@@ -3,7 +3,7 @@
 RSpec.describe UserNotificationScheduleProcessor do
   include ActiveSupport::Testing::TimeHelpers
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:standard_schedule) do
     schedule =
       UserNotificationSchedule.create({ user: user }.merge(UserNotificationSchedule::DEFAULT))

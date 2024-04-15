@@ -71,20 +71,28 @@ class Site
       .cache
       .fetch(categories_cache_key, expires_in: 30.minutes) do
         categories =
-          Category
-            .includes(
-              :uploaded_logo,
-              :uploaded_logo_dark,
-              :uploaded_background,
-              :tags,
-              :tag_groups,
-              :form_templates,
-              category_required_tag_groups: :tag_group,
-            )
-            .joins("LEFT JOIN topics t on t.id = categories.topic_id")
-            .select("categories.*, t.slug topic_slug")
-            .order(:position)
-            .to_a
+          begin
+            query =
+              Category
+                .includes(
+                  :uploaded_logo,
+                  :uploaded_logo_dark,
+                  :uploaded_background,
+                  :uploaded_background_dark,
+                  :tags,
+                  :tag_groups,
+                  :form_templates,
+                  category_required_tag_groups: :tag_group,
+                )
+                .joins("LEFT JOIN topics t on t.id = categories.topic_id")
+                .select("categories.*, t.slug topic_slug")
+                .order(:position)
+
+            query =
+              DiscoursePluginRegistry.apply_modifier(:site_all_categories_cache_query, query, self)
+
+            query.to_a
+          end
 
         if preloaded_category_custom_fields.present?
           Category.preload_custom_fields(categories, preloaded_category_custom_fields)
@@ -98,15 +106,35 @@ class Site
   end
 
   def categories
+    if @guardian.can_lazy_load_categories?
+      preloaded_category_ids = []
+      if @guardian.authenticated?
+        sidebar_category_ids = @guardian.user.secured_sidebar_category_ids(@guardian)
+        preloaded_category_ids.concat(
+          Category
+            .secured(@guardian)
+            .select(:parent_category_id)
+            .distinct
+            .where(id: sidebar_category_ids)
+            .pluck(:parent_category_id),
+        )
+        preloaded_category_ids.concat(sidebar_category_ids)
+      end
+    end
+
     @categories ||=
       begin
         categories = []
 
         self.class.all_categories_cache.each do |category|
-          if @guardian.can_see_serialized_category?(
-               category_id: category[:id],
-               read_restricted: category[:read_restricted],
-             )
+          if (
+               !@guardian.can_lazy_load_categories? ||
+                 preloaded_category_ids.include?(category[:id])
+             ) &&
+               @guardian.can_see_serialized_category?(
+                 category_id: category[:id],
+                 read_restricted: category[:read_restricted],
+               )
             categories << category
           end
         end
@@ -151,7 +179,13 @@ class Site
   end
 
   def groups
-    Group.visible_groups(@guardian.user, "name ASC", include_everyone: true).includes(:flair_upload)
+    query =
+      Group.visible_groups(@guardian.user, "groups.name ASC", include_everyone: true).includes(
+        :flair_upload,
+      )
+    query = DiscoursePluginRegistry.apply_modifier(:site_groups_query, query, self)
+
+    query
   end
 
   def archetypes

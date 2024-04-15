@@ -30,13 +30,9 @@ body.dragging {
   }
 }
 
-/***********************/
-/* bootstrap carryover */
-/***********************/
 code,
 pre {
-  font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
-    "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
+  font-family: var(--d-font-family--monospace);
 }
 
 // this removes the unwanted top margin on a paragraph under a heading
@@ -52,7 +48,7 @@ h6 {
 }
 
 form {
-  margin: 0 0 18px;
+  margin: 0;
 }
 
 label,
@@ -77,6 +73,7 @@ textarea {
 input,
 textarea {
   width: 210px;
+  margin-left: 0;
 }
 
 select,
@@ -91,21 +88,6 @@ select {
   &[multiple],
   &[size] {
     height: auto;
-  }
-}
-
-input,
-textarea {
-  margin-left: 0;
-}
-
-input {
-  &[type="radio"],
-  &[type="checkbox"] {
-    &[disabled],
-    &[readonly] {
-      background-color: transparent;
-    }
   }
 }
 
@@ -159,26 +141,6 @@ input {
   }
 }
 
-.bootbox.modal {
-  .modal-footer {
-    a.btn-primary {
-      color: var(--secondary);
-    }
-  }
-}
-
-/* bootstrap columns */
-
-.offset {
-  &2 {
-    margin-left: 116px;
-  }
-
-  &1 {
-    margin-left: 64px;
-  }
-}
-
 // Media Queries
 @media all and (max-width: 570px) {
   body {
@@ -210,7 +172,6 @@ body.has-sidebar-page {
 @media (prefers-reduced-motion: no-preference) {
   body.sidebar-animate {
     #main-outlet-wrapper {
-      //  grid-template-columns transition supported in Firefox, Chrome support coming summer 2022
       transition-property: grid-template-columns, max-width;
       transition-timing-function: var(--d-sidebar-animation-ease);
       transition-duration: var(--d-sidebar-animation-time);

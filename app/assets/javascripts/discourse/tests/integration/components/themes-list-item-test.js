@@ -1,9 +1,9 @@
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
 import { count, query } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import Theme from "admin/models/theme";
 
 module("Integration | Component | themes-list-item", function (hooks) {
@@ -14,7 +14,6 @@ module("Integration | Component | themes-list-item", function (hooks) {
 
     await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
 
-    assert.expect(1);
     assert.strictEqual(count(".d-icon-check"), 1, "shows default theme icon");
   });
 
@@ -26,7 +25,6 @@ module("Integration | Component | themes-list-item", function (hooks) {
 
     await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
 
-    assert.expect(1);
     assert.strictEqual(count(".d-icon-sync"), 1, "shows pending update icon");
   });
 
@@ -41,7 +39,6 @@ module("Integration | Component | themes-list-item", function (hooks) {
 
     await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
 
-    assert.expect(1);
     assert.strictEqual(
       count(".d-icon-exclamation-circle"),
       1,
@@ -65,7 +62,6 @@ module("Integration | Component | themes-list-item", function (hooks) {
 
     await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
 
-    assert.expect(2);
     assert.deepEqual(
       query(".components")
         .innerText.trim()

@@ -1,19 +1,6 @@
 .chat-message-actions {
-  position: absolute;
-  bottom: -100vh;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  border-radius: 8px 8px 0 0;
-  margin: 0 5px;
-  transition: bottom 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-    visibility cubic-bezier(0.4, 0, 0.2, 1);
-  visibility: hidden;
-  box-sizing: border-box;
-
   .selected-message-container {
-    padding: 0.5em 0.5em 1em 0.5em;
+    padding: 0.5em 0 1em 0;
   }
 
   .selected-message {
@@ -22,7 +9,6 @@
     padding: 0.5em;
     border: 1px solid var(--primary-low);
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.125);
-    border-radius: 8px;
 
     .selected-message-reply {
       margin-left: 5px;
@@ -43,7 +29,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1em 1em 1.5em 1em;
+    padding: 1em 0 1.5em 0;
+    width: 100%;
 
     .chat-message-reaction {
       background: none;
@@ -100,7 +87,6 @@
     }
 
     .reply-btn {
-      border-radius: 3px;
       .d-icon {
         font-size: var(--font-up-4);
       }
@@ -112,7 +98,6 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 0.5em;
     margin: 0;
 
     .chat-message-action-item {
@@ -142,31 +127,6 @@
           color: var(--primary);
         }
       }
-    }
-  }
-}
-
-.chat-message-actions-backdrop {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  width: 100%;
-  z-index: z("header") + 1;
-  transition: background-color 0.4s ease;
-
-  .collapse-area {
-    width: 100%;
-    height: 100%;
-  }
-
-  &.fade-in {
-    background: rgba(var(--always-black-rgb), 0.75);
-
-    .chat-message-actions {
-      bottom: 0px;
-      visibility: visible;
     }
   }
 }

@@ -1,4 +1,7 @@
-<label class="control-label" for={{concat "user-" this.elementId}}>
+<label
+  class="control-label alt-placeholder"
+  for={{concat "user-" this.elementId}}
+>
   {{this.field.name}}
   {{#if this.field.required}}
     <span class="required">*</span>
@@ -12,7 +15,7 @@
     @valueProperty={{null}}
     @nameProperty={{null}}
     @value={{this.value}}
-    @onChange={{action (mut this.value)}}
+    @onChange={{fn (mut this.value)}}
     @options={{hash none=this.noneLabel}}
   />
   <div class="instructions">{{html-safe this.field.description}}</div>

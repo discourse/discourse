@@ -7,6 +7,8 @@ class QunitController < ApplicationController
   def theme
     raise Discourse::NotFound.new if !can_see_theme_qunit?
 
+    @has_test_bundle = EmberCli.has_tests?
+
     param_key = nil
     @suggested_themes = nil
     if (id = get_param(:id)).present?

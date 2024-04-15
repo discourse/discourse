@@ -7,6 +7,6 @@
 <% if SiteSetting.ga_version == "v3_analytics" %>
   <%= preload_script "google-universal-analytics-v3" %>
 <% elsif SiteSetting.ga_version == "v4_gtag" %>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= SiteSetting.ga_universal_tracking_code %>"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= SiteSetting.ga_universal_tracking_code %>" nonce="<%= csp_nonce_placeholder %>"></script>
   <%= preload_script "google-universal-analytics-v4" %>
 <% end %>

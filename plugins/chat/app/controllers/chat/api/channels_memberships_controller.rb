@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Chat::Api::ChannelsMembershipsController < Chat::Api::ChannelsController
+  INDEX_LIMIT = 50
+
   def index
     params.permit(:username, :offset, :limit)
 
     offset = params[:offset].to_i
-    limit = (params[:limit] || 50).to_i.clamp(1, 50)
+    limit = fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT)
 
     memberships =
       Chat::ChannelMembershipsQuery.call(
@@ -25,5 +27,18 @@ class Chat::Api::ChannelsMembershipsController < Chat::Api::ChannelsController
           "/chat/api/channels/#{channel_from_params.id}/memberships?offset=#{offset + limit}&limit=#{limit}&username=#{params[:username]}",
       },
     )
+  end
+
+  def create
+    with_service(Chat::AddUsersToChannel) do
+      on_success { render(json: success_json) }
+      on_failure { render(json: failed_json, status: 422) }
+      on_failed_policy(:can_add_users_to_channel) do
+        render_json_error(I18n.t("chat.errors.users_cant_be_added_to_channel"))
+      end
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+      end
+    end
   end
 end

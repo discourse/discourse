@@ -36,7 +36,11 @@ class UserOptionSerializer < ApplicationSerializer
              :skip_new_user_tips,
              :default_calendar,
              :oldest_search_log_date,
-             :seen_popups
+             :seen_popups,
+             :sidebar_link_to_filtered_list,
+             :sidebar_show_count_of_new_items,
+             :watched_precedence_over_muted,
+             :topics_unread_when_closed
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

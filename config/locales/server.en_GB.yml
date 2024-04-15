@@ -16,22 +16,6 @@ en_GB:
       date_only: "%-d %B %Y"
       long: "%-d %B %Y %H:%M"
       no_day: "%B %Y"
-  date:
-    month_names:
-    - null
-    - January
-    - February
-    - March
-    - April
-    - May
-    - June
-    - July
-    - August
-    - September
-    - October
-    - November
-    - December
-    <<: *datetime_formats
   themes:
     bad_color_scheme: "Can not update theme, invalid colour palette"
     import_error:
@@ -52,6 +36,13 @@ en_GB:
   webauthn:
     validation:
       unknown_cose_algorithm_error: "The algorithm used for the security key is not recognised."
+  reports:
+    post_edits:
+      labels:
+        post: Post
+    consolidated_page_views:
+      labels:
+        post: Post
   site_settings:
     email_subject: "Customisable subject format for standard emails. See <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     restrict_letter_avatar_colors: "A list of 6-digit hexadecimal colour values to be used for letter avatar background."
@@ -62,9 +53,11 @@ en_GB:
     email_accent_fg_color: "The colour of text rendered on the email bg colour in HTML emails. Enter a colour name ('white') or hex value ('#FFFFFF')."
     email_link_color: "The colour of links in HTML emails. Enter a colour name ('blue') or hex value ('#0000FF')."
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customise subject format for standard emails</a>"
-    share_anonymized_statistics: "Share anonymised usage statistics."
     errors:
       invalid_hex_value: "Colour values have to be 6-digit hexadecimal codes."
+  search:
+    types:
+      category: "Categories"
   system_messages:
     welcome_user:
       text_body_template: |
@@ -165,5 +158,7 @@ en_GB:
           <p>If you ever feel like changing these settings, <b>re-run this wizard any time</b>, or visit <a href='%{base_path}/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>
           <p>It is easy to customise your Discourse even further using our powerful theming system. For examples, check out the <a href="https://meta.discourse.org/c/theme/61/l/top" target="_blank">top themes and components</a> on <a href="https://meta.discourse.org/" target="_blank">meta.discourse.org</a>.</p>
           <p>Have fun, and good luck <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>building your new community!</a></p>
+  date:
+    <<: *datetime_formats
   time:
     <<: *datetime_formats

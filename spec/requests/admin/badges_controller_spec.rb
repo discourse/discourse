@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::BadgesController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin)
+  fab!(:moderator)
   fab!(:user) { Fabricate(:user, email: "user1@test.com", username: "username1") }
-  fab!(:badge) { Fabricate(:badge) }
+  fab!(:badge)
 
   describe "#index" do
     context "when logged in as an admin" do

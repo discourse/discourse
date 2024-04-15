@@ -5,11 +5,17 @@
 # https://translate.discourse.org/
 
 bg:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Чат
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Винаги"
+          never: "Никога"
       logs:
         staff_actions:
           actions:
@@ -21,12 +27,10 @@ bg:
           descriptions:
             chat:
               create_message: "Създаване на чат съобщение в зададен канал."
-    about:
-      chat_messages_count: "Съобщения в чата"
-      chat_channels_count: "Чат канали"
-      chat_users_count: "Потребители в чата"
     chat:
+      deleted_chat_username: изтрит
       dates:
+        yesterday: "Вчера"
         time_tiny: "ч:мм"
       all_loaded: "Показани са всички съобщения"
       already_enabled: "Чатът вече е активиран по тази тема. Моля опреснете страницата."
@@ -51,6 +55,7 @@ bg:
       channel_delete:
         instructions: "<p>Изтрива канала <strong>%{name}</strong> и историята на чата. Всички съобщения и свързани с тях данни, като реакции и качвания, ще бъдат изтрити за постоянно. Ако искате да запазите историята на канала и да го деактивирате, може вместо това да архивирате канала.</p> <p>Сигурни ли сте, че искате да <strong>изтриете окончателно</strong> канала? За да потвърдите, въведете името на канала в полето по-долу.</p>"
       close: "Затвори"
+      remove: "Премахване"
       expand: "Разгънете чекмеджето за чат"
       deleted:
         one: "Едно съобщение беше изтрито. [view]"
@@ -66,14 +71,11 @@ bg:
         dm_and_mentions: "Директни съобщения и споменавания"
         never: "Никога"
       flag: "Сигнализиране"
+      heading: "Чат"
       join: "Влизане"
       last_visit: "последно посещение"
-      mention_warning:
-        dismiss: "отмени"
-        cannot_see: "%{username} няма достъп до този канал и не е уведомен."
-        cannot_see_multiple:
-          one: "%{username} и %{count} друг потребител нямат достъп до този канал и не са били уведомени."
-          other: "%{username} и %{count} други потребители нямат достъп до този канал и не са били уведомени."
+      summarization:
+        summarize: "Обобщаване"
       reply: "Отговорете"
       edit: "Редактирай"
       rebake_message: "Прегенерирай HTML "
@@ -82,13 +84,17 @@ bg:
       save: "Запази "
       sounds:
         none: "Без"
+      title: "чат"
+      title_capitalized: "Чат"
       exit: "назад"
       channel_status:
         closed: "Затворена"
         open: "Отвори"
       browse:
         back: "Назад"
+        title: Канали
         filter_all: Всички
+        filter_open: Отвори
         filter_closed: Затворена
       chat_message_separator:
         today: Днес
@@ -100,9 +106,10 @@ bg:
       channel_info:
         back_to_channel: "Назад"
         tabs:
-          about: Относно
           members: Членове
           settings: Настройки
+      new_message_modal:
+        filter: "Филтър"
       direct_message_creator:
         title: Ново Съобщение
         prefix: "До:"
@@ -119,11 +126,22 @@ bg:
       settings:
         follow: "Влизане"
         followed: "Присъединен"
+        threading_enabled: "Да е включен"
+        threading_disabled: "Деактивирани"
         notifications: "Известия"
+        preview: "Преглед"
         save: "Запази "
         saved: "Запазено"
         unfollow: "Напусни"
         admin_title: "Администратор"
+        settings_title: "Настройки"
+        category_label: "Категория"
+        history_label: "История"
+        members_label: "Членове"
+      admin:
+        title: "Чат"
+      channel_list:
+        title: "Канали"
       incoming_webhooks:
         back: "Назад"
         description: "Описание"
@@ -142,6 +160,10 @@ bg:
           title: "Премести в нова тема"
         existing_topic:
           title: "Преместете в съществуваща тема."
+      retention_reminders:
+        short:
+          one: "%{count} ден"
+          other: "%{count} дни"
       emoji_picker:
         objects: "Обекти"
         activities: "Дейности"
@@ -153,16 +175,38 @@ bg:
           one: "%{count} отговор"
           other: "%{count} отговора"
         settings: "Настройки"
+        last_reply: "последен отговор"
+        notifications:
+          regular:
+            title: "Нормален"
+          tracking:
+            title: "Следене"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Ново Съобщение"
         cancel: "Прекрати"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
     discourse_automation:
       scriptables:
         send_chat_message:
           fields:
             message:
               label: Съобщение
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Съобщение в чата с флаг"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Чат"
     styleguide:
       sections:
         chat:
           title: Чат
+    sidebar:
+      panels:
+        chat:
+          label: "Чат"

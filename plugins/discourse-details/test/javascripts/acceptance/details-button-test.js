@@ -1,13 +1,11 @@
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
 import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 
 acceptance("Details Button", function (needs) {
   needs.user();
-  needs.hooks.beforeEach(() => clearPopupMenuOptionsCallback());
 
   test("details button", async function (assert) {
     const popupMenu = selectKit(".toolbar-popup-menu-options");
@@ -19,7 +17,7 @@ acceptance("Details Button", function (needs) {
     await categoryChooser.selectRowByValue(2);
 
     await popupMenu.expand();
-    await popupMenu.selectRowByValue("insertDetails");
+    await popupMenu.selectRowByName(I18n.t("details.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -36,7 +34,7 @@ acceptance("Details Button", function (needs) {
     textarea.selectionEnd = textarea.value.length;
 
     await popupMenu.expand();
-    await popupMenu.selectRowByValue("insertDetails");
+    await popupMenu.selectRowByName(I18n.t("details.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -63,7 +61,7 @@ acceptance("Details Button", function (needs) {
     textarea.selectionEnd = 28;
 
     await popupMenu.expand();
-    await popupMenu.selectRowByValue("insertDetails");
+    await popupMenu.selectRowByName(I18n.t("details.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -90,7 +88,7 @@ acceptance("Details Button", function (needs) {
     textarea.selectionEnd = 29;
 
     await popupMenu.expand();
-    await popupMenu.selectRowByValue("insertDetails");
+    await popupMenu.selectRowByName(I18n.t("details.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
@@ -128,7 +126,7 @@ acceptance("Details Button", function (needs) {
     textarea.selectionEnd = textarea.value.length;
 
     await popupMenu.expand();
-    await popupMenu.selectRowByValue("insertDetails");
+    await popupMenu.selectRowByName(I18n.t("details.title"));
 
     assert.strictEqual(
       query(".d-editor-input").value,

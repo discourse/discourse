@@ -1,0 +1,127 @@
+<DModal
+  class="login-modal -large"
+  @bodyClass={{this.modalBodyClasses}}
+  @closeModal={{@closeModal}}
+  @flash={{this.flash}}
+  @flashType={{this.flashType}}
+  {{did-insert this.preloadLogin}}
+>
+  <:body>
+    <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
+
+    {{#if this.hasNoLoginOptions}}
+      <div class={{if this.site.desktopView "login-left-side"}}>
+        <div class="login-welcome-header no-login-methods-configured">
+          <h1 class="login-title">{{i18n "login.no_login_methods.title"}}</h1>
+          <img />
+          <p class="login-subheader">
+            {{html-safe
+              (i18n
+                "login.no_login_methods.description"
+                (hash adminLoginPath=this.adminLoginPath)
+              )
+            }}
+          </p>
+        </div>
+      </div>
+    {{else}}
+      {{#if this.site.mobileView}}
+        <Modal::Login::WelcomeHeader
+          @wavingHandURL={{this.wavingHandURL}}
+          @createAccount={{this.createAccount}}
+        />
+        {{#if this.showLoginButtons}}
+          <LoginButtons
+            @externalLogin={{this.externalLoginAction}}
+            @passkeyLogin={{this.passkeyLogin}}
+            @context="login"
+          />
+        {{/if}}
+      {{/if}}
+
+      {{#if this.canLoginLocal}}
+        <div class={{if this.site.desktopView "login-left-side"}}>
+          {{#if this.site.desktopView}}
+            <Modal::Login::WelcomeHeader
+              @wavingHandURL={{this.wavingHandURL}}
+              @createAccount={{this.createAccount}}
+            />
+          {{/if}}
+          <Modal::Login::LocalLoginForm
+            @loginName={{this.loginName}}
+            @loginNameChanged={{this.loginNameChanged}}
+            @canLoginLocalWithEmail={{this.canLoginLocalWithEmail}}
+            @canUsePasskeys={{this.canUsePasskeys}}
+            @passkeyLogin={{this.passkeyLogin}}
+            @loginPassword={{this.loginPassword}}
+            @secondFactorMethod={{this.secondFactorMethod}}
+            @secondFactorToken={{this.secondFactorToken}}
+            @backupEnabled={{this.backupEnabled}}
+            @securityKeyAllowedCredentialIds={{this.securityKeyAllowedCredentialIds}}
+            @securityKeyChallenge={{this.securityKeyChallenge}}
+            @showSecurityKey={{this.showSecurityKey}}
+            @otherMethodAllowed={{this.otherMethodAllowed}}
+            @showSecondFactor={{this.showSecondFactor}}
+            @handleForgotPassword={{this.handleForgotPassword}}
+            @login={{this.triggerLogin}}
+            @flashChanged={{this.flashChanged}}
+            @flashTypeChanged={{this.flashTypeChanged}}
+            @securityKeyCredentialChanged={{this.securityKeyCredentialChanged}}
+          />
+          {{#if this.site.desktopView}}
+            <div class="d-modal__footer">
+              <Modal::Login::Footer
+                @canLoginLocal={{this.canLoginLocal}}
+                @showSecurityKey={{this.showSecurityKey}}
+                @login={{this.triggerLogin}}
+                @loginButtonLabel={{this.loginButtonLabel}}
+                @loginDisabled={{this.loginDisabled}}
+                @showSignupLink={{this.showSignupLink}}
+                @createAccount={{this.createAccount}}
+                @loggingIn={{this.loggingIn}}
+                @showSecondFactor={{this.showSecondFactor}}
+              />
+            </div>
+          {{/if}}
+        </div>
+      {{/if}}
+
+      {{#if (and this.showLoginButtons this.site.desktopView)}}
+        {{#unless this.canLoginLocal}}
+          <div class="login-left-side">
+            <Modal::Login::WelcomeHeader
+              @wavingHandURL={{this.wavingHandURL}}
+            />
+          </div>
+        {{/unless}}
+        {{#if this.hasAtLeastOneLoginButton}}
+          <div class="login-right-side">
+            <LoginButtons
+              @externalLogin={{this.externalLoginAction}}
+              @passkeyLogin={{this.passkeyLogin}}
+              @context="login"
+            />
+          </div>
+        {{/if}}
+      {{/if}}
+    {{/if}}
+  </:body>
+
+  <:footer>
+    {{#if this.site.mobileView}}
+      {{#unless this.hasNoLoginOptions}}
+        <Modal::Login::Footer
+          @canLoginLocal={{this.canLoginLocal}}
+          @showSecurityKey={{this.showSecurityKey}}
+          @login={{this.triggerLogin}}
+          @loginButtonLabel={{this.loginButtonLabel}}
+          @loginDisabled={{this.loginDisabled}}
+          @showSignupLink={{this.showSignupLink}}
+          @createAccount={{this.createAccount}}
+          @loggingIn={{this.loggingIn}}
+          @showSecondFactor={{this.showSecondFactor}}
+        />
+      {{/unless}}
+    {{/if}}
+  </:footer>
+</DModal>

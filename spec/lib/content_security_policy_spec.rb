@@ -40,14 +40,14 @@ RSpec.describe ContentSecurityPolicy do
     end
   end
 
-  describe "worker-src" do
+  describe "legacy worker-src" do
+    before { SiteSetting.content_security_policy_strict_dynamic = false }
     it "has expected values" do
       worker_srcs = parse(policy)["worker-src"]
       expect(worker_srcs).to eq(
         %w[
           'self'
           http://test.localhost/assets/
-          http://test.localhost/brotli_asset/
           http://test.localhost/javascripts/
           http://test.localhost/plugins/
         ],
@@ -55,7 +55,8 @@ RSpec.describe ContentSecurityPolicy do
     end
   end
 
-  describe "script-src" do
+  describe "legacy script-src" do
+    before { SiteSetting.content_security_policy_strict_dynamic = false }
     it "always has self, logster, sidekiq, and assets" do
       script_srcs = parse(policy)["script-src"]
       expect(script_srcs).to include(
@@ -64,7 +65,6 @@ RSpec.describe ContentSecurityPolicy do
           http://test.localhost/sidekiq/
           http://test.localhost/mini-profiler-resources/
           http://test.localhost/assets/
-          http://test.localhost/brotli_asset/
           http://test.localhost/extra-locales/
           http://test.localhost/highlight-js/
           http://test.localhost/javascripts/
@@ -106,7 +106,9 @@ RSpec.describe ContentSecurityPolicy do
 
       script_srcs = parse(policy)["script-src"]
       expect(script_srcs).to include("https://www.googletagmanager.com/gtm.js")
-      expect(script_srcs.to_s).to include("nonce-")
+      # nonce is added by the GtmScriptNonceInjector middleware to prevent the
+      # nonce from getting cached by AnonymousCache
+      expect(script_srcs.to_s).not_to include("nonce-")
     end
 
     it "allowlists CDN assets when integrated" do
@@ -116,7 +118,6 @@ RSpec.describe ContentSecurityPolicy do
       expect(script_srcs).to include(
         *%w[
           https://cdn.com/assets/
-          https://cdn.com/brotli_asset/
           https://cdn.com/highlight-js/
           https://cdn.com/javascripts/
           https://cdn.com/plugins/
@@ -131,7 +132,6 @@ RSpec.describe ContentSecurityPolicy do
       expect(script_srcs).to include(
         *%w[
           https://s3-cdn.com/assets/
-          https://s3-cdn.com/brotli_asset/
           https://cdn.com/highlight-js/
           https://cdn.com/javascripts/
           https://cdn.com/plugins/
@@ -146,7 +146,6 @@ RSpec.describe ContentSecurityPolicy do
       expect(script_srcs).to include(
         *%w[
           https://s3-asset-cdn.com/assets/
-          https://s3-asset-cdn.com/brotli_asset/
           https://cdn.com/highlight-js/
           https://cdn.com/javascripts/
           https://cdn.com/plugins/
@@ -164,7 +163,6 @@ RSpec.describe ContentSecurityPolicy do
       expect(script_srcs).to include(
         *%w[
           https://cdn.com/forum/assets/
-          https://cdn.com/forum/brotli_asset/
           https://cdn.com/forum/highlight-js/
           https://cdn.com/forum/javascripts/
           https://cdn.com/forum/plugins/
@@ -179,7 +177,6 @@ RSpec.describe ContentSecurityPolicy do
       expect(script_srcs).to include(
         *%w[
           https://s3-cdn.com/assets/
-          https://s3-cdn.com/brotli_asset/
           https://cdn.com/forum/highlight-js/
           https://cdn.com/forum/javascripts/
           https://cdn.com/forum/plugins/
@@ -187,6 +184,18 @@ RSpec.describe ContentSecurityPolicy do
           http://test.localhost/forum/extra-locales/
         ],
       )
+    end
+  end
+
+  describe "strict-dynamic script-src and worker-src" do
+    it "includes strict-dynamic keyword" do
+      script_srcs = parse(policy)["script-src"]
+      expect(script_srcs).to include("'strict-dynamic'")
+    end
+
+    it "does not set worker-src" do
+      worker_src = parse(policy)["worker-src"]
+      expect(worker_src).to eq(nil)
     end
   end
 
@@ -210,7 +219,6 @@ RSpec.describe ContentSecurityPolicy do
       end
 
       it "includes all EmbeddableHost" do
-        EmbeddableHost
         frame_ancestors = parse(policy)["frame-ancestors"]
         expect(frame_ancestors).to include("https://a.org")
         expect(frame_ancestors).to include("https://b.org")
@@ -237,7 +245,9 @@ RSpec.describe ContentSecurityPolicy do
       end
     end
 
-    it "can extend script-src, object-src, manifest-src" do
+    it "can extend script-src, object-src, manifest-src - legacy" do
+      SiteSetting.content_security_policy_strict_dynamic = false
+
       plugin = plugin_class.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
 
       plugin.activate!
@@ -278,13 +288,9 @@ RSpec.describe ContentSecurityPolicy do
     end
   end
 
-  it "only includes unsafe-inline for qunit paths" do
-    expect(parse(policy(path_info: "/qunit"))["script-src"]).to include("'unsafe-eval'")
-    expect(parse(policy(path_info: "/wizard/qunit"))["script-src"]).to include("'unsafe-eval'")
-    expect(parse(policy(path_info: "/"))["script-src"]).to_not include("'unsafe-eval'")
-  end
+  context "with a theme - legacy" do
+    before { SiteSetting.content_security_policy_strict_dynamic = false }
 
-  context "with a theme" do
     let!(:theme) do
       Fabricate(:theme).tap do |t|
         settings = <<~YML
@@ -385,9 +391,19 @@ RSpec.describe ContentSecurityPolicy do
   end
 
   it "can be extended by site setting" do
-    SiteSetting.content_security_policy_script_src = "from-site-setting.com|from-site-setting.net"
+    SiteSetting.content_security_policy_script_src = "'unsafe-eval'"
 
-    expect(parse(policy)["script-src"]).to include("from-site-setting.com", "from-site-setting.net")
+    expect(parse(policy)["script-src"]).to include("'unsafe-eval'")
+  end
+
+  it "strips unsupported values from setting" do
+    SiteSetting.content_security_policy_script_src =
+      "'unsafe-eval'|blob:|https://example.com/script.js"
+
+    script_src = parse(policy)["script-src"]
+    expect(script_src).to include("'unsafe-eval'")
+    expect(script_src).not_to include("blob:")
+    expect(script_src).not_to include("https://example.com/script.js")
   end
 
   def parse(csp_string)

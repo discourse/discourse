@@ -1,13 +1,19 @@
+{{#if (or this.loading this.groups.canLoadMore)}}
+  {{hide-application-footer}}
+{{/if}}
+
+{{body-class "groups-page"}}
+
 <PluginOutlet @name="before-groups-index-container" @connectorTagName="div" />
 
-<DSection @pageClass="groups">
+<section class="container groups-index">
   <div class="groups-header">
     {{#if this.currentUser.can_create_group}}
       <DButton
-        @action={{action "new"}}
-        @class="btn-default groups-header-new pull-right"
+        @action={{this.new}}
         @icon="plus"
         @label="admin.groups.new.title"
+        class="btn-default groups-header-new pull-right"
       />
     {{/if}}
 
@@ -16,7 +22,7 @@
         @value={{readonly this.filter}}
         placeholder={{i18n "groups.index.all"}}
         class="groups-header-filters-name no-blur"
-        {{on "input" (action "onFilterChanged" value="target.value")}}
+        {{on "input" (with-event-value this.onFilterChanged)}}
         @type="search"
         aria-description={{i18n "groups.index.search_results"}}
       />
@@ -24,9 +30,9 @@
       <ComboBox
         @value={{this.type}}
         @content={{this.types}}
-        @class="groups-header-filters-type"
-        @onChange={{action (mut this.type)}}
+        @onChange={{fn (mut this.type)}}
         @options={{hash clearable=true none="groups.index.filter"}}
+        class="groups-header-filters-type"
       />
     </div>
   </div>
@@ -122,7 +128,6 @@
       <p role="status">{{i18n "groups.index.empty"}}</p>
     {{/if}}
   </ConditionalLoadingSpinner>
-
-</DSection>
+</section>
 
 <PluginOutlet @name="after-groups-index-container" @connectorTagName="div" />

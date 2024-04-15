@@ -8,7 +8,13 @@ module Scheduler
 
     def initialize
       @async = !Rails.env.test?
-      @queue = Queue.new
+      @queue =
+        WorkQueue::ThreadSafeWrapper.new(
+          WorkQueue::FairQueue.new(:site, 500) do
+            WorkQueue::FairQueue.new(:user, 100) { WorkQueue::BoundedQueue.new(50) }
+          end,
+        )
+
       @mutex = Mutex.new
       @stats_mutex = Mutex.new
       @paused = false
@@ -23,7 +29,7 @@ module Scheduler
     end
 
     def length
-      @queue.length
+      @queue.size
     end
 
     def stats
@@ -44,7 +50,13 @@ module Scheduler
       @async = val
     end
 
-    def later(desc = nil, db = RailsMultisite::ConnectionManagement.current_db, &blk)
+    def later(
+      desc = nil,
+      db = RailsMultisite::ConnectionManagement.current_db,
+      force: true,
+      current_user: nil,
+      &blk
+    )
       @stats_mutex.synchronize do
         stats = (@stats[desc] ||= { queued: 0, finished: 0, duration: 0, errors: 0 })
         stats[:queued] += 1
@@ -52,7 +64,7 @@ module Scheduler
 
       if @async
         start_thread if !@thread&.alive? && !@paused
-        @queue << [db, blk, desc]
+        @queue.push({ site: db, user: current_user, db: db, job: blk, desc: desc }, force: force)
       else
         blk.call
       end
@@ -71,7 +83,7 @@ module Scheduler
     end
 
     def do_all_work
-      do_work(_non_block = true) while !@queue.empty?
+      do_work(non_block = true) while !@queue.empty?
     end
 
     private
@@ -89,7 +101,8 @@ module Scheduler
 
     # using non_block to match Ruby #deq
     def do_work(non_block = false)
-      db, job, desc = @queue.deq(non_block)
+      db, job, desc = @queue.shift(block: !non_block).values_at(:db, :job, :desc)
+
       start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       db ||= RailsMultisite::ConnectionManagement::DEFAULT
 

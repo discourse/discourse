@@ -1,4 +1,8 @@
 /* Default badge styles. */
+.show-badge {
+  background: var(--d-content-background);
+}
+
 .user-badge {
   padding: 3px 8px;
   color: var(--primary);
@@ -212,7 +216,6 @@
 
     @media screen and (min-width: 767px) {
       max-width: calc(var(--d-max-width) / 2);
-      margin-right: 1.5em;
     }
 
     .badge-contents {
@@ -224,11 +227,13 @@
 }
 
 .badges-granted {
-  display: flex;
-  flex-wrap: wrap;
-  @media screen and (max-width: $small-width) {
-    justify-content: space-between;
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
+  gap: 3em 2em;
+}
+
+.container.badges {
+  background: var(--d-content-background);
 }
 
 .badge-groups {
@@ -263,6 +268,7 @@
   flex-direction: row;
   margin-bottom: 2em;
   margin-top: 1em;
+  gap: 1em;
 
   .badge-grant-info {
     &.hidden {
@@ -279,23 +285,42 @@
   }
 
   .badge-set-title {
+    flex: 0 1 auto;
     padding: 1.5em;
     border: 1px solid var(--primary-low);
 
-    .user-content {
-      padding: 0;
-      .control-group {
-        margin-bottom: 1em;
+    .badge-title {
+      height: 100%;
+      &__saved {
+        color: var(--success);
       }
     }
-  }
 
-  .badge-title .form-horizontal .controls {
-    margin-left: 0;
-  }
+    .control-group:last-child {
+      margin: auto 0 0;
+    }
 
-  .form-horizontal {
-    margin-bottom: 0;
+    .form-horizontal {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      margin: 0;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5em;
+      margin: 0;
+      button:last-of-type {
+        margin-right: auto;
+      }
+    }
+
+    .combobox {
+      width: 100%;
+    }
   }
 }
 

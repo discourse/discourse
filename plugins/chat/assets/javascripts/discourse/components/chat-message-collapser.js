@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { inject as service } from "@ember/service";
 import { escapeExpression } from "discourse/lib/utilities";
 import domFromString from "discourse-common/lib/dom-from-string";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class ChatMessageCollapser extends Component {
   @service siteSettings;

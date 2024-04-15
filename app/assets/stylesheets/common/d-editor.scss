@@ -24,7 +24,7 @@
   flex-direction: column;
   background-color: var(--secondary);
   position: relative;
-  border: 1px solid var(--primary-medium);
+  border: 1px solid var(--primary-400);
   border-radius: var(--d-input-border-radius);
   min-height: 0;
 
@@ -55,8 +55,10 @@
   flex-direction: column;
   margin-left: 16px;
   overflow: auto;
+  overflow-anchor: none;
   cursor: default;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .d-editor-input,
@@ -76,6 +78,8 @@
   padding: 10px;
   height: 100%;
   overflow-x: hidden;
+  overscroll-behavior: contain;
+  overflow-anchor: none;
   resize: none;
 }
 
@@ -162,8 +166,8 @@
   --resizer-height: 1.75em;
   position: relative;
   display: inline-block;
-  .desktop-view & {
-    // need the extra space on mobile because controls are always visible
+  .discourse-no-touch & {
+    // on hover-capable devices we position the controls within the padding
     padding-bottom: var(--resizer-height);
     margin-bottom: calc(var(--resizer-height) * -1);
   }
@@ -181,13 +185,12 @@
   .button-wrapper {
     min-width: 10em;
     width: 100%;
-
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    align-items: center;
     gap: 0 0.5em;
-
     position: absolute;
-    height: var(--resizer-height);
+    height: calc(var(--resizer-height) + 0.5em);
     bottom: 0;
     left: 0;
     opacity: 0;
@@ -234,15 +237,15 @@
     }
 
     .alt-text-readonly-container {
-      flex: 1 1;
-      width: 100%;
+      flex: 1 1 auto;
+      // arbitrary min-width value allows for correct shrinking
+      min-width: 100px;
 
       .alt-text {
         margin-right: 0.5em;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        max-width: 100%;
       }
 
       .alt-text-edit-btn {
@@ -256,9 +259,9 @@
     }
 
     .alt-text-edit-container {
-      margin-top: 0.25em;
       gap: 0 0.25em;
       flex: 1;
+      max-width: 100%;
 
       .alt-text-input,
       .alt-text-edit-ok,
@@ -267,11 +270,13 @@
       }
 
       .alt-text-input {
+        display: inline-flex;
         flex: 1;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         margin: 0;
+        padding-left: 0.25em;
       }
 
       .alt-text-edit-ok,
@@ -294,13 +299,18 @@
       }
     }
 
+    .wrap-image-grid-button {
+      cursor: pointer;
+      color: var(--tertiary);
+    }
+
     svg {
       pointer-events: none;
     }
   }
 }
 
-.mobile-view .d-editor-preview .image-wrapper .button-wrapper {
+.discourse-touch .d-editor-preview .image-wrapper .button-wrapper {
   opacity: 1;
 }
 
@@ -343,4 +353,13 @@
   .select-kit-header-wrapper {
     justify-content: center;
   }
+}
+
+.d-editor #form-template-form {
+  overflow: auto;
+  background: var(--primary-very-low);
+  padding: 1rem;
+  border: 1px solid var(--primary-400);
+  margin-bottom: 0;
+  height: 100%;
 }

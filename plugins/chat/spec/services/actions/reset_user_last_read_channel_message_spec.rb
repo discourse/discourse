@@ -27,7 +27,9 @@ RSpec.describe Chat::Action::ResetUserLastReadChannelMessage do
   context "when there are non-deleted messages left in the channel" do
     before do
       message_3.trash!
+      message_3.chat_channel.update_last_message_id!
       message_6.trash!
+      message_6.chat_channel.update_last_message_id!
     end
 
     it "sets the matching membership last_read_message_ids to the most recently created message ID" do
@@ -38,7 +40,11 @@ RSpec.describe Chat::Action::ResetUserLastReadChannelMessage do
   end
 
   context "when there are no more non-deleted messages left in the channel" do
-    before { [message_1, message_2, message_4, message_5].each(&:trash!) }
+    before do
+      [message_1, message_2, message_4, message_5].each(&:trash!)
+      channel_1.update_last_message_id!
+      channel_2.update_last_message_id!
+    end
 
     it "sets the matching membership last_read_message_ids to NULL" do
       described_class.call([message_3.id, message_6.id], [channel_1.id, channel_2.id])

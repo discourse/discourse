@@ -6,7 +6,7 @@ module Onebox
       SiteSetting
         .blocked_onebox_domains
         &.split("|")
-        .any? { |blocked| hostname == blocked || hostname.end_with?(".#{blocked}") }
+        &.any? { |blocked| hostname == blocked || hostname.end_with?(".#{blocked}") }
     end
   end
 end

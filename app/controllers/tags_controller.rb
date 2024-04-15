@@ -27,6 +27,7 @@ class TagsController < ::ApplicationController
                   update_notifications
                   personal_messages
                   info
+                  list
                 ]
 
   before_action :fetch_tag, only: %i[info create_synonyms destroy_synonym]
@@ -97,6 +98,46 @@ class TagsController < ::ApplicationController
 
       format.json { render json: { tags: @tags, extras: @extras } }
     end
+  end
+
+  LIST_LIMIT = 51
+
+  def list
+    offset = params[:offset].to_i || 0
+    tags = guardian.can_admin_tags? ? Tag.all : Tag.visible(guardian)
+
+    load_more_query_params = { offset: offset + 1 }
+
+    if filter = params[:filter]
+      tags = tags.where("LOWER(tags.name) ILIKE ?", "%#{filter.downcase}%")
+      load_more_query_params[:filter] = filter
+    end
+
+    if only_tags = params[:only_tags]
+      tags = tags.where("LOWER(tags.name) IN (?)", only_tags.split(",").map(&:downcase))
+      load_more_query_params[:only_tags] = only_tags
+    end
+
+    if exclude_tags = params[:exclude_tags]
+      tags = tags.where("LOWER(tags.name) NOT IN (?)", exclude_tags.split(",").map(&:downcase))
+      load_more_query_params[:exclude_tags] = exclude_tags
+    end
+
+    tags_count = tags.count
+    tags = tags.order("LOWER(tags.name) ASC").limit(LIST_LIMIT).offset(offset * LIST_LIMIT)
+
+    load_more_url = URI("/tags/list.json")
+    load_more_url.query = URI.encode_www_form(load_more_query_params)
+
+    render_serialized(
+      tags,
+      TagSerializer,
+      root: "list_tags",
+      meta: {
+        total_rows_list_tags: tags_count,
+        load_more_list_tags: load_more_url.to_s,
+      },
+    )
   end
 
   Discourse.filters.each do |filter|
@@ -251,13 +292,8 @@ class TagsController < ::ApplicationController
       exclude_has_synonyms: params[:excludeHasSynonyms],
     }
 
-    if params[:limit]
-      begin
-        filter_params[:limit] = Integer(params[:limit])
-        raise Discourse::InvalidParameters.new(:limit) if !filter_params[:limit].positive?
-      rescue ArgumentError
-        raise Discourse::InvalidParameters.new(:limit)
-      end
+    if limit = fetch_limit_from_params(default: nil, max: SiteSetting.max_tag_search_results)
+      filter_params[:limit] = limit
     end
 
     filter_params[:category] = Category.find_by_id(params[:categoryId]) if params[:categoryId]

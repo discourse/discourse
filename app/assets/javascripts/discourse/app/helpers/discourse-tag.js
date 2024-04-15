@@ -1,7 +1,8 @@
 import { htmlSafe } from "@ember/template";
-import { registerUnbound } from "discourse-common/lib/helpers";
 import renderTag from "discourse/lib/render-tag";
+import { registerRawHelper } from "discourse-common/lib/helpers";
 
-export default registerUnbound("discourse-tag", function (name, params) {
+registerRawHelper("discourse-tag", discourseTag);
+export default function discourseTag(name, params) {
   return htmlSafe(renderTag(name, params));
-});
+}

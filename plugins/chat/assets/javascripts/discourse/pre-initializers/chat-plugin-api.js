@@ -4,6 +4,7 @@ import {
   resetChatMessageDecorators,
 } from "discourse/plugins/chat/discourse/components/chat-message";
 import { registerChatComposerButton } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
+import { removeChatComposerSecondaryActions } from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/services/chat-state-manager";
 
 /**
@@ -91,6 +92,38 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * });
  */
 
+/**
+ * Send a chat message, message or uploads must be provided
+ *
+ * @memberof PluginApi
+ * @instance
+ * @function sendChatMessage
+ * @param {number} channelId - The id of the channel
+ * @param {Object} options
+ * @param {string} [options.message] - The content of the message to send
+ * @param {string} [options.uploads] - A list of uploads to send
+ * @param {number} [options.threadId] - The thread id where the message should be sent
+ *
+ * @example
+ *
+ * api.sendChatMessage(
+ *   1,
+ *  { message: "Hello world", threadId: 2 }
+ * );
+ */
+
+/**
+ * Removes secondary actions from the chat composer
+ *
+ * @memberof PluginApi
+ * @instance
+ * @function removeChatComposerSecondaryActions
+ * @param {...string} [1] - List of secondary action ids to remove, eg: `"copyLink", "select"
+ * @example
+ *
+ * api.removeChatComposerSecondaryActions("copyLink", "select");
+ */
+
 export default {
   name: "chat-plugin-api",
   after: "inject-discourse-objects",
@@ -121,6 +154,34 @@ export default {
             addChatDrawerStateCallback(callback);
           },
         });
+      }
+
+      if (!apiPrototype.hasOwnProperty("sendChatMessage")) {
+        Object.defineProperty(apiPrototype, "sendChatMessage", {
+          async value(channelId, options = {}) {
+            return this.container
+              .lookup("service:chat-api")
+              .sendMessage(channelId, {
+                thread_id: options.threadId,
+                post_ids: options.postIds,
+                topic_id: options.topicId,
+                message: options.message,
+                uploads: options.uploads,
+              });
+          },
+        });
+      }
+
+      if (!apiPrototype.hasOwnProperty("removeChatComposerSecondaryActions")) {
+        Object.defineProperty(
+          apiPrototype,
+          "removeChatComposerSecondaryActions",
+          {
+            value(...actionIds) {
+              removeChatComposerSecondaryActions(actionIds);
+            },
+          }
+        );
       }
     });
   },

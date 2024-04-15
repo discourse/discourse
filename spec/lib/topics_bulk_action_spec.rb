@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicsBulkAction do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:topic) { Fabricate(:topic, user: user) }
 
   describe "#dismiss_topics" do
-    fab!(:user) { Fabricate(:user, created_at: 1.days.ago) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:user) { Fabricate(:user, created_at: 1.days.ago, refresh_auto_groups: true) }
+    fab!(:category)
     fab!(:topic2) { Fabricate(:topic, category: category, created_at: 60.minutes.ago) }
     fab!(:topic3) { Fabricate(:topic, category: category, created_at: 120.minutes.ago) }
 
     before { topic.destroy! }
 
     it "dismisses private messages" do
-      pm = Fabricate(:private_message_topic)
+      pm = Fabricate(:private_message_topic, recipient: user)
 
       TopicsBulkAction.new(user, [pm.id], type: "dismiss_topics").perform!
 
@@ -73,6 +74,29 @@ RSpec.describe TopicsBulkAction do
       expect(dismissed_topic_user.topic_id).to eq(topic2.id)
       expect(dismissed_topic_user.created_at).not_to be_nil
     end
+
+    it "doesn't dismiss topics the user can't see" do
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      topic2.update!(category_id: private_category.id)
+
+      expect do
+        TopicsBulkAction.new(user, [topic2.id, topic3.id], type: "dismiss_topics").perform!
+      end.to change { DismissedTopicUser.count }.by(1)
+
+      expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([topic3.id])
+
+      group.add(user)
+
+      expect do
+        TopicsBulkAction.new(user, [topic2.id, topic3.id], type: "dismiss_topics").perform!
+      end.to change { DismissedTopicUser.count }.by(1)
+
+      expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to contain_exactly(
+        topic2.id,
+        topic3.id,
+      )
+    end
   end
 
   describe "dismiss_posts" do
@@ -128,7 +152,7 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "change_category" do
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
     fab!(:fist_post) { Fabricate(:post, topic: topic) }
 
     context "when the user can edit the topic" do
@@ -151,7 +175,7 @@ RSpec.describe TopicsBulkAction do
 
           revision = topic.first_post.revisions.last
           expect(revision).to be_present
-          expect(revision.modifications).to eq ({ "category_id" => [old_category_id, category.id] })
+          expect(revision.modifications).to eq({ "category_id" => [old_category_id, category.id] })
         end
 
         it "doesn't do anything when category stays the same" do
@@ -238,7 +262,7 @@ RSpec.describe TopicsBulkAction do
 
   describe "delete" do
     fab!(:topic) { Fabricate(:post).topic }
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator)
 
     it "deletes the topic" do
       tba = TopicsBulkAction.new(moderator, [topic.id], type: "delete")
@@ -390,12 +414,12 @@ RSpec.describe TopicsBulkAction do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       topic.tags = [tag1, tag2]
     end
 
     it "can change the tags, and can create new tags" do
-      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       tba =
         TopicsBulkAction.new(
           topic.user,
@@ -410,7 +434,7 @@ RSpec.describe TopicsBulkAction do
     end
 
     it "can change the tags but not create new ones" do
-      SiteSetting.min_trust_to_create_tag = 4
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       tba =
         TopicsBulkAction.new(
           topic.user,
@@ -458,12 +482,12 @@ RSpec.describe TopicsBulkAction do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       topic.tags = [tag1, tag2]
     end
 
     it "can append new or existing tags" do
-      SiteSetting.min_trust_to_create_tag = 0
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       tba =
         TopicsBulkAction.new(
           topic.user,
@@ -486,7 +510,7 @@ RSpec.describe TopicsBulkAction do
     end
 
     context "when the user can't create new topics" do
-      before { SiteSetting.min_trust_to_create_tag = 4 }
+      before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
 
       it "can append existing tags but doesn't append new tags" do
         tba =
@@ -528,7 +552,7 @@ RSpec.describe TopicsBulkAction do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       topic.tags = [tag1, tag2]
     end
 

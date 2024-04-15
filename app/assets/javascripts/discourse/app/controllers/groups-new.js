@@ -1,10 +1,10 @@
 import Controller from "@ember/controller";
-import I18n from "I18n";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 export function popupAutomaticMembershipAlert(group_id, email_domains) {
   if (!email_domains) {
@@ -37,6 +37,7 @@ export function popupAutomaticMembershipAlert(group_id, email_domains) {
 
 export default Controller.extend({
   dialog: service(),
+  router: service(),
   saving: null,
 
   @discourseComputed("model.ownerUsernames")
@@ -62,7 +63,7 @@ export default Controller.extend({
     group
       .create()
       .then(() => {
-        this.transitionToRoute("group.members", group.name);
+        this.router.transitionTo("group.members", group.name);
       })
       .catch(popupAjaxError)
       .finally(() => this.set("saving", false));

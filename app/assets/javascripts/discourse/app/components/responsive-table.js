@@ -1,6 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { bind } from "discourse-common/utils/decorators";
-import { tracked } from "@glimmer/tracking";
 
 export default class ResponsiveTable extends Component {
   @tracked lastScrollPosition = 0;

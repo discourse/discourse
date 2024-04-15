@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe SecondFactor::Actions::GrantAdmin do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:user)
 
   def cleanup_admin_confirmation_redis_keys
     keys = Discourse.redis.keys("admin-confirmation:*")
@@ -22,7 +22,7 @@ RSpec.describe SecondFactor::Actions::GrantAdmin do
 
   def create_instance(user, request = nil)
     request ||= create_request
-    SecondFactor::Actions::GrantAdmin.new(Guardian.new(user), request)
+    SecondFactor::Actions::GrantAdmin.new(Guardian.new(user), request, target_user: user)
   end
 
   describe "#no_second_factors_enabled!" do

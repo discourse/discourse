@@ -1,4 +1,7 @@
-import * as Utilities from "discourse/lib/utilities";
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
 import {
   allowsAttachments,
   allowsImages,
@@ -9,18 +12,14 @@ import {
   isImage,
   validateUploadedFiles,
 } from "discourse/lib/uploads";
-import I18n from "I18n";
-import User from "discourse/models/user";
-import sinon from "sinon";
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import I18n from "discourse-i18n";
 
 module("Unit | Utility | uploads", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
     this.siteSettings = getOwner(this).lookup("service:site-settings");
+    this.store = getOwner(this).lookup("service:store");
   });
 
   test("validateUploadedFiles", function (assert) {
@@ -53,7 +52,7 @@ module("Unit | Utility | uploads", function (hooks) {
 
     assert.notOk(
       validateUploadedFiles([{ name: "image.png" }], {
-        user: User.create(),
+        user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
       }),
       "the upload is not valid"
@@ -73,7 +72,7 @@ module("Unit | Utility | uploads", function (hooks) {
 
     assert.ok(
       validateUploadedFiles([{ name: "image.png" }], {
-        user: User.create(),
+        user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
       })
     );
@@ -85,7 +84,7 @@ module("Unit | Utility | uploads", function (hooks) {
 
     assert.ok(
       validateUploadedFiles([{ name: "image.png" }], {
-        user: User.create({ trust_level: 1 }),
+        user: this.store.createRecord("user", { trust_level: 1 }),
         siteSettings: this.siteSettings,
       })
     );
@@ -97,7 +96,7 @@ module("Unit | Utility | uploads", function (hooks) {
 
     assert.notOk(
       validateUploadedFiles([{ name: "roman.txt" }], {
-        user: User.create(),
+        user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
       })
     );
@@ -152,7 +151,7 @@ module("Unit | Utility | uploads", function (hooks) {
     sinon.stub(dialog, "alert");
     assert.notOk(
       validateUploadedFiles([{ name: "test.jpg" }], {
-        user: User.create(),
+        user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
       })
     );
@@ -168,7 +167,7 @@ module("Unit | Utility | uploads", function (hooks) {
     sinon.stub(dialog, "alert");
     assert.notOk(
       validateUploadedFiles([{ name: "test.jpg" }], {
-        user: User.create({ staff: true }),
+        user: this.store.createRecord("user", { staff: true }),
         siteSettings: this.siteSettings,
       })
     );
@@ -182,7 +181,7 @@ module("Unit | Utility | uploads", function (hooks) {
     this.siteSettings.authorized_extensions = "jpeg";
     sinon.stub(dialog, "alert");
 
-    let user = User.create({ moderator: true });
+    let user = this.store.createRecord("user", { moderator: true });
     assert.notOk(
       validateUploadedFiles(files, { user, siteSettings: this.siteSettings })
     );
@@ -216,7 +215,7 @@ module("Unit | Utility | uploads", function (hooks) {
   test("allows valid uploads to go through", function (assert) {
     sinon.stub(dialog, "alert");
 
-    let user = User.create({ trust_level: 1 });
+    let user = this.store.createRecord("user", { trust_level: 1 });
 
     // image
     let image = { name: "image.png", size: imageSize };
@@ -348,10 +347,53 @@ module("Unit | Utility | uploads", function (hooks) {
       "![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)"
     );
 
-    sinon.stub(Utilities, "isAppleDevice").returns(true);
+    const capabilities = getOwner(this).lookup("service:capabilities");
+    sinon.stub(capabilities, "isIOS").get(() => true);
     assert.strictEqual(
       testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
       "![image|100x200](/uploads/123/abcdef.ext)"
+    );
+  });
+
+  test("displayErrorForUpload - non-backup tar.gz file too large", function (assert) {
+    sinon.stub(dialog, "alert");
+    displayErrorForUpload(
+      {
+        jqXHR: {
+          status: 413,
+          responseJSON: {
+            message: I18n.t("post.errors.file_too_large_humanized"),
+          },
+        },
+      },
+      { max_attachment_size_kb: 4096, max_image_size_kb: 4096 },
+      "non-backup-tar-gz-file.tar.gz"
+    );
+    assert.ok(
+      dialog.alert.calledWith(
+        I18n.t("post.errors.file_too_large_humanized", {
+          max_size: I18n.toHumanSize(4096 * 1024),
+        })
+      ),
+      "the alert is called"
+    );
+  });
+
+  test("displayErrorForUpload - backup file too large", function (assert) {
+    sinon.stub(dialog, "alert");
+    displayErrorForUpload(
+      {
+        jqXHR: {
+          status: 413,
+          responseJSON: { message: I18n.t("post.errors.backup_too_large") },
+        },
+      },
+      { max_attachment_size_kb: 4096, max_image_size_kb: 4096 },
+      "backup-2023-09-07-092329-v20230728055813.tar.gz"
+    );
+    assert.ok(
+      dialog.alert.calledWith(I18n.t("post.errors.backup_too_large")),
+      "the alert is called"
     );
   });
 
@@ -390,7 +432,9 @@ module("Unit | Utility | uploads", function (hooks) {
       "test.png"
     );
     assert.ok(
-      dialog.alert.calledWith(I18n.t("post.errors.upload")),
+      dialog.alert.calledWith(
+        I18n.t("post.errors.upload", { file_name: "test.png" })
+      ),
       "the alert is called"
     );
   });

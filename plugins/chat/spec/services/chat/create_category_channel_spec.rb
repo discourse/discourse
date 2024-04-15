@@ -10,11 +10,34 @@ RSpec.describe Chat::CreateCategoryChannel do
     subject(:result) { described_class.call(params) }
 
     fab!(:current_user) { Fabricate(:admin) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
     let(:category_id) { category.id }
 
     let(:guardian) { Guardian.new(current_user) }
     let(:params) { { guardian: guardian, category_id: category_id, name: "cool channel" } }
+
+    it "can create several channels with empty slugs" do
+      SiteSetting.slug_generation_method = "none"
+      expect do
+        described_class.call(params.merge(name: "channel 1", slug: nil))
+      end.not_to raise_error
+      expect do
+        described_class.call(params.merge(name: "channel 2", slug: nil))
+      end.not_to raise_error
+    end
+
+    it "can create several channels with unicode names" do
+      expect do described_class.call(params.merge(name: "マイキ")) end.not_to raise_error
+      expect do described_class.call(params.merge(name: "境界")) end.not_to raise_error
+    end
+
+    context "when public channels are disabled" do
+      fab!(:current_user) { Fabricate(:user) }
+
+      before { SiteSetting.enable_public_channels = false }
+
+      it { is_expected.to fail_a_policy(:public_channels_enabled) }
+    end
 
     context "when the current user cannot make a channel" do
       fab!(:current_user) { Fabricate(:user) }
@@ -91,6 +114,29 @@ RSpec.describe Chat::CreateCategoryChannel do
               .expects(:enforce_automatic_channel_memberships)
               .once
             result
+          end
+        end
+
+        describe "threading_enabled" do
+          context "when true" do
+            it "sets threading_enabled to true" do
+              params[:threading_enabled] = true
+              expect(result.channel.threading_enabled).to eq(true)
+            end
+          end
+
+          context "when blank" do
+            it "sets threading_enabled to false" do
+              params[:threading_enabled] = nil
+              expect(result.channel.threading_enabled).to eq(false)
+            end
+          end
+
+          context "when false" do
+            it "sets threading_enabled to false" do
+              params[:threading_enabled] = false
+              expect(result.channel.threading_enabled).to eq(false)
+            end
           end
         end
       end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Create channel", type: :system, js: true do
+RSpec.describe "Create channel", type: :system do
   fab!(:category_1) { Fabricate(:category) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -30,6 +30,14 @@ RSpec.describe "Create channel", type: :system, js: true do
         channel_modal.select_category(category_1)
 
         expect(channel_modal).to have_create_hint(Group[:everyone].name)
+      end
+
+      it "shows threading toggle" do
+        chat_page.visit_browse
+        chat_page.new_channel_button.click
+        channel_modal.select_category(category_1)
+
+        expect(channel_modal).to have_threading_toggle
       end
 
       it "does not override channel name if that was already specified" do
@@ -138,7 +146,7 @@ RSpec.describe "Create channel", type: :system, js: true do
         context "for a public category" do
           before do
             channel_modal.select_category(category_1)
-            find(".auto-join-channel__label").click
+            find(".-auto-join .chat-modal-create-channel__label").click
             channel_modal.click_primary_button
           end
 
@@ -162,7 +170,7 @@ RSpec.describe "Create channel", type: :system, js: true do
 
           it "does nothing if no is clicked" do
             dialog.click_no
-            expect(page).to have_css(".create-channel-modal")
+            expect(page).to have_css(".chat-modal-create-channel")
             expect(Chat::Channel.exists?(chatable_id: category_1.id)).to eq(false)
           end
         end
@@ -175,7 +183,7 @@ RSpec.describe "Create channel", type: :system, js: true do
           before do
             group_1.add(user_1)
             channel_modal.select_category(private_category)
-            find(".auto-join-channel__label").click
+            find(".-auto-join .chat-modal-create-channel__label").click
             channel_modal.click_primary_button
           end
 

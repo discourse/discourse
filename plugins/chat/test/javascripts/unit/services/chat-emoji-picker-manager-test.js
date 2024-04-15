@@ -1,18 +1,21 @@
-import { module, test } from "qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
-import pretender from "discourse/tests/helpers/create-pretender";
+import { getOwner } from "@ember/application";
 import { settled } from "@ember/test-helpers";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import pretender from "discourse/tests/helpers/create-pretender";
 
-function emojisReponse() {
+function emojisResponse() {
   return { favorites: [{ name: "sad" }] };
 }
 
 module(
   "Discourse Chat | Unit | Service | chat-emoji-picker-manager",
   function (hooks) {
+    setupTest(hooks);
+
     hooks.beforeEach(function () {
       pretender.get("/chat/emojis.json", () => {
-        return [200, {}, emojisReponse()];
+        return [200, {}, emojisResponse()];
       });
 
       this.manager = getOwner(this).lookup("service:chat-emoji-picker-manager");
@@ -58,7 +61,7 @@ module(
 
       await settled();
 
-      assert.deepEqual(this.manager.emojis, emojisReponse());
+      assert.deepEqual(this.manager.emojis, emojisResponse());
       assert.strictEqual(this.manager.loading, false);
     });
 

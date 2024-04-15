@@ -1,14 +1,23 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import DiscourseURL from "discourse/lib/url";
-import FilterModeMixin from "discourse/mixins/filter-mode";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { next } from "@ember/runloop";
+import $ from "jquery";
+import { filterTypeForMode } from "discourse/lib/filter-mode";
+import DiscourseURL from "discourse/lib/url";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
-export default Component.extend(FilterModeMixin, {
+export default Component.extend({
   tagName: "ul",
   classNameBindings: [":nav", ":nav-pills"],
   elementId: "navigation-bar",
+  filterMode: tracked(),
+
+  @dependentKeyCompat
+  get filterType() {
+    return filterTypeForMode(this.filterMode);
+  },
 
   init() {
     this._super(...arguments);

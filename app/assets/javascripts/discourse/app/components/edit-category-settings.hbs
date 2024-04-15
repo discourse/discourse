@@ -4,12 +4,13 @@
       <label for="category-position">
         {{i18n "category.position"}}
       </label>
-      <NumberField
-        @number={{this.category.position}}
-        @id="category-position"
-        @class="position-input"
-        @type="number"
-        @min="0"
+      <input
+        {{on "input" (with-event-value (fn (mut this.category.position)))}}
+        value={{this.category.position}}
+        type="number"
+        min="0"
+        id="category-position"
+        class="position-input"
       />
     </section>
   {{/if}}
@@ -35,11 +36,15 @@
         {{i18n "category.num_featured_topics"}}
       {{/if}}
     </label>
-    <NumberField
-      @number={{this.category.num_featured_topics}}
-      @id="category-number-featured-topics"
-      @type="number"
-      @min="1"
+    <input
+      {{on
+        "input"
+        (with-event-value (fn (mut this.category.num_featured_topics)))
+      }}
+      value={{this.category.num_featured_topics}}
+      type="number"
+      min="1"
+      id="category-number-featured-topics"
     />
   </section>
 
@@ -53,7 +58,7 @@
         @id="category-search-priority"
         @content={{this.searchPrioritiesOptions}}
         @value={{this.category.search_priority}}
-        @onChange={{action (mut this.category.search_priority)}}
+        @onChange={{fn (mut this.category.search_priority)}}
         @options={{hash placementStrategy="absolute"}}
       />
     </div>
@@ -61,7 +66,7 @@
 
   {{#if this.siteSettings.enable_badges}}
     <section class="field allow-badges">
-      <label>
+      <label class="checkbox-label">
         <Input @type="checkbox" @checked={{this.category.allow_badges}} />
         {{i18n "category.allow_badges_label"}}
       </label>
@@ -83,7 +88,7 @@
   {{/if}}
 
   <section class="field navigate-to-first-post-after-read">
-    <label>
+    <label class="checkbox-label">
       <Input
         @type="checkbox"
         @checked={{this.category.navigate_to_first_post_after_read}}
@@ -93,14 +98,14 @@
   </section>
 
   <section class="field all-topics-wiki">
-    <label>
+    <label class="checkbox-label">
       <Input @type="checkbox" @checked={{this.category.all_topics_wiki}} />
       {{i18n "category.all_topics_wiki"}}
     </label>
   </section>
 
   <section class="field allow-unlimited-owner-edits-on-first-post">
-    <label>
+    <label class="checkbox-label">
       <Input
         @type="checkbox"
         @checked={{this.category.allow_unlimited_owner_edits_on_first_post}}
@@ -125,20 +130,20 @@
   {{/if}}
 
   <section class="field require-topic-approval">
-    <label>
+    <label class="checkbox-label">
       <Input
         @type="checkbox"
-        @checked={{this.category.custom_fields.require_topic_approval}}
+        @checked={{this.category.category_setting.require_topic_approval}}
       />
       {{i18n "category.require_topic_approval"}}
     </label>
   </section>
 
   <section class="field require-reply-approval">
-    <label>
+    <label class="checkbox-label">
       <Input
         @type="checkbox"
-        @checked={{this.category.custom_fields.require_reply_approval}}
+        @checked={{this.category.category_setting.require_reply_approval}}
       />
       {{i18n "category.require_reply_approval"}}
     </label>
@@ -172,7 +177,7 @@
           @onChange={{action "onAutoCloseDurationChange"}}
         />
       </div>
-      <label>
+      <label class="checkbox-label">
         <Input
           @type="checkbox"
           @checked={{this.category.auto_close_based_on_last_post}}
@@ -186,11 +191,17 @@
     <label for="category-number-daily-bump">
       {{i18n "category.num_auto_bump_daily"}}
     </label>
-    <NumberField
-      @number={{this.category.custom_fields.num_auto_bump_daily}}
-      @id="category-number-daily-bump"
-      @type="number"
-      @min="0"
+    <input
+      {{on
+        "input"
+        (with-event-value
+          (fn (mut this.category.category_setting.num_auto_bump_daily))
+        )
+      }}
+      value={{this.category.category_setting.num_auto_bump_daily}}
+      type="number"
+      min="0"
+      id="category-number-daily-bump"
     />
   </section>
 
@@ -198,11 +209,17 @@
     <label for="category-auto-bump-cooldown-days">
       {{i18n "category.auto_bump_cooldown_days"}}
     </label>
-    <NumberField
-      @number={{this.category.category_setting.auto_bump_cooldown_days}}
-      @id="category-auto-bump-cooldown-days"
-      @type="number"
-      @min="0"
+    <input
+      {{on
+        "input"
+        (with-event-value
+          (fn (mut this.category.category_setting.auto_bump_cooldown_days))
+        )
+      }}
+      value={{this.category.category_setting.auto_bump_cooldown_days}}
+      type="number"
+      min="0"
+      id="category-auto-bump-cooldown-days"
     />
   </section>
 </section>
@@ -250,7 +267,7 @@
         @content={{this.availableSorts}}
         @value={{this.category.sort_order}}
         @options={{hash none="category.sort_options.default"}}
-        @onChange={{action (mut this.category.sort_order)}}
+        @onChange={{fn (mut this.category.sort_order)}}
       />
       {{#unless this.isDefaultSortOrder}}
         <ComboBox
@@ -261,7 +278,7 @@
             none="category.sort_options.default"
             placementStrategy="absolute"
           }}
-          @onChange={{action (mut this.category.sort_ascending)}}
+          @onChange={{fn (mut this.category.sort_ascending)}}
         />
       {{/unless}}
     </div>
@@ -283,7 +300,7 @@
 
   {{#if this.isParentCategory}}
     <section class="field show-subcategory-list-field">
-      <label>
+      <label class="checkbox-label">
         <Input
           @type="checkbox"
           @checked={{this.category.show_subcategory_list}}
@@ -330,17 +347,14 @@
       </label>
       <TextField
         @id="category-email-in"
-        @class="email-in"
         @value={{this.category.email_in}}
+        class="email-in"
       />
-      <span>
-        {{d-icon "info-circle"}}
-        <DTooltip>{{i18n "category.email_in_tooltip"}}</DTooltip>
-      </span>
+
     </section>
 
     <section class="field email-in-allow-strangers">
-      <label>
+      <label class="checkbox-label">
         <Input
           @type="checkbox"
           @checked={{this.category.email_in_allow_strangers}}
@@ -350,7 +364,7 @@
     </section>
 
     <section class="field mailinglist-mirror">
-      <label>
+      <label class="checkbox-label">
         <Input @type="checkbox" @checked={{this.category.mailinglist_mirror}} />
         {{i18n "category.mailinglist_mirror"}}
       </label>

@@ -3,9 +3,9 @@
 
 RSpec.describe "spammers on same IP" do
   let(:ip_address) { "182.189.119.174" }
-  let!(:spammer1) { Fabricate(:user, ip_address: ip_address) }
-  let!(:spammer2) { Fabricate(:user, ip_address: ip_address) }
-  let(:spammer3) { Fabricate(:user, ip_address: ip_address) }
+  let!(:spammer1) { Fabricate(:user, ip_address: ip_address, trust_level: TrustLevel[0]) }
+  let!(:spammer2) { Fabricate(:user, ip_address: ip_address, trust_level: TrustLevel[0]) }
+  let(:spammer3) { Fabricate(:user, ip_address: ip_address, trust_level: TrustLevel[0]) }
 
   context "when flag_sockpuppets is disabled" do
     let!(:first_post) { create_post(user: spammer1) }

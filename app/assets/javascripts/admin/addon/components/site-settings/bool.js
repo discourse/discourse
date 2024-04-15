@@ -1,5 +1,5 @@
-import { computed } from "@ember/object";
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 
 export default class Bool extends Component {
@@ -13,6 +13,5 @@ export default class Bool extends Component {
 
   set enabled(value) {
     this.set("value", value ? "true" : "false");
-    return value;
   }
 }

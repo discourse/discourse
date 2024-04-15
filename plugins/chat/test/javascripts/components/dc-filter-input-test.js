@@ -1,8 +1,8 @@
+import { fillIn, render, triggerEvent } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
-import { fillIn, render, triggerEvent } from "@ember/test-helpers";
-import { module, test } from "qunit";
 
 module("Discourse Chat | Component | dc-filter-input", function (hooks) {
   setupRenderingTest(hooks);
@@ -19,8 +19,8 @@ module("Discourse Chat | Component | dc-filter-input", function (hooks) {
     assert.true(exists(".d-icon-bell.-right"));
   });
 
-  test("Class attribute", async function (assert) {
-    await render(hbs`<DcFilterInput @class="foo" />`);
+  test("containerClass argument", async function (assert) {
+    await render(hbs`<DcFilterInput @containerClass="foo" />`);
 
     assert.true(exists(".dc-filter-input-container.foo"));
   });

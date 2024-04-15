@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 export default class SidebarHamburgerDropdown extends Component {
   @service appEvents;
   @service currentUser;
   @service site;
   @service siteSettings;
+  @service sidebarState;
 
   @action
   triggerRenderedAppEvent() {

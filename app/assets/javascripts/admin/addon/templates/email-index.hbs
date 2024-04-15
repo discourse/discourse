@@ -26,11 +26,11 @@
             @placeholderKey="admin.email.test_email_address"
           />
           <DButton
-            @class="btn-primary"
-            @action={{action "sendTestEmail"}}
+            @action={{this.sendTestEmail}}
             @disabled={{this.sendTestEmailDisabled}}
             @label="admin.email.send_test"
-            @type="submit"
+            type="submit"
+            class="btn-primary"
           />
           {{#if this.sentTestEmailMessage}}
             <span class="result-message">{{this.sentTestEmailMessage}}</span>

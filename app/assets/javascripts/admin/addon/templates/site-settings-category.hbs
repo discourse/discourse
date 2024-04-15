@@ -1,5 +1,5 @@
 {{#if this.filteredContent}}
-  <DSection @class="form-horizontal settings">
+  <section class="form-horizontal settings">
     {{#each this.filteredContent as |setting|}}
       <SiteSetting
         @setting={{setting}}
@@ -12,7 +12,7 @@
           count=this.category.maxResults
         }}</p>
     {{/if}}
-  </DSection>
+  </section>
 {{else}}
   <br />
   {{i18n "admin.site_settings.no_results"}}

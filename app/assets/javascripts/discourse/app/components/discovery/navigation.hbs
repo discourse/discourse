@@ -1,0 +1,80 @@
+<AddCategoryTagClasses
+  @category={{@category}}
+  @tags={{if @tag (array @tag.id)}}
+/>
+
+{{#if @category}}
+  <PluginOutlet
+    @name="above-category-heading"
+    @outletArgs={{hash category=@category tag=@tag}}
+  />
+
+  <section class="category-heading">
+    {{#if @category.uploaded_logo.url}}
+      <CategoryLogo @category={{@category}} />
+      {{#if @category.description}}
+        <p>{{dir-span @category.description htmlSafe="true"}}</p>
+      {{/if}}
+    {{/if}}
+
+    <span>
+      <PluginOutlet
+        @name="category-heading"
+        @connectorTagName="div"
+        @outletArgs={{hash category=@category tag=@tag}}
+      />
+    </span>
+  </section>
+{{/if}}
+
+{{body-class this.bodyClass}}
+
+<section
+  class={{concat-class
+    "navigation-container"
+    (if @category "category-navigation")
+  }}
+>
+  <DNavigation
+    @category={{@category}}
+    @tag={{@tag}}
+    @additionalTags={{@additionalTags}}
+    @filterMode={{this.filterMode}}
+    @noSubcategories={{@noSubcategories}}
+    @canCreateTopic={{this.canCreateTopic}}
+    @canCreateTopicOnTag={{@canCreateTopicOnTag}}
+    @createTopic={{@createTopic}}
+    @createTopicDisabled={{@createTopicDisabled}}
+    @hasDraft={{this.currentUser.has_topic_draft}}
+    @editCategory={{this.editCategory}}
+    @showCategoryAdmin={{@showCategoryAdmin}}
+    @createCategory={{this.createCategory}}
+    @reorderCategories={{this.reorderCategories}}
+    @canBulkSelect={{@canBulkSelect}}
+    @bulkSelectHelper={{@bulkSelectHelper}}
+    @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
+    @toggleInfo={{@toggleTagInfo}}
+    @tagNotification={{@tagNotification}}
+    @model={{@model}}
+    @showDismissRead={{@showDismissRead}}
+    @showResetNew={{@showResetNew}}
+    @dismissRead={{@dismissRead}}
+    @resetNew={{@resetNew}}
+  />
+
+  {{#if @category}}
+    <PluginOutlet
+      @name="category-navigation"
+      @connectorTagName="div"
+      @outletArgs={{hash category=@category tag=@tag}}
+    />
+  {{/if}}
+
+  {{#if @tag}}
+    <PluginOutlet
+      @name="tag-navigation"
+      @connectorTagName="div"
+      @outletArgs={{hash category=@category tag=@tag}}
+    />
+  {{/if}}
+</section>

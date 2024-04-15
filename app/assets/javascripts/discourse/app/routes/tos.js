@@ -1,9 +1,8 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
 import StaticPage from "discourse/models/static-page";
-import I18n from "I18n";
-import { action } from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "discourse-i18n";
 
 export default class TosRoute extends DiscourseRoute {
   @service siteSettings;
@@ -26,11 +25,5 @@ export default class TosRoute extends DiscourseRoute {
 
   titleToken() {
     return I18n.t("tos");
-  }
-
-  @action
-  didTransition() {
-    this.controllerFor("application").set("showFooter", true);
-    return true;
   }
 }

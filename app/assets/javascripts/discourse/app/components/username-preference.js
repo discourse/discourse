@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import { action } from "@ember/object";
 import { empty, or } from "@ember/object/computed";
-import { setting } from "discourse/lib/computed";
-import I18n from "I18n";
-import User from "discourse/models/user";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
+import { setting } from "discourse/lib/computed";
+import DiscourseURL, { userPath } from "discourse/lib/url";
+import User from "discourse/models/user";
+import I18n from "discourse-i18n";
 
 export default class UsernamePreference extends Component {
   @service siteSettings;

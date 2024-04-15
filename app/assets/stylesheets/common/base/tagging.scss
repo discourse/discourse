@@ -1,3 +1,7 @@
+.container.tags-index {
+  background: var(--d-content-background);
+}
+
 .topic-title-outlet.choose-tags {
   margin-left: 25px;
   margin-top: 3px;
@@ -34,10 +38,12 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  gap: 0.5em;
 
   .topic-header-extra {
     display: inline-flex;
     align-items: center;
+    gap: 0.5em;
   }
 
   .badge-wrapper {
@@ -123,9 +129,6 @@
   .discourse-tags {
     font-size: var(--font-down-1);
   }
-  .discourse-tags + .topic-featured-link {
-    margin-left: 0.5em;
-  }
 }
 
 .discourse-tags {
@@ -150,7 +153,6 @@ header .discourse-tag {
 
 .list-tags {
   display: inline-block;
-  margin-right: 3px;
   font-size: var(--font-down-1);
 }
 
@@ -210,7 +212,7 @@ header .discourse-tag {
     grid-area: header;
     background: var(--primary-very-low);
     padding: 20px;
-    margin-bottom: 1em;
+    margin: 1em 0;
   }
   .tag-groups-sidebar {
     grid-area: sidebar;
@@ -258,7 +260,6 @@ header .discourse-tag {
         "empty dropdown";
       input {
         grid-area: input;
-        margin-top: 4px;
       }
       label {
         grid-area: label;
@@ -315,31 +316,29 @@ header .discourse-tag {
 }
 
 section.tag-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
   margin: 1em 0;
   padding: 2em;
   border: 1px solid var(--primary-low);
 
-  .field {
-    margin: 0 0 0.5em;
-  }
-
-  .btn {
-    margin-right: 0.5em;
-  }
-
   .edit-tag-wrapper {
     display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 1em;
-    #edit-name {
-      flex: 1 1 auto;
-      margin-right: 0.5em;
-    }
+    flex-direction: column;
+
+    #edit-name,
     #edit-description {
-      flex: 10 1 auto;
+      width: 100%;
+      margin-bottom: 0.5em;
+    }
+
+    #edit-description {
+      height: 120px;
     }
     .edit-controls {
-      width: 100%;
+      display: flex;
+      gap: 0.5em;
     }
   }
 
@@ -379,34 +378,25 @@ section.tag-info {
     }
   }
 
-  .tag-description-wrapper {
-    margin-bottom: 1em;
-  }
-
-  .tag-associations {
-    margin-bottom: 1em;
-  }
-
   .tag-actions {
-    margin-top: 2em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  .tag-associations:empty {
+    display: none;
   }
 
   .add-synonyms {
-    margin-top: 1em;
-    div {
+    &__controls {
       display: flex;
-    }
-    .ok {
-      margin-left: 0.5em;
-      display: none;
-    }
-    .has-selection + .ok {
-      display: flex;
+      gap: 0.5em;
     }
   }
 
   .tag-list {
-    margin: 0.5em 0 1em;
+    margin: 0.5em 0 0;
     padding: 0;
     border: none;
     a {

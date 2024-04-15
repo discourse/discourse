@@ -1,6 +1,7 @@
 import Pretender from "pretender";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
+import { cloneJSON } from "discourse-common/lib/object";
 
 export function parsePostData(query) {
   const result = {};
@@ -81,17 +82,18 @@ export function applyDefaultHandlers(pretender) {
   );
 
   pretender.get("/latest.json", () => {
-    const json = fixturesByUrl["/latest.json"];
+    const json = cloneJSON(fixturesByUrl["/latest.json"]);
 
     if (loggedIn()) {
       // Stuff to let us post
       json.topic_list.can_create_topic = true;
     }
+
     return response(json);
   });
 
   pretender.get("/c/bug/1/l/latest.json", () => {
-    const json = fixturesByUrl["/c/bug/1/l/latest.json"];
+    const json = cloneJSON(fixturesByUrl["/c/bug/1/l/latest.json"]);
 
     if (loggedIn()) {
       // Stuff to let us post
@@ -104,8 +106,20 @@ export function applyDefaultHandlers(pretender) {
     return response({
       tags: [
         { id: "eviltrout", count: 1 },
-        { id: "planned", text: "planned", count: 7, pm_only: false },
-        { id: "private", text: "private", count: 0, pm_only: true },
+        {
+          id: "planned",
+          name: "planned",
+          text: "planned",
+          count: 7,
+          pm_only: false,
+        },
+        {
+          id: "private",
+          name: "private",
+          text: "private",
+          count: 0,
+          pm_only: true,
+        },
       ],
       extras: {
         tag_groups: [
@@ -113,24 +127,60 @@ export function applyDefaultHandlers(pretender) {
             id: 2,
             name: "Ford Cars",
             tags: [
-              { id: "Escort", text: "Escort", count: 1, pm_only: false },
-              { id: "focus", text: "focus", count: 3, pm_only: false },
+              {
+                id: "Escort",
+                name: "Escort",
+                text: "Escort",
+                count: 1,
+                pm_only: false,
+              },
+              {
+                id: "focus",
+                name: "focus",
+                text: "focus",
+                count: 3,
+                pm_only: false,
+              },
             ],
           },
           {
             id: 1,
             name: "Honda Cars",
             tags: [
-              { id: "civic", text: "civic", count: 4, pm_only: false },
-              { id: "accord", text: "accord", count: 2, pm_only: false },
+              {
+                id: "civic",
+                name: "civic",
+                text: "civic",
+                count: 4,
+                pm_only: false,
+              },
+              {
+                id: "accord",
+                name: "accord",
+                text: "accord",
+                count: 2,
+                pm_only: false,
+              },
             ],
           },
           {
             id: 1,
             name: "Makes",
             tags: [
-              { id: "ford", text: "ford", count: 5, pm_only: false },
-              { id: "honda", text: "honda", count: 6, pm_only: false },
+              {
+                id: "ford",
+                name: "ford",
+                text: "ford",
+                count: 5,
+                pm_only: false,
+              },
+              {
+                id: "honda",
+                name: "honda",
+                text: "honda",
+                count: 6,
+                pm_only: false,
+              },
             ],
           },
         ],
@@ -188,7 +238,7 @@ export function applyDefaultHandlers(pretender) {
   );
 
   pretender.get("/u/eviltrout.json", () => {
-    const json = fixturesByUrl["/u/eviltrout.json"];
+    const json = cloneJSON(fixturesByUrl["/u/eviltrout.json"]);
     json.user.can_edit = loggedIn();
     return response(json);
   });
@@ -224,7 +274,89 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/u/eviltrout/invited.json", () => {
     return response({
-      invites: [],
+      invites: [
+        {
+          id: 8,
+          invite_key: "hMFT8G1oKP",
+          link: "http://localhost:3000/invites/hMFT8G1oKP",
+          email: "steak@cat.com",
+          domain: null,
+          emailed: false,
+          can_delete_invite: true,
+          custom_message: null,
+          created_at: "2023-06-01T04:47:13.195Z",
+          updated_at: "2023-06-01T04:47:13.195Z",
+          expires_at: "2023-08-30T04:47:00.000Z",
+          expired: false,
+          max_redemptions_allowed: 10,
+          topics: [],
+          groups: [],
+        },
+        {
+          id: 9,
+          invite_key: "hMFT8G1WHA",
+          link: "http://localhost:3000/invites/hMFT8G1WHA",
+          email: "tomtom@cat.com",
+          domain: null,
+          emailed: false,
+          can_delete_invite: false,
+          custom_message: null,
+          created_at: "2023-06-01T04:47:13.195Z",
+          updated_at: "2023-06-01T04:47:13.195Z",
+          expires_at: "2023-08-30T04:47:00.000Z",
+          expired: false,
+          topics: [],
+          groups: [],
+        },
+        {
+          id: 10,
+          invite_key: "hMFT8G1oKP",
+          link: "http://localhost:3000/invites/hMFT8G1oKP",
+          email: null,
+          domain: "cat.com",
+          redemption_count: 0,
+          emailed: false,
+          can_delete_invite: true,
+          custom_message: null,
+          created_at: "2023-06-01T04:47:13.195Z",
+          updated_at: "2023-06-01T04:47:13.195Z",
+          expires_at: "2023-08-30T04:47:00.000Z",
+          expired: false,
+          max_redemptions_allowed: 10,
+          topics: [
+            {
+              id: 5,
+              title: "Welcome to Discourse! :wave:",
+              fancy_title: "Welcome to Discourse! :wave:",
+              slug: "welcome-to-discourse",
+              posts_count: 1,
+            },
+          ],
+          groups: [
+            {
+              id: 41,
+              automatic: false,
+              name: "discourse",
+              user_count: 0,
+              alias_level: 0,
+              visible: true,
+              automatic_membership_email_domains: "",
+              primary_group: false,
+              title: null,
+              grant_trust_level: null,
+              has_messages: false,
+              flair_url: null,
+              flair_bg_color: null,
+              flair_color: null,
+              bio_raw: "",
+              bio_cooked: null,
+              public_admission: true,
+              allow_membership_requests: false,
+              full_name: "Awesome Team",
+            },
+          ],
+        },
+      ],
       can_see_invite_details: true,
       counts: {
         pending: 0,
@@ -275,7 +407,11 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/clicks/track", success);
 
   pretender.get("/search", (request) => {
-    if (request.queryParams.q === "discourse") {
+    if (
+      request.queryParams.q === "discourse" ||
+      request.queryParams.q === "discourse order:latest" ||
+      request.queryParams.q === "discourse order:likes"
+    ) {
       return response(fixturesByUrl["/search.json"]);
     } else if (request.queryParams.q === "discourse visited") {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
@@ -377,6 +513,12 @@ export function applyDefaultHandlers(pretender) {
 
     if (category.email_in === "duplicate@example.com") {
       return response(422, { errors: ["duplicate email"] });
+    }
+
+    if (category.parent_category_id === 1002) {
+      return response(422, {
+        errors: ["subcategory nested under another subcategory"],
+      });
     }
 
     return response({ category });
@@ -1156,6 +1298,10 @@ export function applyDefaultHandlers(pretender) {
   );
 
   pretender.get("/c/:id/visible_groups.json", () => response({ groups: [] }));
+
+  pretender.get("/session/passkey/challenge.json", () =>
+    response({ challenge: "123" })
+  );
 }
 
 export function resetPretender() {

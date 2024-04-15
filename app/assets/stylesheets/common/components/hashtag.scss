@@ -14,7 +14,7 @@ a.hashtag {
   }
 }
 
-a.hashtag-cooked {
+.hashtag-cooked {
   @include mention;
 
   &:visited,
@@ -22,10 +22,17 @@ a.hashtag-cooked {
     color: var(--primary);
   }
 
-  .d-icon {
-    color: var(--primary-high);
-    font-size: var(--font-down-1);
-    margin: 0 0.2em 0 0.1em;
+  .hashtag-icon-placeholder {
+    width: 0.72em;
+    height: 0.72em;
+    display: inline-block;
+    color: var(--primary-medium);
+  }
+
+  .d-icon,
+  .hashtag-icon-placeholder {
+    font-size: var(--font-down-2);
+    margin: 0 0.3em 0 0;
   }
 
   img.emoji {
@@ -40,9 +47,10 @@ a.hashtag-cooked {
 
   .hashtag-category-badge {
     flex: 0 0 auto;
-    width: 9px;
-    height: 9px;
-    margin-right: 5px;
+    width: 0.72em;
+    height: 0.72em;
+    margin-right: 0.25em;
+    margin-left: 0.1em;
     display: inline-block;
   }
 }
@@ -50,7 +58,7 @@ a.hashtag-cooked {
 .hashtag-autocomplete {
   max-height: 13.5em;
   overflow-y: auto;
-  box-shadow: shadow("dropdown-lite");
+  box-shadow: var(--shadow-dropdown);
   border-radius: 8px;
 
   &__fadeout {

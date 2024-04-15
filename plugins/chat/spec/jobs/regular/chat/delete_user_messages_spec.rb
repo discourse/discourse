@@ -2,12 +2,14 @@
 
 RSpec.describe Jobs::Chat::DeleteUserMessages do
   describe "#execute" do
+    subject(:execute) { described_class.new.execute(user_id: user_1) }
+
     fab!(:user_1) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:chat_channel) }
     fab!(:chat_message) { Fabricate(:chat_message, chat_channel: channel, user: user_1) }
 
     it "deletes messages from the user" do
-      subject.execute(user_id: user_1)
+      execute
 
       expect { chat_message.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
@@ -16,7 +18,7 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
       user_2 = Fabricate(:user)
       user_2_message = Fabricate(:chat_message, chat_channel: channel, user: user_2)
 
-      subject.execute(user_id: user_1)
+      execute
 
       expect(user_2_message.reload).to be_present
     end
@@ -24,7 +26,7 @@ RSpec.describe Jobs::Chat::DeleteUserMessages do
     it "deletes trashed messages" do
       chat_message.trash!
 
-      subject.execute(user_id: user_1)
+      execute
 
       expect(Chat::Message.with_deleted.where(id: chat_message.id)).to be_empty
     end

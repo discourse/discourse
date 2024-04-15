@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { inject as service } from "@ember/service";
+import { getOwner } from "@ember/application";
 import EmberObject, { computed } from "@ember/object";
+import { service } from "@ember/service";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 
 class TestClass extends EmberObject {
   @service siteSettings;

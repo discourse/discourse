@@ -6,7 +6,9 @@
 
 ja:
   site_settings:
-    chat_enabled: "チャットプラグインを有効にします。"
+    chat_separate_sidebar_mode: "フォーラムとチャットに個別のサイドバーモードを表示します。"
+    chat_enabled: "チャットを有効にする。"
+    enable_public_channels: "カテゴリに基づいて公開チャンネルを有効にします。"
     chat_allowed_groups: "これらのグループのユーザーがチャットできます。スタッフはいつでもチャットにアクセスできることに注意してください。"
     chat_channel_retention_days: "通常のチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
     chat_dm_retention_days: "パーソナルチャットチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
@@ -26,24 +28,47 @@ ja:
     max_mentions_per_chat_message: "ユーザーがチャットメッセージで @name 通知を行える最大回数。"
     chat_max_direct_message_users: "ユーザーは、新しいダイレクトメッセージを作成する際に、この数を超えるユーザーを追加できません。自分宛のメッセージのみを許可する場合は 0 に設定します。スタッフはこの設定から除外されます。"
     chat_allow_archiving_channels: "チャンネルを閉じる時に、スタッフがメッセージをトピックにアーカイブすることを許可します。"
+    chat_editing_grace_period: "チャットを送信してから (n) 秒間は、チャットメッセージを編集しても (編集済み) タグは表示されません。"
+    chat_editing_grace_period_max_diff_low_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 0 と 1)。"
+    chat_editing_grace_period_max_diff_high_trust: "チャットの編集猶予期間で変更が許可される最大文字数。これを超える変更が行われた場合は、チャットメッセージに (編集済み) タグが表示されます (信頼レベル 2 以上)。"
     errors:
       chat_default_channel: "デフォルトのチャットチャンネルは公開チャンネルである必要があります。"
       direct_message_enabled_groups_invalid: "この設定には、少なくとも 1 つのグループを指定する必要があります。スタッフ以外がダイレクトメッセージを送れないようにするには、スタッフグループを選択します。"
       chat_upload_not_allowed_secure_uploads: "安全なアップロードのサイト設定が有効でない場合、チャットのアップロードは行えません。"
   system_messages:
+    private_channel_title: "チャンネル %{id}"
     chat_channel_archive_complete:
       title: "チャットチャンネルのアーカイブ完了"
       subject_template: "チャットチャンネルのアーカイブが正常に完了しました"
+      text_body_template: |
+        チャットチャンネル %{channel_hashtag_or_name} のアーカイブが正常に完了しました。メッセージはトピック [%{topic_title}](%{topic_url}) にコピーされました。
     chat_channel_archive_failed:
       title: "チャットチャンネルのアーカイブ失敗"
       subject_template: "チャットチャンネルのアーカイブに失敗しました"
+      text_body_template: |
+        チャットチャンネル %{channel_hashtag_or_name} のアーカイブに失敗しました。%{messages_archived} 件のメッセージがアーカイブされました。部分的にアーカイブされたメッセージは、トピック [%{topic_title}](%{topic_url}) にコピーされました。%{channel_url} よりチャンネルにアクセスして、再試行してください。
     chat_channel_archive_failed_no_topic:
       title: "チャットチャンネルのアーカイブ失敗"
       subject_template: "チャットチャンネルのアーカイブに失敗しました"
+      text_body_template: |
+        チャットチャンネル %{channel_hashtag_or_name} のアーカイブに失敗しました。アーカイブされたメッセージはありません。次の理由により、トピックは正常に作成されませんでした:
+
+          %{topic_validation_errors}
+
+        %{channel_url} からチャンネルにアクセスして再試行してください。
   chat:
     deleted_chat_username: 削除済み
     errors:
+      users_cant_be_added_to_channel: "このチャンネルにはユーザーを追加できません。"
       channel_exists_for_category: "このカテゴリと名前のチャンネルはすでに存在します"
+      channel_new_message_disallowed:
+        archived: "チャンネルはアーカイブされているため、新しいメッセージを送信できません"
+        closed: "チャンネルは閉鎖されているため、新しいメッセージを送信できません"
+        read_only: "チャンネルは読み取り専用であるため、新しいメッセージを送信できません"
+      channel_modify_message_disallowed:
+        archived: "チャンネルはアーカイブされているため、メッセージを編集または削除できません"
+        closed: "チャンネルは閉鎖されているため、メッセージを編集または削除できません"
+        read_only: "チャンネルは読み取り専用であるため、メッセージを編集または削除できません"
       user_cannot_send_message: "現在、メッセージを送信できません。"
       rate_limit_exceeded: "30 秒間で送信できるチャットメッセージの件数制限を超えました"
       auto_silence_from_flags: "ユーザーを投稿禁止にするのに十分なスコアで通報されたチャットメッセージ。"
@@ -54,6 +79,7 @@ ja:
         other: "メッセージが短すぎます。最低 %{count} 文字が必要です。"
       message_too_long:
         other: "メッセージが長すぎます。メッセージは最大 %{count} 文字までです。"
+      draft_too_long: "下書きが長すぎます。"
       max_reactions_limit_reached: "このメッセージでは、新しいリアクションは許可されていません。"
       message_move_invalid_channel: "移動元と移動先のチャンネルは公開チャンネルである必要があります。"
       message_move_no_messages_found: "指定されたメッセージ ID を持つメッセージは見つかりませんでした。"
@@ -64,8 +90,12 @@ ja:
       actor_disallowed_dms: "ユーザーがあなたにプライベートメッセージやダイレクトメッセージを送信できないように選択しているため、新しいダイレクトメッセージを作成できません。"
       actor_preventing_target_user_from_dm: "%{username} があなたにプライベートメッセージやダイレクトメッセージを送信できないように選択しているため、新しいダイレクトメッセージを作成できません。"
       user_cannot_send_direct_messages: "ダイレクトメッセージを送信できません。"
+      over_chat_max_direct_message_users_allow_self: "自分自身へのダイレクトメッセージのみを作成できます。"
       over_chat_max_direct_message_users:
         other: "%{count} 人を超えるユーザーを含むダイレクトメッセージを作成できません。"
+      original_message_not_found: "返信しようとしているメッセージの先祖が見つからないか、削除されています。"
+      thread_invalid_for_channel: "スレッドは指定されたチャンネルの一部ではありません。"
+      thread_does_not_match_parent: "スレッドは親メッセージに一致しません。"
     reviewables:
       message_already_handled: "ありがとうございます。ただ、このメッセージはすでにレビュー済みで、通報の必要がないと判断されています。"
       actions:
@@ -90,26 +120,49 @@ ja:
           title: "メッセージを削除"
           description: "ユーザーが閲覧できないようにメッセージを削除します。"
         delete_and_agree:
-          title: "メッセージを削除"
+          title: "通報を無視してメッセージを削除"
+          description: "キューから削除して通報を無視し、そのメッセージを削除します。"
         disagree_and_restore:
           title: "同意せずにメッセージを復元"
           description: "すべてのユーザーが閲覧できるようにメッセージを復元します。"
         disagree:
           title: "同意しない"
         ignore:
-          title: "無視"
+          title: "何もしない"
+          description: "何もアクションを起こさずに、キューから削除して通報を無視します。"
       direct_messages:
         transcript_title: "%{channel_name} の過去のメッセージのトランスクリプト"
         transcript_body: "より文脈を掴みやすいように、この会話の過去のメッセージのトランスクリプトを含めました (最大 10 件)。\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        other: "%{invited_users} 人が %{inviting_user} から招待されました。"
       archive:
         first_post_raw: "このトピックは、[%{channel_name}](%{channel_url}) チャットチャンネルのアーカイブです。"
       messages_moved:
         other: "@%{acting_username} が %{count} 件のメッセージを [%{channel_name}](%{first_moved_message_url}) チャンネルに移動しました。"
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           other: "%{comma_separated_usernames} および他 %{count} 人"
+    mention_warning:
+      dismiss: "閉じる"
+      cannot_see: "%{first_identifier} はこのチャンネルにアクセスできないため通知されませんでした。"
+      cannot_see_multiple:
+        other: "%{first_identifier} と他 %{count} 人のユーザーはこのチャンネルにアクセスできないため通知されませんでした。"
+      invitations_sent:
+        other: "招待状を送信しました"
+      invite: "チャンネルに招待する"
+      without_membership: "%{first_identifier} はこのチャンネルに参加していません。"
+      without_membership_multiple:
+        other: "%{first_identifier} と他 %{count} 人のユーザーはこのチャンネルに参加していません。"
+      group_mentions_disabled: "%{first_identifier} はメンションを許可していません。"
+      group_mentions_disabled_multiple:
+        other: "%{first_identifier} と他 %{count} 個のグループはメンションを許可していません。"
+      global_mentions_disallowed: "このチャンネルでは @here と @all メンションが無効になっています。"
+      too_many_members: "%{first_identifier} のメンバーが多すぎます。誰にも通知されませんでした。"
+      too_many_members_multiple:
+        other: "%{first_identifier} と他 %{count} 個のグループのメンバーが多すぎます。誰にも通知されませんでした."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "に非 ASCII 文字が含まれます"
@@ -121,10 +174,16 @@ ja:
       inline_to_message: "%{username} によるメッセージ #%{message_id} - #%{chat_channel}"
       inline_to_channel: "チャット #%{chat_channel}"
       inline_to_topic_channel: "トピック %{topic_title} のチャット"
+      thread_title_connector: "場所:"
       x_members:
         other: "%{count} 人のメンバー"
       and_x_others:
         other: "および他 %{count} 人"
+    summaries:
+      no_targets: "選択された期間中にメッセージはありませんでした。"
+    transcript:
+      default_thread_title: "スレッド"
+      split_thread_range: "メッセージ %{start}～%{end} / %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -158,6 +217,7 @@ ja:
         other: "新しいチャットメッセージがあります"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] 新しいメッセージ"
         direct_message_from_1: "[%{email_prefix}] %{username} からの新しいメッセージがあります"
         direct_message_from_2: "[%{email_prefix}] %{username1} と他 %{username2} 人からの新しいメッセージ"
         direct_message_from_more:

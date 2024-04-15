@@ -1,17 +1,17 @@
-import { classNameBindings, classNames } from "@ember-decorators/component";
-import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
-import EmberObject, { action, computed } from "@ember/object";
-import Report, { DAILY_LIMIT_DAYS, SCHEMA_VERSION } from "admin/models/report";
 import Component from "@ember/component";
-import I18n from "I18n";
-import ReportLoader from "discourse/lib/reports-loader";
-import discourseComputed from "discourse-common/utils/decorators";
-import { exportEntity } from "discourse/lib/export-csv";
+import EmberObject, { action, computed } from "@ember/object";
+import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 import { isPresent } from "@ember/utils";
+import { classNameBindings, classNames } from "@ember-decorators/component";
+import { exportEntity } from "discourse/lib/export-csv";
+import { outputExportResult } from "discourse/lib/export-result";
+import ReportLoader from "discourse/lib/reports-loader";
 import { isTesting } from "discourse-common/config/environment";
 import { makeArray } from "discourse-common/lib/helpers";
-import { next } from "@ember/runloop";
-import { outputExportResult } from "discourse/lib/export-result";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import Report, { DAILY_LIMIT_DAYS, SCHEMA_VERSION } from "admin/models/report";
 
 const TABLE_OPTIONS = {
   perPage: 8,
@@ -220,11 +220,11 @@ export default class AdminReport extends Component {
 
   @action
   refreshReport(options = {}) {
-    if (!this.attrs.onRefresh) {
+    if (!this.onRefresh) {
       return;
     }
 
-    this.attrs.onRefresh({
+    this.onRefresh({
       type: this.get("model.type"),
       mode: this.currentMode,
       chartGrouping: options.chartGrouping,

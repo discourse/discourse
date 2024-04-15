@@ -1,14 +1,18 @@
 import Controller from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
-import I18n from "I18n";
 import { and } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 export default class AdminPluginsChatController extends Controller {
   @service dialog;
-  queryParams = { selectedWebhookId: "id" };
+  queryParams = [
+    {
+      selectedWebhookId: "id",
+    },
+  ];
 
   loading = false;
   creatingNew = false;

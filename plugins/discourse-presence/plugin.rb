@@ -7,7 +7,7 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-presence
 
 enabled_site_setting :presence_enabled
-hide_plugin if self.respond_to?(:hide_plugin)
+hide_plugin
 
 register_asset "stylesheets/presence.scss"
 
@@ -52,13 +52,11 @@ after_initialize do
         config.allowed_user_ids += topic.allowed_users.pluck(:id)
         config.allowed_group_ids += topic.allowed_groups.pluck(:id)
       elsif post.wiki
-        config.allowed_group_ids << Group::AUTO_GROUPS[
-          :"trust_level_#{SiteSetting.min_trust_to_edit_wiki_post}"
-        ]
+        config.allowed_group_ids += SiteSetting.edit_wiki_post_allowed_groups_map
       end
 
-      if !topic.private_message? && SiteSetting.trusted_users_can_edit_others?
-        config.allowed_group_ids << Group::AUTO_GROUPS[:trust_level_4]
+      if !topic.private_message? && SiteSetting.edit_all_post_groups.present?
+        config.allowed_group_ids += SiteSetting.edit_all_post_groups.split("|").map(&:to_i)
       end
 
       if SiteSetting.enable_category_group_moderation? &&

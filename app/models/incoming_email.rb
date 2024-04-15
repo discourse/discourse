@@ -54,17 +54,17 @@ class IncomingEmail < ActiveRecord::Base
   end
 
   def to_addresses=(to)
-    to = to.map(&:downcase).join(";") if to&.is_a?(Array)
+    to = to.map(&:downcase).join(";") if to.is_a?(Array)
     super(to)
   end
 
   def cc_addresses=(cc)
-    cc = cc.map(&:downcase).join(";") if cc&.is_a?(Array)
+    cc = cc.map(&:downcase).join(";") if cc.is_a?(Array)
     super(cc)
   end
 
   def from_address=(from)
-    from = from.first if from&.is_a?(Array)
+    from = from.first if from.is_a?(Array)
     super(from)
   end
 end
@@ -104,5 +104,6 @@ end
 #  index_incoming_emails_on_imap_sync      (imap_sync)
 #  index_incoming_emails_on_message_id     (message_id)
 #  index_incoming_emails_on_post_id        (post_id)
+#  index_incoming_emails_on_topic_id       (topic_id)
 #  index_incoming_emails_on_user_id        (user_id) WHERE (user_id IS NOT NULL)
 #

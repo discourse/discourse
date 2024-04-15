@@ -6,7 +6,7 @@ describe "Facebook OAuth2" do
   let(:app_secret) { "adddcccdddd99922" }
   let(:temp_code) { "facebook_temp_code_544254" }
   let(:appsecret_proof) do
-    OpenSSL::HMAC.hexdigest(OpenSSL::Digest::SHA256.new, app_secret, access_token)
+    OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new("SHA256"), app_secret, access_token)
   end
 
   fab!(:user1) { Fabricate(:user) }

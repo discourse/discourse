@@ -35,6 +35,12 @@
     }
   }
 
+  .sidebar-section-wrapper.sidebar-section[data-section-name="my-threads"] {
+    .sidebar-section-content {
+      padding-bottom: 0;
+    }
+  }
+
   .sidebar-container {
     .channels-list {
       color: var(--primary);
@@ -57,7 +63,7 @@
         margin-bottom: 1rem;
       }
 
-      .public-channel-empty-message {
+      .channel-list-empty-message {
         margin: 0;
         padding: 0em 2em 0.5em;
       }
@@ -77,7 +83,7 @@
         }
       }
 
-      .open-draft-channel-page-btn,
+      .open-new-message-btn,
       .open-browse-page-btn,
       .edit-channels-dropdown .select-kit-header,
       .chat-channel-leave-btn {
@@ -136,16 +142,6 @@
 }
 
 .chat-enabled {
-  .sidebar-section-link-suffix.icon {
-    &.urgent svg {
-      color: var(--success);
-    }
-
-    &.unread svg {
-      color: var(--tertiary-med-or-tertiary);
-    }
-  }
-
   .sidebar-section-link-prefix {
     .prefix-image {
       border: 1px solid transparent;
@@ -153,12 +149,6 @@
 
     &.active .prefix-image {
       box-shadow: 0px 0px 0px 1px var(--success);
-    }
-  }
-
-  .sidebar-section-link-content-text {
-    .user-status {
-      margin-left: 0.3em;
     }
   }
 

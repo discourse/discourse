@@ -1,5 +1,5 @@
-import { action, computed } from "@ember/object";
 import Component from "@ember/component";
+import { action, computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
 
 export default class CompactList extends Component {

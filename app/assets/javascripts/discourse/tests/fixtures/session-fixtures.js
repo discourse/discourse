@@ -1,5 +1,10 @@
+import { deepFreeze } from "discourse-common/lib/object";
+import {
+  AUTO_GROUPS,
+} from "discourse/lib/constants";
+
 export default {
-  "/session/current.json": {
+  "/session/current.json": deepFreeze({
     current_user: {
       id: 19,
       username: "eviltrout",
@@ -7,7 +12,6 @@ export default {
       avatar_template: "/user_avatar/localhost/eviltrout/{size}/5275.png",
       name: "Robin Ward",
       unread_notifications: 0,
-      unread_private_messages: 0,
       unread_high_priority_notifications: 0,
       admin: true,
       notification_channel_position: null,
@@ -15,6 +19,7 @@ export default {
       moderator: true,
       staff: true,
       can_create_group: true,
+      can_create_topic: true,
       title: "co-founder",
       reply_count: 859,
       topic_count: 36,
@@ -28,18 +33,12 @@ export default {
       can_review: true,
       ignored_users: [],
       groups: [
-        {
-          id: 10,
-          automatic: true,
-          name: "trust_level_0",
-          display_name: "trust_level_0",
-        },
-        {
-          id: 11,
-          automatic: true,
-          name: "trust_level_1",
-          display_name: "trust_level_1",
-        }
+        AUTO_GROUPS.admins,
+        AUTO_GROUPS.moderators,
+        AUTO_GROUPS.staff,
+        AUTO_GROUPS.trust_level_0,
+        AUTO_GROUPS.trust_level_1,
+        AUTO_GROUPS.trust_level_2,
       ],
       user_option: {
         external_links_in_new_tab: false,
@@ -59,7 +58,7 @@ export default {
           links: [
             {
               id: 329,
-              name: "Everything",
+              name: "Topics",
               value: "/latest",
               icon: "layer-group",
               external: false,
@@ -75,7 +74,7 @@ export default {
             },
             {
               id: 331,
-              name: "Info",
+              name: "About",
               value: "/about",
               icon: "info-circle",
               external: false,
@@ -133,5 +132,5 @@ export default {
         },
       ]
     },
-  },
+  }),
 };

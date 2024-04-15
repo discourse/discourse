@@ -46,7 +46,7 @@ def write_template(path, task_name, template)
 
   File.write(output_path, "#{header}\n\n#{template}")
   puts "#{basename} created"
-  `yarn run prettier --write #{output_path}`
+  system("yarn run prettier --write #{output_path}", exception: true)
   puts "#{basename} prettified"
 end
 
@@ -59,7 +59,7 @@ def write_hbs_template(path, task_name, template)
   basename = File.basename(path)
   output_path = "#{Rails.root}/app/assets/javascripts/#{path}"
   File.write(output_path, "#{header}\n#{template}")
-  `yarn run prettier --write #{output_path}`
+  system("yarn run prettier --write #{output_path}", exception: true)
   puts "#{basename} created"
 end
 
@@ -76,7 +76,6 @@ def dependencies
     { source: "diffhtml/dist/diffhtml.min.js", public: true },
     { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true },
     { source: "pikaday/pikaday.js", public: true },
-    { source: "@highlightjs/cdn-assets/.", destination: "highlightjs" },
     { source: "moment/moment.js" },
     { source: "moment/locale/.", destination: "moment-locale" },
     {
@@ -86,32 +85,6 @@ def dependencies
     {
       source: "@discourse/moment-timezone-names-translations/locales/.",
       destination: "moment-timezone-names-locale",
-    },
-    { source: "workbox-sw/build/.", destination: "workbox", public: true, skip_versioning: true },
-    {
-      source: "workbox-routing/build/.",
-      destination: "workbox",
-      public: true,
-      skip_versioning: true,
-    },
-    { source: "workbox-core/build/.", destination: "workbox", public: true, skip_versioning: true },
-    {
-      source: "workbox-strategies/build/.",
-      destination: "workbox",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "workbox-expiration/build/.",
-      destination: "workbox",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "workbox-cacheable-response/build/.",
-      destination: "workbox",
-      skip_versioning: true,
-      public: true,
     },
     {
       source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js",
@@ -159,6 +132,18 @@ end
 task "javascript:update_constants" => :environment do
   task_name = "update_constants"
 
+  auto_groups =
+    Group::AUTO_GROUPS.inject({}) do |result, (group_name, group_id)|
+      result.merge(
+        group_name => {
+          id: group_id,
+          automatic: true,
+          name: group_name,
+          display_name: group_name,
+        },
+      )
+    end
+
   write_template("discourse/app/lib/constants.js", task_name, <<~JS)
     export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
 
@@ -173,6 +158,10 @@ task "javascript:update_constants" => :environment do
     export const SIDEBAR_SECTION = {
       max_title_length: #{SidebarSection::MAX_TITLE_LENGTH},
     }
+
+    export const AUTO_GROUPS = #{auto_groups.to_json};
+
+    export const MAX_NOTIFICATIONS_LIMIT_PARAMS = #{NotificationsController::INDEX_LIMIT};
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
@@ -191,32 +180,6 @@ task "javascript:update_constants" => :environment do
     export const translations = #{Emoji.translations.inspect.gsub("=>", ":")};
     export const replacements = #{Emoji.unicode_replacements_json};
   JS
-
-  langs = []
-  Dir
-    .glob("vendor/assets/javascripts/highlightjs/languages/*.min.js")
-    .each { |f| langs << File.basename(f, ".min.js") }
-  bundle = HighlightJs.bundle(langs)
-
-  ctx = MiniRacer::Context.new
-  hljs_aliases = ctx.eval(<<~JS)
-    #{bundle}
-
-    let aliases = {};
-    hljs.listLanguages().forEach((lang) => {
-      if (hljs.getLanguage(lang).aliases) {
-        aliases[lang] = hljs.getLanguage(lang).aliases;
-      }
-    });
-
-    aliases;
-  JS
-
-  write_template("pretty-text/addon/highlightjs-aliases.js", task_name, <<~JS)
-    export const HLJS_ALIASES = #{hljs_aliases.to_json};
-  JS
-
-  ctx.dispose
 
   write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)
     export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
@@ -240,8 +203,7 @@ end
 task "javascript:update" => "clean_up" do
   require "uglifier"
 
-  yarn = system("yarn install")
-  abort('Unable to run "yarn install"') unless yarn
+  system("yarn install", exception: true)
 
   versions = {}
   start = Time.now
@@ -253,16 +215,6 @@ task "javascript:update" => "clean_up" do
       filename = f[:destination]
     else
       filename = f[:source].split("/").last
-    end
-
-    if src.include? "highlightjs"
-      puts "Cleanup highlightjs styles and install smaller test bundle"
-      system("rm -rf node_modules/@highlightjs/cdn-assets/styles")
-
-      # We don't need every language for tests
-      langs = %w[javascript sql ruby]
-      test_bundle_dest = "vendor/assets/javascripts/highlightjs/highlight-test-bundle.min.js"
-      File.write(test_bundle_dest, HighlightJs.bundle(langs))
     end
 
     if f[:public_root]
@@ -280,35 +232,33 @@ task "javascript:update" => "clean_up" do
         dest = "#{path}/#{filename}"
 
         FileUtils.mkdir_p(path) unless File.exist?(path)
+
+        if src.include? "ace.js"
+          versions["ace/ace.js"] = versions.delete("ace.js")
+
+          themes = %w[theme-chrome theme-chaos]
+
+          themes.each do |file|
+            versions["ace/#{file}.js"] = "#{package_dir_name}/#{package_version}/#{file}.js"
+          end
+
+          ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
+
+          addtl_files = %w[ext-searchbox mode-html mode-scss mode-sql mode-yaml worker-html].concat(
+            themes,
+          )
+
+          dest_path = dest.split("/")[0..-2].join("/")
+          addtl_files.each { |file| FileUtils.cp_r("#{ace_root}#{file}.js", dest_path) }
+        end
       end
     else
       dest = "#{vendor_js}/#{filename}"
     end
 
-    if src.include? "ace.js"
-      versions["ace/ace.js"] = versions.delete("ace.js")
-      ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
-      addtl_files = %w[
-        ext-searchbox
-        mode-html
-        mode-scss
-        mode-sql
-        mode-yaml
-        theme-chrome
-        theme-chaos
-        worker-html
-      ]
-      dest_path = dest.split("/")[0..-2].join("/")
-      addtl_files.each { |file| FileUtils.cp_r("#{ace_root}#{file}.js", dest_path) }
-    end
-
     STDERR.puts "New dependency added: #{dest}" unless File.exist?(dest)
 
-    if f[:uglify]
-      File.write(dest, Uglifier.new.compile(File.read(src)))
-    else
-      FileUtils.cp_r(src, dest)
-    end
+    FileUtils.cp_r(src, dest)
   end
 
   write_template("discourse/app/lib/public-js-versions.js", "update", <<~JS)

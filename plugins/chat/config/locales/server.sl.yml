@@ -19,11 +19,11 @@ sl:
           description: "Potrdi prijavo in utišaj uporabnika"
         disagree:
           title: "Se ne strinjam"
-        ignore:
-          title: "Prezri"
     channel:
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "opusti"
   discourse_push_notifications:
     popup:
       chat_mention:

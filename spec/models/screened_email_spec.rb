@@ -52,7 +52,7 @@ RSpec.describe ScreenedEmail do
   end
 
   describe "#should_block?" do
-    subject { ScreenedEmail.should_block?(email) }
+    subject(:should_block) { ScreenedEmail.should_block?(email) }
 
     it "automatically blocks via email canonicalization" do
       SiteSetting.levenshtein_distance_spammer_emails = 0
@@ -63,7 +63,7 @@ RSpec.describe ScreenedEmail do
     end
 
     it "returns false if a record with the email doesn't exist" do
-      expect(subject).to eq(false)
+      expect(should_block).to eq(false)
     end
 
     it "returns true when there is a record with the email" do
@@ -86,7 +86,7 @@ RSpec.describe ScreenedEmail do
     shared_examples "when a ScreenedEmail record matches" do
       it "updates statistics" do
         freeze_time do
-          expect { subject }.to change { screened_email.reload.match_count }.by(1)
+          expect { should_block }.to change { screened_email.reload.match_count }.by(1)
           expect(screened_email.last_match_at).to eq_time(Time.zone.now)
         end
       end

@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 import Collection from "../lib/collection";
@@ -13,40 +13,47 @@ export default class ChatApi extends Service {
   @service chat;
   @service chatChannelsManager;
 
+  channel(channelId) {
+    return this.#getRequest(`/channels/${channelId}`);
+  }
+
+  channelThreadMessages(channelId, threadId, params = {}) {
+    return this.#getRequest(
+      `/channels/${channelId}/threads/${threadId}/messages?${new URLSearchParams(
+        params
+      ).toString()}`
+    );
+  }
+
+  channelMessages(channelId, params = {}) {
+    return this.#getRequest(
+      `/channels/${channelId}/messages?${new URLSearchParams(
+        params
+      ).toString()}`
+    );
+  }
+
   /**
-   * Get a channel by its ID.
+   * Flags a message in a channel.
    * @param {number} channelId - The ID of the channel.
+   * @param {number} messageId - The ID of the message to flag.
+   * @param {object} params - Params of the flag.
+   * @param {integer} params.flag_type_id
+   * @param {string} [params.message]
+   * @param {boolean} [params.is_warning]
+   * @param {boolean} [params.queue_for_review]
+   * @param {boolean} [params.take_action]
    * @returns {Promise}
    *
    * @example
    *
-   *    this.chatApi.channel(1).then(channel => { ... })
+   *    this.chatApi.flagMessage(5, 1);
    */
-  channel(channelId, data = {}) {
-    const args = {};
-
-    if (data.targetMessageId) {
-      args.target_message_id = data.targetMessageId;
-    } else {
-      args.page_size = data.pageSize;
-
-      if (data.includeMessages) {
-        args.include_messages = true;
-      }
-
-      if (data.messageId) {
-        args.target_message_id = data.messageId;
-      }
-
-      if (data.threadId) {
-        args.thread_id = data.threadId;
-      }
-    }
-
-    return this.#getRequest(`/channels/${channelId}`, args).then((result) => {
-      this.chatChannelsManager.store(result.channel);
-      return result;
-    });
+  flagMessage(channelId, messageId, params = {}) {
+    return this.#postRequest(
+      `/channels/${channelId}/messages/${messageId}/flags`,
+      params
+    );
   }
 
   /**
@@ -60,13 +67,7 @@ export default class ChatApi extends Service {
    *    this.chatApi.thread(5, 1).then(thread => { ... })
    */
   thread(channelId, threadId) {
-    return this.#getRequest(`/channels/${channelId}/threads/${threadId}`).then(
-      (result) =>
-        this.chat.activeChannel.threadsManager.store(
-          this.chat.activeChannel,
-          result.thread
-        )
-    );
+    return this.#getRequest(`/channels/${channelId}/threads/${threadId}`);
   }
 
   /**
@@ -78,8 +79,11 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @returns {Promise}
    */
-  threads(channelId) {
-    return this.#getRequest(`/channels/${channelId}/threads`);
+  threads(channelId, handler) {
+    return new Collection(
+      `${this.#basePath}/channels/${channelId}/threads`,
+      handler
+    );
   }
 
   /**
@@ -90,12 +94,16 @@ export default class ChatApi extends Service {
    *
    *    this.chatApi.channels.then(channels => { ... })
    */
-  channels() {
-    return new Collection(`${this.#basePath}/channels`, (response) => {
-      return response.channels.map((channel) =>
-        this.chatChannelsManager.store(channel)
-      );
-    });
+  channels(params = {}) {
+    return new Collection(
+      `${this.#basePath}/channels`,
+      (response) => {
+        return response.channels.map((channel) =>
+          this.chatChannelsManager.store(channel)
+        );
+      },
+      params
+    );
   }
 
   /**
@@ -171,6 +179,9 @@ export default class ChatApi extends Service {
    * @param {string} data.cooked - The cooked content of the message.
    * @param {number} [data.in_reply_to_id] - The ID of the replied-to message.
    * @param {number} [data.staged_id] - The staged ID of the message before it was persisted.
+   * @param {number} [data.thread_id] - The ID of the thread where this message should be posted.
+   * @param {number} [data.topic_id] - The ID of the currently visible topic in drawer mode.
+   * @param {number} [data.post_ids] - The ID of the currently visible posts in drawer mode.
    * @param {Array.<number>} [data.upload_ids] - Array of upload ids linked to the message.
    * @returns {Promise}
    */
@@ -180,6 +191,18 @@ export default class ChatApi extends Service {
       type: "POST",
       data,
     });
+  }
+
+  /**
+   * Stop streaming of a message
+   * @param {number} channelId - ID of the channel.
+   * @param {number} messageId - ID of the message.
+   * @returns {Promise}
+   */
+  stopMessageStreaming(channelId, messageId) {
+    return this.#deleteRequest(
+      `/channels/${channelId}/messages/${messageId}/streaming`
+    );
   }
 
   /**
@@ -222,6 +245,21 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Creates a thread.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} originalMessageId - The ID of the original message.
+   * @param {object} data - Params of the thread.
+   * @param {string} [data.title] - Title of the thread.
+   * @returns {Promise}
+   */
+  createThread(channelId, originalMessageId, data = {}) {
+    return this.#postRequest(`/channels/${channelId}/threads`, {
+      title: data.title,
+      original_message_id: originalMessageId,
+    });
+  }
+
+  /**
    * Updates the status of a channel.
    * @param {number} channelId - The ID of the channel.
    * @param {string} status - The new status, can be "open" or "closed".
@@ -236,14 +274,15 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @returns {Collection}
    */
-  listChannelMemberships(channelId) {
+  listChannelMemberships(channelId, params = {}) {
     return new Collection(
       `${this.#basePath}/channels/${channelId}/memberships`,
       (response) => {
         return response.memberships.map((membership) =>
           UserChatChannelMembership.create(membership)
         );
-      }
+      },
+      params
     );
   }
 
@@ -252,7 +291,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   listCurrentUserChannels() {
-    return this.#getRequest("/channels/me");
+    return this.#getRequest("/me/channels");
   }
 
   /**
@@ -272,46 +311,34 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   unfollowChannel(channelId) {
-    return this.#deleteRequest(`/channels/${channelId}/memberships/me`).then(
-      (result) => UserChatChannelMembership.create(result.membership)
-    );
+    return this.#deleteRequest(
+      `/channels/${channelId}/memberships/me/follows`
+    ).then((result) => UserChatChannelMembership.create(result.membership));
   }
 
   /**
-   * Returns messages of a channel, from the last message or a specified target.
+   * Destroys the membership of current user on a channel.
+   *
    * @param {number} channelId - The ID of the channel.
-   * @param {object} data - Params of the query.
-   * @param {integer} data.targetMessageId - ID of the targeted message.
-   * @param {integer} data.messageId - ID of the targeted message.
-   * @param {integer} data.direction - Fetch past or future messages.
-   * @param {integer} data.pageSize - Max number of messages to fetch.
    * @returns {Promise}
    */
-  messages(channelId, data = {}) {
-    let path;
-    const args = {};
-
-    if (data.targetMessageId) {
-      path = `/chat/lookup/${data.targetMessageId}`;
-      args.chat_channel_id = channelId;
-    } else {
-      args.page_size = data.pageSize;
-      path = `/chat/${channelId}/messages`;
-
-      if (data.messageId) {
-        args.message_id = data.messageId;
-      }
-
-      if (data.direction) {
-        args.direction = data.direction;
-      }
-
-      if (data.threadId) {
-        args.thread_id = data.threadId;
-      }
+  async leaveChannel(channelId) {
+    await this.#deleteRequest(`/channels/${channelId}/memberships/me`);
+    const channel = await this.chatChannelsManager.find(channelId, {
+      fetchIfNotFound: false,
+    });
+    if (channel) {
+      this.chatChannelsManager.remove(channel);
     }
+  }
 
-    return ajax(path, { data: args });
+  /**
+   * Get the list of tracked threads for the current user.
+   *
+   * @returns {Promise}
+   */
+  userThreads(handler) {
+    return new Collection(`${this.#basePath}/me/threads`, handler);
   }
 
   /**
@@ -331,17 +358,37 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Update notifications settings of current user for a thread.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} threadId - The ID of the thread.
+   * @param {object} data - The settings to modify.
+   * @param {boolean} [data.notification_level] - The new notification level, c.f. Chat::NotificationLevels. Threads only support
+   *  "regular" and "tracking" for now.
+   * @returns {Promise}
+   */
+  updateCurrentUserThreadNotificationsSettings(channelId, threadId, data) {
+    return this.#putRequest(
+      `/channels/${channelId}/threads/${threadId}/notifications-settings/me`,
+      { notification_level: data.notificationLevel }
+    );
+  }
+
+  /**
    * Saves a draft for the channel, which includes message contents and uploads.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - The draft data, see ChatMessage.toJSONDraft() for more details.
    * @returns {Promise}
    */
-  saveDraft(channelId, data) {
-    // TODO (martin) Change this to postRequest after moving DraftsController into Api::DraftsController
-    return ajax("/chat/drafts", {
+  saveDraft(channelId, data, options = {}) {
+    let endpoint = `/chat/api/channels/${channelId}`;
+    if (options.threadId) {
+      endpoint += `/threads/${options.threadId}`;
+    }
+    endpoint += "/drafts";
+
+    return ajax(endpoint, {
       type: "POST",
       data: {
-        chat_channel_id: channelId,
         data,
       },
       ignoreUnsent: false,
@@ -367,7 +414,6 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   publishReaction(channelId, messageId, emoji, reactAction) {
-    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
     return ajax(`/chat/${channelId}/react/${messageId}`, {
       type: "PUT",
       data: {
@@ -396,7 +442,6 @@ export default class ChatApi extends Service {
    * @param {number} messageId - The ID of the message being restored.
    */
   rebakeMessage(channelId, messageId) {
-    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
     return ajax(`/chat/${channelId}/${messageId}/rebake`, {
       type: "PUT",
     });
@@ -412,11 +457,10 @@ export default class ChatApi extends Service {
    * @param {Array<number>} data.upload_ids - The uploads attached to the message after editing.
    */
   editMessage(channelId, messageId, data) {
-    // TODO (martin) Not ideal, this should have a chat API controller endpoint.
-    return ajax(`/chat/${channelId}/edit/${messageId}`, {
-      type: "PUT",
-      data,
-    });
+    return this.#putRequest(
+      `/channels/${channelId}/messages/${messageId}`,
+      data
+    );
   }
 
   /**
@@ -426,6 +470,17 @@ export default class ChatApi extends Service {
    */
   markAllChannelsAsRead() {
     return this.#putRequest(`/channels/read`);
+  }
+
+  /**
+   * Lists all possible chatables.
+   *
+   * @param {term} string - The term to search for. # prefix will scope to channels, @ to users.
+   *
+   * @returns {Promise}
+   */
+  chatables(args = {}) {
+    return this.#getRequest("/chatables", args);
   }
 
   /**
@@ -465,6 +520,60 @@ export default class ChatApi extends Service {
    */
   editThread(channelId, threadId, data) {
     return this.#putRequest(`/channels/${channelId}/threads/${threadId}`, data);
+  }
+
+  /**
+   * Generate a quote for a list of messages.
+   *
+   * @param {number} channelId - The ID of the channel containing the messages.
+   * @param {Array<number>} messageIds - The IDs of the messages to quote.
+   */
+  generateQuote(channelId, messageIds) {
+    return ajax(`/chat/${channelId}/quote`, {
+      type: "POST",
+      data: { message_ids: messageIds },
+    });
+  }
+
+  /**
+   * Invite users to a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @param {Array<number>} userIds - The IDs of the users to invite.
+   * @param {object} options
+   * @param {number} options.chat_message_id - A message ID to display in the invite.
+   */
+  invite(channelId, userIds, options = {}) {
+    return this.#postRequest(`/channels/${channelId}/invites`, {
+      user_ids: userIds,
+      message_id: options.messageId,
+    });
+  }
+
+  /**
+   * Summarize a channel.
+   *
+   * @param {number} channelId - The ID of the channel to summarize.
+   * @param {object} options
+   * @param {number} options.since - Number of hours ago the summary should start (1, 3, 6, 12, 24, 72, 168).
+   */
+  summarize(channelId, options = {}) {
+    return this.#getRequest(`/channels/${channelId}/summarize`, options);
+  }
+
+  /**
+   * Add members to a channel.
+   *
+   * @param {number} channelId - The ID of the channel.
+   * @param {object} targets
+   * @param {Array<string>} targets.usernames - The usernames of the users to add.
+   * @param {Array<string>} targets.groups - The groups names of the groups to add.
+   */
+  addMembersToChannel(channelId, targets) {
+    return this.#postRequest(`/channels/${channelId}/memberships`, {
+      usernames: targets.usernames,
+      groups: targets.groups,
+    });
   }
 
   get #basePath() {

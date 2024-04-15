@@ -1,3 +1,5 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -7,10 +9,8 @@ import {
   query,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 acceptance("Review", function (needs) {
   needs.user();
@@ -70,21 +70,21 @@ acceptance("Review", function (needs) {
 
     assert.ok(visible(".reject-reason-reviewable-modal"));
     assert.ok(
-      query(".reject-reason-reviewable-modal .title").innerHTML.includes(
-        I18n.t("review.reject_reason.title")
-      ),
+      query(
+        ".reject-reason-reviewable-modal .d-modal__title"
+      ).innerHTML.includes(I18n.t("review.reject_reason.title")),
       "it opens reject reason modal when user is rejected"
     );
 
-    await click(".modal-footer .cancel");
+    await click(".d-modal__footer .cancel");
     await reviewableActionDropdown.expand();
     await reviewableActionDropdown.selectRowByValue("reject_user_block");
 
     assert.ok(visible(".reject-reason-reviewable-modal"));
     assert.ok(
-      query(".reject-reason-reviewable-modal .title").innerHTML.includes(
-        I18n.t("review.reject_reason.title")
-      ),
+      query(
+        ".reject-reason-reviewable-modal .d-modal__title"
+      ).innerHTML.includes(I18n.t("review.reject_reason.title")),
       "it opens reject reason modal when user is rejected and blocked"
     );
   });
@@ -113,9 +113,7 @@ acceptance("Review", function (needs) {
     );
 
     assert.strictEqual(
-      query(
-        ".reviewable-flagged-post .post-body .post-body__scroll"
-      ).innerHTML.trim(),
+      query(".reviewable-flagged-post .post-body").innerHTML.trim(),
       "<b>cooked content</b>"
     );
 
@@ -140,7 +138,7 @@ acceptance("Review", function (needs) {
     await visit("/review");
 
     assert.ok(exists(`${topic} .reviewable-action.approve`));
-    assert.ok(!exists(`${topic} .category-name`));
+    assert.ok(!exists(`${topic} .badge-category__name`));
 
     assert.strictEqual(
       query(`${topic} .discourse-tag:nth-of-type(1)`).innerText,
@@ -222,7 +220,7 @@ acceptance("Review", function (needs) {
       "new raw contents"
     );
     assert.strictEqual(
-      query(`${topic} .category-name`).innerText.trim(),
+      query(`${topic} .badge-category__name`).innerText.trim(),
       "support"
     );
   });

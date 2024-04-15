@@ -2,8 +2,8 @@
 require "swagger_helper"
 
 RSpec.describe "site" do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:admin)
+  fab!(:category)
   fab!(:subcategory) { Fabricate(:category, parent_category: category) }
 
   before do
@@ -33,6 +33,27 @@ RSpec.describe "site" do
           end
         ensure
           Site.reset_preloaded_category_custom_fields
+        end
+      end
+    end
+  end
+
+  path "/site/basic-info.json" do
+    get "Get site basic info" do
+      tags "Site"
+      operationId "getSiteBasicInfo"
+      description "Can be used to fetch basic info about a site"
+      consumes "application/json"
+      expected_request_schema = nil
+
+      produces "application/json"
+      response "200", "success response" do
+        expected_response_schema = load_spec_schema("site_basic_info_response")
+        schema expected_response_schema
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
         end
       end
     end

@@ -1,6 +1,6 @@
-import NotificationsButtonComponent from "select-kit/components/notifications-button";
 import { computed } from "@ember/object";
 import { topicLevels } from "discourse/lib/notification-levels";
+import NotificationsButtonComponent from "select-kit/components/notifications-button";
 
 export default NotificationsButtonComponent.extend({
   pluginApiIdentifiers: ["topic-notifications-options"],

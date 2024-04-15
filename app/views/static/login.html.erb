@@ -12,7 +12,7 @@
 <div class='login-welcome__title'>
   <%= PrettyText.cook(I18n.t("login_required.welcome_message", title: SiteSetting.title)).html_safe %>
 
-  <p><%= SiteSetting.site_description %></p>
+  <p class='login-welcome__description'><%= SiteSetting.site_description %></p>
 </div>
 
 <% content_for :title do %><%= @title %><% end %>

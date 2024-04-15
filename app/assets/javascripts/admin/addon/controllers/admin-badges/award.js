@@ -1,10 +1,10 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import I18n from "I18n";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
-import { action } from "@ember/object";
-import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 export default class AdminBadgesAwardController extends Controller {
   @service dialog;

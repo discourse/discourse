@@ -1,47 +1,56 @@
-import Service from "@ember/service";
-
 const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
 const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 
-// Lets us know about browser's capabilities
-export default class Capabilities extends Service {
-  constructor() {
-    super(...arguments);
+const ua = navigator.userAgent;
 
-    const ua = navigator.userAgent;
+class Capabilities {
+  touch = navigator.maxTouchPoints > 1 || "ontouchstart" in window;
 
-    this.touch = navigator.maxTouchPoints > 1 || "ontouchstart" in window;
+  isAndroid = ua.includes("Android");
+  isWinphone = ua.includes("Windows Phone");
+  isIpadOS = ua.includes("Mac OS") && !/iPhone|iPod/.test(ua) && this.touch;
 
-    this.isAndroid = ua.includes("Android");
-    this.isWinphone = ua.includes("Windows Phone");
-    this.isIpadOS =
-      ua.includes("Mac OS") && !/iPhone|iPod/.test(ua) && this.touch;
-    this.isIOS =
-      (/iPhone|iPod/.test(navigator.userAgent) || this.isIpadOS) &&
-      !window.MSStream;
-    this.isApple =
-      APPLE_NAVIGATOR_PLATFORMS.test(navigator.platform) ||
-      (navigator.userAgentData &&
-        APPLE_USER_AGENT_DATA_PLATFORM.test(navigator.userAgentData.platform));
+  isIOS = (/iPhone|iPod/.test(ua) || this.isIpadOS) && !window.MSStream;
+  isApple =
+    APPLE_NAVIGATOR_PLATFORMS.test(navigator.platform) ||
+    (navigator.userAgentData &&
+      APPLE_USER_AGENT_DATA_PLATFORM.test(navigator.userAgentData.platform));
 
-    this.isOpera = !!window.opera || ua.includes(" OPR/");
-    this.isFirefox = ua.includes("Firefox");
-    this.isChrome = !!window.chrome && !this.isOpera;
-    this.isSafari =
-      /Constructor/.test(window.HTMLElement) ||
-      window.safari?.pushNotification.toString() ===
-        "[object SafariRemoteNotification]";
+  isOpera = !!window.opera || ua.includes(" OPR/");
+  isFirefox = ua.includes("Firefox");
+  isChrome = !!window.chrome && !this.isOpera;
+  isSafari =
+    /Constructor/.test(window.HTMLElement) ||
+    window.safari?.pushNotification?.toString() ===
+      "[object SafariRemoteNotification]";
 
-    this.hasContactPicker =
-      "contacts" in navigator && "ContactsManager" in window;
-    this.canVibrate = "vibrate" in navigator;
-    this.isPwa =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      window.navigator.standalone ||
-      document.referrer.includes("android-app://");
-    this.isiOSPWA = this.isPwa && this.isIOS;
-    this.wasLaunchedFromDiscourseHub =
-      window.location.search.includes("discourse_app=1");
-    this.isAppWebview = window.ReactNativeWebView !== undefined;
+  hasContactPicker = "contacts" in navigator && "ContactsManager" in window;
+
+  canVibrate = "vibrate" in navigator;
+
+  isPwa =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone ||
+    document.referrer.includes("android-app://");
+  isiOSPWA = this.isPwa && this.isIOS;
+
+  wasLaunchedFromDiscourseHub =
+    window.location.search.includes("discourse_app=1");
+  isAppWebview = window.ReactNativeWebView !== undefined;
+
+  get userHasBeenActive() {
+    return (
+      !("userActivation" in navigator) || navigator.userActivation.hasBeenActive
+    );
+  }
+}
+
+export const capabilities = new Capabilities();
+
+export default class CapabilitiesServiceShim {
+  static isServiceFactory = true;
+
+  static create() {
+    return capabilities;
   }
 }

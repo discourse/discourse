@@ -95,15 +95,6 @@ module Stylesheet
       contents
     end
 
-    def category_backgrounds
-      contents = +""
-      Category
-        .where("uploaded_background_id IS NOT NULL")
-        .each { |c| contents << category_css(c) if c.uploaded_background&.url.present? }
-
-      contents
-    end
-
     def import_color_definitions
       contents = +""
       DiscoursePluginRegistry.color_definition_stylesheets.each do |name, path|
@@ -213,11 +204,6 @@ module Stylesheet
     def theme
       @theme = (@theme_id && Theme.find(@theme_id)) || :nil unless @theme
       @theme == :nil ? nil : @theme
-    end
-
-    def category_css(category)
-      full_slug = category.full_slug.split("-")[0..-2].join("-")
-      "body.category-#{full_slug} { background-image: url(#{upload_cdn_path(category.uploaded_background.url)}) }\n"
     end
 
     def font_css(font)

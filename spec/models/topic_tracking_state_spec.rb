@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicTrackingState do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:whisperers_group) { Fabricate(:group) }
-  fab!(:private_message_post) { Fabricate(:private_message_post) }
+  fab!(:private_message_post)
   let(:private_message_topic) { private_message_post.topic }
   let(:post) { create_post }
   let(:topic) { post.topic }
@@ -20,7 +20,7 @@ RSpec.describe TopicTrackingState do
   shared_examples "publishes message to right groups and users" do |message_bus_channel, method|
     fab!(:public_category) { Fabricate(:category, read_restricted: false) }
     fab!(:topic_in_public_category) { Fabricate(:topic, category: public_category) }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:read_restricted_category_with_groups) { Fabricate(:private_category, group: group) }
 
     fab!(:topic_in_read_restricted_category_with_groups) do
@@ -275,7 +275,7 @@ RSpec.describe TopicTrackingState do
   end
 
   describe "#publish_muted" do
-    let(:user) { Fabricate(:user, last_seen_at: Date.today) }
+    let(:user) { Fabricate(:user, last_seen_at: Date.today, refresh_auto_groups: true) }
     let(:post) { create_post(user: user) }
 
     include_examples("does not publish message for private topics", :publish_muted)
@@ -307,7 +307,7 @@ RSpec.describe TopicTrackingState do
   end
 
   describe "#publish_unmuted" do
-    let(:user) { Fabricate(:user, last_seen_at: Date.today) }
+    let(:user) { Fabricate(:user, last_seen_at: Date.today, refresh_auto_groups: true) }
     let(:second_user) { Fabricate(:user, last_seen_at: Date.today) }
     let(:third_user) { Fabricate(:user, last_seen_at: Date.today) }
     let(:post) { create_post(user: user) }
@@ -348,7 +348,7 @@ RSpec.describe TopicTrackingState do
   end
 
   describe "#publish_read_private_message" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     let(:read_topic_key) { "/private-messages/unread-indicator/#{group_message.id}" }
     let(:read_post_key) { "/topic/#{group_message.id}" }
     let(:group_message) do
@@ -663,46 +663,27 @@ RSpec.describe TopicTrackingState do
   describe "tag support" do
     before do
       SiteSetting.tagging_enabled = true
+      SiteSetting.create_tag_allowed_groups = "10"
 
       post.topic.notifier.watch_topic!(post.topic.user_id)
 
-      DiscourseTagging.tag_topic_by_names(
-        post.topic,
-        Guardian.new(Discourse.system_user),
-        %w[bananas apples],
-      )
+      DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(user), %w[bananas apples])
     end
 
-    it "includes tags when SiteSetting.navigation_menu is not legacy" do
-      SiteSetting.navigation_menu = "legacy"
-      report = TopicTrackingState.report(user)
-      expect(report.length).to eq(1)
-      row = report[0]
-      expect(row.respond_to?(:tags)).to eq(false)
+    it "includes tags based on the `tagging_enabled` site setting" do
+      SiteSetting.tagging_enabled = false
 
-      SiteSetting.navigation_menu = "sidebar"
-
-      report = TopicTrackingState.report(user)
-      expect(report.length).to eq(1)
-      row = report[0]
-      expect(row.tags).to contain_exactly("apples", "bananas")
-    end
-
-    it "includes tags when TopicTrackingState.include_tags_in_report option is enabled" do
-      SiteSetting.navigation_menu = "legacy"
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
       expect(row.respond_to? :tags).to eq(false)
 
-      TopicTrackingState.include_tags_in_report = true
+      SiteSetting.tagging_enabled = true
 
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
       expect(row.tags).to contain_exactly("apples", "bananas")
-    ensure
-      TopicTrackingState.include_tags_in_report = false
     end
   end
 
@@ -774,6 +755,89 @@ RSpec.describe TopicTrackingState do
     end
   end
 
+  describe ".report_totals" do
+    fab!(:user2) { Fabricate(:user) }
+
+    it "correctly returns new/unread totals" do
+      report = TopicTrackingState.report_totals(user)
+      expect(report).to eq({ new: 0, unread: 0 })
+
+      post.topic.notifier.watch_topic!(post.topic.user_id)
+
+      report = TopicTrackingState.report_totals(user)
+      expect(report).to eq({ new: 1, unread: 0 })
+
+      create_post(user: user, topic: post.topic)
+
+      # when user replies, they have 0 new count
+      report = TopicTrackingState.report_totals(user)
+      expect(report).to eq({ new: 0, unread: 0 })
+
+      # when we reply the poster will have an unread item
+      report = TopicTrackingState.report_totals(post.user)
+      expect(report).to eq({ new: 0, unread: 1 })
+
+      create_post(user: user2, topic: post.topic)
+
+      # when a third user replies, the original user should have an unread item
+      report = TopicTrackingState.report_totals(user)
+      expect(report).to eq({ new: 0, unread: 1 })
+
+      # the post user still has one unread
+      report = TopicTrackingState.report_totals(post.user)
+      expect(report).to eq({ new: 0, unread: 1 })
+
+      post2 = create_post
+      post2.topic.notifier.watch_topic!(user.id)
+
+      # watching another new topic bumps the new count
+      report = TopicTrackingState.report_totals(user)
+      expect(report).to eq({ new: 1, unread: 1 })
+    end
+
+    it "respects treat_as_new_topic_start_date user option" do
+      report = TopicTrackingState.report_totals(user)
+      expect(report).to eq({ new: 0, unread: 0 })
+
+      post.topic.notifier.watch_topic!(post.topic.user_id)
+
+      report = TopicTrackingState.report_totals(user)
+      expect(report).to eq({ new: 1, unread: 0 })
+
+      user.user_option.new_topic_duration_minutes = 5
+      user.user_option.save
+      post.topic.created_at = 10.minutes.ago
+      post.topic.save
+
+      report = TopicTrackingState.report_totals(user)
+      expect(report).to eq({ new: 0, unread: 0 })
+    end
+
+    it "respects new_new_view_enabled" do
+      new_new_group = Fabricate(:group)
+      SiteSetting.experimental_new_new_view_groups = new_new_group.name
+      user.groups << new_new_group
+
+      report = TopicTrackingState.report_totals(user)
+      expect(report).to eq({ new: 0 })
+
+      post.topic.notifier.watch_topic!(post.topic.user_id)
+
+      post2 = create_post
+      Fabricate(:post, topic: post2.topic)
+
+      tracking = {
+        notification_level: TopicUser.notification_levels[:tracking],
+        last_read_post_number: 1,
+      }
+
+      TopicUser.change(user.id, post2.topic_id, tracking)
+
+      report = TopicTrackingState.report_totals(user)
+      expect(report).to eq({ new: 2 })
+    end
+  end
+
   describe ".publish_recover" do
     include_examples("publishes message to right groups and users", "/recover", :publish_recover)
     include_examples("does not publish message for private topics", :publish_recover)
@@ -787,5 +851,21 @@ RSpec.describe TopicTrackingState do
   describe ".publish_destroy" do
     include_examples("publishes message to right groups and users", "/destroy", :publish_destroy)
     include_examples("does not publish message for private topics", :publish_destroy)
+  end
+
+  describe "#publish_dismiss_new_posts" do
+    it "publishes the right message to the right users" do
+      messages =
+        MessageBus.track_publish(TopicTrackingState.unread_channel_key(user.id)) do
+          TopicTrackingState.publish_dismiss_new_posts(user.id, topic_ids: [topic.id])
+        end
+
+      expect(messages.size).to eq(1)
+
+      message = messages.first
+
+      expect(message.data["payload"]["topic_ids"]).to contain_exactly(topic.id)
+      expect(message.user_ids).to eq([user.id])
+    end
   end
 end

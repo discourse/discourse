@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupsController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user2) { Fabricate(:user) }
   fab!(:other_user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:admin)
+  fab!(:moderator)
 
   describe "#index" do
     let(:staff_group) do
@@ -36,6 +36,17 @@ RSpec.describe GroupsController do
       expect(body["groups"].size).to eq(14)
       expect(body["total_rows_groups"]).to eq(50)
       expect(body["load_more_groups"]).to eq("/groups?page=2")
+    end
+
+    it "only accepts valid page numbers" do
+      get "/groups.json", params: { page: -1 }
+      expect(response.status).to eq(400)
+
+      get "/groups.json", params: { page: 0 }
+      expect(response.status).to eq(200)
+
+      get "/groups.json", params: { page: 1 }
+      expect(response.status).to eq(200)
     end
 
     context "when group directory is disabled" do
@@ -397,6 +408,46 @@ RSpec.describe GroupsController do
         end
       end
     end
+
+    describe "groups_index_query modifier" do
+      fab!(:user)
+      fab!(:cool_group) { Fabricate(:group, name: "cool-group") }
+      fab!(:boring_group) { Fabricate(:group, name: "boring-group") }
+
+      it "allows changing the query" do
+        get "/groups.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).to include(
+          cool_group.id,
+          boring_group.id,
+        )
+
+        get "/groups.json", params: { filter: "cool" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).to include(cool_group.id)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).not_to include(boring_group.id)
+
+        Plugin::Instance
+          .new
+          .register_modifier(:groups_index_query) do |query|
+            query.where("groups.name LIKE 'cool%'")
+          end
+
+        get "/groups.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).to include(cool_group.id)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).not_to include(boring_group.id)
+
+        get "/groups.json", params: { filter: "boring" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"].map { |g| g["id"] }).not_to include(
+          cool_group.id,
+          boring_group.id,
+        )
+      ensure
+        DiscoursePluginRegistry.clear_modifiers!
+      end
+    end
   end
 
   describe "#show" do
@@ -592,6 +643,63 @@ RSpec.describe GroupsController do
 
       expect(response.parsed_body["members"].map { |u| u["id"] }).to eq([user.id, other_user.id])
       expect(response.parsed_body["owners"].map { |u| u["id"] }).to eq([other_user.id])
+    end
+
+    context "when include_custom_fields is true" do
+      fab!(:user_field)
+      let(:user_field_name) { "user_field_#{user_field.id}" }
+      let!(:custom_user_field) do
+        UserCustomField.create!(user_id: user.id, name: user_field_name, value: "A custom field")
+      end
+
+      before do
+        sign_in(user)
+        SiteSetting.public_user_custom_fields = user_field_name
+      end
+
+      it "shows the custom fields" do
+        get "/groups/#{group.name}/members.json", params: { include_custom_fields: true }
+
+        expect(response.status).to eq(200)
+        response_custom_fields = response.parsed_body["members"].first["custom_fields"]
+        expect(response_custom_fields[user_field_name]).to eq("A custom field")
+      end
+
+      it "allows sorting by custom fields" do
+        group.add(user2)
+        UserCustomField.create!(user_id: user2.id, name: user_field_name, value: "C custom field")
+        group.add(other_user)
+        UserCustomField.create!(
+          user_id: other_user.id,
+          name: user_field_name,
+          value: "B custom field",
+        )
+
+        get "/groups/#{group.name}/members.json",
+            params: {
+              include_custom_fields: true,
+              order: "custom_field",
+              order_field: user_field_name,
+              asc: true,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["members"].pluck("id")).to eq(
+          [user.id, other_user.id, user2.id],
+        )
+
+        get "/groups/#{group.name}/members.json",
+            params: {
+              include_custom_fields: true,
+              order: "custom_field",
+              order_field: user_field_name,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["members"].pluck("id")).to eq(
+          [user2.id, other_user.id, user.id],
+        )
+      end
     end
   end
 
@@ -886,6 +994,7 @@ RSpec.describe GroupsController do
           mentionable_level: 2,
           messageable_level: 2,
           default_notification_level: 2,
+          members_visibility_level: 2,
         )
 
         put "/groups/#{group.id}.json",
@@ -899,6 +1008,7 @@ RSpec.describe GroupsController do
                 mentionable_level: 1,
                 messageable_level: 1,
                 default_notification_level: 1,
+                members_visibility_level: 1,
                 tracking_category_ids: [category.id],
                 tracking_tags: [tag.name],
               },
@@ -917,6 +1027,7 @@ RSpec.describe GroupsController do
         expect(group.mentionable_level).to eq(1)
         expect(group.messageable_level).to eq(1)
         expect(group.default_notification_level).to eq(1)
+        expect(group.members_visibility_level).to eq(1)
         expect(group.group_category_notification_defaults.first&.category).to eq(category)
         expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
       end
@@ -1201,7 +1312,7 @@ RSpec.describe GroupsController do
 
     fab!(:user3) { Fabricate(:user, last_seen_at: nil, last_posted_at: nil, email: "c@test.org") }
 
-    fab!(:bot) { Fabricate(:bot) }
+    fab!(:bot)
     let(:group) { Fabricate(:group, users: [user1, user2, user3, bot]) }
 
     it "should allow members to be sorted by" do
@@ -1305,7 +1416,7 @@ RSpec.describe GroupsController do
   end
 
   describe "#edit" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     context "when user is not signed in" do
       it "should be forbidden" do
@@ -1859,7 +1970,7 @@ RSpec.describe GroupsController do
       end
 
       it "returns skipped_usernames response body when removing a valid user but is not a member of that group" do
-        delete "/groups/#{group.id}/members.json", params: { user_id: -1 }
+        delete "/groups/#{group.id}/members.json", params: { user_id: Discourse::SYSTEM_USER_ID }
 
         response_body = response.parsed_body
         expect(response.status).to eq(200)
@@ -2328,6 +2439,36 @@ RSpec.describe GroupsController do
         expect(groups.map { |group| group["id"] }).to contain_exactly(group.id, hidden_group.id)
       end
     end
+
+    describe "groups_search_query modifier" do
+      fab!(:user)
+      fab!(:cool_group) { Fabricate(:group, name: "cool-group") }
+      fab!(:boring_group) { Fabricate(:group, name: "boring-group") }
+
+      before { sign_in(user) }
+
+      it "allows changing the query" do
+        get "/groups/search.json", params: { term: "cool" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |g| g["id"] }).to include(cool_group.id)
+        expect(response.parsed_body.map { |g| g["id"] }).not_to include(boring_group.id)
+
+        Plugin::Instance
+          .new
+          .register_modifier(:groups_search_query) do |query|
+            query.where("groups.name LIKE 'boring%'")
+          end
+
+        get "/groups/search.json", params: { term: "cool" }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |g| g["id"] }).not_to include(
+          cool_group.id,
+          boring_group.id,
+        )
+      ensure
+        DiscoursePluginRegistry.clear_modifiers!
+      end
+    end
   end
 
   describe "#new" do
@@ -2390,7 +2531,7 @@ RSpec.describe GroupsController do
     end
 
     describe "with varying category permissions" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
 
       before do
         category.set_permissions("#{group.name}": :full)
@@ -2538,9 +2679,10 @@ RSpec.describe GroupsController do
       end
 
       context "when rate limited" do
+        use_redis_snapshotting
+
         it "rate limits anon searches per user" do
           RateLimiter.enable
-          RateLimiter.clear_all!
 
           5.times { post "/groups/#{group.id}/test_email_settings.json", params: params }
           post "/groups/#{group.id}/test_email_settings.json", params: params

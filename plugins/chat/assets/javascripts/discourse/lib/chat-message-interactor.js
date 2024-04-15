@@ -1,22 +1,32 @@
+import { tracked } from "@glimmer/tracking";
+import { getOwner, setOwner } from "@ember/application";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import BookmarkModal from "discourse/components/modal/bookmark";
+import FlagModal from "discourse/components/modal/flag";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
+import { clipboardCopy } from "discourse/lib/utilities";
+import Bookmark from "discourse/models/bookmark";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
-import showModal from "discourse/lib/show-modal";
+import I18n from "discourse-i18n";
+import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
-import Bookmark from "discourse/models/bookmark";
-import { openBookmarkModal } from "discourse/controllers/bookmark";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { isTesting } from "discourse-common/config/environment";
-import { clipboardCopy } from "discourse/lib/utilities";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatMessageReaction, {
   REACTIONS,
 } from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-import { getOwner, setOwner } from "@ember/application";
-import { tracked } from "@glimmer/tracking";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { MESSAGE_CONTEXT_THREAD } from "discourse/plugins/chat/discourse/components/chat-message";
-import I18n from "I18n";
+
+const removedSecondaryActions = new Set();
+
+export function removeChatComposerSecondaryActions(actionIds) {
+  actionIds.forEach((id) => removedSecondaryActions.add(id));
+}
+
+export function resetRemovedChatComposerSecondaryActions() {
+  removedSecondaryActions.clear();
+}
 
 export default class ChatMessageInteractor {
   @service appEvents;
@@ -25,13 +35,16 @@ export default class ChatMessageInteractor {
   @service chatEmojiReactionStore;
   @service chatEmojiPickerManager;
   @service chatChannelComposer;
-  @service chatChannelThreadComposer;
+  @service chatThreadComposer;
   @service chatChannelPane;
-  @service chatChannelThreadPane;
+  @service chatThreadPane;
   @service chatApi;
   @service currentUser;
   @service site;
   @service router;
+  @service modal;
+  @service capabilities;
+  @service toasts;
 
   @tracked message = null;
   @tracked context = null;
@@ -46,13 +59,9 @@ export default class ChatMessageInteractor {
     this.cachedFavoritesReactions = this.chatEmojiReactionStore.favorites;
   }
 
-  get capabilities() {
-    return getOwner(this).lookup("capabilities:main");
-  }
-
   get pane() {
     return this.context === MESSAGE_CONTEXT_THREAD
-      ? this.chatChannelThreadPane
+      ? this.chatThreadPane
       : this.chatChannelPane;
   }
 
@@ -89,8 +98,10 @@ export default class ChatMessageInteractor {
 
   get canRestoreMessage() {
     return (
-      this.canDelete &&
       this.message?.deletedAt &&
+      (this.currentUser.staff ||
+        (this.message?.user?.id === this.currentUser.id &&
+          this.message?.deletedById === this.currentUser.id)) &&
       this.message.channel?.canModifyMessages?.(this.currentUser)
     );
   }
@@ -111,8 +122,7 @@ export default class ChatMessageInteractor {
 
   get canFlagMessage() {
     return (
-      this.currentUser?.id !== this.message?.user?.id &&
-      !this.message.channel?.isDirectMessageChannel &&
+      this.currentUser.id !== this.message?.user?.id &&
       this.message?.userFlagStatus === undefined &&
       this.message.channel?.canFlag &&
       !this.message?.chatWebhookEvent &&
@@ -122,7 +132,7 @@ export default class ChatMessageInteractor {
 
   get canRebakeMessage() {
     return (
-      this.currentUser?.staff &&
+      this.currentUser.staff &&
       this.message.channel?.canModifyMessages?.(this.currentUser)
     );
   }
@@ -136,18 +146,18 @@ export default class ChatMessageInteractor {
   }
 
   get canDelete() {
-    return this.currentUser?.id === this.message.user.id
+    return this.currentUser.id === this.message.user.id
       ? this.message.channel?.canDeleteSelf
       : this.message.channel?.canDeleteOthers;
   }
 
   get composer() {
     return this.context === MESSAGE_CONTEXT_THREAD
-      ? this.chatChannelThreadComposer
+      ? this.chatThreadComposer
       : this.chatChannelComposer;
   }
 
-  get secondaryButtons() {
+  get secondaryActions() {
     const buttons = [];
 
     buttons.push({
@@ -155,6 +165,14 @@ export default class ChatMessageInteractor {
       name: I18n.t("chat.copy_link"),
       icon: "link",
     });
+
+    if (this.site.mobileView) {
+      buttons.push({
+        id: "copyText",
+        name: I18n.t("chat.copy_text"),
+        icon: "clipboard",
+      });
+    }
 
     if (this.canEdit) {
       buttons.push({
@@ -204,7 +222,7 @@ export default class ChatMessageInteractor {
       });
     }
 
-    return buttons;
+    return buttons.reject((button) => removedSecondaryActions.has(button.id));
   }
 
   select(checked = true) {
@@ -227,6 +245,14 @@ export default class ChatMessageInteractor {
     }
   }
 
+  copyText() {
+    clipboardCopy(this.message.message);
+    this.toasts.success({
+      duration: 3000,
+      data: { message: I18n.t("chat.text_copied") },
+    });
+  }
+
   copyLink() {
     const { protocol, host } = window.location;
     const channelId = this.message.channel.id;
@@ -234,13 +260,17 @@ export default class ChatMessageInteractor {
 
     let url;
     if (this.context === MESSAGE_CONTEXT_THREAD && threadId) {
-      url = getURL(`/chat/c/-/${channelId}/t/${threadId}`);
+      url = getURL(`/chat/c/-/${channelId}/t/${threadId}/${this.message.id}`);
     } else {
       url = getURL(`/chat/c/-/${channelId}/${this.message.id}`);
     }
 
     url = url.indexOf("/") === 0 ? protocol + "//" + host + url : url;
     clipboardCopy(url);
+    this.toasts.success({
+      duration: 1500,
+      data: { message: I18n.t("chat.link_copied") },
+    });
   }
 
   @action
@@ -253,7 +283,7 @@ export default class ChatMessageInteractor {
       return;
     }
 
-    if (this.capabilities.canVibrate && !isTesting()) {
+    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
       navigator.vibrate(5);
     }
 
@@ -297,24 +327,30 @@ export default class ChatMessageInteractor {
 
   @action
   toggleBookmark() {
-    return openBookmarkModal(
-      this.message.bookmark ||
-        Bookmark.createFor(this.currentUser, "Chat::Message", this.message.id),
-      {
-        onAfterSave: (savedData) => {
-          const bookmark = Bookmark.create(savedData);
+    this.modal.show(BookmarkModal, {
+      model: {
+        bookmark: new BookmarkFormData(
+          this.message.bookmark ||
+            Bookmark.createFor(
+              this.currentUser,
+              "Chat::Message",
+              this.message.id
+            )
+        ),
+        afterSave: (bookmarkFormData) => {
+          const bookmark = Bookmark.create(bookmarkFormData.saveData);
           this.message.bookmark = bookmark;
           this.appEvents.trigger(
             "bookmarks:changed",
-            savedData,
+            bookmarkFormData.saveData,
             bookmark.attachedTo()
           );
         },
-        onAfterDelete: () => {
+        afterDelete: () => {
           this.message.bookmark = null;
         },
-      }
-    );
+      },
+    });
   }
 
   @action
@@ -322,8 +358,13 @@ export default class ChatMessageInteractor {
     const model = new ChatMessage(this.message.channel, this.message);
     model.username = this.message.user?.username;
     model.user_id = this.message.user?.id;
-    const controller = showModal("flag", { model });
-    controller.set("flagTarget", new ChatMessageFlag());
+    this.modal.show(FlagModal, {
+      model: {
+        flagTarget: new ChatMessageFlag(getOwner(this)),
+        flagModel: model,
+        setHidden: () => model.set("hidden", true),
+      },
+    });
   }
 
   @action
@@ -354,7 +395,7 @@ export default class ChatMessageInteractor {
 
   @action
   edit() {
-    this.composer.editMessage(this.message);
+    this.composer.edit(this.message);
   }
 
   @action
@@ -377,7 +418,7 @@ export default class ChatMessageInteractor {
   }
 
   @action
-  handleSecondaryButtons(id) {
+  handleSecondaryActions(id) {
     this[id](this.message);
   }
 }

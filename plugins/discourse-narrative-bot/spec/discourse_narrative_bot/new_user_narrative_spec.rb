@@ -6,7 +6,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
   fab!(:discobot_user) { narrative_bot.discobot_user }
   fab!(:discobot_username) { narrative_bot.discobot_username }
   fab!(:first_post) { Fabricate(:post, user: discobot_user) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   fab!(:topic) do
     Fabricate(
@@ -31,6 +31,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
     stub_image_size
     Jobs.run_immediately!
     SiteSetting.discourse_narrative_bot_enabled = true
+    Group.refresh_automatic_groups!
   end
 
   describe "#notify_timeout" do
@@ -828,8 +829,11 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
           end
         end
 
-        describe "when min_trust_to_post_embedded_media is too high" do
-          before { SiteSetting.min_trust_to_post_embedded_media = 4 }
+        describe "when embedded_media_post_allowed_groups does not include the user" do
+          before do
+            SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+            Group.refresh_automatic_groups!
+          end
 
           it "should skip the images tutorial step" do
             post.update!(

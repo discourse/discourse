@@ -18,7 +18,7 @@ et:
       no_day: "%B. %Y"
   date:
     month_names:
-    - null
+    -
     - jaanuar
     - veebruar
     - märts
@@ -50,6 +50,14 @@ et:
   remove_posts_deleted_by_author: "Autori poolt kustutatud"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "postituse nr%{post_number} tegi %{username}"
+  components:
+    enabled_filter: "Sisse lülitatud"
+    disabled_filter: "Välja lülitatud"
+    updates_available_filter: "Uuendused on saadaval"
+  themes:
+    settings_errors:
+      objects:
+        not_valid_integer_value: "peab olema täisarv"
   emails:
     incoming:
       default_subject: "See teema vajab pealkirja"
@@ -71,7 +79,6 @@ et:
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
-      too_long_validation: "piirang on %{max} tähemärki; sina sisestasid %{length}."
       invalid_boolean: "Vigane tõeväärtus."
       taken: "on juba võetud"
       accepted: vajab aktsepteerimist
@@ -150,7 +157,6 @@ et:
     more_replies:
       one: "veel %{count} vastus"
       other: "veel %{count} vastust"
-    loading: "Laen arutelu..."
     permalink: "Püsilink"
     imported_from: "See on kaasnev vestlusteema originaalsisestusele %{link}"
     in_reply_to: "▶ %{username}"
@@ -263,8 +269,6 @@ et:
               same_as_email: "on sama mis su meiliaadress. Palun kasuta turvalisemat parooli."
               same_as_current: "ühtib sinu hetkel kehtiva parooliga."
               unique_characters: "sisaldab liiga palju korduvaid tähemärke. Palun kasuta turvalisemat parooli."
-            ip_address:
-              signup_not_allowed: "Sellelt kontolt pole liitumine lubatud."
         color_scheme_color:
           attributes:
             hex:
@@ -414,8 +418,6 @@ et:
       windows: "Microsoft Windows"
       unknown: "tundmatu operatsioonisüsteem"
   change_email:
-    confirmed: "Sinu meiliaadress on uuendatud."
-    please_continue: "Edasi saidile %{site_name}"
     error: "Sinu meiliaadressi muutmisel esines tõrge. Äkki on see juba kasutuses?"
     error_staged: "Sinu meiliaadressi muutmisel esines tõrge. Ettevalmistamisel olev kasutaja juba kasutab seda."
     already_done: "Vabandust, see kinnitamise link ei kehti enam. Äkki on teie meiliaadress juba muudetud?"
@@ -440,6 +442,9 @@ et:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Ebasünnis"
+    illegal:
+      email_title: 'Postitus teemas "%{title}" nõuab meeskonna tähelepanu'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Saada kasutajale @%{username} sõnum"
       email_title: 'Sinu postitus teemas "%{title}"'
@@ -470,6 +475,9 @@ et:
       title: "Miski muu"
       long_form: "tähistasin selle kui moderaatori tähelepanu vajava"
       email_title: 'Teema "%{title}" nõuab moderaatori tähelepanu'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Postitus teemas "%{title}" nõuab meeskonna tähelepanu'
       email_body: "%{link}\n\n%{message}"
   archetypes:
     regular:
@@ -721,32 +729,36 @@ et:
     host_names_warning: "Sinu config/database.yml fail kasutab vaikimisi hostinime localhost. Kirjuta sinna oma saidi hostinimi."
   site_settings:
     disabled: "välja lülitatud"
-    min_post_length: "Lühim lubatud postituse pikkus"
     max_post_length: "Maksimaalne lubatud postituse pikkus tähemärkides"
     min_topic_title_length: "Lühim lubatud teema pealkirja pikkus tähemärkides"
     max_topic_title_length: "Maksimaalne lubatud teema pealkirja pikkus tähemärkides"
     min_personal_message_title_length: "Minimaalne lubatud teema pealkirja pikkus tähemärkides"
-    min_admin_password_length: "Minimaalne administraatori parooli pikkus."
     dark_mode_none: "Pole"
     enable_staged_users: "Sissetulevate meilide töötlemisel loo kasutajad ettevalmistamiseks automaatselt."
     maximum_staged_users_per_email: "Ettevalmistamisel olevate kasutajate maksimaalne arv sai sissetuleva meili töötlemisel täis."
     dominating_topic_minimum_percent: "Mitu protsenti teema postitustest peab kasutaja tegema, et talle saadetaks meeldetuletus teema liigse domineerimise kohta."
-    embed_truncate: "Lühenda sängitatud postitused."
     embed_post_limit: "Maksimaalne postituste arv, mida sängitada."
-    tagging_enabled: "Luba silte teemadel?"
     min_trust_to_create_tag: "Sildi lisamiseks nõutav minimaalne usaldustase."
     max_tags_per_topic: "Teemale liidetavate siltide maksimaalne arv."
     max_tag_length: "Sildis kasutatavate tähemärkide maksimaalne arv."
     max_tag_search_results: "Siltide otsimisel maksimaalselt kuvatavate tulemuste arv."
     max_tags_in_filter_list: "Filtri rippmenüüs kuvatavate siltide maksimaalne arv. Kuvatakse enimkasutatud sildid."
     tags_sort_alphabetically: "Kuva sildid tähestikulises järjekorras. Vaikimisi kuvatakse need populaarsuse järjekorras."
-    tag_style: "Siltide vimplite visuaalne stiil."
     min_trust_level_to_tag_topics: "Teemade sildistamiseks on nõutav minimaalne usaldustase"
     suppress_overlapping_tags_in_list: "Ära näita silti, kui see ühtib täpselt sõnaga teema päses"
     errors:
       invalid_integer: "Väärtuseks peab olema täisarv."
       min_username_length_range: "Minimaalne ei tohi olla maksimaalsest suurem."
       max_username_length_range: "Sa ei tohi maksimaalset seada minimaalsest väiksemaks."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "mitteaktiivne"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "mitteaktiivne"
+      - ""
   search:
     within_post: "postituse nr%{post_number} tegi %{username}"
     types:
@@ -1028,6 +1040,9 @@ et:
         title: "Kutsu meeskonda"
       finished:
         title: "Sinu Discourse on valmis!"
+  onebox:
+    github:
+      closed: "suletud"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
@@ -1063,7 +1078,6 @@ et:
       approve_user:
         title: "Kiida kasutaja heaks"
       reject_user:
-        title: "Kustuta kasutaja..."
         delete:
           title: "Kustuta kasutaja"
       reject:

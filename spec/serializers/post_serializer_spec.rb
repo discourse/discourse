@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe PostSerializer do
-  fab!(:post) { Fabricate(:post) }
-
-  before { Group.refresh_automatic_groups! }
+  fab!(:post)
 
   context "with a post with lots of actions" do
-    fab!(:actor) { Fabricate(:user) }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:actor) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:admin)
     let(:acted_ids) do
       PostActionType.public_types.values.concat(
         %i[notify_user spam].map { |k| PostActionType.types[k] },
@@ -56,7 +54,9 @@ RSpec.describe PostSerializer do
   end
 
   context "with a post with reviewable content" do
-    let!(:reviewable) { PostActionCreator.spam(Fabricate(:user), post).reviewable }
+    let!(:reviewable) do
+      PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post).reviewable
+    end
 
     it "includes the reviewable data" do
       json =
@@ -68,35 +68,35 @@ RSpec.describe PostSerializer do
   end
 
   context "with a post by a nuked user" do
-    before { post.update!(user_id: nil, deleted_at: Time.zone.now) }
-
-    subject do
+    subject(:serializer) do
       PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
     end
 
+    before { post.update!(user_id: nil, deleted_at: Time.zone.now) }
+
     it "serializes correctly" do
       %i[name username display_username avatar_template user_title trust_level].each do |attr|
-        expect(subject[attr]).to be_nil
+        expect(serializer[attr]).to be_nil
       end
-      %i[moderator staff yours].each { |attr| expect(subject[attr]).to eq(false) }
+      %i[moderator staff yours].each { |attr| expect(serializer[attr]).to eq(false) }
     end
   end
 
   context "with a post by a suspended user" do
-    def subject
+    def serializer
       PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
     end
 
     it "serializes correctly" do
-      expect(subject[:user_suspended]).to be_nil
+      expect(serializer[:user_suspended]).to be_nil
 
       post.user.update!(suspended_till: 1.month.from_now)
 
-      expect(subject[:user_suspended]).to eq(true)
+      expect(serializer[:user_suspended]).to eq(true)
 
-      freeze_time (2.months.from_now)
+      freeze_time(2.months.from_now)
 
-      expect(subject[:user_suspended]).to be_nil
+      expect(serializer[:user_suspended]).to be_nil
     end
   end
 
@@ -139,6 +139,13 @@ RSpec.describe PostSerializer do
           hidden: true,
           hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
         )
+      end
+
+      it "includes if the user can see it" do
+        expect(serialized_post_for_user(Fabricate(:moderator))[:can_see_hidden_post]).to eq(true)
+        expect(serialized_post_for_user(Fabricate(:admin))[:can_see_hidden_post]).to eq(true)
+        expect(serialized_post_for_user(user)[:can_see_hidden_post]).to eq(true)
+        expect(serialized_post_for_user(Fabricate(:user))[:can_see_hidden_post]).to eq(false)
       end
 
       it "shows the raw post only if authorized to see it" do
@@ -274,8 +281,8 @@ RSpec.describe PostSerializer do
   end
 
   context "with posts when group moderation is enabled" do
-    fab!(:topic) { Fabricate(:topic) }
-    fab!(:group_user) { Fabricate(:group_user) }
+    fab!(:topic)
+    fab!(:group_user)
     fab!(:post) { Fabricate(:post, topic: topic) }
 
     before do
@@ -303,8 +310,89 @@ RSpec.describe PostSerializer do
     end
   end
 
+  context "with allow_anonymous_likes enabled" do
+    fab!(:user)
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
+    fab!(:anonymous_user) { Fabricate(:anonymous) }
+
+    let(:serializer) { PostSerializer.new(post, scope: Guardian.new(anonymous_user), root: false) }
+    let(:post_action) do
+      user.id = anonymous_user.id
+      post.id = 1
+
+      a =
+        PostAction.new(
+          user: anonymous_user,
+          post: post,
+          post_action_type_id: PostActionType.types[:like],
+        )
+      a.created_at = 1.minute.ago
+      a
+    end
+
+    before do
+      SiteSetting.allow_anonymous_posting = true
+      SiteSetting.allow_anonymous_likes = true
+      SiteSetting.post_undo_action_window_mins = 10
+      PostSerializer.any_instance.stubs(:post_actions).returns({ 2 => post_action })
+    end
+
+    context "when post_undo_action_window_mins has not passed" do
+      before { post_action.created_at = 5.minutes.ago }
+
+      it "allows anonymous users to unlike posts" do
+        like_actions_summary =
+          serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }
+
+        #When :can_act is present, the JavaScript allows the user to click the unlike button
+        expect(like_actions_summary[:can_act]).to eq(true)
+      end
+    end
+
+    context "when post_undo_action_window_mins has passed" do
+      before { post_action.created_at = 20.minutes.ago }
+
+      it "disallows anonymous users from unliking posts" do
+        # There are no other post actions available to anonymous users so the action_summary will be an empty array
+        expect(serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:like] }).to eq(
+          nil,
+        )
+      end
+    end
+  end
+
+  context "with mentions" do
+    fab!(:user_status)
+    fab!(:user)
+    fab!(:user1) { Fabricate(:user, user_status: user_status) }
+    fab!(:post) { Fabricate(:post, user: user, raw: "Hey @#{user1.username}") }
+    let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
+
+    it "returns mentioned users with user status when user status is enabled" do
+      SiteSetting.enable_user_status = true
+
+      json = serializer.as_json
+
+      expect(json[:mentioned_users]).to be_present
+      expect(json[:mentioned_users].length).to be(1)
+      expect(json[:mentioned_users][0]).to_not be_nil
+      expect(json[:mentioned_users][0][:id]).to eq(user1.id)
+      expect(json[:mentioned_users][0][:username]).to eq(user1.username)
+      expect(json[:mentioned_users][0][:name]).to eq(user1.name)
+      expect(json[:mentioned_users][0][:status][:description]).to eq(user_status.description)
+      expect(json[:mentioned_users][0][:status][:emoji]).to eq(user_status.emoji)
+    end
+
+    it "doesn't return mentioned users when user status is disabled" do
+      SiteSetting.enable_user_status = false
+      json = serializer.as_json
+      expect(json[:mentioned_users]).to be_nil
+    end
+  end
+
   describe "#user_status" do
-    fab!(:user_status) { Fabricate(:user_status) }
+    fab!(:user_status)
     fab!(:user) { Fabricate(:user, user_status: user_status) }
     fab!(:post) { Fabricate(:post, user: user) }
     let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }

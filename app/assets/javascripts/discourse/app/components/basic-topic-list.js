@@ -1,9 +1,10 @@
+import Component from "@ember/component";
 import { alias, not } from "@ember/object/computed";
+import $ from "jquery";
 import discourseComputed, {
   bind,
   observes,
 } from "discourse-common/utils/decorators";
-import Component from "@ember/component";
 
 export default Component.extend({
   loadingMore: alias("topicList.loadingMore"),
@@ -80,7 +81,7 @@ export default Component.extend({
   click(e) {
     // Mobile basic-topic-list doesn't use the `topic-list-item` view so
     // the event for the topic entrance is never wired up.
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       return;
     }
 

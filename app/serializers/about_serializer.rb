@@ -6,8 +6,7 @@ class AboutSerializer < ApplicationSerializer
   end
 
   class AboutCategoryModsSerializer < ApplicationSerializer
-    attributes :category_id
-
+    has_one :category, serializer: CategoryBadgeSerializer, embed: :objects
     has_many :moderators, serializer: UserAboutSerializer, embed: :objects
   end
 
@@ -30,7 +29,7 @@ class AboutSerializer < ApplicationSerializer
   end
 
   def stats
-    object.class.fetch_cached_stats || Jobs::AboutStats.new.execute({})
+    object.class.fetch_cached_stats
   end
 
   def include_contact_url?

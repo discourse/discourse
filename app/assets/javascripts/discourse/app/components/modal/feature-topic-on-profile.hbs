@@ -1,0 +1,26 @@
+<DModal
+  @closeModal={{@closeModal}}
+  class="feature-topic-on-profile choose-topic-modal"
+  id="choosing-topic"
+  @title={{i18n "user.feature_topic_on_profile.title"}}
+>
+  <:body>
+    <ChooseTopic
+      @currentTopicId={{@model.user.featured_topic.id}}
+      @selectedTopicId={{this.newFeaturedTopicId}}
+      @additionalFilters="status:public"
+      @label="user.feature_topic_on_profile.search_label"
+      @topicChangedCallback={{this.newTopicSelected}}
+      @loadOnInit={{true}}
+    />
+  </:body>
+  <:footer>
+    <DButton
+      @action={{this.save}}
+      class="btn-primary save-featured-topic-on-profile"
+      @disabled={{this.noTopicSelected}}
+      @label="user.feature_topic_on_profile.save"
+    />
+    <DButton @action={{@closeModal}} @label="cancel" class="btn-flat" />
+  </:footer>
+</DModal>

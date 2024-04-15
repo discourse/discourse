@@ -284,10 +284,6 @@ nb_NO:
         not_found: |-
           Å nei, det ekkel innlegget mitt har ikke blitt markert som upassende ennå. :worried: Kan du markere det som upassende ved å bruke ** flagget ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ikke glem å bruke Vis mer knapp <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> å avsløre flere handlinger for hvert innlegg.
       search:
-        instructions: |-
-          _psst_ ... jeg har gjemt en overraskelse et sted i dette emnet. Hvis du tar utfordringen, **trykk på søkeikonet** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> øverst til høyre &#8599; for å lete etter den.
-
-          Prøv å søke etter ordet "capy&#8203;bara" i dette emnet
         hidden_message: |-
           Hvordan gikk du glipp av denne capybara? :wink:
 
@@ -361,16 +357,6 @@ nb_NO:
 
           Gjør oppmerksom på at du bare har %{deletion_after} timer(r) til å fjerne et innlegg.
       category_hashtag:
-        instructions: |-
-          Visste du at du kan ha referanser til kategorier og stikkord i innlegget ditt? For eksempel, har du sett %{category} kategorien?
-
-          Skriv `#` i midten av en setning og velg en kategori eller et stikkord.
-        not_found: |-
-          Hmm, jeg ser ikke en kategori noe sted i det innlegget. Pass på at `#` ikke må være det første tegnet på linjen. Kan du forsøke å kopiere dette eksempelet inn i det neste svaret?
-
-          ```text
-          Jeg kan lage en lenke til kategorier med #
-          ```
         reply: |-
           Genialt! Husk at dette fungerer både med kategorier _og_ stikkord, hvis stikkord er aktivert.
       change_topic_notification_level:

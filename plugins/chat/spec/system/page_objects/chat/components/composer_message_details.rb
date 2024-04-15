@@ -12,18 +12,42 @@ module PageObjects
           @context = context
         end
 
-        def has_message?(message, action: nil)
-          data_attributes = "[data-id=\"#{message.id}\"]"
-          data_attributes << "[data-action=\"#{action}\"]" if action
-          find(context).find(SELECTOR + data_attributes)
+        def component
+          find(context)
         end
 
-        def has_no_message?
-          find(context).has_no_css?(SELECTOR)
+        def has_message?(**args)
+          selectors = SELECTOR
+          selectors += "[data-id=\"#{args[:id]}\"]" if args[:id]
+          selectors += "[data-action=\"#{args[:action]}\"]" if args[:action]
+          selector_method = args[:does_not_exist] ? :has_no_selector? : :has_selector?
+          predicate = component.send(selector_method, selectors)
+
+          text_options = {}
+          text_options[:text] = args[:text] if args[:text]
+          text_options[:exact_text] = args[:exact_text] if args[:exact_text]
+          if text_options.present?
+            predicate &&=
+              component.send(selector_method, "#{selectors} .chat-reply__excerpt", **text_options)
+          end
+
+          predicate
         end
 
-        def editing_message?(message)
-          has_message?(message, action: :edit)
+        def has_no_message?(**args)
+          has_message?(**args, does_not_exist: true)
+        end
+
+        def editing?(message)
+          has_message?(id: message.id, action: :edit)
+        end
+
+        def replying_to?(message)
+          has_message?(id: message.id, action: :reply)
+        end
+
+        def cancel_edit
+          component.find(".cancel-message-action").click
         end
       end
     end

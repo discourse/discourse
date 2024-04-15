@@ -1,3 +1,6 @@
 .admin-report-chart {
   animation: fadein 2s;
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
+  }
 }

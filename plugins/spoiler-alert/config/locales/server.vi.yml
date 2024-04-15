@@ -1,0 +1,9 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  site_settings:
+    spoiler_enabled: 'Bật spoiler plugin. Nếu bạn thay đổi điều này, bạn cần phải rebake toàn bộ bài viết bằng câu lệnh: "rake posts:rebake".'

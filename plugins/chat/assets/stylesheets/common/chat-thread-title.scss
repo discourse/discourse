@@ -1,0 +1,12 @@
+.chat__thread-title {
+  display: flex;
+
+  &__name,
+  &__name:visited {
+    color: var(--primary);
+  }
+
+  .chat-thread-list-item-unread-indicator {
+    margin-left: 0.5rem;
+  }
+}

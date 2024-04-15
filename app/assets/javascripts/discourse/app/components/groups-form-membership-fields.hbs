@@ -42,9 +42,13 @@
       </label>
 
       <ExpandingTextArea
-        @name="membership-request-template"
-        @class="group-form-membership-request-template input-xxlarge"
-        @value={{this.model.membership_request_template}}
+        {{on
+          "input"
+          (with-event-value (fn (mut this.model.membership_request_template)))
+        }}
+        value={{this.model.membership_request_template}}
+        name="membership-request-template"
+        class="group-form-membership-request-template input-xxlarge"
       />
     </div>
   {{/if}}
@@ -64,7 +68,6 @@
 
     <ListSetting
       @name="automatic_membership"
-      @class="group-form-automatic-membership-automatic"
       @value={{this.emailDomains}}
       @choices={{this.emailDomains}}
       @settingName="name"
@@ -72,6 +75,7 @@
       @valueProperty={{null}}
       @onChange={{action "onChangeEmailDomainsSetting"}}
       @options={{hash allowAny=true}}
+      class="group-form-automatic-membership-automatic"
     />
 
     {{#if this.showAssociatedGroups}}
@@ -83,13 +87,13 @@
 
       <ListSetting
         @name="automatic_membership_associated_groups"
-        @class="group-form-automatic-membership-associated-groups"
         @value={{this.model.associatedGroupIds}}
         @choices={{this.associatedGroups}}
         @settingName="name"
         @nameProperty="label"
         @valueProperty="id"
-        @onChange={{action (mut this.model.associated_group_ids)}}
+        @onChange={{fn (mut this.model.associated_group_ids)}}
+        class="group-form-automatic-membership-associated-groups"
       />
     {{/if}}
   </div>
@@ -115,8 +119,8 @@
       @valueProperty="value"
       @value={{this.groupTrustLevel}}
       @content={{this.trustLevelOptions}}
-      @class="groups-form-grant-trust-level"
-      @onChange={{action (mut this.model.grant_trust_level)}}
+      @onChange={{fn (mut this.model.grant_trust_level)}}
+      class="groups-form-grant-trust-level"
     />
     <label>
       <Input

@@ -5,27 +5,47 @@
 # https://translate.discourse.org/
 
 fr:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Discussion
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Toujours"
+          fullscreen: "Lorsque la discussion est en plein écran"
+          never: "Jamais"
       logs:
         staff_actions:
           actions:
             chat_channel_status_change: "Le statut du canal de discussion a changé"
             chat_channel_delete: "Canal de discussion supprimé"
+            chat_auto_remove_membership: "Les adhésions sont automatiquement supprimées des canaux"
       api:
         scopes:
           descriptions:
             chat:
               create_message: "Créez un message instantané dans un canal spécifié."
+      web_hooks:
+        chat_event:
+          group_name: "Événements de discussion"
+          chat_message_created: "Le message est créé"
+          chat_message_edited: "Le message est modifié"
+          chat_message_trashed: "Le message est supprimé"
+          chat_message_restored: "Le message est restauré"
     about:
-      chat_messages_count: "Messages instantanés"
+      chat_messages_count: "Messages de discussion"
       chat_channels_count: "Canaux de discussion"
       chat_users_count: "Utilisateurs de la discussion"
     chat:
+      text_copied: Texte copié dans le presse-papiers
+      link_copied: Lien copié dans le presse-papiers
+      back_to_forum: "Forum"
+      deleted_chat_username: supprimé
       dates:
+        yesterday: "Hier"
         time_tiny: "h:mm"
       all_loaded: "Affichage de tous les messages"
       already_enabled: "La discussion est déjà activée sur ce sujet. Veuillez actualiser."
@@ -38,6 +58,9 @@ fr:
       browse_all_channels: "Parcourir tous les canaux"
       move_to_channel:
         title: "Déplacer les messages vers le canal"
+        instructions:
+          one: "Vous déplacez <strong>%{count}</strong> message. Sélectionnez un canal de destination. Un message d'espace réservé sera créé dans le canal <strong>%{channelTitle}</strong> pour indiquer que ce message a été déplacé. Notez que les chaînes de réponses ne seront pas conservées dans le nouveau canal et que les messages de l'ancien canal ne seront plus affichés comme réponses aux messages déplacés."
+          other: "Vous déplacez <strong>%{count}</strong> messages. Sélectionnez un canal de destination. Un message d'espace réservé sera créé dans le canal <strong>%{channelTitle}</strong> pour indiquer que ce message a été déplacé. Notez que les chaînes de réponses ne seront pas conservées dans le nouveau canal et que les messages de l'ancien canal ne seront plus affichés comme réponses aux messages déplacés."
         confirm_move: "Déplacer les messages"
       channel_settings:
         title: "Paramètres du canal"
@@ -49,6 +72,7 @@ fr:
         delete_channel: "Supprimer le canal"
         join_channel: "Rejoindre le canal"
         leave_channel: "Quitter le canal"
+        leave_groupchat_info: "Si vous quittez cette discussion de groupe, vous n'y aurez plus accès et vous ne recevrez plus de notifications associées. Pour vous inscrire à nouveau, vous devrez être réinvité(e) par un membre de la discussion de groupe."
         join: "Rejoindre"
         leave: "Quitter"
         save_label:
@@ -68,6 +92,7 @@ fr:
         instructions: "La fermeture du canal empêche les utilisateurs non responsables d'envoyer de nouveaux messages ou de modifier des messages existants. Voulez-vous vraiment fermer ce canal ?"
       channel_delete:
         title: "Supprimer le canal"
+        instructions: "<p>Supprime le canal <strong>%{name}</strong> et l'historique des discussions. Tous les messages et données associées, telles que les réactions et les téléversements, seront définitivement supprimés. Si vous souhaitez conserver l'historique du canal et le désactiver, vous pouvez plutôt archiver le canal.</p> <p>Voulez-vous vraiment <strong>supprimer définitivement</strong> le canal ? Pour confirmer, saisissez le nom du canal dans la case ci-dessous.</p>"
         confirm: "Je comprends les conséquences. Supprimer le canal"
         confirm_channel_name: "Saisissez le nom du canal"
         process_started: "Le processus de suppression du canal a commencé. Ce modal sera bientôt fermé et vous ne verrez plus le canal supprimé nulle part."
@@ -76,8 +101,13 @@ fr:
         create: "Nouveau canal"
       click_to_join: "Cliquez ici pour voir les canaux disponibles."
       close: "Fermer"
+      remove: "Supprimer"
       collapse: "Réduire le tiroir de discussion"
+      expand: "Développer le tiroir de discussion"
       confirm_flag: "Voulez-vous vraiment signaler le message de %{username} ?"
+      deleted:
+        one: "Un message a été supprimé. [voir]"
+        other: "%{count} messages ont été supprimés. [Voir tout]"
       hidden: "Un message a été masqué. [view]"
       delete: "Supprimer"
       edited: "modifié"
@@ -93,7 +123,13 @@ fr:
         title: "Notifications par e-mail"
         when_away: "Seulement en cas d'absence"
       header_indicator_preference:
+        title: "Afficher l'indicateur d'activité dans l'en-tête"
+        all_new: "Tous les nouveaux messages"
+        dm_and_mentions: "Messages directs et mentions"
+        only_mentions: "Mentions uniquement"
         never: "Jamais"
+      separate_sidebar_mode:
+        title: "Afficher des modes de barre latérale distincts pour le forum et la discussion"
       enable: "Activer la discussion"
       flag: "Drapeau"
       emoji: "Insérer un émoji"
@@ -104,25 +140,94 @@ fr:
       heading: "Discussion"
       join: "Rejoindre"
       last_visit: "dernière visite"
+      summarization:
+        title: "Résumer les messages"
+        description: "Sélectionnez une option ci-dessous pour résumer la conversation envoyée pendant la période souhaitée."
+        summarize: "Résumer"
+        since:
+          one: "Dernière heure"
+          other: "%{count} dernières heures"
       mention_warning:
-        dismiss: "rejeter"
         invitations_sent:
           one: "Invitation envoyée"
           other: "Invitations envoyées"
         invite: "Inviter à rejoindre le canal"
-        without_membership: "%{username} n'a pas rejoint ce canal."
-        group_mentions_disabled: "%{group_name} n'autorise pas les mentions."
-        too_many_members: "%{group_name} a trop de membres. Personne n'a reçu de notification."
+        channel_wide_mentions_disallowed: "Les mentions @here et @all sont désactivées dans ce canal."
         groups:
           header:
             some: "Certains utilisateurs ne recevront pas de notification"
             all: "Personne ne recevra de notification"
           unreachable_1: "@%{group} n'autorise pas les mentions."
+          unreachable_2: "@%{group1} et @%{group2} n'autorisent pas les mentions."
+          unreachable_multiple:
+            one: "@%{group} et %{count} autre groupe n'autorisent pas les mentions."
+            other: "@%{group} et %{count} autres groupes n'autorisent pas les mentions."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {La mention de @{group1} dépasse la <a href="{siteSettingUrl}" target="_blank">limite de notification</a> de # utilisateur.}
+                              other {La mention de @{group1} dépasse la <a href="{siteSettingUrl}" target="_blank">limite de notification</a> de # utilisateurs.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {La mention de @{group1} dépasse la limite de notification de # utilisateur.}
+                              other {La mention de @{group1} dépasse la limite de notification de # utilisateurs.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {La mention de @{group1} et de @{group2} dépasse la <a href="{siteSettingUrl}" target="_blank">limite de notification</a> de # utilisateur.}
+                            other {La mention de @{group1} et de @{group2} dépasse la <a href="{siteSettingUrl}" target="_blank">limite de notification</a> de # utilisateurs.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {La mention de @{group1} et de @{group2} dépasse la limite de notification de # utilisateur.}
+                            other {La mention de @{group1} et @{group2} dépasse la limite de notification de # utilisateurs.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {La mention de ces {groupCount} groupes dépasse la <a href="{siteSettingUrl}" target="_blank">limite de notification</a> de # utilisateur.}
+                            other {La mention de ces {groupCount} groupes dépasse la <a href="{siteSettingUrl}" target="_blank">limite de notification</a> de # utilisateurs.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {La mention de ces {groupCount} groupes dépasse la limite de notification de # utilisateur.}
+                            other {La mention de ces {groupCount} groupes dépasse la limite de notification de # utilisateurs.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          one: "Ce message dépasse la limite de notification de %{count} mention."
+          other: "Ce message dépasse la limite de notification de %{count} mentions."
+        too_many_mentions_admin:
+          one: 'Ce message dépasse la <a href="%{siteSettingUrl}" target="_blank">limite de notification</a> de %{count} mention.'
+          other: 'Ce message dépasse la <a href="%{siteSettingUrl}" target="_blank">limite de notification</a> de %{count} mentions.'
       aria_roles:
         header: "En-tête de discussion"
         composer: "Compositeur de discussion"
         channels_list: "Liste des canaux de discussion"
       no_public_channels: "Vous n'avez rejoint aucun canal."
+      kicked_from_channel: "Vous ne pouvez plus accéder à ce canal."
       only_chat_push_notifications:
         title: "Envoyer uniquement des notifications push de discussion"
         description: "Bloquer l'envoi de toutes les notifications push non liées à la discussion"
@@ -134,14 +239,20 @@ fr:
       close_full_page: "Fermer la discussion en plein écran"
       open_message: "Ouvrir le message dans la discussion"
       placeholder_self: "Noter quelque chose"
+      placeholder_channel: "Discuter dans %{channelName}"
+      placeholder_thread: "Discuter dans le fil de discussion"
       placeholder_users: "Discuter avec %{commaSeparatedNames}"
+      placeholder_new_message_disallowed:
+        archived: "Le canal est archivé, vous ne pouvez pas envoyer de nouveaux messages pour le moment."
+        closed: "Le canal est fermé, vous ne pouvez pas envoyer de nouveaux messages pour le moment."
+        read_only: "Le canal est en lecture seule, vous ne pouvez pas envoyer de nouveaux messages pour le moment."
       placeholder_silenced: "Vous ne pouvez pas envoyer de messages pour le moment."
-      placeholder_start_conversation_users: "Démarrer une conversation avec %{commaSeparatedUsernames}"
       remove_upload: "Supprimer le fichier"
       react: "Réagir avec un émoji"
       reply: "Répondre"
       edit: "Modifier"
       copy_link: "Copier le lien"
+      copy_text: "Copier le texte"
       rebake_message: "Reconstruire le HTML"
       retry_staged_message:
         title: "Erreur de réseau"
@@ -153,6 +264,11 @@ fr:
       save: "Enregistrer"
       select: "Sélectionner"
       return_to_list: "Retour à la liste des canaux"
+      return_to_channel: "Revenir au canal"
+      return_to_threads_list: "Revenir à la liste des sujets"
+      unread_threads_count:
+        one: "Vous avez %{count} discussion non lue"
+        other: "Vous avez %{count} discussions non lues"
       scroll_to_bottom: "Défiler vers le bas"
       scroll_to_new_messages: "Voir les nouveaux messages"
       sound:
@@ -164,6 +280,8 @@ fr:
       title: "discussion"
       title_capitalized: "Discussion"
       upload: "Joindre un fichier"
+      upload_to_channel: "Téléverser vers %{title}"
+      upload_to_thread: "Téléverser dans le fil"
       uploaded_files:
         one: "%{count} fichier"
         other: "%{count} fichiers"
@@ -174,7 +292,7 @@ fr:
         read_only: "Lecture seule"
         archived_header: "Le canal est archivé"
         archived: "Archivé"
-        archive_failed: "Échec de l'archivage du canal. %{completed}/%{total} messages ont été archivés dans <a target=\"_blank\" href=\"%{topic_url}\">le sujet de destination</a>. Appuyez sur Réessayer pour tenter de terminer l'archivage."
+        archive_failed: "Échec de l'archivage du canal. %{completed}/%{total} messages ont été archivés. <a target=\"_blank\" href=\"%{topic_url}\">Le sujet de destination</a> a été créé. Appuyez sur Réessayer pour tenter de terminer l'archivage."
         archive_failed_no_topic: "Échec de l'archivage du canal. %{completed}/%{total} messages ont été archivés, le sujet de destination n'a pas été créé. Appuyez sur Réessayer pour tenter de terminer l'archivage."
         archive_completed: "Voir <a target=\"_blank\" href=\"%{topic_url}\">le sujet de l'archive</a>"
         closed_header: "Le canal est fermé"
@@ -194,6 +312,8 @@ fr:
         yesterday: Hier
       members_view:
         filter_placeholder: Trouver des membres
+        add_member: Ajouter un membre
+        back_to_settings: "Retour aux paramètres"
       about_view:
         associated_topic: Sujet lié
         associated_category: Catégorie liée
@@ -204,23 +324,45 @@ fr:
         back_to_all_channels: "Tous les canaux"
         back_to_channel: "Retour"
         tabs:
-          about: À propos
           members: Membres
           settings: Paramètres
+      new_message_modal:
+        title: Envoyer un message
+        add_user_long: <kbd>majuscule + clic</kbd> ou <kbd>majuscule + entrée</kbd><span>Ajouter @%{username}</span>
+        add_user_short: <span>Ajouter un utilisateur</span>
+        open_channel: <span>Ouvrir le canal</span>
+        default_search_placeholder: "#un-canal, @personne ou un nom"
+        default_channel_search_placeholder: "#un-canal"
+        default_user_search_placeholder: "@personne"
+        user_search_placeholder: "...ajouter d'autres membres"
+        disabled_user: "a désactivé la discussion"
+        no_items: "Aucun élément"
+        create_group_placeholder: "Nom de la discussion de groupe (facultatif)"
+        participants_counter: "%{selection_count}/%{max} participants"
+        new_group_chat: "Nouveau groupe de discussion"
+        filter: "Filtrer"
+        cant_add_more_members: "Nombre maximal de membres atteint"
+        create_new_group_chat: "Créer une discussion de groupe"
       channel_edit_name_slug_modal:
+        title: Modifier le canal
+        input_placeholder: Ajouter un nom
+        slug_description: Un identifiant de canal est utilisé dans l'URL au lieu du nom du canal
         name: Nom du canal
+        slug: Identifiant de canal (facultatif)
       channel_edit_description_modal:
         title: Modifier la description
         input_placeholder: Ajouter une description
         description: Dites aux utilisateurs en quoi consiste ce canal
       direct_message_creator:
+        add_to_channel: "Ajouter au canal"
         title: Nouveau message
         prefix: "À :"
         no_results: Aucun résultat
         selected_user_title: "Désélectionner %{username}"
-      channel_selector:
-        title: "Accéder au canal"
-        no_channels: "Aucun canal ne correspond à votre recherche"
+        group_name: "Nom de la discussion de groupe (facultatif)"
+        members_counter:
+          one: "%{count}/%{max} membre"
+          other: "%{count}/%{max} membres"
       channel:
         no_memberships: Ce canal ne comprend aucun membre
         no_memberships_found: Aucun membre trouvé
@@ -228,15 +370,44 @@ fr:
           one: "%{count} membre"
           other: "%{count} membres"
       create_channel:
+        threading:
+          label: "Activer le fil"
         auto_join_users:
           public_category_warning: "%{category} est une catégorie publique. Ajouter automatiquement tous les utilisateurs récemment actifs à ce canal ?"
+          warning_1_group:
+            one: "Ajouter automatiquement %{count} utilisateur de %{group} ?"
+            other: "Ajouter automatiquement %{count} utilisateurs de %{group} ?"
+          warning_2_groups:
+            one: "Ajouter automatiquement %{count} utilisateur de %{group1} et de %{group2} ?"
+            other: "Ajouter automatiquement %{count} utilisateurs de %{group1} et de %{group2} ?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Ajouter automatiquement {userCount} utilisateur de {groupName} et de {groupCount} autre groupe ?}
+                        other {Ajouter automatiquement {userCount} utilisateurs de {groupName} et de {groupCount} autres groupes ?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Ajouter automatiquement {userCount} utilisateur de {groupName} et de {groupCount} autre groupe ?}
+                        other {Ajouter automatiquement {userCount} utilisateurs de {groupName} et de {groupCount} autres groupes ?}
+                      }
+                    }
+            }
         choose_category:
           label: "Choisir une catégorie"
           none: "sélectionnez-en une…"
           default_hint: Gérer l'accès en visitant <a href=%{link} target="_blank">les paramètres de sécurité de %{category}</a>
+          hint_1_group: 'Les utilisateurs de %{group} auront accès à ce canal selon les <a href="%{settingLink}" target="_blank">paramètres de sécurité</a>'
+          hint_2_groups: 'Les utilisateurs en %{group1} et de %{group2} auront accès à ce canal selon les <a href="%{settingLink}" target="_blank">paramètres de sécurité</a>'
+          hint_multiple_groups:
+            one: 'Les utilisateurs de %{group} et de %{count} autre groupe auront accès à ce canal selon les <a href="%{settingLink}" target="_blank">paramètres de sécurité</a>'
+            other: 'Les utilisateurs de %{group} et de %{count} autres groupes auront accès à ce canal selon les <a href="%{settingLink}" target="_blank">paramètres de sécurité</a>'
         create: "Créer un canal"
         description: "Description (facultative)"
         name: "Nom du canal"
+        slug: "Identifiant de canal (facultatif)"
         title: "Nouveau canal"
         type: "Type"
         types:
@@ -245,8 +416,17 @@ fr:
       reviewable:
         type: "Message de discussion"
       reactions:
-        only_you: "Vous avez réagi avec :%{emoji}:"
-        single_user: "%{username} a réagi avec :%{emoji} :"
+        only_you: "<span>Vous avez réagi avec </span>:%{emoji}:"
+        you_and_single_user: "<span>Vous et %{username} avez réagi avec </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Vous, %{commaSeparatedUsernames} et %{username} avez réagi avec </span>:%{emoji}:"
+        you_multiple_users_and_more:
+          one: "<span>Vous, %{commaSeparatedUsernames} et %{count} autre utilisateur avez réagi avec </span>:%{emoji}:"
+          other: "<span>Vous, %{commaSeparatedUsernames} et %{count} autres utilisateurs avez réagi avec </span>:%{emoji}:"
+        single_user: "<span>%{username} a réagi avec </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} et %{username} ont réagi avec </span>:%{emoji}:"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} et %{count} autre utilisateur ont réagi avec </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} et %{count} autres utilisateurs ont réagi avec </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Basculer la barre d'outils"
         italic_text: "texte souligné"
@@ -256,6 +436,7 @@ fr:
       quote:
         original_channel: 'Envoyé à l''origine dans le canal <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Citation de discussion copiée dans le presse-papiers"
+        default_thread_title: "Fil"
       notification_levels:
         never: "Jamais"
         mention: "Seulement pour les mentions"
@@ -263,13 +444,19 @@ fr:
       settings:
         channel_wide_mentions_label: "Autoriser les mentions @all et @here"
         channel_wide_mentions_description: "Autoriser les utilisateurs à notifier tous les membres de #%{channel} avec @all ou uniquement ceux qui sont actifs en ce moment avec @here"
+        channel_threading_label: "Fil de discussion"
+        channel_threading_description: "Lorsque le fil de discussion est activé, les réponses à un message créeront une conversation distincte, qui existera parallèlement au canal principal."
         auto_join_users_label: "Ajouter automatiquement des utilisateurs"
+        auto_join_users_info: "Vérifiez toutes les heures quels utilisateurs ont été actifs au cours des 3 derniers mois. Ajoutez-les à ce canal s'ils ont accès à la catégorie %{category}."
+        auto_join_users_info_no_category: "Vérifiez toutes les heures quels utilisateurs ont été actifs au cours des 3 derniers mois. Ajoutez-les à ce canal s'ils ont accès à la catégorie sélectionnée."
         auto_join_users_warning: "Chaque utilisateur qui n'est pas membre de ce canal et qui a accès à la catégorie %{category} le rejoindra. Voulez-vous continuer ?"
         desktop_notification_level: "Notifications sur le bureau"
         follow: "Rejoindre"
         followed: "Rejoint"
         mobile_notification_level: "Notifications push mobiles"
         mute: "Mettre le canal en sourdine"
+        threading_enabled: "Activée"
+        threading_disabled: "Désactivé"
         muted_on: "Activé"
         muted_off: "Désactivé"
         notifications: "Notifications"
@@ -278,14 +465,26 @@ fr:
         saved: "Enregistré"
         unfollow: "Quitter"
         admin_title: "Administrateur"
+        settings_title: "Paramètres"
+        info_title: "Informations du canal"
+        category_label: "Catégorie"
+        history_label: "Historique"
+        members_label: "Membres"
       admin:
         title: "Discussion"
+        export_messages:
+          title: "Exporter les messages de la discussion"
+          description: "Cela permet d'exporter tous les messages de tous les canaux."
+          create_export: "Créer une exportation"
+          export_has_started: "L'exportation a commencé. Vous recevrez un MP quand elle sera prête."
       direct_messages:
-        title: "Discussion privée"
         new: "Créer une conversation personnelle"
         create: "Valider"
         leave: "Quitter cette discussion privée"
+        close: "Fermer ce chat personnel"
         cannot_create: "Nous sommes désolés, vous ne pouvez pas envoyer de messages privés."
+      channel_list:
+        title: "Canaux"
       incoming_webhooks:
         back: "Retour"
         channel_placeholder: "Sélectionnez un canal"
@@ -342,6 +541,15 @@ fr:
         many_users:
           one: "%{commaSeparatedUsernames} et %{count} autre utilisateur sont en train d'écrire"
           other: "%{commaSeparatedUsernames} et %{count} autres utilisateurs sont en train d'écrire"
+      retention_reminders:
+        indefinitely_short: "indéfiniment"
+        indefinitely_long: "Les paramètres de discussion ont été définis pour conserver les messages du canal indéfiniment."
+        short:
+          one: "%{count} jour"
+          other: "%{count} jours"
+        long:
+          one: "Les paramètres de discussion ont été définis pour conserver les messages du canal pendant %{count} jour."
+          other: "Les paramètres de discussion ont été définis pour conserver les messages du canal pendant %{count} jours."
       flags:
         off_topic: "Ce message n'est pas pertinent pour la discussion en cours telle que définie par le titre du canal et devrait probablement être déplacé ailleurs."
         inappropriate: "Ce message contient du contenu qu'une personne raisonnable considérerait comme offensant, abusif ou contraire à nos <a href=\"%{basePath}/guidelines\">consignes communautaires</a>."
@@ -365,10 +573,30 @@ fr:
         no_results: "Aucun résultat"
       thread:
         title: "Titre"
+        view_thread: Afficher le fil
         replies:
           one: "%{count} réponse"
           other: "%{count} réponses"
+        label: Fil
+        close: "Fermer le fil"
+        original_message:
+          started_by: "Commencé par"
         settings: "Paramètres"
+        last_reply: "dernière réponse"
+        notifications:
+          regular:
+            title: "Normal"
+            description: "Vous serez averti(e) si quelqu'un mentionne votre @name dans ce fil."
+          tracking:
+            title: "Suivi"
+            description: "Un nombre de nouvelles réponses pour ce fil sera affiché dans la liste des fils et dans le canal. Vous serez averti(e) si quelqu'un mentionne votre @nom dans ce fil."
+        participants_other_count:
+          one: "+ %{count}"
+          other: "+ %{count}"
+      threads:
+        open: "Ouvrir le fil"
+        list: "Fils de discussion"
+        none: "Vous ne participez à aucun fil dans ce canal."
       draft_channel_screen:
         header: "Nouveau message"
         cancel: "Annuler"
@@ -415,6 +643,9 @@ fr:
       types:
         chat_reviewable_message:
           title: "Message de discussion signalé"
+        reviewable_chat_message:
+          title: "Message de discussion marqué"
+          noun: "message de discussion"
     keyboard_shortcuts_help:
       chat:
         title: "Discussion"
@@ -427,6 +658,7 @@ fr:
           composer_code: "%{shortcut} Code (compositeur uniquement)"
           drawer_open: "%{shortcut} Ouvrir le tiroir de discussion"
           drawer_close: "%{shortcut} Fermer le tiroir de discussion"
+          mark_all_channels_read: "%{shortcut} Marquer tous les canaux comme lus"
     topic_statuses:
       chat:
         help: "La discussion est activée pour ce sujet"
@@ -449,3 +681,7 @@ fr:
       sections:
         chat:
           title: Discussion
+    sidebar:
+      panels:
+        chat:
+          label: "Discussion"

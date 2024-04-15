@@ -180,6 +180,10 @@ class UserCommScreener
     actor_preferences[:disallowed_pms_from].include?(user_id)
   end
 
+  def actor_disallowing_any_pms?(user_ids)
+    user_ids.any? { |user_id| actor_disallowing_pms?(user_id) }
+  end
+
   def actor_disallowing_all_pms?
     !acting_user.user_option.allow_private_messages
   end

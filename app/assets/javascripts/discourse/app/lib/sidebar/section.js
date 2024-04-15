@@ -1,16 +1,15 @@
-import I18n from "I18n";
-import showModal from "discourse/lib/show-modal";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { htmlSafe } from "@ember/template";
-import SectionLink from "discourse/lib/sidebar/section-link";
 import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
-import { bind } from "discourse-common/utils/decorators";
+import { service } from "@ember/service";
+import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 import { ajax } from "discourse/lib/ajax";
+import SectionLink from "discourse/lib/sidebar/section-link";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default class Section {
   @service currentUser;
+  @service modal;
   @service router;
 
   @tracked dragCss;
@@ -28,17 +27,21 @@ export default class Section {
   }
 
   get decoratedTitle() {
-    return this.section.public && this.currentUser?.staff
-      ? htmlSafe(`${iconHTML("globe")} ${this.section.title}`)
-      : this.section.title;
+    return this.section.title;
+  }
+
+  get indicatePublic() {
+    return this.section.public && this.currentUser?.staff;
   }
 
   get headerActions() {
-    if (!this.section.public || this.currentUser?.staff) {
+    if (!this.section.public || this.currentUser?.admin) {
       return [
         {
           action: () => {
-            return showModal("sidebar-section-form", { model: this.section });
+            return this.modal.show(SidebarSectionForm, {
+              model: this,
+            });
           },
           title: I18n.t("sidebar.sections.custom.edit"),
         },
@@ -73,6 +76,7 @@ export default class Section {
     this.links = this.links.removeObject(link);
     this.links.splice(position, 0, link);
   }
+
   @bind
   reorder() {
     return ajax(`/sidebar_sections/reorder`, {

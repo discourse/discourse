@@ -1,6 +1,6 @@
-import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "I18n";
 import { Promise } from "rsvp";
+import discourseDebounce from "discourse-common/lib/debounce";
+import I18n from "discourse-i18n";
 
 let _cache = {};
 
@@ -199,7 +199,7 @@ const SHORT_URL_ATTRIBUTES =
   "img[data-orig-src], a[data-orig-href], source[data-orig-src]";
 
 export function resolveCachedShortUrls(siteSettings, scope, opts) {
-  let shortUploadElements = scope.querySelectorAll(SHORT_URL_ATTRIBUTES);
+  const shortUploadElements = scope.querySelectorAll(SHORT_URL_ATTRIBUTES);
 
   if (shortUploadElements.length > 0) {
     _loadCachedShortUrls(shortUploadElements, siteSettings, opts);
@@ -207,14 +207,11 @@ export function resolveCachedShortUrls(siteSettings, scope, opts) {
 }
 
 export function resolveAllShortUrls(ajax, siteSettings, scope, opts) {
-  let shortUploadElements = scope.querySelectorAll(SHORT_URL_ATTRIBUTES);
+  resolveCachedShortUrls(siteSettings, scope, opts);
+
+  const shortUploadElements = scope.querySelectorAll(SHORT_URL_ATTRIBUTES);
 
   if (shortUploadElements.length > 0) {
-    _loadCachedShortUrls(shortUploadElements, siteSettings, opts);
-
-    shortUploadElements = scope.querySelectorAll(SHORT_URL_ATTRIBUTES);
-    if (shortUploadElements.length > 0) {
-      return _loadShortUrls(shortUploadElements, ajax, siteSettings, opts);
-    }
+    return _loadShortUrls(shortUploadElements, ajax, siteSettings, opts);
   }
 }

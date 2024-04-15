@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   sso_secret = "mysecretmyprecious"
   let!(:sso) do
     sso = ::DiscourseConnectProvider.new
@@ -33,7 +33,12 @@ RSpec.describe SecondFactor::Actions::DiscourseConnectProvider do
 
   def create_instance(user, request = nil, opts = nil)
     request ||= create_request
-    SecondFactor::Actions::DiscourseConnectProvider.new(Guardian.new(user), request, opts)
+    SecondFactor::Actions::DiscourseConnectProvider.new(
+      Guardian.new(user),
+      request,
+      opts: opts,
+      target_user: user,
+    )
   end
 
   describe "#skip_second_factor_auth?" do

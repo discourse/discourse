@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::WebHooksController do
-  fab!(:web_hook) { Fabricate(:web_hook) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:web_hook)
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   describe "#create" do
     context "when logged in as admin" do
@@ -20,7 +20,7 @@ RSpec.describe Admin::WebHooksController do
                  wildcard_web_hook: false,
                  active: true,
                  verify_certificate: true,
-                 web_hook_event_type_ids: [1],
+                 web_hook_event_type_ids: [WebHookEventType::TYPES[:topic_created]],
                  group_ids: [],
                  category_ids: [],
                },
@@ -47,7 +47,7 @@ RSpec.describe Admin::WebHooksController do
                  wildcard_web_hook: false,
                  active: true,
                  verify_certificate: true,
-                 web_hook_event_type_ids: [1],
+                 web_hook_event_type_ids: [WebHookEventType::TYPES[:topic_created]],
                  group_ids: [],
                  category_ids: [],
                },
@@ -276,21 +276,6 @@ RSpec.describe Admin::WebHooksController do
     end
 
     it "doesn't emit the web hook if the payload URL resolves to an internal IP" do
-      FinalDestination::TestHelper.stub_to_fail do
-        post "/admin/api/web_hooks/#{web_hook.id}/events/#{web_hook_event.id}/redeliver.json"
-      end
-      expect(response.status).to eq(200)
-
-      parsed_event = response.parsed_body["web_hook_event"]
-      expect(parsed_event["id"]).to eq(web_hook_event.id)
-      expect(parsed_event["response_headers"]).to eq(
-        { error: I18n.t("webhooks.payload_url.blocked_or_internal") }.to_json,
-      )
-      expect(parsed_event["status"]).to eq(-1)
-      expect(parsed_event["response_body"]).to eq(nil)
-    end
-
-    it "doesn't emit the web hook if the payload URL resolves to a blocked IP" do
       FinalDestination::TestHelper.stub_to_fail do
         post "/admin/api/web_hooks/#{web_hook.id}/events/#{web_hook_event.id}/redeliver.json"
       end

@@ -2,7 +2,7 @@
 
 RSpec.describe TopicConverter do
   describe "convert_to_public_topic" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:author) { Fabricate(:user) }
     fab!(:category) { Fabricate(:category, topic_count: 1) }
     fab!(:private_message) { Fabricate(:private_message_topic, user: author) } # creates a topic without a first post
@@ -131,9 +131,9 @@ RSpec.describe TopicConverter do
   end
 
   describe "convert_to_private_message" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:author) { Fabricate(:user) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:category)
     fab!(:topic) { Fabricate(:topic, user: author, category_id: category.id) }
     fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
 
@@ -183,8 +183,8 @@ RSpec.describe TopicConverter do
 
       it "invites only users with regular posts" do
         post2 = Fabricate(:post, topic: topic)
-        whipser_post = Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
-        small_action_post = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
+        Fabricate(:post, topic: topic, post_type: Post.types[:whisper])
+        Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
 
         topic.convert_to_private_message(admin)
 

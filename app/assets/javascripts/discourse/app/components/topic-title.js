@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import KeyEnterEscape from "discourse/mixins/key-enter-escape";
 import { schedule } from "@ember/runloop";
+import KeyEnterEscape from "discourse/mixins/key-enter-escape";
 
 export let topicTitleDecorators = [];
 

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe "Sidebar navigation menu", type: :system, js: true do
+RSpec.describe "Sidebar navigation menu", type: :system do
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
-  let(:sidebar_component) { PageObjects::Components::Sidebar.new }
+  let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   fab!(:current_user) { Fabricate(:user) }
 
@@ -146,7 +146,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
           visit("/")
 
           expect(sidebar_page.dms_section.find("a.sidebar-section-link:nth-child(1)")).to have_css(
-            ".user-status",
+            ".user-status-message",
           )
         end
       end
@@ -182,7 +182,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
         visit("/")
 
         expect(sidebar_page.dms_section.find(".channel-#{dm_channel_1.id}")["title"]).to eq(
-          "Chat in @&lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;",
+          "Chat with @&lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;",
         )
       end
     end

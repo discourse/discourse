@@ -6,7 +6,15 @@
 
 th:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "เสมอ"
+          never: "ไม่เคย"
     chat:
+      deleted_chat_username: ลบ
+      dates:
+        yesterday: "เมื่อวาน"
       create: "สร้าง"
       cancel: "ยกเลิก"
       channel_settings:
@@ -15,6 +23,7 @@ th:
         join: "เข้าร่วม"
         leave: "ออก"
       close: "ปิด"
+      remove: "ลบ"
       delete: "ลบ"
       edited: "ถูกแก้ไข"
       muted: "ปิดการแจ้งเตือน"
@@ -26,8 +35,6 @@ th:
       flag: "ธง"
       join: "เข้าร่วม"
       last_visit: "เยี่ยมชมครั้งล่าสุด"
-      mention_warning:
-        dismiss: "ซ่อน"
       reply: "ตอบ"
       edit: "แก้ไข"
       bookmark_message: "บุ๊คมาร์ค"
@@ -42,6 +49,7 @@ th:
       browse:
         back: "กลับ"
         filter_all: ทั้งหมด
+        filter_open: เปิด
         filter_closed: ปิด
       chat_message_separator:
         today: วันนี้
@@ -53,7 +61,6 @@ th:
       channel_info:
         back_to_channel: "กลับ"
         tabs:
-          about: เกี่ยวกับ
           members: สมาชิก
           settings: การตั้งค่า
       direct_message_creator:
@@ -73,12 +80,17 @@ th:
       settings:
         follow: "เข้าร่วม"
         followed: "สมัครสมาชิกเมื่อ"
+        threading_disabled: "ปิดใช้งานแล้ว"
         notifications: "การแจ้งเตือน"
         preview: "แสดงตัวอย่าง"
         save: "บันทึก"
         saved: "บันทึกแล้ว"
         unfollow: "ออก"
         admin_title: "ผู้ดูแลระบบ"
+        settings_title: "การตั้งค่า"
+        category_label: "หมวดหมู่"
+        history_label: "ประวัติ"
+        members_label: "สมาชิก"
       incoming_webhooks:
         back: "กลับ"
         description: "รายละเอียด"
@@ -99,6 +111,9 @@ th:
           title: "ย้ายไปกระทู้ที่มีอยู่แล้ว"
         new_message:
           title: "ย้ายไปข้อความใหม่"
+      retention_reminders:
+        short:
+          other: "%{count} วัน"
       emoji_picker:
         objects: "วัตถุ"
         activities: "กิจกรรม"
@@ -109,6 +124,12 @@ th:
         replies:
           other: "%{count} ตอบ"
         settings: "การตั้งค่า"
+        last_reply: "การตอบล่าสุด"
+        notifications:
+          regular:
+            title: "ปกติ"
+          tracking:
+            title: "ติดตาม"
       draft_channel_screen:
         header: "สร้างข้อความใหม่"
         cancel: "ยกเลิก"

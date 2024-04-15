@@ -1,79 +1,16 @@
 @import "common/foundation/mixins";
 
-.full-page-chat {
-  overflow: hidden; //prevents double scroll
+.channels-list-container {
+  overflow: hidden;
 
-  .channels-list {
-    overflow-y: overlay;
-    padding-bottom: 6rem;
-    box-sizing: border-box;
-
-    .channels-list-container {
-      background: var(--secondary);
-    }
-
-    .chat-channel-row {
-      height: 4em;
-      margin: 0;
-      padding: 0 1.5rem;
-      border-radius: 0;
-      border-bottom: 1px solid var(--primary-low);
-
-      .chat-channel-metadata {
-        .chat-channel-unread-indicator {
-          font-size: var(--font-down-2);
-          margin-top: 0.25rem;
-        }
-        &__date {
-          font-size: var(--font-down-2);
-        }
-      }
-    }
-
-    .chat-channel-divider {
-      font-size: var(--font-up-1);
-
-      &:first-of-type {
-        padding-top: 1rem;
-      }
-
-      .channel-title {
-        color: var(--quaternary);
-        font-size: var(--font-down-1);
-      }
-    }
-
-    .chat-user-avatar {
-      + .chat-channel-title__usernames {
-        margin-left: 1rem;
-      }
-    }
-
-    .chat-channel-title {
-      width: 100%;
-      overflow: hidden;
-
-      &__users-count {
-        font-size: var(--font-up-2);
-        & + .chat-channel-title__name {
-          margin-left: 1rem;
-        }
-      }
-
-      &__name {
-        margin-left: 0.75em;
-        font-size: var(--font-up-1);
-      }
-
-      &__category-badge {
-        font-size: var(--font-up-1);
-      }
-
-      &__user-status-message {
-        flex-shrink: 3;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
+  .chat-channel-name {
+    font-size: var(--font-up-1-rem);
   }
+}
+
+.c-routes-direct-messages,
+.c-routes-channels,
+.c-routes-threads {
+  background: var(--primary-very-low);
+  max-width: 100vw;
 }

@@ -1,19 +1,20 @@
+import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
+  router: service(),
+
   model(params) {
-    return Category.reloadCategoryWithPermissions(
-      params,
-      this.store,
-      this.site
-    );
+    return this.site.lazy_load_categories
+      ? Category.asyncFindBySlugPath(params.slug, { includePermissions: true })
+      : Category.reloadCategoryWithPermissions(params, this.store, this.site);
   },
 
   afterModel(model) {
     if (!model.can_edit) {
-      this.replaceWith("/404");
+      this.router.replaceWith("/404");
       return;
     }
   },

@@ -1,17 +1,20 @@
-import { and, readOnly } from "@ember/object/computed";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
 import Controller from "@ember/controller";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import PermissionType from "discourse/models/permission-type";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { and } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { underscore } from "@ember/string";
-import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
+import PermissionType from "discourse/models/permission-type";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   dialog: service(),
+  site: service(),
+  router: service(),
+
   selectedTab: "general",
   saving: false,
   deleting: false,
@@ -19,7 +22,6 @@ export default Controller.extend({
   showTooltip: false,
   createdCategory: false,
   expandedMenu: false,
-  mobileView: readOnly("site.mobileView"),
   parentParams: null,
   showDeleteReason: and("showTooltip", "model.cannot_delete_reason"),
 
@@ -87,33 +89,32 @@ export default Controller.extend({
       if (this.validators.some((validator) => validator())) {
         return;
       }
-      const model = this.model;
-      const parentCategory = this.site.categories.findBy(
-        "id",
-        parseInt(model.parent_category_id, 10)
-      );
 
       this.set("saving", true);
-      model.set("parentCategory", parentCategory);
 
-      model
+      this.model
         .save()
         .then((result) => {
-          this.set("saving", false);
-          if (!model.id) {
-            model.setProperties({
+          if (!this.model.id) {
+            this.model.setProperties({
               slug: result.category.slug,
               id: result.category.id,
               can_edit: result.category.can_edit,
               permission: PermissionType.FULL,
               notification_level: NotificationLevels.REGULAR,
             });
-            this.site.updateCategory(model);
-            this.transitionToRoute("editCategory", Category.slugFor(model));
+            this.site.updateCategory(this.model);
+            this.router.transitionTo(
+              "editCategory",
+              Category.slugFor(this.model)
+            );
           }
         })
         .catch((error) => {
           popupAjaxError(error);
+          this.model.set("parent_category_id", undefined);
+        })
+        .finally(() => {
           this.set("saving", false);
         });
     },
@@ -126,7 +127,7 @@ export default Controller.extend({
           this.model
             .destroy()
             .then(() => {
-              this.transitionToRoute("discovery.categories");
+              this.router.transitionTo("discovery.categories");
             })
             .catch(() => {
               this.displayErrors([I18n.t("category.delete_error")]);

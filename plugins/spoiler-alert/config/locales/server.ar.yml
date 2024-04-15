@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    spoiler_enabled: 'تفعيل المكوِّن الإضافي لحرق الأحداث. إذا غيَّرت هذا الإعداد، يجب عليك إعادة إنشاء جميع المنشورات باستخدام: "rake posts:rebake".'
+  spoiler_alert:
+    excerpt_spoiler: "حريق أحداث"

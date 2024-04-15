@@ -1,0 +1,40 @@
+@keyframes d-toast-opening {
+  from {
+    transform: translateY(var(--transform-y, 10px));
+  }
+}
+
+.post-action-feedback-alert {
+  --transform-y: 0;
+
+  position: fixed;
+  top: calc(var(--header-offset) + 0.5rem);
+  left: 0;
+  right: 0;
+  margin-inline: 0.5rem;
+  z-index: z("max");
+  display: flex;
+  box-sizing: border-box;
+  padding: 1em 1.5em;
+  opacity: 1;
+  transition: opacity 0.5s;
+  border-radius: var(--d-border-radius);
+  color: var(--primary);
+  overflow: hidden;
+  background-color: var(--tertiary-very-low);
+  border: 1px solid var(--primary-low);
+  box-shadow: var(--shadow-menu-panel);
+  overflow-wrap: break-word;
+  animation: d-toast-opening 0.3s ease-in-out;
+  will-change: transform;
+
+  &.-fade-out {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .post-action-feedback-alert {
+    --transform-y: 2vh;
+  }
+}

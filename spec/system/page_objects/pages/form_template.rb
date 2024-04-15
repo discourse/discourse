@@ -3,6 +3,16 @@
 module PageObjects
   module Pages
     class FormTemplate < PageObjects::Pages::Base
+      def visit
+        page.visit("/admin/customize/form-templates")
+        self
+      end
+
+      def visit_new
+        page.visit("/admin/customize/form-templates/new")
+        self
+      end
+
       # Form Template Index
       def has_form_template_table?
         page.has_selector?("table.form-templates__table")
@@ -21,8 +31,15 @@ module PageObjects
         find(".form-templates__table tbody tr td", text: name).present?
       end
 
+      def has_no_form_template?(name)
+        has_no_css?(".form-templates__table tbody tr td", text: name)
+      end
+
       def has_category_in_template_row?(category_name)
-        find(".form-templates__table .categories .category-name", text: category_name).present?
+        find(
+          ".form-templates__table .categories .badge-category__name",
+          text: category_name,
+        ).present?
       end
 
       def has_template_structure?(structure)
@@ -31,12 +48,12 @@ module PageObjects
 
       # Form Template new/edit form related
       def type_in_template_name(input)
-        find(".form-templates__form-name-input").send_keys(input)
+        find(".form-templates__form-name-input").fill_in(with: input)
         self
       end
 
       def click_save_button
-        find(".form-templates__form .footer-buttons .btn-primary").click
+        find(".form-templates__form .footer-buttons .btn-primary:enabled", visible: :all).click
       end
 
       def click_quick_insert(field_type)
@@ -48,11 +65,11 @@ module PageObjects
       end
 
       def click_preview_button
-        find(".form-templates__preview-button").click
+        find(".form-templates__preview-button:enabled").click
       end
 
       def has_input_field?(type)
-        find(".form-template-field__#{type}").present?
+        find(".form-template-field__#{type}", visible: :all).present?
       end
 
       def has_preview_modal?
@@ -67,12 +84,12 @@ module PageObjects
         find(".form-templates__form-name-input").value == name
       end
 
-      def has_save_button_with_state?(state)
-        find_button("Save", disabled: state)
+      def has_save_button_with_state?(disabled:)
+        find_button("Save", disabled:)
       end
 
-      def has_preview_button_with_state?(state)
-        find_button("Preview", disabled: state)
+      def has_preview_button_with_state?(disabled:)
+        find_button("Preview", disabled:)
       end
     end
   end

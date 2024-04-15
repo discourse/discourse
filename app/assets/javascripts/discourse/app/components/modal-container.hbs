@@ -1,0 +1,12 @@
+<div class="modal-container" {{did-insert this.modal.setContainerElement}}>
+</div>
+
+{{#if this.modal.activeModal}}
+  {{#each (array this.modal.activeModal) as |activeModal|}}
+    {{! #each ensures that the activeModal component/model are updated atomically }}
+    <activeModal.component
+      @model={{activeModal.opts.model}}
+      @closeModal={{this.closeModal}}
+    />
+  {{/each}}
+{{/if}}

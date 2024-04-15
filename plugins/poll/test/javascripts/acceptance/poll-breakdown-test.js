@@ -1,12 +1,11 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import { test } from "qunit";
-import { click, visit } from "@ember/test-helpers";
 
 acceptance("Poll breakdown", function (needs) {
   needs.user();
@@ -14,7 +13,7 @@ acceptance("Poll breakdown", function (needs) {
     poll_enabled: true,
     poll_groupable_user_fields: "something",
   });
-  needs.hooks.beforeEach(() => clearPopupMenuOptionsCallback());
+
   needs.pretender((server, helper) => {
     server.get("/polls/grouped_poll_results.json", () =>
       helper.response({
@@ -66,13 +65,14 @@ acceptance("Poll breakdown", function (needs) {
 
   test("Displaying the poll breakdown modal", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
+    await click(".widget-dropdown-header");
 
     assert.ok(
-      exists(".poll-show-breakdown"),
+      exists(".item-showBreakdown"),
       "shows the breakdown button when poll_groupable_user_fields is non-empty"
     );
 
-    await click(".poll-show-breakdown");
+    await click(".item-showBreakdown");
 
     assert.ok(exists(".poll-breakdown-total-votes"), "displays the vote count");
 
@@ -90,7 +90,8 @@ acceptance("Poll breakdown", function (needs) {
 
   test("Changing the display mode from percentage to count", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
-    await click(".poll-show-breakdown");
+    await click(".widget-dropdown-header");
+    await click(".item-showBreakdown");
 
     assert.strictEqual(
       query(".poll-breakdown-option-count").textContent.trim(),

@@ -1,6 +1,7 @@
-import PreloadStore from "discourse/lib/preload-store";
 import RestAdapter from "discourse/adapters/rest";
 import { ajax } from "discourse/lib/ajax";
+import PreloadStore from "discourse/lib/preload-store";
+import Topic from "discourse/models/topic";
 
 export default RestAdapter.extend({
   find(store, type, { filter, params }) {
@@ -37,5 +38,11 @@ export default RestAdapter.extend({
       result.params = params;
       return result;
     });
+  },
+
+  async applyTransformations(results) {
+    for (const topicList of results) {
+      await Topic.applyTransformations(topicList.topics);
+    }
   },
 });

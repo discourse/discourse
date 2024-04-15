@@ -1,5 +1,5 @@
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
-import { inject as service } from "@ember/service";
 
 export default class ChatChannelLegacyRoute extends DiscourseRoute {
   @service router;

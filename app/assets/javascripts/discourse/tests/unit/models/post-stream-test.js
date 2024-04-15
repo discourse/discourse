@@ -1,11 +1,11 @@
-import { module, test } from "qunit";
+import { getOwner } from "@ember/application";
 import ArrayProxy from "@ember/array/proxy";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
 import Post from "discourse/models/post";
 import User from "discourse/models/user";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import sinon from "sinon";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { setupTest } from "ember-qunit";
 
 function buildStream(id, stream) {
   const store = getOwner(this).lookup("service:store");

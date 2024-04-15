@@ -22,15 +22,23 @@ id:
       multiple:
         help:
           at_least_min_options:
-            other: "Pilih setidaknya <strong>%{count}</strong> opsi."
+            other: "Pilih setidaknya <strong>%{count} opsi</strong>."
+          up_to_max_options:
+            other: "Pilih hingga <strong>%{count} pilihan</strong>."
+          x_options:
+            other: "Pilih <strong>%{count} pilihan</strong>."
+          between_min_and_max_options: "Pilih antara <strong>%{min} dan %{max} opsi</strong>."
       cast-votes:
         title: "Gunakan suaramu"
         label: "Pilih sekarang!"
       show-results:
         title: "Lihat hasil polling"
-        label: "Lihat hasil"
+        label: "Hasil"
+      remove-vote:
+        label: "Batalkan pilihan"
       hide-results:
         title: "Kembali ke suaramu"
+        label: "Pilih"
       group-results:
         label: "Tampilkan rincian"
       export-results:
@@ -51,6 +59,8 @@ id:
         votes: "%{count} suara"
         percentage: "Persentase"
         count: "Jumlah"
+      options:
+        label: "Opsi"
       error_while_toggling_status: "Maaf, telah terjadi kesalahan pengalihan status dari pemilihan ini."
       ui_builder:
         insert: Masukkan Poll

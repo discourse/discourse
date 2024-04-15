@@ -16,7 +16,7 @@ class QuoteComparer
   # philosophy of "catch the obvious cases, leave moderation for the
   # complicated ones"
   def missing?
-    return true if @parent_post.blank?
+    @parent_post.blank?
   end
 
   def modified?

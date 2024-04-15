@@ -1,35 +1,44 @@
-import PrettyText, { buildOptions } from "pretty-text/pretty-text";
-import { module, test } from "qunit";
-import { hrefAllowed, sanitize } from "pretty-text/sanitizer";
+import { setupTest } from "ember-qunit";
 import AllowLister from "pretty-text/allow-lister";
+import { hrefAllowed, sanitize } from "pretty-text/sanitizer";
+import { module, test } from "qunit";
+import DiscourseMarkdownIt from "discourse-markdown-it";
 
-module("Unit | Utility | sanitizer", function () {
+function build(options) {
+  return DiscourseMarkdownIt.withDefaultFeatures().withOptions(options);
+}
+
+module("Unit | Utility | sanitizer", function (hooks) {
+  setupTest(hooks);
+
   test("sanitize", function (assert) {
-    const pt = new PrettyText(
-      buildOptions({
-        siteSettings: {
-          allowed_iframes:
-            "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?",
-        },
-      })
-    );
+    const engine = build({
+      siteSettings: {
+        allowed_iframes:
+          "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?",
+      },
+    });
     const cooked = (input, expected, text) =>
-      assert.strictEqual(pt.cook(input), expected.replace(/\/>/g, ">"), text);
+      assert.strictEqual(
+        engine.cook(input),
+        expected.replace(/\/>/g, ">"),
+        text
+      );
 
     assert.strictEqual(
-      pt.sanitize('<i class="fa-bug fa-spin">bug</i>'),
+      engine.sanitize('<i class="fa-bug fa-spin">bug</i>'),
       "<i>bug</i>"
     );
     assert.strictEqual(
-      pt.sanitize("<div><script>alert('hi');</script></div>"),
+      engine.sanitize("<div><script>alert('hi');</script></div>"),
       "<div></div>"
     );
     assert.strictEqual(
-      pt.sanitize("<div><p class=\"funky\" wrong='1'>hello</p></div>"),
+      engine.sanitize("<div><p class=\"funky\" wrong='1'>hello</p></div>"),
       "<div><p>hello</p></div>"
     );
-    assert.strictEqual(pt.sanitize("<3 <3"), "&lt;3 &lt;3");
-    assert.strictEqual(pt.sanitize("<_<"), "&lt;_&lt;");
+    assert.strictEqual(engine.sanitize("<3 <3"), "&lt;3 &lt;3");
+    assert.strictEqual(engine.sanitize("<_<"), "&lt;_&lt;");
 
     cooked(
       "hello<script>alert(42)</script>",
@@ -68,10 +77,16 @@ module("Unit | Utility | sanitizer", function () {
       "it allows iframe to OpenStreetMap"
     );
 
-    assert.strictEqual(pt.sanitize("<textarea>hullo</textarea>"), "hullo");
-    assert.strictEqual(pt.sanitize("<button>press me!</button>"), "press me!");
-    assert.strictEqual(pt.sanitize("<canvas>draw me!</canvas>"), "draw me!");
-    assert.strictEqual(pt.sanitize("<progress>hello"), "hello");
+    assert.strictEqual(engine.sanitize("<textarea>hullo</textarea>"), "hullo");
+    assert.strictEqual(
+      engine.sanitize("<button>press me!</button>"),
+      "press me!"
+    );
+    assert.strictEqual(
+      engine.sanitize("<canvas>draw me!</canvas>"),
+      "draw me!"
+    );
+    assert.strictEqual(engine.sanitize("<progress>hello"), "hello");
 
     cooked(
       "[the answer](javascript:alert(42))",
@@ -142,65 +157,70 @@ module("Unit | Utility | sanitizer", function () {
       `<div data-value="<something>" data-html-value="<something>"></div>`,
       `<div data-value="&lt;something&gt;"></div>`
     );
+
+    cooked(
+      '<table><tr><th rowspan="2">a</th><th colspan="3">b</th><td rowspan="4">c</td><td colspan="5">d</td><td class="fa-spin">e</td></tr></table>',
+      '<table><tr><th rowspan="2">a</th><th colspan="3">b</th><td rowspan="4">c</td><td colspan="5">d</td><td>e</td></tr></table>'
+    );
   });
 
   test("ids on headings", function (assert) {
-    const pt = new PrettyText(buildOptions({ siteSettings: {} }));
+    const engine = build({ siteSettings: {} });
     assert.strictEqual(
-      pt.sanitize("<h3>Test Heading</h3>"),
+      engine.sanitize("<h3>Test Heading</h3>"),
       "<h3>Test Heading</h3>"
     );
     assert.strictEqual(
-      pt.sanitize(`<h1 id="heading--test">Test Heading</h1>`),
+      engine.sanitize(`<h1 id="heading--test">Test Heading</h1>`),
       `<h1 id="heading--test">Test Heading</h1>`
     );
     assert.strictEqual(
-      pt.sanitize(`<h2 id="heading--cool">Test Heading</h2>`),
+      engine.sanitize(`<h2 id="heading--cool">Test Heading</h2>`),
       `<h2 id="heading--cool">Test Heading</h2>`
     );
     assert.strictEqual(
-      pt.sanitize(`<h3 id="heading--dashed-name">Test Heading</h3>`),
+      engine.sanitize(`<h3 id="heading--dashed-name">Test Heading</h3>`),
       `<h3 id="heading--dashed-name">Test Heading</h3>`
     );
     assert.strictEqual(
-      pt.sanitize(`<h4 id="heading--underscored_name">Test Heading</h4>`),
+      engine.sanitize(`<h4 id="heading--underscored_name">Test Heading</h4>`),
       `<h4 id="heading--underscored_name">Test Heading</h4>`
     );
     assert.strictEqual(
-      pt.sanitize(`<h5 id="heading--trout">Test Heading</h5>`),
+      engine.sanitize(`<h5 id="heading--trout">Test Heading</h5>`),
       `<h5 id="heading--trout">Test Heading</h5>`
     );
     assert.strictEqual(
-      pt.sanitize(`<h6 id="heading--discourse">Test Heading</h6>`),
+      engine.sanitize(`<h6 id="heading--discourse">Test Heading</h6>`),
       `<h6 id="heading--discourse">Test Heading</h6>`
     );
   });
 
   test("autoplay videos must be muted", function (assert) {
-    let pt = new PrettyText(buildOptions({ siteSettings: {} }));
+    let engine = build({ siteSettings: {} });
     assert.ok(
-      pt
+      engine
         .sanitize(
           `<p>Hey</p><video autoplay src="http://example.com/music.mp4"/>`
         )
         .match(/muted/)
     );
     assert.ok(
-      pt
+      engine
         .sanitize(
           `<p>Hey</p><video autoplay><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
         )
         .match(/muted/)
     );
     assert.ok(
-      pt
+      engine
         .sanitize(
           `<p>Hey</p><video autoplay muted><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
         )
         .match(/muted/)
     );
     assert.notOk(
-      pt
+      engine
         .sanitize(
           `<p>Hey</p><video><source src="http://example.com/music.mp4" type="audio/mpeg"></video>`
         )
@@ -209,29 +229,29 @@ module("Unit | Utility | sanitizer", function () {
   });
 
   test("poorly formed ids on headings", function (assert) {
-    let pt = new PrettyText(buildOptions({ siteSettings: {} }));
+    let engine = build({ siteSettings: {} });
     assert.strictEqual(
-      pt.sanitize(`<h1 id="evil-trout">Test Heading</h1>`),
+      engine.sanitize(`<h1 id="evil-trout">Test Heading</h1>`),
       `<h1>Test Heading</h1>`
     );
     assert.strictEqual(
-      pt.sanitize(`<h1 id="heading--">Test Heading</h1>`),
+      engine.sanitize(`<h1 id="heading--">Test Heading</h1>`),
       `<h1>Test Heading</h1>`
     );
     assert.strictEqual(
-      pt.sanitize(`<h1 id="heading--with space">Test Heading</h1>`),
+      engine.sanitize(`<h1 id="heading--with space">Test Heading</h1>`),
       `<h1>Test Heading</h1>`
     );
     assert.strictEqual(
-      pt.sanitize(`<h1 id="heading--with*char">Test Heading</h1>`),
+      engine.sanitize(`<h1 id="heading--with*char">Test Heading</h1>`),
       `<h1>Test Heading</h1>`
     );
     assert.strictEqual(
-      pt.sanitize(`<h1 id="heading--">Test Heading</h1>`),
+      engine.sanitize(`<h1 id="heading--">Test Heading</h1>`),
       `<h1>Test Heading</h1>`
     );
     assert.strictEqual(
-      pt.sanitize(`<h1 id="test-heading--cool">Test Heading</h1>`),
+      engine.sanitize(`<h1 id="test-heading--cool">Test Heading</h1>`),
       `<h1>Test Heading</h1>`
     );
   });

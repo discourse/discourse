@@ -54,6 +54,25 @@ class Wizard
     end
   end
 
+  def remove_step(step_id)
+    i = @steps.index { |step| step.id == step_id }
+    return if i.nil?
+
+    step = @steps.delete_at(i)
+
+    step.previous.next = step.next if step.previous
+
+    while step = step.next
+      step.index -= 1
+      if step.index == 0
+        step.previous = nil
+        @first_step = step
+      else
+        step.previous = @steps[step.index - 1]
+      end
+    end
+  end
+
   def self.exclude_step(step)
     @@excluded_steps << step
   end

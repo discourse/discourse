@@ -1,28 +1,32 @@
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import { gt, or } from "@ember/object/computed";
+import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import { Promise } from "rsvp";
+import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
+import { ajax } from "discourse/lib/ajax";
+import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import { setTransient } from "discourse/lib/page-tracker";
 import {
   getSearchKey,
   isValidSearchTerm,
   logSearchLinkClick,
+  reciprocallyRankedList,
   searchContextDescription,
   translateResults,
   updateRecentSearches,
 } from "discourse/lib/search";
+import userSearch from "discourse/lib/user-search";
+import { escapeExpression } from "discourse/lib/utilities";
+import { scrollTop } from "discourse/mixins/scroll-top";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
-import { escapeExpression } from "discourse/lib/utilities";
-import { isEmpty } from "@ember/utils";
-import { action } from "@ember/object";
-import { gt, or } from "@ember/object/computed";
-import { scrollTop } from "discourse/mixins/scroll-top";
-import { setTransient } from "discourse/lib/page-tracker";
-import { Promise } from "rsvp";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import showModal from "discourse/lib/show-modal";
-import userSearch from "discourse/lib/user-search";
-import { inject as service } from "@ember/service";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const SortOrders = [
   { name: I18n.t("search.relevance"), id: 0 },
@@ -51,8 +55,12 @@ export function registerFullPageSearchType(
 export default Controller.extend({
   application: controller(),
   composer: service(),
-  bulkSelectEnabled: null,
+  modal: service(),
+  appEvents: service(),
+  siteSettings: service(),
+  searchPreferencesManager: service(),
 
+  bulkSelectEnabled: null,
   loading: false,
   queryParams: [
     "q",
@@ -73,11 +81,18 @@ export default Controller.extend({
   page: 1,
   resultCount: null,
   searchTypes: null,
+  additionalSearchResults: [],
   selected: [],
   error: null,
 
   init() {
     this._super(...arguments);
+
+    this.set(
+      "sortOrder",
+      this.searchPreferencesManager.sortOrder ||
+        this.siteSettings.search_default_sort_order
+    );
 
     const searchTypes = [
       { name: I18n.t("search.type.default"), id: SEARCH_TYPE_DEFAULT },
@@ -132,7 +147,7 @@ export default Controller.extend({
       return (!skip && context) || skip === "false";
     },
     set(val) {
-      this.set("skip_context", val ? "false" : "true");
+      this.set("skip_context", !val);
     },
   },
 
@@ -241,18 +256,13 @@ export default Controller.extend({
     );
   },
 
-  @observes("loading")
-  _showFooter() {
-    this.set("application.showFooter", !this.loading);
-  },
-
   @discourseComputed("resultCount", "noSortQ")
   resultCountLabel(count, term) {
     const plus = count % 50 === 0 ? "+" : "";
     return I18n.t("search.result_count", { count, plus, term });
   },
 
-  @observes("model.[posts,categories,tags,users].length")
+  @observes("model.{posts,categories,tags,users}.length", "searchResultPosts")
   resultCountChanged() {
     if (!this.model.posts) {
       return 0;
@@ -260,7 +270,7 @@ export default Controller.extend({
 
     this.set(
       "resultCount",
-      this.model.posts.length +
+      this.searchResultPosts.length +
         this.model.categories.length +
         this.model.tags.length +
         this.model.users.length
@@ -274,7 +284,7 @@ export default Controller.extend({
 
   hasSelection: gt("selected.length", 0),
 
-  @discourseComputed("selected.length", "model.posts.length")
+  @discourseComputed("selected.length", "searchResultPosts.length")
   hasUnselectedResults(selectionCount, postsCount) {
     return selectionCount < postsCount;
   },
@@ -308,8 +318,21 @@ export default Controller.extend({
       : "search-info";
   },
 
+  @discourseComputed("model.posts", "additionalSearchResults")
+  searchResultPosts(posts, additionalSearchResults) {
+    if (additionalSearchResults?.list?.length > 0) {
+      return reciprocallyRankedList(
+        [posts, additionalSearchResults.list],
+        ["topic_id", additionalSearchResults.identifier]
+      );
+    } else {
+      return posts;
+    }
+  },
+
   searchButtonDisabled: or("searching", "loading"),
 
+  @bind
   _search() {
     if (this.searching) {
       return;
@@ -366,7 +389,7 @@ export default Controller.extend({
         Promise.resolve(categoryTagSearch)
           .then(async (results) => {
             const categories = results.filter((c) => Boolean(c.model));
-            const tags = results.filter((c) => !Boolean(c.model));
+            const tags = results.filter((c) => !c.model);
             const model = (await translateResults({ categories, tags })) || {};
             this.set("model", model);
           })
@@ -432,7 +455,6 @@ export default Controller.extend({
   },
 
   _afterTransition() {
-    this._showFooter();
     if (Object.keys(this.model).length === 0) {
       this.reset();
     }
@@ -464,9 +486,23 @@ export default Controller.extend({
     });
   },
 
+  @action
+  addSearchResults(list, identifier) {
+    this.set("additionalSearchResults", {
+      list,
+      identifier,
+    });
+  },
+
+  @action
+  setSortOrder(value) {
+    this.set("sortOrder", value);
+    this.searchPreferencesManager.sortOrder = value;
+  },
+
   actions: {
     selectAll() {
-      this.selected.addObjects(this.get("model.posts").mapBy("topic"));
+      this.selected.addObjects(this.get("searchResultPosts").mapBy("topic"));
 
       // Doing this the proper way is a HUGE pain,
       // we can hack this to work by observing each on the array
@@ -496,23 +532,28 @@ export default Controller.extend({
     },
 
     showBulkActions() {
-      const modalController = showModal("topic-bulk-actions", {
+      this.modal.show(TopicBulkActions, {
         model: {
           topics: this.selected,
+          refreshClosure: this._search,
         },
-        title: "topics.bulk.actions",
       });
-
-      modalController.set("refreshClosure", () => this._search());
     },
 
     search(options = {}) {
+      if (this.searching) {
+        return;
+      }
+
       if (options.collapseFilters) {
         document
           .querySelector("details.advanced-filters")
           ?.removeAttribute("open");
       }
       this.set("page", 1);
+
+      this.appEvents.trigger("full-page-search:trigger-search");
+
       this._search();
     },
 

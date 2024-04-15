@@ -24,7 +24,7 @@ RSpec.describe UserStat do
       end
 
       context "with a view" do
-        fab!(:topic) { Fabricate(:topic) }
+        fab!(:topic)
         let!(:view) { TopicViewItem.add(topic.id, "127.0.0.1", user.id) }
 
         before do
@@ -176,7 +176,7 @@ RSpec.describe UserStat do
   end
 
   describe "update_time_read!" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:stat) { user.user_stat }
 
     it "always expires redis key" do
@@ -216,7 +216,7 @@ RSpec.describe UserStat do
   end
 
   describe "update_distinct_badge_count" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:stat) { user.user_stat }
     fab!(:badge1) { Fabricate(:badge) }
     fab!(:badge2) { Fabricate(:badge) }
@@ -267,7 +267,7 @@ RSpec.describe UserStat do
   end
 
   describe ".update_draft_count" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "updates draft_count" do
       Draft.create!(user: user, draft_key: "topic_1", data: {})
@@ -284,7 +284,7 @@ RSpec.describe UserStat do
     subject(:update_pending_posts) { stat.update_pending_posts }
 
     let!(:reviewable) { Fabricate(:reviewable_queued_post) }
-    let(:user) { reviewable.created_by }
+    let(:user) { reviewable.target_created_by }
     let(:stat) { user.user_stat }
 
     before do

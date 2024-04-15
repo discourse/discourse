@@ -1,10 +1,6 @@
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - Plugins", function (needs) {
   needs.user();
@@ -28,24 +24,51 @@ acceptance("Admin - Plugins", function (needs) {
             enabled_setting: "testplugin_enabled",
             has_settings: true,
             is_official: true,
+            commit_hash: "1234567890abcdef",
+            commit_url:
+              "https://github.com/username/some-test-plugin/commit/1234567890abcdef",
           },
         ],
       })
     );
+
+    server.put("/admin/site_settings/testplugin_enabled", () =>
+      helper.response(200, {})
+    );
   });
 
-  test("shows plugin list", async function (assert) {
+  test("shows plugin list and can toggle state", async function (assert) {
     await visit("/admin/plugins");
-    const table = query("table.admin-plugins");
-    assert.strictEqual(
-      table.querySelector("tr .plugin-name .name").innerText,
-      "some-test-plugin",
-      "displays the plugin in the table"
-    );
 
-    assert.true(
-      exists(".admin-plugins .admin-container .alert-error"),
-      "displays an error for unknown routes"
-    );
+    assert
+      .dom(
+        "table.admin-plugins-list .admin-plugins-list__row .admin-plugins-list__name-details .admin-plugins-list__name-with-badges .admin-plugins-list__name"
+      )
+      .hasText("Some Test Plugin", "displays the plugin in the table");
+
+    assert
+      .dom(".admin-plugins .admin-container .alert-error")
+      .exists("shows an error for unknown routes");
+
+    assert
+      .dom(
+        "table.admin-plugins-list tr .admin-plugins-list__version a.commit-hash"
+      )
+      .hasAttribute(
+        "href",
+        "https://github.com/username/some-test-plugin/commit/1234567890abcdef",
+        "displays a commit hash with a link to commit url"
+      );
+
+    const toggleSelector =
+      "table.admin-plugins-list tr .admin-plugins-list__enabled button";
+    assert
+      .dom(toggleSelector)
+      .hasAttribute("aria-checked", "true", "displays the plugin as enabled");
+
+    await click(toggleSelector);
+    assert
+      .dom(toggleSelector)
+      .hasAttribute("aria-checked", "false", "displays the plugin as enabled");
   });
 });

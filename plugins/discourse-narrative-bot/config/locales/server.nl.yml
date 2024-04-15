@@ -45,6 +45,9 @@ nl:
       trigger: "gooien"
       invalid: |-
         Sorry, het is wiskundig onmogelijk om die combinatie te gooien. :confounded:
+      not_enough_dice:
+        one: "Ik heb maar %{count} dobbelsteen. Beschamend, ik weet het!"
+        other: "Ik heb maar %{count} dobbelstenen. Beschamend, ik weet het!"
       out_of_range: |-
         Wist je dat [het maximale aantal zijden](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-Sided-dice) voor een wiskundig eerlijke dobbelstenen 120 is?
       results: |-
@@ -293,10 +296,6 @@ nl:
         not_found: |-
           Oh nee, mijn nare bericht is nog niet gemarkeerd als ongepast. :worried: Kun je het als ongepast markeren met behulp van de **markering** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Vergeet niet om de knop Meer weergeven <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> te gebruiken om meer acties te onthullen voor elk bericht.
       search:
-        instructions: |-
-          _psst_ … Ik heb een verrassing verstopt in dit onderwerp. Als je klaar bent voor de uitdaging, **selecteer dan het zoekpictogram** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> rechtsboven &#8599; om ernaar te zoeken.
-
-          Probeer in dit topic te zoeken naar de term "capy&#8203;bara".
         hidden_message: |-
           Hoe kon je deze capibara missen? :wink:
 
@@ -373,9 +372,9 @@ nl:
         instructions: |-
           Wist je dat je in je bericht kunt verwijzen naar categorieën en tags? Heb je bijvoorbeeld categorie %{category} gezien?
 
-          Typ '#' middenin een zin en selecteer een categorie of tag.
+          Typ '#' ergens in een zin en selecteer een categorie of tag.
         not_found: |-
-          Hmm, ik zie nergens een categorie. Merk op dat '#' mag niet het eerste teken zijn. Kun je dit kopiëren in je volgende antwoord?
+          Hmm, ik zie nergens een categorie. Kun je dit kopiëren in je volgende antwoord?
 
           ```tekst
           Ik kan een categorielink maken met #

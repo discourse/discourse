@@ -5,11 +5,18 @@
 # https://translate.discourse.org/
 
 de:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chat
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Immer"
+          fullscreen: "Wenn der Chat im Vollbildmodus ist"
+          never: "Nie"
       logs:
         staff_actions:
           actions:
@@ -21,12 +28,24 @@ de:
           descriptions:
             chat:
               create_message: "Erstelle eine Chat-Nachricht in einem bestimmten Kanal."
+      web_hooks:
+        chat_event:
+          group_name: "Chat-Ereignisse"
+          chat_message_created: "Nachricht erstellt"
+          chat_message_edited: "Nachricht bearbeitet"
+          chat_message_trashed: "Nachricht gelöscht"
+          chat_message_restored: "Nachricht wiederhergestellt"
     about:
       chat_messages_count: "Chat-Nachrichten"
       chat_channels_count: "Chat-Kanäle"
       chat_users_count: "Chat-Benutzer"
     chat:
+      text_copied: Text in die Zwischenablage kopiert
+      link_copied: Link in die Zwischenablage kopiert
+      back_to_forum: "Forum"
+      deleted_chat_username: gelöscht
       dates:
+        yesterday: "Gestern"
         time_tiny: "h:mm"
       all_loaded: "Alle Nachrichten werden angezeigt"
       already_enabled: "Der Chat ist für dieses Thema bereits aktiviert. Bitte aktualisieren."
@@ -37,6 +56,7 @@ de:
       cancel_reply: "Antwort verwerfen"
       chat_channels: "Kanäle"
       browse_all_channels: "Alle Kanäle durchsuchen"
+      see_in: "Siehe in"
       move_to_channel:
         title: "Nachrichten in Kanal verschieben"
         instructions:
@@ -53,6 +73,7 @@ de:
         delete_channel: "Kanal löschen"
         join_channel: "Kanal beitreten"
         leave_channel: "Kanal verlassen"
+        leave_groupchat_info: "Wenn du den Gruppenchat verlässt, hast du keinen Zugriff mehr darauf und erhältst keine Benachrichtigungen mehr. Um wieder teilzunehmen, musst du von einem Mitglied des Gruppenchats erneut eingeladen werden."
         join: "Beitreten"
         leave: "Verlassen"
         save_label:
@@ -72,7 +93,7 @@ de:
         instructions: "Das Schließen des Kanals verhindert, dass Nicht-Teammitglieder neue Nachrichten senden oder bestehende Nachrichten bearbeiten können. Bist du sicher, dass du diesen Kanal schließen möchtest?"
       channel_delete:
         title: "Kanal löschen"
-        instructions: "<p>Löscht den <strong>%{name}</strong> Kanal und den Chatverlauf. Alle Nachrichten und zugehörigen Daten, wie Reaktionen und Uploads, werden dauerhaft gelöscht. Wenn du den Kanalverlauf aufbewahren und stilllegen möchtest, solltest du den Kanal stattdessen archivieren.</p> <p>Bist du sicher, dass du den Kanal <strong>dauerhaft löschen möchtest</strong> ? Zur Bestätigung gibst du den Namen des Kanals in das Feld unten ein.</p>"
+        instructions: "<p>Löscht den Kanal <strong>%{name}</strong> und den Chatverlauf. Alle Nachrichten und zugehörigen Daten wie Reaktionen und Uploads werden dauerhaft gelöscht. Wenn du den Kanalverlauf aufbewahren und stilllegen möchtest, solltest du den Kanal stattdessen archivieren.</p> <p>Bist du sicher, dass du den Kanal <strong>dauerhaft löschen möchtest</strong>? Gib zur Bestätigung den Namen des Kanals in das Feld unten ein.</p>"
         confirm: "Ich verstehe die Konsequenzen und möchte den Kanal löschen"
         confirm_channel_name: "Kanalnamen eingeben"
         process_started: "Der Löschvorgang für den Kanal hat begonnen. Dieser Modal-Dialog wird in Kürze geschlossen und du wirst den gelöschten Kanal nirgendwo mehr sehen."
@@ -81,12 +102,13 @@ de:
         create: "Neuer Kanal"
       click_to_join: "Klicke hier, um die verfügbaren Kanäle zu sehen."
       close: "Schließen"
+      remove: "Entfernen"
       collapse: "Chat-Bereich ausblenden"
-      expand: "Chat-Übersicht erweitern"
+      expand: "Chat-Bereich erweitern"
       confirm_flag: "Bist du sicher, dass du die Nachricht von %{username} markieren möchtest?"
       deleted:
         one: "Eine Nachricht wurde gelöscht. [Anzeigen]"
-        other: "%{count} Nachrichten wurden gelöscht. [alle anzeigen]"
+        other: "%{count} Nachrichten wurden gelöscht. [Alle anzeigen]"
       hidden: "Eine Nachricht wurde ausgeblendet. [Anzeigen]"
       delete: "Löschen"
       edited: "bearbeitet"
@@ -96,6 +118,7 @@ de:
         direct_message_cta: "Persönlichen Chat beginnen"
         direct_message: "Du kannst auch einen persönlichen Chat mit einem oder mehreren Benutzern beginnen."
         title: "Keine Kanäle gefunden"
+        my_threads: "Du hast noch keine Themen. Themen, an denen du teilnimmst, werden hier angezeigt."
       email_frequency:
         description: "Wir schicken dir nur dann eine E-Mail, wenn wir dich in den letzten 15 Minuten nicht gesehen haben."
         never: "Niemals"
@@ -105,7 +128,10 @@ de:
         title: "Aktivitätsindikator in der Kopfzeile anzeigen"
         all_new: "bei allen neuen Nachrichten"
         dm_and_mentions: "bei Direktnachrichten und Erwähnungen"
+        only_mentions: "Nur Erwähnungen"
         never: "niemals"
+      separate_sidebar_mode:
+        title: "Separate Seitenleisten-Modi für Forum und Chat anzeigen"
       enable: "Chat aktivieren"
       flag: "Melden"
       emoji: "Emoji einfügen"
@@ -116,28 +142,19 @@ de:
       heading: "Chat"
       join: "Beitreten"
       last_visit: "letzter Besuch"
+      summarization:
+        title: "Nachrichten zusammenfassen"
+        description: "Wähle unten eine Option aus, um die im gewünschten Zeitraum gesendete Konversation zusammenzufassen."
+        summarize: "Zusammenfassen"
+        since:
+          one: "Letzte Stunde"
+          other: "Letzte %{count} Stunden"
       mention_warning:
-        dismiss: "verwerfen"
-        cannot_see: "%{username} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
-        cannot_see_multiple:
-          one: "%{username} und %{count} andere Nutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
-          other: "%{username} und %{count} können andere Nutzer nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
         invitations_sent:
           one: "Einladung gesendet"
           other: "Einladungen gesendet"
         invite: "Zum Kanal einladen"
-        without_membership: "%{username} ist diesem Kanal nicht beigetreten."
-        without_membership_multiple:
-          one: "%{username} und %{count} andere Nutzer sind diesem Kanal nicht beigetreten."
-          other: "%{username} und %{count} andere Nutzer sind diesem Kanal nicht beigetreten."
-        group_mentions_disabled: "%{group_name} erlaubt keine Erwähnungen."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} und %{count} andere Gruppe erlauben keine Erwähnungen."
-          other: "%{group_name} und %{count} andere Gruppen erlauben keine Erwähnungen."
-        too_many_members: "%{group_name} hat zu viele Mitglieder. Niemand wurde benachrichtigt."
-        too_many_members_multiple:
-          one: "%{group_name} und %{count} andere Gruppe haben zu viele Mitglieder. Es wurde niemand benachrichtigt."
-          other: "%{group_name} und %{count} andere Gruppen haben zu viele Mitglieder. Es wurde niemand benachrichtigt."
+        channel_wide_mentions_disallowed: "Die Erwähnungen von @here und @all sind in diesem Kanal deaktiviert."
         groups:
           header:
             some: "Einige Benutzer werden nicht benachrichtigt"
@@ -153,8 +170,8 @@ de:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {Erwähnung von @{group1} überschreitet die <a href="{siteSettingUrl}" target="_blank">Benachrichtigungsgrenze</a> von # Benutzer.}
-                              other {Erwähnung von @{group1} überschreitet die <a href="{siteSettingUrl}" target="_blank">Benachrichtigungsgrenze</a> von # Benutzern.}
+                              one {Erwähnung von @{group1} überschreitet das <a href="{siteSettingUrl}" target="_blank">Benachrichtigungslimit</a> von # Benutzer.}
+                              other {Erwähnung von @{group1} überschreitet das <a href="{siteSettingUrl}" target="_blank">Benachrichtigungslimit</a> von # Benutzern.}
                           }
                         }
                         false {
@@ -170,8 +187,8 @@ de:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {Erwähnung von @{group1} und @{group2} überschreitet das Limit von <a href="{siteSettingUrl}" target="_blank">Benachrichtigungen</a> von # Benutzer.}
-                            other {Erwähnung von @{group1} und @{group2} überschreitet das <a href="{siteSettingUrl}" target="_blank">Benachrichtigungslimit</a> von Benutzern.}
+                              one {Erwähnung von @{group1} und @{group2} überschreitet das <a href="{siteSettingUrl}" target="_blank">Benachrichtigungslimit</a> von # Benutzer.}
+                            other {Erwähnung von @{group1} und @{group2} überschreitet das <a href="{siteSettingUrl}" target="_blank">Benachrichtigungslimit</a> von # Benutzern.}
                           }
                         }
                         false {
@@ -187,14 +204,14 @@ de:
                       { isAdmin, select,
                         true {
                           { notificationLimit, plural,
-                              one {Erwähne diese {groupCount} Gruppe überschreitet das <a href="{siteSettingUrl}" target="_blank">Benachrichtigungslimit von</a> von # Benutzer.}
-                            other {Erwähne diese {groupCount} Gruppen überschreitet das <a href="{siteSettingUrl}" target="_blank">Benachrichtigungslimit von</a> von # Benutzern.}
+                              one {Erwähnung dieser {groupCount} Gruppen überschreitet das <a href="{siteSettingUrl}" target="_blank">Benachrichtigungslimit</a> von # Benutzer.}
+                            other {Erwähnung dieser {groupCount} Gruppen überschreitet das <a href="{siteSettingUrl}" target="_blank">Benachrichtigungslimit</a> von # Benutzern.}
                           }
                         }
                         false {
                           { notificationLimit, plural,
-                              one {Erwähne diese {groupCount} groups überschreitet das Benachrichtigungslimit von # Benutzer.}
-                            other {Erwähne diese {groupCount} groups überschreitet das Benachrichtigungslimit von # Benutzern.}
+                              one {Erwähnung dieser {groupCount} Gruppen überschreitet das Benachrichtigungslimit von # Benutzer.}
+                            other {Erwähnung dieser {groupCount} Gruppen überschreitet das Benachrichtigungslimit von # Benutzern.}
                           }
                         }
                         other {}
@@ -202,15 +219,16 @@ de:
                     }
             }
         too_many_mentions:
-          one: "Diese Nachricht überschreitet das Benachrichtigungslimit von %{count} Erwähnungen."
+          one: "Diese Nachricht überschreitet das Benachrichtigungslimit von %{count} Erwähnung."
           other: "Diese Nachricht überschreitet das Benachrichtigungslimit von %{count} Erwähnungen."
         too_many_mentions_admin:
-          one: 'Diese Nachricht überschreitet das Benachrichtigungslimit von <a href="%{siteSettingUrl}" target="_blank">.</a> von %{count} erwähnt.'
-          other: 'Diese Nachricht überschreitet das Benachrichtigungslimit von <a href="%{siteSettingUrl}" target="_blank">bei</a> von %{count} Erwähnungen.'
+          one: 'Diese Nachricht überschreitet das <a href="%{siteSettingUrl}" target="_blank">Benachrichtigungslimit</a> von %{count} Erwähnung.'
+          other: 'Diese Nachricht überschreitet das <a href="%{siteSettingUrl}" target="_blank">Benachrichtigungslimit</a> von %{count} Erwähnungen.'
       aria_roles:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"
         channels_list: "Liste der Chat-Kanäle"
+      no_direct_message_channels: "Du bist keinem Direktnachrichtenkanal beigetreten."
       no_public_channels: "Du bist keinem Kanal beigetreten."
       kicked_from_channel: "Du kannst nicht mehr auf diesen Kanal zugreifen."
       only_chat_push_notifications:
@@ -232,13 +250,12 @@ de:
         closed: "Der Kanal ist geschlossen, du kannst im Moment keine neuen Nachrichten senden."
         read_only: "Der Kanal ist schreibgeschützt, du kannst im Moment keine neuen Nachrichten senden."
       placeholder_silenced: "Du kannst derzeit keine Nachrichten senden."
-      placeholder_start_conversation: "Starte ein Gespräch mit..."
-      placeholder_start_conversation_users: "Beginne eine Unterhaltung mit %{commaSeparatedUsernames}"
       remove_upload: "Datei löschen"
       react: "Mit Emoji reagieren"
       reply: "Antworten"
       edit: "Bearbeiten"
       copy_link: "Link kopieren"
+      copy_text: "Text kopieren"
       rebake_message: "HTML neu erstellen"
       retry_staged_message:
         title: "Netzwerkfehler"
@@ -250,7 +267,11 @@ de:
       save: "Speichern"
       select: "Auswählen"
       return_to_list: "Zurück zur Kanalliste"
-      return_to_threads_list: "Zurück zu den laufenden Diskussionen"
+      return_to_channel: "Zurück zum Kanal"
+      return_to_threads_list: "Zurück zur Themenliste"
+      unread_threads_count:
+        one: "Du hast %{count} ungelesene Diskussion"
+        other: "Du hast %{count} ungelesene Diskussionen"
       scroll_to_bottom: "Nach unten scrollen"
       scroll_to_new_messages: "Neue Nachrichten anzeigen"
       sound:
@@ -262,7 +283,7 @@ de:
       title: "Chat"
       title_capitalized: "Chat"
       upload: "Datei anhängen"
-      upload_to_channel: "Auf %{title}hochladen"
+      upload_to_channel: "In %{title} hochladen"
       upload_to_thread: "In Thread hochladen"
       uploaded_files:
         one: "%{count} Datei"
@@ -274,7 +295,7 @@ de:
         read_only: "Schreibgeschützt"
         archived_header: "Kanal ist archiviert"
         archived: "Archiviert"
-        archive_failed: "Archivieren des Kanals fehlgeschlagen. %{completed}/%{total} Nachrichten wurden im <a target=\"_blank\" href=\"%{topic_url}\">Zielthema</a> archiviert. Drücke auf „Erneut versuchen“, um zu versuchen, die Archivierung abzuschließen."
+        archive_failed: "Archivieren des Kanals fehlgeschlagen. %{completed}/%{total} Nachrichten wurden archiviert. <a target=\"_blank\" href=\"%{topic_url}\">Das Zielthema</a> wurde erstellt. Drücke auf „Erneut versuchen“, um zu versuchen, die Archivierung abzuschließen."
         archive_failed_no_topic: "Archivieren des Kanals fehlgeschlagen. %{completed}/%{total} Nachrichten wurden archiviert, das Zielthema wurde nicht erstellt. Drücke auf „Erneut versuchen“, um zu versuchen, die Archivierung abzuschließen."
         archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">Archivthema</a> anzeigen"
         closed_header: "Kanal ist geschlossen"
@@ -294,6 +315,8 @@ de:
         yesterday: Gestern
       members_view:
         filter_placeholder: Mitglieder finden
+        add_member: Mitglied hinzufügen
+        back_to_settings: "Zurück zu den Einstellungen"
       about_view:
         associated_topic: Verknüpftes Thema
         associated_category: Verknüpfte Kategorie
@@ -304,27 +327,46 @@ de:
         back_to_all_channels: "Alle Kanäle"
         back_to_channel: "Zurück"
         tabs:
-          about: Über
           members: Mitglieder
           settings: Einstellungen
+      new_message_modal:
+        title: Nachricht senden
+        add_user_long: <kbd>Umschalt + Klick</kbd> oder <kbd>Umschalt + Eingabe</kbd><span>@%{username} hinzufügen</span>
+        add_user_short: <span>Benutzer hinzufügen</span>
+        open_channel: <span>Kanal öffnen</span>
+        default_search_placeholder: "#ein-kanal, @jemand oder sonstiges"
+        default_channel_search_placeholder: "#ein-kanal"
+        default_user_search_placeholder: "@jemand"
+        user_search_placeholder: "… weitere Mitglieder hinzufügen"
+        disabled_user: "hat den Chat deaktiviert"
+        no_items: "Keine Elemente"
+        create_group_placeholder: "Name des Gruppenchats (optional)"
+        participants_counter: "%{selection_count}/%{max} Teilnehmer"
+        new_group_chat: "Neuer Gruppenchat"
+        filter: "Filter"
+        cant_add_more_members: "Maximale Anzahl von Mitgliedern erreicht"
+        create_new_group_chat: "Gruppenchat erstellen"
+        group_with_too_many_members: "hat zu viele Mitglieder (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Kanal bearbeiten
         input_placeholder: Einen Namen hinzufügen
-        slug_description: In der URL wird anstelle des Kanalnamens ein Kanal-Slug verwendet
+        slug_description: In der URL wird anstelle des Kanalnamens ein Kanal-Kürzel verwendet
         name: Kanalname
-        slug: Kanal-Slug (optional)
+        slug: Kanal-Kürzel (optional)
       channel_edit_description_modal:
         title: Beschreibung bearbeiten
         input_placeholder: Beschreibung hinzufügen
         description: Sag den Leuten, worum es in diesem Kanal geht
       direct_message_creator:
+        add_to_channel: "Zum Kanal hinzufügen"
         title: Neue Nachricht
         prefix: "An:"
         no_results: Keine Ergebnisse
         selected_user_title: "%{username} abwählen"
-      channel_selector:
-        title: "Zum Kanal springen"
-        no_channels: "Keine Kanäle entsprechen deiner Suche"
+        group_name: "Name des Gruppenchats (optional)"
+        members_counter:
+          one: "%{count}/%{max} Mitglied"
+          other: "%{count}/%{max} Mitglieder"
       channel:
         no_memberships: Dieser Kanal hat keine Mitglieder
         no_memberships_found: Keine Mitglieder gefunden
@@ -332,26 +374,28 @@ de:
           one: "%{count} Mitglied"
           other: "%{count} Mitglieder"
       create_channel:
+        threading:
+          label: "Threading aktivieren"
         auto_join_users:
           public_category_warning: "%{category} ist eine öffentliche Kategorie. Alle kürzlich aktiven Benutzer automatisch zu diesem Kanal hinzufügen?"
           warning_1_group:
-            one: "Automatisch %{count} Benutzer von %{group} hinzufügen?"
-            other: "Automatisch %{count} Benutzer von %{group} hinzufügen?"
+            one: "Automatisch %{count} Benutzer aus %{group} hinzufügen?"
+            other: "Automatisch %{count} Benutzer aus %{group} hinzufügen?"
           warning_2_groups:
-            one: "Automatisch %{count} Benutzer von %{group1} und %{group2} hinzufügen?"
-            other: "Automatisch %{count} Benutzer von %{group1} und %{group2} hinzufügen?"
+            one: "Automatisch %{count} Benutzer aus %{group1} und %{group2} hinzufügen?"
+            other: "Automatisch %{count} Benutzer aus %{group1} und %{group2} hinzufügen?"
           warning_multiple_groups_MF: |
             { groupCount, plural,
                 one {
                       { userCount, plural,
-                          one {Automatisch hinzufügen {userCount} Benutzer von {groupName} und {groupCount} andere Gruppe?}
-                        other {Automatisch hinzufügen {userCount} Benutzer von {groupName} und {groupCount} andere Gruppe?}
+                          one {{userCount} Benutzer aus {groupName} und {groupCount} anderer Gruppe automatisch hinzufügen?}
+                        other {{userCount} Benutzer aus {groupName} und {groupCount} anderer Gruppe automatisch hinzufügen?}
                       }
                     }
               other {
                       { userCount, plural,
-                          one {Automatisch hinzufügen {userCount} Benutzer von {groupName} und {groupCount} andere Gruppen?}
-                        other {Automatisch hinzufügen {userCount} Benutzer von {groupName} und {groupCount} andere Gruppen?}
+                          one {{userCount} Benutzer aus {groupName} und {groupCount} anderen Gruppen automatisch hinzufügen?}
+                        other {{userCount} Benutzer aus {groupName} und {groupCount} anderen Gruppen automatisch hinzufügen?}
                       }
                     }
             }
@@ -359,15 +403,15 @@ de:
           label: "Kategorie auswählen"
           none: "eine auswählen …"
           default_hint: Verwalte den Zugang, indem du die <a href=%{link} target="_blank">Sicherheitseinstellungen für %{category}</a> besuchst
-          hint_1_group: 'Benutzer in %{group} haben Zugriff auf diesen Kanal gemäß den <a href="%{settingLink}" target="_blank">Sicherheitseinstellungen</a>'
-          hint_2_groups: 'Benutzer in %{group1} und %{group2} haben Zugriff auf diesen Kanal gemäß den <a href="%{settingLink}" target="_blank">Sicherheitseinstellungen</a>'
+          hint_1_group: 'Benutzer in %{group} haben gemäß den <a href="%{settingLink}" target="_blank">Sicherheitseinstellungen</a> Zugriff auf diesen Kanal'
+          hint_2_groups: 'Benutzer in %{group1} und %{group2} haben gemäß den <a href="%{settingLink}" target="_blank">Sicherheitseinstellungen</a> Zugriff auf diesen Kanal'
           hint_multiple_groups:
-            one: 'Benutzer in %{group} und %{count} anderen Gruppe haben Zugriff auf diesen Kanal gemäß den <a href="%{settingLink}" target="_blank">Sicherheitseinstellungen</a>'
-            other: 'Benutzer in %{group} und %{count} anderen Gruppen haben Zugriff auf diesen Kanal gemäß den <a href="%{settingLink}" target="_blank">Sicherheitseinstellungen</a>'
+            one: 'Benutzer in %{group} und %{count} anderen Gruppe haben gemäß den <a href="%{settingLink}" target="_blank">Sicherheitseinstellungen</a> Zugriff auf diesen Kanal'
+            other: 'Benutzer in %{group} und %{count} anderen Gruppen haben gemäß den <a href="%{settingLink}" target="_blank">Sicherheitseinstellungen</a> Zugriff auf diesen Kanal'
         create: "Kanal erstellen"
         description: "Beschreibung (optional)"
         name: "Kanalname"
-        slug: "Kanal-Slug (optional)"
+        slug: "Kanal-Kürzel (optional)"
         title: "Neuer Kanal"
         type: "Typ"
         types:
@@ -376,17 +420,17 @@ de:
       reviewable:
         type: "Chat-Nachricht"
       reactions:
-        only_you: "Du hast reagiert mit :%{emoji}:"
-        you_and_single_user: "Du und %{username} reagierten mit :%{emoji}:"
-        you_and_multiple_users: "Du, %{commaSeparatedUsernames} und %{username} haben reagiert mit:%{emoji}:"
+        only_you: "<span>Du hast mit reagiert mit </span>:%{emoji}:"
+        you_and_single_user: "<span>Du und %{username} habt reagiert mit </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Du, %{commaSeparatedUsernames} und %{username} habt reagiert mit </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "Du, %{commaSeparatedUsernames} und %{count} andere haben reagiert mit :%{emoji}:"
-          other: "Du, %{commaSeparatedUsernames} und %{count} andere haben reagiert mit :%{emoji}:"
-        single_user: "%{username} haben reagiert mit :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} und %{username} reagierten mit:%{emoji}:"
+          one: "<span>Du, %{commaSeparatedUsernames} und %{count} weitere Person habt reagiert mit </span>:%{emoji}:"
+          other: "<span>Du, %{commaSeparatedUsernames} und %{count} andere Personen habt reagiert mit </span>:%{emoji}:"
+        single_user: "<span>%{username} reagierte mit </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} und %{username} reagierten mit </span>:%{emoji}:"
         multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} und %{count} andere haben reagiert mit :%{emoji}:"
-          other: "%{commaSeparatedUsernames} und %{count} andere haben reagiert mit :%{emoji}:"
+          one: "<span>%{commaSeparatedUsernames} und %{count} andere Person reagierten mit </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} und %{count} andere Personen reagierten mit </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Symbolleiste umschalten"
         italic_text: "hervorgehobener Text"
@@ -396,6 +440,7 @@ de:
       quote:
         original_channel: 'Ursprünglich gesendet in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chat-Zitat in die Zwischenablage kopiert"
+        default_thread_title: "Thread"
       notification_levels:
         never: "Niemals"
         mention: "Nur für Erwähnungen"
@@ -403,15 +448,19 @@ de:
       settings:
         channel_wide_mentions_label: "@all- und @here-Erwähnungen zulassen"
         channel_wide_mentions_description: "Erlaube Benutzern, alle Mitglieder von #%{channel} mit @all zu benachrichtigen oder nur diejenigen, die gerade aktiv sind, mit @here"
+        channel_threading_label: "Threading"
+        channel_threading_description: "Wenn Threading aktiviert ist, wird durch Antworten auf eine Chat-Nachricht eine separate Unterhaltung erstellt, die neben dem Hauptkanal existiert."
         auto_join_users_label: "Benutzer automatisch hinzufügen"
-        auto_join_users_info: "Prüfe stündlich, welche Nutzer in den letzten 3 Monaten aktiv waren. Füge sie zu diesem Kanal hinzu, wenn sie Zugang zur Kategorie %{category} haben."
-        auto_join_users_info_no_category: "Prüfe stündlich, welche Nutzer in den letzten 3 Monaten aktiv waren. Füge sie zu diesem Kanal hinzu, wenn sie Zugriff auf die ausgewählte Kategorie haben."
+        auto_join_users_info: "Stündlich prüfen, welche Benutzer in den letzten 3 Monaten aktiv waren. Diese Benutzer zu diesem Kanal hinzufügen, wenn sie Zugang zur Kategorie %{category} haben."
+        auto_join_users_info_no_category: "Stündlich prüfen, welche Benutzer in den letzten 3 Monaten aktiv waren. Diese Benutzer zu diesem Kanal hinzufügen, wenn sie Zugang zur ausgewählten Kategorie haben."
         auto_join_users_warning: "Jeder Benutzer, der kein Mitglied dieses Kanals ist und Zugriff auf die Kategorie %{category} hat, wird beitreten. Bist du dir sicher?"
         desktop_notification_level: "Desktop-Benachrichtigungen"
         follow: "Beitreten"
         followed: "Beigetreten"
         mobile_notification_level: "Mobile Push-Benachrichtigungen"
         mute: "Kanal stummschalten"
+        threading_enabled: "Aktiviert"
+        threading_disabled: "Deaktiviert"
         muted_on: "An"
         muted_off: "Aus"
         notifications: "Benachrichtigungen"
@@ -420,14 +469,32 @@ de:
         saved: "Gespeichert"
         unfollow: "Verlassen"
         admin_title: "Administrator"
+        settings_title: "Einstellungen"
+        info_title: "Kanal-Info"
+        category_label: "Kategorie"
+        history_label: "Verlauf"
+        members_label: "Mitglieder"
       admin:
         title: "Chat"
+        export_messages:
+          title: "Chat-Nachrichten exportieren"
+          description: "Dadurch werden alle Nachrichten aus allen Kanälen exportiert."
+          create_export: "Export erstellen"
+          export_has_started: "Der Export hat begonnen. Du erhältst eine PN, wenn er abgeschlossen ist."
+      my_threads:
+        title: Meine Threads
+        aria_label: "Zu meiner Thread-Liste wechseln"
       direct_messages:
-        title: "Persönlicher Chat"
+        title: "DMs"
+        aria_label: "Zu Direktnachrichten wechseln"
         new: "Persönlichen Chat erstellen"
         create: "Los"
         leave: "Diesen persönlichen Chat verlassen"
+        close: "Schließe diesen persönlichen Chat"
         cannot_create: "Du kannst leider keine Direktnachrichten senden."
+      channel_list:
+        title: "Kanäle"
+        aria_label: "Zur Kanalliste wechseln"
       incoming_webhooks:
         back: "Zurück"
         channel_placeholder: "Kanal auswählen"
@@ -485,17 +552,18 @@ de:
           one: "%{commaSeparatedUsernames} und %{count} andere Person schreiben"
           other: "%{commaSeparatedUsernames} und %{count} andere Personen schreiben"
       retention_reminders:
-        public_none: "Der Kanalverlauf wird auf unbestimmte Zeit gespeichert."
-        public:
-          one: "Der Kanalverlauf wird %{count} Tage lang gespeichert."
-          other: "Der Kanalverlauf wird für %{count} Tage gespeichert."
-        dm_none: "Der persönliche Chatverlauf wird auf unbestimmte Zeit gespeichert."
-        dm:
-          one: "Der persönliche Chatverlauf wird für %{count} Tag gespeichert."
-          other: "Der persönliche Chatverlauf wird für %{count} Tage gespeichert."
+        indefinitely_short: "unbestimmt"
+        indefinitely_long: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten auf unbestimmte Zeit gespeichert werden."
+        short:
+          one: "%{count} Tag"
+          other: "%{count} Tage"
+        long:
+          one: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten für %{count} Tag aufbewahrt werden."
+          other: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten für %{count} Tage aufbewahrt werden."
       flags:
         off_topic: "Diese Nachricht ist für die aktuelle Diskussion im Sinne des Kanaltitels nicht relevant und sollte wahrscheinlich an eine andere Stelle verschoben werden."
         inappropriate: "Diese Nachricht enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder als Verstoß gegen <a href=\"%{basePath}/guidelines\">unsere Community-Richtlinien</a> ansehen würde."
+        illegal: "Dieser Beitrag erfordert die Aufmerksamkeit des Teams, da er meiner Meinung nach illegale Inhalte enthält."
         spam: "Diese Nachricht ist Werbung oder Vandalismus. Sie ist nicht nützlich oder relevant für den aktuellen Kanal."
         notify_user: "Ich möchte mit dieser Person direkt und persönlich über ihre Nachricht sprechen."
         notify_moderators: "Diese Nachricht erfordert die Aufmerksamkeit des Teams aus einem anderen, oben nicht aufgeführten Grund."
@@ -516,8 +584,7 @@ de:
         no_results: "Keine Ergebnisse"
       thread:
         title: "Titel"
-        view_thread: Thread ansehen
-        default_title: "Thema #%{thread_id}"
+        view_thread: Thread aufrufen
         replies:
           one: "%{count} Antwort"
           other: "%{count} Antworten"
@@ -526,9 +593,20 @@ de:
         original_message:
           started_by: "Gestartet von"
         settings: "Einstellungen"
+        last_reply: "letzte Antw."
+        notifications:
+          regular:
+            title: "Normal"
+            description: "Du wirst benachrichtigt, wenn jemand deinen Namen mit @ in diesem Thread erwähnt."
+          tracking:
+            title: "Verfolgen"
+            description: "Die Anzahl der neuen Antworten auf diesen Thread wird in der Thread-Liste und im Kanal angezeigt. Du wirst benachrichtigt, wenn jemand deinen Namen mit @ in diesem Thread erwähnt."
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Thread öffnen"
-        list: "Laufende Diskussionen"
+        list: "Threads"
         none: "Du nimmst an keinem Thread in diesem Kanal teil."
       draft_channel_screen:
         header: "Neue Nachricht"
@@ -576,6 +654,9 @@ de:
       types:
         chat_reviewable_message:
           title: "Markierte Chat-Nachricht"
+        reviewable_chat_message:
+          title: "Markierte Chat-Nachricht"
+          noun: "Chat-Nachricht"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
@@ -611,3 +692,7 @@ de:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

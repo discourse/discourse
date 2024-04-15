@@ -1,16 +1,16 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed, set } from "@ember/object";
 import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
-import User from "discourse/models/user";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
+import { service } from "@ember/service";
+import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import optionalService from "discourse/lib/optional-service";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { inject as service } from "@ember/service";
-import { dasherize } from "@ember/string";
+import CanCheckEmails from "discourse/mixins/can-check-emails";
+import User from "discourse/models/user";
+import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend(CanCheckEmails, {
   router: service(),
@@ -68,6 +68,8 @@ export default Controller.extend(CanCheckEmails, {
     };
   }),
 
+  isTrustLevelZero: equal("model.trust_level", 0),
+  hasTrustLevel: or("isTrustLevelZero", "model.trust_level"),
   showStaffCounters: or(
     "hasGivenFlags",
     "hasFlaggedPosts",
@@ -118,6 +120,11 @@ export default Controller.extend(CanCheckEmails, {
     return (
       this.currentUser?.can_send_private_messages && (viewingSelf || isAdmin)
     );
+  },
+
+  @discourseComputed("viewingSelf", "currentUser.admin")
+  showActivityTab(viewingSelf, isAdmin) {
+    return viewingSelf || isAdmin || !this.siteSettings.hide_user_activity_tab;
   },
 
   @discourseComputed("viewingSelf", "currentUser.admin")

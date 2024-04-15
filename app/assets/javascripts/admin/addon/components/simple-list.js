@@ -1,9 +1,11 @@
-import { classNameBindings } from "@ember-decorators/component";
-import { empty } from "@ember/object/computed";
+import { arrayContentDidChange } from "@ember/-internals/metal";
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
+import { empty } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
+import { classNameBindings } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
 @classNameBindings(":simple-list", ":value-list")
 export default class SimpleList extends Component {
@@ -13,10 +15,13 @@ export default class SimpleList extends Component {
   newValue = "";
   collection = null;
   values = null;
+  choices = null;
+  allowAny = false;
 
   @on("didReceiveAttrs")
   _setupCollection() {
     this.set("collection", this._splitValues(this.values, this.inputDelimiter));
+    this.set("isPredefinedList", !this.allowAny && !isEmpty(this.choices));
   }
 
   keyDown(event) {
@@ -29,13 +34,13 @@ export default class SimpleList extends Component {
   @action
   changeValue(index, event) {
     this.collection.replace(index, 1, [event.target.value]);
-    this.collection.arrayContentDidChange(index);
+    arrayContentDidChange(this.collection, index);
     this._onChange();
   }
 
   @action
   addValue(newValue) {
-    if (this.inputEmpty) {
+    if (!newValue) {
       return;
     }
 
@@ -69,6 +74,11 @@ export default class SimpleList extends Component {
 
   _onChange() {
     this.onChange?.(this.collection);
+  }
+
+  @discourseComputed("choices", "values")
+  validValues(choices, values) {
+    return choices.filter((name) => !values.includes(name));
   }
 
   @discourseComputed("collection")

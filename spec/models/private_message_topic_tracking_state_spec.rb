@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe PrivateMessageTopicTrackingState do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2) { Fabricate(:user) }
-
-  before_all { Group.refresh_automatic_groups! }
 
   fab!(:group) do
     Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user_2) }
@@ -91,27 +89,24 @@ RSpec.describe PrivateMessageTopicTrackingState do
     it "should publish the right message_bus message" do
       messages = MessageBus.track_publish { described_class.publish_new(private_message) }
 
-      expect(messages.map(&:channel)).to contain_exactly(
-        described_class.user_channel(user.id),
-        described_class.user_channel(user_2.id),
-      )
+      expect(messages.map(&:channel)).to contain_exactly(described_class.user_channel(user_2.id))
 
-      data =
-        messages.find { |message| message.channel == described_class.user_channel(user.id) }.data
+      data = messages.first.data
 
       expect(data["message_type"]).to eq(described_class::NEW_MESSAGE_TYPE)
+      expect(data["topic_id"]).to eq(private_message.id)
+      expect(data["payload"]["last_read_post_number"]).to eq(nil)
+      expect(data["payload"]["highest_post_number"]).to eq(1)
+      expect(data["payload"]["group_ids"]).to eq([])
+      expect(data["payload"]["created_by_user_id"]).to eq(private_message.user_id)
     end
 
     it "should publish the right message_bus message for a group message" do
       messages = MessageBus.track_publish { described_class.publish_new(group_message) }
 
-      expect(messages.map(&:channel)).to contain_exactly(
-        described_class.group_channel(group.id),
-        described_class.user_channel(user.id),
-      )
+      expect(messages.map(&:channel)).to contain_exactly(described_class.group_channel(group.id))
 
-      data =
-        messages.find { |message| message.channel == described_class.group_channel(group.id) }.data
+      data = messages.first.data
 
       expect(data["message_type"]).to eq(described_class::NEW_MESSAGE_TYPE)
       expect(data["topic_id"]).to eq(group_message.id)
@@ -127,17 +122,13 @@ RSpec.describe PrivateMessageTopicTrackingState do
       messages =
         MessageBus.track_publish { described_class.publish_unread(private_message.first_post) }
 
-      expect(messages.map(&:channel)).to contain_exactly(
-        described_class.user_channel(user.id),
-        described_class.user_channel(user_2.id),
-      )
+      expect(messages.map(&:channel)).to contain_exactly(described_class.user_channel(user_2.id))
 
-      data =
-        messages.find { |message| message.channel == described_class.user_channel(user.id) }.data
+      data = messages.first.data
 
       expect(data["message_type"]).to eq(described_class::UNREAD_MESSAGE_TYPE)
       expect(data["topic_id"]).to eq(private_message.id)
-      expect(data["payload"]["last_read_post_number"]).to eq(1)
+      expect(data["payload"]["last_read_post_number"]).to eq(nil)
       expect(data["payload"]["highest_post_number"]).to eq(1)
       expect(data["payload"]["created_by_user_id"]).to eq(private_message.first_post.user_id)
       expect(data["payload"]["notification_level"]).to eq(NotificationLevels.all[:watching])

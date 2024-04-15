@@ -214,9 +214,11 @@ module DiscourseTagging
         new_tag_names: topic.tags.map(&:name),
       )
 
-      return true
+      true
+    else
+      topic.errors.add(:base, I18n.t("tags.user_not_permitted"))
+      false
     end
-    false
   end
 
   def self.validate_category_tags(guardian, model, category, tags = [])
@@ -379,13 +381,13 @@ module DiscourseTagging
 
   CATEGORY_RESTRICTIONS_SQL ||= <<~SQL
     category_restrictions AS (
-      SELECT t.id as tag_id, ct.id as ct_id, ct.category_id as category_id
+      SELECT t.id as tag_id, ct.id as ct_id, ct.category_id as category_id, NULL AS category_tag_group_id
       FROM tags t
       INNER JOIN category_tags ct ON t.id = ct.tag_id /*and_name_like*/
 
       UNION
 
-      SELECT t.id as tag_id, ctg.id as ctg_id, ctg.category_id as category_id
+      SELECT t.id as tag_id, ctg.id as ctg_id, ctg.category_id as category_id, ctg.tag_group_id AS category_tag_group_id
       FROM tags t
       INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
       INNER JOIN category_tag_groups ctg ON tgm.tag_group_id = ctg.tag_group_id
@@ -458,7 +460,7 @@ module DiscourseTagging
       FROM tags t
       INNER JOIN tag_group_restrictions tgr ON tgr.tag_id = t.id
       #{outer_join ? "LEFT OUTER" : "INNER"}
-        JOIN category_restrictions cr ON t.id = cr.tag_id
+        JOIN category_restrictions cr ON t.id = cr.tag_id AND (tgr.tag_group_id = cr.category_tag_group_id OR cr.category_tag_group_id IS NULL)
       /*where*/
       /*order_by*/
       /*limit*/
@@ -572,7 +574,7 @@ module DiscourseTagging
          WHERE tg.one_per_topic
       SQL
 
-      if !one_tag_per_group_ids.empty?
+      if one_tag_per_group_ids.present?
         builder.where(
           "t.id NOT IN (SELECT DISTINCT tag_id FROM tag_group_restrictions WHERE tag_group_id IN (?)) OR id IN (:selected_tag_ids)",
           one_tag_per_group_ids,
@@ -724,8 +726,8 @@ module DiscourseTagging
     tag.strip!
     tag.gsub!(/[[:space:]]+/, "-")
     tag.gsub!(/[^[:word:][:punct:]]+/, "")
-    tag.squeeze!("-")
     tag.gsub!(TAGS_FILTER_REGEXP, "")
+    tag.squeeze!("-")
     tag[0...SiteSetting.max_tag_length]
   end
 
@@ -773,6 +775,16 @@ module DiscourseTagging
     successful = existing.select { |t| !t.errors.present? }
     synonyms_ids = successful.map(&:id)
     TopicTag.where(topic_id: target_tag.topics.with_deleted, tag_id: synonyms_ids).delete_all
+    TopicTag.joins(DB.sql_fragment(<<~SQL, synonyms_ids: synonyms_ids)).delete_all
+      INNER JOIN (
+        SELECT MIN(id) AS id, topic_id
+          FROM topic_tags
+          WHERE tag_id IN (:synonyms_ids)
+          GROUP BY topic_id
+      ) AS tt ON tt.id < topic_tags.id
+                  AND tt.topic_id = topic_tags.topic_id
+                  AND topic_tags.tag_id IN (:synonyms_ids)
+    SQL
     TopicTag.where(tag_id: synonyms_ids).update_all(tag_id: target_tag.id)
     Scheduler::Defer.later "Update tag topic counts" do
       Tag.ensure_consistency!

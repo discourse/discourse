@@ -1,14 +1,14 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "ember-qunit";
-import { click, render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
-
 /* eslint-disable ember/require-tagless-components */
 /* eslint-disable ember/no-classic-classes */
 /* eslint-disable ember/no-classic-components */
-import { default as ClassicComponent } from "@ember/component";
-import { default as GlimmerComponent } from "@glimmer/component";
+
+import GlimmerComponent from "@glimmer/component";
+import ClassicComponent from "@ember/component";
 import { action } from "@ember/object";
+import { click, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { setupRenderingTest } from "ember-qunit";
+import { module, test } from "qunit";
 
 // Configure test-local Classic and Glimmer components that
 // will be immune from upgrades to actual Discourse components.
@@ -27,7 +27,7 @@ const ExampleClassicButton = ClassicComponent.extend({
     this.onClick?.(event);
   },
 });
-const exampleClassicButtonTemplate = hbs`{{yield}}`;
+const exampleClassicButtonTemplate = hbs`{{! template-lint-disable no-yield-only }}{{yield}}`;
 
 class ExampleGlimmerButton extends GlimmerComponent {
   @action

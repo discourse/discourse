@@ -46,7 +46,7 @@ sv:
       invalid: |-
         Förlåt, men det är inte matematiskt möjligt att kombinera tärningarna så. :confounded:
       not_enough_dice:
-        one: "Jag har bara %{count} tärning. Skamligt, jag vet!"
+        one: "Jag har bara %{count} tärningar. Skamligt, jag vet!"
         other: "Jag har bara %{count} tärningar. Skamligt, jag vet!"
       out_of_range: |-
         Visste du att [maximalt antal sidor](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) på en matematiskt rättvis tärning är 120?
@@ -296,10 +296,6 @@ sv:
         not_found: |-
           Åh nej, mitt elaka inlägg har inte flaggats än. :worried: Kan du flagga det som olämpligt genom funktionen **flagga** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Glöm inte att använda Visa mera knappen <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> för att visa fler funktioner för varje inlägg.
       search:
-        instructions: |-
-          _psst_ … Jag har gömt en överraskning i detta ämne. Om du är redo för utmaningen, **klicka på sökikonen** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> uppe till höger &#8599; för att söka efter den.
-
-          Försök söka efter termen "kapy&#8203;bara" i detta ämne.
         hidden_message: |-
           Hur kunde du missa denna kapybara? :wink:
 
@@ -377,18 +373,8 @@ sv:
         instructions: |-
           Visste du att du kan hänvisa till kategorier och taggar i dina inlägg? Har du till exempel sett kategorin %{category}?
 
-          Skriv `#` i mitten på en mening och välj en kategori eller tagg.
-        instructions_experimental: |-
-          Visste du att du kan hänvisa till kategorier och taggar i dina inlägg? Har du till exempel sett kategorin %{category}?
-
           Skriv `#` var som helst i en mening och välj en kategori eller tagg.
         not_found: |-
-          Hmm, jag ser ingen kategori någonstans. Notera att `#` inte kan vara det första tecknet.  Kan du kopiera detta i ditt nästa svar?
-
-          ```text
-          Jag kan skapa en kategorilänk genom #
-          ...
-        not_found_experimental: |-
           Hmm, jag ser ingen kategori någonstans där. Kan du kopiera denna i ditt nästa svar?
 
           ```text

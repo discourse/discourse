@@ -28,8 +28,8 @@
 
 {{#if this.clearable}}
   <DButton
-    @class="btn-default clear-date-time"
     @icon="times"
-    @action={{action "onClear"}}
+    @action={{this.onClear}}
+    class="btn-default clear-date-time"
   />
 {{/if}}

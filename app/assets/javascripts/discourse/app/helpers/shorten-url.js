@@ -1,6 +1,7 @@
-import { registerUnbound } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse-common/lib/helpers";
 
-registerUnbound("shorten-url", function (url) {
+registerRawHelper("shorten-url", shortenUrl);
+export default function shortenUrl(url) {
   let matches = url.match(/\//g);
 
   if (matches && matches.length === 3) {
@@ -9,4 +10,4 @@ registerUnbound("shorten-url", function (url) {
   url = url.replace(/^https?:\/\//, "");
   url = url.replace(/^www\./, "");
   return url.substring(0, 80);
-});
+}

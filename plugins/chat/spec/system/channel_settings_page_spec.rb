@@ -1,13 +1,39 @@
 # frozen_string_literal: true
 
-RSpec.describe "Channel - Info - Settings page", type: :system, js: true do
-  let(:chat_page) { PageObjects::Pages::Chat.new }
+RSpec.describe "Channel - Info - Settings page", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:category_channel) }
+
+  let(:chat_page) { PageObjects::Pages::Chat.new }
+  let(:toasts) { PageObjects::Components::Toasts.new }
+  let(:channel_settings_page) { PageObjects::Pages::ChatChannelSettings.new }
 
   before do
     chat_system_bootstrap
     sign_in(current_user)
+  end
+
+  context "when visiting from browse page" do
+    context "when clicking back button" do
+      it "redirects to browse page" do
+        chat_page.visit_browse
+        find(".c-navbar__back-button").click
+
+        expect(page).to have_current_path("/chat/browse/open")
+      end
+    end
+  end
+
+  context "when visiting from channel page" do
+    context "when clicking back button" do
+      it "redirects to channel page" do
+        chat_page.visit_channel(channel_1)
+        find(".c-navbar__channel-title").click
+        find(".c-navbar__back-button").click
+
+        expect(page).to have_current_path(chat.channel_path(channel_1.slug, channel_1.id))
+      end
+    end
   end
 
   context "as unauthorized user" do
@@ -20,165 +46,274 @@ RSpec.describe "Channel - Info - Settings page", type: :system, js: true do
     end
   end
 
-  context "as authorized user" do
-    context "as not member" do
-      it "redirects to about tab" do
-        chat_page.visit_channel_settings(channel_1)
+  context "as not allowed to see the channel" do
+    fab!(:channel_1) { Fabricate(:private_category_channel) }
 
-        expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/about")
-      end
+    it "redirects to browse page" do
+      chat_page.visit_channel_settings(channel_1)
 
-      it "doesn’t have settings tab" do
-        chat_page.visit_channel_settings(channel_1)
+      expect(page).to have_current_path("/chat/browse/open")
+    end
+  end
 
-        expect(page).to have_no_selector(".chat-tabs-list__item[aria-controls='settings-tab']")
-      end
+  context "as not member of channel" do
+    it "shows settings page" do
+      chat_page.visit_channel_settings(channel_1)
 
-      context "as an admin" do
-        before { sign_in(Fabricate(:admin)) }
+      expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
+    end
+  end
 
-        it "shows settings tab" do
-          chat_page.visit_channel_settings(channel_1)
+  context "as regular user of channel" do
+    before { channel_1.add(current_user) }
 
-          expect(page).to have_selector(".chat-tabs-list__item[aria-controls='settings-tab']")
-        end
+    it "shows settings page" do
+      chat_page.visit_channel_settings(channel_1)
 
-        it "can navigate to settings tab" do
-          chat_page.visit_channel_settings(channel_1)
-
-          expect(page).to have_current_path(
-            "/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings",
-          )
-        end
-      end
+      expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
     end
 
-    context "as a member" do
+    it "shows channel info" do
+      chat_page.visit_channel_settings(channel_1)
+
+      expect(page.find(".badge-category__name")).to have_content(channel_1.chatable.name)
+      expect(page.find(".c-channel-settings__name")).to have_content(channel_1.title)
+      expect(page.find(".c-channel-settings__slug")).to have_content(channel_1.slug)
+    end
+
+    it "can’t edit name or slug" do
+      chat_page.visit_channel_settings(channel_1)
+
+      expect(page).to have_no_selector(".edit-name-slug-btn")
+    end
+
+    it "can’t edit description" do
+      chat_page.visit_channel_settings(channel_1)
+
+      expect(page).to have_no_selector(".edit-description-btn")
+    end
+
+    it "escapes channel title" do
+      channel_1.update!(name: "<script>alert('hello')</script>")
+      chat_page.visit_channel_settings(channel_1)
+
+      expect(page.find(".c-channel-settings__name")["innerHTML"].strip).to eq(
+        "&lt;script&gt;alert('hello')&lt;/script&gt;",
+      )
+      expect(page.find(".chat-channel-name__label")["innerHTML"].strip).to eq(
+        "&lt;script&gt;alert('hello')&lt;/script&gt;",
+      )
+    end
+
+    it "is not showing admin section" do
+      chat_page.visit_channel_settings(channel_1)
+
+      expect(page).to have_no_css("[data-section='admin']")
+    end
+
+    it "can mute channel" do
+      chat_page.visit_channel_settings(channel_1)
+      membership = channel_1.membership_for(current_user)
+
+      expect {
+        PageObjects::Components::DToggleSwitch.new(".c-channel-settings__mute-switch").toggle
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+      }.to change { membership.reload.muted }.from(false).to(true)
+    end
+
+    it "can change desktop notification level" do
+      chat_page.visit_channel_settings(channel_1)
+      membership = channel_1.membership_for(current_user)
+
+      expect {
+        select_kit =
+          PageObjects::Components::SelectKit.new(
+            ".c-channel-settings__desktop-notifications-selector",
+          )
+        select_kit.expand
+        select_kit.select_row_by_name("Never")
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+      }.to change { membership.reload.desktop_notification_level }.from("mention").to("never")
+    end
+
+    it "can change mobile notification level" do
+      chat_page.visit_channel_settings(channel_1)
+      membership = channel_1.membership_for(current_user)
+
+      expect {
+        select_kit =
+          PageObjects::Components::SelectKit.new(
+            ".c-channel-settings__mobile-notifications-selector",
+          )
+        select_kit.expand
+        select_kit.select_row_by_name("Never")
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+      }.to change { membership.reload.mobile_notification_level }.from("mention").to("never")
+    end
+
+    it "can unfollow channel" do
+      membership = channel_1.membership_for(current_user)
+
+      chat_page.visit_channel_settings(channel_1)
+      click_button(I18n.t("js.chat.channel_settings.leave_channel"))
+
+      expect(page).to have_current_path("/chat/browse/open")
+      expect(membership.reload.following).to eq(false)
+    end
+
+    context "when group channel" do
+      fab!(:channel_1) do
+        Fabricate(:direct_message_channel, group: true, users: [current_user, Fabricate(:user)])
+      end
+
       before { channel_1.add(current_user) }
 
-      context "when visitng the settings of a recently joined channel" do
-        fab!(:channel_2) { Fabricate(:category_channel) }
-
-        it "is correctly populated" do
-          chat_page.visit_browse
-          find(
-            ".chat-channel-card[data-channel-id='#{channel_2.id}'] .toggle-channel-membership-button",
-          ).click
-
-          expect(
-            page.find(".chat-channel-card[data-channel-id='#{channel_2.id}']"),
-          ).to have_content(I18n.t("js.chat.joined").upcase)
-
-          find(
-            ".chat-channel-card[data-channel-id='#{channel_2.id}'] .chat-channel-card__setting",
-          ).click
-
-          expect(page).to have_content(I18n.t("js.chat.notification_levels.mention"))
-        end
-      end
-
-      it "can mute channel" do
-        chat_page.visit_channel_settings(channel_1)
+      it "can leave channel" do
         membership = channel_1.membership_for(current_user)
 
-        expect {
-          find(".channel-settings-view__muted-selector").click
-          find(".channel-settings-view__muted-selector [data-name='On']").click
-          expect(page).to have_content(I18n.t("js.chat.settings.saved"))
-        }.to change { membership.reload.muted }.from(false).to(true)
-      end
-
-      it "can change desktop notification level" do
         chat_page.visit_channel_settings(channel_1)
-        membership = channel_1.membership_for(current_user)
+        click_button(I18n.t("js.chat.channel_settings.leave_channel"))
 
-        expect {
-          find(".channel-settings-view__desktop-notification-level-selector").click
-          find(
-            ".channel-settings-view__desktop-notification-level-selector [data-name='Never']",
-          ).click
-          expect(page).to have_content(I18n.t("js.chat.settings.saved"))
-        }.to change { membership.reload.desktop_notification_level }.from("mention").to("never")
+        expect(page).to have_current_path("/chat/browse/open")
+        expect(Chat::UserChatChannelMembership.exists?(membership.id)).to eq(false)
+        expect(
+          channel_1.chatable.direct_message_users.where(user_id: current_user.id).exists?,
+        ).to eq(false)
       end
+    end
+  end
 
-      it "can change mobile notification level" do
-        chat_page.visit_channel_settings(channel_1)
-        membership = channel_1.membership_for(current_user)
+  context "as staff" do
+    fab!(:current_user) { Fabricate(:admin) }
 
-        expect {
-          find(".channel-settings-view__mobile-notification-level-selector").click
-          find(
-            ".channel-settings-view__mobile-notification-level-selector [data-name='Never']",
-          ).click
-          expect(page).to have_content(I18n.t("js.chat.settings.saved"))
-        }.to change { membership.reload.mobile_notification_level }.from("mention").to("never")
-      end
+    before { channel_1.add(current_user) }
 
-      it "doesn’t show admin section" do
-        chat_page.visit_channel_settings(channel_1)
+    it "can edit name" do
+      chat_page.visit_channel_settings(channel_1)
 
-        expect(page).to have_no_content(I18n.t("js.chat.settings.admin_title"))
-      end
+      edit_modal = channel_settings_page.open_edit_modal
 
-      context "as an admin" do
-        before { sign_in(Fabricate(:admin)) }
+      expect(edit_modal).to have_name_input(channel_1.title)
 
-        it "shows admin section" do
-          chat_page.visit_channel_settings(channel_1)
+      name = "A new name"
 
-          expect(page).to have_content(I18n.t("js.chat.settings.admin_title"))
-        end
+      edit_modal.fill_and_save_name(name)
 
-        it "can change auto join setting" do
-          chat_page.visit_channel_settings(channel_1)
+      expect(page).to have_content(name)
+    end
 
-          expect {
-            find(".channel-settings-view__auto-join-selector").click
-            find(".channel-settings-view__auto-join-selector [data-name='Yes']").click
-            find("#dialog-holder .btn-primary").click
-            expect(page).to have_content(I18n.t("js.chat.settings.saved"))
-          }.to change { channel_1.reload.auto_join_users }.from(false).to(true)
-        end
+    it "can edit description" do
+      chat_page.visit_channel_settings(channel_1)
+      find(".edit-description-btn").click
 
-        it "can change allow channel wide mentions" do
-          chat_page.visit_channel_settings(channel_1)
+      expect(page).to have_selector(
+        ".chat-modal-edit-channel-description__description-input",
+        text: channel_1.description,
+      )
 
-          expect {
-            find(".channel-settings-view__channel-wide-mentions-selector").click
-            find(".channel-settings-view__channel-wide-mentions-selector [data-name='No']").click
-            expect(page).to have_content(I18n.t("js.chat.settings.saved"))
-          }.to change { channel_1.reload.allow_channel_wide_mentions }.from(true).to(false)
-        end
+      description = "A new description"
+      find(".chat-modal-edit-channel-description__description-input").fill_in(with: description)
+      find(".create").click
 
-        it "can close channel" do
-          chat_page.visit_channel_settings(channel_1)
+      expect(page).to have_content(description)
+    end
 
-          expect {
-            click_button(I18n.t("js.chat.channel_settings.close_channel"))
-            find("#chat-channel-toggle-btn").click
-            expect(page).to have_content(I18n.t("js.chat.channel_status.closed_header"))
-          }.to change { channel_1.reload.status }.from("open").to("closed")
-        end
+    it "can edit slug" do
+      chat_page.visit_channel_settings(channel_1)
 
-        it "can delete channel" do
-          chat_page.visit_channel_settings(channel_1)
+      edit_modal = channel_settings_page.open_edit_modal
 
-          click_button(I18n.t("js.chat.channel_settings.delete_channel"))
-          fill_in("channel-delete-confirm-name", with: channel_1.title)
-          find_button("chat-confirm-delete-channel", disabled: false).click
-          expect(page).to have_content(I18n.t("js.chat.channel_delete.process_started"))
-        end
+      slug = "gonzo-slug"
 
-        context "when confirmation name is wrong" do
-          it "doesn’t delete submission" do
-            chat_page.visit_channel_settings(channel_1)
-            find(".delete-btn").click
-            fill_in("channel-delete-confirm-name", with: channel_1.title + "wrong")
+      expect(edit_modal).to have_slug_input(channel_1.slug)
 
-            expect(page).to have_button("chat-confirm-delete-channel", disabled: true)
-          end
-        end
-      end
+      edit_modal.fill_and_save_slug(slug)
+
+      expect(page).to have_current_path("/chat/c/gonzo-slug/#{channel_1.id}")
+    end
+
+    it "can clear the slug to use the autogenerated version based on the name" do
+      channel_1.update!(name: "test channel")
+      chat_page.visit_channel_settings(channel_1)
+      edit_modal = channel_settings_page.open_edit_modal
+
+      expect(edit_modal).to have_slug_input(channel_1.slug)
+
+      edit_modal.fill_in_slug_input("")
+      edit_modal.wait_for_auto_generated_slug
+      edit_modal.save_changes
+
+      expect(page).to have_current_path("/chat/c/test-channel/#{channel_1.id}")
+    end
+
+    it "shows settings page" do
+      chat_page.visit_channel_settings(channel_1)
+
+      expect(page).to have_current_path("/chat/c/#{channel_1.slug}/#{channel_1.id}/info/settings")
+    end
+
+    it "can change auto join setting" do
+      chat_page.visit_channel_settings(channel_1)
+
+      expect {
+        PageObjects::Components::DToggleSwitch.new(".c-channel-settings__auto-join-switch").toggle
+        find("#dialog-holder .btn-primary").click
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+      }.to change { channel_1.reload.auto_join_users }.from(false).to(true)
+    end
+
+    it "can change allow channel wide mentions" do
+      chat_page.visit_channel_settings(channel_1)
+
+      expect {
+        PageObjects::Components::DToggleSwitch.new(
+          ".c-channel-settings__channel-wide-mentions",
+        ).toggle
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+      }.to change { channel_1.reload.allow_channel_wide_mentions }.from(true).to(false)
+    end
+
+    it "can close channel" do
+      chat_page.visit_channel_settings(channel_1)
+
+      expect {
+        click_button(I18n.t("js.chat.channel_settings.close_channel"))
+        find("#chat-channel-toggle-btn").click
+
+        expect(page).to have_content(I18n.t("js.chat.channel_status.closed_header"))
+      }.to change { channel_1.reload.status }.from("open").to("closed")
+    end
+
+    it "can enable threading" do
+      chat_page.visit_channel_settings(channel_1)
+
+      expect {
+        PageObjects::Components::DToggleSwitch.new(".c-channel-settings__threading-switch").toggle
+
+        expect(toasts).to have_success(I18n.t("js.saved"))
+      }.to change { channel_1.reload.threading_enabled }.from(false).to(true)
+    end
+
+    it "can delete channel" do
+      chat_page.visit_channel_settings(channel_1)
+
+      click_button(I18n.t("js.chat.channel_settings.delete_channel"))
+      fill_in("channel-delete-confirm-name", with: channel_1.title)
+      find_button("chat-confirm-delete-channel", disabled: false).click
+      expect(page).to have_content(I18n.t("js.chat.channel_delete.process_started"))
+    end
+
+    it "doesn’t delete when confirmation is wrong" do
+      chat_page.visit_channel_settings(channel_1)
+      find(".delete-btn").click
+      fill_in("channel-delete-confirm-name", with: channel_1.title + "wrong")
+
+      expect(page).to have_button("chat-confirm-delete-channel", disabled: true)
     end
   end
 end

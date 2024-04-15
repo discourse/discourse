@@ -1,8 +1,8 @@
+import { h } from "virtual-dom";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
+import hbs from "discourse/widgets/hbs-compiler";
 import PostCooked from "discourse/widgets/post-cooked";
 import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
-import hbs from "discourse/widgets/hbs-compiler";
 
 createWidget("post-link-arrow", {
   tagName: "div.post-link-arrow",

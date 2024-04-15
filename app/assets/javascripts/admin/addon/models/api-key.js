@@ -1,9 +1,9 @@
 import { computed } from "@ember/object";
-import AdminUser from "admin/models/admin-user";
-import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
+import RestModel from "discourse/models/rest";
+import discourseComputed from "discourse-common/utils/decorators";
+import AdminUser from "admin/models/admin-user";
 
 export default class ApiKey extends RestModel {
   @fmt("truncated_key", "%@...") truncatedKey;
@@ -19,7 +19,6 @@ export default class ApiKey extends RestModel {
     } else {
       this.set("_user", value);
     }
-    return this._user;
   }
 
   @discourseComputed("description")

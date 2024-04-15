@@ -6,7 +6,9 @@
 
 he:
   site_settings:
-    chat_enabled: "הפעלת תוסף הצ׳אט."
+    chat_separate_sidebar_mode: "הצגת מצבי סרגל צד נפרדים עבור פורום וצ׳אט."
+    chat_enabled: "הפעלת צ׳אט."
+    enable_public_channels: "הפעלת ערוצים ציבוריים על בסיס קטגוריות."
     chat_allowed_groups: "משתמשים בקבוצות אלה יכולים לשוחח בצ׳אט. נא לשים לב שהסגל תמיד יכול לגשת לצ׳אט."
     chat_channel_retention_days: "הודעות הצ׳אט בערוצים הרגילים ישמרו למשך כמות כזאת של ימים. הגדרה לאפס תשמור את ההודעות לעד."
     chat_dm_retention_days: "הודעות הצ׳אט בערוצי הצ׳אט האישיים ישמרו למשך כמות כזאת של ימים. הגדרה לאפס תשמור את ההודעות לעד."
@@ -26,11 +28,16 @@ he:
     max_mentions_per_chat_message: "מספר התראות מרבי של @שם בהן יכול להשתמש משתמש בהודעת צ׳אט."
     chat_max_direct_message_users: "משתמשים לא יכולים להוסיף יותר מכמות זו של משתמשים אחרים בעת יצירת הודעה ישירה חדשה. יש להגדיר ל־0 כדי לאפשר הודעות עצמיות. הסגל מוחרג מההגדרה הזאת."
     chat_allow_archiving_channels: "לאפשר לסגל להעביר הודעות לארכיון בנושא בעת סגירת ערוץ."
+    chat_editing_grace_period: "במשך (n) שניות לאחר שליחת הודעה בצ׳אט, העריכה לא תציג את התגית (הערוכה) על ידי הודעת הצ׳אט."
+    chat_editing_grace_period_max_diff_low_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 0 ו־1)."
+    chat_editing_grace_period_max_diff_high_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 2 ומעלה)."
+    chat_preferred_mobile_index: "לשונית מועדפת בעת טעינת ‎/chat במכשיר נייד."
     errors:
       chat_default_channel: "ערוץ הצ׳אט כברירת המחדל חייב להיות ערוץ ציבורי."
       direct_message_enabled_groups_invalid: "יש לציין לפחות קבוצה אחת בהגדרה הזאת. כדי למנוע מכולם לשלוח הודעות ישירות למעט הסגל, יש לבחור בקבוצת הסגל."
       chat_upload_not_allowed_secure_uploads: "אסור להעלות לצ׳אט כשהגדרת האתר להעלאות מאובטחות מופעלת."
   system_messages:
+    private_channel_title: "ערוץ %{id}"
     chat_channel_archive_complete:
       title: "העברת ערוץ הצ׳אט לארכיון הושלמה"
       subject_template: "העברת ערוץ הצ׳אט לארכיון הושלמה בהצלחה"
@@ -53,6 +60,7 @@ he:
   chat:
     deleted_chat_username: נמחק
     errors:
+      users_cant_be_added_to_channel: "אי אפשר להוסיף משתמשים לערוץ הזה."
       channel_exists_for_category: "כבר קיים ערוץ לקטגוריה ולשם האלו"
       channel_new_message_disallowed:
         archived: "הערוץ נמצא בארכיון, לא ניתן לשלוח הודעות חדשות"
@@ -74,10 +82,10 @@ he:
         many: "ההודעה קצרה מדי, חייבת להיות באורך של %{count} תווים לפחות."
         other: "ההודעה קצרה מדי, חייבת להיות באורך של %{count} תווים לפחות."
       message_too_long:
-        one: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
-        two: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
-        many: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
-        other: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים לכל היותר."
+        one: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד תו."
+        two: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים."
+        many: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים."
+        other: "ההודעה ארוכה מדי, היא חייבת להיות באורך של עד %{count} תווים."
       draft_too_long: "הטיוטה ארוכה מדי."
       max_reactions_limit_reached: "רגשות חדשים אסורים בהודעה זו."
       message_move_invalid_channel: "ערוצי המקור והיעד חייבים להיות ערוצים ציבוריים."
@@ -96,6 +104,9 @@ he:
         many: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
         other: "אין לך אפשרות ליצור הודעות ישירות מול למעלה מ־%{count} משתמשים נוספים."
       original_message_not_found: "מקור ההודעה אליה ניסית להגיב לא נמצא או שנמחק."
+      thread_invalid_for_channel: "השרשור הוא לא חלק מהערוץ שסופק."
+      thread_does_not_match_parent: "השרשור לא תואם להודעת ההורה."
+      invalid_direct_message: "אסור לך ליצור הודעה ישירה."
     reviewables:
       message_already_handled: "תודה, אבל כבר סקרנו הודעה זו וקבענו שאין צורך לסמן אותה שוב."
       actions:
@@ -120,18 +131,25 @@ he:
           title: "מחיקת ההודעה"
           description: "למחוק את ההודעה כדי שמשתמשים לא יוכלו לראות אותה."
         delete_and_agree:
-          title: "מחיקת ההודעה"
+          title: "התעלמות מהדגל ומחיקת ההודעה"
+          description: "התעלמות מהדגל על ידי הסרתו מהתור ומחיקת ההודעה."
         disagree_and_restore:
           title: "חוסר הסכמה ושחזור ההודעה"
           description: "לשחזר את ההודעה כדי שכל המשתמשים יוכלו לראות אותה."
         disagree:
           title: "אי קבלה"
         ignore:
-          title: "התעלמות"
+          title: "לא לעשות דבר"
+          description: "התעלמות מהדגל על ידי הסרתו מהתור מבלי לנקוט בשום פעולה."
       direct_messages:
         transcript_title: "תמלול הודעות קודמות בערוץ %{channel_name}"
         transcript_body: "כדי לתת לך יותר הקשר, הוספנו תמליל של (עד עשר) ההודעות הקודמות בשיחה זו:\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "ההזמנה של %{invited_users} בוצעה על ידי %{inviting_user}."
+        two: "ההזמנה של %{invited_users} בוצעה על ידי %{inviting_user}."
+        many: "ההזמנה של %{invited_users} בוצעה על ידי %{inviting_user}."
+        other: "ההזמנה של %{invited_users} בוצעה על ידי %{inviting_user}."
       archive:
         first_post_raw: "הנושא הזה הוא הארכיון של ערוץ הצ׳אט [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -147,6 +165,39 @@ he:
           two: "%{comma_separated_usernames} ועוד %{count}"
           many: "%{comma_separated_usernames} ועוד %{count}"
           other: "%{comma_separated_usernames} ועוד %{count}"
+    mention_warning:
+      dismiss: "התעלמות"
+      cannot_see: "ל־%{first_identifier} אין גישה לערוץ הזה ולא נשלחה התראה."
+      cannot_see_multiple:
+        one: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
+        two: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
+        many: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
+        other: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
+      invitations_sent:
+        one: "נשלחה הזמנה"
+        two: "נשלחו הזמנות"
+        many: "נשלחו הזמנות"
+        other: "נשלחו הזמנות"
+      invite: "הזמנה לערוץ"
+      without_membership: "לא הצטרפו לערוץ הזה: %{first_identifier}."
+      without_membership_multiple:
+        one: "לא הצטרפו לערוץ הזה: %{first_identifier} ועוד %{count}."
+        two: "לא הצטרפו לערוץ הזה: %{first_identifier} ועוד %{count}."
+        many: "לא הצטרפו לערוץ הזה: %{first_identifier} ועוד %{count}."
+        other: "לא הצטרפו לערוץ הזה: %{first_identifier} ועוד %{count}."
+      group_mentions_disabled: "אזכורים אסורים בקבוצה %{first_identifier}."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} וקבוצה %{count} נוספת לא מרשות אזכורים."
+        two: "%{first_identifier} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
+        many: "%{first_identifier} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
+        other: "%{first_identifier} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
+      global_mentions_disallowed: "האזכורים ‎@here (כאן) ו־‎@all (כולם) מושבתים בערוץ הזה."
+      too_many_members: "בקבוצה %{first_identifier} יש יותר מדי חברים. לא נשלחו התראות."
+      too_many_members_multiple:
+        one: "בקבוצה %{first_identifier} וב־%{count} נוספת יש יותר מדי חברים. לא נשלחו התראות."
+        two: "בקבוצה %{first_identifier} וב־%{count} נוספות יש יותר מדי חברים. לא נשלחו התראות."
+        many: "בקבוצה %{first_identifier} וב־%{count} נוספות יש יותר מדי חברים. לא נשלחו התראות."
+        other: "בקבוצה %{first_identifier} וב־%{count} נוספות יש יותר מדי חברים. לא נשלחו התראות."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "מכיל תווים שאינם בתחום ASCII"
@@ -158,6 +209,7 @@ he:
       inline_to_message: "הודעה מס׳ %{message_id} מאת ‎%{username}‏ – ‎#%{chat_channel}"
       inline_to_channel: "צ׳אט מס׳ %{chat_channel}"
       inline_to_topic_channel: "צ׳אט לנושא %{topic_title}"
+      thread_title_connector: "בתוך"
       x_members:
         one: "חבר %{count}"
         two: "%{count} חברים"
@@ -168,6 +220,11 @@ he:
         two: "ו־%{count} נוספים"
         many: "ו־%{count} נוספים"
         other: "ו־%{count} נוספים"
+    summaries:
+      no_targets: "לא היו הודעות במהלך התקופה הנבחרת."
+    transcript:
+      default_thread_title: "שרשור"
+      split_thread_range: "הודעות %{start} עד %{end} מתוך %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -204,6 +261,7 @@ he:
         other: "יש לך הודעות חדשות בצ׳אט"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] הודעה חדשה"
         direct_message_from_1: "[%{email_prefix}] הודעה חדשה מאת %{username}"
         direct_message_from_2: "[%{email_prefix}] הודעה חדשה שנשלחה מאת %{username1} וגם %{username2}"
         direct_message_from_more:

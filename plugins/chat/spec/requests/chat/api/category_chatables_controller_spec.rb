@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::Api::CategoryChatablesController do
   describe "#access_by_category" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
 
     context "when signed in as an admin" do
-      fab!(:admin) { Fabricate(:admin) }
+      fab!(:admin)
 
       before { sign_in(admin) }
 
@@ -90,7 +88,7 @@ describe Chat::Api::CategoryChatablesController do
     end
 
     context "when signed in as a regular user" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       before { sign_in(user) }
 

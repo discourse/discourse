@@ -1,29 +1,47 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import FilterModeMixin from "discourse/mixins/filter-mode";
+import { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { setting } from "discourse/lib/computed";
+import { filterTypeForMode } from "discourse/lib/filter-mode";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import NavItem from "discourse/models/nav-item";
 import discourseComputed from "discourse-common/utils/decorators";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { htmlSafe } from "@ember/template";
-import { inject as service } from "@ember/service";
 
-export default Component.extend(FilterModeMixin, {
+export default Component.extend({
   router: service(),
   dialog: service(),
   tagName: "",
+  filterMode: tracked(),
+  fixedCategoryPositions: setting("fixed_category_positions"),
+
+  @dependentKeyCompat
+  get filterType() {
+    return filterTypeForMode(this.filterMode);
+  },
 
   // Should be a `readOnly` instead but some themes/plugins still pass
   // the `categories` property into this component
-  @discourseComputed("site.categoriesList")
-  categories(categoriesList) {
+  @discourseComputed()
+  categories() {
+    let categories = this.site.categoriesList;
+
+    if (!this.siteSettings.allow_uncategorized_topics) {
+      categories = categories.filter(
+        (category) => category.id !== this.site.uncategorized_category_id
+      );
+    }
+
     if (this.currentUser?.indirectly_muted_category_ids) {
-      return categoriesList.filter(
+      categories = categories.filter(
         (category) =>
           !this.currentUser.indirectly_muted_category_ids.includes(category.id)
       );
-    } else {
-      return categoriesList;
     }
+
+    return categories;
   },
 
   @discourseComputed("category")
@@ -134,10 +152,23 @@ export default Component.extend(FilterModeMixin, {
     return filterType !== "categories";
   },
 
-  @discourseComputed()
-  canBulk() {
-    const controller = getOwner(this).lookup("controller:discovery/topics");
-    return controller.canBulkSelect;
+  @action
+  async changeTagNotificationLevel(notificationLevel) {
+    const response = await this.tagNotification.update({
+      notification_level: notificationLevel,
+    });
+
+    const payload = response.responseJson;
+
+    this.tagNotification.set("notification_level", notificationLevel);
+
+    this.currentUser.setProperties({
+      watched_tags: payload.watched_tags,
+      watching_first_post_tags: payload.watching_first_post_tags,
+      tracked_tags: payload.tracked_tags,
+      muted_tags: payload.muted_tags,
+      regular_tags: payload.regular_tags,
+    });
   },
 
   actions: {

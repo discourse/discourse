@@ -10,6 +10,5 @@
   "ember-addon": {
     "after": "ember-cli-babel",
     "before": "ember-cli-deprecation-workflow"
-  },
-  "dependencies": {}
+  }
 }

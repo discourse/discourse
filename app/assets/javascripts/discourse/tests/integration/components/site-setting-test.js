@@ -1,9 +1,9 @@
+import { click, fillIn, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, fillIn, render } from "@ember/test-helpers";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | site-setting", function (hooks) {
   setupRenderingTest(hooks);
@@ -58,5 +58,34 @@ module("Integration | Component | site-setting", function (hooks) {
     await click(query(".setting .d-icon-check"));
 
     assert.strictEqual(query(".validation-error h1"), null);
+  });
+
+  test("displays file types list setting", async function (assert) {
+    this.set("setting", {
+      setting: "theme_authorized_extensions",
+      value: "jpg|jpeg|png",
+      type: "file_types_list",
+    });
+
+    await render(hbs`<SiteSetting @setting={{this.setting}} />`);
+
+    assert.strictEqual(
+      query(".formatted-selection").innerText,
+      "jpg, jpeg, png"
+    );
+
+    await click(query(".file-types-list__button.image"));
+
+    assert.strictEqual(
+      query(".formatted-selection").innerText,
+      "jpg, jpeg, png, gif, heic, heif, webp, avif, svg"
+    );
+
+    await click(query(".file-types-list__button.image"));
+
+    assert.strictEqual(
+      query(".formatted-selection").innerText,
+      "jpg, jpeg, png, gif, heic, heif, webp, avif, svg"
+    );
   });
 });

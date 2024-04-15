@@ -229,6 +229,16 @@ RSpec.describe Jobs::CleanUpUploads do
     expect(Upload.exists?(id: category_background_upload.id)).to eq(true)
   end
 
+  it "does not delete category dark background uploads" do
+    category_background_dark_upload = fabricate_upload
+    Fabricate(:category, uploaded_background_dark: category_background_dark_upload)
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.exists?(id: expired_upload.id)).to eq(false)
+    expect(Upload.exists?(id: category_background_dark_upload.id)).to eq(true)
+  end
+
   it "does not delete post uploads" do
     upload = fabricate_upload
     Fabricate(:post, uploads: [upload])
@@ -279,6 +289,7 @@ RSpec.describe Jobs::CleanUpUploads do
       payload: {
         raw: "#{upload.short_url}\n#{upload2.short_url}",
       },
+      status: :pending,
     )
 
     Fabricate(
@@ -286,7 +297,7 @@ RSpec.describe Jobs::CleanUpUploads do
       payload: {
         raw: "#{upload3.short_url}",
       },
-      status: Reviewable.statuses[:rejected],
+      status: :rejected,
     )
 
     Jobs::CleanUpUploads.new.execute(nil)

@@ -1,11 +1,12 @@
-import I18n from "I18n";
+import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
+import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
+import { cleanNullQueryParams } from "discourse/lib/utilities";
 import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
-import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
-import { action } from "@ember/object";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import getURL from "discourse-common/lib/get-url";
-import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
 export const NEW_FILTER = "new";
 export const UNREAD_FILTER = "unread";
@@ -24,13 +25,7 @@ export default (inboxType, path, filter) => {
       ];
     },
 
-    @action
-    didTransition() {
-      this.controllerFor("user-topics-list")._showFooter();
-      return true;
-    },
-
-    model() {
+    model(params = {}) {
       const topicListFilter =
         "topics/" + path + "/" + this.modelFor("user").get("username_lower");
 
@@ -39,18 +34,25 @@ export default (inboxType, path, filter) => {
         topicListFilter
       );
 
-      return lastTopicList
-        ? lastTopicList
-        : this.store
-            .findFiltered("topicList", { filter: topicListFilter })
-            .then((model) => {
-              // andrei: we agreed that this is an anti pattern,
-              // it's better to avoid mutating a rest model like this
-              // this place we'll be refactored later
-              // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
-              model.set("emptyState", this.emptyState());
-              return model;
-            });
+      if (lastTopicList) {
+        return lastTopicList;
+      }
+
+      params = cleanNullQueryParams(params);
+
+      return this.store
+        .findFiltered("topicList", {
+          filter: topicListFilter,
+          params,
+        })
+        .then((model) => {
+          // andrei: we agreed that this is an anti pattern,
+          // it's better to avoid mutating a rest model like this
+          // this place we'll be refactored later
+          // see https://github.com/discourse/discourse/pull/14313#discussion_r708784704
+          model.set("emptyState", this.emptyState());
+          return model;
+        });
     },
 
     setupController() {
@@ -66,12 +68,23 @@ export default (inboxType, path, filter) => {
         hideCategory: true,
         showPosters: true,
         tagsForUser: this.modelFor("user").get("username_lower"),
-        selected: [],
         showToggleBulkSelect: true,
         filter,
         group: null,
         inbox: inboxType,
       });
+
+      let ascending = userTopicsListController.ascending;
+      if (ascending === "true") {
+        ascending = true;
+      } else if (ascending === "false") {
+        ascending = false;
+      }
+      userTopicsListController.setProperties({
+        ascending,
+      });
+
+      userTopicsListController.bulkSelectHelper.clear();
 
       userTopicsListController.subscribe();
 
@@ -80,26 +93,36 @@ export default (inboxType, path, filter) => {
         group: null,
       });
 
-      this.searchService.set("contextType", "private_messages");
+      // Private messages don't have a unique search context instead
+      // it is built upon the user search context and then tweaks the `type`.
+      // Since this is the only model in which we set a custom `type` we don't
+      // want to create a stand-alone `setSearchType` on the search service so
+      // we can instead explicitly set the search context and pass in the `type`
+      const pmSearchContext = {
+        ...this.controllerFor("user").get("model.searchContext"),
+        type: "private_messages",
+      };
+      this.searchService.searchContext = pmSearchContext;
     },
 
     emptyState() {
       const title = I18n.t("user.no_messages_title");
-      const body = htmlSafe(
-        I18n.t("user.no_messages_body", {
-          aboutUrl: getURL("/about"),
-          icon: iconHTML("envelope"),
-        })
-      );
+      const body = this.currentUser?.can_send_private_messages
+        ? htmlSafe(
+            I18n.t("user.no_messages_body", {
+              aboutUrl: getURL("/about"),
+              icon: iconHTML("envelope"),
+            })
+          )
+        : "";
       return { title, body };
     },
 
     deactivate() {
       this.controllerFor("user-topics-list").unsubscribe();
 
-      this.searchService.set(
-        "searchContext",
-        this.controllerFor("user").get("model.searchContext")
+      this.searchService.searchContext = this.controllerFor("user").get(
+        "model.searchContext"
       );
     },
 

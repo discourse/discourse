@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe UserBadgesController do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:badge) { Fabricate(:badge) }
+  fab!(:user)
+  fab!(:admin)
+  fab!(:badge)
 
   describe "#index" do
     fab!(:badge) { Fabricate(:badge, target_posts: true, show_posts: false) }
+
     it "does not leak private info" do
       p = create_post
       UserBadge.create!(
@@ -31,14 +32,27 @@ RSpec.describe UserBadgesController do
       get "/user_badges.json", params: { badge_id: badge.id }
       expect(response.status).to eq(404)
     end
+
+    it "only accepts valid offset params" do
+      get "/user_badges.json", params: { badge_id: badge.id, offset: -1 }
+      expect(response.status).to eq(400)
+
+      get "/user_badges.json", params: { badge_id: badge.id, offset: 100 }
+      expect(response.status).to eq(200)
+    end
+
+    it "requires username or badge_id to be specified" do
+      get "/user_badges.json"
+      expect(response.status).to eq(400)
+    end
   end
 
-  describe "#index" do
-    fab!(:post) { Fabricate(:post) }
-    fab!(:private_message_post) { Fabricate(:private_message_post) }
+  describe "#show" do
+    fab!(:post)
+    fab!(:private_message_post)
     let(:topic) { post.topic }
     let(:private_message_topic) { private_message_post.topic }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
     fab!(:restricted_topic) { Fabricate(:topic, category: private_category) }
     fab!(:restricted_post) { Fabricate(:post, topic: restricted_topic) }
@@ -46,11 +60,6 @@ RSpec.describe UserBadgesController do
     fab!(:user_badge) { Fabricate(:user_badge, user: user, badge: badge, post: post) }
     fab!(:user_badge_2) { Fabricate(:user_badge, badge: badge, post: private_message_post) }
     fab!(:user_badge_3) { Fabricate(:user_badge, badge: badge, post: restricted_post) }
-
-    it "requires username or badge_id to be specified" do
-      get "/user_badges.json"
-      expect(response.status).to eq(400)
-    end
 
     it "returns user_badges for a user" do
       get "/user-badges/#{user.username}.json"
@@ -104,6 +113,8 @@ RSpec.describe UserBadgesController do
       end
 
       it "does not include the attributes for topics which the current user cannot see" do
+        sign_in(user)
+
         get "/user_badges.json", params: { badge_id: badge.id }
 
         expect(response.status).to eq(200)

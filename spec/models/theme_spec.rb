@@ -1,19 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe Theme do
-  after { Theme.clear_cache! }
-
-  before { ThemeJavascriptCompiler.disable_terser! }
-  after { ThemeJavascriptCompiler.enable_terser! }
-
-  fab! :user do
-    Fabricate(:user)
-  end
+  fab!(:user)
+  fab!(:theme) { Fabricate(:theme, user: user) }
 
   let(:guardian) { Guardian.new(user) }
-
-  let(:theme) { Fabricate(:theme, user: user) }
   let(:child) { Fabricate(:theme, user: user, component: true) }
+
+  before { ThemeJavascriptCompiler.disable_terser! }
+
+  after do
+    Theme.clear_cache!
+    ThemeJavascriptCompiler.enable_terser!
+  end
 
   it "can properly clean up color schemes" do
     scheme = ColorScheme.create!(theme_id: theme.id, name: "test")
@@ -254,7 +253,7 @@ HTML
 
       expect(javascript_cache.content).to include("if ('define' in window) {")
       expect(javascript_cache.content).to include(
-        "define(\"discourse/theme-#{field.theme_id}/initializers/theme-field-#{field.id}-mobile-html-script-1\"",
+        "define(\"discourse/theme-#{field.theme_id}/discourse/initializers/theme-field-#{field.id}-mobile-html-script-1\"",
       )
       expect(javascript_cache.content).to include(
         "settings = require(\"discourse/lib/theme-settings-store\").getObjectForTheme(#{field.theme_id});",
@@ -328,7 +327,7 @@ HTML
       expect(scss).to include("background-color:red")
       expect(scss).to include("font-size:25px")
 
-      setting = theme.settings.find { |s| s.name == :font_size }
+      setting = theme.settings[:font_size]
       setting.value = "30px"
       theme.save!
 
@@ -406,7 +405,7 @@ HTML
       )
       expect(theme_field.javascript_cache.content).to include("if ('define' in window) {")
       expect(theme_field.javascript_cache.content).to include(
-        "define(\"discourse/theme-#{theme_field.theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1\",",
+        "define(\"discourse/theme-#{theme_field.theme.id}/discourse/initializers/theme-field-#{theme_field.id}-common-html-script-1\",",
       )
       expect(theme_field.javascript_cache.content).to include(
         "name: \"theme-field-#{theme_field.id}-common-html-script-1\",",
@@ -418,7 +417,7 @@ HTML
       expect(theme_field.javascript_cache.content).to include("alert(settings.name)")
       expect(theme_field.javascript_cache.content).to include("let a = () => {}")
 
-      setting = theme.settings.find { |s| s.name == :name }
+      setting = theme.settings[:name]
       setting.value = "bill"
       theme.save!
 
@@ -440,9 +439,8 @@ HTML
   end
 
   it "correctly caches theme ids" do
-    Theme.destroy_all
+    Theme.where.not(id: theme.id).destroy_all
 
-    theme
     theme2 = Fabricate(:theme)
 
     expect(Theme.theme_ids).to contain_exactly(theme.id, theme2.id)
@@ -466,6 +464,47 @@ HTML
 
     expect(Theme.theme_ids).to eq([])
     expect(Theme.user_theme_ids).to eq([])
+  end
+
+  it "correctly caches enabled_theme_and_component_ids" do
+    Theme.destroy_all
+
+    theme2 = Fabricate(:theme)
+
+    expect(Theme.enabled_theme_and_component_ids).to eq([])
+
+    theme2.update!(user_selectable: true)
+
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id)
+
+    theme2.update!(user_selectable: false)
+    theme2.set_default!
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id)
+
+    child2 = Fabricate(:theme, component: true)
+    theme2.add_relative_theme!(:child, child2)
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id, child2.id)
+
+    child2.update!(enabled: false)
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id)
+
+    theme3 = Fabricate(:theme, user_selectable: true)
+    child2.update!(enabled: true)
+
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(
+      theme2.id,
+      child2.id,
+      theme3.id,
+    )
+
+    theme3.update!(enabled: false)
+
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id, child2.id)
+
+    theme2.destroy
+    theme3.destroy
+
+    expect(Theme.enabled_theme_and_component_ids).to eq([])
   end
 
   it "correctly caches user_themes template" do
@@ -562,7 +601,7 @@ HTML
   end
 
   it "includes theme_uploads in settings" do
-    Theme.destroy_all
+    Theme.where.not(id: theme.id).destroy_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -574,7 +613,7 @@ HTML
   end
 
   it "does not break on missing uploads in settings" do
-    Theme.destroy_all
+    Theme.where.not(id: theme.id).destroy_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -589,7 +628,7 @@ HTML
 
   it "uses CDN url for theme_uploads in settings" do
     set_cdn_url("http://cdn.localhost")
-    Theme.destroy_all
+    Theme.where.not(id: theme.id).destroy_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(type: :theme_upload_var, target: :common, name: "bob", upload_id: upload.id)
@@ -602,7 +641,7 @@ HTML
 
   it "uses CDN url for settings of type upload" do
     set_cdn_url("http://cdn.localhost")
-    Theme.destroy_all
+    Theme.where.not(id: theme.id).destroy_all
 
     upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
     theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
@@ -621,99 +660,6 @@ HTML
 
     json = JSON.parse(cached_settings(theme.id))
     expect(json["my_upload"]).to eq("http://cdn.localhost#{upload.url}")
-  end
-
-  describe "convert_settings" do
-    it "can migrate a list field to a string field with json schema" do
-      theme.set_field(
-        target: :settings,
-        name: :yaml,
-        value: "valid_json_schema_setting:\n  default: \"green,globe\"\n  type: \"list\"",
-      )
-      theme.save!
-
-      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
-      setting.value = "red,globe|green,cog|brown,users"
-      theme.save!
-
-      expect(setting.type).to eq(ThemeSetting.types[:list])
-
-      yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
-      theme.set_field(target: :settings, name: "yaml", value: yaml)
-      theme.save!
-
-      theme.convert_settings
-      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
-
-      expect(JSON.parse(setting.value)).to eq(
-        JSON.parse(
-          '[{"color":"red","icon":"globe"},{"color":"green","icon":"cog"},{"color":"brown","icon":"users"}]',
-        ),
-      )
-      expect(setting.type).to eq(ThemeSetting.types[:string])
-    end
-
-    it "does not update setting if data does not validate against json schema" do
-      theme.set_field(
-        target: :settings,
-        name: :yaml,
-        value: "valid_json_schema_setting:\n  default: \"green,globe\"\n  type: \"list\"",
-      )
-      theme.save!
-
-      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
-
-      # json_schema_settings.yaml defines only two properties per object and disallows additionalProperties
-      setting.value = "red,globe,hey|green,cog,hey|brown,users,nay"
-      theme.save!
-
-      yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/valid_settings.yaml")
-      theme.set_field(target: :settings, name: "yaml", value: yaml)
-      theme.save!
-
-      expect { theme.convert_settings }.to raise_error("Schema validation failed")
-
-      setting.value = "red,globe|green,cog|brown"
-      theme.save!
-
-      expect { theme.convert_settings }.not_to raise_error
-
-      setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
-      expect(setting.type).to eq(ThemeSetting.types[:string])
-    end
-
-    it "warns when the theme has modified the setting type but data cannot be converted" do
-      begin
-        @orig_logger = Rails.logger
-        Rails.logger = @fake_logger = FakeLogger.new
-
-        theme.set_field(
-          target: :settings,
-          name: :yaml,
-          value: "valid_json_schema_setting:\n  default: \"\"\n  type: \"list\"",
-        )
-        theme.save!
-
-        setting = theme.settings.find { |s| s.name == :valid_json_schema_setting }
-        setting.value = "red,globe"
-        theme.save!
-
-        theme.set_field(
-          target: :settings,
-          name: :yaml,
-          value: "valid_json_schema_setting:\n  default: \"\"\n  type: \"string\"",
-        )
-        theme.save!
-
-        theme.convert_settings
-        expect(setting.value).to eq("red,globe")
-        expect(@fake_logger.warnings[0]).to include(
-          "Theme setting type has changed but cannot be converted.",
-        )
-      ensure
-        Rails.logger = @orig_logger
-      end
-    end
   end
 
   describe "theme translations" do
@@ -1010,18 +956,35 @@ HTML
         name: "yaml",
         value: "some_number: 1",
       )
+
       theme.set_field(
         target: :tests_js,
         type: :js,
         name: "acceptance/some-test.js",
         value: "assert.ok(true);",
       )
+
       theme.save!
     end
 
     it "returns nil for content and digest if theme does not have tests" do
       ThemeField.destroy_all
       expect(theme.baked_js_tests_with_digest).to eq([nil, nil])
+    end
+
+    it "includes theme's migrations theme fields" do
+      theme.set_field(
+        target: :migrations,
+        type: :js,
+        name: "0001-some-migration",
+        value: "export default function migrate(settings) { return settings; }",
+      )
+
+      theme.save!
+
+      content, _digest = theme.baked_js_tests_with_digest
+
+      expect(content).to include("function migrate(settings)")
     end
 
     it "digest does not change when settings are changed" do
@@ -1037,6 +1000,37 @@ HTML
       new_content, new_digest = theme.baked_js_tests_with_digest
       expect(new_content).to eq(content)
       expect(new_digest).to eq(digest)
+    end
+  end
+
+  describe "get_setting" do
+    before do
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        enabled:
+          type: bool
+          default: false
+        some_value:
+          type: string
+          default: "hello"
+      YAML
+
+      ThemeSetting.create!(
+        theme: theme,
+        data_type: ThemeSetting.types[:bool],
+        name: "super_feature_enabled",
+      )
+
+      theme.save!
+    end
+
+    it "returns the value of the setting when given a string represeting the setting name" do
+      expect(theme.get_setting("enabled")).to eq(false)
+      expect(theme.get_setting("some_value")).to eq("hello")
+    end
+
+    it "returns the value of the setting when given a symbol represeting the setting name" do
+      expect(theme.get_setting(:enabled)).to eq(false)
+      expect(theme.get_setting(:some_value)).to eq("hello")
     end
   end
 
@@ -1091,6 +1085,455 @@ HTML
           .filter { |m| m.channel == "/global/asset-version" }
 
       expect(messages.count).to eq(0)
+    end
+  end
+
+  describe "#migrate_settings" do
+    fab!(:settings_field) { Fabricate(:settings_theme_field, theme: theme, value: <<~YAML) }
+        integer_setting: 1
+        list_setting: "aa,bb"
+      YAML
+
+    fab!(:migration_field) { Fabricate(:migration_theme_field, theme: theme, version: 1) }
+
+    it "persists the results of the last pending migration to the database" do
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          settings.set("integer_setting", 1033);
+          settings.set("list_setting", "cc,dd");
+          return settings;
+        }
+      JS
+
+      Fabricate(:migration_theme_field, theme: theme, value: <<~JS, version: 2)
+        export default function migrate(settings) {
+          settings.set("integer_setting", 9909);
+          settings.set("list_setting", "ee,ff");
+          return settings;
+        }
+      JS
+
+      theme.migrate_settings
+      expect(theme.get_setting("integer_setting")).to eq(9909)
+      expect(theme.get_setting("list_setting")).to eq("ee,ff")
+    end
+
+    it "doesn't allow arbitrary settings to be saved in the database" do
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          settings.set("unknown_setting", 8834);
+          return settings;
+        }
+      JS
+      expect do theme.migrate_settings end.to raise_error(
+        Theme::SettingsMigrationError,
+        I18n.t(
+          "themes.import_error.migrations.unknown_setting_returned_by_migration",
+          name: "0001-some-name",
+          setting_name: "unknown_setting",
+        ),
+      )
+    end
+
+    it "updates the theme's javascript cache after running migration" do
+      theme.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
+      theme.save!
+
+      expect(theme.javascript_cache.content).to include('"list_setting":"aa,bb"')
+
+      settings_field.update!(value: <<~YAML)
+        integer_setting: 1
+        list_setting:
+          default: aa|bb
+          type: list
+      YAML
+
+      migration_field.update!(value: <<~JS)
+      export default function migrate(settings) {
+        settings.set("list_setting", "zz|aa");
+        return settings;
+      }
+      JS
+
+      theme.reload
+      theme.migrate_settings
+
+      setting_record = theme.theme_settings.where(name: "list_setting").first
+
+      expect(setting_record.data_type).to eq(ThemeSetting.types[:list])
+      expect(setting_record.value).to eq("zz|aa")
+      expect(theme.javascript_cache.content).to include('"list_setting":"zz|aa"')
+    end
+
+    it "allows changing a setting's type" do
+      theme.update_setting(:list_setting, "zz,aa")
+      theme.save!
+
+      setting_record = theme.theme_settings.where(name: "list_setting").first
+
+      expect(setting_record.data_type).to eq(ThemeSetting.types[:string])
+      expect(setting_record.value).to eq("zz,aa")
+
+      settings_field.update!(value: <<~YAML)
+        integer_setting: 1
+        list_setting:
+          default: aa|bb
+          type: list
+      YAML
+
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          settings.set("list_setting", "zz|aa");
+          return settings;
+        }
+      JS
+
+      theme.reload
+
+      theme.migrate_settings
+
+      expect(theme.theme_settings.where(name: "list_setting").count).to eq(1)
+      setting_record = theme.theme_settings.where(name: "list_setting").first
+
+      expect(setting_record.data_type).to eq(ThemeSetting.types[:list])
+      expect(setting_record.value).to eq("zz|aa")
+
+      expect(
+        theme.theme_settings_migrations.where(theme_field_id: migration_field.id).first.diff,
+      ).to eq(
+        "additions" => [{ "key" => "list_setting", "val" => "zz|aa" }],
+        "deletions" => [{ "key" => "list_setting", "val" => "zz,aa" }],
+      )
+    end
+
+    it "allows renaming a setting" do
+      theme.update_setting(:integer_setting, 11)
+      theme.save!
+
+      setting_record = theme.theme_settings.where(name: "integer_setting").first
+      expect(setting_record.value).to eq("11")
+
+      settings_field.update!(value: <<~YAML)
+        integer_setting_updated: 1
+        list_setting: "aa,bb"
+      YAML
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          settings.set("integer_setting_updated", settings.get("integer_setting"));
+          return settings;
+        }
+      JS
+
+      theme.reload
+
+      theme.migrate_settings
+
+      expect(theme.theme_settings.where(name: "integer_setting").exists?).to eq(false)
+
+      setting_record = theme.theme_settings.where(name: "integer_setting_updated").first
+      expect(setting_record.value).to eq("11")
+
+      expect(
+        theme.theme_settings_migrations.where(theme_field_id: migration_field.id).first.diff,
+      ).to eq(
+        "additions" => [{ "key" => "integer_setting_updated", "val" => 11 }],
+        "deletions" => [{ "key" => "integer_setting", "val" => 11 }],
+      )
+    end
+
+    it "creates a ThemeSettingsMigration record for each migration" do
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          settings.set("integer_setting", 2);
+          settings.set("list_setting", "cc,dd");
+          return settings;
+        }
+      JS
+
+      second_migration_field =
+        Fabricate(:migration_theme_field, theme: theme, value: <<~JS, version: 2)
+        export default function migrate(settings) {
+          settings.set("integer_setting", 3);
+          settings.set("list_setting", "ee,ff");
+          return settings;
+        }
+      JS
+
+      third_migration_field =
+        Fabricate(:migration_theme_field, theme: theme, value: <<~JS, version: 3)
+        export default function migrate(settings) {
+          settings.set("integer_setting", 4);
+          settings.set("list_setting", "gg,hh");
+          return settings;
+        }
+      JS
+
+      theme.migrate_settings
+
+      records = theme.theme_settings_migrations.order(:version)
+
+      expect(records.count).to eq(3)
+
+      expect(records[0].version).to eq(1)
+      expect(records[0].name).to eq("some-name")
+      expect(records[0].theme_field_id).to eq(migration_field.id)
+      expect(records[0].diff).to eq(
+        "additions" => [
+          { "key" => "integer_setting", "val" => 2 },
+          { "key" => "list_setting", "val" => "cc,dd" },
+        ],
+        "deletions" => [],
+      )
+
+      expect(records[1].version).to eq(2)
+      expect(records[1].name).to eq("some-name")
+      expect(records[1].theme_field_id).to eq(second_migration_field.id)
+      expect(records[1].diff).to eq(
+        "additions" => [
+          { "key" => "integer_setting", "val" => 3 },
+          { "key" => "list_setting", "val" => "ee,ff" },
+        ],
+        "deletions" => [
+          { "key" => "integer_setting", "val" => 2 },
+          { "key" => "list_setting", "val" => "cc,dd" },
+        ],
+      )
+
+      expect(records[2].version).to eq(3)
+      expect(records[2].name).to eq("some-name")
+      expect(records[2].theme_field_id).to eq(third_migration_field.id)
+      expect(records[2].diff).to eq(
+        "additions" => [
+          { "key" => "integer_setting", "val" => 4 },
+          { "key" => "list_setting", "val" => "gg,hh" },
+        ],
+        "deletions" => [
+          { "key" => "integer_setting", "val" => 3 },
+          { "key" => "list_setting", "val" => "ee,ff" },
+        ],
+      )
+    end
+
+    it "allows removing an old setting that no longer exists" do
+      settings_field.update!(value: <<~YAML)
+        setting_that_will_be_removed: 1
+      YAML
+      theme.update_setting(:setting_that_will_be_removed, 1023)
+      theme.save!
+
+      settings_field.update!(value: <<~YAML)
+        new_setting: 1
+      YAML
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          if (settings.get("setting_that_will_be_removed") !== 1023) {
+            throw new Error(`expected setting_that_will_be_removed to be 1023, but it was instead ${settings.get("setting_that_will_be_removed")}.`);
+          }
+          settings.delete("setting_that_will_be_removed");
+          return settings;
+        }
+      JS
+      theme.reload
+      theme.migrate_settings
+      theme.reload
+
+      expect(theme.theme_settings.count).to eq(0)
+
+      records = theme.theme_settings_migrations
+      expect(records.size).to eq(1)
+
+      expect(records[0].diff).to eq(
+        "additions" => [],
+        "deletions" => [{ "key" => "setting_that_will_be_removed", "val" => 1023 }],
+      )
+    end
+  end
+
+  describe "development experience" do
+    it "sends 'development-mode-theme-changed event when non-css fields are updated" do
+      Theme.any_instance.stubs(:should_refresh_development_clients?).returns(true)
+
+      theme.set_field(target: :common, name: :scss, value: "body {background: green;}")
+
+      messages =
+        MessageBus
+          .track_publish { theme.save! }
+          .filter { |m| m.channel == "/file-change" }
+          .map(&:data)
+
+      expect(messages).not_to include("development-mode-theme-changed")
+
+      theme.set_field(target: :common, name: :header, value: "<p>Hello world</p>")
+
+      messages =
+        MessageBus
+          .track_publish { theme.save! }
+          .filter { |m| m.channel == "/file-change" }
+          .map(&:data)
+
+      expect(messages).to include(["development-mode-theme-changed"])
+    end
+  end
+
+  describe "#lookup_field when a theme component is used in multiple themes" do
+    fab!(:theme_1) { Fabricate(:theme, user: user) }
+    fab!(:theme_2) { Fabricate(:theme, user: user) }
+    fab!(:child) { Fabricate(:theme, user: user, component: true) }
+
+    before_all do
+      theme_1.add_relative_theme!(:child, child)
+      theme_2.add_relative_theme!(:child, child)
+    end
+
+    it "efficiently caches fields of theme component by only caching the fields once across multiple themes" do
+      child.set_field(target: :common, name: "header", value: "World")
+      child.save!
+
+      expect(Theme.lookup_field(theme_1.id, :desktop, "header")).to eq("World")
+      expect(Theme.lookup_field(theme_2.id, :desktop, "header")).to eq("World")
+
+      expect(
+        Theme.cache.defer_get_set("#{child.id}:common:header:#{Theme.compiler_version}") { raise },
+      ).to eq(["World"])
+      expect(
+        Theme.cache.defer_get_set("#{child.id}:desktop:header:#{Theme.compiler_version}") { raise },
+      ).to eq(nil)
+
+      expect(
+        Theme
+          .cache
+          .defer_get_set("#{theme_1.id}:common:header:#{Theme.compiler_version}") { raise },
+      ).to eq(nil)
+      expect(
+        Theme
+          .cache
+          .defer_get_set("#{theme_1.id}:desktop:header:#{Theme.compiler_version}") { raise },
+      ).to eq(nil)
+
+      expect(
+        Theme
+          .cache
+          .defer_get_set("#{theme_2.id}:common:header:#{Theme.compiler_version}") { raise },
+      ).to eq(nil)
+      expect(
+        Theme
+          .cache
+          .defer_get_set("#{theme_2.id}:desktop:header:#{Theme.compiler_version}") { raise },
+      ).to eq(nil)
+    end
+
+    it "puts the parent value ahead of the child" do
+      theme_1.set_field(target: :common, name: "header", value: "theme_1")
+      theme_1.save!
+
+      child.set_field(target: :common, name: "header", value: "child")
+      child.save!
+
+      expect(Theme.lookup_field(theme_1.id, :desktop, "header")).to eq("theme_1\nchild")
+    end
+
+    it "puts parent translations ahead of child translations" do
+      theme_1.set_field(target: :translations, name: "en", value: <<~YAML)
+        en:
+          theme_1: "test"
+      YAML
+      theme_1.save!
+      theme_field = ThemeField.order(:id).last
+
+      child.set_field(target: :translations, name: "en", value: <<~YAML)
+        en:
+          child: "test"
+      YAML
+      child.save!
+      child_field = ThemeField.order(:id).last
+
+      expect(theme_field.value_baked).not_to eq(child_field.value_baked)
+      expect(Theme.lookup_field(theme_1.id, :translations, :en)).to eq(
+        [theme_field, child_field].map(&:value_baked).join("\n"),
+      )
+    end
+
+    it "prioritizes a locale over its fallback" do
+      theme_1.set_field(target: :translations, name: "en", value: <<~YAML)
+        en:
+          theme_1: "hello"
+      YAML
+      theme_1.save!
+      en_field = ThemeField.order(:id).last
+
+      theme_1.set_field(target: :translations, name: "es", value: <<~YAML)
+        es:
+          theme_1: "hola"
+      YAML
+      theme_1.save!
+      es_field = ThemeField.order(:id).last
+
+      expect(es_field.value_baked).not_to eq(en_field.value_baked)
+      expect(Theme.lookup_field(theme_1.id, :translations, :en)).to eq(en_field.value_baked)
+      expect(Theme.lookup_field(theme_1.id, :translations, :es)).to eq(es_field.value_baked)
+      expect(Theme.lookup_field(theme_1.id, :translations, :fr)).to eq(en_field.value_baked)
+    end
+  end
+
+  describe "#repository_url" do
+    subject(:repository_url) { theme.repository_url }
+
+    context "when theme is not a remote one" do
+      it "returns nothing" do
+        expect(repository_url).to be_blank
+      end
+    end
+
+    context "when theme is a remote one" do
+      let!(:remote_theme) { theme.create_remote_theme(remote_url: remote_url) }
+
+      context "when URL is a SSH one" do
+        let(:remote_url) { "git@github.com:discourse/graceful.git" }
+
+        it "normalizes it" do
+          expect(repository_url).to eq "github.com/discourse/graceful"
+        end
+      end
+
+      context "when URL is a HTTPS one" do
+        let(:remote_url) { "https://github.com/discourse/graceful.git" }
+
+        it "normalizes it" do
+          expect(repository_url).to eq "github.com/discourse/graceful"
+        end
+      end
+
+      context "when URL is a HTTP one" do
+        let(:remote_url) { "http://github.com/discourse/graceful" }
+
+        it "normalizes it" do
+          expect(repository_url).to eq "github.com/discourse/graceful"
+        end
+      end
+
+      context "when URL contains query params" do
+        let(:remote_url) { "http://github.com/discourse/graceful.git?param_id=1" }
+
+        it "keeps the query params" do
+          expect(repository_url).to eq "github.com/discourse/graceful?param_id=1"
+        end
+      end
+    end
+  end
+
+  describe "#user_selectable_count" do
+    subject(:count) { theme.user_selectable_count }
+
+    let!(:users) { Fabricate.times(5, :user) }
+    let!(:another_theme) { Fabricate(:theme) }
+
+    before do
+      users.take(3).each { _1.user_option.update!(theme_ids: [theme.id]) }
+      users.slice(3..4).each { _1.user_option.update!(theme_ids: [another_theme.id]) }
+    end
+
+    it "returns how many users are currently using the theme" do
+      expect(count).to eq 3
     end
   end
 end

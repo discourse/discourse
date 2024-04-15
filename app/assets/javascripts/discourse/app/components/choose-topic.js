@@ -1,10 +1,12 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import { searchForTerm } from "discourse/lib/search";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseComputed, {
+  debounce,
+  observes,
+} from "discourse-common/utils/decorators";
 
 export default Component.extend({
   loading: null,
@@ -69,7 +71,7 @@ export default Component.extend({
       oldTopicTitle: this.topicTitle,
     });
 
-    this.searchDebounced(this.topicTitle);
+    this.search(this.topicTitle);
   },
 
   @discourseComputed("label")
@@ -86,10 +88,7 @@ export default Component.extend({
     this.set("loading", false);
   },
 
-  searchDebounced(title) {
-    discourseDebounce(this, this.search, title, INPUT_DELAY);
-  },
-
+  @debounce(INPUT_DELAY)
   search(title) {
     if (!this.element || this.isDestroying || this.isDestroyed) {
       return;
@@ -137,6 +136,13 @@ export default Component.extend({
 
     if (this.topicChangedCallback) {
       this.topicChangedCallback(topic);
+    }
+  },
+
+  @action
+  focusInput(element) {
+    if (this.autoFocus) {
+      element.focus();
     }
   },
 

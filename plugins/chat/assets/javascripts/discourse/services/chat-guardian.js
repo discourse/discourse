@@ -1,6 +1,9 @@
-import Service from "@ember/service";
+import Service, { service } from "@ember/service";
 
 export default class ChatGuardian extends Service {
+  @service currentUser;
+  @service siteSettings;
+
   canEditChatChannel() {
     return this.canUseChat() && this.currentUser.staff;
   }

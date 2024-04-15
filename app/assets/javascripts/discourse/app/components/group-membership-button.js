@@ -1,14 +1,17 @@
 import Component from "@ember/component";
-import I18n from "I18n";
+import { service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse-common/utils/decorators";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
-import showModal from "discourse/lib/show-modal";
+import I18n from "discourse-i18n";
+import RequestGroupMembershipForm from "./modal/request-group-membership-form";
 
 export default Component.extend({
   classNames: ["group-membership-button"],
+  appEvents: service(),
+  currentUser: service(),
   dialog: service(),
+  modal: service(),
 
   @discourseComputed("model.public_admission", "userIsGroupUser")
   canJoinGroup(publicAdmission, userIsGroupUser) {
@@ -84,8 +87,10 @@ export default Component.extend({
 
     showRequestMembershipForm() {
       if (this.currentUser) {
-        showModal("request-group-membership-form", {
-          model: this.model,
+        this.modal.show(RequestGroupMembershipForm, {
+          model: {
+            group: this.model,
+          },
         });
       } else {
         this._showLoginModal();

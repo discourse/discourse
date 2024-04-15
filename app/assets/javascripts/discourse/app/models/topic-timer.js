@@ -1,10 +1,8 @@
-import RestModel from "discourse/models/rest";
 import { ajax } from "discourse/lib/ajax";
+import RestModel from "discourse/models/rest";
 
-const TopicTimer = RestModel.extend({});
-
-TopicTimer.reopenClass({
-  update(
+export default class TopicTimer extends RestModel {
+  static update(
     topicId,
     time,
     basedOnLastPost,
@@ -32,7 +30,5 @@ TopicTimer.reopenClass({
       type: "POST",
       data,
     });
-  },
-});
-
-export default TopicTimer;
+  }
+}

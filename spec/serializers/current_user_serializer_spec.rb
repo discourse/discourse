@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe CurrentUserSerializer do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   subject(:serializer) { described_class.new(user, scope: guardian, root: false) }
 
   let(:guardian) { Guardian.new(user) }
@@ -65,7 +65,7 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#muted_tag" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
 
     let!(:tag_user) do
       TagUser.create!(
@@ -150,6 +150,27 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
+  describe "#can_ignore_users" do
+    let(:guardian) { Guardian.new(user) }
+    let(:payload) { serializer.as_json }
+
+    context "when user is a regular one" do
+      let(:user) { Fabricate(:user) }
+
+      it "return false for regular users" do
+        expect(payload[:can_ignore_users]).to eq(false)
+      end
+    end
+
+    context "when user is a staff member" do
+      let(:user) { Fabricate(:moderator) }
+
+      it "returns true" do
+        expect(payload[:can_ignore_users]).to eq(true)
+      end
+    end
+  end
+
   describe "#can_review" do
     let(:guardian) { Guardian.new(user) }
     let(:payload) { serializer.as_json }
@@ -184,7 +205,7 @@ RSpec.describe CurrentUserSerializer do
   end
 
   describe "#status" do
-    fab!(:user_status) { Fabricate(:user_status) }
+    fab!(:user_status)
     fab!(:user) { Fabricate(:user, user_status: user_status) }
     let(:serializer) { described_class.new(user, scope: Guardian.new(user), root: false) }
 
@@ -283,12 +304,6 @@ RSpec.describe CurrentUserSerializer do
       )
     end
 
-    it "is included when navigation menu is legacy" do
-      SiteSetting.navigation_menu = "legacy"
-
-      expect(serializer.as_json[:new_personal_messages_notifications_count]).to eq(1)
-    end
-
     it "is included when sidebar is enabled" do
       SiteSetting.navigation_menu = "sidebar"
 
@@ -299,7 +314,7 @@ RSpec.describe CurrentUserSerializer do
   include_examples "User Sidebar Serializer Attributes", described_class
 
   describe "#sidebar_sections" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
 
     it "eager loads sidebar_urls" do

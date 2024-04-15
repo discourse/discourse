@@ -31,7 +31,7 @@ export const directMessageChannels = [
         following: true,
       },
       allow_channel_wide_mentions: true,
-      last_message_sent_at: "2021-07-20T08:14:16.950Z",
+      last_message: { id: 333, created_at: "2021-07-02T08:14:16.950Z" },
       message_bus_last_ids: {
         new_mentions: 0,
         new_messages: 0,
@@ -66,7 +66,7 @@ export const directMessageChannels = [
         following: true,
       },
       allow_channel_wide_mentions: true,
-      last_message_sent_at: "2021-07-05T12:04:00.850Z",
+      last_message: { id: 333, created_at: "2021-07-02T08:14:16.950Z" },
       message_bus_last_ids: {
         new_mentions: 0,
         new_messages: 0,
@@ -108,7 +108,7 @@ export const chatChannels = {
       status: "open",
       chatable: chatables[1],
       allow_channel_wide_mentions: true,
-      last_message_sent_at: "2021-07-24T08:14:16.950Z",
+      last_message: { id: 333, created_at: "2021-07-02T08:14:16.950Z" },
       current_user_membership: {
         muted: false,
         following: true,
@@ -127,7 +127,7 @@ export const chatChannels = {
       status: "open",
       chatable: chatables[1],
       allow_channel_wide_mentions: true,
-      last_message_sent_at: "2021-07-15T08:14:16.950Z",
+      last_message: { id: 333, created_at: "2021-07-02T08:14:16.950Z" },
       current_user_membership: {
         muted: false,
         following: true,
@@ -146,7 +146,7 @@ export const chatChannels = {
       status: "open",
       chatable: chatables[8],
       allow_channel_wide_mentions: true,
-      last_message_sent_at: "2021-07-14T08:14:16.950Z",
+      last_message: { id: 333, created_at: "2021-07-02T08:14:16.950Z" },
       current_user_membership: {
         muted: false,
         following: true,
@@ -165,7 +165,7 @@ export const chatChannels = {
       status: "read_only",
       chatable: chatables[8],
       allow_channel_wide_mentions: true,
-      last_message_sent_at: "2021-07-10T08:14:16.950Z",
+      last_message: { id: 333, created_at: "2021-07-02T08:14:16.950Z" },
       current_user_membership: {
         muted: false,
         following: true,
@@ -184,7 +184,7 @@ export const chatChannels = {
       status: "closed",
       chatable: chatables[8],
       allow_channel_wide_mentions: true,
-      last_message_sent_at: "2021-07-21T08:14:16.950Z",
+      last_message: { id: 333, created_at: "2021-07-02T08:14:16.950Z" },
       current_user_membership: {
         muted: false,
         following: true,
@@ -203,7 +203,7 @@ export const chatChannels = {
       status: "archived",
       chatable: chatables[8],
       allow_channel_wide_mentions: true,
-      last_message_sent_at: "2021-07-25T08:14:16.950Z",
+      last_message: { id: 333, created_at: "2021-07-02T08:14:16.950Z" },
       current_user_membership: {
         muted: false,
         following: true,
@@ -222,7 +222,7 @@ export const chatChannels = {
       status: "open",
       chatable: chatables[12],
       allow_channel_wide_mentions: true,
-      last_message_sent_at: "2021-07-02T08:14:16.950Z",
+      last_message: { id: 333, created_at: "2021-07-02T08:14:16.950Z" },
       current_user_membership: {
         muted: false,
         following: true,

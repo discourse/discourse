@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "listen"
-require "thread"
 require "fileutils"
 require "autospec/reload_css"
 require "autospec/base_runner"
@@ -267,7 +266,9 @@ class Autospec::Manager
           if k.match(file)
             puts "@@@@@@@@@@@@ #{file} matched a reloader for #{runner}" if @debug
             runner.reload
+            # rubocop:disable Lint/NonLocalExitFromIterator
             return
+            # rubocop:enable Lint/NonLocalExitFromIterator
           end
         end
         # watchers

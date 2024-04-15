@@ -3,8 +3,6 @@
 class EmailStyle
   include ActiveModel::Serialization
 
-  attr_accessor :html, :css, :default_html, :default_css
-
   def id
     "email-style"
   end

@@ -17,19 +17,66 @@ module PageObjects
       end
 
       def header
-        find(".chat-thread__header")
+        @header ||= PageObjects::Components::Chat::ThreadHeader.new(".c-routes-channel-thread")
       end
 
-      def omu
-        header.find(".chat-thread__omu")
+      def notifications_button
+        @notifications_button ||=
+          PageObjects::Components::SelectKit.new(".thread-notifications-button")
+      end
+
+      def notification_level=(level)
+        notifications_button.expand
+        notifications_button.select_row_by_value(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+        notifications_button.has_selected_value?(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+      end
+
+      def has_notification_level?(level)
+        select_kit =
+          PageObjects::Components::SelectKit.new(".c-navbar__thread-tracking-dropdown.-persisted")
+        select_kit.has_selected_value?(
+          ::Chat::UserChatThreadMembership.notification_levels[level.to_sym],
+        )
+      end
+
+      def selection_management
+        @selection_management ||=
+          PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")
+      end
+
+      def has_selected_messages?(*messages)
+        self.messages.has_selected_messages?(*messages)
       end
 
       def close
-        header.find(".chat-thread__close").click
+        header.find(".c-navbar__close-thread-button").click
       end
 
-      def has_header_content?(content)
-        header.has_content?(content)
+      def has_back_link_to_thread_list?(channel)
+        header.has_css?(".c-navbar__back-button[href='#{channel.relative_url + "/t"}']")
+      end
+
+      def has_back_link_to_channel?(channel)
+        header.has_css?(".c-navbar__back-button[href='#{channel.relative_url}']")
+      end
+
+      def back
+        header.find(".c-navbar__back-button").click
+      end
+
+      def has_no_unread_list_indicator?
+        has_no_css?(".c-navbar__back-button .chat-thread-header-unread-indicator")
+      end
+
+      def has_unread_list_indicator?(count:)
+        has_css?(
+          ".c-navbar__back-button .chat-thread-header-unread-indicator  .chat-thread-header-unread-indicator__number",
+          text: count.to_s,
+        )
       end
 
       def has_no_loading_skeleton?
@@ -53,37 +100,24 @@ module PageObjects
       def send_message(text = nil)
         text ||= Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length)
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
-        fill_composer(text)
+        composer.fill_in(with: text)
         click_send_message
+        expect(page).to have_no_css(".chat-message.-not-processed")
         click_composer
+        text
       end
 
       def click_send_message
-        find(".chat-thread .chat-composer.is-send-enabled .chat-composer__send-btn").click
+        find(".chat-thread .chat-composer.is-send-enabled .chat-composer-button.-send").click
       end
 
-      def has_message?(text: nil, id: nil, thread_id: nil)
-        check_message_presence(exists: true, text: text, id: id, thread_id: thread_id)
+      def expand_deleted_message(message)
+        message_by_id(message.id).find(".chat-message-expand").click
       end
 
-      def has_no_message?(text: nil, id: nil, thread_id: nil)
-        check_message_presence(exists: false, text: text, id: id, thread_id: thread_id)
-      end
-
-      def check_message_presence(exists: true, text: nil, id: nil, thread_id: nil)
-        css_method = exists ? :has_css? : :has_no_css?
-        selector = thread_id ? ".chat-thread[data-id=\"#{thread_id}\"]" : ".chat-thread"
-        if text
-          find(selector).send(css_method, ".chat-message-text", text: text, wait: 5)
-        elsif id
-          find(selector).send(css_method, ".chat-message-container[data-id=\"#{id}\"]", wait: 10)
-        end
-      end
-
-      def copy_link(message)
+      def expand_message_actions(message)
         hover_message(message)
         click_more_button
-        find("[data-value='copyLink']").click
       end
 
       def click_more_button
@@ -102,17 +136,9 @@ module PageObjects
         ".chat-thread .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
       end
 
-      def select_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='select']").click
-      end
-
-      def has_deleted_message?(message, count: 1)
-        has_css?(
-          ".chat-thread .chat-message-container[data-id=\"#{message.id}\"] .chat-message-deleted",
-          text: I18n.t("js.chat.deleted", count: count),
-        )
+      def edit_message(message, text = nil)
+        messages.edit(message)
+        send_message(message.message + " " + text) if text
       end
     end
   end

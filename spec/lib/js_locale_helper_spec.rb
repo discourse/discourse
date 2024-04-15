@@ -3,6 +3,28 @@
 require "mini_racer"
 
 RSpec.describe JsLocaleHelper do
+  let(:v8_ctx) do
+    node_modules = "#{Rails.root}/node_modules/"
+
+    transpiler = DiscourseJsProcessor::Transpiler.new
+    discourse_i18n =
+      transpiler.perform(
+        File.read("#{Rails.root}/app/assets/javascripts/discourse-i18n/src/index.js"),
+        "app/assets/javascripts/discourse",
+        "discourse-i18n",
+      )
+
+    ctx = MiniRacer::Context.new
+    ctx.load("#{node_modules}/loader.js/dist/loader/loader.js")
+    ctx.eval("var window = globalThis;")
+    ctx.eval(discourse_i18n)
+    ctx.eval <<~JS
+      define("discourse/loader-shims", () => {})
+    JS
+    ctx.load("#{Rails.root}/app/assets/javascripts/locales/i18n.js")
+    ctx
+  end
+
   module StubLoadTranslations
     def set_translations(locale, translations)
       @loaded_translations ||= HashWithIndifferentAccess.new
@@ -193,25 +215,24 @@ RSpec.describe JsLocaleHelper do
     SiteSetting.default_locale = "ru"
     I18n.locale = :uk
 
-    ctx = MiniRacer::Context.new
-    ctx.eval("var window = this;")
-    ctx.load(Rails.root + "app/assets/javascripts/locales/i18n.js")
-    ctx.eval(JsLocaleHelper.output_locale(I18n.locale))
-    ctx.eval('I18n.defaultLocale = "ru";')
+    v8_ctx.eval(JsLocaleHelper.output_locale(I18n.locale))
+    v8_ctx.eval('I18n.defaultLocale = "ru";')
 
-    expect(ctx.eval("I18n.translations").keys).to contain_exactly("uk", "en")
-    expect(ctx.eval("I18n.translations.uk.js").keys).to contain_exactly(
+    expect(v8_ctx.eval("I18n.translations").keys).to contain_exactly("uk", "en")
+    expect(v8_ctx.eval("I18n.translations.uk.js").keys).to contain_exactly(
       "all_three",
       "english_and_user",
       "only_user",
       "site_and_user",
     )
-    expect(ctx.eval("I18n.translations.en.js").keys).to contain_exactly(
+    expect(v8_ctx.eval("I18n.translations.en.js").keys).to contain_exactly(
       "only_english",
       "english_and_site",
     )
 
-    expected.each { |key, expect| expect(ctx.eval("I18n.t(#{"js.#{key}".inspect})")).to eq(expect) }
+    expected.each do |key, expect|
+      expect(v8_ctx.eval("I18n.t(#{"js.#{key}".inspect})")).to eq(expect)
+    end
   end
 
   it "correctly evaluates message formats in en fallback" do
@@ -228,19 +249,16 @@ RSpec.describe JsLocaleHelper do
       }
     MF
 
-    ctx = MiniRacer::Context.new
-    ctx.eval("var window = this;")
-    ctx.load(Rails.root + "app/assets/javascripts/locales/i18n.js")
-    ctx.eval(JsLocaleHelper.output_locale("de"))
-    ctx.eval(JsLocaleHelper.output_client_overrides("de"))
-    ctx.eval(<<~JS)
+    v8_ctx.eval(JsLocaleHelper.output_locale("de"))
+    v8_ctx.eval(JsLocaleHelper.output_client_overrides("de"))
+    v8_ctx.eval(<<~JS)
       for (let [key, value] of Object.entries(I18n._mfOverrides || {})) {
         key = key.replace(/^[a-z_]*js\./, "");
         I18n._compiledMFs[key] = value;
       }
     JS
 
-    expect(ctx.eval("I18n.messageFormat('something_MF', { UNREAD: 1 })")).to eq(
+    expect(v8_ctx.eval("I18n.messageFormat('something_MF', { UNREAD: 1 })")).to eq(
       "There is one unread",
     )
   end
@@ -248,10 +266,7 @@ RSpec.describe JsLocaleHelper do
   LocaleSiteSetting.values.each do |locale|
     it "generates valid date helpers for #{locale[:value]} locale" do
       js = JsLocaleHelper.output_locale(locale[:value])
-      ctx = MiniRacer::Context.new
-      ctx.eval("var window = this;")
-      ctx.load(Rails.root + "app/assets/javascripts/locales/i18n.js")
-      ctx.eval(js)
+      v8_ctx.eval(js)
     end
 
     it "finds moment.js locale file for #{locale[:value]}" do

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe InviteRedeemer do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   describe "#initialize" do
     fab!(:redeeming_user) { Fabricate(:user, email: "redeemer@test.com") }
@@ -390,6 +390,32 @@ RSpec.describe InviteRedeemer do
         expect(user.custom_fields["user_field_#{optional_field.id}"]).to eq("value2")
       end
 
+      it "can set custom fields with field_type confirm properly" do
+        optional_field_1 = Fabricate(:user_field, field_type: "confirm", required: false)
+        optional_field_2 = Fabricate(:user_field, field_type: "confirm", required: false)
+        optional_field_3 = Fabricate(:user_field, field_type: "confirm", required: false)
+        user_fields = {
+          optional_field_1.id.to_s => "false",
+          optional_field_2.id.to_s => "true",
+          optional_field_3.id.to_s => "",
+        }
+
+        user =
+          InviteRedeemer.new(
+            invite: invite,
+            email: invite.email,
+            username: username,
+            name: name,
+            password: password,
+            user_custom_fields: user_fields,
+          ).redeem
+
+        expect(user).to be_present
+        expect(user.custom_fields["user_field_#{optional_field_1.id}"]).to eq(nil)
+        expect(user.custom_fields["user_field_#{optional_field_2.id}"]).to eq("true")
+        expect(user.custom_fields["user_field_#{optional_field_3.id}"]).to eq(nil)
+      end
+
       it "does not add user to group if inviter does not have permissions" do
         group = Fabricate(:group, grant_trust_level: 2)
         InvitedGroup.create(group_id: group.id, invite_id: invite.id)
@@ -587,13 +613,15 @@ RSpec.describe InviteRedeemer do
         expect(invite_link.redemption_count).to eq(1)
       end
 
-      it "should not redeem the invite if InvitedUser record already exists for email" do
+      it "raises an error if email has already been invited" do
         invite_redeemer.redeem
         invite_link.reload
 
         another_invite_redeemer = InviteRedeemer.new(invite: invite_link, email: "foo@example.com")
-        another_user = another_invite_redeemer.redeem
-        expect(another_user).to eq(nil)
+        expect { another_invite_redeemer.redeem }.to raise_error(
+          Invite::UserExists,
+          I18n.t("invite.existing_user_already_redemeed"),
+        )
       end
 
       it "should redeem the invite if InvitedUser record does not exists for email" do

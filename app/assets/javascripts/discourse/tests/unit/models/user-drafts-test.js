@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
-import I18n from "I18n";
-import { NEW_TOPIC_KEY } from "discourse/models/composer";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { module, test } from "qunit";
+import { NEW_TOPIC_KEY } from "discourse/models/composer";
+import I18n from "discourse-i18n";
 
 module("Unit | Model | user-draft", function (hooks) {
   setupTest(hooks);

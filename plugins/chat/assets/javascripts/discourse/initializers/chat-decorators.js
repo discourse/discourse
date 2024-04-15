@@ -1,19 +1,22 @@
-import { decorateGithubOneboxBody } from "discourse/initializers/onebox-decorators";
-import { replaceHashtagIconPlaceholder } from "discourse/lib/hashtag-autocomplete";
-import { withPluginApi } from "discourse/lib/plugin-api";
+import $ from "jquery";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { decorateGithubOneboxBody } from "discourse/instance-initializers/onebox-decorators";
+import { decorateHashtags } from "discourse/lib/hashtag-decorator";
 import highlightSyntax from "discourse/lib/highlight-syntax";
-import I18n from "I18n";
+import loadScript from "discourse/lib/load-script";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL from "discourse/lib/url";
 import { samePrefix } from "discourse-common/lib/get-url";
-import loadScript from "discourse/lib/load-script";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import I18n from "discourse-i18n";
 
 export default {
   name: "chat-decorators",
 
   initializeWithPluginApi(api, container) {
     const siteSettings = container.lookup("service:site-settings");
+    const lightboxService = container.lookup("service:lightbox");
     const site = container.lookup("service:site");
+
     api.decorateChatMessage((element) => decorateGithubOneboxBody(element), {
       id: "onebox-github-body",
     });
@@ -65,18 +68,30 @@ export default {
       id: "linksNewTab",
     });
 
-    api.decorateChatMessage(
-      (element) =>
-        this.lightbox(element.querySelectorAll("img:not(.emoji, .avatar)")),
-      {
-        id: "lightbox",
-      }
-    );
-
-    api.decorateChatMessage(
-      (element) => replaceHashtagIconPlaceholder(element, site),
-      { id: "hashtagIcons" }
-    );
+    if (siteSettings.enable_experimental_lightbox) {
+      api.decorateChatMessage(
+        (element) => {
+          lightboxService.setupLightboxes({
+            container: element,
+            selector: "img:not(.emoji, .avatar, .site-icon)",
+          });
+        },
+        {
+          id: "experimental-chat-lightbox",
+        }
+      );
+    } else {
+      api.decorateChatMessage(
+        (element) =>
+          this.lightbox(element.querySelectorAll("img:not(.emoji, .avatar)")),
+        {
+          id: "lightbox",
+        }
+      );
+    }
+    api.decorateChatMessage((element) => decorateHashtags(element, site), {
+      id: "hashtagIcons",
+    });
   },
 
   _getScrollParent(node, maxParentSelector) {
@@ -144,9 +159,12 @@ export default {
         image: {
           verticalFit: true,
         },
+        gallery: {
+          enabled: true,
+        },
         callbacks: {
           elementParse: (item) => {
-            item.src = item.el[0].src;
+            item.src = item.el[0].dataset.largeSrc || item.el[0].src;
           },
         },
       });

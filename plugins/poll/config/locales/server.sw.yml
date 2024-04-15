@@ -11,7 +11,6 @@ sw:
     poll_edit_window_mins: "Idadi ya dakika baada ya maandiko kuwekwa ambapo uchaguzi unaweza kuhaririwa."
     poll_minimum_trust_level_to_create: "Chagua kiwango cha chini ya uaminifu mtumiaji anahitaji kutengeneza uchaguzi."
   poll:
-    multiple_polls_without_name: "Kuna chaguzi kadhaa zenye majina sawa. Tumia dhana ya '<code>jina</code>' ili kutambua chaguzi zako."
     multiple_polls_with_same_name: "Kuna chaguzi kadhaa zenye majina sawa: <strong>%{name}</strong>. Tumia dhana ya '<code>jina</code>' ilikutofautisha chaguzi zako."
     default_poll_must_have_less_options:
       one: "Chaguzi lazima uwe na chaguo chini ya %{count}."

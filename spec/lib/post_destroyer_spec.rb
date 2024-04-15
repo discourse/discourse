@@ -3,9 +3,9 @@
 RSpec.describe PostDestroyer do
   before { UserActionManager.enable }
 
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
+  fab!(:admin)
+  fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
   let(:post) { create_post }
 
   describe "destroy_old_hidden_posts" do
@@ -391,11 +391,11 @@ RSpec.describe PostDestroyer do
         user_stat = post2.user.user_stat
 
         called = 0
-        topic_destroyed = ->(topic, user) {
+        topic_destroyed = ->(topic, user) do
           expect(topic).to eq(post2.topic)
           expect(user).to eq(post2.user)
           called += 1
-        }
+        end
 
         DiscourseEvent.on(:topic_destroyed, &topic_destroyed)
 
@@ -414,11 +414,11 @@ RSpec.describe PostDestroyer do
         expect(user_stat.reload.topic_count).to eq(1)
 
         called = 0
-        topic_recovered = ->(topic, user) {
+        topic_recovered = ->(topic, user) do
           expect(topic).to eq(post2.topic)
           expect(user).to eq(post2.user)
           called += 1
-        }
+        end
 
         DiscourseEvent.on(:topic_recovered, &topic_recovered)
 
@@ -679,7 +679,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "deleting the second post in a topic" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let!(:post) { create_post(user: user) }
     let(:topic) { post.topic }
     fab!(:second_user) { coding_horror }
@@ -735,20 +735,20 @@ RSpec.describe PostDestroyer do
     end
 
     context "as an admin" do
-      subject { PostDestroyer.new(admin, post).destroy }
+      subject(:destroyer) { PostDestroyer.new(admin, post).destroy }
 
       it "deletes the post" do
-        subject
+        destroyer
         expect(post.deleted_at).to be_present
         expect(post.deleted_by).to eq(admin)
       end
 
       it "creates a new user history entry" do
-        expect { subject }.to change { UserHistory.count }.by(1)
+        expect { destroyer }.to change { UserHistory.count }.by(1)
       end
 
       it "triggers a extensibility event" do
-        events = DiscourseEvent.track_events { subject }
+        events = DiscourseEvent.track_events { destroyer }
 
         expect(events[0][:event_name]).to eq(:post_destroyed)
         expect(events[0][:params].first).to eq(post)
@@ -768,34 +768,34 @@ RSpec.describe PostDestroyer do
     end
 
     context "as a moderator" do
-      subject { PostDestroyer.new(moderator, reply).destroy }
+      subject(:destroyer) { PostDestroyer.new(moderator, reply).destroy }
 
       it "deletes the reply" do
-        subject
+        destroyer
         expect(reply.deleted_at).to be_present
         expect(reply.deleted_by).to eq(moderator)
       end
 
       it "doesn't decrement post_count again" do
-        expect { subject }.to_not change { author.user_stat.post_count }
+        expect { destroyer }.to_not change { author.user_stat.post_count }
       end
     end
 
     context "as an admin" do
-      subject { PostDestroyer.new(admin, reply).destroy }
+      subject(:destroyer) { PostDestroyer.new(admin, reply).destroy }
 
       it "deletes the post" do
-        subject
+        destroyer
         expect(reply.deleted_at).to be_present
         expect(reply.deleted_by).to eq(admin)
       end
 
       it "doesn't decrement post_count again" do
-        expect { subject }.to_not change { author.user_stat.post_count }
+        expect { destroyer }.to_not change { author.user_stat.post_count }
       end
 
       it "creates a new user history entry" do
-        expect { subject }.to change { UserHistory.count }.by(1)
+        expect { destroyer }.to change { UserHistory.count }.by(1)
       end
     end
   end
@@ -996,11 +996,11 @@ RSpec.describe PostDestroyer do
   end
 
   describe "internal links" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     let!(:second_post) { Fabricate(:post, topic: topic) }
     fab!(:other_topic) { Fabricate(:topic) }
     let!(:other_post) { Fabricate(:post, topic: other_topic) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let!(:base_url) { URI.parse(Discourse.base_url) }
     let!(:guardian) { Guardian.new }
     let!(:url) do
@@ -1039,7 +1039,7 @@ RSpec.describe PostDestroyer do
       PostDestroyer.delete_with_replies(reporter, post, defer_reply_flags: defer_reply_flags)
     end
 
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     let(:reporter) { Discourse.system_user }
     let(:reply) { Fabricate(:post, topic: post.topic) }
     let(:reviewable_reply) { PostActionCreator.off_topic(reporter, reply).reviewable }
@@ -1070,7 +1070,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "featured topics for user_profiles" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "clears the user_profiles featured_topic column" do
       user.user_profile.update(featured_topic: post.topic)
@@ -1080,7 +1080,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "permanent destroy" do
-    fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+    fab!(:private_message_topic)
     fab!(:private_post) { Fabricate(:private_message_post, topic: private_message_topic) }
     fab!(:post_action) { Fabricate(:post_action, post: private_post) }
     fab!(:reply) { Fabricate(:private_message_post, topic: private_message_topic) }
@@ -1149,7 +1149,7 @@ RSpec.describe PostDestroyer do
     # timestamps are rounded because postgres truncates the timestamp. that would cause the comparison if we compared
     # these timestamps with the one read from the database
     fab!(:first_post) { Fabricate(:post, created_at: 10.days.ago.round) }
-    fab!(:walter_white) { Fabricate(:walter_white) }
+    fab!(:walter_white)
     let!(:topic) { first_post.topic }
     let!(:reply) do
       Fabricate(:post, topic: topic, created_at: 5.days.ago.round, user: coding_horror)
@@ -1222,7 +1222,7 @@ RSpec.describe PostDestroyer do
   end
 
   describe "mailing_list_mode emails on recovery" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:post_1) { Fabricate(:post, topic: topic) }
     fab!(:post_2) { Fabricate(:post, topic: topic) }
 

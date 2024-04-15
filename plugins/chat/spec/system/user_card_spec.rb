@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User card", type: :system, js: true do
+RSpec.describe "User card", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:topic_1) { Fabricate(:topic) }
 
@@ -9,14 +9,14 @@ RSpec.describe "User card", type: :system, js: true do
   before { chat_system_bootstrap }
 
   shared_examples "not showing chat button" do
-    it "doesn’t show the chat buttton" do
-      expect(page).to have_no_css(".user-card-chat-btn")
+    it "doesn’t show the chat button" do
+      expect(page).to have_no_css(".chat-direct-message-btn")
     end
   end
 
   shared_examples "showing chat button" do
-    it "shows the chat buttton" do
-      expect(page).to have_css(".user-card-chat-btn")
+    it "shows the chat button" do
+      expect(page).to have_css(".chat-direct-message-btn")
     end
   end
 
@@ -49,7 +49,7 @@ RSpec.describe "User card", type: :system, js: true do
         include_examples "showing chat button"
 
         context "when clicking chat button" do
-          before { find(".user-card-chat-btn").click }
+          before { find(".chat-direct-message-btn").click }
 
           it "opens correct channel" do
             # at this point the ChatChannel is not created yet

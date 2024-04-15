@@ -154,22 +154,20 @@ class PostRevisor
   end
 
   def self.create_small_action_for_category_change(topic:, user:, old_category:, new_category:)
-    return if !SiteSetting.create_post_for_category_and_tag_changes
+    if !old_category || !new_category || !SiteSetting.create_post_for_category_and_tag_changes
+      return
+    end
 
     topic.add_moderator_post(
       user,
       I18n.t(
         "topic_category_changed",
-        from: category_name_raw(old_category),
-        to: category_name_raw(new_category),
+        from: "##{old_category.slug_ref}",
+        to: "##{new_category.slug_ref}",
       ),
       post_type: Post.types[:small_action],
       action_code: "category_changed",
     )
-  end
-
-  def self.category_name_raw(category)
-    "##{CategoryHashtagDataSource.category_to_hashtag_item(category).ref}"
   end
 
   def self.create_small_action_for_tag_changes(topic:, user:, added_tags:, removed_tags:)
@@ -314,10 +312,6 @@ class PostRevisor
     # it can fire events in sidekiq before the post is done saving
     # leading to corrupt state
     QuotedPost.extract_from(@post)
-
-    # This must be done before post_process_post, because that uses
-    # post upload security status to cook URLs.
-    @post.update_uploads_secure_status(source: "post revisor")
 
     post_process_post
 
@@ -761,5 +755,18 @@ class PostRevisor
 
   def guardian
     @guardian ||= Guardian.new(@editor)
+  end
+
+  def raw_changed?
+    @fields.has_key?(:raw) && @fields[:raw] != cached_original_raw && @post_successfully_saved
+  end
+
+  def topic_title_changed?
+    topic_changed? && @fields.has_key?(:title) && topic_diff.has_key?(:title) &&
+      !@topic_changes.errored?
+  end
+
+  def reviewable_content_changed?
+    raw_changed? || topic_title_changed?
   end
 end

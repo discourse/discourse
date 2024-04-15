@@ -1,17 +1,20 @@
-import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { next } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
+import { hbs } from "ember-cli-htmlbars";
 import { Promise } from "rsvp";
-import { formattedReminderTime } from "discourse/lib/bookmark";
 import { h } from "virtual-dom";
-import showModal from "discourse/lib/show-modal";
-import { smallUserAtts } from "discourse/widgets/actions-summary";
-import I18n from "I18n";
+import AdminPostMenu from "discourse/components/admin-post-menu";
+import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
+import { formattedReminderTime } from "discourse/lib/bookmark";
+import { recentlyCopied, showAlert } from "discourse/lib/post-action-feedback";
+import { userPath } from "discourse/lib/url";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import { isTesting } from "discourse-common/config/environment";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
+import discourseLater from "discourse-common/lib/later";
+import I18n from "discourse-i18n";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -20,6 +23,7 @@ const _builders = {};
 export let apiExtraButtons = {};
 let _extraButtons = {};
 let _buttonsToRemoveCallbacks = {};
+let _buttonsToReplace = {};
 
 export function addButton(name, builder) {
   _extraButtons[name] = builder;
@@ -32,6 +36,7 @@ export function resetPostMenuExtraButtons() {
 
   _extraButtons = {};
   _buttonsToRemoveCallbacks = {};
+  _buttonsToReplace = {};
 }
 
 export function removeButton(name, callback) {
@@ -40,24 +45,49 @@ export function removeButton(name, callback) {
   _buttonsToRemoveCallbacks[name].push(callback || (() => true));
 }
 
+export function replaceButton(name, replaceWith) {
+  _buttonsToReplace[name] = replaceWith;
+}
+
 function registerButton(name, builder) {
   _builders[name] = builder;
+}
+
+function smallUserAtts(user) {
+  return {
+    template: user.avatar_template,
+    username: user.username,
+    post_url: user.post_url,
+    url: userPath(user.username_lower),
+    unknown: user.unknown,
+  };
 }
 
 export function buildButton(name, widget) {
   let { attrs, state, siteSettings, settings, currentUser } = widget;
 
-  let shouldAddButton = true;
-
-  if (_buttonsToRemoveCallbacks[name]) {
-    shouldAddButton = !_buttonsToRemoveCallbacks[name].some((c) =>
+  // Return early if the button is supposed to be removed via the plugin API
+  if (
+    _buttonsToRemoveCallbacks[name] &&
+    _buttonsToRemoveCallbacks[name].some((c) =>
       c(attrs, state, siteSettings, settings, currentUser)
-    );
+    )
+  ) {
+    return;
+  }
+
+  // Look for a button replacement, build and return widget attrs if present
+  let replacement = _buttonsToReplace[name];
+  if (replacement && replacement?.shouldRender(widget)) {
+    return {
+      replaced: true,
+      name: replacement.name,
+      attrs: replacement.buildAttrs(widget),
+    };
   }
 
   let builder = _builders[name];
-
-  if (shouldAddButton && builder) {
+  if (builder) {
     let button = builder(attrs, state, siteSettings, settings, currentUser);
     if (button && !button.id) {
       button.id = name;
@@ -312,9 +342,18 @@ registerButton("replies", (attrs, state, siteSettings) => {
 registerButton("share", () => {
   return {
     action: "share",
+    icon: "d-post-share",
     className: "share",
     title: "post.controls.share",
+  };
+});
+
+registerButton("copyLink", () => {
+  return {
+    action: "copyLink",
     icon: "d-post-share",
+    className: "post-action-menu__copy-link",
+    title: "post.controls.copy_title",
   };
 });
 
@@ -348,7 +387,7 @@ registerButton(
       return;
     }
 
-    let classNames = ["bookmark", "with-reminder"];
+    let classNames = ["bookmark"];
     let title = "bookmarks.not_bookmarked";
     let titleOptions = { name: "" };
 
@@ -356,6 +395,8 @@ registerButton(
       classNames.push("bookmarked");
 
       if (attrs.bookmarkReminderAt) {
+        classNames.push("with-reminder");
+
         let formattedReminder = formattedReminderTime(
           attrs.bookmarkReminderAt,
           currentUser.user_option.timezone
@@ -386,11 +427,13 @@ registerButton("admin", (attrs) => {
   if (!attrs.canManage && !attrs.canWiki && !attrs.canEditStaffNotes) {
     return;
   }
+
   return {
     action: "openAdminMenu",
     title: "post.controls.admin",
     className: "show-post-admin-menu",
     icon: "wrench",
+    sendActionEvent: true,
   };
 });
 
@@ -438,7 +481,7 @@ registerButton("delete", (attrs) => {
   }
 });
 
-function replaceButton(buttons, find, replace) {
+function _replaceButton(buttons, find, replace) {
   const idx = buttons.indexOf(find);
   if (idx !== -1) {
     buttons[idx] = replace;
@@ -447,6 +490,7 @@ function replaceButton(buttons, find, replace) {
 
 export default createWidget("post-menu", {
   tagName: "section.post-menu-area.clearfix",
+  services: ["modal", "menu"],
 
   settings: {
     collapseButtons: true,
@@ -459,20 +503,67 @@ export default createWidget("post-menu", {
       collapsed: true,
       likedUsers: [],
       readers: [],
-      adminVisible: false,
     };
   },
 
   buildKey: (attrs) => `post-menu-${attrs.id}`,
 
   attachButton(name) {
-    let buttonAtts = buildButton(name, this);
-    if (buttonAtts) {
-      let button = this.attach(this.settings.buttonType, buttonAtts);
-      if (buttonAtts.before) {
-        let before = this.attachButton(buttonAtts.before);
+    let buttonAttrs = buildButton(name, this);
+
+    if (buttonAttrs?.component) {
+      return [
+        new RenderGlimmer(
+          this,
+          buttonAttrs.tagName,
+          hbs`<@data.component
+            @permanentlyDeletePost={{@data.permanentlyDeletePost}}
+            @lockPost={{@data.lockPost}}
+            @unlockPost={{@data.unlockPost}}
+            @grantBadge={{@data.grantBadge}}
+            @rebakePost={{@data.rebakePost}}
+            @toggleWiki={{@data.toggleWiki}}
+            @changePostOwner={{@data.changePostOwner}}
+            @changeNotice={{@data.changeNotice}}
+            @togglePostType={{@data.togglePostType}}
+            @unhidePost={{@data.unhidePost}}
+            @showPagePublish={{@data.showPagePublish}}
+            @post={{@data.post}}
+            @transformedPost={{@data.transformedPost}}
+            @scheduleRerender={{@data.scheduleRerender}}
+          />`,
+          {
+            component: buttonAttrs.component,
+            transformedPost: this.attrs,
+            post: this.findAncestorModel(),
+            permanentlyDeletePost: () =>
+              this.sendWidgetAction("permanentlyDeletePost"),
+            lockPost: () => this.sendWidgetAction("lockPost"),
+            unlockPost: () => this.sendWidgetAction("unlockPost"),
+            grantBadge: () => this.sendWidgetAction("grantBadge"),
+            rebakePost: () => this.sendWidgetAction("rebakePost"),
+            toggleWiki: () => this.sendWidgetAction("toggleWiki"),
+            changePostOwner: () => this.sendWidgetAction("changePostOwner"),
+            changeNotice: () => this.sendWidgetAction("changeNotice"),
+            togglePostType: () => this.sendWidgetAction("togglePostType"),
+            scheduleRerender: () => this.scheduleRerender(),
+          }
+        ),
+      ];
+    }
+
+    // If the button is replaced via the plugin API, we need to render the
+    // replacement rather than a button
+    if (buttonAttrs?.replaced) {
+      return this.attach(buttonAttrs.name, buttonAttrs.attrs);
+    }
+
+    if (buttonAttrs) {
+      let button = this.attach(this.settings.buttonType, buttonAttrs);
+      if (buttonAttrs.before) {
+        let before = this.attachButton(buttonAttrs.before);
         return h("div.double-button", [before, button]);
-      } else if (buttonAtts.addContainer) {
+      } else if (buttonAttrs.addContainer) {
         return h("div.double-button", [button]);
       }
 
@@ -508,8 +599,8 @@ export default createWidget("post-menu", {
 
     // If the post is a wiki, make Edit more prominent
     if (attrs.wiki && attrs.canEdit) {
-      replaceButton(orderedButtons, "edit", "reply-small");
-      replaceButton(orderedButtons, "reply", "wiki-edit");
+      _replaceButton(orderedButtons, "edit", "reply-small");
+      _replaceButton(orderedButtons, "reply", "wiki-edit");
     }
 
     orderedButtons.forEach((i) => {
@@ -532,6 +623,7 @@ export default createWidget("post-menu", {
       visibleButtons = allButtons;
     }
 
+    let hasShowMoreButton = false;
     // Only show ellipsis if there is more than one button hidden
     // if there are no more buttons, we are not collapsed
     if (!state.collapsed || allButtons.length <= visibleButtons.length + 1) {
@@ -547,6 +639,7 @@ export default createWidget("post-menu", {
         icon: "ellipsis-h",
       });
       visibleButtons.splice(visibleButtons.length - 1, 0, showMore);
+      hasShowMoreButton = true;
     }
 
     Object.values(_extraButtons).forEach((builder) => {
@@ -565,18 +658,46 @@ export default createWidget("post-menu", {
       }
 
       if (shouldAddButton && builder) {
-        const buttonAtts = builder(
+        const buttonAttrs = builder(
           attrs,
           this.state,
           this.siteSettings,
           this.settings,
           this.currentUser
         );
-        if (buttonAtts) {
-          const { position, beforeButton, afterButton } = buttonAtts;
-          delete buttonAtts.position;
+        if (buttonAttrs) {
+          const { position, beforeButton, afterButton } = buttonAttrs;
+          delete buttonAttrs.position;
+          let button;
 
-          let button = this.attach(this.settings.buttonType, buttonAtts);
+          if (typeof buttonAttrs.action === "function") {
+            const original = buttonAttrs.action;
+            const self = this;
+
+            buttonAttrs.action = async function (post) {
+              let showFeedback = null;
+
+              if (buttonAttrs.className) {
+                showFeedback = (messageKey) => {
+                  showAlert(post.id, buttonAttrs.className, messageKey);
+                };
+              }
+
+              const postAttrs = {
+                post,
+                showFeedback,
+              };
+
+              if (
+                !buttonAttrs.className ||
+                !recentlyCopied(post.id, buttonAttrs.actionClass)
+              ) {
+                self.sendWidgetAction(original, postAttrs);
+              }
+            };
+          }
+
+          button = this.attach(this.settings.buttonType, buttonAttrs);
 
           const content = [];
           if (beforeButton) {
@@ -641,9 +762,6 @@ export default createWidget("post-menu", {
     ];
 
     postControls.push(h("div.actions", controlsButtons));
-    if (state.adminVisible) {
-      postControls.push(this.attach("post-admin-menu", attrs));
-    }
 
     const contents = [
       h(
@@ -699,27 +817,42 @@ export default createWidget("post-menu", {
         })
       );
     }
-
+    if (hasShowMoreButton) {
+      contents.push(this.attach("post-user-tip-shim"));
+    }
     return contents;
   },
 
-  openAdminMenu() {
-    this.state.adminVisible = true;
-  },
-
-  closeAdminMenu() {
-    this.state.adminVisible = false;
+  openAdminMenu(event) {
+    this.menu.show(event.target, {
+      identifier: "admin-post-menu",
+      component: AdminPostMenu,
+      extraClassName: "popup-menu",
+      data: {
+        scheduleRerender: this.scheduleRerender.bind(this),
+        transformedPost: this.attrs,
+        post: this.findAncestorModel(),
+        permanentlyDeletePost: () =>
+          this.sendWidgetAction("permanentlyDeletePost"),
+        lockPost: () => this.sendWidgetAction("lockPost"),
+        unlockPost: () => this.sendWidgetAction("unlockPost"),
+        grantBadge: () => this.sendWidgetAction("grantBadge"),
+        rebakePost: () => this.sendWidgetAction("rebakePost"),
+        toggleWiki: () => this.sendWidgetAction("toggleWiki"),
+        changePostOwner: () => this.sendWidgetAction("changePostOwner"),
+        changeNotice: () => this.sendWidgetAction("changeNotice"),
+        togglePostType: () => this.sendWidgetAction("togglePostType"),
+        unhidePost: () => this.sendWidgetAction("unhidePost"),
+        showPagePublish: () => this.sendWidgetAction("showPagePublish"),
+      },
+    });
   },
 
   showDeleteTopicModal() {
-    showModal("delete-topic-disallowed");
+    this.modal.show(DeleteTopicDisallowedModal);
   },
 
   showMoreActions() {
-    if (this.currentUser && this.siteSettings.enable_user_tips) {
-      this.currentUser.hideUserTipForever("post_menu");
-    }
-
     this.state.collapsed = false;
     const likesPromise = !this.state.likedUsers.length
       ? this.getWhoLiked()
@@ -741,11 +874,7 @@ export default createWidget("post-menu", {
       return this.sendWidgetAction("showLogin");
     }
 
-    if (this.currentUser && this.siteSettings.enable_user_tips) {
-      this.currentUser.hideUserTipForever("post_menu");
-    }
-
-    if (this.capabilities.canVibrate && !isTesting()) {
+    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
       navigator.vibrate(VIBRATE_DURATION);
     }
 

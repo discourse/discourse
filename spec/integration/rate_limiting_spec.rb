@@ -2,10 +2,9 @@
 # frozen_string_literal: true
 
 RSpec.describe "rate limiter integration" do
-  before do
-    RateLimiter.enable
-    RateLimiter.clear_all!
-  end
+  before { RateLimiter.enable }
+
+  use_redis_snapshotting
 
   it "will rate limit message bus requests once queueing" do
     freeze_time
@@ -44,14 +43,10 @@ RSpec.describe "rate limiter integration" do
       expect(response.cookies.has_key?(name)).to eq(true)
       expect(response.cookies[name]).to be_nil
     end
-
-    RateLimiter.clear_all!
   end
 
   it "can cleanly limit requests and sets a Retry-After header" do
     freeze_time
-
-    RateLimiter.clear_all!
 
     admin = Fabricate(:admin)
     api_key = Fabricate(:api_key, user: admin)

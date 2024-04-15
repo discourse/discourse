@@ -1,5 +1,14 @@
 <div class="admin-emojis">
-  <h1>{{i18n "admin.emoji.title"}}</h1>
+  <div class="admin-emojis__header">
+    <h1>{{i18n "admin.emoji.title"}}</h1>
+    <LinkTo
+      @route="adminSiteSettingsCategory"
+      @model="all_results"
+      @query={{hash filter="emoji"}}
+    >
+      {{i18n "admin.emoji.settings"}}
+    </LinkTo>
+  </div>
 
   <p class="desc">{{i18n "admin.emoji.help"}}</p>
 
@@ -41,9 +50,9 @@
             <td>{{e.group}}</td>
             <td class="action">
               <DButton
-                @action={{action "destroyEmoji" e}}
-                @class="btn-danger"
+                @action={{fn this.destroyEmoji e}}
                 @icon="far-trash-alt"
+                class="btn-danger"
               />
             </td>
           </tr>

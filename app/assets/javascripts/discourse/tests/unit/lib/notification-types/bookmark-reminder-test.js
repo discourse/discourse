@@ -1,11 +1,11 @@
-import { module, test } from "qunit";
-import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
-import { deepMerge } from "discourse-common/lib/object";
-import { createRenderDirector } from "discourse/tests/helpers/notification-types-helper";
 import { htmlSafe } from "@ember/template";
-import Notification from "discourse/models/notification";
-import I18n from "I18n";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import Notification from "discourse/models/notification";
+import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
+import { createRenderDirector } from "discourse/tests/helpers/notification-types-helper";
+import { deepMerge } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 function getNotification(overrides = {}) {
   return Notification.create(

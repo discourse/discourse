@@ -11,7 +11,6 @@
   .widget-dropdown-body {
     display: flex;
     flex-direction: column;
-    padding: 0.25em;
     background: var(--secondary);
     z-index: z("dropdown");
     border: 1px solid var(--primary-low);
@@ -22,7 +21,7 @@
 
   .widget-dropdown-item {
     cursor: pointer;
-    padding: 0.25em;
+    padding: 0.5em 1em;
     display: flex;
     flex: 1;
     align-items: center;
@@ -43,7 +42,7 @@
     }
 
     &:hover {
-      background: var(--tertiary-low);
+      background: var(--d-hover);
     }
   }
 

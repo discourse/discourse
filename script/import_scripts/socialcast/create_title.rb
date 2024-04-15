@@ -17,7 +17,7 @@ class CreateTitle
       title = complete_words title
     end
 
-    return title unless title.nil? || title.size < 20
+    title unless title.nil? || title.size < 20
   end
 
   private

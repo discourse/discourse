@@ -5,8 +5,8 @@
   >
     <button
       type="button"
-      class="btn-emoji btn-flat"
-      onclick={{action "toggleEmojiPicker"}}
+      class="btn-emoji btn-transparent"
+      onclick={{this.toggleEmojiPicker}}
       {{on "focus" this.focus}}
       {{on "blur" this.blur}}
     >
@@ -29,7 +29,7 @@
 </div>
 <EmojiPicker
   @isActive={{this.emojiPickerIsActive}}
-  @emojiSelected={{action "emojiSelected"}}
-  @onEmojiPickerClose={{action "onEmojiPickerOutsideClick"}}
+  @emojiSelected={{this.emojiSelected}}
+  @onEmojiPickerClose={{this.onEmojiPickerOutsideClick}}
   @placement="bottom"
 />

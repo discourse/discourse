@@ -17,7 +17,7 @@ RSpec.describe UnsubscribeKey do
   end
 
   describe "key" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let!(:key) { UnsubscribeKey.create_key_for(user, UnsubscribeKey::DIGEST_TYPE) }
 
     it "has a temporary key" do

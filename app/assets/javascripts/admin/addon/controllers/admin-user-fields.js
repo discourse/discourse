@@ -1,9 +1,9 @@
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { gte, sort } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import I18n from "I18n";
+import { action } from "@ember/object";
+import { gte, sort } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "discourse-i18n";
 
 const MAX_FIELDS = 30;
 
@@ -11,11 +11,18 @@ export default class AdminUserFieldsController extends Controller {
   @service dialog;
 
   fieldTypes = null;
+  fieldSortOrder = ["position"];
 
   @gte("model.length", MAX_FIELDS) createDisabled;
   @sort("model", "fieldSortOrder") sortedFields;
 
-  fieldSortOrder = ["position"];
+  get firstField() {
+    return this.sortedFields[0];
+  }
+
+  get lastField() {
+    return this.sortedFields[this.sortedFields.length - 1];
+  }
 
   @action
   createField() {

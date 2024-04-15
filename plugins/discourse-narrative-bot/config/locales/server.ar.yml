@@ -45,6 +45,13 @@ ar:
       trigger: "رمي النرد"
       invalid: |-
         عذرًا، من المستحيل رياضيًا الحصول على هذه التركيبة في النرد. :confounded:
+      not_enough_dice:
+        zero: "لديَّ %{count} حجر نرد. إنه أمر مخزٍ، أعرف ذلك!"
+        one: "لديَّ حجر نرد واحد (%{count}). إنه أمر مخزٍ، أعرف ذلك!"
+        two: "لديَّ حجرا نرد (%{count}). إنه أمر مخزٍ، أعرف ذلك!"
+        few: "لديَّ %{count} أحجار نرد. إنه أمر مخزٍ، أعرف ذلك!"
+        many: "لديَّ %{count} حجر نرد. إنه أمر مخزٍ، أعرف ذلك!"
+        other: "لديَّ %{count} حجر نرد. إنه أمر مخزٍ، أعرف ذلك!"
       out_of_range: |-
         هل تعلم أن [أقصى عدد من الجوانب](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) في نرد عادل رياضيًا هو 120؟
       results: |-
@@ -277,10 +284,6 @@ ar:
         not_found: |-
           أوه لا، لم يتم الإبلاغ عن منشوري المزعج على أنه غير لائق بعد. :worried: هل يمكنك الإبلاغ عنه كغير لائق باستخدام **العلم** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">؟ لا تنسَ استخدام الزر "عرض المزيد" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> للكشف عن المزيد من الإجراءات لكل منشور.
       search:
-        instructions: |-
-          _بسست_... لقد أخفيت مفاجأة في هذا الموضوع. إذا كنت مستعدًا للتحدي، **فحدِّد رمز البحث** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> أعلى اليسار &#8599; للبحث عنه.
-
-          جرِّب البحث عن المصطلح "كابيبارا" في هذا الموضوع
         hidden_message: |-
           كيف فاتك هذا الكابيبارا؟ :wink:
 
@@ -352,20 +355,10 @@ ar:
           لاحظ أن أمامك %{deletion_after} ساعة فقط لإلغاء حذف منشور.
       category_hashtag:
         instructions: |-
-          هل تعلم أنه بإمكانك الإشارة إلي الفئات والوسوم في منشورك؟ مثلًا، هل عرضت الفئة %{category}؟
-
-          اكتب `#` وسط الجملة وحدِّد أي فئة أو وسم.
-        instructions_experimental: |-
           هل كنت تعلم أن بإمكانك الإشارة إلي الفئات والوسوم في منشورك؟ على سبيل المثال، هل رأيت الفئة %{category}؟
 
-          اكتب `#` وسط الجملة وحدِّد الفئة أو الوسم.
+          اكتب `#` وسط الجملة وحدِّد أي فئة أو وسم.
         not_found: |-
-          حسنًا، لا أرى فئة هناك في أي مكان. لاحظ أن الرمز `#` لا يمكن أن يكون الحرف الأول. هل يمكنك نسخ هذا في ردك التالي؟
-
-          ```text
-          يمكنني إنشاء رابط فئة عبر #
-          ```
-        not_found_experimental: |-
           حسنًا، لا أرى أي فئة هنا في أي مكان. هل يمكنك نسخ هذا في ردك التالي؟
 
           ```text

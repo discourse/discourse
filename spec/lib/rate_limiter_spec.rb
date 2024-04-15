@@ -3,8 +3,8 @@
 require "rate_limiter"
 
 RSpec.describe RateLimiter do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
   let(:rate_limiter) { RateLimiter.new(user, "peppermint-butler", 2, 60) }
   let(:apply_staff_rate_limiter) do
     RateLimiter.new(admin, "peppermint-servant", 5, 40, apply_limit_to_staff: true)

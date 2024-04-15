@@ -13,9 +13,9 @@ module Chat
 
     belongs_to :chat_channel, class_name: "Chat::Channel"
     belongs_to :user
-    belongs_to :in_reply_to, class_name: "Chat::Message"
+    belongs_to :in_reply_to, class_name: "Chat::Message", autosave: true
     belongs_to :last_editor, class_name: "User"
-    belongs_to :thread, class_name: "Chat::Thread"
+    belongs_to :thread, class_name: "Chat::Thread", optional: true, autosave: true
 
     has_many :replies,
              class_name: "Chat::Message",
@@ -30,11 +30,11 @@ module Chat
              dependent: :destroy,
              foreign_key: :chat_message_id
     has_many :bookmarks,
-             -> {
+             -> do
                unscope(where: :bookmarkable_type).where(
                  bookmarkable_type: Chat::Message.polymorphic_name,
                )
-             },
+             end,
              as: :bookmarkable,
              dependent: :destroy
     has_many :upload_references,
@@ -51,38 +51,60 @@ module Chat
              dependent: :destroy,
              class_name: "Chat::Mention",
              foreign_key: :chat_message_id
+    has_many :user_mentions,
+             dependent: :destroy,
+             class_name: "Chat::UserMention",
+             foreign_key: :chat_message_id
+    has_many :group_mentions,
+             dependent: :destroy,
+             class_name: "Chat::GroupMention",
+             foreign_key: :chat_message_id
+    has_one :all_mention,
+            dependent: :destroy,
+            class_name: "Chat::AllMention",
+            foreign_key: :chat_message_id
+    has_one :here_mention,
+            dependent: :destroy,
+            class_name: "Chat::HereMention",
+            foreign_key: :chat_message_id
 
     scope :in_public_channel,
-          -> {
+          -> do
             joins(:chat_channel).where(
               chat_channel: {
                 chatable_type: Chat::Channel.public_channel_chatable_types,
               },
             )
-          }
+          end
     scope :in_dm_channel,
-          -> {
+          -> do
             joins(:chat_channel).where(
               chat_channel: {
                 chatable_type: Chat::Channel.direct_channel_chatable_types,
               },
             )
-          }
+          end
     scope :created_before, ->(date) { where("chat_messages.created_at < ?", date) }
     scope :uncooked, -> { where("cooked_version <> ? or cooked_version IS NULL", BAKED_VERSION) }
 
     before_save { ensure_last_editor_id }
 
+    validates :cooked, length: { maximum: 20_000 }
+    validate :validate_message
+
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
 
-    def validate_message(has_uploads:)
+    def validate_message
+      self.message =
+        TextCleaner.clean(self.message, strip_whitespaces: true, strip_zero_width_spaces: true)
+
       WatchedWordsValidator.new(attributes: [:message]).validate(self)
 
       if self.new_record? || self.changed.include?("message")
         Chat::DuplicateMessageValidator.new(self).validate
       end
 
-      if !has_uploads && message_too_short?
+      if uploads.empty? && message_too_short?
         self.errors.add(
           :base,
           I18n.t(
@@ -100,24 +122,7 @@ module Chat
       end
     end
 
-    def attach_uploads(uploads)
-      return if uploads.blank? || self.new_record?
-
-      now = Time.now
-      ref_record_attrs =
-        uploads.map do |upload|
-          {
-            upload_id: upload.id,
-            target_id: self.id,
-            target_type: self.class.polymorphic_name,
-            created_at: now,
-            updated_at: now,
-          }
-        end
-      UploadReference.insert_all!(ref_record_attrs)
-    end
-
-    def excerpt(max_length: 50)
+    def excerpt(max_length: 100)
       # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
       return message if UrlHelper.relaxed_parse(message).is_a?(URI)
 
@@ -125,25 +130,11 @@ module Chat
       return uploads.first.original_filename if cooked.blank? && uploads.present?
 
       # this may return blank for some complex things like quotes, that is acceptable
-      PrettyText.excerpt(message, max_length, { text_entities: true })
+      PrettyText.excerpt(cooked, max_length, strip_links: true, keep_mentions: true)
     end
 
-    # TODO (martin) Replace the above #excerpt method usage with this one. The
-    # issue with the above one is that we cannot actually render nice HTML
-    # fore replies/excerpts in the UI because text_entities: true will
-    # allow through even denied HTML because of 07ab20131a15ab907c1974fee405d9bdce0c0723.
-    #
-    # For now only the thread index uses this new version since it is not interactive,
-    # we can go back to the interactive reply/edit cases in another PR.
-    def rich_excerpt(max_length: 50)
-      # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
-      return message if UrlHelper.relaxed_parse(message).is_a?(URI)
-
-      # upload-only messages are better represented as the filename
-      return uploads.first.original_filename if cooked.blank? && uploads.present?
-
-      # this may return blank for some complex things like quotes, that is acceptable
-      PrettyText.excerpt(cooked, max_length)
+    def censored_excerpt(max_length: 100)
+      WordWatcher.censor(excerpt(max_length: max_length))
     end
 
     def cooked_for_excerpt
@@ -181,19 +172,8 @@ module Chat
 
     def rebake!(invalidate_oneboxes: false, priority: nil)
       ensure_last_editor_id
-
-      previous_cooked = self.cooked
-      new_cooked =
-        self.class.cook(
-          message,
-          invalidate_oneboxes: invalidate_oneboxes,
-          user_id: self.last_editor_id,
-        )
-      update_columns(cooked: new_cooked, cooked_version: BAKED_VERSION)
-      args = { chat_message_id: self.id }
+      args = { chat_message_id: self.id, invalidate_oneboxes: invalidate_oneboxes }
       args[:queue] = priority.to_s if priority && priority != :normal
-      args[:is_dirty] = true if previous_cooked != new_cooked
-
       Jobs.enqueue(Jobs::Chat::ProcessMessage, args)
     end
 
@@ -220,6 +200,7 @@ module Chat
       text-post-process
       upload-protocol
       watched-words
+      chat-html-inline
     ]
 
     MARKDOWN_IT_RULES = %w[
@@ -236,6 +217,7 @@ module Chat
       strikethrough
       blockquote
       emphasis
+      replacements
     ]
 
     def self.cook(message, opts = {})
@@ -271,27 +253,22 @@ module Chat
     end
 
     def full_url
-      "#{Discourse.base_url}#{url}"
+      "#{Discourse.base_url_no_prefix}#{url}"
     end
 
     def url
-      "/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+      if in_thread?
+        "#{Discourse.base_path}/chat/c/-/#{self.chat_channel_id}/t/#{self.thread_id}/#{self.id}"
+      else
+        "#{Discourse.base_path}/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+      end
     end
 
-    def create_mentions
-      insert_mentions(parsed_mentions.all_mentioned_users_ids)
-    end
-
-    def update_mentions
-      mentioned_user_ids = parsed_mentions.all_mentioned_users_ids
-
-      old_mentions = chat_mentions.pluck(:user_id)
-      updated_mentions = mentioned_user_ids
-      mentioned_user_ids_to_drop = old_mentions - updated_mentions
-      mentioned_user_ids_to_add = updated_mentions - old_mentions
-
-      delete_mentions(mentioned_user_ids_to_drop)
-      insert_mentions(mentioned_user_ids_to_add)
+    def upsert_mentions
+      upsert_user_mentions
+      upsert_group_mentions
+      create_or_delete_all_mention
+      create_or_delete_here_mention
     end
 
     def in_thread?
@@ -303,7 +280,7 @@ module Chat
     end
 
     def thread_om?
-      in_thread? && self.thread.original_message_id == self.id
+      in_thread? && self.thread&.original_message_id == self.id
     end
 
     def parsed_mentions
@@ -316,24 +293,16 @@ module Chat
 
     private
 
-    def delete_mentions(user_ids)
-      chat_mentions.where(user_id: user_ids).destroy_all
+    def delete_mentions(mention_type, target_ids)
+      chat_mentions.where(type: mention_type, target_id: target_ids).destroy_all
     end
 
-    def insert_mentions(user_ids)
-      return if user_ids.empty?
+    def insert_mentions(type, target_ids)
+      return if target_ids.empty?
 
-      now = Time.zone.now
-      mentions = []
-      User
-        .where(id: user_ids)
-        .find_each do |user|
-          mentions << {
-            chat_message_id: self.id,
-            user_id: user.id,
-            created_at: now,
-            updated_at: now,
-          }
+      mentions =
+        target_ids.map do |target_id|
+          { chat_message_id: self.id, target_id: target_id, type: type }
         end
 
       Chat::Mention.insert_all(mentions)
@@ -349,6 +318,38 @@ module Chat
 
     def ensure_last_editor_id
       self.last_editor_id ||= self.user_id
+    end
+
+    def create_or_delete_all_mention
+      if !parsed_mentions.has_global_mention && all_mention.present?
+        all_mention.destroy!
+        association(:all_mention).reload
+      elsif parsed_mentions.has_global_mention && all_mention.blank?
+        build_all_mention.save!
+      end
+    end
+
+    def create_or_delete_here_mention
+      if !parsed_mentions.has_here_mention && here_mention.present?
+        here_mention.destroy!
+        association(:here_mention).reload
+      elsif parsed_mentions.has_here_mention && here_mention.blank?
+        build_here_mention.save!
+      end
+    end
+
+    def upsert_group_mentions
+      old_mentions = group_mentions.pluck(:target_id)
+      new_mentions = parsed_mentions.groups_to_mention.pluck(:id)
+      delete_mentions("Chat::GroupMention", old_mentions - new_mentions)
+      insert_mentions("Chat::GroupMention", new_mentions - old_mentions)
+    end
+
+    def upsert_user_mentions
+      old_mentions = user_mentions.pluck(:target_id)
+      new_mentions = parsed_mentions.direct_mentions.pluck(:id)
+      delete_mentions("Chat::UserMention", old_mentions - new_mentions)
+      insert_mentions("Chat::UserMention", new_mentions - old_mentions)
     end
   end
 end

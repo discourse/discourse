@@ -16,16 +16,20 @@
           <a href='<%= path "/guidelines" %>' itemprop="url"><%= t 'guidelines_topic.title' %> </a>
         </span>
       </li>
-      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
-        <span itemprop='name'>
-          <a href='<%= path "/tos" %>' itemprop="url"><%= t 'tos_topic.title' %> </a>
-        </span>
-      </li>
-      <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
-        <span itemprop='name'>
-          <a href='<%= path "/privacy" %>' itemprop="url"><%= t 'privacy_topic.title' %> </a>
-        </span>
-      </li>
+      <% if tos_url.present? %>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='<%= tos_url %>' itemprop="url"><%= t 'tos_topic.title' %> </a>
+          </span>
+        </li>
+      <% end %>
+      <% if privacy_policy_url.present? %>
+        <li itemscope itemtype='http://schema.org/SiteNavigationElement'>
+          <span itemprop='name'>
+            <a href='<%= privacy_policy_url %>' itemprop="url"><%= t 'privacy_topic.title' %> </a>
+          </span>
+        </li>
+      <% end %>
     </ul>
   </nav>
   <p class='powered-by-link'><%= t 'powered_by_html' %></p>

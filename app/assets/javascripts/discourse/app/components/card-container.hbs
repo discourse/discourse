@@ -2,19 +2,18 @@
   <div class="card-cloak hidden"></div>
 {{/if}}
 
-<UserCardContents
-  @topic={{this.topic.model}}
-  @showUser={{this.showUser}}
-  @filterPosts={{this.filterPosts}}
-  @composePrivateMessage={{route-action "composePrivateMessage"}}
-  @createNewMessageViaParams={{route-action "createNewMessageViaParams"}}
-  role="dialog"
-  aria-labelledby="discourse-user-card-title"
-/>
+<PluginOutlet @name="user-card-content-container">
+  <UserCardContents
+    @topic={{this.topic.model}}
+    @showUser={{this.showUser}}
+    @filterPosts={{this.filterPosts}}
+    @composePrivateMessage={{route-action "composePrivateMessage"}}
+    role="dialog"
+  />
+</PluginOutlet>
 
 <GroupCardContents
   @topic={{this.topic.model}}
   @showUser={{this.showUser}}
   @showGroup={{this.showGroup}}
-  @createNewMessageViaParams={{route-action "createNewMessageViaParams"}}
 />

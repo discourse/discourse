@@ -78,7 +78,7 @@ class UserAvatar < ActiveRecord::Base
           end
         end
       rescue OpenURI::HTTPError => e
-        raise e if e.io&.status[0].to_i != 404
+        raise e if e.io&.status&.[](0).to_i != 404
       ensure
         tempfile&.close!
       end
@@ -118,6 +118,7 @@ class UserAvatar < ActiveRecord::Base
         max_file_size: SiteSetting.max_image_size_kb.kilobytes,
         tmp_file_name: "sso-avatar",
         follow_redirect: true,
+        skip_rate_limit: !!options&.fetch(:skip_rate_limit, false),
       )
 
     return unless tempfile
@@ -150,7 +151,7 @@ class UserAvatar < ActiveRecord::Base
     tempfile.close! if tempfile && tempfile.respond_to?(:close!)
   end
 
-  def self.ensure_consistency!
+  def self.ensure_consistency!(max_optimized_avatars_to_remove: 20_000)
     DB.exec <<~SQL
       UPDATE user_avatars
       SET gravatar_upload_id = NULL
@@ -174,6 +175,33 @@ class UserAvatar < ActiveRecord::Base
           up.id IS NULL
       )
     SQL
+
+    ids =
+      DB.query_single(<<~SQL, sizes: Discourse.avatar_sizes, limit: max_optimized_avatars_to_remove)
+      SELECT oi.id FROM (
+        SELECT custom_upload_id FROM user_avatars
+        EXCEPT
+        SELECT upload_id FROM  upload_references WHERE target_type <> 'UserAvatar'
+        AND upload_id IS NOT NULL
+      ) AS a
+      JOIN optimized_images oi ON oi.upload_id = a.custom_upload_id
+      WHERE oi.width not in (:sizes) AND oi.height not in (:sizes)
+      LIMIT :limit
+    SQL
+
+    warnings_reported = 0
+
+    ids.each do |id|
+      begin
+        OptimizedImage.find(id).destroy!
+      rescue ActiveRecord::RecordNotFound
+      rescue => e
+        if warnings_reported < 10
+          Discourse.warn_exception(e, message: "Failed to remove optimized image")
+          warnings_reported += 1
+        end
+      end
+    end
   end
 end
 

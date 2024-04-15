@@ -1,6 +1,12 @@
-import getURL from "discourse-common/lib/get-url";
+import DEBUG from "@glimmer/env";
 import PreloadStore from "discourse/lib/preload-store";
-import { isDevelopment } from "discourse-common/config/environment";
+import getURL from "discourse-common/lib/get-url";
+
+const BROWSER_EXTENSION_PROTOCOLS = [
+  "moz-extension://",
+  "chrome-extension://",
+  "webkit-masked-url://",
+];
 
 export default function identifySource(error) {
   if (!error || !error.stack) {
@@ -15,8 +21,20 @@ export default function identifySource(error) {
     return;
   }
 
-  const themeMatches =
-    error.stack.match(/\/theme-javascripts\/[\w-]+\.js/g) || [];
+  // Ignore the discourse-deprecation-collector plugin because it inserts itself
+  // into all deprecation stacks.
+  const stack = error.stack.replaceAll(
+    /^.*discourse-deprecation-collector.*$/gm,
+    ""
+  );
+
+  if (BROWSER_EXTENSION_PROTOCOLS.any((p) => stack.includes(p))) {
+    return {
+      type: "browser-extension",
+    };
+  }
+
+  const themeMatches = stack.match(/\/theme-javascripts\/[\w-]+\.js/g) || [];
 
   for (const match of themeMatches) {
     const scriptElement = document.querySelector(`script[src*="${match}"`);
@@ -30,20 +48,18 @@ export default function identifySource(error) {
 
   let plugin;
 
-  // Source-mapped:
-  plugin = plugin || error.stack.match(/plugins\/([\w-]+)\//)?.[1];
+  if (DEBUG) {
+    // Development (no fingerprinting)
+    plugin ??= stack.match(/assets\/plugins\/([\w-]+)\.js/)?.[1];
 
-  if (isDevelopment()) {
-    // Un-source-mapped:
-    plugin = plugin || error.stack.match(/assets\/plugins\/([\w-]+)\.js/)?.[1];
+    // Test files:
+    plugin ??= stack.match(/assets\/plugins\/test\/([\w-]+)_tests\.js/)?.[1];
   }
 
-  // Production mode
-  plugin =
-    plugin ||
-    error.stack.match(
-      /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.br)?\.js/
-    )?.[1];
+  // Production (with fingerprints)
+  plugin ??= stack.match(
+    /assets\/plugins\/_?([\w-]+)-[0-9a-f]+(?:\.br)?\.js/
+  )?.[1];
 
   if (plugin) {
     return {
@@ -68,6 +84,8 @@ export function consolePrefix(error, source) {
     return `[THEME ${source.id} '${source.name}']`;
   } else if (source && source.type === "plugin") {
     return `[PLUGIN ${source.name}]`;
+  } else if (source && source.type === "browser-extension") {
+    return "[BROWSER EXTENSION]";
   }
 
   return "";

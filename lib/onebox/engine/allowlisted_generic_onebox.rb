@@ -94,18 +94,18 @@ module Onebox
             html_entities = HTMLEntities.new
             d = { link: link }.merge(raw)
 
-            if !Onebox::Helpers.blank?(d[:title])
+            if d[:title].present?
               d[:title] = html_entities.decode(Onebox::Helpers.truncate(d[:title], 80))
             end
 
             d[:description] ||= d[:summary]
-            if !Onebox::Helpers.blank?(d[:description])
+            if d[:description].present?
               d[:description] = html_entities.decode(Onebox::Helpers.truncate(d[:description], 250))
             end
 
-            if !Onebox::Helpers.blank?(d[:site_name])
+            if d[:site_name].present?
               d[:domain] = html_entities.decode(Onebox::Helpers.truncate(d[:site_name], 80))
-            elsif !Onebox::Helpers.blank?(d[:domain])
+            elsif d[:domain].present?
               d[:domain] = "http://#{d[:domain]}" unless d[:domain] =~ %r{^https?://}
               d[:domain] = begin
                 URI(d[:domain]).host.to_s.sub(/^www\./, "")
@@ -118,15 +118,14 @@ module Onebox
             d[:image] = d[:image_secure_url] || d[:image_url] || d[:thumbnail_url] || d[:image]
             d[:image] = Onebox::Helpers.get_absolute_image_url(d[:image], @url)
             d[:image] = Onebox::Helpers.normalize_url_for_output(html_entities.decode(d[:image]))
-            d[:image] = nil if Onebox::Helpers.blank?(d[:image])
+            d[:image] = nil if d[:image].blank?
 
             d[:video] = d[:video_secure_url] || d[:video_url] || d[:video]
-            d[:video] = nil if Onebox::Helpers.blank?(d[:video])
+            d[:video] = nil if d[:video].blank?
 
-            d[:published_time] = d[:article_published_time] unless Onebox::Helpers.blank?(
-              d[:article_published_time],
-            )
-            if !Onebox::Helpers.blank?(d[:published_time])
+            d[:published_time] = d[:article_published_time] if d[:article_published_time].present?
+
+            if d[:published_time].present?
               d[:article_published_time] = Time.parse(d[:published_time]).strftime("%-d %b %y")
               d[:article_published_time_title] = Time.parse(d[:published_time]).strftime(
                 "%I:%M%p - %d %B %Y",
@@ -134,18 +133,18 @@ module Onebox
             end
 
             # Twitter labels
-            if !Onebox::Helpers.blank?(d[:label1]) && !Onebox::Helpers.blank?(d[:data1]) &&
+            if d[:label1].present? && d[:data1].present? &&
                  !!AllowlistedGenericOnebox.allowed_twitter_labels.find { |l|
                    d[:label1] =~ /#{l}/i
                  }
               d[:label_1] = Onebox::Helpers.truncate(d[:label1])
               d[:data_1] = Onebox::Helpers.truncate(d[:data1])
             end
-            if !Onebox::Helpers.blank?(d[:label2]) && !Onebox::Helpers.blank?(d[:data2]) &&
+            if d[:label2].present? && d[:data2].present? &&
                  !!AllowlistedGenericOnebox.allowed_twitter_labels.find { |l|
                    d[:label2] =~ /#{l}/i
                  }
-              if Onebox::Helpers.blank?(d[:label_1])
+              if d[:label_1].blank?
                 d[:label_1] = Onebox::Helpers.truncate(d[:label2])
                 d[:data_1] = Onebox::Helpers.truncate(d[:data2])
               else
@@ -154,8 +153,7 @@ module Onebox
               end
             end
 
-            if Onebox::Helpers.blank?(d[:label_1]) && !Onebox::Helpers.blank?(d[:price_amount]) &&
-                 !Onebox::Helpers.blank?(d[:price_currency])
+            if d[:label_1].blank? && d[:price_amount].present? && d[:price_currency].present?
               d[:label_1] = "Price"
               d[:data_1] = Onebox::Helpers.truncate(
                 "#{d[:price_currency].strip} #{d[:price_amount].strip}",
@@ -191,7 +189,8 @@ module Onebox
         return image_html if is_image?
         return embedded_html if is_embedded?
         return card_html if is_card?
-        return article_html if (has_text? || is_image_article?)
+
+        article_html if (has_text? || is_image_article?)
       end
 
       def is_card?
@@ -204,11 +203,11 @@ module Onebox
       end
 
       def has_text?
-        has_title? && !Onebox::Helpers.blank?(data[:description])
+        has_title? && data[:description].present?
       end
 
       def has_title?
-        !Onebox::Helpers.blank?(data[:title])
+        data[:title].present?
       end
 
       def is_image_article?
@@ -220,12 +219,11 @@ module Onebox
       end
 
       def has_image?
-        !Onebox::Helpers.blank?(data[:image])
+        data[:image].present?
       end
 
       def is_video?
-        data[:type] =~ %r{^video[/\.]} && data[:video_type] == "video/mp4" && # Many sites include 'videos' with text/html types (i.e. iframes)
-          !Onebox::Helpers.blank?(data[:video])
+        data[:type] =~ %r{^video[/\.]} && data[:video_type] == "video/mp4" && data[:video].present? # Many sites include 'videos' with text/html types (i.e. iframes)
       end
 
       def is_embedded?
@@ -257,11 +255,16 @@ module Onebox
       end
 
       def article_html
+        if data[:image]
+          data[:thumbnail_width] ||= data[:image_width] || data[:width]
+          data[:thumbnail_height] ||= data[:image_height] || data[:height]
+        end
+
         layout.to_html
       end
 
       def image_html
-        return if Onebox::Helpers.blank?(data[:image])
+        return if data[:image].blank?
 
         escaped_src = ::Onebox::Helpers.normalize_url_for_output(data[:image])
 

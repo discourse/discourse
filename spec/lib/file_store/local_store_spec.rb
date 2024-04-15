@@ -5,11 +5,11 @@ require "file_store/local_store"
 RSpec.describe FileStore::LocalStore do
   let(:store) { FileStore::LocalStore.new }
 
-  fab!(:upload) { Fabricate(:upload) }
+  fab!(:upload)
   let(:uploaded_file) { file_from_fixtures("logo.png") }
   let(:upload_path) { Discourse.store.upload_path }
 
-  fab!(:optimized_image) { Fabricate(:optimized_image) }
+  fab!(:optimized_image)
 
   describe "#store_upload" do
     it "returns a relative url" do

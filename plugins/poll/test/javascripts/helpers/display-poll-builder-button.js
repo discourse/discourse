@@ -1,5 +1,5 @@
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { click, visit } from "@ember/test-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 export async function displayPollBuilderButton() {
   await visit("/");

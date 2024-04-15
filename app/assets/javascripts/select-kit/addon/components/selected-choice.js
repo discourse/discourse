@@ -1,6 +1,6 @@
-import { guidFor } from "@ember/object/internals";
 import Component from "@ember/component";
 import { computed } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
 import UtilsMixin from "select-kit/mixins/utils";
 
 export default Component.extend(UtilsMixin, {

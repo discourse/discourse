@@ -1,26 +1,22 @@
+import { h } from "virtual-dom";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
+import I18n from "discourse-i18n";
 
 export default createWidget("link", {
   tagName: "a",
 
   href(attrs) {
-    const route = attrs.route;
-    if (route) {
-      const router = this.register.lookup("router:main");
-      if (router && router._routerMicrolib) {
-        const params = [route];
-        if (attrs.model) {
-          params.push(attrs.model);
-        }
-        return getURL(
-          router._routerMicrolib.generate.apply(router._routerMicrolib, params)
-        );
+    if (attrs.route) {
+      const router = this.register.lookup("service:router");
+
+      if (attrs.model) {
+        return router.urlFor(attrs.route, attrs.model);
+      } else {
+        return router.urlFor(attrs.route);
       }
     } else {
       return getURL(attrs.href);

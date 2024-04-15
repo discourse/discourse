@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { helperContext } from "discourse-common/lib/helpers";

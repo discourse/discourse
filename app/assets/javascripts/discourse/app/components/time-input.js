@@ -1,7 +1,7 @@
-import { action, computed } from "@ember/object";
 import Component from "@ember/component";
-import { isPresent } from "@ember/utils";
+import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { isPresent } from "@ember/utils";
 
 function convertMinutes(num) {
   return { hours: Math.floor(num / 60), minutes: num % 60 };
@@ -53,8 +53,8 @@ export default Component.extend({
 
     if (
       !isPresent(this.date) &&
-      !isPresent(this.attrs.hours) &&
-      !isPresent(this.attrs.minutes)
+      !isPresent(this.hours) &&
+      !isPresent(this.minutes)
     ) {
       this.setProperties({
         hours: null,
@@ -89,20 +89,19 @@ export default Component.extend({
     // theres 1440 minutes in a day
     // and 1440 / 15 = 96
     let i = 0;
-    while (i < 96) {
+    let option = start;
+    options.push(option);
+    while (i < 95) {
       // while diff with minimumTime is less than one hour
       // use 15 minutes steps and then 30 minutes
-      const minutes = this.minimumTime ? (i <= 4 ? 15 : 30) : 15;
-      const option = start + i * minutes;
-
+      const minutes = this.minimumTime ? (i <= 3 ? 15 : 30) : 15;
+      option = option + minutes;
       // when start is higher than 0 we will reach 1440 minutes
-      // before the 96 iterations
+      // before the 95 iterations
       if (option > 1440) {
         break;
       }
-
       options.push(option);
-
       i++;
     }
 
@@ -112,15 +111,15 @@ export default Component.extend({
 
     options = options.sort((a, b) => a - b);
 
-    return options.map((option) => {
-      let name = convertMinutesToString(option);
+    return options.map((opt) => {
+      let name = convertMinutesToString(opt);
       let label;
 
       if (this.date && this.relativeDate) {
         const diff = this.date
           .clone()
           .startOf("day")
-          .add(option, "minutes")
+          .add(opt, "minutes")
           .diff(this.relativeDate, "minutes");
 
         if (diff < 1440) {
@@ -131,7 +130,7 @@ export default Component.extend({
       }
 
       return {
-        id: option,
+        id: opt,
         name,
         label,
         title: name,

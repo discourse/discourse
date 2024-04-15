@@ -1,18 +1,21 @@
+import { getOwner } from "@ember/application";
+import Component from "@ember/component";
+import { alias } from "@ember/object/computed";
+import { on } from "@ember/object/evented";
+import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import $ from "jquery";
+import { topicTitleDecorators } from "discourse/components/topic-title";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import DiscourseURL, { groupPath } from "discourse/lib/url";
+import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, {
   bind,
   observes,
 } from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
-import { alias } from "@ember/object/computed";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { on } from "@ember/object/evented";
-import { schedule } from "@ember/runloop";
-import { topicTitleDecorators } from "discourse/components/topic-title";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { htmlSafe } from "@ember/template";
+import I18n from "discourse-i18n";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -34,12 +37,16 @@ export function showEntrance(e) {
 }
 
 export function navigateToTopic(topic, href) {
-  this.appEvents.trigger("header:update-topic", topic);
+  const historyStore = getOwner(this).lookup("service:history-store");
+  historyStore.set("lastTopicIdViewed", topic.id);
+
   DiscourseURL.routeTo(href || topic.get("url"));
   return false;
 }
 
 export default Component.extend({
+  router: service(),
+  historyStore: service(),
   tagName: "tr",
   classNameBindings: [":topic-list-item", "unboundClassNames", "topic.visited"],
   attributeBindings: ["data-topic-id", "role", "ariaLevel:aria-level"],
@@ -50,7 +57,17 @@ export default Component.extend({
     this.renderTopicListItem();
   },
 
-  @observes("topic.pinned")
+  // Already-rendered topic is marked as highlighted
+  // Ideally this should be a modifier... but we can't do that
+  // until this component has its tagName removed.
+  @observes("topic.highlight")
+  topicHighlightChanged() {
+    if (this.topic.highlight) {
+      this._highlightIfNeeded();
+    }
+  },
+
+  @observes("topic.pinned", "expandGloballyPinned", "expandAllPinned")
   renderTopicListItem() {
     const template = findRawTemplate("list/topic-list-item");
     if (template) {
@@ -59,6 +76,9 @@ export default Component.extend({
         htmlSafe(template(this, RUNTIME_OPTIONS))
       );
       schedule("afterRender", () => {
+        if (this.isDestroyed || this.isDestroying) {
+          return;
+        }
         if (this.selected && this.selected.includes(this.topic)) {
           this.element.querySelector("input.bulk-select").checked = true;
         }
@@ -113,6 +133,17 @@ export default Component.extend({
     ).classList;
 
     nodeClassList.toggle("read", !data.show_indicator);
+  },
+
+  @discourseComputed("topic.participant_groups")
+  participantGroups(groupNames) {
+    if (!groupNames) {
+      return [];
+    }
+
+    return groupNames.map((name) => {
+      return { name, url: groupPath(name) };
+    });
   },
 
   @discourseComputed("topic.id")
@@ -219,17 +250,19 @@ export default Component.extend({
     }
 
     const topic = this.topic;
-    if (e.target.classList.contains("bulk-select")) {
+    const target = e.target;
+    const classList = target.classList;
+    if (classList.contains("bulk-select")) {
       const selected = this.selected;
 
-      if (e.target.checked) {
+      if (target.checked) {
         selected.addObject(topic);
 
         if (this.lastChecked && e.shiftKey) {
           const bulkSelects = Array.from(
               document.querySelectorAll("input.bulk-select")
             ),
-            from = bulkSelects.indexOf(e.target),
+            from = bulkSelects.indexOf(target),
             to = bulkSelects.findIndex((el) => el.id === this.lastChecked.id),
             start = Math.min(from, to),
             end = Math.max(from, to);
@@ -242,19 +275,22 @@ export default Component.extend({
             });
         }
 
-        this.set("lastChecked", e.target);
+        this.set("lastChecked", target);
       } else {
         selected.removeObject(topic);
         this.set("lastChecked", null);
       }
     }
 
-    if (e.target.classList.contains("raw-topic-link")) {
+    if (
+      classList.contains("raw-topic-link") ||
+      classList.contains("post-activity")
+    ) {
       if (wantsNewWindow(e)) {
         return true;
       }
       e.preventDefault();
-      return this.navigateToTopic(topic, e.target.getAttribute("href"));
+      return this.navigateToTopic(topic, target.getAttribute("href"));
     }
 
     // make full row click target on mobile, due to size constraints
@@ -271,7 +307,10 @@ export default Component.extend({
       return this.navigateToTopic(topic, topic.lastUnreadUrl);
     }
 
-    if (e.target.closest("a.topic-status")) {
+    if (
+      classList.contains("d-icon-thumbtack") &&
+      target.closest("a.topic-status")
+    ) {
       this.topic.togglePinnedForUser();
       return false;
     }
@@ -280,6 +319,13 @@ export default Component.extend({
   },
 
   unhandledRowClick() {},
+
+  keyDown(e) {
+    if (e.key === "Enter" && e.target.classList.contains("post-activity")) {
+      e.preventDefault();
+      return this.navigateToTopic(this.topic, e.target.getAttribute("href"));
+    }
+  },
 
   navigateToTopic,
 
@@ -305,8 +351,11 @@ export default Component.extend({
 
   _highlightIfNeeded: on("didInsertElement", function () {
     // highlight the last topic viewed
-    if (this.session.get("lastTopicIdViewed") === this.get("topic.id")) {
-      this.session.set("lastTopicIdViewed", null);
+    const lastViewedTopicId = this.historyStore.get("lastTopicIdViewed");
+    const isLastViewedTopic = lastViewedTopicId === this.topic.id;
+
+    if (isLastViewedTopic) {
+      this.historyStore.delete("lastTopicIdViewed");
       this.highlight({ isLastViewedTopic: true });
     } else if (this.get("topic.highlight")) {
       // highlight new topics that have been loaded from the server or the one we just created
@@ -330,7 +379,7 @@ export default Component.extend({
   },
 
   _shouldFocusLastVisited() {
-    return !this.site.mobileView && this.focusLastVisitedTopic;
+    return this.site.desktopView && this.focusLastVisitedTopic;
   },
 
   _mainLinkElement() {

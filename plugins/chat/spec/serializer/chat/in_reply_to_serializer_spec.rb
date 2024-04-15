@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::InReplyToSerializer do
   subject(:serializer) { described_class.new(message, scope: guardian, root: nil) }
 
-  fab!(:chat_channel) { Fabricate(:chat_channel) }
+  fab!(:chat_channel)
   let(:guardian) { Guardian.new(Fabricate(:user)) }
 
   describe "#user" do

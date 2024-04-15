@@ -63,7 +63,7 @@ class SiteSettings::DefaultsProvider
   end
 
   def has_setting?(name)
-    has_key?(name.to_sym) || has_key?("#{name.to_s}?".to_sym) || name.to_sym == :default_locale
+    has_key?(name.to_sym) || has_key?("#{name}?".to_sym) || name.to_sym == :default_locale
   end
 
   private

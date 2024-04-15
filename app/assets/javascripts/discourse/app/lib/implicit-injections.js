@@ -1,12 +1,11 @@
 import { getOwner } from "@ember/application";
-import EmberObject, { computed } from "@ember/object";
-
-import Controller from "@ember/controller";
 import Component from "@ember/component";
+import Controller from "@ember/controller";
+import EmberObject, { computed } from "@ember/object";
 import Route from "@ember/routing/route";
-import RestModel from "discourse/models/rest";
-import RestAdapter from "discourse/adapters/rest";
 import Service from "@ember/service";
+import RestAdapter from "discourse/adapters/rest";
+import RestModel from "discourse/models/rest";
 
 const disableImplicitInjectionsKey = Symbol("DISABLE_IMPLICIT_INJECTIONS");
 
@@ -61,7 +60,7 @@ let alreadyRegistered = false;
  * https://guides.emberjs.com/release/applications/dependency-injection/
  *
  * Incremental migration to newer patterns can be achieved using the `@disableImplicitInjections`
- * helper (availble on `discourse/lib/implicit-injections')
+ * helper (available on `discourse/lib/implicit-injections')
  */
 export function registerDiscourseImplicitInjections() {
   if (alreadyRegistered) {

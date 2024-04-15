@@ -1,19 +1,21 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { equal, reads } from "@ember/object/computed";
+import { service } from "@ember/service";
+import CreateInvite from "discourse/components/modal/create-invite";
+import CreateInviteBulk from "discourse/components/modal/create-invite-bulk";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import Invite from "discourse/models/invite";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseComputed, {
   debounce,
   observes,
 } from "discourse-common/utils/decorators";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
-import Invite from "discourse/models/invite";
-import I18n from "I18n";
-import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   dialog: service(),
+  modal: service(),
   user: null,
   model: null,
   filter: null,
@@ -71,20 +73,17 @@ export default Controller.extend({
 
   @action
   createInvite() {
-    const controller = showModal("create-invite");
-    controller.set("invites", this.model.invites);
+    this.modal.show(CreateInvite, { model: { invites: this.model.invites } });
   },
 
   @action
   createInviteCsv() {
-    showModal("create-invite-bulk");
+    this.modal.show(CreateInviteBulk);
   },
 
   @action
   editInvite(invite) {
-    const controller = showModal("create-invite");
-    controller.set("editing", true);
-    controller.setInvite(invite);
+    this.modal.show(CreateInvite, { model: { editing: true, invite } });
   },
 
   @action

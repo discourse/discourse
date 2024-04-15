@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe User do
-  fab!(:group) { Fabricate(:group) }
-
   subject(:user) { Fabricate(:user, last_seen_at: 1.day.ago) }
+
+  fab!(:group)
+
+  it_behaves_like "it has custom fields"
 
   def user_error_message(*keys)
     I18n.t(:"activerecord.errors.models.user.attributes.#{keys.join(".")}")
@@ -11,8 +13,31 @@ RSpec.describe User do
 
   it do
     is_expected.to have_many(:pending_posts).class_name("ReviewableQueuedPost").with_foreign_key(
-      :created_by_id,
+      :target_created_by_id,
     )
+  end
+
+  describe ".in_any_groups?" do
+    fab!(:group)
+
+    it "returns true if any of the group IDs are the 'everyone' auto group" do
+      expect(user.in_any_groups?([group.id, Group::AUTO_GROUPS[:everyone]])).to eq(true)
+    end
+
+    it "returns true if the user is in the group" do
+      expect(user.in_any_groups?([group.id])).to eq(false)
+      group.add(user)
+      user.reload
+      expect(user.in_any_groups?([group.id])).to eq(true)
+    end
+
+    it "always returns true for system user for automated groups" do
+      GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+      Discourse.system_user.reload
+      expect(Discourse.system_user.in_any_groups?([group.id])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:trust_level_4]])).to eq(true)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
+    end
   end
 
   describe "Associations" do
@@ -28,16 +53,16 @@ RSpec.describe User do
 
   describe "Callbacks" do
     describe "default sidebar section links" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
 
-      fab!(:secured_category) do |category|
+      fab!(:secured_category) do
         category = Fabricate(:category)
         category.permissions = { "staff" => :full }
         category.save!
         category
       end
 
-      fab!(:tag) { Fabricate(:tag) }
+      fab!(:tag)
       fab!(:hidden_tag) { Fabricate(:tag) }
       fab!(:staff_tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
@@ -46,86 +71,20 @@ RSpec.describe User do
       before do
         SiteSetting.navigation_menu = "sidebar"
         SiteSetting.tagging_enabled = true
-        SiteSetting.default_sidebar_categories = "#{category.id}|#{secured_category.id}"
-        SiteSetting.default_sidebar_tags = "#{tag.name}|#{hidden_tag.name}"
+        SiteSetting.default_navigation_menu_categories = "#{category.id}|#{secured_category.id}"
+        SiteSetting.default_navigation_menu_tags = "#{tag.name}|#{hidden_tag.name}"
       end
 
-      it "creates the right sidebar section link records for categories and tags that a user can see" do
+      it "creates sidebar section link records for categories and tags that have been configured as defaults" do
         user = Fabricate(:user)
 
         expect(
           SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
-        ).to contain_exactly(category.id)
-
-        expect(
-          SidebarSectionLink.where(linkable_type: "Tag", user_id: user.id).pluck(:linkable_id),
-        ).to contain_exactly(tag.id)
-
-        admin = Fabricate(:admin)
-
-        expect(
-          SidebarSectionLink.where(linkable_type: "Category", user_id: admin.id).pluck(
-            :linkable_id,
-          ),
         ).to contain_exactly(category.id, secured_category.id)
 
         expect(
-          SidebarSectionLink.where(linkable_type: "Tag", user_id: admin.id).pluck(:linkable_id),
+          SidebarSectionLink.where(linkable_type: "Tag", user_id: user.id).pluck(:linkable_id),
         ).to contain_exactly(tag.id, hidden_tag.id)
-      end
-
-      it "should create and remove the right sidebar section link records when user is promoted/demoted as an admin" do
-        user = Fabricate(:user)
-        another_category = Fabricate(:category)
-        another_tag = Fabricate(:tag)
-
-        # User has customized their sidebar categories and tags
-        SidebarSectionLink.where(user: user).delete_all
-        SidebarSectionLinksUpdater.update_category_section_links(
-          user,
-          category_ids: [another_category.id],
-        )
-        SidebarSectionLinksUpdater.update_tag_section_links(user, tag_names: [another_tag.name])
-
-        # A user promoted to admin now has any default categories/tags they didn't previously have access to
-        user.update(admin: true)
-        expect(
-          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
-        ).to contain_exactly(another_category.id, secured_category.id)
-        expect(
-          SidebarSectionLink.where(linkable_type: "Tag", user_id: user.id).pluck(:linkable_id),
-        ).to contain_exactly(another_tag.id, hidden_tag.id)
-
-        # User still has their customized sidebar categories and tags after demotion
-        user.update(admin: false)
-        expect(
-          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
-        ).to contain_exactly(another_category.id)
-        expect(
-          SidebarSectionLink.where(linkable_type: "Tag", user_id: user.id).pluck(:linkable_id),
-        ).to contain_exactly(another_tag.id)
-      end
-
-      it "should not receive any new categories w/ suppress secured categories from admin enabled" do
-        SiteSetting.suppress_secured_categories_from_admin = true
-        user = Fabricate(:user)
-        SidebarSectionLink.where(user: user).delete_all # User has customized their sidebar categories
-        user.update(admin: true)
-        expect(
-          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
-        ).to be_empty
-        user.update(admin: false)
-        expect(
-          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
-        ).to be_empty
-      end
-
-      it "should not create any sidebar section link records when navigation_menu site setting is still legacy" do
-        SiteSetting.navigation_menu = "legacy"
-
-        user = Fabricate(:user)
-
-        expect(SidebarSectionLink.exists?(user_id: user.id)).to eq(false)
       end
 
       it "should not create any sidebar section link records for staged users" do
@@ -142,7 +101,8 @@ RSpec.describe User do
       end
 
       it "should not create any sidebar section link records for non human users" do
-        user = Fabricate(:user, id: -Time.now.to_i)
+        id = -Time.now.to_i
+        user = Fabricate(:user, id: id)
 
         expect(SidebarSectionLink.exists?(user: user)).to eq(false)
       end
@@ -154,6 +114,19 @@ RSpec.describe User do
 
         expect(SidebarSectionLink.exists?(linkable_type: "Category", user_id: user.id)).to eq(true)
         expect(SidebarSectionLink.exists?(linkable_type: "Tag", user_id: user.id)).to eq(false)
+      end
+    end
+
+    describe "#change_display_name" do
+      it "enqueues a job to retroactively update display name in quotes, etc." do
+        expect_enqueued_with(
+          job: :change_display_name,
+          args: {
+            user_id: user.id,
+            old_name: "Bruce Wayne",
+            new_name: "Batman",
+          },
+        ) { user.update(name: "Batman") }
       end
     end
   end
@@ -310,6 +283,11 @@ RSpec.describe User do
 
             it { is_expected.to be_valid }
           end
+          context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+            before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+            it { is_expected.to be_valid }
+          end
         end
 
         context "when watched words are of type 'Censor'" do
@@ -322,6 +300,15 @@ RSpec.describe User do
             it "censors the words upon saving" do
               user.save!
               expect(user_field_value).to eq "■■■■■■■■ word"
+            end
+
+            context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+              before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+              it "does not censor the words upon saving" do
+                user.save!
+                expect(user_field_value).to eq "censored word"
+              end
             end
           end
 
@@ -350,6 +337,14 @@ RSpec.describe User do
             it "replaces the words upon saving" do
               user.save!
               expect(user_field_value).to eq "word replaced"
+            end
+            context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+              before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+              it "does not replace anything" do
+                user.save!
+                expect(user_field_value).to eq "word to replace"
+              end
             end
           end
 
@@ -447,7 +442,7 @@ RSpec.describe User do
   describe "#count_by_signup_date" do
     before(:each) do
       User.destroy_all
-      freeze_time DateTime.parse("2017-02-01 12:00")
+      freeze_time_safe
       Fabricate(:user)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 1.day.ago)
@@ -467,7 +462,7 @@ RSpec.describe User do
   end
 
   describe ".enqueue_welcome_message" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "enqueues the system message" do
       SiteSetting.send_welcome_message = true
@@ -496,7 +491,7 @@ RSpec.describe User do
 
   describe "enqueue_staff_welcome_message" do
     fab!(:first_admin) { Fabricate(:admin) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "enqueues message for admin" do
       expect { user.grant_admin! }.to change { Jobs::SendSystemMessage.jobs.count }.by 1
@@ -530,7 +525,7 @@ RSpec.describe User do
 
   describe "reviewable" do
     let(:user) { Fabricate(:user, active: false) }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     before { Jobs.run_immediately! }
 
@@ -589,7 +584,7 @@ RSpec.describe User do
     fab!(:posts) { [post1, post2, post3] }
     fab!(:post_ids) { [post1.id, post2.id, post3.id] }
     let(:guardian) { Guardian.new(Fabricate(:admin)) }
-    fab!(:reviewable_queued_post) { Fabricate(:reviewable_queued_post, created_by: user) }
+    fab!(:reviewable_queued_post) { Fabricate(:reviewable_queued_post, target_created_by: user) }
 
     it "deletes only one batch of posts" do
       post2
@@ -625,35 +620,33 @@ RSpec.describe User do
   end
 
   describe "new" do
-    subject { Fabricate.build(:user) }
+    subject(:user) { Fabricate.build(:user) }
 
     it { is_expected.to be_valid }
     it { is_expected.not_to be_admin }
     it { is_expected.not_to be_approved }
 
     it "is properly initialized" do
-      expect(subject.approved_at).to be_blank
-      expect(subject.approved_by_id).to be_blank
+      expect(user.approved_at).to be_blank
+      expect(user.approved_by_id).to be_blank
     end
 
     it "triggers an extensibility event" do
-      event = DiscourseEvent.track_events { subject.save! }.first
+      event = DiscourseEvent.track_events { user.save! }.first
 
       expect(event[:event_name]).to eq(:user_created)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(user)
     end
 
     context "with after_save" do
-      before { subject.save! }
+      before { user.save! }
 
       it "has correct settings" do
-        expect(subject.email_tokens).to be_present
-        expect(subject.user_stat).to be_present
-        expect(subject.user_profile).to be_present
-        expect(subject.user_option.email_messages_level).to eq(
-          UserOption.email_level_types[:always],
-        )
-        expect(subject.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
+        expect(user.email_tokens).to be_present
+        expect(user.user_stat).to be_present
+        expect(user.user_profile).to be_present
+        expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
+        expect(user.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
       end
     end
 
@@ -740,41 +733,37 @@ RSpec.describe User do
   end
 
   describe "staff and regular users" do
-    let(:user) { Fabricate.build(:user) }
+    subject(:user) { Fabricate.build(:user) }
 
     describe "#staff?" do
-      subject { user.staff? }
-
-      it { is_expected.to eq(false) }
+      it { is_expected.not_to be_staff }
 
       context "for a moderator user" do
         before { user.moderator = true }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to be_staff }
       end
 
       context "for an admin user" do
         before { user.admin = true }
 
-        it { is_expected.to eq(true) }
+        it { is_expected.to be_staff }
       end
     end
 
     describe "#regular?" do
-      subject { user.regular? }
-
-      it { is_expected.to eq(true) }
+      it { is_expected.to be_regular }
 
       context "for a moderator user" do
         before { user.moderator = true }
 
-        it { is_expected.to eq(false) }
+        it { is_expected.not_to be_regular }
       end
 
       context "for an admin user" do
         before { user.admin = true }
 
-        it { is_expected.to eq(false) }
+        it { is_expected.not_to be_regular }
       end
     end
   end
@@ -889,7 +878,7 @@ RSpec.describe User do
   end
 
   describe "username format" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     def assert_bad(username)
       user.username = username
@@ -1205,7 +1194,7 @@ RSpec.describe User do
   end
 
   describe "previous_visit_at" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
     let!(:third_visit_date) { 5.hours.from_now }
@@ -1242,7 +1231,7 @@ RSpec.describe User do
   end
 
   describe "update_last_seen!" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let!(:first_visit_date) { Time.zone.now }
     let!(:second_visit_date) { 2.hours.from_now }
 
@@ -1307,7 +1296,7 @@ RSpec.describe User do
   end
 
   describe "last_seen_at" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "should have a blank last seen on creation" do
       expect(user.last_seen_at).to eq(nil)
@@ -1359,7 +1348,7 @@ RSpec.describe User do
       describe "after 3 days" do
         it "should log a second visited_at record when we log an update later" do
           user.update_last_seen!
-          future_date = freeze_time(3.days.from_now)
+          freeze_time(3.days.from_now)
           user.update_last_seen!
 
           expect(user.user_visits.count).to eq(2)
@@ -1369,7 +1358,7 @@ RSpec.describe User do
   end
 
   describe "email_confirmed?" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     context "when email has not been confirmed yet" do
       it "should return false" do
@@ -1395,8 +1384,8 @@ RSpec.describe User do
   end
 
   describe "flag_linked_posts_as_spam" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:admin)
     fab!(:post) do
       PostCreator.new(
         user,
@@ -1693,7 +1682,7 @@ RSpec.describe User do
 
   describe "update_posts_read!" do
     context "with a UserVisit record" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       let!(:now) { Time.zone.now }
       before { user.update_last_seen!(now) }
       after { reset_last_seen_cache!(user) }
@@ -1715,7 +1704,7 @@ RSpec.describe User do
   end
 
   describe "primary_group_id" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "has no primary_group_id by default" do
       expect(user.primary_group_id).to eq(nil)
@@ -1792,8 +1781,20 @@ RSpec.describe User do
     end
   end
 
+  describe "real users" do
+    it "should find system user if you allow it" do
+      ids =
+        User
+          .real(allowed_bot_user_ids: [Discourse.system_user.id])
+          .where(id: Discourse.system_user.id)
+          .pluck(:id)
+      expect(ids).to eq([Discourse.system_user.id])
+    end
+  end
+
   describe "#purge_unactivated" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:admin) { Fabricate(:user) }
     fab!(:unactivated) { Fabricate(:user, active: false) }
     fab!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
     fab!(:unactivated_old_with_system_pm) do
@@ -1802,11 +1803,17 @@ RSpec.describe User do
     fab!(:unactivated_old_with_human_pm) do
       Fabricate(:user, active: false, created_at: 2.months.ago)
     end
-    fab!(:unactivated_old_with_post) { Fabricate(:user, active: false, created_at: 1.month.ago) }
+    fab!(:unactivated_old_with_post) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
+    fab!(:unactivated_by_admin) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
+    fab!(:unactivated_by_system) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
 
     before do
-      Group.refresh_automatic_groups!
-
       PostCreator.new(
         Discourse.system_user,
         title: "Welcome to our Discourse",
@@ -1828,12 +1835,30 @@ RSpec.describe User do
         title: "Test topic from a user",
         raw: "This is a sample message",
       ).create
+
+      UserHistory.create!(
+        action: UserHistory.actions[:deactivate_user],
+        acting_user: admin,
+        target_user: unactivated_by_admin,
+      )
+      UserHistory.create!(
+        action: UserHistory.actions[:deactivate_user],
+        acting_user: Discourse.system_user,
+        target_user: unactivated_by_system,
+      )
     end
 
-    it "should only remove old, unactivated users" do
+    it "should only remove old, unactivated users that haven't been manually deactivated" do
       User.purge_unactivated
       expect(User.real.all).to match_array(
-        [user, unactivated, unactivated_old_with_human_pm, unactivated_old_with_post],
+        [
+          user,
+          unactivated,
+          unactivated_old_with_human_pm,
+          unactivated_old_with_post,
+          unactivated_by_admin,
+          admin,
+        ],
       )
     end
 
@@ -1848,6 +1873,9 @@ RSpec.describe User do
           unactivated_old_with_system_pm,
           unactivated_old_with_human_pm,
           unactivated_old_with_post,
+          unactivated_by_admin,
+          unactivated_by_system,
+          admin,
         ],
       )
     end
@@ -1981,8 +2009,8 @@ RSpec.describe User do
   end
 
   describe "staff info" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:moderator)
 
     describe "#number_of_flags_given" do
       it "doesn't count disagreed flags" do
@@ -2029,13 +2057,21 @@ RSpec.describe User do
 
     describe "#number_of_rejected_posts" do
       it "counts rejected posts" do
-        Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:rejected])
+        Fabricate(
+          :reviewable_queued_post,
+          target_created_by: user,
+          status: Reviewable.statuses[:rejected],
+        )
 
         expect(user.number_of_rejected_posts).to eq(1)
       end
 
       it "ignore non-rejected posts" do
-        Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:approved])
+        Fabricate(
+          :reviewable_queued_post,
+          target_created_by: user,
+          status: Reviewable.statuses[:approved],
+        )
 
         expect(user.number_of_rejected_posts).to eq(0)
       end
@@ -2164,7 +2200,7 @@ RSpec.describe User do
   end
 
   describe "#logged_out" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "should publish the right message" do
       message = MessageBus.track_publish("/logout/#{user.id}") { user.logged_out }.first
@@ -2198,22 +2234,6 @@ RSpec.describe User do
       end
     end
 
-    describe "when user is trust level 2" do
-      it "should return the right value" do
-        user.update!(trust_level: TrustLevel[2])
-
-        expect(user.read_first_notification?).to eq(true)
-      end
-    end
-
-    describe "when user is an old user" do
-      it "should return the right value" do
-        user.update!(first_seen_at: 1.year.ago)
-
-        expect(user.read_first_notification?).to eq(true)
-      end
-    end
-
     describe "when user skipped new user tips" do
       it "should return the right value" do
         user.user_option.update!(skip_new_user_tips: true)
@@ -2224,7 +2244,7 @@ RSpec.describe User do
   end
 
   describe "#featured_user_badges" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let!(:user_badge_tl1) do
       UserBadge.create(
         badge_id: Badge::BasicUser,
@@ -2258,8 +2278,8 @@ RSpec.describe User do
   end
 
   describe ".clear_global_notice_if_needed" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:user)
+    fab!(:admin)
 
     before do
       SiteSetting.has_login_hint = true
@@ -2349,15 +2369,15 @@ RSpec.describe User do
     end
 
     it "has the correct counts" do
-      notification = Fabricate(:notification, user: user)
-      notification2 = Fabricate(:notification, user: user, read: true)
-      notification3 =
+      _notification = Fabricate(:notification, user: user)
+      _notification2 = Fabricate(:notification, user: user, read: true)
+      _notification3 =
         Fabricate(
           :notification,
           user: user,
           notification_type: Notification.types[:private_message],
         )
-      notification4 =
+      _notification4 =
         Fabricate(
           :notification,
           user: user,
@@ -2370,15 +2390,12 @@ RSpec.describe User do
           .first
 
       expect(message.data[:unread_notifications]).to eq(1)
-      # NOTE: because of deprecation this will be equal to unread_high_priority_notifications,
-      #       to be removed in 2.5
-      expect(message.data[:unread_private_messages]).to eq(2)
       expect(message.data[:unread_high_priority_notifications]).to eq(2)
     end
 
     it "does not publish to the /notification channel for users who have not been seen in > 30 days" do
-      notification = Fabricate(:notification, user: user)
-      notification2 = Fabricate(:notification, user: user, read: true)
+      _notification = Fabricate(:notification, user: user)
+      _notification2 = Fabricate(:notification, user: user, read: true)
       user.update(last_seen_at: 31.days.ago)
 
       message =
@@ -2452,7 +2469,7 @@ RSpec.describe User do
   end
 
   describe "#unread_notifications" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     before { User.max_unread_notifications = 3 }
 
     after { User.max_unread_notifications = nil }
@@ -2485,7 +2502,7 @@ RSpec.describe User do
   end
 
   describe "#unread_high_priority_notifications" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "only returns an unread count of PM and bookmark reminder notifications" do
       Notification.create!(user_id: user.id, notification_type: 1, read: false, data: "{}")
@@ -2602,7 +2619,7 @@ RSpec.describe User do
   end
 
   describe "#secondary_emails" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "only contains secondary emails" do
       expect(user.user_emails.secondary).to eq([])
@@ -2934,7 +2951,7 @@ RSpec.describe User do
       it "only includes enabled totp 2FA" do
         enabled_totp_2fa =
           Fabricate(:user_second_factor_totp, user: user, name: "Enabled TOTP", enabled: true)
-        disabled_totp_2fa =
+        _disabled_totp_2fa =
           Fabricate(:user_second_factor_totp, user: user, name: "Disabled TOTP", enabled: false)
 
         expect(user.totps.map(&:id)).to eq([enabled_totp_2fa.id])
@@ -2950,7 +2967,7 @@ RSpec.describe User do
             name: "Enabled YubiKey",
             enabled: true,
           )
-        disabled_security_key_2fa =
+        _disabled_security_key_2fa =
           Fabricate(
             :user_security_key_with_random_credential,
             user: user,
@@ -3025,7 +3042,7 @@ RSpec.describe User do
   end
 
   describe "#recent_time_read" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:user2) { Fabricate(:user) }
 
     before_all do
@@ -3206,7 +3223,7 @@ RSpec.describe User do
   end
 
   describe "#whisperer?" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     it "returns true for an admin user" do
       SiteSetting.whispers_allowed_groups = "#{group.id}"
@@ -3235,7 +3252,7 @@ RSpec.describe User do
     end
 
     it "returns false if no whispers groups exist" do
-      expect(subject.whisperer?).to eq(false)
+      expect(user.whisperer?).to eq(false)
     end
   end
 
@@ -3371,16 +3388,39 @@ RSpec.describe User do
       last_notification = Fabricate(:notification, user: user)
       deleted_notification = Fabricate(:notification, user: user)
       deleted_notification.topic.trash!
-      someone_else_notification = Fabricate(:notification, user: Fabricate(:user))
+      _someone_else_notification = Fabricate(:notification, user: Fabricate(:user))
 
       expect(user.bump_last_seen_notification!).to eq(true)
       expect(user.reload.seen_notification_id).to eq(last_notification.id)
     end
   end
 
+  describe "#secured_sidebar_category_ids" do
+    fab!(:user)
+    fab!(:category)
+    fab!(:group)
+    fab!(:secured_category) { Fabricate(:private_category, group: group) }
+
+    fab!(:category_sidebar_section_link) do
+      Fabricate(:category_sidebar_section_link, user: user, linkable: category)
+    end
+
+    fab!(:secured_category_sidebar_section_link) do
+      Fabricate(:category_sidebar_section_link, user: user, linkable: secured_category)
+    end
+
+    it "should only return the category ids of category sidebar section link records that the user is allowed to see" do
+      expect(user.secured_sidebar_category_ids).to contain_exactly(category.id)
+
+      user.update!(admin: true)
+
+      expect(user.secured_sidebar_category_ids).to contain_exactly(category.id, secured_category.id)
+    end
+  end
+
   describe "#visible_sidebar_tags" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:user)
+    fab!(:tag)
     fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
     fab!(:staff_tag_group) do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"])
@@ -3402,8 +3442,8 @@ RSpec.describe User do
   end
 
   describe "#secure_category_ids" do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:admin)
+    fab!(:group)
     fab!(:private_category) { Fabricate(:private_category, group: group) }
 
     it "allows admin to see all secure categories" do

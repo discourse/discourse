@@ -25,7 +25,7 @@ class Admin::EmailController < Admin::AdminController
       AND post_reply_keys.user_id = email_logs.user_id
     SQL
 
-    email_logs = filter_logs(email_logs, params)
+    email_logs = filter_logs(email_logs, params, include_ccs: params[:type] == "group_smtp")
 
     if (reply_key = params[:reply_key]).present?
       email_logs =
@@ -167,21 +167,16 @@ class Admin::EmailController < Admin::AdminController
       end
     end
 
-    # TODO: 2022-05-01 Remove this route once all sites have migrated over
-    # to using the new email_encoded param.
     if deprecated_email_param_used
-      render plain:
-               "warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded email_encoded parameter instead. email has been received and is queued for processing"
+      warning =
+        "warning: the email parameter is deprecated. all POST requests to this route should be sent with a base64 strict encoded email_encoded parameter instead. email has been received and is queued for processing"
+
+      Discourse.deprecate(warning, drop_from: "3.3.0")
+
+      render plain: warning
     else
       render plain: "email has been received and is queued for processing"
     end
-  end
-
-  def raw_email
-    params.require(:id)
-    incoming_email = IncomingEmail.find(params[:id].to_i)
-    text, html = Email.extract_parts(incoming_email.raw)
-    render json: { raw_email: incoming_email.raw, text_part: text, html_part: html }
   end
 
   def incoming
@@ -228,7 +223,7 @@ class Admin::EmailController < Admin::AdminController
 
   private
 
-  def filter_logs(logs, params)
+  def filter_logs(logs, params, include_ccs: false)
     table_name = logs.table_name
 
     logs =
@@ -240,9 +235,14 @@ class Admin::EmailController < Admin::AdminController
         .limit(50)
 
     logs = logs.where("users.username ILIKE ?", "%#{params[:user]}%") if params[:user].present?
-    logs = logs.where("#{table_name}.to_address ILIKE ?", "%#{params[:address]}%") if params[
-      :address
-    ].present?
+
+    if params[:address].present?
+      query = "#{table_name}.to_address ILIKE :address"
+      query += " OR #{table_name}.cc_addresses ILIKE :address" if include_ccs
+
+      logs = logs.where(query, { address: "%#{params[:address]}%" })
+    end
+
     logs = logs.where("#{table_name}.email_type ILIKE ?", "%#{params[:type]}%") if params[
       :type
     ].present?

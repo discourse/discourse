@@ -1,9 +1,9 @@
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module(
   "Integration | Component | user-menu | reviewables-list",
@@ -12,14 +12,13 @@ module(
 
     const template = hbs`<UserMenu::ReviewablesList/>`;
 
-    test("has a 'show all' link", async function (assert) {
+    test("show all button for reviewable notifications", async function (assert) {
       await render(template);
-      const showAll = query(".panel-body-bottom a.show-all");
-      assert.ok(showAll.href.endsWith("/review"), "links to the /review page");
+      const showAll = query(".panel-body-bottom .show-all");
       assert.strictEqual(
         showAll.title,
         I18n.t("user_menu.reviewable.view_all"),
-        "the 'show all' link has a title"
+        "has the correct title"
       );
     });
 

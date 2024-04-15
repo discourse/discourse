@@ -198,10 +198,18 @@ class DiscoursePoll::Poll
 
   def self.grouped_poll_results(user, post_id, poll_name, user_field_name)
     raise Discourse::InvalidParameters.new(:post_id) if !Post.where(id: post_id).exists?
-
     poll =
-      Poll.includes(:poll_options).includes(:poll_votes).find_by(post_id: post_id, name: poll_name)
+      Poll.includes(:poll_options, :poll_votes, post: :topic).find_by(
+        post_id: post_id,
+        name: poll_name,
+      )
     raise Discourse::InvalidParameters.new(:poll_name) unless poll
+
+    # user must be allowed to post in topic
+    guardian = Guardian.new(user)
+    if !guardian.can_create_post?(poll.post.topic)
+      raise DiscoursePoll::Error.new I18n.t("poll.user_cant_post_in_topic")
+    end
 
     unless SiteSetting.poll_groupable_user_fields.split("|").include?(user_field_name)
       raise Discourse::InvalidParameters.new(:user_field_name)

@@ -1,6 +1,10 @@
+<DStyles />
+<DVirtualHeight />
+
 <DiscourseRoot>
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   <DDocument />
+  <PageLoadingSlider />
   <PluginOutlet
     @name="above-site-header"
     @connectorTagName="div"
@@ -8,22 +12,39 @@
   />
 
   {{#if this.showSiteHeader}}
-    <SiteHeader
-      @canSignUp={{this.canSignUp}}
-      @showCreateAccount={{route-action "showCreateAccount"}}
-      @showLogin={{route-action "showLogin"}}
-      @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
-      @toggleMobileView={{route-action "toggleMobileView"}}
-      @toggleAnonymous={{route-action "toggleAnonymous"}}
-      @logout={{route-action "logout"}}
-      @sidebarEnabled={{this.sidebarEnabled}}
-      @navigationMenuQueryParamOverride={{this.navigationMenuQueryParamOverride}}
-      @showSidebar={{this.showSidebar}}
-      @toggleSidebar={{action "toggleSidebar"}}
-    />
+    {{#if this.header.useGlimmerHeader}}
+      <GlimmerSiteHeader
+        @canSignUp={{this.canSignUp}}
+        @showCreateAccount={{route-action "showCreateAccount"}}
+        @showLogin={{route-action "showLogin"}}
+        @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
+        @toggleMobileView={{route-action "toggleMobileView"}}
+        @logout={{route-action "logout"}}
+        @sidebarEnabled={{this.sidebarEnabled}}
+        @showSidebar={{this.showSidebar}}
+        @toggleSidebar={{this.toggleSidebar}}
+      />
+    {{else}}
+      <SiteHeader
+        @canSignUp={{this.canSignUp}}
+        @showCreateAccount={{route-action "showCreateAccount"}}
+        @showLogin={{route-action "showLogin"}}
+        @showKeyboard={{route-action "showKeyboardShortcutsHelp"}}
+        @toggleMobileView={{route-action "toggleMobileView"}}
+        @logout={{route-action "logout"}}
+        @sidebarEnabled={{this.sidebarEnabled}}
+        @navigationMenuQueryParamOverride={{this.navigationMenuQueryParamOverride}}
+        @showSidebar={{this.showSidebar}}
+        @toggleSidebar={{action "toggleSidebar"}}
+      />
+    {{/if}}
   {{/if}}
 
   <SoftwareUpdatePrompt />
+
+  {{#if this.siteSettings.enable_offline_indicator}}
+    <OfflineIndicator />
+  {{/if}}
 
   <PluginOutlet
     @name="below-site-header"
@@ -32,13 +53,16 @@
   />
 
   <div id="main-outlet-wrapper" class="wrap" role="main">
-
     <div class="sidebar-wrapper">
       {{! empty div allows for animation }}
       {{#if (and this.sidebarEnabled this.showSidebar)}}
         <Sidebar @toggleSidebar={{action "toggleSidebar"}} />
       {{/if}}
     </div>
+
+    <LoadingSliderFallbackSpinner />
+
+    <PluginOutlet @name="before-main-outlet" />
 
     <div id="main-outlet">
       <PluginOutlet @name="above-main-container" @connectorTagName="div" />
@@ -49,7 +73,6 @@
         <NotificationConsentBanner />
         <PwaInstallBanner />
         <GlobalNotice />
-        <CreateTopicsNotice />
         <PluginOutlet
           @name="top-notices"
           @connectorTagName="div"
@@ -60,7 +83,17 @@
       {{outlet}}
 
       <CardContainer />
+      <PluginOutlet
+        @name="main-outlet-bottom"
+        @outletArgs={{hash showFooter=this.showFooter}}
+      />
     </div>
+
+    <PluginOutlet @name="after-main-outlet" />
+
+    {{#if this.showPoweredBy}}
+      <PoweredByDiscourse />
+    {{/if}}
   </div>
 
   <PluginOutlet
@@ -81,12 +114,18 @@
     @outletArgs={{hash showFooter=this.showFooter}}
   />
 
-  {{outlet "modal"}}
+  <DLightbox />
+  <ModalContainer />
   <DialogHolder />
   <TopicEntrance />
   <ComposerContainer />
+  <RenderGlimmerContainer />
 
   {{#if this.showFooterNav}}
     <FooterNav />
   {{/if}}
 </DiscourseRoot>
+
+<DInlineMenu />
+<DInlineTooltip />
+<DToasts />

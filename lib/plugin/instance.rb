@@ -50,7 +50,6 @@ class Plugin::Instance
   %i[
     assets
     color_schemes
-    before_auth_initializers
     initializers
     javascripts
     locales
@@ -67,6 +66,11 @@ class Plugin::Instance
     }
   end
 
+  def root_dir
+    return if Rails.env.production?
+    File.dirname(path)
+  end
+
   def seed_data
     @seed_data ||= HashWithIndifferentAccess.new({})
   end
@@ -75,15 +79,22 @@ class Plugin::Instance
     @seed_fu_filter = filter
   end
 
+  # This method returns Core stats + stats registered by plugins
+  def self.stats
+    Stat.all_stats
+  end
+
   def self.find_all(parent_path)
     [].tap do |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
-      Dir["#{parent_path}/*/plugin.rb"].sort.each do |path|
-        source = File.read(path)
-        metadata = Plugin::Metadata.parse(source)
-        plugins << self.new(metadata, path)
-      end
+      Dir["#{parent_path}/*/plugin.rb"].sort.each { |path| plugins << parse_from_source(path) }
     end
+  end
+
+  def self.parse_from_source(path)
+    source = File.read(path)
+    metadata = Plugin::Metadata.parse(source)
+    self.new(metadata, path)
   end
 
   def initialize(metadata = nil, path = nil)
@@ -99,8 +110,12 @@ class Plugin::Instance
     Middleware::AnonymousCache.compile_key_builder
   end
 
-  def add_admin_route(label, location)
-    @admin_route = { label: label, location: location }
+  def add_admin_route(label, location, opts = {})
+    @admin_route = {
+      label: label,
+      location: location,
+      use_new_show_route: opts.fetch(:use_new_show_route, false),
+    }
   end
 
   def configurable?
@@ -117,6 +132,10 @@ class Plugin::Instance
   end
 
   delegate :name, to: :metadata
+
+  def humanized_name
+    (setting_category_name || name).delete_prefix("Discourse ").delete_prefix("discourse-")
+  end
 
   def add_to_serializer(
     serializer,
@@ -144,7 +163,7 @@ class Plugin::Instance
         begin
           "#{serializer.to_s.classify}Serializer".constantize
         rescue StandardError
-          "#{serializer.to_s}Serializer".constantize
+          "#{serializer}Serializer".constantize
         end
 
       # we have to work through descendants cause serializers may already be baked and cached
@@ -189,30 +208,20 @@ class Plugin::Instance
     end
   end
 
-  def whitelist_staff_user_custom_field(field)
-    Discourse.deprecate(
-      "whitelist_staff_user_custom_field is deprecated, use the allow_staff_user_custom_field.",
-      drop_from: "2.6",
-      raise_error: true,
-    )
-    allow_staff_user_custom_field(field)
-  end
-
   def allow_staff_user_custom_field(field)
     DiscoursePluginRegistry.register_staff_user_custom_field(field, self)
   end
 
-  def whitelist_public_user_custom_field(field)
-    Discourse.deprecate(
-      "whitelist_public_user_custom_field is deprecated, use the allow_public_user_custom_field.",
-      drop_from: "2.6",
-      raise_error: true,
-    )
-    allow_public_user_custom_field(field)
-  end
-
   def allow_public_user_custom_field(field)
     DiscoursePluginRegistry.register_public_user_custom_field(field, self)
+  end
+
+  def register_editable_topic_custom_field(field, staff_only: false)
+    if staff_only
+      DiscoursePluginRegistry.register_staff_editable_topic_custom_field(field, self)
+    else
+      DiscoursePluginRegistry.register_public_editable_topic_custom_field(field, self)
+    end
   end
 
   def register_editable_user_custom_field(field, staff_only: false)
@@ -301,6 +310,17 @@ class Plugin::Instance
     Upload.add_in_use_callback(&block)
   end
 
+  # Registers a category custom field to be loaded when rendering a category list
+  # Example usage:
+  #   register_preloaded_category_custom_fields("custom_field")
+  def register_preloaded_category_custom_fields(field)
+    Site.preloaded_category_custom_fields << field
+  end
+
+  def register_problem_check(klass)
+    DiscoursePluginRegistry.register_problem_check(klass, self)
+  end
+
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
       UserLookup.lookup_columns << column
@@ -376,15 +396,6 @@ class Plugin::Instance
 
       hidden_method_name
     end
-  end
-
-  def topic_view_post_custom_fields_whitelister(&block)
-    Discourse.deprecate(
-      "topic_view_post_custom_fields_whitelister is deprecated, use the topic_view_post_custom_fields_allowlister.",
-      drop_from: "2.6",
-      raise_error: true,
-    )
-    topic_view_post_custom_fields_allowlister(&block)
   end
 
   # Add a post_custom_fields_allowlister block to the TopicView, respecting if the plugin is enabled
@@ -516,11 +527,26 @@ class Plugin::Instance
     initializers << block
   end
 
-  def before_auth(&block)
-    if @before_auth_complete
-      raise "Auth providers must be registered before omniauth middleware. after_initialize is too late!"
-    end
-    before_auth_initializers << block
+  def commit_hash
+    git_repo.latest_local_commit
+  end
+
+  def commit_url
+    return if commit_hash.blank?
+    "#{git_repo.url}/commit/#{commit_hash}"
+  end
+
+  def git_repo
+    @git_repo ||= GitRepo.new(directory, name)
+  end
+
+  def discourse_owned?
+    return false if commit_hash.blank?
+    parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
+    return false if parsed_commit_url.blank?
+    github_org = parsed_commit_url.path.split("/")[1]
+    (github_org == "discourse" || github_org == "discourse-org") &&
+      parsed_commit_url.host == "github.com"
   end
 
   # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled
@@ -547,34 +573,39 @@ class Plugin::Instance
     end
   end
 
-  def notify_before_auth
-    before_auth_initializers.each { |callback| callback.call(self) }
-    @before_auth_complete = true
+  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
+  def register_category_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      Category.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_category_custom_field_type(name, type)
-    reloadable_patch { |plugin| Category.register_custom_field_type(name, type) }
+  def register_topic_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::Topic.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_topic_custom_field_type(name, type)
-    reloadable_patch { |plugin| ::Topic.register_custom_field_type(name, type) }
+  def register_post_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::Post.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_post_custom_field_type(name, type)
-    reloadable_patch { |plugin| ::Post.register_custom_field_type(name, type) }
+  def register_group_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::Group.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_group_custom_field_type(name, type)
-    reloadable_patch { |plugin| ::Group.register_custom_field_type(name, type) }
-  end
-
-  # Applies to all sites in a multisite environment. Ignores plugin.enabled?
-  def register_user_custom_field_type(name, type)
-    reloadable_patch { |plugin| ::User.register_custom_field_type(name, type) }
+  def register_user_custom_field_type(name, type, max_length: nil)
+    reloadable_patch do |plugin|
+      ::User.register_custom_field_type(name, type, max_length: max_length)
+    end
   end
 
   def register_seedfu_fixtures(paths)
@@ -634,10 +665,20 @@ class Plugin::Instance
     end
   end
 
+  def register_email_poller(poller)
+    plugin = self
+    DiscoursePluginRegistry.register_mail_poller(poller) if plugin.enabled?
+  end
+
   def register_asset(file, opts = nil)
     raise <<~ERROR if file.end_with?(".hbs", ".handlebars")
         [#{name}] Handlebars templates can no longer be included via `register_asset`.
         Any hbs files under `assets/javascripts` will be automatically compiled and included."
+      ERROR
+
+    raise <<~ERROR if file.start_with?("javascripts/") && file.end_with?(".js", ".js.es6")
+        [#{name}] Javascript files under `assets/javascripts` are automatically included in JS bundles.
+        Manual register_asset calls should be removed. (attempted to add #{file})
       ERROR
 
     if opts && opts == :vendored_core_pretty_text
@@ -666,6 +707,7 @@ class Plugin::Instance
   end
 
   def register_emoji(name, url, group = Emoji::DEFAULT_GROUP)
+    name = name.gsub(/[^a-z0-9]+/i, "_").gsub(/_{2,}/, "_").downcase
     Plugin::CustomEmoji.register(name, url, group)
     Emoji.clear_cache
   end
@@ -695,38 +737,6 @@ class Plugin::Instance
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
-    if @path
-      root_dir_name = File.dirname(@path)
-
-      # Automatically include all ES6 JS and hbs files
-      root_path = "#{root_dir_name}/assets/javascripts"
-      DiscoursePluginRegistry.register_glob(root_path, "js")
-      DiscoursePluginRegistry.register_glob(root_path, "js.es6")
-      DiscoursePluginRegistry.register_glob(root_path, "hbs")
-      DiscoursePluginRegistry.register_glob(root_path, "hbr")
-
-      admin_path = "#{root_dir_name}/admin/assets/javascripts"
-      DiscoursePluginRegistry.register_glob(admin_path, "js", admin: true)
-      DiscoursePluginRegistry.register_glob(admin_path, "js.es6", admin: true)
-      DiscoursePluginRegistry.register_glob(admin_path, "hbs", admin: true)
-      DiscoursePluginRegistry.register_glob(admin_path, "hbr", admin: true)
-
-      DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, "").sub(
-        %r{\A/*},
-        "",
-      )
-      DiscourseJsProcessor.plugin_transpile_paths << admin_path.sub(Rails.root.to_s, "").sub(
-        %r{\A/*},
-        "",
-      )
-
-      test_path = "#{root_dir_name}/test/javascripts"
-      DiscourseJsProcessor.plugin_transpile_paths << test_path.sub(Rails.root.to_s, "").sub(
-        %r{\A/*},
-        "",
-      )
-    end
-
     self.instance_eval File.read(path), path
     if auto_assets = generate_automatic_assets!
       assets.concat(auto_assets)
@@ -738,13 +748,8 @@ class Plugin::Instance
 
     seed_data.each { |key, value| DiscoursePluginRegistry.register_seed_data(key, value) }
 
-    # TODO: possibly amend this to a rails engine
-
-    # Automatically include assets
-    Rails.configuration.assets.paths << auto_generated_path
+    # Allow plugins to `register_asset` for images under /assets
     Rails.configuration.assets.paths << File.dirname(path) + "/assets"
-    Rails.configuration.assets.paths << File.dirname(path) + "/admin/assets"
-    Rails.configuration.assets.paths << File.dirname(path) + "/test/javascripts"
 
     # Automatically include rake tasks
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
@@ -767,33 +772,11 @@ class Plugin::Instance
       Discourse::Utils.atomic_ln_s(public_data, target)
     end
 
-    ensure_directory(js_file_path)
-
-    contents = []
-    handlebars_includes.each { |hb| contents << "require_asset('#{hb}')" }
-    javascript_includes.each { |js| contents << "require_asset('#{js}')" }
-
-    if !contents.present?
-      [js_file_path, extra_js_file_path].each do |f|
-        File.delete(f)
-      rescue Errno::ENOENT
-      end
-      return
-    end
-
-    contents.insert(0, "<%")
-    contents << "%>"
-
-    Discourse::Utils.atomic_write_file(extra_js_file_path, contents.join("\n"))
-
-    begin
-      File.delete(js_file_path)
-    rescue Errno::ENOENT
-    end
+    write_extra_js!
   end
 
   def auth_provider(opts)
-    before_auth do
+    after_initialize do
       provider = Auth::AuthProvider.new
 
       Auth::AuthProvider.auth_attributes.each do |sym|
@@ -845,47 +828,14 @@ class Plugin::Instance
     end
   end
 
-  def handlebars_includes
-    assets
-      .map do |asset, opts|
-        next if opts == :admin
-        next unless asset =~ DiscoursePluginRegistry::HANDLEBARS_REGEX
-        asset
-      end
-      .compact
-  end
-
   def javascript_includes
     assets
       .map do |asset, opts|
         next if opts == :vendored_core_pretty_text
-        next if opts == :admin
         next unless asset =~ DiscoursePluginRegistry::JS_REGEX
         asset
       end
       .compact
-  end
-
-  def each_globbed_asset
-    if @path
-      # Automatically include all ES6 JS and hbs files
-      root_path = "#{File.dirname(@path)}/assets/javascripts"
-      admin_path = "#{File.dirname(@path)}/admin/assets/javascripts"
-
-      Dir
-        .glob(["#{root_path}/**/*", "#{admin_path}/**/*"])
-        .sort
-        .each do |f|
-          f_str = f.to_s
-          if File.directory?(f)
-            yield [f, true]
-          elsif f_str.end_with?(".js.es6") || f_str.end_with?(".hbs") || f_str.end_with?(".hbr")
-            yield [f, false]
-          elsif f_str.end_with?(".js")
-            yield [f, false]
-          end
-        end
-    end
   end
 
   def register_reviewable_type(reviewable_type_class)
@@ -979,36 +929,7 @@ class Plugin::Instance
   #
   # See Auth::DefaultCurrentUserProvider::PARAMETER_API_PATTERNS for more examples
   # and Auth::DefaultCurrentUserProvider#api_parameter_allowed? for implementation
-  def add_api_parameter_route(
-    method: nil,
-    methods: nil,
-    route: nil,
-    actions: nil,
-    format: nil,
-    formats: nil
-  )
-    if Array(format).include?("*")
-      Discourse.deprecate(
-        "* is no longer a valid api_parameter_route format matcher. Use `nil` instead",
-        drop_from: "2.7",
-        raise_error: true,
-      )
-      # Old API used * as wildcard. New api uses `nil`
-      format = nil
-    end
-
-    # Backwards compatibility with old parameter names:
-    if method || route || format
-      Discourse.deprecate(
-        "method, route and format parameters for api_parameter_routes are deprecated. Use methods, actions and formats instead.",
-        drop_from: "2.7",
-        raise_error: true,
-      )
-      methods ||= method
-      actions ||= route
-      formats ||= format
-    end
-
+  def add_api_parameter_route(methods: nil, actions: nil, formats: nil)
     DiscoursePluginRegistry.register_api_parameter_route(
       RouteMatcher.new(methods: methods, actions: actions, formats: formats),
       self,
@@ -1032,6 +953,12 @@ class Plugin::Instance
   # for usage instructions
   def register_presence_channel_prefix(prefix, &block)
     DiscoursePluginRegistry.register_presence_channel_prefix([prefix, block], self)
+  end
+
+  # Registers a new email notification filter. Notification is passed into block, and if all
+  # filters return `true`, the email notification will be sent.
+  def register_email_notification_filter(&block)
+    DiscoursePluginRegistry.register_email_notification_filter(block, self)
   end
 
   # Registers a new push notification filter. User and notification payload are passed into block, and if all
@@ -1139,7 +1066,7 @@ class Plugin::Instance
   # but all stats will be shown on the /about.json route. For example take
   # this usage:
   #
-  # register_about_stat_group("chat_messages") do
+  # register_stat("chat_messages") do
   #   { last_day: 1, "7_days" => 10, "30_days" => 100, count: 1000, previous_30_days: 150 }
   # end
   #
@@ -1161,18 +1088,12 @@ class Plugin::Instance
   # group of stats is shown on the site About page in the Site Statistics
   # table. Some stats may be needed purely for reporting purposes and thus
   # do not need to be shown in the UI to admins/users.
-  def register_about_stat_group(plugin_stat_group_name, show_in_ui: false, &block)
+  def register_stat(name, show_in_ui: false, expose_via_api: false, &block)
     # We do not want to register and display the same group multiple times.
-    if DiscoursePluginRegistry.about_stat_groups.any? { |stat_group|
-         stat_group[:name] == plugin_stat_group_name
-       }
-      return
-    end
+    return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
 
-    DiscoursePluginRegistry.register_about_stat_group(
-      { name: plugin_stat_group_name, show_in_ui: show_in_ui, block: block },
-      self,
-    )
+    stat = Stat.new(name, show_in_ui: show_in_ui, expose_via_api: expose_via_api, &block)
+    DiscoursePluginRegistry.register_stat(stat, self)
   end
 
   ##
@@ -1264,18 +1185,73 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_bookmarkable(RegisteredBookmarkable.new(klass), self)
   end
 
+  ##
+  # Register an object that inherits from [Summarization::Base], which provides a way
+  # to summarize content. Staff can select which strategy to use
+  # through the `summarization_strategy` setting.
+  def register_summarization_strategy(strategy)
+    if !strategy.class.ancestors.include?(Summarization::Base)
+      raise ArgumentError.new("Not a valid summarization strategy")
+    end
+    DiscoursePluginRegistry.register_summarization_strategy(strategy, self)
+  end
+
+  ##
+  # Register a block that will be called when PostActionCreator is going to notify a
+  # user of a post action. If any of these handlers returns false the default PostCreator
+  # call will be skipped.
+  def register_post_action_notify_user_handler(handler)
+    DiscoursePluginRegistry.register_post_action_notify_user_handler(handler, self)
+  end
+
+  # We strip posts before detecting mentions, oneboxes, attachments etc.
+  # We strip those elements that shouldn't be detected. For example,
+  # a mention inside a quote should be ignored, so we strip it off.
+  # Using this API plugins can register their own post strippers.
+  def register_post_stripper(&block)
+    DiscoursePluginRegistry.register_post_stripper({ block: block }, self)
+  end
+
+  def register_search_group_query_callback(callback)
+    DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
+  end
+
   protected
 
   def self.js_path
     File.expand_path "#{Rails.root}/app/assets/javascripts/plugins"
   end
 
-  def js_file_path
-    "#{Plugin::Instance.js_path}/#{directory_name}.js.erb"
+  def legacy_asset_paths
+    [
+      "#{Plugin::Instance.js_path}/#{directory_name}.js.erb",
+      "#{Plugin::Instance.js_path}/#{directory_name}_extra.js.erb",
+    ]
   end
 
   def extra_js_file_path
-    @extra_js_file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}_extra.js.erb"
+    @extra_js_file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}_extra.js"
+  end
+
+  def write_extra_js!
+    # No longer used, but we want to make sure the files are no longer present
+    # so they don't accidently get compiled by Sprockets.
+    legacy_asset_paths.each do |path|
+      File.delete(path)
+    rescue Errno::ENOENT
+    end
+
+    contents = javascript_includes.map { |js| File.read(js) }
+
+    if contents.present?
+      ensure_directory(extra_js_file_path)
+      Discourse::Utils.atomic_write_file(extra_js_file_path, contents.join("\n;\n"))
+    else
+      begin
+        File.delete(extra_js_file_path)
+      rescue Errno::ENOENT
+      end
+    end
   end
 
   def register_assets!
@@ -1345,11 +1321,17 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
   end
 
-  def register_search_group_query_callback(callback)
-    DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
+  private
+
+  def setting_category
+    return if @enabled_site_setting.blank?
+    SiteSetting.categories[enabled_site_setting]
   end
 
-  private
+  def setting_category_name
+    return if setting_category.blank? || setting_category == "plugins"
+    I18n.t("admin_js.admin.site_settings.categories.#{setting_category}")
+  end
 
   def validate_directory_column_name(column_name)
     match = /\A[_a-z]+\z/.match(column_name)

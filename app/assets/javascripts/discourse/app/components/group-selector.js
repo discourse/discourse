@@ -1,11 +1,12 @@
+import Component from "@ember/component";
+import { isEmpty } from "@ember/utils";
+import $ from "jquery";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import I18n from "I18n";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { isEmpty } from "@ember/utils";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   @discourseComputed("placeholderKey")

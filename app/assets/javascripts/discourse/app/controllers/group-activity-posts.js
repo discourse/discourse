@@ -1,6 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { fmt } from "discourse/lib/computed";
-import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   group: controller(),
@@ -21,11 +20,11 @@ export default Controller.extend({
       this.set("loading", true);
       const posts = this.model;
       if (posts && posts.length) {
-        const beforePostId = posts[posts.length - 1].get("id");
+        const before = posts[posts.length - 1].get("created_at");
         const group = this.get("group.model");
 
         let categoryId = this.get("groupActivity.category_id");
-        const opts = { beforePostId, type: this.type, categoryId };
+        const opts = { before, type: this.type, categoryId };
 
         group
           .findPosts(opts)
@@ -40,10 +39,5 @@ export default Controller.extend({
           });
       }
     },
-  },
-
-  @observes("canLoadMore")
-  _showFooter() {
-    this.set("application.showFooter", !this.canLoadMore);
   },
 });

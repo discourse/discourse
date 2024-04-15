@@ -25,6 +25,7 @@ RSpec.describe Chat::MessageDestroyer do
       message_2 = Fabricate(:chat_message, chat_channel: message_1.chat_channel)
       message_3 = Fabricate(:chat_message, chat_channel: message_1.chat_channel)
       message_4 = Fabricate(:chat_message, chat_channel: message_1.chat_channel)
+      message_1.chat_channel.update(last_message: message_4)
       message_3.trash!
       membership =
         Chat::UserChatChannelMembership.create!(
@@ -61,6 +62,12 @@ RSpec.describe Chat::MessageDestroyer do
 
       expect { message_1.reload }.to raise_exception(ActiveRecord::RecordNotFound)
       expect(message_2.reload).to be_present
+    end
+
+    it "sets the last_message_id for the channel if that message is deleted" do
+      message_1.chat_channel.update!(last_message: message_1)
+      described_class.new.destroy_in_batches(Chat::Message.where(id: message_1.id))
+      expect(message_1.chat_channel.reload.last_message_id).to eq(nil)
     end
   end
 end

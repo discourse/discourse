@@ -1,5 +1,5 @@
-import SingleSelectComponent from "select-kit/components/single-select";
 import { gte } from "@ember/object/computed";
+import SingleSelectComponent from "select-kit/components/single-select";
 
 export default SingleSelectComponent.extend({
   pluginApiIdentifiers: ["combo-box"],

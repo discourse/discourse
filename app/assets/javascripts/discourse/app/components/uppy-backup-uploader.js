@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
-import I18n from "I18n";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend(UppyUploadMixin, {
   id: "uppy-backup-uploader",

@@ -86,7 +86,6 @@ sw:
         "8": "Outlook iko vizuri"
         "9": "Ndio"
         "10": "Ishara inaonekana kuwa ndio"
-        "11": "Reply hazy, try again"
         "12": "Tafadhali, uliza tena baadae"
         "13": "Afadhali kutokukwambia kwa sasa"
         "14": "Haiwezi ikabashiri sasa hivi"
@@ -217,10 +216,6 @@ sw:
         reply: |-
           [Wasaidizi](%{base_uri}/vikundi/wasaidizi) watajulishwa kwa ujumbe binafsi kuhusiana na bendera. Kama watumiaji wengi wakibonyeza bendera. Itafichwa hapo hapo kama tahadhari. (Kwa vile mimi sijaandikagi taarifa mbaya au chafu :angel:, Nimeitoa bendera kwa sasa.)
       search:
-        instructions: |-
-          _psst_ ...Nimeficha kitu kwenye hii mada. Kama unapenda kujua, **chagua ikoni ya utafiti** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> upande wa juu mkono wako wa kulia &#8599; kukitafuta hicho kitu
-
-          Jaribu kutafuta neno "capy&#8203;bara" kwenye hii mada
         reply: |-
           Nina furaha kuwa umeiona :tada:
 
@@ -270,16 +265,6 @@ sw:
         not_found: |-
           Je unapata tatizo? Kumbuka <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">onyesha zaidi itaonyesha<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16">kurudisha.
       category_hashtag:
-        instructions: |-
-          Unajua unaweza kuongelea kategoria na lebo kwenye chapisho lako? Mfano, umeona kategoria %{category} hii?
-
-          Andika `#` katikati ya sentensi na chagua kategoria au lebo yoyote.
-        not_found: |-
-          Hmm, Sioni kategoria yoyote. Jua kuwa `#` haiwezi kuwa herufi ya kwanza. Unaweza kunakili kwenye jibu lako linalokuja?
-
-          ```neno
-          Ninaweza kutengeneza kiungo cha kategoria kupitia #
-          ```
         reply: |-
           Vizuri sana! Kumbuka hii inafanya kazi kwenye kategoria _na_lebo kama lebo zikiruhusiwa.
       change_topic_notification_level:

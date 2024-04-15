@@ -1,17 +1,17 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import cookie, { removeCookie } from "discourse/lib/cookie";
+import Session from "discourse/models/session";
+import Site from "discourse/models/site";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
-import cookie, { removeCookie } from "discourse/lib/cookie";
-import I18n from "I18n";
-import Session from "discourse/models/session";
-import Site from "discourse/models/site";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
-import userFixtures from "discourse/tests/fixtures/user-fixtures";
+import I18n from "discourse-i18n";
 
 acceptance("User Preferences - Interface", function (needs) {
   needs.user();

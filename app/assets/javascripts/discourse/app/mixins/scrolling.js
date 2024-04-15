@@ -1,6 +1,6 @@
 import Mixin from "@ember/object/mixin";
 import { scheduleOnce, throttle } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 /**
   This object provides the DOM methods we need for our Mixin to bind to scrolling
@@ -34,7 +34,9 @@ const Scrolling = Mixin.create({
     if (!opts.throttle) {
       opts.throttle = 100;
     }
+
     // So we can not call the scrolled event while transitioning. There is no public API for this :'(
+    // eslint-disable-next-line ember/no-private-routing-service
     const microLib = this.router._router._routerMicrolib;
 
     let scheduleScrolled = () => {

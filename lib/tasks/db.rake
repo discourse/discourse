@@ -20,13 +20,17 @@ module MultisiteTestHelpers
   end
 
   def self.create_multisite?
-    (ENV["RAILS_ENV"] == "test" || !ENV["RAILS_ENV"]) && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
+    (ENV["RAILS_ENV"] == "test" || !ENV["RAILS_ENV"]) && !ENV["RAILS_DB"] &&
+      !ENV["SKIP_MULTISITE"] && !ENV["SKIP_TEST_DATABASE"]
   end
 end
 
 task "db:environment:set" => [:load_config] do |_, args|
   if MultisiteTestHelpers.load_multisite?
-    system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:environment:set")
+    system(
+      "RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:environment:set",
+      exception: true,
+    )
   end
 end
 
@@ -55,7 +59,7 @@ end
 
 task "db:drop" => [:load_config] do |_, args|
   if MultisiteTestHelpers.create_multisite?
-    system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop")
+    system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop", exception: true)
   end
 end
 
@@ -116,7 +120,12 @@ class SeedHelper
   end
 end
 
-task "multisite:migrate" => %w[db:load_config environment set_locale] do |_, args|
+task "multisite:migrate" => %w[
+       db:load_config
+       environment
+       set_locale
+       assets:precompile:theme_transpiler
+     ] do |_, args|
   raise "Multisite migrate is only supported in production" if ENV["RAILS_ENV"] != "production"
 
   DistributedMutex.synchronize(
@@ -216,8 +225,12 @@ task "multisite:migrate" => %w[db:load_config environment set_locale] do |_, arg
   end
 end
 
-# we need to run seed_fu every time we run rake db:migrate
-task "db:migrate" => %w[load_config environment set_locale] do |_, args|
+task "db:migrate" => %w[
+       load_config
+       environment
+       set_locale
+       assets:precompile:theme_transpiler
+     ] do |_, args|
   DistributedMutex.synchronize(
     "db_migration",
     redis: Discourse.redis.without_namespace,
@@ -256,7 +269,7 @@ task "db:migrate" => %w[load_config environment set_locale] do |_, args|
   end
 
   if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
-    system("RAILS_DB=discourse_test_multisite rake db:migrate")
+    system("RAILS_DB=discourse_test_multisite rake db:migrate", exception: true)
   end
 end
 
@@ -574,4 +587,19 @@ task "db:status:json" do
   else
     puts({ status: "ok" }.to_json)
   end
+end
+
+desc "Grow notification id column to a big int in case of overflow"
+task "db:resize:notification_id" => :environment do
+  sql = <<~SQL
+    SELECT table_name, column_name FROM INFORMATION_SCHEMA.columns
+    WHERE (column_name like '%notification_id' OR column_name = 'id' and table_name = 'notifications') AND data_type = 'integer'
+  SQL
+
+  DB
+    .query(sql)
+    .each do |row|
+      puts "Changing #{row.table_name}(#{row.column_name}) to a bigint"
+      DB.exec("ALTER table #{row.table_name} ALTER COLUMN #{row.column_name} TYPE BIGINT")
+    end
 end

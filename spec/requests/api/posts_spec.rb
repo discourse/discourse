@@ -131,6 +131,9 @@ RSpec.describe "posts" do
                        can_recover: {
                          type: :boolean,
                        },
+                       can_see_hidden_post: {
+                         type: :boolean,
+                       },
                        can_wiki: {
                          type: :boolean,
                        },
@@ -330,8 +333,8 @@ RSpec.describe "posts" do
         expected_response_schema = load_spec_schema("post_replies_response")
         schema expected_response_schema
 
-        fab!(:user) { Fabricate(:user) }
-        fab!(:topic) { Fabricate(:topic) }
+        fab!(:user)
+        fab!(:topic)
         fab!(:post) { Fabricate(:post, topic: topic, user: user) }
         let!(:reply) do
           PostCreator.new(

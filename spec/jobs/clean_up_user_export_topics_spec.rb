@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::CleanUpUserExportTopics do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   it "should delete ancient user export system messages" do
     post_en =

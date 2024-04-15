@@ -9,17 +9,6 @@ module Onebox
 
     IGNORE_CANONICAL_DOMAINS ||= %w[www.instagram.com medium.com youtube.com]
 
-    def self.symbolize_keys(hash)
-      return {} if hash.nil?
-
-      hash.inject({}) do |result, (key, value)|
-        new_key = key.is_a?(String) ? key.to_sym : key
-        new_value = value.is_a?(Hash) ? symbolize_keys(value) : value
-        result[new_key] = new_value
-        result
-      end
-    end
-
     def self.clean(html)
       html.gsub(/<[^>]+>/, " ").gsub(/\n/, "")
     end
@@ -165,9 +154,7 @@ module Onebox
         end
 
         http.request_head([uri.path, uri.query].join("?")) do |response|
-          code = response.code.to_i
-          return nil unless code === 200 || Onebox::Helpers.blank?(response.content_length)
-          return response.content_length
+          return response.code.to_i == 200 ? response.content_length.presence : nil
         end
       end
     end
@@ -190,27 +177,17 @@ module Onebox
       "<div style=\"background:transparent;position:relative;width:#{width}px;height:#{height}px;top:#{height}px;margin-top:-#{height}px;\" onClick=\"style.pointerEvents='none'\"></div>"
     end
 
-    def self.blank?(value)
-      if value.nil?
-        true
-      elsif String === value
-        value.empty? || !(/[[:^space:]]/ === value)
-      else
-        value.respond_to?(:empty?) ? !!value.empty? : !value
-      end
-    end
-
     def self.truncate(string, length = 50)
       return string if string.nil?
       string.size > length ? string[0...(string.rindex(" ", length) || length)] + "..." : string
     end
 
     def self.get(meta, attr)
-      (meta && !blank?(meta[attr])) ? sanitize(meta[attr]) : nil
+      (meta && meta[attr].present?) ? sanitize(meta[attr]) : nil
     end
 
     def self.sanitize(value, length = 50)
-      return nil if blank?(value)
+      return nil if value.blank?
       Sanitize.fragment(value).strip
     end
 

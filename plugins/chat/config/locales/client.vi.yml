@@ -6,7 +6,15 @@
 
 vi:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Luôn luôn"
+          never: "Không bao giờ"
     chat:
+      deleted_chat_username: đã bị xóa
+      dates:
+        yesterday: "Hôm qua"
       create: "Tạo"
       cancel: "Huỷ"
       channel_settings:
@@ -15,6 +23,7 @@ vi:
         join: "Tham gia"
         leave: "Rời nhóm"
       close: "Đóng"
+      remove: "Xoá"
       delete: "Xóa"
       edited: "đã chỉnh sửa"
       muted: "im lặng"
@@ -26,8 +35,9 @@ vi:
       flag: "Gắn cờ"
       join: "Tham gia"
       last_visit: "lần thăm cuối"
+      summarization:
+        summarize: "Tóm tắt"
       mention_warning:
-        dismiss: "bỏ qua"
         groups:
           header:
             some: "Một số người dùng sẽ không được thông báo"
@@ -38,6 +48,7 @@ vi:
       bookmark_message: "Đánh dấu chỉ mục"
       bookmark_message_edit: "Chỉnh sửa Dấu trang"
       save: "Lưu lại"
+      select: "Chọn"
       sounds:
         none: "Không có gì"
       exit: "quay lại"
@@ -47,6 +58,7 @@ vi:
       browse:
         back: "Quay lại"
         filter_all: All
+        filter_open: Mở
         filter_closed: Đã
       chat_message_separator:
         today: Hôm nay
@@ -58,9 +70,11 @@ vi:
       channel_info:
         back_to_channel: "Quay lại"
         tabs:
-          about: Giới thiệu
           members: Các thành viên
           settings: Cài đặt
+      new_message_modal:
+        no_items: "Không có mẫu nào"
+        filter: "Lọc"
       direct_message_creator:
         title: Tin nhắn mới
         prefix: "Tới:"
@@ -78,12 +92,17 @@ vi:
       settings:
         follow: "Tham gia"
         followed: "Đã tham gia"
+        threading_disabled: "Vô hiệu hóa"
         notifications: "Thông báo"
         preview: "Xem trước"
         save: "Lưu lại"
         saved: "Lưu trữ"
         unfollow: "Rời nhóm"
         admin_title: "Quản trị"
+        settings_title: "Cài đặt"
+        category_label: "Danh mục"
+        history_label: "Lịch sử"
+        members_label: "Các thành viên"
       incoming_webhooks:
         back: "Quay lại"
         description: "Mô tả"
@@ -104,6 +123,9 @@ vi:
           title: "Di chuyển tới chủ đề đang tồn tại"
         new_message:
           title: "Chuyển đến tin nhắn mới"
+      retention_reminders:
+        short:
+          other: "%{count} ngày"
       flags:
         notify_moderators: "Thông báo này yêu cầu sự chú ý của nhân viên vì một lý do khác không được liệt kê ở trên."
       emoji_picker:
@@ -116,6 +138,14 @@ vi:
         replies:
           other: "%{count} trả lời"
         settings: "Cài đặt"
+        last_reply: "trả lời cuối cùng"
+        notifications:
+          regular:
+            title: "Bình thường"
+          tracking:
+            title: "Đang theo dõi"
+        participants_other_count:
+          other: "+%{count}"
       draft_channel_screen:
         header: "Tin nhắn mới"
         cancel: "Huỷ"

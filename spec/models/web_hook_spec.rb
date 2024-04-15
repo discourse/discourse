@@ -7,30 +7,30 @@ RSpec.describe WebHook do
   it { is_expected.to validate_presence_of :web_hook_event_types }
 
   describe "#content_types" do
-    subject { WebHook.content_types }
+    subject(:content_types) { WebHook.content_types }
 
     it "'json' (application/json) should be at 1st position" do
-      expect(subject["application/json"]).to eq(1)
+      expect(content_types["application/json"]).to eq(1)
     end
 
     it "'url_encoded' (application/x-www-form-urlencoded) should be at 2st position" do
-      expect(subject["application/x-www-form-urlencoded"]).to eq(2)
+      expect(content_types["application/x-www-form-urlencoded"]).to eq(2)
     end
   end
 
   describe "#last_delivery_statuses" do
-    subject { WebHook.last_delivery_statuses }
+    subject(:statuses) { WebHook.last_delivery_statuses }
 
     it "inactive should be at 1st position" do
-      expect(subject[:inactive]).to eq(1)
+      expect(statuses[:inactive]).to eq(1)
     end
 
     it "failed should be at 2st position" do
-      expect(subject[:failed]).to eq(2)
+      expect(statuses[:failed]).to eq(2)
     end
 
     it "successful should be at 3st position" do
-      expect(subject[:successful]).to eq(3)
+      expect(statuses[:successful]).to eq(3)
     end
   end
 
@@ -43,39 +43,53 @@ RSpec.describe WebHook do
     end
 
     it "excludes disabled plugin web_hooks" do
-      web_hook_event_types = WebHookEventType.active.find_by(name: "solved")
-      expect(web_hook_event_types).to eq(nil)
+      web_hook_event_types = WebHookEventType.active.where(name: "solved_accept_unaccept")
+      expect(web_hook_event_types).to be_empty
     end
 
     it "includes non-plugin web_hooks" do
-      web_hook_event_types = WebHookEventType.active.where(name: "topic")
-      expect(web_hook_event_types.count).to eq(1)
+      web_hook_event_types = WebHookEventType.active.where(group: "topic")
+      expect(web_hook_event_types.count).to eq(5)
     end
 
     it "includes enabled plugin web_hooks" do
+      SiteSetting.stubs(:assign_enabled).returns(true)
+      assign_event_types = WebHookEventType.active.where(group: "assign").pluck(:name)
+      expect(assign_event_types).to eq(%w[assigned unassigned])
+
+      SiteSetting.stubs(:voting_enabled).returns(true)
+      voting_event_types = WebHookEventType.active.where(group: "voting").pluck(:name)
+      expect(voting_event_types).to eq(%w[topic_upvote topic_unvote])
+      #
       SiteSetting.stubs(:solved_enabled).returns(true)
-      web_hook_event_types = WebHookEventType.active.where(name: "solved")
-      expect(web_hook_event_types.count).to eq(1)
+      solved_event_types = WebHookEventType.active.where(group: "solved").pluck(:name)
+      expect(solved_event_types).to eq(%w[accepted_solution unaccepted_solution])
+      #
+      SiteSetting.stubs(:chat_enabled).returns(true)
+      chat_event_types = WebHookEventType.active.where(group: "chat").pluck(:name)
+      expect(chat_event_types).to eq(
+        %w[chat_message_created chat_message_edited chat_message_trashed chat_message_restored],
+      )
     end
 
     describe "#active_web_hooks" do
       it "returns unique hooks" do
-        post_hook.web_hook_event_types << WebHookEventType.find_by(name: "topic")
+        post_hook.web_hook_event_types << WebHookEventType.find_by(group: "topic")
         post_hook.update!(wildcard_web_hook: true)
 
-        expect(WebHook.active_web_hooks(:post)).to eq([post_hook])
+        expect(WebHook.active_web_hooks(:post_created)).to eq([post_hook])
       end
 
       it "find relevant hooks" do
-        expect(WebHook.active_web_hooks(:post)).to eq([post_hook])
-        expect(WebHook.active_web_hooks(:topic)).to eq([topic_hook])
+        expect(WebHook.active_web_hooks(:post_created)).to eq([post_hook])
+        expect(WebHook.active_web_hooks(:topic_created)).to eq([topic_hook])
       end
 
       it "excludes inactive hooks" do
         post_hook.update!(active: false)
 
-        expect(WebHook.active_web_hooks(:post)).to eq([])
-        expect(WebHook.active_web_hooks(:topic)).to eq([topic_hook])
+        expect(WebHook.active_web_hooks(:post_created)).to eq([])
+        expect(WebHook.active_web_hooks(:topic_created)).to eq([topic_hook])
       end
 
       describe "wildcard web hooks" do
@@ -84,9 +98,15 @@ RSpec.describe WebHook do
         it "should include wildcard hooks" do
           expect(WebHook.active_web_hooks(:wildcard)).to eq([wildcard_hook])
 
-          expect(WebHook.active_web_hooks(:post)).to contain_exactly(post_hook, wildcard_hook)
+          expect(WebHook.active_web_hooks(:post_created)).to contain_exactly(
+            post_hook,
+            wildcard_hook,
+          )
 
-          expect(WebHook.active_web_hooks(:topic)).to contain_exactly(topic_hook, wildcard_hook)
+          expect(WebHook.active_web_hooks(:topic_created)).to contain_exactly(
+            topic_hook,
+            wildcard_hook,
+          )
         end
       end
     end
@@ -126,7 +146,7 @@ RSpec.describe WebHook do
   end
 
   describe "enqueues hooks" do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:admin) { Fabricate(:admin) }
     let(:topic) { Fabricate(:topic, user: user) }
     let(:post) { Fabricate(:post, topic: topic, user: user) }
@@ -217,6 +237,24 @@ RSpec.describe WebHook do
       payload = JSON.parse(job_args["payload"])
       expect(payload["id"]).to eq(topic_id)
       expect(payload["tags"]).to contain_exactly(tag.name)
+    end
+
+    it "should enqueue granular hooks for topic" do
+      topic_web_hook.web_hook_event_types.delete(
+        WebHookEventType.where(name: "topic_destroyed").last,
+      )
+
+      post = PostCreator.create(user, raw: "post", title: "topic", skip_validations: true)
+      topic_id = post.topic.id
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("topic_created")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(topic_id)
+
+      expect { PostDestroyer.new(user, post).destroy }.not_to change {
+        Jobs::EmitWebHookEvent.jobs.count
+      }
     end
 
     it "should not log a personal message view when processing new topic" do
@@ -612,7 +650,7 @@ RSpec.describe WebHook do
     end
 
     context "with user promoted hooks" do
-      fab!(:user_promoted_web_hook) { Fabricate(:user_promoted_web_hook) }
+      fab!(:user_promoted_web_hook)
       fab!(:another_user) { Fabricate(:user, trust_level: 2) }
 
       it "should pass the user to the webhook job when a user is promoted" do
@@ -632,7 +670,7 @@ RSpec.describe WebHook do
     end
 
     context "with like created hooks" do
-      fab!(:like_web_hook) { Fabricate(:like_web_hook) }
+      fab!(:like_web_hook)
       fab!(:another_user) { Fabricate(:user) }
 
       it "should pass the group id to the emit webhook job" do
@@ -651,7 +689,15 @@ RSpec.describe WebHook do
 
         DiscourseEvent.trigger(:like_created, like)
 
-        assert_hook_was_queued_with(post, user, group_ids: [group.id])
+        assert_hook_was_queued_with(
+          post,
+          user,
+          group_ids: [
+            Group::AUTO_GROUPS[:trust_level_0],
+            Group::AUTO_GROUPS[:trust_level_1],
+            group.id,
+          ],
+        )
       end
 
       it "should pass the category id to the emit webhook job" do

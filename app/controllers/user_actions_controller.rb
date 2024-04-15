@@ -28,17 +28,21 @@ class UserActionsController < ApplicationController
     }
 
     stream = UserAction.stream(opts).to_a
-    render_serialized(stream, UserActionSerializer, root: "user_actions")
+
+    response = { user_actions: serialize_data(stream, UserActionSerializer) }
+
+    if guardian.can_lazy_load_categories?
+      category_ids = stream.map(&:category_id).compact.uniq
+      categories = Category.secured(guardian).with_parents(category_ids)
+      response[:categories] = serialize_data(categories, CategoryBadgeSerializer)
+    end
+
+    render json: response
   end
 
   def show
     params.require(:id)
     render_serialized(UserAction.stream_item(params[:id], guardian), UserActionSerializer)
-  end
-
-  def private_messages
-    # DO NOT REMOVE
-    # TODO should preload messages to avoid extra http req
   end
 
   private

@@ -14,7 +14,7 @@
         />
       </div>
 
-      <label for="enable_ssl_imap">
+      <label for="enable_ssl_imap" class="groups-form__enable-ssl">
         <Input
           @type="checkbox"
           @checked={{this.form.imap_ssl}}
@@ -54,7 +54,7 @@
             @valueProperty="value"
             @content={{this.mailboxes}}
             @tabindex="10"
-            @onChange={{action (mut this.group.imap_mailbox_name)}}
+            @onChange={{fn (mut this.group.imap_mailbox_name)}}
             @options={{hash none="groups.manage.email.mailboxes.disabled"}}
           />
         {{/if}}
@@ -83,12 +83,12 @@
   <div class="control-group buttons">
     <DButton
       @disabled={{or this.missingSettings this.testingSettings}}
-      @class="btn-primary test-imap-settings"
-      @action={{action "testImapSettings"}}
+      @action={{this.testImapSettings}}
       @icon="cog"
       @label="groups.manage.email.test_settings"
-      @tabindex="12"
       @title="groups.manage.email.settings_required"
+      tabindex="12"
+      class="btn-primary test-imap-settings"
     />
 
     <ConditionalLoadingSpinner

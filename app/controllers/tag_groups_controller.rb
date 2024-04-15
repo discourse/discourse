@@ -79,7 +79,10 @@ class TagGroupsController < ApplicationController
       matches = matches.where("lower(NAME) in (?)", params[:names].map(&:downcase))
     end
 
-    matches = matches.order("name").limit(params[:limit] || 5)
+    matches =
+      matches.order("name").limit(
+        fetch_limit_from_params(default: 5, max: SiteSetting.max_tag_search_results),
+      )
 
     render json: {
              results:

@@ -1,8 +1,8 @@
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | Widget | button", function (hooks) {
   setupRenderingTest(hooks);
@@ -62,5 +62,13 @@ module("Integration | Component | Widget | button", function (hooks) {
     await render(hbs`<MountWidget @widget="button" @args={{this.args}} />`);
 
     assert.strictEqual(query("button").title, "foo bar");
+  });
+
+  test("translatedLabel skips no-text class in icon", async function (assert) {
+    this.set("args", { icon: "plus", translatedLabel: "foo bar" });
+
+    await render(hbs`<MountWidget @widget="button" @args={{this.args}} />`);
+
+    assert.ok(!exists("button.btn.btn-icon.no-text"), "skips no-text class");
   });
 });

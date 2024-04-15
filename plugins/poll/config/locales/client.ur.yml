@@ -25,30 +25,16 @@ ur:
           title: "نتائج <strong>بند ہونے</strong> پر دکھائے جائیں گے۔"
         staff:
           title: "نتائج صرف <strong>سٹاف</strong> ممبران کو دکھائے جاتے ہیں۔"
-      multiple:
-        help:
-          at_least_min_options:
-            one: "کم از کم <strong>%{count}</strong> آپشن منتخب کریں۔"
-            other: "کم از کم <strong>%{count}</strong> آپشنز کا انتخاب کریں۔"
-          up_to_max_options:
-            one: "<strong>%{count}</strong> تک کا آپشن منتخب کریں۔"
-            other: "<strong>%{count}</strong> تک کے آپشنز کا انتخاب کریں۔"
-          x_options:
-            one: "<strong>%{count}</strong> آپشن کا انتخاب کریں۔"
-            other: "<strong>%{count}</strong> آپشنز کا انتخاب کریں۔"
-          between_min_and_max_options: "<strong>%{min}</strong> اور <strong>%{max}</strong> آپشنز کے درمیان انتخاب کریں۔"
       cast-votes:
         title: "اپنے ووٹ دیں"
         label: "ابھی ووٹ دیں۔"
       show-results:
         title: "پول کے نتائج ظاہر کریں"
-        label: "نتائج دکھائیں"
+        label: "نتائج"
       remove-vote:
         title: "اپنا ووٹ ہٹا دیں"
-        label: "ووٹ ہٹا دیں"
       hide-results:
         title: "وآپس اپنے ووٹس پر"
-        label: "ووٹ دکھائیں"
       group-results:
         title: "صارف فیلڈ کے لحاظ سے ووٹوں کو گروپ کریں"
         label: "تجزیہ دکھائیں"
@@ -72,6 +58,8 @@ ur:
         breakdown: "تجزیہ"
         percentage: "فیصد"
         count: "شمار"
+      options:
+        label: "اختیارات"
       error_while_toggling_status: "معذرت، اِس پول کا سٹیٹس تبدیل کرتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا۔"
       error_while_casting_votes: "معذرت، آپ کا ووٹ ڈالتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا"
       error_while_fetching_voters: "معذرت، ووٹرز کو دکھاتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا"

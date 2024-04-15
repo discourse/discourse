@@ -7,13 +7,11 @@ module DiscoursePoll
     end
 
     def validate_post
-      min_trust_level = SiteSetting.poll_minimum_trust_level_to_create
-
       if (
            @post.acting_user &&
              (
                @post.acting_user.staff? ||
-                 @post.acting_user.trust_level >= TrustLevel[min_trust_level]
+                 @post.acting_user.in_any_groups?(SiteSetting.poll_create_allowed_groups_map)
              )
          ) || @post.topic&.pm_with_non_human_user?
         true

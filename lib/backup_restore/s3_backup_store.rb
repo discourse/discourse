@@ -80,7 +80,7 @@ module BackupRestore
         expires_in: expires_in,
         opts: {
           metadata: metadata,
-          acl: "private",
+          acl: SiteSetting.s3_use_acls ? "private" : nil,
         },
       )
     end
@@ -115,7 +115,7 @@ module BackupRestore
         existing_external_upload_key,
         File.join(s3_helper.s3_bucket_folder_path, original_filename),
         options: {
-          acl: "private",
+          acl: SiteSetting.s3_use_acls ? "private" : nil,
           apply_metadata_to_destination: true,
         },
       )
@@ -131,9 +131,13 @@ module BackupRestore
     def unsorted_files
       objects = []
 
-      s3_helper.list.each do |obj|
-        objects << create_file_from_object(obj) if obj.key.match?(file_regex)
-      end
+      begin
+        s3_helper.list.each do |obj|
+          objects << create_file_from_object(obj) if obj.key.match?(file_regex)
+        end
+      rescue StandardError
+        NoMethodError
+      end #fired when s3_helper.list is nil - wont respond to .nil?
 
       objects
     rescue Aws::Errors::ServiceError => e

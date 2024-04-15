@@ -12,7 +12,7 @@ class TopicBookmarkable < BaseBookmarkable
   end
 
   def self.preload_associations
-    [:tags, { first_post: :user }]
+    [:category, :tags, { first_post: :user }]
   end
 
   def self.perform_custom_preload!(topic_bookmarks, guardian)
@@ -58,11 +58,15 @@ class TopicBookmarkable < BaseBookmarkable
   end
 
   def self.reminder_conditions(bookmark)
-    bookmark.bookmarkable.present?
+    bookmark.bookmarkable.present? && self.can_see?(bookmark.user.guardian, bookmark)
   end
 
   def self.can_see?(guardian, bookmark)
-    guardian.can_see_topic?(bookmark.bookmarkable)
+    can_see_bookmarkable?(guardian, bookmark.bookmarkable)
+  end
+
+  def self.can_see_bookmarkable?(guardian, bookmarkable)
+    guardian.can_see_topic?(bookmarkable)
   end
 
   def self.bookmark_metadata(bookmark, user)

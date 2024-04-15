@@ -17,6 +17,9 @@
       }
     }
     animation: slideUp 0.3s;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 
   .mobile-view & {
@@ -29,7 +32,7 @@
     .d-icon {
       font-size: var(--font-down-1);
       margin-top: 2px; // vertical alignment
-      margin-right: 1rem;
+      margin-right: 0.75em;
     }
   }
 
@@ -62,9 +65,6 @@
     &:not(:last-of-type) {
       border-bottom: 1px solid var(--primary-low);
     }
-    .badge-wrapper {
-      margin-right: 0;
-    }
     .desc {
       display: inline-block;
       vertical-align: middle;
@@ -88,33 +88,6 @@
         }
       }
     }
-  }
-}
-
-.desktop-view .feature-topic-modal {
-  .pin-until {
-    position: relative;
-    display: inline-block;
-  }
-  .modal-inner-container {
-    overflow: visible;
-  }
-  .modal-footer {
-    background: var(--secondary);
-  }
-}
-
-.mobile-view .feature-topic .feature-section {
-  .desc {
-    display: block;
-    clear: both;
-    max-width: 90%;
-    margin: 0;
-  }
-  .badge-wrapper {
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 19em;
   }
 }
 

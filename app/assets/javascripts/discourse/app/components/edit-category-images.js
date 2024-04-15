@@ -8,6 +8,11 @@ export default buildCategoryPanel("images").extend({
     return uploadedBackgroundUrl || "";
   },
 
+  @discourseComputed("category.uploaded_background_dark.url")
+  backgroundDarkImageUrl(uploadedBackgroundDarkUrl) {
+    return uploadedBackgroundDarkUrl || "";
+  },
+
   @discourseComputed("category.uploaded_logo.url")
   logoImageUrl(uploadedLogoUrl) {
     return uploadedLogoUrl || "";
@@ -41,6 +46,14 @@ export default buildCategoryPanel("images").extend({
 
     backgroundUploadDeleted() {
       this._deleteUpload("category.uploaded_background");
+    },
+
+    backgroundDarkUploadDone(upload) {
+      this._setFromUpload("category.uploaded_background_dark", upload);
+    },
+
+    backgroundDarkUploadDeleted() {
+      this._deleteUpload("category.uploaded_background_dark");
     },
   },
 

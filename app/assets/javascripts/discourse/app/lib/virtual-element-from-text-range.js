@@ -19,6 +19,10 @@ class VirtualElementFromTextRange {
     return this.rect;
   }
 
+  getClientRects() {
+    return this.range.getClientRects();
+  }
+
   get clientWidth() {
     return this.rect.width;
   }

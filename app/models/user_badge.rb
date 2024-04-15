@@ -10,15 +10,15 @@ class UserBadge < ActiveRecord::Base
   BOOLEAN_ATTRIBUTES = %w[is_favorite]
 
   scope :grouped_with_count,
-        -> {
+        -> do
           group(:badge_id, :user_id)
             .select_for_grouping
             .order("MAX(featured_rank) ASC")
             .includes(:user, :granted_by, { badge: :badge_type }, post: :topic)
-        }
+        end
 
   scope :select_for_grouping,
-        -> {
+        -> do
           select(
             UserBadge.attribute_names.map do |name|
               operation = BOOLEAN_ATTRIBUTES.include?(name) ? "BOOL_OR" : "MAX"
@@ -26,7 +26,7 @@ class UserBadge < ActiveRecord::Base
             end,
             'COUNT(*) AS "count"',
           )
-        }
+        end
 
   scope :for_enabled_badges,
         -> { where("user_badges.badge_id IN (SELECT id FROM badges WHERE enabled)") }

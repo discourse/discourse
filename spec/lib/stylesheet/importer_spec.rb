@@ -3,47 +3,8 @@
 require "stylesheet/importer"
 
 RSpec.describe Stylesheet::Importer do
-  def compile_css(name)
-    Stylesheet::Compiler.compile_asset(name)[0]
-  end
-
-  describe "#category_backgrounds" do
-    it "applies CDN to background category images" do
-      expect(compile_css("color_definitions")).to_not include("body.category-")
-
-      background = Fabricate(:upload)
-      parent_category = Fabricate(:category)
-      category =
-        Fabricate(
-          :category,
-          parent_category_id: parent_category.id,
-          uploaded_background: background,
-        )
-
-      expect(compile_css("color_definitions")).to include(
-        "body.category-#{parent_category.slug}-#{category.slug}{background-image:url(#{background.url})}",
-      )
-
-      GlobalSetting.stubs(:cdn_url).returns("//awesome.cdn")
-      expect(compile_css("color_definitions")).to include(
-        "body.category-#{parent_category.slug}-#{category.slug}{background-image:url(//awesome.cdn#{background.url})}",
-      )
-    end
-
-    it "applies S3 CDN to background category images" do
-      setup_s3
-      SiteSetting.s3_use_iam_profile = true
-      SiteSetting.s3_upload_bucket = "test"
-      SiteSetting.s3_region = "ap-southeast-2"
-      SiteSetting.s3_cdn_url = "https://s3.cdn"
-
-      background = Fabricate(:upload_s3)
-      category = Fabricate(:category, uploaded_background: background)
-
-      expect(compile_css("color_definitions")).to include(
-        "body.category-#{category.slug}{background-image:url(https://s3.cdn/original",
-      )
-    end
+  def compile_css(name, options = {})
+    Stylesheet::Compiler.compile_asset(name, options)[0]
   end
 
   describe "#font" do

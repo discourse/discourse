@@ -1,7 +1,7 @@
-import { ajax } from "discourse/lib/ajax";
 import { tracked } from "@glimmer/tracking";
-import { bind } from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { bind } from "discourse-common/utils/decorators";
 
 /**
  * Handles a paginated API response.
@@ -10,23 +10,25 @@ export default class Collection {
   @tracked items = [];
   @tracked meta = {};
   @tracked loading = false;
+  @tracked fetchedOnce = false;
 
-  constructor(resourceURL, handler) {
+  constructor(resourceURL, handler, params = {}) {
     this._resourceURL = resourceURL;
     this._handler = handler;
+    this._params = params;
     this._fetchedAll = false;
   }
 
   get loadMoreURL() {
-    return this.meta.load_more_url;
+    return this.meta?.load_more_url;
   }
 
   get totalRows() {
-    return this.meta.total_rows;
+    return this.meta?.total_rows;
   }
 
   get length() {
-    return this.items.length;
+    return this.items?.length;
   }
 
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
@@ -35,7 +37,7 @@ export default class Collection {
 
     return {
       next: () => {
-        if (index < this.items.length) {
+        if (index < this.length) {
           return { value: this.items[index++], done: false };
         } else {
           return { done: true };
@@ -50,70 +52,49 @@ export default class Collection {
    */
   @bind
   load(params = {}) {
-    this._fetchedAll = false;
-
-    if (this.loading) {
+    if (
+      this.loading ||
+      this._fetchedAll ||
+      (this.totalRows && this.items.length >= this.totalRows)
+    ) {
       return Promise.resolve();
     }
 
     this.loading = true;
 
-    const filteredQueryParams = Object.entries(params).filter(
-      ([, v]) => v !== undefined
-    );
-    const queryString = new URLSearchParams(filteredQueryParams).toString();
+    let endpoint;
+    if (this.loadMoreURL) {
+      endpoint = this.loadMoreURL;
+    } else {
+      const filteredQueryParams = Object.entries(params).filter(
+        ([, v]) => v !== undefined
+      );
 
-    const endpoint = this._resourceURL + (queryString ? `?${queryString}` : "");
+      const queryString = new URLSearchParams(filteredQueryParams).toString();
+      endpoint = this._resourceURL + (queryString ? `?${queryString}` : "");
+    }
+
     return this.#fetch(endpoint)
       .then((result) => {
-        this.items = this._handler(result);
+        const items = this._handler(result);
+
+        if (items.length) {
+          this.items = (this.items ?? []).concat(items);
+        }
+
+        if (!items.length || items.length < params.limit) {
+          this._fetchedAll = true;
+        }
+
         this.meta = result.meta;
+        this.fetchedOnce = true;
       })
       .finally(() => {
         this.loading = false;
       });
   }
 
-  /**
-   * Attempts to load more results
-   * @returns {Promise}
-   */
-  @bind
-  loadMore() {
-    let promise = Promise.resolve();
-
-    if (this.loading) {
-      return promise;
-    }
-
-    if (
-      this._fetchedAll ||
-      (this.totalRows && this.items.length >= this.totalRows)
-    ) {
-      return promise;
-    }
-
-    this.loading = true;
-
-    if (this.loadMoreURL) {
-      promise = this.#fetch(this.loadMoreURL).then((result) => {
-        const newItems = this._handler(result);
-
-        if (newItems.length) {
-          this.items = this.items.concat(newItems);
-        } else {
-          this._fetchedAll = true;
-        }
-        this.meta = result.meta;
-      });
-    }
-
-    return promise.finally(() => {
-      this.loading = false;
-    });
-  }
-
   #fetch(url) {
-    return ajax(url, { type: "GET" });
+    return ajax(url, { type: "GET", data: this._params });
   }
 }

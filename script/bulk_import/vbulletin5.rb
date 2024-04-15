@@ -2,7 +2,6 @@
 
 require_relative "base"
 require "cgi"
-require "set"
 require "mysql2"
 require "htmlentities"
 require "ruby-bbcode-to-md"

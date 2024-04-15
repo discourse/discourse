@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SecondFactor::AuthManager do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:guardian) { Guardian.new(user) }
   fab!(:user_totp) { Fabricate(:user_second_factor_totp, user: user) }
 
@@ -10,12 +10,12 @@ RSpec.describe SecondFactor::AuthManager do
   end
 
   def create_manager(action)
-    SecondFactor::AuthManager.new(guardian, action)
+    SecondFactor::AuthManager.new(guardian, action, target_user: user)
   end
 
   def create_action(request = nil)
     request ||= create_request
-    TestSecondFactorAction.new(guardian, request)
+    TestSecondFactorAction.new(guardian, request, target_user: user)
   end
 
   def stage_challenge(successful:)

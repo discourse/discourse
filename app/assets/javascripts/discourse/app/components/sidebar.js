@@ -1,11 +1,13 @@
 import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
 
 export default class Sidebar extends Component {
   @service appEvents;
   @service site;
+  @service siteSettings;
   @service currentUser;
+  @service sidebarState;
 
   constructor() {
     super(...arguments);
@@ -13,6 +15,24 @@ export default class Sidebar extends Component {
     if (this.site.mobileView) {
       document.addEventListener("click", this.collapseSidebar);
     }
+  }
+
+  get showSwitchPanelButtonsOnTop() {
+    return this.siteSettings.default_sidebar_switch_panel_position === "top";
+  }
+
+  get switchPanelButtons() {
+    if (
+      !this.sidebarState.displaySwitchPanelButtons ||
+      this.sidebarState.panels.length === 1 ||
+      !this.currentUser
+    ) {
+      return [];
+    }
+
+    return this.sidebarState.panels.filter(
+      (panel) => panel !== this.sidebarState.currentPanel && !panel.hidden
+    );
   }
 
   @bind
@@ -37,6 +57,7 @@ export default class Sidebar extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     if (this.site.mobileView) {
       document.removeEventListener("click", this.collapseSidebar);
     }

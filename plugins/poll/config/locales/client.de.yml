@@ -28,27 +28,27 @@ de:
       multiple:
         help:
           at_least_min_options:
-            one: "Wähle mindestens <strong>%{count}</strong> Option."
-            other: "Wähle mindestens <strong>%{count}</strong> Optionen."
+            one: "Wähle mindestens <strong>%{count} Option</strong> aus."
+            other: "Wähle mindestens <strong>%{count} Optionen</strong> aus."
           up_to_max_options:
-            one: "Wähle bis zu <strong>%{count}</strong> Option."
-            other: "Wähle bis zu <strong>%{count}</strong> Optionen."
+            one: "Wähle bis zu <strong>%{count} Option</strong> aus."
+            other: "Wähle bis zu <strong>%{count} Optionen</strong> aus."
           x_options:
-            one: "Wähle <strong>%{count}</strong> Option."
-            other: "Wähle <strong>%{count}</strong> Optionen."
-          between_min_and_max_options: "Wähle zwischen <strong>%{min}</strong> und <strong>%{max}</strong> Optionen."
+            one: "Wähle <strong>%{count} Option</strong> aus."
+            other: "Wähle <strong>%{count} Optionen</strong> aus."
+          between_min_and_max_options: "Wähle zwischen <strong>%{min} und %{max} Optionen</strong> aus."
       cast-votes:
         title: "Gib deine Stimmen ab"
         label: "Jetzt abstimmen!"
       show-results:
         title: "Das Ergebnis der Umfrage anzeigen"
-        label: "Ergebnisse anzeigen"
+        label: "Ergebnisse"
       remove-vote:
         title: "Entferne deine Stimme"
-        label: "Stimme entfernen"
+        label: "Abstimmung zurücknehmen"
       hide-results:
         title: "Zurück zur Umfrage"
-        label: "Umfrage anzeigen"
+        label: "Abstimmen"
       group-results:
         title: "Stimmen anhand von Benutzerfeld gruppieren"
         label: "Aufschlüsselung anzeigen"
@@ -72,6 +72,8 @@ de:
         breakdown: "Aufschlüsselung"
         percentage: "Prozentsatz"
         count: "Anzahl"
+      options:
+        label: "Optionen"
       error_while_toggling_status: "Leider ist beim Umschalten des Status dieser Umfrage ein Fehler aufgetreten."
       error_while_casting_votes: "Leider ist beim Abgeben deiner Stimmen ein Fehler aufgetreten."
       error_while_fetching_voters: "Leider ist beim Anzeigen der Teilnehmer ein Fehler aufgetreten."

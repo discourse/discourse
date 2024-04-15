@@ -70,8 +70,7 @@ def update_themes
         remote_theme.update_remote_version
         if remote_theme.out_of_date?
           puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
-          remote_theme.update_from_remote
-          theme.save!
+          remote_theme.update_from_remote(already_in_transaction: true)
         else
           puts "up to date"
         end
@@ -89,7 +88,7 @@ def update_themes
 end
 
 desc "Update themes & theme components"
-task "themes:update" => :environment do
+task "themes:update": %w[environment assets:precompile:theme_transpiler] do
   if ENV["RAILS_DB"].present?
     update_themes
   else
@@ -125,7 +124,7 @@ desc "Run QUnit tests of a theme/component"
 task "themes:qunit", :type, :value do |t, args|
   type = args[:type]
   value = args[:value]
-  raise <<~TEXT if !%w[name url id].include?(type) || value.blank?
+  raise <<~TEXT if !%w[name url id ids].include?(type) || value.blank?
       Wrong arguments type:#{type.inspect}, value:#{value.inspect}"
       Usage:
         `bundle exec rake "themes:qunit[url,<theme_url>]"`
@@ -133,7 +132,10 @@ task "themes:qunit", :type, :value do |t, args|
         `bundle exec rake "themes:qunit[name,<theme_name>]"`
         OR
         `bundle exec rake "themes:qunit[id,<theme_id>]"`
+        OR
+        `bundle exec rake "themes:qunit[ids,<theme_id|theme_id|theme_id>]
     TEXT
+
   ENV["THEME_#{type.upcase}"] = value.to_s
   ENV["QUNIT_RAILS_ENV"] ||= "development" # qunit:test will switch to `test` by default
   Rake::Task["qunit:test"].reenable
@@ -194,4 +196,48 @@ ensure
   db&.stop
   db&.remove
   redis&.remove
+end
+
+desc "Clones all official themes"
+task "themes:clone_all_official" do |task, args|
+  require "theme_metadata"
+  FileUtils.rm_rf("tmp/themes")
+
+  official_themes =
+    ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
+      repo = "https://github.com/discourse/#{theme_name}"
+      path = File.join(Rails.root, "tmp/themes/#{theme_name}")
+
+      attempts = 0
+
+      begin
+        attempts += 1
+        system("git clone #{repo} #{path}", exception: true)
+      rescue StandardError
+        abort("Failed to clone #{repo}") if attempts >= 3
+        STDERR.puts "Failed to clone #{repo}... trying again..."
+        retry
+      end
+    end
+end
+
+# Note that this should only be used in CI where it is safe to mutate the database without rolling back since running
+# the themes QUnit tests requires the themes to be installed in the database.
+desc "Runs qunit tests for all official themes"
+task "themes:qunit_all_official" => ["themes:clone_all_official", :environment] do |task, args|
+  theme_ids_with_qunit_tests = []
+
+  ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
+    path = File.join(Rails.root, "tmp/themes/#{theme_name}")
+
+    if Dir.glob("#{File.join(path, "test")}/**/*.{js,es6}").any?
+      theme = RemoteTheme.import_theme_from_directory(path)
+      theme_ids_with_qunit_tests << theme.id
+    else
+      puts "Skipping #{theme_name} as no QUnit tests have been detected"
+    end
+  end
+
+  Rake::Task["themes:qunit"].reenable
+  Rake::Task["themes:qunit"].invoke("ids", theme_ids_with_qunit_tests.join("|"))
 end

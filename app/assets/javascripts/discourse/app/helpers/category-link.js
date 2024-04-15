@@ -1,22 +1,17 @@
-import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
-import Category from "discourse/models/category";
-import I18n from "I18n";
-import { escapeExpression } from "discourse/lib/utilities";
 import { get } from "@ember/object";
-import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
+import categoryVariables from "discourse/helpers/category-variables";
+import { escapeExpression } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
+import getURL from "discourse-common/lib/get-url";
+import { helperContext, registerRawHelper } from "discourse-common/lib/helpers";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { isRTL } from "discourse/lib/text-direction";
+import I18n from "discourse-i18n";
 
 let _renderer = defaultCategoryLinkRenderer;
 
 export function replaceCategoryLinkRenderer(fn) {
   _renderer = fn;
-}
-
-function categoryStripe(color, classes) {
-  let style = color ? "style='background-color: #" + color + ";'" : "";
-  return "<span class='" + classes + "' " + style + "></span>";
 }
 
 let _extraIconRenderers = [];
@@ -36,6 +31,7 @@ export function addExtraIconRenderer(renderer) {
     @param {Boolean} [opts.hideParent] If true, parent category will be hidden in the badge.
     @param {Boolean} [opts.recursive] If true, the function will be called recursively for all parent categories
     @param {Number}  [opts.depth] Current category depth, used for limiting recursive calls
+    @param {Boolean} [opts.previewColor] If true, category color will be set as an inline style.
 **/
 export function categoryBadgeHTML(category, opts) {
   const { site, siteSettings } = helperContext();
@@ -79,14 +75,14 @@ export function categoryLinkHTML(category, options) {
     if (options.link !== undefined) {
       categoryOptions.link = options.link;
     }
+    if (options.previewColor) {
+      categoryOptions.previewColor = true;
+    }
     if (options.extraClasses) {
       categoryOptions.extraClasses = options.extraClasses;
     }
     if (options.hideParent) {
       categoryOptions.hideParent = true;
-    }
-    if (options.categoryStyle) {
-      categoryOptions.categoryStyle = options.categoryStyle;
     }
     if (options.recursive) {
       categoryOptions.recursive = true;
@@ -95,7 +91,8 @@ export function categoryLinkHTML(category, options) {
   return htmlSafe(categoryBadgeHTML(category, categoryOptions));
 }
 
-registerUnbound("category-link", categoryLinkHTML);
+export default categoryLinkHTML;
+registerRawHelper("category-link", categoryLinkHTML);
 
 function buildTopicCount(count) {
   return `<span class="topic-count" aria-label="${I18n.t(
@@ -105,7 +102,7 @@ function buildTopicCount(count) {
 }
 
 export function defaultCategoryLinkRenderer(category, opts) {
-  let descriptionText = get(category, "description_text");
+  let descriptionText = escapeExpression(get(category, "description_text"));
   let restricted = get(category, "read_restricted");
   let url = opts.url
     ? opts.url
@@ -113,10 +110,13 @@ export function defaultCategoryLinkRenderer(category, opts) {
   let href = opts.link === false ? "" : url;
   let tagName = opts.link === false || opts.link === "false" ? "span" : "a";
   let extraClasses = opts.extraClasses ? " " + opts.extraClasses : "";
-  let color = get(category, "color");
+  let style = `${categoryVariables(category)}`;
   let html = "";
   let parentCat = null;
   let categoryDir = "";
+  let dataAttributes = category
+    ? `data-category-id="${get(category, "id")}"`
+    : "";
 
   if (!opts.hideParent) {
     parentCat = Category.findById(get(category, "parent_category_id"));
@@ -124,39 +124,32 @@ export function defaultCategoryLinkRenderer(category, opts) {
 
   let siteSettings = helperContext().siteSettings;
 
-  const categoryStyle = opts.categoryStyle || siteSettings.category_style;
-  if (categoryStyle !== "none") {
-    if (parentCat && parentCat !== category) {
-      html += categoryStripe(
-        get(parentCat, "color"),
-        "badge-category-parent-bg"
-      );
-    }
-    html += categoryStripe(color, "badge-category-bg");
-  }
-
-  let classNames = "badge-category clear-badge";
+  let classNames = `badge-category`;
   if (restricted) {
     classNames += " restricted";
   }
 
-  let style = "";
-  if (categoryStyle === "box") {
-    style = `style="color: #${get(category, "text_color")};"`;
+  if (parentCat) {
+    classNames += ` --has-parent`;
+    dataAttributes += ` data-parent-category-id="${parentCat.id}"`;
   }
 
-  html +=
-    `<span ${style} ` +
-    'data-drop-close="true" class="' +
-    classNames +
-    '"' +
-    (descriptionText ? 'title="' + descriptionText + '" ' : "") +
-    ">";
+  html += `<span
+    ${dataAttributes}
+    data-drop-close="true"
+    class="${classNames}"
+    ${
+      opts.previewColor
+        ? `style="--category-badge-color: #${category.color}"`
+        : ""
+    }
+    ${descriptionText ? 'title="' + descriptionText + '" ' : ""}
+  >`;
 
   let categoryName = escapeExpression(get(category, "name"));
 
   if (siteSettings.support_mixed_text_direction) {
-    categoryDir = isRTL(categoryName) ? 'dir="rtl"' : 'dir="ltr"';
+    categoryDir = 'dir="auto"';
   }
 
   if (restricted) {
@@ -168,28 +161,25 @@ export function defaultCategoryLinkRenderer(category, opts) {
       html += iconHTML(iconName);
     }
   });
-  html += `<span class="category-name" ${categoryDir}>${categoryName}</span>`;
+  html += `<span class="badge-category__name" ${categoryDir}>${categoryName}</span>`;
   html += "</span>";
 
-  if (opts.topicCount && categoryStyle !== "box") {
+  if (opts.topicCount) {
     html += buildTopicCount(opts.topicCount);
+  }
+
+  if (opts.subcategoryCount) {
+    html += `<span class="plus-subcategories">${I18n.t(
+      "category_row.subcategory_count",
+      { count: opts.subcategoryCount }
+    )}</span>`;
   }
 
   if (href) {
     href = ` href="${href}" `;
   }
 
-  extraClasses = categoryStyle ? categoryStyle + extraClasses : extraClasses;
-
-  let afterBadgeWrapper = "";
-  if (opts.topicCount && categoryStyle === "box") {
-    afterBadgeWrapper += buildTopicCount(opts.topicCount);
-  }
-  if (opts.plusSubcategories && opts.lastSubcategory) {
-    afterBadgeWrapper += `<span class="plus-subcategories">${I18n.t(
-      "category_row.plus_subcategories",
-      { count: opts.plusSubcategories }
-    )}</span>`;
-  }
-  return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
+  return `<${tagName} class="badge-category__wrapper ${extraClasses}" ${
+    style.length > 0 ? `style="${style}"` : ""
+  } ${href}>${html}</${tagName}>`;
 }

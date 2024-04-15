@@ -42,6 +42,10 @@ class LocaleFileValidator
   PLURALIZATION_KEYS = %w[zero one two few many other]
   ENGLISH_KEYS = %w[one other]
 
+  EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS = [
+    "js.discourse_automation.scriptables.auto_responder.fields.word_answer_list.description",
+  ]
+
   def initialize(filename)
     @filename = filename
     @errors = {}
@@ -92,7 +96,8 @@ class LocaleFileValidator
 
       @errors[:invalid_relative_image_sources] << key if value.match?(%r{src\s*=\s*["']/[^/]}i)
 
-      if value.match?(/{{.+?}}/) && !key.end_with?("_MF")
+      if value.match?(/{{.+?}}/) && !key.end_with?("_MF") &&
+           !EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS.include?(key)
         @errors[:invalid_interpolation_key_format] << key
       end
     end

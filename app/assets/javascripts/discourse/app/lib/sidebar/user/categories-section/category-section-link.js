@@ -1,11 +1,8 @@
-import I18n from "I18n";
-
 import { tracked } from "@glimmer/tracking";
 import { get, set } from "@ember/object";
-
-import { bind } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
-import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const UNREAD_AND_NEW_COUNTABLE = {
   propertyName: "unreadAndNewCount",
@@ -120,7 +117,7 @@ export default class CategorySectionLink {
   #countables() {
     const countables = [];
 
-    if (this.#linkToNew) {
+    if (this.#newNewViewEnabled) {
       countables.push(UNREAD_AND_NEW_COUNTABLE);
     } else {
       countables.push(...DEFAULT_COUNTABLES);
@@ -149,8 +146,8 @@ export default class CategorySectionLink {
     return countables;
   }
 
-  get hideCount() {
-    return this.currentUser?.sidebarListDestination !== UNREAD_LIST_DESTINATION;
+  get showCount() {
+    return this.currentUser?.sidebarShowCountOfNewItems;
   }
 
   @bind
@@ -221,7 +218,7 @@ export default class CategorySectionLink {
   }
 
   get badgeText() {
-    if (this.hideCount && !this.#linkToNew) {
+    if (!this.showCount) {
       return;
     }
 
@@ -235,10 +232,7 @@ export default class CategorySectionLink {
   }
 
   get route() {
-    if (
-      this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION ||
-      this.#linkToNew
-    ) {
+    if (this.currentUser?.sidebarLinkToFilteredList) {
       const activeCountable = this.activeCountable;
 
       if (activeCountable) {
@@ -250,7 +244,7 @@ export default class CategorySectionLink {
   }
 
   get query() {
-    if (this.currentUser?.sidebarListDestination === UNREAD_LIST_DESTINATION) {
+    if (this.currentUser?.sidebarLinkToFilteredList) {
       const activeCountable = this.activeCountable;
 
       if (activeCountable?.routeQuery) {
@@ -268,12 +262,12 @@ export default class CategorySectionLink {
   }
 
   get suffixValue() {
-    if (this.hideCount && this.activeCountable && !this.#linkToNew) {
+    if (!this.showCount && this.activeCountable) {
       return "circle";
     }
   }
 
-  get #linkToNew() {
+  get #newNewViewEnabled() {
     return !!this.currentUser?.new_new_view_enabled;
   }
 }

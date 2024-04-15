@@ -6,7 +6,9 @@
 
 fr:
   site_settings:
-    chat_enabled: "Activer l'extension de discussion."
+    chat_separate_sidebar_mode: "Afficher des modes de barre latérale distincts pour le forum et la discussion."
+    chat_enabled: "Activer la discussion."
+    enable_public_channels: "Activer les canaux publics en fonction des catégories."
     chat_allowed_groups: "Les utilisateurs de ces groupes peuvent discuter. Notez que les responsables peuvent toujours accéder à la discussion."
     chat_channel_retention_days: "Les messages de discussion dans les canaux ordinaires seront conservés pendant ce nombre de jours. Fixez cette valeur sur « 0 » pour conserver les messages indéfiniment."
     chat_dm_retention_days: "Les messages de discussion dans les discussions privées seront conservés pendant ce nombre de jours. Fixez cette valeur sur « 0 » pour conserver les messages indéfiniment."
@@ -26,11 +28,15 @@ fr:
     max_mentions_per_chat_message: "Nombre maximum de notifications @name qu'un utilisateur peut utiliser dans un message de discussion."
     chat_max_direct_message_users: "Les utilisateurs ne peuvent pas ajouter plus que ce nombre d'autres utilisateurs lors de la création d'un nouveau message privé. Fixez cette valeur à 0 pour n'autoriser les messages que pour vous-même. Les responsables ne sont pas soumis à ce paramètre."
     chat_allow_archiving_channels: "Autoriser le personnel à archiver les messages dans un sujet lors de la fermeture d'un canal."
+    chat_editing_grace_period: "Pendant (n) secondes après l'envoi d'une discussion, la modification n'affichera pas l'étiquette (modifiée) à côté du message de discussion."
+    chat_editing_grace_period_max_diff_low_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 0 et 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 2 et supérieurs)."
     errors:
       chat_default_channel: "Le canal de discussion par défaut doit être un canal public."
       direct_message_enabled_groups_invalid: "Vous devez spécifier au moins un groupe pour ce paramètre. Si vous ne souhaitez pas que quiconque, à l'exception des responsables, envoie des messages privés, choisissez le groupe des responsables."
       chat_upload_not_allowed_secure_uploads: "Les téléversements de discussion ne sont pas autorisés lorsque le paramètre du site de téléversement sécurisé est activé."
   system_messages:
+    private_channel_title: "Canal %{id}"
     chat_channel_archive_complete:
       title: "Archivage du canal de discussion terminé"
       subject_template: "L'archivage du canal de discussion est terminé"
@@ -53,16 +59,29 @@ fr:
   chat:
     deleted_chat_username: supprimé
     errors:
+      users_cant_be_added_to_channel: "Les utilisateurs ne peuvent pas être ajoutés à ce canal."
       channel_exists_for_category: "Un canal existe déjà pour cette catégorie et ce nom"
+      channel_new_message_disallowed:
+        archived: "Le canal est archivé, aucun nouveau message ne peut être envoyé"
+        closed: "Le canal est fermé, aucun nouveau message ne peut être envoyé"
+        read_only: "Le canal est en lecture seule, aucun nouveau message ne peut être envoyé"
+      channel_modify_message_disallowed:
+        archived: "Le canal est archivé, aucun message ne peut être modifié ou supprimé."
+        closed: "Le canal est fermé, aucun message ne peut être modifié ou supprimé"
+        read_only: "Le canal est en lecture seule, aucun message ne peut être modifié ou supprimé"
       user_cannot_send_message: "Vous ne pouvez pas envoyer de messages pour le moment."
       rate_limit_exceeded: "Dépassement de la limite de messages de discussion pouvant être envoyés dans les 30 secondes"
       auto_silence_from_flags: "Message de discussion marqué avec un score suffisamment élevé pour mettre l'utilisateur en sourdine."
       channel_cannot_be_archived: "Le canal ne peut pas être archivé pour le moment, il doit être soit fermé, soit ouvert à l'archivage."
       duplicate_message: "Vous avez publié un message identique trop récemment."
       delete_channel_failed: "Échec de la suppression du canal, veuillez réessayer."
+      minimum_length_not_met:
+        one: "Le message est trop court. Il doit comporter au moins %{count} caractère."
+        other: "Le message est trop court. Il doit comporter au moins %{count} caractères."
       message_too_long:
-        one: "Le message est trop long, les messages doivent comporter au maximum %{count} caractères."
+        one: "Le message est trop long, les messages doivent comporter au maximum %{count} caractère."
         other: "Le message est trop long, les messages doivent comporter au maximum %{count} caractères."
+      draft_too_long: "Le brouillon est trop long."
       max_reactions_limit_reached: "Les nouvelles réactions ne sont pas autorisées sur ce message."
       message_move_invalid_channel: "Le canal source et le canal de destination doivent être des canaux publics."
       message_move_no_messages_found: "Aucun message n'a été trouvé avec les ID de message fournis."
@@ -74,6 +93,12 @@ fr:
       actor_preventing_target_user_from_dm: "Vous avez choisi d'empêcher %{username} de vous envoyer des messages privés et directs, vous ne pouvez donc pas lui envoyer de nouveaux messages privés."
       user_cannot_send_direct_messages: "Nous sommes désolés, vous ne pouvez pas envoyer de messages privés."
       over_chat_max_direct_message_users_allow_self: "Vous ne pouvez créer un message privé qu'avec vous-même."
+      over_chat_max_direct_message_users:
+        one: "Vous ne pouvez pas créer de message privé avec plus de %{count} autre utilisateur."
+        other: "Vous ne pouvez pas créer de message privé avec plus de %{count} autres utilisateurs."
+      original_message_not_found: "L'ancêtre du message auquel vous répondez est introuvable ou a été supprimé."
+      thread_invalid_for_channel: "Le fil ne fait pas partie du canal fourni."
+      thread_does_not_match_parent: "Le fil ne correspond pas au message parent."
     reviewables:
       message_already_handled: "Merci, mais nous avons déjà examiné ce message et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
       actions:
@@ -98,18 +123,23 @@ fr:
           title: "Supprimer le message"
           description: "Supprimer le message pour que les utilisateurs ne puissent pas le voir."
         delete_and_agree:
-          title: "Supprimer le message"
+          title: "Ignorer le signalement et supprimer le message"
+          description: "Ignorez le signalement en le supprimant de la file d'attente et supprimez le message."
         disagree_and_restore:
           title: "Refuser et restaurer le message"
           description: "Restaurer le message pour que tous les utilisateurs puissent le voir."
         disagree:
           title: "Refuser"
         ignore:
-          title: "Ignorer"
+          title: "Ne rien faire"
+          description: "Ignorez le signalement en le supprimant de la file d'attente sans prendre aucune mesure."
       direct_messages:
         transcript_title: "Transcription des messages précédents dans le canal %{channel_name}"
         transcript_body: "Pour vous donner plus de contexte, nous avons inclus une transcription des messages précédents de cette conversation (jusqu'à dix) :\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} a été invité(e) par %{inviting_user}."
+        other: "%{invited_users} ont été invités par %{inviting_user}."
       archive:
         first_post_raw: "Ce sujet est une archive du canal de discussion [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -117,9 +147,33 @@ fr:
         other: "@%{acting_username} a déplacé %{count} messages vers le canal [%{channel_name}](%{first_moved_message_url})."
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
-          one: "%{comma_separated_usernames} et %{count} autre participant"
+          one: "%{comma_separated_usernames} et %{count} autre utilisateur"
           other: "%{comma_separated_usernames} et %{count} autres utilisateurs"
+    mention_warning:
+      dismiss: "rejeter"
+      cannot_see: "%{first_identifier} ne peut pas accéder à ce canal et n'a pas été averti(e)."
+      cannot_see_multiple:
+        one: "%{first_identifier} et %{count} autre utilisateur ne peuvent pas accéder à ce canal et n'ont pas été avertis."
+        other: "%{first_identifier} et %{count} autres utilisateurs ne peuvent pas accéder à ce canal et n'ont pas été avertis."
+      invitations_sent:
+        one: "Invitation envoyée"
+        other: "Invitations envoyées"
+      invite: "Inviter à rejoindre le canal"
+      without_membership: "%{first_identifier} n'a pas rejoint ce canal."
+      without_membership_multiple:
+        one: "%{first_identifier} et %{count} autre utilisateur n'ont pas rejoint ce canal."
+        other: "%{first_identifier} et %{count} autres utilisateurs n'ont pas rejoint ce canal."
+      group_mentions_disabled: "%{first_identifier} n'autorise pas les mentions."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} et %{count} autre groupe n'autorisent pas les mentions."
+        other: "%{first_identifier} et %{count} autres groupes n'autorisent pas les mentions."
+      global_mentions_disallowed: "Les mentions @here et @all sont désactivées dans ce canal."
+      too_many_members: "%{first_identifier} a trop de membres. Personne n'a reçu de notification."
+      too_many_members_multiple:
+        one: "%{first_identifier} et %{count} autre groupe comprennent trop de membres. Personne n'a été prévenu."
+        other: "%{first_identifier} et %{count} autres groupes comprennent trop de membres. Personne n'a été prévenu."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "contient des caractères non ASCII"
@@ -131,12 +185,18 @@ fr:
       inline_to_message: "Message #%{message_id} par %{username} - #%{chat_channel}"
       inline_to_channel: "Discussion #%{chat_channel}"
       inline_to_topic_channel: "Discussion pour le sujet %{topic_title}"
+      thread_title_connector: "dans"
       x_members:
         one: "%{count} membre"
         other: "%{count} membres"
       and_x_others:
         one: "et %{count} autre utilisateur"
         other: "et %{count} autres utilisateurs"
+    summaries:
+      no_targets: "Il n'y a eu aucun message pendant la période sélectionnée."
+    transcript:
+      default_thread_title: "Fil"
+      split_thread_range: "messages %{start} à %{end} sur %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -171,6 +231,7 @@ fr:
         other: "Vous avez de nouveaux messages de discussions"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] Nouveau message"
         direct_message_from_1: "[%{email_prefix}] Nouveau message de %{username}"
         direct_message_from_2: "[%{email_prefix}] Nouveaux messages de %{username1} et de %{username2}"
         direct_message_from_more:

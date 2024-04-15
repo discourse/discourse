@@ -41,7 +41,7 @@ class CommonPasswords
 
   def self.load_passwords
     passwords = File.readlines(PASSWORD_FILE)
-    redis.sadd LIST_KEY, passwords.map!(&:chomp)
+    redis.sadd?(LIST_KEY, passwords.map!(&:chomp))
   rescue Errno::ENOENT
     # tolerate this so we don't block signups
     Rails.logger.error "Common passwords file #{PASSWORD_FILE} is not found! Common password checking is skipped."

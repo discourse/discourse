@@ -7,10 +7,10 @@
 {{/if}}
 <div class="control-group buttons group-manage-save-button">
   <DButton
-    @action={{action "save"}}
+    @action={{this.save}}
     @disabled={{or this.disabled this.saving}}
-    @class="btn btn-primary group-manage-save"
     @translatedLabel={{this.savingText}}
+    class="btn-primary group-manage-save"
   />
   {{#if this.saved}}
     <span>{{i18n "saved"}}</span>

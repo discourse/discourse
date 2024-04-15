@@ -1,10 +1,10 @@
-import Service, { inject as service } from "@ember/service";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { isTesting } from "discourse-common/config/environment";
+import Service, { service } from "@ember/service";
 import {
   alertChannel,
   onNotification,
 } from "discourse/lib/desktop-notifications";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class ChatNotificationManager extends Service {

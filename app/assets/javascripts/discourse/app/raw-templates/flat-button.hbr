@@ -1,0 +1,3 @@
+<button class='btn-transparent {{class}}' title='{{i18n "topics.bulk.toggle"}}'>
+  {{d-icon icon}}
+</button>

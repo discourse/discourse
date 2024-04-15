@@ -1,13 +1,15 @@
-import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import RawHtml from "discourse/widgets/raw-html";
-import { avatarImg } from "discourse/widgets/post";
-import getURL from "discourse-common/lib/get-url";
+import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
 import renderTags from "discourse/lib/render-tags";
 import { topicFeaturedLinkNode } from "discourse/lib/render-topic-featured-link";
+import DiscourseURL from "discourse/lib/url";
+import { avatarImg } from "discourse/widgets/post";
+import RawHtml from "discourse/widgets/raw-html";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
+import getURL from "discourse-common/lib/get-url";
+import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
 createWidget("topic-header-participant", {
   tagName: "span",
@@ -111,6 +113,19 @@ export default createWidget("header-topic-info", {
           contents: () => titleHTML,
         })
       );
+
+      heading.push(
+        new RenderGlimmer(
+          this,
+          "span.header-topic-title-suffix",
+          hbs`<PluginOutlet @name="header-topic-title-suffix" @outletArgs={{@data.outletArgs}}/>`,
+          {
+            outletArgs: {
+              topic,
+            },
+          }
+        )
+      );
     }
 
     this.headerElements = [h("h1.header-title", heading)];
@@ -127,7 +142,7 @@ export default createWidget("header-topic-info", {
         if (parentCategory) {
           if (
             this.siteSettings.max_category_nesting > 2 &&
-            !this.site.mobileView
+            this.site.desktopView
           ) {
             const grandParentCategory = parentCategory.get("parentCategory");
             if (grandParentCategory) {
@@ -141,7 +156,9 @@ export default createWidget("header-topic-info", {
             this.attach("category-link", { category: parentCategory })
           );
         }
-        categories.push(this.attach("category-link", { category }));
+        categories.push(
+          this.attach("category-link", { category, hideParent: true })
+        );
 
         this.headerElements.push(h("div.categories-wrapper", categories));
       }

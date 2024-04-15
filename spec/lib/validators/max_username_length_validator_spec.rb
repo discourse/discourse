@@ -25,16 +25,19 @@ RSpec.describe MaxUsernameLengthValidator do
   end
 
   it "checks for users with short usernames" do
-    user = Fabricate(:user, username: "jackjackjack")
+    username = "jackjackjack"
+    Fabricate(:user, username: username)
 
     validator = described_class.new
-    expect(validator.valid_value?(12)).to eq(true)
+    expect(validator.valid_value?(12)).to eq(true),
+    "Valid as 12 >= #{SiteSetting.min_username_length}"
 
     validator = described_class.new
-    expect(validator.valid_value?(11)).to eq(false)
+    expect(validator.valid_value?(11)).to eq(false),
+    "Invalid as 11 < #{SiteSetting.min_username_length}"
 
     expect(validator.error_message).to eq(
-      I18n.t("site_settings.errors.max_username_length_exists", username: "jackjackjack"),
+      I18n.t("site_settings.errors.max_username_length_exists", username: username),
     )
   end
 end

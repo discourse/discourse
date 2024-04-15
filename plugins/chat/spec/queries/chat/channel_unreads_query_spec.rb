@@ -1,8 +1,15 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::ChannelUnreadsQuery do
+  subject(:query) do
+    described_class.call(
+      channel_ids: channel_ids,
+      user_id: current_user.id,
+      include_missing_memberships: include_missing_memberships,
+      include_read: include_read,
+    ).map(&:to_h)
+  end
+
   fab!(:channel_1) { Fabricate(:category_channel) }
   fab!(:current_user) { Fabricate(:user) }
   let(:include_missing_memberships) { false }
@@ -15,20 +22,11 @@ describe Chat::ChannelUnreadsQuery do
     channel_1.add(current_user)
   end
 
-  let(:subject) do
-    described_class.call(
-      channel_ids: channel_ids,
-      user_id: current_user.id,
-      include_missing_memberships: include_missing_memberships,
-      include_read: include_read,
-    ).map(&:to_h)
-  end
-
   context "with unread message" do
     before { Fabricate(:chat_message, chat_channel: channel_1) }
 
     it "returns a correct unread count" do
-      expect(subject.first).to eq({ mention_count: 0, unread_count: 1, channel_id: channel_1.id })
+      expect(query.first).to eq({ mention_count: 0, unread_count: 1, channel_id: channel_1.id })
     end
 
     context "when the membership has been muted" do
@@ -40,7 +38,7 @@ describe Chat::ChannelUnreadsQuery do
       end
 
       it "returns a zeroed unread count" do
-        expect(subject.first).to eq({ mention_count: 0, unread_count: 0, channel_id: channel_1.id })
+        expect(query.first).to eq({ mention_count: 0, unread_count: 0, channel_id: channel_1.id })
       end
     end
 
@@ -49,13 +47,13 @@ describe Chat::ChannelUnreadsQuery do
       fab!(:thread) { Fabricate(:chat_thread, channel: channel_1, original_message: thread_om) }
 
       it "does include the original message in the unread count" do
-        expect(subject.first).to eq({ mention_count: 0, unread_count: 2, channel_id: channel_1.id })
+        expect(query.first).to eq({ mention_count: 0, unread_count: 2, channel_id: channel_1.id })
       end
 
       it "does not include other thread messages in the unread count" do
         Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
         Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
-        expect(subject.first).to eq({ mention_count: 0, unread_count: 2, channel_id: channel_1.id })
+        expect(query.first).to eq({ mention_count: 0, unread_count: 2, channel_id: channel_1.id })
       end
     end
 
@@ -70,7 +68,7 @@ describe Chat::ChannelUnreadsQuery do
       end
 
       it "returns accurate counts" do
-        expect(subject).to match_array(
+        expect(query).to match_array(
           [
             { mention_count: 0, unread_count: 1, channel_id: channel_1.id },
             { mention_count: 0, unread_count: 2, channel_id: channel_2.id },
@@ -87,7 +85,7 @@ describe Chat::ChannelUnreadsQuery do
         end
 
         it "does not return counts for the channels" do
-          expect(subject).to match_array(
+          expect(query).to match_array(
             [{ mention_count: 0, unread_count: 1, channel_id: channel_1.id }],
           )
         end
@@ -96,7 +94,7 @@ describe Chat::ChannelUnreadsQuery do
           let(:include_missing_memberships) { true }
 
           it "does return zeroed counts for the channels" do
-            expect(subject).to match_array(
+            expect(query).to match_array(
               [
                 { mention_count: 0, unread_count: 1, channel_id: channel_1.id },
                 { mention_count: 0, unread_count: 0, channel_id: channel_2.id },
@@ -108,7 +106,7 @@ describe Chat::ChannelUnreadsQuery do
             let(:include_read) { false }
 
             it "does not return counts for the channels" do
-              expect(subject).to match_array(
+              expect(query).to match_array(
                 [{ mention_count: 0, unread_count: 1, channel_id: channel_1.id }],
               )
             end
@@ -128,14 +126,18 @@ describe Chat::ChannelUnreadsQuery do
           user_id: current_user.id,
           data: { chat_message_id: message.id, chat_channel_id: channel.id }.to_json,
         )
-      Chat::Mention.create!(notification: notification, user: current_user, chat_message: message)
+      Chat::UserMention.create!(
+        notifications: [notification],
+        user: current_user,
+        chat_message: message,
+      )
     end
 
     it "returns a correct unread mention" do
       message = Fabricate(:chat_message, chat_channel: channel_1)
       create_mention(message, channel_1)
 
-      expect(subject.first).to eq({ mention_count: 1, unread_count: 1, channel_id: channel_1.id })
+      expect(query.first).to eq({ mention_count: 1, unread_count: 1, channel_id: channel_1.id })
     end
 
     context "for unread mentions in a thread" do
@@ -144,7 +146,7 @@ describe Chat::ChannelUnreadsQuery do
 
       it "does include the original message in the mention count" do
         create_mention(thread_om, channel_1)
-        expect(subject.first).to eq({ mention_count: 1, unread_count: 1, channel_id: channel_1.id })
+        expect(query.first).to eq({ mention_count: 1, unread_count: 1, channel_id: channel_1.id })
       end
 
       it "does not include other thread messages in the mention count" do
@@ -152,7 +154,7 @@ describe Chat::ChannelUnreadsQuery do
         thread_message_2 = Fabricate(:chat_message, chat_channel: channel_1, thread: thread)
         create_mention(thread_message_1, channel_1)
         create_mention(thread_message_2, channel_1)
-        expect(subject.first).to eq({ mention_count: 0, unread_count: 1, channel_id: channel_1.id })
+        expect(query.first).to eq({ mention_count: 0, unread_count: 1, channel_id: channel_1.id })
       end
     end
 
@@ -169,7 +171,7 @@ describe Chat::ChannelUnreadsQuery do
         message_2 = Fabricate(:chat_message, chat_channel: channel_2)
         create_mention(message_2, channel_2)
 
-        expect(subject).to match_array(
+        expect(query).to match_array(
           [
             { mention_count: 1, unread_count: 1, channel_id: channel_1.id },
             { mention_count: 1, unread_count: 2, channel_id: channel_2.id },
@@ -181,14 +183,14 @@ describe Chat::ChannelUnreadsQuery do
 
   context "with nothing unread" do
     it "returns a correct state" do
-      expect(subject.first).to eq({ mention_count: 0, unread_count: 0, channel_id: channel_1.id })
+      expect(query.first).to eq({ mention_count: 0, unread_count: 0, channel_id: channel_1.id })
     end
 
     context "when include_read is false" do
       let(:include_read) { false }
 
       it "returns nothing" do
-        expect(subject).to eq([])
+        expect(query).to eq([])
       end
     end
   end

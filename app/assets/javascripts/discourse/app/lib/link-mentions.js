@@ -1,7 +1,7 @@
-import getURL from "discourse-common/lib/get-url";
 import { ajax } from "discourse/lib/ajax";
 import { userPath } from "discourse/lib/url";
 import { formatUsername } from "discourse/lib/utilities";
+import getURL from "discourse-common/lib/get-url";
 
 let checked = {};
 let foundUsers = {};

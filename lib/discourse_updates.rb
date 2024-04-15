@@ -39,9 +39,9 @@ module DiscourseUpdates
             )
 
         # Handle cases when version check data is old so we report something that makes sense
-        if version_info.updated_at.nil? || last_installed_version != Discourse::VERSION::STRING || # never performed a version check # upgraded since the last version check
+        if version_info.updated_at.nil? || last_installed_version != Discourse::VERSION::STRING || # never performed a version check # updated since the last version check
              is_stale_data
-          Jobs.enqueue(:version_check, all_sites: true)
+          Jobs.enqueue(:call_discourse_hub, all_sites: true)
           version_info.version_check_pending = true
 
           unless version_info.updated_at.nil?
@@ -218,6 +218,11 @@ module DiscourseUpdates
       )
     end
 
+    def new_features_endpoint
+      return "https://meta.discourse.org/new-features.json" if Rails.env.production?
+      ENV["DISCOURSE_NEW_FEATURES_ENDPOINT"] || "http://localhost:4200/new-features.json"
+    end
+
     private
 
     def last_installed_version_key
@@ -246,10 +251,6 @@ module DiscourseUpdates
 
     def missing_versions_key_prefix
       "missing_version"
-    end
-
-    def new_features_endpoint
-      "https://meta.discourse.org/new-features.json"
     end
 
     def new_features_key

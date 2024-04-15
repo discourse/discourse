@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-
 import {
   INBOX,
   NEW,

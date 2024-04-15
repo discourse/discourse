@@ -89,11 +89,8 @@ button.ru {
 }
 
 .start-backup-modal {
-  .btn {
-    margin: 10px 0 10px 5px;
-  }
-  .btn:first-of-type {
-    margin-left: 10px;
+  .alert {
+    margin-bottom: 0;
   }
 }
 
@@ -109,5 +106,8 @@ button.ru {
     @include breakpoint(mobile-extra-large) {
       margin: 1.25em 0 0;
     }
+  }
+  label {
+    font-weight: normal;
   }
 }

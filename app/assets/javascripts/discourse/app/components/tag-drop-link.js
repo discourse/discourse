@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import DiscourseURL from "discourse/lib/url";
-import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "a",

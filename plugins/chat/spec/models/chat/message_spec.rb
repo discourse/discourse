@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::Message do
   fab!(:message) { Fabricate(:chat_message, message: "hey friend, what's up?!") }
 
   it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
+
+  describe "validations" do
+    subject(:message) { described_class.new(message: "") }
+
+    it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
+  end
 
   describe ".cook" do
     it "does not support HTML tags" do
@@ -14,16 +18,25 @@ describe Chat::Message do
       expect(cooked).to eq("<p>&lt;h1&gt;test&lt;/h1&gt;</p>")
     end
 
+    it "correctly extracts mentions with dots" do
+      user = Fabricate(:user)
+      cooked = described_class.cook("@#{user.username}...test")
+
+      expect(cooked).to eq(
+        "<p><a class=\"mention\" href=\"/u/#{user.username}\">@#{user.username}</a>…test</p>",
+      )
+    end
+
     it "does not support headings" do
       cooked = described_class.cook("## heading 2")
 
       expect(cooked).to eq("<p>## heading 2</p>")
     end
 
-    it "does not support horizontal rules" do
+    it "supports horizontal replacement" do
       cooked = described_class.cook("---")
 
-      expect(cooked).to eq("<p>---</p>")
+      expect(cooked).to eq("<p>—</p>")
     end
 
     it "supports backticks rule" do
@@ -53,7 +66,7 @@ describe Chat::Message do
       RAW
 
       expect(cooked).to eq(<<~COOKED.chomp)
-      <pre><code class="lang-ruby">Widget.triangulate(argument: "no u")
+      <pre data-code-wrap="ruby"><code class="lang-ruby">Widget.triangulate(argument: "no u")
       </code></pre>
       COOKED
     end
@@ -75,7 +88,7 @@ describe Chat::Message do
       post = Fabricate(:post, topic: topic)
       SiteSetting.external_system_avatars_enabled = false
       avatar_src =
-        "//test.localhost#{User.system_avatar_template(post.user.username).gsub("{size}", "40")}"
+        "//test.localhost#{User.system_avatar_template(post.user.username).gsub("{size}", "48")}"
 
       cooked = described_class.cook(<<~RAW)
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
@@ -87,10 +100,9 @@ describe Chat::Message do
       <aside class="quote no-group" data-username="#{post.user.username}" data-post="#{post.post_number}" data-topic="#{topic.id}">
       <div class="title">
       <div class="quote-controls"></div>
-      <img loading="lazy" alt="" width="20" height="20" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a>
-      </div>
+      <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a></div>
       <blockquote>
-      <p>Mark me...this will go down in history.</p>
+      <p>Mark me…this will go down in history.</p>
       </blockquote>
       </aside>
       COOKED
@@ -101,9 +113,9 @@ describe Chat::Message do
       user = Fabricate(:user, username: "chatbbcodeuser")
       user2 = Fabricate(:user, username: "otherbbcodeuser")
       avatar_src =
-        "//test.localhost#{User.system_avatar_template(user.username).gsub("{size}", "40")}"
+        "//test.localhost#{User.system_avatar_template(user.username).gsub("{size}", "48")}"
       avatar_src2 =
-        "//test.localhost#{User.system_avatar_template(user2.username).gsub("{size}", "40")}"
+        "//test.localhost#{User.system_avatar_template(user2.username).gsub("{size}", "48")}"
       msg1 =
         Fabricate(
           :chat_message,
@@ -131,36 +143,29 @@ describe Chat::Message do
       expect(cooked).to eq(<<~COOKED.chomp)
         <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg1.id}" data-username="chatbbcodeuser" data-datetime="#{msg1.created_at.iso8601}" data-channel-name="testchannel" data-channel-id="#{chat_channel.id}">
         <div class="chat-transcript-meta">
-        Originally sent in <a href="/chat/c/-/#{chat_channel.id}">testchannel</a>
-        </div>
+        Originally sent in <a href="/chat/c/-/#{chat_channel.id}">testchannel</a></div>
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
-        <img loading="lazy" alt="" width="20" height="20" src="#{avatar_src}" class="avatar">
-        </div>
+        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"></div>
         <div class="chat-transcript-username">
         chatbbcodeuser</div>
         <div class="chat-transcript-datetime">
-        <a href="/chat/c/-/#{chat_channel.id}/#{msg1.id}" title="#{msg1.created_at.iso8601}"></a>
-        </div>
+        <a href="/chat/c/-/#{chat_channel.id}/#{msg1.id}" title="#{msg1.created_at.iso8601}"></a></div>
         </div>
         <div class="chat-transcript-messages">
-        <p>this is the first message</p>
-        </div>
+        <p>this is the first message</p></div>
         </div>
         <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
-        <img loading="lazy" alt="" width="20" height="20" src="#{avatar_src2}" class="avatar">
-        </div>
+        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>
         <div class="chat-transcript-username">
         otherbbcodeuser</div>
         <div class="chat-transcript-datetime">
-        <span title="#{msg2.created_at.iso8601}"></span>
-        </div>
+        <span title="#{msg2.created_at.iso8601}"></span></div>
         </div>
         <div class="chat-transcript-messages">
-        <p>and another cool one</p>
-        </div>
+        <p>and another cool one</p></div>
         </div>
       COOKED
     end
@@ -236,31 +241,26 @@ describe Chat::Message do
       expect(cooked).to eq("<p><span class=\"mention\">@mention</span></p>")
     end
 
-    it "supports category-hashtag plugin" do
-      # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
-      SiteSetting.enable_experimental_hashtag_autocomplete = false
-
-      category = Fabricate(:category)
-
-      cooked = described_class.cook("##{category.slug}")
-
-      expect(cooked).to eq(
-        "<p><a class=\"hashtag\" href=\"#{category.url}\">#<span>#{category.slug}</span></a></p>",
-      )
-    end
-
-    it "supports hashtag-autocomplete plugin" do
+    it "supports hashtag autocomplete" do
       SiteSetting.chat_enabled = true
-      SiteSetting.enable_experimental_hashtag_autocomplete = true
 
       category = Fabricate(:category)
       user = Fabricate(:user)
 
       cooked = described_class.cook("##{category.slug}", user_id: user.id)
 
-      expect(cooked).to eq(
-        "<p><a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"#{category.slug}\" data-id=\"#{category.id}\"><span class=\"hashtag-icon-placeholder\"></span><span>#{category.name}</span></a></p>",
-      )
+      expect(cooked).to have_tag(
+        "a",
+        with: {
+          class: "hashtag-cooked",
+          href: category.url,
+          "data-type": "category",
+          "data-slug": category.slug,
+          "data-id": category.id,
+        },
+      ) do
+        with_tag("span", with: { class: "hashtag-icon-placeholder" })
+      end
     end
 
     it "supports censored plugin" do
@@ -292,8 +292,7 @@ describe Chat::Message do
     it "excerpts upload file name if message is empty" do
       gif =
         Fabricate(:upload, original_filename: "cat.gif", width: 400, height: 300, extension: "gif")
-      message = Fabricate(:chat_message, message: "")
-      message.attach_uploads([gif])
+      message = Fabricate(:chat_message, message: "", uploads: [gif])
 
       expect(message.excerpt).to eq "cat.gif"
     end
@@ -376,7 +375,7 @@ describe Chat::Message do
         )
       image2 =
         Fabricate(:upload, original_filename: "meme.jpg", width: 10, height: 10, extension: "jpg")
-      message.attach_uploads([image, image2])
+      message.uploads = [image, image2]
       expect(message.to_markdown).to eq(<<~MSG.chomp)
       hey friend, what's up?!
 
@@ -409,7 +408,7 @@ describe Chat::Message do
       Fabricate(:chat_message, message: "this is duplicate", chat_channel: channel, user: user1)
       message =
         described_class.new(message: "this is duplicate", chat_channel: channel, user: user2)
-      message.validate_message(has_uploads: false)
+      message.valid?
       expect(message.errors.full_messages).to include(I18n.t("chat.errors.duplicate_message"))
     end
   end
@@ -448,10 +447,11 @@ describe Chat::Message do
 
     it "destroys chat_mention" do
       message_1 = Fabricate(:chat_message)
-      notification = Fabricate(:notification)
-      mention_1 = Fabricate(:chat_mention, chat_message: message_1, notification: notification)
+      notification = Fabricate(:notification, notification_type: Notification.types[:chat_mention])
+      mention_1 =
+        Fabricate(:user_chat_mention, chat_message: message_1, notifications: [notification])
 
-      message_1.destroy!
+      message_1.reload.destroy!
 
       expect { mention_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
@@ -495,131 +495,207 @@ describe Chat::Message do
   end
 
   describe "#rebake!" do
-    fab!(:chat_message) { Fabricate(:chat_message) }
+    fab!(:chat_message)
 
     describe "hashtags" do
-      fab!(:category) { Fabricate(:category) }
-      fab!(:group) { Fabricate(:group) }
+      fab!(:category)
+      fab!(:group)
       fab!(:secure_category) { Fabricate(:private_category, group: group) }
 
       before do
         SiteSetting.chat_enabled = true
-        SiteSetting.enable_experimental_hashtag_autocomplete = true
         SiteSetting.suppress_secured_categories_from_admin = true
       end
 
       it "keeps the same hashtags the user has permission to after rebake" do
         group.add(chat_message.user)
-        chat_message.update!(
-          message:
+        update_message!(
+          chat_message,
+          user: chat_message.user,
+          text:
             "this is the message ##{category.slug} ##{secure_category.slug} ##{chat_message.chat_channel.slug}",
         )
-        chat_message.cook
-        chat_message.save!
 
         expect(chat_message.reload.cooked).to include(secure_category.name)
 
         chat_message.rebake!
+
         expect(chat_message.reload.cooked).to include(secure_category.name)
       end
     end
   end
 
-  describe "#attach_uploads" do
-    fab!(:chat_message) { Fabricate(:chat_message) }
-    fab!(:upload_1) { Fabricate(:upload) }
-    fab!(:upload_2) { Fabricate(:upload) }
+  describe "#upsert_mentions" do
+    context "with direct mentions" do
+      fab!(:user1) { Fabricate(:user) }
+      fab!(:user2) { Fabricate(:user) }
+      fab!(:user3) { Fabricate(:user) }
+      fab!(:user4) { Fabricate(:user) }
+      fab!(:message) do
+        Fabricate(:chat_message, message: "Hey @#{user1.username} and @#{user2.username}")
+      end
+      let(:already_mentioned) { [user1.id, user2.id] }
 
-    it "creates an UploadReference record for the provided uploads" do
-      chat_message.attach_uploads([upload_1, upload_2])
-      upload_references = UploadReference.where(upload_id: [upload_1, upload_2])
-      expect(upload_references.count).to eq(2)
-      expect(upload_references.map(&:target_id).uniq).to eq([chat_message.id])
-      expect(upload_references.map(&:target_type).uniq).to eq([described_class.polymorphic_name])
+      it "creates newly added mentions" do
+        existing_mention_ids = message.chat_mentions.pluck(:id)
+        message.message = message.message + " @#{user3.username} @#{user4.username} "
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.user_mentions.pluck(:target_id)).to match_array(
+          [user1.id, user2.id, user3.id, user4.id],
+        )
+        expect(message.user_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
+      end
+
+      it "drops removed mentions" do
+        # user 2 is not mentioned anymore:
+        message.message = "Hey @#{user1.username}"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.user_mentions.pluck(:target_id)).to contain_exactly(user1.id)
+      end
+
+      it "changes nothing if message mentions has not been changed" do
+        existing_mention_ids = message.chat_mentions.pluck(:id)
+
+        message.upsert_mentions
+
+        expect(message.user_mentions.pluck(:target_id)).to match_array(already_mentioned)
+        expect(message.user_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+      end
     end
 
-    it "does nothing if the message record is new" do
-      expect { described_class.new.attach_uploads([upload_1, upload_2]) }.to not_change {
-        UploadReference.count
-      }
+    context "with group mentions" do
+      fab!(:group1) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:group2) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:group3) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:group4) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:message) do
+        Fabricate(:chat_message, message: "Hey @#{group1.name} and @#{group2.name}")
+      end
+      let(:already_mentioned) { [group1.id, group2.id] }
+
+      it "creates newly added mentions" do
+        existing_mention_ids = message.chat_mentions.pluck(:id)
+        message.message = message.message + " @#{group3.name} @#{group4.name} "
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.group_mentions.pluck(:target_id)).to match_array(
+          [group1.id, group2.id, group3.id, group4.id],
+        )
+        expect(message.group_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
+      end
+
+      it "drops removed mentions" do
+        # group 2 is not mentioned anymore:
+        message.message = "Hey @#{group1.name}"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.group_mentions.pluck(:target_id)).to contain_exactly(group1.id)
+      end
+
+      it "changes nothing if message mentions has not been changed" do
+        existing_mention_ids = message.chat_mentions.pluck(:id)
+
+        message.upsert_mentions
+
+        expect(message.group_mentions.pluck(:target_id)).to match_array(already_mentioned)
+        expect(message.group_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+      end
     end
 
-    it "does nothing for an empty uploads array" do
-      expect { chat_message.attach_uploads([]) }.to not_change { UploadReference.count }
+    context "with @here mentions" do
+      fab!(:message) { Fabricate(:chat_message, message: "There are no mentions yet") }
+
+      it "creates @here mention" do
+        message.message = "Mentioning @here"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.here_mention).to be_present
+      end
+
+      it "creates only one mention even if @here present more than once in a message" do
+        message.message = "Mentioning several times: @here @here @here"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.here_mention).to be_present
+        expect(message.chat_mentions.count).to be(1)
+      end
+
+      it "drops @here mention when it's dropped from the message" do
+        message.message = "Mentioning @here"
+        message.cook
+        message.upsert_mentions
+
+        message.message = "No mentions now"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.here_mention).to be_blank
+      end
+    end
+
+    context "with @all mentions" do
+      fab!(:message) { Fabricate(:chat_message, message: "There are no mentions yet") }
+
+      it "creates @all mention" do
+        message.message = "Mentioning @all"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.all_mention).to be_present
+      end
+
+      it "creates only one mention even if @here present more than once in a message" do
+        message.message = "Mentioning several times: @all @all @all"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.all_mention).to be_present
+        expect(message.chat_mentions.count).to be(1)
+      end
+
+      it "drops @here mention when it's dropped from the message" do
+        message.message = "Mentioning @all"
+        message.cook
+        message.upsert_mentions
+
+        message.message = "No mentions now"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.all_mention).to be_blank
+      end
     end
   end
 
-  describe "#create_mentions" do
-    fab!(:message) { Fabricate(:chat_message) }
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
-
-    it "creates mentions for mentioned  usernames" do
-      message.message = "Mentioning @#{user1.username} and @#{user2.username}"
-      message.cook
-
-      message.create_mentions
-      message.reload
-
-      expect(message.chat_mentions.pluck(:user_id)).to match_array([user1.id, user2.id])
+  describe "#url" do
+    it "returns message permalink" do
+      expect(message.url).to eq("/chat/c/-/#{message.chat_channel_id}/#{message.id}")
     end
 
-    it "ignores duplicated mentions" do
-      message.message =
-        "Mentioning @#{user1.username} @#{user1.username} @#{user1.username} @#{user1.username}"
-      message.cook
-
-      message.create_mentions
-      message.reload
-
-      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
-    end
-  end
-
-  describe "#update_mentions" do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
-    fab!(:user4) { Fabricate(:user) }
-    fab!(:message) do
-      Fabricate(:chat_message, message: "Hey @#{user1.username} and @#{user2.username}")
-    end
-    let(:already_mentioned) { [user1.id, user2.id] }
-
-    it "creates newly added mentions" do
-      existing_mention_ids = message.chat_mentions.pluck(:id)
-      message.message = message.message + " @#{user3.username} @#{user4.username} "
-      message.cook
-
-      message.update_mentions
-      message.reload
-
-      expect(message.chat_mentions.pluck(:user_id)).to match_array(
-        [user1.id, user2.id, user3.id, user4.id],
+    it "returns message permalink when in thread" do
+      thread = Fabricate(:chat_thread)
+      first_message = thread.chat_messages.first
+      expect(first_message.url).to eq(
+        "/chat/c/-/#{first_message.chat_channel_id}/t/#{first_message.thread_id}/#{first_message.id}",
       )
-      expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
-    end
-
-    it "drops removed mentions" do
-      message.message = "Hey @#{user1.username}" # user 2 is not mentioned anymore
-      message.cook
-
-      message.update_mentions
-      message.reload
-
-      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
-    end
-
-    it "changes nothing if passed mentions are identical to existing mentions" do
-      existing_mention_ids = message.chat_mentions.pluck(:id)
-      message.message = message.message
-      message.cook
-
-      message.update_mentions
-      message.reload
-
-      expect(message.chat_mentions.pluck(:user_id)).to match_array(already_mentioned)
-      expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
     end
   end
 end

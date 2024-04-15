@@ -1,18 +1,18 @@
 import {
-  acceptance,
-  exists,
-  query,
-  updateCurrentUser,
-} from "discourse/tests/helpers/qunit-helpers";
-import {
   click,
   currentRouteName,
   currentURL,
   fillIn,
   visit,
 } from "@ember/test-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import {
+  acceptance,
+  exists,
+  query,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 function preferencesPretender(server, helper) {
   server.post("/u/create_second_factor_totp.json", () => {
@@ -174,12 +174,24 @@ acceptance(
 );
 
 acceptance("Ignored users", function (needs) {
-  needs.user();
-  needs.settings({ min_trust_level_to_allow_ignore: 1 });
+  needs.user({ can_ignore_users: true });
 
-  test("when trust level < min level to ignore", async function (assert) {
+  test("when user is not allowed to ignore", async function (assert) {
     await visit(`/u/eviltrout/preferences/users`);
-    updateCurrentUser({ trust_level: 0, moderator: false, admin: false });
+    updateCurrentUser({
+      trust_level: 0,
+      moderator: false,
+      admin: false,
+      can_ignore_users: false,
+      groups: [
+        {
+          id: 10,
+          name: "trust_level_0",
+          display_name: "trust_level_0",
+          automatic: true,
+        },
+      ],
+    });
 
     assert.ok(
       !exists(".user-ignore"),
@@ -187,9 +199,9 @@ acceptance("Ignored users", function (needs) {
     );
   });
 
-  test("when trust level >= min level to ignore", async function (assert) {
+  test("when user is allowed to ignore", async function (assert) {
     await visit(`/u/eviltrout/preferences/users`);
-    updateCurrentUser({ trust_level: 1 });
+    updateCurrentUser({ can_ignore_users: true });
     assert.ok(exists(".user-ignore"), "it shows the list of ignored users");
   });
 
@@ -235,3 +247,15 @@ acceptance(
     });
   }
 );
+
+acceptance("User Preference - No Secondary Emails Allowed", function (needs) {
+  needs.user();
+  needs.pretender(preferencesPretender);
+  needs.settings({ max_allowed_secondary_emails: 0 });
+
+  test("Add Alternate Email Button is unavailable", async function (assert) {
+    await visit("/u/eviltrout/preferences");
+
+    assert.dom(".pref-email a").doesNotExist();
+  });
+});

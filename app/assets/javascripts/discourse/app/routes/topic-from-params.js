@@ -1,11 +1,11 @@
-import DiscourseRoute from "discourse/routes/discourse";
+import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
-import { isEmpty } from "@ember/utils";
+import DiscourseRoute from "discourse/routes/discourse";
 import { isTesting } from "discourse-common/config/environment";
-import { schedule } from "@ember/runloop";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 
 // This route is used for retrieving a topic based on params
 export default DiscourseRoute.extend({

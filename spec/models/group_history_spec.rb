@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupHistory do
-  fab!(:group_history) { Fabricate(:group_history) }
+  fab!(:group_history)
 
   let(:other_group_history) do
     Fabricate(

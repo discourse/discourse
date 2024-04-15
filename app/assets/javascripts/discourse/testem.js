@@ -1,13 +1,24 @@
 const TapReporter = require("testem/lib/reporters/tap_reporter");
-const { shouldLoadPluginTestJs } = require("discourse-plugins");
+const { shouldLoadPlugins } = require("discourse-plugins");
 const fs = require("fs");
+const displayUtils = require("testem/lib/utils/displayutils");
+const colors = require("@colors/colors/safe");
 
-class Reporter {
+class Reporter extends TapReporter {
   failReports = [];
   deprecationCounts = new Map();
 
   constructor() {
-    this._tapReporter = new TapReporter(...arguments);
+    super(...arguments);
+
+    // Colors are enabled automatically in dev env, just need to toggle them on in GH
+    if (process.env.GITHUB_ACTIONS) {
+      colors.enable();
+    }
+
+    if (process.env.GITHUB_ACTIONS) {
+      this.out.write("::group:: Verbose QUnit test output\n");
+    }
   }
 
   reportMetadata(tag, metadata) {
@@ -16,17 +27,50 @@ class Reporter {
       const currentCount = this.deprecationCounts.get(id) || 0;
       this.deprecationCounts.set(id, currentCount + 1);
     } else if (tag === "summary-line") {
-      process.stdout.write(`\n${metadata.message}\n`);
+      this.out.write(`\n${metadata.message}\n`);
     } else {
-      this._tapReporter.reportMetadata(...arguments);
+      super.reportMetadata(...arguments);
     }
   }
 
   report(prefix, data) {
     if (data.failed) {
-      this.failReports.push([prefix, data, this._tapReporter.id]);
+      this.failReports.push([prefix, data, this.id]);
     }
-    this._tapReporter.report(prefix, data);
+
+    super.report(prefix, data);
+  }
+
+  display(prefix, result) {
+    if (this.willDisplay(result)) {
+      const string = displayUtils.resultString(
+        this.id++,
+        prefix,
+        result,
+        this.quietLogs,
+        this.strictSpecCompliance
+      );
+
+      const color = this.colorForResult(result);
+      const matches = string.match(/([\S\s]+?)(\n\s+browser\slog:[\S\s]+)/);
+
+      if (matches) {
+        this.out.write(color(matches[1]));
+        this.out.write(colors.cyan(matches[2]));
+      } else {
+        this.out.write(color(string));
+      }
+    }
+  }
+
+  colorForResult(result) {
+    if (result.todo || result.skipped) {
+      return colors.yellow;
+    } else if (result.passed) {
+      return colors.green;
+    } else {
+      return colors.red;
+    }
   }
 
   generateDeprecationTable() {
@@ -61,24 +105,28 @@ class Reporter {
     } else {
       deprecationMessage += "No deprecations logged";
     }
-    process.stdout.write(`\n${deprecationMessage}\n\n`);
+    this.out.write(`\n${deprecationMessage}\n\n`);
   }
 
   finish() {
-    this._tapReporter.finish();
+    if (process.env.GITHUB_ACTIONS) {
+      this.out.write("::endgroup::");
+    }
+
+    super.finish();
 
     this.reportDeprecations();
 
     if (this.failReports.length > 0) {
-      process.stdout.write("\nFailures:\n\n");
+      this.out.write("\nFailures:\n\n");
 
       this.failReports.forEach(([prefix, data, id]) => {
         if (process.env.GITHUB_ACTIONS) {
-          process.stdout.write(`::error ::QUnit Test Failure: ${data.name}\n`);
+          this.out.write(`::error ::QUnit Test Failure: ${data.name}\n`);
         }
 
-        this._tapReporter.id = id;
-        this._tapReporter.report(prefix, data);
+        this.id = id;
+        super.report(prefix, data);
       });
     }
   }
@@ -87,16 +135,27 @@ class Reporter {
 module.exports = {
   test_page: "tests/index.html?hidepassed",
   disable_watching: true,
-  launch_in_ci: ["Chrome"],
-  // launch_in_dev: ["Chrome"] // Ember-CLI always launches testem in 'CI' mode
+  launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,
   parallel: -1,
   browser_start_timeout: 120,
   browser_args: {
+    Chromium: [
+      // --no-sandbox is needed when running Chromium inside a container
+      process.env.CI ? "--no-sandbox" : null,
+      "--headless=new",
+      "--disable-dev-shm-usage",
+      "--disable-software-rasterizer",
+      "--mute-audio",
+      "--remote-debugging-port=4201",
+      "--window-size=1440,900",
+      "--enable-precise-memory-info",
+      "--js-flags=--max_old_space_size=4096",
+    ].filter(Boolean),
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container
       process.env.CI ? "--no-sandbox" : null,
-      "--headless",
+      "--headless=new",
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",
       "--mute-audio",
@@ -116,17 +175,21 @@ if (process.env.TESTEM_FIREFOX_PATH) {
 }
 
 const target = `http://127.0.0.1:${process.env.UNICORN_PORT || "3000"}`;
+const themeTestPages = process.env.THEME_TEST_PAGES;
 
-if (process.argv.includes("-t")) {
-  // Running testem without ember cli. Probably for theme-qunit
-  const testPage = process.argv[process.argv.indexOf("-t") + 1];
-
+if (themeTestPages) {
+  module.exports.test_page = themeTestPages.split(",");
   module.exports.proxies = {};
+
+  // Prepend a prefix to the path of the route such that the server handling the request can easily identify `/theme-qunit`
+  // requests. This is required because testem prepends a string to the path of the `test_page` option when it makes
+  // the request and there is no easy way for us to strip the string from the path through the proxy. As such, we let the
+  // destination server handle the request base on the prefix instead.
   module.exports.proxies[`/*/theme-qunit`] = {
-    target: `${target}${testPage}`,
-    ignorePath: true,
+    target: `${target}/testem-theme-qunit`,
     xfwd: true,
   };
+
   module.exports.proxies["/*/*"] = { target, xfwd: true };
 
   module.exports.middleware = [
@@ -139,7 +202,7 @@ if (process.argv.includes("-t")) {
       });
     },
   ];
-} else if (shouldLoadPluginTestJs()) {
+} else if (shouldLoadPlugins()) {
   // Running with ember cli, but we want to pass through plugin request to Rails
   module.exports.proxies = {
     "/assets/plugins/*_extra.js": {

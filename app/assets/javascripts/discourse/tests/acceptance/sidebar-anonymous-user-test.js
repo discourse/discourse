@@ -1,7 +1,5 @@
-import { test } from "qunit";
-
 import { click, visit } from "@ember/test-helpers";
-
+import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Anonymous User", function (needs) {
@@ -32,7 +30,7 @@ acceptance("Sidebar - Anonymous User", function (needs) {
     this.siteSettings.navigation_menu = "header dropdown";
 
     await visit("/");
-    await click(".hamburger-dropdown");
+    await click(".hamburger-dropdown button");
 
     assert.ok(
       exists(".sidebar-hamburger-dropdown .sidebar-sections-anonymous"),

@@ -96,11 +96,11 @@ class PostValidator < ActiveModel::Validator
   def max_embedded_media_validator(post)
     return if post.acting_user.blank? || post.acting_user&.staff?
 
-    if post.acting_user.trust_level < TrustLevel[SiteSetting.min_trust_to_post_embedded_media]
+    if !post.acting_user.in_any_groups?(SiteSetting.embedded_media_post_allowed_groups_map)
       add_error_if_count_exceeded(
         post,
-        :no_embedded_media_allowed_trust,
-        :no_embedded_media_allowed_trust,
+        :no_embedded_media_allowed_group,
+        :no_embedded_media_allowed_group,
         post.embedded_media_count,
         0,
       )
@@ -212,7 +212,7 @@ class PostValidator < ActiveModel::Validator
   end
 
   def private_message?(post)
-    post.topic.try(:private_message?)
+    post.topic.try(:private_message?) || options[:private_message]
   end
 
   def add_error_if_count_exceeded(

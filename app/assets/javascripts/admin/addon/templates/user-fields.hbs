@@ -8,21 +8,20 @@
       <AdminUserFieldItem
         @userField={{uf}}
         @fieldTypes={{this.fieldTypes}}
-        @firstField={{this.sortedFields.firstObject}}
-        @lastField={{this.sortedFields.lastObject}}
-        @destroyAction={{action "destroyField"}}
-        @moveUpAction={{action "moveUp"}}
-        @moveDownAction={{action "moveDown"}}
+        @firstField={{this.firstField}}
+        @lastField={{this.lastField}}
+        @destroyAction={{this.destroyField}}
+        @moveUpAction={{this.moveUp}}
+        @moveDownAction={{this.moveDown}}
       />
     {{/each}}
   {{/if}}
 
   <DButton
     @disabled={{this.createDisabled}}
-    @class="btn-primary"
-    @action={{action "createField"}}
+    @action={{this.createField}}
     @label="admin.user_fields.create"
     @icon="plus"
+    class="btn-primary"
   />
-
 </div>

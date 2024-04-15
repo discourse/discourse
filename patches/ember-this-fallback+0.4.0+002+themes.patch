@@ -1,0 +1,125 @@
+diff --git a/node_modules/ember-this-fallback/index.js b/node_modules/ember-this-fallback/index.js
+index afa73eb..21e9411 100644
+--- a/node_modules/ember-this-fallback/index.js
++++ b/node_modules/ember-this-fallback/index.js
+@@ -17,15 +17,20 @@ module.exports = {
+     ThisFallbackPlugin.baseDir = () => __dirname;
+     ThisFallbackPlugin.cacheKey = () => 'ember-this-fallback';
+ 
+-    return {
++    let plugin = {
+       name: 'ember-this-fallback',
+-      parallelBabel: {
++      plugin: ThisFallbackPlugin(options),
++    };
++
++    if (!options.isTheme) {
++      plugin.parallelBabel = {
+         requireFile: __filename,
+         buildUsing: '_buildPlugin',
+         params: options,
+-      },
+-      plugin: ThisFallbackPlugin(options),
+-    };
++      };
++    }
++
++    return plugin;
+   },
+ };
+ 
+diff --git a/node_modules/ember-this-fallback/lib/helpers/logger.js b/node_modules/ember-this-fallback/lib/helpers/logger.js
+index b856edc..afb059a 100644
+--- a/node_modules/ember-this-fallback/lib/helpers/logger.js
++++ b/node_modules/ember-this-fallback/lib/helpers/logger.js
+@@ -1,12 +1,6 @@
+ "use strict";
+-var __importDefault = (this && this.__importDefault) || function (mod) {
+-    return (mod && mod.__esModule) ? mod : { "default": mod };
+-};
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.noopLogger = void 0;
+-const debug_1 = __importDefault(require("debug"));
+-const winston_1 = require("winston");
+-const winston_transport_1 = __importDefault(require("winston-transport"));
+ function noopLogger() {
+     return {
+         debug: noop,
+@@ -15,53 +9,4 @@ function noopLogger() {
+     };
+ }
+ exports.noopLogger = noopLogger;
+-function createLogger(namespace, label) {
+-    const debug = (0, debug_1.default)(namespace);
+-    class DebugTransport extends winston_transport_1.default {
+-        log(info, next) {
+-            debug(info[Symbol.for('message')]);
+-            next();
+-        }
+-    }
+-    return (0, winston_1.createLogger)({
+-        level: 'debug',
+-        transports: [
+-            new winston_1.transports.File({
+-                level: 'info',
+-                filename: `${namespace}.log`,
+-                format: winston_1.format.combine(joinLines(), winston_1.format.label({ label }), winston_1.format.timestamp(), winston_1.format.splat(), logFormatter),
+-            }),
+-            new DebugTransport({
+-                level: 'debug',
+-                format: winston_1.format.combine(joinLines(), winston_1.format.label({ label }), winston_1.format.timestamp(), winston_1.format.splat(), debugFormatter),
+-            }),
+-        ],
+-    });
+-}
+-exports.default = createLogger;
+-const joinLines = (0, winston_1.format)((info) => {
+-    if (Array.isArray(info.message) &&
+-        info.message.every((m) => typeof m === 'string')) {
+-        info.message = joinLogLines(info.message);
+-    }
+-    return info;
+-});
+-const logFormatter = winston_1.format.printf((info) => {
+-    const { level, label, timestamp, message, loc } = info;
+-    return `${timestamp} [${level}] ${concatMessage(label, message, loc)}`;
+-});
+-const debugFormatter = winston_1.format.printf((info) => {
+-    const { label, message } = info;
+-    return concatMessage(label, message);
+-});
+-function concatMessage(label, message, loc) {
+-    if (loc) {
+-        const start = loc.startPosition;
+-        label += `:${start.line}:${start.column + 1}`;
+-    }
+-    return joinLogLines([label, message]);
+-}
+-function joinLogLines(lines) {
+-    return lines.join('\n\t');
+-}
+ function noop() { }
+diff --git a/node_modules/ember-this-fallback/lib/this-fallback-plugin.js b/node_modules/ember-this-fallback/lib/this-fallback-plugin.js
+index be4a785..a8ee337 100644
+--- a/node_modules/ember-this-fallback/lib/this-fallback-plugin.js
++++ b/node_modules/ember-this-fallback/lib/this-fallback-plugin.js
+@@ -29,7 +29,7 @@ const syntax_1 = require("@glimmer/syntax");
+ const ast_1 = require("./helpers/ast");
+ const deprecations_1 = require("./helpers/deprecations");
+ const fallback_1 = require("./helpers/fallback");
+-const logger_1 = __importStar(require("./helpers/logger"));
++const logger_1 = require("./helpers/logger");
+ const scope_stack_1 = __importStar(require("./helpers/scope-stack"));
+ const string_1 = require("./helpers/string");
+ const assert_1 = __importDefault(require("./types/assert"));
+@@ -214,9 +214,7 @@ class NoopPlugin {
+ function buildThisFallbackPlugin({ enableLogging, }) {
+     return (env) => {
+         const name = 'ember-this-fallback';
+-        const logger = enableLogging
+-            ? (0, logger_1.default)(`${name}-plugin`, env.moduleName)
+-            : (0, logger_1.noopLogger)();
++        const logger = (0, logger_1.noopLogger)();
+         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+         if (env.meta.jsutils) {
+             return new ThisFallbackPlugin(name, env, logger);

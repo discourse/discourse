@@ -1,3 +1,6 @@
+import { click, visit } from "@ember/test-helpers";
+import { IMAGE_VERSION } from "pretty-text/emoji/version";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -6,9 +9,6 @@ import {
   query,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import { IMAGE_VERSION } from "pretty-text/emoji/version";
 
 acceptance("User Drafts", function (needs) {
   needs.user();

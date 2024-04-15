@@ -1,7 +1,10 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import EmberObject, { action } from "@ember/object";
+import { service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {
+  @service router;
+
   queryParams = {
     filters: { refreshModel: true },
   };
@@ -15,7 +18,7 @@ export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {
   }
 
   deserializeQueryParam(value, urlKey, defaultValueType) {
-    if (urlKey === "filters") {
+    if (urlKey === "filters" && value) {
       return EmberObject.create(JSON.parse(decodeURIComponent(value)));
     }
 
@@ -36,7 +39,7 @@ export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {
 
   @action
   onFiltersChange(filters) {
-    this.transitionTo("adminLogs.staffActionLogs", {
+    this.router.transitionTo("adminLogs.staffActionLogs", {
       queryParams: { filters },
     });
   }

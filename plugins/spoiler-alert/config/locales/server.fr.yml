@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  site_settings:
+    spoiler_enabled: 'Activer l''extension spoiler. Si vous modifiez cette option, vous devez exécuter la commande « rake posts:rebake ».'
+  spoiler_alert:
+    excerpt_spoiler: "spoiler"

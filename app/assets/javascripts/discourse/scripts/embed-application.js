@@ -62,5 +62,12 @@
         names[i].innerHTML = new BreakString(username).break();
       }
     }
+
+    // Use a # for hashtags since we don't have the JS and icons needed here to render the proper icon.
+    let hashtags = document.querySelectorAll(".cooked a.hashtag-cooked");
+    for (i = 0; i < hashtags.length; i++) {
+      hashtags[i].querySelector(".hashtag-icon-placeholder .d-icon").remove();
+      hashtags[i].querySelector(".hashtag-icon-placeholder").innerText = "#";
+    }
   };
 })();

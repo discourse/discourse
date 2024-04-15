@@ -1,13 +1,13 @@
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { or } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import I18n from "I18n";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import Permalink from "admin/models/permalink";
-import discourseDebounce from "discourse-common/lib/debounce";
+import { action } from "@ember/object";
+import { or } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
 import { clipboardCopy } from "discourse/lib/utilities";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
+import I18n from "discourse-i18n";
+import Permalink from "admin/models/permalink";
 
 export default class AdminPermalinksController extends Controller {
   @service dialog;

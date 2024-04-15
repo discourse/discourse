@@ -1,13 +1,13 @@
-import { cancel } from "@ember/runloop";
-import Category from "discourse/models/category";
 import { action } from "@ember/object";
+import { not } from "@ember/object/computed";
+import { cancel } from "@ember/runloop";
+import { isEmpty } from "@ember/utils";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import discourseComputed from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
 import getURL from "discourse-common/lib/get-url";
-import { isEmpty } from "@ember/utils";
-import { not } from "@ember/object/computed";
 import discourseLater from "discourse-common/lib/later";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default buildCategoryPanel("general", {
   init() {
@@ -53,11 +53,6 @@ export default buildCategoryPanel("general", {
       .uniq();
   },
 
-  @discourseComputed
-  noCategoryStyle() {
-    return this.siteSettings.category_style === "none";
-  },
-
   @discourseComputed("category.id", "category.color")
   usedBackgroundColors(categoryId, categoryColor) {
     const categories = this.site.get("categoriesList");
@@ -91,11 +86,12 @@ export default buildCategoryPanel("general", {
     const c = Category.create({
       name,
       color,
+      id: category.id,
       text_color: textColor,
       parent_category_id: parseInt(parentCategoryId, 10),
       read_restricted: category.get("read_restricted"),
     });
-    return categoryBadgeHTML(c, { link: false });
+    return categoryBadgeHTML(c, { link: false, previewColor: true });
   },
 
   // We can change the parent if there are no children

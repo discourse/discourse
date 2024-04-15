@@ -1,11 +1,9 @@
 import EmberObject, { computed } from "@ember/object";
-import Category from "discourse/models/category";
-import I18n from "I18n";
-import MultiSelectComponent from "select-kit/components/multi-select";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { makeArray } from "discourse-common/lib/helpers";
 import { mapBy } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import Category from "discourse/models/category";
+import { makeArray } from "discourse-common/lib/helpers";
+import CategoryRow from "select-kit/components/category-row";
+import MultiSelectComponent from "select-kit/components/multi-select";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["category-selector"],
@@ -24,20 +22,16 @@ export default MultiSelectComponent.extend({
   init() {
     this._super(...arguments);
 
-    if (!this.categories) {
-      this.set("categories", []);
-    }
     if (!this.blockedCategories) {
       this.set("blockedCategories", []);
     }
   },
 
   content: computed("categories.[]", "blockedCategories.[]", function () {
-    const blockedCategories = makeArray(this.blockedCategories);
     return Category.list().filter((category) => {
       if (category.isUncategorizedCategory) {
-        if (this.attrs.options?.allowUncategorized !== undefined) {
-          return this.attrs.options.allowUncategorized;
+        if (this.options?.allowUncategorized !== undefined) {
+          return this.options.allowUncategorized;
         }
 
         return this.selectKit.options.allowUncategorized;
@@ -45,7 +39,7 @@ export default MultiSelectComponent.extend({
 
       return (
         this.categories.includes(category) ||
-        !blockedCategories.includes(category)
+        !this.blockedCategories.includes(category)
       );
     });
   }),
@@ -53,57 +47,66 @@ export default MultiSelectComponent.extend({
   value: mapBy("categories", "id"),
 
   modifyComponentForRow() {
-    return "category-row";
+    return CategoryRow;
   },
 
-  search(filter) {
-    const result = this._super(filter);
-    if (result.length === 1) {
-      const subcategoryIds = new Set([result[0].id]);
-      for (let i = 0; i < this.siteSettings.max_category_nesting; ++i) {
-        subcategoryIds.forEach((categoryId) => {
-          this.content.forEach((category) => {
-            if (category.parent_category_id === categoryId) {
-              subcategoryIds.add(category.id);
-            }
-          });
+  async search(filter) {
+    let categories;
+    if (this.site.lazy_load_categories) {
+      const rejectCategoryIds = new Set([
+        ...this.categories.map((c) => c.id),
+        ...this.blockedCategories.map((c) => c.id),
+      ]);
+
+      categories = await Category.asyncSearch(filter, {
+        includeUncategorized:
+          this.options?.allowUncategorized !== undefined
+            ? this.options.allowUncategorized
+            : this.selectKit.options.allowUncategorized,
+        rejectCategoryIds: Array.from(rejectCategoryIds),
+      });
+    } else {
+      categories = this._super(filter);
+    }
+
+    // If there is a single match or an exact match and it has subcategories,
+    // add a row for selecting all subcategories
+    if (
+      categories.length === 1 ||
+      (categories.length > 0 && categories[0].name.localeCompare(filter) === 0)
+    ) {
+      // Descendants may not be loaded if lazy loading is enabled. Search for
+      // subcategories will make sure these are loaded
+      if (this.site.lazy_load_categories) {
+        await Category.asyncSearch("", {
+          parentCategoryId: categories[0].id,
         });
       }
 
-      if (subcategoryIds.size > 1) {
-        result.push(
+      if (categories[0].descendants.length > 1) {
+        categories.splice(
+          1,
+          0,
           EmberObject.create({
-            multiCategory: [...subcategoryIds],
-            category: result[0],
-            title: I18n.t("category_row.plus_subcategories_title", {
-              name: result[0].name,
-              count: subcategoryIds.size - 1,
-            }),
-            label: htmlSafe(
-              categoryBadgeHTML(result[0], {
-                link: false,
-                recursive: true,
-                plusSubcategories: subcategoryIds.size - 1,
-              })
-            ),
+            // This is just a hack to ensure the IDs are unique, but ensure
+            // that parseInt still returns a valid ID in order to generate the
+            // label
+            id: `${categories[0].id}+subcategories`,
+            categories: categories[0].descendants,
           })
         );
       }
     }
 
-    return result;
+    return categories;
   },
 
   select(value, item) {
-    if (item.multiCategory) {
-      const items = item.multiCategory.map((id) =>
-        Category.findById(parseInt(id, 10))
+    if (item.categories) {
+      this.selectKit.change(
+        makeArray(this.value).concat(item.categories.mapBy("id")),
+        makeArray(this.selectedContent).concat(item.categories)
       );
-
-      const newValues = makeArray(this.value).concat(items.map((i) => i.id));
-      const newContent = makeArray(this.selectedContent).concat(items);
-
-      this.selectKit.change(newValues, newContent);
     } else {
       this._super(value, item);
     }
@@ -111,9 +114,7 @@ export default MultiSelectComponent.extend({
 
   actions: {
     onChange(values) {
-      this.attrs.onChange(
-        values.map((v) => Category.findById(v)).filter(Boolean)
-      );
+      this.onChange(values.map((v) => Category.findById(v)).filter(Boolean));
       return false;
     },
   },

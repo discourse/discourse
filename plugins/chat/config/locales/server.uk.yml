@@ -6,17 +6,48 @@
 
 uk:
   site_settings:
+    chat_separate_sidebar_mode: "Показувати окремі режими бічної панелі для форуму і чату."
+    chat_enabled: "Увімкнути чат."
+    enable_public_channels: "Увімкнути публічні канали на основі категорій."
     chat_allowed_groups: "Користувачі в цих групах можуть спілкуватися в чаті. Зауважте, що команда обслуговування завжди має доступ до чату."
+    chat_channel_retention_days: "Повідомлення чату в звичайних каналах зберігатимуться стільки днів. Встановіть «0», щоб зберігати повідомлення назавжди."
+    chat_dm_retention_days: "Повідомлення чату в особистих каналах зберігатимуться стільки днів. Встановіть «0», щоб зберігати повідомлення назавжди."
+    chat_auto_silence_duration: "Кількість хвилин, протягом яких користувача буде вимкнено, якщо він перевищить ліміт кількості повідомлень чату. Встановіть «0», щоб вимкнути автоматичне вимкнення."
+    chat_allowed_messages_for_trust_level_0: "Кількість повідомлень, які користувачі рівня довіри 0 можуть надіслати протягом 30 секунд. Встановіть «0», щоб вимкнути обмеження."
+    chat_allowed_messages_for_other_trust_levels: "Кількість повідомлень, які користувачі з рівнями довіри 1-4 можуть надіслати протягом 30 секунд. Встановіть «0», щоб вимкнути обмеження."
+    chat_silence_user_sensitivity: "Ймовірність того, що користувач, якого позначили в чаті, буде автоматично заглушений."
+    chat_auto_silence_from_flags_duration: "Кількість хвилин, на які користувача буде автоматично вимкнено через позначені його повідомлення в чаті."
+    chat_default_channel_id: "Канал чату, який відкриватиметься за умовчанням, якщо користувач не матиме непрочитаних повідомлень або згадок в інших каналах."
+    chat_duplicate_message_sensitivity: "Ймовірність того, що повторне повідомлення від того самого відправника буде заблоковано за короткий проміжок часу. Десяткове число від 0 до 1.0, де 1.0 є найвищим значенням (повідомлення блокуються частіше і за менший проміжок часу). Встановіть `0`, щоб дозволити дублікати повідомлень."
+    chat_minimum_message_length: "Мінімальна кількість символів для повідомлення чату."
+    chat_allow_uploads: "Дозволити завантаження в публічних чатах і каналах прямих повідомлень."
+    chat_archive_destination_topic_status: "Статус, який має отримати тема призначення після завершення архівування каналу. Це стосується лише тих випадків, коли тема призначення є новою, а не існуючою темою."
+    default_emoji_reactions: "Реакція емодзі за замовчуванням для повідомлень чату. Додайте до 5 емодзі для швидкої реакції."
     direct_message_enabled_groups: "Дозволити користувачам у цих групах створювати особисті чати між користувачами. Примітка: команда обслуговування завжди може створювати особисті чати, і користувачі зможуть відповідати на особисті чати, ініційовані користувачами, які мають дозвіл на їх створення."
+    chat_message_flag_allowed_groups: "Користувачі цих груп можуть позначати повідомлення в чаті."
+    max_mentions_per_chat_message: "Максимальна кількість сповіщень @name, які користувач може використовувати в повідомленні чату."
+    chat_max_direct_message_users: "Під час створення нового прямого повідомлення користувачі не можуть додавати більше ніж цю кількість інших користувачів. Встановіть 0, щоб дозволити повідомлення лише собі. Персонал звільняється від цього параметра."
+    chat_allow_archiving_channels: "Дозвольте співробітникам архівувати повідомлення в темі при закритті каналу."
+    chat_editing_grace_period: "Протягом (n) секунд після надсилання чату редагування не відображатиме (відредагований) тег у повідомленні чату."
+    chat_editing_grace_period_max_diff_low_trust: "Максимальна кількість змінених символів, дозволених у пільговому періоді редагування чату, а при більшій зміні показуватиметься тег (відредаговано) біля повідомлення чату (рівень довіри 0 і 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Максимальна кількість змін символів, дозволена протягом пільгового періоду редагування чату, якщо змінено більше, відображати тег (відредаговано) біля повідомлення чату (рівень довіри 2 і вище)."
+    chat_preferred_mobile_index: "Бажана вкладка під час завантаження /чату на мобільному телефоні."
     errors:
+      chat_default_channel: "Канал чату за замовчуванням має бути публічним."
       direct_message_enabled_groups_invalid: "Ви повинні вказати принаймні одну групу для цього параметра. Якщо ви не хочете, щоб хтось, крім членів команди обслуговування, надсилав приватні повідомлення, виберіть групу команди обслуговування."
+      chat_upload_not_allowed_secure_uploads: "Завантаження чату не дозволяється, якщо ввімкнено налаштування безпечного завантаження."
   system_messages:
+    private_channel_title: "Канал %{id}"
     chat_channel_archive_complete:
       title: "Архівацію каналу чату завершено"
       subject_template: "Архівацію каналу чату успішно завершено"
+      text_body_template: |
+        Архівування каналу чату %{channel_hashtag_or_name} успішно завершено. Повідомлення були скопійовані в тему [%{topic_title}] (%{topic_url}).
     chat_channel_archive_failed:
       title: "Не вдалося створити архів каналу чату"
       subject_template: "Не вдалося архівувати канали чату"
+      text_body_template: |
+        Не вдалося архівувати канал чату %{channel_hashtag_or_name} . %{messages_archived} повідомлення заархівовано. Частково заархівовані повідомлення скопійовано в тему [%{topic_title}](%{topic_url}). Перейдіть на канал %{channel_url} , щоб повторити спробу.
     chat_channel_archive_failed_no_topic:
       title: "Не вдалося створити архів каналу чату"
       subject_template: "Помилка архіву каналу чату"
@@ -29,6 +60,8 @@ uk:
   chat:
     deleted_chat_username: видалено
     errors:
+      users_cant_be_added_to_channel: "Користувачі не можуть бути додані до цього каналу."
+      channel_exists_for_category: "Для цієї категорії та назви вже існує канал"
       channel_new_message_disallowed:
         archived: "Канал заархівований, нові повідомлення не надсилаються"
         closed: "Канал закрито, нові повідомлення не надсилаються"
@@ -37,34 +70,54 @@ uk:
         archived: "Канал заархівовано, жодні повідомлення не можна редагувати чи видаляти"
         closed: "Канал закритий, жодні повідомлення не можна редагувати чи видаляти"
         read_only: "Канал доступний лише для читання, жодні повідомлення не можна редагувати чи видаляти"
+      user_cannot_send_message: "В даний момент ви не можете надсилати повідомлення."
+      rate_limit_exceeded: "Перевищено ліміт повідомлень чату, які можна надсилати протягом 30 секунд"
       auto_silence_from_flags: "Повідомлення чату, позначене достатньо високим балом, щоб заблокувати користувача."
+      channel_cannot_be_archived: "Канал наразі не можна архівувати, він має бути або закритим, або відкритим для архівування."
+      duplicate_message: "Ви нещодавно опублікували таке саме повідомлення."
+      delete_channel_failed: "Не вдалося видалити канал, спробуйте ще раз."
       minimum_length_not_met:
         one: "Повідомлення занадто коротке, повинно містити мінімум %{count} символ."
         few: "Повідомлення занадто коротке, повинно містити мінімум %{count} символи."
         many: "Повідомлення занадто коротке, повинно містити мінімум %{count} символів."
         other: "Повідомлення занадто коротке, повинно містити мінімум %{count} символів."
       message_too_long:
-        one: "Повідомлення занадто довге, повідомлення має бути не більше %{count} символ."
+        one: "Повідомлення задовге, повідомлення має містити максимум %{count} символ."
         few: "Повідомлення занадто довге, повідомлення має бути не більше %{count} символи."
         many: "Повідомлення занадто довге, повідомлення має бути не більше %{count} символів."
         other: "Повідомлення занадто довге, повідомлення має бути не більше %{count} символів."
       draft_too_long: "Чернетка занадто довга."
+      max_reactions_limit_reached: "Нові реакції на це повідомлення заборонені."
+      message_move_invalid_channel: "Вихідний і кінцевий канали мають бути загальнодоступними."
+      message_move_no_messages_found: "Не знайдено жодного повідомлення з вказаними ідентифікаторами повідомлень."
+      cant_update_direct_message_channel: "Параметри каналу такі як назва та опис не можуть бути оновлені."
       not_accepting_dms: "На жаль, %{username} в даний момент не приймає повідомлення."
+      actor_ignoring_target_user: "Ви ігноруєте %{username}, тому не можете надсилати їм повідомлення."
+      actor_muting_target_user: "Ви відключили сповіщення від %{username}, тому ви не можете надсилати їм повідомлення."
+      actor_disallowed_dms: "Ви заборонили користувачам надсилати вам приватні та повідомлення чату, тому ви не можете створювати нові прямі повідомлення."
+      actor_preventing_target_user_from_dm: "Ви вирішили заборонити %{username} надсилати вам приватні та прямі повідомлення, тому не можете створювати для них нові прямі повідомлення."
+      user_cannot_send_direct_messages: "На жаль, ви не можете надсилати прямі повідомлення."
       over_chat_max_direct_message_users_allow_self: "Ви можете створити пряме повідомлення тільки з самим собою."
       over_chat_max_direct_message_users:
         one: "Ви не можете створити пряме повідомлення більше ніж з %{count} іншим користувачем."
         few: "Ви не можете створити пряме повідомлення більше ніж з %{count} іншими користувачами."
         many: "Ви не можете створити пряме повідомлення більше ніж з %{count} іншими користувачами."
         other: "Ви не можете створити пряме повідомлення більше ніж з %{count} іншими користувачами."
-      original_message_not_found: "Попередника повідомлення, на яке ви відповідаєте, неможливо знайти або його було видалено."
+      original_message_not_found: "Вихідне повідомлення, на яке ви відповідаєте, неможливо знайти, або його вже видалено."
+      thread_invalid_for_channel: "Гілка не є частиною вказаного каналу."
+      thread_does_not_match_parent: "Гілка не відповідає батьківському повідомленню."
+      invalid_direct_message: "Вам не дозволено створювати це пряме повідомлення."
     reviewables:
+      message_already_handled: "Дякуємо, але ми вже переглянули це повідомлення та вирішили, що його не потрібно знову позначати."
       actions:
         agree:
           title: "Погодитися…"
         agree_and_keep_message:
           title: "Залишити повідомлення"
+          description: "Погодитися з прапором і залишити допис без змін"
         agree_and_keep_deleted:
           title: "Залишити повідомлення видаленим"
+          description: "Погодитись з прапором і залишити допис видаленим."
         agree_and_suspend:
           title: "Призупинити користувача"
           description: "Погодитися з прапором та заморозити користувача."
@@ -73,11 +126,37 @@ uk:
           description: "Погодитися з прапором та відключити користувача."
         agree_and_restore:
           title: "Відновити повідомлення"
+          description: "Відновити повідомлення, щоб користувачі могли його бачити."
+        agree_and_delete:
+          title: "Видалити повідомлення"
+          description: "Видаліть повідомлення, щоб користувачі не бачили його."
+        delete_and_agree:
+          title: "Ігнорувати прапорець і видалити повідомлення"
+          description: "Ігнорувати прапорець, видаливши його з черги і видаливши повідомлення."
+        disagree_and_restore:
+          title: "Не погодитися та відновити повідомлення"
+          description: "Відновити повідомлення, щоб усі користувачі могли його бачити."
         disagree:
           title: "Відмовити"
         ignore:
-          title: "Ігнорувати"
+          title: "Нічого не робити"
+          description: "Ігнорувати прапорець, видаливши його з черги без жодних дій."
+      direct_messages:
+        transcript_title: "Зміст попередніх повідомлень в %{channel_name}"
+        transcript_body: "Щоб надати вам більше контексту, ми включили зміст попередніх повідомлень у цій розмові (до десяти):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} був запрошений %{inviting_user}."
+        few: "%{invited_users} були запрошені %{inviting_user}."
+        many: "%{invited_users} були запрошені %{inviting_user}."
+        other: "%{invited_users} були запрошені %{inviting_user}."
+      archive:
+        first_post_raw: "Ця тема є архівом каналу чату [%{channel_name}](%{channel_url})."
+      messages_moved:
+        one: "@%{acting_username} перемістив повідомлення в канал [%{channel_name}](%{first_moved_message_url})."
+        few: "@%{acting_username} перемістив %{count} повідомлення в канал [%{channel_name}](%{first_moved_message_url})."
+        many: "@%{acting_username} перемістив %{count} повідомлень в канал [%{channel_name}](%{first_moved_message_url})."
+        other: "@%{acting_username} перемістив %{count} повідомлень в канал [%{channel_name}](%{first_moved_message_url})."
       dm_title:
         single_user: "%{username}"
         multi_user: "%{comma_separated_usernames}"
@@ -86,6 +165,39 @@ uk:
           few: "%{comma_separated_usernames} і ще %{count}"
           many: "%{comma_separated_usernames} і ще %{count}"
           other: "%{comma_separated_usernames} і ще %{count}"
+    mention_warning:
+      dismiss: "відхилити"
+      cannot_see: "%{first_identifier} не має доступу до цього каналу і не отримав сповіщення."
+      cannot_see_multiple:
+        one: "%{first_identifier} і %{count} інший користувач не мають доступу до цього каналу та не отримали сповіщення."
+        few: "%{first_identifier} і %{count} інші користувачі не мають доступу до цього каналу та не отримали сповіщення."
+        many: "%{first_identifier} та %{count} інших користувачів не мають доступу до цього каналу та не отримали сповіщення."
+        other: "%{first_identifier} та %{count} інших користувачів не мають доступу до цього каналу та не отримали сповіщення."
+      invitations_sent:
+        one: "Запрошення надіслано"
+        few: "Запрошення надіслані"
+        many: "Запрошення надіслані"
+        other: "Запрошення надіслані"
+      invite: "Запросити до каналу"
+      without_membership: "%{first_identifier} не приєднався до цього каналу."
+      without_membership_multiple:
+        one: "%{first_identifier} і ще %{count} користувач не приєдналися до цього каналу."
+        few: "%{first_identifier} і ще %{count} користувачі не приєдналися до цього каналу."
+        many: "%{first_identifier} і ще %{count} користувачів не приєдналися до цього каналу."
+        other: "%{first_identifier} і ще %{count} користувачів не приєдналися до цього каналу."
+      group_mentions_disabled: "%{first_identifier} не дозволяє згадувати."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} та %{count} інша група забороняють згадки."
+        few: "%{first_identifier} та %{count} інші групи забороняють згадки."
+        many: "%{first_identifier} та %{count} інших груп забороняють згадки."
+        other: "%{first_identifier} та %{count} інших груп забороняють згадки."
+      global_mentions_disallowed: "Згадки @here та @all вимкнені на цьому каналі."
+      too_many_members: "%{first_identifier} має занадто багато членів. Нікого не було повідомлено."
+      too_many_members_multiple:
+        one: "%{first_identifier} та %{count} інша група мають занадто багато членів. Ніхто не був сповіщений."
+        few: "%{first_identifier} та %{count} інші групи мають занадто багато членів. Ніхто не був сповіщений."
+        many: "%{first_identifier} та %{count} інших груп мають занадто багато членів. Ніхто не був сповіщений."
+        other: "%{first_identifier} та %{count} інших груп мають занадто багато членів. Ніхто не був сповіщений."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "містить символи, які не є ASCII"
@@ -97,6 +209,7 @@ uk:
       inline_to_message: "Повідомлення №%{message_id} від %{username} – №%{chat_channel}"
       inline_to_channel: "Чат №%{chat_channel}"
       inline_to_topic_channel: "Чат для теми %{topic_title}"
+      thread_title_connector: "в"
       x_members:
         one: "%{count} учасник"
         few: "%{count} учасники"
@@ -107,10 +220,21 @@ uk:
         few: "та %{count} інші"
         many: "та %{count} інших"
         other: "та %{count} інших"
+    summaries:
+      no_targets: "За вибраний період повідомлень не було."
+    transcript:
+      default_thread_title: "Нитка"
+      split_thread_range: "повідомлення %{start} до %{end} із %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
         direct: '%{username} згадав вас у "%{channel}"'
+        other_type: '%{username} згадано %{identifier} у «%{channel}»'
+      direct_message_chat_mention:
+        direct: "%{username} згадав вас в особистому чаті"
+        other_type: "%{username} згадав(ла) %{identifier} в особистому чаті"
+      new_chat_message: '%{username} надіслав повідомлення в "%{channel}"'
+      new_direct_chat_message: "%{username} надіслав повідомлення в особистому чаті"
   discourse_automation:
     scriptables:
       send_chat_message:
@@ -136,8 +260,41 @@ uk:
         many: "У вас є нові повідомлення в чаті"
         other: "У вас є нові повідомлення в чаті"
       from: "%{site_name}"
+      subject:
+        private_message: "[%{email_prefix}] Нове повідомлення"
+        direct_message_from_1: "[%{email_prefix}] Нове повідомлення від %{username}"
+        direct_message_from_2: "[%{email_prefix}] Нове повідомлення від %{username1} і %{username2}"
+        direct_message_from_more:
+          one: "[%{email_prefix}] Нове повідомлення від %{username} та %{count} іншого"
+          few: "[%{email_prefix}] Нове повідомлення від %{username} та %{count} інших"
+          many: "[%{email_prefix}] Нове повідомлення від %{username} та %{count} інших"
+          other: "[%{email_prefix}] Нове повідомлення від %{username} та %{count} інших"
+        chat_channel_1: "[%{email_prefix}] Нове повідомлення в %{channel}"
+        chat_channel_2: "[%{email_prefix}] нове повідомлення в %{channel1} і %{channel2}"
+        chat_channel_more:
+          one: "[%{email_prefix}] Нове повідомлення в %{channel} та %{count} іншому"
+          few: "[%{email_prefix}] Нове повідомлення в %{channel} і %{count} інших"
+          many: "[%{email_prefix}] Нове повідомлення в %{channel} та %{count} інших"
+          other: "[%{email_prefix}] Нове повідомлення в %{channel} та %{count} інших"
+        chat_channel_and_direct_message: "[%{email_prefix}] Нове повідомлення в %{channel} і від %{username}"
+      unsubscribe: "Цей підсумок чату надсилається з %{site_link} , коли вас немає. Змініть %{email_preferences_link} або %{unsubscribe_link} , щоб скасувати підписку."
+      unsubscribe_no_link: "Цей звіт про чат надсилається від %{site_link} , коли вас немає. Змінити налаштування %{email_preferences_link}."
+      view_messages:
+        one: "Переглянути повідомлення"
+        few: "Переглянути %{count} повідомлення"
+        many: "Переглянути %{count} повідомлень"
+        other: "Переглянути %{count} повідомлень"
+      view_more:
+        one: "Переглянути ще %{count} повідомлення"
+        few: "Переглянути ще %{count} повідомлення"
+        many: "Переглянути ще %{count} повідомлень"
+        other: "Переглянути ще %{count} повідомлень"
       your_chat_settings: "Налаштування частоти електронної пошти чату"
   unsubscribe:
     chat_summary:
+      select_title: "Встановити частоту електронних листів із підсумками чату:"
       never: Ніколи
       when_away: Тільки коли офлайн
+  category:
+    cannot_delete:
+      has_chat_channels: "Неможливо видалити цю категорію, тому що вона має канали в чаті."

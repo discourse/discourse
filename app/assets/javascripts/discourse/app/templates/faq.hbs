@@ -1,4 +1,6 @@
-<DSection @bodyClass="static-{{this.model.path}}" @class="container">
+{{body-class (concat "static-" this.model.path)}}
+
+<section class="container">
   <WatchRead>
     <div class="contents clearfix body-page">
       <PluginOutlet @name="above-static" />
@@ -6,4 +8,4 @@
       <PluginOutlet @name="below-static" />
     </div>
   </WatchRead>
-</DSection>
+</section>

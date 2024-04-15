@@ -8,13 +8,12 @@
   {{#if this.isFavorite}}
     <DButton
       @icon="star"
-      @class="favorite-btn"
       @action={{this.onFavoriteClick}}
+      class="favorite-btn"
     />
   {{else}}
     <DButton
       @icon="far-star"
-      @class="favorite-btn"
       @action={{this.onFavoriteClick}}
       @title={{if
         this.canFavoriteMoreBadges
@@ -22,6 +21,7 @@
         "badges.favorite_max_reached"
       }}
       @disabled={{not this.canFavoriteMoreBadges}}
+      class="favorite-btn"
     />
   {{/if}}
 {{/if}}
@@ -47,8 +47,13 @@
           @model={{this.badge}}
           class="badge-granted"
         >
-          {{number this.displayCount}}
-          {{i18n "badges.awarded"}}
+          {{html-safe
+            (i18n
+              "badges.awarded"
+              count=this.displayCount
+              number=(number this.displayCount)
+            )
+          }}
         </LinkTo>
 
       {{/if}}

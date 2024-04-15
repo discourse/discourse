@@ -6,8 +6,8 @@ RSpec.describe PostActionNotifier do
     Jobs.run_immediately!
   end
 
-  fab!(:evil_trout) { Fabricate(:evil_trout) }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
+  fab!(:post)
 
   context "when editing a post" do
     it "notifies a user of the revision" do
@@ -205,7 +205,7 @@ RSpec.describe PostActionNotifier do
     fab!(:private_message) do
       Fabricate(:topic, archetype: Archetype.private_message, category_id: nil)
     end
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:mention_post) do
       Fabricate(:post, topic: private_message, user: user, raw: "Hello @eviltrout")
     end
@@ -228,7 +228,7 @@ RSpec.describe PostActionNotifier do
   end
 
   context "with moderator action post" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:first_post) { Fabricate(:post, user: user, raw: "A useless post for you.") }
     let(:topic) { first_post.topic }
 

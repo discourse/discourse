@@ -1,31 +1,39 @@
-import { inject as service } from "@ember/service";
+import Controller from "@ember/controller";
+import EmberObject, { action } from "@ember/object";
 import {
   empty,
   filterBy,
   mapBy,
   match,
   notEmpty,
+  readOnly,
 } from "@ember/object/computed";
-import { COMPONENTS, THEMES } from "admin/models/theme";
-import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import ThemeSettings from "admin/models/theme-settings";
-import discourseComputed from "discourse-common/utils/decorators";
-import { makeArray } from "discourse-common/lib/helpers";
+import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
 import { url } from "discourse/lib/computed";
+import { makeArray } from "discourse-common/lib/helpers";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import ThemeSettingsEditor from "admin/components/theme-settings-editor";
+import { COMPONENTS, THEMES } from "admin/models/theme";
+import ThemeSettings from "admin/models/theme-settings";
+import ThemeUploadAddModal from "../components/theme-upload-add";
 
 const THEME_UPLOAD_VAR = 2;
 
 export default class AdminCustomizeThemesShowController extends Controller {
   @service dialog;
+  @service router;
+  @service siteSettings;
+  @service modal;
 
   editRouteName = "adminCustomizeThemes.edit";
 
   @url("model.id", "/admin/customize/themes/%@/export") downloadUrl;
   @url("model.id", "/admin/themes/%@/preview") previewUrl;
+  @url("model.id", "model.locale", "/admin/themes/%@/translations/%@")
+  getTranslationsUrl;
   @empty("selectedChildThemeId") addButtonDisabled;
   @mapBy("model.parentThemes", "name") parentThemesNames;
   @filterBy("allThemes", "component", false) availableParentThemes;
@@ -40,6 +48,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @notEmpty("settings") hasSettings;
   @notEmpty("translations") hasTranslations;
   @match("model.remote_theme.remote_url", /^http(s)?:\/\//) sourceIsHttp;
+  @readOnly("model.settings") settings;
 
   @discourseComputed("model.component", "model.remote_theme")
   showCheckboxes() {
@@ -143,11 +152,6 @@ export default class AdminCustomizeThemesShowController extends Controller {
     return `admin.customize.theme.convert_${type}_tooltip`;
   }
 
-  @discourseComputed("model.settings")
-  settings(settings) {
-    return settings.map((setting) => ThemeSettings.create(setting));
-  }
-
   @discourseComputed("model.translations")
   translations(translations) {
     return translations.map((setting) =>
@@ -226,7 +230,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   }
 
   transitionToEditRoute() {
-    this.transitionToRoute(
+    this.router.transitionTo(
       this.editRouteName,
       this.get("model.id"),
       "common",
@@ -247,6 +251,11 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @discourseComputed("model.user.id", "model.default")
   showConvert(userId, defaultTheme) {
     return userId > 0 && !defaultTheme;
+  }
+
+  @action
+  refreshModel() {
+    this.send("routeRefreshModel");
   }
 
   @action
@@ -273,7 +282,12 @@ export default class AdminCustomizeThemesShowController extends Controller {
 
   @action
   addUploadModal() {
-    showModal("admin-add-upload", { admin: true, name: "" });
+    this.modal.show(ThemeUploadAddModal, {
+      model: {
+        themeFields: this.model.theme_fields,
+        addUpload: this.addUpload,
+      },
+    });
   }
 
   @action
@@ -281,6 +295,22 @@ export default class AdminCustomizeThemesShowController extends Controller {
     let model = this.model;
     model.setField("common", info.name, "", info.upload_id, THEME_UPLOAD_VAR);
     model.saveChanges("theme_fields").catch((e) => popupAjaxError(e));
+  }
+
+  get availableLocales() {
+    return JSON.parse(this.siteSettings.available_locales);
+  }
+
+  get locale() {
+    return this.get("model.locale") || this.siteSettings.default_locale;
+  }
+
+  @action
+  updateLocale(value) {
+    this.set("model.locale", value);
+    ajax(this.getTranslationsUrl).then(({ translations }) =>
+      this.set("model.translations", translations)
+    );
   }
 
   @action
@@ -383,9 +413,19 @@ export default class AdminCustomizeThemesShowController extends Controller {
         model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
           this.allThemes.removeObject(model);
-          this.transitionToRoute("adminCustomizeThemes");
+          this.router.transitionTo("adminCustomizeThemes");
         });
       },
+    });
+  }
+
+  @action
+  showThemeSettingsEditor() {
+    this.dialog.alert({
+      title: "Edit Settings",
+      bodyComponent: ThemeSettingsEditor,
+      bodyComponentModel: { model: this.model, controller: this },
+      class: "theme-settings-editor-dialog",
     });
   }
 
@@ -423,5 +463,10 @@ export default class AdminCustomizeThemesShowController extends Controller {
     this.model
       .saveChanges("enabled")
       .catch(() => this.model.set("enabled", true));
+  }
+
+  @action
+  editColorScheme() {
+    this.router.transitionTo("adminCustomize.colors.show", this.colorSchemeId);
   }
 }

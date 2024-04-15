@@ -6,14 +6,21 @@
 
 sr:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Uvek"
+          never: "Nikad"
     chat:
       dates:
+        yesterday: "Juče"
         time_tiny: "h:mm"
       cancel: "Odustani"
       channel_settings:
         edit: "Izmeni"
         add: "Dodaj"
       close: "Zatvori"
+      remove: "Ukloni"
       delete: "Obriši"
       muted: "utišano"
       joined: "pridružen"
@@ -23,8 +30,6 @@ sr:
         never: "Nikad"
       flag: "Označi Zastavom"
       last_visit: "poslednja poseta"
-      mention_warning:
-        dismiss: "одбаци"
       reply: "Odgovori"
       edit: "Izmeni"
       rebake_message: "Popravi HTML"
@@ -39,6 +44,7 @@ sr:
       browse:
         back: "Nazad"
         filter_all: sve
+        filter_open: Otvori
       chat_message_separator:
         today: Danas
         yesterday: Juče
@@ -49,9 +55,10 @@ sr:
       channel_info:
         back_to_channel: "Nazad"
         tabs:
-          about: O nama
           members: Članovi
           settings: Podešavanja
+      new_message_modal:
+        filter: "Filter"
       direct_message_creator:
         title: Nova privatna poruka
       create_channel:
@@ -70,6 +77,10 @@ sr:
         save: "Sačuvaj"
         saved: "Sačuvano"
         admin_title: "Admin"
+        settings_title: "Podešavanja"
+        category_label: "Kategorija"
+        history_label: "Istorija"
+        members_label: "Članovi"
       incoming_webhooks:
         back: "Nazad"
         description: "Opis"
@@ -88,11 +99,22 @@ sr:
           title: "Prebaci u Novu Temu"
         existing_topic:
           title: "Prebaci u Postojeću Temu"
+      retention_reminders:
+        short:
+          one: "%{count} дан"
+          few: "%{count} дана"
+          other: "%{count} дана"
       emoji_picker:
         flags: "Zastave"
       thread:
         title: "Naslov"
         settings: "Podešavanja"
+        last_reply: "poslednji odgovor"
+        notifications:
+          regular:
+            title: "Normalno"
+          tracking:
+            title: "Praćeno"
       draft_channel_screen:
         header: "Nova privatna poruka"
         cancel: "Odustani"

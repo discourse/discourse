@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe DirectoryItemsController do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:evil_trout) { Fabricate(:evil_trout) }
-  fab!(:walter_white) { Fabricate(:walter_white) }
+  fab!(:user)
+  fab!(:evil_trout)
+  fab!(:walter_white)
   fab!(:stage_user) { Fabricate(:staged, username: "stage_user") }
   fab!(:group) { Fabricate(:group, users: [evil_trout, stage_user]) }
 
@@ -15,6 +15,70 @@ RSpec.describe DirectoryItemsController do
   it "requires a proper `period` param" do
     get "/directory_items.json", params: { period: "eviltrout" }
     expect(response).not_to be_successful
+  end
+
+  context "with limit parameter" do
+    let!(:users) { Array.new(DirectoryItemsController::PAGE_SIZE + 10) { Fabricate(:user) } }
+
+    before { DirectoryItem.refresh! }
+
+    it "limits the number of returned items" do
+      get "/directory_items.json", params: { period: "all", limit: 2 }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+
+      expect(json["directory_items"].length).to eq(2)
+    end
+
+    include_examples "invalid limit params", "/directory_items.json", described_class::PAGE_SIZE
+  end
+
+  context "with page parameter" do
+    it "only accepts valid page numbers" do
+      get "/directory_items.json", params: { period: "all", page: -1 }
+      expect(response.status).to eq(400)
+
+      get "/directory_items.json", params: { period: "all", page: 0 }
+      expect(response.status).to eq(200)
+    end
+  end
+
+  context "with exclude_groups parameter" do
+    before { DirectoryItem.refresh! }
+
+    it "excludes users from specified groups" do
+      get "/directory_items.json", params: { period: "all", exclude_groups: group.name }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      usernames = json["directory_items"].map { |item| item["user"]["username"] }
+
+      expect(usernames).not_to include("eviltrout", "stage_user")
+    end
+
+    it "handles non-existent group names gracefully" do
+      get "/directory_items.json", params: { period: "all", exclude_groups: "non_existent_group" }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+
+      user_names = json["directory_items"].map { |item| item["user"]["username"] }
+      expect(user_names).to include("eviltrout")
+    end
+  end
+
+  context "with exclude_groups parameter and current user in the top positions" do
+    before do
+      sign_in(evil_trout)
+      DirectoryItem.refresh!
+    end
+
+    it "doesn't include current user if they are already in the top positions" do
+      get "/directory_items.json", params: { period: "all", exclude_groups: group.name }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      usernames = json["directory_items"].map { |item| item["user"]["username"] }
+
+      expect(usernames).not_to include("eviltrout")
+    end
   end
 
   context "without data" do

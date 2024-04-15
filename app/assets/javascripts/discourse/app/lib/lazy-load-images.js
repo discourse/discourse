@@ -5,12 +5,8 @@ function isLoaded(img) {
 }
 
 export function nativeLazyLoading(api) {
-  api.decorateCookedElement(
-    (post) =>
-      post.querySelectorAll("img").forEach((img) => (img.loading = "lazy")),
-    {
-      id: "discourse-lazy-load",
-    }
+  api.decorateCookedElement((post) =>
+    post.querySelectorAll("img").forEach((img) => (img.loading = "lazy"))
   );
 
   api.decorateCookedElement(
@@ -47,7 +43,6 @@ export function nativeLazyLoading(api) {
       });
     },
     {
-      id: "discourse-lazy-load-after-adopt",
       afterAdopt: true,
     }
   );

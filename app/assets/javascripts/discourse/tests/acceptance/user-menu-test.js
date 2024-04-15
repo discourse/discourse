@@ -1,4 +1,20 @@
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { later } from "@ember/runloop";
+import {
+  click,
+  currentRouteName,
+  currentURL,
+  triggerEvent,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
+import { test } from "qunit";
+import { Promise } from "rsvp";
+import DButton from "discourse/components/d-button";
+import { AUTO_GROUPS } from "discourse/lib/constants";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
+import TopicFixtures from "discourse/tests/fixtures/topic";
+import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import {
   acceptance,
   exists,
@@ -8,21 +24,14 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 import { cloneJSON } from "discourse-common/lib/object";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
-import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
-import TopicFixtures from "discourse/tests/fixtures/topic";
-import { Promise } from "rsvp";
-import { later } from "@ember/runloop";
-import I18n from "I18n";
-import DButton from "discourse/components/d-button";
+import I18n from "discourse-i18n";
 
 acceptance("User menu", function (needs) {
   needs.user({
     unread_high_priority_notifications: 73,
     trust_level: 3,
+    can_post_anonymously: true,
     grouped_unread_notifications: {
       [NOTIFICATION_TYPES.replied]: 2,
     },
@@ -30,7 +39,6 @@ acceptance("User menu", function (needs) {
 
   needs.settings({
     allow_anonymous_posting: true,
-    anonymous_posting_min_trust_level: 3,
   });
 
   let requestHeaders = {};
@@ -53,7 +61,7 @@ acceptance("User menu", function (needs) {
 
   test("notifications panel has a11y attributes", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     const panel = query("#quick-access-all-notifications");
     assert.strictEqual(panel.getAttribute("tabindex"), "-1");
     assert.strictEqual(
@@ -64,7 +72,7 @@ acceptance("User menu", function (needs) {
 
   test("replies notifications panel has a11y attributes", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-replies");
     const panel = query("#quick-access-replies");
     assert.strictEqual(panel.getAttribute("tabindex"), "-1");
@@ -76,7 +84,7 @@ acceptance("User menu", function (needs) {
 
   test("profile panel has a11y attributes", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
     const panel = query("#quick-access-profile");
     assert.strictEqual(panel.getAttribute("tabindex"), "-1");
@@ -88,7 +96,7 @@ acceptance("User menu", function (needs) {
 
   test("clicking on an unread notification", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
 
     let repliesBadgeNotification = query(
       "#user-menu-button-replies .badge-notification"
@@ -107,7 +115,7 @@ acceptance("User menu", function (needs) {
       "the Discourse-Clear-Notifications request header is set to the notification id in the next ajax request"
     );
 
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     repliesBadgeNotification = query(
       "#user-menu-button-replies .badge-notification"
     );
@@ -122,7 +130,7 @@ acceptance("User menu", function (needs) {
     updateCurrentUser({ reviewable_count: 1 });
 
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-review-queue");
 
     assert.strictEqual(
@@ -145,7 +153,7 @@ acceptance("User menu", function (needs) {
       "clicking on an item closes the menu after navigating"
     );
 
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-review-queue");
     await click("#quick-access-review-queue li.reviewable.pending a");
 
@@ -209,7 +217,7 @@ acceptance("User menu", function (needs) {
       "user-menu-button-profile": I18n.t("user_menu.tabs.profile"),
     };
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     for (const [key, title] of Object.entries(expectedTitles)) {
       assert.strictEqual(
         query(`#${key}`).title,
@@ -284,7 +292,7 @@ acceptance("User menu", function (needs) {
     };
 
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
 
     assert.ok(
       exists("#user-menu-button-custom-tab-1"),
@@ -370,7 +378,7 @@ acceptance("User menu", function (needs) {
     });
 
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
 
     const notifications = queryAll(
       "#quick-access-all-notifications ul li.notification"
@@ -397,7 +405,7 @@ acceptance("User menu", function (needs) {
     });
 
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-bookmarks");
 
     const bookmarks = queryAll("#quick-access-bookmarks ul li.bookmark");
@@ -424,7 +432,7 @@ acceptance("User menu", function (needs) {
     });
 
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-messages");
 
     const messages = queryAll("#quick-access-messages ul li.message");
@@ -435,9 +443,12 @@ acceptance("User menu", function (needs) {
   });
 
   test("the profile tab", async function (assert) {
+    const clickOutside = () =>
+      triggerEvent(document.querySelector("header.d-header"), "pointerdown");
+
     updateCurrentUser({ draft_count: 13 });
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
     const summaryLink = query("#quick-access-profile ul li.summary a");
@@ -485,9 +496,10 @@ acceptance("User menu", function (needs) {
       "invites link has the right icon"
     );
 
-    await click("header.d-header"); // close the menu
+    await clickOutside();
     updateCurrentUser({ can_invite_to_forum: false });
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
+
     await click("#user-menu-button-profile");
 
     assert.notOk(
@@ -495,18 +507,18 @@ acceptance("User menu", function (needs) {
       "invites link not shown when the user can't invite"
     );
 
-    const dratsLink = query("#quick-access-profile ul li.drafts a");
+    const draftsLink = query("#quick-access-profile ul li.drafts a");
     assert.ok(
-      dratsLink.href.endsWith("/u/eviltrout/activity/drafts"),
+      draftsLink.href.endsWith("/u/eviltrout/activity/drafts"),
       "has a link to the drafts page of the user"
     );
     assert.strictEqual(
-      dratsLink.textContent.trim(),
+      draftsLink.textContent.trim(),
       I18n.t("drafts.label_with_count", { count: 13 }),
       "drafts link has the right label with count of the user's drafts"
     );
     assert.ok(
-      dratsLink.querySelector(".d-icon-pencil-alt"),
+      draftsLink.querySelector(".d-icon-user_menu\\.drafts"),
       "drafts link has the right icon"
     );
 
@@ -541,11 +553,11 @@ acceptance("User menu", function (needs) {
       "Do Not Disturb button has the right icon"
     );
 
-    await click("header.d-header"); // close the menu
+    await clickOutside();
     const date = new Date();
     date.setHours(date.getHours() + 2);
     updateCurrentUser({ do_not_disturb_until: date.toISOString() });
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
     doNotDisturbButton = query(
@@ -564,6 +576,10 @@ acceptance("User menu", function (needs) {
       "Do Not Disturb button has the right icon when Do Not Disturb is enabled"
     );
 
+    assert.ok(
+      exists("#quick-access-profile ul li.enable-anonymous .btn"),
+      "toggle anon button is shown"
+    );
     let toggleAnonButton = query(
       "#quick-access-profile ul li.enable-anonymous .btn"
     );
@@ -580,9 +596,9 @@ acceptance("User menu", function (needs) {
       "toggle anonymous button has the right icon when the user isn't anonymous"
     );
 
-    await click("header.d-header"); // close the menu
+    await clickOutside();
     updateCurrentUser({ is_anonymous: true });
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
     toggleAnonButton = query(
@@ -601,9 +617,18 @@ acceptance("User menu", function (needs) {
       "toggle anonymous button has the right icon when the user is anonymous"
     );
 
-    await click("header.d-header"); // close the menu
-    updateCurrentUser({ is_anonymous: false, trust_level: 2 });
-    await click(".d-header-icons .current-user");
+    await clickOutside();
+    updateCurrentUser({
+      is_anonymous: false,
+      can_post_anonymously: false,
+      trust_level: 2,
+      groups: [
+        AUTO_GROUPS.trust_level_0,
+        AUTO_GROUPS.trust_level_1,
+        AUTO_GROUPS.trust_level_2,
+      ],
+    });
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
     assert.notOk(
@@ -615,11 +640,18 @@ acceptance("User menu", function (needs) {
       "toggle anon button isn't shown when the user can't use it"
     );
 
-    await click("header.d-header"); // close the menu
-    updateCurrentUser({ is_anonymous: true, trust_level: 2 });
-    this.siteSettings.allow_anonymous_posting = false;
-    this.siteSettings.anonymous_posting_min_trust_level = 3;
-    await click(".d-header-icons .current-user");
+    await clickOutside();
+    updateCurrentUser({
+      is_anonymous: true,
+      trust_level: 2,
+      can_post_anonymously: true,
+      groups: [
+        AUTO_GROUPS.trust_level_0,
+        AUTO_GROUPS.trust_level_1,
+        AUTO_GROUPS.trust_level_2,
+      ],
+    });
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
     assert.ok(
@@ -627,11 +659,20 @@ acceptance("User menu", function (needs) {
       "toggle anon button is always shown if the user is anonymous"
     );
 
-    await click("header.d-header"); // close the menu
-    updateCurrentUser({ is_anonymous: false, trust_level: 4 });
-    this.siteSettings.allow_anonymous_posting = false;
-    this.siteSettings.anonymous_posting_min_trust_level = 3;
-    await click(".d-header-icons .current-user");
+    await clickOutside();
+    updateCurrentUser({
+      is_anonymous: true,
+      can_post_anonymously: true,
+      trust_level: 4,
+      groups: [
+        AUTO_GROUPS.trust_level_0,
+        AUTO_GROUPS.trust_level_1,
+        AUTO_GROUPS.trust_level_2,
+        AUTO_GROUPS.trust_level_3,
+        AUTO_GROUPS.trust_level_4,
+      ],
+    });
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
     assert.notOk(
@@ -639,16 +680,23 @@ acceptance("User menu", function (needs) {
       "toggle anon button is not shown if the allow_anonymous_posting setting is false"
     );
 
-    await click("header.d-header"); // close the menu
-    updateCurrentUser({ is_anonymous: false, trust_level: 2 });
-    this.siteSettings.allow_anonymous_posting = true;
-    this.siteSettings.anonymous_posting_min_trust_level = 3;
-    await click(".d-header-icons .current-user");
+    await clickOutside();
+    updateCurrentUser({
+      is_anonymous: false,
+      can_post_anonymously: false,
+      trust_level: 2,
+      groups: [
+        AUTO_GROUPS.trust_level_0,
+        AUTO_GROUPS.trust_level_1,
+        AUTO_GROUPS.trust_level_2,
+      ],
+    });
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
     assert.notOk(
       exists("#quick-access-profile ul li.enable-anonymous"),
-      "toggle anon button is not shown if the user doesn't have a high enough trust level"
+      "toggle anon button is not shown if the user is not allowed to post anonymously"
     );
 
     const logoutButton = query("#quick-access-profile ul li.logout .btn");
@@ -683,7 +731,7 @@ acceptance("User menu", function (needs) {
     });
 
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-profile");
 
     const item1 = query("#quick-access-profile ul li.test-1-item");
@@ -749,7 +797,7 @@ acceptance("User menu", function (needs) {
       });
     });
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-all-notifications");
     assert.strictEqual(
       currentURL(),
@@ -769,7 +817,7 @@ acceptance("User menu", function (needs) {
       ["#user-menu-button-profile", "/u/eviltrout/summary"],
     ];
     for (const [id, expectedLink] of tabs) {
-      await click(".d-header-icons .current-user");
+      await click(".d-header-icons .current-user button");
       await click(id);
       await click(id);
       if (expectedLink) {
@@ -794,7 +842,7 @@ acceptance("User menu", function (needs) {
 
   test("tabs have hrefs and can be opened in new window/tab", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
 
     assert
       .dom("#user-menu-button-replies")
@@ -818,6 +866,32 @@ acceptance("User menu", function (needs) {
     } finally {
       window.removeEventListener("click", interceptor);
     }
+  });
+
+  test("tabs without hrefs can be visited with the keyboard", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user button");
+
+    await triggerKeyEvent(
+      "#user-menu-button-other-notifications",
+      "keydown",
+      "Enter"
+    );
+
+    assert.ok(
+      exists("#quick-access-other-notifications"),
+      "the other notifications panel can display using keyboard navigation"
+    );
+  });
+
+  test("closes the menu when navigating away", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user button");
+    await click("#user-menu-button-profile");
+    await click(".quick-access-panel .preferences a");
+
+    assert.dom(".user-menu").doesNotExist();
+    assert.strictEqual(currentRouteName(), "preferences.account");
   });
 });
 
@@ -878,26 +952,28 @@ acceptance("User menu - Dismiss button", function (needs) {
 
   test("shows confirmation modal for the all-notifications list", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
 
     await click(".user-menu .notifications-dismiss");
     assert.strictEqual(
-      query(".dismiss-notification-confirmation").textContent.trim(),
+      query(
+        ".dismiss-notification-confirmation .d-modal__body"
+      ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.default", { count: 10 }),
       "confirmation modal is shown when there are unread high pri notifications"
     );
 
-    await click(".modal-footer .btn-default"); // click cancel on the dismiss modal
+    await click(".d-modal__footer .btn-default"); // click cancel on the dismiss modal
     assert.notOk(markRead, "mark-read request isn't sent");
 
     await click(".user-menu .notifications-dismiss");
-    await click(".modal-footer .btn-primary"); // click confirm on the dismiss modal
+    await click(".d-modal__footer .btn-primary"); // click confirm on the dismiss modal
     assert.ok(markRead, "mark-read request is sent");
   });
 
   test("shows confirmation modal for the bookmarks list", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
 
     assert.strictEqual(
       query("#user-menu-button-bookmarks .badge-notification").textContent,
@@ -918,7 +994,9 @@ acceptance("User menu - Dismiss button", function (needs) {
     await click(".user-menu .notifications-dismiss");
 
     assert.strictEqual(
-      query(".dismiss-notification-confirmation").textContent.trim(),
+      query(
+        ".dismiss-notification-confirmation .d-modal__body"
+      ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
         count: 103,
       }),
@@ -926,7 +1004,7 @@ acceptance("User menu - Dismiss button", function (needs) {
     );
     assert.notOk(markRead, "mark-read request isn't sent");
 
-    await click(".modal-footer .btn-primary"); // confirm dismiss on the dismiss modal
+    await click(".d-modal__footer .btn-primary"); // confirm dismiss on the dismiss modal
 
     assert.notOk(
       exists("#quick-access-bookmarks ul li.notification"),
@@ -951,7 +1029,7 @@ acceptance("User menu - Dismiss button", function (needs) {
 
   test("shows confirmation modal for the messages list", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
 
     assert.strictEqual(
       query("#user-menu-button-messages .badge-notification").textContent,
@@ -972,7 +1050,9 @@ acceptance("User menu - Dismiss button", function (needs) {
     await click(".user-menu .notifications-dismiss");
 
     assert.strictEqual(
-      query(".dismiss-notification-confirmation").textContent.trim(),
+      query(
+        ".dismiss-notification-confirmation .d-modal__body"
+      ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.messages", {
         count: 89,
       }),
@@ -980,7 +1060,7 @@ acceptance("User menu - Dismiss button", function (needs) {
     );
     assert.notOk(markRead, "mark-read request isn't sent");
 
-    await click(".modal-footer .btn-primary"); // confirm dismiss on the dismiss modal
+    await click(".d-modal__footer .btn-primary"); // confirm dismiss on the dismiss modal
 
     assert.notOk(
       exists("#quick-access-messages ul li.notification"),
@@ -1005,7 +1085,7 @@ acceptance("User menu - Dismiss button", function (needs) {
 
   test("doesn't show confirmation modal for the likes notifications list", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
 
     await click("#user-menu-button-likes");
     await click(".user-menu .notifications-dismiss");
@@ -1017,7 +1097,7 @@ acceptance("User menu - Dismiss button", function (needs) {
 
   test("doesn't show confirmation modal for the other notifications list", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
 
     await click("#user-menu-button-other-notifications");
     let othersBadgeNotification = query(
@@ -1038,5 +1118,45 @@ acceptance("User menu - Dismiss button", function (needs) {
       markRead,
       "mark-read request is sent without a confirmation modal"
     );
+  });
+});
+
+acceptance("User menu - avatars", function (needs) {
+  needs.user();
+
+  needs.settings({
+    show_user_menu_avatars: true,
+  });
+
+  test("It shows user avatars for various notifications on all notifications pane", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user button");
+    assert.ok(exists("li.notification.edited .icon-avatar"));
+    assert.ok(exists("li.notification.replied .icon-avatar"));
+  });
+
+  test("It shows user avatars for messages", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user button");
+    await click("#user-menu-button-messages");
+
+    assert.ok(exists("li.notification.private-message .icon-avatar"));
+    assert.ok(exists("li.message .icon-avatar"));
+  });
+
+  test("It shows user avatars for bookmark items and bookmark reminder notification items", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user button");
+    await click("#user-menu-button-bookmarks");
+
+    assert.ok(exists("li.notification.bookmark-reminder .icon-avatar"));
+    assert.ok(exists("li.bookmark .icon-avatar"));
+  });
+
+  test("Icon avatars have correct class names based on system avatar usage", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user button");
+    assert.ok(exists("li.group-message-summary .icon-avatar.system-avatar"));
+    assert.ok(exists("li.notification.replied .icon-avatar.user-avatar"));
   });
 });

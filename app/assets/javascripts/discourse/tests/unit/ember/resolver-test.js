@@ -1,7 +1,8 @@
-import { buildResolver, setResolverOption } from "discourse-common/resolver";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
+import { buildResolver, setResolverOption } from "discourse-common/resolver";
 
 let resolver;
 
@@ -9,6 +10,10 @@ function lookupTemplate(assert, name, expectedTemplate, message) {
   let parseName = resolver.parseName(name);
   let result = resolver.resolveTemplate(parseName);
   assert.strictEqual(result, expectedTemplate, message);
+}
+
+function resolve(name) {
+  return resolver.resolve(name);
 }
 
 function setTemplates(templateModuleNames) {
@@ -20,6 +25,8 @@ function setTemplates(templateModuleNames) {
 const DiscourseResolver = buildResolver("discourse");
 
 module("Unit | Ember | resolver", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
     resolver = DiscourseResolver.create({
@@ -591,93 +598,20 @@ module("Unit | Ember | resolver", function (hooks) {
     );
   });
 
-  test("resolves templates with 'wizard' prefix", function (assert) {
-    setTemplates([
-      "wizard/templates/foo",
-      "discourse/templates/wizard_bar",
-      "discourse/templates/wizard.bar",
-      "wizard/templates/bar",
-      "wizard/templates/dashboard_general",
-      "discourse/templates/wizard-baz-qux",
-      "javascripts/wizard/plugin-template",
-    ]);
-
-    // Switches prefix to wizard/templates when underscored
-    lookupTemplate(
-      assert,
-      "template:wizard_foo",
-      "wizard/templates/foo",
-      "when prefix is separated by underscore"
+  test("resolves plugin/theme components with and without /index", function (assert) {
+    registerTemporaryModule(
+      "discourse/plugins/my-fake-plugin/discourse/components/my-component",
+      "my-component"
+    );
+    registerTemporaryModule(
+      "discourse/plugins/my-fake-plugin/discourse/components/my-second-component/index",
+      "my-second-component"
     );
 
-    // Switches prefix to wizard/templates when dotted
-    lookupTemplate(
-      assert,
-      "template:wizard.foo",
-      "wizard/templates/foo",
-      "when prefix is separated by dot"
-    );
-
-    // Doesn't match unseparated prefix
-    lookupTemplate(
-      assert,
-      "template:wizardfoo",
-      undefined,
-      "but not when prefix is not separated in any way"
-    );
-
-    // Prioritized the default match when underscored
-    lookupTemplate(
-      assert,
-      "template:wizard_bar",
-      "discourse/templates/wizard_bar",
-      "but not when template with the exact underscored name exists"
-    );
-
-    // Prioritized the default match when dotted
-    lookupTemplate(
-      assert,
-      "template:wizard.bar",
-      "discourse/templates/wizard.bar",
-      "but not when template with the exact dotted name exists"
-    );
-
-    lookupTemplate(
-      assert,
-      "template:wizard-dashboard-general",
-      "wizard/templates/dashboard_general",
-      "finds namespaced and underscored version"
-    );
-
-    lookupTemplate(
-      assert,
-      "template:wizard-baz/qux",
-      "discourse/templates/wizard-baz-qux",
-      "also tries dasherized"
-    );
-  });
-
-  test("resolves component templates with 'wizard' prefix to 'wizard/templates/' namespace", function (assert) {
-    setTemplates([
-      "wizard/templates/components/foo",
-      "discourse/templates/components/bar",
-      "wizard/templates/components/bar",
-    ]);
-
-    // Looks for components in wizard/templates
-    lookupTemplate(
-      assert,
-      "template:components/foo",
-      "wizard/templates/components/foo",
-      "uses wizard template component when no standard match"
-    );
-
-    // Prioritized non-wizard component
-    lookupTemplate(
-      assert,
-      "template:components/bar",
-      "discourse/templates/components/bar",
-      "uses standard match when both exist"
+    assert.strictEqual(resolve("component:my-component"), "my-component");
+    assert.strictEqual(
+      resolve("component:my-second-component"),
+      "my-second-component"
     );
   });
 });

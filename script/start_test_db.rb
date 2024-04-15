@@ -24,15 +24,18 @@ while a = ARGV.pop
 end
 
 if should_setup
+  run "rm -rf #{DATA}"
+  run "mkdir -p #{DATA}"
   run "#{BIN}/initdb -D #{DATA}"
 
   run "echo fsync = off >> #{DATA}/postgresql.conf"
+  run "echo synchronous_commit = off >> #{DATA}/postgresql.conf"
   run "echo full_page_writes = off >> #{DATA}/postgresql.conf"
   run "echo shared_buffers = 500MB >> #{DATA}/postgresql.conf"
 end
 
 if should_exec
-  exec "#{BIN}/postmaster -D #{DATA}"
+  exec "#{BIN}/postgres -D #{DATA}"
 elsif should_run
   run "#{BIN}/pg_ctl -D #{DATA} start"
 end

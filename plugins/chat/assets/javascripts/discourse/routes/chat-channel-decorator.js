@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 export default function withChatChannel(extendedClass) {
   return class WithChatChannel extends extendedClass {
@@ -25,34 +25,44 @@ export default function withChatChannel(extendedClass) {
     afterModel(model) {
       super.afterModel?.(...arguments);
 
-      this.controllerFor("chat-channel").set("targetMessageId", null);
       this.chat.activeChannel = model;
 
       if (!model) {
         return this.router.replaceWith("chat");
       }
 
-      let { messageId, channelTitle } = this.paramsFor(this.routeName);
-
-      // messageId query param backwards-compatibility
-      if (messageId) {
-        this.router.replaceWith(
-          "chat.channel",
-          ...model.routeModels,
-          messageId
-        );
-      }
+      let { channelTitle } = this.paramsFor(this.routeName);
 
       if (channelTitle && channelTitle !== model.slugifiedTitle) {
-        messageId = this.paramsFor("chat.channel.near-message").messageId;
+        if (this.routeName === "chat.channel.info") {
+          return this.router.replaceWith(
+            "chat.channel.info",
+            ...model.routeModels
+          );
+        }
+
+        const messageId = this.paramsFor("chat.channel.near-message").messageId;
         const threadId = this.paramsFor("chat.channel.thread").threadId;
 
         if (threadId) {
-          this.router.replaceWith(
-            "chat.channel.thread",
-            ...model.routeModels,
-            threadId
-          );
+          const threadMessageId = this.paramsFor(
+            "chat.channel.thread.near-message"
+          ).messageId;
+
+          if (threadMessageId) {
+            this.router.replaceWith(
+              "chat.channel.thread.near-message",
+              ...model.routeModels,
+              threadId,
+              threadMessageId
+            );
+          } else {
+            this.router.replaceWith(
+              "chat.channel.thread",
+              ...model.routeModels,
+              threadId
+            );
+          }
         } else if (messageId) {
           this.router.replaceWith(
             "chat.channel.near-message",
@@ -62,6 +72,8 @@ export default function withChatChannel(extendedClass) {
         } else {
           this.router.replaceWith("chat.channel", ...model.routeModels);
         }
+      } else {
+        this.controllerFor("chat-channel").set("targetMessageId", null);
       }
     }
   };

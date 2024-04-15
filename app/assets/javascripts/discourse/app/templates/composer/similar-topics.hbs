@@ -1,18 +1,14 @@
-<a
-  href
-  {{on "click" (fn this.closeMessage this.message)}}
-  class="close"
-  aria-label={{i18n "composer.esc_label"}}
->
-  {{i18n "composer.esc"}}
-  {{d-icon "times"}}
-</a>
+<ComposerTipCloseButton @action={{fn this.closeMessage this.message}} />
 
 <h3>{{i18n "composer.similar_topics"}}</h3>
 
 <ul class="topics">
-  <MountWidget
-    @widget="search-result-topic"
-    @args={{hash results=this.message.similarTopics}}
-  />
+  {{#each this.message.similarTopics as |topic|}}
+    <div class="similar-topic">
+      <SearchMenu::Results::Type::Topic
+        @result={{topic}}
+        @withTopicUrl={{true}}
+      />
+    </div>
+  {{/each}}
 </ul>

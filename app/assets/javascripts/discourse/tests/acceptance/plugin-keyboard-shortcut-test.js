@@ -1,13 +1,13 @@
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import sinon from "sinon";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   acceptance,
   count,
   exists,
 } from "discourse/tests/helpers/qunit-helpers";
-import sinon from "sinon";
-import { test } from "qunit";
-import { withPluginApi } from "discourse/lib/plugin-api";
 
 acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
   needs.user();

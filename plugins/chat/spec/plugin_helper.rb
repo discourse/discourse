@@ -8,7 +8,7 @@ module ChatSystemHelpers
     user.activate
 
     SiteSetting.chat_enabled = true
-    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
 
     channels_for_membership.each do |channel|
       membership = channel.add(user)
@@ -24,40 +24,112 @@ module ChatSystemHelpers
     user.activate
     user.user_option.update!(chat_enabled: true)
     Group.refresh_automatic_group!("trust_level_#{user.trust_level}".to_sym)
-    Fabricate(:user_chat_channel_membership, chat_channel: channel, user: user)
+    channel.add(user)
   end
 
   def chat_thread_chain_bootstrap(channel:, users:, messages_count: 4, thread_attrs: {})
     last_user = nil
     last_message = nil
 
+    users.each { |user| chat_system_user_bootstrap(user: user, channel: channel) }
     messages_count.times do |i|
       in_reply_to = i.zero? ? nil : last_message.id
       thread_id = i.zero? ? nil : last_message.thread_id
-      last_user = last_user.present? ? (users - [last_user]).sample : users.sample
+      last_user = ((users - [last_user]).presence || users).sample
       creator =
-        Chat::MessageCreator.new(
-          chat_channel: channel,
+        Chat::CreateMessage.call(
+          chat_channel_id: channel.id,
           in_reply_to_id: in_reply_to,
           thread_id: thread_id,
-          user: last_user,
-          content: Faker::Lorem.paragraph,
+          guardian: last_user.guardian,
+          message: Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
         )
-      creator.create
 
-      raise creator.error if creator.error
-      last_message = creator.chat_message
+      raise "#{creator.inspect_steps.inspect}\n\n#{creator.inspect_steps.error}" if creator.failure?
+      last_message = creator.message_instance
     end
 
     last_message.thread.set_replies_count_cache(messages_count - 1, update_db: true)
     last_message.thread.update!(thread_attrs) if thread_attrs.any?
     last_message.thread
   end
+
+  def thread_excerpt(message)
+    CGI.escapeHTML(
+      message.censored_excerpt(max_length: ::Chat::Thread::EXCERPT_LENGTH).gsub("&hellip;", "…"),
+    )
+  end
+end
+
+module ChatSpecHelpers
+  def service_failed!(result)
+    raise RSpec::Expectations::ExpectationNotMetError.new(
+            "Service failed, see below for step details:\n\n" + result.inspect_steps.inspect,
+          )
+  end
+
+  def update_message!(message, text: nil, user: Discourse.system_user, upload_ids: nil)
+    result =
+      Chat::UpdateMessage.call(
+        guardian: user.guardian,
+        message_id: message.id,
+        upload_ids: upload_ids,
+        message: text,
+        process_inline: true,
+      )
+    service_failed!(result) if result.failure?
+    result.message_instance
+  end
+
+  def trash_message!(message, user: Discourse.system_user)
+    result =
+      Chat::TrashMessage.call(
+        message_id: message.id,
+        channel_id: message.chat_channel_id,
+        guardian: user.guardian,
+      )
+    service_failed!(result) if result.failure?
+    result
+  end
+
+  def restore_message!(message, user: Discourse.system_user)
+    result =
+      Chat::RestoreMessage.call(
+        message_id: message.id,
+        channel_id: message.chat_channel_id,
+        guardian: user.guardian,
+      )
+    service_failed!(result) if result.failure?
+    result
+  end
+
+  def add_users_to_channel(users, channel, user: Discourse.system_user)
+    result =
+      ::Chat::AddUsersToChannel.call(
+        guardian: user.guardian,
+        channel_id: channel.id,
+        usernames: Array(users).map(&:username),
+      )
+    service_failed!(result) if result.failure?
+    result
+  end
+
+  def create_draft(channel, thread: nil, user: Discourse.system_user, data: { message: "draft" })
+    result =
+      ::Chat::UpsertDraft.call(
+        guardian: user.guardian,
+        channel_id: channel.id,
+        thread_id: thread&.id,
+        data: data.to_json,
+      )
+    service_failed!(result) if result.failure?
+    result
+  end
 end
 
 RSpec.configure do |config|
   config.include ChatSystemHelpers, type: :system
-  config.include Chat::ServiceMatchers
+  config.include ChatSpecHelpers
 
   config.expect_with :rspec do |c|
     # Or a very large value, if you do want to truncate at some point

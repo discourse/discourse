@@ -60,9 +60,11 @@ class PostDestroyer
   end
 
   def destroy
-    payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(:post).exists?
+    payload = WebHook.generate_payload(:post, @post) if WebHook.active_web_hooks(
+      :post_destroyed,
+    ).exists?
     is_first_post = @post.is_first_post? && @topic
-    has_topic_web_hooks = is_first_post && WebHook.active_web_hooks(:topic).exists?
+    has_topic_web_hooks = is_first_post && WebHook.active_web_hooks(:topic_destroyed).exists?
 
     if has_topic_web_hooks
       topic_view = TopicView.new(@topic.id, Discourse.system_user, skip_staff_action: true)
@@ -90,6 +92,9 @@ class PostDestroyer
       UserActionManager.topic_destroyed(@topic)
       DiscourseEvent.trigger(:topic_destroyed, @topic, @user)
       WebHook.enqueue_topic_hooks(:topic_destroyed, @topic, topic_payload) if has_topic_web_hooks
+      if SiteSetting.tos_topic_id == @topic.id || SiteSetting.privacy_topic_id == @topic.id
+        Discourse.clear_urls!
+      end
     end
   end
 
@@ -122,6 +127,9 @@ class PostDestroyer
         )
       end
       update_imap_sync(@post, false)
+      if SiteSetting.tos_topic_id == @topic.id || SiteSetting.privacy_topic_id == @topic.id
+        Discourse.clear_urls!
+      end
     end
   end
 
@@ -299,13 +307,11 @@ class PostDestroyer
   def make_previous_post_the_last_one
     last_post =
       Post
-        .where("topic_id = ? and id <> ?", @post.topic_id, @post.id)
         .select(:created_at, :user_id, :post_number)
         .where("topic_id = ? and id <> ?", @post.topic_id, @post.id)
         .where.not(user_id: nil)
         .where.not(post_type: Post.types[:whisper])
         .order("created_at desc")
-        .limit(1)
         .first
 
     if last_post.present?

@@ -1,3 +1,5 @@
+{{hide-application-sidebar}}
+
 {{#if this.message}}
   <div class="alert {{this.alertClass}}">{{this.message}}</div>
 {{/if}}
@@ -10,26 +12,25 @@
   {{#if this.showSecurityKeyForm}}
     <div id="security-key">
       <DButton
-        @action={{action "authenticateSecurityKey"}}
+        @action={{this.authenticateSecurityKey}}
         @icon="key"
-        @id="security-key-authenticate-button"
         @label="login.security_key_authenticate"
-        @type="button"
-        @class="btn btn-large btn-primary"
+        id="security-key-authenticate-button"
+        class="btn-large btn-primary"
       />
     </div>
   {{else if (or this.showTotpForm this.showBackupCodesForm)}}
     <form class={{this.inputFormClass}}>
       <SecondFactorInput
-        @value={{this.secondFactorToken}}
+        {{on "input" (with-event-value (fn (mut this.secondFactorToken)))}}
         @secondFactorMethod={{this.shownSecondFactorMethod}}
-        @onTokenInput={{action "onTokenInput"}}
+        value={{this.secondFactorToken}}
       />
       <DButton
-        @action={{action "authenticateToken"}}
-        @class="btn-primary"
+        @action={{this.authenticateToken}}
         @label="submit"
-        @type="submit"
+        type="submit"
+        class="btn-primary"
       />
     </form>
   {{/if}}

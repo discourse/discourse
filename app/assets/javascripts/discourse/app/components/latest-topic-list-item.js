@@ -1,8 +1,8 @@
+import Component from "@ember/component";
 import {
   navigateToTopic,
   showEntrance,
 } from "discourse/components/topic-list-item";
-import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({

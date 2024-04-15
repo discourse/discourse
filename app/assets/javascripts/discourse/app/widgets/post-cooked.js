@@ -1,15 +1,19 @@
-import highlightHTML, { unhighlightHTML } from "discourse/lib/highlight-html";
-import I18n from "I18n";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
-import highlightSearch from "discourse/lib/highlight-search";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { isValidLink } from "discourse/lib/click-track";
 import { number } from "discourse/lib/formatter";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { escape } from "pretty-text/sanitizer";
+import highlightHTML, { unhighlightHTML } from "discourse/lib/highlight-html";
+import highlightSearch from "discourse/lib/highlight-search";
+import {
+  destroyUserStatusOnMentions,
+  updateUserStatusOnMention,
+} from "discourse/lib/update-user-status-on-mention";
 import domFromString from "discourse-common/lib/dom-from-string";
+import escape from "discourse-common/lib/escape";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
-import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -76,6 +80,7 @@ export default class PostCooked {
 
   destroy() {
     this._stopTrackingMentionedUsersStatus();
+    destroyUserStatusOnMentions();
   }
 
   _decorateAndAdopt(cooked) {
@@ -381,6 +386,7 @@ export default class PostCooked {
   }
 
   _rerenderUserStatusOnMentions() {
+    destroyUserStatusOnMentions();
     this._post()?.mentioned_users?.forEach((user) =>
       this._rerenderUserStatusOnMention(this.cookedDiv, user)
     );
@@ -391,20 +397,24 @@ export default class PostCooked {
     const mentions = postElement.querySelectorAll(`a.mention[href="${href}"]`);
 
     mentions.forEach((mention) => {
-      updateUserStatusOnMention(mention, user.status, this.currentUser);
+      updateUserStatusOnMention(
+        getOwnerWithFallback(this._post()),
+        mention,
+        user.status
+      );
     });
   }
 
   _trackMentionedUsersStatus() {
     this._post()?.mentioned_users?.forEach((user) => {
-      user.trackStatus?.();
+      user.statusManager?.trackStatus?.();
       user.on?.("status-changed", this, "_rerenderUserStatusOnMentions");
     });
   }
 
   _stopTrackingMentionedUsersStatus() {
     this._post()?.mentioned_users?.forEach((user) => {
-      user.stopTrackingStatus?.();
+      user.statusManager?.stopTrackingStatus?.();
       user.off?.("status-changed", this, "_rerenderUserStatusOnMentions");
     });
   }

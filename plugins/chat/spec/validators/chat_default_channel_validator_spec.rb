@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::DefaultChannelValidator do
   fab!(:channel) { Fabricate(:category_channel) }
 

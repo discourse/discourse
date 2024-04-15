@@ -1,9 +1,9 @@
-import { inject as service } from "@ember/service";
-import { sort } from "@ember/object/computed";
-import EmberObject, { action, computed } from "@ember/object";
 import Controller from "@ember/controller";
-import I18n from "I18n";
+import EmberObject, { action, computed } from "@ember/object";
+import { sort } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import I18n from "discourse-i18n";
 
 const ALL_FILTER = "all";
 

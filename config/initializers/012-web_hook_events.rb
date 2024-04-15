@@ -43,6 +43,10 @@ end
   DiscourseEvent.on(event) { |user| WebHook.enqueue_object_hooks(:user, user, event) }
 end
 
+%i[user_suspended user_unsuspended].each do |event|
+  DiscourseEvent.on(event) { |args| WebHook.enqueue_object_hooks(:user, args[:user], event) }
+end
+
 %i[group_created group_updated].each do |event|
   DiscourseEvent.on(event) { |group| WebHook.enqueue_object_hooks(:group, group, event) }
 end

@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import renderTag from "discourse/lib/render-tag";
+import I18n from "discourse-i18n";
 
 let callbacks = null;
 let priorities = null;
@@ -57,7 +57,7 @@ export default function (topic, params) {
   }
 
   if (customHtml || (tags && tags.length > 0)) {
-    buffer = `<div class='discourse-tags' role='list' 
+    buffer = `<div class='discourse-tags' role='list'
                 aria-label=${I18n.t("tagging.tags")}>`;
     if (tags) {
       for (let i = 0; i < tags.length; i++) {
@@ -68,7 +68,7 @@ export default function (topic, params) {
             isPrivateMessage,
             tagsForUser,
             tagName,
-          }) + " ";
+          }) + "";
       }
     }
 

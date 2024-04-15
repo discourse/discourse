@@ -1,9 +1,9 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { htmlSafe } from "@ember/template";
 import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
-import { exists, visible } from "discourse/tests/helpers/qunit-helpers";
 import { module, test } from "qunit";
-import { htmlSafe } from "@ember/template";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { exists, visible } from "discourse/tests/helpers/qunit-helpers";
 
 module("Discourse Chat | Component | collapser", function (hooks) {
   setupRenderingTest(hooks);

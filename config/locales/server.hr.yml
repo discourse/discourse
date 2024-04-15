@@ -19,7 +19,7 @@ hr:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - siječanj
     - veljača
     - ožujak
@@ -52,9 +52,22 @@ hr:
   remove_posts_deleted_by_author: "Izbrisao autor"
   redirect_warning: "Nismo mogli potvrditi da je poveznica koju ste odabrali stvarno bila objavljena na forumu. Želite li svejedno nastaviti, odaberite poveznicu u nastavku."
   on_another_topic: "Na drugoj temi"
+  topic_category_changed: "Od %{from} do %{to}"
+  topic_tag_changed:
+    added_and_removed: "Dodano %{added} i uklonjeno %{removed}"
+    added: "Dodano %{added}"
+    removed: "je uklonio %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
+  components:
+    enabled_filter: "Omogućeno"
+    disabled_filter: "Onemogućeno"
+    updates_available_filter: "Ažuriranja dostupna"
+  theme_settings:
+    errors:
+      json_value:
+        too_large: "je premašio maksimalnu veličinu od %{max_size} bajtova."
   themes:
     bad_color_scheme: "Tema se ne može ažurirati, nevažeća paleta boja"
     other_error: "Dogodila se greška pri ažuriranju teme"
@@ -63,8 +76,11 @@ hr:
       generic: Došlo je do greške prilikom uvoza te teme
       upload: "Greška pri snimanju materijala: %{name}. %{errors}"
       about_json: "Pogreška pri uvozu: about.json ne postoji ili je nevažeći. Jeste li sigurni da je ovo tema za Diskurs?"
+      about_json_too_big: "Pogreška pri uvozu: about.json je veći od ograničenja, koje iznosi %{limit}."
       about_json_values: "about.json sadrži nevažeće vrijednosti: %{errors}"
       modifier_values: "about.json modifikatori sadrže nevažeće vrijednosti: %{errors}"
+      asset_too_big: "Datoteka %{filename} je veća od ograničenja, koje iznosi %{limit}"
+      theme_too_big: "Tema je veća od ograničenja, koje iznosi %{limit}"
       git: "Greška pri kloniranju git repozitorija, pristup je odbijen ili repozitorij nije pronađen"
       git_ref_not_found: "Nije moguće provjeriti git referencu: %{ref}"
       git_unsupported_scheme: "Nije moguće klonirati git repo: shema nije podržana"
@@ -73,6 +89,19 @@ hr:
       unknown_file_type: "Datoteka koju ste učitali ne čini se važećom Discourse temom."
       not_allowed_theme: "`%{repo}` nije na popisu dopuštenih tema (provjerite globalnu postavku `allowed_theme_repos`)."
       ssh_key_gone: "Predugo ste čekali da instalirate temu i SSH ključ je istekao. Molim te pokušaj ponovno."
+      too_many_files: "Broj datoteka (%{count}) u temi premašio je najveći dopušteni broj datoteka (%{limit})"
+      migrations:
+        invalid_filename: "Nevažeći naziv datoteke za migracijsku datoteku: %{filename}. Imena datoteka moraju počinjati s 4 znamenke iza kojih slijedi crtica, a zatim naziv koji sadrži samo alfanumeričke znakove s crticama."
+        name_too_long:
+          one: "Naziv migracije je predug. Ne smije premašiti %{count} znak."
+          few: "Naziv migracije je predug. Ne smije premašiti %{count} znaka."
+          other: "Naziv migracije je predug. Ne smije premašiti %{count} znakova."
+        too_many_pending_migrations: "Previše je migracija na čekanju u ovoj temi. Teme ne smiju uvesti više od 100 migracija u jednom ažuriranju"
+        out_of_sequence: "Migracija '%{name}' nije u nizu. Zadnja migracija za ovu temu imala je broj verzije %{current} koji je viši od nove migracije"
+        syntax_error: "Nije uspjelo pokretanje migracije '%{name}' jer ima sintaksnu pogrešku: %{error}"
+        exceeded_memory_limit: "Migracija '%{name}' nije uspjela jer je premašila ograničenje memorije"
+        timed_out: "Vrijeme za migraciju '%{name}' je isteklo"
+        no_exported_function: "Migracija '%{name}' ne izvozi funkciju za izvođenje migracije"
     errors:
       component_no_user_selectable: "Komponente teme ne može birati korisnik"
       component_no_default: "Komponente teme ne mogu biti podrazumijevana tema."
@@ -81,20 +110,14 @@ hr:
       optimized_link: Optimizirane veze na slike su prolazne i ne bi trebale biti uključene u izvorni kod teme.
     settings_errors:
       invalid_yaml: "Zadani YAML je nevažeći"
-      data_type_not_a_number: "Vrsta postavke `%{name}` nije podržana. Podržane vrste su `integer`, `bool`, `list`, `enum` i `upload`"
+      data_type_inclusion: "Vrsta postavke `%{name}` nije podržana. Podržane vrste su `integer`, `bool`, `list`, `enum` i `upload`"
       name_too_long: "Postoji postavka s predugim imenom. Najveća dopuštena duljina je 255"
-      default_value_missing: "Postavka `%{name}` nema podrazumijevanu vrijednost."
       default_not_match_type: "Tip zadane vrijednosti postavke `%{name}` ne podudara se s postavljenom vrijednošću postavke."
-      default_out_range: "Podrazumijevana vrijednost postavke `%{name}` nije u zadanom rasponu."
       enum_value_not_valid: "Izabrana vrijednost nije jedna od izbora u enum nizu."
-      number_value_not_valid: "Nova vrijednost nije u dozvoljenom rasponu."
-      number_value_not_valid_min_max: "Mora biti između %{min} i %{max}."
-      number_value_not_valid_min: "Mora biti veće od ili jednako %{min}."
-      number_value_not_valid_max: "Mora biti manje od ili jednako %{max}."
-      string_value_not_valid: "Duljina nove vrijednosti nije u dozvoljenom rasponu."
-      string_value_not_valid_min_max: "Mora biti duga barem %{min} i najviše %{max} znakova."
-      string_value_not_valid_min: "Mora biti duga barem %{min} znakova."
-      string_value_not_valid_max: "Mora imati najviše %{max} znakova."
+      number_value_not_valid_min_max: "Vrijednost mora biti između %{min} i %{max}."
+      objects:
+        required: "mora biti prisutan"
+        not_valid_integer_value: "mora biti cijeli broj"
     locale_errors:
       top_level_locale: "Ključ najviše razine u datoteci jezika mora odgovarati nazivu jezika"
       invalid_yaml: "Nevažeći YAML s prijevodom."
@@ -136,7 +159,6 @@ hr:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "je ograničeno na %{max} znakova; vi ste unjeli %{length}."
       invalid_boolean: "Nevažeća boolean vrijednost."
       taken: "je već zauzeto"
       accepted: mora biti prihvaćena
@@ -199,13 +221,20 @@ hr:
       default_tags_already_selected: "Ne možete odabrati oznaku koja se koristi na drugom popisu."
       s3_upload_bucket_is_required: "Ne možete omogućiti prijenose na S3 osim ako niste naveli 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Ne možete omogućiti korištenje S3 inventara osim ako niste omogućili S3 prijenose."
-      page_publishing_requirements: "Objavljivanje stranice ne može se omogućiti ako je omogućen siguran medij."
       s3_backup_requires_s3_settings: "Ne možete koristiti S3 kao pričuvnu lokaciju osim ako niste unijeli '%{setting_name}'."
   invite:
+    not_found_template: |
+      <p>Vaša pozivnica za <a href="%{base_url}">%{site_name}</a> već je iskorištena.</p>
+
+      <p>Ako se sjećate svoje zaporke, možete se <a href="%{base_url}/login">prijaviti</a>.</p>
+
+      <p>U suprotnom molimo <a href="%{base_url}/password-reset">Ponovno postavite zaporku</a>.</p>
     disabled_errors:
       invalid_access: "Nemate dopuštenje za pregled traženog izvora."
   bulk_invite:
     error: "Dogodila se greška pri učitavanju te datoteke. Molimo kasnije pokušajte ponovno."
+  invite_link:
+    email_taken: "Ovaj email se već koristi. Ako već imate korisnički račun, prijavite se ili poništite zaporku."
   topic_invite:
     sender_does_not_allow_pm: "Nažalost, ne dopuštate tom korisniku da vam šalje privatne poruke."
     user_cannot_see_topic: "%{username} ne može vidjeti temu."
@@ -258,7 +287,6 @@ hr:
       one: "još %{count} odgovor"
       few: "još %{count} odgovora"
       other: "još %{count} odgovora"
-    loading: "Učitavanje rasprave"
     permalink: "Poveznica"
     imported_from: "Ovo je prateća tema rasprave za originalni unos na %{link}"
     in_reply_to: "▶ %{username}"
@@ -283,7 +311,7 @@ hr:
     one: "Žao nam je, novi korisnici mogu spomenuti samo jednog korisnika u objavi."
     few: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
     other: "Žao nam je, novi korisnici mogu spomenuti samo %{count} korisnika u objavi."
-  no_embedded_media_allowed_trust: "Nažalost, ne možete ugraditi medijske stavke u post."
+  no_embedded_media_allowed_group: "Nažalost, ne možete ugraditi medijske stavke u post."
   no_embedded_media_allowed: "Nažalost, novi korisnici ne mogu ugraditi medijske stavke u objave."
   no_attachments_allowed: "Žao nam je novi korisnici ne mogu stavljati privitke u objave."
   too_many_attachments:
@@ -306,7 +334,6 @@ hr:
   pm_reached_recipients_limit: "Žao nam je, ne možete imati više od %{recipients_limit} primatelja u poruci."
   removed_direct_reply_full_quotes: "Automatski uklonjen citat cijelog prethodnog posta."
   watched_words_auto_tag: "Automatski označena tema"
-  secure_upload_not_allowed_in_public_topic: "Nažalost, sljedeći sigurni prijenosi ne mogu se koristiti u javnoj temi: %{upload_filenames}."
   create_pm_on_existing_topic: "Nažalost, ne možete stvoriti PM na postojeću temu."
   slow_mode_enabled: "Ova je tema u usporenom načinu rada."
   just_posted_that: "je pre slično nečemu što ste nedavno objavili"
@@ -429,7 +456,8 @@ hr:
             name:
               same_as_password: "je ista kao vaša lozinka."
             ip_address:
-              signup_not_allowed: "Prijava nije dopuštena ovom računu."
+              blocked: "Nove registracije nisu dopuštene s vaše IP adrese."
+              max_new_accounts_per_registration_ip: "Nove registracije nisu dopuštene s vaše IP adrese (dostignuto je maksimalno ograničenje). Kontaktirajte člana osoblja."
         color_scheme_color:
           attributes:
             hex:
@@ -449,7 +477,6 @@ hr:
   meta_category_description: "Rasprave o ovoj stranici, njezinoj organizaciji, kako radi i kako je se može poboljšati."
   staff_category_name: "Osoblje"
   staff_category_description: "Privatna kategorija za rasprave osoblja. Teme su vidljive samo administratorima i moderatorima."
-  admin_quick_start_title: "PROČITATI PRVO: brzi vodič za administratore"
   category:
     topic_prefix: "O %{category} kategoriji"
     errors:
@@ -483,7 +510,6 @@ hr:
     media_placeholder:
       blocked_hotlinked_title: "Mediji smješteni na drugom mjestu. Kliknite za otvaranje u novoj kartici."
       blocked_hotlinked: "Vanjski mediji"
-    hidden_bidi_character: "Dvosmjerni znakovi mogu promijeniti redoslijed prikaza teksta. To se može koristiti za prikrivanje zlonamjernog koda."
     has_likes:
       one: "%{count} Like"
       few: "%{count} Likeova"
@@ -613,12 +639,12 @@ hr:
         few: "prije skoro %{count} godina"
         other: "prije skoro %{count} godina"
   password_reset:
-    no_token: 'Ups! Link koji ste koristili više ne radi. Možete se <a href="%{base_url}/login">Prijaviti</a> sada. Ako ste zaboravili lozinku, možete <a href="%{base_url}/password-reset">zatražiti vezu</a> da je poništite.'
+    no_token: 'Ups! Poveznica koju ste koristili više ne radi. Možete se <a href="%{base_url}/login">Prijaviti</a> sada. Ako ste zaboravili zaporku, možete <a href="%{base_url}/password-reset">zatražiti poveznicu</a> da je poništite.'
     title: "Ponovo postavite zaporku"
-    success: "Uspiješno ste promijenili zaporku i sad ste prijavljeni."
-    success_unapproved: "Uspiješno ste promijenili zaporku."
+    success: "Uspješno ste promijenili zaporku i sad ste prijavljeni."
+    success_unapproved: "Uspješno ste promijenili zaporku."
   email_login:
-    invalid_token: 'Ups! Link koji ste koristili više ne radi. Možete se <a href="%{base_url}/login">Prijaviti</a> sada. Ako ste zaboravili lozinku, možete <a href="%{base_url}/password-reset">zatražiti vezu</a> da je poništite.'
+    invalid_token: 'Ups! Link koji ste koristili više ne radi. Možete se <a href="%{base_url}/login">Prijaviti</a> sada. Ako ste zaboravili zaporku, možete <a href="%{base_url}/password-reset">zatražiti poveznicu</a> da je ponovo postavite.'
     title: "Prijava emailom"
   user_auth_tokens:
     browser:
@@ -650,27 +676,12 @@ hr:
       windows: "Microsoft Windows"
       unknown: "nepoznati operacijski sustav"
   change_email:
-    wrong_account_error: "Prijavljeni ste na krivi račun, odjavite se i pokušajte ponovo."
-    confirmed: "Email vam je ažuriran."
-    please_continue: "Nastavite na %{site_name}"
     error: "Dogodila se greška u promijeni tvog e-maila. Možda se ta adresa već koristi?"
     doesnt_exist: "Ta adresa e-pošte nije povezana s vašim računom."
     error_staged: "Dogodila se greška pri promjeni vaše email adrese. Adresu već koristi drugi korisnik."
     already_done: "Žao nam je, ova poveznica za potvrdu nije više važeća. Možda je vaš email već promijenjen?"
     confirm: "Potvrdi"
     max_secondary_emails_error: "Dosegli ste maksimalno dopušteno ograničenje sekundarne e-pošte."
-    authorizing_new:
-      title: "Potvrdite svoju novu e-poštu"
-      description: "Molimo potvrdite da želite da se vaša adresa e-pošte promijeni u:"
-      description_add: "Potvrdite da želite dodati zamjensku adresu e-pošte:"
-    authorizing_old:
-      title: "Promijenite adresu e-pošte"
-      description: "Molimo potvrdite promjenu adrese e-pošte"
-      description_add: "Potvrdite da želite dodati zamjensku adresu e-pošte:"
-      old_email: "Stari email: %{email}"
-      new_email: "Novi email: %{email}"
-      almost_done_title: "Potvrđivanje nove adrese e-pošte"
-      almost_done_description: "Poslali smo e-poruku na vašu novu adresu e-pošte kako bismo potvrdili promjenu!"
   associated_accounts:
     connected: "(povezano)"
   activation:
@@ -703,6 +714,8 @@ hr:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Neprikladno"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Pošaljite poruku @%{username}"
       email_title: 'Vaša objava u "%{title}"'
@@ -732,6 +745,8 @@ hr:
       long_form: "označio za moderatorsku pozornost"
       email_title: 'Tema "%{title}" zahtjeva moderatorsku pozornost'
       email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Ovu je objavu zajednica označila zastavicom i privremeno je skrivena.</p>"
   archetypes:
@@ -742,10 +757,15 @@ hr:
       message:
         make: "Ova tema je sada \"banner\". Pojaviti će se na vrhu svake stranice dok ju korisnik ne odbaci."
         remove: "Ova tema više nije \"banner\". Neće se više prikazivati na vrhu svake stranice."
+  unsubscribed:
+    description: "Ažurirane su postavke e-pošte za <b>%{email}</b> . Za promjenu postavki e-pošte <a href='%{url}'>posjetite svoje korisničke postavke</a>."
+    topic_description: "Za ponovno pretplatu na %{link}, upotrijebite kontrolu obavijesti pri dnu ili desno od teme."
+    private_topic_description: "Da biste se ponovno pretplatili, koristite kontrolu obavijesti pri dnu ili desno od teme."
   unsubscribe:
     title: "Odjava"
     stop_watching_topic: "Prestanite pratiti ovu temu, %{link}"
     mute_topic: "Prigušite sve obavijesti za ovu temu, %{link}"
+    unwatch_category: "Prestani pratiti sve teme u %{category}"
     mailing_list_mode: "Isključite način popisa za slanje e-pošte"
     all: "Ne šalji mi nikakvu poštu od %{sitename}"
     different_user_description: "Trenutno ste prijavljeni kao drugi korisnik od onog kojem smo poslali e-poštu. Odjavite se ili uđite u anonimni način rada i pokušajte ponovno."
@@ -849,7 +869,11 @@ hr:
     trust_level_growth:
       yaxis: "Dan"
     consolidated_page_views:
+      title: "Konsolidirani prikazi stranica"
+      xaxis:
+        page_view_logged_in: "Prijavljeni korisnici"
       yaxis: "Dan"
+      description: "Prikazi stranica za prijavljene korisnike, anonimne korisnike i alate za indeksiranje."
       labels:
         post: Objava
         editor: Urednik
@@ -1079,17 +1103,12 @@ hr:
     allow_user_locale: "Dopustite korisnicima da odaberu vlastite postavke jezika sučelja"
     set_locale_from_accept_language_header: "postaviti jezik sučelja za anonimne korisnike iz jezičnih zaglavlja njihovih web preglednika"
     support_mixed_text_direction: "Podržava mješoviti smjer teksta slijeva nadesno i zdesna nalijevo."
-    min_post_length: "Minimalna dopuštena duljina posta u znakovima"
-    min_first_post_length: "Minimalna dopuštena duljina prve objave (tijelo teme) u znakovima"
-    min_personal_message_post_length: "Minimalna dopuštena duljina posta u znakovima za poruke"
     max_post_length: "Najveća dopuštena duljina posta u znakovima"
-    topic_featured_link_enabled: "Omogući objavljivanje poveznice s temama."
     show_topic_featured_link_in_digest: "Pokažite istaknutu vezu na temu u sažetku e-pošte."
     min_topic_views_for_delete_confirm: "Minimalni broj prikaza koje tema mora imati da bi se pojavio skočni prozor za potvrdu kada se izbriše"
     min_topic_title_length: "Minimalna dopuštena duljina naslova teme u znakovima"
     max_topic_title_length: "Najveća dopuštena duljina naslova teme u znakovima"
     min_personal_message_title_length: "Minimalna dopuštena duljina naslova za poruku u znakovima"
-    max_emojis_in_title: "Maksimalno dopušteni emotikoni u naslovu teme"
     min_search_term_length: "Minimalna važeća duljina pojma za pretraživanje u znakovima"
     search_tokenize_chinese: "Prisilno pretraživanje tokenizira kineski čak i na stranicama koje nisu kineske"
     search_tokenize_japanese: "Prisilno pretraživanje tokenizira japanski čak i na stranicama koje nisu japanske"
@@ -1098,7 +1117,6 @@ hr:
     log_search_queries: "Zabilježite upite pretraživanja koje su izvršili korisnici"
     search_query_log_max_size: "Maksimalna količina upita za pretraživanje koje treba zadržati"
     search_query_log_max_retention_days: "Maksimalno vrijeme za čuvanje upita za pretraživanje, u danima."
-    search_ignore_accents: "Zanemarite naglaske kada tražite tekst."
     category_search_priority_low_weight: "Težina primijenjena na rangiranje za niski prioritet pretraživanja kategorije."
     category_search_priority_high_weight: "Težina primijenjena na rangiranje za visoku kategoriju prioriteta pretraživanja."
     default_composer_category: "Kategorija koja se koristi za prethodno popunjavanje padajućeg izbornika kategorija prilikom stvaranja nove teme."
@@ -1146,13 +1164,11 @@ hr:
     tl2_additional_flags_per_day_multiplier: "Povećajte ograničenje zastavica po danu za tl2 (član) množenjem s ovim brojem"
     tl3_additional_flags_per_day_multiplier: "Povećajte ograničenje zastavica po danu za tl3 (regular) množenjem s ovim brojem"
     tl4_additional_flags_per_day_multiplier: "Povećajte ograničenje zastavica po danu za tl4 (voditelj) množenjem s ovim brojem"
-    num_users_to_silence_new_user: "Ako postovi novog korisnika dobiju num_spam_flags_to_silence_new_user zastavice neželjene pošte od toliko različitih korisnika, sakrijte sve njihove postove i spriječite buduće objavljivanje. 0 za onemogućavanje."
     num_tl3_flags_to_silence_new_user: "Ako postovi novog korisnika dobiju ovoliko oznaka od num_tl3_users_to_silence_new_user različitih korisnika razine povjerenja 3, sakrijte sve njihove postove i spriječite buduća objavljivanja. 0 za onemogućavanje."
     num_tl3_users_to_silence_new_user: "Ako postovi novog korisnika dobiju oznake num_tl3_flags_to_silence_new_user od toliko različitih korisnika razine povjerenja 3, sakrijte sve njihove postove i spriječite buduća objavljivanja. 0 za onemogućavanje."
     notify_mods_when_user_silenced: "Ako je korisnik automatski utišan, pošaljite poruku svim moderatorima."
     flag_sockpuppets: "Ako novi korisnik odgovori na temu s iste IP adrese kao i korisnik koji je otvorio temu, obje njihove objave označite kao potencijalnu neželjenu poštu."
     traditional_markdown_linebreaks: "Koristite tradicionalne prijelome redaka u Markdownu, koji zahtijevaju dva razmaka na kraju za prijelom retka."
-    enable_markdown_typographer: "Koristite pravila tipografije za poboljšanje čitljivosti teksta: zamijenite ravne navodnike ' s vitičastim navodnicima ', (c) (tm) sa simbolima, -- s emdash –, itd."
     enable_markdown_linkify: "Automatski tretiraj tekst koji izgleda kao veza kao vezu: www.example.com i https://example.com bit će automatski povezani"
     markdown_linkify_tlds: "Popis domena najviše razine koje se automatski tretiraju kao veze"
     markdown_typographer_quotation_marks: "Popis zamjenskih parova dvostrukih i jednostrukih navodnika"
@@ -1160,7 +1176,6 @@ hr:
     must_approve_users: "Osoblje mora odobriti sve nove korisničke račune prije nego im se dopusti pristup stranici."
     invite_code: "Korisnik mora upisati ovaj kod kako bi mu se omogućila registracija računa, zanemaruje se kada je prazan (neosjetljivo je na velika i mala slova)"
     approve_suspect_users: "Dodajte sumnjive korisnike u red čekanja za pregled. Sumnjivi korisnici ušli su u biografiju/web stranicu, ali nemaju aktivnosti čitanja."
-    review_every_post: "Sve objave moraju biti pregledane. UPOZORENJE! NE PREPORUČUJE SE ZA PROMETNA MJESTA."
     pending_users_reminder_delay_minutes: "Obavijesti moderatore ako novi korisnici čekaju na odobrenje dulje od ovoliko minuta. Postavite na -1 da biste onemogućili obavijesti."
     persistent_sessions: "Korisnici će ostati prijavljeni kada se web preglednik zatvori"
     maximum_session_age: "Korisnik će ostati prijavljen n sati od zadnje posjete"
@@ -1168,7 +1183,6 @@ hr:
     ga_universal_tracking_code: "Google Universal Analytics ID koda za praćenje, npr.: UA-12345678-9; pogledajte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics naziv domene, npr.: mysite.com; pogledajte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Omogućite Google Universal Analytics praćenje među domenama. Odlazne veze na te domene imat će dodan ID klijenta. Pogledajte <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googleov vodič za praćenje među domenama.</a>"
-    gtm_container_id: "ID spremnika Google upravitelja oznaka. npr.: GTM-ABCDEF. <br/>Napomena: Skripte trećih strana koje učitava GTM možda će morati biti stavljene na popis dopuštenih u 'src skripte sigurnosne politike sadržaja'."
     enable_escaped_fragments: "Vratite se na Googleov Ajax-Crawling API ako se ne otkrije alat za indeksiranje. Pogledajte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Dopustite moderatorima stvaranje i upravljanje kategorijama i grupama"
     moderators_change_post_ownership: "Dopusti moderatorima promjenu vlasništva posta"
@@ -1182,8 +1196,6 @@ hr:
     unicode_usernames: "Dopustite da korisnička imena i nazivi grupa sadrže Unicode slova i brojke."
     allowed_unicode_username_characters: "Regularni izraz koji dopušta samo neke Unicode znakove unutar korisničkih imena. ASCII slova i brojevi uvijek će biti dopušteni i ne moraju biti uključeni u popis dopuštenih."
     reserved_usernames: "Korisnička imena za koja nije dopuštena prijava. Simbol zamjenskog znaka * može se koristiti za podudaranje bilo kojeg znaka nula ili više puta."
-    min_password_length: "Minimalna duljina lozinke."
-    min_admin_password_length: "Minimalna duljina lozinke za Admin."
     password_unique_characters: "Minimalni broj jedinstvenih znakova koje lozinka mora sadržavati."
     block_common_passwords: "Nemojte dopustiti lozinke koje se nalaze među 10.000 najčešćih lozinki."
     auth_skip_create_confirm: Kada se prijavljujete putem vanjske autorizacije, preskočite skočni prozor za kreiranje računa. Najbolje se upotrebljava uz auth_overrides_email, auth_overrides_username i auth_overrides_name.
@@ -1209,7 +1221,6 @@ hr:
     allow_new_registrations: "Dopusti registracije novih korisnika. Poništite ovu opciju kako biste spriječili bilo koga da stvori novi račun."
     enable_signup_cta: "Pokaži obavijest anonimnim korisnicima koji se vraćaju i traži ih da se prijave za račun."
     enable_google_oauth2_logins: "Omogući Google Oauth2 autentifikaciju. Ovo je metoda provjere autentičnosti koju Google trenutačno podržava. Zahtijeva ključ i tajnu. Pogledajte <a href='https://meta.discourse.org/t/15858' target='_blank'>Konfiguriranje Google prijave za Discourse</a>."
-    google_oauth2_client_id: "ID klijenta vaše Google aplikacije."
     google_oauth2_client_secret: "Tajna klijenta vaše Google aplikacije."
     google_oauth2_prompt: "Izborni razmakom razgraničeni popis vrijednosti niza koji navodi hoće li autorizacijski poslužitelj tražiti od korisnika ponovnu provjeru autentičnosti i pristanak. Pogledajte <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> za moguće vrijednosti."
     google_oauth2_hd: "Neobavezna domena s hostom za Google Apps na koju će prijava biti ograničena. Pogledajte <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> za više pojedinosti."
@@ -1239,20 +1250,17 @@ hr:
     s3_region: "Naziv regije Amazon S3 koji će se koristiti za učitavanje slika i sigurnosnih kopija."
     s3_cdn_url: "CDN URL koji se koristi za sva s3 sredstva (na primjer: https://cdn.somewhere.com). UPOZORENJE: nakon promjene ove postavke morate ponovno ispeći sve stare objave."
     avatar_sizes: "Popis automatski generiranih veličina avatara."
-    external_system_avatars_enabled: "Koristite uslugu avatara vanjskog sustava."
     external_system_avatars_url: "URL usluge avatara vanjskog sustava. Dopuštene zamjene su {username} {first_letter} {color} {size}"
     external_emoji_url: "URL vanjske usluge za emoji slike. Ostavite prazno za onemogućavanje."
     use_site_small_logo_as_system_avatar: "Koristite mali logo stranice umjesto avatara korisnika sustava. Zahtijeva da logo bude prisutan."
     restrict_letter_avatar_colors: "Popis 6-znamenkastih heksadecimalnih vrijednosti boja koje će se koristiti za pozadinu avatara slova."
     enable_listing_suspended_users_on_search: "Omogućite redovnim korisnicima da pronađu suspendirane korisnike."
     selectable_avatars_mode: "Dopustite korisnicima da odaberu avatar s popisa selectable_avatars i ograničite prijenos prilagođenih avatara na odabranu razinu povjerenja."
-    selectable_avatars: "Popis avatara koje korisnici mogu birati."
     allow_all_attachments_for_group_messages: "Dopusti sve privitke e-pošte za grupne poruke."
     png_to_jpg_quality: "Kvaliteta pretvorene JPG datoteke (1 je najniža kvaliteta, 99 je najbolja kvaliteta, 100 za onemogućiti)."
     recompress_original_jpg_quality: "Kvaliteta učitanih slikovnih datoteka (1 je najniža kvaliteta, 99 najbolja kvaliteta, 100 za onemogućavanje)."
     image_preview_jpg_quality: "Kvaliteta slikovnih datoteka promijenjene veličine (1 je najniža kvaliteta, 99 najbolja kvaliteta, 100 za onemogućavanje)."
     allow_staff_to_upload_any_file_in_pm: "Dopustite članovima osoblja da učitaju bilo koje datoteke u PM."
-    strip_image_metadata: "Skini metapodatke slike."
     composer_media_optimization_image_enabled: "Omogućuje medijsku optimizaciju učitanih slikovnih datoteka na strani klijenta."
     composer_media_optimization_image_bytes_optimization_threshold: "Minimalna veličina slikovne datoteke za pokretanje optimizacije na strani klijenta"
     composer_media_optimization_image_resize_dimensions_threshold: "Minimalna širina slike za pokretanje promjene veličine na strani klijenta"
@@ -1275,16 +1283,9 @@ hr:
     tl3_requires_days_visited: "Minimalni broj dana koje korisnik mora posjetiti web-mjesto u zadnjih (tl3 vremensko razdoblje) dana da bi se kvalificirao za promaknuće na razinu povjerenja 3. Postavite više od tl3 vremensko razdoblje da onemogućite promocije na tl3. (0 ili više)"
     tl3_requires_topics_replied_to: "Minimalni broj tema na koje korisnik mora odgovoriti u zadnjih (tl3 vremensko razdoblje) dana da bi se kvalificirao za promaknuće u razinu povjerenja 3. (0 ili više)"
     min_title_similar_length: "Minimalna duljina naslova prije nego što će se provjeriti za slične teme."
-    desktop_category_page_style: "Vizualni stil za stranicu /kategorije."
     category_colors: "Popis heksadecimalnih vrijednosti boja dopuštenih za kategorije."
-    category_style: "Vizualni stil za bedževe kategorije."
     default_dark_mode_color_scheme_id: "Shema boja koja se koristi u tamnom načinu rada."
     dark_mode_none: "ništa"
-    max_image_size_kb: "Maksimalna veličina slike za učitavanje u kB. Ovo također mora biti konfigurirano u nginx (client_max_body_size) / apache ili proxy. Slike veće od ovoga i manje od client_max_body_size bit će promijenjene u veličini kako bi stale pri prijenosu."
-    max_attachment_size_kb: "Maksimalna veličina učitanih datoteka privitka u kB. Ovo također mora biti konfigurirano u nginx (client_max_body_size) / apache ili proxy."
-    authorized_extensions: "Popis ekstenzija datoteka dopuštenih za prijenos (upotrijebite '*' da biste omogućili sve vrste datoteka)"
-    authorized_extensions_for_staff: "Popis ekstenzija datoteka dopuštenih za učitavanje za korisnike osoblja uz popis definiran u postavci web mjesta `authorized_extensions`. (koristite '*' da omogućite sve vrste datoteka)"
-    theme_authorized_extensions: "Popis ekstenzija datoteka dopuštenih za učitavanje tema (upotrijebite '*' da omogućite sve vrste datoteka)"
     max_similar_results: "Koliko sličnih tema prikazati iznad uređivača prilikom sastavljanja nove teme. Usporedba se temelji na naslovu i tijelu."
     max_image_megapixels: "Maksimalni dopušteni broj megapiksela za sliku. Slike s većim brojem megapiksela bit će odbijene."
     title_prettify: "Spriječite uobičajene tipfelere i pogreške u naslovu, uključujući velika slova, prvi znak malim slovima, više! i ?, ekstra . na kraju itd."
@@ -1325,12 +1326,12 @@ hr:
     auto_silence_first_post_regex: "Regularni izraz koji ne razlikuje velika i mala slova koji će, ako se proslijedi, utišati prvu objavu korisnika i poslati je u red čekanja za odobrenje. Primjer: raging|a[bc]a , uzrokovat će prvo utišavanje svih postova koji sadrže raging ili aba ili aca. Odnosi se samo na prvi post. ZASTARJELO: Umjesto toga koristite utišavanje promatranih riječi."
     reviewable_claiming: "Treba li potraživati sadržaj koji se može pregledati prije nego što se na njega može djelovati?"
     reviewable_default_topics: "Prikaži sadržaj koji se može pregledati prema zadanim postavkama grupiran prema temi"
+    unsubscribe_via_email: "Omogućite korisnicima da otkažu pretplatu na e-poštu slanjem e-pošte s 'unsubscribe' u naslovu ili tijelu poruke"
     pop3_polling_password: "Lozinka za POP3 račun za anketu za e-poštu."
     pop3_polling_delete_from_server: "Izbrišite e-poštu s poslužitelja. NAPOMENA: Ako ovo onemogućite, trebali biste ručno očistiti svoj poštanski sandučić"
     log_mail_processing_failures: "Zabilježite sve pogreške obrade e-pošte na <a href='%{base_path}/logs' target='_blank'>/zapisi</a>"
     email_in_min_trust: "Minimalna razina povjerenja koju korisnik mora imati da bi mu se omogućilo objavljivanje novih tema putem e-pošte."
     email_in_authserv_id: "Identifikator usluge koja vrši provjeru autentičnosti dolazne e-pošte. Pogledajte <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> za upute o tome kako to konfigurirati."
-    email_in_spam_header: "Zaglavlje e-pošte za otkrivanje neželjene pošte."
     enable_imap: "Omogućite IMAP za sinkronizaciju grupnih poruka."
     enable_imap_write: "Omogućite dvosmjernu IMAP sinkronizaciju. Ako je onemogućeno, sve operacije pisanja na IMAP računima su onemogućene."
     enable_imap_idle: "Koristite IMAP IDLE mehanizam za čekanje novih e-poruka."
@@ -1359,7 +1360,6 @@ hr:
     digest_min_excerpt_length: "Minimalni izvadak posta u sažetku e-pošte, u znakovima."
     suppress_digest_email_after_days: "Zaustavi e-poštu sa sažetkom za korisnike koji nisu viđeni na web mjestu dulje od (n) dana."
     digest_suppress_categories: "Izostavi te kategorije iz sažetaka e-pošte."
-    disable_digest_emails: "Onemogući e-poštu sa sažetkom za sve korisnike."
     apply_custom_styles_to_digest: "Prilagođeni predložak e-pošte i css primjenjuju se na e-poruke sa sažetkom."
     email_accent_bg_color: "Boja naglaska koja će se koristiti kao pozadina nekih elemenata u HTML porukama e-pošte. Unesite naziv boje ('red') ili hex vrijednost ('#FF0000')."
     email_accent_fg_color: "Boja teksta prikazanog na e-pošti bg boja u HTML e-pošti. Unesite naziv boje ('bijela') ili hex vrijednost ('#FFFFFF')."
@@ -1372,47 +1372,33 @@ hr:
     enable_group_directory: "Omogućite direktorij grupa za pregledavanje"
     enable_category_group_moderation: "Dopustite grupama moderiranje sadržaja u određenim kategorijama"
     group_in_subject: "Postavite %%{optional_pm} u predmetu e-pošte prema imenu prve grupe u PM-u, pogledajte: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Prilagodite format predmeta za standardne e-poruke</a>"
-    allow_anonymous_posting: "Dopusti korisnicima da prijeđu na anonimni način rada"
     anonymous_posting_min_trust_level: "Minimalna razina povjerenja potrebna za omogućavanje anonimnog objavljivanja"
     highlighted_languages: "Uključena pravila za označavanje sintakse. (Upozorenje: uključivanje previše jezika može utjecati na performanse) pogledajte: <a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> za demo"
     show_copy_button_on_codeblocks: "Dodajte gumb kodnim blokovima za kopiranje sadržaja bloka u korisnički međuspremnik."
     embed_any_origin: "Dopusti sadržaj koji se može ugraditi bez obzira na podrijetlo. Ovo je potrebno za mobilne aplikacije sa statičnim HTML-om."
-    embed_topics_list: "Podržava HTML ugradnju popisa tema"
     embed_set_canonical_url: "Postavite kanonski URL za ugrađene teme na URL ugrađenog sadržaja."
-    embed_truncate: "Skratite ugrađene postove."
-    embed_unlisted: "Uvezene teme neće biti navedene dok korisnik ne odgovori."
     embed_support_markdown: "Podržava Markdown formatiranje za ugrađene objave."
     allowed_embed_selectors: "Popis CSS elemenata odvojenih zarezima koji su dopušteni u ugrađivanju."
     allowed_href_schemes: "Sheme dopuštene u vezama uz http i https."
     embed_post_limit: "Maksimalan broj postova za ugradnju."
     embed_username_required: "Potrebno je korisničko ime za kreiranje teme."
-    show_create_topics_notice: "Ako stranica ima manje od 5 javnih tema, pokažite obavijest u kojoj se od administratora traži da kreiraju neke teme."
-    delete_drafts_older_than_n_days: "Izbriši skice starije od (n) dana."
     delete_merged_stub_topics_after_days: "Broj dana čekanja prije automatskog brisanja potpuno spojenih tema. Postavite na 0 da nikada ne brišete nezavršene teme."
     prevent_anons_from_downloading_files: "Spriječite anonimne korisnike u preuzimanju privitaka."
     secure_uploads: 'Ograničava pristup SVIM prijenosima (slike, video, audio, tekst, pdf-ovi, zipovi i ostalo). Ako je "potrebna prijava" omogućena, samo prijavljeni korisnici mogu pristupiti učitavanjima. U suprotnom, pristup će biti ograničen samo na učitavanje medija u privatnim porukama i privatnim kategorijama. UPOZORENJE: Ova je postavka složena i zahtijeva duboko administrativno razumijevanje. Pogledajte <a target="_blank" href="https://meta.discourse.org/t/-/140017">sigurnu učitava temu na Meta</a> za detalje.'
     secure_uploads_allow_embed_images_in_emails: "Omogućuje ugrađivanje sigurnih slika koje bi se inače redigirale u e-porukama, ako je njihova veličina manja od postavke 'maksimalna veličina slike za ugrađivanje e-pošte u sigurne prijenose kb'."
     secure_uploads_max_email_embed_image_size_kb: "Ograničenje veličine za sigurne slike koje će biti ugrađene u e-poštu ako je omogućena postavka \"sigurni prijenosi dopuštaju ugradnju u e-poštu\". Bez uključene te postavke, ova postavka nema učinka."
     slug_generation_method: "Odaberite metodu stvaranja puževa. 'encoded' će generirati niz postotnog kodiranja. 'none' će uopće onemogućiti puž."
-    enable_emoji: "Omogući emoji"
     enable_emoji_shortcuts: "Uobičajeni tekst smajlića kao što je :) :p :( bit će pretvoren u emojije"
-    emoji_set: "Kakave emoji-e želite?"
     emoji_autocomplete_min_chars: "Minimalan broj znakova potreban za pokretanje skočnog prozora s emojijima za automatsko dovršavanje"
     enable_inline_emoji_translation: "Omogućuje prijevod za ugrađene emojije (bez razmaka ili interpunkcijskih znakova prije)"
     approve_post_count: "Količina objava novog ili osnovnog korisnika koja mora biti odobrena"
-    approve_unless_trust_level: "Objave za korisnike ispod ove razine povjerenja moraju biti odobrene"
-    approve_new_topics_unless_trust_level: "Nove teme za korisnike ispod ove razine povjerenja moraju biti odobrene"
-    approve_unless_staged: "Nove teme i postovi za stupnjevite korisnike moraju biti odobreni"
     notify_about_queued_posts_after: "Ako postoje postovi koji čekaju na pregled dulje od ovog broja sati, pošaljite obavijest svim moderatorima. Postavite na 0 da biste onemogućili ove obavijesti."
     auto_close_messages_post_count: "Maksimalan broj dopuštenih postova u poruci prije nego što se automatski zatvori (0 za onemogućiti)"
     auto_close_topics_post_count: "Maksimalan broj dopuštenih postova u temi prije nego što se automatski zatvori (0 za onemogućiti)"
     auto_close_topics_create_linked_topic: "Stvorite novu povezanu temu kada je tema automatski zatvorena na temelju postavke 'automatsko zatvaranje tema za postove'"
     code_formatting_style: "Gumb koda u sastavljaču zadano će koristiti ovaj stil oblikovanja koda"
     max_allowed_message_recipients: "Maksimalan broj dopuštenih primatelja u poruci."
-    watched_words_regular_expressions: "Promatrane riječi su regularni izrazi."
     enable_diffhtml_preview: "Eksperimentalna značajka koja koristi diffHTML za sinkronizaciju pregleda umjesto potpunog ponovnog renderiranja"
-    enable_fast_edit: "Omogućuje mali odabir teksta objave koji se može uređivati na liniji."
-    old_post_notice_days: "Dana prije nego što obavijest o pošti postane stara"
     new_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o novim objavama korisnika."
     returning_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o objavama korisnika koji se vraćaju."
     returning_users_days: "Koliko dana treba proći prije nego što se smatra da se korisnik vraća."
@@ -1421,19 +1407,15 @@ hr:
     enable_page_publishing: "Dopustite članovima osoblja da objavljuju teme na novim URL-ovima s vlastitim stilom."
     show_published_pages_login_required: "Anonimni korisnici mogu vidjeti objavljene stranice, čak i kada je potrebna prijava."
     default_other_skip_new_user_tips: "Preskoči savjete i značke novog korisnika."
-    pm_tags_allowed_for_groups: "Dopustite članovima uključenih grupa da označe bilo koju osobnu poruku"
     min_trust_level_to_tag_topics: "Minimalna razina povjerenja potrebna za označavanje tema"
     suppress_overlapping_tags_in_list: "Ako oznake odgovaraju točnim riječima u naslovima tema, nemojte prikazivati oznaku"
     remove_muted_tags_from_latest: "Ne prikazuj teme označene samo prigušenim oznakama na najnovijem popisu tema."
     force_lowercase_tags: "Prisilno navedite da sve nove oznake budu ispisane malim slovima."
-    company_name: "Ime tvrtke"
-    governing_law: "Mjerodavno pravo"
-    city_for_disputes: "Grad za sporove"
     shared_drafts_category: "Omogućite značajku Dijeljene skice određivanjem kategorije za skice tema. Teme u ovoj kategoriji bit će potisnute s popisa tema za korisnike osoblja."
     shared_drafts_min_trust_level: "Dopustite korisnicima da vide i uređuju dijeljene skice."
-    push_notifications_prompt: "Prikaži upit za pristanak korisnika."
+    push_notifications_prompt: "Prikaži banner pristanka korisnika za push obavijesti. Ova postavka pokreće upit koji od korisnika traži dopuštenje za slanje push obavijesti. Pojavljuje se samo kada push obavijesti nisu već omogućene, podržava ih korisnikov uređaj i korisnik je ili objavio objavu ili koristi progresivnu web-aplikaciju (PWA). Upit se neće ponovno prikazati ako ga je korisnik već odbacio ili dao/odbio dopuštenje."
     push_notifications_icon: "Ikona značke koja se pojavljuje u kutu obavijesti. Preporučuje se monokromatski PNG s prozirnošću veličine 96×96."
-    enable_desktop_push_notifications: "Omogućite push obavijesti na radnoj površini"
+    enable_desktop_push_notifications: "Aktiviraj push obavijesti za sučelje radne površine. Ova značajka omogućuje upozorenja u stvarnom vremenu sa stranice izravno na vašu radnu površinu, povećavajući angažman i osiguravajući da su korisnici uvijek ažurirani. Međutim, učinkovitost ove značajke ovisi o podršci preglednika za push obavijesti."
     push_notification_time_window_mins: "Pričekajte (n) minuta prije slanja push obavijesti. Pomaže u sprječavanju slanja push obavijesti aktivnom online korisniku."
     base_font: "Osnovni font koji se koristi za većinu teksta na web mjestu. Teme se mogu nadjačati putem CSS prilagođenog svojstva `--font-family`."
     heading_font: "Font koji se koristi za naslove na stranici. Teme se mogu nadjačati putem CSS prilagođenog svojstva `--heading-font-family`."
@@ -1444,9 +1426,6 @@ hr:
     dashboard_hidden_reports: "Omogućuje skrivanje navedenih izvješća s nadzorne ploče."
     dashboard_visible_tabs: "Odaberite koje su kartice nadzorne ploče vidljive."
     dashboard_general_tab_activity_metrics: "Odaberite izvješća koja će se prikazivati kao metrika aktivnosti na kartici općenito."
-    gravatar_name: "Naziv pružatelja usluge Gravatar"
-    gravatar_base_url: "Url API baze Gravatar pružatelja usluga"
-    gravatar_login_url: "Url u odnosu na gravatar_base_url, koji korisniku omogućuje prijavu na uslugu Gravatar"
     share_quote_buttons: "Odredite koje se stavke pojavljuju u widgetu za dijeljenje ponuda i kojim redoslijedom."
     share_quote_visibility: "Odredite kada prikazati gumbe za dijeljenje ponuda: nikada, samo anonimnim korisnicima ili svim korisnicima. "
     create_revision_on_bulk_topic_moves: "Napravite reviziju za prve postove kada se teme skupno premještaju u novu kategoriju."
@@ -1455,10 +1434,6 @@ hr:
     use_name_for_username_suggestions: "Koristite puno ime korisnika kada predlažete korisnička imena."
     suggest_weekends_in_date_pickers: "Uključite vikende (subota i nedjelja) u prijedloge za odabir datuma (onemogućite ovo ako Discourse koristite samo radnim danima, od ponedjeljka do petka)."
     splash_screen: "Prikazuje privremeni zaslon za učitavanje dok se sredstva web-mjesta učitavaju"
-    navigation_menu: "Odredite koji navigacijski izbornik koristiti. Bočnu traku i navigaciju u zaglavlju korisnici mogu prilagoditi. Naslijeđena opcija dostupna je za kompatibilnost s prethodnim verzijama."
-    default_sidebar_categories: "Odabrane kategorije će prema zadanim postavkama biti prikazane u odjeljku Kategorije na bočnoj traci."
-    default_sidebar_tags: "Odabrane oznake će prema zadanim postavkama biti prikazane u odjeljku Oznake bočne trake."
-    enable_experimental_hashtag_autocomplete: "EKSPERIMENTALNO: Upotrijebite novi #hashtag sustav automatskog dovršavanja za kategorije i oznake koji drugačije prikazuje odabranu stavku i ima poboljšano pretraživanje"
     errors:
       invalid_css_color: "Nevažeća boja. Unesite naziv boje ili hex vrijednost."
       invalid_email: "Nevažeća adresa e-pošte."
@@ -1470,8 +1445,15 @@ hr:
       invalid_integer_max: "Vrijednost ne može biti veća od %{max}."
       invalid_integer: "Vrijednost mora biti cijeli broj."
       regex_mismatch: "Vrijednost ne odgovara potrebnom formatu."
-      invalid_string_min: "Mora imati najmanje %{min} znakova."
-      invalid_string_max: "Ne smije imati više od %{max} znakova."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "neaktivan"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "neaktivan"
+      - ""
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -1606,6 +1588,7 @@ hr:
     activate_email: "<p>Skoro ste gotovi! Poslali smo aktivacijski mail na <b>%{email}</b>. Slijedite upute u e-pošti da aktivirate svoj račun.</p><p>Ako ne stigne, provjerite svoju spam mapu.</p>"
     not_activated: "Još se ne možete prijaviti. Poslali smo vam aktivacijski e-mail. Slijedite upute u e-poruci kako biste aktivirali svoj račun."
     admin_not_allowed_from_ip_address: "Ne možete se prijaviti kao administrator s te IP adrese."
+    reset_not_allowed_from_ip_address: "Ne možete zatražiti ponovno postavljanje zaporke s te IP adrese."
     errors: "%{errors}"
     not_available: "Nije dostupno. Pokušajte %{suggestion}?"
     omniauth_confirm_button: "Nastavi"
@@ -1618,8 +1601,6 @@ hr:
       sent_test: "poslano!"
   user:
     username:
-      short: "mora imati najmanje %{min} znakova"
-      long: "ne smije imati više od %{max} znakova"
       too_long: "je predug"
       characters: "smije sadržavati samo brojeve, slova, crtice, točke i podvlake"
       unique: "mora biti jedinstven"
@@ -1634,9 +1615,6 @@ hr:
       blocked: "nije dopušteno."
       revoked: "Neće slati e-poštu na '%{email}' do %{date}."
       does_not_exist: "N/A"
-    ip_address:
-      blocked: "Nove registracije nisu dopuštene s vaše IP adrese."
-      max_new_accounts_per_registration_ip: "Nove registracije nisu dopuštene s vaše IP adrese (dostignuto je maksimalno ograničenje). Kontaktirajte člana osoblja."
     website:
       domain_not_allowed: "Web stranica nije važeća. Dopuštene domene su: %{domains}"
     auto_rejected: "Automatski odbijeno zbog starosti. Pogledajte postavku web mjesta auto_handle_queued_age."
@@ -1739,10 +1717,10 @@ hr:
     text_body_template: |
       Hvala što ste prihvatili poziv za %{site_name} -- dobrodošli!
 
-      Pritisnite ovu poveznicu kako biste sada odabrali lozinku:
+      Pritisnite ovu poveznicu kako biste sada odabrali zaporku:
       %{base_url}/u/password-reset/%{email_token}
 
-      (Ako je gornja poveznica istekla, odaberite "Zaboravio sam lozinku" kada se prijavljujete sa svojom adresom e-pošte.)
+      (Ako je gornja poveznica istekla, odaberite "Zaboravio sam zaporku" kada se prijavljujete sa svojom e-mail adresom.)
   download_backup_mailer:
     title: "Preuzmite Backup Mailer"
     subject_template: "[%{email_prefix}] Preuzimanje sigurnosne kopije stranice"
@@ -1761,20 +1739,505 @@ hr:
       subject_template: "Dobrodošli na %{site_name}"
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}"
+    email_reject_post_too_short:
+      subject_template: "[%{email_prefix}] Problem s e-mail porukom -- Objava je prekratka"
+      text_body_template: |
+        Žao nam je, ali vaša e-mail poruka za %{destination} (pod naslovom %{former_title}) nije uspjela.
+
+        Radi promicanja dubljeg razgovora, vrlo kratki odgovori nisu dopušteni. Možete li odgovoriti s najmanje %{count} znakova? Alternativno, možete lajkati objavu putem e-maila tako da odgovorite s "+1".
+  unsubscribe_link: |
+    Da biste otkazali pretplatu na ove e-mailove, [kliknite ovdje](%{unsubscribe_url}).
+  unsubscribe_link_and_mail: |
+    Da biste otkazali pretplatu na ove e-mailove, [kliknite ovdje](%{unsubscribe_url}).
   user_notifications:
+    previous_discussion: "Prethodni odgovori"
+    reached_limit:
+      one: "Pažnja: dnevno šaljemo najviše %{count} e-mail poruku. Provjerite stranicu kako biste vidjeli onu koja bi mogla biti zadržana."
+      few: "Pažnja: dnevno šaljemo najviše %{count} e-mail poruke. Provjerite stranicu kako biste vidjeli one koje bi mogle biti zadržane."
+      other: "Pažnja: dnevno šaljemo najviše %{count} e-mail poruka. Provjerite stranicu kako biste vidjeli one koje bi mogle biti zadržane. PS hvala što ste popularni!"
+    in_reply_to: "Kao odgovor na"
+    reply_by_email: "[Posjetite temu] (%{base_url}%{url}) ili odgovorite na ovu e-mail poruku da biste odgovorili."
+    reply_by_email_pm: "[Posjetite poruku](%{base_url}%{url}) ili odgovorite na ovaj e-mail da biste odgovorili %{participants}."
+    only_reply_by_email: "Odgovorite na ovaj e-mail da biste odgovorili."
+    only_reply_by_email_pm: "Odgovorite na ovaj e-mail da biste odgovorili %{participants}."
+    visit_link_to_respond: "[Posjetite temu] (%{base_url}%{url}) da biste odgovorili."
+    visit_link_to_respond_pm: "[Posjetite poruku](%{base_url}%{url}) da biste odgovorili %{participants}."
+    reply_above_line: "## Molimo upišite svoj odgovor iznad ovog retka. ##"
+    posted_by: "Objavio %{username} na %{post_date}"
+    pm_participants: "Sudionici: %{participants}"
+    more_pm_participants:
+      one: "%{participants} i %{count} drugi"
+      few: "%{participants} i %{count} druga"
+      other: "%{participants} i %{count} drugih"
+    invited_group_to_private_message_body: |
+      %{username} pozvao @%{group_name} na poruku
+
+      > ** [%{topic_title}] (%{topic_url}) **
+      >
+      > %{topic_excerpt}
+
+      na
+
+      > %{site_title} -- %{site_description}
+
+      Da biste se pridružili poruci, kliknite na poveznicu niže:
+
+      %{topic_url}
+    invited_to_private_message_body: |
+      %{username} vas je pozvao na poruku
+
+      > ** [%{topic_title}] (%{topic_url}) **
+      >
+      > %{topic_excerpt}
+
+      na
+
+      > %{site_title} -- %{site_description}
+
+      Da biste se pridružili poruci, kliknite na link ispod:
+
+      %{topic_url}
+    invited_to_topic_body: |
+      %{username} vas je pozvao u diskusiju
+
+      > ** [%{topic_title}] (%{topic_url}) **
+      >
+      > %{topic_excerpt}
+
+      na
+
+      > %{site_title} -- %{site_description}
+
+      Da biste se pridružili diskusiji, kliknite na poveznicu niže:
+
+      %{topic_url}
+    user_invited_to_private_message_pm_group:
+      title: "Korisnik je pozvao grupu u privatnu prepisku"
+      subject_template: "[%{email_prefix}] %{username} pozvao @%{group_name} na poruku '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm:
+      title: "Korisnik je pozvan na privatnu prepisku"
+      subject_template: "[%{email_prefix}] %{username} vas je pozvao u poruku '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm_staged:
+      title: "Korisnik je pozvan na privatnu prepisku"
+      subject_template: "[%{email_prefix}] %{username} vas je pozvao u poruku '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_topic:
+      title: "Korisnik je pozvan na temu"
+      subject_template: "[%{email_prefix}] %{username} vas je pozvao u '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_replied:
+      title: "Korisnik je odgovorio"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_replied_pm:
+      title: "Korisnik je odgovorio PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_quoted:
       title: "Korisnik je citirao"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_linked:
+      title: "Korisnik je naveo poveznicu"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned:
+      title: "Korisnik je spomenut"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      title: "Korisnik spomenut PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned:
+      title: "Spomenuta korisnikova grupa"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      title: "Spomenuta korisnikova grupa u PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      title: "Spomenuta korisnikova grupa u PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted:
+      title: "Korisnik objavio"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_category_or_tag:
+      title: "Korisnik prati kategoriju ili oznaku"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_first_post:
+      title: "Korisnik prati prvu objavu"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm:
+      title: "Korisnik objavio PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm_staged:
+      title: "Korisnik je objavio PM"
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
+    account_suspended:
+      title: "Korisnički račun je suspendiran"
+      subject_template: "[%{email_prefix}] Vaš račun je suspendiran"
+      text_body_template: |
+        Suspendirani ste s foruma do %{suspended_till}.
+
+        Razlog - %{reason}
+    account_suspended_forever:
+      title: "Korisnički račun je suspendiran"
+      subject_template: "[%{email_prefix}] Vaš korisnički račun je suspendiran"
+      text_body_template: |
+        Suspendirani ste s foruma.
+
+        Razlog - %{reason}
+    account_silenced:
+      title: "Korisnički račun je utišan"
+      subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
+      text_body_template: |
+        Utišani ste s foruma do %{silenced_till}.
+
+        Razlog - %{reason}
+    account_silenced_forever:
+      title: "Korisnički račun je utišan"
+      subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
+      text_body_template: |
+        Utišani ste s foruma.
+
+        Razlog - %{reason}
+    account_exists:
+      title: "Korisnički račun već postoji"
+      subject_template: "[%{email_prefix}] Korisnički račun već postoji"
+      text_body_template: |
+        Upravo ste pokušali otvoriti korisnički račun na %{site_name} ili ste pokušali promijeniti e-mail adresu računa u %{email}. Međutim, račun već postoji za %{email}.
+
+        Ako ste zaboravili zaporku, [poništite je sada](%{base_url}/password-reset).
+
+        Ako niste pokušali otvoriti račun za %{email} ili promijeniti svoju e-mail adresu, ne brinite – možete slobodno zanemariti ovu poruku.
+
+        Ako imate pitanja, [kontaktirajte naše ljubazno osoblje](%{base_url}/o).
+    account_second_factor_disabled:
+      title: "Dvofaktorska autentikacija onemogućena"
+      subject_template: "[%{email_prefix}] Dvofaktorska autentikacija onemogućena"
+      text_body_template: |
+        Dvofaktorska autentikacija je onemogućena na vašem korisničkom računu na %{site_name}. Sada se možete prijaviti samo svojom zaporkom; dodatni autentikacijski kod više nije potreban.
+
+        Ako niste odabrali onemogućiti dvofaktorsku autentikaciju, netko je možda ugrozio vaš korisnički račun.
+
+        Ako imate pitanja, [kontaktirajte naše ljubazno osoblje](%{base_url}/o).
     digest:
+      why: "Kratak sažetak %{site_link} od vašeg posljednjeg posjeta %{last_seen_at}"
+      since_last_visit: "Od vašeg posljednjeg posjeta"
+      new_topics: "Nove teme"
       unread_notifications: "Nepročitane obavijesti"
+      unread_high_priority: "Nepročitane obavijesti visokog prioriteta"
       liked_received: "Like-ova primljeno"
       new_users: "Novi korisnici"
+      popular_topics: "Popularne teme"
       join_the_discussion: "Pročitaj više"
+      popular_posts: "Popularne objave"
+      more_new: "Novo za vas"
+      subject_template: "[%{email_prefix}] Sažetak"
+      unsubscribe: "Ovaj sažetak šalje %{site_link} kada vas nismo vidjeli neko vrijeme. Promijenite %{email_preferences_link} ili %{unsubscribe_link} da biste otkazali pretplatu."
+      your_email_settings: "vaše e-mail postavke"
+      click_here: "kliknite ovdje"
+      from: "%{site_name}"
+      preheader: "Kratak sažetak od vašeg posljednjeg posjeta %{last_seen_at}"
     forgot_password:
       title: "Zaboravljena zaporka"
+      subject_template: "[%{email_prefix}] Ponovno postavljanje zaporke"
+      text_body_template: |
+        Netko je tražio da poništi vašu zaporku na [%{site_name}](%{base_url}).
+
+        Ako to niste bili vi, slobodno zanemarite ovu poruku.
+
+        Kliknite na sljedeću poveznicu za odabir nove zaporke:
+        %{base_url}/u/password-reset/%{email_token}
+    email_login:
+      title: "Prijavite se putem poveznice"
+      subject_template: "[%{email_prefix}] Prijavite se putem poveznice"
+      text_body_template: |
+        Ovdje je vaša poveznica za prijavu na [%{site_name}](%{base_url}).
+
+        Ako niste zatražili ovu poveznicu, možete slobodno zanemariti ovu e-mail poruku.
+
+        Kliknite na sljedeću poveznicu za prijavu:
+        %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Postavite zaporku"
+      subject_template: "[%{email_prefix}] Postavite zaporku"
+      text_body_template: |
+        Netko je tražio dodavanje zaporke vašem računu na [%{site_name}](%{base_url}). Alternativno, možete se prijaviti pomoću bilo koje podržane online usluge (Google, Facebook, itd.) koja je povezana s ovom potvrđenom email adresom.
+
+        Ako niste podnijeli ovaj zahtjev, možete slobodno zanemariti ovu poruku.
+
+        Kliknite na sljedeću poveznicu za odabir zaporke:
+        %{base_url}/u/password-reset/%{email_token}
+    admin_login:
+      title: "Administratorska prijava"
+      subject_template: "[%{email_prefix}] Prijava"
+      text_body_template: |
+        Netko je tražio da se prijavi na vaš račun na [%{site_name}](%{base_url}).
+
+        Ako niste podnijeli ovaj zahtjev, možete slobodno zanemariti ovu e-poruku.
+
+        Kliknite na sljedeću poveznicu za prijavu:
+        %{base_url}/session/email-login/%{email_token}
+    account_created:
+      title: "Korisnički račun stvoren"
+      subject_template: "[%{email_prefix}] Vaš novi korisnički račun"
+      text_body_template: |
+        Za vas je kreiran novi korisnički račun na %{site_name}
+
+        Kliknite na sljedeću poveznicu da biste odabrali zaporku za svoj novi korisnički račun:
+        %{base_url}/u/password-reset/%{email_token}
+    confirm_new_email:
+      title: "Potvrdite novu e-mail adresu"
+      subject_template: "[%{email_prefix}] Potvrdite svoju novu e-mail adresu"
+      text_body_template: |
+        Potvrdite svoju novu e-mail adresu za %{site_name} klikom na sljedeću poveznicu:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Ako niste zatražili ovu promjenu, obratite se [administratoru stranice](%{base_url}/about).
+    confirm_new_email_via_admin:
+      title: "Potvrdite novu e-mail adresu"
+      subject_template: "[%{email_prefix}] Potvrdite svoju novu e-mail adresu"
+      text_body_template: |
+        Potvrdite svoju novu e-mail adresu za %{site_name} klikom na sljedeću poveznicu:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Ovu promjenu e-mail adrese zatražio je administrator stranice. Ako niste zatražili ovu promjenu, obratite se [administratoru stranice](%{base_url}/about).
+    confirm_old_email:
+      title: "Potvrdite staru e-mail adresu"
+      subject_template: "[%{email_prefix}] Potvrdite svoju trenutnu e-mail adresu"
+      text_body_template: |
+        Prije nego što možemo promijeniti vašu e-mail adresu, morate potvrditi da kontrolirate
+        trenutnu e-mail adresu. Nakon što dovršite ovaj korak, tražit ćemo da potvrdite novu e-mail adresu.
+
+        Potvrdite svoju trenutnu e-mail adresu za %{site_name} klikom na sljedeću poveznicu:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      title: "Potvrdi staru e-mail adresu (dodaj)"
+      subject_template: "[%{email_prefix}] Potvrdite svoju trenutnu e-mail adresu"
+      text_body_template: |
+        Prije nego što možemo dodati novu e-mail adresu, morate potvrditi da kontrolirate
+        trenutnu e-mail adresu. Nakon što dovršite ovaj korak, tražit ćemo da potvrdite novu e-mail adresu.
+
+        Potvrdite svoju trenutnu e-mail adresu za %{site_name} klikom na sljedeću poveznicu:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
+    notify_old_email:
+      title: "Obavijesti stara e-mail adresa"
+      subject_template: "[%{email_prefix}] Vaša e-mail adresa je promijenjena"
+      text_body_template: |
+        Ovo je automatizirana poruka kojom vas obavještavamo da je vaša e-mail adresa za
+        %{site_name} promijenjena. Ako je to učinjeno pogreškom, kontaktirajte
+        administratora stranice.
+
+        Vaša e-mail adresa je promijenjena u:
+
+        %{new_email}
+    notify_old_email_add:
+      title: "Obavijesti stara e-mail adresa (dodavanje)"
+      subject_template: "[%{email_prefix}] Dodana je nova e-mail adresa"
+      text_body_template: |
+        Ovo je automatizirana poruka kojom vas obavještavamo da je dodana e-mail adresa za
+        %{site_name}. Ako je to učinjeno pogreškom, kontaktirajte
+        administratora stranice.
+
+        Vaša dodana e-mail adresa je:
+
+        %{new_email}
+    signup_after_approval:
+      title: "Prijava nakon odobrenja"
+      subject_template: "Odobreni ste na %{site_name}!"
+      text_body_template: |
+        Dobrodošli u %{site_name}!
+
+        Član osoblja odobrio je vaš korisnički račun na %{site_name}.
+
+        Sada možete pristupiti svom novom korisničkom računu tako da se prijavite na:
+        %{base_url}
+
+        Ako gornju poveznicu ne možete kliknuti, pokušajte je kopirati i zalijepiti u adresnu traku vaš web preglednik.
+
+        %{new_user_tips}
+
+        Vjerujemo u [civilizirano ponašanje zajednice](%{base_url}/guidelines) u svakom trenutku.
+
+        Uživajte u boravku!
+    signup_after_reject:
+      subject_template: "Odbijeni ste na %{site_name}"
+      text_body_template: |
+        Član osoblja odbio je vaš korisnički račun na %{site_name}.
+
+        %{reject_reason}
+    signup:
+      title: "Registracija"
+      subject_template: "[%{email_prefix}] Potvrdite svoj novi korisnički račun"
+      text_body_template: |
+        Dobrodošli na %{site_name}!
+
+        Kliknite sljedeću poveznicu da potvrdite i aktivirate svoj novi korisnički račun:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Ako se na gornju poveznicu ne može kliknuti, pokušajte ju kopirati i zalijepiti u adresnu traku vašeg web preglednika.
+    activation_reminder:
+      title: "Podsjetnik na aktivaciju"
+      subject_template: "[%{email_prefix}] Podsjetnik da potvrdite svoj korisnički račun"
+      text_body_template: |
+        Dobrodošli na %{site_name}!
+
+        Ovo je prijateljski podsjetnik da aktivirate svoj korisnički račun.
+
+        Kliknite sljedeću poveznicu da potvrdite i aktivirate svoj novi korisnički račun:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Ako se na gornju poveznicu ne može kliknuti, pokušajte ju kopirati i zalijepiti u adresnu traku vašeg web preglednika.
+    suspicious_login:
+      title: "Upozorenje o novoj prijavi"
+      subject_template: "[%{site_name}] Nova prijava iz %{location}"
+      text_body_template: |
+        Pozdrav,
+
+        Primijetili smo prijavu s uređaja ili lokacije koju obično ne koristite. Jeste li to bili vi?
+
+         - Lokacija: %{location} (%{client_ip})
+         - Preglednik: %{browser}
+         - Uređaj: %{device} — %{os}
+
+        Ako ste ovo bili vi, odlično! Ne trebate učiniti ništa više.
+
+        Ako to niste vi, molimo [pregledajte svoje postojeće sesije] (%{base_url}/mo/preferences/security) i razmislite o promjeni zaporke.
     post_approved:
       title: "Vaš post je odobren"
+      subject_template: "[%{site_name}] Vaša objava je odobrena"
+      text_body_template: |
+        Pozdrav,
+
+        Ovo je automatizirana poruka od %{site_name} koja vas obavještava da je [vaša objava] (%{base_url}%{post_url}) odobrena.
   page_not_found:
     page_title: "Stranica nije pronađena"
     popular_topics: "Popularno"
@@ -1846,12 +2309,17 @@ hr:
       name: Pročitao smjernice
     reader:
       name: Čitatelj
+    first_onebox:
+      long_description: |
+        Ova značka se dodjeljuje kada prvi put objavite neku poveznicu samu u retku, koja se automatski proširuje u okvir sa sažetkom, naslovom i (ako je dostupno) slikom.
     badge_title_metadata: "%{display_name} značka na %{site_title}"
   tags:
     title: "Oznake"
   finish_installation:
     register:
       button: "Registracija"
+      title: "Registrirajte administratorski račun"
+      help: "Za početak registrirajte novi korisnički račun."
     resend_email:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
   wizard:
@@ -1890,6 +2358,9 @@ hr:
         fields:
           contact_url:
             placeholder: "https://www.example.com/contact-us"
+  onebox:
+    github:
+      closed: "zatvoreno"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'
@@ -1897,12 +2368,14 @@ hr:
       quoted: '%{username} citirao vas je u "%{topic}" - %{site_title}'
       replied: '%{username} odgovorio u "%{topic}" - %{site_title}'
       posted: '%{username} objavio u "%{topic}" - %{site_title}'
+      private_message: '%{username} vam je poslao privatnu poruku u "%{topic}" - %{site_title}'
       linked: '%{username} se povezao s tvojom objavom "%{topic}" - %{site_title}'
       watching_first_post: '%{username} stvorio je novu temu "%{topic}" - %{site_title}'
       confirm_title: "Obavijesti omogućene - %{site_title}"
       confirm_body: "Uspjeh! Obavijesti su omogućene."
       custom: "Obavijest od %{username} %{site_title}"
   staff_action_logs:
+    unknown: "nepoznato"
     api_key:
       revoked: Opoziv
   reviewables:
@@ -1929,7 +2402,6 @@ hr:
       approve:
         title: "Odobri"
       reject_user:
-        title: "Obriši korisnika..."
         delete:
           title: "Obriši korisnika"
       reject:

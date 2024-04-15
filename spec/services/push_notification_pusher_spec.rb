@@ -13,7 +13,10 @@ RSpec.describe PushNotificationPusher do
   end
 
   context "with user" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
+    let(:topic_title) { "Topic" }
+    let(:post_url) { "https://example.com/t/1/2" }
+    let(:username) { "system" }
 
     def create_subscription
       data = <<~JSON
@@ -28,16 +31,17 @@ RSpec.describe PushNotificationPusher do
       PushSubscription.create!(user_id: user.id, data: data)
     end
 
-    def execute_push(notification_type: 1)
+    def execute_push(notification_type: 1, post_number: 1)
       PushNotificationPusher.push(
         user,
         {
-          topic_title: "Topic",
-          username: "system",
+          topic_title: topic_title,
+          username: username,
           excerpt: "description",
           topic_id: 1,
-          post_url: "https://example.com/t/1/2",
+          post_url: post_url,
           notification_type: notification_type,
+          post_number: post_number,
         },
       )
     end
@@ -69,6 +73,16 @@ RSpec.describe PushNotificationPusher do
 
       create_subscription
       execute_push
+    end
+
+    it "triggers a DiscourseEvent with user and message arguments" do
+      WebPush.expects(:payload_send)
+      create_subscription
+      pn_sent_event = DiscourseEvent.track_events { message = execute_push }.first
+
+      expect(pn_sent_event[:event_name]).to eq(:push_notification_sent)
+      expect(pn_sent_event[:params].first).to eq(user)
+      expect(pn_sent_event[:params].second[:url]).to eq(post_url)
     end
 
     it "deletes subscriptions which are erroring regularly" do
@@ -156,6 +170,72 @@ RSpec.describe PushNotificationPusher do
 
       subscription.reload
       expect(subscription.error_count).to eq(1)
+    end
+
+    describe "`watching_category_or_tag` notifications" do
+      it "Uses the 'watching_first_post' translation when new topic was created" do
+        message =
+          execute_push(
+            notification_type: Notification.types[:watching_category_or_tag],
+            post_number: 1,
+          )
+
+        expect(message[:title]).to eq(
+          I18n.t(
+            "discourse_push_notifications.popup.watching_first_post",
+            site_title: SiteSetting.title,
+            topic: topic_title,
+            username: username,
+          ),
+        )
+      end
+
+      it "Uses the 'posted' translation when new post was created" do
+        message =
+          execute_push(
+            notification_type: Notification.types[:watching_category_or_tag],
+            post_number: 2,
+          )
+
+        expect(message[:title]).to eq(
+          I18n.t(
+            "discourse_push_notifications.popup.posted",
+            site_title: SiteSetting.title,
+            topic: topic_title,
+            username: username,
+          ),
+        )
+      end
+    end
+
+    describe "push_notification_pusher_title_payload modifier" do
+      let(:modifier_block) do
+        Proc.new do |payload|
+          payload[:username] = "super_hijacked"
+          payload
+        end
+      end
+      it "Allows modifications to the payload passed to the translation" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:push_notification_pusher_title_payload, &modifier_block)
+
+        message = execute_push(notification_type: Notification.types[:mentioned], post_number: 2)
+
+        expect(message[:title]).to eq(
+          I18n.t(
+            "discourse_push_notifications.popup.mentioned",
+            site_title: SiteSetting.title,
+            topic: topic_title,
+            username: "super_hijacked",
+          ),
+        )
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :push_notification_pusher_title_payload,
+          &modifier_block
+        )
+      end
     end
   end
 end

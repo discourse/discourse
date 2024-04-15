@@ -2,7 +2,7 @@
   border: 1px solid var(--primary-low);
   padding: 5px;
   background: var(--secondary);
-  box-shadow: shadow("card");
+  box-shadow: var(--shadow-card);
   z-index: z("dropdown");
 
   position: absolute;

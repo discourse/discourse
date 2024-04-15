@@ -1,14 +1,7 @@
 // Common styles for "user-info" component
 .user-info {
-  display: inline-block;
-  clear: both;
-  margin-bottom: 1em;
-
-  .user-image {
-    float: left;
-    padding-right: 4px;
-    margin-right: 10px;
-  }
+  display: flex;
+  gap: 1em;
 
   .user-image-inner {
     position: relative;
@@ -16,44 +9,39 @@
   }
 
   .user-detail {
-    float: left;
-    width: 70%;
-    padding-left: 5px;
-    @media screen and (max-width: 600px) {
+    min-width: 0;
+    @include breakpoint(mobile-medium) {
       font-size: var(--font-down-1);
     }
 
     .name-line {
-      @include ellipsis;
+      > a {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 0.5em;
+        color: var(--primary-high);
+      }
+      .name,
+      .username {
+        width: 100%;
+        @include ellipsis;
+      }
+
+      span:first-child {
+        font-weight: bold;
+      }
     }
 
-    .bold a {
-      font-weight: bold;
-    }
-
-    .margin a {
-      margin-left: 5px;
-    }
-
-    .name a,
-    .username a {
-      color: var(--primary-high-or-secondary-low);
+    .details {
+      color: var(--primary);
+      .d-icon-reply {
+        color: var(--primary-medium);
+      }
     }
 
     .title {
-      margin-top: 3px;
-      color: var(--primary-med-or-secondary-med);
-    }
-  }
-
-  &.small {
-    width: 333px;
-    @media screen and (max-width: $small-width) {
-      width: auto;
-      display: flex;
-    }
-    @media screen and (max-width: 600px) {
-      width: 100%;
+      color: var(--primary-medium);
+      @include ellipsis;
     }
   }
 

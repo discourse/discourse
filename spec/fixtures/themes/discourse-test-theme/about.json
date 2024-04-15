@@ -1,0 +1,21 @@
+{
+  "name": "Header Icons",
+  "about_url": "abouturl",
+  "license_url": "licenseurl",
+  "component": false,
+  "assets": {
+    "logo": "assets/logo.png"
+  },
+  "color_schemes": {
+    "Orphan Color Scheme": {
+      "header_primary": "F0F0F0",
+      "header_background": "1E1E1E",
+      "tertiary": "858585"
+    },
+    "Theme Color Scheme": {
+      "header_primary": "F0F0F0",
+      "header_background": "1E1E1E",
+      "tertiary": "858585"
+    }
+  }
+}

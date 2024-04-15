@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Single thread in side panel", type: :system, js: true do
+describe "Single thread in side panel", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -15,9 +15,10 @@ describe "Single thread in side panel", type: :system, js: true do
     sign_in(current_user)
   end
 
-  context "when enable_experimental_chat_threaded_discussions is disabled" do
+  context "when threading is disabled for the channel" do
     fab!(:channel) { Fabricate(:chat_channel) }
-    before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
+
+    before { channel.update!(threading_enabled: false) }
 
     it "does not open the side panel for a single thread" do
       thread =
@@ -28,28 +29,10 @@ describe "Single thread in side panel", type: :system, js: true do
     end
   end
 
-  context "when threading_enabled is false for the channel" do
-    fab!(:channel) { Fabricate(:chat_channel) }
-    before do
-      SiteSetting.enable_experimental_chat_threaded_discussions = true
-      channel.update!(threading_enabled: false)
-    end
-
-    it "does not open the side panel for a single thread" do
-      thread =
-        chat_thread_chain_bootstrap(channel: channel, users: [current_user, Fabricate(:user)])
-      chat_page.visit_channel(channel)
-      channel_page.hover_message(thread.original_message)
-      expect(page).not_to have_css(".chat-message-thread-btn")
-    end
-  end
-
-  context "when enable_experimental_chat_threaded_discussions is true and threading is enabled for the channel" do
+  context "when threading is enabled for the channel" do
     fab!(:user_2) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread) { chat_thread_chain_bootstrap(channel: channel, users: [current_user, user_2]) }
-
-    before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
 
     context "when in full page" do
       context "when switching channel" do
@@ -99,23 +82,34 @@ describe "Single thread in side panel", type: :system, js: true do
       expect(chat_drawer_page).to have_open_channel(channel)
     end
 
+    context "when thread is forced and threading disabled" do
+      before do
+        channel.update!(threading_enabled: false)
+        thread.update!(force: true)
+      end
+
+      it "doesn’t show back button " do
+        chat_page.visit_thread(thread)
+
+        expect(page).to have_no_css(".c-routes-channel-thread .c-navbar__back-button")
+      end
+    end
+
+    it "highlights the message in the channel when clicking original message link" do
+      chat_page.visit_thread(thread)
+
+      find(".chat-message-info__original-message").click
+
+      expect(channel_page.messages).to have_message(
+        id: thread.original_message.id,
+        highlighted: true,
+      )
+    end
+
     it "opens the side panel for a single thread from the indicator" do
       chat_page.visit_channel(channel)
       channel_page.message_thread_indicator(thread.original_message).click
       expect(side_panel).to have_open_thread(thread)
-    end
-
-    xit "shows the excerpt of the thread original message" do
-      chat_page.visit_channel(channel)
-      channel_page.message_thread_indicator(thread.original_message).click
-      expect(thread_page).to have_header_content(thread.excerpt)
-    end
-
-    xit "shows the avatar and username of the original message user" do
-      chat_page.visit_channel(channel)
-      channel_page.message_thread_indicator(thread.original_message).click
-      expect(thread_page.omu).to have_css(".chat-user-avatar img.avatar")
-      expect(thread_page.omu).to have_content(thread.original_message_user.username)
     end
 
     describe "sending a message" do
@@ -124,8 +118,11 @@ describe "Single thread in side panel", type: :system, js: true do
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel).to have_open_thread(thread)
         thread_page.send_message("new thread message")
-        expect(thread_page).to have_message(thread_id: thread.id, text: "new thread message")
-        thread_message = thread.replies.last
+        expect(thread_page.messages).to have_message(
+          thread_id: thread.id,
+          text: "new thread message",
+        )
+        thread_message = thread.last_message
         expect(thread_message.chat_channel_id).to eq(channel.id)
         expect(thread_message.thread.channel_id).to eq(channel.id)
       end
@@ -135,9 +132,22 @@ describe "Single thread in side panel", type: :system, js: true do
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel).to have_open_thread(thread)
         thread_page.send_message("new thread message")
-        expect(thread_page).to have_message(thread_id: thread.id, text: "new thread message")
+        expect(thread_page.messages).to have_message(
+          thread_id: thread.id,
+          text: "new thread message",
+        )
         thread_message = thread.reload.replies.last
         expect(channel_page).not_to have_css(channel_page.message_by_id_selector(thread_message.id))
+      end
+
+      it "changes the tracking bell to be Tracking level in the thread panel" do
+        new_thread = Fabricate(:chat_thread, channel: channel, with_replies: 1, use_service: true)
+        chat_page.visit_channel(channel)
+        channel_page.message_thread_indicator(new_thread.original_message).click
+        expect(side_panel).to have_open_thread(new_thread)
+        expect(thread_page).to have_notification_level("normal")
+        thread_page.send_message("new thread message")
+        expect(thread_page).to have_notification_level("tracking")
       end
 
       it "handles updates from multiple users sending messages in the thread" do
@@ -149,40 +159,49 @@ describe "Single thread in side panel", type: :system, js: true do
 
         other_user = Fabricate(:user)
         chat_system_user_bootstrap(user: other_user, channel: channel)
-        using_session(:tab_2) do
-          sign_in(other_user)
-          chat_page.visit_channel(channel)
-          channel_page.message_thread_indicator(thread.original_message).click
-        end
+        sign_in(other_user)
+        chat_page.visit_channel(channel)
+        channel_page.message_thread_indicator(thread.original_message).click
 
-        using_session(:tab_2) do
-          expect(side_panel).to have_open_thread(thread)
-          thread_page.send_message("the other user message")
-          expect(thread_page).to have_message(thread_id: thread.id, text: "the other user message")
-        end
+        expect(side_panel).to have_open_thread(thread)
 
-        using_session(:tab_1) do |session|
+        thread_page.send_message("the other user message")
+
+        expect(thread_page.messages).to have_message(
+          thread_id: thread.id,
+          text: "the other user message",
+        )
+
+        using_session(:tab_1) do
           expect(side_panel).to have_open_thread(thread)
-          expect(thread_page).to have_message(thread_id: thread.id, text: "the other user message")
+          expect(thread_page.messages).to have_message(
+            thread_id: thread.id,
+            text: "the other user message",
+          )
+
           thread_page.send_message("this is a test message")
-          expect(thread_page).to have_message(thread_id: thread.id, text: "this is a test message")
-          session.quit
+
+          expect(thread_page.messages).to have_message(
+            thread_id: thread.id,
+            text: "this is a test message",
+          )
         end
 
-        using_session(:tab_2) do |session|
-          expect(thread_page).to have_message(thread_id: thread.id, text: "this is a test message")
-          session.quit
-        end
+        expect(thread_page.messages).to have_message(
+          thread_id: thread.id,
+          text: "this is a test message",
+        )
       end
 
       it "does not mark the channel unread if another user sends a message in the thread" do
         other_user = Fabricate(:user)
         chat_system_user_bootstrap(user: other_user, channel: channel)
-        Chat::MessageCreator.create(
-          chat_channel: channel,
+        Fabricate(
+          :chat_message,
+          thread: thread,
           user: other_user,
-          content: "Hello world!",
-          thread_id: thread.id,
+          message: "Hello world!",
+          use_service: true,
         )
         sign_in(current_user)
         chat_page.visit_channel(channel)
@@ -196,7 +215,28 @@ describe "Single thread in side panel", type: :system, js: true do
       it "opens the side panel for a single thread using the indicator", mobile: true do
         chat_page.visit_channel(channel)
         channel_page.message_thread_indicator(thread.original_message).click
+
         expect(side_panel).to have_open_thread(thread)
+      end
+
+      it "navigates back to channel when clicking original message link", mobile: true do
+        chat_page.visit_thread(thread)
+
+        find(".chat-message-info__original-message").click
+
+        expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}")
+      end
+    end
+
+    context "when messages are separated by a day" do
+      before do
+        Fabricate(:chat_message, chat_channel: channel, thread: thread, created_at: 2.days.ago)
+      end
+
+      it "shows a date separator" do
+        chat_page.visit_thread(thread)
+
+        expect(page).to have_selector(".chat-thread .chat-message-separator__text", text: "Today")
       end
     end
   end

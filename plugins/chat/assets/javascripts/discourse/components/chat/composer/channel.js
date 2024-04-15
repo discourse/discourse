@@ -1,43 +1,56 @@
-import ChatComposer from "../../chat-composer";
-import { inject as service } from "@ember/service";
-import I18n from "I18n";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { debounce } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import ChatComposer from "../../chat-composer";
 
 export default class ChatComposerChannel extends ChatComposer {
   @service("chat-channel-composer") composer;
   @service("chat-channel-pane") pane;
+  @service currentUser;
   @service chatDraftsManager;
 
   context = "channel";
 
   composerId = "channel-composer";
 
+  @debounce(2000)
+  persistDraft() {
+    this.chatDraftsManager.add(this.draft, this.args.channel.id);
+  }
+
+  @action
+  destroyDraft() {
+    this.chatDraftsManager.remove(this.args.channel.id);
+  }
+
+  @action
+  resetDraft() {
+    this.args.channel.resetDraft(this.currentUser);
+  }
+
+  get draft() {
+    return this.args.channel.draft;
+  }
+
   get presenceChannelName() {
     const channel = this.args.channel;
     return `/chat-reply/${channel.id}`;
   }
 
-  @action
-  persistDraft() {
-    if (this.args.channel?.isDraft) {
-      return;
-    }
-
-    this.chatDraftsManager.add(this.currentMessage);
-
-    this._persistHandler = discourseDebounce(
-      this,
-      this._debouncedPersistDraft,
-      this.args.channel.id,
-      this.currentMessage.toJSONDraft(),
-      2000
+  get disabled() {
+    return (
+      !this.chat.userCanInteractWithChat ||
+      !this.args.channel.canModifyMessages(this.currentUser)
     );
   }
 
-  @action
-  _debouncedPersistDraft(channelId, jsonDraft) {
-    this.chatApi.saveDraft(channelId, jsonDraft);
+  get lastMessage() {
+    return this.args.channel.lastMessage;
+  }
+
+  lastUserMessage(user) {
+    return this.args.channel.messagesManager.findLastUserMessage(user);
   }
 
   get placeholder() {
@@ -47,18 +60,6 @@ export default class ChatComposerChannel extends ChatComposer {
       );
     }
 
-    if (this.args.channel.isDraft) {
-      if (this.args.channel?.chatable?.users?.length) {
-        return I18n.t("chat.placeholder_start_conversation_users", {
-          commaSeparatedUsernames: this.args.channel.chatable.users
-            .mapBy("username")
-            .join(I18n.t("word_connector.comma")),
-        });
-      } else {
-        return I18n.t("chat.placeholder_start_conversation");
-      }
-    }
-
     if (!this.chat.userCanInteractWithChat) {
       return I18n.t("chat.placeholder_silenced");
     } else {
@@ -66,21 +67,39 @@ export default class ChatComposerChannel extends ChatComposer {
     }
   }
 
+  handleEscape(event) {
+    event.stopPropagation();
+
+    if (this.draft?.inReplyTo) {
+      this.draft.inReplyTo = null;
+    } else if (this.draft?.editing) {
+      this.args.channel.resetDraft(this.currentUser);
+    } else {
+      event.target.blur();
+    }
+  }
+
   #messageRecipients(channel) {
     if (channel.isDirectMessageChannel) {
-      const directMessageRecipients = channel.chatable.users;
-      if (
-        directMessageRecipients.length === 1 &&
-        directMessageRecipients[0].id === this.currentUser.id
-      ) {
-        return I18n.t("chat.placeholder_self");
-      }
+      if (channel.chatable.group && channel.title) {
+        return I18n.t("chat.placeholder_channel", {
+          channelName: `#${channel.title}`,
+        });
+      } else {
+        const directMessageRecipients = channel.chatable.users;
+        if (
+          directMessageRecipients.length === 1 &&
+          directMessageRecipients[0].id === this.currentUser.id
+        ) {
+          return I18n.t("chat.placeholder_self");
+        }
 
-      return I18n.t("chat.placeholder_users", {
-        commaSeparatedNames: directMessageRecipients
-          .map((u) => u.name || `@${u.username}`)
-          .join(I18n.t("word_connector.comma")),
-      });
+        return I18n.t("chat.placeholder_users", {
+          commaSeparatedNames: directMessageRecipients
+            .map((u) => u.name || `@${u.username}`)
+            .join(I18n.t("word_connector.comma")),
+        });
+      }
     } else {
       return I18n.t("chat.placeholder_channel", {
         channelName: `#${channel.title}`,

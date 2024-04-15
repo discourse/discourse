@@ -1,9 +1,10 @@
+/* eslint-disable ember/no-private-routing-service */
+import { getOwner } from "@ember/application";
 import { A } from "@ember/array";
 import Helper from "@ember/component/helper";
-import { computed, get } from "@ember/object";
-import { getOwner } from "@ember/application";
-import { join } from "@ember/runloop";
 import { assert, runInDebug } from "@ember/debug";
+import { computed, get } from "@ember/object";
+import { join } from "@ember/runloop";
 
 function getCurrentRouteInfos(router) {
   let routerLib = router._routerMicrolib || router.router;
@@ -26,7 +27,7 @@ function getRouteWithAction(router, actionName) {
   return { action, handler };
 }
 
-export function routeAction(actionName, router, ...params) {
+function routeAction(actionName, router, ...params) {
   assert("[ember-route-action-helper] Unable to lookup router", router);
 
   runInDebug(() => {

@@ -107,6 +107,11 @@ class Admin::UsersController < Admin::StaffController
 
   def suspend
     guardian.ensure_can_suspend!(@user)
+    reason = params[:reason]
+
+    if reason && (!reason.is_a?(String) || reason.size > 300)
+      raise Discourse::InvalidParameters.new(:reason)
+    end
 
     if @user.suspended?
       suspend_record = @user.suspend_record
@@ -115,7 +120,7 @@ class Admin::UsersController < Admin::StaffController
           "user.already_suspended",
           staff: suspend_record.acting_user.username,
           time_ago:
-            FreedomPatches::Rails4.time_ago_in_words(
+            AgeWords.time_ago_in_words(
               suspend_record.created_at,
               true,
               scope: :"datetime.distance_in_words_verbose",
@@ -128,6 +133,10 @@ class Admin::UsersController < Admin::StaffController
 
     all_users = [@user]
     if Array === params[:other_user_ids]
+      if params[:other_user_ids].size > MAX_SIMILAR_USERS
+        raise Discourse::InvalidParameters.new(:other_user_ids)
+      end
+
       all_users.concat(User.where(id: params[:other_user_ids]).to_a)
       all_users.uniq!
     end
@@ -360,6 +369,11 @@ class Admin::UsersController < Admin::StaffController
 
   def silence
     guardian.ensure_can_silence_user! @user
+    reason = params[:reason]
+
+    if reason && (!reason.is_a?(String) || reason.size > 300)
+      raise Discourse::InvalidParameters.new(:reason)
+    end
 
     if @user.silenced?
       silenced_record = @user.silenced_record
@@ -368,7 +382,7 @@ class Admin::UsersController < Admin::StaffController
           "user.already_silenced",
           staff: silenced_record.acting_user.username,
           time_ago:
-            FreedomPatches::Rails4.time_ago_in_words(
+            AgeWords.time_ago_in_words(
               silenced_record.created_at,
               true,
               scope: :"datetime.distance_in_words_verbose",
@@ -379,6 +393,10 @@ class Admin::UsersController < Admin::StaffController
 
     all_users = [@user]
     if Array === params[:other_user_ids]
+      if params[:other_user_ids].size > MAX_SIMILAR_USERS
+        raise Discourse::InvalidParameters.new(:other_user_ids)
+      end
+
       all_users.concat(User.where(id: params[:other_user_ids]).to_a)
       all_users.uniq!
     end

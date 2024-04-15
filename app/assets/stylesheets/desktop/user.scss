@@ -1,12 +1,4 @@
 // Desktop styles for "/user" section
-.user-content-wrapper {
-  &,
-  > .user-stream {
-    > .alert:first-child {
-      margin-top: 10px;
-    }
-  }
-}
 
 .user-profile-hidden {
   font-size: 1.5em;
@@ -73,26 +65,13 @@
     }
   }
 }
-.user-additional-controls {
-  display: flex;
-  flex-wrap: wrap;
-  padding-top: 15px;
-  .single-select-header,
-  button {
-    margin-bottom: 1em;
-    margin-right: 0.75em;
-  }
-  .user-invite-buttons {
-    margin-left: auto;
-  }
-}
 
 .user-content {
   padding: 0;
   margin-top: 2em;
   padding-bottom: 12px;
   margin-bottom: 12px;
-  background-color: var(--secondary);
+  background: var(--d-content-background, var(--secondary));
   box-sizing: border-box;
 
   .btn.right {
@@ -105,10 +84,6 @@
     max-width: 90px;
     max-height: 90px;
   }
-}
-
-.pref-second-factor {
-  margin-top: 10px;
 }
 
 .invite-controls .btn {
@@ -240,36 +215,10 @@ table.user-invite-list {
 
 .user-messages-page {
   .topic-list th {
-    padding-top: 4px;
+    padding-top: 0;
   }
 
   .show-mores {
     position: absolute;
-  }
-}
-
-.user-messages {
-  margin-right: 0.2em;
-}
-
-.user-preferences {
-  .form-vertical {
-    width: 500px;
-    max-width: 100%;
-  }
-
-  .category-selector,
-  .tag-chooser,
-  textarea,
-  input.user-selector,
-  .user-chooser {
-    width: 100%;
-  }
-}
-
-.user-crawler {
-  .username {
-    margin-left: 5px;
-    display: inline-block;
   }
 }

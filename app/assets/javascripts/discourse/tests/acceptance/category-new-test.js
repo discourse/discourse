@@ -1,14 +1,14 @@
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import sinon from "sinon";
-import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 
 acceptance("New category access for moderators", function (needs) {
   needs.user({ moderator: true, admin: false, trust_level: 1 });
@@ -106,5 +106,29 @@ acceptance("Category New", function (needs) {
       DiscourseURL.routeTo.calledWith("/c/testing/11"),
       "back routing works"
     );
+  });
+});
+
+acceptance("New category preview", function (needs) {
+  needs.user({ admin: true });
+
+  test("Category badge color appears and updates", async function (assert) {
+    await visit("/new-category");
+
+    let previewBadgeColor = document
+      .querySelector(".category-color-editor .badge-category")
+      .style.getPropertyValue("--category-badge-color")
+      .trim();
+
+    assert.equal(previewBadgeColor, "#0088CC");
+
+    await fillIn(".hex-input", "FF00FF");
+
+    previewBadgeColor = document
+      .querySelector(".category-color-editor .badge-category")
+      .style.getPropertyValue("--category-badge-color")
+      .trim();
+
+    assert.equal(previewBadgeColor, "#FF00FF");
   });
 });

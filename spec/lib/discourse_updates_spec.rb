@@ -8,7 +8,7 @@ RSpec.describe DiscourseUpdates do
     DiscourseUpdates.updated_at = updated_at
   end
 
-  subject { DiscourseUpdates.check_version }
+  subject(:version) { DiscourseUpdates.check_version }
 
   context "when version check was done at the current installed version" do
     before { DiscourseUpdates.last_installed_version = Discourse::VERSION::STRING }
@@ -19,15 +19,15 @@ RSpec.describe DiscourseUpdates do
         before { stub_data(Discourse::VERSION::STRING, 0, false, time) }
 
         it "returns all the version fields" do
-          expect(subject.latest_version).to eq(Discourse::VERSION::STRING)
-          expect(subject.missing_versions_count).to eq(0)
-          expect(subject.critical_updates).to eq(false)
-          expect(subject.installed_version).to eq(Discourse::VERSION::STRING)
-          expect(subject.stale_data).to eq(false)
+          expect(version.latest_version).to eq(Discourse::VERSION::STRING)
+          expect(version.missing_versions_count).to eq(0)
+          expect(version.critical_updates).to eq(false)
+          expect(version.installed_version).to eq(Discourse::VERSION::STRING)
+          expect(version.stale_data).to eq(false)
         end
 
         it "returns the timestamp of the last version check" do
-          expect(subject.updated_at).to be_within_one_second_of(time)
+          expect(version.updated_at).to be_within_one_second_of(time)
         end
       end
 
@@ -36,14 +36,14 @@ RSpec.describe DiscourseUpdates do
         before { stub_data("0.9.0", 2, false, time) }
 
         it "returns all the version fields" do
-          expect(subject.latest_version).to eq("0.9.0")
-          expect(subject.missing_versions_count).to eq(2)
-          expect(subject.critical_updates).to eq(false)
-          expect(subject.installed_version).to eq(Discourse::VERSION::STRING)
+          expect(version.latest_version).to eq("0.9.0")
+          expect(version.missing_versions_count).to eq(2)
+          expect(version.critical_updates).to eq(false)
+          expect(version.installed_version).to eq(Discourse::VERSION::STRING)
         end
 
         it "returns the timestamp of the last version check" do
-          expect(subject.updated_at).to be_within_one_second_of(time)
+          expect(version.updated_at).to be_within_one_second_of(time)
         end
       end
     end
@@ -52,22 +52,22 @@ RSpec.describe DiscourseUpdates do
       before { stub_data(nil, nil, false, nil) }
 
       it "returns the installed version" do
-        expect(subject.installed_version).to eq(Discourse::VERSION::STRING)
+        expect(version.installed_version).to eq(Discourse::VERSION::STRING)
       end
 
       it "indicates that version check has not been performed" do
-        expect(subject.updated_at).to eq(nil)
-        expect(subject.stale_data).to eq(true)
+        expect(version.updated_at).to eq(nil)
+        expect(version.stale_data).to eq(true)
       end
 
       it "does not return latest version info" do
-        expect(subject.latest_version).to eq(nil)
-        expect(subject.missing_versions_count).to eq(nil)
-        expect(subject.critical_updates).to eq(nil)
+        expect(version.latest_version).to eq(nil)
+        expect(version.missing_versions_count).to eq(nil)
+        expect(version.critical_updates).to eq(nil)
       end
 
       it "queues a version check" do
-        expect_enqueued_with(job: :version_check) { subject }
+        expect_enqueued_with(job: :call_discourse_hub) { version }
       end
     end
 
@@ -76,15 +76,15 @@ RSpec.describe DiscourseUpdates do
     context "with old version check data" do
       shared_examples "queue version check and report that version is ok" do
         it "queues a version check" do
-          expect_enqueued_with(job: :version_check) { subject }
+          expect_enqueued_with(job: :call_discourse_hub) { version }
         end
 
         it "reports 0 missing versions" do
-          expect(subject.missing_versions_count).to eq(0)
+          expect(version.missing_versions_count).to eq(0)
         end
 
         it "reports that a version check will be run soon" do
-          expect(subject.version_check_pending).to eq(true)
+          expect(version.version_check_pending).to eq(true)
         end
       end
 
@@ -105,15 +105,15 @@ RSpec.describe DiscourseUpdates do
 
     shared_examples "when last_installed_version is old" do
       it "queues a version check" do
-        expect_enqueued_with(job: :version_check) { subject }
+        expect_enqueued_with(job: :call_discourse_hub) { version }
       end
 
       it "reports 0 missing versions" do
-        expect(subject.missing_versions_count).to eq(0)
+        expect(version.missing_versions_count).to eq(0)
       end
 
       it "reports that a version check will be run soon" do
-        expect(subject.version_check_pending).to eq(true)
+        expect(version.version_check_pending).to eq(true)
       end
     end
 
@@ -129,7 +129,7 @@ RSpec.describe DiscourseUpdates do
   end
 
   describe "new features" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     fab!(:admin2) { Fabricate(:admin) }
     let!(:last_item_date) { 5.minutes.ago }
     let!(:sample_features) do
@@ -191,9 +191,9 @@ RSpec.describe DiscourseUpdates do
     it "correctly sees newly added features as unseen" do
       DiscourseUpdates.mark_new_features_as_seen(admin.id)
       expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
-      expect(DiscourseUpdates.new_features_last_seen(admin.id)).to be_within(1.second).of (
-             last_item_date
-           )
+      expect(DiscourseUpdates.new_features_last_seen(admin.id)).to be_within(1.second).of(
+        last_item_date,
+      )
 
       updated_features = [
         { "emoji" => "🤾", "title" => "Brand New Item", "created_at" => 2.minutes.ago },
@@ -251,7 +251,7 @@ RSpec.describe DiscourseUpdates do
   end
 
   describe "#get_last_viewed_feature_date" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "returns an ActiveSupport::TimeWithZone object" do
       time = Time.zone.parse("2022-12-13T21:33:59Z")

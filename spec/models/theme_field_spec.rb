@@ -2,8 +2,13 @@
 # frozen_string_literal: true
 
 RSpec.describe ThemeField do
-  fab!(:theme) { Fabricate(:theme) }
-  before { ThemeJavascriptCompiler.disable_terser! }
+  fab!(:theme)
+
+  before do
+    SvgSprite.clear_plugin_svg_sprite_cache!
+    ThemeJavascriptCompiler.disable_terser!
+  end
+
   after { ThemeJavascriptCompiler.enable_terser! }
 
   describe "scope: find_by_theme_ids" do
@@ -77,7 +82,7 @@ RSpec.describe ThemeField do
     theme_field = ThemeField.create!(theme_id: 1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
     expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"1\"></script>",
+      "<script defer=\"\" src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
     expect(theme_field.value_baked).to include("external-script.js")
     expect(theme_field.value_baked).to include('<script type="text/template"')
@@ -114,7 +119,7 @@ HTML
     field.ensure_baked!
     expect(field.error).not_to eq(nil)
     expect(field.value_baked).to include(
-      "<script defer=\"\" src=\"#{field.javascript_cache.url}\" data-theme-id=\"1\"></script>",
+      "<script defer=\"\" src=\"#{field.javascript_cache.url}\" data-theme-id=\"1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
     expect(field.javascript_cache.content).to include("[THEME 1 'Default'] Compile error")
 
@@ -141,7 +146,7 @@ HTML
     javascript_cache = theme_field.javascript_cache
 
     expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{javascript_cache.url}\" data-theme-id=\"1\"></script>",
+      "<script defer=\"\" src=\"#{javascript_cache.url}\" data-theme-id=\"1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
     )
     expect(javascript_cache.content).to include("testing-div")
     expect(javascript_cache.content).to include("string_setting")
@@ -250,14 +255,14 @@ HTML
 
     # All together
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", \"@ember/template-factory\"]",
+      "define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", ",
     )
     expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/controllers/discovery\"",
+      "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery\"",
     )
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"",
+      "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery-2\"",
     )
     expect(theme.javascript_cache.content).to include("const settings =")
     expect(theme.javascript_cache.content).to include(
@@ -380,15 +385,37 @@ HTML
   it "generates errors when invalid type is passed" do
     field = create_yaml_field(get_fixture("invalid"))
     expect(field.error).to include(
-      I18n.t("#{key}.data_type_not_a_number", name: "invalid_type_setting"),
+      I18n.t("#{key}.data_type_inclusion", name: "invalid_type_setting"),
     )
   end
 
   it "generates errors when default value is not within allowed range" do
     field = create_yaml_field(get_fixture("invalid"))
-    expect(field.error).to include(I18n.t("#{key}.default_out_range", name: "default_out_of_range"))
+
     expect(field.error).to include(
-      I18n.t("#{key}.default_out_range", name: "string_default_out_of_range"),
+      I18n.t(
+        "#{key}.default_value_not_valid",
+        name: "default_out_of_range",
+        error_messages: [I18n.t("#{key}.number_value_not_valid_min_max", min: 1, max: 20)].join(
+          " ",
+        ),
+      ),
+    )
+
+    expect(field.error).to include(
+      I18n.t(
+        "#{key}.default_value_not_valid",
+        name: "string_default_out_of_range",
+        error_messages: [I18n.t("#{key}.string_value_not_valid_min", min: 20)].join(" "),
+      ),
+    )
+  end
+
+  it "generates the right errors when setting of type objects have default values which does not matches the schema" do
+    field = create_yaml_field(get_fixture("invalid"))
+
+    expect(field.error).to include(
+      "Setting `invalid_default_objects_setting` default value isn't valid. The property at JSON Pointer '/0/required_string' must be present. The property at JSON Pointer '/1/min_5_chars_string' must be at least 5 characters long. The property at JSON Pointer '/1/children/0/required_integer' must be present.",
     )
   end
 
@@ -584,11 +611,62 @@ HTML
       it "is generated correctly" do
         fr1.ensure_baked!
         expect(fr1.value_baked).to include(
-          "<script defer src='#{fr1.javascript_cache.url}' data-theme-id='#{fr1.theme_id}'></script>",
+          "<script defer src=\"#{fr1.javascript_cache.url}\" data-theme-id=\"#{fr1.theme_id}\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
         )
         expect(fr1.javascript_cache.content).to include("bonjourworld")
         expect(fr1.javascript_cache.content).to include("helloworld")
         expect(fr1.javascript_cache.content).to include("enval1")
+      end
+
+      it "is recreated when data changes" do
+        t = Fabricate(:theme)
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: { mykey: "initial value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.content).to include("initial value")
+
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: { mykey: "new value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.reload.content).to include("new value")
+      end
+
+      it "is recreated when fallback data changes" do
+        t = Fabricate(:theme)
+        t.set_field(
+          target: "translations",
+          name: "fr",
+          value: { fr: {} }.deep_stringify_keys.to_yaml,
+        )
+        t.set_field(
+          target: "translations",
+          name: "en",
+          value: { en: { myotherkey: "initial value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.content).to include("initial value")
+
+        t.set_field(
+          target: "translations",
+          name: "en",
+          value: { en: { myotherkey: "new value" } }.deep_stringify_keys.to_yaml,
+        )
+        t.save!
+
+        field = t.theme_fields.find_by(target_id: Theme.targets[:translations], name: "fr")
+        expect(field.javascript_cache.reload.content).to include("new value")
       end
     end
 
@@ -659,6 +737,30 @@ HTML
 
     it "crashes gracefully when svg is invalid" do
       FileStore::LocalStore.any_instance.stubs(:path_for).returns(nil)
+      expect(theme_field.validate_svg_sprite_xml).to match("Error with icons-sprite")
+    end
+
+    it "raises an error when sprite is too big" do
+      fname = "theme-icon-sprite.svg"
+      symbols = ""
+
+      3500.times do |i|
+        id = "icon-id-#{i}"
+        path =
+          "M#{rand(1..100)} 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 .008z"
+        symbols += "<symbol id='#{id}' viewBox='0 0 100 100'><path d='#{path}'/></symbol>\n"
+      end
+
+      contents =
+        "<?xml version='1.0' encoding='UTF-8'?><svg><symbol id='customthemeicon' viewBox='0 0 100 100'><path d='M0 0h1ssss00v100H0z'/></symbol>#{symbols}</svg>"
+
+      sprite =
+        UploadCreator.new(file_from_contents(contents, fname), fname, for_theme: true).create_for(
+          -1,
+        )
+
+      theme_field.update(upload: sprite)
+
       expect(theme_field.validate_svg_sprite_xml).to match("Error with icons-sprite")
     end
   end
@@ -744,6 +846,69 @@ HTML
       expect(theme.scss_variables).to include("$test_js: unquote(\"#{upload.url}\");")
 
       expect(theme.scss_variables).not_to include("theme_uploads")
+    end
+  end
+
+  describe "migration JavaScript field" do
+    it "must match a specific format for filename" do
+      field = Fabricate(:migration_theme_field, theme: theme)
+      field.name = "12-some-name"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "12-some-name"),
+      )
+
+      field.name = "00012-some-name"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "00012-some-name"),
+      )
+
+      field.name = "0012some-name"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "0012some-name"),
+      )
+
+      field.name = "0012"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "0012"),
+      )
+
+      field.name = "0012-something"
+
+      expect(field.valid?).to eq(true)
+    end
+
+    it "doesn't allow weird characters in the name" do
+      field = Fabricate(:migration_theme_field, theme: theme)
+      field.name = "0012-ëèard"
+
+      expect(field.valid?).to eq(false)
+      expect(field.errors.full_messages).to contain_exactly(
+        I18n.t("themes.import_error.migrations.invalid_filename", filename: "0012-ëèard"),
+      )
+    end
+
+    it "imposes a limit on the name part in the filename" do
+      stub_const(ThemeField, "MIGRATION_NAME_PART_MAX_LENGTH", 10) do
+        field = Fabricate(:migration_theme_field, theme: theme)
+        field.name = "0012-#{"a" * 11}"
+
+        expect(field.valid?).to eq(false)
+        expect(field.errors.full_messages).to contain_exactly(
+          I18n.t("themes.import_error.migrations.name_too_long", count: 10),
+        )
+
+        field.name = "0012-#{"a" * 10}"
+
+        expect(field.valid?).to eq(true)
+      end
     end
   end
 end

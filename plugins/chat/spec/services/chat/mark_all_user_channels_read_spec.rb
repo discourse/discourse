@@ -47,6 +47,12 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
       )
     end
 
+    before do
+      channel_1.update!(last_message: message_2)
+      channel_2.update!(last_message: message_4)
+      channel_3.update!(last_message: message_6)
+    end
+
     context "when the user has no memberships" do
       let(:guardian) { Guardian.new(Fabricate(:user)) }
 
@@ -78,13 +84,13 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
       let(:messages) { MessageBus.track_publish { result } }
 
       before do
-        Chat::Mention.create!(
-          notification: notification_1,
+        Chat::UserMention.create!(
+          notifications: [notification_1],
           user: current_user,
           chat_message: message_1,
         )
-        Chat::Mention.create!(
-          notification: notification_2,
+        Chat::UserMention.create!(
+          notifications: [notification_2],
           user: current_user,
           chat_message: message_3,
         )
@@ -109,6 +115,7 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
 
       it "does not use deleted messages for the last_read_message_id" do
         message_2.trash!
+        message_2.chat_channel.update_last_message_id!
         result
         expect(membership_1.reload.last_read_message_id).to eq(message_1.id)
       end
@@ -136,18 +143,21 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
         expect(message.data).to eq(
           channel_1.id.to_s => {
             "last_read_message_id" => message_2.id,
+            "last_reply_created_at" => nil,
             "membership_id" => membership_1.id,
             "mention_count" => 0,
             "unread_count" => 0,
           },
           channel_2.id.to_s => {
             "last_read_message_id" => message_4.id,
+            "last_reply_created_at" => nil,
             "membership_id" => membership_2.id,
             "mention_count" => 0,
             "unread_count" => 0,
           },
           channel_3.id.to_s => {
             "last_read_message_id" => message_6.id,
+            "last_reply_created_at" => nil,
             "membership_id" => membership_3.id,
             "mention_count" => 0,
             "unread_count" => 0,
@@ -166,6 +176,7 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
 
         it "does use thread original messages for last_read_message_id" do
           new_om = Fabricate(:chat_message, chat_channel: channel_1, user: other_user)
+          channel_1.update!(last_message: new_om)
           thread.update!(original_message: new_om, original_message_user: other_user)
           result
           expect(membership_1.reload.last_read_message_id).to eq(new_om.id)

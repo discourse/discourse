@@ -1,6 +1,6 @@
-import I18n from "I18n";
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default class FlagType extends RestModel {
   @discourseComputed("id")

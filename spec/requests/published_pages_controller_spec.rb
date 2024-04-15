@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe PublishedPagesController do
-  fab!(:published_page) { Fabricate(:published_page) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:published_page)
+  fab!(:admin)
+  fab!(:user)
   fab!(:user2) { Fabricate(:user) }
 
   context "when enabled" do
@@ -49,7 +49,7 @@ RSpec.describe PublishedPagesController do
       end
 
       context "with private topic" do
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
         fab!(:private_category) { Fabricate(:private_category, group: group) }
 
         before { published_page.topic.update!(category: private_category) }
@@ -78,11 +78,6 @@ RSpec.describe PublishedPagesController do
             expect(response.status).to eq(200)
           end
         end
-      end
-
-      it "returns an error for an article you can't see" do
-        get "/pub/no-article-here-no-thx"
-        expect(response.status).to eq(404)
       end
 
       context "when the article is valid" do
@@ -161,7 +156,7 @@ RSpec.describe PublishedPagesController do
     end
 
     describe "publishing" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
 
       it "returns invalid access for non-staff" do
         sign_in(user)

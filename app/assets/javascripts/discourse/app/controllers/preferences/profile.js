@@ -1,17 +1,18 @@
 import Controller from "@ember/controller";
-import EmberObject from "@ember/object";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
-import { cookAsync } from "discourse/lib/text";
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import EmberObject, { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
-import showModal from "discourse/lib/show-modal";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { cook } from "discourse/lib/text";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   dialog: service(),
+  modal: service(),
   subpageTitle: I18n.t("user.preferences_nav.profile"),
   init() {
     this._super(...arguments);
@@ -69,17 +70,18 @@ export default Controller.extend({
     "model.can_upload_user_card_background"
   ),
 
-  actions: {
-    showFeaturedTopicModal() {
-      const modal = showModal("feature-topic-on-profile", {
-        model: this.model,
-        title: "user.feature_topic_on_profile.title",
-      });
-      modal.set("onClose", () => {
-        document.querySelector(".feature-topic-on-profile-btn")?.focus();
-      });
-    },
+  @action
+  async showFeaturedTopicModal() {
+    await this.modal.show(FeatureTopicOnProfileModal, {
+      model: {
+        user: this.model,
+        setFeaturedTopic: (v) => this.set("model.featured_topic", v),
+      },
+    });
+    document.querySelector(".feature-topic-on-profile-btn")?.focus();
+  },
 
+  actions: {
     clearFeaturedTopicFromProfile() {
       this.dialog.yesNoConfirm({
         message: I18n.t("user.feature_topic_on_profile.clear.warning"),
@@ -126,7 +128,7 @@ export default Controller.extend({
       return model
         .save(this.saveAttrNames)
         .then(() => {
-          cookAsync(model.get("bio_raw"))
+          cook(model.get("bio_raw"))
             .then(() => {
               model.set("bio_cooked");
               this.set("saved", true);

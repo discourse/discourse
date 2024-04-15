@@ -61,6 +61,14 @@
 {{/if}}
 
 {{#if this.displayTimeLineScrollArea}}
+  <UserTip
+    @id="topic_timeline"
+    @titleText={{i18n "user_tips.topic_timeline.title"}}
+    @contentText={{i18n "user_tips.topic_timeline.content"}}
+    @placement="left"
+    @triggerSelector=".timeline-scrollarea-wrapper"
+  />
+
   <div class="timeline-scrollarea-wrapper">
     <div class="timeline-date-wrapper">
       <a
@@ -73,7 +81,11 @@
         </span>
       </a>
     </div>
-    <div class="timeline-scrollarea" style={{this.timelineScrollareaStyle}}>
+    <div
+      class="timeline-scrollarea"
+      style={{this.timelineScrollareaStyle}}
+      {{did-insert this.registerScrollarea}}
+    >
       <div
         class="timeline-padding"
         style={{this.beforePadding}}
@@ -89,6 +101,7 @@
         @didStartDrag={{this.didStartDrag}}
         @dragMove={{this.dragMove}}
         @didEndDrag={{this.didEndDrag}}
+        {{did-insert this.registerScroller}}
       />
       <div
         class="timeline-padding"
@@ -119,7 +132,7 @@
         type="button"
         class="show-summary btn btn-small"
         title={{i18n "summary.short_title"}}
-        {{on "click" @showSummary}}
+        {{on "click" @showTopReplies}}
       >
         {{d-icon "layer-group"}}
         {{i18n "summary.short_label"}}
@@ -158,7 +171,7 @@
         @topic={{@model}}
         @showFullTitle={{false}}
         @appendReason={{false}}
-        @placement={{"bottom-end"}}
+        @placement="bottom-end"
         @showCaret={{false}}
       />
       {{#if @mobileView}}
@@ -171,7 +184,7 @@
     {{/if}}
     <PluginOutlet
       @name="timeline-footer-controls-after"
-      @outletArgs={{hash model=@model}}
+      @outletArgs={{hash model=@model fullscreen=@fullscreen}}
     />
   </div>
 {{/if}}

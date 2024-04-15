@@ -35,7 +35,6 @@ module BackupRestore
 
     def delete_file(filename)
       path = path_from_filename(filename)
-
       if File.exist?(path)
         File.delete(path)
         reset_cache

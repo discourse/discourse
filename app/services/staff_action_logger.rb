@@ -38,12 +38,29 @@ class StaffActionLogger
     StaffActionLogger.base_attrs.each do |attr|
       attrs[attr] = details.delete(attr) if details.has_key?(attr)
     end
-    attrs[:details] = details.map { |r| "#{r[0]}: #{r[1]}" }.join("\n")
+    attrs[:details] = details.map { |r| "#{r[0]}: #{truncate(r[1].to_s)}" }.join("\n")
     attrs[:acting_user_id] = @admin.id
     attrs[:action] = UserHistory.actions[:custom_staff]
     attrs[:custom_type] = custom_type
 
     UserHistory.create!(attrs)
+  end
+
+  def edit_directory_columns_details(column_data, directory_column)
+    directory_column = directory_column.attributes.transform_values(&:to_s)
+    previous_value = directory_column
+    new_value = directory_column.clone
+
+    directory_column.each do |key, value|
+      if column_data[key] != value && column_data[key].present?
+        new_value[key] = column_data[key]
+      elsif key != "name"
+        previous_value.delete key
+        new_value.delete key
+      end
+    end
+
+    [previous_value.to_json, new_value.to_json]
   end
 
   def log_post_deletion(deleted_post, opts = {})
@@ -63,7 +80,7 @@ class StaffActionLogger
       "user: #{username} (#{name})",
       "topic: #{topic_title}",
       "post_number: #{deleted_post.post_number}",
-      "raw: #{deleted_post.raw}",
+      "raw: #{truncate(deleted_post.raw)}",
     ]
 
     UserHistory.create!(
@@ -88,7 +105,7 @@ class StaffActionLogger
     ]
 
     if first_post = topic.ordered_posts.with_deleted.first
-      details << "raw: #{first_post.raw}"
+      details << "raw: #{truncate(first_post.raw)}"
     end
 
     UserHistory.create!(
@@ -162,7 +179,7 @@ class StaffActionLogger
       params(opts).merge(
         action: UserHistory.actions[:post_edit],
         post_id: post.id,
-        details: "#{opts[:old_raw]}\n\n---\n\n#{post.raw}",
+        details: "#{truncate(opts[:old_raw])}\n\n---\n\n#{truncate(post.raw)}",
       ),
     )
   end
@@ -244,15 +261,12 @@ class StaffActionLogger
     raise Discourse::InvalidParameters.new(:new_theme) unless new_theme
 
     new_json = theme_json(new_theme)
-
     old_json, new_json = strip_duplicates(old_json, new_json)
 
     UserHistory.create!(
-      params(opts).merge(
+      params(opts).merge(json_params(old_json, new_json)).merge(
         action: UserHistory.actions[:change_theme],
         subject: new_theme.name,
-        previous_value: old_json,
-        new_value: new_json,
       ),
     )
   end
@@ -260,10 +274,9 @@ class StaffActionLogger
   def log_theme_destroy(theme, opts = {})
     raise Discourse::InvalidParameters.new(:theme) unless theme
     UserHistory.create!(
-      params(opts).merge(
+      params(opts).merge(json_params(theme_json(theme), nil)).merge(
         action: UserHistory.actions[:delete_theme],
         subject: theme.name,
-        previous_value: theme_json(theme),
       ),
     )
   end
@@ -297,7 +310,7 @@ class StaffActionLogger
     UserHistory.create!(
       params(opts).merge(
         action: UserHistory.actions[:change_theme_setting],
-        subject: "#{theme.name}: #{setting_name.to_s}",
+        subject: "#{theme.name}: #{setting_name}",
         previous_value: previous_value,
         new_value: new_value,
       ),
@@ -779,15 +792,15 @@ class StaffActionLogger
 
     topic = reviewable.topic || Topic.with_deleted.find_by(id: reviewable.topic_id)
     topic_title = topic&.title || I18n.t("staff_action_logs.not_found")
-    username = reviewable.created_by&.username || I18n.t("staff_action_logs.unknown")
-    name = reviewable.created_by&.name || I18n.t("staff_action_logs.unknown")
+    username = reviewable.target_created_by&.username || I18n.t("staff_action_logs.unknown")
+    name = reviewable.target_created_by&.name || I18n.t("staff_action_logs.unknown")
 
     details = [
       "created_at: #{reviewable.created_at}",
       "rejected_at: #{rejected_at}",
       "user: #{username} (#{name})",
       "topic: #{topic_title}",
-      "raw: #{reviewable.payload["raw"]}",
+      "raw: #{truncate(reviewable.payload["raw"])}",
     ]
 
     UserHistory.create!(
@@ -989,7 +1002,7 @@ class StaffActionLogger
     )
   end
 
-  def log_group_deletetion(group)
+  def log_group_deletion(group)
     raise Discourse::InvalidParameters.new(:group) if group.nil?
 
     details = ["name: #{group.name}", "id: #{group.id}"]
@@ -1049,6 +1062,15 @@ class StaffActionLogger
 
   private
 
+  def json_params(previous_value, new_value)
+    if (previous_value && previous_value.length > UserHistory::MAX_JSON_LENGTH) ||
+         (new_value && new_value.length > UserHistory::MAX_JSON_LENGTH)
+      { context: I18n.t("staff_action_logs.json_too_long") }
+    else
+      { previous_value: previous_value, new_value: new_value }
+    end
+  end
+
   def get_changes(changes)
     return unless changes
 
@@ -1077,5 +1099,13 @@ class StaffActionLogger
   def custom_section_details(section)
     urls = section.sidebar_urls.map { |url| "#{url.name} - #{url.value}" }
     "links: #{urls.join(", ")}"
+  end
+
+  def truncate(s)
+    if s.size > UserHistory::MAX_CONTEXT_LENGTH
+      "#{s.slice(..UserHistory::MAX_CONTEXT_LENGTH)}..."
+    else
+      s
+    end
   end
 end

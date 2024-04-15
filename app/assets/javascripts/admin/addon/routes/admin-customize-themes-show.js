@@ -1,12 +1,13 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { COMPONENTS, THEMES } from "admin/models/theme";
-import I18n from "I18n";
 import Route from "@ember/routing/route";
+import { service } from "@ember/service";
 import { scrollTop } from "discourse/mixins/scroll-top";
+import I18n from "discourse-i18n";
+import { COMPONENTS, THEMES } from "admin/models/theme";
 
 export default class AdminCustomizeThemesShowRoute extends Route {
   @service dialog;
+  @service router;
 
   serialize(model) {
     return { theme_id: model.get("id") };
@@ -15,7 +16,11 @@ export default class AdminCustomizeThemesShowRoute extends Route {
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
     const model = all.findBy("id", parseInt(params.theme_id, 10));
-    return model ? model : this.replaceWith("adminCustomizeThemes.index");
+    if (model) {
+      return model;
+    } else {
+      this.router.replaceWith("adminCustomizeThemes.index");
+    }
   }
 
   setupController(controller, model) {
@@ -35,6 +40,7 @@ export default class AdminCustomizeThemesShowRoute extends Route {
       colorSchemeId: model.get("color_scheme_id"),
       colorSchemes: parentController.get("model.extras.color_schemes"),
       editingName: false,
+      editingThemeSetting: false,
     });
 
     this.handleHighlight(model);

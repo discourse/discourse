@@ -6,8 +6,8 @@ require "discourse_tagging"
 # More tests are found in the category_tag_spec integration specs
 
 RSpec.describe DiscourseTagging do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:admin_guardian) { Guardian.new(admin) }
   let(:guardian) { Guardian.new(user) }
 
@@ -17,8 +17,8 @@ RSpec.describe DiscourseTagging do
 
   before do
     SiteSetting.tagging_enabled = true
-    SiteSetting.min_trust_to_create_tag = 0
-    SiteSetting.min_trust_level_to_tag_topics = 0
+    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
   end
 
   describe "visible_tags" do
@@ -99,7 +99,7 @@ RSpec.describe DiscourseTagging do
 
   describe "#validate_one_tag_from_group_per_topic" do
     fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2, tag3], one_per_topic: true) }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:category) { Fabricate(:category, allowed_tag_groups: [tag_group.name]) }
 
     it "returns true if the topic doesn't belong to a category" do
@@ -903,7 +903,7 @@ RSpec.describe DiscourseTagging do
 
   describe "tag_topic_by_names" do
     context "with visible but restricted tags" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
 
       before { create_staff_only_tags(["alpha"]) }
 
@@ -1329,8 +1329,8 @@ RSpec.describe DiscourseTagging do
     end
 
     context "when enforcing required tags from a tag group" do
-      fab!(:category) { Fabricate(:category) }
-      fab!(:tag_group) { Fabricate(:tag_group) }
+      fab!(:category)
+      fab!(:tag_group)
       fab!(:topic) { Fabricate(:topic, category: category) }
 
       before do
@@ -1388,7 +1388,7 @@ RSpec.describe DiscourseTagging do
     end
 
     context "with tag synonyms" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
 
       fab!(:syn1) { Fabricate(:tag, name: "synonym1", target_tag: tag1) }
       fab!(:syn2) { Fabricate(:tag, name: "synonym2", target_tag: tag1) }
@@ -1479,11 +1479,62 @@ RSpec.describe DiscourseTagging do
       it "removes zero-width spaces" do
         expect(DiscourseTagging.clean_tag("hel\ufefflo")).to eq("hello")
       end
+
+      it "removes multiple consecutive dashes" do
+        expect(DiscourseTagging.clean_tag("hello---world")).to eq("hello-world")
+        expect(DiscourseTagging.clean_tag("Finances & Accounting")).to eq("finances-accounting")
+      end
+    end
+  end
+
+  describe "Tag in multiple tag groups" do
+    fab!(:parent) { Fabricate(:tag) }
+    fab!(:child) { Fabricate(:tag) }
+    fab!(:no_show_tag) { Fabricate(:tag) }
+
+    fab!(:no_show_tag_group) do
+      Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [no_show_tag.name])
+    end
+
+    fab!(:child_tag_group) do
+      Fabricate(
+        :tag_group,
+        permissions: {
+          "everyone" => 1,
+        },
+        tag_names: [child.name, no_show_tag.name],
+        parent_tag_id: parent.id,
+      )
+    end
+
+    fab!(:parent_tag_group) do
+      Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [parent.name])
+    end
+
+    fab!(:category) do
+      Fabricate(:category, allowed_tag_groups: [parent_tag_group.name, child_tag_group.name])
+    end
+
+    # this test is to make sure that the parent tag is the only one returned when the child tag is also in a tag group
+    # allowed in the category
+    it "Will only return the parent tag" do
+      tags =
+        DiscourseTagging.filter_allowed_tags(
+          Guardian.new(user),
+          selected_tags: nil,
+          for_input: true,
+          category: category,
+          term: "",
+        ).map(&:name)
+
+      expect(tags).to include(parent.name)
+      expect(tags).not_to include(child.name)
+      expect(tags).not_to include(no_show_tag.name)
     end
   end
 
   describe "staff_tag_names" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
 
     fab!(:staff_tag) { Fabricate(:tag) }
     fab!(:other_staff_tag) { Fabricate(:tag) }
@@ -1550,6 +1601,19 @@ RSpec.describe DiscourseTagging do
       }.to_not change { Tag.count }
       expect_same_tag_names(tag1.reload.synonyms, [tag2])
       expect(tag2.reload.target_tag).to eq(tag1)
+    end
+
+    it "replaces topic synonym tags with target tag" do
+      tag4, tag5 = 2.times.collect { Fabricate(:tag) }
+      topic = Fabricate(:topic, tags: [tag2, tag3, tag4])
+      expect {
+        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name, tag3.name])).to eq(
+          true,
+        )
+      }.to_not change { Tag.count }
+      expect_same_tag_names(tag1.reload.synonyms, [tag2, tag3])
+      expect_same_tag_names(topic.reload.tags, [tag1, tag4])
+      expect(tag5.reload).to be_present
     end
 
     it "can create new tags" do

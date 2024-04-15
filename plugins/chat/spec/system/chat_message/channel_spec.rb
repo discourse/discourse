@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat message - channel", type: :system, js: true do
+RSpec.describe "Chat message - channel", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
 
   let(:cdp) { PageObjects::CDP.new }
-  let(:chat) { PageObjects::Pages::Chat.new }
-  let(:channel) { PageObjects::Pages::ChatChannel.new }
+  let(:chat_page) { PageObjects::Pages::Chat.new }
+  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   before do
     chat_system_bootstrap
@@ -17,13 +17,26 @@ RSpec.describe "Chat message - channel", type: :system, js: true do
 
   context "when hovering a message" do
     it "adds an active class" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
-      channel.hover_message(message_1)
+      channel_page.hover_message(message_1)
 
       expect(page).to have_css(
-        ".chat-channel[data-id='#{channel_1.id}'] [data-id='#{message_1.id}'] .chat-message.is-active",
+        ".chat-channel[data-id='#{channel_1.id}'] .chat-message-container[data-id='#{message_1.id}'].-active",
       )
+    end
+  end
+
+  context "when copying text of a message" do
+    before { cdp.allow_clipboard }
+
+    it "[mobile] copies the text of a single message", mobile: true do
+      chat_page.visit_channel(channel_1)
+
+      channel_page.messages.copy_text(message_1)
+
+      expect(cdp.read_clipboard.chomp).to eq(message_1.message)
+      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.text_copied"))
     end
   end
 
@@ -31,18 +44,25 @@ RSpec.describe "Chat message - channel", type: :system, js: true do
     before { cdp.allow_clipboard }
 
     it "copies the link to the message" do
-      chat.visit_channel(channel_1)
+      chat_page.visit_channel(channel_1)
 
-      channel.copy_link(message_1)
+      channel_page.messages.copy_link(message_1)
 
       expect(cdp.read_clipboard).to include("/chat/c/-/#{channel_1.id}/#{message_1.id}")
+      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.link_copied"))
+    end
+
+    it "[mobile] copies the link to the message", mobile: true do
+      chat_page.visit_channel(channel_1)
+
+      channel_page.messages.copy_link(message_1)
+
+      expect(cdp.read_clipboard).to include("/chat/c/-/#{channel_1.id}/#{message_1.id}")
+      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.link_copied"))
     end
 
     context "when the message is part of a thread" do
-      before do
-        SiteSetting.enable_experimental_chat_threaded_discussions = true
-        channel_1.update!(threading_enabled: true)
-      end
+      before { channel_1.update!(threading_enabled: true) }
 
       fab!(:thread_1) do
         chat_thread_chain_bootstrap(
@@ -52,14 +72,26 @@ RSpec.describe "Chat message - channel", type: :system, js: true do
         )
       end
 
-      it "copies the link to the message and not to the thread" do
-        chat.visit_channel(channel_1)
+      it "copies the link to the message" do
+        chat_page.visit_channel(channel_1)
 
-        channel.copy_link(thread_1.original_message)
+        channel_page.messages.copy_link(thread_1.original_message)
 
         expect(cdp.read_clipboard).to include(
           "/chat/c/-/#{channel_1.id}/#{thread_1.original_message.id}",
         )
+        expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.link_copied"))
+      end
+
+      xit "[mobile] copies the link to the message", mobile: true do
+        chat_page.visit_channel(channel_1)
+
+        channel_page.messages.copy_link(thread_1.original_message)
+
+        expect(cdp.read_clipboard).to include(
+          "/chat/c/-/#{channel_1.id}/#{thread_1.original_message.id}",
+        )
+        expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.link_copied"))
       end
     end
   end

@@ -1,103 +1,184 @@
 # frozen_string_literal: true
 
-describe "Bookmarking posts and topics", type: :system, js: true do
-  fab!(:topic) { Fabricate(:topic) }
-  fab!(:user) { Fabricate(:user) }
+describe "Bookmarking posts and topics", type: :system do
+  fab!(:topic)
+  fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post) { Fabricate(:post, topic: topic, raw: "This is some post to bookmark") }
-  fab!(:post2) { Fabricate(:post, topic: topic, raw: "Some interesting post content") }
+  fab!(:post_2) { Fabricate(:post, topic: topic, raw: "Some interesting post content") }
 
+  let(:timezone) { "Australia/Brisbane" }
+  let(:cdp) { PageObjects::CDP.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:bookmark_modal) { PageObjects::Modals::Bookmark.new }
+  let(:bookmark_menu) { PageObjects::Components::BookmarkMenu.new }
 
-  before { sign_in user }
+  before do
+    current_user.user_option.update!(timezone: timezone)
+    sign_in(current_user)
+  end
 
-  def visit_topic_and_open_bookmark_modal(post)
+  def visit_topic_and_open_bookmark_menu(post, expand_actions: true)
     topic_page.visit_topic(topic)
-    topic_page.expand_post_actions(post)
+    open_bookmark_menu(post, expand_actions: expand_actions)
+  end
+
+  def open_bookmark_menu(post, expand_actions: true)
+    topic_page.expand_post_actions(post) if expand_actions
     topic_page.click_post_action_button(post, :bookmark)
   end
 
-  it "allows the user to create bookmarks with and without reminders" do
-    visit_topic_and_open_bookmark_modal(post)
+  it "creates a bookmark on the post as soon as the bookmark button is clicked" do
+    visit_topic_and_open_bookmark_menu(post)
 
-    bookmark_modal.fill_name("something important")
-    bookmark_modal.save
+    expect(bookmark_menu).to be_open
+    expect(page).to have_content(I18n.t("js.bookmarks.bookmarked_success"))
+    expect(topic_page).to have_post_bookmarked(post, with_reminder: false)
+    expect(Bookmark.find_by(bookmarkable: post, user: current_user)).to be_truthy
+  end
 
-    expect(topic_page).to have_post_bookmarked(post)
-    bookmark = Bookmark.find_by(bookmarkable: post, user: user)
-    expect(bookmark.name).to eq("something important")
-    expect(bookmark.reminder_at).to eq(nil)
+  it "updates the created bookmark with a selected reminder option from the bookmark menu" do
+    visit_topic_and_open_bookmark_menu(post)
 
-    visit_topic_and_open_bookmark_modal(post2)
+    expect(bookmark_menu).to be_open
+    expect(page).to have_content(I18n.t("js.bookmarks.bookmarked_success"))
 
+    bookmark_menu.click_menu_option("tomorrow")
+
+    expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
+    expect(page).to have_no_css(".bookmark-menu-content")
+    expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
+  end
+
+  it "can set a reminder from the bookmark modal using the custom bookmark menu option" do
+    visit_topic_and_open_bookmark_menu(post)
+    bookmark_menu.click_menu_option("custom")
     bookmark_modal.select_preset_reminder(:tomorrow)
-    expect(topic_page).to have_post_bookmarked(post2)
-    bookmark = Bookmark.find_by(bookmarkable: post2, user: user)
-    expect(bookmark.reminder_at).not_to eq(nil)
-    expect(bookmark.reminder_set_at).not_to eq(nil)
+    expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
+    expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
   end
 
-  it "does not create a bookmark if the modal is closed with the cancel button" do
-    visit_topic_and_open_bookmark_modal(post)
+  it "allows choosing a different auto_delete_preference to the user preference and remembers it when reopening the modal" do
+    current_user.user_option.update!(
+      bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply],
+    )
+    visit_topic_and_open_bookmark_menu(post_2)
+    bookmark_menu.click_menu_option("custom")
+    expect(bookmark_modal).to be_open
 
-    bookmark_modal.fill_name("something important")
-    bookmark_modal.cancel
+    # TODO (martin) Not sure why, but I need to click this twice for the panel to open :/
+    bookmark_modal.open_options_panel
+    bookmark_modal.open_options_panel
 
-    expect(topic_page).to have_no_post_bookmarked(post)
-    expect(Bookmark.exists?(bookmarkable: post, user: user)).to eq(false)
-  end
-
-  it "creates a bookmark if the modal is closed by clicking outside the modal window" do
-    visit_topic_and_open_bookmark_modal(post)
-
-    bookmark_modal.fill_name("something important")
-    bookmark_modal.click_outside
-
-    expect(topic_page).to have_post_bookmarked(post)
-  end
-
-  it "allows the topic to be bookmarked" do
-    topic_page.visit_topic(topic)
-    topic_page.click_topic_footer_button(:bookmark)
-
-    bookmark_modal.fill_name("something important")
+    expect(bookmark_modal).to have_auto_delete_preference(
+      Bookmark.auto_delete_preferences[:on_owner_reply],
+    )
+    bookmark_modal.select_auto_delete_preference(Bookmark.auto_delete_preferences[:clear_reminder])
     bookmark_modal.save
-
-    expect(topic_page).to have_topic_bookmarked
-    bookmark =
-      try_until_success { expect(Bookmark.exists?(bookmarkable: topic, user: user)).to eq(true) }
-    expect(bookmark).not_to eq(nil)
+    expect(topic_page).to have_post_bookmarked(post_2, with_reminder: false)
+    topic_page.click_post_action_button(post_2, :bookmark)
+    bookmark_menu.click_menu_option("edit")
+    expect(bookmark_modal).to have_open_options_panel
+    expect(bookmark_modal).to have_auto_delete_preference(
+      Bookmark.auto_delete_preferences[:clear_reminder],
+    )
   end
 
-  context "when the user has a bookmark auto_delete_preference" do
-    before do
-      user.user_option.update!(
-        bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:on_owner_reply],
+  it "opens the bookmark modal with the Custom... option only after the bookmark saves on slow connections" do
+    topic_page.visit_topic(topic)
+
+    cdp.with_slow_upload do
+      open_bookmark_menu(post)
+      bookmark_menu.click_menu_option("custom")
+    end
+
+    expect(bookmark_modal).to be_open
+  end
+
+  describe "topic level bookmarks" do
+    it "allows the topic to be bookmarked" do
+      topic_page.visit_topic(topic)
+      topic_page.click_topic_footer_button(:bookmark)
+
+      bookmark_modal.fill_name("something important")
+      bookmark_modal.save
+
+      expect(topic_page).to have_topic_bookmarked
+      expect(Bookmark.exists?(bookmarkable: topic, user: current_user)).to be_truthy
+    end
+
+    it "opens the edit bookmark modal from the topic bookmark button if one post is bookmarked" do
+      bookmark = Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
+      topic_page.visit_topic(topic)
+      topic_page.click_topic_footer_button(:bookmark)
+      expect(bookmark_modal).to be_open
+      expect(bookmark_modal).to be_editing_id(bookmark.id)
+    end
+
+    it "clears all topic bookmarks from the topic bookmark button if more than one post is bookmarked" do
+      Fabricate(:bookmark, bookmarkable: post, user: current_user)
+      Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
+      topic_page.visit_topic(topic)
+      topic_page.click_topic_footer_button(:bookmark)
+      dialog = PageObjects::Components::Dialog.new
+      expect(dialog).to have_content(I18n.t("js.bookmarks.confirm_clear"))
+      dialog.click_yes
+      expect(dialog).to be_closed
+      expect(topic_page).to have_no_bookmarks
+      expect(Bookmark.where(user: current_user).count).to eq(0)
+    end
+  end
+
+  describe "editing existing bookmarks" do
+    fab!(:bookmark) do
+      Fabricate(
+        :bookmark,
+        bookmarkable: post_2,
+        user: current_user,
+        name: "test name",
+        reminder_at: 10.days.from_now,
       )
     end
 
-    it "is respected when the user creates a new bookmark" do
-      visit_topic_and_open_bookmark_modal(post)
-
-      bookmark_modal.save
-      expect(topic_page).to have_post_bookmarked(post)
-
-      bookmark = Bookmark.find_by(bookmarkable: post, user: user)
-      expect(bookmark.auto_delete_preference).to eq(
-        Bookmark.auto_delete_preferences[:on_owner_reply],
+    it "prefills the name of the bookmark and the custom reminder date and time" do
+      visit_topic_and_open_bookmark_menu(post_2, expand_actions: false)
+      bookmark_menu.click_menu_option("edit")
+      expect(bookmark_modal).to have_open_options_panel
+      expect(bookmark_modal.name.value).to eq("test name")
+      expect(bookmark_modal.existing_reminder_alert).to have_content(
+        bookmark_modal.existing_reminder_alert_message(bookmark),
       )
+      expect(bookmark_modal.custom_date_picker.value).to eq(
+        bookmark.reminder_at_in_zone(timezone).strftime("%Y-%m-%d"),
+      )
+      expect(bookmark_modal.custom_time_picker.value).to eq(
+        bookmark.reminder_at_in_zone(timezone).strftime("%H:%M"),
+      )
+      expect(bookmark_modal).to have_active_preset("custom")
     end
 
-    it "allows the user to choose a different auto delete preference for a bookmark" do
-      visit_topic_and_open_bookmark_modal(post)
+    it "can delete the bookmark" do
+      visit_topic_and_open_bookmark_menu(post_2, expand_actions: false)
+      bookmark_menu.click_menu_option("edit")
+      bookmark_modal.delete
+      bookmark_modal.confirm_delete
+      expect(topic_page).to have_no_post_bookmarked(post_2)
+    end
 
-      bookmark_modal.save
-      expect(topic_page).to have_post_bookmarked(post)
+    it "can delete the bookmark from within the menu" do
+      visit_topic_and_open_bookmark_menu(post_2, expand_actions: false)
+      bookmark_menu.click_menu_option("delete")
+      expect(topic_page).to have_no_post_bookmarked(post_2)
+    end
 
-      bookmark = Bookmark.find_by(bookmarkable: post, user: user)
-      expect(bookmark.auto_delete_preference).to eq(
-        Bookmark.auto_delete_preferences[:on_owner_reply],
-      )
+    it "does not save edits when pressing cancel" do
+      visit_topic_and_open_bookmark_menu(post_2, expand_actions: false)
+      bookmark_menu.click_menu_option("edit")
+      bookmark_modal.fill_name("something important")
+      bookmark_modal.cancel
+      topic_page.click_post_action_button(post_2, :bookmark)
+      bookmark_menu.click_menu_option("edit")
+      expect(bookmark_modal.name.value).to eq("something important")
+      expect(bookmark.reload.name).to eq("test name")
     end
   end
 end

@@ -25,7 +25,7 @@ if !Theme.exists?
   end
 
   name = I18n.t("color_schemes.default_theme_name")
-  default_theme = Theme.create!(name: name, user_id: -1)
+  default_theme = Theme.create!(name: name, user_id: Discourse::SYSTEM_USER_ID)
   default_theme.set_default!
 
   if SiteSetting.default_dark_mode_color_scheme_id ==

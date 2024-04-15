@@ -1,7 +1,7 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
-import { render } from "@ember/test-helpers";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Discourse Chat | Component | chat-user-info", function (hooks) {
   setupRenderingTest(hooks);
@@ -11,14 +11,24 @@ module("Discourse Chat | Component | chat-user-info", function (hooks) {
 
     await render(hbs`<ChatUserInfo @user={{this.user}} />`);
 
-    assert
-      .dom(`a[data-user-card=${this.user.username}] div.chat-user-avatar`)
-      .exists();
+    assert.dom().containsText(this.user.username);
+    assert.dom().containsText(this.user.name);
+  });
 
-    assert
-      .dom(
-        `a[data-user-card=${this.user.username}] span.chat-user-display-name`
-      )
-      .includesText(this.user.username);
+  test("status message", async function (assert) {
+    this.siteSettings.enable_user_status = true;
+
+    this.set("user", this.currentUser);
+
+    this.user.setProperties({
+      status: { description: "happy", emoji: "smile" },
+    });
+
+    await render(
+      hbs`<ChatUserInfo @user={{this.user}} @showStatus={{true}} @showStatusDescription={{true}} />`
+    );
+
+    assert.dom("img.emoji[alt='smile']").exists("it shows the emoji");
+    assert.dom().containsText("happy");
   });
 });

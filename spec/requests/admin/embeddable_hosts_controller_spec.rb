@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::EmbeddableHostsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:embeddable_host) { Fabricate(:embeddable_host) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
+  fab!(:embeddable_host)
 
   describe "#create" do
     context "when logged in as an admin" do

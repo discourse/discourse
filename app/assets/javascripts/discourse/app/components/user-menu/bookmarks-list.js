@@ -1,11 +1,10 @@
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { ajax } from "discourse/lib/ajax";
-import Notification from "discourse/models/notification";
-import showModal from "discourse/lib/show-modal";
-import I18n from "I18n";
-import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import Bookmark from "discourse/models/bookmark";
+import Notification from "discourse/models/notification";
+import I18n from "discourse-i18n";
 
 export default class UserMenuBookmarksList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -45,6 +44,12 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     return this.currentUser.get(key) || 0;
   }
 
+  get dismissConfirmationText() {
+    return I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
+      count: this.#unreadBookmarkRemindersCount,
+    });
+  }
+
   async fetchItems() {
     const data = await ajax(
       `/u/${this.currentUser.username}/user-menu-bookmarks`
@@ -68,21 +73,14 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     await Bookmark.applyTransformations(bookmarks);
     content.push(
       ...bookmarks.map((bookmark) => {
-        return new UserMenuBookmarkItem({ bookmark });
+        return new UserMenuBookmarkItem({
+          bookmark,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        });
       })
     );
 
     return content;
-  }
-
-  dismissWarningModal() {
-    const modalController = showModal("dismiss-notification-confirmation");
-    modalController.set(
-      "confirmationMessage",
-      I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
-        count: this.#unreadBookmarkRemindersCount,
-      })
-    );
-    return modalController;
   }
 }

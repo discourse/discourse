@@ -28,6 +28,10 @@
   }
 }
 
+.container.groups-index {
+  background: var(--d-content-background);
+}
+
 .groups-boxes {
   display: grid;
   grid-gap: 1em;
@@ -46,7 +50,7 @@
       transition: all 0.25s;
 
       &:hover {
-        box-shadow: shadow("card");
+        box-shadow: var(--shadow-card);
         border-color: var(--primary-low-mid-or-secondary-high);
       }
     }
@@ -149,6 +153,7 @@
     display: inline;
   }
   &.groups-notifications-form {
+    max-width: 33em;
     .control-instructions {
       color: var(--primary-medium);
       margin-bottom: 10px;

@@ -1,9 +1,16 @@
-import { ajax } from "discourse/lib/ajax";
+import { setOwner } from "@ember/application";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "I18n";
 import getURL from "discourse-common/lib/get-url";
+import I18n from "discourse-i18n";
 
 export default class ChatMessageFlag {
+  @service chatApi;
+
+  constructor(owner) {
+    setOwner(this, owner);
+  }
+
   title() {
     return "flagging.title";
   }
@@ -34,11 +41,13 @@ export default class ChatMessageFlag {
     });
   }
 
-  flagsAvailable(_controller, site, model) {
-    let flagsAvailable = site.flagTypes;
+  flagsAvailable(flagModal) {
+    let flagsAvailable = flagModal.site.flagTypes;
 
     flagsAvailable = flagsAvailable.filter((flag) => {
-      return model.availableFlags.includes(flag.name_key);
+      return flagModal.args.model.flagModel.availableFlags.includes(
+        flag.name_key
+      );
     });
 
     // "message user" option should be at the top
@@ -55,37 +64,22 @@ export default class ChatMessageFlag {
     return this._rewriteFlagDescriptions(flagsAvailable);
   }
 
-  create(controller, opts) {
-    controller.send("hideModal");
+  async create(flagModal, opts) {
+    flagModal.args.closeModal();
 
-    return ajax("/chat/flag", {
-      method: "PUT",
-      data: {
-        chat_message_id: controller.get("model.id"),
-        flag_type_id: controller.get("selected.id"),
+    const channelId = flagModal.args.model.flagModel.channel.id;
+    const messageId = flagModal.args.model.flagModel.id;
+
+    try {
+      await this.chatApi.flagMessage(channelId, messageId, {
+        flag_type_id: flagModal.selected.id,
         message: opts.message,
         is_warning: opts.isWarning,
         take_action: opts.takeAction,
         queue_for_review: opts.queue_for_review,
-      },
-    })
-      .then(() => {
-        if (controller.isDestroying || controller.isDestroyed) {
-          return;
-        }
-
-        if (!opts.skipClose) {
-          controller.send("closeModal");
-        }
-        if (opts.message) {
-          controller.set("message", "");
-        }
-      })
-      .catch((error) => {
-        if (!controller.isDestroying && !controller.isDestroyed) {
-          controller.send("closeModal");
-        }
-        popupAjaxError(error);
       });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 }

@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
+import { htmlSafe } from "@ember/template";
 import {
   SCROLLER_HEIGHT,
   timelineDate,
 } from "discourse/components/topic-timeline/container";
-import I18n from "I18n";
-import { htmlSafe } from "@ember/template";
+import I18n from "discourse-i18n";
 
 export default class TopicTimelineScroller extends Component {
   style = htmlSafe(`height: ${SCROLLER_HEIGHT}px`);

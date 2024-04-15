@@ -53,18 +53,15 @@ class DiscoursePluginRegistry
   define_register :javascripts, Set
   define_register :auth_providers, Set
   define_register :service_workers, Set
-  define_register :admin_javascripts, Set
   define_register :stylesheets, Hash
   define_register :mobile_stylesheets, Hash
   define_register :desktop_stylesheets, Hash
   define_register :color_definition_stylesheets, Hash
-  define_register :handlebars, Set
   define_register :serialized_current_user_fields, Set
   define_register :seed_data, HashWithIndifferentAccess
   define_register :locales, HashWithIndifferentAccess
   define_register :svg_icons, Set
   define_register :custom_html, Hash
-  define_register :asset_globs, Set
   define_register :html_builders, Hash
   define_register :seed_path_builders, Set
   define_register :vendored_pretty_text, Set
@@ -72,9 +69,13 @@ class DiscoursePluginRegistry
   define_register :seedfu_filter, Set
   define_register :demon_processes, Set
   define_register :groups_callback_for_users_search_controller_action, Hash
+  define_register :mail_pollers, Set
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
+
+  define_filtered_register :staff_editable_topic_custom_fields
+  define_filtered_register :public_editable_topic_custom_fields
 
   define_filtered_register :self_editable_user_custom_fields
   define_filtered_register :staff_editable_user_custom_fields
@@ -95,6 +96,7 @@ class DiscoursePluginRegistry
 
   define_filtered_register :presence_channel_prefixes
 
+  define_filtered_register :email_notification_filters
   define_filtered_register :push_notification_filters
 
   define_filtered_register :notification_consolidation_plans
@@ -108,13 +110,25 @@ class DiscoursePluginRegistry
 
   define_filtered_register :search_groups_set_query_callbacks
 
-  define_filtered_register :about_stat_groups
+  define_filtered_register :stats
   define_filtered_register :bookmarkables
 
   define_filtered_register :list_suggested_for_providers
 
+  define_filtered_register :summarization_strategies
+
+  define_filtered_register :post_action_notify_user_handlers
+
+  define_filtered_register :post_strippers
+
+  define_filtered_register :problem_checks
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
+  end
+
+  def self.register_mail_poller(mail_poller)
+    self.mail_pollers << mail_poller
   end
 
   def register_js(filename, options = {})
@@ -143,34 +157,11 @@ class DiscoursePluginRegistry
     Archetype.register(name, options)
   end
 
-  def self.register_glob(root, extension, options = nil)
-    self.asset_globs << [root, extension, options || {}]
-  end
-
-  def self.each_globbed_asset(each_options = nil)
-    each_options ||= {}
-
-    self.asset_globs.each do |g|
-      root, ext, options = *g
-
-      if options[:admin]
-        next unless each_options[:admin]
-      else
-        next if each_options[:admin]
-      end
-
-      Dir.glob("#{root}/**/*.#{ext}") { |f| yield f }
-    end
-  end
-
   JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6\z/
-  HANDLEBARS_REGEX = /\.(hb[rs]|js\.handlebars)\z/
 
   def self.register_asset(asset, opts = nil, plugin_directory_name = nil)
     if asset =~ JS_REGEX
-      if opts == :admin
-        self.admin_javascripts << asset
-      elsif opts == :vendored_pretty_text
+      if opts == :vendored_pretty_text
         self.vendored_pretty_text << asset
       elsif opts == :vendored_core_pretty_text
         self.vendored_core_pretty_text << asset
@@ -190,8 +181,6 @@ class DiscoursePluginRegistry
         self.stylesheets[plugin_directory_name] ||= Set.new
         self.stylesheets[plugin_directory_name] << asset
       end
-    elsif asset =~ HANDLEBARS_REGEX
-      self.handlebars << asset
     end
   end
 

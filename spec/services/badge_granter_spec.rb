@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe BadgeGranter do
-  fab!(:badge) { Fabricate(:badge) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:badge)
+  fab!(:user)
 
   before { BadgeGranter.enable_queue }
 
@@ -309,7 +309,7 @@ RSpec.describe BadgeGranter do
   end
 
   describe "revoke" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     let!(:user_badge) { BadgeGranter.grant(badge, user) }
 
     it "revokes the badge and does necessary cleanup" do
@@ -396,8 +396,8 @@ RSpec.describe BadgeGranter do
   end
 
   describe "update_badges" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:liker) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:liker) { Fabricate(:user, refresh_auto_groups: true) }
 
     it "grants autobiographer" do
       user.user_profile.bio_raw = "THIS IS MY bio it a long bio I like my bio"

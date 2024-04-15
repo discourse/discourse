@@ -1,7 +1,7 @@
-import DiscourseURL from "discourse/lib/url";
-import MiniTagChooser from "select-kit/components/mini-tag-chooser";
-import { makeArray } from "discourse-common/lib/helpers";
 import { action } from "@ember/object";
+import DiscourseURL from "discourse/lib/url";
+import { makeArray } from "discourse-common/lib/helpers";
+import MiniTagChooser from "select-kit/components/mini-tag-chooser";
 
 export default MiniTagChooser.extend({
   pluginApiIdentifiers: ["tags-intersection-chooser"],

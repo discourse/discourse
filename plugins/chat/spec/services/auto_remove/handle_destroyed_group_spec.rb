@@ -5,8 +5,8 @@ RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
     subject(:result) { described_class.call(params) }
 
     let(:params) { { destroyed_group_user_ids: [admin_1.id, admin_2.id, user_1.id, user_2.id] } }
-    fab!(:user_1) { Fabricate(:user) }
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:admin_1) { Fabricate(:admin) }
     fab!(:admin_2) { Fabricate(:admin) }
 
@@ -130,7 +130,6 @@ RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
             channel_2.add(user_2)
             channel_1.add(admin_1)
             channel_1.add(admin_2)
-            Group.refresh_automatic_groups!
           end
 
           it "sets the service result as successful" do
@@ -151,7 +150,6 @@ RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
             channel_2.add(user_2)
             channel_1.add(admin_1)
             channel_1.add(admin_2)
-            Group.refresh_automatic_groups!
           end
 
           it { is_expected.to fail_a_policy(:not_everyone_allowed) }
@@ -170,7 +168,6 @@ RSpec.describe Chat::AutoRemove::HandleDestroyedGroup do
           channel_2.add(user_2)
           channel_1.add(admin_1)
           channel_1.add(admin_2)
-          Group.refresh_automatic_groups!
         end
 
         context "when channel category not read_restricted with no category_groups" do

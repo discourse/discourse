@@ -1,17 +1,18 @@
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { or } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import I18n from "I18n";
-import WatchedWord from "admin/models/watched-word";
-import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
-import { fmt } from "discourse/lib/computed";
+import { action } from "@ember/object";
+import { or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
-import showModal from "discourse/lib/show-modal";
+import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { fmt } from "discourse/lib/computed";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import WatchedWordTestModal from "admin/components/modal/watched-word-test";
+import WatchedWord from "admin/models/watched-word";
 
 export default class AdminWatchedWordsActionController extends Controller {
   @service dialog;
+  @service modal;
   @controller adminWatchedWords;
 
   actionNameKey = null;
@@ -91,9 +92,8 @@ export default class AdminWatchedWordsActionController extends Controller {
   test() {
     WatchedWord.findAll().then((data) => {
       this.adminWatchedWords.set("model", data);
-      showModal("admin-watched-word-test", {
-        admin: true,
-        model: this.currentAction,
+      this.modal.show(WatchedWordTestModal, {
+        model: { watchedWord: this.currentAction },
       });
     });
   }

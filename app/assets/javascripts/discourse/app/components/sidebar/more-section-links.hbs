@@ -5,9 +5,10 @@
 <li class="sidebar-section-link-wrapper">
   <DButton
     @icon="ellipsis-v"
-    @action={{action this.toggleSectionLinks}}
-    @class="btn-flat sidebar-more-section-links-details-summary"
+    @action={{this.toggleSectionLinks}}
     @label="sidebar.more"
+    class="btn-flat sidebar-more-section-links-details-summary"
+    aria-expanded={{if this.open "true" "false"}}
   />
 </li>
 
@@ -20,11 +21,21 @@
     >
 
       <div class="sidebar-more-section-links-details-content">
-        <div class="sidebar-more-section-links-details-content-main">
+        <ul class="sidebar-more-section-links-details-content-main">
           {{#each this.sectionLinks as |sectionLink|}}
             <Sidebar::MoreSectionLink @sectionLink={{sectionLink}} />
           {{/each}}
-        </div>
+        </ul>
+
+        {{#if @moreButtonAction}}
+          <div class="sidebar-more-section-links-details-content-footer">
+            <Sidebar::SectionLinkButton
+              @action={{@moreButtonAction}}
+              @icon={{@moreButtonIcon}}
+              @text={{@moreButtonText}}
+            />
+          </div>
+        {{/if}}
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe RemoteTheme do
-  describe "#import_remote" do
+  describe "#import_theme" do
     def about_json(
       love_color: "FAFAFA",
       tertiary_low_color: "FFFFFF",
@@ -35,6 +35,12 @@ RSpec.describe RemoteTheme do
       "@font-face { font-family: magic; src: url($font)}; body {color: $color; content: $name;}"
     end
 
+    let(:migration_js) { <<~JS }
+        export default function migrate(settings) {
+          return settings;
+        }
+      JS
+
     let :initial_repo do
       setup_git_repo(
         "about.json" => about_json,
@@ -51,6 +57,7 @@ RSpec.describe RemoteTheme do
         "assets/font.woff2" => "FAKE FONT",
         "settings.yaml" => "boolean_setting: true",
         "locales/en.yml" => "sometranslations",
+        "migrations/settings/0001-some-migration.js" => migration_js,
       )
     end
 
@@ -62,14 +69,102 @@ RSpec.describe RemoteTheme do
 
     around(:each) { |group| MockGitImporter.with_mock { group.run } }
 
+    it "run pending theme settings migrations" do
+      add_to_git_repo(initial_repo, "migrations/settings/0002-another-migration.js" => <<~JS)
+        export default function migrate(settings) {
+          settings.set("boolean_setting", false);
+          return settings;
+        }
+      JS
+      theme = RemoteTheme.import_theme(initial_repo_url)
+      migrations = theme.theme_settings_migrations.order(:version)
+
+      expect(migrations.size).to eq(2)
+
+      first_migration = migrations[0]
+      second_migration = migrations[1]
+
+      expect(first_migration.version).to eq(1)
+      expect(second_migration.version).to eq(2)
+
+      expect(first_migration.name).to eq("some-migration")
+      expect(second_migration.name).to eq("another-migration")
+
+      expect(first_migration.diff).to eq("additions" => [], "deletions" => [])
+      expect(second_migration.diff).to eq(
+        "additions" => [{ "key" => "boolean_setting", "val" => false }],
+        "deletions" => [],
+      )
+
+      expect(theme.get_setting(:boolean_setting)).to eq(false)
+
+      expect(first_migration.theme_field.value).to eq(<<~JS)
+        export default function migrate(settings) {
+          return settings;
+        }
+      JS
+      expect(second_migration.theme_field.value).to eq(<<~JS)
+        export default function migrate(settings) {
+          settings.set("boolean_setting", false);
+          return settings;
+        }
+      JS
+    end
+
+    it "doesn't create theme if a migration fails" do
+      add_to_git_repo(initial_repo, "migrations/settings/0002-another-migration.js" => <<~JS)
+        export default function migrate(s) {
+          return null;
+        }
+      JS
+      expect do RemoteTheme.import_theme(initial_repo_url) end.to raise_error(
+        Theme::SettingsMigrationError,
+      ).and not_change(Theme, :count).and not_change(RemoteTheme, :count)
+    end
+
+    it "doesn't partially update the theme when a migration fails" do
+      theme = RemoteTheme.import_theme(initial_repo_url)
+
+      add_to_git_repo(
+        initial_repo,
+        "about.json" =>
+          JSON
+            .parse(about_json(about_url: "https://updated.site.com"))
+            .tap { |h| h[:component] = true }
+            .to_json,
+        "stylesheets/file.scss" => ".class3 { color: green; }",
+        "common/header.html" => "I AM UPDATED HEADER",
+        "migrations/settings/0002-new-failing-migration.js" => <<~JS,
+          export default function migrate(settings) {
+            null.toString();
+            return settings;
+          }
+        JS
+      )
+
+      expect do theme.remote_theme.update_from_remote end.to raise_error(
+        Theme::SettingsMigrationError,
+      )
+
+      theme.reload
+
+      expect(theme.component).to eq(false)
+      expect(theme.remote_theme.about_url).to eq("https://www.site.com/about")
+
+      expect(theme.theme_fields.find_by(name: "header").value).to eq("I AM HEADER")
+      expect(
+        theme.theme_fields.find_by(type_id: ThemeField.types[:scss], name: "file").value,
+      ).to eq(".class1{color:red}")
+    end
+
     it "can correctly import a remote theme" do
       time = Time.new("2000")
       freeze_time time
 
-      @theme = RemoteTheme.import_theme(initial_repo_url)
-      remote = @theme.remote_theme
+      theme = RemoteTheme.import_theme(initial_repo_url)
+      remote = theme.remote_theme
 
-      expect(@theme.name).to eq("awesome theme")
+      expect(theme.name).to eq("awesome theme")
       expect(remote.remote_url).to eq(initial_repo_url)
       expect(remote.remote_version).to eq(`cd #{initial_repo} && git rev-parse HEAD`.strip)
       expect(remote.local_version).to eq(`cd #{initial_repo} && git rev-parse HEAD`.strip)
@@ -79,11 +174,11 @@ RSpec.describe RemoteTheme do
       expect(remote.theme_version).to eq("1.0")
       expect(remote.minimum_discourse_version).to eq("1.0.0")
 
-      expect(@theme.theme_modifier_set.serialize_topic_excerpts).to eq(true)
+      expect(theme.theme_modifier_set.serialize_topic_excerpts).to eq(true)
 
-      expect(@theme.theme_fields.length).to eq(11)
+      expect(theme.theme_fields.length).to eq(12)
 
-      mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
+      mapped = Hash[*theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
       expect(mapped["0-header"]).to eq("I AM HEADER")
       expect(mapped["1-scss"]).to eq(scss_data)
@@ -96,21 +191,24 @@ RSpec.describe RemoteTheme do
 
       expect(mapped["4-en"]).to eq("sometranslations")
       expect(mapped["7-acceptance/theme-test.js"]).to eq("assert.ok(true);")
+      expect(mapped["8-0001-some-migration"]).to eq(
+        "export default function migrate(settings) {\n  return settings;\n}\n",
+      )
 
-      expect(mapped.length).to eq(11)
+      expect(mapped.length).to eq(12)
 
-      expect(@theme.settings.length).to eq(1)
-      expect(@theme.settings.first.value).to eq(true)
+      expect(theme.settings.length).to eq(1)
+      expect(theme.settings[:boolean_setting].value).to eq(true)
 
       expect(remote.remote_updated_at).to eq_time(time)
 
-      scheme = ColorScheme.find_by(theme_id: @theme.id)
+      scheme = ColorScheme.find_by(theme_id: theme.id)
       expect(scheme.name).to eq("Amazing")
       expect(scheme.colors.find_by(name: "love").hex).to eq("fafafa")
       expect(scheme.colors.find_by(name: "tertiary-low").hex).to eq("ffffff")
 
-      expect(@theme.color_scheme_id).to eq(scheme.id)
-      @theme.update(color_scheme_id: nil)
+      expect(theme.color_scheme_id).to eq(scheme.id)
+      theme.update(color_scheme_id: nil)
 
       File.write("#{initial_repo}/common/header.html", "I AM UPDATED")
       File.write(
@@ -133,15 +231,14 @@ RSpec.describe RemoteTheme do
       expect(remote.remote_version).to eq(`cd #{initial_repo} && git rev-parse HEAD`.strip)
 
       remote.update_from_remote
-      @theme.save!
-      @theme.reload
+      theme.reload
 
-      scheme = ColorScheme.find_by(theme_id: @theme.id)
+      scheme = ColorScheme.find_by(theme_id: theme.id)
       expect(scheme.name).to eq("Amazing")
       expect(scheme.colors.find_by(name: "love").hex).to eq("eaeaea")
-      expect(@theme.color_scheme_id).to eq(nil) # Should only be set on first import
+      expect(theme.color_scheme_id).to eq(nil) # Should only be set on first import
 
-      mapped = Hash[*@theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
+      mapped = Hash[*theme.theme_fields.map { |f| ["#{f.target_id}-#{f.name}", f.value] }.flatten]
 
       # Scss file was deleted
       expect(mapped["5-file"]).to eq(nil)
@@ -149,8 +246,8 @@ RSpec.describe RemoteTheme do
       expect(mapped["0-header"]).to eq("I AM UPDATED")
       expect(mapped["1-scss"]).to eq(scss_data)
 
-      expect(@theme.settings.length).to eq(1)
-      expect(@theme.settings.first.value).to eq(32)
+      expect(theme.settings.length).to eq(1)
+      expect(theme.settings[:integer_setting].value).to eq(32)
 
       expect(remote.remote_updated_at).to eq_time(time)
       expect(remote.about_url).to eq("https://newsite.com/about")
@@ -163,13 +260,12 @@ RSpec.describe RemoteTheme do
       `cd #{initial_repo} && git commit -am "update"`
 
       remote.update_from_remote
-      @theme.save
-      @theme.reload
+      theme.reload
 
-      scheme_count = ColorScheme.where(theme_id: @theme.id).count
+      scheme_count = ColorScheme.where(theme_id: theme.id).count
       expect(scheme_count).to eq(1)
 
-      scheme = ColorScheme.find_by(theme_id: @theme.id)
+      scheme = ColorScheme.find_by(theme_id: theme.id)
       expect(scheme.colors.find_by(name: "tertiary_low_color")).to eq(nil)
     end
 
@@ -194,6 +290,73 @@ RSpec.describe RemoteTheme do
       expect(remote.reload.local_version).to eq(old_version)
       expect(remote.reload.remote_version).to eq(new_version)
       expect(remote.reload.commits_behind).to eq(-1)
+    end
+
+    it "runs only new migrations when updating a theme" do
+      add_to_git_repo(initial_repo, "settings.yaml" => <<~YAML)
+        first_integer_setting: 1
+        second_integer_setting: 2
+      YAML
+      add_to_git_repo(initial_repo, "migrations/settings/0002-another-migration.js" => <<~JS)
+        export default function migrate(settings) {
+          settings.set("first_integer_setting", 101);
+          return settings;
+        }
+      JS
+
+      theme = RemoteTheme.import_theme(initial_repo_url)
+
+      expect(theme.get_setting(:first_integer_setting)).to eq(101)
+      expect(theme.get_setting(:second_integer_setting)).to eq(2)
+
+      theme.update_setting(:first_integer_setting, 110)
+
+      add_to_git_repo(initial_repo, "migrations/settings/0003-yet-another-migration.js" => <<~JS)
+        export default function migrate(settings) {
+          settings.set("second_integer_setting", 201);
+          return settings;
+        }
+      JS
+
+      theme.remote_theme.update_from_remote
+      theme.reload
+
+      expect(theme.get_setting(:first_integer_setting)).to eq(110)
+      expect(theme.get_setting(:second_integer_setting)).to eq(201)
+    end
+
+    it "fails if theme has too many files" do
+      stub_const(RemoteTheme, "MAX_THEME_FILE_COUNT", 1) do
+        expect { RemoteTheme.import_theme(initial_repo_url) }.to raise_error(
+          RemoteTheme::ImportError,
+          I18n.t("themes.import_error.too_many_files", count: 15, limit: 1),
+        )
+      end
+    end
+
+    it "fails if files are too large" do
+      stub_const(RemoteTheme, "MAX_ASSET_FILE_SIZE", 1.byte) do
+        expect { RemoteTheme.import_theme(initial_repo_url) }.to raise_error(
+          RemoteTheme::ImportError,
+          I18n.t(
+            "themes.import_error.asset_too_big",
+            filename: "common/color_definitions.scss",
+            limit: ActiveSupport::NumberHelper.number_to_human_size(1),
+          ),
+        )
+      end
+    end
+
+    it "fails if theme is too large" do
+      stub_const(RemoteTheme, "MAX_THEME_SIZE", 1.byte) do
+        expect { RemoteTheme.import_theme(initial_repo_url) }.to raise_error(
+          RemoteTheme::ImportError,
+          I18n.t(
+            "themes.import_error.theme_too_big",
+            limit: ActiveSupport::NumberHelper.number_to_human_size(1),
+          ),
+        )
+      end
     end
   end
 
@@ -229,6 +392,48 @@ RSpec.describe RemoteTheme do
     it "is blank when theme is up-to-date" do
       github_repo.update!(local_version: github_repo.remote_version, commits_behind: 0)
       expect(github_repo.reload.github_diff_link).to be_blank
+    end
+  end
+
+  describe ".extract_theme_info" do
+    let(:importer) { mock }
+
+    let(:theme_info) do
+      {
+        "name" => "My Theme",
+        "about_url" => "https://example.com/about",
+        "license_url" => "https://example.com/license",
+      }
+    end
+
+    it "raises an error if about.json is too big" do
+      importer.stubs(:file_size).with("about.json").returns(100_000_000)
+
+      expect { RemoteTheme.extract_theme_info(importer) }.to raise_error(
+        RemoteTheme::ImportError,
+        I18n.t(
+          "themes.import_error.about_json_too_big",
+          limit:
+            ActiveSupport::NumberHelper.number_to_human_size((RemoteTheme::MAX_METADATA_FILE_SIZE)),
+        ),
+      )
+    end
+
+    it "raises an error if about.json is invalid" do
+      importer.stubs(:file_size).with("about.json").returns(123)
+      importer.stubs(:[]).with("about.json").returns("{")
+
+      expect { RemoteTheme.extract_theme_info(importer) }.to raise_error(
+        RemoteTheme::ImportError,
+        I18n.t("themes.import_error.about_json"),
+      )
+    end
+
+    it "returns extracted theme info" do
+      importer.stubs(:file_size).with("about.json").returns(123)
+      importer.stubs(:[]).with("about.json").returns(theme_info.to_json)
+
+      expect(RemoteTheme.extract_theme_info(importer)).to eq(theme_info)
     end
   end
 
@@ -279,6 +484,17 @@ RSpec.describe RemoteTheme do
 
       remote.update!(last_error_text: nil)
       expect(described_class.unreachable_themes).to eq([])
+    end
+  end
+
+  describe ".import_theme_from_directory" do
+    let(:theme_dir) { "#{Rails.root}/spec/fixtures/themes/discourse-test-theme" }
+
+    it "imports a theme from a directory" do
+      theme = RemoteTheme.import_theme_from_directory(theme_dir)
+
+      expect(theme.name).to eq("Header Icons")
+      expect(theme.theme_fields.count).to eq(6)
     end
   end
 end

@@ -1,0 +1,68 @@
+.invites-show {
+  padding: 2rem 3rem;
+  background: var(--secondary);
+
+  .login-welcome-header {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    overflow-wrap: anywhere;
+  }
+
+  .login-title {
+    font-size: var(--font-up-6);
+    margin: 0;
+  }
+
+  .waving-hand {
+    width: 35px;
+    height: 35px;
+    margin-left: 0.5em;
+    align-self: center;
+  }
+
+  .login-subheader {
+    font-size: var(--font-up-1);
+    margin: 0;
+  }
+
+  .user-info {
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  .col-image {
+    display: none;
+  }
+
+  .create-account__password {
+    &-info {
+      display: flex;
+      justify-content: space-between;
+    }
+    &-tip-validation {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  .invitation-cta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .instructions {
+    color: var(--primary-medium);
+  }
+
+  .disclaimer {
+    color: var(--primary-medium);
+    margin-top: 0.5em;
+  }
+}

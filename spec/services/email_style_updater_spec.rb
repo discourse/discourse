@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe EmailStyleUpdater do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   let(:default_html) { File.read("#{Rails.root}/app/views/email/default_template.html") }
   let(:updater) { EmailStyleUpdater.new(admin) }
 

@@ -18,7 +18,7 @@ end
 
 RSpec.describe Auth::GithubAuthenticator do
   let(:authenticator) { described_class.new }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "after_authenticate" do
     let(:data) { auth_token_for(user) }
@@ -238,7 +238,7 @@ RSpec.describe Auth::GithubAuthenticator do
   end
 
   describe "revoke" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:authenticator) { Auth::GithubAuthenticator.new }
 
     it "raises exception if no entry for user" do

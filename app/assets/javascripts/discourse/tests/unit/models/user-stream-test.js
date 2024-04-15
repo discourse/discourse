@@ -1,13 +1,14 @@
-import { module, test } from "qunit";
-import User from "discourse/models/user";
-import UserAction from "discourse/models/user-action";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import UserAction from "discourse/models/user-action";
 
 module("Unit | Model | user-stream", function (hooks) {
   setupTest(hooks);
 
   test("basics", function (assert) {
-    const user = User.create({ id: 1, username: "eviltrout" });
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", { id: 1, username: "eviltrout" });
     const stream = user.stream;
     assert.present(stream, "a user has a stream by default");
     assert.strictEqual(stream.user, user, "the stream points back to the user");
@@ -20,7 +21,8 @@ module("Unit | Model | user-stream", function (hooks) {
   });
 
   test("filterParam", function (assert) {
-    const user = User.create({ id: 1, username: "eviltrout" });
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", { id: 1, username: "eviltrout" });
     const stream = user.stream;
 
     // defaults to posts/topics

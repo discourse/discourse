@@ -310,13 +310,6 @@ class PostsController < ApplicationController
     render json: post.reply_ids(guardian).to_json
   end
 
-  def all_reply_ids
-    Discourse.deprecate("/posts/:id/reply-ids/all is deprecated.", drop_from: "3.0")
-
-    post = find_post_from_params
-    render json: post.reply_ids(guardian, only_replies_to_single_post: false).to_json
-  end
-
   def destroy
     post = find_post_from_params
     force_destroy = ActiveModel::Type::Boolean.new.cast(params[:force_destroy])
@@ -662,31 +655,7 @@ class PostsController < ApplicationController
     render body: nil
   end
 
-  def flagged_posts
-    Discourse.deprecate(
-      "PostsController#flagged_posts is deprecated. Please use /review instead.",
-      since: "2.8.0.beta4",
-      drop_from: "2.9",
-    )
-
-    params.permit(:offset, :limit)
-    guardian.ensure_can_see_flagged_posts!
-
-    user = fetch_user_from_params
-    offset = [params[:offset].to_i, 0].max
-    limit = [(params[:limit] || 60).to_i, 100].min
-
-    posts =
-      user_posts(guardian, user.id, offset: offset, limit: limit).where(
-        id:
-          PostAction
-            .where(post_action_type_id: PostActionType.notify_flag_type_ids)
-            .where(disagreed_at: nil)
-            .select(:post_id),
-      )
-
-    render_serialized(posts, AdminUserActionSerializer)
-  end
+  DELETED_POSTS_MAX_LIMIT = 100
 
   def deleted_posts
     params.permit(:offset, :limit)
@@ -694,7 +663,7 @@ class PostsController < ApplicationController
 
     user = fetch_user_from_params
     offset = [params[:offset].to_i, 0].max
-    limit = [(params[:limit] || 60).to_i, 100].min
+    limit = fetch_limit_from_params(default: 60, max: DELETED_POSTS_MAX_LIMIT)
 
     posts = user_posts(guardian, user.id, offset: offset, limit: limit).where.not(deleted_at: nil)
 
@@ -809,27 +778,25 @@ class PostsController < ApplicationController
       topics = Topic.where(id: topic_ids).with_deleted.where.not(archetype: "private_message")
       topics = topics.secured(guardian)
 
-      posts = posts.where(topic_id: topics.pluck(:id))
+      posts = posts.where(topic_id: topics)
     end
 
     posts.offset(opts[:offset]).limit(opts[:limit])
   end
 
   def create_params
-    permitted = [
-      :raw,
-      :topic_id,
-      :archetype,
-      :category,
-      # TODO remove together with 'targetUsername' deprecations
-      :target_usernames,
-      :target_recipients,
-      :reply_to_post_number,
-      :auto_track,
-      :typing_duration_msecs,
-      :composer_open_duration_msecs,
-      :visible,
-      :draft_key,
+    permitted = %i[
+      raw
+      topic_id
+      archetype
+      category
+      target_recipients
+      reply_to_post_number
+      auto_track
+      typing_duration_msecs
+      composer_open_duration_msecs
+      visible
+      draft_key
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|
@@ -872,8 +839,22 @@ class PostsController < ApplicationController
         .permit(*permitted)
         .tap do |allowed|
           allowed[:image_sizes] = params[:image_sizes]
-          # TODO this does not feel right, we should name what meta_data is allowed
-          allowed[:meta_data] = params[:meta_data]
+
+          if params.has_key?(:meta_data)
+            Discourse.deprecate(
+              "the :meta_data param is deprecated, use the :topic_custom_fields param instead",
+              since: "3.2",
+              drop_from: "3.3",
+            )
+          end
+
+          topic_custom_fields = {}
+          topic_custom_fields.merge!(editable_topic_custom_fields(:meta_data))
+          topic_custom_fields.merge!(editable_topic_custom_fields(:topic_custom_fields))
+
+          if topic_custom_fields.present?
+            allowed[:topic_opts] = { custom_fields: topic_custom_fields }
+          end
         end
 
     # Staff are allowed to pass `is_warning`
@@ -917,15 +898,7 @@ class PostsController < ApplicationController
     result[:user_agent] = request.user_agent
     result[:referrer] = request.env["HTTP_REFERER"]
 
-    if recipients = result[:target_usernames]
-      Discourse.deprecate(
-        "`target_usernames` is deprecated, use `target_recipients` instead.",
-        output_in_test: true,
-        drop_from: "2.9.0",
-      )
-    else
-      recipients = result[:target_recipients]
-    end
+    recipients = result[:target_recipients]
 
     if recipients
       recipients = recipients.split(",").map(&:downcase)
@@ -941,6 +914,25 @@ class PostsController < ApplicationController
 
     result.permit!
     result.to_h
+  end
+
+  def editable_topic_custom_fields(params_key)
+    if (topic_custom_fields = params[params_key]).present?
+      editable_topic_custom_fields = Topic.editable_custom_fields(guardian)
+
+      if (
+           unpermitted_topic_custom_fields =
+             topic_custom_fields.except(*editable_topic_custom_fields)
+         ).present?
+        raise Discourse::InvalidParameters.new(
+                "The following keys in :#{params_key} are not permitted: #{unpermitted_topic_custom_fields.keys.join(", ")}",
+              )
+      end
+
+      topic_custom_fields.permit(*editable_topic_custom_fields).to_h
+    else
+      {}
+    end
   end
 
   def signature_for(args)

@@ -1,7 +1,7 @@
-import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
+import { cancel, throttle } from "@ember/runloop";
+import Modifier from "ember-modifier";
 import { bind } from "discourse-common/utils/decorators";
-import { throttle } from "@ember/runloop";
 
 const MINIMUM_SIZE = 20;
 
@@ -15,8 +15,8 @@ export default class ResizableNode extends Modifier {
   _originalHeight = 0;
   _originalX = 0;
   _originalY = 0;
-  _originalMouseX = 0;
-  _originalMouseY = 0;
+  _originalPageX = 0;
+  _originalPageY = 0;
 
   constructor(owner, args) {
     super(owner, args);
@@ -28,24 +28,53 @@ export default class ResizableNode extends Modifier {
     this.element = element;
     this.didResizeContainer = didResizeContainer;
     this.options = Object.assign(
-      { vertical: true, horizontal: true, position: true, mutate: true },
+      {
+        vertical: true,
+        horizontal: true,
+        position: true,
+        mutate: true,
+        resetOnWindowResize: false,
+      },
       options
     );
 
     this.element
       .querySelector(this.resizerSelector)
+      ?.addEventListener("touchstart", this._startResize);
+    this.element
+      .querySelector(this.resizerSelector)
       ?.addEventListener("mousedown", this._startResize);
+
+    window.addEventListener("resize", this._resizeWindow);
   }
 
   cleanup() {
     this.element
       .querySelector(this.resizerSelector)
+      ?.removeEventListener("touchstart", this._startResize);
+    this.element
+      .querySelector(this.resizerSelector)
       ?.removeEventListener("mousedown", this._startResize);
+
+    window.removeEventListener("resize", this._resizeWindow);
+    cancel(this._throttledResizeHandler);
   }
 
   @bind
   _startResize(event) {
     event.preventDefault();
+
+    this._minimumWidth = parseFloat(
+      getComputedStyle(this.element, null)
+        .getPropertyValue("min-width")
+        .replace("px", "") || MINIMUM_SIZE
+    );
+
+    this._minimumHeight = parseFloat(
+      getComputedStyle(this.element, null)
+        .getPropertyValue("min-height")
+        .replace("px", "") || MINIMUM_SIZE
+    );
 
     this._originalWidth = parseFloat(
       getComputedStyle(this.element, null)
@@ -59,24 +88,22 @@ export default class ResizableNode extends Modifier {
     );
     this._originalX = this.element.getBoundingClientRect().left;
     this._originalY = this.element.getBoundingClientRect().top;
-    this._originalMouseX = event.pageX;
-    this._originalMouseY = event.pageY;
 
+    this._originalPageX = this._eventValueForProperty(event, "pageX");
+    this._originalPageY = this._eventValueForProperty(event, "pageY");
+
+    window.addEventListener("touchmove", this._resize);
+    window.addEventListener("touchend", this._stopResize);
     window.addEventListener("mousemove", this._resize);
     window.addEventListener("mouseup", this._stopResize);
   }
 
-  @bind
-  _resize(event) {
-    throttle(this, this._resizeThrottled, event, 50);
-  }
-
   /*
     The bulk of the logic is to calculate the new width and height of the element
-    based on the current mouse position: width is calculated by subtracting
-    the difference between the current event.pageX and the original this._originalMouseX
+    based on the current position on page: width is calculated by subtracting
+    the difference between the current pageX and the original this._originalPageX
     from the original this._originalWidth, and rounding up to the nearest integer.
-    height is calculated in a similar way using event.pageY and this._originalMouseY.
+    height is calculated in a similar way using pageY and this._originalPageY.
 
     In this example (B) is the current element top/left and (A) is x/y of the mouse after dragging:
 
@@ -87,9 +114,10 @@ export default class ResizableNode extends Modifier {
     -------
   */
   @bind
-  _resizeThrottled(event) {
+  _resize(event) {
     let width = this._originalWidth;
-    let diffWidth = event.pageX - this._originalMouseX;
+    let diffWidth =
+      this._eventValueForProperty(event, "pageX") - this._originalPageX;
     if (document.documentElement.classList.contains("rtl")) {
       width = Math.ceil(width + diffWidth);
     } else {
@@ -97,28 +125,34 @@ export default class ResizableNode extends Modifier {
     }
 
     const height = Math.ceil(
-      this._originalHeight - (event.pageY - this._originalMouseY)
+      this._originalHeight -
+        (this._eventValueForProperty(event, "pageY") - this._originalPageY)
     );
 
     const newStyle = {};
-
-    if (this.options.horizontal && width > MINIMUM_SIZE) {
+    if (this.options.horizontal && width >= this._minimumWidth) {
       newStyle.width = width + "px";
 
       if (this.options.position) {
         newStyle.left =
-          Math.ceil(this._originalX + (event.pageX - this._originalMouseX)) +
-          "px";
+          Math.ceil(
+            this._originalX +
+              (this._eventValueForProperty(event, "pageX") -
+                this._originalPageX)
+          ) + "px";
       }
     }
 
-    if (this.options.vertical && height > MINIMUM_SIZE) {
+    if (this.options.vertical && height >= this._minimumHeight) {
       newStyle.height = height + "px";
 
       if (this.options.position) {
         newStyle.top =
-          Math.ceil(this._originalY + (event.pageY - this._originalMouseY)) +
-          "px";
+          Math.ceil(
+            this._originalY +
+              (this._eventValueForProperty(event, "pageY") -
+                this._originalPageY)
+          ) + "px";
       }
     }
 
@@ -126,12 +160,46 @@ export default class ResizableNode extends Modifier {
       Object.assign(this.element.style, newStyle);
     }
 
-    this.didResizeContainer?.(this.element, { width, height });
+    this.didResizeContainer?.(this.element, {
+      width: width >= this._minimumWidth ? width : this._minimumWidth,
+      height: height >= this._minimumHeight ? height : this._minimumHeight,
+    });
+  }
+
+  @bind
+  _resizeWindow() {
+    if (!this.options.resetOnWindowResize) {
+      return;
+    }
+
+    this._throttledResizeHandler = throttle(this, this._throttledResize, 100);
+  }
+
+  @bind
+  _throttledResize() {
+    const style = {};
+    if (this.options.vertical) {
+      style.height = "auto";
+    }
+    if (this.options.horizontal) {
+      style.width = "auto";
+    }
+    Object.assign(this.element.style, style);
   }
 
   @bind
   _stopResize() {
+    window.removeEventListener("touchmove", this._resize);
+    window.removeEventListener("touchend", this._stopResize);
     window.removeEventListener("mousemove", this._resize);
     window.removeEventListener("mouseup", this._stopResize);
+  }
+
+  _eventValueForProperty(event, property) {
+    if (event.changedTouches) {
+      return event.changedTouches[0][property];
+    } else {
+      return event[property];
+    }
   }
 }

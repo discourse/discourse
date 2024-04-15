@@ -1,6 +1,6 @@
 import { registerDeprecationHandler } from "@ember/debug";
-import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
 import QUnit from "qunit";
+import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse-common/lib/deprecated";
 
 let disabled = false;
 

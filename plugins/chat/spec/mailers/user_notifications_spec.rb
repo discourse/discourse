@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe UserNotifications do
   fab!(:chatters_group) { Fabricate(:group) }
-  fab!(:sender) { Fabricate(:user, group_ids: [chatters_group.id]) }
-  fab!(:user) { Fabricate(:user, group_ids: [chatters_group.id]) }
+  fab!(:sender) { Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true) }
 
   before do
     SiteSetting.chat_enabled = true
@@ -13,7 +11,6 @@ describe UserNotifications do
   end
 
   def refresh_auto_groups
-    Group.refresh_automatic_groups!
     user.reload
     sender.reload
   end
@@ -22,7 +19,7 @@ describe UserNotifications do
     context "with private channel" do
       fab!(:channel) do
         refresh_auto_groups
-        Chat::DirectMessageChannelCreator.create!(acting_user: sender, target_users: [sender, user])
+        create_dm_channel(sender, [sender, user])
       end
 
       it "calls guardian can_join_chat_channel?" do
@@ -33,6 +30,22 @@ describe UserNotifications do
       end
 
       describe "email subject" do
+        context "when private_email setting is enabled" do
+          before { SiteSetting.private_email = true }
+
+          it "has a generic subject" do
+            Fabricate(:chat_message, user: sender, chat_channel: channel)
+            email = described_class.chat_summary(user, {})
+
+            expect(email.subject).to eq(
+              I18n.t(
+                "user_notifications.chat_summary.subject.private_message",
+                email_prefix: SiteSetting.email_prefix.presence || SiteSetting.title,
+              ),
+            )
+          end
+        end
+
         it "includes the sender username in the subject" do
           expected_subject =
             I18n.t(
@@ -76,11 +89,7 @@ describe UserNotifications do
           another_dm_user = Fabricate(:user, group_ids: [chatters_group.id])
           refresh_auto_groups
           another_dm_user.reload
-          another_channel =
-            Chat::DirectMessageChannelCreator.create!(
-              acting_user: user,
-              target_users: [another_dm_user, user],
-            )
+          another_channel = create_dm_channel(user, [another_dm_user, user])
           Fabricate(:chat_message, user: another_dm_user, chat_channel: another_channel)
           Fabricate(:chat_message, user: sender, chat_channel: channel)
           email = described_class.chat_summary(user, {})
@@ -99,19 +108,16 @@ describe UserNotifications do
         end
 
         it "displays a count when there are more than two DMs with unread messages" do
-          user = Fabricate(:user, group_ids: [chatters_group.id])
+          user = Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true)
           senders = []
 
           3.times do
-            sender = Fabricate(:user, group_ids: [chatters_group.id])
+            sender = Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true)
             refresh_auto_groups
             sender.reload
             senders << sender
-            channel =
-              Chat::DirectMessageChannelCreator.create!(
-                acting_user: sender,
-                target_users: [user, sender],
-              )
+            channel = create_dm_channel(sender, [sender, user])
+
             user
               .user_chat_channel_memberships
               .where(chat_channel_id: channel.id)
@@ -149,7 +155,8 @@ describe UserNotifications do
     context "with public channel" do
       fab!(:channel) { Fabricate(:category_channel) }
       fab!(:chat_message) { Fabricate(:chat_message, user: sender, chat_channel: channel) }
-      fab!(:user_membership) do
+      # using fab! for user_membership below makes these specs flaky
+      let!(:user_membership) do
         Fabricate(
           :user_chat_channel_membership,
           chat_channel: channel,
@@ -158,88 +165,112 @@ describe UserNotifications do
         )
       end
 
+      before do
+        channel.add(sender)
+        channel.update!(last_message: chat_message)
+      end
+
       it "doesn't return an email if there are no unread mentions" do
         email = described_class.chat_summary(user, {})
 
         expect(email.to).to be_blank
       end
 
-      # context "with channel-wide mentions" do
-      #   before { Jobs.run_immediately! }
+      context "with channel-wide mentions" do
+        before { Jobs.run_immediately! }
 
-      #   def create_chat_message_with_mentions_and_notifications(content)
-      #     # Sometimes it's not enough to just fabricate a message
-      #     # and we have to create it like here. In this case all the necessary
-      #     # db records for mentions and notifications will be created under the hood.
-      #     Chat::MessageCreator.create(chat_channel: channel, user: sender, content: content)
-      #   end
+        def create_chat_message_with_mentions_and_notifications(content)
+          # Sometimes it's not enough to just fabricate a message
+          # and we have to create it like here. In this case all the necessary
+          # db records for mentions and notifications will be created under the hood.
+          Chat::CreateMessage.call(
+            chat_channel_id: channel.id,
+            guardian: sender.guardian,
+            message: content,
+          )
+        end
 
-      #   it "returns email for @all mention by default" do
-      #     create_chat_message_with_mentions_and_notifications("Mentioning @all")
-      #     email = described_class.chat_summary(user, {})
-      #     expect(email.to).to contain_exactly(user.email)
-      #   end
+        it "returns email for @all mention by default" do
+          create_chat_message_with_mentions_and_notifications("Mentioning @all")
+          email = described_class.chat_summary(user, {})
+          expect(email.to).to contain_exactly(user.email)
+        end
 
-      #   it "returns email for @here mention by default" do
-      #     user.update(last_seen_at: 1.second.ago)
+        it "returns email for @here mention by default" do
+          user.update(last_seen_at: 1.second.ago)
 
-      #     create_chat_message_with_mentions_and_notifications("Mentioning @here")
-      #     email = described_class.chat_summary(user, {})
+          create_chat_message_with_mentions_and_notifications("Mentioning @here")
+          email = described_class.chat_summary(user, {})
 
-      #     expect(email.to).to contain_exactly(user.email)
-      #   end
+          expect(email.to).to contain_exactly(user.email)
+        end
 
-      #   context "when channel-wide mentions are disabled in a channel" do
-      #     before { channel.update!(allow_channel_wide_mentions: false) }
+        context "when channel-wide mentions are disabled in a channel" do
+          before { channel.update!(allow_channel_wide_mentions: false) }
 
-      #     it "doesn't return email for @all mention" do
-      #       create_chat_message_with_mentions_and_notifications("Mentioning @all")
-      #       email = described_class.chat_summary(user, {})
+          it "doesn't return email for @all mention" do
+            create_chat_message_with_mentions_and_notifications("Mentioning @all")
+            email = described_class.chat_summary(user, {})
 
-      #       expect(email.to).to be_blank
-      #     end
+            expect(email.to).to be_blank
+          end
 
-      #     it "doesn't return email for @here mention" do
-      #       user.update(last_seen_at: 1.second.ago)
+          it "doesn't return email for @here mention" do
+            user.update(last_seen_at: 1.second.ago)
 
-      #       create_chat_message_with_mentions_and_notifications("Mentioning @here")
-      #       email = described_class.chat_summary(user, {})
+            create_chat_message_with_mentions_and_notifications("Mentioning @here")
+            email = described_class.chat_summary(user, {})
 
-      #       expect(email.to).to be_blank
-      #     end
-      #   end
+            expect(email.to).to be_blank
+          end
+        end
 
-      #   context "when user has disabled channel-wide mentions" do
-      #     before { user.user_option.update!(ignore_channel_wide_mention: true) }
+        context "when user has disabled channel-wide mentions" do
+          before { user.user_option.update!(ignore_channel_wide_mention: true) }
 
-      #     it "doesn't return email for @all mention" do
-      #       create_chat_message_with_mentions_and_notifications("Mentioning @all")
-      #       email = described_class.chat_summary(user, {})
+          it "doesn't return email for @all mention" do
+            create_chat_message_with_mentions_and_notifications("Mentioning @all")
+            email = described_class.chat_summary(user, {})
 
-      #       expect(email.to).to be_blank
-      #     end
+            expect(email.to).to be_blank
+          end
 
-      #     it "doesn't return email for @here mention" do
-      #       user.update(last_seen_at: 1.second.ago)
+          it "doesn't return email for @here mention" do
+            user.update(last_seen_at: 1.second.ago)
 
-      #       create_chat_message_with_mentions_and_notifications("Mentioning @here")
-      #       email = described_class.chat_summary(user, {})
+            create_chat_message_with_mentions_and_notifications("Mentioning @here")
+            email = described_class.chat_summary(user, {})
 
-      #       expect(email.to).to be_blank
-      #     end
-      #   end
-      # end
+            expect(email.to).to be_blank
+          end
+        end
+      end
 
       describe "email subject" do
         context "with regular mentions" do
           before do
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: chat_message,
-              notification: notification,
+              notifications: [notification],
             )
+          end
+
+          context "when private_email setting is enabled" do
+            before { SiteSetting.private_email = true }
+
+            it "has a generic subject" do
+              email = described_class.chat_summary(user, {})
+
+              expect(email.subject).to eq(
+                I18n.t(
+                  "user_notifications.chat_summary.subject.private_message",
+                  email_prefix: SiteSetting.email_prefix.presence || SiteSetting.title,
+                ),
+              )
+            end
           end
 
           it "includes the sender username in the subject" do
@@ -271,13 +302,14 @@ describe UserNotifications do
               user: user,
               last_read_message_id: another_chat_message.id - 2,
             )
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: another_chat_message,
-              notification: notification,
+              notifications: [notification],
             )
+            another_chat_channel.update!(last_message: another_chat_message)
 
             email = described_class.chat_summary(user, {})
 
@@ -310,13 +342,14 @@ describe UserNotifications do
                 user: user,
                 last_read_message_id: another_chat_message.id - 2,
               )
-              notification = Fabricate(:notification)
+              notification = Fabricate(:notification, user: user)
               Fabricate(
-                :chat_mention,
+                :user_chat_mention,
                 user: user,
                 chat_message: another_chat_message,
-                notification: notification,
+                notifications: [notification],
               )
+              another_chat_channel.update!(last_message: another_chat_message)
             end
 
             expected_subject =
@@ -336,18 +369,14 @@ describe UserNotifications do
         context "with both unread DM messages and mentions" do
           before do
             refresh_auto_groups
-            channel =
-              Chat::DirectMessageChannelCreator.create!(
-                acting_user: sender,
-                target_users: [sender, user],
-              )
+            channel = create_dm_channel(sender, [sender, user])
             Fabricate(:chat_message, user: sender, chat_channel: channel)
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: chat_message,
-              notification: notification,
+              notifications: [notification],
             )
           end
 
@@ -369,12 +398,12 @@ describe UserNotifications do
 
       describe "When there are mentions" do
         before do
-          notification = Fabricate(:notification)
+          notification = Fabricate(:notification, user: user)
           Fabricate(
-            :chat_mention,
+            :user_chat_mention,
             user: user,
             chat_message: chat_message,
-            notification: notification,
+            notifications: [notification],
           )
         end
 
@@ -461,11 +490,7 @@ describe UserNotifications do
           it "returns an email when the user has unread private messages" do
             user_membership.update!(last_read_message_id: chat_message.id)
             refresh_auto_groups
-            channel =
-              Chat::DirectMessageChannelCreator.create!(
-                acting_user: sender,
-                target_users: [sender, user],
-              )
+            channel = create_dm_channel(sender, [sender, user])
             Fabricate(:chat_message, user: sender, chat_channel: channel)
 
             email = described_class.chat_summary(user, {})
@@ -480,12 +505,12 @@ describe UserNotifications do
             )
 
             new_message = Fabricate(:chat_message, user: sender, chat_channel: channel)
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: new_message,
-              notification: notification,
+              notifications: [notification],
             )
 
             email = described_class.chat_summary(user, {})
@@ -503,6 +528,31 @@ describe UserNotifications do
         end
 
         describe "mail contents" do
+          context "when private_email setting is enabled" do
+            before { SiteSetting.private_email = true }
+
+            it "has a generic channel title name" do
+              email = described_class.chat_summary(user, {})
+
+              expect(email.html_part.body.to_s).to include(
+                I18n.t("system_messages.private_channel_title", id: channel.id),
+              )
+            end
+
+            it "doesn’t include message content" do
+              email = described_class.chat_summary(user, {})
+
+              expect(email.html_part.body.to_s).to_not include(chat_message.cooked_for_excerpt)
+            end
+
+            it "doesn’t include user info" do
+              email = described_class.chat_summary(user, {})
+
+              expect(email.html_part.body.to_s).to_not include(chat_message.user.small_avatar_url)
+              expect(email.html_part.body.to_s).to_not include(chat_message.user.username)
+            end
+          end
+
           it "returns an email when the user has unread mentions" do
             email = described_class.chat_summary(user, {})
 
@@ -584,21 +634,65 @@ describe UserNotifications do
             expect(user_avatar.attribute("alt").value).to eq(sender.username)
           end
 
-          it "includes a view more link when there are more than two mentions" do
-            2.times do
-              msg = Fabricate(:chat_message, user: sender, chat_channel: channel)
-              notification = Fabricate(:notification)
-              Fabricate(:chat_mention, user: user, chat_message: msg, notification: notification)
+          context "with subfolder" do
+            before { set_subfolder "/community" }
+
+            it "includes correct view summary link in template" do
+              email = described_class.chat_summary(user, {})
+              expect(email.html_part.body.to_s).to include(
+                "<a class=\"more-messages-link\" href=\"#{Discourse.base_url}/chat",
+              )
+            end
+          end
+
+          context "when there are more than two mentions" do
+            it "includes a view more link " do
+              2.times do
+                msg = Fabricate(:chat_message, user: sender, chat_channel: channel)
+                notification = Fabricate(:notification, user: user)
+                Fabricate(
+                  :user_chat_mention,
+                  user: user,
+                  chat_message: msg,
+                  notifications: [notification],
+                )
+              end
+
+              email = described_class.chat_summary(user, {})
+              more_messages_channel_link =
+                Nokogiri::HTML5.fragment(email.html_part.body.to_s).css(".more-messages-link")
+
+              expect(more_messages_channel_link.attribute("href").value).to eq(
+                chat_message.full_url,
+              )
+              expect(more_messages_channel_link.text).to include(
+                I18n.t("user_notifications.chat_summary.view_more", count: 1),
+              )
             end
 
-            email = described_class.chat_summary(user, {})
-            more_messages_channel_link =
-              Nokogiri::HTML5.fragment(email.html_part.body.to_s).css(".more-messages-link")
+            context "when private_email setting is enabled" do
+              before { SiteSetting.private_email = true }
 
-            expect(more_messages_channel_link.attribute("href").value).to eq(chat_message.full_url)
-            expect(more_messages_channel_link.text).to include(
-              I18n.t("user_notifications.chat_summary.view_more", count: 1),
-            )
+              it "has only a link to view all messages" do
+                2.times do
+                  msg = Fabricate(:chat_message, user: sender, chat_channel: channel)
+                  notification = Fabricate(:notification, user: user)
+                  Fabricate(
+                    :user_chat_mention,
+                    user: user,
+                    chat_message: msg,
+                    notifications: [notification],
+                  )
+                end
+
+                email = described_class.chat_summary(user, {})
+                more_messages_channel_link =
+                  Nokogiri::HTML5.fragment(email.html_part.body.to_s).css(".more-messages-link")
+                expect(more_messages_channel_link.text).to include(
+                  I18n.t("user_notifications.chat_summary.view_messages", count: 3),
+                )
+              end
+            end
           end
 
           it "doesn't repeat mentions we already sent" do
@@ -609,12 +703,12 @@ describe UserNotifications do
 
             new_message =
               Fabricate(:chat_message, user: sender, chat_channel: channel, cooked: "New message")
-            notification = Fabricate(:notification)
+            notification = Fabricate(:notification, user: user)
             Fabricate(
-              :chat_mention,
+              :user_chat_mention,
               user: user,
               chat_message: new_message,
-              notification: notification,
+              notifications: [notification],
             )
 
             email = described_class.chat_summary(user, {})
@@ -626,5 +720,15 @@ describe UserNotifications do
         end
       end
     end
+  end
+
+  def create_dm_channel(sender, target_users)
+    result =
+      Chat::CreateDirectMessageChannel.call(
+        guardian: sender.guardian,
+        target_usernames: target_users.map(&:username),
+      )
+    service_failed!(result) if result.failure?
+    result.channel
   end
 end

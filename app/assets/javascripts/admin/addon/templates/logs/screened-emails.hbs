@@ -3,11 +3,11 @@
 </p>
 
 <DButton
-  @class="btn-default screened-email-export"
-  @action={{action "exportScreenedEmailList"}}
+  @action={{this.exportScreenedEmailList}}
   @title="admin.export_csv.button_title.screened_email"
   @icon="download"
   @label="admin.export_csv.button_text"
+  class="btn-default screened-email-export"
 />
 
 <br />
@@ -47,8 +47,7 @@
             <td class="ip_address">{{item.ip_address}}</td>
             <td class="action">
               <DButton
-                @action={{action "clearBlock"}}
-                @actionParam={{item}}
+                @action={{fn this.clearBlock item}}
                 @icon="check"
                 @label="admin.logs.screened_emails.actions.allow"
               />

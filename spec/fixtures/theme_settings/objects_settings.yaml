@@ -1,0 +1,51 @@
+objects_setting:
+  description:
+    en: "This is a description for objects setting"
+  type: objects
+  default:
+    - name: "section 1"
+      links:
+        - name: "link 1"
+          url: "http://example.com"
+        - name: "link 2"
+          url: "http://example.com"
+    - name: "section 2"
+      links:
+        - name: "link 3"
+          url: "http://example.com"
+        - name: "link 4"
+          url: "http://example.com"
+  schema:
+    name: section
+    properties:
+      name:
+        type: string
+        required: true
+      links:
+        type: objects
+        schema:
+          name: link
+          properties:
+            name:
+              type: string
+              required: true
+              validations:
+                max_length: 20
+            url:
+              type: string
+
+objects_with_categories:
+  type: objects
+  default: []
+  schema:
+    name: categories
+    properties:
+      category_ids:
+        type: categories
+      child_categories:
+        type: objects
+        schema:
+          name: child category
+          properties:
+            category_ids:
+              type: categories

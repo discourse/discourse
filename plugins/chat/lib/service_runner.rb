@@ -12,14 +12,20 @@
 #
 # * +on_success+: will execute the provided block if the service succeeds
 # * +on_failure+: will execute the provided block if the service fails
+# * +on_failed_step(name)+: will execute the provided block if the step named
+#   `name` fails
 # * +on_failed_policy(name)+: will execute the provided block if the policy
 #   named `name` fails
 # * +on_failed_contract(name)+: will execute the provided block if the contract
 #   named `name` fails
-# * +on_model_not_found(name)+: will execute the provided block if the service
-#   fails and its model is not present
+# * +on_model_not_found(name)+: will execute the provided block if the model
+#   named `name` is not present
+# * +on_model_errors(name)+: will execute the provided block if the model named
+#   `name` contains validation errors
 #
-# Default actions for each of these are defined in [Chat::ApiController#default_actions_for_service]
+# All the specialized steps receive the failing step result object as an
+# argument to their block. `on_model_errors` receives the actual model so it’s
+# easier to inspect it.
 #
 # @example In a controller
 #   def create
@@ -28,7 +34,7 @@
 #         flash[:notice] = "Success!"
 #         redirect_to a_path
 #       end
-#       on_failed_policy(:a_named_policy) { redirect_to root_path }
+#       on_failed_policy(:a_named_policy) { |policy| redirect_to root_path, alert: policy.reason }
 #       on_failure { render :new }
 #     end
 #   end
@@ -50,20 +56,41 @@
 
 class ServiceRunner
   # @!visibility private
-  NULL_RESULT = OpenStruct.new(failure?: false)
-  # @!visibility private
   AVAILABLE_ACTIONS = {
-    on_success: -> { result.success? },
-    on_failure: -> { result.failure? },
-    on_failed_step: ->(name) { failure_for?("result.step.#{name}") },
-    on_failed_policy: ->(name = "default") { failure_for?("result.policy.#{name}") },
-    on_failed_contract: ->(name = "default") { failure_for?("result.contract.#{name}") },
-    on_model_not_found: ->(name = "model") do
-      failure_for?("result.model.#{name}") && result[name].blank?
-    end,
-    on_model_errors: ->(name = "model") do
-      failure_for?("result.model.#{name}") && result["result.model.#{name}"].invalid
-    end,
+    on_success: {
+      condition: -> { result.success? },
+      key: [],
+    },
+    on_failure: {
+      condition: -> { result.failure? },
+      key: [],
+    },
+    on_failed_step: {
+      condition: ->(name) { failure_for?("result.step.#{name}") },
+      key: %w[result step],
+    },
+    on_failed_policy: {
+      condition: ->(name = "default") { failure_for?("result.policy.#{name}") },
+      key: %w[result policy],
+      default_name: "default",
+    },
+    on_failed_contract: {
+      condition: ->(name = "default") { failure_for?("result.contract.#{name}") },
+      key: %w[result contract],
+      default_name: "default",
+    },
+    on_model_not_found: {
+      condition: ->(name = "model") { failure_for?("result.model.#{name}") && result[name].blank? },
+      key: %w[result model],
+      default_name: "model",
+    },
+    on_model_errors: {
+      condition: ->(name = "model") do
+        failure_for?("result.model.#{name}") && result["result.model.#{name}"].invalid
+      end,
+      key: [],
+      default_name: "model",
+    },
   }.with_indifferent_access.freeze
 
   # @!visibility private
@@ -104,13 +131,19 @@ class ServiceRunner
   attr_reader :actions
 
   def failure_for?(key)
-    (object.result[key] || NULL_RESULT).failure?
+    object.result[key]&.failure?
   end
 
   def add_action(name, *args, &block)
+    action = AVAILABLE_ACTIONS[name]
     actions[[name, *args].join("_").to_sym] = [
-      -> { instance_exec(*args, &AVAILABLE_ACTIONS[name]) },
-      -> { object.instance_eval(&block) },
+      -> { instance_exec(*args, &action[:condition]) },
+      -> do
+        object.instance_exec(
+          result[[*action[:key], args.first || action[:default_name]].join(".")],
+          &block
+        )
+      end,
     ]
   end
 

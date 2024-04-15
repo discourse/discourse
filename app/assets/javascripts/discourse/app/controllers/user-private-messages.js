@@ -1,10 +1,10 @@
+import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
-import { cached, tracked } from "@glimmer/tracking";
-import I18n from "I18n";
+import { service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
+import I18n from "discourse-i18n";
 
 const customUserNavMessagesDropdownRows = [];
 
@@ -27,6 +27,7 @@ export function resetCustomUserNavMessagesDropdownRows() {
 export default class extends Controller {
   @service router;
   @controller user;
+  @controller userTopicsList;
 
   @tracked group;
   @tracked tagId;
@@ -38,6 +39,10 @@ export default class extends Controller {
   @readOnly("router.currentRoute.parent.name") currentParentRouteName;
   @readOnly("site.can_tag_pms") pmTaggingEnabled;
 
+  get bulkSelectHelper() {
+    this.userTopicsList.bulkSelectHelper;
+  }
+
   get messagesDropdownValue() {
     let value;
 
@@ -46,7 +51,11 @@ export default class extends Controller {
     for (let i = this.messagesDropdownContent.length - 1; i >= 0; i--) {
       const row = this.messagesDropdownContent[i];
 
-      if (currentURL.includes(row.id.replace(this.router.rootURL, "/"))) {
+      if (
+        currentURL.includes(
+          row.id.toLowerCase().replace(this.router.rootURL, "/")
+        )
+      ) {
         value = row.id;
         break;
       }
@@ -95,11 +104,6 @@ export default class extends Controller {
     });
 
     return content;
-  }
-
-  @action
-  changeGroupNotificationLevel(notificationLevel) {
-    this.group.setNotification(notificationLevel, this.get("user.model.id"));
   }
 
   @action

@@ -20,14 +20,7 @@ class PushNotificationPusher
         ActionController::Base.helpers.image_url("push-notifications/#{notification_icon_name}.png")
 
       message = {
-        title:
-          payload[:translated_title] ||
-            I18n.t(
-              "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}",
-              site_title: SiteSetting.title,
-              topic: payload[:topic_title],
-              username: payload[:username],
-            ),
+        title: payload[:translated_title] || title(payload),
         body: payload[:excerpt],
         badge: get_badge,
         icon: notification_icon,
@@ -41,6 +34,32 @@ class PushNotificationPusher
     end
 
     message
+  end
+
+  def self.title(payload)
+    translation_key =
+      case payload[:notification_type]
+      when Notification.types[:watching_category_or_tag]
+        # For watching_category_or_tag, the notification could be for either a new post or new topic.
+        # Instead of duplicating translations, we can rely on 'watching_first_post' for new topics,
+        # and 'posted' for new posts.
+        type = payload[:post_number] == 1 ? "watching_first_post" : "posted"
+        "discourse_push_notifications.popup.#{type}"
+      else
+        "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}"
+      end
+
+    # Payload modifier used to adjust arguments to the translation
+    payload =
+      DiscoursePluginRegistry.apply_modifier(:push_notification_pusher_title_payload, payload)
+
+    I18n.t(
+      translation_key,
+      site_title: SiteSetting.title,
+      topic: payload[:topic_title],
+      username: payload[:username],
+      group_name: payload[:group_name],
+    )
   end
 
   def self.subscriptions(user)
@@ -147,6 +166,8 @@ class PushNotificationPusher
       if subscription.first_error_at || subscription.error_count != 0
         subscription.update_columns(error_count: 0, first_error_at: nil)
       end
+
+      DiscourseEvent.trigger(:push_notification_sent, user, message)
     rescue WebPush::ExpiredSubscription
       subscription.destroy!
     rescue WebPush::ResponseError => e
@@ -156,6 +177,8 @@ class PushNotificationPusher
         handle_generic_error(subscription, e, user, endpoint, message)
       end
     rescue Timeout::Error => e
+      handle_generic_error(subscription, e, user, endpoint, message)
+    rescue OpenSSL::SSL::SSLError => e
       handle_generic_error(subscription, e, user, endpoint, message)
     end
   end

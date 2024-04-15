@@ -39,27 +39,11 @@ module DiscourseNarrativeBot
         next_state: :tutorial_category_hashtag,
         next_instructions:
           Proc.new do
-            category = Category.secured(Guardian.new(@user)).last
-            slug = category.slug
-
-            if parent_category = category.parent_category
-              slug = "#{parent_category.slug}#{CategoryHashtag::SEPARATOR}#{slug}"
-            end
-
-            # TODO (martin) When enable_experimental_hashtag_autocomplete is the only option
-            # update the instructions and remove instructions_experimental, as well as the
-            # not_found translation
-            if SiteSetting.enable_experimental_hashtag_autocomplete
-              I18n.t(
-                "#{I18N_KEY}.category_hashtag.instructions_experimental",
-                i18n_post_args(category: "##{slug}"),
-              )
-            else
-              I18n.t(
-                "#{I18N_KEY}.category_hashtag.instructions",
-                i18n_post_args(category: "##{slug}"),
-              )
-            end
+            category = Category.secured(@user.guardian).last
+            I18n.t(
+              "#{I18N_KEY}.category_hashtag.instructions",
+              i18n_post_args(category: "##{category.slug_ref}"),
+            )
           end,
         recover: {
           action: :reply_to_recover,
@@ -94,7 +78,7 @@ module DiscourseNarrativeBot
         prerequisite:
           Proc.new do
             SiteSetting.poll_enabled &&
-              @user.has_trust_level?(SiteSetting.poll_minimum_trust_level_to_create)
+              @user.in_any_groups?(SiteSetting.poll_create_allowed_groups_map)
           end,
         next_state: :tutorial_details,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.details.instructions", i18n_post_args) },
@@ -197,10 +181,6 @@ module DiscourseNarrativeBot
         archetype: Archetype.private_message,
       }
 
-      if @post && @post.topic.private_message? &&
-           @post.topic.topic_allowed_users.pluck(:user_id).include?(@user.id)
-      end
-
       if @data[:topic_id]
         opts = opts.merge(topic_id: @data[:topic_id]).except(:title, :target_usernames, :archetype)
       end
@@ -298,9 +278,7 @@ module DiscourseNarrativeBot
       topic_id = @post.topic_id
       return unless valid_topic?(topic_id)
 
-      hashtag_css_class =
-        SiteSetting.enable_experimental_hashtag_autocomplete ? ".hashtag-cooked" : ".hashtag"
-      if Nokogiri::HTML5.fragment(@post.cooked).css(hashtag_css_class).size > 0
+      if Nokogiri::HTML5.fragment(@post.cooked).css(".hashtag-cooked").size > 0
         raw = <<~MD
           #{I18n.t("#{I18N_KEY}.category_hashtag.reply", i18n_post_args)}
 
@@ -312,14 +290,7 @@ module DiscourseNarrativeBot
       else
         fake_delay
         unless @data[:attempted]
-          if SiteSetting.enable_experimental_hashtag_autocomplete
-            reply_to(
-              @post,
-              I18n.t("#{I18N_KEY}.category_hashtag.not_found_experimental", i18n_post_args),
-            )
-          else
-            reply_to(@post, I18n.t("#{I18N_KEY}.category_hashtag.not_found", i18n_post_args))
-          end
+          reply_to(@post, I18n.t("#{I18N_KEY}.category_hashtag.not_found", i18n_post_args))
         end
         enqueue_timeout_job(@user)
         false

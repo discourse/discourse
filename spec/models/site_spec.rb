@@ -66,8 +66,8 @@ RSpec.describe Site do
   end
 
   describe "#categories" do
-    fab!(:category) { Fabricate(:category) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:category)
+    fab!(:user)
     let(:guardian) { Guardian.new(user) }
 
     it "omits read restricted categories" do
@@ -157,6 +157,66 @@ RSpec.describe Site do
 
       expect(site.categories.map { |c| c[:can_edit] }).to contain_exactly(true, true)
     end
+
+    describe "site_all_categories_cache_query modifier" do
+      fab!(:cool_category) { Fabricate(:category, name: "Cool category") }
+      fab!(:boring_category) { Fabricate(:category, name: "Boring category") }
+
+      it "allows changing the query" do
+        prefetched_categories = Site.new(Guardian.new(user)).categories.map { |c| c[:id] }
+        expect(prefetched_categories).to include(cool_category.id, boring_category.id)
+
+        # we need to clear the cache to ensure that the categories list will be updated
+        Site.clear_cache
+
+        Plugin::Instance
+          .new
+          .register_modifier(:site_all_categories_cache_query) do |query|
+            query.where("categories.name LIKE 'Cool%'")
+          end
+
+        prefetched_categories = Site.new(Guardian.new(user)).categories.map { |c| c[:id] }
+
+        expect(prefetched_categories).to include(cool_category.id)
+        expect(prefetched_categories).not_to include(boring_category.id)
+      ensure
+        DiscoursePluginRegistry.clear_modifiers!
+      end
+    end
+
+    context "with lazy loaded categories enabled" do
+      fab!(:user)
+
+      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
+
+      it "does not return any categories for anonymous users" do
+        site = Site.new(Guardian.new)
+
+        expect(site.categories).to eq([])
+      end
+
+      it "returns only sidebar categories and their parent categories" do
+        parent_category = Fabricate(:category)
+        category.update!(parent_category: parent_category)
+        Fabricate(:category_sidebar_section_link, linkable: category, user: user)
+
+        site = Site.new(Guardian.new(user))
+
+        expect(site.categories.map { |c| c[:id] }).to contain_exactly(
+          parent_category.id,
+          category.id,
+        )
+      end
+
+      it "returns only visible sidebar categories" do
+        Fabricate(:category_sidebar_section_link, linkable: category, user: user)
+        category.update!(read_restricted: true)
+
+        site = Site.new(Guardian.new(user))
+
+        expect(site.categories).to eq([])
+      end
+    end
   end
 
   it "omits groups user can not see" do
@@ -172,6 +232,31 @@ RSpec.describe Site do
     admin = Fabricate(:admin)
     site = Site.new(Guardian.new(admin))
     expect(site.groups.pluck(:name)).to include(staff_group.name, public_group.name, "everyone")
+  end
+
+  describe "site_groups_query modifier" do
+    fab!(:user)
+    fab!(:cool_group) { Fabricate(:group, name: "cool-group") }
+    fab!(:boring_group) { Fabricate(:group, name: "boring-group") }
+
+    it "allows changing the query" do
+      prefetched_groups = Site.new(Guardian.new(user)).groups.map { |c| c[:id] }
+      expect(prefetched_groups).to include(cool_group.id, boring_group.id)
+
+      # we need to clear the cache to ensure that the groups list will be updated
+      Site.clear_cache
+
+      Plugin::Instance
+        .new
+        .register_modifier(:site_groups_query) { |query| query.where("groups.name LIKE 'cool%'") }
+
+      prefetched_groups = Site.new(Guardian.new(user)).groups.map { |c| c[:id] }
+
+      expect(prefetched_groups).to include(cool_group.id)
+      expect(prefetched_groups).not_to include(boring_group.id)
+    ensure
+      DiscoursePluginRegistry.clear_modifiers!
+    end
   end
 
   it "includes all enabled authentication providers" do

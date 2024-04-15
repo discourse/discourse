@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  js:
+    spoiler:
+      title: Rendi illeggibile spoiler
+      label:
+        show: "Mostra contenuti nascosti"
+    composer:
+      spoiler_text: "Questo testo verrà reso illeggibile"

@@ -1,19 +1,19 @@
+import EmberObject from "@ember/object";
+import { isEmpty } from "@ember/utils";
+import { renderAvatar } from "discourse/helpers/user-avatar";
+import { ajax } from "discourse/lib/ajax";
 import { durationTiny, number } from "discourse/lib/formatter";
+import round from "discourse/lib/round";
 import {
   escapeExpression,
   fillMissingDates,
   formatUsername,
   toNumber,
 } from "discourse/lib/utilities";
-import EmberObject from "@ember/object";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
-import { isEmpty } from "@ember/utils";
 import { makeArray } from "discourse-common/lib/helpers";
-import { renderAvatar } from "discourse/helpers/user-avatar";
-import round from "discourse/lib/round";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 // Change this line each time report format change
 // and you want to ensure cache is reset
@@ -154,7 +154,7 @@ export default class Report extends EmberObject {
             ),
           };
         });
-      } else {
+      } else if (report.modes[0] !== "radar") {
         report[filledField] = fillMissingDates(
           JSON.parse(JSON.stringify(report[dataField])),
           startDateFormatted,

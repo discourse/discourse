@@ -2,10 +2,11 @@
 
 module Chat
   class UserChannelMembershipSerializer < BaseChannelMembershipSerializer
-    has_one :user, serializer: BasicUserSerializer, embed: :objects
+    has_one :user, embed: :objects
 
     def user
-      object.user
+      user = object.user || Chat::NullUser.new
+      Chat::BasicUserSerializer.new(user, root: false, scope: scope, include_status: true)
     end
   end
 end

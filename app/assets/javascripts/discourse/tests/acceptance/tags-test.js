@@ -1,4 +1,5 @@
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -8,8 +9,8 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 
 acceptance("Tags", function (needs) {
   needs.user();
@@ -310,6 +311,21 @@ acceptance("Tag info", function (needs) {
       });
     });
 
+    server.get("/tags/c/feature/2/none/l/latest.json", () => {
+      return helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          topics: [],
+        },
+      });
+    });
+
     server.get("/tag/planters/info", () => {
       return helper.response({
         __rest_serializer: "1",
@@ -475,6 +491,17 @@ acceptance("Tag info", function (needs) {
     );
   });
 
+  test("tag info hides when tag filter removed", async function (assert) {
+    await visit("/tag/happy-monkey");
+
+    await click("#show-tag-info");
+    assert.dom(".tag-info .tag-name").exists();
+
+    await visit("/latest");
+
+    assert.dom(".tag-info").doesNotExist("tag info is not shown on homepage");
+  });
+
   test("can filter tags page by category", async function (assert) {
     await visit("/tag/planters");
 
@@ -496,6 +523,40 @@ acceptance("Tag info", function (needs) {
       `.category-breadcrumb li:nth-of-type(2) .category-row[data-value="no-categories"]`
     );
     assert.strictEqual(currentURL(), "/tags/c/feature/2/none/planters");
+  });
+
+  test("sets document title correctly", async function (assert) {
+    await visit("/tag/planters");
+    assert.strictEqual(
+      document.title,
+      I18n.t("tagging.filters.without_category", {
+        filter: "Latest",
+        tag: "planters",
+      }) + ` - ${this.siteSettings.title}`
+    );
+
+    await click(".category-breadcrumb .category-drop-header");
+    await click(`.category-breadcrumb .category-row[data-name="feature"]`);
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters");
+    assert.strictEqual(
+      document.title,
+      I18n.t("tagging.filters.with_category", {
+        filter: "Latest",
+        tag: "planters",
+        category: "feature",
+      }) + ` - ${this.siteSettings.title}`
+    );
+
+    await click(".tag-drop-header");
+    await click(`.tag-row[data-value="no-tags"]`);
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/none");
+    assert.strictEqual(
+      document.title,
+      I18n.t("tagging.filters.untagged_with_category", {
+        filter: "Latest",
+        category: "feature",
+      }) + ` - ${this.siteSettings.title}`
+    );
   });
 
   test("can visit show-category-latest routes", async function (assert) {
@@ -543,7 +604,7 @@ acceptance("Tag info", function (needs) {
     await visit("/tag/planters");
     await click("#create-topic");
     let composer = this.owner.lookup("service:composer");
-    assert.strictEqual(composer.get("model").tags, undefined);
+    assert.deepEqual(composer.get("model").tags, []);
   });
 });
 

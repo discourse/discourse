@@ -1,3 +1,4 @@
+import require from "require";
 import { getResolverOption } from "discourse-common/resolver";
 
 export const __DISCOURSE_RAW_TEMPLATES = {};
@@ -30,26 +31,26 @@ export function findRawTemplate(name) {
   );
 }
 
-export function buildRawConnectorCache(findOutlets) {
+export function buildRawConnectorCache() {
   let result = {};
-  findOutlets(
-    Object.keys(__DISCOURSE_RAW_TEMPLATES),
-    (outletName, resource) => {
+  Object.keys(__DISCOURSE_RAW_TEMPLATES).forEach((resource) => {
+    const segments = resource.split("/");
+    const connectorIndex = segments.indexOf("connectors");
+
+    if (connectorIndex >= 0) {
+      const outletName = segments[connectorIndex + 1];
       result[outletName] ??= [];
       result[outletName].push({
         template: __DISCOURSE_RAW_TEMPLATES[resource],
       });
     }
-  );
+  });
   return result;
 }
 
 export function eagerLoadRawTemplateModules() {
-  for (const [key, value] of Object.entries(requirejs.entries)) {
-    if (
-      key.includes("/templates/") &&
-      value.deps.includes("discourse-common/lib/raw-templates")
-    ) {
+  for (const key of Object.keys(requirejs.entries)) {
+    if (key.includes("/raw-templates/")) {
       require(key);
     }
   }

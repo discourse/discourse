@@ -1,13 +1,13 @@
-import { inject as service } from "@ember/service";
 import Controller from "@ember/controller";
-import I18n from "I18n";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import ScreenedIpAddress from "admin/models/screened-ip-address";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { exportEntity } from "discourse/lib/export-csv";
-import { observes } from "@ember-decorators/object";
-import { outputExportResult } from "discourse/lib/export-result";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { observes } from "@ember-decorators/object";
+import { exportEntity } from "discourse/lib/export-csv";
+import { outputExportResult } from "discourse/lib/export-result";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
+import I18n from "discourse-i18n";
+import ScreenedIpAddress from "admin/models/screened-ip-address";
 
 export default class AdminLogsScreenedIpAddressesController extends Controller {
   @service dialog;

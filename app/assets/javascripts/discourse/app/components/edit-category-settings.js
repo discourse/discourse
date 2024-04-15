@@ -1,11 +1,11 @@
-import { and, empty } from "@ember/object/computed";
-import Group from "discourse/models/group";
-import I18n from "I18n";
-import { SEARCH_PRIORITIES } from "discourse/lib/constants";
-import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import discourseComputed from "discourse-common/utils/decorators";
-import { setting } from "discourse/lib/computed";
 import { action } from "@ember/object";
+import { and, empty } from "@ember/object/computed";
+import { buildCategoryPanel } from "discourse/components/edit-category-panel";
+import { setting } from "discourse/lib/computed";
+import { SEARCH_PRIORITIES } from "discourse/lib/constants";
+import Group from "discourse/models/group";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const categorySortCriteria = [];
 export function addCategorySortCriteria(criteria) {

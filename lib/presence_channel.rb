@@ -5,10 +5,13 @@
 class PresenceChannel
   class NotFound < StandardError
   end
+
   class InvalidAccess < StandardError
   end
+
   class ConfigNotLoaded < StandardError
   end
+
   class InvalidConfig < StandardError
   end
 
@@ -112,7 +115,7 @@ class PresenceChannel
   end
 
   # Is a user allowed to enter this channel?
-  # Currently equal to the the can_view? permission
+  # Currently equal to the can_view? permission
   def can_enter?(user_id: nil, group_ids: nil)
     return false if user_id.nil?
     can_view?(user_id: user_id, group_ids: group_ids)
@@ -314,7 +317,10 @@ class PresenceChannel
         else
           raise InvalidConfig.new "Expected PresenceChannel::Config or nil. Got a #{result.class.name}"
         end
-      PresenceChannel.redis.set(redis_key_config, to_cache, ex: CONFIG_CACHE_SECONDS)
+
+      DiscourseRedis.ignore_readonly do
+        PresenceChannel.redis.set(redis_key_config, to_cache, ex: CONFIG_CACHE_SECONDS)
+      end
 
       raise PresenceChannel::NotFound if result.nil?
       result
@@ -330,7 +336,7 @@ class PresenceChannel
     else
       message["leaving_user_ids"] = leaving_user_ids if leaving_user_ids.present?
       if entering_user_ids.present?
-        users = User.where(id: entering_user_ids)
+        users = User.where(id: entering_user_ids).includes(:user_option)
         message["entering_users"] = ActiveModel::ArraySerializer.new(
           users,
           each_serializer: BasicUserSerializer,
@@ -513,7 +519,7 @@ class PresenceChannel
       #{UPDATE_GLOBAL_CHANNELS_LUA}
 
       -- Update the user session count in the channel hash
-      local val = redis.call('HINCRBY', hash_key, user_id, -1)
+      local val = redis.call('HINCRBY', hash_key, user_id, #{Discourse::SYSTEM_USER_ID})
       if val <= 0 then
         redis.call('HDEL', hash_key, user_id)
         removed_users = 1
@@ -604,7 +610,7 @@ class PresenceChannel
         get_mutex()
       end
 
-      local val = redis.call('HINCRBY', hash_key, user_id, -1)
+      local val = redis.call('HINCRBY', hash_key, user_id, #{Discourse::SYSTEM_USER_ID})
       if val <= 0 then
         table.insert(expired_user_ids, tonumber(user_id))
         redis.call('HDEL', hash_key, user_id)

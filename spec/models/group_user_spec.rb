@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupUser do
-  fab!(:group) { Fabricate(:group) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:group)
+  fab!(:user)
 
   describe "callbacks" do
     it "increments and decrements `Group#user_count` when record is created and destroyed" do
@@ -17,7 +17,6 @@ RSpec.describe GroupUser do
   it "correctly sets notification level" do
     moderator = Fabricate(:moderator)
 
-    Group.refresh_automatic_groups!(:moderators)
     gu = GroupUser.find_by(user_id: moderator.id, group_id: Group::AUTO_GROUPS[:moderators])
 
     expect(gu.notification_level).to eq(NotificationLevels.all[:tracking])
@@ -43,8 +42,8 @@ RSpec.describe GroupUser do
   end
 
   describe "default category notifications" do
-    fab!(:group) { Fabricate(:group) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:group)
+    fab!(:user)
     fab!(:category1) { Fabricate(:category) }
     fab!(:category2) { Fabricate(:category) }
     fab!(:category3) { Fabricate(:category) }
@@ -136,8 +135,8 @@ RSpec.describe GroupUser do
   end
 
   describe "default tag notifications" do
-    fab!(:group) { Fabricate(:group) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:group)
+    fab!(:user)
     fab!(:tag1) { Fabricate(:tag) }
     fab!(:tag2) { Fabricate(:tag) }
     fab!(:tag3) { Fabricate(:tag) }
@@ -203,7 +202,7 @@ RSpec.describe GroupUser do
   end
 
   describe "#ensure_consistency!" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:group_2) { Fabricate(:group) }
 
     fab!(:pm_post) { Fabricate(:private_message_post) }
@@ -275,7 +274,7 @@ RSpec.describe GroupUser do
   end
 
   describe "#destroy!" do
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     it "removes `primary_group_id`, `flair_group_id` and exec `match_primary_group_changes` method on user model" do
       user = Fabricate(:user, primary_group: group, flair_group: group)
@@ -302,6 +301,28 @@ RSpec.describe GroupUser do
 
       group_user.destroy!
       # keep in mind that we do not restore tl3, cause reqs can be lost
+      expect(user.reload.trust_level).to eq(2)
+    end
+
+    it "protects user trust level if all requirements are met" do
+      Promotion.stubs(:tl2_met?).returns(true)
+
+      user = Fabricate(:user)
+      expect(user.trust_level).to eq(1)
+
+      group.update!(grant_trust_level: 1)
+
+      Promotion.recalculate(user)
+      expect(user.reload.trust_level).to eq(2)
+
+      group_user = Fabricate(:group_user, group: group, user: user)
+      expect_not_enqueued_with(
+        job: :send_system_message,
+        args: {
+          user_id: user.id,
+          message_type: "tl2_promotion_message",
+        },
+      ) { group_user.destroy! }
       expect(user.reload.trust_level).to eq(2)
     end
   end

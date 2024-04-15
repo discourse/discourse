@@ -4,7 +4,7 @@ RSpec.describe UserSearch do
   before_all { SearchIndexer.enable } # Enable for prefabrication
   before { SearchIndexer.enable } # Enable for each test
 
-  fab!(:topic) { Fabricate :topic }
+  fab!(:topic)
   fab!(:topic2) { Fabricate :topic }
   fab!(:topic3) { Fabricate :topic }
   fab!(:topic4) { Fabricate :topic }
@@ -29,7 +29,7 @@ RSpec.describe UserSearch do
   fab!(:inactive) { Fabricate :user, username: "Ghost", active: false }
   fab!(:admin) { Fabricate :admin, username: "theadmin" }
   fab!(:moderator) { Fabricate :moderator, username: "themod" }
-  fab!(:staged) { Fabricate :staged }
+  fab!(:staged)
 
   def search_for(*args)
     # mapping "username" so it's easier to debug
@@ -37,9 +37,9 @@ RSpec.describe UserSearch do
   end
 
   context "with a secure category" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:searching_user) { Fabricate(:user) }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
     fab!(:category) { Fabricate(:category, read_restricted: true, user: user) }
 
     before_all do
@@ -191,7 +191,8 @@ RSpec.describe UserSearch do
     end
 
     it "only reveals topic participants to people with permission" do
-      pm_topic = Fabricate(:private_message_post).topic
+      pm_topic =
+        Fabricate(:private_message_post, user: Fabricate(:user, refresh_auto_groups: true)).topic
 
       # Anonymous, does not have access
       expect do search_for("", topic_id: pm_topic.id) end.to raise_error(Discourse::InvalidAccess)
@@ -201,7 +202,6 @@ RSpec.describe UserSearch do
         Discourse::InvalidAccess,
       )
 
-      Group.refresh_automatic_groups!
       pm_topic.invite(pm_topic.user, mr_b.username)
 
       results = search_for("", topic_id: pm_topic.id, searching_user: mr_b)

@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 class UserCustomField < ActiveRecord::Base
+  include CustomField
+
   belongs_to :user
 
   scope :searchable,
-        -> {
+        -> do
           joins(
             "INNER JOIN user_fields ON user_fields.id = REPLACE(user_custom_fields.name, 'user_field_', '')::INTEGER AND user_fields.searchable IS TRUE AND user_custom_fields.name like 'user_field_%'",
           )
-        }
+        end
 end
 
 # == Schema Information
@@ -24,5 +26,6 @@ end
 #
 # Indexes
 #
-#  index_user_custom_fields_on_user_id_and_name  (user_id,name)
+#  idx_user_custom_fields_discourse_automation_unique_id_partial  (user_id,value) UNIQUE WHERE ((name)::text = 'discourse_automation_ids'::text)
+#  index_user_custom_fields_on_user_id_and_name                   (user_id,name)
 #

@@ -1,6 +1,6 @@
 import { currentRouteName, visit } from "@ember/test-helpers";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Login redirect - anonymous", function () {
   test("redirects login to default homepage", async function (assert) {

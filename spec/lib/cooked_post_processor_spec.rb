@@ -4,12 +4,13 @@ require "cooked_post_processor"
 require "file_store/s3_store"
 
 RSpec.describe CookedPostProcessor do
-  fab!(:upload) { Fabricate(:upload) }
-  fab!(:large_image_upload) { Fabricate(:large_image_upload) }
+  fab!(:upload)
+  fab!(:large_image_upload)
+  fab!(:user_with_auto_groups) { Fabricate(:user, refresh_auto_groups: true) }
   let(:upload_path) { Discourse.store.upload_path }
 
   describe "#post_process" do
-    fab!(:post) { Fabricate(:post, raw: <<~RAW) }
+    fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~RAW) }
       <img src="#{upload.url}">
       RAW
 
@@ -34,7 +35,7 @@ RSpec.describe CookedPostProcessor do
 
       let(:title) { "some title" }
 
-      let(:post) { Fabricate(:post, raw: <<~RAW) }
+      let(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~RAW) }
         #{url}
         This is a #{url} with path
 
@@ -125,8 +126,8 @@ RSpec.describe CookedPostProcessor do
       before { SiteSetting.enable_inline_onebox_on_all_domains = true }
 
       describe "internal links" do
-        fab!(:topic) { Fabricate(:topic) }
-        fab!(:post) { Fabricate(:post, raw: "Hello #{topic.url}") }
+        fab!(:topic)
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: "Hello #{topic.url}") }
         let(:url) { topic.url }
 
         it "includes the topic title" do
@@ -174,7 +175,7 @@ RSpec.describe CookedPostProcessor do
         let(:title) { "<b>some title</b>" }
         let(:escaped_title) { CGI.escapeHTML(title) }
 
-        let(:post) { Fabricate(:post, raw: <<~RAW) }
+        let(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~RAW) }
           This is a #{url_with_path} topic
           This should not be inline #{url_no_path} oneboxed
 
@@ -257,7 +258,8 @@ RSpec.describe CookedPostProcessor do
 
         it "includes responsive images on demand" do
           upload.update!(width: 2000, height: 1500, filesize: 10_000, dominant_color: "FFFFFF")
-          post = Fabricate(:post, raw: "hello <img src='#{upload.url}'>")
+          post =
+            Fabricate(:post, user: user_with_auto_groups, raw: "hello <img src='#{upload.url}'>")
 
           # fake some optimized images
           OptimizedImage.create!(
@@ -314,7 +316,8 @@ RSpec.describe CookedPostProcessor do
 
         it "doesn't include response images for cropped images" do
           upload.update!(width: 200, height: 4000, filesize: 12_345)
-          post = Fabricate(:post, raw: "hello <img src='#{upload.url}'>")
+          post =
+            Fabricate(:post, user: user_with_auto_groups, raw: "hello <img src='#{upload.url}'>")
 
           # fake some optimized images
           OptimizedImage.create!(
@@ -344,7 +347,7 @@ RSpec.describe CookedPostProcessor do
       end
 
       context "with image_sizes" do
-        fab!(:post) { Fabricate(:post_with_image_urls) }
+        fab!(:post) { Fabricate(:post_with_image_urls, user: user_with_auto_groups) }
         let(:cpp) { CookedPostProcessor.new(post, image_sizes: image_sizes) }
 
         before do
@@ -385,7 +388,7 @@ RSpec.describe CookedPostProcessor do
       context "with unsized images" do
         fab!(:upload) { Fabricate(:image_upload, width: 123, height: 456) }
 
-        fab!(:post) { Fabricate(:post, raw: <<~HTML) }
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~HTML) }
           <img src="#{upload.url}">
           HTML
 
@@ -401,7 +404,7 @@ RSpec.describe CookedPostProcessor do
       context "with large images" do
         fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
 
-        fab!(:post) { Fabricate(:post, raw: <<~HTML) }
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~HTML) }
           <img src="#{upload.url}">
           HTML
 
@@ -424,7 +427,7 @@ RSpec.describe CookedPostProcessor do
 
         context "when image is inside onebox" do
           let(:url) { "https://image.com/my-avatar" }
-          let(:post) { Fabricate(:post, raw: url) }
+          let(:post) { Fabricate(:post, user: user_with_auto_groups, raw: url) }
 
           before do
             Oneboxer
@@ -450,6 +453,7 @@ RSpec.describe CookedPostProcessor do
           fab!(:post) do
             Fabricate(
               :post,
+              user: user_with_auto_groups,
               raw: "<img src=\"/#{Discourse.store.upload_path}/original/1X/1234567890123456.svg\">",
             )
           end
@@ -468,6 +472,7 @@ RSpec.describe CookedPostProcessor do
             let(:post) do
               Fabricate(
                 :post,
+                user: user_with_auto_groups,
                 raw:
                   "<img src=\"http://test.discourse/#{upload_path}/original/1X/1234567890123456.svg?somepamas\">",
               )
@@ -505,7 +510,11 @@ RSpec.describe CookedPostProcessor do
           let(:optimized_size) { "600x500" }
 
           let(:post) do
-            Fabricate(:post, raw: "![large.png|#{optimized_size}](#{upload.short_url})")
+            Fabricate(
+              :post,
+              user: user_with_auto_groups,
+              raw: "![large.png|#{optimized_size}](#{upload.short_url})",
+            )
           end
 
           let(:cooked_html) { <<~HTML }
@@ -516,8 +525,6 @@ RSpec.describe CookedPostProcessor do
 
           context "when the upload is attached to the correct post" do
             before do
-              FastImage.expects(:size).returns([1750, 2000])
-              OptimizedImage.expects(:resize).returns(true)
               Discourse
                 .store
                 .class
@@ -525,21 +532,60 @@ RSpec.describe CookedPostProcessor do
                 .expects(:has_been_uploaded?)
                 .at_least_once
                 .returns(true)
-              upload.update(secure: true, access_control_post: post)
+              upload.update!(secure: true, access_control_post: post)
+              post.link_post_uploads
             end
 
             # TODO fix this spec, it is sometimes getting CDN links when it runs concurrently
             xit "handles secure images with the correct lightbox link href" do
+              FastImage.expects(:size).returns([1750, 2000])
+              OptimizedImage.expects(:resize).returns(true)
               cpp.post_process
 
               expect(cpp.html).to match_html cooked_html
+            end
+
+            context "when the upload was not secure" do
+              before { upload.update!(secure: false) }
+
+              it "changes the secure status" do
+                cpp.post_process
+                expect(upload.reload.secure).to eq(true)
+              end
+            end
+
+            context "when the upload should no longer be considered secure" do
+              before { SiteSetting.login_required = false }
+
+              it "changes the secure status" do
+                cpp.post_process
+                expect(upload.reload.secure).to eq(false)
+              end
+
+              it "does not use a secure-uploads URL for the lightbox href" do
+                SiteSetting.create_thumbnails = false
+                SiteSetting.max_image_width = 10
+                SiteSetting.max_image_height = 10
+
+                cpp.post_process
+                expect(cpp.html).not_to have_tag(
+                  "a",
+                  with: {
+                    class: "lightbox",
+                    href: "//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png",
+                  },
+                )
+              end
             end
           end
 
           context "when the upload is attached to a different post" do
             before do
               FastImage.size(upload.url)
-              upload.update(secure: true, access_control_post: Fabricate(:post))
+              upload.update(
+                secure: true,
+                access_control_post: Fabricate(:post, user: user_with_auto_groups),
+              )
             end
 
             it "does not create thumbnails or optimize images" do
@@ -557,7 +603,7 @@ RSpec.describe CookedPostProcessor do
       context "with tall images > default aspect ratio" do
         fab!(:upload) { Fabricate(:image_upload, width: 500, height: 2200) }
 
-        fab!(:post) { Fabricate(:post, raw: <<~HTML) }
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~HTML) }
           <img src="#{upload.url}">
           HTML
 
@@ -576,7 +622,7 @@ RSpec.describe CookedPostProcessor do
       context "with taller images < default aspect ratio" do
         fab!(:upload) { Fabricate(:image_upload, width: 500, height: 2300) }
 
-        fab!(:post) { Fabricate(:post, raw: <<~HTML) }
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~HTML) }
           <img src="#{upload.url}">
           HTML
 
@@ -595,7 +641,7 @@ RSpec.describe CookedPostProcessor do
       context "with iPhone X screenshots" do
         fab!(:upload) { Fabricate(:image_upload, width: 1125, height: 2436) }
 
-        fab!(:post) { Fabricate(:post, raw: <<~HTML) }
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~HTML) }
           <img src="#{upload.url}">
           HTML
 
@@ -617,7 +663,7 @@ RSpec.describe CookedPostProcessor do
       context "with large images when using subfolders" do
         fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
 
-        fab!(:post) { Fabricate(:post, raw: <<~HTML) }
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~HTML) }
           <img src="/subfolder#{upload.url}">
           HTML
 
@@ -649,7 +695,7 @@ RSpec.describe CookedPostProcessor do
           cpp.post_process
 
           expect(cpp.html).to match_html <<~HTML
-            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder#{upload.url}" data-download-href="//test.localhost/subfolder/#{upload_path}/#{upload.sha1}" title="&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png"><img src="//test.localhost/subfolder/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
+            <p><div class="lightbox-wrapper"><a class="lightbox" href="//test.localhost/subfolder#{upload.url}" data-download-href="//test.localhost/subfolder/#{upload_path}/#{upload.sha1}" title="><img src=x onerror=alert('haha')>.png"><img src="//test.localhost/subfolder/#{upload_path}/optimized/1X/#{upload.sha1}_#{OptimizedImage::VERSION}_690x788.png" width="690" height="788"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">&gt;&lt;img src=x onerror=alert('haha')&gt;.png</span><span class="informations">1750×2000 1.21 KB</span><svg class="fa d-icon d-icon-discourse-expand svg-icon" aria-hidden="true"><use href="#discourse-expand"></use></svg></div></a></div></p>
           HTML
         end
       end
@@ -657,7 +703,7 @@ RSpec.describe CookedPostProcessor do
       context "with title and alt" do
         fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
 
-        fab!(:post) { Fabricate(:post, raw: <<~HTML) }
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~HTML) }
           <img src="#{upload.url}" title="WAT" alt="RED">
           HTML
 
@@ -682,7 +728,7 @@ RSpec.describe CookedPostProcessor do
       context "with title only" do
         fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
 
-        fab!(:post) { Fabricate(:post, raw: <<~HTML) }
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~HTML) }
           <img src="#{upload.url}" title="WAT">
           HTML
 
@@ -707,7 +753,7 @@ RSpec.describe CookedPostProcessor do
       context "with alt only" do
         fab!(:upload) { Fabricate(:image_upload, width: 1750, height: 2000) }
 
-        fab!(:post) { Fabricate(:post, raw: <<~HTML) }
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~HTML) }
           <img src="#{upload.url}" alt="RED">
           HTML
 
@@ -730,7 +776,7 @@ RSpec.describe CookedPostProcessor do
       end
 
       context "with topic image" do
-        fab!(:post) { Fabricate(:post_with_uploaded_image) }
+        fab!(:post) { Fabricate(:post_with_uploaded_image, user: user_with_auto_groups) }
         let(:cpp) { CookedPostProcessor.new(post) }
 
         it "adds a topic image if there's one in the first post" do
@@ -757,22 +803,6 @@ RSpec.describe CookedPostProcessor do
           expect(post.image_upload_id).not_to be_present
         end
 
-        it "won't remove the original image if another post doesn't have an image" do
-          topic = post.topic
-
-          cpp.post_process
-          topic.reload
-          expect(topic.image_upload_id).to be_present
-          expect(post.image_upload_id).to be_present
-
-          post = Fabricate(:post, topic: topic, raw: "this post doesn't have an image")
-          CookedPostProcessor.new(post).post_process
-          topic.reload
-
-          expect(post.topic.image_upload_id).to be_present
-          expect(post.image_upload_id).to be_blank
-        end
-
         it "generates thumbnails correctly" do
           # image size in cooked is 1500*2000
           topic = post.topic
@@ -781,7 +811,13 @@ RSpec.describe CookedPostProcessor do
           expect(topic.image_upload_id).to be_present
           expect(post.image_upload_id).to be_present
 
-          post = Fabricate(:post, topic: topic, raw: "this post doesn't have an image")
+          post =
+            Fabricate(
+              :post,
+              user: user_with_auto_groups,
+              topic: topic,
+              raw: "this post doesn't have an image",
+            )
           CookedPostProcessor.new(post).post_process
           topic.reload
 
@@ -793,7 +829,7 @@ RSpec.describe CookedPostProcessor do
       it "prioritizes data-thumbnail images" do
         upload1 = Fabricate(:image_upload, width: 1750, height: 2000)
         upload2 = Fabricate(:image_upload, width: 1750, height: 2000)
-        post = Fabricate(:post, raw: <<~MD)
+        post = Fabricate(:post, user: user_with_auto_groups, raw: <<~MD)
           ![alttext|1750x2000](#{upload1.url})
           ![alttext|1750x2000|thumbnail](#{upload2.url})
         MD
@@ -804,7 +840,9 @@ RSpec.describe CookedPostProcessor do
       end
 
       context "with post image" do
-        let(:reply) { Fabricate(:post_with_uploaded_image, post_number: 2) }
+        let(:reply) do
+          Fabricate(:post_with_uploaded_image, user: user_with_auto_groups, post_number: 2)
+        end
         let(:cpp) { CookedPostProcessor.new(reply) }
 
         it "adds a post image if there's one in the post" do
@@ -943,7 +981,12 @@ RSpec.describe CookedPostProcessor do
     fab!(:thumbnail) { Fabricate(:optimized_image, upload: upload, width: 512, height: 384) }
 
     it "adds lightbox and optimizes images" do
-      post = Fabricate(:post, raw: "![image|1024x768, 50%](#{large_image_upload.short_url})")
+      post =
+        Fabricate(
+          :post,
+          user: user_with_auto_groups,
+          raw: "![image|1024x768, 50%](#{large_image_upload.short_url})",
+        )
       cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
       cpp.post_process
 
@@ -958,7 +1001,12 @@ RSpec.describe CookedPostProcessor do
       # skips lightboxing
       # adds "animated" class to element
       upload.update!(animated: true)
-      post = Fabricate(:post, raw: "![image|1024x768, 50%](#{upload.short_url})")
+      post =
+        Fabricate(
+          :post,
+          user: user_with_auto_groups,
+          raw: "![image|1024x768, 50%](#{upload.short_url})",
+        )
 
       cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
       cpp.post_process
@@ -988,6 +1036,7 @@ RSpec.describe CookedPostProcessor do
         post =
           Fabricate(
             :post,
+            user: user_with_auto_groups,
             raw: "![tennis-gif|311x280](https://media2.giphy.com/media/7Oifk90VrCdNe/giphy.webp)",
           )
         cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
@@ -1001,6 +1050,7 @@ RSpec.describe CookedPostProcessor do
         post =
           Fabricate(
             :post,
+            user: user_with_auto_groups,
             raw:
               "![cat](https://media1.tenor.com/images/20c7ddd5e84c7427954f430439c5209d/tenor.gif)",
           )
@@ -1013,7 +1063,7 @@ RSpec.describe CookedPostProcessor do
     end
 
     it "optimizes and wraps images in quotes with lightbox wrapper" do
-      post = Fabricate(:post, raw: <<~MD)
+      post = Fabricate(:post, user: user_with_auto_groups, raw: <<~MD)
         [quote]
         ![image|1024x768, 50%](#{large_image_upload.short_url})
         [/quote]
@@ -1035,14 +1085,16 @@ RSpec.describe CookedPostProcessor do
           "<aside class='onebox'><img src='#{large_image_upload.url}' width='512' height='384'></aside>",
         )
 
-      post = Fabricate(:post, raw: "https://discourse.org")
+      post = Fabricate(:post, user: user_with_auto_groups, raw: "https://discourse.org")
 
       cpp = CookedPostProcessor.new(post, disable_dominant_color: true)
       cpp.post_process
 
       doc = Nokogiri::HTML5.fragment(cpp.html)
       expect(doc.css(".lightbox-wrapper").size).to eq(0)
-      expect(doc.css("img").first["srcset"]).to_not eq(nil)
+      expect(doc.css("img").first["srcset"]).to eq(nil)
+      expect(doc.css("img").first["src"]).to include("optimized")
+      expect(doc.css("img").first["src"]).to include("512x384")
     end
   end
 
@@ -1079,7 +1131,7 @@ RSpec.describe CookedPostProcessor do
           .with(url, anything)
           .returns("<img class='onebox' src='#{image_url}' />")
 
-        post = Fabricate(:post, raw: url)
+        post = Fabricate(:post, user: user_with_auto_groups, raw: url)
         upload.update!(url: "https://test.s3.amazonaws.com/something.png", dominant_color: "00ffff")
 
         PostHotlinkedMedia.create!(
@@ -1108,7 +1160,7 @@ RSpec.describe CookedPostProcessor do
         Oneboxer.unstub(:onebox)
       end
 
-      context "when the post is with_secure_uploads and the upload is secure and secure uploads is enabled" do
+      context "when the post is should_secure_uploads and the upload is secure and secure uploads is enabled" do
         before do
           setup_s3
           upload.update(secure: true)
@@ -1123,7 +1175,7 @@ RSpec.describe CookedPostProcessor do
             .with(url, anything)
             .returns("<img class='onebox' src='#{image_url}' />")
 
-          post = Fabricate(:post, raw: url)
+          post = Fabricate(:post, user: user_with_auto_groups, raw: url)
           upload.update!(
             url: "https://test.s3.amazonaws.com/something.png",
             dominant_color: "00ffff",
@@ -1160,7 +1212,7 @@ RSpec.describe CookedPostProcessor do
           </a>
         HTML
 
-      post = Fabricate(:post, raw: url)
+      post = Fabricate(:post, user: user_with_auto_groups, raw: url)
 
       PostHotlinkedMedia.create!(url: "//image.com/avatar.png", post: post, status: "too_large")
 
@@ -1190,7 +1242,7 @@ RSpec.describe CookedPostProcessor do
         </aside>
       HTML
 
-      post = Fabricate(:post, raw: url)
+      post = Fabricate(:post, user: user_with_auto_groups, raw: url)
 
       PostHotlinkedMedia.create!(url: "//example.com/favicon.ico", post: post, status: "too_large")
       PostHotlinkedMedia.create!(url: "//example.com/article.jpeg", post: post, status: "too_large")
@@ -1220,7 +1272,7 @@ RSpec.describe CookedPostProcessor do
         .with(url, anything)
         .returns("<img class='onebox' src='#{image_url}' />")
 
-      post = Fabricate(:post, raw: url)
+      post = Fabricate(:post, user: user_with_auto_groups, raw: url)
 
       PostHotlinkedMedia.create!(
         url: "//image.com/avatar.png",
@@ -1252,7 +1304,7 @@ RSpec.describe CookedPostProcessor do
         </aside>
       HTML
 
-      post = Fabricate(:post, raw: url)
+      post = Fabricate(:post, user: user_with_auto_groups, raw: url)
 
       PostHotlinkedMedia.create!(
         url: "//example.com/favicon.ico",
@@ -1515,6 +1567,7 @@ RSpec.describe CookedPostProcessor do
           the_post =
             Fabricate(
               :post,
+              user: user_with_auto_groups,
               raw:
                 %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})},
             )
@@ -1538,6 +1591,7 @@ RSpec.describe CookedPostProcessor do
           the_post =
             Fabricate(
               :post,
+              user: user_with_auto_groups,
               raw:
                 %Q{This post has a local emoji :+1: and an external upload\n\n![smallest.png|10x20](#{upload.short_url})},
             )
@@ -1559,7 +1613,12 @@ RSpec.describe CookedPostProcessor do
           upload.update_column(:url, "#{SiteSetting.Upload.absolute_base_url}/#{stored_path}")
           upload.update_column(:secure, true)
 
-          the_post = Fabricate(:post, raw: "This post has a custom emoji :trout:")
+          the_post =
+            Fabricate(
+              :post,
+              user: user_with_auto_groups,
+              raw: "This post has a custom emoji :trout:",
+            )
           the_post.cook(the_post.raw)
 
           cpp = CookedPostProcessor.new(the_post)
@@ -1587,7 +1646,11 @@ RSpec.describe CookedPostProcessor do
             SiteSetting.prevent_anons_from_downloading_files = true
 
             the_post =
-              Fabricate(:post, raw: "This post has an S3 video onebox:\n#{video_upload.url}")
+              Fabricate(
+                :post,
+                user: user_with_auto_groups,
+                raw: "This post has an S3 video onebox:\n#{video_upload.url}",
+              )
 
             cpp = CookedPostProcessor.new(the_post.reload)
             cpp.post_process_oneboxes
@@ -1609,7 +1672,11 @@ RSpec.describe CookedPostProcessor do
             video_upload.update_column(:secure, true)
 
             the_post =
-              Fabricate(:post, raw: "This post has an S3 video onebox:\n#{video_upload.url}")
+              Fabricate(
+                :post,
+                user: user_with_auto_groups,
+                raw: "This post has an S3 video onebox:\n#{video_upload.url}",
+              )
 
             cpp = CookedPostProcessor.new(the_post)
             cpp.post_process_oneboxes
@@ -1657,7 +1724,7 @@ RSpec.describe CookedPostProcessor do
               ![logo.png](upload://#{image_upload.base62_sha1}.#{image_upload.extension})
             RAW
 
-            the_post = Fabricate(:post, raw: raw)
+            the_post = Fabricate(:post, user: user_with_auto_groups, raw: raw)
 
             cpp = CookedPostProcessor.new(the_post)
             cpp.post_process_oneboxes
@@ -1668,15 +1735,23 @@ RSpec.describe CookedPostProcessor do
               audio_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
 
             expect(cpp.html).to match_html <<~HTML
-              <p>This post has a video upload.</p>
-              <div class="onebox video-onebox">
+              <p>This post has a video upload.</p><div class="onebox video-onebox">
                 <video width="100%" height="100%" controls="">
                   <source src="#{secure_video_url}">
-                  <a href="#{secure_video_url}">#{secure_video_url}</a>
+                  <a href="#{secure_video_url}">
+                    #{secure_video_url}
+                  </a>
                 </video>
               </div>
+
               <p>This post has an audio upload.<br>
-              <audio controls=""><source src="#{secure_audio_url}"><a href="#{secure_audio_url}">#{secure_audio_url}</a></audio></p>
+              <audio controls="">
+                <source src="#{secure_audio_url}">
+                <a href="#{secure_audio_url}">
+                  #{secure_audio_url}
+                </a>
+              </audio>
+              </p>
               <p>And an image upload.<br>
               <img src="#{image_upload.url}" alt="#{image_upload.original_filename}" data-base62-sha1="#{image_upload.base62_sha1}"></p>
             HTML
@@ -1689,7 +1764,7 @@ RSpec.describe CookedPostProcessor do
   describe "#remove_user_ids" do
     let(:topic) { Fabricate(:topic) }
 
-    let(:post) { Fabricate(:post, raw: <<~RAW) }
+    let(:post) { Fabricate(:post, user: user_with_auto_groups, raw: <<~RAW) }
         link to a topic: #{topic.url}?u=foo
 
         a tricky link to a topic: #{topic.url}?bob=bob;u=sam&jane=jane
@@ -1736,7 +1811,11 @@ RSpec.describe CookedPostProcessor do
 
     context "with emoji inside a quote" do
       let(:post) do
-        Fabricate(:post, raw: "time to eat some sweet \n[quote]\n:candy:\n[/quote]\n mmmm")
+        Fabricate(
+          :post,
+          user: user_with_auto_groups,
+          raw: "time to eat some sweet \n[quote]\n:candy:\n[/quote]\n mmmm",
+        )
       end
 
       it "doesn't award a badge when the emoji is in a quote" do
@@ -1746,7 +1825,9 @@ RSpec.describe CookedPostProcessor do
     end
 
     context "with emoji in the text" do
-      let(:post) { Fabricate(:post, raw: "time to eat some sweet :candy: mmmm") }
+      let(:post) do
+        Fabricate(:post, user: user_with_auto_groups, raw: "time to eat some sweet :candy: mmmm")
+      end
 
       it "awards a badge for using an emoji" do
         cpp.grant_badges
@@ -1764,7 +1845,12 @@ RSpec.describe CookedPostProcessor do
       end
 
       it "awards the badge for using an onebox" do
-        post = Fabricate(:post, raw: "onebox me:\n\nhttps://discourse.org\n")
+        post =
+          Fabricate(
+            :post,
+            user: user_with_auto_groups,
+            raw: "onebox me:\n\nhttps://discourse.org\n",
+          )
         cpp = CookedPostProcessor.new(post)
         cpp.post_process_oneboxes
         cpp.grant_badges
@@ -1772,7 +1858,8 @@ RSpec.describe CookedPostProcessor do
       end
 
       it "does not award the badge when link is not oneboxed" do
-        post = Fabricate(:post, raw: "onebox me:\n\nhttp://example.com\n")
+        post =
+          Fabricate(:post, user: user_with_auto_groups, raw: "onebox me:\n\nhttp://example.com\n")
         cpp = CookedPostProcessor.new(post)
         cpp.post_process_oneboxes
         cpp.grant_badges
@@ -1781,7 +1868,12 @@ RSpec.describe CookedPostProcessor do
 
       it "does not award the badge when the badge is disabled" do
         Badge.where(id: Badge::FirstOnebox).update_all(enabled: false)
-        post = Fabricate(:post, raw: "onebox me:\n\nhttps://discourse.org\n")
+        post =
+          Fabricate(
+            :post,
+            user: user_with_auto_groups,
+            raw: "onebox me:\n\nhttps://discourse.org\n",
+          )
         cpp = CookedPostProcessor.new(post)
         cpp.post_process_oneboxes
         cpp.grant_badges
@@ -1791,7 +1883,13 @@ RSpec.describe CookedPostProcessor do
 
     context "with reply_by_email" do
       let(:post) do
-        Fabricate(:post, raw: "This is a **reply** via email ;)", via_email: true, post_number: 2)
+        Fabricate(
+          :post,
+          user: user_with_auto_groups,
+          raw: "This is a **reply** via email ;)",
+          via_email: true,
+          post_number: 2,
+        )
       end
 
       it "awards a badge for replying via email" do
@@ -1803,7 +1901,9 @@ RSpec.describe CookedPostProcessor do
 
   describe "quote processing" do
     let(:cpp) { CookedPostProcessor.new(cp) }
-    let(:pp) { Fabricate(:post, raw: "This post is ripe for quoting!") }
+    let(:pp) do
+      Fabricate(:post, user: user_with_auto_groups, raw: "This post is ripe for quoting!")
+    end
 
     context "with an unmodified quote" do
       let(:cp) do
@@ -1842,7 +1942,7 @@ RSpec.describe CookedPostProcessor do
         [/quote]
         and this is a reply
         RAW
-      let(:cp) { Fabricate(:post, raw: external_raw) }
+      let(:cp) { Fabricate(:post, user: user_with_auto_groups, raw: external_raw) }
 
       it "it should be marked as missing" do
         cpp.post_process_quotes
@@ -1852,8 +1952,10 @@ RSpec.describe CookedPostProcessor do
   end
 
   describe "full quote on direct reply" do
-    fab!(:topic) { Fabricate(:topic) }
-    let!(:post) { Fabricate(:post, topic: topic, raw: 'this is the "first" post') }
+    fab!(:topic)
+    let!(:post) do
+      Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: 'this is the "first" post')
+    end
 
     let(:raw) { <<~RAW.strip }
       [quote="#{post.user.username}, post:#{post.post_number}, topic:#{topic.id}"]
@@ -1892,9 +1994,22 @@ RSpec.describe CookedPostProcessor do
     before { SiteSetting.remove_full_quote = true }
 
     it "works" do
-      hidden = Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post after")
-      small_action = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
-      reply = Fabricate(:post, topic: topic, raw: raw)
+      hidden =
+        Fabricate(
+          :post,
+          user: user_with_auto_groups,
+          topic: topic,
+          hidden: true,
+          raw: "this is the second post after",
+        )
+      small_action =
+        Fabricate(
+          :post,
+          user: user_with_auto_groups,
+          topic: topic,
+          post_type: Post.types[:small_action],
+        )
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw)
 
       freeze_time do
         topic.bumped_at = 1.day.ago
@@ -1915,14 +2030,14 @@ RSpec.describe CookedPostProcessor do
     end
 
     it "does nothing if there are multiple quotes" do
-      reply = Fabricate(:post, topic: topic, raw: raw3)
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw3)
       CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
       expect(reply.raw).to eq(raw3)
     end
 
     it "does not delete quote if not first paragraph" do
-      reply = Fabricate(:post, topic: topic, raw: raw2)
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw2)
       CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
       expect(reply.raw).to eq(raw2)
@@ -1931,22 +2046,33 @@ RSpec.describe CookedPostProcessor do
     it "does nothing when 'remove_full_quote' is disabled" do
       SiteSetting.remove_full_quote = false
 
-      reply = Fabricate(:post, topic: topic, raw: raw)
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw)
 
       CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(reply.raw).to eq(raw)
     end
 
     it "does not generate a blank HTML document" do
-      post = Fabricate(:post, topic: topic, raw: "<sunday><monday>")
+      post = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: "<sunday><monday>")
       cp = CookedPostProcessor.new(post)
       cp.post_process
       expect(cp.html).to eq("<p></p>")
     end
 
     it "works only on new posts" do
-      Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post after")
-      Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
+      Fabricate(
+        :post,
+        user: user_with_auto_groups,
+        topic: topic,
+        hidden: true,
+        raw: "this is the second post after",
+      )
+      Fabricate(
+        :post,
+        user: user_with_auto_groups,
+        topic: topic,
+        post_type: Post.types[:small_action],
+      )
       reply = PostCreator.create!(topic.user, topic_id: topic.id, raw: raw)
 
       stub_image_size
@@ -1965,8 +2091,8 @@ RSpec.describe CookedPostProcessor do
     end
 
     it "works with nested quotes" do
-      reply1 = Fabricate(:post, topic: topic, raw: raw)
-      reply2 = Fabricate(:post, topic: topic, raw: <<~RAW.strip)
+      reply1 = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw)
+      reply2 = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: <<~RAW.strip)
         [quote="#{reply1.user.username}, post:#{reply1.post_number}, topic:#{topic.id}"]
         #{raw}
         [/quote]
@@ -1980,8 +2106,8 @@ RSpec.describe CookedPostProcessor do
   end
 
   describe "full quote on direct reply with full name prioritization" do
-    fab!(:user) { Fabricate(:user, name: "james, john, the third") }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:user) { Fabricate(:user, name: "james, john, the third", refresh_auto_groups: true) }
+    fab!(:topic)
     let!(:post) { Fabricate(:post, user: user, topic: topic, raw: 'this is the "first" post') }
 
     let(:raw) { <<~RAW.strip }
@@ -2025,9 +2151,22 @@ RSpec.describe CookedPostProcessor do
     end
 
     it "removes direct reply with full quotes" do
-      hidden = Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post after")
-      small_action = Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
-      reply = Fabricate(:post, topic: topic, raw: raw)
+      hidden =
+        Fabricate(
+          :post,
+          user: user_with_auto_groups,
+          topic: topic,
+          hidden: true,
+          raw: "this is the second post after",
+        )
+      small_action =
+        Fabricate(
+          :post,
+          user: user_with_auto_groups,
+          topic: topic,
+          post_type: Post.types[:small_action],
+        )
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw)
 
       freeze_time do
         topic.bumped_at = 1.day.ago
@@ -2048,14 +2187,14 @@ RSpec.describe CookedPostProcessor do
     end
 
     it "does nothing if there are multiple quotes" do
-      reply = Fabricate(:post, topic: topic, raw: raw3)
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw3)
       CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
       expect(reply.raw).to eq(raw3)
     end
 
     it "does not delete quote if not first paragraph" do
-      reply = Fabricate(:post, topic: topic, raw: raw2)
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw2)
       CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(topic.ordered_posts.pluck(:id)).to eq([post.id, reply.id])
       expect(reply.raw).to eq(raw2)
@@ -2064,22 +2203,33 @@ RSpec.describe CookedPostProcessor do
     it "does nothing when 'remove_full_quote' is disabled" do
       SiteSetting.remove_full_quote = false
 
-      reply = Fabricate(:post, topic: topic, raw: raw)
+      reply = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: raw)
 
       CookedPostProcessor.new(reply).remove_full_quote_on_direct_reply
       expect(reply.raw).to eq(raw)
     end
 
     it "does not generate a blank HTML document" do
-      post = Fabricate(:post, topic: topic, raw: "<sunday><monday>")
+      post = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: "<sunday><monday>")
       cp = CookedPostProcessor.new(post)
       cp.post_process
       expect(cp.html).to eq("<p></p>")
     end
 
     it "works only on new posts" do
-      Fabricate(:post, topic: topic, hidden: true, raw: "this is the second post after")
-      Fabricate(:post, topic: topic, post_type: Post.types[:small_action])
+      Fabricate(
+        :post,
+        user: user_with_auto_groups,
+        topic: topic,
+        hidden: true,
+        raw: "this is the second post after",
+      )
+      Fabricate(
+        :post,
+        user: user_with_auto_groups,
+        topic: topic,
+        post_type: Post.types[:small_action],
+      )
       reply = PostCreator.create!(topic.user, topic_id: topic.id, raw: raw)
 
       stub_image_size
@@ -2099,7 +2249,7 @@ RSpec.describe CookedPostProcessor do
 
     it "works with nested quotes" do
       reply1 = Fabricate(:post, user: user, topic: topic, raw: raw)
-      reply2 = Fabricate(:post, topic: topic, raw: <<~RAW.strip)
+      reply2 = Fabricate(:post, user: user_with_auto_groups, topic: topic, raw: <<~RAW.strip)
         [quote="#{reply1.user.name}, post:#{reply1.post_number}, topic:#{topic.id}, username:#{reply1.user.username}"]
         #{raw}
         [/quote]
@@ -2113,8 +2263,8 @@ RSpec.describe CookedPostProcessor do
   end
 
   describe "prioritizes full name in quotes" do
-    fab!(:user) { Fabricate(:user, name: "james, john, the third") }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:user) { Fabricate(:user, name: "james, john, the third", refresh_auto_groups: true) }
+    fab!(:topic)
     let!(:post) { Fabricate(:post, user: user, topic: topic, raw: 'this is the "first" post') }
 
     before do
@@ -2136,10 +2286,10 @@ RSpec.describe CookedPostProcessor do
   end
 
   describe "#html" do
-    it "escapes attributes" do
-      post = Fabricate(:post, raw: '<img alt="<something>">')
-      expect(post.cook(post.raw)).to eq('<p><img alt="&lt;something&gt;"></p>')
-      expect(CookedPostProcessor.new(post).html).to eq('<p><img alt="&lt;something&gt;"></p>')
+    it "escapes html entities in attributes per html5" do
+      post = Fabricate(:post, user: user_with_auto_groups, raw: '<img alt="&<something>">')
+      expect(post.cook(post.raw)).to eq('<p><img alt="&amp;<something>"></p>')
+      expect(CookedPostProcessor.new(post).html).to eq('<p><img alt="&amp;<something>"></p>')
     end
   end
 end

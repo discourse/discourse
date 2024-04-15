@@ -1,13 +1,13 @@
 import Controller from "@ember/controller";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
-import I18n from "I18n";
+import { action } from "@ember/object";
+import { equal, readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
-import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { equal, readOnly } from "@ember/object/computed";
-import { getWebauthnCredential } from "discourse/lib/webauthn";
 import DiscourseURL from "discourse/lib/url";
+import { getWebauthnCredential } from "discourse/lib/webauthn";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const { TOTP, BACKUP_CODE, SECURITY_KEY } = SECOND_FACTOR_METHODS;
 export default Controller.extend({
@@ -192,7 +192,10 @@ export default Controller.extend({
         );
         ajax(response.callback_path, {
           type: response.callback_method,
-          data: { second_factor_nonce: this.nonce },
+          data: {
+            second_factor_nonce: this.nonce,
+            ...response.callback_params,
+          },
         })
           .then((callbackResponse) => {
             const redirectUrl =
@@ -204,11 +207,6 @@ export default Controller.extend({
       .catch((error) => {
         this.displayError(extractError(error));
       });
-  },
-
-  @action
-  onTokenInput(event) {
-    this.set("secondFactorToken", event.target.value);
   },
 
   @action

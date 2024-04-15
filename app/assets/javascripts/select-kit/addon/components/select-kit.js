@@ -1,21 +1,23 @@
-import { INPUT_DELAY } from "discourse-common/config/environment";
+import Component from "@ember/component";
 import EmberObject, { computed, get } from "@ember/object";
+import { guidFor } from "@ember/object/internals";
+import Mixin from "@ember/object/mixin";
+import { bind, cancel, next, schedule, throttle } from "@ember/runloop";
+import { service } from "@ember/service";
+import { isEmpty, isNone, isPresent } from "@ember/utils";
+import { createPopper } from "@popperjs/core";
+import { Promise } from "rsvp";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
+import deprecated from "discourse-common/lib/deprecated";
+import { makeArray } from "discourse-common/lib/helpers";
+import { bind as bindDecorator } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import PluginApiMixin, {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
 } from "select-kit/mixins/plugin-api";
-import { bind, cancel, next, schedule, throttle } from "@ember/runloop";
-import { isEmpty, isNone, isPresent } from "@ember/utils";
-import Component from "@ember/component";
-import I18n from "I18n";
-import Mixin from "@ember/object/mixin";
-import { Promise } from "rsvp";
 import UtilsMixin from "select-kit/mixins/utils";
-import { createPopper } from "@popperjs/core";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { guidFor } from "@ember/object/internals";
-import { makeArray } from "discourse-common/lib/helpers";
 
 export const MAIN_COLLECTION = "MAIN_COLLECTION";
 export const ERRORS_COLLECTION = "ERRORS_COLLECTION";
@@ -59,6 +61,7 @@ export default Component.extend(
     labelProperty: null,
     titleProperty: null,
     langProperty: null,
+    appEvents: service(),
 
     init() {
       this._super(...arguments);
@@ -75,7 +78,7 @@ export default Component.extend(
       this.set(
         "selectKit",
         EmberObject.create({
-          uniqueID: this.attrs?.id?.value || this.attrs?.id || guidFor(this),
+          uniqueID: this.id || guidFor(this),
           valueProperty: this.valueProperty,
           nameProperty: this.nameProperty,
           labelProperty: this.labelProperty,
@@ -114,6 +117,7 @@ export default Component.extend(
           highlightPrevious: bind(this, this._highlightPrevious),
           highlightLast: bind(this, this._highlightLast),
           highlightFirst: bind(this, this._highlightFirst),
+          deselectLast: bind(this, this._deselectLast),
           change: bind(this, this._onChangeWrapper),
           select: bind(this, this.select),
           deselect: bind(this, this.deselect),
@@ -191,6 +195,8 @@ export default Component.extend(
     didInsertElement() {
       this._super(...arguments);
 
+      this.appEvents.on("keyboard-visibility-change", this, this._updatePopper);
+
       if (this.selectKit.options.expandedOnInsert) {
         this._open();
       }
@@ -205,6 +211,12 @@ export default Component.extend(
       this._super(...arguments);
 
       this._cancelSearch();
+
+      this.appEvents.off(
+        "keyboard-visibility-change",
+        this,
+        this._updatePopper
+      );
 
       if (this.popper) {
         this.popper.destroy();
@@ -295,6 +307,7 @@ export default Component.extend(
       minimum: null,
       autoInsertNoneItem: true,
       closeOnChange: true,
+      useHeaderFilter: false,
       limitMatches: null,
       placement: isDocumentRTL() ? "bottom-end" : "bottom-start",
       verticalOffset: 3,
@@ -311,6 +324,7 @@ export default Component.extend(
       hiddenValues: null,
       disabled: false,
       expandedOnInsert: false,
+      formName: null,
     },
 
     autoFilterable: computed("content.[]", "selectKit.filter", function () {
@@ -368,9 +382,11 @@ export default Component.extend(
     },
 
     addError(error) {
-      this.errorsCollection.pushObject(error);
+      if (!this.errorsCollection.includes(error)) {
+        this.errorsCollection.pushObject(error);
+      }
 
-      this._safeAfterRender(() => this.popper && this.popper.update());
+      this._safeAfterRender(() => this._updatePopper());
     },
 
     clearErrors() {
@@ -404,7 +420,7 @@ export default Component.extend(
     },
 
     _onInput(event) {
-      this.popper && this.popper.update();
+      this._updatePopper();
 
       if (this._searchPromise) {
         cancel(this._searchPromise);
@@ -476,7 +492,7 @@ export default Component.extend(
           if (this.selectKit.options.focusAfterOnChange) {
             this._safeAfterRender(() => {
               this._focusFilter();
-              this.popper && this.popper.update();
+              this._updatePopper();
             });
           }
         }
@@ -636,13 +652,19 @@ export default Component.extend(
         "selectKit.isLoading": true,
         "selectKit.enterDisabled": true,
       });
-      this._safeAfterRender(() => this.popper && this.popper.update());
+      this._safeAfterRender(() => this._updatePopper());
 
       let content = [];
 
       return Promise.resolve(this.search(filter))
         .then((result) => {
           if (this.isDestroyed || this.isDestroying) {
+            return [];
+          }
+
+          if (this.selectKit.options.maximum === 0) {
+            this.set("selectKit.isLoading", false);
+            this.set("selectKit.hasNoContent", false);
             return [];
           }
 
@@ -696,7 +718,7 @@ export default Component.extend(
 
           this._safeAfterRender(() => {
             if (this.selectKit.isExpanded) {
-              this.popper && this.popper.update();
+              this._updatePopper();
               this._focusFilter();
             }
           });
@@ -765,6 +787,8 @@ export default Component.extend(
       } else {
         if (this.selectKit.isFilterExpanded) {
           this._focusFilter();
+          this.set("selectKit.highlighted", null);
+          return;
         } else {
           highlightedIndex = 0;
         }
@@ -788,6 +812,8 @@ export default Component.extend(
       } else {
         if (this.selectKit.isFilterExpanded) {
           this._focusFilter();
+          this.set("selectKit.highlighted", null);
+          return;
         } else {
           highlightedIndex = count - 1;
         }
@@ -797,6 +823,12 @@ export default Component.extend(
       if (highlighted) {
         this._scrollToRow(highlighted, false);
         this.set("selectKit.highlighted", highlighted);
+      }
+    },
+
+    _deselectLast() {
+      if (this.selectKit.hasSelection) {
+        this.deselectByValue(this.value[this.value.length - 1]);
       }
     },
 
@@ -851,7 +883,7 @@ export default Component.extend(
 
       this.clearErrors();
 
-      const inModal = this.element.closest("#discourse-modal");
+      const inModal = this.element.closest(".fixed-modal");
       if (inModal && this.site.mobileView) {
         const modalBody = inModal.querySelector(".modal-body");
         modalBody.style = "";
@@ -875,7 +907,7 @@ export default Component.extend(
       this.selectKit.onOpen(event);
 
       if (!this.popper) {
-        const inModal = this.element.closest("#discourse-modal");
+        const inModal = this.element.closest(".fixed-modal .modal-body");
         const anchor = document.querySelector(
           `#${this.selectKit.uniqueID}-header`
         );
@@ -883,6 +915,26 @@ export default Component.extend(
           `#${this.selectKit.uniqueID}-body`
         );
         const strategy = this._computePlacementStrategy();
+
+        let bottomOffset = 0;
+        if (this.capabilities.isIOS) {
+          bottomOffset +=
+            parseInt(
+              getComputedStyle(document.documentElement)
+                .getPropertyValue("--safe-area-inset-bottom")
+                .trim(),
+              10
+            ) || 0;
+        }
+        if (this.site.mobileView) {
+          bottomOffset +=
+            parseInt(
+              getComputedStyle(document.documentElement)
+                .getPropertyValue("--footer-nav-height")
+                .trim(),
+              10
+            ) || 0;
+        }
 
         this.popper = createPopper(anchor, popper, {
           eventsEnabled: false,
@@ -892,8 +944,8 @@ export default Component.extend(
             {
               name: "eventListeners",
               options: {
-                resize: !this.site.mobileView,
-                scroll: !this.site.mobileView,
+                resize: this.site.desktopView,
+                scroll: this.site.desktopView,
               },
             },
             {
@@ -908,6 +960,7 @@ export default Component.extend(
                       ),
                       10
                     ) || 0,
+                  bottom: bottomOffset,
                 },
               },
             },
@@ -939,7 +992,7 @@ export default Component.extend(
               fn: ({ state }) => {
                 if (inModal) {
                   const innerModal = document.querySelector(
-                    "#discourse-modal div.modal-inner-container"
+                    ".fixed-modal div.modal-inner-container"
                   );
 
                   if (innerModal) {
@@ -979,10 +1032,9 @@ export default Component.extend(
               enabled: !!(inModal && this.site.mobileView),
               phase: "afterWrite",
               fn: ({ state }) => {
-                const modalBody = inModal.querySelector(".modal-body");
-                modalBody.style = "";
-                modalBody.style.height =
-                  modalBody.clientHeight + state.rects.popper.height + "px";
+                inModal.style = "";
+                inModal.style.height =
+                  inModal.clientHeight + state.rects.popper.height + "px";
               },
             },
           ],
@@ -995,12 +1047,16 @@ export default Component.extend(
           this.selectKit.options.filterable || this.selectKit.options.allowAny,
       });
 
+      if (this.selectKit.options.useHeaderFilter) {
+        this._focusFilterInput();
+      }
+
       this.triggerSearch();
 
       this._safeAfterRender(() => {
         this._focusFilter();
         this._scrollToCurrent();
-        this.popper && this.popper.update();
+        this._updatePopper();
       });
     },
 
@@ -1035,19 +1091,33 @@ export default Component.extend(
         return;
       }
 
+      // setting focus as early as possible is best for iOS
+      // because render/promise delays may cause keyboard not to show
+      if (!forceHeader) {
+        this._focusFilterInput();
+      }
+
       this._safeAfterRender(() => {
         const input = this.getFilterInput();
         if (!forceHeader && input) {
-          input.focus({ preventScroll: true });
-
-          if (typeof input.selectionStart === "number") {
-            input.selectionStart = input.selectionEnd = input.value.length;
-          }
+          this._focusFilterInput();
         } else if (!this.selectKit.options.preventHeaderFocus) {
           const headerContainer = this.getHeader();
           headerContainer && headerContainer.focus({ preventScroll: true });
         }
       });
+    },
+
+    _focusFilterInput() {
+      const input = this.getFilterInput();
+
+      if (input && document.activeElement !== input) {
+        input.focus({ preventScroll: true });
+
+        if (typeof input.selectionStart === "number") {
+          input.selectionStart = input.selectionEnd = input.value.length;
+        }
+      }
     },
 
     getFilterInput() {
@@ -1062,6 +1132,11 @@ export default Component.extend(
       this._deprecateValueAttribute();
       this._deprecateMutations();
       this._handleDeprecatedArgs();
+    },
+
+    @bindDecorator
+    _updatePopper() {
+      this.popper?.update?.();
     },
 
     _computePlacementStrategy() {
@@ -1101,16 +1176,15 @@ export default Component.extend(
     },
 
     _deprecateMutations() {
-      this.actions = this.actions || {};
-      this.attrs = this.attrs || {};
+      this.actions ??= {};
 
-      if (!this.attrs.onChange && !this.actions.onChange) {
+      if (!this.onChange && !this.actions.onChange) {
         this._deprecated(
           "Implicit mutation has been deprecated, please use `onChange` handler"
         );
 
         this.actions.onChange =
-          this.attrs.onSelect ||
+          this.onSelect ||
           this.actions.onSelect ||
           ((value) => this.set("value", value));
       }
@@ -1135,6 +1209,7 @@ export default Component.extend(
         minimum: "options.minimum",
         i18nPostfix: "options.i18nPostfix",
         i18nPrefix: "options.i18nPrefix",
+        btnCustomClasses: "options.btnCustomClasses",
         castInteger: "options.castInteger",
       };
 

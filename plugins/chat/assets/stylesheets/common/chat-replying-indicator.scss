@@ -5,6 +5,7 @@
 
   &-container {
     display: flex;
+    height: 16px;
   }
 
   &:before {
@@ -23,7 +24,9 @@
 
     .chat-replying-indicator__dot {
       display: inline-block;
-      animation: chat-replying-indicator__wave 1.8s linear infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: chat-replying-indicator__wave 1.8s linear infinite;
+      }
       &:nth-child(2) {
         animation-delay: -1.6s;
       }

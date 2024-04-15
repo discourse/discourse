@@ -1,26 +1,19 @@
-import { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
-import deprecated from "discourse-common/lib/deprecated";
+import { service } from "@ember/service";
+import $ from "jquery";
+import { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   @on("init")
   _init() {
-    if (!this.get("site.mobileView")) {
+    if (this.site.desktopView) {
       let classes = this.desktopClass;
       if (classes) {
         classes = classes.split(" ");
         this.set("classNames", classes);
       }
-    }
-    if (this.currentPath) {
-      deprecated("{{mobile-nav}} no longer requires the currentPath property", {
-        since: "2.7.0.beta4",
-        dropFrom: "2.9.0.beta1",
-        id: "discourse.mobile-nav.currentPath",
-      });
     }
   },
 
@@ -55,6 +48,7 @@ export default Component.extend({
   },
 
   willDestroyElement() {
+    this._super(...arguments);
     this.router.off("routeDidChange", this, this.currentRouteChanged);
   },
 

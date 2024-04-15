@@ -3,9 +3,9 @@
     <div class="editor-information">
       <DButton
         @title="go_back"
-        @action={{action "goBack"}}
+        @action={{this.goBack}}
         @icon="chevron-left"
-        @class="btn-small editor-back-button"
+        class="btn-small editor-back-button"
       />
 
       <span class="editor-theme-name-wrapper">
@@ -49,10 +49,10 @@
 
       <div class="buttons">
         <DButton
-          @action={{action "save"}}
+          @action={{this.save}}
           @disabled={{this.saveDisabled}}
-          @class="btn-primary"
           @translatedLabel={{this.saveButtonText}}
+          class="btn-primary"
         />
       </div>
     </div>

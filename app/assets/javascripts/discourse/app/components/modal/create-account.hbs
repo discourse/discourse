@@ -1,0 +1,332 @@
+{{! template-lint-disable no-duplicate-id }}
+<DModal
+  class="create-account -large"
+  {{on "keydown" this.actionOnEnter}}
+  {{on "click" this.selectKitFocus}}
+  @closeModal={{@closeModal}}
+  @bodyClass={{this.modalBodyClasses}}
+  @flash={{this.flash}}
+  @flashType="error"
+  aria-labelledby="create-account-title"
+>
+  <:body>
+    <PluginOutlet
+      @name="create-account-before-modal-body"
+      @connectorTagName="div"
+    />
+
+    <div
+      class={{concat-class
+        (if this.site.desktopView "login-left-side")
+        this.model.authOptions.auth_provider
+      }}
+    >
+      <div class="login-welcome-header" id="create-account-title">
+        <h1 class="login-title">{{i18n "create_account.header_title"}}</h1>
+        <img src={{this.wavingHandURL}} alt="" class="waving-hand" />
+        <p class="login-subheader">{{i18n "create_account.subheader_title"}}</p>
+        <PluginOutlet
+          @name="create-account-header-bottom"
+          @outletArgs={{hash showLogin=(route-action "showLogin")}}
+        />
+      </div>
+
+      {{#if this.showCreateForm}}
+        <form id="login-form">
+          {{#if this.associateHtml}}
+            <div class="input-group create-account-associate-link">
+              <span>{{html-safe this.associateHtml}}</span>
+            </div>
+          {{/if}}
+          <div class="input-group create-account-email">
+            <Input
+              {{on "focusout" this.checkEmailAvailability}}
+              @type="email"
+              @value={{this.model.accountEmail}}
+              disabled={{this.emailDisabled}}
+              autofocus="autofocus"
+              aria-describedby="account-email-validation account-email-validation-more-info"
+              aria-invalid={{this.emailValidation.failed}}
+              name="email"
+              id="new-account-email"
+              class={{value-entered this.model.accountEmail}}
+            />
+            <label class="alt-placeholder" for="new-account-email">
+              {{i18n "user.email.title"}}
+              {{~#if this.userFields~}}
+                <span class="required">*</span>
+              {{/if}}
+            </label>
+            <InputTip
+              @validation={{this.emailValidation}}
+              id="account-email-validation"
+            />
+            <span class="more-info" id="account-email-validation-more-info">
+              {{i18n "user.email.instructions"}}
+            </span>
+          </div>
+
+          <div class="input-group create-account__username">
+            <Input
+              @value={{this.model.accountUsername}}
+              disabled={{this.usernameDisabled}}
+              maxlength={{this.maxUsernameLength}}
+              aria-describedby="username-validation username-validation-more-info"
+              aria-invalid={{this.usernameValidation.failed}}
+              autocomplete="off"
+              name="username"
+              id="new-account-username"
+              class={{value-entered this.model.accountUsername}}
+            />
+            <label class="alt-placeholder" for="new-account-username">
+              {{i18n "user.username.title"}}
+              {{~#if this.userFields~}}
+                <span class="required">*</span>
+              {{/if}}
+            </label>
+
+            <InputTip
+              @validation={{this.usernameValidation}}
+              id="username-validation"
+            />
+            <span class="more-info" id="username-validation-more-info">
+              {{i18n "user.username.instructions"}}
+            </span>
+          </div>
+
+          <div class="input-group create-account__fullname">
+            {{#if this.fullnameRequired}}
+              <TextField
+                @disabled={{this.nameDisabled}}
+                @value={{this.model.accountName}}
+                @id="new-account-name"
+                aria-describedby="fullname-validation fullname-validation-more-info"
+                aria-invalid={{this.nameValidation.failed}}
+                class={{value-entered this.model.accountName}}
+              />
+              <label class="alt-placeholder" for="new-account-name">
+                {{i18n "user.name.title"}}
+                {{#if this.siteSettings.full_name_required}}
+                  {{~#if this.userFields~}}
+                    <span class="required">*</span>
+                  {{/if}}
+                {{/if}}
+              </label>
+
+              <InputTip
+                @validation={{this.nameValidation}}
+                id="fullname-validation"
+              />
+              <span class="more-info" id="fullname-validation-more-info">
+                {{this.nameInstructions}}
+              </span>
+            {{/if}}
+          </div>
+
+          <PluginOutlet
+            @name="create-account-before-password"
+            @outletArgs={{hash
+              accountName=this.model.accountName
+              accountUsername=this.model.accountUsername
+              accountPassword=this.accountPassword
+              userFields=this.userFields
+              authOptions=this.model.authOptions
+            }}
+          />
+
+          <div class="input-group create-account__password">
+            {{#if this.passwordRequired}}
+              <PasswordField
+                @value={{this.accountPassword}}
+                @capsLockOn={{this.capsLockOn}}
+                type={{if this.maskPassword "password" "text"}}
+                autocomplete="current-password"
+                aria-describedby="password-validation password-validation-more-info"
+                aria-invalid={{this.passwordValidation.failed}}
+                id="new-account-password"
+                class={{value-entered this.accountPassword}}
+              />
+              <label class="alt-placeholder" for="new-account-password">
+                {{i18n "user.password.title"}}
+                {{~#if this.userFields~}}
+                  <span class="required">*</span>
+                {{/if}}
+              </label>
+
+              <div class="create-account__password-info">
+                <div class="create-account__password-tip-validation">
+                  <InputTip
+                    @validation={{this.passwordValidation}}
+                    id="password-validation"
+                  />
+                  <span class="more-info" id="password-validation-more-info">
+                    {{this.passwordInstructions}}
+                  </span>
+                  <div
+                    class={{concat-class
+                      "caps-lock-warning"
+                      (unless this.capsLockOn "hidden")
+                    }}
+                  >
+                    {{d-icon "exclamation-triangle"}}
+                    {{i18n "login.caps_lock_warning"}}
+                  </div>
+                </div>
+                <TogglePasswordMask
+                  @maskPassword={{this.maskPassword}}
+                  @togglePasswordMask={{this.togglePasswordMask}}
+                />
+              </div>
+            {{/if}}
+
+            <div class="password-confirmation">
+              <label for="new-account-password-confirmation">
+                {{i18n "user.password_confirmation.title"}}
+              </label>
+              <HoneypotInput
+                @id="new-account-confirmation"
+                @autocomplete="new-password"
+                @value={{this.accountHoneypot}}
+              />
+              <Input
+                @value={{this.accountChallenge}}
+                id="new-account-challenge"
+              />
+            </div>
+          </div>
+
+          {{#if this.requireInviteCode}}
+            <div class="input-group create-account__invite-code">
+              <Input
+                @value={{this.inviteCode}}
+                id="inviteCode"
+                class={{value-entered this.inviteCode}}
+              />
+              <label class="alt-placeholder" for="invite-code">
+                {{i18n "user.invite_code.title"}}
+              </label>
+              <span class="more-info">
+                {{i18n "user.invite_code.instructions"}}
+              </span>
+            </div>
+          {{/if}}
+
+          <PluginOutlet
+            @name="create-account-after-password"
+            @outletArgs={{hash
+              accountName=this.model.accountName
+              accountUsername=this.model.accountUsername
+              accountPassword=this.accountPassword
+              userFields=this.userFields
+            }}
+          />
+
+          {{#if this.userFields}}
+            <div class="user-fields">
+              {{#each this.userFields as |f|}}
+                <div class="input-group">
+                  <UserField
+                    @field={{f.field}}
+                    @value={{f.value}}
+                    @validation={{f.validation}}
+                    class={{value-entered f.value}}
+                  />
+                </div>
+              {{/each}}
+            </div>
+          {{/if}}
+
+          <PluginOutlet
+            @name="create-account-after-user-fields"
+            @outletArgs={{hash
+              accountName=this.model.accountName
+              accountUsername=this.model.accountUsername
+              accountPassword=this.accountPassword
+              userFields=this.userFields
+            }}
+          />
+        </form>
+
+        {{#if this.site.desktopView}}
+          <div class="d-modal__footer">
+            <div class="disclaimer">
+              {{html-safe this.disclaimerHtml}}
+            </div>
+            <div class="d-modal__footer-buttons">
+              <DButton
+                @action={{this.createAccount}}
+                @disabled={{this.submitDisabled}}
+                @label="create_account.title"
+                @isLoading={{this.formSubmitted}}
+                class="btn-large btn-primary"
+              />
+
+              {{#unless this.hasAuthOptions}}
+                <DButton
+                  @action={{route-action "showLogin"}}
+                  @disabled={{this.formSubmitted}}
+                  @label="log_in"
+                  id="login-link"
+                  class="btn-large btn-flat"
+                />
+              {{/unless}}
+            </div>
+          </div>
+
+          <PluginOutlet
+            @name="create-account-after-modal-footer"
+            @connectorTagName="div"
+          />
+        {{/if}}
+      {{/if}}
+
+      {{#if this.model.skipConfirmation}}
+        {{loading-spinner size="large"}}
+      {{/if}}
+    </div>
+
+    {{#if this.hasAtLeastOneLoginButton}}
+      {{#if this.site.mobileView}}
+        <div class="login-or-separator"><span>
+            {{i18n "login.or"}}</span></div>{{/if}}
+      <div class="login-right-side">
+        <LoginButtons
+          @externalLogin={{this.externalLogin}}
+          @context="create-account"
+        />
+      </div>
+    {{/if}}
+  </:body>
+
+  <:footer>
+    {{#if (and this.showCreateForm this.site.mobileView)}}
+      <div class="disclaimer">
+        {{html-safe this.disclaimerHtml}}
+      </div>
+      <div class="d-modal__footer-buttons">
+        <DButton
+          @action={{this.createAccount}}
+          @disabled={{this.submitDisabled}}
+          @label="create_account.title"
+          @isLoading={{this.formSubmitted}}
+          class="btn-large btn-primary"
+        />
+
+        {{#unless this.hasAuthOptions}}
+          <DButton
+            @action={{route-action "showLogin"}}
+            @disabled={{this.formSubmitted}}
+            @label="log_in"
+            id="login-link"
+            class="btn-large btn-flat"
+          />
+        {{/unless}}
+      </div>
+
+      <PluginOutlet
+        @name="create-account-after-modal-footer"
+        @connectorTagName="div"
+      />
+    {{/if}}
+  </:footer>
+</DModal>

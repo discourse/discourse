@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe SidebarSectionsController do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:user)
+  fab!(:admin)
+  fab!(:moderator)
 
   describe "#index" do
     fab!(:sidebar_section) { Fabricate(:sidebar_section, title: "private section", user: user) }
@@ -85,6 +85,24 @@ RSpec.describe SidebarSectionsController do
       expect(sidebar_section.sidebar_urls.fourth.name).to eq("My preferences")
       expect(sidebar_section.sidebar_urls.fourth.value).to eq("/my/preferences")
       expect(sidebar_section.sidebar_urls.fourth.external).to be false
+    end
+
+    it "validates max number of links" do
+      SiteSetting.max_sidebar_section_links = 5
+
+      sign_in(user)
+
+      links =
+        6.times.map do
+          { icon: "external-link-alt", name: "My preferences", value: "/my/preferences" }
+        end
+
+      post "/sidebar_sections.json", params: { title: "custom section", links: links }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        ["Maximum 5 records are allowed. Got 6 records instead."],
+      )
     end
 
     it "does not allow regular user to create public section" do
@@ -236,6 +254,28 @@ RSpec.describe SidebarSectionsController do
       )
     end
 
+    it "validates limit of links" do
+      SiteSetting.max_sidebar_section_links = 5
+
+      sign_in(user)
+
+      links =
+        6.times.map do
+          { icon: "external-link-alt", name: "My preferences", value: "/my/preferences" }
+        end
+
+      put "/sidebar_sections/#{sidebar_section.id}.json",
+          params: {
+            title: "custom section",
+            links: links,
+          }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to eq(
+        ["Maximum 5 records are allowed. Got 6 records instead."],
+      )
+    end
+
     it "doesn't allow to edit other's sections" do
       sidebar_section_2 = Fabricate(:sidebar_section)
       sidebar_url_3 = Fabricate(:sidebar_url, name: "other_tags", value: "/tags")
@@ -303,12 +343,12 @@ RSpec.describe SidebarSectionsController do
     it "allows admin to edit community section" do
       sign_in(admin)
 
-      everything_link = community_section.sidebar_urls.find_by(name: "Everything")
+      topics_link = community_section.sidebar_urls.find_by(name: "Topics")
       my_posts_link = community_section.sidebar_urls.find_by(name: "My Posts")
 
       community_section
         .sidebar_section_links
-        .where.not(linkable_id: [everything_link.id, my_posts_link.id])
+        .where.not(linkable_id: [topics_link.id, my_posts_link.id])
         .destroy_all
 
       put "/sidebar_sections/#{community_section.id}.json",
@@ -316,12 +356,7 @@ RSpec.describe SidebarSectionsController do
             title: "community section edited",
             links: [
               { icon: "link", id: my_posts_link.id, name: "my posts edited", value: "/my_posts" },
-              {
-                icon: "link",
-                id: everything_link.id,
-                name: "everything edited",
-                value: "/everything",
-              },
+              { icon: "link", id: topics_link.id, name: "topics edited", value: "/new" },
             ],
           }
 
@@ -330,74 +365,8 @@ RSpec.describe SidebarSectionsController do
       expect(community_section.reload.title).to eq("community section edited")
       expect(community_section.sidebar_urls[0].name).to eq("my posts edited")
       expect(community_section.sidebar_urls[0].value).to eq("/my_posts")
-      expect(community_section.sidebar_urls[1].name).to eq("everything edited")
-      expect(community_section.sidebar_urls[1].value).to eq("/everything")
-    end
-  end
-
-  describe "#reorder" do
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
-    fab!(:sidebar_url_1) { Fabricate(:sidebar_url, name: "tags", value: "/tags") }
-    fab!(:sidebar_url_2) { Fabricate(:sidebar_url, name: "categories", value: "/categories") }
-    fab!(:sidebar_url_3) { Fabricate(:sidebar_url, name: "topic", value: "/t/1") }
-
-    fab!(:section_link_1) do
-      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
-    end
-
-    fab!(:section_link_2) do
-      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
-    end
-
-    fab!(:section_link_3) do
-      Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_3)
-    end
-
-    it "sorts links" do
-      expect(sidebar_section.sidebar_urls.pluck(:id)).to eq(
-        [sidebar_url_1.id, sidebar_url_2.id, sidebar_url_3.id],
-      )
-
-      sign_in(user)
-
-      post "/sidebar_sections/reorder.json",
-           params: {
-             sidebar_section_id: sidebar_section.id,
-             links_order: [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
-           }
-
-      expect(response.status).to eq(200)
-
-      expect(sidebar_section.reload.sidebar_urls.pluck(:id)).to eq(
-        [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
-      )
-    end
-
-    it "returns 403 when a user tries to reorder a section that doesn't belong to them" do
-      sign_in(user2)
-
-      post "/sidebar_sections/reorder.json",
-           params: {
-             sidebar_section_id: sidebar_section.id,
-             links_order: [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
-           }
-
-      expect(response.status).to eq(403)
-
-      expect(sidebar_section.reload.sidebar_urls.pluck(:id)).to eq(
-        [sidebar_url_1.id, sidebar_url_2.id, sidebar_url_3.id],
-      )
-    end
-
-    it "returns 403 for an non user" do
-      post "/sidebar_sections/reorder.json",
-           params: {
-             sidebar_section_id: sidebar_section.id,
-             links_order: [sidebar_url_2.id, sidebar_url_3.id, sidebar_url_1.id],
-           }
-
-      expect(response.status).to eql(403)
+      expect(community_section.sidebar_urls[1].name).to eq("topics edited")
+      expect(community_section.sidebar_urls[1].value).to eq("/new")
     end
   end
 
@@ -461,7 +430,6 @@ RSpec.describe SidebarSectionsController do
     let(:community_section) do
       SidebarSection.find_by(section_type: SidebarSection.section_types[:community])
     end
-    let(:everything_link) { community_section.sidebar_section_links.first }
 
     it "doesn't allow user to reset community section" do
       sign_in(user)

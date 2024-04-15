@@ -39,14 +39,14 @@ RSpec.describe Imap::Sync do
 
   describe "no previous sync" do
     let(:from) { "john@free.fr" }
-    let(:subject) { "Testing email post" }
+    let(:email_subject) { "Testing email post" }
     let(:message_id) { "#{SecureRandom.hex}@example.com" }
 
     let(:email) do
       EmailFabricator(
         from: from,
         to: group.email_username,
-        subject: subject,
+        subject: email_subject,
         message_id: message_id,
       )
     end
@@ -80,7 +80,7 @@ RSpec.describe Imap::Sync do
       expect(group.imap_last_uid).to eq(100)
 
       topic = Topic.last
-      expect(topic.title).to eq(subject)
+      expect(topic.title).to eq(email_subject)
       expect(topic.user.email).to eq(from)
       expect(topic.tags.pluck(:name)).to contain_exactly("seen", "important", "test-label")
 
@@ -110,7 +110,7 @@ RSpec.describe Imap::Sync do
         expect(group.imap_last_uid).to eq(100)
 
         topic = Topic.last
-        expect(topic.title).to eq(subject)
+        expect(topic.title).to eq(email_subject)
         expect(topic.user.email).to eq(from)
         expect(topic.tags).to eq([])
       end
@@ -161,7 +161,7 @@ RSpec.describe Imap::Sync do
   end
 
   describe "previous sync" do
-    let(:subject) { "Testing email post" }
+    let(:email_subject) { "Testing email post" }
 
     let(:first_from) { "john@free.fr" }
     let(:first_message_id) { SecureRandom.hex }
@@ -191,7 +191,7 @@ RSpec.describe Imap::Sync do
                   from: first_from,
                   to: group.email_username,
                   cc: second_from,
-                  subject: subject,
+                  subject: email_subject,
                   body: first_body,
                 ),
             },
@@ -203,7 +203,7 @@ RSpec.describe Imap::Sync do
             }.by(1).and change { IncomingEmail.count }.by(1)
 
       topic = Topic.last
-      expect(topic.title).to eq(subject)
+      expect(topic.title).to eq(email_subject)
       expect(GroupArchivedMessage.where(topic_id: topic.id).exists?).to eq(false)
 
       post = Post.where(post_type: Post.types[:regular]).last
@@ -233,7 +233,7 @@ RSpec.describe Imap::Sync do
                   in_reply_to: first_message_id,
                   from: second_from,
                   to: group.email_username,
-                  subject: "Re: #{subject}",
+                  subject: "Re: #{email_subject}",
                   body: second_body,
                 ),
             },
@@ -267,7 +267,7 @@ RSpec.describe Imap::Sync do
             }.and not_change { IncomingEmail.count }
 
       topic = Topic.last
-      expect(topic.title).to eq(subject)
+      expect(topic.title).to eq(email_subject)
       expect(GroupArchivedMessage.where(topic_id: topic.id).exists?).to eq(true)
 
       expect(Topic.last.posts.where(post_type: Post.types[:regular]).count).to eq(2)
@@ -294,7 +294,7 @@ RSpec.describe Imap::Sync do
                     from: first_from,
                     to: group.email_username,
                     cc: second_from,
-                    subject: subject,
+                    subject: email_subject,
                     body: first_body,
                   ),
               },
@@ -389,7 +389,7 @@ RSpec.describe Imap::Sync do
                     from: first_from,
                     to: group.email_username,
                     cc: second_from,
-                    subject: subject,
+                    subject: email_subject,
                     body: first_body,
                   ),
               },
@@ -446,7 +446,7 @@ RSpec.describe Imap::Sync do
                     from: first_from,
                     to: group.email_username,
                     cc: second_from,
-                    subject: subject,
+                    subject: email_subject,
                     body: first_body,
                   ),
               },
@@ -494,7 +494,7 @@ RSpec.describe Imap::Sync do
   end
 
   describe "invalidated previous sync" do
-    let(:subject) { "Testing email post" }
+    let(:email_subject) { "Testing email post" }
 
     let(:first_from) { "john@free.fr" }
     let(:first_message_id) { SecureRandom.hex }
@@ -526,7 +526,7 @@ RSpec.describe Imap::Sync do
                   from: first_from,
                   to: group.email_username,
                   cc: second_from,
-                  subject: subject,
+                  subject: email_subject,
                   body: first_body,
                 ),
             },
@@ -540,7 +540,7 @@ RSpec.describe Imap::Sync do
                   in_reply_to: first_message_id,
                   from: second_from,
                   to: group.email_username,
-                  subject: "Re: #{subject}",
+                  subject: "Re: #{email_subject}",
                   body: second_body,
                 ),
             },
@@ -571,7 +571,7 @@ RSpec.describe Imap::Sync do
                   from: first_from,
                   to: group.email_username,
                   cc: second_from,
-                  subject: subject,
+                  subject: email_subject,
                   body: first_body,
                 ),
             },
@@ -585,7 +585,7 @@ RSpec.describe Imap::Sync do
                   in_reply_to: first_message_id,
                   from: second_from,
                   to: group.email_username,
-                  subject: "Re: #{subject}",
+                  subject: "Re: #{email_subject}",
                   body: second_body,
                 ),
             },

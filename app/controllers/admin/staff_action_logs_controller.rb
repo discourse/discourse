@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Admin::StaffActionLogsController < Admin::StaffController
+  INDEX_LIMIT = 200
+
   def index
     filters = params.slice(*UserHistory.staff_filters + %i[page limit])
 
     page = (params[:page] || 0).to_i
-    page_size = (params[:limit] || 200).to_i.clamp(1, 200)
+    page_size = fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT)
 
     staff_action_logs = UserHistory.staff_action_records(current_user, filters)
     count = staff_action_logs.count

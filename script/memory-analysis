@@ -5,7 +5,6 @@ require 'fileutils'
 require 'pathname'
 require 'tmpdir'
 require 'json'
-require 'set'
 
 def usage
   STDERR.puts "Usage: memory-analysis [PID|DUMPFILE]"

@@ -1,65 +1,74 @@
 # frozen_string_literal: true
 
-module EmberCli
+class EmberCli < ActiveSupport::CurrentAttributes
+  # Cache which persists for the duration of a request
+  attribute :request_cache
+
+  def self.dist_dir
+    "#{Rails.root}/app/assets/javascripts/discourse/dist"
+  end
+
   def self.assets
-    @assets ||=
-      begin
-        assets = %w[
-          discourse.js
-          admin.js
-          wizard.js
-          ember_jquery.js
-          markdown-it-bundle.js
-          start-discourse.js
-          vendor.js
-        ]
-        assets +=
-          Dir.glob("app/assets/javascripts/discourse/scripts/*.js").map { |f| File.basename(f) }
-
-        Discourse
-          .find_plugin_js_assets(include_disabled: true)
-          .each do |file|
-            next if file.ends_with?("_extra") # these are still handled by sprockets
-            assets << "#{file}.js"
-          end
-
-        assets
-      end
+    cache[:assets] ||= Dir.glob("**/*.{js,map,txt,css}", base: "#{dist_dir}/assets")
   end
 
   def self.script_chunks
-    return @@chunk_infos if defined?(@@chunk_infos)
+    return cache[:script_chunks] if cache[:script_chunks]
 
-    raw_chunk_infos =
-      JSON.parse(
-        File.read("#{Rails.configuration.root}/app/assets/javascripts/discourse/dist/chunks.json"),
-      )
+    chunk_infos = JSON.parse(File.read("#{dist_dir}/assets.json"))
 
-    chunk_infos =
-      raw_chunk_infos["scripts"]
-        .map do |info|
-          logical_name = info["afterFile"][%r{\Aassets/(.*)\.js\z}, 1]
-          chunks = info["scriptChunks"].map { |filename| filename[%r{\Aassets/(.*)\.js\z}, 1] }
-          [logical_name, chunks]
-        end
-        .to_h
+    chunk_infos.transform_keys! { |key| key.delete_prefix("assets/").delete_suffix(".js") }
 
-    @@chunk_infos = chunk_infos if Rails.env.production?
-    chunk_infos
+    chunk_infos.transform_values! do |value|
+      value["assets"].map { |chunk| chunk.delete_prefix("assets/").delete_suffix(".js") }
+    end
+
+    # Special case - vendor.js is fingerprinted by Embroider in production, but not run through Webpack
+    if !assets.include?("vendor.js") &&
+         fingerprinted = assets.find { |a| a.match?(/^vendor\..*\.js$/) }
+      chunk_infos["vendor"] = [fingerprinted.delete_suffix(".js")]
+    end
+
+    cache[:script_chunks] = chunk_infos
   rescue Errno::ENOENT
     {}
   end
 
   def self.is_ember_cli_asset?(name)
-    assets.include?(name) || name.start_with?("chunk.")
+    assets.include?(name) || script_chunks.values.flatten.include?(name.delete_suffix(".js"))
   end
 
   def self.ember_version
     @version ||=
       begin
-        ember_source_package_raw =
-          File.read("#{Rails.root}/app/assets/javascripts/node_modules/ember-source/package.json")
+        ember_source_package_raw = File.read("#{Rails.root}/node_modules/ember-source/package.json")
         JSON.parse(ember_source_package_raw)["version"]
       end
+  end
+
+  def self.workbox_dir_name
+    return @workbox_base_dir if defined?(@workbox_base_dir)
+
+    @workbox_base_dir =
+      if (full_path = Dir.glob("app/assets/javascripts/discourse/dist/assets/workbox-*")[0])
+        File.basename(full_path)
+      end
+  end
+
+  def self.has_tests?
+    File.exist?("#{dist_dir}/tests/index.html")
+  end
+
+  def self.cache
+    if Rails.env.development?
+      self.request_cache ||= {}
+    else
+      @production_cache ||= {}
+    end
+  end
+
+  def self.clear_cache!
+    self.request_cache = nil
+    @production_cache = nil
   end
 end

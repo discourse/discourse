@@ -16,7 +16,7 @@ RSpec.describe "S3Inventory" do
 
     client.stub_responses(
       :list_objects,
-      ->(context) {
+      ->(context) do
         expect(context.params[:prefix]).to eq(
           "#{S3Inventory::INVENTORY_PREFIX}/#{S3Inventory::INVENTORY_VERSION}/bucket/original/hive",
         )
@@ -48,7 +48,7 @@ RSpec.describe "S3Inventory" do
           ],
           next_marker: "eyJNYXJrZXIiOiBudWxsLCAiYm90b190cnVuY2F0ZV9hbW91bnQiOiAyfQ==",
         }
-      },
+      end,
     )
 
     inventory.stubs(:cleanup!)

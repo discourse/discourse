@@ -3,14 +3,11 @@
 class StaticController < ApplicationController
   skip_before_action :check_xhr, :redirect_to_login_if_required
   skip_before_action :verify_authenticity_token,
-                     only: %i[brotli_asset cdn_asset enter favicon service_worker_asset]
-  skip_before_action :preload_json,
-                     only: %i[brotli_asset cdn_asset enter favicon service_worker_asset]
-  skip_before_action :handle_theme,
-                     only: %i[brotli_asset cdn_asset enter favicon service_worker_asset]
+                     only: %i[cdn_asset enter favicon service_worker_asset]
+  skip_before_action :preload_json, only: %i[cdn_asset enter favicon service_worker_asset]
+  skip_before_action :handle_theme, only: %i[cdn_asset enter favicon service_worker_asset]
 
-  before_action :apply_cdn_headers,
-                only: %i[brotli_asset cdn_asset enter favicon service_worker_asset]
+  before_action :apply_cdn_headers, only: %i[cdn_asset enter favicon service_worker_asset]
 
   PAGES_WITH_EMAIL_PARAM = %w[login password_reset signup]
   MODAL_PAGES = %w[password_reset signup]
@@ -187,16 +184,6 @@ class StaticController < ApplicationController
         response.headers["Last-Modified"] = Time.new(2000, 01, 01).httpdate
         render body: data, content_type: "image/png"
       end
-    end
-  end
-
-  def brotli_asset
-    is_asset_path
-
-    if params[:path].end_with?(".map")
-      serve_asset
-    else
-      serve_asset(".br") { response.headers["Content-Encoding"] = "br" }
     end
   end
 

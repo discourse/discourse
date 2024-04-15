@@ -25,7 +25,7 @@ class AnonymousShadowCreator
   def get
     return unless user
     return unless SiteSetting.allow_anonymous_posting
-    return if user.trust_level < SiteSetting.anonymous_posting_min_trust_level
+    return if !user.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map)
     return if SiteSetting.must_approve_users? && !user.approved?
 
     shadow = user.shadow_user

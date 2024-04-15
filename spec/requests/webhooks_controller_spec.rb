@@ -210,6 +210,52 @@ RSpec.describe WebhooksController do
     end
   end
 
+  describe "#mailpace" do
+    it "works" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailpace.json",
+           params: {
+             event: "email.bounced",
+             payload: {
+               status: "bounced",
+               to: email,
+               message_id: "<#{message_id}>",
+             },
+           }
+
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq(nil) # mailpace doesn't give us this
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.hard_bounce_score)
+    end
+
+    it "soft bounces" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id, to_address: email)
+
+      post "/webhooks/mailpace.json",
+           params: {
+             event: "email.deferred",
+             payload: {
+               status: "deferred",
+               to: email,
+               message_id: "<#{message_id}>",
+             },
+           }
+
+      expect(response.status).to eq(200)
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.bounce_error_code).to eq(nil) # mailpace doesn't give us this
+      expect(email_log.user.user_stat.bounce_score).to eq(SiteSetting.soft_bounce_score)
+    end
+  end
+
   describe "#mandrill" do
     let(:payload) do
       "mandrill_events=%5B%7B%22event%22%3A%22hard_bounce%22%2C%22msg%22%3A%7B%22email%22%3A%22em%40il.com%22%2C%22diag%22%3A%225.1.1%22%2C%22bounce_description%22%3A%22smtp%3B+550-5.1.1+The+email+account+that+you+tried+to+reach+does+not+exist.%22%2C%22metadata%22%3A%7B%22message_id%22%3A%2212345%40il.com%22%7D%7D%7D%5D"

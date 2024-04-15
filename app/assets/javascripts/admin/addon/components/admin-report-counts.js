@@ -1,6 +1,6 @@
-import { classNameBindings, tagName } from "@ember-decorators/component";
-import { match } from "@ember/object/computed";
 import Component from "@ember/component";
+import { match } from "@ember/object/computed";
+import { classNameBindings, tagName } from "@ember-decorators/component";
 
 @tagName("tr")
 @classNameBindings("reverseColors")

@@ -1,12 +1,12 @@
-import { tagName } from "@ember-decorators/component";
-import { inject as service } from "@ember/service";
 import Component from "@ember/component";
-import I18n from "I18n";
-import Permalink from "admin/models/permalink";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import { fmt } from "discourse/lib/computed";
-import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
+import { tagName } from "@ember-decorators/component";
+import { fmt } from "discourse/lib/computed";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import Permalink from "admin/models/permalink";
 
 @tagName("")
 export default class PermalinkForm extends Component {
@@ -28,6 +28,7 @@ export default class PermalinkForm extends Component {
       { id: "category_id", name: I18n.t("admin.permalink.category_id") },
       { id: "tag_name", name: I18n.t("admin.permalink.tag_name") },
       { id: "external_url", name: I18n.t("admin.permalink.external_url") },
+      { id: "user_id", name: I18n.t("admin.permalink.user_id") },
     ];
   }
 

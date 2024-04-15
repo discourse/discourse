@@ -1,8 +1,11 @@
-import Service, { inject as service } from "@ember/service";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
+import Service, { service } from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
-import Site from "discourse/models/site";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
+import { defaultHomepage } from "discourse/lib/utilities";
+import getURL from "discourse-common/lib/get-url";
+import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 
 const PREFERRED_MODE_KEY = "preferred_mode";
 const PREFERRED_MODE_STORE_NAMESPACE = "discourse_chat_";
@@ -18,13 +21,18 @@ export function addChatDrawerStateCallback(callback) {
 export function resetChatDrawerStateCallbacks() {
   chatDrawerStateCallbacks = [];
 }
+
 export default class ChatStateManager extends Service {
   @service chat;
+  @service chatHistory;
   @service router;
+  @service site;
 
   @tracked isSidePanelExpanded = false;
   @tracked isDrawerExpanded = false;
   @tracked isDrawerActive = false;
+  @tracked hasPreloadedChannels = false;
+
   @tracked _chatURL = null;
   @tracked _appURL = null;
 
@@ -53,6 +61,24 @@ export default class ChatStateManager extends Service {
   }
 
   didOpenDrawer(url = null) {
+    withPluginApi("1.8.0", (api) => {
+      const adminSidebarStateManager = api.container.lookup(
+        "service:admin-sidebar-state-manager"
+      );
+
+      if (
+        adminSidebarStateManager === undefined ||
+        !adminSidebarStateManager.maybeForceAdminSidebar()
+      ) {
+        if (getUserChatSeparateSidebarMode(this.currentUser).always) {
+          api.setSeparatedSidebarMode();
+          api.hideSidebarSwitchPanelButtons();
+        } else {
+          api.setCombinedSidebarMode();
+        }
+      }
+    });
+
     this.isDrawerActive = true;
     this.isDrawerExpanded = true;
 
@@ -65,6 +91,34 @@ export default class ChatStateManager extends Service {
   }
 
   didCloseDrawer() {
+    withPluginApi("1.8.0", (api) => {
+      const adminSidebarStateManager = api.container.lookup(
+        "service:admin-sidebar-state-manager"
+      );
+
+      const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
+        this.currentUser
+      );
+
+      if (
+        adminSidebarStateManager === undefined ||
+        !adminSidebarStateManager.maybeForceAdminSidebar()
+      ) {
+        api.setSidebarPanel(MAIN_PANEL);
+
+        if (chatSeparateSidebarMode.fullscreen) {
+          api.setCombinedSidebarMode();
+          api.showSidebarSwitchPanelButtons();
+        } else if (chatSeparateSidebarMode.always) {
+          api.setSeparatedSidebarMode();
+          api.showSidebarSwitchPanelButtons();
+        } else {
+          api.setCombinedSidebarMode();
+          api.hideSidebarSwitchPanelButtons();
+        }
+      }
+    });
+
     this.isDrawerActive = false;
     this.isDrawerExpanded = false;
     this.chat.updatePresence();
@@ -91,7 +145,7 @@ export default class ChatStateManager extends Service {
 
   get isFullPagePreferred() {
     return !!(
-      Site.currentProp("mobileView") ||
+      this.site.mobileView ||
       this._store.getObject(PREFERRED_MODE_KEY) === FULL_PAGE_CHAT
     );
   }
@@ -99,7 +153,7 @@ export default class ChatStateManager extends Service {
   get isDrawerPreferred() {
     return !!(
       !this.isFullPagePreferred ||
-      (!Site.currentProp("mobileView") &&
+      (this.site.desktopView &&
         (!this._store.getObject(PREFERRED_MODE_KEY) ||
           this._store.getObject(PREFERRED_MODE_KEY) === DRAWER_CHAT))
     );
@@ -133,11 +187,11 @@ export default class ChatStateManager extends Service {
       url = this.router.urlFor(`discovery.${defaultHomepage()}`);
     }
 
-    return url;
+    return getURL(url);
   }
 
   get lastKnownChatURL() {
-    return this._chatURL || "/chat";
+    return getURL(this._chatURL || "/chat");
   }
 
   #publishStateChange() {

@@ -1,5 +1,5 @@
+import I18n from "discourse-i18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
-import I18n from "I18n";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["color-palettes"],

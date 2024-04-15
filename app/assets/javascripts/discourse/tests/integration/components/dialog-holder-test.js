@@ -1,6 +1,3 @@
-import I18n from "I18n";
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   click,
   fillIn,
@@ -9,9 +6,12 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { query } from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
 import GroupDeleteDialogMessage from "discourse/components/dialog-messages/group-delete";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { query } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | dialog-holder", function (hooks) {
   setupRenderingTest(hooks);
@@ -34,11 +34,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     });
     await settled();
 
-    assert.ok(
-      query(".dialog-overlay").offsetWidth > 0,
-      true,
-      "overlay is visible"
-    );
+    assert.true(query(".dialog-overlay").offsetWidth > 0, "overlay is visible");
     assert.strictEqual(
       query(".dialog-body").innerText.trim(),
       "This is an error",
@@ -79,11 +75,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     });
     await settled();
 
-    assert.ok(
-      query(".dialog-overlay").offsetWidth > 0,
-      true,
-      "overlay is visible"
-    );
+    assert.true(query(".dialog-overlay").offsetWidth > 0, "overlay is visible");
     assert.strictEqual(
       query(".dialog-body").innerText.trim(),
       "This is an error",
@@ -91,7 +83,7 @@ module("Integration | Component | dialog-holder", function (hooks) {
     );
 
     // dismiss by pressing Esc
-    await triggerKeyEvent(document, "keydown", "Escape");
+    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
 
     assert.ok(cancelCallbackCalled, "cancel callback called");
     assert.ok(query("#dialog-holder"), "element is still in DOM");

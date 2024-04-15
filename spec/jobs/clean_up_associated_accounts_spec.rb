@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::CleanUpAssociatedAccounts do
-  subject { Jobs::CleanUpAssociatedAccounts.new.execute({}) }
+  subject(:job) { Jobs::CleanUpAssociatedAccounts.new.execute({}) }
 
   it "deletes the correct records" do
     freeze_time
@@ -26,7 +26,7 @@ RSpec.describe Jobs::CleanUpAssociatedAccounts do
         updated_at: 12.hours.ago,
       )
 
-    expect { subject }.to change { UserAssociatedAccount.count }.by(-1)
+    expect { job }.to change { UserAssociatedAccount.count }.by(-1)
     expect(UserAssociatedAccount.all).to contain_exactly(today, connected)
   end
 end

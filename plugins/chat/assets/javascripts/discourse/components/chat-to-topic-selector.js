@@ -1,7 +1,7 @@
 import Component from "@ember/component";
+import { alias, equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import discourseComputed from "discourse-common/utils/decorators";
-import { alias, equal } from "@ember/object/computed";
 
 export const NEW_TOPIC_SELECTION = "new_topic";
 export const EXISTING_TOPIC_SELECTION = "existing_topic";

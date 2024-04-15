@@ -19,6 +19,8 @@ class SafeModeController < ApplicationController
       safe_mode << "no_plugins"
     elsif params["no_unofficial_plugins"] == "true"
       safe_mode << "no_unofficial_plugins"
+    elsif params["deprecation_errors"] == "true"
+      safe_mode << "deprecation_errors"
     end
 
     if safe_mode.length > 0

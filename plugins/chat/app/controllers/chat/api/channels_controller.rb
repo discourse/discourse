@@ -1,9 +1,13 @@
 # frozen_string_literal: true
 
-CHANNEL_EDITABLE_PARAMS = %i[name description slug]
-CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions]
-
 class Chat::Api::ChannelsController < Chat::ApiController
+  CHANNEL_EDITABLE_PARAMS ||= %i[name description slug]
+  CATEGORY_CHANNEL_EDITABLE_PARAMS ||= %i[
+    auto_join_users
+    allow_channel_wide_mentions
+    threading_enabled
+  ]
+
   def index
     permitted = params.permit(:filter, :limit, :offset, :status)
 
@@ -12,7 +16,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
     options[:status] = Chat::Channel.statuses[permitted[:status]] ? permitted[:status] : nil
 
     memberships = Chat::ChannelMembershipManager.all_for_user(current_user)
-    channels = Chat::ChannelFetcher.secured_public_channels(guardian, memberships, options)
+    channels = Chat::ChannelFetcher.secured_public_channels(guardian, options)
     serialized_channels =
       channels.map do |channel|
         Chat::ChannelSerializer.new(
@@ -30,13 +34,26 @@ class Chat::Api::ChannelsController < Chat::ApiController
 
   def destroy
     with_service Chat::TrashChannel do
+      on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
+      on_success { render(json: success_json) }
+      on_failure { render(json: failed_json, status: 422) }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+      end
     end
   end
 
   def create
     channel_params =
-      params.require(:channel).permit(:chatable_id, :name, :slug, :description, :auto_join_users)
+      params.require(:channel).permit(
+        :chatable_id,
+        :name,
+        :slug,
+        :description,
+        :auto_join_users,
+        :threading_enabled,
+      )
 
     # NOTE: We don't allow creating channels for anything but category chatable types
     # at the moment. This may change in future, at which point we will need to pass in
@@ -64,33 +81,21 @@ class Chat::Api::ChannelsController < Chat::ApiController
       on_model_errors(:membership) do
         render_json_error(result.membership, type: :record_invalid, status: 422)
       end
+      on_failure { render(json: failed_json, status: 422) }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+      end
     end
   end
 
   def show
-    if params[:target_message_id].present? || params[:include_messages].present?
-      with_service(
-        Chat::ChannelViewBuilder,
-        **params.permit(:channel_id, :target_message_id, :thread_id, :page_size, :direction).slice(
-          :channel_id,
-          :target_message_id,
-          :thread_id,
-          :page_size,
-          :direction,
-        ),
-      ) do
-        on_success { render_serialized(result.view, Chat::ViewSerializer, root: false) }
-        on_failed_policy(:target_message_exists) { raise Discourse::NotFound }
-        on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
-      end
-    else
-      render_serialized(
-        channel_from_params,
-        Chat::ChannelSerializer,
-        membership: channel_from_params.membership_for(current_user),
-        root: "channel",
-      )
-    end
+    render_serialized(
+      channel_from_params,
+      Chat::ChannelSerializer,
+      membership: channel_from_params.membership_for(current_user),
+      root: "channel",
+      include_extra_info: true,
+    )
   end
 
   def update

@@ -129,6 +129,8 @@ module Email
       # always set a default Message ID from the host
       @message.header["Message-ID"] = Email::MessageIdService.generate_default
 
+      post = nil
+      topic = nil
       if topic_id.present? && post_id.present?
         post = Post.find_by(id: post_id, topic_id: topic_id)
 
@@ -138,7 +140,6 @@ module Email
         topic = post.topic
         return skip(SkippedEmailLog.reason_types[:sender_topic_deleted]) if topic.blank?
 
-        add_attachments(post)
         add_identification_field_headers(topic, post)
 
         # See https://www.ietf.org/rfc/rfc2919.txt for the List-ID
@@ -249,6 +250,10 @@ module Email
       # Parse the HTML again so we can make any final changes before
       # sending
       style = Email::Styles.new(@message.html_part.body.to_s)
+      if post.present?
+        @stripped_secure_upload_shas = style.stripped_upload_sha_map.values
+        add_attachments(post)
+      end
 
       # Suppress images from short emails
       if SiteSetting.strip_images_from_short_emails &&
@@ -386,7 +391,17 @@ module Email
     end
 
     def should_attach_image?(upload, optimized_1X = nil)
-      return if !SiteSetting.secure_uploads_allow_embed_images_in_emails || !upload.secure?
+      if !SiteSetting.secure_uploads_allow_embed_images_in_emails ||
+           # Sometimes images in a post have a secure URL but are not secure uploads,
+           # for example if a user uploads an image to a public post then copies the markdown
+           # into a PM which sends an email, so we have to make sure we attached those
+           # stripped images here as well.
+           (
+             !upload.secure? && !@stripped_secure_upload_shas.include?(upload.sha1) &&
+               !@stripped_secure_upload_shas.include?(optimized_1X&.sha1)
+           )
+        return
+      end
       if (optimized_1X&.filesize || upload.filesize) >
            SiteSetting.secure_uploads_max_email_embed_image_size_kb.kilobytes
         return

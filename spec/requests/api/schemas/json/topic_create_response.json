@@ -56,7 +56,7 @@
       "type": "integer"
     },
     "score": {
-      "type": "integer"
+      "type": "number"
     },
     "yours": {
       "type": "boolean"
@@ -119,6 +119,9 @@
       "type": "boolean"
     },
     "can_recover": {
+      "type": "boolean"
+    },
+    "can_see_hidden_post": {
       "type": "boolean"
     },
     "can_wiki": {

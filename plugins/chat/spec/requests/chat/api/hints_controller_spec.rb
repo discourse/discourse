@@ -11,7 +11,7 @@ RSpec.describe Chat::Api::HintsController do
     end
 
     context "for logged in users" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
       fab!(:mentionable_group) do
         Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone])
       end

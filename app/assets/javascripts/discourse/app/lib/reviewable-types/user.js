@@ -1,5 +1,5 @@
 import ReviewableTypeBase from "discourse/lib/reviewable-types/base";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class extends ReviewableTypeBase {
   get description() {

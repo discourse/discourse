@@ -1,5 +1,5 @@
-import Mixin from "@ember/object/mixin";
 import { warn } from "@ember/debug";
+import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
   _consoleDebug(msg) {

@@ -1,9 +1,8 @@
-import { cancel, next } from "@ember/runloop";
-import { isLTR, isRTL, siteDir } from "discourse/lib/text-direction";
-import I18n from "I18n";
 import { TextField } from "@ember/legacy-built-in-components";
-import discourseComputed from "discourse-common/utils/decorators";
+import { cancel, next } from "@ember/runloop";
 import discourseDebounce from "discourse-common/lib/debounce";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const DEBOUNCE_MS = 500;
 
@@ -55,14 +54,7 @@ export default TextField.extend({
 
   get dir() {
     if (this.siteSettings.support_mixed_text_direction) {
-      const val = this.get("value");
-      if (val && isRTL(val)) {
-        return "rtl";
-      } else if (val && isLTR(val)) {
-        return "ltr";
-      } else {
-        return siteDir();
-      }
+      return "auto";
     }
   },
 

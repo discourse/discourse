@@ -1,11 +1,11 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { render, settled } from "@ember/test-helpers";
-import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import I18n from "I18n";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 module(
   "Integration | Component | user-menu | bookmarks-list",
@@ -27,17 +27,13 @@ module(
       assert.ok(items[1].classList.contains("bookmark"));
     });
 
-    test("show all link", async function (assert) {
+    test("show all button for bookmark notifications", async function (assert) {
       await render(template);
       const link = query(".panel-body-bottom .show-all");
-      assert.ok(
-        link.href.endsWith("/u/eviltrout/activity/bookmarks"),
-        "links to the bookmarks page"
-      );
       assert.strictEqual(
         link.title,
         I18n.t("user_menu.view_all_bookmarks"),
-        "has a title"
+        "has the correct title"
       );
     });
 

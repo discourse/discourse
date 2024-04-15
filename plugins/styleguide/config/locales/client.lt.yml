@@ -73,6 +73,6 @@ lt:
           footer: "Modalinė poraštė"
         header_icons:
           title: "Antraštės piktogramos"
-        rich_tooltip:
+        tooltips:
           description: "Aprašymas"
           header: "Viršus"

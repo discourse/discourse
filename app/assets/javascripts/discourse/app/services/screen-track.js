@@ -1,13 +1,14 @@
-import Service, { inject as service } from "@ember/service";
+import { run } from "@ember/runloop";
+import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { bind } from "discourse-common/utils/decorators";
-import { isTesting } from "discourse-common/config/environment";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   getHighestReadCache,
   resetHighestReadCache,
   setHighestReadCache,
 } from "discourse/lib/topic-list-tracker";
-import { run } from "@ember/runloop";
+import { isTesting } from "discourse-common/config/environment";
+import { bind } from "discourse-common/utils/decorators";
 
 // We use this class to track how long posts in a topic are on the screen.
 const PAUSE_UNLESS_SCROLLED = 1000 * 60 * 3;
@@ -17,19 +18,26 @@ const ANON_MAX_TOPIC_IDS = 5;
 const AJAX_FAILURE_DELAYS = [5000, 10000, 20000, 40000];
 const ALLOWED_AJAX_FAILURES = [405, 429, 500, 501, 502, 503, 504];
 
+@disableImplicitInjections
 export default class ScreenTrack extends Service {
   @service appEvents;
+  @service currentUser;
+  @service keyValueStore;
+  @service session;
+  @service siteSettings;
+  @service topicTrackingState;
 
+  _ajaxFailures = 0;
   _consolidatedTimings = [];
   _lastTick = null;
   _lastScrolled = null;
   _lastFlush = 0;
-  _timings = {};
-  _totalTimings = {};
+  _timings = new Map();
+  _totalTimings = new Map();
   _topicTime = 0;
-  _onscreen = [];
-  _readOnscreen = [];
-  _readPosts = {};
+  _onscreen = null;
+  _readOnscreen = null;
+  _readPosts = new Set();
   _inProgress = false;
 
   constructor() {
@@ -38,9 +46,7 @@ export default class ScreenTrack extends Service {
   }
 
   start(topicId, topicController) {
-    const currentTopicId = this._topicId;
-
-    if (currentTopicId && currentTopicId !== topicId) {
+    if (this._topicId && this._topicId !== topicId) {
       this.tick();
       this.flush();
     }
@@ -91,12 +97,12 @@ export default class ScreenTrack extends Service {
     this._lastTick = now;
     this._lastScrolled = now;
     this._lastFlush = 0;
-    this._timings = {};
-    this._totalTimings = {};
+    this._timings.clear();
+    this._totalTimings.clear();
     this._topicTime = 0;
-    this._onscreen = [];
-    this._readOnscreen = [];
-    this._readPosts = {};
+    this._onscreen = null;
+    this._readOnscreen = null;
+    this._readPosts.clear();
     this._inProgress = false;
   }
 
@@ -110,13 +116,12 @@ export default class ScreenTrack extends Service {
   }
 
   consolidateTimings(timings, topicTime, topicId) {
-    let foundIndex = this._consolidatedTimings.findIndex(
+    const foundIndex = this._consolidatedTimings.findIndex(
       (elem) => elem.topicId === topicId
     );
 
     if (foundIndex > -1) {
-      let found = this._consolidatedTimings[foundIndex];
-
+      const found = this._consolidatedTimings[foundIndex];
       const lastIndex = this._consolidatedTimings.length - 1;
 
       if (foundIndex !== lastIndex) {
@@ -125,14 +130,14 @@ export default class ScreenTrack extends Service {
         this._consolidatedTimings[lastIndex - 1] = last;
       }
 
-      const oldTimings = found.timings;
-      Object.keys(oldTimings).forEach((id) => {
+      Object.keys(found.timings).forEach((id) => {
         if (timings[id]) {
-          oldTimings[id] += timings[id];
+          found.timings[id] += timings[id];
         }
       });
+
       found.topicTime += topicTime;
-      found.timings = Object.assign({}, timings, found.timings);
+      found.timings = { ...timings, ...found.timings };
     } else {
       this._consolidatedTimings.push({ timings, topicTime, topicId });
     }
@@ -151,7 +156,7 @@ export default class ScreenTrack extends Service {
     return getHighestReadCache(topicId);
   }
 
-  sendNextConsolidatedTiming() {
+  async sendNextConsolidatedTiming() {
     if (this._consolidatedTimings.length === 0) {
       return;
     }
@@ -167,8 +172,6 @@ export default class ScreenTrack extends Service {
       return;
     }
 
-    this._ajaxFailures = this._ajaxFailures || 0;
-
     const { timings, topicTime, topicId } = this._consolidatedTimings.pop();
     const data = {
       timings,
@@ -178,82 +181,76 @@ export default class ScreenTrack extends Service {
 
     this._inProgress = true;
 
-    return ajax("/topics/timings", {
-      data,
-      type: "POST",
-      headers: {
-        "X-SILENCE-LOGGER": "true",
-        "Discourse-Background": "true",
-      },
-    })
-      .then(() => {
-        if (this.isDestroying || this.isDestroyed) {
-          return;
-        }
-
-        this._ajaxFailures = 0;
-        const topicController = this._topicController;
-        if (topicController) {
-          const postNumbers = Object.keys(timings).map((v) => parseInt(v, 10));
-          topicController.readPosts(topicId, postNumbers);
-
-          const cachedHighestRead = this.highestReadFromCache(topicId);
-          if (
-            cachedHighestRead &&
-            cachedHighestRead <= postNumbers.lastObject
-          ) {
-            resetHighestReadCache(topicId);
-          }
-        }
-
-        this.appEvents.trigger("topic:timings-sent", data);
-      })
-      .catch((e) => {
-        if (e.jqXHR && ALLOWED_AJAX_FAILURES.includes(e.jqXHR.status)) {
-          const delay = AJAX_FAILURE_DELAYS[this._ajaxFailures];
-          this._ajaxFailures += 1;
-
-          if (delay) {
-            this._blockSendingToServerTill = Date.now() + delay;
-            // we did not send to the server, got to re-queue it
-            this.consolidateTimings(timings, topicTime, topicId);
-          }
-        }
-
-        if (window.console && window.console.warn && e.jqXHR) {
-          window.console.warn(
-            `Failed to update topic times for topic ${topicId} due to ${e.jqXHR.status} error`
-          );
-        }
-      })
-      .finally(() => {
-        this._inProgress = false;
-        this._lastFlush = 0;
+    try {
+      await ajax("/topics/timings", {
+        data,
+        type: "POST",
+        headers: {
+          "X-SILENCE-LOGGER": "true",
+          "Discourse-Background": "true",
+        },
       });
+
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      this._ajaxFailures = 0;
+      if (this._topicController) {
+        const postNumbers = Object.keys(timings).map((v) => parseInt(v, 10));
+        this._topicController.readPosts(topicId, postNumbers);
+
+        const cachedHighestRead = this.highestReadFromCache(topicId);
+        if (cachedHighestRead && cachedHighestRead <= postNumbers.lastObject) {
+          resetHighestReadCache(topicId);
+        }
+      }
+
+      this.appEvents.trigger("topic:timings-sent", data);
+    } catch (e) {
+      if (e.jqXHR && ALLOWED_AJAX_FAILURES.includes(e.jqXHR.status)) {
+        const delay = AJAX_FAILURE_DELAYS[this._ajaxFailures];
+        this._ajaxFailures += 1;
+
+        if (delay) {
+          this._blockSendingToServerTill = Date.now() + delay;
+          // we did not send to the server, got to re-queue it
+          this.consolidateTimings(timings, topicTime, topicId);
+        }
+      }
+
+      if (window.console && window.console.warn && e.jqXHR) {
+        window.console.warn(
+          `Failed to update topic times for topic ${topicId} due to ${e.jqXHR.status} error`
+        );
+      }
+    } finally {
+      this._inProgress = false;
+      this._lastFlush = 0;
+    }
   }
 
   flush() {
     const newTimings = {};
-    const totalTimings = this._totalTimings;
 
-    const timings = this._timings;
-    Object.keys(this._timings).forEach((postNumber) => {
-      const time = timings[postNumber];
-      totalTimings[postNumber] = totalTimings[postNumber] || 0;
+    for (const [postNumber, time] of this._timings) {
+      if (!this._totalTimings.has(postNumber)) {
+        this._totalTimings.set(postNumber, 0);
+      }
 
-      if (time > 0 && totalTimings[postNumber] < MAX_TRACKING_TIME) {
-        totalTimings[postNumber] += time;
+      const totalTiming = this._totalTimings.get(postNumber);
+      if (time > 0 && totalTiming < MAX_TRACKING_TIME) {
+        this._totalTimings.set(postNumber, totalTiming + time);
         newTimings[postNumber] = time;
       }
-      timings[postNumber] = 0;
-    });
+
+      this._timings.set(postNumber, 0);
+    }
 
     const topicId = parseInt(this._topicId, 10);
-    let highestSeen = 0;
 
     // Workaround to avoid ignored posts being "stuck unread"
-    const controller = this._topicController;
-    const stream = controller ? controller.get("model.postStream") : null;
+    const stream = this._topicController?.get("model.postStream");
     if (
       this.currentUser && // Logged in
       this.currentUser.get("ignored_users.length") && // At least 1 user is ignored
@@ -274,10 +271,9 @@ export default class ScreenTrack extends Service {
       ] = 1;
     }
 
-    const newTimingsKeys = Object.keys(newTimings);
-    newTimingsKeys.forEach((postNumber) => {
-      highestSeen = Math.max(highestSeen, parseInt(postNumber, 10));
-    });
+    const highestSeen = Object.keys(newTimings)
+      .map((postNumber) => parseInt(postNumber, 10))
+      .reduce((a, b) => Math.max(a, b), 0);
 
     const highestSeenByTopic = this.session.get("highestSeenByTopic");
     if ((highestSeenByTopic[topicId] || 0) < highestSeen) {
@@ -286,7 +282,7 @@ export default class ScreenTrack extends Service {
 
     this.topicTrackingState.updateSeen(topicId, highestSeen);
 
-    if (newTimingsKeys.length > 0) {
+    if (highestSeen > 0) {
       if (this.currentUser) {
         this.consolidateTimings(newTimings, this._topicTime, topicId);
 
@@ -294,15 +290,15 @@ export default class ScreenTrack extends Service {
           this.sendNextConsolidatedTiming();
         }
       } else if (this._anonCallback) {
-        // Anonymous viewer - save to localStorage
-        const storage = this.keyValueStore;
-
         // Save total time
-        const existingTime = storage.getInt("anon-topic-time");
-        storage.setItem("anon-topic-time", existingTime + this._topicTime);
+        const existingTime = this.keyValueStore.getInt("anon-topic-time");
+        this.keyValueStore.setItem(
+          "anon-topic-time",
+          existingTime + this._topicTime
+        );
 
         // Save unique topic IDs up to a max
-        let topicIds = storage.get("anon-topic-ids");
+        let topicIds = this.keyValueStore.get("anon-topic-ids");
         if (topicIds) {
           topicIds = topicIds.split(",").map((e) => parseInt(e, 10));
         } else {
@@ -314,7 +310,7 @@ export default class ScreenTrack extends Service {
           topicIds.length < ANON_MAX_TOPIC_IDS
         ) {
           topicIds.push(topicId);
-          storage.setItem("anon-topic-ids", topicIds.join(","));
+          this.keyValueStore.setItem("anon-topic-ids", topicIds.join(","));
         }
 
         // Inform the observer
@@ -342,15 +338,13 @@ export default class ScreenTrack extends Service {
     this._lastFlush += diff;
     this._lastTick = now;
 
-    const totalTimings = this._totalTimings;
-    const timings = this._timings;
     const nextFlush = this.siteSettings.flush_timings_secs * 1000;
 
-    const rush = Object.keys(timings).some((postNumber) => {
+    const rush = [...this._timings.entries()].some(([postNumber, timing]) => {
       return (
-        timings[postNumber] > 0 &&
-        !totalTimings[postNumber] &&
-        !this._readPosts[postNumber]
+        timing > 0 &&
+        !this._totalTimings.get(postNumber) &&
+        !this._readPosts.has(postNumber)
       );
     });
 
@@ -366,13 +360,15 @@ export default class ScreenTrack extends Service {
     if (this.session.hasFocus) {
       this._topicTime += diff;
 
-      this._onscreen.forEach(
-        (postNumber) =>
-          (timings[postNumber] = (timings[postNumber] || 0) + diff)
+      this._onscreen?.forEach((postNumber) =>
+        this._timings.set(
+          postNumber,
+          (this._timings.get(postNumber) ?? 0) + diff
+        )
       );
 
-      this._readOnscreen.forEach((postNumber) => {
-        this._readPosts[postNumber] = true;
+      this._readOnscreen?.forEach((postNumber) => {
+        this._readPosts.add(postNumber);
       });
     }
   }

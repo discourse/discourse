@@ -1,13 +1,13 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import I18n from "discourse-i18n";
 
 function setupGroupPretender(server, helper) {
   server.post("/groups/Macdonald/request_membership.json", () => {
@@ -191,7 +191,7 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-index-request");
 
     assert.strictEqual(
-      query(".modal-header .title").innerText.trim(),
+      query(".d-modal__header .d-modal__title-text").innerText.trim(),
       I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
     );
 
@@ -200,7 +200,7 @@ acceptance("Group - Authenticated", function (needs) {
       "Please add me"
     );
 
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
 
     assert.strictEqual(
       query(".fancy-title").innerText.trim(),

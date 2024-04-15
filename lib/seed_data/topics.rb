@@ -53,6 +53,9 @@ module SeedData
 
     def topics(site_setting_names: nil, include_welcome_topics: true, include_legal_topics: true)
       staff_category = Category.find_by(id: SiteSetting.staff_category_id)
+      feedback_category = Category.find_by(id: SiteSetting.meta_category_id)
+      feedback_category_hashtag =
+        feedback_category ? "##{feedback_category.slug}" : "#site-feedback"
 
       topics = []
 
@@ -79,7 +82,12 @@ module SeedData
       topics << {
         site_setting_name: "guidelines_topic_id",
         title: I18n.t("guidelines_topic.title"),
-        raw: I18n.t("guidelines_topic.body", base_path: Discourse.base_path),
+        raw:
+          I18n.t(
+            "guidelines_topic.body",
+            base_path: Discourse.base_path,
+            feedback_category: feedback_category_hashtag,
+          ),
         category: staff_category,
         static_first_reply: true,
       }
@@ -98,6 +106,17 @@ module SeedData
       if include_welcome_topics
         # Welcome Topic
         if general_category = Category.find_by(id: SiteSetting.general_category_id)
+          site_info_quote =
+            if SiteSetting.title.present? && SiteSetting.site_description.present?
+              <<~RAW
+              > ## #{SiteSetting.title}
+              >
+              > #{SiteSetting.site_description}
+              RAW
+            else
+              ""
+            end
+
           topics << {
             site_setting_name: "welcome_topic_id",
             title: I18n.t("discourse_welcome_topic.title", site_title: SiteSetting.title),
@@ -107,6 +126,8 @@ module SeedData
                 base_path: Discourse.base_path,
                 site_title: SiteSetting.title,
                 site_description: SiteSetting.site_description,
+                site_info_quote: site_info_quote,
+                feedback_category: feedback_category_hashtag,
               ),
             category: general_category,
             after_create: proc { |post| post.topic.update_pinned(true, true) },

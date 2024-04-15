@@ -1,9 +1,10 @@
+import { getOwner } from "@ember/application";
+import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
-import { render } from "@ember/test-helpers";
-import { module, test } from "qunit";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
   "Discourse Chat | Component | chat-channel-preview-card",
@@ -11,7 +12,12 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.set("channel", fabricators.channel({ chatable_type: "Category" }));
+      this.set(
+        "channel",
+        new ChatFabricators(getOwner(this)).channel({
+          chatable_type: "Category",
+        })
+      );
 
       this.channel.description = "Important stuff is announced here.";
       this.channel.title = "announcements";
@@ -24,13 +30,13 @@ module(
       await render(hbs`<ChatChannelPreviewCard @channel={{this.channel}} />`);
 
       assert.strictEqual(
-        query(".chat-channel-title__name").innerText,
+        query(".chat-channel-name__label").innerText,
         this.channel.title,
         "it shows the channel title"
       );
 
       assert.true(
-        exists(query(".chat-channel-title__category-badge")),
+        exists(query(".chat-channel-icon.--category-badge")),
         "it shows the category hashtag badge"
       );
     });

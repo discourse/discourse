@@ -16,9 +16,23 @@ html.composer-open {
   margin-right: auto;
   max-width: $reply-area-max-width;
   width: 100%;
+
   &.hide-preview {
     max-width: 740px;
   }
+
+  .with-form-template {
+    .toggle-preview,
+    #mobile-file-upload,
+    .submit-panel .mobile-preview {
+      display: none;
+    }
+    .d-editor-preview-wrapper {
+      display: none;
+      flex: 0;
+    }
+  }
+
   @media screen and (max-width: 1200px) {
     min-width: 0;
   }
@@ -26,11 +40,16 @@ html.composer-open {
   transition: height 250ms ease, background 250ms ease, transform 250ms ease,
     max-width 250ms ease, padding-bottom 250ms ease;
   background-color: var(--secondary);
-  box-shadow: shadow("composer");
+  box-shadow: var(--shadow-composer);
 
   .reply-area {
     display: flex;
     flex-direction: column;
+
+    &.with-form-template {
+      max-height: 100%;
+      box-sizing: border-box;
+    }
   }
 
   .saving-text,
@@ -119,20 +138,20 @@ html.composer-open {
       align-items: center;
       width: auto;
       max-width: 100%;
-
-      .avatar {
-        width: 20px;
-      }
+      min-width: 0; // allows shrinking when needed
 
       .action-title {
+        display: flex;
+        align-items: center;
         line-height: normal;
-        @include ellipsis;
-      }
+        min-width: 0;
 
-      .topic-link,
-      .user-link,
-      .post-link {
-        margin-right: 8px;
+        .topic-link,
+        .user-link,
+        .post-link {
+          margin-right: 8px;
+          @include ellipsis;
+        }
       }
 
       .username {
@@ -157,10 +176,6 @@ html.composer-open {
       display: flex;
       gap: 8px;
       margin-left: 8px;
-
-      .d-icon {
-        color: var(--primary-medium);
-      }
     }
   }
 
@@ -239,6 +254,12 @@ html.composer-open {
       max-width: 100%;
       width: auto;
 
+      &.has-selection {
+        .name {
+          font-size: var(--font-up-1);
+        }
+      }
+
       .select-kit-header {
         color: var(--primary-high);
         white-space: nowrap;
@@ -249,28 +270,26 @@ html.composer-open {
         max-width: 450px;
       }
 
-      // below needed for text-overflow: ellipsis;
       .selected-name {
         max-width: 100%;
         overflow: hidden;
         .name {
-          max-width: 100%;
-          overflow: hidden;
           display: flex;
-          .badge-wrapper {
+          max-width: 100%;
+          gap: 0 0.5em;
+          .badge-category {
             overflow: hidden;
           }
           // This prevents the first category from being too-truncated at the expense of a long subcategory
-          .badge-wrapper:first-of-type:not(:last-of-type) {
-            flex: 1 0 auto;
-            max-width: 50%;
+          > span:last-of-type:not(:first-of-type) {
+            flex-shrink: 10;
           }
         }
       }
     }
   }
 
-  .with-tags {
+  .with-tags.with-category {
     .title-and-category {
       flex-wrap: wrap;
     }
@@ -307,11 +326,12 @@ html.composer-open {
 
   .category-input + .mini-tag-chooser {
     margin-left: 8px;
+    width: auto;
+    max-width: calc(50% - 4px);
   }
 
   .mini-tag-chooser {
     flex-grow: 1;
-    max-width: calc(50% - 4px);
     margin: 0 0 8px 0px;
     z-index: z("composer", "dropdown");
     .select-kit-header {
@@ -358,6 +378,10 @@ html.composer-open {
         color: var(--danger);
       }
     }
+
+    .preview-template {
+      margin-left: 0.5rem;
+    }
   }
 
   #draft-status,
@@ -394,16 +418,27 @@ html.composer-open {
   #file-uploader {
     display: none;
   }
+
+  .composer-select-form-template {
+    margin-bottom: 8px;
+    width: 100%;
+
+    .name,
+    .formatted-selection,
+    .d-icon {
+      color: var(--primary-high);
+    }
+  }
 }
 
 .autocomplete {
   z-index: z("composer", "dropdown") + 1;
   position: absolute;
-  max-width: 300px;
-  width: 300px;
+  max-width: 370px;
+  min-width: 300px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
-  box-shadow: shadow("dropdown-lite");
+  box-shadow: var(--shadow-dropdown);
   border-radius: 8px;
 
   ul {
@@ -453,10 +488,17 @@ html.composer-open {
           color: var(--primary-high);
         }
 
-        .status-description {
-          @include ellipsis;
-          font-size: var(--font-down-2);
-          color: var(--primary-high);
+        .user-status-message {
+          display: flex;
+          align-items: center;
+          gap: 0.25em;
+
+          .user-status-message-description {
+            @include ellipsis;
+            font-size: var(--font-down-2);
+            color: var(--primary-high);
+            margin: 0;
+          }
         }
 
         .relative-date {

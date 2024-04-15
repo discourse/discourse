@@ -1,8 +1,8 @@
 import Component from "@ember/component";
-import I18n from "I18n";
+import { or } from "@ember/object/computed";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseComputed from "discourse-common/utils/decorators";
-import { or } from "@ember/object/computed";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   init() {

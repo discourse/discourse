@@ -1,0 +1,42 @@
+.chat-modal-create-channel {
+  .modal-inner-container {
+    width: 500px;
+  }
+
+  .choose-topic-results-list {
+    max-height: 200px;
+    overflow-y: scroll;
+  }
+
+  .select-kit.combo-box,
+  &__input,
+  #choose-topic-title {
+    width: 100%;
+    margin-bottom: 0;
+  }
+  .category-chooser {
+    .select-kit-selected-name.selected-name.choice {
+      color: var(
+        --primary-high
+      ); // Make consistent with color of placeholder text when choosing topic
+    }
+  }
+
+  &__hint {
+    font-size: var(--font-down-1);
+    padding-top: 0.25rem;
+    color: var(--secondary-low);
+  }
+
+  &__control,
+  .edit-channel-control {
+    margin-bottom: 1rem;
+  }
+
+  &__label-description {
+    margin: 0;
+    padding-top: 0.25rem;
+    color: var(--secondary-low);
+    font-size: var(--font-down-1) !important;
+  }
+}

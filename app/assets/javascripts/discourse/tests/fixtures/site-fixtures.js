@@ -138,6 +138,7 @@ export default {
           show_subcategory_list: true,
           default_view: "latest",
           subcategory_list_style: "boxes_with_featured_topics",
+          has_children: true,
         },
         {
           id: 6,
@@ -158,6 +159,7 @@ export default {
           background_url: null,
           show_subcategory_list: false,
           default_view: "latest",
+          has_children: true,
         },
         {
           id: 24,
@@ -309,6 +311,7 @@ export default {
           notification_level: null,
           show_subcategory_list: false,
           default_view: "latest",
+          has_children: true,
         },
         {
           id: 11,
@@ -463,6 +466,7 @@ export default {
           default_view: "latest",
           subcategory_list_style: "boxes",
           default_list_filter: "all",
+          has_children: true,
         },
         {
           id: 240,
@@ -516,6 +520,7 @@ export default {
           parent_category_id: null,
           notification_level: null,
           background_url: null,
+          has_children: true,
         },
         {
           id: 1002,
@@ -533,6 +538,7 @@ export default {
           parent_category_id: 1001,
           notification_level: null,
           background_url: null,
+          has_children: true,
         },
         {
           id: 1003,
@@ -707,7 +713,7 @@ export default {
           links: [
             {
               id: 329,
-              name: "Everything",
+              name: "Topics",
               value: "/latest",
               icon: "layer-group",
               external: false,
@@ -723,7 +729,7 @@ export default {
             },
             {
               id: 331,
-              name: "Info",
+              name: "About",
               value: "/about",
               icon: "info-circle",
               external: false,

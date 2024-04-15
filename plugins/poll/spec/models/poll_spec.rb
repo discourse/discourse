@@ -38,7 +38,7 @@ RSpec.describe ::DiscoursePoll::Poll do
     end
 
     it "author can see results when results setting is on_vote" do
-      author = Fabricate(:user)
+      author = Fabricate(:user, refresh_auto_groups: true)
       post = Fabricate(:post, user: author, raw: "[poll results=on_vote]\n- A\n- B\n[/poll]")
       poll = post.polls.first
       option = poll.poll_options.first
@@ -60,7 +60,7 @@ RSpec.describe ::DiscoursePoll::Poll do
 
     it "only staff members can see results when results setting is staff_only" do
       post = Fabricate(:post, raw: "[poll results=staff_only]\n- A\n- B\n[/poll]")
-      user = Fabricate(:user)
+      user = Fabricate(:user, refresh_auto_groups: true)
       poll = post.polls.first
       option = poll.poll_options.first
 
@@ -74,7 +74,7 @@ RSpec.describe ::DiscoursePoll::Poll do
 
   describe "when post is trashed" do
     it "maintains the association" do
-      user = Fabricate(:user)
+      user = Fabricate(:user, refresh_auto_groups: true)
       post = Fabricate(:post, raw: "[poll results=staff_only]\n- A\n- B\n[/poll]", user: user)
       poll = post.polls.first
 

@@ -6,7 +6,8 @@
     "muted",
     "desktop_notification_level",
     "mobile_notification_level",
-    "following"
+    "following",
+    "last_viewed_at"
   ],
   "properties": {
     "chat_channel_id": { "type": "number" },
@@ -22,8 +23,11 @@
         "id": { "type": "number" },
         "name": { "type": "string" },
         "avatar_template": { "type": "string" },
-        "username": { "type": "string" }
+        "username": { "type": "string" },
+        "can_chat": { "type": "boolean" },
+        "has_chat_enabled": { "type": "boolean" }
       }
-    }
+    },
+    "last_viewed_at": { "type": "datetime" }
   }
 }

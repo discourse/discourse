@@ -196,6 +196,8 @@ class ImportScripts::Jive < ImportScripts::Base
   end
 
   def normalize_raw!(raw)
+    return "<missing>" if raw.blank?
+
     raw = raw.dup
     raw = raw[5..-6]
 

@@ -61,7 +61,7 @@
                   "type": "integer"
                 },
                 "score": {
-                  "type": "integer"
+                  "type": "number"
                 },
                 "yours": {
                   "type": "boolean"
@@ -115,6 +115,9 @@
                   "type": "boolean"
                 },
                 "can_recover": {
+                  "type": "boolean"
+                },
+                "can_see_hidden_post": {
                   "type": "boolean"
                 },
                 "can_wiki": {
@@ -712,6 +715,9 @@
         "null"
       ]
     },
+    "summarizable": {
+      "type": "boolean"
+    },
     "details": {
       "type": "object",
       "additionalProperties": false,
@@ -982,6 +988,7 @@
     "show_read_indicator",
     "thumbnails",
     "slow_mode_enabled_until",
+    "summarizable",
     "details"
   ]
 }

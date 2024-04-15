@@ -1,9 +1,12 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import userSearch from "discourse/lib/user-search";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Utility | user-search", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     pretender.get("/u/search/users", (request) => {
       // special responder for per category search

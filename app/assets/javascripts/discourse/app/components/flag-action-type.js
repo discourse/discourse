@@ -1,25 +1,25 @@
-import { and, equal, not } from "@ember/object/computed";
 import Component from "@ember/component";
-import I18n from "I18n";
+import { and, equal, not } from "@ember/object/computed";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
-  classNames: ["flag-action-type"],
+  tagName: "",
+
+  @discourseComputed("flag.name_key")
+  wrapperClassNames(nameKey) {
+    return `flag-action-type ${nameKey}`;
+  },
 
   @discourseComputed("flag.name_key")
   customPlaceholder(nameKey) {
     return I18n.t("flagging.custom_placeholder_" + nameKey);
   },
 
-  @discourseComputed(
-    "flag.name",
-    "flag.name_key",
-    "flag.is_custom_flag",
-    "username"
-  )
-  formattedName(name, nameKey, isCustomFlag, username) {
-    if (isCustomFlag) {
+  @discourseComputed("flag.name", "flag.name_key", "username")
+  formattedName(name, nameKey, username) {
+    if (["notify_user", "notify_moderators"].includes(nameKey)) {
       return name.replace(/{{username}}|%{username}/, username);
     } else {
       return I18n.t("flagging.formatted_name." + nameKey);
@@ -32,6 +32,7 @@ export default Component.extend({
   },
 
   showMessageInput: and("flag.is_custom_flag", "selected"),
+  showConfirmation: and("flag.isIllegal", "selected"),
   showDescription: not("showMessageInput"),
   isNotifyUser: equal("flag.name_key", "notify_user"),
 

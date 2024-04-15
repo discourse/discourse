@@ -1,11 +1,11 @@
+import { visit } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { test } from "qunit";
 import {
   acceptance,
   count,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
-import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
 const HELLO =

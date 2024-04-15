@@ -1,13 +1,13 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { render, settled } from "@ember/test-helpers";
-import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { hbs } from "ember-cli-htmlbars";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { cloneJSON, deepMerge } from "discourse-common/lib/object";
+import { module, test } from "qunit";
+import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
-import I18n from "I18n";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { cloneJSON, deepMerge } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 function getMessage(overrides = {}) {
   return deepMerge(
@@ -253,17 +253,13 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
     );
   });
 
-  test("show all link", async function (assert) {
+  test("show all button for message notifications", async function (assert) {
     await render(template);
     const link = query(".panel-body-bottom .show-all");
-    assert.ok(
-      link.href.endsWith("/u/eviltrout/messages"),
-      "links to the user's messages page"
-    );
     assert.strictEqual(
       link.title,
       I18n.t("user_menu.view_all_messages"),
-      "has a title"
+      "has the correct title"
     );
   });
 

@@ -130,6 +130,7 @@ aside.onebox {
     h4 {
       font-size: var(--font-up-1);
       margin: 0 0 10px 0;
+      line-height: var(--line-height-medium);
     }
 
     a[href] {
@@ -153,24 +154,6 @@ aside.onebox {
       &.onebox-full-image {
         max-height: none;
         max-width: none;
-      }
-    }
-
-    .github-body-container {
-      margin: 1em 0 0 0;
-      color: var(--primary-very-high);
-      max-height: 400px;
-      white-space: pre-wrap;
-      overflow-y: auto;
-      word-break: break-word;
-      font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono",
-        "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace;
-      flex: 1 0 100%;
-      box-sizing: border-box;
-
-      .show-more {
-        // padding on right for larger hitzone
-        padding: 0.5em 1.5em 0em 0.25em;
       }
     }
 
@@ -199,7 +182,6 @@ aside.onebox {
           max-width: initial;
           max-height: initial;
           float: none;
-          margin-right: none;
         }
       }
 
@@ -413,6 +395,7 @@ pre.onebox code ol.lines li {
   border-left: 1px solid #cfcfcf;
   min-height: 1.5em; //show empty li lines
   white-space: pre;
+  width: max-content;
 }
 
 pre.onebox code li.selected {
@@ -438,8 +421,27 @@ pre.onebox code {
 .onebox.githubcommit,
 .onebox.githubissue {
   .onebox-body {
+    display: grid;
+    grid-template-areas:
+      "icon title"
+      "icon branches"
+      "icon info"
+      "body body";
+    grid-template-columns: 2.5em 1fr;
+    gap: 0.25em 0.75em;
+
+    @include breakpoint(mobile-extra-large) {
+      gap: 0.25em 0.5em;
+      grid-template-columns: 1.5em 1fr;
+      grid-template-areas:
+        "icon title"
+        "branches branches"
+        "info info"
+        "body body";
+    }
+
     h4 {
-      margin-bottom: 5px;
+      margin-bottom: 0;
     }
 
     > .github-icon {
@@ -450,22 +452,26 @@ pre.onebox code {
   }
 
   .github-row {
-    display: flex;
+    display: contents;
   }
 
-  .github-icon-container {
-    display: flex;
-    align-items: center;
-    margin-right: 10px;
+  .github-icon-container,
+  .github-info-container {
+    display: contents;
   }
 
   .github-icon {
+    grid-area: icon;
+    align-self: center;
+    width: 100%;
+    height: 100%;
+    max-width: 2.15em;
+    margin: 0 auto;
     fill: var(--primary-high);
-    width: 40px;
-    height: 40px;
   }
 
   .branches {
+    grid-area: branches;
     font-size: var(--font-down-1);
     code {
       word-break: break-all;
@@ -474,21 +480,21 @@ pre.onebox code {
 
   .github-info-container {
     width: 100%;
+    overflow-x: hidden;
+    > span {
+      // TODO: remove in a few months
+      // replaced by .github-info in new commit oneboxes
+      grid-area: info;
+    }
   }
 
   .github-info {
+    grid-area: info;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     width: 100%;
-
-    > div {
-      margin: 2.5px 0;
-    }
-
-    > div:not(:last-child) {
-      margin-right: 15px;
-    }
+    gap: 0.15em 1em;
 
     .lines {
       font-weight: bold;
@@ -500,17 +506,31 @@ pre.onebox code {
         color: var(--danger);
       }
     }
+
+    .discourse-local-date {
+      white-space: nowrap;
+    }
+  }
+
+  .github-body-container {
+    grid-area: body;
+    margin: 1em 0 0 0;
+    color: var(--primary-very-high);
+    max-height: 400px;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    word-break: break-word;
+    font-family: var(--d-font-family--monospace);
+    box-sizing: border-box;
+
+    .show-more {
+      // padding on right for larger hitzone
+      padding: 0.5em 1.5em 0em 0.25em;
+    }
   }
 
   .onebox-avatar-inline {
-    height: 20px;
-    width: 20px;
     border-radius: 2px;
-    float: none;
-    margin: 0;
-    padding: 0;
-    vertical-align: middle;
-    max-width: none;
   }
 
   .labels span {
@@ -678,6 +698,11 @@ aside.onebox.twitterstatus .onebox-body {
       fill: currentColor;
       margin-right: 0.25em;
     }
+  }
+
+  .is-reply {
+    color: var(--primary-medium);
+    margin-right: 0.25em;
   }
 }
 
@@ -902,6 +927,7 @@ aside.onebox.mixcloud-preview {
   position: relative;
   padding: 0 0 56.25% 0;
   width: 100%;
+  background-color: black;
 
   video {
     position: absolute;
@@ -910,14 +936,60 @@ aside.onebox.mixcloud-preview {
   }
 }
 
-iframe.vimeo-onebox {
+.video-placeholder-container {
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  padding: 0 0 56.25% 0;
+  width: 100%;
+  background-color: black;
+
+  .video-placeholder-overlay {
+    background-color: rgba(0, 0, 0, 0.25);
+    padding: 1rem;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    .d-icon-play {
+      border-radius: var(--d-border-radius);
+      color: #fff;
+      display: flex;
+      filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.25));
+      height: 2.3rem;
+      transition: transform 0.15s;
+      width: 2.3rem;
+
+      @media (prefers-reduced-motion) {
+        transition: transform 0s;
+      }
+    }
+
+    .spinner {
+      border-color: #fff;
+      border-right-color: rgba(0, 0, 0, 0);
+      margin: 0;
+    }
+  }
+
+  @include hover {
+    .video-placeholder-overlay .d-icon-play {
+      transform: scale(1.2);
+    }
+  }
+}
+
+iframe.vimeo-onebox,
+iframe.loom-onebox {
   width: 100%;
   height: auto;
   aspect-ratio: 16/9;
 }
 
 @supports not (aspect-ratio: auto) {
-  iframe.vimeo-onebox {
+  iframe.vimeo-onebox,
+  iframe.loom-onebox {
     width: 690px;
     height: 388px;
   }
@@ -930,6 +1002,9 @@ iframe.vimeo-onebox {
     position: absolute;
     width: calc(100% - 40px);
     animation: 0.5s fadeIn;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 }
 
@@ -944,6 +1019,8 @@ iframe.vimeo-onebox {
 }
 
 .onebox-placeholder-container {
+  background-size: cover;
+  background-position: center;
   position: relative;
   width: 100%;
   padding: 0 0 48.25% 0;
@@ -1004,4 +1081,82 @@ aside.onebox.preview-error .site-icon {
   width: 16px;
   height: 16px;
   margin-right: 0.5em;
+}
+
+.onebox.threadsstatus .onebox-body {
+  .thumbnail,
+  .thumbnail.onebox-avatar {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+  }
+  .threads-screen-name {
+    font-size: var(--font-down-1);
+  }
+  h4 {
+    margin-bottom: 0;
+  }
+
+  .thread-contents .thread-description {
+    white-space: pre-line;
+  }
+
+  p,
+  .thread-contents {
+    clear: left;
+    padding: 1em 0;
+
+    .quoted {
+      border: 1px solid var(--primary-low);
+      padding: 0.5em 1em;
+      margin-top: 1em;
+      white-space: normal;
+
+      .quoted-link {
+        color: inherit;
+      }
+
+      .quoted-title {
+        font-weight: bold;
+        margin: 0.5em 0;
+        padding: 0;
+
+        span {
+          font-weight: lighter;
+          color: var(--primary-medium);
+        }
+      }
+
+      div {
+        margin-bottom: 5px;
+      }
+    }
+  }
+
+  .date {
+    display: flex;
+    line-height: var(--line-height-small);
+
+    .timestamp {
+      color: var(--primary-medium);
+    }
+  }
+
+  .like,
+  .replies {
+    align-items: center;
+    color: var(--primary-medium);
+    display: flex;
+    margin-left: 0.75em;
+
+    svg {
+      fill: currentColor;
+      margin-right: 0.25em;
+    }
+  }
+
+  .is-reply {
+    color: var(--primary-medium);
+    margin-right: 0.25em;
+  }
 }

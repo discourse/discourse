@@ -10,6 +10,7 @@ module Chat
   #   description: "This is the best channel",
   #   slug: "super-channel",
   #   category_id: category.id,
+  #   threading_enabled: true,
   #  )
   #
   class CreateCategoryChannel
@@ -23,8 +24,10 @@ module Chat
     #   @option params_to_create [String] slug
     #   @option params_to_create [Boolean] auto_join_users
     #   @option params_to_create [Integer] category_id
+    #   @option params_to_create [Boolean] threading_enabled
     #   @return [Service::Base::Context]
 
+    policy :public_channels_enabled
     policy :can_create_channel
     contract
     model :category, :fetch_category
@@ -42,8 +45,12 @@ module Chat
       attribute :slug, :string
       attribute :category_id, :integer
       attribute :auto_join_users, :boolean, default: false
+      attribute :threading_enabled, :boolean, default: false
 
-      before_validation { self.auto_join_users = auto_join_users.presence || false }
+      before_validation do
+        self.auto_join_users = auto_join_users.presence || false
+        self.threading_enabled = threading_enabled.presence || false
+      end
 
       validates :category_id, presence: true
       validates :name, length: { maximum: SiteSetting.max_topic_title_length }
@@ -51,33 +58,38 @@ module Chat
 
     private
 
-    def can_create_channel(guardian:, **)
+    def public_channels_enabled
+      SiteSetting.enable_public_channels
+    end
+
+    def can_create_channel(guardian:)
       guardian.can_create_chat_channel?
     end
 
-    def fetch_category(contract:, **)
+    def fetch_category(contract:)
       Category.find_by(id: contract.category_id)
     end
 
-    def category_channel_does_not_exist(category:, contract:, **)
+    def category_channel_does_not_exist(category:, contract:)
       !Chat::Channel.exists?(chatable: category, name: contract.name)
     end
 
-    def create_channel(category:, contract:, **)
+    def create_channel(category:, contract:)
       category.create_chat_channel(
         name: contract.name,
         slug: contract.slug,
         description: contract.description,
         user_count: 1,
         auto_join_users: contract.auto_join_users,
+        threading_enabled: contract.threading_enabled,
       )
     end
 
-    def create_membership(channel:, guardian:, **)
+    def create_membership(channel:, guardian:)
       channel.user_chat_channel_memberships.create(user: guardian.user, following: true)
     end
 
-    def enforce_automatic_channel_memberships(channel:, **)
+    def enforce_automatic_channel_memberships(channel:)
       return if !channel.auto_join_users?
       Chat::ChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
     end

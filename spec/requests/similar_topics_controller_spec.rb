@@ -62,7 +62,6 @@ RSpec.describe SimilarTopicsController do
             reindex_posts
             Topic.stubs(:count).returns(50)
             sign_in(Fabricate(:moderator))
-            Group.refresh_automatic_groups!
           end
 
           it "passes a user through if logged in" do

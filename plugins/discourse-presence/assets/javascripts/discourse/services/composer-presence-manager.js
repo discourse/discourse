@@ -1,5 +1,5 @@
-import Service, { inject as service } from "@ember/service";
 import { cancel, debounce } from "@ember/runloop";
+import Service, { service } from "@ember/service";
 import { isTesting } from "discourse-common/config/environment";
 
 const PRESENCE_CHANNEL_PREFIX = "/discourse-presence";

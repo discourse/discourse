@@ -1,8 +1,14 @@
-<DSection @pageClass="search" @class="search-container">
+{{#if this.loading}}
+  {{hide-application-footer}}
+{{/if}}
+
+{{body-class "search-page"}}
+
+<section class="search-container">
   <ScrollTracker
     @name="full-page-search"
     @tag={{this.searchTerm}}
-    @class="hidden"
+    class="hidden"
   />
 
   <div class="search-header" role="search">
@@ -18,26 +24,26 @@
     <div class="search-bar">
       <SearchTextField
         @value={{this.searchTerm}}
-        @class="full-page-search search no-blur search-query"
         @aria-label={{i18n "search.search_term_label"}}
         @enter={{action "search" (hash collapseFilters=true)}}
         @hasAutofocus={{this.hasAutofocus}}
         @aria-controls="search-result-count"
+        class="full-page-search search no-blur search-query"
       />
       <ComboBox
         @id="search-type"
         @value={{this.search_type}}
         @content={{this.searchTypes}}
-        @onChange={{action (mut this.search_type)}}
+        @onChange={{fn (mut this.search_type)}}
         @options={{hash castInteger=true}}
       />
       <DButton
-        @action={{action "search" (hash collapseFilters=true)}}
+        @action={{fn (action "search") (hash collapseFilters=true)}}
         @icon="search"
         @label="search.search_button"
-        @class="btn-primary search-cta"
         @ariaLabel="search.search_button"
         @disabled={{this.searchButtonDisabled}}
+        class="btn-primary search-cta"
       />
     </div>
     {{#if this.usingDefaultSearchType}}
@@ -58,7 +64,7 @@
       <div class="search-filters">
         <SearchAdvancedOptions
           @searchTerm={{readonly this.searchTerm}}
-          @onChangeSearchTerm={{action (mut this.searchTerm)}}
+          @onChangeSearchTerm={{fn (mut this.searchTerm)}}
           @search={{action "search" (hash collapseFilters=true)}}
           @searchButtonDisabled={{this.searchButtonDisabled}}
           @expandFilters={{this.expandFilters}}
@@ -77,6 +83,17 @@
   </div>
 
   <div class="search-advanced">
+    <PluginOutlet
+      @name="full-page-search-below-search-header"
+      @connectorTagName="div"
+      @outletArgs={{hash
+        search=this.searchTerm
+        type=this.search_type
+        model=this.model
+        addSearchResults=this.addSearchResults
+      }}
+    />
+
     {{#if this.hasResults}}
       {{#if this.usingDefaultSearchType}}
         <div
@@ -87,16 +104,16 @@
           {{#if this.canBulkSelect}}
             <DButton
               @icon="list"
-              @class="btn-default bulk-select"
               @title="topics.bulk.toggle"
               @action={{action "toggleBulkSelect"}}
+              class="btn-default bulk-select"
             />
             {{#if this.selected}}
               <DButton
-                @class="btn-default bulk-select-btn"
                 @selected={{this.selected}}
                 @action={{action "showBulkActions"}}
                 @icon="wrench"
+                class="btn-default bulk-select-btn"
               />
             {{/if}}
           {{/if}}
@@ -105,18 +122,18 @@
             {{#if this.hasUnselectedResults}}
               <DButton
                 @icon="check-square"
-                @class="btn-default"
                 @action={{action "selectAll"}}
                 @label="search.select_all"
+                class="btn-default"
               />
             {{/if}}
 
             {{#if this.hasSelection}}
               <DButton
                 @icon="far-square"
-                @class="btn-default"
                 @action={{action "clearAll"}}
                 @label="search.clear_all"
+                class="btn-default"
               />
             {{/if}}
           {{/if}}
@@ -128,7 +145,7 @@
             <ComboBox
               @value={{this.sortOrder}}
               @content={{this.sortOrders}}
-              @onChange={{action (mut this.sortOrder)}}
+              @onChange={{this.setSortOrder}}
               @id="search-sort-by"
               @options={{hash castInteger=true}}
             />
@@ -152,7 +169,7 @@
         <LoadMore @selector=".fps-result" @action={{action "loadMore"}}>
           {{#if (or this.usingDefaultSearchType this.customSearchType)}}
             <SearchResultEntries
-              @posts={{this.model.posts}}
+              @posts={{this.searchResultPosts}}
               @bulkSelectEnabled={{this.bulkSelectEnabled}}
               @selected={{this.selected}}
               @highlightQuery={{this.highlightQuery}}
@@ -241,7 +258,7 @@
                 {{#if this.model.users}}
                   <div class="user-items">
                     {{#each this.model.users as |user|}}
-                      <UserLink @user={{user}} @class="fps-user-item">
+                      <UserLink @user={{user}} class="fps-user-item">
                         {{avatar user imageSize="large"}}
 
                         <div class="user-titles">
@@ -270,4 +287,4 @@
       </div>
     {{/if}}
   </div>
-</DSection>
+</section>

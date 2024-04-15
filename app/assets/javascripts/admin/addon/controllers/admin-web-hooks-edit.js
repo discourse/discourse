@@ -1,17 +1,20 @@
-import { inject as service } from "@ember/service";
-import { alias } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import { alias } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default class AdminWebHooksEditController extends Controller {
   @service dialog;
+  @service router;
+  @service siteSettings;
+
   @controller adminWebHooks;
 
-  @alias("adminWebHooks.eventTypes") eventTypes;
+  @alias("adminWebHooks.groupedEventTypes") groupedEventTypes;
   @alias("adminWebHooks.defaultEventTypes") defaultEventTypes;
   @alias("adminWebHooks.contentTypes") contentTypes;
 
@@ -94,7 +97,7 @@ export default class AdminWebHooksEditController extends Controller {
 
       this.set("saved", true);
       this.adminWebHooks.model.addObject(this.model);
-      this.transitionToRoute("adminWebHooks.show", this.model);
+      this.router.transitionTo("adminWebHooks.show", this.model);
     } catch (e) {
       popupAjaxError(e);
     }

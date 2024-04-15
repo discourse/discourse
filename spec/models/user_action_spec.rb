@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserAction do
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:coding_horror)
 
   before { UserActionManager.enable }
 
@@ -11,7 +11,7 @@ RSpec.describe UserAction do
   describe "#stream" do
     fab!(:public_post) { Fabricate(:post) }
     let(:public_topic) { public_post.topic }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     fab!(:private_post) { Fabricate(:post) }
     let(:private_topic) do
@@ -42,7 +42,7 @@ RSpec.describe UserAction do
         end
 
       expect(m[0].group_ids).to eq([Group::AUTO_GROUPS[:admins]])
-      expect(m[0].user_ids).to eq([user.id])
+      expect(m[0].user_ids).to eq(nil)
     end
 
     describe "integration" do
@@ -121,7 +121,7 @@ RSpec.describe UserAction do
     end
 
     describe "assignments" do
-      let(:stream) { UserAction.stream(user_id: user.id, guardian: Guardian.new(user)) }
+      let(:stream) { UserAction.stream(user_id: user.id, guardian: user.guardian) }
 
       before do
         log_test_action(action_type: UserAction::ASSIGNED)
@@ -146,7 +146,7 @@ RSpec.describe UserAction do
     describe "mentions" do
       before { log_test_action(action_type: UserAction::MENTION) }
 
-      let(:stream) { UserAction.stream(user_id: user.id, guardian: Guardian.new(user)) }
+      let(:stream) { UserAction.stream(user_id: user.id, guardian: user.guardian) }
 
       it "is returned by the stream" do
         expect(stream.count).to eq(1)
@@ -158,10 +158,37 @@ RSpec.describe UserAction do
         expect(stream).to be_blank
       end
     end
+
+    describe "when a plugin registers the :user_action_stream_builder modifier" do
+      before do
+        log_test_action(action_type: UserAction::LIKE)
+        log_test_action(action_type: UserAction::WAS_LIKED)
+      end
+
+      after { DiscoursePluginRegistry.clear_modifiers! }
+
+      it "allows the plugin to modify the builder query" do
+        Plugin::Instance
+          .new
+          .register_modifier(:user_action_stream_builder) do |builder|
+            expect(builder).to be_a(MiniSqlMultisiteConnection::CustomBuilder)
+            builder.limit(1)
+          end
+
+        stream = UserAction.stream(user_id: user.id, guardian: user.guardian)
+
+        expect(stream.count).to eq(1)
+
+        DiscoursePluginRegistry.clear_modifiers!
+
+        stream = UserAction.stream(user_id: user.id, guardian: user.guardian)
+        expect(stream.count).to eq(2)
+      end
+    end
   end
 
   describe "when user likes" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     let(:likee) { post.user }
     fab!(:liker) { coding_horror }
 

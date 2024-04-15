@@ -11,37 +11,23 @@ ro:
       trigger: "citează"
     magic_8_ball:
       answers:
-        "1": "It is certain"
-        "2": "It is decidedly so"
-        "3": "Without a doubt"
-        "4": "Yes definitely"
-        "5": "You may rely on it"
-        "6": "As I see it, yes"
-        "7": "Most likely"
-        "8": "Outlook good"
         "9": "Da"
-        "10": "Signs point to yes"
-        "11": "Reply hazy, try again"
-        "12": "Ask again later"
-        "13": "Better not tell you now"
-        "14": "Cannot predict now"
-        "15": "Concentrate and ask again"
-        "16": "Don't count on it"
-        "17": "My reply is no"
-        "18": "My sources say no"
-        "19": "Outlook not so good"
-        "20": "Very doubtful"
     new_user_narrative:
       hello:
         title: "Salutări!"
         message: |-
-          Mulțumim că te-ai alăturat la %{title}, și bine ai venit!
+          Mulțumim că te-ai alăturat %{title} și bine ai venit!
 
-          - Eu sunt doar robot, dar [personalul nostru prietenos](%{base_uri}/about) este aici să te ajute, în cazul in care ai nevoie să vorbești cu cineva.
+          - Eu sunt doar un robot, dar [personalul nostru prietenos](%{base_uri}/about) este aici să te ajute, în cazul în care ai nevoie să vorbești cu cineva.
 
-          - Din motive de securitate, limităm temporar ceea ce pot face noii utilizatori. Vei câștiga [noi abilități](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (și [badges](%{base_uri}/badges)) daca îți petreci mai mult timp pe acest sit.
+          - Din motive de securitate, limităm temporar ceea ce pot face noii utilizatori. Vei dobândi [noi abilități](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (și [insigne](%{base_uri}/badges)) pe măsură ce te cunoaștem.
 
-          - Noi credem în [comportamentul comunitar civilizat](%{base_uri}/guidelines) în orice moment.
+          - Credem tot timpul în [comportamentul civilizat al comunității](%{base_uri}/guidelines).
       bookmark:
         instructions: |-
-          Dacă vrei să afli mai multe, selectează <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> mai jos şi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marcați cu semn de carte acest mesaj**. Dacă o faci, ar putea fi un :gift: în viitor!
+          Dacă vrei să afli mai multe, selectează <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> de mai jos şi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **marchează ca semn de carte acest mesaj**. Dacă o faci, ar putea fi un :gift: în viitor!
+      search:
+        instructions: |-
+          _psst_ … Am ascuns o surpriză în acest subiect. Dacă ești gata pentru o provocare, **selectează pictograma de căutare** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> din dreapta sus &#8599;, alege „în acest subiect”, apoi caută.
+
+          Încearcă să cauți termenul „capy&#8203;bara” în acest subiect

@@ -6,7 +6,15 @@
 
 hy:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Միշտ"
+          never: "Երբեք"
     chat:
+      deleted_chat_username: ջնջված
+      dates:
+        yesterday: "Երեկվա"
       create: "Ստեղծել"
       cancel: "Չեղարկել"
       channel_settings:
@@ -15,6 +23,7 @@ hy:
         join: "Միանալ"
         leave: "Լքել"
       close: "Փակել"
+      remove: "Հեռացնել"
       delete: "Ջնջել"
       edited: "խմբագրվել է"
       muted: "խլացված"
@@ -26,8 +35,6 @@ hy:
       flag: "Դրոշակավորել"
       join: "Միանալ"
       last_visit: "վերջին այցելությունը"
-      mention_warning:
-        dismiss: "չեղարկել"
       reply: "Պատասխանել"
       edit: "Խմբագրել"
       rebake_message: "Վերակառուցել HTML-ը"
@@ -42,6 +49,7 @@ hy:
       browse:
         back: "Ետ"
         filter_all: Բոլորը
+        filter_open: Բացել
         filter_closed: Փակված
       chat_message_separator:
         today: Այսօրվա
@@ -53,9 +61,11 @@ hy:
       channel_info:
         back_to_channel: "Ետ"
         tabs:
-          about: Մասին
           members: Անդամներ
           settings: Կարգավորումներ
+      new_message_modal:
+        no_items: "Տարրեր չկան"
+        filter: "Ֆիլտր"
       direct_message_creator:
         title: Նոր Հաղորդագրություն
         prefix: "Ում:"
@@ -73,12 +83,17 @@ hy:
       settings:
         follow: "Միանալ"
         followed: "Միացել է"
+        threading_disabled: "Անջատված"
         notifications: "Ծանուցումներ"
         preview: "Նախադիտում"
         save: "Պահպանել"
         saved: "Պահված է"
         unfollow: "Լքել"
         admin_title: "Ադմին"
+        settings_title: "Կարգավորումներ"
+        category_label: "Կատեգորիա"
+        history_label: "Պատմություն"
+        members_label: "Անդամներ"
       incoming_webhooks:
         back: "Ետ"
         description: "Նկարագրությունը"
@@ -99,6 +114,10 @@ hy:
           title: "Տեղափոխել դեպի Գոյություն Ունեցող Թեմա"
         new_message:
           title: "Տեղափոխել դեպի Նոր Հաղորդագրություն"
+      retention_reminders:
+        short:
+          one: "%{count} օր"
+          other: "%{count} օր"
       emoji_picker:
         objects: "Օբյեկտներ"
         activities: "Ակտիվություն"
@@ -110,6 +129,12 @@ hy:
           one: "%{count} պատասխան"
           other: "%{count} պատասխան"
         settings: "Կարգավորումներ"
+        last_reply: "վերջին պատասխանը"
+        notifications:
+          regular:
+            title: "Նորմալ"
+          tracking:
+            title: "Հետևում Եմ"
       draft_channel_screen:
         header: "Նոր Հաղորդագրություն"
         cancel: "Չեղարկել"

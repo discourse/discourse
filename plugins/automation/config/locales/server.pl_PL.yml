@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  discourse_automation:
+    triggerables:
+      user_promoted:
+        description: Gdy użytkownik awansuje z jednego poziomu zaufania na inny
+        transition_placeholder: "od %{from_level_name} do %{to_level_name}"
+      topic:
+        title: Temat
+    scriptables:
+      topic:
+        title: Utwórz temat
+      pin_topic:
+        title: Przypnij temat
+      close_topic:
+        title: Zamknij temat
+      append_last_checked_by:
+        button_text: Zrobione

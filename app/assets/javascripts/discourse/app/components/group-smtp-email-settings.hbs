@@ -27,7 +27,7 @@
         />
       </div>
 
-      <label for="enable_ssl">
+      <label for="enable_ssl" class="groups-form__enable-ssl">
         <Input
           @type="checkbox"
           @checked={{this.form.smtp_ssl}}
@@ -99,12 +99,12 @@
   <div class="control-group buttons">
     <DButton
       @disabled={{or this.missingSettings this.testingSettings}}
-      @class="btn-primary test-smtp-settings"
-      @action={{action "testSmtpSettings"}}
+      @action={{this.testSmtpSettings}}
       @icon="cog"
       @label="groups.manage.email.test_settings"
-      @tabindex="7"
       @title="groups.manage.email.settings_required"
+      tabindex="7"
+      class="btn-primary test-smtp-settings"
     />
 
     <ConditionalLoadingSpinner

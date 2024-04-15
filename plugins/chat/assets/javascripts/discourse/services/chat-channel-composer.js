@@ -1,40 +1,92 @@
-import { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import ChatComposer from "./chat-composer";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import { schedule } from "@ember/runloop";
+import Service, { service } from "@ember/service";
+import { disableBodyScroll } from "discourse/lib/body-scroll-lock";
 
-export default class ChatChannelComposer extends ChatComposer {
+export default class ChatChannelComposer extends Service {
   @service chat;
+  @service chatApi;
+  @service currentUser;
   @service router;
+  @service("chat-thread-composer") threadComposer;
+  @service loadingSlider;
+  @service capabilities;
+  @service appEvents;
+  @service site;
+
+  @tracked textarea;
+  @tracked scrollable;
+
+  init() {
+    super.init(...arguments);
+    this.appEvents.on("discourse:focus-changed", this, this.blur);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("discourse:focus-changed", this, this.blur);
+  }
 
   @action
-  reset(channel) {
-    this.message = ChatMessage.createDraftMessage(channel, {
-      user: this.currentUser,
+  focus(options = {}) {
+    this.textarea?.focus(options);
+
+    schedule("afterRender", () => {
+      if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
+        disableBodyScroll(this.scrollable, { reverse: true });
+      }
     });
   }
 
   @action
-  replyTo(message) {
-    this.chat.activeMessage = null;
-    const channel = message.channel;
+  blur() {
+    this.textarea.blur();
+  }
 
-    if (
-      this.siteSettings.enable_experimental_chat_threaded_discussions &&
-      channel.threadingEnabled
-    ) {
-      let thread;
-      if (message.thread?.id) {
-        thread = message.thread;
-      } else {
-        thread = channel.createStagedThread(message);
-        message.thread = thread;
+  @action
+  edit(message) {
+    this.chat.activeMessage = null;
+    message.editing = true;
+    message.channel.draft = message;
+
+    if (this.site.desktopView) {
+      this.focus({ refreshHeight: true, ensureAtEnd: true });
+    }
+  }
+
+  @action
+  async replyTo(message) {
+    this.chat.activeMessage = null;
+
+    if (message.channel.threadingEnabled) {
+      if (!message.thread?.id) {
+        try {
+          this.loadingSlider.transitionStarted();
+          const threadObject = await this.chatApi.createThread(
+            message.channel.id,
+            message.id
+          );
+          message.thread = message.channel.threadsManager.add(
+            message.channel,
+            threadObject
+          );
+        } finally {
+          this.loadingSlider.transitionEnded();
+        }
       }
 
-      this.chat.activeMessage = null;
-      this.router.transitionTo("chat.channel.thread", ...thread.routeModels);
+      message.channel.resetDraft(this.currentUser);
+
+      await this.router.transitionTo(
+        "chat.channel.thread",
+        ...message.thread.routeModels
+      );
+
+      this.threadComposer.focus({ ensureAtEnd: true, refreshHeight: true });
     } else {
-      this.message.inReplyTo = message;
+      message.channel.draft.inReplyTo = message;
+      this.focus({ ensureAtEnd: true, refreshHeight: true });
     }
   }
 }

@@ -108,10 +108,10 @@ async function optimize(imageData, fileName, width, height, settings) {
   logIfDebug(`Reduction: ${(initialSize / finalSize).toFixed(1)}x speedup`);
 
   if (finalSize < 20000) {
-    throw "Final size suspciously small, discarding optimizations";
+    throw "Final size suspiciously small, discarding optimizations";
   }
 
-  let transferrable = Uint8Array.from(result).buffer; // decoded was allocated inside WASM so it **cannot** be transfered to another context, need to copy by value
+  let transferrable = Uint8Array.from(result).buffer; // decoded was allocated inside WASM so it **cannot** be transferred to another context, need to copy by value
 
   return transferrable;
 }

@@ -9,7 +9,6 @@ export function getCachedTopicList(session) {
 export function resetCachedTopicList(session) {
   session.setProperties({
     topicList: null,
-    topicListScrollPosition: null,
   });
 }
 

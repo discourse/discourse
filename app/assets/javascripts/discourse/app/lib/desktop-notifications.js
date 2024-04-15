@@ -1,11 +1,11 @@
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import KeyValueStore from "discourse/lib/key-value-store";
 import { Promise } from "rsvp";
+import KeyValueStore from "discourse/lib/key-value-store";
+import DiscourseURL from "discourse/lib/url";
+import { formatUsername } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import { formatUsername } from "discourse/lib/utilities";
 import discourseLater from "discourse-common/lib/later";
+import I18n from "discourse-i18n";
 
 let primaryTab = false;
 let liveEnabled = false;
@@ -144,7 +144,7 @@ function isIdle() {
 }
 
 // Call-in point from message bus
-async function onNotification(data, siteSettings, user) {
+async function onNotification(data, siteSettings, user, appEvents) {
   if (!liveEnabled) {
     return;
   }
@@ -167,6 +167,7 @@ async function onNotification(data, siteSettings, user) {
       site_title: siteSettings.title,
       topic: data.topic_title,
       username: formatUsername(data.username),
+      group_name: data.group_name,
     });
 
   const notificationBody = data.excerpt;
@@ -187,6 +188,7 @@ async function onNotification(data, siteSettings, user) {
   });
   notification.onclick = () => {
     DiscourseURL.routeTo(data.post_url);
+    appEvents.trigger("desktop-notification-opened", { url: data.post_url });
     notification.close();
   };
 

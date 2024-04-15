@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Document title", type: :system, js: true do
+RSpec.describe "Document title", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -17,7 +17,7 @@ RSpec.describe "Document title", type: :system, js: true do
     it "shows the channel name in the document title" do
       chat_page.visit_channel(channel_1)
 
-      expect(page.title).to start_with("##{channel_1.title}")
+      expect(page).to have_title("##{channel_1.title}")
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe "Document title", type: :system, js: true do
     it "shows the channel name in the document title" do
       chat_page.visit_channel(channel_1)
 
-      expect(page.title).to start_with("#{channel_1.title(current_user)}")
+      expect(page).to have_title("#{channel_1.title(current_user)}")
     end
   end
 end

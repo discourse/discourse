@@ -28,6 +28,14 @@ RSpec.describe UserActionsController do
         expect(actions.first).not_to include "email"
       end
 
+      it "returns categories when lazy load categories is enabled" do
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+        user_actions
+        expect(response.status).to eq(200)
+        category_ids = response.parsed_body["categories"].map { |category| category["id"] }
+        expect(category_ids).to contain_exactly(post.topic.category.id)
+      end
+
       context "when 'acting_username' is provided" do
         let(:user) { Fabricate(:user) }
 
@@ -45,7 +53,7 @@ RSpec.describe UserActionsController do
       end
 
       context "when user's profile is hidden" do
-        fab!(:post) { Fabricate(:post) }
+        fab!(:post)
 
         before { post.user.user_option.update_column(:hide_profile_and_presence, true) }
 
@@ -79,7 +87,7 @@ RSpec.describe UserActionsController do
         end
 
         context "when user is logged in" do
-          fab!(:user) { Fabricate(:user) }
+          fab!(:user)
 
           before { sign_in(user) }
 
@@ -92,7 +100,7 @@ RSpec.describe UserActionsController do
         end
 
         context "when user is a moderator" do
-          fab!(:moderator) { Fabricate(:moderator) }
+          fab!(:moderator)
 
           before { sign_in(moderator) }
 
@@ -105,7 +113,7 @@ RSpec.describe UserActionsController do
         end
 
         context "when user is an admin" do
-          fab!(:admin) { Fabricate(:admin) }
+          fab!(:admin)
 
           before { sign_in(admin) }
 
@@ -125,7 +133,7 @@ RSpec.describe UserActionsController do
       end
 
       context "when bad data is provided" do
-        fab!(:user) { Fabricate(:user) }
+        fab!(:user)
 
         let(:params) { { filter: filter, username: username, offset: offset, limit: limit } }
         let(:filter) { "1,2" }

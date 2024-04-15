@@ -1,7 +1,7 @@
 import Component from "@ember/component";
+import { filter } from "@ember/object/computed";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
-import { filter } from "@ember/object/computed";
 
 //  A breadcrumb including category drop downs
 export default Component.extend({
@@ -10,43 +10,31 @@ export default Component.extend({
   editingCategory: false,
   editingCategoryTab: null,
 
-  @discourseComputed("categories")
-  filteredCategories(categories) {
-    return categories.filter(
-      (category) =>
-        this.siteSettings.allow_uncategorized_topics ||
-        category.id !== this.site.uncategorized_category_id
-    );
-  },
+  @discourseComputed("category", "categories", "noSubcategories")
+  categoryBreadcrumbs(category, filteredCategories, noSubcategories) {
+    const ancestors = category?.ancestors || [];
+    const parentCategories = [undefined, ...ancestors];
+    const categories = [...ancestors, undefined];
 
-  @discourseComputed(
-    "category.ancestors",
-    "filteredCategories",
-    "noSubcategories"
-  )
-  categoryBreadcrumbs(categoryAncestors, filteredCategories, noSubcategories) {
-    categoryAncestors = categoryAncestors || [];
-    const parentCategories = [undefined, ...categoryAncestors];
-    const categories = [...categoryAncestors, undefined];
-    const zipped = parentCategories.map((x, i) => [x, categories[i]]);
+    return parentCategories
+      .map((x, i) => [x, categories[i]])
+      .map((record) => {
+        const [parentCategory, subCategory] = record;
 
-    return zipped.map((record) => {
-      const [parentCategory, category] = record;
+        const options = filteredCategories.filter(
+          (c) =>
+            c.get("parentCategory.id") === (parentCategory && parentCategory.id)
+        );
 
-      const options = filteredCategories.filter(
-        (c) =>
-          c.get("parentCategory.id") === (parentCategory && parentCategory.id)
-      );
-
-      return {
-        category,
-        parentCategory,
-        options,
-        isSubcategory: !!parentCategory,
-        noSubcategories: !category && noSubcategories,
-        hasOptions: options.length !== 0,
-      };
-    });
+        return {
+          category: subCategory,
+          parentCategory,
+          options,
+          isSubcategory: !!parentCategory,
+          noSubcategories: !subCategory && noSubcategories,
+          hasOptions: !parentCategory || parentCategory.has_children,
+        };
+      });
   },
 
   @discourseComputed("siteSettings.tagging_enabled", "editingCategory")

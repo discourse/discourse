@@ -6,7 +6,15 @@
 
 lv:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Vienmēr"
+          never: "Nekad"
     chat:
+      deleted_chat_username: dzēsts
+      dates:
+        yesterday: "Vakar"
       create: "Izveidot"
       cancel: "Atcelt"
       channel_settings:
@@ -15,6 +23,7 @@ lv:
         join: "Pievienojieties"
         leave: "Iziet"
       close: "Aizvērt"
+      remove: "Atcelt"
       delete: "Dzēst"
       edited: "rediģēts"
       muted: "klusināts"
@@ -26,8 +35,6 @@ lv:
       flag: "Sūdzība"
       join: "Pievienojieties"
       last_visit: "pēdējais apmeklējums"
-      mention_warning:
-        dismiss: "nerādīt"
       reply: "Atbilde"
       edit: "Rediģēt"
       rebake_message: "Pārbūvēt HTML"
@@ -43,6 +50,7 @@ lv:
       browse:
         back: "Atpakaļ"
         filter_all: Viss
+        filter_open: Atvērt
         filter_closed: Slēgts
       chat_message_separator:
         today: Šodien
@@ -54,9 +62,10 @@ lv:
       channel_info:
         back_to_channel: "Atpakaļ"
         tabs:
-          about: Par
           members: Dalībnieki
           settings: Iestatījumi
+      new_message_modal:
+        filter: "Filtrs"
       direct_message_creator:
         title: Jauns ziņa
         prefix: "Kam:"
@@ -74,12 +83,18 @@ lv:
       settings:
         follow: "Pievienojieties"
         followed: "Pievienojās"
+        threading_enabled: "Ieslēgts"
+        threading_disabled: "Atslēgt"
         notifications: "Paziņojumi"
         preview: "Priekšskatījums"
         save: "Saglabāt"
         saved: "Saglabāts"
         unfollow: "Iziet"
         admin_title: "Administrators"
+        settings_title: "Iestatījumi"
+        category_label: "Sadaļa"
+        history_label: "Vēsture"
+        members_label: "Dalībnieki"
       incoming_webhooks:
         back: "Atpakaļ"
         description: "Apraksts"
@@ -98,6 +113,11 @@ lv:
           title: "Pārvietot uz jaunu tēmu"
         existing_topic:
           title: "Pārvietot uz esošu tēmu"
+      retention_reminders:
+        short:
+          zero: "%{count} dienas"
+          one: "%{count} diena"
+          other: "%{count} dienas"
       emoji_picker:
         objects: "Priekšmeti"
         activities: "Aktivitātes"
@@ -110,6 +130,12 @@ lv:
           one: "%{count} atbilde"
           other: "%{count} atbildes"
         settings: "Iestatījumi"
+        last_reply: "pēdējā atbilde"
+        notifications:
+          regular:
+            title: "Normāls"
+          tracking:
+            title: "Sekot"
       draft_channel_screen:
         header: "Jauns ziņa"
         cancel: "Atcelt"

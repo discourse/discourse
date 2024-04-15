@@ -1,10 +1,10 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - Webhooks", function (needs) {
   needs.user();
@@ -16,6 +16,7 @@ acceptance("Admin - Webhooks", function (needs) {
         total_rows_web_hooks: 0,
         load_more_web_hooks: "/admin/api/web_hooks.json?limit=50&offset=50",
         extras: {
+          categories: [],
           content_types: [
             { id: 1, name: "application/json" },
             { id: 2, name: "application/x-www-form-urlencoded" },

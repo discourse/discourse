@@ -1,8 +1,11 @@
+import { next } from "@ember/runloop";
+import { click, fillIn, focus, render, settled } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, fillIn, render, settled } from "@ember/test-helpers";
+import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import {
-  chromeTest,
   exists,
   paste,
   query,
@@ -12,11 +15,7 @@ import {
   getTextareaSelection,
   setTextareaSelection,
 } from "discourse/tests/helpers/textarea-selection-helper";
-import { hbs } from "ember-cli-htmlbars";
-import I18n from "I18n";
-import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
-import { next } from "@ember/runloop";
-import { withPluginApi } from "discourse/lib/plugin-api";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);
@@ -71,7 +70,7 @@ module("Integration | Component | d-editor", function (hooks) {
   }
 
   function testCase(title, testFunc) {
-    chromeTest(title, async function (assert) {
+    test(title, async function (assert) {
       this.set("value", "hello world.");
 
       await render(hbs`<DEditor @value={{this.value}} />`);
@@ -694,6 +693,33 @@ third line`
       "starting to type an emoji like :grinning:",
       "it works when there is a partial emoji"
     );
+  });
+
+  test("Toolbar buttons are only rendered when condition is met", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.onToolbarCreate((toolbar) => {
+        toolbar.addButton({
+          id: "shown",
+          group: "extras",
+          icon: "far-smile",
+          action: () => {},
+          condition: () => true,
+        });
+
+        toolbar.addButton({
+          id: "not-shown",
+          group: "extras",
+          icon: "far-frown",
+          action: () => {},
+          condition: () => false,
+        });
+      });
+    });
+
+    await render(hbs`<DEditor/>`);
+
+    assert.ok(exists(".d-editor-button-bar button.shown"));
+    assert.notOk(exists(".d-editor-button-bar button.not-shown"));
   });
 
   test("toolbar buttons tabindex", async function (assert) {

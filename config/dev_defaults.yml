@@ -35,6 +35,8 @@ topic:
     max: 3
 user:
   count: 30
+email_logs:
+  count: 2
 
 new_user:
   username: new_user

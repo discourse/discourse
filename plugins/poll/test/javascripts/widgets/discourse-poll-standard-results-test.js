@@ -1,9 +1,9 @@
+import EmberObject from "@ember/object";
+import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
-import EmberObject from "@ember/object";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 
 module(
   "Integration | Component | Widget | discourse-poll-standard-results",

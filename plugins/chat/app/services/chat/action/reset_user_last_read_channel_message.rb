@@ -16,17 +16,12 @@ module Chat
          -- the cte row_number is necessary to only return a single row
          -- for each channel to prevent additional data being returned
          WITH cte AS (
-           SELECT * FROM (
-             SELECT id, chat_channel_id, row_number() OVER (
-                 PARTITION BY chat_channel_id ORDER BY created_at DESC, id DESC
-               ) AS row_number
-             FROM chat_messages
-             WHERE deleted_at IS NULL AND chat_channel_id IN (:channel_ids)
-           ) AS recent_messages
-           WHERE recent_messages.row_number = 1
+           SELECT chat_channels.id AS chat_channel_id, last_message_id
+           FROM chat_channels
+           WHERE chat_channels.id IN (:channel_ids)
          )
          UPDATE user_chat_channel_memberships
-         SET last_read_message_id = cte.id
+         SET last_read_message_id = cte.last_message_id
          FROM cte
          WHERE user_chat_channel_memberships.last_read_message_id IN (:last_read_message_ids)
          AND cte.chat_channel_id = user_chat_channel_memberships.chat_channel_id;

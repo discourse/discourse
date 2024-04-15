@@ -8,8 +8,10 @@ hu:
   js:
     admin:
       site_settings:
-        categories:
-          chat: Csevegés
+        chat_separate_sidebar_mode:
+          always: "Mindig"
+          fullscreen: "Amikor a csevegés teljes képernyőn van"
+          never: "Soha"
       logs:
         staff_actions:
           actions:
@@ -21,12 +23,10 @@ hu:
           descriptions:
             chat:
               create_message: "Csevegőüzenet létrehozása egy megadott csatornán."
-    about:
-      chat_messages_count: "Csevegőüzenetek"
-      chat_channels_count: "Csevegőcsatornák"
-      chat_users_count: "Csevegőfelhasználók"
     chat:
+      deleted_chat_username: törölt
       dates:
+        yesterday: "Tegnap"
         time_tiny: "h:mm"
       all_loaded: "Összes üzenet megjelenítése"
       already_enabled: "A csevegés már engedélyezve van ebben a témában. Frissítsen."
@@ -73,6 +73,7 @@ hu:
         create: "Új csatorna"
       click_to_join: "Kattintson ide az elérhető csatornák megtekintéséhez."
       close: "Lezárás"
+      remove: "Eltávolítás"
       collapse: "Csevegőfiók összecsukása"
       expand: "Chat fiók bővítése"
       confirm_flag: "Biztos, hogy jelenti %{username} üzenetét?"
@@ -94,6 +95,7 @@ hu:
         title: "Aktivitásjelző megjelenítése a fejlécben"
         all_new: "Minden új üzenet"
         dm_and_mentions: "Közvetlen üzenetek és említések"
+        only_mentions: "Csak említések"
         never: "Soha"
       enable: "Csevegés engedélyezése"
       flag: "Jelölés"
@@ -105,8 +107,9 @@ hu:
       heading: "Csevegés"
       join: "Belépés"
       last_visit: "utolsó látogatás"
+      summarization:
+        summarize: "Összefoglalás"
       mention_warning:
-        dismiss: "elvetés"
         invitations_sent:
           one: "Meghívó elküldve"
           other: "Meghívók elküldve"
@@ -177,7 +180,7 @@ hu:
         back: "Vissza"
         title: Csatornák
         filter_all: Összes
-        filter_open: Nyitott
+        filter_open: Megnyitás
         filter_closed: Zárt
         filter_archived: Archivált
         filter_input_placeholder: Csatorna keresése név szerint
@@ -196,9 +199,10 @@ hu:
         back_to_all_channels: "Összes csatorna"
         back_to_channel: "Vissza"
         tabs:
-          about: Névjegy
           members: Tagok
           settings: Beállítások
+      new_message_modal:
+        filter: "Szűrő"
       channel_edit_name_slug_modal:
         title: Csatorna szerkesztése
         input_placeholder: Név hozzáadása
@@ -212,9 +216,6 @@ hu:
         prefix: "Címzett:"
         no_results: Nincs találat
         selected_user_title: "%{username} kijelölésének megszüntetése"
-      channel_selector:
-        title: "Ugrás a csatornára"
-        no_channels: "Egyetlen csatorna sem felel meg a keresésnek"
       channel:
         no_memberships: Ennek a csatornának nincsenek tagjai
         no_memberships_found: Nem találhatók tagok
@@ -238,8 +239,6 @@ hu:
           topic: "Téma"
       reviewable:
         type: "Csevegőüzenet"
-      reactions:
-        only_you: "Ezzel reagált: :%{emoji}:"
       composer:
         toggle_toolbar: "Eszköztár be/ki"
         italic_text: "dőlt szöveg"
@@ -248,6 +247,7 @@ hu:
         send: "Küldés"
       quote:
         copy_success: "Csevegési idézet a vágólapra másolva"
+        default_thread_title: "Szál"
       notification_levels:
         never: "Soha"
         mention: "Csak megemlítésnél"
@@ -260,6 +260,8 @@ hu:
         followed: "Csatlakozott"
         mobile_notification_level: "Mobilos leküldéses értesítések"
         mute: "Csatorna némítása"
+        threading_enabled: "Engedélyezed"
+        threading_disabled: "Kikapcsolt"
         muted_on: "Be"
         muted_off: "Ki"
         notifications: "Értesítések"
@@ -268,10 +270,13 @@ hu:
         saved: "Mentve"
         unfollow: "Elhagyás"
         admin_title: "Adminisztrátor"
+        settings_title: "Beállítások"
+        category_label: "Kategória"
+        history_label: "Idővonal"
+        members_label: "Tagok"
       admin:
         title: "Csevegés"
       direct_messages:
-        title: "Személyes csevegés"
         new: "Személyes csevegés létrehozása"
         create: "Ugrás"
         leave: "E személyes csevegés elhagyása"
@@ -330,8 +335,9 @@ hu:
           one: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
           other: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
       retention_reminders:
-        public_none: "A csatornaelőzmények korlátlan ideig megőrződnek."
-        dm_none: "A személyes csevegési előzmények korlátlan ideig megőrződnek."
+        short:
+          one: "%{count} nap"
+          other: "%{count} nap"
       flagging:
         action: "Üzenet megjelölése"
       emoji_picker:
@@ -354,6 +360,15 @@ hu:
           other: "%{count} válasz"
         label: Szál
         settings: "Beállítások"
+        last_reply: "utolsó válasz"
+        notifications:
+          regular:
+            title: "Normális"
+          tracking:
+            title: "Követés"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Új üzenet"
         cancel: "Visszavon"

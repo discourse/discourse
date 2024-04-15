@@ -7,6 +7,188 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.0] - 2024-03-20
+
+- Added `addAdminPluginConfigurationNav`, which defines a list of links used in the adminPlugins.show page for a specific plugin, and displays them either in an inner sidebar or in a top horizontal nav.
+
+## [1.29.0] - 2024-03-05
+
+- added `headerButtons` which allows for manipulation of the header butttons. This includes, adding, removing, or modifying the order of buttons. 
+
+## [1.28.0] - 2024-02-21
+
+- added `headerIcons` which allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons. 
+
+## [1.27.0] - 2024-02-21
+
+- deprecated `addToHeaderIcons` in favor of `headerIcons`
+
+## [1.26.0] - 2024-02-21
+
+- Added `renderBeforeWrapperOutlet` which is used for rendering components before the content of wrapper plugin outlets 
+- Added `renderAfterWrapperOutlet` which is used for rendering components after the content of wrapper plugin outlets 
+
+## [1.25.0] - 2024-02-05
+
+- Added `addComposerImageWrapperButton` which is used to add a custom button to the composer preview's image wrapper that appears on hover of an uploaded image.
+
+## [1.24.0] - 2024-01-08
+
+- Added `addAdminSidebarSectionLink` which is used to add a link to a specific admin sidebar section, as a replacement for the `admin-menu` plugin outlet. This only has an effect if the `admin_sidebar_enabled_groups` site setting is in use, which enables the new admin nav sidebar.
+
+## [1.23.0] - 2024-01-03
+
+### Added
+
+- Added `setUserMenuNotificationsLimit` function which is used to specify a new limit for the notifications query when the user menu is opened.
+
+## [1.21.0] - 2023-12-22
+
+### Added
+
+- Added `includeUserFieldPropertiesOnSave` function, which includes the passed user field properties in the user field save request. This is useful for plugins that are adding additional columns to the user field model and want to save the new property values alongside the default user field properties (all under the same save call).
+
+
+## [1.20.0] - 2023-12-20
+
+### Added
+
+- Added `addSearchMenuAssistantSelectCallback` function, which is used to override the behavior of clicking a search menu assistant item. If any callback returns false, the core behavior will not be executed.
+
+## [1.19.0] - 2023-12-13
+
+### Added
+
+- Added `setNotificationsLimit` function, which sets a new limit for how many notifications are loaded for the user notifications route
+
+- Added `addBeforeLoadMoreNotificationsCallback` function, which takes a function as the argument. All added callbacks are evaluated before `loadMore` is triggered for user notifications. If any callback returns false, notifications will not be loaded.
+
+## [1.18.0] - 2023-12-1
+
+### Added
+
+- Added `setDesktopTopicTimelineScrollAreaHeight` function, which takes an object with min/max key value pairs as an argument. This is used to adjust the height of the topic timeline on desktop without CSS hacks that break the functionality of the topic timeline.
+
+## [1.17.0] - 2023-11-30
+
+### Added
+
+- Introduces `forceDropdownAnimationForMenuPanels` API for forcing one or many Menu Panels (search-menu, user-menu, etc) to be rendered as a dropdown. This can be useful for plugins as the default behavior is to add a 'slide-in' behavior to a menu panel if you are viewing on a small screen. eg. mobile.
+
+## [1.16.0] - 2023-11-17
+
+### Added
+
+- Added `recurrenceRule` option to `downloadCalendar`, this can be used to set recurring events in the calendar. Rule syntax can be found at https://datatracker.ietf.org/doc/html/rfc5545#section-3.3.10.
+
+## [1.15.0] - 2023-10-18
+
+### Added
+
+- Added `hidden` option to `addSidebarPanel`, this can be used to remove the panel from combined sidebar mode as well as hiding its switch button. Useful for cases where only one sidebar should be shown at a time regardless of other panels.
+- Added `getSidebarPanel` function, which returns the current sidebar panel object for comparison.
+
+## [1.14.0] - 2023-10-06
+
+### Added
+
+- Added `addComposerToolbarPopupMenuOption` as a replacement for `addToolbarPopupMenuOptionsCallback` with new changes
+  introduced to the method's signature.
+
+### Changed
+
+- Deprecate `addToolbarPopupMenuOptionsCallback` in favor of `addComposerToolbarPopupMenuOption`.
+
+## [1.13.0] - 2023-10-05
+
+### Added
+
+- Introduces `renderInOutlet` API for rendering components into plugin outlets
+
+## [1.12.0] - 2023-09-06
+
+### Added
+
+- Adds `addPostAdminMenuButton` which allows to register a new button in the post admin menu.
+
+## [1.11.0] - 2023-08-30
+
+### Added
+
+- Adds `addBeforeAuthCompleteCallback` which allows plugins and themes to add functions to be
+  evaluated before the auth-complete logic is run. If any of these callbacks return false, the
+  auth-complete logic will be aborted.
+
+## [1.10.0] - 2023-08-25
+
+### Added
+
+- Adds `registerReviewableActionModal` which allows core and plugins to register a modal component class
+  which is used to show a modal for certain reviewable actions.
+
+## [1.9.0] - 2023-08-09
+
+### Added
+
+- Adds `showSidebarSwitchPanelButtons` which is experimental, and allows plugins to show sidebar switch panel buttons in separated mode
+
+- Adds `hideSidebarSwitchPanelButtons` which is experimental, and allows plugins to hide sidebar switch panel buttons in separated mode
+
+## [1.8.1] - 2023-08-08
+
+### Added
+
+- Adds `replacePostMenuButton` which allows plugins to replace a post menu button with a widget.
+
+## [1.8.0] - 2023-07-18
+
+### Added
+- Adds `addSidebarPanel` which is experimental, and adds a Sidebar panel by returning a class which extends from the
+  BaseCustomSidebarPanel class.
+
+- Adds `setSidebarPanel` which is experimental, and sets the current sidebar panel.
+
+## [1.7.1] - 2023-07-18
+
+### Added
+
+- Adds `addBulkActionButton` which adds actions to the Bulk Topic modal
+
+## [1.7.0] - 2023-07-17
+
+### Added
+
+- Adds `addCommunitySectionLink` which allows plugins to add a navigation link to the Sidebar community section under
+  the "More..." links drawer.
+
+- Adds `registerUserCategorySectionLinkCountable` which allows plugins to register a new countable for section links
+  under Sidebar Categories section on top of the default countables of unread topics count and new topics count.
+
+- Adds `registerCustomCategorySectionLinkLockIcon` which allows plugins to change the lock icon used for a sidebar
+  category section link to indicate that a category is read restricted.
+
+- Adds `registerCustomCategorySectionLinkPrefix` which allows plugins to register a custom prefix for a sidebar category
+  section link.
+
+- Adds `registerCustomTagSectionLinkPrefixValue` which allows plugins to register a custom prefix for a sidebar tag
+  section link.
+
+- Adds `refreshUserSidebarCategoriesSectionCounts` which allows plugins to trigger a refresh of the counts for all
+  category section links under the categories section for a logged in user.
+
+- Adds `addSidebarSection` which allows plugins to add a Sidebar section.
+
+- Adds `registerNotificationTypeRenderer` which allows plugins to register a custom renderer for a notification type
+  or override the renderer of an existing type. See lib/notification-types/base.js for documentation and the default
+  renderer.
+
+- Adds `registerModelTransformer` which allows plugins to apply transformation using a callback on a list of model
+  instances of a specific type. Currently, this API only works on lists rendered in the user menu such as notifications,
+  bookmarks and topics (i.e. messages), but it may be extended to other lists in other parts of the app.
+
+- Adds `addUserMessagesNavigationDropdownRow` which allows plugins to add a row to the dropdown used on the
+  `userPrivateMessages` route used to navigate between the different user messages pages.
+
 ## [1.6.0] - 2022-12-13
 
 ### Added

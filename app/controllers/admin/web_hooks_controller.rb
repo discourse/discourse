@@ -15,15 +15,18 @@ class Admin::WebHooksController < Admin::AdminController
         .includes(:categories)
         .includes(:groups)
 
+    data = serialize_data(web_hooks, AdminWebHookSerializer, root: "web_hooks")
+
     json = {
-      web_hooks: serialize_data(web_hooks, AdminWebHookSerializer),
-      extras: {
-        event_types: WebHookEventType.active,
-        default_event_types: WebHook.default_event_types,
-        content_types: WebHook.content_types.map { |name, id| { id: id, name: name } },
-        delivery_statuses:
-          WebHook.last_delivery_statuses.map { |name, id| { id: id, name: name.to_s } },
-      },
+      web_hooks: data.delete("web_hooks"),
+      extras:
+        data.merge(
+          grouped_event_types: WebHookEventType.active_grouped,
+          default_event_types: WebHook.default_event_types,
+          content_types: WebHook.content_types.map { |name, id| { id: id, name: name } },
+          delivery_statuses:
+            WebHook.last_delivery_statuses.map { |name, id| { id: id, name: name.to_s } },
+        ),
       total_rows_web_hooks: WebHook.count,
       load_more_web_hooks:
         admin_web_hooks_path(limit: limit, offset: offset + limit, format: :json),
@@ -33,11 +36,16 @@ class Admin::WebHooksController < Admin::AdminController
   end
 
   def show
-    render_serialized(@web_hook, AdminWebHookSerializer, root: "web_hook")
+    data = serialize_data(@web_hook, AdminWebHookSerializer, root: "web_hook")
+    web_hook = data.delete("web_hook")
+    data = { "extras" => data, "web_hook" => web_hook }
+    render json: MultiJson.dump(data), status: 200
   end
 
   def edit
-    render_serialized(@web_hook, AdminWebHookSerializer, root: "web_hook")
+    data = serialize_data(@web_hook, AdminWebHookSerializer, root: "web_hook")
+    data["extras"] = { "categories" => data.delete(:categories) }
+    render json: MultiJson.dump(data), status: 200
   end
 
   def create

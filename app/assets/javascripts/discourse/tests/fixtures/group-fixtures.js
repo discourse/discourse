@@ -269,6 +269,7 @@ export default {
       url: "/t/consistent-new-indicator/24355/1",
       user_title: "designerator",
       user_long_name: "",
+      post_number: 2,
       category: {
         id: 9,
         name: "ux",
@@ -320,6 +321,7 @@ export default {
       url: "/t/the-end-of-clown-vomit-or-simplified-category-styles/24249/63",
       user_title: "designerator",
       user_long_name: "",
+      post_number: 2,
       category: {
         id: 9,
         name: "ux",
@@ -371,6 +373,7 @@ export default {
       url: "/t/the-end-of-clown-vomit-or-simplified-category-styles/24249/62",
       user_title: "designerator",
       user_long_name: "",
+      post_number: 2,
       category: {
         id: 9,
         name: "ux",
@@ -422,6 +425,7 @@ export default {
       url: "/t/quote-reply-insertion-at-cursor-position/24344/4",
       user_title: "team",
       user_long_name: "Régis Hanol",
+      post_number: 2,
       category: {
         id: 2,
         name: "feature",
@@ -474,6 +478,7 @@ export default {
       url: "/t/quote-reply-insertion-at-cursor-position/24344/2",
       user_title: "team",
       user_long_name: "Régis Hanol",
+      post_number: 2,
       category: {
         id: 2,
         name: "feature",
@@ -526,6 +531,7 @@ export default {
       url: "/t/translations-frequently-broken/22546/27",
       user_title: "team",
       user_long_name: "Régis Hanol",
+      post_number: 2,
       category: {
         id: 27,
         name: "translations",
@@ -579,6 +585,7 @@ export default {
       url: "/t/introducing-discette-a-minimal-ember-cli-front-end-to-discourse/24321/3",
       user_title: "team",
       user_long_name: "Régis Hanol",
+      post_number: 2,
       category: {
         id: 7,
         name: "dev",
@@ -631,6 +638,7 @@ export default {
       url: "/t/after-sign-in-im-not-redirected-to-the-conversation/17753/8",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 9,
         name: "ux",
@@ -683,6 +691,7 @@ export default {
       url: "/t/dealing-with-ios-8-mobile-safari-bugs/24101/7",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 2,
         name: "feature",
@@ -735,6 +744,7 @@ export default {
       url: "/t/rss-is-not-valid/24338/2",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 6,
         name: "support",
@@ -787,6 +797,7 @@ export default {
       url: "/t/pasted-image-upload-size-error/24320/4",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 1,
         name: "bug",
@@ -839,6 +850,7 @@ export default {
       url: "/t/the-end-of-clown-vomit-or-simplified-category-styles/24249/57",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 9,
         name: "ux",
@@ -891,6 +903,7 @@ export default {
       url: "/t/what-is-born-mobile-born-to-touch-supposed-to-tell-me/24329/3",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 3,
         name: "meta",
@@ -943,6 +956,7 @@ export default {
       url: "/t/how-to-create-static-pages-in-discourse/24313/2",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 6,
         name: "support",
@@ -995,6 +1009,7 @@ export default {
       url: "/t/pasted-image-upload-size-error/24320/2",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 1,
         name: "bug",
@@ -1047,6 +1062,7 @@ export default {
       url: "/t/monetizing-discourse-talk/24316/4",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 6,
         name: "support",
@@ -1100,6 +1116,7 @@ export default {
       url: "/t/introducing-discette-a-minimal-ember-cli-front-end-to-discourse/24321/2",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 7,
         name: "dev",
@@ -1152,6 +1169,7 @@ export default {
       url: "/t/how-to-do-object-oriented-discussion-through-oneboxes/24328/2",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 5,
         name: "extensibility",
@@ -1204,6 +1222,7 @@ export default {
       url: "/t/update-failed-and-now-showing-currently-upgrading/24332/2",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 6,
         name: "support",
@@ -1256,6 +1275,7 @@ export default {
       url: "/t/dealing-with-ios-8-mobile-safari-bugs/24101/5",
       user_title: "co-founder",
       user_long_name: "Jeff Atwood",
+      post_number: 2,
       category: {
         id: 2,
         name: "feature",

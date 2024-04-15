@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    spoiler_enabled: 'Увімкнути плагін спойлерів. Якщо ви зміните це, ви повинні переробити всі пости за допомогою: "rake posts:rebake".'
+  spoiler_alert:
+    excerpt_spoiler: "спойлер"

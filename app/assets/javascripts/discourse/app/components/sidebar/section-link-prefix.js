@@ -26,7 +26,6 @@ export default class extends Component {
         }
 
         return hexValues.join(", ");
-        break;
       default:
         return this.args.prefixValue;
     }

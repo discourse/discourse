@@ -32,12 +32,17 @@ class WebHookUserSerializer < UserSerializer
     can_change_website
     can_change_tracking_preferences
     user_api_keys
+    user_passkeys
     group_users
     user_auth_tokens
     user_auth_token_logs
     use_logo_small_as_avatar
     pending_posts_count
     status
+    display_sidebar_tags
+    sidebar_category_ids
+    sidebar_tags
+    can_pick_theme_with_custom_homepage
   ].each { |attr| define_method("include_#{attr}?") { false } }
 
   def include_email?

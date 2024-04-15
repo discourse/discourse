@@ -33,17 +33,6 @@
     </thead>
     <tbody>
       <tr>
-        <th>{{i18n "admin.user.tl3_requirements.visits"}}</th>
-        <td>{{check-icon this.model.tl3Requirements.met.days_visited}}</td>
-        <td>
-          {{this.model.tl3Requirements.days_visited_percent}}% ({{this.model.tl3Requirements.days_visited}}
-          /
-          {{this.model.tl3Requirements.time_period}}
-          {{i18n "admin.user.tl3_requirements.days"}})
-        </td>
-        <td>{{this.model.tl3Requirements.min_days_visited_percent}}%</td>
-      </tr>
-      <tr>
         <th>{{i18n "admin.user.tl3_requirements.topics_replied_to"}}</th>
         <td>{{check-icon this.model.tl3Requirements.met.topics_replied_to}}</td>
         <td>{{#if this.model.tl3Requirements.capped_topics_replied_to}}&ge;
@@ -69,6 +58,17 @@
         <td>{{check-icon this.model.tl3Requirements.met.posts_read}}</td>
         <td>{{this.model.tl3Requirements.posts_read}}</td>
         <td>{{this.model.tl3Requirements.min_posts_read}}</td>
+      </tr>
+      <tr>
+        <th>{{i18n "admin.user.tl3_requirements.posts_read_days"}}</th>
+        <td>{{check-icon this.model.tl3Requirements.met.days_visited}}</td>
+        <td>
+          {{this.model.tl3Requirements.days_visited_percent}}% ({{this.model.tl3Requirements.days_visited}}
+          /
+          {{this.model.tl3Requirements.time_period}}
+          {{i18n "admin.user.tl3_requirements.days"}})
+        </td>
+        <td>{{this.model.tl3Requirements.min_days_visited_percent}}%</td>
       </tr>
       <tr>
         <th>{{i18n "admin.user.tl3_requirements.posts_read_all_time"}}</th>

@@ -8,6 +8,7 @@ class ShortenTopicCustomFieldsIndex < ActiveRecord::Migration[4.2]
               name: "topic_custom_fields_value_key_idx",
               where: "value IS NOT NULL AND char_length(value) < 400"
   end
+
   def down
     remove_index :topic_custom_fields, :value, name: "topic_custom_fields_value_key_idx"
     add_index :topic_custom_fields, :value

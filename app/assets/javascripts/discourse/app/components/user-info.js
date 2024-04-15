@@ -1,8 +1,8 @@
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
-import { userPath } from "discourse/lib/url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { userPath } from "discourse/lib/url";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNameBindings: [":user-info", "size"],
@@ -14,12 +14,12 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    this.user?.trackStatus?.();
+    this.user?.statusManager?.trackStatus();
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    this.user?.stopTrackingStatus?.();
+    this.user?.statusManager?.stopTrackingStatus();
   },
 
   @discourseComputed("user.username")

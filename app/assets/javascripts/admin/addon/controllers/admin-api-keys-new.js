@@ -1,14 +1,18 @@
-import { equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { isBlank } from "@ember/utils";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action, get } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
+import { equal } from "@ember/object/computed";
+import { service } from "@ember/service";
+import { isBlank } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import ApiKeyUrlsModal from "../components/modal/api-key-urls";
 
 export default class AdminApiKeysNewController extends Controller {
+  @service router;
+  @service modal;
+
   userModes = [
     { id: "all", name: I18n.t("admin.api.all_users") },
     { id: "single", name: I18n.t("admin.api.single_user") },
@@ -76,13 +80,12 @@ export default class AdminApiKeysNewController extends Controller {
 
   @action
   continue() {
-    this.transitionToRoute("adminApiKeys.show", this.model.id);
+    this.router.transitionTo("adminApiKeys.show", this.model.id);
   }
 
   @action
   showURLs(urls) {
-    return showModal("admin-api-key-urls", {
-      admin: true,
+    this.modal.show(ApiKeyUrlsModal, {
       model: { urls },
     });
   }

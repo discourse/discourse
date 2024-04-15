@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require "email/poller"
 
 RSpec.describe Jobs::PollMailbox do
   let(:poller) { Jobs::PollMailbox.new }
@@ -173,6 +174,47 @@ RSpec.describe Jobs::PollMailbox do
       expect(incoming_email.rejection_message).to eq(
         I18n.t("emails.incoming.errors.bounced_email_error"),
       )
+    end
+  end
+
+  describe "poller plugin" do
+    let(:poller_plugin) do
+      Class
+        .new(described_class) do
+          def set_enabled(e)
+            @enabled = e
+          end
+
+          def enabled?
+            @enabled
+          end
+
+          def poll_mailbox(process_cb)
+            process_cb.call(file_from_fixtures("original_message.eml", "emails"))
+          end
+        end
+        .new
+    end
+
+    let(:plugin) { Plugin::Instance.new }
+
+    before(:each) { plugin.register_email_poller(poller_plugin) }
+
+    after(:each) do
+      Discourse.plugins.delete plugin
+      DiscoursePluginRegistry.reset!
+    end
+
+    it "doesn't call process method when plugin is not active" do
+      poller_plugin.set_enabled(false)
+      poller.expects(:process_popmail).never
+      poller.execute({})
+    end
+
+    it "calls process method when plugin is active" do
+      poller_plugin.set_enabled(true)
+      poller.expects(:process_popmail).once
+      poller.execute({})
     end
   end
 end

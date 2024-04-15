@@ -1,8 +1,21 @@
 # frozen_string_literal: true
 
 class UserOption < ActiveRecord::Base
+  HOMEPAGES = {
+    # -1 => reserved for "custom homepage"
+    1 => "latest",
+    2 => "categories",
+    3 => "unread",
+    4 => "new",
+    5 => "top",
+    6 => "bookmarks",
+    7 => "unseen",
+    # 8 => reserved for "hot"
+  }
+
   self.ignored_columns = [
     "disable_jump_reply", # Remove once 20210706091905 is promoted from post_deploy to regular migration
+    "sidebar_list_destination", # TODO(osama): Remove in January 2024
   ]
 
   self.primary_key = :user_id
@@ -14,12 +27,6 @@ class UserOption < ActiveRecord::Base
   scope :human_users, -> { where("user_id > 0") }
 
   enum default_calendar: { none_selected: 0, ics: 1, google: 2 }, _scopes: false
-  enum sidebar_list_destination: {
-         none_selected: 0,
-         default: 0,
-         unread_new: 1,
-       },
-       _prefix: "sidebar_list"
 
   def self.ensure_consistency!
     sql = <<~SQL
@@ -94,6 +101,8 @@ class UserOption < ActiveRecord::Base
     self.title_count_mode = SiteSetting.default_title_count_mode
 
     self.hide_profile_and_presence = SiteSetting.default_hide_profile_and_presence
+    self.sidebar_link_to_filtered_list = SiteSetting.default_sidebar_link_to_filtered_list
+    self.sidebar_show_count_of_new_items = SiteSetting.default_sidebar_show_count_of_new_items
 
     true
   end
@@ -173,24 +182,9 @@ class UserOption < ActiveRecord::Base
   end
 
   def homepage
-    case homepage_id
-    when 1
-      "latest"
-    when 2
-      "categories"
-    when 3
-      "unread"
-    when 4
-      "new"
-    when 5
-      "top"
-    when 6
-      "bookmarks"
-    when 7
-      "unseen"
-    else
-      SiteSetting.homepage
-    end
+    return HOMEPAGES[homepage_id] if HOMEPAGES.keys.include?(homepage_id)
+
+    "hot" if homepage_id == 8 && SiteSetting.top_menu_map.include?("hot")
   end
 
   def text_size
@@ -291,11 +285,16 @@ end
 #  chat_email_frequency                 :integer          default(1), not null
 #  enable_experimental_sidebar          :boolean          default(FALSE)
 #  seen_popups                          :integer          is an Array
-#  sidebar_list_destination             :integer          default("none_selected"), not null
 #  chat_header_indicator_preference     :integer          default(0), not null
+#  sidebar_link_to_filtered_list        :boolean          default(FALSE), not null
+#  sidebar_show_count_of_new_items      :boolean          default(FALSE), not null
+#  watched_precedence_over_muted        :boolean
+#  chat_separate_sidebar_mode           :integer          default(0), not null
+#  topics_unread_when_closed            :boolean          default(TRUE), not null
 #
 # Indexes
 #
-#  index_user_options_on_user_id                       (user_id) UNIQUE
-#  index_user_options_on_user_id_and_default_calendar  (user_id,default_calendar)
+#  index_user_options_on_user_id                        (user_id) UNIQUE
+#  index_user_options_on_user_id_and_default_calendar   (user_id,default_calendar)
+#  index_user_options_on_watched_precedence_over_muted  (watched_precedence_over_muted)
 #

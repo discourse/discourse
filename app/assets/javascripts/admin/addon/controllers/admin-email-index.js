@@ -1,12 +1,12 @@
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { empty } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
-import { observes } from "@ember-decorators/object";
+import { action } from "@ember/object";
+import { empty } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { observes } from "@ember-decorators/object";
+import { ajax } from "discourse/lib/ajax";
 import { escapeExpression } from "discourse/lib/utilities";
+import I18n from "discourse-i18n";
 
 export default class AdminEmailIndexController extends Controller {
   @service dialog;

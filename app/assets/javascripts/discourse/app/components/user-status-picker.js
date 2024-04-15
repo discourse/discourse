@@ -10,17 +10,23 @@ export default class UserStatusPicker extends Component {
   emojiPickerIsActive = false;
 
   didInsertElement() {
-    this._super(...arguments);
+    super.didInsertElement(...arguments);
 
     if (!this.status) {
       this.set("status", {});
     }
+
+    document.querySelector(".user-status-description")?.focus();
   }
 
   @computed("status.emoji")
   get emojiHtml() {
     const emoji = escapeExpression(`:${this.status.emoji}:`);
     return emojiUnescape(emoji);
+  }
+
+  focusEmojiButton() {
+    document.querySelector(".btn-emoji")?.focus();
   }
 
   @action
@@ -33,9 +39,7 @@ export default class UserStatusPicker extends Component {
     this.set("status.emoji", emoji);
     this.set("emojiPickerIsActive", false);
 
-    scheduleOnce("afterRender", () => {
-      document.querySelector(".btn-emoji")?.focus();
-    });
+    scheduleOnce("afterRender", this, this.focusEmojiButton);
   }
 
   @action

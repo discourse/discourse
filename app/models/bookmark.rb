@@ -123,17 +123,21 @@ class Bookmark < ActiveRecord::Base
     update!(reminder_last_sent_at: Time.zone.now, reminder_set_at: nil)
   end
 
+  def reminder_at_in_zone(timezone)
+    self.reminder_at.in_time_zone(timezone)
+  end
+
   scope :with_reminders, -> { where("reminder_at IS NOT NULL") }
 
   scope :pending_reminders,
-        ->(before_time = Time.now.utc) {
+        ->(before_time = Time.now.utc) do
           with_reminders.where("reminder_at <= ?", before_time).where(reminder_last_sent_at: nil)
-        }
+        end
 
   scope :pending_reminders_for_user, ->(user) { pending_reminders.where(user: user) }
 
   scope :for_user_in_topic,
-        ->(user_id, topic_id) {
+        ->(user_id, topic_id) do
           joins(
             "LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'",
           ).joins(
@@ -145,7 +149,7 @@ class Bookmark < ActiveRecord::Base
             user_id: user_id,
             topic_id: topic_id,
           )
-        }
+        end
 
   def self.count_per_day(opts = nil)
     opts ||= {}

@@ -1,11 +1,11 @@
-import { cloak, uncloak } from "discourse/widgets/post-stream";
 import { schedule, scheduleOnce } from "@ember/runloop";
-import DiscourseURL from "discourse/lib/url";
+import { service } from "@ember/service";
 import MountWidget from "discourse/components/mount-widget";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { isWorkaroundActive } from "discourse/lib/safari-hacks";
 import offsetCalculator from "discourse/lib/offset-calculator";
-import { inject as service } from "@ember/service";
+import { isWorkaroundActive } from "discourse/lib/safari-hacks";
+import DiscourseURL from "discourse/lib/url";
+import { cloak, uncloak } from "discourse/widgets/post-stream";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 import domUtils from "discourse-common/utils/dom-utils";
 
@@ -37,7 +37,7 @@ export default MountWidget.extend({
   widget: "post-stream",
   _topVisible: null,
   _bottomVisible: null,
-  _currentPost: null,
+  _currentPostObj: null,
   _currentVisible: null,
   _currentPercent: null,
 
@@ -181,10 +181,7 @@ export default MountWidget.extend({
       const first = posts.objectAt(onscreen[0]);
       if (this._topVisible !== first) {
         this._topVisible = first;
-        const elem = postsNodes.item(onscreen[0]);
-        const elemId = elem.id;
-        const elemPos = domUtils.position(elem);
-        const distToElement = elemPos?.top || 0;
+        const elemId = postsNodes.item(onscreen[0]).id;
 
         const topRefresh = () => {
           refresh(() => {
@@ -194,16 +191,33 @@ export default MountWidget.extend({
               return;
             }
 
-            const position = domUtils.position(refreshedElem);
-            const top = position.top - distToElement;
-            document.documentElement.scroll({ top, left: 0 });
+            // The getOffsetTop function calculates the total offset distance of
+            // an element from the top of the document. Unlike element.offsetTop
+            // which only returns the offset relative to its nearest positioned
+            // ancestor, this function recursively accumulates the offsetTop
+            // of an element and all of its offset parents (ancestors).
+            // This ensures the total distance is measured from the very top of
+            // the document, accounting for any nested elements and their
+            // respective offsets.
+            const getOffsetTop = (element) => {
+              if (!element) {
+                return 0;
+              }
+              return element.offsetTop + getOffsetTop(element.offsetParent);
+            };
+
+            window.scrollTo({
+              top: getOffsetTop(refreshedElem) - offsetCalculator(),
+            });
 
             // This seems weird, but somewhat infrequently a rerender
             // will cause the browser to scroll to the top of the document
             // in Chrome. This makes sure the scroll works correctly if that
             // happens.
             schedule("afterRender", () => {
-              document.documentElement.scroll({ top, left: 0 });
+              window.scrollTo({
+                top: getOffsetTop(refreshedElem) - offsetCalculator(),
+              });
             });
           });
         };
@@ -219,11 +233,11 @@ export default MountWidget.extend({
         this.bottomVisibleChanged({ post: last, refresh });
       }
 
-      const changedPost = this._currentPost !== currentPost;
+      const currentPostObj = posts.objectAt(currentPost);
+      const changedPost = this._currentPostObj !== currentPostObj;
       if (changedPost) {
-        this._currentPost = currentPost;
-        const post = posts.objectAt(currentPost);
-        this.currentPostChanged({ post });
+        this._currentPostObj = currentPostObj;
+        this.currentPostChanged({ post: currentPostObj });
       }
 
       if (percent !== null) {
@@ -237,32 +251,31 @@ export default MountWidget.extend({
     } else {
       this._topVisible = null;
       this._bottomVisible = null;
-      this._currentPost = null;
+      this._currentPostObj = null;
       this._currentPercent = null;
     }
 
-    const onscreenPostNumbers = [];
-    const readPostNumbers = [];
+    const onscreenPostNumbers = new Set();
+    const readPostNumbers = new Set();
 
-    const prev = this._previouslyNearby;
-    const newPrev = {};
+    const newPrev = new Set();
     nearby.forEach((idx) => {
       const post = posts.objectAt(idx);
-      const postNumber = post.post_number;
 
-      delete prev[postNumber];
+      this._previouslyNearby.delete(post.post_number);
 
       if (onscreen.includes(idx)) {
-        onscreenPostNumbers.push(postNumber);
+        onscreenPostNumbers.add(post.post_number);
         if (post.read) {
-          readPostNumbers.push(postNumber);
+          readPostNumbers.add(post.post_number);
         }
       }
-      newPrev[postNumber] = post;
+
+      newPrev.add(post.post_number, post);
       uncloak(post, this);
     });
 
-    Object.values(prev).forEach((node) => cloak(node, this));
+    Object.values(this._previouslyNearby).forEach((node) => cloak(node, this));
 
     this._previouslyNearby = newPrev;
     this.screenTrack.setOnscreen(onscreenPostNumbers, readPostNumbers);
@@ -302,6 +315,7 @@ export default MountWidget.extend({
       }
     }
     this.queueRerender();
+    this._scrollTriggered();
   },
 
   @bind
@@ -311,7 +325,7 @@ export default MountWidget.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    this._previouslyNearby = {};
+    this._previouslyNearby = new Set();
 
     this.appEvents.on("post-stream:refresh", this, "_debouncedScroll");
     const opts = {
@@ -361,6 +375,11 @@ export default MountWidget.extend({
     );
     this.appEvents.off("post-stream:refresh", this, "_refresh");
     this.appEvents.off("post-stream:posted", this, "_posted");
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+    this._refresh({ force: true });
   },
 
   _handleWidgetButtonHoverState(event) {

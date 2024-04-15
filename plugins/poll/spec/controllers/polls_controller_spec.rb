@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe ::DiscoursePoll::PollsController do
   routes { ::DiscoursePoll::Engine.routes }
 
@@ -32,6 +30,8 @@ RSpec.describe ::DiscoursePoll::PollsController do
       raw: "[poll public=true results=on_close]\n- A\n- B\n[/poll]",
     )
   end
+
+  before { Group.refresh_automatic_groups! }
 
   describe "#vote" do
     it "works" do

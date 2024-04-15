@@ -1,10 +1,10 @@
+import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
-import Component from "@ember/component";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   classNames: ["topic-notifications-button"],

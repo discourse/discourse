@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::BackupsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   let(:backup_filename) { "2014-02-10-065935.tar.gz" }
   let(:backup_filename2) { "2014-02-11-065935.tar.gz" }
@@ -154,10 +154,9 @@ RSpec.describe Admin::BackupsController do
       end
 
       context "with rate limiting enabled" do
-        before do
-          RateLimiter.clear_all!
-          RateLimiter.enable
-        end
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
 
         after { RateLimiter.disable }
 
@@ -595,7 +594,7 @@ RSpec.describe Admin::BackupsController do
           )
         end
 
-        it "works with multiple chunks when the final chunk is just the remaninder" do
+        it "works with multiple chunks when the final chunk is just the remainder" do
           freeze_time
           described_class.any_instance.expects(:has_enough_space_on_disk?).times(3).returns(true)
 

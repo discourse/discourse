@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::Api::ChannelsController do
   before do
     SiteSetting.chat_enabled = true
@@ -230,8 +228,8 @@ RSpec.describe Chat::Api::ChannelsController do
   end
 
   describe "#create" do
-    fab!(:admin) { Fabricate(:admin) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:admin)
+    fab!(:category)
 
     let(:params) do
       {
@@ -240,6 +238,7 @@ RSpec.describe Chat::Api::ChannelsController do
           chatable_id: category.id,
           name: "channel name",
           description: "My new channel",
+          threading_enabled: false,
         },
       }
     end
@@ -300,6 +299,25 @@ RSpec.describe Chat::Api::ChannelsController do
       new_channel = Chat::Channel.find(response.parsed_body.dig("channel", "id"))
 
       expect(new_channel.auto_join_users).to eq(true)
+    end
+
+    it "creates a channel sets threading_enabled to false by default" do
+      post "/chat/api/channels", params: params
+      expect(response.status).to eq(200)
+
+      new_channel = Chat::Channel.find(response.parsed_body.dig("channel", "id"))
+
+      expect(new_channel.threading_enabled).to eq(false)
+    end
+
+    it "creates a channel with threading_enabled set to true" do
+      params[:channel][:threading_enabled] = true
+      post "/chat/api/channels", params: params
+      expect(response.status).to eq(200)
+
+      new_channel = Chat::Channel.find(response.parsed_body.dig("channel", "id"))
+
+      expect(new_channel.threading_enabled).to eq(true)
     end
 
     describe "triggers the auto-join process" do
@@ -495,6 +513,16 @@ RSpec.describe Chat::Api::ChannelsController do
         expect(response.parsed_body["channel"]).to match_response_schema("category_chat_channel")
       end
 
+      describe "when updating threading_enabled" do
+        it "sets the new value" do
+          expect {
+            put "/chat/api/channels/#{channel.id}", params: { channel: { threading_enabled: true } }
+          }.to change { channel.reload.threading_enabled }.from(false).to(true)
+
+          expect(response.parsed_body["channel"]["threading_enabled"]).to eq(true)
+        end
+      end
+
       describe "when updating allow_channel_wide_mentions" do
         it "sets the new value" do
           put "/chat/api/channels/#{channel.id}",
@@ -568,5 +596,9 @@ RSpec.describe Chat::Api::ChannelsController do
         end
       end
     end
+  end
+
+  def flag_message(message, flagger, flag_type: ReviewableScore.types[:off_topic])
+    Chat::ReviewQueue.new.flag_message(message, Guardian.new(flagger), flag_type)[:reviewable]
   end
 end

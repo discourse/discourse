@@ -1,11 +1,10 @@
 import EmberObject from "@ember/object";
+import $ from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 
-const StaticPage = EmberObject.extend();
-
-StaticPage.reopenClass({
-  find(path) {
+export default class StaticPage extends EmberObject {
+  static find(path) {
     return new Promise((resolve) => {
       // Models shouldn't really be doing Ajax request, but this is a huge speed boost if we
       // preload content.
@@ -22,7 +21,5 @@ StaticPage.reopenClass({
         );
       }
     });
-  },
-});
-
-export default StaticPage;
+  }
+}

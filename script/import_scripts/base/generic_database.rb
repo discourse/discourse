@@ -4,7 +4,7 @@ require "sqlite3"
 
 module ImportScripts
   class GenericDatabase
-    def initialize(directory, batch_size:, recreate: false, numeric_keys: false)
+    def initialize(directory, batch_size: 1000, recreate: false, numeric_keys: false)
       filename = "#{directory}/index.db"
       File.delete(filename) if recreate && File.exist?(filename)
 
@@ -42,8 +42,8 @@ module ImportScripts
     def insert_user(user)
       @db.execute(<<-SQL, prepare(user))
         INSERT OR REPLACE
-        INTO user (id, email, username, name, bio, avatar_path, created_at, last_seen_at, active)
-        VALUES (:id, :email, :username, :name, :bio, :avatar_path, :created_at, :last_seen_at, :active)
+        INTO user (id, email, username, name, bio, avatar_path, created_at, last_seen_at, active, staged, admin)
+        VALUES (:id, :email, :username, :name, :bio, :avatar_path, :created_at, :last_seen_at, :active, :staged, :admin)
       SQL
     end
 
@@ -61,8 +61,8 @@ module ImportScripts
 
       @db.transaction do
         @db.execute(<<-SQL, prepare(topic))
-          INSERT OR REPLACE INTO topic (id, title, raw, category_id, closed, user_id, created_at, url, upload_count)
-          VALUES (:id, :title, :raw, :category_id, :closed, :user_id, :created_at, :url, :upload_count)
+          INSERT OR REPLACE INTO topic (id, title, raw, category_id, closed, user_id, created_at, url, upload_count, tags)
+          VALUES (:id, :title, :raw, :category_id, :closed, :user_id, :created_at, :url, :upload_count, :tags)
         SQL
 
         attachments&.each do |attachment|
@@ -146,6 +146,28 @@ module ImportScripts
             SELECT 1
             FROM post
             WHERE post.user_id = user.id
+        )
+      SQL
+    end
+
+    def calculate_user_last_seen_at_dates
+      @db.execute <<~SQL
+        UPDATE user
+        SET last_seen_at = (
+          SELECT MAX(created_at)
+          FROM post
+          WHERE post.user_id = user.id
+        )
+      SQL
+    end
+
+    def calculate_user_created_at_dates
+      @db.execute <<~SQL
+        UPDATE user
+        SET created_at = (
+          SELECT MIN(created_at)
+          FROM post
+          WHERE post.user_id = user.id
         )
       SQL
     end
@@ -325,6 +347,48 @@ module ImportScripts
       @db.get_first_value(sql)
     end
 
+    def create_missing_topics
+      posts = @db.execute(<<~SQL)
+          WITH missing_topics AS (SELECT *, RANK() OVER ( PARTITION BY topic_id ORDER BY created_at ) AS post_number
+                                    FROM post p
+                                   WHERE NOT EXISTS (SELECT 1 FROM topic t WHERE t.id = p.topic_id))
+        SELECT *
+          FROM missing_topics
+         WHERE post_number = 1
+      SQL
+
+      posts.each do |post|
+        @db.execute("DELETE FROM post WHERE id = ?", post["id"])
+
+        topic = post.except("post_number", "reply_to_post_id")
+        topic["id"] = topic.delete("topic_id")
+        topic = yield(topic)
+
+        @db.execute(<<-SQL, prepare(topic))
+          INSERT OR REPLACE INTO topic (id, title, raw, category_id, closed, user_id, created_at, url, upload_count, tags)
+          VALUES (:id, :title, :raw, :category_id, :closed, :user_id, :created_at, :url, :upload_count, :tags)
+        SQL
+
+        @db.execute("DELETE FROM post WHERE id = ?", post["id"])
+
+        @db.execute(<<-SQL, topic_id: topic["id"], post_id: post["id"])
+          INSERT OR REPLACE INTO topic_upload (topic_id, path)
+          SELECT :topic_id, path
+          FROM post_upload
+          WHERE post_id = :post_id
+        SQL
+
+        @db.execute("DELETE FROM post_upload WHERE post_id = ?", post["id"])
+
+        @db.execute(<<-SQL, topic_id: topic["id"], post_id: post["id"])
+          UPDATE like
+          SET topic_id = :topic_id,
+              post_id = NULL
+          WHERE post_id = :post_id
+        SQL
+      end
+    end
+
     private
 
     def configure_database
@@ -382,7 +446,9 @@ module ImportScripts
           avatar_path TEXT,
           created_at DATETIME,
           last_seen_at DATETIME,
-          active BOOLEAN NOT NULL DEFAULT true
+          active BOOLEAN NOT NULL DEFAULT true,
+          staged BOOLEAN NOT NULL DEFAULT false,
+          admin BOOLEAN NOT NULL DEFAULT false
         )
       SQL
 
@@ -400,7 +466,8 @@ module ImportScripts
           user_id #{key_data_type} NOT NULL,
           created_at DATETIME,
           url TEXT,
-          upload_count INTEGER DEFAULT 0
+          upload_count INTEGER DEFAULT 0,
+          tags JSON
         )
       SQL
 
@@ -486,6 +553,8 @@ module ImportScripts
           hash[key] = value ? 1 : 0
         elsif value.is_a?(Date)
           hash[key] = value.to_s
+        elsif value.is_a?(Time)
+          hash[key] = value.utc.iso8601
         end
       end
     end

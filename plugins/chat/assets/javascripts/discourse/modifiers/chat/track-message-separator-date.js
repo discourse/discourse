@@ -1,5 +1,5 @@
-import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
+import Modifier from "ember-modifier";
 
 const IS_PINNED_CLASS = "is-pinned";
 

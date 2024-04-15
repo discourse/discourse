@@ -3,6 +3,14 @@
 module PageObjects
   module Components
     class Dialog < PageObjects::Components::Base
+      def closed?
+        has_no_css?(".dialog-container")
+      end
+
+      def open?
+        has_css?(".dialog-container")
+      end
+
       def has_content?(content)
         find(".dialog-container").has_content?(content)
       end
@@ -10,6 +18,8 @@ module PageObjects
       def click_yes
         find(".dialog-footer .btn-primary").click
       end
+
+      alias click_ok click_yes
 
       def click_no
         find(".dialog-footer .btn-default").click

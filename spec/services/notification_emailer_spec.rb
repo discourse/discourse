@@ -6,7 +6,7 @@ RSpec.describe NotificationEmailer do
     NotificationEmailer.enable
   end
 
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
 
   # something is off with fabricator
@@ -18,6 +18,7 @@ RSpec.describe NotificationEmailer do
       notification_type: Notification.types[type],
       topic: topic,
       post_number: post.post_number,
+      skip_send_email: true,
     )
   end
 
@@ -42,7 +43,8 @@ RSpec.describe NotificationEmailer do
       it "enqueues a job if the user is staged for non-linked and non-quoted types" do
         notification.user.staged = true
 
-        if type == :user_linked || type == :user_quoted
+        if type == :user_linked || type == :user_quoted || type == :user_mentioned ||
+             type == :group_mentioned
           expect_not_enqueued_with(job: :user_email, args: { type: type }) do
             NotificationEmailer.process_notification(notification, no_delay: no_delay)
           end
@@ -59,7 +61,8 @@ RSpec.describe NotificationEmailer do
         notification.user.staged = true
         SiteSetting.must_approve_users = true
 
-        if type == :user_linked || type == :user_quoted
+        if type == :user_linked || type == :user_quoted || type == :user_mentioned ||
+             type == :group_mentioned
           expect_not_enqueued_with(job: :user_email, args: { type: type }) do
             NotificationEmailer.process_notification(notification, no_delay: no_delay)
           end
@@ -270,6 +273,51 @@ RSpec.describe NotificationEmailer do
             key = "user_notifications.#{type_key}.#{subkey}"
             expect(I18n.exists?(key)).to eq(true), "missing translation: #{key}"
           end
+        end
+      end
+    end
+  end
+
+  describe "with plugin-added email_notification_filters" do
+    let!(:plugin) { Plugin::Instance.new }
+    let!(:notification) { create_notification(:quoted) }
+    let(:no_delay) { true }
+    let(:type) { :user_quoted }
+
+    after { DiscoursePluginRegistry.reset_register! :email_notification_filters }
+
+    it "sends email when all filters return true" do
+      plugin.register_email_notification_filter { |_| true }
+      plugin.register_email_notification_filter { |_| true }
+
+      expect_enqueued_with(job: :user_email, args: { type: type }) do
+        NotificationEmailer.process_notification(notification, no_delay: no_delay)
+      end
+    end
+
+    it "doesn't send email when all one filter returns false" do
+      plugin.register_email_notification_filter { |_| true }
+      plugin.register_email_notification_filter { |_| false }
+
+      expect_not_enqueued_with(job: :user_email, args: { type: type }) do
+        NotificationEmailer.process_notification(notification, no_delay: no_delay)
+      end
+    end
+  end
+
+  context "with a staged user" do
+    context "when notification is mentioned or group_mentioned type" do
+      it "doesn't enqueue the job to send user email" do
+        staged_user = Fabricate(:staged)
+        mentioned = create_notification(:mentioned, staged_user)
+        group_mentioned = create_notification(:group_mentioned, staged_user)
+
+        expect_not_enqueued_with(job: :user_email) do
+          NotificationEmailer.process_notification(mentioned, no_delay: Time.zone.now)
+        end
+
+        expect_not_enqueued_with(job: :user_email) do
+          NotificationEmailer.process_notification(group_mentioned, no_delay: Time.zone.now)
         end
       end
     end

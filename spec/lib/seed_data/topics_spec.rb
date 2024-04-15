@@ -3,7 +3,7 @@
 require "seed_data/topics"
 
 RSpec.describe SeedData::Topics do
-  subject { SeedData::Topics.with_default_locale }
+  subject(:seeder) { SeedData::Topics.with_default_locale }
 
   before do
     general_category = Fabricate(:category, name: "General")
@@ -11,11 +11,14 @@ RSpec.describe SeedData::Topics do
   end
 
   def create_topic(name = "welcome_topic_id")
-    subject.create(site_setting_names: [name], include_legal_topics: true)
+    seeder.create(site_setting_names: [name], include_legal_topics: true)
   end
 
   describe "#create" do
     it "creates a missing topic" do
+      staff_category = Fabricate(:category, name: "Feedback")
+      SiteSetting.meta_category_id = staff_category.id
+
       expect { create_topic }.to change { Topic.count }.by(1).and change { Post.count }.by(1)
 
       topic = Topic.last
@@ -28,6 +31,8 @@ RSpec.describe SeedData::Topics do
           base_path: Discourse.base_path,
           site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
+          site_info_quote: "",
+          feedback_category: "#feedback",
         ).rstrip,
       )
       expect(topic.category_id).to eq(SiteSetting.general_category_id)
@@ -73,22 +78,55 @@ RSpec.describe SeedData::Topics do
     end
 
     it "does not create a legal topic if company_name is not set" do
-      subject.create(site_setting_names: ["tos_topic_id"])
+      seeder.create(site_setting_names: ["tos_topic_id"])
 
       expect(SiteSetting.tos_topic_id).to eq(-1)
     end
 
+    it "creates a welcome topic without site title" do
+      SiteSetting.title = "My Awesome Community"
+      SiteSetting.site_description = ""
+
+      create_topic
+
+      post = Post.find_by(topic_id: SiteSetting.welcome_topic_id, post_number: 1)
+      expect(post.raw).not_to include("> ## My Awesome Community")
+    end
+
+    it "creates a welcome topic with site title and description" do
+      SiteSetting.title = "My Awesome Community"
+      SiteSetting.site_description = "The best community"
+
+      create_topic
+
+      post = Post.find_by(topic_id: SiteSetting.welcome_topic_id, post_number: 1)
+      expect(post.raw).to include("> ## My Awesome Community")
+      expect(post.raw).to include("> The best community")
+    end
+
     it "creates a legal topic if company_name is set" do
       SiteSetting.company_name = "Company Name"
-      subject.create(site_setting_names: ["tos_topic_id"])
+      seeder.create(site_setting_names: ["tos_topic_id"])
 
       expect(SiteSetting.tos_topic_id).to_not eq(-1)
+    end
+
+    it "creates FAQ topic" do
+      meta_category = Fabricate(:category, name: "Meta")
+      staff_category = Fabricate(:category, name: "Feedback")
+      SiteSetting.meta_category_id = meta_category.id
+      SiteSetting.staff_category_id = staff_category.id
+      create_topic("guidelines_topic_id")
+      topic = Topic.find(SiteSetting.guidelines_topic_id)
+      post = Post.find_by(topic_id: SiteSetting.guidelines_topic_id, post_number: 1)
+      expect(topic.title).to_not include("Translation missing")
+      expect(post.raw).to_not include("Translation missing")
     end
   end
 
   describe "#update" do
     def update_topic(name = "welcome_topic_id", skip_changed: false)
-      subject.update(site_setting_names: [name], skip_changed: skip_changed)
+      seeder.update(site_setting_names: [name], skip_changed: skip_changed)
     end
 
     it "updates the changed topic" do
@@ -110,6 +148,8 @@ RSpec.describe SeedData::Topics do
           base_path: Discourse.base_path,
           site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
+          site_info_quote: "",
+          feedback_category: "#site-feedback",
         ).rstrip,
       )
     end
@@ -144,7 +184,7 @@ RSpec.describe SeedData::Topics do
 
   describe "#delete" do
     def delete_topic(name = "welcome_topic_id", skip_changed: false)
-      subject.delete(site_setting_names: [name], skip_changed: skip_changed)
+      seeder.delete(site_setting_names: [name], skip_changed: skip_changed)
     end
 
     it "deletes the topic" do
@@ -176,7 +216,7 @@ RSpec.describe SeedData::Topics do
         { id: "welcome_topic_id", name: "Changed Topic Title", selected: false },
       ]
 
-      expect(subject.reseed_options).to eq(expected_options)
+      expect(seeder.reseed_options).to eq(expected_options)
     end
   end
 end

@@ -45,6 +45,9 @@ tr_TR:
       trigger: "zar at"
       invalid: |-
         Üzgünüm, bu zar kombinasyonunu tutturmak matematiksel olarak imkansız. :confounded:
+      not_enough_dice:
+        one: "Sadece %{count} zarım var. Utanç verici, biliyorum!"
+        other: "Sadece %{count} zarım var. Utanç verici, biliyorum!"
       out_of_range: |-
         Matematiksel olarak adil bir zar için [maksimum kenar sayısının](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) 120 olduğunu biliyor muydunuz?
       results: |-
@@ -294,9 +297,9 @@ tr_TR:
           Olamaz, kötü gönderime henüz uygunsuz bayrağı eklenmemiş. :worried: <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">**Bayrağı** kullanarak uygunsuz bayrağı ekleyebilir misiniz? Her gönderi için daha fazla eylem göstermek için daha fazla göster düğmesini <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> kullanmayı unutmayın.
       search:
         instructions: |-
-          _psst_ … Bu konuya bir sürpriz gizledim. Meydan okumaya hazırsanız aramak için sağ üstteki &#8599; bölümde **arama simgesini seçin** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">.
+          _psst_ … Bu konuya bir sürpriz gizledim. Eğer meydan okumaya hazırsanız, <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">sağ üstteki &#8599;, **arama simgesini seçin**, 'bu konuda' seçeneğini seçin ve ardından arayın.
 
-          Bu konuda "kapi&#8203;bara" terimini aramayı deneyin
+          Bu başlıkta "capy&#8203;bara" terimini aramayı deneyin
         hidden_message: |-
           Bu kapibarayı nasıl kaçırdınız? :wink:
 
@@ -371,11 +374,11 @@ tr_TR:
           Bir gönderiyi silme işlemini geri almak için yalnızca %{deletion_after} saatiniz olduğunu unutmayın.
       category_hashtag:
         instructions: |-
-          Gönderinizde kategorilere ve etiketlere atıfta bulunabileceğinizi biliyor muydunuz? Örneğin, %{category} kategorisini gördünüz mü?
+          Gönderinizde kategorilere ve etiketlere atıfta bulunabileceğinizi biliyor muydunuz? Mesela %{category} kategorisini gördünüz mü?
 
-          Bir cümlenin ortasına "#" yazın ve herhangi bir kategori veya etiketi seçin.
+          Cümle içinde herhangi bir yere `#` yazın ve herhangi bir kategori veya etiketi seçin.
         not_found: |-
-          Hmm, orada hiçbir yerde bir kategori göremiyorum. İlk karakterin "#" olamayacağını unutmayın. Bunu bir sonraki yanıtınıza kopyalayabilir misiniz?
+          Hmm, orada hiçbir yerde bir kategori göremiyorum. Bunu bir sonraki yanıtınıza kopyalayabilir misiniz?
 
           ```text
           # aracılığıyla kategori bağlantısı oluşturabilirim

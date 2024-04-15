@@ -1,7 +1,10 @@
 <div class="control-group notifications">
   <label class="control-label">{{i18n "user.notifications"}}</label>
 
-  <div class="controls controls-dropdown">
+  <div
+    class="controls controls-dropdown"
+    data-setting-name="user-like-notification-frequency"
+  >
     <label>{{i18n "user.like_notification_frequency.title"}}</label>
     <ComboBox
       @valueProperty="value"
@@ -15,7 +18,10 @@
 </div>
 
 {{#unless this.capabilities.isAppWebview}}
-  <div class="control-group desktop-notifications">
+  <div
+    class="control-group desktop-notifications"
+    data-setting-name="user-desktop-notifications"
+  >
     <label class="control-label">{{i18n
         "user.desktop_notifications.label"
       }}</label>

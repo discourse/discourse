@@ -1,11 +1,12 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ChatChannelThreads extends DiscourseRoute {
   @service router;
-  @service chatChannelThreadListPane;
+  @service chatThreadListPane;
   @service chatStateManager;
+  @service chat;
 
   beforeModel(transition) {
     const channel = this.modelFor("chat.channel");
@@ -20,13 +21,19 @@ export default class ChatChannelThreads extends DiscourseRoute {
   }
 
   @action
-  willTransition(transition) {
-    if (transition.targetName !== "chat.channel.thread") {
-      this.chatChannelThreadListPane.close();
-    }
+  activate() {
+    this.chat.activeMessage = null;
   }
 
-  activate() {
-    this.chatChannelThreadListPane.open();
+  @action
+  willTransition(transition) {
+    if (
+      transition.targetName === "chat.channel.index" ||
+      transition.targetName === "chat.channel.near-message" ||
+      transition.targetName === "chat.index" ||
+      !transition.targetName.startsWith("chat")
+    ) {
+      this.chatStateManager.closeSidePanel();
+    }
   }
 }

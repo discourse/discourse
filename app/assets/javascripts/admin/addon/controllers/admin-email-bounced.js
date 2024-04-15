@@ -1,8 +1,8 @@
-import AdminEmailLogsController from "admin/controllers/admin-email-logs";
+import { action } from "@ember/object";
+import { observes } from "@ember-decorators/object";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { observes } from "@ember-decorators/object";
-import { action } from "@ember/object";
+import AdminEmailLogsController from "admin/controllers/admin-email-logs";
 
 export default class AdminEmailBouncedController extends AdminEmailLogsController {
   @action

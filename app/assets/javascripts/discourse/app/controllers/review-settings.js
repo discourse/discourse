@@ -1,8 +1,8 @@
 import Controller from "@ember/controller";
-import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   saving: false,
@@ -32,10 +32,9 @@ export default Controller.extend({
   scoreTypes(types) {
     const username = I18n.t("review.example_username");
 
-    return types.map((type) =>
-      Object.assign({}, type, {
-        title: type.title.replace("%{username}", username),
-      })
-    );
+    return types.map((type) => ({
+      ...type,
+      title: type.title.replace("%{username}", username),
+    }));
   },
 });

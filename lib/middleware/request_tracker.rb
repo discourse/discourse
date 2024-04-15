@@ -201,6 +201,7 @@ class Middleware::RequestTracker
   def call(env)
     result = nil
     info = nil
+    gc_stat_timing = nil
 
     # doing this as early as possible so we have an
     # accurate counter
@@ -210,22 +211,32 @@ class Middleware::RequestTracker
 
     cookie = find_auth_cookie(env)
     if error_details = rate_limit(request, cookie)
-      available_in, error_code = error_details
+      available_in, error_code, limit_on_id = error_details
       message = <<~TEXT
-        Slow down, too many requests from this IP address.
+        Slow down, too many requests from this #{limit_on_id ? "user" : "IP address"}.
         Please retry again in #{available_in} seconds.
         Error code: #{error_code}.
       TEXT
       headers = {
+        "Content-Type" => "text/plain",
         "Retry-After" => available_in.to_s,
         "Discourse-Rate-Limit-Error-Code" => error_code,
       }
+      if username = cookie&.[](:username)
+        headers["X-Discourse-Username"] = username
+      end
       return 429, headers, [message]
     end
     env["discourse.request_tracker"] = self
 
     MethodProfiler.start
-    result = @app.call(env)
+
+    if SiteSetting.instrument_gc_stat_per_request
+      gc_stat_timing = GCStatInstrumenter.instrument { result = @app.call(env) }
+    else
+      result = @app.call(env)
+    end
+
     info = MethodProfiler.stop
 
     # possibly transferred?
@@ -263,7 +274,11 @@ class Middleware::RequestTracker
         end
       end
     end
-    log_request_info(env, result, info, request) if !env["discourse.request_tracker.skip"]
+
+    if !env["discourse.request_tracker.skip"]
+      info.merge!(gc_stat_timing) if gc_stat_timing
+      log_request_info(env, result, info, request)
+    end
   end
 
   def log_later(data)
@@ -315,7 +330,7 @@ class Middleware::RequestTracker
     limiter10 =
       RateLimiter.new(
         nil,
-        "global_ip_limit_10_#{ip_or_id}",
+        "global_limit_10_#{ip_or_id}",
         GlobalSetting.max_reqs_per_ip_per_10_seconds,
         10,
         global: !limit_on_id,
@@ -326,7 +341,7 @@ class Middleware::RequestTracker
     limiter60 =
       RateLimiter.new(
         nil,
-        "global_ip_limit_60_#{ip_or_id}",
+        "global_limit_60_#{ip_or_id}",
         GlobalSetting.max_reqs_per_ip_per_minute,
         60,
         global: !limit_on_id,
@@ -337,7 +352,7 @@ class Middleware::RequestTracker
     limiter_assets10 =
       RateLimiter.new(
         nil,
-        "global_ip_limit_10_assets_#{ip_or_id}",
+        "global_limit_10_assets_#{ip_or_id}",
         GlobalSetting.max_asset_reqs_per_ip_per_10_seconds,
         10,
         error_code: limit_on_id ? "id_assets_10_secs_limit" : "ip_assets_10_secs_limit",
@@ -349,13 +364,20 @@ class Middleware::RequestTracker
 
     if !limiter_assets10.can_perform?
       if warn
+        limited_on = limit_on_id ? "user_id" : "ip"
         Discourse.warn(
-          "Global asset IP rate limit exceeded for #{ip}: 10 second rate limit",
+          "Global asset rate limit exceeded for #{limited_on}: #{ip}: 10 second rate limit",
           uri: request.env["REQUEST_URI"],
         )
       end
 
-      return limiter_assets10.seconds_to_wait(Time.now.to_i), limiter_assets10.error_code if block
+      if block
+        return [
+          limiter_assets10.seconds_to_wait(Time.now.to_i),
+          limiter_assets10.error_code,
+          limit_on_id
+        ]
+      end
     end
 
     begin
@@ -368,13 +390,14 @@ class Middleware::RequestTracker
       nil
     rescue RateLimiter::LimitExceeded => e
       if warn
+        limited_on = limit_on_id ? "user_id" : "ip"
         Discourse.warn(
-          "Global IP rate limit exceeded for #{ip}: #{type} second rate limit",
+          "Global rate limit exceeded for #{limited_on}: #{ip}: #{type} second rate limit",
           uri: request.env["REQUEST_URI"],
         )
       end
       if block
-        [e.available_in, e.error_code]
+        [e.available_in, e.error_code, limit_on_id]
       else
         nil
       end

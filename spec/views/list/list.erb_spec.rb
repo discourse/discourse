@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe "list/list.erb" do
-  fab!(:category) { Fabricate(:category) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:category)
+  fab!(:topic)
 
   it "add nofollow to RSS alternate link for category" do
     view.stubs(:include_crawler_content?).returns(false)
@@ -18,7 +16,7 @@ RSpec.describe "list/list.erb" do
     )
   end
 
-  it "adds sturctured data" do
+  it "adds structured data" do
     view.stubs(:include_crawler_content?).returns(true)
     topic.posters = []
     assign(:list, OpenStruct.new(topics: [topic]))

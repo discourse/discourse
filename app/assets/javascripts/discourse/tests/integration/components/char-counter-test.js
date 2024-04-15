@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | char-counter", function (hooks) {
   setupRenderingTest(hooks);
@@ -20,9 +20,14 @@ module("Integration | Component | char-counter", function (hooks) {
   test("updating value updates counter", async function (assert) {
     this.max = 50;
 
-    await render(
-      hbs`<CharCounter @value={{this.charCounterContent}} @max={{this.max}}><textarea {{on "input" (action (mut this.charCounterContent) value="target.value")}}></textarea></CharCounter>`
-    );
+    await render(hbs`
+      <CharCounter
+        @value={{this.charCounterContent}}
+        @max={{this.max}}
+      >
+        <textarea {{on "input" (with-event-value (fn (mut this.charCounterContent)))}}></textarea>
+      </CharCounter>
+    `);
 
     assert
       .dom(this.element)

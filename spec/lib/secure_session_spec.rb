@@ -18,10 +18,10 @@ RSpec.describe SecureSession do
     key = SecureRandom.hex
 
     s.set(key, "test2", expires: 5.minutes)
-    expect(s.ttl(key)).to be_within(1.second).of (5.minutes)
+    expect(s.ttl(key)).to be_within(1.second).of(5.minutes)
 
     key = SecureRandom.hex
     s.set(key, "test2")
-    expect(s.ttl(key)).to be_within(1.second).of (SecureSession.expiry)
+    expect(s.ttl(key)).to be_within(1.second).of(SecureSession.expiry)
   end
 end

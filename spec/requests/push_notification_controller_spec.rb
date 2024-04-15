@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PushNotificationController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   context "when logged out" do
     it "should not allow subscribe" do

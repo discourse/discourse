@@ -1,10 +1,10 @@
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 acceptance("Admin - Site Texts", function (needs) {
   needs.user();
@@ -24,7 +24,7 @@ acceptance("Admin - Site Texts", function (needs) {
     assert.ok(exists(".site-text.overridden"));
 
     // Only show overridden
-    await click(".search-area .filter-options input");
+    await click(".search-area .filter-options #toggle-overridden");
     assert.strictEqual(
       currentURL(),
       "/admin/customize/site_texts?overridden=true&q=Test"
@@ -32,6 +32,14 @@ acceptance("Admin - Site Texts", function (needs) {
 
     assert.ok(!exists(".site-text:not(.overridden)"));
     assert.ok(exists(".site-text.overridden"));
+    await click(".search-area .filter-options #toggle-overridden");
+
+    // Only show outdated
+    await click(".search-area .filter-options #toggle-outdated");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/customize/site_texts?outdated=true&q=Test"
+    );
   });
 
   test("edit and revert a site text by key", async function (assert) {

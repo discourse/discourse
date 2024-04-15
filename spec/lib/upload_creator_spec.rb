@@ -3,7 +3,7 @@
 require "file_store/s3_store"
 
 RSpec.describe UploadCreator do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "#create_for" do
     describe "when upload is not an image" do
@@ -147,7 +147,7 @@ RSpec.describe UploadCreator do
     describe "converting to jpeg" do
       def image_quality(path)
         local_path = File.join(Rails.root, "public", path)
-        Discourse::Utils.execute_command("identify", "-format", "%Q", local_path).to_i
+        Discourse::Utils.execute_command("identify", "-ping", "-format", "%Q", local_path).to_i
       end
 
       let(:filename) { "should_be_jpeg.png" }
@@ -374,6 +374,18 @@ RSpec.describe UploadCreator do
         expect(stored_upload.secure?).to eq(true)
         expect(stored_upload.url).not_to eq(signed_url)
         expect(signed_url).to match(/Amz-Credential/)
+      end
+
+      it "should return CDN URL when enabled" do
+        SiteSetting.s3_use_cdn_url_for_all_uploads = true
+        SiteSetting.authorized_extensions = "pdf"
+        SiteSetting.s3_cdn_url = "https://example-cdn.com"
+
+        upload = UploadCreator.new(pdf_file, pdf_filename, opts).create_for(user.id)
+        stored_upload = Upload.last
+        cdn_url = Discourse.store.url_for(stored_upload)
+
+        expect(cdn_url).to match(/example-cdn\.com/)
       end
     end
 

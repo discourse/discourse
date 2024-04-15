@@ -1,12 +1,12 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import Bookmark from "discourse/models/bookmark";
-import I18n from "I18n";
+import { module, test } from "qunit";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { tomorrow } from "discourse/lib/time-utils";
+import Bookmark from "discourse/models/bookmark";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | bookmark-icon", function (hooks) {
   setupRenderingTest(hooks);
@@ -16,6 +16,7 @@ module("Integration | Component | bookmark-icon", function (hooks) {
       bookmark: Bookmark.create({
         reminder_at: tomorrow(this.currentUser.user_option.timezone),
         name: "some name",
+        currentUser: this.currentUser,
       }),
     });
 
@@ -41,6 +42,7 @@ module("Integration | Component | bookmark-icon", function (hooks) {
       "bookmark",
       Bookmark.create({
         name: "some name",
+        currentUser: this.currentUser,
       })
     );
 

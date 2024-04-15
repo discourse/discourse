@@ -5,7 +5,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
   fab!(:discobot_user) { narrative_bot.discobot_user }
   fab!(:discobot_username) { narrative_bot.discobot_username }
   fab!(:first_post) { Fabricate(:post, user: discobot_user) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   fab!(:topic) do
     Fabricate(
@@ -29,6 +29,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
     stub_image_size
     Jobs.run_immediately!
     SiteSetting.discourse_narrative_bot_enabled = true
+    Group.refresh_automatic_groups!
   end
 
   describe "#notify_timeout" do
@@ -377,9 +378,6 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
         context "when reply contains the skip trigger" do
           it "should create the right reply" do
-            # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
-            SiteSetting.enable_experimental_hashtag_autocomplete = false
-
             parent_category = Fabricate(:category, name: "a")
             _category = Fabricate(:category, parent_category: parent_category, name: "b")
 
@@ -417,9 +415,6 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
       context "when user recovers a post in the right topic" do
         it "should create the right reply" do
-          # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
-          SiteSetting.enable_experimental_hashtag_autocomplete = false
-
           parent_category = Fabricate(:category, name: "a")
           _category = Fabricate(:category, parent_category: parent_category, name: "b")
           post
@@ -448,9 +443,6 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
           topic_id: topic.id,
           track: described_class.to_s,
         )
-
-        # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
-        SiteSetting.enable_experimental_hashtag_autocomplete = false
       end
 
       context "when post is not in the right topic" do
@@ -509,37 +501,15 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         narrative.input(:reply, user, post: post)
 
         expected_raw = <<~RAW
-          #{I18n.t("discourse_narrative_bot.advanced_user_narrative.category_hashtag.reply", base_uri: "")}
-
-          #{I18n.t("discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.instructions", base_uri: "")}
-        RAW
-
-        expect(Post.last.raw).to eq(expected_raw.chomp)
-        expect(narrative.get_data(user)[:state].to_sym).to eq(
-          :tutorial_change_topic_notification_level,
-        )
-      end
-
-      context "when enable_experimental_hashtag_autocomplete is true" do
-        before { SiteSetting.enable_experimental_hashtag_autocomplete = true }
-
-        it "should create the right reply" do
-          category = Fabricate(:category)
-
-          post.update!(raw: "Check out this ##{category.slug}")
-          narrative.input(:reply, user, post: post)
-
-          expected_raw = <<~RAW
             #{I18n.t("discourse_narrative_bot.advanced_user_narrative.category_hashtag.reply", base_uri: "")}
 
             #{I18n.t("discourse_narrative_bot.advanced_user_narrative.change_topic_notification_level.instructions", base_uri: "")}
           RAW
 
-          expect(Post.last.raw).to eq(expected_raw.chomp)
-          expect(narrative.get_data(user)[:state].to_sym).to eq(
-            :tutorial_change_topic_notification_level,
-          )
-        end
+        expect(Post.last.raw).to eq(expected_raw.chomp)
+        expect(narrative.get_data(user)[:state].to_sym).to eq(
+          :tutorial_change_topic_notification_level,
+        )
       end
     end
 
@@ -651,7 +621,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         end
 
         it "should create the right reply (insufficient trust level)" do
-          user.update(trust_level: 0)
+          user.change_trust_level!(TrustLevel[0])
 
           TopicUser.change(
             user.id,
@@ -831,6 +801,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         :system_message_sent,
         post: Post.last,
         message_type: "tl2_promotion_message",
+        recipient: recipient,
       )
     }.to change { Topic.count }
     expect(Topic.last.title).to eq(
@@ -849,6 +820,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         :system_message_sent,
         post: Post.last,
         message_type: "tl2_promotion_message",
+        recipient: recipient,
       )
     }.to change { Topic.count }
     expect(Topic.last.title).to eq(
@@ -879,11 +851,25 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
         :system_message_sent,
         post: Post.last,
         message_type: "tl2_promotion_message",
+        recipient: recipient,
       )
     }.to change { Topic.count }
 
     topic = Topic.last
     expect(topic.title).to eq("german title")
     expect(topic.first_post.raw).to eq("german body")
+  end
+
+  it "invites the correct user when users in site_contact_group_name are invited to the system message" do
+    recipient = Fabricate(:user)
+    group = Fabricate(:group)
+    group.add(Fabricate(:user))
+    SiteSetting.site_contact_group_name = "#{group.name}"
+
+    SystemMessage.new(recipient).create("tl2_promotion_message", {})
+
+    expect(Topic.last.topic_users.map(&:user_id).sort).to eq(
+      [DiscourseNarrativeBot::Base.new.discobot_user.id, recipient.id],
+    )
   end
 end

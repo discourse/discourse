@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  site_settings:
+    spoiler_enabled: '啟用劇透插件。如果更改此設定，則必須使用以下命令重新烘焙所有貼文：“rake posts:rebake”。'
+  spoiler_alert:
+    excerpt_spoiler: "劇透"

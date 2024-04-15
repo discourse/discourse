@@ -1,7 +1,6 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Rendering polls with bar charts - mobile", function (needs) {
   needs.user();
@@ -18,9 +17,6 @@ acceptance("Rendering polls with bar charts - mobile", function (needs) {
         })),
       });
     });
-  });
-  needs.hooks.beforeEach(() => {
-    clearPopupMenuOptionsCallback();
   });
 
   test("Public number poll", async function (assert) {

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# We are seeing occasional flakes in `patch-package`, possibly caused by https://github.com/ds300/patch-package/issues/484
+# This script will retry it three times before giving up.
+# Longer-term we hope to upgrade to a package manager with built-in patch support.
+
+for i in {1..3}; do
+  if [ $i -ne 1 ]; then
+    echo "patch-package failed... retry ($i/3)..."
+  fi
+
+  script_dir=$(dirname "$0")
+  yarn --silent --cwd "${script_dir}" patch-package && exit 0;
+done
+
+exit 1;

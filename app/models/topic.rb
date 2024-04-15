@@ -3,6 +3,7 @@
 class Topic < ActiveRecord::Base
   class UserExists < StandardError
   end
+
   class NotAllowed < StandardError
   end
   include RateLimiter::OnCreateRecord
@@ -28,7 +29,7 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :mute!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
-  attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
+  attr_accessor :allowed_user_ids, :allowed_group_ids, :tags_changed, :includes_destination_category
 
   def self.max_fancy_title_length
     400
@@ -58,7 +59,7 @@ class Topic < ActiveRecord::Base
 
   def thumbnail_info(enqueue_if_missing: false, extra_sizes: [])
     return nil unless original = image_upload
-    return nil if original.filesize >= SiteSetting.max_image_size_kb.kilobytes
+    return nil if original.filesize >= SiteSetting.max_image_size_kb.to_i.kilobytes
     return nil unless original.read_attribute(:width) && original.read_attribute(:height)
 
     infos = []
@@ -293,8 +294,8 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :posters # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :participants
+  attr_accessor :participant_groups
   attr_accessor :topic_list
-  attr_accessor :meta_data
   attr_accessor :include_last_poster
   attr_accessor :import_mode # set to true to optimize creation and save for imports
 
@@ -317,13 +318,13 @@ class Topic < ActiveRecord::Base
   SQL
 
   scope :private_messages_for_user,
-        ->(user) {
+        ->(user) do
           private_messages.where(
             "topics.id IN (#{PRIVATE_MESSAGES_SQL_USER})
       OR topics.id IN (#{PRIVATE_MESSAGES_SQL_GROUP})",
             user_id: user.id,
           )
-        }
+        end
 
   scope :listable_topics, -> { where("topics.archetype <> ?", Archetype.private_message) }
 
@@ -568,8 +569,7 @@ class Topic < ActiveRecord::Base
     topics = topics.limit(opts[:limit]) if opts[:limit]
 
     # Remove category topics
-    category_topic_ids = Category.pluck(:topic_id).compact!
-    topics = topics.where("topics.id NOT IN (?)", category_topic_ids) if category_topic_ids.present?
+    topics = topics.where.not(id: Category.select(:topic_id).where.not(topic_id: nil))
 
     # Remove muted and shared draft categories
     remove_category_ids =
@@ -583,6 +583,16 @@ class Topic < ActiveRecord::Base
           "topics.category_id NOT IN (?)",
           SiteSetting.digest_suppress_categories.split("|").map(&:to_i),
         )
+    end
+    if SiteSetting.digest_suppress_tags.present?
+      tag_ids = Tag.where_name(SiteSetting.digest_suppress_tags.split("|")).pluck(:id)
+      if tag_ids.present?
+        topics =
+          topics.joins("LEFT JOIN topic_tags tg ON topics.id = tg.topic_id").where(
+            "tg.tag_id NOT IN (?) OR tg.tag_id IS NULL",
+            tag_ids,
+          )
+      end
     end
     remove_category_ids << SiteSetting.shared_drafts_category if SiteSetting.shared_drafts_enabled?
     if remove_category_ids.present?
@@ -611,19 +621,6 @@ class Topic < ActiveRecord::Base
     topics
   end
 
-  def meta_data=(data)
-    custom_fields.replace(data)
-  end
-
-  def meta_data
-    custom_fields
-  end
-
-  def update_meta_data(data)
-    custom_fields.update(data)
-    save
-  end
-
   def reload(options = nil)
     @post_numbers = nil
     @public_topic_timer = nil
@@ -644,7 +641,8 @@ class Topic < ActiveRecord::Base
     start_date,
     end_date,
     category_id = nil,
-    include_subcategories = false
+    include_subcategories = false,
+    group_ids = nil
   )
     result =
       listable_topics.where(
@@ -657,6 +655,15 @@ class Topic < ActiveRecord::Base
       result.where(
         category_id: include_subcategories ? Category.subcategory_ids(category_id) : category_id,
       ) if category_id
+
+    if group_ids
+      result =
+        result
+          .joins("INNER JOIN users ON users.id = topics.user_id")
+          .joins("INNER JOIN group_users ON group_users.user_id = users.id")
+          .where("group_users.group_id IN (?)", group_ids)
+    end
+
     result.count
   end
 
@@ -968,7 +975,7 @@ class Topic < ActiveRecord::Base
       old_category = category
 
       if self.category_id != new_category.id
-        self.update_attribute(:category_id, new_category.id)
+        self.update(category_id: new_category.id)
 
         if old_category
           Category.where(id: old_category.id).update_all("topic_count = topic_count - 1")
@@ -1236,7 +1243,11 @@ class Topic < ActiveRecord::Base
       )
 
     if opts[:destination_topic_id]
-      topic = post_mover.to_topic(opts[:destination_topic_id], participants: opts[:participants])
+      topic =
+        post_mover.to_topic(
+          opts[:destination_topic_id],
+          **opts.slice(:participants, :chronological_order),
+        )
 
       DiscourseEvent.trigger(:topic_merged, post_mover.original_topic, post_mover.destination_topic)
 
@@ -1268,6 +1279,10 @@ class Topic < ActiveRecord::Base
 
   def participants_summary(options = {})
     @participants_summary ||= TopicParticipantsSummary.new(self, options).summary
+  end
+
+  def participant_groups_summary(options = {})
+    @participant_groups_summary ||= TopicParticipantGroupsSummary.new(self, options).summary
   end
 
   def make_banner!(user, bannered_until = nil)
@@ -1843,13 +1858,21 @@ class Topic < ActiveRecord::Base
     @is_category_topic ||= Category.exists?(topic_id: self.id.to_i)
   end
 
-  def reset_bumped_at
+  def reset_bumped_at(post_id = nil)
     post =
-      ordered_posts.where(
-        user_deleted: false,
-        hidden: false,
-        post_type: Post.types[:regular],
-      ).last || first_post
+      (
+        if post_id
+          Post.find_by(id: post_id)
+        else
+          ordered_posts.where(
+            user_deleted: false,
+            hidden: false,
+            post_type: Post.types[:regular],
+          ).last || first_post
+        end
+      )
+
+    return if !post
 
     self.bumped_at = post.created_at
     self.save(validate: false)
@@ -2034,6 +2057,17 @@ class Topic < ActiveRecord::Base
 
   def group_pm?
     private_message? && all_allowed_users.count > 2
+  end
+
+  def visible_tags(guardian)
+    tags.reject { |tag| guardian.hidden_tag_names.include?(tag[:name]) }
+  end
+
+  def self.editable_custom_fields(guardian)
+    fields = []
+    fields.push(*DiscoursePluginRegistry.public_editable_topic_custom_fields)
+    fields.push(*DiscoursePluginRegistry.staff_editable_topic_custom_fields) if guardian.is_staff?
+    fields
   end
 
   private

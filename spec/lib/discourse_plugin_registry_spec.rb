@@ -83,18 +83,18 @@ RSpec.describe DiscoursePluginRegistry do
     end
   end
 
-  describe "#admin_javascripts" do
-    it "defaults to an empty Set" do
-      registry.reset!
-      expect(registry.admin_javascripts).to eq(Set.new)
-    end
-  end
-
   describe "#seed_data" do
     it "defaults to an empty Set" do
       registry.reset!
       expect(registry.seed_data).to be_a(Hash)
       expect(registry.seed_data.size).to eq(0)
+    end
+  end
+
+  describe "#mail_pollers" do
+    it "defaults to an empty Set" do
+      registry.reset!
+      expect(registry.mail_pollers).to eq(Set.new)
     end
   end
 
@@ -221,13 +221,6 @@ RSpec.describe DiscoursePluginRegistry do
       registry.register_asset("test.css", :color_definitions, plugin_directory_name)
       expect(registry.color_definition_stylesheets[plugin_directory_name]).to eq("test.css")
       expect(registry.stylesheets[plugin_directory_name]).to eq(nil)
-    end
-
-    it "registers admin javascript properly" do
-      registry.register_asset("my_admin.js", :admin)
-
-      expect(registry.admin_javascripts.count).to eq(1)
-      expect(registry.javascripts.count).to eq(0)
     end
 
     it "registers vendored_core_pretty_text properly" do

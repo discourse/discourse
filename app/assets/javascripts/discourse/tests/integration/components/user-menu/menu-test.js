@@ -1,10 +1,10 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, render, settled } from "@ember/test-helpers";
-import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | user-menu", function (hooks) {
   setupRenderingTest(hooks);
@@ -222,7 +222,8 @@ module("Integration | Component | user-menu", function (hooks) {
           },
         ];
       } else if (
-        queryParams.filter_by_types === "mentioned,posted,quoted,replied"
+        queryParams.filter_by_types ===
+        "mentioned,group_mentioned,posted,quoted,replied"
       ) {
         data = [
           {
@@ -280,7 +281,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(exists("#quick-access-replies.quick-access-panel"));
     assert.strictEqual(
       queryParams.filter_by_types,
-      "mentioned,posted,quoted,replied",
+      "mentioned,group_mentioned,posted,quoted,replied",
       "request params has filter_by_types set to `mentioned`, `posted`, `quoted` and `replied`"
     );
     assert.strictEqual(queryParams.silent, "true");

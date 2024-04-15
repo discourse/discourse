@@ -1,14 +1,14 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit, {
   DEFAULT_CONTENT,
   setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
 import { clearCallbacks } from "select-kit/mixins/plugin-api";
-import { hbs } from "ember-cli-htmlbars";
-import { withPluginApi } from "discourse/lib/plugin-api";
 
 module("Integration | Component | select-kit/api", function (hooks) {
   setupRenderingTest(hooks);

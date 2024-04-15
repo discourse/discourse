@@ -1,18 +1,17 @@
-import { bind } from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse-common/lib/debounce";
+import { getOwner, setOwner } from "@ember/application";
 import { run, throttle } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
+import { ajax } from "discourse/lib/ajax";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import {
   nextTopicUrl,
   previousTopicUrl,
 } from "discourse/lib/topic-list-tracker";
-import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
-import domUtils from "discourse-common/utils/dom-utils";
+import Composer from "discourse/models/composer";
+import { capabilities } from "discourse/services/capabilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import { ajax } from "discourse/lib/ajax";
-import { headerOffset } from "discourse/lib/offset-calculator";
-import { helperContext } from "discourse-common/lib/helpers";
+import discourseLater from "discourse-common/lib/later";
+import domUtils from "discourse-common/utils/dom-utils";
 
 let extraKeyboardShortcutsHelp = {};
 function addExtraKeyboardShortcutHelp(help) {
@@ -32,14 +31,23 @@ export function clearExtraKeyboardShortcutHelp() {
 
 export { extraKeyboardShortcutsHelp as extraKeyboardShortcutsHelp };
 
+export const PLATFORM_KEY_MODIFIER = /Mac|iPod|iPhone|iPad/.test(
+  navigator.platform
+)
+  ? "meta"
+  : "ctrl";
+
 const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
+  "meta+/": { handler: "filterSidebar", anonymous: true },
+  [`${PLATFORM_KEY_MODIFIER}+/`]: { handler: "filterSidebar", anonymous: true },
   "ctrl+alt+f": { handler: "toggleSearch", anonymous: true, global: true },
   "=": { handler: "toggleHamburgerMenu", anonymous: true },
   "?": { handler: "showHelpModal", anonymous: true },
   ".": { click: ".alert.alert-info.clickable", anonymous: true }, // show incoming/updated topics
+  a: { handler: "toggleArchivePM" },
   b: { handler: "toggleBookmark" },
   c: { handler: "createTopic" },
   "shift+c": { handler: "focusComposer" },
@@ -99,18 +107,23 @@ const DEFAULT_BINDINGS = {
   "shift+k": { handler: "prevSection", anonymous: true },
   "shift+p": { handler: "pinUnpinTopic" },
   "shift+r": { handler: "replyToTopic" },
-  "shift+s": { click: "#topic-footer-buttons button.share", anonymous: true }, // share topic
+  "shift+s": {
+    click: "#topic-footer-buttons button.share-and-invite",
+    anonymous: true,
+  }, // share topic
   "shift+l": { handler: "goToUnreadPost" },
   "shift+z shift+z": { handler: "logout" },
   "shift+f11": { handler: "fullscreenComposer", global: true },
   "shift+u": { handler: "deferTopic" },
   "shift+a": { handler: "toggleAdminActions" },
+  "shift+b": { handler: "toggleBulkSelect" },
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
-  "x r": {
-    click: "#dismiss-new-bottom,#dismiss-new-top",
-  }, // dismiss new
-  "x t": { click: "#dismiss-topics-bottom,#dismiss-topics-top" }, // dismiss topics
+  x: { handler: "bulkSelectItem" },
+  "shift+d": {
+    click:
+      "#dismiss-new-bottom, #dismiss-new-top, #dismiss-topics-bottom, #dismiss-topics-top",
+  }, // dismiss new or unread
 };
 
 const animationDuration = 100;
@@ -121,7 +134,9 @@ function preventKeyboardEvent(event) {
 }
 
 export default {
-  init(keyTrapper, container) {
+  init(keyTrapper, owner) {
+    setOwner(this, owner);
+
     // Sometimes the keyboard shortcut initializer is not torn down. This makes sure
     // we clear any previous test state.
     if (this.keyTrapper) {
@@ -130,14 +145,13 @@ export default {
     }
 
     this.keyTrapper = new keyTrapper();
-    this.container = container;
     this._stopCallback();
 
-    this.searchService = this.container.lookup("service:search");
-    this.appEvents = this.container.lookup("service:app-events");
-    this.currentUser = this.container.lookup("service:current-user");
-    this.siteSettings = this.container.lookup("service:site-settings");
-    this.site = this.container.lookup("service:site");
+    this.searchService = owner.lookup("service:search");
+    this.appEvents = owner.lookup("service:app-events");
+    this.currentUser = owner.lookup("service:current-user");
+    this.siteSettings = owner.lookup("service:site-settings");
+    this.site = owner.lookup("service:site");
 
     // Disable the shortcut if private messages are disabled
     if (!this.currentUser?.can_send_private_messages) {
@@ -158,11 +172,10 @@ export default {
 
     this.keyTrapper?.destroy();
     this.keyTrapper = null;
-    this.container = null;
   },
 
   isTornDown() {
-    return this.keyTrapper == null || this.container == null;
+    return this.keyTrapper == null;
   },
 
   bindKey(key, binding = null) {
@@ -298,16 +311,16 @@ export default {
     const topic = this.currentTopic();
     if (topic && document.querySelectorAll(".posts-wrapper").length) {
       preventKeyboardEvent(event);
-      this.container.lookup("controller:topic").send("toggleBookmark");
+      getOwner(this).lookup("controller:topic").send("toggleBookmark");
     }
   },
 
   logout() {
-    this.container.lookup("route:application").send("logout");
+    getOwner(this).lookup("route:application").send("logout");
   },
 
   quoteReply() {
-    if (this.isPostTextSelected()) {
+    if (this.isPostTextSelected) {
       this.appEvents.trigger("quote-button:quote");
       return false;
     }
@@ -323,7 +336,7 @@ export default {
   },
 
   editPost() {
-    if (this.siteSettings.enable_fast_edit && this.isPostTextSelected()) {
+    if (this.siteSettings.enable_fast_edit && this.isPostTextSelected) {
       this.appEvents.trigger("quote-button:edit");
       return false;
     } else {
@@ -350,11 +363,11 @@ export default {
   },
 
   goToFirstSuggestedTopic() {
-    const el = document.querySelector(".suggested-topics a.raw-topic-link");
+    const el = document.querySelector("#suggested-topics a.raw-topic-link");
     if (el) {
       el.click();
     } else {
-      const controller = this.container.lookup("controller:topic");
+      const controller = getOwner(this).lookup("controller:topic");
       // Only the last page contains list of suggested topics.
       const url = `/t/${controller.get("model.id")}/last.json`;
       ajax(url).then((result) => {
@@ -383,7 +396,7 @@ export default {
 
   _jumpTo(direction) {
     if (document.querySelector(".container.posts")) {
-      this.container.lookup("controller:topic").send(direction);
+      getOwner(this).lookup("controller:topic").send(direction);
     }
   },
 
@@ -394,11 +407,18 @@ export default {
   },
 
   selectDown() {
-    this._moveSelection(1);
+    this._moveSelection({ direction: 1, scrollWithinPosts: true });
   },
 
   selectUp() {
-    this._moveSelection(-1);
+    this._moveSelection({ direction: -1, scrollWithinPosts: true });
+  },
+
+  bulkSelectItem() {
+    const elem = document.querySelector(
+      ".selected input.bulk-select, .selected .select-post"
+    );
+    elem?.click();
   },
 
   goBack() {
@@ -426,7 +446,7 @@ export default {
     run(() => {
       if (document.querySelector(".container.posts")) {
         event.preventDefault(); // We need to stop printing the current page in Firefox
-        this.container.lookup("controller:topic").print();
+        getOwner(this).lookup("controller:topic").print();
       }
     });
   },
@@ -445,14 +465,14 @@ export default {
       return;
     }
 
-    this.container.lookup("service:composer").open({
+    getOwner(this).lookup("service:composer").open({
       action: Composer.CREATE_TOPIC,
       draftKey: Composer.NEW_TOPIC_KEY,
     });
   },
 
   focusComposer(event) {
-    const composer = this.container.lookup("service:composer");
+    const composer = getOwner(this).lookup("service:composer");
     if (event) {
       event.preventDefault();
       event.stopPropagation();
@@ -460,15 +480,24 @@ export default {
     composer.focusComposer(event);
   },
 
+  filterSidebar() {
+    const filterInput = document.querySelector(".sidebar-filter__input");
+
+    if (filterInput) {
+      this._scrollTo(0);
+      filterInput.focus();
+    }
+  },
+
   fullscreenComposer() {
-    const composer = this.container.lookup("service:composer");
+    const composer = getOwner(this).lookup("service:composer");
     if (composer.get("model")) {
       composer.toggleFullscreen();
     }
   },
 
   pinUnpinTopic() {
-    this.container.lookup("controller:topic").togglePinnedState();
+    getOwner(this).lookup("controller:topic").togglePinnedState();
   },
 
   goToPost(event) {
@@ -497,7 +526,7 @@ export default {
   },
 
   showHelpModal() {
-    this.container
+    getOwner(this)
       .lookup("controller:application")
       .send("showKeyboardShortcutsHelp");
   },
@@ -531,7 +560,7 @@ export default {
   sendToTopicListItemView(action, elem) {
     elem = elem || document.querySelector("tr.selected.topic-list-item");
     if (elem) {
-      const registry = this.container.lookup("-view-registry:main");
+      const registry = getOwner(this).lookup("-view-registry:main");
       if (registry) {
         const view = registry[elem.id];
         view.send(action);
@@ -540,7 +569,7 @@ export default {
   },
 
   currentTopic() {
-    const topicController = this.container.lookup("controller:topic");
+    const topicController = getOwner(this).lookup("controller:topic");
     if (topicController) {
       const topic = topicController.get("model");
       if (topic) {
@@ -549,9 +578,9 @@ export default {
     }
   },
 
-  isPostTextSelected() {
-    const topicController = this.container.lookup("controller:topic");
-    return !!topicController?.get("quoteState")?.postId;
+  get isPostTextSelected() {
+    const topicController = getOwner(this).lookup("controller:topic");
+    return !!topicController.quoteState.postId;
   },
 
   sendToSelectedPost(action, elem) {
@@ -565,7 +594,7 @@ export default {
     }
 
     if (selectedPostId) {
-      const topicController = this.container.lookup("controller:topic");
+      const topicController = getOwner(this).lookup("controller:topic");
       const post = topicController
         .get("model.postStream.posts")
         .findBy("id", selectedPostId);
@@ -574,7 +603,7 @@ export default {
 
         let actionMethod = topicController.actions[action];
         if (!actionMethod) {
-          const topicRoute = this.container.lookup("route:topic");
+          const topicRoute = getOwner(this).lookup("route:topic");
           actionMethod = topicRoute.actions[action];
         }
 
@@ -631,7 +660,7 @@ export default {
     }
   },
 
-  _moveSelection(direction) {
+  _moveSelection({ direction, scrollWithinPosts }) {
     // Pressing a move key (J/K) very quick (i.e. keeping J or K pressed) will
     // move fast by disabling smooth page scrolling.
     const now = +new Date();
@@ -682,7 +711,7 @@ export default {
     let article = selected;
 
     // Try doing a page scroll in the context of current post.
-    if (!fast && direction !== 0 && article) {
+    if (!fast && direction !== 0 && article && scrollWithinPosts) {
       // The beginning of first article is the beginning of the page.
       const beginArticle =
         article.classList.contains("topic-post") &&
@@ -721,15 +750,29 @@ export default {
       }
     }
 
-    article = articles[index + direction];
-    if (!article) {
-      return;
+    let newIndex = index;
+    while (true) {
+      newIndex += direction;
+      article = articles[newIndex];
+
+      // Element doesn't exist
+      if (!article) {
+        return;
+      }
+
+      // Element is visible
+      if (article.getBoundingClientRect().height > 0) {
+        break;
+      }
     }
 
     for (const a of articles) {
       a.classList.remove("selected");
+      a.removeAttribute("tabindex");
     }
     article.classList.add("selected");
+    article.setAttribute("tabindex", "0");
+    article.focus();
 
     this.appEvents.trigger("keyboard:move-selection", {
       articles,
@@ -738,7 +781,12 @@ export default {
 
     const articleTop = domUtils.offset(article).top,
       articleTopPosition = articleTop - headerOffset();
-    if (!fast && direction < 0 && article.offsetHeight > window.innerHeight) {
+    if (
+      scrollWithinPosts &&
+      !fast &&
+      direction < 0 &&
+      article.offsetHeight > window.innerHeight
+    ) {
       // Scrolling to the last "page" of the previous post if post has multiple
       // "pages" (if its height does not fit in the screen).
       return this._scrollTo(
@@ -746,8 +794,7 @@ export default {
       );
     } else if (article.classList.contains("topic-post")) {
       return this._scrollTo(
-        article.querySelector("#post_1") ? 0 : articleTopPosition,
-        { focusTabLoc: true }
+        article.querySelector("#post_1") ? 0 : articleTopPosition
       );
     }
 
@@ -764,25 +811,11 @@ export default {
     this._scrollTo(articleTopPosition - window.innerHeight * scrollRatio);
   },
 
-  _scrollTo(scrollTop, opts = {}) {
+  _scrollTo(scrollTop) {
     window.scrollTo({
       top: scrollTop,
       behavior: "smooth",
     });
-
-    if (opts.focusTabLoc) {
-      window.addEventListener("scroll", this._onScrollEnds, { passive: true });
-    }
-  },
-
-  @bind
-  _onScrollEnds() {
-    window.removeEventListener("scroll", this._onScrollEnds, { passive: true });
-    discourseDebounce(this, this._onScrollEndsCallback, animationDuration);
-  },
-
-  _onScrollEndsCallback() {
-    document.querySelector(".topic-post.selected span.tabLoc")?.focus();
   },
 
   categoriesTopicsList() {
@@ -811,20 +844,26 @@ export default {
       );
     } else if (document.querySelector(".topic-list")) {
       return document.querySelectorAll(".topic-list .topic-list-item");
-    } else if ((categoriesTopicsList = this.categoriesTopicsList())) {
-      return categoriesTopicsList;
     } else if (document.querySelector(".search-results")) {
       return document.querySelectorAll(".search-results .fps-result");
+    } else if ((categoriesTopicsList = this.categoriesTopicsList())) {
+      return categoriesTopicsList;
     }
   },
 
   _changeSection(direction) {
-    const sections = Array.from(document.querySelectorAll(".nav.nav-pills li"));
-    const active = document.querySelector(".nav.nav-pills li.active");
-    const index = sections.indexOf(active) + direction;
+    if (document.querySelector(".post-stream")) {
+      this._moveSelection({ direction, scrollWithinPosts: false });
+    } else {
+      const sections = Array.from(
+        document.querySelectorAll(".nav.nav-pills li")
+      );
+      const active = document.querySelector(".nav.nav-pills li.active");
+      const index = sections.indexOf(active) + direction;
 
-    if (index >= 0 && index < sections.length) {
-      sections[index].querySelector("a")?.click();
+      if (index >= 0 && index < sections.length) {
+        sections[index].querySelector("a, button")?.click();
+      }
     }
   },
 
@@ -849,7 +888,7 @@ export default {
   },
 
   _replyToPost() {
-    this.container.lookup("controller:topic").send("replyToPost");
+    getOwner(this).lookup("controller:topic").send("replyToPost");
   },
 
   _getSelectedPost() {
@@ -861,21 +900,35 @@ export default {
   },
 
   deferTopic() {
-    this.container.lookup("controller:topic").send("deferTopic");
+    getOwner(this).lookup("controller:topic").send("deferTopic");
   },
 
   toggleAdminActions() {
-    this.appEvents.trigger("topic:toggle-actions");
+    document.querySelector(".toggle-admin-menu")?.click();
+  },
+
+  toggleBulkSelect() {
+    const bulkSelect = document.querySelector("button.bulk-select");
+
+    if (bulkSelect) {
+      bulkSelect.click();
+    } else {
+      getOwner(this).lookup("controller:topic").send("toggleMultiSelect");
+    }
+  },
+
+  toggleArchivePM() {
+    getOwner(this).lookup("controller:topic").send("toggleArchiveMessage");
   },
 
   webviewKeyboardBack() {
-    if (helperContext().capabilities.isAppWebview) {
+    if (capabilities.isAppWebview) {
       window.history.back();
     }
   },
 
   webviewKeyboardForward() {
-    if (helperContext().capabilities.isAppWebview) {
+    if (capabilities.isAppWebview) {
       window.history.forward();
     }
   },

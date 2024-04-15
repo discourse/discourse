@@ -4,7 +4,7 @@
     <Input
       @value={{this.buffered.host}}
       placeholder="example.com"
-      @enter={{action "save"}}
+      @enter={{this.save}}
       class="host-name"
       autofocus={{true}}
     />
@@ -14,30 +14,30 @@
     <Input
       @value={{this.buffered.allowed_paths}}
       placeholder="/blog/.*"
-      @enter={{action "save"}}
+      @enter={{this.save}}
       class="path-allowlist"
     />
   </td>
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.category"}}</div>
     <CategoryChooser
-      @value={{this.categoryId}}
-      @class="small"
-      @onChange={{action (mut this.categoryId)}}
+      @value={{this.category.id}}
+      @onChangeCategory={{fn (mut this.category)}}
+      class="small"
     />
   </td>
   <td class="editing-controls">
     <DButton
       @icon="check"
-      @action={{action "save"}}
-      @class="btn-primary"
+      @action={{this.save}}
       @disabled={{this.cantSave}}
+      class="btn-primary"
     />
     <DButton
       @icon="times"
-      @action={{action "cancel"}}
-      @class="btn-danger"
+      @action={{this.cancel}}
       @disabled={{this.host.isSaving}}
+      class="btn-danger"
     />
   </td>
 {{else}}
@@ -53,14 +53,10 @@
   </td>
   <td>
     <div class="label">{{i18n "admin.embedding.category"}}</div>
-    {{category-badge this.host.category allowUncategorized=true}}
+    {{category-badge this.category allowUncategorized=true}}
   </td>
   <td class="controls">
-    <DButton @icon="pencil-alt" @action={{action "edit"}} />
-    <DButton
-      @icon="far-trash-alt"
-      @action={{action "delete"}}
-      @class="btn-danger"
-    />
+    <DButton @icon="pencil-alt" @action={{this.edit}} />
+    <DButton @icon="far-trash-alt" @action={{this.delete}} class="btn-danger" />
   </td>
 {{/if}}

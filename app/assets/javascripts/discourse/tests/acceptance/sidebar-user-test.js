@@ -1,30 +1,13 @@
-import I18n from "I18n";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import Sinon from "sinon";
 import {
   acceptance,
   exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-
-acceptance(
-  "Sidebar - Logged on user - Legacy navigation menu enabled",
-  function (needs) {
-    needs.user();
-
-    needs.settings({
-      navigation_menu: "legacy",
-    });
-
-    test("clicking header hamburger icon displays old hamburger dropdown", async function (assert) {
-      await visit("/");
-      await click(".hamburger-dropdown");
-
-      assert.ok(exists(".menu-container-general-links"));
-    });
-  }
-);
+import I18n from "discourse-i18n";
 
 acceptance(
   "Sidebar - Logged on user - Mobile view - Header dropdown navigation menu enabled",
@@ -38,7 +21,7 @@ acceptance(
 
     test("sections are collapsable", async function (assert) {
       await visit("/");
-      await click(".hamburger-dropdown");
+      await click("#toggle-hamburger-menu");
 
       assert.ok(
         exists(".sidebar-section-header.sidebar-section-header-collapsable"),
@@ -59,14 +42,14 @@ acceptance(
 
     test("showing and hiding sidebar", async function (assert) {
       await visit("/");
-      await click(".hamburger-dropdown");
+      await click("#toggle-hamburger-menu");
 
       assert.ok(
         exists(".sidebar-hamburger-dropdown"),
         "displays the sidebar dropdown"
       );
 
-      await click(".hamburger-dropdown");
+      await click("#toggle-hamburger-menu");
 
       assert.notOk(
         exists(".sidebar-hamburger-dropdown"),
@@ -76,7 +59,7 @@ acceptance(
 
     test("sections are not collapsable", async function (assert) {
       await visit("/");
-      await click(".hamburger-dropdown");
+      await click("#toggle-hamburger-menu");
 
       assert.notOk(
         exists(".sidebar-section-header.sidebar-section-header-collapsable"),
@@ -86,7 +69,7 @@ acceptance(
 
     test("'more' dropdown should display as regular list items in header dropdown mode", async function (assert) {
       await visit("/");
-      await click(".hamburger-dropdown");
+      await click("#toggle-hamburger-menu");
 
       assert.ok(
         exists("[data-link-name='admin']"),
@@ -162,7 +145,7 @@ acceptance(
 
     test("button to toggle between mobile and desktop view on touch devices ", async function (assert) {
       const capabilities = this.container.lookup("service:capabilities");
-      capabilities.touch = true;
+      Sinon.stub(capabilities, "touch").value(true);
 
       await visit("/");
 
@@ -208,7 +191,7 @@ acceptance(
 
       assert.ok(
         exists(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-header[aria-expanded='true'][aria-controls='sidebar-section-content-community']"
+          ".sidebar-section[data-section-name='categories'] .sidebar-section-header[aria-expanded='true'][aria-controls='sidebar-section-content-categories']"
         ),
         "accessibility attributes are set correctly on sidebar section header when section is expanded"
       );
@@ -217,7 +200,7 @@ acceptance(
 
       assert.ok(
         exists(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-header[aria-expanded='false'][aria-controls='sidebar-section-content-community']"
+          ".sidebar-section[data-section-name='categories'] .sidebar-section-header[aria-expanded='false'][aria-controls='sidebar-section-content-categories']"
         ),
         "accessibility attributes are set correctly on sidebar section header when section is collapsed"
       );
@@ -235,7 +218,7 @@ acceptance(
 
       assert.strictEqual(
         query(".btn-sidebar-toggle").title,
-        I18n.t("sidebar.hide_sidebar"),
+        I18n.t("sidebar.title"),
         "has the right title attribute when sidebar is expanded"
       );
 
@@ -250,7 +233,7 @@ acceptance(
 
       assert.strictEqual(
         query(".btn-sidebar-toggle").title,
-        I18n.t("sidebar.show_sidebar"),
+        I18n.t("sidebar.title"),
         "has the right title attribute when sidebar is collapsed"
       );
     });

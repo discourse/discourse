@@ -1,5 +1,5 @@
-import Eyeline from "discourse/lib/eyeline";
 import Mixin from "@ember/object/mixin";
+import Eyeline from "discourse/lib/eyeline";
 import Scrolling from "discourse/mixins/scrolling";
 import { on } from "discourse-common/utils/decorators";
 

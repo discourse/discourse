@@ -1,8 +1,8 @@
-import { createWidget } from "discourse/widgets/widget";
 import hbs from "discourse/widgets/hbs-compiler";
+import { createWidget } from "discourse/widgets/widget";
 
 createWidget("header-contents", {
-  tagName: "div.contents.clearfix",
+  tagName: "div.contents",
   transform() {
     return {
       showBootstrapMode: this.currentUser?.staff && this.site.desktopView,
@@ -15,7 +15,9 @@ createWidget("header-contents", {
       {{/if}}
     {{/if}}
 
-    {{home-logo attrs=attrs}}
+    {{before-header-logo-outlet attrs=attrs}}
+
+    {{home-logo-wrapper-outlet attrs=attrs}}
 
     {{#if attrs.topic}}
       {{header-topic-info attrs=attrs}}
@@ -25,6 +27,8 @@ createWidget("header-contents", {
       {{/if}}
     {{/if}}
 
-    <div class="panel clearfix" role="navigation">{{yield}}</div>
+    {{before-header-panel-outlet attrs=attrs}}
+
+    <div class="panel" role="navigation">{{yield}}</div>
   `,
 });

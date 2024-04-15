@@ -13,11 +13,11 @@ RSpec.describe Tag do
   let(:tag) { Fabricate(:tag) }
   let(:tag2) { Fabricate(:tag) }
   let(:topic) { Fabricate(:topic, tags: [tag]) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   before do
     SiteSetting.tagging_enabled = true
-    SiteSetting.min_trust_level_to_tag_topics = 0
+    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
   end
 
   describe "Associations" do
@@ -35,13 +35,13 @@ RSpec.describe Tag do
   end
 
   describe "new" do
-    subject { Fabricate.build(:tag) }
+    subject(:tag) { Fabricate.build(:tag) }
 
     it "triggers a extensibility event" do
-      event = DiscourseEvent.track_events { subject.save! }.last
+      event = DiscourseEvent.track_events { tag.save! }.last
 
       expect(event[:event_name]).to eq(:tag_created)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(tag)
     end
 
     it "prevents case-insensitive duplicates" do
@@ -59,13 +59,13 @@ RSpec.describe Tag do
   end
 
   describe "destroy" do
-    subject { Fabricate(:tag) }
+    subject(:tag) { Fabricate(:tag) }
 
     it "triggers a extensibility event" do
-      event = DiscourseEvent.track_events { subject.destroy! }.last
+      event = DiscourseEvent.track_events { tag.destroy! }.last
 
       expect(event[:event_name]).to eq(:tag_destroyed)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(tag)
     end
 
     it "removes it from its tag group" do
@@ -299,6 +299,7 @@ RSpec.describe Tag do
       )
     end
     let!(:tag_group) { Fabricate(:tag_group, tag_names: [tag_in_group.name]) }
+    let!(:synonym_tag) { Fabricate(:tag, target_tag: tags.first) }
 
     it "returns the correct tags" do
       expect(Tag.unused.pluck(:name)).to contain_exactly("unused1", "unused2")
@@ -366,7 +367,7 @@ RSpec.describe Tag do
   end
 
   describe ".topic_count_column" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
 
     it "returns 'staff_topic_count' when user is staff" do
       expect(Tag.topic_count_column(Guardian.new(admin))).to eq("staff_topic_count")
@@ -380,6 +381,17 @@ RSpec.describe Tag do
       SiteSetting.include_secure_categories_in_tag_counts = true
 
       expect(Tag.topic_count_column(Guardian.new(user))).to eq("staff_topic_count")
+    end
+  end
+
+  describe "description" do
+    it "uses the HTMLSanitizer to remove unsafe tags and attributes" do
+      tag.description =
+        "<div>hi</div><script>a=0;</script> <a onclick='const a=0;' href=\"https://www.discourse.org\">discourse</a>"
+      tag.save!
+      expect(tag.description.strip).to eq(
+        "<div>hi</div>a=0; <a href=\"https://www.discourse.org\">discourse</a>",
+      )
     end
   end
 end

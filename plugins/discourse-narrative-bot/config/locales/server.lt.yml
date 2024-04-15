@@ -98,7 +98,6 @@ lt:
         "10": "Ženklai rodo, kad taip"
         "11": "Atsakymas miglotas, bandykite dar kartą"
         "12": "Vėliau paklauskite dar kartą"
-        "13": "Better not tell you now"
         "14": "Dabar negalima prognozuoti"
         "15": "Susikaupkite ir vėl paklauskite"
         "16": "Nesitikėkite"
@@ -250,10 +249,6 @@ lt:
         not_found: |-
           Oi ne, mano bjaurus pranešimas dar nebuvo pažymėtas kaip netinkamas. :worried: Ar galite pažymėti jį kaip netinkamą naudojant **vėliavą** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nepamirškite naudoti Rodyti daugiau mygtuko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , kad atskleistumėte daugiau veiksmų kiekvienam įrašui.
       search:
-        instructions: |-
-          _psst_ … Šioje temoje paslėpiau staigmeną. Jei pasiruošę iššūkiui, **pasirinkite paieškos piktogramą** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> viršuje dešinėje &#8599; ir ieškokite jos.
-
-          Pabandykite šioje temoje ieškoti termino „capy&#8203;bara“.
         hidden_message: |-
           Kaip jūs praleidote šį capybara? :wink:
 
@@ -308,16 +303,6 @@ lt:
 
           Ar galite padaryti man paslaugą ir <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **atšaukti ištrynimą**?
       category_hashtag:
-        instructions: |-
-          Ar žinojote, kad savo įraše galite nurodyti kategorijas ir žymas? Pavyzdžiui, ar matėte %{category} kategoriją?
-
-          Įveskite „#“ sakinio viduryje ir pasirinkite bet kurią kategoriją arba žymą.
-        not_found: |-
-          Hmm, niekur nematau kategorijos. Atminkite, kad „#“ negali būti pirmasis simbolis. Ar galite tai nukopijuoti kitame atsakyme?
-
-          ```tekstas
-          Galiu sukurti kategorijos nuorodą per #
-          ```
         reply: |-
           Puikiai! Atminkite, kad tai veikia abiejų kategorijų _ir_ žymas, jei žymės įjungtos.
       change_topic_notification_level:

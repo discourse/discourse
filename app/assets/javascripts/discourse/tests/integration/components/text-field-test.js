@@ -1,10 +1,10 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fillIn, render } from "@ember/test-helpers";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
 import sinon from "sinon";
-import I18n from "I18n";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | text-field", function (hooks) {
   setupRenderingTest(hooks);
@@ -24,34 +24,12 @@ module("Integration | Component | text-field", function (hooks) {
     assert.strictEqual(query("input").placeholder, "placeholder.i18n.key");
   });
 
-  test("sets the dir attribute to ltr for Hebrew text", async function (assert) {
+  test("sets the dir attribute to auto when mixed text direction enabled", async function (assert) {
     this.siteSettings.support_mixed_text_direction = true;
 
     await render(hbs`<TextField @value="זהו שם עברי עם מקום עברי" />`);
 
-    assert.strictEqual(query("input").getAttribute("dir"), "rtl");
-  });
-
-  test("sets the dir attribute to ltr for English text", async function (assert) {
-    this.siteSettings.support_mixed_text_direction = true;
-
-    await render(hbs`<TextField @value="This is a ltr title" />`);
-
-    assert.strictEqual(query("input").getAttribute("dir"), "ltr");
-  });
-
-  test("updates the dir attribute when value changes", async function (assert) {
-    this.siteSettings.support_mixed_text_direction = true;
-
-    await render(
-      hbs`<TextField id="mytextfield" @value="This is a ltr title" />`
-    );
-
-    assert.strictEqual(query("input").getAttribute("dir"), "ltr");
-
-    await fillIn("#mytextfield", "זהו שם עברי עם מקום עברי");
-
-    assert.strictEqual(query("input").getAttribute("dir"), "rtl");
+    assert.dom("input").hasAttribute("dir", "auto");
   });
 
   test("supports onChange", async function (assert) {

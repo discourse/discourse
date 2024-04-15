@@ -5,15 +5,17 @@
   >
     <table class="topic-list bookmark-list">
       <thead class="topic-list-header">
-        {{#unless this.site.mobileView}}
-          <th class="topic-list-data">{{i18n "topic.title"}}</th>
-          <th class="topic-list-data">&nbsp;</th>
-          <th class="post-metadata topic-list-data">{{i18n
-              "post.bookmarks.updated"
-            }}</th>
-          <th class="post-metadata topic-list-data">{{i18n "activity"}}</th>
-          <th>&nbsp;</th>
-        {{/unless}}
+        {{#if this.site.desktopView}}
+          <PluginOutlet @name="bookmark-list-table-header">
+            <th class="topic-list-data">{{i18n "topic.title"}}</th>
+            <th class="topic-list-data">&nbsp;</th>
+            <th class="post-metadata topic-list-data">{{i18n
+                "post.bookmarks.updated"
+              }}</th>
+            <th class="post-metadata topic-list-data">{{i18n "activity"}}</th>
+            <th>&nbsp;</th>
+          </PluginOutlet>
+        {{/if}}
       </thead>
       <tbody class="topic-list-body">
         {{#each this.content as |bookmark|}}
@@ -89,14 +91,15 @@
                   }}
                 </a>
               {{/if}}
-              {{! template-lint-disable }}
+
+              {{! template-lint-disable no-invalid-interactive }}
               <p
                 class="post-excerpt"
                 {{on "click" this.screenExcerptForExternalLink}}
               >{{html-safe bookmark.excerpt}}</p>
             </th>
-            {{#unless this.site.mobileView}}
-              <td class="topic-list-data">
+            {{#if this.site.desktopView}}
+              <td class="author-avatar topic-list-data">
                 {{#if bookmark.user.avatar_template}}
                   <a
                     href={{bookmark.user.path}}
@@ -113,7 +116,7 @@
                   </a>
                 {{/if}}
               </td>
-              <td class="post-metadata topic-list-data">{{format-date
+              <td class="post-metadata topic-list-data updated-at">{{format-date
                   bookmark.updated_at
                   format="tiny"
                 }}</td>
@@ -123,7 +126,7 @@
                 class="num post-metadata"
                 tagName="td"
               }}
-            {{/unless}}
+            {{/if}}
             <td class="topic-list-data">
               <BookmarkActionsDropdown
                 @bookmark={{bookmark}}

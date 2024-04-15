@@ -25,27 +25,14 @@ gl:
           title: "Os resultados amosaranse logo de <strong>pechada</strong>."
         staff:
           title: "Os resultados só se amosan a membros do <strong>equipo</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Escolla polo menos a opción <strong>%{count}</strong>."
-            other: "Escolla polo menos as opcións <strong>%{count}</strong>."
-          up_to_max_options:
-            one: "Escolla ata <strong>%{count}</strong> opción."
-            other: "Escolla ata <strong>%{count}</strong> opcións."
-          x_options:
-            one: "Escolla <strong>%{count}</strong> opción."
-            other: "Escolla <strong>%{count}</strong> opcións."
-          between_min_and_max_options: "Escolla entre as opcións <strong>%{min}</strong> e <strong>%{max}</strong>."
       cast-votes:
         title: "Vote"
         label: "Vote agora!"
       show-results:
         title: "Amosar os resultados da enquisa"
-        label: "Amosar os resultados"
+        label: "Resultados"
       hide-results:
         title: "Volver aos seus votos"
-        label: "Amosar o voto"
       group-results:
         title: "Agrupar votos por campo de usuario"
         label: "Amosar en detalle"
@@ -69,6 +56,8 @@ gl:
         breakdown: "Detalle"
         percentage: "Porcentaxe"
         count: "Conta"
+      options:
+        label: "Opcións"
       error_while_toggling_status: "Desculpe, produciuse un erro ao trocar o status desta enquisa."
       error_while_casting_votes: "Desculpe, produciuse un erro na emisión dos seus votos."
       error_while_fetching_voters: "Desculpe, produciuse un erro ao presentar os votantes."

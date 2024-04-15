@@ -1,5 +1,5 @@
-import Mixin from "@ember/object/mixin";
 import { get } from "@ember/object";
+import Mixin from "@ember/object/mixin";
 
 export default Mixin.create({
   isValidInput(eventKey) {

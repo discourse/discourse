@@ -1,5 +1,5 @@
-import MultiSelectFilterComponent from "select-kit/components/multi-select/multi-select-filter";
 import { action } from "@ember/object";
+import MultiSelectFilterComponent from "select-kit/components/multi-select/multi-select-filter";
 
 export default MultiSelectFilterComponent.extend({
   classNames: ["email-group-user-chooser-filter"],

@@ -1,22 +1,24 @@
 import { computed, set } from "@ember/object";
-import Category from "discourse/models/category";
-import ComboBoxComponent from "select-kit/components/combo-box";
-import I18n from "I18n";
-import PermissionType from "discourse/models/permission-type";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { isNone } from "@ember/utils";
-import { setting } from "discourse/lib/computed";
 import { htmlSafe } from "@ember/template";
+import { isNone } from "@ember/utils";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { setting } from "discourse/lib/computed";
+import Category from "discourse/models/category";
+import PermissionType from "discourse/models/permission-type";
+import I18n from "discourse-i18n";
+import CategoryRow from "select-kit/components/category-row";
+import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-chooser"],
   classNames: ["category-chooser"],
-  allowUncategorizedTopics: setting("allow_uncategorized_topics"),
+  allowUncategorized: setting("allow_uncategorized_topics"),
   fixedCategoryPositionsOnCreate: setting("fixed_category_positions_on_create"),
 
   selectKitOptions: {
     filterable: true,
-    allowUncategorized: false,
+    allowUncategorized: "allowUncategorized",
+    autoInsertNoneItem: false,
     allowSubCategories: true,
     permissionType: PermissionType.FULL,
     excludeCategoryId: null,
@@ -24,8 +26,24 @@ export default ComboBoxComponent.extend({
     prioritizedCategoryId: null,
   },
 
+  init() {
+    this._super(...arguments);
+
+    if (
+      this.site.lazy_load_categories &&
+      this.value &&
+      !Category.hasAsyncFoundAll([this.value])
+    ) {
+      // eslint-disable-next-line no-console
+      console.warn("Category selected with category-chooser was not loaded");
+      Category.asyncFindByIds([this.value]).then(() => {
+        this.notifyPropertyChange("value");
+      });
+    }
+  },
+
   modifyComponentForRow() {
-    return "category-row";
+    return CategoryRow;
   },
 
   modifyNoSelection() {
@@ -38,10 +56,7 @@ export default ComboBoxComponent.extend({
           I18n.t(isString ? this.selectKit.options.none : "category.none")
         )
       );
-    } else if (
-      this.allowUncategorizedTopics ||
-      this.selectKit.options.allowUncategorized
-    ) {
+    } else if (this.selectKit.options.allowUncategorized) {
       return Category.findUncategorized();
     } else {
       const defaultCategoryId = parseInt(
@@ -76,6 +91,15 @@ export default ComboBoxComponent.extend({
   },
 
   search(filter) {
+    if (this.site.lazy_load_categories) {
+      return Category.asyncSearch(this._normalize(filter), {
+        includeUncategorized: this.selectKit.options.allowUncategorized,
+        rejectCategoryIds: [this.selectKit.options.excludeCategoryId],
+        scopedCategoryId: this.selectKit.options.scopedCategoryId,
+        prioritizedCategoryId: this.selectKit.options.prioritizedCategoryId,
+      });
+    }
+
     if (filter) {
       filter = this._normalize(filter);
       return this.content.filter((item) => {
@@ -198,5 +222,10 @@ export default ComboBoxComponent.extend({
 
   _matchCategory(filter, categoryName) {
     return this._normalize(categoryName).includes(filter);
+  },
+
+  _onChange(value) {
+    this._boundaryActionHandler("onChangeCategory", Category.findById(value));
+    return true;
   },
 });

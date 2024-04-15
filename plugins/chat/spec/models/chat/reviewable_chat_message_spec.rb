@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::ReviewableMessage, type: :model do
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:chat_channel) { Fabricate(:chat_channel) }
+  fab!(:moderator)
+  fab!(:user)
+  fab!(:chat_channel)
   fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
   fab!(:reviewable) do
     Fabricate(:chat_reviewable_message, target: chat_message, created_by: moderator)
   end
+
+  it { is_expected.to validate_length_of(:type).is_at_most(100) }
+  it { is_expected.to validate_length_of(:target_type).is_at_most(100) }
 
   it "agree_and_keep agrees with the flag and doesn't delete the message" do
     reviewable.perform(moderator, :agree_and_keep_message)

@@ -99,7 +99,7 @@ RSpec.describe Wizard::Builder do
   describe "styling" do
     let(:styling_step) { wizard.steps.find { |s| s.id == "styling" } }
     let(:font_field) { styling_step.fields[1] }
-    fab!(:theme) { Fabricate(:theme) }
+    fab!(:theme)
     let(:colors_field) { styling_step.fields.first }
 
     it "has the full list of available fonts" do

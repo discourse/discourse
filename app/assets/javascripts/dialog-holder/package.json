@@ -8,16 +8,19 @@
     "ember-addon"
   ],
   "dependencies": {
-    "a11y-dialog": "7.5.2",
-    "ember-auto-import": "^2.6.3",
-    "ember-cli-babel": "^7.26.11",
-    "ember-cli-htmlbars": "^6.2.0"
+    "a11y-dialog": "8.0.4",
+    "ember-auto-import": "^2.7.2",
+    "ember-cli-babel": "^8.2.0",
+    "ember-cli-htmlbars": "^6.3.0"
   },
   "devDependencies": {
-    "webpack": "^5.84.0"
+    "@types/jquery": "^3.5.29",
+    "@types/qunit": "^2.19.10",
+    "@types/rsvp": "^4.0.9",
+    "webpack": "^5.91.0"
   },
   "engines": {
-    "node": "16.* || >= 18",
+    "node": ">= 18",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   }

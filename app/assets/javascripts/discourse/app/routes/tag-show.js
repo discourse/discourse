@@ -1,44 +1,45 @@
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { queryParams, resetParams } from "discourse/controllers/discovery/list";
+import { filterTypeForMode } from "discourse/lib/filter-mode";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import PreloadStore from "discourse/lib/preload-store";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
+import { escapeExpression } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
+import PermissionType from "discourse/models/permission-type";
 import {
   filterQueryParams,
   findTopicList,
 } from "discourse/routes/build-topic-route";
-import {
-  queryParams,
-  resetParams,
-} from "discourse/controllers/discovery-sortable";
-import Category from "discourse/models/category";
-import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
-import FilterModeMixin from "discourse/mixins/filter-mode";
-import I18n from "I18n";
-import PermissionType from "discourse/models/permission-type";
-import { escapeExpression } from "discourse/lib/utilities";
-import { makeArray } from "discourse-common/lib/helpers";
-import { setTopicList } from "discourse/lib/topic-list-tracker";
-import showModal from "discourse/lib/show-modal";
-import { action } from "@ember/object";
-import PreloadStore from "discourse/lib/preload-store";
-import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 const NONE = "none";
 const ALL = "all";
 
-export default DiscourseRoute.extend(FilterModeMixin, {
-  composer: service(),
-  navMode: "latest",
+@disableImplicitInjections
+export default class TagShowRoute extends DiscourseRoute {
+  @service composer;
+  @service router;
+  @service currentUser;
+  @service store;
+  @service topicTrackingState;
+  @service("search") searchService;
+  @service historyStore;
 
-  queryParams,
+  queryParams = queryParams;
+  controllerName = "discovery/list";
+  templateName = "discovery/list";
+  routeConfig = {};
 
-  controllerName: "tag.show",
-  templateName: "tag.show",
+  get navMode() {
+    return this.routeConfig.navMode || "latest";
+  }
 
-  beforeModel() {
-    const controller = this.controllerFor("tag.show");
-    controller.setProperties({
-      loading: true,
-      showInfo: false,
-    });
-  },
+  get noSubcategories() {
+    return this.routeConfig.noSubcategories;
+  }
 
   async model(params, transition) {
     const tag = this.store.createRecord("tag", {
@@ -55,10 +56,10 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       });
     }
 
-    const filterType = this.navMode.split("/")[0];
+    const filterType = filterTypeForMode(this.navMode);
 
     let tagNotification;
-    if (tag && tag.id !== NONE && this.currentUser) {
+    if (tag && tag.id !== NONE && this.currentUser && !additionalTags) {
       // If logged in, we should get the tag's user settings
       tagNotification = await this.store.find(
         "tagNotification",
@@ -66,7 +67,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       );
     }
 
-    const category = params.category_slug_path_with_id
+    let category = params.category_slug_path_with_id
       ? Category.findBySlugPathWithID(params.category_slug_path_with_id)
       : null;
     const filteredQueryParams = filterQueryParams(
@@ -88,6 +89,13 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       filter += `/${tagId}/l/${topicFilter}`;
     } else if (additionalTags) {
       filter = `tags/intersection/${tagId}/${additionalTags.join("/")}`;
+
+      if (transition.to.queryParams["category"]) {
+        filteredQueryParams["category"] = transition.to.queryParams["category"];
+        category = Category.findBySlugPathWithID(
+          transition.to.queryParams["category"]
+        );
+      }
     } else {
       filter = `tag/${tagId}/l/${topicFilter}`;
     }
@@ -99,7 +107,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     ) {
       // TODO: avoid throwing away preload data by redirecting on the server
       PreloadStore.getAndRemove("topic_list");
-      return this.replaceWith(
+      return this.router.replaceWith(
         "tags.showCategoryNone",
         params.category_slug_path_with_id,
         tagId
@@ -112,7 +120,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       filter,
       filteredQueryParams,
       {
-        cached: this.isPoppedState(transition),
+        cached: this.historyStore.isPoppedState,
       }
     );
 
@@ -124,8 +132,6 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       });
     }
 
-    setTopicList(list);
-
     return {
       tag,
       category,
@@ -136,20 +142,14 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       canCreateTopic: list.can_create_topic,
       canCreateTopicOnCategory: category?.permission === PermissionType.FULL,
       canCreateTopicOnTag: !tag.staff || this.currentUser?.staff,
+      noSubcategories: this.noSubcategories,
     };
-  },
+  }
 
   setupController(controller, model) {
-    const noSubcategories = this.noSubcategories;
-
-    this.controllerFor("tag.show").setProperties({
-      model: model.tag,
-      ...model,
-      period: model.list.for_period,
-      navMode: this.navMode,
-      noSubcategories,
-      loading: false,
-    });
+    super.setupController(...arguments);
+    controller.bulkSelectHelper.clear();
+    setTopicList(model.list);
 
     if (model.category || model.additionalTags) {
       const tagIntersectionSearchContext = {
@@ -161,36 +161,37 @@ export default DiscourseRoute.extend(FilterModeMixin, {
         category: model.category || null,
       };
 
-      this.searchService.set("searchContext", tagIntersectionSearchContext);
+      this.searchService.searchContext = tagIntersectionSearchContext;
     } else {
-      this.searchService.set("searchContext", model.tag.searchContext);
+      this.searchService.searchContext = model.tag.searchContext;
     }
-  },
+  }
 
   titleToken() {
     const filterText = I18n.t(
       `filters.${this.navMode.replace("/", ".")}.title`
     );
-    const controller = this.controllerFor("tag.show");
+    const model = this.currentModel;
 
-    if (controller.tag?.id) {
-      if (controller.category) {
+    const tag = model?.tag?.id;
+    if (tag && tag !== NONE) {
+      if (model.category) {
         return I18n.t("tagging.filters.with_category", {
           filter: filterText,
-          tag: controller.tag.id,
-          category: controller.category.name,
+          tag: model.tag.id,
+          category: model.category.name,
         });
       } else {
         return I18n.t("tagging.filters.without_category", {
           filter: filterText,
-          tag: controller.tag.id,
+          tag: model.tag.id,
         });
       }
     } else {
-      if (controller.category) {
+      if (model.category) {
         return I18n.t("tagging.filters.untagged_with_category", {
           filter: filterText,
-          category: controller.category.name,
+          category: model.category.name,
         });
       } else {
         return I18n.t("tagging.filters.untagged_without_category", {
@@ -198,78 +199,21 @@ export default DiscourseRoute.extend(FilterModeMixin, {
         });
       }
     }
-  },
+  }
 
   deactivate() {
-    this._super(...arguments);
-    this.searchService.set("searchContext", null);
-  },
-
-  @action
-  renameTag(tag) {
-    showModal("rename-tag", { model: tag });
-  },
-
-  @action
-  createTopic() {
-    if (this.currentUser?.has_topic_draft) {
-      this.openTopicDraft();
-    } else {
-      const controller = this.controllerFor("tag.show");
-      this.composer
-        .open({
-          categoryId: controller.category?.id,
-          action: Composer.CREATE_TOPIC,
-          draftKey: Composer.NEW_TOPIC_KEY,
-        })
-        .then(() => {
-          // Pre-fill the tags input field
-          if (this.composer.canEditTags && controller.tag?.id) {
-            const composerModel = this.composer.model;
-            composerModel.set("tags", this._controllerTags(controller));
-          }
-        });
-    }
-  },
-
-  @action
-  dismissReadTopics(dismissTopics) {
-    const operationType = dismissTopics ? "topics" : "posts";
-    this.send("dismissRead", operationType);
-  },
-
-  @action
-  dismissRead(operationType) {
-    const controller = this.controllerFor("tag-show");
-    let options = {
-      tagName: controller.tag?.id,
-    };
-    const categoryId = controller.category?.id;
-
-    if (categoryId) {
-      options = Object.assign({}, options, {
-        categoryId,
-        includeSubcategories: !controller.noSubcategories,
-      });
-    }
-
-    controller.send("dismissRead", operationType, options);
-  },
+    super.deactivate(...arguments);
+    this.searchService.searchContext = null;
+  }
 
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
-  },
+  }
+}
 
-  @action
-  didTransition() {
-    this.controllerFor("tag.show")._showFooter();
-    return true;
-  },
-
-  _controllerTags(controller) {
-    return [controller.get("model.id"), ...makeArray(controller.additionalTags)]
-      .filter(Boolean)
-      .filter((tag) => ![NONE, ALL].includes(tag));
-  },
-});
+export function buildTagRoute(routeConfig = {}) {
+  return class extends TagShowRoute {
+    routeConfig = routeConfig;
+  };
+}

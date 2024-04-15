@@ -7,7 +7,7 @@ RSpec.describe DoNotDisturbController do
   end
 
   describe "logged in" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     before { sign_in(user) }
 

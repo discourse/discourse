@@ -1,0 +1,8 @@
+en:
+  js:
+    spoiler:
+      title: Blur Spoiler
+      label:
+        show: "Show hidden content"
+    composer:
+      spoiler_text: "This text will be blurred"

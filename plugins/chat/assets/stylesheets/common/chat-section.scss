@@ -1,0 +1,15 @@
+.chat-section {
+  border-bottom: 1px solid var(--primary-low);
+  padding: 1rem;
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  box-sizing: border-box;
+
+  &__text {
+    align-items: baseline;
+    display: flex;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}

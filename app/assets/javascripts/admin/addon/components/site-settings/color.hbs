@@ -3,7 +3,7 @@
   @valid={{this.valid}}
   @onlyHex={{false}}
   @styleSelection={{false}}
-  @onChangeColor={{action "onChangeColor"}}
+  @onChangeColor={{this.onChangeColor}}
 />
 <SettingValidationMessage @message={{this.validationMessage}} />
-<div class="desc">{{html-safe this.setting.description}}</div>
+<SiteSettings::Description @description={{this.setting.description}} />

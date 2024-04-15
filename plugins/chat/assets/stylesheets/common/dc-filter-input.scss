@@ -15,9 +15,16 @@
     margin: 0;
     border: none;
     outline: none;
+
+    @include breakpoint(tablet, min-width) {
+      .chat-browse-view__actions & {
+        width: 210px;
+      }
+    }
   }
 
   .d-icon {
+    color: var(--primary-medium);
     margin: 0 0.5rem;
   }
 }

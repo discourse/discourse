@@ -1,7 +1,7 @@
 import Component from "@ember/component";
-import { afterRender } from "discourse-common/utils/decorators";
 import { REPLACEMENTS } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
+import { afterRender } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "section",

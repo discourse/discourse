@@ -1,10 +1,10 @@
 import Component from "@ember/component";
-import I18n from "I18n";
-import UtilsMixin from "select-kit/mixins/utils";
 import { action, computed } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { isPresent } from "@ember/utils";
 import { not } from "@ember/object/computed";
+import { isPresent } from "@ember/utils";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import UtilsMixin from "select-kit/mixins/utils";
 
 export default Component.extend(UtilsMixin, {
   classNames: ["select-kit-filter"],
@@ -79,6 +79,12 @@ export default Component.extend(UtilsMixin, {
       return true;
     }
 
+    if (event.key === "Backspace" && !this.selectKit.filter) {
+      this.selectKit.deselectLast();
+      event.preventDefault();
+      return false;
+    }
+
     if (event.key === "ArrowUp") {
       this.selectKit.highlightLast();
       event.preventDefault();
@@ -86,6 +92,9 @@ export default Component.extend(UtilsMixin, {
     }
 
     if (event.key === "ArrowDown") {
+      if (!this.selectKit.isExpanded) {
+        this.selectKit.open(event);
+      }
       this.selectKit.highlightFirst();
       event.preventDefault();
       return false;

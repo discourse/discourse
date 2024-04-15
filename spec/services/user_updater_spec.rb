@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UserUpdater do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:u1) { Fabricate(:user) }
   fab!(:u2) { Fabricate(:user) }
   fab!(:u3) { Fabricate(:user) }
@@ -33,8 +33,8 @@ RSpec.describe UserUpdater do
   end
 
   describe "#update" do
-    fab!(:category) { Fabricate(:category) }
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:category)
+    fab!(:tag)
     fab!(:tag2) { Fabricate(:tag) }
 
     it "saves user" do
@@ -44,6 +44,42 @@ RSpec.describe UserUpdater do
       updater.update(name: "Jim Tom")
 
       expect(user.reload.name).to eq "Jim Tom"
+    end
+
+    describe "the within_user_updater_transaction event" do
+      it "allows plugins to perform additional updates" do
+        update_attributes = { name: "Jimmmy Johnny" }
+        handler =
+          Proc.new do |user, attrs|
+            user.user_profile.update!(bio_raw: "hello world I'm Jimmmy")
+            expect(attrs).to eq(update_attributes)
+          end
+        DiscourseEvent.on(:within_user_updater_transaction, &handler)
+
+        updater = UserUpdater.new(user, user)
+        updater.update(update_attributes)
+
+        expect(user.reload.name).to eq("Jimmmy Johnny")
+        expect(user.user_profile.bio_raw).to eq("hello world I'm Jimmmy")
+      ensure
+        DiscourseEvent.off(:within_user_updater_transaction, &handler)
+      end
+
+      it "can cancel the whole update transaction if a handler raises" do
+        error_class = Class.new(StandardError)
+        handler = Proc.new { raise error_class.new }
+
+        DiscourseEvent.on(:within_user_updater_transaction, &handler)
+
+        old_name = user.name
+        updater = UserUpdater.new(user, user)
+
+        expect { updater.update(name: "Failure McClario") }.to raise_error(error_class)
+
+        expect(user.reload.name).to eq(old_name)
+      ensure
+        DiscourseEvent.off(:within_user_updater_transaction, &handler)
+      end
     end
 
     it "can update categories and tags" do
@@ -175,11 +211,11 @@ RSpec.describe UserUpdater do
       expect(user.date_of_birth).to eq(date_of_birth.to_date)
     end
 
-    it "allows user to update profile header when the user has required trust level" do
-      user = Fabricate(:user, trust_level: 2)
+    it "allows user to update profile header when the user has required group" do
+      user = Fabricate(:user, trust_level: TrustLevel[2])
       updater = UserUpdater.new(user, user)
       upload = Fabricate(:upload)
-      SiteSetting.min_trust_level_to_allow_profile_background = 2
+      SiteSetting.profile_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       val = updater.update(profile_background_upload_url: upload.url)
       expect(val).to be_truthy
       user.reload
@@ -190,11 +226,11 @@ RSpec.describe UserUpdater do
       expect(user.profile_background_upload).to eq(nil)
     end
 
-    it "allows user to update user card background when the user has required trust level" do
-      user = Fabricate(:user, trust_level: 2)
+    it "allows user to update user card background when the user has required group" do
+      user = Fabricate(:user, trust_level: TrustLevel[2])
       updater = UserUpdater.new(user, user)
       upload = Fabricate(:upload)
-      SiteSetting.min_trust_level_to_allow_user_card_background = 2
+      SiteSetting.user_card_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       val = updater.update(card_background_upload_url: upload.url)
       expect(val).to be_truthy
       user.reload
@@ -550,14 +586,10 @@ RSpec.describe UserUpdater do
 
     context "when skip_new_user_tips is edited" do
       it "updates seen_popups too" do
-        messages =
-          MessageBus.track_publish("/user-tips/#{user.id}") do
-            UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: true)
-          end
+        UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: true)
 
         expect(user.user_option.skip_new_user_tips).to eq(true)
         expect(user.user_option.seen_popups).to eq([-1])
-        expect(messages.map(&:data)).to contain_exactly([-1])
       end
 
       it "does not reset seen_popups" do
@@ -567,18 +599,6 @@ RSpec.describe UserUpdater do
 
         expect(user.user_option.skip_new_user_tips).to eq(false)
         expect(user.user_option.seen_popups).to eq([1, 2, 3])
-      end
-    end
-
-    context "when seen_popups is edited" do
-      it "publishes a message" do
-        messages =
-          MessageBus.track_publish("/user-tips/#{user.id}") do
-            UserUpdater.new(Discourse.system_user, user).update(seen_popups: [1])
-          end
-
-        expect(user.user_option.seen_popups).to eq([1])
-        expect(messages.map(&:data)).to contain_exactly([1])
       end
     end
 
@@ -616,6 +636,11 @@ RSpec.describe UserUpdater do
       )
 
       expect(UserHistory.last.action).to eq(UserHistory.actions[:change_name])
+    end
+
+    it "clears the homepage_id when the special 'custom' id is chosen" do
+      UserUpdater.new(user, user).update(homepage_id: "-1")
+      expect(user.user_option.homepage_id).to eq(nil)
     end
   end
 end

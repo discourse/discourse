@@ -324,6 +324,21 @@
             "null"
           ]
         },
+        "user_passkeys": {
+          "type": "array"
+        },
+        "sidebar_tags": {
+          "type": "array"
+        },
+        "sidebar_category_ids": {
+          "type": "array"
+        },
+        "display_sidebar_tags": {
+          "type": "boolean"
+        },
+        "can_pick_theme_with_custom_homepage": {
+          "type": "boolean"
+        },
         "user_auth_tokens": {
           "type": "array",
           "items":
@@ -771,11 +786,20 @@
             "oldest_search_log_date": {
               "type": ["string", "null"]
             },
-            "sidebar_list_destination": {
-              "type": "string"
+            "sidebar_link_to_filtered_list": {
+              "type": "boolean"
+            },
+            "sidebar_show_count_of_new_items": {
+              "type": "boolean"
+            },
+            "watched_precedence_over_muted": {
+              "type": ["boolean", "null"]
             },
             "seen_popups": {
               "type": ["array", "null"]
+            },
+            "topics_unread_when_closed": {
+              "type": "boolean"
             }
           },
           "required": [
@@ -810,7 +834,8 @@
             "text_size_seq",
             "title_count_mode",
             "timezone",
-            "skip_new_user_tips"
+            "skip_new_user_tips",
+            "topics_unread_when_closed"
           ]
         }
       },

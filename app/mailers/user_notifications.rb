@@ -167,7 +167,7 @@ class UserNotifications < ActionMailer::Base
         reason: user_history.details,
       )
     else
-      silenced_till = user.silenced_till.in_time_zone(user.user_option.timezone)
+      silenced_till = user.silenced_till.in_time_zone(user.user_option.timezone.presence || "UTC")
       build_email(
         user.email,
         template: "user_notifications.account_silenced",
@@ -191,7 +191,7 @@ class UserNotifications < ActionMailer::Base
         reason: user_history.details,
       )
     else
-      suspended_till = user.suspended_till.in_time_zone(user.user_option.timezone)
+      suspended_till = user.suspended_till.in_time_zone(user.user_option.timezone.presence || "UTC")
       build_email(
         user.email,
         template: "user_notifications.account_suspended",
@@ -601,12 +601,20 @@ class UserNotifications < ActionMailer::Base
 
     # tag names
     if opts[:show_tags_in_subject] && post.topic_id
+      max_tags =
+        if SiteSetting.enable_max_tags_per_email_subject
+          SiteSetting.max_tags_per_email_subject
+        else
+          SiteSetting.max_tags_per_topic
+        end
+
       tags =
         DiscourseTagging
           .visible_tags(Guardian.new(user))
           .joins(:topic_tags)
           .where("topic_tags.topic_id = ?", post.topic_id)
-          .limit(SiteSetting.max_tags_per_topic)
+          .order("tags.public_topic_count DESC", "tags.name ASC")
+          .limit(max_tags)
           .pluck(:name)
 
       show_tags_in_subject = tags.any? ? tags.join(" ") : nil

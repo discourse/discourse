@@ -1,4 +1,8 @@
-<a href={{this.hrefLink}} class={{this.activeClass}}>
+<a
+  href={{this.hrefLink}}
+  class={{this.activeClass}}
+  aria-current={{if this.activeClass "true"}}
+>
   {{#if this.hasIcon}}
     <span class={{this.content.name}}></span>
   {{/if}}

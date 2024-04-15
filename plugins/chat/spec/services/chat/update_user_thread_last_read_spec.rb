@@ -9,14 +9,17 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
   describe ".call" do
     subject(:result) { described_class.call(params) }
 
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:chatters) { Fabricate(:group) }
+    fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id]) }
     fab!(:channel) { Fabricate(:chat_channel) }
-    fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+    fab!(:thread) { Fabricate(:chat_thread, channel: channel, old_om: true) }
     fab!(:thread_reply_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
     fab!(:thread_reply_2) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
 
     let(:guardian) { Guardian.new(current_user) }
     let(:params) { { guardian: guardian, channel_id: channel.id, thread_id: thread.id } }
+
+    before { SiteSetting.chat_allowed_groups = [chatters] }
 
     context "when params are not valid" do
       before { params.delete(:thread_id) }
@@ -58,13 +61,13 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
 
         before do
           Jobs.run_immediately!
-          Chat::Mention.create!(
-            notification: notification_1,
+          Chat::UserMention.create!(
+            notifications: [notification_1],
             user: current_user,
             chat_message: Fabricate(:chat_message, chat_channel: channel, thread: thread),
           )
-          Chat::Mention.create!(
-            notification: notification_2,
+          Chat::UserMention.create!(
+            notifications: [notification_2],
             user: current_user,
             chat_message: Fabricate(:chat_message, chat_channel: channel, thread: thread),
           )
@@ -95,7 +98,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
 
           it "updates the last_read_message_id of the thread" do
             result
-            expect(membership.reload.last_read_message_id).to eq(thread.replies.last.id)
+            expect(membership.reload.last_read_message_id).to eq(thread.reload.last_message.id)
           end
         end
       end

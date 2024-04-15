@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::Chat::AutoJoinUsers do
+  subject(:job) { described_class.new }
+
   it "works" do
     Jobs.run_immediately!
     channel = Fabricate(:category_channel, auto_join_users: true)
@@ -11,7 +11,7 @@ describe Jobs::Chat::AutoJoinUsers do
     membership = Chat::UserChatChannelMembership.find_by(user: user, chat_channel: channel)
     expect(membership).to be_nil
 
-    subject.execute({})
+    job.execute({})
 
     membership = Chat::UserChatChannelMembership.find_by(user: user, chat_channel: channel)
     expect(membership.following).to eq(true)

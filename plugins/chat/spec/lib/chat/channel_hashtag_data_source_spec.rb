@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::ChannelHashtagDataSource do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:category) { Fabricate(:category) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:category)
+  fab!(:group)
   fab!(:private_category) { Fabricate(:private_category, group: group) }
   fab!(:channel1) do
     Fabricate(
@@ -24,12 +24,73 @@ RSpec.describe Chat::ChannelHashtagDataSource do
       messages_count: 78,
     )
   end
+  fab!(:channel3) do
+    Fabricate(
+      :chat_channel,
+      slug: "music",
+      name: "Tunes",
+      chatable: category,
+      description: "A place for music lovers",
+      messages_count: 437,
+    )
+  end
   let!(:guardian) { Guardian.new(user) }
 
-  before do
-    SiteSetting.enable_experimental_hashtag_autocomplete = true
-    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
-    Group.refresh_automatic_groups!
+  before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1] }
+
+  describe "#enabled?" do
+    it "returns false if public channels are disabled" do
+      SiteSetting.enable_public_channels = false
+      expect(described_class.enabled?).to eq(false)
+    end
+
+    it "returns true if public channels are disabled" do
+      SiteSetting.enable_public_channels = true
+      expect(described_class.enabled?).to eq(true)
+    end
+  end
+
+  describe "#find_by_ids" do
+    it "finds a channel by ID" do
+      result = described_class.find_by_ids(guardian, [channel1.id]).first
+      expect(result.to_h).to eq(
+        {
+          relative_url: channel1.relative_url,
+          text: "Zany Things",
+          description: "Just weird stuff",
+          colors: [channel1.chatable.color],
+          icon: "comment",
+          id: channel1.id,
+          type: "channel",
+          ref: nil,
+          slug: "random",
+        },
+      )
+    end
+
+    it "does not return a channel that a user does not have permission to view" do
+      result = described_class.find_by_ids(Guardian.new, [channel2.id]).first
+      expect(result).to eq(nil)
+
+      result = described_class.find_by_ids(guardian, [channel2.id]).first
+      expect(result).to eq(nil)
+
+      GroupUser.create(user: user, group: group)
+      result = described_class.find_by_ids(Guardian.new(user), [channel2.id]).first
+      expect(result.to_h).to eq(
+        {
+          relative_url: channel2.relative_url,
+          text: "Secret Stuff",
+          description: nil,
+          colors: [channel2.chatable.color],
+          icon: "comment",
+          id: channel2.id,
+          type: "channel",
+          ref: nil,
+          slug: "secret",
+        },
+      )
+    end
   end
 
   describe "#lookup" do
@@ -40,6 +101,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           relative_url: channel1.relative_url,
           text: "Zany Things",
           description: "Just weird stuff",
+          colors: [channel1.chatable.color],
           icon: "comment",
           id: channel1.id,
           type: "channel",
@@ -60,6 +122,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           relative_url: channel2.relative_url,
           text: "Secret Stuff",
           description: nil,
+          colors: [channel2.chatable.color],
           icon: "comment",
           id: channel2.id,
           type: "channel",
@@ -76,8 +139,34 @@ RSpec.describe Chat::ChannelHashtagDataSource do
 
     it "returns nothing if the user cannot chat" do
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
-      Group.refresh_automatic_groups!
       expect(described_class.lookup(Guardian.new(user), ["random"])).to be_empty
+    end
+
+    it "can return multiple channels" do
+      expect(described_class.lookup(guardian, %w[music random]).map(&:to_h)).to contain_exactly(
+        {
+          description: "Just weird stuff",
+          icon: "comment",
+          colors: [category.color],
+          id: channel1.id,
+          ref: nil,
+          relative_url: channel1.relative_url,
+          slug: "random",
+          text: "Zany Things",
+          type: "channel",
+        },
+        {
+          description: "A place for music lovers",
+          icon: "comment",
+          colors: [category.color],
+          id: channel3.id,
+          ref: nil,
+          relative_url: channel3.relative_url,
+          slug: "music",
+          text: "Tunes",
+          type: "channel",
+        },
+      )
     end
   end
 
@@ -95,6 +184,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           relative_url: channel1.relative_url,
           text: "Zany Things",
           description: "Just weird stuff",
+          colors: [channel1.chatable.color],
           icon: "comment",
           id: channel1.id,
           type: "channel",
@@ -111,6 +201,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           relative_url: channel1.relative_url,
           text: "Zany Things",
           description: "Just weird stuff",
+          colors: [channel1.chatable.color],
           icon: "comment",
           id: channel1.id,
           type: "channel",
@@ -130,6 +221,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           relative_url: channel2.relative_url,
           text: "Secret Stuff",
           description: nil,
+          colors: [channel2.chatable.color],
           icon: "comment",
           id: channel2.id,
           type: "channel",
@@ -141,7 +233,6 @@ RSpec.describe Chat::ChannelHashtagDataSource do
 
     it "returns nothing if the user cannot chat" do
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
-      Group.refresh_automatic_groups!
       expect(described_class.search(Guardian.new(user), "rand", 10)).to be_empty
     end
   end
@@ -184,7 +275,6 @@ RSpec.describe Chat::ChannelHashtagDataSource do
 
     it "returns nothing if the user cannot chat" do
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
-      Group.refresh_automatic_groups!
       expect(described_class.search_without_term(Guardian.new(user), 10)).to be_empty
     end
   end

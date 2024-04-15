@@ -6,7 +6,7 @@
 
 ko:
   site_settings:
-    chat_enabled: "채팅 플러그인을 활성화합니다."
+    chat_enabled: "채팅 활성화."
   chat:
     deleted_chat_username: 삭제되었습니다
     errors:
@@ -29,15 +29,25 @@ ko:
           title: "메시지 복원"
         agree_and_delete:
           title: "메시지 삭제"
-        delete_and_agree:
-          title: "메시지 삭제"
         disagree:
           title: "동의하지 않음"
-        ignore:
-          title: "무시"
     channel:
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "무시"
+      cannot_see: "%{first_identifier} 이 채널에 액세스할 수 없으며 알림을 받지 않았습니다."
+      cannot_see_multiple:
+        other: "%{first_identifier}명 외 %{count}명의 사용자가 이 채널에 액세스할 수 없으며 알림을 받지 않았습니다."
+      without_membership: "%{first_identifier}이 채널에 참여하지 않았습니다."
+      without_membership_multiple:
+        other: "%{first_identifier} 및 %{count}명의 다른 사용자가 이 채널에 가입하지 않았습니다."
+      group_mentions_disabled: "%{first_identifier}은 언급을 허용하지 않습니다."
+      group_mentions_disabled_multiple:
+        other: "%{first_identifier} 및 %{count}개의 다른 그룹은 멘션을 허용하지 않습니다."
+      too_many_members: "%{first_identifier}은(는) 구성원이 너무 많습니다. 아무도 알림을 받지 않았습니다."
+      too_many_members_multiple:
+        other: "%{first_identifier} 및 %{count}개의 그룹은 회원 수가 너무 많습니다. 아무도 알림을 받지 않았습니다."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "비 ASCII 문자 포함"
@@ -46,6 +56,8 @@ ko:
     onebox:
       x_members:
         other: "회원 %{count}명"
+    transcript:
+      default_thread_title: "스레드"
   discourse_automation:
     scriptables:
       send_chat_message:

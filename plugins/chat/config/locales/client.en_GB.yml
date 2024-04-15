@@ -7,5 +7,9 @@
 en_GB:
   js:
     chat:
+      about_view:
+        description: Description
       composer:
         italic_text: "emphasised text"
+      incoming_webhooks:
+        description: "Description"

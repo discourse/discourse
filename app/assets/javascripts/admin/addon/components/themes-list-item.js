@@ -1,14 +1,14 @@
-import { classNameBindings, classNames } from "@ember-decorators/component";
-import { and, gt } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import { escape } from "pretty-text/sanitizer";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { action } from "@ember/object";
+import { and, gt } from "@ember/object/computed";
+import { classNameBindings, classNames } from "@ember-decorators/component";
+import escape from "discourse-common/lib/escape";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const MAX_COMPONENTS = 4;
 
-@classNames("themes-list-item")
+@classNames("themes-list-container__item")
 @classNameBindings("theme.selected:selected")
 export default class ThemesListItem extends Component {
   childrenExpanded = false;

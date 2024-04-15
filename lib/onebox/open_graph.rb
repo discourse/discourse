@@ -25,7 +25,7 @@ module Onebox
     COLLECTIONS = %i[article_section article_section_color article_tag]
 
     def extract(doc)
-      return {} if Onebox::Helpers.blank?(doc)
+      return {} if doc.blank?
 
       data = {}
 
@@ -35,7 +35,7 @@ module Onebox
           if (m["property"] && m["property"][/\A(?:og|article|product):(.+)\z/i]) ||
                (m["name"] && m["name"][/\A(?:og|article|product):(.+)\z/i])
             value = (m["content"] || m["value"]).to_s
-            next if Onebox::Helpers.blank?(value)
+            next if value.blank?
             key = $1.tr("-:", "_").to_sym
             data[key] ||= value
             if key.in?(COLLECTIONS)
@@ -48,9 +48,7 @@ module Onebox
 
       # Attempt to retrieve the title from the meta tag
       title_element = doc.at_css("title")
-      if title_element && title_element.text
-        data[:title] ||= title_element.text unless Onebox::Helpers.blank?(title_element.text)
-      end
+      data[:title] ||= title_element.text if title_element && title_element.text.present?
 
       data
     end

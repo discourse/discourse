@@ -1,6 +1,8 @@
 en:
   site_settings:
-    chat_enabled: "Enable the chat plugin."
+    chat_separate_sidebar_mode: "Show separate sidebar modes for forum and chat."
+    chat_enabled: "Enable chat."
+    enable_public_channels: "Enable public channels based on categories."
     chat_allowed_groups: "Users in these groups can chat. Note that staff can always access chat."
     chat_channel_retention_days: "Chat messages in regular channels will be retained for this many days. Set to '0' to retain messages forever."
     chat_dm_retention_days: "Chat messages in personal chat channels will be retained for this many days. Set to '0' to retain messages forever."
@@ -20,11 +22,16 @@ en:
     max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
     chat_max_direct_message_users: "Users cannot add more than this number of other users when creating a new direct message. Set to 0 to only allow messages to oneself. Staff are exempt from this setting."
     chat_allow_archiving_channels: "Allow staff to archive messages to a topic when closing a channel."
+    chat_editing_grace_period: "For (n) seconds after sending a chat, editing will not display the (edited) tag by the chat message."
+    chat_editing_grace_period_max_diff_low_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 0 and 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 2 and up)."
+    chat_preferred_mobile_index: "Preferred tab when loading /chat on mobile."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."
       chat_upload_not_allowed_secure_uploads: "Chat uploads are not allowed when secure uploads site setting is enabled."
   system_messages:
+    private_channel_title: "Channel %{id}"
     chat_channel_archive_complete:
       title: "Chat Channel Archive Complete"
       subject_template: "Chat channel archive completed successfully"
@@ -48,6 +55,7 @@ en:
   chat:
     deleted_chat_username: deleted
     errors:
+      users_cant_be_added_to_channel: "Users can't be added to this channel."
       channel_exists_for_category: "A channel already exists for this category and name"
       channel_new_message_disallowed:
         archived: "The channel is archived, no new messages can be sent"
@@ -67,7 +75,7 @@ en:
         one: "Message is too short, must have a minimum of %{count} character."
         other: "Message is too short, must have a minimum of %{count} characters."
       message_too_long:
-        one: "Message is too long, messages must be a maximum of %{count} characters."
+        one: "Message is too long, messages must be a maximum of %{count} character."
         other: "Message is too long, messages must be a maximum of %{count} characters."
       draft_too_long: "Draft is too long."
       max_reactions_limit_reached: "New reactions are not allowed on this message."
@@ -84,7 +92,10 @@ en:
       over_chat_max_direct_message_users:
         one: "You can't create a direct message with more than %{count} other user."
         other: "You can't create a direct message with more than %{count} other users."
-      original_message_not_found: "The ancestor of the message you are replying cannot be found or has been deleted."
+      original_message_not_found: "The ancestor of the message you are replying to cannot be found or has been deleted."
+      thread_invalid_for_channel: "Thread is not part of the provided channel."
+      thread_does_not_match_parent: "Thread does not match parent message."
+      invalid_direct_message: "You are not allowed to create this direct message."
     reviewables:
       message_already_handled: "Thanks, but we've already reviewed this message and determined it does not need to be flagged again."
       actions:
@@ -109,18 +120,23 @@ en:
           title: "Delete Message"
           description: "Delete the message so that users cannot see it."
         delete_and_agree:
-          title: "Delete Message"
+          title: "Ignore Flag and Delete Message"
+          description: "Ignore the flag by removing it from the queue and delete the message."
         disagree_and_restore:
           title: "Disagree and Restore Message"
           description: "Restore the message so that all users can see it."
         disagree:
           title: "Disagree"
         ignore:
-          title: "Ignore"
+          title: "Do Nothing"
+          description: "Ignore the flag by removing it from the queue without taking any action."
       direct_messages:
         transcript_title: "Transcript of previous messages in %{channel_name}"
         transcript_body: "To give you more context, we included a transcript of the previous messages in this conversation (up to ten):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} has been invited by %{inviting_user}."
+        other: "%{invited_users} have been invited by %{inviting_user}."
       archive:
         first_post_raw: "This topic is an archive of the [%{channel_name}](%{channel_url}) chat channel."
       messages_moved:
@@ -132,6 +148,29 @@ en:
         multi_user_truncated:
           one: "%{comma_separated_usernames} and %{count} other"
           other: "%{comma_separated_usernames} and %{count} others"
+    mention_warning:
+      dismiss: "dismiss"
+      cannot_see: "%{first_identifier} can't access this channel and was not notified."
+      cannot_see_multiple:
+        one: "%{first_identifier} and %{count} other user cannot access this channel and were not notified."
+        other: "%{first_identifier} and %{count} other users cannot access this channel and were not notified."
+      invitations_sent:
+        one: "Invitation sent"
+        other: "Invitations sent"
+      invite: "Invite to channel"
+      without_membership: "%{first_identifier} has not joined this channel."
+      without_membership_multiple:
+        one: "%{first_identifier} and %{count} other user have not joined this channel."
+        other: "%{first_identifier} and %{count} other users have not joined this channel."
+      group_mentions_disabled: "%{first_identifier} doesn't allow mentions."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} and %{count} other group don't allow mentions."
+        other: "%{first_identifier} and %{count} other groups don't allow mentions."
+      global_mentions_disallowed: "@here and @all mentions are disabled in this channel."
+      too_many_members: "%{first_identifier} has too many members. No one was notified."
+      too_many_members_multiple:
+        one: "%{first_identifier} and %{count} other group have too many members. No one was notified."
+        other: "%{first_identifier} and %{count} other groups have too many members. No one was notified."
 
     category_channel:
       errors:
@@ -147,6 +186,7 @@ en:
       inline_to_message: "Message #%{message_id} by %{username} – #%{chat_channel}"
       inline_to_channel: "Chat #%{chat_channel}"
       inline_to_topic_channel: "Chat for Topic %{topic_title}"
+      thread_title_connector: "in"
 
       x_members:
         one: "%{count} member"
@@ -155,6 +195,13 @@ en:
       and_x_others:
         one: "and %{count} other"
         other: "and %{count} others"
+
+    summaries:
+      no_targets: "There were no messages during the selected period."
+
+    transcript:
+      default_thread_title: "Thread"
+      split_thread_range: "messages %{start} to %{end} of %{total}"
 
   discourse_push_notifications:
     popup:
@@ -193,6 +240,7 @@ en:
         other: "You have new chat messages"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] New message"
         direct_message_from_1: "[%{email_prefix}] New message from %{username}"
         direct_message_from_2: "[%{email_prefix}] New message from %{username1} and %{username2}"
         direct_message_from_more:

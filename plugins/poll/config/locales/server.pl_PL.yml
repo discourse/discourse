@@ -10,12 +10,16 @@ pl_PL:
     poll_maximum_options: "Maksymalna ilość dozwolonych opcji w ankiecie."
     poll_edit_window_mins: "Liczba minut po utworzeniu postu, podczas którego można edytować ankietę."
     poll_minimum_trust_level_to_create: "Minimalny poziom zaufania potrzebny do stworzenia ankiety."
+    poll_create_allowed_groups: "Grupy, które mogą tworzyć ankiety."
     poll_groupable_user_fields: "Zestaw nazw pól użytkownika, który może zostać użyty do grupowania i filtrowania wyników ankiet."
     poll_export_data_explorer_query_id: "ID zapytania Data Explorera do używania w trakcie eksportowania wyników ankiet (0, by wyłączyć)."
+    poll_default_public: "Podczas tworzenia nowej ankiety domyślnie włącz opcję 'show who voted'."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
     poll: "ankieta"
     invalid_argument: "Nieprawidłowa wartość '%{value}' dla argumentu '%{argument}'."
-    multiple_polls_without_name: "Istnieje kilka nienazwanych ankiet. Użyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
+    multiple_polls_without_name: "Tworząc wiele ankiet, dołącz unikalne nazwy, dodając <code>name=przykład</code> do tagów <code>[poll]</code>."
     multiple_polls_with_same_name: "Istnieje kilka ankiet o tej samej nazwie: <strong>%{name}</strong>. Użyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
     default_poll_must_have_at_least_1_option: "Ankieta musi mieć co najmniej jedną opcję."
     named_poll_must_have_at_least_1_option: "Ankieta o nazwie <strong>%{name}</strong> musi mieć co najmniej jedną opcję."

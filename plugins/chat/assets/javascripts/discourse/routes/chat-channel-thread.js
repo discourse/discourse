@@ -1,63 +1,59 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ChatChannelThread extends DiscourseRoute {
   @service router;
   @service chatStateManager;
   @service chat;
-  @service chatStagedThreadMapping;
-  @service chatChannelThreadPane;
+  @service chatThreadPane;
+
+  redirectToChannel(channel, transition) {
+    transition.abort();
+    this.chatStateManager.closeSidePanel();
+    this.router.transitionTo("chat.channel", ...channel.routeModels);
+  }
 
   model(params, transition) {
     const channel = this.modelFor("chat.channel");
-
     return channel.threadsManager
       .find(channel.id, params.threadId)
       .catch(() => {
-        transition.abort();
-        this.router.transitionTo("chat.channel", ...channel.routeModels);
+        this.redirectToChannel(channel, transition);
         return;
       });
   }
 
-  afterModel(model) {
-    this.chatChannelThreadPane.open(model);
-  }
-
-  @action
-  willTransition() {
-    this.chatChannelThreadPane.close();
-  }
-
-  beforeModel(transition) {
+  afterModel(thread, transition) {
     const channel = this.modelFor("chat.channel");
 
-    if (!channel.threadingEnabled) {
-      transition.abort();
-      this.router.transitionTo("chat.channel", ...channel.routeModels);
+    if (!channel.threadingEnabled && !thread.force) {
+      this.redirectToChannel(channel, transition);
       return;
     }
 
-    // This is a very special logic to attempt to reconciliate a staged thread id
-    // it happens after creating a new thread and having a temp ID in the URL
-    // if users presses reload at this moment, we would have a 404
-    // replacing the ID in the URL sooner would also cause a reload
-    const params = this.paramsFor("chat.channel.thread");
-    const threadId = params.threadId;
+    this.chat.activeChannel.activeThread = thread;
+  }
 
-    if (threadId?.startsWith("staged-thread-")) {
-      const mapping = this.chatStagedThreadMapping.getMapping();
+  @action
+  willTransition(transition) {
+    if (
+      transition.targetName === "chat.channel.index" ||
+      transition.targetName === "chat.channel.near-message" ||
+      transition.targetName === "chat.index" ||
+      !transition.targetName.startsWith("chat")
+    ) {
+      this.chatStateManager.closeSidePanel();
+    }
+  }
 
-      if (mapping[threadId]) {
-        transition.abort();
-
-        this.router.transitionTo(
-          "chat.channel.thread",
-          ...[...channel.routeModels, mapping[threadId]]
-        );
-        return;
-      }
+  beforeModel() {
+    const { messageId } = this.paramsFor(this.routeName + ".near-message");
+    if (
+      !messageId &&
+      this.controllerFor("chat-channel-thread").get("targetMessageId")
+    ) {
+      this.controllerFor("chat-channel-thread").set("targetMessageId", null);
     }
 
     this.chatStateManager.openSidePanel();

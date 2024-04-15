@@ -11,11 +11,11 @@ th:
       actions:
         disagree:
           title: "ไม่เห็นด้วย"
-        ignore:
-          title: "ไม่สนใจ"
     channel:
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "ซ่อน"
   discourse_push_notifications:
     popup:
       chat_mention:

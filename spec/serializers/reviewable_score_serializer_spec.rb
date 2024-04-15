@@ -2,7 +2,7 @@
 
 RSpec.describe ReviewableScoreSerializer do
   fab!(:reviewable) { Fabricate(:reviewable_flagged_post) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   describe "#reason" do
     context "with regular links" do

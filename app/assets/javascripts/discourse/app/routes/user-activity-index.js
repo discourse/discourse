@@ -1,8 +1,8 @@
-import UserActivityStreamRoute from "discourse/routes/user-activity-stream";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
+import UserActivityStreamRoute from "discourse/routes/user-activity-stream";
+import getURL from "discourse-common/lib/get-url";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
 export default UserActivityStreamRoute.extend({
   userActionType: null,

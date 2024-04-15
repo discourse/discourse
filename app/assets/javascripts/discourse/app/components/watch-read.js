@@ -1,9 +1,9 @@
 import Component from "@ember/component";
-import { inject as service } from "@ember/service";
-import { bind } from "discourse-common/utils/decorators";
-import isElementInViewport from "discourse/lib/is-element-in-viewport";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { userPath } from "discourse/lib/url";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class WatchRead extends Component {
   @service currentUser;

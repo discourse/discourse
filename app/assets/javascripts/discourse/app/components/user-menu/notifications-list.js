@@ -1,17 +1,34 @@
-import UserMenuItemsList from "discourse/components/user-menu/items-list";
-import I18n from "I18n";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
+import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import { ajax } from "discourse/lib/ajax";
+import { MAX_NOTIFICATIONS_LIMIT_PARAMS } from "discourse/lib/constants";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
+import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import {
   mergeSortedLists,
   postRNWebviewMessage,
 } from "discourse/lib/utilities";
-import showModal from "discourse/lib/show-modal";
-import { inject as service } from "@ember/service";
-import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
-import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
+import I18n from "discourse-i18n";
+
+const MAX_LIMIT = MAX_NOTIFICATIONS_LIMIT_PARAMS;
+const DEFAULT_LIMIT = 30;
+let limit = DEFAULT_LIMIT;
+
+export function setNotificationsLimit(newLimit) {
+  if (newLimit <= 0 || newLimit > MAX_LIMIT) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `Error: Invalid limit of ${newLimit} passed to setNotificationsLimit. Must be greater than 0 and less than ${MAX_LIMIT}`
+    );
+    return;
+  }
+
+  limit = newLimit;
+}
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service appEvents;
@@ -19,6 +36,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service siteSettings;
   @service site;
   @service store;
+  @service modal;
 
   get filterByTypes() {
     return this.args.filterByTypes;
@@ -65,9 +83,23 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     }
   }
 
+  get renderDismissConfirmation() {
+    return true;
+  }
+
+  get dismissConfirmationText() {
+    return I18n.t("notifications.dismiss_confirmation.body.default", {
+      count: this.currentUser.unread_high_priority_notifications,
+    });
+  }
+
+  get alwaysRenderDismissConfirmation() {
+    return false;
+  }
+
   async fetchItems() {
     const params = {
-      limit: 30,
+      limit,
       recent: true,
       bump_last_seen_reviewable: true,
     };
@@ -138,56 +170,64 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     return content;
   }
 
-  dismissWarningModal() {
-    if (this.currentUser.unread_high_priority_notifications > 0) {
-      const modalController = showModal("dismiss-notification-confirmation");
-      modalController.set(
-        "confirmationMessage",
-        I18n.t("notifications.dismiss_confirmation.body.default", {
-          count: this.currentUser.unread_high_priority_notifications,
-        })
-      );
-      return modalController;
-    }
-  }
-
-  @action
-  dismissButtonClick() {
+  async performDismiss() {
     const opts = { type: "PUT" };
     const dismissTypes = this.dismissTypes;
     if (dismissTypes?.length > 0) {
       opts.data = { dismiss_types: dismissTypes.join(",") };
     }
-    const modalController = this.dismissWarningModal();
-    const modalCallback = () => {
-      ajax("/notifications/mark-read", opts).then(() => {
-        if (dismissTypes) {
-          const unreadNotificationCountsHash = {
-            ...this.currentUser.grouped_unread_notifications,
-          };
-          dismissTypes.forEach((type) => {
-            const typeId = this.site.notification_types[type];
-            if (typeId) {
-              delete unreadNotificationCountsHash[typeId];
-            }
-          });
-          this.currentUser.set(
-            "grouped_unread_notifications",
-            unreadNotificationCountsHash
-          );
-        } else {
-          this.currentUser.set("all_unread_notifications_count", 0);
-          this.currentUser.set("unread_high_priority_notifications", 0);
-          this.currentUser.set("grouped_unread_notifications", {});
+    await ajax("/notifications/mark-read", opts);
+    if (dismissTypes) {
+      const unreadNotificationCountsHash = {
+        ...this.currentUser.grouped_unread_notifications,
+      };
+      dismissTypes.forEach((type) => {
+        const typeId = this.site.notification_types[type];
+        if (typeId) {
+          delete unreadNotificationCountsHash[typeId];
         }
-        this.refreshList();
-        postRNWebviewMessage("markRead", "1");
       });
-    };
-    if (modalController) {
-      modalController.set("dismissNotifications", modalCallback);
+      this.currentUser.set(
+        "grouped_unread_notifications",
+        unreadNotificationCountsHash
+      );
     } else {
-      modalCallback();
+      this.currentUser.set("all_unread_notifications_count", 0);
+      this.currentUser.set("unread_high_priority_notifications", 0);
+      this.currentUser.set("grouped_unread_notifications", {});
+    }
+    this.refreshList();
+    postRNWebviewMessage("markRead", "1");
+  }
+
+  dismissWarningModal() {
+    this.modal.show(DismissNotificationConfirmationModal, {
+      model: {
+        confirmationMessage: this.dismissConfirmationText,
+        dismissNotifications: () => this.performDismiss(),
+      },
+    });
+  }
+
+  @action
+  dismissButtonClick() {
+    // by default we display a warning modal when dismissing a notification
+    // however we bypass the warning modal for specific notification types when
+    // they are a 'low priority' type of notification (eg. likes)
+    if (
+      this.renderDismissConfirmation ||
+      this.alwaysRenderDismissConfirmation
+    ) {
+      if (
+        this.currentUser.unread_high_priority_notifications > 0 ||
+        this.alwaysRenderDismissConfirmation
+      ) {
+        this.dismissWarningModal();
+      } else {
+        this.performDismiss();
+      }
+    } else {
+      this.performDismiss();
     }
   }
 }

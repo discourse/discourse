@@ -1,0 +1,40 @@
+.chat-message-error {
+  color: var(--danger-medium);
+
+  &__retry-btn {
+    padding: 0.5em 0;
+    background: none;
+
+    &:hover,
+    &:focus,
+    .-active & {
+      background: none !important;
+    }
+
+    &:focus .retry-staged-message-btn__action {
+      text-decoration: underline;
+    }
+
+    .d-icon,
+    &-title,
+    &:hover .d-icon {
+      color: var(--danger) !important;
+      font-size: var(--font-down-1);
+    }
+
+    .d-icon {
+      margin-right: 0.25em !important;
+    }
+
+    &-action {
+      color: var(--tertiary);
+      font-size: var(--font-down-1);
+      margin-left: 0.25em;
+
+      &:hover {
+        color: var(--tertiary-high);
+        text-decoration: underline;
+      }
+    }
+  }
+}

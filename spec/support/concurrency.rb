@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "fiber"
-
 module Concurrency
   module Logic
     class DeadEnd < StandardError

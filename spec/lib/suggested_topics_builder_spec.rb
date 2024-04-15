@@ -3,7 +3,7 @@
 require "suggested_topics_builder"
 
 RSpec.describe SuggestedTopicsBuilder do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
   let(:builder) { SuggestedTopicsBuilder.new(topic) }
 
   before { SiteSetting.suggested_topics = 5 }

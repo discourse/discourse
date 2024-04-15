@@ -253,6 +253,25 @@ RSpec.describe Onebox::Engine::AllowlistedGenericOnebox do
   end
 
   describe "article html hosts" do
+    context "when returning an article_html with a thumbnail" do
+      before do
+        stub_request(
+          :get,
+          "https://www.assemblyai.com/blog/how-rlhf-preference-model-tuning-works-and-how-things-may-go-wrong/",
+        ).to_return(status: 200, body: onebox_response("assemblyai"))
+      end
+
+      it "shows article thumbnail with correct size" do
+        onebox =
+          described_class.new(
+            "https://www.assemblyai.com/blog/how-rlhf-preference-model-tuning-works-and-how-things-may-go-wrong/",
+          )
+
+        expect(onebox.to_html).to include("width=\"1600\"")
+        expect(onebox.to_html).to include("height=\"900\"")
+      end
+    end
+
     context "when returning article_html for hosts in article_html_hosts" do
       before do
         stub_request(:get, "https://www.imdb.com/title/tt0108002/").to_return(

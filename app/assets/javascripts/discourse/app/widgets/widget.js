@@ -1,3 +1,10 @@
+import { getOwner, setOwner } from "@ember/application";
+import { get } from "@ember/object";
+import { camelize } from "@ember/string";
+import { Promise } from "rsvp";
+import { h } from "virtual-dom";
+import { consolePrefix } from "discourse/lib/source-identifier";
+import DecoratorHelper from "discourse/widgets/decorator-helper";
 import {
   WidgetChangeHook,
   WidgetClickHook,
@@ -14,15 +21,12 @@ import {
   WidgetMouseOverHook,
   WidgetMouseUpHook,
   WidgetTouchEndHook,
+  WidgetTouchMoveHook,
   WidgetTouchStartHook,
 } from "discourse/widgets/hooks";
-import DecoratorHelper from "discourse/widgets/decorator-helper";
-import I18n from "I18n";
-import { Promise } from "rsvp";
-import { deepMerge } from "discourse-common/lib/object";
-import { get } from "@ember/object";
-import { h } from "virtual-dom";
 import { isProduction } from "discourse-common/config/environment";
+import { deepMerge } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 const _registry = {};
 
@@ -36,9 +40,17 @@ export function deleteFromRegistry(name) {
 
 const _decorators = {};
 
-export function decorateWidget(widgetName, cb) {
-  _decorators[widgetName] = _decorators[widgetName] || [];
-  _decorators[widgetName].push(cb);
+export function decorateWidget(decorateIdentifier, cb) {
+  const widgetName = decorateIdentifier.split(":")[0];
+  if (!_registry[widgetName]) {
+    // eslint-disable-next-line no-console
+    console.error(
+      consolePrefix(),
+      `decorateWidget: Could not find widget '${widgetName}' in registry`
+    );
+  }
+  _decorators[decorateIdentifier] ??= [];
+  _decorators[decorateIdentifier].push(cb);
 }
 
 export function traverseCustomWidgets(tree, callback) {
@@ -106,7 +118,10 @@ export function reopenWidget(name, opts) {
   let existing = _registry[name];
   if (!existing) {
     // eslint-disable-next-line no-console
-    console.error(`Could not find widget ${name} in registry`);
+    console.error(
+      consolePrefix(),
+      `reopenWidget: Could not find widget ${name} in registry`
+    );
     return;
   }
 
@@ -142,6 +157,7 @@ export default class Widget {
     this.dirtyKeys = opts.dirtyKeys;
 
     register.deprecateContainer(this);
+    setOwner(this, getOwner(register));
 
     this.key = this.buildKey ? this.buildKey(attrs) : null;
     this.site = register.lookup("service:site");
@@ -154,7 +170,7 @@ export default class Widget {
 
     // We can inject services into widgets by passing a `services` parameter on creation
     (this.services || []).forEach((s) => {
-      this[s] = register.lookup(`service:${s}`);
+      this[camelize(s)] = register.lookup(`service:${s}`);
     });
 
     this.init(this.attrs);
@@ -314,11 +330,17 @@ export default class Widget {
 
     const view = this._findView();
     if (view) {
-      const method = view.get(name);
-      if (!method) {
-        // eslint-disable-next-line no-console
-        console.warn(`${name} not found`);
-        return;
+      let method;
+
+      if (typeof name === "function") {
+        method = name;
+      } else {
+        method = view.get(name);
+        if (!method) {
+          // eslint-disable-next-line no-console
+          console.warn(`${name} not found`);
+          return;
+        }
       }
 
       if (typeof method === "string") {
@@ -473,6 +495,10 @@ export default class Widget {
 
     if (this.touchEnd) {
       properties["widget-touch-end"] = new WidgetTouchEndHook(this);
+    }
+
+    if (this.touchMove) {
+      properties["widget-touch-move"] = new WidgetTouchMoveHook(this);
     }
 
     const attributes = properties["attributes"] || {};

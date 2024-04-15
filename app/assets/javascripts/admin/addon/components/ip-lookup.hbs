@@ -1,9 +1,9 @@
 {{#if this.ip}}
   <DButton
-    @class="btn-default"
-    @action={{action "lookup"}}
+    @action={{this.lookup}}
     @icon="globe"
     @label="admin.user.ip_lookup"
+    class="btn-default"
   />
 {{/if}}
 {{#if this.show}}
@@ -13,16 +13,12 @@
       }}</a>
     {{#if this.copied}}
       <DButton
-        @class="btn-hover pull-right"
         @icon="copy"
         @label="ip_lookup.copied"
+        class="btn-hover pull-right"
       />
     {{else}}
-      <DButton
-        @action={{action "copy"}}
-        @class="pull-right no-text"
-        @icon="copy"
-      />
+      <DButton @action={{this.copy}} @icon="copy" class="pull-right no-text" />
     {{/if}}
     <h4>{{i18n "ip_lookup.title"}}</h4>
     <p class="powered-by">{{html-safe (i18n "ip_lookup.powered_by")}}</p>
@@ -61,13 +57,13 @@
         <strong>{{this.totalOthersWithSameIP}}</strong>
         {{#if this.other_accounts.length}}
           <DButton
-            @class="btn-danger pull-right"
-            @action={{action "deleteOtherAccounts"}}
+            @action={{this.deleteOtherAccounts}}
             @icon="exclamation-triangle"
             @translatedLabel={{i18n
               "ip_lookup.delete_other_accounts"
               count=this.otherAccountsToDelete
             }}
+            class="btn-danger pull-right"
           />
         {{/if}}
       </dt>

@@ -8,9 +8,9 @@
 
       {{#if this.user.canManageTopic}}
         <DButton
-          @class="slow-mode-remove"
-          @action={{action "disableSlowMode"}}
+          @action={{this.disableSlowMode}}
           @icon="trash-alt"
+          class="slow-mode-remove"
         />
       {{/if}}
     </h3>

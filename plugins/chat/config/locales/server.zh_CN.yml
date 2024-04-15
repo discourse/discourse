@@ -6,7 +6,9 @@
 
 zh_CN:
   site_settings:
-    chat_enabled: "启用聊天插件。"
+    chat_separate_sidebar_mode: "为论坛和聊天显示单独的边栏模式。"
+    chat_enabled: "启用聊天。"
+    enable_public_channels: "基于类别启用公开频道。"
     chat_allowed_groups: "这些群组中的用户可以聊天。请注意，管理人员始终可以访问聊天。"
     chat_channel_retention_days: "常规频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
@@ -26,41 +28,47 @@ zh_CN:
     max_mentions_per_chat_message: "用户可以在聊天消息中使用的 @name 通知的最大数量。"
     chat_max_direct_message_users: "在创建新的直接消息时，用户无法添加超过此数量的其他用户。设置为 0 只允许给自己发送消息。管理人员不受此设置的影响。"
     chat_allow_archiving_channels: "允许管理人员在关闭频道时将消息归档到某个话题。"
+    chat_editing_grace_period: "在发送聊天后 (n) 秒内进行编辑时，不会在聊天消息旁边显示（已编辑）标签。"
+    chat_editing_grace_period_max_diff_low_trust: "聊天编辑宽限期内允许的最大字符更改数，超过此值将在聊天消息旁边显示（已编辑）标签（信任级别 0 和 1）。"
+    chat_editing_grace_period_max_diff_high_trust: "聊天编辑宽限期内允许的最大字符更改数，超过此值将在聊天消息旁边显示（已编辑）标签（信任级别 2 及以上）。"
+    chat_preferred_mobile_index: "在移动设备上加载 /chat 时的首选标签页。"
     errors:
       chat_default_channel: "默认聊天频道必须是公共频道。"
       direct_message_enabled_groups_invalid: "您必须为此设置至少指定一个群组。如果您不希望管理人员以外的任何人发送直接消息，请选择管理人员群组。"
       chat_upload_not_allowed_secure_uploads: "当启用安全上传站点设置时，不允许在聊天中上传文件。"
   system_messages:
+    private_channel_title: "频道 %{id}"
     chat_channel_archive_complete:
       title: "聊天频道归档完成"
       subject_template: "聊天频道归档成功完成"
       text_body_template: |
-        存档聊天频道 %{channel_hashtag_or_name} 已成功完成。这些消息已复制到主题 [%{topic_title}](%{topic_url}) 中。
+        归档聊天频道 %{channel_hashtag_or_name} 已成功完成。这些消息已复制到话题 [%{topic_title}](%{topic_url}) 中。
     chat_channel_archive_failed:
       title: "聊天频道归档失败"
       subject_template: "聊天频道归档失败"
       text_body_template: |
-        存档聊天频道 %{channel_hashtag_or_name} 失败。 %{messages_archived} 消息已存档。部分归档的消息被复制到主题 [%{topic_title}](%{topic_url}) 中。访问 %{channel_url} 的频道重试。
+        归档聊天频道 %{channel_hashtag_or_name} 失败。%{messages_archived} 条消息已归档。部分归档的消息被复制到话题 [%{topic_title}](%{topic_url}) 中。访问 %{channel_url} 下的频道以重试。
     chat_channel_archive_failed_no_topic:
       title: "聊天频道归档失败"
       subject_template: "聊天频道归档失败"
       text_body_template: |
-        存档聊天频道 %{channel_hashtag_or_name} 失败。没有消息被存档。话题创建不成功，原因如下：
+        归档聊天频道 %{channel_hashtag_or_name} 失败。没有消息被归档。话题创建未成功，原因如下：
 
           %{topic_validation_errors}
 
-        访问 %{channel_url} 频道重试。
+        访问 %{channel_url} 下的频道以重试。
   chat:
     deleted_chat_username: 已删除
     errors:
+      users_cant_be_added_to_channel: "无法将用户添加到此频道。"
       channel_exists_for_category: "此类别和名称的频道已经存在"
       channel_new_message_disallowed:
-        archived: "该频道已被存档，无法发送新消息"
+        archived: "该频道已被归档，无法发送新消息"
         closed: "该频道已关闭，无法发送新消息"
-        read_only: "该频道是只读的，不能发送新消息"
+        read_only: "该频道为只读频道，无法发送新消息"
       channel_modify_message_disallowed:
-        archived: "频道已关闭，无法编辑或删除任何消息"
-        closed: "频道已关闭，无法编辑或删除任何消息"
+        archived: "该频道已关闭，无法编辑或删除任何消息"
+        closed: "该频道已关闭，无法编辑或删除任何消息"
         read_only: "该频道为只读频道，无法编辑或删除任何消息"
       user_cannot_send_message: "您目前无法发送消息。"
       rate_limit_exceeded: "超过了 30 秒内可发送的聊天消息的上限"
@@ -69,10 +77,10 @@ zh_CN:
       duplicate_message: "您在短时间内发布了一条相同的消息。"
       delete_channel_failed: "删除频道失败，请重试。"
       minimum_length_not_met:
-        other: "消息太短，必须至少有 %{count} 个字符。"
+        other: "消息过短，必须至少有 %{count} 个字符。"
       message_too_long:
         other: "消息过长，最多只能包含 %{count} 个字符。"
-      draft_too_long: "草稿太长了。"
+      draft_too_long: "草稿过长。"
       max_reactions_limit_reached: "此消息不允许有新的回应。"
       message_move_invalid_channel: "源频道和目标频道必须是公共频道。"
       message_move_no_messages_found: "找不到带有提供的消息 ID 的消息。"
@@ -83,10 +91,13 @@ zh_CN:
       actor_disallowed_dms: "您已选择阻止用户向您发送私人和直接消息，因此您无法创建新的直接消息。"
       actor_preventing_target_user_from_dm: "您已选择阻止 %{username} 向您发送私人和直接消息，因此您无法创建给他们的新直接消息。"
       user_cannot_send_direct_messages: "抱歉，您无法发送直接消息。"
-      over_chat_max_direct_message_users_allow_self: "你只能创建一个与自己的直接信息。"
+      over_chat_max_direct_message_users_allow_self: "您只能创建一个与自己的直接消息。"
       over_chat_max_direct_message_users:
         other: "您无法创建与超过 %{count} 个其他用户的直接消息。"
-      original_message_not_found: "无法找到您要回复信息的内容，或已被删除。"
+      original_message_not_found: "找不到您要回复信息的上级内容，或相关内容已被删除。"
+      thread_invalid_for_channel: "该对话不是所提供频道的一部分。"
+      thread_does_not_match_parent: "对话与父消息不匹配。"
+      invalid_direct_message: "你不能创建此私信。"
     reviewables:
       message_already_handled: "谢谢，但我们已经审核此消息，并确定它不需要被再次举报。"
       actions:
@@ -111,18 +122,22 @@ zh_CN:
           title: "删除消息"
           description: "删除消息，使用户看不到。"
         delete_and_agree:
-          title: "删除消息"
+          title: "忽略举报并删除消息"
+          description: "将举报从队列中移除并删除消息以忽略该举报。"
         disagree_and_restore:
           title: "不同意并恢复消息"
           description: "恢复消息，以便所有用户都可以看到。"
         disagree:
           title: "不同意"
         ignore:
-          title: "忽略"
+          title: "不进行操作"
+          description: "不采取任何措施，将举报从队列中移除以忽略该举报。"
       direct_messages:
         transcript_title: "%{channel_name}中以前消息的副本"
         transcript_body: "为了向您提供更多背景，我们在此对话中包含了以前消息的副本（最多十条）：\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        other: "%{inviting_user} 已邀请 %{invited_users}。"
       archive:
         first_post_raw: "此话题是[%{channel_name}](%{channel_url})聊天频道的归档。"
       messages_moved:
@@ -132,6 +147,24 @@ zh_CN:
         multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           other: "%{comma_separated_usernames} 和其他 %{count} 人"
+    mention_warning:
+      dismiss: "忽略"
+      cannot_see: "%{first_identifier} 无法访问此频道且没有收到通知。"
+      cannot_see_multiple:
+        other: "%{first_identifier} 和 %{count} 位其他用户无法访问此频道且没有收到通知。"
+      invitations_sent:
+        other: "已发送邀请"
+      invite: "邀请加入频道"
+      without_membership: "%{first_identifier} 尚未加入此频道。"
+      without_membership_multiple:
+        other: "%{first_identifier} 和其他 %{count} 位用户尚未加入此频道。"
+      group_mentions_disabled: "%{first_identifier} 不允许提及。"
+      group_mentions_disabled_multiple:
+        other: "%{first_identifier} 和其他 %{count} 个群组不允许提及。"
+      global_mentions_disallowed: "@here 和 @all 提及在此频道中被禁用。"
+      too_many_members: "%{first_identifier} 的成员过多。任何人都没有收到通知。"
+      too_many_members_multiple:
+        other: "%{first_identifier} 和其他 %{count} 个群组的成员过多。任何人都没有收到通知。"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "包含非 ASCII 字符"
@@ -143,10 +176,16 @@ zh_CN:
       inline_to_message: "消息 #%{message_id}，来自%{username} – #%{chat_channel}"
       inline_to_channel: "聊天 #%{chat_channel}"
       inline_to_topic_channel: "话题%{topic_title}的聊天"
+      thread_title_connector: "位置："
       x_members:
         other: "%{count} 个成员"
       and_x_others:
         other: "和其他 %{count} 人"
+    summaries:
+      no_targets: "在所选时间段内没有消息。"
+    transcript:
+      default_thread_title: "对话"
+      split_thread_range: "%{start} 到 %{end} 的消息（共 %{total} 条）"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -180,6 +219,7 @@ zh_CN:
         other: "您有新的聊天消息"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] 新消息"
         direct_message_from_1: "[%{email_prefix}] 来自 %{username} 的新消息"
         direct_message_from_2: "[%{email_prefix}] 来自 %{username1} 和 %{username2} 的新消息"
         direct_message_from_more:
@@ -189,8 +229,8 @@ zh_CN:
         chat_channel_more:
           other: "[%{email_prefix}] %{channel} 和其他 %{count} 个频道的新消息"
         chat_channel_and_direct_message: "[%{email_prefix}] %{channel} 中和来自 %{username} 的新消息"
-      unsubscribe: "此聊天摘要在您离开时从%{site_link}发送。更改您的%{email_preferences_link}，或者%{unsubscribe_link}以退订。"
-      unsubscribe_no_link: "此聊天摘要在您离开时从%{site_link}发送。更改您的%{email_preferences_link}。"
+      unsubscribe: "此聊天总结在您离开时从%{site_link}发送。更改您的%{email_preferences_link}，或者%{unsubscribe_link}以退订。"
+      unsubscribe_no_link: "此聊天总结在您离开时从%{site_link}发送。更改您的%{email_preferences_link}。"
       view_messages:
         other: "查看 %{count} 条消息"
       view_more:
@@ -198,7 +238,7 @@ zh_CN:
       your_chat_settings: "聊天电子邮件频率偏好设置"
   unsubscribe:
     chat_summary:
-      select_title: "将聊天摘要电子邮件频率设置为："
+      select_title: "将聊天总结电子邮件频率设置为："
       never: 永不
       when_away: 仅在离开时
   category:

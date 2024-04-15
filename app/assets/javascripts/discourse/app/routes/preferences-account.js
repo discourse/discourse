@@ -1,12 +1,12 @@
-import RestrictedUserRoute from "discourse/routes/restricted-user";
-import UserBadge from "discourse/models/user-badge";
-import showModal from "discourse/lib/show-modal";
 import { action } from "@ember/object";
-import I18n from "I18n";
+import { service } from "@ember/service";
+import AvatarSelectorModal from "discourse/components/modal/avatar-selector";
+import UserBadge from "discourse/models/user-badge";
+import RestrictedUserRoute from "discourse/routes/restricted-user";
+import I18n from "discourse-i18n";
 
 export default RestrictedUserRoute.extend({
-  showFooter: true,
-
+  modal: service(),
   model() {
     const user = this.modelFor("user");
     if (this.siteSettings.enable_badges) {
@@ -39,6 +39,8 @@ export default RestrictedUserRoute.extend({
 
   @action
   showAvatarSelector(user) {
-    showModal("avatar-selector").setProperties({ user });
+    this.modal.show(AvatarSelectorModal, {
+      model: { user },
+    });
   },
 });

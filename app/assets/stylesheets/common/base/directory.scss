@@ -5,6 +5,7 @@
 
 .directory {
   margin-bottom: 100px;
+  background: var(--d-content-background);
 
   &.users-directory {
     .directory-group-selector {
@@ -69,13 +70,8 @@
       }
     }
   }
-  .modal-footer {
-    display: flex;
+  .d-modal__footer {
     justify-content: space-between;
-
-    .reset-to-default {
-      margin-right: 0;
-    }
   }
 }
 
@@ -190,16 +186,11 @@
   .user-info {
     display: flex;
     min-width: 0;
-    margin: 0;
     width: 100%;
-    .user-image {
-      padding-right: 0.5em;
-      margin-right: 0.5em;
-    }
     .user-detail {
       padding: 0;
       width: 100%;
-      @media screen and (max-width: 600px) {
+      @include breakpoint(tablet) {
         // overrides existing media query
         font-size: var(--font-0);
       }
@@ -318,7 +309,7 @@
       }
     }
 
-    [class*="--empty"] {
+    .--empty {
       display: none;
     }
   }

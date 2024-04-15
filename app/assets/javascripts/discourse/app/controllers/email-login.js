@@ -1,12 +1,12 @@
 import Controller from "@ember/controller";
-import DiscourseURL from "discourse/lib/url";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
-import { getWebauthnCredential } from "discourse/lib/webauthn";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
+import DiscourseURL from "discourse/lib/url";
+import { getWebauthnCredential } from "discourse/lib/webauthn";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   router: service(),

@@ -1,10 +1,10 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
-import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
+import { query } from "discourse/tests/helpers/qunit-helpers";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 module(
   "Discourse Chat | Component | chat-composer placeholder",
@@ -36,6 +36,7 @@ module(
       this.channel = ChatChannel.create({
         chatable_type: "DirectMessage",
         chatable: {
+          group: true,
           users: [
             { name: "Tomtom" },
             { name: "Steaky" },

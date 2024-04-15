@@ -1,9 +1,9 @@
-import { inject as service } from "@ember/service";
-import { empty, notEmpty, or } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import EmailPreview from "admin/models/email-preview";
 import { action, get } from "@ember/object";
+import { empty, notEmpty, or } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import EmailPreview from "admin/models/email-preview";
 
 export default class AdminEmailPreviewDigestController extends Controller {
   @service dialog;

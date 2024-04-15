@@ -1,17 +1,17 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { set } from "@ember/object";
 import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 import {
   ALL_CATEGORIES_ID,
   NO_CATEGORIES_ID,
 } from "select-kit/components/category-drop";
-import Category from "discourse/models/category";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import { hbs } from "ember-cli-htmlbars";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { set } from "@ember/object";
-import sinon from "sinon";
 
 function initCategories(context) {
   const categories = context.site.categoriesList;
@@ -68,7 +68,7 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     const text = this.subject.header().label();
     assert.strictEqual(
       text,
-      I18n.t("category.all").toLowerCase(),
+      I18n.t("categories.categories_label"),
       "it uses the noneLabel"
     );
   });

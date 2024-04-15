@@ -1,5 +1,3 @@
-$topic-progress-height: 42px;
-
 @keyframes button-jump-up {
   0% {
     margin-bottom: -60px;
@@ -18,7 +16,7 @@ $topic-progress-height: 42px;
   }
 }
 
-[class*="archetype-"] {
+#main-outlet {
   --below-topic-margin: 0.75em;
 }
 
@@ -69,15 +67,15 @@ $topic-progress-height: 42px;
       overflow-y: auto;
       z-index: z("timeline");
       padding: 10px 10px 35px 10px;
-      box-shadow: shadow("dropdown");
+      box-shadow: var(--shadow-dropdown);
       background: var(--tertiary-low);
 
       .close {
         display: flex;
         align-items: center;
         position: absolute;
-        right: 10px;
-        top: 10px;
+        right: 0px;
+        top: 8px;
         color: var(--primary);
         opacity: 0.5;
         font-size: var(--font-up-1);
@@ -99,6 +97,23 @@ $topic-progress-height: 42px;
     }
     .timeline-container .timeline-scroller-content {
       position: relative;
+    }
+  }
+  #topic-progress-wrapper {
+    .topic-admin-menu-button .toggle-admin-menu {
+      border-top-right-radius: 0;
+      border-bottom-left-radius: var(--d-border-radius);
+      border-bottom-right-radius: 0;
+    }
+    #topic-progress {
+      border-radius: var(--d-border-radius);
+      overflow: hidden;
+    }
+    .topic-admin-menu-button-container + #topic-progress {
+      border-top-left-radius: 0;
+      border-top-right-radius: var(--d-border-radius);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: var(--d-border-radius);
     }
   }
 }
@@ -152,7 +167,7 @@ $topic-progress-height: 42px;
     }
   }
 
-  body:not(.footer-nav-visible) & {
+  html:not(.footer-nav-visible) & {
     bottom: env(safe-area-inset-bottom);
   }
 
@@ -174,12 +189,13 @@ $topic-progress-height: 42px;
 }
 
 #topic-progress {
+  --topic-progress-height: 42px;
   position: relative;
   background-color: var(--secondary);
   color: var(--tertiary);
   border: 1px solid var(--tertiary-low);
   width: 145px;
-  height: $topic-progress-height;
+  height: var(--topic-progress-height);
 
   /* as a big ol' click target, don't let text inside be selected */
   @include unselectable;
@@ -250,9 +266,6 @@ $topic-progress-height: 42px;
   button {
     margin: 0 0.5em 0 0;
   }
-  a.topic-featured-link {
-    display: inline-block;
-  }
   .topic-statuses {
     line-height: 1.2;
     .d-icon {
@@ -265,26 +278,17 @@ $topic-progress-height: 42px;
   }
 }
 
-a.badge-category {
-  margin-top: 5px;
-}
-
 #topic-title {
   .title-wrapper {
     display: flex;
     flex-wrap: wrap;
     width: 90%;
-    a.topic-featured-link {
-      display: inline-block;
-    }
   }
   h1 {
     margin-bottom: 0;
     width: 100%;
   }
-  a.badge-category {
-    margin-top: 5px;
-  }
+
   a.edit-topic .d-icon {
     font-size: 0.8em;
   }
@@ -301,14 +305,16 @@ a.badge-category {
     }
     .category-chooser,
     .mini-tag-chooser {
-      flex: 1 1 49%;
+      flex: 1 1 35%;
       margin: 0 0 9px 0;
       @media all and (max-width: 500px) {
         flex: 1 1 100%;
       }
     }
     .mini-tag-chooser {
-      margin-left: 2%; // category/tag chooser are 49% wide, so this is 1% * 2
+      flex: 1 1 54%;
+      margin: 0 0 9px 0;
+      margin-left: 1%; // category at 40%, tag chooser at 58%
       @media all and (max-width: 500px) {
         margin-left: 0;
       }
@@ -328,6 +334,7 @@ a.badge-category {
 }
 
 .private_message {
+  background: var(--d-content-background);
   #topic-title {
     .edit-topic-title {
       position: relative;
@@ -364,44 +371,6 @@ a.badge-category {
   background-color: var(--highlight-bg);
   margin-top: 1em;
   max-width: 757px;
-}
-
-.suggested-topics-wrapper.related-messages-wrapper {
-  .suggested-topics:nth-of-type(n + 2) {
-    thead {
-      display: none;
-    }
-  }
-}
-
-// Target the .badge-category text, the bullet icon needs to maintain `display: block`
-.suggested-topics h3 .badge-wrapper.bullet span.badge-category,
-.suggested-topics h3 .badge-wrapper.box span,
-.suggested-topics h3 .badge-wrapper.bar span {
-  display: inline;
-}
-
-.suggested-topics h3 .badge-wrapper.bullet span.badge-category {
-  // Override vertical-align: text-top from `badges.css.scss`
-  vertical-align: baseline;
-  line-height: var(--line-height-medium);
-}
-
-.suggested-topics h3 .badge-wrapper.bullet,
-.suggested-topics h3 .badge-wrapper.bullet span.badge-category-parent-bg,
-.suggested-topics h3 .badge-wrapper.bullet span.badge-category-bg {
-  // Top of bullet aligns with top of line - adjust line height to vertically align bullet.
-  line-height: 0.8;
-}
-
-.suggested-topics .badge-wrapper.bullet span.badge-category,
-.suggested-topics .badge-wrapper.bar span.badge-category {
-  max-width: 150px;
-}
-
-.suggested-topics .suggested-topics-title {
-  display: flex;
-  align-items: center;
 }
 
 .post-links-container {
@@ -459,12 +428,14 @@ a.badge-category {
 }
 
 a.topic-featured-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   text-transform: lowercase;
   color: var(--primary-med-or-secondary-med);
   font-size: 0.875rem;
   .d-icon {
-    margin-right: 3px;
+    font-size: var(--font-down-1);
+    margin-right: 0.25em;
   }
 }
 

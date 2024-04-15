@@ -45,6 +45,9 @@ fr:
       trigger: "jet"
       invalid: |-
         Je regrette, c'est mathématiquement impossible d'obtenir cette combinaison de dés. :confounded:
+      not_enough_dice:
+        one: "Je n'ai que %{count} dé. C'est honteux, je sais !"
+        other: "Je n'ai que %{count} dés. C'est honteux, je sais !"
       out_of_range: |-
         Saviez-vous que [le nombre maximal de faces](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) d'un dé non truqué est de 120 ?
       results: |-
@@ -294,10 +297,6 @@ fr:
         not_found: |-
           Oh non, mon vilain message n'a pas encore été signalé comme étant répréhensible. :worried: Pouvez-vous le signaler comme étant répréhensible avec le **drapeau** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> ? Pensez à utiliser le bouton « Afficher plus » <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> afin de faire apparaître les autres actions relatives aux messages.
       search:
-        instructions: |-
-          _psst_ … J'ai caché une surprise dans ce sujet. Si vous aimez les défis, sélectionnez **l’icône de recherche** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> située en haut à droite &#8599; pour la trouver.
-
-          Essayez de chercher le terme « capy​&#8203;bara » dans ce sujet.
         hidden_message: |-
           Comment avez-vous manqué ce capybara ? :wink:
 
@@ -374,18 +373,8 @@ fr:
         instructions: |-
           Saviez-vous que vous pouviez faire référence aux catégories et étiquettes dans vos messages ? Par exemple, avez-vous vu la catégorie %{category} ?
 
-          Saisissez « # » au milieu d'une phrase et sélectionnez n'importe quelle catégorie ou étiquette.
-        instructions_experimental: |-
-          Saviez-vous que vous pouviez faire référence aux catégories et étiquettes dans vos messages ? Par exemple, avez-vous vu la catégorie %{category} ?
-
           Saisissez « # » dans une phrase et sélectionnez la catégorie ou l'étiquette de votre choix.
         not_found: |-
-          Hum, je ne vois de catégorie nulle part. Notez que « # » ne peut pas être le premier caractère. Pouvez-vous copier ceci dans votre prochaine réponse ?
-
-          « texte
-          Je peux créer un lien de catégorie via #
-          »
-        not_found_experimental: |-
           Hum, je ne vois aucune catégorie ici. Pouvez-vous copier ceci dans votre prochaine réponse ?
 
           ```text
@@ -454,12 +443,12 @@ fr:
           Beau travail ! Votre attention pour les _détails_ est admirable !
       end:
         message: |-
-          Vous avez suivi ce tutoriel comme un _utiliser avancé_ :bow:
+          Vous avez suivi ce tutoriel comme un _utilisateur avancé_ :bow:
 
           %{certificate}
 
           C'est tout ce que j'ai pour vous.
 
-          Au revoir ! Si vous voulez me reparler, envoyez moi un message à tout moment :sunglasses:
+          Au revoir ! Si vous voulez me reparler, envoyez-moi un message à tout moment :sunglasses:
       certificate:
         alt: "Certificat de réussite de l'utilisateur avancé"

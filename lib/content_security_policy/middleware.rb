@@ -11,6 +11,7 @@ class ContentSecurityPolicy
       request = Rack::Request.new(env)
       _, headers, _ = response = @app.call(env)
 
+      return response if headers["Content-Security-Policy"].present?
       return response unless html_response?(headers)
 
       # The EnforceHostname middleware ensures request.host_with_port can be trusted

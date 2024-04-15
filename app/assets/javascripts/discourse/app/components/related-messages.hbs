@@ -1,10 +1,12 @@
 <div
   id="related-messages"
-  class="suggested-topics"
+  class="more-topics__list {{if this.hidden 'hidden'}}"
   role="complementary"
   aria-labelledby="related-messages-title"
+  {{did-insert this.registerList}}
+  {{will-destroy this.removeList}}
 >
-  <h3 class="suggested-topics-title" id="related-messages-title">
+  <h3 id="related-messages-title" class="more-topics__list-title">
     {{i18n "related_messages.title"}}
   </h3>
 
@@ -12,7 +14,7 @@
     <BasicTopicList
       @hideCategory="true"
       @showPosters="true"
-      @topics={{this.topic.relatedMessages}}
+      @topics={{@topic.relatedMessages}}
     />
   </div>
 

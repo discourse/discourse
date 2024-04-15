@@ -1,10 +1,10 @@
-import { empty, or } from "@ember/object/computed";
-import MultiSelectComponent from "select-kit/components/multi-select";
-import I18n from "I18n";
-import TagsMixin from "select-kit/mixins/tags";
 import { computed } from "@ember/object";
-import { makeArray } from "discourse-common/lib/helpers";
+import { empty, or } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
+import { makeArray } from "discourse-common/lib/helpers";
+import I18n from "discourse-i18n";
+import MultiSelectComponent from "select-kit/components/multi-select";
+import TagsMixin from "select-kit/mixins/tags";
 
 export default MultiSelectComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["mini-tag-chooser"],
@@ -26,6 +26,7 @@ export default MultiSelectComponent.extend(TagsMixin, {
     closeOnChange: false,
     maximum: "maxTagsPerTopic",
     autoInsertNoneItem: false,
+    useHeaderFilter: false,
   },
 
   modifyComponentForRow(collection, item) {
@@ -69,6 +70,13 @@ export default MultiSelectComponent.extend(TagsMixin, {
   }),
 
   search(filter) {
+    const maximum = this.selectKit.options.maximum;
+    if (maximum === 0) {
+      const key = "select_kit.max_content_reached";
+      this.addError(I18n.t(key, { count: maximum }));
+      return [];
+    }
+
     const data = {
       q: filter || "",
       limit: this.maxTagSearchResults,

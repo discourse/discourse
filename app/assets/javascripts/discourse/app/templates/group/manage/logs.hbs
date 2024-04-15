@@ -1,3 +1,7 @@
+{{#unless this.model.all_loaded}}
+  {{hide-application-footer}}
+{{/unless}}
+
 {{#if this.model.logs}}
   <div class="group-manage-logs-controls">
     <GroupManageLogsFilter

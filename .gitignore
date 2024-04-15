@@ -8,6 +8,7 @@
 /.env
 /.procfile
 /dump.rdb
+.DS_Store
 
 /config/discourse.conf
 /config/discourse.pill
@@ -39,9 +40,14 @@
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
 !/plugins/discourse-lazy-videos/
+!/plugins/automation/
+/plugins/automation/gems
 !/plugins/chat/
 !/plugins/poll/
 !/plugins/styleguide
+!/plugins/spoiler-alert/
+!/plugins/checklist/
+!/plugins/footnote/
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -52,6 +58,11 @@
 
 # We provide a .sample but people can use newer versions if they want to
 .ruby-version
+.ruby-gemset
+.tool-versions
+
+# Likewise, there is a .vscode-sample for VSCode config
+.vscode
 
 # Front-end
 dist

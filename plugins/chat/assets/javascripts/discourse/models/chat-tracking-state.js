@@ -1,6 +1,6 @@
-import { setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import { setOwner } from "@ember/application";
+import { service } from "@ember/service";
 
 export default class ChatTrackingState {
   @service chatTrackingStateManager;

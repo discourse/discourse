@@ -56,15 +56,13 @@ RSpec.describe Stylesheet::Compiler do
 
     context "with a plugin" do
       let :plugin1 do
-        plugin1 = Plugin::Instance.new
-        plugin1.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+        plugin1 = plugin_from_fixtures("my_plugin")
         plugin1.register_css "body { background: $primary }"
         plugin1
       end
 
       let :plugin2 do
-        plugin2 = Plugin::Instance.new
-        plugin2.path = "#{Rails.root}/spec/fixtures/plugins/scss_plugin/plugin.rb"
+        plugin2 = plugin_from_fixtures("scss_plugin")
         plugin2
       end
 
@@ -87,6 +85,20 @@ RSpec.describe Stylesheet::Compiler do
         css, _map = Stylesheet::Compiler.compile_asset("my_plugin", theme_id: theme.id)
         expect(css).not_to include(upload.url)
         expect(css).to include("background:")
+      end
+
+      context "with the `rtl` option" do
+        it "generates an RTL version of the plugin CSS if the option is true" do
+          css, _ = Stylesheet::Compiler.compile_asset("scss_plugin", theme_id: theme.id, rtl: true)
+          expect(css).to include(".pull-left{float:right}")
+          expect(css).not_to include(".pull-left{float:left}")
+        end
+
+        it "returns an unchanged version of the plugin CSS" do
+          css, _ = Stylesheet::Compiler.compile_asset("scss_plugin", theme_id: theme.id, rtl: false)
+          expect(css).to include(".pull-left{float:left}")
+          expect(css).not_to include(".pull-left{float:right}")
+        end
       end
 
       it "supports SCSS imports" do
@@ -169,8 +181,7 @@ RSpec.describe Stylesheet::Compiler do
 
     context "with a plugin" do
       before do
-        plugin = Plugin::Instance.new
-        plugin.path = "#{Rails.root}/spec/fixtures/plugins/color_definition/plugin.rb"
+        plugin = plugin_from_fixtures("color_definition")
         Discourse.plugins << plugin
         plugin.activate!
       end

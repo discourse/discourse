@@ -1,9 +1,8 @@
+import { htmlSafe } from "@ember/template";
 import UserAction from "discourse/models/user-action";
 import UserActivityStreamRoute from "discourse/routes/user-activity-stream";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
-import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import I18n from "discourse-i18n";
 
 export default UserActivityStreamRoute.extend({
   userActionType: UserAction.TYPES["likes_given"],
@@ -27,11 +26,5 @@ export default UserActivityStreamRoute.extend({
 
   titleToken() {
     return I18n.t("user_action_groups.1");
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("application").set("showFooter", true);
-    return true;
   },
 });

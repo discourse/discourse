@@ -7,6 +7,10 @@
   opacity: 1;
 }
 
+:root {
+  --bronze: #d38f42 !important;
+}
+
 html.discourse-no-touch {
   .btn-default:not(.btn-flat, .btn-danger, .btn-primary),
   .btn-icon:not(.btn-flat, .btn-danger, .btn-primary) {
@@ -50,7 +54,6 @@ html {
   }
 
   // Composer
-
   #reply-control .reply-to .reply-details .d-icon {
     opacity: 1;
     color: var(--primary-low-mid);
@@ -63,6 +66,11 @@ html {
         &:hover {
           color: var(--secondary);
         }
+      }
+    }
+    .btn-icon:not(.btn-flat, .btn-danger, .btn-primary):focus {
+      .d-icon {
+        color: currentColor;
       }
     }
   }
@@ -80,19 +88,16 @@ html {
     }
   }
 
-  .menu-panel .panel-body-bottom .btn:hover {
+  .menu-panel .panel-body-bottom .btn:hover,
+  .menu-panel .panel-body-bottom .btn:focus {
     .d-icon {
       color: var(--primary);
     }
   }
 
-  .d-header-icons .d-icon {
+  .d-header-icons .d-icon,
+  .header-sidebar-toggle button .d-icon {
     color: var(--primary-low-mid);
-  }
-
-  .d-header-icons .icon:hover .d-icon,
-  .d-header-icons .icon:focus .d-icon {
-    color: var(--primary-high);
   }
 
   .d-header-icons .unread-notifications {
@@ -137,6 +142,14 @@ html {
 
   .topic-list .posters a:first-child .avatar.latest:not(.single) {
     box-shadow: 0 0 0 2px var(--tertiary);
+  }
+
+  .topic-list .topic-list-item-separator .topic-list-data span {
+    color: var(--danger);
+  }
+
+  .discourse-tag.box {
+    background: var(--primary-very-low);
   }
 
   // Posts
@@ -280,7 +293,66 @@ html {
     color: var(--primary-medium);
   }
 
-  // Admin
+  .alert.alert-success a {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+
+  .latest-topic-list .table-heading,
+  .top-topic-list .table-heading {
+    color: var(--primary-medium);
+  }
+
+  .latest-topic-list-item .topic-last-activity a,
+  .category-list .featured-topic a.last-posted-at,
+  .category-list .featured-topic a.last-posted-at:visited {
+    color: var(--primary-high-or-secondary-low);
+  }
+
+  .category-boxes .description {
+    color: var(--primary-med-or-secondary-med);
+  }
+
+  // User Preferences
+  .user-menu.revamped .quick-access-panel li.unread,
+  .user-menu.revamped .quick-access-panel li.pending {
+    background-color: var(--tertiary-very-low);
+  }
+
+  .user-main .deleted-posts {
+    color: var(--primary);
+  }
+
+  .user-main .flagged-posts {
+    color: dark-light-choose($primary, $secondary);
+  }
+
+  .uploaded-image-preview
+    .image-upload-controls
+    .image-uploader-lightbox-btn
+    .d-icon {
+    color: var(--primary);
+  }
+
+  .settings .setting .setting-value .uploaded-image-preview {
+    background-color: var(--primary-very-low);
+  }
+
+  // Notifications
+
+  .user-menu.revamped .tabs-list .btn .badge-notification {
+    background-color: dark-light-choose($tertiary-high, $tertiary);
+  }
+
+  .user-stream .notification.unread {
+    background-color: var(--tertiary-very-low);
+  }
+
+  .user-stream .time {
+    color: var(--primary-very-high);
+  }
+
+  // Admin Settings
 
   .admin-controls {
     .nav-pills > li > a:not(.active):hover {
@@ -292,6 +364,54 @@ html {
   .cooked mark,
   .d-editor-preview mark {
     background-color: yellow; // resets to browser default
+  }
+
+  .settings .setting.overridden h3:before {
+    background-color: var(--tertiary);
+  }
+
+  .admin-controls .controls {
+    background: var(--primary-very-low);
+  }
+
+  // Dashboard
+
+  .user-metrics .table-cell.user-basic .label,
+  .user-metrics .table-cell.user-member .label,
+  .user-metrics .table-cell.user-leader .label {
+    color: dark-light-choose($primary, $secondary);
+  }
+
+  .admin-contents.admin-plugins td.version .commit-hash {
+    color: var(--primary-medium);
+  }
+
+  // Search
+
+  .search-container
+    .search-filters
+    details.search-advanced-additional-options
+    > summary {
+    color: var(--highlight-high);
+  }
+
+  .chat-notices__notice,
+  .chat-notices .chat-retention-reminder {
+    background-color: var(--tertiary-very-low);
+  }
+
+  // Review
+
+  .reviewable-item .reviewable-meta-data .created-at a {
+    color: var(--primary-medium);
+  }
+
+  .reviewable-item {
+    background: dark-light-choose($primary-very-low, $secondary-very-high);
+  }
+
+  .reviewable .status span.approved {
+    color: var(--success-hover);
   }
 }
 

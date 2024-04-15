@@ -1,4 +1,5 @@
-import I18n from "I18n";
+import I18n from "discourse-i18n";
+
 export function formattedReminderTime(reminderAt, timezone) {
   let reminderAtDate = moment.tz(reminderAt, timezone);
   let formatted = reminderAtDate.format(I18n.t("dates.time"));

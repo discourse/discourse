@@ -1,11 +1,7 @@
 <div class="container email-login clearfix">
   <div class="content-wrapper">
     <div class="image-wrapper">
-      <img
-        src={{this.lockImageUrl}}
-        class="password-reset-img"
-        alt={{i18n "email_login.emoji"}}
-      />
+      <img src={{this.lockImageUrl}} class="password-reset-img" alt="" />
     </div>
 
     <form>
@@ -36,9 +32,12 @@
                 @isLogin={{true}}
               >
                 <SecondFactorInput
-                  @value={{this.secondFactorToken}}
+                  {{on
+                    "input"
+                    (with-event-value (fn (mut this.secondFactorToken)))
+                  }}
                   @secondFactorMethod={{this.secondFactorMethod}}
-                  @backupEnabled={{this.backupEnabled}}
+                  value={{this.secondFactorToken}}
                 />
               </SecondFactorForm>
             {{/if}}
@@ -57,8 +56,8 @@
             <DButton
               @label="email_login.confirm_button"
               @action={{action "finishLogin"}}
-              @type="submit"
-              @class="btn-primary"
+              type="submit"
+              class="btn-primary"
             />
           {{/unless}}
         </div>

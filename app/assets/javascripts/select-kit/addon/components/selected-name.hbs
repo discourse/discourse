@@ -4,9 +4,16 @@
     title={{this.title}}
     data-value={{this.value}}
     data-name={{this.name}}
-    role="option"
     class="select-kit-selected-name selected-name choice"
   >
+    {{#if this.selectKit.options.formName}}
+      <input
+        type="hidden"
+        name={{this.selectKit.options.formName}}
+        value={{this.value}}
+      />
+    {{/if}}
+
     {{#if this.item.icon}}
       {{d-icon this.item.icon}}
     {{/if}}
@@ -17,18 +24,16 @@
 
     {{#if this.shouldDisplayClearableButton}}
       <DButton
-        @class="btn-clear"
         @icon="times"
-        @action={{this.selectKit.deselect}}
-        @actionParam={{this.item}}
+        @action={{fn this.selectKit.deselect this.item}}
         @ariaLabel="clear_input"
+        class="btn-clear"
       />
     {{/if}}
   </div>
 {{else}}
   {{#if this.item.icon}}
     <div
-      role="option"
       lang={{this.lang}}
       class="select-kit-selected-name selected-name choice"
     >

@@ -1,7 +1,6 @@
-import I18n from "I18n";
-
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { formatUsername } from "discourse/lib/utilities";
+import I18n from "discourse-i18n";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 
 export default {
@@ -19,32 +18,30 @@ export default {
           "chat_invitation",
           (NotificationItemBase) => {
             return class extends NotificationItemBase {
+              linkTitle = I18n.t("notifications.titles.chat_invitation");
+              icon = "link";
+              description = I18n.t("notifications.chat_invitation");
+
               get linkHref() {
+                const data = this.notification.data;
                 const slug = slugifyChannel({
-                  title: this.notification.data.chat_channel_title,
-                  slug: this.notification.data.chat_channel_slug,
+                  title: data.chat_channel_title,
+                  slug: data.chat_channel_slug,
                 });
-                return `/chat/c/${slug || "-"}/${
-                  this.notification.data.chat_channel_id
-                }/${this.notification.data.chat_message_id}`;
-              }
 
-              get linkTitle() {
-                return I18n.t("notifications.titles.chat_invitation");
-              }
+                let url = `/chat/c/${slug || "-"}/${data.chat_channel_id}`;
 
-              get icon() {
-                return "link";
+                if (data.chat_message_id) {
+                  url += `/${data.chat_message_id}`;
+                }
+
+                return url;
               }
 
               get label() {
                 return formatUsername(
                   this.notification.data.invited_by_username
                 );
-              }
-
-              get description() {
-                return I18n.t("notifications.chat_invitation");
               }
             };
           }

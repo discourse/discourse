@@ -19,7 +19,13 @@ $breakpoints: (
 );
 
 @mixin breakpoint($bp, $rule: max-width, $type: screen, $sidebar: false) {
-  @media #{$type} and (#{$rule}: map-get($breakpoints, $bp)) {
+  $bp-value: map-get($breakpoints, $bp);
+
+  @if $rule == min-width {
+    $bp-value: calc(#{$bp-value} + 1px);
+  }
+
+  @media #{$type} and (#{$rule}: #{$bp-value}) {
     @content;
   }
 
@@ -152,8 +158,8 @@ $hpad: 0.65em;
 
 @mixin default-focus() {
   border-color: var(--tertiary);
-  outline: 1px solid var(--tertiary);
-  outline-offset: 0;
+  outline: 2px solid var(--tertiary);
+  outline-offset: -2px;
 }
 
 @mixin fa-rotate($degrees, $rotation) {
@@ -247,12 +253,13 @@ $hpad: 0.65em;
 }
 
 @mixin mention() {
-  display: inline-block; // https://bugzilla.mozilla.org/show_bug.cgi?id=1656119
+  display: inline;
   font-size: 0.93em;
   font-weight: normal;
   color: var(--primary);
-  padding: 0 0.3em 0.07em;
+  padding: 0.14em 0.34em 0.19em;
   background: var(--primary-low);
   border-radius: 0.6em;
   text-decoration: none;
+  text-wrap: nowrap;
 }

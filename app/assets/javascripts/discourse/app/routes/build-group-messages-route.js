@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
+import I18n from "discourse-i18n";
 
 export default (type) => {
   return UserTopicListRoute.extend({
@@ -39,12 +39,11 @@ export default (type) => {
         showPosters: true,
       });
 
-      const currentUser = this.currentUser;
-      this.searchService.set("searchContext", {
+      this.searchService.searchContext = {
         type: "private_messages",
-        id: currentUser.get("username_lower"),
-        user: currentUser,
-      });
+        id: this.currentUser.get("username_lower"),
+        user: this.currentUser,
+      };
     },
 
     emptyState() {
@@ -59,7 +58,7 @@ export default (type) => {
     },
 
     deactivate() {
-      this.searchService.set("searchContext", null);
+      this.searchService.searchContext = null;
     },
   });
 };

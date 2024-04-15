@@ -5,10 +5,13 @@ require "rbconfig"
 class ChromeInstalledChecker
   class ChromeError < StandardError
   end
+
   class ChromeVersionError < ChromeError
   end
+
   class ChromeNotInstalled < ChromeError
   end
+
   class ChromeVersionTooLow < ChromeError
   end
 

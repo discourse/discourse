@@ -56,7 +56,8 @@ if !args.include?("test") && !args.include?("build") && !args.include?("--proxy"
   args << PROXY
 end
 
-exit 1 if !system "yarn -s install --cwd #{YARN_DIR}"
+# Running yarn install in the root directory will also run it for YARN_DIR via a post-install hook
+exit 1 if !system "yarn", "-s", "install", "--cwd", RAILS_ROOT
 
 yarn_env = {}
 if ARGV.include?("--forward-host")

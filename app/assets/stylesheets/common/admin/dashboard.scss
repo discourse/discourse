@@ -1,12 +1,10 @@
 .admin-reports,
-.dashboard,
 .dashboard-next {
   &.admin-contents {
     margin: 10px 0 0 0;
   }
 }
 
-.dashboard,
 .dashboard-next {
   .navigation {
     display: flex;
@@ -24,6 +22,10 @@
       display: block;
       font-weight: bold;
       padding: 0.6em 1em 0.5em 1em;
+
+      .emoji {
+        margin-right: 0.5em;
+      }
     }
   }
 
@@ -42,6 +44,10 @@
   }
 
   &.dashboard-reports .navigation-item.reports {
+    @include active-navigation-item;
+  }
+
+  &.dashboard-new-features .navigation-item.new-features {
     @include active-navigation-item;
   }
 
@@ -496,36 +502,6 @@
   }
 }
 
-.dashboard-reports {
-  .reports-list {
-    display: flex;
-    flex-wrap: wrap;
-    list-style-type: none;
-    margin: 0 -1.5%;
-  }
-  .report {
-    margin: 1.5%;
-    border: 1px solid var(--primary-low);
-    flex: 1 1 28%;
-    transition: box-shadow 0.25s;
-    min-width: 225px;
-    max-width: 550px;
-    a {
-      display: block;
-      width: 100%;
-      height: 100%;
-      box-sizing: border-box;
-      padding: 1em;
-      .report-description {
-        color: var(--primary-high);
-      }
-    }
-    &:hover {
-      box-shadow: shadow("card");
-    }
-  }
-}
-
 .version-checks {
   display: flex;
   flex-wrap: wrap;
@@ -550,7 +526,7 @@
   justify-content: space-between;
   padding-top: 1em;
 
-  .upgrade-header {
+  .update-header {
     flex: 1 1 100%;
 
     @media screen and (max-width: 650px) {
@@ -651,21 +627,8 @@
   }
 
   &:not(.ordered-first) {
-    .section-title {
-      margin-top: 1.5em;
-    }
-
     .new-features-dismiss {
       display: none;
-    }
-  }
-
-  .section-body {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    grid-gap: 1.5em;
-    &.three-or-more-items {
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     }
   }
 
@@ -683,22 +646,29 @@
 .admin-new-feature-item {
   display: flex;
   align-items: flex-start;
+  margin-bottom: 1.5em;
+  background-color: var(--primary-very-low);
+  padding: 1em;
+  max-width: 45rem;
 
-  .new-feature-emoji {
-    font-size: 3.5em;
+  &__new-feature-emoji {
+    font-size: 1.2em;
+    padding-left: 0;
     padding-right: 0.5em;
-    padding-left: 0.5em;
-    width: 25%;
-    text-align: center;
   }
 
-  .new-feature-content {
+  &__content {
     padding-right: 0.5em;
-    width: 75%;
-    .header {
-      font-size: var(--font-up-1);
-      font-weight: bold;
-      margin-bottom: 0.5em;
-    }
+    width: 100%;
+  }
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    font-size: var(--font-up-1);
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+  &__screenshot {
+    width: 100%;
   }
 }

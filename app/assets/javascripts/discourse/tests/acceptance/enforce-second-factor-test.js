@@ -1,9 +1,9 @@
+import { click, currentRouteName, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentRouteName, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 async function catchAbortedTransition() {
   try {
@@ -15,39 +15,25 @@ async function catchAbortedTransition() {
   }
 }
 
-acceptance("Enforce Second Factor", function (needs) {
+acceptance("Enforce Second Factor for unconfirmed session", function (needs) {
   needs.user();
   needs.pretender((server, helper) => {
     server.post("/u/second_factors.json", () => {
       return helper.response({
         success: "OK",
-        password_required: "true",
+        unconfirmed_session: "true",
       });
     });
-  });
-  needs.settings({
-    navigation_menu: "legacy",
   });
 
   test("as an admin", async function (assert) {
     await visit("/u/eviltrout/preferences/second-factor");
     this.siteSettings.enforce_second_factor = "staff";
 
-    await catchAbortedTransition();
-
     assert.strictEqual(
       currentRouteName(),
-      "preferences.second-factor",
-      "it will not transition from second-factor preferences"
-    );
-
-    await click("#toggle-hamburger-menu");
-    await click("a.admin-link");
-
-    assert.strictEqual(
-      currentRouteName(),
-      "preferences.second-factor",
-      "it stays at second-factor preferences"
+      "preferences.security",
+      "it transitions to security preferences"
     );
   });
 
@@ -57,21 +43,10 @@ acceptance("Enforce Second Factor", function (needs) {
     await visit("/u/eviltrout/preferences/second-factor");
     this.siteSettings.enforce_second_factor = "all";
 
-    await catchAbortedTransition();
-
     assert.strictEqual(
       currentRouteName(),
-      "preferences.second-factor",
-      "it will not transition from second-factor preferences"
-    );
-
-    await click("#toggle-hamburger-menu");
-    await click("a.about-link");
-
-    assert.strictEqual(
-      currentRouteName(),
-      "preferences.second-factor",
-      "it stays at second-factor preferences"
+      "preferences.security",
+      "it will transition to security preferences"
     );
   });
 
@@ -90,8 +65,13 @@ acceptance("Enforce Second Factor", function (needs) {
       "it will transition from second-factor preferences"
     );
 
-    await click("#toggle-hamburger-menu");
-    await click("a.about-link");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+    );
+
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='about']"
+    );
 
     assert.strictEqual(
       currentRouteName(),

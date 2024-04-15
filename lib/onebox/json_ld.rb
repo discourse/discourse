@@ -13,7 +13,7 @@ module Onebox
     private
 
     def extract(doc)
-      return {} if Onebox::Helpers.blank?(doc)
+      return {} if doc.blank?
 
       doc
         .css('script[type="application/ld+json"]')

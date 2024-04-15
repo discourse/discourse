@@ -1,11 +1,13 @@
-import I18n from "I18n";
 import Controller from "@ember/controller";
-import getUrl from "discourse-common/lib/get-url";
-import discourseComputed from "discourse-common/utils/decorators";
+import { service } from "@ember/service";
 import { resendActivationEmail } from "discourse/lib/user-activation";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
+import getUrl from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
+  router: service(),
   envelopeImageUrl: getUrl("/images/envelope.svg"),
 
   @discourseComputed
@@ -21,11 +23,11 @@ export default Controller.extend({
   actions: {
     sendActivationEmail() {
       resendActivationEmail(this.get("accountCreated.username")).then(() => {
-        this.transitionToRoute("account-created.resent");
+        this.router.transitionTo("account-created.resent");
       });
     },
     editActivationEmail() {
-      this.transitionToRoute("account-created.edit-email");
+      this.router.transitionTo("account-created.edit-email");
     },
   },
 });

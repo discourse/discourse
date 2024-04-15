@@ -152,7 +152,7 @@ RSpec.describe EmbeddableHost do
   end
 
   describe ".record_for_url" do
-    fab!(:embeddable_host) { Fabricate(:embeddable_host) }
+    fab!(:embeddable_host)
 
     it "returns the right record if given URL matches host" do
       expect(EmbeddableHost.record_for_url("https://#{embeddable_host.host}")).to eq(

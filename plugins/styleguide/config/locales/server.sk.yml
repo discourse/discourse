@@ -5,3 +5,7 @@
 # https://translate.discourse.org/
 
 sk:
+  site_settings:
+    styleguide_enabled: 'Povolenie cesty "/styleguide" na pomoc pri štylizácii Discourse'
+    styleguide_admin_only: "Obmedzenie viditeľnosti sprievodcu štýlom pre administrátorov"
+    styleguide_allowed_groups: "Obmedzuje viditeľnosť sprievodcu štýlmi pre členov poskytnutých skupín"

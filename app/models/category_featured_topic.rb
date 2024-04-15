@@ -29,8 +29,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
 
     if batched
       if categories.length == batch_size
-        next_id =
-          Category.where("id > ?", categories.last.id).order("id asc").limit(1).pluck(:id)[0]
+        next_id = Category.where("id > ?", categories.last.id).order(:id).pick(:id)
         next_id ? Discourse.redis.setex(NEXT_CATEGORY_ID_KEY, 1.day, next_id) : clear_batch!
       else
         clear_batch!

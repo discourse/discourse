@@ -1,10 +1,12 @@
+<Chat::Admin::ExportMessages />
+
 {{#if this.selectedWebhook}}
   <DButton
-    @class="incoming-chat-webhooks-back"
     @icon="chevron-left"
     @label="chat.incoming_webhooks.back"
     @title="chat.incoming_webhooks.back"
-    @action={{action (mut this.selectedWebhookId) null}}
+    @action={{fn (mut this.selectedWebhookId) null}}
+    class="incoming-chat-webhooks-back"
   />
 
   <form class="form-vertical">
@@ -68,18 +70,18 @@
         @isActive={{this.emojiPickerIsActive}}
         @isEditorFocused={{true}}
         @emojiSelected={{action "emojiSelected"}}
-        @onEmojiPickerClose={{action (mut this.emojiPickerIsActive) false}}
+        @onEmojiPickerClose={{fn (mut this.emojiPickerIsActive) false}}
       />
 
       {{#unless this.emojiPickerIsActive}}
         <DButton
-          @class="btn-primary"
           @label="chat.incoming_webhooks.select_emoji"
-          @action={{action (mut this.emojiPickerIsActive) true}}
+          @action={{fn (mut this.emojiPickerIsActive) true}}
+          class="btn-primary"
         />
         <DButton
           @label="chat.incoming_webhooks.reset_emoji"
-          @action={{action (mut this.selectedWebhook.emoji) null}}
+          @action={{fn (mut this.selectedWebhook.emoji) null}}
           @disabled={{not this.selectedWebhook.emoji}}
         />
       {{/unless}}
@@ -98,11 +100,11 @@
     </div>
 
     <DButton
-      @class="btn-primary"
       @label="chat.incoming_webhooks.save"
       @title="chat.incoming_webhooks.save"
-      @action={{action "saveEdit"}}
+      @action={{this.saveEdit}}
       @disabled={{this.saveEditDisabled}}
+      class="btn-primary"
     />
   </form>
 {{else}}
@@ -119,27 +121,27 @@
       <ChatChannelChooser
         @content={{this.model.chat_channels}}
         @value={{this.newWebhookChannelId}}
-        @onChange={{action (mut this.newWebhookChannelId)}}
+        @onChange={{fn (mut this.newWebhookChannelId)}}
       />
       <DButton
         @label="chat.create"
         @title="chat.create"
-        @class="btn-primary create-new-incoming-webhook-btn"
         @disabled={{not this.nameAndChannelValid}}
-        @action={{action "createNewWebhook"}}
+        @action={{this.createNewWebhook}}
+        class="btn-primary create-new-incoming-webhook-btn"
       />
       <DButton
         @label="chat.cancel"
         @title="chat.cancel"
-        @action={{action "resetNewWebhook"}}
+        @action={{this.resetNewWebhook}}
       />
     </div>
   {{else}}
     <DButton
       @label="chat.incoming_webhooks.new"
       @title="chat.incoming_webhooks.new"
-      @class="btn-primary"
-      @action={{action (mut this.creatingNew) true}}
+      @action={{fn (mut this.creatingNew) true}}
+      class="btn-primary"
     />
   {{/if}}
 
@@ -166,23 +168,22 @@
               {{/if}}
             </div>
 
-            <div><ChatChannelTitle @channel={{webhook.chat_channel}} /></div>
+            <div><ChannelTitle @channel={{webhook.chat_channel}} /></div>
             <div>{{webhook.description}}</div>
           </div>
 
           <div class="incoming-chat-webhooks--row--controls">
             <div>
               <DButton
-                @class="btn"
                 @icon="pencil-alt"
                 @label="chat.incoming_webhooks.edit"
-                @action={{action (mut this.selectedWebhookId) webhook.id}}
+                @action={{fn (mut this.selectedWebhookId) webhook.id}}
               />
               <DButton
-                @class="btn btn-danger"
                 @icon="trash-alt"
                 @title="chat.incoming_webhooks.delete"
-                @action={{action "destroyWebhook" webhook}}
+                @action={{fn this.destroyWebhook webhook}}
+                class="btn-danger"
               />
             </div>
           </div>

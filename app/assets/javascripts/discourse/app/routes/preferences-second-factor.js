@@ -1,31 +1,30 @@
-import RestrictedUserRoute from "discourse/routes/restricted-user";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import RestrictedUserRoute from "discourse/routes/restricted-user";
 
 export default RestrictedUserRoute.extend({
-  showFooter: true,
+  currentUser: service(),
+  siteSettings: service(),
+  router: service(),
 
   model() {
     return this.modelFor("user");
   },
 
-  renderTemplate() {
-    return this.render({ into: "user" });
-  },
-
   setupController(controller, model) {
-    controller.setProperties({ model, newUsername: model.get("username") });
+    controller.setProperties({ model, newUsername: model.username });
     controller.set("loading", true);
 
     model
-      .loadSecondFactorCodes("")
+      .loadSecondFactorCodes()
       .then((response) => {
         if (response.error) {
           controller.set("errorMessage", response.error);
+        } else if (response.unconfirmed_session) {
+          this.router.transitionTo("preferences.security");
         } else {
           controller.setProperties({
             errorMessage: null,
-            loaded: !response.password_required,
-            dirty: !!response.password_required,
             totps: response.totps,
             security_keys: response.security_keys,
           });
@@ -39,17 +38,14 @@ export default RestrictedUserRoute.extend({
   willTransition(transition) {
     this._super(...arguments);
 
-    const controller = this.controllerFor("preferences/second-factor");
-    const user = controller.get("currentUser");
-    const settings = controller.get("siteSettings");
-
     if (
       transition.targetName === "preferences.second-factor" ||
-      !user ||
-      user.is_anonymous ||
-      user.second_factor_enabled ||
-      (settings.enforce_second_factor === "staff" && !user.staff) ||
-      settings.enforce_second_factor === "no"
+      !this.currentUser ||
+      this.currentUser.is_anonymous ||
+      this.currentUser.second_factor_enabled ||
+      (this.siteSettings.enforce_second_factor === "staff" &&
+        !this.currentUser.staff) ||
+      this.siteSettings.enforce_second_factor === "no"
     ) {
       return true;
     }

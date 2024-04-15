@@ -1,11 +1,7 @@
-import {
-  acceptance,
-  count,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 acceptance("Create Account - User Fields", function (needs) {
   needs.site({
@@ -35,45 +31,40 @@ acceptance("Create Account - User Fields", function (needs) {
     await visit("/");
     await click("header .sign-up-button");
 
-    assert.ok(exists(".create-account"), "it shows the create account modal");
-    assert.ok(exists(".user-field"), "it has at least one user field");
+    assert.dom(".create-account").exists("it shows the create account modal");
+    assert.dom(".user-field").exists("it has at least one user field");
 
-    await click(".modal-footer .btn-primary");
-    assert.strictEqual(
-      query("#account-email-validation").innerText.trim(),
-      "Please enter an email address"
-    );
+    await click(".d-modal__footer .btn-primary");
+    assert
+      .dom("#account-email-validation")
+      .hasText(I18n.t("user.email.required"));
 
     await fillIn("#new-account-name", "Dr. Good Tuna");
     await fillIn("#new-account-password", "cool password bro");
     await fillIn("#new-account-email", "good.tuna@test.com");
     await fillIn("#new-account-username", "goodtuna");
 
-    assert.ok(
-      exists("#username-validation.good"),
-      "the username validation is good"
-    );
-    assert.ok(
-      exists("#account-email-validation.good"),
-      "the email validation is good"
-    );
+    assert
+      .dom("#username-validation.good")
+      .exists("the username validation is good");
+    assert
+      .dom("#account-email-validation.good")
+      .exists("the email validation is good");
 
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
     await fillIn(".user-field input[type=text]:nth-of-type(1)", "Barky");
     await click(".user-field input[type=checkbox]");
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
   });
 
   test("can submit with enter", async function (assert) {
     await visit("/");
     await click("header .sign-up-button");
-    await triggerKeyEvent(".modal-footer .btn-primary", "keydown", "Enter");
+    await triggerKeyEvent("#new-account-email", "keydown", "Enter");
 
-    assert.strictEqual(
-      count("#modal-alert:visible"),
-      1,
-      "hitting Enter triggers action"
-    );
+    assert
+      .dom("#account-email-validation")
+      .hasText(I18n.t("user.email.required"), "hitting Enter triggers action");
   });
 
   test("shows validation error for user fields", async function (assert) {
@@ -83,16 +74,14 @@ acceptance("Create Account - User Fields", function (needs) {
     await fillIn("#new-account-password", "cool password bro");
     await fillIn(".user-field-whats-your-dad-like input", "cool password bro");
 
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
 
-    assert.ok(
-      exists(".user-field-what-is-your-pets-name .tip.bad"),
-      "shows required field error"
-    );
+    assert
+      .dom(".user-field-what-is-your-pets-name .tip.bad")
+      .exists("shows required field error");
 
-    assert.ok(
-      exists(".user-field-whats-your-dad-like .tip.bad"),
-      "shows same as password error"
-    );
+    assert
+      .dom(".user-field-whats-your-dad-like .tip.bad")
+      .exists("shows same as password error");
   });
 });

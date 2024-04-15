@@ -1,4 +1,5 @@
-import { withFrozenTime } from "discourse/tests/helpers/qunit-helpers";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import {
   laterThisWeek,
   laterToday,
@@ -6,8 +7,7 @@ import {
   startOfDay,
   tomorrow,
 } from "discourse/lib/time-utils";
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
+import { withFrozenTime } from "discourse/tests/helpers/qunit-helpers";
 
 const timezone = "Australia/Brisbane";
 

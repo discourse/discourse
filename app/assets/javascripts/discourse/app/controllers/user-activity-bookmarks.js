@@ -1,18 +1,20 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { equal, notEmpty } from "@ember/object/computed";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseComputed from "discourse-common/utils/decorators";
+import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import Bookmark from "discourse/models/bookmark";
-import I18n from "I18n";
-import { Promise } from "rsvp";
-import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   queryParams: ["q"],
   q: null,
 
+  router: service(),
   application: controller(),
   user: controller(),
   loading: false,
@@ -51,7 +53,7 @@ export default Controller.extend({
 
   @action
   search() {
-    this.transitionToRoute({
+    this.router.transitionTo({
       queryParams: { q: this.searchTerm },
     });
   },
@@ -94,7 +96,7 @@ export default Controller.extend({
     this.set("permissionDenied", true);
   },
 
-  _processLoadResponse(searchTerm, response) {
+  async _processLoadResponse(searchTerm, response) {
     if (!response || !response.user_bookmark_list) {
       this.model.loadMoreUrl = null;
       return;
@@ -106,6 +108,7 @@ export default Controller.extend({
 
     if (response.bookmarks) {
       const bookmarkModels = response.bookmarks.map(this.transform);
+      await Bookmark.applyTransformations(bookmarkModels);
       this.model.bookmarks.pushObjects(bookmarkModels);
       this.session.set("bookmarksModel", this.model);
     }

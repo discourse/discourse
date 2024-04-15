@@ -1,7 +1,7 @@
-import discourseComputed, { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { gt, union } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   topic: null,

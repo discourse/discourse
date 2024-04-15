@@ -1,8 +1,10 @@
-import { registerUnbound } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse-common/lib/helpers";
 
-registerUnbound(
-  "component-for-collection",
-  (collectionIdentifier, selectKit) => {
-    return selectKit.modifyComponentForCollection(collectionIdentifier);
-  }
-);
+registerRawHelper("component-for-collection", componentForCollection);
+
+export default function componentForCollection(
+  collectionIdentifier,
+  selectKit
+) {
+  return selectKit.modifyComponentForCollection(collectionIdentifier);
+}

@@ -17,15 +17,40 @@ RSpec.describe DiscourseHub do
     end
   end
 
+  describe ".discover_enrollment" do
+    it "should trigger a POST request to hub" do
+      stub_request(
+        :post,
+        (ENV["HUB_BASE_URL"] || "http://local.hub:3000/api") + "/discover/enroll",
+      ).with(body: JSON[DiscourseHub.discover_enrollment_payload]).to_return(
+        status: 200,
+        body: "",
+        headers: {
+        },
+      )
+
+      DiscourseHub.discover_enrollment
+    end
+  end
+
+  describe ".discover_enrollment_payload" do
+    it "should return the correct payload" do
+      payload = DiscourseHub.discover_enrollment_payload
+      expect(payload[:forum_url]).to eq(Discourse.base_url)
+      expect(payload[:forum_title]).to eq(SiteSetting.title)
+      expect(payload[:locale]).to eq(I18n.locale)
+    end
+  end
+
   describe ".version_check_payload" do
     describe "when Discourse Hub has not fetched stats since past 7 days" do
       it "should include stats" do
         DiscourseHub.stats_fetched_at = 8.days.ago
         json = JSON.parse(DiscourseHub.version_check_payload.to_json)
 
-        expect(json["topic_count"]).to be_present
-        expect(json["post_count"]).to be_present
-        expect(json["user_count"]).to be_present
+        expect(json["topics_count"]).to be_present
+        expect(json["posts_count"]).to be_present
+        expect(json["users_count"]).to be_present
         expect(json["topics_7_days"]).to be_present
         expect(json["topics_30_days"]).to be_present
         expect(json["posts_7_days"]).to be_present
@@ -34,7 +59,7 @@ RSpec.describe DiscourseHub do
         expect(json["users_30_days"]).to be_present
         expect(json["active_users_7_days"]).to be_present
         expect(json["active_users_30_days"]).to be_present
-        expect(json["like_count"]).to be_present
+        expect(json["likes_count"]).to be_present
         expect(json["likes_7_days"]).to be_present
         expect(json["likes_30_days"]).to be_present
         expect(json["installed_version"]).to be_present

@@ -94,7 +94,6 @@ module Discourse
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
     config.active_record.belongs_to_required_by_default = false
-    config.active_record.legacy_connection_handling = true
     config.active_record.yaml_column_permitted_classes = [
       Hash,
       HashWithIndifferentAccess,
@@ -168,6 +167,9 @@ module Discourse
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware,
                            ContentSecurityPolicy::Middleware
 
+    require "middleware/csp_script_nonce_injector"
+    config.middleware.insert_after(ActionDispatch::Flash, Middleware::CspScriptNonceInjector)
+
     require "middleware/discourse_public_exceptions"
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 
@@ -178,6 +180,15 @@ module Discourse
                                  extensions: %w[.js .es6 .js.es6],
                                  charset: :unicode
     Sprockets.register_postprocessor "application/javascript", DiscourseJsProcessor
+
+    class SprocketsSassUnsupported
+      def self.call(*args)
+        raise "Discourse does not support compiling scss/sass files via Sprockets"
+      end
+    end
+
+    Sprockets.register_engine(".sass", SprocketsSassUnsupported, silence_deprecation: true)
+    Sprockets.register_engine(".scss", SprocketsSassUnsupported, silence_deprecation: true)
 
     Discourse::Application.initializer :prepend_ember_assets do |app|
       # Needs to be in its own initializer so it runs after the append_assets_path initializer defined by Sprockets

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Fabricator(:post) do
-  user
+  user { Fabricate(:user, refresh_auto_groups: true) }
   topic { |attrs| Fabricate(:topic, user: attrs[:user]) }
   raw "Hello world"
   post_type Post.types[:regular]
@@ -14,6 +14,23 @@ Fabricator(:post_with_long_raw_content, from: :post) do
   raw "This is a sample post with semi-long raw content. The raw content is also more than
       two hundred characters to satisfy any test conditions that require content longer
       than the typical test post raw content. It really is some long content, folks."
+end
+
+Fabricator(:post_with_very_long_raw_content, from: :post) do
+  raw "This is a sample post with very long raw content. The raw content is actually so long
+      that there is no way it could be longer. It is adding so many characters to the post content
+      so that we can use it in testing for scenarios where a post is very long and might cause issues.
+      The post is so long in fact, that the text is split into various paragraphs. Some people are not
+      very concise in their words. They tend to ramble and ramble on about certain information. This
+      is why we need to make sure that we are going about testing in certain ways so that when people
+      such as those that ramble on, are making posts, we can be sure that the posts are not causing
+      any issues. When issues happen it can cause lots of problems. For example, if a post is too long,
+      it affects the way it can be viewed by others.
+      Depending on the screen size, it may cause a lot of scrolling to take place. This is not good.
+      In certain cases, we want to truncate the content of the post when its too long so that it does
+      not cause issues. This is why we need to make sure that we are testing for these scenarios. I think
+      this post has gotten very long, however, I would like to make sure that it is a bit longer, so I
+      will add one final sentence. This is my final sentence, thank you for reading, goodbye."
 end
 
 Fabricator(:post_with_youtube, from: :post) do
@@ -61,7 +78,7 @@ Fabricator(:post_with_uploaded_image, from: :post) do
 end
 
 Fabricator(:post_with_an_attachment, from: :post) do
-  raw "<a class=\"attachment\" href=\"/#{Discourse.store.upload_path}/origina/1X/66b3ed1503efc936.zip\">archive.zip</a>"
+  raw "<a class=\"attachment\" href=\"/#{Discourse.store.upload_path}/original/1X/66b3ed1503efc936.zip\">archive.zip</a>"
 end
 
 Fabricator(:post_with_unsized_images, from: :post) do
@@ -107,7 +124,7 @@ Fabricator(:post_with_uploads_and_links, from: :post) { raw <<~MD }
   MD
 
 Fabricator(:post_with_external_links, from: :post) do
-  user
+  user { Fabricate(:user, refresh_auto_groups: true) }
   topic
   raw <<~MD
     Here's a link to twitter: http://twitter.com

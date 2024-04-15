@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::SearchLogsController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   before { SearchLog.log(term: "ruby", search_type: :header, ip_address: "127.0.0.1") }
 

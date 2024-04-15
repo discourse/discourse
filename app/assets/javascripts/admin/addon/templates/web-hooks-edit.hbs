@@ -23,7 +23,7 @@
         @content={{this.contentTypes}}
         @name="content-type"
         @value={{this.model.content_type}}
-        @onChange={{action (mut this.model.content_type)}}
+        @onChange={{fn (mut this.model.content_type)}}
       />
     </div>
 
@@ -43,8 +43,9 @@
       <label class="subscription-choice">
         <RadioButton
           @name="subscription-choice"
-          @value="individual"
-          @selection={{this.model.webhookType}}
+          @onChange={{fn (mut this.model.wildcard_web_hook) false}}
+          @value={{false}}
+          @selection={{this.model.wildcard_web_hook}}
         />
         {{i18n "admin.web_hooks.individual_event"}}
         <InputTip @validation={{this.eventTypeValidation}} />
@@ -52,20 +53,27 @@
 
       {{#unless this.model.wildcard_web_hook}}
         <div class="event-selector">
-          {{#each this.eventTypes as |type|}}
-            <WebhookEventChooser
-              @type={{type}}
-              @eventTypes={{this.model.web_hook_event_types}}
-            />
-          {{/each}}
+          {{#each-in this.groupedEventTypes as |group eventTypes|}}
+            <div class="event-group">
+              {{i18n (concat "admin.web_hooks." group "_event.group_name")}}
+              {{#each eventTypes as |type|}}
+                <WebhookEventChooser
+                  @type={{type}}
+                  @group={{group}}
+                  @eventTypes={{this.model.web_hook_event_types}}
+                />
+              {{/each}}
+            </div>
+          {{/each-in}}
         </div>
       {{/unless}}
 
       <label class="subscription-choice">
         <RadioButton
           @name="subscription-choice"
-          @value="wildcard"
-          @selection={{this.model.webhookType}}
+          @onChange={{fn (mut this.model.wildcard_web_hook) true}}
+          @value={{true}}
+          @selection={{this.model.wildcard_web_hook}}
         />
         {{i18n "admin.web_hooks.wildcard_event"}}
       </label>
@@ -78,7 +86,7 @@
           }}</label>
         <CategorySelector
           @categories={{this.model.categories}}
-          @onChange={{action (mut this.model.categories)}}
+          @onChange={{fn (mut this.model.categories)}}
         />
         <div class="instructions">{{i18n
             "admin.web_hooks.categories_filter_instructions"
@@ -133,7 +141,7 @@
     </label>
 
     <div>
-      <label>
+      <label class="checkbox-label">
         <Input @type="checkbox" name="active" @checked={{this.model.active}} />
         {{i18n "admin.web_hooks.active"}}
       </label>
@@ -147,9 +155,9 @@
   <div class="controls">
     <DButton
       @translatedLabel={{this.saveButtonText}}
-      @action={{action "save"}}
+      @action={{this.save}}
       @disabled={{this.saveButtonDisabled}}
-      @class="btn-primary admin-webhooks__save-button"
+      class="btn-primary admin-webhooks__save-button"
     />
 
     {{#if this.model.isNew}}

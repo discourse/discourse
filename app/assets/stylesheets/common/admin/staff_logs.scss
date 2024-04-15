@@ -282,6 +282,9 @@ table.screened-ip-addresses {
 
 .watched-words-uploader {
   display: inline-block;
+  label {
+    font-weight: normal;
+  }
 }
 
 .watched-words-list {

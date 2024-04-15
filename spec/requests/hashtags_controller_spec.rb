@@ -4,7 +4,7 @@ RSpec.describe HashtagsController do
   fab!(:category) { Fabricate(:category, name: "Random", slug: "random") }
   fab!(:tag) { Fabricate(:tag, name: "bug") }
 
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   fab!(:private_category) do
     Fabricate(:private_category, group: group, name: "Staff", slug: "staff")
   end
@@ -19,306 +19,313 @@ RSpec.describe HashtagsController do
     tag_group
   end
 
-  describe "#lookup" do
-    context "when enable_experimental_hashtag_autocomplete disabled" do
-      # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
-      before { SiteSetting.enable_experimental_hashtag_autocomplete = false }
-      context "when logged in" do
-        context "as regular user" do
-          before { sign_in(Fabricate(:user)) }
+  describe "#by_ids" do
+    context "when logged in" do
+      context "as anonymous user" do
+        it "does not return private categories" do
+          get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
 
-          it "returns only valid categories and tags" do
-            get "/hashtags.json",
-                params: {
-                  slugs: [category.slug, private_category.slug, "none", tag.name, hidden_tag.name],
-                }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body).to eq(
-              "categories" => {
-                category.slug => category.url,
-              },
-              "tags" => {
-                tag.name => tag.full_url,
-              },
-            )
-          end
-
-          it "handles tags with the TAG_HASHTAG_POSTFIX" do
-            get "/hashtags.json",
-                params: {
-                  slugs: ["#{tag.name}#{PrettyText::Helpers::TAG_HASHTAG_POSTFIX}"],
-                }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body).to eq(
-              "categories" => {
-              },
-              "tags" => {
-                tag.name => tag.full_url,
-              },
-            )
-          end
-
-          it "does not return restricted categories or hidden tags" do
-            get "/hashtags.json", params: { slugs: [private_category.slug, hidden_tag.name] }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body).to eq("categories" => {}, "tags" => {})
-          end
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq(
+            {
+              "category" => [
+                {
+                  "relative_url" => category.url,
+                  "text" => category.name,
+                  "description" => nil,
+                  "colors" => [category.color],
+                  "icon" => "folder",
+                  "type" => "category",
+                  "ref" => category.slug,
+                  "slug" => category.slug,
+                  "id" => category.id,
+                },
+              ],
+            },
+          )
         end
 
-        context "as admin" do
-          fab!(:admin) { Fabricate(:admin) }
+        it "does not return categories on login_required sites" do
+          SiteSetting.login_required = true
 
-          before { sign_in(admin) }
+          get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
 
-          it "returns restricted categories and hidden tags" do
-            group.add(admin)
-
-            get "/hashtags.json", params: { slugs: [private_category.slug, hidden_tag.name] }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body).to eq(
-              "categories" => {
-                private_category.slug => private_category.url,
-              },
-              "tags" => {
-                hidden_tag.name => hidden_tag.full_url,
-              },
-            )
-          end
-        end
-
-        context "with sub-sub-categories" do
-          before do
-            SiteSetting.max_category_nesting = 3
-            sign_in(Fabricate(:user))
-          end
-
-          it "works" do
-            foo = Fabricate(:category_with_definition, slug: "foo")
-            foobar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: foo.id)
-            foobarbaz =
-              Fabricate(:category_with_definition, slug: "baz", parent_category_id: foobar.id)
-
-            qux = Fabricate(:category_with_definition, slug: "qux")
-            quxbar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: qux.id)
-            quxbarbaz =
-              Fabricate(:category_with_definition, slug: "baz", parent_category_id: quxbar.id)
-
-            invalid_slugs = [":"]
-            child_slugs = %w[bar baz]
-            deeply_nested_slugs = %w[foo:bar:baz qux:bar:baz]
-            get "/hashtags.json",
-                params: {
-                  slugs:
-                    invalid_slugs + child_slugs + deeply_nested_slugs +
-                      %w[foo foo:bar bar:baz qux qux:bar],
-                }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body["categories"]).to eq(
-              "foo" => foo.url,
-              "foo:bar" => foobar.url,
-              "bar:baz" => foobarbaz.id < quxbarbaz.id ? foobarbaz.url : quxbarbaz.url,
-              "qux" => qux.url,
-              "qux:bar" => quxbar.url,
-            )
-          end
+          expect(response.status).to eq(403)
         end
       end
 
-      context "when not logged in" do
-        it "returns invalid access" do
-          get "/hashtags.json", params: { slugs: [] }
-          expect(response.status).to eq(403)
+      context "as regular user" do
+        before { sign_in(Fabricate(:user)) }
+
+        it "does not return private categories" do
+          get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq(
+            {
+              "category" => [
+                {
+                  "relative_url" => category.url,
+                  "text" => category.name,
+                  "description" => nil,
+                  "colors" => [category.color],
+                  "icon" => "folder",
+                  "type" => "category",
+                  "ref" => category.slug,
+                  "slug" => category.slug,
+                  "id" => category.id,
+                },
+              ],
+            },
+          )
+        end
+      end
+
+      context "as admin" do
+        before { sign_in(Fabricate(:admin)) }
+
+        it "returns private categories" do
+          get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["category"]).to contain_exactly(
+            {
+              "relative_url" => category.url,
+              "text" => category.name,
+              "description" => nil,
+              "colors" => [category.color],
+              "icon" => "folder",
+              "type" => "category",
+              "ref" => category.slug,
+              "slug" => category.slug,
+              "id" => category.id,
+            },
+            {
+              "relative_url" => private_category.url,
+              "text" => private_category.name,
+              "description" => nil,
+              "colors" => [private_category.color],
+              "icon" => "folder",
+              "type" => "category",
+              "ref" => private_category.slug,
+              "slug" => private_category.slug,
+              "id" => private_category.id,
+            },
+          )
         end
       end
     end
 
-    context "when enable_experimental_hashtag_autocomplete enabled" do
-      before { SiteSetting.enable_experimental_hashtag_autocomplete = true }
+    context "when not logged in" do
+      it "does not return private categories" do
+        get "/hashtags/by-ids.json", params: { category: [category.id, private_category.id, -1] }
 
-      context "when logged in" do
-        context "as regular user" do
-          before { sign_in(Fabricate(:user)) }
-
-          it "returns only valid categories and tags" do
-            get "/hashtags.json",
-                params: {
-                  slugs: [category.slug, private_category.slug, "none", tag.name, hidden_tag.name],
-                  order: %w[category tag],
-                }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body).to eq(
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq(
+          {
+            "category" => [
               {
-                "category" => [
-                  {
-                    "relative_url" => category.url,
-                    "text" => category.name,
-                    "description" => nil,
-                    "icon" => "folder",
-                    "type" => "category",
-                    "ref" => category.slug,
-                    "slug" => category.slug,
-                    "id" => category.id,
-                  },
-                ],
-                "tag" => [
-                  {
-                    "relative_url" => tag.url,
-                    "text" => tag.name,
-                    "description" => nil,
-                    "icon" => "tag",
-                    "type" => "tag",
-                    "ref" => tag.name,
-                    "slug" => tag.name,
-                    "secondary_text" => "x0",
-                    "id" => tag.id,
-                  },
-                ],
+                "relative_url" => category.url,
+                "text" => category.name,
+                "description" => nil,
+                "colors" => [category.color],
+                "icon" => "folder",
+                "type" => "category",
+                "ref" => category.slug,
+                "slug" => category.slug,
+                "id" => category.id,
               },
-            )
-          end
+            ],
+          },
+        )
+      end
+    end
+  end
 
-          it "handles tags with the ::tag type suffix" do
-            get "/hashtags.json", params: { slugs: ["#{tag.name}::tag"], order: %w[category tag] }
+  describe "#lookup" do
+    context "when logged in" do
+      context "as regular user" do
+        before { sign_in(Fabricate(:user)) }
 
-            expect(response.status).to eq(200)
-            expect(response.parsed_body).to eq(
-              {
-                "category" => [],
-                "tag" => [
-                  {
-                    "relative_url" => tag.url,
-                    "text" => tag.name,
-                    "description" => nil,
-                    "icon" => "tag",
-                    "type" => "tag",
-                    "ref" => "#{tag.name}::tag",
-                    "slug" => tag.name,
-                    "secondary_text" => "x0",
-                    "id" => tag.id,
-                  },
-                ],
-              },
-            )
-          end
+        it "returns only valid categories and tags" do
+          get "/hashtags.json",
+              params: {
+                slugs: [category.slug, private_category.slug, "none", tag.name, hidden_tag.name],
+                order: %w[category tag],
+              }
 
-          it "does not return restricted categories or hidden tags" do
-            get "/hashtags.json",
-                params: {
-                  slugs: [private_category.slug, hidden_tag.name],
-                  order: %w[category tag],
-                }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body).to eq({ "category" => [], "tag" => [] })
-          end
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq(
+            {
+              "category" => [
+                {
+                  "relative_url" => category.url,
+                  "text" => category.name,
+                  "description" => nil,
+                  "colors" => [category.color],
+                  "icon" => "folder",
+                  "type" => "category",
+                  "ref" => category.slug,
+                  "slug" => category.slug,
+                  "id" => category.id,
+                },
+              ],
+              "tag" => [
+                {
+                  "relative_url" => tag.url,
+                  "text" => tag.name,
+                  "description" => nil,
+                  "colors" => nil,
+                  "icon" => "tag",
+                  "type" => "tag",
+                  "ref" => tag.name,
+                  "slug" => tag.name,
+                  "secondary_text" => "x0",
+                  "id" => tag.id,
+                },
+              ],
+            },
+          )
         end
 
-        context "as admin" do
-          fab!(:admin) { Fabricate(:admin) }
+        it "handles tags with the ::tag type suffix" do
+          get "/hashtags.json", params: { slugs: ["#{tag.name}::tag"], order: %w[category tag] }
 
-          before { sign_in(admin) }
-
-          it "returns restricted categories and hidden tags" do
-            group.add(admin)
-
-            get "/hashtags.json",
-                params: {
-                  slugs: [private_category.slug, hidden_tag.name],
-                  order: %w[category tag],
-                }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body).to eq(
-              {
-                "category" => [
-                  {
-                    "relative_url" => private_category.url,
-                    "text" => private_category.name,
-                    "description" => nil,
-                    "icon" => "folder",
-                    "type" => "category",
-                    "ref" => private_category.slug,
-                    "slug" => private_category.slug,
-                    "id" => private_category.id,
-                  },
-                ],
-                "tag" => [
-                  {
-                    "relative_url" => hidden_tag.url,
-                    "text" => hidden_tag.name,
-                    "description" => nil,
-                    "icon" => "tag",
-                    "type" => "tag",
-                    "ref" => hidden_tag.name,
-                    "slug" => hidden_tag.name,
-                    "secondary_text" => "x0",
-                    "id" => hidden_tag.id,
-                  },
-                ],
-              },
-            )
-          end
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq(
+            {
+              "category" => [],
+              "tag" => [
+                {
+                  "relative_url" => tag.url,
+                  "text" => tag.name,
+                  "description" => nil,
+                  "colors" => nil,
+                  "icon" => "tag",
+                  "type" => "tag",
+                  "ref" => "#{tag.name}::tag",
+                  "slug" => tag.name,
+                  "secondary_text" => "x0",
+                  "id" => tag.id,
+                },
+              ],
+            },
+          )
         end
 
-        context "with sub-sub-categories" do
-          before do
-            SiteSetting.max_category_nesting = 3
-            sign_in(Fabricate(:user))
-          end
+        it "does not return restricted categories or hidden tags" do
+          get "/hashtags.json",
+              params: {
+                slugs: [private_category.slug, hidden_tag.name],
+                order: %w[category tag],
+              }
 
-          it "works" do
-            foo = Fabricate(:category_with_definition, slug: "foo")
-            foobar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: foo.id)
-            foobarbaz =
-              Fabricate(:category_with_definition, slug: "baz", parent_category_id: foobar.id)
-
-            qux = Fabricate(:category_with_definition, slug: "qux")
-            quxbar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: qux.id)
-            quxbarbaz =
-              Fabricate(:category_with_definition, slug: "baz", parent_category_id: quxbar.id)
-
-            invalid_slugs = [":"]
-            child_slugs = %w[bar baz]
-            deeply_nested_slugs = %w[foo:bar:baz qux:bar:baz]
-            get "/hashtags.json",
-                params: {
-                  slugs:
-                    invalid_slugs + child_slugs + deeply_nested_slugs +
-                      %w[foo foo:bar bar:baz qux qux:bar],
-                  order: %w[category tag],
-                }
-
-            expect(response.status).to eq(200)
-            found_categories = response.parsed_body["category"]
-            expect(found_categories.map { |c| c["ref"] }).to match_array(
-              %w[foo foo:bar bar:baz qux qux:bar],
-            )
-            expect(found_categories.find { |c| c["ref"] == "foo" }["relative_url"]).to eq(foo.url)
-            expect(found_categories.find { |c| c["ref"] == "foo:bar" }["relative_url"]).to eq(
-              foobar.url,
-            )
-            expect(found_categories.find { |c| c["ref"] == "bar:baz" }["relative_url"]).to eq(
-              foobarbaz.url,
-            )
-            expect(found_categories.find { |c| c["ref"] == "qux" }["relative_url"]).to eq(qux.url)
-            expect(found_categories.find { |c| c["ref"] == "qux:bar" }["relative_url"]).to eq(
-              quxbar.url,
-            )
-          end
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq({ "category" => [], "tag" => [] })
         end
       end
 
-      context "when not logged in" do
-        it "returns invalid access" do
-          get "/hashtags.json", params: { slugs: [], order: %w[category tag] }
-          expect(response.status).to eq(403)
+      context "as admin" do
+        fab!(:admin)
+
+        before { sign_in(admin) }
+
+        it "returns restricted categories and hidden tags" do
+          group.add(admin)
+
+          get "/hashtags.json",
+              params: {
+                slugs: [private_category.slug, hidden_tag.name],
+                order: %w[category tag],
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body).to eq(
+            {
+              "category" => [
+                {
+                  "relative_url" => private_category.url,
+                  "text" => private_category.name,
+                  "description" => nil,
+                  "colors" => [private_category.color],
+                  "icon" => "folder",
+                  "type" => "category",
+                  "ref" => private_category.slug,
+                  "slug" => private_category.slug,
+                  "id" => private_category.id,
+                },
+              ],
+              "tag" => [
+                {
+                  "relative_url" => hidden_tag.url,
+                  "text" => hidden_tag.name,
+                  "description" => nil,
+                  "colors" => nil,
+                  "icon" => "tag",
+                  "type" => "tag",
+                  "ref" => hidden_tag.name,
+                  "slug" => hidden_tag.name,
+                  "secondary_text" => "x0",
+                  "id" => hidden_tag.id,
+                },
+              ],
+            },
+          )
         end
+      end
+
+      context "with sub-sub-categories" do
+        before do
+          SiteSetting.max_category_nesting = 3
+          sign_in(Fabricate(:user))
+        end
+
+        it "works" do
+          foo = Fabricate(:category_with_definition, slug: "foo")
+          foobar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: foo.id)
+          foobarbaz =
+            Fabricate(:category_with_definition, slug: "baz", parent_category_id: foobar.id)
+
+          qux = Fabricate(:category_with_definition, slug: "qux")
+          quxbar = Fabricate(:category_with_definition, slug: "bar", parent_category_id: qux.id)
+          quxbarbaz =
+            Fabricate(:category_with_definition, slug: "baz", parent_category_id: quxbar.id)
+
+          invalid_slugs = [":"]
+          child_slugs = %w[bar baz]
+          deeply_nested_slugs = %w[foo:bar:baz qux:bar:baz]
+          get "/hashtags.json",
+              params: {
+                slugs:
+                  invalid_slugs + child_slugs + deeply_nested_slugs +
+                    %w[foo foo:bar bar:baz qux qux:bar],
+                order: %w[category tag],
+              }
+
+          expect(response.status).to eq(200)
+          found_categories = response.parsed_body["category"]
+          expect(found_categories.map { |c| c["ref"] }).to match_array(
+            %w[foo foo:bar bar:baz qux qux:bar],
+          )
+          expect(found_categories.find { |c| c["ref"] == "foo" }["relative_url"]).to eq(foo.url)
+          expect(found_categories.find { |c| c["ref"] == "foo:bar" }["relative_url"]).to eq(
+            foobar.url,
+          )
+          expect(found_categories.find { |c| c["ref"] == "bar:baz" }["relative_url"]).to eq(
+            foobarbaz.url,
+          )
+          expect(found_categories.find { |c| c["ref"] == "qux" }["relative_url"]).to eq(qux.url)
+          expect(found_categories.find { |c| c["ref"] == "qux:bar" }["relative_url"]).to eq(
+            quxbar.url,
+          )
+        end
+      end
+    end
+
+    context "when not logged in" do
+      it "returns invalid access" do
+        get "/hashtags.json", params: { slugs: [], order: %w[category tag] }
+        expect(response.status).to eq(403)
       end
     end
   end
@@ -339,6 +346,7 @@ RSpec.describe HashtagsController do
               "text" => category.name,
               "description" => nil,
               "icon" => "folder",
+              "colors" => [category.color],
               "type" => "category",
               "ref" => category.slug,
               "slug" => category.slug,
@@ -348,6 +356,7 @@ RSpec.describe HashtagsController do
               "relative_url" => tag_2.url,
               "text" => tag_2.name,
               "description" => nil,
+              "colors" => nil,
               "icon" => "tag",
               "type" => "tag",
               "ref" => "#{tag_2.name}::tag",
@@ -382,6 +391,7 @@ RSpec.describe HashtagsController do
               "relative_url" => private_category.url,
               "text" => private_category.name,
               "description" => nil,
+              "colors" => [private_category.color],
               "icon" => "folder",
               "type" => "category",
               "ref" => private_category.slug,
@@ -399,6 +409,7 @@ RSpec.describe HashtagsController do
               "relative_url" => hidden_tag.url,
               "text" => hidden_tag.name,
               "description" => nil,
+              "colors" => nil,
               "icon" => "tag",
               "type" => "tag",
               "ref" => "#{hidden_tag.name}",

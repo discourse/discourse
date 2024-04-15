@@ -1,10 +1,14 @@
 import { action } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import DiscourseRoute from "discourse/routes/discourse";
+import { service } from "@ember/service";
+import $ from "jquery";
 import { Promise } from "rsvp";
-import I18n from "I18n";
+import { ajax } from "discourse/lib/ajax";
+import Bookmark from "discourse/models/bookmark";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
+  historyStore: service(),
   templateName: "user/bookmarks",
 
   queryParams: {
@@ -12,11 +16,11 @@ export default DiscourseRoute.extend({
     q: { refreshModel: true },
   },
 
-  model(params, transition) {
+  model(params) {
     const controller = this.controllerFor("user-activity-bookmarks");
 
     if (
-      this.isPoppedState(transition) &&
+      this.historyStore.isPoppedState &&
       this.session.bookmarksModel &&
       this.session.bookmarksModel.searchTerm === params.q
     ) {
@@ -25,13 +29,12 @@ export default DiscourseRoute.extend({
 
     this.session.setProperties({
       bookmarksModel: null,
-      bookmarkListScrollPosition: null,
     });
 
     controller.set("loading", true);
 
     return this._loadBookmarks(params)
-      .then((response) => {
+      .then(async (response) => {
         if (!response.user_bookmark_list) {
           return { bookmarks: [] };
         }
@@ -39,6 +42,7 @@ export default DiscourseRoute.extend({
         const bookmarks = response.user_bookmark_list.bookmarks.map(
           controller.transform
         );
+        await Bookmark.applyTransformations(bookmarks);
         const loadMoreUrl = response.user_bookmark_list.more_bookmarks_url;
 
         const model = { bookmarks, loadMoreUrl };
@@ -51,12 +55,6 @@ export default DiscourseRoute.extend({
 
   titleToken() {
     return I18n.t("user_action_groups.3");
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("user-activity")._showFooter();
-    return true;
   },
 
   @action

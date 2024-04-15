@@ -2,6 +2,11 @@
 
 module RetrieveTitle
   CRAWL_TIMEOUT = 1
+  UNRECOVERABLE_ERRORS = [
+    Net::ReadTimeout,
+    FinalDestination::SSRFError,
+    FinalDestination::UrlEncodingError,
+  ]
 
   def self.crawl(url, max_redirects: nil, initial_https_redirect_ignore_limit: false)
     fetch_title(
@@ -9,8 +14,8 @@ module RetrieveTitle
       max_redirects: max_redirects,
       initial_https_redirect_ignore_limit: initial_https_redirect_ignore_limit,
     )
-  rescue Net::ReadTimeout, FinalDestination::SSRFError
-    # do nothing for Net::ReadTimeout errors
+  rescue *UNRECOVERABLE_ERRORS
+    # ¯\_(ツ)_/¯
   end
 
   def self.extract_title(html, encoding = nil)
@@ -73,6 +78,9 @@ module RetrieveTitle
         stop_at_blocked_pages: true,
         max_redirects: max_redirects,
         initial_https_redirect_ignore_limit: initial_https_redirect_ignore_limit,
+        headers: {
+          Accept: "text/html,*/*",
+        },
       )
 
     current = nil

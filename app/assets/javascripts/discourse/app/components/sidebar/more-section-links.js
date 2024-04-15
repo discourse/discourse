@@ -1,10 +1,9 @@
+import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-
 import { bind } from "discourse-common/utils/decorators";
-import Component from "@glimmer/component";
 
 export default class SidebarMoreSectionLinks extends Component {
   @service router;
@@ -19,6 +18,7 @@ export default class SidebarMoreSectionLinks extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this.#removeClickEventListener();
     this.router.off("routeDidChange", this, this.#setActiveSectionLink);
   }
@@ -48,9 +48,9 @@ export default class SidebarMoreSectionLinks extends Component {
   @bind
   closeDetails(event) {
     if (this.open) {
-      const isLinkClick = event.target.className.includes(
-        "sidebar-section-link"
-      );
+      const isLinkClick =
+        event.target.className.includes("sidebar-section-link") ||
+        event.target.className.includes("sidebar-section-link-button");
 
       if (isLinkClick || this.#isOutsideDetailsClick(event)) {
         this.open = false;

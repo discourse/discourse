@@ -2,8 +2,8 @@
 
 RSpec.describe TopicGroup do
   describe "#update_last_read" do
-    fab!(:group) { Fabricate(:group) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:group)
+    fab!(:user)
 
     before do
       @topic = Fabricate(:private_message_topic, allowed_groups: [group])

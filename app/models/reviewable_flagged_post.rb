@@ -44,28 +44,32 @@ class ReviewableFlaggedPost < Reviewable
     return unless pending?
     return if post.blank?
 
-    agree =
+    agree_bundle =
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
 
+    if potential_spam? && guardian.can_delete_user?(target_created_by)
+      delete_user_actions(actions, agree_bundle)
+    end
+
     if !post.user_deleted? && !post.hidden?
-      build_action(actions, :agree_and_hide, icon: "far-eye-slash", bundle: agree)
+      build_action(actions, :agree_and_hide, icon: "far-eye-slash", bundle: agree_bundle)
     end
 
     if post.hidden?
-      build_action(actions, :agree_and_keep_hidden, icon: "thumbs-up", bundle: agree)
+      build_action(actions, :agree_and_keep_hidden, icon: "thumbs-up", bundle: agree_bundle)
     else
-      build_action(actions, :agree_and_keep, icon: "thumbs-up", bundle: agree)
+      build_action(actions, :agree_and_keep, icon: "thumbs-up", bundle: agree_bundle)
     end
 
     if guardian.can_delete_post_or_topic?(post)
-      build_action(actions, :delete_and_agree, icon: "far-trash-alt", bundle: agree)
+      build_action(actions, :delete_and_agree, icon: "far-trash-alt", bundle: agree_bundle)
 
       if post.reply_count > 0
         build_action(
           actions,
           :delete_and_agree_replies,
           icon: "far-trash-alt",
-          bundle: agree,
+          bundle: agree_bundle,
           confirm: true,
         )
       end
@@ -76,19 +80,21 @@ class ReviewableFlaggedPost < Reviewable
         actions,
         :agree_and_suspend,
         icon: "ban",
-        bundle: agree,
+        bundle: agree_bundle,
         client_action: "suspend",
       )
       build_action(
         actions,
         :agree_and_silence,
         icon: "microphone-slash",
-        bundle: agree,
+        bundle: agree_bundle,
         client_action: "silence",
       )
     end
 
-    build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree) if post.user_deleted?
+    if post.user_deleted?
+      build_action(actions, :agree_and_restore, icon: "far-eye", bundle: agree_bundle)
+    end
     if post.hidden?
       build_action(actions, :disagree_and_restore, icon: "thumbs-down")
     else
@@ -102,7 +108,7 @@ class ReviewableFlaggedPost < Reviewable
         label: "reviewables.actions.ignore.title",
       )
 
-    if !post.hidden?
+    if !post.hidden? || guardian.user.is_system_user?
       build_action(actions, :ignore_and_do_nothing, icon: "external-link-alt", bundle: ignore)
     end
     if guardian.can_delete_post_or_topic?(post)
@@ -117,8 +123,6 @@ class ReviewableFlaggedPost < Reviewable
         )
       end
     end
-
-    delete_user_actions(actions) if potential_spam? && guardian.can_delete_user?(target_created_by)
   end
 
   def perform_ignore(performed_by, args)

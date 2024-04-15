@@ -1,10 +1,10 @@
+import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
 
 acceptance("Topic Discovery - Mobile", function (needs) {
   needs.mobileView();

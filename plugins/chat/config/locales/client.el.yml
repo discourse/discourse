@@ -6,7 +6,15 @@
 
 el:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Πάντα"
+          never: "Ποτέ"
     chat:
+      deleted_chat_username: διεγράφη
+      dates:
+        yesterday: "Χτες"
       create: "Δημιουργία"
       cancel: "Ακύρωση"
       channel_settings:
@@ -15,6 +23,7 @@ el:
         join: "Γίνετε μέλος"
         leave: "Αποχώρηση"
       close: "Κλείσιμο"
+      remove: "Αφαίρεση"
       delete: "Σβήσιμο"
       edited: "επεξεργάστηκε"
       muted: "σε σίγαση"
@@ -26,12 +35,11 @@ el:
       flag: "Επισήμανση"
       join: "Γίνετε μέλος"
       last_visit: "τελευταία επίσκεψη"
-      mention_warning:
-        dismiss: "απόρριψη"
       reply: "Απάντηση"
       edit: "Επεξεργασία"
       rebake_message: "Ανανέωση HTML"
       bookmark_message: "Σελιδοδείκτης"
+      bookmark_message_edit: "Επεξεργασία Σελιδοδείκτη"
       save: "Αποθήκευση"
       sounds:
         none: "Κανένα"
@@ -42,6 +50,7 @@ el:
       browse:
         back: "Πίσω"
         filter_all: Όλα
+        filter_open: Ξεκίνημα
         filter_closed: Κλειστό
       chat_message_separator:
         today: Σήμερα
@@ -53,9 +62,11 @@ el:
       channel_info:
         back_to_channel: "Πίσω"
         tabs:
-          about: Σχετικά
           members: Μέλη
           settings: Ρυθμίσεις
+      new_message_modal:
+        no_items: "Δεν υπάρχουν στοιχεία"
+        filter: "Φίλτρο"
       direct_message_creator:
         title: Νέο Μήνυμα
         prefix: "Προς:"
@@ -73,12 +84,17 @@ el:
       settings:
         follow: "Γίνετε μέλος"
         followed: "Έγινε μέλος"
+        threading_disabled: "Απενεργοποιημένο"
         notifications: "Ειδοποιήσεις"
         preview: "Προεπισκόπηση"
         save: "Αποθήκευση"
         saved: "Αποθηκεύτηκε! "
         unfollow: "Αποχώρηση"
         admin_title: "Διαχειριστής"
+        settings_title: "Ρυθμίσεις"
+        category_label: "Κατηγορία"
+        history_label: "Ιστορικό"
+        members_label: "Μέλη"
       incoming_webhooks:
         back: "Πίσω"
         description: "Περιγραφή"
@@ -99,6 +115,10 @@ el:
           title: "Μετακίνηση σε Υπάρχον Θέμα"
         new_message:
           title: "Μετακίνηση σε νέο μήνυμα"
+      retention_reminders:
+        short:
+          one: "%{count} ημ"
+          other: "%{count} ημ"
       emoji_picker:
         objects: "Αντικείμενα"
         activities: "Δραστηριότητες"
@@ -110,6 +130,12 @@ el:
           one: "%{count} απάντηση"
           other: "%{count} απαντήσεις"
         settings: "Ρυθμίσεις"
+        last_reply: "τελευταία απάντηση"
+        notifications:
+          regular:
+            title: "Φυσιολογικό"
+          tracking:
+            title: "Παρακολουθείται"
       draft_channel_screen:
         header: "Νέο Μήνυμα"
         cancel: "Ακύρωση"

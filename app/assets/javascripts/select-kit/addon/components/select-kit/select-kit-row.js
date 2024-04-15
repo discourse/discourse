@@ -1,11 +1,11 @@
-import { action, computed } from "@ember/object";
 import Component from "@ember/component";
-import I18n from "I18n";
-import UtilsMixin from "select-kit/mixins/utils";
-import { guidFor } from "@ember/object/internals";
-import { makeArray } from "discourse-common/lib/helpers";
+import { action, computed } from "@ember/object";
 import { reads } from "@ember/object/computed";
+import { guidFor } from "@ember/object/internals";
 import { dasherize } from "@ember/string";
+import { makeArray } from "discourse-common/lib/helpers";
+import I18n from "discourse-i18n";
+import UtilsMixin from "select-kit/mixins/utils";
 
 export default Component.extend(UtilsMixin, {
   classNames: ["select-kit-row"],
@@ -38,7 +38,7 @@ export default Component.extend(UtilsMixin, {
   didInsertElement() {
     this._super(...arguments);
 
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       this.element.addEventListener("mouseenter", this.handleMouseEnter);
       this.element.addEventListener("focus", this.handleMouseEnter);
     }
@@ -47,7 +47,7 @@ export default Component.extend(UtilsMixin, {
   willDestroyElement() {
     this._super(...arguments);
 
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       this.element.removeEventListener("mouseenter", this.handleMouseEnter);
       this.element.removeEventListener("focus", this.handleMouseEnter);
     }

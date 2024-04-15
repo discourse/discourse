@@ -1,5 +1,5 @@
+import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import I18n from "I18n";
 
 export default DropdownSelectBoxComponent.extend({
   pluginApiIdentifiers: ["toolbar-popup-menu-options"],
@@ -20,7 +20,7 @@ export default DropdownSelectBoxComponent.extend({
           return {
             icon: content.icon,
             name: I18n.t(content.label),
-            id: content.action,
+            id: { name: content.name, action: content.action },
           };
         }
       })

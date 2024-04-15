@@ -1,10 +1,10 @@
-import Controller from "@ember/controller";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import I18n from "I18n";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import Controller from "@ember/controller";
+import { action, computed } from "@ember/object";
+import { service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import I18n from "discourse-i18n";
 
 export default class extends Controller {
   @service currentUser;
@@ -101,6 +101,25 @@ export default class extends Controller {
       )
       .filter((t) => t);
   }
+  @computed(
+    "model.watchedCategories",
+    "model.mutedCategories",
+    "model.watched_tags.[]",
+    "model.muted_tags.[]"
+  )
+  get showMutePrecedenceSetting() {
+    const show =
+      (this.model.watchedCategories?.length > 0 &&
+        this.model.muted_tags?.length > 0) ||
+      (this.model.watched_tags?.length > 0 &&
+        this.model.mutedCategories?.length > 0);
+
+    if (show && this.model.user_option.watched_precedence_over_muted === null) {
+      this.model.user_option.watched_precedence_over_muted =
+        this.siteSettings.watched_precedence_over_muted;
+    }
+    return show;
+  }
 
   @computed(
     "model.watchedCategories",
@@ -120,7 +139,7 @@ export default class extends Controller {
           ? this.model.regularCategories
           : this.model.mutedCategories
       )
-      .filter((t) => t);
+      .filter(Boolean);
   }
 
   @computed("siteSettings.remove_muted_tags_from_latest")
@@ -147,6 +166,8 @@ export default class extends Controller {
       "watched_category_ids",
       "tracked_category_ids",
       "watched_first_post_category_ids",
+      "watched_precedence_over_muted",
+      "topics_unread_when_closed",
     ];
 
     if (this.siteSettings.tagging_enabled) {

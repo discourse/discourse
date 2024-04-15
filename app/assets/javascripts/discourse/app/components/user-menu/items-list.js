@@ -1,9 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import Session from "discourse/models/session";
+import { service } from "@ember/service";
+import DiscourseURL from "discourse/lib/url";
 
 export default class UserMenuItemsList extends Component {
+  @service session;
+
   @tracked loading = false;
   @tracked items = [];
 
@@ -28,6 +31,10 @@ export default class UserMenuItemsList extends Component {
     return "user-menu/items-list-empty-state";
   }
 
+  get renderDismissConfirmation() {
+    return false;
+  }
+
   async fetchItems() {
     throw new Error(
       `the fetchItems method must be implemented in ${this.constructor.name}`
@@ -36,10 +43,6 @@ export default class UserMenuItemsList extends Component {
 
   async refreshList() {
     await this.#load();
-  }
-
-  dismissWarningModal() {
-    return null;
   }
 
   async #load() {
@@ -67,14 +70,14 @@ export default class UserMenuItemsList extends Component {
   #getCachedItems() {
     const key = this.itemsCacheKey;
     if (key) {
-      return Session.currentProp(`user-menu-items:${key}`);
+      return this.session[`user-menu-items:${key}`];
     }
   }
 
   #setCachedItems(newItems) {
     const key = this.itemsCacheKey;
     if (key) {
-      Session.currentProp(`user-menu-items:${key}`, newItems);
+      this.session.set(`user-menu-items:${key}`, newItems);
     }
   }
 
@@ -83,5 +86,11 @@ export default class UserMenuItemsList extends Component {
     throw new Error(
       `dismissButtonClick must be implemented in ${this.constructor.name}.`
     );
+  }
+
+  @action
+  showAll() {
+    DiscourseURL.routeTo(this.showAllHref);
+    this.args.closeUserMenu();
   }
 }

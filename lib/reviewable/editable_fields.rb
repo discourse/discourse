@@ -9,6 +9,10 @@ class Reviewable < ActiveRecord::Base
         super(id)
         @type = type
       end
+
+      def server_action
+        id
+      end
     end
 
     def add(id, type)

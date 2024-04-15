@@ -1,9 +1,9 @@
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
-import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { setupTest } from "ember-qunit";
 
 module("Unit | Model | topic", function (hooks) {
   setupTest(hooks);
@@ -209,13 +209,13 @@ module("Unit | Model | topic", function (hooks) {
 
     assert.strictEqual(
       rtlTopic.fancyTitle,
-      `<span dir="rtl">هذا اختبار</span>`,
-      "sets the dir-span to rtl"
+      `<span dir="auto">هذا اختبار</span>`,
+      "sets the dir-span to auto"
     );
     assert.strictEqual(
       ltrTopic.fancyTitle,
-      `<span dir="ltr">This is a test</span>`,
-      "sets the dir-span to ltr"
+      `<span dir="auto">This is a test</span>`,
+      "sets the dir-span to auto"
     );
   });
 

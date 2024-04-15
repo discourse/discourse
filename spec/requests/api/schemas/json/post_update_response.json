@@ -51,7 +51,7 @@
           "type": "integer"
         },
         "score": {
-          "type": ""
+          "type": "number"
         },
         "yours": {
           "type": "boolean"
@@ -110,6 +110,9 @@
         "can_recover": {
           "type": "boolean"
         },
+        "can_see_hidden_post": {
+          "type": "boolean"
+        },
         "can_wiki": {
           "type": "boolean"
         },
@@ -127,24 +130,22 @@
         },
         "actions_summary": {
           "type": "array",
-          "items": [
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "id": {
-                  "type": "integer"
-                },
-                "can_act": {
-                  "type": "boolean"
-                }
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer"
               },
-              "required": [
-                "id",
-                "can_act"
-              ]
-            }
-          ]
+              "can_act": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "can_act"
+            ]
+          }
         },
         "moderator": {
           "type": "boolean"
@@ -202,9 +203,7 @@
         },
         "mentioned_users": {
           "type": "array",
-          "items": [
-
-          ]
+          "items": {}
         },
         "name": {
           "type": [

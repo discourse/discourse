@@ -1,7 +1,7 @@
-import MultiSelectComponent from "select-kit/components/multi-select";
-import TagsMixin from "select-kit/mixins/tags";
 import { computed } from "@ember/object";
 import { makeArray } from "discourse-common/lib/helpers";
+import MultiSelectComponent from "select-kit/components/multi-select";
+import TagsMixin from "select-kit/mixins/tags";
 
 export default MultiSelectComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-chooser"],
@@ -71,8 +71,8 @@ export default MultiSelectComponent.extend(TagsMixin, {
 
   actions: {
     onChange(value, items) {
-      if (this.attrs.onChange) {
-        this.attrs.onChange(value, items);
+      if (this.onChange) {
+        this.onChange(value, items);
       } else {
         this.set("tags", value);
       }

@@ -1,13 +1,16 @@
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import { Placeholder } from "discourse/lib/posts-with-placeholders";
+import { hbs } from "ember-cli-htmlbars";
+import $ from "jquery";
+import { h } from "virtual-dom";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import { Placeholder } from "discourse/lib/posts-with-placeholders";
+import transformPost from "discourse/lib/transform-post";
+import DiscourseURL from "discourse/lib/url";
 import { avatarFor } from "discourse/widgets/post";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
-import transformPost from "discourse/lib/transform-post";
+import I18n from "discourse-i18n";
 
 let transformCallbacks = null;
 export function postTransformCallbacks(transformed) {
@@ -251,7 +254,14 @@ export default createWidget("post-stream", {
       if (prevDate) {
         const daysSince = Math.floor((curTime - prevDate) / DAY);
         if (daysSince > this.siteSettings.show_time_gap_days) {
-          result.push(this.attach("time-gap", { daysSince }));
+          result.push(
+            new RenderGlimmer(
+              this,
+              "div.time-gap.small-action",
+              hbs`<TimeGap @daysSince={{@data.daysSince}} />`,
+              { daysSince }
+            )
+          );
         }
       }
       prevDate = curTime;

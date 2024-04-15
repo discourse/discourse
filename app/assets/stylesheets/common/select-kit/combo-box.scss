@@ -27,7 +27,7 @@
 
     .select-kit-header {
       background: var(--secondary);
-      border-color: var(--primary-medium);
+      border-color: var(--primary-400);
 
       &.is-focused {
         @include default-focus;

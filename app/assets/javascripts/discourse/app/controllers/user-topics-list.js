@@ -1,56 +1,96 @@
-import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import { reads } from "@ember/object/computed";
-import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
+import { tracked } from "@glimmer/tracking";
+import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { or, reads } from "@ember/object/computed";
+import { isNone } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
+import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 import Topic from "discourse/models/topic";
-
 import {
   NEW_FILTER,
   UNREAD_FILTER,
 } from "discourse/routes/build-private-messages-route";
+import { QUERY_PARAMS } from "discourse/routes/user-topic-list";
+import discourseComputed from "discourse-common/utils/decorators";
 
 // Lists of topics on a user's page.
-export default Controller.extend(BulkTopicSelection, {
-  application: controller(),
+export default class UserTopicsListController extends Controller {
+  @tracked model;
 
-  hideCategory: false,
-  showPosters: false,
-  channel: null,
-  tagsForUser: null,
-  incomingCount: reads("pmTopicTrackingState.newIncoming.length"),
+  hideCategory = false;
+  showPosters = false;
+  channel = null;
+  tagsForUser = null;
+  queryParams = Object.keys(QUERY_PARAMS);
+
+  bulkSelectHelper = new BulkSelectHelper(this);
+
+  @reads("pmTopicTrackingState.newIncoming.length") incomingCount;
+
+  @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
+  canBulkSelect;
+
+  constructor() {
+    super(...arguments);
+
+    for (const [name, info] of Object.entries(QUERY_PARAMS)) {
+      defineTrackedProperty(this, name, info.default);
+    }
+  }
+
+  get bulkSelectEnabled() {
+    return this.bulkSelectHelper.bulkSelectEnabled;
+  }
+
+  get selected() {
+    return this.bulkSelectHelper.selected;
+  }
 
   @discourseComputed("model.topics.length", "incomingCount")
   noContent(topicsLength, incomingCount) {
     return topicsLength === 0 && incomingCount === 0;
-  },
-
-  saveScrollPosition() {
-    this.session.set("topicListScrollPosition", $(window).scrollTop());
-  },
-
-  @observes("model.canLoadMore")
-  _showFooter() {
-    this.set("application.showFooter", !this.get("model.canLoadMore"));
-  },
+  }
 
   @discourseComputed("filter", "model.topics.length")
   showResetNew(filter, hasTopics) {
     return filter === NEW_FILTER && hasTopics;
-  },
+  }
 
   @discourseComputed("filter", "model.topics.length")
   showDismissRead(filter, hasTopics) {
     return filter === UNREAD_FILTER && hasTopics;
-  },
+  }
 
   subscribe() {
     this.pmTopicTrackingState.trackIncoming(this.inbox, this.filter);
-  },
+  }
 
   unsubscribe() {
     this.pmTopicTrackingState.stopIncomingTracking();
-  },
+  }
+
+  @action
+  changeSort(sortBy) {
+    if (sortBy === this.resolvedOrder) {
+      this.ascending = !this.resolvedAscending;
+    } else {
+      this.ascending = false;
+    }
+    this.order = sortBy;
+  }
+
+  get resolvedAscending() {
+    if (isNone(this.ascending)) {
+      return this.model.get("params.ascending") === "true";
+    } else {
+      return this.ascending.toString() === "true";
+    }
+  }
+
+  get resolvedOrder() {
+    return this.order ?? this.model.get("params.order") ?? "activity";
+  }
 
   @action
   resetNew() {
@@ -73,22 +113,52 @@ export default Controller.extend(BulkTopicSelection, {
         this.send("refresh");
       }
     });
-  },
+  }
 
   @action
   loadMore() {
     this.model.loadMore();
-  },
+  }
 
   @action
-  showInserted(event) {
+  async showInserted(event) {
     event?.preventDefault();
-    this.model.loadBefore(this.pmTopicTrackingState.newIncoming);
-    this.pmTopicTrackingState.resetIncomingTracking();
-  },
+
+    if (this.model.loadingBefore) {
+      return;
+    }
+
+    try {
+      const topicIds = [...this.pmTopicTrackingState.newIncoming];
+      await this.model.loadBefore(topicIds);
+      this.pmTopicTrackingState.resetIncomingTracking(topicIds);
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
 
   @action
   refresh() {
     this.send("triggerRefresh");
-  },
-});
+  }
+
+  @action
+  toggleBulkSelect() {
+    this.bulkSelectHelper.toggleBulkSelect();
+  }
+
+  @action
+  dismissRead(operationType, options) {
+    this.bulkSelectHelper.dismissRead(operationType, options);
+  }
+
+  @action
+  updateAutoAddTopicsToBulkSelect(value) {
+    this.bulkSelectHelper.autoAddTopicsToBulkSelect = value;
+  }
+
+  @action
+  addTopicsToBulkSelect(topics) {
+    this.bulkSelectHelper.addTopics(topics);
+  }
+}

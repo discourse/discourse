@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe "Visit channel", type: :system, js: true do
-  fab!(:category) { Fabricate(:category) }
-  fab!(:topic) { Fabricate(:topic) }
+RSpec.describe "Visit channel", type: :system do
+  fab!(:category)
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:current_user) { Fabricate(:user) }
   fab!(:category_channel_1) { Fabricate(:category_channel) }
@@ -11,6 +11,9 @@ RSpec.describe "Visit channel", type: :system, js: true do
   fab!(:inaccessible_dm_channel_1) { Fabricate(:direct_message_channel) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
+  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:dialog) { PageObjects::Components::Dialog.new }
 
   before { chat_system_bootstrap }
 
@@ -21,7 +24,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
     end
 
     it "shows a not found page" do
-      chat.visit_channel(category_channel_1)
+      chat.visit_channel(category_channel_1, with_preloaded_channels: false)
 
       expect(page).to have_content(I18n.t("page_not_found.title"))
     end
@@ -30,7 +33,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
   context "when chat enabled" do
     context "when anonymous" do
       it "redirects to homepage" do
-        chat.visit_channel(category_channel_1)
+        chat.visit_channel(category_channel_1, with_preloaded_channels: false)
 
         expect(page).to have_current_path("/latest")
       end
@@ -43,7 +46,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
         before { current_user.user_option.update!(chat_enabled: false) }
 
         it "redirects to homepage" do
-          chat.visit_channel(category_channel_1)
+          chat.visit_channel(category_channel_1, with_preloaded_channels: false)
 
           expect(page).to have_current_path("/latest")
         end
@@ -53,7 +56,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
         before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] }
 
         it "redirects homepage" do
-          chat.visit_channel(category_channel_1)
+          chat.visit_channel(category_channel_1, with_preloaded_channels: false)
 
           expect(page).to have_current_path("/latest")
         end
@@ -131,7 +134,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
             chat.visit_channel(category_channel_1)
 
             expect(page).to have_content(category_channel_1.name)
-            expect(chat).to have_message(message_1)
+            expect(channel_page.messages).to have_message(id: message_1.id)
           end
         end
 
@@ -143,13 +146,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
           it "allows to join it" do
             chat.visit_channel(dm_channel_1)
 
-            expect(page).to have_content(I18n.t("js.chat.channel_settings.join_channel"))
-          end
-
-          it "shows a preview of the channel" do
-            chat.visit_channel(dm_channel_1)
-
-            expect(chat).to have_message(message_1)
+            expect(channel_page.composer).to be_enabled
           end
         end
       end
@@ -170,7 +167,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
             chat.visit_channel(category_channel_1)
 
             expect(page).to have_content(category_channel_1.name)
-            expect(chat).to have_message(message_1)
+            expect(channel_page.messages).to have_message(id: message_1.id)
           end
 
           context "when URL doesn’t contain slug" do
@@ -180,6 +177,28 @@ RSpec.describe "Visit channel", type: :system, js: true do
               expect(page).to have_current_path(
                 "/chat/c/#{category_channel_1.slug}/#{category_channel_1.id}",
               )
+            end
+          end
+
+          context "when visiting a specific channel message ID then navigating to another channel" do
+            fab!(:early_message) { Fabricate(:chat_message, chat_channel: category_channel_1) }
+            fab!(:other_channel) do
+              Fabricate(:category_channel, category: category_channel_1.chatable)
+            end
+            fab!(:other_channel_message) { Fabricate(:chat_message, chat_channel: other_channel) }
+
+            before do
+              30.times { Fabricate(:chat_message, chat_channel: category_channel_1) }
+              other_channel.add(current_user)
+            end
+
+            it "does not error" do
+              visit(early_message.url)
+              expect(channel_page).to have_no_loading_skeleton
+              expect(channel_page.messages).to have_message(id: early_message.id)
+              sidebar_page.open_channel(other_channel)
+              expect(dialog).to be_closed
+              expect(channel_page.messages).to have_message(id: other_channel_message.id)
             end
           end
         end
@@ -198,7 +217,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
           it "shows a preview of the channel" do
             chat.visit_channel(dm_channel_1)
 
-            expect(chat).to have_message(message_1)
+            expect(channel_page.messages).to have_message(id: message_1.id)
           end
 
           context "when URL doesn’t contain slug" do

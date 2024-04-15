@@ -1,12 +1,11 @@
 {{! template-lint-disable no-invalid-interactive }}
 {{! template-lint-disable no-nested-interactive }}
-{{! template-lint-disable no-down-event-binding }}
+{{! template-lint-disable no-pointer-down-event-binding }}
 
 {{#if (eq this.chatEmojiPickerManager.picker.context @context)}}
   <div
     class={{concat-class
       "chat-emoji-picker"
-      @class
       (if this.chatEmojiPickerManager.closing "closing")
     }}
     {{did-insert this.addClickOutsideEventListener}}
@@ -15,21 +14,22 @@
     {{will-destroy (if @willDestroy @willDestroy (noop))}}
     {{will-destroy this.removeClickOutsideEventListener}}
     {{on "keydown" this.trapKeyDownEvents}}
+    ...attributes
   >
     <div class="chat-emoji-picker__filter-container">
       <DcFilterInput
-        @class="chat-emoji-picker__filter"
-        @value={{this.chatEmojiPickerManager.picker.initialFilter}}
-        @filterAction={{action this.didInputFilter value="target.value"}}
-        @icons={{hash left="search"}}
-        placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
-        autofocus={{true}}
         {{did-insert (if this.site.desktopView this.focusFilter (noop))}}
         {{did-insert
           (fn
             this.didInputFilter this.chatEmojiPickerManager.picker.initialFilter
           )
         }}
+        @value={{this.chatEmojiPickerManager.picker.initialFilter}}
+        @filterAction={{with-event-value this.didInputFilter}}
+        @icons={{hash left="search"}}
+        @containerClass="chat-emoji-picker__filter"
+        autofocus={{true}}
+        placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
       >
         <div
           class="chat-emoji-picker__fitzpatrick-scale"
@@ -40,9 +40,7 @@
             {{#each this.fitzpatrickModifiers as |fitzpatrick|}}
 
               {{#if
-                (not
-                  (eq fitzpatrick.scale this.chatEmojiReactionStore.diversity)
-                )
+                (not-eq fitzpatrick.scale this.chatEmojiReactionStore.diversity)
               }}
                 <button
                   type="button"
@@ -82,7 +80,7 @@
     </div>
 
     {{#if this.chatEmojiPickerManager.sections.length}}
-      {{#if (not (gte this.filteredEmojis.length 0))}}
+      {{#if (eq this.filteredEmojis null)}}
         <div class="chat-emoji-picker__sections-nav">
           <div
             class="chat-emoji-picker__sections-nav__indicator"
@@ -111,7 +109,7 @@
                   width="18"
                   height="18"
                   class="emoji"
-                  src={{emojis.firstObject.url}}
+                  src={{get emojis "0.url"}}
                 />
               {{/if}}
             </DButton>
@@ -129,7 +127,7 @@
           {{on "keydown" this.onSectionsKeyDown}}
           role="button"
         >
-          {{#if (gte this.filteredEmojis.length 0)}}
+          {{#if (not-eq this.filteredEmojis null)}}
             <div class="chat-emoji-picker__section filtered">
               {{#each this.filteredEmojis as |emoji|}}
                 <img
@@ -162,7 +160,7 @@
             <div
               class={{concat-class
                 "chat-emoji-picker__section"
-                (if (gte this.filteredEmojis.length 0) "hidden")
+                (if (not-eq this.filteredEmojis null) "hidden")
               }}
               data-section={{section}}
               role="region"
@@ -179,7 +177,7 @@
               </h2>
               <div class="chat-emoji-picker__section-emojis">
                 {{! we always want the first emoji for tabbing}}
-                {{#let emojis.firstObject as |emoji|}}
+                {{#let (get emojis "0") as |emoji|}}
                   <img
                     width="32"
                     height="32"

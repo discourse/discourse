@@ -2,13 +2,19 @@ chat:
   chat_enabled:
     default: true
     client: true
-  chat_allowed_groups:
+  enable_public_channels:
+    default: true
     client: true
+  chat_allowed_groups:
     type: group_list
     list_type: compact
     default: "3|11" # 3: @staff, 11: @trust_level_1
     allow_any: false
     refresh: true
+  chat_threads_enabled:
+    client: true
+    default: false
+    hidden: true
   needs_chat_seeded:
     default: true
     hidden: true
@@ -94,14 +100,12 @@ chat:
   direct_message_enabled_groups:
     default: "11" # @trust_level_1
     type: group_list
-    client: true
     allow_any: false
     refresh: true
     validator: "Chat::DirectMessageEnabledGroupsValidator"
   chat_message_flag_allowed_groups:
     default: "11" # @trust_level_1
     type: group_list
-    client: true
     allow_any: false
     refresh: true
   max_mentions_per_chat_message:
@@ -113,7 +117,31 @@ chat:
   max_chat_draft_length:
     default: 50_000
     hidden: true
-  enable_experimental_chat_threaded_discussions:
-    default: false
-    hidden: true
+  chat_separate_sidebar_mode:
     client: true
+    default: "never"
+    type: enum
+    enum: "Chat::SeparateSidebarModeSiteSetting"
+  chat_editing_grace_period:
+    client: true
+    type: integer
+    default: 30
+    min: 0
+  chat_editing_grace_period_max_diff_low_trust:
+    client: true
+    type: integer
+    default: 10
+    min: 0
+  chat_editing_grace_period_max_diff_high_trust:
+    client: true
+    type: integer
+    default: 40
+    min: 0
+  chat_preferred_mobile_index:
+    client: true
+    type: enum
+    default: channels
+    choices:
+      - channels
+      - direct_messages
+      - my_threads

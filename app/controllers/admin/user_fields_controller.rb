@@ -2,7 +2,7 @@
 
 class Admin::UserFieldsController < Admin::AdminController
   def self.columns
-    %i[
+    columns = %i[
       name
       field_type
       editable
@@ -13,6 +13,7 @@ class Admin::UserFieldsController < Admin::AdminController
       position
       searchable
     ]
+    DiscoursePluginRegistry.apply_modifier(:admin_user_fields_columns, columns)
   end
 
   def create

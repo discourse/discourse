@@ -7,7 +7,7 @@ RSpec.describe GivenDailyLike do
   end
 
   context "with a user" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     def value_for(user_id, date)
       GivenDailyLike.find_for(user_id, date).pluck(:likes_given)[0] || 0

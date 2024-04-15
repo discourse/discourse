@@ -1,13 +1,14 @@
 import {
+  fourMonths,
+  inNDays,
   LATER_TODAY_CUTOFF_HOUR,
+  laterThisWeek,
+  laterToday,
   MOMENT_FRIDAY,
   MOMENT_MONDAY,
   MOMENT_SATURDAY,
   MOMENT_SUNDAY,
   MOMENT_THURSDAY,
-  fourMonths,
-  laterThisWeek,
-  laterToday,
   nextBusinessWeekStart,
   nextMonth,
   now,
@@ -23,7 +24,7 @@ import {
   twoMonths,
   twoWeeks,
 } from "discourse/lib/time-utils";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export const TIME_SHORTCUT_TYPES = {
   ONE_HOUR: "one_hour",
@@ -123,6 +124,15 @@ export function timeShortcuts(timezone) {
         icon: "angle-right",
         label: "time_shortcut.two_days",
         time: twoDays(timezone),
+        timeFormatKey: "dates.time_short_day",
+      };
+    },
+    threeDays() {
+      return {
+        id: "three_days",
+        icon: "angle-right",
+        label: "time_shortcut.three_days",
+        time: inNDays(timezone, 3),
         timeFormatKey: "dates.time_short_day",
       };
     },

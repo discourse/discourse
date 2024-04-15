@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe CategoryUploadSerializer do
-  fab!(:upload) { Fabricate(:upload) }
-  let(:subject) { described_class.new(upload, root: false) }
+  subject(:serializer) { described_class.new(upload, root: false) }
+
+  fab!(:upload)
 
   it "should include width and height" do
-    expect(subject.width).to eq(upload.width)
-    expect(subject.height).to eq(upload.height)
+    expect(serializer.width).to eq(upload.width)
+    expect(serializer.height).to eq(upload.height)
   end
 end

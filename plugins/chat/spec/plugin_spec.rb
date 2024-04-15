@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat do
   before do
     SiteSetting.clean_up_uploads = true
@@ -12,17 +10,17 @@ describe Chat do
 
   describe "register_upload_unused" do
     fab!(:chat_channel) { Fabricate(:chat_channel, chatable: Fabricate(:category)) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
 
     let!(:chat_message) do
-      Chat::MessageCreator.create(
+      Fabricate(
+        :chat_message,
         chat_channel: chat_channel,
         user: user,
-        in_reply_to_id: nil,
-        content: "Hello world!",
-        upload_ids: [upload.id],
+        message: "Hello world!",
+        uploads: [upload],
       )
     end
 
@@ -37,21 +35,19 @@ describe Chat do
 
   describe "register_upload_in_use" do
     fab!(:chat_channel) { Fabricate(:chat_channel, chatable: Fabricate(:category)) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:message_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
     fab!(:draft_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
 
     let!(:chat_message) do
-      Chat::MessageCreator.create(
+      Fabricate(
+        :chat_message,
         chat_channel: chat_channel,
         user: user,
-        in_reply_to_id: nil,
-        content: "Hello world! #{message_upload.sha1}",
-        upload_ids: [],
+        message: "Hello world! #{message_upload.sha1}",
       )
     end
-
     let!(:draft_message) do
       Chat::Draft.create!(
         user: user,
@@ -77,13 +73,14 @@ describe Chat do
     let!(:user) { Fabricate(:user) }
     let!(:guardian) { Guardian.new(user) }
     let(:serializer) { UserCardSerializer.new(target_user, scope: guardian) }
-    fab!(:group) { Fabricate(:group) }
+    fab!(:group)
 
     context "when chat enabled" do
       before { SiteSetting.chat_enabled = true }
 
       it "returns true if the target user and the guardian user is in the Chat.allowed_group_ids" do
         SiteSetting.chat_allowed_groups = group.id
+        SiteSetting.direct_message_enabled_groups = group.id
         GroupUser.create(user: target_user, group: group)
         GroupUser.create(user: user, group: group)
         expect(serializer.can_chat_user).to eq(true)
@@ -116,6 +113,34 @@ describe Chat do
           expect(serializer.can_chat_user).to eq(false)
         end
       end
+
+      context "when both users are in Chat.allowed_group_ids" do
+        before do
+          SiteSetting.chat_allowed_groups = group.id
+          SiteSetting.direct_message_enabled_groups = group.id
+          GroupUser.create(user: target_user, group: group)
+          GroupUser.create(user: user, group: group)
+        end
+
+        it "returns true when both users are valid" do
+          expect(serializer.can_chat_user).to eq(true)
+        end
+
+        it "returns false if current user has chat disabled" do
+          user.user_option.update!(chat_enabled: false)
+          expect(serializer.can_chat_user).to eq(false)
+        end
+
+        it "returns false if target user has chat disabled" do
+          target_user.user_option.update!(chat_enabled: false)
+          expect(serializer.can_chat_user).to eq(false)
+        end
+
+        it "returns false if user is not in dm allowed group" do
+          SiteSetting.direct_message_enabled_groups = 3
+          expect(serializer.can_chat_user).to eq(false)
+        end
+      end
     end
 
     context "when chat not enabled" do
@@ -127,21 +152,30 @@ describe Chat do
     end
   end
 
+  describe "admin plugin serializer extension" do
+    let(:admin) { Fabricate(:admin) }
+    let(:chat_plugin) do
+      Plugin::Instance.parse_from_source(File.join(Rails.root, "plugins", "chat", "plugin.rb"))
+    end
+    let(:serializer) { AdminPluginSerializer.new(chat_plugin, scope: admin.guardian) }
+
+    it "includes all incoming webhooks via :incoming_chat_webhooks" do
+      webhook = Fabricate(:incoming_chat_webhook)
+      expect(serializer.incoming_chat_webhooks).to contain_exactly(webhook)
+    end
+
+    it "includes all chat channels via :chat_channels" do
+      channel = Fabricate(:chat_channel)
+      expect(serializer.chat_channels).to contain_exactly(channel)
+    end
+  end
+
   describe "chat oneboxes" do
     fab!(:chat_channel) { Fabricate(:category_channel) }
-    fab!(:user) { Fabricate(:user, active: true) }
-    fab!(:user_2) { Fabricate(:user, active: false) }
-    fab!(:user_3) { Fabricate(:user, staged: true) }
-    fab!(:user_4) { Fabricate(:user, suspended_till: 3.weeks.from_now) }
+    fab!(:user)
 
-    let!(:chat_message) do
-      Chat::MessageCreator.create(
-        chat_channel: chat_channel,
-        user: user,
-        in_reply_to_id: nil,
-        content: "Hello world!",
-        upload_ids: [],
-      ).chat_message
+    fab!(:chat_message) do
+      Fabricate(:chat_message, chat_channel: chat_channel, user: user, message: "Hello world!")
     end
 
     let(:chat_url) { "#{Discourse.base_url}/chat/c/-/#{chat_channel.id}" }
@@ -161,63 +195,6 @@ describe Chat do
         expect(results[0][:title]).to eq(
           "Message ##{chat_message.id} by #{chat_message.user.username} – ##{chat_channel.name}",
         )
-      end
-    end
-
-    context "when regular" do
-      it "renders channel, excluding inactive, staged, and suspended users" do
-        user.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-        user_2.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-        user_3.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-        user_4.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-        Jobs::Chat::UpdateUserCountsForChannels.new.execute({})
-
-        expect(Oneboxer.preview(chat_url)).to match_html <<~HTML
-          <aside class="onebox chat-onebox">
-            <article class="onebox-body chat-onebox-body">
-              <h3 class="chat-onebox-title">
-                <a href="#{chat_url}">
-                  <span class="category-chat-badge" style="color: ##{chat_channel.chatable.color}">
-                    <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
-                 </span>
-                  <span class="clear-badge">#{chat_channel.name}</span>
-                </a>
-              </h3>
-              <div class="chat-onebox-members-count">1 member</div>
-              <div class="chat-onebox-members">
-               <a class="trigger-user-card" data-user-card="#{user.username}" aria-hidden="true" tabindex="-1">
-                 <img loading="lazy" alt="#{user.username}" width="30" height="30" src="#{user.avatar_template_url.gsub("{size}", "60")}" class="avatar">
-               </a>
-              </div>
-            </article>
-        </aside>
-
-        HTML
-      end
-
-      it "renders messages" do
-        expect(Oneboxer.preview("#{chat_url}/#{chat_message.id}")).to match_html <<~HTML
-          <div class="chat-transcript" data-message-id="#{chat_message.id}" data-username="#{user.username}" data-datetime="#{chat_message.created_at.iso8601}" data-channel-name="#{chat_channel.name}" data-channel-id="#{chat_channel.id}">
-          <div class="chat-transcript-user">
-            <div class="chat-transcript-user-avatar">
-              <a class="trigger-user-card" data-user-card="#{user.username}" aria-hidden="true" tabindex="-1">
-                <img loading="lazy" alt="#{user.username}" width="20" height="20" src="#{user.avatar_template_url.gsub("{size}", "20")}" class="avatar">
-              </a>
-            </div>
-            <div class="chat-transcript-username">#{user.username}</div>
-              <div class="chat-transcript-datetime">
-                <a href="#{chat_url}/#{chat_message.id}" title="#{chat_message.created_at}">#{chat_message.created_at}</a>
-              </div>
-              <a class="chat-transcript-channel" href="/chat/c/-/#{chat_channel.id}">
-                <span class="category-chat-badge" style="color: ##{chat_channel.chatable.color}">
-                  <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
-                </span>
-                #{chat_channel.name}
-              </a>
-            </div>
-          <div class="chat-transcript-messages"><p>Hello world!</p></div>
-        </div>
-        HTML
       end
     end
   end
@@ -252,7 +229,7 @@ describe Chat do
     end
 
     describe "when a user is created" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
       let(:user) { Fabricate(:user, last_seen_at: nil, first_seen_at: nil) }
 
       it "queues a job to auto-join the user the first time they log in" do
@@ -278,7 +255,7 @@ describe Chat do
     end
 
     describe "when category permissions change" do
-      fab!(:category) { Fabricate(:category) }
+      fab!(:category)
 
       let(:chatters_group_permission) do
         { chatters_group.name => CategoryGroup.permission_types[:full] }
@@ -304,8 +281,8 @@ describe Chat do
     end
   end
 
-  describe "secure media compatibility" do
-    it "disables chat uploads if secure media changes from disabled to enabled" do
+  describe "secure uploads compatibility" do
+    it "disables chat uploads if secure uploads changes from disabled to enabled" do
       enable_secure_uploads
       expect(SiteSetting.chat_allow_uploads).to eq(false)
       last_history = UserHistory.last
@@ -323,61 +300,13 @@ describe Chat do
     end
   end
 
-  describe "current_user_serializer#chat_channels" do
-    before do
-      SiteSetting.chat_enabled = true
-      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
-    end
-
-    fab!(:user) { Fabricate(:user) }
-
-    let(:serializer) { CurrentUserSerializer.new(user, scope: Guardian.new(user)) }
-
-    it "returns the global presence channel state" do
-      expect(serializer.chat_channels[:global_presence_channel_state]).to be_present
-    end
-
-    context "when no channels exist" do
-      it "returns an empty array" do
-        expect(serializer.chat_channels[:direct_message_channels]).to eq([])
-        expect(serializer.chat_channels[:public_channels]).to eq([])
-      end
-    end
-
-    context "when followed direct message channels exist" do
-      fab!(:user_2) { Fabricate(:user) }
-      fab!(:channel) { Fabricate(:direct_message_channel, users: [user, user_2]) }
-
-      it "returns them" do
-        expect(serializer.chat_channels[:public_channels]).to eq([])
-        expect(serializer.chat_channels[:direct_message_channels].count).to eq(1)
-        expect(serializer.chat_channels[:direct_message_channels][0].id).to eq(channel.id)
-      end
-    end
-
-    context "when followed public channels exist" do
-      fab!(:channel) { Fabricate(:chat_channel) }
-
-      before do
-        Fabricate(:user_chat_channel_membership, user: user, chat_channel: channel, following: true)
-        Fabricate(:chat_channel)
-      end
-
-      it "returns them" do
-        expect(serializer.chat_channels[:direct_message_channels]).to eq([])
-        expect(serializer.chat_channels[:public_channels].count).to eq(1)
-        expect(serializer.chat_channels[:public_channels][0].id).to eq(channel.id)
-      end
-    end
-  end
-
   describe "current_user_serializer#has_joinable_public_channels" do
     before do
       SiteSetting.chat_enabled = true
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     end
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:serializer) { CurrentUserSerializer.new(user, scope: Guardian.new(user)) }
 
     context "when no channels exist" do
@@ -417,7 +346,7 @@ describe Chat do
   end
 
   describe "Deleting posts while deleting a user" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "queues a job to also delete chat messages" do
       deletion_opts = { delete_posts: true }

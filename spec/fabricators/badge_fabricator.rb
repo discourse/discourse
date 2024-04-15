@@ -6,3 +6,8 @@ Fabricator(:badge) do
   name { sequence(:name) { |i| "Badge #{i}" } }
   badge_type
 end
+
+Fabricator(:manually_grantable_badge, from: :badge) do
+  system false
+  query nil
+end

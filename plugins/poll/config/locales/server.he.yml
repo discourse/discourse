@@ -10,12 +10,16 @@ he:
     poll_maximum_options: "מספר האפשרויות המרבי המותר בסקר"
     poll_edit_window_mins: "מספר דקות אחרי יצירת פוסט במהלכן ניתן לערוך סקרים."
     poll_minimum_trust_level_to_create: "הגדרת רמת המהימנות המזערית הנדרשת ליצירת סקרים."
+    poll_create_allowed_groups: "הקבוצות שמורשות ליצור סקרים."
     poll_groupable_user_fields: "רשימה של שמות משדה המשתמש שניתן להשתמש בהם לקיבוץ ולסינון תוצאות סקרים."
     poll_export_data_explorer_query_id: "מזהה שאילתת חוקר הנתונים לשימוש לטובת ייצוא תוצאות הסקר (0 כדי להשבית)."
+    poll_default_public: "בעת יצירת סקר חדש, יש להפעיל את האפשרות ‚להציג מי הצביע’ כברירת מחדל."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create (דרגת אמון מזערית ליצירת סקרים)"
   poll:
     poll: "סקר"
     invalid_argument: "ערך שגוי ‚%{value}’ למשתנה ‚%{argument}’."
-    multiple_polls_without_name: "יש מספר סקרים ללא שם. יש להשתמש במאפיין ‚<code>name</code>’ כדי לזהות את הסקרים שלך באופן ייחודי."
+    multiple_polls_without_name: "בעת יצירת מספר סקרים, כדאי לתת להם שמות ייחודיים על ידי הוספת <code>name=דוגמה</code> לתגיות <code>[poll]</code> שלך."
     multiple_polls_with_same_name: "יש מספר סקרים עם אותו השם: <strong>%{name}</strong>. יש להשתמש במאפיין ‚<code>name</code>’ (שם) כדי לזהות את הסקרים שלך באופן ייחודי."
     default_poll_must_have_at_least_1_option: "לסקר חייבת להיות אפשרות אחת לפחות."
     named_poll_must_have_at_least_1_option: "לסקר בשם <strong>%{name}</strong> חייבת להיות אפשרות אחת לפחות."

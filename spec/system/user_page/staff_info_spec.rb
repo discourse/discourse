@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-describe "Viewing user staff info as an admin", type: :system, js: true do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+describe "Viewing user staff info as an admin", type: :system do
+  fab!(:user)
+  fab!(:admin)
   let(:user_page) { PageObjects::Pages::User.new }
 
   before { sign_in(admin) }

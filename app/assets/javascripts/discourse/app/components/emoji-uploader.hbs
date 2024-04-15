@@ -9,7 +9,7 @@
         name="name"
         placeholder={{i18n "admin.emoji.name"}}
         @value={{readonly this.name}}
-        {{on "input" (action (mut this.name) value="target.value")}}
+        {{on "input" (with-event-value (fn (mut this.name)))}}
       />
     </div>
   </div>
@@ -40,11 +40,11 @@
         accept=".png,.gif"
       />
       <DButton
-        @class="btn-primary"
         @translatedLabel={{this.buttonLabel}}
         @icon="plus"
-        @action={{action "chooseFiles"}}
+        @action={{this.chooseFiles}}
         @disabled={{this.uploading}}
+        class="btn-primary"
       />
     </div>
   </div>

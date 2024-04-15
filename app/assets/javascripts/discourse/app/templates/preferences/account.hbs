@@ -1,28 +1,34 @@
-<div class="control-group pref-username">
+<div class="control-group pref-username" data-setting-name="user-username">
   <label class="control-label">{{i18n "user.username.title"}}</label>
   <UsernamePreference @user={{this.model}} />
 </div>
 
 {{#unless this.siteSettings.discourse_connect_overrides_avatar}}
-  <div class="control-group pref-avatar">
+  <div class="control-group pref-avatar" data-setting-name="user-avatar">
     <label class="control-label" id="profile-picture">{{i18n
         "user.avatar.title"
       }}</label>
+    <input
+      type="hidden"
+      id="user-avatar-uploads"
+      data-custom-avatar-upload-id={{this.model.custom_avatar_upload_id}}
+      data-system-avatar-upload-id={{this.model.system_avatar_upload_id}}
+    />
     <div class="controls">
       {{! we want the "huge" version even though we're downsizing it in CSS }}
       {{bound-avatar this.model "huge"}}
       <DButton
-        @action={{route-action "showAvatarSelector"}}
-        @actionParam={{this.model}}
-        @class="btn-default pad-left"
+        @action={{fn (route-action "showAvatarSelector") this.model}}
         @icon="pencil-alt"
+        id="edit-avatar"
+        class="btn-default pad-left"
       />
     </div>
   </div>
 {{/unless}}
 
 {{#if this.canCheckEmails}}
-  <div class="control-group pref-email">
+  <div class="control-group pref-email" data-setting-name="user-email">
     <label class="control-label">{{i18n "user.email.title"}}</label>
     {{#if this.model.email}}
       {{#if this.siteSettings.enable_secondary_emails}}
@@ -67,7 +73,7 @@
           {{/each}}
         </div>
 
-        {{#if this.model.can_edit_email}}
+        {{#if this.canAddEmail}}
           <LinkTo
             @route="preferences.email"
             @query={{hash new=1}}
@@ -98,12 +104,11 @@
     {{else}}
       <div class="controls">
         <DButton
-          @action={{route-action "checkEmail"}}
-          @class="btn-default"
-          @actionParam={{this.model}}
+          @action={{fn (route-action "checkEmail") this.model}}
           @title="admin.users.check_email.title"
           @icon="envelope"
           @label="admin.users.check_email.text"
+          class="btn-default"
         />
       </div>
     {{/if}}
@@ -111,7 +116,10 @@
 {{/if}}
 
 {{#if this.canUpdateAssociatedAccounts}}
-  <div class="control-group pref-associated-accounts">
+  <div
+    class="control-group pref-associated-accounts"
+    data-setting-name="user-associated-accounts"
+  >
     <label class="control-label">{{i18n
         "user.associated_accounts.title"
       }}</label>
@@ -128,12 +136,14 @@
                 <td>
                   {{#if authProvider.method.can_revoke}}
                     <DButton
-                      @action={{action "revokeAccount"}}
-                      @actionParam={{authProvider.account}}
+                      @action={{fn
+                        (action "revokeAccount")
+                        authProvider.account
+                      }}
                       @title="user.associated_accounts.revoke"
-                      @class="btn-danger no-text"
                       @icon="trash-alt"
                       @disabled={{get this.revoking authProvider.method.name}}
+                      class="btn-danger no-text"
                     />
                   {{/if}}
                 </td>
@@ -144,12 +154,14 @@
                 <td colspan="2">
                   {{#if authProvider.method.can_connect}}
                     <DButton
-                      @action={{action "connectAccount"}}
-                      @actionParam={{authProvider.method}}
+                      @action={{fn
+                        (action "connectAccount")
+                        authProvider.method
+                      }}
                       @label="user.associated_accounts.connect"
-                      @class="btn-default"
                       @icon="plug"
                       @disabled={{this.disableConnectButtons}}
+                      class="btn-default"
                     />
                   {{else}}
                     {{i18n "user.associated_accounts.not_connected"}}
@@ -163,8 +175,7 @@
     {{else}}
       <div class="controls">
         <DButton
-          @action={{route-action "checkEmail"}}
-          @actionParam={{this.model}}
+          @action={{fn (route-action "checkEmail") this.model}}
           @title="admin.users.check_email.title"
           @icon="envelope"
           @label="admin.users.check_email.text"
@@ -175,7 +186,7 @@
 {{/if}}
 
 {{#if this.canEditName}}
-  <div class="control-group pref-name">
+  <div class="control-group pref-name" data-setting-name="user-name">
     <label class="control-label">{{i18n "user.name.title"}}</label>
     <div class="controls">
       {{#if this.model.can_edit_name}}
@@ -195,13 +206,13 @@
 {{/if}}
 
 {{#if this.canSelectTitle}}
-  <div class="control-group pref-title">
+  <div class="control-group pref-title" data-setting-name="user-title">
     <label class="control-label">{{i18n "user.title.title"}}</label>
     <div class="controls">
       <ComboBox
         @value={{this.newTitleInput}}
         @content={{this.model.availableTitles}}
-        @onChange={{action (mut this.newTitleInput)}}
+        @onChange={{fn (mut this.newTitleInput)}}
         @options={{hash none="user.title.none"}}
       />
     </div>
@@ -212,13 +223,13 @@
 {{/if}}
 
 {{#if this.canSelectFlair}}
-  <div class="control-group pref-flair">
+  <div class="control-group pref-flair" data-setting-name="user-flair">
     <label class="control-label">{{i18n "user.flair.title"}}</label>
     <div class="controls">
       <FlairChooser
         @value={{this.newFlairGroupId}}
         @content={{this.model.availableFlairs}}
-        @onChange={{action (mut this.newFlairGroupId)}}
+        @onChange={{fn (mut this.newFlairGroupId)}}
         @options={{hash none="user.flair.none"}}
       />
     </div>
@@ -229,7 +240,7 @@
 {{/if}}
 
 {{#if this.canSelectUserStatus}}
-  <div class="control-group pref-user-status">
+  <div class="control-group pref-user-status" data-setting-name="user-status">
     <label class="control-label">{{i18n "user.status.title"}}</label>
     <div class="controls">
       {{#if this.newStatus}}
@@ -241,17 +252,19 @@
         <span class="static">{{i18n "user.status.not_set"}}</span>
       {{/if}}
       <DButton
-        @action={{action "showUserStatusModal"}}
-        @actionParam={{this.newStatus}}
-        @class="btn-default btn-small pad-left"
+        @action={{fn (action "showUserStatusModal") this.newStatus}}
         @icon="pencil-alt"
+        class="btn-default btn-small pad-left"
       />
     </div>
   </div>
 {{/if}}
 
 {{#if this.canSelectPrimaryGroup}}
-  <div class="control-group pref-primary-group">
+  <div
+    class="control-group pref-primary-group"
+    data-setting-name="user-primary-group"
+  >
     <label class="control-label">{{i18n "user.primary_group.title"}}</label>
     <div class="controls">
       <ComboBox
@@ -264,14 +277,17 @@
 {{/if}}
 
 {{#if this.canDownloadPosts}}
-  <div class="control-group pref-data-export">
+  <div
+    class="control-group pref-data-export"
+    data-setting-name="user-data-export"
+  >
     <label class="control-label">{{i18n "user.download_archive.title"}}</label>
     <div class="controls">
       <DButton
         @action={{action "exportUserArchive"}}
-        @class="btn-default btn-request-archive"
         @label="user.download_archive.button_text"
         @icon="download"
+        class="btn-default btn-request-archive"
       />
     </div>
     <div class="instructions">
@@ -313,9 +329,9 @@
       <DButton
         @action={{action "delete"}}
         @disabled={{this.deleteDisabled}}
-        @class="btn-danger"
         @icon="far-trash-alt"
         @label="user.delete_account"
+        class="btn-danger"
       />
     </div>
   </div>

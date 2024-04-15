@@ -29,33 +29,14 @@ sl:
           title: "Rezultati bodo prikazani, ko se glasovanje <strong>zapre</strong>."
         staff:
           title: "Rezultati so prikazani samo <strong>osebju</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Izberite vsaj <strong>%{count}</strong> možnost."
-            two: "Izberite vsaj <strong>%{count}</strong> možnosti."
-            few: "Izberite vsaj <strong>%{count}</strong> možnosti."
-            other: "Izberite vsaj <strong>%{count}</strong> možnosti."
-          up_to_max_options:
-            one: "Izberite največ <strong>%{count}</strong> možnost."
-            two: "Izberite največ <strong>%{count}</strong> možnosti."
-            few: "Izberite največ <strong>%{count}</strong> možnosti."
-            other: "Izberite največ <strong>%{count}</strong> možnosti."
-          x_options:
-            one: "Izberite <strong>%{count}</strong> možnost."
-            two: "Izberite <strong>%{count}</strong> možnosti."
-            few: "Izberite <strong>%{count}</strong> možnosti."
-            other: "Izberite <strong>%{count}</strong> možnosti."
-          between_min_and_max_options: "Izbirate lahko med <strong>%{min}</strong> in <strong>%{max}</strong> možnostmi."
       cast-votes:
         title: "Oddajte svoj glas"
         label: "Glasuj!"
       show-results:
         title: "Prikaži rezultate ankete"
-        label: "Prikaži rezultate"
+        label: "Rezultati"
       hide-results:
         title: "Nazaj na vašo glasovnico"
-        label: "Prikaži oddane glasove"
       group-results:
         title: "Zbiranje glasov po uporabniškem polju"
         label: "Pokaži razčlenitev"
@@ -79,6 +60,8 @@ sl:
         breakdown: "Razčlenitev"
         percentage: "Odstotki"
         count: "Število"
+      options:
+        label: "Možnosti"
       error_while_toggling_status: "Prišlo je do napake med spreminjanjem statusa te ankete."
       error_while_casting_votes: "Prišlo je do napake med oddajo vašega glasu."
       error_while_fetching_voters: "Prišlo je do napake med prikazom glasovalcev."

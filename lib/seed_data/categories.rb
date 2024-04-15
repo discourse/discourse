@@ -138,9 +138,9 @@ module SeedData
         SiteSetting.set(site_setting_name, category.id)
 
         if sidebar
-          sidebar_categories = SiteSetting.default_sidebar_categories.split("|")
+          sidebar_categories = SiteSetting.default_navigation_menu_categories.split("|")
           sidebar_categories << category.id
-          SiteSetting.set("default_sidebar_categories", sidebar_categories.join("|"))
+          SiteSetting.set("default_navigation_menu_categories", sidebar_categories.join("|"))
         end
 
         SiteSetting.set("default_composer_category", category.id) if default_composer_category

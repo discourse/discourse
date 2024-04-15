@@ -4,7 +4,6 @@
 #
 
 require "ox"
-require "set"
 
 class Saxy < Ox::Sax
   def initialize

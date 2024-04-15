@@ -46,8 +46,10 @@ RSpec.describe Report do
 
   describe "counting" do
     describe "requests" do
+      subject(:json) { Report.find("http_total_reqs").as_json }
+
       before do
-        freeze_time DateTime.parse("2017-03-01 12:00")
+        freeze_time_safe
 
         # today, an incomplete day:
         application_requests = [
@@ -59,37 +61,31 @@ RSpec.describe Report do
         ]
 
         # 60 complete days:
-        30
-          .times
-          .each_with_object(application_requests) do |i|
-            application_requests.concat(
-              [
-                {
-                  date: (i + 1).days.ago.to_time,
-                  req_type: ApplicationRequest.req_types["http_total"],
-                  count: 10,
-                },
-              ],
-            )
-          end
-        30
-          .times
-          .each_with_object(application_requests) do |i|
-            application_requests.concat(
-              [
-                {
-                  date: (31 + i).days.ago.to_time,
-                  req_type: ApplicationRequest.req_types["http_total"],
-                  count: 100,
-                },
-              ],
-            )
-          end
+        30.times.each do |i|
+          application_requests.concat(
+            [
+              {
+                date: (i + 1).days.ago.to_time,
+                req_type: ApplicationRequest.req_types["http_total"],
+                count: 10,
+              },
+            ],
+          )
+        end
+        30.times.each do |i|
+          application_requests.concat(
+            [
+              {
+                date: (31 + i).days.ago.to_time,
+                req_type: ApplicationRequest.req_types["http_total"],
+                count: 100,
+              },
+            ],
+          )
+        end
 
         ApplicationRequest.insert_all(application_requests)
       end
-
-      subject(:json) { Report.find("http_total_reqs").as_json }
 
       it "counts the correct records" do
         expect(json[:data].size).to eq(31) # today and 30 full days
@@ -101,7 +97,7 @@ RSpec.describe Report do
     describe "topics" do
       before do
         Report.clear_cache
-        freeze_time DateTime.parse("2017-03-01 12:00")
+        freeze_time_safe
         user = Fabricate(:user)
         topics =
           ((0..32).to_a + [60, 61, 62, 63]).map do |i|
@@ -149,7 +145,7 @@ RSpec.describe Report do
       let(:user) { Fabricate(:user) }
 
       it "returns a report with data" do
-        freeze_time DateTime.parse("2000-01-01")
+        freeze_time_safe
         user.user_visits.create(visited_at: 1.hour.from_now)
         user.user_visits.create(visited_at: 1.day.ago)
         user.user_visits.create(visited_at: 2.days.ago, mobile: true)
@@ -173,7 +169,7 @@ RSpec.describe Report do
       let(:user) { Fabricate(:user) }
 
       it "returns a report with data" do
-        freeze_time DateTime.parse("2000-01-01")
+        freeze_time_safe
         user.user_visits.create(visited_at: 1.hour.from_now)
         user.user_visits.create(visited_at: 2.days.ago, mobile: true)
         user.user_visits.create(visited_at: 45.days.ago)
@@ -201,19 +197,19 @@ RSpec.describe Report do
 
       context "with #{pluralized}" do
         before(:each) do
-          freeze_time DateTime.parse("2017-03-01 12:00")
+          freeze_time_safe
 
           if arg == :flag
-            user = Fabricate(:user)
+            user = Fabricate(:user, refresh_auto_groups: true)
             topic = Fabricate(:topic, user: user)
-            builder = ->(dt) {
+            builder = ->(dt) do
               PostActionCreator.create(
                 user,
                 Fabricate(:post, topic: topic, user: user),
                 :spam,
                 created_at: dt,
               )
-            }
+            end
           elsif arg == :signup
             builder = ->(dt) { Fabricate(:user, created_at: dt) }
           else
@@ -266,7 +262,7 @@ RSpec.describe Report do
 
       context "with #{request_type}" do
         before do
-          freeze_time DateTime.parse("2017-03-01 12:00")
+          freeze_time_safe
           application_requests = [
             {
               date: 35.days.ago.to_time,
@@ -466,7 +462,7 @@ RSpec.describe Report do
       before do
         3.times { Fabricate(:user, admin: true) }
         2.times { Fabricate(:user, moderator: true) }
-        UserSilencer.silence(Fabricate(:user), Fabricate.build(:admin))
+        UserSilencer.silence(Fabricate(:user, refresh_auto_groups: true), Fabricate.build(:admin))
         Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago)
       end
 
@@ -523,7 +519,7 @@ RSpec.describe Report do
 
     context "with different users/visits" do
       before do
-        freeze_time DateTime.parse("2017-03-01 12:00")
+        freeze_time_safe
 
         arpit = Fabricate(:user)
         arpit.user_visits.create(visited_at: 1.day.ago)
@@ -556,14 +552,14 @@ RSpec.describe Report do
 
     context "with different activities" do
       before do
-        freeze_time DateTime.parse("2017-03-01 12:00")
+        freeze_time_safe
 
         UserActionManager.enable
 
         arpit = Fabricate(:user)
         sam = Fabricate(:user)
 
-        jeff = Fabricate(:user, created_at: 1.day.ago)
+        jeff = Fabricate(:user, created_at: 1.day.ago, refresh_auto_groups: true)
         post = create_post(user: jeff, created_at: 1.day.ago)
         PostActionCreator.like(arpit, post)
         PostActionCreator.like(sam, post)
@@ -594,7 +590,7 @@ RSpec.describe Report do
     include_examples "no data"
 
     context "with flags" do
-      let(:flagger) { Fabricate(:user) }
+      let(:flagger) { Fabricate(:user, refresh_auto_groups: true) }
       let(:post) { Fabricate(:post, user: flagger) }
 
       before { freeze_time }
@@ -693,7 +689,7 @@ RSpec.describe Report do
 
     let(:sam) { Fabricate(:user, moderator: true, username: "sam") }
 
-    let(:jeff) { Fabricate(:user, moderator: true, username: "jeff") }
+    let(:jeff) { Fabricate(:user, moderator: true, username: "jeff", refresh_auto_groups: true) }
 
     include_examples "no data"
 
@@ -852,7 +848,7 @@ RSpec.describe Report do
       include_examples "with data x/y"
 
       before(:each) do
-        user = Fabricate(:user)
+        user = Fabricate(:user, refresh_auto_groups: true)
         topic = Fabricate(:topic, user: user)
         post0 = Fabricate(:post, topic: topic, user: user)
         post1 = Fabricate(:post, topic: Fabricate(:topic, category: c1, user: user), user: user)
@@ -1082,8 +1078,8 @@ RSpec.describe Report do
   end
 
   describe "user_flagging_ratio" do
-    let(:joffrey) { Fabricate(:user, username: "joffrey") }
-    let(:robin) { Fabricate(:user, username: "robin") }
+    let(:joffrey) { Fabricate(:user, username: "joffrey", refresh_auto_groups: true) }
+    let(:robin) { Fabricate(:user, username: "robin", refresh_auto_groups: true) }
     let(:moderator) { Fabricate(:moderator) }
     let(:user) { Fabricate(:user) }
 
@@ -1150,7 +1146,7 @@ RSpec.describe Report do
 
     context "with data" do
       it "works" do
-        freeze_time DateTime.parse("2017-03-01 12:00")
+        freeze_time_safe
 
         ip = [81, 2, 69, 142]
 
@@ -1333,7 +1329,6 @@ RSpec.describe Report do
 
         expect(page_view_anon_report[:color]).to eql("#9BC53D")
         expect(page_view_anon_report[:data][0][:y]).to eql(1)
-      ensure
       end
     end
   end
@@ -1378,7 +1373,6 @@ RSpec.describe Report do
 
         expect(user_api_report[:color]).to eql("#9BC53D")
         expect(user_api_report[:data][0][:y]).to eql(1)
-      ensure
       end
     end
   end

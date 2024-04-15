@@ -1,8 +1,8 @@
-import DropdownSelectBoxRowComponent from "select-kit/components/dropdown-select-box/dropdown-select-box-row";
-import I18n from "I18n";
 import { computed } from "@ember/object";
-import { escapeExpression } from "discourse/lib/utilities";
 import { readOnly } from "@ember/object/computed";
+import { escapeExpression } from "discourse/lib/utilities";
+import I18n from "discourse-i18n";
+import DropdownSelectBoxRowComponent from "select-kit/components/dropdown-select-box/dropdown-select-box-row";
 
 export default DropdownSelectBoxRowComponent.extend({
   classNames: ["notifications-button-row"],
@@ -13,9 +13,7 @@ export default DropdownSelectBoxRowComponent.extend({
     return escapeExpression(I18n.t(`${this._start}.title`));
   }),
 
-  title: readOnly("label"),
-
-  icons: computed("title", "item.icon", function () {
+  icons: computed("item.icon", function () {
     return [escapeExpression(this.item.icon)];
   }),
 

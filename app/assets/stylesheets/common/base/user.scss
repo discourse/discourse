@@ -64,6 +64,15 @@
 
   .show-mores {
     width: 100%;
+
+    .alert-info.clickable {
+      gap: 0.5em;
+
+      &.loading {
+        color: var(--primary-medium);
+        cursor: default;
+      }
+    }
   }
 
   .d-icon-heart {
@@ -78,6 +87,8 @@
 }
 
 .user-main {
+  background: var(--d-content-background);
+
   .about {
     width: 100%;
     margin-bottom: 0;
@@ -293,7 +304,6 @@
         width: auto;
         text-align: left;
         font-weight: normal;
-        font-weight: bold;
       }
 
       .instructions {
@@ -367,11 +377,11 @@
       margin: 0;
     }
   }
-  $label-max-width: 300px;
+  --label-max-width: 300px;
   label.radio {
     display: flex;
     align-items: center;
-    max-width: $label-max-width;
+    max-width: var(--label-max-width);
     margin: 0 0.5em 0 0;
     padding: 0;
     .avatar {
@@ -382,7 +392,7 @@
   .error {
     color: var(--danger);
     margin: 0;
-    max-width: calc(#{$label-max-width} - 20px);
+    max-width: calc(var(--label-max-width) - 20px);
     grid-column-start: 2;
     grid-column-end: 3;
   }
@@ -516,6 +526,23 @@
 }
 
 .user-preferences {
+  .form-vertical {
+    width: 500px;
+    max-width: 100%;
+
+    .control-group {
+      margin-bottom: 2em;
+    }
+  }
+
+  .category-selector,
+  .tag-chooser,
+  textarea,
+  input.user-selector,
+  .user-chooser {
+    width: 100%;
+  }
+
   textarea {
     height: 100px;
   }
@@ -647,6 +674,95 @@
   .save-button {
     display: flex;
     align-items: center;
+    gap: 1em;
+  }
+
+  .pref-auth-tokens {
+    .auth-token-icon {
+      color: var(--primary-medium);
+      font-size: 2.25em;
+      float: left;
+      margin-right: 10px;
+    }
+
+    .auth-token-first {
+      font-size: 1.1em;
+
+      .auth-token-device {
+        font-weight: bold;
+      }
+    }
+
+    .auth-token-second {
+      color: var(--primary-medium);
+
+      .active {
+        color: var(--success);
+        font-weight: bold;
+      }
+    }
+
+    .auth-token-dropdown {
+      float: right;
+
+      .btn,
+      .btn:hover {
+        background: transparent;
+
+        .d-icon {
+          color: var(--primary-high);
+        }
+      }
+    }
+  }
+
+  .pref-passkeys,
+  .pref-auth-tokens {
+    .row {
+      border-top: 1px solid var(--primary-low);
+      padding: 0.5em 0;
+      margin: 0.5em 0;
+
+      &:last-child {
+        border-bottom: 1px solid var(--primary-low);
+      }
+    }
+  }
+
+  .pref-passkeys {
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      .row-passkey__name {
+        font-weight: bold;
+      }
+
+      .row-passkey__created-date,
+      .row-passkey__used-date {
+        color: var(--primary-medium);
+      }
+    }
+
+    &__add {
+      margin-top: 1em;
+    }
+
+    .passkey-options-dropdown {
+      .btn,
+      .btn:hover {
+        background: transparent;
+
+        .d-icon {
+          color: var(--primary-high);
+        }
+      }
+    }
+  }
+
+  .pref-second-factor {
+    margin-top: 0.5em;
   }
 }
 
@@ -654,38 +770,6 @@
   .user-content {
     width: 100%;
     margin-top: 0;
-  }
-}
-
-.large-notifications {
-  margin: 0;
-}
-
-.large-notification {
-  display: flex;
-  align-items: center;
-
-  a {
-    display: flex;
-    align-items: center;
-
-    .d-icon {
-      margin-right: 0.5em;
-    }
-
-    span:first-child {
-      color: var(--primary);
-    }
-
-    // Can remove this once other languages have removed html from i18n values
-    div {
-      .fa {
-        display: none;
-      }
-      p {
-        margin: 0;
-      }
-    }
   }
 }
 
@@ -747,7 +831,7 @@
     border: 0;
     cursor: auto;
     outline: none;
-    font-family: monospace;
+    font-family: var(--d-font-family--monospace);
     &:focus {
       box-shadow: none;
       border-color: var(--primary-low);
@@ -823,6 +907,7 @@
   max-height: 350px;
   margin-bottom: 1em;
   text-align: justify;
+  overflow-y: auto;
   .selectable-avatar {
     margin: 5px;
     display: inline-block;
@@ -864,6 +949,19 @@
   }
 }
 
+.user-additional-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+}
+
+.user-invite-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-left: auto;
+}
+
 .notification-schedule {
   .instruction {
     margin-top: 12px;
@@ -882,5 +980,25 @@
         }
       }
     }
+  }
+}
+
+// Due to special login animations, the order here needs to be changed
+.control-group[data-setting-name="user-user-fields"]
+  .user-field.text
+  .controls {
+  display: flex;
+  flex-direction: column;
+  .control-label.alt-placeholder {
+    order: 1;
+  }
+  .ember-text-field {
+    order: 2;
+  }
+  .tip {
+    order: 3;
+  }
+  .instructions {
+    order: 4;
   }
 }

@@ -35,8 +35,8 @@ RSpec.describe TopTopic do
   end
 
   describe "#compute_top_score_for" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:coding_horror) { Fabricate(:coding_horror) }
+    fab!(:user)
+    fab!(:coding_horror)
 
     fab!(:topic_1) { Fabricate(:topic, posts_count: 10, like_count: 28) }
     fab!(:t1_post_1) { Fabricate(:post, topic: topic_1, like_count: 28, post_number: 1) }

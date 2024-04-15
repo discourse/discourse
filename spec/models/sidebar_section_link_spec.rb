@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SidebarSectionLink do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "Validations" do
     it "is not valid when linkable already exists for the current user" do

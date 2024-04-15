@@ -1,17 +1,37 @@
 import EmberObject from "@ember/object";
-import I18n from "I18n";
 import { Promise } from "rsvp";
+import { updateCsrfToken } from "discourse/lib/ajax";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
-import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
-import { updateCsrfToken } from "discourse/lib/ajax";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
-const LoginMethod = EmberObject.extend({
+export default class LoginMethod extends EmberObject {
+  static buildPostForm(url) {
+    // Login always happens in an anonymous context, with no CSRF token
+    // So we need to fetch it before sending a POST request
+    return updateCsrfToken().then(() => {
+      const form = document.createElement("form");
+      form.setAttribute("style", "display:none;");
+      form.setAttribute("method", "post");
+      form.setAttribute("action", url);
+
+      const input = document.createElement("input");
+      input.setAttribute("name", "authenticity_token");
+      input.setAttribute("value", Session.currentProp("csrfToken"));
+      form.appendChild(input);
+
+      document.body.appendChild(form);
+
+      return form;
+    });
+  }
+
   @discourseComputed
   title() {
     return this.title_override || I18n.t(`login.${this.name}.title`);
-  },
+  }
 
   @discourseComputed
   screenReaderTitle() {
@@ -19,12 +39,12 @@ const LoginMethod = EmberObject.extend({
       this.title_override ||
       I18n.t(`login.${this.name}.sr_title`, { defaultValue: this.title })
     );
-  },
+  }
 
   @discourseComputed
   prettyName() {
     return this.pretty_name_override || I18n.t(`login.${this.name}.name`);
-  },
+  }
 
   doLogin({ reconnect = false, signup = false, params = {} } = {}) {
     if (this.customLogin) {
@@ -56,30 +76,8 @@ const LoginMethod = EmberObject.extend({
     }
 
     return LoginMethod.buildPostForm(authUrl).then((form) => form.submit());
-  },
-});
-
-LoginMethod.reopenClass({
-  buildPostForm(url) {
-    // Login always happens in an anonymous context, with no CSRF token
-    // So we need to fetch it before sending a POST request
-    return updateCsrfToken().then(() => {
-      const form = document.createElement("form");
-      form.setAttribute("style", "display:none;");
-      form.setAttribute("method", "post");
-      form.setAttribute("action", url);
-
-      const input = document.createElement("input");
-      input.setAttribute("name", "authenticity_token");
-      input.setAttribute("value", Session.currentProp("csrfToken"));
-      form.appendChild(input);
-
-      document.body.appendChild(form);
-
-      return form;
-    });
-  },
-});
+  }
+}
 
 let methods;
 
@@ -101,5 +99,3 @@ export function findAll() {
 export function clearAuthMethods() {
   methods = undefined;
 }
-
-export default LoginMethod;

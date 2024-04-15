@@ -13,6 +13,12 @@ RSpec.describe CurrentUserSerializer do
     current_user.user_option.update(chat_enabled: true)
   end
 
+  describe "#chat_separate_sidebar_mode" do
+    it "is present" do
+      expect(serializer.as_json[:user_option][:chat_separate_sidebar_mode]).to eq("default")
+    end
+  end
+
   describe "#chat_drafts" do
     context "when user can't chat" do
       before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff] }

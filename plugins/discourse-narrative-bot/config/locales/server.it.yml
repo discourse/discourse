@@ -45,6 +45,9 @@ it:
       trigger: "tira il dado"
       invalid: |-
         Mi dispiace, è matematicamente impossibile lanciare quella combinazione di dadi. :confounded:
+      not_enough_dice:
+        one: "Ho solo %{count} tentativo. È un peccato, lo so!"
+        other: "Ho solo %{count} tentativi. È un peccato, lo so!"
       out_of_range: |-
         Lo sapevi che [il numero massimo di lati](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) per avere un dado matematicamente ben bilanciato è 120?
       results: |-
@@ -293,10 +296,6 @@ it:
         not_found: |-
           Oh no, il mio brutto messaggio non è ancora stato segnalato come inappropriato. :worried: Puoi contrassegnarlo come inappropriato usando il pulsante **segnala** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Non dimenticare di usare il pulsante 'mostra altro' <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> per rivelare gli altri pulsanti.
       search:
-        instructions: |-
-          _psst_ … Ho nascosto una sorpresa in questo argomento. Se sei pronto alla sfida, **seleziona l'icona cerca** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> in alto a destra &#8599; per trovarla.
-
-          Prova a cercare il termine "capi&#8203;bara" in questo argomento
         hidden_message: |-
           Come hai fatto a perderti questo capibara? :wink:
 
@@ -373,12 +372,12 @@ it:
         instructions: |-
           Lo sapevi che è possibile fare riferimento a categorie ed etichette in un messaggio? Per esempio, hai visto la categoria %{category}?
 
-          Digita `#` nel mezzo di una frase e seleziona una categoria o un'etichetta.
+          Digita "#" nel mezzo di una frase e seleziona una categoria o un'etichetta.
         not_found: |-
-          Uhm, non vedo nessuna categoria nel tuo messaggio. Nota che `#` non può essere il primo carattere di una riga. Puoi copiare questo nella tua prossima risposta?
+          Uhm, non vedo nessuna categoria qui. Puoi copiare questo nella tua prossima risposta?
 
-          ```text
-          Posso creare un collegamento ad una categoria digitando #
+          ```testo
+          Posso creare un collegamento a una categoria digitando #
           ```
         reply: |-
           Eccellente! Ricorda che ciò funziona sia per le categorie _sia_ per le etichette, se queste etichette sono abilitate.

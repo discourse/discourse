@@ -10,9 +10,10 @@ ro:
     poll_maximum_options: "Numărul maxim admis de opțiuni într-un sondaj"
     poll_edit_window_mins: "Număr de minute după crearea postării pe parcursul cărora sondajele pot fi editate."
     poll_minimum_trust_level_to_create: "Definește nivelul minim de încredere pentru a crea sondaje."
+    poll_default_public: "Când se creează un sondaj nou, activează opțiunea „arată cine a votat” în mod prestabilit."
   poll:
     invalid_argument: "Valoare nevalidă „%{value}” pentru argumentul „%{argument}”."
-    multiple_polls_without_name: "Există mai multe sondaje fără nume. Folosește atributul '<code>name</code>' pentru a identifica sondajele proprii"
+    multiple_polls_without_name: "Atunci când creezi mai multe sondaje, include nume unice adăugând <code>name=exemplu</code> la etichetele <code>[poll]</code>."
     multiple_polls_with_same_name: "Există mai multe sondaje cu același nume: <strong>%{name}</strong>. Folosește atributul '<code>name</code>' pentru a identifica sondajele."
     default_poll_must_have_at_least_1_option: "Sondajul trebuie să aibă cel puţin o opţiune."
     named_poll_must_have_at_least_1_option: "Sondajul <strong>%{name}</strong> trebuie să aibă cel puțin o opțiune."

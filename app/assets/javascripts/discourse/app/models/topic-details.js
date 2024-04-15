@@ -1,27 +1,29 @@
 import EmberObject from "@ember/object";
-import RestModel from "discourse/models/rest";
-import User from "discourse/models/user";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
+import RestModel from "discourse/models/rest";
 
 /**
   A model representing a Topic's details that aren't always present, such as a list of participants.
   When showing topics in lists and such this information should not be required.
 **/
 
-const TopicDetails = RestModel.extend({
-  loaded: false,
+export default class TopicDetails extends RestModel {
+  @service store;
+
+  loaded = false;
 
   updateFromJson(details) {
     const topic = this.topic;
 
     if (details.allowed_users) {
-      details.allowed_users = details.allowed_users.map(function (u) {
-        return User.create(u);
-      });
+      details.allowed_users = details.allowed_users.map((u) =>
+        this.store.createRecord("user", u)
+      );
     }
 
     if (details.participants) {
-      details.participants = details.participants.map(function (p) {
+      details.participants = details.participants.map((p) => {
         p.topic = topic;
         return EmberObject.create(p);
       });
@@ -29,7 +31,7 @@ const TopicDetails = RestModel.extend({
 
     this.setProperties(details);
     this.set("loaded", true);
-  },
+  }
 
   updateNotifications(level) {
     return ajax(`/t/${this.get("topic.id")}/notifications`, {
@@ -41,7 +43,7 @@ const TopicDetails = RestModel.extend({
         notifications_reason_id: null,
       });
     });
-  },
+  }
 
   removeAllowedGroup(group) {
     const groups = this.allowed_groups;
@@ -53,7 +55,7 @@ const TopicDetails = RestModel.extend({
     }).then(() => {
       groups.removeObject(groups.findBy("name", name));
     });
-  },
+  }
 
   removeAllowedUser(user) {
     const users = this.allowed_users;
@@ -65,7 +67,5 @@ const TopicDetails = RestModel.extend({
     }).then(() => {
       users.removeObject(users.findBy("username", username));
     });
-  },
-});
-
-export default TopicDetails;
+  }
+}

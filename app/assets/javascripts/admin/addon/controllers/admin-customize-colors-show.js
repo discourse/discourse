@@ -1,12 +1,13 @@
 import Controller from "@ember/controller";
-import I18n from "I18n";
-import discourseLater from "discourse-common/lib/later";
 import { action, computed } from "@ember/object";
+import { service } from "@ember/service";
 import { clipboardCopy } from "discourse/lib/utilities";
-import { inject as service } from "@ember/service";
+import discourseLater from "discourse-common/lib/later";
+import I18n from "discourse-i18n";
 
 export default class AdminCustomizeColorsShowController extends Controller {
   @service dialog;
+  @service router;
   onlyOverridden = false;
 
   @computed("model.colors.[]", "onlyOverridden")
@@ -58,7 +59,7 @@ export default class AdminCustomizeColorsShowController extends Controller {
     );
     newColorScheme.save().then(() => {
       this.allColors.pushObject(newColorScheme);
-      this.replaceRoute("adminCustomize.colors.show", newColorScheme);
+      this.router.replaceWith("adminCustomize.colors.show", newColorScheme);
     });
   }
 
@@ -79,7 +80,7 @@ export default class AdminCustomizeColorsShowController extends Controller {
       didConfirm: () => {
         return this.model.destroy().then(() => {
           this.allColors.removeObject(this.model);
-          this.replaceRoute("adminCustomize.colors");
+          this.router.replaceWith("adminCustomize.colors");
         });
       },
     });

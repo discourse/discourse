@@ -12,7 +12,6 @@ be:
     poll_minimum_trust_level_to_create: "Вызначэнне мінімальнага ўзроўню даверу, неабходны для стварэння апытанняў."
   poll:
     invalid_argument: "Несапраўднае значэнне '% {значэнне}' для аргументу '% {аргумент}'."
-    multiple_polls_without_name: "Ёсць некалькі апытанняў без імя. Выкарыстоўвайце «<код> назва <"
     multiple_polls_with_same_name: "Ёсць некалькі апытанняў з тым жа імем: <моцны>% {імя} <"
     default_poll_must_have_different_options: "Апытанне павінен мець розныя варыянты."
     named_poll_must_have_different_options: "Апытанне з імем <моцны>% {імя} <"

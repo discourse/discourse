@@ -1,10 +1,11 @@
+import { get } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
 import { isBlank, isEmpty } from "@ember/utils";
-import I18n from "I18n";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import RestModel from "discourse/models/rest";
 import discourseComputed from "discourse-common/utils/decorators";
-import { get } from "@ember/object";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "discourse-i18n";
+import ThemeSettings from "admin/models/theme-settings";
 
 const THEME_UPLOAD_VAR = 2;
 const FIELDS_IDS = [0, 1, 5];
@@ -14,6 +15,16 @@ export const COMPONENTS = "components";
 const SETTINGS_TYPE_ID = 5;
 
 class Theme extends RestModel {
+  static munge(json) {
+    if (json.settings) {
+      json.settings = json.settings.map((setting) =>
+        ThemeSettings.create(setting)
+      );
+    }
+
+    return json;
+  }
+
   @or("default", "user_selectable") isActive;
   @gt("remote_theme.commits_behind", 0) isPendingUpdates;
   @gt("editedFields.length", 0) hasEditedFields;
@@ -308,16 +319,6 @@ class Theme extends RestModel {
     return this.save(hash)
       .finally(() => this.set("changed", false))
       .catch(popupAjaxError);
-  }
-
-  saveSettings(name, value) {
-    const settings = {};
-    settings[name] = value;
-    return this.save({ settings });
-  }
-
-  saveTranslation(name, value) {
-    return this.save({ translations: { [name]: value } });
   }
 }
 

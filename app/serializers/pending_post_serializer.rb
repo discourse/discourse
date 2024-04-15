@@ -15,13 +15,23 @@ class PendingPostSerializer < ApplicationSerializer
 
   delegate :created_by, :payload, :topic, to: :object, private: true
   delegate :url, to: :topic, prefix: true, allow_nil: true
-  delegate :avatar_template, :name, :username, to: :created_by, allow_nil: true
+  delegate :avatar_template, :name, :username, to: :target_created_by, allow_nil: true
+
+  def created_by_id
+    object.target_created_by_id
+  end
 
   def raw_text
     payload["raw"]
   end
 
   def title
-    payload["title"] || topic.title
+    payload["title"] || topic&.title
+  end
+
+  private
+
+  def target_created_by
+    object.target_created_by
   end
 end

@@ -1,19 +1,23 @@
-.dashboard,
 .dashboard-next {
   .activity-metrics .counters-list {
     font-size: var(--font-down-1);
   }
   .navigation a.navigation-link {
-    padding: 0.5em;
+    padding: 0.4em;
+    font-size: var(--font-down-1);
+    .emoji {
+      width: 1.3em;
+      height: 1.3em;
+      margin-right: 0;
+    }
   }
   .dashboard-new-features .section-body {
     grid-template-columns: none;
   }
 
   .admin-new-feature-item {
-    .new-feature-emoji {
+    &__new-feature-emoji {
       padding-left: 0em;
-      padding-right: 0.25em;
     }
   }
 }

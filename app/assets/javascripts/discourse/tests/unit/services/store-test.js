@@ -1,6 +1,6 @@
-import { module, test } from "qunit";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { module, test } from "qunit";
 import pretender, {
   fixturesByUrl,
   response,
@@ -262,5 +262,16 @@ module("Unit | Service | store", function (hooks) {
     assert.true("topic_list" in result);
     assert.true(Array.isArray(result.topics));
     assert.strictEqual(result.filter, "topics/created-by/trout");
+  });
+
+  test("Spec incompliant embedded record name", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const fruit = await store.find("fruit", 4);
+
+    assert.propContains(
+      fruit.other_fruit_ids,
+      { apple: 1, banana: 2 },
+      "embedded record remains unhydrated"
+    );
   });
 });

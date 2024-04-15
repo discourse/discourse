@@ -1,10 +1,10 @@
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
 import selectKit, {
   setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
-import { hbs } from "ember-cli-htmlbars";
 
 module(
   "Integration | Component | select-kit/notifications-button",

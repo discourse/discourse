@@ -1,21 +1,24 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import I18n from "I18n";
 import Route from "@ember/routing/route";
+import { service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 export default class AdminCustomizeThemesEditRoute extends Route {
   @service dialog;
+  @service router;
 
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
     const model = all.findBy("id", parseInt(params.theme_id, 10));
-    return model
-      ? {
-          model,
-          target: params.target,
-          field_name: params.field_name,
-        }
-      : this.replaceWith("adminCustomizeThemes.index");
+    if (model) {
+      return {
+        model,
+        target: params.target,
+        field_name: params.field_name,
+      };
+    } else {
+      this.router.replaceWith("adminCustomizeThemes.index");
+    }
   }
 
   serialize(wrapper) {
@@ -32,11 +35,11 @@ export default class AdminCustomizeThemesEditRoute extends Route {
       .get("fields")
       [wrapper.target].map((f) => f.name);
     if (wrapper.model.remote_theme && wrapper.model.remote_theme.is_git) {
-      this.transitionTo("adminCustomizeThemes.index");
+      this.router.transitionTo("adminCustomizeThemes.index");
       return;
     }
     if (!fields.includes(wrapper.field_name)) {
-      this.transitionTo(
+      this.router.transitionTo(
         "adminCustomizeThemes.edit",
         wrapper.model.id,
         wrapper.target,

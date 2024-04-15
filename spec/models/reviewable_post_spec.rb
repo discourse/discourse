@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewablePost do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   describe "#build_actions" do
     let(:post) { Fabricate.build(:post) }

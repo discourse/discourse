@@ -1,5 +1,5 @@
-import User from "discourse/models/user";
 import { h } from "virtual-dom";
+import User from "discourse/models/user";
 import { renderIcon } from "discourse-common/lib/icon-library";
 
 const _decorators = [];
@@ -54,6 +54,7 @@ export default function renderTopicFeaturedLink(topic) {
     return "";
   }
 }
+// deprecated per components/header/topic/featured-link.gjs
 export function topicFeaturedLinkNode(topic) {
   const meta = extractLinkMeta(topic);
   if (meta) {

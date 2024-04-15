@@ -1,7 +1,10 @@
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminReportsShowRoute extends DiscourseRoute {
+  @service router;
+
   queryParams = {
     start_date: { refreshModel: true },
     end_date: { refreshModel: true },
@@ -68,6 +71,6 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
         : null,
     };
 
-    this.transitionTo("adminReports.show", { queryParams });
+    this.router.transitionTo("adminReports.show", { queryParams });
   }
 }

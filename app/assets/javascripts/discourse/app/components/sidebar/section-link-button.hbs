@@ -1,0 +1,15 @@
+<div class="sidebar-section-link-wrapper">
+  <button
+    type="button"
+    class="btn btn-flat sidebar-section-link-button sidebar-row"
+    {{on "click" @action}}
+  >
+    <span class="sidebar-section-link-prefix icon">
+      {{d-icon @icon}}
+    </span>
+
+    <span class="sidebar-section-link-content-text">
+      {{@text}}
+    </span>
+  </button>
+</div>

@@ -1,56 +1,19 @@
-import DiscoveryController from "discourse/controllers/discovery";
-import { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { dasherize } from "@ember/string";
-import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
+import { service } from "@ember/service";
+import discourseComputed from "discourse-common/utils/decorators";
 
-const subcategoryStyleComponentNames = {
-  rows: "categories_only",
-  rows_with_featured_topics: "categories_with_featured_topics",
-  boxes: "categories_boxes",
-  boxes_with_featured_topics: "categories_boxes_with_topics",
-};
+export default class CategoriesController extends Controller {
+  @service router;
+  @service composer;
 
-const mobileCompatibleViews = [
-  "categories_with_featured_topics",
-  "subcategories_with_featured_topics",
-];
+  @reads("currentUser.staff") canEdit;
 
-export default DiscoveryController.extend({
-  discovery: controller(),
-
-  // this makes sure the composer isn't scoping to a specific category
-  category: null,
-
-  canEdit: reads("currentUser.staff"),
   @discourseComputed
   isCategoriesRoute() {
     return this.router.currentRouteName === "discovery.categories";
-  },
-  @discourseComputed("model.parentCategory")
-  categoryPageStyle(parentCategory) {
-    let style = this.siteSettings.desktop_category_page_style;
-
-    if (this.site.mobileView && !mobileCompatibleViews.includes(style)) {
-      style = mobileCompatibleViews[0];
-    }
-
-    if (parentCategory) {
-      style =
-        subcategoryStyleComponentNames[
-          parentCategory.get("subcategory_list_style")
-        ] || style;
-    }
-
-    const componentName =
-      parentCategory &&
-      (style === "categories_and_latest_topics" ||
-        style === "categories_and_latest_topics_created_date")
-        ? "categories_only"
-        : style;
-    return dasherize(componentName);
-  },
+  }
 
   @action
   showInserted(event) {
@@ -59,11 +22,17 @@ export default DiscoveryController.extend({
     // Move inserted into topics
     this.model.loadBefore(tracker.get("newIncoming"), true);
     tracker.resetTracking();
-  },
+  }
 
-  actions: {
-    refresh() {
-      this.send("triggerRefresh");
-    },
-  },
-});
+  @action
+  createTopic() {
+    this.composer.openNewTopic({
+      preferDraft: true,
+    });
+  }
+
+  @action
+  refresh() {
+    this.send("triggerRefresh");
+  }
+}

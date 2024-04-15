@@ -6,7 +6,15 @@
 
 nb_NO:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Alltid"
+          never: "Aldri"
     chat:
+      deleted_chat_username: slettet
+      dates:
+        yesterday: "I går"
       create: "Opprett"
       cancel: "Avbryt"
       channel_settings:
@@ -15,6 +23,7 @@ nb_NO:
         join: "Bli medlem"
         leave: "Forlat"
       close: "Lukk"
+      remove: "Fjern"
       delete: "Slett"
       edited: "redigert"
       muted: "ignorert"
@@ -26,8 +35,6 @@ nb_NO:
       flag: "Flagg"
       join: "Bli medlem"
       last_visit: "siste besøk"
-      mention_warning:
-        dismiss: "forkast"
       reply: "Svar"
       edit: "Endre"
       rebake_message: "Generer HTML på nytt"
@@ -43,6 +50,7 @@ nb_NO:
       browse:
         back: "Forrige"
         filter_all: Alle
+        filter_open: Åpne
         filter_closed: Lukket
       chat_message_separator:
         today: I dag
@@ -54,9 +62,10 @@ nb_NO:
       channel_info:
         back_to_channel: "Forrige"
         tabs:
-          about: Om
           members: Medlemmer
           settings: Instillinger
+      new_message_modal:
+        filter: "Filtrer"
       direct_message_creator:
         title: Ny Melding
         prefix: "Til:"
@@ -76,12 +85,18 @@ nb_NO:
         channel_wide_mentions_description: "Tillat brukere å varsle alle medlemmer av #%{channel} med @alle eller bare de som er aktive i øyeblikket med @alleher"
         follow: "Bli medlem"
         followed: "Medlem fra"
+        threading_enabled: "Aktivert"
+        threading_disabled: "Deaktivert"
         notifications: "Varsler"
         preview: "Forhåndsvis"
         save: "Lagre"
         saved: "Lagret"
         unfollow: "Forlat"
         admin_title: "Admin"
+        settings_title: "Instillinger"
+        category_label: "Kategori"
+        history_label: "Historie"
+        members_label: "Medlemmer"
       incoming_webhooks:
         back: "Forrige"
         description: "Beskrivelse"
@@ -102,6 +117,10 @@ nb_NO:
           title: "Flytt til eksisterende emne"
         new_message:
           title: "Flytt til ny melding"
+      retention_reminders:
+        short:
+          one: "%{count} dag"
+          other: "%{count} dager"
       emoji_picker:
         objects: "Objekter"
         activities: "Aktiviteter"
@@ -113,6 +132,15 @@ nb_NO:
           one: "%{count} svar"
           other: "%{count} svar"
         settings: "Instillinger"
+        last_reply: "siste svar"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Overvåkning"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Ny Melding"
         cancel: "Avbryt"

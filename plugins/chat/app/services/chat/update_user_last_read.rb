@@ -19,10 +19,12 @@ module Chat
     model :channel
     model :active_membership
     policy :invalid_access
-    policy :ensure_message_exists
+    model :message
     policy :ensure_message_id_recency
-    step :update_last_read_message_id
-    step :mark_associated_mentions_as_read
+    transaction do
+      step :update_membership_state
+      step :mark_associated_mentions_as_read
+    end
     step :publish_new_last_read_to_clients
 
     # @!visibility private
@@ -35,41 +37,41 @@ module Chat
 
     private
 
-    def fetch_channel(contract:, **)
+    def fetch_channel(contract:)
       ::Chat::Channel.find_by(id: contract.channel_id)
     end
 
-    def fetch_active_membership(guardian:, channel:, **)
+    def fetch_active_membership(guardian:, channel:)
       ::Chat::ChannelMembershipManager.new(channel).find_for_user(guardian.user, following: true)
     end
 
-    def invalid_access(guardian:, active_membership:, **)
+    def invalid_access(guardian:, active_membership:)
       guardian.can_join_chat_channel?(active_membership.chat_channel)
     end
 
-    def ensure_message_exists(channel:, contract:, **)
-      ::Chat::Message.with_deleted.exists?(chat_channel_id: channel.id, id: contract.message_id)
+    def fetch_message(channel:, contract:)
+      ::Chat::Message.with_deleted.find_by(chat_channel_id: channel.id, id: contract.message_id)
     end
 
-    def ensure_message_id_recency(contract:, active_membership:, **)
+    def ensure_message_id_recency(message:, active_membership:)
       !active_membership.last_read_message_id ||
-        contract.message_id >= active_membership.last_read_message_id
+        message.id >= active_membership.last_read_message_id
     end
 
-    def update_last_read_message_id(contract:, active_membership:, **)
-      active_membership.update!(last_read_message_id: contract.message_id)
+    def update_membership_state(message:, active_membership:)
+      active_membership.update!(last_read_message_id: message.id, last_viewed_at: Time.zone.now)
     end
 
-    def mark_associated_mentions_as_read(active_membership:, contract:, **)
+    def mark_associated_mentions_as_read(active_membership:, message:)
       ::Chat::Action::MarkMentionsRead.call(
         active_membership.user,
         channel_ids: [active_membership.chat_channel.id],
-        message_id: contract.message_id,
+        message_id: message.id,
       )
     end
 
-    def publish_new_last_read_to_clients(guardian:, channel:, contract:, **)
-      ::Chat::Publisher.publish_user_tracking_state(guardian.user, channel.id, contract.message_id)
+    def publish_new_last_read_to_clients(guardian:, channel:, message:)
+      ::Chat::Publisher.publish_user_tracking_state!(guardian.user, channel, message)
     end
   end
 end

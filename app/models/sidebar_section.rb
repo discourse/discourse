@@ -11,7 +11,9 @@ class SidebarSection < ActiveRecord::Base
            source: :linkable,
            source_type: "SidebarUrl"
 
-  accepts_nested_attributes_for :sidebar_urls, allow_destroy: true
+  accepts_nested_attributes_for :sidebar_urls,
+                                allow_destroy: true,
+                                limit: -> { SiteSetting.max_sidebar_section_links }
 
   before_save :set_system_user_for_public_section
 

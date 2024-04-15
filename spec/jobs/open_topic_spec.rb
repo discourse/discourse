@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::OpenTopic do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   fab!(:topic) { Fabricate(:topic_timer, user: admin).topic }
 
@@ -49,7 +49,7 @@ RSpec.describe Jobs::OpenTopic do
   end
 
   describe "when user is no longer authorized to open topics" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     fab!(:topic) { Fabricate(:topic_timer, user: user).topic }
 

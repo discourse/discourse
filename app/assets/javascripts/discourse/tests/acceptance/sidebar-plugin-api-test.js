@@ -1,6 +1,13 @@
-import { test } from "qunit";
-import I18n from "I18n";
 import { click, settled, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
+import {
+  resetCustomCategoryLockIcon,
+  resetCustomCategorySectionLinkPrefix,
+  resetCustomCountables,
+} from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
+import Site from "discourse/models/site";
 import {
   acceptance,
   exists,
@@ -8,16 +15,8 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
-import Site from "discourse/models/site";
-import {
-  resetCustomCategoryLockIcon,
-  resetCustomCategorySectionLinkPrefix,
-  resetCustomCountables,
-} from "discourse/lib/sidebar/user/categories-section/category-section-link";
-import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
-import { UNREAD_LIST_DESTINATION } from "discourse/controllers/preferences/sidebar";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 acceptance("Sidebar - Plugin API", function (needs) {
   needs.user({});
@@ -207,6 +206,28 @@ acceptance("Sidebar - Plugin API", function (needs) {
                     return "hover button title attribute";
                   }
                 })(),
+
+                new (class extends BaseCustomSidebarSectionLink {
+                  get name() {
+                    return "homepage";
+                  }
+
+                  get classNames() {
+                    return "my-class-name";
+                  }
+
+                  get href() {
+                    return "https://www.discourse.org";
+                  }
+
+                  get title() {
+                    return "Homepage";
+                  }
+
+                  get text() {
+                    return "Homepage";
+                  }
+                })(),
               ];
             }
           };
@@ -229,6 +250,12 @@ acceptance("Sidebar - Plugin API", function (needs) {
       "chat channels text",
       "displays header with correct text"
     );
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-caret"
+      )
+      .exists();
 
     await click(
       ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-dropdown summary"
@@ -351,6 +378,18 @@ acceptance("Sidebar - Plugin API", function (needs) {
     );
 
     assert.strictEqual(
+      links[3].title,
+      "Homepage",
+      "displays external link with correct title attribute"
+    );
+
+    assert.strictEqual(
+      links[3].href,
+      "https://www.discourse.org/",
+      "displays external link with correct href attribute"
+    );
+
+    assert.strictEqual(
       query(".sidebar-section-link-hover button").title,
       "hover button title attribute",
       "displays hover button with correct title"
@@ -424,176 +463,6 @@ acceptance("Sidebar - Plugin API", function (needs) {
         ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-content a"
       ),
       "displays no links"
-    );
-  });
-
-  test("API bridge for decorating hamburger-menu widget with footer links", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
-      api.decorateWidget("hamburger-menu:footerLinks", () => {
-        return {
-          route: "discovery.top",
-          rawLabel: "my top",
-          className: "my-custom-top",
-        };
-      });
-    });
-
-    await visit("/");
-
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
-    );
-
-    const myCustomTopSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-content-main .sidebar-section-link[data-link-name='my-custom-top']"
-    );
-
-    assert.ok(
-      myCustomTopSectionLink,
-      "adds my custom top section link to community section under the secondary section in the More... links drawer"
-    );
-
-    assert.ok(
-      myCustomTopSectionLink.href.endsWith("/top"),
-      "sets the right href attribute for the my custom top section link"
-    );
-
-    assert.strictEqual(
-      myCustomTopSectionLink.textContent.trim(),
-      "my top",
-      "displays the right text for my custom top section link"
-    );
-  });
-
-  test("API bridge for decorating hamburger-menu widget with general links", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
-      api.decorateWidget("hamburger-menu:generalLinks", () => {
-        return {
-          route: "discovery.latest",
-          label: "filters.latest.title",
-        };
-      });
-
-      api.decorateWidget("hamburger-menu:generalLinks", () => {
-        return {
-          route: "discovery.unread",
-          rawLabel: "my unreads",
-        };
-      });
-
-      api.decorateWidget("hamburger-menu:generalLinks", () => {
-        return {
-          route: "discovery.top",
-          rawLabel: "my top",
-          className: "my-custom-top",
-        };
-      });
-
-      api.decorateWidget("hamburger-menu:generalLinks", () => {
-        return {
-          href: "/c/bug?status=open",
-          rawLabel: "open bugs",
-        };
-      });
-
-      api.decorateWidget("hamburger-menu:generalLinks", () => {
-        return {
-          href: "/t/internationalization-localization/280",
-          rawLabel: "my favourite topic",
-        };
-      });
-    });
-
-    await visit("/");
-
-    const customLatestSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='latest']"
-    );
-
-    assert.ok(
-      customLatestSectionLink,
-      "adds custom latest section link to community section"
-    );
-
-    assert.ok(
-      customLatestSectionLink.href.endsWith("/latest"),
-      "sets the right href attribute for the custom latest section link"
-    );
-
-    assert.strictEqual(
-      customLatestSectionLink.textContent.trim(),
-      I18n.t("filters.latest.title"),
-      "displays the right text for custom latest section link"
-    );
-
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
-    );
-
-    const customUnreadSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-unreads']"
-    );
-
-    assert.ok(
-      customUnreadSectionLink,
-      "adds custom unread section link to community section"
-    );
-
-    assert.ok(
-      customUnreadSectionLink.href.endsWith("/unread"),
-      "sets the right href attribute for the custom unread section link"
-    );
-
-    assert.strictEqual(
-      customUnreadSectionLink.textContent.trim(),
-      "my unreads",
-      "displays the right text for custom unread section link"
-    );
-
-    const customTopSectionLInk = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-custom-top']"
-    );
-
-    assert.ok(
-      customTopSectionLInk,
-      "adds custom top section link to community section with right link class"
-    );
-
-    const openBugsSectionLink = query(
-      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='open-bugs']"
-    );
-
-    assert.ok(
-      openBugsSectionLink,
-      "adds custom open bugs section link to community section with right link class"
-    );
-
-    assert.ok(
-      openBugsSectionLink.href.endsWith("/c/bug?status=open"),
-      "sets the right href attribute for the custom open bugs section link"
-    );
-
-    // close more links
-    await click(
-      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
-    );
-
-    await visit("/t/internationalization-localization/280");
-
-    assert.ok(
-      exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='my-favourite-topic'].active"
-      ),
-      "displays my favourite topic custom section link when current route matches the link's route"
-    );
-
-    await visit("/t/short-topic-with-two-posts/54077");
-
-    assert.notOk(
-      exists(
-        ".sidebar-section[data-section-name='community'] .sidebar-section-link-my-favourite-topic.active"
-      ),
-      "does not display my favourite topic custom section link when current route does not match the link's route"
     );
   });
 
@@ -692,32 +561,36 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.ok(
           exists(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-suffix.unread`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-suffix.unread`
           ),
           "the right suffix is displayed when custom countable is active"
         );
 
         assert.strictEqual(
-          query(`.sidebar-section-link[data-category-id="${category1.id}"]`)
-            .pathname,
+          query(
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
+          ).pathname,
           `/c/${category1.name}/${category1.id}`,
           "does not use route configured for custom countable when user has elected not to show any counts in sidebar"
         );
 
         assert.notOk(
           exists(
-            `.sidebar-section-link[data-category-id="${category2.id}"] .sidebar-section-link-suffix.unread`
+            `.sidebar-section-link-wrapper[data-category-id="${category2.id}"] .sidebar-section-link-suffix.unread`
           ),
           "does not display suffix when custom countable is not registered"
         );
 
         updateCurrentUser({
-          sidebar_list_destination: UNREAD_LIST_DESTINATION,
+          user_option: {
+            sidebar_link_to_filtered_list: true,
+            sidebar_show_count_of_new_items: true,
+          },
         });
 
         assert.strictEqual(
           query(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
           ).innerText.trim(),
           I18n.t("sidebar.unread_count", { count: 1 }),
           "displays the right badge text in section link when unread is present and custom countable is not prioritised over unread"
@@ -731,22 +604,24 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.strictEqual(
           query(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-content-badge`
           ).innerText.trim(),
           `some custom ${category1.topic_count}`,
           "displays the right badge text in section link when unread is present but custom countable is prioritised over unread"
         );
 
         assert.strictEqual(
-          query(`.sidebar-section-link[data-category-id="${category1.id}"]`)
-            .pathname,
+          query(
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
+          ).pathname,
           `/c/${category1.name}/${category1.id}/l/latest`,
           "has the right pathname for section link"
         );
 
         assert.strictEqual(
-          query(`.sidebar-section-link[data-category-id="${category1.id}"]`)
-            .search,
+          query(
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] a`
+          ).search,
           "?status=open",
           "has the right query params for section link"
         );
@@ -773,7 +648,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.ok(
           exists(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .prefix-badge.d-icon-wrench`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .prefix-badge.d-icon-wrench`
           ),
           "wrench icon is displayed for the section link's prefix badge"
         );
@@ -805,14 +680,14 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.ok(
           exists(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .prefix-icon.d-icon-wrench`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .prefix-icon.d-icon-wrench`
           ),
           "wrench icon is displayed for the section link's prefix icon"
         );
 
         assert.strictEqual(
           query(
-            `.sidebar-section-link[data-category-id="${category1.id}"] .sidebar-section-link-prefix`
+            `.sidebar-section-link-wrapper[data-category-id="${category1.id}"] .sidebar-section-link-prefix`
           ).style.color,
           "rgb(255, 0, 0)",
           "section link's prefix icon has the right color"
@@ -845,14 +720,14 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.ok(
           exists(
-            `.sidebar-section-link[data-tag-name="tag1"] .prefix-icon.d-icon-wrench`
+            `.sidebar-section-link-wrapper[data-tag-name="tag1"] .prefix-icon.d-icon-wrench`
           ),
           "wrench icon is displayed for tag1 section link's prefix icon"
         );
 
         assert.strictEqual(
           query(
-            `.sidebar-section-link[data-tag-name="tag1"] .sidebar-section-link-prefix`
+            `.sidebar-section-link-wrapper[data-tag-name="tag1"] .sidebar-section-link-prefix`
           ).style.color,
           "rgb(255, 0, 0)",
           "tag1 section link's prefix icon has the right color"
@@ -860,7 +735,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
         assert.ok(
           exists(
-            `.sidebar-section-link[data-tag-name="tag2"] .prefix-icon.d-icon-tag`
+            `.sidebar-section-link-wrapper[data-tag-name="tag2"] .prefix-icon.d-icon-tag`
           ),
           "default tag icon is displayed for tag2 section link's prefix icon"
         );
@@ -868,5 +743,290 @@ acceptance("Sidebar - Plugin API", function (needs) {
     } finally {
       resetCustomTagSectionLinkPrefixIcons();
     }
+  });
+
+  test("New custom sidebar panel and option to set default and show/hide switch buttons", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarPanel((BaseCustomSidebarPanel) => {
+        const ChatSidebarPanel = class extends BaseCustomSidebarPanel {
+          get key() {
+            return "new-panel";
+          }
+
+          get switchButtonLabel() {
+            "New panel";
+          }
+
+          get switchButtonIcon() {
+            return "d-chat";
+          }
+
+          get switchButtonDefaultUrl() {
+            return "/chat";
+          }
+        };
+        return ChatSidebarPanel;
+      });
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            get name() {
+              return "test-chat-channels";
+            }
+
+            get text() {
+              return "chat channels text";
+            }
+
+            get actionsIcon() {
+              return "cog";
+            }
+
+            get links() {
+              return [
+                new (class extends BaseCustomSidebarSectionLink {
+                  get name() {
+                    return "random-channel";
+                  }
+
+                  get classNames() {
+                    return "my-class-name";
+                  }
+
+                  get route() {
+                    return "topic";
+                  }
+
+                  get models() {
+                    return ["some-slug", 1];
+                  }
+
+                  get title() {
+                    return "random channel title";
+                  }
+
+                  get text() {
+                    return "random channel text";
+                  }
+
+                  get prefixType() {
+                    return "icon";
+                  }
+
+                  get prefixValue() {
+                    return "d-chat";
+                  }
+
+                  get prefixColor() {
+                    return "FF0000";
+                  }
+
+                  get prefixBadge() {
+                    return "lock";
+                  }
+
+                  get suffixType() {
+                    return "icon";
+                  }
+
+                  get suffixValue() {
+                    return "circle";
+                  }
+
+                  get suffixCSSClass() {
+                    return "unread";
+                  }
+                })(),
+              ];
+            }
+          };
+        },
+        "new-panel"
+      );
+      api.setSeparatedSidebarMode();
+      api.setSidebarPanel("new-panel");
+      api.setSeparatedSidebarMode();
+    });
+
+    await visit("/");
+
+    assert.strictEqual(
+      query(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
+      ).textContent.trim(),
+      "chat channels text",
+      "displays header with correct text"
+    );
+
+    await click(".sidebar__panel-switch-button");
+
+    assert
+      .dom(".sidebar-section[data-section-name='test-chat-channels']")
+      .doesNotExist();
+    assert.dom(".sidebar-sections + button").exists();
+
+    assert
+      .dom("#d-sidebar .sidebar-sections + .sidebar__panel-switch-button")
+      .exists();
+    assert
+      .dom("#d-sidebar .sidebar__panel-switch-button + .sidebar-sections")
+      .doesNotExist();
+
+    this.siteSettings.default_sidebar_switch_panel_position = "top";
+    await visit("/");
+
+    assert
+      .dom("#d-sidebar .sidebar-sections + .sidebar__panel-switch-button")
+      .doesNotExist();
+    assert
+      .dom("#d-sidebar .sidebar__panel-switch-button + .sidebar-sections")
+      .exists();
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
+      )
+      .doesNotExist();
+
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.setCombinedSidebarMode();
+    });
+    await visit("/");
+    assert.dom(".sidebar__panel-switch-button").doesNotExist();
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
+      )
+      .exists();
+
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.setSidebarPanel("new-panel");
+      api.hideSidebarSwitchPanelButtons();
+    });
+    await visit("/");
+    assert.dom(".sidebar__panel-switch-button").doesNotExist();
+
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.setSidebarPanel("new-panel");
+      api.hideSidebarSwitchPanelButtons();
+      api.showSidebarSwitchPanelButtons();
+    });
+    await visit("/");
+    assert.dom(".sidebar__panel-switch-button").exists();
+  });
+
+  test("New hidden custom sidebar panel", async function (assert) {
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.addSidebarPanel((BaseCustomSidebarPanel) => {
+        const AdminSidebarPanel = class extends BaseCustomSidebarPanel {
+          get key() {
+            return "admin-panel";
+          }
+
+          get hidden() {
+            return true;
+          }
+        };
+        return AdminSidebarPanel;
+      });
+      api.addSidebarSection(
+        (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+          return class extends BaseCustomSidebarSection {
+            get name() {
+              return "test-admin-section";
+            }
+
+            get text() {
+              return "test admin section";
+            }
+
+            get actionsIcon() {
+              return "cog";
+            }
+
+            get links() {
+              return [
+                new (class extends BaseCustomSidebarSectionLink {
+                  get name() {
+                    return "admin-link";
+                  }
+
+                  get classNames() {
+                    return "my-class-name";
+                  }
+
+                  get route() {
+                    return "topic";
+                  }
+
+                  get models() {
+                    return ["some-slug", 1];
+                  }
+
+                  get title() {
+                    return "admin link";
+                  }
+
+                  get text() {
+                    return "admin link";
+                  }
+
+                  get prefixType() {
+                    return "icon";
+                  }
+
+                  get prefixValue() {
+                    return "cog";
+                  }
+
+                  get prefixColor() {
+                    return "FF0000";
+                  }
+
+                  get prefixBadge() {
+                    return "lock";
+                  }
+
+                  get suffixType() {
+                    return "icon";
+                  }
+
+                  get suffixValue() {
+                    return "circle";
+                  }
+
+                  get suffixCSSClass() {
+                    return "unread";
+                  }
+                })(),
+              ];
+            }
+          };
+        },
+        "admin-panel"
+      );
+      api.setSidebarPanel("admin-panel");
+      api.setSeparatedSidebarMode();
+    });
+
+    await visit("/");
+
+    assert.strictEqual(
+      query(
+        ".sidebar-section[data-section-name='test-admin-section'] .sidebar-section-header-text"
+      ).textContent.trim(),
+      "test admin section",
+      "displays header with correct text"
+    );
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.setSidebarPanel("main-panel");
+      api.setCombinedSidebarMode();
+    });
+    await visit("/");
+    assert.dom(".sidebar__panel-switch-button").doesNotExist();
+    assert
+      .dom(".sidebar-section[data-section-name='test-admin-section']")
+      .doesNotExist();
   });
 });

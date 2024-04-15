@@ -1,23 +1,29 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import { classNameBindings } from "@ember-decorators/component";
 import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import LinkLookup from "discourse/lib/link-lookup";
 import { not } from "@ember/object/computed";
-import showModal from "discourse/lib/show-modal";
+import { service } from "@ember/service";
+import { classNameBindings } from "@ember-decorators/component";
 import { ajax } from "discourse/lib/ajax";
+import LinkLookup from "discourse/lib/link-lookup";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import { debounce } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 let _messagesCache = {};
-let _recipient_names = [];
 
 @classNameBindings(":composer-popup-container", "hidden")
 export default class ComposerMessages extends Component {
+  @service modal;
+  @tracked showShareModal;
+
   checkedMessages = false;
   messages = null;
   messagesByTemplate = null;
   queuedForTyping = null;
   similarTopics = null;
   usersNotSeen = null;
+  recipientNames = [];
 
   @not("composer.viewOpenOrFullscreen") hidden;
 
@@ -82,6 +88,7 @@ export default class ComposerMessages extends Component {
 
   // Called after the user has typed a reply.
   // Some messages only get shown after being typed.
+  @debounce(INPUT_DELAY)
   async _typedReply() {
     if (this.isDestroying || this.isDestroyed) {
       return;
@@ -118,10 +125,10 @@ export default class ComposerMessages extends Component {
 
       if (
         recipient_names.length > 0 &&
-        recipient_names.length !== _recipient_names.length &&
-        !recipient_names.every((v, i) => v === _recipient_names[i])
+        recipient_names.length !== this.recipientNames.length &&
+        !recipient_names.every((v, i) => v === this.recipientNames[i])
       ) {
-        _recipient_names = recipient_names;
+        this.recipientNames = recipient_names;
 
         const response = await ajax(
           `/composer_messages/user_not_seen_in_a_while`,
@@ -180,6 +187,11 @@ export default class ComposerMessages extends Component {
 
     // We don't care about similar topics unless creating a topic
     if (!this.composer.creatingTopic) {
+      return;
+    }
+
+    // We don't care about similar topics when creating with a form template
+    if (this.composer?.category?.form_template_ids.length > 0) {
       return;
     }
 
@@ -304,19 +316,17 @@ export default class ComposerMessages extends Component {
     }
   }
 
-  @action
-  shareModal() {
+  get shareModalData() {
     const { topic } = this.composer;
-    const controller = showModal("share-topic", { model: topic.category });
-
-    controller.setProperties({
+    return {
+      topic,
+      category: topic.category,
       allowInvites:
         topic.details.can_invite_to &&
         !topic.archived &&
         !topic.closed &&
         !topic.deleted,
-      topic,
-    });
+    };
   }
 
   @action

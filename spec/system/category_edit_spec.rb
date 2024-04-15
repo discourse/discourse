@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-describe "Edit Category", type: :system, js: true do
-  fab!(:color_scheme) { Fabricate(:color_scheme) }
-  fab!(:theme) { Fabricate(:theme) }
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:form_template) { Fabricate(:form_template) }
+describe "Edit Category", type: :system do
+  fab!(:color_scheme)
+  fab!(:theme)
+  fab!(:admin)
+  fab!(:form_template)
   fab!(:form_template_2) { Fabricate(:form_template) }
   fab!(:category) do
     Fabricate(:category, name: "Cool Category", slug: "cool-cat", topic_count: 3234)

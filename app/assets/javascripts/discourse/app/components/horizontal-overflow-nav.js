@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { bind } from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class HorizontalOverflowNav extends Component {
   @service site;

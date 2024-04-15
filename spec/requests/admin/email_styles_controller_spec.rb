@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::EmailStylesController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   let(:default_html) { File.read("#{Rails.root}/app/views/email/default_template.html") }
   let(:default_css) { "" }

@@ -10,7 +10,7 @@ class SidebarSectionsController < ApplicationController
         .strict_loading
         .includes(:sidebar_urls)
         .where("public OR user_id = ?", current_user.id)
-        .order("(public IS TRUE) DESC")
+        .order("(public IS TRUE) DESC, title ASC")
         .map { |section| SidebarSectionSerializer.new(section, root: false) }
 
     render json: sections
@@ -29,6 +29,8 @@ class SidebarSectionsController < ApplicationController
     render_serialized(sidebar_section, SidebarSectionSerializer)
   rescue ActiveRecord::RecordInvalid => e
     render_json_error(e.record.errors.full_messages.first)
+  rescue ActiveRecord::NestedAttributes::TooManyRecords => e
+    render_json_error(e.message)
   end
 
   def update
@@ -59,9 +61,11 @@ class SidebarSectionsController < ApplicationController
       Site.clear_anon_cache!
     end
 
-    render_serialized(sidebar_section, SidebarSectionSerializer)
+    render_serialized(sidebar_section.reload, SidebarSectionSerializer)
   rescue ActiveRecord::RecordInvalid => e
     render_json_error(e.record.errors.full_messages.first)
+  rescue ActiveRecord::NestedAttributes::TooManyRecords => e
+    render_json_error(e.message)
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
   end
@@ -77,17 +81,6 @@ class SidebarSectionsController < ApplicationController
     end
 
     render_serialized(sidebar_section, SidebarSectionSerializer)
-  end
-
-  def reorder
-    sidebar_section = SidebarSection.find_by(id: reorder_params["sidebar_section_id"])
-    @guardian.ensure_can_edit!(sidebar_section)
-    order = reorder_params["links_order"].map(&:to_i).each_with_index.to_h
-    set_order(sidebar_section, order)
-
-    render_serialized(sidebar_section, SidebarSectionSerializer)
-  rescue Discourse::InvalidAccess
-    render json: failed_json, status: 403
   end
 
   def destroy

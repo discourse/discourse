@@ -1,7 +1,8 @@
 import { getRenderDirector } from "discourse/lib/notification-types-manager";
-import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
-import User from "discourse/models/user";
 import Site from "discourse/models/site";
+import User from "discourse/models/user";
+import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
+import { cloneJSON } from "discourse-common/lib/object";
 
 export function createRenderDirector(
   notification,
@@ -11,7 +12,9 @@ export function createRenderDirector(
   const director = getRenderDirector(
     notificationType,
     notification,
-    User.create(sessionFixtures["/session/current.json"].current_user),
+    User.create(
+      cloneJSON(sessionFixtures["/session/current.json"].current_user)
+    ),
     siteSettings,
     Site.current()
   );

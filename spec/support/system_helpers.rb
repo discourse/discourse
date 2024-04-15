@@ -2,6 +2,8 @@
 require "highline/import"
 
 module SystemHelpers
+  PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
+
   def pause_test
     result =
       ask(
@@ -12,24 +14,72 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit "/session/#{user.encoded_username}/become.json?redirect=false"
+    visit File.join(
+            GlobalSetting.relative_url_root || "",
+            "/session/#{user.encoded_username}/become.json?redirect=false",
+          )
+
+    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
-  def sign_out
-    delete "/session"
+  # Uploads a theme from a directory.
+  #
+  # @param set_theme_as_default [Boolean] Whether to set the uploaded theme as the default theme for the site. Defaults to true.
+  #
+  # @return [Theme] The uploaded theme model given by `models/theme.rb`.
+  #
+  # @example Upload a theme and set it as default
+  #   upload_theme("/path/to/theme")
+  def upload_theme(set_theme_as_default: true)
+    theme = RemoteTheme.import_theme_from_directory(theme_dir_from_caller)
+
+    if theme.component
+      raise "Uploaded theme is a theme component, please use the `upload_theme_component` method instead."
+    end
+
+    theme.set_default! if set_theme_as_default
+    theme
+  end
+
+  # Uploads a theme component from a directory.
+  #
+  # @param parent_theme_id [Integer] The ID of the theme to add the theme component to. Defaults to `SiteSetting.default_theme_id`.
+  #
+  # @return [Theme] The uploaded theme model given by `models/theme.rb`.
+  #
+  # @example Upload a theme component
+  #   upload_theme_component("/path/to/theme_component")
+  #
+  # @example Upload a theme component and add it to a specific theme
+  #   upload_theme_component("/path/to/theme_component", parent_theme_id: 123)
+  def upload_theme_component(parent_theme_id: SiteSetting.default_theme_id)
+    theme = RemoteTheme.import_theme_from_directory(theme_dir_from_caller)
+
+    if !theme.component
+      raise "Uploaded theme is not a theme component, please use the `upload_theme` method instead."
+    end
+
+    Theme.find(parent_theme_id).child_themes << theme
+    theme
   end
 
   def setup_system_test
     SiteSetting.login_required = false
-    SiteSetting.content_security_policy = false
+    SiteSetting.has_login_hint = false
     SiteSetting.force_hostname = Capybara.server_host
     SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_enabled = false
     SiteSetting.disable_avatar_education_message = true
     SiteSetting.enable_user_tips = false
+    SiteSetting.splash_screen = false
+    SiteSetting.allowed_internal_hosts =
+      (
+        SiteSetting.allowed_internal_hosts.to_s.split("|") +
+          MinioRunner.config.minio_urls.map { |url| URI.parse(url).host }
+      ).join("|")
   end
 
-  def try_until_success(timeout: 2, frequency: 0.01)
+  def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01)
     start ||= Time.zone.now
     backoff ||= frequency
     yield
@@ -97,16 +147,10 @@ module SystemHelpers
   end
 
   def using_browser_timezone(timezone, &example)
-    previous_browser_timezone = ENV["TZ"]
-
-    ENV["TZ"] = timezone
-
-    using_session(timezone) do |session|
+    using_session(timezone) do
+      page.driver.browser.devtools.emulation.set_timezone_override(timezone_id: timezone)
       freeze_time(&example)
-      session.quit
     end
-
-    ENV["TZ"] = previous_browser_timezone
   end
 
   # When using parallelism, Capybara's `using_session` method can cause
@@ -129,5 +173,46 @@ module SystemHelpers
     JS
 
     page.execute_script(js, selector, start, offset)
+  end
+
+  def setup_s3_system_test(enable_secure_uploads: false, enable_direct_s3_uploads: true)
+    SiteSetting.enable_s3_uploads = true
+
+    SiteSetting.s3_upload_bucket = "discoursetest"
+    SiteSetting.enable_upload_debug_mode = true
+
+    SiteSetting.s3_access_key_id = MinioRunner.config.minio_root_user
+    SiteSetting.s3_secret_access_key = MinioRunner.config.minio_root_password
+    SiteSetting.s3_endpoint = MinioRunner.config.minio_server_url
+
+    SiteSetting.enable_direct_s3_uploads = enable_direct_s3_uploads
+    SiteSetting.secure_uploads = enable_secure_uploads
+
+    MinioRunner.start
+  end
+
+  def skip_unless_s3_system_specs_enabled!
+    if ENV["CI"]
+      return(
+        skip(
+          "S3 system specs are temporarily disabled in this environment to address parallel spec issues",
+        )
+      )
+    end
+    if !ENV["CI"] && !ENV["RUN_S3_SYSTEM_SPECS"]
+      skip(
+        "S3 system specs are disabled in this environment, set CI=1 or RUN_S3_SYSTEM_SPECS=1 to enable them.",
+      )
+    end
+  end
+
+  private
+
+  def theme_dir_from_caller
+    caller.each do |line|
+      if (split = line.split(%r{/spec/system/.+_spec.rb})).length > 1
+        return split.first
+      end
+    end
   end
 end

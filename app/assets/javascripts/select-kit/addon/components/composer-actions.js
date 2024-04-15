@@ -1,3 +1,8 @@
+import { equal, gt } from "@ember/object/computed";
+import { service } from "@ember/service";
+import { camelize } from "@ember/string";
+import { isEmpty } from "@ember/utils";
+import { escapeExpression } from "discourse/lib/utilities";
 import {
   CREATE_SHARED_DRAFT,
   CREATE_TOPIC,
@@ -5,14 +10,10 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-import discourseComputed from "discourse-common/utils/decorators";
 import Draft from "discourse/models/draft";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import I18n from "I18n";
-import { camelize } from "@ember/string";
-import { equal, gt } from "@ember/object/computed";
-import { isEmpty } from "@ember/utils";
-import { inject as service } from "@ember/service";
 
 // Component can get destroyed and lose state
 let _topicSnapshot = null;
@@ -27,6 +28,7 @@ export function _clearSnapshots() {
 
 export default DropdownSelectBoxComponent.extend({
   dialog: service(),
+  composer: service(),
   seq: 0,
   pluginApiIdentifiers: ["composer-actions"],
   classNames: ["composer-actions"],
@@ -135,6 +137,7 @@ export default DropdownSelectBoxComponent.extend({
       this.topic &&
       !this.topic.isPrivateMessage &&
       !this.isEditing &&
+      this.currentUser.can_create_topic &&
       _topicSnapshot
     ) {
       items.push({
@@ -220,12 +223,10 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
 
-    if (items.length === 0) {
+    if (items.length === 0 && this.currentUser.can_create_topic) {
       items.push({
         name: I18n.t("composer.composer_actions.create_topic.label"),
-        description: I18n.t(
-          "composer.composer_actions.reply_as_new_topic.desc"
-        ),
+        description: I18n.t("composer.composer_actions.create_topic.desc"),
         icon: "share",
         id: "create_topic",
       });
@@ -234,14 +235,32 @@ export default DropdownSelectBoxComponent.extend({
     return items;
   },
 
+  _continuedFromText(post, topic) {
+    let url = post?.url || topic?.url;
+    const topicTitle = topic?.title;
+
+    if (!url || !topicTitle) {
+      return;
+    }
+
+    url = `${location.protocol}//${location.host}${url}`;
+    const link = `[${escapeExpression(topicTitle)}](${url})`;
+    return I18n.t("post.continue_discussion", {
+      postLink: link,
+    });
+  },
+
   _replyFromExisting(options, post, topic) {
-    this.closeComposer();
-    this.openComposer(options, post, topic);
+    this.composer.closeComposer();
+    this.composer.open({
+      ...options,
+      prependText: this._continuedFromText(post, topic),
+    });
   },
 
   _openComposer(options) {
-    this.closeComposer();
-    this.openComposer(options);
+    this.composer.closeComposer();
+    this.composer.open(options);
   },
 
   toggleWhisperSelected(options, model) {

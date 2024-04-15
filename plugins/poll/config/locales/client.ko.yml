@@ -23,27 +23,16 @@ ko:
           title: "결과가 <strong>닫히면 표시</strong> 됩니다."
         staff:
           title: "결과는 <strong>직원</strong> 에게만 표시됩니다."
-      multiple:
-        help:
-          at_least_min_options:
-            other: "최소 <strong>%{count}</strong>개의 옵션을 선택하십시오."
-          up_to_max_options:
-            other: "최대 <strong>%{count}</strong>개의 옵션을 선택하십시오."
-          x_options:
-            other: "<strong>%{count}</strong> 옵션 선택"
-          between_min_and_max_options: "<strong>%{min}</strong> 과 <strong>%{max}</strong> 중에서 옵션을 선택하십시오."
       cast-votes:
         title: "표 던지기"
         label: "지금 투표!"
       show-results:
         title: "투표 결과 표시"
-        label: "결과 보기"
+        label: "검색 결과"
       remove-vote:
         title: "내 투표 삭제"
-        label: "투표 삭제"
       hide-results:
         title: "투표로 돌아가기"
-        label: "투표 표시"
       group-results:
         title: "사용자 필드 별 그룹 투표"
         label: "고장 표시"
@@ -67,6 +56,8 @@ ko:
         breakdown: "분석"
         percentage: "백분율"
         count: "수"
+      options:
+        label: "옵션"
       error_while_toggling_status: "죄송합니다. 이 투표의 상태를 바꾸는 도중 에러가 발생하였습니다."
       error_while_casting_votes: "죄송합니다. 투표를 하는 도중 에러가 발생하였습니다."
       error_while_fetching_voters: "죄송합니다. 투표한 사람을 표시하는 도중 에러가 발생하였습니다."

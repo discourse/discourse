@@ -6,6 +6,11 @@ module Chat
       return unless SiteSetting.chat_enabled
 
       users_with_unprocessed_unread_mentions.find_each do |user|
+        # Apply modifier to `true` -- this allows other plugins to block the chat summary email send
+        if !DiscoursePluginRegistry.apply_modifier(:chat_mailer_send_summary_to_user, true, user)
+          next
+        end
+
         # user#memberships_with_unread_messages is a nested array that looks like [[membership_id, unread_message_id]]
         # Find the max unread id per membership.
         membership_and_max_unread_mention_ids =
@@ -52,13 +57,17 @@ module Chat
         .joins("INNER JOIN chat_channels cc ON cc.id = uccm.chat_channel_id")
         .joins("INNER JOIN chat_messages c_msg ON c_msg.chat_channel_id = uccm.chat_channel_id")
         .joins("LEFT OUTER JOIN chat_mentions c_mentions ON c_mentions.chat_message_id = c_msg.id")
+        .joins(
+          "LEFT OUTER JOIN chat_mention_notifications cmn ON cmn.chat_mention_id = c_mentions.id",
+        )
+        .joins("LEFT OUTER JOIN notifications n ON cmn.notification_id = n.id")
         .where("c_msg.deleted_at IS NULL AND c_msg.user_id <> users.id")
         .where("c_msg.created_at > ?", 1.week.ago)
         .where(<<~SQL)
         (uccm.last_read_message_id IS NULL OR c_msg.id > uccm.last_read_message_id) AND
         (uccm.last_unread_mention_when_emailed_id IS NULL OR c_msg.id > uccm.last_unread_mention_when_emailed_id) AND
         (
-          (uccm.user_id = c_mentions.user_id AND uccm.following IS true AND cc.chatable_type = 'Category') OR
+          (uccm.user_id = n.user_id AND uccm.following IS true AND cc.chatable_type = 'Category') OR
           (cc.chatable_type = 'DirectMessage')
         )
       SQL

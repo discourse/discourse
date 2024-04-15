@@ -1,13 +1,22 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 acceptance("Admin - Badges - Show", function (needs) {
   needs.user();
+  needs.settings({
+    enable_badge_sql: true,
+  });
+  needs.pretender((server, helper) => {
+    server.post("/admin/badges/preview.json", () =>
+      helper.response(200, { grant_count: 3, sample: [] })
+    );
+  });
+
   test("new badge page", async function (assert) {
     await visit("/admin/badges/new");
     assert.ok(
@@ -38,11 +47,10 @@ acceptance("Admin - Badges - Show", function (needs) {
       "image uploader becomes visible after clicking the upload image radio button"
     );
 
-    // SQL fields
-    assert.false(exists("label[for=query]"), "sql input is hidden by default");
-    this.siteSettings.enable_badge_sql = true;
-    await settled();
-    assert.true(exists("label[for=query]"), "sql input shows when enabled");
+    assert.true(
+      exists("label[for=query]"),
+      "sql input is visible when enabled"
+    );
 
     assert.false(
       exists("input[name=auto_revoke]"),
@@ -111,5 +119,19 @@ acceptance("Admin - Badges - Show", function (needs) {
     assert.ok(exists(".icon-picker"), "icon picker is becomes visible");
     assert.ok(!exists(".image-uploader"), "image uploader becomes hidden");
     assert.strictEqual(query(".icon-picker").textContent.trim(), "fa-rocket");
+  });
+
+  test("sql input is hidden by default", async function (assert) {
+    this.siteSettings.enable_badge_sql = false;
+    await visit("/admin/badges/new");
+    assert.dom("label[for=query]").doesNotExist();
+  });
+
+  test("Badge preview displays the grant count", async function (assert) {
+    await visit("/admin/badges/3");
+    await click("a.preview-badge");
+    assert
+      .dom(".badge-query-preview .grant-count")
+      .hasText("3 badges to be assigned.");
   });
 });

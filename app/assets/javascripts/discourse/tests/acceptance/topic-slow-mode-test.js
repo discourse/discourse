@@ -1,15 +1,15 @@
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
-import topicFixtures from "discourse/tests/fixtures/topic";
+import I18n from "discourse-i18n";
 
 acceptance("Topic - Slow Mode - enabled", function (needs) {
   needs.user();
@@ -67,7 +67,7 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     await click(".future-date-input-selector-header");
 
     assert.strictEqual(
-      query("div.modal-footer button.btn-primary span").innerText,
+      query("div.d-modal__footer button.btn-primary span").innerText,
       I18n.t("topic.slow_mode_update.enable"),
       "shows 'Enable' button when slow mode is disabled"
     );
@@ -78,7 +78,7 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     await click(".future-date-input-selector-header");
 
     assert.strictEqual(
-      query("div.modal-footer button.btn-primary span").innerText,
+      query("div.d-modal__footer button.btn-primary span").innerText,
       I18n.t("topic.slow_mode_update.update"),
       "shows 'Update' button when slow mode is enabled"
     );

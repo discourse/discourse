@@ -1,7 +1,7 @@
-import I18n from "I18n";
 import Controller, { inject as controller } from "@ember/controller";
 import { computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 export default class extends Controller {
   @service router;
@@ -22,7 +22,8 @@ export default class extends Controller {
 
   @computed(
     "pmTopicTrackingState.newIncoming.[]",
-    "pmTopicTrackingState.statesModificationCounter"
+    "pmTopicTrackingState.statesModificationCounter",
+    "pmTopicTrackingState.isTracking"
   )
   get newLinkText() {
     return this.#linkText("new");
@@ -30,7 +31,8 @@ export default class extends Controller {
 
   @computed(
     "pmTopicTrackingState.newIncoming.[]",
-    "pmTopicTrackingState.statesModificationCounter"
+    "pmTopicTrackingState.statesModificationCounter",
+    "pmTopicTrackingState.isTracking"
   )
   get unreadLinkText() {
     return this.#linkText("unread");

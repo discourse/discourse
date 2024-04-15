@@ -1,8 +1,8 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { getOwner, setOwner } from "@ember/application";
+import Service, { service } from "@ember/service";
 import { test } from "qunit";
 import RestModel from "discourse/models/rest";
-import Service, { inject as service } from "@ember/service";
-import { getOwner, setOwner } from "@ember/application";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Implicit injections shims", function () {
   test("it provides legacy injections on common models", function (assert) {
@@ -50,7 +50,7 @@ acceptance("Implicit injections shims", function () {
     assert.strictEqual(
       newModel.appEvents,
       "overridden app events",
-      "overriden app events are passed though when creating from another objects"
+      "overridden app events are passed though when creating from another objects"
     );
   });
 });

@@ -1,22 +1,37 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { gt } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import { service } from "@ember/service";
+import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
+import AuthTokenModal from "discourse/components/modal/auth-token";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import logout from "discourse/lib/logout";
-import showModal from "discourse/lib/show-modal";
 import { userPath } from "discourse/lib/url";
+import { isWebauthnSupported } from "discourse/lib/webauthn";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
-import I18n from "I18n";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
 
 export default Controller.extend(CanCheckEmails, {
+  modal: service(),
+  dialog: service(),
+  router: service(),
   passwordProgress: null,
   subpageTitle: I18n.t("user.preferences_nav.security"),
   showAllAuthTokens: false,
+
+  get canUsePasskeys() {
+    return (
+      !this.siteSettings.enable_discourse_connect &&
+      this.siteSettings.enable_local_logins &&
+      this.siteSettings.enable_passkeys &&
+      isWebauthnSupported()
+    );
+  },
 
   @discourseComputed("model.is_anonymous")
   canChangePassword(isAnonymous) {
@@ -102,6 +117,27 @@ export default Controller.extend(CanCheckEmails, {
       .catch(popupAjaxError);
   },
 
+  @action
+  async manage2FA() {
+    try {
+      const trustedSession = await this.model.trustedSession();
+
+      if (!trustedSession.success) {
+        this.dialog.dialog({
+          title: I18n.t("user.confirm_access.title"),
+          type: "notice",
+          bodyComponent: ConfirmSession,
+          didConfirm: () =>
+            this.router.transitionTo("preferences.second-factor"),
+        });
+      } else {
+        await this.router.transitionTo("preferences.second-factor");
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  },
+
   actions: {
     save() {
       this.set("saved", false);
@@ -112,7 +148,7 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     showToken(token) {
-      showModal("auth-token", { model: token });
+      this.modal.show(AuthTokenModal, { model: token });
     },
   },
 });

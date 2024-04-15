@@ -1,4 +1,4 @@
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _chatComposerButtons = {};
 
@@ -114,12 +114,12 @@ export function chatComposerButtons(composer, position, context) {
 
       if (isFunction(button.action)) {
         result.action = () => {
-          button.action.apply(composer);
+          button.action.apply(composer, [context]);
         };
       } else {
         const actionName = button.action;
         result.action = () => {
-          composer[actionName]();
+          composer[actionName](context);
         };
       }
 

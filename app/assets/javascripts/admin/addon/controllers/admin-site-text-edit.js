@@ -1,10 +1,10 @@
 import Controller from "@ember/controller";
-import I18n from "I18n";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import discourseComputed from "discourse-common/utils/decorators";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 export default Controller.extend(bufferedProperty("siteText"), {
   dialog: service(),
@@ -14,6 +14,11 @@ export default Controller.extend(bufferedProperty("siteText"), {
   @discourseComputed("buffered.value")
   saveDisabled(value) {
     return this.siteText.value === value;
+  },
+
+  @discourseComputed("siteText.status")
+  isOutdated(status) {
+    return status === "outdated";
   },
 
   @action
@@ -47,5 +52,19 @@ export default Controller.extend(bufferedProperty("siteText"), {
           .catch(popupAjaxError);
       },
     });
+  },
+
+  @action
+  dismissOutdated() {
+    this.siteText
+      .dismissOutdated(this.locale)
+      .then(() => {
+        this.siteText.set("status", "up_to_date");
+      })
+      .catch(popupAjaxError);
+  },
+
+  get interpolationKeys() {
+    return this.siteText.interpolation_keys.join(", ");
   },
 });

@@ -28,16 +28,16 @@ module Chat
 
     private
 
-    def fetch_channel(channel_id:, **)
+    def fetch_channel(channel_id:)
       Chat::Channel.find_by(id: channel_id)
     end
 
-    def check_channel_permission(guardian:, channel:, status:, **)
+    def check_channel_permission(guardian:, channel:, status:)
       guardian.can_preview_chat_channel?(channel) &&
         guardian.can_change_channel_status?(channel, status.to_sym)
     end
 
-    def change_status(channel:, status:, guardian:, **)
+    def change_status(channel:, status:, guardian:)
       channel.public_send("#{status}!", guardian.user)
     end
   end

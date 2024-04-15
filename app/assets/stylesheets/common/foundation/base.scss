@@ -6,10 +6,15 @@
   --topic-body-width: #{$topic-body-width};
   --topic-body-width-padding: #{$topic-body-width-padding};
   --topic-avatar-width: #{$topic-avatar-width};
-  --d-border-radius: initial;
+  --d-border-radius: 2px;
+  --d-border-radius-large: 2px;
   --d-nav-pill-border-radius: var(--d-border-radius);
   --d-button-border-radius: var(--d-border-radius);
   --d-input-border-radius: var(--d-border-radius);
+  --d-content-background: initial;
+  --d-font-family--monospace: Consolas, Menlo, Monaco, "Lucida Console",
+    "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono",
+    "Courier New", monospace;
 }
 
 // --------------------------------------------------
@@ -112,6 +117,10 @@ img {
   vertical-align: middle;
 }
 
+.svg-icon {
+  color: inherit;
+}
+
 // Forms
 // --------------------------------------------------
 
@@ -144,8 +153,10 @@ tbody {
 .topic-list-item,
 tr {
   border-bottom: 1px solid var(--primary-low);
-  &.highlighted {
-    animation: background-fade-highlight 2.5s ease-out;
+  @media (prefers-reduced-motion: no-preference) {
+    &.highlighted {
+      animation: background-fade-highlight 2.5s ease-out;
+    }
   }
 }
 
@@ -176,7 +187,8 @@ input[type="submit"] {
   }
 
   > input[type="text"],
-  > input[type="search"] {
+  > input[type="search"],
+  > input[type="password"] {
     display: inline-flex;
     flex: 1;
   }
@@ -184,6 +196,7 @@ input[type="submit"] {
   > .select-kit,
   > input[type="text"],
   > input[type="search"],
+  > input[type="password"],
   > label,
   > .btn,
   > .d-date-input {

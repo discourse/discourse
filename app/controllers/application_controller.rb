@@ -51,7 +51,9 @@ class ApplicationController < ActionController::Base
   after_action :add_noindex_header,
                if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   after_action :add_noindex_header_to_non_canonical, if: :spa_boot_request?
-  around_action :link_preload, if: -> { spa_boot_request? && GlobalSetting.preload_link_header }
+  after_action :set_cross_origin_opener_policy_header, if: :spa_boot_request?
+  after_action :clean_xml, if: :is_feed_response?
+  after_action :add_early_hint_header, if: -> { spa_boot_request? }
 
   HONEYPOT_KEY ||= "HONEYPOT_KEY"
   CHALLENGE_KEY ||= "CHALLENGE_KEY"
@@ -121,6 +123,7 @@ class ApplicationController < ActionController::Base
 
   class RenderEmpty < StandardError
   end
+
   class PluginDisabled < StandardError
   end
 
@@ -336,7 +339,7 @@ class ApplicationController < ActionController::Base
         return render plain: message, status: status_code
       end
       with_resolved_locale do
-        error_page_opts[:layout] = (opts[:include_ember] && @preloaded) ? "application" : "no_ember"
+        error_page_opts[:layout] = (opts[:include_ember] && @preloaded) ? set_layout : "no_ember"
         render html: build_not_found_page(error_page_opts)
       end
     end
@@ -348,6 +351,8 @@ class ApplicationController < ActionController::Base
     before_action do
       if plugin = Discourse.plugins_by_name[plugin_name]
         raise PluginDisabled.new if !plugin.enabled?
+      elsif Rails.env.test?
+        raise "Required plugin '#{plugin_name}' not found. The string passed to requires_plugin should match the plugin's name at the top of plugin.rb"
       else
         Rails.logger.warn("Required plugin '#{plugin_name}' not found")
       end
@@ -459,7 +464,7 @@ class ApplicationController < ActionController::Base
     return unless guardian.can_enable_safe_mode?
 
     safe_mode = params[SAFE_MODE]
-    if safe_mode&.is_a?(String)
+    if safe_mode.is_a?(String)
       safe_mode = safe_mode.split(",")
       request.env[NO_THEMES] = safe_mode.include?(NO_THEMES) || safe_mode.include?(LEGACY_NO_THEMES)
       request.env[NO_PLUGINS] = safe_mode.include?(NO_PLUGINS)
@@ -514,7 +519,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_homepage
-    current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
+    current_user&.user_option&.homepage || HomepageHelper.resolve(request, current_user)
   end
 
   def serialize_data(obj, serializer, opts = nil)
@@ -661,6 +666,27 @@ class ApplicationController < ActionController::Base
 
     store_preloaded("topicTrackingStates", MultiJson.dump(hash[:data]))
     store_preloaded("topicTrackingStateMeta", MultiJson.dump(hash[:meta]))
+
+    if current_user.admin?
+      # This is used in the wizard so we can preload fonts using the FontMap JS API.
+      store_preloaded("fontMap", MultiJson.dump(load_font_map))
+
+      # Used to show plugin-specific admin routes in the sidebar.
+      store_preloaded(
+        "visiblePlugins",
+        MultiJson.dump(
+          Discourse
+            .plugins_sorted_by_name(enabled_only: false)
+            .map do |plugin|
+              {
+                name: plugin.name.downcase,
+                admin_route: plugin.admin_route,
+                enabled: plugin.enabled?,
+              }
+            end,
+        ),
+      )
+    end
   end
 
   def custom_html_json
@@ -925,7 +951,7 @@ class ApplicationController < ActionController::Base
         Discourse
           .cache
           .fetch(key, expires_in: 10.minutes) do
-            category_topic_ids = Category.pluck(:topic_id).compact
+            category_topic_ids = Category.select(:topic_id).where.not(topic_id: nil)
             @top_viewed =
               TopicQuery
                 .new(nil, except_topic_ids: category_topic_ids)
@@ -962,6 +988,10 @@ class ApplicationController < ActionController::Base
     request.format.atom? || request.format.rss?
   end
 
+  def is_feed_response?
+    request.get? && response&.content_type&.match?(/(rss|atom)/)
+  end
+
   def add_noindex_header
     if request.get? && !response.headers["X-Robots-Tag"]
       if SiteSetting.allow_index_in_robots_txt
@@ -978,6 +1008,10 @@ class ApplicationController < ActionController::Base
          !SiteSetting.allow_indexing_non_canonical_urls
       response.headers["X-Robots-Tag"] ||= "noindex"
     end
+  end
+
+  def set_cross_origin_opener_policy_header
+    response.headers["Cross-Origin-Opener-Policy"] = SiteSetting.cross_origin_opener_policy_header
   end
 
   protected
@@ -1041,9 +1075,15 @@ class ApplicationController < ActionController::Base
       end
   end
 
-  def run_second_factor!(action_class, action_data = nil)
-    action = action_class.new(guardian, request, action_data)
-    manager = SecondFactor::AuthManager.new(guardian, action)
+  def run_second_factor!(action_class, action_data: nil, target_user: current_user)
+    if current_user && target_user != current_user
+      # Anon can run 2fa against another target, but logged-in users should not.
+      # This should be validated at the `run_second_factor!` call site.
+      raise "running 2fa against another user is not allowed"
+    end
+
+    action = action_class.new(guardian, request, opts: action_data, target_user: target_user)
+    manager = SecondFactor::AuthManager.new(guardian, action, target_user: target_user)
     yield(manager) if block_given?
     result = manager.run!(request, params, secure_session)
 
@@ -1056,13 +1096,75 @@ class ApplicationController < ActionController::Base
     result
   end
 
-  def link_preload
-    @links_to_preload = []
-    yield
-    response.headers["Link"] = @links_to_preload.join(", ") if !@links_to_preload.empty?
+  # We don't actually send 103 Early Hint responses from Discourse. However, upstream proxies can be configured
+  # to cache a response header from the app and use that to send an Early Hint response to future clients.
+  # See 'early_hint_header_mode' and 'early_hint_header_name' Global Setting descriptions for more info.
+  def add_early_hint_header
+    return if GlobalSetting.early_hint_header_mode.nil?
+
+    links = []
+
+    if GlobalSetting.early_hint_header_mode == "preconnect"
+      [GlobalSetting.cdn_url, SiteSetting.s3_cdn_url].each do |url|
+        next if url.blank?
+        base_url = URI.join(url, "/").to_s.chomp("/")
+        links.push("<#{base_url}>; rel=preconnect")
+      end
+    elsif GlobalSetting.early_hint_header_mode == "preload"
+      links.push(*@asset_preload_links)
+    end
+
+    response.headers[GlobalSetting.early_hint_header_name] = links.join(", ") if links.present?
   end
 
   def spa_boot_request?
     request.get? && !(request.format && request.format.json?) && !request.xhr?
+  end
+
+  def load_font_map
+    DiscourseFonts
+      .fonts
+      .each_with_object({}) do |font, font_map|
+        next if !font[:variants]
+        font_map[font[:key]] = font[:variants].map do |v|
+          {
+            url: "#{Discourse.base_url}/fonts/#{v[:filename]}?v=#{DiscourseFonts::VERSION}",
+            weight: v[:weight],
+          }
+        end
+      end
+  end
+
+  def fetch_limit_from_params(params: self.params, default:, max:)
+    fetch_int_from_params(:limit, params: params, default: default, max: max)
+  end
+
+  def fetch_int_from_params(key, params: self.params, default:, min: 0, max: nil)
+    key = key.to_sym
+
+    if default.present? && ((max.present? && default > max) || (min.present? && default < min))
+      raise "default #{key.inspect} is not between #{min.inspect} and #{max.inspect}"
+    end
+
+    if params.has_key?(key)
+      value =
+        begin
+          Integer(params[key])
+        rescue ArgumentError
+          raise Discourse::InvalidParameters.new(key)
+        end
+
+      if (min.present? && value < min) || (max.present? && value > max)
+        raise Discourse::InvalidParameters.new(key)
+      end
+
+      value
+    else
+      default
+    end
+  end
+
+  def clean_xml
+    response.body.gsub!(XmlCleaner::INVALID_CHARACTERS, "")
   end
 end

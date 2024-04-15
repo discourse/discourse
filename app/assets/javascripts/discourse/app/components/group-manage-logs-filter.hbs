@@ -1,9 +1,8 @@
 {{#if this.value}}
   <DButton
-    @class="btn-default group-manage-logs-filter"
-    @action={{action "clearFilter"}}
-    @actionParam={{this.type}}
+    @action={{fn this.clearFilter this.type}}
     @icon="times-circle"
     @translatedLabel={{concat this.label ": " this.filterText}}
+    class="btn-default group-manage-logs-filter"
   />
 {{/if}}

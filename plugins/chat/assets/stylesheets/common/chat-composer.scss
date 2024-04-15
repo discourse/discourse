@@ -29,6 +29,10 @@
     align-self: flex-end;
   }
 
+  .chat-composer-separator {
+    flex-shrink: 0;
+  }
+
   &__outer-container {
     display: flex;
     align-items: center;
@@ -44,7 +48,7 @@
     width: 100%;
     flex-direction: row;
     border: 1px solid var(--primary-low);
-    border-radius: 10px;
+    border-radius: var(--d-border-radius-large);
     background-color: var(--secondary);
     min-height: 50px;
     overflow: hidden;
@@ -59,73 +63,6 @@
 
       &:hover {
         cursor: not-allowed;
-      }
-    }
-  }
-
-  .chat-composer-button__btn {
-    background: none;
-
-    &:not(:disabled) {
-      .d-icon {
-        color: var(--primary-high);
-      }
-
-      .no-touch & {
-        &:hover,
-        &:focus {
-          .d-icon {
-            color: var(--primary);
-          }
-
-          &.primary {
-            .d-icon {
-              color: var(--tertiary);
-            }
-          }
-        }
-      }
-
-      &.primary {
-        .d-icon {
-          color: var(--tertiary);
-        }
-      }
-    }
-
-    &:disabled {
-      cursor: default;
-
-      .d-icon {
-        color: var(--primary-low-mid);
-      }
-    }
-  }
-
-  &__send-btn {
-    will-change: scale;
-
-    @keyframes sendingScales {
-      0% {
-        transform: scale(0.9);
-      }
-      50% {
-        transform: scale(1.2);
-      }
-      100% {
-        transform: scale(0.9);
-      }
-    }
-
-    .chat-composer.is-sending & {
-      animation: sendingScales 1s infinite linear;
-    }
-
-    &:not(:disabled) {
-      &:hover {
-        .d-icon {
-          transform: scale(1.2);
-        }
       }
     }
   }
@@ -191,7 +128,7 @@
 }
 
 .chat-composer-message-details {
-  padding: 0 0.75rem 0.5rem;
+  margin: 0 1rem 0.5rem 1rem;
   display: flex;
   align-items: center;
 

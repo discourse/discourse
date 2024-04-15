@@ -22,7 +22,7 @@ class TagGroup < ActiveRecord::Base
 
   after_commit { DiscourseTagging.clear_cache! }
 
-  attr_accessor :permissions
+  attr_reader :permissions
 
   def tag_names=(tag_names_arg)
     DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)

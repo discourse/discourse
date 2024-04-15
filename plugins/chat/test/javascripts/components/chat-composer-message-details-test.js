@@ -1,8 +1,9 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import hbs from "htmlbars-inline-precompile";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import { module, test } from "qunit";
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
   "Discourse Chat | Component | chat-composer-message-details",
@@ -10,7 +11,7 @@ module(
     setupRenderingTest(hooks);
 
     test("data-id attribute", async function (assert) {
-      this.message = fabricators.message();
+      this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
         hbs`<ChatComposerMessageDetails @message={{this.message}} />`
@@ -22,7 +23,9 @@ module(
     });
 
     test("editing a message has the pencil icon", async function (assert) {
-      this.message = fabricators.message({ editing: true });
+      this.message = new ChatFabricators(getOwner(this)).message({
+        editing: true,
+      });
 
       await render(
         hbs`<ChatComposerMessageDetails @message={{this.message}} />`
@@ -32,8 +35,10 @@ module(
     });
 
     test("replying to a message has the reply icon", async function (assert) {
-      const firstMessage = fabricators.message();
-      this.message = fabricators.message({ inReplyTo: firstMessage });
+      const firstMessage = new ChatFabricators(getOwner(this)).message();
+      this.message = new ChatFabricators(getOwner(this)).message({
+        inReplyTo: firstMessage,
+      });
 
       await render(
         hbs`<ChatComposerMessageDetails @message={{this.message}} />`
@@ -43,7 +48,7 @@ module(
     });
 
     test("displays user avatar", async function (assert) {
-      this.message = fabricators.message();
+      this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
         hbs`<ChatComposerMessageDetails @message={{this.message}} />`
@@ -55,7 +60,7 @@ module(
     });
 
     test("displays message excerpt", async function (assert) {
-      this.message = fabricators.message();
+      this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
         hbs`<ChatComposerMessageDetails @message={{this.message}} />`
@@ -65,7 +70,7 @@ module(
     });
 
     test("displays user’s username", async function (assert) {
-      this.message = fabricators.message();
+      this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
         hbs`<ChatComposerMessageDetails @message={{this.message}} />`

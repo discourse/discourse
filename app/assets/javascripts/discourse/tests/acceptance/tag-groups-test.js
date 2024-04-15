@@ -1,27 +1,32 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import { setPrefix } from "discourse-common/lib/get-url";
 
 acceptance("Tag Groups", function (needs) {
   needs.user();
   needs.settings({ tagging_enabled: true });
   needs.pretender((server, helper) => {
+    const tagGroups = {
+      tag_group: {
+        id: 42,
+        name: "test tag group",
+        tag_names: ["monkey"],
+        parent_tag_name: [],
+        one_per_topic: false,
+        permissions: { everyone: 1 },
+      },
+    };
     server.post("/tag_groups", () => {
-      return helper.response({
-        tag_group: {
-          id: 42,
-          name: "test tag group",
-          tag_names: ["monkey"],
-          parent_tag_name: [],
-          one_per_topic: false,
-          permissions: { everyone: 1 },
-        },
-      });
+      return helper.response(tagGroups);
+    });
+    server.get("/forum/tag_groups", () => {
+      return helper.response(tagGroups);
     });
 
     server.get("/groups/search.json", () => {
@@ -81,5 +86,14 @@ acceptance("Tag Groups", function (needs) {
       exists("#visible-permission:checked"),
       "selected permission does not change after saving"
     );
+  });
+
+  test("going back to tags supports subfolder", async function (assert) {
+    setPrefix("/forum");
+
+    await visit("/tag_groups");
+    assert
+      .dom("a.tag-groups--back")
+      .hasAttribute("href", "/forum/tags", "supports subfolder");
   });
 });

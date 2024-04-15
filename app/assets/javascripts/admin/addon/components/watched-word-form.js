@@ -1,14 +1,14 @@
-import { action } from "@ember/object";
-import { classNames, tagName } from "@ember-decorators/component";
-import { inject as service } from "@ember/service";
-import { empty, equal } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
-import { observes } from "@ember-decorators/object";
 import Component from "@ember/component";
-import I18n from "I18n";
-import WatchedWord from "admin/models/watched-word";
-import { isEmpty } from "@ember/utils";
+import { action } from "@ember/object";
+import { empty, equal } from "@ember/object/computed";
 // import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import { classNames, tagName } from "@ember-decorators/component";
+import { observes } from "@ember-decorators/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
+import WatchedWord from "admin/models/watched-word";
 
 @tagName("form")
 @classNames("watched-word-form")

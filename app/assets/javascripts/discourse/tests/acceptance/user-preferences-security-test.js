@@ -1,6 +1,5 @@
-import I18n from "I18n";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -9,6 +8,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "discourse-i18n";
 
 acceptance("User Preferences - Security", function (needs) {
   needs.user();
@@ -16,6 +16,14 @@ acceptance("User Preferences - Security", function (needs) {
   needs.pretender((server, helper) => {
     server.get("/u/eviltrout/activity.json", () => {
       return helper.response({});
+    });
+
+    server.get("/u/trusted-session.json", () => {
+      return helper.response({ failed: "FAILED" });
+    });
+
+    server.post("/session/forgot_password.json", () => {
+      return helper.response({ success: "Ok" });
     });
   });
 
@@ -54,14 +62,6 @@ acceptance("User Preferences - Security", function (needs) {
     await authTokenDropdown.selectRowByValue("notYou");
 
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
-
-    await click(".modal-footer .btn-primary");
-
-    assert.strictEqual(
-      count(".pref-password.highlighted"),
-      1,
-      "it should highlight password preferences"
-    );
   });
 
   test("Viewing user api keys", async function (assert) {
@@ -100,5 +100,138 @@ acceptance("User Preferences - Security", function (needs) {
       exists(".pref-user-api-keys__last-used-at"),
       "displays the last used at date for the API key"
     );
+  });
+
+  test("Viewing Passkeys - user has a key", async function (assert) {
+    this.siteSettings.enable_passkeys = true;
+
+    updateCurrentUser({
+      user_passkeys: [
+        {
+          id: 1,
+          name: "Password Manager",
+          last_used: "2023-10-09T20:03:20.986Z",
+          created_at: "2023-10-09T20:01:37.578Z",
+        },
+      ],
+    });
+
+    await visit("/u/eviltrout/preferences/security");
+
+    assert.strictEqual(
+      query(".pref-passkeys__rows .row-passkey__name").innerText.trim(),
+      "Password Manager",
+      "displays the passkey name"
+    );
+
+    assert
+      .dom(".row-passkey__created-date")
+      .exists("displays the created at date for the passkey");
+
+    assert
+      .dom(".row-passkey__used-date")
+      .exists("displays the last used at date for the passkey");
+
+    await click(".pref-passkeys__add button");
+
+    assert
+      .dom(".dialog-body .confirm-session")
+      .exists(
+        "displays a dialog to confirm the user's identity before adding a passkey"
+      );
+
+    assert
+      .dom(".dialog-body #password")
+      .exists("dialog includes a password field");
+
+    assert
+      .dom(".dialog-body .confirm-session__passkey")
+      .exists("dialog includes a passkey button");
+
+    assert
+      .dom(".dialog-body .confirm-session__reset")
+      .exists("dialog includes a link to reset the password");
+
+    await click(".dialog-body .confirm-session__reset-btn");
+
+    assert
+      .dom(".confirm-session__reset-email-sent")
+      .exists("shows reset email confirmation message");
+
+    await click(".dialog-close");
+
+    const dropdown = selectKit(".passkey-options-dropdown");
+    await dropdown.expand();
+    await dropdown.selectRowByName("Edit");
+
+    assert
+      .dom(".dialog-body .rename-passkey__form")
+      .exists("clicking Edit displays a dialog to rename the passkey");
+
+    await click(".dialog-close");
+
+    await dropdown.expand();
+    await dropdown.selectRowByName("Delete");
+
+    assert
+      .dom(".dialog-body .confirm-session")
+      .exists(
+        "displays a dialog to confirm the user's identity before deleting a passkey"
+      );
+
+    await click(".dialog-close");
+  });
+
+  test("Viewing Passkeys - empty state", async function (assert) {
+    this.siteSettings.enable_passkeys = true;
+
+    await visit("/u/eviltrout/preferences/security");
+
+    assert
+      .dom(".pref-passkeys__add .btn")
+      .exists("shows a button to add a passkey");
+
+    await click(".pref-passkeys__add .btn");
+
+    assert
+      .dom(".dialog-body .confirm-session")
+      .exists(
+        "displays a dialog to confirm the user's identity before adding a passkey"
+      );
+
+    assert.dom(".dialog-body #password").exists("includes a password field");
+
+    assert
+      .dom(".dialog-body .confirm-session__passkey")
+      .doesNotExist("does not include a passkey button");
+  });
+
+  test("Viewing Passkeys - another user has a key", async function (assert) {
+    this.siteSettings.enable_passkeys = true;
+
+    // user charlie has passkeys in fixtures
+    await visit("/u/charlie/preferences/security");
+
+    assert.strictEqual(
+      query(".pref-passkeys__rows .row-passkey__name").innerText.trim(),
+      "iCloud Keychain",
+      "displays the passkey name"
+    );
+
+    assert
+      .dom(".row-passkey__created-date")
+      .exists("displays the created at date for the passkey");
+
+    assert
+      .dom(".row-passkey__used-date")
+      .exists("displays the last used at date for the passkey");
+
+    assert
+      .dom(".pref-passkeys__add")
+      .doesNotExist("does not show add passkey button");
+
+    assert
+      .dom(".passkey-options-dropdown")
+      .doesNotExist("does not show passkey options dropdown");
   });
 });

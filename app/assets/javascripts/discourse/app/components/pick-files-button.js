@@ -1,13 +1,13 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import {
   authorizedExtensions,
   authorizesAllExtensions,
 } from "discourse/lib/uploads";
-import { action } from "@ember/object";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
-import { inject as service } from "@ember/service";
+import I18n from "discourse-i18n";
 
 // This picker is intended to be used with UppyUploadMixin or with
 // ComposerUploadUppy, which is why there are no change events registered
@@ -91,7 +91,10 @@ export default Component.extend({
       this.dialog.alert(message);
       return;
     }
-    this.onFilesPicked(files);
+
+    if (typeof this.onFilesPicked === "function") {
+      this.onFilesPicked(files);
+    }
   },
 
   _haveAcceptedTypes(files) {

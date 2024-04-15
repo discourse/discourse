@@ -5,7 +5,7 @@
 # version: 0.1
 # author: Joffrey Jaffeux
 
-hide_plugin if self.respond_to?(:hide_plugin)
+hide_plugin
 
 register_asset "stylesheets/common/discourse-local-dates.scss"
 register_asset "moment.js", :vendored_core_pretty_text
@@ -19,7 +19,7 @@ after_initialize do
     POST_CUSTOM_FIELD ||= "local_dates".freeze
   end
 
-  %w[../lib/discourse_local_dates/engine.rb].each { |path| load File.expand_path(path, __FILE__) }
+  require_relative "lib/discourse_local_dates/engine"
 
   register_post_custom_field_type(DiscourseLocalDates::POST_CUSTOM_FIELD, :json)
 

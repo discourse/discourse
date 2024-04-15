@@ -5,27 +5,47 @@
 # https://translate.discourse.org/
 
 ja:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: チャット
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "常時"
+          fullscreen: "チャットが全画面表示の場合"
+          never: "なし"
       logs:
         staff_actions:
           actions:
             chat_channel_status_change: "チャットチャンネルのステータスが変更されました"
             chat_channel_delete: "チャットチャンネルが削除されました"
+            chat_auto_remove_membership: "メンバーシップはチャンネルから自動的に削除されました"
       api:
         scopes:
           descriptions:
             chat:
               create_message: "特定のチャンネルでチャットメッセージを作成します。"
+      web_hooks:
+        chat_event:
+          group_name: "チャットイベント"
+          chat_message_created: "メッセージが作成された"
+          chat_message_edited: "メッセージが編集された"
+          chat_message_trashed: "メッセージがゴミ箱に移動された"
+          chat_message_restored: "メッセージが復元された"
     about:
       chat_messages_count: "チャットメッセージ"
       chat_channels_count: "チャットチャンネル"
       chat_users_count: "チャットユーザー"
     chat:
+      text_copied: テキストをクリップボードにコピーしました
+      link_copied: リンクをクリップボードにコピーしました
+      back_to_forum: "フォーラム"
+      deleted_chat_username: 削除
       dates:
+        yesterday: "昨日"
         time_tiny: "h:mm"
       all_loaded: "すべてのメッセージを表示中"
       already_enabled: "このトピックのチャットはすでに有効になっています。再読み込みしてください。"
@@ -38,6 +58,8 @@ ja:
       browse_all_channels: "すべてのチャンネルを閲覧する"
       move_to_channel:
         title: "メッセージをチャンネルに移動する"
+        instructions:
+          other: "<strong>%{count}</strong> のメッセージを移動しようとしています。移動先のチャンネルを選択してください。これらのメッセージが移動されたことを示すために、プレースホルダーメッセージは、<strong>%{channelTitle}</strong> チャンネルに作成されます。新しいチャンネルでは返信チェーンが保持されないため、古いチャンネルのメッセージは移動されたメッセージへの返信としては表示されなくなることに注意してください。"
         confirm_move: "メッセージを移動"
       channel_settings:
         title: "チャンネルの設定"
@@ -49,6 +71,7 @@ ja:
         delete_channel: "チャンネルを削除する"
         join_channel: "チャンネルに参加する"
         leave_channel: "チャンネルから退出する"
+        leave_groupchat_info: "このグループチャットから退出すると、それにアクセスできなくなり、そのチャットに関連する通知を受信しなくなります。もう一度参加するには、グループチャットのメンバーから招待を受ける必要があります。"
         join: "参加"
         leave: "退出"
         save_label:
@@ -68,6 +91,7 @@ ja:
         instructions: "チャンネルを閉鎖すると、スタッフ以外のユーザーが新しいメッセージの送信や既存のメッセージの編集を行えなくなります。このチャンネルを閉鎖してもよろしいですか？"
       channel_delete:
         title: "チャンネルを削除"
+        instructions: "<p><strong>%{name}</strong> チャンネルとチャット履歴を削除します。すべてのメッセージと、リアクションやアップロードといった関連データは永久に削除されます。チャンネルの履歴を保持して閉鎖するには、チャンネルを削除ではなくアーカイブすることをお勧めします。</p><p>チャンネルを<strong>永久に削除</strong>してもよろしいですか？確定するには、チャンネルの名前を下のボックスに入力してください。</p>"
         confirm: "結果を理解し、チャンネルを削除します"
         confirm_channel_name: "チャンネル名を入力してください"
         process_started: "チャンネルの削除処理が開始しました。このモーダルは間もなく閉じられ、削除されたチャンネルがどこにも表示されなくなります。"
@@ -76,8 +100,12 @@ ja:
         create: "新しいチャンネル"
       click_to_join: "利用可能なチャンネルを表示するにはここをクリックします。"
       close: "閉じる"
+      remove: "削除"
       collapse: "チャットドロワーを折りたたむ"
+      expand: "チャットドロワーを展開"
       confirm_flag: "%{username} のメッセージを通報してよろしいですか？"
+      deleted:
+        other: "%{count} 件のメッセージが削除されました。[すべて表示]"
       hidden: "メッセージが非表示でした。[view]"
       delete: "削除"
       edited: "編集済み"
@@ -93,7 +121,13 @@ ja:
         title: "メール通知"
         when_away: "退席中の時のみ"
       header_indicator_preference:
+        title: "ヘッダーにアクティビティインジケーターを表示"
+        all_new: "すべての新着メッセージ"
+        dm_and_mentions: "ダイレクトメッセージとメンション"
+        only_mentions: "メンションのみ"
         never: "なし"
+      separate_sidebar_mode:
+        title: "フォーラムとチャットに個別のサイドバーモードを表示する"
       enable: "チャットを有効にする"
       flag: "通報する"
       emoji: "絵文字を挿入する"
@@ -104,20 +138,89 @@ ja:
       heading: "チャット"
       join: "参加"
       last_visit: "最後の訪問"
+      summarization:
+        title: "メッセージを要約する"
+        description: "以下から、希望する期間に送信される会話を要約するオプションを選択してください。"
+        summarize: "要約"
+        since:
+          other: "過去 %{count} 時間"
       mention_warning:
-        dismiss: "閉じる"
         invitations_sent:
           other: "招待状を送信しました"
         invite: "チャンネルに招待する"
+        channel_wide_mentions_disallowed: "このチャンネルでは @here と @all メンションが無効になっています。"
         groups:
           header:
             some: "一部のユーザーには通知されません"
             all: "誰にも通知されません"
+          unreachable_1: "@%{group} はメンションを許可していません。"
+          unreachable_2: "@%{group1} と @%{group2} はメンションを許可していません。"
+          unreachable_multiple:
+            other: "@%{group} と他 %{count} 個のグループはメンションを許可していません。"
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {@{group1} のメンションは、# ユーザーの<a href="{siteSettingUrl}" target="_blank">通知上限</a>を超えています。}
+                              other {@{group1} のメンションは、# ユーザーの<a href="{siteSettingUrl}" target="_blank">通知上限</a>を超えています。}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {@{group1} のメンションは、# ユーザーの通知上限を超えています。}
+                              other {@{group1} のメンションは、# ユーザーの通知上限を超えています。}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {@{group1} と @{group2} のメンションは、# ユーザーの<a href="{siteSettingUrl}" target="_blank">通知上限</a>を超えています。}
+                            other {@{group1} と @{group2} のメンションは、# ユーザーの<a href="{siteSettingUrl}" target="_blank">通知上限</a>を超えています。}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {@{group1} と @{group2} のメンションは、# ユーザーの通知上限を超えています。}
+                            other {@{group1} と @{group2} のメンションは、# ユーザーの通知上限を超えています。}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {これら {groupCount} 個のグループのメンションは、# ユーザーの<a href="{siteSettingUrl}" target="_blank">通知上限</a>を超えています。}
+                            other {これら {groupCount} 個のグループのメンションは、# ユーザーの<a href="{siteSettingUrl}" target="_blank">通知上限</a>を超えています。}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {これら {groupCount} 個のグループのメンションは、# ユーザーの通知上限を超えています。}
+                            other {これら {groupCount} 個のグループのメンションは、# ユーザーの通知上限を超えています。}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          other: "このメッセージは、%{count} メンションの通知上限を超えています。"
+        too_many_mentions_admin:
+          other: 'このメッセージは、%{count} メンションの<a href="%{siteSettingUrl}" target="_blank">通知上限</a>を超えています。'
       aria_roles:
         header: "チャットヘッダー"
         composer: "チャット作成ツール"
         channels_list: "チャットのチャンネルリスト"
       no_public_channels: "どのチャンネルにも参加していません。"
+      kicked_from_channel: "このチャンネルにアクセスできなくなりました。"
       only_chat_push_notifications:
         title: "チャットのプッシュ通知のみ送信する"
         description: "チャット以外のすべてのプッシュ通知の送信をブロックします"
@@ -129,14 +232,20 @@ ja:
       close_full_page: "全画面チャットを閉じる"
       open_message: "メッセージをチャットで開く"
       placeholder_self: "メモを書き留める"
+      placeholder_channel: "%{channelName} 内でチャット"
+      placeholder_thread: "スレッド内でチャット"
       placeholder_users: "%{commaSeparatedNames} とチャット"
+      placeholder_new_message_disallowed:
+        archived: "チャンネルはアーカイブされているため、新しいメッセージを送信できません。"
+        closed: "チャンネルは閉鎖されているため、新しいメッセージを送信できません。"
+        read_only: "チャンネルは読み取り専用であるため、新しいメッセージを送信できません。"
       placeholder_silenced: "現在、メッセージを送信できません。"
-      placeholder_start_conversation_users: "%{commaSeparatedUsernames} と会話を始める"
       remove_upload: "ファイルを削除する"
       react: "絵文字でリアクション"
       reply: "返信"
       edit: "編集"
       copy_link: "リンクをコピーする"
+      copy_text: "テキストをコピー"
       rebake_message: "HTML を再構築"
       retry_staged_message:
         title: "ネットワークエラー"
@@ -148,6 +257,10 @@ ja:
       save: "保存"
       select: "選択"
       return_to_list: "チャンネルリストに戻る"
+      return_to_channel: "チャンネルに戻る"
+      return_to_threads_list: "スレッドリストに戻る"
+      unread_threads_count:
+        other: "未読のディスカッションが %{count} 件あります"
       scroll_to_bottom: "一番下にスクロール"
       scroll_to_new_messages: "新しいメッセージを見る"
       sound:
@@ -159,6 +272,8 @@ ja:
       title: "チャット"
       title_capitalized: "チャット"
       upload: "ファイルを添付する"
+      upload_to_channel: "%{title} にアップロード"
+      upload_to_thread: "スレッドにアップロード"
       uploaded_files:
         other: "%{count} 個のファイル"
       you_flagged: "このメッセージを通報しました"
@@ -168,6 +283,8 @@ ja:
         read_only: "読み取り専用"
         archived_header: "チャンネルはアーカイブされています"
         archived: "アーカイブ済み"
+        archive_failed: "チャンネルのアーカイブに失敗しました。%{completed} / 全 %{total} 件のメッセージがアーカイブされました。<a target=\"_blank\" href=\"%{topic_url}\">アーカイブ先のトピック</a>が作成されました。再試行を押して、アーカイブの完了を試してください。"
+        archive_failed_no_topic: "チャンネルのアーカイブに失敗しました。%{completed} / 全 %{total} 件のメッセージがアーカイブされました。アーカイブ先のトピックは作成されていません。再試行を押して、アーカイブの完了を試してください。"
         archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">アーカイブ済みのトピック</a>を見る"
         closed_header: "チャンネルは閉鎖されています"
         closed: "閉鎖"
@@ -186,6 +303,8 @@ ja:
         yesterday: 昨日
       members_view:
         filter_placeholder: メンバーを検索
+        add_member: メンバーを追加
+        back_to_settings: "設定に戻る"
       about_view:
         associated_topic: リンクされたトピック
         associated_category: リンクされたカテゴリ
@@ -196,40 +315,78 @@ ja:
         back_to_all_channels: "すべてのチャンネル"
         back_to_channel: "戻る"
         tabs:
-          about: 紹介
           members: メンバー
           settings: 設定
+      new_message_modal:
+        title: メッセージを送信する
+        add_user_long: <kbd>Shift + クリック</kbd>または <kbd>Shift + Enter</kbd><span>@%{username} を追加</span>
+        add_user_short: <span>ユーザーを追加</span>
+        open_channel: <span>チャンネルを開く</span>
+        default_search_placeholder: "#a-channel、@somebody など"
+        default_channel_search_placeholder: "#a-channel"
+        default_user_search_placeholder: "@somebody"
+        user_search_placeholder: "...さらにメンバーを追加"
+        disabled_user: "はチャットを無効にしました"
+        no_items: "項目なし"
+        create_group_placeholder: "グループチャット名 (オプション)"
+        participants_counter: "参加者: %{selection_count} 人/ 最大 %{max} 人"
+        new_group_chat: "新しいグループチャット"
+        filter: "フィルタ"
+        cant_add_more_members: "メンバーの最大数に達しました"
+        create_new_group_chat: "グループチャットを作成"
       channel_edit_name_slug_modal:
+        title: チャンネルを編集する
+        input_placeholder: 名前を追加してください
+        slug_description: チャンネルスラグはチャンネル名の代わりに URL で使用されます
         name: チャンネル名
+        slug: チャンネルスラグ (オプション)
       channel_edit_description_modal:
         title: 説明を編集する
         input_placeholder: 説明を追加する
         description: このチャンネルの紹介を入力します
       direct_message_creator:
+        add_to_channel: "チャンネルに追加"
         title: 新しいメッセージ
         prefix: "宛先:"
         no_results: 結果がありません
         selected_user_title: "%{username} を選択解除"
-      channel_selector:
-        title: "チャンネルにジャンプ"
-        no_channels: "検索に一致するチャンネルはありません"
+        group_name: "グループチャット名 (オプション)"
+        members_counter:
+          other: "メンバー: %{count} 人 / 最大 %{max} 人"
       channel:
         no_memberships: このチャンネルにはメンバーがいません
         no_memberships_found: メンバーが見つかりません
         memberships_count:
           other: "%{count} 人のメンバー"
       create_channel:
+        threading:
+          label: "スレッドを有効にする"
         auto_join_users:
           public_category_warning: "%{category} は公開カテゴリです。最近アクティブなすべてのユーザーをこのチャンネルに自動的に追加しますか？"
+          warning_1_group:
+            other: "%{group} から %{count} 人のユーザーを自動的に追加しますか？"
           warning_2_groups:
             other: "%{group1} と %{group2} から %{count} 人のユーザーを自動的に追加しますか？"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                other {
+                      { userCount, plural,
+                          other {{groupName} と他 {groupCount} 個のグループから {userCount} 人のユーザーを自動的に追加しますか？}
+                      }
+                    }
+            }
         choose_category:
           label: "カテゴリを選択する"
           none: "1 つ選択してください..."
           default_hint: <a href=%{link} target="_blank">%{category} のセキュリティ設定</a>に移動し、アクセス権を管理します
+          hint_1_group: '%{group} のユーザーは、<a href="%{settingLink}" target="_blank">セキュリティ設定</a>に従って、このチャンネルにアクセスできます'
+          hint_2_groups: '%{group1} と %{group2} のユーザーは、<a href="%{settingLink}" target="_blank">セキュリティ設定</a>に従って、このチャンネルにアクセスできます'
+          hint_multiple_groups:
+            other: '%{group} と他 %{count} 個のグループのユーザーは、<a href="%{settingLink}" target="_blank">セキュリティ設定</a>に従って、このチャンネルにアクセスできます'
         create: "チャンネルを作成"
         description: "説明 (オプション)"
         name: "チャンネル名"
+        slug: "チャンネルスラグ (オプション)"
         title: "新しいチャンネル"
         type: "タイプ"
         types:
@@ -238,12 +395,15 @@ ja:
       reviewable:
         type: "チャットメッセージ"
       reactions:
-        only_you: ":%{emoji}: でリアクションしました"
+        only_you: ":%{emoji}: <span>でリアクションしました</span>"
+        you_and_single_user: "<span>あなたと %{username} が :%{emoji}: でリアクションしました</span>"
+        you_and_multiple_users: "<span>あなた、%{commaSeparatedUsernames} と %{username} が :%{emoji}: でリアクションしました</span>"
         you_multiple_users_and_more:
-          other: "あなた、%{commaSeparatedUsernames} と他 %{count} 人が :%{emoji}: でリアクションしました"
-        single_user: "%{username} が :%{emoji}: でリアクションしました"
+          other: "<span>あなた、%{commaSeparatedUsernames} と他 %{count} 人が :%{emoji}: でリアクションしました</span>"
+        single_user: "<span>%{username} が :%{emoji}: でリアクションしました</span>"
+        multiple_users: "<span>%{commaSeparatedUsernames} と %{username} が :%{emoji}: でリアクションしました</span>"
         multiple_users_and_more:
-          other: "%{commaSeparatedUsernames} と他 %{count} 人が :%{emoji}: でリアクションしました"
+          other: "<span>%{commaSeparatedUsernames} と他 %{count} 人が :%{emoji}: でリアクションしました</span>"
       composer:
         toggle_toolbar: "ツールバーの切り替え"
         italic_text: "強調文字"
@@ -253,6 +413,7 @@ ja:
       quote:
         original_channel: '最初に <a href="%{channelLink}">%{channel}</a> で送信されました'
         copy_success: "チャットの引用をクリップボードにコピーしました"
+        default_thread_title: "スレッド"
       notification_levels:
         never: "なし"
         mention: "メンションのみ"
@@ -260,13 +421,19 @@ ja:
       settings:
         channel_wide_mentions_label: "@all と @here メンションを許可する"
         channel_wide_mentions_description: "@all で #%{channel} の全メンバーに通知するか、@here で現在アクティブなメンバーのみに通知することを許可します"
+        channel_threading_label: "スレッド"
+        channel_threading_description: "スレッドが有効になっている場合、チャットメッセージへの返信によって個別の会話が作成され、メインチャンネルと並行して存在することになります。"
         auto_join_users_label: "自動的にユーザーを追加する"
+        auto_join_users_info: "どのユーザーが過去 3 か月間アクティブであったかを時間単位で確認します。ユーザーが %{category} カテゴリにアクセスできる場合は、このチャンネルに追加します。"
+        auto_join_users_info_no_category: "どのユーザーが過去 3 か月間アクティブであったかを時間単位で確認します。選択されたカテゴリにユーザーがアクセスできる場合は、このチャンネルに追加します。"
         auto_join_users_warning: "このチャンネルのメンバーでなく、%{category} カテゴリにアクセスできるすべてのユーザーが参加します。よろしいですか？"
         desktop_notification_level: "デスクトップ通知"
         follow: "参加"
         followed: "参加中"
         mobile_notification_level: "モバイルプッシュ通知"
         mute: "チャンネルをミュート"
+        threading_enabled: "有効"
+        threading_disabled: "無効"
         muted_on: "オン"
         muted_off: "オフ"
         notifications: "通知"
@@ -275,14 +442,26 @@ ja:
         saved: "保存済み"
         unfollow: "退出"
         admin_title: "管理者"
+        settings_title: "設定"
+        info_title: "チャンネル情報"
+        category_label: "カテゴリ"
+        history_label: "履歴"
+        members_label: "メンバー"
       admin:
         title: "チャット"
+        export_messages:
+          title: "チャットメッセージをエクスポートする"
+          description: "これによりすべてのチャンネルのすべてのメッセージがエクスポートされます。"
+          create_export: "エクスポートを作成"
+          export_has_started: "エクスポートが開始されました。準備ができたら PM が届きます。"
       direct_messages:
-        title: "パーソナルチャット"
         new: "パーソナルチャットを作成"
         create: "開始"
         leave: "このパーソナルチャットから退出する"
+        close: "このパーソナルチャットを閉じる"
         cannot_create: "ダイレクトメッセージを送信できません。"
+      channel_list:
+        title: "チャンネル"
       incoming_webhooks:
         back: "戻る"
         channel_placeholder: "チャンネルを選択する"
@@ -336,10 +515,12 @@ ja:
         many_users:
           other: "%{commaSeparatedUsernames} と他 %{count} 人が入力中です"
       retention_reminders:
-        public:
-          other: "チャンネル履歴は %{count} 日間保持されます。"
-        dm:
-          other: "パーソナルチャット履歴は %{count} 日間保持されます。"
+        indefinitely_short: "無期限"
+        indefinitely_long: "チャット設定は、チャンネルメッセージを無期限に保持するように設定されています。"
+        short:
+          other: "%{count} 日"
+        long:
+          other: "チャット設定は、チャンネルメッセージを %{count} 日間保持するように設定されています。"
       flags:
         off_topic: "このメッセージは、チャンネルのタイトルで定義された現在のディスカッションとは関係がないため、おそらく別の場所に移動する必要があります。"
         inappropriate: "このメッセージには、合理的な人が攻撃的、虐待的、または<a href=\"%{basePath}/guidelines\">コミュニティーガイドライン</a>に違反すると見なすコンテンツが含まれます。"
@@ -362,10 +543,29 @@ ja:
         search_placeholder: "絵文字名とエイリアスで検索..."
         no_results: "結果がありません"
       thread:
-        title: "タグライン"
+        title: "タイトル"
+        view_thread: スレッドを表示
         replies:
           other: "返信: %{count} 件"
+        label: スレッド
+        close: "スレッドを閉じる"
+        original_message:
+          started_by: "開始ユーザー"
         settings: "設定"
+        last_reply: "最後の返信"
+        notifications:
+          regular:
+            title: "標準"
+            description: "このスレッドで誰かが @name であなたをメンションすると、通知されます。"
+          tracking:
+            title: "追跡中"
+            description: "スレッドリストとチャンネルに、このスレッドの新しい返信数が表示されます。スレッドで誰かが @name であなたをメンションすると、通知されます。"
+        participants_other_count:
+          other: "+%{count} 件"
+      threads:
+        open: "スレッドを開く"
+        list: "スレッド"
+        none: "このチャンネルのどのスレッドにも参加していません。"
       draft_channel_screen:
         header: "新しいメッセージ"
         cancel: "キャンセル"
@@ -412,6 +612,9 @@ ja:
       types:
         chat_reviewable_message:
           title: "通報されたチャットメッセージ"
+        reviewable_chat_message:
+          title: "通報されたチャットメッセージ"
+          noun: "チャットメッセージ"
     keyboard_shortcuts_help:
       chat:
         title: "チャット"
@@ -424,6 +627,7 @@ ja:
           composer_code: "%{shortcut} コード (作成ツールのみ)"
           drawer_open: "%{shortcut} チャットドロワーを開く"
           drawer_close: "%{shortcut} チャットドロワーを閉じる"
+          mark_all_channels_read: "%{shortcut} すべてのチャンネルを既読としてマークします"
     topic_statuses:
       chat:
         help: "このトピックのチャットは有効になっています"
@@ -445,3 +649,7 @@ ja:
       sections:
         chat:
           title: チャット
+    sidebar:
+      panels:
+        chat:
+          label: "チャット"

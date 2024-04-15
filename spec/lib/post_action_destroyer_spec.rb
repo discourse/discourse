@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe PostActionDestroyer do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user) }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:admin)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:post)
 
   describe "#perform" do
     context "with like" do
@@ -43,6 +43,30 @@ RSpec.describe PostActionDestroyer do
           stats_message = messages.select { |msg| msg.data[:type] == :stats }.first
           expect(stats_message).to be_present
           expect(stats_message.data[:like_count]).to eq(0)
+        end
+
+        it "triggers the right flag events" do
+          PostActionCreator.new(user, post, PostActionType.types[:inappropriate]).perform
+          events =
+            DiscourseEvent.track_events { PostActionDestroyer.destroy(user, post, :inappropriate) }
+          event_names = events.map { |event| event[:event_name] }
+          expect(event_names).to include(:flag_destroyed)
+          expect(event_names).not_to include(:like_destroyed)
+        end
+
+        it "triggers the right like events" do
+          events = DiscourseEvent.track_events { PostActionDestroyer.destroy(user, post, :like) }
+          event_names = events.map { |event| event[:event_name] }
+          expect(event_names).to include(:like_destroyed)
+          expect(event_names).not_to include(:flag_destroyed)
+        end
+
+        it "sends the right event arguments" do
+          events = DiscourseEvent.track_events { PostActionDestroyer.destroy(user, post, :like) }
+          event = events.find { |e| e[:event_name] == :like_destroyed }
+          expect(event.present?).to eq(true)
+          expect(event[:params].first).to be_instance_of(PostAction)
+          expect(event[:params].second).to be_instance_of(PostActionDestroyer)
         end
       end
 

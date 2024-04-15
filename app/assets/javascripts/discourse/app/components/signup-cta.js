@@ -1,7 +1,7 @@
 import Component from "@ember/component";
-import discourseLater from "discourse-common/lib/later";
 import { action } from "@ember/object";
 import { on } from "@ember/object/evented";
+import discourseLater from "discourse-common/lib/later";
 
 export default Component.extend({
   action: "showCreateAccount",

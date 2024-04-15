@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Admin::EmailTemplatesController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:admin)
+  fab!(:moderator)
+  fab!(:user)
 
   def original_text(key)
     I18n.overrides_disabled { I18n.t(key) }
@@ -450,7 +450,7 @@ RSpec.describe Admin::EmailTemplatesController do
 
   it "uses only existing email templates" do
     Admin::EmailTemplatesController.email_keys.each do |key|
-      expect(I18n.t(key)).to_not include("translation missing")
+      expect(I18n.t(key)).to_not include("Translation missing")
     end
   end
 end

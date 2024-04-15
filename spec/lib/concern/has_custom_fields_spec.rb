@@ -17,6 +17,8 @@ RSpec.describe HasCustomFields do
       end
 
       class CustomFieldsTestItemCustomField < ActiveRecord::Base
+        include CustomField
+
         belongs_to :custom_fields_test_item
       end
     end
@@ -134,6 +136,13 @@ RSpec.describe HasCustomFields do
       expect(db_item.custom_fields).to eq("a" => "b", "c" => "d")
     end
 
+    it "handles assigning singleton values to array fields" do
+      CustomFieldsTestItem.register_custom_field_type "array", [:integer]
+      test_item = CustomFieldsTestItem.new
+      test_item.custom_fields = { "array" => "1" }
+      test_item.save
+    end
+
     it "handles arrays properly" do
       CustomFieldsTestItem.register_custom_field_type "array", [:integer]
       test_item = CustomFieldsTestItem.new
@@ -187,6 +196,55 @@ RSpec.describe HasCustomFields do
 
       db_item = CustomFieldsTestItem.find(test_item.id)
       expect(db_item.custom_fields).to eq("a" => %w[b 10 d])
+    end
+
+    it "that are true can be fetched" do
+      test_item = CustomFieldsTestItem.new
+      CustomFieldsTestItem.register_custom_field_type("bool", :boolean)
+
+      test_item.save!
+
+      expect(
+        CustomFieldsTestItemCustomField
+          .true_fields
+          .where(custom_fields_test_item_id: test_item.id)
+          .count,
+      ).to eq(0)
+
+      test_item.custom_fields["bool"] = true
+      test_item.save!
+
+      expect(
+        CustomFieldsTestItemCustomField
+          .true_fields
+          .where(custom_fields_test_item_id: test_item.id)
+          .count,
+      ).to eq(1)
+    end
+
+    it "stores boolean values in boolean fields as t or f" do
+      test_item = CustomFieldsTestItem.new
+      CustomFieldsTestItem.register_custom_field_type("bool", :boolean)
+
+      test_item.custom_fields["bool"] = "true"
+      test_item.save_custom_fields
+
+      expect(CustomFieldsTestItemCustomField.last.value).to eq("t")
+
+      test_item.custom_fields["bool"] = "false"
+      test_item.save_custom_fields
+
+      expect(CustomFieldsTestItemCustomField.last.value).to eq("f")
+    end
+
+    it "coerces non-integer values in integer fields" do
+      test_item = CustomFieldsTestItem.new
+      CustomFieldsTestItem.register_custom_field_type("int", :integer)
+
+      test_item.custom_fields["int"] = "true"
+      test_item.save_custom_fields
+
+      expect(CustomFieldsTestItemCustomField.last.value).to eq("0")
     end
 
     it "supports type coercion" do
@@ -365,6 +423,17 @@ RSpec.describe HasCustomFields do
       end
     end
 
+    it "supports setting a maximum length" do
+      CustomFieldsTestItem.register_custom_field_type "foo", :string, max_length: 1
+      test_item = CustomFieldsTestItem.new
+      test_item.custom_fields = { "foo" => "a" }
+      test_item.save!
+
+      test_item.custom_fields = { "foo" => "aa" }
+      expect { test_item.save! }.to raise_error(ActiveRecord::RecordInvalid)
+      expect { test_item.save_custom_fields }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
     describe "upsert_custom_fields" do
       it "upserts records" do
         test_item = CustomFieldsTestItem.create
@@ -388,6 +457,17 @@ RSpec.describe HasCustomFields do
         test_item.reload
         expect(test_item.custom_fields["hello"]).to eq("world")
         expect(test_item.custom_fields["abc"]).to eq("ghi")
+      end
+
+      it "updates the updated_at timestamp" do
+        test_item = CustomFieldsTestItem.create
+        test_item.upsert_custom_fields(foo: "bar")
+        field = CustomFieldsTestItemCustomField.find_by(name: "foo")
+        prev_updated_at = field.updated_at
+
+        test_item.upsert_custom_fields(foo: "baz")
+
+        expect(prev_updated_at).not_to eq(field.reload.updated_at)
       end
 
       it "allows upsert to use keywords" do

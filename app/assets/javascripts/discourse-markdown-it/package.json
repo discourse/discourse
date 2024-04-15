@@ -1,0 +1,45 @@
+{
+  "name": "discourse-markdown-it",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Discourse's markdown-it features",
+  "author": "Discourse <team@discourse.org>",
+  "license": "GPL-2.0-only",
+  "keywords": [
+    "ember-addon"
+  ],
+  "exports": {
+    ".": "./src/index.js",
+    "./*": "./src/*.js",
+    "./addon-main.js": "./addon-main.cjs"
+  },
+  "files": [
+    "addon-main.cjs",
+    "src"
+  ],
+  "dependencies": {
+    "@embroider/addon-shim": "^1.8.7",
+    "discourse-common": "1.0.0",
+    "ember-auto-import": "^2.7.2",
+    "markdown-it": "^14.0.0"
+  },
+  "peerDependencies": {
+    "discourse-i18n": "1.0.0",
+    "pretty-text": "1.0.0",
+    "xss": "*"
+  },
+  "engines": {
+    "node": ">= 18",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.21.1"
+  },
+  "ember": {
+    "edition": "octane"
+  },
+  "ember-addon": {
+    "version": 2,
+    "type": "addon",
+    "main": "addon-main.cjs",
+    "app-js": {}
+  }
+}

@@ -1,21 +1,19 @@
-import {
-  changeSort,
-  queryParams,
-  resetParams,
-} from "discourse/controllers/discovery-sortable";
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import { queryParams, resetParams } from "discourse/controllers/discovery/list";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
+import { cleanNullQueryParams, defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
+import DiscourseRoute from "discourse/routes/discourse";
 import { deepEqual } from "discourse-common/lib/object";
-import { defaultHomepage } from "discourse/lib/utilities";
-import { isEmpty } from "@ember/utils";
-import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
+import I18n from "discourse-i18n";
 
 // A helper to build a topic route for a filter
-function filterQueryParams(params, defaultParams) {
-  const findOpts = Object.assign({}, defaultParams || {});
+export function filterQueryParams(params, defaultParams) {
+  const findOpts = { ...(defaultParams || {}) };
 
   if (params) {
     Object.keys(queryParams).forEach(function (opt) {
@@ -27,7 +25,7 @@ function filterQueryParams(params, defaultParams) {
   return findOpts;
 }
 
-async function findTopicList(
+export async function findTopicList(
   store,
   tracking,
   filter,
@@ -56,17 +54,13 @@ async function findTopicList(
     session.set("topicList", null);
   } else {
     // Clear the cache
-    session.setProperties({ topicList: null, topicListScrollPosition: null });
+    session.setProperties({ topicList: null });
   }
 
   if (!list) {
     // Clean up any string parameters that might slip through
     filterParams ||= {};
-    for (const [key, val] of Object.entries(filterParams)) {
-      if (val === "undefined" || val === "null") {
-        filterParams[key] = null;
-      }
-    }
+    filterParams = cleanNullQueryParams(filterParams);
 
     list = await store.findFiltered("topicList", {
       filter,
@@ -94,86 +88,75 @@ async function findTopicList(
   return list;
 }
 
-export default function (filter, extras) {
-  extras = extras || {};
-  return DiscourseRoute.extend(
-    {
-      screenTrack: service(),
-      queryParams,
+@disableImplicitInjections
+class AbstractTopicRoute extends DiscourseRoute {
+  @service screenTrack;
+  @service store;
+  @service topicTrackingState;
+  @service currentUser;
+  @service historyStore;
 
-      beforeModel() {
-        this.controllerFor("navigation/default").set(
-          "filterType",
-          filter.split("/")[0]
-        );
-      },
+  queryParams = queryParams;
+  templateName = "discovery/list";
+  controllerName = "discovery/list";
 
-      model(data, transition) {
-        // attempt to stop early cause we need this to be called before .sync
-        this.screenTrack.stop();
+  async model(data) {
+    // attempt to stop early cause we need this to be called before .sync
+    this.screenTrack.stop();
 
-        const findOpts = filterQueryParams(data),
-          findExtras = { cached: this.isPoppedState(transition) };
+    const findOpts = filterQueryParams(data),
+      findExtras = { cached: this.historyStore.isPoppedState };
 
-        return findTopicList(
-          this.store,
-          this.topicTrackingState,
-          filter,
-          findOpts,
-          findExtras
-        );
-      },
+    const topicListPromise = findTopicList(
+      this.store,
+      this.topicTrackingState,
+      this.routeConfig.filter,
+      findOpts,
+      findExtras
+    );
 
-      titleToken() {
-        if (filter === defaultHomepage()) {
-          return;
-        }
+    return {
+      list: await topicListPromise,
+      filterType: this.routeConfig.filter.split("/")[0],
+    };
+  }
 
-        const filterText = I18n.t(
-          "filters." + filter.replace("/", ".") + ".title"
-        );
-        return I18n.t("filters.with_topics", { filter: filterText });
-      },
+  titleToken() {
+    if (this.routeConfig.filter === defaultHomepage()) {
+      return;
+    }
 
-      setupController(controller, model) {
-        const topicOpts = {
-          model,
-          category: null,
-          period: model.get("for_period") || model.get("params.period"),
-          selected: [],
-          expandAllPinned: false,
-          expandGloballyPinned: true,
-        };
+    const filterText = I18n.t(
+      "filters." + this.routeConfig.filter.replace("/", ".") + ".title"
+    );
+    return I18n.t("filters.with_topics", { filter: filterText });
+  }
 
-        this.controllerFor("discovery/topics").setProperties(topicOpts);
+  setupController(controller, model) {
+    super.setupController(...arguments);
+    controller.bulkSelectHelper.clear();
+    setTopicList(model.list);
+  }
 
-        this.controllerFor("navigation/default").set(
-          "canCreateTopic",
-          model.get("can_create_topic")
-        );
-      },
+  @action
+  resetParams(skipParams = []) {
+    resetParams.call(this, skipParams);
+  }
 
-      renderTemplate() {
-        this.render("navigation/default", { outlet: "navigation-bar" });
-
-        this.render("discovery/topics", {
-          controller: "discovery/topics",
-          outlet: "list-container",
-        });
-      },
-
-      @action
-      changeSort(sortBy) {
-        changeSort.call(this, sortBy);
-      },
-
-      @action
-      resetParams(skipParams = []) {
-        resetParams.call(this, skipParams);
-      },
-    },
-    extras
-  );
+  @action
+  willTransition() {
+    if (this.routeConfig.filter === "top" && this.currentUser) {
+      this.currentUser.set("user_option.should_be_redirected_to_top", false);
+      if (this.currentUser.user_option?.redirected_to_top) {
+        this.currentUser.set("user_option.redirected_to_top.reason", null);
+      }
+    }
+    return super.willTransition(...arguments);
+  }
 }
 
-export { filterQueryParams, findTopicList };
+export default function buildTopicRoute(filter) {
+  return class extends AbstractTopicRoute {
+    routeConfig = { filter };
+  };
+}

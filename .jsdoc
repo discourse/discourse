@@ -10,8 +10,6 @@
     }
   },
   "opts": {
-    "template": "./node_modules/tidy-jsdoc",
-    "prism-theme": "prism-custom",
     "encoding": "utf8",
     "recurse": true
   },

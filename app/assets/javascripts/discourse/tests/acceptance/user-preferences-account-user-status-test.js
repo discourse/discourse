@@ -1,11 +1,11 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 async function openUserStatusModal() {
   await click(".pref-user-status .btn-default");
@@ -21,7 +21,7 @@ async function setStatus(status) {
   await openUserStatusModal();
   await pickEmoji(status.emoji);
   await fillIn(".user-status-description", status.description);
-  await click(".modal-footer .btn-primary"); // save and close modal
+  await click(".d-modal__footer .btn-primary"); // save and close modal
 }
 
 acceptance("User Profile - Account - User Status", function (needs) {

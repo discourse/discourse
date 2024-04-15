@@ -2,7 +2,7 @@
 
 RSpec.describe ExportCsvController do
   context "while logged in as normal user" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     before { sign_in(user) }
 
     describe "#export_entity" do
@@ -40,7 +40,7 @@ RSpec.describe ExportCsvController do
   end
 
   context "while logged in as an admin" do
-    fab!(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     before { sign_in(admin) }
 
     describe "#export_entity" do
@@ -73,11 +73,21 @@ RSpec.describe ExportCsvController do
         expect(log_entry.acting_user_id).to eq(admin.id)
         expect(log_entry.subject).to eq("user_list")
       end
+
+      it "fails requests where the entity is too long" do
+        post "/export_csv/export_entity.json", params: { entity: "x" * 200 }
+        expect(response.status).to eq(400)
+      end
+
+      it "fails requests where the name arg is too long" do
+        post "/export_csv/export_entity.json", params: { entity: "foo", args: { name: "x" * 200 } }
+        expect(response.status).to eq(400)
+      end
     end
   end
 
   context "while logged in as a moderator" do
-    fab!(:moderator) { Fabricate(:moderator) }
+    fab!(:moderator)
 
     before { sign_in(moderator) }
 

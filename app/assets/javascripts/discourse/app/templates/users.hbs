@@ -1,4 +1,9 @@
-<DSection @pageClass="users">
+{{#if this.model.canLoadMore}}
+  {{hide-application-footer}}
+{{/if}}
+
+{{body-class "users-page"}}
+<section>
   <LoadMore
     @selector=".directory-table .directory-table__cell"
     @action={{action "loadMore"}}
@@ -16,7 +21,7 @@
           <div class="period-controls">
             <PeriodChooser
               @period={{this.period}}
-              @onChange={{action (mut this.period)}}
+              @onChange={{fn (mut this.period)}}
               @fullDay={{false}}
             />
             {{#if this.lastUpdatedAt}}
@@ -36,25 +41,22 @@
               @value={{readonly this.nameInput}}
               placeholder={{i18n "directory.filter_name"}}
               class="filter-name no-blur"
-              {{on
-                "input"
-                (action "onUsernameFilterChanged" value="target.value")
-              }}
+              {{on "input" (with-event-value this.onUsernameFilterChanged)}}
             />
             {{#if this.showGroupFilter}}
               <ComboBox
-                @class="directory-group-selector"
                 @value={{this.group}}
                 @content={{this.groupOptions}}
                 @onChange={{action this.groupChanged}}
                 @options={{hash none="directory.group.all"}}
+                class="directory-group-selector"
               />
             {{/if}}
             {{#if this.currentUser.staff}}
               <DButton
                 @icon="wrench"
-                @action={{action "showEditColumnsModal"}}
-                @class="btn-default open-edit-columns-btn"
+                @action={{this.showEditColumnsModal}}
+                class="btn-default open-edit-columns-btn"
               />
             {{/if}}
             <PluginOutlet
@@ -75,12 +77,23 @@
             />
             <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
           {{else}}
-            <div class="clearfix"></div>
-            <p>{{i18n "directory.no_results"}}</p>
+            <div class="empty-state">
+              <div class="empty-state-body">
+                <p>
+                  {{i18n "directory.no_results.body"}}
+                  {{#if this.currentUser.staff}}
+                    {{html-safe
+                      (i18n
+                        "directory.no_results.extra_body" basePath=(base-path)
+                      )
+                    }}
+                  {{/if}}
+                </p>
+              </div>
+            </div>
           {{/if}}
         </ConditionalLoadingSpinner>
-
       </div>
     </div>
   </LoadMore>
-</DSection>
+</section>

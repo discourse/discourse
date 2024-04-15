@@ -92,13 +92,15 @@ class NewPostManager
       return :post_count
     end
 
-    return :trust_level if user.trust_level < SiteSetting.approve_unless_trust_level.to_i
+    if !user.staged? && !user.in_any_groups?(SiteSetting.approve_unless_allowed_groups_map)
+      return :group
+    end
 
     if (
-         manager.args[:title].present? &&
-           user.trust_level < SiteSetting.approve_new_topics_unless_trust_level.to_i
+         manager.args[:title].present? && !user.staged? &&
+           !user.in_any_groups?(SiteSetting.approve_new_topics_unless_allowed_groups_map)
        )
-      return :new_topics_unless_trust_level
+      return :new_topics_unless_allowed_groups
     end
 
     if WordWatcher.new("#{manager.args[:title]} #{manager.args[:raw]}").requires_approval?
@@ -115,7 +117,7 @@ class NewPostManager
 
     if (
          manager.args[:image_sizes].present? &&
-           user.trust_level < SiteSetting.review_media_unless_trust_level.to_i
+           !user.in_any_groups?(SiteSetting.skip_review_media_groups_map)
        )
       return :contains_media
     end
@@ -200,10 +202,16 @@ class NewPostManager
   end
 
   def self.queue_enabled?
-    SiteSetting.approve_post_count > 0 || SiteSetting.approve_unless_trust_level.to_i > 0 ||
-      SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
-      SiteSetting.approve_unless_staged ||
-      WordWatcher.words_for_action_exists?(:require_approval) || handlers.size > 1
+    SiteSetting.approve_post_count > 0 ||
+      !(
+        SiteSetting.approve_unless_allowed_groups_map.include?(Group::AUTO_GROUPS[:trust_level_0])
+      ) ||
+      !(
+        SiteSetting.approve_new_topics_unless_allowed_groups_map.include?(
+          Group::AUTO_GROUPS[:trust_level_0],
+        )
+      ) || SiteSetting.approve_unless_staged ||
+      WordWatcher.words_for_action_exist?(:require_approval) || handlers.size > 1
   end
 
   def initialize(user, args)
@@ -259,10 +267,11 @@ class NewPostManager
 
     reviewable =
       ReviewableQueuedPost.new(
-        created_by: @user,
+        created_by: Discourse.system_user,
         payload: payload,
         topic_id: @args[:topic_id],
         reviewable_by_moderator: true,
+        target_created_by: @user,
       )
     reviewable.payload["title"] = @args[:title] if @args[:title].present?
     reviewable.category_id = args[:category] if args[:category].present?
@@ -299,7 +308,7 @@ class NewPostManager
     result.reviewable = reviewable
     result.reason = reason if reason
     result.check_errors(errors)
-    result.pending_count = ReviewableQueuedPost.where(created_by: @user).pending.count
+    result.pending_count = ReviewableQueuedPost.where(target_created_by: @user).pending.count
     result
   end
 

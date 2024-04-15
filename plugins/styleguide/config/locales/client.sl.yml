@@ -22,6 +22,6 @@ sl:
           title: "Prispevek"
         suggested_topics:
           title: "Predlagane teme"
-        rich_tooltip:
+        tooltips:
           description: "Opis"
           header: "Glava"

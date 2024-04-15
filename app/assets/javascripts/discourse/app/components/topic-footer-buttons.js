@@ -1,10 +1,10 @@
-import { alias, or } from "@ember/object/computed";
-import { computed } from "@ember/object";
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import { computed } from "@ember/object";
+import { alias, or } from "@ember/object/computed";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dropdown";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   elementId: "topic-footer-buttons",
@@ -27,6 +27,7 @@ export default Component.extend({
     function () {
       return this.inlineButtons
         .filterBy("dropdown", false)
+        .filterBy("anonymousOnly", false)
         .concat(this.inlineDropdowns)
         .sortBy("priority")
         .reverse();

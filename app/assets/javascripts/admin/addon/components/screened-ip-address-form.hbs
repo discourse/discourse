@@ -2,22 +2,22 @@
 <TextField
   @value={{this.ip_address}}
   @disabled={{this.formSubmitted}}
-  @class="ip-address-input"
   @placeholderKey="admin.logs.screened_ips.form.ip_address"
   @autocorrect="off"
   @autocapitalize="off"
+  class="ip-address-input"
 />
 
 <ComboBox
   @content={{this.actionNames}}
   @value={{this.actionName}}
-  @onChange={{action (mut this.actionName)}}
+  @onChange={{fn (mut this.actionName)}}
 />
 
 <DButton
-  @type="submit"
-  @class="btn-default"
-  @action={{action "submitForm"}}
+  @action={{this.submitForm}}
   @disabled={{this.formSubmitted}}
   @label="admin.logs.screened_ips.form.add"
+  type="submit"
+  class="btn-default"
 />

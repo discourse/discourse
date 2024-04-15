@@ -1,27 +1,31 @@
-import Mixin from "@ember/object/mixin";
-import ExtendableUploader from "discourse/mixins/extendable-uploader";
+import { getOwner } from "@ember/application";
+import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
-import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
-import { deepMerge } from "discourse-common/lib/object";
-import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
+import Mixin from "@ember/object/mixin";
+import { run } from "@ember/runloop";
+import { service } from "@ember/service";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
-import { warn } from "@ember/debug";
-import I18n from "I18n";
-import getURL from "discourse-common/lib/get-url";
-import { clipboardHelpers } from "discourse/lib/utilities";
-import { bind, observes, on } from "discourse-common/utils/decorators";
+import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
+import { updateCsrfToken } from "discourse/lib/ajax";
 import {
   bindFileInputChangeListener,
+  displayErrorForBulkUpload,
   displayErrorForUpload,
   getUploadMarkdown,
   validateUploadedFile,
 } from "discourse/lib/uploads";
-import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
-import { inject as service } from "@ember/service";
-import { run } from "@ember/runloop";
+import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
+import { clipboardHelpers } from "discourse/lib/utilities";
+import ComposerVideoThumbnailUppy from "discourse/mixins/composer-video-thumbnail-uppy";
+import ExtendableUploader from "discourse/mixins/extendable-uploader";
+import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
+import getURL from "discourse-common/lib/get-url";
+import { deepMerge } from "discourse-common/lib/object";
+import { bind, observes, on } from "discourse-common/utils/decorators";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
+import I18n from "discourse-i18n";
 
 // Note: This mixin is used _in addition_ to the ComposerUpload mixin
 // on the composer-editor component. It overrides some, but not all,
@@ -37,6 +41,8 @@ import escapeRegExp from "discourse-common/utils/escape-regexp";
 //
 export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   dialog: service(),
+  session: service(),
+
   uploadRootPath: "/uploads",
   uploadTargetBound: false,
   useUploadPlaceholders: true,
@@ -94,6 +100,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
   _bindUploadTarget() {
     this.set("inProgressUploads", []);
+    this.set("bufferedUploadErrors", []);
     this.placeholders = {};
     this._preProcessorStatus = {};
     this.editorEl = this.element.querySelector(this.editorClass);
@@ -325,28 +332,33 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
         cacheShortUploadUrl(upload.short_url, upload);
 
-        this._generateVideoThumbnail(file, upload.url, () => {
-          if (this.useUploadPlaceholders) {
+        new ComposerVideoThumbnailUppy(getOwner(this)).generateVideoThumbnail(
+          file,
+          upload.url,
+          () => {
+            if (this.useUploadPlaceholders) {
+              this.appEvents.trigger(
+                `${this.composerEventPrefix}:replace-text`,
+                this.placeholders[file.id].uploadPlaceholder.trim(),
+                markdown
+              );
+            }
+            this._resetUpload(file, { removePlaceholder: false });
             this.appEvents.trigger(
-              `${this.composerEventPrefix}:replace-text`,
-              this.placeholders[file.id].uploadPlaceholder.trim(),
-              markdown
+              `${this.composerEventPrefix}:upload-success`,
+              file.name,
+              upload
             );
-          }
-          this._resetUpload(file, { removePlaceholder: false });
-          this.appEvents.trigger(
-            `${this.composerEventPrefix}:upload-success`,
-            file.name,
-            upload
-          );
 
-          if (this.inProgressUploads.length === 0) {
-            this.appEvents.trigger(
-              `${this.composerEventPrefix}:all-uploads-complete`
-            );
-            this._reset();
+            if (this.inProgressUploads.length === 0) {
+              this.appEvents.trigger(
+                `${this.composerEventPrefix}:all-uploads-complete`
+              );
+              this._displayBufferedErrors();
+              this._reset();
+            }
           }
-        });
+        );
       });
     });
 
@@ -394,11 +406,11 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     file.meta.error = error;
 
     if (!this.userCancelled) {
-      displayErrorForUpload(response || error, this.siteSettings, file.name);
+      this._bufferUploadError(response || error, file.name);
       this.appEvents.trigger(`${this.composerEventPrefix}:upload-error`, file);
     }
-
     if (this.inProgressUploads.length === 0) {
+      this._displayBufferedErrors();
       this._reset();
     }
   },
@@ -408,6 +420,24 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       "inProgressUploads",
       this.inProgressUploads.filter((upl) => upl.id !== fileId)
     );
+  },
+
+  _displayBufferedErrors() {
+    if (this.bufferedUploadErrors.length === 0) {
+      return;
+    } else if (this.bufferedUploadErrors.length === 1) {
+      displayErrorForUpload(
+        this.bufferedUploadErrors[0].data,
+        this.siteSettings,
+        this.bufferedUploadErrors[0].fileName
+      );
+    } else {
+      displayErrorForBulkUpload(this.bufferedUploadErrors);
+    }
+  },
+
+  _bufferUploadError(data, fileName) {
+    this.bufferedUploadErrors.push({ data, fileName });
   },
 
   _setupPreProcessors() {
@@ -496,8 +526,8 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     const filename = this._filenamePlaceholder(file);
 
     // when adding two separate files with the same filename search for matching
-    // placeholder already existing in the editor ie [Uploading: test.png...]
-    // and add order nr to the next one: [Uploading: test.png(1)...]
+    // placeholder already existing in the editor ie [Uploading: test.png…]
+    // and add order nr to the next one: [Uploading: test.png(1)…]
     const escapedFilename = escapeRegExp(filename);
     const regexString = `\\[${I18n.t("uploading_filename", {
       filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
@@ -538,9 +568,9 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   _useXHRUploads() {
     this._uppyInstance.use(XHRUpload, {
       endpoint: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
-      headers: {
+      headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
-      },
+      }),
     });
   },
 
@@ -552,6 +582,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       isProcessingUpload: false,
       isCancellable: false,
       inProgressUploads: [],
+      bufferedUploadErrors: [],
     });
     this._resetPreProcessors();
     this.fileInputEl.value = "";
@@ -590,8 +621,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   },
 
   @bind
-  _addFiles(files, opts = {}) {
+  async _addFiles(files, opts = {}) {
+    if (!this.session.csrfToken) {
+      await updateCsrfToken();
+    }
+
     files = Array.isArray(files) ? files : [files];
+
     try {
       this._uppyInstance.addFiles(
         files.map((file) => {
@@ -620,21 +656,23 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       this.mobileUploadButton = document.getElementById(
         this.mobileFileUploaderId
       );
-      this.mobileUploadButtonEventListener = () => {
-        document.getElementById(this.fileUploadElementId).click();
-      };
-      this.mobileUploadButton.addEventListener(
+      this.mobileUploadButton?.addEventListener(
         "click",
-        this.mobileUploadButtonEventListener,
+        this._mobileUploadButtonEventListener,
         false
       );
     }
   },
 
+  @bind
+  _mobileUploadButtonEventListener() {
+    document.getElementById(this.fileUploadElementId).click();
+  },
+
   _unbindMobileUploadButton() {
     this.mobileUploadButton?.removeEventListener(
       "click",
-      this.mobileUploadButtonEventListener
+      this._mobileUploadButtonEventListener
     );
   },
 

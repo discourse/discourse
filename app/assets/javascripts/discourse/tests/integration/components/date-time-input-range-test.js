@@ -1,8 +1,8 @@
+import { fillIn, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { fillIn, render } from "@ember/test-helpers";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 function fromDateInput() {
@@ -31,7 +31,7 @@ module("Integration | Component | date-time-input-range", function (hooks) {
     this.setProperties({ state: { from: DEFAULT_DATE_TIME, to: null } });
 
     await render(
-      hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @onChange={{action (mut this.state)}} />`
+      hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @onChange={{fn (mut this.state)}} />`
     );
 
     assert.strictEqual(fromDateInput().value, "2019-01-29");
@@ -50,9 +50,23 @@ module("Integration | Component | date-time-input-range", function (hooks) {
     await fillIn(toDateInput(), "2019-01-30");
     await toTimeSelectKit.expand();
     rows = toTimeSelectKit.rows();
-
     assert.equal(rows[0].dataset.name, "00:00");
     assert.equal(rows[rows.length - 1].dataset.name, "23:45");
+  });
+
+  test("setting relativeDate results in correct intervals (4x 15m then 30m)", async function (assert) {
+    this.setProperties({ state: { from: DEFAULT_DATE_TIME, to: null } });
+
+    await render(
+      hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @relativeDate={{this.state.from}} @onChange={{fn (mut this.state)}} />`
+    );
+
+    await fillIn(toDateInput(), "2019-01-29");
+    const toTimeSelectKit = selectKit(".to .d-time-input .select-kit");
+    await toTimeSelectKit.expand();
+    let rows = toTimeSelectKit.rows();
+    assert.equal(rows[4].dataset.name, "15:45");
+    assert.equal(rows[5].dataset.name, "16:15");
   });
 
   test("timezone support", async function (assert) {
@@ -64,7 +78,7 @@ module("Integration | Component | date-time-input-range", function (hooks) {
     });
 
     await render(
-      hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @onChange={{action (mut this.state)}} @timezone="Europe/Paris" />`
+      hbs`<DateTimeInputRange @from={{this.state.from}} @to={{this.state.to}} @onChange={{fn (mut this.state)}} @timezone="Europe/Paris" />`
     );
 
     assert.strictEqual(fromDateInput().value, "2019-01-29");

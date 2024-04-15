@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::InvalidateInactiveAdmins do
-  fab!(:active_admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }
-  before { active_admin.email_tokens.update_all(confirmed: true) }
+  subject(:job) { Jobs::InvalidateInactiveAdmins.new.execute({}) }
 
-  subject { Jobs::InvalidateInactiveAdmins.new.execute({}) }
+  fab!(:active_admin) { Fabricate(:admin, last_seen_at: 1.hour.ago) }
+
+  before { active_admin.email_tokens.update_all(confirmed: true) }
 
   it "does nothing when all admins have been seen recently" do
     SiteSetting.invalidate_inactive_admin_email_after_days = 365
-    subject
+    job
     expect(active_admin.reload.active).to eq(true)
     expect(active_admin.email_tokens.where(confirmed: true).exists?).to eq(true)
   end
@@ -21,12 +22,12 @@ RSpec.describe Jobs::InvalidateInactiveAdmins do
       before { SiteSetting.invalidate_inactive_admin_email_after_days = 365 }
 
       it "marks email tokens as unconfirmed" do
-        subject
+        job
         expect(not_seen_admin.reload.email_tokens.where(confirmed: true).exists?).to eq(false)
       end
 
       it "makes the user as not active and logs the action" do
-        subject
+        job
         expect(not_seen_admin.reload.active).to eq(false)
 
         log = UserHistory.last
@@ -35,7 +36,7 @@ RSpec.describe Jobs::InvalidateInactiveAdmins do
       end
 
       it "adds a staff log" do
-        subject
+        job
         expect(not_seen_admin.reload.active).to eq(false)
       end
 
@@ -52,20 +53,20 @@ RSpec.describe Jobs::InvalidateInactiveAdmins do
         end
 
         it "removes the social logins" do
-          subject
+          job
           expect(UserAssociatedAccount.where(user_id: not_seen_admin.id).exists?).to eq(false)
         end
       end
 
       it "doesn't deactivate admins with recent posts" do
         Fabricate(:post, user: not_seen_admin)
-        subject
+        job
         expect(not_seen_admin.reload.active).to eq(true)
       end
 
       it "doesn't deactivate admins with recently used api keys" do
         Fabricate(:api_key, user: not_seen_admin, last_used_at: 1.day.ago)
-        subject
+        job
         expect(not_seen_admin.reload.active).to eq(true)
       end
     end
@@ -74,7 +75,7 @@ RSpec.describe Jobs::InvalidateInactiveAdmins do
       before { SiteSetting.invalidate_inactive_admin_email_after_days = 0 }
 
       it "does nothing" do
-        subject
+        job
         expect(active_admin.reload.active).to eq(true)
         expect(active_admin.email_tokens.where(confirmed: true).exists?).to eq(true)
         expect(not_seen_admin.reload.active).to eq(true)

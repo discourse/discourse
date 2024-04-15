@@ -20,12 +20,8 @@ module Chat
       direct_message.chat_channel_title_for_user(self, user)
     end
 
-    def ensure_slug_ok
-      true
-    end
-
     def generate_auto_slug
-      self.slug = nil
+      false if !self.slug.present?
     end
   end
 end

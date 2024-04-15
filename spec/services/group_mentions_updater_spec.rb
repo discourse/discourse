@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupMentionsUpdater do
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
 
   before { Jobs.run_immediately! }
 

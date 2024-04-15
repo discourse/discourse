@@ -46,7 +46,7 @@ zh_CN:
       invalid: |-
         抱歉，数学上无法掷出该骰子组合。:confounded:
       not_enough_dice:
-        other: "我的骰子只有 %{count} 点。羞，我知道!"
+        other: "我的骰子只有 %{count} 点。羞，我知道！"
       out_of_range: |-
         你知道数学上公平的骰子[最多有 120 个面](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)吗？
       results: |-
@@ -169,7 +169,7 @@ zh_CN:
           - 我们始终相信[文明社区行为](%{base_uri}/guidelines)。
       onebox:
         instructions: |-
-          接下来，你能与我分享其中一个链接吗？以**一行一个链接的形式**回复，然后它会自动展开为包含一个漂亮的摘要。
+          接下来，你能与我分享其中一个链接吗？以**一行一个链接的形式**回复，然后它会自动展开为包含一个漂亮的总结。
 
           要复制链接，在移动端设备上按住链接，或者右键点击你的鼠标：
 
@@ -196,7 +196,7 @@ zh_CN:
         reply: |-
           漂亮的图片 - 我按下了赞 :heart: 按钮，让你知道我有多欣赏它 :heart_eyes:
         like_not_found: |-
-          你忘记赞 :heart: 我的[帖子](%{url})了吗？:crying_cat_face:
+          你是不是忘记赞 :heart: 我的[帖子](%{url})了？:crying_cat_face:
         not_found: |-
           你好像没有上传图片，所以我选择了一张我_确定_你会喜欢的图片。
 
@@ -213,7 +213,7 @@ zh_CN:
         reply: |-
           感谢你赞我的帖子！
         not_found: |-
-          你忘记赞 :heart: 我的[帖子](%{url})了吗？:crying_cat_face:
+          你是不是忘记赞 :heart: 我的[帖子](%{url})了？:crying_cat_face:
       formatting:
         instructions: |-
           你可以在回复中使用**粗体** 或_斜体_吗？
@@ -295,10 +295,6 @@ zh_CN:
         not_found: |-
           哦不，我讨厌的帖子还没有被举报为不当言论。:worried: 你可以使用**举报** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 将其举报为不当言论吗？不要忘记使用“显示更多”按钮 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 来显示每个帖子的更多操作。
       search:
-        instructions: |-
-          呼…我已经在这个话题中隐藏了一个惊喜。如果你想挑战的话，点击右上角 &#8599; 的**搜索图标** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> 来找到它。
-
-          试试在这个话题中搜索关键字“capy&#8203;bara”
         hidden_message: |-
           你怎么错过了这只水豚？:wink:
 
@@ -373,21 +369,11 @@ zh_CN:
           注意，你只有 %{deletion_after} 小时的时间可以取消删除帖子。
       category_hashtag:
         instructions: |-
-          你知道你可以在你的帖子中引用类别和标签吗？例如，你看到过“%{category}”类别吗？
+          您知道您可以在帖子中引用类别和标签吗？例如，您有没有看到%{category}类别？
 
-          在句子中输入`#`，然后选择任意类别或标签。
-        instructions_experimental: |-
-          你知道可以在你的帖子中引用类别和标签吗？例如，你有没有看到 %{category} 类别？
-
-          在句子的任何地方输入`#`，然后选择任何类别或标签。
+          在句子中的任何地方输入 `#`，然后选择任何类别或标签。
         not_found: |-
-          哈，我没有在任何地方看到类别。注意，`#` 不能是第一个字符。你能在下一个回复中复制它吗？
-
-          ```text
-          我可以通过 # 创建一个类别链接
-          ```
-        not_found_experimental: |-
-          嗯，我在那里没有看到一个类别。你能在下次回复中复制这个吗？
+          嗯，我在那里没有看到类别。你能在下一条回复中复制吗？
 
           ```text
           我可以通过输入 # 创建一个类别链接
@@ -409,7 +395,7 @@ zh_CN:
           请注意，当你回复话题或阅读话题超过几分钟时，它会被自动设置为“跟踪”通知级别。你可以在[你的用户偏好设置](%{base_uri}/my/preferences)中更改此设置。
       poll:
         instructions: |-
-          你知道你可以在任何帖子中添加投票吗？尝试使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标来**构建投票**。
+          你知道你可以在任何帖子中添加投票吗？尝试使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标来**插入投票**。
         not_found: |-
           哎呀！你的回复中还没有任何投票。
 
@@ -439,7 +425,7 @@ zh_CN:
           [details=点这里查看运作方式！]
           1. 点击编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标。
           2. 选择“隐藏详细信息”。
-          3. 编辑详细信息摘要并添加内容。
+          3. 编辑详细信息总结并添加内容。
           [/details]
 
           你可以使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标在你的下一个回复中添加详细信息部分吗？

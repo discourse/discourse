@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::DownloadAvatarFromUrl do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "when url is invalid" do
     it "should not raise any error" do

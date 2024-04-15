@@ -1,6 +1,6 @@
-import { module, test } from "qunit";
-import hbs from "htmlbars-inline-precompile";
 import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module(

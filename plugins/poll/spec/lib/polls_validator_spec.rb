@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe ::DiscoursePoll::PollsValidator do
+  subject(:validator) { described_class.new(post) }
+
   let(:post) { Fabricate(:post) }
-  subject { described_class.new(post) }
 
   describe "#validate_polls" do
     it "ensures that polls have valid arguments" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 RSpec.describe ListableTopicSerializer do
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:topic)
 
   describe "#excerpt" do
     it "can be extended by theme modifiers" do

@@ -4,6 +4,10 @@
 # results when looking up a tag slug via markdown or searching for
 # tags via the # autocomplete character.
 class TagHashtagDataSource
+  def self.enabled?
+    SiteSetting.tagging_enabled
+  end
+
   def self.icon
     "tag"
   end
@@ -33,7 +37,6 @@ class TagHashtagDataSource
   private_class_method :tag_to_hashtag_item
 
   def self.lookup(guardian, slugs)
-    return [] if !SiteSetting.tagging_enabled
     DiscourseTagging
       .filter_visible(Tag.where_name(slugs), guardian)
       .map { |tag| tag_to_hashtag_item(tag, guardian) }
@@ -45,8 +48,6 @@ class TagHashtagDataSource
     limit,
     condition = HashtagAutocompleteService.search_conditions[:contains]
   )
-    return [] if !SiteSetting.tagging_enabled
-
     tags_with_counts, _ =
       DiscourseTagging.filter_allowed_tags(
         guardian,
@@ -79,8 +80,6 @@ class TagHashtagDataSource
   end
 
   def self.search_without_term(guardian, limit)
-    return [] if !SiteSetting.tagging_enabled
-
     tags_with_counts, _ =
       DiscourseTagging.filter_allowed_tags(
         guardian,

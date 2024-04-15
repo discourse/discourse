@@ -2,7 +2,7 @@
 
 module Chat
   module UserNotificationsExtension
-    def chat_summary(user, opts)
+    def chat_summary(user, _ = nil)
       guardian = Guardian.new(user)
       return unless guardian.can_chat?
 
@@ -11,9 +11,9 @@ module Chat
           .joins(:user, :chat_channel)
           .where.not(user: user)
           .where("chat_messages.created_at > ?", 1.week.ago)
-          .joins(
-            "LEFT OUTER JOIN chat_mentions cm ON cm.chat_message_id = chat_messages.id AND cm.notification_id IS NOT NULL",
-          )
+          .joins("LEFT OUTER JOIN chat_mentions cm ON cm.chat_message_id = chat_messages.id")
+          .joins("LEFT OUTER JOIN chat_mention_notifications cmn ON cmn.chat_mention_id = cm.id")
+          .joins("LEFT OUTER JOIN notifications n ON cmn.notification_id = n.id")
           .joins(
             "INNER JOIN user_chat_channel_memberships uccm ON uccm.chat_channel_id = chat_channels.id",
           )
@@ -22,7 +22,7 @@ module Chat
           (uccm.last_read_message_id IS NULL OR chat_messages.id > uccm.last_read_message_id) AND
           (uccm.last_unread_mention_when_emailed_id IS NULL OR chat_messages.id > uccm.last_unread_mention_when_emailed_id) AND
           (
-            (cm.user_id = :user_id AND uccm.following IS true AND chat_channels.chatable_type = 'Category') OR
+            (n.user_id = :user_id AND cmn.notification_id IS NOT NULL AND uccm.following IS true AND chat_channels.chatable_type = 'Category') OR
             (chat_channels.chatable_type = 'DirectMessage')
           )
         SQL
@@ -44,25 +44,24 @@ module Chat
       build_summary_for(user)
       @preferences_path = "#{Discourse.base_url}/my/preferences/chat"
 
-      # TODO(roman): Remove after the 2.9 release
-      add_unsubscribe_link = UnsubscribeKey.respond_to?(:get_unsubscribe_strategy_for)
-
-      if add_unsubscribe_link
-        unsubscribe_key = UnsubscribeKey.create_key_for(@user, "chat_summary")
-        @unsubscribe_link = "#{Discourse.base_url}/email/unsubscribe/#{unsubscribe_key}"
-        opts[:unsubscribe_url] = @unsubscribe_link
-      end
-
       opts = {
         from_alias: I18n.t("user_notifications.chat_summary.from", site_name: Email.site_title),
         subject: summary_subject(user, @grouped_messages),
-        add_unsubscribe_link: add_unsubscribe_link,
       }
 
       build_email(user.email, opts)
     end
 
     def summary_subject(user, grouped_messages)
+      if SiteSetting.private_email
+        return(
+          I18n.t(
+            "user_notifications.chat_summary.subject.private_message",
+            email_prefix: @email_prefix,
+          )
+        )
+      end
+
       all_channels = grouped_messages.keys
       grouped_channels = all_channels.partition { |c| !c.direct_message_channel? }
       channels = grouped_channels.first
@@ -73,7 +72,7 @@ module Chat
       # Prioritize messages from regular channels over direct messages
       if channels.any?
         channel_notification_text(
-          channels.sort_by { |channel| [channel.last_message_sent_at, channel.created_at] },
+          channels.sort_by { |channel| [channel.last_message.created_at, channel.created_at] },
           dm_users,
         )
       else

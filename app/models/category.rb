@@ -16,13 +16,7 @@ class Category < ActiveRecord::Base
   include AnonCacheInvalidator
   include HasDestroyedWebHook
 
-  REQUIRE_TOPIC_APPROVAL = "require_topic_approval"
-  REQUIRE_REPLY_APPROVAL = "require_reply_approval"
-  NUM_AUTO_BUMP_DAILY = "num_auto_bump_daily"
-
-  register_custom_field_type(REQUIRE_TOPIC_APPROVAL, :boolean)
-  register_custom_field_type(REQUIRE_REPLY_APPROVAL, :boolean)
-  register_custom_field_type(NUM_AUTO_BUMP_DAILY, :integer)
+  SLUG_REF_SEPARATOR = ":"
 
   belongs_to :topic
   belongs_to :topic_only_relative_url,
@@ -35,6 +29,7 @@ class Category < ActiveRecord::Base
   belongs_to :uploaded_logo, class_name: "Upload"
   belongs_to :uploaded_logo_dark, class_name: "Upload"
   belongs_to :uploaded_background, class_name: "Upload"
+  belongs_to :uploaded_background_dark, class_name: "Upload"
 
   has_many :topics
   has_many :category_users
@@ -48,7 +43,17 @@ class Category < ActiveRecord::Base
 
   has_one :category_setting, dependent: :destroy
 
-  delegate :auto_bump_cooldown_days, to: :category_setting, allow_nil: true
+  delegate :auto_bump_cooldown_days,
+           :num_auto_bump_daily,
+           :num_auto_bump_daily=,
+           :require_reply_approval,
+           :require_reply_approval=,
+           :require_reply_approval?,
+           :require_topic_approval,
+           :require_topic_approval=,
+           :require_topic_approval?,
+           to: :category_setting,
+           allow_nil: true
 
   has_and_belongs_to_many :web_hooks
 
@@ -102,22 +107,28 @@ class Category < ActiveRecord::Base
   before_save :downcase_name
   before_save :ensure_category_setting
 
-  after_save :publish_discourse_stylesheet
-  after_save :publish_category
   after_save :reset_topic_ids_cache
   after_save :clear_subcategory_ids
   after_save :clear_url_cache
   after_save :update_reviewables
+  after_save :publish_discourse_stylesheet
+  after_save :publish_category
 
   after_save do
     if saved_change_to_uploaded_logo_id? || saved_change_to_uploaded_logo_dark_id? ||
-         saved_change_to_uploaded_background_id?
-      upload_ids = [self.uploaded_logo_id, self.uploaded_logo_dark_id, self.uploaded_background_id]
+         saved_change_to_uploaded_background_id? || saved_change_to_uploaded_background_dark_id?
+      upload_ids = [
+        self.uploaded_logo_id,
+        self.uploaded_logo_dark_id,
+        self.uploaded_background_id,
+        self.uploaded_background_dark_id,
+      ]
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
 
   after_destroy :reset_topic_ids_cache
+  after_destroy :clear_subcategory_ids
   after_destroy :publish_category_deletion
   after_destroy :remove_site_settings
 
@@ -157,7 +168,7 @@ class Category < ActiveRecord::Base
   scope :latest, -> { order("topic_count DESC") }
 
   scope :secured,
-        ->(guardian = nil) {
+        ->(guardian = nil) do
           ids = guardian.secure_category_ids if guardian
 
           if ids.present?
@@ -168,13 +179,13 @@ class Category < ActiveRecord::Base
           else
             where("NOT categories.read_restricted").references(:categories)
           end
-        }
+        end
 
   TOPIC_CREATION_PERMISSIONS ||= [:full]
   POST_CREATION_PERMISSIONS ||= %i[create_post full]
 
   scope :topic_create_allowed,
-        ->(guardian) {
+        ->(guardian) do
           scoped = scoped_to_permissions(guardian, TOPIC_CREATION_PERMISSIONS)
 
           if !SiteSetting.allow_uncategorized_topics && !guardian.is_staff?
@@ -182,10 +193,29 @@ class Category < ActiveRecord::Base
           end
 
           scoped
-        }
+        end
 
   scope :post_create_allowed,
         ->(guardian) { scoped_to_permissions(guardian, POST_CREATION_PERMISSIONS) }
+
+  scope :with_ancestors, ->(id) { where(<<~SQL, id) }
+        id IN (
+          WITH RECURSIVE ancestors(category_id) AS (
+            SELECT ?
+            UNION
+            SELECT parent_category_id
+            FROM categories, ancestors
+            WHERE id = ancestors.category_id
+          )
+          SELECT category_id FROM ancestors
+        )
+      SQL
+
+  scope :with_parents, ->(ids) { where(<<~SQL, ids: ids) }
+    id IN (:ids)
+    OR
+    id IN (SELECT DISTINCT parent_category_id FROM categories WHERE id IN (:ids))
+  SQL
 
   delegate :post_template, to: "self.class"
 
@@ -201,14 +231,65 @@ class Category < ActiveRecord::Base
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
 
-  @topic_id_cache = DistributedCache.new("category_topic_ids")
+  def self.preload_user_fields!(guardian, categories)
+    category_ids = categories.map(&:id)
+
+    # Load notification levels
+    notification_levels = CategoryUser.notification_levels_for(guardian.user)
+    notification_levels.default = CategoryUser.default_notification_level
+
+    # Load permissions
+    allowed_topic_create_ids =
+      if !guardian.is_admin? && !guardian.is_anonymous?
+        Category.topic_create_allowed(guardian).where(id: category_ids).pluck(:id).to_set
+      end
+
+    # Categories with children
+    with_children =
+      Category
+        .secured(guardian)
+        .where(parent_category_id: category_ids)
+        .pluck(:parent_category_id)
+        .to_set
+
+    # Update category attributes
+    categories.each do |category|
+      category.notification_level = notification_levels[category[:id]]
+
+      category.permission = CategoryGroup.permission_types[:full] if guardian.is_admin? ||
+        allowed_topic_create_ids&.include?(category[:id])
+
+      category.has_children = with_children.include?(category[:id])
+    end
+  end
+
+  def self.ancestors_of(category_ids)
+    ancestor_ids = []
+
+    SiteSetting.max_category_nesting.times do
+      category_ids =
+        where(id: category_ids)
+          .where.not(parent_category_id: nil)
+          .pluck("DISTINCT parent_category_id")
+
+      ancestor_ids.concat(category_ids)
+
+      break if category_ids.empty?
+    end
+
+    where(id: ancestor_ids)
+  end
+
+  def self.topic_id_cache
+    @topic_id_cache ||= DistributedCache.new("category_topic_ids")
+  end
 
   def self.topic_ids
-    @topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
+    topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
   end
 
   def self.reset_topic_ids_cache
-    @topic_id_cache.clear
+    topic_id_cache.clear
   end
 
   def reset_topic_ids_cache
@@ -665,22 +746,6 @@ class Category < ActiveRecord::Base
     [read_restricted, mapped]
   end
 
-  def require_topic_approval?
-    custom_fields[REQUIRE_TOPIC_APPROVAL]
-  end
-
-  def require_reply_approval?
-    custom_fields[REQUIRE_REPLY_APPROVAL]
-  end
-
-  def num_auto_bump_daily
-    custom_fields[NUM_AUTO_BUMP_DAILY]
-  end
-
-  def num_auto_bump_daily=(v)
-    custom_fields[NUM_AUTO_BUMP_DAILY] = v
-  end
-
   def auto_bump_limiter
     return nil if num_auto_bump_daily.to_i == 0
     RateLimiter.new(nil, "auto_bump_limit_#{self.id}", 1, 86_400 / num_auto_bump_daily.to_i)
@@ -691,22 +756,11 @@ class Category < ActiveRecord::Base
   end
 
   def self.auto_bump_topic!
-    bumped = false
-
-    auto_bumps =
-      CategoryCustomField
-        .where(name: Category::NUM_AUTO_BUMP_DAILY)
-        .where('NULLIF(value, \'\')::int > 0')
-        .pluck(:category_id)
-
-    if (auto_bumps.length > 0)
-      auto_bumps.shuffle.each do |category_id|
-        bumped = Category.find_by(id: category_id)&.auto_bump_topic!
-        break if bumped
-      end
-    end
-
-    bumped
+    Category
+      .joins(:category_setting)
+      .where("category_settings.num_auto_bump_daily > 0")
+      .shuffle
+      .any?(&:auto_bump_topic!)
   end
 
   # will automatically bump a single topic
@@ -859,8 +913,8 @@ class Category < ActiveRecord::Base
   end
 
   def has_children?
-    @has_children ||= (id && Category.where(parent_category_id: id).exists?) ? :true : :false
-    @has_children == :true
+    return @has_children if defined?(@has_children)
+    @has_children = (id && Category.where(parent_category_id: id).exists?)
   end
 
   def uncategorized?
@@ -888,19 +942,9 @@ class Category < ActiveRecord::Base
   end
 
   def url
-    @@url_cache.defer_get_set(self.id) do
+    @@url_cache.defer_get_set(self.id.to_s) do
       "#{Discourse.base_path}/c/#{slug_path.join("/")}/#{self.id}"
     end
-  end
-
-  def url_with_id
-    Discourse.deprecate(
-      "Category#url_with_id is deprecated. Use `Category#url` instead.",
-      output_in_test: true,
-      drop_from: "2.9.0",
-    )
-
-    url
   end
 
   # If the name changes, try and update the category definition topic too if it's an exact match
@@ -1064,6 +1108,20 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def slug_ref(depth: 1)
+    if self.parent_category_id.present?
+      built_ref = [self.slug]
+      parent = self.parent_category
+      while parent.present? && (built_ref.length < depth + 1)
+        built_ref << parent.slug
+        parent = parent.parent_category
+      end
+      built_ref.reverse.join(Category::SLUG_REF_SEPARATOR)
+    else
+      self.slug
+    end
+  end
+
   def cannot_delete_reason
     return I18n.t("category.cannot_delete.uncategorized") if self.uncategorized?
     return I18n.t("category.cannot_delete.has_subcategories") if self.has_children?
@@ -1202,6 +1260,7 @@ end
 #  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null
 #  default_slow_mode_seconds                 :integer
 #  uploaded_logo_dark_id                     :integer
+#  uploaded_background_dark_id               :integer
 #
 # Indexes
 #

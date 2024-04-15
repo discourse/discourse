@@ -1,16 +1,21 @@
 # frozen_string_literal: true
 
 RSpec.describe InvitesController do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:user) { Fabricate(:user, trust_level: SiteSetting.min_trust_level_to_allow_invite) }
+  fab!(:admin)
+  fab!(:user) { Fabricate(:user, trust_level: TrustLevel[2]) }
 
   describe "#show" do
-    fab!(:invite) { Fabricate(:invite) }
+    fab!(:invite)
 
     it "shows the accept invite page" do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
-      expect(response.body).to have_tag(:script, with: { src: "/assets/discourse.js" })
+      expect(response.body).to have_tag(
+        :script,
+        with: {
+          "data-discourse-entrypoint" => "discourse",
+        },
+      )
       expect(response.body).not_to include(invite.email)
       expect(response.body).to_not include(
         I18n.t(
@@ -42,7 +47,7 @@ RSpec.describe InvitesController do
       it "shows unobfuscated email" do
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
-        expect(response.body).to have_tag(:script, with: { src: "/assets/discourse.js" })
+        expect(response.body).to_not have_tag(:body, with: { class: "no-ember" })
         expect(response.body).to include(invite.email)
         expect(response.body).not_to include("i*****g@a***********e.ooo")
       end
@@ -80,7 +85,7 @@ RSpec.describe InvitesController do
     end
 
     describe "logged in user viewing an invite" do
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group)
 
       before { sign_in(user) }
 
@@ -89,7 +94,7 @@ RSpec.describe InvitesController do
 
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
-        expect(response.body).to have_tag(:script, with: { src: "/assets/discourse.js" })
+        expect(response.body).to_not have_tag(:body, with: { class: "no-ember" })
         expect(response.body).not_to include(
           I18n.t(
             "invite.not_found_template",
@@ -114,7 +119,7 @@ RSpec.describe InvitesController do
 
         get "/invites/#{invite.invite_key}"
         expect(response.status).to eq(200)
-        expect(response.body).to have_tag(:script, with: { src: "/assets/discourse.js" })
+        expect(response.body).to_not have_tag(:body, with: { class: "no-ember" })
         expect(response.body).not_to include(
           I18n.t(
             "invite.not_found_template",
@@ -199,7 +204,8 @@ RSpec.describe InvitesController do
     it "fails if invite does not exist" do
       get "/invites/missing"
       expect(response.status).to eq(200)
-      expect(response.body).to_not have_tag(:script, with: { src: "/assets/application.js" })
+
+      expect(response.body).to have_tag(:body, with: { class: "no-ember" })
       expect(response.body).to include(I18n.t("invite.not_found", base_url: Discourse.base_url))
     end
 
@@ -208,7 +214,8 @@ RSpec.describe InvitesController do
 
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
-      expect(response.body).to_not have_tag(:script, with: { src: "/assets/application.js" })
+
+      expect(response.body).to have_tag(:body, with: { class: "no-ember" })
       expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
     end
 
@@ -224,7 +231,8 @@ RSpec.describe InvitesController do
 
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
-      expect(response.body).to_not have_tag(:script, with: { src: "/assets/application.js" })
+
+      expect(response.body).to have_tag(:body, with: { class: "no-ember" })
       expect(response.body).to include(
         I18n.t(
           "invite.not_found_template",
@@ -237,7 +245,8 @@ RSpec.describe InvitesController do
 
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
-      expect(response.body).to_not have_tag(:script, with: { src: "/assets/application.js" })
+
+      expect(response.body).to have_tag(:body, with: { class: "no-ember" })
       expect(response.body).to include(
         I18n.t(
           "invite.not_found_template_link",
@@ -266,7 +275,7 @@ RSpec.describe InvitesController do
     end
 
     context "with invite to topic" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
 
       it "works" do
         sign_in(user)
@@ -289,9 +298,9 @@ RSpec.describe InvitesController do
       end
 
       context "when topic is private" do
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
 
-        fab!(:secured_category) do |category|
+        fab!(:secured_category) do
           category = Fabricate(:category)
           category.permissions = { group.name => :full }
           category.save!
@@ -321,7 +330,7 @@ RSpec.describe InvitesController do
     end
 
     context "with invite to group" do
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group)
 
       it "works for admins" do
         sign_in(admin)
@@ -424,6 +433,18 @@ RSpec.describe InvitesController do
         end
       end
 
+      context "when email address is too long" do
+        let(:email) { "a" * 495 + "@example.com" }
+
+        it "fails" do
+          create_invite
+          expect(response).to have_http_status :unprocessable_entity
+          expect(response.parsed_body["errors"]).to be_present
+          error_message = response.parsed_body["errors"].first
+          expect(error_message).to eq("Email is too long (maximum is 500 characters)")
+        end
+      end
+
       context "when providing an email belonging to an existing user" do
         let(:email) { user.email }
 
@@ -448,6 +469,46 @@ RSpec.describe InvitesController do
             expect(body).to match(/There was a problem with your request./)
           end
         end
+      end
+    end
+
+    context "with domain invite" do
+      it "works" do
+        sign_in(admin)
+
+        post "/invites.json", params: { domain: "example.com" }
+        expect(response).to have_http_status :ok
+      end
+
+      it "fails when domain is invalid" do
+        sign_in(admin)
+
+        post "/invites.json", params: { domain: "example" }
+
+        expect(response).to have_http_status :unprocessable_entity
+
+        error_message = response.parsed_body["errors"].first
+        expect(error_message).to eq(I18n.t("invite.domain_not_allowed_admin"))
+      end
+
+      it "fails when domain is too long" do
+        sign_in(admin)
+
+        post "/invites.json", params: { domain: "a" * 500 + ".ca" }
+        expect(response).to have_http_status :unprocessable_entity
+
+        error_message = response.parsed_body["errors"].first
+        expect(error_message).to eq("Domain is too long (maximum is 500 characters)")
+      end
+
+      it "fails when custom message is too long" do
+        sign_in(admin)
+
+        post "/invites.json", params: { custom_message: "b" * 1001, domain: "example.com" }
+        expect(response).to have_http_status :unprocessable_entity
+
+        error_message = response.parsed_body["errors"].first
+        expect(error_message).to eq("Custom message is too long (maximum is 1000 characters)")
       end
     end
 
@@ -493,6 +554,152 @@ RSpec.describe InvitesController do
              }
         expect(response.status).to eq(422)
       end
+    end
+  end
+
+  describe "#create-multiple" do
+    it "fails if you are not admin" do
+      sign_in(Fabricate(:user))
+      post "/invites/create-multiple.json",
+           params: {
+             email: %w[test@example.com test1@example.com bademail],
+           }
+      expect(response.status).to eq(403)
+    end
+
+    it "creates multiple invites for multiple emails" do
+      sign_in(admin)
+      post "/invites/create-multiple.json",
+           params: {
+             email: %w[test@example.com test1@example.com bademail],
+           }
+      expect(response.status).to eq(200)
+      json = JSON(response.body)
+      expect(json["failed_invitations"].length).to eq(1)
+      expect(json["successful_invitations"].length).to eq(2)
+    end
+
+    it "creates many invite codes with one request" do #change to
+      sign_in(admin)
+      num_emails = 5 # increase manually for load testing
+      post "/invites/create-multiple.json",
+           params: {
+             email: 1.upto(num_emails).map { |i| "test#{i}@example.com" },
+             #email: %w[test+1@example.com test1@example.com]
+           }
+      expect(response.status).to eq(200)
+      json = JSON(response.body)
+      expect(json["failed_invitations"].length).to eq(0)
+      expect(json["successful_invitations"].length).to eq(num_emails)
+    end
+
+    context "with invite to topic" do
+      fab!(:topic)
+
+      it "works" do
+        sign_in(admin)
+
+        post "/invites/create-multiple.json",
+             params: {
+               email: ["test@example.com"],
+               topic_id: topic.id,
+               invite_to_topic: true,
+             }
+        expect(response.status).to eq(200)
+        expect(Jobs::InviteEmail.jobs.first["args"].first["invite_to_topic"]).to be_truthy
+      end
+
+      it "fails when topic_id is invalid" do
+        sign_in(admin)
+
+        post "/invites/create-multiple.json",
+             params: {
+               email: ["test@example.com"],
+               topic_id: -9999,
+             }
+        expect(response.status).to eq(400)
+      end
+    end
+
+    context "with invite to group" do
+      fab!(:group)
+
+      it "works for admins" do
+        sign_in(admin)
+
+        post "/invites/create-multiple.json",
+             params: {
+               email: ["test@example.com"],
+               group_ids: [group.id],
+             }
+        expect(response.status).to eq(200)
+        expect(Invite.find_by(email: "test@example.com").invited_groups.count).to eq(1)
+      end
+
+      it "works with multiple groups" do
+        sign_in(admin)
+        group2 = Fabricate(:group)
+
+        post "/invites/create-multiple.json",
+             params: {
+               email: ["test@example.com"],
+               group_names: "#{group.name},#{group2.name}",
+             }
+        expect(response.status).to eq(200)
+        expect(Invite.find_by(email: "test@example.com").invited_groups.count).to eq(2)
+      end
+    end
+
+    context "with email invite" do
+      subject(:create_multiple_invites) { post "/invites/create-multiple.json", params: params }
+
+      let(:params) { { email: [email] } }
+      let(:email) { "test@example.com" }
+
+      before { sign_in(admin) }
+
+      context "when doing successive calls" do
+        let(:invite) { Invite.last }
+
+        it "creates invite once and updates it after" do
+          create_multiple_invites
+          expect(response).to have_http_status :ok
+          expect(Jobs::InviteEmail.jobs.size).to eq(1)
+
+          create_multiple_invites
+          expect(response).to have_http_status :ok
+          expect(response.parsed_body["successful_invitations"][0]["invite"]["id"]).to eq(invite.id)
+        end
+      end
+
+      context 'when "skip_email" parameter is provided' do
+        before { params[:skip_email] = true }
+
+        it "accepts the parameter" do
+          create_multiple_invites
+          expect(response).to have_http_status :ok
+          expect(Jobs::InviteEmail.jobs.size).to eq(0)
+        end
+      end
+    end
+
+    it "fails if asked to generate too many invites at once" do
+      SiteSetting.max_api_invites = 3
+      sign_in(admin)
+      post "/invites/create-multiple.json",
+           params: {
+             email: %w[
+               mail1@mailinator.com
+               mail2@mailinator.com
+               mail3@mailinator.com
+               mail4@mailinator.com
+             ],
+           }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"][0]).to eq(
+        I18n.t("invite.max_invite_emails_limit_exceeded", max: SiteSetting.max_api_invites),
+      )
     end
   end
 
@@ -554,25 +761,29 @@ RSpec.describe InvitesController do
         expect(Jobs::InviteEmail.jobs.size).to eq(0)
       end
 
-      it "can send invite email" do
-        sign_in(user)
-        RateLimiter.enable
-        RateLimiter.clear_all!
-
-        invite = Fabricate(:invite, invited_by: user, email: "test@example.com")
-
-        expect { put "/invites/#{invite.id}", params: { send_email: true } }.to change {
-          RateLimiter.new(user, "resend-invite-per-hour", 10, 1.hour).remaining
-        }.by(-1)
-        expect(response.status).to eq(200)
-        expect(Jobs::InviteEmail.jobs.size).to eq(1)
-      end
-
       it "cannot create duplicated invites" do
         Fabricate(:invite, invited_by: admin, email: "test2@example.com")
 
         put "/invites/#{invite.id}.json", params: { email: "test2@example.com" }
         expect(response.status).to eq(409)
+      end
+
+      describe "rate limiting" do
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
+
+        it "can send invite email" do
+          sign_in(user)
+
+          invite = Fabricate(:invite, invited_by: user, email: "test@example.com")
+
+          expect { put "/invites/#{invite.id}", params: { send_email: true } }.to change {
+            RateLimiter.new(user, "resend-invite-per-hour", 10, 1.hour).remaining
+          }.by(-1)
+          expect(response.status).to eq(200)
+          expect(Jobs::InviteEmail.jobs.size).to eq(1)
+        end
       end
 
       context "when providing an email belonging to an existing user" do
@@ -650,7 +861,7 @@ RSpec.describe InvitesController do
     end
 
     context "with a deleted invite" do
-      fab!(:invite) { Fabricate(:invite) }
+      fab!(:invite)
 
       before { invite.trash! }
 
@@ -980,6 +1191,27 @@ RSpec.describe InvitesController do
         Fabricate(:invite, email: nil, emailed_status: Invite.emailed_status_types[:not_required])
       end
 
+      it "does not create multiple users for a single use invite" do
+        user_count = User.count
+
+        2
+          .times
+          .map do
+            Thread.new do
+              put "/invites/show/#{invite.invite_key}.json",
+                  params: {
+                    email: "test@example.com",
+                    password: "verystrongpassword",
+                  }
+            end
+          end
+          .each(&:join)
+
+        expect(invite.reload.max_redemptions_allowed).to eq(1)
+        expect(invite.reload.redemption_count).to eq(1)
+        expect(User.count).to eq(user_count + 1)
+      end
+
       it "sends an activation email and does not activate the user" do
         expect {
           put "/invites/show/#{invite.invite_key}.json",
@@ -1037,7 +1269,7 @@ RSpec.describe InvitesController do
     end
 
     context "when new registrations are disabled" do
-      fab!(:topic) { Fabricate(:topic) }
+      fab!(:topic)
       fab!(:invite) { Invite.generate(topic.user, email: "test@example.com", topic: topic) }
 
       before { SiteSetting.allow_new_registrations = false }
@@ -1057,7 +1289,7 @@ RSpec.describe InvitesController do
       context "for an email invite" do
         fab!(:invite) { Fabricate(:invite, email: "test@example.com") }
         fab!(:user) { Fabricate(:user, email: "test@example.com") }
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
 
         it "redeems the invitation and creates the invite accepted notification" do
           put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
@@ -1149,7 +1381,7 @@ RSpec.describe InvitesController do
       context "for an invite link" do
         fab!(:invite) { Fabricate(:invite, email: nil) }
         fab!(:user) { Fabricate(:user, email: "test@example.com") }
-        fab!(:group) { Fabricate(:group) }
+        fab!(:group)
 
         it "redeems the invitation and creates the invite accepted notification" do
           put "/invites/show/#{invite.invite_key}.json", params: { id: invite.invite_key }
@@ -1269,7 +1501,7 @@ RSpec.describe InvitesController do
     end
 
     context "with staged user" do
-      fab!(:invite) { Fabricate(:invite) }
+      fab!(:invite)
       fab!(:staged_user) { Fabricate(:user, staged: true, email: invite.email) }
 
       it "can keep the old username" do
@@ -1361,7 +1593,12 @@ RSpec.describe InvitesController do
   describe "#resend_all_invites" do
     let(:admin) { Fabricate(:admin) }
 
-    before { SiteSetting.invite_expiry_days = 30 }
+    before do
+      SiteSetting.invite_expiry_days = 30
+      RateLimiter.enable
+    end
+
+    use_redis_snapshotting
 
     it "resends all non-redeemed invites by a user" do
       freeze_time
@@ -1384,8 +1621,6 @@ RSpec.describe InvitesController do
 
     it "errors if admins try to exceed limit of one bulk invite per day" do
       sign_in(admin)
-      RateLimiter.enable
-      RateLimiter.clear_all!
       start = Time.now
 
       freeze_time(start)

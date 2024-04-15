@@ -61,7 +61,7 @@
         },
         "permission": {
           "type": [
-            "string",
+            "integer",
             "null"
           ]
         },
@@ -79,11 +79,11 @@
         },
         "form_template_ids": {
           "type": "array",
-          "items": []
+          "items": {}
         },
         "has_children": {
           "type": [
-            "string",
+            "boolean",
             "null"
           ]
         },
@@ -263,6 +263,12 @@
             "string",
             "null"
           ]
+        },
+        "uploaded_background_dark": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       },
       "required": [
@@ -314,7 +320,8 @@
         "search_priority",
         "uploaded_logo",
         "uploaded_logo_dark",
-        "uploaded_background"
+        "uploaded_background",
+        "uploaded_background_dark"
       ]
     }
   },

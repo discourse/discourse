@@ -1,21 +1,22 @@
-import { alias, gt, not, or } from "@ember/object/computed";
-import { propertyNotEqual, setting } from "discourse/lib/computed";
-import CanCheckEmails from "discourse/mixins/can-check-emails";
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { findAll } from "discourse/models/login-method";
-import DiscourseURL from "discourse/lib/url";
-import getURL from "discourse-common/lib/get-url";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
+import { alias, gt, not, or } from "@ember/object/computed";
 import { next } from "@ember/runloop";
-import showModal from "discourse/lib/show-modal";
+import { service } from "@ember/service";
+import UserStatusModal from "discourse/components/modal/user-status";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { exportUserArchive } from "discourse/lib/export-csv";
+import DiscourseURL from "discourse/lib/url";
+import CanCheckEmails from "discourse/mixins/can-check-emails";
+import { findAll } from "discourse/models/login-method";
+import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
+  modal: service(),
   user: controller(),
   canDownloadPosts: alias("user.viewingSelf"),
 
@@ -140,6 +141,14 @@ export default Controller.extend(CanCheckEmails, {
     return findAll().length > 0;
   },
 
+  @discourseComputed(
+    "siteSettings.max_allowed_secondary_emails",
+    "model.can_edit_email"
+  )
+  canAddEmail(maxAllowedSecondaryEmails, canEditEmail) {
+    return maxAllowedSecondaryEmails > 0 && canEditEmail;
+  },
+
   @action
   resendConfirmationEmail(email, event) {
     event?.preventDefault();
@@ -156,9 +165,7 @@ export default Controller.extend(CanCheckEmails, {
 
   @action
   showUserStatusModal(status) {
-    showModal("user-status", {
-      title: "user_status.set_custom_status",
-      modalClass: "user-status",
+    this.modal.show(UserStatusModal, {
       model: {
         status,
         hidePauseNotifications: true,
@@ -216,7 +223,11 @@ export default Controller.extend(CanCheckEmails, {
                   });
                 },
                 () => {
-                  this.dialog.alert(I18n.t("user.delete_yourself_not_allowed"));
+                  next(() =>
+                    this.dialog.alert(
+                      I18n.t("user.delete_yourself_not_allowed")
+                    )
+                  );
                   this.set("deleting", false);
                 }
               );

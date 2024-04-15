@@ -1,13 +1,13 @@
-import { helperContext, makeArray } from "discourse-common/lib/helpers";
-import deprecated from "discourse-common/lib/deprecated";
-import I18n from "I18n";
 import jQuery from "jquery";
+import deprecated from "discourse-common/lib/deprecated";
+import { helperContext, makeArray } from "discourse-common/lib/helpers";
+import I18n from "discourse-i18n";
 
 export function shortDate(date) {
   return moment(date).format(I18n.t("dates.medium.date_year"));
 }
 
-function shortDateNoYear(date) {
+export function shortDateNoYear(date) {
   return moment(date).format(I18n.t("dates.tiny.date_month"));
 }
 
@@ -102,6 +102,11 @@ export function autoUpdatingRelativeAge(date, options) {
     append += "' title='" + longDate(date);
   }
 
+  let prefix = "";
+  if (options.prefix) {
+    prefix = options.prefix + " ";
+  }
+
   return (
     "<span class='relative-date" +
     append +
@@ -110,6 +115,7 @@ export function autoUpdatingRelativeAge(date, options) {
     "' data-format='" +
     format +
     "'>" +
+    prefix +
     relAge +
     "</span>"
   );

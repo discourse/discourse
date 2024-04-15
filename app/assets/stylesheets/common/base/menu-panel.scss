@@ -1,7 +1,7 @@
 .menu-panel.slide-in {
   position: fixed;
   right: 0;
-  box-shadow: shadow("header");
+  box-shadow: var(--shadow-header);
 
   .panel-body {
     width: 100%;
@@ -17,11 +17,12 @@
   top: 100%; // directly underneath .panel
   right: -10px; // 10px to the right of .panel - adjust as needed
   max-height: 80vh;
+  border-radius: var(--d-border-radius-large);
 }
 
 .menu-panel {
   border: 1px solid var(--primary-low);
-  box-shadow: shadow("menu-panel");
+  box-shadow: var(--shadow-menu-panel);
   background-color: var(--secondary);
   z-index: z("header");
   padding: 0.5em;
@@ -90,6 +91,10 @@
   .badge-notification {
     vertical-align: text-bottom;
   }
+
+  .sidebar-filter {
+    width: calc(320px - 2 * var(--d-sidebar-row-horizontal-padding));
+  }
 }
 
 .search-menu .menu-panel {
@@ -100,6 +105,7 @@
   right: 0;
   width: 320px;
   padding: 0;
+  border-top-right-radius: 0px;
 
   .panel-body-bottom {
     flex: 0;
@@ -122,6 +128,7 @@
       display: flex;
       padding: 0.857em;
       position: relative;
+      border-radius: 0px;
 
       .d-icon {
         color: var(--primary-medium);
@@ -160,40 +167,6 @@
     justify-content: space-between;
     box-sizing: border-box;
     min-width: 0; // makes sure menu tabs don't go off screen
-
-    .double-user,
-    .multi-user {
-      white-space: unset;
-    }
-
-    .item-label {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      color: var(--primary);
-    }
-
-    li {
-      background-color: var(--secondary);
-
-      &.unread,
-      &.pending {
-        background-color: var(--tertiary-low);
-      }
-
-      &:hover {
-        background-color: var(--d-hover);
-        outline: none;
-      }
-
-      &:focus-within {
-        background: var(--d-hover);
-        a {
-          // we don't need the link focus because we're styling the parent
-          outline: 0;
-        }
-      }
-    }
   }
 
   #quick-access-profile {
@@ -257,17 +230,19 @@
 }
 
 .hamburger-panel {
+  // remove once glimmer search menu in place
   a.widget-link {
+    width: 100%;
+    box-sizing: border-box;
+    @include ellipsis;
+  }
+  a.search-link {
     width: 100%;
     box-sizing: border-box;
     @include ellipsis;
   }
   .panel-body {
     overflow-y: auto;
-  }
-
-  span.badge-category {
-    max-width: 100px;
   }
 }
 
@@ -279,7 +254,35 @@
 }
 
 .menu-panel {
+  // remove once glimmer search menu in place
   .widget-link,
+  .categories-link {
+    padding: 0.25em 0.5em;
+    display: block;
+    color: var(--primary);
+    &:hover,
+    &:focus {
+      background-color: var(--d-hover);
+      outline: none;
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    .new {
+      font-size: var(--font-down-1);
+      margin-left: 0.5em;
+      color: var(--primary-med-or-secondary-med);
+    }
+
+    &.show-help,
+    &.filter {
+      color: var(--tertiary);
+    }
+  }
+
+  .search-link,
   .categories-link {
     padding: 0.25em 0.5em;
     display: block;
@@ -333,22 +336,6 @@
       font-size: var(--font-down-1);
       line-height: var(--line-height-large);
     }
-    .badge-wrapper {
-      &.bar,
-      &.bullet {
-        color: var(--primary);
-        padding: 0 0 0 0.15em;
-      }
-      &.box {
-        color: var(--secondary);
-        + a.badge.badge-notification {
-          padding-top: 2px;
-        }
-        span {
-          z-index: z("base") * -1;
-        }
-      }
-    }
   }
 
   // note these topic counts only appear for anons in the category hamburger drop down
@@ -361,182 +348,299 @@
   div.discourse-tags {
     font-size: var(--font-down-1);
   }
+
+  .sidebar-admin-header__row {
+    width: calc(320px - 2 * var(--d-sidebar-row-horizontal-padding));
+  }
+
+  .sidebar-sections {
+    &__back-to-forum {
+      color: var(--d-sidebar-link-color);
+      display: flex;
+      align-items: center;
+      svg {
+        margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+        height: 0.75em;
+        width: 0.75em;
+        color: var(--d-sidebar-link-icon-color);
+      }
+    }
+  }
 }
 
-.user-menu {
-  .quick-access-panel {
-    width: 100%;
+// Panel / user-notification-list styles. **not** menu panel sizing styles
+.user-menu .quick-access-panel,
+.user-notifications-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
+  border-top: 1px solid var(--primary-low);
+  padding-top: 0.75em;
+  margin-top: -1px;
+
+  &:focus {
+    outline: none;
+  }
+
+  .double-user,
+  .multi-user {
+    white-space: unset;
+  }
+
+  .item-label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--primary);
+  }
+
+  h3 {
+    padding: 0 0.4em;
+    font-weight: bold;
+    margin: 0.5em 0;
+  }
+
+  .d-icon,
+  &:hover .d-icon {
+    color: var(--primary-medium);
+  }
+  .icon {
+    color: var(--primary-high);
+  }
+
+  .btn-primary {
+    .d-icon {
+      color: var(--secondary);
+    }
+  }
+
+  ul {
     display: flex;
-    flex-direction: column;
-    min-height: 0;
+    flex-flow: column wrap;
+    overflow: hidden;
     max-height: 100%;
-    border-top: 1px solid var(--primary-low);
-    padding-top: 0.75em;
-    margin-top: -1px;
-    &:focus {
+  }
+
+  li {
+    background-color: var(--secondary);
+    box-sizing: border-box;
+    list-style-type: none;
+
+    &.unread,
+    &.pending {
+      background-color: var(--tertiary-low);
+    }
+    &:hover {
+      background-color: var(--d-hover);
       outline: none;
     }
-    h3 {
-      padding: 0 0.4em;
-      font-weight: bold;
-      margin: 0.5em 0;
+
+    &:focus-within {
+      background: var(--d-hover);
+      a {
+        // we don't need the link focus because we're styling the parent
+        outline: 0;
+      }
     }
 
-    .d-icon,
-    &:hover .d-icon {
-      color: var(--primary-medium);
-    }
-    .icon {
-      color: var(--primary-high);
+    // This is until other languages remove the HTML from within
+    // notifications. It can then be removed
+    div .fa {
+      display: none;
     }
 
-    .btn-primary {
+    span.double-user,
+    // e.g., "username, username2"
+    span.multi-user
+    // e.g., "username and n others"
+    {
+      display: inline;
+      max-width: 100%;
+      align-items: baseline;
+      white-space: nowrap;
+    }
+
+    span.multi-user
+    // e.g., "username, username2, and n others"
+    {
+      span.multi-username:nth-of-type(2) {
+        // margin between username2 and "and n others"
+        margin-right: 0.25em;
+      }
+    }
+
+    // truncate when usernames are very long
+    span.multi-username {
+      @include ellipsis;
+      flex: 0 1 auto;
+      min-width: 1.2em;
+      max-width: 10em;
+      &:nth-of-type(2) {
+        // margin for comma between username and username2
+        margin-left: 0.25em;
+      }
+    }
+
+    &:hover {
+      background-color: var(--d-hover);
+      outline: none;
+    }
+
+    &:focus-within {
+      background: var(--d-hover);
+      a {
+        // we don't need the link focus because we're styling the parent
+        outline: 0;
+      }
+      .btn-flat:focus {
+        // undo default btn-flat style
+        background: transparent;
+      }
+    }
+
+    a,
+    .profile-tab-btn {
+      display: flex;
+      margin: 0.25em;
+      padding: 0em 0.25em;
+    }
+
+    button {
+      padding: 0.25em 0.5em;
+    }
+
+    a,
+    button {
+      > div {
+        overflow: hidden; // clears the text from wrapping below icons
+        overflow-wrap: anywhere;
+        @supports not (overflow-wrap: anywhere) {
+          word-break: break-word;
+        }
+
+        // Truncate items with more than 2 lines.
+        @include line-clamp(2);
+      }
+    }
+
+    p {
+      margin: 0;
+      overflow: hidden;
+    }
+  }
+  li:not(.show-all) {
+    padding: 0;
+    align-self: flex-start;
+    width: 100%;
+
+    .d-icon {
+      padding-top: 0.2em;
+      margin-right: 0.5em;
+    }
+  }
+  .is-warning {
+    .d-icon-envelope {
+      color: var(--danger);
+    }
+  }
+  .read {
+    background-color: var(--secondary);
+  }
+  .none {
+    padding-top: 5px;
+  }
+  .spinner-container {
+    min-height: 2em;
+  }
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+    margin: 0 auto;
+  }
+  .show-all a {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 30px;
+    color: var(--primary-med-or-secondary-high);
+    background: var(--blend-primary-secondary-5);
+    &:hover {
+      color: var(--primary);
+      background: var(--primary-low);
+    }
+  }
+  /* as a big ol' click target, don't let text inside be selected */
+  @include unselectable;
+}
+
+// Styles to have user avatar positioned and sized correctly
+.user-menu.show-avatars,
+.user-notifications-list.show-avatars {
+  li.notification,
+  li.bookmark,
+  li.message {
+    a {
+      color: var(--primary);
+      align-items: center;
+      padding: 0.15em 0;
+
+      .item-label {
+        font-weight: bold;
+      }
+      .item-description {
+        color: var(--primary);
+      }
+
+      .icon-avatar {
+        display: flex;
+        position: relative;
+        overflow: visible;
+        margin-right: 0.5em;
+        flex-shrink: 0;
+        width: 2em;
+        height: 2em;
+        margin: 0.3em 1em 0 0;
+
+        .avatar {
+          width: 100%;
+          height: 100%;
+        }
+        &__icon-wrapper {
+          position: absolute;
+          right: -0.65em;
+          top: -0.45em;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 22px;
+          height: 22px;
+          border-radius: 100%;
+          background: var(--secondary);
+
+          .d-icon {
+            display: block;
+            margin: 0;
+            padding: 0;
+            font-size: var(--font-down-1);
+            color: var(--primary);
+          }
+        }
+      }
+      & + div {
+        padding: 0.25em 0;
+      }
+    }
+    &.unread .icon-avatar__icon-wrapper {
+      background: var(--tertiary);
+
       .d-icon {
         color: var(--secondary);
       }
     }
-
-    ul {
-      display: flex;
-      flex-flow: column wrap;
-      overflow: hidden;
-      max-height: 100%;
-    }
-
-    li {
-      background-color: var(--d-selected);
-      box-sizing: border-box;
-      list-style-type: none;
-
-      // This is until other languages remove the HTML from within
-      // notifications. It can then be removed
-      div .fa {
-        display: none;
-      }
-
-      span.double-user,
-      // e.g., "username, username2"
-      span.multi-user
-      // e.g., "username, username2, and n others"
-      {
-        display: inline-flex;
-        max-width: 100%;
-        align-items: baseline;
-        white-space: nowrap;
-      }
-
-      span.multi-user
-      // e.g., "username, username2, and n others"
-      {
-        span.multi-username:nth-of-type(2) {
-          // margin between username2 and "and n others"
-          margin-right: 0.25em;
-        }
-      }
-
-      // truncate when usernames are very long
-      span.multi-username {
-        @include ellipsis;
-        flex: 0 1 auto;
-        min-width: 1.2em;
-        max-width: 10em;
-        &:nth-of-type(2) {
-          // margin for comma between username and username2
-          margin-left: 0.25em;
-        }
-      }
-
-      &:hover {
-        background-color: var(--d-hover);
-        outline: none;
-      }
-
-      &:focus-within {
-        background: var(--d-hover);
-        a {
-          // we don't need the link focus because we're styling the parent
-          outline: 0;
-        }
-        .btn-flat:focus {
-          // undo default btn-flat style
-          background: transparent;
-        }
-      }
-
-      a,
-      .profile-tab-btn {
-        display: flex;
-        margin: 0.25em;
-        padding: 0em 0.25em;
-      }
-
-      button {
-        padding: 0.25em 0.5em;
-      }
-
-      a,
-      button {
-        > div {
-          overflow: hidden; // clears the text from wrapping below icons
-          overflow-wrap: anywhere;
-          @supports not (overflow-wrap: anywhere) {
-            word-break: break-word;
-          }
-
-          // Truncate items with more than 2 lines.
-          @include line-clamp(2);
-        }
-      }
-
-      p {
-        margin: 0;
-        overflow: hidden;
-      }
-    }
-    li:not(.show-all) {
-      padding: 0;
-      align-self: flex-start;
-      width: 100%;
-      .d-icon {
-        padding-top: 0.2em;
-        margin-right: 0.5em;
-      }
-    }
-    .is-warning {
-      .d-icon-envelope {
-        color: var(--danger);
-      }
-    }
-    .read {
-      background-color: var(--secondary);
-    }
-    .none {
-      padding-top: 5px;
-    }
-    .spinner-container {
-      min-height: 2em;
-    }
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border-width: 2px;
-      margin: 0 auto;
-    }
-    .show-all a {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 30px;
-      color: var(--primary-med-or-secondary-high);
-      background: var(--blend-primary-secondary-5);
-      &:hover {
-        color: var(--primary);
-        background: var(--primary-low);
-      }
-    }
-    /* as a big ol' click target, don't let text inside be selected */
-    @include unselectable;
   }
 }
 
@@ -555,19 +659,11 @@
   height: 100%;
   width: 100%;
   position: fixed;
-  background-color: black;
-  --opacity: 0.5;
-  opacity: var(--opacity);
+  background-color: rgba(0, 0, 0, 0.3);
   top: var(--header-top);
   left: 0;
   display: none;
   touch-action: pan-y pinch-zoom;
-
-  @media (prefers-reduced-motion: no-preference) {
-    &.animate {
-      transition: opacity 0.1s linear;
-    }
-  }
 }
 
 .menu-panel.slide-in {
@@ -580,27 +676,13 @@
   @supports (height: 100dvh) {
     --100dvh: 100dvh;
   }
+  box-shadow: 0px 0 30px -2px rgba(0, 0, 0, 0.5);
 
   --base-height: calc(var(--100dvh) - var(--header-top));
 
   height: var(--base-height);
 
-  body.footer-nav-ipad & {
+  html.footer-nav-ipad & {
     height: calc(var(--base-height) - var(--footer-nav-height));
-  }
-
-  transform: translateX(var(--offset));
-  @media (prefers-reduced-motion: no-preference) {
-    &.animate {
-      transition: transform 0.1s linear;
-    }
-  }
-  &.moving,
-  &.animate {
-    // PERF: only render first 20 items in a list to allow for smooth
-    // pan events
-    li:nth-child(n + 20) {
-      display: none;
-    }
   }
 }

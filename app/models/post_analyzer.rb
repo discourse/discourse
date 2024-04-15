@@ -146,11 +146,9 @@ class PostAnalyzer
   def cooked_stripped
     @cooked_stripped ||=
       begin
-        doc = Nokogiri::HTML5.fragment(cook(@raw, topic_id: @topic_id))
-        doc.css(
-          "pre .mention, aside.quote > .title, aside.quote .mention, aside.quote .mention-group, .onebox, .elided",
-        ).remove
-        doc
+        cooked = cook(@raw, topic_id: @topic_id)
+        fragment = Nokogiri::HTML5.fragment(cooked)
+        PostStripper.strip(fragment)
       end
   end
 

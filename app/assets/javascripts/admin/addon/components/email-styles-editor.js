@@ -1,9 +1,9 @@
-import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { reads } from "@ember/object/computed";
 import Component from "@ember/component";
-import I18n from "I18n";
+import { action, computed } from "@ember/object";
+import { reads } from "@ember/object/computed";
+import { service } from "@ember/service";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default class EmailStylesEditor extends Component {
   @service dialog;
@@ -30,7 +30,6 @@ export default class EmailStylesEditor extends Component {
 
   set editorContents(value) {
     this.styles.setField(this.fieldName, value);
-    return value;
   }
 
   @action

@@ -1,18 +1,18 @@
-import I18n from "I18n";
-import SelectKitFilterComponent from "select-kit/components/select-kit/select-kit-filter";
+import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
-import { action } from "@ember/object";
+import SelectKitFilterComponent from "select-kit/components/select-kit/select-kit-filter";
 
 export default SelectKitFilterComponent.extend({
   classNames: ["multi-select-filter"],
 
   @discourseComputed("placeholder", "selectKit.hasSelection")
   computedPlaceholder(placeholder, hasSelection) {
-    if (hasSelection) {
+    if (this.hidePlaceholderWithSelection && hasSelection) {
       return "";
     }
-    return isEmpty(placeholder) ? "" : I18n.t(placeholder);
+
+    return isEmpty(placeholder) ? "" : placeholder;
   },
 
   @action

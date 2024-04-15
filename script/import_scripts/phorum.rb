@@ -270,10 +270,10 @@ class ImportScripts::Phorum < ImportScripts::Base
         if !post.raw[html]
           post.raw += "\n\n#{html}\n\n"
           post.save!
-          if PostUpload.where(post: post, upload: upl_obj).exists?
+          if UploadReference.where(target: post, upload: upl_obj).exists?
             puts "skipping creating uploaded for previously uploaded file #{upload["file_id"]}"
           else
-            PostUpload.create!(post: post, upload: upl_obj)
+            UploadReference.ensure_exist!(upload_ids: [upl_obj.id], target: post)
           end
           # PostUpload.create!(post: post, upload: upl_obj) unless PostUpload.where(post: post, upload: upl_obj).exists?
         else

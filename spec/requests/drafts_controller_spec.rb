@@ -1,14 +1,22 @@
 # frozen_string_literal: true
 
 RSpec.describe DraftsController do
+  fab!(:user)
+
   describe "#index" do
     it "requires you to be logged in" do
       get "/drafts.json"
       expect(response.status).to eq(403)
     end
 
+    describe "when limit params is invalid" do
+      before { sign_in(user) }
+
+      include_examples "invalid limit params", "/drafts.json", described_class::INDEX_LIMIT
+    end
+
     it "returns correct stream length after adding a draft" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       Draft.set(user, "xxx", 0, "{}")
       get "/drafts.json"
       expect(response.status).to eq(200)
@@ -17,7 +25,7 @@ RSpec.describe DraftsController do
     end
 
     it "has empty stream after deleting last draft" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       Draft.set(user, "xxx", 0, "{}")
       Draft.clear(user, "xxx", 0)
       get "/drafts.json"
@@ -42,11 +50,26 @@ RSpec.describe DraftsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["drafts"].first["title"]).to eq(nil)
     end
+
+    it "returns categories when lazy load categories is enabled" do
+      SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+      category = Fabricate(:category)
+      topic = Fabricate(:topic, category: category)
+      Draft.set(topic.user, "topic_#{topic.id}", 0, "{}")
+      sign_in(topic.user)
+
+      get "/drafts.json"
+      expect(response.status).to eq(200)
+      draft_keys = response.parsed_body["drafts"].map { |draft| draft["draft_key"] }
+      expect(draft_keys).to contain_exactly("topic_#{topic.id}")
+      category_ids = response.parsed_body["categories"].map { |cat| cat["id"] }
+      expect(category_ids).to contain_exactly(category.id)
+    end
   end
 
   describe "#show" do
     it "returns a draft if requested" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       Draft.set(user, "hello", 0, "test")
 
       get "/drafts/hello.json"
@@ -62,7 +85,7 @@ RSpec.describe DraftsController do
     end
 
     it "saves a draft" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       post "/drafts.json", params: { draft_key: "xyz", data: { my: "data" }.to_json, sequence: 0 }
 
@@ -77,7 +100,7 @@ RSpec.describe DraftsController do
     end
 
     it "checks for an conflict on update" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       post = Fabricate(:post, user: user)
 
       post "/drafts.json",
@@ -103,7 +126,7 @@ RSpec.describe DraftsController do
     end
 
     it "cant trivially resolve conflicts without interaction" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       DraftSequence.next!(user, "abc")
 
@@ -120,7 +143,7 @@ RSpec.describe DraftsController do
     end
 
     it "has a clean protocol for ownership handover" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       post "/drafts.json",
            params: {
@@ -170,7 +193,7 @@ RSpec.describe DraftsController do
     end
 
     it "raises an error for out-of-sequence draft setting" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       seq = DraftSequence.next!(user, "abc")
       Draft.set(user, "abc", seq, { b: "test" }.to_json)
 
@@ -226,11 +249,50 @@ RSpec.describe DraftsController do
         end
       end
     end
+
+    it "returns 403 when the maximum amount of drafts per users is reached" do
+      SiteSetting.max_drafts_per_user = 2
+
+      user1 = Fabricate(:user)
+      sign_in(user1)
+
+      data = { my: "data" }.to_json
+
+      # creating the first draft should work
+      post "/drafts.json", params: { draft_key: "TOPIC_1", data: data }
+      expect(response.status).to eq(200)
+
+      # same draft key, so shouldn't count against the limit
+      post "/drafts.json", params: { draft_key: "TOPIC_1", data: data, sequence: 0 }
+      expect(response.status).to eq(200)
+
+      # different draft key, so should count against the limit
+      post "/drafts.json", params: { draft_key: "TOPIC_2", data: data }
+      expect(response.status).to eq(200)
+
+      # limit should be reached now
+      post "/drafts.json", params: { draft_key: "TOPIC_3", data: data }
+      expect(response.status).to eq(403)
+
+      # updating existing draft should still work
+      post "/drafts.json", params: { draft_key: "TOPIC_1", data: data, sequence: 1 }
+      expect(response.status).to eq(200)
+
+      # creating a new draft as a different user should still work
+      user2 = Fabricate(:user)
+      sign_in(user2)
+      post "/drafts.json", params: { draft_key: "TOPIC_3", data: data }
+      expect(response.status).to eq(200)
+
+      # check the draft counts just to be safe
+      expect(Draft.where(user_id: user1.id).count).to eq(2)
+      expect(Draft.where(user_id: user2.id).count).to eq(1)
+    end
   end
 
   describe "#destroy" do
     it "destroys drafts when required" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       Draft.set(user, "xxx", 0, "hi")
       delete "/drafts/xxx.json", params: { sequence: 0 }
 

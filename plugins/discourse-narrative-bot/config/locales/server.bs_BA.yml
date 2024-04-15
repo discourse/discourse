@@ -206,8 +206,6 @@ bs_BA:
         not_found: |-
           Oh ne, moj gadni post još nije označen kao neprikladan. :worried: Možete li to označiti neprimjerenim upotrebom ** zastave ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ne zaboravite da upotrijebite dugme Prikaži više <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> da biste otkrili više mogućnosti za svaki post.
       search:
-        instructions: |-
-          _psst_… Sakrio sam iznenađenje u ovoj temi. Ako ste spremni za izazov, ** odaberite ikonu za pretraživanje ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> gore desno ↗ da ga potražite. Pokušajte tražiti pojam "capy&#8203;bara" u ovoj temi
         hidden_message: |-
           Kako ste uspjeli propustiti ovu kapibaru? :wink:
 
@@ -253,10 +251,6 @@ bs_BA:
         reply: |-
           Uf, to je bilo blizu! Hvala za popravku da: wink: Imajte na umu da imate samo %{deletion_after} sat (e) da povratite post.
       category_hashtag:
-        instructions: |-
-          Da li ste znali da možete koristiti kategorije i oznake u svom postu? Na primjer, jeste li vidjeli kategoriju %{category}? Upišite `#` u sredinu rečenice i odaberite bilo koju kategoriju ili oznaku.
-        not_found: |-
-          Hmm, tamo ne vidim nijednu kategoriju. Imajte na umu da `#` ne može biti prvi znak. Možete li ovo kopirati u sljedećem odgovoru? `` `tekst Mogu kreirati link za kategoriju preko #` ``
         reply: |-
           Odlično! Zapamtite ovo radi za obje kategorije _i_ oznake, ako su oznake omogućene.
       change_topic_notification_level:

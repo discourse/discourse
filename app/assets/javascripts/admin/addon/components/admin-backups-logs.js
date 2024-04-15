@@ -1,9 +1,9 @@
+import Component from "@ember/component";
+import { scheduleOnce } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
-import Component from "@ember/component";
-import I18n from "I18n";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { scheduleOnce } from "@ember/runloop";
+import I18n from "discourse-i18n";
 
 @classNames("admin-backups-logs")
 export default class AdminBackupsLogs extends Component {

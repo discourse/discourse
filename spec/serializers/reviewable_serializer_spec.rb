@@ -2,7 +2,7 @@
 
 RSpec.describe ReviewableSerializer do
   fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   it "serializes all the fields" do
     json = described_class.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
@@ -15,6 +15,7 @@ RSpec.describe ReviewableSerializer do
     expect(json[:can_edit]).to eq(true)
     expect(json[:version]).to eq(0)
     expect(json[:removed_topic_id]).to be_nil
+    expect(json[:created_from_flag]).to eq(false)
   end
 
   it "Includes the removed topic id when the topis was deleted" do

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative "base"
-require "set"
 require "mysql2"
 require "htmlentities"
 require "parallel"

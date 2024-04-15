@@ -8,7 +8,6 @@ th:
   site_settings:
     poll_maximum_options: "จำนวนตัวเลือกมากสุดที่อนุญาตให้ในการสร้างแบบสำรวจ"
   poll:
-    multiple_polls_without_name: "มีการสำรวจจำนวนมากที่ไม่มีชื่อ ใช้แอทเทอบิว '<code>name</code>' เพื่อระบุตัวตนของการสำรวจนั้น"
     multiple_polls_with_same_name: "มีการสำรวจจำนวนมากที่ใช้ชื่อเดียวกัน: <strong>%{name}</strong> ลองใช้แอทเทอบิว '<code>name</code>' เพื่อระบุตัวตนของการสำรวจนั้น"
     default_poll_must_have_less_options:
       other: "แบบสำรวจต้องมีอย่างน้อย %{count} ตัวเลือก"

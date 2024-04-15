@@ -1,9 +1,10 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import hbs from "htmlbars-inline-precompile";
-import I18n from "I18n";
-import { module, test } from "qunit";
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import I18n from "discourse-i18n";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import {
   CHANNEL_STATUSES,
   channelStatusIcon,
@@ -13,7 +14,7 @@ module("Discourse Chat | Component | chat-channel-status", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders nothing when channel is opened", async function (assert) {
-    this.channel = fabricators.channel();
+    this.channel = new ChatFabricators(getOwner(this)).channel();
 
     await render(hbs`<ChatChannelStatus @channel={{this.channel}} />`);
 
@@ -21,7 +22,9 @@ module("Discourse Chat | Component | chat-channel-status", function (hooks) {
   });
 
   test("defaults to long format", async function (assert) {
-    this.channel = fabricators.channel({ status: CHANNEL_STATUSES.closed });
+    this.channel = new ChatFabricators(getOwner(this)).channel({
+      status: CHANNEL_STATUSES.closed,
+    });
 
     await render(hbs`<ChatChannelStatus @channel={{this.channel}} />`);
 
@@ -31,7 +34,7 @@ module("Discourse Chat | Component | chat-channel-status", function (hooks) {
   });
 
   test("accepts a format argument", async function (assert) {
-    this.channel = fabricators.channel({
+    this.channel = new ChatFabricators(getOwner(this)).channel({
       status: CHANNEL_STATUSES.archived,
     });
 
@@ -45,7 +48,7 @@ module("Discourse Chat | Component | chat-channel-status", function (hooks) {
   });
 
   test("renders the correct icon", async function (assert) {
-    this.channel = fabricators.channel({
+    this.channel = new ChatFabricators(getOwner(this)).channel({
       status: CHANNEL_STATUSES.archived,
     });
 
@@ -56,7 +59,7 @@ module("Discourse Chat | Component | chat-channel-status", function (hooks) {
 
   test("renders archive status", async function (assert) {
     this.currentUser.admin = true;
-    this.channel = fabricators.channel({
+    this.channel = new ChatFabricators(getOwner(this)).channel({
       status: CHANNEL_STATUSES.archived,
       archive_failed: true,
     });

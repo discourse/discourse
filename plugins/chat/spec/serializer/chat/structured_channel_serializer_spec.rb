@@ -135,29 +135,32 @@ RSpec.describe Chat::StructuredChannelSerializer do
       it "calls MessageBus.last_ids with all the required channels for each public and DM chat chat channel" do
         MessageBus
           .expects(:last_ids)
-          .with(
-            Chat::Publisher::CHANNEL_METADATA_MESSAGE_BUS_CHANNEL,
-            Chat::Publisher::CHANNEL_EDITS_MESSAGE_BUS_CHANNEL,
-            Chat::Publisher::CHANNEL_STATUS_MESSAGE_BUS_CHANNEL,
-            Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
-            Chat::Publisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL,
-            Chat::Publisher.user_tracking_state_message_bus_channel(user1.id),
-            Chat::Publisher.new_messages_message_bus_channel(channel1.id),
-            Chat::Publisher.new_mentions_message_bus_channel(channel1.id),
-            Chat::Publisher.kick_users_message_bus_channel(channel1.id),
-            Chat::Publisher.root_message_bus_channel(channel1.id),
-            Chat::Publisher.new_messages_message_bus_channel(channel2.id),
-            Chat::Publisher.new_mentions_message_bus_channel(channel2.id),
-            Chat::Publisher.kick_users_message_bus_channel(channel2.id),
-            Chat::Publisher.root_message_bus_channel(channel2.id),
-            Chat::Publisher.new_messages_message_bus_channel(channel3.id),
-            Chat::Publisher.new_mentions_message_bus_channel(channel3.id),
-            Chat::Publisher.root_message_bus_channel(channel3.id),
-            Chat::Publisher.new_messages_message_bus_channel(channel4.id),
-            Chat::Publisher.new_mentions_message_bus_channel(channel4.id),
-            Chat::Publisher.root_message_bus_channel(channel4.id),
-          )
+          .with do |*args|
+            [
+              Chat::Publisher::CHANNEL_METADATA_MESSAGE_BUS_CHANNEL,
+              Chat::Publisher::CHANNEL_EDITS_MESSAGE_BUS_CHANNEL,
+              Chat::Publisher::CHANNEL_STATUS_MESSAGE_BUS_CHANNEL,
+              Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL,
+              Chat::Publisher::CHANNEL_ARCHIVE_STATUS_MESSAGE_BUS_CHANNEL,
+              Chat::Publisher.user_tracking_state_message_bus_channel(user1.id),
+              Chat::Publisher.new_messages_message_bus_channel(channel1.id),
+              Chat::Publisher.new_mentions_message_bus_channel(channel1.id),
+              Chat::Publisher.kick_users_message_bus_channel(channel1.id),
+              Chat::Publisher.root_message_bus_channel(channel1.id),
+              Chat::Publisher.new_messages_message_bus_channel(channel2.id),
+              Chat::Publisher.new_mentions_message_bus_channel(channel2.id),
+              Chat::Publisher.kick_users_message_bus_channel(channel2.id),
+              Chat::Publisher.root_message_bus_channel(channel2.id),
+              Chat::Publisher.new_messages_message_bus_channel(channel3.id),
+              Chat::Publisher.new_mentions_message_bus_channel(channel3.id),
+              Chat::Publisher.root_message_bus_channel(channel3.id),
+              Chat::Publisher.new_messages_message_bus_channel(channel4.id),
+              Chat::Publisher.new_mentions_message_bus_channel(channel4.id),
+              Chat::Publisher.root_message_bus_channel(channel4.id),
+            ].to_set == args.to_set
+          end
           .returns({})
+
         described_class.new(fetch_data, scope: guardian).as_json
       end
 
@@ -176,6 +179,7 @@ RSpec.describe Chat::StructuredChannelSerializer do
             kick_message_bus_last_id: 0,
             channel_message_bus_last_id: 0,
             can_join_chat_channel: true,
+            post_allowed_category_ids: nil,
           )
           .once
         described_class.new(data, scope: guardian).as_json

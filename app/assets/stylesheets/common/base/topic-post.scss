@@ -1,3 +1,7 @@
+#main-outlet > .regular {
+  background: var(--d-content-background);
+}
+
 .button-count.has-pending {
   span {
     background-color: var(--danger);
@@ -17,7 +21,9 @@
   position: relative;
   overflow: hidden;
   &:before {
-    animation: placeHolderShimmer 4s linear infinite forwards;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: placeHolderShimmer 4s linear infinite forwards;
+    }
     position: absolute;
     left: 0;
     content: "";
@@ -53,14 +59,15 @@
     font-weight: bold;
   }
 
-  span {
+  > span {
     font-size: var(--font-0);
-    margin-right: 8px;
+    margin-right: 0.33em;
     display: inline-block;
     @include ellipsis;
     vertical-align: middle;
     a {
       color: var(--primary-high-or-secondary-low);
+      outline-offset: -1px;
     }
   }
   .fa {
@@ -202,6 +209,10 @@
       height: var(--calculated-height);
     }
   }
+
+  svg {
+    max-height: 2000px;
+  }
 }
 
 // add staff color
@@ -315,6 +326,11 @@ nav.post-controls {
       vertical-align: top;
       background: transparent;
       border: none;
+      .d-icon {
+        // this avoids an issue where hovering off the icon
+        // removes the .d-hover class from the button prematurely
+        pointer-events: none;
+      }
       &.d-hover,
       &:focus,
       &:active {
@@ -329,7 +345,7 @@ nav.post-controls {
         position: relative;
       }
       &.delete.d-hover,
-      &.delete:hover,
+      &.delete:active,
       &.delete:focus {
         background: var(--danger);
         color: var(--secondary);
@@ -435,7 +451,9 @@ nav.post-controls {
 }
 
 .has-like .d-icon.heart-animation {
-  animation: heartBump 0.4s;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: heartBump 0.4s;
+  }
 }
 
 @keyframes slideout {
@@ -452,10 +470,6 @@ nav.post-controls {
 aside.quote {
   margin-top: 1em;
   margin-bottom: 1em;
-
-  .badge-wrapper {
-    margin-left: 5px;
-  }
 
   .title {
     @include post-aside;
@@ -477,7 +491,9 @@ aside.quote {
     margin-top: 0;
     .expanded-quote {
       overflow: hidden;
-      animation: slideout 1s ease-in-out;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: slideout 1s ease-in-out;
+      }
       &.icon-only {
         text-align: center;
         font-size: var(--font-up-4);
@@ -518,14 +534,23 @@ aside.quote {
   }
 }
 
-.small-user-list .unknown {
-  display: inline-block;
-  background-color: var(--primary-low);
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  vertical-align: middle;
-  margin-right: 0.25em;
+.small-user-list {
+  .small-user-list-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-end;
+  }
+
+  .unknown {
+    display: inline-block;
+    background-color: var(--primary-low);
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 0.25em;
+  }
 }
 
 .post-hidden {
@@ -551,17 +576,7 @@ aside.quote {
 }
 
 .quote-button {
-  display: none;
-  position: absolute;
-  z-index: z("dropdown");
-  background-color: var(--secondary);
-  border: 1px solid var(--primary-low);
-  box-shadow: shadow("card");
   flex-direction: column;
-
-  &.animated {
-    transition: top 0.1s linear, left 0.1s linear;
-  }
 
   &.visible {
     display: flex;
@@ -600,13 +615,14 @@ aside.quote {
   }
 
   .btn-flat {
-    .d-icon {
-      color: var(--primary-high);
-    }
-    .discourse-no-touch & {
-      &:hover {
-        background-color: var(--tertiary-low);
+    &:hover {
+      .d-icon {
+        color: var(--tertiary);
       }
+    }
+
+    .d-button-label {
+      white-space: nowrap;
     }
   }
 
@@ -674,16 +690,25 @@ aside.quote {
   border-top: none; // would cause double top border
 
   .avatars {
-    > div {
-      float: left;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    box-sizing: border-box;
+    a {
+      display: block;
       position: relative;
-      margin: 3px 0;
+    }
+
+    .avatar {
+      width: 2.15em;
+      height: 2.15em;
     }
     .post-count {
       position: absolute;
+      top: 0;
       right: 0;
       border-radius: 100px;
-      padding: 3px 5px;
+      padding: 0.15em 0.4em 0.2em;
       text-align: center;
       font-weight: normal;
       font-size: var(--font-down-2);
@@ -692,8 +717,7 @@ aside.quote {
   }
 
   .avatar {
-    float: left;
-    margin-right: 4px;
+    margin-right: 0.33em;
   }
 
   section {
@@ -701,12 +725,15 @@ aside.quote {
   }
 
   ul {
+    display: flex;
+    flex-wrap: wrap;
     margin: 0;
     list-style: none;
   }
 
   h3 {
-    margin-bottom: 4px;
+    width: 100%;
+    margin-bottom: 0.33em;
     color: var(--primary);
     line-height: var(--line-height-large);
     font-weight: normal;
@@ -733,11 +760,26 @@ aside.quote {
   }
 
   .topic-links {
+    tbody {
+      border: none;
+    }
     tr {
       border: none;
     }
     .badge-notification {
       margin: 1px 5px 2px 0;
+    }
+  }
+
+  .link-summary .btn {
+    width: 100%;
+    .d-icon {
+      color: var(--primary-high);
+    }
+    .discourse-no-touch & {
+      &:hover {
+        background: var(--primary-low);
+      }
     }
   }
 
@@ -925,14 +967,23 @@ aside.quote {
     border-top: 1px solid var(--primary-low);
     padding-top: 0.5em;
   }
-  &.highlighted {
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .topic-body.highlighted,
+  .small-action-desc.highlighted {
     animation: background-fade-highlight 2.5s ease-out;
   }
-  .deleted & {
-    // Disable so the deleted background is visible immediately
-    &.highlighted {
-      animation: none;
-    }
+  // Disable animation so deleted status is visible immediately
+  .deleted .topic-body.highlighted {
+    animation: none;
+  }
+}
+
+.small-action-desc,
+.topic-body {
+  &:focus-visible {
+    outline: none;
   }
 }
 
@@ -966,17 +1017,13 @@ aside.quote {
     .widget-button {
       display: flex;
       align-items: center;
-
       .d-button-label {
         order: 0;
         padding-right: 0.25em;
         color: var(--primary-med-or-secondary-med);
-        transition: color 0.25s;
       }
-
       .d-icon {
         order: 1;
-        transition: color 0.25s;
         color: var(--primary-med-or-secondary-med);
       }
       .discourse-no-touch & {
@@ -998,6 +1045,7 @@ aside.quote {
 }
 
 pre {
+  max-height: 2000px;
   code {
     word-wrap: normal;
     display: block;
@@ -1104,6 +1152,7 @@ blockquote > *:last-child {
   }
 }
 
+.reviewable .post-body,
 .cooked table,
 .d-editor-preview table {
   thead {
@@ -1123,6 +1172,10 @@ blockquote > *:last-child {
 .small-action {
   display: flex;
   align-items: center;
+
+  &:focus-visible {
+    outline: none;
+  }
 
   &.deleted {
     background-color: var(--danger-low-mid);
@@ -1263,11 +1316,6 @@ span.mention {
   .topics {
     padding-bottom: 15px;
   }
-  .suggested-topics-message {
-    .badge-wrapper {
-      margin-right: 0;
-    }
-  }
 }
 
 .large-image-placeholder {
@@ -1370,7 +1418,7 @@ span.mention {
     position: relative;
     .select-posts {
       position: absolute;
-      right: 5em;
+      right: 7em;
       z-index: z("dropdown");
       top: 0.5em;
       height: 100px;
@@ -1378,7 +1426,7 @@ span.mention {
         margin-left: 8px;
         background-color: var(--primary-low);
         color: var(--primary);
-        box-shadow: shadow("dropdown");
+        box-shadow: var(--shadow-dropdown);
       }
     }
   }
@@ -1400,7 +1448,7 @@ span.mention {
   box-sizing: border-box;
   max-width: calc(var(--topic-body-width) + 4.5em);
   padding: 3em 5em 2em
-    calc(var(--topic-avatar-width + var(--topic-body-width-padding)));
+    calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
   @include breakpoint(mobile-extra-large) {
     padding: 1.5em 1.5em 0.25em;
   }
@@ -1421,6 +1469,11 @@ span.mention {
     .btn {
       margin-right: 0.5em;
       white-space: nowrap;
+
+      .d-icon {
+        color: inherit;
+      }
+
       &.btn-remind {
         background: var(--primary-very-low);
         margin-right: auto;
@@ -1469,6 +1522,11 @@ span.mention {
     color: var(--primary-high);
     margin-right: var(--topic-body-width-padding);
   }
+}
+
+html.anon #topic-footer-buttons {
+  display: flex;
+  justify-content: end;
 }
 
 #topic-footer-buttons {
@@ -1524,6 +1582,11 @@ span.mention {
       }
     }
   }
+}
+
+iframe {
+  max-width: 100%;
+  max-height: #{"min(1000px, 200vh)"};
 }
 
 .post-admin-menu {
@@ -1632,22 +1695,19 @@ span.mention {
 }
 
 .open-popup-link {
+  display: inline;
+  margin-inline: 0.25em;
   position: sticky;
   left: 1rem;
   opacity: 0%;
   white-space: nowrap;
+  transition: 0.25s ease-in-out opacity;
 }
 
 .fullscreen-table-wrapper {
   transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
   display: block;
   position: relative;
-
-  &--buttons {
-    position: absolute;
-    top: 0.5rem;
-    left: 0.5rem;
-  }
 }
 
 .fullscreen-table-modal .modal-inner-container,
@@ -1683,11 +1743,44 @@ span.mention {
   }
 }
 
+.fullscreen-table-modal {
+  .d-modal__container {
+    width: auto;
+  }
+  .d-modal__body {
+    padding-top: 0;
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background-color: var(--secondary);
+    }
+
+    td {
+      padding: 5px 6px 5px 3px;
+    }
+  }
+}
+
 html.discourse-no-touch .fullscreen-table-wrapper:hover {
   border-radius: 5px;
   box-shadow: 0 2px 5px 0 rgba(var(--always-black-rgb), 0.1),
     0 2px 10px 0 rgba(var(--always-black-rgb), 0.1);
   .open-popup-link {
     opacity: 100%;
+  }
+}
+
+.read-state {
+  position: absolute;
+  // We use absolute positioning here because we want it to display in the padding
+  align-self: center;
+  color: var(--tertiary-medium);
+  right: 0;
+  font-size: 0.571em;
+  &.read {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 1s, opacity ease-out 1s;
   }
 }

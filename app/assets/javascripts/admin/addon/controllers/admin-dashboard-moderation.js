@@ -1,12 +1,8 @@
 import { computed } from "@ember/object";
-import Controller from "@ember/controller";
-import PeriodComputationMixin from "admin/mixins/period-computation";
 import discourseComputed from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
+import AdminDashboardTabController from "./admin-dashboard-tab";
 
-export default class AdminDashboardModerationController extends Controller.extend(
-  PeriodComputationMixin
-) {
+export default class AdminDashboardModerationController extends AdminDashboardTabController {
   @discourseComputed
   flagsStatusOptions() {
     return {
@@ -35,17 +31,19 @@ export default class AdminDashboardModerationController extends Controller.exten
     };
   }
 
-  @discourseComputed("startDate", "endDate")
-  filters(startDate, endDate) {
-    return { startDate, endDate };
+  @computed("startDate", "endDate")
+  get filters() {
+    return { startDate: this.startDate, endDate: this.endDate };
   }
 
-  @discourseComputed("lastWeek", "endDate")
-  lastWeekfilters(startDate, endDate) {
-    return { startDate, endDate };
-  }
+  @discourseComputed("endDate")
+  lastWeekFilters(endDate) {
+    const lastWeek = moment()
+      .locale("en")
+      .utc()
+      .endOf("day")
+      .subtract(1, "week");
 
-  _reportsForPeriodURL(period) {
-    return getURL(`/admin/dashboard/moderation?period=${period}`);
+    return { lastWeek, endDate };
   }
 }

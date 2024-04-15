@@ -1,7 +1,5 @@
 <ConditionalLoadingSpinner @condition={{this.isLoading}}>
-  <span>
-    <PluginOutlet @name="admin-dashboard-general-top" @connectorTagName="div" />
-  </span>
+  <PluginOutlet @name="admin-dashboard-general-top" @connectorTagName="div" />
 
   {{#if this.isCommunityHealthVisible}}
     <div class="community-health section">
@@ -12,11 +10,13 @@
               {{i18n "admin.dashboard.community_health"}}
             </a>
           </h2>
-          <PeriodChooser
+
+          <DashboardPeriodSelector
             @period={{this.period}}
-            @action={{action "changePeriod"}}
-            @content={{this.availablePeriods}}
-            @fullDay={{false}}
+            @setPeriod={{this.setPeriod}}
+            @startDate={{this.startDate}}
+            @endDate={{this.endDate}}
+            @setCustomDateRange={{this.setCustomDateRange}}
           />
         </div>
 
@@ -195,10 +195,9 @@
     {{/if}}
   </div>
 
-  <span>
-    <PluginOutlet
-      @name="admin-dashboard-general-bottom"
-      @connectorTagName="div"
-    />
-  </span>
+  <PluginOutlet
+    @name="admin-dashboard-general-bottom"
+    @connectorTagName="div"
+    @outletArgs={{hash filters=this.filters}}
+  />
 </ConditionalLoadingSpinner>

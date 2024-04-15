@@ -1,9 +1,31 @@
-import { module, test } from "qunit";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { module, test } from "qunit";
+import ThemeSettings from "admin/models/theme-settings";
 
 module("Unit | Model | theme", function (hooks) {
   setupTest(hooks);
+
+  test("create munges settings property to ThemeSettings instances", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+
+    const theme = store.createRecord("theme", {
+      settings: [
+        { id: 1, name: "setting1" },
+        { id: 2, name: "setting2" },
+      ],
+    });
+
+    assert.ok(
+      theme.settings[0] instanceof ThemeSettings,
+      "should be an instance of ThemeSettings"
+    );
+
+    assert.ok(
+      theme.settings[1] instanceof ThemeSettings,
+      "should be an instance of ThemeSettings"
+    );
+  });
 
   test("can add an upload correctly", function (assert) {
     const store = getOwner(this).lookup("service:store");

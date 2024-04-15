@@ -1,6 +1,6 @@
+import { action, set } from "@ember/object";
 import { and, empty } from "@ember/object/computed";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
-import { action, set } from "@ember/object";
 
 export default buildCategoryPanel("tags", {
   allowedTagsEmpty: empty("category.allowed_tags"),

@@ -1,3 +1,6 @@
+import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import TopicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   exists,
@@ -5,9 +8,6 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import TopicFixtures from "discourse/tests/fixtures/topic";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Topic - User Status", function (needs) {

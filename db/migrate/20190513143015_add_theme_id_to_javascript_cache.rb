@@ -14,6 +14,7 @@ class AddThemeIdToJavascriptCache < ActiveRecord::Migration[5.2]
     make_changes
     execute "ALTER TABLE javascript_caches ADD CONSTRAINT enforce_theme_or_theme_field CHECK ((theme_id IS NOT NULL AND theme_field_id IS NULL) OR (theme_id IS NULL AND theme_field_id IS NOT NULL))"
   end
+
   def down
     execute "ALTER TABLE javascript_caches DROP CONSTRAINT enforce_theme_or_theme_field"
     revert { make_changes }

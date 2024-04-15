@@ -1,9 +1,9 @@
+import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { not } from "@ember/object/computed";
-import Controller from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
 import { propertyEqual } from "discourse/lib/computed";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
 
 export default class AdminCustomizeRobotsTxtController extends Controller.extend(
   bufferedProperty("model")

@@ -1,5 +1,5 @@
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
@@ -48,15 +48,13 @@ acceptance("User Preferences - Second Factor Backup", function (needs) {
     updateCurrentUser({ second_factor_enabled: true });
     await visit("/u/eviltrout/preferences/second-factor");
 
-    if (exists(".new-second-factor-backup")) {
-      // if codes don't exist yet, create them
-      await click(".new-second-factor-backup");
-      await click(".second-factor-backup-edit-modal .btn-primary");
-      await click(".modal-close");
-    }
+    // create backup codes
+    await click(".new-second-factor-backup");
+    await click(".second-factor-backup-edit-modal .btn-primary");
+    await click(".second-factor-backup-edit-modal .modal-close");
 
     await click(".two-factor-backup-dropdown .select-kit-header");
-    await click("li[data-name='Disable'");
+    await click("li[data-name='Disable']");
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),
       "Deleting backup codes"

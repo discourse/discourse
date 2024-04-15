@@ -43,6 +43,7 @@ class PostSerializer < BasicPostSerializer
              :can_delete,
              :can_permanently_delete,
              :can_recover,
+             :can_see_hidden_post,
              :can_wiki,
              :link_counts,
              :read,
@@ -180,6 +181,10 @@ class PostSerializer < BasicPostSerializer
     scope.can_recover_post?(object)
   end
 
+  def can_see_hidden_post
+    scope.can_see_hidden_post?(object)
+  end
+
   def can_wiki
     scope.can_wiki?(object)
   end
@@ -310,8 +315,14 @@ class PostSerializer < BasicPostSerializer
         summary.delete(:can_act)
       end
 
+      if actions.present? && SiteSetting.allow_anonymous_likes && sym == :like &&
+           !scope.can_delete_post_action?(actions[id])
+        summary.delete(:can_act)
+      end
+
       if actions.present? && actions.has_key?(id)
         summary[:acted] = true
+
         summary[:can_undo] = true if scope.can_delete?(actions[id])
       end
 
@@ -570,10 +581,12 @@ class PostSerializer < BasicPostSerializer
       if @topic_view && (mentioned_users = @topic_view.mentioned_users[object.id])
         mentioned_users
       else
-        User.where(username: object.mentions)
+        query = User.includes(:user_option)
+        query = query.includes(:user_status) if SiteSetting.enable_user_status
+        query = query.where(username: object.mentions)
       end
 
-    users.map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+    users.map { |user| BasicUserSerializer.new(user, root: false, include_status: true).as_json }
   end
 
   def include_mentioned_users?
@@ -594,7 +607,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reviewable_scores
-    reviewable&.reviewable_scores&.to_a || []
+    reviewable&.reviewable_scores.to_a
   end
 
   def user_custom_fields_object

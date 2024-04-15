@@ -5,8 +5,23 @@
 # https://translate.discourse.org/
 
 lt:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          chat: Pokalbis
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Visada"
+          never: "Niekada"
     chat:
+      deleted_chat_username: ištrintas
+      dates:
+        yesterday: "Vakar"
+        time_tiny: "h:mm"
+      bot: "botas"
       create: "Sukurti"
       cancel: "Atšaukti"
       channel_settings:
@@ -14,7 +29,12 @@ lt:
         add: "Pridėti"
         join: "Prisijungti"
         leave: "Palikti"
+      channel_archive:
+        retry: "Bandykite dar kartą"
+      channels_list_popup:
+        browse: "Naršyti kanalus"
       close: "Uždaryti"
+      remove: "Pašalinti"
       delete: "Pašalinti"
       edited: "taisytas"
       muted: "nutyldita"
@@ -24,10 +44,11 @@ lt:
       header_indicator_preference:
         never: "Niekada"
       flag: "Pranešti"
+      heading: "Pokalbis"
       join: "Prisijungti"
       last_visit: "paskutinis apsilankymas"
-      mention_warning:
-        dismiss: "praleisti"
+      summarization:
+        summarize: "Apibendrinti"
       reply: "Atsakyti"
       edit: "Redaguoti"
       rebake_message: "Perkurti HTML"
@@ -36,6 +57,8 @@ lt:
       save: "Išsaugoti"
       sounds:
         none: "Nieko"
+      title: "pokalbis"
+      title_capitalized: "Pokalbis"
       exit: "atgal"
       channel_status:
         closed: "Uždaryta"
@@ -43,6 +66,7 @@ lt:
       browse:
         back: "Atgal"
         filter_all: Visos
+        filter_open: Atidaryti
         filter_closed: Uždaryta
       chat_message_separator:
         today: Šiandien
@@ -54,9 +78,11 @@ lt:
       channel_info:
         back_to_channel: "Atgal"
         tabs:
-          about: Apie
           members: Nariai
           settings: Nustatymai
+      new_message_modal:
+        no_items: "Nėra elementų"
+        filter: "Filtruoti"
       direct_message_creator:
         title: Nauja žinutė
         prefix: "Kam:"
@@ -74,12 +100,20 @@ lt:
       settings:
         follow: "Prisijungti"
         followed: "Prisijungė"
+        threading_enabled: "Galimas"
+        threading_disabled: "Uždrausta"
         notifications: "Pranešimai"
         preview: "Peržiūrėti"
         save: "Išsaugoti"
         saved: "Išsaugota"
         unfollow: "Palikti"
         admin_title: "Administratorius"
+        settings_title: "Nustatymai"
+        category_label: "Kategorija"
+        history_label: "Istorija"
+        members_label: "Nariai"
+      admin:
+        title: "Pokalbis"
       incoming_webhooks:
         back: "Atgal"
         description: "Aprašymas"
@@ -100,6 +134,12 @@ lt:
           title: "Perkelti į esamą temą"
         new_message:
           title: "Pereiti prie naujos žinutės"
+      retention_reminders:
+        short:
+          one: "%{count} diena"
+          few: "%{count} dienos"
+          many: "%{count} dienų"
+          other: "%{count} dienų"
       emoji_picker:
         objects: "Objektai"
         activities: "Veikla"
@@ -113,6 +153,17 @@ lt:
           many: "%{count} atsakymai"
           other: "%{count} atsakymai"
         settings: "Nustatymai"
+        last_reply: "Paskutinis atsakymas"
+        notifications:
+          regular:
+            title: "Įprastas"
+          tracking:
+            title: "Seku"
+        participants_other_count:
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nauja žinutė"
         cancel: "Atšaukti"
@@ -124,3 +175,14 @@ lt:
           fields:
             message:
               label: Žinutės
+    keyboard_shortcuts_help:
+      chat:
+        title: "Pokalbis"
+    styleguide:
+      sections:
+        chat:
+          title: Pokalbis
+    sidebar:
+      panels:
+        chat:
+          label: "Pokalbis"

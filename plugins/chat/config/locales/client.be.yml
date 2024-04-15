@@ -6,13 +6,22 @@
 
 be:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "заўсёды"
+          never: "ніколі"
     chat:
+      deleted_chat_username: аддалены
+      dates:
+        yesterday: "учора"
       create: "стварыць"
       cancel: "адмяніць"
       channel_settings:
         edit: "рэдагаваць"
         add: "дадаць"
       close: "зачыніць"
+      remove: "выдаліць"
       delete: "выдаляць"
       muted: "ігнаруемай"
       joined: "рэгістрацыя"
@@ -43,9 +52,10 @@ be:
       channel_info:
         back_to_channel: "Назад"
         tabs:
-          about: Аб тэме
           members: Удзельнікі
           settings: Налады
+      new_message_modal:
+        filter: "Filter"
       direct_message_creator:
         title: новае паведамленне
         prefix: "да:"
@@ -62,11 +72,16 @@ be:
         never: "ніколі"
       settings:
         followed: "рэгістрацыя"
+        threading_disabled: "Адключана"
         notifications: "Натыфікацыі"
         preview: "папярэдні прагляд"
         save: "захаваць"
         saved: "Захавана"
         admin_title: "адміністратар"
+        settings_title: "Налады"
+        category_label: "катэгорыя"
+        history_label: "гісторыя"
+        members_label: "Удзельнікі"
       incoming_webhooks:
         back: "Назад"
         description: "Апісанне"
@@ -90,6 +105,10 @@ be:
       thread:
         title: "Загаловак"
         settings: "Налады"
+        last_reply: "апошні адказ"
+        notifications:
+          tracking:
+            title: "Сачыць"
       draft_channel_screen:
         header: "новае паведамленне"
         cancel: "адмяніць"

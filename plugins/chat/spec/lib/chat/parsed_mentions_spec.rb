@@ -1,13 +1,27 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::ParsedMentions do
   fab!(:channel_member_1) { Fabricate(:user) }
   fab!(:channel_member_2) { Fabricate(:user) }
   fab!(:channel_member_3) { Fabricate(:user) }
   fab!(:not_a_channel_member) { Fabricate(:user) }
-  fab!(:chat_channel) { Fabricate(:chat_channel) }
+  fab!(:chat_channel)
+
+  def message_quote_with_mentions(mentions)
+    <<~MARKDOWN
+    [chat quote="jan;100;2023-10-10T13:00:00Z"]
+    message mentioning #{mentions.map { |m| "@#{m}" }.join(" ")}
+    [/chat]
+    MARKDOWN
+  end
+
+  def post_quote_with_mentions(mentions)
+    <<~MARKDOWN
+    [quote="jan, post:1, topic:10"]
+    message mentioning #{mentions.map { |m| "@#{m}" }.join(" ")}
+    [/quote]
+    MARKDOWN
+  end
 
   before do
     chat_channel.add(channel_member_1)
@@ -40,6 +54,24 @@ RSpec.describe Chat::ParsedMentions do
 
     it "returns an empty list if there are no global mentions" do
       message = create_message("not mentioning anybody")
+
+      mentions = described_class.new(message)
+      result = mentions.global_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when quoting a message with global mentions" do
+      message = create_message(message_quote_with_mentions(["all"]))
+
+      mentions = described_class.new(message)
+      result = mentions.global_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when quoting a post with global mentions" do
+      message = create_message(post_quote_with_mentions(["all"]))
 
       mentions = described_class.new(message)
       result = mentions.global_mentions.pluck(:username)
@@ -82,6 +114,24 @@ RSpec.describe Chat::ParsedMentions do
 
       expect(result).to be_empty
     end
+
+    it "returns an empty list when quoting a message with here mentions" do
+      message = create_message(message_quote_with_mentions(["here"]))
+
+      mentions = described_class.new(message)
+      result = mentions.here_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when quoting a post with here mentions" do
+      message = create_message(post_quote_with_mentions(["here"]))
+
+      mentions = described_class.new(message)
+      result = mentions.here_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
   end
 
   describe "#direct_mentions" do
@@ -96,13 +146,7 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns a user when self-mentioning" do
-      message =
-        Fabricate(
-          :chat_message,
-          chat_channel: chat_channel,
-          message: "Hey @#{channel_member_1.username}",
-          user: channel_member_1,
-        )
+      message = create_message("Hey @#{channel_member_1.username}", user: channel_member_1)
 
       mentions = described_class.new(message)
 
@@ -121,6 +165,30 @@ RSpec.describe Chat::ParsedMentions do
 
     it "returns an empty list if no one was mentioned directly" do
       message = create_message("not mentioning anybody")
+
+      mentions = described_class.new(message)
+      result = mentions.direct_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when quoting a message with mentioned users" do
+      message =
+        create_message(
+          message_quote_with_mentions([channel_member_1.username, channel_member_2.username]),
+        )
+
+      mentions = described_class.new(message)
+      result = mentions.direct_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when quoting a post with mentioned users" do
+      message =
+        create_message(
+          post_quote_with_mentions([channel_member_1.username, channel_member_2.username]),
+        )
 
       mentions = described_class.new(message)
       result = mentions.direct_mentions.pluck(:username)
@@ -172,9 +240,27 @@ RSpec.describe Chat::ParsedMentions do
 
       expect(result).to be_empty
     end
+
+    it "returns an empty list when quoting a message with a mentioned group" do
+      message = create_message(message_quote_with_mentions([group1.name]))
+
+      mentions = described_class.new(message)
+      result = mentions.group_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
+
+    it "returns an empty list when quoting a post with a mentioned group" do
+      message = create_message(post_quote_with_mentions([group1.name]))
+
+      mentions = described_class.new(message)
+      result = mentions.group_mentions.pluck(:username)
+
+      expect(result).to be_empty
+    end
   end
 
-  def create_message(text)
-    Fabricate(:chat_message, chat_channel: chat_channel, message: text)
+  def create_message(text, **extra_args)
+    Fabricate(:chat_message, chat_channel: chat_channel, message: text, **extra_args)
   end
 end

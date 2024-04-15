@@ -1,7 +1,7 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
-import { click, render } from "@ember/test-helpers";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Discourse Lazy Videos | Component | lazy-video", function (hooks) {
   setupRenderingTest(hooks);

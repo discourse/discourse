@@ -1,9 +1,10 @@
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
-  showFooter: true,
+  router: service(),
 
   beforeModel() {
-    this.transitionTo("group.manage.profile");
+    this.router.transitionTo("group.manage.profile");
   },
 });

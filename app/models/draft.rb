@@ -7,6 +7,10 @@ class Draft < ActiveRecord::Base
 
   belongs_to :user
 
+  has_many :upload_references, as: :target, dependent: :delete_all
+
+  validates :draft_key, length: { maximum: 25 }
+
   after_commit :update_draft_count, on: %i[create destroy]
 
   class OutOfSequence < StandardError

@@ -14,11 +14,11 @@
     @saveDisabled={{this.saveDisabled}}
   >
     <DButton
-      @class="btn-default"
       @disabled={{this.resetDisabled}}
       @icon="undo"
-      @action={{action "reset"}}
+      @action={{this.reset}}
       @label="admin.settings.reset"
+      class="btn-default"
     />
   </SaveControls>
 </div>

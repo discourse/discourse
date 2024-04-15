@@ -24,26 +24,8 @@ Discourse::Application.configure do
 
   config.log_level = :info
 
-  if GlobalSetting.smtp_address
-    settings = {
-      address: GlobalSetting.smtp_address,
-      port: GlobalSetting.smtp_port,
-      domain: GlobalSetting.smtp_domain,
-      user_name: GlobalSetting.smtp_user_name,
-      password: GlobalSetting.smtp_password,
-      authentication: GlobalSetting.smtp_authentication,
-      enable_starttls_auto: GlobalSetting.smtp_enable_start_tls,
-      open_timeout: GlobalSetting.smtp_open_timeout,
-      read_timeout: GlobalSetting.smtp_read_timeout,
-    }
-
-    settings[
-      :openssl_verify_mode
-    ] = GlobalSetting.smtp_openssl_verify_mode if GlobalSetting.smtp_openssl_verify_mode
-
-    settings[:tls] = true if GlobalSetting.smtp_force_tls
-
-    config.action_mailer.smtp_settings = settings.compact
+  if (smtp_settings = GlobalSetting.smtp_settings).present?
+    config.action_mailer.smtp_settings = smtp_settings
   else
     config.action_mailer.delivery_method = :sendmail
     config.action_mailer.sendmail_settings = { arguments: "-i" }

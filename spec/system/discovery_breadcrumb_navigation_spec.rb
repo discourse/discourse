@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Navigating with breadcrumbs", type: :system, js: true do
+describe "Navigating with breadcrumbs", type: :system do
   let(:discovery) { PageObjects::Pages::Discovery.new }
 
   fab!(:category1) { Fabricate(:category) }
@@ -49,7 +49,7 @@ describe "Navigating with breadcrumbs", type: :system, js: true do
   end
 
   context "with tags" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
     fab!(:c1_topic_tagged) { Fabricate(:topic, category: category1, tags: [tag]) }
     fab!(:c3_topic_tagged) { Fabricate(:topic, category: category3, tags: [tag]) }
     fab!(:c3_child_topic_tagged) { Fabricate(:topic, category: category3_child, tags: [tag]) }
@@ -61,7 +61,7 @@ describe "Navigating with breadcrumbs", type: :system, js: true do
       expect(discovery.topic_list).to have_topic(c1_topic_tagged)
       expect(discovery.topic_list).to have_topics(count: 2)
 
-      expect(discovery.tag_drop).to have_selected_name("all tags")
+      expect(discovery.tag_drop).to have_selected_name("tags")
       discovery.tag_drop.select_row_by_value(tag.name)
 
       expect(discovery.topic_list).to have_topics(count: 1)
@@ -74,8 +74,8 @@ describe "Navigating with breadcrumbs", type: :system, js: true do
       expect(discovery.topic_list).to have_topic(c3_topic_tagged)
       expect(discovery.topic_list).to have_topics(count: 2)
 
-      expect(discovery.subcategory_drop).to have_selected_name("none")
-      expect(discovery.tag_drop).to have_selected_name("all tags")
+      expect(discovery.subcategory_drop).to have_selected_name("no subcategories")
+      expect(discovery.tag_drop).to have_selected_name("tags")
       discovery.tag_drop.select_row_by_value(tag.name)
 
       expect(page).to have_current_path(
@@ -86,7 +86,7 @@ describe "Navigating with breadcrumbs", type: :system, js: true do
     end
   end
 
-  describe "initial pageloads for nosubcategories" do
+  describe "initial page loads for no-subcategories" do
     it "shows correct data for /c/" do
       visit("/c/#{category3.id}")
       expect(page).to have_current_path("/c/#{category3.slug}/#{category3.id}/none")

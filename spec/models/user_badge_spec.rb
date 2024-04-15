@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe UserBadge do
-  fab!(:badge) { Fabricate(:badge) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:badge)
+  fab!(:user)
 
   describe "Validations" do
     let(:subject) { BadgeGranter.grant(badge, user) }
@@ -48,7 +48,7 @@ RSpec.describe UserBadge do
   end
 
   describe "featured rank" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:user_badge_tl1) do
       UserBadge.create!(
         badge_id: Badge::BasicUser,

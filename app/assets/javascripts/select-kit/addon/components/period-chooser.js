@@ -1,6 +1,6 @@
 import { oneWay, readOnly } from "@ember/object/computed";
+import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
-import I18n from "I18n";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["period-chooser"],
@@ -29,7 +29,7 @@ export default DropdownSelectBoxComponent.extend({
       if (this.action) {
         this.action(value);
       } else {
-        this.attrs.onChange && this.attrs.onChange(value);
+        this.onChange?.(value);
       }
     },
   },

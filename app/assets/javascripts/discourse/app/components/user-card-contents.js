@@ -1,20 +1,20 @@
+import Component from "@ember/component";
 import EmberObject, { action, set } from "@ember/object";
 import { alias, and, gt, gte, not, or } from "@ember/object/computed";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { dasherize } from "@ember/string";
+import { isEmpty } from "@ember/utils";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
+import { durationTiny } from "discourse/lib/formatter";
+import { prioritizeNameInUx } from "discourse/lib/settings";
+import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
-import Component from "@ember/component";
-import I18n from "I18n";
 import User from "discourse/models/user";
-import { durationTiny } from "discourse/lib/formatter";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
-import { isEmpty } from "@ember/utils";
-import { prioritizeNameInUx } from "discourse/lib/settings";
-import { dasherize } from "@ember/string";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",
@@ -30,6 +30,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     "usernameClass",
     "primaryGroup",
   ],
+  attributeBindings: ["labelledBy:aria-labelledby"],
   allowBackgrounds: setting("allow_profile_backgrounds"),
   showBadges: setting("enable_badges"),
 
@@ -45,6 +46,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   showMoreBadges: gt("moreBadgesCount", 0),
   showDelete: and("viewingAdmin", "showName", "user.canBeDeleted"),
   linkWebsite: not("user.isBasic"),
+
+  @discourseComputed("user")
+  labelledBy(user) {
+    return user ? "discourse-user-card-title" : null;
+  },
 
   @discourseComputed("user")
   hasLocaleOrWebsite(user) {
@@ -201,7 +207,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
           );
         }
         this.setProperties({ user });
-        this.user.trackStatus();
+        this.user.statusManager.trackStatus();
         return user;
       })
       .catch(() => this._close())
@@ -210,7 +216,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
 
   _close() {
     if (this.user) {
-      this.user.stopTrackingStatus();
+      this.user.statusManager.stopTrackingStatus();
     }
 
     this.setProperties({

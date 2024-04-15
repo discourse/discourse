@@ -11,11 +11,13 @@ task "import:ensure_consistency" => :environment do
   insert_topic_views
   insert_user_actions
   insert_user_options
-  insert_user_stats
+  insert_user_profiles
+  insert_user_stats unless ENV["SKIP_USER_STATS"]
   insert_user_visits
   insert_draft_sequences
+  insert_automatic_group_users
 
-  update_user_stats
+  update_user_stats unless ENV["SKIP_USER_STATS"]
   update_posts
   update_topics
   update_categories
@@ -23,7 +25,10 @@ task "import:ensure_consistency" => :environment do
   update_groups
   update_tag_stats
   update_topic_users
+  update_topic_featured_users
   create_category_definitions
+
+  # run_jobs
 
   log "Done!"
 end
@@ -166,7 +171,9 @@ def insert_user_options
                   notification_level_when_replying,
                   like_notification_frequency,
                   skip_new_user_tips,
-                  hide_profile_and_presence
+                  hide_profile_and_presence,
+                  sidebar_link_to_filtered_list,
+                  sidebar_show_count_of_new_items
                 )
              SELECT u.id
                   , #{SiteSetting.default_email_mailing_list_mode}
@@ -188,20 +195,38 @@ def insert_user_options
                   , #{SiteSetting.default_other_like_notification_frequency}
                   , #{SiteSetting.default_other_skip_new_user_tips}
                   , #{SiteSetting.default_hide_profile_and_presence}
+                  , #{SiteSetting.default_sidebar_link_to_filtered_list}
+                  , #{SiteSetting.default_sidebar_show_count_of_new_items}
                FROM users u
           LEFT JOIN user_options uo ON uo.user_id = u.id
               WHERE uo.user_id IS NULL
   SQL
 end
 
+def insert_user_profiles
+  log "Inserting user profiles..."
+
+  DB.exec <<-SQL
+    INSERT INTO user_profiles (user_id)
+         SELECT id
+           FROM users
+    ON CONFLICT DO NOTHING
+  SQL
+end
+
 def insert_user_stats
   log "Inserting user stats..."
 
-  DB.exec <<-SQL
+  DB.exec <<~SQL
     INSERT INTO user_stats (user_id, new_since)
-         SELECT id, created_at
-           FROM users
-    ON CONFLICT DO NOTHING
+    SELECT id, created_at
+      FROM users u
+     WHERE NOT EXISTS (
+       SELECT 1
+         FROM user_stats us
+        WHERE us.user_id = u.id
+     )
+        ON CONFLICT DO NOTHING
   SQL
 end
 
@@ -229,6 +254,40 @@ def insert_draft_sequences
             AND archetype = 'regular'
     ON CONFLICT DO NOTHING
   SQL
+end
+
+def insert_automatic_group_users
+  Group::AUTO_GROUPS.each do |group_name, group_id|
+    user_condition =
+      case group_name
+      when :everyone
+        "TRUE"
+      when :admins
+        "id > 0 AND admin AND NOT staged"
+      when :moderators
+        "id > 0 AND moderator AND NOT staged"
+      when :staff
+        "id > 0 AND (moderator OR admin) AND NOT staged"
+      when :trust_level_1, :trust_level_2, :trust_level_3, :trust_level_4
+        "id > 0 AND trust_level >= :min_trust_level AND NOT staged"
+      when :trust_level_0
+        "id > 0 AND NOT staged"
+      end
+
+    DB.exec(<<~SQL, group_id: group_id, min_trust_level: group_id - 10)
+      INSERT INTO group_users (group_id, user_id, created_at, updated_at)
+      SELECT :group_id, id, NOW(), NOW()
+        FROM users u
+       WHERE #{user_condition}
+         AND NOT EXISTS (
+                          SELECT 1
+                            FROM group_users gu
+                           WHERE gu.group_id = :group_id AND gu.user_id = u.id
+                        )
+    SQL
+
+    Group.reset_user_count(Group.find(group_id))
+  end
 end
 
 def update_user_stats
@@ -276,7 +335,7 @@ def update_user_stats
 end
 
 def update_posts
-  log "Updating posts..."
+  log "Updating post reply counts..."
 
   DB.exec <<-SQL
     WITH Y AS (
@@ -300,6 +359,19 @@ def update_posts
   #   FROM X
   #  WHERE id = X.post_id
   #    AND COALESCE(reply_to_user_id, -9999) <> X.user_id
+
+  log "Updating post reply_to_user_id..."
+
+  DB.exec <<~SQL
+    UPDATE posts AS replies
+    SET reply_to_user_id = original.user_id
+    FROM posts AS original
+    WHERE original.topic_id = replies.topic_id
+      AND original.post_number = replies.reply_to_post_number
+      AND replies.reply_to_post_number IS NOT NULL
+      AND replies.reply_to_user_id IS NULL
+      AND replies.post_number <> replies.reply_to_post_number
+  SQL
 end
 
 def update_topics
@@ -388,9 +460,9 @@ def update_users
       GROUP BY p.user_id
     )
     UPDATE users
-       SET first_seen_at  = X.min_created_at
-         , last_seen_at   = X.max_created_at
-         , last_posted_at = X.max_created_at
+       SET first_seen_at  = LEAST(first_seen_at, X.min_created_at)
+         , last_seen_at   = GREATEST(last_seen_at, X.max_created_at)
+         , last_posted_at = GREATEST(last_posted_at, X.max_created_at)
       FROM X
      WHERE id = X.user_id
        AND (COALESCE(first_seen_at, '1970-01-01')  <> X.min_created_at
@@ -443,9 +515,15 @@ def update_topic_users
   SQL
 end
 
+def update_topic_featured_users
+  log "Updating topic featured users..."
+  TopicFeaturedUsers.ensure_consistency!
+end
+
 def create_category_definitions
   log "Creating category definitions"
   Category.ensure_consistency!
+  Site.clear_cache
 end
 
 def log(message)
@@ -568,4 +646,142 @@ task "import:update_first_post_created_at" => :environment do
   SQL
 
   log "Done"
+end
+
+desc "Update avatars from external_avatar_url in SSO records"
+task "import:update_avatars_from_sso" => :environment do
+  log "Updating avatars from SSO records"
+
+  sql = <<~SQL
+    SELECT user_id, external_avatar_url
+    FROM single_sign_on_records s
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM user_avatars a
+      WHERE a.user_id = s.user_id
+    )
+  SQL
+
+  queue = SizedQueue.new(1000)
+  threads = []
+
+  threads << Thread.new do ||
+    DB.query_each(sql) { |row| queue << { user_id: row.user_id, url: row.external_avatar_url } }
+    queue.close
+  end
+
+  max_count = DB.query_single(<<~SQL).first
+    SELECT COUNT(*)
+    FROM single_sign_on_records s
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM user_avatars a
+      WHERE a.user_id = s.user_id
+    )
+  SQL
+
+  status_queue = Queue.new
+  status_thread =
+    Thread.new do
+      error_count = 0
+      current_count = 0
+
+      while !(status = status_queue.pop).nil?
+        error_count += 1 if !status
+        current_count += 1
+
+        print "\r%7d / %7d (%d errors)" % [current_count, max_count, error_count]
+      end
+    end
+
+  20.times do
+    threads << Thread.new do
+      while row = queue.pop
+        begin
+          UserAvatar.import_url_for_user(
+            row[:url],
+            User.find(row[:user_id]),
+            override_gravatar: true,
+            skip_rate_limit: true,
+          )
+          status_queue << true
+        rescue StandardError
+          status_queue << false
+        end
+      end
+    end
+  end
+
+  threads.each(&:join)
+  status_queue.close
+  status_thread.join
+end
+
+def run_jobs
+  log "Running jobs"
+
+  Jobs::EnsureDbConsistency.new.execute({})
+  Jobs::DirectoryRefreshOlder.new.execute({})
+  Jobs::DirectoryRefreshDaily.new.execute({})
+  Jobs::ReindexSearch.new.execute({})
+  Jobs::TopRefreshToday.new.execute({})
+  Jobs::TopRefreshOlder.new.execute({})
+  Jobs::Weekly.new.execute({})
+end
+
+desc "Rebake posts that contain polls"
+task "import:rebake_uncooked_posts_with_polls" => :environment do
+  log "Rebaking posts with polls"
+
+  posts = Post.where("EXISTS (SELECT 1 FROM polls WHERE polls.post_id = posts.id)")
+
+  import_rebake_posts(posts)
+end
+
+desc "Rebake posts that contain events"
+task "import:rebake_uncooked_posts_with_events" => :environment do
+  log "Rebaking posts with events"
+
+  posts =
+    Post.where(
+      "EXISTS (SELECT 1 FROM discourse_post_event_events WHERE discourse_post_event_events.id = posts.id)",
+    )
+
+  import_rebake_posts(posts)
+end
+
+desc "Rebake posts that have tag"
+task "import:rebake_uncooked_posts_with_tag", [:tag_name] => :environment do |_task, args|
+  log "Rebaking posts with tag"
+
+  posts =
+    Post.where(
+      "EXISTS (SELECT 1 FROM topic_tags JOIN tags ON tags.id = topic_tags.tag_id WHERE topic_tags.topic_id = posts.topic_id AND tags.name = ?)",
+      args[:tag_name],
+    )
+
+  import_rebake_posts(posts)
+end
+
+def import_rebake_posts(posts)
+  Jobs.run_immediately!
+  OptimizedImage.lock_per_machine = false
+
+  posts = posts.where("baked_version <> ? or baked_version IS NULL", Post::BAKED_VERSION)
+
+  max_count = posts.count
+  current_count = 0
+
+  ids = posts.pluck(:id)
+  # work randomly so you can run this job from lots of consoles if needed
+  ids.shuffle!
+
+  ids.each do |id|
+    # may have been cooked in interim
+    post = posts.where(id: id).first
+    post.rebake! if post
+
+    current_count += 1
+    print "\r%7d / %7d" % [current_count, max_count]
+  end
 end

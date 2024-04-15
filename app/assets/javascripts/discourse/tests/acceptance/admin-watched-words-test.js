@@ -1,3 +1,5 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -5,9 +7,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Admin - Watched Words", function (needs) {
   needs.user();
@@ -124,17 +124,20 @@ acceptance("Admin - Watched Words", function (needs) {
   test("test modal - replace", async function (assert) {
     await visit("/admin/customize/watched_words/action/replace");
     await click(".watched-word-test");
-    await fillIn(".modal-body textarea", "Hi there!");
-    assert.strictEqual(query(".modal-body li .match").innerText, "Hi");
-    assert.strictEqual(query(".modal-body li .replacement").innerText, "hello");
+    await fillIn(".d-modal__body textarea", "Hi there!");
+    assert.strictEqual(query(".d-modal__body li .match").innerText, "Hi");
+    assert.strictEqual(
+      query(".d-modal__body li .replacement").innerText,
+      "hello"
+    );
   });
 
   test("test modal - tag", async function (assert) {
     await visit("/admin/customize/watched_words/action/tag");
     await click(".watched-word-test");
-    await fillIn(".modal-body textarea", "Hello world!");
-    assert.strictEqual(query(".modal-body li .match").innerText, "Hello");
-    assert.strictEqual(query(".modal-body li .tag").innerText, "greeting");
+    await fillIn(".d-modal__body textarea", "Hello world!");
+    assert.strictEqual(query(".d-modal__body li .match").innerText, "Hello");
+    assert.strictEqual(query(".d-modal__body li .tag").innerText, "greeting");
   });
 });
 

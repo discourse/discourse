@@ -1,5 +1,5 @@
-import { tagName } from "@ember-decorators/component";
 import Component from "@ember/component";
+import { tagName } from "@ember-decorators/component";
 import loadScript from "discourse/lib/load-script";
 
 @tagName("canvas")
@@ -53,6 +53,7 @@ export default class AdminGraph extends Component {
   }
 
   didInsertElement() {
+    super.didInsertElement(...arguments);
     loadScript("/javascripts/Chart.min.js").then(() =>
       this.refreshChart.apply(this)
     );

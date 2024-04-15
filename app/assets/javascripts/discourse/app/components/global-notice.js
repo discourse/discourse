@@ -1,12 +1,14 @@
-import EmberObject, { action } from "@ember/object";
-import cookie, { removeCookie } from "discourse/lib/cookie";
 import Component from "@ember/component";
-import I18n from "I18n";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import EmberObject, { action } from "@ember/object";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { inject as service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { tagName } from "@ember-decorators/component";
+import cookie, { removeCookie } from "discourse/lib/cookie";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
-const _pluginNotices = [];
+const _pluginNotices = new TrackedArray();
 
 export function addGlobalNotice(text, id, options = {}) {
   _pluginNotices.push(Notice.create({ text, id, options }));
@@ -48,58 +50,43 @@ const Notice = EmberObject.extend({
   },
 });
 
-export default Component.extend({
-  tagName: "",
-  router: service(),
-  logsNoticeService: service("logsNotice"),
-  logNotice: null,
+@tagName("")
+export default class GlobalNotice extends Component {
+  @service keyValueStore;
+  @service("logsNotice") logsNoticeService;
+  @service router;
 
-  init() {
-    this._super(...arguments);
+  logNotice = null;
+
+  constructor() {
+    super(...arguments);
 
     this.logsNoticeService.addObserver("hidden", this._handleLogsNoticeUpdate);
     this.logsNoticeService.addObserver("text", this._handleLogsNoticeUpdate);
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     this.logsNoticeService.removeObserver("text", this._handleLogsNoticeUpdate);
     this.logsNoticeService.removeObserver(
       "hidden",
       this._handleLogsNoticeUpdate
     );
-  },
+  }
 
   get visible() {
     return !this.router.currentRouteName.startsWith("wizard.");
-  },
+  }
 
-  @discourseComputed(
-    "site.isReadOnly",
-    "site.isStaffWritesOnly",
-    "siteSettings.login_required",
-    "siteSettings.disable_emails",
-    "siteSettings.global_notice",
-    "session.safe_mode",
-    "logNotice.{id,text,hidden}"
-  )
-  notices(
-    isReadOnly,
-    isStaffWritesOnly,
-    loginRequired,
-    disableEmails,
-    globalNotice,
-    safeMode,
-    logNotice
-  ) {
+  get notices() {
     let notices = [];
 
     if (cookie("dosp") === "1") {
       removeCookie("dosp", { path: "/" });
       notices.push(
         Notice.create({
-          text: loginRequired
+          text: this.siteSettings.login_required
             ? I18n.t("forced_anonymous_login_required")
             : I18n.t("forced_anonymous"),
           id: "forced-anonymous",
@@ -107,20 +94,20 @@ export default Component.extend({
       );
     }
 
-    if (safeMode) {
+    if (this.session.get("safe_mode")) {
       notices.push(
         Notice.create({ text: I18n.t("safe_mode.enabled"), id: "safe-mode" })
       );
     }
 
-    if (isStaffWritesOnly) {
+    if (this.site.get("isStaffWritesOnly")) {
       notices.push(
         Notice.create({
           text: I18n.t("staff_writes_only_mode.enabled"),
           id: "alert-staff-writes-only",
         })
       );
-    } else if (isReadOnly) {
+    } else if (this.site.get("isReadOnly")) {
       notices.push(
         Notice.create({
           text: I18n.t("read_only_mode.enabled"),
@@ -129,33 +116,41 @@ export default Component.extend({
       );
     }
 
-    if (disableEmails === "yes") {
+    if (this.siteSettings.disable_emails === "yes") {
       notices.push(
         Notice.create({
           text: I18n.t("emails_are_disabled"),
           id: "alert-emails-disabled",
+          options: {
+            dismissable: true,
+            persistentDismiss: false,
+          },
         })
       );
-    } else if (disableEmails === "non-staff") {
+    } else if (this.siteSettings.disable_emails === "non-staff") {
       notices.push(
         Notice.create({
           text: I18n.t("emails_are_disabled_non_staff"),
           id: "alert-emails-disabled",
+          options: {
+            dismissable: true,
+            persistentDismiss: false,
+          },
         })
       );
     }
 
-    if (globalNotice?.length > 0) {
+    if (this.siteSettings.global_notice?.length > 0) {
       notices.push(
         Notice.create({
-          text: globalNotice,
+          text: this.siteSettings.global_notice,
           id: "alert-global-notice",
         })
       );
     }
 
-    if (logNotice) {
-      notices.push(logNotice);
+    if (this.get("logNotice")) {
+      notices.push(this.get("logNotice"));
     }
 
     return notices.concat(_pluginNotices).filter((notice) => {
@@ -183,13 +178,11 @@ export default Component.extend({
         return false;
       }
     });
-  },
+  }
 
   @action
   dismissNotice(notice) {
-    if (notice.options.onDismiss) {
-      notice.options.onDismiss(notice);
-    }
+    notice.options.onDismiss?.(notice);
 
     if (notice.options.persistentDismiss) {
       this.keyValueStore.set({
@@ -202,26 +195,21 @@ export default Component.extend({
     if (alert) {
       alert.style.display = "none";
     }
-  },
+  }
 
   @bind
   _handleLogsNoticeUpdate() {
-    const { logsNoticeService } = this;
     const logNotice = Notice.create({
       text: htmlSafe(this.logsNoticeService.message),
       id: "alert-logs-notice",
       options: {
         dismissable: true,
         persistentDismiss: false,
-        visibility() {
-          return !logsNoticeService.hidden;
-        },
-        onDismiss() {
-          logsNoticeService.set("text", "");
-        },
+        visibility: () => !this.logsNoticeService.hidden,
+        onDismiss: () => this.logsNoticeService.set("text", ""),
       },
     });
 
     this.set("logNotice", logNotice);
-  },
-});
+  }
+}

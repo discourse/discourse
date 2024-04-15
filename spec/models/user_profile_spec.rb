@@ -4,7 +4,7 @@ RSpec.describe UserProfile do
   describe "Validations" do
     subject(:profile) { user.user_profile }
 
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:watched_word) { Fabricate(:watched_word, word: "bad") }
 
     describe "#location" do
@@ -166,7 +166,7 @@ RSpec.describe UserProfile do
     end
 
     describe "after save" do
-      fab!(:user) { Fabricate(:user) }
+      fab!(:user)
 
       before do
         user.user_profile.bio_raw = "my bio"
@@ -184,7 +184,7 @@ RSpec.describe UserProfile do
   end
 
   describe "changing bio" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     before do
       user.user_profile.bio_raw = "**turtle power!**"
@@ -198,8 +198,8 @@ RSpec.describe UserProfile do
   end
 
   describe "bio excerpt emojis" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:upload) { Fabricate(:upload) }
+    fab!(:user)
+    fab!(:upload)
 
     before do
       CustomEmoji.create!(name: "test", upload: upload)
@@ -315,7 +315,7 @@ RSpec.describe UserProfile do
   end
 
   describe ".import_url_for_user" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     before do
       stub_request(:any, "thisfakesomething.something.com").to_return(

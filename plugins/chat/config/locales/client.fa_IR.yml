@@ -5,22 +5,27 @@
 # https://translate.discourse.org/
 
 fa_IR:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: گفتگو
+  js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "همیشه"
+          never: "هرگز"
       logs:
         staff_actions:
           actions:
             chat_channel_status_change: "وضعیت کانال گفتگو تغییر کرد"
             chat_channel_delete: "کانال گفتگو حذف شد"
-    about:
-      chat_messages_count: "پیام‌های گفتگو"
-      chat_channels_count: "کانال‌های گفتگو"
-      chat_users_count: "کاربران گفتگو"
     chat:
+      back_to_forum: "انجمن"
+      deleted_chat_username: حذف شد
       dates:
+        yesterday: "دیروز"
         time_tiny: "HH:mm"
       all_loaded: "نمایش همه پیام‌ها"
       already_enabled: "گفتگو در حال حاضر در این موضوع فعال شده است. لطفا صفحه جاری را تازه‌سازی کنید."
@@ -63,6 +68,7 @@ fa_IR:
         create: "کانال جدید"
       click_to_join: "برای مشاهده کانال‌های موجود، اینجا را کلیک کنید."
       close: "بستن"
+      remove: "پاک کردن"
       confirm_flag: "آیا برای پرچم گذاری پیام %{username} مطمئن هستید؟"
       hidden: "یک پیام پنهان شده است. [view]"
       delete: "حذف"
@@ -89,7 +95,6 @@ fa_IR:
       join: "عضو شدن"
       last_visit: "آخرین بازدید"
       mention_warning:
-        dismiss: "رد کردن"
         invitations_sent:
           one: "دعوت‌نامه ارسال شد"
           other: "دعوت‌نامه‌ها ارسال شد"
@@ -116,7 +121,9 @@ fa_IR:
       save: "ذخیره"
       select: "انتخاب کنید"
       return_to_list: "بازگشت به فهرست کانال‌ها"
-      return_to_threads_list: "بازگشت به گفتگوی جاری"
+      unread_threads_count:
+        one: "شما %{count} گفتگوی خوانده نشده دارید"
+        other: "شما %{count} گفتگوی خوانده نشده دارید"
       scroll_to_bottom: "حرکت به پایین"
       scroll_to_new_messages: "مشاهده پیام‌های جدید"
       sound:
@@ -144,7 +151,7 @@ fa_IR:
         back: "بازگشت"
         title: کانال‌ها
         filter_all: همه
-        filter_open: باز شد
+        filter_open: باز
         filter_closed: بسته
         filter_archived: بایگانی شد
         filter_input_placeholder: کانال را با نام جستجو کنید
@@ -163,9 +170,10 @@ fa_IR:
         back_to_all_channels: "همه کانال‌ها"
         back_to_channel: "بازگشت"
         tabs:
-          about: درباره
           members: اعضاء
           settings: تنظیمات
+      new_message_modal:
+        filter: "فیلتر"
       channel_edit_name_slug_modal:
         title: ویرایش کانال
         input_placeholder: افزودن نام
@@ -175,11 +183,10 @@ fa_IR:
         input_placeholder: افزودن توضیحات
         description: به بقیه افراد بگویید که این کانال در مورد چی هست
       direct_message_creator:
+        add_to_channel: "افزودن به کانال"
         title: پیام جدید
         prefix: "به:"
         no_results: هیج نتیجه‌ای نداشت
-      channel_selector:
-        no_channels: "هیچ کانالی با جستجوی شما مطابقت ندارد"
       channel:
         no_memberships: این کانال هنوز هیچ عضوی ندارد
         no_memberships_found: هیچ عضوی یافت نشد
@@ -200,8 +207,6 @@ fa_IR:
           topic: "موضوعات"
       reviewable:
         type: "پیام گفتگو"
-      reactions:
-        only_you: "شما با :%{emoji}: واکنش نشان دادید"
       composer:
         italic_text: "متن تاکید شده"
         bold_text: "نوشته‌ی ضخیم "
@@ -220,6 +225,7 @@ fa_IR:
         follow: "عضو شدن"
         followed: "عضو شده"
         mute: "بی‌صدا کردن کانال"
+        threading_disabled: "غیرفعال"
         muted_on: "روشن"
         muted_off: "خاموش"
         notifications: "اعلان‌ها"
@@ -228,10 +234,13 @@ fa_IR:
         saved: "ذخیره شد"
         unfollow: "ترک کردن"
         admin_title: "مدیر کل"
+        settings_title: "تنظیمات"
+        category_label: "دسته‌بندی"
+        history_label: "تاریخچه"
+        members_label: "اعضاء"
       admin:
         title: "گفتگو"
       direct_messages:
-        title: "گفتگوی شخصی"
         new: "ایجاد گفتگوی شخصی"
         create: "برو"
         cannot_create: "با عرض پوزش، شما نمی‌توانید پیام مستقیم ارسال کنید."
@@ -268,6 +277,10 @@ fa_IR:
       replying_indicator:
         single_user: "%{username} در حال نوشتن"
         multiple_users: "%{commaSeparatedUsernames} و %{lastUsername} در حال نوشتن"
+      retention_reminders:
+        short:
+          one: "%{count} روز"
+          other: "%{count} روز"
       emoji_picker:
         favorites: "اغلب استفاده می‌شه"
         objects: "اشیا"
@@ -281,15 +294,18 @@ fa_IR:
       thread:
         title: "عنوان"
         view_thread: مشاهده موضوع
-        default_title: "موضوع #%{thread_id}"
         replies:
           one: "%{count} پاسخ"
           other: "%{count} پاسخ"
         original_message:
           started_by: "شروع شده توسط"
         settings: "تنظیمات"
-      threads:
-        list: "گفتگوهای در حال انجام"
+        last_reply: "آخرین پاسخ"
+        notifications:
+          regular:
+            title: "معمولی"
+          tracking:
+            title: "پیگیری"
       draft_channel_screen:
         header: "پیام جدید"
         cancel: "انصراف"
@@ -347,3 +363,7 @@ fa_IR:
       sections:
         chat:
           title: گفتگو
+    sidebar:
+      panels:
+        chat:
+          label: "گفتگو"

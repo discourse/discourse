@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 const DEFAULT_CONTENT = [
@@ -75,8 +75,8 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
         @value={{this.value}}
         @content={{this.content}}
         @options={{hash
-          caretUpIcon=caretUpIcon
-          caretDownIcon=caretDownIcon
+          caretUpIcon=this.caretUpIcon
+          caretDownIcon=this.caretDownIcon
         }}
       />
     `);

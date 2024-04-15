@@ -1,6 +1,6 @@
-import Service from "@ember/service";
-import { getOwner } from "@ember/application";
+import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { fileToImageData } from "discourse/lib/media-optimization-utils";
 import { getAbsoluteURL, getURLWithCDN } from "discourse-common/lib/get-url";
 
@@ -20,8 +20,11 @@ import { getAbsoluteURL, getURLWithCDN } from "discourse-common/lib/get-url";
  * will wait for the "installed" message to be handled before continuing
  * with any image optimization work.
  */
+@disableImplicitInjections
 export default class MediaOptimizationWorkerService extends Service {
-  appEvents = getOwner(this).lookup("service:app-events");
+  @service appEvents;
+  @service siteSettings;
+
   worker = null;
   workerUrl = getAbsoluteURL("/javascripts/media-optimization-worker.js");
   currentComposerUploadData = null;
@@ -34,7 +37,7 @@ export default class MediaOptimizationWorkerService extends Service {
       : true;
 
     let file = data;
-    if (!/(\.|\/)(jpe?g|png|webp)$/i.test(file.type)) {
+    if (!/(\.|\/)(jpe?g|png)$/i.test(file.type)) {
       return Promise.resolve();
     }
     if (
@@ -50,6 +53,7 @@ export default class MediaOptimizationWorkerService extends Service {
     }
     await this.ensureAvailableWorker();
 
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
       this.logIfDebug(`Transforming ${file.name}`);
 

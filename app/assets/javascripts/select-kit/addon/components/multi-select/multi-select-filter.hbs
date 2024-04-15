@@ -1,11 +1,11 @@
 {{#unless this.isHidden}}
   {{! filter-input-search prevents 1password from attempting autocomplete }}
-  {{! template-lint-disable no-down-event-binding }}
+  {{! template-lint-disable no-pointer-down-event-binding }}
 
   <Input
     tabindex={{0}}
     class="filter-input"
-    placeholder={{this.placeholder}}
+    placeholder={{this.computedPlaceholder}}
     autocomplete="off"
     autocorrect="off"
     autocapitalize="off"

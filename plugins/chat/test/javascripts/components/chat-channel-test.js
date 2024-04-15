@@ -1,10 +1,11 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { getOwner } from "@ember/application";
+import { render, triggerEvent, waitFor } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import { render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import pretender, { OK } from "discourse/tests/helpers/create-pretender";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
   "Discourse Chat | Component | chat-channel | status on mentions",
@@ -12,14 +13,6 @@ module(
     setupRenderingTest(hooks);
 
     const channelId = 1;
-    const channel = {
-      id: channelId,
-      chatable_id: 1,
-      chatable_type: "Category",
-      meta: { message_bus_last_ids: {} },
-      current_user_membership: { following: true },
-      chatable: { id: 1 },
-    };
     const actingUser = {
       id: 1,
       username: "acting_user",
@@ -45,6 +38,7 @@ module(
       message: `Hey @${mentionedUser.username}`,
       cooked: `<p>Hey <a class="mention" href="/u/${mentionedUser.username}">@${mentionedUser.username}</a></p>`,
       mentioned_users: [mentionedUser],
+      created_at: "2020-08-04T15:00:00.000Z",
       user: {
         id: 1,
         username: "jesse",
@@ -52,20 +46,25 @@ module(
     };
 
     hooks.beforeEach(function () {
-      pretender.get(`/chat/api/channels/1`, () =>
-        OK({
-          channel,
-          chat_messages: [message],
+      pretender.get(`/chat/api/channels/1/messages`, () =>
+        response({
+          messages: [message],
           meta: { can_delete_self: true },
         })
       );
+      pretender.get(`/chat/api/me/channels`, () =>
+        response({
+          direct_message_channels: [],
+          public_channels: [],
+        })
+      );
 
-      this.channel = fabricators.channel({
+      this.channel = new ChatFabricators(getOwner(this)).channel({
         id: channelId,
         currentUserMembership: { following: true },
         meta: { can_join_chat_channel: false },
       });
-      this.appEvents = this.container.lookup("service:appEvents");
+      this.appEvents = this.container.lookup("service:app-events");
     });
 
     test("it shows status on mentions", async function (assert) {
@@ -92,6 +91,7 @@ module(
 
       const selector = statusSelector(mentionedUser.username);
       await waitFor(selector);
+
       assertStatusIsRendered(
         assert,
         statusSelector(mentionedUser.username),
@@ -157,15 +157,32 @@ module(
       assert.dom(selector).doesNotExist("status is deleted");
     });
 
+    test("it shows status tooltip", async function (assert) {
+      await render(
+        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
+      );
+      await triggerEvent(statusSelector(mentionedUser.username), "mousemove");
+
+      assert.equal(
+        document
+          .querySelector(".user-status-tooltip-description")
+          .textContent.trim(),
+        mentionedUser.status.description,
+        "status description is correct"
+      );
+
+      assert.ok(
+        document.querySelector(
+          `.user-status-message-tooltip img[alt='${mentionedUser.status.emoji}']`
+        ),
+        "status emoji is correct"
+      );
+    });
+
     function assertStatusIsRendered(assert, selector, status) {
       assert
         .dom(selector)
         .exists("status is rendered")
-        .hasAttribute(
-          "title",
-          status.description,
-          "status description is updated"
-        )
         .hasAttribute(
           "src",
           new RegExp(`${status.emoji}.png`),
@@ -182,7 +199,6 @@ module(
           created_at: "2023-05-18T16:07:59.588Z",
           excerpt: `Hey @${mentionedUser2.username}`,
           available_flags: [],
-          thread_title: null,
           chat_channel_id: 7,
           mentioned_users: [mentionedUser2],
           user: actingUser,
@@ -194,7 +210,7 @@ module(
     }
 
     function statusSelector(username) {
-      return `.mention[href='/u/${username}'] .user-status`;
+      return `.mention[href='/u/${username}'] .user-status-message img`;
     }
   }
 );

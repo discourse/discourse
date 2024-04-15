@@ -1,9 +1,12 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
+import { readOnly } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   hide: false,
+
+  banner: readOnly("site.banner"),
 
   @discourseComputed("banner.html")
   content(bannerHtml) {
@@ -15,7 +18,7 @@ export default Component.extend({
     return newDiv.innerHTML;
   },
 
-  @discourseComputed("user.dismissed_banner_key", "banner.key", "hide")
+  @discourseComputed("currentUser.dismissed_banner_key", "banner.key", "hide")
   visible(dismissedBannerKey, bannerKey, hide) {
     dismissedBannerKey =
       dismissedBannerKey || this.keyValueStore.get("dismissed_banner_key");
@@ -32,8 +35,8 @@ export default Component.extend({
 
   @action
   dismiss() {
-    if (this.user) {
-      this.user.dismissBanner(this.get("banner.key"));
+    if (this.currentUser) {
+      this.currentUser.dismissBanner(this.get("banner.key"));
     } else {
       this.set("hide", true);
       this.keyValueStore.set({
@@ -41,5 +44,10 @@ export default Component.extend({
         value: this.get("banner.key"),
       });
     }
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+    this.appEvents.trigger("decorate-non-stream-cooked-element", this.element);
   },
 });

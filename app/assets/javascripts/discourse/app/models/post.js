@@ -1,25 +1,117 @@
 import EmberObject, { get } from "@ember/object";
 import { and, equal, not, or } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
+import { Promise } from "rsvp";
+import { resolveShareUrl } from "discourse/helpers/share-url";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { propertyEqual } from "discourse/lib/computed";
+import { cook } from "discourse/lib/text";
+import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { userPath } from "discourse/lib/url";
+import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
 import Composer from "discourse/models/composer";
-import I18n from "I18n";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
-import { cookAsync } from "discourse/lib/text";
 import discourseComputed from "discourse-common/utils/decorators";
-import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { isEmpty } from "@ember/utils";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { postUrl } from "discourse/lib/utilities";
-import { propertyEqual } from "discourse/lib/computed";
-import { resolveShareUrl } from "discourse/helpers/share-url";
-import { userPath } from "discourse/lib/url";
+import I18n from "discourse-i18n";
 
-const Post = RestModel.extend({
-  customShare: null,
+export default class Post extends RestModel {
+  static munge(json) {
+    if (json.actions_summary) {
+      const lookup = EmberObject.create();
+
+      // this area should be optimized, it is creating way too many objects per post
+      json.actions_summary = json.actions_summary.map((a) => {
+        a.actionType = Site.current().postActionTypeById(a.id);
+        a.count = a.count || 0;
+        const actionSummary = ActionSummary.create(a);
+        lookup[a.actionType.name_key] = actionSummary;
+
+        if (a.actionType.name_key === "like") {
+          json.likeAction = actionSummary;
+        }
+        return actionSummary;
+      });
+
+      json.actionByName = lookup;
+    }
+
+    if (json && json.reply_to_user) {
+      json.reply_to_user = User.create(json.reply_to_user);
+    }
+
+    return json;
+  }
+
+  static updateBookmark(postId, bookmarked) {
+    return ajax(`/posts/${postId}/bookmark`, {
+      type: "PUT",
+      data: { bookmarked },
+    });
+  }
+
+  static destroyBookmark(postId) {
+    return ajax(`/posts/${postId}/bookmark`, {
+      type: "DELETE",
+    });
+  }
+
+  static deleteMany(post_ids, { agreeWithFirstReplyFlag = true } = {}) {
+    return ajax("/posts/destroy_many", {
+      type: "DELETE",
+      data: { post_ids, agree_with_first_reply_flag: agreeWithFirstReplyFlag },
+    });
+  }
+
+  static mergePosts(post_ids) {
+    return ajax("/posts/merge_posts", {
+      type: "PUT",
+      data: { post_ids },
+    }).catch(popupAjaxError);
+  }
+
+  static loadRevision(postId, version) {
+    return ajax(`/posts/${postId}/revisions/${version}.json`).then((result) => {
+      result.categories?.forEach((c) => Site.current().updateCategory(c));
+      return EmberObject.create(result);
+    });
+  }
+
+  static hideRevision(postId, version) {
+    return ajax(`/posts/${postId}/revisions/${version}/hide`, {
+      type: "PUT",
+    });
+  }
+
+  static permanentlyDeleteRevisions(postId) {
+    return ajax(`/posts/${postId}/revisions/permanently_delete`, {
+      type: "DELETE",
+    });
+  }
+
+  static showRevision(postId, version) {
+    return ajax(`/posts/${postId}/revisions/${version}/show`, {
+      type: "PUT",
+    });
+  }
+
+  static loadRawEmail(postId) {
+    return ajax(`/posts/${postId}/raw-email.json`);
+  }
+
+  customShare = null;
+
+  @equal("trust_level", 0) new_user;
+  @equal("post_number", 1) firstPost;
+  @or("deleted_at", "deletedViaTopic") deleted;
+  @not("deleted") notDeleted;
+  @propertyEqual("topic.details.created_by.id", "user_id") topicOwner;
+
+  // Posts can show up as deleted if the topic is deleted
+  @and("firstPost", "topic.deleted_at") deletedViaTopic;
 
   @discourseComputed("url", "customShare")
   shareUrl(url) {
@@ -29,30 +121,22 @@ const Post = RestModel.extend({
 
     const user = User.current();
     return resolveShareUrl(url, user);
-  },
-
-  new_user: equal("trust_level", 0),
-  firstPost: equal("post_number", 1),
-
-  // Posts can show up as deleted if the topic is deleted
-  deletedViaTopic: and("firstPost", "topic.deleted_at"),
-  deleted: or("deleted_at", "deletedViaTopic"),
-  notDeleted: not("deleted"),
+  }
 
   @discourseComputed("name", "username")
   showName(name, username) {
     return name && name !== username && this.siteSettings.display_name_on_posts;
-  },
+  }
 
   @discourseComputed("firstPost", "deleted_by", "topic.deleted_by")
   postDeletedBy(firstPost, deletedBy, topicDeletedBy) {
     return firstPost ? topicDeletedBy : deletedBy;
-  },
+  }
 
   @discourseComputed("firstPost", "deleted_at", "topic.deleted_at")
   postDeletedAt(firstPost, deletedAt, topicDeletedAt) {
     return firstPost ? topicDeletedAt : deletedAt;
-  },
+  }
 
   @discourseComputed("post_number", "topic_id", "topic.slug")
   url(post_number, topic_id, topicSlug) {
@@ -61,18 +145,18 @@ const Post = RestModel.extend({
       topic_id || this.get("topic.id"),
       post_number
     );
-  },
+  }
 
   // Don't drop the /1
   @discourseComputed("post_number", "url")
   urlWithNumber(postNumber, baseUrl) {
     return postNumber === 1 ? `${baseUrl}/1` : baseUrl;
-  },
+  }
 
   @discourseComputed("username")
-  usernameUrl: userPath,
-
-  topicOwner: propertyEqual("topic.details.created_by.id", "user_id"),
+  usernameUrl(username) {
+    return userPath(username);
+  }
 
   updatePostField(field, value) {
     const data = {};
@@ -81,7 +165,7 @@ const Post = RestModel.extend({
     return ajax(`/posts/${this.id}/${field}`, { type: "PUT", data })
       .then(() => this.set(field, value))
       .catch(popupAjaxError);
-  },
+  }
 
   @discourseComputed("link_counts.@each.internal")
   internalLinks() {
@@ -90,7 +174,7 @@ const Post = RestModel.extend({
     }
 
     return this.link_counts.filterBy("internal").filterBy("title");
-  },
+  }
 
   @discourseComputed("actions_summary.@each.can_act")
   flagsAvailable() {
@@ -103,7 +187,7 @@ const Post = RestModel.extend({
     return this.site.flagTypes.filter((item) =>
       this.get(`actionByName.${item.name_key}.can_act`)
     );
-  },
+  }
 
   @discourseComputed(
     "siteSettings.use_pg_headlines_for_excerpt",
@@ -111,25 +195,25 @@ const Post = RestModel.extend({
   )
   useTopicTitleHeadline(enabled, title) {
     return enabled && title;
-  },
+  }
 
   @discourseComputed("topic_title_headline")
   topicTitleHeadline(title) {
     return fancyTitle(title, this.siteSettings.support_mixed_text_direction);
-  },
+  }
 
   afterUpdate(res) {
     if (res.category) {
       this.site.updateCategory(res.category);
     }
-  },
+  }
 
   updateProperties() {
     return {
       post: { raw: this.raw, edit_reason: this.editReason },
       image_sizes: this.imageSizes,
     };
-  },
+  }
 
   createProperties() {
     // composer only used once, defer the dependency
@@ -148,7 +232,7 @@ const Post = RestModel.extend({
     }
 
     return data;
-  },
+  }
 
   // Expands the first post's content, if embedded and shortened.
   expand() {
@@ -158,7 +242,7 @@ const Post = RestModel.extend({
         `<section class="expanded-embed">${post.cooked}</section>`
       );
     });
-  },
+  }
 
   // Recover a deleted post
   recover() {
@@ -192,7 +276,7 @@ const Post = RestModel.extend({
         popupAjaxError(error);
         this.setProperties(initProperties);
       });
-  },
+  }
 
   /**
     Changes the state of the post to be deleted. Does not call the server, that should be
@@ -217,7 +301,7 @@ const Post = RestModel.extend({
         this.post_number === 1
           ? "topic.deleted_by_author_simple"
           : "post.deleted_by_author_simple";
-      promise = cookAsync(I18n.t(key)).then((cooked) => {
+      promise = cook(I18n.t(key)).then((cooked) => {
         this.setProperties({
           cooked,
           can_delete: false,
@@ -231,7 +315,7 @@ const Post = RestModel.extend({
     }
 
     return promise || Promise.resolve();
-  },
+  }
 
   /**
     Changes the state of the post to NOT be deleted. Does not call the server.
@@ -250,7 +334,7 @@ const Post = RestModel.extend({
         user_deleted: false,
       });
     }
-  },
+  }
 
   destroy(deletedBy, opts) {
     return this.setDeletedState(deletedBy).then(() => {
@@ -259,7 +343,7 @@ const Post = RestModel.extend({
         type: "DELETE",
       });
     });
-  },
+  }
 
   /**
     Updates a post from another's attributes. This will normally happen when a post is loading but
@@ -291,23 +375,23 @@ const Post = RestModel.extend({
         }
       }
     });
-  },
+  }
 
   expandHidden() {
     return ajax(`/posts/${this.id}/cooked.json`).then((result) => {
       this.setProperties({ cooked: result.cooked, cooked_hidden: false });
     });
-  },
+  }
 
   rebake() {
     return ajax(`/posts/${this.id}/rebake`, { type: "PUT" }).catch(
       popupAjaxError
     );
-  },
+  }
 
   unhide() {
     return ajax(`/posts/${this.id}/unhide`, { type: "PUT" });
-  },
+  }
 
   createBookmark(data) {
     this.setProperties({
@@ -324,12 +408,12 @@ const Post = RestModel.extend({
       targetId: this.id,
     });
     this.appEvents.trigger("post-stream:refresh", { id: this.id });
-  },
+  }
 
   deleteBookmark(bookmarked) {
     this.set("topic.bookmarked", bookmarked);
     this.clearBookmark();
-  },
+  }
 
   clearBookmark() {
     this.setProperties({
@@ -344,14 +428,14 @@ const Post = RestModel.extend({
       target: "post",
       targetId: this.id,
     });
-  },
+  }
 
   updateActionsSummary(json) {
     if (json && json.id === this.id) {
       json = Post.munge(json);
       this.set("actions_summary", json.actions_summary);
     }
-  },
+  }
 
   updateLikeCount(count, userId, eventType) {
     let ownAction = User.current()?.id === userId;
@@ -385,97 +469,15 @@ const Post = RestModel.extend({
       Object.assign(this.actionByName["like"], newActionObject);
       Object.assign(this.likeAction, newActionObject);
     }
-  },
+  }
 
   revertToRevision(version) {
     return ajax(`/posts/${this.id}/revisions/${version}/revert`, {
       type: "PUT",
     });
-  },
-});
+  }
 
-Post.reopenClass({
-  munge(json) {
-    if (json.actions_summary) {
-      const lookup = EmberObject.create();
-
-      // this area should be optimized, it is creating way too many objects per post
-      json.actions_summary = json.actions_summary.map((a) => {
-        a.actionType = Site.current().postActionTypeById(a.id);
-        a.count = a.count || 0;
-        const actionSummary = ActionSummary.create(a);
-        lookup[a.actionType.name_key] = actionSummary;
-
-        if (a.actionType.name_key === "like") {
-          json.likeAction = actionSummary;
-        }
-        return actionSummary;
-      });
-
-      json.actionByName = lookup;
-    }
-
-    if (json && json.reply_to_user) {
-      json.reply_to_user = User.create(json.reply_to_user);
-    }
-
-    return json;
-  },
-
-  updateBookmark(postId, bookmarked) {
-    return ajax(`/posts/${postId}/bookmark`, {
-      type: "PUT",
-      data: { bookmarked },
-    });
-  },
-
-  destroyBookmark(postId) {
-    return ajax(`/posts/${postId}/bookmark`, {
-      type: "DELETE",
-    });
-  },
-
-  deleteMany(post_ids, { agreeWithFirstReplyFlag = true } = {}) {
-    return ajax("/posts/destroy_many", {
-      type: "DELETE",
-      data: { post_ids, agree_with_first_reply_flag: agreeWithFirstReplyFlag },
-    });
-  },
-
-  mergePosts(post_ids) {
-    return ajax("/posts/merge_posts", {
-      type: "PUT",
-      data: { post_ids },
-    }).catch(popupAjaxError);
-  },
-
-  loadRevision(postId, version) {
-    return ajax(`/posts/${postId}/revisions/${version}.json`).then((result) =>
-      EmberObject.create(result)
-    );
-  },
-
-  hideRevision(postId, version) {
-    return ajax(`/posts/${postId}/revisions/${version}/hide`, {
-      type: "PUT",
-    });
-  },
-
-  permanentlyDeleteRevisions(postId) {
-    return ajax(`/posts/${postId}/revisions/permanently_delete`, {
-      type: "DELETE",
-    });
-  },
-
-  showRevision(postId, version) {
-    return ajax(`/posts/${postId}/revisions/${version}/show`, {
-      type: "PUT",
-    });
-  },
-
-  loadRawEmail(postId) {
-    return ajax(`/posts/${postId}/raw-email.json`);
-  },
-});
-
-export default Post;
+  get topicNotificationLevel() {
+    return this.topic.details.notification_level;
+  }
+}

@@ -1,13 +1,14 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import { module, test } from "qunit";
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   joinChannel,
   leaveChannel,
 } from "discourse/tests/helpers/presence-pretender";
+import { query } from "discourse/tests/helpers/qunit-helpers";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 async function addUser(id, username, channelName = "/chat-reply/1") {
   await joinChannel(channelName, {
@@ -87,7 +88,7 @@ module(
     });
 
     test("displays indicator when 2 or 3 users are replying", async function (assert) {
-      this.channel = fabricators.channel();
+      this.channel = new ChatFabricators(getOwner(this)).channel();
 
       await render(
         hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />`
@@ -102,7 +103,7 @@ module(
     });
 
     test("displays indicator when 3 users are replying", async function (assert) {
-      this.channel = fabricators.channel();
+      this.channel = new ChatFabricators(getOwner(this)).channel();
 
       await render(
         hbs`<ChatReplyingIndicator @presenceChannelName="/chat-reply/1" />`
@@ -118,7 +119,7 @@ module(
     });
 
     test("displays indicator when more than 3 users are replying", async function (assert) {
-      this.channel = fabricators.channel();
+      this.channel = new ChatFabricators(getOwner(this)).channel();
 
       await render(
         hbs`<ChatReplyingIndicator  @presenceChannelName="/chat-reply/1" />`
@@ -135,7 +136,7 @@ module(
     });
 
     test("filters current user from list of repliers", async function (assert) {
-      this.channel = fabricators.channel();
+      this.channel = new ChatFabricators(getOwner(this)).channel();
 
       await render(
         hbs`<ChatReplyingIndicator  @presenceChannelName="/chat-reply/1" />`

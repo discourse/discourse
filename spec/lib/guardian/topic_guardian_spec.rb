@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicGuardian do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:tl3_user) { Fabricate(:trust_level_3) }
   fab!(:tl4_user) { Fabricate(:trust_level_4) }
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:category) { Fabricate(:category) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:moderator)
+  fab!(:category)
+  fab!(:group)
   fab!(:private_category) { Fabricate(:private_category, group: group) }
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:private_topic) { Fabricate(:topic, category: private_category) }
-  fab!(:private_message_topic) { Fabricate(:private_message_topic) }
+  fab!(:private_message_topic)
 
   before { Guardian.enable_topic_can_see_consistency_check }
 
@@ -19,28 +19,28 @@ RSpec.describe TopicGuardian do
 
   describe "#can_create_shared_draft?" do
     it "when shared_drafts are disabled" do
-      SiteSetting.shared_drafts_min_trust_level = "admin"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(Guardian.new(admin).can_create_shared_draft?).to eq(false)
     end
 
     it "when user is a moderator and access is set to admin" do
       SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = "admin"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(Guardian.new(moderator).can_create_shared_draft?).to eq(false)
     end
 
     it "when user is a moderator and access is set to staff" do
       SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = "staff"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:staff]
 
       expect(Guardian.new(moderator).can_create_shared_draft?).to eq(true)
     end
 
     it "when user is TL3 and access is set to TL2" do
       SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = "2"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
 
       expect(Guardian.new(tl3_user).can_create_shared_draft?).to eq(true)
     end
@@ -48,28 +48,28 @@ RSpec.describe TopicGuardian do
 
   describe "#can_see_shared_draft?" do
     it "when shared_drafts are disabled (existing shared drafts)" do
-      SiteSetting.shared_drafts_min_trust_level = "admin"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(Guardian.new(admin).can_see_shared_draft?).to eq(true)
     end
 
     it "when user is a moderator and access is set to admin" do
       SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = "admin"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(Guardian.new(moderator).can_see_shared_draft?).to eq(false)
     end
 
     it "when user is a moderator and access is set to staff" do
       SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = "staff"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:staff]
 
       expect(Guardian.new(moderator).can_see_shared_draft?).to eq(true)
     end
 
     it "when user is TL3 and access is set to TL2" do
       SiteSetting.shared_drafts_category = category.id
-      SiteSetting.shared_drafts_min_trust_level = "2"
+      SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
 
       expect(Guardian.new(tl3_user).can_see_shared_draft?).to eq(true)
     end
@@ -91,12 +91,12 @@ RSpec.describe TopicGuardian do
 
     it "returns true when tl4 can delete posts and topics" do
       expect(Guardian.new(tl4_user).can_see_deleted_topics?(topic.category)).to eq(false)
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(tl4_user).can_see_deleted_topics?(topic.category)).to eq(true)
     end
 
     it "returns false for anonymous user" do
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new.can_see_deleted_topics?(topic.category)).to be_falsey
     end
   end
@@ -118,12 +118,12 @@ RSpec.describe TopicGuardian do
 
     it "returns true when tl4 can delete posts and topics" do
       expect(Guardian.new(tl4_user).can_recover_topic?(Topic.with_deleted.last)).to eq(false)
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(tl4_user).can_recover_topic?(Topic.with_deleted.last)).to eq(true)
     end
 
     it "returns false for anonymous user" do
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new.can_recover_topic?(Topic.with_deleted.last)).to eq(false)
     end
   end
@@ -134,7 +134,7 @@ RSpec.describe TopicGuardian do
 
       before do
         SiteSetting.shared_drafts_category = category.id
-        SiteSetting.shared_drafts_min_trust_level = "2"
+        SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       end
 
       it "returns false if the topic is a PM" do
@@ -170,6 +170,27 @@ RSpec.describe TopicGuardian do
 
         expect(Guardian.new(tl2_user).can_edit_topic?(topic)).to eq(false)
       end
+    end
+  end
+
+  describe "#is_in_edit_topic_groups?" do
+    it "returns true if the user is in edit_all_topic_groups" do
+      group.add(user)
+      SiteSetting.edit_all_topic_groups = group.id.to_s
+
+      expect(Guardian.new(user).is_in_edit_topic_groups?).to eq(true)
+    end
+
+    it "returns false if the user is not in edit_all_topic_groups" do
+      SiteSetting.edit_all_topic_groups = Group::AUTO_GROUPS[:trust_level_4]
+
+      expect(Guardian.new(tl3_user).is_in_edit_topic_groups?).to eq(false)
+    end
+
+    it "returns false if the edit_all_topic_groups is empty" do
+      SiteSetting.edit_all_topic_groups = nil
+
+      expect(Guardian.new(user).is_in_edit_topic_groups?).to eq(false)
     end
   end
 

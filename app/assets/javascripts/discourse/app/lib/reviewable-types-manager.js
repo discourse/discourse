@@ -1,5 +1,4 @@
 import ReviewableTypeBase from "discourse/lib/reviewable-types/base";
-
 import FlaggedPost from "discourse/lib/reviewable-types/flagged-post";
 import QueuedPost from "discourse/lib/reviewable-types/queued-post";
 import ReviewableUser from "discourse/lib/reviewable-types/user";

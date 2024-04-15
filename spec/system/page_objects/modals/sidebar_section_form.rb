@@ -7,9 +7,12 @@ module PageObjects
         fill_in "section-name", with: name
       end
 
-      def fill_link(name, url)
+      def fill_link(name, url, icon = "link")
         fill_in "link-name", with: name, match: :first
         fill_in "link-url", with: url, match: :first
+        find(".sidebar-section-form-link .select-kit summary", match: :first).click
+        fill_in "filter-input-search", with: icon, match: :first
+        find(".select-kit-row.is-highlighted", match: :first).click
       end
 
       def mark_as_public
@@ -26,21 +29,48 @@ module PageObjects
 
       def confirm_delete
         find(".dialog-container .btn-primary").click
+        closed?
+      end
+
+      def confirm_update
+        find(".dialog-container .btn-primary").click
+        closed?
+      end
+
+      def reset
+        find(".reset-link").click
+        find(".dialog-footer .btn-primary").click
+        closed?
+        self
       end
 
       def save
         find("#save-section").click
+        self
       end
 
       def visible?
         page.has_css?(".sidebar-section-form-modal")
       end
 
+      def closed?
+        page.has_no_css?(".sidebar-section-form-modal")
+      end
+
       def has_disabled_save?
         find_button("Save", disabled: true)
       end
+
       def has_enabled_save?
         find_button("Save", disabled: false)
+      end
+
+      def topics_link
+        find(".draggable[data-link-name='Topics']")
+      end
+
+      def review_link
+        find(".draggable[data-link-name='Review']")
       end
     end
   end

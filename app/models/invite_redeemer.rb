@@ -125,6 +125,7 @@ class InviteRedeemer
       fields = user.custom_fields
 
       user_fields.each do |f|
+        field_params[f.id.to_s] = nil if field_params[f.id.to_s] === "false"
         field_val = field_params[f.id.to_s]
         fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[
           0...UserField.max_length
@@ -192,7 +193,7 @@ class InviteRedeemer
     redeeming_user ||= User.where(admin: false, staged: false).find_by_email(email)
     if redeeming_user.present? &&
          InvitedUser.exists?(user_id: redeeming_user.id, invite_id: invite.id)
-      return false
+      raise Invite::UserExists.new(I18n.t("invite.existing_user_already_redemeed"))
     end
 
     true
@@ -243,7 +244,10 @@ class InviteRedeemer
     @invited_user_record = InvitedUser.create!(invite_id: invite.id, redeemed_at: Time.zone.now)
 
     if @invited_user_record.present?
-      Invite.increment_counter(:redemption_count, invite.id)
+      invite.with_lock("FOR UPDATE NOWAIT") do
+        Invite.increment_counter(:redemption_count, invite.id)
+        invite.save!
+      end
       delete_duplicate_invites
     end
 

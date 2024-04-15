@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Archive channel", type: :system, js: true do
+RSpec.describe "Archive channel", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
@@ -65,17 +65,22 @@ RSpec.describe "Archive channel", type: :system, js: true do
         end
 
         context "when archived channels had unreads" do
-          before { channel_1.add(current_user) }
+          let(:other_user) { Fabricate(:user) }
+
+          before do
+            channel_1.add(current_user)
+            channel_1.add(other_user)
+          end
 
           it "clears unread indicators" do
             Jobs.run_immediately!
 
-            other_user = Fabricate(:user)
-            channel_1.add(other_user)
-            Chat::MessageCreator.create(
+            Fabricate(
+              :chat_message,
               chat_channel: channel_1,
               user: other_user,
-              content: "this is fine @#{current_user.username}",
+              message: "this is fine @#{current_user.username}",
+              use_service: true,
             )
 
             visit("/")

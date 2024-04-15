@@ -1,13 +1,13 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { click, render } from "@ember/test-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
 import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
+import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import I18n from "I18n";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 function getNotificationsData() {
   return cloneJSON(NotificationFixtures["/notifications"].notifications);
@@ -65,17 +65,13 @@ module(
       assert.strictEqual(queryParams.silent, undefined);
     });
 
-    test("displays a show all button that takes to the notifications page of the current user", async function (assert) {
+    test("show all button for all notifications page", async function (assert) {
       await render(template);
       const showAllBtn = query(".panel-body-bottom .btn.show-all");
-      assert.ok(
-        showAllBtn.href.endsWith("/u/eviltrout/notifications"),
-        "it takes you to the notifications page"
-      );
       assert.strictEqual(
-        showAllBtn.getAttribute("title"),
+        showAllBtn.title,
         I18n.t("user_menu.view_all_notifications"),
-        "title attribute is present"
+        "has the correct title"
       );
     });
 

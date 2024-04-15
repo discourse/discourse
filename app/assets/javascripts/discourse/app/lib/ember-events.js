@@ -1,8 +1,8 @@
 // eslint-disable-next-line ember/no-classic-components
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
-import { actionModifier } from "./ember-action-modifier";
 import Ember from "ember";
+import { actionModifier } from "./ember-action-modifier";
 
 /**
  * Classic Ember components (i.e. "@ember/component") rely upon "event
@@ -132,7 +132,7 @@ function rewireClassicComponentEvents(app) {
      * @param {string | typeof INTERNAL} name
      * @param {unknown[]} args
      */
-    trigger(name, ...args) {
+    _trigger(name, ...args) {
       if (name === INTERNAL) {
         if (this.element) {
           return this._super.call(this, ...args);

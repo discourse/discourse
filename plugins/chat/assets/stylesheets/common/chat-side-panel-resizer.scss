@@ -1,16 +1,29 @@
 .chat-side-panel-resizer {
   top: 0;
   bottom: 0;
-  left: -3px;
-  width: 5px;
   position: absolute;
-  z-index: z("max");
+  z-index: z("composer", "content") - 1;
   transition: background-color 0.15s 0.15s;
   background-color: transparent;
 
-  &:hover,
-  &:active {
-    cursor: col-resize;
-    background: var(--tertiary);
+  .touch & {
+    left: -6px;
+    width: 10px;
+
+    &:active {
+      cursor: col-resize;
+      background: var(--tertiary);
+    }
+  }
+
+  .no-touch & {
+    left: -3px;
+    width: 5px;
+
+    &:hover,
+    &:active {
+      cursor: col-resize;
+      background: var(--tertiary);
+    }
   }
 }

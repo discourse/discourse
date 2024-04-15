@@ -8,6 +8,11 @@ module PageObjects
         self
       end
 
+      def click_interface_tab
+        click_link "Interface"
+        self
+      end
+
       def click_secondary_navigation_menu_scroll_right
         find(".horizontal-overflow-nav__scroll-right").click
       end
@@ -34,6 +39,10 @@ module PageObjects
 
       def has_account_link_not_visible?
         horizontal_secondary_link_visible?(ACCOUNT_LINK_CSS_SELECTOR, visible: false)
+      end
+
+      def has_primary_email?(email)
+        has_css?(".email-first", text: email)
       end
 
       private

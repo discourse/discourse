@@ -1,8 +1,10 @@
+import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import FilterModeMixin from "discourse/mixins/filter-mode";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { filterTypeForMode } from "discourse/lib/filter-mode";
 import discourseComputed from "discourse-common/utils/decorators";
 
-export default Component.extend(FilterModeMixin, {
+export default Component.extend({
   tagName: "li",
   classNameBindings: [
     "active",
@@ -15,6 +17,12 @@ export default Component.extend(FilterModeMixin, {
   hidden: false,
   activeClass: "",
   hrefLink: null,
+  filterMode: tracked(),
+
+  @dependentKeyCompat
+  get filterType() {
+    return filterTypeForMode(this.filterMode);
+  },
 
   @discourseComputed("content.filterType", "filterType", "content.active")
   active(contentFilterType, filterType, active) {
@@ -24,14 +32,14 @@ export default Component.extend(FilterModeMixin, {
     return contentFilterType === filterType;
   },
 
-  @discourseComputed("content.count")
-  isHidden(count) {
+  @discourseComputed("content.count", "content.name")
+  isHidden(count, name) {
     return (
       !this.active &&
       this.currentUser &&
+      !this.currentUser.new_new_view_enabled &&
       this.currentUser.trust_level > 0 &&
-      (this.content.get("name") === "new" ||
-        this.content.get("name") === "unread") &&
+      (name === "new" || name === "unread") &&
       count < 1
     );
   },

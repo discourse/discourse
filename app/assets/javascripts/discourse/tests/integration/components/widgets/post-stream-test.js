@@ -1,9 +1,11 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
-import { count } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { count } from "discourse/tests/helpers/qunit-helpers";
+import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 
 function postStreamTest(name, attrs) {
   test(name, async function (assert) {
@@ -17,8 +19,63 @@ function postStreamTest(name, attrs) {
   });
 }
 
+let lastTransformedPost = null;
+
 module("Integration | Component | Widget | post-stream", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.afterEach(function () {
+    resetPostMenuExtraButtons();
+  });
+
+  postStreamTest("extensibility", {
+    posts() {
+      withPluginApi("0.14.0", (api) => {
+        api.addPostMenuButton("coffee", (transformedPost) => {
+          lastTransformedPost = transformedPost;
+          return {
+            action: "drinkCoffee",
+            icon: "coffee",
+            className: "hot-coffee",
+            title: "coffee.title",
+            position: "first",
+          };
+        });
+      });
+
+      const store = getOwner(this).lookup("service:store");
+      const topic = store.createRecord("topic");
+      topic.set("details.created_by", { id: 123 });
+      topic.set("id", 1234);
+
+      return [
+        store.createRecord("post", {
+          topic,
+          id: 1,
+          post_number: 1,
+          user_id: 123,
+          primary_group_name: "trout",
+          avatar_template: "/images/avatar.png",
+        }),
+      ];
+    },
+
+    test(assert) {
+      assert.strictEqual(count(".post-stream"), 1);
+      assert.strictEqual(count(".topic-post"), 1, "renders all posts");
+      assert.notStrictEqual(lastTransformedPost, null, "it transforms posts");
+      assert.strictEqual(
+        lastTransformedPost.topic.id,
+        1234,
+        "it also transforms the topic"
+      );
+      assert.strictEqual(
+        count(".actions .extra-buttons .hot-coffee"),
+        1,
+        "should have the extended button"
+      );
+    },
+  });
 
   postStreamTest("basics", {
     posts() {

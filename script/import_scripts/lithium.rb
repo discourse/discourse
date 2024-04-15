@@ -994,11 +994,7 @@ SQL
                 end
 
               if l["href"]
-                if permalink && permalink.target_url
-                  l["href"] = permalink.target_url
-                elsif l["href"] =~ %r{^/gartner/attachments/gartner/([^.]*).(\w*)}
-                  linked_upload = "#{$1}.#{$2}"
-                end
+                l["href"] = permalink.target_url if permalink && permalink.target_url
               end
             elsif l["src"]
               # we need an upload here

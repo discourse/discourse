@@ -12,9 +12,10 @@ RSpec.describe SiteController do
       SiteSetting.logo_small = upload
       SiteSetting.apple_touch_icon = upload
       SiteSetting.mobile_logo = upload
+      SiteSetting.include_in_discourse_discover = true
       Theme.clear_default!
 
-      get "/site/basic-info.json"
+      get "/site/basic-info.json", headers: { "HTTP_USER_AGENT" => "Discourse Hub" }
       json = response.parsed_body
 
       expected_url = UrlHelper.absolute(upload.url)
@@ -28,6 +29,16 @@ RSpec.describe SiteController do
       expect(json["header_primary_color"]).to eq("333333")
       expect(json["header_background_color"]).to eq("ffffff")
       expect(json["login_required"]).to eq(true)
+      expect(json["discourse_discover_enrolled"]).to eq(true)
+    end
+
+    it "skips `discourse_discover_enrolled` if `include_in_discourse_discover` setting disabled" do
+      SiteSetting.include_in_discourse_discover = false
+
+      get "/site/basic-info.json"
+      json = response.parsed_body
+
+      expect(json.keys).not_to include("discourse_discover_enrolled")
     end
   end
 
@@ -40,9 +51,9 @@ RSpec.describe SiteController do
       json = response.parsed_body
 
       expect(response.status).to eq(200)
-      expect(json["topic_count"]).to be_present
-      expect(json["post_count"]).to be_present
-      expect(json["user_count"]).to be_present
+      expect(json["topics_count"]).to be_present
+      expect(json["posts_count"]).to be_present
+      expect(json["users_count"]).to be_present
       expect(json["topics_7_days"]).to be_present
       expect(json["topics_30_days"]).to be_present
       expect(json["posts_7_days"]).to be_present
@@ -51,7 +62,7 @@ RSpec.describe SiteController do
       expect(json["users_30_days"]).to be_present
       expect(json["active_users_7_days"]).to be_present
       expect(json["active_users_30_days"]).to be_present
-      expect(json["like_count"]).to be_present
+      expect(json["likes_count"]).to be_present
       expect(json["likes_7_days"]).to be_present
       expect(json["likes_30_days"]).to be_present
     end
@@ -61,6 +72,33 @@ RSpec.describe SiteController do
 
       get "/site/statistics.json"
       expect(response).to redirect_to "/"
+    end
+
+    it "returns exposable stats only" do
+      Discourse.redis.del(About.stats_cache_key)
+
+      SiteSetting.login_required = true
+      SiteSetting.share_anonymized_statistics = true
+
+      plugin = Plugin::Instance.new
+      plugin.register_stat("private_stat", expose_via_api: false) do
+        { :last_day => 1, "7_days" => 2, "30_days" => 3, :count => 4 }
+      end
+      plugin.register_stat("exposable_stat", expose_via_api: true) do
+        { :last_day => 11, "7_days" => 12, "30_days" => 13, :count => 14 }
+      end
+
+      get "/site/statistics.json"
+      json = response.parsed_body
+
+      expect(json["exposable_stat_last_day"]).to be(11)
+      expect(json["exposable_stat_7_days"]).to be(12)
+      expect(json["exposable_stat_30_days"]).to be(13)
+      expect(json["exposable_stat_count"]).to be(14)
+      expect(json["private_stat_last_day"]).not_to be_present
+      expect(json["private_stat_7_days"]).not_to be_present
+      expect(json["private_stat_30_days"]).not_to be_present
+      expect(json["private_stat_count"]).not_to be_present
     end
   end
 end

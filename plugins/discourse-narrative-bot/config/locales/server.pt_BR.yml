@@ -46,7 +46,7 @@ pt_BR:
       invalid: |-
         Sinto muito, é matematicamente impossível rolar essa combinação de dados. :confounded:
       not_enough_dice:
-        one: "Só tenho %{count} dado. Vergonhoso, eu sei!"
+        one: "Só tenho %{count} dados. Vergonhoso, eu sei!"
         other: "Só tenho %{count} dados. Vergonhoso, eu sei!"
       out_of_range: |-
         Você sabia que [a quantidade máxima de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para um dado matematicamente justo é 120?
@@ -161,7 +161,7 @@ pt_BR:
       hello:
         title: "Saudações!"
         message: |-
-          Obrigado por participar de %{title}, boas-vindas!
+          Obrigado(a) por participar de %{title}, boas-vindas!
 
           - Eu sou apenas um robô, mas [nossa equipe prestativa](%{base_uri}/about) também está aqui para ajudar se você precisar falar com uma pessoa.
 
@@ -296,10 +296,6 @@ pt_BR:
         not_found: |-
           Ah não, minha postagem inapropriada ainda não foi sinalizada. :worried: Você pode sinalizá-la como inapropriada usando o **sinalizador** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Não se esqueça de usar o botão Mostrar mais <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para revelar mais ações para cada postagem.
       search:
-        instructions: |-
-          _xiiu_ … Escondi uma surpresa neste tópico. Se você está pronto(a) para o desafio, **selecione o ícone de pesquisa** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> no canto superior à direita &#8599; para pesquisar por ela.
-
-          Tente pesquisar o termo "capy&#8203;bara" (em inglês) neste tópico
         hidden_message: |-
           Como você perdeu esta capivara? :wink:
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
@@ -373,21 +369,11 @@ pt_BR:
           Note que você só tem %{deletion_after} hora(s) para restaurar uma postagem.
       category_hashtag:
         instructions: |-
-          Você sabia que pode se referir a categorias e etiquetas em sua postagem? Por exemplo, viu a categoria %{category}?
-
-          Digite "#" no meio de uma frase e selecione qualquer categoria ou etiqueta.
-        instructions_experimental: |-
           Você sabia que pode se referir a categorias e etiquetas na sua postagem? Por exemplo, você viu a categoria %{category}?
 
           Digite "#" dentro de uma frase e selecione qualquer categoria ou etiqueta.
         not_found: |-
-          Hmm, eu não vejo uma categoria em nenhum lugar. Observe que "#' não pode ser o primeiro caractere. Você pode copiar isso na sua próxima resposta?
-
-          ```text
-          Eu posso criar um link de categoria via #
-          ```
-        not_found_experimental: |-
-          Hmm, não vejo uma categoria em lugar algum. Você poderia copiar isto na sua próxima resposta?
+          Hm, não vejo categoria em nenhum lugar. Você poderia copiar isto na sua próxima resposta?
 
           ```text
           Eu posso criar um link de categoria via #

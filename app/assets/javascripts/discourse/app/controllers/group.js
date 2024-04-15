@@ -1,10 +1,9 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { capitalize } from "@ember/string";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const Tab = EmberObject.extend({
   init() {
@@ -20,6 +19,10 @@ const Tab = EmberObject.extend({
 export default Controller.extend({
   application: controller(),
   dialog: service(),
+  currentUser: service(),
+  router: service(),
+  composer: service(),
+
   counts: null,
   showing: "members",
   destroying: null,
@@ -106,11 +109,6 @@ export default Controller.extend({
     return isGroupUser || (this.currentUser && this.currentUser.admin);
   },
 
-  @discourseComputed("model.displayName", "model.full_name")
-  groupName(displayName, fullName) {
-    return capitalize(fullName || displayName);
-  },
-
   @discourseComputed("model.messageable")
   displayGroupMessageButton(messageable) {
     return this.currentUser && messageable;
@@ -127,7 +125,7 @@ export default Controller.extend({
 
   @action
   messageGroup() {
-    this.send("createNewMessageViaParams", {
+    this.composer.openNewMessage({
       recipients: this.get("model.name"),
       hasGroups: true,
     });
@@ -146,13 +144,17 @@ export default Controller.extend({
       didConfirm: () => {
         model
           .destroy()
-          .then(() => this.transitionToRoute("groups.index"))
           .catch((error) => {
             // eslint-disable-next-line no-console
             console.error(error);
             this.dialog.alert(I18n.t("admin.groups.delete_failed"));
           })
-          .finally(() => this.set("destroying", false));
+          .then(() => {
+            this.router.transitionTo("groups.index");
+          })
+          .finally(() => {
+            this.set("destroying", false);
+          });
       },
       didCancel: () => this.set("destroying", false),
     });

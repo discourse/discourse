@@ -51,7 +51,7 @@ RSpec.describe Auth::FacebookAuthenticator do
   end
 
   describe "description_for_user" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "returns empty string if no entry for user" do
       expect(authenticator.description_for_user(user)).to eq("")
@@ -71,7 +71,7 @@ RSpec.describe Auth::FacebookAuthenticator do
   end
 
   describe "revoke" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:authenticator) { Auth::FacebookAuthenticator.new }
 
     it "raises exception if no entry for user" do

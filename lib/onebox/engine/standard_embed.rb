@@ -82,9 +82,7 @@ module Onebox
             if (m["property"] && m["property"][/^twitter:(.+)$/i]) ||
                  (m["name"] && m["name"][/^twitter:(.+)$/i])
               value = (m["content"] || m["value"]).to_s
-              twitter[$1.tr("-:", "_").to_sym] ||= value unless (
-                Onebox::Helpers.blank?(value) || value == "0 minutes"
-              )
+              twitter[$1.tr("-:", "_").to_sym] ||= value if (value.present? && value != "0 minutes")
             end
           end
 
@@ -100,7 +98,13 @@ module Onebox
           ).first
         favicon = favicon.nil? ? nil : (favicon["href"].nil? ? nil : favicon["href"].strip)
 
-        Onebox::Helpers.get_absolute_image_url(favicon, url)
+        return nil if favicon.blank?
+
+        absolute_url = Onebox::Helpers.get_absolute_image_url(favicon, url)
+
+        return nil if absolute_url.length > UrlHelper::MAX_URL_LENGTH
+
+        absolute_url
       end
 
       def get_description
@@ -115,7 +119,7 @@ module Onebox
       def get_json_response
         oembed_url = get_oembed_url
 
-        return "{}" if Onebox::Helpers.blank?(oembed_url)
+        return "{}" if oembed_url.blank?
 
         begin
           Onebox::Helpers.fetch_response(oembed_url)
@@ -137,12 +141,12 @@ module Onebox
         end
 
         if html_doc
-          if Onebox::Helpers.blank?(oembed_url)
+          if oembed_url.blank?
             application_json = html_doc.at("//link[@type='application/json+oembed']/@href")
             oembed_url = application_json.value if application_json
           end
 
-          if Onebox::Helpers.blank?(oembed_url)
+          if oembed_url.blank?
             text_json = html_doc.at("//link[@type='text/json+oembed']/@href")
             oembed_url ||= text_json.value if text_json
           end
@@ -156,7 +160,7 @@ module Onebox
       end
 
       def set_from_normalizer_data(normalizer)
-        normalizer.data.each do |k, v|
+        normalizer.data.each do |k, _|
           v = normalizer.send(k)
           @raw[k] ||= v unless v.nil?
         end
@@ -170,7 +174,7 @@ module Onebox
 
       def set_twitter_data_on_raw
         twitter = get_twitter
-        twitter.each { |k, v| @raw[k] ||= v unless Onebox::Helpers.blank?(v) }
+        twitter.each { |k, v| @raw[k] ||= v if v.present? }
       end
 
       def set_oembed_data_on_raw
@@ -185,13 +189,13 @@ module Onebox
 
       def set_favicon_data_on_raw
         favicon = get_favicon
-        @raw[:favicon] = favicon unless Onebox::Helpers.blank?(favicon)
+        @raw[:favicon] = favicon if favicon.present?
       end
 
       def set_description_on_raw
         unless @raw[:description]
           description = get_description
-          @raw[:description] = description unless Onebox::Helpers.blank?(description)
+          @raw[:description] = description if description.present?
         end
       end
     end

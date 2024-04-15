@@ -1,11 +1,15 @@
-<DSection @pageClass="user-notifications" />
+{{#if this.model.canLoadMore}}
+  {{hide-application-footer}}
+{{/if}}
+
+{{body-class "user-notifications-page"}}
 
 <div class="user-navigation user-navigation-secondary">
   <HorizontalOverflowNav @ariaLabel="User secondary - notifications">
     <DNavigationItem
       @route="userNotifications.index"
-      @class="user-nav__notifications-all"
       @ariaCurrentContext="subNav"
+      class="user-nav__notifications-all"
     >
       {{d-icon "bell"}}
       <span>{{i18n "user.filters.all"}}</span>
@@ -13,8 +17,8 @@
 
     <DNavigationItem
       @route="userNotifications.responses"
-      @class="user-nav__notifications-responses"
       @ariaCurrentContext="subNav"
+      class="user-nav__notifications-responses"
     >
       {{d-icon "reply"}}
       <span>{{i18n "user_action_groups.6"}}</span>
@@ -22,8 +26,8 @@
 
     <DNavigationItem
       @route="userNotifications.likesReceived"
-      @class="user-nav__notifications-likes"
       @ariaCurrentContext="subNav"
+      class="user-nav__notifications-likes"
     >
       {{d-icon "heart"}}
       <span>{{i18n "user_action_groups.2"}}</span>
@@ -32,8 +36,8 @@
     {{#if this.siteSettings.enable_mentions}}
       <DNavigationItem
         @route="userNotifications.mentions"
-        @class="user-nav__notifications-mentions"
         @ariaCurrentContext="subNav"
+        class="user-nav__notifications-mentions"
       >
         {{d-icon "at"}}
         <span>{{i18n "user_action_groups.7"}}</span>
@@ -42,11 +46,20 @@
 
     <DNavigationItem
       @route="userNotifications.edits"
-      @class="user-nav__notifications-edits"
       @ariaCurrentContext="subNav"
+      class="user-nav__notifications-edits"
     >
       {{d-icon "pencil-alt"}}
       <span>{{i18n "user_action_groups.11"}}</span>
+    </DNavigationItem>
+
+    <DNavigationItem
+      @route="userNotifications.links"
+      @ariaCurrentContext="subNav"
+      class="user-nav__notifications-links"
+    >
+      {{d-icon "link"}}
+      <span>{{i18n "user_action_groups.17"}}</span>
     </DNavigationItem>
 
     <PluginOutlet
@@ -61,11 +74,11 @@
     <div class="navigation-controls">
       <DButton
         @title="user.dismiss_notifications_tooltip"
-        @class="btn btn-default dismiss-notifications"
         @action={{action "resetNew"}}
         @label="user.dismiss_notifications"
         @icon="check"
         @disabled={{this.allNotificationsRead}}
+        class="btn-default dismiss-notifications"
       />
     </div>
   {{/if}}
@@ -73,9 +86,9 @@
 
 <section class="user-content" id="user-content">
   <LoadMore
-    @class="notification-history user-stream"
     @selector=".user-stream .notification"
     @action={{action "loadMore"}}
+    class="notification-history user-stream"
   >
     {{outlet}}
     <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />

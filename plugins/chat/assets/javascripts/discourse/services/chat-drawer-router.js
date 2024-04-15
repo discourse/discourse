@@ -1,16 +1,15 @@
-import Service, { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-import ChatDrawerDraftChannel from "discourse/plugins/chat/discourse/components/chat-drawer/draft-channel";
-import ChatDrawerChannel from "discourse/plugins/chat/discourse/components/chat-drawer/channel";
-import ChatDrawerThread from "discourse/plugins/chat/discourse/components/chat-drawer/thread";
-import ChatDrawerThreads from "discourse/plugins/chat/discourse/components/chat-drawer/threads";
-import ChatDrawerIndex from "discourse/plugins/chat/discourse/components/chat-drawer/index";
+import Service, { service } from "@ember/service";
+import ChatDrawerRoutesChannel from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel";
+import ChatDrawerRoutesChannelThread from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-thread";
+import ChatDrawerRoutesChannelThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-threads";
+import ChatDrawerRoutesChannels from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channels";
+import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
 
-const COMPONENTS_MAP = {
-  "chat.draft-channel": { name: ChatDrawerDraftChannel },
-  "chat.channel": { name: ChatDrawerChannel },
+const ROUTES = {
+  "chat.channel": { name: ChatDrawerRoutesChannel },
   "chat.channel.thread": {
-    name: ChatDrawerThread,
+    name: ChatDrawerRoutesChannelThread,
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
@@ -18,17 +17,39 @@ const COMPONENTS_MAP = {
       };
     },
   },
+  "chat.channel.thread.index": {
+    name: ChatDrawerRoutesChannelThread,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
+        threadId: route.params.threadId,
+      };
+    },
+  },
+  "chat.channel.thread.near-message": {
+    name: ChatDrawerRoutesChannelThread,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.parent.params.channelId,
+        threadId: route.parent.params.threadId,
+        messageId: route.params.messageId,
+      };
+    },
+  },
   "chat.channel.threads": {
-    name: ChatDrawerThreads,
+    name: ChatDrawerRoutesChannelThreads,
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
       };
     },
   },
-  chat: { name: ChatDrawerIndex },
+  "chat.threads": {
+    name: ChatDrawerRoutesThreads,
+  },
+  chat: { name: ChatDrawerRoutesChannels },
   "chat.channel.near-message": {
-    name: ChatDrawerChannel,
+    name: ChatDrawerRoutesChannel,
     extractParams: (route) => {
       return {
         channelId: route.parent.params.channelId,
@@ -37,7 +58,7 @@ const COMPONENTS_MAP = {
     },
   },
   "chat.channel-legacy": {
-    name: ChatDrawerChannel,
+    name: ChatDrawerRoutesChannel,
     extractParams: (route) => {
       return {
         channelId: route.params.channelId,
@@ -49,24 +70,21 @@ const COMPONENTS_MAP = {
 
 export default class ChatDrawerRouter extends Service {
   @service router;
-  @tracked component = null;
-  @tracked params = null;
-  @tracked history = [];
+  @service chatHistory;
 
-  get previousRouteName() {
-    if (this.history.length > 1) {
-      return this.history[this.history.length - 2];
-    }
-  }
+  @tracked component = null;
+  @tracked drawerRoute = null;
+  @tracked params = null;
 
   stateFor(route) {
-    this.history.push(route.name);
-    if (this.history.length > 10) {
-      this.history.shift();
-    }
+    this.drawerRoute?.deactivate?.(this.chatHistory.currentRoute);
 
-    const component = COMPONENTS_MAP[route.name];
-    this.params = component?.extractParams?.(route) || route.params;
-    this.component = component?.name || ChatDrawerIndex;
+    this.chatHistory.visit(route);
+
+    this.drawerRoute = ROUTES[route.name];
+    this.params = this.drawerRoute?.extractParams?.(route) || route.params;
+    this.component = this.drawerRoute?.name || ChatDrawerRoutesChannels;
+
+    this.drawerRoute.activate?.(route);
   }
 }

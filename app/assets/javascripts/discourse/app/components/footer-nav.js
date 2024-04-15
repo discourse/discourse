@@ -1,9 +1,9 @@
+import { throttle } from "@ember/runloop";
+import MountWidget from "discourse/components/mount-widget";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
 import MobileScrollDirection from "discourse/mixins/mobile-scroll-direction";
-import MountWidget from "discourse/components/mount-widget";
 import Scrolling from "discourse/mixins/scrolling";
 import { observes } from "discourse-common/utils/decorators";
-import { throttle } from "@ember/runloop";
 
 const MOBILE_SCROLL_DIRECTION_CHECK_THROTTLE = 150;
 
@@ -38,13 +38,13 @@ const FooterNavComponent = MountWidget.extend(
       }
 
       if (this.capabilities.isIpadOS) {
-        document.body.classList.add("footer-nav-ipad");
+        document.documentElement.classList.add("footer-nav-ipad");
       } else {
         this.bindScrolling();
         window.addEventListener("resize", this.scrolled, false);
         this.appEvents.on("composer:opened", this, "_composerOpened");
         this.appEvents.on("composer:closed", this, "_composerClosed");
-        document.body.classList.add("footer-nav-visible");
+        document.documentElement.classList.add("footer-nav-visible");
       }
     },
 
@@ -58,7 +58,7 @@ const FooterNavComponent = MountWidget.extend(
       }
 
       if (this.capabilities.isIpadOS) {
-        document.body.classList.remove("footer-nav-ipad");
+        document.documentElement.classList.remove("footer-nav-ipad");
       } else {
         this.unbindScrolling();
         window.removeEventListener("resize", this.scrolled);
@@ -94,7 +94,7 @@ const FooterNavComponent = MountWidget.extend(
         "visible",
         this.mobileScrollDirection === null ? true : false
       );
-      document.body.classList.toggle(
+      document.documentElement.classList.toggle(
         "footer-nav-visible",
         this.mobileScrollDirection === null ? true : false
       );

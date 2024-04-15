@@ -1,6 +1,7 @@
-import { registerUnbound } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse-common/lib/helpers";
 
-registerUnbound("value-entered", function (value) {
+registerRawHelper("value-entered", valueEntered);
+export default function valueEntered(value) {
   if (!value) {
     return "";
   } else if (value.length > 0) {
@@ -8,4 +9,4 @@ registerUnbound("value-entered", function (value) {
   } else {
     return "";
   }
-});
+}

@@ -1,12 +1,14 @@
-import SingleSelectHeaderComponent from "select-kit/components/select-kit/single-select-header";
 import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
+import SingleSelectHeaderComponent from "select-kit/components/select-kit/single-select-header";
 
 export default SingleSelectHeaderComponent.extend({
   classNames: ["dropdown-select-box-header"],
-  classNameBindings: ["btnClassName", "btnStyleClass"],
+  classNameBindings: ["btnClassName", "btnStyleClass", "btnCustomClasses"],
   showFullTitle: readOnly("selectKit.options.showFullTitle"),
   customStyle: readOnly("selectKit.options.customStyle"),
+
+  btnCustomClasses: readOnly("selectKit.options.btnCustomClasses"),
 
   btnClassName: computed("showFullTitle", function () {
     return `btn ${this.showFullTitle ? "btn-icon-text" : "no-text btn-icon"}`;

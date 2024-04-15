@@ -23,7 +23,13 @@ module Jobs
 
       if post.raw != raw
         changes = { raw: raw, edit_reason: I18n.t("upload.edit_reason") }
-        post.revise(Discourse.system_user, changes, bypass_bump: true, skip_staff_log: true)
+        post.revise(
+          Discourse.system_user,
+          changes,
+          bypass_bump: true,
+          skip_staff_log: true,
+          skip_validations: true,
+        )
       end
     end
   end

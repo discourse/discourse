@@ -1,13 +1,13 @@
-import Controller, { inject as controller } from "@ember/controller";
-import { observes } from "@ember-decorators/object";
-import I18n from "I18n";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { next } from "@ember/runloop";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import getURL from "discourse-common/lib/get-url";
 import { tracked } from "@glimmer/tracking";
+import Controller, { inject as controller } from "@ember/controller";
+import { action } from "@ember/object";
+import { next } from "@ember/runloop";
+import { service } from "@ember/service";
+import { observes } from "@ember-decorators/object";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "discourse-i18n";
 
 const IMAGE = "image";
 const ICON = "icon";
@@ -206,7 +206,7 @@ export default class AdminBadgesShowController extends Controller.extend(
             if (!adminBadges.includes(model)) {
               adminBadges.pushObject(model);
             }
-            this.transitionToRoute("adminBadges.show", model.get("id"));
+            this.router.transitionTo("adminBadges.show", model.get("id"));
           } else {
             this.commitBuffer();
             this.savingStatus = I18n.t("saved");
@@ -237,7 +237,7 @@ export default class AdminBadgesShowController extends Controller.extend(
           .destroy()
           .then(() => {
             adminBadges.removeObject(model);
-            this.transitionToRoute("adminBadges.index");
+            this.router.transitionTo("adminBadges.index");
           })
           .catch(() => {
             this.dialog.alert(I18n.t("generic_error"));

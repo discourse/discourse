@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe WebHookPostSerializer do
-  fab!(:admin) { Fabricate(:admin) }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:admin)
+  fab!(:post)
 
   def serialized_for_user(u)
     WebHookPostSerializer.new(post, scope: Guardian.new(u), root: false).as_json

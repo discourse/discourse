@@ -11,7 +11,7 @@ RSpec.describe Chat::Api::ReadsController do
 
   describe "#read" do
     describe "marking a single message read" do
-      fab!(:chat_channel) { Fabricate(:chat_channel) }
+      fab!(:chat_channel)
       fab!(:other_user) { Fabricate(:user) }
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
@@ -133,6 +133,12 @@ RSpec.describe Chat::Api::ReadsController do
         )
       end
 
+      before do
+        chat_channel_1.update!(last_message: message_2)
+        chat_channel_2.update!(last_message: message_4)
+        chat_channel_3.update!(last_message: message_6)
+      end
+
       it "marks all messages as read across the user's channel memberships with the correct last_read_message_id" do
         put "/chat/api/channels/read.json"
 
@@ -193,7 +199,7 @@ RSpec.describe Chat::Api::ReadsController do
         }.to_json,
       )
       .tap do |notification|
-        Chat::Mention.create!(user: user, chat_message: msg, notification: notification)
+        Chat::UserMention.create!(user: user, chat_message: msg, notifications: [notification])
       end
   end
 end

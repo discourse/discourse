@@ -4,7 +4,7 @@ RSpec.shared_examples "a chat channel model" do
   fab!(:user1) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
   fab!(:staff) { Fabricate(:user, admin: true) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
   fab!(:private_category) { Fabricate(:private_category, group: group) }
   fab!(:private_category_channel) { Fabricate(:category_channel, chatable: private_category) }
   fab!(:direct_message_channel) { Fabricate(:direct_message_channel, users: [user1, user2]) }

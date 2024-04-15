@@ -439,9 +439,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
         if !post.raw[html]
           post.raw += "\n\n#{html}\n\n"
           post.save!
-          unless PostUpload.where(post: post, upload: upl_obj).exists?
-            PostUpload.create!(post: post, upload: upl_obj)
-          end
+          UploadReference.ensure_exist!(upload_ids: [upl_obj.id], target: post)
         end
       else
         puts "Fail"

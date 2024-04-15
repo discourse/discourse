@@ -5,8 +5,8 @@
     @onUploadDone={{action "logoUploadDone"}}
     @onUploadDeleted={{action "logoUploadDeleted"}}
     @type="category_logo"
-    @class="no-repeat contain-image"
     @id="category-logo-uploader"
+    class="no-repeat contain-image"
   />
 </section>
 
@@ -17,8 +17,8 @@
     @onUploadDone={{action "logoDarkUploadDone"}}
     @onUploadDeleted={{action "logoDarkUploadDeleted"}}
     @type="category_logo_dark"
-    @class="no-repeat contain-image"
     @id="category-dark-logo-uploader"
+    class="no-repeat contain-image"
   />
 </section>
 
@@ -30,5 +30,16 @@
     @onUploadDeleted={{action "backgroundUploadDeleted"}}
     @type="category_background"
     @id="category-background-uploader"
+  />
+</section>
+
+<section class="field category-background-image">
+  <label>{{i18n "category.background_image_dark"}}</label>
+  <UppyImageUploader
+    @imageUrl={{this.backgroundDarkImageUrl}}
+    @onUploadDone={{action "backgroundDarkUploadDone"}}
+    @onUploadDeleted={{action "backgroundDarkUploadDeleted"}}
+    @type="category_background_dark"
+    @id="category-dark-background-uploader"
   />
 </section>

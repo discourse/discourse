@@ -1,9 +1,9 @@
-import EmberObject from "@ember/object";
-import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulation";
-import { next, schedule } from "@ember/runloop";
 import { setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
 import { registerDestructor } from "@ember/destroyable";
+import EmberObject from "@ember/object";
+import { next, schedule } from "@ember/runloop";
+import { service } from "@ember/service";
+import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulation";
 
 // This class sole purpose is to provide a way to interact with the textarea
 // using the existing TextareaTextManipulation mixin without using it directly
@@ -45,21 +45,35 @@ export default class TextareaInteractor extends EmberObject.extend(
     this._textarea.dispatchEvent(event);
   }
 
-  focus(opts = { ensureAtEnd: false, refreshHeight: true }) {
+  blur() {
     next(() => {
-      if (opts.refreshHeight) {
-        this.refreshHeight();
-      }
+      schedule("afterRender", () => {
+        this._textarea.blur();
+      });
+    });
+  }
 
-      if (opts.ensureAtEnd) {
-        this.ensureCaretAtEnd();
-      }
+  focus(opts = { ensureAtEnd: false, refreshHeight: true, addText: null }) {
+    next(() => {
+      schedule("afterRender", () => {
+        if (opts.refreshHeight) {
+          this.refreshHeight();
+        }
 
-      if (this.capabilities.isIpadOS || this.site.mobileView) {
-        return;
-      }
+        if (opts.ensureAtEnd) {
+          this.ensureCaretAtEnd();
+        }
 
-      this.focusTextArea();
+        if (this.capabilities.isIpadOS || this.site.mobileView) {
+          return;
+        }
+
+        if (opts.addText) {
+          this.addText(this.getSelected(), opts.addText);
+        }
+
+        this.focusTextArea();
+      });
     });
   }
 

@@ -1,32 +1,39 @@
-import { equal, readOnly } from "@ember/object/computed";
-import { i18n, setting } from "discourse/lib/computed";
-import ComboBoxComponent from "select-kit/components/combo-box";
-import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
-import TagsMixin from "select-kit/mixins/tags";
 import { computed } from "@ember/object";
+import { readOnly } from "@ember/object/computed";
+import { setting } from "discourse/lib/computed";
+import DiscourseURL, { getCategoryAndTagUrl } from "discourse/lib/url";
 import { makeArray } from "discourse-common/lib/helpers";
+import I18n from "discourse-i18n";
+import ComboBoxComponent from "select-kit/components/combo-box";
+import FilterForMore from "select-kit/components/filter-for-more";
 import { MAIN_COLLECTION } from "select-kit/components/select-kit";
+import TagsMixin from "select-kit/mixins/tags";
 
 export const NO_TAG_ID = "no-tags";
 export const ALL_TAGS_ID = "all-tags";
-export const NONE_TAG_ID = "none";
+
+export const NONE_TAG = "none";
 
 const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
 
 export default ComboBoxComponent.extend(TagsMixin, {
   pluginApiIdentifiers: ["tag-drop"],
-  classNameBindings: ["categoryStyle", "tagClass"],
+  classNameBindings: ["tagClass"],
   classNames: ["tag-drop"],
   value: readOnly("tagId"),
-  categoryStyle: setting("category_style"),
   maxTagSearchResults: setting("max_tag_search_results"),
   sortTagsAlphabetically: setting("tags_sort_alphabetically"),
   maxTagsInFilterList: setting("max_tags_in_filter_list"),
   shouldShowMoreTags: computed(
     "maxTagsInFilterList",
     "topTags.[]",
+    "mainCollection.[]",
     function () {
-      return this.topTags.length > this.maxTagsInFilterList;
+      if (this.selectKit.filter?.length > 0) {
+        return this.mainCollection.length > this.maxTagsInFilterList;
+      } else {
+        return this.topTags.length > this.maxTagsInFilterList;
+      }
     }
   ),
 
@@ -40,8 +47,6 @@ export default ComboBoxComponent.extend(TagsMixin, {
     autoInsertNoneItem: false,
   },
 
-  noTagsSelected: equal("tagId", NONE_TAG_ID),
-
   init() {
     this._super(...arguments);
 
@@ -50,33 +55,31 @@ export default ComboBoxComponent.extend(TagsMixin, {
 
   modifyComponentForCollection(collection) {
     if (collection === MORE_TAGS_COLLECTION) {
-      return "tag-drop/more-tags-collection";
+      return FilterForMore;
     }
   },
 
   modifyContentForCollection(collection) {
     if (collection === MORE_TAGS_COLLECTION) {
       return {
-        shouldShowMoreTags: this.shouldShowMoreTags,
+        shouldShowMoreTip: this.shouldShowMoreTags,
       };
     }
   },
 
   modifyNoSelection() {
-    if (this.noTagsSelected) {
-      return this.defaultItem(NO_TAG_ID, this.noTagsLabel);
+    if (this.tagId === NONE_TAG) {
+      return this.defaultItem(NO_TAG_ID, I18n.t("tagging.selector_no_tags"));
     } else {
-      return this.defaultItem(ALL_TAGS_ID, this.allTagsLabel);
+      return this.defaultItem(ALL_TAGS_ID, I18n.t("tagging.selector_tags"));
     }
   },
 
   modifySelection(content) {
-    if (this.tagId) {
-      if (this.noTagsSelected) {
-        content = this.defaultItem(NO_TAG_ID, this.noTagsLabel);
-      } else {
-        content = this.defaultItem(this.tagId, this.tagId);
-      }
+    if (this.tagId === NONE_TAG) {
+      content = this.defaultItem(NO_TAG_ID, I18n.t("tagging.selector_no_tags"));
+    } else if (this.tagId) {
+      content = this.defaultItem(this.tagId, this.tagId);
     }
 
     return content;
@@ -86,10 +89,6 @@ export default ComboBoxComponent.extend(TagsMixin, {
     return this.tagId ? `tag-${this.tagId}` : "tag_all";
   }),
 
-  allTagsLabel: i18n("tagging.selector_all_tags"),
-
-  noTagsLabel: i18n("tagging.selector_no_tags"),
-
   modifyComponentForRow() {
     return "tag-row";
   },
@@ -97,15 +96,24 @@ export default ComboBoxComponent.extend(TagsMixin, {
   shortcuts: computed("tagId", function () {
     const shortcuts = [];
 
-    if (this.tagId !== NONE_TAG_ID) {
+    if (this.tagId !== NONE_TAG) {
       shortcuts.push({
         id: NO_TAG_ID,
-        name: this.noTagsLabel,
+        name: I18n.t("tagging.selector_no_tags"),
       });
     }
 
     if (this.tagId) {
-      shortcuts.push({ id: ALL_TAGS_ID, name: this.allTagsLabel });
+      shortcuts.push({
+        id: ALL_TAGS_ID,
+        name: I18n.t("tagging.selector_all_tags"),
+      });
+    }
+
+    // If there is a single shortcut, we can have a single "remove filter"
+    // option
+    if (shortcuts.length === 1 && shortcuts[0].id === ALL_TAGS_ID) {
+      shortcuts[0].name = I18n.t("tagging.selector_remove_filter");
     }
 
     return shortcuts;
@@ -168,7 +176,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
   actions: {
     onChange(tagId, tag) {
       if (tagId === NO_TAG_ID) {
-        tagId = NONE_TAG_ID;
+        tagId = NONE_TAG;
       } else if (tagId === ALL_TAGS_ID) {
         tagId = null;
       } else if (tag && tag.targetTagId) {

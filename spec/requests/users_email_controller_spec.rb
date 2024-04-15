@@ -3,9 +3,9 @@
 require "rotp"
 
 RSpec.describe UsersEmailController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let!(:email_token) { Fabricate(:email_token, user: user) }
-  fab!(:moderator) { Fabricate(:moderator) }
+  fab!(:moderator)
 
   describe "#confirm-new-email" do
     it "does not redirect to login for signed out accounts, this route works fine as anon user" do
@@ -24,10 +24,9 @@ RSpec.describe UsersEmailController do
     it "errors out for invalid tokens" do
       sign_in(user)
 
-      get "/u/confirm-new-email/invalidtoken"
+      get "/u/confirm-new-email/invalidtoken.json"
 
-      expect(response.status).to eq(200)
-      expect(response.body).to include(I18n.t("change_email.already_done"))
+      expect(response.status).to eq(404)
     end
 
     it "does not change email if accounts mismatch for a signed in user" do
@@ -38,7 +37,8 @@ RSpec.describe UsersEmailController do
 
       sign_in(moderator)
 
-      put "/u/confirm-new-email", params: { token: "#{email_token.token}" }
+      put "/u/confirm-new-email/#{email_token.token}.json"
+      expect(response.status).to eq(404)
       expect(user.reload.email).to eq(old_email)
     end
 
@@ -50,212 +50,16 @@ RSpec.describe UsersEmailController do
         updater.change_to("bubblegum@adventuretime.ooo")
       end
 
-      it "includes security_key_allowed_credential_ids in a hidden field" do
-        key1 = Fabricate(:user_security_key_with_random_credential, user: user)
-        key2 = Fabricate(:user_security_key_with_random_credential, user: user)
-
-        get "/u/confirm-new-email/#{updater.change_req.new_email_token.token}"
-
-        doc = Nokogiri.HTML5(response.body)
-        credential_ids = doc.css("#security-key-allowed-credential-ids").first["value"].split(",")
-        expect(credential_ids).to contain_exactly(key1.credential_id, key2.credential_id)
-      end
-
       it "confirms with a correct token" do
         user.user_stat.update_columns(bounce_score: 42, reset_bounce_score_after: 1.week.from_now)
 
-        put "/u/confirm-new-email", params: { token: "#{updater.change_req.new_email_token.token}" }
+        put "/u/confirm-new-email/#{updater.change_req.new_email_token.token}.json"
 
-        expect(response.status).to eq(302)
-        expect(response.redirect_url).to include("done")
+        expect(response.status).to eq(200)
         user.reload
         expect(user.user_stat.bounce_score).to eq(0)
         expect(user.user_stat.reset_bounce_score_after).to eq(nil)
         expect(user.email).to eq("bubblegum@adventuretime.ooo")
-      end
-
-      context "when second factor is required" do
-        fab!(:second_factor) { Fabricate(:user_second_factor_totp, user: user) }
-        fab!(:backup_code) { Fabricate(:user_second_factor_backup, user: user) }
-
-        it "requires a second factor token" do
-          get "/u/confirm-new-email/#{updater.change_req.new_email_token.token}"
-
-          expect(response.status).to eq(200)
-          expect(response.body).to include(I18n.t("login.second_factor_title"))
-          expect(response.body).not_to include(I18n.t("login.invalid_second_factor_code"))
-        end
-
-        it "requires a backup token" do
-          get "/u/confirm-new-email/#{updater.change_req.new_email_token.token}?show_backup=true"
-
-          expect(response.status).to eq(200)
-          expect(response.body).to include(I18n.t("login.second_factor_backup_title"))
-        end
-
-        it "adds an error on a second factor attempt" do
-          put "/u/confirm-new-email",
-              params: {
-                token: updater.change_req.new_email_token.token,
-                second_factor_token: "000000",
-                second_factor_method: UserSecondFactor.methods[:totp],
-              }
-
-          expect(response.status).to eq(302)
-          expect(flash[:invalid_second_factor]).to eq(true)
-        end
-
-        it "confirms with a correct second token" do
-          put "/u/confirm-new-email",
-              params: {
-                second_factor_token: ROTP::TOTP.new(second_factor.data).now,
-                second_factor_method: UserSecondFactor.methods[:totp],
-                token: updater.change_req.new_email_token.token,
-              }
-
-          expect(response.status).to eq(302)
-          expect(user.reload.email).to eq("bubblegum@adventuretime.ooo")
-        end
-
-        context "with rate limiting" do
-          before do
-            RateLimiter.clear_all!
-            RateLimiter.enable
-          end
-
-          it "rate limits by IP" do
-            freeze_time
-
-            6.times do
-              put "/u/confirm-new-email",
-                  params: {
-                    token: "blah",
-                    second_factor_token: "000000",
-                    second_factor_method: UserSecondFactor.methods[:totp],
-                  }
-
-              expect(response.status).to eq(302)
-            end
-
-            put "/u/confirm-new-email",
-                params: {
-                  token: "blah",
-                  second_factor_token: "000000",
-                  second_factor_method: UserSecondFactor.methods[:totp],
-                }
-
-            expect(response.status).to eq(429)
-          end
-
-          it "rate limits by username" do
-            freeze_time
-
-            6.times do |x|
-              user.email_change_requests.last.update(
-                change_state: EmailChangeRequest.states[:complete],
-              )
-              put "/u/confirm-new-email",
-                  params: {
-                    token: updater.change_req.new_email_token.token,
-                    second_factor_token: "000000",
-                    second_factor_method: UserSecondFactor.methods[:totp],
-                  },
-                  env: {
-                    REMOTE_ADDR: "1.2.3.#{x}",
-                  }
-
-              expect(response.status).to eq(302)
-            end
-
-            user.email_change_requests.last.update(
-              change_state: EmailChangeRequest.states[:authorizing_new],
-            )
-            put "/u/confirm-new-email",
-                params: {
-                  token: updater.change_req.new_email_token.token,
-                  second_factor_token: "000000",
-                  second_factor_method: UserSecondFactor.methods[:totp],
-                },
-                env: {
-                  REMOTE_ADDR: "1.2.3.4",
-                }
-
-            expect(response.status).to eq(429)
-          end
-        end
-      end
-
-      context "when security key is required" do
-        fab!(:user_security_key) do
-          Fabricate(
-            :user_security_key,
-            user: user,
-            credential_id: valid_security_key_data[:credential_id],
-            public_key: valid_security_key_data[:public_key],
-          )
-        end
-
-        before { simulate_localhost_webauthn_challenge }
-
-        it "requires a security key" do
-          get "/u/confirm-new-email/#{updater.change_req.new_email_token.token}"
-
-          expect(response.status).to eq(200)
-          expect(response.body).to include(I18n.t("login.security_key_authenticate"))
-          expect(response.body).to include(I18n.t("login.security_key_description"))
-        end
-
-        context "if the user has a TOTP enabled and wants to use that instead" do
-          before { Fabricate(:user_second_factor_totp, user: user) }
-
-          it "allows entering the totp code instead" do
-            get "/u/confirm-new-email/#{updater.change_req.new_email_token.token}?show_totp=true"
-
-            expect(response.status).to eq(200)
-            expect(response.body).to include(I18n.t("login.second_factor_title"))
-            expect(response.body).not_to include(I18n.t("login.security_key_authenticate"))
-          end
-        end
-
-        it "adds an error on a security key attempt" do
-          get "/u/confirm-new-email/#{updater.change_req.new_email_token.token}"
-          put "/u/confirm-new-email",
-              params: {
-                token: updater.change_req.new_email_token.token,
-                second_factor_token: "{}",
-                second_factor_method: UserSecondFactor.methods[:security_key],
-              }
-
-          expect(response.status).to eq(302)
-          expect(flash[:invalid_second_factor]).to eq(true)
-        end
-
-        it "confirms with a correct security key token" do
-          get "/u/confirm-new-email/#{updater.change_req.new_email_token.token}"
-          put "/u/confirm-new-email",
-              params: {
-                token: updater.change_req.new_email_token.token,
-                second_factor_token: valid_security_key_auth_post_data.to_json,
-                second_factor_method: UserSecondFactor.methods[:security_key],
-              }
-
-          expect(response.status).to eq(302)
-          expect(user.reload.email).to eq("bubblegum@adventuretime.ooo")
-        end
-
-        context "if the security key data JSON is garbled" do
-          it "raises an invalid parameters error" do
-            get "/u/confirm-new-email/#{updater.change_req.new_email_token.token}"
-            put "/u/confirm-new-email",
-                params: {
-                  token: updater.change_req.new_email_token.token,
-                  second_factor_token: "{someweird: 8notjson}",
-                  second_factor_method: UserSecondFactor.methods[:security_key],
-                }
-
-            expect(response.status).to eq(400)
-          end
-        end
       end
     end
 
@@ -269,7 +73,8 @@ RSpec.describe UsersEmailController do
       updater.change_to("bubblegum@adventuretime.ooo")
 
       sign_in(user)
-      put "/u/confirm-new-email", params: { token: "#{updater.change_req.new_email_token.token}" }
+      put "/u/confirm-new-email/#{updater.change_req.new_email_token.token}.json"
+      expect(response.status).to eq(200)
 
       new_password = SecureRandom.hex
       put "/u/password-reset/#{email_token.token}.json", params: { password: new_password }
@@ -282,20 +87,12 @@ RSpec.describe UsersEmailController do
   end
 
   describe "#confirm-old-email" do
-    it "redirects to login for signed out accounts" do
-      get "/u/confirm-old-email/invalidtoken"
-
-      expect(response.status).to eq(302)
-      expect(response.redirect_url).to eq("http://test.localhost/login")
-    end
-
     it "errors out for invalid tokens" do
       sign_in(user)
 
-      get "/u/confirm-old-email/invalidtoken"
+      get "/u/confirm-old-email/invalidtoken.json"
 
-      expect(response.status).to eq(200)
-      expect(response.body).to include(I18n.t("change_email.already_done"))
+      expect(response.status).to eq(404)
     end
 
     it "bans change when accounts do not match" do
@@ -303,10 +100,9 @@ RSpec.describe UsersEmailController do
       updater = EmailUpdater.new(guardian: moderator.guardian, user: moderator)
       email_change_request = updater.change_to("bubblegum@adventuretime.ooo")
 
-      get "/u/confirm-old-email/#{email_change_request.old_email_token.token}"
+      get "/u/confirm-old-email/#{email_change_request.old_email_token.token}.json"
 
-      expect(response.status).to eq(200)
-      expect(body).to include("alert-error")
+      expect(response.status).to eq(403)
     end
 
     context "with valid old token" do
@@ -315,17 +111,15 @@ RSpec.describe UsersEmailController do
         updater = EmailUpdater.new(guardian: moderator.guardian, user: moderator)
         email_change_request = updater.change_to("bubblegum@adventuretime.ooo")
 
-        get "/u/confirm-old-email/#{email_change_request.old_email_token.token}"
+        get "/u/confirm-old-email/#{email_change_request.old_email_token.token}.json"
 
         expect(response.status).to eq(200)
-        body = CGI.unescapeHTML(response.body)
-        expect(body).to include(I18n.t("change_email.authorizing_old.title"))
-        expect(body).to include(I18n.t("change_email.authorizing_old.description"))
+        expect(response.parsed_body["old_email"]).to eq(moderator.email)
+        expect(response.parsed_body["new_email"]).to eq("bubblegum@adventuretime.ooo")
 
-        put "/u/confirm-old-email", params: { token: email_change_request.old_email_token.token }
+        put "/u/confirm-old-email/#{email_change_request.old_email_token.token}.json"
 
-        expect(response.status).to eq(302)
-        expect(response.redirect_url).to include("done=true")
+        expect(response.status).to eq(200)
       end
     end
   end

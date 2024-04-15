@@ -19,7 +19,6 @@ et:
         label: "Hääleta nüüd!"
       show-results:
         title: "Kuva hääletuse tulemused"
-        label: "Kuva tulemused"
       hide-results:
         title: "Tagasi sinu vastuse juurde"
       export-results:
@@ -34,6 +33,8 @@ et:
         confirm: "Kas sa oled kindel, et sa tahad antud hääletuse sulgeda?"
       breakdown:
         count: "Arv"
+      options:
+        label: "Suvandid"
       error_while_toggling_status: "Kahjuks tekkis postituse staatuse ümberlülitamisel tõrge."
       error_while_casting_votes: "Kahjuks tekkis hääletamise käigus tõrge."
       error_while_fetching_voters: "Kahjuks tekkis hääletajate näitamise käigus tõrge."

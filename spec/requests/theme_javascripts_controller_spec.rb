@@ -167,12 +167,15 @@ RSpec.describe ThemeJavascriptsController do
       component.save!
       _, digest = component.baked_js_tests_with_digest
 
+      theme_javascript_hash =
+        component.theme_fields.find_by(upload_id: js_upload.id).javascript_cache.digest
+
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
       expect(response.body).to include(
         "require(\"discourse/lib/theme-settings-store\").registerSettings(" +
           "#{component.id}, {\"num_setting\":5,\"theme_uploads\":{\"vendorlib\":" +
           "\"/uploads/default/test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}/original/1X/#{js_upload.sha1}.js\"},\"theme_uploads_local\":{\"vendorlib\":" +
-          "\"/theme-javascripts/#{js_upload.sha1}.js?__ws=test.localhost\"}}, { force: true });",
+          "\"/theme-javascripts/#{theme_javascript_hash}.js?__ws=test.localhost\"}}, { force: true });",
       )
       expect(response.body).to include("assert.ok(true);")
     ensure
@@ -225,14 +228,6 @@ RSpec.describe ThemeJavascriptsController do
       get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
       expect(response.status).to eq(200)
       expect(response.body).to include("assert.ok(343434);")
-    end
-
-    it "includes inline sourcemap" do
-      ThemeJavascriptCompiler.enable_terser!
-      content, digest = component.baked_js_tests_with_digest
-      get "/theme-javascripts/tests/#{component.id}-#{digest}.js"
-      expect(response.status).to eq(200)
-      expect(response.body).to include("//# sourceMappingURL=data:application/json;base64,")
     end
   end
 end

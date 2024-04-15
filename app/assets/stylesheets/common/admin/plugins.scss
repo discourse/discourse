@@ -6,45 +6,121 @@
       margin-left: auto;
     }
   }
-  td.plugin-name {
-    .name {
-      font-weight: bold;
-    }
-  }
-  .grid {
+
+  .admin-plugins-list {
     @media screen and (min-width: 550px) {
-      tr {
+      .admin-plugins-list__row {
         grid-template-columns: 0.25fr repeat(4, 1fr);
       }
     }
     @include breakpoint(mobile-extra-large) {
-      tr {
+      .admin-plugins-list__row {
         grid-template-columns: 0.25fr repeat(3, 1fr);
       }
-      td.plugin-name {
-        grid-column-start: 2;
-        grid-column-end: -1;
-      }
-      td.settings {
-        grid-row: 2;
-        grid-column-start: 4;
-        text-align: right;
-        button {
-          display: flex;
+      .admin-plugins-list {
+        &__name-details {
+          grid-column-start: 2;
+          grid-column-end: -1;
+        }
+        &__settings {
+          grid-row: 2;
+          grid-column-start: 4;
+          text-align: right;
+          button {
+            display: flex;
+          }
+        }
+        &__version {
+          grid-row: 2;
+          grid-column-start: 3;
+        }
+        &__enabled {
+          grid-row: 2;
+          grid-column-start: 2;
         }
       }
-      td.version {
-        grid-row: 2;
-        grid-column-start: 3;
+    }
+
+    .admin-plugins-list__row-admin-search-filtered {
+      background-color: var(--primary-low);
+    }
+
+    &__author {
+      font-size: var(--font-down-2);
+      padding: 0 0 0.25em 0;
+    }
+
+    &__name-with-badges {
+      display: flex;
+    }
+
+    &__name {
+      font-weight: bold;
+      margin-right: 0.5em;
+    }
+
+    &__badge {
+      font-weight: 400;
+      font-size: var(--font-down-2);
+      background-color: var(--primary-low);
+      color: var(--primary-medium);
+      padding: 0.2em 0.8em;
+
+      .d-icon {
+        font-size: 0.8em;
       }
-      td.col-enabled {
-        grid-row: 2;
-        grid-column-start: 2;
+
+      & + .admin-plugins-list__badge {
+        margin-left: 0.5em;
+      }
+    }
+
+    &__version {
+      .commit-hash {
+        font-size: var(--font-down-1);
       }
     }
   }
 }
 
-.admin-plugins-official-badge {
-  color: var(--success);
+.admin-plugin-config-page {
+  .admin-controls {
+    margin-bottom: 1em;
+  }
+
+  &__main-area {
+    .admin-detail {
+      padding-top: 15px;
+    }
+
+    &.-without-inner-sidebar {
+      .admin-detail {
+        border-left: 0;
+        padding-left: 0;
+        width: 100%;
+      }
+    }
+  }
+}
+
+.admin-plugins .admin-container {
+  margin-top: 0;
+}
+
+.admin-plugins-list-container {
+  margin-top: 1em;
+}
+
+.admin-plugin-filtered-site-settings {
+  &__filter {
+    width: 100%;
+  }
+}
+
+.admin-plugin-config-area {
+  &__settings {
+    .admin-site-settings-filter-controls {
+      margin-bottom: 1em;
+    }
+  }
 }

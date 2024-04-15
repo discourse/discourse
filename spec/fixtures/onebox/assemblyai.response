@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en" class="theme-light">
+    <head>
+        <title>How RLHF Works (And How Things May Go Wrong)</title>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="How are Large Language Models (LLMs) like ChatGPT trained with Reinforcement Learning From Human Feedback (RLHF) to learn human preferences?">
+        <link rel="icon" href="https://www.assemblyai.com/blog/content/images/size/w256h256/2021/09/Frame-141-2.png" type="image/png">
+        <link rel="canonical" href="https://www.assemblyai.com/blog/how-rlhf-preference-model-tuning-works-and-how-things-may-go-wrong/">
+        <meta name="referrer" content="no-referrer-when-downgrade">
+        <meta property="og:site_name" content="News, Tutorials, AI Research">
+        <meta property="og:type" content="article">
+        <meta property="og:title" content="How RLHF Works (And How Things May Go Wrong)">
+        <meta property="og:description" content="Large Language Models like ChatGPT are trained with Reinforcement Learning From Human Feedback (RLHF) to learn human preferences. Let’s uncover how RLHF works and survey its current strongest limitations.">
+        <meta property="og:url" content="https://www.assemblyai.com/blog/how-rlhf-preference-model-tuning-works-and-how-things-may-go-wrong/">
+        <meta property="og:image" content="https://www.assemblyai.com/blog/content/images/2023/08/Blog---RLHF-models.png">
+        <meta property="article:published_time" content="2023-08-03T14:38:05.000Z">
+        <meta property="article:modified_time" content="2023-08-07T11:17:39.000Z">
+        <meta property="article:tag" content="Deep Learning">
+        <meta property="article:tag" content="Popular">
+        <meta property="article:tag" content="no-chatbot">
+        <meta property="article:publisher" content="https://www.facebook.com/AssemblyAI">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="How RLHF Works (And How Things May Go Wrong)">
+        <meta name="twitter:description" content="Large Language Models like ChatGPT are trained with Reinforcement Learning From Human Feedback (RLHF) to learn human preferences. Let’s uncover how RLHF works and survey its current strongest limitations.">
+        <meta name="twitter:url" content="https://www.assemblyai.com/blog/how-rlhf-preference-model-tuning-works-and-how-things-may-go-wrong/">
+        <meta name="twitter:image" content="https://www.assemblyai.com/blog/content/images/2023/08/Blog---RLHF-models.png">
+        <meta name="twitter:label1" content="Written by">
+        <meta name="twitter:data1" content="Marco Ramponi">
+        <meta name="twitter:label2" content="Filed under">
+        <meta name="twitter:data2" content="Deep Learning, Popular, no-chatbot">
+        <meta name="twitter:site" content="@AssemblyAI">
+        <meta property="og:image:width" content="1600">
+        <meta property="og:image:height" content="900">
+        <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "publisher": {
+            "@type": "Organization",
+            "name": "News, Tutorials, AI Research",
+            "url": "https://www.assemblyai.com/blog/",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://www.assemblyai.com/blog/content/images/size/w256h256/2021/09/Frame-141-2.png",
+                "width": 60,
+                "height": 60
+            }
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Marco Ramponi",
+            "image": {
+                "@type": "ImageObject",
+                "url": "https://www.assemblyai.com/blog/content/images/2022/11/marco-foto-profile_cut.jpg",
+                "width": 1236,
+                "height": 1182
+            },
+            "url": "https://www.assemblyai.com/blog/author/marco/",
+            "sameAs": [
+                "https://www.linkedin.com/in/marco-ramponi-ai"
+            ]
+        },
+        "headline": "How RLHF Works (And How Things May Go Wrong)",
+        "url": "https://www.assemblyai.com/blog/how-rlhf-preference-model-tuning-works-and-how-things-may-go-wrong/",
+        "datePublished": "2023-08-03T14:38:05.000Z",
+        "dateModified": "2023-08-07T11:17:39.000Z",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://www.assemblyai.com/blog/content/images/2023/08/Blog---RLHF-models.png",
+            "width": 1600,
+            "height": 900
+        },
+        "keywords": "Deep Learning, Popular, no-chatbot",
+        "description": "Large Language Models like ChatGPT are trained with Reinforcement Learning From Human Feedback (RLHF) to learn human preferences. Let’s uncover how RLHF works and survey its current strongest limitations.",
+        "mainEntityOfPage": "https://www.assemblyai.com/blog/how-rlhf-preference-model-tuning-works-and-how-things-may-go-wrong/"
+    }
+        </script>
+        <meta name="generator" content="Ghost 5.58">
+    </head>
+    <body class="post-template tag-deep-learning tag-popular tag-no-chatbot"></body>
+</html>

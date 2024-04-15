@@ -4,16 +4,16 @@ require "filter_best_posts"
 require "topic_view"
 
 RSpec.describe FilterBestPosts do
-  fab!(:topic) { Fabricate(:topic) }
-  fab!(:coding_horror) { Fabricate(:coding_horror) }
+  fab!(:topic)
+  fab!(:coding_horror)
   fab!(:first_poster) { topic.user }
 
   fab!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1) }
   fab!(:p2) { Fabricate(:post, topic: topic, user: coding_horror, percent_rank: 0.5) }
   fab!(:p3) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 0) }
 
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:moderator)
+  fab!(:admin)
 
   it "can find the best responses" do
     filtered_posts = TopicView.new(topic.id, coding_horror, best: 2).filtered_posts

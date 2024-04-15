@@ -1,14 +1,14 @@
-import { action } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
-import { inject as service } from "@ember/service";
-import { or } from "@ember/object/computed";
-import Category from "discourse/models/category";
 import Component from "@ember/component";
-import I18n from "I18n";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import { or } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { tagName } from "@ember-decorators/component";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import Category from "discourse/models/category";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 @tagName("tr")
 export default class EmbeddableHost extends Component.extend(
@@ -28,7 +28,7 @@ export default class EmbeddableHost extends Component.extend(
     const categoryId = host.category_id || this.site.uncategorized_category_id;
     const category = Category.findById(categoryId);
 
-    host.set("category", category);
+    this.set("category", category);
   }
 
   @discourseComputed("buffered.host", "host.isSaving")
@@ -38,7 +38,6 @@ export default class EmbeddableHost extends Component.extend(
 
   @action
   edit() {
-    this.set("categoryId", this.get("host.category.id"));
     this.set("editToggled", true);
   }
 
@@ -53,14 +52,13 @@ export default class EmbeddableHost extends Component.extend(
       "allowed_paths",
       "class_name"
     );
-    props.category_id = this.categoryId;
+    props.category_id = this.category.id;
 
     const host = this.host;
 
     host
       .save(props)
       .then(() => {
-        host.set("category", Category.findById(this.categoryId));
         this.set("editToggled", false);
       })
       .catch(popupAjaxError);

@@ -1,11 +1,11 @@
 import Component from "@ember/component";
-import Group from "discourse/models/group";
-import I18n from "I18n";
-import PermissionType from "discourse/models/permission-type";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import discourseComputed from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import Group from "discourse/models/group";
+import PermissionType from "discourse/models/permission-type";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend(bufferedProperty("model"), {
   router: service(),

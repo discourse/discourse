@@ -254,15 +254,16 @@ RSpec.describe Middleware::RequestTracker do
     before do
       RateLimiter.enable
       RateLimiter.clear_all_global!
-      RateLimiter.clear_all!
 
       @orig_logger = Rails.logger
       Rails.logger = @fake_logger = FakeLogger.new
 
       # rate limiter tests depend on checks for retry-after
       # they can be sensitive to clock skew during test runs
-      freeze_time DateTime.parse("2021-01-01 01:00")
+      freeze_time_safe
     end
+
+    use_redis_snapshotting
 
     after { Rails.logger = @orig_logger }
 
@@ -306,9 +307,9 @@ RSpec.describe Middleware::RequestTracker do
         status, _ = middleware.call(env1)
         status, _ = middleware.call(env1)
 
-        expect(
-          @fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") },
-        ).to eq(warn_count)
+        expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(
+          warn_count,
+        )
         expect(status).to eq(429)
         warn_count += 1
       end
@@ -328,7 +329,7 @@ RSpec.describe Middleware::RequestTracker do
       stub_const(
         Middleware::RequestTracker,
         "STATIC_IP_SKIPPER",
-        "177.33.14.73 191.209.88.192/30"&.split&.map { |ip| IPAddr.new(ip) },
+        "177.33.14.73 191.209.88.192/30".split.map { |ip| IPAddr.new(ip) },
       ) do
         global_setting :max_reqs_per_ip_per_10_seconds, 1
         global_setting :max_reqs_per_ip_mode, "block"
@@ -397,9 +398,9 @@ RSpec.describe Middleware::RequestTracker do
         status, _ = middleware.call(env1)
         status, _ = middleware.call(env1)
 
-        expect(
-          @fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") },
-        ).to eq(0)
+        expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(
+          0,
+        )
         expect(status).to eq(200)
       end
     end
@@ -411,9 +412,7 @@ RSpec.describe Middleware::RequestTracker do
       status, _ = middleware.call(env)
       status, headers = middleware.call(env)
 
-      expect(@fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") }).to eq(
-        1,
-      )
+      expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
       expect(status).to eq(429)
       expect(headers["Retry-After"]).to eq("10")
     end
@@ -425,9 +424,7 @@ RSpec.describe Middleware::RequestTracker do
       status, _ = middleware.call(env)
       status, _ = middleware.call(env)
 
-      expect(@fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") }).to eq(
-        1,
-      )
+      expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
       expect(status).to eq(200)
     end
 
@@ -494,6 +491,7 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(429)
         expect(called).to eq(1)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_10_secs_limit")
+        expect(response.first).to include("too many requests from this IP address")
         expect(response.first).to include("Error code: ip_10_secs_limit.")
       end
 
@@ -517,6 +515,7 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(429)
         expect(called).to eq(1)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+        expect(response.first).to include("too many requests from this IP address")
         expect(response.first).to include("Error code: ip_60_secs_limit.")
       end
 
@@ -541,6 +540,7 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(429)
         expect(called).to eq(1)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_assets_10_secs_limit")
+        expect(response.first).to include("too many requests from this IP address")
         expect(response.first).to include("Error code: ip_assets_10_secs_limit.")
       end
     end
@@ -581,6 +581,7 @@ RSpec.describe Middleware::RequestTracker do
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("id_60_secs_limit")
+        expect(response.first).to include("too many requests from this user")
         expect(response.first).to include("Error code: id_60_secs_limit.")
       end
       expect(called).to eq(3)
@@ -616,6 +617,7 @@ RSpec.describe Middleware::RequestTracker do
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+        expect(response.first).to include("too many requests from this IP address")
         expect(response.first).to include("Error code: ip_60_secs_limit.")
       end
     end
@@ -651,6 +653,7 @@ RSpec.describe Middleware::RequestTracker do
       status, headers, response = middleware.call(env)
       expect(status).to eq(429)
       expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+      expect(response.first).to include("too many requests from this IP address")
       expect(response.first).to include("Error code: ip_60_secs_limit.")
     end
   end
@@ -660,15 +663,16 @@ RSpec.describe Middleware::RequestTracker do
       lambda do |env|
         sql_calls.times { User.where(id: -100).pluck(:id) }
         redis_calls.times { Discourse.redis.get("x") }
+        yield if block_given?
         result
       end
     end
 
     let(:logger) do
-      ->(env, data) {
+      ->(env, data) do
         @env = env
         @data = data
-      }
+      end
     end
 
     before { Middleware::RequestTracker.register_detailed_request_logger(logger) }
@@ -676,6 +680,8 @@ RSpec.describe Middleware::RequestTracker do
     after { Middleware::RequestTracker.unregister_detailed_request_logger(logger) }
 
     it "can report data from anon cache" do
+      Middleware::AnonymousCache.enable_anon_cache
+
       cache = Middleware::AnonymousCache.new(app([200, {}, ["i am a thing"]]))
       tracker = Middleware::RequestTracker.new(cache)
 
@@ -744,6 +750,36 @@ RSpec.describe Middleware::RequestTracker do
       expect(headers["X-Sql-Time"].to_f).to be > 0
 
       expect(headers["X-Runtime"].to_f).to be > 0
+    end
+
+    it "correctly logs GC stats when `instrument_gc_stat_per_request` site setting has been enabled" do
+      tracker =
+        Middleware::RequestTracker.new(
+          app([200, {}, []]) do
+            GC.start(full_mark: true) # Major GC
+            GC.start(full_mark: false) # Minor GC
+          end,
+        )
+
+      tracker.call(env)
+
+      expect(@data[:timing][:gc]).to eq(nil)
+
+      SiteSetting.instrument_gc_stat_per_request = true
+
+      tracker =
+        Middleware::RequestTracker.new(
+          app([200, {}, []]) do
+            GC.start(full_mark: true) # Major GC
+            GC.start(full_mark: false) # Minor GC
+          end,
+        )
+
+      tracker.call(env)
+
+      expect(@data[:timing][:gc][:time]).to be > 0.0
+      expect(@data[:timing][:gc][:major_count]).to eq(1)
+      expect(@data[:timing][:gc][:minor_count]).to eq(1)
     end
 
     it "can correctly log messagebus request types" do

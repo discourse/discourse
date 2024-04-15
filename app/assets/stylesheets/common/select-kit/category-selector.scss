@@ -1,17 +1,12 @@
 .select-kit,
 .select-kit-box {
   &.category-selector {
-    .select-kit-selected-name {
-      .badge-wrapper {
-        &.box {
-          margin: 2px;
-          padding: 0;
-        }
-      }
-    }
-
     .category-row {
       max-width: 100%;
+
+      .category-status {
+        gap: 0 0.5em;
+      }
 
       .topic-count {
         margin-left: 0.25em;
@@ -19,6 +14,19 @@
 
       .plus-subcategories {
         font-size: var(--font-down-2);
+        margin-left: 0.25em;
+      }
+    }
+
+    .selected-choice-category {
+      .badge-category .d-icon {
+        margin: 0;
+      }
+      &:hover,
+      &:focus {
+        .badge-category {
+          color: var(--secondary);
+        }
       }
     }
   }

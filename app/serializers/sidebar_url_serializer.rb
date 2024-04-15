@@ -4,6 +4,6 @@ class SidebarUrlSerializer < ApplicationSerializer
   attributes :id, :name, :value, :icon, :external, :segment
 
   def external
-    object.external? || object.full_reload?
+    object.external?
   end
 end

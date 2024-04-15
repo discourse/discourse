@@ -1,43 +1,67 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
-import GroupHistory from "discourse/models/group-history";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { equal } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
+import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import Category from "discourse/models/category";
+import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
-import { equal } from "@ember/object/computed";
-import { isEmpty } from "@ember/utils";
+import discourseComputed from "discourse-common/utils/decorators";
 
-const Group = RestModel.extend({
-  user_count: 0,
-  limit: null,
-  offset: null,
+export default class Group extends RestModel {
+  static findAll(opts) {
+    return ajax("/groups/search.json", { data: opts }).then((groups) =>
+      groups.map((g) => Group.create(g))
+    );
+  }
 
-  request_count: 0,
-  requestersLimit: null,
-  requestersOffset: null,
+  static loadMembers(name, opts) {
+    return ajax(`/groups/${name}/members.json`, { data: opts });
+  }
 
+  static mentionable(name) {
+    return ajax(`/groups/${name}/mentionable`);
+  }
+
+  static messageable(name) {
+    return ajax(`/groups/${name}/messageable`);
+  }
+
+  static checkName(name) {
+    return ajax("/groups/check-name", { data: { group_name: name } });
+  }
+
+  user_count = 0;
+  limit = null;
+  offset = null;
+  request_count = 0;
+  requestersLimit = null;
+  requestersOffset = null;
+
+  @equal("mentionable_level", 99) canEveryoneMention;
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
     this.setProperties({ members: [], requesters: [] });
-  },
+  }
 
   @discourseComputed("automatic_membership_email_domains")
   emailDomains(value) {
     return isEmpty(value) ? "" : value;
-  },
+  }
 
   @discourseComputed("associated_group_ids")
   associatedGroupIds(value) {
     return isEmpty(value) ? [] : value;
-  },
+  }
 
   @discourseComputed("automatic")
   type(automatic) {
     return automatic ? "automatic" : "custom";
-  },
+  }
 
   async reloadMembers(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
@@ -72,7 +96,7 @@ const Group = RestModel.extend({
       limit: response.meta.limit,
       offset: response.meta.offset,
     });
-  },
+  }
 
   findRequesters(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
@@ -102,7 +126,7 @@ const Group = RestModel.extend({
         requestersOffset: result.meta.offset,
       });
     });
-  },
+  }
 
   async removeOwner(member) {
     await ajax(`/admin/groups/${this.id}/owners.json`, {
@@ -110,7 +134,7 @@ const Group = RestModel.extend({
       data: { user_id: member.id },
     });
     await this.reloadMembers({}, true);
-  },
+  }
 
   async removeMember(member, params) {
     await ajax(`/groups/${this.id}/members.json`, {
@@ -118,7 +142,7 @@ const Group = RestModel.extend({
       data: { user_id: member.id },
     });
     await this.reloadMembers(params, true);
-  },
+  }
 
   async leave() {
     await ajax(`/groups/${this.id}/leave.json`, {
@@ -126,7 +150,7 @@ const Group = RestModel.extend({
     });
     this.set("can_see_members", this.members_visibility_level < 2);
     await this.reloadMembers({}, true);
-  },
+  }
 
   async addMembers(usernames, filter, notifyUsers, emails = []) {
     const response = await ajax(`/groups/${this.id}/members.json`, {
@@ -138,14 +162,14 @@ const Group = RestModel.extend({
     } else {
       await this.reloadMembers();
     }
-  },
+  }
 
   async join() {
     await ajax(`/groups/${this.id}/join.json`, {
       type: "PUT",
     });
     await this.reloadMembers({}, true);
-  },
+  }
 
   async addOwners(usernames, filter, notifyUsers) {
     const response = await ajax(`/groups/${this.id}/owners.json`, {
@@ -158,69 +182,152 @@ const Group = RestModel.extend({
     } else {
       await this.reloadMembers({}, true);
     }
-  },
+  }
 
   _filterMembers(usernames) {
     return this.reloadMembers({ filter: usernames.join(",") });
-  },
+  }
 
   @discourseComputed("display_name", "name")
   displayName(groupDisplayName, name) {
     return groupDisplayName || name;
-  },
+  }
 
   @discourseComputed("flair_bg_color")
   flairBackgroundHexColor(flairBgColor) {
     return flairBgColor
       ? flairBgColor.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
-  },
+  }
 
   @discourseComputed("flair_color")
   flairHexColor(flairColor) {
     return flairColor
       ? flairColor.replace(new RegExp("[^0-9a-fA-F]", "g"), "")
       : null;
-  },
-
-  canEveryoneMention: equal("mentionable_level", 99),
+  }
 
   @discourseComputed("visibility_level")
   isPrivate(visibilityLevel) {
     return visibilityLevel > 1;
-  },
+  }
 
   @observes("isPrivate", "canEveryoneMention")
   _updateAllowMembershipRequests() {
     if (this.isPrivate || !this.canEveryoneMention) {
       this.set("allow_membership_requests", false);
     }
-  },
+  }
 
-  @discourseComputed("watching_category_ids")
-  watchingCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
-  },
+  @dependentKeyCompat
+  get watchingCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.watching_category_ids &&
+      !Category.hasAsyncFoundAll(this.watching_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watching_category_ids).then(() =>
+        this.notifyPropertyChange("watching_category_ids")
+      );
+    }
 
-  @discourseComputed("tracking_category_ids")
-  trackingCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
-  },
+    return Category.findByIds(this.get("watching_category_ids"));
+  }
 
-  @discourseComputed("watching_first_post_category_ids")
-  watchingFirstPostCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
-  },
+  set watchingCategories(categories) {
+    this.set(
+      "watching_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
 
-  @discourseComputed("regular_category_ids")
-  regularCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
-  },
+  @dependentKeyCompat
+  get trackingCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.tracking_category_ids &&
+      !Category.hasAsyncFoundAll(this.tracking_category_ids)
+    ) {
+      Category.asyncFindByIds(this.tracking_category_ids).then(() =>
+        this.notifyPropertyChange("tracking_category_ids")
+      );
+    }
 
-  @discourseComputed("muted_category_ids")
-  mutedCategories(categoryIds) {
-    return Category.findByIds(categoryIds);
-  },
+    return Category.findByIds(this.get("tracking_category_ids"));
+  }
+
+  set trackingCategories(categories) {
+    this.set(
+      "tracking_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get watchingFirstPostCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.watching_first_post_category_ids &&
+      !Category.hasAsyncFoundAll(this.watching_first_post_category_ids)
+    ) {
+      Category.asyncFindByIds(this.watching_first_post_category_ids).then(() =>
+        this.notifyPropertyChange("watching_first_post_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("watching_first_post_category_ids"));
+  }
+
+  set watchingFirstPostCategories(categories) {
+    this.set(
+      "watching_first_post_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get regularCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.regular_category_ids &&
+      !Category.hasAsyncFoundAll(this.regular_category_ids)
+    ) {
+      Category.asyncFindByIds(this.regular_category_ids).then(() =>
+        this.notifyPropertyChange("regular_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("regular_category_ids"));
+  }
+
+  set regularCategories(categories) {
+    this.set(
+      "regular_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
+
+  @dependentKeyCompat
+  get mutedCategories() {
+    if (
+      this.site.lazy_load_categories &&
+      this.muted_category_ids &&
+      !Category.hasAsyncFoundAll(this.muted_category_ids)
+    ) {
+      Category.asyncFindByIds(this.muted_category_ids).then(() =>
+        this.notifyPropertyChange("muted_category_ids")
+      );
+    }
+
+    return Category.findByIds(this.get("muted_category_ids"));
+  }
+
+  set mutedCategories(categories) {
+    this.set(
+      "muted_category_ids",
+      categories.map((c) => c.id)
+    );
+  }
 
   asJSON() {
     const attrs = {
@@ -301,7 +408,7 @@ const Group = RestModel.extend({
     }
 
     return attrs;
-  },
+  }
 
   async create() {
     const response = await ajax("/admin/groups", {
@@ -316,21 +423,21 @@ const Group = RestModel.extend({
     });
 
     await this.reloadMembers();
-  },
+  }
 
   save(opts = {}) {
     return ajax(`/groups/${this.id}`, {
       type: "PUT",
       data: Object.assign({ group: this.asJSON() }, opts),
     });
-  },
+  }
 
   destroy() {
     if (!this.id) {
       return;
     }
     return ajax(`/admin/groups/${this.id}`, { type: "DELETE" });
-  },
+  }
 
   findLogs(offset, filters) {
     return ajax(`/groups/${this.name}/logs.json`, {
@@ -341,30 +448,33 @@ const Group = RestModel.extend({
         all_loaded: results["all_loaded"],
       });
     });
-  },
+  }
 
-  findPosts(opts) {
+  async findPosts(opts) {
     opts = opts || {};
     const type = opts.type || "posts";
     const data = {};
 
-    if (opts.beforePostId) {
-      data.before_post_id = opts.beforePostId;
+    if (opts.before) {
+      data.before = opts.before;
     }
 
     if (opts.categoryId) {
       data.category_id = parseInt(opts.categoryId, 10);
     }
 
-    return ajax(`/groups/${this.name}/${type}.json`, { data }).then((posts) => {
-      return posts.map((p) => {
-        p.user = User.create(p.user);
-        p.topic = Topic.create(p.topic);
-        p.category = Category.findById(p.category_id);
-        return EmberObject.create(p);
-      });
+    const posts = await ajax(`/groups/${this.name}/${type}.json`, { data });
+    const categories = await Category.asyncFindByIds(
+      posts.map((p) => p.category_id)
+    );
+
+    return posts.map((p) => {
+      p.user = User.create(p.user);
+      p.topic = Topic.create(p.topic);
+      p.category = categories[p.category_id];
+      return EmberObject.create(p);
     });
-  },
+  }
 
   setNotification(notification_level, userId) {
     this.set("group_user.notification_level", notification_level);
@@ -372,38 +482,12 @@ const Group = RestModel.extend({
       data: { notification_level, user_id: userId },
       type: "POST",
     });
-  },
+  }
 
   requestMembership(reason) {
     return ajax(`/groups/${this.name}/request_membership.json`, {
       type: "POST",
       data: { reason },
     });
-  },
-});
-
-Group.reopenClass({
-  findAll(opts) {
-    return ajax("/groups/search.json", { data: opts }).then((groups) =>
-      groups.map((g) => Group.create(g))
-    );
-  },
-
-  loadMembers(name, opts) {
-    return ajax(`/groups/${name}/members.json`, { data: opts });
-  },
-
-  mentionable(name) {
-    return ajax(`/groups/${name}/mentionable`);
-  },
-
-  messageable(name) {
-    return ajax(`/groups/${name}/messageable`);
-  },
-
-  checkName(name) {
-    return ajax("/groups/check-name", { data: { group_name: name } });
-  },
-});
-
-export default Group;
+  }
+}

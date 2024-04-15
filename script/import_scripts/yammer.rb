@@ -468,6 +468,8 @@ class ImportScripts::Yammer < ImportScripts::Base
   end
 
   def normalize_raw(raw)
+    return "<missing>" if raw.blank?
+
     raw = raw.gsub('\n', "")
     raw.gsub!(/\[\[user:(\d+)\]\]/) do
       u = Regexp.last_match(1)

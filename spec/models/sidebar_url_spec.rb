@@ -16,6 +16,20 @@ RSpec.describe SidebarUrl do
         value: "http://#{Discourse.current_hostname}/pub/test",
       ).valid?,
     ).to eq(true)
+    expect(
+      SidebarUrl.new(
+        icon: "link",
+        name: "external",
+        value: "https://www.test.com/" + "a" * 979,
+      ).valid?,
+    ).to eq(true)
+    expect(
+      SidebarUrl.new(
+        icon: "link",
+        name: "external",
+        value: "https://www.test.com/" + "a" * 980,
+      ).valid?,
+    ).to eq(false)
   end
 
   it "sets external flag" do

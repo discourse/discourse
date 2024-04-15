@@ -81,7 +81,7 @@ RSpec.describe IntegerSettingValidator do
     end
 
     context "with min and max" do
-      subject(:validator) { described_class.new(min: -1, max: 3) }
+      subject(:validator) { described_class.new(min: -1, max: 1_000_000) }
 
       include_examples "for all IntegerSettingValidator opts"
 
@@ -92,8 +92,12 @@ RSpec.describe IntegerSettingValidator do
       end
 
       it "returns false if value is out of range" do
-        expect(validator.valid_value?(4)).to eq(false)
+        expect(validator.valid_value?(1_000_001)).to eq(false)
         expect(validator.valid_value?(-2)).to eq(false)
+      end
+
+      it "returns formatted error" do
+        expect(validator.error_message).to eq("Value must be between -1 and 1,000,000.")
       end
     end
 

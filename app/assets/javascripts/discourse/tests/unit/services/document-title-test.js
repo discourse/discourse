@@ -1,21 +1,16 @@
-import { module, test } from "qunit";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { currentUser } from "discourse/tests/helpers/qunit-helpers";
-import Session from "discourse/models/session";
+import { module, test } from "qunit";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Service | document-title", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    const session = Session.current();
+    const session = getOwner(this).lookup("service:session");
     session.hasFocus = true;
 
     this.documentTitle = getOwner(this).lookup("service:document-title");
-  });
-
-  hooks.afterEach(function () {
-    this.documentTitle.reset();
   });
 
   test("it updates the document title", function (assert) {
@@ -33,8 +28,13 @@ module("Unit | Service | document-title", function (hooks) {
   });
 
   test("it displays notification counts for logged in users", function (assert) {
-    this.documentTitle.currentUser = currentUser();
-    this.documentTitle.currentUser.user_option.dynamic_favicon = false;
+    const currentUser = logIn();
+    this.owner.unregister("service:current-user");
+    this.owner.register("service:current-user", currentUser, {
+      instantiate: false,
+    });
+
+    currentUser.user_option.dynamic_favicon = false;
     this.documentTitle.setTitle("test notifications");
     this.documentTitle.updateNotificationCount(5);
     assert.strictEqual(document.title, "test notifications");
@@ -46,13 +46,17 @@ module("Unit | Service | document-title", function (hooks) {
   });
 
   test("it doesn't display notification counts for users in do not disturb", function (assert) {
-    this.documentTitle.currentUser = currentUser();
+    const currentUser = logIn();
+    this.owner.unregister("service:current-user");
+    this.owner.register("service:current-user", currentUser, {
+      instantiate: false,
+    });
 
     const date = new Date();
     date.setHours(date.getHours() + 1);
-    this.documentTitle.currentUser.do_not_disturb_until = date.toUTCString();
+    currentUser.do_not_disturb_until = date.toUTCString();
 
-    this.documentTitle.currentUser.user_option.dynamic_favicon = false;
+    currentUser.user_option.dynamic_favicon = false;
     this.documentTitle.setTitle("test notifications");
     this.documentTitle.updateNotificationCount(5);
     assert.strictEqual(document.title, "test notifications");

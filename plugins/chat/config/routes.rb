@@ -4,18 +4,30 @@ Chat::Engine.routes.draw do
   namespace :api, defaults: { format: :json } do
     get "/chatables" => "chatables#index"
     get "/channels" => "channels#index"
-    get "/channels/me" => "current_user_channels#index"
+    get "/me/channels" => "current_user_channels#index"
+    get "/me/threads" => "current_user_threads#index"
     post "/channels" => "channels#create"
     put "/channels/read/" => "reads#update_all"
     put "/channels/:channel_id/read/:message_id" => "reads#update"
+    post "/channels/:channel_id/messages/:message_id/flags" => "channels_messages_flags#create"
+    post "/channels/:channel_id/drafts" => "channels_drafts#create"
     delete "/channels/:channel_id" => "channels#destroy"
     put "/channels/:channel_id" => "channels#update"
     get "/channels/:channel_id" => "channels#show"
     put "/channels/:channel_id/status" => "channels_status#update"
+    get "/channels/:channel_id/messages" => "channel_messages#index"
+    put "/channels/:channel_id/messages/:message_id" => "channel_messages#update"
     post "/channels/:channel_id/messages/moves" => "channels_messages_moves#create"
+    delete "/channels/:channel_id/messages/:message_id/streaming" =>
+             "channels_messages_streaming#destroy"
+    post "/channels/:channel_id/invites" => "channels_invites#create"
     post "/channels/:channel_id/archives" => "channels_archives#create"
     get "/channels/:channel_id/memberships" => "channels_memberships#index"
+    post "/channels/:channel_id/memberships" => "channels_memberships#create"
     delete "/channels/:channel_id/memberships/me" => "channels_current_user_membership#destroy"
+    delete "/channels/:channel_id/memberships/me/follows" =>
+             "channels_current_user_membership_follows#destroy"
+    put "/channels/:channel_id/memberships/me" => "channels_current_user_membership#update"
     post "/channels/:channel_id/memberships/me" => "channels_current_user_membership#create"
     put "/channels/:channel_id/notifications-settings/me" =>
           "channels_current_user_notifications_settings#update"
@@ -29,17 +41,31 @@ Chat::Engine.routes.draw do
     get "/mentions/groups" => "hints#check_group_mentions", :format => :json
 
     get "/channels/:channel_id/threads" => "channel_threads#index"
+    post "/channels/:channel_id/threads" => "channel_threads#create"
     put "/channels/:channel_id/threads/:thread_id" => "channel_threads#update"
     get "/channels/:channel_id/threads/:thread_id" => "channel_threads#show"
+    get "/channels/:channel_id/threads/:thread_id/messages" => "channel_thread_messages#index"
     put "/channels/:channel_id/threads/:thread_id/read" => "thread_reads#update"
+    post "/channels/:channel_id/threads/:thread_id/drafts" => "channels_threads_drafts#create"
+    put "/channels/:channel_id/threads/:thread_id/notifications-settings/me" =>
+          "channel_threads_current_user_notifications_settings#update"
+
+    # TODO (martin) Remove this when we refactor the DM channel creation to happen
+    # via message creation in a different API controller.
+    post "/direct-message-channels" => "direct_messages#create"
 
     put "/channels/:channel_id/messages/:message_id/restore" => "channel_messages#restore"
     delete "/channels/:channel_id/messages/:message_id" => "channel_messages#destroy"
+
+    get "/channels/:channel_id/summarize" => "summaries#get_summary"
+  end
+
+  namespace :admin, defaults: { format: :json, constraints: StaffConstraint.new } do
+    post "export/messages" => "export#export_messages"
   end
 
   # direct_messages_controller routes
   get "/direct_messages" => "direct_messages#index"
-  post "/direct_messages/create" => "direct_messages#create"
 
   # incoming_webhooks_controller routes
   post "/hooks/:key" => "incoming_webhooks#create_message"
@@ -49,29 +75,22 @@ Chat::Engine.routes.draw do
 
   # chat_controller routes
   get "/" => "chat#respond"
+  get "/new-message" => "chat#respond"
+  get "/direct-messages" => "chat#respond"
+  get "/channels" => "chat#respond"
+  get "/threads" => "chat#respond"
   get "/browse" => "chat#respond"
   get "/browse/all" => "chat#respond"
   get "/browse/closed" => "chat#respond"
   get "/browse/open" => "chat#respond"
   get "/browse/archived" => "chat#respond"
-  get "/draft-channel" => "chat#respond"
-  post "/enable" => "chat#enable_chat"
-  post "/disable" => "chat#disable_chat"
   post "/dismiss-retention-reminder" => "chat#dismiss_retention_reminder"
-  get "/:chat_channel_id/messages" => "chat#messages"
-  get "/message/:message_id" => "chat#message_link"
-  put ":chat_channel_id/edit/:message_id" => "chat#edit_message"
   put ":chat_channel_id/react/:message_id" => "chat#react"
   put "/:chat_channel_id/:message_id/rebake" => "chat#rebake"
-  post "/:chat_channel_id/:message_id/flag" => "chat#flag"
   post "/:chat_channel_id/quote" => "chat#quote_messages"
-  get "/lookup/:message_id" => "chat#lookup_message"
-  put "/:chat_channel_id/read/:message_id" => "chat#update_user_last_read"
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
-  put "/:chat_channel_id/invite" => "chat#invite_users"
-  post "/drafts" => "chat#set_draft"
-  post "/:chat_channel_id" => "chat#create_message"
-  put "/flag" => "chat#flag"
+  post "/:chat_channel_id" => "api/channel_messages#create"
+
   get "/emojis" => "emojis#index"
 
   base_c_route = "/c/:channel_title/:channel_id"
@@ -86,6 +105,7 @@ Chat::Engine.routes.draw do
   get "/channel/:channel_id", to: redirect("/chat/c/-/%{channel_id}")
 
   get "#{base_c_route}/t/:thread_id" => "chat#respond"
+  get "#{base_c_route}/t/:thread_id/:message_id" => "chat#respond"
 
   base_channel_route = "/channel/:channel_id/:channel_title"
   redirect_base = "/chat/c/%{channel_title}/%{channel_id}"

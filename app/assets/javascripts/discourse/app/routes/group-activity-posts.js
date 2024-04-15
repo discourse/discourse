@@ -1,6 +1,6 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
 import { action, get } from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "discourse-i18n";
 
 export function buildGroupPage(type) {
   return DiscourseRoute.extend({
@@ -24,7 +24,6 @@ export function buildGroupPage(type) {
         type,
         canLoadMore: !loadedAll,
       });
-      this.controllerFor("application").set("showFooter", loadedAll);
     },
 
     @action

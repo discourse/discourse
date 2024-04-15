@@ -45,6 +45,9 @@ fi:
       trigger: "heitä"
       invalid: |-
         Pahoittelen, mutta on matemaattinen mahdottomuus heittää noppia pyytämälläsi tavalla. :confounded:
+      not_enough_dice:
+        one: "Minulla on vain %{count} noppa. Häpeällistä, tiedän!"
+        other: "Minulla on vain %{count} noppaa. Häpeällistä, tiedän!"
       out_of_range: |-
         Tiesitkö, että [suurin mahdollinen määrä sivuja](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) matemaattisesti tasapuolisessa nopassa on 120?
       results: |-
@@ -293,10 +296,6 @@ fi:
         not_found: |-
           Oi voi, tuhmaa viestiäni ei ole vielä liputettu sopimattomaksi. :worried: Voitko liputtaa sen sopimattomaksi **flag** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> -painikkeella? Älä unohda, että saat lisää toimintoja näkyviin <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> -painikkeen takaa.
       search:
-        instructions: |-
-          _psst_ … Olen piilottanut yllätyksen tähän ketjuun. Jos kaipaat haastetta, etsi sitä **valitsemalla hakukuvake** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> oikeasta yläkulmasta &#8599;.
-
-          Kokeile etsiä termiä "kapybara" tästä ketjusta
         hidden_message: |-
           Miten sinulta jäi tämä kapybara huomaamatta? :wink:
 
@@ -373,9 +372,9 @@ fi:
         instructions: |-
           Tiesitkö, että viesteissä voi viitata alueisiin ja tunnisteisiin? Esimerkiksi, oletko käynyt alueella %{category}?
 
-          Näppäile lauseen keskellä `#` ja valitse mieleinen alue tai tunniste.
+          Kirjoita # mihin tahansa kohtaan lauseessa ja valitse mieleinen alue tai tunniste.
         not_found: |-
-          Höh, en näe viittauksia alueisiin. Huomioi, ettei `#` saa olla rivinsä ensimmäinen merkki. Kopioisitko tämän seuraavaan vastaukseesi?
+          Höh, en näe viittauksia alueisiin. Kopioisitko tämän seuraavaan vastaukseesi?
 
           ```text
           Voin luoda aluelinkin käyttäen risuaitaa #

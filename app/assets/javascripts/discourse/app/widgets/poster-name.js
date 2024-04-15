@@ -1,10 +1,10 @@
-import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import I18n from "I18n";
-import { formatUsername } from "discourse/lib/utilities";
-import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { formatUsername } from "discourse/lib/utilities";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
+import getURL from "discourse-common/lib/get-url";
+import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
 let sanitizeName = function (name) {
   return name.toLowerCase().replace(/[\s\._-]/g, "");
@@ -61,7 +61,7 @@ export default createWidget("poster-name", {
 
   didRenderWidget() {
     if (this.attrs.user) {
-      this.attrs.user.trackStatus();
+      this.attrs.user.statusManager.trackStatus();
       this.attrs.user.on("status-changed", this, "scheduleRerender");
     }
   },
@@ -69,7 +69,7 @@ export default createWidget("poster-name", {
   willRerenderWidget() {
     if (this.attrs.user) {
       this.attrs.user.off("status-changed", this, "scheduleRerender");
-      this.attrs.user.stopTrackingStatus();
+      this.attrs.user.statusManager.stopTrackingStatus();
     }
   },
 

@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
 import { gt, readOnly } from "@ember/object/computed";
-import { bind } from "discourse-common/utils/decorators";
+import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class WebhookEvents extends Component {
   @service messageBus;

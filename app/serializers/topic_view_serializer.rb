@@ -78,10 +78,12 @@ class TopicViewSerializer < ApplicationSerializer
     :user_last_posted_at,
     :is_shared_draft,
     :slow_mode_enabled_until,
+    :summarizable,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
   has_many :pending_posts, serializer: TopicPendingPostSerializer, root: false, embed: :objects
+  has_many :categories, serializer: TopicCategorySerializer, embed: :objects
 
   has_one :published_page, embed: :objects
 
@@ -310,5 +312,13 @@ class TopicViewSerializer < ApplicationSerializer
 
   def slow_mode_enabled_until
     object.topic.slow_mode_topic_timer&.execute_at
+  end
+
+  def summarizable
+    object.summarizable?
+  end
+
+  def include_categories?
+    scope.can_lazy_load_categories?
   end
 end

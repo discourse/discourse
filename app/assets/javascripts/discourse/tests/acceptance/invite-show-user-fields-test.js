@@ -1,7 +1,7 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import PreloadStore from "discourse/lib/preload-store";
 import { test } from "qunit";
+import PreloadStore from "discourse/lib/preload-store";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Accept Invite - User Fields", function (needs) {
   needs.site({

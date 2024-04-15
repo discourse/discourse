@@ -9,8 +9,8 @@
     {{if this.model.profile_hidden 'profile-hidden'}}
     {{this.primaryGroup}}"
 >
-  <DSection @class="user-main">
-    <a href="#user-content" id="skip-link" class="skip-link__user-nav">
+  <section class="user-main">
+    <a href="#user-content" id="user-nav-skip-link" class="skip-link__user-nav">
       {{i18n "skip_user_nav"}}
     </a>
     <section
@@ -296,10 +296,13 @@
               {{#if this.model.can_send_private_message_to_user}}
                 <li>
                   <DButton
-                    @class="btn-primary compose-pm"
-                    @action={{route-action "composePrivateMessage" this.model}}
+                    @action={{fn
+                      (route-action "composePrivateMessage")
+                      this.model
+                    }}
                     @icon="envelope"
                     @label="user.private_message"
+                    class="btn-primary compose-pm"
                   />
                 </li>
               {{/if}}
@@ -334,13 +337,17 @@
               {{#if this.canExpandProfile}}
                 <li>
                   <DButton
-                    @ariaExpanded={{this.collapsedInfoState.isExpanded}}
                     @ariaLabel={{this.collapsedInfoState.ariaLabel}}
-                    @ariaControls="collapsed-info-panel"
-                    @class="btn-default"
                     @label={{concat "user." this.collapsedInfoState.label}}
                     @icon={{this.collapsedInfoState.icon}}
                     @action={{action this.collapsedInfoState.action}}
+                    aria-controls="collapsed-info-panel"
+                    aria-expanded={{if
+                      this.collapsedInfoState.isExpanded
+                      "true"
+                      "false"
+                    }}
+                    class="btn-default"
                   />
                 </li>
               {{/if}}
@@ -384,7 +391,7 @@
                       @model={{this.model.invited_by}}
                     >{{this.model.invited_by.username}}</LinkTo></dd></div>
               {{/if}}
-              {{#if this.model.trust_level}}
+              {{#if this.hasTrustLevel}}
                 <div><dt class="trust-level">{{i18n "user.trust_level"}}</dt><dd
                     class="trust-level"
                   >{{this.model.trustLevel.name}}</dd></div>
@@ -396,11 +403,10 @@
                       {{this.model.email}}
                     {{else}}
                       <DButton
-                        @action={{route-action "checkEmail"}}
-                        @actionParam={{this.model}}
+                        @action={{fn (route-action "checkEmail") this.model}}
                         @icon="envelope"
                         @label="admin.users.check_email.text"
-                        @class="btn-primary"
+                        class="btn-primary"
                       />
                     {{/if}}
                   </dd>
@@ -435,7 +441,7 @@
                     @action={{action "adminDelete"}}
                     @icon="exclamation-triangle"
                     @label="user.admin_delete"
-                    @class="btn-danger btn-delete-user"
+                    class="btn-danger btn-delete-user"
                   /></div>
               {{/if}}
             </dl>
@@ -454,6 +460,7 @@
         @user={{this.model}}
         @isStaff={{this.currentUser.staff}}
         @isMobileView={{this.site.mobileView}}
+        @showActivityTab={{this.showActivityTab}}
         @showNotificationsTab={{this.showNotificationsTab}}
         @showPrivateMessages={{this.showPrivateMessages}}
         @canInviteToForum={{this.canInviteToForum}}
@@ -468,5 +475,5 @@
         {{outlet}}
       </div>
     </div>
-  </DSection>
+  </section>
 </div>

@@ -78,7 +78,7 @@ module Onebox
         else
           # for channel pages
           html = Onebox::Engine::AllowlistedGenericOnebox.new(@url, @timeout).to_html
-          return if Onebox::Helpers.blank?(html)
+          return if html.blank?
           html.gsub!(%r{['"]//}, "https://")
           html
         end

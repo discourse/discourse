@@ -25,16 +25,16 @@ cs:
       long_description: |
         Tento odznak se uděluje po úspěšném absolvování interaktivního kurzu pro pokročilé uživatele. Zvládli jste pokročilé diskusní nástroje - a nyní máte plnou licenci!
   discourse_narrative_bot:
-    bio: "Ahoj, nejsem skutečná osoba. Jsem bot, který vás může naučit něco o tomto webu. Chcete-li se mnou komunikovat, pošlete mi zprávu nebo mě zmiňte jménem."
+    bio: "Ahoj, nejsem skutečná osoba. Jsem bot, který tě může naučit něco o tomto webu. Chceš-li se mnou komunikovat, pošli mi zprávu nebo mě zmiň mým jménem."
     tl2_promotion_message:
-      subject_template: "Teď, když jste povýšili, je čas seznámit se s některými pokročilými funkcemi!"
+      subject_template: "Teď, když jsi povýšil/a, je čas seznámit se s některými pokročilými funkcemi!"
       text_body_template: |
         Odpovězte na tuto zprávu pomocí `@%{discobot_username} %{reset_trigger}`, abyste se dozvěděli více o tom, co můžete udělat.
     timeout:
       message: |-
         Ahoj @%{username}, jen se hlásím, protože jsem o tobě už dlouho neslyšel.
 
-        - Chceš-li pokračovat, odpověz mi kdykoli.
+        - Chceš-li pokračovat, kdykoli mi odpověz.
 
         - Pokud chceš tento krok přeskočit, řekni `%{skip_trigger}`.
 
@@ -52,7 +52,7 @@ cs:
     quote:
       trigger: "citace"
       "1":
-        quote: "Uprostřed každého problému se nachází příležitost."
+        quote: "Uprostřed každé potíže se skrývá příležitost"
         author: "Albert Einstein"
       "2":
         quote: "Svoboda nemá cenu, pokud s ní není spojena svoboda chybovat."
@@ -70,16 +70,16 @@ cs:
         quote: "Život je jako bonboniéra, nikdy nevíš, co ochutnáš."
         author: "Máma Forresta Gumpa"
       "7":
-        quote: "Malý krok pro člověka, vleký skok pro lidstvo."
+        quote: "Malý krok pro člověka, velký skok pro lidstvo."
         author: "Neil Armstrong"
       "8":
         quote: "Každý den udělejte jednu věc, která vás děsí."
         author: "Eleanor Roosevelt"
       "9":
-        quote: "Chyby jsou vždy odpustitelné, když má daná osoba odvahu je přiznat."
+        quote: "Chyby se vždy dají odpustit, pokud má člověk odvahu je přiznat."
         author: "Bruce Lee"
       "10":
-        quote: "Cokoli si dokáže lidská mysl představit a čemu uvěří, toho může člověk dosáhnout."
+        quote: "Cokoli si lidská mysl dokáže představit a čemu uvěří, toho může dosáhnout."
         author: "Napoleon Hill"
       "11":
         quote: "Mír doma, mír ve světě."
@@ -88,7 +88,7 @@ cs:
         quote: "Vzdělání není způsob jak uniknout chudobě, je to způsob, jak s ní bojovat."
         author: "Julius Nyerere"
       "13":
-        quote: "I cesta tisíc mil dlouhá začíná prvním krokem."
+        quote: "I cesta tisíc mil dlouhá začíná jedním krokem."
         author: "Lao Tzu"
       results: |-
         > :left_speech_bubble: _%{quote}_ &mdash; %{author}
@@ -104,7 +104,7 @@ cs:
         "7": "S největší pravděpodobností"
         "8": "Vypadá to dobře"
         "9": "Ano"
-        "10": "Dle znamení ano"
+        "10": "Znamení naznačují, že ano"
         "11": "Odpověď je nejasná, zkuste to znovu"
         "12": "Zeptej se znovu později"
         "13": "To ti teď raději neřeknu"
@@ -128,7 +128,7 @@ cs:
           V současné době umím dělat následující věci:
 
           `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > Spustí interaktivní výukový kurz speciálně pro vás, v osobní zprávě. `{name-of-tutorial}` může být jeden z: `%{tracks}`.
+          > Spustit interaktivní výukový kurz speciálně pro tebe, v osobní zprávě. `{name-of-tutorial}` může být jedno z: `%{tracks}`.
         bot_actions: |-
           `@%{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6
@@ -138,7 +138,7 @@ cs:
 
           `@%{discobot_username} %{magic_8_ball_trigger}`
           > :crystal_ball: Můžete se na ni spolehnout
-        discobot_disabled: Ve svých předvolbách jste mě zakázali. Musíte povolit tipy pro nové uživatele aby jste se mnou mohli komunikovat.
+        discobot_disabled: Ve svých předvolbách jsi mě zakázal/a. Musíš povolit tipy pro nové uživatele aby jsi se mnou mohl/a komunikovat.
       do_not_understand:
         first_response: |-
           Dík za odpověď!
@@ -146,9 +146,9 @@ cs:
           Bohužel nejsem naprogramován nijak skvěle, takže jsem tomuhle moc nerozuměl. :frowning:
         track_response: Můžeš to zkusit znovu, nebo pokud chceš tento krok přeskočit, řekni „%{skip_trigger}“. Jinak pro začnutí znovu řekni „%{reset_trigger}“.
         second_response: |-
-          Promiň, pořád to nechápu. :anguished:
+          Eh, promiň. Pořád to nechápu. :anguished:
 
-          Jsem jen bot, ale pokud chceš oslovit skutečnou osobu, podívej se na [naši kontaktní stránku] (%{base_path}/ o).
+          Jsem jen robot, ale pokud chceš oslovit skutečnou osobu, podívej se na [naši kontaktní stránku] (%{base_path}/about).
 
           Mezitím se ti budu klidit z cesty.
     new_user_narrative:
@@ -158,28 +158,28 @@ cs:
       hello:
         title: "Zdravím!"
         message: |-
-          Děkujeme, že jste se připojili k %{title}, a vítáme vás!
+          Dík, že ses přidal/a k %{title}, a vítám tě!
 
-          - Jsem jen robot, ale [náš přátelský personál](%{base_uri}/about) je tu také, pokud se potřebujete na někoho obrátit.
+          - Jsem jen robot, ale [naše přátelská redakce](%{base_uri}/about) je tu pro tebe také, pokud se potřebuješ na někoho obrátit.
 
-          - Z bezpečnostních důvodů dočasně omezujeme možnosti nových uživatelů. Jakmile vás poznáme, získáte [nové schopnosti](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) (a [badges](%{base_uri}/badges)).
+          - Z bezpečnostních důvodů dočasně omezujeme možnosti nových uživatelů. Jakmile tě poznáme, získáš [nové schopnosti](https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/29) (a [odznaky](%{base_uri}/badges)).
 
           - Za všech okolností věříme v [civilizované chování komunity](%{base_uri}/guidelines).
       onebox:
         instructions: |-
-          Dále, můžete se mnou sdílet jeden z těchto odkazů? Odpovězte ** samotným odkazem na řádku ** a automaticky se rozbalí o šikovný souhrn.
+          Dále, můžeš se se mnou podělit o jeden z těchto odkazů? Odpověz **odkazem na samostatném řádku**, a ten se automaticky rozšíří o šikovné shrnutí.
 
-          Chcete-li zkopírovat libovolný odkaz, klepněte a podržte na mobilním zařízení nebo klikněte pravým tlačítkem myši na ukazovací zařízení:
+          Chceš-li zkopírovat libovolný odkaz, klepni a podrž na mobilním zařízení nebo klikni pravým tlačítkem myši na polohovací zařízení (myš):
 
           <https://en.wikipedia.org/wiki/Inherently_funny_word>
           <https://en.wikipedia.org/wiki/Death_by_coconut>
-          <https://en.wikipedia.org/wiki/Calculator_spelling>
+          <https://en.wikipedia.org/wiki/Calculator_spelling>.
         reply: |-
-          Super! Toto bude fungovat pro většinu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> odkazů. Nezapomeňte, že to musí být na řádku _všechno samo_, s ničím jiným vpředu ani vzadu.
+          Super! Toto bude fungovat pro většinu <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> odkazů. Nezapomeň, že to musí být na _samostatném_ řádku, bez ničeho dalšího před nebo za ním.
         not_found: |-
-          Lituji, odkaz ve vaší odpovědi jsem nenašel! :cry:
+          Promiň, ale odkaz jsem ve tvojí odpovědi nenašel! :cry:
 
-          Můžete zkusit přidat následující odkaz na svůj vlastní řádek do své další odpovědi?
+          Můžeš zkusit přidat následující odkaz na samostatný řádek do své další odpovědi?
 
           <https://en.wikipedia.org/wiki/Exotic_Shorthair>
       images:
@@ -188,260 +188,255 @@ cs:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Pokud se vám líbí (a komu by ne!), Pokračujte a stisknutím tlačítka :heart: pod tímto příspěvkem mi dejte vědět.
+          Pokud se ti líbí (a komu by ne!), pokračuj a stisknutím tlačítka "Líbí se" :heart: pod tímto příspěvkem mi to dej vědět.
 
-          Můžete ** odpovědět obrázkem? ** Jakýkoli obrázek bude stačit! Přetáhněte, stiskněte tlačítko nahrávání nebo ho dokonce zkopírujte a vložte.
+          Můžeš **odpovědět obrázkem?** Jakýkoli obrázek bude stačit! Přetáhni, stiskni tlačítko nahrávání nebo ho prostě jen zkopíruj a vlož.
         reply: |-
-          Šikovný obrázek - stiskl jsem tlačítko jako :heart: , abych vás informoval, jak moc si toho vážím :heart_eyes:
+          Šikovný obrázek – stiskl jsem tlačítko :heart: , abych ti dal najevo, jak moc si toho vážím :heart_eyes:
         like_not_found: |-
-          Zapomněli jste dát lajk, tedy říct líbí se mi :heart: můj [příspěvek?] (%{url}) :crying_cat_face:
+          Nezapomněl/a jsi lajknout :heart: můj [příspěvek?](%{url}) :crying_cat_face:
         not_found: |-
-          Vypadá to, že jste nenahráli obrázek, a tak jsem vybral obrázek, kterým jsem si jistý, že se vám bude líbit.
+          Vypadá to, že jsi nenahrál/a žádný obrázek, tak jsem vybral obrázek, který se ti určitě bude líbit.
 
           <%{image_url}>
 
-          Zkuste tedy nahrát tento nebo vložit odkaz sám na řádek!
+          Zkus příště nahrát tenhle, nebo vložit odkaz na samostatný řádek!
       likes:
         instructions: |-
-          Tady je obrázek jednorožce:
+          Zde je obrázek jednorožce:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/unicorn.png" width="520" height="520">
 
-          Pokud se vám líbí (a komu by ne!), Pokračujte a stisknutím tlačítka :heart: pod tímto příspěvkem mi dejte vědět.
-
-          Můžete ** odpovědět obrázkem? ** Jakýkoli obrázek bude stačit! Přetáhněte, stiskněte tlačítko nahrávání nebo ho dokonce zkopírujte a vložte.
+          Pokud se ti líbí (a komu by se nelíbil!), stiskni tlačítko "Líbí se" :heart: pod tímto příspěvkem a dej mi vědět.
         reply: |-
-          Děkuji, že se vám líbí můj příspěvek!
+          Dík, že se ti líbí můj příspěvek!
         not_found: |-
-          Zapomněli jste dát lajk, tedy říct líbí se mi :heart: na můj [příspěvek?] (%{url}) :crying_cat_face:
+          Nezapomněl/a jsi lajknout :heart: můj [příspěvek?](%{url}) :crying_cat_face:
       formatting:
         instructions: |-
           Dokážeš udělat ve své odpovědi nějaká slova **tučná** nebo _kurzívou_ ?
 
-          - zadejte `**bold**` nebo `_italic_`
+          - napiš `**tučné**` nebo `_kurzíva_`
 
-          nebo stiskněte tlačítka <kbd><b>B</b></kbd> nebo <kbd><i>I</i></kbd> v editoru
+          - nebo v editoru stiskni tlačítka <kbd><b>B</b></kbd> nebo <kbd><i>I</i></kbd>
         reply: |-
-          Dobrá práce! HTML a BBCode fungují také pro formátování - abyste se dozvěděli více, [vyzkoušejte tento návod] (https://commonmark.org/help) :nerd:
+          Dobrá práce! HTML a BBCode fungují také pro formátování – aby ses dozvěděl/a více, [vyzkoušej tento návod](https://commonmark.org/help) :nerd:
         not_found: |-
-          Ve vaší odpovědi jsem nenašel žádné formátování. :pencil2:
+          Ojé, ve tvé odpovědi jsem nenašel žádné formátování. :pencil2:
 
-          Můžete to zkusit znovu? Použijte <kbd><b>B</b></kbd> tučných nebo <kbd><i>I</i></kbd> kurzívy v editoru, pokud se uvíznete.
+          Můžeš to zkusit znovu? Pokud se zasekneš, použij v editoru tlačítka <kbd><b>B</b></kbd> pro tučné písmo nebo <kbd><i>I</i></kbd> pro kurzívu.
       quoting:
         instructions: |-
-          Můžete mě zkusit citovat, když odpovíte, abych věděl přesně, na kterou část odpovídáte?
+          Můžeš mě zkusit citovat, když odpovíš, abych věděl přesně, na kterou část odpovídáš?
 
           > Pokud je to káva, přineste mi čaj, ale pokud je to čaj, přineste mi kávu, prosím.
           >
           > Jednou z výhod mluvit sám se sebou je, že víte, že alespoň někdo poslouchá.
           >
-          > Někteří lidé ovládají způsob, jak zacházet se slovy, a jiní lidé… oh, uh, ne
+          > Někteří lidé ovládají způsob, jak zacházet se slovy, a jiní lidé… eee, ehm, ne.
 
-          Vyberte text kterékoli nabídky &uarr; , které chcete, a pak stiskněte tlačítko **Quote**, které se objeví nad výběrem — nebo tlačítko **Odpověď** v dolní části tohoto příspěvku.
+          Vyber text kterékoli &uarr; z citátů, který se ti líbí, a pak stiskni tlačítko **Citovat**, které se objeví nad výběrem – nebo tlačítko **Odpovědět** v dolní části tohoto příspěvku.
 
-          Pod citátem zadejte slovo nebo dvě o tom, proč jste vybrali právě ten, protože jsem zvědavý :thinking:
+          Pod citátem napiš slovo nebo dvě o tom, proč jsi vybral/a právě ten, protože já jsem zvědavý :thinking:
         reply: |-
-          Dobrá práce, vybral jste si můj oblíbený citát! :left_speech_bubble:
+          Dobrá práce, vybral/a jsi si můj oblíbený citát! :left_speech_bubble:
         not_found: |-
-          Hmm, vypadá to, že jste mě ve své odpovědi necitoval?
+          Hmm, vypadá to, že jsi mě ve své odpovědi necitoval/a?
 
-          Pokud vyberete libovolný text v mém příspěvku, zobrazí se tlačítko <kbd>** Citace **</kbd> . A stisknutí tlačítka** Odpovědět ** s jakýmkoli vybraným textem bude fungovat také! Můžete to zkusit znovu?
+          Výběrem libovolného textu v mém příspěvku se zobrazí tlačítko <kbd>**Citovat**</kbd> . A stisknutí **Odpovědět** s libovolným vybraným textem bude fungovat také! Můžeš to zkusit znovu?
       bookmark:
         instructions: |-
-          Pokud by ses chtěl dozvědět víc, klikni na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> níže a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **ulož si tuto soukromou zprávu do záložek**. Pokud to uděláš, je možný, že tam v budoucnu najdeš :gift:!
+          Pokud by ses chtěl dozvědět víc, klikni na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> níže a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-bookmark.png" width="16" height="16"> **ulož si tuto soukromou zprávu do záložek**. Pokud to uděláš, je možné, že tam v budoucnu najdeš :gift:!
         reply: |-
-          Vynikající! Nyní můžete snadno najít cestu zpět do naší soukromé konverzace kdykoli přímo z [záložky záložek ve Vašem profilu] (%{bookmark_url}). Stačí vybrat svůj profilový obrázek vpravo nahoře &#8599;
+          Výborně! Nyní můžeš kdykoli snadno najít cestu zpět k naší soukromé konverzaci přímo ze [záložky na svém profilu](%{bookmark_url}). Stačí vybrat svůj profilový obrázek v pravém horním rohu &#8599;.
         not_found: |-
-          Uh, nevidím v tomto tématu žádné záložky. Našli jste záložku pod každým příspěvkem? Použijte "ukaž více" <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> k odhalení dalších akcí v případě potřeby.
+          Uf, nevidím v tomto tématu žádné záložky. Vidíš záložku pod každým příspěvkem? V případě potřeby zobraz další akce pomocí tlačítka Zobrazit více <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> .
       emoji:
         instructions: |-
-          Možná jste viděli, že ve svých odpovědích používám malé obrázky. :blue_car::dash: Ty se jmenují [emoji](https://en.wikipedia.org/wiki/Emoji). Můžete ** přidat ke své odpovědi emodži **? Fungovat bude kterákoli z těchto možností:
+          Možná jsi viděl/a, že ve svých odpovědích používám malé obrázky :blue_car::dash: , kterým se říká [emoji](https://en.wikipedia.org/wiki/Emoji). Můžeš **přidat emoji** do své odpovědi? Funguje kterýkoli z nich:
 
-          - Zadejte `:) ;) :D :P :O` Čili dvojtečku a závorku, nebo středník a závorku atp
+          - Napiš `:) ;) :D :P :O`
 
-          - Napište dvojtečku <kbd>:</kbd> poté vyplňte název :tada:`
+          - Napiš dvojtečku <kbd>:</kbd> a pak doplňt název emoji `:tada:`
 
-          - Stiskněte tlačítko emodži <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> v editoru nebo na klávesnici Vašeho mobilu
+          - Stiskni tlačítko emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> v editoru nebo na klávesnici mobilu.
         reply: |-
           To je :sparkles: _emojitastické!_ :sparkles:
         not_found: |-
-          Jejda, nevidím ve vaší odpovědi žádné emodži? Ach ne! :sob:
+          Jejda, ve tvé odpovědi nevidím žádné emoji? Ale ne! :sob:
 
-          Zkuste zadat dvojtečku <kbd>:</kbd> , aby se zobrazil výběr emodži, poté zadejte několik prvních písmen požadovaného textu, například „:bird:“
+          Zkus napsat dvojtečku <kbd>:</kbd> , čímž vyvoláš výběr emoji, a pak napiš několik prvních písmen toho, co chceš, například `:bird:`
 
-          Nebo stiskněte tlačítko emodži <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> v editoru.
+          Nebo v editoru stiskni tlačítko emoji <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-smile.png" width="16" height="16"> .
 
-          (Pokud používáte mobilní zařízení, můžete Emodži zadávat také přímo z klávesnice.)
+          (Pokud používáš mobilní zařízení, můžeš také zadávat emoji přímo z klávesnice.)
       mention:
         instructions: |-
-          Někdy možná budete chtít získat pozornost člověka, i když neodpovídáte přímo jemu. Zadejte „@“ a pak vyplňte jeho uživatelské jméno, abyste ho zmínili.
+          Někdy můžeš chtít upoutat pozornost člověka, i když mu neodpovídáš přímo. Napiš `@` a poté doplň jejich uživatelské jméno, aby ses o nich zmínil/a.
 
-          Můžete ve své odpovědi zmínit **`@%{discobot_username}`**?
+          Mohl/a bys ve své další odpovědi zmínit **`@%{discobot_username}`**?
         reply: |-
-          _Řekl někdo mé jméno!? _ :raised_hand: Věřím, že jsi to řekl ty! :wave: No, tady jsem! Díky za zmínku. :ok_hand:
+          _Řekl někdo mé jméno!?_ :raised_hand: Věřím, žes to byl/a ty! :wave: No, tady jsem! Díky za zmínku. :ok_hand:
         not_found: |-
-          Nikde tam nevidím své jméno :frowning: . Můžete mě zkusit znovu zmínit jako „@%{discobot_username}`?
+          Nikde tam nevidím své jméno :frowning: . Můžeš mě zkusit znovu zmínit jako `@%{discobot_username}`?
 
-          (A ano, moje uživatelské jméno je napsáno _disco_, stejně jako v 70. letech taneční šílenství. Mám [rád noční život!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
+          (A ano, moje uživatelské jméno se píše _disco_, stejně jako taneční šílenství 70. let. Mám [rád noční život!] (https://www.youtube.com/watch?v=B_wGI3_sGf8) :dancer:)
       flag:
         instructions: |-
-          Máme rádi přátelské diskuse a potřebujeme vaši pomoc, abychom [udrželi civilizovanou atmosféru](%{guidelines_url}). Pokud uvidíte nějaký problém, označte ho prosím aby jste o něm dali soukromě jeho autorovi nebo [našemu ochotnému personálu](%{about_url}) vědět. Existuje mnoho důvodů, proč byste mohli chtít příspěvek označit, od neškodného návrhu na rozdělení tématu až po jasné porušení komunitních standardů. Pokud vyberete možnost **Něco jiného**, zahájíte diskusi v soukromé zprávě s moderátory, kde můžete položit další otázky.
+          Máme rádi přátelské diskuse a potřebujeme tvoji pomoc, abychom je [udrželi civilizované](%{guidelines_url}). Pokud vidíš nějaký problém, označ jej prosím, a dej tak o něm soukromě vědět autorovi nebo [naší ochotné redakci](%{about_url}). Existuje mnoho důvodů, proč bys mohl/a chtít příspěvek označit, od neškodného návrhu na rozdělení tématu až po jasné porušení komunitních standardů. Pokud vybereš možnost **Něco jiného**, zahájíš diskusi s moderátory v soukromé zprávě, kde můžeš položit další otázky.
 
           > :imp: Napsal jsem tu něco nepěkného
 
-          Klidně tento příspěvek **označte** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> a jako důvod vyberte **Je to nevhodné**!
-        reply: "[Naši personál (%{base_uri}/ skupiny / zaměstnanci) bude soukromě informováni o vaší vlajce. Pokud příspěvek označí dostatek členů komunity, bude také preventivně automaticky skryt. (Vzhledem k tomu, že jsem ve skutečnosti nenapsal ošklivý příspěvek :angel:, šel jsem napřed \na prozatím vlaječku odstranil)"
+          Klidně tento příspěvek **označ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> a jako důvod vyber **Je to nevhodné**!
+        reply: |-
+          [Naše redakce](%{base_uri}/groups/staff) bude soukromě informována o tvé vlajce. Pokud příspěvek označí dostatečný počet členů komunity, bude z preventivních důvodů také automaticky skryt. (Protože jsem ve skutečnosti žádný ošklivý příspěvek nenapsal :angel:, tak jsem si dovolil vlaječku odstranit.)
         not_found: |-
-          Ach ne, můj ošklivý příspěvek ještě nebyl označen jako nevhodný. :worried: Můžete jej označit jako nevhodný pomocí ** vlaječky ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nezapomeňte použít tlačítko Zobrazit více <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> k odhalení dalších akcí pro každý příspěvek.
+          Ale ne, můj ošklivý příspěvek ještě nebyl označen jako nevhodný. :worried: Můžeš to označit jako nevhodné pomocí **vlajky** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nezapomeň použít tlačítko Zobrazit více <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , abys odhalil/a více akcí pro každý příspěvek.
       search:
-        instructions: |-
-          _psst_ … V tomto tématu jsem ukryl překvapení. Pokud jste připraveni na tuto výzvu, **vyberte ikonu vyhledávání** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> v pravém horním rohu &#8599; abyste jej hledali.
-
-          Zkuste hledat termín "Kapy&#8203;bara" v tomto tématu
         hidden_message: |-
-          Jak vám utekla tato kapybara? :wink:
+          Jak jsi mohl/a přehlédnout tuhle kapybaru? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Všimli jste si, že jste zpět na začátku? Nakrmte tuto chudou hladovou kapybaru ** odpovědí pomocí%{search_answer}a budete automaticky přesměrováni na konec.
+          Všiml/a sis, že ses vrátil/a na začátek? Nakrm tuhle ubohou hladovou kapybaru **odpovědí pomocí emoji `%{search_answer}`** a budeš automaticky vrácen/a na konec.
         reply: |-
-          Ano, našli jste to :tada:
+          To je ono! :tada:
 
-          - Pro podrobnější vyhledávání přejděte na [stránku úplného vyhledávání](%{search_url}).
+          - Pro podrobnější vyhledávání přejdi na [podrobnou stránku vyhledávání](%{search_url}).
 
-          - Chcete-li skákat kdekoli v dlouhé diskusi, vyzkoušejte ovládací prvky tématu vpravo (a dole na mobilu).
+          - Chceš-li skočit kamkoli v dlouhé diskusi, vyzkoušej ovládací prvky časové osy tématu vpravo (a dole, na mobilu).
 
-          - Pokud máte fyzickou :keyboard:, stiskněte <kbd>?</kbd> pro zobrazení našich šikovných klávesových zkratek.
+          - Pokud máš fyzickou :keyboard:, stiskni <kbd>?</kbd> pro zobrazení našich praktických klávesových zkratek.
         not_found: |-
-          Hmm… vypadá to, že máte potíže. Omlouváme se. Hledali jste <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> výraz **kapy&#8203;bara**?
+          Hmm… Vypadá to, že bys mohl/a mít potíže. Omlouvám se za to. Hledal/a jsi na <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> výraz **capy&#8203;bara**?
       end:
         message: |-
-          Děkujeme, že jste se mnou zůstali @%{username}! Toto jsem pro vás vytvořil, myslím, že jste si to zasloužili:
+          Díky, že jsi se mnou vydržel/a, @%{username}! Tohle jsem pro tebe vyrobil, myslím, že si to zasloužíš:
 
           %{certificate}
 
-          To je zatím vše! Podívejte se na [** naše nejnovější diskusní témata **] (%{base_uri}/ nejnovější) nebo [** diskusní kategorie **] (%{base_uri}/ kategorie). :sunglasses:
+          To je prozatím vše! Podívej se na [**naše nejnovější diskusní témata**](%{base_uri}/latest) nebo [**kategorie diskusí**](%{base_uri}/categories). :sunglasses:
 
-          (Chcete-li se mnou znovu mluvit, abyste se dozvěděli více, stačí poslat zprávu nebo%{discobot_username}!)
+          (Pokud by sis se mnou chtěl/a znovu promluvit a dozvědět se víc, stačí kdykoli napsat zprávu nebo zmínit `@%{discobot_username}`!)
       certificate:
         alt: "Osvědčení o úspěchu"
     advanced_user_narrative:
       reset_trigger: "pokročilý kurz"
-      cert_title: "Jako uznání úspěšného dokončení nového kurzu pro pokročilé."
+      cert_title: "Jako uznání za úspěšné dokončení kurzu pro pokročilé uživatele"
       title: ":arrow_up: Pokročilé uživatelské funkce"
       start_message: |-
         Jako _pokročilý_ uživatel jste navštívili [vaše preference page] (%{base_uri}/ moje / preference) Zatím @%{username}? Existuje mnoho způsobů, jak si přizpůsobit svůj zážitek, například výběr tmavého nebo světlého motivu.
 
         Ale odbočím, pojďme začít!
       edit:
-        bot_created_post_raw: "@%{discobot_username} je zdaleka nejúžasnější robot, co znám :wink:"
+        bot_created_post_raw: "@%{discobot_username} je zdaleka nejúžasnější robot, kterého znám :wink:"
         instructions: |-
-          Každý dělá chyby. Ale nebojte se, vždy můžete své příspěvky upravit, abyste je opravili!
+          Každý dělá chyby. Ale neboj se, své příspěvky můžeš vždy upravit a opravit je!
 
-          Můžete začít ** úpravou ** příspěvku, který jsem právě vytvořil vaším jménem?
+          Můžeš začít **úpravou** příspěvku, který jsem tvým jménem právě vytvořil?
         not_found: |-
-          Vypadá to, že jste ještě nezměnili [post](%{url}), který jsem pro vás vytvořil. Můžete to zkusit znovu?
+          Vypadá to, že jsi ještě neupravil/a [příspěvek](%{url}), který jsem pro tebe vytvořil. Můžeš to zkusit znovu?
 
-          Pomocí <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> vyvolejte editor.
+          Pomocí ikony <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-pencil.png" width="16" height="16"> vyvoláš editor.
         reply: |-
           Skvělá práce!
 
-          Všimněte si, že úpravy provedené po 5 minutách budou zobrazeny jako veřejné úpravy, a v pravém horním rohu se objeví malá ikona tužky.
+          Všimni si, že úpravy provedené po 5 minutách se zobrazí jako veřejné revize úprav a v pravém horním rohu se objeví malá ikona tužky s počtem revizí.
       delete:
         instructions: |-
-          Pokud chcete zrušit příspěvek, který jste vložili, můžete jej smazat.
+          Pokud chceš svůj příspěvek stáhnout, můžeš ho smazat.
 
-          Pokračujte a ** smažte ** kterýkoli ze svých příspěvků výše pomocí <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> ** smazat **. Neodstraňujte však první příspěvek!
+          Pokračuj a **odstraň** kterýkoli z výše uvedených příspěvků pomocí akce <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **odstranit**. Ale nemaž první příspěvek!
         not_found: |-
-          Ještě nevidím žádné smazané příspěvky? Pamatujte, že <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zobrazit více odhalí <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> smazání.
+          Zatím nevidím žádné smazané příspěvky? Nezapomeň, že <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zobrazit více odhalí <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> tlačítko smazat.
         reply: |-
-          Whoa! :boom:
+          Páni! :boom:
 
-          Z důvodu zachování kontinuity diskusí nejsou mazání okamžitá, takže příspěvek bude odstraněn až po nějaké době.
+          Aby byla zachována kontinuita diskuzí, mazání není okamžité, takže příspěvek bude odstraněn až po nějaké době.
       recover:
         deleted_post_raw: "Proč @%{discobot_username} smazal můj příspěvek? :anguished:"
         instructions: |-
-          Ach ne! Vypadá to, že jsem omylem smazal nový příspěvek, který jsem pro vás právě vytvořil.
+          Ale ne! Vypadá to, že jsem omylem smazal nový příspěvek, který jsem pro tebe právě vytvořil.
 
-          Uděláte mi laskavost a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> ** zrušíte smazání **?
+          Můžeš mi udělat laskavost a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> **obnovit** jej?
         not_found: |-
-          Mít potíže? Pamatujte, že <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zobrazit více odhalí <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> možnost obnovit.
+          Máš potíže? Nezapomeň, že <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zobrazit více odkryje tlačítko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-rotate-left.png" width="16" height="16"> obnovit.
         reply: |-
-          Uf, to bylo těsné! Díky za opravu, že :wink:
+          Uf, to bylo těsné! Díky za opravu :wink:
 
-          Všimněte si, že máte pouze %{deletion_after} hodiny (y) vrátit příspěvek.
+          Upozorňuji, že máš na vrácení příspěvku pouze %{deletion_after} hodin.
       category_hashtag:
         instructions: |-
-          Věděli jste, že ve svém příspěvku můžete odkazovat na kategorie a značky? Viděli jste například kategorii %{category}
+          Věděl/a jsi, že v příspěvku můžeš odkazovat na kategorie a štítky? Viděl/a jsti například kategorii %{category} ?
 
-          Uprostřed věty napište „#“ a vyberte libovolnou kategorii nebo značku.
+          Zadej `#` kdekoli ve větě a vyber libovolnou kategorii nebo štítek.
         not_found: |-
-          Hmm, nikde tam nevidím kategorii. Všimněte si, že `#` nemůže být první znak. Můžete to zkopírovat do své příští odpovědi?
+          Hmm, nikde tam nevidím žádnou kategorii. Můžeš zkopírovat tohle do další odpovědi?
 
-          `` `text
-          mohu vytvořit odkaz kategorie přes #
-          ` ``
+          ```text
+          Odkaz na kategorii mohu vytvořit pomocí #
+          ```
         reply: |-
-          Vynikající! Pamatujte, že toto funguje pro kategorie _i_ značky, pokud jsou tyto povoleny.
+          Skvěle! Nezapomeň, že to funguje jak pro kategorie, tak pro štítky (pokud jsou povoleny).
       change_topic_notification_level:
         instructions: |-
-          Každé téma má úroveň oznámení. Začíná to na „normální“, což znamená, že obvykle budete upozorněni pouze tehdy, když někdo mluví přímo s vámi.
+          Každé téma má úroveň oznámení. Začíná na "normální", což znamená, že budeš obvykle upozorněn/a pouze tehdy, když někdo mluví přímo k tobě.
 
-          Ve výchozím nastavení je úroveň oznámení pro soukromou zprávu nastavena na nejvyšší úroveň „hlídané“, což znamená, že budete upozorněni na každou novou odpověď. Úroveň oznámení pro _jakékoliv_ téma ale můžete přepsat na „hlídané“, „sledované“ nebo „ztišené“.
+          Ve výchozím nastavení je úroveň oznámení pro soukromou zprávu nastavena na nejvyšší úroveň "sledování", což znamená, že budeš upozorněn/a na každou novou odpověď. Úroveň oznámení pro _jakékoli_ téma však můžeš změnit na "hlídat", "sledovat" nebo "ztlumit".
 
-          Zkusme změnit úroveň oznámení pro toto téma. Ve spodní části tématu najdete tlačítko, které ukazuje, že toto téma ** hlídáte **. Můžete změnit úroveň oznámení na ** sledování **?
+          Zkusme změnit úroveň oznámení pro toto téma. V dolní části tématu najdi tlačítko, které ukazuje, že toto téma **hlídáš**. Můžeš změnit úroveň oznámení na **sledování**?
         not_found: |-
-          Vypadá to, že stále hlídáte :eyes: toto téma! Pokud máte potíže s jeho nalezením, tlačítko úrovně oznámení se nachází ve spodní části tématu.
+          Vypadá to, že tohle téma pořád hlídáš :eyes:! Pokud máš problém s jeho nalezením, tlačítko úrovně oznámení se nachází v dolní části tématu.
         reply: |-
-          Úžasná práce! Doufám, že jste toto téma neztlumili, protože můžu být někdy trochu ukecaný :grin:.
+          Úžasná práce! Doufám, že jsi toto téma neztlumil/a, protože občas jsem trochu upovídaný :grin:.
 
-          Všimněte si, že když odpovíte na téma nebo čtete téma déle než několik minut, automaticky se nastaví na úroveň oznámení „sledování“. Tuto možnost můžete změnit v [předvolbách uživatele] (%{base_uri}/my/preference).
+          Všimni si, že když odpovídáš na téma nebo čteš téma déle než několik minut, je automaticky nastavena úroveň upozornění 'sledování'. Toto nastavení můžeš změnit ve [svých uživatelských nastaveních](%{base_uri}/my/preferences).
       poll:
         instructions: |-
-          Věděli jste, že k libovolnému příspěvku můžete přidat anketu? Zkuste použít <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> v editoru pro ** sestavení ankety **.
+          Věděl/a jsi, že můžeš k jakémukoli příspěvku přidat hlasování? Zkus v editoru použít ozubené kolečko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> a **Vytvořit hlasování**.
         not_found: |-
-          Jejda! Ve vaší odpovědi nebyl žádný průzkum.
+          Ups! Ve tvojí odpovědi nebylo žádné hlasování.
 
-          Použijte <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> ozubeného kola v editoru nebo zkopírujte a vložte tuto anketu do vaší další odpovědi:
+          Použij ikonu ozubeného kola <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> v editoru nebo zkopíruj a vlož tuto hlasování do své další odpovědi:
 
-          `` text
+          ```text
           [poll]
           * :cat:
           * :dog:
           [/poll]
-          `` `
+          ````
         reply: |-
-          Hej, pěkná anketa! Jak jsem si vedl ve tvém učení?
+          Hej, pěkná anketa! Jak jsem si vedl při výuce?
 
-          [poll]
-          *: +1:
+          [anketa]
+          * :+1:
           * :-1:
           [/poll]
       details:
         instructions: |-
-          Někdy možná budete chtít ** skrýt detaily ** ve svých odpovědích:
+          Někdy můžeš chtít v odpovědích **skrýt detaily**:
 
-          - Když diskutujete o zápletkách filmu nebo televizního pořadu, které by byly považovány za spoiler.
+          - Pokud diskutuješ o dějových bodech filmu nebo seriálu, které by byly považovány za spoiler.
 
-          - Když váš příspěvek potřebuje spoustu volitelných detailů, které mohou být zahlcující, když jsou čteny najednou.
+          - Když je ve tvém příspěvku třeba spousta nepovinných detailů, které mohou být při čtení najednou zahlcující.
 
-          [detaily = Vyberte tuto možnost, abyste zjistili, jak to funguje!]
-          1. Vyberte <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> ozubené kolečko v editoru.
-          2. Vyberte „Skrýt podrobnosti“.
-          3. Upravte souhrn podrobností a přidejte svůj obsah.
+          [details=Klikni na tento text, abys viděl/a, jak to funguje!]
+          1. V editoru vyber ozubené kolo <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> .
+          2. Vyber možnost "Skrýt detaily".
+          3. Uprav shrnutí podrobností a přidej svůj obsah.
           [/details]
 
-          Můžete použít <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> v editoru a přidat sekci detailů k další odpovědi?
+          Mohl/a bys použít ozubené kolečko <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> v editoru a přidat sekci s detaily do další odpovědi?
         not_found: |-
-          Máte potíže s vytvářením widgetu detailů? Zkuste ve své další odpovědi zahrnout následující:
+          Máš potíže s vytvořením sekce s podrobnostmi? Zkus do příští odpovědi uvést následující text:
 
           ```text
-          [details=Vyberte mě pro podrobnosti]
+          [details=Klikni na mě pro podrobnosti]
           Zde jsou podrobnosti
           [/details]
-          ``
+          ```
         reply: |-
-          Skvělá práce — vaše pozornost k _detailům_ je obdivuhodná!
+          Skvělá práce – tvůj smysl pro detail je obdivuhodný!
       end:
         message: |-
           Proletěl jsi to jako _pokročilý uživatel_, opravdu :bow:
@@ -450,6 +445,6 @@ cs:
 
           To je vše, co pro tebe mám.
 
-          Zatím ahoj! Pokud se mnou budete chtít znovu mluvit, pošlete mi kdykoliv zprávu :sunglasses:
+          Zatím ahoj! Pokud se mnou budeš chtít znovu mluvit, pošli mi kdykoliv zprávu :sunglasses:
       certificate:
         alt: "Certifikát úspěchu cesty pokročilého uživatele"

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe PostLocker do
-  fab!(:moderator) { Fabricate(:moderator) }
-  fab!(:post) { Fabricate(:post) }
+  fab!(:moderator)
+  fab!(:post)
 
   it "doesn't allow regular users to lock posts" do
     expect { PostLocker.new(post, post.user).lock }.to raise_error(Discourse::InvalidAccess)

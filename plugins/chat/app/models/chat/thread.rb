@@ -11,22 +11,37 @@ module Chat
 
     belongs_to :channel, foreign_key: "channel_id", class_name: "Chat::Channel"
     belongs_to :original_message_user, foreign_key: "original_message_user_id", class_name: "User"
-    belongs_to :original_message, foreign_key: "original_message_id", class_name: "Chat::Message"
+    belongs_to :original_message,
+               -> { with_deleted },
+               foreign_key: "original_message_id",
+               class_name: "Chat::Message"
 
     has_many :chat_messages,
-             -> {
+             -> do
                where("deleted_at IS NULL").order(
                  "chat_messages.created_at ASC, chat_messages.id ASC",
                )
-             },
+             end,
              foreign_key: :thread_id,
              primary_key: :id,
              class_name: "Chat::Message"
     has_many :user_chat_thread_memberships
+    belongs_to :last_message,
+               class_name: "Chat::Message",
+               foreign_key: :last_message_id,
+               optional: true
+    def last_message
+      super || NullMessage.new
+    end
 
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
 
     validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
+
+    # Since the `replies` for the thread can all be deleted, to avoid errors
+    # in lists and previews of the thread, we can consider the original message
+    # as the last message in this case as a fallback.
+    before_create { self.last_message_id = self.original_message_id }
 
     def add(user)
       Chat::UserChatThreadMembership.find_or_create_by!(user: user, thread: self)
@@ -36,8 +51,18 @@ module Chat
       Chat::UserChatThreadMembership.find_by(user: user, thread: self)&.destroy
     end
 
+    def membership_for(user)
+      user_chat_thread_memberships.find_by(user: user)
+    end
+
+    def mark_read_for_user!(user, last_read_message_id: nil)
+      membership_for(user)&.update!(
+        last_read_message_id: last_read_message_id || self.last_message_id,
+      )
+    end
+
     def replies
-      self.chat_messages.where.not(id: self.original_message_id)
+      self.chat_messages.where.not(id: self.original_message_id).order("created_at ASC, id ASC")
     end
 
     def url
@@ -49,7 +74,11 @@ module Chat
     end
 
     def excerpt
-      original_message.rich_excerpt(max_length: EXCERPT_LENGTH)
+      original_message.excerpt(max_length: EXCERPT_LENGTH)
+    end
+
+    def update_last_message_id!
+      self.update!(last_message_id: self.latest_not_deleted_message_id)
     end
 
     def latest_not_deleted_message_id(anchor_message_id: nil)
@@ -85,7 +114,6 @@ module Chat
     end
 
     def self.ensure_consistency!
-      return if !SiteSetting.enable_experimental_chat_threaded_discussions
       update_counts
     end
 
@@ -98,17 +126,16 @@ module Chat
       # It is updated eventually via Jobs::Chat::PeriodicalUpdates. In
       # future we may want to update this more frequently.
       updated_thread_ids = DB.query_single <<~SQL
-        UPDATE chat_threads threads
-        SET replies_count = subquery.replies_count
+        UPDATE chat_threads ct
+        SET replies_count = GREATEST(COALESCE(subquery.new_count, 0), 0)
         FROM (
-          SELECT COUNT(*) - 1 AS replies_count, thread_id
-          FROM chat_messages
-          WHERE chat_messages.deleted_at IS NULL AND thread_id IS NOT NULL
-          GROUP BY thread_id
-        ) subquery
-        WHERE threads.id = subquery.thread_id
-        AND subquery.replies_count != threads.replies_count
-        RETURNING threads.id AS thread_id;
+          SELECT cm.thread_id, COUNT(cm.*) - 1 AS new_count
+          FROM chat_threads
+          LEFT JOIN chat_messages cm ON cm.thread_id = chat_threads.id AND cm.deleted_at IS NULL
+          GROUP BY cm.thread_id
+        ) AS subquery
+        WHERE ct.id = subquery.thread_id AND ct.replies_count IS DISTINCT FROM GREATEST(COALESCE(subquery.new_count, 0), 0)
+        RETURNING ct.id AS thread_id
       SQL
       return if updated_thread_ids.empty?
       self.clear_caches!(updated_thread_ids)
@@ -129,11 +156,13 @@ end
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  replies_count            :integer          default(0), not null
+#  last_message_id          :bigint
 #
 # Indexes
 #
 #  index_chat_threads_on_channel_id                (channel_id)
 #  index_chat_threads_on_channel_id_and_status     (channel_id,status)
+#  index_chat_threads_on_last_message_id           (last_message_id)
 #  index_chat_threads_on_original_message_id       (original_message_id)
 #  index_chat_threads_on_original_message_user_id  (original_message_user_id)
 #  index_chat_threads_on_replies_count             (replies_count)

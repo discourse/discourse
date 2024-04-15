@@ -1,4 +1,4 @@
-<DSection @class="current-badge content-body">
+<section class="current-badge content-body">
   <div class="control-group current-badge__toggle-badge">
     <DToggleSwitch
       @state={{this.buffered.enabled}}
@@ -62,7 +62,7 @@
           @type="badge_image"
           @onUploadDone={{action "setImage"}}
           @onUploadDeleted={{action "removeImage"}}
-          @class="no-repeat contain-image"
+          class="no-repeat contain-image"
         />
         <div class="control-instructions">
           <p class="help">{{i18n "admin.badges.image_help"}}</p>
@@ -72,7 +72,7 @@
           @name="icon"
           @value={{this.buffered.icon}}
           @options={{hash maximum=1}}
-          @onChange={{action (mut this.buffered.icon)}}
+          @onChange={{fn (mut this.buffered.icon)}}
         />
       {{/if}}
     </div>
@@ -83,7 +83,7 @@
         @name="badge_type_id"
         @value={{this.buffered.badge_type_id}}
         @content={{this.badgeTypes}}
-        @onChange={{action (mut this.buffered.badge_type_id)}}
+        @onChange={{fn (mut this.buffered.badge_type_id)}}
         @options={{hash disabled=this.readOnly}}
       />
     </div>
@@ -98,14 +98,14 @@
           @name="badge_grouping_id"
           @value={{this.buffered.badge_grouping_id}}
           @content={{this.badgeGroupings}}
-          @class="badge-selector"
+          class="badge-selector"
           @nameProperty="name"
-          @onChange={{action (mut this.buffered.badge_grouping_id)}}
+          @onChange={{fn (mut this.buffered.badge_grouping_id)}}
         />
         <DButton
-          @class="btn-default"
           @action={{route-action "editGroupings"}}
           @icon="pencil-alt"
+          class="btn-default"
         />
       </div>
     </div>
@@ -175,11 +175,17 @@
         <a
           href
           {{on "click" (fn this.showPreview this.buffered "false")}}
-        >{{i18n "admin.badges.preview.link_text"}}</a>
+          class="preview-badge"
+        >
+          {{i18n "admin.badges.preview.link_text"}}</a>
         |
-        <a href {{on "click" (fn this.showPreview this.buffered "true")}}>{{i18n
-            "admin.badges.preview.plan_text"
-          }}</a>
+        <a
+          href
+          {{on "click" (fn this.showPreview this.buffered "true")}}
+          class="preview-badge-plan"
+        >
+          {{i18n "admin.badges.preview.plan_text"}}
+        </a>
         {{#if this.preview_loading}}
           {{i18n "loading"}}
         {{/if}}
@@ -214,7 +220,7 @@
             name="trigger"
             @value={{this.buffered.trigger}}
             @content={{this.badgeTriggers}}
-            @onChange={{action (mut this.buffered.trigger)}}
+            @onChange={{fn (mut this.buffered.trigger)}}
             @options={{hash disabled=this.readOnly}}
           />
         </div>
@@ -223,14 +229,14 @@
 
     <div class="control-group">
       <div>
-        <label>
+        <label class="checkbox-label">
           <Input @type="checkbox" @checked={{this.buffered.allow_title}} />
           {{i18n "admin.badges.allow_title"}}
         </label>
       </div>
 
       <div>
-        <label>
+        <label class="checkbox-label">
           <Input
             @type="checkbox"
             @checked={{this.buffered.multiple_grant}}
@@ -241,7 +247,7 @@
       </div>
 
       <div>
-        <label>
+        <label class="checkbox-label">
           <Input
             @type="checkbox"
             @checked={{this.buffered.listable}}
@@ -252,7 +258,7 @@
       </div>
 
       <div>
-        <label>
+        <label class="checkbox-label">
           <Input
             @type="checkbox"
             @checked={{this.buffered.show_posts}}
@@ -263,32 +269,42 @@
       </div>
     </div>
 
+    <PluginOutlet
+      @name="admin-above-badge-buttons"
+      @outletArgs={{hash badge=this.buffered}}
+    />
+
     <div class="buttons">
       <DButton
-        @class="btn-primary"
-        @action={{action "save"}}
-        @type="submit"
+        @action={{this.save}}
         @disabled={{this.saving}}
         @label="admin.badges.save"
+        type="submit"
+        class="btn-primary"
       />
       <span class="saving">{{this.savingStatus}}</span>
       {{#unless this.readOnly}}
         <DButton
-          @action={{action "destroyBadge"}}
-          @class="btn-danger"
+          @action={{this.destroyBadge}}
           @label="admin.badges.delete"
+          class="btn-danger"
         />
       {{/unless}}
     </div>
   </form>
-</DSection>
+</section>
 
 {{#if this.grant_count}}
   <div class="content-body current-badge-actions">
     <div>
       <LinkTo @route="badges.show" @model={{this}}>
-        {{number this.grant_count}}
-        {{i18n "badges.awarded"}}
+        {{html-safe
+          (i18n
+            "badges.awarded"
+            count=this.displayCount
+            number=(number this.displayCount)
+          )
+        }}
       </LinkTo>
     </div>
   </div>

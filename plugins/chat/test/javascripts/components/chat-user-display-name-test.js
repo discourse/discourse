@@ -1,8 +1,8 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
+import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
-import { render } from "@ember/test-helpers";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { query } from "discourse/tests/helpers/qunit-helpers";
 
 function displayName() {
   return query(".chat-user-display-name").innerText.trim();
@@ -28,7 +28,7 @@ module(
 
       await render(hbs`<ChatUserDisplayName @user={{this.user}} />`);
 
-      assert.strictEqual(displayName(), "bob — Bobcat");
+      assert.strictEqual(displayName(), "bob Bobcat");
     });
   }
 );
@@ -53,7 +53,7 @@ module(
 
       await render(hbs`<ChatUserDisplayName @user={{this.user}} />`);
 
-      assert.strictEqual(displayName(), "Bobcat — bob");
+      assert.strictEqual(displayName(), "Bobcat bob");
     });
   }
 );

@@ -11,28 +11,11 @@ class Middleware::OmniauthBypassMiddleware
   def initialize(app, options = {})
     @app = app
 
-    Discourse.plugins.each(&:notify_before_auth)
-
-    # if you need to test this and are having ssl issues see:
-    #  http://stackoverflow.com/questions/6756460/openssl-error-using-omniauth-specified-ssl-path-but-didnt-work
-    # OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE if Rails.env.development?
-    @omniauth =
-      OmniAuth::Builder.new(app) do
-        Discourse.authenticators.each { |authenticator| authenticator.register_middleware(self) }
-      end
-
-    @omniauth.before_request_phase do |env|
+    OmniAuth.config.before_request_phase do |env|
       request = ActionDispatch::Request.new(env)
 
       # Check for CSRF token in POST requests
       CSRFTokenVerifier.new.call(env) if request.request_method.downcase.to_sym != :get
-
-      # Check whether the authenticator is enabled
-      if !Discourse.enabled_authenticators.any? { |a|
-           a.name.to_sym == env["omniauth.strategy"].name.to_sym
-         }
-        raise AuthenticatorDisabled
-      end
 
       # If the user is trying to reconnect to an existing account, store in session
       request.session[:auth_reconnect] = !!request.params["reconnect"]
@@ -50,7 +33,14 @@ class Middleware::OmniauthBypassMiddleware
           !SiteSetting.enable_local_logins && Discourse.enabled_authenticators.length == 1
         OmniAuth.config.allowed_request_methods = only_one_provider ? %i[get post] : [:post]
 
-        @omniauth.call(env)
+        omniauth =
+          OmniAuth::Builder.new(@app) do
+            Discourse.enabled_authenticators.each do |authenticator|
+              authenticator.register_middleware(self)
+            end
+          end
+
+        omniauth.call(env)
       rescue AuthenticatorDisabled => e
         #  Authenticator is disabled, pretend it doesn't exist and pass request to app
         @app.call(env)

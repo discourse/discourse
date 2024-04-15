@@ -38,4 +38,41 @@ class SiteSettingsTask
     end
     [log, counts]
   end
+
+  def self.names
+    SiteSetting
+      .all_settings(include_hidden: true)
+      .map { |site_setting| site_setting[:setting].to_s }
+  end
+
+  def self.rg_installed?
+    !`which rg`.strip.empty?
+  end
+
+  def self.directory_path(directory_name)
+    all_the_parent_dir = ENV["ALL_THE_PARENT_DIR"]
+    if all_the_parent_dir
+      File.expand_path(File.join(all_the_parent_dir, directory_name))
+    else
+      File.expand_path(File.join(Dir.pwd, "..", directory_name))
+    end
+  end
+
+  def self.directories_to_check
+    %w[all-the-themes all-the-custom-themes all-the-plugins all-the-custom-plugins]
+  end
+
+  def self.directories
+    directories = [Dir.pwd]
+    SiteSettingsTask.directories_to_check.each do |d|
+      if Dir.exist? SiteSettingsTask.directory_path(d)
+        directories << SiteSettingsTask.directory_path(d)
+      end
+    end
+    directories
+  end
+
+  def self.rg_search_count(term, directory)
+    `rg -l --no-ignore "#{term}" "#{directory}" -g '!config' -g '!db/migrate' | wc -l`.strip.to_i
+  end
 end

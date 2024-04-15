@@ -1,7 +1,7 @@
-import { acceptance, query } from "../helpers/qunit-helpers";
-import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
-import I18n from "I18n";
+import { test } from "qunit";
+import I18n from "discourse-i18n";
+import { acceptance, query } from "../helpers/qunit-helpers";
 
 acceptance("User Activity / Replies - empty state", function (needs) {
   const currentUser = "eviltrout";

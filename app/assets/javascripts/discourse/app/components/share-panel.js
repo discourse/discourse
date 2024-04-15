@@ -1,11 +1,12 @@
 import Component from "@ember/component";
-import I18n from "I18n";
-import Sharing from "discourse/lib/sharing";
+import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
-import { escapeExpression } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
+import Sharing from "discourse/lib/sharing";
+import { escapeExpression } from "discourse/lib/utilities";
 import discourseLater from "discourse-common/lib/later";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   tagName: null,
@@ -58,12 +59,11 @@ export default Component.extend({
     }, 200);
   },
 
-  actions: {
-    share(source) {
-      Sharing.shareSource(source, {
-        url: this.shareUrl,
-        title: this.get("topic.title"),
-      });
-    },
+  @action
+  share(source) {
+    Sharing.shareSource(source, {
+      url: this.shareUrl,
+      title: this.topic.get("title"),
+    });
   },
 });

@@ -1,17 +1,20 @@
+import Component from "@ember/component";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
-import Component from "@ember/component";
-import getURL from "discourse-common/lib/get-url";
+import $ from "jquery";
 import loadScript from "discourse/lib/load-script";
-import I18n from "I18n";
+import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const COLOR_VARS_REGEX =
   /\$(primary|secondary|tertiary|quaternary|header_background|header_primary|highlight|danger|success|love)(\s|;|-(low|medium|high))/g;
 
 @classNames("ace-wrapper")
 export default class AceEditor extends Component {
+  isLoading = true;
   mode = "css";
   disabled = false;
   htmlPlaceholder = false;
@@ -26,6 +29,7 @@ export default class AceEditor extends Component {
   }
 
   didRender() {
+    super.didRender(...arguments);
     this._skipContentChangeEvent = false;
   }
 
@@ -93,86 +97,98 @@ export default class AceEditor extends Component {
 
   didInsertElement() {
     super.didInsertElement(...arguments);
+
     loadScript("/javascripts/ace/ace.js").then(() => {
-      window.ace.require(["ace/ace"], (loadedAce) => {
-        loadedAce.config.set("loadWorkerFromBlob", false);
-        loadedAce.config.set("workerPath", getURL("/javascripts/ace")); // Do not use CDN for workers
+      loadScript(`/javascripts/ace/theme-${this.aceTheme}.js`).then(() => {
+        this.set("isLoading", false);
 
-        if (this.htmlPlaceholder) {
-          this._overridePlaceholder(loadedAce);
-        }
+        next(() => {
+          window.ace.require(["ace/ace"], (loadedAce) => {
+            loadedAce.config.set("loadWorkerFromBlob", false);
+            loadedAce.config.set("workerPath", getURL("/javascripts/ace")); // Do not use CDN for workers
 
-        if (!this.element || this.isDestroying || this.isDestroyed) {
-          return;
-        }
-        const editor = loadedAce.edit(this.element.querySelector(".ace"));
+            if (this.htmlPlaceholder) {
+              this._overridePlaceholder(loadedAce);
+            }
 
-        editor.setShowPrintMargin(false);
-        editor.setOptions({ fontSize: "14px", placeholder: this.placeholder });
-        editor.getSession().setMode("ace/mode/" + this.mode);
-        editor.on("change", () => {
-          this._skipContentChangeEvent = true;
-          this.set("content", editor.getSession().getValue());
-        });
-        if (this.attrs.save) {
-          editor.commands.addCommand({
-            name: "save",
-            exec: () => {
-              this.attrs.save();
-            },
-            bindKey: { mac: "cmd-s", win: "ctrl-s" },
+            if (!this.element || this.isDestroying || this.isDestroyed) {
+              return;
+            }
+            const aceElement = this.element.querySelector(".ace");
+            const editor = loadedAce.edit(aceElement);
+            editor.setShowPrintMargin(false);
+            editor.setOptions({
+              fontSize: "14px",
+              placeholder: this.placeholder,
+            });
+            editor.getSession().setMode("ace/mode/" + this.mode);
+            editor.on("change", () => {
+              this._skipContentChangeEvent = true;
+              this.set("content", editor.getSession().getValue());
+            });
+            if (this.save) {
+              editor.commands.addCommand({
+                name: "save",
+                exec: () => {
+                  this.save();
+                },
+                bindKey: { mac: "cmd-s", win: "ctrl-s" },
+              });
+            }
+
+            editor.on("blur", () => {
+              this.warnSCSSDeprecations();
+            });
+
+            editor.$blockScrolling = Infinity;
+            editor.renderer.setScrollMargin(10, 10);
+
+            this.element.setAttribute("data-editor", editor);
+            this._editor = editor;
+            this.changeDisabledState();
+            this.warnSCSSDeprecations();
+
+            $(window)
+              .off("ace:resize")
+              .on("ace:resize", () => this.appEvents.trigger("ace:resize"));
+
+            if (this.appEvents) {
+              // xxx: don't run during qunit tests
+              this.appEvents.on("ace:resize", this, "resize");
+            }
+
+            if (this.autofocus) {
+              this.send("focus");
+            }
+
+            this.setAceTheme();
+
+            this._darkModeListener = window.matchMedia(
+              "(prefers-color-scheme: dark)"
+            );
+            this._darkModeListener.addListener(this.setAceTheme);
           });
-        }
-
-        editor.on("blur", () => {
-          this.warnSCSSDeprecations();
         });
-
-        editor.$blockScrolling = Infinity;
-        editor.renderer.setScrollMargin(10, 10);
-
-        this.element.setAttribute("data-editor", editor);
-        this._editor = editor;
-        this.changeDisabledState();
-        this.warnSCSSDeprecations();
-
-        $(window)
-          .off("ace:resize")
-          .on("ace:resize", () => this.appEvents.trigger("ace:resize"));
-
-        if (this.appEvents) {
-          // xxx: don't run during qunit tests
-          this.appEvents.on("ace:resize", this, "resize");
-        }
-
-        if (this.autofocus) {
-          this.send("focus");
-        }
-
-        this.setAceTheme();
-        this._darkModeListener = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        );
-        this._darkModeListener.addListener(this.setAceTheme);
       });
     });
   }
 
   willDestroyElement() {
-    if (this._darkModeListener) {
-      this._darkModeListener.removeListener(this.setAceTheme);
-    }
+    super.willDestroyElement(...arguments);
+    this._darkModeListener?.removeListener(this.setAceTheme);
   }
 
-  @bind
-  setAceTheme() {
+  get aceTheme() {
     const schemeType = getComputedStyle(document.body)
       .getPropertyValue("--scheme-type")
       .trim();
 
-    this._editor.setTheme(
-      `ace/theme/${schemeType === "dark" ? "chaos" : "chrome"}`
-    );
+    return schemeType === "dark" ? "chaos" : "chrome";
+  }
+
+  @bind
+  setAceTheme() {
+    this._editor.setTheme(`ace/theme/${this.aceTheme}`);
   }
 
   warnSCSSDeprecations() {

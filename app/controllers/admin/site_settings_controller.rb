@@ -6,7 +6,15 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   def index
-    render_json_dump(site_settings: SiteSetting.all_settings)
+    params.permit(:categories, :plugin)
+
+    render_json_dump(
+      site_settings:
+        SiteSetting.all_settings(
+          filter_categories: params[:categories],
+          filter_plugin: params[:plugin],
+        ),
+    )
   end
 
   def update
@@ -31,7 +39,12 @@ class Admin::SiteSettingsController < Admin::AdminController
 
     raise_access_hidden_setting(id)
 
-    if SiteSetting.type_supervisor.get_type(id) == :uploaded_image_list
+    case SiteSetting.type_supervisor.get_type(id)
+    when :integer
+      value = value.tr("^-0-9", "")
+    when :file_size_restriction
+      value = value.tr("^0-9", "").to_i
+    when :uploaded_image_list
       value = Upload.get_from_urls(value.split("|")).to_a
     end
 
@@ -229,7 +242,7 @@ class Admin::SiteSettingsController < Admin::AdminController
   private
 
   def is_sidebar_default_setting?(setting_name)
-    %w[default_sidebar_categories default_sidebar_tags].include?(setting_name.to_s)
+    %w[default_navigation_menu_categories default_navigation_menu_tags].include?(setting_name.to_s)
   end
 
   def user_options
@@ -255,6 +268,8 @@ class Admin::SiteSettingsController < Admin::AdminController
       default_text_size: "text_size_key",
       default_title_count_mode: "title_count_mode_key",
       default_hide_profile_and_presence: "hide_profile_and_presence",
+      default_sidebar_link_to_filtered_list: "sidebar_link_to_filtered_list",
+      default_sidebar_show_count_of_new_items: "sidebar_show_count_of_new_items",
     }
   end
 

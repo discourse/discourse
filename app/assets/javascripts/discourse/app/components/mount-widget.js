@@ -1,17 +1,32 @@
-import { cancel, scheduleOnce } from "@ember/runloop";
-import { diff, patch } from "virtual-dom";
-import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
+import ArrayProxy from "@ember/array/proxy";
 import Component from "@ember/component";
+import { cancel, scheduleOnce } from "@ember/runloop";
+import { camelize } from "@ember/string";
+import { diff, patch } from "virtual-dom";
 import DirtyKeys from "discourse/lib/dirty-keys";
 import { WidgetClickHook } from "discourse/widgets/hooks";
-import { camelize } from "@ember/string";
+import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
 import { getRegister } from "discourse-common/lib/get-owner";
-import ArrayProxy from "@ember/array/proxy";
 
 let _cleanCallbacks = {};
+
 export function addWidgetCleanCallback(widgetName, fn) {
   _cleanCallbacks[widgetName] = _cleanCallbacks[widgetName] || [];
   _cleanCallbacks[widgetName].push(fn);
+}
+
+export function removeWidgetCleanCallback(widgetName, fn) {
+  const callbacks = _cleanCallbacks[widgetName];
+  if (!callbacks) {
+    return;
+  }
+
+  const index = callbacks.indexOf(fn);
+  if (index === -1) {
+    return;
+  }
+
+  callbacks.splice(index, 1);
 }
 
 export function resetWidgetCleanCallbacks() {
@@ -31,6 +46,21 @@ export default Component.extend({
   init() {
     this._super(...arguments);
     const name = this.widget;
+
+    if (name === "post-cooked") {
+      throw [
+        "Cannot use <MountWidget /> with `post-cooked`.",
+        "It's a special-case that needs to be wrapped in another widget.",
+        "For example:",
+        "  createWidget('test-widget', {",
+        "    html(attrs) {",
+        "      return [",
+        "        new PostCooked(attrs, new DecoratorHelper(this), this.currentUser),",
+        "      ];",
+        "    },",
+        "  });",
+      ].join("\n");
+    }
 
     this.register = getRegister(this);
 
@@ -54,6 +84,7 @@ export default Component.extend({
   },
 
   didInsertElement() {
+    this._super(...arguments);
     WidgetClickHook.setupDocumentCallback();
 
     this._rootNode = document.createElement("div");
@@ -62,6 +93,7 @@ export default Component.extend({
   },
 
   willClearRender() {
+    this._super(...arguments);
     const callbacks = _cleanCallbacks[this.widget];
     if (callbacks) {
       callbacks.forEach((cb) => cb(this._tree));
@@ -76,6 +108,7 @@ export default Component.extend({
   },
 
   willDestroyElement() {
+    this._super(...arguments);
     this._dispatched.forEach((evt) => {
       const [eventName, caller] = evt;
       this.appEvents.off(eventName, this, caller);
@@ -165,5 +198,10 @@ export default Component.extend({
 
   unmountChildComponent(info) {
     this._childComponents.removeObject(info);
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+    this.queueRerender();
   },
 });

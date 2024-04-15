@@ -1,8 +1,8 @@
 import Component from "@ember/component";
-import { actionDescription } from "discourse/widgets/post-small-action";
 import { computed } from "@ember/object";
 import { propertyEqual } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
+import { actionDescription } from "discourse/widgets/post-small-action";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({

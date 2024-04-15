@@ -293,10 +293,6 @@ pt:
         not_found: |-
           Oh não, minha postagem desagradável ainda não foi sinalizada como inadequada. :worried: Você poderia sinalizá-la como imprópria usando **sinalizar** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Não se esqueça de usar o botão mostrar mais <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para exibir mais ações para cada postagem.
       search:
-        instructions: |-
-          _psst_ … Eu escondi uma surpresa neste tópico. Se você está pronto para o desafio, **selecione o ícone de pesquisa** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> no canto superior direito &#8599; para procurá-la.
-
-          Experimente pesquisar o termo "capi&#8203;vara" neste tópico
         hidden_message: |-
           Como você perdeu este capybara? :wink:
 
@@ -371,20 +367,10 @@ pt:
           Observe que você só tem %{deletion_after} hora(s) para desfazer a exclusão de um post.
       category_hashtag:
         instructions: |-
-          Sabia que pode se referir a categorias e tags no seu post? Por exemplo, viu a categoria %{category}?
-
-          Digite `#` no meio de uma frase e selecione qualquer categoria ou tag.
-        instructions_experimental: |-
           Sabia que pode referenciar categorias e tags no seu post? Por exemplo, já viu a categoria %{category}?
 
           Digite `#` em qualquer lugar de uma frase e selecione qualquer categoria ou tag.
         not_found: |-
-          Hmm, não vejo uma categoria em qualquer lugar. Observe que `#` não pode ser o primeiro caractere. Você poderia copiar isso em sua próxima resposta?
-
-          ```text
-          Eu posso criar um link de categoria através de #
-          ```
-        not_found_experimental: |-
           Hmm, não vejo uma categoria aí em nenhum lado. Pode copiar isto na sua próxima resposta?
 
           ```texto

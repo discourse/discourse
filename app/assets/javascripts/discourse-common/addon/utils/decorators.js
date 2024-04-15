@@ -1,9 +1,3 @@
-import { on as emberOn } from "@ember/object/evented";
-import {
-  observes as emberObservesDecorator,
-  on as emberOnDecorator,
-} from "@ember-decorators/object";
-
 import { observer } from "@ember/object";
 import {
   alias as EmberAlias,
@@ -35,15 +29,20 @@ import {
   union as EmberUnion,
   uniq as EmberUniq,
 } from "@ember/object/computed";
+import CoreObject from "@ember/object/core";
+import { on as emberOn } from "@ember/object/evented";
 import { bind as emberBind, schedule } from "@ember/runloop";
+import {
+  observes as emberObservesDecorator,
+  on as emberOnDecorator,
+} from "@ember-decorators/object";
+import discourseDebounce from "discourse-common/lib/debounce";
+import deprecated from "discourse-common/lib/deprecated";
 import decoratorAlias from "discourse-common/utils/decorator-alias";
 import extractValue from "discourse-common/utils/extract-value";
 import handleDescriptor from "discourse-common/utils/handle-descriptor";
 import isDescriptor from "discourse-common/utils/is-descriptor";
 import macroAlias from "discourse-common/utils/macro-alias";
-import discourseDebounce from "discourse-common/lib/debounce";
-import CoreObject from "@ember/object/core";
-import deprecated from "discourse-common/lib/deprecated";
 
 export default function discourseComputedDecorator(...params) {
   // determine if user called as @discourseComputed('blah', 'blah') or @discourseComputed
@@ -72,9 +71,7 @@ export function bind(target, name, descriptor) {
     configurable: true,
     get() {
       const bound = emberBind(this, descriptor.value);
-      const attributes = Object.assign({}, descriptor, {
-        value: bound,
-      });
+      const attributes = { ...descriptor, value: bound };
 
       Object.defineProperty(this, name, attributes);
 

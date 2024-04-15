@@ -82,6 +82,6 @@ vi:
           title: "Con quay"
         empty_state:
           title: "Trạng thái trống"
-        rich_tooltip:
+        tooltips:
           description: "Mô tả"
           header: "Header"

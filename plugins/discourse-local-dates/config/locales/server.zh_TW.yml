@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    discourse_local_dates_enabled: "啟用 discourse-local-dates 功能。將透過 [date] 元素使貼文支援本地時區感知日期。"
+    discourse_local_dates_default_formats: "常用的日期時間格式，參見：<a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>momentjs 字串格式</a>"
+    discourse_local_dates_default_timezones: "預設時區列表，必須為有效的 <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>TZ</a>"
+    discourse_local_dates_email_format: "用於在電子郵件中顯示日期的格式。"

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-describe "Emoji deny list", type: :system, js: true do
+describe "Emoji deny list", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:emoji_picker) { PageObjects::Components::EmojiPicker.new }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   before { sign_in(admin) }
 
@@ -12,7 +12,7 @@ describe "Emoji deny list", type: :system, js: true do
     before { SiteSetting.emoji_deny_list = "" }
     let(:site_settings_page) { PageObjects::Pages::AdminSettings.new }
 
-    it "should allow admin to update emoji deny list" do
+    skip "should allow admin to update emoji deny list" do
       site_settings_page.visit_category("posting")
 
       site_settings_page.select_from_emoji_list("emoji_deny_list", "fu", false)
@@ -44,7 +44,7 @@ describe "Emoji deny list", type: :system, js: true do
       Emoji.clear_cache && Discourse.request_refresh!
     end
 
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:post) { Fabricate(:post, topic: topic) }
 
     xit "should remove denied emojis from emoji picker" do

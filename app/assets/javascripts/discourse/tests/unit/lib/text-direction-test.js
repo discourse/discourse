@@ -1,5 +1,6 @@
-import { isLTR, isRTL, setTextDirections } from "discourse/lib/text-direction";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { isLTR, isRTL, setTextDirections } from "discourse/lib/text-direction";
 
 function quoteHtml() {
   return `
@@ -30,7 +31,9 @@ function assertDirection(assert, elem, expected, message) {
   assert.strictEqual(elem.getAttribute("dir"), expected, message);
 }
 
-module("Unit | Utility | text-direction", function () {
+module("Unit | Utility | text-direction", function (hooks) {
+  setupTest(hooks);
+
   test("isRTL", function (assert) {
     // Hebrew
     assert.strictEqual(isRTL("זה מבחן"), true);
@@ -84,38 +87,38 @@ module("Unit | Utility | text-direction", function () {
     assertDirection(
       assert,
       quotedRtl,
-      "rtl",
-      "RTL paragraphs inside quote have rtl dir"
+      "auto",
+      "RTL paragraphs inside quote have auto dir"
     );
     assertDirection(
       assert,
       quotedLtr,
-      "ltr",
-      "LTR paragraphs inside quote have ltr dir"
+      "auto",
+      "LTR paragraphs inside quote have auto dir"
     );
     assertDirection(
       assert,
       quotedLtrNested,
-      "ltr",
-      "LTR paragraphs inside nested quote have ltr dir"
+      "auto",
+      "LTR paragraphs inside nested quote have auto dir"
     );
     assertDirection(
       assert,
       quotedRtlNested,
-      "rtl",
-      "RTL paragraphs inside nested quote have rtl dir"
+      "auto",
+      "RTL paragraphs inside nested quote have auto dir"
     );
     assertDirection(
       assert,
       notQuotedLtr,
-      "ltr",
-      "LTR paragraphs outside quotes have ltr dir"
+      "auto",
+      "LTR paragraphs outside quotes have auto dir"
     );
     assertDirection(
       assert,
       notQuotedRtl,
-      "rtl",
-      "RTL paragraphs outside quotes have rtl dir"
+      "auto",
+      "RTL paragraphs outside quotes have auto dir"
     );
   });
 });

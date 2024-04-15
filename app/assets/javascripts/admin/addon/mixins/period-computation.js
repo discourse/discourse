@@ -1,5 +1,6 @@
-import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
+import DiscourseURL from "discourse/lib/url";
+import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Mixin.create({
@@ -9,29 +10,38 @@ export default Mixin.create({
   init() {
     this._super(...arguments);
 
+    deprecated(
+      "PeriodComputation mixin is deprecated. Use AdminDashboardTabController instead.",
+      {
+        id: "discourse.period-mixin",
+        since: "3.2.0.beta5-dev",
+      }
+    );
     this.availablePeriods = ["yearly", "quarterly", "monthly", "weekly"];
   },
 
   @discourseComputed("period")
-  startDate(period) {
-    let fullDay = moment().locale("en").utc().endOf("day");
+  startDate: {
+    get(period) {
+      const fullDay = moment().locale("en").utc().endOf("day");
 
-    switch (period) {
-      case "yearly":
-        return fullDay.subtract(1, "year").startOf("day");
-        break;
-      case "quarterly":
-        return fullDay.subtract(3, "month").startOf("day");
-        break;
-      case "weekly":
-        return fullDay.subtract(6, "days").startOf("day");
-        break;
-      case "monthly":
-        return fullDay.subtract(1, "month").startOf("day");
-        break;
-      default:
-        return fullDay.subtract(1, "month").startOf("day");
-    }
+      switch (period) {
+        case "yearly":
+          return fullDay.subtract(1, "year").startOf("day");
+        case "quarterly":
+          return fullDay.subtract(3, "month").startOf("day");
+        case "weekly":
+          return fullDay.subtract(6, "days").startOf("day");
+        case "monthly":
+          return fullDay.subtract(1, "month").startOf("day");
+        default:
+          return fullDay.subtract(1, "month").startOf("day");
+      }
+    },
+
+    set(period) {
+      return period;
+    },
   },
 
   @discourseComputed()
@@ -45,8 +55,14 @@ export default Mixin.create({
   },
 
   @discourseComputed()
-  endDate() {
-    return moment().locale("en").utc().endOf("day");
+  endDate: {
+    get() {
+      return moment().locale("en").utc().endOf("day");
+    },
+
+    set(endDate) {
+      return endDate;
+    },
   },
 
   @discourseComputed()

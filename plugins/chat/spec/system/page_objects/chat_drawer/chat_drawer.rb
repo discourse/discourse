@@ -4,31 +4,72 @@ module PageObjects
   module Pages
     class ChatDrawer < PageObjects::Pages::Base
       VISIBLE_DRAWER = ".chat-drawer.is-expanded"
+
+      def channel_index
+        @channel_index ||= ::PageObjects::Components::Chat::ChannelIndex.new(VISIBLE_DRAWER)
+      end
+
       def open_browse
+        mouseout
         find("#{VISIBLE_DRAWER} .open-browse-page-btn").click
       end
 
-      def open_draft_channel
-        find("#{VISIBLE_DRAWER} .open-draft-channel-page-btn").click
-      end
-
       def close
-        find("#{VISIBLE_DRAWER} .chat-drawer-header__close-btn").click
+        mouseout
+        find("#{VISIBLE_DRAWER} .c-navbar__close-drawer-button").click
       end
 
       def back
-        find("#{VISIBLE_DRAWER} .chat-drawer-header__back-btn").click
+        mouseout
+        find("#{VISIBLE_DRAWER} .c-navbar__back-button").click
+      end
+
+      def visit_index
+        visit("/")
+        PageObjects::Pages::Chat.new.open_from_header
+      end
+
+      def visit_channel(channel)
+        visit_index
+        open_channel(channel)
       end
 
       def open_channel(channel)
-        find(
-          "#{VISIBLE_DRAWER} .channels-list .chat-channel-row[data-chat-channel-id='#{channel.id}']",
-        ).click
+        channel_index.open_channel(channel)
         has_no_css?(".chat-skeleton")
       end
 
+      def has_unread_channel?(channel)
+        channel_index.has_unread_channel?(channel)
+      end
+
+      def has_no_unread_channel?(channel)
+        channel_index.has_no_unread_channel?(channel)
+      end
+
+      def has_user_threads_section?
+        has_css?(".chat-channel-row.--threads[href='/chat/threads']")
+      end
+
+      def has_no_user_threads_section?
+        has_no_css?(".chat-channel-row.--threads[href='/chat/threads']")
+      end
+
+      def has_unread_user_threads?
+        has_css?(".chat-channel-row.--threads .c-unread-indicator")
+      end
+
+      def has_no_unread_user_threads?
+        has_no_css?(".chat-channel-row.--threads .c-unread-indicator")
+      end
+
+      def click_user_threads
+        find(".chat-channel-row.--threads").click
+      end
+
       def maximize
-        find("#{VISIBLE_DRAWER} .chat-drawer-header__full-screen-btn").click
+        mouseout
+        find("#{VISIBLE_DRAWER} .c-navbar__full-page-button").click
       end
 
       def has_open_thread?(thread = nil)
@@ -45,6 +86,36 @@ module PageObjects
 
       def has_open_thread_list?
         has_css?("#{VISIBLE_DRAWER} .chat-thread-list")
+      end
+
+      def open_thread_list
+        find(thread_list_button_selector).click
+      end
+
+      def thread_list_button_selector
+        ".c-navbar__threads-list-button"
+      end
+
+      def has_unread_thread_indicator?(count:)
+        has_css?("#{thread_list_button_selector}.has-unreads") &&
+          has_css?(
+            ".chat-thread-header-unread-indicator .chat-thread-header-unread-indicator__number",
+            text: count.to_s,
+          )
+      end
+
+      def has_no_unread_thread_indicator?
+        has_no_css?("#{thread_list_button_selector}.has-unreads")
+      end
+
+      private
+
+      def mouseout
+        # Ensure that the mouse is not hovering over the drawer
+        # and that the message actions menu is closed.
+        # This check is essential because the message actions menu might partially
+        # overlap with the header, making certain buttons inaccessible.
+        find("#site-logo").hover
       end
     end
   end

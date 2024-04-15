@@ -21,6 +21,10 @@ class HtmlToMarkdown
 
   private
 
+  def strip_newlines(string)
+    string.gsub(/\n/, " ")&.squeeze(" ")
+  end
+
   def remove_not_allowed!(doc)
     allowed = Set.new
 
@@ -157,7 +161,7 @@ class HtmlToMarkdown
   end
 
   def visit_a(node)
-    if node["href"].present? && node["href"].starts_with?(*allowed_hrefs)
+    if node["href"].present? && node["href"].start_with?(*allowed_hrefs)
       "[#{traverse(node)}](#{node["href"]})"
     else
       traverse(node)
@@ -167,16 +171,18 @@ class HtmlToMarkdown
   def visit_img(node)
     return if node["src"].blank?
 
+    node["alt"] = strip_newlines(node["alt"]) if node["alt"].present?
+    node["title"] = strip_newlines(node["title"]) if node["title"].present?
+
     if @opts[:keep_img_tags]
       node.to_html
-    elsif @opts[:keep_cid_imgs] && node["src"].starts_with?("cid:")
+    elsif @opts[:keep_cid_imgs] && node["src"].start_with?("cid:")
       node.to_html
-    elsif node["src"].starts_with?(*ALLOWED_IMG_SRCS)
-      title = node["alt"].presence || node["title"].presence
+    elsif node["src"].start_with?(*ALLOWED_IMG_SRCS)
       width = node["width"].to_i
       height = node["height"].to_i
       dimensions = "|#{width}x#{height}" if width > 0 && height > 0
-      "![#{title}#{dimensions}](#{node["src"]})"
+      "![#{node["alt"] || node["title"]}#{dimensions}](#{node["src"]})"
     end
   end
 

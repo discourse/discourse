@@ -7,3 +7,11 @@ export function canDisplayCategory(categoryId, siteSettings) {
 
   return !Category.isUncategorized(categoryId);
 }
+
+export function hasDefaultSidebarCategories(siteSettings) {
+  return siteSettings.default_navigation_menu_categories.length > 0;
+}
+
+export function hasDefaultSidebarTags(siteSettings) {
+  return siteSettings.default_navigation_menu_tags.length > 0;
+}

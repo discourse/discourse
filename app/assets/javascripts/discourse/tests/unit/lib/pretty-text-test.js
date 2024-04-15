@@ -1,13 +1,14 @@
-import PrettyText, { buildOptions } from "pretty-text/pretty-text";
+import { setupTest } from "ember-qunit";
+import { registerEmoji } from "pretty-text/emoji";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
 import QUnit, { module, test } from "qunit";
 import { deepMerge } from "discourse-common/lib/object";
-import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
-import { registerEmoji } from "pretty-text/emoji";
-import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import DiscourseMarkdownIt from "discourse-markdown-it";
+import { extractDataAttribute } from "discourse-markdown-it/engine";
 
 const rawOpts = {
   siteSettings: {
@@ -26,10 +27,12 @@ const rawOpts = {
   getURL: (url) => url,
 };
 
-const defaultOpts = buildOptions(rawOpts);
+function build(options = rawOpts) {
+  return DiscourseMarkdownIt.withDefaultFeatures().withOptions(options);
+}
 
 QUnit.assert.cooked = function (input, expected, message) {
-  const actual = new PrettyText(defaultOpts).cook(input);
+  const actual = build().cook(input);
   this.pushResult({
     result: actual === expected.replace(/\/>/g, ">"),
     actual,
@@ -40,7 +43,7 @@ QUnit.assert.cooked = function (input, expected, message) {
 
 QUnit.assert.cookedOptions = function (input, opts, expected, message) {
   const merged = deepMerge({}, rawOpts, opts);
-  const actual = new PrettyText(buildOptions(merged)).cook(input);
+  const actual = build(merged).cook(input);
   this.pushResult({
     result: actual === expected,
     actual,
@@ -53,15 +56,17 @@ QUnit.assert.cookedPara = function (input, expected, message) {
   QUnit.assert.cooked(input, `<p>${expected}</p>`, message);
 };
 
-module("Unit | Utility | pretty-text", function () {
+module("Unit | Utility | pretty-text", function (hooks) {
+  setupTest(hooks);
+
   test("buildOptions", function (assert) {
     assert.ok(
-      buildOptions({ siteSettings: { enable_emoji: true } }).discourse.features
+      build({ siteSettings: { enable_emoji: true } }).options.discourse.features
         .emoji,
       "emoji enabled"
     );
     assert.ok(
-      !buildOptions({ siteSettings: { enable_emoji: false } }).discourse
+      !build({ siteSettings: { enable_emoji: false } }).options.discourse
         .features.emoji,
       "emoji disabled"
     );
@@ -643,73 +648,6 @@ eviltrout</p>
     );
   });
 
-  test("Category hashtags", function (assert) {
-    const alwaysTrue = {
-      categoryHashtagLookup: function () {
-        return [
-          "http://test.discourse.org/category-hashtag",
-          "category-hashtag",
-        ];
-      },
-    };
-
-    assert.cookedOptions(
-      "Check out #category-hashtag",
-      alwaysTrue,
-      '<p>Check out <a class="hashtag" href="http://test.discourse.org/category-hashtag">#<span>category-hashtag</span></a></p>',
-      "it translates category hashtag into links"
-    );
-
-    assert.cooked(
-      "Check out #category-hashtag",
-      '<p>Check out <span class="hashtag">#category-hashtag</span></p>',
-      "it does not translate category hashtag into links if it is not a valid category hashtag"
-    );
-
-    assert.cookedOptions(
-      "[#category-hashtag](http://www.test.com)",
-      alwaysTrue,
-      '<p><a href="http://www.test.com">#category-hashtag</a></p>',
-      "it does not translate category hashtag within links"
-    );
-
-    assert.cooked(
-      "```\n# #category-hashtag\n```",
-      '<pre><code class="lang-auto"># #category-hashtag\n</code></pre>',
-      "it does not translate category hashtags to links in code blocks"
-    );
-
-    assert.cooked(
-      "># #category-hashtag\n",
-      '<blockquote>\n<h1><span class="hashtag">#category-hashtag</span></h1>\n</blockquote>',
-      "it handles category hashtags in simple quotes"
-    );
-
-    assert.cooked(
-      "# #category-hashtag",
-      '<h1><a name="category-hashtag-1" class="anchor" href="#category-hashtag-1"></a><span class="hashtag">#category-hashtag</span></h1>',
-      "it works within ATX-style headers"
-    );
-
-    assert.cooked(
-      "don't `#category-hashtag`",
-      "<p>don't <code>#category-hashtag</code></p>",
-      "it does not mention in an inline code block"
-    );
-
-    assert.cooked(
-      "<small>#category-hashtag</small>",
-      '<p><small><span class="hashtag">#category-hashtag</span></small></p>',
-      "it works between HTML tags"
-    );
-
-    assert.cooked(
-      "Checkout #ụdị",
-      '<p>Checkout <span class="hashtag">#ụdị</span></p>',
-      "it works for non-english characters"
-    );
-  });
-
   test("Heading", function (assert) {
     assert.cooked(
       "**Bold**\n----------",
@@ -797,7 +735,7 @@ eviltrout</p>
 
   test("Oneboxing", function (assert) {
     function matches(input, regexp) {
-      return new PrettyText(defaultOpts).cook(input).match(regexp);
+      return build().cook(input).match(regexp);
     }
 
     assert.ok(
@@ -870,25 +808,25 @@ eviltrout</p>
 
     assert.cooked(
       "```json\n{hello: 'world'}\n```\ntrailing",
-      "<pre><code class=\"lang-json\">{hello: 'world'}\n</code></pre>\n<p>trailing</p>",
+      '<pre data-code-wrap="json"><code class="lang-json">{hello: \'world\'}\n</code></pre>\n<p>trailing</p>',
       "It does not truncate text after a code block."
     );
 
     assert.cooked(
       "```json\nline 1\n\nline 2\n\n\nline3\n```",
-      '<pre><code class="lang-json">line 1\n\nline 2\n\n\nline3\n</code></pre>',
+      '<pre data-code-wrap="json"><code class="lang-json">line 1\n\nline 2\n\n\nline3\n</code></pre>',
       "it maintains new lines inside a code block."
     );
 
     assert.cooked(
       "hello\nworld\n```json\nline 1\n\nline 2\n\n\nline3\n```",
-      '<p>hello<br>\nworld</p>\n<pre><code class="lang-json">line 1\n\nline 2\n\n\nline3\n</code></pre>',
+      '<p>hello<br>\nworld</p>\n<pre data-code-wrap="json"><code class="lang-json">line 1\n\nline 2\n\n\nline3\n</code></pre>',
       "it maintains new lines inside a code block with leading content."
     );
 
     assert.cooked(
       "```ruby\n<header>hello</header>\n```",
-      '<pre><code class="lang-ruby">&lt;header&gt;hello&lt;/header&gt;\n</code></pre>',
+      '<pre data-code-wrap="ruby"><code class="lang-ruby">&lt;header&gt;hello&lt;/header&gt;\n</code></pre>',
       "it escapes code in the code block"
     );
 
@@ -900,7 +838,7 @@ eviltrout</p>
 
     assert.cooked(
       "```ruby\n# cool\n```",
-      '<pre><code class="lang-ruby"># cool\n</code></pre>',
+      '<pre data-code-wrap="ruby"><code class="lang-ruby"># cool\n</code></pre>',
       "it supports changing the language"
     );
 
@@ -912,19 +850,19 @@ eviltrout</p>
 
     assert.cooked(
       "```ruby\ndef self.parse(text)\n\n  text\nend\n```",
-      '<pre><code class="lang-ruby">def self.parse(text)\n\n  text\nend\n</code></pre>',
+      '<pre data-code-wrap="ruby"><code class="lang-ruby">def self.parse(text)\n\n  text\nend\n</code></pre>',
       "it allows leading spaces on lines in a code block."
     );
 
     assert.cooked(
       "```ruby\nhello `eviltrout`\n```",
-      '<pre><code class="lang-ruby">hello `eviltrout`\n</code></pre>',
+      '<pre data-code-wrap="ruby"><code class="lang-ruby">hello `eviltrout`\n</code></pre>',
       "it allows code with backticks in it"
     );
 
     assert.cooked(
       "```eviltrout\nhello\n```",
-      '<pre data-code-wrap="eviltrout"><code class="lang-plaintext">hello\n</code></pre>',
+      '<pre data-code-wrap="eviltrout"><code class="lang-eviltrout">hello\n</code></pre>',
       "it converts to custom block unknown code names"
     );
 
@@ -1081,11 +1019,7 @@ eviltrout</p>
   test("video", function (assert) {
     assert.cooked(
       "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
-      `<p><div class="video-container">
-    <video width="100%" height="100%" preload="metadata" controls>
-      <source src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
-      <a href="/404">/404</a>
-    </video>
+      `<p><div class="video-placeholder-container" data-video-src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
   </div></p>`,
       "It returns the correct video player HTML"
     );
@@ -1107,11 +1041,7 @@ eviltrout</p>
         siteSettings: { secure_uploads: true },
         lookupUploadUrls,
       },
-      `<p><div class="video-container">
-    <video width="100%" height="100%" preload="metadata" controls>
-      <source src="/secure-uploads/original/3X/c/b/test.mp4">
-      <a href="/secure-uploads/original/3X/c/b/test.mp4">/secure-uploads/original/3X/c/b/test.mp4</a>
-    </video>
+      `<p><div class="video-placeholder-container" data-video-src="/secure-uploads/original/3X/c/b/test.mp4">
   </div></p>`,
       "It returns the correct video HTML when the URL is mapped with secure uploads, removing data-orig-src"
     );
@@ -1282,6 +1212,11 @@ eviltrout</p>
       '<pre><code class="lang-auto">   s</code></pre>',
       "it doesn't trim leading whitespace"
     );
+    assert.cooked(
+      "> [code]\n> line 1\n> line 2\n> line 3\n> [/code]",
+      '<blockquote>\n<pre><code class="lang-auto">line 1\nline 2\nline 3</code></pre>\n</blockquote>',
+      "supports quoting a whole [code] block"
+    );
   });
 
   test("tags with arguments", function (assert) {
@@ -1385,7 +1320,7 @@ eviltrout</p>
 <div class=\"quote-controls\"></div>
  Alice:</div>
 <blockquote>
-<pre><code class=\"lang-javascript\">var foo ='foo';
+<pre data-code-wrap=\"javascript\"><code class=\"lang-javascript\">var foo ='foo';
 var bar = 'bar';
 </code></pre>
 </blockquote>
@@ -1400,7 +1335,7 @@ var bar = 'bar';
 <div class=\"quote-controls\"></div>
  Alice:</div>
 <blockquote>
-<pre><code class=\"lang-javascript\">var foo ='foo';
+<pre data-code-wrap=\"javascript\"><code class=\"lang-javascript\">var foo ='foo';
 var bar = 'bar';
 </code></pre>
 </blockquote>
@@ -1410,7 +1345,7 @@ var bar = 'bar';
   });
 
   test("quotes with trailing formatting", function (assert) {
-    const result = new PrettyText(defaultOpts).cook(
+    const result = build().cook(
       '[quote="EvilTrout, post:123, topic:456, full:true"]\nhello\n[/quote]\n*Test*'
     );
     assert.strictEqual(
@@ -1568,8 +1503,8 @@ var bar = 'bar';
     assert.cookedOptions(
       `![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)`,
       { previewing: true },
-      `<p><div class=\"onebox-placeholder-container\">
-        <span class=\"placeholder-icon video\"></span>
+      `<p><div class="onebox-placeholder-container" data-orig-src-id="eyPnj7UzkU0AkGkx2dx8G4YM1Jx">
+        <span class="placeholder-icon video"></span>
       </div></p>`
     );
   });
@@ -1683,6 +1618,7 @@ var bar = 'bar';
     const opts = {
       watchedWordsReplace: {
         "(?:\\W|^)(fun)(?=\\W|$)": {
+          word: "fun",
           replacement: "times",
           case_sensitive: false,
         },
@@ -1697,6 +1633,7 @@ var bar = 'bar';
     const opts = {
       watchedWordsLink: {
         "(?:\\W|^)(fun)(?=\\W|$)": {
+          word: "fun",
           replacement: "https://discourse.org",
           case_sensitive: false,
         },
@@ -1711,18 +1648,21 @@ var bar = 'bar';
   });
 
   test("watched words replace with bad regex", function (assert) {
-    const maxMatches = 100; // same limit as MD watched-words-replace plugin
     const opts = {
       siteSettings: { watched_words_regular_expressions: true },
       watchedWordsReplace: {
-        "(\\bu?\\b)": { replacement: "you", case_sensitive: false },
+        "(\\bu?\\b)": {
+          word: "(\\bu?\\b)",
+          replacement: "you",
+          case_sensitive: false,
+        },
       },
     };
 
     assert.cookedOptions(
       "one",
       opts,
-      `<p>${"you".repeat(maxMatches)}one</p>`,
+      `<p>youoneyou</p>`,
       "does not loop infinitely"
     );
   });
@@ -1731,7 +1671,7 @@ var bar = 'bar';
     // "js" is an alias of "javascript"
     assert.cooked(
       "```js\nvar foo ='foo';\nvar bar = 'bar';\n```",
-      `<pre><code class=\"lang-js\">var foo ='foo';
+      `<pre data-code-wrap="js"><code class=\"lang-js\">var foo ='foo';
 var bar = 'bar';
 </code></pre>`,
       "code block with js alias works"
@@ -1740,9 +1680,53 @@ var bar = 'bar';
     // "html" is an alias of "xml"
     assert.cooked(
       "```html\n<strong>fun</strong> times\n```",
-      `<pre><code class=\"lang-html\">&lt;strong&gt;fun&lt;/strong&gt; times
+      `<pre data-code-wrap="html"><code class=\"lang-html\">&lt;strong&gt;fun&lt;/strong&gt; times
 </code></pre>`,
       "code block with html alias work"
+    );
+  });
+
+  test("image grid", function (assert) {
+    assert.cooked(
+      "[grid]\n![](http://folksy.com/images/folksy-colour.png)\n[/grid]",
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"></p>
+</div>`,
+      "image grid works"
+    );
+
+    assert.cooked(
+      `[grid]
+![](http://folksy.com/images/folksy-colour.png)
+![](http://folksy.com/images/folksy-colour2.png)
+![](http://folksy.com/images/folksy-colour3.png)
+[/grid]`,
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"><br>
+<img src="http://folksy.com/images/folksy-colour2.png" alt role="presentation"><br>
+<img src="http://folksy.com/images/folksy-colour3.png" alt role="presentation"></p>
+</div>`,
+      "image grid with 3 images works"
+    );
+
+    assert.cooked(
+      `[grid]
+![](http://folksy.com/images/folksy-colour.png) ![](http://folksy.com/images/folksy-colour2.png)
+![](http://folksy.com/images/folksy-colour3.png)
+[/grid]`,
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"> <img src="http://folksy.com/images/folksy-colour2.png" alt role="presentation"><br>
+<img src="http://folksy.com/images/folksy-colour3.png" alt role="presentation"></p>
+</div>`,
+      "image grid with mixed block and inline images works"
+    );
+
+    assert.cooked(
+      "[grid]![](http://folksy.com/images/folksy-colour.png) ![](http://folksy.com/images/folksy-colour2.png)[/grid]",
+      `<div class="d-image-grid">
+<p><img src="http://folksy.com/images/folksy-colour.png" alt role="presentation"> <img src="http://folksy.com/images/folksy-colour2.png" alt role="presentation"></p>
+</div>`,
+      "image grid with inline images works"
     );
   });
 });

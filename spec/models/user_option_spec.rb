@@ -15,7 +15,7 @@ RSpec.describe UserOption do
   end
 
   describe "defaults" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "should be redirected to top when there is a reason to" do
       user.user_option.expects(:redirected_to_top).returns(reason: "42")
@@ -43,6 +43,30 @@ RSpec.describe UserOption do
       user = Fabricate(:user)
       expect(user.user_option.email_digests).to eq(false)
       expect(user.user_option.digest_after_minutes).to eq(0)
+    end
+
+    it "should correctly set sidebar_link_to_filtered_list when `default_sidebar_link_to_filtered_list` site setting is enabled" do
+      SiteSetting.default_sidebar_link_to_filtered_list = true
+      user = Fabricate(:user)
+      expect(user.user_option.sidebar_link_to_filtered_list).to eq(true)
+    end
+
+    it "should correctly set sidebar_link_to_filtered_list when `default_sidebar_link_to_filtered_list` site setting is disabled" do
+      SiteSetting.default_sidebar_link_to_filtered_list = false
+      user = Fabricate(:user)
+      expect(user.user_option.sidebar_link_to_filtered_list).to eq(false)
+    end
+
+    it "should correctly set sidebar_show_count_of_new_items when `default_sidebar_show_count_of_new_items` site setting is enabled" do
+      SiteSetting.default_sidebar_show_count_of_new_items = true
+      user = Fabricate(:user)
+      expect(user.user_option.sidebar_show_count_of_new_items).to eq(true)
+    end
+
+    it "should correctly set sidebar_show_count_of_new_items when `default_sidebar_show_count_of_new_items` site setting is disabled" do
+      SiteSetting.default_sidebar_show_count_of_new_items = false
+      user = Fabricate(:user)
+      expect(user.user_option.sidebar_show_count_of_new_items).to eq(false)
     end
   end
 
@@ -87,7 +111,7 @@ RSpec.describe UserOption do
   end
 
   describe ".redirected_to_top" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     it "should have no reason when `SiteSetting.redirect_users_to_top_page` is disabled" do
       SiteSetting.redirect_users_to_top_page = false
@@ -168,7 +192,7 @@ RSpec.describe UserOption do
   end
 
   describe ".user_tzinfo" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     context "with user with valid timezone given" do
       before { user.user_option.update(timezone: "Europe/Paris") }

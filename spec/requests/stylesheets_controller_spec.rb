@@ -18,7 +18,7 @@ RSpec.describe StylesheetsController do
     expect(cached.digest).to eq digest
 
     # tmp folder destruction and cached
-    `rm -rf #{Stylesheet::Manager.cache_fullpath}`
+    Stylesheet::Manager.rm_cache_folder
 
     get "/stylesheets/desktop_rtl_#{digest}.css"
     expect(response.status).to eq(200)
@@ -35,7 +35,7 @@ RSpec.describe StylesheetsController do
     builder = Stylesheet::Manager::Builder.new(target: :desktop, theme: theme, manager: manager)
     builder.compile
 
-    `rm -rf #{Stylesheet::Manager.cache_fullpath}`
+    Stylesheet::Manager.rm_cache_folder
 
     get "/stylesheets/#{builder.stylesheet_filename.sub(".css", "")}.css"
 
@@ -49,7 +49,7 @@ RSpec.describe StylesheetsController do
       Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
     builder.compile
 
-    `rm -rf #{Stylesheet::Manager.cache_fullpath}`
+    Stylesheet::Manager.rm_cache_folder
 
     get "/stylesheets/#{builder.stylesheet_filename.sub(".css", "")}.css"
 
@@ -58,6 +58,62 @@ RSpec.describe StylesheetsController do
     get "/stylesheets/#{builder.stylesheet_filename_no_digest.sub(".css", "")}.css"
 
     expect(response.status).to eq(200)
+  end
+
+  context "when there are enabled plugins" do
+    fab!(:user)
+
+    let(:plugin) do
+      plugin = plugin_from_fixtures("my_plugin")
+      plugin.register_css "body { padding: 1px 2px 3px 4px; }"
+      plugin
+    end
+
+    before do
+      Discourse.plugins << plugin
+      plugin.activate!
+      Stylesheet::Importer.register_imports!
+      StylesheetCache.destroy_all
+      SiteSetting.has_login_hint = false
+      SiteSetting.allow_user_locale = true
+      sign_in(user)
+    end
+
+    after do
+      Discourse.plugins.delete(plugin)
+      Stylesheet::Importer.register_imports!
+      DiscoursePluginRegistry.reset!
+    end
+
+    it "can lookup plugin specific css" do
+      get "/"
+
+      html = Nokogiri::HTML5.fragment(response.body)
+      expect(html.at("link[data-target=my_plugin_rtl]")).to eq(nil)
+
+      href = html.at("link[data-target=my_plugin]").attribute("href").value
+      get href
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Type"]).to eq("text/css")
+      expect(response.body).to include("body{padding:1px 2px 3px 4px}")
+      expect(response.body).not_to include("body{padding:1px 4px 3px 2px}")
+
+      user.locale = "ar" # RTL locale
+      user.save!
+      get "/"
+
+      html = Nokogiri::HTML5.fragment(response.body)
+      expect(html.at("link[data-target=my_plugin]")).to eq(nil)
+
+      href = html.at("link[data-target=my_plugin_rtl]").attribute("href").value
+      get href
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Type"]).to eq("text/css")
+      expect(response.body).to include("body{padding:1px 4px 3px 2px}")
+      expect(response.body).not_to include("body{padding:1px 2px 3px 4px}")
+    end
   end
 
   it "ignores Accept header and does not include Vary header" do

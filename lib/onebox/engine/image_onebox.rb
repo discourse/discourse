@@ -5,8 +5,8 @@ module Onebox
     class ImageOnebox
       include Engine
 
-      matches_content_type(%r{^image/(png|jpg|jpeg|gif|bmp|tif|tiff)$})
-      matches_regexp(%r{^(https?:)?//.+\.(png|jpg|jpeg|gif|bmp|tif|tiff)(\?.*)?$}i)
+      matches_content_type(%r{^image/(png|jpg|jpeg|gif|bmp|tif|tiff|webp|avif)$})
+      matches_regexp(%r{^(https?:)?//.+\.(png|jpg|jpeg|gif|bmp|tif|tiff|webp|avif)(\?.*)?$}i)
 
       def always_https?
         AllowlistedGenericOnebox.host_matches(uri, AllowlistedGenericOnebox.https_hosts)

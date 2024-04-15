@@ -40,8 +40,6 @@ RSpec.describe SpamHandler do
       Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
       Fabricate(:moderator, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
 
-      Group.refresh_automatic_groups!(:staff)
-
       # should not limit registration
       SiteSetting.max_new_accounts_per_registration_ip = 1
       Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])

@@ -1,18 +1,21 @@
-<div class="admin-controls">
-  <HorizontalOverflowNav @className="main-nav nav plugin-nav">
-    <NavItem @route="adminPlugins.index" @label="admin.plugins.title" />
-    {{#each this.adminRoutes as |route|}}
-      <NavItem @route={{route.full_location}} @label={{route.label}} />
-    {{/each}}
-    {{#if this.currentUser.admin}}
-      <NavItem
-        @route="adminSiteSettingsCategory"
-        @label="admin.plugins.change_settings"
-        @routeParam="plugins"
-      />
-    {{/if}}
-  </HorizontalOverflowNav>
-</div>
+{{#if this.showTopNav}}
+  <div class="admin-controls">
+    <HorizontalOverflowNav class="main-nav nav plugin-nav">
+      <NavItem @route="adminPlugins.index" @label="admin.plugins.title" />
+      {{#each this.adminRoutes as |route|}}
+        {{#if route.use_new_show_route}}
+          <NavItem
+            @route={{route.full_location}}
+            @label={{route.label}}
+            @routeParam={{route.location}}
+          />
+        {{else}}
+          <NavItem @route={{route.full_location}} @label={{route.label}} />
+        {{/if}}
+      {{/each}}
+    </HorizontalOverflowNav>
+  </div>
+{{/if}}
 
 <div class="admin-container">
   {{#each this.brokenAdminRoutes as |route|}}

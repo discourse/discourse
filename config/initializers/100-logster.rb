@@ -60,6 +60,11 @@ if Rails.env.production?
   Logster.config.env_expandable_keys.push(:hostname, :problem_db)
 end
 
+Rails.application.config.after_initialize do
+  Logster.config.back_to_site_link_path = "#{Discourse.base_path}/admin"
+  Logster.config.back_to_site_link_text = I18n.t("dashboard.back_from_logster_text")
+end
+
 Logster.store.max_backlog = GlobalSetting.max_logster_logs
 
 # TODO logster should be able to do this automatically
@@ -126,7 +131,7 @@ Discourse.plugins.each do |plugin|
   next if !plugin.metadata.url
 
   Logster.config.project_directories << {
-    path: "#{Rails.root.to_s}/plugins/#{plugin.directory_name}",
+    path: "#{Rails.root}/plugins/#{plugin.directory_name}",
     url: plugin.metadata.url,
   }
 end

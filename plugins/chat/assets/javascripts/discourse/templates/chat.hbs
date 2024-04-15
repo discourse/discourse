@@ -1,7 +1,5 @@
 <div id="chat-progress-bar-container"></div>
 
-<ChatVh />
-
 {{#if this.chat.sidebarActive}}
   <div class="full-page-chat teams-sidebar-on">
     {{outlet}}
@@ -22,6 +20,9 @@
       class={{concat-class "main-chat-outlet" this.mainOutletModifierClasses}}
     >
       {{outlet}}
+      {{#if this.shouldUseChatFooter}}
+        <ChatFooter />
+      {{/if}}
     </div>
   </div>
 {{/if}}

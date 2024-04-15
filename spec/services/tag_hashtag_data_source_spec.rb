@@ -6,8 +6,20 @@ RSpec.describe TagHashtagDataSource do
   fab!(:tag3) { Fabricate(:tag, name: "factory", public_topic_count: 4) }
   fab!(:tag4) { Fabricate(:tag, name: "factorio", public_topic_count: 3) }
   fab!(:tag5) { Fabricate(:tag, name: "factz", public_topic_count: 1) }
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:guardian) { Guardian.new(user) }
+
+  describe "#enabled?" do
+    it "returns false if tagging is disabled" do
+      SiteSetting.tagging_enabled = false
+      expect(described_class.enabled?).to eq(false)
+    end
+
+    it "returns true if tagging is enabled" do
+      SiteSetting.tagging_enabled = true
+      expect(described_class.enabled?).to eq(true)
+    end
+  end
 
   describe "#search" do
     it "orders tag results by exact search match, then public topic count, then name" do
@@ -35,11 +47,6 @@ RSpec.describe TagHashtagDataSource do
       expect(described_class.search(guardian, "fact", 5).map(&:secondary_text)).to eq(
         %w[x0 x5 x4 x3 x1],
       )
-    end
-
-    it "returns nothing if tagging is not enabled" do
-      SiteSetting.tagging_enabled = false
-      expect(described_class.search(guardian, "fact", 5)).to be_empty
     end
 
     it "returns tags that are children of a TagGroup" do

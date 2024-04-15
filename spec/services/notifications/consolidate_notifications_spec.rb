@@ -2,7 +2,7 @@
 
 RSpec.describe Notifications::ConsolidateNotifications do
   describe "#before_consolidation_callbacks" do
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:rule) do
       described_class.new(
         from: Notification.types[:liked],

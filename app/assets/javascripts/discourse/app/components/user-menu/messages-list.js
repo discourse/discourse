@@ -1,13 +1,12 @@
+import { service } from "@ember/service";
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { ajax } from "discourse/lib/ajax";
-import Notification from "discourse/models/notification";
-import showModal from "discourse/lib/show-modal";
-import I18n from "I18n";
-import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
-import Topic from "discourse/models/topic";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import { mergeSortedLists } from "discourse/lib/utilities";
-import { inject as service } from "@ember/service";
+import Notification from "discourse/models/notification";
+import Topic from "discourse/models/topic";
+import I18n from "discourse-i18n";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   @service store;
@@ -49,6 +48,12 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     return this.currentUser.get(key) || 0;
   }
 
+  get dismissConfirmationText() {
+    return I18n.t("notifications.dismiss_confirmation.body.messages", {
+      count: this.#unreadMessagesNotifications,
+    });
+  }
+
   async fetchItems() {
     const data = await ajax(
       `/u/${this.currentUser.username}/user-menu-private-messages`
@@ -72,6 +77,16 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     const topics = data.topics.map((t) => this.store.createRecord("topic", t));
     await Topic.applyTransformations(topics);
 
+    if (this.siteSettings.show_user_menu_avatars) {
+      // Populate avatar_template for lastPoster
+      const usersById = new Map(data.users.map((u) => [u.id, u]));
+      topics.forEach((t) => {
+        t.last_poster_avatar_template = usersById.get(
+          t.lastPoster.user_id
+        )?.avatar_template;
+      });
+    }
+
     const readNotifications = await Notification.initializeNotifications(
       data.read_notifications
     );
@@ -91,21 +106,16 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
           })
         );
       } else {
-        content.push(new UserMenuMessageItem({ message: item }));
+        content.push(
+          new UserMenuMessageItem({
+            message: item,
+            siteSettings: this.siteSettings,
+            site: this.site,
+          })
+        );
       }
     });
 
     return content;
-  }
-
-  dismissWarningModal() {
-    const modalController = showModal("dismiss-notification-confirmation");
-    modalController.set(
-      "confirmationMessage",
-      I18n.t("notifications.dismiss_confirmation.body.messages", {
-        count: this.#unreadMessagesNotifications,
-      })
-    );
-    return modalController;
   }
 }

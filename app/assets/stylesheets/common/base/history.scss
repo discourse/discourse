@@ -1,41 +1,182 @@
 // styles that apply to the popup that appears when you show the edit history of a post
 
 .modal.history-modal {
-  .modal-body {
-    max-height: 70vh;
+  .modal-inner-container {
+    max-width: var(--d-max-width);
+    width: 100dvw;
+  }
+  &.--mode-inline {
+    .modal-inner-container {
+      width: auto;
+    }
+  }
+
+  .modal-body:not(.theme-change-modal-body) {
+    min-height: 65dvh;
+  }
+
+  .d-modal__footer {
+    justify-content: space-between;
   }
 
   #revision-numbers {
     display: inline-block;
-    min-width: 96px;
+    min-width: 7em;
     text-align: center;
   }
 
   #revision {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5em 0;
+    align-items: center;
+    padding-bottom: 0.5em;
     overflow: auto;
     border-bottom: 3px solid var(--primary-low);
-  }
-
-  table.markdown > tbody > tr > td,
-  .revision-content {
-    width: 47.5%;
-    float: left;
-    min-height: 1px;
-
-    &:nth-of-type(2) {
-      margin-left: 5%;
+    @include breakpoint(tablet) {
+      padding-bottom: 0;
+    }
+    @include breakpoint(mobile-large) {
+      padding-bottom: 0.5em;
     }
   }
 
   #revision-details {
-    padding: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  #display-modes {
+    .nav {
+      margin: 0;
+      padding: 0;
+      border: none;
+    }
+    @include breakpoint(tablet) {
+      width: 100%;
+      margin-top: 0.5em;
+      .nav-pills {
+        width: 100%;
+        li {
+          margin: 0;
+          flex: 1 1 auto;
+        }
+        a {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  .revision-details__user {
+    display: flex;
+    align-items: center;
+  }
+
+  .revision__title,
+  .body-diff,
+  table.markdown > tbody > tr,
+  .-tag-revisions {
+    --gap-width: 1rem;
+    display: flex;
+    gap: 0 var(--gap-width);
+  }
+
+  .mobile-view & {
+    .-tag-revisions {
+      display: block;
+    }
+    .discourse-tags {
+      display: inline;
+      font-size: var(--font-down-1);
+    }
+  }
+
+  .inline-diff {
+    width: 100%;
+    max-width: var(--modal-max-width);
+  }
+
+  pre {
+    display: flex;
+  }
+
+  pre code {
+    word-wrap: anywhere; // prevent long strings from breaking modal width
+    min-width: 0;
+    overflow: auto;
+    flex: 0 1 auto;
+  }
+
+  .revision__title {
+    margin: 0;
+    line-height: var(--line-height-medium);
+  }
+
+  &:not(.--mode-inline) {
+    .-tag-revisions span {
+      flex: 0 1 50%;
+      min-width: 0;
+      align-self: start;
+    }
+  }
+
+  .revision-content {
+    flex: 0 1 50%;
+    min-width: 0;
+  }
+
+  .markdown {
+    font-family: var(--d-font-family--monospace);
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    td {
+      word-wrap: anywhere;
+      white-space: pre-wrap;
+      flex: 0 1 50%;
+    }
+    tbody {
+      border: none;
+    }
+  }
+
+  #revision-controls {
+    display: flex;
+    align-items: center;
+
+    .btn {
+      margin: 0;
+    }
+
+    @include breakpoint(tablet) {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  [class^="revision-controls--"] {
+    display: flex;
+    gap: 0 1em;
   }
 
   #revisions {
+    word-wrap: break-word;
+    table {
+      margin-top: 10px;
+      tr {
+        border: none;
+      }
+    }
+
     .row:first-of-type {
       margin-top: 10px;
     }
-    table {
+    .revision-content table {
       thead {
         th {
           padding-bottom: 2px;
@@ -53,11 +194,53 @@
     }
   }
 
+  #revision-footer-buttons {
+    display: flex;
+    gap: 0.5em;
+    button {
+      margin: 0;
+      flex: 1 1 auto;
+      min-width: 0;
+      .d-button-label {
+        @include ellipsis;
+      }
+    }
+    @include breakpoint(tablet) {
+      width: 100%;
+      flex: 1 1 100%;
+      button {
+        font-size: var(--font-down-1);
+      }
+    }
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    box-sizing: border-box;
+  }
+
   ins,
-  .diff-ins {
+  .diff-ins,
+  del,
+  .diff-del {
+    color: var(--primary);
+    text-decoration: none;
     code,
     img {
-      border: 2px solid var(--success);
+      border: 2px solid;
+    }
+    a {
+      text-decoration: none;
+    }
+  }
+
+  ins,
+  .diff-ins {
+    background: var(--success-low);
+    code,
+    img {
+      border-color: var(--success);
     }
     img {
       opacity: 0.75;
@@ -65,31 +248,16 @@
     }
     a {
       color: var(--success);
-      text-decoration: none;
     }
   }
-  img.diff-ins,
-  code.diff-ins {
-    border: 2px solid var(--success);
-  }
-  img.diff-ins {
-    opacity: 0.75;
-    filter: alpha(opacity=75);
-  }
-  .diff-ins {
-    color: var(--primary);
-    background: var(--success-low);
-  }
-  ins {
-    color: var(--primary);
-    background: var(--success-low);
-    text-decoration: none;
-  }
+
   del,
   .diff-del {
+    background: var(--danger-low);
+    text-decoration: none;
     code,
     img {
-      border: 2px solid var(--danger);
+      border-color: var(--danger);
     }
     img {
       opacity: 0.5;
@@ -97,36 +265,17 @@
     }
     a {
       color: var(--danger);
-      text-decoration: none;
     }
   }
-  img.diff-del,
-  code.diff-del {
-    border: 2px solid var(--danger);
-  }
-  img.diff-del {
-    opacity: 0.5;
-    filter: alpha(opacity=50);
-  }
-  .diff-del {
-    color: var(--primary);
-    background: var(--danger-low);
-    text-decoration: none;
-  }
-  del {
-    color: var(--primary);
-    background: var(--danger-low);
-    text-decoration: none;
-  }
+
   span.date {
     font-weight: bold;
   }
   span.edit-reason {
     background-color: var(--highlight-bg);
-    padding: 3px 5px 5px 5px;
   }
   .d-icon-ban {
-    color: #f00;
+    color: var(--danger);
   }
   .hidden-revision-either {
     opacity: 0.5;

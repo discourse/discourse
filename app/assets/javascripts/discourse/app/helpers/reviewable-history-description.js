@@ -1,14 +1,16 @@
-import { EDITED } from "discourse/models/reviewable-history";
-import I18n from "I18n";
-import { htmlHelper } from "discourse-common/lib/helpers";
+import { htmlSafe } from "@ember/template";
 import { htmlStatus } from "discourse/helpers/reviewable-status";
+import { EDITED } from "discourse/models/reviewable-history";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import I18n from "discourse-i18n";
 
-export default htmlHelper(function (rh) {
+export default function reviewableHistoryDescription(rh) {
   switch (rh.reviewable_history_type) {
     case EDITED:
-      return iconHTML("pencil-alt") + " " + I18n.t("review.history.edited");
+      return htmlSafe(
+        iconHTML("pencil-alt") + " " + I18n.t("review.history.edited")
+      );
     default:
-      return htmlStatus(rh.status);
+      return htmlSafe(htmlStatus(rh.status));
   }
-});
+}

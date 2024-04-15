@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe TagGroupsController do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
 
   describe "#index" do
-    fab!(:tag_group) { Fabricate(:tag_group) }
+    fab!(:tag_group)
 
     describe "for a non staff user" do
       it "should not be accessible" do
@@ -20,7 +20,7 @@ RSpec.describe TagGroupsController do
     end
 
     describe "for a staff user" do
-      fab!(:admin) { Fabricate(:admin) }
+      fab!(:admin)
 
       before { sign_in(admin) }
 
@@ -40,13 +40,19 @@ RSpec.describe TagGroupsController do
   end
 
   describe "#search" do
-    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag)
 
     let(:everyone) { Group::AUTO_GROUPS[:everyone] }
     let(:staff) { Group::AUTO_GROUPS[:staff] }
 
     let(:full) { TagGroupPermission.permission_types[:full] }
     let(:readonly) { TagGroupPermission.permission_types[:readonly] }
+
+    describe "when limit params is invalid" do
+      include_examples "invalid limit params",
+                       "/tag_groups/filter/search.json",
+                       SiteSetting.max_tag_search_results
+    end
 
     context "for anons" do
       it "returns the tag group with the associated tag names" do

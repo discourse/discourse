@@ -5,7 +5,7 @@ require "import_export"
 RSpec.describe ImportExport::TopicExporter do
   before { STDOUT.stubs(:write) }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: user) }
 

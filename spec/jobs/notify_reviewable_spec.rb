@@ -3,8 +3,8 @@
 RSpec.describe Jobs::NotifyReviewable do
   describe "#execute" do
     fab!(:admin) { Fabricate(:admin, moderator: true) }
-    fab!(:moderator) { Fabricate(:moderator) }
-    fab!(:group_user) { Fabricate(:group_user) }
+    fab!(:moderator)
+    fab!(:group_user)
     fab!(:group) { group_user.group }
     fab!(:user) { group_user.user }
 

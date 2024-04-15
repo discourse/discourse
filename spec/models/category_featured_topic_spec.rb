@@ -5,8 +5,8 @@ RSpec.describe CategoryFeaturedTopic do
   it { is_expected.to belong_to :topic }
 
   describe ".feature_topics_for" do
-    fab!(:user) { Fabricate(:user) }
-    fab!(:category) { Fabricate(:category) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:category)
     let!(:category_post) do
       PostCreator.create(
         user,

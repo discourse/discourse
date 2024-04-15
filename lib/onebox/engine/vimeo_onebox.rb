@@ -34,7 +34,7 @@ module Onebox
 
       def oembed_data
         response = Onebox::Helpers.fetch_response("https://vimeo.com/api/oembed.json?url=#{url}")
-        @oembed_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(response))
+        @oembed_data = ::MultiJson.load(response, symbolize_keys: true)
       rescue StandardError
         "{}"
       end

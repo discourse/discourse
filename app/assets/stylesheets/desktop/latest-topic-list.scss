@@ -40,16 +40,14 @@
     flex: 0 1 auto;
     max-width: 65%;
     font-size: var(--font-0);
-    .badge-wrapper {
-      max-width: 100%;
-      .badge-category-bg {
-        flex-shrink: 0;
-      }
-    }
-
     .top-row {
       margin-bottom: 0.1em;
       font-size: var(--font-up-1);
+    }
+    .bottom-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 0.5em;
     }
   }
   .topic-stats {

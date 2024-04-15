@@ -1,11 +1,12 @@
 import { render } from "@ember/test-helpers";
+import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
+import QUnit, { test } from "qunit";
+import { autoLoadModules } from "discourse/instance-initializers/auto-load-modules";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
-import { autoLoadModules } from "discourse/initializers/auto-load-modules";
-import QUnit, { test } from "qunit";
-import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
 import { currentSettings } from "discourse/tests/helpers/site-settings";
 
 export function setupRenderingTest(hooks) {
@@ -26,20 +27,7 @@ export function setupRenderingTest(hooks) {
       name: "Robin Ward",
       admin: false,
       moderator: false,
-      groups: [
-        {
-          id: 10,
-          automatic: true,
-          name: "trust_level_0",
-          display_name: "trust_level_0",
-        },
-        {
-          id: 11,
-          automatic: true,
-          name: "trust_level_1",
-          display_name: "trust_level_1",
-        },
-      ],
+      groups: [AUTO_GROUPS.trust_level_0, AUTO_GROUPS.trust_level_1],
       user_option: {
         timezone: "Australia/Brisbane",
       },
@@ -59,8 +47,6 @@ export function setupRenderingTest(hooks) {
 
     autoLoadModules(this.owner, this.registry);
     this.owner.lookup("service:store");
-
-    $.fn.autocomplete = function () {};
   });
 }
 

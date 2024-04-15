@@ -171,6 +171,15 @@ RSpec.describe PostOwnerChanger do
     end
 
     context "with integration tests" do
+      subject(:change_owners) do
+        PostOwnerChanger.new(
+          post_ids: [p1.id, p2.id],
+          topic_id: topic.id,
+          new_owner: user_a,
+          acting_user: editor,
+        ).change_owner!
+      end
+
       let(:p1user) { p1.user }
       let(:p2user) { p2.user }
 
@@ -207,15 +216,6 @@ RSpec.describe PostOwnerChanger do
         )
 
         UserActionManager.enable
-      end
-
-      subject(:change_owners) do
-        PostOwnerChanger.new(
-          post_ids: [p1.id, p2.id],
-          topic_id: topic.id,
-          new_owner: user_a,
-          acting_user: editor,
-        ).change_owner!
       end
 
       it "updates users' topic and post counts" do

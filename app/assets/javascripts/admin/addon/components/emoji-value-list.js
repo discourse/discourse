@@ -1,11 +1,11 @@
-import { classNameBindings } from "@ember-decorators/component";
 import Component from "@ember/component";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { emojiUrlFor } from "discourse/lib/text";
 import { action, set, setProperties } from "@ember/object";
 import { schedule } from "@ember/runloop";
+import { classNameBindings } from "@ember-decorators/component";
+import { emojiUrlFor } from "discourse/lib/text";
 import discourseLater from "discourse-common/lib/later";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 @classNameBindings(":value-list", ":emoji-list")
 export default class EmojiValueList extends Component {

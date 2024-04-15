@@ -3,10 +3,13 @@
 class TopicEmbed < ActiveRecord::Base
   include Trashable
 
+  EMBED_CONTENT_CACHE_MAX_LENGTH = 32_000
+
   belongs_to :topic
   belongs_to :post
   validates_presence_of :embed_url
   validates_uniqueness_of :embed_url
+  validates :embed_content_cache, length: { maximum: EMBED_CONTENT_CACHE_MAX_LENGTH }
 
   before_validation(on: :create) do
     unless (
@@ -21,10 +24,14 @@ class TopicEmbed < ActiveRecord::Base
   end
 
   class FetchResponse
-    attr_accessor :title, :body, :author
+    attr_accessor :title, :body, :author, :url
   end
 
   def self.normalize_url(url)
+    # downcase
+    # remove trailing forward slash/
+    # remove consecutive hyphens
+    # remove leading and trailing whitespace
     url.downcase.sub(%r{/\z}, "").sub(/\-+/, "-").strip
   end
 
@@ -39,13 +46,14 @@ class TopicEmbed < ActiveRecord::Base
   def self.import(user, url, title, contents, category_id: nil, cook_method: nil, tags: nil)
     return unless url =~ %r{\Ahttps?\://}
 
+    original_contents = contents.dup.truncate(EMBED_CONTENT_CACHE_MAX_LENGTH)
     contents = first_paragraph_from(contents) if SiteSetting.embed_truncate && cook_method.nil?
     contents ||= ""
     contents = contents.dup << imported_from_html(url)
 
     url = normalize_url(url)
 
-    embed = TopicEmbed.find_by("lower(embed_url) = ?", url)
+    embed = topic_embed_by_url(url)
     content_sha1 = Digest::SHA1.hexdigest(contents)
     post = nil
 
@@ -68,19 +76,24 @@ class TopicEmbed < ActiveRecord::Base
           cook_method: cook_method,
           category: category_id || eh.try(:category_id),
           tags: SiteSetting.tagging_enabled ? tags : nil,
+          embed_url: url,
+          embed_content_sha1: content_sha1,
         }
-        create_args[:visible] = false if SiteSetting.embed_unlisted?
+        create_args[:visible] = false if SiteSetting.import_embed_unlisted?
 
-        creator = PostCreator.new(user, create_args)
-        post = creator.create
-        if post.present?
-          TopicEmbed.create!(
-            topic_id: post.topic_id,
-            embed_url: url,
-            content_sha1: content_sha1,
-            post_id: post.id,
-          )
-        end
+        # always return `args` when using this modifier, e.g:
+        #
+        # plugin.register_modifier(:topic_embed_import_create_args) do |args|
+        #   args[:title] = "MODIFIED: #{args[:title]}"
+        #
+        #   args # returning args is important to prevent errors
+        # end
+        create_args =
+          DiscoursePluginRegistry.apply_modifier(:topic_embed_import_create_args, create_args) ||
+            create_args
+
+        post = PostCreator.create(user, create_args)
+        post.topic.topic_embed.update!(embed_content_cache: original_contents)
       end
     else
       absolutize_urls(url, contents)
@@ -105,7 +118,7 @@ class TopicEmbed < ActiveRecord::Base
           changes[:title] = title if title.present?
 
           post.revise(user, changes, skip_validations: true, bypass_rate_limiter: true)
-          embed.update!(content_sha1: content_sha1)
+          embed.update!(content_sha1: content_sha1, embed_content_cache: original_contents)
         end
       end
     end
@@ -122,12 +135,12 @@ class TopicEmbed < ActiveRecord::Base
     return if uri.blank?
 
     begin
-      html = uri.read
-    rescue OpenURI::HTTPError, Net::OpenTimeout
+      html = FinalDestination::HTTP.get(uri)
+    rescue OpenURI::HTTPError, Net::OpenTimeout, FinalDestination::SSRFDetector::DisallowedIpError
       return
     end
 
-    parse_html(html, url)
+    parse_html(html, uri.to_s)
   end
 
   def self.parse_html(html, url)
@@ -151,6 +164,9 @@ class TopicEmbed < ActiveRecord::Base
     response = FetchResponse.new
 
     raw_doc = Nokogiri.HTML5(html)
+
+    response.url = url
+
     auth_element =
       raw_doc.at('meta[@name="discourse-username"]') || raw_doc.at('meta[@name="author"]')
     if auth_element.present?
@@ -217,6 +233,7 @@ class TopicEmbed < ActiveRecord::Base
     response.title = opts[:title] if opts[:title].present?
     import_user = opts[:user] if opts[:user].present?
     import_user = response.author if response.author.present?
+    url = normalize_url(response.url) if response.url.present?
 
     TopicEmbed.import(import_user, url, response.title, response.body)
   end
@@ -260,9 +277,14 @@ class TopicEmbed < ActiveRecord::Base
     fragment.at("div").inner_html
   end
 
-  def self.topic_id_for_embed(embed_url)
+  def self.topic_embed_by_url(embed_url)
     embed_url = normalize_url(embed_url).sub(%r{\Ahttps?\://}, "")
-    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").pick(:topic_id)
+    TopicEmbed.where("embed_url ~* ?", "^https?://#{Regexp.escape(embed_url)}$").first
+  end
+
+  def self.topic_id_for_embed(embed_url)
+    topic_embed = topic_embed_by_url(embed_url)
+    topic_embed&.topic_id
   end
 
   def self.first_paragraph_from(html)
@@ -291,6 +313,11 @@ class TopicEmbed < ActiveRecord::Base
         response = TopicEmbed.find_remote(url)
 
         body = response.body
+        if post&.topic&.topic_embed && body.present?
+          post.topic.topic_embed.update!(
+            embed_content_cache: body.truncate(EMBED_CONTENT_CACHE_MAX_LENGTH),
+          )
+        end
         body << TopicEmbed.imported_from_html(url)
         body
       end
@@ -301,15 +328,16 @@ end
 #
 # Table name: topic_embeds
 #
-#  id            :integer          not null, primary key
-#  topic_id      :integer          not null
-#  post_id       :integer          not null
-#  embed_url     :string(1000)     not null
-#  content_sha1  :string(40)
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  deleted_at    :datetime
-#  deleted_by_id :integer
+#  id                  :integer          not null, primary key
+#  topic_id            :integer          not null
+#  post_id             :integer          not null
+#  embed_url           :string(1000)     not null
+#  content_sha1        :string(40)
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  deleted_at          :datetime
+#  deleted_by_id       :integer
+#  embed_content_cache :text
 #
 # Indexes
 #

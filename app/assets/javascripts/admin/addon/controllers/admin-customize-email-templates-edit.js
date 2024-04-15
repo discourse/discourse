@@ -1,10 +1,10 @@
-import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
-import I18n from "I18n";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import discourseComputed from "discourse-common/utils/decorators";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "discourse-i18n";
 
 export default class AdminCustomizeEmailTemplatesEditController extends Controller.extend(
   bufferedProperty("emailTemplate")

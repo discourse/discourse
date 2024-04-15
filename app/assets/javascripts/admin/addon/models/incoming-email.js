@@ -1,6 +1,6 @@
-import AdminUser from "admin/models/admin-user";
 import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import AdminUser from "admin/models/admin-user";
 
 export default class IncomingEmail extends EmberObject {
   static create(attrs) {
@@ -33,9 +33,5 @@ export default class IncomingEmail extends EmberObject {
     }).then((incomings) =>
       incomings.map((incoming) => IncomingEmail.create(incoming))
     );
-  }
-
-  static loadRawEmail(id) {
-    return ajax(`/admin/email/incoming/${id}/raw.json`);
   }
 }

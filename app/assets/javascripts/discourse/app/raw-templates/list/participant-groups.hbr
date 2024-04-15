@@ -1,0 +1,18 @@
+<div
+  class="participant-group-wrapper"
+  role="list"
+  aria-label="{{i18n 'topic.participant_groups'}}"
+>
+  {{#each groups as |group|}}
+    <div class="participant-group">
+      <a
+        class="user-group trigger-group-card"
+        href="{{group.url}}"
+        data-group-card="{{group.name}}"
+      >
+        {{d-icon "users"}}
+        {{group.name}}
+      </a>
+    </div>
+  {{/each}}
+</div>

@@ -57,7 +57,7 @@ RSpec.describe ImportScripts::Base do
 
   describe "#create_post" do
     let(:importer) { described_class.new }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     let(:post_params) do
       { user_id: user.id, raw: "Test post [b]content[/b]", title: "Test topic for post" }
     end

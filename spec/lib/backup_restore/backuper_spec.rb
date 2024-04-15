@@ -81,20 +81,10 @@ RSpec.describe BackupRestore::Backuper do
 
     before { backup.stubs(:success).returns(success) }
 
-    context "when the result isn't successful" do
-      let(:success) { false }
-
-      it "doesn't refresh disk stats" do
-        store.expects(:reset_cache).never
-        run
-      end
-    end
-
     context "when the result is successful" do
       let(:success) { true }
-
       it "refreshes disk stats" do
-        store.expects(:reset_cache)
+        store.expects(:reset_cache).at_least_once
         run
       end
     end

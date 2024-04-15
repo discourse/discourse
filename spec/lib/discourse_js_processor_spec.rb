@@ -155,15 +155,11 @@ RSpec.describe DiscourseJsProcessor do
       Handlebars.registerHelper('dummy-helper', function(string) {
         return `dummy(${string})`
       })
-      JS
+    JS
 
     let(:mini_racer) do
       ctx = MiniRacer::Context.new
-      ctx.eval(
-        File.open(
-          "#{Rails.root}/app/assets/javascripts/node_modules/handlebars/dist/handlebars.js",
-        ).read,
-      )
+      ctx.eval(File.open("#{Rails.root}/node_modules/handlebars/dist/handlebars.js").read)
       ctx.eval(helpers)
       ctx
     end

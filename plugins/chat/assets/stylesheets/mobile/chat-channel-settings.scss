@@ -1,0 +1,10 @@
+.c-channel-settings {
+  min-width: 320px;
+
+  html.footer-nav-ipad &,
+  html.footer-nav-visible & {
+    padding-bottom: calc(
+      env(safe-area-inset-bottom) + var(--footer-nav-height, 0px)
+    );
+  }
+}
