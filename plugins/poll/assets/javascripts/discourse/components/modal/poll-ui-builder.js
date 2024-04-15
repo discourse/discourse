@@ -12,6 +12,7 @@ export const PIE_CHART_TYPE = "pie";
 export const REGULAR_POLL_TYPE = "regular";
 export const NUMBER_POLL_TYPE = "number";
 export const MULTIPLE_POLL_TYPE = "multiple";
+export const IRV_POLL_TYPE = "irv";
 
 const ALWAYS_POLL_RESULT = "always";
 const VOTE_POLL_RESULT = "on_vote";
@@ -36,7 +37,10 @@ export default class PollUiBuilderModal extends Component {
   publicPoll = this.siteSettings.poll_default_public;
 
   @or("showAdvanced", "isNumber") showNumber;
+  @or("showAdvanced", "isIrv") showIrv;
   @gt("pollOptions.length", 1) canRemoveOption;
+  @or("isIrv", "isRegular") dontShowForIrvOrRegular;
+  @or("isIrv", "isNumber") dontShowForIrvOrNumber;
 
   @discourseComputed("currentUser.staff")
   pollResults(staff) {
@@ -78,6 +82,11 @@ export default class PollUiBuilderModal extends Component {
   @discourseComputed("pollType")
   isMultiple(pollType) {
     return pollType === MULTIPLE_POLL_TYPE;
+  }
+
+  @discourseComputed("pollType")
+  isIrv(pollType) {
+    return pollType === IRV_POLL_TYPE;
   }
 
   @discourseComputed("pollOptions.@each.value")

@@ -103,6 +103,7 @@ en:
           label: Type
           regular: Single Choice
           multiple: Multiple Choice
+          irv: Instant Runoff Voting
           number: Number Rating
         poll_result:
           label: Show Results...
