@@ -8,6 +8,7 @@ module Chat
     belongs_to :last_read_message, class_name: "Chat::Message", optional: true
     belongs_to :thread, class_name: "Chat::Thread", foreign_key: :thread_id
 
+    attribute :thread_title_prompt, default: true
     enum :notification_level, Chat::NotificationLevels.all
   end
 end

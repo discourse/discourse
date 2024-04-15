@@ -9,11 +9,11 @@ const ChatNavbarTitle = <template>
     title={{@title}}
     class={{concatClass "c-navbar__title" (if @showFullTitle "full-title")}}
   >
-    {{#if @onClick}}
+    {{#if @openThreadTitleModal}}
       <DButton
         class="c-navbar__title-text btn-transparent"
         @icon={{@icon}}
-        @action={{@onClick}}
+        @action={{@openThreadTitleModal}}
         @translatedLabel={{@title}}
       />
     {{else}}

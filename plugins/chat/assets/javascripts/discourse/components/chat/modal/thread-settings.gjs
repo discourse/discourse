@@ -86,6 +86,14 @@ export default class ChatModalThreadSettings extends Component {
           </p>
         </div>
       </:body>
+      <:footer>
+        <DButton
+          @disabled={{this.buttonDisabled}}
+          @action={{this.saveThread}}
+          @label="save"
+          class="btn-primary"
+        />
+      </:footer>
     </DModal>
   </template>
 }

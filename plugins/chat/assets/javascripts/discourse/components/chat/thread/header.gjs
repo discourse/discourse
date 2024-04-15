@@ -91,7 +91,7 @@ export default class ChatThreadHeader extends Component {
 
       <navbar.Title
         @title={{replaceEmoji this.headerTitle}}
-        @onClick={{this.openThreadTitleModal}}
+        @openThreadTitleModal={{this.openThreadTitleModal}}
       />
       <navbar.Actions as |action|>
         <action.ThreadTrackingDropdown @thread={{@thread}} />
