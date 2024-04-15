@@ -2,3 +2,12 @@ plugins:
   user_enrollment_field:
     default: "user_field_1"
     client: true
+  college_admits_received_field:
+    default: "user_field_3"
+    client: true
+  college_admits_awaited_field:
+    default: "user_field_4"
+    client: true
+  college_top_preference_field:
+    default: "user_field_5"
+    client: true

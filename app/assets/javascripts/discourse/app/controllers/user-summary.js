@@ -1,5 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
+import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import { duration } from "discourse/lib/formatter";
 import discourseComputed from "discourse-common/utils/decorators";
 
@@ -9,6 +11,8 @@ const MAX_BADGES = 6;
 export default Controller.extend({
   userController: controller("user"),
   user: alias("userController.model"),
+  siteSettings: service(),
+  currentUser: service(),
 
   @discourseComputed("model.badges.length")
   moreBadges(badgesLength) {
@@ -43,4 +47,19 @@ export default Controller.extend({
       ? duration(recentTimeReadSeconds, { format: "medium" })
       : null;
   },
+
+  topCollege: computed(function () {
+    return this
+      .currentUser.custom_fields?.[this.siteSettings.college_top_preference_field];
+  }),
+
+  admitsReceived: computed(function () {
+    return this
+      .currentUser.custom_fields?.[this.siteSettings.college_admits_received_field];
+  }),
+
+  admitsAwaited: computed(function () {
+    return this
+      .currentUser.custom_fields?.[this.siteSettings.college_admits_awaited_field];
+  }),
 });
