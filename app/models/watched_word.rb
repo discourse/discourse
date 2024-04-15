@@ -27,12 +27,12 @@ class WatchedWord < ActiveRecord::Base
   after_destroy -> { WordWatcher.clear_cache! }
 
   scope :for,
-        ->(word:) {
+        ->(word:) do
           where(
             "(word ILIKE :word AND case_sensitive = 'f') OR (word LIKE :word AND case_sensitive = 't')",
             word: word,
           )
-        }
+        end
 
   def self.actions
     @actions ||=
@@ -77,28 +77,12 @@ class WatchedWord < ActiveRecord::Base
 
   scope :by_action, -> { order("action ASC, word ASC") }
   scope :for,
-        ->(word:) {
+        ->(word:) do
           where(
             "(word ILIKE :word AND case_sensitive = 'f') OR (word LIKE :word AND case_sensitive = 't')",
             word: word,
           )
-        }
-
-  def self.normalize_word(w)
-    w.strip.squeeze("*")
-  end
-
-  def replacement_is_url
-    errors.add(:base, :invalid_url) if !(replacement =~ URI.regexp)
-  end
-
-  def replacement_is_tag_list
-    tag_list = replacement&.split(",")
-    tags = Tag.where(name: tag_list)
-    if (tag_list.blank? || tags.empty? || tag_list.size != tags.size)
-      errors.add(:base, :invalid_tag_list)
-    end
-  end
+        end
 
   def self.create_or_update_word(params)
     word = normalize_word(params[:word])

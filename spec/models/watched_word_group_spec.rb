@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe WatchedWordGroup do
-  fab!(:watched_word_group) { Fabricate(:watched_word_group) }
+  fab!(:watched_word_group)
   fab!(:watched_word_1) { Fabricate(:watched_word, watched_word_group_id: watched_word_group.id) }
   fab!(:watched_word_2) { Fabricate(:watched_word, watched_word_group_id: watched_word_group.id) }
 

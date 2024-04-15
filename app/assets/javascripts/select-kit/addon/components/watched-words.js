@@ -1,6 +1,6 @@
-import MultiSelectComponent from "select-kit/components/multi-select";
-import { makeArray } from "discourse-common/lib/helpers";
 import { computed } from "@ember/object";
+import { makeArray } from "discourse-common/lib/helpers";
+import MultiSelectComponent from "select-kit/components/multi-select";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["watched-words"],
