@@ -883,12 +883,13 @@ module("Integration | Component | Widget | post", function (hooks) {
   test("pm map", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
+    topic.details.set("allowed_users", [
+      EmberObject.create({ username: "eviltrout" }),
+    ]);
     this.set("args", {
       topic,
       showTopicMap: true,
       showPMMap: true,
-      allowedGroups: [],
-      allowedUsers: [EmberObject.create({ username: "eviltrout" })],
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);

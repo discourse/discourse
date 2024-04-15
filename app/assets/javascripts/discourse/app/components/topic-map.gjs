@@ -48,7 +48,7 @@ export default class TopicMap extends Component {
     {{#if @showPMMap}}
       <section class="information private-message-map">
         <PrivateMessageMap
-          @postAttrs={{@postAttrs}}
+          @topicDetails={{this.topicDetails}}
           @showInvite={{@showInvite}}
           @removeAllowedGroup={{@removeAllowedGroup}}
           @removeAllowedUser={{@removeAllowedUser}}
