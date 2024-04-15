@@ -6673,6 +6673,7 @@ en:
           add_document_types: "Documents"
           add_types_title: "Allow extensions %{types}"
           add_types_toast: "%{types} file types added"
+        mandatory_group: "Group is mandatory"
 
       badges:
         title: Badges

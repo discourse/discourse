@@ -102,6 +102,6 @@ module("Integration | Component | group-list site-setting", function (hooks) {
     await subject.expand();
     await subject.selectRowByValue("2");
 
-    assert.dom(".selected-content div").hasClass("disabled");
+    assert.dom(".selected-content button").hasClass("disabled");
   });
 });

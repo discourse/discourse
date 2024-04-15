@@ -370,6 +370,12 @@ module SiteSettingExtension
     sanitize_override = val.is_a?(String) && client_settings.include?(name)
 
     sanitized_val = sanitize_override ? sanitize_field(val) : val
+
+    if mandatory_values[name.to_sym]
+      sanitized_val =
+        (mandatory_values[name.to_sym].split("|") | sanitized_val.to_s.split("|")).join("|")
+    end
+
     provider.save(name, sanitized_val, type)
     current[name] = type_supervisor.to_rb_value(name, sanitized_val)
 
@@ -559,13 +565,9 @@ module SiteSettingExtension
           return false if !plugin.configurable? && plugin.enabled_site_setting == name
         end
 
-        value =
-          if (c = current[name]).nil?
-            refresh!
-            current[name]
-          else
-            c
-          end
+        refresh! if current[name].nil?
+        value = current[name]
+
         if mandatory_values[name]
           return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")
         end

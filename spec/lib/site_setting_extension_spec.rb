@@ -859,16 +859,24 @@ RSpec.describe SiteSettingExtension do
 
   describe "mandatory_values for group list settings" do
     it "adds mandatory values" do
-      expect(SiteSetting.create_tag_allowed_groups).to eq("1|2|13")
+      expect(SiteSetting.embedded_media_post_allowed_groups).to eq("1|2|10")
 
-      SiteSetting.create_tag_allowed_groups = 14
-      expect(SiteSetting.create_tag_allowed_groups).to eq("1|2|14")
+      SiteSetting.embedded_media_post_allowed_groups = 14
+      expect(SiteSetting.embedded_media_post_allowed_groups).to eq("1|2|14")
 
-      SiteSetting.create_tag_allowed_groups = "13|14"
-      expect(SiteSetting.create_tag_allowed_groups).to eq("1|2|13|14")
+      SiteSetting.embedded_media_post_allowed_groups = ""
+      expect(SiteSetting.embedded_media_post_allowed_groups).to eq("1|2")
 
-      SiteSetting.create_tag_allowed_groups = ""
-      expect(SiteSetting.create_tag_allowed_groups).to eq("1|2")
+      test_provider = SiteSetting.provider
+      SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
+      SiteSetting.embedded_media_post_allowed_groups = "13|14"
+      expect(SiteSetting.embedded_media_post_allowed_groups).to eq("1|2|13|14")
+      expect(SiteSetting.find_by(name: "embedded_media_post_allowed_groups").value).to eq(
+        "1|2|13|14",
+      )
+    ensure
+      SiteSetting.find_by(name: "embedded_media_post_allowed_groups").destroy
+      SiteSetting.provider = test_provider
     end
   end
 

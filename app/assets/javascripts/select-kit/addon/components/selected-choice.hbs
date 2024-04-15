@@ -1,5 +1,8 @@
 {{#if this.readOnly}}
-  <div class="btn btn-default disabled">{{this.itemName}}</div>
+  <button
+    class="btn btn-default disabled"
+    title={{I18n "admin.site_settings.mandatory_group"}}
+  >{{this.itemName}}</button>
 {{else}}
   <button
     {{on "click" (fn this.selectKit.deselect this.item)}}

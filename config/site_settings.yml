@@ -876,7 +876,7 @@ posting:
   enable_system_message_replies:
     default: true
   personal_message_enabled_groups:
-    default: "11" # auto group trust_level_1
+    default: "1|2|11" # auto group admins, moderators, trust_level_1
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -973,7 +973,7 @@ posting:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   here_mention_allowed_groups:
-    default: "12" # auto group trust_level_2
+    default: "1|2|12" # auto group admins, moderators, trust_level_2
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1082,7 +1082,7 @@ posting:
     enum: "TrustLevelSetting"
     hidden: true
   approve_unless_allowed_groups:
-    default: "10" # auto groups trust_level_0
+    default: "1|2|10" # auto groups admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1092,7 +1092,7 @@ posting:
     enum: "TrustLevelSetting"
     hidden: true
   approve_new_topics_unless_allowed_groups:
-    default: "10" # auto groups trust_level_0
+    default: "1|2|10" # auto groups admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1167,7 +1167,7 @@ posting:
     enum: "TrustLevelSetting"
     hidden: true
   skip_review_media_groups:
-    default: "10" # auto groups trust_level_0
+    default: "1|2|10" # auto groups admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1285,7 +1285,7 @@ email:
     enum: "TrustLevelSetting"
     hidden: true
   email_in_allowed_groups:
-    default: "12" # auto group trust_level_2
+    default: "1|2|12" # auto group admins, moderators, trust_level_2
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1719,7 +1719,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   create_topic_allowed_groups:
-    default: "10" # auto group trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1729,7 +1729,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   edit_wiki_post_allowed_groups:
-    default: "11" # auto group trust_level_1
+    default: "1|2|11" # auto group admins, moderators, trust_level_1
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1739,7 +1739,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   edit_post_allowed_groups:
-    default: "10" # auto group trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1749,7 +1749,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   self_wiki_allowed_groups:
-    default: "13" # auto group trust_level_3
+    default: "1|2|13" # auto group admins, moderators, trust_level_3
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1759,7 +1759,7 @@ trust:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   send_email_messages_allowed_groups:
-    default: "14" # auto group trust_level_4
+    default: "1|2|14" # auto group admins, moderators, trust_level_4
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1769,7 +1769,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   flag_post_allowed_groups:
-    default: "11" # auto group trust_level_1
+    default: "1|2|11" # auto group admins, moderators, trust_level_1
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1779,7 +1779,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   post_links_allowed_groups:
-    default: "10" # auto group trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1789,7 +1789,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   embedded_media_post_allowed_groups:
-    default: "10" # auto group trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1800,7 +1800,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   profile_background_allowed_groups:
-    default: "10" # auto group trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1811,7 +1811,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   user_card_background_allowed_groups:
-    default: "10" # auto group trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1821,7 +1821,7 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   invite_allowed_groups:
-    default: "12" # auto group trust_level_2
+    default: "1|2|12" # auto group admins, moderators, trust_level_2
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -1832,7 +1832,7 @@ trust:
     client: true
     hidden: true
   ignore_allowed_groups:
-    default: "12" # auto group trust_level_2
+    default: "1|2|12" # auto group admins, moderators, trust_level_2
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -3040,7 +3040,7 @@ user_api:
     enum: "TrustLevelSetting"
     hidden: true
   user_api_key_allowed_groups:
-    default: "10" # auto group trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -3093,7 +3093,7 @@ tags:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   create_tag_allowed_groups:
-    default: "13" # auto group trust_level_3
+    default: "1|2|13" # auto group admins, moderators, trust_level_3
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
@@ -3104,7 +3104,7 @@ tags:
     client: true
     hidden: true
   tag_topic_allowed_groups:
-    default: "10" # auto trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false

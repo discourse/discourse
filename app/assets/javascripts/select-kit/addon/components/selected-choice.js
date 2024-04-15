@@ -24,7 +24,11 @@ export default Component.extend(UtilsMixin, {
     return this.getName(this.item);
   }),
 
+  mandatoryValuesArray: computed("item", function () {
+    return this.get("mandatoryValues")?.split("|") || [];
+  }),
+
   readOnly: computed("item", function () {
-    return this.get("mandatoryValues")?.split("|")?.includes(this.item.id);
+    return this.mandatoryValuesArray.includes(this.item.id);
   }),
 });
