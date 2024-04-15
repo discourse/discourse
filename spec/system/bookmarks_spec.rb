@@ -7,6 +7,7 @@ describe "Bookmarking posts and topics", type: :system do
   fab!(:post_2) { Fabricate(:post, topic: topic, raw: "Some interesting post content") }
 
   let(:timezone) { "Australia/Brisbane" }
+  let(:cdp) { PageObjects::CDP.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:bookmark_modal) { PageObjects::Modals::Bookmark.new }
   let(:bookmark_menu) { PageObjects::Components::BookmarkMenu.new }
@@ -18,9 +19,11 @@ describe "Bookmarking posts and topics", type: :system do
 
   def visit_topic_and_open_bookmark_menu(post, expand_actions: true)
     topic_page.visit_topic(topic)
+    open_bookmark_menu(post, expand_actions: expand_actions)
+  end
 
+  def open_bookmark_menu(post, expand_actions: true)
     topic_page.expand_post_actions(post) if expand_actions
-
     topic_page.click_post_action_button(post, :bookmark)
   end
 
@@ -78,6 +81,17 @@ describe "Bookmarking posts and topics", type: :system do
     expect(bookmark_modal).to have_auto_delete_preference(
       Bookmark.auto_delete_preferences[:clear_reminder],
     )
+  end
+
+  it "opens the bookmark modal with the Custom... option only after the bookmark saves on slow connections" do
+    topic_page.visit_topic(topic)
+
+    cdp.with_slow_upload do
+      open_bookmark_menu(post)
+      bookmark_menu.click_menu_option("custom")
+    end
+
+    expect(bookmark_modal).to be_open
   end
 
   describe "topic level bookmarks" do
