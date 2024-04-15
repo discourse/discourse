@@ -36,7 +36,7 @@
             <span class="topic-categories">
               {{bound-category-link
                 t.category
-                recursive=true
+                ancestors=t.category.predecessors
                 hideParent=true
                 link=false
               }}
