@@ -1093,11 +1093,27 @@ class Post < ActiveRecord::Base
       UploadReference.where(target: self).delete_all
       UploadReference.insert_all(upload_references) if upload_references.size > 0
 
-      if SiteSetting.secure_uploads?
-        Upload
-          .where(id: upload_ids, access_control_post_id: nil)
-          .where("id NOT IN (SELECT upload_id FROM custom_emojis)")
-          .update_all(access_control_post_id: self.id)
+      if self.should_secure_uploads?
+        uploads_in_post =
+          Upload
+            .joins(:upload_references)
+            .includes(:upload_references)
+            .where(id: upload_ids, access_control_post_id: nil)
+            .where("uploads.id NOT IN (SELECT upload_id FROM custom_emojis)")
+
+        access_control_will_change_upload_ids =
+          uploads_in_post
+            .map do |upl|
+              upl_ref = upl.upload_references.sort_by { |ur| [ur.created_at, ur.id] }.first
+              if upl_ref.blank? || (upl_ref.target_id == self.id && upl_ref.target_type == "Post")
+                upl.id
+              end
+            end
+            .compact
+
+        Upload.where(id: access_control_will_change_upload_ids).update_all(
+          access_control_post_id: self.id,
+        )
       end
     end
   end
