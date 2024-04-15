@@ -126,8 +126,6 @@ pl_PL:
       number_value_not_valid_min: "Wartość musi być większa lub równa %{min}."
       number_value_not_valid_max: "Wartość musi być mniejsza lub równa %{max}."
       string_value_not_valid_min_max: "Wartość musi mieć długość od %{min} do %{max} znaków."
-      string_value_not_valid_min: "Wartość musi mieć co najmniej %{min} znaków."
-      string_value_not_valid_max: "Wartość musi być co najwyżej %{max} znaków."
       objects:
         humanize_required: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być obecny."
         required: "musi zostać podana"
@@ -143,26 +141,14 @@ pl_PL:
         not_valid_boolean_value: "musi być wartością logiczną"
         humanize_not_valid_enum_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być jedną z następujących %{choices}."
         not_valid_enum_value: "musi być jednym z następujących: %{choices}"
-        humanize_not_valid_category_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłowym identyfikatorem kategorii."
-        not_valid_category_value: "musi być prawidłowym identyfikatorem kategorii"
         humanize_not_valid_topic_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłowym identyfikatorem tematu."
         not_valid_topic_value: "musi być prawidłowym identyfikatorem tematu"
         humanize_not_valid_post_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłowym identyfikatorem postu."
         not_valid_post_value: "musi być prawidłowym identyfikatorem posta"
-        humanize_not_valid_group_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłowym identyfikatorem grupy."
-        not_valid_group_value: "musi być prawidłowym identyfikatorem grupy"
         humanize_not_valid_tags_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłową tablicą nazw tagów."
         not_valid_tags_value: "musi być tablicą prawidłowych nazw tagów"
-        humanize_tags_value_not_valid_min: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć co najmniej %{min} nazw tagów."
-        tags_value_not_valid_min: "musi mieć co najmniej %{min} nazw tagów"
-        humanize_tags_value_not_valid_max: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć co najwyżej %{max} nazw tagów."
-        tags_value_not_valid_max: "musi mieć co najwyżej %{max} nazw tagów"
         humanize_not_valid_upload_value: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być prawidłowym identyfikatorem przesyłania."
         not_valid_upload_value: "musi być prawidłowym identyfikatorem przesyłania"
-        humanize_string_value_not_valid_min: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć długość co najmniej %{min} znaków."
-        string_value_not_valid_min: "musi mieć co najmniej %{min} znaków"
-        humanize_string_value_not_valid_max: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi mieć co najwyżej %{max} znaków."
-        string_value_not_valid_max: "musi mieć co najwyżej %{max} znaków"
         humanize_number_value_not_valid_min: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być większa lub równa %{min}."
         number_value_not_valid_min: "musi być większa lub równa %{min}"
         humanize_number_value_not_valid_max: "Wskazany element o ścieżce JSON '%{property_json_pointer}' musi być mniejsza lub równa %{max}."
@@ -211,7 +197,6 @@ pl_PL:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>:%{message}"
     messages:
-      too_long_validation: "ograniczono do %{max} znaków, podano %{length}."
       invalid_boolean: "Nieprawidłowy boolean."
       taken: "jest już w użyciu"
       accepted: musi zostać zaakceptowane
@@ -341,7 +326,6 @@ pl_PL:
       many: "Wysłałeś już %{count} zaproszeń w ostatnim dniu, odczekaj %{time_left} zanim spróbujesz ponownie."
       other: "Wysłałeś już %{count} zaproszeń w ostatnim dniu, odczekaj %{time_left} zanim spróbujesz ponownie."
     confirm_email: "<p>Już prawie koniec! Wysłaliśmy na Twój adres e-mail aktywacyjny. Postępuj zgodnie z instrukcjami w e-mailu, aby aktywować konto.</p><p>Jeśli e-mail nie przyszedł, sprawdź folder ze spamem.</p>"
-    cant_invite_to_group: "Nie możesz zapraszać użytkowników do określonej grupy. Upewnij się, że jesteś właścicielem grupy, do których próbujesz zaprosić."
     disabled_errors:
       discourse_connect_enabled: "Zaproszenia są wyłączone, ponieważ DiscourseConnect jest włączony."
       invalid_access: "Nie masz uprawnień do przeglądania żądanego zasobu."
@@ -480,7 +464,6 @@ pl_PL:
   pm_reached_recipients_limit: "Przepraszamy, możesz wysłać wiadomość tylko do %{recipients_limit} odbiorców."
   removed_direct_reply_full_quotes: "Automatycznie usunięto cytowanie całości poprzedzającego wpisu."
   watched_words_auto_tag: "Automatycznie otagowany wątek"
-  secure_upload_not_allowed_in_public_topic: "Niestety, następujące bezpieczne przesyłanie nie może być użyte w publicznym temacie: %{upload_filenames}."
   create_pm_on_existing_topic: "Przepraszamy, nie możesz utworzyć PM na istniejący temat."
   slow_mode_enabled: "Ten temat jest w trybie zwolnionym."
   just_posted_that: "jest zbyt podobne do tego co umieściłeś/łaś niedawno"
@@ -637,7 +620,6 @@ pl_PL:
 
       Każdemu łatwiej będzie przeczytać temat, który ma kilka pogłębionych odpowiedzi, zamiast wielu niewielkich, indywidualnych.
     dominating_topic: Dużo pisałeś w tym temacie! Zastanów się, czy nie dać innym możliwości odpowiadania tutaj i dyskutowania ze sobą.
-    get_a_room: Odpowiedziałeś na @%{reply_username} %{count} razy. Czy wiesz, że możesz zamiast tego wysłać wiadomość osobistą?
     dont_feed_the_trolls: Ten post został już oznaczony jako wymagający uwagi moderatora. Czy na pewno chcesz na niego odpowiedzieć? Odpowiedzi na negatywne treści zachęcają do jeszcze bardziej negatywnych zachowań.
     too_many_replies: |
       ### Osiągnąłeś/łaś limit odpowiedzi w tym temacie
@@ -1704,7 +1686,6 @@ pl_PL:
     summarization_strategy: "Dodatkowe sposoby podsumowywania treści zarejestrowanych przez wtyczki"
     custom_summarization_allowed_groups: "Grupy, które mogą podsumowywać zawartość za pomocą `summarization_strategy`."
     enable_personal_messages: "PRZESTARZAŁE, zamiast tego użyj ustawienia 'personal message enabled groups'. Zezwalaj użytkownikom na poziomie zaufania 1 (konfigurowalnym za pomocą minimalnego zaufania do wysyłania wiadomości) na tworzenie wiadomości i odpowiadanie na wiadomości. Pamiętaj, że personel zawsze może wysyłać wiadomości bez względu na wszystko."
-    personal_message_enabled_groups: "Zezwalaj użytkownikom w tych grupach na tworzenie wiadomości i odpowiadanie na nie. Grupy poziomów zaufania zawierają wszystkie poziomy zaufania powyżej tej liczby, na przykład wybranie trust_level_1 umożliwia również użytkownikom z trust_level_2, 3, 4 wysyłać PW. Pamiętaj, że personel zawsze może wysyłać wiadomości bez względu na wszystko."
     enable_system_message_replies: "Pozwala użytkownikom odpowiadać na wiadomości systemowe, nawet jeśli wiadomości osobiste są wyłączone"
     enable_chunked_encoding: "Włącz odpowiedzi fragmentaryczne serwera. Ta funkcja działa w większości konfiguracji, jednak niektóre serwery proxy mogą buforować odpowiedzi, powodując opóźnienia."
     long_polling_base_url: "Podstawowy URL używany dla long polling (kiedy CDN dostarcza dynamicznych treści, upewnij się że ustawiłeś/łaś to w origin pull) np.: http://origin.site.com"
@@ -2187,7 +2168,6 @@ pl_PL:
     enable_category_group_moderation: "Zezwalaj grupom na moderowanie treści w określonych kategoriach"
     group_in_subject: "Ustaw %%{optional_pm} w temacie wiadomości e-mail z nazwą pierwszej grupy w prywatnej wiadomości, zobacz: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Dostosuj format tematu dla standardowych wiadomości e-mail</a>"
     allow_anonymous_posting: "Włącz opcję umożliwiającą użytkownikom przejście w tryb anonimowy podczas dodawania wpisów. Po aktywacji, użytkownicy mogą zdecydować się na ukrycie swojej tożsamości podczas tworzenia postów lub tematów w całej witrynie. Patrz również `allow_anonymous_likes`."
-    allow_anonymous_likes: "Włącz to ustawienie, aby umożliwić anonimowym użytkownikom przeglądającym Twoją witrynę polubienie postów. Po włączeniu to ustawienie może zachęcać do interakcji niezalogowanych użytkowników, umożliwiając im interakcję z treścią. Zobacz także `allow_anonymous_posting`."
     anonymous_posting_min_trust_level: "Minimalny poziom zaufania potrzebny by aktywować anonimowe wpisy"
     anonymous_posting_allowed_groups: "Grupy, które mogą włączyć anonimowe publikowanie"
     anonymous_account_duration_minutes: "Aby chronić anonimowość twórz nowe anonimowe konto co N minut dla każdego użytkownika. Przykład: jeśli ustawione na 600, dopóki nie minie 600 minut od ostatniego wpisu i użytkownik przełącza się na anon, zostanie utworzone nowe anonimowe konto."
@@ -2259,7 +2239,6 @@ pl_PL:
     notify_about_reviewable_item_after: "Jeśli po tylu godzinach są elementy do przejrzenia, które jeszcze nie zostały sprawdzone, wyślij wiadomość do moderatorów. Ustaw na 0, aby wyłączyć."
     delete_drafts_older_than_n_days: "Usuń wersje robocze, które nie zostały zmienione w ciągu więcej niż (n) dni."
     delete_merged_stub_topics_after_days: "Liczba dni, po których wątki, z których zostały przeniesione wszystkie posty, zostaną automatycznie usunięte. Aby to wyłączyć, ustaw wartość na 0."
-    bootstrap_mode_min_users: "Minimalna liczba użytkowników wymagana do wyłączenia trybu bootstrap (ustaw 0, aby wyłączyć, może to potrwać do 24 godzin)"
     prevent_anons_from_downloading_files: "Zablokuj możliwość pobierania załączników przez anonimowych użytkowników."
     secure_uploads: 'Ograniczenie dostępu do WSZYSTKICH przesyłanych plików (obrazów, filmów, audio, tekstów, plików pdf, zipów i innych). Jeśli włączona jest opcja "Wymagane logowanie", tylko zalogowani użytkownicy będą mieli dostęp do przesyłanych materiałów. W przeciwnym razie dostęp będzie ograniczony tylko do przesyłania mediów w prywatnych wiadomościach i prywatnych kategoriach. UWAGA: To ustawienie jest skomplikowane i wymaga głębokiej wiedzy administracyjnej. Szczegóły znajdziesz na stronie <a target="_blank" href="https://meta.discourse.org/t/-/140017">w temacie bezpieczne przesyłanie plików na Meta</a> .'
     secure_uploads_allow_embed_images_in_emails: "Umożliwia osadzanie w wiadomościach e-mail bezpiecznych obrazów, które normalnie byłyby pominięte, jeśli ich rozmiar jest mniejszy niż ustawienie 'secure uploads max email embed image size kb'."
@@ -2362,7 +2341,6 @@ pl_PL:
     tags_sort_alphabetically: "Pokaż tagi w alfabetycznym porządku. Domyślne pokazywane są według popularności."
     tags_listed_by_group: "Wyświetl listę tagów według grup tagów na <a href='%{base_path}/tags' target='_blank'>liście tagów</a>."
     tag_style: "Zdefiniuj wygląd znaczników tagów w witrynie. To ustawienie pozwala dostosować sposób wizualnej reprezentacji tagów we wszystkich obszarach witryny, zwiększając spójność układu i dostępność dla użytkownika."
-    pm_tags_allowed_for_groups: "Zezwalaj członkom uwzględnionych grup na oznaczanie dowolnej wiadomości osobistej"
     min_trust_level_to_tag_topics: "Minimalny poziom zaufania wymagany do tagowania tematów"
     tag_topic_allowed_groups: "Grupy, które mogą tagować tematy."
     suppress_overlapping_tags_in_list: "Jeśli tagi dopasowane są dokładnie do słów w tytule tematu, nie pokazuj tagu"
@@ -2430,8 +2408,6 @@ pl_PL:
       must_include_latest: "Górne menu musi zawierać zakładkę 'aktualne'."
       invalid_string: "Nieprawidłowa wartość."
       invalid_string_min_max: "Musi być między %{min} i %{max} znaków."
-      invalid_string_min: "Musi być co najmniej %{min} znaków."
-      invalid_string_max: "Musi być nie więcej niż %{max} znaków."
       invalid_json: "Nieprawidłowy JSON."
       invalid_reply_by_email_address: "Wartość musi zawierać '%{reply_key}' i musi być inna niż e-mail z powiadomieniem."
       invalid_alternative_reply_by_email_addresses: "Wszystkie wartości muszą zawierać '%{reply_key}' i być inne niż w emailu powiadamiającym."
@@ -2464,7 +2440,6 @@ pl_PL:
         regex_invalid: "Wyrażenie regularne jest nieprawidłowe: %{error}"
         leading_trailing_slash: "Wyrażenie regularne nie może zaczynać się ani kończyć ukośnikiem."
       unicode_usernames_avatars: "Wewnętrzne awatary systemowe nie obsługują nazw użytkowników zawierających unicode."
-      list_value_count: "Lista musi zawierać dokładnie %{count} wartości."
       markdown_linkify_tlds: "Nie możesz uwzględnić wartości '*'."
       google_oauth2_hd_groups: "Przed włączeniem tego ustawienia musisz skonfigurować wszystkie ustawienia 'google oauth2 hd'."
       search_tokenize_chinese_enabled: "Musisz wyłączyć 'search_tokenize_chinese' przed włączeniem tego ustawienia."
@@ -2498,6 +2473,14 @@ pl_PL:
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
       profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "nieaktywny"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "nieaktywny"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2739,8 +2722,6 @@ pl_PL:
     new_user_typed_too_fast: "Nowy użytkownik wpisany zbyt szybko"
     content_matches_auto_silence_regex: "Treść pasuje do wyrażenia regularnego automatycznego wyciszenia"
     username:
-      short: "musi zawierać co najmniej %{min} znaków"
-      long: "nie może zawierać więcej niż %{max} znaków"
       too_long: "jest za długa"
       characters: "musi zawierać tylko cyfry, litery, myślniki, kropki i podkreślenia"
       unique: "musi być unikalna"
@@ -2902,35 +2883,9 @@ pl_PL:
   new_version_mailer:
     title: "Nowa wersja powiadomień"
     subject_template: "[%{email_prefix}] Nowa wersja Discourse jest dostępna"
-    text_body_template: |
-      Hurra, nowa wersja [Discourse](https://www.discourse.org) jest dostępna!
-
-      Twoja wersja: %{installed_version}
-      Nowa wersja: **%{new_version}**
-
-      - Uaktualnij za pomocą naszego prostego **[uaktualnienia przez przeglądarkę jednym kliknięciem](%{base_url}/admin/upgrade)**
-
-      - Zobacz, co nowego w [dzienniku zmian](https://meta.discourse.org/tag/release-notes) lub przejrzyj [nieprzetworzony dziennik zmian GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Odwiedź [meta.discourse.org](https://meta.discourse.org) dla nowości, dyskusji i wsparcia technicznego dla Discourse
   new_version_mailer_with_notes:
     title: "Nowa wersja powiadomień z uwagami"
     subject_template: "[%{email_prefix}] dostępna aktualizacja"
-    text_body_template: |
-      Hurra, nowa wersja [Discourse](https://www.discourse.org) jest dostępna!
-
-      Twoja wersja: %{installed_version}
-      Nowa wersja: **%{new_version}**
-
-      - Uaktualnij za pomocą naszego prostego **[uaktualnienia przez przeglądarkę jednym kliknięciem](%{base_url}/admin/upgrade)**
-
-      - Zobacz, co nowego w [dzienniku zmian](https://meta.discourse.org/tag/release-notes) lub przejrzyj [nieprzetworzony dziennik zmian GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Odwiedź [meta.discourse.org](https://meta.discourse.org) dla nowości, dyskusji i wsparcia technicznego dla Discourse
-
-      ### Dziennik zmian
-
-      %{notes}
   flag_reasons:
     off_topic: "Twój wpis został oznaczony jako **nie na temat**: społeczność uważa, że nie pasuje do tematu, w którym został dodany, biorąc pod uwagę jego tytuł i treść pierwszego wpisu."
     inappropriate: "Twój post został oznaczony jako **nieodpowiedni**: społeczność uważa, że jest on obraźliwy, stanowi przejaw nienawiści lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
@@ -4198,104 +4153,6 @@ pl_PL:
     Edytuj pierwszy wpis w tym temacie by zmienić zawartość strony %{page_name}.
   guidelines_topic:
     title: "FAQ/Przewodnik"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Tutaj prowadzimy cywilizowane dyskusje publiczne](#civilized)
-
-      Traktuj to forum dyskusyjne tak samo, jak traktowałbyś park miejski. To również wspólna przestrzeń społeczna – miejsce do wymiany wiedzy, umiejętności i zainteresowań poprzez ciągłe rozmowy.
-
-      To nie są żelazne reguły. Są to wskazówki, które mają pomóc ludziom w naszej społeczności utrzymać to miejsce jako miłe i przyjazne dla cywilizowanych dyskusji publicznych.
-
-      <a name="improve"></a>
-
-      ## [Ulepsz dyskusję](#improve)
-
-      Pomóż nam stworzyć świetne miejsce do dyskusji, zawsze dodając coś pozytywnego, nawet drobnego. Jeśli nie jesteś pewien, czy Twój post przyczynia się do rozmowy, przemyśl, co chcesz powiedzieć i spróbuj ponownie później.
-
-      Jednym ze sposobów na ulepszenie dyskusji jest odkrywanie tych, które już się toczą. Przed odpowiedzią lub rozpoczęciem własnej dyskusji poświęć trochę czasu na przeglądanie tematów, a będziesz mieć większe szanse na spotkanie innych osób, które dzielą Twoje zainteresowania.
-
-      Tematy, które tutaj omawiamy, są dla nas ważne i chcemy, abyś również tak do nich podchodził. Szanuj tematy i osoby je omawiające, nawet jeśli nie zgadzasz się z częścią tego, co się mówi.
-
-      <a name="agreeable"></a>
-
-      ## [Bądź uprzejmy, nawet gdy się nie zgadzasz](#agreeable)
-
-      Możesz chcieć odpowiedzieć, się nie zgadzając. To dobrze. Ale pamiętaj, aby _krytykować pomysły, a nie ludzi_. Proszę unikać:
-
-      * Obraźliwych wyzwisk
-      * Ataki ad personam
-      * Odpowiadania na ton wypowiedzi, a nie jej rzeczywistą treść
-      * Automatycznego sprzeciwu
-
-      Zamiast tego przedstaw przemyślane spostrzeżenia, które poprawią konwersację.
-
-      <a name="participate"></a>
-
-      ## [Twój udział się liczy](#participate)
-
-      Prowadzone tutaj rozmowy wyznaczają ton dla każdego nowoprzybyłego. Pomóż nam wpływać na przyszłość tej społeczności, decydując się na udział w dyskusjach, które sprawiają, że to forum jest interesującym miejscem – i unikając tych, które nim nie są.
-
-      Discourse oferuje narzędzia, które umożliwiają społeczności zbiorową identyfikację najlepszych (i najgorszych) wkładów: zakładki, lajki, flagi, odpowiedzi, edycje, obserwowanie, wyciszanie itp. Używaj tych narzędzi, aby poprawić swoje własne wrażenia i doświadczenia wszystkich innych.
-
-      Stwórzmy razem społeczność lepszą niż ta, którą zastaliśmy.
-
-      <a name="flag-problems"></a>
-
-      ## [Jeśli widzisz problem, zgłoś go](#flag-problems)
-
-      Moderatorzy mają specjalne uprawnienia; są odpowiedzialni za to forum. Ale ty też. Dzięki Twojej pomocy moderatorzy mogą być animatorami społeczności, a nie tylko sprzątaczami czy policją.
-
-      Kiedy widzisz złe zachowanie, nie odpowiadaj. Odpowiadanie zachęca do złego zachowania przez jego potwierdzanie, zużywa Twoją energię i marnuje czas wszystkim. Po prostu to zgłoś. Jeśli uzbiera się wystarczająco dużo zgłoszeń, zostaną podjęte działania, automatycznie lub przez interwencję moderatora.
-
-      Aby utrzymać naszą społeczność, moderatorzy zastrzegają sobie prawo do usuwania dowolnej treści i dowolnego konta użytkownika z dowolnego powodu w dowolnym momencie. Moderatorzy nie weryfikują wcześniej nowych postów; moderatorzy i operatorzy strony nie ponoszą odpowiedzialności za żadne treści publikowane przez społeczność.
-
-      <a name="be-civil"></a>
-
-      ## [Zawsze bądź uprzejmy](#be-civil)
-
-      Nic tak nie psuje zdrowej rozmowy jak niegrzeczność:
-
-      * Bądź uprzejmy. Nie publikuj niczego, co rozsądna osoba uznałaby za obraźliwe, znieważające lub mowę nienawiści.
-      * Przestrzegaj czystości. Nie publikuj niczego obscenicznego lub seksualnie jawnego.
-      * Szanuj innych. Nie nękaj ani nie dręcz nikogo, nie podszywaj się pod innych i nie ujawniaj ich prywatnych informacji.
-      * Szanuj nasze forum. Nie publikuj spamu ani w inny sposób nie dewastuj forum.
-
-      Te terminy nie są precyzyjnie zdefiniowane – unikaj nawet _pozorów_ takich rzeczy. Jeśli nie jesteś pewien, zapytaj siebie, jak byś się czuł, gdyby Twój post został wyróżniony na pierwszej stronie
-
-      Jest to forum publiczne, a wyszukiwarki indeksują te dyskusje. Język, linki i obrazy powinny być bezpieczne dla rodziny i znajomych.
-
-      <a name="keep-tidy"></a>
-
-      ## [Porządek przede wszystkim](#keep-tidy)
-
-      Staraj się umieszczać rzeczy w odpowiednim miejscu, abyśmy mogli poświęcić więcej czasu na dyskusję, a mniej na sprzątanie. Dlatego:
-
-      * Nie zakładaj tematów w złej kategorii. Przeczytaj opisy kategorii.
-      * Nie kopiuj tego samego posta w wielu wątkach.
-      * Nie publikuj pustych odpowiedzi.
-      * Nie zmieniaj tematu w trakcie dyskusji.
-      * Nie podpisuj swoich postów. Do każdego posta dołączone są informacje o Twoim profilu.
-
-      Zamiast pisać "+1" lub "Zgadzam się", użyj przycisku "Lubię to". Zamiast zmieniać istniejący temat w zupełnie innym kierunku, użyj opcji "Odpowiedz jako temat powiązany".
-
-      <a name="stealing"></a>
-
-      ## [Publikuj tylko swoje materiały](#stealing)
-
-      Nie możesz publikować niczego cyfrowego, co należy do kogoś innego bez pozwolenia. Nie możesz umieszczać opisów, linków ani metod kradzieży czyjejś własności intelektualnej (oprogramowania, wideo, audio, obrazów) ani łamania innych praw.
-
-      <a name="power"></a>
-
-      ## [Tworzone przez Ciebie](#power)
-
-      Ta strona jest obsługiwana przez twoich [przyjaznych moderatorów](%{base_path}/about) i *Ciebie*, czyli społeczność. Jeśli masz jakiekolwiek pytania dotyczące zasad działania tego forum, otwórz nowy temat w %{feedback_category} i zacznijmy dyskusję! W przypadku krytycznej lub pilnej kwestii, której nie można rozwiązać za pomocą tematu meta lub flagi, skontaktuj się z nami za pośrednictwem: [strony personelu](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Regulamin](#tos)
-
-      Tak, prawniczy język bywa nudny, ale musimy chronić siebie &ndash; a w konsekwencji Ciebie i Twoje dane &ndash; przed nieprzyjaznymi osobami. Mamy [regulamin](%{base_path}/tos), który opisuje Twoje (i nasze) zachowania i prawa związane z treścią, prywatnością i przepisami prawnymi. Aby korzystać z tej usługi, musisz zgodzić się przestrzegać naszego [regulaminu](%{base_path}/tos).
   tos_topic:
     title: "Warunki użytkowania"
     body: |
@@ -4563,7 +4420,6 @@ pl_PL:
     mass_award:
       errors:
         invalid_csv: Natrafiliśmy na błąd w linii %{line_number}. Upewnij się, że plik CSV zawiera jeden adres w każdej linii.
-        too_many_csv_entries: Za dużo wpisów w pliku CSV. Podaj plik CSV zawierający nie więcej niż %{count} wpisów.
         badge_disabled: Najpierw włącz odznakę %{badge_name}.
         cant_grant_multiple_times: Nie można wielokrotnie przyznać odznaki %{badge_name} pojedynczemu użytkownikowi.
     editor:

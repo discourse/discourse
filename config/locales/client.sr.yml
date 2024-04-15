@@ -215,7 +215,8 @@ sr:
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     clear_input: "Poništi unos"
-    edit: "Izmeni naziv i kategoriju ove teme"
+    edit: "Izmeni"
+    edit_topic: "Izmeni naziv i kategoriju ove teme"
     expand: "Proširi"
     not_implemented: "Ova stavka nije jos omogućena za sad, izvinjavamo se."
     no_value: "Ne"
@@ -261,7 +262,10 @@ sr:
     weekly: "nedeljno"
     every_month: "svaki mesec"
     every_six_months: "svakih šest meseci"
-    max_of_count: "maksimalno od %{count}"
+    max_of_count:
+      one: "maksimalno od %{count}"
+      few: "maksimalno od %{count}"
+      other: "maksimalno od %{count}"
     character_count:
       one: "%{count} karakter"
       few: "%{count} karaktera"
@@ -305,6 +309,7 @@ sr:
       no_user_bookmarks: "Nemate obeleženih poruka; obeleživači vam omogućavaju da se brzo uputite ka određenoj poruci."
       search_placeholder: "Pretraži obeleživače po nazivu, naslovu teme ili sadržaju poruka"
       search: "Pretraži"
+      bookmark: "Markiraj"
       reminders:
         today_with_time: "danas u %{time}"
         tomorrow_with_time: "sutra u %{time}"
@@ -608,7 +613,10 @@ sr:
       categories_label: "kategorije"
       subcategories_label: "podkategorije"
       remove_filter: "uklonite filter"
-      plus_more_count: "+još %{count} članova"
+      plus_more_count:
+        one: "+još %{count} članova"
+        few: "+još %{count} člana"
+        other: "+još %{count} članova"
       category: "Kategorija"
       reorder:
         title: "Promeni redosled katergorija"
@@ -630,7 +638,10 @@ sr:
       organisation: Organizacija
       phone: Telefon
       other_accounts: "Ostali računari s istom IP adresom"
-      delete_other_accounts: "Obriši %{count}"
+      delete_other_accounts:
+        one: "Obriši %{count}"
+        few: "Obriši %{count}"
+        other: "Obriši %{count}"
       username: "Korisničko ime"
       trust_level: "Nivo poverenja"
       read_time: "vreme čitanja"
@@ -800,6 +811,8 @@ sr:
         title: "Jezik interfejsa"
         instructions: "Jezik korisničkog okruženja. Promeniće se kad se ponovo učita stranica."
         default: "(zadano)"
+      homepage:
+        default: "(zadano)"
       password_confirmation:
         title: "Ponoviti šifru"
       auth_tokens:
@@ -879,7 +892,6 @@ sr:
         same_as_username: "Tvoja šifra je ista kao i tvoje korisničko ime."
         same_as_email: "Tvoja šifra je ista kao i tvoj email."
         ok: "Vaša šifra izgleda dobro."
-        instructions: "Najmanje %{count} karaktera."
       summary:
         title: "Rezime"
         stats: "Statistike"
@@ -1174,7 +1186,6 @@ sr:
       new_messages_marker: "poslednja poseta"
       bulk:
         select_all: "Izaberi sve"
-        defer: "Odloži"
         delete: "Obriši Teme"
         dismiss: "Одбаци"
         dismiss_new: "Odbaci Novo"
@@ -1217,8 +1228,6 @@ sr:
       create_long: "Otvori novu Temu"
       archive_message:
         title: "Arhiviraj"
-      defer:
-        title: "Odloži"
       list: "Teme"
       new: "nova tema"
       unread: "nepročitano"
@@ -1842,7 +1851,7 @@ sr:
         upload: "Upload"
         uploading: "Uploading"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Molimo unesite validnu vrednost"
           email: "Molimo unesite validnu e-mail adresu."
     table_builder:
@@ -1871,10 +1880,8 @@ sr:
         up_to_date: "Imate trenutnu verziju!"
         critical_available: "Dostupno je kritično ažuriranje."
         updates_available: "Ažuriranje je dostupno."
-        please_upgrade: "Molimo nadogradite!"
         no_check_performed: "Nije učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."
-        version_check_pending: "Čini se da ste nedavno nadogradili. Fantastično!"
         installed_version: "Instalirano"
         latest_version: "Poslednje"
         new_features:

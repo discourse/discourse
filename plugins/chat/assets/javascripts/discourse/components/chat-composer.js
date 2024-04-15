@@ -11,6 +11,10 @@ import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
 import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 import { SKIP } from "discourse/lib/autocomplete";
+import {
+  disableBodyScroll,
+  enableBodyScroll,
+} from "discourse/lib/body-scroll-lock";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { emojiUrlFor } from "discourse/lib/text";
 import userSearch from "discourse/lib/user-search";
@@ -276,14 +280,22 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  onTextareaFocusIn(textarea) {
+  onTextareaFocusOut(event) {
+    this.isFocused = false;
+    enableBodyScroll(event.target);
+  }
+
+  @action
+  onTextareaFocusIn(event) {
+    this.isFocused = true;
+    const textarea = event.target;
+    disableBodyScroll(textarea);
+
     if (!this.capabilities.isIOS) {
       return;
     }
 
     // hack to prevent the whole viewport to move on focus input
-    // we need access to native node
-    textarea = this.composer.textarea.textarea;
     textarea.style.transform = "translateY(-99999px)";
     textarea.focus();
     window.requestAnimationFrame(() => {

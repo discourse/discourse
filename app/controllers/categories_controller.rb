@@ -436,6 +436,7 @@ class CategoriesController < ApplicationController
 
     if include_ancestors
       ancestors = Category.secured(guardian).ancestors_of(categories.map(&:id))
+      Category.preload_user_fields!(guardian, ancestors)
       response[:ancestors] = serialize_data(ancestors, SiteCategorySerializer, scope: guardian)
     end
 

@@ -193,7 +193,8 @@ da:
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     clear_input: "Ryd input"
-    edit: "redigér titel og kategori for dette emne"
+    edit: "Rediger"
+    edit_topic: "redigér titel og kategori for dette emne"
     expand: "Udvid"
     not_implemented: "Beklager! Denne funktion er ikke blevet implementeret endnu."
     no_value: "Nej"
@@ -237,7 +238,9 @@ da:
     weekly: "ugentligt"
     every_month: "hver måned"
     every_six_months: "hvert halvår"
-    max_of_count: "maks af %{count}"
+    max_of_count:
+      one: "maks af %{count}"
+      other: "maks af %{count}"
     character_count:
       one: "%{count} tegn"
       other: "%{count} tegn"
@@ -295,6 +298,7 @@ da:
         clear_reminder: "Behold bogmærke og ryd påmindelse"
       search_placeholder: "Søg i bogmærker efter navn, emnetitel eller indlægs indhold"
       search: "Søg"
+      bookmark: "Bogmærk"
       reminders:
         today_with_time: "i dag kl. %{time}"
         tomorrow_with_time: "i morgen kl. %{time}"
@@ -596,6 +600,7 @@ da:
       never: "Aldrig"
       last_custom: "Sidste brugerdefineret dato"
       custom: "Brugerdefineret dato og tid"
+      custom_short: "Tilpasset..."
       select_timeframe: "Vælg en tidsramme"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> oprettede <a href='%{topicUrl}'>emnet</a>"
@@ -876,7 +881,6 @@ da:
         image: "Overfør et billede"
       default_notifications:
         modal_title: "Bruger standard notifikationer"
-        modal_description: "Ønsker du at anvende denne ændring historisk? Dette vil ændre præferencer for %{count} eksisterende brugere."
         modal_yes: "Ja"
         modal_no: "Nej, anvend kun ændringer fremadrettet"
     user_action_groups:
@@ -898,7 +902,9 @@ da:
       subcategories_label: "underkategorier:"
       no_subcategories: "ingen underkategorier"
       remove_filter: "fjern filter"
-      plus_more_count: "+%{count} mere"
+      plus_more_count:
+        one: "+%{count} mere"
+        other: "+%{count} mere"
       view_all: "vis alle"
       category: "Kategori"
       category_list: "Vis liste over kategorier"
@@ -939,7 +945,9 @@ da:
       organisation: Organisation
       phone: Telefon
       other_accounts: "Andre konti med denne IP adresse"
-      delete_other_accounts: "Slet %{count}"
+      delete_other_accounts:
+        one: "Slet %{count}"
+        other: "Slet %{count}"
       username: "brugernavn"
       trust_level: "TN"
       read_time: "læse tid"
@@ -1054,7 +1062,6 @@ da:
         description: "Spring nye bruger-onboarding tips og emblemer over"
       reset_seen_user_tips: "Vis brugertips igen"
       theme_default_on_all_devices: "Gør dette til standard temaet på alle mine enheder"
-      color_scheme_default_on_all_devices: "Sæt standard farveskema(er) på alle mine enheder"
       color_scheme: "Farveskema"
       color_schemes:
         default_description: "Tema standard"
@@ -1070,7 +1077,6 @@ da:
       allow_private_messages: "Tillad andre brugere at sende mig personlige beskeder"
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
-      enable_defer: "Aktivér 'udsæt' for at markere emner som ulæste"
       experimental_sidebar:
         options: "Indstillinger"
         navigation_section: "Navigation"
@@ -1354,6 +1360,8 @@ da:
         instructions: "Brugergrænseflade sprog. Det skifter når du genindlæser siden."
         default: "(standard)"
         any: "alle"
+      homepage:
+        default: "(standard)"
       password_confirmation:
         title: "Gentag adgangskode"
       invite_code:
@@ -1529,7 +1537,6 @@ da:
         same_as_username: "Dit password er det samme som dit brugernavn."
         same_as_email: "Dit password er det samme som din email adresse."
         ok: "Din adgangskode ser fin ud."
-        instructions: "Mindst %{count} tegn."
         required: "Indtast venligst en adgangskode"
         confirm: "Bekræft"
       summary:
@@ -1643,7 +1650,6 @@ da:
       close: "luk"
       dismiss_error: "Skjul fejl"
     close: "Luk"
-    assets_changed_confirm: "Dette websted har lige modtaget en softwareopgradering. Indlæs den nyeste version nu?"
     logout: "Du er blevet logget ud."
     refresh: "Opdater"
     home: "Hjem"
@@ -2238,7 +2244,6 @@ da:
           seen: Jeg læste
           unseen: Jeg ikke har læst
           wiki: er wiki
-          images: inkludér billede(r)
           all_tags: Alle ovenstående mærker
         statuses:
           label: Hvor emner
@@ -2296,7 +2301,6 @@ da:
         clear_all: "Ryd alle"
         unlist_topics: "Fjern emner fra liste"
         relist_topics: "Genindlæs emner"
-        defer: "Udsæt"
         delete: "Slet emner"
         dismiss: "Skjul"
         dismiss_read: "Afvis alle ulæste"
@@ -2355,6 +2359,7 @@ da:
     topic_bulk_actions:
       close_topics:
         name: "Luk indlæg"
+        optional: (valgfri)
       archive_topics:
         name: "Arkiver Emner"
       unlist_topics:
@@ -2381,9 +2386,6 @@ da:
       move_to_inbox:
         title: "Flyt til Indbakke"
         help: "Flyt beskeder tilbage til Indbakke"
-      defer:
-        help: "Markér som ulæst"
-        title: "Udsæt"
       list: "Emner"
       new: "nyt emne"
       unread: "ulæste"
@@ -3400,7 +3402,6 @@ da:
         mark_tracking: "%{shortcut} Følg emne"
         mark_watching: "%{shortcut} Hold øje med emne"
         print: "%{shortcut} Print emne"
-        defer: "%{shortcut} Udsæt emne"
         topic_admin_actions: "%{shortcut} Åbn emneadministratorhandlinger"
       search_menu:
         title: "Søg Menuen"
@@ -3704,7 +3705,7 @@ da:
         upload: "Overfør"
         uploading: "Overfører billede"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Indtast venligst en gyldig værdi."
           email: "Indtast venligst en gyldig email adresse."
     table_builder:
@@ -3743,10 +3744,8 @@ da:
         up_to_date: "Du kører den seneste version af Discourse."
         critical_available: "En kritisk opdatering er tilgængelig."
         updates_available: "Opdatering er tilgængelige."
-        please_upgrade: "Opgradér venligst!"
         no_check_performed: "Der er ikke blevet søgt efter opdateringer. Kontrollér om sidekiq kører."
         stale_data: "Der er ikke blevet søgt efter opdateringer på det seneste. Kontrollér om sidekiq kører."
-        version_check_pending: "Det ser ud til, at du har opgraderet for nyligt. Fantastisk!"
         installed_version: "Installeret"
         latest_version: "Seneste version"
         problems_found: "Nogle råd baseret på dine nuværende sideindstillinger"
@@ -4251,7 +4250,9 @@ da:
           disabled_component_tooltip: "Denne komponent er deaktiveret"
           default_theme_tooltip: "Dette tema er sidens standard tema"
           updates_available_tooltip: "Opdateringer er tilgængelige til dette tema"
-          and_x_more: "og %{count} mere."
+          and_x_more:
+            one: "og %{count} mere."
+            other: "og %{count} mere."
           collapse: Fald sammen
           uploads: "Overførsler"
           no_uploads: "Du kan overføre aktiver tilknyttet dit tema, f.eks. skrifttyper og billeder"
@@ -4365,8 +4366,6 @@ da:
           schema:
             fields:
               required: "*obligatoriske"
-              string:
-                too_short: "skal være på mindst %%{count} tegn."
               number:
                 too_small: "skal være større eller lig med %{count}"
                 too_large: "skal være mindre end eller lig med %{count}"
@@ -5129,7 +5128,6 @@ da:
           empty: "Der er endnu ingen billeder. Overfør venligst et."
           upload:
             label: "Overfør"
-            title: "Overfør billede (r)"
         selectable_avatars:
           title: "Liste over avatarer, som brugere kan vælge imellem"
         categories:
@@ -5165,7 +5163,6 @@ da:
         secret_list:
           invalid_input: "Inputfelter kan ikke være tomme eller indeholde lodret bjælketegn."
         default_categories:
-          modal_description: "Ønsker du at anvende denne ændring historisk? Dette vil ændre præferencer for %{count} eksisterende brugere."
           modal_yes: "Ja"
           modal_no: "Nej, anvend kun ændringer fremadrettet"
         simple_list:
@@ -5260,9 +5257,7 @@ da:
           perform: "Tildel Emblem til Brugere"
           upload_csv: Overfør en CSV-fil med enten bruger-e-mails eller brugernavne
           aborted: Overfør venligst en CSV-fil, der indeholder enten bruger-e-mails eller brugernavne
-          success: Din CSV blev modtaget, og %{count} brugere vil modtage deres emblem inden længe.
           csv_has_unmatched_users: "Følgende poster er i CSV-filen, men de kunne ikke matches med eksisterende brugere, og vil derfor ikke modtage emblemet:"
-          csv_has_unmatched_users_truncated_list: "Der var %{count} poster i CSV-filen, der ikke kunne matches med eksisterende brugere og modtager derfor ikke emblemet. På grund af det store antal umatchede poster vises kun de første 100:"
           replace_owners: Fjern emblemet fra tidligere ejere
           grant_existing_holders: Tildel yderligere emblemer til eksisterende emblemindehavere
       emoji:

@@ -46,6 +46,10 @@ export default class Results extends Component {
     return content;
   }
 
+  get searchLogId() {
+    return this.search.results.grouped_search_result?.search_log_id;
+  }
+
   @action
   updateSearchTopics(value) {
     this.searchTopics = value;

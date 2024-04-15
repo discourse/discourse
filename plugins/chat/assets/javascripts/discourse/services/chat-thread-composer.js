@@ -8,6 +8,7 @@ export default class ChatThreadComposer extends Service {
   @service chat;
   @service capabilities;
   @service appEvents;
+  @service site;
 
   @tracked textarea;
   @tracked scrollable;
@@ -43,7 +44,10 @@ export default class ChatThreadComposer extends Service {
     this.chat.activeMessage = null;
     message.editing = true;
     message.thread.draft = message;
-    this.focus({ refreshHeight: true, ensureAtEnd: true });
+
+    if (this.site.desktopView) {
+      this.focus({ refreshHeight: true, ensureAtEnd: true });
+    }
   }
 
   @action

@@ -13,7 +13,7 @@ acceptance("Hashtag CSS Generator", function (needs) {
         id: 4,
         color: "2B81AF",
         text_color: "ffffff",
-        parentCategory: { id: 1 },
+        parent_category_id: 1,
         name: "category3",
       },
     ],
@@ -27,7 +27,7 @@ acceptance("Hashtag CSS Generator", function (needs) {
       ".hashtag-category-badge { background-color: var(--primary-medium); }\n" +
         ".hashtag-color--category-1 { background-color: #ff0000; }\n" +
         ".hashtag-color--category-2 { background-color: #333; }\n" +
-        ".hashtag-color--category-4 { background-color: #2B81AF; }"
+        ".hashtag-color--category-4 { background: linear-gradient(-90deg, #2B81AF 50%, #ff0000 50%); }"
     );
   });
 });

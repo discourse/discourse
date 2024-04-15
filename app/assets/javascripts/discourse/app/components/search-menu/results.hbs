@@ -43,6 +43,7 @@
             @resultTypes={{this.resultTypesWithComponent}}
             @topicResultsOnly={{true}}
             @closeSearchMenu={{@closeSearchMenu}}
+            @searchLogId={{this.searchLogId}}
           />
           <SearchMenu::Results::MoreLink
             @updateTypeFilter={{@updateTypeFilter}}
@@ -63,6 +64,7 @@
             @closeSearchMenu={{@closeSearchMenu}}
             @searchTermChanged={{@searchTermChanged}}
             @displayNameWithUser={{true}}
+            @searchLogId={{this.searchLogId}}
           />
         {{/if}}
       {{/if}}

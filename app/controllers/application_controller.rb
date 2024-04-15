@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   after_action :add_noindex_header_to_non_canonical, if: :spa_boot_request?
   after_action :set_cross_origin_opener_policy_header, if: :spa_boot_request?
   after_action :clean_xml, if: :is_feed_response?
-  around_action :add_early_hint_header, if: -> { spa_boot_request? }
+  after_action :add_early_hint_header, if: -> { spa_boot_request? }
 
   HONEYPOT_KEY ||= "HONEYPOT_KEY"
   CHALLENGE_KEY ||= "CHALLENGE_KEY"
@@ -519,7 +519,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_homepage
-    current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
+    current_user&.user_option&.homepage || HomepageHelper.resolve(request, current_user)
   end
 
   def serialize_data(obj, serializer, opts = nil)
@@ -1100,11 +1100,7 @@ class ApplicationController < ActionController::Base
   # to cache a response header from the app and use that to send an Early Hint response to future clients.
   # See 'early_hint_header_mode' and 'early_hint_header_name' Global Setting descriptions for more info.
   def add_early_hint_header
-    return yield if GlobalSetting.early_hint_header_mode.nil?
-
-    @asset_preload_links = []
-
-    yield
+    return if GlobalSetting.early_hint_header_mode.nil?
 
     links = []
 

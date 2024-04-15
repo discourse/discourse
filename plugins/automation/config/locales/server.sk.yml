@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  discourse_automation:
+    triggerables:
+      topic:
+        title: Témy
+    scriptables:
+      pin_topic:
+        title: Pripni tému
+      close_topic:
+        title: Uzavrieť tému
+      append_last_checked_by:
+        button_text: Hotovo

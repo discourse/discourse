@@ -1,7 +1,7 @@
 import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
   "Discourse Chat | Unit | Service | chat-drafts-manager",
@@ -13,13 +13,13 @@ module(
     });
 
     test("storing and retrieving message", async function (assert) {
-      const message1 = fabricators.message();
+      const message1 = new ChatFabricators(getOwner(this)).message();
 
       await this.subject.add(message1, message1.channel.id);
 
       assert.strictEqual(this.subject.get(message1.channel.id), message1);
 
-      const message2 = fabricators.message();
+      const message2 = new ChatFabricators(getOwner(this)).message();
 
       await this.subject.add(message2, message2.channel.id);
 
@@ -27,7 +27,7 @@ module(
     });
 
     test("#reset", async function (assert) {
-      const message = fabricators.message();
+      const message = new ChatFabricators(getOwner(this)).message();
 
       await this.subject.add(message, message.channel.id);
 

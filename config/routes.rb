@@ -667,10 +667,6 @@ Discourse::Application.routes.draw do
           :constraints => {
             username: RouteFormat.username,
           }
-      get "#{root_path}/:username/preferences/categories" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
       get "#{root_path}/:username/preferences/users" => "users#preferences",
           :constraints => {
             username: RouteFormat.username,
@@ -1585,6 +1581,8 @@ Discourse::Application.routes.draw do
     root to: "finish_installation#index",
          constraints: HomePageConstraint.new("finish_installation"),
          as: "installation_redirect"
+
+    root to: "custom#index", constraints: HomePageConstraint.new("custom"), as: "custom_index"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

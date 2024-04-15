@@ -201,6 +201,9 @@ RSpec.configure do |config|
   config.include UploadsHelpers
   config.include OneboxHelpers
   config.include FastImageHelpers
+  config.include WithServiceHelper
+  config.include ServiceMatchers
+
   config.mock_framework = :mocha
   config.order = "random"
   config.infer_spec_type_from_file_location!

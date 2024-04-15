@@ -223,6 +223,19 @@ RSpec.describe Category do
     end
   end
 
+  describe "with_parents" do
+    fab!(:category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+
+    it "returns parent categories and subcategories" do
+      expect(Category.with_parents([category.id])).to contain_exactly(category)
+    end
+
+    it "returns only categories if top-level categories" do
+      expect(Category.with_parents([subcategory.id])).to contain_exactly(category, subcategory)
+    end
+  end
+
   describe "security" do
     fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:category_2) { Fabricate(:category_with_definition) }

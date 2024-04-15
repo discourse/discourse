@@ -159,7 +159,6 @@ it:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "ha un massimo di%{max} caratteri; tu ne hai inseriti %{length}."
       invalid_boolean: "Valore booleano non valido."
       taken: "è già stato usato"
       accepted: deve essere accettato
@@ -273,7 +272,6 @@ it:
       one: "Hai già inviato %{count} invito nell'ultimo giorno; aspetta %{time_left} prima di riprovare."
       other: "Hai già inviato %{count} inviti nell'ultimo giorno; aspetta %{time_left} prima di riprovare."
     confirm_email: "<p>Ci siamo quasi! Abbiamo mandato un'email di attivazione al tuo indirizzo email. Per attivare il tuo account, segui le istruzioni contenute nell'email.</p><p>Se non dovesse arrivarti, controlla la tua cartella Spam.</p>"
-    cant_invite_to_group: "Non hai il permesso di invitare utenti ai gruppi specificati. Assicurati di essere il proprietario dei gruppi a cui stai provando a invitarli."
     disabled_errors:
       discourse_connect_enabled: "Gli inviti sono disabilitati perché è abilitato DiscourseConnect."
       invalid_access: "Non hai il permesso di visualizzare la risorsa richiesta."
@@ -391,7 +389,6 @@ it:
   pm_reached_recipients_limit: "Spiacenti, non sono consentiti più di %{recipients_limit} destinatari in un messaggio."
   removed_direct_reply_full_quotes: "La citazione dell'intero messaggio precedente è stata rimossa automaticamente."
   watched_words_auto_tag: "Argomento etichettato automaticamente"
-  secure_upload_not_allowed_in_public_topic: "Siamo spiacenti, i seguenti caricamenti sicuri non possono essere utilizzati in un argomento pubblico: %{upload_filenames}."
   create_pm_on_existing_topic: "Spiacenti, non puoi creare un MP su un argomento esistente."
   slow_mode_enabled: "Questo argomento è in modalità lenta."
   just_posted_that: "è troppo simile a ciò che hai appena pubblicato"
@@ -534,7 +531,6 @@ it:
 
       E' più facile per chiunque leggere argomenti che hanno poche risposte ma più dettagliate, rispetto a molte brevi risposte singole.
     dominating_topic: Hai pubblicato molte volte in questo argomento! Prendi in considerazione l'idea di dare ad altri l'opportunità di rispondere qui e discutere anche tra loro.
-    get_a_room: Abbiamo notato che hai già risposto %{count} volte a @%{reply_username}. Sapevi che puoi anche scambiare messaggi personali con questa persona?
     dont_feed_the_trolls: Questo messaggio è già stato segnalato all'attenzione del moderatore. Vuoi davvero rispondere? Le risposte a contenuti negativi tendono a incoraggiare altri comportamenti negativi.
     too_many_replies: |
       ### Hai raggiungo il limite di risposte per questo argomento
@@ -1531,7 +1527,6 @@ it:
     summarization_strategy: "Altri modi per riassumere i contenuti registrati dai plugin"
     custom_summarization_allowed_groups: "Gruppi autorizzati a riassumere i contenuti utilizzando la `summarization_strategy`."
     enable_personal_messages: "Impostazione DEPRECATA, usare l'impostazione 'personal message enabled groups' al suo posto. Autorizza gli utenti con livello di attendibilità 1 (configurabile attraverso l'opzione \"min livello di attendibilità per l'invio di messaggi\") a creare e rispondere ai messaggi. Nota che lo staff può inviare messaggi in ogni caso."
-    personal_message_enabled_groups: "Consenti agli utenti all'interno di questi gruppi di creare messaggi e rispondere ai messaggi. I gruppi dei livelli di attendibilità comprendono tutti i livelli al di sopra di tale numero, ad esempio la scelta di trust_level_1 consente anche agli utenti trust_level_2, 3, 4 di inviare MP. Tieni presente che lo staff può sempre inviare messaggi in ogni caso."
     enable_system_message_replies: "Consente agli utenti di rispondere ai messaggi di sistema, anche se i messaggi personali sono disabilitati"
     enable_chunked_encoding: "Abilita le risposte di codifica in blocchi dal server. Questa funzionalità va bene sulla maggior parte delle configurazioni, tuttavia alcuni proxy possono eseguire la bufferizzazione, provocando un ritardo nelle risposte"
     long_polling_base_url: "URL di base usato per il long polling (quando una CDN serve contenuto dinamico, bisogna impostarlo come origin pull) es. http://origin.site.com"
@@ -2048,7 +2043,6 @@ it:
     embed_username_required: "Il nome utente è obbligatorio per la creazione di argomenti."
     notify_about_reviewable_item_after: "Se ci sono segnalazioni di elementi da rivedere che non sono state gestite dopo tale numero di ore, invia un messaggio personale ai moderatori. Impostare su 0 per disabilitare."
     delete_merged_stub_topics_after_days: "Numero di giorni di attesa prima di eliminare automaticamente gli argomenti stub completamente uniti. Impostare a 0 per non eliminare mai gli argomenti stub."
-    bootstrap_mode_min_users: "Numero minimo di utenti richiesto per disabilitare la modalità bootstrap (imposta a 0 per disattivare, può richiedere fino a 24 ore)"
     prevent_anons_from_downloading_files: "Impedisci agli utenti anonimi di scaricare allegati."
     secure_uploads: 'Limita l''accesso a TUTTI i caricamenti (immagini, video, audio, testo, pdf, zip, ecc.). Se l''opzione “accesso richiesto” è attivata, solo gli utenti registrati possono accedere ai caricamenti. In caso contrario, l''accesso sarà limitato solo per i media caricati in messaggi privati e categorie private. ATTENZIONE: Questa impostazione è complessa e richiede una profonda competenza amministrativa. Per maggiori dettagli visita <a target="_blank" href="https://meta.discourse.org/t/-/140017">l''argomento sui caricamenti sicuri su Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Consente l'integrazione di immagini sicure che normalmente verrebbero oscurate nelle e-mail, se la loro dimensione è inferiore al valore dell'i'impostazione 'dimensione max in kb immagini da integrare nelle email per caricamenti protetti'."
@@ -2130,7 +2124,6 @@ it:
     max_tags_in_filter_list: "Numero massimo di etichette da mostrare nell'elenco a discesa del filtro. Saranno mostrate le etichette più usate."
     tags_sort_alphabetically: "Mostra le etichette in ordine alfabetico. Per default vengono mostrate in ordine di popolarità."
     tags_listed_by_group: "Elenca le Etichette per gruppo di Etichette nella <a href='%{base_path}/tags' target='_blank'>pagina delle Etichette</a> ."
-    pm_tags_allowed_for_groups: "Consenti ai membri dei gruppi inclusi di etichettare qualsiasi messaggio personale"
     min_trust_level_to_tag_topics: "Livello di attendibilità minimo richiesto per etichettare argomenti"
     suppress_overlapping_tags_in_list: "Se le etichette corrispondono alle esatte parole nei titoli degli argomenti, non mostrare l'etichetta"
     remove_muted_tags_from_latest: "Non mostrare argomenti etichettati solo con etichette silenziate nell'elenco degli argomenti più recenti."
@@ -2185,8 +2178,6 @@ it:
       must_include_latest: "Il menu principale deve includere la scheda \"ultimi\"."
       invalid_string: "Valore non valido."
       invalid_string_min_max: "Il numero di caratteri deve essere tra %{min} e %{max}."
-      invalid_string_min: "Il numero di caratteri deve essere di almeno %{min}."
-      invalid_string_max: "Il numero di caratteri non deve eccedere %{max}."
       invalid_json: "JSON non valido."
       invalid_reply_by_email_address: "Il valore deve contenere '%{reply_key}' ed essere differente dalla email di notifica."
       invalid_alternative_reply_by_email_addresses: "Tutti i valori devono contenere '%{reply_key}' ed essere differenti dalla email di notifica."
@@ -2219,7 +2210,6 @@ it:
         regex_invalid: "L'espressione regolare non è valida: %{error}"
         leading_trailing_slash: "L'espressione regolare non può iniziare o terminare con una barra."
       unicode_usernames_avatars: "Gli avatar di sistema interni non supportano i nomi utente Unicode."
-      list_value_count: "La lista deve contenere esattamente %{count} valori."
       markdown_linkify_tlds: "Non è possibile includere il valore '*'."
       google_oauth2_hd_groups: "Prima di attivare questa impostazione, devi configurare le opzioni 'google oauth2 hd'."
       search_tokenize_chinese_enabled: "Devi disattivare \"search_tokenize_chinese\" prima di attivare questa impostazione."
@@ -2246,6 +2236,14 @@ it:
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "non attivi"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "non attivi"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2445,8 +2443,6 @@ it:
     new_user_typed_too_fast: "Il nuovo utente ha scritto troppo velocemente"
     content_matches_auto_silence_regex: "Il contenuto corrisponde all'espressione regolare per silenziare automaticamente"
     username:
-      short: "deve essere almeno di %{min} caratteri"
-      long: "non deve essere più lungo di %{max} caratteri"
       too_long: "è troppo lungo"
       characters: "deve includere solo numeri, lettere, trattini, puntini e trattini bassi"
       unique: "deve essere univoco"
@@ -2591,35 +2587,9 @@ it:
   new_version_mailer:
     title: "Mailer Nuova Versione"
     subject_template: "[%{email_prefix}] Nuova versione di Discourse, aggiornamento disponibile"
-    text_body_template: |
-      Evviva, è finalmente disponibile una nuova versione di [Discourse](https://www.discourse.org)!
-
-      La tua versione: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      - Passa subito all'ultima versione utilizzando il nostro semplice strumento di **[aggiornamento da browser in un solo clic](%{base_url}/admin/upgrade)**
-
-      - Scopri le novità nelle [note di rilascio](https://meta.discourse.org/tag/release-notes) o visualizza il [log originale delle modifiche GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) per scoprire notizie, discussioni e ricevere supporto su Discourse
   new_version_mailer_with_notes:
     title: "Mailer Nuova Versione con Note"
     subject_template: "[%{email_prefix}] aggiornamento disponibile"
-    text_body_template: |
-      Evviva, è finalmente disponibile una nuova versione di [Discourse](https://www.discourse.org)!
-
-      La tua versione: %{installed_version}
-      Nuova versione: **%{new_version}**
-
-      - Passa subito all'ultima versione utilizzando il nostro semplice strumento di **[aggiornamento da browser in un solo clic](%{base_url}/admin/upgrade)**
-
-      - Scopri le novità nelle [note di rilascio](https://meta.discourse.org/tag/release-notes) o visualizza il [log originale delle modifiche GitHub](https://github.com/discourse/discourse/commits/master)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) per scoprire notizie, discussioni e ricevere supporto su Discourse
-
-      ### Note di rilascio
-
-      %{notes}
   flag_reasons:
     off_topic: "Il tuo messaggio è stato segnalato come **fuori tema**: la comunità pensa che non riguardi l'argomento, come attualmente definito dal titolo e dal contenuto del primo messaggio."
     inappropriate: "Il tuo messaggio è stato segnalato come **inappropriato**: la community ritiene che sia offensivo, ingiurioso, oppure che inciti all'odio o rappresenti una violazione delle [nostre linee guida della community](%{base_path}/guidelines)."
@@ -3760,7 +3730,6 @@ it:
     mass_award:
       errors:
         invalid_csv: Si è verificato un errore sulla riga %{line_number}. Si prega di confermare che il CSV ha un'email per riga.
-        too_many_csv_entries: Troppi elementi nel file CSV. Usa un file CSV con non più di %{count} elementi.
         badge_disabled: Attivare prima il distintivo %{badge_name} .
         cant_grant_multiple_times: Impossibile assegnare il distintivo %{badge_name} più volte a uno stesso utente.
     editor:

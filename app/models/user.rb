@@ -1823,10 +1823,6 @@ class User < ActiveRecord::Base
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
   end
 
-  def glimmer_header_enabled?
-    in_any_groups?(SiteSetting.experimental_glimmer_header_groups_map)
-  end
-
   def watched_precedence_over_muted
     if user_option.watched_precedence_over_muted.nil?
       SiteSetting.watched_precedence_over_muted
@@ -2023,8 +2019,11 @@ class User < ActiveRecord::Base
     destroyer = UserDestroyer.new(Discourse.system_user)
 
     User
+      .joins(
+        "LEFT JOIN user_histories ON user_histories.target_user_id = users.id AND action = #{UserHistory.actions[:deactivate_user]} AND acting_user_id > 0",
+      )
       .where(active: false)
-      .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
+      .where("users.created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
       .where("NOT admin AND NOT moderator")
       .where(
         "NOT EXISTS
@@ -2036,6 +2035,7 @@ class User < ActiveRecord::Base
               (SELECT 1 FROM posts p WHERE p.user_id = users.id LIMIT 1)
             ",
       )
+      .where("user_histories.id IS NULL")
       .limit(200)
       .find_each do |user|
         begin

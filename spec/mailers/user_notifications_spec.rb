@@ -1471,6 +1471,23 @@ RSpec.describe UserNotifications do
         expect(mail.body).to include(date)
       end
     end
+
+    context "when user timezone is invalid" do
+      before { user.user_option.timezone = "" }
+
+      it "doesn't raise error" do
+        expect { UserNotifications.account_silenced(user) }.not_to raise_error
+      end
+
+      it "adds the silenced_till date in UTC" do
+        date = "May 25, 2020, 12:00pm"
+        user.silenced_till = DateTime.parse(date)
+
+        mail = UserNotifications.account_silenced(user, { user_history: user_history })
+
+        expect(mail.body).to include(date)
+      end
+    end
   end
 
   describe ".account_suspended" do
@@ -1487,6 +1504,23 @@ RSpec.describe UserNotifications do
 
     context "when user doesn't have timezone set" do
       before { user.user_option.timezone = nil }
+
+      it "doesn't raise error" do
+        expect { UserNotifications.account_suspended(user) }.not_to raise_error
+      end
+
+      it "adds the suspended_till date in UTC" do
+        date = "May 25, 2020, 12:00pm"
+        user.suspended_till = DateTime.parse(date)
+
+        mail = UserNotifications.account_suspended(user, { user_history: user_history })
+
+        expect(mail.body).to include(date)
+      end
+    end
+
+    context "when user timezone is invalid" do
+      before { user.user_option.timezone = "" }
 
       it "doesn't raise error" do
         expect { UserNotifications.account_suspended(user) }.not_to raise_error

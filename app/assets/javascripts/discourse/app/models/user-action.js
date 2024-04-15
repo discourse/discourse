@@ -19,6 +19,7 @@ const UserActionTypes = {
   edits: 11,
   messages_sent: 12,
   messages_received: 13,
+  links: 17,
 };
 const InvertedActionTypes = {};
 

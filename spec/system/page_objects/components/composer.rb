@@ -219,6 +219,7 @@ module PageObjects
           const index = composer.value.indexOf(text);
           const position = index + text.length;
 
+          composer.focus();
           composer.setSelectionRange(position, position);
         JS
       end
@@ -226,6 +227,7 @@ module PageObjects
       def select_all
         execute_script(<<~JS, text)
           const composer = document.querySelector("#{COMPOSER_ID} .d-editor-input");
+          composer.focus();
           composer.setSelectionRange(0, composer.value.length);
         JS
       end

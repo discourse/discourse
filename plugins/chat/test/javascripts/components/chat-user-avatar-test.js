@@ -1,8 +1,9 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
+import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 function containerSelector(user, options = {}) {
   let onlineSelector = ":not(.is-online)";
@@ -17,7 +18,7 @@ module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
   setupRenderingTest(hooks);
 
   test("when user is not online", async function (assert) {
-    this.user = fabricators.user();
+    this.user = new CoreFabricators(getOwner(this)).user();
     this.chat = { presenceChannel: { users: [] } };
 
     await render(
@@ -28,7 +29,7 @@ module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
   });
 
   test("user is online", async function (assert) {
-    this.user = fabricators.user();
+    this.user = new CoreFabricators(getOwner(this)).user();
     this.chat = {
       presenceChannel: { users: [{ id: this.user.id }] },
     };
@@ -41,7 +42,7 @@ module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
   });
 
   test("@showPresence=false", async function (assert) {
-    this.user = fabricators.user();
+    this.user = new CoreFabricators(getOwner(this)).user();
     this.chat = {
       presenceChannel: { users: [{ id: this.user.id }] },
     };
@@ -54,7 +55,7 @@ module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
   });
 
   test("@interactive=true", async function (assert) {
-    this.user = fabricators.user();
+    this.user = new CoreFabricators(getOwner(this)).user();
 
     await render(
       hbs`<ChatUserAvatar @interactive={{false}}  @user={{this.user}} />`

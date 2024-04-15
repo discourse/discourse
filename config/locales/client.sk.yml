@@ -282,7 +282,8 @@ sk:
         us_west_1: "USA Západ (S. Kalifornia)"
         us_west_2: "USA Západ (Oregon)"
     clear_input: "Vymazať vstup"
-    edit: "upraviť názov a kategóriu témy"
+    edit: "Upraviť"
+    edit_topic: "upraviť názov a kategóriu témy"
     expand: "Rozbaľ"
     not_implemented: "Ľutujeme, táto funkcia ešte nie je implementovaná."
     no_value: "Nie"
@@ -331,7 +332,11 @@ sk:
     weekly: "týždenne"
     every_month: "každý mesiac"
     every_six_months: "každých šesť mesiacov"
-    max_of_count: "najviac %{count}"
+    max_of_count:
+      one: "najviac %{count}"
+      few: "najviac %{count}"
+      many: "najviac %{count}"
+      other: "najviac %{count}"
     character_count:
       one: "%{count} znak"
       few: "%{count} znakov"
@@ -401,6 +406,7 @@ sk:
         clear_reminder: "Udržujte záložku a jasnú pripomienku"
       search_placeholder: "Vyhľadávajte záložky podľa názvu, názvu témy alebo obsahu príspevku"
       search: "Hľadať"
+      bookmark: "Záložka"
       reminders:
         today_with_time: "dnes o %{time}"
         tomorrow_with_time: "zajtra o %{time}"
@@ -1004,7 +1010,6 @@ sk:
         image: "Nahrajte obrázok"
       default_notifications:
         modal_title: "Predvolené upozornenia používateľa"
-        modal_description: "Chcete túto zmenu uplatniť historicky? Týmto sa zmenia preferencie pre %{count} existujúcich používateľov."
         modal_yes: "Áno"
         modal_no: "Nie, zmeny aplikujte iba v budúcnosti"
     user_action_groups:
@@ -1025,7 +1030,11 @@ sk:
       categories_label: "kategórie"
       subcategories_label: "podkategórie"
       remove_filter: "zruš filter"
-      plus_more_count: "+%{count} ďalší"
+      plus_more_count:
+        one: "+%{count} ďalší"
+        few: "+%{count} ďalšie"
+        many: "+%{count} ďalších"
+        other: "+%{count} ďalší"
       category: "Kategória"
       category_list: "Zobraziť zoznam kategórií"
       reorder:
@@ -1062,7 +1071,11 @@ sk:
         few: "%{count} nové témy za posledný týždeň."
         many: "%{count} nových tém za posledný týždeň."
         other: "%{count} nových tém za posledný týždeň."
-      n_more: "Kategórie (%{count} ďalších)…"
+      n_more:
+        one: "Kategórie (%{count} ďalších)…"
+        few: "Kategórie (%{count} ďalších)…"
+        many: "Kategórie (%{count} ďalších)…"
+        other: "Kategórie (%{count} ďalších)…"
     ip_lookup:
       title: Vyhľadávanie podľa IP adresy
       hostname: Hostname
@@ -1071,7 +1084,11 @@ sk:
       organisation: Organizácia
       phone: Telefón
       other_accounts: "Ostatné účty s touto IP adresou:"
-      delete_other_accounts: "Zmazaných %{count}"
+      delete_other_accounts:
+        one: "Zmazaných %{count}"
+        few: "Zmazaných %{count}"
+        many: "Zmazaných %{count}"
+        other: "Zmazaných %{count}"
       username: "používateľské meno"
       trust_level: "Dôvera"
       read_time: "čas strávený čítaním"
@@ -1201,7 +1218,6 @@ sk:
         description: "Preskočiť tipy a odznaky na registráciu nového používateľa"
       reset_seen_user_tips: "Znova zobraziť tipy používateľov"
       theme_default_on_all_devices: "Nastaviť túto tému ako predvolenú na všetkých mojich zariadeniach"
-      color_scheme_default_on_all_devices: "Nastaviť predvolené farebné schémy na všetkých mojich zariadeniach"
       color_scheme: "Farebná schéma"
       color_schemes:
         default_description: "Predvolená téma"
@@ -1217,7 +1233,6 @@ sk:
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
-      enable_defer: "Ak chcete označiť témy ako neprečítané, povoľte odloženie"
       experimental_sidebar:
         enable: "Povoliť bočný panel"
         options: "Možnosti"
@@ -1536,6 +1551,8 @@ sk:
         instructions: "Jazyk úžívateľského rozhrania. Zmení sa po obnovení stránky."
         default: "(predvolené)"
         any: "hocijaký"
+      homepage:
+        default: "(predvolené)"
       password_confirmation:
         title: "Heslo znova"
       auth_tokens:
@@ -1705,7 +1722,6 @@ sk:
         same_as_username: "Vaše heslo je rovnaké ako používateľské meno."
         same_as_email: "Vaše heslo je rovnaké ako e-mail."
         ok: "Vaše heslo je v poriadku."
-        instructions: "Aspoň %{count} znakov."
         required: "Prosím zadajte heslo"
         confirm: "Potvrďte"
         incorrect_password: "Zadané heslo je nesprávne."
@@ -1811,7 +1827,6 @@ sk:
         content: "Upozornenia slúžia na to, aby ste boli informovaní o dianí v komunite."
       topic_timeline:
         title: "Časová os témy"
-        content: "Rýchle prechádzanie príspevku pomocou časovej osi témy."
       post_menu:
         title: "Ponuka príspevkov"
     loading: "Načítava sa…"
@@ -2132,7 +2147,6 @@ sk:
           seen: Ktoré mám prečítané
           unseen: som nečítal
           wiki: sú wiki
-          images: zahŕňajú obrázok(y)
         statuses:
           label: Kde témy
           open: sú otvorené
@@ -2170,7 +2184,6 @@ sk:
         select_all: "Vyber všetko"
         clear_all: "Zruš všetko"
         unlist_topics: "Dôverné témy"
-        defer: "Odložiť"
         delete: "Zmazať témy"
         dismiss: "Zahodiť"
         dismiss_read: "Zahodiť všetký neprečítané"
@@ -2194,6 +2207,11 @@ sk:
           few: "Označíli ste <b>%{count}</b> tém.y"
           many: "Označíli ste <b>%{count}</b> tém."
           other: "Označíli ste <b>%{count}</b> tém."
+        selected_count:
+          one: "%{count} vybrané"
+          few: "%{count} vybrané"
+          many: "%{count} vybrané"
+          other: "%{count} vybrané"
         choose_new_tags: "Vyberte pre tému nové štítky:"
         changed_tags: "Štítky tém boli zmenené."
       none:
@@ -2217,6 +2235,7 @@ sk:
     topic_bulk_actions:
       close_topics:
         name: "Uzavrieť tému"
+        optional: (nepovinné)
       archive_topics:
         name: "Archivuj témy"
       unlist_topics:
@@ -2238,8 +2257,6 @@ sk:
       move_to_inbox:
         title: "Presunúť do schránky"
         help: "Presunúť správu späť do schránky"
-      defer:
-        title: "Odložiť"
       list: "Témy"
       new: "nová téma"
       unread: "neprečítané"
@@ -3131,20 +3148,20 @@ sk:
         upload: "Načítať"
         uploading: "Nahrávanie"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Prosím zadajte platnú hodnotu."
           email: "Zadajte prosím platný email."
-        tooLong:
+        too_long:
           one: "Vstup musí mať menej ako %{count} znakov."
           few: "Vstup musí mať menej ako %{count} znakov."
           many: "Vstup musí mať menej ako %{count} znakov."
           other: "Vstup musí mať menej ako %{count} znakov."
-        rangeOverflow:
+        range_overflow:
           one: "Vstup musí byť menší ako %{count}."
           few: "Vstup musí byť menší ako %{count}."
           many: "Vstup musí byť menší ako %{count}."
           other: "Vstup musí byť menší ako %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "Vstup musí byť väčší ako %{count}."
           few: "Vstup musí byť väčší ako %{count}."
           many: "Vstup musí byť väčší ako %{count}."
@@ -3227,10 +3244,8 @@ sk:
         up_to_date: "Máte nainštalovanú najnovšiu verziu!"
         critical_available: "Je dostupná kritická aktualizácia."
         updates_available: "Aktualizácie sú k dispozícii."
-        please_upgrade: "Prosím aktualizujte!"
         no_check_performed: "Neprebehlo zisťovanie aktualizácií. Uistite sa že je spustený sidekiq."
         stale_data: "V poslednej dobe neprebehlo zisťovanie aktualizácií. Uistite sa že je spustený sidekiq."
-        version_check_pending: "Zdá sa že ste nedávno aktualizovali. Fantastické!"
         installed_version: "Nainštalované"
         latest_version: "Najnovšie"
         new_features:
@@ -3593,7 +3608,11 @@ sk:
           mobile: "Mobil"
           settings: "Nastavenia"
           preview: "Ukážka"
-          selected: "%{count} vybrané"
+          selected:
+            one: "%{count} vybrané"
+            few: "%{count} vybrané"
+            many: "%{count} vybrané"
+            other: "%{count} vybrané"
           cancel: "Zrušiť"
           collapse: Zbaliť
           upload_file_tip: "Vyberte si súbor, ktoré chcete nahrať (png, woff2 atď.…)"
@@ -3631,8 +3650,6 @@ sk:
           schema:
             fields:
               required: "*povinné"
-              string:
-                too_short: "musí mať minimálne %{count} znakov"
               number:
                 too_small: "musí byť väčšie alebo rovné %{count}"
                 too_large: "musí byť menej alebo rovné %{count}"

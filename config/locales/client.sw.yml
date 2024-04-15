@@ -156,7 +156,8 @@ sw:
         us_east_2: "Mashariki ya Marekani (Ohio)"
         us_west_1: "Magharibi ya Marekani (California Kaskazini)"
         us_west_2: "Magharibi ya Marekani (Oregon)"
-    edit: "hariri kichwa na kikundi cha mada hii"
+    edit: "Hariri"
+    edit_topic: "hariri kichwa na kikundi cha mada hii"
     expand: "Panua"
     not_implemented: "Samahani, kipengele hicho hakijatekelezwa bado."
     no_value: "Hapana"
@@ -193,7 +194,9 @@ sw:
     every_hour: "kila saa"
     daily: "kila siku"
     weekly: "kila wiki"
-    max_of_count: "kiwango cha juu cha %{count}"
+    max_of_count:
+      one: "kiwango cha juu cha %{count}"
+      other: "kiwango cha juu cha %{count}"
     character_count:
       one: "Herufi %{count}"
       other: "Herufi %{count}"
@@ -220,6 +223,7 @@ sw:
       confirm_clear: "Una uhakika unataka kuondoa mialamisho ya mada hii?"
       save: "hifadhi"
       search: "Tafuta"
+      bookmark: "Alamisha"
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
@@ -568,7 +572,9 @@ sw:
       organisation: Shirika
       phone: Simu
       other_accounts: "Akaunti nyingine zenye anuani moja"
-      delete_other_accounts: "Futa %{count}"
+      delete_other_accounts:
+        one: "Futa %{count}"
+        other: "Futa %{count}"
       username: "jinalamtumiaji"
       trust_level: "Kiwango cha Uaminifu"
       read_time: "mda wa kusoma"
@@ -813,6 +819,8 @@ sw:
         instructions: "Lugha ya kiolesura ya mtumiaji. Itabadilika ukirudisha tena ukurasa."
         default: "(chaguo-msingi)"
         any: "yoyote"
+      homepage:
+        default: "(chaguo-msingi)"
       password_confirmation:
         title: "nywila upya"
       auth_tokens:
@@ -910,7 +918,6 @@ sw:
         same_as_username: "Nywila yako ni sawa na jina lako la utumiaji."
         same_as_email: "Nywila yako ni sawa na jina lako la utumiaji."
         ok: "Nywila yako iko sawa."
-        instructions: "Herufi %{count} au zaidi."
       summary:
         title: "Muhtasari"
         stats: "Takwimu"
@@ -1371,7 +1378,6 @@ sw:
           seen: Nilisoma
           unseen: Sijasoma
           wiki: ni wiki
-          images: Tia ndani picha
           all_tags: Lebo zote zilizo juu
         statuses:
           label: Mada za wapi
@@ -1449,6 +1455,7 @@ sw:
     topic_bulk_actions:
       close_topics:
         name: "Funga Mada"
+        optional: (sio muhimu)
       archive_topics:
         name: "Hifadhi Mada kwenye nyaraka"
       unlist_topics:
@@ -2282,7 +2289,7 @@ sw:
         upload: "Ongeza"
         uploading: "Inapakia"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Tafadhali andika thamani sahihi."
           email: "Andika barua pepe iliyo sahihi."
     table_builder:
@@ -2312,10 +2319,8 @@ sw:
         up_to_date: "Una toleo la sasa!"
         critical_available: "Sasisho muhimu linapatikana."
         updates_available: "Masashisho yanapatikana."
-        please_upgrade: "Tafadhali boresha!"
         no_check_performed: "Utafutaji wa toleo la sasa haujafanywa. Hakikisha sidekiq inafanya kazi."
         stale_data: "Utafutaji wa toleo la sasa haujafanyika hivi karibuni. Hakikisha sidekiq inafanya kazi."
-        version_check_pending: "Inaonekana umeweka toleo la sasa hivi karibuni. Vizuri!"
         installed_version: "Imesanikishwa"
         latest_version: "Hivi Karibuni"
         new_features:
@@ -2692,8 +2697,6 @@ sw:
           schema:
             fields:
               required: "*muhimu na Inahitajika"
-              string:
-                too_short: "lazima iwe na herufi%{count}au zaidi"
               number:
                 too_small: "izidi au iwe sawa na %{count}"
                 too_large: "lazima iwe chini ya au sawa na %{count}"
@@ -3224,7 +3227,6 @@ sw:
           empty: "Hakuna picha ,Tafadhali pakia moja."
           upload:
             label: "Pakia"
-            title: "Pakia picha"
         categories:
           all_results: "Zote"
           required: "Muhimu na Inahitajika"

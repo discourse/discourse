@@ -466,7 +466,7 @@ export default class Topic extends RestModel {
     return { type: "topic", id };
   }
 
-  @computed("category_id")
+  @computed("category_id", "site.categoriesById.[]")
   get category() {
     return Category.findById(this.category_id);
   }

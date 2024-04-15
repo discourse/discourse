@@ -86,6 +86,7 @@ ca:
         over_x_years:
           one: "més d'%{count} any"
           other: "més de %{count} anys"
+        date_year: "MMM D, AAAA"
       medium_with_ago:
         x_minutes:
           one: "fa %{count} minut"
@@ -119,6 +120,7 @@ ca:
       to_placeholder: "fins a la data"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
+      post: "publicació #%{postNumber} de @%{username}"
       close: "tanca"
       twitter: "Comparteix en Twitter"
       facebook: "Comparteix en Facebook"
@@ -126,8 +128,10 @@ ca:
       url: "Copiar i compartir URL"
     word_connector:
       comma: ", "
+      last_item: "i"
     action_codes:
       public_topic: "Tema fet públic %{when}"
+      open_topic: "S'ha convertit això en un tema el %{when}"
       private_topic: "S'ha convertit el tema en un miSSatge perSonal %{when}"
       split_topic: "S'ha dividit el tema %{when}"
       invited_user: "S'ha convidat %{who} %{when}"
@@ -136,6 +140,8 @@ ca:
       removed_user: "Ha suprimit %{who} %{when}"
       removed_group: "Ha suprimit %{who} %{when}"
       autobumped: "Elevat automàticament %{when}"
+      tags_changed: "Etiquetes actualitzades el %{when}"
+      category_changed: "Categoria actualitzada el %{when}"
       autoclosed:
         enabled: "Tancat %{when}"
         disabled: "Obert %{when}"
@@ -190,7 +196,8 @@ ca:
         us_west_1: "EUA Oest (N. Califòrnia)"
         us_west_2: "EUA Oest (Oregon)"
     clear_input: "Esborra l'entrada"
-    edit: "edita el títol i la categoria d'aquest tema"
+    edit: "Edita"
+    edit_topic: "edita el títol i la categoria d'aquest tema"
     expand: "Expandeix"
     not_implemented: "Ho sentim! Aquesta funcionalitat encara no s'ha implementat."
     no_value: "No"
@@ -234,7 +241,9 @@ ca:
     weekly: "setmanal"
     every_month: "cada mes"
     every_six_months: "cada sis mesos"
-    max_of_count: "màxim de %{count}"
+    max_of_count:
+      one: "màxim de %{count}"
+      other: "màxim de %{count}"
     character_count:
       one: "%{count} caràcter"
       other: "%{count} caràcters"
@@ -281,6 +290,7 @@ ca:
       no_user_bookmarks: "No teniu publicacions en els preferits. Els preferits us permeten referir-vos fàcilment a publicacions específiques. "
       search_placeholder: "Cerqueu preferits per nom, títol del tema o contingut de la publicació"
       search: "Cerca"
+      bookmark: "Preferit"
       reminders:
         today_with_time: "avui a les %{time}"
         tomorrow_with_time: "demà a les %{time}"
@@ -755,7 +765,6 @@ ca:
       flair_preview_icon: "Previsualitza la icona"
       flair_preview_image: "Previsualitza la imatge"
       default_notifications:
-        modal_description: "Voleu aplicar històricament aquest canvi? Això canviarà les preferències per a %{count} usuaris existents."
         modal_yes: "Sí"
         modal_no: "No, aplica el canvi només en el futur"
     user_action_groups:
@@ -776,7 +785,9 @@ ca:
       categories_label: "categories"
       subcategories_label: "subcategories"
       remove_filter: "elimina filtre"
-      plus_more_count: "+%{count} més"
+      plus_more_count:
+        one: "+%{count} més"
+        other: "+%{count} més"
       view_all: "mostra-ho tot"
       category: "Categoria"
       category_list: "Mostra la llista de categories"
@@ -810,7 +821,9 @@ ca:
       organisation: Organització
       phone: Telèfon
       other_accounts: "Altres comptes amb aquesta adreça IP:"
-      delete_other_accounts: "Suprimeix %{count}"
+      delete_other_accounts:
+        one: "Suprimeix %{count}"
+        other: "Suprimeix %{count}"
       username: "nom d'usuari"
       trust_level: "nivell de confiança"
       read_time: "temps de lectura"
@@ -894,7 +907,6 @@ ca:
       allow_private_messages: "Permet a altres usuaris d'enviar-me missatges personals"
       external_links_in_new_tab: "Obre tots els enllaços externs en una pestanya nova"
       enable_quoting: "Permet citar la resposta en el text destacat"
-      enable_defer: "Habilita l'ajornament per a marcar temes no llegits"
       experimental_sidebar:
         options: "Opcions"
         navigation_section: "Navegació"
@@ -1021,6 +1033,7 @@ ca:
         use: "Utilitza l'aplicació Authenticator"
         disable: "Desactiva"
         delete: "Suprimeix"
+        delete_backup_codes_confirm_title: "Eliminar codis de còpia de seguretat"
         save: "Desa"
         edit: "Edita"
         totp:
@@ -1126,6 +1139,8 @@ ca:
         instructions: "Llengua de la interfície d'usuari. Canviarà quan actualitzeu la pàgina."
         default: "(per defecte)"
         any: "qualsevol"
+      homepage:
+        default: "(per defecte)"
       password_confirmation:
         title: "Contrasenya una altra vegada"
       auth_tokens:
@@ -1249,7 +1264,6 @@ ca:
         same_as_username: "La contrasenya és igual que el nom d'usuari."
         same_as_email: "La contrasenya és igual que el correu electrònic."
         ok: "La contrasenya té bon aspecte."
-        instructions: "Com a mínim %{count} caràcters."
         confirm: "Confirma"
       summary:
         title: "Resum"
@@ -1796,7 +1810,6 @@ ca:
           seen: he llegit
           unseen: no he llegit
           wiki: són wiki
-          images: inclou imatge(s)
           all_tags: Totes les etiquetes anteriors
         statuses:
           label: On els temes
@@ -1833,7 +1846,6 @@ ca:
         clear_all: "Neteja-ho tot"
         unlist_topics: "Fes temes invisibles"
         relist_topics: "Torna a llistar els temes"
-        defer: "Ajorna"
         delete: "Suprimeix temes"
         dismiss: "Descarta-ho"
         dismiss_read: "Descarta tots els llegits"
@@ -1876,6 +1888,7 @@ ca:
     topic_bulk_actions:
       close_topics:
         name: "Tanca temes"
+        optional: (opcional)
       archive_topics:
         name: "Arxiva temes"
       unlist_topics:
@@ -1902,9 +1915,6 @@ ca:
       move_to_inbox:
         title: "Mou a la safata d'entrada"
         help: "Torna el missatge a la safata d'entrada"
-      defer:
-        help: "Marca com a no llegit"
-        title: "Ajorna"
       list: "Temes"
       new: "tema nou"
       unread: "no llegit"
@@ -2715,7 +2725,6 @@ ca:
         mark_tracking: "%{shortcut} Segueix el tema"
         mark_watching: "%{shortcut} Vigila el tema"
         print: "%{shortcut} Imprimeix el tema"
-        defer: "%{shortcut} Ajorna el tema"
     badges:
       earned_n_times:
         one: "Ha rebut aquesta insígnia %{count} vegada."
@@ -2906,7 +2915,7 @@ ca:
         upload: "Carrega"
         uploading: "Carregant"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Introduïu un valor vàlid."
           email: "Introduïu una adreça vàlida de correu electrònic."
     table_builder:
@@ -2944,10 +2953,8 @@ ca:
         up_to_date: "Esteu al dia!"
         critical_available: "Hi ha una actualització crítica."
         updates_available: "Hi ha actualitzacions disponibles."
-        please_upgrade: "Actualitzeu!"
         no_check_performed: "No s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
         stale_data: "Darrerament no s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
-        version_check_pending: "Sembla que heu actualitzat fa poc. Genial!"
         installed_version: "Instal·lat"
         latest_version: "Més recents"
         problems_found: "Uns quants consells basats en la configuració actual del lloc web."
@@ -3378,7 +3385,9 @@ ca:
           disabled_component_tooltip: "Aquest component s'ha desactivat"
           default_theme_tooltip: "Aquesta aparença és l'aparença predeterminada del lloc web"
           updates_available_tooltip: "Hi ha actualitzacions disponibles per a aquesta aparença"
-          and_x_more: "i %{count} més."
+          and_x_more:
+            one: "i %{count} més."
+            other: "i %{count} més."
           collapse: Redueix
           uploads: "Càrregues"
           no_uploads: "Podeu pujar elements associats a la vostra aparença com ara fonts tipogràfiques i imatges"
@@ -3461,8 +3470,6 @@ ca:
           schema:
             fields:
               required: "*necessari"
-              string:
-                too_short: "ha de tenir almenys %{count} caràcters"
               number:
                 too_small: "ha de ser més gran o igual que %{count}"
                 too_large: "ha de ser igual o menor que %{count}"
@@ -4079,7 +4086,6 @@ ca:
           empty: "Encara no hi ha imatges. Carregueu-ne una."
           upload:
             label: "Carrega"
-            title: "Carrega imatge(s)"
         selectable_avatars:
           title: "Llista d'avatars que els usuaris poden triar"
         categories:
@@ -4115,7 +4121,6 @@ ca:
         secret_list:
           invalid_input: "Els camps d'entrada no poden ser buits o contenir un caràcter de barra vertical."
         default_categories:
-          modal_description: "Voleu aplicar històricament aquest canvi? Això canviarà les preferències per a %{count} usuaris existents."
           modal_yes: "Sí"
           modal_no: "No, aplica el canvi només en el futur"
         file_types_list:

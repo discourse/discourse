@@ -166,7 +166,6 @@ ar:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "الحد الأقصى هو %{max} حرف؛ لقد أدخلت %{length}."
       invalid_boolean: "قيمة منطقية غير صالحة."
       taken: "مُستخدَم بالفعل"
       accepted: يجب قبولها
@@ -312,7 +311,6 @@ ar:
       many: "لقد أرسلت بالفعل %{count} دعوة في اليوم الماضي، يُرجى الانتظار %{time_left} قبل إعادة المحاولة."
       other: "لقد أرسلت بالفعل %{count} دعوة في اليوم الماضي، يُرجى الانتظار %{time_left} قبل إعادة المحاولة."
     confirm_email: "<p>أنت على وشك الانتهاء! لقد أرسلنا رسالة إلكترونية للتفعيل إلى عنوان بريدك الإلكتروني. يُرجى اتباع التعليمات الواردة في الرسالة لتنشيط حسابك.</p><p>إذا لم تصلك الرسالة، فتحقَّق من مجلد الرسائل غير المرغوب فيها.</p>"
-    cant_invite_to_group: "غير مسموح لك بدعوة المستخدمين إلى مجموعة (مجموعات) محدَّدة. تأكَّد من أنك مالك المجموعة (المجموعات) التي تحاول الدعوة إليها."
     disabled_errors:
       discourse_connect_enabled: "الدعوات متوقفة لأنه تم تفعيل DiscourseConnect."
       invalid_access: "غير مسموح لك بعرض المورد المطلوب."
@@ -470,7 +468,6 @@ ar:
   pm_reached_recipients_limit: "عذرًا، لا يمكن إضافة أكثر من %{recipients_limit} مستلم في الرسالة."
   removed_direct_reply_full_quotes: "تمت إزالة الاقتباس من المنشور السابق بالكامل تلقائيًا."
   watched_words_auto_tag: "تم وضع وسم على الموضوع تلقائيًا"
-  secure_upload_not_allowed_in_public_topic: "عذرًا، لا يمكن استخدام التحميلات الآمنة التالية في موضوع عام: %{upload_filenames}."
   create_pm_on_existing_topic: "عذرًا، لا يمكنك إنشاء رسالة خاصة بشأن موضوع حالي."
   slow_mode_enabled: "هذا الموضوع في الوضع البطيء."
   just_posted_that: "مشابه جدًا لما نشرته مؤخرًا"
@@ -637,7 +634,6 @@ ar:
 
       يسهُل على الجميع قراءة الموضوعات التي يوجد بها عدد قليل من الردود التفصيلية بدلًا من الكثير من الردود الفردية الصغيرة.
     dominating_topic: لقد نشرت كثيرًا في هذا الموضوع! فكِّر في منح الآخرين فرصة للرد هنا ومناقشة الأمور مع بعضهم البعض أيضًا.
-    get_a_room: لقد رددت على @%{reply_username} %{count} من المرات، هل تعلم أنه يمكنك إرسال رسالة شخصية إليه بدلًا من ذلك؟
     dont_feed_the_trolls: تم الإبلاغ عن هذا المنشور بالفعل لجذب انتباه المشرف. هل تريد بالتأكيد الرد عليه؟ تميل الردود على المحتوى السلبي إلى تشجيع المزيد من السلوك السلبي.
     too_many_replies: |
       ### لقد بلغت حد الردود في هذا الموضوع
@@ -1746,7 +1742,6 @@ ar:
     summarization_strategy: "طرق إضافية لتلخيص المحتوى المسجَّل بواسطة المكونات الإضافية"
     custom_summarization_allowed_groups: "المجموعات المسموح لها بتلخيص المحتويات باستخدام `summarization_strategy`"
     enable_personal_messages: "تم إيقافه، استخدم إعداد 'personal message enabled groups' بدلًا من ذلك. اسمح للمستخدمين من مستوى الثقة 1 (قابل للإعداد عبر الحد الأدنى لمستوى الثقة لإرسال الرسائل) بإنشاء رسائل والرد على الرسائل. لاحظ أن فريق العمل يمكنه دائمًا إرسال الرسائل بغض النظر عن أي شيء."
-    personal_message_enabled_groups: "اسمح للمستخدمين داخل هذه المجموعات بإنشاء رسائل والرد على الرسائل. تتضمن مجموعات مستوى الثقة جميع مستويات الثقة التي تزيد عن هذا الرقم؛ على سبيل المثال، يتيح اختيار trust_level_1 أيضًا لمستخدمي trust_level_2 و3 و4 إرسال رسائل خاصة. لاحظ أن الموظفين يمكنهم دائمًا إرسال الرسائل بغض النظر عن السبب."
     enable_system_message_replies: "يسمح للمستخدمين بالرد على رسائل النظام، حتى إذا كانت الرسائل الشخصية متوقفة."
     enable_chunked_encoding: "تفعيل استجابات الترميز المقسَّمة بواسطة الخادم. تعمل هذه الميزة على معظم الإعدادات، ولكن قد يتم تخزين بعض الخوادم الوكيلة مؤقتًا، مما يتسبب في تأخير الاستجابات"
     long_polling_base_url: "عنوان URL الأساسي المُستخدَم في الاستقصاء الطويل (عندما تخدم شبكة توصيل المحتوى (CDN) محتوًى ديناميكيًا، احرص على تعيين هذا على سحب الموارد من المصدر) eg: http://origin.site.com"
@@ -2263,7 +2258,6 @@ ar:
     embed_username_required: "اسم المستخدم مطلوب لإنشاء الموضوع"
     notify_about_reviewable_item_after: "إرسال رسالة شخصية إلى المشرفين إذا كانت هناك عناصر قابلة للمراجعة لم يتم التعامل معها بعد هذا العدد من الساعات. اضبط القيمة على 0 للإيقاف."
     delete_merged_stub_topics_after_days: "عدد الأيام التي يجب انتظارها قبل حذف الموضوعات البديلة المدمجة بالكامل تلقائيًا. اتعيين القيمة على 0 لعدم حذف الموضوعات البديلة أبدًا."
-    bootstrap_mode_min_users: "الحد الأدنى لعدد المستخدمين المطلوب لإيقاف وضع التمهيد (اضبط القيمة على 0 للإيقاف. يمكن أن تستغرق العملية 24 ساعة)"
     prevent_anons_from_downloading_files: "منع المستخدمين المجهولين من تنزيل المرفقات"
     secure_uploads: 'يقيِّد الوصول إلى كل التحميلات (الصور ومقاطع الفيديو والمقاطع الصوتية والنصوص وملفات PDF وملفات ZIP وغير ذلك). بخلاف ذلك، سيكون الوصول مقيَّدًا فقط لتحميلات الوسائط في الرسائل والفئات الخاصة. تحذير: هذا الإعداد معقَّد ويتطلب فهمًا إداريًا عميقًا. انظر <a target="_blank" href="https://meta.discourse.org/t/-/140017">موضوع التحميلات الآمنة على Meta</a> لمعرفة التفاصيل.'
     secure_uploads_allow_embed_images_in_emails: "يسمح بتضمين الصور الآمنة التي عادةً ما يتم تنقيحها في الرسائل الإلكترونية، إذا كان حجمها أصغر من الإعداد `secure uploads max email embed image size kb`."
@@ -2345,7 +2339,6 @@ ar:
     max_tags_in_filter_list: "الحد الأقصى لعدد الوسوم التي يتم عرضها في القائمة المنسدلة للتصفية. سيتم عرض الوسوم الأكثر استخدامًا."
     tags_sort_alphabetically: "عرض الوسوم بترتيب أبجدي. الإعداد الافتراضي هو العرض بترتيب الأكثر رواجًا."
     tags_listed_by_group: "إدراج الوسوم حسب مجموعة الوسوم الموجودة في <a href='%{base_path}/tags' target='_blank'>صفحة الوسوم</a>"
-    pm_tags_allowed_for_groups: "السماح لأعضاء المجموعة (المجموعات) المضمَّنة بوسم أي رسالة شخصية"
     min_trust_level_to_tag_topics: "الحد الأدنى لمستوى الثقة المطلوب لوضع وسوم على الموضوعات"
     suppress_overlapping_tags_in_list: "عدم عرض الوسم إذا كانت الوسوم تتطابق تمامًا مع الكلمات الموجودة في عناوين الموضوعات"
     remove_muted_tags_from_latest: "عدم عرض الموضوعات التي تم وضع وسم الكتم فقط عليها في قائمة الموضوعات الحديثة"
@@ -2401,8 +2394,6 @@ ar:
       must_include_latest: "يجب أن تتضمَّن القائمة العلوية علامة التبويب \"الأحدث\"."
       invalid_string: "القيمة غير صالحة."
       invalid_string_min_max: "يجب أن يكون عدد الأحرف بين %{min} و%{max}."
-      invalid_string_min: "يجب ألا يقل عدد الأحرف عن %{min}."
-      invalid_string_max: "يجب ألا يزيد عدد الأحرف عن %{max}."
       invalid_json: "ملف JSON غير صالح."
       invalid_reply_by_email_address: "يجب أن تحتوي القيمة على \"%{reply_key}\" وأن تكون مختلفة عن الرسالة الإلكترونية للإشعار."
       invalid_alternative_reply_by_email_addresses: "يجب أن تحتوي جميع القيم على \"%{reply_key}\" وأن تكون مختلفة عن الرسالة الإلكترونية للإشعار."
@@ -2435,7 +2426,6 @@ ar:
         regex_invalid: "التعبير العادي غير صالح: %{error}"
         leading_trailing_slash: "يجب ألا يبدأ التعبير العادي بشرطة مائلة وينتهي بها."
       unicode_usernames_avatars: "لا تدعم الصور الرمزية الداخلية للنظام أسماء المستخدمين بترميز Unicode."
-      list_value_count: "يجب أن تحتوي القائمة على قيم %{count} بالتعيين."
       markdown_linkify_tlds: "لا يمكنك تضمين قيمة '*'."
       google_oauth2_hd_groups: "يجب عليك تعيين جميع إعدادات 'google oauth2 hd' قبل تفعيل هذا الإعداد."
       search_tokenize_chinese_enabled: "يجب عليك إيقاف `email editable` قبل تفعيل هذا الإعداد."
@@ -2462,6 +2452,14 @@ ar:
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "غير نشطة"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "غير نشطة"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2741,8 +2739,6 @@ ar:
     new_user_typed_too_fast: "كتب المستخدم الجديد بسرعة كبيرة"
     content_matches_auto_silence_regex: "يتطابق المحتوى مع التعبير العادي للكتم التلقائي"
     username:
-      short: "يجب ألا يقل عدد الأحرف عن %{min}"
-      long: "يجب ألا يزيد عدد الأحرف عن %{max}"
       too_long: "طويل جدًا"
       characters: "يجب ألا يتضمَّن سوى الأرقام والحروف والشرطات والنقاط والشرطات السفلية"
       unique: "يجب أن يكون فريدًا"
@@ -2896,11 +2892,9 @@ ar:
   new_version_mailer:
     title: "رسالة الإصدار الجديد"
     subject_template: "[%{email_prefix}] إصدار جديد من Discourse، يتوفَّر تحديث"
-    text_body_template: "مرحى، يتوفَّر إصدار جديد من [Discourse](https://www.discourse.org)!\n\nإصدارك: %{installed_version}\nالإصدار الجديد: **%{new_version}** \n\n- الترقية بسهولة باستخدام **[ترقية المتصفح بنقرة واحدة](%{base_url}/admin/upgrade)**\n\n - تعرَّف على الجديد في [ملاحظات الإصدار](https://meta.discourse.org/tag/release-notes) أو اعرض [سجل تغييرات GitHub البسيط](https://github.com/discourse/discourse/commits/master)\n\n- انتقل إلى [meta.discourse.org](https://meta.discourse.org) للاطِّلاع على الأخبار والمناقشات ودعم Discourse\n"
   new_version_mailer_with_notes:
     title: "رسالة الإصدار الجديد مع الملاحظات"
     subject_template: "يتوفَّر تحديث [%{email_prefix}]"
-    text_body_template: "مرحى، يتوفَّر إصدار جديد من [Discourse](https://www.discourse.org)!\n\nإصدارك: %{installed_version}\nالإصدار الجديد: **%{new_version}** \n\n- الترقية بسهولة باستخدام **[ترقية المتصفح بنقرة واحدة](%{base_url}/admin/upgrade)**\n\n - تعرَّف على الجديد في [ملاحظات الإصدار](https://meta.discourse.org/tag/release-notes) أو اعرض [سجل تغييرات GitHub البسيط](https://github.com/discourse/discourse/commits/master)\n\n- انتقل إلى [meta.discourse.org](https://meta.discourse.org) للاطِّلاع على الأخبار والمناقشات ودعم \n\n### ملاحظات الإصدار\n\n%{notes}Discourse\n"
   flag_reasons:
     off_topic: "تم الإبلاغ عن منشورك على أنه **خارج الموضوع**: يشعر المجتمع بأنه غير مناسب للموضوع، كما هو محدَّد حاليًا في العنوان وأول منشور."
     inappropriate: "تم الإبلاغ عن منشورك على أنه **غير لائق**: يشعر المجتمع بأنه هجومي أو مسيء أو يتضمَّن سلوكًا ينمُّ عن كراهية أو ينتهك [إرشادات مجتمعنا](%{base_path}/guidelines)."
@@ -4429,7 +4423,6 @@ ar:
     mass_award:
       errors:
         invalid_csv: حدث عُطل في السطر %{line_number}. يُرجى التأكد من وجود عنوان بريد إلكتروني واحد في كل سطر من ملف CSV.
-        too_many_csv_entries: هناك عدد كبير جدًا من الإدخالات في ملف CSV. يُرجى تقديم ملف CSV لا يحتوي على أكثر من %{count} إدخال.
         badge_disabled: يُرجى تفعيل شارة %{badge_name} أولًا.
         cant_grant_multiple_times: لا يمكن منح الشارة %{badge_name} عدة مرات لمستخدم واحد.
     editor:

@@ -52,12 +52,22 @@ hr:
   remove_posts_deleted_by_author: "Izbrisao autor"
   redirect_warning: "Nismo mogli potvrditi da je poveznica koju ste odabrali stvarno bila objavljena na forumu. Želite li svejedno nastaviti, odaberite poveznicu u nastavku."
   on_another_topic: "Na drugoj temi"
+  topic_category_changed: "Od %{from} do %{to}"
+  topic_tag_changed:
+    added_and_removed: "Dodano %{added} i uklonjeno %{removed}"
+    added: "Dodano %{added}"
+    removed: "je uklonio %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} od %{username}"
   components:
     enabled_filter: "Omogućeno"
     disabled_filter: "Onemogućeno"
+    updates_available_filter: "Ažuriranja dostupna"
+  theme_settings:
+    errors:
+      json_value:
+        too_large: "je premašio maksimalnu veličinu od %{max_size} bajtova."
   themes:
     bad_color_scheme: "Tema se ne može ažurirati, nevažeća paleta boja"
     other_error: "Dogodila se greška pri ažuriranju teme"
@@ -66,8 +76,11 @@ hr:
       generic: Došlo je do greške prilikom uvoza te teme
       upload: "Greška pri snimanju materijala: %{name}. %{errors}"
       about_json: "Pogreška pri uvozu: about.json ne postoji ili je nevažeći. Jeste li sigurni da je ovo tema za Diskurs?"
+      about_json_too_big: "Pogreška pri uvozu: about.json je veći od ograničenja, koje iznosi %{limit}."
       about_json_values: "about.json sadrži nevažeće vrijednosti: %{errors}"
       modifier_values: "about.json modifikatori sadrže nevažeće vrijednosti: %{errors}"
+      asset_too_big: "Datoteka %{filename} je veća od ograničenja, koje iznosi %{limit}"
+      theme_too_big: "Tema je veća od ograničenja, koje iznosi %{limit}"
       git: "Greška pri kloniranju git repozitorija, pristup je odbijen ili repozitorij nije pronađen"
       git_ref_not_found: "Nije moguće provjeriti git referencu: %{ref}"
       git_unsupported_scheme: "Nije moguće klonirati git repo: shema nije podržana"
@@ -76,6 +89,19 @@ hr:
       unknown_file_type: "Datoteka koju ste učitali ne čini se važećom Discourse temom."
       not_allowed_theme: "`%{repo}` nije na popisu dopuštenih tema (provjerite globalnu postavku `allowed_theme_repos`)."
       ssh_key_gone: "Predugo ste čekali da instalirate temu i SSH ključ je istekao. Molim te pokušaj ponovno."
+      too_many_files: "Broj datoteka (%{count}) u temi premašio je najveći dopušteni broj datoteka (%{limit})"
+      migrations:
+        invalid_filename: "Nevažeći naziv datoteke za migracijsku datoteku: %{filename}. Imena datoteka moraju počinjati s 4 znamenke iza kojih slijedi crtica, a zatim naziv koji sadrži samo alfanumeričke znakove s crticama."
+        name_too_long:
+          one: "Naziv migracije je predug. Ne smije premašiti %{count} znak."
+          few: "Naziv migracije je predug. Ne smije premašiti %{count} znaka."
+          other: "Naziv migracije je predug. Ne smije premašiti %{count} znakova."
+        too_many_pending_migrations: "Previše je migracija na čekanju u ovoj temi. Teme ne smiju uvesti više od 100 migracija u jednom ažuriranju"
+        out_of_sequence: "Migracija '%{name}' nije u nizu. Zadnja migracija za ovu temu imala je broj verzije %{current} koji je viši od nove migracije"
+        syntax_error: "Nije uspjelo pokretanje migracije '%{name}' jer ima sintaksnu pogrešku: %{error}"
+        exceeded_memory_limit: "Migracija '%{name}' nije uspjela jer je premašila ograničenje memorije"
+        timed_out: "Vrijeme za migraciju '%{name}' je isteklo"
+        no_exported_function: "Migracija '%{name}' ne izvozi funkciju za izvođenje migracije"
     errors:
       component_no_user_selectable: "Komponente teme ne može birati korisnik"
       component_no_default: "Komponente teme ne mogu biti podrazumijevana tema."
@@ -133,7 +159,6 @@ hr:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "je ograničeno na %{max} znakova; vi ste unjeli %{length}."
       invalid_boolean: "Nevažeća boolean vrijednost."
       taken: "je već zauzeto"
       accepted: mora biti prihvaćena
@@ -309,7 +334,6 @@ hr:
   pm_reached_recipients_limit: "Žao nam je, ne možete imati više od %{recipients_limit} primatelja u poruci."
   removed_direct_reply_full_quotes: "Automatski uklonjen citat cijelog prethodnog posta."
   watched_words_auto_tag: "Automatski označena tema"
-  secure_upload_not_allowed_in_public_topic: "Nažalost, sljedeći sigurni prijenosi ne mogu se koristiti u javnoj temi: %{upload_filenames}."
   create_pm_on_existing_topic: "Nažalost, ne možete stvoriti PM na postojeću temu."
   slow_mode_enabled: "Ova je tema u usporenom načinu rada."
   just_posted_that: "je pre slično nečemu što ste nedavno objavili"
@@ -845,7 +869,11 @@ hr:
     trust_level_growth:
       yaxis: "Dan"
     consolidated_page_views:
+      title: "Konsolidirani prikazi stranica"
+      xaxis:
+        page_view_logged_in: "Prijavljeni korisnici"
       yaxis: "Dan"
+      description: "Prikazi stranica za prijavljene korisnike, anonimne korisnike i alate za indeksiranje."
       labels:
         post: Objava
         editor: Urednik
@@ -1379,14 +1407,15 @@ hr:
     enable_page_publishing: "Dopustite članovima osoblja da objavljuju teme na novim URL-ovima s vlastitim stilom."
     show_published_pages_login_required: "Anonimni korisnici mogu vidjeti objavljene stranice, čak i kada je potrebna prijava."
     default_other_skip_new_user_tips: "Preskoči savjete i značke novog korisnika."
-    pm_tags_allowed_for_groups: "Dopustite članovima uključenih grupa da označe bilo koju osobnu poruku"
     min_trust_level_to_tag_topics: "Minimalna razina povjerenja potrebna za označavanje tema"
     suppress_overlapping_tags_in_list: "Ako oznake odgovaraju točnim riječima u naslovima tema, nemojte prikazivati oznaku"
     remove_muted_tags_from_latest: "Ne prikazuj teme označene samo prigušenim oznakama na najnovijem popisu tema."
     force_lowercase_tags: "Prisilno navedite da sve nove oznake budu ispisane malim slovima."
     shared_drafts_category: "Omogućite značajku Dijeljene skice određivanjem kategorije za skice tema. Teme u ovoj kategoriji bit će potisnute s popisa tema za korisnike osoblja."
     shared_drafts_min_trust_level: "Dopustite korisnicima da vide i uređuju dijeljene skice."
+    push_notifications_prompt: "Prikaži banner pristanka korisnika za push obavijesti. Ova postavka pokreće upit koji od korisnika traži dopuštenje za slanje push obavijesti. Pojavljuje se samo kada push obavijesti nisu već omogućene, podržava ih korisnikov uređaj i korisnik je ili objavio objavu ili koristi progresivnu web-aplikaciju (PWA). Upit se neće ponovno prikazati ako ga je korisnik već odbacio ili dao/odbio dopuštenje."
     push_notifications_icon: "Ikona značke koja se pojavljuje u kutu obavijesti. Preporučuje se monokromatski PNG s prozirnošću veličine 96×96."
+    enable_desktop_push_notifications: "Aktiviraj push obavijesti za sučelje radne površine. Ova značajka omogućuje upozorenja u stvarnom vremenu sa stranice izravno na vašu radnu površinu, povećavajući angažman i osiguravajući da su korisnici uvijek ažurirani. Međutim, učinkovitost ove značajke ovisi o podršci preglednika za push obavijesti."
     push_notification_time_window_mins: "Pričekajte (n) minuta prije slanja push obavijesti. Pomaže u sprječavanju slanja push obavijesti aktivnom online korisniku."
     base_font: "Osnovni font koji se koristi za većinu teksta na web mjestu. Teme se mogu nadjačati putem CSS prilagođenog svojstva `--font-family`."
     heading_font: "Font koji se koristi za naslove na stranici. Teme se mogu nadjačati putem CSS prilagođenog svojstva `--heading-font-family`."
@@ -1416,8 +1445,15 @@ hr:
       invalid_integer_max: "Vrijednost ne može biti veća od %{max}."
       invalid_integer: "Vrijednost mora biti cijeli broj."
       regex_mismatch: "Vrijednost ne odgovara potrebnom formatu."
-      invalid_string_min: "Mora imati najmanje %{min} znakova."
-      invalid_string_max: "Ne smije imati više od %{max} znakova."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "neaktivan"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "neaktivan"
+      - ""
   search:
     within_post: "#%{post_number} od %{username}"
     types:
@@ -1565,8 +1601,6 @@ hr:
       sent_test: "poslano!"
   user:
     username:
-      short: "mora imati najmanje %{min} znakova"
-      long: "ne smije imati više od %{max} znakova"
       too_long: "je predug"
       characters: "smije sadržavati samo brojeve, slova, crtice, točke i podvlake"
       unique: "mora biti jedinstven"
@@ -1705,21 +1739,294 @@ hr:
       subject_template: "Dobrodošli na %{site_name}"
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}"
+    email_reject_post_too_short:
+      subject_template: "[%{email_prefix}] Problem s e-mail porukom -- Objava je prekratka"
+      text_body_template: |
+        Žao nam je, ali vaša e-mail poruka za %{destination} (pod naslovom %{former_title}) nije uspjela.
+
+        Radi promicanja dubljeg razgovora, vrlo kratki odgovori nisu dopušteni. Možete li odgovoriti s najmanje %{count} znakova? Alternativno, možete lajkati objavu putem e-maila tako da odgovorite s "+1".
   unsubscribe_link: |
     Da biste otkazali pretplatu na ove e-mailove, [kliknite ovdje](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
     Da biste otkazali pretplatu na ove e-mailove, [kliknite ovdje](%{unsubscribe_url}).
   user_notifications:
     previous_discussion: "Prethodni odgovori"
+    reached_limit:
+      one: "Pažnja: dnevno šaljemo najviše %{count} e-mail poruku. Provjerite stranicu kako biste vidjeli onu koja bi mogla biti zadržana."
+      few: "Pažnja: dnevno šaljemo najviše %{count} e-mail poruke. Provjerite stranicu kako biste vidjeli one koje bi mogle biti zadržane."
+      other: "Pažnja: dnevno šaljemo najviše %{count} e-mail poruka. Provjerite stranicu kako biste vidjeli one koje bi mogle biti zadržane. PS hvala što ste popularni!"
     in_reply_to: "Kao odgovor na"
     reply_by_email: "[Posjetite temu] (%{base_url}%{url}) ili odgovorite na ovu e-mail poruku da biste odgovorili."
     reply_by_email_pm: "[Posjetite poruku](%{base_url}%{url}) ili odgovorite na ovaj e-mail da biste odgovorili %{participants}."
     only_reply_by_email: "Odgovorite na ovaj e-mail da biste odgovorili."
     only_reply_by_email_pm: "Odgovorite na ovaj e-mail da biste odgovorili %{participants}."
     visit_link_to_respond: "[Posjetite temu] (%{base_url}%{url}) da biste odgovorili."
+    visit_link_to_respond_pm: "[Posjetite poruku](%{base_url}%{url}) da biste odgovorili %{participants}."
+    reply_above_line: "## Molimo upišite svoj odgovor iznad ovog retka. ##"
+    posted_by: "Objavio %{username} na %{post_date}"
+    pm_participants: "Sudionici: %{participants}"
+    more_pm_participants:
+      one: "%{participants} i %{count} drugi"
+      few: "%{participants} i %{count} druga"
+      other: "%{participants} i %{count} drugih"
+    invited_group_to_private_message_body: |
+      %{username} pozvao @%{group_name} na poruku
+
+      > ** [%{topic_title}] (%{topic_url}) **
+      >
+      > %{topic_excerpt}
+
+      na
+
+      > %{site_title} -- %{site_description}
+
+      Da biste se pridružili poruci, kliknite na poveznicu niže:
+
+      %{topic_url}
+    invited_to_private_message_body: |
+      %{username} vas je pozvao na poruku
+
+      > ** [%{topic_title}] (%{topic_url}) **
+      >
+      > %{topic_excerpt}
+
+      na
+
+      > %{site_title} -- %{site_description}
+
+      Da biste se pridružili poruci, kliknite na link ispod:
+
+      %{topic_url}
+    invited_to_topic_body: |
+      %{username} vas je pozvao u diskusiju
+
+      > ** [%{topic_title}] (%{topic_url}) **
+      >
+      > %{topic_excerpt}
+
+      na
+
+      > %{site_title} -- %{site_description}
+
+      Da biste se pridružili diskusiji, kliknite na poveznicu niže:
+
+      %{topic_url}
+    user_invited_to_private_message_pm_group:
+      title: "Korisnik je pozvao grupu u privatnu prepisku"
+      subject_template: "[%{email_prefix}] %{username} pozvao @%{group_name} na poruku '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm:
+      title: "Korisnik je pozvan na privatnu prepisku"
+      subject_template: "[%{email_prefix}] %{username} vas je pozvao u poruku '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_private_message_pm_staged:
+      title: "Korisnik je pozvan na privatnu prepisku"
+      subject_template: "[%{email_prefix}] %{username} vas je pozvao u poruku '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_invited_to_topic:
+      title: "Korisnik je pozvan na temu"
+      subject_template: "[%{email_prefix}] %{username} vas je pozvao u '%{topic_title}'"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{respond_instructions}
+    user_replied:
+      title: "Korisnik je odgovorio"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_replied_pm:
+      title: "Korisnik je odgovorio PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_quoted:
       title: "Korisnik je citirao"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_linked:
+      title: "Korisnik je naveo poveznicu"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned:
+      title: "Korisnik je spomenut"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_mentioned_pm:
+      title: "Korisnik spomenut PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned:
+      title: "Spomenuta korisnikova grupa"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm:
+      title: "Spomenuta korisnikova grupa u PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_group_mentioned_pm_group:
+      title: "Spomenuta korisnikova grupa u PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted:
+      title: "Korisnik objavio"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_category_or_tag:
+      title: "Korisnik prati kategoriju ili oznaku"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_first_post:
+      title: "Korisnik prati prvu objavu"
+      subject_template: "[%{email_prefix}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm:
+      title: "Korisnik objavio PM"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_posted_pm_staged:
+      title: "Korisnik je objavio PM"
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
+    account_suspended:
+      title: "Korisnički račun je suspendiran"
+      subject_template: "[%{email_prefix}] Vaš račun je suspendiran"
+      text_body_template: |
+        Suspendirani ste s foruma do %{suspended_till}.
+
+        Razlog - %{reason}
+    account_suspended_forever:
+      title: "Korisnički račun je suspendiran"
+      subject_template: "[%{email_prefix}] Vaš korisnički račun je suspendiran"
+      text_body_template: |
+        Suspendirani ste s foruma.
+
+        Razlog - %{reason}
+    account_silenced:
+      title: "Korisnički račun je utišan"
+      subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
+      text_body_template: |
+        Utišani ste s foruma do %{silenced_till}.
+
+        Razlog - %{reason}
+    account_silenced_forever:
+      title: "Korisnički račun je utišan"
+      subject_template: "[%{email_prefix}] Vaš korisnički račun je utišan"
+      text_body_template: |
+        Utišani ste s foruma.
+
+        Razlog - %{reason}
     account_exists:
+      title: "Korisnički račun već postoji"
+      subject_template: "[%{email_prefix}] Korisnički račun već postoji"
       text_body_template: |
         Upravo ste pokušali otvoriti korisnički račun na %{site_name} ili ste pokušali promijeniti e-mail adresu računa u %{email}. Međutim, račun već postoji za %{email}.
 
@@ -1728,13 +2035,32 @@ hr:
         Ako niste pokušali otvoriti račun za %{email} ili promijeniti svoju e-mail adresu, ne brinite – možete slobodno zanemariti ovu poruku.
 
         Ako imate pitanja, [kontaktirajte naše ljubazno osoblje](%{base_url}/o).
+    account_second_factor_disabled:
+      title: "Dvofaktorska autentikacija onemogućena"
+      subject_template: "[%{email_prefix}] Dvofaktorska autentikacija onemogućena"
+      text_body_template: |
+        Dvofaktorska autentikacija je onemogućena na vašem korisničkom računu na %{site_name}. Sada se možete prijaviti samo svojom zaporkom; dodatni autentikacijski kod više nije potreban.
+
+        Ako niste odabrali onemogućiti dvofaktorsku autentikaciju, netko je možda ugrozio vaš korisnički račun.
+
+        Ako imate pitanja, [kontaktirajte naše ljubazno osoblje](%{base_url}/o).
     digest:
+      why: "Kratak sažetak %{site_link} od vašeg posljednjeg posjeta %{last_seen_at}"
+      since_last_visit: "Od vašeg posljednjeg posjeta"
+      new_topics: "Nove teme"
       unread_notifications: "Nepročitane obavijesti"
+      unread_high_priority: "Nepročitane obavijesti visokog prioriteta"
       liked_received: "Like-ova primljeno"
       new_users: "Novi korisnici"
+      popular_topics: "Popularne teme"
       join_the_discussion: "Pročitaj više"
+      popular_posts: "Popularne objave"
+      more_new: "Novo za vas"
       subject_template: "[%{email_prefix}] Sažetak"
-      unsubscribe: "Ovaj sažetak šalje %{site_link} kada vas nismo vidjeli neko vrijeme. Promijenite %{email_preferences_link}ili %{unsubscribe_link} da biste otkazali pretplatu."
+      unsubscribe: "Ovaj sažetak šalje %{site_link} kada vas nismo vidjeli neko vrijeme. Promijenite %{email_preferences_link} ili %{unsubscribe_link} da biste otkazali pretplatu."
+      your_email_settings: "vaše e-mail postavke"
+      click_here: "kliknite ovdje"
+      from: "%{site_name}"
       preheader: "Kratak sažetak od vašeg posljednjeg posjeta %{last_seen_at}"
     forgot_password:
       title: "Zaboravljena zaporka"
@@ -1746,8 +2072,19 @@ hr:
 
         Kliknite na sljedeću poveznicu za odabir nove zaporke:
         %{base_url}/u/password-reset/%{email_token}
+    email_login:
+      title: "Prijavite se putem poveznice"
+      subject_template: "[%{email_prefix}] Prijavite se putem poveznice"
+      text_body_template: |
+        Ovdje je vaša poveznica za prijavu na [%{site_name}](%{base_url}).
+
+        Ako niste zatražili ovu poveznicu, možete slobodno zanemariti ovu e-mail poruku.
+
+        Kliknite na sljedeću poveznicu za prijavu:
+        %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Postavite zaporku"
+      subject_template: "[%{email_prefix}] Postavite zaporku"
       text_body_template: |
         Netko je tražio dodavanje zaporke vašem računu na [%{site_name}](%{base_url}). Alternativno, možete se prijaviti pomoću bilo koje podržane online usluge (Google, Facebook, itd.) koja je povezana s ovom potvrđenom email adresom.
 
@@ -1756,6 +2093,8 @@ hr:
         Kliknite na sljedeću poveznicu za odabir zaporke:
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
+      title: "Administratorska prijava"
+      subject_template: "[%{email_prefix}] Prijava"
       text_body_template: |
         Netko je tražio da se prijavi na vaš račun na [%{site_name}](%{base_url}).
 
@@ -1764,11 +2103,73 @@ hr:
         Kliknite na sljedeću poveznicu za prijavu:
         %{base_url}/session/email-login/%{email_token}
     account_created:
+      title: "Korisnički račun stvoren"
+      subject_template: "[%{email_prefix}] Vaš novi korisnički račun"
       text_body_template: |
         Za vas je kreiran novi korisnički račun na %{site_name}
 
         Kliknite na sljedeću poveznicu da biste odabrali zaporku za svoj novi korisnički račun:
         %{base_url}/u/password-reset/%{email_token}
+    confirm_new_email:
+      title: "Potvrdite novu e-mail adresu"
+      subject_template: "[%{email_prefix}] Potvrdite svoju novu e-mail adresu"
+      text_body_template: |
+        Potvrdite svoju novu e-mail adresu za %{site_name} klikom na sljedeću poveznicu:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Ako niste zatražili ovu promjenu, obratite se [administratoru stranice](%{base_url}/about).
+    confirm_new_email_via_admin:
+      title: "Potvrdite novu e-mail adresu"
+      subject_template: "[%{email_prefix}] Potvrdite svoju novu e-mail adresu"
+      text_body_template: |
+        Potvrdite svoju novu e-mail adresu za %{site_name} klikom na sljedeću poveznicu:
+
+        %{base_url}/u/confirm-new-email/%{email_token}
+
+        Ovu promjenu e-mail adrese zatražio je administrator stranice. Ako niste zatražili ovu promjenu, obratite se [administratoru stranice](%{base_url}/about).
+    confirm_old_email:
+      title: "Potvrdite staru e-mail adresu"
+      subject_template: "[%{email_prefix}] Potvrdite svoju trenutnu e-mail adresu"
+      text_body_template: |
+        Prije nego što možemo promijeniti vašu e-mail adresu, morate potvrditi da kontrolirate
+        trenutnu e-mail adresu. Nakon što dovršite ovaj korak, tražit ćemo da potvrdite novu e-mail adresu.
+
+        Potvrdite svoju trenutnu e-mail adresu za %{site_name} klikom na sljedeću poveznicu:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
+    confirm_old_email_add:
+      title: "Potvrdi staru e-mail adresu (dodaj)"
+      subject_template: "[%{email_prefix}] Potvrdite svoju trenutnu e-mail adresu"
+      text_body_template: |
+        Prije nego što možemo dodati novu e-mail adresu, morate potvrditi da kontrolirate
+        trenutnu e-mail adresu. Nakon što dovršite ovaj korak, tražit ćemo da potvrdite novu e-mail adresu.
+
+        Potvrdite svoju trenutnu e-mail adresu za %{site_name} klikom na sljedeću poveznicu:
+
+        %{base_url}/u/confirm-old-email/%{email_token}
+    notify_old_email:
+      title: "Obavijesti stara e-mail adresa"
+      subject_template: "[%{email_prefix}] Vaša e-mail adresa je promijenjena"
+      text_body_template: |
+        Ovo je automatizirana poruka kojom vas obavještavamo da je vaša e-mail adresa za
+        %{site_name} promijenjena. Ako je to učinjeno pogreškom, kontaktirajte
+        administratora stranice.
+
+        Vaša e-mail adresa je promijenjena u:
+
+        %{new_email}
+    notify_old_email_add:
+      title: "Obavijesti stara e-mail adresa (dodavanje)"
+      subject_template: "[%{email_prefix}] Dodana je nova e-mail adresa"
+      text_body_template: |
+        Ovo je automatizirana poruka kojom vas obavještavamo da je dodana e-mail adresa za
+        %{site_name}. Ako je to učinjeno pogreškom, kontaktirajte
+        administratora stranice.
+
+        Vaša dodana e-mail adresa je:
+
+        %{new_email}
     signup_after_approval:
       title: "Prijava nakon odobrenja"
       subject_template: "Odobreni ste na %{site_name}!"
@@ -1787,8 +2188,56 @@ hr:
         Vjerujemo u [civilizirano ponašanje zajednice](%{base_url}/guidelines) u svakom trenutku.
 
         Uživajte u boravku!
+    signup_after_reject:
+      subject_template: "Odbijeni ste na %{site_name}"
+      text_body_template: |
+        Član osoblja odbio je vaš korisnički račun na %{site_name}.
+
+        %{reject_reason}
+    signup:
+      title: "Registracija"
+      subject_template: "[%{email_prefix}] Potvrdite svoj novi korisnički račun"
+      text_body_template: |
+        Dobrodošli na %{site_name}!
+
+        Kliknite sljedeću poveznicu da potvrdite i aktivirate svoj novi korisnički račun:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Ako se na gornju poveznicu ne može kliknuti, pokušajte ju kopirati i zalijepiti u adresnu traku vašeg web preglednika.
+    activation_reminder:
+      title: "Podsjetnik na aktivaciju"
+      subject_template: "[%{email_prefix}] Podsjetnik da potvrdite svoj korisnički račun"
+      text_body_template: |
+        Dobrodošli na %{site_name}!
+
+        Ovo je prijateljski podsjetnik da aktivirate svoj korisnički račun.
+
+        Kliknite sljedeću poveznicu da potvrdite i aktivirate svoj novi korisnički račun:
+        %{base_url}/u/activate-account/%{email_token}
+
+        Ako se na gornju poveznicu ne može kliknuti, pokušajte ju kopirati i zalijepiti u adresnu traku vašeg web preglednika.
+    suspicious_login:
+      title: "Upozorenje o novoj prijavi"
+      subject_template: "[%{site_name}] Nova prijava iz %{location}"
+      text_body_template: |
+        Pozdrav,
+
+        Primijetili smo prijavu s uređaja ili lokacije koju obično ne koristite. Jeste li to bili vi?
+
+         - Lokacija: %{location} (%{client_ip})
+         - Preglednik: %{browser}
+         - Uređaj: %{device} — %{os}
+
+        Ako ste ovo bili vi, odlično! Ne trebate učiniti ništa više.
+
+        Ako to niste vi, molimo [pregledajte svoje postojeće sesije] (%{base_url}/mo/preferences/security) i razmislite o promjeni zaporke.
     post_approved:
       title: "Vaš post je odobren"
+      subject_template: "[%{site_name}] Vaša objava je odobrena"
+      text_body_template: |
+        Pozdrav,
+
+        Ovo je automatizirana poruka od %{site_name} koja vas obavještava da je [vaša objava] (%{base_url}%{post_url}) odobrena.
   page_not_found:
     page_title: "Stranica nije pronađena"
     popular_topics: "Popularno"
@@ -1869,6 +2318,8 @@ hr:
   finish_installation:
     register:
       button: "Registracija"
+      title: "Registrirajte administratorski račun"
+      help: "Za početak registrirajte novi korisnički račun."
     resend_email:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
   wizard:
@@ -1917,6 +2368,7 @@ hr:
       quoted: '%{username} citirao vas je u "%{topic}" - %{site_title}'
       replied: '%{username} odgovorio u "%{topic}" - %{site_title}'
       posted: '%{username} objavio u "%{topic}" - %{site_title}'
+      private_message: '%{username} vam je poslao privatnu poruku u "%{topic}" - %{site_title}'
       linked: '%{username} se povezao s tvojom objavom "%{topic}" - %{site_title}'
       watching_first_post: '%{username} stvorio je novu temu "%{topic}" - %{site_title}'
       confirm_title: "Obavijesti omogućene - %{site_title}"

@@ -19,7 +19,7 @@ gem "json"
 
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
 # We intend to drop sprockets rather than upgrade to 4.x
-gem "sprockets", git: "https://github.com/rails/sprockets", branch: "3.x"
+gem "sprockets", "~> 3.7.3"
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master
@@ -54,8 +54,6 @@ gem "discourse-fonts", require: "discourse_fonts"
 gem "message_bus"
 
 gem "rails_multisite"
-
-gem "fast_xs", platform: :ruby
 
 gem "fastimage"
 
@@ -198,8 +196,6 @@ gem "puma", require: false
 
 gem "rbtrace", require: false, platform: :mri
 
-gem "gc_tracer", require: false, platform: :mri
-
 # required for feed importing and embedding
 gem "ruby-readability", require: false
 
@@ -268,3 +264,7 @@ gem "net-http"
 gem "cgi", ">= 0.3.6", require: false
 
 gem "tzinfo-data"
+
+# dependencies for the automation plugin
+gem "iso8601"
+gem "rrule"

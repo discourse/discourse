@@ -184,7 +184,8 @@ zh_TW:
         us_west_1: "美國西部 (北加州)"
         us_west_2: "美國西部 (奧勒岡州)"
     clear_input: "清除輸入"
-    edit: "編輯此話題的標題與分類"
+    edit: "編輯"
+    edit_topic: "編輯此話題的標題與分類"
     expand: "展開"
     not_implemented: "抱歉，此功能尚未開放。"
     no_value: "否"
@@ -227,7 +228,8 @@ zh_TW:
     weekly: "每週"
     every_month: "每個月"
     every_six_months: "每半年"
-    max_of_count: "（最大 %{count}）"
+    max_of_count:
+      other: "（最大 %{count}）"
     character_count:
       other: "%{count} 個字元"
     period_chooser:
@@ -280,6 +282,7 @@ zh_TW:
         clear_reminder: "保留書籤和清除提醒"
       search_placeholder: "依名稱、主題標題或貼文內容搜尋書籤"
       search: "搜尋"
+      bookmark: "書籤"
       reminders:
         today_with_time: "今天 %{time}"
         tomorrow_with_time: "明天 %{time}"
@@ -529,6 +532,7 @@ zh_TW:
       never: "永不"
       last_custom: "上次自訂日期時間"
       custom: "自定義日期和時間"
+      custom_short: "自訂..."
       select_timeframe: "選擇有效時間範圍"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 張貼了 <a href='%{topicUrl}'>此主題</a>"
@@ -781,7 +785,8 @@ zh_TW:
       categories_label: "分類"
       subcategories_label: "次分類"
       remove_filter: "取消過濾"
-      plus_more_count: "+%{count} 更多"
+      plus_more_count:
+        other: "+%{count} 更多"
       view_all: "查看全部"
       category: "分類"
       category_list: "顯示分類列表"
@@ -817,7 +822,8 @@ zh_TW:
       organisation: 組織
       phone: 電話
       other_accounts: "使用相同 IP 位置的帳號："
-      delete_other_accounts: "刪除 %{count} 個"
+      delete_other_accounts:
+        other: "刪除 %{count} 個"
       username: "使用者名稱"
       trust_level: "TL"
       read_time: "閱讀時間"
@@ -1153,6 +1159,8 @@ zh_TW:
         instructions: "使用者介面的語言，當頁面重新整理的時候會更換成你的設定。"
         default: "(default)"
         any: "任何"
+      homepage:
+        default: "(default)"
       password_confirmation:
         title: "再次輸入密碼"
       invite_code:
@@ -1291,7 +1299,8 @@ zh_TW:
         same_as_username: "密碼與使用者名稱相同"
         same_as_email: "你的密碼與電郵相同。"
         ok: "你的密碼符合要求。"
-        instructions: "至少 %{count} 個字元."
+        instructions:
+          other: "至少 %{count} 個字元."
       summary:
         title: "摘要"
         stats: "統計"
@@ -1811,7 +1820,6 @@ zh_TW:
           seen: 我已讀的
           unseen: 我還未讀的
           wiki: 是公共編輯的
-          images: 包含圖片
           all_tags: 以上所有的標籤
         statuses:
           label: 當話題
@@ -1858,7 +1866,6 @@ zh_TW:
         clear_all: "清除全部"
         unlist_topics: "未在列表中的話題"
         relist_topics: "討論話題"
-        defer: "延遲"
         delete: "刪除話題"
         dismiss: "忽略"
         dismiss_read: "忽略所有未讀話題"
@@ -1900,6 +1907,7 @@ zh_TW:
     topic_bulk_actions:
       close_topics:
         name: "關閉話題"
+        optional: (選擇性)
       archive_topics:
         name: "已封存的話題"
       unlist_topics:
@@ -1925,8 +1933,6 @@ zh_TW:
       move_to_inbox:
         title: "移動到收件匣"
         help: "把訊息移動到收件匣"
-      defer:
-        title: "延遲"
       list: "話題"
       new: "新話題"
       unread: "未讀"
@@ -2950,7 +2956,8 @@ zh_TW:
                 other: "%{count} 草稿"
             review:
               content: "審核"
-              pending_count: "剩餘 %{count}"
+              pending_count:
+                other: "剩餘 %{count}"
       filter: "過濾"
       no_results:
         title: "沒有結果"
@@ -2963,7 +2970,7 @@ zh_TW:
         upload: "上傳"
         uploading: "上傳中"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "請輸入一個有效的值。"
     table_builder:
       edit:
@@ -2994,10 +3001,8 @@ zh_TW:
         up_to_date: "你使用的是最新版本!"
         critical_available: "有重要更新可以安裝。"
         updates_available: "有更新可以安裝。"
-        please_upgrade: "請升級！"
         no_check_performed: "從未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
         stale_data: "最近未檢查是否有更新可以使用，請確定 sidekiq 有在執行中。"
-        version_check_pending: "看來你最近升級了，非常好！"
         installed_version: "已安裝"
         latest_version: "最新版本"
         problems_found: "根據您現在網站設定的建議"
@@ -3413,7 +3418,8 @@ zh_TW:
           broken_theme_tooltip: "此佈景主題的 CSS、HTML 或 YAML 中有錯誤。"
           default_theme_tooltip: "此佈景主題是網站的預設佈景主題"
           updates_available_tooltip: "此佈景主題可更新"
-          and_x_more: "和%{count}更多。"
+          and_x_more:
+            other: "和%{count}更多。"
           collapse: 收起
           uploads: "上傳檔案"
           no_uploads: "您能上傳與您的佈景主題有關的物件，例如：字型與圖片。"
@@ -3492,7 +3498,8 @@ zh_TW:
             fields:
               required: "*必要設定"
               string:
-                too_short: "必須至少 %{count} 個字"
+                too_short:
+                  other: "必須至少 %{count} 個字"
               number:
                 too_small: "必須大於或等於 %{count}"
                 too_large: "必須少於或等於 %{count}"
@@ -4108,7 +4115,6 @@ zh_TW:
           empty: "尚未有圖片，請上傳圖檔。"
           upload:
             label: "上傳"
-            title: "上傳圖像"
         selectable_avatars:
           title: "使用者可選擇的頭像列表"
         categories:

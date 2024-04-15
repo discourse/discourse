@@ -48,6 +48,8 @@ import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import { buildResolver } from "discourse-common/resolver";
 import Application from "../app";
 import { loadSprites } from "../lib/svg-sprite-loader";
+import * as FakerModule from "@faker-js/faker";
+import { setLoadedFaker } from "discourse/lib/load-faker";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -432,6 +434,8 @@ export default function setupTests(config) {
       "fontawesome"
     );
   }
+
+  setLoadedFaker(FakerModule);
 
   if (!hasPluginJs && !hasThemeJs) {
     configureRaiseOnDeprecation();

@@ -74,7 +74,7 @@ export default class ChatChannel extends Component {
   @tracked showChatQuoteSuccess = false;
   @tracked includeHeader = true;
   @tracked needsArrow = false;
-  @tracked atBottom = false;
+  @tracked atBottom = true;
   @tracked uploadDropZone;
   @tracked isScrolling = false;
 
@@ -173,6 +173,12 @@ export default class ChatChannel extends Component {
 
   @bind
   onNewMessage(message) {
+    if (!this.atBottom) {
+      this.needsArrow = true;
+      this.messagesLoader.canLoadMoreFuture = true;
+      return;
+    }
+
     stackingContextFix(this.scrollable, () => {
       this.messagesManager.addMessages([message]);
     });

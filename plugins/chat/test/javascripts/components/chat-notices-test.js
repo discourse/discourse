@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
@@ -5,13 +6,13 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-notice", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays all notices for a channel", async function (assert) {
-    this.channel = fabricators.channel();
+    this.channel = new ChatFabricators(getOwner(this)).channel();
     this.manager = this.container.lookup(
       "service:chat-channel-notices-manager"
     );
@@ -39,7 +40,7 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
   });
 
   test("Notices can be cleared", async function (assert) {
-    this.channel = fabricators.channel();
+    this.channel = new ChatFabricators(getOwner(this)).channel();
     this.manager = this.container.lookup(
       "service:chat-channel-notices-manager"
     );
@@ -65,7 +66,7 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
     );
   });
   test("MentionWithoutMembership notice renders", async function (assert) {
-    this.channel = fabricators.channel();
+    this.channel = new ChatFabricators(getOwner(this)).channel();
     this.manager = this.container.lookup(
       "service:chat-channel-notices-manager"
     );

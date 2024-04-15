@@ -134,8 +134,12 @@ en:
       number_value_not_valid_min: "Value must be larger than or equal to %{min}."
       number_value_not_valid_max: "Value must be smaller than or equal to %{max}."
       string_value_not_valid_min_max: "Value must be between %{min} and %{max} characters long."
-      string_value_not_valid_min: "Value must be at least %{min} characters long."
-      string_value_not_valid_max: "Value must be at most %{max} characters long."
+      string_value_not_valid_min:
+        one: "Value must be at least %{count} character long."
+        other: "Value must be at least %{count} characters long."
+      string_value_not_valid_max:
+        one: "Value must be at most %{count} character long."
+        other: "Value must be at most %{count} characters long."
       objects:
         humanize_required: "The property at JSON Pointer '%{property_json_pointer}' must be present."
         required: "must be present"
@@ -159,10 +163,18 @@ en:
 
         humanize_not_valid_categories_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid category ids."
         not_valid_categories_value: "must be an array of valid category ids"
-        humanize_categories_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{min} category ids."
-        categories_value_not_valid_min: "must have at least %{min} category ids"
-        humanize_categories_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{max} category ids."
-        categories_value_not_valid_max: "must have at most %{max} category ids"
+        humanize_categories_value_not_valid_min:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{count} category id."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{count} category ids."
+        categories_value_not_valid_min:
+          one: "must have at least %{count} category id"
+          other: "must have at least %{count} category ids"
+        humanize_categories_value_not_valid_max:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{count} category id."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{count} category ids."
+        categories_value_not_valid_max:
+          one: "must have at most %{count} category id"
+          other: "must have at most %{count} category ids"
 
         humanize_not_valid_topic_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid topic id."
         not_valid_topic_value: "must be a valid topic id"
@@ -172,25 +184,49 @@ en:
 
         humanize_not_valid_groups_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid group ids."
         not_valid_groups_value: "must be an array of valid group ids"
-        humanize_groups_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{min} group ids."
-        groups_value_not_valid_min: "must have at least %{min} group ids"
-        humanize_groups_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{max} group ids."
-        groups_value_not_valid_max: "must have at most %{max} group ids"
+        humanize_groups_value_not_valid_min:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{count} group id."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{count} group ids."
+        groups_value_not_valid_min:
+          one: "must have at least %{count} group id"
+          other: "must have at least %{count} group ids"
+        humanize_groups_value_not_valid_max:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{count} group id."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{count} group ids."
+        groups_value_not_valid_max:
+          one: "must have at most %{count} group id"
+          other: "must have at most %{count} group ids"
 
         humanize_not_valid_tags_value: "The property at JSON Pointer '%{property_json_pointer}' must be an array of valid tag names."
         not_valid_tags_value: "must be an array of valid tag names"
-        humanize_tags_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{min} tag names."
-        tags_value_not_valid_min: "must have at least %{min} tag names"
-        humanize_tags_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{max} tag names."
-        tags_value_not_valid_max: "must have at most %{max} tag names"
+        humanize_tags_value_not_valid_min:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{count} tag name."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must have at least %{count} tag names."
+        tags_value_not_valid_min:
+          one: "must have at least %{count} tag name"
+          other: "must have at least %{count} tag names"
+        humanize_tags_value_not_valid_max:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{count} tag name."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must have at most %{count} tag names."
+        tags_value_not_valid_max:
+          one: "must have at most %{count} tag name"
+          other: "must have at most %{count} tag names"
 
         humanize_not_valid_upload_value: "The property at JSON Pointer '%{property_json_pointer}' must be a valid upload id."
         not_valid_upload_value: "must be a valid upload id"
 
-        humanize_string_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{min} characters long."
-        string_value_not_valid_min: "must be at least %{min} characters long"
-        humanize_string_value_not_valid_max: "The property at JSON Pointer '%{property_json_pointer}' must be at most %{max} characters long."
-        string_value_not_valid_max: "must be at most %{max} characters long"
+        humanize_string_value_not_valid_min:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{count} character long."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must be at least %{count} characters long."
+        string_value_not_valid_min:
+          one: "must be at least %{count} character long"
+          other: "must be at least %{count} characters long"
+        humanize_string_value_not_valid_max:
+          one: "The property at JSON Pointer '%{property_json_pointer}' must be at most %{count} character long."
+          other: "The property at JSON Pointer '%{property_json_pointer}' must be at most %{count} characters long."
+        string_value_not_valid_max:
+          one: "must be at most %{count} character long"
+          other: "must be at most %{count} characters long"
 
         humanize_number_value_not_valid_min: "The property at JSON Pointer '%{property_json_pointer}' must be larger than or equal to %{min}."
         number_value_not_valid_min: "must be larger than or equal to %{min}"
@@ -240,7 +276,9 @@ en:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "is limited to %{max} characters; you entered %{length}."
+      too_long_validation:
+        one: "is limited to %{count} character; you entered %{length}."
+        other: "is limited to %{count} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
       taken: "has already been taken"
       accepted: must be accepted
@@ -361,7 +399,6 @@ en:
       one: "You have already sent %{count} invite in the last 24 hours, please wait %{time_left} before trying again."
       other: "You have already sent %{count} invites in the last 24 hours, please wait %{time_left} before trying again."
     confirm_email: "<p>You’re almost done! We sent an activation mail to your email address. Please follow the instructions in the mail to activate your account.</p><p>If it doesn’t arrive, check your spam folder.</p>"
-    cant_invite_to_group: "You are not allowed to invite users to specified group(s). Make sure you are owner of the group(s) you are trying to invite to."
     disabled_errors:
       discourse_connect_enabled: "Invites are disabled because DiscourseConnect is enabled."
       invalid_access: "You are not permitted to view the requested resource."
@@ -493,7 +530,6 @@ en:
   pm_reached_recipients_limit: "Sorry, you can't have more than %{recipients_limit} recipients in a message."
   removed_direct_reply_full_quotes: "Automatically removed quote of whole previous post."
   watched_words_auto_tag: "Automatically tagged topic"
-  secure_upload_not_allowed_in_public_topic: "Sorry, the following secure upload(s) cannot be used in a public topic: %{upload_filenames}."
   create_pm_on_existing_topic: "Sorry, you can't create a PM on an existing topic."
   slow_mode_enabled: "This topic is in slow mode."
 
@@ -653,7 +689,9 @@ en:
 
     dominating_topic: You’ve posted a lot in this topic! Consider giving others an opportunity to reply here and discuss things with each other as well.
 
-    get_a_room: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
+    get_a_room:
+      one: You’ve replied to @%{reply_username} once, did you know you could send them a personal message instead?
+      other: You’ve replied to @%{reply_username} %{count} times, did you know you could send them a personal message instead?
 
     dont_feed_the_trolls: This post has already been flagged for moderator attention. Are you sure you wish to reply to it? Replies to negative content tend to encourage more negative behavior.
 
@@ -1707,7 +1745,7 @@ en:
     custom_summarization_allowed_groups: "Groups allowed to summarize contents using the `summarization_strategy`."
 
     enable_personal_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. Allow trust level 1 (configurable via min trust to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
-    personal_message_enabled_groups: "Allow users within these groups to create messages and reply to messages. Trust level groups include all trust levels above that number, for example choosing trust_level_1 also allows trust_level_2, 3, 4 users to send PMs. Note that staff can always send messages no matter what."
+    personal_message_enabled_groups: "Allow users in these groups to create personal messages. IMPORTANT: 1) all users can reply to messages. 2) Trust level groups include higher levels; choose trust_level_1 to allow TL1, TL2, TL3, TL4 but not allow TL0. 3) Admins and mods can always send messages. 4) Group interaction settings override this setting for messaging specific groups."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
     enable_chunked_encoding: "Enable chunked encoding responses by the server. This feature works on most setups however some proxies may buffer, causing responses to be delayed"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -2282,7 +2320,7 @@ en:
     enable_category_group_moderation: "Allow groups to moderate content in specific categories"
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_posting: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow_anonymous_likes`."
-    allow_anonymous_likes: "Enable this setting to allow users who are browsing your site anonymously to like posts. When enabled, this setting might encourage engagement from visitors who are not currently signed in, by allowing them to interact with content. See also `allow_anonymous_posting`."
+    allow_anonymous_likes: "Enable this setting to allow users who are browsing your site anonymously to like posts. When activated, users can opt for their identities to be hidden when liking posts or topics throughout the site. See also `allow_anonymous_posting`."
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
@@ -2346,6 +2384,8 @@ en:
 
     likes_notification_consolidation_window_mins: "Duration in minutes where liked notifications are consolidated into a single notification once the threshold has been reached. The threshold can be configured via `SiteSetting.notification_consolidation_threshold`."
 
+    linked_notification_consolidation_window_mins: "Duration in minutes where linked notifications are consolidated into a single notification once the threshold has been reached. The threshold can be configured via `SiteSetting.notification_consolidation_threshold`."
+
     automatically_unpin_topics: "Automatically unpin topics when the user reaches the bottom."
 
     read_time_word_count: "Word count per minute for calculating estimated reading time."
@@ -2396,7 +2436,7 @@ en:
     delete_drafts_older_than_n_days: "Delete drafts that have not been changed in more than (n) days."
     delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to 0 to never delete stub topics."
 
-    bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable, can take up to 24 hours)"
+    bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours)"
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
     secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in private messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
@@ -2519,7 +2559,7 @@ en:
     tags_sort_alphabetically: "Show tags in alphabetical order. Default is to show in order of popularity."
     tags_listed_by_group: "List tags by tag group on the <a href='%{base_path}/tags' target='_blank'>Tags page</a>."
     tag_style: "Define the visual appearance of tag badges on the site. This setting allows you to customize how tags are visually represented across all areas of the site, enhancing layout consistency and user accessibility."
-    pm_tags_allowed_for_groups: "Allow members of included group(s) to tag any personal message"
+    pm_tags_allowed_for_groups: "Allow members of included groups to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     tag_topic_allowed_groups: "Groups that are allowed to tag topics."
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
@@ -2579,11 +2619,12 @@ en:
     enable_custom_sidebar_sections: "EXPERIMENTAL: Enable custom sidebar sections"
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
-    experimental_glimmer_header_groups: "EXPERIMENTAL: Render the site header as glimmer components."
-
+    enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Show a quick access menu for bookmarks on posts and a new redesigned modal"
+    glimmer_header_mode: "Control whether the new 'glimmer' header implementation is used. Defaults to 'auto', which will enable automatically once all your themes and plugins are ready. https://meta.discourse.org/t/296544"
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "EXPERIMENTAL: Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
     lazy_load_categories_groups: "EXPERIMENTAL: Lazy load category information only for users of these groups. This improves performance on sites with many categories."
+    experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTAL: Enable the new bulk actions dropdown."
 
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
@@ -2603,8 +2644,12 @@ en:
       must_include_latest: "Top menu must include the 'latest' tab."
       invalid_string: "Invalid value."
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
-      invalid_string_min: "Must be at least %{min} characters."
-      invalid_string_max: "Must be no more than %{max} characters."
+      invalid_string_min:
+        one: "Must be at least %{count} character."
+        other: "Must be at least %{count} characters."
+      invalid_string_max:
+        one: "Must be no more than %{count} character."
+        other: "Must be no more than %{count} characters."
       invalid_json: "Invalid JSON."
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
       invalid_alternative_reply_by_email_addresses: "All values must contain '%{reply_key}' and be different from the notification email."
@@ -2637,7 +2682,9 @@ en:
         regex_invalid: "The regular expression is invalid: %{error}"
         leading_trailing_slash: "The regular expression must not start and end with a slash."
       unicode_usernames_avatars: "The internal system avatars do not support Unicode usernames."
-      list_value_count: "The list must contain exactly %{count} values."
+      list_value_count:
+        one: "The list must contain exactly %{count} value."
+        other: "The list must contain exactly %{count} values."
       markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
@@ -2672,6 +2719,14 @@ en:
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
       profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
+      clean_up_inactive_users_after_days:
+        - "deactivated"
+        - "inactive"
+        - "unactivated"
+      purge_unactivated_users_grace_period_days:
+        - "deactivated"
+        - "inactive"
+        - "unactivated"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -2888,8 +2943,12 @@ en:
     new_user_typed_too_fast: "New user typed too fast"
     content_matches_auto_silence_regex: "Content matches auto silence regex"
     username:
-      short: "must be at least %{min} characters"
-      long: "must be no more than %{max} characters"
+      short:
+        one: "must be at least %{count} character"
+        other: "must be at least %{count} characters"
+      long:
+        one: "must be no more than %{count} character"
+        other: "must be no more than %{count} characters"
       too_long: "is too long"
       characters: "must only include numbers, letters, dashes, dots, and underscores"
       unique: "must be unique"
@@ -3065,7 +3124,7 @@ en:
       Your version: %{installed_version}
       New version: **%{new_version}**
 
-      - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
+      - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
       - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
 
@@ -3080,7 +3139,7 @@ en:
       Your version: %{installed_version}
       New version: **%{new_version}**
 
-      - Upgrade using our easy **[one-click browser upgrade](%{base_url}/admin/upgrade)**
+      - Update using our easy **[one-click browser update](%{base_url}/admin/update)**
 
       - See what's new in the [release notes](https://meta.discourse.org/tag/release-notes) or view the [raw GitHub changelog](https://github.com/discourse/discourse/commits/main)
 
@@ -4602,12 +4661,6 @@ en:
 
       This site is operated by your [friendly local staff](%{base_path}/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in %{feedback_category} and let’s discuss! If there’s a critical or urgent issue that can’t be handled by a meta topic or flag, contact us via the [staff page](%{base_path}/about).
 
-      <a name="tos"></a>
-
-      ## [Terms of Service](#tos)
-
-      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](%{base_path}/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](%{base_path}/tos).
-
   tos_topic:
     title: "Terms of Service"
     body: |
@@ -4877,7 +4930,9 @@ en:
     mass_award:
       errors:
         invalid_csv: We encountered an error on line %{line_number}. Please confirm the CSV has one email per line.
-        too_many_csv_entries: Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entries.
+        too_many_csv_entries:
+          one: Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entry.
+          other: Too many entries in the CSV file. Please provide a CSV file with no more than %{count} entries.
         badge_disabled: Please enable the %{badge_name} badge first.
         cant_grant_multiple_times: Can't grant the %{badge_name} badge multiple times to a single user.
     editor:

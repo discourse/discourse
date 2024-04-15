@@ -39,7 +39,6 @@ module ::Chat
 end
 
 require_relative "lib/chat/engine"
-require_relative "lib/chat/types/array"
 
 after_initialize do
   register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))

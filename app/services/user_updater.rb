@@ -129,6 +129,8 @@ class UserUpdater
       user.primary_group_id = nil
     end
 
+    attributes[:homepage_id] = nil if attributes[:homepage_id] == "-1"
+
     if attributes[:flair_group_id] && attributes[:flair_group_id] != user.flair_group_id &&
          (
            attributes[:flair_group_id].blank? ||
@@ -262,13 +264,6 @@ class UserUpdater
         else
           user_notification_schedule.destroy_scheduled_timings
         end
-      end
-      if attributes.key?(:seen_popups) || attributes.key?(:skip_new_user_tips)
-        MessageBus.publish(
-          "/user-tips/#{user.id}",
-          user.user_option.seen_popups,
-          user_ids: [user.id],
-        )
       end
       DiscourseEvent.trigger(:user_updated, user)
     end

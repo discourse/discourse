@@ -5,6 +5,7 @@ import uniqueId from "discourse/helpers/unique-id";
 import { TOAST } from "float-kit/lib/constants";
 
 export default class DToastInstance {
+  @service site;
   @service toasts;
 
   options = null;
@@ -18,5 +19,11 @@ export default class DToastInstance {
   @action
   close() {
     this.toasts.close(this);
+  }
+
+  get isValidForView() {
+    return this.options.views.includes(
+      this.site.desktopView ? "desktop" : "mobile"
+    );
   }
 }

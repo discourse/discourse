@@ -2,7 +2,9 @@
 
 p > code,
 li > code,
-pre > code {
+pre > code,
+strong > code,
+em > code {
   color: var(--primary-very-high);
   background: var(--hljs-bg);
 }

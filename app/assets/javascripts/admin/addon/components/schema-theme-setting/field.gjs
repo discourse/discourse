@@ -46,7 +46,7 @@ export default class SchemaThemeSettingField extends Component {
   }
 
   <template>
-    <div class="schema-field" data-name={{@name}}>
+    <div class="schema-field" data-name={{@name}} data-type={{@spec.type}}>
       <label class="schema-field__label">{{@label}}{{if
           @spec.required
           "*"

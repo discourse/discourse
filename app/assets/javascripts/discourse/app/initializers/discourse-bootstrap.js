@@ -1,5 +1,5 @@
 import { DEBUG } from "@glimmer/env";
-import runloop from "@ember/runloop";
+import { _backburner } from "@ember/runloop";
 import RSVP from "rsvp";
 import PreloadStore from "discourse/lib/preload-store";
 import { setURLContainer } from "discourse/lib/url";
@@ -19,7 +19,7 @@ export default {
   // The very first initializer to run
   initialize(app) {
     if (DEBUG) {
-      runloop._backburner.ASYNC_STACKS = true;
+      _backburner.ASYNC_STACKS = true;
     }
 
     setURLContainer(app.__container__);

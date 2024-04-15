@@ -53,7 +53,7 @@ export default class ChatThread extends Component {
   @service router;
   @service siteSettings;
 
-  @tracked isAtBottom = true;
+  @tracked atBottom = true;
   @tracked isScrolling = false;
   @tracked needsArrow = false;
   @tracked uploadDropZone;
@@ -316,7 +316,15 @@ export default class ChatThread extends Component {
 
   @bind
   onNewMessage(message) {
-    this.messagesManager.addMessages([message]);
+    if (!this.atBottom) {
+      this.needsArrow = true;
+      this.messagesLoader.canLoadMoreFuture = true;
+      return;
+    }
+
+    stackingContextFix(this.scrollable, () => {
+      this.messagesManager.addMessages([message]);
+    });
   }
 
   @bind

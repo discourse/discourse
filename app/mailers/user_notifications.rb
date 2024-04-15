@@ -167,7 +167,7 @@ class UserNotifications < ActionMailer::Base
         reason: user_history.details,
       )
     else
-      silenced_till = user.silenced_till.in_time_zone(user.user_option.timezone)
+      silenced_till = user.silenced_till.in_time_zone(user.user_option.timezone.presence || "UTC")
       build_email(
         user.email,
         template: "user_notifications.account_silenced",
@@ -191,7 +191,7 @@ class UserNotifications < ActionMailer::Base
         reason: user_history.details,
       )
     else
-      suspended_till = user.suspended_till.in_time_zone(user.user_option.timezone)
+      suspended_till = user.suspended_till.in_time_zone(user.user_option.timezone.presence || "UTC")
       build_email(
         user.email,
         template: "user_notifications.account_suspended",

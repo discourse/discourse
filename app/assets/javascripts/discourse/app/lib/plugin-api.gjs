@@ -9,10 +9,10 @@ import {
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { headerButtonsDAG } from "discourse/components/glimmer-header";
-import { headerIconsDAG } from "discourse/components/glimmer-header/icons";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
+import { headerButtonsDAG } from "discourse/components/header";
+import { headerIconsDAG } from "discourse/components/header/icons";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import MountWidget, {
   addWidgetCleanCallback,
@@ -201,19 +201,6 @@ function wrapWithErrorHandler(func, messageKey) {
       return;
     }
   };
-}
-
-function deprecatedHeaderWidgetOverride(widgetName, override) {
-  if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
-    deprecated(
-      `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
-      {
-        since: "v3.3.0.beta1-dev",
-        id: "discourse.header-widget-overrides",
-        url: "https://meta.discourse.org/t/296544",
-      }
-    );
-  }
 }
 
 class PluginApi {
@@ -560,7 +547,7 @@ class PluginApi {
    **/
   decorateWidget(name, fn) {
     const widgetName = name.split(":")[0];
-    deprecatedHeaderWidgetOverride(widgetName, "decorateWidget");
+    this.#deprecatedHeaderWidgetOverride(widgetName, "decorateWidget");
 
     decorateWidget(name, fn);
   }
@@ -591,7 +578,7 @@ class PluginApi {
       return;
     }
 
-    deprecatedHeaderWidgetOverride(widget, "attachWidgetAction");
+    this.#deprecatedHeaderWidgetOverride(widget, "attachWidgetAction");
 
     widgetClass.prototype[actionName] = fn;
   }
@@ -910,7 +897,7 @@ class PluginApi {
    *
    **/
   changeWidgetSetting(widgetName, settingName, newValue) {
-    deprecatedHeaderWidgetOverride(widgetName, "changeWidgetSetting");
+    this.#deprecatedHeaderWidgetOverride(widgetName, "changeWidgetSetting");
     changeSetting(widgetName, settingName, newValue);
   }
 
@@ -944,7 +931,7 @@ class PluginApi {
    **/
 
   reopenWidget(name, args) {
-    deprecatedHeaderWidgetOverride(name, "reopenWidget");
+    this.#deprecatedHeaderWidgetOverride(name, "reopenWidget");
     return reopenWidget(name, args);
   }
 
@@ -979,6 +966,7 @@ class PluginApi {
         url: "https://meta.discourse.org/t/296544",
       }
     );
+    this.container.lookup("service:header").anyWidgetHeaderOverrides = true;
     attachAdditionalPanel(name, toggle, transformAttrs);
   }
 
@@ -1850,17 +1838,17 @@ class PluginApi {
    * api.headerIcons.has("chat")
    * ```
    *
-   * Additionally, you can utilize the `@panelPortal` argument to create a dropdown panel. This can be useful when
+   * If you are looking to add a button with a dropdown, you can implement a `DMenu` which has a `content` block
    * you want create a button in the header that opens a dropdown panel with additional content.
    *
    * ```
    * const IconWithDropdown = <template>
-   *   <DButton @icon="icon" @onClick={{this.toggleVisible}} />
-   *   {{#if this.visible}}
-   *     <@panelPortal>
-   *       <div>Panel</div>
-   *     </@panelPortal>
-   *   {{/if}}
+   *   <DMenu @icon="foo" title={{i18n "title"}}>
+   *     <:content as |args|>
+   *       dropdown content here
+   *       <DButton @action={{args.close}} @icon="bar" />
+   *     </:content>
+   *   </DMenu>
    * </template>;
    *
    * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
@@ -2951,6 +2939,20 @@ class PluginApi {
     }
 
     registerAdminPluginConfigNav(pluginId, mode, links);
+  }
+
+  #deprecatedHeaderWidgetOverride(widgetName, override) {
+    if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
+      this.container.lookup("service:header").anyWidgetHeaderOverrides = true;
+      deprecated(
+        `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
+        {
+          since: "v3.3.0.beta1-dev",
+          id: "discourse.header-widget-overrides",
+          url: "https://meta.discourse.org/t/296544",
+        }
+      );
+    }
   }
 }
 

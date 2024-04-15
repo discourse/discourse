@@ -49,27 +49,21 @@ export default DropdownSelectBoxComponent.extend({
         id: "update-category",
         icon: "pencil-alt",
         name: i18n("topic_bulk_actions.update_category.name"),
-        description: i18n("topic_bulk_actions.update_category.description"),
       },
       {
         id: "update-notifications",
         icon: "d-regular",
         name: i18n("topic_bulk_actions.update_notifications.name"),
-        description: i18n(
-          "topic_bulk_actions.update_notifications.description"
-        ),
       },
       {
         id: "reset-bump-dates",
         icon: "anchor",
         name: i18n("topic_bulk_actions.reset_bump_dates.name"),
-        description: i18n("topic_bulk_actions.reset_bump_dates.description"),
       },
       {
         id: "defer",
         icon: "circle",
         name: i18n("topic_bulk_actions.defer.name"),
-        description: i18n("topic_bulk_actions.defer.description"),
         visible: ({ currentUser }) => currentUser.user_option.enable_defer,
       },
       {
@@ -144,6 +138,7 @@ export default DropdownSelectBoxComponent.extend({
     let allowSilent = false;
     let initialAction = null;
     let initialActionLabel = null;
+    let description = null;
     if (opts.allowSilent === true) {
       allowSilent = true;
     }
@@ -156,11 +151,15 @@ export default DropdownSelectBoxComponent.extend({
     } else {
       title = i18n(`topics.bulk.${title}`);
     }
+    if (opts.description) {
+      description = opts.description;
+    }
 
     this.modal.show(BulkTopicActions, {
       model: {
         action: actionName,
         title,
+        description,
         bulkSelectHelper: this.bulkSelectHelper,
         refreshClosure: () => this.router.refresh(),
         allowSilent,
@@ -174,10 +173,16 @@ export default DropdownSelectBoxComponent.extend({
   onSelect(id) {
     switch (id) {
       case "update-category":
-        this.showBulkTopicActionsModal(id, "change_category");
+        this.showBulkTopicActionsModal(id, "change_category", {
+          description: i18n(`topic_bulk_actions.update_category.description`),
+        });
         break;
       case "update-notifications":
-        this.showBulkTopicActionsModal(id, "notification_level");
+        this.showBulkTopicActionsModal(id, "notification_level", {
+          description: i18n(
+            `topic_bulk_actions.update_notifications.description`
+          ),
+        });
         break;
       case "close-topics":
         this.showBulkTopicActionsModal("close", "close_topics", {
@@ -206,10 +211,14 @@ export default DropdownSelectBoxComponent.extend({
         this.showBulkTopicActionsModal("delete", "delete");
         break;
       case "reset-bump-dates":
-        this.showBulkTopicActionsModal(id, "reset_bump_dates");
+        this.showBulkTopicActionsModal(id, "reset_bump_dates", {
+          description: i18n(`topic_bulk_actions.reset_bump_dates.description`),
+        });
         break;
       case "defer":
-        this.showBulkTopicActionsModal(id, "defer");
+        this.showBulkTopicActionsModal(id, "defer", {
+          description: i18n(`topic_bulk_actions.defer.description`),
+        });
         break;
       default:
         if (_customOnSelection[id]) {
