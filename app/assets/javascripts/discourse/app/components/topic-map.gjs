@@ -9,7 +9,9 @@ import concatClass from "discourse/helpers/concat-class";
 import or from "truth-helpers/helpers/or";
 
 export default class TopicMap extends Component {
-  @tracked collapsed = !this.args.postAttrs.hasTopRepliesSummary;
+  @tracked collapsed = !this.args.model.has_summary;
+  topicDetails = this.args.model.get("details");
+  postStream = this.args.model.postStream;
 
   @action
   toggleMap() {
@@ -32,7 +34,7 @@ export default class TopicMap extends Component {
         <TopicMapExpanded @postAttrs={{@postAttrs}} />
       </section>
     {{/unless}}
-    {{#if (or @postAttrs.hasTopRepliesSummary @postAttrs.summarizable)}}
+    {{#if (or this.topicDetails.has_summary @model.summarizable)}}
       <section class="information toggle-summary">
         <SummaryBox
           @postAttrs={{@postAttrs}}
@@ -43,7 +45,7 @@ export default class TopicMap extends Component {
         />
       </section>
     {{/if}}
-    {{#if @postAttrs.showPMMap}}
+    {{#if @showPMMap}}
       <section class="information private-message-map">
         <PrivateMessageMap
           @postAttrs={{@postAttrs}}

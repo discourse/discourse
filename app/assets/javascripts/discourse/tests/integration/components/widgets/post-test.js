@@ -780,7 +780,10 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - few posts", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123 });
     this.set("args", {
+      topic,
       showTopicMap: true,
       topicPostsCount: 2,
       participants: [{ username: "eviltrout" }, { username: "codinghorror" }],
@@ -794,7 +797,10 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - participants", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123 });
     this.set("args", {
+      topic,
       showTopicMap: true,
       topicPostsCount: 10,
       participants: [
@@ -816,7 +822,10 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - links", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123 });
     this.set("args", {
+      topic,
       showTopicMap: true,
       topicLinks: [
         { url: "http://link1.example.com", clicks: 0 },
@@ -845,7 +854,9 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - no summary", async function (assert) {
-    this.set("args", { showTopicMap: true });
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123 });
+    this.set("args", { topic, showTopicMap: true });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
@@ -853,7 +864,10 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - has top replies summary", async function (assert) {
-    this.set("args", { showTopicMap: true, hasTopRepliesSummary: true });
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123 });
+    topic.details.set("has_summary", true);
+    this.set("args", { topic, showTopicMap: true, hasTopRepliesSummary: true });
     this.set("showTopReplies", () => (this.summaryToggled = true));
 
     await render(
@@ -867,7 +881,10 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("pm map", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123 });
     this.set("args", {
+      topic,
       showTopicMap: true,
       showPMMap: true,
       allowedGroups: [],
