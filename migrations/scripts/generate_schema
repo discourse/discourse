@@ -7,13 +7,15 @@
 # It accepts an optional command line argument for the output file path which
 # overrides the path configured in schema.yml
 
-puts "Loading application..."
-require_relative "../../config/environment"
+require_relative "../lib/migrations"
 
 module Migrations
+  load_rails_environment
+  load_gemfiles("common")
+
   class SchemaGenerator
     def initialize(opts = {})
-      config = YAML.load_file(File.join(__dir__, "schema.yml"), symbolize_names: true)
+      config = load_config
 
       @core_db_connection = ActiveRecord::Base.connection
       @output_stream = StringIO.new
@@ -25,7 +27,7 @@ module Migrations
       @column_configs = config[:columns]
 
       @configured_table_names = @table_configs&.keys&.sort || []
-      @global_column_ignore_list = @column_configs[:ignore] || []
+      @global_column_ignore_list = @column_configs&.fetch(:ignore) || []
     end
 
     def run
@@ -35,13 +37,21 @@ module Migrations
       generate_tables
       generate_indirectly_ignored_columns_log
       generate_migration_file
+      validate_migration_file
 
       puts "", "Done"
     end
 
     private
 
+    def load_config
+      path = File.expand_path("../config/intermediate_db.yml", __dir__)
+      YAML.load_file(path, symbolize_names: true)
+    end
+
     def generate_header
+      return if @configured_table_names.empty?
+
       @output_stream.puts <<~HEADER
         /*
          This file is auto-generated from the Discourse core database schema. Instead of editing it directly,
@@ -61,6 +71,8 @@ module Migrations
     end
 
     def generate_indirectly_ignored_columns_log
+      return if @indirectly_ignored_columns.empty?
+
       puts "Generating indirectly ignored column list..."
 
       @output_stream.puts "\n\n/*"
@@ -142,7 +154,8 @@ module Migrations
         end
 
       @output_stream.puts ""
-      @output_stream.puts "CREATE TABLE #{name} ("
+      @output_stream.puts "CREATE TABLE #{name}"
+      @output_stream.puts "("
 
       if !composite_key && primary_key.present?
         primary_key_column = column_records.find { |c| c.name == primary_key }
@@ -166,13 +179,45 @@ module Migrations
         column_definitions << generate_column_definition(column)
       end
 
-      column_definitions << "  PRIMARY KEY (#{primary_key.join(", ")})" if composite_key
+      format_columns!(column_definitions)
+
+      column_definitions << "    PRIMARY KEY (#{primary_key.join(", ")})" if composite_key
 
       @output_stream.puts column_definitions.join(",\n")
       @output_stream.puts ");"
       @output_stream.puts "" if indexes.present?
 
       indexes.each { |index| generate_index(name, index) }
+    end
+
+    def validate_migration_file
+      db = Extralite::Database.new(":memory:")
+
+      if (sql = @output_stream.string).blank?
+        warn "No SQL generated, skipping validation".red
+      else
+        db.execute(sql)
+      end
+    ensure
+      db.close if db
+    end
+
+    def format_columns!(column_definitions)
+      column_definitions.map! do |c|
+        c.match(
+          /^\s*(?<name>\w+)\s(?<datatype>\w+)\s?(?<nullable>NOT NULL)?\s?(?<primary_key>PRIMARY KEY)?/,
+        ).named_captures
+      end
+
+      max_name_length = column_definitions.map { |c| c["name"].length }.max
+      max_datatype_length = column_definitions.map { |c| c["datatype"].length }.max
+
+      column_definitions.sort_by! do |c|
+        [c["primary_key"] ? 0 : 1, c["nullable"] ? 0 : 1, c["name"]]
+      end
+      column_definitions.map! do |c|
+        "    #{c["name"].ljust(max_name_length)} #{c["datatype"].ljust(max_datatype_length)} #{c["nullable"]} #{c["primary_key"]}".rstrip
+      end
     end
 
     class CustomColumn

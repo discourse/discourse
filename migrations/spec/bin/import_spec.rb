@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "Migrations::Import" do
-  subject(:cli) { system("migrations/import", exception: true) }
+  subject(:cli) do
+    # rubocop:disable Discourse/NoChdir
+    Dir.chdir("migrations") { system("bin/import", exception: true) }
+    # rubocop:enable Discourse/NoChdir
+  end
 
   it "works" do
     expect { cli }.to output(
