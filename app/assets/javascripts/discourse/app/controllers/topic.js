@@ -841,6 +841,16 @@ export default Controller.extend(bufferedProperty("model"), {
         opts.destinationCategoryId = topic.get("destination_category_id");
       }
 
+      // Reopen the composer if we're editing the same post
+      const editingExisting =
+        post.id === composerModel?.post?.id &&
+        opts?.action === Composer.EDIT &&
+        composerModel?.draftKey === opts.draftKey;
+      if (editingExisting) {
+        composerModel.set("composeState", Composer.OPEN);
+        return;
+      }
+
       // Cancel and reopen the composer for the first post
       if (editingFirst) {
         composer.cancelComposer(opts).then(() => composer.open(opts));
