@@ -1109,7 +1109,7 @@ class Post < ActiveRecord::Base
         access_control_will_change_upload_ids =
           uploads_in_post.filter_map do |upl|
             first_ref = upl.upload_references.min_by { |ur| [ur.created_at, ur.id] }
-            upl.id if first_ref.blank? || first_ref.targets?(self)
+            upl.id if first_ref.blank? || first_ref.target?(self)
           end
 
         Upload.where(id: access_control_will_change_upload_ids).update_all(
