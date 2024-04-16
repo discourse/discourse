@@ -1542,7 +1542,8 @@ RSpec.describe PostRevisor do
       end
 
       context "with secure uploads uploads" do
-        let!(:image5) { Fabricate(:secure_upload) }
+        let!(:image5) { Fabricate(:secure_upload, access_control_post: post) }
+
         before do
           Jobs.run_immediately!
           setup_s3

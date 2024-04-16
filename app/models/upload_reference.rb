@@ -6,6 +6,10 @@ class UploadReference < ActiveRecord::Base
 
   delegate :to_markdown, to: :upload
 
+  def target?(target_to_check)
+    self.target_id == target_to_check.id && self.target_type == target_to_check.class.to_s
+  end
+
   def self.ensure_exist!(upload_ids: [], target: nil, target_type: nil, target_id: nil)
     if !target && !(target_type && target_id)
       raise "target OR target_type and target_id are required"

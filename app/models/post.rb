@@ -1093,11 +1093,28 @@ class Post < ActiveRecord::Base
       UploadReference.where(target: self).delete_all
       UploadReference.insert_all(upload_references) if upload_references.size > 0
 
+      # NOTE: The access_control_post_id needs to be set whenever a post is linked to an upload
+      # when secure uploads is enabled because it is later used for UploadSecurity checks.
+      # The caveat here is that access_control_post_id should only be set if this post is
+      # the first time the upload is referenced, otherwise we can end up hijacking upload
+      # ownership from other posts.
       if SiteSetting.secure_uploads?
-        Upload
-          .where(id: upload_ids, access_control_post_id: nil)
-          .where("id NOT IN (SELECT upload_id FROM custom_emojis)")
-          .update_all(access_control_post_id: self.id)
+        uploads_in_post =
+          Upload
+            .joins(:upload_references)
+            .includes(:upload_references)
+            .where(id: upload_ids, access_control_post_id: nil)
+            .where("uploads.id NOT IN (SELECT upload_id FROM custom_emojis)")
+
+        access_control_will_change_upload_ids =
+          uploads_in_post.filter_map do |upl|
+            first_ref = upl.upload_references.min_by { |ur| [ur.created_at, ur.id] }
+            upl.id if first_ref.blank? || first_ref.target?(self)
+          end
+
+        Upload.where(id: access_control_will_change_upload_ids).update_all(
+          access_control_post_id: self.id,
+        )
       end
     end
   end
