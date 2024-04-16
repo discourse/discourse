@@ -126,6 +126,7 @@ module Email
       else
         subject = @opts[:subject]
       end
+      subject = DiscoursePluginRegistry.apply_modifier(:user_notification_subject, subject,@opts)
       subject
     end
 
@@ -164,6 +165,7 @@ module Email
             html_body: html_override.html_safe,
           },
         )
+      html = DiscoursePluginRegistry.apply_modifier(:user_notification_html_part, html,@opts)
 
       Mail::Part.new do
         content_type "text/html; charset=UTF-8"
@@ -184,6 +186,7 @@ module Email
         body << "\n"
         body << @template_args[:unsubscribe_instructions]
       end
+      body = DiscoursePluginRegistry.apply_modifier(:user_notification_body, body,@opts)
 
       body
     end
