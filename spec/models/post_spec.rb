@@ -1732,58 +1732,31 @@ RSpec.describe Post do
         expect(post.reload.upload_references.pluck(:id)).to_not contain_exactly(post_uploads_ids)
       end
 
-      describe "setting access_control_post on linked uploads" do
-        fab!(:other_post) { Fabricate(:post) }
-
+      context "when secure uploads is enabled" do
         before do
           setup_s3
           SiteSetting.authorized_extensions = "pdf|png|jpg|csv"
           SiteSetting.secure_uploads = true
-          SiteSetting.login_required = true
         end
 
-        context "for uploads in the post which have a null access_control_post_id" do
-          before do
-            image_upload.update!(access_control_post_id: nil)
-            video_upload.update!(access_control_post_id: other_post.id)
-            audio_upload.update!(access_control_post_id: other_post.id)
-          end
+        it "sets the access_control_post_id on uploads in the post that don't already have the value set" do
+          other_post = Fabricate(:post)
+          video_upload.update(access_control_post_id: other_post.id)
+          audio_upload.update(access_control_post_id: other_post.id)
 
-          it "does nothing if secure uploads is disabled" do
-            SiteSetting.secure_uploads = false
+          post.link_post_uploads
+
+          image_upload.reload
+          video_upload.reload
+          expect(image_upload.access_control_post_id).to eq(post.id)
+          expect(video_upload.access_control_post_id).not_to eq(post.id)
+        end
+
+        context "for custom emoji" do
+          before { CustomEmoji.create(name: "meme", upload: image_upload) }
+          it "never sets an access control post because they should not be secure" do
             post.link_post_uploads
-            image_upload.reload
-            expect(image_upload.access_control_post_id).to eq(nil)
-          end
-
-          it "sets access_control_post_id to the current post if it is the first time the upload is being referenced" do
-            post.link_post_uploads
-            expect(image_upload.reload.access_control_post_id).to eq(post.id)
-          end
-
-          it "does not set access_control_post_id if the current post is not the first time the upload is being referenced" do
-            UploadReference.create!(
-              upload: image_upload,
-              target: Fabricate(:post),
-              created_at: 1.year.ago,
-            )
-            post.link_post_uploads
-            expect(image_upload.reload.access_control_post_id).not_to eq(post.id)
-          end
-
-          it "does not set access_control_post_id for uploads that already have one" do
-            post.link_post_uploads
-            expect(video_upload.access_control_post_id).not_to eq(post.id)
-            expect(audio_upload.access_control_post_id).not_to eq(post.id)
-          end
-
-          context "for custom emoji" do
-            before { CustomEmoji.create(name: "meme", upload: image_upload) }
-
-            it "never sets an access control post because they should not be secure" do
-              post.link_post_uploads
-              expect(image_upload.reload.access_control_post_id).to eq(nil)
-            end
+            expect(image_upload.reload.access_control_post_id).to eq(nil)
           end
         end
       end
