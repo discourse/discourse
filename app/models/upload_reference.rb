@@ -6,7 +6,7 @@ class UploadReference < ActiveRecord::Base
 
   delegate :to_markdown, to: :upload
 
-  def targets?(target_to_check)
+  def target?(target_to_check)
     self.target_id == target_to_check.id && self.target_type == target_to_check.class.to_s
   end
 

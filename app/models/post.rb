@@ -1107,12 +1107,10 @@ class Post < ActiveRecord::Base
             .where("uploads.id NOT IN (SELECT upload_id FROM custom_emojis)")
 
         access_control_will_change_upload_ids =
-          uploads_in_post
-            .map do |upl|
-              first_ref = upl.upload_references.sort_by { |ur| [ur.created_at, ur.id] }.first
-              upl.id if first_ref.blank? || first_ref.targets?(self)
-            end
-            .compact
+          uploads_in_post.filter_map do |upl|
+            first_ref = upl.upload_references.min_by { |ur| [ur.created_at, ur.id] }
+            upl.id if first_ref.blank? || first_ref.targets?(self)
+          end
 
         Upload.where(id: access_control_will_change_upload_ids).update_all(
           access_control_post_id: self.id,
