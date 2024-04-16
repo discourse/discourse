@@ -82,7 +82,7 @@ describe "Secure uploads" do
     upload.reload
     expect(upload.upload_references.count).to eq(1)
     expect(upload.secure).to eq(false)
-    expect(upload.access_control_post).to eq(nil)
+    expect(upload.access_control_post).to eq(post)
 
     stub_presign_upload_get(upload)
     create_post(
@@ -94,7 +94,7 @@ describe "Secure uploads" do
     upload.reload
     expect(upload.upload_references.count).to eq(2)
     expect(upload.secure).to eq(false)
-    expect(upload.access_control_post).to eq(nil)
+    expect(upload.access_control_post).to eq(post)
   end
 
   it "does not convert an upload to insecure when it was first used in a secure post then in a public post" do
