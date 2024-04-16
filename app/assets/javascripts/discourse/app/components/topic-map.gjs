@@ -10,11 +10,9 @@ import or from "truth-helpers/helpers/or";
 
 export default class TopicMap extends Component {
   @tracked collapsed = !this.args.model.has_summary;
-  @tracked topicDetails = this.args.model.get("details");
-  @tracked postStream = this.args.model.postStream;
 
   get userFilters() {
-    return this.postStream.userFilters || [];
+    return this.args.postStream.userFilters || [];
   }
 
   @action
@@ -26,7 +24,7 @@ export default class TopicMap extends Component {
     <section class={{concatClass "map" (if this.collapsed "map-collapsed")}}>
       <TopicMapSummary
         @topic={{@model}}
-        @topicDetails={{this.topicDetails}}
+        @topicDetails={{@topicDetails}}
         @toggleMap={{this.toggleMap}}
         @collapsed={{this.collapsed}}
         @userFilters={{this.userFilters}}
@@ -38,7 +36,7 @@ export default class TopicMap extends Component {
         id="topic-map-expanded__aria-controls"
       >
         <TopicMapExpanded
-          @topicDetails={{this.topicDetails}}
+          @topicDetails={{@topicDetails}}
           @userFilters={{this.userFilters}}
         />
       </section>
@@ -47,7 +45,7 @@ export default class TopicMap extends Component {
       <section class="information toggle-summary">
         <SummaryBox
           @topic={{@model}}
-          @postStream={{this.postStream}}
+          @postStream={{@postStream}}
           @cancelFilter={{@cancelFilter}}
           @showTopReplies={{@showTopReplies}}
           @collapseSummary={{@collapseSummary}}
@@ -58,7 +56,7 @@ export default class TopicMap extends Component {
     {{#if @showPMMap}}
       <section class="information private-message-map">
         <PrivateMessageMap
-          @topicDetails={{this.topicDetails}}
+          @topicDetails={{@topicDetails}}
           @showInvite={{@showInvite}}
           @removeAllowedGroup={{@removeAllowedGroup}}
           @removeAllowedUser={{@removeAllowedUser}}

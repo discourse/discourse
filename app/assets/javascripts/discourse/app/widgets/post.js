@@ -757,6 +757,8 @@ createWidget("post-body", {
       hbs`<TopicMap
         @postAttrs={{@data.postAttrs}}
         @model={{@data.model}}
+        @topicDetails={{@data.topicDetails}}
+        @postStream={{@data.postStream}}
         @showPMMap={{@data.showPMMap}}
         @cancelFilter={{@data.cancelFilter}}
         @showTopReplies={{@data.showTopReplies}}
@@ -769,6 +771,8 @@ createWidget("post-body", {
       {
         postAttrs: attrs,
         model: attrs.topic,
+        topicDetails: attrs.topic.get("details"),
+        postStream: attrs.topic.postStream,
         showPMMap: attrs.showPMMap,
         cancelFilter: () => this.sendWidgetAction("cancelFilter"),
         showTopReplies: () => this.sendWidgetAction("showTopReplies"),
