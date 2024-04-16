@@ -1559,6 +1559,7 @@ export default class ComposerService extends Service {
       });
     }
 
+    const defaultComposerHeight = this._getDefaultComposerHeight();
 
     this.set("model.composerHeight", defaultComposerHeight);
     document.documentElement.style.setProperty(
