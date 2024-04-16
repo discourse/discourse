@@ -1279,7 +1279,12 @@ ro:
     email:
       sent_test: "trimis!"
   user:
-    deactivated: "A fost dezactivat din cauza pre a multor emailuri ricoșate la '%{email}'."
+    deactivated: "A fost dezactivat din cauza prea multor emailuri respinse la „%{email}”."
+    deactivated_by_staff: "Dezactivat de echipă"
+    deactivated_by_inactivity:
+      one: "Dezactivat automat după %{count} zi de inactivitate"
+      few: "Dezactivat automat după %{count} zile de inactivitate"
+      other: "Dezactivat automat după %{count} de zile de inactivitate"
     username:
       short: "trebuie să fie cel puțin %{min} de caractere"
       long: "trebuie să nu aibă mai mult de %{max} caractere"

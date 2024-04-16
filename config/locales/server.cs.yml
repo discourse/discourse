@@ -1512,11 +1512,11 @@ cs:
       title: "Zapomenuté heslo"
       subject_template: "[%{email_prefix}] Obnovení hesla"
       text_body_template: |
-        Někdo zažádal o změna Tvého hesla na [%{site_name}](%{base_url}).
+        Někdo požádal o obnovení Vašeho hesla na [%{site_name}] (%{base_url}).
 
-        Pokud jsi to Ty nebyl, můžeš v klidu ignorovat tento email.
+        Pokud jste to nebyl/a vy, můžete tento e-mail bezpečně ignorovat.
 
-        Pro změnu hesla klikni na tento odkaz:
+        Klikněte na následující odkaz pro výběr nového hesla:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Přihlášení pomocí odkazu"
