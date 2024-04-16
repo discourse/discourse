@@ -11,9 +11,11 @@ function mbAjax(messageBus, opts) {
   opts.headers ||= {};
 
   if (messageBus.baseUrl !== "/") {
-    opts.headers["X-Shared-Session-Key"] = $(
-      "meta[name=shared_session_key]"
-    ).attr("content");
+    const key = document
+      .querySelector("meta[name=shared_session_key]")
+      ?.content;
+
+    opts.headers["X-Shared-Session-Key"] = key;
   }
 
   if (userPresent()) {
