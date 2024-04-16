@@ -8,6 +8,7 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::USER_UPDATED
   field :custom_fields, component: :custom_fields
   field :user_profile, component: :user_profile
   field :once_per_user, component: :boolean
+  field :new_users_only, component: :boolean
 
   validate do
     has_triggers = has_trigger_field?(:custom_fields) && has_trigger_field?(:user_profile)
