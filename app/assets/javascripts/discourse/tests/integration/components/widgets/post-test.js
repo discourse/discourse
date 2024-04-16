@@ -827,7 +827,7 @@ module("Integration | Component | Widget | post", function (hooks) {
   test("topic map - links", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
-    topic.details.set("topicLinks", [
+    topic.details.set("links", [
       { url: "http://link1.example.com", clicks: 0 },
       { url: "http://link2.example.com", clicks: 0 },
       { url: "http://link3.example.com", clicks: 0 },

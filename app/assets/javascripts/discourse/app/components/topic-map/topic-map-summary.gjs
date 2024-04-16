@@ -10,6 +10,10 @@ import i18n from "discourse-common/helpers/i18n";
 import { avatarImg } from "discourse-common/lib/avatar-utils";
 
 export default class TopicMapSummary extends Component {
+  linksCount = this.args.topicDetails.links?.length ?? 0;
+  createdByUsername = this.args.topicDetails.created_by?.username;
+  lastPosterUsername = this.args.topicDetails.last_poster?.username;
+
   get toggleMapButton() {
     return {
       title: this.args.collapsed
@@ -72,8 +76,8 @@ export default class TopicMapSummary extends Component {
         <div class="topic-map-post created-at">
           <a
             class="trigger-user-card"
-            data-user-card={{@topicDetails.created_by?.username}}
-            title={{@topicDetails.created_by?.username}}
+            data-user-card={{this.createdByUsername}}
+            title={{this.createdByUsername}}
             aria-hidden="true"
           />
           {{this.createdByAvatar}}
@@ -86,8 +90,8 @@ export default class TopicMapSummary extends Component {
           <div class="topic-map-post last-reply">
             <a
               class="trigger-user-card"
-              data-user-card={{@topicDetails.last_poster?.username}}
-              title={{@topicDetails.last_poster?.username}}
+              data-user-card={{this.lastPosterUsername}}
+              title={{this.lastPosterUsername}}
               aria-hidden="true"
             />
             {{this.lastPostAvatar}}
@@ -127,12 +131,12 @@ export default class TopicMapSummary extends Component {
             }}</h4>
         </li>
       {{/if}}
-      {{#if (gt @topicDetails.links?.length 0)}}
+      {{#if (gt this.linksCount 0)}}
         <li class="secondary links">
-          {{number @topicDetails.links?.length noTitle="true"}}
+          {{number this.linksCount noTitle="true"}}
           <h4 role="presentation">{{i18n
               "links_lowercase"
-              count=@topicDetails.links?.length
+              count=this.linksCount
             }}</h4>
         </li>
       {{/if}}
