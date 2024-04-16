@@ -10,9 +10,12 @@ import or from "truth-helpers/helpers/or";
 
 export default class TopicMap extends Component {
   @tracked collapsed = !this.args.model.has_summary;
-  topicDetails = this.args.model.get("details");
-  postStream = this.args.model.postStream;
-  userFilters = this.postStream.userFilters || [];
+  @tracked topicDetails = this.args.model.get("details");
+  @tracked postStream = this.args.model.postStream;
+
+  get userFilters() {
+    return this.postStream.userFilters || [];
+  }
 
   @action
   toggleMap() {
