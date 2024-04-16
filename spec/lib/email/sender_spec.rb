@@ -640,12 +640,28 @@ RSpec.describe Email::Sender do
           expect(message.to_s.scan(/cid:[\w\-@.]+/).uniq.length).to eq(2)
         end
 
-        it "attaches allowed images from posts in the activity summary" do
+        it "attaches allowed images from multiple posts in the activity summary" do
+          other_post = Fabricate(:post)
+          @secure_image_2 =
+            UploadCreator.new(
+              file_from_fixtures("logo-dev.png", "images"),
+              "something-cool.png",
+            ).create_for(Discourse.system_user.id)
+          @secure_image_2.update_secure_status(override: true)
+          @secure_image_2.update(access_control_post_id: other_post.id)
+
+          Jobs::PullHotlinkedImages.any_instance.expects(:execute)
+          other_post.update(
+            raw:
+              "#{UploadMarkdown.new(@secure_image).image_markdown}\n#{UploadMarkdown.new(@secure_image_2).image_markdown}",
+          )
+          other_post.rebake!
+
           message.header["X-Discourse-Post-Id"] = nil
-          message.header["X-Discourse-Post-Ids"] = "#{reply.id}"
+          message.header["X-Discourse-Post-Ids"] = "#{reply.id},#{other_post.id}"
           Email::Sender.new(message, :digest).send
           expect(message.attachments.map(&:filename)).to include(
-            *[image, @secure_image].map(&:original_filename),
+            *[image, @secure_image, @secure_image_2].map(&:original_filename),
           )
         end
 
