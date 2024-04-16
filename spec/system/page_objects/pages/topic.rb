@@ -90,6 +90,8 @@ module PageObjects
           post_by_number(post).find(".post-controls .create-flag").click
         when :copy_link
           post_by_number(post).find(".post-controls .post-action-menu__copy-link").click
+        when :edit
+          post_by_number(post).find(".post-controls .edit").click
         end
       end
 
