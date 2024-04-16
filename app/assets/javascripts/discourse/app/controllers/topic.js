@@ -847,7 +847,7 @@ export default Controller.extend(bufferedProperty("model"), {
         opts?.action === Composer.EDIT &&
         composerModel?.draftKey === opts.draftKey;
       if (editingExisting) {
-        composerModel.set("composeState", Composer.OPEN);
+        composer.unshrink();
         return;
       }
 
