@@ -72,8 +72,8 @@ class WatchedWord < ActiveRecord::Base
 
   belongs_to :watched_word_group
 
-  after_save :clear_cache
-  after_destroy :clear_cache
+  after_save -> { WordWatcher.clear_cache! }
+  after_destroy -> { WordWatcher.clear_cache! }
 
   scope :by_action, -> { order("action ASC, word ASC") }
   scope :for,
