@@ -685,7 +685,6 @@ nl:
       topic_count_long: "Topics gemaakt"
       post_count: "Antwoorden"
       post_count_long: "Antwoorden geplaatst"
-      no_results: "Geen resultaten gevonden."
       days_visited: "Bezoeken"
       days_visited_long: "Dagen bezocht"
       posts_read: "Gelezen"
@@ -961,6 +960,7 @@ nl:
       "13": "Inbox"
       "14": "Wachtend"
       "15": "Concepten"
+      "17": "Links"
     categories:
       categories_label: "categorieën"
       subcategories_label: "subcategorieën"
@@ -2401,6 +2401,7 @@ nl:
         one: "heeft %{count} van je berichten geliket"
         other: "heeft %{count} van je berichten geliket"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

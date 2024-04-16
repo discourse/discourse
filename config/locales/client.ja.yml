@@ -634,7 +634,6 @@ ja:
       topic_count_long: "作成したトピック数"
       post_count: "返信"
       post_count_long: "投稿の返信数"
-      no_results: "結果はありませんでした。"
       days_visited: "アクセス"
       days_visited_long: "アクセス日数"
       posts_read: "既読"
@@ -910,6 +909,7 @@ ja:
       "13": "受信トレイ"
       "14": "保留中"
       "15": "下書き"
+      "17": "リンク"
     categories:
       categories_label: "カテゴリ"
       subcategories_label: "サブカテゴリ"
@@ -2289,6 +2289,7 @@ ja:
       liked_consolidated_description:
         other: "はあなたの %{count} 件の投稿に「いいね！」しました"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

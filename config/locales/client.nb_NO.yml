@@ -579,7 +579,6 @@ nb_NO:
       topic_count_long: "Emner opprettet"
       post_count: "Svar"
       post_count_long: "Svar"
-      no_results: "Ingen treff"
       days_visited: "Besøk"
       days_visited_long: "Dager besøkt"
       posts_read: "Lest"
@@ -847,6 +846,7 @@ nb_NO:
       "13": "Innboks"
       "14": "Venter"
       "15": "Utkast"
+      "17": "Lenker"
     categories:
       categories_label: "kategorier"
       subcategories_label: "underkategorier"
@@ -1906,6 +1906,7 @@ nb_NO:
         one: "likte %{count} av dine innlegg"
         other: "likte %{count} av dine innlegg"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

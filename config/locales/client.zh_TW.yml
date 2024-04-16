@@ -561,7 +561,6 @@ zh_TW:
       topic_count_long: "話題已開啟"
       post_count: "回覆"
       post_count_long: "回覆貼文"
-      no_results: "未找到任何結果。"
       days_visited: "造訪"
       days_visited_long: "到訪天數"
       posts_read: "已讀"
@@ -781,6 +780,7 @@ zh_TW:
       "13": "收件匣"
       "14": "等待中"
       "15": "草稿"
+      "17": "連結"
     categories:
       categories_label: "分類"
       subcategories_label: "次分類"
@@ -1718,6 +1718,7 @@ zh_TW:
       liked_consolidated_description:
         other: "說你的%{count}則貼文讚"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

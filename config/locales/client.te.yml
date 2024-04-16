@@ -690,7 +690,6 @@ te:
       topic_count_long: "విషయాలు సృష్టించబడ్డాయి"
       post_count: "ప్రత్యుత్తరాలు"
       post_count_long: "ప్రత్యుత్తరాలు పోస్ట్ చేయబడ్డాయి"
-      no_results: "ఫలితాలు ఏవీ కనుగొనబడలేదు."
       days_visited: "సందర్శనాలు"
       days_visited_long: "దర్శించిన రోజులు"
       posts_read: "చదివిన"
@@ -966,6 +965,7 @@ te:
       "13": "ఇన్ బాక్స్"
       "14": "పెండింగు"
       "15": "చిత్తుప్రతులు"
+      "17": "లింకులు"
     categories:
       categories_label: "వర్గాలు"
       subcategories_label: "ఉప వర్గాలు"
@@ -2440,6 +2440,7 @@ te:
         one: "మీ పోస్ట్‌లలో %{count} ని ఇష్టపడ్డారు"
         other: "మీ పోస్ట్‌లలో %{count} ని ఇష్టపడ్డారు"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

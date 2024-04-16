@@ -2387,7 +2387,6 @@ pl_PL:
     enable_custom_sidebar_sections: "EKSPERYMENTALNIE: Włącz niestandardowe sekcje paska bocznego"
     experimental_topics_filter: "EKSPERYMENTALNE: Włącza eksperymentalną ścieżkę filtrowania tematów w /filter"
     enable_experimental_lightbox: "EKSPERYMENTALNIE: Zastąp domyślny lightbox obrazu odświeżonym projektem."
-    experimental_glimmer_header_groups: "EKSPERYMENTALNE: Renderuj nagłówek witryny jako komponenty glimmer."
     experimental_form_templates: "EKSPERYMENTALNIE: Włącz funkcję szablonów formularzy. <b>Po włączeniu</b> zarządzaj szablonami w <a href='%{base_path}/admin/customize/form-templates'>Dostosuj / Szablony</a>."
     admin_sidebar_enabled_groups: "EKSPERYMENTALNE: Włącz nawigację na pasku bocznym interfejsu administratora dla określonych grup, co zastępuje przyciski nawigacyjne administratora najwyższego poziomu."
     lazy_load_categories_groups: "EKSPERYMENTALNE: Ładuj leniwie informacje o kategorii tylko dla użytkowników tych grup. Poprawia to wydajność w witrynach z wieloma kategoriami."

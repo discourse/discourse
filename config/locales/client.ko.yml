@@ -571,7 +571,6 @@ ko:
       topic_count_long: "생성한 주제"
       post_count: "댓글"
       post_count_long: "게시된 댓글"
-      no_results: "결과가 없습니다."
       days_visited: "방문"
       days_visited_long: "방문 일수"
       posts_read: "읽음"
@@ -844,6 +843,7 @@ ko:
       "13": "받은 편지함"
       "14": "보류 중"
       "15": "임시저장"
+      "17": "링크"
     categories:
       categories_label: "카테고리"
       subcategories_label: "하위 카테고리"
@@ -1986,6 +1986,7 @@ ko:
       liked_consolidated_description:
         other: "내 게시물 중 %{count}개를 좋아합니다"
       liked_consolidated: "<span>%{username}</span> %{description} "
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

@@ -645,7 +645,6 @@ bg:
       topic_count_long: "Създадени теми"
       post_count: "Отговори"
       post_count_long: "Публикувани отговори"
-      no_results: "Няма намерени резултати."
       days_visited: "Посещения"
       days_visited_long: "Посетени дни"
       posts_read: "Прочетени"
@@ -920,6 +919,7 @@ bg:
       "13": "Кутия"
       "14": "Чакащи"
       "15": "Чернови"
+      "17": "Връзки"
     categories:
       categories_label: "категории"
       subcategories_label: "подкатегории"
@@ -2215,6 +2215,7 @@ bg:
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> прие поканата ви"
