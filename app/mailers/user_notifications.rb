@@ -231,14 +231,14 @@ class UserNotifications < ActionMailer::Base
       limit: SiteSetting.digest_topics + SiteSetting.digest_other_topics,
       top_order: true,
     }
-    topics_for_digest = Topic.for_digest(user, min_date, digest_opts).to_a
+    topics_for_digest = Topic.for_digest(user, min_date, digest_opts)
     if topics_for_digest.empty? && !user.user_option.try(:include_tl0_in_digests)
       # Find some topics from new users that are at least 24 hours old
       topics_for_digest =
-        Topic
-          .for_digest(user, min_date, digest_opts.merge(include_tl0: true))
-          .where("topics.created_at < ?", 24.hours.ago)
-          .to_a
+        Topic.for_digest(user, min_date, digest_opts.merge(include_tl0: true)).where(
+          "topics.created_at < ?",
+          24.hours.ago,
+        )
     end
 
     @popular_topics = topics_for_digest[0, SiteSetting.digest_topics]
@@ -349,6 +349,9 @@ class UserNotifications < ActionMailer::Base
           ),
         add_unsubscribe_link: true,
         unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
+        topic_ids: topics_for_digest.pluck(:id),
+        post_ids:
+          topics_for_digest.joins(:posts).where(posts: { post_number: 1 }).pluck("posts.id"),
       }
 
       build_email(user.email, opts)
