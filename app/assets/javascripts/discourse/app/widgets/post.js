@@ -755,7 +755,6 @@ createWidget("post-body", {
       this,
       "div.topic-map",
       hbs`<TopicMap
-        @postAttrs={{@data.postAttrs}}
         @model={{@data.model}}
         @topicDetails={{@data.topicDetails}}
         @postStream={{@data.postStream}}
@@ -769,7 +768,6 @@ createWidget("post-body", {
         @removeAllowedUser={{@data.removeAllowedUser}}
       />`,
       {
-        postAttrs: attrs,
         model: attrs.topic,
         topicDetails: attrs.topic.get("details"),
         postStream: attrs.topic.postStream,
