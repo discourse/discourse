@@ -788,7 +788,6 @@ ru:
       topic_count_long: "Создано тем"
       post_count: "Ответов"
       post_count_long: "Ответов написано"
-      no_results: "Ничего не найдено."
       days_visited: "Посещений"
       days_visited_long: "Дней посещения"
       posts_read: "Прочитано"
@@ -1068,6 +1067,7 @@ ru:
       "13": "Входящие"
       "14": "Ожидают одобрения"
       "15": "Черновики"
+      "17": "Ссылки"
     categories:
       categories_label: "категории"
       subcategories_label: "подкатегории"
@@ -2624,6 +2624,7 @@ ru:
         many: "понравилось %{count} ваших сообщений"
         other: "понравились %{count} вашего сообщения"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

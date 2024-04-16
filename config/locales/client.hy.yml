@@ -507,7 +507,6 @@ hy:
       topic_count_long: "Ստեղծված Թեմա"
       post_count: "Պատասխան"
       post_count_long: "Հրապարակված Պատասխան"
-      no_results: "Արդյունքներ չեն գտնվել:"
       days_visited: "Այցելություն"
       days_visited_long: "Այցելության Օր"
       posts_read: "Կարդացած"
@@ -701,6 +700,7 @@ hy:
       "13": "Մուտքի արկղ"
       "14": "Սպասող"
       "15": "Սևագրեր"
+      "17": "Հղումներ"
     categories:
       categories_label: "կատեգորիաներ"
       subcategories_label: "ենթակատեգորիաներ"
@@ -1598,6 +1598,7 @@ hy:
         one: "հավանել է Ձեր %{count} գրառում"
         other: "հավանել է Ձեր %{count} գրառումը"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

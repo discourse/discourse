@@ -369,7 +369,6 @@ sw:
       topic_count_long: "Mada Zilizotengenezwa"
       post_count: "Majibu"
       post_count_long: "Majibu Yaliyochapishwa"
-      no_results: "Hakuna majibu yaliyopatikana."
       days_visited: "Matembezi"
       days_visited_long: "Siku Zilizotembelewa"
       posts_read: "Soma"
@@ -542,6 +541,7 @@ sw:
       "12": "Vilivyotumwa"
       "13": "kisanduku pokezi"
       "14": "Inasubiri"
+      "17": "Viungo"
     categories:
       categories_label: "kategoria"
       subcategories_label: "kategoria mtoto"

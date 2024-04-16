@@ -743,7 +743,6 @@ hr:
       topic_count_long: "Napravljene teme"
       post_count: "Odgovori"
       post_count_long: "Poslan odgovor"
-      no_results: "Nema pronađenih rezultata"
       days_visited: "Posjete"
       days_visited_long: "Dana posjećeno"
       posts_read: "Pročitano"
@@ -1021,6 +1020,7 @@ hr:
       "13": "Primljeno"
       "14": "Na čekanju"
       "15": "Skice"
+      "17": "Linkovi"
     categories:
       categories_label: "kategorije"
       subcategories_label: "podkategorije"
@@ -2499,6 +2499,7 @@ hr:
         few: "se sviđa vaših %{count} postova"
         other: "se svidjelo %{count} vaših postova"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

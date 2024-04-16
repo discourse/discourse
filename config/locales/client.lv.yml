@@ -530,7 +530,6 @@ lv:
       topic_count_long: "Izveidotās tēmas"
       post_count: "Atbildes"
       post_count_long: "Ierakstītās atbildes"
-      no_results: "Nav rezultātu."
       days_visited: "Apmeklējumi"
       days_visited_long: "Apmeklējuma dienas"
       posts_read: "Lasīts"
@@ -793,6 +792,7 @@ lv:
       "13": "Iesūtne"
       "14": "Gaida apstiprinājumu"
       "15": "Melnraksti"
+      "17": "Saites"
     categories:
       categories_label: "sadaļas"
       subcategories_label: "apakšsadaļas"

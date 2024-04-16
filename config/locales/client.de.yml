@@ -698,7 +698,9 @@ de:
       topic_count_long: "Erstellte Themen"
       post_count: "Beiträge"
       post_count_long: "Verfasste Beiträge"
-      no_results: "Es wurden keine Ergebnisse gefunden."
+      no_results:
+        body: "Hier wird eine Liste der Community-Mitglieder und ihrer Aktivitäten angezeigt. Im Moment ist die Liste noch leer, weil deine Community noch ganz neu ist!"
+        extra_body: "Admins und Moderatoren können Benutzer in der <a href='%{basePath}/admin/users/'>Benutzerverwaltung</a> sehen und verwalten."
       days_visited: "Aufrufe"
       days_visited_long: "Besuchstage"
       posts_read: "Gelesen"
@@ -977,6 +979,7 @@ de:
       "13": "Posteingang"
       "14": "Ausstehend"
       "15": "Entwürfe"
+      "17": "Links"
     categories:
       categories_label: "Kategorien"
       subcategories_label: "Unterkategorien"
@@ -2438,6 +2441,10 @@ de:
         one: "gefällt %{count} deiner Beiträge"
         other: "gefallen %{count} deiner Beiträge"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated_description:
+        one: "verlinkte %{count} deiner Beiträge"
+        other: "verlinkte %{count} deiner Beiträge"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2508,6 +2515,7 @@ de:
         watching_first_post: "neues Thema"
         topic_reminder: "Themen-Erinnerung"
         liked_consolidated: "neue „Gefällt mir“-Angaben"
+        linked_consolidated: "neue Links"
         post_approved: "Beitrag genehmigt"
         membership_request_consolidated: "Neue Mitgliedschaftsanfragen"
         reaction: "neue Reaktion"
@@ -2752,6 +2760,9 @@ de:
         selected:
           one: "Du hast <b>%{count}</b> Thema ausgewählt."
           other: "Du hast <b>%{count}</b> Themen ausgewählt."
+        selected_sole_category:
+          one: "Du hast ausgewählt <b>%{count}</b> Thema aus der Kategorie:"
+          other: "Du hast ausgewählt <b>%{count}</b> Themen aus der Kategorie:"
         selected_count:
           one: "%{count} ausgewählt"
           other: "%{count} ausgewählt"
@@ -2802,6 +2813,7 @@ de:
     topic_bulk_actions:
       close_topics:
         name: "Themen schließen"
+        note: "Hinweis"
         optional: (optional)
       archive_topics:
         name: "Themen archivieren"

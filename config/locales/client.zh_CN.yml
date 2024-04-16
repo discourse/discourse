@@ -647,7 +647,6 @@ zh_CN:
       topic_count_long: "创建的话题"
       post_count: "回复"
       post_count_long: "回帖"
-      no_results: "没有找到结果。"
       days_visited: "访问天数"
       days_visited_long: "访问天数"
       posts_read: "已读"
@@ -923,6 +922,7 @@ zh_CN:
       "13": "收件箱"
       "14": "待处理"
       "15": "草稿"
+      "17": "链接"
     categories:
       categories_label: "类别"
       subcategories_label: "子类别"
@@ -2322,6 +2322,7 @@ zh_CN:
       liked_consolidated_description:
         other: "点赞了您的 %{count} 个帖子"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
