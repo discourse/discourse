@@ -801,7 +801,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
   test("topic map - participants", async function (assert) {
     const store = getOwner(this).lookup("service:store");
-    const topic = store.createRecord("topic", { id: 123 });
+    const topic = store.createRecord("topic", { id: 123, posts_count: 10 });
     topic.postStream.setProperties({ userFilters: ["sam", "codinghorror"] });
     topic.details.set("participants", [
       { username: "eviltrout" },
@@ -813,14 +813,6 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", {
       topic,
       showTopicMap: true,
-      topicPostsCount: 10,
-      participants: [
-        { username: "eviltrout" },
-        { username: "codinghorror" },
-        { username: "sam" },
-        { username: "ZogStrIP" },
-      ],
-      userFilters: ["sam", "codinghorror"],
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);

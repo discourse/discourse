@@ -22,9 +22,11 @@ export default class TopicMap extends Component {
   <template>
     <section class={{concatClass "map" (if this.collapsed "map-collapsed")}}>
       <TopicMapSummary
-        @postAttrs={{@postAttrs}}
+        @topic={{@model}}
+        @topicDetails={{this.topicDetails}}
         @toggleMap={{this.toggleMap}}
         @collapsed={{this.collapsed}}
+        @userFilters={{this.userFilters}}
       />
     </section>
     {{#unless this.collapsed}}
