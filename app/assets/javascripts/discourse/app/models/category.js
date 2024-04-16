@@ -492,6 +492,15 @@ export default class Category extends RestModel {
     return [...(parentAncestors || []), this];
   }
 
+  @discourseComputed("parentCategory", "parentCategory.predecessors")
+  predecessors(parentCategory, parentPredecessors) {
+    if (parentCategory) {
+      return [parentCategory, ...parentPredecessors];
+    } else {
+      return [];
+    }
+  }
+
   @discourseComputed("subcategories")
   descendants() {
     const descendants = [this];
