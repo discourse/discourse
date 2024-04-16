@@ -366,7 +366,9 @@ class CategoriesController < ApplicationController
 
     categories = Category.secured(guardian)
 
-    categories = categories.where("name ILIKE ?", "%#{term}%") if term.present?
+    if term.present? && words = term.split
+      words.each { |word| categories = categories.where("name ILIKE ?", "%#{word}%") }
+    end
 
     categories =
       (
