@@ -33,27 +33,28 @@
       College List
     </p>
     <div class="college-list">
-      <div class="college-card">
-        <div class="toptext">Top Preference</div>
-        <div class="card-contents">
-          <div class="logo">&nbsp;</div>
-          <div class="subtext">
-            <div class="college">{{this.topCollege}}</div>
-            <div class="course">BS Computer Science</div>
+      {{#each this.admitsReceivedWithHash as |college|}}
+        <div class="college-card">
+          <div class="toptext {{college.type}}">{{college.topText}}</div>
+          <div class="card-contents">
+            <div class="logo">
+              <picture>
+                <source
+                  id="s1"
+                  srcset="/images/colleges/{{college.hash}}.png"
+                  type="image/png"
+                />
+                <img src="/images/colleges/{{college.hash}}.jpg" alt="logo" />
+              </picture>
+            </div>
+            <div class="subtext">
+              <div class="college">{{college.name}}</div>
+              <div class="course">BS Computer Science</div>
+            </div>
           </div>
         </div>
-      </div>
-      {{! continue with admits/awaited }}
+      {{/each}}
     </div>
-    <p style="color: hsl(210,8%,42%);">
-      This section needs to be filled out ... by someone
-      <br />1
-
-      <br />2
-      {{this.admitsReceived}}
-      <br />3
-      {{this.admitsAwaited}}
-    </p>
   </div>
 </div>
 

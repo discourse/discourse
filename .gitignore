@@ -23,6 +23,8 @@
 /public/plugins
 /public/tombstone
 /public/uploads
+/public/images/
+!/public/images/.gitkeep
 
 # Ignore the default SQLite database and db dumps
 *.sql

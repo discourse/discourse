@@ -14,6 +14,56 @@ export default Controller.extend({
   siteSettings: service(),
   currentUser: service(),
 
+  init() {
+    this._super(...arguments);
+    this.setAdmitsReceivedWithHash();
+  },
+
+  setAdmitsReceivedWithHash() {
+    let allColleges = [];
+
+    // Handle the single college
+    if (this.topCollege) {
+      allColleges.push({ name: this.topCollege, topText: "Top Preference" });
+    }
+
+    // Handle the lists of colleges
+    allColleges = allColleges.concat(
+      (this.admitsAwaited || []).map((name) => ({
+        name,
+        type: "await",
+        topText: "Admit Awaited",
+      })),
+      (this.admitsReceived || []).map((name) => ({
+        name,
+        topText: "Admit Received",
+      }))
+    );
+
+    Promise.all(
+      allColleges.map(async (college) => {
+        const hash = await this.sha1(college.name);
+        return {
+          ...college,
+          hash,
+        };
+      })
+    ).then((results) => {
+      this.set("admitsReceivedWithHash", results);
+    });
+  },
+
+  sha1(data) {
+    const encoder = new TextEncoder();
+    const encodedData = encoder.encode(data);
+    return crypto.subtle.digest("SHA-1", encodedData).then((hashBuffer) => {
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray
+        .map((byte) => byte.toString(16).padStart(2, "0"))
+        .join("");
+    });
+  },
+
   @discourseComputed("model.badges.length")
   moreBadges(badgesLength) {
     return badgesLength >= MAX_BADGES;
