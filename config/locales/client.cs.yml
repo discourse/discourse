@@ -3808,8 +3808,10 @@ cs:
           details: "Okamžitě dosáhněte prahové hodnoty vlajky, skryjte příspěvek a souhlaste se všemi čekajícími vlajkami."
         suspend:
           title: "Suspend User"
+          details: "Dosáhnout prahové hodnoty nahlášení a suspendovat uživatele."
         silence:
           title: "ztišit uživatele"
+          details: "Dosáhnout prahové hodnoty nahlášení a ztišit uživatele."
       notify_action: "Zpráva"
       official_warning: "Oficiální varování"
       delete_spammer: "Odstranit spamera"
@@ -4255,11 +4257,14 @@ cs:
       staff_info: "Chcete-li přidat omezení, vložte tento štítek do <a href=%{basePath}/tag_groups>skupiny štítků</a>."
       category_restricted: "Tento štítek je omezen na kategorie, ke kterým nemáte oprávnění k přístupu."
       synonyms: "Synonyma"
+      synonyms_description: "Pokud jsou použity následující štítky, budou nahrazeny <b>%{base_tag_name}</b>."
+      save: "Uložit název a popis značky"
       edit_synonyms: "Upravit synonyma"
       add_synonyms_label: "Přidat synonyma:"
       add_synonyms: "Přidat"
       add_synonyms_failed: "Následující štítky nelze přidat jako synonyma: <b>%{tag_names}</b>. Ujistěte se, že nemají vlastní synonyma nebo nejsou synonymy jiného štítku."
       remove_synonym: "Odstranit synonymum"
+      delete_synonym_confirm: 'Opravdu si přejete odstranit synonymum "%{tag_name}"?'
       delete_tag: "Odstranit štítek"
       delete_confirm:
         one: "Opravdu chcete odstranit tento štítek a odebrat jej z %{count} tématu, ke kterému je přiřazen?"
@@ -4280,6 +4285,7 @@ cs:
       manage_groups: "Spravovat skupiny štítků"
       manage_groups_description: "Definice skupin pro organizaci štítků"
       upload: "Nahrát štítky"
+      upload_description: "Nahrajte soubor csv a vytvořte štítky hromadně"
       upload_instructions: "Jeden na řádek, případně se skupinou štítků ve formátu 'název_štítku,skupina_štítků'."
       upload_successful: "Štítky byly úspěšně nahrány"
       delete_no_unused_tags: "Neexistují žádné nepoužité štítky."
@@ -5054,6 +5060,7 @@ cs:
       navigation_menu:
         sidebar: "Postranní panel"
         header_dropdown: "Rozbalovací nabídka záhlaví"
+        legacy: "Zastaralé"
       backups:
         title: "Zálohy"
         menu:
@@ -5096,7 +5103,7 @@ cs:
           download:
             label: "Stáhnout"
             title: "Poslat e-mail s odkazem ke stažení"
-            alert: "Odkaz ke stažení tohoto zálohování ti byl poslaný e-mailem"
+            alert: "Odkaz ke stažení této zálohy vám byl zaslán e-mailem."
           destroy:
             title: "Odstranit zálohu"
             confirm: "Are you sure you want to destroy this backup?"
@@ -5136,11 +5143,13 @@ cs:
         settings_editor: "Editor nastavení"
         validation_settings_keys: "Každá položka musí mít pouze klíč „nastavení“ a klíč „hodnota“."
         validation_settings_deleted: "Tato nastavení byla odstraněna. Prosím obnovte je a zkuste to znovu."
+        validation_settings_added: "Tato nastavení byla přidána. Odeberte je a zkuste to znovu."
         save: "Uložit"
         new: "Nové"
         new_style: "Nový styl"
         install: "Instalovat"
         delete: "Smazat"
+        delete_confirm: 'Opravdu chcete odstranit "%{theme_name}"?'
         bulk_delete: "Jste si jisti?"
         bulk_themes_delete_confirm: "Tímto se odinstalují následující motivy. Nebudou již použitelné žádnými uživateli na vašem webu:"
         bulk_components_delete_confirm: "Tímto se odinstalují následující komponenty. Nebudou již použitelné žádnými uživateli na vašem webu:"
@@ -5336,6 +5345,7 @@ cs:
         time: "Čas"
         user: "Uživatel"
         email_type: "Typ emailu"
+        details_title: "Zobrazit podrobnosti e-mailu"
         to_address: "Komu"
         test_email_address: "testovací emailová adresa"
         send_test: "Odešli testovací email"
@@ -5349,9 +5359,11 @@ cs:
         format: "Formát"
         html: "html"
         text: "text"
+        html_preview: "Náhled obsahu e-mailu"
         last_seen_user: "Uživatel byl naposled přítomen:"
         no_result: "Nenalezeny žádné výsledky souhrnu."
         reply_key: "Klíč pro odpověď"
+        post_link_with_smtp: "Podrobnosti o příspěvku a SMTP"
         skipped_reason: "Důvod přeskočení"
         incoming_emails:
           from_address: "Od koho"
@@ -5381,6 +5393,7 @@ cs:
             address_placeholder: "jmeno@example.com"
             type_placeholder: "přehled, registrace…"
             reply_key_placeholder: "klíč pro odpověď"
+            smtp_transaction_response_placeholder: "SMTP ID"
           email_addresses:
             see_more: "[Zobrazit více...]"
           post_id: "(ID příspěvku: %{post_id})"
@@ -5393,6 +5406,7 @@ cs:
           silence_user: "ztišení uživatele"
           delete_post: "smazání příspěku"
           delete_topic: "smazání tématu"
+          post_approved: "Příspěvek schválen"
       logs:
         title: "Logy a filtry"
         action: "Akce"
@@ -5427,6 +5441,7 @@ cs:
           no_previous: "Předchozí hodnota neexistuje."
           deleted: "Žádná nová hodnota. Záznam byl odstraněn."
           actions:
+            permanently_delete_post_revisions: "trvale odstranit revize příspěvků"
             delete_user: "odstranit uživatele"
             change_trust_level: "změnit úroveň důvěry"
             change_username: "změnit uživatelské jméno"
@@ -5436,6 +5451,8 @@ cs:
             change_site_text: "změnit text webu"
             suspend_user: "suspendovat uživatele"
             unsuspend_user: "zrušit suspendování"
+            removed_suspend_user: "pozastavit uživatele (odebráno)"
+            removed_unsuspend_user: "zrušit pozastavení uživatele (odebráno)"
             grant_badge: "udělit odznak"
             revoke_badge: "odejmout odznak"
             check_email: "zkontrolovat e-mail"
@@ -5450,6 +5467,8 @@ cs:
             create_category: "vytvořit kategorii"
             silence_user: "umlčet uživatele"
             unsilence_user: "zrušit umlčení uživatele"
+            removed_silence_user: "ztišit uživatele (odstraněno)"
+            removed_unsilence_user: "zrušit ztišení uživatele (odebráno)"
             grant_admin: "udělit administrátorská práva"
             revoke_admin: "odebrat administrátorská práva"
             grant_moderation: "udělit moderátorská práva"
@@ -5618,6 +5637,7 @@ cs:
       user:
         suspend_failed: "Nastala chyba při zakazování uživatele %{error}"
         unsuspend_failed: "Nastala chyba při povolování uživatele %{error}"
+        suspend_duration: "Pozastavit uživatele do:"
         suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
         suspend_reason_hidden_label: "Důvod zablokování? Tento text se zobrazí uživateli ve chvíli, kdy se pokusí přihlásit. Udržuj ho krátký."
         suspend_reason: "Reason"
@@ -5636,11 +5656,14 @@ cs:
         silence_message: "e-mailová zpráva"
         silence_message_placeholder: "()"
         suspended_until: "(až %{until})"
+        suspend_forever: "Pozastavit navždy"
         cant_suspend: "Tento uživatel nemůže být suspendován"
         penalty_post_actions: "Co byste chtěli udělat s tímto přidruženým příspěvkem?"
         penalty_post_delete: "Smazat příspěvek"
         penalty_post_edit: "Upravit příspěvek"
         penalty_post_none: "Nic nedělat"
+        penalty_history_MF: >-
+          Za posledních 6 měsíců byl tento uživatel <b>pozastaven { SUSPENDED, plural, one {#x} few {# krát} many {# krát} other {#x} }</b> a <b>umlčen { SILENCED, plural, one {#x} few {#x} many {#x} other {#x} }</b>.
         silence: "Ztišit"
         unsilence: "odmlčet "
         silenced: "Ztišený? "
@@ -5787,6 +5810,7 @@ cs:
           likes_received: "Obdržených 'líbí se'"
           likes_received_days: "Obdržených 'líbí se': unikátní dny"
           likes_received_users: "Obdržených 'líbí se': unikátní uživatelé"
+          suspended: "Pozastaveno (posledních 6 měsíců)"
           qualifies: "Splňuje podmínky pro úroveň důvěry 3."
           does_not_qualify: "Nesplňuje úroveň důvěry 3."
           will_be_promoted: "Bude brzy povýšen."
