@@ -84,6 +84,8 @@ createWidget("discourse-poll-option", {
 
     if (attrs.isMultiple) {
       contents.push(iconNode(chosen ? "far-check-square" : "far-square"));
+    } else if (attrs.isIrv) {
+      contents.push(iconNode("circle"));
     } else {
       contents.push(iconNode(chosen ? "circle" : "far-circle"));
     }
@@ -326,6 +328,7 @@ createWidget("discourse-poll-container", {
             return this.attach("discourse-poll-option", {
               option,
               isMultiple: attrs.isMultiple,
+              isIrv: attrs.isIrv,
               vote: attrs.vote,
             });
           })
@@ -907,6 +910,7 @@ export default createWidget("discourse-poll", {
       isAutomaticallyClosed: this.isAutomaticallyClosed(),
       isClosed: this.isClosed(),
       isMultiple: this.isMultiple(),
+      isIrv: this.isIrv(),
       max: this.max(),
       min: this.min(),
       showResults,
@@ -952,6 +956,11 @@ export default createWidget("discourse-poll", {
   isMultiple() {
     const { poll } = this.attrs;
     return poll.type === "multiple";
+  },
+
+  isIrv() {
+    const { poll } = this.attrs;
+    return poll.type === "irv";
   },
 
   hasVoted() {

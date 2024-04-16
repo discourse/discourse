@@ -9,7 +9,7 @@ class Poll < ActiveRecord::Base
   has_many :poll_options, -> { order(:id) }, dependent: :destroy
   has_many :poll_votes
 
-  enum type: { regular: 0, multiple: 1, number: 2 }, _scopes: false
+  enum type: { regular: 0, multiple: 1, number: 2, irv: 3 }, _scopes: false
 
   enum status: { open: 0, closed: 1 }, _scopes: false
 
