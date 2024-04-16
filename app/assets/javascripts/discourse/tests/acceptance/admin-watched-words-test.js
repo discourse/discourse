@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
@@ -59,7 +59,11 @@ acceptance("Admin - Watched Words", function (needs) {
     await visit("/admin/customize/watched_words/action/block");
 
     await click(".show-words-checkbox");
-    await fillIn(".watched-word-form input", "poutine");
+
+    await click(".select-kit-header.multi-select-header");
+    await fillIn(".select-kit-filter input", "poutine");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
+
     await click(".watched-word-form button");
 
     let found = [];
@@ -82,7 +86,11 @@ acceptance("Admin - Watched Words", function (needs) {
       "Add button is disabled by default"
     );
     await click(".show-words-checkbox");
-    await fillIn(".watched-word-form input", "Discourse");
+
+    await click(".select-kit-header.multi-select-header");
+    await fillIn(".select-kit-filter input", "Discourse");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
+
     await click(".case-sensitivity-checkbox");
     assert.strictEqual(
       submitButton.disabled,
