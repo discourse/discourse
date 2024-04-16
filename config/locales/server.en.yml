@@ -2931,6 +2931,7 @@ en:
         updating_site_settings: "Updating site settings…"
         updating_user_stats: "Updating user stats…"
         merging_user_attributes: "Merging user attributes…"
+        merging_user_associated_accounts: "Merging user associated accounts…"
         updating_user_ids: "Updating user ids…"
         deleting_source_user: "Deleting source user…"
   user:
