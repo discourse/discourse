@@ -640,6 +640,15 @@ RSpec.describe Email::Sender do
           expect(message.to_s.scan(/cid:[\w\-@.]+/).uniq.length).to eq(2)
         end
 
+        it "attaches allowed images from posts in the activity summary" do
+          message.header["X-Discourse-Post-Id"] = nil
+          message.header["X-Discourse-Post-Ids"] = "#{reply.id}"
+          Email::Sender.new(message, :digest).send
+          expect(message.attachments.map(&:filename)).to include(
+            *[image, @secure_image].map(&:original_filename),
+          )
+        end
+
         it "does not attach images that are not marked as secure, in the case of a non-secure upload copied to a PM" do
           SiteSetting.login_required = false
           @secure_image.update_secure_status(override: false)
