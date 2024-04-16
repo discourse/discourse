@@ -48,7 +48,7 @@ describe "Admin Customize Themes", type: :system do
     end
 
     it "selects the component tab when visiting the theme-components route" do
-      visit("/admin/customize/theme-components")
+      visit("/admin/customize/components")
       expect(find(".themes-list-header")).to have_css(".components-tab.active")
     end
   end
