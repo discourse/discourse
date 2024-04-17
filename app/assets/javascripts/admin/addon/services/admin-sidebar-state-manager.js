@@ -1,17 +1,27 @@
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 
 export default class AdminSidebarStateManager extends Service {
   @service sidebarState;
   @service currentUser;
-  @tracked keywords = new TrackedObject();
+  @tracked keywords = {};
 
   STORE_NAMESPACE = "discourse_admin_sidebar_experiment_";
 
   store = new KeyValueStore(this.STORE_NAMESPACE);
+
+  setLinkKeywords(link_name, keywords) {
+    if (!this.keywords[link_name]) {
+      this.keywords[link_name] = {
+        navigation: keywords.map((k) => k.toLowerCase()),
+      };
+      return;
+    }
+
+    this.keywords[link_name].navigation = keywords.map((k) => k.toLowerCase());
+  }
 
   get navConfig() {
     return this.store.getObject("navConfig");

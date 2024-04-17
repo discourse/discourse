@@ -159,8 +159,9 @@ export const ADMIN_NAV_MAP = [
         name: "admin_components",
         route: "adminCustomizeThemes",
         routeModels: ["components"],
-        label: "admin.appearance.sidebar_link.components",
+        label: "admin.appearance.sidebar_link.components.title",
         icon: "puzzle-piece",
+        keywords: ["admin.appearance.sidebar_link.components.keywords"],
       },
       {
         name: "admin_customize_site_texts",

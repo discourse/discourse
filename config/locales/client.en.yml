@@ -5337,7 +5337,9 @@ en:
           emoji: "Emoji"
           navigation: "Navigation"
           themes: "Themes"
-          components: "Components"
+          components:
+            title: "Components"
+            keywords: "theme"
           site_texts: "Site Texts"
 
       email_settings:
