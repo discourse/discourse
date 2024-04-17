@@ -16,6 +16,7 @@
     "postinstall": "../run-patch-package"
   },
   "dependencies": {
+    "@discourse/ember-instantsearch": "^1.0.2",
     "@faker-js/faker": "^8.4.1",
     "@glimmer/syntax": "^0.92.0",
     "@highlightjs/cdn-assets": "^11.9.0",
@@ -65,8 +66,8 @@
     "babel-import-util": "^2.0.2",
     "babel-plugin-ember-template-compilation": "^2.2.1",
     "bootstrap": "3.4.1",
-    "custom-proxy": "1.0.0",
     "broccoli-asset-rev": "^3.0.0",
+    "custom-proxy": "1.0.0",
     "deepmerge": "^4.3.1",
     "deprecation-silencer": "1.0.0",
     "dialog-holder": "1.0.0",
