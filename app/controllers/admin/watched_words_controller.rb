@@ -16,7 +16,11 @@ class Admin::WatchedWordsController < Admin::StaffController
     watched_word_group = WatchedWordGroup.create_membership(watched_words_params)
     if watched_word_group.valid?
       StaffActionLogger.new(current_user).log_watched_words_creation(watched_word_group)
-      render json: watched_word_group, root: false
+      render_json_dump WatchedWordListSerializer.new(
+                         watched_word_group.watched_words,
+                         scope: guardian,
+                         root: false,
+                       )
     else
       render_json_error(watched_word_group)
     end

@@ -113,8 +113,10 @@ export default class WatchedWordForm extends Component {
             message: I18n.t("admin.watched_words.form.success"),
             isCaseSensitive: false,
           });
-          this.action(WatchedWord.create(result));
-          this.focusInput();
+          result.words.forEach((word) => {
+            this.action(WatchedWord.create(word));
+          });
+          // this.focusInput();
         })
         .catch((e) => {
           this.set("formSubmitted", false);
