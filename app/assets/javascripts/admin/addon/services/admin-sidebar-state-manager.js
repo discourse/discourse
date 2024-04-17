@@ -1,4 +1,3 @@
-import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
