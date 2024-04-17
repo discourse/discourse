@@ -59,21 +59,25 @@ acceptance("Admin - Watched Words", function (needs) {
     await visit("/admin/customize/watched_words/action/block");
 
     await click(".show-words-checkbox");
-
     await click(".select-kit-header.multi-select-header");
+
     await fillIn(".select-kit-filter input", "poutine");
     await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
 
+    await fillIn(".select-kit-filter input", "cheese");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
+
+    assert.strictEqual(
+      query("select-kit-header-wrapper .formated-selection").innerText,
+      "poutine, cheese"
+    );
+
     await click(".watched-word-form button");
 
-    let found = [];
-    [...queryAll(".watched-words-list .watched-word")].forEach((elem) => {
-      if (elem.innerText.trim() === "poutine") {
-        found.push(true);
-      }
-    });
+    let found = queryAll(".watched-words-list .watched-word");
 
-    assert.strictEqual(found.length, 1);
+    assert.strictEqual(found[0].innerText.trim(), "poutine");
+    assert.strictEqual(found[1].innerText.trim(), "cheese");
     assert.strictEqual(count(".watched-words-list .case-sensitive"), 0);
   });
 
