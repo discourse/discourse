@@ -598,7 +598,6 @@ ur:
       topic_count_long: "بنائے گئے ٹاپک"
       post_count: "جوابات"
       post_count_long: "پوسٹ کیے گئے جوابات"
-      no_results: "کوئی نتائج نہیں پائے گئے۔"
       days_visited: "زائرین کی تعداد"
       days_visited_long: "زیارت کے دن"
       posts_read: "پڑھ لیا گیا"
@@ -869,6 +868,7 @@ ur:
       "13": "اِن باکس"
       "14": "زیرِاِلتوَاء"
       "15": "ڈرافٹس"
+      "17": "لنکس"
     categories:
       categories_label: "اقسام"
       subcategories_label: "ذیلی زمرے"
@@ -2005,6 +2005,7 @@ ur:
         one: "آپ کی %{count} پوسٹس کو لائیک کیا"
         other: "آپ کی %{count} پوسٹس کو لائیک کیا"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

@@ -1697,6 +1697,14 @@ export default class ComposerService extends Service {
     });
   }
 
+  unshrink() {
+    this.model.set("composeState", Composer.OPEN);
+    document.documentElement.style.setProperty(
+      "--composer-height",
+      this.model.composerHeight
+    );
+  }
+
   shrink() {
     if (
       this.get("model.replyDirty") ||

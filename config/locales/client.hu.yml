@@ -698,7 +698,6 @@ hu:
       topic_count_long: "Létrehozott téma"
       post_count: "Válasz"
       post_count_long: "Közzétett válasz"
-      no_results: "Nincs találat."
       days_visited: "Látogatás"
       days_visited_long: "Látogatott nap"
       posts_read: "Olvasott"
@@ -974,6 +973,7 @@ hu:
       "13": "Beérkezett üzenetek"
       "14": "Folyamatban"
       "15": "Vázlatok"
+      "17": "Hivatkozások"
     categories:
       categories_label: "kategóriák"
       subcategories_label: "alkategóriák"
@@ -2429,6 +2429,7 @@ hu:
         one: "kedvelte %{count} bejegyzését"
         other: "kedvelte %{count} bejegyzését"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span>%{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

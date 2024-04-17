@@ -572,7 +572,6 @@ gl:
       topic_count_long: "Temas creados"
       post_count: "Respostas"
       post_count_long: "Respostas publicadas"
-      no_results: "Non se atoparon resultados."
       days_visited: "Visitas"
       days_visited_long: "Días visitados"
       posts_read: "Lidos"
@@ -814,6 +813,7 @@ gl:
       "13": "Caixa de entrada"
       "14": "Pendente"
       "15": "Borradores"
+      "17": "Ligazóns"
     categories:
       categories_label: "categorías"
       subcategories_label: "subcategorías"
@@ -1895,6 +1895,7 @@ gl:
         one: "gustoulles %{count} das súas publicacións"
         other: "gustáronlles %{count} das súas publicacións"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

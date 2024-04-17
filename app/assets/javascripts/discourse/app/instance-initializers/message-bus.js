@@ -7,16 +7,26 @@ import getURL from "discourse-common/lib/get-url";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
-function ajax(opts) {
-  if (opts.complete) {
-    const oldComplete = opts.complete;
-    opts.complete = function (xhr, stat) {
-      handleLogoff(xhr);
-      oldComplete(xhr, stat);
-    };
-  } else {
-    opts.complete = handleLogoff;
+function mbAjax(messageBus, opts) {
+  opts.headers ||= {};
+
+  if (messageBus.baseUrl !== "/") {
+    const key = document.querySelector(
+      "meta[name=shared_session_key]"
+    )?.content;
+
+    opts.headers["X-Shared-Session-Key"] = key;
   }
+
+  if (userPresent()) {
+    opts.headers["Discourse-Present"] = "true";
+  }
+
+  const oldComplete = opts.complete;
+  opts.complete = function (xhr, stat) {
+    handleLogoff(xhr);
+    oldComplete?.(xhr, stat);
+  };
 
   return $.ajax(opts);
 }
@@ -78,28 +88,9 @@ export default {
 
     messageBus.enableChunkedEncoding = siteSettings.enable_chunked_encoding;
 
-    if (messageBus.baseUrl !== "/") {
-      messageBus.ajax = function (opts) {
-        opts.headers = opts.headers || {};
-        opts.headers["X-Shared-Session-Key"] = $(
-          "meta[name=shared_session_key]"
-        ).attr("content");
-        if (userPresent()) {
-          opts.headers["Discourse-Present"] = "true";
-        }
-        return ajax(opts);
-      };
-    } else {
-      messageBus.ajax = function (opts) {
-        opts.headers = opts.headers || {};
-        if (userPresent()) {
-          opts.headers["Discourse-Present"] = "true";
-        }
-        return ajax(opts);
-      };
+    messageBus.ajax = (opts) => mbAjax(messageBus, opts);
 
-      messageBus.baseUrl = getURL("/");
-    }
+    messageBus.baseUrl = getURL("/");
 
     if (user) {
       messageBus.callbackInterval = siteSettings.polling_interval;

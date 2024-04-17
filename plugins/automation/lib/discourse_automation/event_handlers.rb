@@ -65,7 +65,7 @@ module DiscourseAutomation
         end
     end
 
-    def self.handle_user_updated(user)
+    def self.handle_user_updated(user, new_user: false)
       return if user.id < 0
 
       name = DiscourseAutomation::Triggers::USER_UPDATED
@@ -79,6 +79,13 @@ module DiscourseAutomation
             next
           end
 
+          new_users_only = automation.trigger_field("new_users_only")["value"]
+
+          new_user_custom_field = automation.new_user_custom_field_name
+          new_user ||= user.custom_fields[new_user_custom_field].present?
+
+          next if new_users_only && !new_user
+
           required_custom_fields = automation.trigger_field("custom_fields")
           user_data = {}
           user_custom_fields_data = DB.query <<-SQL
@@ -87,16 +94,22 @@ module DiscourseAutomation
             JOIN user_custom_fields ucf ON CONCAT('user_field_', uf.id) = ucf.name
             WHERE ucf.user_id = #{user.id};
           SQL
+
           user_custom_fields_data =
             user_custom_fields_data.each_with_object({}) do |obj, hash|
               field_name = obj.field_name
               field_value = obj.field_value
               hash[field_name] = field_value
             end
+
           if required_custom_fields["value"]
             if required_custom_fields["value"].any? { |field|
                  user_custom_fields_data[field].blank?
                }
+              if new_users_only
+                user.custom_fields[new_user_custom_field] = "1"
+                user.save_custom_fields
+              end
               next
             end
             user_data[:custom_fields] = user_custom_fields_data
@@ -108,9 +121,18 @@ module DiscourseAutomation
             if required_user_profile_fields["value"].any? { |field|
                  user_profile_data[field].blank?
                }
+              if new_users_only
+                user.custom_fields[new_user_custom_field] = "1"
+                user.save_custom_fields
+              end
               next
             end
             user_data[:profile_data] = user_profile_data
+          end
+
+          if new_users_only && once_per_user
+            user.custom_fields.delete(new_user_custom_field)
+            user.save_custom_fields
           end
 
           automation.attach_custom_field(user)

@@ -647,7 +647,6 @@ fa_IR:
       topic_count_long: "موضوعات ساخته شده"
       post_count: "پاسخ‌ها"
       post_count_long: "پاسخ‌های نوشته شده"
-      no_results: "نتیجه ای یافت نشد."
       days_visited: "بازدید‌ها"
       days_visited_long: "روز‌های بازدید شده"
       posts_read: "خواندن"
@@ -897,6 +896,7 @@ fa_IR:
       "13": "صندوق دریافت"
       "14": "در انتظار"
       "15": "پیش‌نویس‌ها"
+      "17": "پیوندها"
     categories:
       categories_label: "دسته‌بندی‌ها"
       subcategories_label: "دسته‌‌بندی‌های فرزند"
@@ -2049,6 +2049,7 @@ fa_IR:
         one: "%{count}نوشته ی شما را پسندید"
         other: "%{count}نوشته ی شما را پسندید"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

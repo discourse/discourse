@@ -685,7 +685,6 @@ pt_BR:
       topic_count_long: "Tópicos criados"
       post_count: "Respostas"
       post_count_long: "Respostas postadas"
-      no_results: "Nenhum resultado foi encontrado."
       days_visited: "Acessos"
       days_visited_long: "Dias acessados"
       posts_read: "Lidos"
@@ -961,6 +960,7 @@ pt_BR:
       "13": "Caixa de entrada"
       "14": "Pendentes"
       "15": "Rascunhos"
+      "17": "Links"
     categories:
       categories_label: "categorias"
       subcategories_label: "subcategorias"
@@ -2401,6 +2401,7 @@ pt_BR:
         one: "curtiu %{count} de suas postagens"
         other: "curtiu %{count} de suas postagens"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

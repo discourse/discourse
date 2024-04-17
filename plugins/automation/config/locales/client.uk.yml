@@ -257,6 +257,14 @@ uk:
             creator:
               label: Автор
               updated_user_context: Оновлений користувач
+            body:
+              label: Тіло теми
+            title:
+              label: Назва теми
+            category:
+              label: Категорія теми
+            tags:
+              label: Теги теми
         group_category_notification_default:
           fields:
             group:

@@ -650,7 +650,6 @@ pt:
       topic_count_long: "Tópicos Criados"
       post_count: "Respostas"
       post_count_long: "Respostas Publicadas"
-      no_results: "Não foram encontrados resultados."
       days_visited: "Visitas"
       days_visited_long: "Dias Visitados"
       posts_read: "Ler"
@@ -923,6 +922,7 @@ pt:
       "13": "Caixa de Entrada"
       "14": "Pendente"
       "15": "Rascunhos"
+      "17": "Hiperligações"
     categories:
       categories_label: "categorias"
       subcategories_label: "subcategorias"
@@ -2066,6 +2066,7 @@ pt:
         one: "gostou de %{count} das suas publicações"
         other: "gostou de %{count} das suas publicações"
       liked_consolidated: "<span>%{username}</span>%{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

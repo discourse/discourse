@@ -28,6 +28,7 @@ export default class BookmarkMenu extends Component {
   bookmarkManager = this.args.bookmarkManager;
   timezone = this.currentUser?.user_option?.timezone || moment.tz.guess();
   timeShortcuts = timeShortcuts(this.timezone);
+  bookmarkCreatePromise = null;
 
   @action
   setReminderShortcuts() {
@@ -79,22 +80,25 @@ export default class BookmarkMenu extends Component {
   }
 
   @action
-  async onBookmark() {
-    try {
-      await this.bookmarkManager.create();
-      // We show the menu with Edit/Delete options if the bokmark exists,
-      // so this "quicksave" will do nothing in that case.
-      // NOTE: Need a nicer way to handle this; otherwise as soon as you save
-      // a bookmark, it switches to the other Edit/Delete menu.
-      this.quicksaved = true;
-      this.toasts.success({
-        duration: 3000,
-        views: ["mobile"],
-        data: { message: I18n.t("bookmarks.bookmarked_success") },
+  onBookmark() {
+    this.bookmarkCreatePromise = this.bookmarkManager.create();
+    this.bookmarkCreatePromise
+      .then(() => {
+        // We show the menu with Edit/Delete options if the bokmark exists,
+        // so this "quicksave" will do nothing in that case.
+        // NOTE: Need a nicer way to handle this; otherwise as soon as you save
+        // a bookmark, it switches to the other Edit/Delete menu.
+        this.quicksaved = true;
+        this.toasts.success({
+          duration: 3000,
+          views: ["mobile"],
+          data: { message: I18n.t("bookmarks.bookmarked_success") },
+        });
+      })
+      .catch((error) => popupAjaxError(error))
+      .finally(() => {
+        this.bookmarkCreatePromise = null;
       });
-    } catch (error) {
-      popupAjaxError(error);
-    }
   }
 
   @action
@@ -140,6 +144,10 @@ export default class BookmarkMenu extends Component {
 
   @action
   async onChooseReminderOption(option) {
+    if (this.bookmarkCreatePromise) {
+      await this.bookmarkCreatePromise;
+    }
+
     if (option.id === TIME_SHORTCUT_TYPES.CUSTOM) {
       this._openBookmarkModal();
     } else {

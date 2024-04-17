@@ -48,8 +48,34 @@ describe "Admin Customize Themes", type: :system do
     end
 
     it "selects the component tab when visiting the theme-components route" do
-      visit("/admin/customize/theme-components")
+      visit("/admin/customize/components")
       expect(find(".themes-list-header")).to have_css(".components-tab.active")
+    end
+
+    it "switching between themes and components tabs keeps the search visible only if both tabs have at least 10 items" do
+      6.times { Fabricate(:theme) }
+      (1..5).each { |number| Fabricate(:theme, component: true, name: "Cool component #{number}") }
+
+      visit("/admin/customize/themes")
+      expect(admin_customize_themes_page).to have_themes(count: 11)
+
+      admin_customize_themes_page.search("5")
+      expect(admin_customize_themes_page).to have_themes(count: 1)
+
+      admin_customize_themes_page.switch_to_components
+      expect(admin_customize_themes_page).to have_no_search
+      expect(admin_customize_themes_page).to have_themes(count: 5)
+
+      (6..11).each { |number| Fabricate(:theme, component: true, name: "Cool component #{number}") }
+
+      visit("/admin/customize/components")
+      expect(admin_customize_themes_page).to have_themes(count: 11)
+
+      admin_customize_themes_page.search("5")
+      expect(admin_customize_themes_page).to have_themes(count: 1)
+
+      admin_customize_themes_page.switch_to_themes
+      expect(admin_customize_themes_page).to have_themes(count: 1)
     end
   end
 
