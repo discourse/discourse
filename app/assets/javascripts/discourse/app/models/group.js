@@ -467,11 +467,12 @@ export default class Group extends RestModel {
     const categories = await Category.asyncFindByIds(
       posts.map((p) => p.category_id)
     );
+    const categoriesById = Object.fromEntries(categories.map((c) => [c.id, c]));
 
     return posts.map((p) => {
       p.user = User.create(p.user);
       p.topic = Topic.create(p.topic);
-      p.category = categories[p.category_id];
+      p.category = categoriesById[p.category_id];
       return EmberObject.create(p);
     });
   }
