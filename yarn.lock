@@ -5417,6 +5417,14 @@ decorator-transforms@^1.0.1:
     "@babel/plugin-syntax-decorators" "^7.23.3"
     babel-import-util "^2.0.1"
 
+decorator-transforms@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/decorator-transforms/-/decorator-transforms-1.2.1.tgz#d72e39b95c9e3d63465f82b148d021919e9d198f"
+  integrity sha512-UUtmyfdlHvYoX3VSG1w5rbvBQ2r5TX1JsE4hmKU9snleFymadA3VACjl6SRfi9YgBCSjBbfQvR1bs9PRW9yBKw==
+  dependencies:
+    "@babel/plugin-syntax-decorators" "^7.23.3"
+    babel-import-util "^2.0.1"
+
 deep-eql@^4.1.2:
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/deep-eql/-/deep-eql-4.1.3.tgz#7c7775513092f7df98d8df9996dd085eb668cc6d"
