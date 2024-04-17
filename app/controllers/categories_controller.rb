@@ -21,8 +21,7 @@ class CategoriesController < ApplicationController
 
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
   MIN_CATEGORIES_TOPICS = 5
-  DEFAULT_CATEGORIES_LIMIT = 25
-  MAX_CATEGORIES_LIMIT = 100
+  MAX_CATEGORIES_LIMIT = 25
 
   def redirect
     return if handle_permalink("/category/#{params[:path]}")
@@ -363,7 +362,15 @@ class CategoriesController < ApplicationController
     prioritized_category_id = params[:prioritized_category_id].to_i if params[
       :prioritized_category_id
     ].present?
-    limit = params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT) if params[:limit].present?
+    limit =
+      (
+        if params[:limit].present?
+          params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT)
+        else
+          CategoriesController::MAX_CATEGORIES_LIMIT
+        end
+      )
+    page = [1, params[:page].to_i].max
 
     categories = Category.secured(guardian)
 
@@ -405,7 +412,8 @@ class CategoriesController < ApplicationController
         )
         .joins("LEFT JOIN topics t on t.id = categories.topic_id")
         .select("categories.*, t.slug topic_slug")
-        .limit(limit || DEFAULT_CATEGORIES_LIMIT)
+        .limit(limit)
+        .offset((page - 1) * limit)
 
     if Site.preloaded_category_custom_fields.present?
       Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)

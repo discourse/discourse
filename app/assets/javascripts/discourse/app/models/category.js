@@ -398,6 +398,7 @@ export default class Category extends RestModel {
       include_ancestors: opts.includeAncestors,
       prioritized_category_id: opts.prioritizedCategoryId,
       limit: opts.limit,
+      page: opts.page,
     };
 
     const result = (CATEGORY_ASYNC_SEARCH_CACHE[JSON.stringify(data)] ||=

@@ -72,43 +72,45 @@ export default MultiSelectComponent.extend({
     // If there is a single match or an exact match and it has subcategories,
     // add a row for selecting all subcategories
     if (
-      categories.length === 1 ||
-      (categories.length > 0 && categories[0].name.localeCompare(filter) === 0)
+      (categories.length === 1 ||
+        (categories.length > 0 &&
+          categories[0].name.localeCompare(filter) === 0)) &&
+      categories[0].subcategory_count > 0
     ) {
-      // Descendants may not be loaded if lazy loading is enabled. Search for
-      // subcategories will make sure these are loaded
-      if (this.site.lazy_load_categories) {
-        await Category.asyncSearch("", {
-          parentCategoryId: categories[0].id,
-          limit: 100,
-        });
-      }
-
-      if (categories[0].descendants.length > 1) {
-        categories.splice(
-          1,
-          0,
-          EmberObject.create({
-            // This is just a hack to ensure the IDs are unique, but ensure
-            // that parseInt still returns a valid ID in order to generate the
-            // label
-            id: `${categories[0].id}+subcategories`,
-            // We limit to the first 100 subcategories because a large number
-            // of categories selected would break the UI
-            categories: categories[0].descendants.slice(0, 100),
-          })
-        );
-      }
+      categories.splice(
+        1,
+        0,
+        EmberObject.create({
+          // This is just a hack to ensure the IDs are unique, but ensure
+          // that parseInt still returns a valid ID in order to generate the
+          // label
+          id: `${categories[0].id}+subcategories`,
+          category: categories[0],
+        })
+      );
     }
 
     return categories;
   },
 
   async select(value, item) {
-    if (item.categories) {
+    // item is usually a category, but if the "category" property is set, then
+    // it is the special row for selecting all subcategories
+    if (item.category) {
+      if (this.site.lazy_load_categories) {
+        // Descendants may not be loaded if lazy loading is enabled. Searching
+        // for subcategories will make sure these are loaded
+        for (let page = 1, categories = [null]; categories.length > 0; page++) {
+          categories = await Category.asyncSearch("", {
+            parentCategoryId: item.category.id,
+            page,
+          });
+        }
+      }
+
       this.selectKit.change(
-        makeArray(this.value).concat(item.categories.mapBy("id")),
-        makeArray(this.selectedContent).concat(item.categories)
+        makeArray(this.value).concat(item.category.descendants.mapBy("id")),
+        makeArray(this.selectedContent).concat(item.category.descendants)
       );
     } else {
       this._super(value, item);

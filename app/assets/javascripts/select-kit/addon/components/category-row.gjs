@@ -111,8 +111,8 @@ export default class CategoryRow extends Component {
           this.allowUncategorizedTopics || this.allowUncategorized,
         hideParent: !!this.parentCategory,
         topicCount: this.topicCount,
-        subcategoryCount: this.args.item?.categories
-          ? this.category.subcategories_count
+        subcategoryCount: this.args.item?.category
+          ? this.category.subcategory_count
           : 0,
       })
     );
