@@ -6,7 +6,8 @@ import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 export default class AdminSidebarStateManager extends Service {
   @service sidebarState;
   @service currentUser;
-  @tracked keywords = {};
+
+  keywords = {};
 
   STORE_NAMESPACE = "discourse_admin_sidebar_experiment_";
 
