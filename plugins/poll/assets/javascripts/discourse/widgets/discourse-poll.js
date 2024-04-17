@@ -1,4 +1,5 @@
 import { getOwner } from "@ember/application";
+import { hbs as hbsCli } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -9,6 +10,7 @@ import round from "discourse/lib/round";
 import hbs from "discourse/widgets/hbs-compiler";
 import { avatarFor } from "discourse/widgets/post";
 import RawHtml from "discourse/widgets/raw-html";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
@@ -72,6 +74,7 @@ function checkUserGroups(user, poll) {
 
 createWidget("discourse-poll-option", {
   tagName: "li",
+  buildKey: (attrs) => `discourse-poll-option-${attrs.option.id}`,
 
   buildAttributes(attrs) {
     return { tabindex: 0, "data-poll-option-id": attrs.option.id };
@@ -93,6 +96,10 @@ createWidget("discourse-poll-option", {
     contents.push(" ");
     contents.push(optionHtml(option, this.siteSettings));
 
+    if (attrs.isIrv) {
+      contents.push(this.attach("discourse-poll-option-dropdown", attrs));
+    }
+
     return contents;
   },
 
@@ -107,6 +114,31 @@ createWidget("discourse-poll-option", {
       this.click(e);
     }
   },
+});
+
+createWidget("discourse-poll-option-dropdown", {
+  tagName: "div.irv-dropdown",
+  buildKey: (attrs) => `discourse-poll-option-dropdown-${attrs.option.id}`,
+
+  html(attrs) {
+    return [
+      new RenderGlimmer(
+        this,
+        "div.irv-dropdown-content",
+        hbsCli`<DropdownSelectBox @value={{@data.value}} @content={{data.content}} @onChange={{action (mut data.selectRank)}} @options={{hash showCaret=false filterable=false none="poll.options.irv.abstain" }} class="poll-option-dropdown"/>`,
+        {
+          ...attrs,
+          value: 0 || "poll.options.irv.abstain", //option.value
+          content: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+          selectRank: this.selectRank.bind(this),
+        }
+      ),
+    ];
+  },
+
+  // TODO: Implement this
+  // selectRank(value) {
+  // },
 });
 
 createWidget("discourse-poll-load-more", {
