@@ -1,7 +1,28 @@
 {{body-class "user-summary-page"}}
 
 <div class="new-user-content-wrapper" style="margin-top: 2.25rem">
-  <div>
+  <div style="margin-bottom: 4rem;">
+    <p style="font-size: 20px; font-weight: 700; margin-bottom: 1rem;">
+      College List ({{this.profileViews}})
+    </p>
+    <div class="college-list" id="college-grid">
+      {{#each this.admitsReceivedWithHash as |college|}}
+        <div class="college-card">
+          <div class="toptext {{college.type}}">{{college.topText}}</div>
+          <div class="card-contents">
+            <div class="logo">
+              <img src="/images/colleges/{{college.hash}}.png" />
+            </div>
+            <div class="subtext">
+              <div class="college">{{college.name}}</div>
+              <div class="course">BS Computer Science</div>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+  <div style="margin-bottom: 2rem;">
     <p style="font-size: 20px; font-weight: 700; margin-bottom: 1rem;">About</p>
     {{#if this.user.bio_excerpt}}
       <div class="card-row second-row">
@@ -27,35 +48,7 @@
       </p>
     {{/if}}
   </div>
-  <hr style="margin: 2.25rem 0" />
-  <div>
-    <p style="font-size: 20px; font-weight: 700; margin-bottom: 1rem;">
-      College List
-    </p>
-    <div class="college-list">
-      {{#each this.admitsReceivedWithHash as |college|}}
-        <div class="college-card">
-          <div class="toptext {{college.type}}">{{college.topText}}</div>
-          <div class="card-contents">
-            <div class="logo">
-              <picture>
-                <source
-                  id="s1"
-                  srcset="/images/colleges/{{college.hash}}.png"
-                  type="image/png"
-                />
-                <img src="/images/colleges/{{college.hash}}.jpg" alt="logo" />
-              </picture>
-            </div>
-            <div class="subtext">
-              <div class="college">{{college.name}}</div>
-              <div class="course">BS Computer Science</div>
-            </div>
-          </div>
-        </div>
-      {{/each}}
-    </div>
-  </div>
+  <p><strong>Lives in</strong>: <span>{{this.currentUser.location}}</span></p>
 </div>
 
 <div class="user-content hidden hidden" id="user-content">

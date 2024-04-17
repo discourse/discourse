@@ -481,6 +481,7 @@ Discourse::Application.routes.draw do
         end
       end
 
+      get "#{root_path}/profile-views" => "users#profile_views"
       get "#{root_path}/trusted-session" => "users#trusted_session"
       post "#{root_path}/confirm-session" => "users#confirm_session"
 

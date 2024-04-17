@@ -2,6 +2,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import { duration } from "discourse/lib/formatter";
 import discourseComputed from "discourse-common/utils/decorators";
 
@@ -17,6 +18,11 @@ export default Controller.extend({
   init() {
     this._super(...arguments);
     this.setAdmitsReceivedWithHash();
+    this.fetchProfileViews();
+  },
+
+  async fetchProfileViews() {
+    this.set("profileViews", await ajax("/u/profile-views.json"));
   },
 
   setAdmitsReceivedWithHash() {

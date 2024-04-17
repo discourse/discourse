@@ -40,6 +40,7 @@ class UsersController < ApplicationController
                    reset_recent_searches
                    user_menu_bookmarks
                    user_menu_messages
+                   profile_views
                  ]
 
   skip_before_action :check_xhr,
@@ -1526,6 +1527,16 @@ class UsersController < ApplicationController
 
   def trusted_session
     render json: secure_session_confirmed? || user_just_created ? success_json : failed_json
+  end
+
+  def profile_views
+    count = UserProfileView
+      .where(user_profile_id: current_user.user_profile.id)
+      .order(id: :desc)
+      .limit(10)
+      .pluck(:user_id).count("DISTINCT user_id")
+
+    render json: { count: count }
   end
 
   def list_second_factors

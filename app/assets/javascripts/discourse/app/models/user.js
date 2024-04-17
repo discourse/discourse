@@ -572,6 +572,10 @@ export default class User extends RestModel.extend(Evented) {
     return ajax("/u/trusted-session.json");
   }
 
+  profileViews() {
+    return ajax("/u/profile-views");
+  }
+
   createPasskey() {
     return ajax("/u/create_passkey.json", {
       type: "POST",
