@@ -5,7 +5,7 @@ module Chat
     attributes :can_chat, :has_chat_enabled
 
     def can_chat
-      SiteSetting.chat_enabled && object.guardian.can_chat? && object.guardian.can_direct_message?
+      SiteSetting.chat_enabled && object.guardian.can_chat? && scope.can_create_direct_message?
     end
 
     def has_chat_enabled
