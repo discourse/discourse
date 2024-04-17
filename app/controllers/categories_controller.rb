@@ -367,7 +367,7 @@ class CategoriesController < ApplicationController
         if params[:limit].present?
           params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT)
         else
-          CategoriesController::MAX_CATEGORIES_LIMIT
+          MAX_CATEGORIES_LIMIT
         end
       )
     page = [1, params[:page].to_i].max
