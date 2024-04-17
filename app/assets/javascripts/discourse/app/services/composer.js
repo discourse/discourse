@@ -1353,6 +1353,7 @@ export default class ComposerService extends Service {
       composerModel.composeState === Composer.DRAFT
     ) {
       this.close();
+
       composerModel = null;
     }
 
@@ -1373,6 +1374,13 @@ export default class ComposerService extends Service {
           composerModel.draftKey === opts.draftKey
         ) {
           composerModel.set("composeState", Composer.OPEN);
+
+          // reset height set from collapse() state
+          document.documentElement.style.setProperty(
+            "--composer-height",
+            this.get("model.composerHeight")
+          );
+
           if (!opts.action) {
             return;
           }
@@ -1415,7 +1423,6 @@ export default class ComposerService extends Service {
           await this.open(opts);
         }
       }
-
       await this._setModel(composerModel, opts);
     } finally {
       this.skipAutoSave = false;
