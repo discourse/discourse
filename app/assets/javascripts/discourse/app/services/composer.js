@@ -1373,6 +1373,13 @@ export default class ComposerService extends Service {
           composerModel.draftKey === opts.draftKey
         ) {
           composerModel.set("composeState", Composer.OPEN);
+
+          // reset height set from collapse() state
+          document.documentElement.style.setProperty(
+            "--composer-height",
+            this.get("model.composerHeight")
+          );
+
           if (!opts.action) {
             return;
           }
