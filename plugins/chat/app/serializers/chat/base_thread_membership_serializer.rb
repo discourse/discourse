@@ -8,5 +8,9 @@ module Chat
       Chat::UserChatThreadMembership.notification_levels[object.notification_level] ||
         Chat::UserChatThreadMembership.notification_levels["normal"]
     end
+
+    def thread_title_prompt
+      object.try(:thread_title_prompt) || false
+    end
   end
 end

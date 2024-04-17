@@ -618,6 +618,7 @@ export default class ChatThread extends Component {
       data: {
         title: this.toastText.title,
         message: this.toastText.message,
+        showProgressBar: true,
         actions: [
           {
             label: this.toastText.dismissLabel,
