@@ -13,12 +13,12 @@ class Admin::WatchedWordsController < Admin::StaffController
   end
 
   def create
-    watched_word = WatchedWord.create_or_update_word(watched_words_params)
-    if watched_word.valid?
-      StaffActionLogger.new(current_user).log_watched_words_creation(watched_word)
-      render json: watched_word, root: false
+    watched_word_group = WatchedWordGroup.create_membership(watched_words_params)
+    if watched_word_group.valid?
+      StaffActionLogger.new(current_user).log_watched_words_creation(watched_word_group)
+      render json: watched_word_group, root: false
     else
-      render_json_error(watched_word)
+      render_json_error(watched_word_group)
     end
   end
 
@@ -100,6 +100,6 @@ class Admin::WatchedWordsController < Admin::StaffController
   private
 
   def watched_words_params
-    params.permit(:id, :word, :replacement, :action_key, :case_sensitive)
+    params.permit(:id, :replacement, :action_key, :case_sensitive, words: [])
   end
 end

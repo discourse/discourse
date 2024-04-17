@@ -48,34 +48,8 @@ class WatchedWord < ActiveRecord::Base
       )
   end
 
-  MAX_WORDS_PER_ACTION = 2000
-
-  before_validation do
-    self.word = self.class.normalize_word(self.word)
-    if self.action == WatchedWord.actions[:link] && !(self.replacement =~ %r{\Ahttps?://})
-      self.replacement =
-        "#{Discourse.base_url}#{self.replacement&.starts_with?("/") ? "" : "/"}#{self.replacement}"
-    end
-  end
-
-  validates :word, presence: true, uniqueness: true, length: { maximum: 100 }
-  validates :action, presence: true
-
-  validate :replacement_is_url, if: -> { action == WatchedWord.actions[:link] }
-  validate :replacement_is_tag_list, if: -> { action == WatchedWord.actions[:tag] }
-
-  validates_each :word do |record, attr, val|
-    if WatchedWord.where(action: record.action).count >= MAX_WORDS_PER_ACTION
-      record.errors.add(:word, :too_many)
-    end
-  end
-
   belongs_to :watched_word_group
 
-  after_save -> { WordWatcher.clear_cache! }
-  after_destroy -> { WordWatcher.clear_cache! }
-
-  scope :by_action, -> { order("action ASC, word ASC") }
   scope :for,
         ->(word:) do
           where(
