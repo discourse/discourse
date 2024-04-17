@@ -1353,7 +1353,6 @@ export default class ComposerService extends Service {
       composerModel.composeState === Composer.DRAFT
     ) {
       this.close();
-
       composerModel = null;
     }
 
@@ -1423,6 +1422,7 @@ export default class ComposerService extends Service {
           await this.open(opts);
         }
       }
+
       await this._setModel(composerModel, opts);
     } finally {
       this.skipAutoSave = false;
