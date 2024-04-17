@@ -87,6 +87,12 @@
             "null"
           ]
         },
+        "subcategories_count": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
         "sort_order": {
           "type": [
             "string",
@@ -291,6 +297,7 @@
         "topic_template",
         "form_template_ids",
         "has_children",
+        "subcategories_count",
         "sort_order",
         "sort_ascending",
         "show_subcategory_list",
