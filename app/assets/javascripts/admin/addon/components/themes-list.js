@@ -77,6 +77,13 @@ export default class ThemesList extends Component {
   @equal("filter", ACTIVE_FILTER) activeFilter;
   @equal("filter", INACTIVE_FILTER) inactiveFilter;
 
+  willRender() {
+    super.willRender(...arguments);
+    if (!this.showSearchAndFilter) {
+      this.set("searchTerm", null);
+    }
+  }
+
   @discourseComputed("themes", "components", "currentTab")
   themesList(themes, components) {
     if (this.themesTabActive) {
@@ -209,9 +216,6 @@ export default class ThemesList extends Component {
     if (newTab !== this.currentTab) {
       this.set("selectInactiveMode", false);
       this.set("filter", ALL_FILTER);
-      if (!this.showSearchAndFilter) {
-        this.set("searchTerm", null);
-      }
       this.router.transitionTo("adminCustomizeThemes", newTab);
     }
   }

@@ -45,6 +45,10 @@ module PageObjects
         has_css?(".inactive-theme input:checked", count: count)
       end
 
+      def has_themes?(count:)
+        has_css?(".themes-list-container__item", count: count)
+      end
+
       def toggle_all_inactive
         find(".toggle-all-inactive").click
       end
@@ -65,6 +69,22 @@ module PageObjects
       def click_theme_settings_editor_button
         click_button(I18n.t("admin_js.admin.customize.theme.settings_editor"))
         PageObjects::Components::AdminThemeSettingsEditor.new
+      end
+
+      def switch_to_components
+        find(".components-tab").click
+      end
+
+      def switch_to_themes
+        find(".themes-tab").click
+      end
+
+      def search(term)
+        find(".themes-list-search__input").fill_in with: term
+      end
+
+      def has_no_search?
+        has_no_css?(".themes-list-search__input")
       end
 
       private
