@@ -136,9 +136,10 @@ createWidget("discourse-poll-option-dropdown", {
     ];
   },
 
-  // TODO: Implement this
-  // selectRank(value) {
-  // },
+  // TODO Placeholder
+  selectRank(value) {
+    return value * 2;
+  },
 });
 
 createWidget("discourse-poll-load-more", {
