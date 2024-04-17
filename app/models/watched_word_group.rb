@@ -40,7 +40,7 @@ class WatchedWordGroup < ActiveRecord::Base
 
         unless watched_word.valid?
           # TODO: Properly bubble up error
-          self.errors.merge!({ word: watched_word.inspect })
+          self.errors.add(:invalid, watched_word.inspect)
           self.errors.merge!(watched_word.errors)
 
           raise ActiveRecord::Rollback

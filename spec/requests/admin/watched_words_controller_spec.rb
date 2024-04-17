@@ -104,17 +104,24 @@ RSpec.describe Admin::WatchedWordsController do
       before { sign_in(admin) }
 
       it "creates a word with default case sensitivity" do
-        post "/admin/customize/watched_words.json", params: { action_key: "flag", word: "Deals" }
+        expect {
+          post "/admin/customize/watched_words.json",
+               params: {
+                 action_key: "flag",
+                 words: %w[Deals Offer],
+               }
+        }.to change { WatchedWord.count }.by(2)
 
         expect(response.status).to eq(200)
         expect(WatchedWord.take.word).to eq("Deals")
+        expect(WatchedWord.last.word).to eq("Offer")
       end
 
       it "creates a word with the given case sensitivity" do
         post "/admin/customize/watched_words.json",
              params: {
                action_key: "flag",
-               word: "PNG",
+               words: ["PNG"],
                case_sensitive: true,
              }
 
