@@ -247,12 +247,7 @@ class Category < ActiveRecord::Base
 
     # Load subcategory counts (used to fill has_children property)
     subcategory_count =
-      Category
-        .secured(guardian)
-        .where.not(parent_category_id: nil)
-        .group(:parent_category_id)
-        .pluck(:parent_category_id, "COUNT(*)")
-        .to_h
+      Category.secured(guardian).where.not(parent_category_id: nil).group(:parent_category_id).count
 
     # Update category attributes
     categories.each do |category|
