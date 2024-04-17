@@ -56,8 +56,9 @@ RSpec.describe Chat::ChatableUserSerializer do
   end
 
   context "when staff creates direct messages" do
-    let(:admin) { Fabricate(:admin) }
+    fab!(:admin)
     subject(:serializer) { described_class.new(user, scope: Guardian.new(admin), root: false) }
+
     before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4] }
 
     it "can chat" do
