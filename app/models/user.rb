@@ -2020,7 +2020,7 @@ class User < ActiveRecord::Base
 
     User
       .joins(
-        "LEFT JOIN user_histories ON user_histories.target_user_id = users.id AND action = #{UserHistory.actions[:deactivate_user]} AND acting_user_id > 0",
+        "LEFT JOIN user_histories ON user_histories.target_user_id = users.id AND action = #{UserHistory.actions[:deactivate_user]} AND acting_user_id IS NOT NULL",
       )
       .where(active: false)
       .where("users.created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
