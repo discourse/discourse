@@ -1,8 +1,10 @@
 import { render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { module, skip, test } from "qunit";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DToastInstance from "float-kit/lib/d-toast-instance";
+
+const TOAST_SELECTOR = ".fk-d-default-toast";
 
 module(
   "Integration | Component | FloatKit | d-default-toast",
@@ -103,8 +105,7 @@ module(
         .hasText("cancel");
     });
 
-    skip("swipe up to close", async function (assert) {
-      const TOAST_SELECTOR = ".fk-d-default-toast";
+    test("swipe up to close", async function (assert) {
       this.site.mobileView = true;
       this.hasClosed = false;
 
@@ -113,7 +114,9 @@ module(
       };
 
       this.toast = new DToastInstance(this, {});
-      await render(hbs`<DDefaultToast @close={{this.onClose}} />`);
+      await render(
+        hbs`<DDefaultToast @data={{this.toast.options.data}} @close={{this.onClose}} />`
+      );
 
       assert.dom(TOAST_SELECTOR).exists();
 
@@ -124,6 +127,7 @@ module(
 
       await triggerEvent(TOAST_SELECTOR, "touchmove", {
         touches: [{ clientX: 0, clientY: -20 }],
+        changedTouches: [{ clientX: 0, clientY: -20 }],
       });
 
       await triggerEvent(TOAST_SELECTOR, "touchend", {
