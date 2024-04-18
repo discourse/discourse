@@ -108,7 +108,9 @@ module(
       this.site.mobileView = true;
       this.hasClosed = false;
 
-      this.onClose = () => (this.hasClosed = true);
+      this.onClose = () => {
+        this.hasClosed = true;
+      };
 
       this.toast = new DToastInstance(this, {});
       await render(hbs`<DDefaultToast @close={{this.onClose}} />`);

@@ -51,10 +51,10 @@ export default class DDefaultToast extends Component {
       return;
     }
 
-    enableBodyScroll(this.wrapperElement);
-
     if (state.deltaY > MIN_SWIPE_THRESHOLD) {
       this.args.close();
+    } else {
+      enableBodyScroll(this.wrapperElement);
     }
   }
 
