@@ -3,6 +3,7 @@ import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -22,14 +23,20 @@ export default class DDefaultToast extends Component {
   scrollLocked = false;
   swipeEnabled = this.site.mobileView;
 
-  @action
-  setupToast(element) {
+  setupToast = modifier((element) => {
     this.wrapperElement = element.parentElement;
     this.wrapperElement.addEventListener(
       "touchstart",
       this.toggleLock.bind(this)
     );
-  }
+
+    return () => {
+      this.wrapperElement.removeEventListener(
+        "touchstart",
+        this.toggleLock.bind(this)
+      );
+    };
+  });
 
   @action
   handleSwipe(state) {
@@ -81,14 +88,6 @@ export default class DDefaultToast extends Component {
     this.scrollLocked = !this.scrollLocked;
   }
 
-  @action
-  cleanupToast() {
-    this.wrapperElement.removeEventListener(
-      "touchstart",
-      this.toggleLock.bind(this)
-    );
-  }
-
   <template>
     <div
       class={{concatClass
@@ -96,12 +95,12 @@ export default class DDefaultToast extends Component {
         (concat "-" (or @data.theme "default"))
       }}
       ...attributes
-      {{didInsert this.setupToast}}
       {{swipe
         didSwipe=this.handleSwipe
         didEndSwipe=this.handleSwipeEnded
         enabled=this.swipeEnabled
       }}
+      {{this.setupToast}}
     >
       {{#if @showProgressBar}}
         <div
