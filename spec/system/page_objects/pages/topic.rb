@@ -191,7 +191,7 @@ module PageObjects
       end
 
       def click_like_reaction_for(post)
-        within_post(post) { find(".post-controls .actions .like").click  }
+        within_post(post) { find(".post-controls .actions .like").click }
       end
 
       def has_topic_map?
