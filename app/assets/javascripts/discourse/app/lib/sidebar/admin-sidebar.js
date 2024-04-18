@@ -290,7 +290,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         if (link.keywords) {
           this.adminSidebarStateManager.setLinkKeywords(
             link.name,
-            link.keywords.map((keywordI18n) => I18n.t(keywordI18n))
+            I18n.t(link.keywords).split("|")
           );
         }
       })

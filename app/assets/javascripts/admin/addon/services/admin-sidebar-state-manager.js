@@ -15,12 +15,14 @@ export default class AdminSidebarStateManager extends Service {
   setLinkKeywords(link_name, keywords) {
     if (!this.keywords[link_name]) {
       this.keywords[link_name] = {
-        navigation: keywords.map((k) => k.toLowerCase()),
+        navigation: keywords.map((keyword) => keyword.toLowerCase()),
       };
       return;
     }
 
-    this.keywords[link_name].navigation = keywords.map((k) => k.toLowerCase());
+    this.keywords[link_name].navigation = keywords.map((keyword) =>
+      keyword.toLowerCase()
+    );
   }
 
   get navConfig() {

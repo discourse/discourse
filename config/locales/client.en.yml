@@ -5312,7 +5312,9 @@ en:
         title: "Account"
         sidebar_link:
           backups: "Backups"
-          whats_new: "What's New"
+          whats_new:
+            title: "What's New"
+            keywords: "changelog|feature|release"
 
       community:
         title: "Community"
@@ -5339,7 +5341,7 @@ en:
           themes: "Themes"
           components:
             title: "Components"
-            keywords: "theme"
+            keywords: "theme|extension"
           site_texts: "Site Texts"
 
       email_settings:
