@@ -7,10 +7,6 @@ import { modifier } from "ember-modifier";
 import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-} from "discourse/lib/body-scroll-lock";
 import swipe from "discourse/modifiers/swipe";
 import icon from "discourse-common/helpers/d-icon";
 import { bind } from "discourse-common/utils/decorators";
@@ -21,15 +17,13 @@ export default class DDefaultToast extends Component {
   @service site;
 
   animating = false;
-  scrollLocked = false;
   swipeEnabled = this.site.mobileView;
 
   setupToast = modifier((element) => {
     this.wrapperElement = element.parentElement;
-    this.wrapperElement.addEventListener("touchstart", this.disableScroll);
 
     return () => {
-      this.wrapperElement.removeEventListener("touchstart", this.disableScroll);
+      this.wrapperElement = null;
     };
   });
 
@@ -53,8 +47,6 @@ export default class DDefaultToast extends Component {
 
     if (state.deltaY > MIN_SWIPE_THRESHOLD) {
       this.args.close();
-    } else {
-      enableBodyScroll(this.wrapperElement);
     }
   }
 
@@ -67,15 +59,6 @@ export default class DDefaultToast extends Component {
     });
 
     this.animating = false;
-  }
-
-  @bind
-  disableScroll() {
-    if (!this.swipeEnabled) {
-      return;
-    }
-
-    disableBodyScroll(this.wrapperElement);
   }
 
   <template>
