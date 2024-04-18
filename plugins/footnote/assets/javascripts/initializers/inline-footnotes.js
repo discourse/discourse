@@ -29,47 +29,47 @@ function applyInlineFootnotes(elem) {
 }
 
 function buildTooltip() {
-  let html = `
+  const template = document.createElement("template");
+  template.innerHTML = `
     <div id="footnote-tooltip" role="tooltip">
       <div class="footnote-tooltip-content"></div>
       <div id="arrow" data-popper-arrow></div>
     </div>
-  `;
+  `.trim();
 
-  let template = document.createElement("template");
-  html = html.trim();
-  template.innerHTML = html;
   return template.content.firstChild;
 }
 
-function footNoteEventHandler(event) {
-  inlineFootnotePopper?.destroy();
-
-  const tooltip = document.getElementById("footnote-tooltip");
-
-  // reset state by hidding tooltip, it handles "click outside"
-  // allowing to hide the tooltip when you click anywhere else
-  tooltip?.removeAttribute("data-show");
-
-  // if we didn't actually click a footnote button, exit early
-  if (!event.target.classList.contains("expand-footnote")) {
-    return;
-  }
-
+function footnoteEventHandler(event) {
   event.preventDefault();
   event.stopPropagation();
 
-  // append footnote to tooltip body
+  const tooltip = document.getElementById("footnote-tooltip");
+  const displayedFootnoteId = tooltip?.dataset.footnoteId;
   const expandableFootnote = event.target;
-  const cooked = expandableFootnote.closest(".cooked");
   const footnoteId = expandableFootnote.dataset.footnoteId;
-  const footnoteContent = tooltip.querySelector(".footnote-tooltip-content");
-  let newContent = cooked.querySelector(footnoteId);
 
+  inlineFootnotePopper?.destroy();
+  tooltip?.removeAttribute("data-show");
+  tooltip?.removeAttribute("data-footnote-id");
+
+  if (
+    displayedFootnoteId === footnoteId ||
+    !event.target.classList.contains("expand-footnote")
+  ) {
+    // dismissing the tooltip
+    return;
+  }
+
+  // append footnote to tooltip body
+  const footnoteContent = tooltip.querySelector(".footnote-tooltip-content");
+  const cooked = expandableFootnote.closest(".cooked");
+  const newContent = cooked.querySelector(footnoteId);
   footnoteContent.innerHTML = newContent.innerHTML;
 
   // display tooltip
   tooltip.dataset.show = "";
+  tooltip.dataset.footnoteId = footnoteId;
 
   // setup popper
   inlineFootnotePopper?.destroy();
@@ -104,9 +104,8 @@ export default {
       return;
     }
 
-    document.documentElement.append(buildTooltip());
-
-    window.addEventListener("click", footNoteEventHandler);
+    document.body.append(buildTooltip());
+    window.addEventListener("click", footnoteEventHandler);
 
     withPluginApi("0.8.9", (api) => {
       api.decorateCookedElement((elem) => applyInlineFootnotes(elem), {
@@ -124,7 +123,7 @@ export default {
 
   teardown() {
     inlineFootnotePopper?.destroy();
-    window.removeEventListener("click", footNoteEventHandler);
+    window.removeEventListener("click", footnoteEventHandler);
     document.getElementById("footnote-tooltip")?.remove();
   },
 };
