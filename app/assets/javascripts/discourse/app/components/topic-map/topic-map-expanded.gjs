@@ -13,8 +13,14 @@ const TRUNCATED_LINKS_LIMIT = 5;
 
 export default class TopicMapExpanded extends Component {
   @tracked allLinksShown = false;
-  topicLinks = this.args.topicDetails.links;
-  participants = this.args.topicDetails.participants;
+
+  get topicLinks() {
+    return this.args.topicDetails.links;
+  }
+
+  get participants() {
+    return this.args.topicDetails.participants;
+  }
 
   @action
   showAllLinks() {

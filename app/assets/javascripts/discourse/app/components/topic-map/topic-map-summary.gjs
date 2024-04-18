@@ -10,9 +10,17 @@ import i18n from "discourse-common/helpers/i18n";
 import { avatarImg } from "discourse-common/lib/avatar-utils";
 
 export default class TopicMapSummary extends Component {
-  linksCount = this.args.topicDetails.links?.length ?? 0;
-  createdByUsername = this.args.topicDetails.created_by?.username;
-  lastPosterUsername = this.args.topicDetails.last_poster?.username;
+  get linksCount() {
+    return this.args.topicDetails.links?.length ?? 0;
+  }
+
+  get createdByUsername() {
+    return this.args.topicDetails.created_by?.username;
+  }
+
+  get lastPosterUsername() {
+    return this.args.topicDetails.last_poster?.username;
+  }
 
   get toggleMapButton() {
     return {
