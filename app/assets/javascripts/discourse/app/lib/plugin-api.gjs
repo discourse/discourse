@@ -676,6 +676,30 @@ class PluginApi {
   }
 
   /**
+   * Add a new button in the topic admin menu.
+   *
+   * Example:
+   *
+   * ```
+   * api.addTopicAdminMenuButton((topic) => {
+   *   return {
+   *     action: () => {
+   *       alert('You clicked on the coffee button!');
+   *     },
+   *     icon: 'coffee',
+   *     className: 'hot-coffee',
+   *     label: 'coffee.title',
+   *   };
+   * });
+   * ```
+   **/
+  addTopicAdminMenuButton(callback) {
+    this.container
+      .lookup("service:admin-topic-menu-buttons")
+      .addButton(callback);
+  }
+
+  /**
    * Remove existing button below a post with your plugin.
    *
    * Example:
