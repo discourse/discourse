@@ -13,6 +13,7 @@ import {
 } from "discourse/lib/body-scroll-lock";
 import swipe from "discourse/modifiers/swipe";
 import icon from "discourse-common/helpers/d-icon";
+import { bind } from "discourse-common/utils/decorators";
 
 const MIN_SWIPE_THRESHOLD = 10;
 
@@ -25,16 +26,10 @@ export default class DDefaultToast extends Component {
 
   setupToast = modifier((element) => {
     this.wrapperElement = element.parentElement;
-    this.wrapperElement.addEventListener(
-      "touchstart",
-      this.toggleLock.bind(this)
-    );
+    this.wrapperElement.addEventListener("touchstart", this.toggleLock);
 
     return () => {
-      this.wrapperElement.removeEventListener(
-        "touchstart",
-        this.toggleLock.bind(this)
-      );
+      this.wrapperElement.removeEventListener("touchstart", this.toggleLock);
     };
   });
 
@@ -74,6 +69,7 @@ export default class DDefaultToast extends Component {
     this.animating = false;
   }
 
+  @bind
   toggleLock() {
     if (!this.site.mobileView) {
       return;
