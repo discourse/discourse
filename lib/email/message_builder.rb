@@ -218,7 +218,9 @@ module Email
       end
 
       result["X-Discourse-Post-Id"] = @opts[:post_id].to_s if @opts[:post_id]
+      result["X-Discourse-Post-Ids"] = @opts[:post_ids].join(",") if @opts[:post_ids].present?
       result["X-Discourse-Topic-Id"] = @opts[:topic_id].to_s if @opts[:topic_id]
+      result["X-Discourse-Topic-Ids"] = @opts[:topic_ids].join(",") if @opts[:topic_ids].present?
 
       # at this point these have been filtered by the recipient's guardian for visibility,
       # see UserNotifications#send_notification_email
