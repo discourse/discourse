@@ -41,9 +41,6 @@ function buildTooltip() {
 }
 
 function footnoteEventHandler(event) {
-  event.preventDefault();
-  event.stopPropagation();
-
   const tooltip = document.getElementById("footnote-tooltip");
   const displayedFootnoteId = tooltip?.dataset.footnoteId;
   const expandableFootnote = event.target;
@@ -53,11 +50,16 @@ function footnoteEventHandler(event) {
   tooltip?.removeAttribute("data-show");
   tooltip?.removeAttribute("data-footnote-id");
 
-  if (
-    displayedFootnoteId === footnoteId ||
-    !event.target.classList.contains("expand-footnote")
-  ) {
-    // dismissing the tooltip
+  if (!event.target.classList.contains("expand-footnote")) {
+    // dismissing the tooltip by clicking outside
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+
+  if (displayedFootnoteId === footnoteId) {
+    // dismissing the tooltip by clicking the footnote button
     return;
   }
 
@@ -114,9 +116,11 @@ export default {
       });
 
       api.onPageChange(() => {
-        document
-          .getElementById("footnote-tooltip")
-          ?.removeAttribute("data-show");
+        inlineFootnotePopper?.destroy();
+
+        const tooltip = document.getElementById("footnote-tooltip");
+        tooltip?.removeAttribute("data-show");
+        tooltip?.removeAttribute("data-footnote-id");
       });
     });
   },
