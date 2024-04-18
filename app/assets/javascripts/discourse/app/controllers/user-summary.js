@@ -23,6 +23,8 @@ export default Controller.extend({
 
   async fetchProfileViews() {
     this.set("profileViews", await ajax("/u/profile-views.json"));
+    this.set("firstUser", this.profileViews?.[0]);
+    this.set("secondUser", this.profileViews?.[1]);
   },
 
   setAdmitsReceivedWithHash() {

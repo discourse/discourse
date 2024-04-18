@@ -12,7 +12,39 @@
 }
 
 .user-summary-page .wrap {
-  max-width: 768px !important;
+  max-width: 900px !important;
+
+  .side-box {
+    align-self: flex-start;
+    min-width: 256px;
+    width: 256px;
+
+    .profile-viewers-summary {
+      border-radius: 8px;
+      background: #747e96;
+      color: white;
+      max-width: 100%;
+      width: 100%;
+      padding: 0.5rem 1rem;
+      font-weight: 500;
+      position: relative;
+      z-index: 2;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    .profile-viewers-detail {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      background: #f0f4fd;
+      position: relative;
+      top: -1rem;
+      padding-top: 2rem;
+      padding-bottom: 1rem;
+      box-sizing: border-box;
+    }
+  }
 }
 
 .user-summary-page .college-list {

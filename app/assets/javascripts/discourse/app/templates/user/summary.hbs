@@ -1,54 +1,88 @@
 {{body-class "user-summary-page"}}
 
 <div class="new-user-content-wrapper" style="margin-top: 2.25rem">
-  <div style="margin-bottom: 4rem;">
-    <p style="font-size: 20px; font-weight: 700; margin-bottom: 1rem;">
-      College List ({{this.profileViews}})
-    </p>
-    <div class="college-list" id="college-grid">
-      {{#each this.admitsReceivedWithHash as |college|}}
-        <div class="college-card">
-          <div class="toptext {{college.type}}">{{college.topText}}</div>
-          <div class="card-contents">
-            <div class="logo">
-              <img src="/images/colleges/{{college.hash}}.png" />
+  <div
+    style="display: flex; justify-content: space-around; align-items: center;"
+  >
+    <div>
+      <div style="margin-bottom: 4rem;">
+        <p
+          style="font-size: 20px; font-weight: 700; margin-bottom: 1rem; margin-top: 0;"
+        >
+          College List
+        </p>
+        <div class="college-list" id="college-grid">
+          {{#each this.admitsReceivedWithHash as |college|}}
+            <div class="college-card">
+              <div class="toptext {{college.type}}">{{college.topText}}</div>
+              <div class="card-contents">
+                <div class="logo">
+                  <img src="/images/colleges/{{college.hash}}.png" />
+                </div>
+                <div class="subtext">
+                  <div class="college">{{college.name}}</div>
+                  <div class="course">BS Computer Science</div>
+                </div>
+              </div>
             </div>
-            <div class="subtext">
-              <div class="college">{{college.name}}</div>
-              <div class="course">BS Computer Science</div>
-            </div>
-          </div>
-        </div>
-      {{/each}}
-    </div>
-  </div>
-  <div style="margin-bottom: 2rem;">
-    <p style="font-size: 20px; font-weight: 700; margin-bottom: 1rem;">About</p>
-    {{#if this.user.bio_excerpt}}
-      <div class="card-row second-row">
-        <div class="bio-contents">
-          {{html-safe this.user.bio_cooked}}
+          {{/each}}
         </div>
       </div>
-    {{else if (eq this.user.username this.currentUser.username)}}
-      <a
-        href="/u/{{this.currentUser.username}}/preferences/profile/"
-        class="about-edit-link"
-      >
-        Write something about yourself
-        <svg
-          style="width: 10px;"
-          class="fa d-icon d-icon-pencil-alt svg-icon svg-string"
-          xmlns="http://www.w3.org/2000/svg"
-        ><use href="#pencil-alt"></use></svg>
-      </a>
-    {{else}}
-      <p style="color: hsl(210,8%,42%);">
-        Apparently, this user prefers to keep an air of mystery about them
-      </p>
-    {{/if}}
+      <div style="margin-bottom: 2rem;">
+        <p
+          style="font-size: 20px; font-weight: 700; margin-bottom: 1rem;"
+        >About</p>
+        {{#if this.user.bio_excerpt}}
+          <div class="card-row second-row">
+            <div class="bio-contents">
+              {{html-safe this.user.bio_cooked}}
+            </div>
+          </div>
+        {{else if (eq this.user.username this.currentUser.username)}}
+          <a
+            href="/u/{{this.currentUser.username}}/preferences/profile/"
+            class="about-edit-link"
+          >
+            Write something about yourself
+            <svg
+              style="width: 10px;"
+              class="fa d-icon d-icon-pencil-alt svg-icon svg-string"
+              xmlns="http://www.w3.org/2000/svg"
+            ><use href="#pencil-alt"></use></svg>
+          </a>
+        {{else}}
+          <p style="color: hsl(210,8%,42%);">
+            Apparently, this user prefers to keep an air of mystery about them
+          </p>
+        {{/if}}
+      </div>
+      <p><strong>Lives in</strong>:
+        <span>{{this.currentUser.location}}</span></p>
+    </div>
+    <div class="side-box">
+      <div class="profile-viewers-summary">
+        {{#if (gt this.profileViews.views.length 1)}}
+          <div>
+            <span>{{bound-avatar firstUser "tiny"}}</span>
+            <span style="position: relative; left: -.5rem; z-index: 2;">
+              {{bound-avatar secondUser "tiny"}}
+            </span>
+            and others viewed your profile
+          </div>
+        {{else}}
+          <div>Your profile views</div>
+        {{/if}}
+      </div>
+      <div class="profile-viewers-detail">
+        {{#each this.profileViews.views as |user|}}
+          <div style="display: flex; align-items: center; gap: .5rem;">
+            {{bound-avatar user "tiny"}}
+            {{user.name}}
+          </div>
+        {{/each}}
+      </div>
+    </div>
   </div>
-  <p><strong>Lives in</strong>: <span>{{this.currentUser.location}}</span></p>
 </div>
 
 <div class="user-content hidden hidden" id="user-content">

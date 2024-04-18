@@ -1530,13 +1530,28 @@ class UsersController < ApplicationController
   end
 
   def profile_views
-    count = UserProfileView
-      .where(user_profile_id: current_user.user_profile.id)
-      .order(id: :desc)
-      .limit(10)
-      .pluck(:user_id).count("DISTINCT user_id")
+    result = DB.query(<<-SQL, current_user_id: current_user.id)
+    SELECT distinct on (users.id)
+      coalesce(users.name, users.username) as name,
+      users.username as username,
+      users.uploaded_avatar_id as avatar_id
+      from users
+          join user_profile_views
+              on users.id = user_profile_views.user_id
+              and user_profile_views.user_profile_id = :current_user_id
+          left join uploads
+              on users.uploaded_avatar_id = uploads.id
+      where
+          user_profile_views.viewed_at >= (now() - interval '90 days')
+      order by users.id, uploads.created_at desc;
+    SQL
 
-    render json: { count: count }
+    enhanced_results = result.map do |view|
+      view_hash = view.respond_to?(:to_h) ? view.to_h : view.attributes.to_h
+      view_hash.merge(avatar_template: User.avatar_template(view.username, view.avatar_id))
+    end
+
+    render json: { views: enhanced_results }
   end
 
   def list_second_factors
