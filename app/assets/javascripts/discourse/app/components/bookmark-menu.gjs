@@ -93,10 +93,6 @@ export default class BookmarkMenu extends Component {
     return cssClasses.join(" ");
   }
 
-  get buttonIdentifier() {
-    return `${this.bookmarkManager.bookmarkModel.bookmarkable_type.toLowerCase()}-bookmark-menu`;
-  }
-
   get buttonIcon() {
     if (this.existingBookmark?.reminderAt) {
       return "discourse-bookmark-clock";
@@ -240,7 +236,7 @@ export default class BookmarkMenu extends Component {
   <template>
     <DMenu
       {{didInsert this.setReminderShortcuts}}
-      @identifier={{this.buttonIdentifier}}
+      @identifier="bookmark-menu"
       @triggers={{array "click"}}
       class={{this.buttonClasses}}
       @title={{this.buttonTitle}}

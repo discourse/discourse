@@ -97,7 +97,7 @@ describe "Bookmarking posts and topics", type: :system do
   describe "topic level bookmarks" do
     it "allows the topic to be bookmarked" do
       topic_page.visit_topic(topic)
-      topic_page.click_topic_bookmark_button(topic)
+      topic_page.click_topic_bookmark_button
       expect(topic_page).to have_topic_bookmarked(topic)
       expect(Bookmark.exists?(bookmarkable: topic, user: current_user)).to be_truthy
     end
@@ -105,7 +105,7 @@ describe "Bookmarking posts and topics", type: :system do
     it "opens the edit bookmark modal from the topic bookmark button and saves edits" do
       bookmark = Fabricate(:bookmark, bookmarkable: topic, user: current_user)
       topic_page.visit_topic(topic)
-      topic_page.click_topic_bookmark_button(topic)
+      topic_page.click_topic_bookmark_button
       bookmark_menu.click_menu_option("edit")
       expect(bookmark_modal).to be_open
       expect(bookmark_modal).to be_editing_id(bookmark.id)
