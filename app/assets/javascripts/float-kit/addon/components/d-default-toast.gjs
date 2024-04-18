@@ -13,7 +13,7 @@ import {
 import swipe from "discourse/modifiers/swipe";
 import icon from "discourse-common/helpers/d-icon";
 
-const MIN_SWIPE_THRESHOLD = 20;
+const MIN_SWIPE_THRESHOLD = 10;
 
 export default class DDefaultToast extends Component {
   @service site;

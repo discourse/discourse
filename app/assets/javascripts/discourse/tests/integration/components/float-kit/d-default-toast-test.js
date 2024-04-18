@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -101,6 +101,34 @@ module(
         .dom(".fk-d-default-toast__actions .btn.btn-danger")
         .exists()
         .hasText("cancel");
+    });
+
+    test("swipe up to close", async function (assert) {
+      const TOAST_SELECTOR = ".fk-d-default-toast";
+      this.site.mobileView = true;
+      this.hasClosed = false;
+
+      this.onClose = () => (this.hasClosed = true);
+
+      this.toast = new DToastInstance(this, {});
+      await render(hbs`<DDefaultToast @close={{this.onClose}} />`);
+
+      assert.dom(TOAST_SELECTOR).exists();
+
+      await triggerEvent(TOAST_SELECTOR, "touchstart", {
+        touches: [{ clientX: 0, clientY: 0 }],
+        changedTouches: [{ clientX: 0, clientY: 0 }],
+      });
+
+      await triggerEvent(TOAST_SELECTOR, "touchmove", {
+        touches: [{ clientX: 0, clientY: -20 }],
+      });
+
+      await triggerEvent(TOAST_SELECTOR, "touchend", {
+        changedTouches: [{ clientX: 0, clientY: -20 }],
+      });
+
+      assert.strictEqual(this.hasClosed, true);
     });
   }
 );
