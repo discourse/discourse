@@ -9,7 +9,6 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import swipe from "discourse/modifiers/swipe";
 import icon from "discourse-common/helpers/d-icon";
-import { bind } from "discourse-common/utils/decorators";
 
 const MIN_SWIPE_THRESHOLD = 10;
 
