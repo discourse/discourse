@@ -178,7 +178,21 @@ export default class RenderGlimmer {
   }
 
   get parentMountWidgetComponent() {
-    return this.widget?._findView() || this._emberView;
+    if (this._emberView) {
+      return this._emberView;
+    }
+    // Work up parent widgets until we find one with a _emberView
+    // attribute. `.parentWidget` is the normal way to work up the tree,
+    // but we use `attrs._postCookedWidget` to handle the special case
+    // of widgets rendered inside post-cooked.
+    let widget = this.widget;
+    while (widget) {
+      const component = widget._emberView;
+      if (component) {
+        return component;
+      }
+      widget = widget.parentWidget || widget.attrs._postCookedWidget;
+    }
   }
 }
 
