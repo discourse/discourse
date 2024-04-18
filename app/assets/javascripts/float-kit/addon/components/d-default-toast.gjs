@@ -26,16 +26,16 @@ export default class DDefaultToast extends Component {
 
   setupToast = modifier((element) => {
     this.wrapperElement = element.parentElement;
-    this.wrapperElement.addEventListener("touchstart", this.toggleLock);
+    this.wrapperElement.addEventListener("touchstart", this.disableScroll);
 
     return () => {
-      this.wrapperElement.removeEventListener("touchstart", this.toggleLock);
+      this.wrapperElement.removeEventListener("touchstart", this.disableScroll);
     };
   });
 
   @action
   handleSwipe(state) {
-    if (!this.site.mobileView || this.animating) {
+    if (!this.swipeEnabled || this.animating) {
       return;
     }
 
@@ -47,11 +47,11 @@ export default class DDefaultToast extends Component {
 
   @action
   handleSwipeEnded(state) {
-    if (!this.site.mobileView) {
+    if (!this.swipeEnabled) {
       return;
     }
 
-    this.toggleLock();
+    enableBodyScroll(this.wrapperElement);
 
     if (state.deltaY > MIN_SWIPE_THRESHOLD) {
       this.args.close();
@@ -70,18 +70,12 @@ export default class DDefaultToast extends Component {
   }
 
   @bind
-  toggleLock() {
-    if (!this.site.mobileView) {
+  disableScroll() {
+    if (!this.swipeEnabled) {
       return;
     }
 
-    if (this.scrollLocked) {
-      enableBodyScroll(this.wrapperElement);
-    } else {
-      disableBodyScroll(this.wrapperElement);
-    }
-
-    this.scrollLocked = !this.scrollLocked;
+    disableBodyScroll(this.wrapperElement);
   }
 
   <template>
