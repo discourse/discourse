@@ -77,7 +77,6 @@ export default class DMenu extends Component {
         "fk-d-menu__trigger"
         (if this.menuInstance.expanded "-expanded")
         (concat this.options.identifier "-trigger")
-        this.options.extraClassName
       }}
       id={{this.menuInstance.id}}
       data-identifier={{this.options.identifier}}

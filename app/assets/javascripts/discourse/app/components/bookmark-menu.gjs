@@ -94,9 +94,7 @@ export default class BookmarkMenu extends Component {
   }
 
   get buttonIdentifier() {
-    return `bookmark-menu-${this.bookmarkManager.bookmarkModel.bookmarkable_type.toLowerCase()}-${
-      this.bookmarkManager.bookmarkModel.bookmarkable_id
-    }`;
+    return `${this.bookmarkManager.bookmarkModel.bookmarkable_type.toLowerCase()}-bookmark-menu`;
   }
 
   get buttonIcon() {
@@ -244,7 +242,6 @@ export default class BookmarkMenu extends Component {
       {{didInsert this.setReminderShortcuts}}
       @identifier={{this.buttonIdentifier}}
       @triggers={{array "click"}}
-      @extraClassName="bookmark-menu-content"
       class={{this.buttonClasses}}
       @title={{this.buttonTitle}}
       @label={{this.buttonLabel}}
