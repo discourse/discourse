@@ -40,7 +40,7 @@ export default class SummaryBox extends Component {
   }
 
   get topRepliesSummaryEnabled() {
-    return this.args.topic.has_summary;
+    return this.args.topic.postStream.summary;
   }
 
   get topRepliesSummaryInfo() {
