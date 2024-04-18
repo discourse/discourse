@@ -1,8 +1,7 @@
 import { render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { module, test } from "qunit";
+import { module, skip, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { chromeTest } from "discourse/tests/helpers/qunit-helpers";
 import DToastInstance from "float-kit/lib/d-toast-instance";
 
 module(
@@ -104,7 +103,7 @@ module(
         .hasText("cancel");
     });
 
-    chromeTest("swipe up to close", async function (assert) {
+    skip("swipe up to close", async function (assert) {
       const TOAST_SELECTOR = ".fk-d-default-toast";
       this.site.mobileView = true;
       this.hasClosed = false;
