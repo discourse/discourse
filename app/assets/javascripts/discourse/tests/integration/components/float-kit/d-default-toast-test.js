@@ -1,3 +1,4 @@
+import { later } from "@ember/runloop";
 import { render, triggerEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
@@ -133,6 +134,8 @@ module(
       await triggerEvent(TOAST_SELECTOR, "touchend", {
         changedTouches: [{ clientX: 0, clientY: -20 }],
       });
+
+      await new Promise((resolve) => later(resolve, 600));
 
       assert.strictEqual(this.hasClosed, true);
     });
