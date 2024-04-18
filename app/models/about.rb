@@ -13,6 +13,10 @@ class About
       @category = category
       @moderators = moderators
     end
+
+    def parent_category
+      category.parent_category
+    end
   end
 
   include ActiveModel::Serialization
