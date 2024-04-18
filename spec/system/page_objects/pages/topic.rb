@@ -115,12 +115,16 @@ module PageObjects
         find_topic_footer_button(button).click
       end
 
-      def has_topic_bookmarked?
-        has_css?("#{topic_footer_button_id("bookmark")}.bookmarked", text: "Edit Bookmark")
+      def click_topic_bookmark_button(topic)
+        find("[data-identifier='bookmark-menu-topic-#{topic.id}']").click
       end
 
-      def has_no_bookmarks?
-        has_no_css?("#{topic_footer_button_id("bookmark")}.bookmarked")
+      def has_topic_bookmarked?(topic)
+        has_css?(".bookmark-menu-topic-#{topic.id}-trigger.bookmarked", text: "Edit Bookmark")
+      end
+
+      def has_no_bookmarks?(topic)
+        has_no_css?(".bookmark-menu-topic-#{topic.id}-trigger.bookmarked")
       end
 
       def find_topic_footer_button(button)
