@@ -181,9 +181,17 @@ RSpec.describe UserNotifications do
     end
 
     context "with new topics" do
-      let!(:popular_topic) do
-        Fabricate(:topic, user: Fabricate(:coding_horror), created_at: 1.hour.ago)
+      fab!(:coding_horror)
+
+      let!(:popular_topic) { Fabricate(:topic, user: coding_horror, created_at: 1.hour.ago) }
+
+      let!(:another_popular_topic) do
+        Fabricate(:topic, user: coding_horror, created_at: 1.hour.ago)
       end
+
+      let!(:post) { Fabricate(:post, topic: popular_topic, post_number: 1) }
+
+      let!(:another_post) { Fabricate(:post, topic: another_popular_topic, post_number: 1) }
 
       it "works" do
         expect(email.to).to eq([user.email])
@@ -192,6 +200,10 @@ RSpec.describe UserNotifications do
         expect(email.html_part.body.to_s).to be_present
         expect(email.text_part.body.to_s).to be_present
         expect(email.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
+        expect(email.header["X-Discourse-Topic-Ids"].to_s).to eq(
+          "#{another_popular_topic.id},#{popular_topic.id}",
+        )
+        expect(email.header["X-Discourse-Post-Ids"].to_s).to eq("#{another_post.id},#{post.id}")
         expect(email.html_part.body.to_s).to include("New Users")
       end
 
