@@ -1,5 +1,9 @@
 import { registerDestructor } from "@ember/destroyable";
 import Modifier from "ember-modifier";
+import {
+  disableBodyScroll,
+  enableBodyScroll,
+} from "discourse/lib/body-scroll-lock";
 import { bind } from "discourse-common/utils/decorators";
 
 /**
@@ -74,6 +78,8 @@ export default class SwipeModifier extends Modifier {
    */
   @bind
   handleTouchStart(event) {
+    disableBodyScroll(this.element);
+
     this.state = {
       initialY: event.touches[0].clientY,
       initialX: event.touches[0].clientX,
@@ -81,6 +87,7 @@ export default class SwipeModifier extends Modifier {
       deltaX: 0,
       direction: null,
       orientation: null,
+      element: this.element,
     };
 
     this.didStartSwipeCallback?.(this.state);
@@ -94,6 +101,8 @@ export default class SwipeModifier extends Modifier {
    */
   @bind
   handleTouchEnd() {
+    enableBodyScroll(this.element);
+
     this.didEndSwipeCallback?.(this.state);
   }
 
@@ -137,5 +146,7 @@ export default class SwipeModifier extends Modifier {
     this.element?.removeEventListener("touchstart", this.handleTouchStart);
     this.element?.removeEventListener("touchmove", this.handleTouchMove);
     this.element?.removeEventListener("touchend", this.handleTouchEnd);
+
+    enableBodyScroll(this.element);
   }
 }

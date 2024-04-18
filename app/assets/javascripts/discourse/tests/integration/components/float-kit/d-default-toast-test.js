@@ -1,11 +1,8 @@
-import { later } from "@ember/runloop";
-import { render, triggerEvent } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DToastInstance from "float-kit/lib/d-toast-instance";
-
-const TOAST_SELECTOR = ".fk-d-default-toast";
 
 module(
   "Integration | Component | FloatKit | d-default-toast",
@@ -104,40 +101,6 @@ module(
         .dom(".fk-d-default-toast__actions .btn.btn-danger")
         .exists()
         .hasText("cancel");
-    });
-
-    test("swipe up to close", async function (assert) {
-      this.site.mobileView = true;
-      this.hasClosed = false;
-
-      this.onClose = () => {
-        this.hasClosed = true;
-      };
-
-      this.toast = new DToastInstance(this, {});
-      await render(
-        hbs`<DDefaultToast @data={{this.toast.options.data}} @close={{this.onClose}} />`
-      );
-
-      assert.dom(TOAST_SELECTOR).exists();
-
-      await triggerEvent(TOAST_SELECTOR, "touchstart", {
-        touches: [{ clientX: 0, clientY: 0 }],
-        changedTouches: [{ clientX: 0, clientY: 0 }],
-      });
-
-      await triggerEvent(TOAST_SELECTOR, "touchmove", {
-        touches: [{ clientX: 0, clientY: -20 }],
-        changedTouches: [{ clientX: 0, clientY: -20 }],
-      });
-
-      await triggerEvent(TOAST_SELECTOR, "touchend", {
-        changedTouches: [{ clientX: 0, clientY: -20 }],
-      });
-
-      await new Promise((resolve) => later(resolve, 600));
-
-      assert.strictEqual(this.hasClosed, true);
     });
   }
 );

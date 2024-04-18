@@ -1,82 +1,14 @@
 import Component from "@glimmer/component";
 import { concat, fn, hash } from "@ember/helper";
-import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
-import { modifier } from "ember-modifier";
 import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-} from "discourse/lib/body-scroll-lock";
-import swipe from "discourse/modifiers/swipe";
 import icon from "discourse-common/helpers/d-icon";
-import { bind } from "discourse-common/utils/decorators";
-
-const MIN_SWIPE_THRESHOLD = 10;
 
 export default class DDefaultToast extends Component {
   @service site;
-
-  animating = false;
-  swipeEnabled = this.site.mobileView;
-
-  setupToast = modifier((element) => {
-    this.wrapperElement = element.parentElement;
-    this.wrapperElement.addEventListener("touchstart", this.disableScroll);
-
-    return () => {
-      this.wrapperElement.removeEventListener("touchstart", this.disableScroll);
-      this.wrapperElement = null;
-    };
-  });
-
-  @action
-  handleSwipe(state) {
-    if (!this.swipeEnabled || this.animating) {
-      return;
-    }
-
-    if (state.deltaY > MIN_SWIPE_THRESHOLD) {
-      this.#animateWrapperPosition();
-      return;
-    }
-  }
-
-  @action
-  handleSwipeEnded(state) {
-    if (!this.swipeEnabled) {
-      return;
-    }
-
-    if (state.deltaY > MIN_SWIPE_THRESHOLD) {
-      this.args.close();
-    } else {
-      enableBodyScroll(this.wrapperElement);
-    }
-  }
-
-  async #animateWrapperPosition() {
-    this.animating = true;
-
-    await this.wrapperElement.animate([{ transform: `translateY(-150px)` }], {
-      duration: 500,
-      fill: "forwards",
-    });
-
-    this.animating = false;
-  }
-
-  @bind
-  disableScroll() {
-    if (!this.swipeEnabled) {
-      return;
-    }
-
-    disableBodyScroll(this.wrapperElement);
-  }
 
   <template>
     <div
@@ -85,12 +17,6 @@ export default class DDefaultToast extends Component {
         (concat "-" (or @data.theme "default"))
       }}
       ...attributes
-      {{swipe
-        didSwipe=this.handleSwipe
-        didEndSwipe=this.handleSwipeEnded
-        enabled=this.swipeEnabled
-      }}
-      {{this.setupToast}}
     >
       {{#if @showProgressBar}}
         <div
