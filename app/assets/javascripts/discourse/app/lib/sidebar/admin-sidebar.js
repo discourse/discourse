@@ -239,6 +239,10 @@ function pluginAdminRouteLinks() {
     });
 }
 
+function installedPluginsLinkKeywords() {
+  return (PreloadStore.get("visiblePlugins") || []).mapBy("name");
+}
+
 export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   key = ADMIN_PANEL;
   hidden = true;
@@ -266,6 +270,10 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
     if (!session.get("safe_mode")) {
       navMap.findBy("name", "plugins").links.push(...pluginAdminRouteLinks());
+      this.adminSidebarStateManager.setLinkKeywords(
+        "admin_installed_plugins",
+        installedPluginsLinkKeywords()
+      );
     }
 
     if (siteSettings.experimental_form_templates) {
@@ -280,7 +288,10 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     navMap.forEach((section) =>
       section.links.forEach((link) => {
         if (link.keywords) {
-          this.adminSidebarStateManager.keywords[link.name] = link.keywords;
+          this.adminSidebarStateManager.setLinkKeywords(
+            link.name,
+            I18n.t(link.keywords).split("|")
+          );
         }
       })
     );
