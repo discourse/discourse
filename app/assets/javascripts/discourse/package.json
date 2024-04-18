@@ -63,7 +63,7 @@
     "admin": "1.0.0",
     "autosize": "^6.0.1",
     "babel-import-util": "^2.0.3",
-    "babel-plugin-ember-template-compilation": "^2.2.1",
+    "babel-plugin-ember-template-compilation": "^2.2.2",
     "bootstrap": "3.4.1",
     "custom-proxy": "1.0.0",
     "broccoli-asset-rev": "^3.0.0",
