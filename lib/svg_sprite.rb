@@ -164,6 +164,7 @@ module SvgSprite
         italic
         key
         keyboard
+        language
         layer-group
         link
         list
@@ -197,6 +198,7 @@ module SvgSprite
         random
         redo
         reply
+        robot
         rocket
         search
         search-plus
