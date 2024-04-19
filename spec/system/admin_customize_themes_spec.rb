@@ -3,7 +3,7 @@
 describe "Admin Customize Themes", type: :system do
   fab!(:color_scheme)
   fab!(:theme)
-  fab!(:admin)
+  fab!(:admin) { Fabricate(:admin, locale: "en") }
 
   let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
 
@@ -159,6 +159,34 @@ describe "Admin Customize Themes", type: :system do
 
       theme_translations_settings_editor.fill_in("Hello World in French")
       theme_translations_settings_editor.save
+    end
+
+    it "should match the current user locale translation" do
+      SiteSetting.allow_user_locale = true
+      SiteSetting.set_locale_from_accept_language_header = true
+      SiteSetting.default_locale = "fr"
+
+      theme.set_field(
+        target: :translations,
+        name: "en",
+        value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
+      )
+      theme.set_field(
+        target: :translations,
+        name: "fr",
+        value: { fr: { group: { hello: "Bonjour!" } } }.deep_stringify_keys.to_yaml,
+      )
+      theme.save!
+
+      visit("/admin/customize/themes/#{theme.id}")
+
+      theme_translations_settings_editor =
+        PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
+
+      expect(theme_translations_settings_editor.get_input_value).to have_content("Hello there!")
+
+      theme_translations_picker = PageObjects::Components::SelectKit.new(".translation-selector")
+      expect(theme_translations_picker.component.text).to eq("English (US)")
     end
   end
 end
