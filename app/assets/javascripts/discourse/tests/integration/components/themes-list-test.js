@@ -1,4 +1,4 @@
-import { click, fillIn, render } from "@ember/test-helpers";
+import { fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -366,87 +366,5 @@ module("Integration | Component | themes-list", function (hooks) {
       "updates_available"
     );
     assert.deepEqual(componentNames(), ["Component unused and disabled 1"]);
-  });
-
-  test("switching between themes and components tabs keeps the search visible only if both tabs have at least 10 items", async function (assert) {
-    const themes = createThemes(10, (n) => {
-      return { name: `Theme ${n}${n}` };
-    });
-    const components = createThemes(5, (n) => {
-      return {
-        name: `Component ${n}${n}`,
-        component: true,
-        parent_themes: [1],
-        parentThemes: [1],
-      };
-    });
-    this.setProperties({
-      themes,
-      components,
-      currentTab: THEMES,
-    });
-
-    await render(
-      hbs`<ThemesList @themes={{this.themes}} @components={{this.components}} @currentTab={{this.currentTab}} />`
-    );
-
-    await fillIn(".themes-list-search__input", "11");
-    assert.strictEqual(
-      query(".themes-list-container__item .info").textContent.trim(),
-      "Theme 11",
-      "only 1 theme is shown"
-    );
-    await click(".themes-list-header .components-tab");
-    assert.ok(
-      !exists(".themes-list-search__input"),
-      "search input/term do not persist when we switch to the other" +
-        " tab because it has fewer than 10 items"
-    );
-    assert.deepEqual(
-      [...queryAll(".themes-list-container__item .info .name")].map((node) =>
-        node.textContent.trim()
-      ),
-      [
-        "Component 11",
-        "Component 22",
-        "Component 33",
-        "Component 44",
-        "Component 55",
-      ],
-      "all components are shown"
-    );
-
-    this.set(
-      "components",
-      this.components.concat(
-        createThemes(5, (n) => {
-          n += 5;
-          return {
-            name: `Component ${n}${n}`,
-            component: true,
-            parent_themes: [1],
-            parentThemes: [1],
-          };
-        })
-      )
-    );
-    assert.ok(
-      exists(".themes-list-search__input"),
-      "search is now shown for the components tab"
-    );
-
-    await fillIn(".themes-list-search__input", "66");
-    assert.strictEqual(
-      query(".themes-list-container__item .info").textContent.trim(),
-      "Component 66",
-      "only 1 component is shown"
-    );
-
-    await click(".themes-list-header .themes-tab");
-    assert.strictEqual(
-      query(".themes-list-container__item .info").textContent.trim(),
-      "Theme 66",
-      "search term persisted between tabs because both have more than 10 items"
-    );
   });
 });

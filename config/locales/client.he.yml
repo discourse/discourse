@@ -800,7 +800,6 @@ he:
       topic_count_long: "נושאים שנוצרו"
       post_count: "תגובות"
       post_count_long: "תגובות שפורסמו"
-      no_results: "לא נמצאו תוצאות"
       days_visited: "ביקורים"
       days_visited_long: "ימים לביקור"
       posts_read: "נקראו"
@@ -1080,6 +1079,7 @@ he:
       "13": "דואר נכנס"
       "14": "ממתין"
       "15": "טיוטות"
+      "17": "קישורים"
     categories:
       categories_label: "קטגוריות"
       subcategories_label: "תת־קטגוריות"
@@ -2653,6 +2653,7 @@ he:
         many: "אהבו %{count} מהפוסטים שלך"
         other: "אהבו %{count} מהפוסטים שלך"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2733,6 +2734,7 @@ he:
         watching_first_post: "נושא חדש"
         topic_reminder: "תזכורת נושא"
         liked_consolidated: "לייקים חדשים"
+        linked_consolidated: "קישורים חדשים"
         post_approved: "פוסט אושר"
         membership_request_consolidated: "בקשות חברות חדשות"
         reaction: "תגובת אמוג׳י חדשה"
@@ -2839,6 +2841,7 @@ he:
           seen: קראתי
           unseen: לא קראתי
           wiki: הם ויקי
+          images: לרבות תמונות
           all_tags: כל התגיות הנ"ל
         statuses:
           label: כאשר נושאים
@@ -4919,8 +4922,10 @@ he:
         up_to_date: "הכול עדכני!"
         critical_available: "עדכון קריטי מוכן להתקנה."
         updates_available: "עדכונים מוכנים."
+        please_update: "נא לעדכן!"
         no_check_performed: "לא בוצעה בדיקה לעדכונים. וודא ש-sidekiq פועל."
         stale_data: "לא בוצעה בדיקת עדכונים לאחרונה. וודא ש-sidekiq פועל."
+        version_check_pending: "נראה שעדכנת לאחרונה. פנטסטי!"
         installed_version: "הותקן"
         latest_version: "אחרונה"
         problems_found: "עצה שמבוססת על הגדרות האתר הנוכחיות שלך"
@@ -6599,6 +6604,7 @@ he:
           empty: "אין תמונות עדיין. נא להעלות אחת."
           upload:
             label: "העלאה"
+            title: "העלאת תמונות"
         selectable_avatars:
           title: "רשימת תמונות ייצוגיות מהן המשתמשים יכולים לבחור"
         categories:

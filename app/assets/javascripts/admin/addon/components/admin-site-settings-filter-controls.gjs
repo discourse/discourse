@@ -4,6 +4,7 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
 import i18n from "discourse-common/helpers/i18n";
@@ -35,6 +36,9 @@ export default class AdminSiteSettingsFilterControls extends Component {
 
   @action
   runInitialFilter() {
+    if (this.args.initialFilter !== this.filter) {
+      this.filter = this.args.initialFilter;
+    }
     this.onChangeFilter();
   }
 
@@ -42,6 +46,7 @@ export default class AdminSiteSettingsFilterControls extends Component {
     <div
       class="admin-controls admin-site-settings-filter-controls"
       {{didInsert this.runInitialFilter}}
+      {{didUpdate this.runInitialFilter @initialFilter}}
     >
       <div class="controls">
         <div class="inline-form">

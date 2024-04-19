@@ -1187,6 +1187,7 @@ ro:
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
     shared_drafts_allowed_groups: "Permit utilizatorilor din aceste grupuri să vadă și să editeze ciorne comune."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Afișează un meniu de acces rapid pentru semne de carte în articole și un nou modal reproiectat"
+    glimmer_header_mode: "Controlează dacă se utilizează noua implementare a antetului cu efect de „licărire”. Valoarea implicită este „auto”, care va fi activată automat odată ce toate temele și modulele sunt gata. https://meta.discourse.org/t/296544"
     experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTAL: Activează noua listă derulantă de acțiuni în masă."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:
@@ -1229,12 +1230,12 @@ ro:
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
       clean_up_inactive_users_after_days:
-      - ""
-      - "inactivă"
+      - "dezactivat"
+      - "inactiv"
       - ""
       purge_unactivated_users_grace_period_days:
-      - ""
-      - "inactivă"
+      - "dezactivat"
+      - "inactiv"
       - ""
   search:
     within_post: "#%{post_number} de %{username}:"
@@ -1333,7 +1334,12 @@ ro:
     email:
       sent_test: "trimis!"
   user:
-    deactivated: "A fost dezactivat din cauza pre a multor emailuri ricoșate la '%{email}'."
+    deactivated: "A fost dezactivat din cauza prea multor emailuri respinse la „%{email}”."
+    deactivated_by_staff: "Dezactivat de echipă"
+    deactivated_by_inactivity:
+      one: "Dezactivat automat după %{count} zi de inactivitate"
+      few: "Dezactivat automat după %{count} zile de inactivitate"
+      other: "Dezactivat automat după %{count} de zile de inactivitate"
     username:
       characters: "trebuie să includă numai cifre, litere, liniuțe, puncte și liniuțe de subliniere"
       unique: "trebuie să fie unic"

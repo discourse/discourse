@@ -7,6 +7,7 @@ describe "Bookmarking posts and topics", type: :system do
   fab!(:post_2) { Fabricate(:post, topic: topic, raw: "Some interesting post content") }
 
   let(:timezone) { "Australia/Brisbane" }
+  let(:cdp) { PageObjects::CDP.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:bookmark_modal) { PageObjects::Modals::Bookmark.new }
   let(:bookmark_menu) { PageObjects::Components::BookmarkMenu.new }
@@ -18,9 +19,11 @@ describe "Bookmarking posts and topics", type: :system do
 
   def visit_topic_and_open_bookmark_menu(post, expand_actions: true)
     topic_page.visit_topic(topic)
+    open_bookmark_menu(post, expand_actions: expand_actions)
+  end
 
+  def open_bookmark_menu(post, expand_actions: true)
     topic_page.expand_post_actions(post) if expand_actions
-
     topic_page.click_post_action_button(post, :bookmark)
   end
 
@@ -42,7 +45,7 @@ describe "Bookmarking posts and topics", type: :system do
     bookmark_menu.click_menu_option("tomorrow")
 
     expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
-    expect(page).to have_no_css(".bookmark-menu-content")
+    expect(page).to have_no_css(".bookmark-menu-content.-expanded")
     expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
   end
 
@@ -80,37 +83,38 @@ describe "Bookmarking posts and topics", type: :system do
     )
   end
 
+  it "opens the bookmark modal with the Custom... option only after the bookmark saves on slow connections" do
+    topic_page.visit_topic(topic)
+
+    cdp.with_slow_upload do
+      open_bookmark_menu(post)
+      bookmark_menu.click_menu_option("custom")
+    end
+
+    expect(bookmark_modal).to be_open
+  end
+
   describe "topic level bookmarks" do
     it "allows the topic to be bookmarked" do
       topic_page.visit_topic(topic)
-      topic_page.click_topic_footer_button(:bookmark)
-
-      bookmark_modal.fill_name("something important")
-      bookmark_modal.save
-
-      expect(topic_page).to have_topic_bookmarked
+      topic_page.click_topic_bookmark_button
+      expect(topic_page).to have_topic_bookmarked(topic)
       expect(Bookmark.exists?(bookmarkable: topic, user: current_user)).to be_truthy
     end
 
-    it "opens the edit bookmark modal from the topic bookmark button if one post is bookmarked" do
-      bookmark = Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
+    it "opens the edit bookmark modal from the topic bookmark button and saves edits" do
+      bookmark = Fabricate(:bookmark, bookmarkable: topic, user: current_user)
       topic_page.visit_topic(topic)
-      topic_page.click_topic_footer_button(:bookmark)
+      topic_page.click_topic_bookmark_button
+      bookmark_menu.click_menu_option("edit")
       expect(bookmark_modal).to be_open
       expect(bookmark_modal).to be_editing_id(bookmark.id)
-    end
+      bookmark_modal.fill_name("something important")
+      bookmark_modal.click_primary_button
 
-    it "clears all topic bookmarks from the topic bookmark button if more than one post is bookmarked" do
-      Fabricate(:bookmark, bookmarkable: post, user: current_user)
-      Fabricate(:bookmark, bookmarkable: post_2, user: current_user)
-      topic_page.visit_topic(topic)
-      topic_page.click_topic_footer_button(:bookmark)
-      dialog = PageObjects::Components::Dialog.new
-      expect(dialog).to have_content(I18n.t("js.bookmarks.confirm_clear"))
-      dialog.click_yes
-      expect(dialog).to be_closed
-      expect(topic_page).to have_no_bookmarks
-      expect(Bookmark.where(user: current_user).count).to eq(0)
+      try_until_success(frequency: 0.5) do
+        expect(bookmark.reload.name).to eq("something important")
+      end
     end
   end
 

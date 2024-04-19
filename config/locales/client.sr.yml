@@ -503,7 +503,6 @@ sr:
       topic_count_long: "Tema kreirano"
       post_count: "Odgovori"
       post_count_long: "Odgovora poslato"
-      no_results: "Rezultati nisu pronađeni"
       days_visited: "Poseta"
       days_visited_long: "Dana posećivano"
       posts_read: "Pročitano"
@@ -609,6 +608,7 @@ sr:
       "13": "Primljeno"
       "14": "U toku"
       "15": "Нацрти"
+      "17": "Linkovi"
     categories:
       categories_label: "kategorije"
       subcategories_label: "podkategorije"

@@ -9,7 +9,11 @@ import concatClass from "discourse/helpers/concat-class";
 import or from "truth-helpers/helpers/or";
 
 export default class TopicMap extends Component {
-  @tracked collapsed = !this.args.postAttrs.hasTopRepliesSummary;
+  @tracked collapsed = !this.args.model.has_summary;
+
+  get userFilters() {
+    return this.args.postStream.userFilters || [];
+  }
 
   @action
   toggleMap() {
@@ -19,9 +23,11 @@ export default class TopicMap extends Component {
   <template>
     <section class={{concatClass "map" (if this.collapsed "map-collapsed")}}>
       <TopicMapSummary
-        @postAttrs={{@postAttrs}}
+        @topic={{@model}}
+        @topicDetails={{@topicDetails}}
         @toggleMap={{this.toggleMap}}
         @collapsed={{this.collapsed}}
+        @userFilters={{this.userFilters}}
       />
     </section>
     {{#unless this.collapsed}}
@@ -29,13 +35,17 @@ export default class TopicMap extends Component {
         class="topic-map-expanded"
         id="topic-map-expanded__aria-controls"
       >
-        <TopicMapExpanded @postAttrs={{@postAttrs}} />
+        <TopicMapExpanded
+          @topicDetails={{@topicDetails}}
+          @userFilters={{this.userFilters}}
+        />
       </section>
     {{/unless}}
-    {{#if (or @postAttrs.hasTopRepliesSummary @postAttrs.summarizable)}}
+    {{#if (or @model.has_summary @model.summarizable)}}
       <section class="information toggle-summary">
         <SummaryBox
-          @postAttrs={{@postAttrs}}
+          @topic={{@model}}
+          @postStream={{@postStream}}
           @cancelFilter={{@cancelFilter}}
           @showTopReplies={{@showTopReplies}}
           @collapseSummary={{@collapseSummary}}
@@ -43,10 +53,10 @@ export default class TopicMap extends Component {
         />
       </section>
     {{/if}}
-    {{#if @postAttrs.showPMMap}}
+    {{#if @showPMMap}}
       <section class="information private-message-map">
         <PrivateMessageMap
-          @postAttrs={{@postAttrs}}
+          @topicDetails={{@topicDetails}}
           @showInvite={{@showInvite}}
           @removeAllowedGroup={{@removeAllowedGroup}}
           @removeAllowedUser={{@removeAllowedUser}}

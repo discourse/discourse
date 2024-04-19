@@ -175,6 +175,9 @@ en:
             once_per_user:
               label: Once per user
               description: Will trigger only once per user
+            new_users_only:
+              label: New users only
+              description: Will trigger only for new users that join after this automation is enabled
         category_created_edited:
           fields:
             restricted_category:

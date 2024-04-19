@@ -83,7 +83,7 @@ class TopicViewSerializer < ApplicationSerializer
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
   has_many :pending_posts, serializer: TopicPendingPostSerializer, root: false, embed: :objects
-  has_many :categories, serializer: TopicCategorySerializer, embed: :objects
+  has_many :categories, serializer: CategoryBadgeSerializer, embed: :objects
 
   has_one :published_page, embed: :objects
 

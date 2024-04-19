@@ -686,7 +686,6 @@ it:
       topic_count_long: "Argomenti Creati"
       post_count: "Risposte"
       post_count_long: "Risposte Inviate"
-      no_results: "Nessun risultato trovato."
       days_visited: "Visite"
       days_visited_long: "Giorni di Frequenza"
       posts_read: "Letti"
@@ -962,6 +961,7 @@ it:
       "13": "Posta in arrivo"
       "14": "In Attesa"
       "15": "Bozze"
+      "17": "Collegamenti"
     categories:
       categories_label: "categorie"
       subcategories_label: "sottocategorie"
@@ -2398,6 +2398,7 @@ it:
         one: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
         other: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

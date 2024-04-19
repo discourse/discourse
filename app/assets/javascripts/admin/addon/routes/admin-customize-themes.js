@@ -13,23 +13,20 @@ export default class AdminCustomizeThemesRoute extends Route {
   queryParams = {
     repoUrl: null,
     repoName: null,
-    tab: null,
   };
 
-  model() {
+  model(params) {
+    this.currentTab = params.type;
     return this.store.findAll("theme");
   }
 
   setupController(controller, model) {
     super.setupController(controller, model);
 
-    if (controller.tab) {
+    if (this.currentTab) {
       controller.setProperties({
         editingTheme: false,
-        currentTab: controller.tab,
-
-        // this is to get rid of the queryString since we don't want it hanging around
-        tab: undefined,
+        currentTab: this.currentTab,
       });
     }
 

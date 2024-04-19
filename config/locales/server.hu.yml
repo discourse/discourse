@@ -71,6 +71,7 @@ hu:
   themes:
     bad_color_scheme: "A téma nem frissíthető, érvénytelen színpaletta"
     other_error: "Hiba történt az oldal stílusának frissítésekor"
+    ember_selector_error: "Sajnáljuk, az #ember vagy az .ember-view CSS-szelektorok használata nem engedélyezett, mert ezek a nevek dinamikusan generálódnak futás közben és idővel változnak, ami végül a CSS meghibásodását eredményezi. Próbálkozzon másik választóval."
     import_error:
       generic: Hiba történt a téma importálása során
       upload: "Hiba a feltöltési tartalom létrehozásakor: %{name}. %{errors}"
@@ -86,7 +87,7 @@ hu:
       unpack_failed: "A fájl kibontása sikertelen"
       file_too_big: "A kibontott fájl túl nagy."
       unknown_file_type: "A feltöltött fájl nem tűnik érvényes Discourse témának."
-      not_allowed_theme: "A `%{repo}` nem szerepel a megengedett témák listáján (ellenőrizze az `allowed_theme_repos` globális beállítást)."
+      not_allowed_theme: "A(z) `%{repo}` nem szerepel a megengedett témák listáján (ellenőrizze az `allowed_theme_repos` globális beállítást)."
       ssh_key_gone: "Túl sokáig várt a téma telepítésével, és az SSH-kulcs lejárt. Kérjük, próbálja meg újra."
       too_many_files: "A fájlok száma (%{count}) a témában meghaladta a maximálisan megengedett fájlszámot (%{limit})."
       migrations:
@@ -95,19 +96,42 @@ hu:
           one: "A migrációs név túl hosszú. Nem haladhatja meg a %{count} karaktert."
           other: "A migrációs név túl hosszú. Nem haladhatja meg a %{count} karaktert."
         too_many_pending_migrations: "Túl sok függőben lévő migráció van ebben a témában. A témák nem vezethetnek be 100-nál több migrációt egyetlen frissítésben"
+        out_of_sequence: "A(z) '%{name}' migráció nem megfelelő. A téma legutóbbi áttelepítésének verziószáma %{current} volt, amely magasabb, mint az új migrációé"
+        syntax_error: "A(z) '%{name}' migráció futtatása nem sikerült, mert szintaktikai hibája van: %{error}"
+        exceeded_memory_limit: "A(z) '%{name}' migrálása meghiúsult, mert túllépte a memóriakorlátot"
+        timed_out: "A(z) '%{name}' migráció időtúllépést szenvedett"
+        no_exported_function: "A(z) '%{name}' áttelepítés nem exportál függvényt az áttelepítés végrehajtásához"
+        default_export_not_a_function: "A(z) '%{name}' áttelepítésnek van egy alapértelmezett exportálása, amely nem függvény. Az alapértelmezett exportálásnak az áttelepítést végrehajtó funkciónak kell lennie"
+        no_returned_value: "A(z) '%{name}' migráció nem adott vissza értéket (vagy null vagy undefined). Egy Map objektumot kell visszaadnia"
+        wrong_return_type: "A(z) '%{name}' migráció ismeretlen adattípust adott vissza. Map objektumot kell visszaadnia"
+        runtime_error: "A(z) '%{name}' migráció a következő futásidejű hibát észlelte: %{error}"
+        unknown_setting_returned_by_migration: "A(z) '%{name}' áttelepítés egy '%{setting_name}' beállítást adott vissza, amely nincs deklarálva a téma settings.yml fájljában"
     errors:
       component_no_user_selectable: "A téma összetevőit nem választhatja ki a felhasználó"
       component_no_default: "A témaösszetevő nem lehet alapértelmezett téma"
       component_no_color_scheme: "A témaösszevető nem tartalmazhat színpalettát"
       no_multilevels_components: "A gyermektémákat tartalmazó témák nem lehet maguk is gyermektémák"
+      optimized_link: Az optimalizált képhivatkozások átmenetiek, és nem szabad a téma forráskódjában szerepeltetni.
     settings_errors:
       invalid_yaml: "A megadott YAML érvénytelen."
-      data_type_inclusion: "A `%{name}` típus beállítása nem támogatott. Támogatott típusok: `integer`, `bool`, `list`, `enum` és `upload`."
+      data_type_inclusion: "A(z) `%{name}` típus beállítása nem támogatott. Támogatott típusok: `integer`, `bool`, `list`, `enum` és `upload`."
       name_too_long: "Az egyik beállítás neve túl hosszú. A legnagyobb hossz 255"
+      default_value_missing: "A(z) `%{name}` beállításnak nincs alapértelmezett értéke."
       default_not_match_type: "A(z) „%{name}” beállítás alapértelmezett értékének típusa nem egyezik a beállítás típusával."
+      default_value_not_valid: "A(z) `%{name}` alapértelmezett értéke nem érvényes. %{error_messages}"
       enum_value_not_valid: "A kiválasztott érték nem szerepel az enum lehetőségei között."
       number_value_not_valid_min_max: "Az értéknek %{min} és %{max} között kell lennie."
+      number_value_not_valid_min: "Az értéknek nagyobbnak vagy egyenlőnek kell lennie, mint %{min}."
+      number_value_not_valid_max: "Az értéknek kisebbnek vagy egyenlőnek kell lennie, mint %{max}."
+      string_value_not_valid_min_max: "A karakterek számának %{min} és %{max} között kell lennie."
+      string_value_not_valid_min:
+        one: "Az értéknek legalább %{count} karakter hosszúnak kell lennie."
+        other: "Az értéknek legalább %{count} karakter hosszúnak kell lennie."
+      string_value_not_valid_max:
+        one: "Az érték legfeljebb %{count} karakter hosszú lehet."
+        other: "Az érték legfeljebb %{count} karakter hosszú lehet."
       objects:
+        humanize_required: "A JSON Pointer '%{property_json_pointer}' tulajdonságnak jelen kell lennie."
         required: "megadása kötelező"
         not_valid_integer_value: "egész számnak kell lennie"
     locale_errors:

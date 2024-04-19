@@ -20,6 +20,10 @@ module DiscourseAutomation
     validates :script, presence: true
     validate :validate_trigger_fields
 
+    after_destroy do |automation|
+      UserCustomField.where(name: automation.new_user_custom_field_name).destroy_all
+    end
+
     attr_accessor :running_in_background
 
     def running_in_background!
@@ -161,6 +165,10 @@ module DiscourseAutomation
       pending_automations.delete_all
       pending_pms.delete_all
       scriptable&.on_reset&.call(self)
+    end
+
+    def new_user_custom_field_name
+      "automation_#{self.id}_new_user"
     end
 
     private

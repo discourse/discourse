@@ -144,13 +144,17 @@ export default Controller.extend({
       didConfirm: () => {
         model
           .destroy()
-          .then(() => this.router.transitionTo("groups.index"))
           .catch((error) => {
             // eslint-disable-next-line no-console
             console.error(error);
             this.dialog.alert(I18n.t("admin.groups.delete_failed"));
           })
-          .finally(() => this.set("destroying", false));
+          .then(() => {
+            this.router.transitionTo("groups.index");
+          })
+          .finally(() => {
+            this.set("destroying", false);
+          });
       },
       didCancel: () => this.set("destroying", false),
     });

@@ -208,6 +208,9 @@ after_initialize do
   register_topic_custom_field_type(DiscourseAutomation::AUTO_RESPONDER_TRIGGERED_IDS, [:integer])
 
   on(:user_updated) { |user| DiscourseAutomation::EventHandlers.handle_user_updated(user) }
+  on(:user_created) do |user|
+    DiscourseAutomation::EventHandlers.handle_user_updated(user, new_user: true)
+  end
 
   register_user_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
   register_post_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
