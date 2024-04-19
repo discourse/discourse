@@ -12,8 +12,6 @@ class Auth::LinkedInOidcAuthenticator < Auth::ManagedAuthenticator
            }
 
     option :scope, "openid profile email"
-    option :fields, %w[id full-name first-name last-name picture-url email-address]
-    option :redirect_url
 
     uid { raw_info["sub"] }
 
@@ -22,15 +20,13 @@ class Auth::LinkedInOidcAuthenticator < Auth::ManagedAuthenticator
         email: raw_info["email"],
         first_name: raw_info["given_name"],
         last_name: raw_info["family_name"],
-        picture_url: raw_info["picture"],
+        image: raw_info["picture"],
       }
     end
 
     extra { { "raw_info" => raw_info } }
 
     def callback_url
-      return options.redirect_url if options.redirect_url
-
       full_host + script_name + callback_path
     end
 
@@ -54,26 +50,6 @@ class Auth::LinkedInOidcAuthenticator < Auth::ManagedAuthenticator
 
     private
 
-    def fields_mapping
-      # https://learn.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/sign-in-with-linkedin-v2?context=linkedin%2Fconsumer%2Fcontext#api-request-to-retreive-member-details
-      {
-        "id" => "sub",
-        "full-name" => "name",
-        "first-name" => "given_name",
-        "last-name" => "family_name",
-        "picture-url" => "picture",
-      }
-    end
-
-    def fields
-      options
-        .fields
-        .each
-        .with_object([]) do |field, result|
-          result << fields_mapping[field] if fields_mapping.has_key? field
-        end
-    end
-
     def profile_endpoint
       "/v2/userinfo"
     end
@@ -94,9 +70,6 @@ class Auth::LinkedInOidcAuthenticator < Auth::ManagedAuthenticator
                           strategy = env["omniauth.strategy"]
                           strategy.options[:client_id] = SiteSetting.linkedin_oidc_client_id
                           strategy.options[:client_secret] = SiteSetting.linkedin_oidc_client_secret
-                          strategy.options[
-                            :redirect_url
-                          ] = "http://27ee-58-96-250-197.ngrok-free.app/auth/linkedin_oidc/callback"
                         }
   end
 

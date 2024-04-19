@@ -22,7 +22,7 @@ RSpec.describe Auth::LinkedInOidcAuthenticator do
         email: "coding@horror.com",
         first_name: "Coding",
         last_name: "Horror",
-        picture_url:
+        image:
           "https://media.licdn.com/dms/image/C5603AQH7UYSA0m_DNw/profile-displayphoto-shrink_100_100/0/1516350954443?e=1718841600&v=beta&t=1DdwKTzW2QdVuPtnk1C20oaYSkqeEa4ffuI6_NlXbB",
       },
       uid: "100",
