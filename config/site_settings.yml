@@ -506,6 +506,7 @@ login:
     list_type: simple
   enable_linkedin_oidc_logins:
     default: false
+    validator: "LinkedinOidcCredentialsValidator"
   linkedin_oidc_client_id:
     default: ""
     regex: "^[a-z0-9]+$"

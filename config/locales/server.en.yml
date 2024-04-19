@@ -2692,6 +2692,7 @@ en:
         other: "The list must contain exactly %{count} values."
       markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
+      linkedin_oidc_credentials: "You must configure LinkedIn OIDC credentials ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret') before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."

@@ -29,6 +29,8 @@ class Auth::LinkedInOidcAuthenticator < Auth::ManagedAuthenticator
     extra { { "raw_info" => raw_info } }
 
     def callback_url
+      return options.redirect_url if options.redirect_url
+
       full_host + script_name + callback_path
     end
 
@@ -92,6 +94,9 @@ class Auth::LinkedInOidcAuthenticator < Auth::ManagedAuthenticator
                           strategy = env["omniauth.strategy"]
                           strategy.options[:client_id] = SiteSetting.linkedin_oidc_client_id
                           strategy.options[:client_secret] = SiteSetting.linkedin_oidc_client_secret
+                          strategy.options[
+                            :redirect_url
+                          ] = "http://27ee-58-96-250-197.ngrok-free.app/auth/linkedin_oidc/callback"
                         }
   end
 
