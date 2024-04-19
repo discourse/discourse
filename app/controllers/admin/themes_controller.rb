@@ -176,7 +176,7 @@ class Admin::ThemesController < Admin::AdminController
       themes: serialize_data(@themes, ThemeSerializer),
       extras: {
         color_schemes: serialize_data(@color_schemes, ColorSchemeSerializer),
-        locale: I18n.locale,
+        locale: current_user.effective_locale,
       },
     }
 

@@ -161,7 +161,6 @@ describe "Admin Customize Themes", type: :system do
       theme_translations_settings_editor.save
     end
 
-    # relates to https://meta.discourse.org/t/locale-mismatch-at-theme-translations/302879
     it "should match the current user locale translation" do
       SiteSetting.allow_user_locale = true
       SiteSetting.set_locale_from_accept_language_header = true
