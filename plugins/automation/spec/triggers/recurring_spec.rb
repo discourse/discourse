@@ -58,6 +58,70 @@ describe "Recurring" do
     end
   end
 
+  context "updating automation with recurring trigger" do
+    fab!(:automation) do
+      Fabricate(:automation, trigger: DiscourseAutomation::Triggers::RECURRING, script: "test")
+    end
+
+    before do
+      DiscourseAutomation::Scriptable.add("test") do
+        triggerables [DiscourseAutomation::Triggers::RECURRING]
+        field :test, component: :text
+      end
+
+      automation.upsert_field!(
+        "start_date",
+        "date_time",
+        { value: 2.hours.from_now },
+        target: "trigger",
+      )
+      upsert_period_field!(1, "week")
+
+      automation.upsert_field!("test", "text", { value: "something" }, target: "script")
+    end
+
+    context "when start date changes" do
+      it "resets the pending automations" do
+        expect {
+          automation.upsert_field!(
+            "start_date",
+            "date_time",
+            { value: 1.day.from_now },
+            target: "trigger",
+          )
+        }.to change { DiscourseAutomation::PendingAutomation.last.execute_at }
+        expect(DiscourseAutomation::PendingAutomation.count).to eq(1)
+      end
+    end
+
+    context "when interval changes" do
+      it "resets the pending automations" do
+        expect { upsert_period_field!(2, "week") }.to change {
+          DiscourseAutomation::PendingAutomation.last.execute_at
+        }
+        expect(DiscourseAutomation::PendingAutomation.count).to eq(1)
+      end
+    end
+
+    context "when frequency changes" do
+      it "resets the pending automations" do
+        expect { upsert_period_field!(1, "month") }.to change {
+          DiscourseAutomation::PendingAutomation.last.execute_at
+        }
+        expect(DiscourseAutomation::PendingAutomation.count).to eq(1)
+      end
+    end
+
+    context "when a non recurrence related field changes" do
+      it "doesn't reset the pending automations" do
+        expect {
+          automation.upsert_field!("test", "text", { value: "somethingelse" }, target: "script")
+        }.to_not change { DiscourseAutomation::PendingAutomation.last.execute_at }
+        expect(DiscourseAutomation::PendingAutomation.count).to eq(1)
+      end
+    end
+  end
+
   context "when trigger is called" do
     before do
       freeze_time Time.zone.parse("2021-06-04 10:00")
