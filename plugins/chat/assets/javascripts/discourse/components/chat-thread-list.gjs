@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import { modifier } from "ember-modifier";
+import { modifier as modifierFn } from "ember-modifier";
 import { eq } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
@@ -18,7 +18,7 @@ export default class ChatThreadList extends Component {
 
   noThreadsLabel = I18n.t("chat.threads.none");
 
-  subscribe = modifier((element, [channel]) => {
+  subscribe = modifierFn((element, [channel]) => {
     this.messageBus.subscribe(
       `/chat/${channel.id}`,
       this.onMessageBus,
@@ -35,7 +35,7 @@ export default class ChatThreadList extends Component {
     };
   });
 
-  fill = modifier((element) => {
+  fill = modifierFn((element) => {
     this.resizeObserver = new ResizeObserver(() => {
       if (isElementInViewport(element)) {
         this.loadThreads();
@@ -49,7 +49,7 @@ export default class ChatThreadList extends Component {
     };
   });
 
-  loadMore = modifier((element) => {
+  loadMore = modifierFn((element) => {
     this.intersectionObserver = new IntersectionObserver(this.loadThreads);
     this.intersectionObserver.observe(element);
 
