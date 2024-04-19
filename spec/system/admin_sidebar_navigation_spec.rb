@@ -101,6 +101,36 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(["Appearance", "Preview Summary", "Server Setup"])
   end
 
+  it "allows further filtering of site settings or users if links do not show results" do
+    visit("/admin")
+    filter.filter("user locale")
+    find(".sidebar-additional-filter-settings").click
+    expect(page).to have_current_path(
+      "/admin/site_settings/category/all_results?filter=user%20locale",
+    )
+    expect(page).to have_content(I18n.t("site_settings.allow_user_locale"))
+
+    filter.filter("log_search_queries")
+    find(".sidebar-additional-filter-settings").click
+    expect(page).to have_current_path(
+      "/admin/site_settings/category/all_results?filter=log_search_queries",
+    )
+    expect(page).to have_content(I18n.t("site_settings.log_search_queries"))
+
+    user_1 = Fabricate(:user, username: "moltisanti", name: "Christopher Moltisanti")
+    user_2 = Fabricate(:user, username: "bevelaqua", name: "Matthew Bevelaqua")
+
+    filter.filter("bevelaqua")
+    find(".sidebar-additional-filter-users").click
+    expect(page).to have_current_path("/admin/users/list/active?username=bevelaqua")
+    within(".users-list-container") { expect(page).to have_content("bevelaqua") }
+
+    filter.filter("moltisanti")
+    find(".sidebar-additional-filter-users").click
+    expect(page).to have_current_path("/admin/users/list/active?username=moltisanti")
+    within(".users-list-container") { expect(page).to have_content("moltisanti") }
+  end
+
   it "allows sections to be expanded" do
     visit("/admin")
     sidebar.toggle_all_sections
