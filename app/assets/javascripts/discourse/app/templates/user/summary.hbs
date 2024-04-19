@@ -2,30 +2,37 @@
 
 <div class="new-user-content-wrapper" style="margin-top: 2.25rem">
   <div
-    style="display: flex; justify-content: space-around; align-items: center;"
+    style="display: flex; justify-content: space-around; align-items: center; gap: 1rem;"
   >
-    <div>
+    <div style="flex-grow: 1;">
       <div style="margin-bottom: 4rem;">
         <p
           style="font-size: 20px; font-weight: 700; margin-bottom: 1rem; margin-top: 0;"
         >
           College List
         </p>
+        <p class="hidden">({{this.topCollege}})</p>
         <div class="college-list" id="college-grid">
-          {{#each this.admitsReceivedWithHash as |college|}}
-            <div class="college-card">
-              <div class="toptext {{college.type}}">{{college.topText}}</div>
-              <div class="card-contents">
-                <div class="logo">
-                  <img src="/images/colleges/{{college.hash}}.png" />
-                </div>
-                <div class="subtext">
-                  <div class="college">{{college.name}}</div>
-                  <div class="course">BS Computer Science</div>
+          {{#if this.admitsReceivedWithHash.length}}
+            {{#each this.admitsReceivedWithHash as |college|}}
+              <div class="college-card">
+                <div class="toptext {{college.type}}">{{college.topText}}</div>
+                <div class="card-contents">
+                  <div class="logo">
+                    <img src="/images/colleges/{{college.hash}}.png" />
+                  </div>
+                  <div class="subtext">
+                    <div class="college">{{college.name}}</div>
+                    <div class="course">BS Computer Science</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          {{/each}}
+            {{/each}}
+          {{else}}
+            <p style="color: hsl(210,8%,42%); margin-top: -1.5rem;">
+              This person hasn't filled out this information
+            </p>
+          {{/if}}
         </div>
       </div>
       <div style="margin-bottom: 2rem;">
@@ -57,30 +64,45 @@
         {{/if}}
       </div>
       <p><strong>Lives in</strong>:
-        <span>{{this.currentUser.location}}</span></p>
+        <span>
+          {{#if this.user.location}}
+            {{this.user.location}}
+          {{else}}
+            <span style="font-style:italic; font-weight: 300;">
+              The bermuda triangle
+            </span>
+          {{/if}}
+        </span>
+      </p>
     </div>
     <div class="side-box">
-      <div class="profile-viewers-summary">
-        {{#if (gt this.profileViews.views.length 1)}}
-          <div>
-            <span>{{bound-avatar firstUser "tiny"}}</span>
-            <span style="position: relative; left: -.5rem; z-index: 2;">
-              {{bound-avatar secondUser "tiny"}}
-            </span>
-            and others viewed your profile
-          </div>
-        {{else}}
-          <div>Your profile views</div>
-        {{/if}}
-      </div>
-      <div class="profile-viewers-detail">
-        {{#each this.profileViews.views as |user|}}
-          <div style="display: flex; align-items: center; gap: .5rem;">
-            {{bound-avatar user "tiny"}}
-            {{user.name}}
-          </div>
-        {{/each}}
-      </div>
+      {{#if (eq this.user.username this.currentUser.username)}}
+        <div class="profile-viewers-summary">
+          {{#if (gt this.profileViews.views.length 1)}}
+            <div>
+              <div style="display: inline-flex; width: 42px;">
+                <span>{{bound-avatar this.firstUser "tiny"}}</span>
+                <span style="position: relative; left: -6px; z-index: 2;">
+                  {{bound-avatar this.secondUser "tiny"}}
+                </span>
+              </div>
+              <span style="position: relative;">and others viewed your profile</span>
+            </div>
+          {{else}}
+            <div>Who's viewed your profile</div>
+          {{/if}}
+        </div>
+        <div class="profile-viewers-detail">
+          {{#each this.profileViews.views as |user|}}
+            <div style="display: flex; align-items: center; gap: .5rem;">
+              {{bound-avatar user "tiny"}}
+              <a href="/u/{{user.username}}" class="trigger-user-card">
+                {{user.name}}
+              </a>
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
     </div>
   </div>
 </div>

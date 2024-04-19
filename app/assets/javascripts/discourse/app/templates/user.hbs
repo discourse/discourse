@@ -175,13 +175,14 @@
               Enrolling in
               {{this.course}}
             </div>
-            <div class="tags" style="display: flex; gap: .5rem;">
+            <div class="tags hidden" style="display: flex; gap: .5rem;">
+              {{! What to show here? }}
               <span>#hello</span>
               <span>#world</span>
               <span>#college</span>
             </div>
             {{#if this.showFeaturedTopic}}
-              <div class="featured-topic user-profile__featured-topic">
+              <div class="featured-topic user-profile__featured-topic hidden">
                 <span title={{i18n "user.featured_topic"}}>
                   {{d-icon "book"~}}
                 </span><LinkTo

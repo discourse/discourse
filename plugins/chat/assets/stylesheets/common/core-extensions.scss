@@ -16,8 +16,8 @@
 
   .side-box {
     align-self: flex-start;
-    min-width: 256px;
-    width: 256px;
+    min-width: 300px;
+    width: 300px;
 
     .profile-viewers-summary {
       border-radius: 8px;
@@ -25,17 +25,20 @@
       color: white;
       max-width: 100%;
       width: 100%;
-      padding: 0.5rem 1rem;
+      padding: 1.7rem 1.5rem;
       font-weight: 500;
       position: relative;
       z-index: 2;
-      padding: 2rem;
       box-sizing: border-box;
+
+      img.avatar {
+        border: 2px solid white;
+      }
     }
 
     .profile-viewers-detail {
       width: 100%;
-      padding: 0.5rem 1rem;
+      padding: 1.7rem 1.5rem;
       border-radius: 8px;
       background: #f0f4fd;
       position: relative;
@@ -43,6 +46,9 @@
       padding-top: 2rem;
       padding-bottom: 1rem;
       box-sizing: border-box;
+      gap: 0.7rem;
+      display: flex;
+      flex-direction: column;
     }
   }
 }

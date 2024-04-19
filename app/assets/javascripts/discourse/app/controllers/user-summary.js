@@ -17,32 +17,36 @@ export default Controller.extend({
 
   init() {
     this._super(...arguments);
-    this.setAdmitsReceivedWithHash();
     this.fetchProfileViews();
   },
 
   async fetchProfileViews() {
-    this.set("profileViews", await ajax("/u/profile-views.json"));
-    this.set("firstUser", this.profileViews?.[0]);
-    this.set("secondUser", this.profileViews?.[1]);
+    const profileViews = await ajax("/u/profile-views.json");
+    this.set("profileViews", profileViews);
+    this.set("firstUser", profileViews.views?.[0]);
+    this.set("secondUser", profileViews.views?.[1]);
   },
 
-  setAdmitsReceivedWithHash() {
+  setAdmitsReceivedWithHash(
+    topCollege = null,
+    admitsAwaited = [],
+    admitsReceived = []
+  ) {
     let allColleges = [];
 
     // Handle the single college
-    if (this.topCollege) {
-      allColleges.push({ name: this.topCollege, topText: "Top Preference" });
+    if (topCollege) {
+      allColleges.push({ name: topCollege, topText: "Top Preference" });
     }
 
     // Handle the lists of colleges
     allColleges = allColleges.concat(
-      (this.admitsAwaited || []).map((name) => ({
+      [].concat(admitsAwaited || []).map((name) => ({
         name,
         type: "await",
         topText: "Admit Awaited",
       })),
-      (this.admitsReceived || []).map((name) => ({
+      [].concat(admitsReceived || []).map((name) => ({
         name,
         topText: "Admit Received",
       }))
@@ -70,6 +74,16 @@ export default Controller.extend({
         .map((byte) => byte.toString(16).padStart(2, "0"))
         .join("");
     });
+  },
+
+  @discourseComputed("profileViews")
+  firstUser(profileViews) {
+    return profileViews.views?.[0];
+  },
+
+  @discourseComputed("profileViews")
+  secondUser(profileViews) {
+    return profileViews.views?.[1];
   },
 
   @discourseComputed("model.badges.length")
@@ -106,18 +120,13 @@ export default Controller.extend({
       : null;
   },
 
-  topCollege: computed(function () {
-    return this
-      .currentUser.custom_fields?.[this.siteSettings.college_top_preference_field];
-  }),
-
-  admitsReceived: computed(function () {
-    return this
-      .currentUser.custom_fields?.[this.siteSettings.college_admits_received_field];
-  }),
-
-  admitsAwaited: computed(function () {
-    return this
-      .currentUser.custom_fields?.[this.siteSettings.college_admits_awaited_field];
-  }),
+  @discourseComputed("user.custom_fields")
+  topCollege(customFields) {
+    // dummy field to trigger computation
+    this.setAdmitsReceivedWithHash(
+      customFields?.[this.siteSettings.college_top_preference_field],
+      customFields?.[this.siteSettings.college_admits_awaited_field],
+      customFields?.[this.siteSettings.college_admits_received_field]
+    );
+  },
 });
