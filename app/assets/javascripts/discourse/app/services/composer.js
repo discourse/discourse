@@ -1071,7 +1071,7 @@ export default class ComposerService extends Service {
 
     // for now handle a very narrow use case
     // if we are replying to a topic
-    // AND are on on a different topic
+    // AND are on a different topic
     // AND topic is open (or we are staff)
     // --> pop the window up
     if (!force && composer.replyingToTopic) {
