@@ -21,6 +21,14 @@ RSpec.describe DiscoursePoll::Poll do
       [/poll]
     RAW
 
+  fab!(:post_with_irv_poll) { Fabricate(:post, raw: <<~RAW) }
+    [poll type=irv public=true]
+    * Red
+    * Blue
+    * Yellow
+    [/poll]
+    RAW
+
   describe ".vote" do
     it "should only allow one vote per user for a regular poll" do
       poll = post_with_regular_poll.polls.first
@@ -157,6 +165,45 @@ RSpec.describe DiscoursePoll::Poll do
       expect(PollVote.where(poll: poll, user: user).pluck(:poll_option_id)).to contain_exactly(
         poll.poll_options.first.id,
         poll.poll_options.second.id,
+      )
+    end
+
+    it "allows user to vote on options correctly for a irv poll" do
+      poll = post_with_irv_poll.polls.first
+      poll_options = poll.poll_options
+
+      DiscoursePoll::Poll.vote(
+        user,
+        post_with_irv_poll.id,
+        "poll",
+        [
+          { digest: poll_options.first.digest, rank: 2 },
+          { digest: poll_options.second.digest, rank: 1 },
+          { digest: poll_options.third.digest, rank: 0 },
+        ],
+      )
+
+      DiscoursePoll::Poll.vote(
+        user_2,
+        post_with_irv_poll.id,
+        "poll",
+        [
+          { digest: poll_options.first.digest, rank: 0 },
+          { digest: poll_options.second.digest, rank: 2 },
+          { digest: poll_options.third.digest, rank: 1 },
+        ],
+      )
+
+      expect(PollVote.where(poll: poll, user: user).pluck(:poll_option_id)).to contain_exactly(
+        poll_options.first.id,
+        poll_options.second.id,
+        poll_options.third.id,
+      )
+
+      expect(PollVote.where(poll: poll, user: user_2).pluck(:poll_option_id)).to contain_exactly(
+        poll_options.first.id,
+        poll_options.second.id,
+        poll_options.third.id,
       )
     end
   end
