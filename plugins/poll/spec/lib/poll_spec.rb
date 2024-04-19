@@ -205,6 +205,8 @@ RSpec.describe DiscoursePoll::Poll do
         ],
       )
 
+      expect(PollVote.count).to eq(6)
+
       expect(PollVote.where(poll: poll, user: user).pluck(:poll_option_id)).to contain_exactly(
         poll_options.first.id,
         poll_options.second.id,
