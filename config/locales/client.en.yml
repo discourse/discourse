@@ -4759,7 +4759,7 @@ en:
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
-        description: "We couldn’t find anything matching ‘%{filter}’"
+        description: "We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">search site settings</a> or the <a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">admin user list?</a>"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
