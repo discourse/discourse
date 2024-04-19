@@ -168,7 +168,7 @@ RSpec.describe DiscoursePoll::Poll do
       )
     end
 
-    it "allows user to vote on options correctly for a irv poll" do
+    it "allows user to vote on options correctly for a irv poll and to vote again" do
       poll = post_with_irv_poll.polls.first
       poll_options = poll.poll_options
 
@@ -191,6 +191,17 @@ RSpec.describe DiscoursePoll::Poll do
           { digest: poll_options.first.digest, rank: 0 },
           { digest: poll_options.second.digest, rank: 2 },
           { digest: poll_options.third.digest, rank: 1 },
+        ],
+      )
+
+      DiscoursePoll::Poll.vote(
+        user,
+        post_with_irv_poll.id,
+        "poll",
+        [
+          { digest: poll_options.first.digest, rank: 1 },
+          { digest: poll_options.second.digest, rank: 2 },
+          { digest: poll_options.third.digest, rank: 0 },
         ],
       )
 
