@@ -13,8 +13,20 @@ RSpec.describe "DiscoursePoll endpoints" do
       [/poll]
       SQL
 
+    fab!(:post_with_irv_poll) { Fabricate(:post, raw: <<~SQL) }
+      [poll type=irv public=true]
+      - Red
+      - Blue
+      - Yellow
+      [/poll]
+      SQL
+
     let(:option_a) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:option_b) { "e89dec30bbd9bf50fabf6a05b4324edf" }
+
+    let(:irv_option_a) { { id: "5c24fc1df56d764b550ceae1b9319125", rank: 2 } }
+    let(:irv_option_b) { { id: "e89dec30bbd9bf50fabf6a05b4324edf", rank: 1 } }
+    let(:irv_option_c) { { id: "a1a6e2779b52caadb93579c0c3db7c0c", rank: 0 } }
 
     it "should return the right response" do
       DiscoursePoll::Poll.vote(user, post.id, DiscoursePoll::DEFAULT_POLL_NAME, [option_a])
@@ -61,6 +73,46 @@ RSpec.describe "DiscoursePoll endpoints" do
       expect(option.length).to eq(1)
       expect(option.first["id"]).to eq(user.id)
       expect(option.first["username"]).to eq(user.username)
+    end
+
+    it "should return the right response for a IRV option" do
+      DiscoursePoll::Poll.vote(
+        user,
+        post_with_irv_poll.id,
+        DiscoursePoll::DEFAULT_POLL_NAME,
+        [irv_option_a, irv_option_b, irv_option_c],
+      )
+
+      get "/polls/voters.json",
+          params: {
+            post_id: post_with_irv_poll.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            option_id: irv_option_b["id"],
+          }
+
+      expect(response.status).to eq(200)
+
+      poll = response.parsed_body["voters"]
+
+      option = poll[irv_option_a]
+
+      expect(option.length).to eq(1)
+      expect(option.first["rank"]).to eq(2)
+      expect(option.first["users"].first["id"]).to eq(user.id)
+      expect(option.first["users"].first["username"]).to eq(user.username)
+
+      option = poll[irv_option_b]
+
+      expect(option.length).to eq(1)
+      expect(option.first["rank"]).to eq(1)
+      expect(option.first["users"].first["id"]).to eq(user.id)
+      expect(option.first["users"].first["username"]).to eq(user.username)
+
+      option = poll[irv_option_c]
+
+      expect(option.first["rank"]).to eq(0)
+      expect(option.first["users"].first["id"]).to eq(user.id)
+      expect(option.first["users"].first["username"]).to eq(user.username)
     end
 
     describe "when post_id is blank" do
@@ -141,12 +193,25 @@ RSpec.describe "DiscoursePoll endpoints" do
       [/poll]
       SQL
 
+    fab!(:post_with_irv_poll) { Fabricate(:post, raw: <<~SQL) }
+      [poll type=irv public=true]
+      - Red
+      - Blue
+      - Yellow
+      [/poll]
+      SQL
+
     let(:option_a) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:option_b) { "e89dec30bbd9bf50fabf6a05b4324edf" }
+
+    let(:irv_option_a) { { id: "5c24fc1df56d764b550ceae1b9319125", rank: 2 } }
+    let(:irv_option_b) { { id: "e89dec30bbd9bf50fabf6a05b4324edf", rank: 1 } }
+    let(:irv_option_c) { { id: "a1a6e2779b52caadb93579c0c3db7c0c", rank: 0 } }
 
     before do
       sign_in(user1)
       user_votes = { user_0: option_a, user_1: option_a, user_2: option_b }
+      user_irv_votes = { user_0: irv_option_a, user_1: irv_option_b, user_2: irv_option_c }
 
       [user1, user2, user3].each_with_index do |user, index|
         DiscoursePoll::Poll.vote(
@@ -154,6 +219,12 @@ RSpec.describe "DiscoursePoll endpoints" do
           post.id,
           DiscoursePoll::DEFAULT_POLL_NAME,
           [user_votes["user_#{index}".to_sym]],
+        )
+        DiscoursePoll::Poll.vote(
+          user,
+          post_with_irv_poll.id,
+          DiscoursePoll::DEFAULT_POLL_NAME,
+          [user_irv_votes["user_#{index}".to_sym]],
         )
         UserCustomField.create(user_id: user.id, name: "something", value: "value#{index}")
       end
@@ -204,6 +275,19 @@ RSpec.describe "DiscoursePoll endpoints" do
           },
         ],
       )
+    end
+
+    it "returns an error when attempting to return group results for IRV type poll" do
+      SiteSetting.poll_groupable_user_fields = "something"
+      get "/polls/grouped_poll_results.json",
+          params: {
+            post_id: post_with_irv_poll.id,
+            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
+            user_field_name: "something",
+          }
+
+      expect(response.status).to eq(400)
+      expect(response.body).to include("IRV")
     end
 
     it "returns an error when poll_groupable_user_fields is empty" do
