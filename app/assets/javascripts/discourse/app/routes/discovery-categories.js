@@ -4,6 +4,7 @@ import { hash } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "discourse/lib/preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
 import CategoryList from "discourse/models/category-list";
 import TopicList from "discourse/models/topic-list";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -17,28 +18,35 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   templateName = "discovery/categories";
   controllerName = "discovery/categories";
 
-  findCategories() {
-    let style =
+  async findCategories(parentCategory) {
+    let model;
+
+    const style =
       this.site.desktopView && this.siteSettings.desktop_category_page_style;
 
     if (
       style === "categories_and_latest_topics" ||
       style === "categories_and_latest_topics_created_date"
     ) {
-      return this._findCategoriesAndTopics("latest");
+      model = this._findCategoriesAndTopics("latest", parentCategory);
     } else if (style === "categories_and_top_topics") {
-      return this._findCategoriesAndTopics("top");
+      model = this._findCategoriesAndTopics("top", parentCategory);
     } else {
       // The server may have serialized this. Based on the logic above, we don't need it
       // so remove it to avoid it being used later by another TopicList route.
       PreloadStore.remove("topic_list");
+      model = CategoryList.list(this.store);
     }
 
-    return CategoryList.list(this.store);
+    model = await model;
+    model.set("category", parentCategory);
+
+    return model;
   }
 
-  model() {
-    return this.findCategories().then((model) => {
+  model(params) {
+    const parentCategory = Category.findById(params.parent_category_id);
+    return this.findCategories(parentCategory).then((model) => {
       const tracking = this.topicTrackingState;
       if (tracking) {
         tracking.sync(model, "categories");
@@ -79,7 +87,7 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
     };
   }
 
-  async _findCategoriesAndTopics(filter) {
+  async _findCategoriesAndTopics(filter, parentCategory = null) {
     return hash({
       categoriesList: PreloadStore.getAndRemove("categories_list"),
       topicsList: PreloadStore.getAndRemove("topic_list"),
@@ -102,7 +110,11 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
 
         return CategoryList.create({
           store: this.store,
-          categories: CategoryList.categoriesFrom(this.store, result),
+          categories: CategoryList.categoriesFrom(
+            this.store,
+            result,
+            parentCategory
+          ),
           topics: TopicList.topicsFrom(this.store, result),
           can_create_category: result.category_list.can_create_category,
           can_create_topic: result.category_list.can_create_topic,
