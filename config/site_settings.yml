@@ -504,6 +504,16 @@ login:
     default: ""
     type: list
     list_type: simple
+  enable_linkedin_oidc_logins:
+    default: false
+    validator: "LinkedinOidcCredentialsValidator"
+  linkedin_oidc_client_id:
+    default: ""
+    regex: "^[a-z0-9]+$"
+  linkedin_oidc_client_secret:
+    default: ""
+    regex: "^[a-zA-Z0-9]+$"
+    secret: true
   auth_skip_create_confirm:
     default: false
     client: true
