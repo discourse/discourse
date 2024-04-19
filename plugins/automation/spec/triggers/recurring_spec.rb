@@ -58,7 +58,7 @@ describe "Recurring" do
     end
   end
 
-  context "updating automation with recurring trigger" do
+  context "when updating automation" do
     fab!(:automation) do
       Fabricate(:automation, trigger: DiscourseAutomation::Triggers::RECURRING, script: "test")
     end
