@@ -17,6 +17,7 @@ export default Controller.extend(CanCheckEmails, {
   dialog: service(),
   userNotifications: controller("user-notifications"),
   adminTools: optionalService(),
+  siteSettings: service(),
 
   @discourseComputed("model.username")
   viewingSelf(username) {
@@ -173,6 +174,21 @@ export default Controller.extend(CanCheckEmails, {
     if (group) {
       return `group-${group}`;
     }
+  },
+
+  @discourseComputed("model.custom_fields")
+  course(customFields) {
+    return customFields?.[this.siteSettings.user_enrollment_field];
+  },
+
+  @discourseComputed("model.custom_fields")
+  topCollege(customFields) {
+    return customFields?.[this.siteSettings.college_top_preference_field];
+  },
+
+  @discourseComputed("model.custom_fields")
+  graduationYear(customFields) {
+    return customFields?.[this.siteSettings.college_graduation_year_field];
   },
 
   currentParentRoute: readOnly("router.currentRoute.parent.name"),

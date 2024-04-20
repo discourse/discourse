@@ -10,6 +10,12 @@
           style="font-size: 20px; font-weight: 700; margin-bottom: 1rem; margin-top: 0;"
         >
           College List
+          {{#if (eq this.user.username this.currentUser.username)}}
+            <a
+              href="/u/{{this.currentUser.username}}/preferences/profile/"
+              class="edit-link"
+            >Edit</a>
+          {{/if}}
         </p>
         <p class="hidden">({{this.topCollege}})</p>
         <div class="college-list" id="college-grid">
@@ -23,22 +29,43 @@
                   </div>
                   <div class="subtext">
                     <div class="college">{{college.name}}</div>
-                    <div class="course">BS Computer Science</div>
+                    <div class="course">{{this.course}}</div>
                   </div>
                 </div>
               </div>
             {{/each}}
           {{else}}
-            <p style="color: hsl(210,8%,42%); margin-top: -1.5rem;">
-              This person hasn't filled out this information
-            </p>
+            {{#if (eq this.user.username this.currentUser.username)}}
+              <a
+                href="/u/{{this.currentUser.username}}/preferences/profile/"
+                class="about-edit-link"
+                style="margin-top: -1.5rem;"
+              >
+                Add your preferred colleges here!
+                <svg
+                  style="width: 10px;"
+                  class="fa d-icon d-icon-pencil-alt svg-icon svg-string"
+                  xmlns="http://www.w3.org/2000/svg"
+                ><use href="#pencil-alt"></use></svg>
+              </a>
+            {{else}}
+              <p style="color: hsl(210,8%,42%); margin-top: -1.5rem;">
+                This person hasn't filled out this information
+              </p>
+            {{/if}}
           {{/if}}
         </div>
       </div>
       <div style="margin-bottom: 2rem;">
-        <p
-          style="font-size: 20px; font-weight: 700; margin-bottom: 1rem;"
-        >About</p>
+        <p style="font-size: 20px; font-weight: 700; margin-bottom: 1rem;">
+          About
+          {{#if (eq this.user.username this.currentUser.username)}}
+            <a
+              href="/u/{{this.currentUser.username}}/preferences/profile/"
+              class="edit-link"
+            >Edit</a>
+          {{/if}}
+        </p>
         {{#if this.user.bio_excerpt}}
           <div class="card-row second-row">
             <div class="bio-contents">

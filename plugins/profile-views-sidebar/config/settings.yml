@@ -11,3 +11,6 @@ plugins:
   college_top_preference_field:
     default: "user_field_5"
     client: true
+  college_graduation_year_field:
+    default: "user_field_6"
+    client: true

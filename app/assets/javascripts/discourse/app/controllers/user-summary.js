@@ -1,5 +1,4 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
@@ -128,5 +127,10 @@ export default Controller.extend({
       customFields?.[this.siteSettings.college_admits_awaited_field],
       customFields?.[this.siteSettings.college_admits_received_field]
     );
+  },
+
+  @discourseComputed("user.custom_fields")
+  course(customFields) {
+    return customFields?.[this.siteSettings.user_enrollment_field];
   },
 });

@@ -171,15 +171,15 @@
                 />
               </span>
             </div>
-            <div style="font-size: 16px; color: #000;">
-              Enrolling in
-              {{this.course}}
+            <div style="font-size: 16px; color: #000; opacity: .72;">
+              Aspiring student @
+              {{or this.topCollege "???"}}
             </div>
-            <div class="tags hidden" style="display: flex; gap: .5rem;">
+            <div class="tags" style="display: flex; gap: .5rem;">
               {{! What to show here? }}
-              <span>#hello</span>
-              <span>#world</span>
-              <span>#college</span>
+              {{#if this.course}}<span>{{this.course}}</span>{{/if}}
+              {{#if this.graduationYear}}<span>Class of
+                  {{this.graduationYear}}</span>{{/if}}
             </div>
             {{#if this.showFeaturedTopic}}
               <div class="featured-topic user-profile__featured-topic hidden">

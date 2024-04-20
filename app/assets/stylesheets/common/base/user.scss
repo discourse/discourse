@@ -852,6 +852,14 @@
 .primary-textual {
   flex: 1 1 auto;
   min-width: 0;
+
+  .tags span {
+    border-radius: 24rem;
+    padding: 0.5rem 1rem;
+    background: #dbe1f0;
+    font-size: 14px;
+    font-weight: 700;
+  }
 }
 
 .primary-textual .staged,

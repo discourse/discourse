@@ -14,6 +14,20 @@
 .user-summary-page .wrap {
   max-width: 900px !important;
 
+  .edit-link {
+    font-size: 16px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    font-weight: 500;
+    color: #1a63f1;
+    margin-left: 0.5rem;
+    vertical-align: text-bottom;
+
+    &:hover {
+      text-decoration-thickness: 2px;
+    }
+  }
+
   .side-box {
     align-self: flex-start;
     min-width: 300px;
@@ -71,14 +85,19 @@
     .card-contents {
       display: flex;
       padding: 1.5rem 1rem;
-      gap: 0.5rem;
+      gap: 12px;
       justify-content: space-around;
+      overflow: hidden;
 
-      .logo img {
-        max-width: 100%;
-        width: 48px;
-        height: 48px;
-        object-fit: contain;
+      .logo {
+        flex-shrink: 0;
+
+        img {
+          max-width: 100%;
+          width: 48px;
+          height: 48px;
+          object-fit: contain;
+        }
       }
     }
 
@@ -87,6 +106,10 @@
       flex-direction: column;
       justify-content: center;
       gap: 4px;
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .toptext {
@@ -102,8 +125,6 @@
       position: absolute;
       padding: 4px 12px;
       border-radius: 24px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
 
       &.await {
         background-color: #c1eded;
@@ -115,6 +136,8 @@
       font-weight: 500;
       color: #050505;
       margin: 0;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     .course {

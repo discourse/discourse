@@ -73,19 +73,16 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
     position: absolute;
     top: 0;
     right: 2px;
-
-    &.-urgent {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: auto;
-      max-width: 0.6em;
-      height: 1em;
-      min-width: 0.6em;
-      padding: 0.21em 0.42em;
-      top: 18px;
-      left: 18px;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    max-width: 0.6em;
+    height: 1em;
+    min-width: 0.6em;
+    padding: 0.21em 0.42em;
+    top: 18px;
+    left: 18px;
   }
 
   span.icon {
