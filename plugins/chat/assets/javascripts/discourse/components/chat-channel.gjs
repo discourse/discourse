@@ -111,6 +111,7 @@ export default class ChatChannel extends Component {
     this.#cancelHandlers();
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this.subscriptionManager.teardown();
+    this.updateLastReadMessage();
   }
 
   @action
@@ -415,15 +416,12 @@ export default class ChatChannel extends Component {
     }
 
     schedule("afterRender", () => {
-      let lastFullyVisibleMessageNode = null;
-
-      this.scrollable
-        .querySelectorAll(".chat-message-container")
-        .forEach((item) => {
-          if (checkMessageBottomVisibility(this.scrollable, item)) {
-            lastFullyVisibleMessageNode = item;
-          }
-        });
+      const messages = this.scrollable.querySelectorAll(
+        ".chat-message-container"
+      );
+      let lastFullyVisibleMessageNode = Array.from(messages)
+        .reverse()
+        .find((item) => checkMessageBottomVisibility(this.scrollable, item));
 
       if (!lastFullyVisibleMessageNode) {
         return;
