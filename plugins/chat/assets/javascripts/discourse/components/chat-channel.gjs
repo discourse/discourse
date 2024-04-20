@@ -416,11 +416,8 @@ export default class ChatChannel extends Component {
     }
 
     schedule("afterRender", () => {
-      const messages = this.scrollable.querySelectorAll(
-        ".chat-message-container"
-      );
-      let lastFullyVisibleMessageNode = Array.from(messages)
-        .reverse()
+      const lastFullyVisibleMessageNode = this.scrollable
+        .querySelectorAll(".chat-message-container")
         .find((item) => checkMessageBottomVisibility(this.scrollable, item));
 
       if (!lastFullyVisibleMessageNode) {
