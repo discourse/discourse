@@ -22,8 +22,6 @@ export default Controller.extend({
   async fetchProfileViews() {
     const profileViews = await ajax("/u/profile-views.json");
     this.set("profileViews", profileViews);
-    this.set("firstUser", profileViews.views?.[0]);
-    this.set("secondUser", profileViews.views?.[1]);
   },
 
   setAdmitsReceivedWithHash(
@@ -53,7 +51,7 @@ export default Controller.extend({
 
     Promise.all(
       allColleges.map(async (college) => {
-        const hash = await this.sha1(college.name);
+        const hash = this.sha1(college.name);
         return {
           ...college,
           hash,
@@ -64,7 +62,7 @@ export default Controller.extend({
     });
   },
 
-  sha1(data) {
+  _sha1(data) {
     const encoder = new TextEncoder();
     const encodedData = encoder.encode(data);
     return crypto.subtle.digest("SHA-1", encodedData).then((hashBuffer) => {
@@ -73,6 +71,12 @@ export default Controller.extend({
         .map((byte) => byte.toString(16).padStart(2, "0"))
         .join("");
     });
+  },
+
+  sha1(data) {
+    const shaObj = new jsSHA("SHA-1", "TEXT");
+    shaObj.update(data);
+    return shaObj.getHash("HEX");
   },
 
   @discourseComputed("profileViews")
