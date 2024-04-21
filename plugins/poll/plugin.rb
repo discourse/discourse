@@ -40,6 +40,7 @@ after_initialize do
   require_relative "app/serializers/poll_serializer"
   require_relative "jobs/regular/close_poll"
   require_relative "lib/poll"
+  require_relative "lib/irv"
   require_relative "lib/polls_updater"
   require_relative "lib/polls_validator"
   require_relative "lib/post_validator"

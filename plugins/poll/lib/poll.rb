@@ -57,6 +57,23 @@ class DiscoursePoll::Poll
             PollVote.create!(poll: poll, user: user, poll_option_id: option_id)
           end
         end
+
+        if poll.type == "irv"
+          ballot = []
+          PollVote
+            .where(poll: poll)
+            .pluck(:user_id)
+            .uniq
+            .each do |user_id|
+              ballot_paper = []
+              PollVote
+                .where(poll: poll, user_id: user_id)
+                .order(rank: :asc)
+                .each { |vote| ballot_paper << vote.poll_option.digest if vote.rank > 0 }
+              ballot << ballot_paper
+            end
+          irv_outcome = DiscoursePoll::Irv.irv_outcome(ballot)
+        end
       end
 
     unless serialized_poll[:type] == "irv"
