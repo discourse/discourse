@@ -1,6 +1,6 @@
 <div>
   <div
-    style="max-width: 100%; padding: .5rem 1.5rem; background: #F0F4FD; border-radius: 8px"
+    style="max-width: 100%; padding: .5rem 1.5rem; background: #F0F4FD; border-radius: 8px; position: relative; z-index: 2;"
   >
     <div style="display: flex; gap: 1em;align-items: center;">
       <div class="user-card-avatar">
@@ -27,6 +27,37 @@
           </h2>
         </div>
       </div>
+    </div>
+  </div>
+  <div class="profile-viewers-preview">
+    <div>
+      {{#if (gt this.profileViews.views.length 0)}}
+        <div style="display: inline-flex; width: 42px;">
+          <span>{{bound-avatar this.firstUser "tiny"}}</span>
+          <span style="position: relative; left: -6px; z-index: 2;">
+            {{bound-avatar this.secondUser "tiny"}}
+          </span>
+        </div>
+        <a
+          style="position: relative; color: white;"
+          href="/u/{{this.currentUser.username}}/summary"
+        >and others viewed your profile
+          <svg
+            style="width: 10px;"
+            class="fa d-icon d-icon-chevron-right svg-icon svg-string"
+            xmlns="http://www.w3.org/2000/svg"
+          ><use href="#chevron-right"></use></svg></a>
+      {{else}}
+        <a
+          style="position: relative; color: white;"
+          href="/u/{{this.currentUser.username}}/summary"
+        >View your Profile
+          <svg
+            style="width: 10px;"
+            class="fa d-icon d-icon-chevron-right svg-icon svg-string"
+            xmlns="http://www.w3.org/2000/svg"
+          ><use href="#chevron-right"></use></svg></a>
+      {{/if}}
     </div>
   </div>
 </div>

@@ -105,19 +105,7 @@
     <div class="side-box">
       {{#if (eq this.user.username this.currentUser.username)}}
         <div class="profile-viewers-summary">
-          {{#if (gt this.profileViews.views.length 1)}}
-            <div>
-              <div style="display: inline-flex; width: 42px;">
-                <span>{{bound-avatar this.firstUser "tiny"}}</span>
-                <span style="position: relative; left: -6px; z-index: 2;">
-                  {{bound-avatar this.secondUser "tiny"}}
-                </span>
-              </div>
-              <span style="position: relative;">and others viewed your profile</span>
-            </div>
-          {{else}}
-            <div>Who's viewed your profile</div>
-          {{/if}}
+          <div>Your profile views</div>
         </div>
         <div class="profile-viewers-detail">
           {{#each this.profileViews.views as |user|}}
