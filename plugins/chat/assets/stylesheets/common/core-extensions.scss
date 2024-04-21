@@ -33,6 +33,24 @@
     min-width: 300px;
     width: 300px;
 
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f0f4fd; /* Light grey track */
+      margin-top: 1rem;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #a6adbd;
+      border-radius: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8a8f9d;
+    }
+
     .profile-viewers-summary {
       border-radius: 8px;
       background: #747e96;
@@ -60,9 +78,32 @@
       padding-top: 2rem;
       padding-bottom: 1rem;
       box-sizing: border-box;
-      gap: 0.7rem;
+      gap: 1.5rem;
       display: flex;
       flex-direction: column;
+      height: auto; // todo: fix
+      max-height: 24rem;
+      overflow-y: auto;
+
+      .profile-link {
+        font-size: 14px;
+        font-weight: 700;
+        color: black;
+
+        &:hover {
+          text-decoration: underline;
+          text-underline-offset: 2px;
+          text-decoration-thickness: 2px;
+        }
+      }
+
+      .tags span {
+        border-radius: 24rem;
+        padding: 0.5rem 1rem;
+        background: #dbe1f0;
+        font-size: 10px;
+        font-weight: 700;
+      }
     }
   }
 }

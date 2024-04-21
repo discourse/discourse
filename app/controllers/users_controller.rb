@@ -1530,21 +1530,40 @@ class UsersController < ApplicationController
   end
 
   def profile_views
-    result = DB.query(<<-SQL, current_user_id: current_user.id)
+    sql = <<~SQL
+    WITH props as (
+      SELECT user_id,
+        min(value) filter (where name = :graduation_year_field) as graduation_year,
+        min(value) filter (where name = :top_college_field)  as top_college,
+        min(value) filter (where name = :course_field)  as course
+      FROM user_custom_fields
+      GROUP BY 1
+    )
     SELECT distinct on (users.id)
       coalesce(users.name, users.username) as name,
       users.username as username,
-      users.uploaded_avatar_id as avatar_id
+      users.uploaded_avatar_id as avatar_id,
+      props.*
       from users
           join user_profile_views
               on users.id = user_profile_views.user_id
               and user_profile_views.user_profile_id = :current_user_id
           left join uploads
               on users.uploaded_avatar_id = uploads.id
+          left join props
+              on users.id = props.user_id
       where
           user_profile_views.viewed_at >= (now() - interval '90 days')
       order by users.id, uploads.created_at desc;
     SQL
+
+    result = DB.query(
+      sql,
+      current_user_id: current_user.id,
+      graduation_year_field: SiteSetting.college_graduation_year_field,
+      top_college_field: SiteSetting.college_top_preference_field,
+      course_field: SiteSetting.user_enrollment_field
+    )
 
     enhanced_results = result.map do |view|
       view_hash = view.respond_to?(:to_h) ? view.to_h : view.attributes.to_h

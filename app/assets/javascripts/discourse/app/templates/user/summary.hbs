@@ -121,11 +121,31 @@
         </div>
         <div class="profile-viewers-detail">
           {{#each this.profileViews.views as |user|}}
-            <div style="display: flex; align-items: center; gap: .5rem;">
-              {{bound-avatar user "tiny"}}
-              <a href="/u/{{user.username}}" class="trigger-user-card">
-                {{user.name}}
-              </a>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="align-self: baseline;">
+                {{bound-avatar user "large"}}
+              </div>
+              <div
+                style="display: flex; flex-direction: column; gap: 4px; overflow: hidden;"
+              >
+                <a href="/u/{{user.username}}" class="profile-link">
+                  {{user.name}}
+                </a>
+                <div
+                  style="font-size: 12px; color: #000; opacity: .7; font-weight: 400; text-overflow: ellipsis;  white-space: nowrap; overflow: hidden;"
+                >
+                  Aspiring student @
+                  {{or user.top_college "???"}}
+                </div>
+                <div
+                  class="tags"
+                  style="display: flex; gap: .5rem; margin-top: 2px;"
+                >
+                  {{#if user.course.course}}<span>{{user.course}}</span>{{/if}}
+                  {{#if user.graduation_year}}<span>Class of
+                      {{user.graduation_year}}</span>{{/if}}
+                </div>
+              </div>
             </div>
           {{/each}}
         </div>
