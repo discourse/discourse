@@ -2,3 +2,5 @@
 
 tmp/*
 Gemfile.lock
+
+/config/process_uploads.yml
