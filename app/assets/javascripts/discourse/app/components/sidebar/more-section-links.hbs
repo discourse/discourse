@@ -4,12 +4,18 @@
 
 <li class="sidebar-section-link-wrapper">
   <DButton
-    @icon="ellipsis-v"
-    @action={{this.toggleSectionLinks}}
-    @label="sidebar.more"
-    class="btn-flat sidebar-more-section-links-details-summary"
     aria-expanded={{if this.open "true" "false"}}
-  />
+    class="sidebar-section-link sidebar-row sidebar-more-section-links-details-summary --link-button"
+    @noAutoClass={{true}}
+    @action={{this.toggleSectionLinks}}
+  >
+    <span class="sidebar-section-link-prefix icon">
+      {{d-icon "ellipsis-v"}}
+    </span>
+    <span class="sidebar-section-link-content-text">
+      {{i18n "sidebar.more"}}
+    </span>
+  </DButton>
 </li>
 
 {{#if this.open}}

@@ -31,6 +31,22 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
     }
   }
 
+  get buttonClasses() {
+    if (this.args.noAutoClass) {
+      return this.args.class || "";
+    }
+
+    let classes = [
+      this.args.isLoading ? "is-loading" : "",
+      this.btnLink ? "btn-link" : "btn",
+      this.noText ? "no-text" : "",
+      this.btnType || "",
+      this.args.class || "",
+    ];
+
+    return classes.join(" ");
+  }
+
   get forceDisabled() {
     return !!this.args.isLoading;
   }
@@ -154,14 +170,7 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
   <template>
     {{! template-lint-disable no-pointer-down-event-binding }}
     <this.wrapperElement
-      {{! For legacy compatibility. Prefer passing class as attributes. }}
-      class={{concatClass
-        @class
-        (if @isLoading "is-loading")
-        (if this.btnLink "btn-link" "btn")
-        (if this.noText "no-text")
-        this.btnType
-      }}
+      class={{this.buttonClasses}}
       {{! For legacy compatibility. Prefer passing these as html attributes. }}
       id={{@id}}
       form={{@form}}

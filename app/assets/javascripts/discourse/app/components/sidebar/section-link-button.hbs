@@ -1,8 +1,8 @@
 <div class="sidebar-section-link-wrapper">
-  <button
-    type="button"
-    class="btn btn-flat sidebar-section-link-button sidebar-row"
-    {{on "click" @action}}
+  <DButton
+    class="sidebar-section-link sidebar-row --link-button"
+    @noAutoClass={{true}}
+    @action={{@action}}
   >
     <span class="sidebar-section-link-prefix icon">
       {{d-icon @icon}}
@@ -11,5 +11,5 @@
     <span class="sidebar-section-link-content-text">
       {{@text}}
     </span>
-  </button>
+  </DButton>
 </div>
