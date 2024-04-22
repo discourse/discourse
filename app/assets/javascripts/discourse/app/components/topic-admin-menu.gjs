@@ -97,7 +97,6 @@ export default class TopicAdminMenu extends Component {
                         @label="topic.actions.multi_select"
                         @action={{fn this.onButtonAction "toggleMultiSelect"}}
                         @icon="tasks"
-                        class="popup-menu-btn"
                       />
                     </li>
                   {{/if}}
@@ -123,7 +122,6 @@ export default class TopicAdminMenu extends Component {
                           @label="topic.actions.recover"
                           @action={{fn this.onButtonAction "recoverTopic"}}
                           @icon="undo"
-                          class="popup-menu-btn"
                         />
                       </li>
                     {{/if}}
@@ -145,7 +143,6 @@ export default class TopicAdminMenu extends Component {
                         }}
                         @action={{fn this.onButtonAction "toggleClosed"}}
                         @icon={{if @topic.closed "unlock" "lock"}}
-                        class="popup-menu-btn"
                       />
                     </li>
                   {{/if}}
@@ -166,7 +163,6 @@ export default class TopicAdminMenu extends Component {
                         }}
                         @action={{fn this.onButtonAction "showFeatureTopic"}}
                         @icon="thumbtack"
-                        class="popup-menu-btn"
                       />
                     </li>
                   {{/if}}
@@ -185,7 +181,6 @@ export default class TopicAdminMenu extends Component {
                         }}
                         @action={{fn this.onButtonAction "toggleArchived"}}
                         @icon="folder"
-                        class="popup-menu-btn"
                       />
                     </li>
                   {{/if}}
@@ -200,7 +195,6 @@ export default class TopicAdminMenu extends Component {
                         }}
                         @action={{fn this.onButtonAction "toggleVisibility"}}
                         @icon={{if this.visible "far-eye-slash" "far-eye"}}
-                        class="popup-menu-btn"
                       />
                     </li>
                   {{/if}}
@@ -222,7 +216,6 @@ export default class TopicAdminMenu extends Component {
                           )
                         }}
                         @icon={{if this.isPrivateMessage "comment" "envelope"}}
-                        class="popup-menu-btn"
                       />
                     </li>
                   {{/if}}
@@ -235,7 +228,6 @@ export default class TopicAdminMenu extends Component {
                         @label="topic.actions.timed_update"
                         @action={{fn this.onButtonAction "showTopicTimerModal"}}
                         @icon="far-clock"
-                        class="popup-menu-btn"
                       />
                     </li>
 
@@ -248,7 +240,6 @@ export default class TopicAdminMenu extends Component {
                             "showChangeTimestamp"
                           }}
                           @icon="calendar-alt"
-                          class="popup-menu-btn"
                         />
                       </li>
                     {{/if}}
@@ -258,7 +249,6 @@ export default class TopicAdminMenu extends Component {
                         @label="topic.actions.reset_bump_date"
                         @action={{fn this.onButtonAction "resetBumpDate"}}
                         @icon="anchor"
-                        class="popup-menu-btn"
                       />
                     </li>
 
@@ -270,7 +260,6 @@ export default class TopicAdminMenu extends Component {
                           "showTopicSlowModeUpdate"
                         }}
                         @icon="hourglass-start"
-                        class="popup-menu-btn"
                       />
                     </li>
                   {{/if}}
@@ -283,7 +272,6 @@ export default class TopicAdminMenu extends Component {
                         @label="review.moderation_history"
                         @href={{this.topicModerationHistoryUrl}}
                         @icon="list"
-                        class="popup-menu-btn"
                       />
                     </li>
                   {{/if}}
@@ -294,7 +282,7 @@ export default class TopicAdminMenu extends Component {
                         @label={{button.label}}
                         @translatedLabel={{button.translatedLabel}}
                         @icon={{button.icon}}
-                        class={{concatClass "popup-menu-btn" button.className}}
+                        class={{button.className}}
                         @action={{fn this.onExtraButtonAction button.action}}
                       />
                     </li>
