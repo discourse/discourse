@@ -35,7 +35,7 @@ module Chat
       attribute :channel_id, :integer
       attribute :thread_title_prompt_seen, :boolean
 
-      validates :thread_id, :channel_id, :thread_title_prompt, presence: true
+      validates :thread_id, :channel_id, :thread_title_prompt_seen, presence: true
 
       validates :thread_title_prompt_seen, inclusion: { in: [true, false] }
     end

@@ -576,7 +576,7 @@ export default class ChatThread extends Component {
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log("Couldn't save thread title prompt status", e);
-      this.membership.threadTitlePrompt = false;
+      this.membership.threadTitlePromptSeen = false;
     }
   }
 
@@ -590,7 +590,7 @@ export default class ChatThread extends Component {
     const threadReplyCount = this.messagesManager.messages.length - 1;
     const ignoreThreadTitlePrompts =
       !this.currentUser.user_option.show_thread_title_prompts;
-    const hasSeenThreadTitlePrompt = this.membership?.threadTitlePrompt;
+    const hasSeenThreadTitlePrompt = this.membership?.threadTitlePromptSeen;
 
     if (
       this.site.desktopView ||
