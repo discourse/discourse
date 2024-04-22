@@ -1222,16 +1222,16 @@
   resolved "https://registry.yarnpkg.com/@discourse/backburner.js/-/backburner.js-2.7.1-0.tgz#0fc5f93c8f3ee013af2beed55d30ff10362d8f06"
   integrity sha512-r0cjllX/niPSxot/lpz0Tj9CXmyYoFE6kvEN9oL0D0sOGpknmK9FielZqcPGxuD/Z8vOb67penUElHRjH+F4cQ==
 
-"@discourse/ember-instantsearch@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@discourse/ember-instantsearch/-/ember-instantsearch-1.0.2.tgz#55709470ca2e55a7e83e2e88c93bd8e01cb2d6ad"
-  integrity sha512-gHGMbPXmD4d8GrtbJfsYdOdtAyW5jXjfyDqACqKFN1TMlldz9TsKCwVdpFfuwlLolvp5vc4TptzYqyid300JKw==
+"@discourse/ember-instantsearch@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@discourse/ember-instantsearch/-/ember-instantsearch-1.0.7.tgz#094f081cd45bd89303bccd8a75227d84731bc84a"
+  integrity sha512-Mk4+qk1y7xfrQ7O2cB86db7p93OJ3KgyE2ZLMQBs/TqS/wiIBAU1/SECdA+zpkL0+fvGRyZkaiEn66EXKQWs/Q==
   dependencies:
     "@babel/runtime" "^7.24.4"
     "@ember/render-modifiers" "^2.1.0"
     "@embroider/addon-shim" "^1.8.7"
     algoliasearch "^4.22.1"
-    decorator-transforms "^1.0.1"
+    decorator-transforms "^1.2.1"
     ember-cli-htmlbars ember-cli/ember-cli-htmlbars
     instantsearch.js "^4.66.0"
     typesense-instantsearch-adapter "^2.8.0"
@@ -5408,14 +5408,6 @@ decode-uri-component@^0.2.0:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.2.tgz#e69dbe25d37941171dd540e024c444cd5188e1e9"
   integrity sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==
-
-decorator-transforms@^1.0.1:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/decorator-transforms/-/decorator-transforms-1.2.0.tgz#c86c816bf825c2538ac5c98178d3acbb3776b26b"
-  integrity sha512-RVBlaFXkLHEKEAa7bCfbjmJTyr4VgfpsnNzAq0fvxtpK0KlXuH59n0EaXTUx+KZFrIj38C3mAI2w7VvLm0nM7w==
-  dependencies:
-    "@babel/plugin-syntax-decorators" "^7.23.3"
-    babel-import-util "^2.0.1"
 
 decorator-transforms@^1.2.1:
   version "1.2.1"
