@@ -348,7 +348,7 @@ RSpec.describe "Chat channel", type: :system do
         ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
       )
 
-      find(".chat-messages-scroll").scroll_to(0, -1000)
+      find(".chat-messages-scroller").scroll_to(0, -1000)
 
       expect(page).to have_no_css(
         ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",

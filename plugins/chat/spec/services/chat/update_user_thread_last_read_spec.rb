@@ -4,6 +4,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
   describe Chat::UpdateUserThreadLastRead::Contract, type: :model do
     it { is_expected.to validate_presence_of :channel_id }
     it { is_expected.to validate_presence_of :thread_id }
+    it { is_expected.to validate_presence_of :message_id }
   end
 
   describe ".call" do
@@ -11,13 +12,18 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
 
     fab!(:chatters) { Fabricate(:group) }
     fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id]) }
-    fab!(:channel) { Fabricate(:chat_channel) }
-    fab!(:thread) { Fabricate(:chat_thread, channel: channel, old_om: true) }
-    fab!(:thread_reply_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
-    fab!(:thread_reply_2) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
+    fab!(:thread) { Fabricate(:chat_thread, old_om: true) }
+    fab!(:reply_1) { Fabricate(:chat_message, thread: thread) }
 
     let(:guardian) { Guardian.new(current_user) }
-    let(:params) { { guardian: guardian, channel_id: channel.id, thread_id: thread.id } }
+    let(:params) do
+      {
+        message_id: reply_1.id,
+        guardian: guardian,
+        channel_id: thread.channel.id,
+        thread_id: thread.id,
+      }
+    end
 
     before { SiteSetting.chat_allowed_groups = [chatters] }
 
@@ -27,80 +33,86 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
       it { is_expected.to fail_a_contract }
     end
 
+    context "when thread cannot be found" do
+      before { params[:channel_id] = Fabricate(:chat_channel).id }
+
+      it { is_expected.to fail_to_find_a_model(:thread) }
+    end
+
+    context "when user can’t access the channel" do
+      fab!(:channel) { Fabricate(:private_category_channel) }
+      fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
+
+      it { is_expected.to fail_a_policy(:invalid_access) }
+    end
+
     context "when params are valid" do
-      context "when user can’t access the channel" do
-        fab!(:channel) { Fabricate(:private_category_channel) }
-        fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
-
-        it { is_expected.to fail_a_policy(:invalid_access) }
+      it "sets the service result as successful" do
+        expect(result).to be_a_success
       end
 
-      context "when thread cannot be found" do
-        before { params[:channel_id] = Fabricate(:chat_channel).id }
-
-        it { is_expected.to fail_to_find_a_model(:thread) }
+      it "publishes new last read to clients" do
+        messages = MessageBus.track_publish { result }
+        expect(messages.map(&:channel)).to include("/chat/user-tracking-state/#{current_user.id}")
       end
 
-      context "when everything is fine" do
-        fab!(:notification_1) do
-          Fabricate(
-            :notification,
-            notification_type: Notification.types[:chat_mention],
-            user: current_user,
+      context "when the user is a member of the thread" do
+        fab!(:membership) do
+          Fabricate(:user_chat_thread_membership, user: current_user, thread: thread)
+        end
+
+        it "updates the last_read_message_id of the thread" do
+          expect { result }.to change { membership.reload.last_read_message_id }.from(nil).to(
+            reply_1.id,
           )
         end
-        fab!(:notification_2) do
-          Fabricate(
-            :notification,
-            notification_type: Notification.types[:chat_mention],
-            user: current_user,
-          )
-        end
+      end
+    end
 
-        let(:messages) { MessageBus.track_publish { result } }
+    context "when unread messages have associated notifications" do
+      before_all do
+        Jobs.run_immediately!
+        thread.channel.add(current_user)
+      end
 
-        before do
-          Jobs.run_immediately!
-          Chat::UserMention.create!(
-            notifications: [notification_1],
-            user: current_user,
-            chat_message: Fabricate(:chat_message, chat_channel: channel, thread: thread),
-          )
-          Chat::UserMention.create!(
-            notifications: [notification_2],
-            user: current_user,
-            chat_message: Fabricate(:chat_message, chat_channel: channel, thread: thread),
-          )
-        end
+      fab!(:reply_2) do
+        Fabricate(
+          :chat_message,
+          thread: thread,
+          message: "hi @#{current_user.username}",
+          use_service: true,
+        )
+      end
 
-        it "sets the service result as successful" do
-          expect(result).to be_a_success
-        end
+      fab!(:reply_3) do
+        Fabricate(
+          :chat_message,
+          thread: thread,
+          message: "hi @#{current_user.username}",
+          use_service: true,
+        )
+      end
 
-        it "marks existing notifications related to all messages in the thread as read" do
-          expect { result }.to change {
-            Notification.where(
-              notification_type: Notification.types[:chat_mention],
-              user: current_user,
-              read: false,
-            ).count
-          }.by(-2)
-        end
+      it "marks notifications as read" do
+        params[:message_id] = reply_2.id
 
-        it "publishes new last read to clients" do
-          expect(messages.map(&:channel)).to include("/chat/user-tracking-state/#{current_user.id}")
-        end
+        expect { described_class.call(params) }.to change {
+          ::Notification
+            .where(notification_type: Notification.types[:chat_mention])
+            .where(user: current_user)
+            .where(read: false)
+            .count
+        }.by(-1)
 
-        context "when the user is a member of the thread" do
-          fab!(:membership) do
-            Fabricate(:user_chat_thread_membership, user: current_user, thread: thread)
-          end
+        params[:message_id] = reply_3.id
 
-          it "updates the last_read_message_id of the thread" do
-            result
-            expect(membership.reload.last_read_message_id).to eq(thread.reload.last_message.id)
-          end
-        end
+        expect { described_class.call(params) }.to change {
+          ::Notification
+            .where(notification_type: Notification.types[:chat_mention])
+            .where(user: current_user)
+            .where(read: false)
+            .count
+        }.by(-1)
       end
     end
   end

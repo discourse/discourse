@@ -4,9 +4,9 @@ module Chat
   # Service responsible for updating the last read message id of a membership.
   #
   # @example
-  #  Chat::UpdateUserLastRead.call(channel_id: 2, message_id: 3, guardian: guardian)
+  #  Chat::UpdateUserChannelLastRead.call(channel_id: 2, message_id: 3, guardian: guardian)
   #
-  class UpdateUserLastRead
+  class UpdateUserChannelLastRead
     include ::Service::Base
 
     # @!method call(channel_id:, message_id:, guardian:)

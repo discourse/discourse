@@ -9,7 +9,7 @@
   min-width: 250px;
   @include chat-height(var(--chat-header-offset, 0px));
 
-  .chat-messages-scroll {
+  .chat-messages-scroller {
     flex-grow: 1;
     overflow-y: scroll;
     overscroll-behavior: contain;
@@ -20,6 +20,8 @@
     will-change: transform;
     @include chat-scrollbar();
     min-height: 1px;
+    box-sizing: border-box;
+    transition: padding-top 0.2s ease-in-out;
 
     .join-channel-btn.in-float {
       position: absolute;

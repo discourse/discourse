@@ -6,7 +6,7 @@ module PageObjects
       class Messages < PageObjects::Components::Base
         attr_reader :context
 
-        SELECTOR = ".chat-messages-scroll"
+        SELECTOR = ".chat-messages-scroller"
 
         def initialize(context)
           @context = context

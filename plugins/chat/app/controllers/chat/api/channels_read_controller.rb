@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-class Chat::Api::ReadsController < Chat::ApiController
+class Chat::Api::ChannelsReadController < Chat::ApiController
   def update
-    params.require(%i[channel_id message_id])
-
-    with_service(Chat::UpdateUserLastRead) do
+    with_service(Chat::UpdateUserChannelLastRead) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:ensure_message_id_recency) do

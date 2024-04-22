@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::UpdateUserLastRead do
-  describe Chat::UpdateUserLastRead::Contract, type: :model do
+RSpec.describe Chat::UpdateUserChannelLastRead do
+  describe Chat::UpdateUserChannelLastRead::Contract, type: :model do
     it { is_expected.to validate_presence_of :channel_id }
     it { is_expected.to validate_presence_of :message_id }
   end
