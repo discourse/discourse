@@ -570,8 +570,7 @@ export default class ChatThread extends Component {
     try {
       await this.chatApi.updateCurrentUserThreadTitlePrompt(
         this.args.thread.channel.id,
-        this.args.thread.id,
-        { thread_title_prompt_seen: true }
+        this.args.thread.id
       );
     } catch (e) {
       // eslint-disable-next-line no-console

@@ -1,43 +1,38 @@
 # frozen_string_literal: true
 
 module Chat
-  # Updates the thread title prompt for a user, or if the thread
-  # does not exist, adds the user as a member of the thread before setting
-  # the thread title prompt.
+  # Marks the thread title prompt as seen for a specific user/thread
+  # Note: if the thread does not exist, it adds the user as a member of the thread
+  # before setting the thread title prompt.
   #
   # @example
-  # Chat::UpdateThreadTitlePrompt.call(
+  # Chat::MarkThreadTitlePromptSeen.call(
   #   thread_id: 88,
   #   channel_id: 2,
   #   guardian: guardian,
-  #   thread_title_prompt_seen: true,
   # )
   #
-  class UpdateThreadTitlePrompt
+  class MarkThreadTitlePromptSeen
     include Service::Base
 
-    # @!method call(thread_id:, channel_id:, guardian:, thread_title_prompt_seen:)
+    # @!method call(thread_id:, channel_id:, guardian:)
     #   @param [Integer] thread_id
     #   @param [Integer] channel_id
-    #   @param [Boolean] thread_title_prompt_seen
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 
     contract
-    model :thread, :fetch_thread
-    policy :can_view_channel
+    model :thread
     policy :threading_enabled_for_channel
+    policy :can_view_channel
     transaction { step :create_or_update_membership }
 
     # @!visibility private
     class Contract
       attribute :thread_id, :integer
       attribute :channel_id, :integer
-      attribute :thread_title_prompt_seen, :boolean
 
-      validates :thread_id, :channel_id, :thread_title_prompt_seen, presence: true
-
-      validates :thread_title_prompt_seen, inclusion: { in: [true, false] }
+      validates :thread_id, :channel_id, presence: true
     end
 
     private
@@ -57,7 +52,7 @@ module Chat
     def create_or_update_membership(thread:, guardian:, contract:)
       membership = thread.membership_for(guardian.user)
       membership = thread.add(guardian.user) if !membership
-      membership.update!(thread_title_prompt_seen: contract.thread_title_prompt_seen)
+      membership.update!(thread_title_prompt_seen: true)
       context.membership = membership
     end
   end

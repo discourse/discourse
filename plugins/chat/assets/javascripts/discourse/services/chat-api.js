@@ -377,14 +377,11 @@ export default class ChatApi extends Service {
    * Update thread title prompt of current user for a thread.
    * @param {number} channelId - The ID of the channel.
    * @param {number} threadId - The ID of the thread.
-   * @param {object} data - The settings to modify.
-   * @param {boolean} [data.thread_title_prompt_seen] - (true) to prevent showing user the prompt for this thread in the future.
    * @returns {Promise}
    */
-  updateCurrentUserThreadTitlePrompt(channelId, threadId, data) {
+  updateCurrentUserThreadTitlePrompt(channelId, threadId) {
     return this.#putRequest(
-      `/channels/${channelId}/threads/${threadId}/thread-title-prompt/me`,
-      { thread_title_prompt_seen: data.thread_title_prompt_seen }
+      `/channels/${channelId}/threads/${threadId}/thread-title-prompt/me`
     );
   }
 
