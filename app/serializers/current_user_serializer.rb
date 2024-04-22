@@ -80,19 +80,14 @@ class CurrentUserSerializer < BasicUserSerializer
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
 
   has_one :user_option, embed: :object, serializer: CurrentUserOptionSerializer
+  has_many :all_sidebar_sections,
+           embed: :object,
+           key: :sidebar_sections,
+           serializer: SidebarSectionSerializer
 
   def initialize(object, options = {})
     super
     options[:include_status] = true
-  end
-
-  def sidebar_sections
-    SidebarSection
-      .public_sections
-      .or(SidebarSection.where(user_id: object.id))
-      .includes(:sidebar_urls)
-      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
-      .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end
 
   def groups
