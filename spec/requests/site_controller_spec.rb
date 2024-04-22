@@ -33,7 +33,7 @@ RSpec.describe SiteController do
       expect(json["include_in_discourse_discover"]).to eq(true)
     end
 
-    it "includes false values for some site settings" do
+    it "includes false values for include_in_discourse_discover and login_required" do
       SiteSetting.include_in_discourse_discover = false
       SiteSetting.login_required = false
 
