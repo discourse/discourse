@@ -6,7 +6,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import BookmarkModal from "discourse/components/modal/bookmark";
-import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   TIME_SHORTCUT_TYPES,
@@ -28,6 +27,7 @@ export default class BookmarkMenu extends Component {
   bookmarkManager = this.args.bookmarkManager;
   timezone = this.currentUser?.user_option?.timezone || moment.tz.guess();
   timeShortcuts = timeShortcuts(this.timezone);
+  bookmarkCreatePromise = null;
 
   @action
   setReminderShortcuts() {
@@ -58,15 +58,58 @@ export default class BookmarkMenu extends Component {
       return I18n.t("bookmarks.not_bookmarked");
     } else {
       if (this.existingBookmark.reminderAt) {
-        return I18n.t("bookmarks.created_with_reminder", {
+        return I18n.t("bookmarks.created_with_reminder_generic", {
           date: this.existingBookmark.formattedReminder(this.timezone),
           name: this.existingBookmark.name || "",
         });
       } else {
-        return I18n.t("bookmarks.created", {
+        return I18n.t("bookmarks.created_generic", {
           name: this.existingBookmark.name || "",
         });
       }
+    }
+  }
+
+  get buttonClasses() {
+    let cssClasses = ["bookmark widget-button bookmark-menu__trigger"];
+
+    if (!this.args.showLabel) {
+      cssClasses.push("btn-icon no-text");
+    } else {
+      cssClasses.push("btn-icon-text");
+    }
+
+    if (this.args.buttonClasses) {
+      cssClasses.push(this.args.buttonClasses);
+    }
+
+    if (this.existingBookmark) {
+      cssClasses.push("bookmarked");
+      if (this.existingBookmark.reminderAt) {
+        cssClasses.push("with-reminder");
+      }
+    }
+
+    return cssClasses.join(" ");
+  }
+
+  get buttonIcon() {
+    if (this.existingBookmark?.reminderAt) {
+      return "discourse-bookmark-clock";
+    } else {
+      return "bookmark";
+    }
+  }
+
+  get buttonLabel() {
+    if (!this.args.showLabel) {
+      return;
+    }
+
+    if (this.existingBookmark) {
+      return I18n.t("bookmarked.edit_bookmark");
+    } else {
+      return I18n.t("bookmarked.title");
     }
   }
 
@@ -79,22 +122,25 @@ export default class BookmarkMenu extends Component {
   }
 
   @action
-  async onBookmark() {
-    try {
-      await this.bookmarkManager.create();
-      // We show the menu with Edit/Delete options if the bokmark exists,
-      // so this "quicksave" will do nothing in that case.
-      // NOTE: Need a nicer way to handle this; otherwise as soon as you save
-      // a bookmark, it switches to the other Edit/Delete menu.
-      this.quicksaved = true;
-      this.toasts.success({
-        duration: 3000,
-        views: ["mobile"],
-        data: { message: I18n.t("bookmarks.bookmarked_success") },
+  onBookmark() {
+    this.bookmarkCreatePromise = this.bookmarkManager.create();
+    this.bookmarkCreatePromise
+      .then(() => {
+        // We show the menu with Edit/Delete options if the bokmark exists,
+        // so this "quicksave" will do nothing in that case.
+        // NOTE: Need a nicer way to handle this; otherwise as soon as you save
+        // a bookmark, it switches to the other Edit/Delete menu.
+        this.quicksaved = true;
+        this.toasts.success({
+          duration: 3000,
+          views: ["mobile"],
+          data: { message: I18n.t("bookmarks.bookmarked_success") },
+        });
+      })
+      .catch((error) => popupAjaxError(error))
+      .finally(() => {
+        this.bookmarkCreatePromise = null;
       });
-    } catch (error) {
-      popupAjaxError(error);
-    }
   }
 
   @action
@@ -140,6 +186,10 @@ export default class BookmarkMenu extends Component {
 
   @action
   async onChooseReminderOption(option) {
+    if (this.bookmarkCreatePromise) {
+      await this.bookmarkCreatePromise;
+    }
+
     if (option.id === TIME_SHORTCUT_TYPES.CUSTOM) {
       this._openBookmarkModal();
     } else {
@@ -188,25 +238,16 @@ export default class BookmarkMenu extends Component {
       {{didInsert this.setReminderShortcuts}}
       @identifier="bookmark-menu"
       @triggers={{array "click"}}
-      class={{concatClass
-        "bookmark widget-button btn-flat no-text btn-icon bookmark-menu__trigger"
-        (if this.existingBookmark "bookmarked")
-        (if this.existingBookmark.reminderAt "with-reminder")
-      }}
+      class={{this.buttonClasses}}
       @title={{this.buttonTitle}}
+      @label={{this.buttonLabel}}
+      @icon={{this.buttonIcon}}
       @onClose={{this.onCloseMenu}}
       @onShow={{this.onShowMenu}}
       @onRegisterApi={{this.onRegisterApi}}
       @modalForMobile={{true}}
       @arrow={{false}}
     >
-      <:trigger>
-        {{#if this.existingBookmark.reminderAt}}
-          {{icon "discourse-bookmark-clock"}}
-        {{else}}
-          {{icon "bookmark"}}
-        {{/if}}
-      </:trigger>
       <:content>
         <div class="bookmark-menu__body">
 

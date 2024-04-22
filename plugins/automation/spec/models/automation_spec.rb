@@ -165,4 +165,21 @@ describe DiscourseAutomation::Automation do
       end
     end
   end
+
+  describe "after_destroy" do
+    fab!(:automation) { Fabricate(:automation, enabled: false) }
+    fab!(:automation2) { Fabricate(:automation, enabled: false) }
+
+    it "deletes user custom fields that indicate new users" do
+      user = Fabricate(:user)
+      user.custom_fields[automation.new_user_custom_field_name] = "1"
+      user.custom_fields[automation2.new_user_custom_field_name] = "1"
+      user.save_custom_fields
+
+      automation.destroy!
+      user.reload
+
+      expect(user.custom_fields).to eq({ automation2.new_user_custom_field_name => "1" })
+    end
+  end
 end

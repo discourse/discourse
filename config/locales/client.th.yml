@@ -466,7 +466,6 @@ th:
       topic_count_long: "กระทู้ถูกสร้าง"
       post_count: "ตอบ"
       post_count_long: "คำตอบถูกโพสต์แล้ว"
-      no_results: "ไม่พบผลการค้นหา"
       days_visited: "เยี่ยมชม"
       days_visited_long: "วันที่เยี่ยมชม"
       posts_read: "อ่าน"
@@ -641,6 +640,7 @@ th:
       "13": "กล่องข้อความ"
       "14": "อยู่ระหว่างการพิจารณา"
       "15": "แบบร่าง"
+      "17": "ลิงก์"
     categories:
       categories_label: "หมวดหมู่"
       subcategories_label: "หมวดหมู่ย่อย"
@@ -1440,6 +1440,7 @@ th:
       liked_consolidated_description:
         other: "ถูกใจ %{count} ครั้งต่อโพสต์ของคุณ"
       liked_consolidated: "<span>%{username}</span>%{description}"
+      linked_consolidated: "<span>%{username}</span>%{description}"
       private_message: "<span>%{username}</span>%{description}"
       invited_to_private_message: "<p><span>%{username}</span>%{description}"
       invited_to_topic: "<span>%{username}</span>%{description}"

@@ -31,7 +31,9 @@ gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
-gem "redis"
+# config/initializers/006-mini_profiler.rb depends upon the RedisClient#call.
+# Rework this when upgrading to redis client 5.0 and above.
+gem "redis", "< 5.0"
 
 # This is explicitly used by Sidekiq and is an optional dependency.
 # We tell Sidekiq to use the namespace "sidekiq" which triggers this

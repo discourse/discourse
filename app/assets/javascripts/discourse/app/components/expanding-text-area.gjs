@@ -1,9 +1,9 @@
 import { on } from "@ember/modifier";
 import autosize from "autosize";
-import { modifier } from "ember-modifier";
+import { modifier as modifierFn } from "ember-modifier";
 import autoFocus from "discourse/modifiers/auto-focus";
 
-const resize = modifier((element) => {
+const resize = modifierFn((element) => {
   autosize(element);
   return () => autosize.destroy(element);
 });

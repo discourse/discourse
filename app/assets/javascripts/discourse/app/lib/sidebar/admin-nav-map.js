@@ -14,8 +14,9 @@ export const ADMIN_NAV_MAP = [
       {
         name: "admin_whats_new",
         route: "admin.whatsNew",
-        label: "admin.account.sidebar_link.whats_new",
+        label: "admin.account.sidebar_link.whats_new.title",
         icon: "gift",
+        keywords: "admin.account.sidebar_link.whats_new.keywords",
       },
     ],
   },
@@ -150,9 +151,18 @@ export const ADMIN_NAV_MAP = [
       {
         name: "admin_themes",
         route: "adminCustomizeThemes",
-        query: { tab: "themes" },
+        routeModels: ["themes"],
+        model: "themes",
         label: "admin.appearance.sidebar_link.themes",
         icon: "paint-brush",
+      },
+      {
+        name: "admin_components",
+        route: "adminCustomizeThemes",
+        routeModels: ["components"],
+        label: "admin.appearance.sidebar_link.components.title",
+        icon: "puzzle-piece",
+        keywords: "admin.appearance.sidebar_link.components.keywords",
       },
       {
         name: "admin_customize_site_texts",

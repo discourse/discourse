@@ -111,6 +111,7 @@ export default class ChatChannel extends Component {
     this.#cancelHandlers();
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this.subscriptionManager.teardown();
+    this.updateLastReadMessage();
   }
 
   @action

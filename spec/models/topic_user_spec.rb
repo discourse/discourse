@@ -228,6 +228,12 @@ RSpec.describe TopicUser do
         today = Time.zone.now
         freeze_time Time.zone.now
 
+        # ensure data model is correct for the test
+        # logging an update to a row that does not exist
+        # is not supported
+        _post1 = Fabricate(:post, topic: topic)
+        _post2 = Fabricate(:post, topic: topic)
+
         TopicUser.update_last_read(user, topic.id, 1, 1, 0)
 
         tomorrow = 1.day.from_now

@@ -29,6 +29,20 @@ export default class CoreFabricators {
     setOwner(this, owner);
   }
 
+  post(args = {}) {
+    return this.store.createRecord("post", {
+      id: args.id || incrementSequence(),
+      topic: args.topic || this.topic(),
+    });
+  }
+
+  topic(args = {}) {
+    return this.store.createRecord("topic", {
+      id: args.id || incrementSequence(),
+      title: args.title || getLoadedFaker().faker.commerce.productName(),
+    });
+  }
+
   category(args = {}) {
     const name = args.name || getLoadedFaker().faker.commerce.product();
 

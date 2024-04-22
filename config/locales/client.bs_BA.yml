@@ -572,7 +572,6 @@ bs_BA:
       topic_count_long: "Kreirano temi"
       post_count: "Replike"
       post_count_long: "Odgovoreno"
-      no_results: "Bez rezultata pretrage."
       days_visited: "Posjete"
       days_visited_long: "Dani posjete"
       posts_read: "Čitaj"
@@ -798,6 +797,7 @@ bs_BA:
       "13": "Inbox"
       "14": "Na čekanju."
       "15": "Skice"
+      "17": "Linkovi"
     categories:
       categories_label: "kategorije"
       subcategories_label: "podkategorije"
@@ -1744,6 +1744,7 @@ bs_BA:
         few: "vam se svidio %{count} vaših postova"
         other: "vam se svidio %{count} vaših postova"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

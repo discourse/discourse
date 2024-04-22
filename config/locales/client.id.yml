@@ -625,7 +625,6 @@ id:
       topic_count_long: "Topik Dibuat"
       post_count: "Balasan"
       post_count_long: "Pesan Terbalas"
-      no_results: "Tidak ada hasil yang ditemukan."
       days_visited: "mengunjungi"
       days_visited_long: "Hari yang dikunjungi"
       posts_read: "baca"
@@ -861,6 +860,7 @@ id:
       "13": "Kotak masuk"
       "14": "tertunda"
       "15": "Konsep"
+      "17": "Tautan"
     categories:
       categories_label: "kategori"
       subcategories_label: "subkategori"

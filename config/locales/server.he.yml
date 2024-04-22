@@ -2189,6 +2189,7 @@ he:
     disable_tags_edit_notifications: "השבתת התראות על עריכות תגיות של נושאים. כולל נושאים ש‚פורסמו’ (למשל: טיוטות משותפות)."
     notification_consolidation_threshold: "מספר ההתראות שסומנו בלייק או בקשות שהתקבלו לפני שההתראות קובצו להתראה אחת. יש להגדיר ל־0 כדי להשבית."
     likes_notification_consolidation_window_mins: "משך הזמן בשניות בו התראות מקובצות להתראה אחת לאחר שהגיעו לסף הזה. ניתן להגדיר את הסף דרך `SiteSetting.notification_consolidation_threshold` (סף קיבוץ התראות)."
+    linked_notification_consolidation_window_mins: "משך הזמן בשניות בו התראות מקושרות מקובצות להתראה אחת לאחר שהגיעו לסף הזה. ניתן להגדיר את הסף דרך `SiteSetting.notification_consolidation_threshold` (סף קיבוץ התראות)."
     automatically_unpin_topics: "הסרת נעיצה אוטומטית של נושאים כאשר המשתמשים מגיעים לתחתית."
     read_time_word_count: "מספר המילים לדקה כדי להעריך את זמן הקריאה."
     topic_page_title_includes_category: "<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>תגית הכותרת (title)</a> בעמוד הנושא מכילה את שם הקטגוריה."
@@ -4674,6 +4675,7 @@ he:
     limited_to_one_tag_from_group: "אי אפשר להשתמש בתגיות %{tags} בו־זמנית. נא לכלול רק אחת מהן."
     invalid_target_tag: "לא יכול להיות מילה נרדפת של מילה נרדפת"
     synonyms_exist: "אסור לשימוש כל עוד קיימות מילים נרדפות"
+    user_not_permitted: "אסור לך לתייג נושאים"
   rss_by_tag: "נושאים מתוייגים %{tag}"
   finish_installation:
     congratulations: "ברכותינו, התקנת את Discourse!"

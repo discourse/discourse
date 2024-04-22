@@ -1211,7 +1211,7 @@ RSpec.describe CategoriesController do
 
       queries = track_sql_queries { get "/categories/search.json", params: { term: "Notfoo" } }
 
-      expect(queries.length).to eq(5)
+      expect(queries.length).to eq(8)
 
       expect(response.parsed_body["categories"].length).to eq(1)
       expect(response.parsed_body["categories"][0]["custom_fields"]).to eq("bob" => "marley")
@@ -1247,10 +1247,11 @@ RSpec.describe CategoriesController do
       it "returns categories" do
         get "/categories/search.json", params: { term: "Foo" }
 
-        expect(response.parsed_body["categories"].size).to eq(2)
+        expect(response.parsed_body["categories"].size).to eq(3)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
           "Foo",
           "Foobar",
+          "Notfoo",
         )
       end
     end

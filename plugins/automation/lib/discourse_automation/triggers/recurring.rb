@@ -13,12 +13,27 @@ module DiscourseAutomation
         { id: "year", name: "discourse_automation.triggerables.recurring.frequencies.year" },
       ]
 
-      def self.setup_pending_automation(automation, fields)
-        automation.pending_automations.destroy_all
+      def self.setup_pending_automation(automation, fields, previous_fields)
+        start_date = fields.dig("start_date", "value")
+        interval = fields.dig("recurrence", "value", "interval")
+        frequency = fields.dig("recurrence", "value", "frequency")
 
-        return unless start_date = fields.dig("start_date", "value")
-        return unless interval = fields.dig("recurrence", "value", "interval")
-        return unless frequency = fields.dig("recurrence", "value", "frequency")
+        # this case is not possible in practice but better be safe
+        if !start_date || !interval || !frequency
+          automation.pending_automations.destroy_all
+          return
+        end
+
+        previous_start_date = previous_fields&.dig("start_date", "value")
+        previous_interval = previous_fields&.dig("recurrence", "value", "interval")
+        previous_frequency = previous_fields&.dig("recurrence", "value", "frequency")
+
+        if previous_start_date != start_date || previous_interval != interval ||
+             previous_frequency != frequency
+          automation.pending_automations.destroy_all
+        else
+          return
+        end
 
         start_date = Time.parse(start_date)
         byday = start_date.strftime("%A").upcase[0, 2]
@@ -82,11 +97,19 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::RECURRING) d
         required: true
   field :start_date, component: :date_time, required: true
 
-  on_update do |automation, fields|
-    DiscourseAutomation::Triggers::Recurring.setup_pending_automation(automation, fields)
+  on_update do |automation, fields, previous_fields|
+    DiscourseAutomation::Triggers::Recurring.setup_pending_automation(
+      automation,
+      fields,
+      previous_fields,
+    )
   end
-  on_call do |automation, fields|
-    DiscourseAutomation::Triggers::Recurring.setup_pending_automation(automation, fields)
+  on_call do |automation, fields, previous_fields|
+    DiscourseAutomation::Triggers::Recurring.setup_pending_automation(
+      automation,
+      fields,
+      previous_fields,
+    )
   end
 
   enable_manual_trigger

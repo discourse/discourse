@@ -259,7 +259,7 @@ RSpec.describe Admin::SiteSettingsController do
 
         expect(response.status).to eq(422)
         expect(SiteSetting.personal_message_enabled_groups).to eq(
-          Group::AUTO_GROUPS[:trust_level_4],
+          "1|2|#{Group::AUTO_GROUPS[:trust_level_4]}",
         )
       end
 

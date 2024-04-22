@@ -3,6 +3,7 @@
     {{#if this.currentUser.admin}}
       <NavItem
         @route="adminCustomizeThemes"
+        @routeParam="themes"
         @label="admin.customize.theme.title"
         class="admin-customize-themes"
       />

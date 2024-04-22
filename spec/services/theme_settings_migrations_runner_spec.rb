@@ -281,5 +281,24 @@ describe ThemeSettingsMigrationsRunner do
       expect(results[0][:settings_before]).to eq({})
       expect(results[0][:settings_after]).to eq({})
     end
+
+    it "attaches the getCategoryIdByName() function to the context of the migrations" do
+      category = Fabricate(:category, name: "some-category")
+
+      theme.update_setting(:integer_setting, -10)
+      theme.save!
+
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings, helpers) {
+          const categoryId = helpers.getCategoryIdByName("some-category");
+          settings.set("integer_setting", categoryId);
+          return settings;
+        }
+      JS
+
+      results = described_class.new(theme).run
+
+      expect(results[0][:settings_after]).to eq({ "integer_setting" => category.id })
+    end
   end
 end
