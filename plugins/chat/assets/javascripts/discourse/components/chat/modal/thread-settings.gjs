@@ -80,7 +80,7 @@ export default class ChatModalThreadSettings extends Component {
           <p class="discourse-ai-cta__description">{{htmlSafe
               (i18n
                 "chat.thread_title_modal.discourse_ai.description"
-                url="<a href='https://www.discourse.org/ai' target='_blank'>Discourse AI</a>"
+                url="<a href='https://www.discourse.org/ai' rel='noopener noreferrer' target='_blank'>Discourse AI</a>"
               )
             }}
           </p>

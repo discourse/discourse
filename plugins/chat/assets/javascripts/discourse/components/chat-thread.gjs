@@ -20,6 +20,7 @@ import {
   FUTURE,
   PAST,
   READ_INTERVAL_MS,
+  THREAD_TITLE_REPLIES_THRESHOLD,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import { stackingContextFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
@@ -40,8 +41,6 @@ import ChatSelectionManager from "./chat/selection-manager";
 import Message from "./chat-message";
 import ChatSkeleton from "./chat-skeleton";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
-
-const THREAD_TITLE_REPLIES_THRESHOLD = 5;
 
 export default class ChatThread extends Component {
   @service appEvents;
@@ -586,7 +585,6 @@ export default class ChatThread extends Component {
   }
 
   get canShowToast() {
-    const threadReplyCount = this.messagesManager.messages.length - 1;
     const ignoreThreadTitlePrompts =
       !this.currentUser.user_option.show_thread_title_prompts;
     const hasSeenThreadTitlePrompt = this.membership?.threadTitlePromptSeen;
@@ -594,9 +592,9 @@ export default class ChatThread extends Component {
     if (
       this.site.desktopView ||
       this.args.thread.title ||
+      this.args.thread.replyCount < THREAD_TITLE_REPLIES_THRESHOLD ||
       ignoreThreadTitlePrompts ||
-      hasSeenThreadTitlePrompt ||
-      threadReplyCount < THREAD_TITLE_REPLIES_THRESHOLD
+      hasSeenThreadTitlePrompt
     ) {
       return false;
     }
