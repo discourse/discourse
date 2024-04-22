@@ -150,7 +150,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.29.0";
+export const PLUGIN_API_VERSION = "1.31.0";
 
 const DEPRECATED_HEADER_WIDGETS = [
   "header",
