@@ -130,7 +130,13 @@ export default class TopicAdminMenu extends Component {
                   {{/if}}
 
                   {{#if this.details.can_close_topic}}
-                    <li class="topic-admin-open">
+                    <li
+                      class={{if
+                        @topic.closed
+                        "topic-admin-open"
+                        "topic-admin-close"
+                      }}
+                    >
                       <DButton
                         @label={{if
                           @topic.closed
