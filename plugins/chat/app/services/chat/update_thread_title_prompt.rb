@@ -10,16 +10,16 @@ module Chat
   #   thread_id: 88,
   #   channel_id: 2,
   #   guardian: guardian,
-  #   thread_title_prompt: true,
+  #   thread_title_prompt_seen: true,
   # )
   #
   class UpdateThreadTitlePrompt
     include Service::Base
 
-    # @!method call(thread_id:, channel_id:, guardian:, thread_title_prompt:)
+    # @!method call(thread_id:, channel_id:, guardian:, thread_title_prompt_seen:)
     #   @param [Integer] thread_id
     #   @param [Integer] channel_id
-    #   @param [Boolean] thread_title_prompt
+    #   @param [Boolean] thread_title_prompt_seen
     #   @param [Guardian] guardian
     #   @return [Service::Base::Context]
 
@@ -33,11 +33,11 @@ module Chat
     class Contract
       attribute :thread_id, :integer
       attribute :channel_id, :integer
-      attribute :thread_title_prompt, :boolean
+      attribute :thread_title_prompt_seen, :boolean
 
       validates :thread_id, :channel_id, :thread_title_prompt, presence: true
 
-      validates :thread_title_prompt, inclusion: { in: [true, false] }
+      validates :thread_title_prompt_seen, inclusion: { in: [true, false] }
     end
 
     private
@@ -57,7 +57,7 @@ module Chat
     def create_or_update_membership(thread:, guardian:, contract:)
       membership = thread.membership_for(guardian.user)
       membership = thread.add(guardian.user) if !membership
-      membership.update!(thread_title_prompt: contract.thread_title_prompt)
+      membership.update!(thread_title_prompt_seen: contract.thread_title_prompt_seen)
       context.membership = membership
     end
   end

@@ -77,7 +77,7 @@ RSpec.describe Chat::Api::ChannelThreadsCurrentUserNotificationsSettingsControll
           "notification_level" => Chat::UserChatThreadMembership.notification_levels[:normal],
           "thread_id" => thread.id,
           "last_read_message_id" => last_reply.id,
-          "thread_title_prompt" => false,
+          "thread_title_prompt_seen" => false,
         )
       end
     end

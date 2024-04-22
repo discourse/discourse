@@ -557,7 +557,7 @@ export default class ChatThread extends Component {
     this.args.thread.currentUserMembership = UserChatThreadMembership.create({
       notification_level: NotificationLevels.TRACKING,
       last_read_message_id: this.args.thread.lastMessageId,
-      thread_title_prompt: false,
+      thread_title_prompt_seen: false,
     });
   }
 
@@ -571,7 +571,7 @@ export default class ChatThread extends Component {
       await this.chatApi.updateCurrentUserThreadTitlePrompt(
         this.args.thread.channel.id,
         this.args.thread.id,
-        { thread_title_prompt: true }
+        { thread_title_prompt_seen: true }
       );
     } catch (e) {
       // eslint-disable-next-line no-console
