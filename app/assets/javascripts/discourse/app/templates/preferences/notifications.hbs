@@ -1,66 +1,47 @@
-<div class="control-group notifications">
-  <label class="control-label">{{i18n "user.notifications"}}</label>
-
-  <div
-    class="controls controls-dropdown"
-    data-setting-name="user-like-notification-frequency"
-  >
-    <label>{{i18n "user.like_notification_frequency.title"}}</label>
-    <ComboBox
-      @valueProperty="value"
-      @content={{this.likeNotificationFrequencies}}
-      @value={{this.model.user_option.like_notification_frequency}}
-      @onChange={{action
-        (mut this.model.user_option.like_notification_frequency)
-      }}
-    />
-  </div>
-</div>
-
-{{#unless this.capabilities.isAppWebview}}
-  <div
-    class="control-group desktop-notifications"
-    data-setting-name="user-desktop-notifications"
-  >
-    <label class="control-label">{{i18n
-        "user.desktop_notifications.label"
-      }}</label>
-    <DesktopNotificationConfig />
-    <div class="instructions">{{i18n
-        "user.desktop_notifications.each_browser_note"
-      }}</div>
-    <span>
-      <PluginOutlet
-        @name="user-preferences-desktop-notifications"
-        @connectorTagName="div"
-        @outletArgs={{hash model=this.model save=(action "save")}}
+<div class="notification-history user-stream">
+  {{#if this.model.error}}
+    <div class="item error">
+      {{#if this.model.forbidden}}
+        {{i18n "errors.reasons.forbidden"}}
+      {{else}}
+        {{i18n "errors.desc.unknown"}}
+      {{/if}}
+    </div>
+  {{else if this.doesNotHaveNotifications}}
+    <PluginOutlet @name="user-notifications-empty-state">
+      <EmptyState
+        @title={{i18n "user.no_notifications_page_title"}}
+        @body={{this.emptyStateBody}}
       />
-    </span>
-  </div>
-{{/unless}}
+    </PluginOutlet>
+  {{else}}
+    <PluginOutlet @name="user-notifications-above-filter" />
+    <div
+      class="user-notifications-filter"
+      style="margin-bottom: 0 !important; padding-bottom: 1rem;"
+    >
+      <NotificationsFilter
+        @value={{this.filter}}
+        @onChange={{this.updateFilter}}
+      />
+      <PluginOutlet
+        @name="user-notifications-after-filter"
+        @outletArgs={{hash items=this.items}}
+      />
+    </div>
 
-<UserNotificationSchedule @model={{this.model}} />
-
-<span>
-  <PluginOutlet
-    @name="user-preferences-notifications"
-    @connectorTagName="div"
-    @outletArgs={{hash model=this.model save=(action "save")}}
-  />
-</span>
-
-<br />
-
-<span>
-  <PluginOutlet
-    @name="user-custom-controls"
-    @connectorTagName="div"
-    @outletArgs={{hash model=this.model}}
-  />
-</span>
-
-<SaveControls
-  @model={{this.model}}
-  @action={{action "save"}}
-  @saved={{this.saved}}
-/>
+    {{#if this.nothingFound}}
+      <div class="alert alert-info">{{i18n "notifications.empty"}}</div>
+    {{else}}
+      <div class={{this.listContainerClassNames}}>
+        {{#each this.items as |item|}}
+          <UserMenu::MenuItem @item={{item}} />
+        {{/each}}
+        <ConditionalLoadingSpinner @condition={{this.loading}} />
+        <PluginOutlet
+          @name="user-notifications-list-bottom"
+          @outletArgs={{hash controller=this}}
+        />
+      </div>
+    {{/if}}
+  {{/if}}</div>

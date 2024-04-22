@@ -7,21 +7,6 @@
   </div>
 {{/if}}
 
-<div class="control-group pref-timezone" data-setting-name="user-timezone">
-  <label class="control-label">{{i18n "user.timezone"}}</label>
-  <TimezoneInput
-    @value={{this.model.user_option.timezone}}
-    @onChange={{fn (mut this.model.user_option.timezone)}}
-    class="input-xxlarge"
-  />
-  <DButton
-    @icon="globe"
-    @label="user.use_current_timezone"
-    @action={{action "useCurrentTimezone"}}
-    class="btn-default"
-  />
-</div>
-
 {{#if this.model.can_change_location}}
   <div class="control-group pref-location" data-setting-name="user-location">
     <label class="control-label" for="edit-location">{{i18n
@@ -39,7 +24,10 @@
 {{/if}}
 
 {{#if this.model.can_change_website}}
-  <div class="control-group pref-website" data-setting-name="user-website">
+  <div
+    class="control-group pref-website hidden"
+    data-setting-name="user-website"
+  >
     <label class="control-label" for="edit-website">{{i18n
         "user.website"
       }}</label>
@@ -64,7 +52,7 @@
 {{#if this.siteSettings.allow_profile_backgrounds}}
   {{#if this.canUploadProfileHeader}}
     <div
-      class="control-group pref-profile-bg"
+      class="control-group pref-profile-bg hidden"
       data-setting-name="user-profile-bg"
     >
       <label class="control-label">{{i18n
@@ -83,7 +71,10 @@
     </div>
   {{/if}}
   {{#if this.canUploadUserCardBackground}}
-    <div class="control-group pref-profile-bg" data-setting-name="user-card-bg">
+    <div
+      class="control-group pref-profile-bg hidden"
+      data-setting-name="user-card-bg"
+    >
       <label class="control-label">{{i18n
           "user.change_card_background.title"
         }}</label>
@@ -101,8 +92,23 @@
   {{/if}}
 {{/if}}
 
+<div class="control-group pref-timezone" data-setting-name="user-timezone">
+  <label class="control-label">{{i18n "user.timezone"}}</label>
+  <TimezoneInput
+    @value={{this.model.user_option.timezone}}
+    @onChange={{fn (mut this.model.user_option.timezone)}}
+    class="input-xxlarge"
+  />
+  <DButton
+    @icon="globe"
+    @label="user.use_current_timezone"
+    @action={{action "useCurrentTimezone"}}
+    class="btn-default"
+  />
+</div>
+
 {{#if this.siteSettings.allow_featured_topic_on_user_profiles}}
-  <div class="control-group" data-setting-name="user-featured-topic">
+  <div class="control-group hidden" data-setting-name="user-featured-topic">
     <label class="control-label">{{i18n "user.featured_topic"}}</label>
     {{#if this.model.featured_topic}}
       <label class="featured-topic-link">

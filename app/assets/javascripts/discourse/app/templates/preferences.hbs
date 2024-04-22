@@ -14,7 +14,7 @@
     <DNavigationItem
       @route="preferences.security"
       @ariaCurrentContext="subNav"
-      class="user-nav__preferences-security"
+      class="user-nav__preferences-security hidden"
     >
       {{d-icon "lock"}}
       <span>{{i18n "user.preferences_nav.security"}}</span>
@@ -30,9 +30,18 @@
     </DNavigationItem>
 
     <DNavigationItem
+      @route="userActivity.index"
+      @ariaCurrentContext="subNav"
+      class="user-nav__activity-all"
+    >
+      {{d-icon "stream"}}
+      <span>{{i18n "user.filters.all"}}</span>
+    </DNavigationItem>
+
+    <DNavigationItem
       @route="preferences.emails"
       @ariaCurrentContext="subNav"
-      class="user-nav__preferences-emails"
+      class="user-nav__preferences-emails hidden"
     >
       {{d-icon "envelope"}}
       <span>{{i18n "user.preferences_nav.emails"}}</span>
@@ -51,7 +60,7 @@
       <DNavigationItem
         @route="preferences.tracking"
         @ariaCurrentContext="subNav"
-        class="user-nav__preferences-tracking"
+        class="user-nav__preferences-tracking hidden"
       >
         {{d-icon "plus"}}
         <span>{{i18n "user.preferences_nav.tracking"}}</span>
@@ -61,7 +70,7 @@
     <DNavigationItem
       @route="preferences.users"
       @ariaCurrentContext="subNav"
-      class="user-nav__preferences-users"
+      class="user-nav__preferences-users hidden"
     >
       {{d-icon "users"}}
       <span>{{i18n "user.preferences_nav.users"}}</span>
@@ -70,7 +79,7 @@
     <DNavigationItem
       @route="preferences.interface"
       @ariaCurrentContext="subNav"
-      class="user-nav__preferences-interface"
+      class="user-nav__preferences-interface hidden"
     >
       {{d-icon "desktop"}}
       <span>{{i18n "user.preferences_nav.interface"}}</span>
@@ -79,7 +88,7 @@
     <DNavigationItem
       @route="preferences.navigation-menu"
       @ariaCurrentContext="subNav"
-      class="user-nav__preferences-navigation-menu"
+      class="user-nav__preferences-navigation-menu hidden"
     >
       {{d-icon "bars"}}
       <span>{{i18n "user.preferences_nav.navigation_menu"}}</span>
@@ -107,7 +116,5 @@
     />
   </span>
 
-  <form class="form-vertical">
-    {{outlet}}
-  </form>
+  {{outlet}}
 </section>
