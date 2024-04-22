@@ -30,12 +30,12 @@
     </DNavigationItem>
 
     <DNavigationItem
-      @route="userActivity.index"
+      @route="preferences.activity"
       @ariaCurrentContext="subNav"
       class="user-nav__activity-all"
     >
       {{d-icon "stream"}}
-      <span>{{i18n "user.filters.all"}}</span>
+      <span>Activity</span>
     </DNavigationItem>
 
     <DNavigationItem
@@ -116,5 +116,7 @@
     />
   </span>
 
-  {{outlet}}
+  <form class="form-vertical">
+    {{outlet}}
+  </form>
 </section>

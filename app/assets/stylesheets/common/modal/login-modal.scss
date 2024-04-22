@@ -161,7 +161,7 @@
       position: relative;
       display: flex;
       flex-direction: column;
-      margin-bottom: 0.8em;
+      margin-bottom: 2em;
       input,
       .select-kit-header {
         padding: 0.75em 0.77em;
@@ -261,6 +261,7 @@
     // user fields input groups will
     // be styled differently
     .user-fields .input-group {
+      margin-bottom: 2.5em;
       .user-field {
         &.text {
           &.value-entered label.alt-placeholder.control-label,

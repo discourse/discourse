@@ -10,8 +10,8 @@ import domUtils from "discourse-common/utils/dom-utils";
 import I18n from "discourse-i18n";
 
 export const SCROLLER_HEIGHT = 50;
-const DEFAULT_MIN_SCROLLAREA_HEIGHT = 170;
-const DEFAULT_MAX_SCROLLAREA_HEIGHT = 300;
+const DEFAULT_MIN_SCROLLAREA_HEIGHT = 200;
+const DEFAULT_MAX_SCROLLAREA_HEIGHT = 320;
 const LAST_READ_HEIGHT = 20;
 
 let desktopMinScrollAreaHeight = DEFAULT_MIN_SCROLLAREA_HEIGHT;

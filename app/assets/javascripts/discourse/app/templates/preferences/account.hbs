@@ -28,7 +28,11 @@
 {{/unless}}
 
 {{#if this.canCheckEmails}}
-  <div class="control-group pref-email" data-setting-name="user-email">
+  <div
+    class="control-group pref-email"
+    data-setting-name="user-email"
+    style="max-width: 500px;"
+  >
     <label class="control-label">{{i18n "user.email.title"}}</label>
     {{#if this.model.email}}
       {{#if this.siteSettings.enable_secondary_emails}}

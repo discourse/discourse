@@ -36,6 +36,9 @@ export default Component.extend({
     }
 
     if (TITLES[action]) {
+      if (action === CREATE_TOPIC) {
+        return "Create Post";
+      }
       return I18n.t(TITLES[action]);
     }
 

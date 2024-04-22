@@ -29,7 +29,7 @@ export default Component.extend({
   toggleIcon(composeState) {
     return composeState === "draft" || composeState === "saving"
       ? "times"
-      : "chevron-down";
+      : "times";
   },
 
   @discourseComputed("composeState")

@@ -173,6 +173,7 @@ export default function () {
         this.route("security");
         this.route("profile");
         this.route("emails");
+        this.route("activity");
         this.route("notifications");
         this.route("tracking");
         this.route("categories");

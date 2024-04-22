@@ -1,4 +1,44 @@
+body:not(.ios-safari-composer-hacks) {
+  #reply-control.open {
+    --min-height: 255px;
+    min-height: var(--min-height);
+    max-height: calc(100vh - var(--header-offset, 4em));
+    &.composer-action-reply {
+      min-height: calc(var(--min-height) - 4em);
+    }
+    box-sizing: border-box;
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+    height: 520px;
+  }
+}
+
 #reply-control {
+  &.composer-action-createTopic {
+    .composer-actions,
+    .d-icon-plus {
+      display: none;
+    }
+  }
+
+  // bottom: 0;
+  top: 50%;
+  transform: translateY(-50%);
+
+  .save-or-cancel {
+    margin-top: 1.5rem;
+    flex-grow: 1;
+    margin-right: 0;
+    width: 100%;
+
+    .create {
+      background-color: #000;
+      flex-grow: 1;
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+    }
+  }
+
   .reply-area {
     margin: 0 auto;
     padding: 8px;
@@ -7,6 +47,10 @@
     width: 100%;
 
     .submit-panel {
+      .cancel {
+        display: none;
+      }
+
       flex-wrap: wrap;
     }
   }

@@ -2483,7 +2483,7 @@ en:
       overwrite_edit: "Overwrite Edit"
       reply: "Reply"
       cancel: "Cancel"
-      create_topic: "Create Topic"
+      create_topic: "Save Post"
       create_pm: "Send Message"
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"

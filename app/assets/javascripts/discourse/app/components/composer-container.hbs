@@ -6,7 +6,7 @@
   @cancelled={{this.composer.cancelled}}
   @save={{this.composer.saveAction}}
 >
-  <div class="grippie"></div>
+  <div class="grippie hidden"></div>
   {{#if this.composer.visible}}
     <ComposerMessages
       @composer={{this.composer.model}}
@@ -95,7 +95,7 @@
           <ComposerToggles
             @composeState={{this.composer.model.composeState}}
             @showToolbar={{this.composer.showToolbar}}
-            @toggleComposer={{this.composer.toggle}}
+            @toggleComposer={{this.composer.cancel}}
             @toggleToolbar={{this.composer.toggleToolbar}}
             @toggleFullscreen={{this.composer.fullscreenComposer}}
             @disableTextarea={{this.composer.disableTextarea}}
@@ -174,7 +174,7 @@
                   />
 
                   {{#if this.composer.model.showCategoryChooser}}
-                    <div class="category-input">
+                    <div class="category-input hidden">
                       <CategoryChooser
                         @value={{this.composer.model.categoryId}}
                         @onChange={{this.composer.updateCategory}}
@@ -192,25 +192,6 @@
                         @validation={{this.composer.categoryValidation}}
                       />
                     </div>
-                  {{/if}}
-
-                  {{#if this.composer.canEditTags}}
-                    <MiniTagChooser
-                      @value={{this.composer.model.tags}}
-                      @onChange={{fn (mut this.composer.model.tags)}}
-                      @options={{hash
-                        disabled=this.composer.disableTagsChooser
-                        categoryId=this.composer.model.categoryId
-                        minimum=this.composer.model.minimumRequiredTags
-                      }}
-                    />
-                    <PluginOutlet
-                      @name="after-composer-tag-input"
-                      @outletArgs={{hash composer=this.composer.model}}
-                    />
-                    <PopupInputTip
-                      @validation={{this.composer.tagValidation}}
-                    />
                   {{/if}}
 
                   <PluginOutlet
@@ -247,6 +228,22 @@
         </span>
 
         <div class="submit-panel">
+          {{#if this.composer.canEditTags}}
+            <MiniTagChooser
+              @value={{this.composer.model.tags}}
+              @onChange={{fn (mut this.composer.model.tags)}}
+              @options={{hash
+                disabled=this.composer.disableTagsChooser
+                categoryId=this.composer.model.categoryId
+                minimum=this.composer.model.minimumRequiredTags
+              }}
+            />
+            <PluginOutlet
+              @name="after-composer-tag-input"
+              @outletArgs={{hash composer=this.composer.model}}
+            />
+            <PopupInputTip @validation={{this.composer.tagValidation}} />
+          {{/if}}
           <span>
             <PluginOutlet
               @name="composer-fields-below"
@@ -401,7 +398,7 @@
               @translatedTitle={{this.composer.toggleText}}
               @icon="angle-double-left"
               class={{concat-class
-                "btn-transparent btn-mini-toggle toggle-preview"
+                "btn-transparent btn-mini-toggle toggle-preview hidden"
                 (unless this.composer.showPreview "active")
               }}
             />

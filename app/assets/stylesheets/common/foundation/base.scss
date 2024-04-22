@@ -154,6 +154,12 @@ tbody {
   background-color: #fff;
 }
 
+.invite-page {
+  .bg-white {
+    background-color: rgb(84, 84, 84);
+  }
+}
+
 .topic-list-item,
 tr {
   border-bottom: 1px solid var(--primary-low);

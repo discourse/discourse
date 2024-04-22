@@ -8,6 +8,7 @@ html.composer-open {
   position: fixed;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   bottom: 0;
   height: 0;
   right: 0;
@@ -37,10 +38,14 @@ html.composer-open {
     min-width: 0;
   }
   z-index: z("composer", "content");
-  transition: height 250ms ease, background 250ms ease, transform 250ms ease,
-    max-width 250ms ease, padding-bottom 250ms ease;
+  // transition: height 250ms ease, background 250ms ease, transform 250ms ease,
+  //   max-width 250ms ease, padding-bottom 250ms ease;
   background-color: var(--secondary);
-  box-shadow: var(--shadow-composer);
+  // box-shadow: var(--shadow-composer);
+
+  &:not(.closed) {
+    box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+  }
 
   .reply-area {
     display: flex;
