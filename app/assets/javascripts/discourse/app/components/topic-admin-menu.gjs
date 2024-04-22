@@ -5,7 +5,8 @@ import { inject as service } from "@ember/service";
 import { and, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import dIcon from "discourse-common/helpers/d-icon";
+import icon from "discourse-common/helpers/d-icon";
+import getURL from "discourse-common/lib/get-url";
 import DMenu from "float-kit/components/d-menu";
 
 export default class TopicAdminMenu extends Component {
@@ -68,7 +69,7 @@ export default class TopicAdminMenu extends Component {
   }
 
   get topicModerationHistoryUrl() {
-    return `/review?topic_id=${this.args.topic.id}&status=all`;
+    return getURL(`/review?topic_id=${this.args.topic.id}&status=all`);
   }
 
   <template>
@@ -79,7 +80,7 @@ export default class TopicAdminMenu extends Component {
           @triggerClass="toggle-admin-menu"
         >
           <:trigger>
-            {{dIcon "wrench"}}
+            {{icon "wrench"}}
           </:trigger>
           <:content>
             <div class="popup-menu topic-admin-popup-menu">
@@ -116,7 +117,7 @@ export default class TopicAdminMenu extends Component {
                           class="popup-menu-btn-danger"
                         />
                       </li>
-                    {{else if (and this.canRecover @topic.deleted)}}
+                    {{else if this.canRecover}}
                       <li class="topic-admin-recover">
                         <DButton
                           @label="topic.actions.recover"
@@ -128,7 +129,7 @@ export default class TopicAdminMenu extends Component {
                     {{/if}}
                   {{/if}}
 
-                  {{#if (and this.currentUser this.details.can_close_topic)}}
+                  {{#if this.details.can_close_topic}}
                     <li class="topic-admin-open">
                       <DButton
                         @label={{if
@@ -166,9 +167,7 @@ export default class TopicAdminMenu extends Component {
 
                   {{#if
                     (and
-                      this.currentUser
-                      this.details.can_archive_topic
-                      (not this.isPrivateMessage)
+                      this.details.can_archive_topic (not this.isPrivateMessage)
                     )
                   }}
                     <li class="topic-admin-archive">
@@ -200,12 +199,7 @@ export default class TopicAdminMenu extends Component {
                     </li>
                   {{/if}}
 
-                  {{#if
-                    (and
-                      this.currentUser.canManageTopic
-                      this.details.can_convert_topic
-                    )
-                  }}
+                  {{#if (and this.details.can_convert_topic)}}
                     <li class="topic-admin-convert">
                       <DButton
                         @label={{if
