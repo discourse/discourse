@@ -381,7 +381,7 @@ export default class ChatApi extends Service {
    */
   updateCurrentUserThreadTitlePrompt(channelId, threadId) {
     return this.#putRequest(
-      `/channels/${channelId}/threads/${threadId}/thread-title-prompt/me`
+      `/channels/${channelId}/threads/${threadId}/mark-thread-title-prompt-seen/me`
     );
   }
 
