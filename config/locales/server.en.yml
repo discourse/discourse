@@ -1745,7 +1745,7 @@ en:
     custom_summarization_allowed_groups: "Groups allowed to summarize contents using the `summarization_strategy`."
 
     enable_personal_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. Allow trust level 1 (configurable via min trust to send messages) users to create messages and reply to messages. Note that staff can always send messages no matter what."
-    personal_message_enabled_groups: "Allow users in these groups to create personal messages. IMPORTANT: 1) all users can reply to messages. 2) Trust level groups include higher levels; choose trust_level_1 to allow TL1, TL2, TL3, TL4 but not allow TL0. 3) Admins and mods can always send messages. 4) Group interaction settings override this setting for messaging specific groups."
+    personal_message_enabled_groups: "Allow users in these groups to create personal messages. IMPORTANT: 1) all users can reply to messages. 2) Trust level groups include higher levels; choose trust_level_1 to allow TL1, TL2, TL3, TL4 but not allow TL0. 3) Admins and mods can always send messages. 4) Group interaction settings override this setting for messaging specific groups. Admins and moderators can always create personal messages."
     enable_system_message_replies: "Allows users to reply to system messages, even if personal messages are disabled"
     enable_chunked_encoding: "Enable chunked encoding responses by the server. This feature works on most setups however some proxies may buffer, causing responses to be delayed"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -1931,6 +1931,10 @@ en:
     discord_secret: "Discord Client Secret Key Used for authenticating and enabling Discord related features on the site, such as Discord logins. This secret key corresponds to the Discord application created for the website, and is necessary for securely communicating with the Discord API."
     discord_trusted_guilds: 'Only allow members of these Discord guilds to log in via Discord. Use the numeric ID for the guild. For more information, check the instructions <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">here</a>. Leave blank to allow any guild.'
 
+    enable_linkedin_oidc_logins: "Enable LinkedIn authentication, requires linkedin_client_id and linkedin_client_secret."
+    linkedin_oidc_client_id: "Client ID for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
+    linkedin_oidc_client_secret: "Client secret for LinkedIn authentication, registered at <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
+
     enable_backups: "Allow administrators to create backups of the forum"
     allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep. Older backups are automatically deleted"
@@ -2070,35 +2074,35 @@ en:
     edit_all_post_groups: "Allow users in this group to edit other users' posts"
 
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
-    create_topic_allowed_groups: "Groups that are allowed to create new topics."
+    create_topic_allowed_groups: "Groups that are allowed to create new topics. Admins and moderators can always create topics."
     allow_flagging_staff: "If enabled, users can flag posts from staff accounts."
 
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
-    edit_wiki_post_allowed_groups: "Groups that are allowed to edit posts marked as wiki."
+    edit_wiki_post_allowed_groups: "Groups that are allowed to edit posts marked as wiki. Admins and moderators can always edit posts marked as wiki."
 
     min_trust_to_edit_post: "The minimum trust level required to edit posts."
-    edit_post_allowed_groups: "Groups that are allowed to edit posts."
+    edit_post_allowed_groups: "Groups that are allowed to edit posts. Admins and moderators can always edit posts."
 
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
-    self_wiki_allowed_groups: "Groups where users can make their own post wiki."
+    self_wiki_allowed_groups: "Groups where users can make their own post wiki. Admins and moderators can always make their own post wiki."
 
     min_trust_to_send_messages: "DEPRECATED, use the 'personal message enabled groups' setting instead. The minimum trust level required to create new personal messages."
     min_trust_to_send_email_messages: "The minimum trust level required to send personal messages via email."
-    send_email_messages_allowed_groups: "Groups that are allowed to send personal messages via email."
+    send_email_messages_allowed_groups: "Groups that are allowed to send personal messages via email. Admins and moderators can always send personal messages via email."
     min_trust_to_flag_posts: "The minimum trust level required to flag posts"
-    flag_post_allowed_groups: "Groups that are allowed to flag posts."
+    flag_post_allowed_groups: "Groups that are allowed to flag posts. Admins and moderators can always flag posts."
     min_trust_to_post_links: "The minimum trust level required to include links in posts"
     post_links_allowed_groups: "Groups that are allowed to include links in posts. Admins and moderators are always allowed to post links."
     min_trust_to_post_embedded_media: "The minimum trust level required to embed media items in a post"
-    embedded_media_post_allowed_groups: "The users in these groups are allowed to embed media items in a post"
+    embedded_media_post_allowed_groups: "The users in these groups are allowed to embed media items in a post. Admins and moderators can always embed media items."
     min_trust_level_to_allow_profile_background: "The minimum trust level required to upload a profile background"
-    profile_background_allowed_groups: "Groups that are allowed to upload a profile background."
+    profile_background_allowed_groups: "Groups that are allowed to upload a profile background. Admins and moderators can always upload a profile background."
     min_trust_level_to_allow_user_card_background: "The minimum trust level required to upload a user card background"
-    user_card_background_allowed_groups: "Groups that are allowed to upload a user card background."
+    user_card_background_allowed_groups: "Groups that are allowed to upload a user card background. Admins and moderators can always upload a user card background."
     min_trust_level_to_allow_invite: "The minimum trust level required to invite users"
-    invite_allowed_groups: "Groups that are allowed to invite users."
+    invite_allowed_groups: "Groups that are allowed to invite users. Admins and moderators can always invite users."
     min_trust_level_to_allow_ignore: "The minimum trust level required to ignore users"
-    ignore_allowed_groups: "Groups that are allowed to ignore other users."
+    ignore_allowed_groups: "Groups that are allowed to ignore other users. Admins and moderators can always ignore other users."
     allowed_link_domains: "Domains that users may link to even if they don't have the appropriate trust level to post links"
 
     newuser_max_links: "How many links a new user can add to a post."
@@ -2112,7 +2116,7 @@ en:
     here_mention: "Name used for a @mention to allow privileged users to notify up to 'max_here_mentioned' people participating in the topic. Must not be an existing username."
     max_here_mentioned: "Maximum number of mentioned people by @here."
     min_trust_level_for_here_mention: "The minimum trust level allowed to mention @here."
-    here_mention_allowed_groups: "Groups that are allowed to mention @here."
+    here_mention_allowed_groups: "Groups that are allowed to mention @here. Admins and moderators can always mention @here."
 
     create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
 
@@ -2264,7 +2268,7 @@ en:
     log_mail_processing_failures: "Log all email processing failures to <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Allow users to post new topics via email. After enabling this setting, you will be able to configure incoming email addresses for groups and categories."
     email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
-    email_in_allowed_groups: "Groups that are allowed to post new topics via email."
+    email_in_allowed_groups: "Groups that are allowed to post new topics via email. Admins and moderators can always post new topics via email."
 
     email_in_authserv_id: "The identifier of the service doing authentication checks on incoming emails. See <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> for instructions on how to configure this."
     email_in_spam_header: "Selects the specific email header to use for identifying spam. This option can be X-Spam-Flag, X-Spam-Status, or X-SES-Spam-Verdict, and the email is tagged as spam based on the header's value. For instance, if the chosen setting is X-Spam-Flag, an email with this header value set to YES would be classified as spam."
@@ -2453,9 +2457,9 @@ en:
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts created by users below this trust level must be approved"
-    approve_unless_allowed_groups: "Posts created by users not in these groups must be approved"
+    approve_unless_allowed_groups: "Posts created by users not in these groups must be approved. Posts created by admins and moderators are always approved."
     approve_new_topics_unless_trust_level: "New topics created by users below this trust level must be approved"
-    approve_new_topics_unless_allowed_groups: "New topics created by users not in these groups must be approved"
+    approve_new_topics_unless_allowed_groups: "New topics created by users not in these groups must be approved. Topics created by admins and moderators are always approved."
     approve_unless_staged: "New topics and posts created by staged users must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
     reviewable_revision_reasons: "List of reasons that can be selected when rejecting a reviewable queued post with a revision. Other is always available as well, which allows for a custom reason to be entered."
@@ -2478,7 +2482,7 @@ en:
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
     review_media_unless_trust_level: "Staff will review posts of users with lower trust levels if they contain embedded media."
-    skip_review_media_groups: "Users who are not in any of these groups will have their posts sent to staff for review if the post contains embedded media."
+    skip_review_media_groups: "Users who are not in any of these groups will have their posts sent to staff for review if the post contains embedded media. Posts created by admins and moderators are always allowed."
     blur_tl0_flagged_posts_media: "Blur flagged posts images to hide potentially NSFW content."
     enable_page_publishing: "Allow staff members to publish topics to new URLs with their own styling."
     show_published_pages_login_required: "Anonymous users can see published pages, even when login is required."
@@ -2541,7 +2545,8 @@ en:
       <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
     user_api_key_allowed_groups: |
       Group membership required for generation of user API keys.<br>
-      <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
+      <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub.<br>
+       Admins and moderators can always create user API keys.
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
     revoke_user_api_keys_unused_days: "Number of days since a user API key was last used before it is automatically revoked (0 for never)"
@@ -2549,7 +2554,7 @@ en:
 
     tagging_enabled: "Enable tags on topics? See the <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Admin guide to tags on Meta</a> for more information."
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
-    create_tag_allowed_groups: "Groups that are allowed to create tags."
+    create_tag_allowed_groups: "Groups that are allowed to create tags. Admins and moderators can always create tags."
     max_tags_per_topic: "The maximum tags that can be applied to a topic."
     enable_max_tags_per_email_subject: "Use max_tags_per_email_subject when generating the subject of an email"
     max_tags_per_email_subject: "The maximum tags that can be in the subject of an email"
@@ -2561,7 +2566,7 @@ en:
     tag_style: "Define the visual appearance of tag badges on the site. This setting allows you to customize how tags are visually represented across all areas of the site, enhancing layout consistency and user accessibility."
     pm_tags_allowed_for_groups: "Allow members of included groups to tag any personal message"
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
-    tag_topic_allowed_groups: "Groups that are allowed to tag topics."
+    tag_topic_allowed_groups: "Groups that are allowed to tag topics. Admins and moderators can always tag topics."
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged only with muted tags in the latest topic list."
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
@@ -2687,6 +2692,7 @@ en:
         other: "The list must contain exactly %{count} values."
       markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
+      linkedin_oidc_credentials: "You must configure LinkedIn OIDC credentials ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret') before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "You cannot enable DiscourseConnect if 2FA is enforced."

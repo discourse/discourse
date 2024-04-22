@@ -65,8 +65,7 @@ class EmailSettingsValidator
   # For Gmail, the port should be 587, enable_starttls_auto should be true,
   # and enable_tls should be false.
   #
-  # @param domain [String] - Used for HELO, will be the email sender's domain, so often
-  #                          will just be the host e.g. the domain for test@gmail.com is gmail.com.
+  # @param domain [String] - Used for HELO, should be the FQDN of the server sending the mail
   #                          localhost can be used in development mode.
   #                          See https://datatracker.ietf.org/doc/html/rfc788#section-4
   # @param debug [Boolean] - When set to true, any errors will be logged at a warning
@@ -77,7 +76,7 @@ class EmailSettingsValidator
     username:,
     password:,
     domain: nil,
-    authentication: GlobalSetting.smtp_authentication,
+    authentication: nil,
     enable_starttls_auto: GlobalSetting.smtp_enable_start_tls,
     enable_tls: GlobalSetting.smtp_force_tls,
     openssl_verify_mode: GlobalSetting.smtp_openssl_verify_mode,
@@ -91,8 +90,13 @@ class EmailSettingsValidator
         raise ArgumentError, "TLS and STARTTLS are mutually exclusive"
       end
 
-      if !%i[plain login cram_md5].include?(authentication.to_sym)
-        raise ArgumentError, "Invalid authentication method. Must be plain, login, or cram_md5."
+      if username || password
+        authentication = (authentication || GlobalSetting.smtp_authentication)&.to_sym
+        if !%i[plain login cram_md5].include?(authentication)
+          raise ArgumentError, "Invalid authentication method. Must be plain, login, or cram_md5."
+        end
+      else
+        authentication = nil
       end
 
       if domain.blank?
@@ -127,7 +131,7 @@ class EmailSettingsValidator
       smtp.open_timeout = 5
       smtp.read_timeout = 5
 
-      smtp.start(domain, username, password, authentication.to_sym)
+      smtp.start(domain, username, password, authentication)
       smtp.finish
     rescue => err
       log_and_raise(err, debug)

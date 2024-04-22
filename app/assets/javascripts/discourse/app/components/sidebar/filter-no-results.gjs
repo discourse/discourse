@@ -1,6 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import i18n from "discourse-common/helpers/i18n";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "discourse-i18n";
 
 export default class FilterNoResulsts extends Component {
   @service sidebarState;
@@ -13,16 +16,28 @@ export default class FilterNoResulsts extends Component {
     return this.sidebarState.currentPanel.filterable;
   }
 
+  get noResultsDescription() {
+    const params = {
+      filter: this.sidebarState.filter,
+      settings_filter_url: getURL(
+        `/admin/site_settings/category/all_results?filter=${this.sidebarState.filter}`
+      ),
+      user_list_filter_url: getURL(
+        `/admin/users/list/active?username=${this.sidebarState.filter}`
+      ),
+    };
+    return htmlSafe(I18n.t("sidebar.no_results.description", params));
+  }
+
   <template>
     {{#if this.shouldDisplay}}
       <div class="sidebar-no-results">
-        <div class="sidebar-no-results__title">{{i18n
+        <h4 class="sidebar-no-results__title">{{i18n
             "sidebar.no_results.title"
-          }}</div>
-        <div class="sidebar-no-results__description">{{i18n
-            "sidebar.no_results.description"
-            filter=this.sidebarState.filter
-          }}</div>
+          }}</h4>
+        <p
+          class="sidebar-no-results__description"
+        >{{this.noResultsDescription}}</p>
       </div>
     {{/if}}
   </template>

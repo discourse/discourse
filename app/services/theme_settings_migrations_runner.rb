@@ -1,25 +1,48 @@
 # frozen_string_literal: true
 
 class ThemeSettingsMigrationsRunner
+  # Methods defined in this module will be made available in the JS context where the theme settings migrations are
+  # executed.
+  #
+  # Defining a method `get_category_id_by_name` will result in the `getCategoryIdByName` function being made available
+  # in the JS context that migrations are ran in.
+  module Helpers
+    extend self
+
+    # @param [String] Name of the category to retrieve the id of.
+    # @return [Integer|nil] The id of the category with the given name or nil if a category does not exist for the given
+    #   name.
+    def get_category_id_by_name(category_name)
+      Category.where(name_lower: category_name).pick(:id)
+    end
+  end
+
   Migration = Struct.new(:version, :name, :original_name, :code, :theme_field_id)
 
   MIGRATION_ENTRY_POINT_JS = <<~JS
     const migrate = require("discourse/theme/migration")?.default;
+    const helpers = require("discourse/theme/migration-helpers")?.default;
+
     function main(settingsObj) {
       if (!migrate) {
         throw new Error("no_exported_migration_function");
       }
+
       if (typeof migrate !== "function") {
         throw new Error("default_export_is_not_a_function");
       }
+
       const map = new Map(Object.entries(settingsObj));
-      const updatedMap = migrate(map);
+      const updatedMap = migrate(map, helpers);
+
       if (!updatedMap) {
         throw new Error("migration_function_no_returned_value");
       }
+
       if (!(updatedMap instanceof Map)) {
         throw new Error("migration_function_wrong_return_type");
       }
+
       return Object.fromEntries(updatedMap.entries());
     }
   JS
@@ -168,7 +191,21 @@ class ThemeSettingsMigrationsRunner
       filename: "theme-#{@theme.id}-migration.js",
     )
 
+    Helpers.instance_methods.each do |method_name|
+      context.attach("__helpers.#{method_name.to_s.camelize(:lower)}", Helpers.method(method_name))
+    end
+
+    context.eval(
+      DiscourseJsProcessor.transpile(
+        "export default __helpers",
+        "",
+        "discourse/theme/migration-helpers",
+      ),
+      filename: "theme-#{@theme.id}-migration-helpers.js",
+    )
+
     context.eval(MIGRATION_ENTRY_POINT_JS, filename: "migration-entrypoint.js")
+
     context.call("main", settings)
   ensure
     context&.dispose

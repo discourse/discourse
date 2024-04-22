@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@ember/optional-features": "^2.1.0",
-    "@embroider/test-setup": "^3.0.3",
+    "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^1.1.2",
     "@types/jquery": "^3.5.29",
     "@types/qunit": "^2.19.10",

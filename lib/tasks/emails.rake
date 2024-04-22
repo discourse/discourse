@@ -84,7 +84,7 @@ task "emails:test", [:email] => [:environment] do |_, args|
       domain: smtp[:domain] || "localhost",
       username: smtp[:user_name],
       password: smtp[:password],
-      authentication: smtp[:authentication] || "plain",
+      authentication: smtp[:authentication],
     )
   rescue Exception => e
     if e.to_s.match(/execution expired/)
