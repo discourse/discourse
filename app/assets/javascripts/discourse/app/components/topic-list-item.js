@@ -367,23 +367,19 @@ export default Component.extend({
   @bind
   _onTitleFocus() {
     if (this.element && !this.isDestroying && !this.isDestroyed) {
-      this._mainLinkElement().classList.add("focused");
+      this.element.classList.add("selected");
     }
   },
 
   @bind
   _onTitleBlur() {
     if (this.element && !this.isDestroying && !this.isDestroyed) {
-      this._mainLinkElement().classList.remove("focused");
+      this.element.classList.remove("selected");
     }
   },
 
   _shouldFocusLastVisited() {
     return this.site.desktopView && this.focusLastVisitedTopic;
-  },
-
-  _mainLinkElement() {
-    return this.element.querySelector(".main-link");
   },
 
   _titleElement() {
