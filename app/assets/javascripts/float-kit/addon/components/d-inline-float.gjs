@@ -1,26 +1,45 @@
+import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
+import { and } from "truth-helpers";
+import DModal from "discourse/components/d-modal";
 import DFloatBody from "float-kit/components/d-float-body";
 
-const DInlineFloat = <template>
-  {{#if @instance.expanded}}
-    <DFloatBody
-      @instance={{@instance}}
-      @trapTab={{@trapTab}}
-      @mainClass={{@mainClass}}
-      @innerClass={{@innerClass}}
-      @role={{@role}}
-      @portalOutletElement={{@portalOutletElement}}
-      @inline={{@inline}}
-    >
-      {{#if @instance.options.component}}
-        <@instance.options.component
-          @data={{@instance.options.data}}
-          @close={{@instance.close}}
-        />
-      {{else}}
-        {{@instance.options.content}}
-      {{/if}}
-    </DFloatBody>
-  {{/if}}
-</template>;
+export default class DInlineFloat extends Component {
+  @service site;
 
-export default DInlineFloat;
+  <template>
+    {{#if @instance.expanded}}
+      {{#if (and this.site.mobileView @instance.options.modalForMobile)}}
+        <DModal @closeModal={{@instance.close}} @hideHeader={{true}}>
+          {{#if @instance.options.component}}
+            <@instance.options.component
+              @data={{@instance.options.data}}
+              @close={{@instance.close}}
+            />
+          {{else}}
+            {{@instance.options.content}}
+          {{/if}}
+        </DModal>
+      {{else}}
+        <DFloatBody
+          @instance={{@instance}}
+          @trapTab={{@trapTab}}
+          @mainClass={{@mainClass}}
+          @innerClass={{@innerClass}}
+          @role={{@role}}
+          @portalOutletElement={{@portalOutletElement}}
+          @inline={{@inline}}
+        >
+          {{#if @instance.options.component}}
+            <@instance.options.component
+              @data={{@instance.options.data}}
+              @close={{@instance.close}}
+            />
+          {{else}}
+            {{@instance.options.content}}
+          {{/if}}
+        </DFloatBody>
+      {{/if}}
+    {{/if}}
+  </template>
+}
