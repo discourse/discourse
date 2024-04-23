@@ -5,6 +5,7 @@ import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { fmt, propertyEqual } from "discourse/lib/computed";
+import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
 import { longDate } from "discourse/lib/formatter";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
 import PreloadStore from "discourse/lib/preload-store";
@@ -459,6 +460,23 @@ export default class Topic extends RestModel {
   @discourseComputed("visible")
   invisible(visible) {
     return visible !== undefined ? !visible : undefined;
+  }
+
+  @discourseComputed("visibility_reason_id")
+  visibilityReasonTranslated() {
+    if (
+      this.visibility_reason_id &&
+      this.visibility_reason_id !== 99 // unknown
+    ) {
+      const reasonKey = Object.keys(TOPIC_VISIBILITY_REASONS)[
+        Object.values(TOPIC_VISIBILITY_REASONS).indexOf(
+          this.visibility_reason_id
+        )
+      ];
+      return I18n.t(`topic_statuses.visibility_reasons.${reasonKey}`);
+    }
+
+    return "";
   }
 
   @discourseComputed("id")

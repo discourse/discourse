@@ -614,11 +614,20 @@ class Post < ActiveRecord::Base
       self.skip_validation = true
 
       update!(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: reason)
+      topic_with_no_visible_posts = Topic.where(<<~SQL, topic_id: topic_id).first
+        id = :topic_id AND NOT EXISTS (
+          SELECT 1 FROM posts WHERE topic_id = :topic_id AND NOT hidden
+        )
+      SQL
 
-      Topic.where(
-        "id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)",
-        topic_id: topic_id,
-      ).update_all(visible: false)
+      if topic_with_no_visible_posts
+        topic_with_no_visible_posts.update_status(
+          "visible",
+          false,
+          Discourse.system_user,
+          { visibility_reason_id: Topic.visibility_reasons[:op_flag_threshold_reached] },
+        )
+      end
 
       UserStatCountUpdater.decrement!(self)
     end
@@ -652,7 +661,24 @@ class Post < ActiveRecord::Base
   def unhide!
     Post.transaction do
       self.update!(hidden: false)
-      self.topic.update(visible: true) if is_first_post?
+
+      # NOTE: We have to consider `nil` a valid reason here because historically
+      # topics didn't have a visibility_reason_id, if we didn't do this we would
+      # break backwards compat since we cannot backfill data.
+      if is_first_post? &&
+           (
+             self.topic.visibility_reason_id ==
+               Topic.visibility_reasons[:op_flag_threshold_reached] ||
+               self.topic.visibility_reason_id.nil?
+           )
+        self.topic.update_status(
+          "visible",
+          true,
+          Discourse.system_user,
+          { visibility_reason_id: Topic.visibility_reasons[:op_unhidden] },
+        )
+      end
+
       UserStatCountUpdater.increment!(self)
       save(validate: false)
     end
