@@ -210,7 +210,7 @@
 {{/if}}
 
 {{#if this.canSelectTitle}}
-  <div class="control-group pref-title" data-setting-name="user-title">
+  <div class="control-group pref-title hidden" data-setting-name="user-title">
     <label class="control-label">{{i18n "user.title.title"}}</label>
     <div class="controls">
       <ComboBox
@@ -282,7 +282,7 @@
 
 {{#if this.canDownloadPosts}}
   <div
-    class="control-group pref-data-export"
+    class="control-group pref-data-export hidden"
     data-setting-name="user-data-export"
   >
     <label class="control-label">{{i18n "user.download_archive.title"}}</label>

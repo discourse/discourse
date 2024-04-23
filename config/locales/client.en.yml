@@ -1433,7 +1433,7 @@ en:
       preferences_nav:
         account: "Account"
         security: "Security"
-        profile: "Profile"
+        profile: "Edit Profile"
         emails: "Emails"
         notifications: "Notifications"
         tracking: "Tracking"
@@ -3753,6 +3753,7 @@ en:
             button: "HTML"
 
       bookmarks:
+        created: "Bookmarked!"
         create: "Create bookmark"
         create_for_topic: "Create bookmark for topic"
         edit: "Edit bookmark"

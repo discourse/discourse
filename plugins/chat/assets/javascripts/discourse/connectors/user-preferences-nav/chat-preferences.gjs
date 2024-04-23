@@ -11,8 +11,8 @@ export default class ChatPreferences extends Component {
   <template>
     <li class="user-nav__preferences-chat">
       <LinkTo @route="preferences.chat">
-        {{dIcon "d-chat"}}
-        <span>{{i18n "chat.title_capitalized"}}</span>
+        {{dIcon "wrench"}}
+        <span>Settings</span>
       </LinkTo>
     </li>
   </template>

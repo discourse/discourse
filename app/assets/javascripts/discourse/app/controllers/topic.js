@@ -19,6 +19,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { BookmarkFormData } from "discourse/lib/bookmark";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
+import postActionFeedback from "discourse/lib/post-action-feedback";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
@@ -858,10 +859,12 @@ export default Controller.extend(bufferedProperty("model"), {
             bookmark.bookmarkable_id === post.id &&
             bookmark.bookmarkable_type === "Post"
         );
-        return this._modifyPostBookmark(
+        debugger;
+        return this._postQuickBookmark(
           bookmarkForPost ||
             Bookmark.createFor(this.currentUser, "Post", post.id),
-          post
+          post,
+          !!bookmarkForPost?.bookmarkable_id
         );
       } else {
         return this._toggleTopicLevelBookmark().then((changedIds) => {
@@ -1300,6 +1303,7 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _modifyPostBookmark(bookmark, post) {
+    debugger;
     this.modal
       .show(BookmarkModal, {
         model: {
@@ -1332,6 +1336,40 @@ export default Controller.extend(bufferedProperty("model"), {
           });
         }
       });
+  },
+
+  _postQuickBookmark(bookmark, post, del = false) {
+    if (del) {
+      ajax("/bookmarks/" + bookmark.id, {
+        type: "DELETE",
+      }).then(() => {});
+      this.model.removeBookmark(bookmark.id);
+      // post.deleteBookmark(response.topic_bookmarked);
+    } else {
+      ajax("/bookmarks", {
+        type: "POST",
+        data: new BookmarkFormData(bookmark).saveData,
+      }).then((response) => {
+        bookmark.id = response.id;
+      });
+      this._syncBookmarks(bookmark);
+      this.model.set("bookmarking", false);
+      post.createBookmark(bookmark);
+      this.model.afterPostBookmarked(post, bookmark);
+    }
+
+    post.appEvents.trigger("post-stream:refresh", {
+      id: bookmark.bookmarkable_id,
+    });
+
+    postActionFeedback({
+      postId: post.id,
+      actionClass: "with-reminder",
+      messageKey: "post.bookmarks.created",
+      actionCallback: () => {},
+      errorCallback: () => {},
+    });
+    return [post.id];
   },
 
   _syncBookmarks(data) {

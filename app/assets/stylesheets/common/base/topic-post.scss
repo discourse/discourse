@@ -685,6 +685,7 @@ aside.quote {
 }
 
 .topic-map {
+  display: none;
   background: var(--primary-very-low);
   border: 1px solid var(--primary-low);
   border-top: none; // would cause double top border

@@ -13,6 +13,14 @@
   border-radius: var(--d-border-radius);
   display: flex;
 
+  li[data-name="Copy link"] {
+    display: none;
+  }
+
+  .bookmark-btn {
+    display: none;
+  }
+
   .emoji-picker-anchor {
     position: absolute;
     height: 34px;
