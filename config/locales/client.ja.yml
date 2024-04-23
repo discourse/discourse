@@ -1766,10 +1766,6 @@ ja:
       suggested_topics:
         title: "どんどん読みましょう！"
         content: "次に読むことをお勧めするトピックをいくつかご紹介します。"
-      admin_guide:
-        title: "新しいサイトへようこそ！"
-        content: "サイトとコミュニティーの構築を続けるには、<a href='%{admin_guide_url}'>管理者ガイドをお読みください</a>。"
-        content_no_url: "管理者ガイドを読み、サイトとコミュニティーの構築を続けましょう。"
     loading: "読み込み中…"
     errors:
       prev_page: "次の項目を読み込み中に発生しました:"
@@ -4624,6 +4620,8 @@ ja:
           emoji: "絵文字"
           navigation: "ナビゲーション"
           themes: "テーマ"
+          components:
+            title: "コンポーネント"
       email_settings:
         sidebar_link:
           appearance: "外観"

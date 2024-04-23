@@ -5,7 +5,11 @@ class SiteSettingsTask
     site_settings = SiteSetting.all_settings(include_hidden: include_hidden)
     h = {}
     site_settings.each do |site_setting|
-      next if site_setting[:default] == site_setting[:value] if !include_defaults
+      default = site_setting[:default]
+      if site_setting[:mandatory_values]
+        default = (site_setting[:mandatory_values].split("|") | default.split("|")).join("|")
+      end
+      next if default == site_setting[:value] if !include_defaults
       h.store(site_setting[:setting].to_s, site_setting[:value])
     end
     h

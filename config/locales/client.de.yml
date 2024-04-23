@@ -1889,10 +1889,6 @@ de:
       suggested_topics:
         title: "Lies weiter!"
         content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
-      admin_guide:
-        title: "Willkommen auf deiner neuen Website!"
-        content: "<a href='%{admin_guide_url}'>Lies den Administrator-Leitfaden</a>, um deine Website und deine Community weiter auszubauen."
-        content_no_url: "Lies den Administrator-Leitfaden, um deine Website und deine Community weiter auszubauen."
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -2119,6 +2115,10 @@ de:
         name: "Discord"
         title: "Mit Discord anmelden"
         sr_title: "Mit Discord anmelden"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "Mit LinkedIn anmelden"
+        sr_title: "Mit LinkedIn anmelden"
       passkey:
         name: "Mit einem Passkey anmelden"
       second_factor_toggle:
@@ -4404,7 +4404,7 @@ de:
       clear_filter: "Filter löschen"
       no_results:
         title: "Keine Ergebnisse"
-        description: "Wir konnten nichts finden, das zu '%{filter}' passt"
+        description: "Wir konnten nichts finden, das zu '%{filter}' passt.<br><br>Wolltest du die <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">Seiteneinstellungen</a> oder die <a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">Benutzerliste</a> durchsuchen?"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -4940,7 +4940,9 @@ de:
         title: "Konto"
         sidebar_link:
           backups: "Backups"
-          whats_new: "Was ist neu?"
+          whats_new:
+            title: "Was ist neu?"
+            keywords: "Änderungsprotokoll|Feature|Release"
       community:
         title: "Gemeinschaft"
         sidebar_link:
@@ -4963,6 +4965,9 @@ de:
           emoji: "Emoji"
           navigation: "Navigation"
           themes: "Themes"
+          components:
+            title: "Komponenten"
+            keywords: "Theme|Erweiterung"
           site_texts: "Website-Texte"
       email_settings:
         title: "E-Mail-Einstellungen"
@@ -6245,6 +6250,7 @@ de:
           add_document_types: "Dokumente"
           add_types_title: "Erweiterungen zulassen %{types}"
           add_types_toast: "%{types} Dateitypen hinzugefügt"
+        mandatory_group: "Gruppe ist obligatorisch"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen

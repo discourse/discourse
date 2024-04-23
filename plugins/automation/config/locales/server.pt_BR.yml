@@ -14,6 +14,8 @@ pt_BR:
         invalid_field: O componente do campo `%{component}` não pode ser usado em `%{target}:%{target_name}.`
         invalid_metadata: Os dados para `%{field}` são inválidos ou o componente `%{component}` é desconhecido.
     triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "Pelo menos um dos 'custom_fields' ou 'user_profile' deve ser fornecido."
       user_badge_granted:
         title: Emblema de usuário concedido
         doc: Aciona uma automação quando um usuário recebe um emblema.
@@ -60,12 +62,15 @@ pt_BR:
       after_post_cook:
         title: Depois da falsificação da postagem
         description: Quando o conteúdo de uma postagem for falsificado, a automação será acionada
+      user_updated:
+        description: Quando um usuário atualizar qualquer informação a automação será acionada
     scriptables:
       post:
         title: Criar uma postagem
         description: Criar uma postagem em um tópico específico
       topic:
         title: Criar um tópico
+        description: Criar um tópico como um usuário específico
       flag_post_on_words:
         title: Sinalizar postagem em palavras
         description: Sinaliza uma postagem se ela contiver palavras especificadas

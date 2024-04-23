@@ -4,6 +4,7 @@ export default class AdminUsersListShowRoute extends DiscourseRoute {
   queryParams = {
     order: { refreshModel: true },
     asc: { refreshModel: true },
+    username: { refreshModel: true },
   };
 
   // TODO: this has been introduced to fix a bug in admin-users-list-show
@@ -20,6 +21,7 @@ export default class AdminUsersListShowRoute extends DiscourseRoute {
         controller.setProperties({
           order: transition.to.queryParams.order,
           asc: transition.to.queryParams.asc,
+          listFilter: transition.to.queryParams.username,
           query: params.filter,
           refreshing: false,
         });

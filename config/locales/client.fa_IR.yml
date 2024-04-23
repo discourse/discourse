@@ -3745,7 +3745,8 @@ fa_IR:
         title: "حساب کاربری"
         sidebar_link:
           backups: "نسخه‌های پشتیبان"
-          whats_new: "چه چیزی جدید شده"
+          whats_new:
+            title: "چه چیزی جدید شده"
       community:
         title: "انجمن"
         sidebar_link:
@@ -3768,6 +3769,8 @@ fa_IR:
           emoji: "شکلک"
           navigation: "ناوبری"
           themes: "قالب‌ها"
+          components:
+            title: "کامپوننت‌ها"
           site_texts: "متن‌های سایت"
       email_settings:
         title: "تنظیمات ایمیل"

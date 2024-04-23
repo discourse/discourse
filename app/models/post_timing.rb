@@ -148,6 +148,16 @@ class PostTiming < ActiveRecord::Base
   MAX_READ_TIME_PER_BATCH = 60 * 1000.0
 
   def self.process_timings(current_user, topic_id, topic_time, timings, opts = {})
+    lookup_column = current_user.whisperer? ? "highest_staff_post_number" : "highest_post_number"
+    highest_post_number = DB.query_single(<<~SQL, topic_id: topic_id).first
+          SELECT #{lookup_column}
+          FROM topics
+          WHERE id = :topic_id
+        SQL
+
+    # does not exist log nothing
+    return if highest_post_number.nil?
+
     UserStat.update_time_read!(current_user.id)
 
     max_time_per_post = ((Time.now - current_user.created_at) * 1000.0)
@@ -163,6 +173,7 @@ class PostTiming < ActiveRecord::Base
       i -= 1
       timings[i][1] = max_time_per_post if timings[i][1] > max_time_per_post
       timings.delete_at(i) if timings[i][0] < 1
+      timings.delete_at(i) if timings[i][0] > highest_post_number
     end
 
     timings.each_with_index do |(post_number, time), index|

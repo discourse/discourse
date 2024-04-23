@@ -624,8 +624,7 @@ class Guardian
     return false if !authenticated?
     return false if User.where(username_lower: SiteSetting.here_mention).exists?
 
-    @user.in_any_groups?(SiteSetting.here_mention_allowed_groups_map) ||
-      @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
+    @user.in_any_groups?(SiteSetting.here_mention_allowed_groups_map)
   end
 
   def can_lazy_load_categories?
@@ -635,10 +634,6 @@ class Guardian
 
   def is_me?(other)
     other && authenticated? && other.is_a?(User) && @user == other
-  end
-
-  def is_discourse_hub_request?
-    request&.user_agent == "Discourse Hub"
   end
 
   private

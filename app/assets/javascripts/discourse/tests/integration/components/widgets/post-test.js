@@ -780,10 +780,16 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - few posts", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123 });
+    topic.details.set("participants", [
+      { username: "eviltrout" },
+      { username: "codinghorror" },
+    ]);
     this.set("args", {
+      topic,
       showTopicMap: true,
       topicPostsCount: 2,
-      participants: [{ username: "eviltrout" }, { username: "codinghorror" }],
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
@@ -794,16 +800,19 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - participants", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123, posts_count: 10 });
+    topic.postStream.setProperties({ userFilters: ["sam", "codinghorror"] });
+    topic.details.set("participants", [
+      { username: "eviltrout" },
+      { username: "codinghorror" },
+      { username: "sam" },
+      { username: "ZogStrIP" },
+    ]);
+
     this.set("args", {
+      topic,
       showTopicMap: true,
-      topicPostsCount: 10,
-      participants: [
-        { username: "eviltrout" },
-        { username: "codinghorror" },
-        { username: "sam" },
-        { username: "ZogStrIP" },
-      ],
-      userFilters: ["sam", "codinghorror"],
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
@@ -816,17 +825,17 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - links", async function (assert) {
-    this.set("args", {
-      showTopicMap: true,
-      topicLinks: [
-        { url: "http://link1.example.com", clicks: 0 },
-        { url: "http://link2.example.com", clicks: 0 },
-        { url: "http://link3.example.com", clicks: 0 },
-        { url: "http://link4.example.com", clicks: 0 },
-        { url: "http://link5.example.com", clicks: 0 },
-        { url: "http://link6.example.com", clicks: 0 },
-      ],
-    });
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123 });
+    topic.details.set("links", [
+      { url: "http://link1.example.com", clicks: 0 },
+      { url: "http://link2.example.com", clicks: 0 },
+      { url: "http://link3.example.com", clicks: 0 },
+      { url: "http://link4.example.com", clicks: 0 },
+      { url: "http://link5.example.com", clicks: 0 },
+      { url: "http://link6.example.com", clicks: 0 },
+    ]);
+    this.set("args", { topic, showTopicMap: true });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
@@ -845,7 +854,9 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - no summary", async function (assert) {
-    this.set("args", { showTopicMap: true });
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123 });
+    this.set("args", { topic, showTopicMap: true });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
@@ -853,7 +864,9 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - has top replies summary", async function (assert) {
-    this.set("args", { showTopicMap: true, hasTopRepliesSummary: true });
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123, has_summary: true });
+    this.set("args", { topic, showTopicMap: true });
     this.set("showTopReplies", () => (this.summaryToggled = true));
 
     await render(
@@ -867,11 +880,15 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("pm map", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 123 });
+    topic.details.set("allowed_users", [
+      EmberObject.create({ username: "eviltrout" }),
+    ]);
     this.set("args", {
+      topic,
       showTopicMap: true,
       showPMMap: true,
-      allowedGroups: [],
-      allowedUsers: [EmberObject.create({ username: "eviltrout" })],
     });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);

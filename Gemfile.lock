@@ -636,7 +636,7 @@ DEPENDENCIES
   rbtrace
   rchardet
   redcarpet
-  redis
+  redis (< 5.0)
   redis-namespace
   rinku
   rotp

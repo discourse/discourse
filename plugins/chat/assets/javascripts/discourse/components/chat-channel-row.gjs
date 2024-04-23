@@ -7,7 +7,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { modifier } from "ember-modifier";
+import { modifier as modifierFn } from "ember-modifier";
 import { and, eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -39,11 +39,11 @@ export default class ChatChannelRow extends Component {
   @tracked rowStyle = null;
   @tracked canSwipe = true;
 
-  registerSwipableRow = modifier((element) => {
+  registerSwipableRow = modifierFn((element) => {
     this.swipableRow = element;
   });
 
-  onReset = modifier((element) => {
+  onReset = modifierFn((element) => {
     const handler = () => {
       this.rowStyle = htmlSafe("margin-right: 0px;");
       this.showRemoveButton = false;
@@ -60,7 +60,7 @@ export default class ChatChannelRow extends Component {
     };
   });
 
-  onRemoveChannel = modifier((element) => {
+  onRemoveChannel = modifierFn((element) => {
     element.addEventListener(
       "transitionend",
       () => {
@@ -72,7 +72,7 @@ export default class ChatChannelRow extends Component {
     element.classList.add(FADEOUT_CLASS);
   });
 
-  handleSwipe = modifier((element) => {
+  handleSwipe = modifierFn((element) => {
     element.addEventListener("touchstart", this.onSwipeStart, {
       passive: true,
     });

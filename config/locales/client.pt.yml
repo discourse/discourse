@@ -3843,6 +3843,8 @@ pt:
           emoji: "Emoji"
           navigation: "Navegação"
           themes: "Temas"
+          components:
+            title: "Componentes"
       email_settings:
         sidebar_link:
           appearance: "Aparência"

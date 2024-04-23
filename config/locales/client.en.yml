@@ -2037,11 +2037,6 @@ en:
         title: "Keep reading!"
         content: "Here are some topics we think you might like to read next."
 
-      admin_guide:
-        title: "Welcome to your new site!"
-        content: "<a href='%{admin_guide_url}'>Read the admin guide</a> to continue building your site and community."
-        content_no_url: "Read the admin guide to continue building your site and community."
-
     loading: "Loading…"
     errors:
       prev_page: "while trying to load"
@@ -2324,6 +2319,10 @@ en:
         name: "Discord"
         title: "Log in with Discord"
         sr_title: "Log in with Discord"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "Log in with LinkedIn"
+        sr_title: "Log in with LinkedIn"
       passkey:
         name: "Log in with a passkey"
       second_factor_toggle:
@@ -4759,7 +4758,7 @@ en:
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
-        description: "We couldn’t find anything matching ‘%{filter}’"
+        description: "We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">search site settings</a> or the <a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">admin user list?</a>"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -5312,7 +5311,9 @@ en:
         title: "Account"
         sidebar_link:
           backups: "Backups"
-          whats_new: "What's New"
+          whats_new:
+            title: "What's New"
+            keywords: "changelog|feature|release"
 
       community:
         title: "Community"
@@ -5337,7 +5338,9 @@ en:
           emoji: "Emoji"
           navigation: "Navigation"
           themes: "Themes"
-          components: "Components"
+          components:
+            title: "Components"
+            keywords: "theme|extension"
           site_texts: "Site Texts"
 
       email_settings:
@@ -6674,6 +6677,7 @@ en:
           add_document_types: "Documents"
           add_types_title: "Allow extensions %{types}"
           add_types_toast: "%{types} file types added"
+        mandatory_group: "Group is mandatory"
 
       badges:
         title: Badges

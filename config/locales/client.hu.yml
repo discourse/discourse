@@ -1880,10 +1880,6 @@ hu:
       suggested_topics:
         title: "Olvass tovább!"
         content: "Íme néhány téma, amelyet szerintünk szívesen elolvasna legközelebb."
-      admin_guide:
-        title: "Üdvözöljük új webhelyén!"
-        content: "<a href='%{admin_guide_url}'>Olvassa el az adminisztrátori útmutatót</a>, hogy folytassa webhelye és közössége építését."
-        content_no_url: "Olvassa el az adminisztrátori útmutatót, hogy folytassa webhelye és közössége építését."
     loading: "Betöltés…"
     errors:
       prev_page: "amíg megpróbál betölteni"
@@ -4378,7 +4374,6 @@ hu:
       clear_filter: "Szűrő kiürítése"
       no_results:
         title: "Nincs eredmény"
-        description: "Nem találtunk semmi ennek megfelelőt '%{filter}'"
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
       description: "Az üdvözlő téma az első dolog, amit az új tagok elolvasnak. Gondoljon rá úgy, mint egy \"lendületbe hozó beszéd\"-re vagy \"küldetésnyilatkozat\"-ra. Tudassa mindenkivel, kiknek szól ez a közösség, mire számíthatnak itt, és mit szeretne, mit csináljanak először."
@@ -4914,7 +4909,8 @@ hu:
         title: "Fiók"
         sidebar_link:
           backups: "Biztonsági mentések"
-          whats_new: "Újdonságok"
+          whats_new:
+            title: "Újdonságok"
       community:
         title: "Közösség"
         sidebar_link:
@@ -4937,6 +4933,8 @@ hu:
           emoji: "Emoji"
           navigation: "Navigáció"
           themes: "Témák"
+          components:
+            title: "Összetevő"
           site_texts: "Oldal szövegei"
       email_settings:
         title: "E-mail beállítások"

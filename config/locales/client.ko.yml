@@ -3889,6 +3889,8 @@ ko:
           emoji: "이모티콘"
           navigation: "내비게이션"
           themes: "테마"
+          components:
+            title: "구성 요소"
       email_settings:
         sidebar_link:
           appearance: "외관"

@@ -1632,8 +1632,6 @@ sl:
         title: "Vaše prvo obvestilo!"
       suggested_topics:
         title: "Nadaljujte z branjem!"
-      admin_guide:
-        title: "Dobrodošli na vaši novi strani!"
     loading: "Nalagam..."
     errors:
       prev_page: "med nalaganjem"

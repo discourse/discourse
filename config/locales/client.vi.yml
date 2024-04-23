@@ -3995,6 +3995,8 @@ vi:
           emoji: "Emoji"
           navigation: "Điều hướng"
           themes: "Themes"
+          components:
+            title: "Các thành phần"
       email_settings:
         sidebar_link:
           appearance: "Ngoại hình"
