@@ -245,9 +245,6 @@
         },
         "suggested_topics": {
           "type": "integer"
-        },
-        "admin_guide": {
-          "type": "integer"
         }
       },
       "required": [
@@ -255,8 +252,7 @@
         "topic_timeline",
         "post_menu",
         "topic_notification_levels",
-        "suggested_topics",
-        "admin_guide"
+        "suggested_topics"
       ]
     },
     "groups": {

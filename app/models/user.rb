@@ -360,7 +360,6 @@ class User < ActiveRecord::Base
         post_menu: 3,
         topic_notification_levels: 4,
         suggested_topics: 5,
-        admin_guide: 6,
       )
   end
 
