@@ -1,7 +1,8 @@
-<div class="sidebar-section-link-wrapper">
+<div class="sidebar-section-link-wrapper" data-list-item-name={{@name}}>
   <DButton
     class="sidebar-section-link sidebar-row --link-button"
     @noAutoClass={{true}}
+    data-link-name={{@name}}
     {{on "click" @action}}
   >
     <span class="sidebar-section-link-prefix icon">
