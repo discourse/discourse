@@ -89,7 +89,7 @@ class ProblemCheck
   end
 
   def self.checks
-    Collection.new(CORE_PROBLEM_CHECKS | DiscoursePluginRegistry.problem_checks)
+    Collection.new(DiscoursePluginRegistry.problem_checks.concat(CORE_PROBLEM_CHECKS))
   end
 
   def self.scheduled
