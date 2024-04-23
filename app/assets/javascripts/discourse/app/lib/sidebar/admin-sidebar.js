@@ -270,7 +270,13 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const navMap = savedConfig || ADMIN_NAV_MAP;
 
     if (!session.get("safe_mode")) {
-      navMap.findBy("name", "plugins").links.push(...pluginAdminRouteLinks());
+      const pluginLinks = navMap.findBy("name", "plugins").links;
+      pluginAdminRouteLinks().forEach((pluginLink) => {
+        if (!pluginLinks.mapBy("name").includes(pluginLink.name)) {
+          pluginLinks.push(pluginLink);
+        }
+      });
+
       this.adminSidebarStateManager.setLinkKeywords(
         "admin_installed_plugins",
         installedPluginsLinkKeywords()
