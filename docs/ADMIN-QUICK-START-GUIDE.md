@@ -3,7 +3,7 @@ Congratulations, you are now the proud owner of your very own [Civilized Discour
 ![](https://www.discourse.org/images/welcome/welcome-to-discourse-hosting-690x314.jpg)
 
 # 1. Initial setup 
-Discourse is a powerful, versatile platform with many options.  To help you make sure you're covering all the bases as you get started with your new community, we provided some checklists and guidance below. If you haven't already, [complete the Setup Wizard](/wizard) which covers the essentials. 
+Discourse is a powerful, versatile platform with many options. To help you make sure you're covering all the bases as you get started with your new community, we provided some checklists and guidance in this Getting Started guide. The Getting started button at the top is only visible to you and will go away when you have invited more members ([if you prefer, you can remove it now](/admin/site_settings/category/all_results?filter=bootstrap)).
 
 You now also need to [test your email](#h-4-maintaining-your-discourse-server-14) to make sure it is configured correctly, otherwise new signups and notifications will not work. 
 

@@ -2037,11 +2037,6 @@ en:
         title: "Keep reading!"
         content: "Here are some topics we think you might like to read next."
 
-      admin_guide:
-        title: "Welcome to your new site!"
-        content: "<a href='%{admin_guide_url}'>Read the admin guide</a> to continue building your site and community."
-        content_no_url: "Read the admin guide to continue building your site and community."
-
     loading: "Loading…"
     errors:
       prev_page: "while trying to load"
