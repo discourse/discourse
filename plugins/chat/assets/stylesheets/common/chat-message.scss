@@ -64,6 +64,15 @@
     min-width: 0;
     width: 100%;
 
+    a {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+
+      &:visited {
+        color: #424242;
+      }
+    }
+
     code {
       box-sizing: border-box;
       font-size: var(--font-down-1);
