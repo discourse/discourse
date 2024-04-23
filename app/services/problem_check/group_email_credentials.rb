@@ -7,6 +7,7 @@
 # problem checks, and if any credentials have issues they will show up on
 # the admin dashboard as a high priority issue.
 class ProblemCheck::GroupEmailCredentials < ProblemCheck
+  self.priority = "high"
   self.perform_every = 30.minutes
 
   def call
