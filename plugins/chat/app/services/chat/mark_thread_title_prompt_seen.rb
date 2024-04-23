@@ -42,7 +42,9 @@ module Chat
     end
 
     def can_view_channel(guardian:, thread:)
-      guardian.can_preview_chat_channel?(thread.channel)
+      x = guardian.can_preview_chat_channel?(thread.channel)
+      puts x
+      x
     end
 
     def threading_enabled_for_channel(thread:)
