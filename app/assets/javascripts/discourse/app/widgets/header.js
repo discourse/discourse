@@ -357,7 +357,7 @@ createWidget("hamburger-dropdown-wrapper", {
   click(event) {
     if (
       event.target.closest(".sidebar-section-header-button") ||
-      event.target.closest(".sidebar-section-link-button") ||
+      event.target.closest(".--link-button") ||
       event.target.closest(".sidebar-section-link")
     ) {
       this.sendWidgetAction("toggleHamburger");
