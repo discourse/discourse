@@ -2057,10 +2057,6 @@ he:
       suggested_topics:
         title: "אפשר להמשיך לקרוא!"
         content: "הינה כמה נושאים שלדעתנו יעניין אותך לקרוא בהמשך."
-      admin_guide:
-        title: "ברוך בואך לאתר החדש שלך!"
-        content: "<a href='%{admin_guide_url}'>כדאי לקרוא את המדריך למנהלים</a> כדי להמשיך לבנות את האתר והקהילה שלך."
-        content_no_url: "כדאי לקרוא את המדריך למנהלים בטרם בניית האתר והקהילה שלך."
     loading: "בטעינה…"
     errors:
       prev_page: "בזמן הניסיון לטעון"
@@ -2085,6 +2081,7 @@ he:
       close: "סגירה"
       dismiss_error: "התעלמות מהשגיאה"
     close: "סגור"
+    assets_changed_confirm: "האתר זכה לעדכון תכנה. למשוך את הגרסה העדכנית כעת?"
     logout: "יצאת מהמערכת."
     refresh: "רענן"
     home: "בית"
@@ -2292,6 +2289,10 @@ he:
         name: "Discord"
         title: "כניסה עם Discord"
         sr_title: "כניסה עם Discord"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "כניסה עם LinkedIn"
+        sr_title: "כניסה עם LinkedIn"
       passkey:
         name: "כניסה עם מפתח גישה"
       second_factor_toggle:
@@ -4680,6 +4681,9 @@ he:
           save: "שמירה"
           delete: "מחיקה"
           delete_confirm: "למחוק את המקטע הזה?"
+          delete_public_confirm: "סעיף זה <strong>גלוי לכולם</strong>, למחוק אותו?"
+          update_public_confirm: "השינויים יהיו <strong>גלויים לכולם</strong> באתר הזה. להמשיך?"
+          mark_as_private_confirm: "הסעיף הזה <strong>גלוי לכולם</strong>. לאחר העדכון, הוא יהיה <strong>גלוי רק לך</strong>. להמשיך?"
           reset_confirm: "לאפס את המקטע הזה לברירת המחדל?"
           public: "גלוי לכולם"
           always_public: "התוכן בסעיף הזה הוא תמיד ציבורי"
@@ -4782,7 +4786,7 @@ he:
       clear_filter: "פינוי המסנן"
       no_results:
         title: "אין תוצאות"
-        description: "לא מצאנו שום דבר שעונה על ‚%{filter}’"
+        description: "לא מצאנו שום דבר שעונה לחיפוש ‚%{filter}’.<br><br>התכוונת במקרה <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">לחפש בהגדרות האתר</a> או ב<a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">רשימת משתמשי ההנהלה?</a>"
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
       description: "נושא קבלת הפנים שלך הוא הדבר הראשון שחברים חדשים יקראו. אפשר לחשוב על זה כמו על „נאום מעלית” או „הצהרת כוונות”. כדאי לתאר למי מיועדת הקהילה הזאת, מה אפשר לצפות למצוא כאן ומה מומלץ לעשות בהתחלה."
@@ -5336,7 +5340,8 @@ he:
         title: "חשבון"
         sidebar_link:
           backups: "גיבויים"
-          whats_new: "מה חדש"
+          whats_new:
+            title: "מה חדש"
       community:
         title: "קהילה"
         sidebar_link:
@@ -5359,6 +5364,8 @@ he:
           emoji: "אמוג׳י"
           navigation: "ניווט"
           themes: "תמות"
+          components:
+            title: "רכיבים"
           site_texts: "טקסטים של האתר"
       email_settings:
         title: "הגדרות דוא״ל"
@@ -6654,6 +6661,7 @@ he:
           add_document_types: "מסמכים"
           add_types_title: "לאפשר סיומות %{types}"
           add_types_toast: "%{types} סוגי קבצים נוספו"
+        mandatory_group: "קבוצה היא בגדר חובה"
       badges:
         title: עיטורים
         new_badge: עיטור חדש

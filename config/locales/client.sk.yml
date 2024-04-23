@@ -3453,6 +3453,8 @@ sk:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Navigácia"
+          components:
+            title: "Komponenty"
       email_settings:
         sidebar_link:
           preview_summary: "Súhrn"

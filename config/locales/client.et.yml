@@ -2827,6 +2827,8 @@ et:
           emoji: "Emotikon"
           navigation: "Navigatsioon"
           themes: "Kujundused"
+          components:
+            title: "Komponendid"
       email_settings:
         sidebar_link:
           preview_summary: "Saadetise eelvaatlus"

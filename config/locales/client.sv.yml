@@ -1863,10 +1863,6 @@ sv:
       suggested_topics:
         title: "Fortsätt läsa!"
         content: "Här är några ämnen som vi tror att du kanske vill läsa härnäst."
-      admin_guide:
-        title: "Välkommen till din nya webbplats!"
-        content: "<a href='%{admin_guide_url}'>Läs administratörsguiden</a> för att fortsätta bygga din webbplats och ditt forum."
-        content_no_url: "Läs administratörshandboken för att fortsätta bygga upp din webbplats och ditt forum."
     loading: "Laddar…"
     errors:
       prev_page: "medan vi försökte ladda"
@@ -4862,6 +4858,8 @@ sv:
           emoji: "Emoji"
           navigation: "Navigering"
           themes: "Teman"
+          components:
+            title: "Komponenter"
       email_settings:
         title: "E-postinställningar"
         sidebar_link:

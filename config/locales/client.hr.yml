@@ -1934,10 +1934,6 @@ hr:
       suggested_topics:
         title: "Nastavi čitati!"
         content: "Evo nekih tema za koje mislimo da biste ih željeli pročitati sljedeće."
-      admin_guide:
-        title: "Dobro došli na svoju novu stranicu!"
-        content: "<a href='%{admin_guide_url}'>Pročitajte vodič za administratore</a> da biste nastavili s izgradnjom svoje stranice i zajednice."
-        content_no_url: "Pročitajte vodič za administratore da biste nastavili s izgradnjom svoje stranice i zajednice."
     loading: "Učitavanje…"
     errors:
       prev_page: "pri pokušaju očitanja"
@@ -4769,7 +4765,8 @@ hr:
         title: "Račun"
         sidebar_link:
           backups: "Sigurnosne kopije"
-          whats_new: "Što je novo"
+          whats_new:
+            title: "Što je novo"
       community:
         title: "Zajednica"
         sidebar_link:
@@ -4787,6 +4784,8 @@ hr:
           emoji: "Emoji"
           navigation: "Navigacija"
           themes: "Teme"
+          components:
+            title: "Komponente"
       email_settings:
         sidebar_link:
           appearance: "Izgled"
