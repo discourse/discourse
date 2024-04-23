@@ -116,7 +116,7 @@
     "virtual-dom": "^2.1.1",
     "webpack": "^5.91.0",
     "webpack-stats-plugin": "^1.1.3",
-    "workbox-cacheable-response": "^7.0.0",
+    "workbox-cacheable-response": "^7.1.0",
     "workbox-core": "^7.0.0",
     "workbox-expiration": "^7.0.0",
     "workbox-routing": "^7.0.0",
