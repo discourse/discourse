@@ -1305,7 +1305,7 @@ cs:
       %{confirm_unsubscribe_link}
 
 
-      Pokud si přejete nadále dostávat e-mailové aktualizace, můžete tuto zprávu gnorovat.
+      Pokud si přejete nadále dostávat e-mailové aktualizace, můžete tuto zprávu ignorovat.
   invite_forum_mailer:
     subject_template: "%{inviter_name} vás pozval/a na stránky %{site_domain_name}."
     text_body_template: |
@@ -1410,6 +1410,15 @@ cs:
         Užijte si svůj pobyt!
 
         [prefs]: %{user_preferences_url}
+    tl2_promotion_message:
+      text_body_template: |
+        Povýšili jsme vás o další [úroveň důvěry](https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/29)!
+
+        Dosažení úrovně důvěry 2 znamená, že jste četli a aktivně se účastnili dostatečně na to, abyste mohli být považováni za člena této komunity.
+
+        Jako zkušený uživatel možná oceníte [tento seznam užitečných tipů a triků](https://meta.discourse.cz/t/tipy-a-triky-pro-nove-uzivatele-discourse/28).
+
+        Zveme vás, abyste se i nadále zapojovali – těší nás, že jste mezi námi.
     backup_succeeded:
       subject_template: "Zálohování bylo úspěšně dokončeno."
     backup_failed:
@@ -1442,9 +1451,9 @@ cs:
         many: "%{count} users waiting for approval"
         other: "%{count} users waiting for approval"
       text_body_template: |
-        Na schválení (nebo zamítnutí) čekají registrace nových uživatelů, než budou moci vstoupit do tohoto fóra.
+        Jsou zde nové uživatelské registrace, které čekají na schválení (nebo zamítnutí), než budou mít přístup k tomuto fóru.
 
-        [Zkontrolujte je](%{base_url}/review).
+        [Prosím zkontrolujte je](%{base_url}/review).
   unsubscribe_link: |
     Pro zrušení zasílání těchto emailů [klikněte zde](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1648,6 +1657,7 @@ cs:
         Tento odznak je udělen při první úpravě wiki příspěvku.
     basic_user:
       name: Základní
+      description: <a href="https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/29">Uděleny</a> všechny základní funkce komunity
       long_description: |
         Tento odznak je udělen, když dosáhnete 1. úrovně důvěry. Děkujeme, že jste se tu zdrželi a přečetli pár témat, abyste se dozvěděli, o čem naše komunita je. Byla vám odstraněna omezení pro nové uživatele; byly vám poskytnuty všechny základní komunitní nástroje, jako jsou osobní zprávy, nahlašování, úpravy wiki a možnost publikovat více obrázků a odkazů.
     member:

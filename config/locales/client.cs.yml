@@ -647,12 +647,12 @@ cs:
         send_email: "Odeslat e-mail o odmítnutí"
     relative_time_picker:
       minutes:
-        one: "minuta"
+        one: "minutu"
         few: "minuty"
         many: "minut"
         other: "minut"
       hours:
-        one: "hodina"
+        one: "hodinu"
         few: "hodiny"
         many: "hodin"
         other: "hodin"
@@ -2229,7 +2229,7 @@ cs:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
-      enter: "Vstoupit"
+      enter: "Enter"
     conditional_loading_section:
       loading: Načítání…
     category_row:
@@ -3036,7 +3036,7 @@ cs:
         select: "Uživatelé mohou do tohoto tématu přispívat pouze jednou za:"
         description: "Aby uživatelé podpořili promyšlenou diskuzi v rychle se vyvíjejících nebo sporných diskusích, musí počkat, než do tohoto tématu znovu přidají příspěvek."
         enable: "Zapnout"
-        update: "Aktualizace"
+        update: "Aktualizovat"
         enabled_until: "Povoleno do:"
         remove: "Vypnout"
         hours: "Hodiny:"
@@ -3055,7 +3055,7 @@ cs:
           24_hours: "24 hodin"
           custom: "Vlastní doba trvání"
       slow_mode_notice:
-        duration: "Počkejte prosím %{duration} mezi příspěvky v tomto tématu"
+        duration: "Mezi příspěvky v tomto tématu prosím vyčkejte %{duration}"
       topic_status_update:
         title: "Časovač tématu"
         save: "Nastavit časovač "
@@ -4603,7 +4603,7 @@ cs:
         create: "Vytvořit tabulku"
         help:
           title: "Pomocí editoru tabulek"
-          enter_key: "Vstoupit"
+          enter_key: "Enter"
           tab_key: "Tab"
           new_row: "na konci řádku pro vložení nového řádku."
           new_col: "na konec sloupce pro vložení nového sloupce."
@@ -5099,7 +5099,7 @@ cs:
             title: "Vytvořit zálohu"
             confirm: "Chcete začít novou zálohu?"
             include_uploads: "zahrnout všechny nahrané soubory"
-            s3_upload_warning: 'Toto je pouze pro zálohování databáze. Nahrané soubory nebudou zahrnuty, což znamená, že všechny obrázky a další nahrané soubory mohou chybět, pokud je záloha obnovena na jiné nastavení hostingu. <b>Chcete-li povolit úplnou zálohu včetně vašich S3 souborů, přečtěte si <a href="https://meta.discourse.org/t/-/276535" target="_blank">tuto příručku</a>.</b>'
+            s3_upload_warning: 'Toto slouží pouze pro zálohování databáze. Nahrané soubory nebudou zahrnuty, což znamená, že všechny obrázky a další nahrané soubory mohou při obnovení zálohy na jiné nastavení hostingu chybět. <b>Chcete-li povolit úplnou zálohu včetně vašich S3 souborů, přečtěte si <a href="https://meta.discourse.org/t/-/276535" target="_blank">tuto příručku</a>.</b>'
           download:
             label: "Stáhnout"
             title: "Poslat e-mail s odkazem ke stažení"
@@ -5243,7 +5243,7 @@ cs:
           disable: "Vypnout"
           update_to_latest: "Aktualizovat na nejnovější"
           check_for_updates: "kontrola aktualizací"
-          updating: "Aktualizace…"
+          updating: "Probíhá aktualizace…"
           up_to_date: "Motiv je aktuální, naposledy zkontrolováno: "
           add: "Přidat"
           theme_settings: "Nastavení motivu"
