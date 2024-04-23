@@ -2,7 +2,7 @@
 class CreateAdminNotices < ActiveRecord::Migration[7.0]
   def change
     create_table :admin_notices do |t|
-      t.integer :category, null: false, index: true
+      t.integer :subject, null: false, index: true
       t.integer :priority, null: false
 
       t.string :identifier, null: false, index: true
