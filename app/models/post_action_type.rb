@@ -79,30 +79,24 @@ class PostActionType < ActiveRecord::Base
       flag_types.valid?(sym)
     end
 
-    private
-
     def initialize_flag_settings
+      @types = nil
       @flag_settings = FlagSettings.new
-      @flag_settings.add(3, :off_topic, notify_type: true, auto_action_type: true)
-      @flag_settings.add(
-        4,
-        :inappropriate,
-        topic_type: true,
-        notify_type: true,
-        auto_action_type: true,
-      )
-      @flag_settings.add(8, :spam, topic_type: true, notify_type: true, auto_action_type: true)
-      @flag_settings.add(6, :notify_user, topic_type: false, notify_type: false, custom_type: true)
-      @flag_settings.add(
-        7,
-        :notify_moderators,
-        topic_type: true,
-        notify_type: true,
-        custom_type: true,
-      )
-      @flag_settings.add(10, :illegal, topic_type: true, notify_type: true, custom_type: true)
-      # When adding a new ID here, check that it doesn't clash with any added in
-      # `ReviewableScore.types`. You can thank me later.
+      if ActiveRecord::Base.connection.table_exists?(:post_flags)
+        PostFlag
+          .enabled
+          .order(:position)
+          .find_each do |post_flag|
+            @flag_settings.add(
+              post_flag.id,
+              post_flag.name.to_sym,
+              topic_type: post_flag.topic_type,
+              notify_type: post_flag.notify_type,
+              auto_action_type: post_flag.auto_action_type,
+              custom_type: post_flag.custom_type,
+            )
+          end
+      end
     end
   end
 
