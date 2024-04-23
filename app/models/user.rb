@@ -563,7 +563,7 @@ class User < ActiveRecord::Base
 
   def enqueue_staff_welcome_message(role)
     return unless staff?
-    return if role == :admin && User.real.where(admin: true).count == 1
+    return if is_singular_admin?
 
     Jobs.enqueue(
       :send_system_message,
