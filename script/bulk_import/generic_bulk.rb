@@ -1149,8 +1149,22 @@ class BulkImport::Generic < BulkImport::Base
 
     likes.close
 
-    puts "", "Updating like counts of topics..."
+    puts "", "Updating like counts of posts..."
     start_time = Time.now
+
+    DB.exec(<<~SQL)
+        WITH
+          likes AS (
+                     SELECT post_id, COUNT(*) AS like_count FROM post_actions WHERE post_action_type_id = 2 GROUP BY post_id
+                   )
+      UPDATE posts
+         SET like_count = likes.like_count
+        FROM likes
+       WHERE posts.id = likes.post_id
+         AND posts.like_count <> likes.like_count
+    SQL
+
+    puts "", "Updating like counts of topics..."
 
     DB.exec(<<~SQL)
         WITH
