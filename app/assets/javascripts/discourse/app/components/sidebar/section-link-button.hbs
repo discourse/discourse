@@ -2,7 +2,7 @@
   <DButton
     class="sidebar-section-link sidebar-row --link-button"
     @noAutoClass={{true}}
-    @action={{@action}}
+    {{on "click" @action}}
   >
     <span class="sidebar-section-link-prefix icon">
       {{d-icon @icon}}
