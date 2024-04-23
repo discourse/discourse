@@ -286,11 +286,11 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     store.findAll("theme").then((themes) => {
       this.adminSidebarStateManager.setLinkKeywords(
         "admin_themes",
-        themes.content.filter((theme) => !theme.component).mapBy("name")
+        themes.content.rejectBy("component").mapBy("name")
       );
       this.adminSidebarStateManager.setLinkKeywords(
         "admin_components",
-        themes.content.filter((component) => component.component).mapBy("name")
+        themes.content.filterBy("component").mapBy("name")
       );
     });
 
