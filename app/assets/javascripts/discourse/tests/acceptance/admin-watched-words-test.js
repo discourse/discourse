@@ -110,7 +110,9 @@ acceptance("Admin - Watched Words", function (needs) {
       .dom(".watched-words-list .watched-word")
       .hasText(`Discourse ${I18n.t("admin.watched_words.case_sensitive")}`);
 
-    await fillIn(".watched-word-form input", "discourse");
+    await click(".select-kit-header.multi-select-header");
+    await fillIn(".select-kit-filter input", "discourse");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
     await click(".case-sensitivity-checkbox");
     await click(submitButton);
 
