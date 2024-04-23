@@ -57,6 +57,7 @@ acceptance("Admin - Watched Words", function (needs) {
 
   test("add words", async function (assert) {
     await visit("/admin/customize/watched_words/action/block");
+    const submitButton = query(".watched-word-form button");
 
     await click(".show-words-checkbox");
     await click(".select-kit-header.multi-select-header");
@@ -73,14 +74,16 @@ acceptance("Admin - Watched Words", function (needs) {
       "has the correct words in the input field"
     );
 
-    await click(".watched-word-form button");
+    await click(submitButton);
 
-    const words = queryAll(".watched-words-list .watched-word").map((elem) => {
-      return elem.innerText.trim();
-    });
+    const words = [...queryAll(".watched-words-list .watched-word")].map(
+      (elem) => {
+        return elem.innerText.trim();
+      }
+    );
 
-    assert.ok(words.includes("poutine"));
-    assert.ok(words.includes("cheese"));
+    assert.ok(words.includes("poutine"), "has word 'poutine'");
+    assert.ok(words.includes("cheese"), "has word 'cheese'");
     assert.equal(count(".watched-words-list .case-sensitive"), 0);
   });
 
