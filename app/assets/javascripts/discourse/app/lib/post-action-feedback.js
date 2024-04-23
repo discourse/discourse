@@ -62,6 +62,10 @@ function createAlert(message, postId, actionBtn) {
 }
 
 function createCheckmark(btn, actionClass, postId) {
+  if (actionClass.match(/bookmark/)) {
+    return;
+  }
+
   const svgId = `svg_${actionClass}_${postId}`;
   const checkmark = makeCheckmarkSvg(postId, actionClass, svgId);
   btn.appendChild(checkmark.content);

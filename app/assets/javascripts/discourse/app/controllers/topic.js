@@ -859,7 +859,6 @@ export default Controller.extend(bufferedProperty("model"), {
             bookmark.bookmarkable_id === post.id &&
             bookmark.bookmarkable_type === "Post"
         );
-        debugger;
         return this._postQuickBookmark(
           bookmarkForPost ||
             Bookmark.createFor(this.currentUser, "Post", post.id),
@@ -1303,7 +1302,6 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _modifyPostBookmark(bookmark, post) {
-    debugger;
     this.modal
       .show(BookmarkModal, {
         model: {
@@ -1342,33 +1340,43 @@ export default Controller.extend(bufferedProperty("model"), {
     if (del) {
       ajax("/bookmarks/" + bookmark.id, {
         type: "DELETE",
-      }).then(() => {});
-      this.model.removeBookmark(bookmark.id);
-      // post.deleteBookmark(response.topic_bookmarked);
+      }).then((response) => {
+        this.model.removeBookmark(bookmark.id);
+        post.deleteBookmark(response.topic_bookmarked);
+        post.appEvents.trigger("post-stream:refresh", {
+          id: bookmark.bookmarkable_id,
+        });
+        postActionFeedback({
+          postId: post.id,
+          actionClass: "bookmark",
+          messageKey: "post.bookmarks.removed",
+          actionCallback: () => {},
+          errorCallback: () => {},
+        });
+      });
     } else {
       ajax("/bookmarks", {
         type: "POST",
         data: new BookmarkFormData(bookmark).saveData,
       }).then((response) => {
         bookmark.id = response.id;
+        this._syncBookmarks(bookmark);
+        this.model.set("bookmarking", false);
+        post.createBookmark(bookmark);
+        this.model.afterPostBookmarked(post, bookmark);
+        post.appEvents.trigger("post-stream:refresh", {
+          id: bookmark.bookmarkable_id,
+        });
+        postActionFeedback({
+          postId: post.id,
+          actionClass: "bookmark",
+          messageKey: "post.bookmarks.created",
+          actionCallback: () => {},
+          errorCallback: () => {},
+        });
       });
-      this._syncBookmarks(bookmark);
-      this.model.set("bookmarking", false);
-      post.createBookmark(bookmark);
-      this.model.afterPostBookmarked(post, bookmark);
     }
 
-    post.appEvents.trigger("post-stream:refresh", {
-      id: bookmark.bookmarkable_id,
-    });
-
-    postActionFeedback({
-      postId: post.id,
-      actionClass: "with-reminder",
-      messageKey: "post.bookmarks.created",
-      actionCallback: () => {},
-      errorCallback: () => {},
-    });
     return [post.id];
   },
 

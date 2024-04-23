@@ -3754,6 +3754,7 @@ en:
 
       bookmarks:
         created: "Bookmarked!"
+        removed: "Bookmark Removed!"
         create: "Create bookmark"
         create_for_topic: "Create bookmark for topic"
         edit: "Edit bookmark"
