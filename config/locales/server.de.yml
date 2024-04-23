@@ -2194,7 +2194,7 @@ de:
     tag_style: "Visueller Stil für Schlagwort-Abzeichen."
     pm_tags_allowed_for_groups: "Mitgliedern der einbezogenen Gruppe(n) erlauben, jede persönliche Nachricht zu markieren"
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
-    tag_topic_allowed_groups: "Gruppen, die Themen mit Schlüsselwörtern versehen dürfen."
+    tag_topic_allowed_groups: "Gruppen, die Schlagwörter zu Themen hinzufügen dürfen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
