@@ -55,12 +55,6 @@ module Chat
       user_chat_thread_memberships.find_by(user: user)
     end
 
-    def mark_read_for_user!(user, last_read_message_id: nil)
-      membership_for(user)&.update!(
-        last_read_message_id: last_read_message_id || self.last_message_id,
-      )
-    end
-
     def replies
       self.chat_messages.where.not(id: self.original_message_id).order("created_at ASC, id ASC")
     end

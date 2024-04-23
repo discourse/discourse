@@ -4,7 +4,6 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
   describe Chat::UpdateUserThreadLastRead::Contract, type: :model do
     it { is_expected.to validate_presence_of :channel_id }
     it { is_expected.to validate_presence_of :thread_id }
-    it { is_expected.to validate_presence_of :message_id }
   end
 
   describe ".call" do
@@ -25,7 +24,10 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
       }
     end
 
-    before { SiteSetting.chat_allowed_groups = [chatters] }
+    before do
+      thread.add(current_user)
+      SiteSetting.chat_allowed_groups = [chatters]
+    end
 
     context "when params are not valid" do
       before { params.delete(:thread_id) }
@@ -37,6 +39,12 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
       before { params[:channel_id] = Fabricate(:chat_channel).id }
 
       it { is_expected.to fail_to_find_a_model(:thread) }
+    end
+
+    context "when user has no membership" do
+      before { thread.remove(current_user) }
+
+      it { is_expected.to fail_to_find_a_model(:membership) }
     end
 
     context "when user can’t access the channel" do
@@ -65,6 +73,18 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
           expect { result }.to change { membership.reload.last_read_message_id }.from(nil).to(
             reply_1.id,
           )
+        end
+
+        context "when the provided last read id is before the existing one" do
+          fab!(:reply_2) { Fabricate(:chat_message, thread: thread) }
+
+          before { thread.membership_for(current_user).update!(last_read_message_id: reply_2.id) }
+
+          it "doesnt change it" do
+            params[:message_id] = reply_1.id
+
+            expect { result }.to_not change { membership.reload.last_read_message_id }
+          end
         end
       end
     end

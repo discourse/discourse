@@ -19,6 +19,7 @@ module Chat
 
     contract
     model :thread
+    model :membership
     policy :invalid_access
     step :mark_associated_mentions_as_read
     step :mark_thread_read
@@ -30,7 +31,7 @@ module Chat
       attribute :thread_id, :integer
       attribute :message_id, :integer
 
-      validates :thread_id, :channel_id, :message_id, presence: true
+      validates :thread_id, :channel_id, presence: true
     end
 
     private
@@ -39,12 +40,16 @@ module Chat
       ::Chat::Thread.find_by(id: contract.thread_id, channel_id: contract.channel_id)
     end
 
+    def fetch_membership(guardian:, thread:)
+      thread.membership_for(guardian.user)
+    end
+
     def invalid_access(guardian:, thread:)
       guardian.can_join_chat_channel?(thread.channel)
     end
 
-    def mark_thread_read(thread:, guardian:, contract:)
-      thread.mark_read_for_user!(guardian.user, last_read_message_id: contract.message_id)
+    def mark_thread_read(membership:, contract:)
+      membership.mark_read!(contract.message_id)
     end
 
     def mark_associated_mentions_as_read(thread:, guardian:, contract:)
