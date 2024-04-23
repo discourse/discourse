@@ -120,16 +120,20 @@ export default class WatchedWordForm extends Component {
         })
         .catch((e) => {
           this.set("formSubmitted", false);
-          const message = e.jqXHR.responseJSON?.errors
-            ? I18n.t("generic_error_with_reason", {
-                error: e.jqXHR.responseJSON.errors.join(". "),
-              })
-            : I18n.t("generic_error");
-          this.dialog.alert({
-            message,
-            didConfirm: () => this.focusInput(),
-            didCancel: () => this.focusInput(),
-          });
+          if (e.jqXHR) {
+            const message = e.jqXHR.responseJSON?.errors
+              ? I18n.t("generic_error_with_reason", {
+                  error: e.jqXHR.responseJSON.errors.join(". "),
+                })
+              : I18n.t("generic_error");
+            this.dialog.alert({
+              message,
+              didConfirm: () => this.focusInput(),
+              didCancel: () => this.focusInput(),
+            });
+          } else {
+            throw e;
+          }
         });
     }
   }

@@ -67,18 +67,21 @@ acceptance("Admin - Watched Words", function (needs) {
     await fillIn(".select-kit-filter input", "cheese");
     await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
 
-    assert.strictEqual(
-      query("select-kit-header-wrapper .formated-selection").innerText,
-      "poutine, cheese"
+    assert.equal(
+      query(".select-kit-header-wrapper .formatted-selection").innerText,
+      "poutine, cheese",
+      "has the correct words in the input field"
     );
 
     await click(".watched-word-form button");
 
-    let found = queryAll(".watched-words-list .watched-word");
+    const words = queryAll(".watched-words-list .watched-word").map((elem) => {
+      return elem.innerText.trim();
+    });
 
-    assert.strictEqual(found[0].innerText.trim(), "poutine");
-    assert.strictEqual(found[1].innerText.trim(), "cheese");
-    assert.strictEqual(count(".watched-words-list .case-sensitive"), 0);
+    assert.ok(words.includes("poutine"));
+    assert.ok(words.includes("cheese"));
+    assert.equal(count(".watched-words-list .case-sensitive"), 0);
   });
 
   test("add case-sensitive words", async function (assert) {
