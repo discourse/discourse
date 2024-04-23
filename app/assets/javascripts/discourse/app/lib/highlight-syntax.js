@@ -35,7 +35,7 @@ export default async function highlightSyntax(elem, siteSettings, session) {
 
     let lang;
     for (const className of e.classList) {
-      const m = className.match(/^lang-(.+)$/);
+      const m = className.match(/^lang(?:uage)?-(.+)$/);
       if (m) {
         lang = m[1];
         break;
