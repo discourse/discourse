@@ -119,7 +119,7 @@
     "workbox-cacheable-response": "^7.0.0",
     "workbox-core": "^7.0.0",
     "workbox-expiration": "^7.0.0",
-    "workbox-routing": "^7.0.0",
+    "workbox-routing": "^7.1.0",
     "workbox-strategies": "^7.0.0",
     "workbox-sw": "^7.0.0",
     "xss": "^1.0.15"
