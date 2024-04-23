@@ -953,55 +953,6 @@ class StaffActionLogger
     )
   end
 
-  def log_create_watched_word_group(watched_word_group)
-    raise Discourse::InvalidParameters.new(:watched_word_group) unless watched_word_group
-
-    member_log_details = watched_word_group.watched_words.map(&:action_log_details)
-
-    UserHistory.create!(
-      action: UserHistory.actions[:create_watched_word_group],
-      acting_user_id: @admin.id,
-      details: "id: #{watched_word_group.id}\n#{member_log_details.join("\n")}",
-      context: WatchedWord.actions[watched_word_group.action],
-    )
-  end
-
-  def log_update_watched_word_group(watched_word_group, opts = {})
-    raise Discourse::InvalidParameters.new(:watched_word_group) unless watched_word_group
-
-    member_log_details = watched_word_group.watched_words.map(&:action_log_details)
-    old_member_log_details = opts[:old_members].map(&:action_log_details) if opts[:old_members]
-
-    details = [
-      "id: #{watched_word_group.id}",
-      "#{old_member_log_details.join("\n")}",
-      "\n-----\n",
-      "#{member_log_details.join("\n")}",
-    ]
-
-    UserHistory.create!(
-      action: UserHistory.actions[:update_watched_word_group],
-      acting_user_id: @admin.id,
-      details: details.join("\n"),
-      context: WatchedWord.actions[watched_word_group.action],
-    )
-  end
-
-  def log_delete_watched_word_group(watched_word_group, opts = {})
-    raise Discourse::InvalidParameters.new(:watched_word_group) unless watched_word_group
-
-    deleted_member_log_details = opts[:deleted_members].map(&:action_log_details) if opts[
-      :deleted_members
-    ]
-
-    UserHistory.create!(
-      action: UserHistory.actions[:delete_watched_word_group],
-      acting_user_id: @admin.id,
-      details: "id: #{watched_word_group.id}\n#{deleted_member_log_details.join("\n")}",
-      context: WatchedWord.actions[watched_word_group.action],
-    )
-  end
-
   def log_group_deletion(group)
     raise Discourse::InvalidParameters.new(:group) if group.nil?
 
