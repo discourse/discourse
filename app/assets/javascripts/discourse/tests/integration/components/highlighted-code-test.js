@@ -36,8 +36,8 @@ module("Integration | Component | highlighted-code", function (hooks) {
 
     const codeElement = query("code.hljs");
 
-    assert.ok(
-      !codeElement.classList.contains("lang-auto"),
+    assert.notOk(
+      codeElement.classList.contains("lang-auto"),
       "lang-auto is removed"
     );
     assert.ok(
@@ -53,8 +53,8 @@ module("Integration | Component | highlighted-code", function (hooks) {
       this.session
     );
 
-    assert.ok(
-      codeElement.dataset.unknownHljsLang === undefined,
+    assert.notOk(
+      codeElement.dataset.unknownHljsLang,
       "language is found from language- class"
     );
   });
