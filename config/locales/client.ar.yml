@@ -2204,10 +2204,6 @@ ar:
       suggested_topics:
         title: "واصل القراءة!"
         content: "إليك بعض الموضوعات التي نظن أنك قد ترغب في قراءتها بعد ذلك."
-      admin_guide:
-        title: "مرحبًا بك في موقعك الجديد!"
-        content: "<a href='%{admin_guide_url}'>اقرأ دليل المشرف</a> لمواصلة بناء موقعك و مجتمعك."
-        content_no_url: "اقرأ دليل المسؤول لمتابعة بناء موقعك ومجتمعك."
     loading: "جارٍ التحميل…"
     errors:
       prev_page: "في أثناء محاولة التحميل"
@@ -5728,6 +5724,8 @@ ar:
           emoji: "الرمز التعبيري"
           navigation: "التنقل"
           themes: "السمات"
+          components:
+            title: "المكوِّنات"
       email_settings:
         title: "إعدادات البريد الإلكتروني"
         sidebar_link:

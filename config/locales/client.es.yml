@@ -1854,10 +1854,6 @@ es:
       suggested_topics:
         title: "¡Sigue leyendo!"
         content: "Estos son algunos de los temas que creemos que te gustaría leer a continuación."
-      admin_guide:
-        title: "¡Te damos la bienvenida a tu nuevo sitio!"
-        content: "<a href='%{admin_guide_url}'>Lee la guía del administrador</a> para seguir construyendo tu sitio y tu comunidad."
-        content_no_url: "Lee la guía del administrador para seguir construyendo tu sitio y tu comunidad."
     loading: "Cargando…"
     errors:
       prev_page: "mientras se intentaba cargar"
@@ -4841,6 +4837,8 @@ es:
           emoji: "Emoji"
           navigation: "Navegación"
           themes: "Tema"
+          components:
+            title: "Componentes"
       email_settings:
         sidebar_link:
           appearance: "Aspecto"

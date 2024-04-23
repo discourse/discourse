@@ -1386,10 +1386,6 @@ id:
       save: "Simpan"
     user_tips:
       button: "Mengerti!"
-      admin_guide:
-        title: "Selamat datang di situs baru Anda!"
-        content: "<a href='%{admin_guide_url}'>Baca panduan admin</a> untuk terus membangun situs dan komunitas Anda."
-        content_no_url: "Baca panduan admin untuk terus membangun situs dan komunitas Anda."
     errors:
       reasons:
         network: "Gangguan Jaringan"

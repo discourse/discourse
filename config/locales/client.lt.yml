@@ -3888,6 +3888,8 @@ lt:
           emoji: "Emoji"
           navigation: "Navigacija"
           themes: "Temos"
+          components:
+            title: "Komponentai"
       email_settings:
         sidebar_link:
           appearance: "išvaizda"

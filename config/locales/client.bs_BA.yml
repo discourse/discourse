@@ -3346,6 +3346,8 @@ bs_BA:
           emoji: "Emoji"
           navigation: "Navigacija"
           themes: "Teme"
+          components:
+            title: "Komponenti"
       email_settings:
         sidebar_link:
           appearance: "Izgled"
