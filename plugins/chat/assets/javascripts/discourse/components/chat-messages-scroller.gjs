@@ -4,7 +4,7 @@ import ChatScrollableList from "../modifiers/chat/scrollable-list";
 
 const ChatMessagesScroller = <template>
   <div
-    class="chat-messages-scroller chat-messages-container popper-viewport"
+    class="chat-messages-scroller popper-viewport"
     {{didInsert @onRegisterScroller}}
     {{ChatScrollableList
       (hash onScroll=@onScroll onScrollEnd=@onScrollEnd reverse=true)
