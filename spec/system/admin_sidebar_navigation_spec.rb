@@ -160,6 +160,24 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(["Installed"])
   end
 
+  it "accepts components and themes keywords for filter" do
+    Fabricate(:theme, name: "Air theme", component: false)
+    Fabricate(:theme, name: "Kanban", component: true)
+
+    visit("/admin")
+    sidebar.toggle_all_sections
+
+    filter.filter("air")
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(1)
+    expect(links.map(&:text)).to eq(["Themes"])
+
+    filter.filter("kanban")
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.count).to eq(1)
+    expect(links.map(&:text)).to eq(["Components"])
+  end
+
   it "does not show the button to customize sidebar sections, that is only supported in the main panel" do
     visit("/")
     expect(sidebar).to have_add_section_button
