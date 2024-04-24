@@ -75,8 +75,7 @@
     "app/assets/javascripts/pretty-text",
     "app/assets/javascripts/select-kit",
     "app/assets/javascripts/theme-transpiler",
-    "app/assets/javascripts/truth-helpers",
-    "app/assets/javascripts/ember-instantsearch"
+    "app/assets/javascripts/truth-helpers"
   ],
   "resolutions": {
     "**/unset-value": "2.0.1"
