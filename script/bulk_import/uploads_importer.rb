@@ -329,7 +329,7 @@ module BulkImport
     end
 
     def get_original_filename(id)
-      @output_db.get_single_value("SELECT original_filename FROM downloads WHERE id = ?", id)
+      @output_db.get_first_value("SELECT original_filename FROM downloads WHERE id = ?", id)
     end
 
     def check_response!(response, uri)
