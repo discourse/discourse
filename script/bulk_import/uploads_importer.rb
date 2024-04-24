@@ -284,7 +284,7 @@ module BulkImport
       status_thread.join
     end
 
-    def download_file(url:, id:)
+    def download_file(url:, id:, retry_count: 0)
       path = download_cache_path(id)
       original_filename = nil
 
@@ -334,8 +334,10 @@ module BulkImport
 
     def check_response!(response, uri)
       if uri.blank?
-        if response.code.to_i >= 400
-          raise "#{response.code} Error"
+        code = response.code.to_i
+
+        if code >= 400
+          raise "#{code} Error"
         else
           throw :done
         end
@@ -688,17 +690,21 @@ module BulkImport
           upload JSON_TEXT,
           markdown TEXT,
           skip_reason TEXT
-        );
+        )
+      SQL
 
+      @output_db.execute(<<~SQL)
         CREATE TABLE IF NOT EXISTS optimized_images (
           id TEXT PRIMARY KEY NOT NULL,
           optimized_images JSON_TEXT
-        );
+        )
+      SQL
 
+      @output_db.execute(<<~SQL)
         CREATE TABLE IF NOT EXISTS downloads (
           id TEXT PRIMARY KEY NOT NULL,
           original_filename TEXT NOT NULL
-        );
+        )
       SQL
     end
 
