@@ -4,25 +4,21 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   router: service(),
 
+  secondFactorMethod: null,
+
+  secondFactorToken: null,
+
   lockImageUrl: getURL("/images/lock.svg"),
 
   @discourseComputed("model")
   secondFactorRequired(model) {
     return model.security_key_required || model.second_factor_required;
-  },
-
-  @discourseComputed("model")
-  secondFactorMethod(model) {
-    return model.security_key_required
-      ? SECOND_FACTOR_METHODS.SECURITY_KEY
-      : SECOND_FACTOR_METHODS.TOTP;
   },
 
   actions: {
