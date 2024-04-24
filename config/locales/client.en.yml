@@ -1856,7 +1856,7 @@ en:
 
           send_invite_email: "Save and Send Email"
           send_invite_email_instructions: "Restrict invite to email to send an invite email"
-          save_invite: "Save Invite"
+          save_invite: "Generate Link"
 
           invite_saved: "Invite saved."
 

@@ -1,20 +1,10 @@
-<DModal
-  class="create-invite-modal"
-  @title={{i18n
-    (if
-      this.editing
-      "user.invited.invite.edit_title"
-      "user.invited.invite.new_title"
-    )
-  }}
-  @closeModal={{@closeModal}}
->
+<DModal class="create-invite-modal" @title="" @closeModal={{@closeModal}}>
   <:belowHeader>
     {{#if this.flashText}}
       <div
         id="modal-alert"
         role="alert"
-        class="alert alert-{{this.flashClass}}"
+        class="hidden alert alert-{{this.flashClass}}"
       >
         {{#if this.flashLink}}
           <div class="input-group invite-link">
@@ -40,7 +30,45 @@
     {{/if}}
   </:belowHeader>
   <:body>
-    <form>
+    <div class="container">
+      <h2>Invite your friends to<br /> Zinc Community</h2>
+      <p class="subtext">Share your unique referral link with friends</p>
+      {{#if (and this.flashText this.flashLink)}}
+        <div class="input-group invite-link" style="margin-bottom: 2rem;">
+          <div class="link-share-container" style="width: 360px">
+            <Input
+              name="invite-link"
+              class="invite-link"
+              @value={{this.invite.link}}
+              readonly={{true}}
+            />
+            <CopyButton
+              @selector="input.invite-link"
+              @copied={{action "copied"}}
+            />
+          </div>
+        </div>
+        <div class="share-container">
+          <p class="subtext" style="margin-bottom: 1rem;">share on</p>
+          {{#each this.quoteSharingSources as |source|}}
+            <DButton
+              @action={{fn this.share source}}
+              @translatedTitle={{source.title}}
+              @icon={{source.icon}}
+              class="btn-flat"
+            />
+          {{/each}}
+        </div>
+      {{else}}
+        <DButton
+          @icon="link"
+          @label="user.invited.invite.save_invite"
+          @action={{this.saveInvite}}
+          class="btn-primary save-invite"
+        />
+      {{/if}}
+    </div>
+    <form class="hidden">
       {{#if this.editing}}
         <div class="input-group invite-link">
           <label for="invite-link">{{i18n
@@ -175,30 +203,4 @@
       {{/if}}
     </form>
   </:body>
-  <:footer>
-
-    <DButton
-      @icon="link"
-      @label="user.invited.invite.save_invite"
-      @action={{this.saveInvite}}
-      class="btn-primary save-invite"
-    />
-
-    <DButton
-      @icon="envelope"
-      @label={{if
-        this.invite.emailed
-        "user.invited.reinvite"
-        "user.invited.invite.send_invite_email"
-      }}
-      @action={{fn this.saveInvite true}}
-      @title={{unless
-        this.isEmail
-        "user.invited.invite.send_invite_email_instructions"
-      }}
-      @disabled={{not this.isEmail}}
-      class="btn-primary send-invite"
-    />
-
-  </:footer>
 </DModal>

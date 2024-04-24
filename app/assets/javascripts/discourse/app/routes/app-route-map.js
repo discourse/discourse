@@ -174,6 +174,7 @@ export default function () {
         this.route("profile");
         this.route("emails");
         this.route("activity");
+        this.route("invites");
         this.route("notifications");
         this.route("tracking");
         this.route("categories");
@@ -182,7 +183,6 @@ export default function () {
         this.route("interface");
         this.route("apps");
         this.route("navigation-menu");
-
         this.route("email");
         this.route("second-factor");
       });

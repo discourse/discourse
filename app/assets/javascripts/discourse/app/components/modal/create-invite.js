@@ -1,11 +1,13 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { not, readOnly } from "@ember/object/computed";
 import { extractError } from "discourse/lib/ajax-error";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { sanitize } from "discourse/lib/text";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import { emailValid, hostnameValid } from "discourse/lib/utilities";
+import Sharing from "discourse/lib/sharing";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
@@ -20,6 +22,7 @@ export default Component.extend(bufferedProperty("invite"), {
   flashText: null,
   flashClass: null,
   flashLink: false,
+  siteSettings: service(),
 
   editing: readOnly("model.editing"),
   inviteToTopic: false,
@@ -205,5 +208,21 @@ export default Component.extend(bufferedProperty("invite"), {
   onChangeTopic(topicId, topic) {
     this.set("topics", [topic]);
     this.set("buffered.topicId", topicId);
+  },
+
+  // @discourseComputed("this.siteSettings.share_quote_buttons")
+  get quoteSharingSources() {
+    return Sharing.activeSources(
+      this.siteSettings.share_quote_buttons,
+      this.siteSettings.login_required
+    );
+  },
+
+  @action
+  share(source) {
+    Sharing.shareSource(source, {
+      url: this.invite.link,
+      title: "Your invite to Zinc Community!",
+    });
   },
 });

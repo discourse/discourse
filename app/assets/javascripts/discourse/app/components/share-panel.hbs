@@ -11,6 +11,7 @@
 
   <div class="sources">
     {{#each this.sources as |source|}}
+      {{! use this! }}
       <ShareSource @source={{source}} @action={{this.share}} />
     {{/each}}
   </div>

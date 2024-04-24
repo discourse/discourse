@@ -38,6 +38,18 @@
       <span>Activity</span>
     </DNavigationItem>
 
+    {{! fix this! }}
+    {{#if this.currentUser.can_invite_to_forum}}
+      <DNavigationItem
+        @route="preferences.invites"
+        @ariaCurrentContext="subNav"
+        class="user-nav__invites-all"
+      >
+        {{d-icon "user-plus"}}
+        <span>Invites</span>
+      </DNavigationItem>
+    {{/if}}
+
     <DNavigationItem
       @route="preferences.emails"
       @ariaCurrentContext="subNav"

@@ -664,6 +664,14 @@ Discourse::Application.routes.draw do
           :constraints => {
             username: RouteFormat.username,
           }
+      get "#{root_path}/:username/preferences/activity" => "users#preferences",
+          :constraints => {
+            username: RouteFormat.username,
+          }
+      get "#{root_path}/:username/preferences/invites" => "users#preferences",
+          :constraints => {
+            username: RouteFormat.username,
+          }
       get "#{root_path}/:username/preferences/tracking" => "users#preferences",
           :constraints => {
             username: RouteFormat.username,

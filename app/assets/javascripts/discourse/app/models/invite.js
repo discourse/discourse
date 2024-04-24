@@ -77,7 +77,7 @@ export default class Invite extends EmberObject {
 
   @discourseComputed("invite_key")
   shortKey(key) {
-    return key.slice(0, 4) + "...";
+    return key?.slice(0, 4) + "...";
   }
 
   @discourseComputed("groups")
