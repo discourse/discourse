@@ -170,6 +170,26 @@ function likeCount(attrs, state) {
   }
 }
 
+function replyCount(attrs, _) {
+  const count = attrs.topicReplyCount,
+    additionalClass = "reply-count";
+
+  return {
+    action: null,
+    title: "post.has_replies_title",
+    className: `button-count reply-count ${additionalClass}`,
+    contents: count,
+    icon: "comment",
+    iconRight: true,
+    addContainer: true,
+    titleOptions: { count },
+    translatedAriaLabel: I18n.t("post.sr_post_reply_count_button", { count }),
+    ariaPressed: true,
+  };
+}
+
+registerButton("reply-count", replyCount);
+
 registerButton("like-count", likeCount);
 
 registerButton(
@@ -599,6 +619,12 @@ export default createWidget("post-menu", {
     if (attrs.wiki && attrs.canEdit) {
       _replaceButton(orderedButtons, "edit", "reply-small");
       _replaceButton(orderedButtons, "reply", "wiki-edit");
+    }
+
+    if (attrs.firstPost) {
+      const replyCountButton = this.attachButton("reply-count");
+      allButtons.push(replyCountButton);
+      visibleButtons.push(replyCountButton);
     }
 
     orderedButtons.forEach((i) => {

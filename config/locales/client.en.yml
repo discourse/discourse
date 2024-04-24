@@ -3568,6 +3568,9 @@ en:
       has_likes_title:
         one: "%{count} person liked this post"
         other: "%{count} people liked this post"
+      has_replies_title:
+        one: "There is %{count} reply on this post"
+        other: "There are %{count} replies on this post"
 
       has_likes_title_only_you: "you liked this post"
       has_likes_title_you:
@@ -3577,6 +3580,9 @@ en:
       sr_post_like_count_button:
         one: "%{count} person liked this post. Click to view"
         other: "%{count} people liked this post. Click to view"
+      sr_post_reply_count_button:
+        one: "There is %{count} reply on this post"
+        other: "There are %{count} replies on this post."
       sr_post_read_count_button:
         one: "%{count} person read this post. Click to view"
         other: "%{count} people read this post. Click to view"

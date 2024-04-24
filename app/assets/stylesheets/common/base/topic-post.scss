@@ -278,6 +278,9 @@ nav.post-controls {
         &:active {
           box-shadow: none;
         }
+        &.reply-count svg {
+          padding: 0 0.45rem;
+        }
         &.my-likes,
         &.read-indicator,
         &.regular-likes {
