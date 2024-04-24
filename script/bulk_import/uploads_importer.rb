@@ -20,6 +20,10 @@ rescue LoadError
 end
 
 module BulkImport
+  MAX_FILE_SIZE = 1.gigabyte
+
+  UploadMetadata = Struct.new(:original_filename, :origin_url, :description)
+
   class UploadsImporter
     TRANSACTION_SIZE = 1000
     QUEUE_SIZE = 1000
@@ -153,17 +157,27 @@ module BulkImport
           Thread.current.name = "worker-#{index}"
 
           store = Discourse.store
+          max_filesize = 100.megabyte
 
           while (row = queue.pop)
             begin
               data_file = nil
               path = nil
+              metadata =
+                UploadMetadata.new(
+                  original_filename: row["display_filename"] || row["filename"],
+                  description: row["description"].presence,
+                )
 
               if row["data"].present?
                 data_file = Tempfile.new("discourse-upload", binmode: true)
                 data_file.write(row["data"])
                 data_file.rewind
                 path = data_file.path
+              elsif row["url"].present?
+                path, metadata.original_filename = download_file(url: row["url"], id: row["id"])
+                metadata.origin_url = row["url"]
+                next if !path
               else
                 relative_path = row["relative_path"]
                 file_exists = false
@@ -198,7 +212,7 @@ module BulkImport
                     begin
                       UploadCreator.new(
                         file,
-                        row["display_filename"] || row["filename"],
+                        metadata.original_filename,
                         type: row["type"],
                       ).create_for(Discourse::SYSTEM_USER_ID)
                     rescue StandardError => e
@@ -228,7 +242,8 @@ module BulkImport
                   status_queue << {
                     id: row["id"],
                     upload: upload.attributes.to_json,
-                    markdown: UploadMarkdown.new(upload).to_markdown,
+                    markdown:
+                      UploadMarkdown.new(upload).to_markdown(display_name: metadata.description),
                     skip_reason: nil,
                   }
                   break
@@ -267,6 +282,77 @@ module BulkImport
       consumer_threads.each(&:join)
       status_queue.close
       status_thread.join
+    end
+
+    def download_file(url:, id:)
+      path = download_cache_path(id)
+      original_filename = nil
+
+      if File.exist?(path) && (original_filename = get_original_filename(id))
+        return path, original_filename
+      end
+
+      fd = FinalDestination.new(url)
+      file = nil
+
+      fd.get do |response, chunk, uri|
+        if file.nil?
+          check_response!(response, uri)
+          original_filename = extract_filename_from_response(response, uri)
+          file = open_output_file(id, response, uri)
+        end
+
+        file.write(chunk)
+
+        if file.size > MAX_FILE_SIZE
+          file.close
+          file.unlink
+          file = nil
+          throw :done
+        end
+      end
+
+      file.close if file
+
+      [path, original_filename]
+    end
+
+    def download_cache_path(id)
+      File.join(@settings[:download_cache_path], id)
+    end
+
+    def get_original_filename(id)
+      @output_db.get_single_value("SELECT original_filename FROM downloads WHERE id = ?", id)
+    end
+
+    def check_response!(response, uri)
+      if uri.blank?
+        if response.code.to_i >= 400
+          raise "#{response.code} Error"
+        else
+          throw :done
+        end
+      end
+    end
+
+    def extract_filename_from_response(response, uri)
+      filename =
+        if (header = response.header["Content-Disposition"])
+          filename =
+            header[/filename\*=UTF-8''(\S+)\b/i, 1] || header[/filename=(?:"(.+)"|[^\s;]+)/i, 1]
+          URI.decode_www_form_component(filename)
+        else
+          File.basename(uri.path)
+        end
+
+      filename = "file" if filename.blank?
+
+      if File.extname(filename).blank? && response.content_type.present?
+        ext = MiniMime.lookup_by_content_type(response.content_type)&.extension
+        filename = "#{filename}.#{ext}" if ext.present?
+      end
+
+      filename
     end
 
     def fix_missing
@@ -595,14 +681,17 @@ module BulkImport
           upload JSON_TEXT,
           markdown TEXT,
           skip_reason TEXT
-        )
-      SQL
+        );
 
-      @output_db.execute(<<~SQL)
         CREATE TABLE IF NOT EXISTS optimized_images (
           id TEXT PRIMARY KEY NOT NULL,
           optimized_images JSON_TEXT
-        )
+        );
+
+        CREATE TABLE IF NOT EXISTS downloads (
+          id TEXT PRIMARY KEY NOT NULL,
+          original_filename TEXT NOT NULL
+        );
       SQL
     end
 
