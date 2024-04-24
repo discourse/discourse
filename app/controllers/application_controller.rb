@@ -643,8 +643,8 @@ class ApplicationController < ActionController::Base
     store_preloaded("customHTML", custom_html_json)
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
-    store_preloaded("isReadOnly", @readonly_mode.to_s)
-    store_preloaded("isStaffWritesOnly", @staff_writes_only_mode.to_s)
+    store_preloaded("isReadOnly", get_or_check_readonly_mode.to_json)
+    store_preloaded("isStaffWritesOnly", get_or_check_staff_writes_only_mode.to_json)
     store_preloaded("activatedThemes", activated_themes_json)
   end
 
