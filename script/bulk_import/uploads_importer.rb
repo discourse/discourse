@@ -179,7 +179,7 @@ module BulkImport
                 metadata.origin_url = row["url"]
                 next if !path
               else
-                relative_path = row["relative_path"]
+                relative_path = row["relative_path"] || ""
                 file_exists = false
 
                 @root_paths.each do |root_path|
