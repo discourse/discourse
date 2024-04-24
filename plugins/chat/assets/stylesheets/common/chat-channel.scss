@@ -9,33 +9,18 @@
   min-width: 250px;
   @include chat-height(var(--chat-header-offset, 0px));
 
-  .chat-messages-scroller {
-    flex-grow: 1;
-    overflow-y: scroll;
-    overscroll-behavior: contain;
-    display: flex;
-    flex-direction: column-reverse;
-    z-index: 1;
-    margin: 0 1px 0 0;
-    will-change: transform;
-    @include chat-scrollbar();
-    min-height: 1px;
-    box-sizing: border-box;
-    transition: padding-top 0.2s ease-in-out;
+  .join-channel-btn.in-float {
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    top: 10px;
+    z-index: 10;
+  }
 
-    .join-channel-btn.in-float {
-      position: absolute;
-      transform: translateX(-50%);
-      left: 50%;
-      top: 10px;
-      z-index: 10;
-    }
-
-    .all-loaded-message {
-      text-align: center;
-      color: var(--primary-medium);
-      font-size: var(--font-down-1);
-      padding: 0.5em 0.25em 0.25em;
-    }
+  .all-loaded-message {
+    text-align: center;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    padding: 0.5em 0.25em 0.25em;
   }
 }

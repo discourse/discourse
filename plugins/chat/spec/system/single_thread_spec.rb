@@ -34,6 +34,17 @@ describe "Single thread in side panel", type: :system do
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread) { chat_thread_chain_bootstrap(channel: channel, users: [current_user, user_2]) }
 
+    context "when returning to a thread where last read is not last message" do
+      it "scrolls to the correct last read message" do
+        message_1 = Fabricate(:chat_message, thread: thread, chat_channel: channel)
+        thread.membership_for(current_user).update!(last_read_message: message_1)
+        messages = Fabricate.times(50, :chat_message, thread: thread, chat_channel: channel)
+        chat_page.visit_thread(thread)
+
+        expect(page).to have_css("[data-id='#{message_1.id}'].-highlighted")
+      end
+    end
+
     context "when in full page" do
       context "when switching channel" do
         fab!(:channel_2) { Fabricate(:chat_channel, threading_enabled: true) }

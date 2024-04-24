@@ -243,12 +243,8 @@ export default class ChatThread extends Component {
     });
     this.args.thread.details = meta;
 
-    if (this.args.targetMessageId) {
-      this.scrollToMessageId(this.args.targetMessageId, { highlight: true });
-    } else if (this.args.thread.currentUserMembership?.lastReadMessageId) {
-      this.scrollToMessageId(
-        this.args.thread.currentUserMembership?.lastReadMessageId
-      );
+    if (meta.target_message_id) {
+      this.scrollToMessageId(meta.target_message_id, { highlight: true });
     } else {
       this.scrollToTop();
     }

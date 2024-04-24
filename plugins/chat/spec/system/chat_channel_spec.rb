@@ -146,7 +146,7 @@ RSpec.describe "Chat channel", type: :system do
   end
 
   context "when returning to a channel where last read is not last message" do
-    it "jumps to the bottom of the channel" do
+    it "scrolls to the correct last read message" do
       channel_1.membership_for(current_user).update!(last_read_message: message_1)
       messages = Fabricate.times(50, :chat_message, chat_channel: channel_1)
       chat_page.visit_channel(channel_1)
