@@ -267,7 +267,7 @@ module BulkImport
                 id: row["id"],
                 upload: nil,
                 markdown: nil,
-                error: e.message + "\n (#{e.backtrace})",
+                error: e.message,
                 skip_reason: "error",
               }
             ensure
