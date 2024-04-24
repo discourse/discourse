@@ -145,6 +145,17 @@ RSpec.describe Chat::UpdateMessage do
       expect(chat_message.reload.cooked).to eq("<p>Change <strong>to</strong> this!</p>")
     end
 
+    it "updates the excerpt" do
+      chat_message = create_chat_message(user1, "This is a message", public_chat_channel)
+
+      described_class.call(
+        guardian: guardian,
+        message_id: chat_message.id,
+        message: "Change to this!",
+      )
+      expect(chat_message.reload.excerpt).to eq("Change to this!")
+    end
+
     it "publishes a DiscourseEvent for updated messages" do
       chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
       events =

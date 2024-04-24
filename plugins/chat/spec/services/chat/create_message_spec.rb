@@ -57,6 +57,10 @@ RSpec.describe Chat::CreateMessage do
         expect(message).to be_cooked
       end
 
+      it "creates the excerpt" do
+        expect(message).to have_attributes(excerpt: content)
+      end
+
       it "creates mentions" do
         Jobs.run_immediately!
         expect { result }.to change { Chat::Mention.count }.by(1)

@@ -37,6 +37,7 @@ module Chat
     model :message_instance, :instantiate_message
 
     transaction do
+      step :create_excerpt
       step :save_message
       step :delete_drafts
       step :post_process_thread
@@ -220,6 +221,10 @@ module Chat
           { chat_message_id: message_instance.id, staged_id: contract.staged_id },
         )
       end
+    end
+
+    def create_excerpt(message_instance:)
+      message_instance.excerpt = WordWatcher.censor(message_instance.raw_excerpt)
     end
 
     def publish_user_tracking_state(message_instance:, channel:, channel_membership:, guardian:)

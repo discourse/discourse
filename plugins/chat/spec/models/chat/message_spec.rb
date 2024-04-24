@@ -277,7 +277,7 @@ describe Chat::Message do
           :chat_message,
           message: "https://twitter.com/EffinBirds/status/1518743508378697729",
         )
-      expect(message.excerpt).to eq("https://twitter.com/EffinBirds/status/1518743508378697729")
+      expect(message.raw_excerpt).to eq("https://twitter.com/EffinBirds/status/1518743508378697729")
       message =
         Fabricate.build(
           :chat_message,
@@ -286,7 +286,7 @@ describe Chat::Message do
           <aside class=\"onebox twitterstatus\" data-onebox-src=\"https://twitter.com/EffinBirds/status/1518743508378697729\">\n  <header class=\"source\">\n\n      <a href=\"https://twitter.com/EffinBirds/status/1518743508378697729\" target=\"_blank\" rel=\"nofollow ugc noopener\">twitter.com</a>\n  </header>\n\n  <article class=\"onebox-body\">\n    \n<h4><a href=\"https://twitter.com/EffinBirds/status/1518743508378697729\" target=\"_blank\" rel=\"nofollow ugc noopener\">Effin' Birds</a></h4>\n<div class=\"twitter-screen-name\"><a href=\"https://twitter.com/EffinBirds/status/1518743508378697729\" target=\"_blank\" rel=\"nofollow ugc noopener\">@EffinBirds</a></div>\n\n<div class=\"tweet\">\n  <span class=\"tweet-description\">https://t.co/LjlqMm9lck</span>\n</div>\n\n<div class=\"date\">\n  <a href=\"https://twitter.com/EffinBirds/status/1518743508378697729\" class=\"timestamp\" target=\"_blank\" rel=\"nofollow ugc noopener\">5:07 PM - 25 Apr 2022</a>\n\n    <span class=\"like\">\n      <svg viewbox=\"0 0 512 512\" width=\"14px\" height=\"16px\" aria-hidden=\"true\">\n        <path d=\"M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z\"></path>\n      </svg>\n      2.5K\n    </span>\n\n    <span class=\"retweet\">\n      <svg viewbox=\"0 0 640 512\" width=\"14px\" height=\"16px\" aria-hidden=\"true\">\n        <path d=\"M629.657 343.598L528.971 444.284c-9.373 9.372-24.568 9.372-33.941 0L394.343 343.598c-9.373-9.373-9.373-24.569 0-33.941l10.823-10.823c9.562-9.562 25.133-9.34 34.419.492L480 342.118V160H292.451a24.005 24.005 0 0 1-16.971-7.029l-16-16C244.361 121.851 255.069 96 276.451 96H520c13.255 0 24 10.745 24 24v222.118l40.416-42.792c9.285-9.831 24.856-10.054 34.419-.492l10.823 10.823c9.372 9.372 9.372 24.569-.001 33.941zm-265.138 15.431A23.999 23.999 0 0 0 347.548 352H160V169.881l40.416 42.792c9.286 9.831 24.856 10.054 34.419.491l10.822-10.822c9.373-9.373 9.373-24.569 0-33.941L144.971 67.716c-9.373-9.373-24.569-9.373-33.941 0L10.343 168.402c-9.373 9.373-9.373 24.569 0 33.941l10.822 10.822c9.562 9.562 25.133 9.34 34.419-.491L96 169.881V392c0 13.255 10.745 24 24 24h243.549c21.382 0 32.09-25.851 16.971-40.971l-16.001-16z\"></path>\n      </svg>\n      499\n    </span>\n</div>\n\n  </article>\n\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n\n  <div style=\"clear: both\"></div>\n</aside>\n
         COOKED
         )
-      expect(message.excerpt).to eq("https://twitter.com/EffinBirds/status/1518743508378697729")
+      expect(message.raw_excerpt).to eq("https://twitter.com/EffinBirds/status/1518743508378697729")
     end
 
     it "excerpts upload file name if message is empty" do
@@ -294,7 +294,7 @@ describe Chat::Message do
         Fabricate(:upload, original_filename: "cat.gif", width: 400, height: 300, extension: "gif")
       message = Fabricate(:chat_message, message: "", uploads: [gif])
 
-      expect(message.excerpt).to eq "cat.gif"
+      expect(message.raw_excerpt).to eq "cat.gif"
     end
 
     it "supports autolink with <>" do
