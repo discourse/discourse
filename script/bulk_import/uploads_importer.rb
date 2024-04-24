@@ -267,7 +267,7 @@ module BulkImport
                 id: row["id"],
                 upload: nil,
                 markdown: nil,
-                error: e.message,
+                error: e.message + "\n (#{e.backtrace})",
                 skip_reason: "error",
               }
             ensure
@@ -324,6 +324,7 @@ module BulkImport
     end
 
     def download_cache_path(id)
+      id = id.gsub("/", "_").gsub("=", "-")
       File.join(@settings[:download_cache_path], id)
     end
 
