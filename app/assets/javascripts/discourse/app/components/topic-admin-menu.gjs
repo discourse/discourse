@@ -94,6 +94,7 @@ export default class TopicAdminMenu extends Component {
                   }}
                     <li class="topic-admin-multi-select">
                       <DButton
+                        class="btn-transparent"
                         @label="topic.actions.multi_select"
                         @action={{fn this.onButtonAction "toggleMultiSelect"}}
                         @icon="tasks"
@@ -113,12 +114,13 @@ export default class TopicAdminMenu extends Component {
                           @label="topic.actions.delete"
                           @action={{fn this.onButtonAction "deleteTopic"}}
                           @icon="far-trash-alt"
-                          class="popup-menu-btn-danger"
+                          class="popup-menu-btn-danger btn-danger btn-transparent"
                         />
                       </li>
                     {{else if this.canRecover}}
                       <li class="topic-admin-recover">
                         <DButton
+                          class="btn-transparent"
                           @label="topic.actions.recover"
                           @action={{fn this.onButtonAction "recoverTopic"}}
                           @icon="undo"
@@ -136,6 +138,7 @@ export default class TopicAdminMenu extends Component {
                       }}
                     >
                       <DButton
+                        class="btn-transparent"
                         @label={{if
                           @topic.closed
                           "topic.actions.open"
@@ -156,6 +159,7 @@ export default class TopicAdminMenu extends Component {
                   }}
                     <li class="topic-admin-pin">
                       <DButton
+                        class="btn-transparent"
                         @label={{if
                           this.featured
                           "topic.actions.unpin"
@@ -174,6 +178,7 @@ export default class TopicAdminMenu extends Component {
                   }}
                     <li class="topic-admin-archive">
                       <DButton
+                        class="btn-transparent"
                         @label={{if
                           this.archived
                           "topic.actions.unarchive"
@@ -188,6 +193,7 @@ export default class TopicAdminMenu extends Component {
                   {{#if this.details.can_toggle_topic_visibility}}
                     <li class="topic-admin-visible">
                       <DButton
+                        class="btn-transparent"
                         @label={{if
                           this.visible
                           "topic.actions.invisible"
@@ -202,6 +208,7 @@ export default class TopicAdminMenu extends Component {
                   {{#if (and this.details.can_convert_topic)}}
                     <li class="topic-admin-convert">
                       <DButton
+                        class="btn-transparent"
                         @label={{if
                           this.isPrivateMessage
                           "topic.actions.make_public"
@@ -225,6 +232,7 @@ export default class TopicAdminMenu extends Component {
                   {{#if this.currentUser.canManageTopic}}
                     <li class="admin-topic-timer-update">
                       <DButton
+                        class="btn-transparent"
                         @label="topic.actions.timed_update"
                         @action={{fn this.onButtonAction "showTopicTimerModal"}}
                         @icon="far-clock"
@@ -234,6 +242,7 @@ export default class TopicAdminMenu extends Component {
                     {{#if this.currentUser.staff}}
                       <li class="topic-admin-change-timestamp">
                         <DButton
+                          class="btn-transparent"
                           @label="topic.change_timestamp.title"
                           @action={{fn
                             this.onButtonAction
@@ -246,6 +255,7 @@ export default class TopicAdminMenu extends Component {
 
                     <li class="topic-admin-reset-bump-date">
                       <DButton
+                        class="btn-transparent"
                         @label="topic.actions.reset_bump_date"
                         @action={{fn this.onButtonAction "resetBumpDate"}}
                         @icon="anchor"
@@ -254,6 +264,7 @@ export default class TopicAdminMenu extends Component {
 
                     <li class="topic-admin-slow-mode">
                       <DButton
+                        class="btn-transparent"
                         @label="topic.actions.slow_mode"
                         @action={{fn
                           this.onButtonAction
@@ -269,6 +280,7 @@ export default class TopicAdminMenu extends Component {
                   {{#if this.currentUser.staff}}
                     <li class="topic-admin-moderation-history">
                       <DButton
+                        class="btn-transparent"
                         @label="review.moderation_history"
                         @href={{this.topicModerationHistoryUrl}}
                         @icon="list"
@@ -279,6 +291,7 @@ export default class TopicAdminMenu extends Component {
                   {{#each this.extraButtons as |button|}}
                     <li>
                       <DButton
+                        class="btn-transparent"
                         @label={{button.label}}
                         @translatedLabel={{button.translatedLabel}}
                         @icon={{button.icon}}
