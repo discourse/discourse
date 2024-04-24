@@ -267,7 +267,6 @@ task "assets:precompile:compress_js": "environment" do
         manifest
           .files
           .select { |k, v| k =~ /\.js\z/ }
-          .reject { |k, v| k =~ %r{/workbox-.*'/} }
           .each do |file, info|
             path = "#{assets_path}/#{file}"
             _file =
