@@ -299,7 +299,7 @@ module BulkImport
         if file.nil?
           check_response!(response, uri)
           original_filename = extract_filename_from_response(response, uri)
-          file = open_output_file(id, response, uri)
+          file = File.open(path, "wb")
         end
 
         file.write(chunk)
@@ -312,7 +312,13 @@ module BulkImport
         end
       end
 
-      file.close if file
+      if file
+        file.close
+        insert(
+          "INSERT INTO downloads (id, original_filename) VALUES (?, ?)",
+          [id, original_filename],
+        )
+      end
 
       [path, original_filename]
     end
