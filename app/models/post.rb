@@ -615,14 +615,12 @@ class Post < ActiveRecord::Base
       should_update_user_stat = true
 
       update!(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: reason)
-      topic_with_no_visible_posts = Topic.where(<<~SQL, topic_id: topic_id).first
-        id = :topic_id AND NOT EXISTS (
-          SELECT 1 FROM posts WHERE topic_id = :topic_id AND NOT hidden
-        )
-      SQL
 
-      if topic_with_no_visible_posts
-        topic_with_no_visible_posts.update_status(
+      any_visible_posts_in_topic =
+        Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])
+
+      if !any_visible_posts_in_topic
+        self.topic.update_status(
           "visible",
           false,
           Discourse.system_user,
@@ -631,7 +629,7 @@ class Post < ActiveRecord::Base
         should_update_user_stat = false
       end
 
-      # We need to do this because TopicStatusUpdater also does the increment
+      # We need to do this because TopicStatusUpdater also does the decrement
       # and we don't want to double count for the OP.
       UserStatCountUpdater.decrement!(self) if should_update_user_stat
     end
