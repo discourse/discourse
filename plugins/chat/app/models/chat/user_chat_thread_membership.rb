@@ -11,11 +11,7 @@ module Chat
     enum :notification_level, Chat::NotificationLevels.all
 
     def mark_read!(new_last_read_id = nil)
-      new_last_read_id ||= thread.last_message_id
-
-      if !last_read_message_id || new_last_read_id > self.last_read_message_id
-        update!(last_read_message_id: new_last_read_id)
-      end
+      update!(last_read_message_id: new_last_read_id || thread.last_message_id)
     end
   end
 end

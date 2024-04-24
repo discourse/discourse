@@ -12,7 +12,7 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
     fab!(:chatters) { Fabricate(:group) }
     fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id]) }
     fab!(:thread) { Fabricate(:chat_thread, old_om: true) }
-    fab!(:reply_1) { Fabricate(:chat_message, thread: thread) }
+    fab!(:reply_1) { Fabricate(:chat_message, thread: thread, chat_channel_id: thread.channel.id) }
 
     let(:guardian) { Guardian.new(current_user) }
     let(:params) do
@@ -80,10 +80,13 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
 
           before { thread.membership_for(current_user).update!(last_read_message_id: reply_2.id) }
 
-          it "doesnt change it" do
-            params[:message_id] = reply_1.id
+          it { is_expected.to fail_a_policy(:ensure_valid_message) }
+        end
 
-            expect { result }.to_not change { membership.reload.last_read_message_id }
+        context "when the message doesn’t exist" do
+          it "fails" do
+            params[:message_id] = 999
+            is_expected.to fail_to_find_a_model(:message)
           end
         end
       end

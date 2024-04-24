@@ -22,7 +22,9 @@ RSpec.describe Chat::Api::ChannelsThreadsReadController do
       end
 
       context "when a message_id is provided" do
-        fab!(:message_1) { Fabricate(:chat_message, thread: thread_1) }
+        fab!(:message_1) do
+          Fabricate(:chat_message, thread: thread_1, chat_channel: thread_1.channel)
+        end
 
         it "updates the last read" do
           expect {

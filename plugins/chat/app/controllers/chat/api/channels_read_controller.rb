@@ -9,7 +9,7 @@ class Chat::Api::ChannelsReadController < Chat::ApiController
         raise Discourse::InvalidParameters.new(:message_id)
       end
       on_model_not_found(:message) { raise Discourse::NotFound }
-      on_model_not_found(:active_membership) { raise Discourse::NotFound }
+      on_model_not_found(:membership) { raise Discourse::NotFound }
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_failed_contract do |contract|

@@ -32,7 +32,7 @@ RSpec.describe Chat::UpdateUserChannelLastRead do
       context "when user has no membership" do
         before { membership.destroy! }
 
-        it { is_expected.to fail_to_find_a_model(:active_membership) }
+        it { is_expected.to fail_to_find_a_model(:membership) }
       end
 
       context "when user can’t access the channel" do
