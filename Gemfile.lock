@@ -452,7 +452,7 @@ GEM
       google-protobuf (>= 3.25, < 5.0)
     sassc-embedded (1.75.2)
       sass-embedded (~> 1.75)
-    selenium-devtools (0.123.0)
+    selenium-devtools (0.124.0)
       selenium-webdriver (~> 4.2)
     selenium-webdriver (4.19.0)
       base64 (~> 0.2)
