@@ -139,9 +139,7 @@ export default class ComposerService extends Service {
 
   @on("init")
   _setupPreview() {
-    const val = this.site.mobileView
-      ? false
-      : this.keyValueStore.get("composer.showPreview") || "true";
+    const val = false;
     this.set("showPreview", val === "true");
   }
 
