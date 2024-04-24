@@ -1852,10 +1852,6 @@ fi:
       suggested_topics:
         title: "Jatka lukemista!"
         content: "Tässä on muutamia ketjuja, joita saatat haluta lukea seuraavaksi."
-      admin_guide:
-        title: "Tervetuloa uudelle sivustollesi!"
-        content: "<a href='%{admin_guide_url}'>Lue ylläpito-opas</a> jatkaaksesi sivustosi ja yhteisösi rakentamista."
-        content_no_url: "Lue ylläpito-opas jatkaaksesi sivustosi ja yhteisösi rakentamista."
     loading: "Ladataan…"
     errors:
       prev_page: "yrittäessä ladata"
@@ -4834,6 +4830,8 @@ fi:
           emoji: "Emojit"
           navigation: "Navigointi"
           themes: "Teemat"
+          components:
+            title: "Komponentit"
       email_settings:
         sidebar_link:
           appearance: "Ulkoasu"

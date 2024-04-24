@@ -3225,6 +3225,8 @@ zh_TW:
           emoji: "Emoji"
           navigation: "導覽"
           themes: "佈景主題"
+          components:
+            title: "元件"
       email_settings:
         sidebar_link:
           appearance: "外觀"
