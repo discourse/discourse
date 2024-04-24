@@ -1526,6 +1526,10 @@ span.mention {
     color: var(--primary-high);
     margin-right: var(--topic-body-width-padding);
   }
+
+  &.new-user {
+    display: none;
+  }
 }
 
 html.anon #topic-footer-buttons {
