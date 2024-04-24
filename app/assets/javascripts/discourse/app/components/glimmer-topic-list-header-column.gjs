@@ -47,19 +47,20 @@ export default class GlimmerTopicListHeaderColumn extends Component {
       }}
       ...attributes
     >
-      {{~#if @canBulkSelect}}
-        {{~#if @showBulkToggle}}
+      {{#if @canBulkSelect}}
+        {{#if @showBulkToggle}}
           <button
             title={{i18n "topics.bulk.toggle"}}
             class="btn-flat bulk-select"
           >
             {{icon (if @experimentalTopicBulkActionsEnabled "tasks" "list")}}
           </button>
-        {{/if~}}
-        {{~#if @bulkSelectEnabled}}
+        {{/if}}
+
+        {{#if @bulkSelectEnabled}}
           <span class="bulk-select-topics">
-            {{~#if @canDoBulkActions}}
-              {{~#if @experimentalTopicBulkActionsEnabled}}
+            {{#if @canDoBulkActions}}
+              {{#if @experimentalTopicBulkActionsEnabled}}
                 <GlimmerTopicBulkSelectDropdown
                   @bulkSelectHelper={{@bulkSelectHelper}}
                 />
@@ -67,8 +68,9 @@ export default class GlimmerTopicListHeaderColumn extends Component {
                 <button class="btn btn-icon no-text bulk-select-actions">{{icon
                     "cog"
                   }}&#8203;</button>
-              {{/if~}}
-            {{/if~}}
+              {{/if}}
+            {{/if}}
+
             <button class="btn btn-default bulk-select-all">{{i18n
                 "topics.bulk.select_all"
               }}</button>
@@ -76,10 +78,11 @@ export default class GlimmerTopicListHeaderColumn extends Component {
                 "topics.bulk.clear_all"
               }}</button>
           </span>
-        {{/if~}}
-      {{/if~}}
-      {{~#unless @bulkSelectEnabled}}
-        {{~#if this.showTopicsAndRepliesToggle}}
+        {{/if}}
+      {{/if}}
+
+      {{#unless @bulkSelectEnabled}}
+        {{#if this.showTopicsAndRepliesToggle}}
           <GlimmerNewListHeaderControls
             @current={{@newListSubset}}
             @newRepliesCount={{@newRepliesCount}}
@@ -87,11 +90,12 @@ export default class GlimmerTopicListHeaderColumn extends Component {
           />
         {{else}}
           <span>{{this.localizedName}}</span>
-        {{/if~}}
-      {{/unless~}}
-      {{~#if this.isSorting}}
+        {{/if}}
+      {{/unless}}
+
+      {{#if this.isSorting}}
         {{icon this.sortIcon}}
-      {{/if~}}
+      {{/if}}
     </th>
   </template>
 }
