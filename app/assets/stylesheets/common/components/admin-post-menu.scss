@@ -1,4 +1,8 @@
 [data-content][data-identifier="admin-post-menu"] {
+  .d-modal__body {
+    padding: 0;
+  }
+
   ul {
     padding: 0.5rem;
     margin: 0;
@@ -15,6 +19,33 @@
 
       &:last-child {
         margin-bottom: 0;
+      }
+    }
+
+    .btn {
+      justify-content: left;
+      text-align: left;
+      background: none;
+      width: 100%;
+      padding: 0.5em;
+      border-radius: 0;
+      margin: 0;
+
+      .d-icon {
+        color: var(--primary-medium);
+        align-self: flex-start;
+        margin-right: 0.75em;
+        margin-top: 0.1em;
+      }
+
+      &:focus,
+      &:hover {
+        color: var(--primary);
+        background: var(--d-hover);
+
+        .d-icon {
+          color: var(--primary-medium);
+        }
       }
     }
   }

@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { and, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";
 import DMenu from "float-kit/components/d-menu";

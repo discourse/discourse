@@ -10,7 +10,12 @@ export default class DInlineFloat extends Component {
   <template>
     {{#if @instance.expanded}}
       {{#if (and this.site.mobileView @instance.options.modalForMobile)}}
-        <DModal @closeModal={{@instance.close}} @hideHeader={{true}}>
+        <DModal
+          @closeModal={{@instance.close}}
+          @hideHeader={{true}}
+          data-identifier={{@instance.options.identifier}}
+          data-content
+        >
           {{#if @instance.options.component}}
             <@instance.options.component
               @data={{@instance.options.data}}
