@@ -46,15 +46,6 @@ class EmberCli < ActiveSupport::CurrentAttributes
       end
   end
 
-  def self.workbox_dir_name
-    return @workbox_base_dir if defined?(@workbox_base_dir)
-
-    @workbox_base_dir =
-      if (full_path = Dir.glob("app/assets/javascripts/discourse/dist/assets/workbox-*")[0])
-        File.basename(full_path)
-      end
-  end
-
   def self.has_tests?
     File.exist?("#{dist_dir}/tests/index.html")
   end
