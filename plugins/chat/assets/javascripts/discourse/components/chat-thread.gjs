@@ -165,7 +165,7 @@ export default class ChatThread extends Component {
 
   @bind
   updateLastReadMessage() {
-    if (!this.args.thread) {
+    if (!this.args.thread?.currentUserMembership) {
       return;
     }
 
@@ -181,8 +181,7 @@ export default class ChatThread extends Component {
       return;
     }
 
-    const lastReadId =
-      this.args.thread.currentUserMembership?.lastReadMessageId;
+    const lastReadId = this.args.thread.currentUserMembership.lastReadMessageId;
     if (lastReadId >= lastUnreadVisibleMessage.id) {
       return;
     }
