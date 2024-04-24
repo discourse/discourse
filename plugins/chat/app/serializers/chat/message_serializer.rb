@@ -56,6 +56,10 @@ module Chat
       MessageUserSerializer.new(user, root: false, include_status: true).as_json
     end
 
+    def excerpt
+      object.excerpt || object.raw_excerpt
+    end
+
     def reactions
       object
         .reactions
