@@ -318,9 +318,10 @@ module BulkImport
           "INSERT INTO downloads (id, original_filename) VALUES (?, ?)",
           [id, original_filename],
         )
+        return path, original_filename
       end
 
-      [path, original_filename]
+      nil
     end
 
     def download_cache_path(id)
