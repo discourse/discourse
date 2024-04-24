@@ -497,8 +497,7 @@ class TopicsController < ApplicationController
         Topic.find_by(id: topic_id)
       end
 
-    params[:until] === "" ? params[:until] = nil : params[:until]
-    status_opts = { until: params[:until] }
+    status_opts = { until: params[:until].presence }
 
     if status == "visible"
       status_opts[:visibility_reason_id] = (

@@ -466,13 +466,11 @@ export default class Topic extends RestModel {
   visibilityReasonTranslated() {
     if (
       this.visibility_reason_id &&
-      this.visibility_reason_id !== 99 // unknown
+      this.visibility_reason_id !== TOPIC_VISIBILITY_REASONS.unknown
     ) {
-      const reasonKey = Object.keys(TOPIC_VISIBILITY_REASONS)[
-        Object.values(TOPIC_VISIBILITY_REASONS).indexOf(
-          this.visibility_reason_id
-        )
-      ];
+      const reasonKey = Object.keys(TOPIC_VISIBILITY_REASONS).find(
+        (key) => TOPIC_VISIBILITY_REASONS[key] === this.visibility_reason_id
+      );
       return I18n.t(`topic_statuses.visibility_reasons.${reasonKey}`);
     }
 

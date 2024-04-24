@@ -668,12 +668,11 @@ class Post < ActiveRecord::Base
       # NOTE: We have to consider `nil` a valid reason here because historically
       # topics didn't have a visibility_reason_id, if we didn't do this we would
       # break backwards compat since we cannot backfill data.
-      if is_first_post? &&
-           (
-             self.topic.visibility_reason_id ==
-               Topic.visibility_reasons[:op_flag_threshold_reached] ||
-               self.topic.visibility_reason_id.nil?
-           )
+      hidden_because_of_op_flagging =
+        self.topic.visibility_reason_id == Topic.visibility_reasons[:op_flag_threshold_reached] ||
+          self.topic.visibility_reason_id.nil?
+
+      if is_first_post? && hidden_because_of_op_flagging
         self.topic.update_status(
           "visible",
           true,
