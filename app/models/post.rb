@@ -612,6 +612,7 @@ class Post < ActiveRecord::Base
 
     Post.transaction do
       self.skip_validation = true
+      should_update_user_stat = true
 
       update!(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: reason)
       topic_with_no_visible_posts = Topic.where(<<~SQL, topic_id: topic_id).first
@@ -627,9 +628,12 @@ class Post < ActiveRecord::Base
           Discourse.system_user,
           { visibility_reason_id: Topic.visibility_reasons[:op_flag_threshold_reached] },
         )
+        should_update_user_stat = false
       end
 
-      UserStatCountUpdater.decrement!(self)
+      # We need to do this because TopicStatusUpdater also does the increment
+      # and we don't want to double count for the OP.
+      UserStatCountUpdater.decrement!(self) if should_update_user_stat
     end
 
     # inform user
@@ -661,6 +665,7 @@ class Post < ActiveRecord::Base
   def unhide!
     Post.transaction do
       self.update!(hidden: false)
+      should_update_user_stat = true
 
       # NOTE: We have to consider `nil` a valid reason here because historically
       # topics didn't have a visibility_reason_id, if we didn't do this we would
@@ -677,9 +682,13 @@ class Post < ActiveRecord::Base
           Discourse.system_user,
           { visibility_reason_id: Topic.visibility_reasons[:op_unhidden] },
         )
+        should_update_user_stat = false
       end
 
-      UserStatCountUpdater.increment!(self)
+      # We need to do this because TopicStatusUpdater also does the increment
+      # and we don't want to double count for the OP.
+      UserStatCountUpdater.increment!(self) if should_update_user_stat
+
       save(validate: false)
     end
 
