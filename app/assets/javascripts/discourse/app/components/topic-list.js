@@ -10,6 +10,7 @@ import TopicBulkActions from "./modal/topic-bulk-actions";
 export default Component.extend(LoadMore, {
   modal: service(),
   router: service(),
+  siteSettings: service(),
 
   tagName: "table",
   classNames: ["topic-list"],
