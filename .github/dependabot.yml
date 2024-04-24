@@ -81,6 +81,9 @@ updates:
       types:
         patterns:
           - "@types/*"
+      workbox:
+        patterns:
+          - "workbox-*"
 #  - package-ecosystem: "bundler"
 #    directory: "migrations/config/gemfiles/convert"
 #    schedule:
