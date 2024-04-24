@@ -135,7 +135,7 @@ module BulkImport
                 puts "", "Failed to create upload: #{params[:id]} (#{error_message})", ""
               end
 
-              @output_db.execute(<<~SQL, params)
+              insert(<<~SQL, params)
                 INSERT INTO uploads (id, upload, markdown, skip_reason)
                 VALUES (:id, :upload, :markdown, :skip_reason)
               SQL
@@ -157,7 +157,6 @@ module BulkImport
           Thread.current.name = "worker-#{index}"
 
           store = Discourse.store
-          max_filesize = 100.megabyte
 
           while (row = queue.pop)
             begin
@@ -515,7 +514,7 @@ module BulkImport
 
             case params.delete(:status)
             when :ok
-              @output_db.execute(<<~SQL, params)
+              insert(<<~SQL, params)
                 INSERT INTO optimized_images (id, optimized_images)
                 VALUES (:id, :optimized_images)
               SQL
