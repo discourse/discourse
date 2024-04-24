@@ -26,7 +26,7 @@ export default DropdownSelectBox.extend({
     const content = [];
 
     content.push({
-      icon: "user",
+      icon: "bell",
       id: "changeToNormal",
       description: I18n.t("user.user_notifications.normal_option_title"),
       name: I18n.t("user.user_notifications.normal_option"),
