@@ -76,11 +76,20 @@
       @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
       @index={{index}}
     />
-    {{raw
-      "list/visited-line"
-      lastVisitedTopic=this.lastVisitedTopic
-      topic=topic
-    }}
+
+    {{#if (eq this.siteSettings.glimmer_topic_list_mode "enabled")}}
+      <GlimmerVisitedLine
+        @lastVisitedTopic={{this.lastVisitedTopic}}
+        @topic={{topic}}
+      />
+    {{else}}
+      {{raw
+        "list/visited-line"
+        lastVisitedTopic=this.lastVisitedTopic
+        topic=topic
+      }}
+    {{/if}}
+
     <PluginOutlet
       @name="after-topic-list-item"
       @outletArgs={{hash topic=topic index=index}}
