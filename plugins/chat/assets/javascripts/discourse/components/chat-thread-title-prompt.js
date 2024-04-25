@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import I18n from "I18n";
 import ThreadSettingsModal from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
@@ -22,27 +23,28 @@ export default class ShowThreadTitlePrompt extends Component {
 
   constructor() {
     super(...arguments);
-    this.thread = this.args.thread;
 
-    if (this.canShowToast) {
-      this.show();
-      this.updateThreadTitlePrompt();
-    }
+    next(() => {
+      if (this.canShowToast) {
+        this.show();
+        this.updateThreadTitlePrompt();
+      }
+    });
   }
 
   get membership() {
-    return this.thread.currentUserMembership;
+    return this.args.thread.currentUserMembership;
   }
 
   @action
   async updateThreadTitlePrompt() {
     try {
       const result = await this.chatApi.updateCurrentUserThreadTitlePrompt(
-        this.thread.channel.id,
-        this.thread.id
+        this.args.thread.channel.id,
+        this.args.thread.id
       );
 
-      this.thread.currentUserMembership = UserChatThreadMembership.create(
+      this.args.thread.currentUserMembership = UserChatThreadMembership.create(
         result.membership
       );
     } catch (e) {
@@ -64,12 +66,14 @@ export default class ShowThreadTitlePrompt extends Component {
   get canShowToast() {
     if (
       this.site.desktopView ||
-      (this.thread.user_id !== this.currentUser.id && !this.currentUser.admin)
+      (this.args.thread.user_id !== this.currentUser.id &&
+        !this.currentUser.admin)
     ) {
       return false;
     }
-    const titleNotSet = this.thread.title === null;
-    const hasReplies = this.thread.replyCount >= THREAD_TITLE_PROMPT_THRESHOLD;
+    const titleNotSet = this.args.thread.title === null;
+    const hasReplies =
+      this.args.thread.replyCount >= THREAD_TITLE_PROMPT_THRESHOLD;
     const showPrompts = this.currentUser.user_option.show_thread_title_prompts;
     const promptNotSeen = !this.membership?.threadTitlePromptSeen;
     return titleNotSet && hasReplies && showPrompts && promptNotSeen;
@@ -97,7 +101,7 @@ export default class ShowThreadTitlePrompt extends Component {
             class: "btn-primary toast-action",
             action: (toast) => {
               this.modal.show(ThreadSettingsModal, {
-                model: this.thread,
+                model: this.args.thread,
               });
 
               toast.close();
