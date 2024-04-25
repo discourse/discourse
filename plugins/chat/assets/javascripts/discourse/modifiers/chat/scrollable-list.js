@@ -27,6 +27,8 @@ export default class ChatScrollableList extends Modifier {
     this.element.addEventListener("wheel", this.handleWheel, {
       passive: true,
     });
+
+    this.throttleComputeScroll();
   }
 
   @bind
