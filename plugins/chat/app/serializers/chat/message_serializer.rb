@@ -57,7 +57,7 @@ module Chat
     end
 
     def excerpt
-      object.excerpt || WordWatcher.censor(object.raw_excerpt)
+      object.excerpt || object.build_excerpt
     end
 
     def reactions

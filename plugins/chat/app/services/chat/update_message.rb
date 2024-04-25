@@ -97,7 +97,7 @@ module Chat
     end
 
     def update_excerpt(message:)
-      message.excerpt = WordWatcher.censor(message.raw_excerpt)
+      message.excerpt = message.build_excerpt
     end
 
     def save_message(message:)

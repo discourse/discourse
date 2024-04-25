@@ -123,7 +123,7 @@ module Chat
       end
     end
 
-    def raw_excerpt
+    def build_excerpt
       # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
       return message if UrlHelper.relaxed_parse(message).is_a?(URI)
 

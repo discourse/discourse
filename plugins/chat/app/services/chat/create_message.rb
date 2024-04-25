@@ -224,7 +224,7 @@ module Chat
     end
 
     def create_excerpt(message_instance:)
-      message_instance.excerpt = WordWatcher.censor(message_instance.raw_excerpt)
+      message_instance.excerpt = message_instance.build_excerpt
     end
 
     def publish_user_tracking_state(message_instance:, channel:, channel_membership:, guardian:)
