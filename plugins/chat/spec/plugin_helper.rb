@@ -55,7 +55,7 @@ module ChatSystemHelpers
   end
 
   def thread_excerpt(message)
-    CGI.escapeHTML(message.excerpt.gsub("&hellip;", "…"))
+    message.excerpt
   end
 end
 
