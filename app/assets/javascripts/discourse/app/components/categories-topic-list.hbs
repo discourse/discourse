@@ -8,7 +8,11 @@
 
 {{#if this.topics}}
   {{#each this.topics as |t|}}
-    <LatestTopicListItem @topic={{t}} />
+    {{#if (eq this.siteSettings.glimmer_topic_list_mode "enabled")}}
+      <GlimmerLatestTopicListItem @topic={{t}} />
+    {{else}}
+      <LatestTopicListItem @topic={{t}} />
+    {{/if}}
   {{/each}}
   <div class="more-topics">
     {{#if
