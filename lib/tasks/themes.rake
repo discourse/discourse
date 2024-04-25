@@ -67,7 +67,9 @@ def update_themes
         next if remote_theme.blank? || remote_theme.remote_url.blank?
 
         print "Checking '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'... "
+
         remote_theme.update_remote_version
+
         if remote_theme.out_of_date?
           puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
           remote_theme.update_from_remote(already_in_transaction: true)
@@ -79,7 +81,7 @@ def update_themes
           raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
         end
       rescue => e
-        STDERR.puts "Failed to update '#{theme.name}': #{e}"
+        STDERR.puts "[#{RailsMultisite::ConnectionManagement.current_db}] Failed to update '#{theme.name}' (#{theme.id}): #{e}"
         raise if ENV["RAISE_THEME_ERRORS"] == "1"
       end
     end
