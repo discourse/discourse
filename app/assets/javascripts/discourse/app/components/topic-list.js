@@ -17,6 +17,7 @@ export default Component.extend(LoadMore, {
   classNameBindings: ["bulkSelectEnabled:sticky-header"],
   showTopicPostBadges: true,
   listTitle: "topic.title",
+  lastCheckedElementId: null,
 
   get canDoBulkActions() {
     return (

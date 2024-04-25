@@ -59,23 +59,44 @@
 
 <tbody class="topic-list-body">
   {{#each this.filteredTopics as |topic index|}}
-    <TopicListItem
-      @topic={{topic}}
-      @bulkSelectEnabled={{this.bulkSelectEnabled}}
-      @showTopicPostBadges={{this.showTopicPostBadges}}
-      @hideCategory={{this.hideCategory}}
-      @showPosters={{this.showPosters}}
-      @showLikes={{this.showLikes}}
-      @showOpLikes={{this.showOpLikes}}
-      @expandGloballyPinned={{this.expandGloballyPinned}}
-      @expandAllPinned={{this.expandAllPinned}}
-      @lastVisitedTopic={{this.lastVisitedTopic}}
-      @selected={{this.selected}}
-      @lastChecked={{this.lastChecked}}
-      @tagsForUser={{this.tagsForUser}}
-      @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
-      @index={{index}}
-    />
+    {{#if (eq this.siteSettings.glimmer_topic_list_mode "enabled")}}
+      <GlimmerTopicListItem
+        @topic={{topic}}
+        @bulkSelectEnabled={{this.bulkSelectEnabled}}
+        @showTopicPostBadges={{this.showTopicPostBadges}}
+        @hideCategory={{this.hideCategory}}
+        @showPosters={{this.showPosters}}
+        @showLikes={{this.showLikes}}
+        @showOpLikes={{this.showOpLikes}}
+        @expandGloballyPinned={{this.expandGloballyPinned}}
+        @expandAllPinned={{this.expandAllPinned}}
+        @lastVisitedTopic={{this.lastVisitedTopic}}
+        @selected={{this.selected}}
+        @lastCheckedElementId={{this.lastCheckedElementId}}
+        @updateLastCheckedElementId={{fn (mut this.lastCheckedElementId)}}
+        @tagsForUser={{this.tagsForUser}}
+        @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+        @index={{index}}
+      />
+    {{else}}
+      <TopicListItem
+        @topic={{topic}}
+        @bulkSelectEnabled={{this.bulkSelectEnabled}}
+        @showTopicPostBadges={{this.showTopicPostBadges}}
+        @hideCategory={{this.hideCategory}}
+        @showPosters={{this.showPosters}}
+        @showLikes={{this.showLikes}}
+        @showOpLikes={{this.showOpLikes}}
+        @expandGloballyPinned={{this.expandGloballyPinned}}
+        @expandAllPinned={{this.expandAllPinned}}
+        @lastVisitedTopic={{this.lastVisitedTopic}}
+        @selected={{this.selected}}
+        @lastChecked={{this.lastChecked}}
+        @tagsForUser={{this.tagsForUser}}
+        @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+        @index={{index}}
+      />
+    {{/if}}
 
     {{#if (eq this.siteSettings.glimmer_topic_list_mode "enabled")}}
       <GlimmerVisitedLine
