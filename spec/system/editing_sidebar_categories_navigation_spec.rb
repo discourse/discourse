@@ -225,6 +225,43 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     expect(modal).to have_checkbox(category2_subcategory)
   end
 
+  context "when there are more categories than the page limit" do
+    around(:each) do |example|
+      search_calls = 0
+
+      spy =
+        CategoriesController.clone.prepend(
+          Module.new do
+            define_method :search do
+              search_calls += 1
+              super()
+            end
+          end,
+        )
+
+      @get_search_calls = lambda { search_calls }
+
+      stub_const(Object, :CategoriesController, spy) do
+        stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 1) { example.run }
+      end
+    end
+
+    it "loads all the categories eventually" do
+      visit "/latest"
+
+      expect(sidebar).to have_categories_section
+
+      modal = sidebar.click_edit_categories_button
+      modal.filter("category")
+
+      expect(modal).to have_categories(
+        [category2, category2_subcategory, category, category_subcategory2, category_subcategory],
+      )
+
+      expect(@get_search_calls.call).to eq(6)
+    end
+  end
+
   describe "when max_category_nesting has been set to 3" do
     before_all { SiteSetting.max_category_nesting = 3 }
 
