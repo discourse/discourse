@@ -90,9 +90,14 @@ export default class CategoryList extends ArrayProxy {
     );
   }
 
-  static list(store) {
+  static list(store, parentCategory = null) {
+    const data = {};
+    if (parentCategory) {
+      data.parent_category_id = parentCategory?.id;
+    }
+
     return PreloadStore.getAndRemove("categories_list", () =>
-      ajax("/categories.json")
+      ajax("/categories.json", { data })
     ).then((result) =>
       CategoryList.create({
         store,

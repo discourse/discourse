@@ -15,6 +15,12 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   @service router;
   @service session;
 
+  queryParams = {
+    parent_category_id: {
+      refreshModel: true,
+    },
+  };
+
   templateName = "discovery/categories";
   controllerName = "discovery/categories";
 
@@ -28,17 +34,16 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
       style === "categories_and_latest_topics" ||
       style === "categories_and_latest_topics_created_date"
     ) {
-      model = this._findCategoriesAndTopics("latest", parentCategory);
+      model = await this._findCategoriesAndTopics("latest", parentCategory);
     } else if (style === "categories_and_top_topics") {
-      model = this._findCategoriesAndTopics("top", parentCategory);
+      model = await this._findCategoriesAndTopics("top", parentCategory);
     } else {
       // The server may have serialized this. Based on the logic above, we don't need it
       // so remove it to avoid it being used later by another TopicList route.
       PreloadStore.remove("topic_list");
-      model = CategoryList.list(this.store);
+      model = await CategoryList.list(this.store, parentCategory);
     }
 
-    model = await model;
     model.set("category", parentCategory);
 
     return model;

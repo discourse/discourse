@@ -26,7 +26,6 @@ export default ComboBoxComponent.extend({
   content: readOnly("categoriesWithShortcuts.[]"),
   noCategoriesLabel: I18n.t("categories.no_subcategories"),
   navigateToEdit: false,
-  editingCategory: false,
   editingCategoryTab: null,
   allowUncategorized: setting("allow_uncategorized_topics"),
 
@@ -81,7 +80,7 @@ export default ComboBoxComponent.extend({
       const shortcuts = [];
 
       if (
-        (this.value && !this.editingCategory) ||
+        (this.value && !this.editingCategoryTab) ||
         (this.selectKit.options.noSubcategories &&
           this.selectKit.options.subCategory)
       ) {
@@ -154,9 +153,10 @@ export default ComboBoxComponent.extend({
     "parentCategoryName",
     "selectKit.options.subCategory",
     function () {
-      if (this.editingCategory) {
+      if (this.editingCategoryTab) {
         return this.noCategoriesLabel;
       }
+
       if (this.selectKit.options.subCategory) {
         return I18n.t("categories.all_subcategories", {
           categoryName: this.parentCategoryName,
@@ -225,17 +225,24 @@ export default ComboBoxComponent.extend({
           ? this.selectKit.options.parentCategory
           : Category.findById(parseInt(categoryId, 10));
 
-      const route = this.editingCategory
-        ? getEditCategoryUrl(
-            category,
-            categoryId !== NO_CATEGORIES_ID,
-            this.editingCategoryTab
-          )
-        : getCategoryAndTagUrl(
-            category,
-            categoryId !== NO_CATEGORIES_ID,
-            this.tagId
-          );
+      let route;
+      if (this.editingCategoryTab) {
+        // rendered on category page
+        route = getEditCategoryUrl(
+          category,
+          categoryId !== NO_CATEGORIES_ID,
+          this.editingCategoryTab
+        );
+      } else if (this.filterType === "categories") {
+        // rendered on categories page
+        route = `/categories?parent_category_id=${categoryId}`;
+      } else {
+        route = getCategoryAndTagUrl(
+          category,
+          categoryId !== NO_CATEGORIES_ID,
+          this.tagId
+        );
+      }
 
       DiscourseURL.routeToUrl(route);
     },
