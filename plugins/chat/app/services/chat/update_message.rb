@@ -24,6 +24,7 @@ module Chat
 
     transaction do
       step :modify_message
+      step :update_excerpt
       step :save_message
       step :save_revision
       step :publish
@@ -93,6 +94,10 @@ module Chat
       return if !difference.any?
 
       message.upload_ids = new_upload_ids
+    end
+
+    def update_excerpt(message:)
+      message.excerpt = message.build_excerpt
     end
 
     def save_message(message:)
