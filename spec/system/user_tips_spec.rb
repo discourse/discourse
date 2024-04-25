@@ -53,15 +53,6 @@ describe "Homepage", type: :system do
       )
     end
 
-    it "shows the boostrapping tip to an admin user" do
-      SiteSetting.bootstrap_mode_enabled = true
-      expect(admin.user_option.seen_popups).to eq(nil)
-      sign_in admin
-      visit "/"
-
-      expect(page).to have_css(".fk-d-tooltip .user-tip__title", text: "Welcome to your new site!")
-    end
-
     it "shows a second notification once first is dismissed and user visits a topic" do
       sign_in user
       visit "/"

@@ -3633,6 +3633,8 @@ el:
           emoji: "Emoji"
           navigation: "Πλοήγηση"
           themes: "Θέματα"
+          components:
+            title: "Συστατικά"
       email_settings:
         sidebar_link:
           appearance: "Εμφάνιση"

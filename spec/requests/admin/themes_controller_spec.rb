@@ -1437,4 +1437,23 @@ RSpec.describe Admin::ThemesController do
       end
     end
   end
+
+  describe "#schema" do
+    fab!(:theme)
+    fab!(:theme_component) { Fabricate(:theme, component: true) }
+
+    before { sign_in(admin) }
+
+    it "returns 200 when customizing a theme's setting of objects type" do
+      get "/admin/customize/themes/#{theme.id}/schema/some_setting_name"
+
+      expect(response.status).to eq(200)
+    end
+
+    it "returns 200 when customizing a theme component's setting of objects type" do
+      get "/admin/customize/components/#{theme_component.id}/schema/some_setting_name"
+
+      expect(response.status).to eq(200)
+    end
+  end
 end

@@ -3663,6 +3663,8 @@ gl:
           emoji: "Emoji"
           navigation: "Navegación"
           themes: "Temas"
+          components:
+            title: "Compoñentes"
       email_settings:
         sidebar_link:
           appearance: "Aparencia"

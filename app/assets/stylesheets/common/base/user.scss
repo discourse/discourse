@@ -911,13 +911,26 @@
   .selectable-avatar {
     margin: 5px;
     display: inline-block;
+    position: relative;
     .avatar {
       cursor: pointer;
       width: 60px;
       height: 60px;
-      &:hover {
-        box-shadow: 0 0 10px var(--primary);
+    }
+    &:hover {
+      .selectable-avatar__remove {
+        visibility: visible;
       }
+    }
+    &__remove {
+      visibility: hidden;
+      color: var(--primary-high);
+      position: absolute;
+      bottom: 0px;
+      width: 100%;
+      left: 0px;
+      text-align: center;
+      font-size: var(--font-up-2);
     }
   }
 }

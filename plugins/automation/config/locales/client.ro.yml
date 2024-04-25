@@ -64,6 +64,11 @@ ro:
             restricted_group:
               label: Grup
           created: Creat
+        user_updated:
+          fields:
+            new_users_only:
+              label: Doar pentru utilizatorii noi
+              description: Se va declanșa doar pentru utilizatorii noi care se alătură după ce această automatizare este activată
         category_created_edited:
           fields:
             restricted_category:

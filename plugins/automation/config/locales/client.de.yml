@@ -181,6 +181,9 @@ de:
             once_per_user:
               label: Einmal pro Benutzer
               description: Wird nur einmal pro Benutzer ausgelöst
+            new_users_only:
+              label: Nur neue Benutzer
+              description: Wird nur für neue Benutzer ausgelöst, die nach der Aktivierung dieser Automatisierung beitreten.
         category_created_edited:
           fields:
             restricted_category:

@@ -2060,10 +2060,6 @@ pl_PL:
       suggested_topics:
         title: "Czytaj dalej!"
         content: "Oto kilka tematów, które naszym zdaniem warto przeczytać w następnej kolejności."
-      admin_guide:
-        title: "Witaj w swojej nowej witrynie!"
-        content: "<a href='%{admin_guide_url}'>Przeczytaj przewodnik administratora</a>, aby kontynuować budowanie witryny i społeczności."
-        content_no_url: "Przeczytaj przewodnik administratora, aby kontynuować tworzenie witryny i społeczności."
     loading: "Ładowanie…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -4810,7 +4806,6 @@ pl_PL:
       clear_filter: "Wyczyść filtr"
       no_results:
         title: "Brak wyników"
-        description: "Nie znaleźliśmy niczego pasującego do ‘%{filter}’"
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
       description: "Twój temat powitalny to pierwsza rzecz, którą przeczytają nowi członkowie. Pomyśl o tym jako o swoim „przemówieniu” lub „deklaracji misji”. Poinformuj wszystkich, dla kogo jest ta społeczność, czego mogą się tu spodziewać, i co chcesz, aby zrobili najpierw."
@@ -5366,7 +5361,8 @@ pl_PL:
         title: "Konto"
         sidebar_link:
           backups: "Kopie zapasowe"
-          whats_new: "Co nowego"
+          whats_new:
+            title: "Co nowego"
       community:
         title: "Społeczność"
         sidebar_link:
@@ -5389,6 +5385,8 @@ pl_PL:
           emoji: "Emoji"
           navigation: "Nawigacja"
           themes: "Motywy"
+          components:
+            title: "Komponenty"
           site_texts: "Teksty witryny"
       email_settings:
         title: "Ustawienia e-mail"
