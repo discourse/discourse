@@ -11,10 +11,6 @@ function initializePlugin(api) {
   }
 }
 
-function removeReadonlyClass(boxes) {
-  boxes.forEach((e) => e.classList.remove("readonly"));
-}
-
 function isWhitespaceNode(node) {
   return node.nodeType === 3 && node.nodeValue.match(/^\s*$/);
 }
@@ -80,8 +76,9 @@ export function checklistSyntax(elem, postDecorator) {
 
       const newValue = classList.contains("checked") ? "[ ]" : "[x]";
       const template = document.createElement("template");
-
-      template.innerHTML = iconHTML("spinner", { class: "fa-spin" });
+      template.innerHTML = iconHTML("spinner", {
+        class: "fa-spin list-item-checkbox",
+      });
       box.insertAdjacentElement("afterend", template.content.firstChild);
       box.classList.add("hidden");
       boxes.forEach((e) => e.classList.add("readonly"));
@@ -158,7 +155,9 @@ export function checklistSyntax(elem, postDecorator) {
         postWidget.attrs.isSaving = false;
         postWidget.scheduleRerender();
       } finally {
-        removeReadonlyClass(boxes);
+        boxes.forEach((e) => e.classList.remove("readonly"));
+        box.classList.remove("hidden");
+        box.parentElement.querySelector(".fa-spin").remove();
       }
     };
   });
