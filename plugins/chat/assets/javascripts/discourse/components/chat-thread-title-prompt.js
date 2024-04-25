@@ -1,7 +1,6 @@
 import { setOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { NotificationLevels } from "discourse/lib/notification-levels";
 import I18n from "I18n";
 import ThreadSettingsModal from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 import { THREAD_TITLE_PROMPT_THRESHOLD } from "discourse/plugins/chat/discourse/lib/chat-constants";
@@ -24,7 +23,6 @@ export default class ShowThreadTitlePrompt {
   constructor(owner, thread) {
     setOwner(this, owner);
     this.thread = thread;
-    this.createThreadMembership();
   }
 
   get membership() {
@@ -32,33 +30,23 @@ export default class ShowThreadTitlePrompt {
   }
 
   @action
-  createThreadMembership() {
-    if (this.membership || !this.currentUser.admin) {
-      return;
-    }
-
-    this.thread.currentUserMembership = UserChatThreadMembership.create({
-      notification_level: NotificationLevels.TRACKING,
-      last_read_message_id: this.thread.lastMessageId,
-      thread_title_prompt_seen: false,
-    });
-  }
-
-  @action
   async updateThreadTitlePrompt() {
-    if (!this.membership) {
-      return;
-    }
-
     try {
-      await this.chatApi.updateCurrentUserThreadTitlePrompt(
+      const result = await this.chatApi.updateCurrentUserThreadTitlePrompt(
         this.thread.channel.id,
         this.thread.id
+      );
+
+      this.thread.currentUserMembership = UserChatThreadMembership.create(
+        result.membership
       );
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log("Couldn't save thread title prompt status", e);
-      this.membership.threadTitlePromptSeen = false;
+
+      if (this.membership) {
+        this.membership.threadTitlePromptSeen = false;
+      }
     }
   }
 
@@ -75,12 +63,10 @@ export default class ShowThreadTitlePrompt {
     ) {
       return false;
     }
-
     const titleNotSet = this.thread.title === null;
     const showPrompts = this.currentUser.user_option.show_thread_title_prompts;
     const promptNotSeen = !this.membership?.threadTitlePromptSeen;
     const hasReplies = this.thread.replyCount >= THREAD_TITLE_PROMPT_THRESHOLD;
-
     return titleNotSet && hasReplies && showPrompts && promptNotSeen;
   }
 

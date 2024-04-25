@@ -51,7 +51,11 @@ module Chat
 
     def create_or_update_membership(thread:, guardian:, contract:)
       membership = thread.membership_for(guardian.user)
-      membership = thread.add(guardian.user) if !membership
+      membership =
+        thread.add(
+          guardian.user,
+          notification_level: Chat::NotificationLevels.all[:normal],
+        ) if !membership
       membership.update!(thread_title_prompt_seen: true)
       context.membership = membership
     end
