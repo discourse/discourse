@@ -232,7 +232,6 @@ export default class ChatThread extends Component {
     }
 
     this.debounceFillPaneAttempt();
-    this.showThreadTitlePrompt();
   }
 
   @action
@@ -530,10 +529,6 @@ export default class ChatThread extends Component {
     return prev;
   }
 
-  showThreadTitlePrompt() {
-    return new ShowThreadTitlePrompt(getOwner(this), this.args.thread).show();
-  }
-
   <template>
     <div
       class={{concatClass
@@ -593,6 +588,7 @@ export default class ChatThread extends Component {
       {{/if}}
 
       <ChatUploadDropZone @model={{@thread}} />
+      <ShowThreadTitlePrompt @thread={{@thread}} />
     </div>
   </template>
 }

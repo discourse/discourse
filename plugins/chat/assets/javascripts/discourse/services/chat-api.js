@@ -380,7 +380,7 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   updateCurrentUserThreadTitlePrompt(channelId, threadId) {
-    return this.#putRequest(
+    return this.#postRequest(
       `/channels/${channelId}/threads/${threadId}/mark-thread-title-prompt-seen/me`
     );
   }

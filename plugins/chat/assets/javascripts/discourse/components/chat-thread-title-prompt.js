@@ -1,4 +1,4 @@
-import { setOwner } from "@ember/application";
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import I18n from "I18n";
@@ -6,7 +6,7 @@ import ThreadSettingsModal from "discourse/plugins/chat/discourse/components/cha
 import { THREAD_TITLE_PROMPT_THRESHOLD } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 
-export default class ShowThreadTitlePrompt {
+export default class ShowThreadTitlePrompt extends Component {
   @service chatApi;
   @service modal;
   @service toasts;
@@ -20,9 +20,14 @@ export default class ShowThreadTitlePrompt {
     primaryLabel: I18n.t("chat.thread_title_toast.primary_action"),
   };
 
-  constructor(owner, thread) {
-    setOwner(this, owner);
-    this.thread = thread;
+  constructor() {
+    super(...arguments);
+    this.thread = this.args.thread;
+
+    if (this.canShowToast) {
+      this.show();
+      this.updateThreadTitlePrompt();
+    }
   }
 
   get membership() {
@@ -58,23 +63,19 @@ export default class ShowThreadTitlePrompt {
 
   get canShowToast() {
     if (
-      this.thread.user_id !== this.currentUser.id &&
-      !this.currentUser.admin
+      this.site.desktopView ||
+      (this.thread.user_id !== this.currentUser.id && !this.currentUser.admin)
     ) {
       return false;
     }
     const titleNotSet = this.thread.title === null;
+    const hasReplies = this.thread.replyCount >= THREAD_TITLE_PROMPT_THRESHOLD;
     const showPrompts = this.currentUser.user_option.show_thread_title_prompts;
     const promptNotSeen = !this.membership?.threadTitlePromptSeen;
-    const hasReplies = this.thread.replyCount >= THREAD_TITLE_PROMPT_THRESHOLD;
     return titleNotSet && hasReplies && showPrompts && promptNotSeen;
   }
 
   show() {
-    if (this.site.desktopView || !this.canShowToast) {
-      return;
-    }
-
     this.toasts.default({
       duration: 5000,
       class: "thread-toast",
@@ -105,7 +106,5 @@ export default class ShowThreadTitlePrompt {
         ],
       },
     });
-
-    this.updateThreadTitlePrompt();
   }
 }
