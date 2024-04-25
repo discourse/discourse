@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { and, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";
 import DMenu from "float-kit/components/d-menu";
@@ -291,11 +292,10 @@ export default class TopicAdminMenu extends Component {
                   {{#each this.extraButtons as |button|}}
                     <li>
                       <DButton
-                        class="btn-transparent"
                         @label={{button.label}}
                         @translatedLabel={{button.translatedLabel}}
                         @icon={{button.icon}}
-                        class={{button.className}}
+                        class={{concatClass "btn-transparent" button.className}}
                         @action={{fn this.onExtraButtonAction button.action}}
                       />
                     </li>
