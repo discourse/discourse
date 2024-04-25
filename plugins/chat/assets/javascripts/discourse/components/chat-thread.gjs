@@ -13,14 +13,12 @@ import { resetIdle } from "discourse/lib/desktop-notifications";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
-import ThreadSettingsModal from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
+import ShowThreadTitlePrompt from "discourse/plugins/chat/discourse/components/chat-thread-title-prompt";
 import ChatChannelThreadSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-thread-subscription-manager";
 import {
   FUTURE,
   PAST,
   READ_INTERVAL_MS,
-  THREAD_TITLE_REPLIES_THRESHOLD,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import { stackingContextFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
@@ -53,11 +51,8 @@ export default class ChatThread extends Component {
   @service chatThreadComposer;
   @service chatThreadPane;
   @service currentUser;
-  @service modal;
   @service router;
-  @service site;
   @service siteSettings;
-  @service toasts;
 
   @tracked atBottom = true;
   @tracked isScrolling = false;
@@ -65,13 +60,6 @@ export default class ChatThread extends Component {
   @tracked uploadDropZone;
 
   scrollable = null;
-
-  toastText = {
-    title: I18n.t("chat.thread_title_toast.title"),
-    message: I18n.t("chat.thread_title_toast.message"),
-    dismissLabel: I18n.t("chat.thread_title_toast.dismiss_action"),
-    primaryLabel: I18n.t("chat.thread_title_toast.primary_action"),
-  };
 
   @action
   resetIdle() {
@@ -112,7 +100,6 @@ export default class ChatThread extends Component {
         thread: this.args.thread,
       });
     this.chatThreadComposer.focus();
-    this.createThreadMembership();
     this.loadMessages();
   }
 
@@ -245,7 +232,7 @@ export default class ChatThread extends Component {
     }
 
     this.debounceFillPaneAttempt();
-    this.threadTitleToast();
+    this.showThreadTitlePrompt();
   }
 
   @action
@@ -543,104 +530,8 @@ export default class ChatThread extends Component {
     return prev;
   }
 
-  get membership() {
-    return this.args.thread.currentUserMembership;
-  }
-
-  @action
-  createThreadMembership() {
-    if (this.membership || !this.currentUser.admin) {
-      return;
-    }
-
-    this.args.thread.currentUserMembership = UserChatThreadMembership.create({
-      notification_level: NotificationLevels.TRACKING,
-      last_read_message_id: this.args.thread.lastMessageId,
-      thread_title_prompt_seen: false,
-    });
-  }
-
-  @action
-  async updateThreadTitlePrompt() {
-    if (!this.membership) {
-      return;
-    }
-
-    try {
-      await this.chatApi.updateCurrentUserThreadTitlePrompt(
-        this.args.thread.channel.id,
-        this.args.thread.id
-      );
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log("Couldn't save thread title prompt status", e);
-      this.membership.threadTitlePromptSeen = false;
-    }
-  }
-
-  @action
-  disableFutureThreadTitlePrompts() {
-    this.currentUser.set("user_option.show_thread_title_prompts", false);
-    this.currentUser.save();
-  }
-
-  get canShowToast() {
-    const ignoreThreadTitlePrompts =
-      !this.currentUser.user_option.show_thread_title_prompts;
-    const hasSeenThreadTitlePrompt = this.membership?.threadTitlePromptSeen;
-
-    if (
-      this.site.desktopView ||
-      this.args.thread.title ||
-      this.args.thread.replyCount < THREAD_TITLE_REPLIES_THRESHOLD ||
-      ignoreThreadTitlePrompts ||
-      hasSeenThreadTitlePrompt
-    ) {
-      return false;
-    }
-
-    return (
-      this.args.thread.user_id === this.currentUser.id || this.currentUser.admin
-    );
-  }
-
-  threadTitleToast() {
-    if (!this.canShowToast) {
-      return;
-    }
-
-    this.toasts.default({
-      duration: 5000,
-      class: "thread-toast",
-      data: {
-        title: this.toastText.title,
-        message: this.toastText.message,
-        showProgressBar: true,
-        actions: [
-          {
-            label: this.toastText.dismissLabel,
-            class: "btn-link toast-hide",
-            action: (toast) => {
-              this.disableFutureThreadTitlePrompts();
-              toast.close();
-            },
-          },
-          {
-            label: this.toastText.primaryLabel,
-            class: "btn-primary toast-action",
-            action: (toast) => {
-              this.modal.show(ThreadSettingsModal, {
-                model: this.args.thread,
-              });
-
-              toast.close();
-            },
-          },
-        ],
-      },
-    });
-
-    this.updateThreadTitlePrompt();
+  showThreadTitlePrompt() {
+    return new ShowThreadTitlePrompt(getOwner(this), this.args.thread).show();
   }
 
   <template>
