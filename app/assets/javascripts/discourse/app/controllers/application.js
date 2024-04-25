@@ -1,6 +1,7 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import runAfterFramePaint from "discourse/lib/after-frame-paint";
 import discourseDebounce from "discourse-common/lib/debounce";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -122,5 +123,17 @@ export default Controller.extend({
         this.keyValueStore.setItem(HIDE_SIDEBAR_KEY, "true");
       }
     }
+  },
+
+  @action
+  trackDiscoursePainted() {
+    runAfterFramePaint(() => {
+      performance.mark("discourse-paint");
+      performance.measure(
+        "discourse-init-to-paint",
+        "discourse-init",
+        "discourse-paint"
+      );
+    });
   },
 });
