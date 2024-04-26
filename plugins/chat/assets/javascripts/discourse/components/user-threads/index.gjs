@@ -61,13 +61,19 @@ export default class UserThreads extends Component {
 
     this.messageBus.subscribe(
       `/chat/${channel.id}`,
-      (data) => this.onMessage(data, channel),
+      this.onMessage,
       channel.channelMessageBusLastId
     );
   }
 
-  onMessage(data, channel) {
+  onMessage(data) {
     if (data.type === "update_thread_original_message") {
+      const channel = this.trackedChannels[data.channel_id];
+
+      if (!channel) {
+        return;
+      }
+
       const thread = channel.threadsManager.threads.find(
         (t) => t.id === data.thread_id
       );
