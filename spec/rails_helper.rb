@@ -19,7 +19,6 @@ require "rbtrace" if RUBY_ENGINE == "ruby"
 require "pry"
 require "pry-byebug"
 require "pry-rails"
-require "pry-stack_explorer"
 require "fabrication"
 require "mocha/api"
 require "certified"
@@ -578,15 +577,6 @@ RSpec.configure do |config|
       # the issue to the Rails.
       ActiveRecord::Base.connection.data_sources.map do |table|
         ActiveRecord::Base.connection.schema_cache.add(table)
-      end
-
-      ApplicationController.before_action(prepend: true) do
-        if BlockRequestsMiddleware.current_example_location && !request.xhr? &&
-             request.format == "html"
-          cookies[
-            BlockRequestsMiddleware::RSPEC_CURRENT_EXAMPLE_COOKIE_STRING
-          ] = BlockRequestsMiddleware.current_example_location
-        end
       end
 
       system_tests_initialized = true

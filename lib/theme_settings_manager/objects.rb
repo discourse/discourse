@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class ThemeSettingsManager::Objects < ThemeSettingsManager
+  def self.extract_value_from_row(row)
+    row.json_value
+  end
+
   def value
     has_record? ? db_record.json_value : default.map!(&:deep_stringify_keys)
   end
