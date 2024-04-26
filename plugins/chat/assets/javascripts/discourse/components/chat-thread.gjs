@@ -12,6 +12,7 @@ import { resetIdle } from "discourse/lib/desktop-notifications";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
+import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 import ChatChannelThreadSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-thread-subscription-manager";
 import {
   FUTURE,
@@ -123,7 +124,6 @@ export default class ChatThread extends Component {
         (state.distanceToBottom.pixels > 250 && !state.atBottom);
       this.isScrolling = true;
       this.debounceUpdateLastReadMessage();
-      this.lastFullyVisibleMessageId = state.lastVisibleId;
 
       if (
         state.atTop ||
@@ -148,7 +148,6 @@ export default class ChatThread extends Component {
     this.resetIdle();
     this.atBottom = state.atBottom;
     this.args.setFullTitle?.(state.atTop);
-    this.lastFullyVisibleMessageId = state.lastVisibleId;
 
     if (state.atBottom) {
       this.fetchMoreMessages({ direction: FUTURE });
@@ -169,27 +168,27 @@ export default class ChatThread extends Component {
       return;
     }
 
-    if (!this.lastFullyVisibleMessageId) {
+    const firstFullyVisibleMessageId = firstVisibleMessageId(this.scroller);
+    if (!firstFullyVisibleMessageId) {
       return;
     }
 
-    const lastUnreadVisibleMessage = this.messagesManager.findMessage(
-      this.lastFullyVisibleMessageId
+    const firstMessage = this.messagesManager.findMessage(
+      firstFullyVisibleMessageId
     );
-
-    if (!lastUnreadVisibleMessage) {
+    if (!firstMessage) {
       return;
     }
 
     const lastReadId = this.args.thread.currentUserMembership.lastReadMessageId;
-    if (lastReadId >= lastUnreadVisibleMessage.id) {
+    if (lastReadId >= firstMessage.id) {
       return;
     }
 
     return this.chatApi.markThreadAsRead(
       this.args.thread.channel.id,
       this.args.thread.id,
-      lastUnreadVisibleMessage.id
+      firstMessage.id
     );
   }
 

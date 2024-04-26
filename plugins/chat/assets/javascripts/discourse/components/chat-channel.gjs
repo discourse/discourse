@@ -20,6 +20,7 @@ import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
+import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 import ChatChannelSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-subscription-manager";
 import {
   FUTURE,
@@ -412,27 +413,27 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    if (!this.lastFullyVisibleMessageId) {
+    const firstFullyVisibleMessageId = firstVisibleMessageId(this.scroller);
+    if (!firstFullyVisibleMessageId) {
       return;
     }
 
-    let lastUnreadVisibleMessage = this.messagesManager.findMessage(
-      this.lastFullyVisibleMessageId
+    let firstMessage = this.messagesManager.findMessage(
+      firstFullyVisibleMessageId
     );
-
-    if (!lastUnreadVisibleMessage) {
+    if (!firstMessage) {
       return;
     }
 
     const lastReadId =
       this.args.channel.currentUserMembership?.lastReadMessageId;
-    if (lastReadId >= lastUnreadVisibleMessage.id) {
+    if (lastReadId >= firstMessage.id) {
       return;
     }
 
     return this.chatApi.markChannelAsRead(
       this.args.channel.id,
-      lastUnreadVisibleMessage.id
+      firstMessage.id
     );
   }
 
@@ -460,7 +461,6 @@ export default class ChatChannel extends Component {
         (state.distanceToBottom.pixels > 250 && !state.atBottom);
       this.isScrolling = true;
       this.debouncedUpdateLastReadMessage();
-      this.lastFullyVisibleMessageId = state.lastVisibleId;
 
       if (
         state.atTop ||
@@ -484,7 +484,6 @@ export default class ChatChannel extends Component {
       (state.distanceToBottom.pixels > 250 && !state.atBottom);
     this.isScrolling = false;
     this.atBottom = state.atBottom;
-    this.lastFullyVisibleMessageId = state.lastVisibleId;
 
     if (state.atBottom) {
       this.fetchMoreMessages({ direction: FUTURE });
