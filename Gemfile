@@ -146,6 +146,7 @@ group :test, :development do
 
   gem "shoulda-matchers", require: false
   gem "rspec-html-matchers"
+  gem "pry-stack_explorer", require: false
   gem "byebug", require: ENV["RM_INFO"].nil?, platform: :mri
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
