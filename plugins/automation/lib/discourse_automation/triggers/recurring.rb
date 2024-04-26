@@ -31,7 +31,7 @@ module DiscourseAutomation
         if previous_start_date != start_date || previous_interval != interval ||
              previous_frequency != frequency
           automation.pending_automations.destroy_all
-        else
+        elsif automation.pending_automations.present?
           return
         end
 
