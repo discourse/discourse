@@ -34,10 +34,10 @@ export default class CategoryDropMoreCollection extends Component {
           {{i18n "categories.plus_more_count" (hash count=this.moreCount)}}
         </span>
 
-        {{#if this.args.selectKit.options.parentCategory}}
+        {{#if @selectKit.options.parentCategory}}
           <LinkTo
             @route="discovery.subcategories"
-            @model={{this.args.selectKit.options.parentCategory.id}}
+            @model={{@selectKit.options.parentCategory.id}}
           >
             {{i18n "categories.view_all"}}
             {{icon "external-link-alt"}}
