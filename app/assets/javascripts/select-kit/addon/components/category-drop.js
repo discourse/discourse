@@ -237,10 +237,15 @@ export default ComboBoxComponent.extend({
         );
       } else if (this.filterType === "categories") {
         // rendered on categories page
-        route =
-          categoryId === "all-categories"
-            ? "/categories"
-            : `/categories/${categoryId}`;
+        if (categoryId === "all-categories" || categoryId === "no-categories") {
+          route = this.selectKit.options.parentCategory
+            ? `/categories/${this.selectKit.options.parentCategory.id}`
+            : "/categories";
+        } else if (categoryId) {
+          route = `/categories/${categoryId}`;
+        } else {
+          route = "/categories";
+        }
       } else {
         route = getCategoryAndTagUrl(
           category,
