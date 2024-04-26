@@ -66,6 +66,7 @@ export default class UserThreads extends Component {
     );
   }
 
+  @bind
   onMessage(data) {
     if (data.type === "update_thread_original_message") {
       const channel = this.trackedChannels[data.channel_id];

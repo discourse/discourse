@@ -93,7 +93,7 @@ module Chat
           type: :update_thread_original_message,
           original_message_id: thread.original_message_id,
           thread_id: thread.id,
-          channe_id: thread.channel.id,
+          channel_id: thread.channel.id,
           preview: preview.as_json,
         },
       )
