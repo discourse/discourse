@@ -12,6 +12,10 @@ module Chat
                :mentioned_users,
                :user
 
+    def excerpt
+      object.excerpt || object.build_excerpt
+    end
+
     def mentioned_users
       object
         .user_mentions
