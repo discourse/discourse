@@ -50,6 +50,7 @@ export default class TopicTitle extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-invalid-interactive }}
     <div
       {{didInsert this.applyDecorators}}
       {{on "keydown" this.keyDown}}
@@ -63,7 +64,7 @@ export default class TopicTitle extends Component {
       <PluginOutlet
         @name="topic-title"
         @connectorTagName="div"
-        @outletArgs={{hash model=this.args.model}}
+        @outletArgs={{hash model=@model}}
       />
     </div>
   </template>
