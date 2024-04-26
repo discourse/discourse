@@ -1,5 +1,5 @@
 <TapTileGrid @activeTile={{this.selectedShortcut}} as |grid|>
-  {{#each this.options as |option|}}
+  {{#each this.options key="id" as |option|}}
     {{#unless option.hidden}}
       <TapTile
         @icon={{option.icon}}

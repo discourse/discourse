@@ -11,11 +11,15 @@ class WebHookExtras {
   @tracked categories;
 
   constructor(args) {
-    this.categories = args.categories;
-    this.content_types = args.content_types;
-    this.default_event_types = args.default_event_types;
-    this.delivery_statuses = args.delivery_statuses;
-    this.grouped_event_types = args.grouped_event_types;
+    this.categories = args.categories || [];
+    this.content_types = args.content_types || [];
+    this.default_event_types = args.default_event_types || [];
+    this.delivery_statuses = args.delivery_statuses || [];
+    this.grouped_event_types = args.grouped_event_types || [];
+  }
+
+  addCategories(categories) {
+    this.categories = this.categories.concat(categories).uniqBy((c) => c.id);
   }
 
   get categoriesById() {
@@ -56,6 +60,9 @@ export default class WebHook extends RestModel {
   }
 
   set categories(value) {
+    this.extras ||= new WebHookExtras({});
+    this.extras.addCategories(value);
+
     this.set(
       "category_ids",
       value.map((c) => c.id)

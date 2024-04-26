@@ -16,6 +16,7 @@
     "postinstall": "../run-patch-package"
   },
   "dependencies": {
+    "@discourse/ember-instantsearch": "^1.0.9",
     "@faker-js/faker": "^8.4.1",
     "@glimmer/syntax": "^0.92.0",
     "@highlightjs/cdn-assets": "^11.9.0",
@@ -27,7 +28,8 @@
     "highlight.js": "^11.9.0",
     "jspreadsheet-ce": "^4.13.4",
     "morphlex": "^0.0.15",
-    "pretty-text": "1.0.0"
+    "pretty-text": "1.0.0",
+    "decorator-transforms": "^1.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",
@@ -65,8 +67,8 @@
     "babel-import-util": "^2.0.3",
     "babel-plugin-ember-template-compilation": "^2.2.2",
     "bootstrap": "3.4.1",
-    "custom-proxy": "1.0.0",
     "broccoli-asset-rev": "^3.0.0",
+    "custom-proxy": "1.0.0",
     "deepmerge": "^4.3.1",
     "deprecation-silencer": "1.0.0",
     "dialog-holder": "1.0.0",

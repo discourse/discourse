@@ -20,9 +20,7 @@ class UserField < ActiveRecord::Base
   end
 
   def queue_index_search
-    SearchIndexer.queue_users_reindex(
-      UserCustomField.where(name: "user_field_#{self.id}").pluck(:user_id),
-    )
+    Jobs.enqueue(:index_user_fields_for_search, user_field_id: self.id)
   end
 
   private
