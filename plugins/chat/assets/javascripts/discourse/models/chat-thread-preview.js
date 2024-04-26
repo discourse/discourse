@@ -44,7 +44,6 @@ export default class ChatThreadPreview {
       this.participantUsers.push(user);
       this.participantCount += 1;
     }
-    this.replyCount += 1;
     this.lastReplyAt = messageObject.created_at;
     this.lastReplyId = messageObject.id;
     this.lastReplyExcerpt = messageObject.excerpt;
