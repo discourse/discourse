@@ -491,7 +491,7 @@ export default class ChatChannel extends Component {
     } else {
       this.chatChannelScrollPositions.set(
         this.args.channel.id,
-        state.lastVisibleId
+        state.firstVisibleId
       );
     }
   }
