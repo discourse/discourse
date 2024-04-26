@@ -12,6 +12,7 @@ export default class Toasts extends Component {
   @tracked message = "Message";
   @tracked duration = TOAST.options.duration;
   @tracked autoClose = TOAST.options.autoClose;
+  @tracked showProgressBar = TOAST.options.showProgressBar;
   @tracked class;
   @tracked action = true;
   @tracked icon;
@@ -48,6 +49,7 @@ export default class Toasts extends Component {
     this.toasts[theme]({
       duration: this.duration,
       autoClose: this.autoClose,
+      showProgressBar: this.showProgressBar,
       class: this.class,
       data: {
         title: this.title,
@@ -66,5 +68,10 @@ export default class Toasts extends Component {
   @action
   toggleAutoClose() {
     this.autoClose = !this.autoClose;
+  }
+
+  @action
+  toggleShowProgressBar() {
+    this.showProgressBar = !this.showProgressBar;
   }
 }
