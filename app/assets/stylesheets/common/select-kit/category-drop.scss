@@ -69,3 +69,13 @@
     }
   }
 }
+
+.category-breadcrumb .category-drop {
+  .category-row.is-disabled {
+    cursor: not-allowed;
+
+    .badge-category__name {
+      color: var(--primary-low-mid);
+    }
+  }
+}

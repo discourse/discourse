@@ -46,6 +46,7 @@ export default ComboBoxComponent.extend({
     headerComponent: "category-drop/category-drop-header",
     parentCategory: false,
     allowUncategorized: "allowUncategorized",
+    disableIfHasNoChildren: false,
   },
 
   init() {
