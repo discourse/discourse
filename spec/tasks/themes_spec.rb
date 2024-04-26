@@ -44,7 +44,7 @@ RSpec.describe "tasks/themes" do
 
     after { `rm -fr #{initial_repo}` }
 
-    it "should retain a theme's settings and not update the theme when a theme's setting fails to safe" do
+    it "should retain a theme's settings and not update the theme when a theme's setting fails to save" do
       theme.update_setting(:some_setting, "some setting value")
 
       migration_content = <<~JS
