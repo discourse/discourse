@@ -2854,7 +2854,7 @@ uncategorized:
   share_anonymized_statistics: true
 
   enable_powered_by_discourse:
-    default: false
+    default: true
     client: true
 
   auto_handle_queued_age:
