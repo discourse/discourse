@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -46,18 +47,6 @@ export default class GlimmerTopicListItem extends Component {
       this.messageBus.subscribe(this.unreadIndicatorChannel, this.onMessage);
     }
 
-    schedule("afterRender", () => {
-      if (!this.isDestroying && !this.isDestroyed) {
-        const rawTopicLink = this.element.querySelector(".raw-topic-link");
-        rawTopicLink &&
-          topicTitleDecorators?.forEach((cb) =>
-            cb(this.args.topic, rawTopicLink, "topic-list-item-title")
-          );
-      }
-    });
-  }
-
-  renderTopicListItem() {
     if (this.shouldFocusLastVisited) {
       const title = this.titleElement;
       if (title) {
@@ -193,6 +182,17 @@ export default class GlimmerTopicListItem extends Component {
   }
 
   @action
+  applyTitleDecorators(element) {
+    const rawTopicLink = element.querySelector(".raw-topic-link");
+
+    if (rawTopicLink) {
+      topicTitleDecorators?.forEach((cb) =>
+        cb(this.args.topic, rawTopicLink, "topic-list-item-title")
+      );
+    }
+  }
+
+  @action
   onBulkSelectToggle(e) {
     if (e.target.checked) {
       this.args.selected.addObject(this.args.topic);
@@ -313,7 +313,7 @@ export default class GlimmerTopicListItem extends Component {
   }
 
   get shouldFocusLastVisited() {
-    return this.site.desktopView && this.focusLastVisitedTopic;
+    return this.site.desktopView && this.args.focusLastVisitedTopic;
   }
 
   get titleElement() {
@@ -322,6 +322,7 @@ export default class GlimmerTopicListItem extends Component {
 
   <template>
     <tr
+      {{didInsert this.applyTitleDecorators}}
       {{on "keydown" this.keyDown}}
       data-topic-id={{@topic.id}}
       role={{this.role}}
