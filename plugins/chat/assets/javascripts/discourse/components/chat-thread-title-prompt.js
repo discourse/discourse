@@ -82,11 +82,11 @@ export default class ShowThreadTitlePrompt extends Component {
   show() {
     this.toasts.default({
       duration: 5000,
+      showProgressBar: true,
       class: "thread-toast",
       data: {
         title: this.toastText.title,
         message: this.toastText.message,
-        showProgressBar: true,
         actions: [
           {
             label: this.toastText.dismissLabel,
