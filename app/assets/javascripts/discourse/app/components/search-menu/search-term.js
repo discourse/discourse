@@ -77,7 +77,6 @@ export default class SearchTerm extends Component {
         this.lastEnterTimestamp &&
         Date.now() - this.lastEnterTimestamp < SECOND_ENTER_MAX_DELAY;
 
-      // same combination as key-enter-escape mixin
       if (
         e.ctrlKey ||
         e.metaKey ||
