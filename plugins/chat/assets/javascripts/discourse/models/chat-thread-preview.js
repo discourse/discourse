@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import User from "discourse/models/user";
 
 export default class ChatThreadPreview {
   static create(args = {}) {
