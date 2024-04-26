@@ -1857,6 +1857,7 @@ RSpec.describe User do
           unactivated_old_with_human_pm,
           unactivated_old_with_post,
           unactivated_by_admin,
+          unactivated_by_system,
           admin,
         ],
       )

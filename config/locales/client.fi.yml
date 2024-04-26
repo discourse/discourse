@@ -685,7 +685,6 @@ fi:
       topic_count_long: "Ketjunaloituksia"
       post_count: "Vastauksia"
       post_count_long: "Kirjoitettuja vastauksia"
-      no_results: "Ei tuloksia."
       days_visited: "Vierailut"
       days_visited_long: "Vierailupäiviä"
       posts_read: "Luetut"
@@ -961,6 +960,7 @@ fi:
       "13": "Postilaatikko"
       "14": "Odottaa"
       "15": "Luonnokset"
+      "17": "Linkit"
     categories:
       categories_label: "luokat"
       subcategories_label: "ala-alueet"
@@ -1852,10 +1852,6 @@ fi:
       suggested_topics:
         title: "Jatka lukemista!"
         content: "Tässä on muutamia ketjuja, joita saatat haluta lukea seuraavaksi."
-      admin_guide:
-        title: "Tervetuloa uudelle sivustollesi!"
-        content: "<a href='%{admin_guide_url}'>Lue ylläpito-opas</a> jatkaaksesi sivustosi ja yhteisösi rakentamista."
-        content_no_url: "Lue ylläpito-opas jatkaaksesi sivustosi ja yhteisösi rakentamista."
     loading: "Ladataan…"
     errors:
       prev_page: "yrittäessä ladata"
@@ -2397,6 +2393,7 @@ fi:
         one: "tykkäsi %{count} viestistäsi"
         other: "tykkäsi %{count} viestistäsi"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -4833,6 +4830,8 @@ fi:
           emoji: "Emojit"
           navigation: "Navigointi"
           themes: "Teemat"
+          components:
+            title: "Komponentit"
       email_settings:
         sidebar_link:
           appearance: "Ulkoasu"

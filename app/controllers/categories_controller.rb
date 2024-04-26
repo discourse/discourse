@@ -362,17 +362,21 @@ class CategoriesController < ApplicationController
     prioritized_category_id = params[:prioritized_category_id].to_i if params[
       :prioritized_category_id
     ].present?
-    limit = params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT) if params[:limit].present?
+    limit =
+      (
+        if params[:limit].present?
+          params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT)
+        else
+          MAX_CATEGORIES_LIMIT
+        end
+      )
+    page = [1, params[:page].to_i].max
 
     categories = Category.secured(guardian)
 
-    categories =
-      categories
-        .includes(:category_search_data)
-        .references(:category_search_data)
-        .where(
-          "category_search_data.search_data @@ #{Search.ts_query(term: term)}",
-        ) if term.present?
+    if term.present? && words = term.split
+      words.each { |word| categories = categories.where("name ILIKE ?", "%#{word}%") }
+    end
 
     categories =
       (
@@ -408,7 +412,8 @@ class CategoriesController < ApplicationController
         )
         .joins("LEFT JOIN topics t on t.id = categories.topic_id")
         .select("categories.*, t.slug topic_slug")
-        .limit(limit || MAX_CATEGORIES_LIMIT)
+        .limit(limit)
+        .offset((page - 1) * limit)
 
     if Site.preloaded_category_custom_fields.present?
       Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)

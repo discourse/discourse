@@ -689,7 +689,6 @@ sv:
       topic_count_long: "Ämnen skapade"
       post_count: "Svar"
       post_count_long: "Svar publicerade"
-      no_results: "Inga resultat hittades."
       days_visited: "Besök"
       days_visited_long: "Dagar besökta"
       posts_read: "Lästa"
@@ -965,6 +964,7 @@ sv:
       "13": "Inkorg"
       "14": "Väntar"
       "15": "Utkast"
+      "17": "Länkar"
     categories:
       categories_label: "kategorier"
       subcategories_label: "underkategorier"
@@ -1863,10 +1863,6 @@ sv:
       suggested_topics:
         title: "Fortsätt läsa!"
         content: "Här är några ämnen som vi tror att du kanske vill läsa härnäst."
-      admin_guide:
-        title: "Välkommen till din nya webbplats!"
-        content: "<a href='%{admin_guide_url}'>Läs administratörsguiden</a> för att fortsätta bygga din webbplats och ditt forum."
-        content_no_url: "Läs administratörshandboken för att fortsätta bygga upp din webbplats och ditt forum."
     loading: "Laddar…"
     errors:
       prev_page: "medan vi försökte ladda"
@@ -2408,6 +2404,7 @@ sv:
         one: "gillade %{count} av dina inlägg"
         other: "gillade %{count} av dina inlägg"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span>%{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -4861,6 +4858,8 @@ sv:
           emoji: "Emoji"
           navigation: "Navigering"
           themes: "Teman"
+          components:
+            title: "Komponenter"
       email_settings:
         title: "E-postinställningar"
         sidebar_link:

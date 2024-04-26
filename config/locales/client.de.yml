@@ -698,7 +698,9 @@ de:
       topic_count_long: "Erstellte Themen"
       post_count: "Beiträge"
       post_count_long: "Verfasste Beiträge"
-      no_results: "Es wurden keine Ergebnisse gefunden."
+      no_results:
+        body: "Hier wird eine Liste der Community-Mitglieder und ihrer Aktivitäten angezeigt. Im Moment ist die Liste noch leer, weil deine Community noch ganz neu ist!"
+        extra_body: "Admins und Moderatoren können Benutzer in der <a href='%{basePath}/admin/users/'>Benutzerverwaltung</a> sehen und verwalten."
       days_visited: "Aufrufe"
       days_visited_long: "Besuchstage"
       posts_read: "Gelesen"
@@ -977,6 +979,7 @@ de:
       "13": "Posteingang"
       "14": "Ausstehend"
       "15": "Entwürfe"
+      "17": "Links"
     categories:
       categories_label: "Kategorien"
       subcategories_label: "Unterkategorien"
@@ -1886,10 +1889,6 @@ de:
       suggested_topics:
         title: "Lies weiter!"
         content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
-      admin_guide:
-        title: "Willkommen auf deiner neuen Website!"
-        content: "<a href='%{admin_guide_url}'>Lies den Administrator-Leitfaden</a>, um deine Website und deine Community weiter auszubauen."
-        content_no_url: "Lies den Administrator-Leitfaden, um deine Website und deine Community weiter auszubauen."
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -2116,6 +2115,10 @@ de:
         name: "Discord"
         title: "Mit Discord anmelden"
         sr_title: "Mit Discord anmelden"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "Mit LinkedIn anmelden"
+        sr_title: "Mit LinkedIn anmelden"
       passkey:
         name: "Mit einem Passkey anmelden"
       second_factor_toggle:
@@ -2438,6 +2441,10 @@ de:
         one: "gefällt %{count} deiner Beiträge"
         other: "gefallen %{count} deiner Beiträge"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated_description:
+        one: "verlinkte %{count} deiner Beiträge"
+        other: "verlinkte %{count} deiner Beiträge"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2508,6 +2515,7 @@ de:
         watching_first_post: "neues Thema"
         topic_reminder: "Themen-Erinnerung"
         liked_consolidated: "neue „Gefällt mir“-Angaben"
+        linked_consolidated: "neue Links"
         post_approved: "Beitrag genehmigt"
         membership_request_consolidated: "Neue Mitgliedschaftsanfragen"
         reaction: "neue Reaktion"
@@ -2752,6 +2760,9 @@ de:
         selected:
           one: "Du hast <b>%{count}</b> Thema ausgewählt."
           other: "Du hast <b>%{count}</b> Themen ausgewählt."
+        selected_sole_category:
+          one: "Du hast ausgewählt <b>%{count}</b> Thema aus der Kategorie:"
+          other: "Du hast ausgewählt <b>%{count}</b> Themen aus der Kategorie:"
         selected_count:
           one: "%{count} ausgewählt"
           other: "%{count} ausgewählt"
@@ -2802,6 +2813,7 @@ de:
     topic_bulk_actions:
       close_topics:
         name: "Themen schließen"
+        note: "Hinweis"
         optional: (optional)
       archive_topics:
         name: "Themen archivieren"
@@ -4392,7 +4404,7 @@ de:
       clear_filter: "Filter löschen"
       no_results:
         title: "Keine Ergebnisse"
-        description: "Wir konnten nichts finden, das zu '%{filter}' passt"
+        description: "Wir konnten nichts finden, das zu '%{filter}' passt.<br><br>Wolltest du die <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">Seiteneinstellungen</a> oder die <a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">Benutzerliste</a> durchsuchen?"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -4928,7 +4940,9 @@ de:
         title: "Konto"
         sidebar_link:
           backups: "Backups"
-          whats_new: "Was ist neu?"
+          whats_new:
+            title: "Was ist neu?"
+            keywords: "Änderungsprotokoll|Feature|Release"
       community:
         title: "Gemeinschaft"
         sidebar_link:
@@ -4951,6 +4965,9 @@ de:
           emoji: "Emoji"
           navigation: "Navigation"
           themes: "Themes"
+          components:
+            title: "Komponenten"
+            keywords: "Theme|Erweiterung"
           site_texts: "Website-Texte"
       email_settings:
         title: "E-Mail-Einstellungen"
@@ -6233,6 +6250,7 @@ de:
           add_document_types: "Dokumente"
           add_types_title: "Erweiterungen zulassen %{types}"
           add_types_toast: "%{types} Dateitypen hinzugefügt"
+        mandatory_group: "Gruppe ist obligatorisch"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen

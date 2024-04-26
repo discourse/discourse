@@ -746,7 +746,6 @@ sk:
       topic_count_long: "Vytvorených tém"
       post_count: "Odpovede"
       post_count_long: "Odpovedí"
-      no_results: "Žiadne výsledky"
       days_visited: "Návštev"
       days_visited_long: "Navštívených dní"
       posts_read: "Prečítané"
@@ -1026,6 +1025,7 @@ sk:
       "13": "Prijaté správy"
       "14": "Čakajúce správy"
       "15": "Koncepty"
+      "17": "Odkazy"
     categories:
       categories_label: "kategórie"
       subcategories_label: "podkategórie"
@@ -2071,6 +2071,7 @@ sk:
         few: "%{username} a %{count} ďalších"
         many: "%{username} a %{count} ďalších"
         other: "%{username} a %{count} ďalších"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       dismiss_confirmation:
         dismiss: "Zahodiť"
         cancel: "Zrušiť"
@@ -3452,6 +3453,8 @@ sk:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Navigácia"
+          components:
+            title: "Komponenty"
       email_settings:
         sidebar_link:
           preview_summary: "Súhrn"

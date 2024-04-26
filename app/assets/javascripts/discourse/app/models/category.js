@@ -6,6 +6,7 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
+import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
@@ -398,6 +399,7 @@ export default class Category extends RestModel {
       include_ancestors: opts.includeAncestors,
       prioritized_category_id: opts.prioritizedCategoryId,
       limit: opts.limit,
+      page: opts.page,
     };
 
     const result = (CATEGORY_ASYNC_SEARCH_CACHE[JSON.stringify(data)] ||=
@@ -459,6 +461,11 @@ export default class Category extends RestModel {
     return this.site.categories.filterBy("parent_category_id", this.id);
   }
 
+  @computed("subcategory_list")
+  get serializedSubcategories() {
+    return this.subcategory_list?.map((c) => Category.create(c));
+  }
+
   @discourseComputed("required_tag_groups", "minimum_required_tags")
   minimumRequiredTags() {
     if (this.required_tag_groups?.length > 0) {
@@ -490,6 +497,15 @@ export default class Category extends RestModel {
   @discourseComputed("parentCategory.ancestors")
   ancestors(parentAncestors) {
     return [...(parentAncestors || []), this];
+  }
+
+  @discourseComputed("parentCategory", "parentCategory.predecessors")
+  predecessors(parentCategory, parentPredecessors) {
+    if (parentCategory) {
+      return [parentCategory, ...parentPredecessors];
+    } else {
+      return [];
+    }
   }
 
   @discourseComputed("subcategories")
@@ -750,7 +766,9 @@ export default class Category extends RestModel {
   @discourseComputed("topics")
   featuredTopics(topics) {
     if (topics && topics.length) {
-      return topics.slice(0, this.num_featured_topics || 2);
+      return topics
+        .slice(0, this.num_featured_topics || 2)
+        .map((t) => Topic.create(t));
     }
   }
 

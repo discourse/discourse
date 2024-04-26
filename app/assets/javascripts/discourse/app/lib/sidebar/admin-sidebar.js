@@ -239,6 +239,10 @@ function pluginAdminRouteLinks() {
     });
 }
 
+function installedPluginsLinkKeywords() {
+  return (PreloadStore.get("visiblePlugins") || []).mapBy("name");
+}
+
 export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
   key = ADMIN_PANEL;
   hidden = true;
@@ -251,6 +255,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const siteSettings = getOwnerWithFallback(this).lookup(
       "service:site-settings"
     );
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const router = getOwnerWithFallback(this).lookup("service:router");
     const session = getOwnerWithFallback(this).lookup("service:session");
     if (!currentUser.use_admin_sidebar) {
@@ -265,8 +270,29 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const navMap = savedConfig || ADMIN_NAV_MAP;
 
     if (!session.get("safe_mode")) {
-      navMap.findBy("name", "plugins").links.push(...pluginAdminRouteLinks());
+      const pluginLinks = navMap.findBy("name", "plugins").links;
+      pluginAdminRouteLinks().forEach((pluginLink) => {
+        if (!pluginLinks.mapBy("name").includes(pluginLink.name)) {
+          pluginLinks.push(pluginLink);
+        }
+      });
+
+      this.adminSidebarStateManager.setLinkKeywords(
+        "admin_installed_plugins",
+        installedPluginsLinkKeywords()
+      );
     }
+
+    store.findAll("theme").then((themes) => {
+      this.adminSidebarStateManager.setLinkKeywords(
+        "admin_themes",
+        themes.content.rejectBy("component").mapBy("name")
+      );
+      this.adminSidebarStateManager.setLinkKeywords(
+        "admin_components",
+        themes.content.filterBy("component").mapBy("name")
+      );
+    });
 
     if (siteSettings.experimental_form_templates) {
       navMap.findBy("name", "appearance").links.push({
@@ -280,7 +306,10 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     navMap.forEach((section) =>
       section.links.forEach((link) => {
         if (link.keywords) {
-          this.adminSidebarStateManager.keywords[link.name] = link.keywords;
+          this.adminSidebarStateManager.setLinkKeywords(
+            link.name,
+            I18n.t(link.keywords).split("|")
+          );
         }
       })
     );

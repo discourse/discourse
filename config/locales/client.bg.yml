@@ -645,7 +645,6 @@ bg:
       topic_count_long: "Създадени теми"
       post_count: "Отговори"
       post_count_long: "Публикувани отговори"
-      no_results: "Няма намерени резултати."
       days_visited: "Посещения"
       days_visited_long: "Посетени дни"
       posts_read: "Прочетени"
@@ -920,6 +919,7 @@ bg:
       "13": "Кутия"
       "14": "Чакащи"
       "15": "Чернови"
+      "17": "Връзки"
     categories:
       categories_label: "категории"
       subcategories_label: "подкатегории"
@@ -1766,10 +1766,6 @@ bg:
       suggested_topics:
         title: "Продължете да четете!"
         content: "Ето някои теми, които смятаме, че бихте искали също да прочетете."
-      admin_guide:
-        title: "Добре дошли в новия си сайт!"
-        content: "<a href='%{admin_guide_url}'>Прочетете ръководството за администриране</a> , за да продължите да изграждате своя сайт и общност."
-        content_no_url: "Прочетете ръководството за администриране , за да продължите да изграждате своя сайт и общност."
     errors:
       prev_page: "докато се зареждаше"
       reasons:
@@ -2215,6 +2211,7 @@ bg:
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
       invitee_accepted: "<span>%{username}</span> прие поканата ви"

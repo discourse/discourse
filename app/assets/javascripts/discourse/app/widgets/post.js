@@ -755,7 +755,10 @@ createWidget("post-body", {
       this,
       "div.topic-map",
       hbs`<TopicMap
-        @postAttrs={{@data.postAttrs}}
+        @model={{@data.model}}
+        @topicDetails={{@data.topicDetails}}
+        @postStream={{@data.postStream}}
+        @showPMMap={{@data.showPMMap}}
         @cancelFilter={{@data.cancelFilter}}
         @showTopReplies={{@data.showTopReplies}}
         @collapseSummary={{@data.collapseSummary}}
@@ -765,7 +768,10 @@ createWidget("post-body", {
         @removeAllowedUser={{@data.removeAllowedUser}}
       />`,
       {
-        postAttrs: attrs,
+        model: attrs.topic,
+        topicDetails: attrs.topic.get("details"),
+        postStream: attrs.topic.postStream,
+        showPMMap: attrs.showPMMap,
         cancelFilter: () => this.sendWidgetAction("cancelFilter"),
         showTopReplies: () => this.sendWidgetAction("showTopReplies"),
         collapseSummary: () => this.sendWidgetAction("collapseSummary"),

@@ -198,7 +198,9 @@ export default Component.extend(
       this.appEvents.on("keyboard-visibility-change", this, this._updatePopper);
 
       if (this.selectKit.options.expandedOnInsert) {
-        this._open();
+        next(() => {
+          this._open();
+        });
       }
     },
 

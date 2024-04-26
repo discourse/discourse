@@ -647,7 +647,9 @@ zh_CN:
       topic_count_long: "创建的话题"
       post_count: "回复"
       post_count_long: "回帖"
-      no_results: "没有找到结果。"
+      no_results:
+        body: "此处将显示社区成员的活动列表。目前列表为空，因为你的社区是新的！"
+        extra_body: "管理员和版主可以在 <a href='%{basePath}/admin/users/'>用户管理员</a>中查看和管理用户。"
       days_visited: "访问天数"
       days_visited_long: "访问天数"
       posts_read: "已读"
@@ -923,6 +925,7 @@ zh_CN:
       "13": "收件箱"
       "14": "待处理"
       "15": "草稿"
+      "17": "链接"
     categories:
       categories_label: "类别"
       subcategories_label: "子类别"
@@ -1795,10 +1798,6 @@ zh_CN:
       suggested_topics:
         title: "继续阅读！"
         content: "下面是我们认为您接下来可能想要阅读的一些话题。"
-      admin_guide:
-        title: "欢迎来到您的新站点！"
-        content: "<a href='%{admin_guide_url}'>阅读管理指南</a> 以继续构建您的站点和社区。"
-        content_no_url: "阅读管理指南以继续构建您的站点和社区。"
     loading: "加载…"
     errors:
       prev_page: "无法加载"
@@ -2022,6 +2021,10 @@ zh_CN:
         name: "Discord"
         title: "使用 Discord 登录"
         sr_title: "使用 Discord 登录"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "使用 LinkedIn 登录"
+        sr_title: "使用 LinkedIn 登录"
       passkey:
         name: "使用通行密钥登录"
       second_factor_toggle:
@@ -2322,6 +2325,7 @@ zh_CN:
       liked_consolidated_description:
         other: "点赞了您的 %{count} 个帖子"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2616,6 +2620,8 @@ zh_CN:
         choose_new_category: "为话题选择新类别："
         selected:
           other: "您已选择 <b>%{count}</b> 个话题。"
+        selected_sole_category:
+          other: "你已从类别中选择了 <b>%{count}</b> 个话题。"
         selected_count:
           other: "已选择 %{count} 个"
         change_tags: "替换标签"
@@ -4174,7 +4180,7 @@ zh_CN:
       clear_filter: "清除过滤器"
       no_results:
         title: "没有结果"
-        description: "我们找不到任何匹配 ’%{filter}’ 的内容"
+        description: "我们找不到与“%{filter}”匹配的任何内容。<br><br>你是否要 <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">搜索站点设置</a> 或 <a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">管理员用户列表？</a>"
     welcome_topic_banner:
       title: "创建您的欢迎话题"
       description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
@@ -4700,7 +4706,9 @@ zh_CN:
         title: "帐户"
         sidebar_link:
           backups: "备份"
-          whats_new: "最新变化"
+          whats_new:
+            title: "最新变化"
+            keywords: "更新日志|功能|发布"
       community:
         title: "社区"
         sidebar_link:
@@ -4723,6 +4731,9 @@ zh_CN:
           emoji: "表情符号"
           navigation: "导航"
           themes: "主题"
+          components:
+            title: "组件"
+            keywords: "主题|扩展"
           site_texts: "站点文本"
       email_settings:
         title: "电子邮件设置"
@@ -5990,6 +6001,7 @@ zh_CN:
           add_document_types: "文档"
           add_types_title: "允许扩展名 %{types}"
           add_types_toast: "添加了 %{types} 文件类型"
+        mandatory_group: "群组是必须的"
       badges:
         title: 徽章
         new_badge: 新徽章

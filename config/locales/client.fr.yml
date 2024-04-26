@@ -686,7 +686,6 @@ fr:
       topic_count_long: "Sujets créés"
       post_count: "Réponses"
       post_count_long: "Réponses envoyées"
-      no_results: "Aucun résultat n'a été trouvé."
       days_visited: "Visites"
       days_visited_long: "Jours visités"
       posts_read: "Lus"
@@ -962,6 +961,7 @@ fr:
       "13": "Boîte de réception"
       "14": "En attente"
       "15": "Brouillons"
+      "17": "Liens"
     categories:
       categories_label: "catégories"
       subcategories_label: "sous-catégories"
@@ -1853,10 +1853,6 @@ fr:
       suggested_topics:
         title: "Continuez de lire !"
         content: "Voici quelques sujets que vous pourriez vouloir lire ensuite."
-      admin_guide:
-        title: "Bienvenue sur votre nouveau site !"
-        content: "<a href='%{admin_guide_url}'>Lisez le guide d'administration</a> pour continuer à développer votre site et votre communauté."
-        content_no_url: "Lisez le guide d'administration pour continuer à développer votre site et votre communauté."
     loading: "Chargement…"
     errors:
       prev_page: "lors du chargement de"
@@ -2398,6 +2394,7 @@ fr:
         one: "a aimé %{count} de vos messages"
         other: "a aimé %{count} de vos messages"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -4835,6 +4832,8 @@ fr:
           emoji: "Émoji"
           navigation: "Navigation"
           themes: "Thèmes"
+          components:
+            title: "Composants"
       email_settings:
         sidebar_link:
           appearance: "Apparence"

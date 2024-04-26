@@ -686,7 +686,6 @@ it:
       topic_count_long: "Argomenti Creati"
       post_count: "Risposte"
       post_count_long: "Risposte Inviate"
-      no_results: "Nessun risultato trovato."
       days_visited: "Visite"
       days_visited_long: "Giorni di Frequenza"
       posts_read: "Letti"
@@ -962,6 +961,7 @@ it:
       "13": "Posta in arrivo"
       "14": "In Attesa"
       "15": "Bozze"
+      "17": "Collegamenti"
     categories:
       categories_label: "categorie"
       subcategories_label: "sottocategorie"
@@ -1853,10 +1853,6 @@ it:
       suggested_topics:
         title: "Continua a leggere!"
         content: "Ecco alcuni argomenti che riteniamo gradiresti leggere in seguito."
-      admin_guide:
-        title: "Eccoti nel tuo nuovo sito!"
-        content: "<a href='%{admin_guide_url}'>Leggi la guida dell'amministratore</a> per continuare a costruire il tuo sito e la tua community."
-        content_no_url: "Leggi la guida dell'amministratore per continuare a costruire il tuo sito e la tua community."
     loading: "Caricamento…"
     errors:
       prev_page: "durante il caricamento"
@@ -2398,6 +2394,7 @@ it:
         one: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
         other: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -4833,6 +4830,8 @@ it:
           emoji: "Emoji"
           navigation: "Navigazione"
           themes: "Temi"
+          components:
+            title: "Componenti"
       email_settings:
         sidebar_link:
           appearance: "Aspetto"

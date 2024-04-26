@@ -387,7 +387,10 @@ uk:
         unbookmark: "Натисніть, щоб видалити всі закладки в цій темі"
         unbookmark_with_reminder: "Натисніть, щоб видалити всі закладки та нагадування в цій темі"
     bookmarks:
+      also_set_reminder: "Також встановити нагадування?"
       bookmarked_success: "В закладках!"
+      deleted_bookmark_success: "Закладку видалено!"
+      reminder_set_success: "Нагадування встановлено!"
       created: "Ви додали цей допис в закладки. %{name}"
       created_generic: "Ви створили закладку. %{name}"
       create: "Створити закладку"
@@ -410,6 +413,8 @@ uk:
         when_reminder_sent: "Видалити закладку"
         on_owner_reply: "Видалити закладку після моєї відповіді"
         clear_reminder: "Залишити закладку та очистити нагадування"
+        after_reminder_label: "Нагадавши вам, ми повинні..."
+        after_reminder_checkbox: "Встановити це як замовчування для всіх майбутніх закладок нагадування"
       search_placeholder: "Пошук закладок за назвою, назвою теми або вмістом допису"
       search: "Пошук"
       bookmark: "Додати закладку"
@@ -744,6 +749,7 @@ uk:
       in_two_hours: "Через дві години"
       later_today: "Пізніше сьогодні"
       two_days: "Два дні"
+      three_days: "Через три дні"
       next_business_day: "Наступний робочий день"
       tomorrow: "Завтра"
       post_local_date: "Дата допису"
@@ -794,7 +800,9 @@ uk:
       topic_count_long: "Тем створено"
       post_count: "Відповідей"
       post_count_long: "Відповіді Опубліковано"
-      no_results: "Нічого не знайдено."
+      no_results:
+        body: "Тут буде показано список учасників спільноти, які відображатимуть їхню активність. Наразі список порожній, тому що ваша спільнота ще нова!"
+        extra_body: "Адміністратори та модератори можуть переглядати користувачів і керувати ними в <a href='%{basePath}/admin/users/'>адміністраторі користувачів</a>."
       days_visited: "Відвідин"
       days_visited_long: "Днів відвідин"
       posts_read: "Прочитані"
@@ -1058,6 +1066,11 @@ uk:
         image: "Завантажити зображення"
       default_notifications:
         modal_title: "Стандартні сповіщення користувача"
+        modal_description:
+          one: "Ви хотіли б застосувати ці зміни? Це змінить налаштування для %{count} існуючого користувача."
+          few: "Хотіли б ви застосувати цю зміну для існуючих користувачів? Це змінить налаштування для %{count} існуючих користувачів."
+          many: "Хотіли б ви застосувати цю зміну для існуючих користувачів? Це змінить налаштування для %{count} існуючих користувачів."
+          other: "Хотіли б ви застосувати цю зміну для існуючих користувачів? Це змінить налаштування для %{count} існуючих користувачів."
         modal_yes: "Так"
         modal_no: "Ні, тільки застосувати зміни в майбутньому"
     user_action_groups:
@@ -1074,6 +1087,7 @@ uk:
       "13": "Вхідні"
       "14": "Очікують"
       "15": "Чернетки"
+      "17": "Посилання"
     categories:
       categories_label: "розділи"
       subcategories_label: "підрозділи"
@@ -1275,6 +1289,7 @@ uk:
         description: "Пропустити поради щодо створення користувача та значків"
       reset_seen_user_tips: "Знову показати поради користувача"
       theme_default_on_all_devices: "Зробити цю тему базовою для усіх моїх пристроїв"
+      color_scheme_default_on_all_devices: "Встановити колірну схему за замовчуванням на всіх моїх пристроях"
       color_scheme: "Схема кольорів"
       color_schemes:
         default_description: "Типова тема"
@@ -1929,6 +1944,11 @@ uk:
         same_as_username: "Ваш пароль збігається з іменем користувача"
         same_as_email: "Ваш пароль збігається з вашим email"
         ok: "Ваш пароль виглядає добре."
+        instructions:
+          one: "Принаймні %{count} символ."
+          few: "Принаймні %{count} символи."
+          many: "Не менше %{count} символів."
+          other: "Не менше %{count} символів."
         required: "Будь ласка, введіть пароль"
         confirm: "Підтвердити"
         incorrect_password: "Введений пароль неправильний."
@@ -2051,10 +2071,6 @@ uk:
       suggested_topics:
         title: "Продовжуйте читати!"
         content: "Ось кілька тем, які, на нашу думку, ви можете прочитати далі."
-      admin_guide:
-        title: "Ласкаво просимо на ваш новий сайт!"
-        content: "<a href='%{admin_guide_url}'>Прочитайте посібник адміністратора</a> , щоб продовжити розбудову свого сайту та спільноти."
-        content_no_url: "Прочитайте посібник адміністратора, щоб продовжити розбудову свого сайту та спільноти."
     loading: "Завантаження…"
     errors:
       prev_page: "при спробі завантаження"
@@ -2433,6 +2449,11 @@ uk:
         few: "Згадка %{group} сповістить <a href='%{group_link}'>%{count} людини</a>."
         many: "Згадка %{group} сповістить <a href='%{group_link}'>%{count} людей</a>."
         other: "Згадка %{group} сповістить <a href='%{group_link}'>%{count} людей</a>."
+      larger_group_mentioned:
+        one: "Згадка про %{group} повідомить про це <a href='%{group_link}'>%{count} особу</a>. Ви впевнені?"
+        few: "Згадка %{group} сповістить <a href='%{group_link}'>%{count} людей</a>. Ви впевнені?"
+        many: "Згадка %{group} сповістить <a href='%{group_link}'>%{count} людей</a>. Ви впевнені?"
+        other: "Згадка %{group} сповістить <a href='%{group_link}'>%{count} людей</a>. Ви впевнені?"
       cannot_see_mention:
         category: "Ви згадали @%{username}, але користувач не одержить сповіщення, тому що він немає доступу до цього розділу. Вам потрібно додати його до групи, що має доступ до цього розділу."
         private: "Ви згадали @%{username}, але користувач не одержить сповіщення, оскільки не можуть побачити це особисте повідомлення. Вам потрібно буде запросити їх до цього спілкування."
@@ -2648,6 +2669,12 @@ uk:
         many: "вподобав(ла) %{count} ваших дописів"
         other: "вподобав(ла) %{count} ваших дописів"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated_description:
+        one: "пов'язано з %{count} вашим повідомленням"
+        few: "посилання з %{count} вашими публікаціями"
+        many: "посилання з %{count} вашими публікаціями"
+        other: "посилання з %{count} вашими публікаціями"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2728,6 +2755,7 @@ uk:
         watching_first_post: "нова тема"
         topic_reminder: "нагадування про тему"
         liked_consolidated: "нові вподобання"
+        linked_consolidated: "нові посилання"
         post_approved: "допис затверджено"
         membership_request_consolidated: "нові запити на членство"
         reaction: "нова реакція"
@@ -2834,6 +2862,7 @@ uk:
           seen: Я читаю
           unseen: Я не читав
           wiki: є вікі
+          images: включити зображення
           all_tags: Усі перераховані вище теґи
         statuses:
           label: Де теми
@@ -3001,6 +3030,11 @@ uk:
           few: "Ви вибрали <b>%{count}</b> теми."
           many: "Ви вибрали <b>%{count}</b> тем."
           other: "Ви вибрали <b>%{count}</b> тем."
+        selected_sole_category:
+          one: "Ви вибрали <b>%{count}</b> тему з категорії:"
+          few: "Ви вибрали <b>%{count}</b> теми з категорії:"
+          many: "Ви вибрали <b>%{count}</b> тем з категорії:"
+          other: "Ви вибрали <b>%{count}</b> тем з категорії:"
         selected_count:
           one: "%{count} вибрано"
           few: "%{count} вибрано"
@@ -3057,6 +3091,7 @@ uk:
     topic_bulk_actions:
       close_topics:
         name: "Закрити теми"
+        note: "Примітка"
         optional: (опціонально)
       archive_topics:
         name: "Архівувати теми"
@@ -4331,6 +4366,7 @@ uk:
         filter_sidebar: "%{shortcut} Бічна панель фільтрів"
         help: "%{shortcut} Показати поєднання клавіш"
         toggle_bulk_select: "%{shortcut} Перемкнути масовий вибір"
+        dismiss: "%{shortcut} Відхилити вибрані теми"
         x: "%{shortcut} Перемикання вибору (в режимі масового вибору)"
         log_out: "%{shortcut} Вийти"
       composing:
@@ -4681,6 +4717,9 @@ uk:
           save: "Зберегти"
           delete: "Видалити"
           delete_confirm: "Ви впевнені, що хочете видалити цей розділ?"
+          delete_public_confirm: "Цей розділ <strong>видимий для всіх</strong>, ви впевнені, що хочете його видалити?"
+          update_public_confirm: "Зміни буде <strong>видно всім</strong> на цьому сайті. Ви впевнені?"
+          mark_as_private_confirm: "Цей розділ <strong>видно всім</strong>. Після оновлення він буде <strong>видимий тільки вам</strong>. Ви впевнені?"
           reset_confirm: "Ви впевнені, що бажаєте повернути цей розділ до стандартних?"
           public: "Видно для всіх"
           always_public: "Вміст цього розділу завжди відкритий для всіх"
@@ -4693,6 +4732,11 @@ uk:
               label: "Іконка"
               validation:
                 blank: "Іконка не може бути порожньою"
+                maximum:
+                  one: "Значок має бути коротшим за %{count} символ"
+                  few: "Значок має бути коротшим за %{count} символи"
+                  many: "Значок має бути коротшим за %{count} символів"
+                  other: "Значок має бути коротшим за %{count} символів"
             name:
               label: "Імʼя"
               validation:
@@ -4783,7 +4827,6 @@ uk:
       clear_filter: "Очистити фільтр"
       no_results:
         title: "Немає результатів"
-        description: "Ми не змогли знайти жодного результату '%{filter}'"
     welcome_topic_banner:
       title: "Створіть тему привітання"
       description: "Ваша привітальна тема – це перше, що прочитають нові учасники. Думайте про це як про свою «початкову презентацію» або «програмну заяву». Повідомте всім, для кого ця спільнота, що вони можуть очікувати тут знайти та що ви хочете, щоб вони зробили в першу чергу."
@@ -5339,7 +5382,8 @@ uk:
         title: "Обліковий запис"
         sidebar_link:
           backups: "Резервні копії"
-          whats_new: "Що нового"
+          whats_new:
+            title: "Що нового"
       community:
         title: "Спільнота"
         sidebar_link:
@@ -5362,6 +5406,8 @@ uk:
           emoji: "Смайли"
           navigation: "Навігація"
           themes: "Стилі"
+          components:
+            title: "Компоненти"
           site_texts: "Тексти сайту"
       email_settings:
         title: "Налаштування електронної пошти"
@@ -6613,6 +6659,7 @@ uk:
           empty: "Фотографій поки немає. Будь ласка, завантажте одне."
           upload:
             label: "Завантажити"
+            title: "Завантажити зображення"
         selectable_avatars:
           title: "Список аватарів, які користувачі можуть вибрати"
         categories:

@@ -584,7 +584,6 @@ el:
       topic_count_long: "Δημιουργημένα Νήματα"
       post_count: "Απαντήσεις"
       post_count_long: "Αναρτημένες Απαντήσεις"
-      no_results: "Δεν βρέθηκαν αποτελέσματα."
       days_visited: "Επισκέψεις"
       days_visited_long: "Ημέρες Επίσκεψης"
       posts_read: "Διαβασμένο"
@@ -826,6 +825,7 @@ el:
       "13": "Εισερχόμενα"
       "14": "Εκκρεμή"
       "15": "Προσχέδια"
+      "17": "Σύνδεσμοι"
     categories:
       categories_label: "κατηγορίες"
       subcategories_label: "υποκατηγορίες"
@@ -1879,6 +1879,7 @@ el:
         one: "μου άρεσε %{count} από τις αναρτήσεις σας"
         other: "μου άρεσαν %{count} από τις αναρτήσεις σας"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -3632,6 +3633,8 @@ el:
           emoji: "Emoji"
           navigation: "Πλοήγηση"
           themes: "Θέματα"
+          components:
+            title: "Συστατικά"
       email_settings:
         sidebar_link:
           appearance: "Εμφάνιση"

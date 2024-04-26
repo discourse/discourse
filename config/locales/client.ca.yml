@@ -569,7 +569,6 @@ ca:
       topic_count_long: "Temes creats"
       post_count: "Respostes"
       post_count_long: "Respostes publicades"
-      no_results: "No s'han trobat resultats"
       days_visited: "Visites"
       days_visited_long: "Dies visitats"
       posts_read: "Llegit"
@@ -781,6 +780,7 @@ ca:
       "13": "Safata d'entrada"
       "14": "Pendents"
       "15": "Esborranys"
+      "17": "Enllaços"
     categories:
       categories_label: "categories"
       subcategories_label: "subcategories"
@@ -1690,6 +1690,7 @@ ca:
         one: "li agrada %{count} de les vostres publicacions"
         other: " %{count} de les vostres publicacions té 'M'agrada'"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -3194,6 +3195,8 @@ ca:
           emoji: "Emoji"
           navigation: "Navegació"
           themes: "Aparences"
+          components:
+            title: "Components"
       email_settings:
         sidebar_link:
           appearance: "Aparença"

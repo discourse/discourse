@@ -504,6 +504,16 @@ login:
     default: ""
     type: list
     list_type: simple
+  enable_linkedin_oidc_logins:
+    default: false
+    validator: "LinkedinOidcCredentialsValidator"
+  linkedin_oidc_client_id:
+    default: ""
+    regex: "^[a-z0-9]+$"
+  linkedin_oidc_client_secret:
+    default: ""
+    regex: "^[a-zA-Z0-9]+$"
+    secret: true
   auth_skip_create_confirm:
     default: false
     client: true
@@ -876,11 +886,11 @@ posting:
   enable_system_message_replies:
     default: true
   personal_message_enabled_groups:
-    default: "3|11" # auto group trust_level_1
+    default: "1|2|11" # auto group admins, moderators, trust_level_1
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400
@@ -973,11 +983,11 @@ posting:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   here_mention_allowed_groups:
-    default: "3|12" # auto group staff and trust_level_2
+    default: "1|2|12" # auto group admins, moderators, trust_level_2
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   title_max_word_length:
     default: 30
     locale_default:
@@ -1082,21 +1092,21 @@ posting:
     enum: "TrustLevelSetting"
     hidden: true
   approve_unless_allowed_groups:
-    default: "3|10" # auto groups staff and trust_level_0
+    default: "1|2|10" # auto groups admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   approve_new_topics_unless_trust_level:
     default: 0
     enum: "TrustLevelSetting"
     hidden: true
   approve_new_topics_unless_allowed_groups:
-    default: "3|10" # auto groups staff and trust_level_0
+    default: "1|2|10" # auto groups admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   approve_suspect_users:
     default: true
   approve_unless_staged:
@@ -1167,11 +1177,11 @@ posting:
     enum: "TrustLevelSetting"
     hidden: true
   skip_review_media_groups:
-    default: "3|10" # auto groups staff and trust_level_0
+    default: "1|2|10" # auto groups admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   blur_tl0_flagged_posts_media:
     default: true
     client: true
@@ -1285,11 +1295,11 @@ email:
     enum: "TrustLevelSetting"
     hidden: true
   email_in_allowed_groups:
-    default: "3|12" # auto group staff and trust_level_2
+    default: "1|2|12" # auto group admins, moderators, trust_level_2
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   email_in_authserv_id:
     default: ""
   email_in_spam_header:
@@ -1719,88 +1729,89 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   create_topic_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_edit_wiki_post:
     default: 1
     enum: "TrustLevelSetting"
     hidden: true
   edit_wiki_post_allowed_groups:
-    default: "3|11" # auto group staff and trust_level_1
+    default: "1|2|11" # auto group admins, moderators, trust_level_1
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_edit_post:
     default: 0
     enum: "TrustLevelSetting"
     hidden: true
   edit_post_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_allow_self_wiki:
     default: 3
     enum: "TrustLevelSetting"
     hidden: true
   self_wiki_allowed_groups:
-    default: "3|13" # auto group staff and trust_level_3
+    default: "1|2|13" # auto group admins, moderators, trust_level_3
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_send_email_messages:
     default: "4"
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   send_email_messages_allowed_groups:
-    default: "1|3|14" # auto group admin, staff, and trust_level_4
+    default: "1|2|14" # auto group admins, moderators, trust_level_4
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_flag_posts:
     default: 1
     enum: "TrustLevelSetting"
     hidden: true
   flag_post_allowed_groups:
-    default: "3|11" # auto group staff and trust_level_1
+    default: "1|2|11" # auto group admins, moderators, trust_level_1
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_post_links:
     default: 0
     enum: "TrustLevelSetting"
     hidden: true
   post_links_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_post_embedded_media:
     default: 0
     enum: "TrustLevelSetting"
     hidden: true
   embedded_media_post_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_allow_profile_background:
     default: 0
     client: true
     enum: "TrustLevelSetting"
     hidden: true
   profile_background_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
@@ -1810,7 +1821,8 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   user_card_background_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
@@ -1819,22 +1831,22 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   invite_allowed_groups:
-    default: "3|12" # auto group staff and trust_level_2
+    default: "1|2|12" # auto group admins, moderators, trust_level_2
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_allow_ignore:
     default: 2
     enum: "TrustLevelSetting"
     client: true
     hidden: true
   ignore_allowed_groups:
-    default: "3|12" # auto group staff and trust_level_2
+    default: "1|2|12" # auto group admins, moderators, trust_level_2
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
   send_tl2_promotion_message: true
@@ -1946,7 +1958,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot"
     type: list
     list_type: compact
   browser_update_user_agents:
@@ -1994,7 +2006,7 @@ security:
     list_type: compact
   slow_down_crawler_user_agents:
     type: list
-    default: ""
+    default: "gptbot|claudebot|anthropic-ai|brightbot"
     list_type: compact
   slow_down_crawler_rate: 60
   content_security_policy:
@@ -3038,11 +3050,11 @@ user_api:
     enum: "TrustLevelSetting"
     hidden: true
   user_api_key_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   allowed_user_api_push_urls:
     default: ""
     type: list
@@ -3091,23 +3103,23 @@ tags:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   create_tag_allowed_groups:
-    default: "1|3|13" # auto group admin, staff, and trust_level_3
+    default: "1|2|13" # auto group admins, moderators, trust_level_3
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_tag_topics:
     default: "0"
     enum: "TrustLevelAndStaffSetting"
     client: true
     hidden: true
   tag_topic_allowed_groups:
-    default: "1|3|10" # auto group admin, staff, and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
     client: true
-    validator: "AtLeastOneGroupValidator"
   max_tag_search_results:
     client: true
     default: 5

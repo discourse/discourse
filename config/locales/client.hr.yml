@@ -743,7 +743,6 @@ hr:
       topic_count_long: "Napravljene teme"
       post_count: "Odgovori"
       post_count_long: "Poslan odgovor"
-      no_results: "Nema pronađenih rezultata"
       days_visited: "Posjete"
       days_visited_long: "Dana posjećeno"
       posts_read: "Pročitano"
@@ -1021,6 +1020,7 @@ hr:
       "13": "Primljeno"
       "14": "Na čekanju"
       "15": "Skice"
+      "17": "Linkovi"
     categories:
       categories_label: "kategorije"
       subcategories_label: "podkategorije"
@@ -1934,10 +1934,6 @@ hr:
       suggested_topics:
         title: "Nastavi čitati!"
         content: "Evo nekih tema za koje mislimo da biste ih željeli pročitati sljedeće."
-      admin_guide:
-        title: "Dobro došli na svoju novu stranicu!"
-        content: "<a href='%{admin_guide_url}'>Pročitajte vodič za administratore</a> da biste nastavili s izgradnjom svoje stranice i zajednice."
-        content_no_url: "Pročitajte vodič za administratore da biste nastavili s izgradnjom svoje stranice i zajednice."
     loading: "Učitavanje…"
     errors:
       prev_page: "pri pokušaju očitanja"
@@ -2499,6 +2495,7 @@ hr:
         few: "se sviđa vaših %{count} postova"
         other: "se svidjelo %{count} vaših postova"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -4768,7 +4765,8 @@ hr:
         title: "Račun"
         sidebar_link:
           backups: "Sigurnosne kopije"
-          whats_new: "Što je novo"
+          whats_new:
+            title: "Što je novo"
       community:
         title: "Zajednica"
         sidebar_link:
@@ -4786,6 +4784,8 @@ hr:
           emoji: "Emoji"
           navigation: "Navigacija"
           themes: "Teme"
+          components:
+            title: "Komponente"
       email_settings:
         sidebar_link:
           appearance: "Izgled"

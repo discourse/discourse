@@ -890,7 +890,6 @@ ar:
       topic_count_long: "الموضوعات المنشأة"
       post_count: "الردود"
       post_count_long: "الردود المنشورة"
-      no_results: "لم يتم العثور على أي نتيجة."
       days_visited: "الزيارات"
       days_visited_long: "أيام الزيارة"
       posts_read: "المقروءة"
@@ -1174,6 +1173,7 @@ ar:
       "13": "صندوق الوارد"
       "14": "قيد الانتظار"
       "15": "المسودات"
+      "17": "الروابط"
     categories:
       categories_label: "الفئات"
       subcategories_label: "الفئات الفرعية"
@@ -2204,10 +2204,6 @@ ar:
       suggested_topics:
         title: "واصل القراءة!"
         content: "إليك بعض الموضوعات التي نظن أنك قد ترغب في قراءتها بعد ذلك."
-      admin_guide:
-        title: "مرحبًا بك في موقعك الجديد!"
-        content: "<a href='%{admin_guide_url}'>اقرأ دليل المشرف</a> لمواصلة بناء موقعك و مجتمعك."
-        content_no_url: "اقرأ دليل المسؤول لمتابعة بناء موقعك ومجتمعك."
     loading: "جارٍ التحميل…"
     errors:
       prev_page: "في أثناء محاولة التحميل"
@@ -2845,6 +2841,7 @@ ar:
         many: "سجَّل إعجابه على %{count} من منشوراتك"
         other: "سجَّل إعجابه على %{count} من منشوراتك"
       liked_consolidated: "‏<span>⁨%{username}⁩</span> ‏%{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       invited_to_private_message: "‏<p><span>⁨%{username}⁩</span> ‏%{description}"
       invited_to_topic: "‏<span>⁨%{username}⁩</span> ‏%{description}"
@@ -5727,6 +5724,8 @@ ar:
           emoji: "الرمز التعبيري"
           navigation: "التنقل"
           themes: "السمات"
+          components:
+            title: "المكوِّنات"
       email_settings:
         title: "إعدادات البريد الإلكتروني"
         sidebar_link:

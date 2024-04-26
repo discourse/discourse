@@ -4626,6 +4626,62 @@ RSpec.describe TopicsController do
   describe "#timings" do
     fab!(:post_1) { Fabricate(:post, user: post_author1, topic: topic) }
 
+    before do
+      # admins
+      SiteSetting.whispers_allowed_groups = "1"
+    end
+
+    let(:whisper) do
+      Fabricate(:post, user: post_author1, topic: topic, post_type: Post.types[:whisper])
+    end
+
+    it "should gracefully handle invalid timings sent in" do
+      sign_in(user)
+      params = {
+        topic_id: topic.id,
+        topic_time: 5,
+        timings: {
+          post_1.post_number => 2,
+          whisper.post_number => 2,
+          1000 => 100,
+        },
+      }
+
+      post "/topics/timings.json", params: params
+      expect(response.status).to eq(200)
+
+      tu = TopicUser.find_by(user: user, topic: topic)
+      expect(tu.last_read_post_number).to eq(post_1.post_number)
+
+      # lets also test timing recovery here
+      tu.update!(last_read_post_number: 999)
+
+      post "/topics/timings.json", params: params
+
+      tu = TopicUser.find_by(user: user, topic: topic)
+      expect(tu.last_read_post_number).to eq(post_1.post_number)
+    end
+
+    it "should gracefully handle invalid timings sent in from staff" do
+      sign_in(admin)
+
+      post "/topics/timings.json",
+           params: {
+             topic_id: topic.id,
+             topic_time: 5,
+             timings: {
+               post_1.post_number => 2,
+               whisper.post_number => 2,
+               1000 => 100,
+             },
+           }
+
+      expect(response.status).to eq(200)
+
+      tu = TopicUser.find_by(user: admin, topic: topic)
+      expect(tu.last_read_post_number).to eq(whisper.post_number)
+    end
+
     it "should record the timing" do
       sign_in(user)
 
@@ -5382,7 +5438,7 @@ RSpec.describe TopicsController do
 
       it "resets bump correctly" do
         post1 = Fabricate(:post, user: post_author1, topic: topic, created_at: 2.days.ago)
-        post2 = Fabricate(:post, user: post_author1, topic: topic, created_at: 1.day.ago)
+        _post2 = Fabricate(:post, user: post_author1, topic: topic, created_at: 1.day.ago)
 
         put "/t/#{topic.id}/reset-bump-date/#{post1.id}.json"
         expect(response.status).to eq(200)

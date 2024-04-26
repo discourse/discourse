@@ -247,6 +247,16 @@ he:
               label: מזהה נושא
             post:
               label: תוכן הפוסט
+        topic:
+          fields:
+            body:
+              label: גוף הנושא
+            title:
+              label: כותרת נושא
+            category:
+              label: קטגוריית הנושא
+            tags:
+              label: תגיות הנושא
         group_category_notification_default:
           fields:
             group:
@@ -318,6 +328,10 @@ he:
           fields:
             words:
               label: רשימת מילים נדרשות
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: שם קבוצת המשתתפים
         send_pms:
           add_a_pm_btn:
             label: הוספת הודעה פרטית

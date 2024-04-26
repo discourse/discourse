@@ -9,6 +9,10 @@ module Chat
     belongs_to :thread, class_name: "Chat::Thread", foreign_key: :thread_id
 
     enum :notification_level, Chat::NotificationLevels.all
+
+    def mark_read!(new_last_read_id = nil)
+      update!(last_read_message_id: new_last_read_id || thread.last_message_id)
+    end
   end
 end
 

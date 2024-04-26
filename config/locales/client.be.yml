@@ -294,7 +294,6 @@ be:
       topic_count: "тэмаў"
       topic_count_long: "тэмаў створана"
       post_count: "адказы"
-      no_results: "нічога не знойдзена."
       days_visited: "наведванне"
       days_visited_long: "дзён наведанае"
       posts_read: "прачытаныя"
@@ -412,6 +411,7 @@ be:
       "13": "ўваходныя"
       "14": "чакаецца"
       "15": "Чарнавікі"
+      "17": "Спасылкі"
     categories:
       categories_label: "катэгорыі"
       subcategories_label: "падкатэгорыі"

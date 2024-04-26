@@ -69,6 +69,7 @@ export const MENU = {
     onShow: null,
     onRegisterApi: null,
     modalForMobile: false,
+    inline: null,
   },
   portalOutletId: "d-menu-portal-outlet",
 };

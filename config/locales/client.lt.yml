@@ -663,7 +663,6 @@ lt:
       topic_count_long: "Sukurtos Temos"
       post_count: "Atsakymai"
       post_count_long: "Paskelbti Įrašai"
-      no_results: "Nerasta jokių rezultatų."
       days_visited: "Apsilankymai"
       days_visited_long: "Apsilankymo dienos"
       posts_read: "Perskaityti"
@@ -937,6 +936,7 @@ lt:
       "13": "Pranešimų dežutė"
       "14": "Laukiama"
       "15": "Juodraščiai"
+      "17": "Nuorodos"
     categories:
       categories_label: "kategorijos"
       subcategories_label: "subkategorijos"
@@ -2027,6 +2027,7 @@ lt:
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -3887,6 +3888,8 @@ lt:
           emoji: "Emoji"
           navigation: "Navigacija"
           themes: "Temos"
+          components:
+            title: "Komponentai"
       email_settings:
         sidebar_link:
           appearance: "išvaizda"

@@ -492,7 +492,6 @@ et:
       topic_count_long: "Teemasid loodud"
       post_count: "Vastuseid"
       post_count_long: "Vastuseid postitatud"
-      no_results: "Ei leitud ühtegi tulemust."
       days_visited: "Külastusi"
       days_visited_long: "Päevi külastatud"
       posts_read: "Loetud"
@@ -694,6 +693,7 @@ et:
       "13": "Postkast"
       "14": "Ootel"
       "15": "Mustandid"
+      "17": "Viited"
     categories:
       categories_label: "liigid"
       subcategories_label: "alamfoorumid"
@@ -1469,6 +1469,7 @@ et:
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2826,6 +2827,8 @@ et:
           emoji: "Emotikon"
           navigation: "Navigatsioon"
           themes: "Kujundused"
+          components:
+            title: "Komponendid"
       email_settings:
         sidebar_link:
           preview_summary: "Saadetise eelvaatlus"

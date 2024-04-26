@@ -335,7 +335,6 @@ sq:
       topic_count_long: "Topics Created"
       post_count: "Përgjigje"
       post_count_long: "Replies Posted"
-      no_results: "Nuk u gjet asnjë rezultat."
       days_visited: "Vizita"
       days_visited_long: "Vizita Ditore"
       posts_read: "Lexuar"
@@ -457,6 +456,7 @@ sq:
       "12": "Të dërguar"
       "13": "Inbox"
       "14": "Në pritje"
+      "17": "Lidhjet"
     categories:
       categories_label: "categories"
       subcategories_label: "nënkategori"

@@ -657,7 +657,6 @@ sl:
       topic_count_long: "Ustvarjenih tem"
       post_count: "Odgovorov"
       post_count_long: "Objavljenih odgovorov"
-      no_results: "Noben rezultat ni bil najden."
       days_visited: "Obiskov"
       days_visited_long: "Dni prisotnosti"
       posts_read: "Prebrano"
@@ -914,6 +913,7 @@ sl:
       "13": "Prejeto"
       "14": "Čaka odobritev"
       "15": "Osnutki"
+      "17": "Povezave"
     categories:
       categories_label: "kategorije"
       subcategories_label: "pod Kategorija"
@@ -1632,8 +1632,6 @@ sl:
         title: "Vaše prvo obvestilo!"
       suggested_topics:
         title: "Nadaljujte z branjem!"
-      admin_guide:
-        title: "Dobrodošli na vaši novi strani!"
     loading: "Nalagam..."
     errors:
       prev_page: "med nalaganjem"
@@ -2085,6 +2083,7 @@ sl:
         few: "je všečkal %{count} vaše prispevke"
         other: "je všečkal %{count} vaših prispevkov"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"

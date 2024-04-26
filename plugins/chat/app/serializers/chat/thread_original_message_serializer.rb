@@ -12,10 +12,6 @@ module Chat
                :mentioned_users,
                :user
 
-    def excerpt
-      object.censored_excerpt
-    end
-
     def mentioned_users
       object
         .user_mentions

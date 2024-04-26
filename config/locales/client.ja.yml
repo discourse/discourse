@@ -634,7 +634,6 @@ ja:
       topic_count_long: "作成したトピック数"
       post_count: "返信"
       post_count_long: "投稿の返信数"
-      no_results: "結果はありませんでした。"
       days_visited: "アクセス"
       days_visited_long: "アクセス日数"
       posts_read: "既読"
@@ -910,6 +909,7 @@ ja:
       "13": "受信トレイ"
       "14": "保留中"
       "15": "下書き"
+      "17": "リンク"
     categories:
       categories_label: "カテゴリ"
       subcategories_label: "サブカテゴリ"
@@ -1766,10 +1766,6 @@ ja:
       suggested_topics:
         title: "どんどん読みましょう！"
         content: "次に読むことをお勧めするトピックをいくつかご紹介します。"
-      admin_guide:
-        title: "新しいサイトへようこそ！"
-        content: "サイトとコミュニティーの構築を続けるには、<a href='%{admin_guide_url}'>管理者ガイドをお読みください</a>。"
-        content_no_url: "管理者ガイドを読み、サイトとコミュニティーの構築を続けましょう。"
     loading: "読み込み中…"
     errors:
       prev_page: "次の項目を読み込み中に発生しました:"
@@ -2289,6 +2285,7 @@ ja:
       liked_consolidated_description:
         other: "はあなたの %{count} 件の投稿に「いいね！」しました"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -4623,6 +4620,8 @@ ja:
           emoji: "絵文字"
           navigation: "ナビゲーション"
           themes: "テーマ"
+          components:
+            title: "コンポーネント"
       email_settings:
         sidebar_link:
           appearance: "外観"

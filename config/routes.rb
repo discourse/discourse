@@ -221,6 +221,7 @@ Discourse::Application.routes.draw do
 
       get "customize" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/themes" => "themes#index", :constraints => AdminConstraint.new
+      get "customize/components" => "themes#index", :constraints => AdminConstraint.new
       get "customize/theme-components" => "themes#index", :constraints => AdminConstraint.new
       get "customize/colors" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/colors/:id" => "color_schemes#index", :constraints => AdminConstraint.new
@@ -257,8 +258,10 @@ Discourse::Application.routes.draw do
 
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
+        get "components/:id" => "themes#index"
         get "themes/:id/export" => "themes#export"
         get "themes/:id/schema/:setting_name" => "themes#schema"
+        get "components/:id/schema/:setting_name" => "themes#schema"
 
         # They have periods in their URLs often:
         get "site_texts" => "site_texts#index"
@@ -1625,6 +1628,8 @@ Discourse::Application.routes.draw do
 
     resources :sidebar_sections, only: %i[index create update destroy]
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
+
+    post "/pageview" => "pageview#index"
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
 

@@ -1,5 +1,13 @@
 <% content_for :title do %><%= @page_title %> - <%= SiteSetting.title %><% end %>
 
+<% content_for :head do %>
+  <meta id="discourse-error" data-discourse-error="true">
+<% end %>
+
+<% content_for :no_ember_head do %>
+  <meta id="discourse-error" data-discourse-error="true">
+<% end %>
+
 <div class="page-not-found">
   <h1 class="title"><%= @title %></h1>
 

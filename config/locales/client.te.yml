@@ -690,7 +690,6 @@ te:
       topic_count_long: "విషయాలు సృష్టించబడ్డాయి"
       post_count: "ప్రత్యుత్తరాలు"
       post_count_long: "ప్రత్యుత్తరాలు పోస్ట్ చేయబడ్డాయి"
-      no_results: "ఫలితాలు ఏవీ కనుగొనబడలేదు."
       days_visited: "సందర్శనాలు"
       days_visited_long: "దర్శించిన రోజులు"
       posts_read: "చదివిన"
@@ -966,6 +965,7 @@ te:
       "13": "ఇన్ బాక్స్"
       "14": "పెండింగు"
       "15": "చిత్తుప్రతులు"
+      "17": "లింకులు"
     categories:
       categories_label: "వర్గాలు"
       subcategories_label: "ఉప వర్గాలు"
@@ -1865,10 +1865,6 @@ te:
       suggested_topics:
         title: "చదువుతూ ఉండండి!"
         content: "మీరు తరువాత చదవాలనుకుంటున్నారని మేము భావిస్తున్న కొన్ని విషయాలు ఇక్కడ ఉన్నాయి."
-      admin_guide:
-        title: "మీ కొత్త సైట్‌కి స్వాగతం!"
-        content: "మీ సైట్ మరియు సంఘంని నిర్మించడం కొనసాగించడానికి <a href='%{admin_guide_url}'>అడ్మిన్ గైడ్ చదవండి</a>."
-        content_no_url: "మీ సైట్ మరియు సంఘాన్ని నిర్మించడాన్ని కొనసాగించడానికి నిర్వాహక మార్గదర్శిని చదవండి."
     loading: "లోడ్ అవుతోంది…"
     errors:
       prev_page: "లోడ్ చేయడానికి ప్రయత్నిస్తున్నప్పుడు"
@@ -2440,6 +2436,7 @@ te:
         one: "మీ పోస్ట్‌లలో %{count} ని ఇష్టపడ్డారు"
         other: "మీ పోస్ట్‌లలో %{count} ని ఇష్టపడ్డారు"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -4377,7 +4374,6 @@ te:
       clear_filter: "ఫిల్టర్‌ని క్లియర్ చేయండి"
       no_results:
         title: "ఫలితాలు లేవు"
-        description: "మేము '%{filter}'కి సరిపోలే ఏదీ కనుగొనలేకపోయాము"
     welcome_topic_banner:
       title: "మీ స్వాగత విషయాన్ని సృష్టించండి"
       description: "కొత్త సభ్యులు చదివే మొదటి విషయం మీ స్వాగతం పోస్ట్. దీనిని మీ \"ఎలివేటర్ పిచ్\" లేదా \"మిషన్ స్టేట్‌మెంట్\"గా భావించండి. ఈ సంఘం ఎవరి కోసం ఉద్దేశించబడిందో, వారు ఇక్కడ ఏమి ఆశించవచ్చు మరియు వారు ముందుగా ఏమి చేయాలని మీరు కోరుకుంటున్నారో అందరికీ తెలియజేయండి."
@@ -4921,6 +4917,8 @@ te:
           emoji: "ఇమోజి"
           navigation: "నావిగేషన్"
           themes: "థీమ్స్"
+          components:
+            title: "భాగాలు"
       email_settings:
         title: "ఇమెయిల్ సెట్టింగ్‌లు"
         sidebar_link:

@@ -685,7 +685,6 @@ nl:
       topic_count_long: "Topics gemaakt"
       post_count: "Antwoorden"
       post_count_long: "Antwoorden geplaatst"
-      no_results: "Geen resultaten gevonden."
       days_visited: "Bezoeken"
       days_visited_long: "Dagen bezocht"
       posts_read: "Gelezen"
@@ -961,6 +960,7 @@ nl:
       "13": "Inbox"
       "14": "Wachtend"
       "15": "Concepten"
+      "17": "Links"
     categories:
       categories_label: "categorieën"
       subcategories_label: "subcategorieën"
@@ -1856,10 +1856,6 @@ nl:
       suggested_topics:
         title: "Blijf lezen!"
         content: "Hier zijn enkele topics waarvan we denken dat je ze misschien leuk vindt om te lezen."
-      admin_guide:
-        title: "Welkom op je nieuwe site!"
-        content: "<a href='%{admin_guide_url}'>Lees de beheerdersgids</a> om door te gaan met het bouwen van je site en community."
-        content_no_url: "Lees de beheerdersgids om door te gaan met het bouwen van je site en community."
     loading: "Laden…"
     errors:
       prev_page: "tijdens het laden van"
@@ -2401,6 +2397,7 @@ nl:
         one: "heeft %{count} van je berichten geliket"
         other: "heeft %{count} van je berichten geliket"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -4849,6 +4846,8 @@ nl:
           emoji: "Emoji"
           navigation: "Navigatie"
           themes: "Thema's"
+          components:
+            title: "Onderdelen"
       email_settings:
         sidebar_link:
           appearance: "Vormgeving"

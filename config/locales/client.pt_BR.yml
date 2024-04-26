@@ -685,7 +685,6 @@ pt_BR:
       topic_count_long: "Tópicos criados"
       post_count: "Respostas"
       post_count_long: "Respostas postadas"
-      no_results: "Nenhum resultado foi encontrado."
       days_visited: "Acessos"
       days_visited_long: "Dias acessados"
       posts_read: "Lidos"
@@ -961,6 +960,7 @@ pt_BR:
       "13": "Caixa de entrada"
       "14": "Pendentes"
       "15": "Rascunhos"
+      "17": "Links"
     categories:
       categories_label: "categorias"
       subcategories_label: "subcategorias"
@@ -1856,10 +1856,6 @@ pt_BR:
       suggested_topics:
         title: "Continue lendo!"
         content: "Confira alguns tópicos que achamos que você possa gostar de ler em seguida."
-      admin_guide:
-        title: "Boas-vindas ao nosso novo site!"
-        content: "<a href='%{admin_guide_url}'>Leia o guia da administração</a> para continuar criando seu site e comunidade."
-        content_no_url: "Leia o guia da administração para continuar criando seu site e comunidade."
     loading: "Carregando…"
     errors:
       prev_page: "ao tentar carregar"
@@ -2401,6 +2397,7 @@ pt_BR:
         one: "curtiu %{count} de suas postagens"
         other: "curtiu %{count} de suas postagens"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -4847,6 +4844,8 @@ pt_BR:
           emoji: "Emoji"
           navigation: "Navegação"
           themes: "Temas"
+          components:
+            title: "Componentes"
       email_settings:
         sidebar_link:
           appearance: "Aparência"

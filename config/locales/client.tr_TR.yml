@@ -698,7 +698,6 @@ tr_TR:
       topic_count_long: "Oluşturulan Konular"
       post_count: "Yanıtlar"
       post_count_long: "Gönderilen Yanıtlar"
-      no_results: "Sonuç bulunamadı."
       days_visited: "Ziyaretler"
       days_visited_long: "Ziyaret edilen günler"
       posts_read: "Okundu"
@@ -974,6 +973,7 @@ tr_TR:
       "13": "Gelen Kutusu"
       "14": "Bekleyen"
       "15": "Taslaklar"
+      "17": "Bağlantı"
     categories:
       categories_label: "kategoriler"
       subcategories_label: "alt kategoriler"
@@ -1879,10 +1879,6 @@ tr_TR:
       suggested_topics:
         title: "Okumaya devam edin!"
         content: "İşte daha sonra okumak isteyebileceğinizi düşündüğümüz bazı konular."
-      admin_guide:
-        title: "Yeni sitenize hoş geldiniz!"
-        content: "Sitenizi ve topluluğunuzu oluşturmaya devam etmek için <a href='%{admin_guide_url}'>yönetici kılavuzunu okuyun</a>."
-        content_no_url: "Sitenizi ve topluluğunuzu oluşturmaya devam etmek için yönetici kılavuzunu okuyun."
     loading: "Yükleniyor…"
     errors:
       prev_page: "şunu yüklemeye çalışırken:"
@@ -2428,6 +2424,7 @@ tr_TR:
         one: "gönderilerinizden %{count} tanesini beğendi"
         other: "gönderilerinizden %{count} tanesini beğendi"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -4366,7 +4363,6 @@ tr_TR:
       clear_filter: "Filtreyi temizle"
       no_results:
         title: "Sonuç yok"
-        description: "'%{filter}' ile eşleşen hiçbir şey bulamadık"
     welcome_topic_banner:
       title: "Karşılama Konunuzu oluşturun"
       description: "Karşılama konunuz, yeni üyelerin okuyacağı ilk şeydir. Bunu “asansör konuşmanız” veya “hedef tanımınız” olarak düşünün. Herkese bu topluluğun kimler için olduğunu, burada ne bulmayı bekleyebileceklerini ve önce ne yapmalarını istediğinizi açıklayın."
@@ -4902,7 +4898,8 @@ tr_TR:
         title: "Hesap"
         sidebar_link:
           backups: "Yedeklemeler"
-          whats_new: "Yenilikler"
+          whats_new:
+            title: "Yenilikler"
       community:
         title: "Topluluk"
         sidebar_link:
@@ -4925,6 +4922,8 @@ tr_TR:
           emoji: "Emoji"
           navigation: "Gezinti"
           themes: "Temalar"
+          components:
+            title: "Bileşenler"
           site_texts: "Site Metinleri"
       email_settings:
         title: "e-posta ayarları"

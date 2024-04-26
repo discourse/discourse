@@ -34,6 +34,11 @@ module PageObjects
         self
       end
 
+      def minimize
+        find("#{COMPOSER_ID} .toggle-minimize").click
+        self
+      end
+
       def append_content(content)
         current_content = composer_input.value
         composer_input.set(current_content + content)

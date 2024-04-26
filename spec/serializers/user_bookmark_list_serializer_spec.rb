@@ -29,5 +29,16 @@ RSpec.describe UserBookmarkListSerializer do
         %w[UserTestBookmarkSerializer UserTopicBookmarkSerializer UserPostBookmarkSerializer],
       )
     end
+
+    it "serializes categories" do
+      topic_category = Fabricate(:category)
+      topic_bookmark.bookmarkable.update!(category: topic_category)
+      post_category = Fabricate(:category)
+      post_bookmark.bookmarkable.topic.update!(category: post_category)
+
+      serializer = run_serializer
+
+      expect(serializer.categories).to contain_exactly(topic_category, post_category)
+    end
   end
 end

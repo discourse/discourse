@@ -17,19 +17,19 @@ export default class PrivateMessageMap extends Component {
   get participantsClasses() {
     return !this.isEditing &&
       this.site.mobileView &&
-      this.args.postAttrs.allowedGroups.length > 4
+      this.args.topicDetails.allowed_groups.length > 4
       ? "participants hide-names"
       : "participants";
   }
 
   get canInvite() {
-    return this.args.postAttrs.canInvite;
+    return this.args.topicDetails.can_invite_to;
   }
 
   get canRemove() {
     return (
-      this.args.postAttrs.canRemoveAllowedUsers ||
-      this.args.postAttrs.canRemoveSelfId
+      this.args.topicDetails.can_remove_allowed_users ||
+      this.args.topicDetails.can_remove_self_id
     );
   }
 
@@ -58,20 +58,20 @@ export default class PrivateMessageMap extends Component {
 
   <template>
     <div class={{this.participantsClasses}}>
-      {{#each @postAttrs.allowedGroups as |group|}}
+      {{#each @topicDetails.allowed_groups as |group|}}
         <PmMapUserGroup
           @model={{group}}
           @isEditing={{this.isEditing}}
-          @canRemoveAllowedUsers={{@postAttrs.canRemoveAllowedUsers}}
+          @canRemoveAllowedUsers={{@topicDetails.can_remove_allowed_users}}
           @removeAllowedGroup={{@removeAllowedGroup}}
         />
       {{/each}}
-      {{#each @postAttrs.allowedUsers as |user|}}
+      {{#each @topicDetails.allowed_users as |user|}}
         <PmMapUser
           @model={{user}}
           @isEditing={{this.isEditing}}
-          @canRemoveAllowedUsers={{@postAttrs.canRemoveAllowedUsers}}
-          @canRemoveSelfId={{@postAttrs.canRemoveSelfId}}
+          @canRemoveAllowedUsers={{@topicDetails.can_remove_allowed_users}}
+          @canRemoveSelfId={{@topicDetails.can_remove_self_id}}
           @removeAllowedUser={{@removeAllowedUser}}
         />
       {{/each}}

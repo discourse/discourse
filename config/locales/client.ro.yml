@@ -724,7 +724,6 @@ ro:
       topic_count_long: "Subiecte create"
       post_count: "Răspunsuri"
       post_count_long: "Răspunsuri publicate"
-      no_results: "Nu s-au găsit rezultate."
       days_visited: "Vizite"
       days_visited_long: "Zile de vizită"
       posts_read: "Citite"
@@ -979,6 +978,7 @@ ro:
       "13": "Primite"
       "14": "În așteptare"
       "15": "Ciorne"
+      "17": "Legături"
     categories:
       categories_label: "categorii"
       subcategories_label: "subcategorii"
@@ -1129,7 +1129,7 @@ ro:
         dark: "Mod întunecat"
       dark_mode: "Mod întunecat"
       allow_private_messages: "Permite altor utilizatori să îmi trimită mesaje private"
-      external_links_in_new_tab: "Deschide toate adresele externe într-un tab nou"
+      external_links_in_new_tab: "Deschide toate legăturile externe într-o filă nouă"
       enable_quoting: "Activează citarea răspunsurilor pentru textul selectat"
       enable_defer: "Activează marcarea subiectelor ca necitite"
       experimental_sidebar:
@@ -1552,8 +1552,8 @@ ro:
         top_badges: "Top ecusoane"
         no_badges: "Nu există încă ecusoane"
         more_badges: "Mai multe ecusoane"
-        top_links: "Top link-uri"
-        no_links: "Nici un link încă."
+        top_links: "Top legături"
+        no_links: "Nicio legătură încă."
         most_liked_by: "Cele mai apreciate de către"
         most_liked_users: "Cele mai apreciate"
         most_replied_to_users: "Cele mai multe răspunsuri pentru"
@@ -1922,6 +1922,7 @@ ro:
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2093,6 +2094,10 @@ ro:
           one: "Ai selectat <b>un</b> subiect."
           few: "Ai selectat <b>%{count}</b> subiecte."
           other: "Ai selectat <b>%{count}</b> de subiecte."
+        selected_sole_category:
+          one: "Ai selectat <b>%{count}</b> subiect din categoria:"
+          few: "Ai selectat <b>%{count}</b> subiecte din categoria:"
+          other: "Ai selectat <b>%{count}</b> de subiecte din categoria:"
         change_tags: "Înlocuiește etichete"
         append_tags: "Adaugă etichete"
         choose_new_tags: "Alege etichete noi pentru aceste subiecte:"
@@ -2195,7 +2200,7 @@ ro:
         other: "sunt %{count} de aprecieri pentru această discuţie"
       back_to_list: "Înapoi la lista de subiecte"
       options: "Opțiuni pentru subiect"
-      show_links: "arată link-urile din acest subiect"
+      show_links: "arată legăturile din acest subiect"
       suggest_create_topic: Ești gata să <a href>începi o nouă conversație?</a>
       deleted: "Subiectul a fost șters"
       slow_mode_update:
@@ -2776,7 +2781,7 @@ ro:
       title:
         one: "mai e %{count}"
         few: "mai sunt %{count}"
-        other: "mai sunt %{count}"
+        other: "încă %{count}"
     topic_statuses:
       warning:
         help: "Aceasta este o avertizare oficială."
@@ -3168,7 +3173,7 @@ ro:
             badges:
               content: "Insigne"
             topics:
-              content: "Discuții"
+              content: "Subiecte"
             faq:
               content: "Întrebări frecvente"
             groups:
@@ -3176,7 +3181,7 @@ ro:
             users:
               content: "Utilizatori"
             my_posts:
-              content: "Postările mele"
+              content: "Articolele mele"
             review:
               content: "Revizuire"
               title: "Articole semnalate și alte elemente la coadă"
@@ -3187,7 +3192,6 @@ ro:
       clear_filter: "Elimină filtrul"
       no_results:
         title: "Fără rezultate"
-        description: "Nu am găsit nimic care să corespundă cu „%{filter}”"
     until: "Pana cand:"
     form_templates:
       upload_field:
@@ -3457,7 +3461,8 @@ ro:
         title: "Cont"
         sidebar_link:
           backups: "Copii de siguranță"
-          whats_new: "Ce este nou"
+          whats_new:
+            title: "Ce este nou"
       community:
         title: "Comunitate"
         sidebar_link:
@@ -3726,10 +3731,10 @@ ro:
             description: "Culoarea principală de fundal și culoarea textului anumitor butoane."
           tertiary:
             name: "terțiar"
-            description: "Link-uri, câteva butoane, notificări, și culoare de accent."
+            description: "Legături, câteva butoane, notificări, și culoare de accent."
           quaternary:
             name: "cuaternar"
-            description: "Linkuri de navigare."
+            description: "Legături de navigare."
           header_background:
             name: "fundalul header-ului"
             description: "Culoarea de fundal a header-ului din site."
@@ -4129,7 +4134,7 @@ ro:
         reset_bounce_score:
           label: "Resetează"
           title: "Resetează rata de ricoșeu înapoi la 0"
-        deactivate_explanation: "Un utilizator dezactivat va trebui să-și revalideze email-ul."
+        deactivate_explanation: "Un utilizator dezactivat va trebui să-și revalideze emailul."
         suspended_explanation: "Un utilizator suspendat nu se poate autentifica"
         silence_explanation: "Utilizatorii puși pe mut nu pot răspunde și nu pot posta discuții noi."
         staged_explanation: "Un utilizator în așteptare poate posta numai prin email la subiectele specifice."
