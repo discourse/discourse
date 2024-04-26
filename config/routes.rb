@@ -1167,6 +1167,10 @@ Discourse::Application.routes.draw do
     get "/c", to: redirect(relative_url_root + "categories")
 
     resources :categories, only: %i[index create update destroy]
+    get "categories/:parent_category_id" => "categories#index",
+        :constraints => {
+          parent_category_id: /\d+/,
+        }
     post "categories/reorder" => "categories#reorder"
     get "categories/find" => "categories#find"
     post "categories/search" => "categories#search"
