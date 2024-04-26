@@ -119,6 +119,16 @@ describe "Recurring" do
         }.to_not change { DiscourseAutomation::PendingAutomation.last.execute_at }
         expect(DiscourseAutomation::PendingAutomation.count).to eq(1)
       end
+
+      context "when there are no existing pending automations" do
+        before { automation.pending_automations.destroy_all }
+
+        it "creates a new one" do
+          expect {
+            automation.upsert_field!("test", "text", { value: "somethingelse" }, target: "script")
+          }.to change { DiscourseAutomation::PendingAutomation.count }.by(1)
+        end
+      end
     end
   end
 
