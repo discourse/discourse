@@ -137,6 +137,15 @@ describe "Thread indicator for chat messages", type: :system do
       ).to have_content(thread_excerpt(thread_1.last_message.reload))
     end
 
+    it "builds an excerpt for the last reply if it doesn’t have one" do
+      thread_1.last_message.update!(excerpt: nil)
+      chat_page.visit_channel(channel)
+
+      expect(
+        channel_page.message_thread_indicator(thread_1.original_message).excerpt,
+      ).to have_content(thread_1.last_message.build_excerpt)
+    end
+
     it "updates the last reply excerpt and participants when a new message is added to the thread" do
       new_user = Fabricate(:user)
       chat_system_user_bootstrap(user: new_user, channel: channel)

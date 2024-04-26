@@ -66,6 +66,7 @@ RSpec.describe Middleware::RequestTracker do
       CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon.first.count).to eq(2)
+      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(2)
     end
 
     it "can log requests correctly" do
@@ -119,6 +120,23 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon_mobile.first.count).to eq(1)
 
       expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
+
+      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
+    end
+
+    it "logs deferred pageviews correctly" do
+      data =
+        Middleware::RequestTracker.get_data(
+          env(:path => "/message-bus/abcde/poll", "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1"),
+          ["200", { "Content-Type" => "text/html" }],
+          0.1,
+        )
+      Middleware::RequestTracker.log_request(data)
+
+      expect(data[:deferred_track]).to eq(true)
+      CachedCounting.flush
+
+      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
     end
 
     it "logs API requests correctly" do

@@ -8,7 +8,7 @@ cs:
   js:
     discourse_automation:
       create: Vytvoř
-      update: Aktualizace
+      update: Aktualizovat
       fields:
         user:
           label: Uživatel

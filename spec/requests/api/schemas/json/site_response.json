@@ -245,9 +245,6 @@
         },
         "suggested_topics": {
           "type": "integer"
-        },
-        "admin_guide": {
-          "type": "integer"
         }
       },
       "required": [
@@ -255,8 +252,7 @@
         "topic_timeline",
         "post_menu",
         "topic_notification_levels",
-        "suggested_topics",
-        "admin_guide"
+        "suggested_topics"
       ]
     },
     "groups": {
@@ -607,6 +603,12 @@
             "has_children": {
               "type": "boolean"
             },
+            "subcategory_count": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
             "sort_order": {
               "type": [
                 "string",
@@ -744,6 +746,7 @@
             "notification_level",
             "topic_template",
             "has_children",
+            "subcategory_count",
             "sort_order",
             "sort_ascending",
             "show_subcategory_list",

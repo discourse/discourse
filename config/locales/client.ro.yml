@@ -3192,7 +3192,6 @@ ro:
       clear_filter: "Elimină filtrul"
       no_results:
         title: "Fără rezultate"
-        description: "Nu am găsit nimic care să corespundă cu „%{filter}”"
     until: "Pana cand:"
     form_templates:
       upload_field:
@@ -3462,7 +3461,8 @@ ro:
         title: "Cont"
         sidebar_link:
           backups: "Copii de siguranță"
-          whats_new: "Ce este nou"
+          whats_new:
+            title: "Ce este nou"
       community:
         title: "Comunitate"
         sidebar_link:

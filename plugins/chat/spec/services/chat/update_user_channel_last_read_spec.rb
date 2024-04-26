@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::UpdateUserLastRead do
-  describe Chat::UpdateUserLastRead::Contract, type: :model do
+RSpec.describe Chat::UpdateUserChannelLastRead do
+  describe Chat::UpdateUserChannelLastRead::Contract, type: :model do
     it { is_expected.to validate_presence_of :channel_id }
     it { is_expected.to validate_presence_of :message_id }
   end
@@ -32,7 +32,7 @@ RSpec.describe Chat::UpdateUserLastRead do
       context "when user has no membership" do
         before { membership.destroy! }
 
-        it { is_expected.to fail_to_find_a_model(:active_membership) }
+        it { is_expected.to fail_to_find_a_model(:membership) }
       end
 
       context "when user can’t access the channel" do

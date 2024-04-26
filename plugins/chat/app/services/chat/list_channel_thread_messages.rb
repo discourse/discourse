@@ -69,9 +69,9 @@ module Chat
     end
 
     def determine_target_message_id(contract:, membership:, guardian:)
-      if contract.fetch_from_last_read
+      if contract.fetch_from_last_read || !contract.target_message_id
         context.target_message_id = membership&.last_read_message_id
-      else
+      elsif contract.target_message_id
         context.target_message_id = contract.target_message_id
       end
     end

@@ -3162,6 +3162,8 @@ hy:
           emoji: "Էմոջի"
           navigation: "Նավիգացիա"
           themes: "Թեմաներ"
+          components:
+            title: "Բաղադրիչներ"
       email_settings:
         sidebar_link:
           appearance: "Արտաքին տեսք"

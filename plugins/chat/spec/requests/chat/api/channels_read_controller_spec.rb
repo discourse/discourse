@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Chat::Api::ReadsController do
+RSpec.describe Chat::Api::ChannelsReadController do
   fab!(:current_user) { Fabricate(:user) }
 
   before do
@@ -17,7 +17,7 @@ RSpec.describe Chat::Api::ReadsController do
       fab!(:message_2) { Fabricate(:chat_message, chat_channel: chat_channel, user: other_user) }
 
       it "returns a 404 when the user is not a channel member" do
-        put "/chat/api/channels/#{chat_channel.id}/read/#{message_1.id}.json"
+        put "/chat/api/channels/#{chat_channel.id}/read?message_id=#{message_1.id}.json"
         expect(response.status).to eq(404)
       end
 
@@ -29,7 +29,7 @@ RSpec.describe Chat::Api::ReadsController do
           following: false,
         )
 
-        put "/chat/api/channels/#{chat_channel.id}/read/#{message_1.id}.json"
+        put "/chat/api/channels/#{chat_channel.id}/read?message_id=#{message_1.id}.json"
         expect(response.status).to eq(404)
       end
 
@@ -49,7 +49,7 @@ RSpec.describe Chat::Api::ReadsController do
           before { membership.update!(last_read_message_id: message_2.id) }
 
           it "raises an invalid request" do
-            put "/chat/api/channels/#{chat_channel.id}/read/#{message_1.id}.json"
+            put "/chat/api/channels/#{chat_channel.id}/read?message_id=#{message_1.id}.json"
             expect(response.status).to eq(400)
             expect(response.parsed_body["errors"][0]).to match(/message_id/)
           end
@@ -59,14 +59,14 @@ RSpec.describe Chat::Api::ReadsController do
           before { message_1.trash!(Discourse.system_user) }
 
           it "works" do
-            put "/chat/api/channels/#{chat_channel.id}/read/#{message_1.id}"
+            put "/chat/api/channels/#{chat_channel.id}/read?message_id=#{message_1.id}"
             expect(response.status).to eq(200)
           end
         end
 
         it "updates timing records" do
           expect {
-            put "/chat/api/channels/#{chat_channel.id}/read/#{message_1.id}.json"
+            put "/chat/api/channels/#{chat_channel.id}/read?message_id=#{message_1.id}.json"
           }.not_to change { Chat::UserChatChannelMembership.count }
 
           membership.reload
@@ -78,7 +78,7 @@ RSpec.describe Chat::Api::ReadsController do
         it "marks all mention notifications as read for the channel" do
           notification = create_notification_and_mention_for(current_user, other_user, message_1)
 
-          put "/chat/api/channels/#{chat_channel.id}/read/#{message_2.id}.json"
+          put "/chat/api/channels/#{chat_channel.id}/read?message_id=#{message_2.id}.json"
           expect(response.status).to eq(200)
           expect(notification.reload.read).to eq(true)
         end
@@ -87,7 +87,7 @@ RSpec.describe Chat::Api::ReadsController do
           message_3 = Fabricate(:chat_message, chat_channel: chat_channel, user: other_user)
           notification = create_notification_and_mention_for(current_user, other_user, message_3)
 
-          put "/chat/api/channels/#{chat_channel.id}/read/#{message_2.id}.json"
+          put "/chat/api/channels/#{chat_channel.id}/read?message_id=#{message_2.id}.json"
           expect(response.status).to eq(200)
           expect(notification.reload.read).to eq(false)
         end

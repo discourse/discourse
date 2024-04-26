@@ -8,6 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import Category from "discourse/models/category";
 import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
+import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -463,15 +464,16 @@ export default class Group extends RestModel {
       data.category_id = parseInt(opts.categoryId, 10);
     }
 
-    const posts = await ajax(`/groups/${this.name}/${type}.json`, { data });
-    const categories = await Category.asyncFindByIds(
-      posts.map((p) => p.category_id)
-    );
+    const result = await ajax(`/groups/${this.name}/${type}.json`, { data });
 
-    return posts.map((p) => {
+    result.categories?.forEach((category) => {
+      Site.current().updateCategory(category);
+    });
+
+    return result.posts.map((p) => {
       p.user = User.create(p.user);
       p.topic = Topic.create(p.topic);
-      p.category = categories[p.category_id];
+      p.category = Category.findById(p.category_id);
       return EmberObject.create(p);
     });
   }

@@ -1,5 +1,5 @@
 <div class="summary-box__container">
-  {{#if this.topRepliesSummaryEnabled}}
+  {{#if @topic.has_summary}}
     <p>{{html-safe this.topRepliesSummaryInfo}}</p>
   {{/if}}
   <div class="summarization-buttons">
@@ -23,8 +23,7 @@
         />
       {{/if}}
     {{/if}}
-
-    {{#if this.topRepliesSummaryEnabled}}
+    {{#if @topic.has_summary}}
       <DButton
         @action={{if @postStream.summary @cancelFilter @showTopReplies}}
         @translatedTitle={{this.topRepliesTitle}}

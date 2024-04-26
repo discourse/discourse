@@ -3650,6 +3650,8 @@ nb_NO:
           emoji: "Emoji"
           navigation: "Navigasjon"
           themes: "Drakter"
+          components:
+            title: "Komponenter"
       email_settings:
         sidebar_link:
           appearance: "Utseende"

@@ -3195,6 +3195,8 @@ ca:
           emoji: "Emoji"
           navigation: "Navegació"
           themes: "Aparences"
+          components:
+            title: "Components"
       email_settings:
         sidebar_link:
           appearance: "Aparença"

@@ -3947,6 +3947,8 @@ ur:
           emoji: "اِیمَوجی"
           navigation: "نیویگیشن"
           themes: "تِھیمز"
+          components:
+            title: "اجزاء"
       email_settings:
         sidebar_link:
           appearance: "ظاہری شکل"

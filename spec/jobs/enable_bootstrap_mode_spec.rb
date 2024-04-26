@@ -34,6 +34,7 @@ RSpec.describe Jobs::EnableBootstrapMode do
       StaffActionLogger.any_instance.expects(:log_site_setting_change).times(4)
       Jobs::EnableBootstrapMode.new.execute(user_id: admin.id)
       expect(admin.reload.moderator).to be_truthy
+      expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
     end
   end
 end

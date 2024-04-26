@@ -302,7 +302,11 @@ export default class AdminCustomizeThemesShowController extends Controller {
   }
 
   get locale() {
-    return this.get("model.locale") || this.siteSettings.default_locale;
+    return (
+      this.get("model.locale") ||
+      this.userLocale ||
+      this.siteSettings.default_locale
+    );
   }
 
   @action

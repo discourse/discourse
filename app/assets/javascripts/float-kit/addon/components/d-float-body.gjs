@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
-import { modifier as emberModifier } from "ember-modifier";
+import { modifier as modifierFn } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 import TrapTab from "discourse/modifiers/trap-tab";
 import DFloatPortal from "float-kit/components/d-float-portal";
@@ -11,7 +11,7 @@ import FloatKitCloseOnClickOutside from "float-kit/modifiers/close-on-click-outs
 import FloatKitCloseOnEscape from "float-kit/modifiers/close-on-escape";
 
 export default class DFloatBody extends Component {
-  closeOnScroll = emberModifier(() => {
+  closeOnScroll = modifierFn(() => {
     const firstScrollParent = getScrollParent(this.trigger);
 
     const handler = () => {
