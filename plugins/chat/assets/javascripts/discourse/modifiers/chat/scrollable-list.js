@@ -54,7 +54,7 @@ export default class ChatScrollableList extends Modifier {
     this.scrollTimer = discourseLater(() => {
       this.options.onScrollEnd?.(
         Object.assign(this.computeState(), {
-          lastVisibleId: this.computeFirstVisibleMessageId(),
+          lastVisibleId: firstVisibleMessageId(this.element),
         })
       );
     }, this.options.delay || 250);
@@ -133,9 +133,5 @@ export default class ChatScrollableList extends Modifier {
     }
 
     return this.element.scrollTop < this.lastScrollTop ? UP : DOWN;
-  }
-
-  computeFirstVisibleMessageId() {
-    return firstVisibleMessageId(this.element);
   }
 }
