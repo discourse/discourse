@@ -15,7 +15,7 @@ RSpec.describe Chat::Api::ChannelThreadsCurrentUserTitlePromptSeenController do
   describe "#update" do
     context "when not signed in" do
       it "returns 403" do
-        put "/chat/api/channels/#{channel_1.id}/threads/#{thread_1.id}/mark-thread-title-prompt-seen/me"
+        post "/chat/api/channels/#{channel_1.id}/threads/#{thread_1.id}/mark-thread-title-prompt-seen/me"
         expect(response.status).to eq(403)
       end
     end
@@ -28,25 +28,25 @@ RSpec.describe Chat::Api::ChannelThreadsCurrentUserTitlePromptSeenController do
 
       context "when invalid" do
         it "returns 404 if channel id is not found" do
-          put "/chat/api/channels/-/threads/#{thread_1.id}/mark-thread-title-prompt-seen/me"
+          post "/chat/api/channels/-/threads/#{thread_1.id}/mark-thread-title-prompt-seen/me"
           expect(response.status).to eq(404)
         end
 
         it "returns 404 if thread id is not found" do
-          put "/chat/api/channels/#{channel_1.id}/threads/-/mark-thread-title-prompt-seen/me"
+          post "/chat/api/channels/#{channel_1.id}/threads/-/mark-thread-title-prompt-seen/me"
           expect(response.status).to eq(404)
         end
 
         it "returns 404 if channel threading is not enabled" do
           channel_1.update!(threading_enabled: false)
-          put "/chat/api/channels/#{channel_1.id}/threads/#{thread_1.id}/mark-thread-title-prompt-seen/me"
+          post "/chat/api/channels/#{channel_1.id}/threads/#{thread_1.id}/mark-thread-title-prompt-seen/me"
           expect(response.status).to eq(404)
         end
 
         it "returns 404 if user can’t view channel" do
           channel = Fabricate(:private_category_channel)
           thread = Fabricate(:chat_thread, channel: channel)
-          put "/chat/api/channels/#{channel.id}/threads/#{thread.id}/mark-thread-title-prompt-seen/me"
+          post "/chat/api/channels/#{channel.id}/threads/#{thread.id}/mark-thread-title-prompt-seen/me"
 
           expect(response.status).to eq(404)
         end
@@ -58,7 +58,7 @@ RSpec.describe Chat::Api::ChannelThreadsCurrentUserTitlePromptSeenController do
 
           expect(membership.thread_title_prompt_seen).to eq(false)
 
-          put "/chat/api/channels/#{channel_1.id}/threads/#{thread_1.id}/mark-thread-title-prompt-seen/me"
+          post "/chat/api/channels/#{channel_1.id}/threads/#{thread_1.id}/mark-thread-title-prompt-seen/me"
 
           expect(response.status).to eq(200)
 
@@ -69,7 +69,7 @@ RSpec.describe Chat::Api::ChannelThreadsCurrentUserTitlePromptSeenController do
           random_thread = Fabricate(:chat_thread, channel: channel_1)
 
           expect do
-            put "/chat/api/channels/#{channel_1.id}/threads/#{random_thread.id}/mark-thread-title-prompt-seen/me"
+            post "/chat/api/channels/#{channel_1.id}/threads/#{random_thread.id}/mark-thread-title-prompt-seen/me"
           end.to change { Chat::UserChatThreadMembership.count }.by(1)
 
           expect(response.status).to eq(200)
