@@ -118,7 +118,6 @@ RSpec.describe "User threads", type: :system do
     it "updates the thread when another user replies" do
       chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
       thread = channel_1.threads.last
-      message = thread.original_message
       last_user = Fabricate(:user)
 
       chat_page.visit_user_threads
@@ -126,7 +125,6 @@ RSpec.describe "User threads", type: :system do
       last_message = Fabricate(:chat_message, thread: thread, user: last_user, use_service: true)
 
       indicator = PageObjects::Components::Chat::ThreadIndicator.new(".c-user-thread")
-
       expect(indicator).to have_reply_count(4)
       expect(indicator).to have_participant(last_user)
       expect(indicator).to have_excerpt(last_message.excerpt)

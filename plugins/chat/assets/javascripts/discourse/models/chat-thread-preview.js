@@ -37,16 +37,4 @@ export default class ChatThreadPreview {
   get otherParticipantCount() {
     return this.participantCount - this.participantUsers.length;
   }
-
-  updateFromMessageObject(messageObject) {
-    const user = User.create(messageObject.user);
-    if (!this.participantUsers.find((u) => u.id === user.id)) {
-      this.participantUsers.push(user);
-      this.participantCount += 1;
-    }
-    this.lastReplyAt = messageObject.created_at;
-    this.lastReplyId = messageObject.id;
-    this.lastReplyExcerpt = messageObject.excerpt;
-    this.lastReplyUser = user;
-  }
 }

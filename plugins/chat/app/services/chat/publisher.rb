@@ -92,6 +92,7 @@ module Chat
         {
           type: :update_thread_original_message,
           original_message_id: thread.original_message_id,
+          thread_id: thread.id,
           preview: preview.as_json,
         },
       )
