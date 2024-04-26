@@ -29,6 +29,14 @@
           font-weight: 700;
         }
 
+        &.is-disabled {
+          cursor: not-allowed;
+
+          .badge-category__name {
+            color: var(--primary-low-mid);
+          }
+        }
+
         .category-desc {
           font-weight: normal;
           color: var(--primary-medium);
@@ -66,16 +74,6 @@
           }
         }
       }
-    }
-  }
-}
-
-.category-breadcrumb .category-drop {
-  .category-row.is-disabled {
-    cursor: not-allowed;
-
-    .badge-category__name {
-      color: var(--primary-low-mid);
     }
   }
 }
