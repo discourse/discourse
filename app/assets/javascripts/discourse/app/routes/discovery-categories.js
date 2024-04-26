@@ -15,12 +15,6 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   @service router;
   @service session;
 
-  queryParams = {
-    parent_category_id: {
-      refreshModel: true,
-    },
-  };
-
   templateName = "discovery/categories";
   controllerName = "discovery/categories";
 
@@ -44,13 +38,18 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
       model = await CategoryList.list(this.store, parentCategory);
     }
 
-    model.set("category", parentCategory);
-
     return model;
   }
 
-  model(params) {
-    const parentCategory = Category.findById(params.parent_category_id);
+  async model(params) {
+    let parentCategory;
+    if (params.parent_category_id) {
+      const categoryId = parseInt(params.parent_category_id, 10);
+      parentCategory = this.site.lazy_load_categories
+        ? await Category.asyncFindById(categoryId)
+        : Category.findById(categoryId);
+    }
+
     return this.findCategories(parentCategory).then((model) => {
       const tracking = this.topicTrackingState;
       if (tracking) {
@@ -105,7 +104,11 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
           return { ...result.categoriesList, ...result.topicsList };
         } else {
           // Otherwise, return the ajax result
-          return ajax(`/categories_and_${filter}`);
+          const data = {};
+          if (parentCategory) {
+            data.parent_category_id = parentCategory.id;
+          }
+          return ajax(`/categories_and_${filter}`, { data });
         }
       })
       .then((result) => {
@@ -120,6 +123,7 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
             result,
             parentCategory
           ),
+          parentCategory,
           topics: TopicList.topicsFrom(this.store, result),
           can_create_category: result.category_list.can_create_category,
           can_create_topic: result.category_list.can_create_topic,

@@ -7,6 +7,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default Component.extend({
   classNameBindings: ["hidden:hidden", ":category-breadcrumb"],
   tagName: "ol",
+  editingCategory: false,
   editingCategoryTab: null,
 
   @discourseComputed("category", "categories", "noSubcategories")
@@ -36,9 +37,9 @@ export default Component.extend({
       });
   },
 
-  @discourseComputed("siteSettings.tagging_enabled", "editingCategoryTab")
-  showTagsSection(taggingEnabled, editingCategoryTab) {
-    return taggingEnabled && !editingCategoryTab;
+  @discourseComputed("siteSettings.tagging_enabled", "editingCategory")
+  showTagsSection(taggingEnabled, editingCategory) {
+    return taggingEnabled && !editingCategory;
   },
 
   @discourseComputed("category")

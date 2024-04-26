@@ -10,8 +10,6 @@ export default class CategoriesController extends Controller {
 
   @reads("currentUser.staff") canEdit;
 
-  queryParams = ["parent_category_id"];
-
   @discourseComputed
   isCategoriesRoute() {
     return this.router.currentRouteName === "discovery.categories";

@@ -26,6 +26,7 @@ export default ComboBoxComponent.extend({
   content: readOnly("categoriesWithShortcuts.[]"),
   noCategoriesLabel: I18n.t("categories.no_subcategories"),
   navigateToEdit: false,
+  editingCategory: false,
   editingCategoryTab: null,
   allowUncategorized: setting("allow_uncategorized_topics"),
 
@@ -80,7 +81,7 @@ export default ComboBoxComponent.extend({
       const shortcuts = [];
 
       if (
-        (this.value && !this.editingCategoryTab) ||
+        (this.value && !this.editingCategory) ||
         (this.selectKit.options.noSubcategories &&
           this.selectKit.options.subCategory)
       ) {
@@ -153,7 +154,7 @@ export default ComboBoxComponent.extend({
     "parentCategoryName",
     "selectKit.options.subCategory",
     function () {
-      if (this.editingCategoryTab) {
+      if (this.editingCategory) {
         return this.noCategoriesLabel;
       }
 
@@ -235,7 +236,10 @@ export default ComboBoxComponent.extend({
         );
       } else if (this.filterType === "categories") {
         // rendered on categories page
-        route = `/categories?parent_category_id=${categoryId}`;
+        route =
+          categoryId === "all-categories"
+            ? "/categories"
+            : `/categories/${categoryId}`;
       } else {
         route = getCategoryAndTagUrl(
           category,
