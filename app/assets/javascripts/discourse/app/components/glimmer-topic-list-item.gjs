@@ -52,20 +52,69 @@ export default class GlimmerTopicListItem extends Component {
     this.messageBus.unsubscribe(this.unreadIndicatorChannel, this.onMessage);
   }
 
-  @action
-  highlightIfNeeded(element) {
-    if (this.args.topic.id === this.historyStore.get("lastTopicIdViewed")) {
-      this.historyStore.delete("lastTopicIdViewed");
-      this.highlight(element, true);
-    } else if (this.args.topic.highlight) {
-      // highlight new topics that have been loaded from the server or the one we just created
-      this.args.topic.set("highlight", false);
-      this.highlight(element, false);
-    }
+  @bind
+  onMessage(data) {
+    const nodeClassList = document.querySelector(
+      `.indicator-topic-${data.topic_id}`
+    ).classList;
+
+    nodeClassList.toggle("read", !data.show_indicator);
+  }
+
+  get unreadIndicatorChannel() {
+    return `/private-messages/unread-indicator/${this.args.topic.id}`;
+  }
+
+  get includeUnreadIndicator() {
+    return typeof this.args.topic.unread_by_group_member !== "undefined";
   }
 
   get isSelected() {
     return this.args.selected?.includes(this.args.topic);
+  }
+
+  get participantGroups() {
+    if (!this.args.topic.participant_groups) {
+      return [];
+    }
+
+    return this.args.topic.participant_groups.map((name) => ({
+      name,
+      url: groupPath(name),
+    }));
+  }
+
+  get newDotText() {
+    return this.currentUser?.trust_level > 0
+      ? ""
+      : I18n.t("filters.new.lower_title");
+  }
+
+  get tagClassNames() {
+    return this.args.topic.tags?.map((tagName) => `tag-${tagName}`);
+  }
+
+  get expandPinned() {
+    if (
+      !this.args.topic.pinned ||
+      (this.site.mobileView && !this.siteSettings.show_pinned_excerpt_mobile) ||
+      (this.site.desktopView && !this.siteSettings.show_pinned_excerpt_desktop)
+    ) {
+      return false;
+    }
+
+    return (
+      (this.args.expandGloballyPinned && this.args.topic.pinned_globally) ||
+      this.args.expandAllPinned
+    );
+  }
+
+  get shouldFocusLastVisited() {
+    return this.site.desktopView && this.args.focusLastVisitedTopic;
+  }
+
+  get unreadClass() {
+    return this.args.topic.unread_by_group_member ? "" : "read";
   }
 
   showEntrance(e) {
@@ -95,61 +144,40 @@ export default class GlimmerTopicListItem extends Component {
     DiscourseURL.routeTo(href || topic.url);
   }
 
-  @bind
-  onMessage(data) {
-    const nodeClassList = document.querySelector(
-      `.indicator-topic-${data.topic_id}`
-    ).classList;
-
-    nodeClassList.toggle("read", !data.show_indicator);
-  }
-
-  get participantGroups() {
-    if (!this.args.topic.participant_groups) {
-      return [];
-    }
-
-    return this.args.topic.participant_groups.map((name) => ({
-      name,
-      url: groupPath(name),
-    }));
-  }
-
-  get unreadIndicatorChannel() {
-    return `/private-messages/unread-indicator/${this.args.topic.id}`;
-  }
-
-  get unreadClass() {
-    return this.args.topic.unread_by_group_member ? "" : "read";
-  }
-
-  get includeUnreadIndicator() {
-    return typeof this.args.topic.unread_by_group_member !== "undefined";
-  }
-
-  get newDotText() {
-    return this.currentUser?.trust_level > 0
-      ? ""
-      : I18n.t("filters.new.lower_title");
-  }
-
-  get tagClassNames() {
-    return this.args.topic.tags?.map((tagName) => `tag-${tagName}`);
-  }
-
-  get expandPinned() {
-    if (
-      !this.args.topic.pinned ||
-      (this.site.mobileView && !this.siteSettings.show_pinned_excerpt_mobile) ||
-      (this.site.desktopView && !this.siteSettings.show_pinned_excerpt_desktop)
-    ) {
-      return false;
-    }
-
-    return (
-      (this.args.expandGloballyPinned && this.args.topic.pinned_globally) ||
-      this.args.expandAllPinned
+  highlight(element, isLastViewedTopic) {
+    element.classList.add("highlighted");
+    element.setAttribute("data-islastviewedtopic", isLastViewedTopic);
+    element.addEventListener(
+      "animationend",
+      () => element.classList.remove("highlighted"),
+      { once: true }
     );
+
+    if (isLastViewedTopic && this.shouldFocusLastVisited) {
+      element.querySelector(".main-link .title")?.focus();
+    }
+  }
+
+  @action
+  highlightIfNeeded(element) {
+    if (this.args.topic.id === this.historyStore.get("lastTopicIdViewed")) {
+      this.historyStore.delete("lastTopicIdViewed");
+      this.highlight(element, true);
+    } else if (this.args.topic.highlight) {
+      // highlight new topics that have been loaded from the server or the one we just created
+      this.args.topic.set("highlight", false);
+      this.highlight(element, false);
+    }
+  }
+
+  @action
+  onTitleFocus(event) {
+    event.target.classList.add("selected");
+  }
+
+  @action
+  onTitleBlur(event) {
+    event.target.classList.remove("selected");
   }
 
   @action
@@ -248,34 +276,6 @@ export default class GlimmerTopicListItem extends Component {
       e.preventDefault();
       this.navigateToTopic(this.args.topic, e.target.href);
     }
-  }
-
-  highlight(element, isLastViewedTopic) {
-    element.classList.add("highlighted");
-    element.setAttribute("data-islastviewedtopic", isLastViewedTopic);
-    element.addEventListener(
-      "animationend",
-      () => element.classList.remove("highlighted"),
-      { once: true }
-    );
-
-    if (isLastViewedTopic && this.shouldFocusLastVisited) {
-      element.querySelector(".main-link .title")?.focus();
-    }
-  }
-
-  @action
-  onTitleFocus(event) {
-    event.target.classList.add("selected");
-  }
-
-  @action
-  onTitleBlur(event) {
-    event.target.classList.remove("selected");
-  }
-
-  get shouldFocusLastVisited() {
-    return this.site.desktopView && this.args.focusLastVisitedTopic;
   }
 
   <template>
