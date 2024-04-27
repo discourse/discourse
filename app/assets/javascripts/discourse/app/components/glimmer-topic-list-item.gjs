@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import $ from "jquery";
 import { eq, gt } from "truth-helpers";
 import GlimmerActionList from "discourse/components/glimmer-action-list";
@@ -16,6 +15,7 @@ import GlimmerPostsCountColumn from "discourse/components/glimmer-posts-count-co
 import GlimmerTopicExcerpt from "discourse/components/glimmer-topic-excerpt";
 import GlimmerUnreadIndicator from "discourse/components/glimmer-unread-indicator";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import TopicLink from "discourse/components/topic-link";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import { topicTitleDecorators } from "discourse/components/topic-title";
@@ -24,7 +24,6 @@ import concatClass from "discourse/helpers/concat-class";
 import discourseTags from "discourse/helpers/discourse-tags";
 import number from "discourse/helpers/number";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
-import topicLink from "discourse/helpers/topic-link";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
@@ -45,14 +44,6 @@ export default class GlimmerTopicListItem extends Component {
 
     if (this.includeUnreadIndicator) {
       this.messageBus.subscribe(this.unreadIndicatorChannel, this.onMessage);
-    }
-
-    if (this.shouldFocusLastVisited) {
-      const title = this.titleElement;
-      if (title) {
-        title.addEventListener("focus", this.onTitleFocus);
-        title.addEventListener("blur", this.onTitleBlur);
-      }
     }
   }
 
@@ -376,8 +367,12 @@ export default class GlimmerTopicListItem extends Component {
           no whitespace
           }}<TopicStatus
             @topic={{@topic}}
+          />{{!
+          no whitespace
+          }}<TopicLink
+            @topic={{@topic}}
+            class="raw-link raw-topic-link"
           />
-          {{~topicLink @topic class="raw-link raw-topic-link"}}
           {{~#if @topic.featured_link~}}
             &nbsp;
             {{~topicFeaturedLink @topic}}
