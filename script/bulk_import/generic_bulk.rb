@@ -1759,7 +1759,10 @@ class BulkImport::Generic < BulkImport::Base
 
     tags.each do |row|
       cleaned_tag_name = DiscourseTagging.clean_tag(row["name"])
-      tag = Tag.find_or_create_by!(name: cleaned_tag_name)
+      tag =
+        Tag.where("LOWER(name) = ?", cleaned_tag_name.downcase).first_or_create!(
+          name: cleaned_tag_name,
+        )
       @tag_mapping[row["id"]] = tag.id
 
       if row["tag_group_id"]
