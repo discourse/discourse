@@ -31,8 +31,7 @@ export default class GlimmerActivityColumn extends Component {
       <a
         href={{@topic.lastPostUrl}}
         class="post-activity"
-      >{{!
-        no whitespace
+      >{{! no whitespace
         }}<PluginOutlet
           @name="topic-list-before-relative-date"
         />

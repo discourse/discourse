@@ -332,18 +332,13 @@ export default class GlimmerTopicListItem extends Component {
         <td class="main-link clearfix topic-list-data" colspan="1">
           <PluginOutlet @name="topic-list-before-link" />
 
-          <span
-            class="link-top-line"
-          >{{!
-          no whitespace
+          <span class="link-top-line">{{! no whitespace
           }}<PluginOutlet
               @name="topic-list-before-status"
-            />{{!
-          no whitespace
+            />{{! no whitespace
           }}<TopicStatus
               @topic={{@topic}}
-            />{{!
-          no whitespace
+            />{{! no whitespace
           }}<GlimmerTopicLink
               {{on "focus" this.onTitleFocus}}
               {{on "blur" this.onTitleBlur}}
@@ -356,8 +351,7 @@ export default class GlimmerTopicListItem extends Component {
             {{~/if~}}
             <PluginOutlet
               @name="topic-list-after-title"
-            />{{!
-          no whitespace
+            />{{! no whitespace
           }}
             <GlimmerUnreadIndicator
               @includeUnreadIndicator={{this.includeUnreadIndicator}}
@@ -468,24 +462,20 @@ export default class GlimmerTopicListItem extends Component {
 
           <div
             class="topic-item-metadata right"
-          >{{!
-            no whitespace
+          >{{! no whitespace
             }}<PluginOutlet
               @name="topic-list-before-link"
             />
 
             <div
               class="main-link"
-            >{{!
-              no whitespace
+            >{{! no whitespace
               }}<PluginOutlet
                 @name="topic-list-before-status"
-              />{{!
-              no whitespace
+              />{{! no whitespace
               }}<TopicStatus
                 @topic={{@topic}}
-              />{{!
-              no whitespace
+              />{{! no whitespace
               }}<GlimmerTopicLink
                 {{on "focus" this.onTitleFocus}}
                 {{on "blur" this.onTitleBlur}}
@@ -505,8 +495,7 @@ export default class GlimmerTopicListItem extends Component {
                 <GlimmerTopicExcerpt @topic={{@topic}} />
               {{~/if~}}
               <PluginOutlet @name="topic-list-main-link-bottom" />
-            </div>{{!
-            no whitespace
+            </div>{{! no whitespace
             }}<PluginOutlet
               @name="topic-list-after-main-link"
             />
