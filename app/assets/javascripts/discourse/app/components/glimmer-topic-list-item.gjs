@@ -3,7 +3,6 @@ import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import $ from "jquery";
 import { eq, gt } from "truth-helpers";
@@ -27,10 +26,11 @@ import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
-import { bind, observes } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default class GlimmerTopicListItem extends Component {
+  @service appEvents;
   @service currentUser;
   @service historyStore;
   @service messageBus;
@@ -40,7 +40,6 @@ export default class GlimmerTopicListItem extends Component {
 
   constructor() {
     super(...arguments);
-    //   this.highlightIfNeeded();
 
     if (this.includeUnreadIndicator) {
       this.messageBus.subscribe(this.unreadIndicatorChannel, this.onMessage);
@@ -51,36 +50,17 @@ export default class GlimmerTopicListItem extends Component {
     super.willDestroy(...arguments);
 
     this.messageBus.unsubscribe(this.unreadIndicatorChannel, this.onMessage);
-
-    // if (this.shouldFocusLastVisited) {
-    //   const title = this.titleElement;
-    //   if (title) {
-    //     title.removeEventListener("focus", this.onTitleFocus);
-    //     title.removeEventListener("blur", this.onTitleBlur);
-    //   }
-    // }
   }
 
-  // Ideally this should be a modifier... but we can't do that
-  // until this component has its tagName removed.
-  highlightIfNeeded() {
-    const lastViewedTopicId = this.historyStore.get("lastTopicIdViewed");
-
-    if (lastViewedTopicId === this.args.topic.id) {
+  @action
+  highlightIfNeeded(element) {
+    if (this.args.topic.id === this.historyStore.get("lastTopicIdViewed")) {
       this.historyStore.delete("lastTopicIdViewed");
-      this.highlight({ isLastViewedTopic: true });
+      this.highlight(element, true);
     } else if (this.args.topic.highlight) {
       // highlight new topics that have been loaded from the server or the one we just created
-      this.set("topic.highlight", false);
-      this.highlight();
-    }
-  }
-
-  // Already-rendered topic is marked as highlighted
-  @observes("topic.highlight")
-  topicHighlightChanged() {
-    if (this.args.topic.highlight) {
-      this.highlightIfNeeded();
+      this.args.topic.set("highlight", false);
+      this.highlight(element, false);
     }
   }
 
@@ -212,10 +192,12 @@ export default class GlimmerTopicListItem extends Component {
     }
   }
 
+  @action
   click(e) {
     const result = this.showEntrance(e);
     if (result === false) {
-      return result;
+      e.preventDefault();
+      return;
     }
 
     if (
@@ -223,7 +205,7 @@ export default class GlimmerTopicListItem extends Component {
       e.target.classList.contains("post-activity")
     ) {
       if (wantsNewWindow(e)) {
-        return true;
+        return;
       }
 
       e.preventDefault();
@@ -239,7 +221,7 @@ export default class GlimmerTopicListItem extends Component {
       )
     ) {
       if (wantsNewWindow(e)) {
-        return true;
+        return;
       }
 
       e.preventDefault();
@@ -256,65 +238,52 @@ export default class GlimmerTopicListItem extends Component {
       return;
     }
 
-    return this.unhandledRowClick(e, this.args.topic);
+    // TODO:
+    // this.unhandledRowClick(e, this.args.topic);
   }
 
-  // TODO: Doesn't work
   @action
   keyDown(e) {
     if (e.key === "Enter" && e.target.classList.contains("post-activity")) {
       e.preventDefault();
-      this.navigateToTopic(this.args.topic, e.target.getAttribute("href"));
+      this.navigateToTopic(this.args.topic, e.target.href);
     }
   }
 
-  highlight(opts = { isLastViewedTopic: false }) {
-    schedule("afterRender", () => {
-      if (this.isDestroying || this.isDestroyed) {
-        return;
-      }
+  highlight(element, isLastViewedTopic) {
+    element.classList.add("highlighted");
+    element.setAttribute("data-islastviewedtopic", isLastViewedTopic);
+    element.addEventListener(
+      "animationend",
+      () => element.classList.remove("highlighted"),
+      { once: true }
+    );
 
-      this.element.classList.add("highlighted");
-      this.element.setAttribute(
-        "data-islastviewedtopic",
-        opts.isLastViewedTopic
-      );
-      this.element.addEventListener("animationend", () => {
-        this.element.classList.remove("highlighted");
-      });
-
-      if (opts.isLastViewedTopic && this.shouldFocusLastVisited) {
-        this.titleElement?.focus();
-      }
-    });
-  }
-
-  @bind
-  onTitleFocus() {
-    if (!this.isDestroying && !this.isDestroyed) {
-      this.element.classList.add("selected");
+    if (isLastViewedTopic && this.shouldFocusLastVisited) {
+      element.querySelector(".main-link .title")?.focus();
     }
   }
 
-  @bind
-  onTitleBlur() {
-    if (!this.isDestroying && !this.isDestroyed) {
-      this.element.classList.remove("selected");
-    }
+  @action
+  onTitleFocus(event) {
+    event.target.classList.add("selected");
+  }
+
+  @action
+  onTitleBlur(event) {
+    event.target.classList.remove("selected");
   }
 
   get shouldFocusLastVisited() {
     return this.site.desktopView && this.args.focusLastVisitedTopic;
   }
 
-  get titleElement() {
-    return this.element.querySelector(".main-link .title");
-  }
-
   <template>
     <tr
       {{didInsert this.applyTitleDecorators}}
+      {{didInsert this.highlightIfNeeded}}
       {{on "keydown" this.keyDown}}
+      {{on "click" this.click}}
       data-topic-id={{@topic.id}}
       role={{this.role}}
       aria-level={{this.ariaLevel}}
@@ -370,6 +339,8 @@ export default class GlimmerTopicListItem extends Component {
           />{{!
           no whitespace
           }}<TopicLink
+            {{on "focus" this.onTitleFocus}}
+            {{on "blur" this.onTitleBlur}}
             @topic={{@topic}}
             class="raw-link raw-topic-link"
           />
