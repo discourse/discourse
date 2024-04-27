@@ -9,6 +9,7 @@ import { eq, gt } from "truth-helpers";
 import GlimmerActionList from "discourse/components/glimmer-action-list";
 import GlimmerActivityColumn from "discourse/components/glimmer-activity-column";
 import GlimmerParticipantGroups from "discourse/components/glimmer-participant-groups";
+import GlimmerPostCountOrBadges from "discourse/components/glimmer-post-count-or-badges";
 import GlimmerPostersColumn from "discourse/components/glimmer-posters-column";
 import GlimmerPostsCountColumn from "discourse/components/glimmer-posts-count-column";
 import GlimmerTopicExcerpt from "discourse/components/glimmer-topic-excerpt";
@@ -18,14 +19,17 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import { topicTitleDecorators } from "discourse/components/topic-title";
+import avatar from "discourse/helpers/avatar";
 import categoryLink from "discourse/helpers/category-link";
 import concatClass from "discourse/helpers/concat-class";
 import discourseTags from "discourse/helpers/discourse-tags";
+import formatDate from "discourse/helpers/format-date";
 import number from "discourse/helpers/number";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL, { groupPath } from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
+import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -308,134 +312,235 @@ export default class GlimmerTopicListItem extends Component {
         @name="above-topic-list-item"
         @outletArgs={{hash topic=@topic}}
       />
-      {{! TODO: convert topic-list-before-columns outlets into above-topic-list-item }}
+      {{#if this.site.desktopView}}
+        <PluginOutlet @name="topic-list-before-columns" />
 
-      {{#if @bulkSelectEnabled}}
-        <td class="bulk-select topic-list-data">
-          <label for="bulk-select-{{@topic.id}}">
-            <input
-              {{on "click" this.onBulkSelectToggle}}
-              checked={{this.isSelected}}
-              type="checkbox"
-              id="bulk-select-{{@topic.id}}"
-              class="bulk-select"
-            />
-          </label>
-        </td>
-      {{/if}}
-
-      <td class="main-link clearfix topic-list-data" colspan="1">
-        <PluginOutlet @name="topic-list-before-link" />
-
-        <span
-          class="link-top-line"
-        >{{!
-          no whitespace
-          }}<PluginOutlet
-            @name="topic-list-before-status"
-          />{{!
-          no whitespace
-          }}<TopicStatus
-            @topic={{@topic}}
-          />{{!
-          no whitespace
-          }}<GlimmerTopicLink
-            {{on "focus" this.onTitleFocus}}
-            {{on "blur" this.onTitleBlur}}
-            @topic={{@topic}}
-            class="raw-link raw-topic-link"
-          />
-          {{~#if @topic.featured_link~}}
-            &nbsp;
-            {{~topicFeaturedLink @topic}}
-          {{~/if~}}
-          <PluginOutlet
-            @name="topic-list-after-title"
-          />{{!
-          no whitespace
-          }}
-          <GlimmerUnreadIndicator
-            @includeUnreadIndicator={{this.includeUnreadIndicator}}
-            @topicId={{@topic.id}}
-            class={{this.unreadClass}}
-          />
-          {{~#if @showTopicPostBadges~}}
-            <TopicPostBadges
-              @unreadPosts={{@topic.unread_posts}}
-              @unseen={{@topic.unseen}}
-              @newDotText={{this.newDotText}}
-              @url={{@topic.lastUnreadUrl}}
-            />
-          {{~/if~}}
-        </span>
-
-        <div class="link-bottom-line">
-          {{#unless @hideCategory}}
-            {{#unless @topic.isPinnedUncategorized}}
-              <PluginOutlet @name="topic-list-before-category" />
-              {{categoryLink @topic.category}}
-            {{/unless}}
-          {{/unless}}
-
-          {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
-
-          {{#if this.participantGroups}}
-            <GlimmerParticipantGroups @groups={{this.participantGroups}} />
-          {{/if}}
-
-          <GlimmerActionList
-            @topic={{@topic}}
-            @postNumbers={{@topic.liked_post_numbers}}
-            @icon="heart"
-            class="likes"
-          />
-        </div>
-
-        {{#if this.expandPinned}}
-          <GlimmerTopicExcerpt @topic={{@topic}} />
+        {{#if @bulkSelectEnabled}}
+          <td class="bulk-select topic-list-data">
+            <label for="bulk-select-{{@topic.id}}">
+              <input
+                {{on "click" this.onBulkSelectToggle}}
+                checked={{this.isSelected}}
+                type="checkbox"
+                id="bulk-select-{{@topic.id}}"
+                class="bulk-select"
+              />
+            </label>
+          </td>
         {{/if}}
 
-        <PluginOutlet @name="topic-list-main-link-bottom" />
-      </td>
+        <td class="main-link clearfix topic-list-data" colspan="1">
+          <PluginOutlet @name="topic-list-before-link" />
 
-      <PluginOutlet @name="topic-list-after-main-link" />
+          <span
+            class="link-top-line"
+          >{{!
+          no whitespace
+          }}<PluginOutlet
+              @name="topic-list-before-status"
+            />{{!
+          no whitespace
+          }}<TopicStatus
+              @topic={{@topic}}
+            />{{!
+          no whitespace
+          }}<GlimmerTopicLink
+              {{on "focus" this.onTitleFocus}}
+              {{on "blur" this.onTitleBlur}}
+              @topic={{@topic}}
+              class="raw-link raw-topic-link"
+            />
+            {{~#if @topic.featured_link~}}
+              &nbsp;
+              {{~topicFeaturedLink @topic}}
+            {{~/if~}}
+            <PluginOutlet
+              @name="topic-list-after-title"
+            />{{!
+          no whitespace
+          }}
+            <GlimmerUnreadIndicator
+              @includeUnreadIndicator={{this.includeUnreadIndicator}}
+              @topicId={{@topic.id}}
+              class={{this.unreadClass}}
+            />
+            {{~#if @showTopicPostBadges~}}
+              <TopicPostBadges
+                @unreadPosts={{@topic.unread_posts}}
+                @unseen={{@topic.unseen}}
+                @newDotText={{this.newDotText}}
+                @url={{@topic.lastUnreadUrl}}
+              />
+            {{~/if~}}
+          </span>
 
-      {{#if @showPosters}}
-        <GlimmerPostersColumn @posters={{@topic.featuredUsers}} />
-      {{/if}}
+          <div class="link-bottom-line">
+            {{#unless @hideCategory}}
+              {{#unless @topic.isPinnedUncategorized}}
+                <PluginOutlet @name="topic-list-before-category" />
+                {{categoryLink @topic.category}}
+              {{/unless}}
+            {{/unless}}
 
-      <GlimmerPostsCountColumn @topic={{@topic}} />
+            {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
 
-      {{#if @showLikes}}
-        <td class="num likes topic-list-data">
-          {{#if (gt @topic.like_count 0)}}
-            <a href={{@topic.summaryUrl}}>
-              {{number @topic.like_count}}
-              {{icon "heart"}}
-            </a>
+            {{#if this.participantGroups}}
+              <GlimmerParticipantGroups @groups={{this.participantGroups}} />
+            {{/if}}
+
+            <GlimmerActionList
+              @topic={{@topic}}
+              @postNumbers={{@topic.liked_post_numbers}}
+              @icon="heart"
+              class="likes"
+            />
+          </div>
+
+          {{#if this.expandPinned}}
+            <GlimmerTopicExcerpt @topic={{@topic}} />
           {{/if}}
+
+          <PluginOutlet @name="topic-list-main-link-bottom" />
+        </td>
+
+        <PluginOutlet @name="topic-list-after-main-link" />
+
+        {{#if @showPosters}}
+          <GlimmerPostersColumn @posters={{@topic.featuredUsers}} />
+        {{/if}}
+
+        <GlimmerPostsCountColumn @topic={{@topic}} />
+
+        {{#if @showLikes}}
+          <td class="num likes topic-list-data">
+            {{#if (gt @topic.like_count 0)}}
+              <a href={{@topic.summaryUrl}}>
+                {{number @topic.like_count}}
+                {{icon "heart"}}
+              </a>
+            {{/if}}
+          </td>
+        {{/if}}
+
+        {{#if @showOpLikes}}
+          <td class="num likes">
+            {{#if (gt @topic.op_like_count 0)}}
+              <a href={{@topic.summaryUrl}}>
+                {{number @topic.op_like_count}}
+                {{icon "heart"}}
+              </a>
+            {{/if}}
+          </td>
+        {{/if}}
+
+        <td class="num views {{@topic.viewsHeat}} topic-list-data">
+          <PluginOutlet @name="topic-list-before-view-count" />
+          {{number @topic.views numberKey="views_long"}}
+        </td>
+
+        <GlimmerActivityColumn @topic={{@topic}} class="num topic-list-data" />
+
+        <PluginOutlet @name="topic-list-after-columns" />
+      {{else}}
+        <td class="topic-list-data">
+          <PluginOutlet @name="topic-list-before-columns" />
+
+          <div class="pull-left">
+            {{#if @bulkSelectEnabled}}
+              <label for="bulk-select-{{@topic.id}}">
+                <input
+                  type="checkbox"
+                  id="bulk-select-{{@topic.id}}"
+                  class="bulk-select"
+                />
+              </label>
+            {{else}}
+              <a
+                href={{@topic.lastPostUrl}}
+                aria-label={{i18n
+                  "latest_poster_link"
+                  username=@topic.lastPosterUser.username
+                }}
+                data-user-card={{@topic.lastPosterUser.username}}
+              >{{avatar @topic.lastPosterUser imageSize="large"}}</a>
+            {{/if}}
+          </div>
+
+          <div
+            class="topic-item-metadata right"
+          >{{!
+            no whitespace
+            }}<PluginOutlet
+              @name="topic-list-before-link"
+            />
+
+            <div
+              class="main-link"
+            >{{!
+              no whitespace
+              }}<PluginOutlet
+                @name="topic-list-before-status"
+              />{{!
+              no whitespace
+              }}<TopicStatus
+                @topic={{@topic}}
+              />{{!
+              no whitespace
+              }}<GlimmerTopicLink
+                {{on "focus" this.onTitleFocus}}
+                {{on "blur" this.onTitleBlur}}
+                @topic={{@topic}}
+                class="raw-link raw-topic-link"
+              />
+              {{~#if @topic.featured_link~}}
+                {{topicFeaturedLink @topic}}
+              {{~/if~}}
+              <PluginOutlet @name="topic-list-after-title" />
+              {{~#if @topic.unseen~}}
+                <span class="topic-post-badges">&nbsp;<span
+                    class="badge-notification new-topic"
+                  ></span></span>
+              {{~/if~}}
+              {{~#if this.expandPinned~}}
+                <GlimmerTopicExcerpt @topic={{@topic}} />
+              {{~/if~}}
+              <PluginOutlet @name="topic-list-main-link-bottom" />
+            </div>{{!
+            no whitespace
+            }}<PluginOutlet
+              @name="topic-list-after-main-link"
+            />
+
+            <div class="pull-right">
+              <GlimmerPostCountOrBadges
+                @topic={{@topic}}
+                @postBadgesEnabled={{@showTopicPostBadges}}
+              />
+            </div>
+
+            <div class="topic-item-stats clearfix">
+              <span class="topic-item-stats__category-tags">
+                {{#unless @hideCategory}}
+                  <PluginOutlet @name="topic-list-before-category" />
+                  {{categoryLink @topic.category}}
+                {{/unless}}
+
+                {{discourseTags @topic mode="list"}}
+              </span>
+
+              <div class="num activity last">
+                <span title={{@topic.bumpedAtTitle}} class="age activity">
+                  <a href={{@topic.lastPostUrl}}>{{formatDate
+                      @topic.bumpedAt
+                      format="tiny"
+                      noTitle="true"
+                    }}</a>
+                </span>
+              </div>
+            </div>
+          </div>
         </td>
       {{/if}}
-
-      {{#if @showOpLikes}}
-        <td class="num likes">
-          {{#if (gt @topic.op_like_count 0)}}
-            <a href={{@topic.summaryUrl}}>
-              {{number @topic.op_like_count}}
-              {{icon "heart"}}
-            </a>
-          {{/if}}
-        </td>
-      {{/if}}
-
-      <td class="num views {{@topic.viewsHeat}} topic-list-data">
-        <PluginOutlet @name="topic-list-before-view-count" />
-        {{number @topic.views numberKey="views_long"}}
-      </td>
-
-      <GlimmerActivityColumn @topic={{@topic}} class="num topic-list-data" />
-
-      <PluginOutlet @name="topic-list-after-columns" />
     </tr>
   </template>
 }

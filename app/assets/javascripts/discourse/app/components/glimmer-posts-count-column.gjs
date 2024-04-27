@@ -4,7 +4,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import number from "discourse/helpers/number";
 import I18n from "discourse-i18n";
 
-export default class GlimmerPostCountColumn extends Component {
+export default class GlimmerPostsCountColumn extends Component {
   @service siteSettings;
 
   get ratio() {
