@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
+import { htmlSafe } from "@ember/template";
 import formatDate from "discourse/helpers/format-date";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import ChatThreadParticipants from "./chat-thread-participants";
 import ChatUserAvatar from "./chat-user-avatar";
