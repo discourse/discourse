@@ -12,9 +12,9 @@ import GlimmerParticipantGroups from "discourse/components/glimmer-participant-g
 import GlimmerPostersColumn from "discourse/components/glimmer-posters-column";
 import GlimmerPostsCountColumn from "discourse/components/glimmer-posts-count-column";
 import GlimmerTopicExcerpt from "discourse/components/glimmer-topic-excerpt";
+import GlimmerTopicLink from "discourse/components/glimmer-topic-link";
 import GlimmerUnreadIndicator from "discourse/components/glimmer-unread-indicator";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TopicLink from "discourse/components/topic-link";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import { topicTitleDecorators } from "discourse/components/topic-title";
@@ -339,7 +339,7 @@ export default class GlimmerTopicListItem extends Component {
             @topic={{@topic}}
           />{{!
           no whitespace
-          }}<TopicLink
+          }}<GlimmerTopicLink
             {{on "focus" this.onTitleFocus}}
             {{on "blur" this.onTitleBlur}}
             @topic={{@topic}}
