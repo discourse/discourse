@@ -1,5 +1,5 @@
 export default function concatClass(...args) {
-  const classes = args.compact().join(" ");
+  const classes = args.flat().filter(Boolean).join(" ");
 
   if (classes.length) {
     return classes;
