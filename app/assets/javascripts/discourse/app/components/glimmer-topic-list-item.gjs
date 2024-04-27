@@ -279,6 +279,7 @@ export default class GlimmerTopicListItem extends Component {
   }
 
   <template>
+    {{! template-lint-disable no-invalid-interactive }}
     <tr
       {{didInsert this.applyTitleDecorators}}
       {{didInsert this.highlightIfNeeded}}
@@ -408,7 +409,7 @@ export default class GlimmerTopicListItem extends Component {
       {{#if @showLikes}}
         <td class="num likes topic-list-data">
           {{#if (gt @topic.like_count 0)}}
-            <a href="{{@topic.summaryUrl}}">
+            <a href={{@topic.summaryUrl}}>
               {{number @topic.like_count}}
               {{icon "heart"}}
             </a>
