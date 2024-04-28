@@ -5,6 +5,10 @@ class WatchedWordGroup < ActiveRecord::Base
 
   has_many :watched_words, dependent: :destroy
 
+  def self.actions
+    WatchedWord.actions
+  end
+
   def self.create_membership(params)
     words = params.delete(:words)
     action = params[:action] || WatchedWord.actions[params[:action_key].to_sym]

@@ -1,11 +1,11 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { empty, equal } from "@ember/object/computed";
-// import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { classNames, tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import WatchedWord from "admin/models/watched-word";
@@ -46,6 +46,13 @@ export default class WatchedWordForm extends Component {
     }
   }
 
+  @observes("actionKey")
+  actionChanged() {
+    this.setProperties({
+      showMessage: false,
+    });
+  }
+
   @discourseComputed("words.[]")
   isUniqueWord(words) {
     const existingWords = this.filteredContent || [];
@@ -64,10 +71,6 @@ export default class WatchedWordForm extends Component {
     });
 
     return !duplicate;
-  }
-
-  focusInput() {
-    // schedule("afterRender", () => this.element.querySelector("input").focus());
   }
 
   @action
@@ -107,7 +110,6 @@ export default class WatchedWordForm extends Component {
           this.setProperties({
             words: [],
             replacement: "",
-            formSubmitted: false,
             selectedTags: [],
             showMessage: true,
             message: I18n.t("admin.watched_words.form.success"),
@@ -120,25 +122,9 @@ export default class WatchedWordForm extends Component {
           } else {
             this.action(result);
           }
-          // this.focusInput();
         })
-        .catch((e) => {
-          this.set("formSubmitted", false);
-          if (e.jqXHR) {
-            const message = e.jqXHR.responseJSON?.errors
-              ? I18n.t("generic_error_with_reason", {
-                  error: e.jqXHR.responseJSON.errors.join(". "),
-                })
-              : I18n.t("generic_error");
-            this.dialog.alert({
-              message,
-              didConfirm: () => this.focusInput(),
-              didCancel: () => this.focusInput(),
-            });
-          } else {
-            throw e;
-          }
-        });
+        .catch(popupAjaxError)
+        .finally(this.set("formSubmitted", false));
     }
   }
 }
