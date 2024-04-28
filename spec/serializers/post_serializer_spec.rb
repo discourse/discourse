@@ -3,10 +3,8 @@
 RSpec.describe PostSerializer do
   fab!(:post)
 
-  before { Group.refresh_automatic_groups! }
-
   context "with a post with lots of actions" do
-    fab!(:actor) { Fabricate(:user) }
+    fab!(:actor) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:admin)
     let(:acted_ids) do
       PostActionType.public_types.values.concat(
@@ -361,6 +359,35 @@ RSpec.describe PostSerializer do
           nil,
         )
       end
+    end
+  end
+
+  context "with mentions" do
+    fab!(:user_status)
+    fab!(:user)
+    fab!(:user1) { Fabricate(:user, user_status: user_status) }
+    fab!(:post) { Fabricate(:post, user: user, raw: "Hey @#{user1.username}") }
+    let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
+
+    it "returns mentioned users with user status when user status is enabled" do
+      SiteSetting.enable_user_status = true
+
+      json = serializer.as_json
+
+      expect(json[:mentioned_users]).to be_present
+      expect(json[:mentioned_users].length).to be(1)
+      expect(json[:mentioned_users][0]).to_not be_nil
+      expect(json[:mentioned_users][0][:id]).to eq(user1.id)
+      expect(json[:mentioned_users][0][:username]).to eq(user1.username)
+      expect(json[:mentioned_users][0][:name]).to eq(user1.name)
+      expect(json[:mentioned_users][0][:status][:description]).to eq(user_status.description)
+      expect(json[:mentioned_users][0][:status][:emoji]).to eq(user_status.emoji)
+    end
+
+    it "doesn't return mentioned users when user status is disabled" do
+      SiteSetting.enable_user_status = false
+      json = serializer.as_json
+      expect(json[:mentioned_users]).to be_nil
     end
   end
 

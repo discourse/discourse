@@ -166,7 +166,7 @@ RSpec.describe TagsController do
       include_examples "retrieves the right tags"
 
       it "works for tags in groups" do
-        tag_group = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
+        _tag_group = Fabricate(:tag_group, tags: [test_tag, topic_tag, synonym])
 
         get "/tags.json"
 
@@ -405,7 +405,6 @@ RSpec.describe TagsController do
       expect(response.status).to eq(200)
 
       json = response.parsed_body
-
       topic_list = json["topic_list"]
 
       expect(topic_list["tags"].map { |t| t["id"] }).to contain_exactly(tag.id)
@@ -423,7 +422,7 @@ RSpec.describe TagsController do
     end
 
     it "does not show staff-only tags" do
-      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+      _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
 
       get "/tag/test"
       expect(response.status).to eq(404)
@@ -558,14 +557,14 @@ RSpec.describe TagsController do
     end
 
     it "returns 404 if tag is staff-only" do
-      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+      _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
       get "/tag/test/info.json"
       expect(response.status).to eq(404)
     end
 
     it "staff-only tags can be retrieved for staff user" do
       sign_in(admin)
-      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+      _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
       get "/tag/test/info.json"
       expect(response.status).to eq(200)
     end
@@ -575,7 +574,7 @@ RSpec.describe TagsController do
       category2 = Fabricate(:category)
       tag_group = Fabricate(:tag_group, tags: [tag])
       category2.update!(tag_groups: [tag_group])
-      staff_category = Fabricate(:private_category, group: Fabricate(:group), tags: [tag])
+      _staff_category = Fabricate(:private_category, group: Fabricate(:group), tags: [tag])
       get "/tag/#{tag.name}/info.json"
       expect(response.parsed_body.dig("tag_info", "category_ids")).to contain_exactly(
         category.id,
@@ -852,7 +851,7 @@ RSpec.describe TagsController do
         end
 
         it "returns a 404 when tag is restricted" do
-          tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+          _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
 
           get "/tag/test/l/latest.json"
           expect(response.status).to eq(404)
@@ -944,7 +943,7 @@ RSpec.describe TagsController do
     end
 
     it "returns a 404 if tag is restricted" do
-      tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
+      _tag_group = Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["test"])
 
       get "/tag/test/l/top.json"
       expect(response.status).to eq(404)
@@ -1019,7 +1018,7 @@ RSpec.describe TagsController do
         end
 
         it "can filter on category without q param" do
-          nope = Fabricate(:tag, name: "nope")
+          Fabricate(:tag, name: "nope")
           get "/tags/filter/search.json", params: { categoryId: category.id }
           expect(response.status).to eq(200)
           expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq([yup.name])
@@ -1057,7 +1056,8 @@ RSpec.describe TagsController do
       end
 
       it "matches tags after sanitizing input" do
-        yup, nope = Fabricate(:tag, name: "yup"), Fabricate(:tag, name: "nope")
+        Fabricate(:tag, name: "yup")
+        Fabricate(:tag, name: "nope")
         get "/tags/filter/search.json", params: { q: "N/ope" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["results"].map { |j| j["id"] }.sort).to eq(["nope"])
@@ -1086,7 +1086,7 @@ RSpec.describe TagsController do
 
       it "can return all the results" do
         tag_group1 = Fabricate(:tag_group, tag_names: %w[common1 common2 group1tag group1tag2])
-        tag_group2 = Fabricate(:tag_group, tag_names: %w[common1 common2])
+        _tag_group2 = Fabricate(:tag_group, tag_names: %w[common1 common2])
         category = Fabricate(:category, tag_groups: [tag_group1])
         get "/tags/filter/search.json",
             params: {
@@ -1324,7 +1324,7 @@ RSpec.describe TagsController do
       end
 
       it "can return errors" do
-        tag2 = Fabricate(:tag, target_tag: tag)
+        _tag2 = Fabricate(:tag, target_tag: tag)
         tag3 = Fabricate(:tag)
         post "/tag/#{tag3.name}/synonyms.json", params: { synonyms: [tag.name] }
         expect(response.status).to eq(200)

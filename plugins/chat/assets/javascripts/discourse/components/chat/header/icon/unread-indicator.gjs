@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import {
   HEADER_INDICATOR_PREFERENCE_ALL_NEW,
   HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,

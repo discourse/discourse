@@ -10,13 +10,7 @@ task "assets:precompile:build" do
   if ENV["SKIP_EMBER_CLI_COMPILE"] != "1"
     ember_version = ENV["EMBER_VERSION"] || "5"
 
-    raise "Unknown ember version '#{ember_version}'" if !%w[3 5].include?(ember_version)
-
-    if ember_version == "3"
-      puts "Downgrading to Ember 3..."
-      system("script/switch_ember_version", ember_version, exception: true, chdir: Rails.root)
-      system("yarn install", exception: true, chdir: "app/assets/javascripts/discourse")
-    end
+    raise "Unknown ember version '#{ember_version}'" if !%w[5].include?(ember_version)
 
     compile_command = "CI=1 yarn --cwd app/assets/javascripts/discourse run ember build"
 
@@ -27,7 +21,8 @@ task "assets:precompile:build" do
       compile_command = "NODE_OPTIONS='--max-old-space-size=2048' #{compile_command}"
     end
 
-    compile_command = "EMBER_ENV=production #{compile_command}" if ENV["EMBER_ENV"].nil?
+    ember_env = ENV["EMBER_ENV"] || "production"
+    compile_command = "#{compile_command} -prod" if ember_env == "production"
 
     only_ember_precompile_build_remaining = (ARGV.last == "assets:precompile:build")
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
@@ -202,7 +197,8 @@ end
 
 # different brotli versions use different parameters
 def brotli_command(path, max_compress)
-  compression_quality = max_compress ? "11" : "6"
+  compression_quality =
+    max_compress ? "11" : (ENV["DISCOURSE_ASSETS_PRECOMPILE_DEFAULT_BROTLI_QUALITY"] || "6")
   "brotli -f --quality=#{compression_quality} #{path} --output=#{path}.br"
 end
 
@@ -271,7 +267,6 @@ task "assets:precompile:compress_js": "environment" do
         manifest
           .files
           .select { |k, v| k =~ /\.js\z/ }
-          .reject { |k, v| k =~ %r{/workbox-.*'/} }
           .each do |file, info|
             path = "#{assets_path}/#{file}"
             _file =

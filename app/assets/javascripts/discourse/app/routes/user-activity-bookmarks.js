@@ -1,8 +1,10 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import Bookmark from "discourse/models/bookmark";
+import Site from "discourse/models/site";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
@@ -33,14 +35,19 @@ export default DiscourseRoute.extend({
     controller.set("loading", true);
 
     return this._loadBookmarks(params)
-      .then((response) => {
+      .then(async (response) => {
         if (!response.user_bookmark_list) {
           return { bookmarks: [] };
         }
 
+        response.user_bookmark_list.categories?.forEach((category) =>
+          Site.current().updateCategory(category)
+        );
+
         const bookmarks = response.user_bookmark_list.bookmarks.map(
           controller.transform
         );
+        await Bookmark.applyTransformations(bookmarks);
         const loadMoreUrl = response.user_bookmark_list.more_bookmarks_url;
 
         const model = { bookmarks, loadMoreUrl };

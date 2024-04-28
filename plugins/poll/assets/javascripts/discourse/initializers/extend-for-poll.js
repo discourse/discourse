@@ -120,6 +120,7 @@ function initializePolls(api) {
           groupableUserFields: (pollGroupableUserFields || "")
             .split("|")
             .filter(Boolean),
+          _postCookedWidget: helper.widget,
         };
         const glue = new WidgetGlue("discourse-poll", register, attrs);
         glue.appendTo(pollNode);
@@ -134,7 +135,7 @@ function initializePolls(api) {
   });
   api.cleanupStream(cleanUpPolls);
 
-  const siteSettings = api.container.lookup("site-settings:main");
+  const siteSettings = api.container.lookup("service:site-settings");
   if (siteSettings.poll_enabled) {
     api.addSearchSuggestion("in:polls");
   }

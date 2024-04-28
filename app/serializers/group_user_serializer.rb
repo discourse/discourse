@@ -2,8 +2,14 @@
 
 class GroupUserSerializer < BasicUserSerializer
   include UserPrimaryGroupMixin
+  include UserStatusMixin
 
-  attributes :name, :title, :last_posted_at, :last_seen_at, :added_at, :timezone, :status
+  attributes :name, :title, :last_posted_at, :last_seen_at, :added_at, :timezone
+
+  def initialize(object, options = {})
+    super
+    options[:include_status] = true
+  end
 
   def timezone
     user.user_option.timezone
@@ -11,13 +17,5 @@ class GroupUserSerializer < BasicUserSerializer
 
   def include_added_at?
     object.respond_to? :added_at
-  end
-
-  def include_status?
-    SiteSetting.enable_user_status && user.has_status?
-  end
-
-  def status
-    UserStatusSerializer.new(user.user_status, root: false)
   end
 end

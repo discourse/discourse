@@ -1010,6 +1010,7 @@ class TopicsController < ApplicationController
           :group,
           :category_id,
           :notification_level_id,
+          :message,
           *DiscoursePluginRegistry.permitted_bulk_action_parameters,
           tags: [],
         )
@@ -1151,12 +1152,14 @@ class TopicsController < ApplicationController
 
   def reset_bump_date
     params.require(:id)
+    params.permit(:post_id)
+
     guardian.ensure_can_update_bumped_at!
 
     topic = Topic.find_by(id: params[:id])
     raise Discourse::NotFound.new unless topic
 
-    topic.reset_bumped_at
+    topic.reset_bumped_at(params[:post_id])
     render body: nil
   end
 
@@ -1253,7 +1256,19 @@ class TopicsController < ApplicationController
       raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     end
 
-    opts = params.slice(:page, :print, :filter_top_level_replies, :preview_theme_id)
+    # Allow plugins to append allowed query parameters, so they aren't scrubbed on redirect to proper topic URL
+    additional_allowed_query_parameters =
+      DiscoursePluginRegistry.apply_modifier(
+        :redirect_to_correct_topic_additional_query_parameters,
+        [],
+      )
+
+    opts =
+      params.slice(
+        *%i[page print filter_top_level_replies preview_theme_id].concat(
+          additional_allowed_query_parameters,
+        ),
+      )
     opts.delete(:page) if params[:page] == 0
 
     url = topic.relative_url

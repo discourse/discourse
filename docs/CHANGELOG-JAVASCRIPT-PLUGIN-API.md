@@ -7,6 +7,31 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.0] - 2024-03-20
+
+- Added `addAdminPluginConfigurationNav`, which defines a list of links used in the adminPlugins.show page for a specific plugin, and displays them either in an inner sidebar or in a top horizontal nav.
+
+## [1.29.0] - 2024-03-05
+
+- added `headerButtons` which allows for manipulation of the header butttons. This includes, adding, removing, or modifying the order of buttons. 
+
+## [1.28.0] - 2024-02-21
+
+- added `headerIcons` which allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons. 
+
+## [1.27.0] - 2024-02-21
+
+- deprecated `addToHeaderIcons` in favor of `headerIcons`
+
+## [1.26.0] - 2024-02-21
+
+- Added `renderBeforeWrapperOutlet` which is used for rendering components before the content of wrapper plugin outlets 
+- Added `renderAfterWrapperOutlet` which is used for rendering components after the content of wrapper plugin outlets 
+
+## [1.25.0] - 2024-02-05
+
+- Added `addComposerImageWrapperButton` which is used to add a custom button to the composer preview's image wrapper that appears on hover of an uploaded image.
+
 ## [1.24.0] - 2024-01-08
 
 - Added `addAdminSidebarSectionLink` which is used to add a link to a specific admin sidebar section, as a replacement for the `admin-menu` plugin outlet. This only has an effect if the `admin_sidebar_enabled_groups` site setting is in use, which enables the new admin nav sidebar.

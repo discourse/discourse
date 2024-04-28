@@ -47,19 +47,19 @@ function hasMutedTags(topicTags, mutedTags, siteSettings) {
   );
 }
 
-const TopicTrackingState = EmberObject.extend({
-  messageCount: 0,
+export default class TopicTrackingState extends EmberObject {
+  messageCount = 0;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.states = new Map();
     this.stateChangeCallbacks = {};
     this._trackedTopicLimit = 4000;
-  },
+  }
 
   willDestroy() {
-    this._super(...arguments);
+    super.willDestroy(...arguments);
 
     this.messageBus.unsubscribe("/latest", this._processChannelPayload);
 
@@ -75,7 +75,7 @@ const TopicTrackingState = EmberObject.extend({
     this.messageBus.unsubscribe("/delete", this.onDeleteMessage);
     this.messageBus.unsubscribe("/recover", this.onRecoverMessage);
     this.messageBus.unsubscribe("/destroy", this.onDestroyMessage);
-  },
+  }
 
   /**
    * Subscribe to MessageBus channels which are used for publishing changes
@@ -134,19 +134,19 @@ const TopicTrackingState = EmberObject.extend({
       this.onDestroyMessage,
       meta["/destroy"] ?? messageBusDefaultNewMessageId
     );
-  },
+  }
 
   @bind
   onDeleteMessage(msg) {
     this.modifyStateProp(msg, "deleted", true);
     this.incrementMessageCount();
-  },
+  }
 
   @bind
   onRecoverMessage(msg) {
     this.modifyStateProp(msg, "deleted", false);
     this.incrementMessageCount();
-  },
+  }
 
   @bind
   onDestroyMessage(msg) {
@@ -159,15 +159,15 @@ const TopicTrackingState = EmberObject.extend({
     ) {
       DiscourseURL.redirectTo("/");
     }
-  },
+  }
 
   mutedTopics() {
     return (this.currentUser && this.currentUser.muted_topics) || [];
-  },
+  }
 
   unmutedTopics() {
     return (this.currentUser && this.currentUser.unmuted_topics) || [];
-  },
+  }
 
   trackMutedOrUnmutedTopic(data) {
     let topics, key;
@@ -183,7 +183,7 @@ const TopicTrackingState = EmberObject.extend({
       createdAt: Date.now(),
     });
     this.currentUser && this.currentUser.set(key, topics);
-  },
+  }
 
   pruneOldMutedAndUnmutedTopics() {
     const now = Date.now();
@@ -196,15 +196,15 @@ const TopicTrackingState = EmberObject.extend({
     this.currentUser &&
       this.currentUser.set("muted_topics", mutedTopics) &&
       this.currentUser.set("unmuted_topics", unmutedTopics);
-  },
+  }
 
   isMutedTopic(topicId) {
     return !!this.mutedTopics().findBy("topicId", topicId);
-  },
+  }
 
   isUnmutedTopic(topicId) {
     return !!this.unmutedTopics().findBy("topicId", topicId);
-  },
+  }
 
   /**
    * Updates the topic's last_read_post_number to the highestSeen post
@@ -233,7 +233,7 @@ const TopicTrackingState = EmberObject.extend({
       this.modifyStateProp(topicId, "last_read_post_number", highestSeen);
       this.incrementMessageCount();
     }
-  },
+  }
 
   /**
    * Used to count incoming topics which will be displayed in a message
@@ -310,7 +310,7 @@ const TopicTrackingState = EmberObject.extend({
     if (
       filter === "categories" &&
       data.message_type === "latest" &&
-      !Site.current().mobileView &&
+      Site.current().desktopView &&
       (this.siteSettings.desktop_category_page_style ===
         "categories_and_latest_topics" ||
         this.siteSettings.desktop_category_page_style ===
@@ -321,7 +321,7 @@ const TopicTrackingState = EmberObject.extend({
 
     // hasIncoming relies on this count
     this.set("incomingCount", this.newIncoming.length);
-  },
+  }
 
   /**
    * Resets the number of incoming topics to 0 and flushes the new topics
@@ -333,7 +333,20 @@ const TopicTrackingState = EmberObject.extend({
   resetTracking() {
     this.newIncoming = [];
     this.set("incomingCount", 0);
-  },
+  }
+
+  /**
+   * Removes the given topic IDs from the list of incoming topics.
+   *
+   * @method clearIncoming
+   */
+  clearIncoming(topicIds) {
+    const toRemove = new Set(topicIds);
+    this.newIncoming = this.newIncoming.filter(
+      (topicId) => !toRemove.has(topicId)
+    );
+    this.set("incomingCount", this.newIncoming.length);
+  }
 
   /**
    * Track how many new topics came for the specified filter.
@@ -375,7 +388,7 @@ const TopicTrackingState = EmberObject.extend({
     this.set("filterTag", tag);
     this.set("filter", filter);
     this.set("incomingCount", 0);
-  },
+  }
 
   /**
    * Used to determine whether to show the message at the top of the topic list
@@ -386,7 +399,7 @@ const TopicTrackingState = EmberObject.extend({
   @discourseComputed("incomingCount")
   hasIncoming(incomingCount) {
     return incomingCount && incomingCount > 0;
-  },
+  }
 
   /**
    * Removes the topic ID provided from the tracker state.
@@ -400,7 +413,7 @@ const TopicTrackingState = EmberObject.extend({
     if (this.states.delete(this._stateKey(topicId))) {
       this._afterStateChange();
     }
-  },
+  }
 
   /**
    * Removes multiple topics from the state at once, and increments
@@ -415,7 +428,7 @@ const TopicTrackingState = EmberObject.extend({
     topicIds.forEach((topicId) => this.removeTopic(topicId));
     this.incrementMessageCount();
     this._afterStateChange();
-  },
+  }
 
   /**
    * If we have a cached topic list, we can update it from our tracking information
@@ -466,7 +479,7 @@ const TopicTrackingState = EmberObject.extend({
         });
       }
     });
-  },
+  }
 
   /**
    * Uses the provided topic list to apply changes to the in-memory topic
@@ -509,25 +522,25 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     this.incrementMessageCount();
-  },
+  }
 
   incrementMessageCount() {
     this.incrementProperty("messageCount");
-  },
+  }
 
   _generateCallbackId() {
     return Math.random().toString(12).slice(2, 11);
-  },
+  }
 
   onStateChange(cb) {
     let callbackId = this._generateCallbackId();
     this.stateChangeCallbacks[callbackId] = cb;
     return callbackId;
-  },
+  }
 
   offStateChange(callbackId) {
     delete this.stateChangeCallbacks[callbackId];
-  },
+  }
 
   getSubCategoryIds(categoryId) {
     const result = [categoryId];
@@ -542,7 +555,7 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     return new Set(result);
-  },
+  }
 
   countCategoryByState({
     type,
@@ -606,7 +619,7 @@ const TopicTrackingState = EmberObject.extend({
 
       return true;
     }).length;
-  },
+  }
 
   countNew({ categoryId, tagId, noSubcategories, customFilterFn } = {}) {
     return this.countCategoryByState({
@@ -616,7 +629,7 @@ const TopicTrackingState = EmberObject.extend({
       noSubcategories,
       customFilterFn,
     });
-  },
+  }
 
   countUnread({ categoryId, tagId, noSubcategories, customFilterFn } = {}) {
     return this.countCategoryByState({
@@ -626,7 +639,7 @@ const TopicTrackingState = EmberObject.extend({
       noSubcategories,
       customFilterFn,
     });
-  },
+  }
 
   countNewAndUnread({
     categoryId,
@@ -641,7 +654,7 @@ const TopicTrackingState = EmberObject.extend({
       noSubcategories,
       customFilterFn,
     });
-  },
+  }
 
   /**
    * Calls the provided callback for each of the currently tracked topics
@@ -657,7 +670,7 @@ const TopicTrackingState = EmberObject.extend({
     this._trackedTopics(opts).forEach((trackedTopic) => {
       fn(trackedTopic.topic, trackedTopic.newTopic, trackedTopic.unreadTopic);
     });
-  },
+  }
 
   /**
    * Using the array of tags provided, tallies up all topics via forEachTracked
@@ -710,7 +723,7 @@ const TopicTrackingState = EmberObject.extend({
     );
 
     return counts;
-  },
+  }
 
   countCategory(category_id, tagId) {
     let sum = 0;
@@ -728,7 +741,7 @@ const TopicTrackingState = EmberObject.extend({
       }
     }
     return sum;
-  },
+  }
 
   lookupCount({ type, category, tagId, noSubcategories, customFilterFn } = {}) {
     if (type === "latest") {
@@ -782,7 +795,7 @@ const TopicTrackingState = EmberObject.extend({
         return this.countCategory(categoryId, tagId);
       }
     }
-  },
+  }
 
   loadStates(data) {
     if (!data || data.length === 0) {
@@ -796,7 +809,7 @@ const TopicTrackingState = EmberObject.extend({
     if (modified) {
       this._afterStateChange();
     }
-  },
+  }
 
   _setState({ topic, data, skipAfterStateChange }) {
     const stateKey = this._stateKey(topic);
@@ -813,11 +826,11 @@ const TopicTrackingState = EmberObject.extend({
     } else {
       return false;
     }
-  },
+  }
 
   modifyState(topic, data) {
     this._setState({ topic, data });
-  },
+  }
 
   modifyStateProp(topic, prop, data) {
     const state = this.findState(topic);
@@ -825,11 +838,11 @@ const TopicTrackingState = EmberObject.extend({
       state[prop] = data;
       this._afterStateChange();
     }
-  },
+  }
 
   findState(topicOrId) {
     return this.states.get(this._stateKey(topicOrId));
-  },
+  }
 
   /*
    * private
@@ -860,7 +873,7 @@ const TopicTrackingState = EmberObject.extend({
         }
       }
     }
-  },
+  }
 
   // this updates the topic in the state to match the
   // topic from the list (e.g. updates category, highest read post
@@ -908,7 +921,7 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     return newState;
-  },
+  }
 
   // this stops sync of tracking state when list is filtered, in the past this
   // would cause the tracking state to become inconsistent.
@@ -925,7 +938,7 @@ const TopicTrackingState = EmberObject.extend({
     }
 
     return shouldCompensate;
-  },
+  }
 
   // any state that is not in the provided list must be updated
   // based on the filter selected so we do not have any incorrect
@@ -957,7 +970,7 @@ const TopicTrackingState = EmberObject.extend({
 
       this.modifyState(topicKey, newState);
     }
-  },
+  }
 
   // processes the data sent via messageBus, called by establishChannels
   @bind
@@ -1054,7 +1067,7 @@ const TopicTrackingState = EmberObject.extend({
         this.incrementMessageCount();
       }
     }
-  },
+  }
 
   _dismissNewTopics(topicIds) {
     topicIds.forEach((topicId) => {
@@ -1062,7 +1075,7 @@ const TopicTrackingState = EmberObject.extend({
     });
 
     this.incrementMessageCount();
-  },
+  }
 
   _dismissNewPosts(topicIds) {
     topicIds.forEach((topicId) => {
@@ -1078,13 +1091,13 @@ const TopicTrackingState = EmberObject.extend({
     });
 
     this.incrementMessageCount();
-  },
+  }
 
   _addIncoming(topicId) {
     if (!this.newIncoming.includes(topicId)) {
       this.newIncoming.push(topicId);
     }
-  },
+  }
 
   _trackedTopics(opts = {}) {
     return Array.from(this.states.values())
@@ -1096,7 +1109,7 @@ const TopicTrackingState = EmberObject.extend({
         }
       })
       .compact();
-  },
+  }
 
   _stateKey(topicOrId) {
     if (typeof topicOrId === "number") {
@@ -1106,17 +1119,17 @@ const TopicTrackingState = EmberObject.extend({
     } else {
       return `t${topicOrId.topic_id}`;
     }
-  },
+  }
 
   _afterStateChange() {
     this.notifyPropertyChange("states");
     Object.values(this.stateChangeCallbacks).forEach((cb) => cb());
-  },
+  }
 
   _maxStateSizeReached() {
     return this.states.size >= this._trackedTopicLimit;
-  },
-});
+  }
+}
 
 export function startTracking(tracking) {
   PreloadStore.getAndRemove("topicTrackingStates").then((data) =>
@@ -1127,5 +1140,3 @@ export function startTracking(tracking) {
     tracking.establishChannels(meta)
   );
 }
-
-export default TopicTrackingState;

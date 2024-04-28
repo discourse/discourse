@@ -1,9 +1,11 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
+import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import I18n from "discourse-i18n";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
   "Discourse Chat | Component | Chat::Message::LeftGutter",
@@ -15,7 +17,7 @@ module(
     `;
 
     test("default", async function (assert) {
-      this.message = fabricators.message();
+      this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(template);
 
@@ -23,7 +25,9 @@ module(
     });
 
     test("with reviewable", async function (assert) {
-      this.message = fabricators.message({ reviewable_id: 1 });
+      this.message = new ChatFabricators(getOwner(this)).message({
+        reviewable_id: 1,
+      });
 
       await render(template);
 
@@ -33,7 +37,9 @@ module(
     });
 
     test("with flag status", async function (assert) {
-      this.message = fabricators.message({ user_flag_status: 0 });
+      this.message = new ChatFabricators(getOwner(this)).message({
+        user_flag_status: 0,
+      });
 
       await render(template);
 
@@ -43,7 +49,9 @@ module(
     });
 
     test("bookmark", async function (assert) {
-      this.message = fabricators.message({ bookmark: fabricators.bookmark() });
+      this.message = new ChatFabricators(getOwner(this)).message({
+        bookmark: new CoreFabricators(getOwner(this)).bookmark(),
+      });
 
       await render(template);
 

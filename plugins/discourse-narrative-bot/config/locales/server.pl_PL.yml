@@ -301,9 +301,9 @@ pl_PL:
           O nie, mój nieodpowiedni wpis nie został jeszcze oflagowany. :worried: Czy możesz oznaczyć post jako nieodpowiedni, używając flagi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nie zapomnij użyć przycisku „pokaż więcej” <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16">, by wyświetlić więcej opcji przy dla danego wpisu.
       search:
         instructions: |-
-          _psst_ …Ukryłem niespodziankę w tym wątku. Jeśli chcesz podjąć wyzwanie, **wybierz ikonę szukania** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> w prawym górnym rogu &#8599;, by jej poszukać.
+          _Psst_ … schowałem niespodziankę w tym temacie. Jeśli jesteś gotowy na wyzwanie, **kliknij ikonę wyszukiwania** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> w prawym górnym rogu &#8599;, wybierz 'w tym temacie', a następnie wyszukaj ją.
 
-          Spróbuj wyszukać frazę „kapibara” w tym wątku.
+          Spróbuj wyszukać termin "capy&#8203;bara" w tym temacie.
         hidden_message: |-
           Jak tęskniłeś/łaś za tą kapibarą? :wink:
 

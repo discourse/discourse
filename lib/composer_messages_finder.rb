@@ -181,6 +181,7 @@ class ComposerMessagesFinder
   end
 
   def check_get_a_room(min_users_posted: 5)
+    return unless @user.guardian.can_send_private_messages?
     return unless educate_reply?(:notified_about_get_a_room)
     return unless @details[:post_id].present?
     return if @topic.category&.read_restricted

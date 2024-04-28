@@ -5,7 +5,9 @@
 @import "chat-browse";
 @import "chat-channel";
 @import "chat-channel-card";
+@import "chat-channel-icon";
 @import "chat-channel-info";
+@import "chat-channel-name";
 @import "chat-channel-preview-card";
 @import "chat-channel-title";
 @import "chat-composer-dropdown";
@@ -66,3 +68,5 @@
 @import "chat-navbar";
 @import "chat-thread-title";
 @import "chat-audio-upload";
+@import "chat-message-text";
+@import "chat-messages-scroller";

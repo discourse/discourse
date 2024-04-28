@@ -1,8 +1,10 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { RouteException } from "discourse/controllers/exception";
 import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
   router: service(),
@@ -12,7 +14,10 @@ export default DiscourseRoute.extend({
 
   beforeModel() {
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
-      this.router.replaceWith("discovery");
+      throw new RouteException({
+        status: 403,
+        desc: I18n.t("user.login_to_view_profile"),
+      });
     }
   },
 
@@ -36,7 +41,7 @@ export default DiscourseRoute.extend({
     return user
       .findDetails()
       .then(() => user.findStaffInfo())
-      .then(() => user.trackStatus())
+      .then(() => user.statusManager.trackStatus())
       .catch(() => this.router.replaceWith("/404"));
   },
 
@@ -76,7 +81,7 @@ export default DiscourseRoute.extend({
       `/u/${user.username_lower}/counters`,
       this.onUserCountersMessage
     );
-    user.stopTrackingStatus();
+    user.statusManager.stopTrackingStatus();
 
     // Remove the search context
     this.searchService.searchContext = null;

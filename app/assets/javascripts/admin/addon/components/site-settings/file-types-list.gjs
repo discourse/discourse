@@ -2,14 +2,14 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
-import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import { makeArray } from "discourse-common/lib/helpers";
 import I18n from "discourse-i18n";
 import SettingValidationMessage from "admin/components/setting-validation-message";
+import SiteSettingsDescription from "admin/components/site-settings/description";
 import ListSetting from "select-kit/components/list-setting";
 
 const IMAGE_TYPES = [
@@ -110,7 +110,7 @@ export default class FileTypesList extends Component {
     />
 
     <DButton
-      @action={{(fn this.insertDefaultTypes "image")}}
+      @action={{fn this.insertDefaultTypes "image"}}
       @label="admin.site_settings.file_types_list.add_image_types"
       @translatedTitle={{i18n
         "admin.site_settings.file_types_list.add_types_title"
@@ -119,7 +119,7 @@ export default class FileTypesList extends Component {
       class="btn file-types-list__button image"
     />
     <DButton
-      @action={{(fn this.insertDefaultTypes "video")}}
+      @action={{fn this.insertDefaultTypes "video"}}
       @label="admin.site_settings.file_types_list.add_video_types"
       @translatedTitle={{i18n
         "admin.site_settings.file_types_list.add_types_title"
@@ -128,7 +128,7 @@ export default class FileTypesList extends Component {
       class="btn file-types-list__button video"
     />
     <DButton
-      @action={{(fn this.insertDefaultTypes "audio")}}
+      @action={{fn this.insertDefaultTypes "audio"}}
       @label="admin.site_settings.file_types_list.add_audio_types"
       @translatedTitle={{i18n
         "admin.site_settings.file_types_list.add_types_title audio"
@@ -137,7 +137,7 @@ export default class FileTypesList extends Component {
       class="btn file-types-list__button"
     />
     <DButton
-      @action={{(fn this.insertDefaultTypes "document")}}
+      @action={{fn this.insertDefaultTypes "document"}}
       @label="admin.site_settings.file_types_list.add_document_types"
       @translatedTitle={{i18n
         "admin.site_settings.file_types_list.add_types_title"
@@ -146,7 +146,7 @@ export default class FileTypesList extends Component {
       class="btn file-types-list__button document"
     />
 
-    <SettingValidationMessage @message={{this.validationMessage}} />
-    <div class="desc">{{htmlSafe @setting.description}}</div>
+    <SettingValidationMessage @message={{@validationMessage}} />
+    <SiteSettingsDescription @description={{@setting.description}} />
   </template>
 }

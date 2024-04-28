@@ -19,6 +19,7 @@ const UserActionTypes = {
   edits: 11,
   messages_sent: 12,
   messages_received: 13,
+  links: 17,
 };
 const InvertedActionTypes = {};
 
@@ -26,153 +27,28 @@ Object.keys(UserActionTypes).forEach(
   (k) => (InvertedActionTypes[k] = UserActionTypes[k])
 );
 
-const UserAction = RestModel.extend({
-  @discourseComputed("category_id")
-  category() {
-    return Category.findById(this.category_id);
-  },
+export default class UserAction extends RestModel {
+  static TYPES = UserActionTypes;
 
-  @discourseComputed("action_type")
-  descriptionKey(action) {
-    if (action === null || UserAction.TO_SHOW.includes(action)) {
-      if (this.isPM) {
-        return this.sameUser ? "sent_by_you" : "sent_by_user";
-      } else {
-        return this.sameUser ? "posted_by_you" : "posted_by_user";
-      }
-    }
+  static TYPES_INVERTED = InvertedActionTypes;
 
-    if (this.topicType) {
-      return this.sameUser ? "you_posted_topic" : "user_posted_topic";
-    }
+  static TO_COLLAPSE = [
+    UserActionTypes.likes_given,
+    UserActionTypes.likes_received,
+    UserActionTypes.edits,
+    UserActionTypes.bookmarks,
+  ];
 
-    if (this.postReplyType) {
-      if (this.reply_to_post_number) {
-        return this.sameUser ? "you_replied_to_post" : "user_replied_to_post";
-      } else {
-        return this.sameUser ? "you_replied_to_topic" : "user_replied_to_topic";
-      }
-    }
+  static TO_SHOW = [
+    UserActionTypes.likes_given,
+    UserActionTypes.likes_received,
+    UserActionTypes.edits,
+    UserActionTypes.bookmarks,
+    UserActionTypes.messages_sent,
+    UserActionTypes.messages_received,
+  ];
 
-    if (this.mentionType) {
-      if (this.sameUser) {
-        return "you_mentioned_user";
-      } else {
-        return this.targetUser ? "user_mentioned_you" : "user_mentioned_user";
-      }
-    }
-  },
-
-  @discourseComputed("username")
-  sameUser(username) {
-    return username === User.currentProp("username");
-  },
-
-  @discourseComputed("target_username")
-  targetUser(targetUsername) {
-    return targetUsername === User.currentProp("username");
-  },
-
-  presentName: or("name", "username"),
-  targetDisplayName: or("target_name", "target_username"),
-  actingDisplayName: or("acting_name", "acting_username"),
-
-  @discourseComputed("target_username")
-  targetUserUrl(username) {
-    return userPath(username);
-  },
-
-  @discourseComputed("username")
-  usernameLower(username) {
-    return username.toLowerCase();
-  },
-
-  @discourseComputed("usernameLower")
-  userUrl(usernameLower) {
-    return userPath(usernameLower);
-  },
-
-  @discourseComputed()
-  postUrl() {
-    return postUrl(this.slug, this.topic_id, this.post_number);
-  },
-
-  @discourseComputed()
-  replyUrl() {
-    return postUrl(this.slug, this.topic_id, this.reply_to_post_number);
-  },
-
-  replyType: equal("action_type", UserActionTypes.replies),
-  postType: equal("action_type", UserActionTypes.posts),
-  topicType: equal("action_type", UserActionTypes.topics),
-  bookmarkType: equal("action_type", UserActionTypes.bookmarks),
-  messageSentType: equal("action_type", UserActionTypes.messages_sent),
-  messageReceivedType: equal("action_type", UserActionTypes.messages_received),
-  mentionType: equal("action_type", UserActionTypes.mentions),
-  isPM: or("messageSentType", "messageReceivedType"),
-  postReplyType: or("postType", "replyType"),
-
-  addChild(action) {
-    let groups = this.childGroups;
-    if (!groups) {
-      groups = {
-        likes: UserActionGroup.create({ icon: "heart" }),
-        stars: UserActionGroup.create({ icon: "star" }),
-        edits: UserActionGroup.create({ icon: "pencil-alt" }),
-        bookmarks: UserActionGroup.create({ icon: "bookmark" }),
-      };
-    }
-    this.set("childGroups", groups);
-
-    const bucket = (function () {
-      switch (action.action_type) {
-        case UserActionTypes.likes_given:
-        case UserActionTypes.likes_received:
-          return "likes";
-        case UserActionTypes.edits:
-          return "edits";
-        case UserActionTypes.bookmarks:
-          return "bookmarks";
-      }
-    })();
-    const current = groups[bucket];
-    if (current) {
-      current.push(action);
-    }
-  },
-
-  @discourseComputed(
-    "childGroups",
-    "childGroups.likes.items",
-    "childGroups.likes.items.[]",
-    "childGroups.stars.items",
-    "childGroups.stars.items.[]",
-    "childGroups.edits.items",
-    "childGroups.edits.items.[]",
-    "childGroups.bookmarks.items",
-    "childGroups.bookmarks.items.[]"
-  )
-  children() {
-    const g = this.childGroups;
-    let rval = [];
-    if (g) {
-      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function (i) {
-        return i.get("items") && i.get("items").length > 0;
-      });
-    }
-    return rval;
-  },
-
-  switchToActing() {
-    this.setProperties({
-      username: this.acting_username,
-      name: this.actingDisplayName,
-    });
-  },
-});
-
-UserAction.reopenClass({
-  collapseStream(stream) {
+  static collapseStream(stream) {
     const uniq = {};
     const collapsed = [];
     let pos = 0;
@@ -204,26 +80,147 @@ UserAction.reopenClass({
       }
     });
     return collapsed;
-  },
+  }
 
-  TYPES: UserActionTypes,
-  TYPES_INVERTED: InvertedActionTypes,
+  @or("name", "username") presentName;
+  @or("target_name", "target_username") targetDisplayName;
+  @or("acting_name", "acting_username") actingDisplayName;
+  @equal("action_type", UserActionTypes.replies) replyType;
+  @equal("action_type", UserActionTypes.posts) postType;
+  @equal("action_type", UserActionTypes.topics) topicType;
+  @equal("action_type", UserActionTypes.bookmarks) bookmarkType;
+  @equal("action_type", UserActionTypes.messages_sent) messageSentType;
+  @equal("action_type", UserActionTypes.messages_received) messageReceivedType;
+  @equal("action_type", UserActionTypes.mentions) mentionType;
+  @or("messageSentType", "messageReceivedType") isPM;
+  @or("postType", "replyType") postReplyType;
 
-  TO_COLLAPSE: [
-    UserActionTypes.likes_given,
-    UserActionTypes.likes_received,
-    UserActionTypes.edits,
-    UserActionTypes.bookmarks,
-  ],
+  @discourseComputed("category_id")
+  category() {
+    return Category.findById(this.category_id);
+  }
 
-  TO_SHOW: [
-    UserActionTypes.likes_given,
-    UserActionTypes.likes_received,
-    UserActionTypes.edits,
-    UserActionTypes.bookmarks,
-    UserActionTypes.messages_sent,
-    UserActionTypes.messages_received,
-  ],
-});
+  @discourseComputed("action_type")
+  descriptionKey(action) {
+    if (action === null || UserAction.TO_SHOW.includes(action)) {
+      if (this.isPM) {
+        return this.sameUser ? "sent_by_you" : "sent_by_user";
+      } else {
+        return this.sameUser ? "posted_by_you" : "posted_by_user";
+      }
+    }
 
-export default UserAction;
+    if (this.topicType) {
+      return this.sameUser ? "you_posted_topic" : "user_posted_topic";
+    }
+
+    if (this.postReplyType) {
+      if (this.reply_to_post_number) {
+        return this.sameUser ? "you_replied_to_post" : "user_replied_to_post";
+      } else {
+        return this.sameUser ? "you_replied_to_topic" : "user_replied_to_topic";
+      }
+    }
+
+    if (this.mentionType) {
+      if (this.sameUser) {
+        return "you_mentioned_user";
+      } else {
+        return this.targetUser ? "user_mentioned_you" : "user_mentioned_user";
+      }
+    }
+  }
+
+  @discourseComputed("username")
+  sameUser(username) {
+    return username === User.currentProp("username");
+  }
+
+  @discourseComputed("target_username")
+  targetUser(targetUsername) {
+    return targetUsername === User.currentProp("username");
+  }
+
+  @discourseComputed("target_username")
+  targetUserUrl(username) {
+    return userPath(username);
+  }
+
+  @discourseComputed("username")
+  usernameLower(username) {
+    return username.toLowerCase();
+  }
+
+  @discourseComputed("usernameLower")
+  userUrl(usernameLower) {
+    return userPath(usernameLower);
+  }
+
+  @discourseComputed()
+  postUrl() {
+    return postUrl(this.slug, this.topic_id, this.post_number);
+  }
+
+  @discourseComputed()
+  replyUrl() {
+    return postUrl(this.slug, this.topic_id, this.reply_to_post_number);
+  }
+
+  addChild(action) {
+    let groups = this.childGroups;
+    if (!groups) {
+      groups = {
+        likes: UserActionGroup.create({ icon: "heart" }),
+        stars: UserActionGroup.create({ icon: "star" }),
+        edits: UserActionGroup.create({ icon: "pencil-alt" }),
+        bookmarks: UserActionGroup.create({ icon: "bookmark" }),
+      };
+    }
+    this.set("childGroups", groups);
+
+    const bucket = (function () {
+      switch (action.action_type) {
+        case UserActionTypes.likes_given:
+        case UserActionTypes.likes_received:
+          return "likes";
+        case UserActionTypes.edits:
+          return "edits";
+        case UserActionTypes.bookmarks:
+          return "bookmarks";
+      }
+    })();
+    const current = groups[bucket];
+    if (current) {
+      current.push(action);
+    }
+  }
+
+  @discourseComputed(
+    "childGroups",
+    "childGroups.likes.items",
+    "childGroups.likes.items.[]",
+    "childGroups.stars.items",
+    "childGroups.stars.items.[]",
+    "childGroups.edits.items",
+    "childGroups.edits.items.[]",
+    "childGroups.bookmarks.items",
+    "childGroups.bookmarks.items.[]"
+  )
+  children() {
+    const g = this.childGroups;
+    let rval = [];
+    if (g) {
+      rval = [g.likes, g.stars, g.edits, g.bookmarks].filter(function (i) {
+        return i.get("items") && i.get("items").length > 0;
+      });
+    }
+    return rval;
+  }
+
+  switchToActing() {
+    this.setProperties({
+      username: this.acting_username,
+      name: this.actingDisplayName,
+    });
+  }
+}

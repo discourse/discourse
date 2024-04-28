@@ -3,6 +3,9 @@ name: Tests
 on:
   pull_request:
     paths-ignore:
+      - ".github/workflows/migration-tests.yml"
+      - ".github/dependabot.yml"
+      - ".github/labeler.yml"
       - "migrations/**"
   push:
     branches:
@@ -10,6 +13,9 @@ on:
       - beta
       - stable
     paths-ignore:
+      - ".github/workflows/migration-tests.yml"
+      - ".github/dependabot.yml"
+      - ".github/labeler.yml"
       - "migrations/**"
 
 concurrency:
@@ -22,9 +28,9 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ !matrix.updated_ember && ' (Ember 3)' || '' }} # Update fetch-job-id step if changing this
+    name: ${{ matrix.target }} ${{ matrix.build_type }} # Update fetch-job-id step if changing this
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
-    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
+    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
     timeout-minutes: 20
 
     env:
@@ -35,8 +41,7 @@ jobs:
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       MINIO_RUNNER_LOG_LEVEL: DEBUG
-      EMBER_VERSION: ${{ (matrix.updated_ember && '5') || '3' }}
-      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref_name == 'main' }}
+      DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/main/head' }}
 
     strategy:
       fail-fast: false
@@ -44,8 +49,6 @@ jobs:
       matrix:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins, themes]
-        ruby: ["3.2"]
-        updated_ember: [true]
         exclude:
           - build_type: annotations
             target: plugins
@@ -58,11 +61,15 @@ jobs:
         include:
           - build_type: system
             target: chat
-            updated_ember: true
 
     steps:
       - name: Set working directory owner
         run: chown root:root .
+
+      - name: Remove Chromium
+        continue-on-error: true
+        if: matrix.build_type == 'system'
+        run: apt remove -y chromium-driver chromium
 
       - uses: actions/checkout@v4
         with:
@@ -83,11 +90,18 @@ jobs:
           sudo -E -u postgres script/start_test_db.rb
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
+      - name: Container envs
+        id: container-envs
+        run: |
+          echo "ruby_version=$RUBY_VERSION" >> $GITHUB_OUTPUT
+          echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Bundler cache
         uses: actions/cache@v4
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
+          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
 
       - name: Setup gems
         run: |
@@ -95,7 +109,7 @@ jobs:
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
-          bundle install --jobs 4
+          bundle install --jobs $(($(nproc) - 1))
           bundle clean
 
       - name: Get yarn cache directory
@@ -124,13 +138,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: plugins/*/gems
-          key: ${{ runner.os }}-plugin-gems-${{matrix.ruby}}-${{ hashFiles('plugins/*/plugin.rb') }}
+          key: ${{ runner.os }}-plugin-gems-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-${{ hashFiles('plugins/*/plugin.rb') }}
 
       - name: Checkout official themes
         if: matrix.target == 'themes' && matrix.build_type == 'system'
         run: bin/rake themes:clone_all_official
 
-      - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
+      - name: Add hosts to /etc/hosts, otherwise Chromium cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: |
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
@@ -145,6 +159,7 @@ jobs:
             ${{ runner.os }}-
             ${{ hashFiles('.github/workflows/tests.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
+            ${{ hashFiles('config/environments/test.rb') }}-
             ${{ env.USES_PARALLEL_DATABASES }}
 
       - name: Restore database from cache
@@ -235,23 +250,31 @@ jobs:
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
+        env:
+          CHECKOUT_TIMEOUT: 10
         run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
 
       - name: Plugin System Tests
         if: matrix.build_type == 'system' && matrix.target == 'plugins'
+        env:
+          CHECKOUT_TIMEOUT: 10
         run: |
           GLOBIGNORE="plugins/chat/*";
-          PREFABRICATION=0 LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         shell: bash
         timeout-minutes: 30
 
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
+        env:
+          CHECKOUT_TIMEOUT: 10
         run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
         timeout-minutes: 30
 
       - name: Theme System Tests
         if: matrix.build_type == 'system' && matrix.target == 'themes'
+        env:
+          CHECKOUT_TIMEOUT: 10
         run: |
           RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error PARALLEL_TEST_PROCESSORS=4 bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
         shell: bash
@@ -290,7 +313,7 @@ jobs:
         id: fetch-job-id
         if: always() && steps.check-flaky-spec-report.outputs.exists == 'true'
         run: |
-          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}${{ !matrix.updated_ember && ' (Ember 3)' || '' }}')
+          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}')
           echo "job_id=$job_id" >> $GITHUB_OUTPUT
 
       - name: Create flaky tests report artifact
@@ -323,7 +346,7 @@ jobs:
 
   core_frontend_tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: core frontend (${{ matrix.browser }})${{ !matrix.updated_ember && ' (Ember 3)' || '' }}
+    name: core frontend (${{ matrix.browser }})
     runs-on: ubuntu-20.04-8core
     container:
       image: discourse/discourse_test:slim-browsers
@@ -334,11 +357,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
-        updated_ember: [true]
-        include:
-          - browser: Chrome
-            updated_ember: false
+        browser: ["Chromium", "Firefox ESR", "Firefox Evergreen"]
 
     env:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
@@ -365,12 +384,7 @@ jobs:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}-cachev2
 
-      - name: Downgrade Ember
-        if: matrix.updated_ember == false
-        run: script/switch_ember_version 3
-
       - name: Yarn install
-        working-directory: ./app/assets/javascripts/discourse
         run: yarn install --frozen-lockfile
 
       - name: Ember Build

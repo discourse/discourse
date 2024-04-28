@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import htmlSafe from "discourse-common/helpers/html-safe";
 import I18n from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatThreadList from "discourse/plugins/chat/discourse/components/chat-thread-list";
@@ -48,10 +48,10 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
           @routeModels={{this.chat.activeChannel.routeModels}}
         />
         <navbar.Title @title={{this.title}} @icon="discourse-threads" />
-        <navbar.Actions as |action|>
-          <action.ToggleDrawerButton />
-          <action.FullPageButton />
-          <action.CloseDrawerButton />
+        <navbar.Actions as |a|>
+          <a.ToggleDrawerButton />
+          <a.FullPageButton />
+          <a.CloseDrawerButton />
         </navbar.Actions>
       </Navbar>
     {{/if}}

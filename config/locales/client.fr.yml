@@ -35,11 +35,9 @@ fr:
       long_with_year: "DD MMM YYYY HH:mm"
       long_with_year_no_time: "DD MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM, LT"
-      long_date_with_year_without_time: "D MMM 'YY"
+      long_date_with_year_without_time: "DD MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       wrap_ago: "il y a %{date}"
       wrap_on: "le %{date}"
       tiny:
@@ -75,7 +73,7 @@ fr:
           one: "%{count} an"
           other: "%{count} ans"
         date_month: "D MMM"
-        date_year: "MMM 'YY"
+        date_year: "MMM YYYY"
       medium:
         less_than_x_minutes:
           one: "moins de %{count} minute"
@@ -104,7 +102,7 @@ fr:
         almost_x_years:
           one: "presque %{count} an"
           other: "presque %{count} ans"
-        date_year: "D MMM 'YY"
+        date_year: "DD MMM YYYY"
       medium_with_ago:
         x_minutes:
           one: "il y a %{count} minute"
@@ -188,9 +186,9 @@ fr:
     emails_are_disabled: "L'e-mail sortant a été désactivé par un administrateur. Aucune notification par e-mail ne sera envoyée."
     emails_are_disabled_non_staff: "L'envoi d'e-mail est désactivé pour les utilisateurs ne faisant pas partie des responsables."
     software_update_prompt:
-      message: "Nous avons fait une mise à jour du site, nous vous invitons donc à <span>actualiser cette page</span> pour éviter d'éventuels dysfonctionnements."
       dismiss: "Rejeter"
     bootstrap_mode: "Pour commencer"
+    back_button: "Revenir en arrière"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Votre site risque de ne pas fonctionner, car un thème ou un composant comprend des erreurs."
@@ -200,7 +198,6 @@ fr:
     broken_page_change_alert: "Un gestionnaire onPageChange a généré une erreur. Consultez les outils de développement du navigateur pour obtenir plus d'informations."
     broken_plugin_alert: "Causé par l'extension « %{name}»"
     critical_deprecation:
-      notice: "<b>[Avis d'administration]</b> L'un de vos thèmes ou extensions doit être mis à jour pour être compatible avec les prochaines modifications principales de Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>plus d'informations</a>)."
       theme_source: "Thème identifié : <a target='_blank' href='%{path}'>« %{name} »</a>."
       plugin_source: "Extension identifiée : « %{name} »"
     s3:
@@ -228,7 +225,8 @@ fr:
         us_west_1: "États-Unis - Ouest (Californie)"
         us_west_2: "États-Unis - Ouest (Oregon)"
     clear_input: "Effacer la saisie"
-    edit: "modifier le titre et la catégorie de ce sujet"
+    edit: "Modifier"
+    edit_topic: "modifier le titre et la catégorie de ce sujet"
     expand: "Développer"
     not_implemented: "Cette fonctionnalité n'est pas encore disponible."
     no_value: "Non"
@@ -273,7 +271,9 @@ fr:
     weekly: "chaque semaine"
     every_month: "chaque mois"
     every_six_months: "tous les six mois"
-    max_of_count: "maximum sur %{count}"
+    max_of_count:
+      one: "maximum sur %{count}"
+      other: "maximum sur %{count}"
     character_count:
       one: "%{count} caractère"
       other: "%{count} caractères"
@@ -317,6 +317,7 @@ fr:
         unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
         unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet"
     bookmarks:
+      bookmarked_success: "Ajouté aux signets!"
       created: "Vous avez mis un signet à ce message. %{name}"
       created_generic: "Vous avez mis ceci en signet. %{name}"
       create: "Créer un signet"
@@ -341,6 +342,7 @@ fr:
         clear_reminder: "Conserver le signet et supprimer le rappel"
       search_placeholder: "Rechercher des signets par nom, titre de sujet ou contenu de message"
       search: "Recherche"
+      bookmark: "Signet"
       reminders:
         today_with_time: "aujourd'hui à %{time}"
         tomorrow_with_time: "demain à %{time}"
@@ -655,6 +657,7 @@ fr:
       never: "Jamais"
       last_custom: "Date et heure personnalisées précédentes"
       custom: "Date et heure personnalisées"
+      custom_short: "Personnalisé…"
       select_timeframe: "Sélectionner un intervalle de temps"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> a démarré <a href='%{topicUrl}'>le sujet</a>"
@@ -683,7 +686,6 @@ fr:
       topic_count_long: "Sujets créés"
       post_count: "Réponses"
       post_count_long: "Réponses envoyées"
-      no_results: "Aucun résultat n'a été trouvé."
       days_visited: "Visites"
       days_visited_long: "Jours visités"
       posts_read: "Lus"
@@ -943,7 +945,6 @@ fr:
         image: "Insérer une image"
       default_notifications:
         modal_title: "Notifications par défaut de l'utilisateur"
-        modal_description: "Voulez-vous appliquer cette modification rétroactivement ? Cela affectera les préférences de %{count} utilisateurs existants."
         modal_yes: "Oui"
         modal_no: "Non, appliquer ce changement à partir de maintenant"
     user_action_groups:
@@ -960,10 +961,16 @@ fr:
       "13": "Boîte de réception"
       "14": "En attente"
       "15": "Brouillons"
+      "17": "Liens"
     categories:
-      all: "toutes les catégories"
-      all_subcategories: "toutes"
-      no_subcategory: "aucune"
+      categories_label: "catégories"
+      subcategories_label: "sous-catégories"
+      no_subcategories: "aucune sous-catégorie"
+      remove_filter: "supprimer le filtre"
+      plus_more_count:
+        one: "+%{count} autres"
+        other: "+%{count} autres"
+      view_all: "tout voir"
       category: "Catégorie"
       category_list: "Afficher la liste des catégories"
       reorder:
@@ -995,7 +1002,9 @@ fr:
       topic_stat_sentence_month:
         one: "%{count} nouveau sujet au cours du dernier mois."
         other: "%{count} nouveaux sujets au cours du dernier mois."
-      n_more: "Catégories (%{count} autres)…"
+      n_more:
+        one: "Catégories (%{count} autres)…"
+        other: "Catégories (%{count} autres)…"
     ip_lookup:
       title: Localisation de l'adresse IP
       hostname: Nom de l'hôte
@@ -1004,7 +1013,9 @@ fr:
       organisation: Organisation
       phone: Téléphone
       other_accounts: "Autres comptes avec cette adresse IP :"
-      delete_other_accounts: "Supprimer %{count}"
+      delete_other_accounts:
+        one: "Supprimer %{count}"
+        other: "Supprimer %{count}"
       username: "nom d'utilisateur"
       trust_level: "niveau de confiance"
       read_time: "temps de lecture"
@@ -1133,7 +1144,6 @@ fr:
         description: "Ignorer les badges et les conseils d'intégration des nouveaux utilisateurs"
       reset_seen_user_tips: "Afficher à nouveau les conseils d'utilisation"
       theme_default_on_all_devices: "En faire mon thème par défaut sur tous mes périphériques"
-      color_scheme_default_on_all_devices: "Définir comme jeu(x) de couleurs par défaut sur tous mes appareils"
       color_scheme: "Jeu de couleurs"
       color_schemes:
         default_description: "Couleur du thème"
@@ -1149,7 +1159,6 @@ fr:
       allow_private_messages: "Permettre aux autres utilisateurs de m’envoyer des messages directs"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer de citer le texte sélectionné"
-      enable_defer: "Activer le bouton pour reporter des sujets à plus tard en les marquant comme non lus"
       experimental_sidebar:
         enable: "Activer la barre latérale"
         options: "Options"
@@ -1431,8 +1440,7 @@ fr:
         save: "Enregistrer"
         title: "Clés d'accès"
         short_description: "Les clés d'accès sont des remplacements de mots de passe qui valident votre identité de manière biométrique (par exemple, tactile, faceID) ou via le code PIN/mot de passe de l'appareil."
-        added_prefix: "Ajouté"
-        last_used_prefix: "Dernière utilisation"
+        added_date: "Ajout de %{date}"
         never_used: "Jamais utilisée"
         not_allowed_error: "Le processus d'enregistrement de la clé d'accès a expiré, a été annulé ou n'est pas autorisé."
         already_added_error: "Vous avez déjà enregistré cette clé d'accès. Vous n'avez pas besoin de le faire à nouveau."
@@ -1456,6 +1464,15 @@ fr:
         success_via_admin: "Nous avons envoyé un e-mail à cette adresse. L'utilisateur devra suivre les instructions de confirmation qui y sont indiquées."
         success_staff: "Nous avons envoyé un e-mail à votre adresse actuelle. Merci de suivre les instructions qui y figurent."
         back_to_preferences: "Retour aux préférences"
+        confirm_success: "Votre adresse e-mail a été mise à jour."
+        confirm: "Confirmer"
+        authorizing_new:
+          description: "Veuillez confirmer que vous souhaitez remplacer votre adresse e-mail par :"
+          description_add: "Veuillez confirmer que vous souhaitez ajouter une adresse e-mail alternative :"
+        authorizing_old:
+          old_email: "Adresse e-mail précédente : %{email}"
+          new_email: "Nouvelle adresse e-mail : %{email}"
+          confirm_success: "Nous avons envoyé un e-mail à votre nouvelle adresse pour confirmer le changement !"
       change_avatar:
         title: "Modifier votre image de profil"
         gravatar: "<a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>, associé à"
@@ -1540,6 +1557,8 @@ fr:
         instructions: "Langue de l'interface utilisateur. Le changement sera pris en compte après actualisation de la page."
         default: "(par défaut)"
         any: "tous"
+      homepage:
+        default: "(par défaut)"
       password_confirmation:
         title: "Confirmation du mot de passe"
       invite_code:
@@ -1730,7 +1749,6 @@ fr:
         same_as_username: "Votre mot de passe est identique à votre nom d'utilisateur."
         same_as_email: "Votre mot de passe est identique à votre adresse e-mail."
         ok: "Votre mot de passe semble correct."
-        instructions: "Au moins %{count} caractères."
         required: "Veuillez saisir un mot de passe"
         confirm: "Confirmer"
         incorrect_password: "Le mot de passe saisi est incorrect."
@@ -1826,7 +1844,6 @@ fr:
         content: "Les notifications sont utilisées pour vous tenir au courant de ce qui se passe dans la communauté."
       topic_timeline:
         title: "Chronologie du sujet"
-        content: "Parcourez rapidement un article à l'aide de la chronologie des sujets."
       post_menu:
         title: "Menu du message"
         content: "Découvrez comment vous pouvez interagir autrement avec le message en cliquant sur les trois points !"
@@ -1836,10 +1853,6 @@ fr:
       suggested_topics:
         title: "Continuez de lire !"
         content: "Voici quelques sujets que vous pourriez vouloir lire ensuite."
-      admin_guide:
-        title: "Bienvenue sur votre nouveau site !"
-        content: "<a href='%{admin_guide_url}'>Lisez le guide d'administration</a> pour continuer à développer votre site et votre communauté."
-        content_no_url: "Lisez le guide d'administration pour continuer à développer votre site et votre communauté."
     loading: "Chargement…"
     errors:
       prev_page: "lors du chargement de"
@@ -1864,7 +1877,6 @@ fr:
       close: "fermer"
       dismiss_error: "Ignorer l'erreur"
     close: "Fermer"
-    assets_changed_confirm: "Une mise à jour est disponible pour ce site. Souhaitez-vous obtenir la dernière version ?"
     logout: "Vous avez été déconnecté(e)."
     refresh: "Actualiser"
     home: "Accueil"
@@ -2067,7 +2079,7 @@ fr:
         title: "Se connecter avec Discord"
         sr_title: "Se connecter avec Discord"
       passkey:
-        name: "Connectez-vous à l'aide d'une clé d'accès"
+        name: "Se connecter avec une clé d'accès"
       second_factor_toggle:
         totp: "Utilisez plutôt une application d'authentification"
         backup_code: "Utilisez plutôt un code de secours"
@@ -2112,6 +2124,9 @@ fr:
     conditional_loading_section:
       loading: Chargement…
     category_row:
+      subcategory_count:
+        one: "+ %{count} sous-catégorie"
+        other: "+ %{count} sous-catégories"
       topic_count:
         one: "%{count} sujet dans cette catégorie"
         other: "%{count} sujets dans cette catégorie"
@@ -2134,10 +2149,11 @@ fr:
         one: "Sélectionnez au moins %{count} élément."
         other: "Sélectionnez au moins %{count} éléments."
       components:
-        tag_drop:
-          filter_for_more: Filtrer pour plus…
+        filter_for_more: Filtrer pour plus…
         categories_admin_dropdown:
           title: "Gérer les catégories"
+        bulk_select_topics_dropdown:
+          title: "Actions sur la sélection"
     date_time_picker:
       from: De
       to: À
@@ -2194,7 +2210,6 @@ fr:
       group_mentioned:
         one: "La mention de %{group} informera <a href='%{group_link}'>%{count} personne</a>."
         other: "La mention de %{group} informera <a href='%{group_link}'>%{count} personnes</a>."
-      larger_group_mentioned: "La mention de %{group} informera <a href='%{group_link}'>%{count} personnes</a>. Voulez-vous continuer ?"
       cannot_see_mention:
         category: "Vous avez mentionné @%{username}, mais aucune notification ne lui sera envoyée, car la catégorie ne lui est pas accessible. Vous devez l'ajouter à un groupe ayant accès à cette catégorie."
         private: "Vous avez mentionné @%{username}, mais aucune notification ne lui sera envoyée, car ce message direct ne lui est pas visible. Vous devez l'inviter à rejoindre ce message direct."
@@ -2235,7 +2250,6 @@ fr:
       reply: "Répondre"
       cancel: "Annuler"
       create_topic: "Créer le sujet"
-      create_pm: "Envoyer le message"
       create_whisper: "Murmurer"
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
@@ -2380,6 +2394,7 @@ fr:
         one: "a aimé %{count} de vos messages"
         other: "a aimé %{count} de vos messages"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2554,7 +2569,6 @@ fr:
           seen: que j'ai lus
           unseen: que je n'ai pas lus
           wiki: qui sont des wikis
-          images: qui contiennent des images
           all_tags: Contient toutes ces étiquettes
         statuses:
           label: et dont les sujets
@@ -2647,12 +2661,12 @@ fr:
     topics:
       new_messages_marker: "dernière visite"
       bulk:
+        confirm: "Confirmer"
         select_all: "Tout sélectionner"
         clear_all: "Tout désélectionner"
         unlist_topics: "Rendre les sujets invisibles"
         relist_topics: "Lister les sujets"
         reset_bump_dates: "Réinitialiser la date d'actualisation"
-        defer: "Reporter à plus tard"
         delete: "Supprimer les sujets"
         dismiss: "Marquer comme vus"
         dismiss_read: "Marquer tous les sujets comme vus"
@@ -2693,6 +2707,9 @@ fr:
         selected:
           one: "Vous avez sélectionné <b>%{count}</b> sujet."
           other: "Vous avez sélectionné <b>%{count}</b> sujets."
+        selected_count:
+          one: "%{count} sélectionné"
+          other: "%{count} sélectionné"
         change_tags: "Remplacer des étiquettes"
         append_tags: "Ajouter des étiquettes"
         choose_new_tags: "Choisissez de nouvelles étiquettes pour ces sujets :"
@@ -2732,6 +2749,24 @@ fr:
         top: "Il n'y a pas d'autres meilleurs sujets à consulter."
         bookmarks: "Il n'y a pas d'autres sujets enregistrés dans les signets."
         filter: "Il n'y a plus de sujets."
+    topic_bulk_actions:
+      close_topics:
+        name: "Fermer les sujets"
+        optional: (facultatif)
+      archive_topics:
+        name: "Archiver les sujets"
+      unlist_topics:
+        name: "Rendre les sujets invisibles"
+      relist_topics:
+        name: "Lister les sujets"
+      remove_tags:
+        name: "Supprimer des étiquettes"
+      append_tags:
+        name: "Ajouter des étiquettes"
+      replace_tags:
+        name: "Remplacer des étiquettes"
+      delete_topics:
+        name: "Supprimer les sujets"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -2747,9 +2782,6 @@ fr:
       move_to_inbox:
         title: "Déplacer dans la boîte de réception"
         help: "Déplacer le message dans la boîte de réception"
-      defer:
-        help: "Marquer comme non lu"
-        title: "Reporter à plus tard"
       list: "Sujets"
       new: "nouveau sujet"
       unread: "non lus"
@@ -2888,12 +2920,12 @@ fr:
       auto_delete_replies:
         title: "Suppression automatique des réponses"
       status_update_notice:
-        auto_open: "Ce sujet sera automatiquement ouvert dans %{timeLeft}."
-        auto_close: "Ce sujet sera automatiquement fermé dans %{timeLeft}."
+        auto_open: "Ce sujet sera automatiquement ouvert %{timeLeft}."
+        auto_close: "Ce sujet sera automatiquement fermé %{timeLeft}."
         auto_publish_to_category: "Ce sujet sera publié dans <a href=%{categoryUrl}>#%{categoryName}</a> dans %{timeLeft}."
         auto_close_after_last_post: "Ce sujet sera fermé %{duration} après la dernière réponse."
-        auto_delete: "Ce sujet sera automatiquement supprimé dans %{timeLeft}."
-        auto_bump: "Ce sujet sera automatiquement remonté dans %{timeLeft}."
+        auto_delete: "Ce sujet sera automatiquement supprimé %{timeLeft}."
+        auto_bump: "Ce sujet sera automatiquement remonté %{timeLeft}."
         auto_reminder: "Vous recevrez un rappel concernant ce sujet dans %{timeLeft}."
         auto_delete_replies: "Les réponses à ce sujet sont automatiquement supprimées après %{duration}."
       auto_close_title: "Paramètres de fermeture automatique"
@@ -3851,8 +3883,6 @@ fr:
         show_incoming_updated_topics: "%{shortcut} Afficher les sujets mis à jour"
         search: "%{shortcut} Rechercher"
         help: "%{shortcut} Ouvrir l'aide du clavier"
-        dismiss_new: "%{shortcut} Ignorer les nouveaux sujets"
-        dismiss_topics: "%{shortcut} Ignorer les sujets"
         log_out: "%{shortcut} Se déconnecter"
       composing:
         title: "Édition"
@@ -3892,7 +3922,6 @@ fr:
         mark_tracking: "%{shortcut} Suivre le sujet"
         mark_watching: "%{shortcut} Surveiller le sujet"
         print: "%{shortcut} Imprimer le sujet"
-        defer: "%{shortcut} Reporter le sujet à plus tard"
         topic_admin_actions: "%{shortcut} Ouvrir les actions d'administration du sujet"
         archive_private_message: "%{shortcut} Basculer l'archivage des messages privés"
       search_menu:
@@ -3952,8 +3981,10 @@ fr:
     tagging:
       all_tags: "Toutes les étiquettes"
       other_tags: "Autres étiquettes"
+      selector_tags: "étiquettes"
       selector_all_tags: "toutes les étiquettes"
       selector_no_tags: "aucune étiquette"
+      selector_remove_filter: "supprimer le filtre"
       tags: "Étiquettes"
       choose_for_topic: "étiquettes optionnelles"
       choose_for_topic_required:
@@ -4180,23 +4211,19 @@ fr:
               label: "Icône"
               validation:
                 blank: "L'icône ne peut pas être vide"
-                maximum: "L'icône doit être inférieure à %{count} caractères"
             name:
               label: "Nom"
               validation:
                 blank: "Le nom ne peut pas être vide"
-                maximum: "Le nom doit comporter moins de %{count} caractères"
             value:
               label: "Lien"
               validation:
                 blank: "Le lien ne peut pas être vide"
-                maximum: "Le lien doit comporter moins de %{count} caractères"
                 invalid: "Le format n'est pas valide"
           title:
             label: "Titre de la section"
             validation:
               blank: "Le titre ne peut pas être vide"
-              maximum: "Le titre doit comporter moins de %{count} caractères"
         about:
           header_link_text: "À propos"
         messages:
@@ -4259,11 +4286,16 @@ fr:
             review:
               content: "À examiner"
               title: "Messages signalés et autres éléments en file d'attente"
-              pending_count: "%{count} en attente"
+              pending_count:
+                one: "%{count} en attente"
+                other: "%{count} en attente"
         global_section: "Section globale, visible par tous"
       panels:
         forum:
           label: Forum
+      filter: "Filtrer"
+      no_results:
+        title: "Aucun résultat"
     welcome_topic_banner:
       title: "Créez votre sujet de bienvenue"
       description: "Votre sujet de bienvenue est la première chose que les nouveaux membres liront. Considérez-le comme votre « argumentaire » ou votre « énoncé de mission ». Faites savoir à tout le monde à qui est destinée cette communauté, ce qu'ils peuvent s'attendre à y trouver et ce que vous aimeriez qu'ils fassent en premier."
@@ -4278,12 +4310,12 @@ fr:
         upload: "Téléverser"
         uploading: "Téléversement"
       errors:
-        valueMissing:
+        value_missing:
           default: "Veuillez remplir ce champ."
-          select-one: "Veuillez sélectionner un élément dans la liste."
-          select-multiple: "Veuillez sélectionner au moins un élément dans la liste."
+          select_one: "Veuillez sélectionner un élément dans la liste."
+          select_multiple: "Veuillez sélectionner au moins un élément dans la liste."
           checkbox: "Veuillez cocher cette case si vous souhaitez continuer."
-        typeMismatch:
+        type_mismatch:
           default: "Veuillez saisir une valeur valide."
           color: "Veuillez saisir une couleur."
           date: "Veuillez saisir une date."
@@ -4293,20 +4325,20 @@ fr:
           tel: "Veuillez saisir un numéro de téléphone valide."
           text: "Veuillez saisir une valeur de texte."
           url: "Veuillez saisir une URL valide."
-        tooShort:
+        too_short:
           one: "La saisie doit comporter %{count} caractère ou plus."
           other: "La saisie doit comporter %{count} caractères ou plus."
-        tooLong:
+        too_long:
           one: "La saisie doit comporter moins de %{count} caractère."
           other: "La saisie doit comporter moins de %{count} caractères."
-        rangeOverflow:
+        range_overflow:
           one: "La saisie doit être inférieure à %{count}."
           other: "La saisie doit être inférieure à %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "La saisie doit être supérieure à %{count}."
           other: "La saisie doit être supérieure à %{count}."
-        patternMismatch: "Veuillez respecter le format demandé."
-        badInput: "Veuillez saisir une entrée valide."
+        pattern_mismatch: "Veuillez respecter le format demandé."
+        bad_input: "Veuillez saisir une entrée valide."
     table_builder:
       title: "Éditeur de tableaux"
       modal:
@@ -4370,6 +4402,7 @@ fr:
       title: "Administrateur Discourse"
       moderator: "Modérateur"
       back_to_forum: "Retour au forum"
+      filter_reports: Filtrer les rapports
       tags:
         remove_muted_tags_from_latest:
           always: "toujours"
@@ -4378,6 +4411,11 @@ fr:
       reports:
         title: "Liste des rapports disponibles"
         meta_doc: "Explorez notre <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> pour obtenir un aperçu détaillé des rapports."
+        sidebar_title: "Rapports"
+        sidebar_link:
+          all: "Tout"
+      new_features:
+        title: "Nouveautés"
       dashboard:
         title: "Tableau de bord"
         last_updated: "Dernière actualisation du tableau de bord :"
@@ -4386,10 +4424,8 @@ fr:
         up_to_date: "À jour !"
         critical_available: "Une mise à jour critique est disponible."
         updates_available: "Des mises à jour sont disponibles."
-        please_upgrade: "Veuillez mettre à jour !"
         no_check_performed: "Une vérification de mises à jour n'a pas été effectuée. Vérifiez que sidekiq est en cours d'exécution."
         stale_data: "Une vérification de mises à jour n'a pas été effectuée récemment. Vérifiez que sidekiq est en cours d'exécution."
-        version_check_pending: "On dirait que vous avez récemment fait une mise à jour. Super !"
         installed_version: "Installée"
         latest_version: "Dernière"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
@@ -4435,7 +4471,6 @@ fr:
         exception_error: Nous sommes désolés, une erreur s'est produite lors de l'exécution de la requête
         too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de réessayer.
         not_found_error: Nous sommes désolés, ce rapport n'existe pas
-        filter_reports: Filtrer les rapports
         custom_date_range: Plage de dates personnalisée
         reports:
           trend_title: "Variation de %{percent}. La valeur actuelle est de %{current}. Elle était de %{prev} pour la période précédente."
@@ -4623,7 +4658,6 @@ fr:
             users:
               bookmarks: Lister les signets des utilisateurs. Les rappels de signet sont retournés lorsque le format ICS est utilisé.
               sync_sso: Synchroniser un utilisateur en utilisant DiscourseConnect.
-              show: Obtenir des informations sur un utilisateur.
               check_emails: Lister les e-mails d'utilisateurs.
               update: Mettre à jour les informations du profil utilisateur.
               log_out: Déconnecter toutes les sessions pour un utilisateur.
@@ -4744,14 +4778,10 @@ fr:
           post_liked: "Lorsqu'un utilisateur attribue un « J'aime »"
         notification_event:
           group_name: "Événements de notification"
-          notification_created: "Un utilisateur reçoit une notification dans son fil"
         group_user_event:
           group_name: "Événements pour les utilisateurs du groupe"
-          user_added_to_group: "Un utilisateur est ajouté à un groupe"
-          user_removed_from_group: "Un utilisateur est supprimé d'un groupe"
         user_promoted_event:
           group_name: "Événements promus par l'utilisateur"
-          user_promoted: "Un utilisateur est promu"
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"
@@ -4779,6 +4809,52 @@ fr:
           timestamp: "Créé"
           completion: "Temps d'exécution"
           actions: "Actions"
+      home:
+        title: "Accueil"
+      account:
+        title: "Compte"
+        sidebar_link:
+          backups: "Sauvegardes"
+      community:
+        title: "Communauté"
+        sidebar_link:
+          badges: "Badges"
+          notifications: "Notifications"
+          permalinks: "Permaliens"
+          trust_levels: "Niveaux de confiance"
+          users: "Utilisateurs"
+          user_fields: "Champs utilisateurs"
+          watched_words: "Mots surveillés"
+          legal: "Légal"
+      appearance:
+        title: "Apparence"
+        sidebar_link:
+          emoji: "Émoji"
+          navigation: "Navigation"
+          themes: "Thèmes"
+          components:
+            title: "Composants"
+      email_settings:
+        sidebar_link:
+          appearance: "Apparence"
+          preview_summary: "Prévisualisation de l'e-mail"
+      email_logs:
+        sidebar_link:
+          sent: "Envoyés"
+          skipped: "Ignorés"
+          bounced: "Non délivrés"
+          received: "Reçus"
+          rejected: "Rejetés"
+      security:
+        title: "Sécurité"
+        sidebar_link:
+          error_logs: "Journal d'erreurs"
+          screened_emails: "E-mails filtrés"
+          screened_ips: "IP sous surveillance"
+          screened_urls: "URL sous surveillance"
+          search_logs: "Journaux de recherche"
+          security: "Sécurité"
+          spam: "Spam"
       plugins:
         title: "Extensions"
         installed: "Extensions installées"
@@ -4795,6 +4871,20 @@ fr:
         author: "Par %{author}"
         experimental_badge: "expérimental"
         learn_more: "En savoir plus"
+        sidebar_link:
+          installed: "Installé"
+      advanced:
+        title: "Avancé"
+        sidebar_link:
+          developer: "Développeur"
+          embedding: "Intégration externe"
+          rate_limits: "Limites d'utilisation"
+          user_api: "API utilisateur"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Fichiers"
+          other_options: "Autre"
+          search: "Recherche"
       navigation_menu:
         sidebar: "Barre latérale"
         header_dropdown: "Liste déroulante de l'en-tête"
@@ -4825,6 +4915,7 @@ fr:
           uploading_progress: "Téléversement : %{progress} %"
           success: "Le fichier « %{filename} » a été envoyé avec succès. Le fichier est en cours de traitement et il faudra jusqu'à une minute pour qu'il apparaisse dans la liste."
           error: "Une erreur est survenue lors de l'envoi du fichier « %{filename} » : %{message}"
+        settings: "Paramètres"
         operations:
           is_running: "Une opération est en cours d'exécution…"
           failed: "L'opération %{operation} a échoué. Veuillez consulter les journaux."
@@ -4969,13 +5060,17 @@ fr:
           convert_theme_tooltip: "Convertir ce thème en composant"
           inactive_themes: "Thèmes inactifs :"
           inactive_components: "Composants non utilisés :"
-          selected: "%{count} sélectionné"
+          selected:
+            one: "%{count} sélectionné"
+            other: "%{count} sélectionné"
           cancel: "Annuler"
           broken_theme_tooltip: "Ce thème comporte des erreurs de CSS, HTML ou YAML"
           disabled_component_tooltip: "Ce composant a été désactivé"
           default_theme_tooltip: "Ce thème est le thème par défaut du site"
           updates_available_tooltip: "Des mises à jour sont disponibles pour ce thème"
-          and_x_more: "et %{count} de plus."
+          and_x_more:
+            one: "et %{count} de plus."
+            other: "et %{count} de plus."
           collapse: Réduire
           uploads: "Fichiers envoyés"
           no_uploads: "Vous pouvez envoyer des ressources associées à votre thème comme des polices ou des images"
@@ -5095,6 +5190,12 @@ fr:
           active_filter: "Actif"
           inactive_filter: "Inactif"
           updates_available_filter: "Mises à jour disponibles"
+          schema:
+            fields:
+              required: "*requis"
+              number:
+                too_small: "doit être supérieur ou égal à %{count}"
+                too_large: "doit être inférieur ou égal à %{count}"
         colors:
           select_base:
             title: "Sélectionner la palette de couleurs de base"
@@ -5171,7 +5272,6 @@ fr:
           instructions: "Personnalisez le modèle depuis lequel tous les e-mails HTML sont générés et stylés à l'aide de CSS."
       email:
         title: "E-mails"
-        settings: "Paramètres"
         templates: "Modèles"
         templates_title: "Modèles d'e-mails"
         preview_digest: "Prévisualisation de l'e-mail"
@@ -5818,7 +5918,6 @@ fr:
             other: "Lors des %{count} derniers jours :"
           value_heading: "Valeur"
           requirement_heading: "Prérequis"
-          visits: "Visites"
           days: "jours"
           topics_replied_to: "Sujets auxquels l'utilisateur a répondu"
           topics_viewed: "Sujets vus"
@@ -5934,7 +6033,6 @@ fr:
           empty: "Il n'y a aucune image pour le moment. Veuillez en envoyer une."
           upload:
             label: "Envoyer"
-            title: "Envoyer une ou plusieurs images"
         selectable_avatars:
           title: "Liste d'avatars que les utilisateurs peuvent choisir"
         categories:
@@ -5970,7 +6068,6 @@ fr:
         secret_list:
           invalid_input: "Les champs de saisie ne peuvent pas être vide ou contenir le caractère de la barre verticale"
         default_categories:
-          modal_description: "Voulez-vous appliquer cette modification rétroactivement ? Cela affectera les préférences de %{count} utilisateurs existants."
           modal_yes: "Oui"
           modal_no: "Non, appliquer ce changement à partir de maintenant"
         simple_list:
@@ -6069,9 +6166,7 @@ fr:
           perform: "Attribuer ce badge à ces utilisateurs"
           upload_csv: Envoyez un fichier CSV contenant les adresses e-mail ou les noms d'utilisateur
           aborted: Envoyez d'abord un fichier CSV contenant des adresses e-mail ou des noms d'utilisateur
-          success: Votre fichier CSV a été envoyé et %{count} utilisateurs obtiendront bientôt leurs badges.
           csv_has_unmatched_users: "Les entrées suivantes se trouvent dans le fichier CSV, mais elles n'ont pas pu être associées à des utilisateurs existants et ne recevront donc pas le badge :"
-          csv_has_unmatched_users_truncated_list: "Il y avait %{count} entrées dans le fichier CSV qui n'ont pas pu être associées à des utilisateurs existants et qui ne recevront donc pas le badge. En raison du grand nombre d'entrées sans correspondance, seules les 100 premières sont affichées :"
           replace_owners: Retirer le badge des propriétaires précédents
           grant_existing_holders: Accordez des badges supplémentaires aux détenteurs de badges existants
       emoji:
@@ -6085,6 +6180,7 @@ fr:
         image: "Image"
         alt: "aperçu de l'émoji personnalisé"
         delete_confirm: "Voulez-vous vraiment supprimer l'émoji :%{name}: ?"
+        settings: "Paramètres"
       embedding:
         get_started: "Si vous souhaitez intégrer Discourse dans un autre site, commencez par ajouter son hôte."
         confirm_delete: "Voulez-vous vraiment supprimer cet hôte ?"
@@ -6124,6 +6220,7 @@ fr:
         category_title: "Catégorie"
         tag_name: "Nom de l'étiquette"
         external_url: "URL externe ou relative"
+        username: "Nom d'utilisateur"
         destination: "Cible"
         copy_to_clipboard: "Copier le permalien dans le presse-papier"
         delete_confirm: Voulez-vous vraiment supprimer ce permalien ?

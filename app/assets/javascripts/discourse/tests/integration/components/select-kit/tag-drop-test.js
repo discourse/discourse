@@ -83,4 +83,17 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
       "it has the tag count"
     );
   });
+
+  test("default global (no category)", async function (assert) {
+    this.siteSettings.max_tags_in_filter_list = 3;
+    await render(hbs`<TagDrop />`);
+
+    await this.subject.expand();
+    assert.dom(".filter-for-more").exists("it has the 'filter for more' note");
+
+    await this.subject.fillInFilter("dav");
+    assert
+      .dom(".filter-for-more")
+      .doesNotExist("it does not have the 'filter for more' note");
+  });
 });

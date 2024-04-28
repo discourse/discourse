@@ -40,7 +40,7 @@ TEXT
     end
 
     it "the plugin name the plugin site settings are still under the generic plugins: category" do
-      plugin_instance.stubs(:setting_catgory).returns("plugins")
+      plugin_instance.stubs(:setting_category).returns("plugins")
       expect(plugin_instance.humanized_name).to eq("sample-plugin")
     end
 
@@ -408,15 +408,9 @@ TEXT
       plugin.register_asset("desktop.css", :desktop)
       plugin.register_asset("desktop2.css", :desktop)
 
-      plugin.register_asset("code.js")
-
-      plugin.register_asset("my_admin.js", :admin)
-      plugin.register_asset("my_admin2.js", :admin)
-
       plugin.activate!
 
-      expect(DiscoursePluginRegistry.javascripts.count).to eq(2)
-      expect(DiscoursePluginRegistry.admin_javascripts.count).to eq(2)
+      expect(DiscoursePluginRegistry.javascripts.count).to eq(1)
       expect(DiscoursePluginRegistry.desktop_stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.stylesheets[plugin.directory_name].count).to eq(2)
       expect(DiscoursePluginRegistry.mobile_stylesheets[plugin.directory_name].count).to eq(1)

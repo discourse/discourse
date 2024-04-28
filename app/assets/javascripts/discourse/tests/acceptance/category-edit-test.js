@@ -145,6 +145,36 @@ acceptance("Category Edit", function (needs) {
     assert.deepEqual(removePayload.allowed_tag_groups, []);
   });
 
+  test("Editing parent category (disabled Uncategorized)", async function (assert) {
+    this.siteSettings.allow_uncategorized_topics = false;
+
+    await visit("/c/bug/edit");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(6);
+
+    await categoryChooser.expand();
+
+    const names = [...categoryChooser.rows()].map((row) => row.dataset.name);
+    assert.ok(names.includes("(no category)"));
+    assert.notOk(names.includes("Uncategorized"));
+  });
+
+  test("Editing parent category (enabled Uncategorized)", async function (assert) {
+    this.siteSettings.allow_uncategorized_topics = true;
+
+    await visit("/c/bug/edit");
+    const categoryChooser = selectKit(".category-chooser");
+    await categoryChooser.expand();
+    await categoryChooser.selectRowByValue(6);
+
+    await categoryChooser.expand();
+
+    const names = [...categoryChooser.rows()].map((row) => row.dataset.name);
+    assert.ok(names.includes("(no category)"));
+    assert.notOk(names.includes("Uncategorized"));
+  });
+
   test("Index Route", async function (assert) {
     await visit("/c/bug/edit");
     assert.strictEqual(

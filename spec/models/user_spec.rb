@@ -283,6 +283,11 @@ RSpec.describe User do
 
             it { is_expected.to be_valid }
           end
+          context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+            before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+            it { is_expected.to be_valid }
+          end
         end
 
         context "when watched words are of type 'Censor'" do
@@ -295,6 +300,15 @@ RSpec.describe User do
             it "censors the words upon saving" do
               user.save!
               expect(user_field_value).to eq "■■■■■■■■ word"
+            end
+
+            context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+              before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+              it "does not censor the words upon saving" do
+                user.save!
+                expect(user_field_value).to eq "censored word"
+              end
             end
           end
 
@@ -323,6 +337,14 @@ RSpec.describe User do
             it "replaces the words upon saving" do
               user.save!
               expect(user_field_value).to eq "word replaced"
+            end
+            context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+              before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+              it "does not replace anything" do
+                user.save!
+                expect(user_field_value).to eq "word to replace"
+              end
             end
           end
 
@@ -420,7 +442,7 @@ RSpec.describe User do
   describe "#count_by_signup_date" do
     before(:each) do
       User.destroy_all
-      freeze_time DateTime.parse("2017-02-01 12:00")
+      freeze_time_safe
       Fabricate(:user)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 1.day.ago)
@@ -1759,8 +1781,20 @@ RSpec.describe User do
     end
   end
 
+  describe "real users" do
+    it "should find system user if you allow it" do
+      ids =
+        User
+          .real(allowed_bot_user_ids: [Discourse.system_user.id])
+          .where(id: Discourse.system_user.id)
+          .pluck(:id)
+      expect(ids).to eq([Discourse.system_user.id])
+    end
+  end
+
   describe "#purge_unactivated" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:admin) { Fabricate(:user) }
     fab!(:unactivated) { Fabricate(:user, active: false) }
     fab!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
     fab!(:unactivated_old_with_system_pm) do
@@ -1769,11 +1803,17 @@ RSpec.describe User do
     fab!(:unactivated_old_with_human_pm) do
       Fabricate(:user, active: false, created_at: 2.months.ago)
     end
-    fab!(:unactivated_old_with_post) { Fabricate(:user, active: false, created_at: 1.month.ago) }
+    fab!(:unactivated_old_with_post) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
+    fab!(:unactivated_by_admin) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
+    fab!(:unactivated_by_system) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
 
     before do
-      Group.refresh_automatic_groups!
-
       PostCreator.new(
         Discourse.system_user,
         title: "Welcome to our Discourse",
@@ -1795,12 +1835,31 @@ RSpec.describe User do
         title: "Test topic from a user",
         raw: "This is a sample message",
       ).create
+
+      UserHistory.create!(
+        action: UserHistory.actions[:deactivate_user],
+        acting_user: admin,
+        target_user: unactivated_by_admin,
+      )
+      UserHistory.create!(
+        action: UserHistory.actions[:deactivate_user],
+        acting_user: Discourse.system_user,
+        target_user: unactivated_by_system,
+      )
     end
 
-    it "should only remove old, unactivated users" do
+    it "should only remove old, unactivated users that haven't been manually deactivated" do
       User.purge_unactivated
       expect(User.real.all).to match_array(
-        [user, unactivated, unactivated_old_with_human_pm, unactivated_old_with_post],
+        [
+          user,
+          unactivated,
+          unactivated_old_with_human_pm,
+          unactivated_old_with_post,
+          unactivated_by_admin,
+          unactivated_by_system,
+          admin,
+        ],
       )
     end
 
@@ -1815,6 +1874,9 @@ RSpec.describe User do
           unactivated_old_with_system_pm,
           unactivated_old_with_human_pm,
           unactivated_old_with_post,
+          unactivated_by_admin,
+          unactivated_by_system,
+          admin,
         ],
       )
     end

@@ -8,3 +8,4 @@ uk:
   site_settings:
     styleguide_enabled: 'Увімкнути шлях `/styleguide`, щоб спростити стилізацію Discourse'
     styleguide_admin_only: "Обмежує видимість керування стилем лише адміністраторами"
+    styleguide_allowed_groups: "Обмежує видимість посібника зі стилів для членів наданих груп"

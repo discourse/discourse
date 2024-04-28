@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe UserNotifications do
   fab!(:chatters_group) { Fabricate(:group) }
-  fab!(:sender) { Fabricate(:user, group_ids: [chatters_group.id]) }
-  fab!(:user) { Fabricate(:user, group_ids: [chatters_group.id]) }
+  fab!(:sender) { Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true) }
 
   before do
     SiteSetting.chat_enabled = true
@@ -13,7 +11,6 @@ describe UserNotifications do
   end
 
   def refresh_auto_groups
-    Group.refresh_automatic_groups!
     user.reload
     sender.reload
   end
@@ -111,11 +108,11 @@ describe UserNotifications do
         end
 
         it "displays a count when there are more than two DMs with unread messages" do
-          user = Fabricate(:user, group_ids: [chatters_group.id])
+          user = Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true)
           senders = []
 
           3.times do
-            sender = Fabricate(:user, group_ids: [chatters_group.id])
+            sender = Fabricate(:user, group_ids: [chatters_group.id], refresh_auto_groups: true)
             refresh_auto_groups
             sender.reload
             senders << sender

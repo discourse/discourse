@@ -1,13 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import DFloatBody from "float-kit/components/d-float-body";
+import { TOOLTIP } from "float-kit/lib/constants";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
-import and from "truth-helpers/helpers/and";
 
 export default class DTooltip extends Component {
   @service tooltip;
@@ -15,9 +17,9 @@ export default class DTooltip extends Component {
 
   @tracked tooltipInstance = null;
 
-  registerTrigger = modifier((element) => {
+  registerTrigger = modifier((element, [properties]) => {
     const options = {
-      ...this.args,
+      ...properties,
       ...{
         listeners: true,
         beforeTrigger: (instance) => {
@@ -29,6 +31,8 @@ export default class DTooltip extends Component {
     const instance = new DTooltipInstance(getOwner(this), element, options);
 
     this.tooltipInstance = instance;
+
+    this.options.onRegisterApi?.(instance);
 
     return () => {
       instance.destroy();
@@ -50,6 +54,16 @@ export default class DTooltip extends Component {
     };
   }
 
+  @action
+  allowedProperties() {
+    const properties = {};
+    Object.keys(TOOLTIP.options).forEach((key) => {
+      const value = TOOLTIP.options[key];
+      properties[key] = this.args[key] ?? value;
+    });
+    return properties;
+  }
+
   <template>
     <span
       class={{concatClass
@@ -61,14 +75,12 @@ export default class DTooltip extends Component {
       data-identifier={{this.options.identifier}}
       data-trigger
       aria-expanded={{if this.tooltipInstance.expanded "true" "false"}}
-      {{this.registerTrigger}}
+      {{this.registerTrigger (this.allowedProperties)}}
       ...attributes
     >
-      <div class="fk-d-tooltip__trigger-container">
+      <span class="fk-d-tooltip__trigger-container">
         {{#if (has-block "trigger")}}
-          <div>
-            {{yield this.componentArgs to="trigger"}}
-          </div>
+          {{yield this.componentArgs to="trigger"}}
         {{else}}
           {{#if @icon}}
             <span class="fk-d-tooltip__icon">
@@ -79,7 +91,7 @@ export default class DTooltip extends Component {
             <span class="fk-d-tooltip__label">{{@label}}</span>
           {{/if}}
         {{/if}}
-      </div>
+      </span>
     </span>
 
     {{#if this.tooltipInstance.expanded}}

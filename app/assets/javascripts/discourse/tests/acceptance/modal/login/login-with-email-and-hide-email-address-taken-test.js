@@ -7,7 +7,6 @@ acceptance("Login with email - hide email address taken", function (needs) {
   needs.settings({
     enable_local_logins_via_email: true,
     hide_email_address_taken: true,
-    enable_passkeys: false,
   });
 
   needs.pretender((server, helper) => {

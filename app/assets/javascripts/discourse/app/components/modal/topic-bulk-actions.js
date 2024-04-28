@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import Topic from "discourse/models/topic";
 import I18n from "discourse-i18n";
@@ -195,6 +195,14 @@ export default class TopicBulkActions extends Component {
       },
     },
   ];
+
+  constructor() {
+    super(...arguments);
+
+    if (this.args.model.initialAction === "set-component") {
+      this.setComponent(this.args.model.initialComponent);
+    }
+  }
 
   get buttons() {
     return [...this.defaultButtons, ..._customButtons].filter(({ visible }) => {

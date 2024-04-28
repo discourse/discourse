@@ -301,12 +301,12 @@ class UploadCreator
       @upload.errors.add(:base, I18n.t("upload.empty"))
     elsif pixels == 0 && @image_info.type.to_s != "svg"
       @upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
-    elsif max_image_pixels > 0 && pixels >= max_image_pixels * 2
+    elsif max_image_pixels > 0 && pixels >= max_image_pixels
       @upload.errors.add(
         :base,
         I18n.t(
           "upload.images.larger_than_x_megapixels",
-          max_image_megapixels: SiteSetting.max_image_megapixels * 2,
+          max_image_megapixels: SiteSetting.max_image_megapixels,
         ),
       )
     end
@@ -663,7 +663,7 @@ class UploadCreator
           # Only GIFs, WEBPs and a few other unsupported image types can be animated
           OptimizedImage.ensure_safe_paths!(@file.path)
 
-          command = ["identify", "-format", "%n\\n", @file.path]
+          command = ["identify", "-ping", "-format", "%n\\n", @file.path]
           frames =
             begin
               Discourse::Utils.execute_command(*command, timeout: Upload::MAX_IDENTIFY_SECONDS).to_i

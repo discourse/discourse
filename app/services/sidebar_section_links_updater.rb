@@ -6,6 +6,7 @@ class SidebarSectionLinksUpdater
       delete_section_links(user: user, linkable_type: "Category")
     else
       category_ids = Category.where(id: category_ids).pluck(:id)
+      category_ids = category_ids[...SidebarSection::MAX_USER_CATEGORY_LINKS]
       update_section_links(user: user, linkable_type: "Category", new_linkable_ids: category_ids)
     end
   end

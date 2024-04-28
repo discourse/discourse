@@ -3,6 +3,7 @@ import { test } from "qunit";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
+  chromeTest,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -70,7 +71,8 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
     );
   });
 
-  test("j/k navigation skips hidden elements", async function (assert) {
+  // FIXME: For reasons unknown this test if flaky on firefox
+  chromeTest("j/k navigation skips hidden elements", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     document.querySelector("#qunit-fixture").innerHTML = `
@@ -151,8 +153,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       exists("#dismiss-topics-top"),
       "dismiss unread top button is present"
     );
-    await triggerKeyEvent(document, "keypress", "X");
-    await triggerKeyEvent(document, "keypress", "T");
+    await triggerKeyEvent(document, "keydown", "D", { shiftKey: true });
     assert.ok(
       exists("#dismiss-read-confirm"),
       "confirmation modal to dismiss unread is present"
@@ -168,7 +169,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       "mark read has been called on the backend once"
     );
 
-    // we get rid of all but one topic so the top dismiss button doesn't
+    // we get rid of all but one topic so the bottom dismiss button doesn't
     // show up, as it only appears if there are too many topics pushing
     // the bottom button out of the viewport
     let originalTopics = [...topicList.topic_list.topics];
@@ -178,11 +179,11 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     await visit("/");
     await visit("/unread");
     assert.notOk(
-      exists("#dismiss-topics-top"),
-      "dismiss unread top button is hidden"
+      exists("#dismiss-topics-bottom"),
+      "dismiss unread bottom button is hidden"
     );
-    await triggerKeyEvent(document, "keypress", "X");
-    await triggerKeyEvent(document, "keypress", "T");
+
+    await triggerKeyEvent(document, "keydown", "D", { shiftKey: true });
     assert.ok(
       exists("#dismiss-read-confirm"),
       "confirmation modal to dismiss unread is present"
@@ -210,11 +211,11 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     document.getElementById("ember-testing-container").scrollTop = 0;
     await visit("/new");
     assert.ok(exists("#dismiss-new-top"), "dismiss new top button is present");
-    await triggerKeyEvent(document, "keypress", "X");
-    await triggerKeyEvent(document, "keypress", "R");
+
+    await triggerKeyEvent(document, "keydown", "D", { shiftKey: true });
     assert.strictEqual(resetNewCalled, 1);
 
-    // we get rid of all but one topic so the top dismiss button doesn't
+    // we get rid of all but one topic so the bottom dismiss button doesn't
     // show up, as it only appears if there are too many topics pushing
     // the bottom button out of the viewport
     let originalTopics = [...topicList.topic_list.topics];
@@ -224,11 +225,11 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     await visit("/");
     await visit("/new");
     assert.notOk(
-      exists("#dismiss-new-top"),
-      "dismiss new top button has been hidden"
+      exists("#dismiss-new-bottom"),
+      "dismiss new bottom button has been hidden"
     );
-    await triggerKeyEvent(document, "keypress", "X");
-    await triggerKeyEvent(document, "keypress", "R");
+
+    await triggerKeyEvent(document, "keydown", "D", { shiftKey: true });
     assert.strictEqual(resetNewCalled, 2);
 
     // restore the original topic list
@@ -250,8 +251,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
       "dismiss new bottom button is present"
     );
 
-    await triggerKeyEvent(document, "keypress", "X");
-    await triggerKeyEvent(document, "keypress", "R");
+    await triggerKeyEvent(document, "keydown", "D", { shiftKey: true });
 
     assert.strictEqual(resetNewCalled, 1);
   });

@@ -43,6 +43,7 @@
   .topic-header-extra {
     display: inline-flex;
     align-items: center;
+    gap: 0.5em;
   }
 
   .badge-wrapper {
@@ -128,9 +129,6 @@
   .discourse-tags {
     font-size: var(--font-down-1);
   }
-  .discourse-tags + .topic-featured-link {
-    margin-left: 0.5em;
-  }
 }
 
 .discourse-tags {
@@ -155,7 +153,6 @@ header .discourse-tag {
 
 .list-tags {
   display: inline-block;
-  margin-right: 3px;
   font-size: var(--font-down-1);
 }
 
@@ -263,7 +260,6 @@ header .discourse-tag {
         "empty dropdown";
       input {
         grid-area: input;
-        margin-top: 4px;
       }
       label {
         grid-area: label;
@@ -320,31 +316,29 @@ header .discourse-tag {
 }
 
 section.tag-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
   margin: 1em 0;
   padding: 2em;
   border: 1px solid var(--primary-low);
 
-  .field {
-    margin: 0 0 0.5em;
-  }
-
-  .btn {
-    margin-right: 0.5em;
-  }
-
   .edit-tag-wrapper {
     display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 1em;
-    #edit-name {
+    flex-direction: column;
+
+    #edit-name,
+    #edit-description {
       width: 100%;
+      margin-bottom: 0.5em;
     }
+
     #edit-description {
       height: 120px;
-      flex: 10 1 auto;
     }
     .edit-controls {
-      width: 100%;
+      display: flex;
+      gap: 0.5em;
     }
   }
 
@@ -384,34 +378,25 @@ section.tag-info {
     }
   }
 
-  .tag-description-wrapper {
-    margin-bottom: 1em;
-  }
-
-  .tag-associations {
-    margin-bottom: 1em;
-  }
-
   .tag-actions {
-    margin-top: 2em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  .tag-associations:empty {
+    display: none;
   }
 
   .add-synonyms {
-    margin-top: 1em;
-    div {
+    &__controls {
       display: flex;
-    }
-    .ok {
-      margin-left: 0.5em;
-      display: none;
-    }
-    .has-selection + .ok {
-      display: flex;
+      gap: 0.5em;
     }
   }
 
   .tag-list {
-    margin: 0.5em 0 1em;
+    margin: 0.5em 0 0;
     padding: 0;
     border: none;
     a {

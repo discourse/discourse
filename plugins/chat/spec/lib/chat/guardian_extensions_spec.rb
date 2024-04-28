@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::GuardianExtensions do
   fab!(:chatters) { Fabricate(:group) }
-  fab!(:user) { Fabricate(:user, group_ids: [chatters.id]) }
+  fab!(:user) { Fabricate(:user, group_ids: [chatters.id], refresh_auto_groups: true) }
   fab!(:staff) { Fabricate(:user, admin: true) }
   fab!(:chat_group) { Fabricate(:group) }
   fab!(:channel) { Fabricate(:category_channel) }
@@ -25,10 +23,8 @@ RSpec.describe Chat::GuardianExtensions do
   end
 
   it "allows TL1 to chat by default and by extension higher trust levels" do
-    Group.refresh_automatic_groups!
     expect(guardian.can_chat?).to eq(true)
-    user.update!(trust_level: TrustLevel[3])
-    Group.refresh_automatic_groups!
+    user.change_trust_level!(TrustLevel[3])
     expect(guardian.can_chat?).to eq(true)
   end
 
@@ -481,6 +477,30 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
+    describe "#can_edit_chat" do
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+
+      context "when user is staff" do
+        it "returns true" do
+          expect(staff_guardian.can_edit_chat?(message)).to eq(true)
+        end
+      end
+
+      context "when user is not staff" do
+        it "returns false" do
+          expect(guardian.can_edit_chat?(message)).to eq(false)
+        end
+      end
+
+      context "when user is owner of the message" do
+        fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: user) }
+
+        it "returns true" do
+          expect(guardian.can_edit_chat?(message)).to eq(true)
+        end
+      end
+    end
+
     describe "#can_delete_category?" do
       alias_matcher :be_able_to_delete_category, :be_can_delete_category
 
@@ -588,8 +608,6 @@ RSpec.describe Chat::GuardianExtensions do
       end
 
       context "for direct message channels" do
-        before { Group.refresh_automatic_groups! }
-
         it "it still allows the user to message even if they are not in direct_message_enabled_groups because they are not creating the channel" do
           SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
           dm_channel.update!(status: :open)

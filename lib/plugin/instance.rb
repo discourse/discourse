@@ -66,6 +66,11 @@ class Plugin::Instance
     }
   end
 
+  def root_dir
+    return if Rails.env.production?
+    File.dirname(path)
+  end
+
   def seed_data
     @seed_data ||= HashWithIndifferentAccess.new({})
   end
@@ -105,8 +110,12 @@ class Plugin::Instance
     Middleware::AnonymousCache.compile_key_builder
   end
 
-  def add_admin_route(label, location)
-    @admin_route = { label: label, location: location }
+  def add_admin_route(label, location, opts = {})
+    @admin_route = {
+      label: label,
+      location: location,
+      use_new_show_route: opts.fetch(:use_new_show_route, false),
+    }
   end
 
   def configurable?
@@ -227,6 +236,14 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
   end
 
+  # Allows to define custom "status:" filter. Example usage:
+  #   register_custom_filter_by_status("foobar") do |scope|
+  #     scope.where("word_count = 42")
+  #   end
+  def register_custom_filter_by_status(status, &block)
+    TopicsFilter.add_filter_by_status(status, &block)
+  end
+
   # Allows to define custom search order. Example usage:
   #   Search.advanced_order(:chars) do |posts|
   #     posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
@@ -306,6 +323,10 @@ class Plugin::Instance
   #   register_preloaded_category_custom_fields("custom_field")
   def register_preloaded_category_custom_fields(field)
     Site.preloaded_category_custom_fields << field
+  end
+
+  def register_problem_check(klass)
+    DiscoursePluginRegistry.register_problem_check(klass, self)
   end
 
   def custom_avatar_column(column)
@@ -663,6 +684,11 @@ class Plugin::Instance
         Any hbs files under `assets/javascripts` will be automatically compiled and included."
       ERROR
 
+    raise <<~ERROR if file.start_with?("javascripts/") && file.end_with?(".js", ".js.es6")
+        [#{name}] Javascript files under `assets/javascripts` are automatically included in JS bundles.
+        Manual register_asset calls should be removed. (attempted to add #{file})
+      ERROR
+
     if opts && opts == :vendored_core_pretty_text
       full_path = DiscoursePluginRegistry.core_asset_for_name(file)
     else
@@ -719,38 +745,6 @@ class Plugin::Instance
   # this allows us to present information about a plugin in the UI
   # prior to activations
   def activate!
-    if @path
-      root_dir_name = File.dirname(@path)
-
-      # Automatically include all ES6 JS and hbs files
-      root_path = "#{root_dir_name}/assets/javascripts"
-      DiscoursePluginRegistry.register_glob(root_path, "js")
-      DiscoursePluginRegistry.register_glob(root_path, "js.es6")
-      DiscoursePluginRegistry.register_glob(root_path, "hbs")
-      DiscoursePluginRegistry.register_glob(root_path, "hbr")
-
-      admin_path = "#{root_dir_name}/admin/assets/javascripts"
-      DiscoursePluginRegistry.register_glob(admin_path, "js", admin: true)
-      DiscoursePluginRegistry.register_glob(admin_path, "js.es6", admin: true)
-      DiscoursePluginRegistry.register_glob(admin_path, "hbs", admin: true)
-      DiscoursePluginRegistry.register_glob(admin_path, "hbr", admin: true)
-
-      DiscourseJsProcessor.plugin_transpile_paths << root_path.sub(Rails.root.to_s, "").sub(
-        %r{\A/*},
-        "",
-      )
-      DiscourseJsProcessor.plugin_transpile_paths << admin_path.sub(Rails.root.to_s, "").sub(
-        %r{\A/*},
-        "",
-      )
-
-      test_path = "#{root_dir_name}/test/javascripts"
-      DiscourseJsProcessor.plugin_transpile_paths << test_path.sub(Rails.root.to_s, "").sub(
-        %r{\A/*},
-        "",
-      )
-    end
-
     self.instance_eval File.read(path), path
     if auto_assets = generate_automatic_assets!
       assets.concat(auto_assets)
@@ -762,13 +756,8 @@ class Plugin::Instance
 
     seed_data.each { |key, value| DiscoursePluginRegistry.register_seed_data(key, value) }
 
-    # TODO: possibly amend this to a rails engine
-
-    # Automatically include assets
-    Rails.configuration.assets.paths << auto_generated_path
+    # Allow plugins to `register_asset` for images under /assets
     Rails.configuration.assets.paths << File.dirname(path) + "/assets"
-    Rails.configuration.assets.paths << File.dirname(path) + "/admin/assets"
-    Rails.configuration.assets.paths << File.dirname(path) + "/test/javascripts"
 
     # Automatically include rake tasks
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
@@ -791,29 +780,7 @@ class Plugin::Instance
       Discourse::Utils.atomic_ln_s(public_data, target)
     end
 
-    ensure_directory(js_file_path)
-
-    contents = []
-    handlebars_includes.each { |hb| contents << "require_asset('#{hb}')" }
-    javascript_includes.each { |js| contents << "require_asset('#{js}')" }
-
-    if !contents.present?
-      [js_file_path, extra_js_file_path].each do |f|
-        File.delete(f)
-      rescue Errno::ENOENT
-      end
-      return
-    end
-
-    contents.insert(0, "<%")
-    contents << "%>"
-
-    Discourse::Utils.atomic_write_file(extra_js_file_path, contents.join("\n"))
-
-    begin
-      File.delete(js_file_path)
-    rescue Errno::ENOENT
-    end
+    write_extra_js!
   end
 
   def auth_provider(opts)
@@ -869,47 +836,14 @@ class Plugin::Instance
     end
   end
 
-  def handlebars_includes
-    assets
-      .map do |asset, opts|
-        next if opts == :admin
-        next unless asset =~ DiscoursePluginRegistry::HANDLEBARS_REGEX
-        asset
-      end
-      .compact
-  end
-
   def javascript_includes
     assets
       .map do |asset, opts|
         next if opts == :vendored_core_pretty_text
-        next if opts == :admin
         next unless asset =~ DiscoursePluginRegistry::JS_REGEX
         asset
       end
       .compact
-  end
-
-  def each_globbed_asset
-    if @path
-      # Automatically include all ES6 JS and hbs files
-      root_path = "#{File.dirname(@path)}/assets/javascripts"
-      admin_path = "#{File.dirname(@path)}/admin/assets/javascripts"
-
-      Dir
-        .glob(["#{root_path}/**/*", "#{admin_path}/**/*"])
-        .sort
-        .each do |f|
-          f_str = f.to_s
-          if File.directory?(f)
-            yield [f, true]
-          elsif f_str.end_with?(".js.es6") || f_str.end_with?(".hbs") || f_str.end_with?(".hbr")
-            yield [f, false]
-          elsif f_str.end_with?(".js")
-            yield [f, false]
-          end
-        end
-    end
   end
 
   def register_reviewable_type(reviewable_type_class)
@@ -1286,18 +1220,46 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_post_stripper({ block: block }, self)
   end
 
+  def register_search_group_query_callback(callback)
+    DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
+  end
+
   protected
 
   def self.js_path
     File.expand_path "#{Rails.root}/app/assets/javascripts/plugins"
   end
 
-  def js_file_path
-    "#{Plugin::Instance.js_path}/#{directory_name}.js.erb"
+  def legacy_asset_paths
+    [
+      "#{Plugin::Instance.js_path}/#{directory_name}.js.erb",
+      "#{Plugin::Instance.js_path}/#{directory_name}_extra.js.erb",
+    ]
   end
 
   def extra_js_file_path
-    @extra_js_file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}_extra.js.erb"
+    @extra_js_file_path ||= "#{Plugin::Instance.js_path}/#{directory_name}_extra.js"
+  end
+
+  def write_extra_js!
+    # No longer used, but we want to make sure the files are no longer present
+    # so they don't accidently get compiled by Sprockets.
+    legacy_asset_paths.each do |path|
+      File.delete(path)
+    rescue Errno::ENOENT
+    end
+
+    contents = javascript_includes.map { |js| File.read(js) }
+
+    if contents.present?
+      ensure_directory(extra_js_file_path)
+      Discourse::Utils.atomic_write_file(extra_js_file_path, contents.join("\n;\n"))
+    else
+      begin
+        File.delete(extra_js_file_path)
+      rescue Errno::ENOENT
+      end
+    end
   end
 
   def register_assets!
@@ -1365,10 +1327,6 @@ class Plugin::Instance
 
   def register_topic_preloader_associations(fields)
     DiscoursePluginRegistry.register_topic_preloader_association(fields, self)
-  end
-
-  def register_search_group_query_callback(callback)
-    DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
   end
 
   private

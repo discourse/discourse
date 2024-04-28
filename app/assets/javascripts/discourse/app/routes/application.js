@@ -1,9 +1,10 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import CreateAccount from "discourse/components/modal/create-account";
 import ForgotPassword from "discourse/components/modal/forgot-password";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import LoginModal from "discourse/components/modal/login";
+import { RouteException } from "discourse/controllers/exception";
 import { setting } from "discourse/lib/computed";
 import cookie from "discourse/lib/cookie";
 import logout from "discourse/lib/logout";
@@ -33,16 +34,19 @@ function unlessStrictlyReadOnly(method, message) {
 const ApplicationRoute = DiscourseRoute.extend({
   siteTitle: setting("title"),
   shortSiteDescription: setting("short_site_description"),
-  documentTitle: service(),
-  dialog: service(),
-  composer: service(),
-  modal: service(),
-  loadingSlider: service(),
-  router: service(),
-  siteSettings: service(),
+
   clientErrorHandler: service(),
-  login: service(),
+  composer: service(),
+  currentUser: service(),
+  dialog: service(),
+  documentTitle: service(),
   historyStore: service(),
+  loadingSlider: service(),
+  login: service(),
+  modal: service(),
+  router: service(),
+  site: service(),
+  siteSettings: service(),
 
   get isOnlyOneExternalLoginMethod() {
     return (
@@ -122,23 +126,27 @@ const ApplicationRoute = DiscourseRoute.extend({
     error(err, transition) {
       const xhrOrErr = err.jqXHR ? err.jqXHR : err;
       const exceptionController = this.controllerFor("exception");
+      let shouldBubble = false;
 
       const themeOrPluginSource = identifySource(err);
 
-      // eslint-disable-next-line no-console
-      console.error(
-        ...[consolePrefix(err, themeOrPluginSource), xhrOrErr].filter(Boolean)
-      );
-
-      if (xhrOrErr && xhrOrErr.status === 404) {
-        return this.router.transitionTo("exception-unknown");
-      }
-
-      if (themeOrPluginSource) {
-        this.clientErrorHandler.displayErrorNotice(
-          "Error loading route",
-          themeOrPluginSource
+      if (!(xhrOrErr instanceof RouteException)) {
+        shouldBubble = true;
+        // eslint-disable-next-line no-console
+        console.error(
+          ...[consolePrefix(err, themeOrPluginSource), xhrOrErr].filter(Boolean)
         );
+
+        if (xhrOrErr && xhrOrErr.status === 404) {
+          return this.router.transitionTo("exception-unknown");
+        }
+
+        if (themeOrPluginSource) {
+          this.clientErrorHandler.displayErrorNotice(
+            "Error loading route",
+            themeOrPluginSource
+          );
+        }
       }
 
       exceptionController.setProperties({
@@ -146,8 +154,16 @@ const ApplicationRoute = DiscourseRoute.extend({
         thrown: xhrOrErr,
       });
 
+      if (transition.intent.url) {
+        if (transition.method === "replace") {
+          DiscourseURL.replaceState(transition.intent.url);
+        } else {
+          DiscourseURL.pushState(transition.intent.url);
+        }
+      }
+
       this.intermediateTransitionTo("exception");
-      return true;
+      return shouldBubble;
     },
 
     showLogin: unlessStrictlyReadOnly(

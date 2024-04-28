@@ -2,13 +2,7 @@ import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Create Account Fields - From Login Form", function (needs) {
-  needs.pretender((server, helper) => {
-    server.get(`/session/passkey/challenge.json`, () =>
-      helper.response({ challenge: "smth" })
-    );
-  });
-
+acceptance("Create Account Fields - From Login Form", function () {
   test("autofills email field with login form value", async function (assert) {
     await visit("/");
     await click("header .login-button");

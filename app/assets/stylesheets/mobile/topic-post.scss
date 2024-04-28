@@ -194,19 +194,10 @@ a.reply-to-tab {
       }
     }
   }
-  .link-summary .btn {
-    color: var(--primary-med-or-secondary-high);
-    background: var(--blend-primary-secondary-5);
-    width: 100%;
-  }
 
   .toggle-summary {
     .summarization-buttons {
       flex-direction: column;
-
-      .top-replies {
-        margin-top: 10px;
-      }
     }
   }
 }
@@ -384,7 +375,15 @@ span.highlighted {
 }
 
 .read-state {
-  display: none;
+  // contained within the padding to prevent vertical overflow
+  max-width: var(--d-wrap-padding-h);
+  right: calc(var(--d-wrap-padding-h) * -1);
+  font-size: var(--font-down-5);
+  margin-top: 0.45em;
+
+  svg {
+    right: 0.25em;
+  }
 }
 
 .post-notice {

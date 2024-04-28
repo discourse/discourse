@@ -3,7 +3,7 @@
 RSpec.describe PostAction do
   it { is_expected.to rate_limit }
 
-  fab!(:moderator)
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:codinghorror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
   fab!(:eviltrout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
   fab!(:admin)
@@ -25,7 +25,6 @@ RSpec.describe PostAction do
     it "notifies moderators (integration test)" do
       post = create_post
       mod = moderator
-      Group.refresh_automatic_groups!
 
       result =
         PostActionCreator.notify_moderators(codinghorror, post, "this is my special long message")
@@ -756,12 +755,11 @@ RSpec.describe PostAction do
     end
   end
 
-  it "prevents user to act twice at the same time" do
-    Group.refresh_automatic_groups!
-    # flags are already being tested
-    all_types_except_flags =
-      PostActionType.types.except(*PostActionType.flag_types_without_custom.keys)
-    all_types_except_flags.values.each do |action|
+  # flags are already being tested
+  all_types_except_flags =
+    PostActionType.types.except(*PostActionType.flag_types_without_custom.keys)
+  all_types_except_flags.values.each do |action|
+    it "prevents user to act twice at the same time" do
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_success
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_failed
     end

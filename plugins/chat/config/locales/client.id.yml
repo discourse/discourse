@@ -100,6 +100,7 @@ id:
       browse:
         title: Kanal
         filter_all: Semua
+        filter_open: Buka
         filter_closed: Tertutup
         filter_archived: Diarsipkan
       members_view:

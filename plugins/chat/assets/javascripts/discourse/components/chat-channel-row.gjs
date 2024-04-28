@@ -5,17 +5,18 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { modifier } from "ember-modifier";
+import { modifier as modifierFn } from "ember-modifier";
+import { and, eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import icon from "discourse-common/helpers/d-icon";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-import and from "truth-helpers/helpers/and";
-import eq from "truth-helpers/helpers/eq";
-import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
+import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-icon";
+import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
 import ChatChannelMetadata from "discourse/plugins/chat/discourse/components/chat-channel-metadata";
 import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
 
@@ -38,11 +39,11 @@ export default class ChatChannelRow extends Component {
   @tracked rowStyle = null;
   @tracked canSwipe = true;
 
-  registerSwipableRow = modifier((element) => {
+  registerSwipableRow = modifierFn((element) => {
     this.swipableRow = element;
   });
 
-  onReset = modifier((element) => {
+  onReset = modifierFn((element) => {
     const handler = () => {
       this.rowStyle = htmlSafe("margin-right: 0px;");
       this.showRemoveButton = false;
@@ -59,7 +60,7 @@ export default class ChatChannelRow extends Component {
     };
   });
 
-  onRemoveChannel = modifier((element) => {
+  onRemoveChannel = modifierFn((element) => {
     element.addEventListener(
       "transitionend",
       () => {
@@ -71,7 +72,7 @@ export default class ChatChannelRow extends Component {
     element.classList.add(FADEOUT_CLASS);
   });
 
-  handleSwipe = modifier((element) => {
+  handleSwipe = modifierFn((element) => {
     element.addEventListener("touchstart", this.onSwipeStart, {
       passive: true,
     });
@@ -142,18 +143,26 @@ export default class ChatChannelRow extends Component {
     return this.args.channel.tracking.unreadCount > 0;
   }
 
+  get shouldRenderLastMessage() {
+    return (
+      this.site.mobileView &&
+      this.args.channel.isDirectMessageChannel &&
+      this.args.channel.lastMessage
+    );
+  }
+
   get #firstDirectMessageUser() {
     return this.args.channel?.chatable?.users?.firstObject;
   }
 
   @action
   startTrackingStatus() {
-    this.#firstDirectMessageUser?.trackStatus();
+    this.#firstDirectMessageUser?.statusManager.trackStatus();
   }
 
   @action
   stopTrackingStatus() {
-    this.#firstDirectMessageUser?.stopTrackingStatus();
+    this.#firstDirectMessageUser?.statusManager.stopTrackingStatus();
   }
 
   <template>
@@ -177,6 +186,7 @@ export default class ChatChannelRow extends Component {
       <div
         class={{concatClass
           "chat-channel-row__content"
+          (if @channel.isCategoryChannel "is-category" "is-dm")
           (if this.shouldReset "-animate-reset")
         }}
         {{(if this.shouldHandleSwipe (modifier this.registerSwipableRow))}}
@@ -184,8 +194,19 @@ export default class ChatChannelRow extends Component {
         {{(if this.shouldReset (modifier this.onReset))}}
         style={{this.rowStyle}}
       >
-        <ChannelTitle @channel={{@channel}} />
-        <ChatChannelMetadata @channel={{@channel}} @unreadIndicator={{true}} />
+        <ChannelIcon @channel={{@channel}} />
+        <div class="chat-channel-row__info">
+          <ChannelName @channel={{@channel}} />
+          <ChatChannelMetadata
+            @channel={{@channel}}
+            @unreadIndicator={{true}}
+          />
+          {{#if this.shouldRenderLastMessage}}
+            <div class="chat-channel__last-message">
+              {{replaceEmoji (htmlSafe @channel.lastMessage.excerpt)}}
+            </div>
+          {{/if}}
+        </div>
 
         {{#if
           (and @options.leaveButton @channel.isFollowing this.site.desktopView)

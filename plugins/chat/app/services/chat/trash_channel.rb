@@ -28,15 +28,15 @@ module Chat
 
     private
 
-    def fetch_channel(channel_id:, **)
+    def fetch_channel(channel_id:)
       Chat::Channel.find_by(id: channel_id)
     end
 
-    def invalid_access(guardian:, channel:, **)
+    def invalid_access(guardian:, channel:)
       guardian.can_preview_chat_channel?(channel) && guardian.can_delete_chat_channel?
     end
 
-    def prevents_slug_collision(channel:, **)
+    def prevents_slug_collision(channel:)
       channel.update!(
         slug:
           "#{Time.current.strftime("%Y%m%d-%H%M")}-#{channel.slug}-deleted".truncate(
@@ -46,18 +46,18 @@ module Chat
       )
     end
 
-    def soft_delete_channel(guardian:, channel:, **)
+    def soft_delete_channel(guardian:, channel:)
       channel.trash!(guardian.user)
     end
 
-    def log_channel_deletion(guardian:, channel:, **)
+    def log_channel_deletion(guardian:, channel:)
       StaffActionLogger.new(guardian.user).log_custom(
         DELETE_CHANNEL_LOG_KEY,
         { chat_channel_id: channel.id, chat_channel_name: channel.title(guardian.user) },
       )
     end
 
-    def enqueue_delete_channel_relations_job(channel:, **)
+    def enqueue_delete_channel_relations_job(channel:)
       Jobs.enqueue(Jobs::Chat::ChannelDelete, chat_channel_id: channel.id)
     end
   end

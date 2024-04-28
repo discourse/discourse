@@ -15,6 +15,7 @@ cs:
       site_settings:
         chat_separate_sidebar_mode:
           always: "Vždy"
+          fullscreen: "Když je chat na celé obrazovce"
           never: "Nikdy"
       logs:
         staff_actions:
@@ -27,51 +28,114 @@ cs:
           descriptions:
             chat:
               create_message: "Vytvořit chatovací zprávu v určeném kanálu."
+      web_hooks:
+        chat_event:
+          group_name: "Události chatu"
+          chat_message_created: "Zpráva je vytvořena"
+          chat_message_edited: "Zpráva je upravena"
+          chat_message_trashed: "Zpráva je vyhozena do koše"
+          chat_message_restored: "Zpráva je obnovena"
     about:
+      chat_messages_count: "Zprávy v chatu"
       chat_channels_count: "Kanály chatu"
+      chat_users_count: "Uživatelé chatu"
     chat:
+      text_copied: Zkopírováno do schránky
+      link_copied: Odkaz zkopírován do schránky
       back_to_forum: "Fórum"
       deleted_chat_username: smazáno
       dates:
+        yesterday: "Včera"
         time_tiny: "h:mm"
       all_loaded: "Zobrazení všech zpráv"
+      already_enabled: "Chat je v tomto tématu již povolen. Obnovte prosím stránku."
+      disabled_for_topic: "Chat je v tomto tématu zakázán."
       create: "Vytvoř"
       cancel: "Zrušit"
+      cancel_reply: "Zrušit odpověď"
       chat_channels: "Kanály"
       browse_all_channels: "Procházet všechny kanály"
+      move_to_channel:
+        title: "Přesunout zprávy do kanálu"
+        instructions:
+          one: "Přesouváte <strong>%{count}</strong> zprávu. Vyberte cílový kanál. V kanálu <strong>%{channelTitle}</strong> se vytvoří zástupná zpráva, která označuje, že tato zpráva byla přesunuta. Upozorňujeme, že řetězce odpovědí nebudou v novém kanálu zachovány a zprávy ve starém kanálu se již nebudou zobrazovat jako odpovědi na přesunuté zprávy."
+          few: "Přesouváte <strong>%{count}</strong> zprávy. Vyberte cílový kanál. V kanálu <strong>%{channelTitle}</strong> se vytvoří zástupná zpráva, která označuje, že tato zpráva byla přesunuta. Upozorňujeme, že řetězce odpovědí nebudou v novém kanálu zachovány a zprávy ve starém kanálu se již nebudou zobrazovat jako odpovědi na přesunuté zprávy."
+          many: "Přesouváte <strong>%{count}</strong> zpráv. Vyberte cílový kanál. V kanálu <strong>%{channelTitle}</strong> se vytvoří zástupná zpráva, která označuje, že tato zpráva byla přesunuta. Upozorňujeme, že řetězce odpovědí nebudou v novém kanálu zachovány a zprávy ve starém kanálu se již nebudou zobrazovat jako odpovědi na přesunuté zprávy."
+          other: "Přesouváte <strong>%{count}</strong> zpráv. Vyberte cílový kanál. V kanálu <strong>%{channelTitle}</strong> se vytvoří zástupná zpráva, která označuje, že tato zpráva byla přesunuta. Upozorňujeme, že řetězce odpovědí nebudou v novém kanálu zachovány a zprávy ve starém kanálu se již nebudou zobrazovat jako odpovědi na přesunuté zprávy."
+        confirm_move: "Přesunout zprávy"
       channel_settings:
+        title: "Nastavení kanálu"
         edit: "Upravit"
         add: "přidat"
+        close_channel: "Zavřít kanál"
+        open_channel: "Otevřít kanál"
+        archive_channel: "Archivovat kanál"
+        delete_channel: "Odstranit kanál"
+        join_channel: "Připojit se k kanálu"
+        leave_channel: "Opustit kanál"
+        leave_groupchat_info: "Opuštěním tohoto skupinového chatu k němu již nebudete mít přístup a nebudete dostávat s ním spojená upozornění. Chcete-li se do něj znovu připojit, musíte být znovu pozváni některým ze členů skupinového chatu."
         join: "Přidat se ke skupině"
         leave: "Opustit skupinu"
+      channel_archive:
+        process_started: "Proces archivace byl zahájen. Toto okno se brzy uzavře a po dokončení procesu archivace obdržíte osobní zprávu."
+        retry: "Zkuste znovu"
+      channel_open:
+        title: "Otevřít kanál"
       channel_close:
         title: "Zavřít kanál"
+      channel_delete:
+        title: "Odstranit kanál"
       channels_list_popup:
         browse: "Procházet kanály"
         create: "Nový kanál"
       click_to_join: "Kliknutím sem zobrazíte dostupné kanály."
       close: "Zavřít"
       remove: "Smazat"
-      expand: "Rozbalit menu chatu"
+      collapse: "Sbalit panel chatu"
+      expand: "Rozbalit zásuvku chatu"
       delete: "Smazat"
       edited: "upraveno"
       muted: "ztišení"
       joined: "účet vytvořen"
       empty_state:
+        direct_message_cta: "Zahájení osobního konverzace"
+        direct_message: "Můžete také zahájit osobní konverzaci s jedním nebo více uživateli."
         title: "Nebyly nalezeny žádné kanály"
       email_frequency:
         never: "Nikdy"
+        title: "E-mailová upozornění"
+        when_away: "Jen v nepřítomnosti"
       header_indicator_preference:
+        title: "Zobrazit indikátor aktivity v záhlaví"
+        all_new: "Všechny nové zprávy"
+        dm_and_mentions: "Přímé zprávy a zmínky"
+        only_mentions: "Pouze zmínky"
         never: "Nikdy"
+      separate_sidebar_mode:
+        title: "Zobrazit samostatné režimy postranního panelu pro fórum a chat"
+      enable: "Povolit chat"
       flag: "Nahlášení"
+      emoji: "Vložit emoji"
+      flagged: "Tato zpráva byla označena ke kontrole"
+      invitation_notification: "<span>%{username}</span> <span>vás pozval/a, abyste se připojili ke kanálu chatu</span>"
+      in_reply_to: "V odpovědi na"
       heading: "Chat"
       join: "Přidat se ke skupině"
       last_visit: "poslední návštěva"
+      summarization:
+        title: "Shrnout zprávy"
       aria_roles:
         channels_list: "Seznam kanálů chatu"
-      no_public_channels: "Nepřipojili jste se k žádným kanálům."
+      no_direct_message_channels: "Zatím jste se nepřipojili k žádným kanálům přímých zpráv."
+      no_public_channels: "Zatím jste se nepřipojili k žádným kanálům."
+      open_full_page: "Otevřít chat na celou obrazovku"
+      close_full_page: "Zavřít chat na celé obrazovce"
+      placeholder_channel: "Pište v %{channelName}"
+      placeholder_users: "Pište si s %{commaSeparatedNames}"
+      react: "Reagovat pomocí emoji"
       reply: "Odpověď"
       edit: "Upravit"
+      copy_link: "Kopírovat odkaz"
       rebake_message: "Obnovit HTML"
       unreliable_network: "Síť je nespolehlivá, odesílání zpráv a ukládání konceptů nemusí fungovat."
       bookmark_message: "Založit"
@@ -83,7 +147,7 @@ cs:
         none: "Žádná"
       title: "chat"
       title_capitalized: "Chat"
-      upload: "Připojte soubor"
+      upload: "Připojit soubor"
       exit: "zpět"
       channel_status:
         closed: "Uzavřeno"
@@ -91,12 +155,17 @@ cs:
       browse:
         back: "Zpět"
         title: Kanály
-        filter_all: Celkem
-        filter_closed: Uzavřeno
+        filter_all: Vše
+        filter_open: Otevřené
+        filter_closed: Zavřené
+        filter_archived: Archivované
+        filter_input_placeholder: Vyhledat kanál podle názvu
       chat_message_separator:
         today: Dnes
         yesterday: Včera
       members_view:
+        filter_placeholder: Najít členy
+        add_member: Přidat člena
         back_to_settings: "Zpět na nastavení"
       about_view:
         title: Nadpis
@@ -109,10 +178,26 @@ cs:
           members: Členové
           settings: Nastavení
       new_message_modal:
+        user_search_placeholder: "...přidat další členy"
         filter: "Filtr"
+        cant_add_more_members: "Byl dosažen maximální počet členů"
+        group_with_too_many_members: "má příliš mnoho členů (%{membersCount})"
       direct_message_creator:
         title: Nová zpráva
         prefix: "Komu:"
+        members_counter:
+          one: "%{count}/%{max} člena"
+          few: "%{count}/%{max} členů"
+          many: "%{count}/%{max} členů"
+          other: "%{count}/%{max} členů"
+      channel:
+        no_memberships: Tento kanál nemá žádné členy
+        no_memberships_found: Nebyli nalezeni žádní členové
+        memberships_count:
+          one: "%{count} člen"
+          few: "%{count} členové"
+          many: "%{count} členů"
+          other: "%{count} členů"
       create_channel:
         title: "Nový kanál"
         type: "Typ"
@@ -170,6 +255,8 @@ cs:
       direct_messages:
         title: "Soukromé zprávy"
         new: "Vytvořit osobní chat"
+        leave: "Opustit tento osobní chat"
+        close: "Zavřít tento osobní chat"
       channel_list:
         title: "Kanály"
       incoming_webhooks:
@@ -204,6 +291,8 @@ cs:
           few: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dny."
           many: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dní."
           other: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dní."
+      flags:
+        notify_user: "Chci s touto osobou mluvit o jejich zprávě přímo a osobně."
       emoji_picker:
         objects: "Objekty"
         activities: "Aktivity"
@@ -229,7 +318,15 @@ cs:
         header: "Nová zpráva"
         cancel: "Zrušit"
     notifications:
+      chat_invitation: "vás pozval/a, abyste se připojili ke kanálu chatu"
+      chat_invitation_html: "<span>%{username}</span> <span>vás pozval/a, abyste se připojili ke kanálu chatu</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      popup:
+        direct_message_chat_mention:
+          direct: "vás zmínil/a v osobním chatu"
+          direct_html: "<span>%{username}</span> <span>vás zmínil/a v osobním chatu</span>"
+          other_plain: "zmínil/a %{identifier} v osobním chatu"
+          other_html: "<span>%{username}</span> <span>zmínil/a %{identifier} v osobním chatu</span>"
     discourse_automation:
       scriptables:
         send_chat_message:
@@ -245,6 +342,12 @@ cs:
         title: "Chat"
         keyboard_shortcuts:
           mark_all_channels_read: "%{shortcut} Označit všechny kanály jako přečtené"
+    user:
+      allow_private_messages: "Povolit ostatním uživatelům posílat mi osobní zprávy a přímé zprávy v chatu"
+      muted_users_instructions: "Potlačit všechna oznámení, osobní zprávy a přímé zprávy z chatu od těchto uživatelů."
+      allowed_pm_users_instructions: "Od těchto uživatelů povolit pouze osobní zprávy nebo přímé zprávy chatu."
+      allow_private_messages_from_specific_users: "Povolit posílání osobních zpráv nebo přímých zpráv v chatu pouze konkrétním uživatelům."
+      ignored_users_instructions: "Potlačit všechny příspěvky, zprávy, oznámení, osobní zprávy a přímé zprávy chatu od těchto uživatelů."
     styleguide:
       sections:
         chat:

@@ -168,6 +168,25 @@
     .control-unit {
       margin-top: 0.5em;
       margin-bottom: 2em;
+
+      .translation-selector-container {
+        display: flex;
+        justify-content: space-between;
+        width: 79.7%;
+
+        @media screen and (max-width: 700px) {
+          width: 100%;
+        }
+
+        @media screen and (min-width: 700px) and (max-width: 768px) {
+          width: 73%;
+        }
+
+        .translation-selector {
+          width: auto;
+          margin-left: auto;
+        }
+      }
     }
     .control {
       margin-bottom: 10px;
@@ -1127,7 +1146,7 @@ table.permalinks {
 }
 
 .customize-form-template-view-modal {
-  .modal-footer {
+  .d-modal__footer {
     .btn:last-child {
       margin-left: auto;
     }

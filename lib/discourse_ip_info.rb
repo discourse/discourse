@@ -25,16 +25,18 @@ class DiscourseIpInfo
   end
 
   def self.mmdb_download(name)
-    if GlobalSetting.maxmind_license_key.blank?
-      STDERR.puts "MaxMind IP database updates require a license"
-      STDERR.puts "Please set DISCOURSE_MAXMIND_LICENSE_KEY to one you generated at https://www.maxmind.com"
-      return
-    end
-
-    FileUtils.mkdir_p(path)
-
     url =
-      "https://download.maxmind.com/app/geoip_download?license_key=#{GlobalSetting.maxmind_license_key}&edition_id=#{name}&suffix=tar.gz"
+      if GlobalSetting.maxmind_mirror_url.present?
+        File.join(GlobalSetting.maxmind_mirror_url, "#{name}.tar.gz").to_s
+      else
+        if GlobalSetting.maxmind_license_key.blank?
+          STDERR.puts "MaxMind IP database updates require a license"
+          STDERR.puts "Please set DISCOURSE_MAXMIND_LICENSE_KEY to one you generated at https://www.maxmind.com"
+          return
+        end
+
+        "https://download.maxmind.com/app/geoip_download?license_key=#{GlobalSetting.maxmind_license_key}&edition_id=#{name}&suffix=tar.gz"
+      end
 
     gz_file =
       FileHelper.download(
@@ -42,7 +44,7 @@ class DiscourseIpInfo
         max_file_size: 100.megabytes,
         tmp_file_name: "#{name}.gz",
         validate_uri: false,
-        follow_redirect: false,
+        follow_redirect: true,
       )
 
     filename = File.basename(gz_file.path)

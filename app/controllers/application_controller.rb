@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   after_action :add_noindex_header_to_non_canonical, if: :spa_boot_request?
   after_action :set_cross_origin_opener_policy_header, if: :spa_boot_request?
   after_action :clean_xml, if: :is_feed_response?
-  around_action :link_preload, if: -> { spa_boot_request? && GlobalSetting.preload_link_header }
+  after_action :add_early_hint_header, if: -> { spa_boot_request? }
 
   HONEYPOT_KEY ||= "HONEYPOT_KEY"
   CHALLENGE_KEY ||= "CHALLENGE_KEY"
@@ -339,7 +339,7 @@ class ApplicationController < ActionController::Base
         return render plain: message, status: status_code
       end
       with_resolved_locale do
-        error_page_opts[:layout] = (opts[:include_ember] && @preloaded) ? "application" : "no_ember"
+        error_page_opts[:layout] = (opts[:include_ember] && @preloaded) ? set_layout : "no_ember"
         render html: build_not_found_page(error_page_opts)
       end
     end
@@ -446,8 +446,6 @@ class ApplicationController < ActionController::Base
       current_user.sync_notification_channel_position
       preload_current_user_data
     end
-
-    preload_additional_json
   end
 
   def set_mobile_view
@@ -521,7 +519,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_homepage
-    current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
+    current_user&.user_option&.homepage || HomepageHelper.resolve(request, current_user)
   end
 
   def serialize_data(obj, serializer, opts = nil)
@@ -643,8 +641,8 @@ class ApplicationController < ActionController::Base
     store_preloaded("customHTML", custom_html_json)
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
-    store_preloaded("isReadOnly", @readonly_mode.to_s)
-    store_preloaded("isStaffWritesOnly", @staff_writes_only_mode.to_s)
+    store_preloaded("isReadOnly", get_or_check_readonly_mode.to_json)
+    store_preloaded("isStaffWritesOnly", get_or_check_staff_writes_only_mode.to_json)
     store_preloaded("activatedThemes", activated_themes_json)
   end
 
@@ -669,12 +667,26 @@ class ApplicationController < ActionController::Base
     store_preloaded("topicTrackingStates", MultiJson.dump(hash[:data]))
     store_preloaded("topicTrackingStateMeta", MultiJson.dump(hash[:meta]))
 
-    # This is used in the wizard so we can preload fonts using the FontMap JS API.
-    store_preloaded("fontMap", MultiJson.dump(load_font_map)) if current_user.admin?
-  end
+    if current_user.admin?
+      # This is used in the wizard so we can preload fonts using the FontMap JS API.
+      store_preloaded("fontMap", MultiJson.dump(load_font_map))
 
-  def preload_additional_json
-    # noop, should be defined by subcontrollers
+      # Used to show plugin-specific admin routes in the sidebar.
+      store_preloaded(
+        "visiblePlugins",
+        MultiJson.dump(
+          Discourse
+            .plugins_sorted_by_name(enabled_only: false)
+            .map do |plugin|
+              {
+                name: plugin.name.downcase,
+                admin_route: plugin.admin_route,
+                enabled: plugin.enabled?,
+              }
+            end,
+        ),
+      )
+    end
   end
 
   def custom_html_json
@@ -1063,9 +1075,15 @@ class ApplicationController < ActionController::Base
       end
   end
 
-  def run_second_factor!(action_class, action_data = nil)
-    action = action_class.new(guardian, request, action_data)
-    manager = SecondFactor::AuthManager.new(guardian, action)
+  def run_second_factor!(action_class, action_data: nil, target_user: current_user)
+    if current_user && target_user != current_user
+      # Anon can run 2fa against another target, but logged-in users should not.
+      # This should be validated at the `run_second_factor!` call site.
+      raise "running 2fa against another user is not allowed"
+    end
+
+    action = action_class.new(guardian, request, opts: action_data, target_user: target_user)
+    manager = SecondFactor::AuthManager.new(guardian, action, target_user: target_user)
     yield(manager) if block_given?
     result = manager.run!(request, params, secure_session)
 
@@ -1078,10 +1096,25 @@ class ApplicationController < ActionController::Base
     result
   end
 
-  def link_preload
-    @links_to_preload = []
-    yield
-    response.headers["Link"] = @links_to_preload.join(", ") if !@links_to_preload.empty?
+  # We don't actually send 103 Early Hint responses from Discourse. However, upstream proxies can be configured
+  # to cache a response header from the app and use that to send an Early Hint response to future clients.
+  # See 'early_hint_header_mode' and 'early_hint_header_name' Global Setting descriptions for more info.
+  def add_early_hint_header
+    return if GlobalSetting.early_hint_header_mode.nil?
+
+    links = []
+
+    if GlobalSetting.early_hint_header_mode == "preconnect"
+      [GlobalSetting.cdn_url, SiteSetting.s3_cdn_url].each do |url|
+        next if url.blank?
+        base_url = URI.join(url, "/").to_s.chomp("/")
+        links.push("<#{base_url}>; rel=preconnect")
+      end
+    elsif GlobalSetting.early_hint_header_mode == "preload"
+      links.push(*@asset_preload_links)
+    end
+
+    response.headers[GlobalSetting.early_hint_header_name] = links.join(", ") if links.present?
   end
 
   def spa_boot_request?

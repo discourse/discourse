@@ -1,19 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe Theme do
-  after { Theme.clear_cache! }
-
-  before { ThemeJavascriptCompiler.disable_terser! }
-  after { ThemeJavascriptCompiler.enable_terser! }
-
-  fab! :user do
-    Fabricate(:user)
-  end
+  fab!(:user)
+  fab!(:theme) { Fabricate(:theme, user: user) }
 
   let(:guardian) { Guardian.new(user) }
-
-  fab!(:theme) { Fabricate(:theme, user: user) }
   let(:child) { Fabricate(:theme, user: user, component: true) }
+
+  before { ThemeJavascriptCompiler.disable_terser! }
+
+  after do
+    Theme.clear_cache!
+    ThemeJavascriptCompiler.enable_terser!
+  end
 
   it "can properly clean up color schemes" do
     scheme = ColorScheme.create!(theme_id: theme.id, name: "test")
@@ -328,7 +327,7 @@ HTML
       expect(scss).to include("background-color:red")
       expect(scss).to include("font-size:25px")
 
-      setting = theme.settings.find { |s| s.name == :font_size }
+      setting = theme.settings[:font_size]
       setting.value = "30px"
       theme.save!
 
@@ -418,7 +417,7 @@ HTML
       expect(theme_field.javascript_cache.content).to include("alert(settings.name)")
       expect(theme_field.javascript_cache.content).to include("let a = () => {}")
 
-      setting = theme.settings.find { |s| s.name == :name }
+      setting = theme.settings[:name]
       setting.value = "bill"
       theme.save!
 
@@ -465,6 +464,47 @@ HTML
 
     expect(Theme.theme_ids).to eq([])
     expect(Theme.user_theme_ids).to eq([])
+  end
+
+  it "correctly caches enabled_theme_and_component_ids" do
+    Theme.destroy_all
+
+    theme2 = Fabricate(:theme)
+
+    expect(Theme.enabled_theme_and_component_ids).to eq([])
+
+    theme2.update!(user_selectable: true)
+
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id)
+
+    theme2.update!(user_selectable: false)
+    theme2.set_default!
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id)
+
+    child2 = Fabricate(:theme, component: true)
+    theme2.add_relative_theme!(:child, child2)
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id, child2.id)
+
+    child2.update!(enabled: false)
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id)
+
+    theme3 = Fabricate(:theme, user_selectable: true)
+    child2.update!(enabled: true)
+
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(
+      theme2.id,
+      child2.id,
+      theme3.id,
+    )
+
+    theme3.update!(enabled: false)
+
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id, child2.id)
+
+    theme2.destroy
+    theme3.destroy
+
+    expect(Theme.enabled_theme_and_component_ids).to eq([])
   end
 
   it "correctly caches user_themes template" do
@@ -1095,11 +1135,42 @@ HTML
       )
     end
 
+    it "updates the theme's javascript cache after running migration" do
+      theme.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
+      theme.save!
+
+      expect(theme.javascript_cache.content).to include('"list_setting":"aa,bb"')
+
+      settings_field.update!(value: <<~YAML)
+        integer_setting: 1
+        list_setting:
+          default: aa|bb
+          type: list
+      YAML
+
+      migration_field.update!(value: <<~JS)
+      export default function migrate(settings) {
+        settings.set("list_setting", "zz|aa");
+        return settings;
+      }
+      JS
+
+      theme.reload
+      theme.migrate_settings
+
+      setting_record = theme.theme_settings.where(name: "list_setting").first
+
+      expect(setting_record.data_type).to eq(ThemeSetting.types[:list])
+      expect(setting_record.value).to eq("zz|aa")
+      expect(theme.javascript_cache.content).to include('"list_setting":"zz|aa"')
+    end
+
     it "allows changing a setting's type" do
       theme.update_setting(:list_setting, "zz,aa")
       theme.save!
 
       setting_record = theme.theme_settings.where(name: "list_setting").first
+
       expect(setting_record.data_type).to eq(ThemeSetting.types[:string])
       expect(setting_record.value).to eq("zz,aa")
 
@@ -1109,12 +1180,14 @@ HTML
           default: aa|bb
           type: list
       YAML
+
       migration_field.update!(value: <<~JS)
         export default function migrate(settings) {
           settings.set("list_setting", "zz|aa");
           return settings;
         }
       JS
+
       theme.reload
 
       theme.migrate_settings
@@ -1399,6 +1472,68 @@ HTML
       expect(Theme.lookup_field(theme_1.id, :translations, :en)).to eq(en_field.value_baked)
       expect(Theme.lookup_field(theme_1.id, :translations, :es)).to eq(es_field.value_baked)
       expect(Theme.lookup_field(theme_1.id, :translations, :fr)).to eq(en_field.value_baked)
+    end
+  end
+
+  describe "#repository_url" do
+    subject(:repository_url) { theme.repository_url }
+
+    context "when theme is not a remote one" do
+      it "returns nothing" do
+        expect(repository_url).to be_blank
+      end
+    end
+
+    context "when theme is a remote one" do
+      let!(:remote_theme) { theme.create_remote_theme(remote_url: remote_url) }
+
+      context "when URL is a SSH one" do
+        let(:remote_url) { "git@github.com:discourse/graceful.git" }
+
+        it "normalizes it" do
+          expect(repository_url).to eq "github.com/discourse/graceful"
+        end
+      end
+
+      context "when URL is a HTTPS one" do
+        let(:remote_url) { "https://github.com/discourse/graceful.git" }
+
+        it "normalizes it" do
+          expect(repository_url).to eq "github.com/discourse/graceful"
+        end
+      end
+
+      context "when URL is a HTTP one" do
+        let(:remote_url) { "http://github.com/discourse/graceful" }
+
+        it "normalizes it" do
+          expect(repository_url).to eq "github.com/discourse/graceful"
+        end
+      end
+
+      context "when URL contains query params" do
+        let(:remote_url) { "http://github.com/discourse/graceful.git?param_id=1" }
+
+        it "keeps the query params" do
+          expect(repository_url).to eq "github.com/discourse/graceful?param_id=1"
+        end
+      end
+    end
+  end
+
+  describe "#user_selectable_count" do
+    subject(:count) { theme.user_selectable_count }
+
+    let!(:users) { Fabricate.times(5, :user) }
+    let!(:another_theme) { Fabricate(:theme) }
+
+    before do
+      users.take(3).each { _1.user_option.update!(theme_ids: [theme.id]) }
+      users.slice(3..4).each { _1.user_option.update!(theme_ids: [another_theme.id]) }
+    end
+
+    it "returns how many users are currently using the theme" do
+      expect(count).to eq 3
     end
   end
 end

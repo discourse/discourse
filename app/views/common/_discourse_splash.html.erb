@@ -246,6 +246,8 @@
     </style>
   </noscript>
 
-  <%= SplashScreenHelper.inline_splash_screen_script %>
+  <script nonce="<%= csp_nonce_placeholder %>">
+    <%= SplashScreenHelper.raw_js %>
+  </script>
 </section>
 <%- end %>

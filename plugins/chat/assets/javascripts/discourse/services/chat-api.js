@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 import Collection from "../lib/collection";
@@ -180,6 +180,8 @@ export default class ChatApi extends Service {
    * @param {number} [data.in_reply_to_id] - The ID of the replied-to message.
    * @param {number} [data.staged_id] - The staged ID of the message before it was persisted.
    * @param {number} [data.thread_id] - The ID of the thread where this message should be posted.
+   * @param {number} [data.topic_id] - The ID of the currently visible topic in drawer mode.
+   * @param {number} [data.post_ids] - The ID of the currently visible posts in drawer mode.
    * @param {Array.<number>} [data.upload_ids] - Array of upload ids linked to the message.
    * @returns {Promise}
    */
@@ -189,6 +191,18 @@ export default class ChatApi extends Service {
       type: "POST",
       data,
     });
+  }
+
+  /**
+   * Stop streaming of a message
+   * @param {number} channelId - ID of the channel.
+   * @param {number} messageId - ID of the message.
+   * @returns {Promise}
+   */
+  stopMessageStreaming(channelId, messageId) {
+    return this.#deleteRequest(
+      `/channels/${channelId}/messages/${messageId}/streaming`
+    );
   }
 
   /**
@@ -308,8 +322,14 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @returns {Promise}
    */
-  leaveChannel(channelId) {
-    return this.#deleteRequest(`/channels/${channelId}/memberships/me`);
+  async leaveChannel(channelId) {
+    await this.#deleteRequest(`/channels/${channelId}/memberships/me`);
+    const channel = await this.chatChannelsManager.find(channelId, {
+      fetchIfNotFound: false,
+    });
+    if (channel) {
+      this.chatChannelsManager.remove(channel);
+    }
   }
 
   /**
@@ -319,13 +339,6 @@ export default class ChatApi extends Service {
    */
   userThreads(handler) {
     return new Collection(`${this.#basePath}/me/threads`, handler);
-  }
-
-  /**
-   * Get the total number of threads for the current user.
-   */
-  userThreadCount() {
-    return this.#getRequest("/me/threads/count");
   }
 
   /**
@@ -480,21 +493,25 @@ export default class ChatApi extends Service {
    * @returns {Promise}
    */
   markChannelAsRead(channelId, messageId = null) {
-    return this.#putRequest(`/channels/${channelId}/read/${messageId}`);
+    return this.#putRequest(
+      `/channels/${channelId}/read?message_id=${messageId}`
+    );
   }
 
   /**
-   * Marks all messages and mentions in a thread as read. This is quite
-   * far-reaching for now, and is not granular since there is no membership/
-   * read state per-user for threads. In future this will be expanded to
-   * also pass message ID in the same way as markChannelAsRead
+   * Marks messages for a single user chat thread membership as read. If no
+   * message ID is provided, then the latest message for the channel is fetched
+   * on the server and used for the last read message.
    *
    * @param {number} channelId - The ID of the channel for the thread being marked as read.
    * @param {number} threadId - The ID of the thread being marked as read.
+   * @param {number} messageId - The ID of the message being marked as read.
    * @returns {Promise}
    */
-  markThreadAsRead(channelId, threadId) {
-    return this.#putRequest(`/channels/${channelId}/threads/${threadId}/read`);
+  markThreadAsRead(channelId, threadId, messageId) {
+    return this.#putRequest(
+      `/channels/${channelId}/threads/${threadId}/read?message_id=${messageId}`
+    );
   }
 
   /**

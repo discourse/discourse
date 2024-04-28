@@ -18,6 +18,8 @@ ro:
     chat:
       back_to_forum: "Forum"
       deleted_chat_username: șters
+      dates:
+        yesterday: "Ieri"
       create: "Creează"
       cancel: "Anulare"
       move_to_channel:
@@ -73,10 +75,11 @@ ro:
       exit: "înapoi"
       channel_status:
         closed: "Închis"
-        open: "Deschide sondajul"
+        open: "Deschis"
       browse:
         back: "Înapoi"
         filter_all: Toate
+        filter_open: Deschide
         filter_closed: Închis
       chat_message_separator:
         today: Astăzi
@@ -92,7 +95,7 @@ ro:
         back_to_channel: "Înapoi"
         tabs:
           members: Membri
-          settings: Opțiuni
+          settings: Setări
       new_message_modal:
         user_search_placeholder: "...adaugă mai mulți membri"
         create_group_placeholder: "Nume grup discuție (opțional)"
@@ -148,7 +151,7 @@ ro:
         saved: "Salvat"
         unfollow: "Părăsește"
         admin_title: "Administrator"
-        settings_title: "Opțiuni"
+        settings_title: "Setări"
         category_label: "Categorie"
         history_label: "Istoric"
         members_label: "Membri"
@@ -158,7 +161,7 @@ ro:
         back: "Înapoi"
         description: "Descriere"
         delete: "Șterge"
-        emoji: "Emoji"
+        emoji: "Emoticon"
         name: "Nume"
         save: "Salvare"
         edit: "Modifică"
@@ -187,7 +190,7 @@ ro:
           few: "%{count} răspunsuri"
           other: "%{count} răspunsuri"
         label: Fir
-        settings: "Opțiuni"
+        settings: "Setări"
         last_reply: "Ultimul răspuns"
         notifications:
           regular:

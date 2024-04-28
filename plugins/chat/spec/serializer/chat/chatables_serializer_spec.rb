@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::ChatablesSerializer do
   context "with status" do
     fab!(:user_1) { Fabricate(:user) }

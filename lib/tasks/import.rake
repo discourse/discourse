@@ -12,12 +12,12 @@ task "import:ensure_consistency" => :environment do
   insert_user_actions
   insert_user_options
   insert_user_profiles
-  insert_user_stats
+  insert_user_stats unless ENV["SKIP_USER_STATS"]
   insert_user_visits
   insert_draft_sequences
   insert_automatic_group_users
 
-  update_user_stats
+  update_user_stats unless ENV["SKIP_USER_STATS"]
   update_posts
   update_topics
   update_categories
@@ -772,8 +772,15 @@ def import_rebake_posts(posts)
   max_count = posts.count
   current_count = 0
 
-  posts.find_each(order: :desc) do |post|
-    post.rebake!
+  ids = posts.pluck(:id)
+  # work randomly so you can run this job from lots of consoles if needed
+  ids.shuffle!
+
+  ids.each do |id|
+    # may have been cooked in interim
+    post = posts.where(id: id).first
+    post.rebake! if post
+
     current_count += 1
     print "\r%7d / %7d" % [current_count, max_count]
   end

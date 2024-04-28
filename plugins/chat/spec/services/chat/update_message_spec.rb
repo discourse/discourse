@@ -23,7 +23,7 @@ RSpec.describe Chat::UpdateMessage do
     let(:guardian) { Guardian.new(user1) }
     fab!(:admin1) { Fabricate(:admin) }
     fab!(:admin2) { Fabricate(:admin) }
-    fab!(:user1) { Fabricate(:user) }
+    fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:user2) { Fabricate(:user) }
     fab!(:user3) { Fabricate(:user) }
     fab!(:user4) { Fabricate(:user) }
@@ -46,7 +46,6 @@ RSpec.describe Chat::UpdateMessage do
       [admin1, admin2, user1, user2, user3, user4].each do |user|
         Fabricate(:user_chat_channel_membership, chat_channel: public_chat_channel, user: user)
       end
-      Group.refresh_automatic_groups!
     end
 
     def create_chat_message(user, message, channel, upload_ids: nil)
@@ -144,6 +143,17 @@ RSpec.describe Chat::UpdateMessage do
 
       described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
       expect(chat_message.reload.cooked).to eq("<p>Change <strong>to</strong> this!</p>")
+    end
+
+    it "updates the excerpt" do
+      chat_message = create_chat_message(user1, "This is a message", public_chat_channel)
+
+      described_class.call(
+        guardian: guardian,
+        message_id: chat_message.id,
+        message: "Change to this!",
+      )
+      expect(chat_message.reload.excerpt).to eq("Change to this!")
     end
 
     it "publishes a DiscourseEvent for updated messages" do
@@ -310,7 +320,7 @@ RSpec.describe Chat::UpdateMessage do
         expect(mentioned_user["id"]).to eq(user2.id)
         expect(mentioned_user["username"]).to eq(user2.username)
         expect(mentioned_user["status"]).to be_present
-        expect(mentioned_user["status"].slice(:description, :emoji)).to eq(status)
+        expect(mentioned_user["status"].symbolize_keys.slice(:description, :emoji)).to eq(status)
       end
 
       it "doesn't add mentioned user's status to the message bus message when status is disabled" do
@@ -741,6 +751,9 @@ RSpec.describe Chat::UpdateMessage do
 
     describe "watched words" do
       fab!(:watched_word)
+      let!(:censored_word) do
+        Fabricate(:watched_word, word: "test", action: WatchedWord.actions[:censor])
+      end
 
       it "errors when a blocked word is present" do
         chat_message = create_chat_message(user1, "something", public_chat_channel)
@@ -755,6 +768,18 @@ RSpec.describe Chat::UpdateMessage do
         end.to raise_error(ActiveRecord::RecordInvalid).with_message(msg)
 
         expect(chat_message.reload.message).not_to eq("bad word - #{watched_word.word}")
+      end
+
+      it "hides censored word within the excerpt" do
+        chat_message = create_chat_message(user1, "something", public_chat_channel)
+
+        described_class.call(
+          guardian: guardian,
+          message_id: chat_message.id,
+          message: "bad word - #{censored_word.word}",
+        )
+
+        expect(chat_message.reload.excerpt).to eq("bad word - ■■■■")
       end
     end
 

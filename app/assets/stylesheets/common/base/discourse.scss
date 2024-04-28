@@ -10,24 +10,10 @@
   --d-input-bg-color--disabled: var(--primary-low);
   --d-input-text-color--disabled: var(--primary);
   --d-input-border--disabled: 1px solid var(--primary-low);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom);
 }
 
 // Animation Keyframes
-@keyframes ping {
-  0% {
-    transform: scale(0.6);
-    box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0.7);
-  }
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(var(--success-rgb), 0);
-  }
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0);
-  }
-}
-
 @keyframes rotate-forever {
   0% {
     transform: rotate(0deg);
@@ -138,6 +124,11 @@ img.avatar {
 //                                                      '15
 span.relative-date {
   white-space: nowrap;
+}
+
+legend {
+  color: var(--primary-high);
+  font-weight: bold;
 }
 
 label {
@@ -281,11 +272,6 @@ textarea {
   color: var(--d-input-text-color);
   caret-color: currentColor;
 
-  &[class*="span"] {
-    float: none;
-    margin-left: 0;
-  }
-
   &[disabled],
   &[readonly] {
     cursor: not-allowed;
@@ -345,10 +331,11 @@ textarea {
 }
 
 .wrap {
+  --d-wrap-padding-h: 10px;
   max-width: var(--d-max-width);
   margin-right: auto;
   margin-left: auto;
-  padding: 0 10px;
+  padding: 0 var(--d-wrap-padding-h);
   .contents {
     position: relative;
   }
@@ -397,7 +384,6 @@ textarea {
   position: absolute;
   left: 0;
   bottom: -1px;
-  z-index: 1002;
 }
 
 .do-not-disturb-background {
@@ -405,16 +391,15 @@ textarea {
   align-items: center;
   justify-content: center;
   width: 1.25em;
-  background-color: var(--tertiary-med-or-tertiary);
+  background-color: var(--secondary);
   border-radius: 50%;
   height: 1.25em;
 
-  .d-icon.d-icon-moon {
-    display: block;
-    color: var(--tertiary-or-white) !important;
-    line-height: unset;
-    font-size: 0.875em;
-    margin: 0 !important;
+  .d-icon.d-icon-discourse-dnd {
+    color: var(--header_primary-medium) !important;
+    font-size: 1em;
+    height: 1em;
+    width: 1em;
   }
 }
 
@@ -593,8 +578,12 @@ textarea {
     line-height: var(--line-height-large);
   }
 
+  .control-group,
   .controls {
     margin-left: 0;
+    label {
+      font-weight: normal;
+    }
   }
 }
 
@@ -604,7 +593,10 @@ textarea {
   box-sizing: border-box;
   width: 100%;
   display: grid;
-  grid-template-areas: "sidebar content";
+  grid-template-areas:
+    "sidebar content"
+    "sidebar below-content";
+  grid-template-rows: 1fr auto;
   grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
   gap: 0;
 
@@ -781,6 +773,7 @@ textarea {
   }
 }
 
+a#user-nav-skip-link,
 a#skip-link {
   padding: 0.25em 0.5em;
   position: fixed;

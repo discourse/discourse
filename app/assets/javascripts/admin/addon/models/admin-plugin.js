@@ -1,4 +1,4 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { capitalize } from "@ember/string";
 import I18n from "discourse-i18n";
 
@@ -52,10 +52,11 @@ export default class AdminPlugin {
     return "plugins";
   }
 
+  @cached
   get nameTitleized() {
     // The category name is better in a lot of cases, as it's a human-inputted
     // translation, and we can handle things like SAML instead of showing them
-    // as Saml from discourse-saml. We can fall back to the programattic version
+    // as Saml from discourse-saml. We can fall back to the programmatic version
     // though if needed.
     let name;
     if (this.translatedCategoryName) {
@@ -76,6 +77,11 @@ export default class AdminPlugin {
     }
 
     return name;
+  }
+
+  @cached
+  get nameTitleizedLower() {
+    return this.nameTitleized.toLowerCase();
   }
 
   get author() {

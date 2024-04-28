@@ -110,6 +110,8 @@ Discourse::Application.routes.draw do
       get "" => "admin#index"
 
       get "plugins" => "plugins#index"
+      get "plugins/:plugin_id" => "plugins#show"
+      get "plugins/:plugin_id/settings" => "plugins#show"
 
       resources :site_settings, only: %i[index update], constraints: AdminConstraint.new do
         collection { get "category/:id" => "site_settings#index" }
@@ -219,6 +221,7 @@ Discourse::Application.routes.draw do
 
       get "customize" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/themes" => "themes#index", :constraints => AdminConstraint.new
+      get "customize/components" => "themes#index", :constraints => AdminConstraint.new
       get "customize/theme-components" => "themes#index", :constraints => AdminConstraint.new
       get "customize/colors" => "color_schemes#index", :constraints => AdminConstraint.new
       get "customize/colors/:id" => "color_schemes#index", :constraints => AdminConstraint.new
@@ -231,8 +234,11 @@ Discourse::Application.routes.draw do
                 constraints: AdminConstraint.new do
         member do
           get "preview" => "themes#preview"
+          get "translations/:locale" => "themes#get_translations"
           put "setting" => "themes#update_single_setting"
+          get "objects_setting_metadata/:setting_name" => "themes#objects_setting_metadata"
         end
+
         collection do
           post "import" => "themes#import"
           post "upload_asset" => "themes#upload_asset"
@@ -252,7 +258,10 @@ Discourse::Application.routes.draw do
 
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
+        get "components/:id" => "themes#index"
         get "themes/:id/export" => "themes#export"
+        get "themes/:id/schema/:setting_name" => "themes#schema"
+        get "components/:id/schema/:setting_name" => "themes#schema"
 
         # They have periods in their URLs often:
         get "site_texts" => "site_texts#index"
@@ -321,6 +330,7 @@ Discourse::Application.routes.draw do
       get "dashboard/security" => "dashboard#security"
       get "dashboard/reports" => "dashboard#reports"
       get "dashboard/whats-new" => "dashboard#new_features"
+      get "/whats-new" => "dashboard#new_features"
 
       resources :dashboard, only: [:index] do
         collection { get "problems" }
@@ -538,10 +548,10 @@ Discourse::Application.routes.draw do
       )
 
       get "#{root_path}/confirm-old-email/:token" => "users_email#show_confirm_old_email"
-      put "#{root_path}/confirm-old-email" => "users_email#confirm_old_email"
+      put "#{root_path}/confirm-old-email/:token" => "users_email#confirm_old_email"
 
       get "#{root_path}/confirm-new-email/:token" => "users_email#show_confirm_new_email"
-      put "#{root_path}/confirm-new-email" => "users_email#confirm_new_email"
+      put "#{root_path}/confirm-new-email/:token" => "users_email#confirm_new_email"
 
       get(
         {
@@ -657,10 +667,6 @@ Discourse::Application.routes.draw do
             username: RouteFormat.username,
           }
       get "#{root_path}/:username/preferences/tracking" => "users#preferences",
-          :constraints => {
-            username: RouteFormat.username,
-          }
-      get "#{root_path}/:username/preferences/categories" => "users#preferences",
           :constraints => {
             username: RouteFormat.username,
           }
@@ -1126,6 +1132,7 @@ Discourse::Application.routes.draw do
         # creating an alias cause the api was extended to mark a single notification
         # this allows us to cleanly target it
         put "read" => "notifications#mark_read"
+        get "totals" => "notifications#totals"
       end
     end
 
@@ -1207,6 +1214,7 @@ Discourse::Application.routes.draw do
     end
 
     get "hashtags" => "hashtags#lookup"
+    get "hashtags/by-ids" => "hashtags#by_ids"
     get "hashtags/search" => "hashtags#search"
 
     TopTopic.periods.each do |period|
@@ -1236,7 +1244,11 @@ Discourse::Application.routes.draw do
     put "t/:id/convert-topic/:type" => "topics#convert_topic"
     put "t/:id/publish" => "topics#publish"
     put "t/:id/shared-draft" => "topics#update_shared_draft"
-    put "t/:id/reset-bump-date" => "topics#reset_bump_date"
+    put "t/:id/reset-bump-date/(:post_id)" => "topics#reset_bump_date",
+        :constraints => {
+          id: /\d+/,
+          post_id: /\d+/,
+        }
     put "topics/bulk"
     put "topics/reset-new" => "topics#reset_new"
     put "topics/pm-reset-new" => "topics#private_message_reset_new"
@@ -1573,6 +1585,8 @@ Discourse::Application.routes.draw do
          constraints: HomePageConstraint.new("finish_installation"),
          as: "installation_redirect"
 
+    root to: "custom#index", constraints: HomePageConstraint.new("custom"), as: "custom_index"
+
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"
     post "/user-api-key/revoke" => "user_api_keys#revoke"
@@ -1614,6 +1628,8 @@ Discourse::Application.routes.draw do
 
     resources :sidebar_sections, only: %i[index create update destroy]
     put "/sidebar_sections/reset/:id" => "sidebar_sections#reset"
+
+    post "/pageview" => "pageview#index"
 
     get "*url", to: "permalinks#show", constraints: PermalinkConstraint.new
 

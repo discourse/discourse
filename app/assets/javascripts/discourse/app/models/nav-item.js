@@ -1,6 +1,8 @@
+import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { reads } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { emojiUnescape } from "discourse/lib/text";
 import {
   hasTrackedFilter,
@@ -16,139 +18,12 @@ import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-const NavItem = EmberObject.extend({
-  topicTrackingState: service(),
+export default class NavItem extends EmberObject {
+  static extraArgsCallbacks = [];
+  static customNavItemHrefs = [];
+  static extraNavItemDescriptors = [];
 
-  @discourseComputed("name")
-  title: {
-    get(name) {
-      if (this._title) {
-        return this._title;
-      }
-
-      return I18n.t("filters." + name.replace("/", ".") + ".help", {});
-    },
-
-    set(value) {
-      return this.set("_title", value);
-    },
-  },
-
-  @discourseComputed("name", "count")
-  displayName: {
-    get(name, count) {
-      if (this._displayName) {
-        return this._displayName;
-      }
-
-      count = count || 0;
-
-      if (
-        name === "latest" &&
-        (!Site.currentProp("mobileView") || this.tagId !== undefined)
-      ) {
-        count = 0;
-      }
-
-      let extra = { count };
-      const titleKey = count === 0 ? ".title" : ".title_with_count";
-
-      return emojiUnescape(
-        I18n.t(`filters.${name.replace("/", ".") + titleKey}`, extra)
-      );
-    },
-
-    set(value) {
-      return this.set("_displayName", value);
-    },
-  },
-
-  @discourseComputed("filterType", "category", "noSubcategories", "tagId")
-  href(filterType, category, noSubcategories, tagId) {
-    let customHref = null;
-
-    NavItem.customNavItemHrefs.forEach(function (cb) {
-      customHref = cb.call(this, this);
-      if (customHref) {
-        return false;
-      }
-    }, this);
-
-    if (customHref) {
-      return getURL(customHref);
-    }
-
-    const context = { category, noSubcategories, tagId };
-    return NavItem.pathFor(filterType, context);
-  },
-
-  filterType: reads("name"),
-
-  @discourseComputed("name", "category", "noSubcategories")
-  filterMode(name, category, noSubcategories) {
-    let mode = "";
-    if (category) {
-      mode += "c/";
-      mode += Category.slugFor(category);
-      if (noSubcategories) {
-        mode += "/none";
-      }
-      mode += "/l/";
-    }
-    return mode + name.replace(" ", "-");
-  },
-
-  @discourseComputed(
-    "name",
-    "category",
-    "tagId",
-    "noSubcategories",
-    "currentRouteQueryParams",
-    "topicTrackingState.messageCount"
-  )
-  count(name, category, tagId, noSubcategories, currentRouteQueryParams) {
-    const state = this.topicTrackingState;
-
-    if (state) {
-      return state.lookupCount({
-        type: name,
-        category,
-        tagId,
-        noSubcategories,
-        customFilterFn: hasTrackedFilter(currentRouteQueryParams)
-          ? isTrackedTopic
-          : undefined,
-      });
-    }
-  },
-});
-
-const ExtraNavItem = NavItem.extend({
-  href: discourseComputed("href", {
-    get() {
-      if (this._href) {
-        return this._href;
-      }
-
-      return this.href;
-    },
-
-    set(key, value) {
-      return (this._href = value);
-    },
-  }),
-
-  count: 0,
-
-  customFilter: null,
-});
-
-NavItem.reopenClass({
-  extraArgsCallbacks: [],
-  customNavItemHrefs: [],
-  extraNavItemDescriptors: [],
-
-  pathFor(filterType, context) {
+  static pathFor(filterType, context) {
     let path = getURL("");
     let includesCategoryContext = false;
     let includesTagContext = false;
@@ -191,11 +66,11 @@ NavItem.reopenClass({
     // period has its own selector just below
 
     return path;
-  },
+  }
 
   // Create a nav item given a filterType. It returns null if there is not
   // valid nav item. The name is a historical artifact.
-  fromText(filterType, opts) {
+  static fromText(filterType, opts) {
     const anonymous = !User.current();
 
     opts = opts || {};
@@ -233,9 +108,9 @@ NavItem.reopenClass({
 
     let store = getOwnerWithFallback(this).lookup("service:store");
     return store.createRecord("nav-item", args);
-  },
+  }
 
-  buildList(category, args) {
+  static buildList(category, args) {
     args = args || {};
 
     if (category) {
@@ -342,10 +217,119 @@ NavItem.reopenClass({
       });
     }
     return items;
-  },
-});
+  }
 
-export default NavItem;
+  @service topicTrackingState;
+
+  @tracked name;
+  @reads("name") filterType;
+
+  @tracked _title;
+  @tracked _displayName;
+
+  @dependentKeyCompat
+  get title() {
+    if (this._title) {
+      return this._title;
+    }
+
+    return I18n.t("filters." + this.name.replace("/", ".") + ".help", {});
+  }
+
+  set title(value) {
+    this._title = value;
+  }
+
+  @dependentKeyCompat
+  get displayName() {
+    if (this._displayName) {
+      return this._displayName;
+    }
+
+    let count = this.count || 0;
+
+    if (
+      this.name === "latest" &&
+      (Site.currentProp("desktopView") || this.tagId !== undefined)
+    ) {
+      count = 0;
+    }
+
+    let extra = { count };
+    const titleKey = count === 0 ? ".title" : ".title_with_count";
+
+    return emojiUnescape(
+      I18n.t(`filters.${this.name.replace("/", ".") + titleKey}`, extra)
+    );
+  }
+
+  set displayName(value) {
+    this._displayName = value;
+  }
+
+  @discourseComputed("filterType", "category", "noSubcategories", "tagId")
+  href(filterType, category, noSubcategories, tagId) {
+    let customHref = null;
+
+    NavItem.customNavItemHrefs.forEach(function (cb) {
+      customHref = cb.call(this, this);
+      if (customHref) {
+        return false;
+      }
+    }, this);
+
+    if (customHref) {
+      return getURL(customHref);
+    }
+
+    const context = { category, noSubcategories, tagId };
+    return NavItem.pathFor(filterType, context);
+  }
+
+  @discourseComputed("name", "category", "noSubcategories")
+  filterMode(name, category, noSubcategories) {
+    let mode = "";
+    if (category) {
+      mode += "c/";
+      mode += Category.slugFor(category);
+      if (noSubcategories) {
+        mode += "/none";
+      }
+      mode += "/l/";
+    }
+    return mode + name.replace(" ", "-");
+  }
+
+  @discourseComputed(
+    "name",
+    "category",
+    "tagId",
+    "noSubcategories",
+    "currentRouteQueryParams",
+    "topicTrackingState.messageCount"
+  )
+  count(name, category, tagId, noSubcategories, currentRouteQueryParams) {
+    const state = this.topicTrackingState;
+
+    if (state) {
+      return state.lookupCount({
+        type: name,
+        category,
+        tagId,
+        noSubcategories,
+        customFilterFn: hasTrackedFilter(currentRouteQueryParams)
+          ? isTrackedTopic
+          : undefined,
+      });
+    }
+  }
+}
+
+export class ExtraNavItem extends NavItem {
+  @tracked href;
+  @tracked count = 0;
+  customFilter = null;
+}
 
 export function extraNavItemProperties(cb) {
   NavItem.extraArgsCallbacks.push(cb);

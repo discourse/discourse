@@ -11,10 +11,19 @@
       {{#each resultType.results as |result|}}
         {{! template-lint-disable no-pointer-down-event-binding }}
         {{! template-lint-disable no-invalid-interactive }}
-        <li class="item" {{on "keydown" this.onKeydown}}>
+        <li
+          class="item"
+          {{on
+            "keydown"
+            (fn this.onKeydown (hash resultType=resultType result=result))
+          }}
+        >
           <a
             href={{or result.url result.path}}
-            {{on "click" this.onClick}}
+            {{on
+              "click"
+              (fn this.onClick (hash resultType=resultType result=result))
+            }}
             class="search-link"
           >
             <resultType.component

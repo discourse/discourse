@@ -1,9 +1,54 @@
 // base styles for every modal popup used in Discourse
 
+// prevents bg scrolling when modal is open
+html:has(.d-modal) {
+  overflow: hidden;
+}
+
+html.keyboard-visible.mobile-view {
+  .d-modal {
+    max-height: calc(var(--composer-vh, var(--1dvh)) * 100);
+    height: calc(var(--composer-vh, var(--1dvh)) * 100);
+    bottom: 0;
+  }
+
+  .d-modal__container {
+    max-height: calc(var(--composer-vh, var(--1dvh)) * 100);
+    height: calc(var(--composer-vh, var(--1dvh)) * 100);
+  }
+}
+
+html:not(.keyboard-visible.mobile-view) {
+  .d-modal__container {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
 .d-modal {
+  align-items: flex-end;
+
   &__container {
+    // this is a hack to prevent issues on safari with transforms
+    position: fixed;
+
     width: 100%;
     max-width: 100%;
+    max-height: calc(var(--composer-vh, var(--1dvh)) * 85);
+    will-change: auto;
+  }
+
+  &__header {
+    padding: 0.5rem;
+  }
+
+  .ios-device & {
+    &__footer {
+      margin-top: auto;
+    }
+  }
+
+  &__title-text {
+    font-size: var(--font-up-1-rem);
   }
 
   // fixes modal placement on Android when keyboard is visible
@@ -12,6 +57,8 @@
 
     .d-modal__container {
       max-height: 100%;
+      min-height: 100%;
+      height: 100%;
     }
   }
 }
@@ -51,61 +98,14 @@
   }
 }
 
-// we need a little extra room on mobile for the
-// stuff inside the footer to fit
-.modal-footer {
-  padding: 10px;
-}
-
-.modal-header {
-  padding: 10px;
-  h3 {
-    font-size: var(--font-up-2);
-  }
-}
-
 .close {
   font-size: var(--font-up-4);
 }
 
-#choosing-topic {
-  p {
-    margin-top: 0;
-    padding-bottom: 0;
-  }
-
-  input[type="radio"] {
-    margin-right: 10px;
-  }
-
-  .category-chooser {
-    margin-bottom: 9px;
-  }
-
-  button {
-    margin-top: 10px;
-    display: block;
-  }
-
-  form {
-    margin-top: 20px;
-    input:not(.filter-input)[type="text"] {
-      box-sizing: border-box;
-      width: 100%;
-    }
-  }
-}
-
 @media only screen and (max-device-width: 568px) {
-  .modal .flag-modal-body .flag-message {
+  .flag-modal-body .flag-message {
     height: 3em;
   }
-}
-
-/* fixes for the new account confirm dialog on mobile */
-
-.modal-inner-container {
-  margin-bottom: 20px;
 }
 
 /* fix for tall modals */
@@ -128,25 +128,6 @@
 
     .modal-inner-container {
       margin: auto;
-    }
-  }
-}
-
-.modal .modal-body.reorder-categories {
-  max-height: calc(100vh - 220px);
-}
-
-.discard-draft-modal {
-  .modal-inner-container {
-    width: 250px;
-  }
-  .modal-footer {
-    justify-content: center;
-    flex-flow: column nowrap;
-    align-items: stretch;
-
-    .btn {
-      margin-right: 0;
     }
   }
 }

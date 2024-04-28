@@ -38,7 +38,7 @@ export default Component.extend(UtilsMixin, {
   didInsertElement() {
     this._super(...arguments);
 
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       this.element.addEventListener("mouseenter", this.handleMouseEnter);
       this.element.addEventListener("focus", this.handleMouseEnter);
     }
@@ -47,7 +47,7 @@ export default Component.extend(UtilsMixin, {
   willDestroyElement() {
     this._super(...arguments);
 
-    if (!this.site.mobileView) {
+    if (this.site.desktopView) {
       this.element.removeEventListener("mouseenter", this.handleMouseEnter);
       this.element.removeEventListener("focus", this.handleMouseEnter);
     }

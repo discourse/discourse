@@ -22,7 +22,7 @@
           <ComboBox
             @value={{this.selectedBadgeId}}
             @content={{this.availableBadges}}
-            @onChange={{action (mut this.selectedBadgeId)}}
+            @onChange={{fn (mut this.selectedBadgeId)}}
             @options={{hash filterable=true}}
           />
         </div>

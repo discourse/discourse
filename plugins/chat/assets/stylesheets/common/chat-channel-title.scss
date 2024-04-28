@@ -1,7 +1,8 @@
 .chat-channel-title {
+  @include ellipsis;
   display: flex;
   align-items: center;
-  @include ellipsis;
+  gap: 0.5rem;
 
   .chat-channel-preview-card & {
     max-width: 100%;
@@ -18,21 +19,6 @@
   &__user-status-message {
     flex-shrink: 3;
     overflow: hidden;
-  }
-
-  .chat-name,
-  .category-chat-name,
-  &__usernames,
-  .dm-usernames {
-    @include ellipsis;
-    font-size: var(--font-0);
-    margin: 0;
-
-    .emoji {
-      height: 1.2em;
-      vertical-align: text-bottom;
-      width: 1.2em;
-    }
   }
 
   .d-icon-lock {
@@ -82,14 +68,6 @@
   position: relative;
 }
 
-.chat-channel-title .chat-user-avatar {
-  font-size: var(--font-up-1);
-
-  + .chat-channel-title__usernames {
-    margin-left: 0.5rem;
-  }
-}
-
 .chat-channel-title__restricted-category-icon {
   background-color: var(--secondary);
   position: absolute;
@@ -108,21 +86,4 @@
     vertical-align: text-bottom;
     width: 1.2em;
   }
-}
-
-.chat-channel-title__name {
-  @include ellipsis;
-  font-size: var(--font-0);
-  color: var(--primary);
-  margin-left: 0.5rem;
-}
-
-.channel-info {
-  .chat-channel-title__name {
-    max-width: 100%;
-  }
-}
-
-.has-unread .chat-channel-title__name {
-  font-weight: bold;
 }

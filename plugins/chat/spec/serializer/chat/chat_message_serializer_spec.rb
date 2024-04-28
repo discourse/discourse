@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::MessageSerializer do
   subject(:serializer) { described_class.new(message_1, scope: guardian, root: nil) }
 
   fab!(:chat_channel) { Fabricate(:category_channel) }
   fab!(:message_poster) { Fabricate(:user) }
   fab!(:message_1) { Fabricate(:chat_message, user: message_poster, chat_channel: chat_channel) }
-  fab!(:guardian_user) { Fabricate(:user) }
+  fab!(:guardian_user) { Fabricate(:user, refresh_auto_groups: true) }
 
   let(:guardian) { Guardian.new(guardian_user) }
 
@@ -46,7 +44,7 @@ describe Chat::MessageSerializer do
   describe "#excerpt" do
     it "censors words" do
       watched_word = Fabricate(:watched_word, action: WatchedWord.actions[:censor])
-      message = Fabricate(:chat_message, message: "ok #{watched_word.word}")
+      message = Fabricate(:chat_message, use_service: true, message: "ok #{watched_word.word}")
       serializer = described_class.new(message, scope: guardian, root: nil)
 
       expect(serializer.as_json[:excerpt]).to eq("ok ■■■■■")
@@ -60,6 +58,21 @@ describe Chat::MessageSerializer do
         message_1.reload
 
         expect(serializer.as_json[:user][:username]).to eq(I18n.t("chat.deleted_chat_username"))
+      end
+    end
+
+    context "with user status" do
+      it "adds status to user if status is enabled" do
+        message_1.user.set_status!("test", "heart")
+        SiteSetting.enable_user_status = true
+        json = serializer.as_json
+        expect(json[:user][:status]).to be_present
+      end
+
+      it "does not add status to user if status is disabled" do
+        SiteSetting.enable_user_status = false
+        json = serializer.as_json
+        expect(json[:user][:status]).to be_nil
       end
     end
   end
@@ -83,8 +96,6 @@ describe Chat::MessageSerializer do
   end
 
   describe "#available_flags" do
-    before { Group.refresh_automatic_groups! }
-
     context "when flagging on a regular channel" do
       let(:options) { { scope: guardian, root: nil, chat_channel: message_1.chat_channel } }
 
@@ -167,7 +178,6 @@ describe Chat::MessageSerializer do
 
       it "doesn't include notify_user if they are not in a PM allowed group" do
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
-        Group.refresh_automatic_groups!
 
         serialized = described_class.new(message_1, options).as_json
 
@@ -175,9 +185,8 @@ describe Chat::MessageSerializer do
       end
 
       it "returns an empty list if the user needs a higher TL to flag" do
-        guardian.user.update!(trust_level: TrustLevel[2])
+        guardian.user.change_trust_level!(TrustLevel[2])
         SiteSetting.chat_message_flag_allowed_groups = Group::AUTO_GROUPS[:trust_level_3]
-        Group.refresh_automatic_groups!
 
         serialized = described_class.new(message_1, options).as_json
 
@@ -236,6 +245,41 @@ describe Chat::MessageSerializer do
 
       expect { serializer.as_json }.not_to raise_error
       expect(serializer.as_json[:mentioned_users]).to be_empty
+    end
+
+    context "with user status" do
+      fab!(:user_status) { Fabricate(:user_status) }
+      fab!(:mentioned_user) { Fabricate(:user, user_status: user_status) }
+      fab!(:message) do
+        Fabricate(
+          :chat_message,
+          message:
+            "there should be a mention here, but since we're fabricating objects it doesn't matter",
+        )
+      end
+      fab!(:chat_mention) do
+        Fabricate(:user_chat_mention, chat_message: message, user: mentioned_user)
+      end
+
+      it "adds status to mentioned users when status is enabled" do
+        SiteSetting.enable_user_status = true
+
+        serializer = described_class.new(message, scope: guardian, root: nil)
+        json = serializer.as_json
+
+        expect(json[:mentioned_users][0][:status]).not_to be_nil
+        expect(json[:mentioned_users][0][:status][:description]).to eq(user_status.description)
+        expect(json[:mentioned_users][0][:status][:emoji]).to eq(user_status.emoji)
+      end
+
+      it "does not add status to mentioned users when status is enabled" do
+        SiteSetting.enable_user_status = false
+
+        serializer = described_class.new(message, scope: guardian, root: nil)
+        json = serializer.as_json
+
+        expect(json[:mentioned_users][0][:status]).to be_nil
+      end
     end
   end
 

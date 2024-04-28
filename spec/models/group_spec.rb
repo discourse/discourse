@@ -57,6 +57,14 @@ RSpec.describe Group do
     end
   end
 
+  describe ".human_users" do
+    before { group.users << user << Discourse.system_user }
+
+    it "returns only human users" do
+      expect(group.human_users).to contain_exactly(user)
+    end
+  end
+
   describe "#posts_for" do
     it "returns the post in the group" do
       p = Fabricate(:post)
@@ -195,18 +203,6 @@ RSpec.describe Group do
         expect(group.valid?).to eq(true)
       end
     end
-  end
-
-  def real_admins
-    Group[:admins].user_ids.reject { |id| id < 0 }
-  end
-
-  def real_moderators
-    Group[:moderators].user_ids.reject { |id| id < 0 }
-  end
-
-  def real_staff
-    Group[:staff].user_ids.reject { |id| id < 0 }
   end
 
   describe "#primary_group=" do
@@ -424,33 +420,33 @@ RSpec.describe Group do
 
     Group.refresh_automatic_groups!(:admins, :staff, :moderators)
 
-    expect(real_admins).to eq [admin.id]
-    expect(real_moderators).to eq [moderator.id]
-    expect(real_staff.sort).to eq [moderator.id, admin.id].sort
+    expect(Group[:admins].human_users).to contain_exactly(admin)
+    expect(Group[:moderators].human_users).to contain_exactly(moderator)
+    expect(Group[:staff].human_users).to contain_exactly(moderator, admin)
 
     admin.admin = false
     admin.save
 
     Group.refresh_automatic_group!(:admins)
-    expect(real_admins).to be_empty
+    expect(Group[:admins].human_users).to be_empty
 
     moderator.revoke_moderation!
 
     admin.grant_admin!
-    expect(real_admins).to eq [admin.id]
-    expect(real_staff).to eq [admin.id]
+    expect(Group[:admins].human_users).to contain_exactly(admin)
+    expect(Group[:staff].human_users).to contain_exactly(admin)
 
     admin.revoke_admin!
-    expect(real_admins).to be_empty
-    expect(real_staff).to be_empty
+    expect(Group[:admins].human_users).to be_empty
+    expect(Group[:staff].human_users).to be_empty
 
     admin.grant_moderation!
-    expect(real_moderators).to eq [admin.id]
-    expect(real_staff).to eq [admin.id]
+    expect(Group[:moderators].human_users).to contain_exactly(admin)
+    expect(Group[:staff].human_users).to contain_exactly(admin)
 
     admin.revoke_moderation!
-    expect(real_admins).to be_empty
-    expect(real_staff).to eq []
+    expect(Group[:admins].human_users).to be_empty
+    expect(Group[:staff].human_users).to be_empty
 
     # we need some work to set min username to 6
 
@@ -495,24 +491,23 @@ RSpec.describe Group do
     Group.delete_all
     Group.refresh_automatic_groups!
 
-    groups = Group.includes(:users).to_a
-    expect(groups.count).to eq Group::AUTO_GROUPS.count
+    expect(Group.count).to eq Group::AUTO_GROUPS.count
 
-    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:admins] }
-    expect(g.users.count).to eq g.user_count
-    expect(g.users.pluck(:id)).to contain_exactly(admin.id)
+    g = Group[:admins]
+    expect(g.human_users.count).to eq(g.user_count)
+    expect(g.human_users).to contain_exactly(admin)
 
-    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:staff] }
-    expect(g.users.count).to eq g.user_count
-    expect(g.users.pluck(:id)).to contain_exactly(admin.id)
+    g = Group[:admins]
+    expect(g.human_users.count).to eq(g.user_count)
+    expect(g.human_users).to contain_exactly(admin)
 
-    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:trust_level_1] }
-    expect(g.users.count).to eq g.user_count
-    expect(g.users.pluck(:id)).to contain_exactly(admin.id, user.id)
+    g = Group[:trust_level_1]
+    expect(g.human_users.count).to eq(g.user_count)
+    expect(g.human_users).to contain_exactly(admin, user)
 
-    g = groups.find { |grp| grp.id == Group::AUTO_GROUPS[:trust_level_2] }
-    expect(g.users.count).to eq g.user_count
-    expect(g.users.pluck(:id)).to contain_exactly(user.id)
+    g = Group[:trust_level_2]
+    expect(g.human_users.count).to eq(g.user_count)
+    expect(g.human_users).to contain_exactly(admin, user)
   end
 
   it "can set members via usernames helper" do
@@ -1046,7 +1041,6 @@ RSpec.describe Group do
 
     it "should return the right groups" do
       Group.delete_all
-      Group.refresh_automatic_groups!
 
       group_name =
         Fabricate(:group, name: "tEsT_more_things", full_name: "Abc something awesome").name

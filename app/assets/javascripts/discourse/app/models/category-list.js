@@ -2,44 +2,13 @@ import ArrayProxy from "@ember/array/proxy";
 import { ajax } from "discourse/lib/ajax";
 import { number } from "discourse/lib/formatter";
 import PreloadStore from "discourse/lib/preload-store";
-import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-const CategoryList = ArrayProxy.extend({
-  init() {
-    this.set("content", this.categories || []);
-    this._super(...arguments);
-    this.set("page", 1);
-    this.set("fetchedLastPage", false);
-  },
-
-  @bind
-  async loadMore() {
-    if (this.isLoading || this.fetchedLastPage) {
-      return;
-    }
-
-    this.set("isLoading", true);
-
-    const data = { page: this.page + 1 };
-    const result = await ajax("/categories.json", { data });
-
-    this.set("page", data.page);
-    if (result.category_list.categories.length === 0) {
-      this.set("fetchedLastPage", true);
-    }
-    this.set("isLoading", false);
-
-    const newCategoryList = CategoryList.categoriesFrom(this.store, result);
-    newCategoryList.forEach((c) => this.categories.pushObject(c));
-  },
-});
-
-CategoryList.reopenClass({
-  categoriesFrom(store, result, parentCategory = null) {
+export default class CategoryList extends ArrayProxy {
+  static categoriesFrom(store, result, parentCategory = null) {
     // Find the period that is most relevant
     const statPeriod =
       ["week", "month"].find(
@@ -67,28 +36,9 @@ CategoryList.reopenClass({
       }
     });
     return categories;
-  },
+  }
 
-  _buildCategoryResult(c, statPeriod) {
-    if (c.parent_category_id) {
-      c.parentCategory = Category.findById(c.parent_category_id);
-    }
-
-    if (c.subcategory_list) {
-      c.subcategories = c.subcategory_list.map((subCategory) =>
-        this._buildCategoryResult(subCategory, statPeriod)
-      );
-    } else if (c.subcategory_ids) {
-      c.subcategories = c.subcategory_ids.map((subCategoryId) =>
-        Category.findById(parseInt(subCategoryId, 10))
-      );
-    }
-
-    if (c.subcategories) {
-      // TODO: Not all subcategory_ids have been loaded
-      c.subcategories = c.subcategories?.filter(Boolean);
-    }
-
+  static _buildCategoryResult(c, statPeriod) {
     if (c.topics) {
       c.topics = c.topics.map((t) => Topic.create(t));
     }
@@ -126,9 +76,9 @@ CategoryList.reopenClass({
     const record = Site.current().updateCategory(c);
     record.setupGroupsAndPermissions();
     return record;
-  },
+  }
 
-  listForParent(store, category) {
+  static listForParent(store, category) {
     return ajax(
       `/categories.json?parent_category_id=${category.get("id")}`
     ).then((result) =>
@@ -138,9 +88,9 @@ CategoryList.reopenClass({
         parentCategory: category,
       })
     );
-  },
+  }
 
-  list(store) {
+  static list(store) {
     return PreloadStore.getAndRemove("categories_list", () =>
       ajax("/categories.json")
     ).then((result) =>
@@ -151,7 +101,33 @@ CategoryList.reopenClass({
         can_create_topic: result.category_list.can_create_topic,
       })
     );
-  },
-});
+  }
 
-export default CategoryList;
+  init() {
+    this.set("content", this.categories || []);
+    super.init(...arguments);
+    this.set("page", 1);
+    this.set("fetchedLastPage", false);
+  }
+
+  @bind
+  async loadMore() {
+    if (this.isLoading || this.fetchedLastPage) {
+      return;
+    }
+
+    this.set("isLoading", true);
+
+    const data = { page: this.page + 1 };
+    const result = await ajax("/categories.json", { data });
+
+    this.set("page", data.page);
+    if (result.category_list.categories.length === 0) {
+      this.set("fetchedLastPage", true);
+    }
+    this.set("isLoading", false);
+
+    const newCategoryList = CategoryList.categoriesFrom(this.store, result);
+    newCategoryList.forEach((c) => this.categories.pushObject(c));
+  }
+}

@@ -5,13 +5,12 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { and, or } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
-import discourseLater from "discourse-common/lib/later";
-import and from "truth-helpers/helpers/and";
-import or from "truth-helpers/helpers/or";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
@@ -22,7 +21,6 @@ export default class ChatMessageActionsMobile extends Component {
   @service capabilities;
 
   @tracked hasExpandedReply = false;
-  @tracked showFadeIn = false;
 
   get message() {
     return this.chat.activeMessage.model;
@@ -41,9 +39,7 @@ export default class ChatMessageActionsMobile extends Component {
   }
 
   @action
-  fadeAndVibrate() {
-    discourseLater(this.#addFadeIn.bind(this));
-
+  vibrate() {
     if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
       navigator.vibrate(5);
     }
@@ -58,62 +54,36 @@ export default class ChatMessageActionsMobile extends Component {
   @action
   collapseMenu(event) {
     event.preventDefault();
-    this.#onCloseMenu();
+    this.args.closeModal();
   }
 
   @action
   actAndCloseMenu(fnId) {
+    this.args.closeModal();
     this.messageInteractor[fnId]();
-    this.#onCloseMenu();
+  }
+
+  @action
+  react(name, operation) {
+    this.args.closeModal();
+    this.messageInteractor.react(name, operation);
   }
 
   @action
   openEmojiPicker(_, event) {
+    this.args.closeModal();
     this.messageInteractor.openEmojiPicker(_, event);
-    this.#onCloseMenu();
-  }
-
-  #onCloseMenu() {
-    this.#removeFadeIn();
-
-    // we don't want to remove the component right away as it's animating
-    // 200 is equal to the duration of the css animation
-    discourseLater(() => {
-      if (this.isDestroying || this.isDestroyed) {
-        return;
-      }
-
-      // by ensuring we are not hovering any message anymore
-      // we also ensure the menu is fully removed
-      this.chat.activeMessage = null;
-    }, 200);
-  }
-
-  #addFadeIn() {
-    this.showFadeIn = true;
-  }
-
-  #removeFadeIn() {
-    this.showFadeIn = false;
   }
 
   <template>
     {{#if (and this.site.mobileView this.chat.activeMessage.model.persisted)}}
-      <div
-        class={{concatClass
-          "chat-message-actions-backdrop"
-          (if this.showFadeIn "fade-in")
-        }}
-        {{didInsert this.fadeAndVibrate}}
+      <DModal
+        @closeModal={{@closeModal}}
+        @headerClass="hidden"
+        class="chat-message-actions"
+        {{didInsert this.vibrate}}
       >
-        <div
-          role="button"
-          class="collapse-area"
-          {{on "touchstart" this.collapseMenu passive=false bubbles=false}}
-        >
-        </div>
-
-        <div class="chat-message-actions">
+        <:body>
           <div class="selected-message-container">
             <div class="selected-message">
               <ChatUserAvatar @user={{this.message.user}} />
@@ -151,7 +121,7 @@ export default class ChatMessageActionsMobile extends Component {
                 {{#each this.messageInteractor.emojiReactions as |reaction|}}
                   <ChatMessageReaction
                     @reaction={{reaction}}
-                    @onReaction={{this.messageInteractor.react}}
+                    @onReaction={{this.react}}
                     @message={{this.message}}
                     @showCount={{false}}
                   />
@@ -188,8 +158,8 @@ export default class ChatMessageActionsMobile extends Component {
               {{/if}}
             </div>
           {{/if}}
-        </div>
-      </div>
+        </:body>
+      </DModal>
     {{/if}}
   </template>
 }

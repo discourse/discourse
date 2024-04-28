@@ -21,6 +21,14 @@ class SearchIndexer
     @disabled = false
   end
 
+  def self.with_indexing
+    prior = @disabled
+    enable
+    yield
+  ensure
+    @disabled = prior
+  end
+
   def self.update_index(table:, id:, a_weight: nil, b_weight: nil, c_weight: nil, d_weight: nil)
     raw_data = { a: a_weight, b: b_weight, c: c_weight, d: d_weight }
 

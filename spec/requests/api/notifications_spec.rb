@@ -40,7 +40,7 @@ RSpec.describe "notifications" do
                          type: :string,
                        },
                        post_number: {
-                         type: %i[string null],
+                         type: %i[integer null],
                        },
                        topic_id: {
                          type: %i[integer null],

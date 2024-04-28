@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
@@ -190,26 +190,27 @@ export default class History extends Component {
     );
   }
 
-  revert(post, postVersion) {
-    post
-      .revertToRevision(postVersion)
-      .then((result) => {
-        this.refresh(post.id, postVersion);
-        if (result.topic) {
-          post.set("topic.slug", result.topic.slug);
-          post.set("topic.title", result.topic.title);
-          post.set("topic.fancy_title", result.topic.fancy_title);
-        }
-        if (result.category_id) {
-          post.set("topic.category", Category.findById(result.category_id));
-        }
-        this.args.closeModal();
-      })
-      .catch((e) => {
-        if (e.jqXHR.responseJSON?.errors?.[0]) {
-          this.dialog.alert(e.jqXHR.responseJSON.errors[0]);
-        }
-      });
+  async revert(post, postVersion) {
+    try {
+      const result = await post.revertToRevision(postVersion);
+      this.refresh(post.id, postVersion);
+      if (result.topic) {
+        post.set("topic.slug", result.topic.slug);
+        post.set("topic.title", result.topic.title);
+        post.set("topic.fancy_title", result.topic.fancy_title);
+      }
+      if (result.category_id) {
+        post.set(
+          "topic.category",
+          await Category.asyncFindById(result.category_id)
+        );
+      }
+      this.args.closeModal();
+    } catch (e) {
+      if (e.jqXHR.responseJSON?.errors?.[0]) {
+        this.dialog.alert(e.jqXHR.responseJSON.errors[0]);
+      }
+    }
   }
 
   get editButtonLabel() {

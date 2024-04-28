@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 78
+  BASE_COMPILER_VERSION = 81
 
   class SettingsMigrationError < StandardError
   end
@@ -90,6 +90,8 @@ class Theme < ActiveRecord::Base
           )
         end
 
+  delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
+
   def notify_color_change(color, scheme: nil)
     scheme ||= color.color_scheme
     changed_colors << color if color
@@ -172,7 +174,9 @@ class Theme < ActiveRecord::Base
       js_compiler = ThemeJavascriptCompiler.new(id, name)
       js_compiler.append_tree(all_extra_js)
       settings_hash = build_settings_hash
+
       js_compiler.prepend_settings(settings_hash) if settings_hash.present?
+
       javascript_cache || build_javascript_cache
       javascript_cache.update!(content: js_compiler.content, source_map: js_compiler.source_map)
     else
@@ -234,6 +238,19 @@ class Theme < ActiveRecord::Base
   def self.user_theme_ids
     get_set_cache "user_theme_ids" do
       Theme.user_selectable.pluck(:id)
+    end
+  end
+
+  def self.enabled_theme_and_component_ids
+    get_set_cache "enabled_theme_and_component_ids" do
+      theme_ids = Theme.user_selectable.where(enabled: true).pluck(:id)
+      component_ids =
+        ChildTheme
+          .where(parent_theme_id: theme_ids)
+          .joins(:child_theme)
+          .where(themes: { enabled: true })
+          .pluck(:child_theme_id)
+      (theme_ids | component_ids)
     end
   end
 
@@ -354,11 +371,13 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def self.lookup_field(theme_id, target, field, skip_transformation: false)
+  def self.lookup_field(theme_id, target, field, skip_transformation: false, csp_nonce: nil)
     return "" if theme_id.blank?
 
     theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
-    (resolve_baked_field(theme_ids, target.to_sym, field) || "").html_safe
+    resolved = (resolve_baked_field(theme_ids, target.to_sym, field) || "")
+    resolved = resolved.gsub(ThemeField::CSP_NONCE_PLACEHOLDER, csp_nonce) if csp_nonce
+    resolved.html_safe
   end
 
   def self.lookup_modifier(theme_ids, modifier_name)
@@ -467,8 +486,7 @@ class Theme < ActiveRecord::Base
             .compact
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
-          <link rel="preload" href="#{c.url}" as="script">
-          <script defer src='#{c.url}' data-theme-id='#{c.theme_id}'></script>
+          <script defer src="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
         HTML
       end
     when :translations
@@ -647,14 +665,15 @@ class Theme < ActiveRecord::Base
 
   def settings
     field = settings_field
-    return [] unless field && field.error.nil?
-    settings = []
+    settings = {}
 
-    ThemeSettingsParser
-      .new(field)
-      .load do |name, default, type, opts|
-        settings << ThemeSettingsManager.create(name, default, type, self, opts)
-      end
+    if field && field.error.nil?
+      ThemeSettingsParser
+        .new(field)
+        .load do |name, default, type, opts|
+          settings[name] = ThemeSettingsManager.create(name, default, type, self, opts)
+        end
+    end
 
     settings
   end
@@ -668,7 +687,7 @@ class Theme < ActiveRecord::Base
   def cached_default_settings
     Theme.get_set_cache "default_settings_for_theme_#{self.id}" do
       settings_hash = {}
-      self.settings.each { |setting| settings_hash[setting.name] = setting.default }
+      self.settings.each { |name, setting| settings_hash[name] = setting.default }
 
       theme_uploads = build_theme_uploads_hash
       settings_hash["theme_uploads"] = theme_uploads if theme_uploads.present?
@@ -682,7 +701,7 @@ class Theme < ActiveRecord::Base
 
   def build_settings_hash
     hash = {}
-    self.settings.each { |setting| hash[setting.name] = setting.value }
+    self.settings.each { |name, setting| hash[name] = setting.value }
 
     theme_uploads = build_theme_uploads_hash
     hash["theme_uploads"] = theme_uploads if theme_uploads.present?
@@ -724,13 +743,13 @@ class Theme < ActiveRecord::Base
   #   theme.get_setting(:some_string) => "hello"
   #
   def get_setting(setting_name)
-    target_setting = settings.find { |setting| setting.name == setting_name.to_sym }
+    target_setting = settings[setting_name.to_sym]
     raise Discourse::NotFound unless target_setting
     target_setting.value
   end
 
   def update_setting(setting_name, new_value)
-    target_setting = settings.find { |setting| setting.name == setting_name }
+    target_setting = settings[setting_name.to_sym]
     raise Discourse::NotFound unless target_setting
 
     target_setting.value = new_value
@@ -879,6 +898,7 @@ class Theme < ActiveRecord::Base
       end
 
       self.reload
+      self.update_javascript_cache!
     end
 
     if start_transaction
@@ -942,6 +962,18 @@ class Theme < ActiveRecord::Base
     end
 
     [content, Digest::SHA1.hexdigest(content)]
+  end
+
+  def repository_url
+    return unless remote_url
+    remote_url.gsub(
+      %r{([^@]+@)?(http(s)?://)?(?<host>[^:/]+)[:/](?<path>((?!\.git).)*)(\.git)?(?<rest>.*)},
+      '\k<host>/\k<path>\k<rest>',
+    )
+  end
+
+  def user_selectable_count
+    UserOption.where(theme_ids: [id]).count
   end
 
   private

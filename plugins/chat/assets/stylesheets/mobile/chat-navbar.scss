@@ -10,12 +10,17 @@
   &__back-button {
     align-self: stretch;
   }
-
-  .c-navbar__title {
-    .c-routes-direct-messages &,
-    .c-routes-channels &,
-    .c-routes-threads & {
-      padding-left: 1.25rem;
+  &.-full-title {
+    .c-navbar {
+      &__actions,
+      &__back-button {
+        height: calc(var(--chat-header-offset) - 2px) !important;
+      }
+      &__title {
+        padding-block: calc(1rem + 2px);
+      }
     }
+    left: 0.25rem;
+    width: calc(100% - 0.5rem);
   }
 }

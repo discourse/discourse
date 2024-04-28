@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe WatchedWord do
-  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true) }
+  fab!(:tl2_user) { Fabricate(:user, trust_level: TrustLevel[2]) }
   fab!(:admin)
   fab!(:moderator)
 
@@ -187,7 +187,6 @@ RSpec.describe WatchedWord do
     end
 
     it "doesn't need approval in a private message" do
-      Group.refresh_automatic_groups!
       manager =
         NewPostManager.new(
           tl2_user,

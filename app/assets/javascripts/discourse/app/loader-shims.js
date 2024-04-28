@@ -1,7 +1,7 @@
 import { importSync } from "@embroider/macros";
 import loaderShim from "discourse-common/lib/loader-shim";
 
-// AMD shims for the app bunndle, see the comment in loader-shim.js
+// AMD shims for the app bundle, see the comment in loader-shim.js
 // These effectively become public APIs for plugins, so add/remove them carefully
 loaderShim("@discourse/itsatrap", () => importSync("@discourse/itsatrap"));
 loaderShim("@ember-compat/tracked-built-ins", () =>
@@ -33,3 +33,34 @@ loaderShim("js-yaml", () => importSync("js-yaml"));
 loaderShim("message-bus-client", () => importSync("message-bus-client"));
 loaderShim("virtual-dom", () => importSync("virtual-dom"));
 loaderShim("xss", () => importSync("xss"));
+loaderShim("truth-helpers", () => importSync("truth-helpers"));
+loaderShim("truth-helpers/helpers/and", () =>
+  importSync("truth-helpers/helpers/and")
+);
+loaderShim("truth-helpers/helpers/eq", () =>
+  importSync("truth-helpers/helpers/eq")
+);
+loaderShim("truth-helpers/helpers/gt", () =>
+  importSync("truth-helpers/helpers/gt")
+);
+loaderShim("truth-helpers/helpers/gte", () =>
+  importSync("truth-helpers/helpers/gte")
+);
+loaderShim("truth-helpers/helpers/includes", () =>
+  importSync("truth-helpers/helpers/includes")
+);
+loaderShim("truth-helpers/helpers/lt", () =>
+  importSync("truth-helpers/helpers/lt")
+);
+loaderShim("truth-helpers/helpers/lte", () =>
+  importSync("truth-helpers/helpers/lte")
+);
+loaderShim("truth-helpers/helpers/not-eq", () =>
+  importSync("truth-helpers/helpers/not-eq")
+);
+loaderShim("truth-helpers/helpers/not", () =>
+  importSync("truth-helpers/helpers/not")
+);
+loaderShim("truth-helpers/helpers/or", () =>
+  importSync("truth-helpers/helpers/or")
+);

@@ -223,6 +223,19 @@ RSpec.describe Category do
     end
   end
 
+  describe "with_parents" do
+    fab!(:category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+
+    it "returns parent categories and subcategories" do
+      expect(Category.with_parents([category.id])).to contain_exactly(category)
+    end
+
+    it "returns only categories if top-level categories" do
+      expect(Category.with_parents([subcategory.id])).to contain_exactly(category, subcategory)
+    end
+  end
+
   describe "security" do
     fab!(:category) { Fabricate(:category_with_definition) }
     fab!(:category_2) { Fabricate(:category_with_definition) }
@@ -632,11 +645,13 @@ RSpec.describe Category do
   end
 
   describe "update_stats" do
-    before { @category = Fabricate(:category_with_definition) }
+    before do
+      @category =
+        Fabricate(:category_with_definition, user: Fabricate(:user, refresh_auto_groups: true))
+    end
 
     context "with regular topics" do
       before do
-        Group.refresh_automatic_groups!
         create_post(user: @category.user, category: @category.id)
         Category.update_stats
         @category.reload
@@ -675,7 +690,6 @@ RSpec.describe Category do
 
     context "with revised post" do
       before do
-        Group.refresh_automatic_groups!
         post = create_post(user: @category.user, category: @category.id)
 
         SiteSetting.editing_grace_period = 1.minute
@@ -714,7 +728,6 @@ RSpec.describe Category do
     end
 
     context "when there are no topics left" do
-      before { Group.refresh_automatic_groups! }
       let!(:topic) { create_post(user: @category.user, category: @category.id).reload.topic }
 
       it "can update the topic count to zero" do
@@ -1481,6 +1494,33 @@ RSpec.describe Category do
       it "allows limiting depth" do
         expect(subcategory_2.slug_ref(depth: 1)).to eq("bar#{Category::SLUG_REF_SEPARATOR}boo")
       end
+    end
+  end
+
+  describe ".ancestors_of" do
+    fab!(:category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+
+    fab!(:sub_subcategory) do
+      SiteSetting.max_category_nesting = 3
+      Fabricate(:category, parent_category: subcategory)
+    end
+
+    it "finds the parent" do
+      expect(Category.ancestors_of([subcategory.id]).to_a).to eq([category])
+    end
+
+    it "finds the grandparent" do
+      expect(Category.ancestors_of([sub_subcategory.id]).to_a).to contain_exactly(
+        category,
+        subcategory,
+      )
+    end
+
+    it "respects the relation it's called on" do
+      expect(Category.where.not(id: category.id).ancestors_of([sub_subcategory.id]).to_a).to eq(
+        [subcategory],
+      )
     end
   end
 end

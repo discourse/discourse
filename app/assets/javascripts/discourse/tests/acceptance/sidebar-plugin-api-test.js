@@ -843,6 +843,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
         },
         "new-panel"
       );
+      api.setSeparatedSidebarMode();
       api.setSidebarPanel("new-panel");
       api.setSeparatedSidebarMode();
     });

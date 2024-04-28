@@ -22,7 +22,7 @@
       @input={{readonly this.ignoredUntil}}
       @customShortcuts={{this.timeShortcuts}}
       @includeDateTime={{false}}
-      @onChangeInput={{action (mut this.ignoredUntil)}}
+      @onChangeInput={{fn (mut this.ignoredUntil)}}
     />
     <p>{{i18n "user.user_notifications.ignore_duration_note"}}</p>
   </:body>

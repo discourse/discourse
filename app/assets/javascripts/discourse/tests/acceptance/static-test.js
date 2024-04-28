@@ -2,13 +2,7 @@ import { currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Static pages", function (needs) {
-  needs.pretender((server, helper) => {
-    server.get(`/session/passkey/challenge.json`, () =>
-      helper.response({ challenge: "smth" })
-    );
-  });
-
+acceptance("Static pages", function () {
   test("/faq", async function (assert) {
     await visit("/faq");
     assert.true(

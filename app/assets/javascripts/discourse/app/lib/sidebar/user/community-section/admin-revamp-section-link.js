@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import I18n from "discourse-i18n";
 
@@ -29,13 +29,7 @@ export default class AdminRevampSectionLink extends BaseSectionLink {
       return false;
     }
 
-    return (
-      this.currentUser.staff &&
-      this.siteSettings.userInAnyGroups(
-        "admin_sidebar_enabled_groups",
-        this.currentUser
-      )
-    );
+    return this.currentUser.use_admin_sidebar;
   }
 
   get defaultPrefixValue() {

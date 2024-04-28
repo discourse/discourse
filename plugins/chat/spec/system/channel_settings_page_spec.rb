@@ -17,7 +17,6 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
     context "when clicking back button" do
       it "redirects to browse page" do
         chat_page.visit_browse
-        find(".chat-channel-card__setting").click
         find(".c-navbar__back-button").click
 
         expect(page).to have_current_path("/chat/browse/open")
@@ -101,7 +100,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
       expect(page.find(".c-channel-settings__name")["innerHTML"].strip).to eq(
         "&lt;script&gt;alert('hello')&lt;/script&gt;",
       )
-      expect(page.find(".chat-channel-title__name")["innerHTML"].strip).to eq(
+      expect(page.find(".chat-channel-name__label")["innerHTML"].strip).to eq(
         "&lt;script&gt;alert('hello')&lt;/script&gt;",
       )
     end

@@ -6,8 +6,7 @@ class AboutSerializer < ApplicationSerializer
   end
 
   class AboutCategoryModsSerializer < ApplicationSerializer
-    attributes :category_id
-
+    has_one :category, serializer: CategoryBadgeSerializer, embed: :objects
     has_many :moderators, serializer: UserAboutSerializer, embed: :objects
   end
 

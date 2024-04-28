@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe PostActionsController do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:coding_horror)
-
-  before { Group.refresh_automatic_groups! }
 
   describe "#destroy" do
     fab!(:post) { Fabricate(:post, user: coding_horror) }
@@ -120,7 +118,7 @@ RSpec.describe PostActionsController do
     end
 
     describe "as a moderator" do
-      fab!(:user) { Fabricate(:moderator) }
+      fab!(:user) { Fabricate(:moderator, refresh_auto_groups: true) }
       fab!(:post_1) { Fabricate(:post, user: coding_horror) }
 
       before { sign_in(user) }

@@ -70,7 +70,8 @@ RSpec.describe Post do
 
   it { is_expected.to rate_limit }
 
-  let(:topic) { Fabricate(:topic) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  let(:topic) { Fabricate(:topic, user: user) }
   let(:post_args) { { user: topic.user, topic: topic } }
 
   describe "scopes" do
@@ -147,12 +148,12 @@ RSpec.describe Post do
     end
   end
 
-  describe "with_secure_uploads?" do
+  describe "should_secure_uploads?" do
     let(:topic) { Fabricate(:topic) }
     let!(:post) { Fabricate(:post, topic: topic) }
 
     it "returns false if secure uploads is not enabled" do
-      expect(post.with_secure_uploads?).to eq(false)
+      expect(post.should_secure_uploads?).to eq(false)
     end
 
     context "when secure uploads is enabled" do
@@ -166,14 +167,14 @@ RSpec.describe Post do
         before { SiteSetting.login_required = true }
 
         it "returns true" do
-          expect(post.with_secure_uploads?).to eq(true)
+          expect(post.should_secure_uploads?).to eq(true)
         end
 
         context "if secure_uploads_pm_only" do
           before { SiteSetting.secure_uploads_pm_only = true }
 
           it "returns false" do
-            expect(post.with_secure_uploads?).to eq(false)
+            expect(post.should_secure_uploads?).to eq(false)
           end
         end
       end
@@ -183,7 +184,7 @@ RSpec.describe Post do
         before { topic.change_category_to_id(category.id) }
 
         it "returns true" do
-          expect(post.with_secure_uploads?).to eq(true)
+          expect(post.should_secure_uploads?).to eq(true)
         end
 
         context "when the topic is deleted" do
@@ -193,7 +194,7 @@ RSpec.describe Post do
           end
 
           it "returns true" do
-            expect(post.with_secure_uploads?).to eq(true)
+            expect(post.should_secure_uploads?).to eq(true)
           end
         end
 
@@ -201,7 +202,7 @@ RSpec.describe Post do
           before { SiteSetting.secure_uploads_pm_only = true }
 
           it "returns false" do
-            expect(post.with_secure_uploads?).to eq(false)
+            expect(post.should_secure_uploads?).to eq(false)
           end
         end
       end
@@ -210,14 +211,14 @@ RSpec.describe Post do
         let(:topic) { Fabricate(:private_message_topic) }
 
         it "returns true" do
-          expect(post.with_secure_uploads?).to eq(true)
+          expect(post.should_secure_uploads?).to eq(true)
         end
 
         context "when the topic is deleted" do
           before { topic.trash! }
 
           it "returns true" do
-            expect(post.with_secure_uploads?).to eq(true)
+            expect(post.should_secure_uploads?).to eq(true)
           end
         end
 
@@ -225,7 +226,7 @@ RSpec.describe Post do
           before { SiteSetting.secure_uploads_pm_only = true }
 
           it "returns true" do
-            expect(post.with_secure_uploads?).to eq(true)
+            expect(post.should_secure_uploads?).to eq(true)
           end
         end
       end
@@ -275,7 +276,7 @@ RSpec.describe Post do
   end
 
   describe "maximum media embeds" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_no_images) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_image) { post_with_body("![sherlock](http://bbc.co.uk/sherlock.jpg)", newuser) }
     let(:post_two_images) do
@@ -336,36 +337,6 @@ RSpec.describe Post do
       expect(post_one_image).to be_valid
     end
 
-    it "doesn't allow more than `min_trust_to_post_embedded_media`" do
-      SiteSetting.min_trust_to_post_embedded_media = 4
-      post_one_image.user.trust_level = 3
-      expect(post_one_image).not_to be_valid
-    end
-
-    it "doesn't allow more than `min_trust_to_post_embedded_media` in a quote" do
-      SiteSetting.min_trust_to_post_embedded_media = 4
-      post_one_image.user.trust_level = 3
-      expect(post_image_within_quote).not_to be_valid
-    end
-
-    it "doesn't allow more than `min_trust_to_post_embedded_media` in code" do
-      SiteSetting.min_trust_to_post_embedded_media = 4
-      post_one_image.user.trust_level = 3
-      expect(post_image_within_code).not_to be_valid
-    end
-
-    it "doesn't allow more than `min_trust_to_post_embedded_media` in pre" do
-      SiteSetting.min_trust_to_post_embedded_media = 4
-      post_one_image.user.trust_level = 3
-      expect(post_image_within_pre).not_to be_valid
-    end
-
-    it "doesn't allow more than `min_trust_to_post_embedded_media`" do
-      SiteSetting.min_trust_to_post_embedded_media = 4
-      post_one_image.user.trust_level = 4
-      expect(post_one_image).to be_valid
-    end
-
     it "doesn't count favicons as images" do
       PrettyText.stubs(:cook).returns(post_with_favicon.raw)
       expect(post_with_favicon.embedded_media_count).to eq(0)
@@ -385,6 +356,38 @@ RSpec.describe Post do
 
     it "counts video and audio as embedded media" do
       expect(post_with_two_embedded_media.embedded_media_count).to eq(2)
+    end
+
+    describe "embedded_media_allowed_groups" do
+      it "doesn't allow users outside of `embedded_media_post_allowed_groups`" do
+        SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        post_one_image.user.change_trust_level!(3)
+        expect(post_one_image).not_to be_valid
+      end
+
+      it "doesn't allow users outside of `embedded_media_post_allowed_groups` in a quote" do
+        SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        post_one_image.user.change_trust_level!(3)
+        expect(post_image_within_quote).not_to be_valid
+      end
+
+      it "doesn't allow users outside of `embedded_media_post_allowed_groups` in code" do
+        SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        post_one_image.user.change_trust_level!(3)
+        expect(post_image_within_code).not_to be_valid
+      end
+
+      it "doesn't allow users outside of `embedded_media_post_allowed_groups` in pre" do
+        SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        post_one_image.user.change_trust_level!(3)
+        expect(post_image_within_pre).not_to be_valid
+      end
+
+      it "allows users who are in a group in `embedded_media_post_allowed_groups`" do
+        SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
+        post_one_image.user.change_trust_level!(4)
+        expect(post_one_image).to be_valid
+      end
     end
 
     context "with validation" do
@@ -421,7 +424,7 @@ RSpec.describe Post do
   end
 
   describe "maximum attachments" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_no_attachments) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_attachment) do
       post_with_body(
@@ -474,7 +477,7 @@ RSpec.describe Post do
   end
 
   describe "links" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:no_links) { post_with_body("hello world my name is evil trout", newuser) }
     let(:one_link) { post_with_body("[jlawr](http://www.imdb.com/name/nm2225369)", newuser) }
     let(:two_links) do
@@ -557,7 +560,7 @@ RSpec.describe Post do
   end
 
   describe "maximums" do
-    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+    fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_one_link) do
       post_with_body("[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", newuser)
     end
@@ -686,7 +689,7 @@ RSpec.describe Post do
     end
 
     context "with max mentions" do
-      fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0], refresh_auto_groups: true) }
+      fab!(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
       let(:post_with_one_mention) { post_with_body("@Jake is the person I'm mentioning", newuser) }
       let(:post_with_two_mentions) do
         post_with_body("@Jake @Finn are the people I'm mentioning", newuser)
@@ -713,7 +716,7 @@ RSpec.describe Post do
           SiteSetting.max_mentions_per_post = 1
         end
 
-        it "allows vmax_mentions_per_post mentions" do
+        it "allows max_mentions_per_post mentions" do
           post_with_one_mention.user.trust_level = TrustLevel[1]
           expect(post_with_one_mention).to be_valid
         end
@@ -1760,7 +1763,7 @@ RSpec.describe Post do
     end
 
     describe "#update_uploads_secure_status" do
-      fab!(:user) { Fabricate(:user, trust_level: 0) }
+      fab!(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
 
       let(:raw) { <<~RAW }
         <a href="#{attachment_upload.url}">Link</a>
@@ -2199,7 +2202,7 @@ RSpec.describe Post do
 
   describe "public_posts_count_per_day" do
     before do
-      freeze_time DateTime.parse("2017-03-01 12:00")
+      freeze_time_safe
 
       Fabricate(:post)
       Fabricate(:post, created_at: 1.day.ago)

@@ -6,6 +6,9 @@ describe "Post selection | Fast edit", type: :system do
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:post_2) { Fabricate(:post, topic: topic, raw: "It ‘twas a great’ “time”!") }
+  fab!(:spanish_post) { Fabricate(:post, topic: topic, raw: "Hola Juan, ¿cómo estás?") }
+  fab!(:chinese_post) { Fabricate(:post, topic: topic, raw: "这是一个测试") }
+  fab!(:post_with_emoji) { Fabricate(:post, topic: topic, raw: "Good morning :wave:!") }
   fab!(:current_user) { Fabricate(:admin) }
 
   before { sign_in(current_user) }
@@ -51,6 +54,50 @@ describe "Post selection | Fast edit", type: :system do
         "#{topic_page.post_by_number_selector(2)} .cooked p",
         text: "It ‘twas a great’ “day”!",
       )
+    end
+
+    it "saves when text contains diacratics" do
+      topic_page.visit_topic(topic)
+
+      select_text_range("#{topic_page.post_by_number_selector(3)} .cooked p", 11, 12)
+
+      topic_page.click_fast_edit_button
+
+      fast_editor.fill_content("¿está todo bien?")
+      fast_editor.save
+
+      expect(page).to have_selector(
+        "#{topic_page.post_by_number_selector(3)} .cooked p",
+        text: "Hola Juan, ¿está todo bien?",
+      )
+    end
+
+    it "saves when text contains CJK ranges" do
+      topic_page.visit_topic(topic)
+
+      select_text_range("#{topic_page.post_by_number_selector(4)} .cooked p", 0, 2)
+      topic_page.click_fast_edit_button
+
+      fast_editor.fill_content("今天")
+      fast_editor.save
+
+      expect(page).to have_selector(
+        "#{topic_page.post_by_number_selector(4)} .cooked p",
+        text: "今天一个测试",
+      )
+    end
+
+    it "saves when text contains emoji" do
+      topic_page.visit_topic(topic)
+
+      select_text_range("#{topic_page.post_by_number_selector(5)} .cooked p", 5, 7)
+      topic_page.click_fast_edit_button
+
+      fast_editor.fill_content("day")
+      fast_editor.save
+
+      expect(page).to have_no_css("#fast-edit-input")
+      expect(post_with_emoji.raw).to eq("Good day :wave:!")
     end
   end
 end

@@ -202,3 +202,51 @@
     flex: 1 0 auto;
   }
 }
+
+.admin-reports-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--primary-low);
+  padding-bottom: 0.5em;
+
+  @media screen and (max-width: 400px) {
+    flex-wrap: wrap;
+  }
+
+  h2 {
+    margin: 0 0.5em 0 0;
+
+    a {
+      color: var(--primary);
+    }
+  }
+}
+
+.admin-reports-list {
+  display: flex;
+  flex-wrap: wrap;
+  list-style-type: none;
+  margin: 0 -1.5%;
+  &__report {
+    margin: 1.5%;
+    border: 1px solid var(--primary-low);
+    flex: 1 1 28%;
+    transition: box-shadow 0.25s;
+    min-width: 225px;
+    max-width: 550px;
+    a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 1em;
+      .report-description {
+        color: var(--primary-high);
+      }
+    }
+    &:hover {
+      box-shadow: var(--shadow-card);
+    }
+  }
+}

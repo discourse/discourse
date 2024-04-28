@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
@@ -17,10 +17,7 @@ export default class ChatDrawerRoutesThreads extends Component {
       <navbar.Title
         @title={{i18n "chat.my_threads.title"}}
         @icon="discourse-threads"
-        as |title|
-      >
-        <title.SubTitle @title={{this.chat.activeChannel.title}} />
-      </navbar.Title>
+      />
       <navbar.Actions as |action|>
         <action.ThreadsListButton />
         <action.ToggleDrawerButton />

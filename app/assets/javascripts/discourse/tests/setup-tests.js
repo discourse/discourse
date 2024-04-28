@@ -21,6 +21,7 @@ import { resetSettings as resetThemeSettings } from "discourse/lib/theme-setting
 import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
+import { resetCategoryCache } from "discourse/models/category";
 import SiteSettingService from "discourse/services/site-settings";
 import { flushMap } from "discourse/services/store";
 import pretender, {
@@ -47,6 +48,8 @@ import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import { buildResolver } from "discourse-common/resolver";
 import Application from "../app";
 import { loadSprites } from "../lib/svg-sprite-loader";
+import * as FakerModule from "@faker-js/faker";
+import { setLoadedFaker } from "discourse/lib/load-faker";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -333,6 +336,8 @@ export default function setupTests(config) {
     PreloadStore.reset();
     resetSite();
 
+    resetCategoryCache();
+
     sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");
     sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
@@ -429,6 +434,8 @@ export default function setupTests(config) {
       "fontawesome"
     );
   }
+
+  setLoadedFaker(FakerModule);
 
   if (!hasPluginJs && !hasThemeJs) {
     configureRaiseOnDeprecation();

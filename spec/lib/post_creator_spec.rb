@@ -5,7 +5,7 @@ require "topic_subtype"
 
 RSpec.describe PostCreator do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
   fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
   let(:topic) { Fabricate(:topic, user: user) }
@@ -259,26 +259,19 @@ RSpec.describe PostCreator do
         p = nil
         messages = MessageBus.track_publish { p = creator.create }
 
-        latest = messages.find { |m| m.channel == "/latest" }
-        expect(latest).not_to eq(nil)
+        expect(messages.find { _1.channel == "/latest" }).not_to eq(nil)
+        expect(messages.find { _1.channel == "/new" }).not_to eq(nil)
+        expect(messages.find { _1.channel == "/unread/#{p.user_id}" }).not_to eq(nil)
+        expect(messages.find { _1.channel == "/user-drafts/#{p.user_id}" }).not_to eq(nil)
 
-        latest = messages.find { |m| m.channel == "/new" }
-        expect(latest).not_to eq(nil)
-
-        read = messages.find { |m| m.channel == "/unread/#{p.user_id}" }
-        expect(read).not_to eq(nil)
-
-        user_action = messages.find { |m| m.channel == "/u/#{p.user.username}" }
-        expect(user_action).not_to eq(nil)
-
-        draft_count = messages.find { |m| m.channel == "/user-drafts/#{p.user_id}" }
-        expect(draft_count).not_to eq(nil)
+        user_action = messages.find { _1.channel == "/u/#{p.user.username}" }
+        expect(user_action).to eq(nil)
 
         topics_stats =
           messages.find { |m| m.channel == "/topic/#{p.topic.id}" && m.data[:type] == :stats }
         expect(topics_stats).to eq(nil)
 
-        expect(messages.filter { |m| m.channel != "/distributed_hash" }.length).to eq(7)
+        expect(messages.filter { _1.channel != "/distributed_hash" }.size).to eq(6)
       end
 
       it "extracts links from the post" do
@@ -556,7 +549,7 @@ RSpec.describe PostCreator do
           context "when can create tags" do
             before do
               SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-              SiteSetting.min_trust_level_to_tag_topics = 0
+              SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
             end
 
             it "can create all tags if none exist" do
@@ -577,7 +570,7 @@ RSpec.describe PostCreator do
           context "when cannot create tags" do
             before do
               SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
-              SiteSetting.min_trust_level_to_tag_topics = 0
+              SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
             end
 
             it "only uses existing tags" do
@@ -590,7 +583,7 @@ RSpec.describe PostCreator do
           context "when automatically tagging first posts" do
             before do
               SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-              SiteSetting.min_trust_level_to_tag_topics = 0
+              SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
               Fabricate(:tag, name: "greetings")
               Fabricate(:tag, name: "hey")
               Fabricate(:tag, name: "about-art")
@@ -680,8 +673,7 @@ RSpec.describe PostCreator do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     it "whispers do not mess up the public view" do
-      # turns out this can fail on leap years if we don't do this
-      freeze_time DateTime.parse("2010-01-01 12:00")
+      freeze_time_safe
 
       first = PostCreator.new(user, topic_id: topic.id, raw: "this is the first post").create
 
@@ -760,7 +752,7 @@ RSpec.describe PostCreator do
     fab!(:topic) { Fabricate(:topic, user: user) }
 
     it "silent do not mess up the public view" do
-      freeze_time DateTime.parse("2010-01-01 12:00")
+      freeze_time_safe
 
       first = PostCreator.new(user, topic_id: topic.id, raw: "this is the first post").create
 
@@ -1081,7 +1073,6 @@ RSpec.describe PostCreator do
     fab!(:target_user2) { Fabricate(:moderator) }
     fab!(:unrelated_user) { Fabricate(:user) }
     let(:post) do
-      Group.refresh_automatic_groups!
       PostCreator.create!(
         user,
         title: "hi there welcome to my topic",
@@ -1097,8 +1088,7 @@ RSpec.describe PostCreator do
       SiteSetting.min_first_post_length = 20
       SiteSetting.min_post_length = 25
       SiteSetting.body_min_entropy = 20
-      user.update!(trust_level: 3)
-      Group.refresh_automatic_groups!
+      user.change_trust_level!(TrustLevel[3])
 
       expect {
         PostCreator.create!(
@@ -1198,13 +1188,12 @@ RSpec.describe PostCreator do
     end
 
     it "does not increase posts count for small actions" do
-      topic = Fabricate(:private_message_topic, user: Fabricate(:user))
+      topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
 
       Fabricate(:post, topic: topic)
 
       1.upto(3) do |i|
         user = Fabricate(:user)
-        Group.refresh_automatic_groups!
         topic.invite(topic.user, user.username)
         topic.reload
         expect(topic.posts_count).to eq(1)
@@ -1235,7 +1224,6 @@ RSpec.describe PostCreator do
     end
 
     it "works as expected" do
-      Group.refresh_automatic_groups!
       # Invalid archetype
       creator = PostCreator.new(user, base_args)
       creator.create
@@ -1324,7 +1312,6 @@ RSpec.describe PostCreator do
     end
     fab!(:unrelated) { Fabricate(:user) }
     let(:post) do
-      Group.refresh_automatic_groups!
       PostCreator.create!(
         user,
         title: "hi there welcome to my topic",
@@ -1499,6 +1486,23 @@ RSpec.describe PostCreator do
       creator.create
       expect(creator.errors).to be_blank
       expect(TopicEmbed.where(content_sha1: content_sha1).exists?).to eq(true)
+    end
+
+    context "when embed_unlisted is true" do
+      before { SiteSetting.embed_unlisted = true }
+
+      it "unlists the topic" do
+        creator =
+          PostCreator.new(
+            user,
+            embed_url: embed_url,
+            title: "Reviews of Science Ovens",
+            raw: "Did you know that you can use microwaves to cook your dinner? Science!",
+          )
+        post = creator.create
+        expect(creator.errors).to be_blank
+        expect(post.topic).not_to be_visible
+      end
     end
   end
 

@@ -11,6 +11,7 @@ class SiteSettingMoveToGroupsMigrationGenerator < Rails::Generators::Base
     file_path = "db/migrate/#{migration_version}_fill_#{new_name}_based_on_deprecated_setting.rb"
     class_name = "Fill#{new_name.classify}BasedOnDeprecatedSetting"
 
+    load_all_settings
     validate_setting_name!(old_name)
     validate_setting_name!(new_name)
     validate_setting_type!(old_name)
@@ -89,17 +90,35 @@ class SiteSettingMoveToGroupsMigrationGenerator < Rails::Generators::Base
 
   private
 
+  def load_all_settings
+    load_settings(File.join(Rails.root, "config", "site_settings.yml"))
+
+    if GlobalSetting.load_plugins?
+      Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
+        load_settings(file, plugin: file.split("/")[-3])
+      end
+    end
+
+    if Rails.env.test?
+      load_settings(
+        File.join(Rails.root, "spec", "fixtures", "site_settings", "generator_test.yml"),
+      )
+    end
+  end
+
   def validate_setting_name!(name)
-    if !SiteSetting.respond_to?(name)
+    if !self.respond_to?(name)
       say "Site setting with #{name} does not exist"
       raise ArgumentError
     end
   end
 
   def setting_type(name)
-    @site_settings ||= load_settings(File.join(Rails.root, "config", "site_settings.yml"))
-    subgroup = @site_settings.values.find { |row| row.keys.include?(name) }
-    subgroup[name][:enum]
+    if type_supervisor.get_type(name.to_sym) == :enum
+      return type_supervisor.get_enum_class(name.to_sym).to_s
+    end
+
+    nil
   end
 
   def validate_setting_type!(name)

@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { EMBER_MAJOR_VERSION } from "discourse/lib/ember-version";
+import { service } from "@ember/service";
 
 export default class ModalContainer extends Component {
   @service modal;
@@ -9,9 +8,5 @@ export default class ModalContainer extends Component {
   @action
   closeModal(data) {
     this.modal.close(data);
-  }
-
-  get renderLegacy() {
-    return EMBER_MAJOR_VERSION < 4;
   }
 }

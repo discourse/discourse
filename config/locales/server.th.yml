@@ -161,8 +161,6 @@ th:
         other: "%{count}เดือนที่แล้ว"
   password_reset:
     title: "รีเซ็ทรหัสผ่าน"
-  change_email:
-    please_continue: "ดำเนินการต่อไปยัง %{site_name}"
   activation:
     continue_button: "ดำเนินการต่อไปยัง %{site_name}"
     welcome_to: "ยินดีต้อนรับสู่ %{site_name}!"
@@ -295,6 +293,15 @@ th:
   site_settings:
     disabled: "ปิดใช้งานแล้ว"
     dark_mode_none: "ไม่มี"
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "ไม่ใช้งาน"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "ไม่ใช้งาน"
+      - ""
   search:
     within_post: "#%{post_number} ด้วย %{username}"
     types:

@@ -91,33 +91,6 @@
   }
 }
 
-.desktop-view .feature-topic-modal {
-  .pin-until {
-    position: relative;
-    display: inline-block;
-  }
-  .modal-inner-container {
-    overflow: visible;
-  }
-  .modal-footer {
-    background: var(--secondary);
-  }
-}
-
-.mobile-view .feature-topic .feature-section {
-  .desc {
-    display: block;
-    clear: both;
-    max-width: 90%;
-    margin: 0;
-  }
-  .badge-category__wrapper {
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 19em;
-  }
-}
-
 // Select posts
 
 .selected-posts {

@@ -51,12 +51,12 @@ module Chat
 
     private
 
-    def can_add_users_to_channel(guardian:, channel:, **)
+    def can_add_users_to_channel(guardian:, channel:)
       (guardian.user.admin? || channel.joined_by?(guardian.user)) &&
         channel.direct_message_channel? && channel.chatable.group
     end
 
-    def fetch_users(contract:, channel:, **)
+    def fetch_users(contract:, channel:)
       ::Chat::UsersFromUsernamesAndGroupsQuery.call(
         usernames: contract.usernames,
         groups: contract.groups,
@@ -64,17 +64,17 @@ module Chat
       )
     end
 
-    def fetch_channel(contract:, **)
+    def fetch_channel(contract:)
       ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
     end
 
-    def validate_user_count(channel:, users:, **)
+    def validate_user_count(channel:, users:)
       if channel.user_count + users.length > SiteSetting.chat_max_direct_message_users
         fail!("should have less than #{SiteSetting.chat_max_direct_message_users} elements")
       end
     end
 
-    def upsert_memberships(channel:, users:, **)
+    def upsert_memberships(channel:, users:)
       always_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
       memberships =
@@ -119,7 +119,7 @@ module Chat
       )
     end
 
-    def recompute_users_count(channel:, **)
+    def recompute_users_count(channel:)
       return if context.added_user_ids.blank?
 
       channel.update!(
@@ -128,7 +128,7 @@ module Chat
       )
     end
 
-    def notice_channel(guardian:, channel:, users:, **)
+    def notice_channel(guardian:, channel:, users:)
       added_users = users.select { |u| context.added_user_ids.include?(u.id) }
 
       return if added_users.blank?

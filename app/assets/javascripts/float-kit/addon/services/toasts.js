@@ -23,8 +23,15 @@ export default class Toasts extends Service {
    */
   @action
   show(options = {}) {
-    const instance = new DToastInstance(getOwner(this), options);
-    this.activeToasts.push(instance);
+    const instance = new DToastInstance(getOwner(this), {
+      component: DDefaultToast,
+      ...options,
+    });
+
+    if (instance.isValidForView) {
+      this.activeToasts.push(instance);
+    }
+
     return instance;
   }
 
@@ -39,7 +46,7 @@ export default class Toasts extends Service {
   default(options = {}) {
     options.data.theme = "default";
 
-    return this.show({ ...options, component: DDefaultToast });
+    return this.show(options);
   }
 
   /**
@@ -52,9 +59,9 @@ export default class Toasts extends Service {
   @action
   success(options = {}) {
     options.data.theme = "success";
-    options.data.icon = "check";
+    options.data.icon ??= "check";
 
-    return this.show({ ...options, component: DDefaultToast });
+    return this.show(options);
   }
 
   /**
@@ -67,9 +74,9 @@ export default class Toasts extends Service {
   @action
   error(options = {}) {
     options.data.theme = "error";
-    options.data.icon = "exclamation-triangle";
+    options.data.icon ??= "exclamation-triangle";
 
-    return this.show({ ...options, component: DDefaultToast });
+    return this.show(options);
   }
 
   /**
@@ -82,9 +89,9 @@ export default class Toasts extends Service {
   @action
   warning(options = {}) {
     options.data.theme = "warning";
-    options.data.icon = "exclamation-circle";
+    options.data.icon ??= "exclamation-circle";
 
-    return this.show({ ...options, component: DDefaultToast });
+    return this.show(options);
   }
 
   /**
@@ -97,9 +104,9 @@ export default class Toasts extends Service {
   @action
   info(options = {}) {
     options.data.theme = "info";
-    options.data.icon = "info-circle";
+    options.data.icon ??= "info-circle";
 
-    return this.show({ ...options, component: DDefaultToast });
+    return this.show(options);
   }
 
   /**

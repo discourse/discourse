@@ -160,12 +160,12 @@ const DiscourseURL = EmberObject.extend({
 
   replaceState(path) {
     if (path.startsWith("#")) {
-      path = this.router.currentURL.replace(/#.*$/, "") + path;
+      path = this.routerService.currentURL.replace(/#.*$/, "") + path;
     }
 
     path = withoutPrefix(path);
 
-    if (this.router.currentURL !== path) {
+    if (this.routerService.currentURL !== path) {
       // Always use replaceState in the next runloop to prevent weird routes changing
       // while URLs are loading. For example, while a topic loads it sets `currentPost`
       // which triggers a replaceState even though the topic hasn't fully loaded yet!
@@ -175,6 +175,11 @@ const DiscourseURL = EmberObject.extend({
         this.router._routerMicrolib.replaceURL(path);
       });
     }
+  },
+
+  pushState(path) {
+    path = withoutPrefix(path);
+    this.router._routerMicrolib.updateURL(path);
   },
 
   routeToTag(a) {
@@ -228,7 +233,7 @@ const DiscourseURL = EmberObject.extend({
       return this.replaceState(path);
     }
 
-    const oldPath = this.router.currentURL;
+    const oldPath = this.routerService.currentURL;
 
     path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
@@ -281,27 +286,32 @@ const DiscourseURL = EmberObject.extend({
 
   // Determines whether a URL is internal or not
   isInternal(url) {
-    if (url && url.length) {
-      if (url.startsWith("//")) {
-        url = "http:" + url;
-      }
-      if (url.startsWith("#")) {
-        return true;
-      }
-      if (url.startsWith("/")) {
-        return true;
-      }
-      if (url.startsWith(this.origin())) {
-        return true;
-      }
-      if (url.replace(/^http/, "https").startsWith(this.origin())) {
-        return true;
-      }
-      if (url.replace(/^https/, "http").startsWith(this.origin())) {
-        return true;
-      }
+    if (!url?.length) {
+      return false;
     }
-    return false;
+
+    if (url.startsWith("//")) {
+      url = "http:" + url;
+    }
+
+    if (url.startsWith("http://") || url.startsWith("https://")) {
+      return (
+        url.startsWith(this.origin) ||
+        url.replace(/^http/, "https").startsWith(this.origin) ||
+        url.replace(/^https/, "http").startsWith(this.origin)
+      );
+    }
+
+    try {
+      const parsedUrl = new URL(url, this.origin);
+      if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+        return false;
+      }
+    } catch {
+      return false;
+    }
+
+    return true;
   },
 
   /**
@@ -383,8 +393,8 @@ const DiscourseURL = EmberObject.extend({
   },
 
   // This has been extracted so it can be tested.
-  origin() {
-    let prefix = getURL("/");
+  get origin() {
+    const prefix = getURL("/");
     return window.location.origin + (prefix === "/" ? "" : prefix);
   },
 
@@ -415,8 +425,6 @@ const DiscourseURL = EmberObject.extend({
   handleURL(path, opts) {
     opts = opts || {};
 
-    const router = this.router;
-
     if (opts.replaceURL) {
       this.replaceState(path);
     }
@@ -429,7 +437,7 @@ const DiscourseURL = EmberObject.extend({
       elementId = split[1];
     }
 
-    const transition = router.transitionTo(path);
+    const transition = this.routerService.transitionTo(path);
 
     transition._discourse_intercepted = true;
     transition._discourse_anchor = elementId;

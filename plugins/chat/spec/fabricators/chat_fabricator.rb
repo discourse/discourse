@@ -216,7 +216,7 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
   original_message do |attrs|
     Fabricate(
       :chat_message,
-      chat_channel: attrs[:channel] || Fabricate(:chat_channel),
+      chat_channel: attrs[:channel] || Fabricate(:chat_channel, threading_enabled: true),
       user: attrs[:original_message_user] || Fabricate(:user),
       use_service: attrs[:use_service],
     )

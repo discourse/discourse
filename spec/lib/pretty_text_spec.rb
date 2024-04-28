@@ -220,7 +220,7 @@ RSpec.describe PrettyText do
           <aside class="quote no-group" data-username="maja" data-post="3" data-topic="#{topic.id}">
           <div class="title">
           <div class="quote-controls"></div>
-          <a href="http://test.localhost/t/#{topic.id}/3">#{I18n.t("on_another_topic")}</a></div>
+          <a href="/t/#{topic.id}/3">#{I18n.t("on_another_topic")}</a></div>
           <blockquote>
           <p>I have nothing to say.</p>
           </blockquote>
@@ -569,13 +569,13 @@ RSpec.describe PrettyText do
           <a class="mention" href="/u/test">@test</a>,
           <a class="mention-group" href="/g/test-group">@test-group</a>,
           <a class="custom-mention" href="/custom-mention">@test-custom</a>,
+          <a class="mention" href="/u/test1">test1</a>,
           this is a test
         </p>
         HTML
 
         extracted_mentions = PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked_html))
-        expect(extracted_mentions).to include("test", "test-group")
-        expect(extracted_mentions).not_to include("test-custom")
+        expect(extracted_mentions).to contain_exactly("test", "test-group")
 
         Plugin::Instance
           .new
@@ -1953,6 +1953,39 @@ HTML
 
   describe "watched words - replace & link" do
     after { Discourse.redis.flushdb }
+
+    # Makes sure that mini_racer/libv8-node env doesn't regress
+    it "finishes in a timely matter" do
+      sql = 1500.times.map { |i| <<~SQL }.join
+        INSERT INTO watched_words
+        (created_at, updated_at, word, action, replacement)
+        VALUES
+        (
+          :now,
+          :now,
+          'word_#{i}',
+          :action,
+          'replacement_#{i}'
+        );
+      SQL
+
+      DB.exec(sql, now: Time.current, action: WatchedWord.actions[:replace])
+
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:replace],
+        word: "nope",
+        replacement: "yep",
+      )
+
+      # Due to a bug in node 18.16 and lower this takes about 11s.
+      # On node 18.19 and newer it takes about 250ms
+      expect do
+        Timeout.timeout(3) do
+          expect(PrettyText.cook("abc nope def")).to match_html("<p>abc yep def</p>")
+        end
+      end.not_to raise_error
+    end
 
     it "replaces words with other words" do
       Fabricate(

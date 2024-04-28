@@ -40,6 +40,7 @@ en:
       back_to_forum: "Forum"
       deleted_chat_username: deleted
       dates:
+        yesterday: "Yesterday"
         time_tiny: "h:mm"
       all_loaded: "Showing all messages"
       already_enabled: "Chat is already enabled on this topic. Please refresh."
@@ -50,6 +51,7 @@ en:
       cancel_reply: "Cancel reply"
       chat_channels: "Channels"
       browse_all_channels: "Browse all channels"
+      see_in: "See in"
       move_to_channel:
         title: "Move messages to channel"
         instructions:
@@ -114,6 +116,7 @@ en:
         direct_message_cta: "Start a personal Chat"
         direct_message: "You can also start a personal chat with one or more users."
         title: "No channels found"
+        my_threads: "You don't have any threads yet. Threads you participate in will be displayed here."
       email_frequency:
         description: "We'll only email you if we haven't seen you in the last 15 minutes."
         never: "Never"
@@ -305,7 +308,7 @@ en:
         back: "Back"
         title: Channels
         filter_all: All
-        filter_open: Opened
+        filter_open: Open
         filter_closed: Closed
         filter_archived: Archived
         filter_input_placeholder: Search channel by name
@@ -587,6 +590,7 @@ en:
       flags:
         off_topic: "This message is not relevant to the current discussion as defined by the channel title, and should probably be moved elsewhere."
         inappropriate: "This message contains content that a reasonable person would consider offensive, abusive, or a violation of <a href=\"%{basePath}/guidelines\">our community guidelines</a>."
+        illegal: "This post requires staff attention because I believe it contains content that is illegal."
         spam: "This message is an advertisement, or vandalism. It is not useful or relevant to the current channel."
         notify_user: "I want to talk to this person directly and personally about their message."
         notify_moderators: "This message requires staff attention for another reason not listed above."

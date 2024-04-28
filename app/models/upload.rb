@@ -281,6 +281,7 @@ class Upload < ActiveRecord::Base
           begin
             Discourse::Utils.execute_command(
               "identify",
+              "-ping",
               "-format",
               "%w %h",
               path,
@@ -413,6 +414,7 @@ class Upload < ActiveRecord::Base
       begin
         Discourse::Utils.execute_command(
           "identify",
+          "-ping",
           "-format",
           "%Q",
           local_path,

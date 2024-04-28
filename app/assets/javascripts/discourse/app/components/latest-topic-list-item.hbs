@@ -14,9 +14,9 @@
     {{raw "topic-status" topic=this.topic}}
     {{topic-link this.topic}}
     {{~#if this.topic.featured_link}}
-      {{topic-featured-link this.topic}}
-    {{/if}}
-    <TopicPostBadges
+      &nbsp;{{topic-featured-link this.topic}}
+    {{/if}}{{! intentionally inline 
+    to avoid whitespace}}<TopicPostBadges
       @unreadPosts={{this.topic.unread_posts}}
       @unseen={{this.topic.unseen}}
       @url={{this.topic.lastUnreadUrl}}

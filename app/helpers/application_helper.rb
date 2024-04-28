@@ -65,10 +65,8 @@ module ApplicationHelper
     google_universal_analytics_json
   end
 
-  def google_tag_manager_nonce_placeholder
-    placeholder = "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
-    response.headers["Discourse-GTM-Nonce-Placeholder"] = placeholder
-    placeholder
+  def csp_nonce_placeholder
+    ContentSecurityPolicy.nonce_placeholder(response.headers)
   end
 
   def shared_session_key
@@ -150,24 +148,20 @@ module ApplicationHelper
 
   def preload_script_url(url, entrypoint: nil)
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
+    nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
 
     add_resource_preload_list(url, "script")
-    if GlobalSetting.preload_link_header
-      <<~HTML.html_safe
-        <script defer src="#{url}" #{entrypoint_attribute}></script>
-      HTML
-    else
-      <<~HTML.html_safe
-        <link rel="preload" href="#{url}" as="script" #{entrypoint_attribute}>
-        <script defer src="#{url}" #{entrypoint_attribute}></script>
-      HTML
-    end
+
+    <<~HTML.html_safe
+      <script defer src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
+    HTML
   end
 
   def add_resource_preload_list(resource_url, type)
-    if !@links_to_preload.nil?
-      @links_to_preload << %Q(<#{resource_url}>; rel="preload"; as="#{type}")
-    end
+    links =
+      controller.instance_variable_get(:@asset_preload_links) ||
+        controller.instance_variable_set(:@asset_preload_links, [])
+    links << %Q(<#{resource_url}>; rel="preload"; as="#{type}")
   end
 
   def discourse_csrf_tags
@@ -437,7 +431,11 @@ module ApplicationHelper
   end
 
   def include_crawler_content?
-    crawler_layout? || !mobile_view? || !modern_mobile_device?
+    if current_user && !crawler_layout?
+      params.key?(:print)
+    else
+      crawler_layout? || !mobile_view? || !modern_mobile_device?
+    end
   end
 
   def modern_mobile_device?
@@ -562,7 +560,7 @@ module ApplicationHelper
   end
 
   def current_homepage
-    current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
+    current_user&.user_option&.homepage || HomepageHelper.resolve(request, current_user)
   end
 
   def build_plugin_html(name)
@@ -586,6 +584,7 @@ module ApplicationHelper
       mobile_view? ? :mobile : :desktop,
       name,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
+      csp_nonce: csp_nonce_placeholder,
     )
   end
 
@@ -595,6 +594,7 @@ module ApplicationHelper
       :translations,
       I18n.locale,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
+      csp_nonce: csp_nonce_placeholder,
     )
   end
 
@@ -604,6 +604,7 @@ module ApplicationHelper
       :extra_js,
       nil,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
+      csp_nonce: csp_nonce_placeholder,
     )
   end
 
@@ -738,6 +739,10 @@ module ApplicationHelper
     absolute_url
   end
 
+  def escape_noscript(&block)
+    raw capture(&block).gsub(%r{<(/\s*noscript)}i, '&lt;\1')
+  end
+
   def manifest_url
     # If you want the `manifest_url` to be different for a specific action,
     # in the action set @manifest_url = X. Originally added for chat to add a
@@ -752,6 +757,10 @@ module ApplicationHelper
 
   def rss_creator(user)
     user&.display_name
+  end
+
+  def anonymous_top_menu_items
+    Discourse.anonymous_top_menu_items.map(&:to_s)
   end
 
   def authentication_data

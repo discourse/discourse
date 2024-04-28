@@ -1,4 +1,4 @@
-import { click, visit, waitFor } from "@ember/test-helpers";
+import { click, triggerEvent, visit, waitFor } from "@ember/test-helpers";
 import $ from "jquery";
 import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
@@ -8,6 +8,10 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
 
   needs.settings({
     navigation_menu: "sidebar",
+  });
+
+  needs.hooks.afterEach(function () {
+    document.body.style.width = null;
   });
 
   test("wide sidebar is changed to cloak when resize to narrow screen", async function (assert) {
@@ -22,8 +26,7 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
 
     assert.ok(exists("#d-sidebar"), "wide sidebar is displayed");
 
-    const bodyElement = document.querySelector("body");
-    bodyElement.style.width = "767px";
+    document.body.style.width = "767px";
 
     await waitFor(".btn-sidebar-toggle.narrow-desktop", {
       timeout: 5000,
@@ -35,40 +38,38 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
       "cloak sidebar is displayed"
     );
 
-    await click("#main-outlet");
+    await triggerEvent(document.querySelector(".header-cloak"), "pointerdown");
+
     assert.ok(
       !exists(".sidebar-hamburger-dropdown"),
       "cloak sidebar is collapsed"
     );
 
-    bodyElement.style.width = "1200px";
+    document.body.style.width = "1200px";
     await waitFor("#d-sidebar", {
       timeout: 5000,
     });
     assert.ok(exists("#d-sidebar"), "wide sidebar is displayed");
-
-    bodyElement.style.width = null;
   });
 
   test("transition from narrow screen to wide screen", async function (assert) {
     await visit("/");
 
-    const bodyElement = document.querySelector("body");
-    bodyElement.style.width = "767px";
+    document.body.style.width = "767px";
 
     await waitFor(".btn-sidebar-toggle.narrow-desktop", {
       timeout: 5000,
     });
     await click(".btn-sidebar-toggle");
 
-    bodyElement.style.width = "1200px";
+    document.body.style.width = "1200px";
     await waitFor("#d-sidebar", {
       timeout: 5000,
     });
-    await click(".header-dropdown-toggle.current-user");
-    $(".header-dropdown-toggle.current-user").click();
-    assert.ok(exists(".quick-access-panel"));
 
-    bodyElement.style.width = null;
+    await click(".header-dropdown-toggle.current-user button");
+    $(".header-dropdown-toggle.current-user").click();
+
+    assert.ok(exists(".quick-access-panel"));
   });
 });

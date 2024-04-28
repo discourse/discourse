@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicsBulkAction do
-  fab!(:topic)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:topic) { Fabricate(:topic, user: user) }
 
   describe "#dismiss_topics" do
     fab!(:user) { Fabricate(:user, created_at: 1.days.ago, refresh_auto_groups: true) }
@@ -156,10 +157,7 @@ RSpec.describe TopicsBulkAction do
 
     context "when the user can edit the topic" do
       context "with 'create_revision_on_bulk_topic_moves' setting enabled" do
-        before do
-          SiteSetting.create_revision_on_bulk_topic_moves = true
-          Group.refresh_automatic_groups!
-        end
+        before { SiteSetting.create_revision_on_bulk_topic_moves = true }
 
         it "changes the category, creates a post revision and returns the topic_id" do
           old_category_id = topic.category_id
@@ -198,10 +196,7 @@ RSpec.describe TopicsBulkAction do
       end
 
       context "with 'create_revision_on_bulk_topic_moves' setting disabled" do
-        before do
-          SiteSetting.create_revision_on_bulk_topic_moves = false
-          Group.refresh_automatic_groups!
-        end
+        before { SiteSetting.create_revision_on_bulk_topic_moves = false }
 
         it "changes the category, doesn't create a post revision and returns the topic_id" do
           tba =
@@ -419,9 +414,8 @@ RSpec.describe TopicsBulkAction do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       topic.tags = [tag1, tag2]
-      Group.refresh_automatic_groups!
     end
 
     it "can change the tags, and can create new tags" do
@@ -488,9 +482,8 @@ RSpec.describe TopicsBulkAction do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       topic.tags = [tag1, tag2]
-      Group.refresh_automatic_groups!
     end
 
     it "can append new or existing tags" do
@@ -559,9 +552,8 @@ RSpec.describe TopicsBulkAction do
 
     before do
       SiteSetting.tagging_enabled = true
-      SiteSetting.min_trust_level_to_tag_topics = 0
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       topic.tags = [tag1, tag2]
-      Group.refresh_automatic_groups!
     end
 
     it "can remove all tags" do

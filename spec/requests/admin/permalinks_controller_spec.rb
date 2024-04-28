@@ -92,6 +92,8 @@ RSpec.describe Admin::PermalinksController do
           post_id: nil,
           category_id: nil,
           tag_id: nil,
+          external_url: nil,
+          user_id: nil,
         )
       end
 
@@ -112,6 +114,8 @@ RSpec.describe Admin::PermalinksController do
           post_id: some_post.id,
           category_id: nil,
           tag_id: nil,
+          external_url: nil,
+          user_id: nil,
         )
       end
 
@@ -132,6 +136,8 @@ RSpec.describe Admin::PermalinksController do
           post_id: nil,
           category_id: category.id,
           tag_id: nil,
+          external_url: nil,
+          user_id: nil,
         )
       end
 
@@ -152,6 +158,30 @@ RSpec.describe Admin::PermalinksController do
           post_id: nil,
           category_id: nil,
           tag_id: tag.id,
+          external_url: nil,
+          user_id: nil,
+        )
+      end
+
+      it "works for users" do
+        user = Fabricate(:user)
+
+        post "/admin/permalinks.json",
+             params: {
+               url: "/people/42",
+               permalink_type: "user_id",
+               permalink_type_value: user.id,
+             }
+
+        expect(response.status).to eq(200)
+        expect(Permalink.last).to have_attributes(
+          url: "people/42",
+          topic_id: nil,
+          post_id: nil,
+          category_id: nil,
+          tag_id: nil,
+          external_url: nil,
+          user_id: user.id,
         )
       end
     end

@@ -95,13 +95,14 @@ Discourse::Application.configure do
       # Most existing tests were written assuming allow_uncategorized_topics
       # was enabled, so we should set it to true.
       s.set_regardless_of_locale(:allow_uncategorized_topics, true)
-
-      # disable plugins
-      if ENV["LOAD_PLUGINS"] == "1"
-        s.set_regardless_of_locale(:discourse_narrative_bot_enabled, false)
-      end
     end
 
     SiteSetting.refresh!
+  end
+
+  if ENV["CI"].present?
+    config.to_prepare do
+      ActiveSupport.on_load(:active_record_postgresqladapter) { self.create_unlogged_tables = true }
+    end
   end
 end

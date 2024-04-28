@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
@@ -14,6 +15,12 @@ export default class ChatDrawerRoutesChannelThread extends Component {
   @service chatStateManager;
   @service chatChannelsManager;
   @service chatHistory;
+
+  @tracked showThreadFullTitle = false;
+
+  get showfullTitle() {
+    return this.chatStateManager.isDrawerExpanded && this.showThreadFullTitle;
+  }
 
   get backButton() {
     const link = {
@@ -65,18 +72,27 @@ export default class ChatDrawerRoutesChannelThread extends Component {
     }
   }
 
+  @action
+  setFullTitle(value) {
+    this.showThreadFullTitle = value;
+  }
+
   <template>
-    <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
+    <Navbar
+      @onClick={{this.chat.toggleDrawer}}
+      @showFullTitle={{this.showfullTitle}}
+      as |navbar|
+    >
       <navbar.BackButton
         @title={{this.backButton.title}}
         @route={{this.backButton.route}}
         @routeModels={{this.backButton.models}}
       />
       <navbar.Title @title={{this.threadTitle}} @icon="discourse-threads" />
-      <navbar.Actions as |action|>
-        <action.ToggleDrawerButton />
-        <action.FullPageButton />
-        <action.CloseDrawerButton />
+      <navbar.Actions as |a|>
+        <a.ToggleDrawerButton />
+        <a.FullPageButton />
+        <a.CloseDrawerButton />
       </navbar.Actions>
     </Navbar>
 
@@ -92,6 +108,7 @@ export default class ChatDrawerRoutesChannelThread extends Component {
             <ChatThread
               @thread={{thread}}
               @targetMessageId={{@params.messageId}}
+              @setFullTitle={{this.setFullTitle}}
             />
           {{/if}}
         {{/each}}

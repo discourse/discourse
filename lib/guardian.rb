@@ -97,7 +97,7 @@ class Guardian
   attr_reader :request
 
   def initialize(user = nil, request = nil)
-    @user = user.presence || AnonymousUser.new
+    @user = user.presence || Guardian::AnonymousUser.new
     @request = request
   end
 
@@ -624,8 +624,7 @@ class Guardian
     return false if !authenticated?
     return false if User.where(username_lower: SiteSetting.here_mention).exists?
 
-    @user.in_any_groups?(SiteSetting.here_mention_allowed_groups_map) ||
-      @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_for_here_mention)
+    @user.in_any_groups?(SiteSetting.here_mention_allowed_groups_map)
   end
 
   def can_lazy_load_categories?
@@ -640,12 +639,7 @@ class Guardian
   private
 
   def is_my_own?(obj)
-    if anonymous?
-      return(
-        SiteSetting.allow_anonymous_likes? && obj.class == PostAction && obj.is_like? &&
-          obj.user_id == @user.id
-      )
-    end
+    return false if anonymous?
     return obj.user_id == @user.id if obj.respond_to?(:user_id) && obj.user_id && @user.id
     return obj.user == @user if obj.respond_to?(:user)
 

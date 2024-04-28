@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { cloneJSON } from "discourse-common/lib/object";
 import { bind } from "discourse-common/utils/decorators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -36,7 +36,6 @@ export default class ChatChannelSubscriptionManager {
 
   teardown() {
     this.messageBus.unsubscribe(this.messageBusChannel, this.onMessage);
-    this.modelId = null;
   }
 
   @bind
@@ -147,6 +146,7 @@ export default class ChatChannelSubscriptionManager {
       message.excerpt = data.chat_message.excerpt;
       message.uploads = cloneJSON(data.chat_message.uploads || []);
       message.edited = data.chat_message.edited;
+      message.streaming = data.chat_message.streaming;
     }
   }
 
@@ -193,7 +193,7 @@ export default class ChatChannelSubscriptionManager {
     if (message) {
       message.deletedAt = null;
     } else {
-      const newMessage = ChatMessage.create(this.model, data.chat_message);
+      const newMessage = ChatMessage.create(this.channel, data.chat_message);
       newMessage.manager = this.messagesManager;
       this.messagesManager.addMessages([newMessage]);
     }

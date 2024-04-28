@@ -9,15 +9,16 @@
         <span>{{i18n "user.summary.title"}}</span>
       </DNavigationItem>
 
-      <DNavigationItem
-        @route="userActivity"
-        @ariaCurrentContext="parentNav"
-        class="user-nav__activity"
-      >
-        {{d-icon "stream"}}
-        <span>{{i18n "user.activity_stream"}}</span>
-      </DNavigationItem>
-
+      {{#if @showActivityTab}}
+        <DNavigationItem
+          @route="userActivity"
+          @ariaCurrentContext="parentNav"
+          class="user-nav__activity"
+        >
+          {{d-icon "stream"}}
+          <span>{{i18n "user.activity_stream"}}</span>
+        </DNavigationItem>
+      {{/if}}
     {{/unless}}
 
     {{#if @showNotificationsTab}}

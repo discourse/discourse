@@ -196,7 +196,7 @@ cs:
         like_not_found: |-
           Nezapomněl/a jsi lajknout :heart: můj [příspěvek?](%{url}) :crying_cat_face:
         not_found: |-
-          Vypadá to, že jsi nenahrál žádný obrázek, tak jsem vybral obrázek, který se ti určitě bude líbit.
+          Vypadá to, že jsi nenahrál/a žádný obrázek, tak jsem vybral obrázek, který se ti určitě bude líbit.
 
           <%{image_url}>
 
@@ -220,7 +220,7 @@ cs:
 
           - nebo v editoru stiskni tlačítka <kbd><b>B</b></kbd> nebo <kbd><i>I</i></kbd>
         reply: |-
-          Dobrá práce! HTML a BBCode fungují také pro formátování – aby ses dozvěděl/a více, [vyzkoušej tento návod] (https://commonmark.org/help) :nerd:
+          Dobrá práce! HTML a BBCode fungují také pro formátování – aby ses dozvěděl/a více, [vyzkoušej tento návod](https://commonmark.org/help) :nerd:
         not_found: |-
           Ojé, ve tvé odpovědi jsem nenašel žádné formátování. :pencil2:
 
@@ -293,20 +293,16 @@ cs:
         not_found: |-
           Ale ne, můj ošklivý příspěvek ještě nebyl označen jako nevhodný. :worried: Můžeš to označit jako nevhodné pomocí **vlajky** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nezapomeň použít tlačítko Zobrazit více <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> , abys odhalil/a více akcí pro každý příspěvek.
       search:
-        instructions: |-
-          _psst_ … V tomto tématu jsem skryl překvapení. Pokud jsi připraven/a na výzvu, **vyber ikonu vyhledávání** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> vpravo nahoře &#8599; a najdi ho.
-
-          Zkus v tomto tématu vyhledat výraz „capy&#8203;bara“
         hidden_message: |-
           Jak jsi mohl/a přehlédnout tuhle kapybaru? :wink:
 
           <img src="%{base_uri}/plugins/discourse-narrative-bot/images/capybara-eating.gif"/>
 
-          Všiml/a sis, že ss vrátil/a na začátek? Nakrm tuhle ubohou hladovou kapybaru **odpovědí pomocí emoji `%{search_answer}`** a budeš automaticky vrácen/a na konec.
+          Všiml/a sis, že ses vrátil/a na začátek? Nakrm tuhle ubohou hladovou kapybaru **odpovědí pomocí emoji `%{search_answer}`** a budeš automaticky vrácen/a na konec.
         reply: |-
-          Ano, našli jste to :tada:
+          To je ono! :tada:
 
-          - Pro podrobnější vyhledávání přejdi na [podrobnou stránku vyhledávání] (%{search_url}).
+          - Pro podrobnější vyhledávání přejdi na [podrobnou stránku vyhledávání](%{search_url}).
 
           - Chceš-li skočit kamkoli v dlouhé diskusi, vyzkoušej ovládací prvky časové osy tématu vpravo (a dole, na mobilu).
 
@@ -350,7 +346,7 @@ cs:
         instructions: |-
           Pokud chceš svůj příspěvek stáhnout, můžeš ho smazat.
 
-          Pokračuj a **odstraň** kterýkoli z výše uvedených příspěvků pomocí akce <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **odstranit**. Nemaž však první příspěvek!
+          Pokračuj a **odstraň** kterýkoli z výše uvedených příspěvků pomocí akce <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> **odstranit**. Ale nemaž první příspěvek!
         not_found: |-
           Zatím nevidím žádné smazané příspěvky? Nezapomeň, že <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> zobrazit více odhalí <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-trash.png" width="16" height="16"> tlačítko smazat.
         reply: |-

@@ -31,6 +31,7 @@ RSpec.describe Permalink do
     let(:post) { Fabricate(:post, topic: topic) }
     let(:category) { Fabricate(:category) }
     let(:tag) { Fabricate(:tag) }
+    let(:user) { Fabricate(:user) }
 
     it "returns a topic url when topic_id is set" do
       permalink.topic_id = topic.id
@@ -94,6 +95,16 @@ RSpec.describe Permalink do
     end
 
     it "returns nil when nothing is set" do
+      expect(target_url).to eq(nil)
+    end
+
+    it "returns a user url when user_id is set" do
+      permalink.user_id = user.id
+      expect(target_url).to eq(user.full_url)
+    end
+
+    it "returns nil when user_id is set but user is not found" do
+      permalink.user_id = 99_999
       expect(target_url).to eq(nil)
     end
   end

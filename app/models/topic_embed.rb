@@ -79,6 +79,18 @@ class TopicEmbed < ActiveRecord::Base
           embed_url: url,
           embed_content_sha1: content_sha1,
         }
+        create_args[:visible] = false if SiteSetting.import_embed_unlisted?
+
+        # always return `args` when using this modifier, e.g:
+        #
+        # plugin.register_modifier(:topic_embed_import_create_args) do |args|
+        #   args[:title] = "MODIFIED: #{args[:title]}"
+        #
+        #   args # returning args is important to prevent errors
+        # end
+        create_args =
+          DiscoursePluginRegistry.apply_modifier(:topic_embed_import_create_args, create_args) ||
+            create_args
 
         post = PostCreator.create(user, create_args)
         post.topic.topic_embed.update!(embed_content_cache: original_contents)

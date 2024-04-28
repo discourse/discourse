@@ -31,11 +31,15 @@
       {{/if}}
 
       <div class="group-info-names">
-        <span class="group-info-name">{{this.groupName}}</span>
+        <span class="group-info-name">
+          {{or this.model.full_name this.model.name}}
+        </span>
 
-        {{#if this.model.full_name}}<div
-            class="group-info-full-name"
-          >{{this.model.name}}</div>{{/if}}
+        {{#if this.model.full_name}}
+          <div class="group-info-full-name">
+            {{this.model.name}}
+          </div>
+        {{/if}}
       </div>
 
       <div class="group-details-button">
@@ -60,6 +64,7 @@
               @icon="trash-alt"
               @label="admin.groups.delete"
               class="btn-danger"
+              data-test-selector="delete-group-button"
             />
           {{/if}}
         {{/if}}

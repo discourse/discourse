@@ -10,9 +10,6 @@ acceptance("Login with email - no social logins", function (needs) {
   needs.settings({ enable_local_logins_via_email: true });
   needs.pretender((server, helper) => {
     server.post("/u/email-login", () => helper.response({ success: "OK" }));
-    server.get(`/session/passkey/challenge.json`, () =>
-      helper.response({ challenge: "smth" })
-    );
   });
   test("with login with email enabled", async function (assert) {
     await visit("/");

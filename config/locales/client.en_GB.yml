@@ -20,16 +20,11 @@ en_GB:
       long_with_year: "D MMM YYYY HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM 'YY LT"
       long_date_without_year: "D MMM LT"
-      long_date_with_year_without_time: "D MMM 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM 'YY <br/>LT"
       tiny:
         date_month: "D MMM"
-        date_year: "MMM 'YY"
-      medium:
-        date_year: "D MMM 'YY"
+        date_year: "MMM YYYY"
     review:
       types:
         reviewable_flagged_post:
@@ -52,12 +47,12 @@ en_GB:
       flair_color: "Avatar Flair Colour"
       flair_color_placeholder: "(Optional) Hex colour value"
     categories:
+      categories_label: "categories"
       reorder:
         title_long: "Reorganise the category list"
     ip_lookup:
       organisation: Organisation
     user:
-      color_scheme_default_on_all_devices: "Set default colour scheme(s) on all my devices"
       color_scheme: "Colour Scheme"
       color_schemes:
         dark_instructions: "You can preview the dark mode colour scheme by toggling your device's dark mode."
@@ -130,6 +125,9 @@ en_GB:
           descriptions:
             users:
               anonymize: Anonymise user accounts.
+      appearance:
+        sidebar_link:
+          navigation: "Navigation"
       backups:
         upload:
           error: "There has been an error whilst uploading '%{filename}': %{message}"

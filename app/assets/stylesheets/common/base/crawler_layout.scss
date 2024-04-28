@@ -80,9 +80,6 @@ body > noscript {
     table-layout: fixed;
     overflow: hidden;
     margin: 2em 0;
-    .posters > a {
-      float: none;
-    }
 
     thead {
       border-bottom: 1px solid #ddd;
@@ -343,5 +340,12 @@ body > noscript {
 @media print {
   .buorg {
     display: none !important;
+  }
+}
+
+.user-crawler {
+  .username {
+    margin-left: 5px;
+    display: inline-block;
   }
 }

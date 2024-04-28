@@ -1,12 +1,14 @@
 import { setOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { MENU } from "float-kit/lib/constants";
 import FloatKitInstance from "float-kit/lib/float-kit-instance";
 
 export default class DMenuInstance extends FloatKitInstance {
   @service menu;
+  @service site;
+  @service modal;
 
   constructor(owner, trigger, options = {}) {
     super(...arguments);
@@ -16,6 +18,15 @@ export default class DMenuInstance extends FloatKitInstance {
     this.id = trigger.id || guidFor(trigger);
     this.trigger = trigger;
     this.setupListeners();
+  }
+
+  @action
+  close() {
+    if (this.site.mobileView && this.options.modalForMobile) {
+      this.modal.close();
+    }
+
+    super.close(...arguments);
   }
 
   @action

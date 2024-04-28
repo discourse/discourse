@@ -7,13 +7,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("New Message - Anonymous", function (needs) {
-  needs.pretender((server, helper) => {
-    server.get(`/session/passkey/challenge.json`, () =>
-      helper.response({ challenge: "smth" })
-    );
-  });
-
+acceptance("New Message - Anonymous", function () {
   test("accessing new-message route when logged out", async function (assert) {
     await visit(
       "/new-message?username=charlie&title=message%20title&body=message%20body"

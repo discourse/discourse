@@ -13,6 +13,8 @@ sw:
           never: "Kamwe"
     chat:
       deleted_chat_username: imefutwa
+      dates:
+        yesterday: "Jana"
       create: "Tengeneza"
       cancel: "Ghairi"
       channel_settings:
@@ -46,6 +48,7 @@ sw:
       browse:
         back: "Iliyopita"
         filter_all: Vyote
+        filter_open: Fungua
         filter_closed: Imefungwa
       chat_message_separator:
         today: Leo

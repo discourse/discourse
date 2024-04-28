@@ -27,12 +27,17 @@ module PageObjects
         find(".chat-header-icon").click
       end
 
+      def close_from_header
+        find(".chat-header-icon").click
+      end
+
       def has_header_href?(href)
         find(".chat-header-icon").has_link?(href: href)
       end
 
-      def open
+      def open(with_preloaded_channels: true)
         visit("/chat")
+        has_finished_loading?(with_preloaded_channels: with_preloaded_channels)
       end
 
       def open_new_message(ensure_open: true)
@@ -48,13 +53,14 @@ module PageObjects
         drawer?(expectation: false, channel_id: channel_id, expanded: expanded)
       end
 
-      def visit_channel(channel, message_id: nil)
+      def visit_channel(channel, message_id: nil, with_preloaded_channels: true)
         visit(channel.url + (message_id ? "/#{message_id}" : ""))
-        has_finished_loading?
+        has_finished_loading?(with_preloaded_channels: with_preloaded_channels)
       end
 
       def visit_user_threads
         visit("/chat/threads")
+        has_css?(".spinner")
         has_no_css?(".spinner")
       end
 
@@ -87,7 +93,22 @@ module PageObjects
         PageObjects::Pages::ChatBrowse.new.has_finished_loading?
       end
 
-      def has_finished_loading?
+      def visit_new_message(recipients)
+        if recipients.is_a?(Array)
+          recipients = recipients.map(&:username).join(",")
+        elsif recipients.respond_to?(:username)
+          recipients = recipients.username
+        end
+
+        visit("/chat/new-message?recipients=#{recipients}")
+      end
+
+      def has_preloaded_channels?
+        has_css?("body.has-preloaded-chat-channels")
+      end
+
+      def has_finished_loading?(with_preloaded_channels: true)
+        has_preloaded_channels? if with_preloaded_channels
         has_no_css?(".chat-channel--not-loaded-once")
         has_no_css?(".chat-skeleton")
       end

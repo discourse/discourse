@@ -1040,7 +1040,7 @@ RSpec.describe Admin::ThemesController do
   end
 
   describe "#update_single_setting" do
-    let(:theme) { Fabricate(:theme) }
+    fab!(:theme)
 
     before do
       theme.set_field(target: :settings, name: :yaml, value: "bg: red")
@@ -1061,6 +1061,61 @@ RSpec.describe Admin::ThemesController do
         user_history = UserHistory.last
 
         expect(user_history.action).to eq(UserHistory.actions[:change_theme_setting])
+      end
+
+      it "should return the right error when value used to update a theme setting of `objects` typed is invalid" do
+        field =
+          theme.set_field(
+            target: :settings,
+            name: "yaml",
+            value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+          )
+
+        theme.save!
+
+        put "/admin/themes/#{theme.id}/setting.json",
+            params: {
+              name: "objects_setting",
+              value: [
+                { name: "new_section", links: [{ name: "a" * 21, url: "https://some.url.com" }] },
+              ].to_json,
+            }
+
+        expect(response.status).to eq(422)
+
+        expect(response.parsed_body["errors"]).to eq(
+          ["The property at JSON Pointer '/0/links/0/name' must be at most 20 characters long."],
+        )
+      end
+
+      it "should be able to update a theme setting of `objects` typed" do
+        field =
+          theme.set_field(
+            target: :settings,
+            name: "yaml",
+            value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+          )
+
+        theme.save!
+
+        put "/admin/themes/#{theme.id}/setting.json",
+            params: {
+              name: "objects_setting",
+              value: [
+                { name: "new_section", links: [{ name: "new link", url: "https://some.url.com" }] },
+              ].to_json,
+            }
+
+        expect(response.status).to eq(200)
+
+        expect(theme.settings[:objects_setting].value).to eq(
+          [
+            {
+              "name" => "new_section",
+              "links" => [{ "name" => "new link", "url" => "https://some.url.com" }],
+            },
+          ],
+        )
       end
 
       it "should clear a theme setting" do
@@ -1097,6 +1152,172 @@ RSpec.describe Admin::ThemesController do
     end
   end
 
+  describe "#update_translations" do
+    fab!(:theme)
+
+    before do
+      theme.set_field(
+        target: :translations,
+        name: :en,
+        value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
+      )
+      theme.set_field(
+        target: :translations,
+        name: :fr,
+        value: { fr: { group: { hello: "Bonjour Mes Amis!" } } }.deep_stringify_keys.to_yaml,
+      )
+      theme.save!
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it "should update a theme translation" do
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                translations: {
+                  "group.hello" => "Hello there! updated",
+                },
+              },
+            }
+
+        expect(response.status).to eq(200)
+        theme.reload.translations.map { |t| expect(t.value).to eq("Hello there! updated") }
+      end
+
+      it "should update a theme translation with locale" do
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                translations: {
+                  "group.hello" => "Hello there! updated",
+                },
+                locale: "en",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        theme.reload.translations.map { |t| expect(t.value).to eq("Hello there! updated") }
+      end
+
+      it "should fail update a theme translation when locale is wrong" do
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                translations: {
+                  "group.hello" => "Hello there! updated",
+                },
+                locale: "foo",
+              },
+            }
+
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("invalid_params", message: :locale),
+        )
+      end
+
+      it "should update other locale and do not change current one" do
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                translations: {
+                  "group.hello" => "Bonjour Mes Amis! updated",
+                },
+                locale: "fr",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        theme.reload.translations.map { |t| expect(t.value).to eq("Hello there!") }
+
+        get "/admin/themes/#{theme.id}/translations/fr.json"
+        translations = response.parsed_body["translations"]
+        expect(translations.first["value"]).to eq("Bonjour Mes Amis! updated")
+      end
+    end
+
+    shared_examples "theme update not allowed" do
+      it "prevents updates with a 404 response" do
+        put "/admin/themes/#{theme.id}.json",
+            params: {
+              theme: {
+                translations: {
+                  "group.hello" => "Bonjour Mes Amis! updated",
+                },
+                locale: "fr",
+              },
+            }
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "theme update not allowed"
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      include_examples "theme update not allowed"
+    end
+  end
+
+  describe "#get_translations" do
+    fab!(:theme)
+
+    before do
+      theme.set_field(
+        target: :translations,
+        name: :en,
+        value: { en: { group: { hello: "Hello there!" } } }.deep_stringify_keys.to_yaml,
+      )
+      theme.save!
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      it "get translations from theme" do
+        get "/admin/themes/#{theme.id}/translations/en.json"
+        translations = response.parsed_body["translations"]
+        expect(translations.first["value"]).to eq("Hello there!")
+      end
+
+      it "fail if get translations from theme with wrong locale" do
+        get "/admin/themes/#{theme.id}/translations/foo.json"
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"]).to include(
+          I18n.t("invalid_params", message: :locale),
+        )
+      end
+    end
+
+    shared_examples "get theme translations not allowed" do
+      it "prevents updates with a 404 response" do
+        get "/admin/themes/#{theme.id}/translations/en.json"
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+      end
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "get theme translations not allowed"
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      include_examples "get theme translations not allowed"
+    end
+  end
+
   describe "#bulk_destroy" do
     fab!(:theme) { Fabricate(:theme, name: "Awesome Theme") }
     fab!(:theme_2) { Fabricate(:theme, name: "Another awesome Theme") }
@@ -1113,6 +1334,126 @@ RSpec.describe Admin::ThemesController do
     it "logs the theme destroy action for each theme" do
       StaffActionLogger.any_instance.expects(:log_theme_destroy).twice
       delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
+    end
+  end
+
+  describe "#objects_setting_metadata" do
+    fab!(:theme)
+
+    let(:theme_setting) do
+      yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml")
+      field = theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+      theme.settings
+    end
+
+    it "returns 404 if user is not an admin" do
+      get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+      expect(response.status).to eq(404)
+
+      sign_in(user)
+
+      get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+      expect(response.status).to eq(404)
+
+      sign_in(moderator)
+
+      get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    context "when user is an admin" do
+      before { sign_in(admin) }
+
+      it "returns 400 if the `id` param is not the id of a valid theme" do
+        get "/admin/themes/some_invalid_id/objects_setting_metadata/objects_with_categories.json"
+
+        expect(response.status).to eq(400)
+      end
+
+      it "returns 400 if the `setting_name` param does not match a valid setting" do
+        get "/admin/themes/#{theme.id}/objects_setting_metadata/some_invalid_setting_name.json"
+
+        expect(response.status).to eq(400)
+      end
+
+      it "returns 200 with the right `property_descriptions` attributes" do
+        theme.set_field(
+          target: :translations,
+          name: "en",
+          value: File.read("#{Rails.root}/spec/fixtures/theme_locales/objects_settings/en.yaml"),
+        )
+
+        theme.save!
+
+        theme_setting
+
+        get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_setting.json"
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["property_descriptions"]).to eq(
+          {
+            "links.name.description" => "Name of the link",
+            "links.name.label" => "Name",
+            "links.url.description" => "URL of the link",
+            "links.url.label" => "URL",
+            "name.description" => "Section Name",
+            "name.label" => "Name",
+          },
+        )
+      end
+
+      it "returns 200 with the right `categories` attribute for a theme setting with categories propertoes" do
+        category_1 = Fabricate(:category)
+        category_2 = Fabricate(:category)
+        category_3 = Fabricate(:category)
+
+        theme_setting[:objects_with_categories].value = [
+          {
+            "category_ids" => [category_1.id, category_2.id],
+            "child_categories" => [{ "category_ids" => [category_3.id] }],
+          },
+        ]
+
+        get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+        expect(response.status).to eq(200)
+
+        categories = response.parsed_body["categories"]
+
+        expect(categories.keys.map(&:to_i)).to contain_exactly(
+          category_1.id,
+          category_2.id,
+          category_3.id,
+        )
+
+        expect(categories[category_1.id.to_s]["name"]).to eq(category_1.name)
+        expect(categories[category_2.id.to_s]["name"]).to eq(category_2.name)
+        expect(categories[category_3.id.to_s]["name"]).to eq(category_3.name)
+      end
+    end
+  end
+
+  describe "#schema" do
+    fab!(:theme)
+    fab!(:theme_component) { Fabricate(:theme, component: true) }
+
+    before { sign_in(admin) }
+
+    it "returns 200 when customizing a theme's setting of objects type" do
+      get "/admin/customize/themes/#{theme.id}/schema/some_setting_name"
+
+      expect(response.status).to eq(200)
+    end
+
+    it "returns 200 when customizing a theme component's setting of objects type" do
+      get "/admin/customize/components/#{theme_component.id}/schema/some_setting_name"
+
+      expect(response.status).to eq(200)
     end
   end
 end

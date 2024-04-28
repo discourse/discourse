@@ -10,30 +10,31 @@ export default Component.extend({
   editingCategory: false,
   editingCategoryTab: null,
 
-  @discourseComputed("category.ancestors", "categories", "noSubcategories")
-  categoryBreadcrumbs(categoryAncestors, filteredCategories, noSubcategories) {
-    categoryAncestors = categoryAncestors || [];
-    const parentCategories = [undefined, ...categoryAncestors];
-    const categories = [...categoryAncestors, undefined];
-    const zipped = parentCategories.map((x, i) => [x, categories[i]]);
+  @discourseComputed("category", "categories", "noSubcategories")
+  categoryBreadcrumbs(category, filteredCategories, noSubcategories) {
+    const ancestors = category?.ancestors || [];
+    const parentCategories = [undefined, ...ancestors];
+    const categories = [...ancestors, undefined];
 
-    return zipped.map((record) => {
-      const [parentCategory, category] = record;
+    return parentCategories
+      .map((x, i) => [x, categories[i]])
+      .map((record) => {
+        const [parentCategory, subCategory] = record;
 
-      const options = filteredCategories.filter(
-        (c) =>
-          c.get("parentCategory.id") === (parentCategory && parentCategory.id)
-      );
+        const options = filteredCategories.filter(
+          (c) =>
+            c.get("parentCategory.id") === (parentCategory && parentCategory.id)
+        );
 
-      return {
-        category,
-        parentCategory,
-        options,
-        isSubcategory: !!parentCategory,
-        noSubcategories: !category && noSubcategories,
-        hasOptions: !parentCategory || parentCategory.has_children,
-      };
-    });
+        return {
+          category: subCategory,
+          parentCategory,
+          options,
+          isSubcategory: !!parentCategory,
+          noSubcategories: !subCategory && noSubcategories,
+          hasOptions: !parentCategory || parentCategory.has_children,
+        };
+      });
   },
 
   @discourseComputed("siteSettings.tagging_enabled", "editingCategory")

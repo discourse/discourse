@@ -34,6 +34,9 @@ class ApiKeyScope < ActiveRecord::Base
           delete: {
             actions: %w[topics#destroy],
           },
+          recover: {
+            actions: %w[topics#recover],
+          },
           read: {
             actions: %w[topics#show topics#feed topics#posts topics#show_by_external_id],
             params: %i[topic_id external_id],
@@ -61,8 +64,25 @@ class ApiKeyScope < ActiveRecord::Base
           delete: {
             actions: %w[posts#destroy],
           },
+          recover: {
+            actions: %w[posts#recover],
+          },
           list: {
             actions: %w[posts#latest],
+          },
+        },
+        revisions: {
+          read: {
+            actions: %w[posts#latest_revision posts#revisions],
+            params: %i[post_id],
+          },
+          modify: {
+            actions: %w[posts#hide_revision posts#show_revision posts#revert],
+            params: %i[post_id],
+          },
+          permanently_delete: {
+            actions: %w[posts#permanently_delete_revisions],
+            params: %i[post_id],
           },
         },
         tags: {

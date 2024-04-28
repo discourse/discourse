@@ -255,8 +255,15 @@ acceptance(
             automatic: false,
             name: "Macdonald",
           },
+          {
+            id: 47, // must match group-fixtures.js because lookup is by ID
+            automatic: false,
+            name: "Discourse",
+          },
         ]);
       });
+
+      server.post("/invites", () => helper.response({}));
     });
 
     test("shows correct saved data in form", async function (assert) {
@@ -270,6 +277,14 @@ acceptance(
         .hasText("Welcome to Discourse! :wave:");
       assert.dom(".invite-to-groups .formatted-selection").hasText("Macdonald");
       assert.dom("#invite-email").hasValue("cat.com");
+    });
+
+    test("shows correct saved data in group invite form", async function (assert) {
+      await visit("/g/discourse");
+      await click(".group-members-invite");
+      assert.dom(".invite-to-groups .formatted-selection").hasText("Discourse");
+
+      await click(".save-invite");
     });
   }
 );

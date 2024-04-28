@@ -21,7 +21,7 @@
           <div class="period-controls">
             <PeriodChooser
               @period={{this.period}}
-              @onChange={{action (mut this.period)}}
+              @onChange={{fn (mut this.period)}}
               @fullDay={{false}}
             />
             {{#if this.lastUpdatedAt}}
@@ -41,10 +41,7 @@
               @value={{readonly this.nameInput}}
               placeholder={{i18n "directory.filter_name"}}
               class="filter-name no-blur"
-              {{on
-                "input"
-                (action "onUsernameFilterChanged" value="target.value")
-              }}
+              {{on "input" (with-event-value this.onUsernameFilterChanged)}}
             />
             {{#if this.showGroupFilter}}
               <ComboBox
@@ -80,8 +77,20 @@
             />
             <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
           {{else}}
-            <div class="clearfix"></div>
-            <p>{{i18n "directory.no_results"}}</p>
+            <div class="empty-state">
+              <div class="empty-state-body">
+                <p>
+                  {{i18n "directory.no_results.body"}}
+                  {{#if this.currentUser.staff}}
+                    {{html-safe
+                      (i18n
+                        "directory.no_results.extra_body" basePath=(base-path)
+                      )
+                    }}
+                  {{/if}}
+                </p>
+              </div>
+            </div>
           {{/if}}
         </ConditionalLoadingSpinner>
       </div>

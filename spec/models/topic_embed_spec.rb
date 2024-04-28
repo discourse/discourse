@@ -8,7 +8,7 @@ RSpec.describe TopicEmbed do
   it { is_expected.to validate_presence_of :embed_url }
 
   describe ".import" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     let(:title) { "How to turn a fish from good to evil in 30 seconds" }
     let(:url) { "http://eviltrout.com/123" }
     let(:contents) do
@@ -129,29 +129,55 @@ RSpec.describe TopicEmbed do
         expect(post.cooked).to match(/#{cased_url}/)
       end
 
-      it "will make the topic unlisted if `embed_unlisted` is set until someone replies" do
-        Jobs.run_immediately!
-        SiteSetting.embed_unlisted = true
-        imported_post =
-          TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
-        expect(imported_post.topic).not_to be_visible
-        pc =
-          PostCreator.new(
-            Fabricate(:user),
-            raw: "this is a reply that will make the topic visible",
-            topic_id: imported_post.topic_id,
-            reply_to_post_number: 1,
-          )
-        pc.create
-        expect(imported_post.topic.reload).to be_visible
+      shared_examples "topic is unlisted" do
+        it "unlists the topic until someone replies" do
+          Jobs.run_immediately!
+          imported_post =
+            TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
+          expect(imported_post.topic).not_to be_visible
+          pc =
+            PostCreator.new(
+              Fabricate(:user),
+              raw: "this is a reply that will make the topic visible",
+              topic_id: imported_post.topic_id,
+              reply_to_post_number: 1,
+            )
+          pc.create
+          expect(imported_post.topic.reload).to be_visible
+        end
       end
 
-      it "won't be invisible if `embed_unlisted` is set to false" do
-        Jobs.run_immediately!
-        SiteSetting.embed_unlisted = false
-        imported_post =
-          TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
-        expect(imported_post.topic).to be_visible
+      context "when import embed unlisted is true" do
+        before { SiteSetting.import_embed_unlisted = true }
+
+        include_examples "topic is unlisted"
+
+        context "when embed unlisted is false" do
+          before { SiteSetting.embed_unlisted = false }
+
+          include_examples "topic is unlisted"
+        end
+      end
+
+      context "when import embed unlisted is false" do
+        before { SiteSetting.import_embed_unlisted = false }
+
+        context "when embed unlisted is false" do
+          before { SiteSetting.embed_unlisted = false }
+
+          it "lists the topic" do
+            Jobs.run_immediately!
+            imported_post =
+              TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
+            expect(imported_post.topic).to be_visible
+          end
+        end
+
+        context "when embed unlisted is true" do
+          before { SiteSetting.embed_unlisted = true }
+
+          include_examples "topic is unlisted"
+        end
       end
 
       it "creates the topic in the category passed as a parameter" do
@@ -218,6 +244,46 @@ RSpec.describe TopicEmbed do
             cook_method: Post.cook_methods[:regular],
           )
         expect(imported_post.cooked).to match(/onebox|iframe/)
+      end
+
+      describe "topic_embed_import_create_args modifier" do
+        after { DiscoursePluginRegistry.clear_modifiers! }
+
+        it "can alter the args used to create the topic" do
+          plugin = Plugin::Instance.new
+          plugin.register_modifier(:topic_embed_import_create_args) do |args|
+            args[:title] = "MODIFIED: #{args[:title]}"
+
+            args
+          end
+
+          Jobs.run_immediately!
+          imported_post =
+            TopicEmbed.import(
+              user,
+              "http://eviltrout.com/abcd",
+              title,
+              "some random content",
+              category_id: category.id,
+            )
+          expect(imported_post.topic.title).to eq("MODIFIED: #{title}")
+        end
+
+        it "will revert to defaults if the modifier returns nil" do
+          plugin = Plugin::Instance.new
+          plugin.register_modifier(:topic_embed_import_create_args) { |args| nil }
+
+          Jobs.run_immediately!
+          imported_post =
+            TopicEmbed.import(
+              user,
+              "http://eviltrout.com/abcd",
+              title,
+              "some random content",
+              category_id: category.id,
+            )
+          expect(imported_post.topic.title).to eq(title)
+        end
       end
     end
 
@@ -528,8 +594,8 @@ RSpec.describe TopicEmbed do
       url = "https://somesource.com"
 
       contents = <<~HTML
-      hello world new post <a href="mailto:somemail@somewhere.org>">hello</a>
-      some image <img src="https:/><invalidimagesrc/">
+        hello world new post <a href="mailto:somemail@somewhere.org>">hello</a>
+        some image <img src="https:/><invalidimagesrc/">
       HTML
 
       raw = TopicEmbed.absolutize_urls(url, contents)

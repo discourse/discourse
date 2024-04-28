@@ -51,7 +51,7 @@ describe "Uploading files in the composer", type: :system do
     # we need to come back to this in a few months and try again.
     #
     # c.f. https://groups.google.com/g/chromedriver-users/c/1SMbByMfO2U
-    xit "generates a thumbnail for the video" do
+    xit "generates a topic preview thumbnail from the video" do
       sign_in(current_user)
 
       visit "/new-topic"
@@ -62,12 +62,38 @@ describe "Uploading files in the composer", type: :system do
       attach_file(file_path_1) { composer.click_toolbar_button("upload") }
 
       expect(composer).to have_no_in_progress_uploads
-      expect(composer.preview).to have_css(".video-container")
+      expect(composer.preview).to have_css(".onebox-placeholder-container")
 
       composer.submit
 
       expect(find("#topic-title")).to have_content("Video upload test")
-      expect(topic.image_upload_id).to eq(Upload.last.id)
+      # I think topic list previews need to be enabled for this?
+      #expect(topic.image_upload_id).to eq(Upload.last.id)
+    end
+
+    it "generates a thumbnail from the video" do
+      sign_in(current_user)
+
+      visit "/new-topic"
+      expect(composer).to be_opened
+      topic.fill_in_composer_title("Video upload test")
+
+      file_path_1 = file_from_fixtures("small.mp4", "media").path
+      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+
+      expect(composer).to have_no_in_progress_uploads
+      expect(composer.preview).to have_css(".onebox-placeholder-container")
+
+      composer.submit
+
+      expect(find("#topic-title")).to have_content("Video upload test")
+
+      selector = topic.post_by_number_selector(1)
+
+      expect(page).to have_css(selector)
+      within(selector) do
+        expect(page).to have_css(".video-placeholder-container[data-thumbnail-src]")
+      end
     end
   end
 end

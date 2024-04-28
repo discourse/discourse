@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import GroupMessageSectionLink from "discourse/lib/sidebar/user/messages-section/group-message-section-link";
 import PersonalMessageSectionLink from "discourse/lib/sidebar/user/messages-section/personal-message-section-link";
 import { bind } from "discourse-common/utils/decorators";

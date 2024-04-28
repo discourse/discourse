@@ -11,6 +11,23 @@ class UserHistory < ActiveRecord::Base
   belongs_to :topic
   belongs_to :category
 
+  # Each value in the context should be shorter than this
+  MAX_CONTEXT_LENGTH = 50_000
+
+  # We often store multiple values in details, particularly during post edits
+  # Let's allow space for 2 values + a little extra for padding
+  MAX_DETAILS_LENGTH = 110_000
+
+  MAX_JSON_LENGTH = 300_000
+
+  validates :details, length: { maximum: MAX_DETAILS_LENGTH }
+  validates :context, length: { maximum: MAX_CONTEXT_LENGTH }
+  validates :subject, length: { maximum: MAX_CONTEXT_LENGTH }
+  validates :ip_address, length: { maximum: MAX_CONTEXT_LENGTH }
+  validates :email, length: { maximum: MAX_CONTEXT_LENGTH }
+  validates :previous_value, length: { maximum: MAX_JSON_LENGTH }
+  validates :new_value, length: { maximum: MAX_JSON_LENGTH }
+
   validates_presence_of :action
 
   scope :only_staff_actions, -> { where("action IN (?)", UserHistory.staff_action_ids) }

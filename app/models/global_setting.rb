@@ -247,6 +247,33 @@ class GlobalSetting
     define_singleton_method(name) { default } unless self.respond_to? name
   end
 
+  def self.smtp_settings
+    if GlobalSetting.smtp_address
+      settings = {
+        address: GlobalSetting.smtp_address,
+        port: GlobalSetting.smtp_port,
+        domain: GlobalSetting.smtp_domain,
+        user_name: GlobalSetting.smtp_user_name,
+        password: GlobalSetting.smtp_password,
+        enable_starttls_auto: GlobalSetting.smtp_enable_start_tls,
+        open_timeout: GlobalSetting.smtp_open_timeout,
+        read_timeout: GlobalSetting.smtp_read_timeout,
+      }
+
+      if settings[:password] || settings[:user_name]
+        settings[:authentication] = GlobalSetting.smtp_authentication
+      end
+
+      settings[
+        :openssl_verify_mode
+      ] = GlobalSetting.smtp_openssl_verify_mode if GlobalSetting.smtp_openssl_verify_mode
+
+      settings[:tls] = true if GlobalSetting.smtp_force_tls
+      settings.compact
+      settings
+    end
+  end
+
   class BaseProvider
     def self.coerce(setting)
       return setting == "true" if setting == "true" || setting == "false"

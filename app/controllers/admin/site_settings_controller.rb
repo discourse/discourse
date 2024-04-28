@@ -6,7 +6,15 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   def index
-    render_json_dump(site_settings: SiteSetting.all_settings)
+    params.permit(:categories, :plugin)
+
+    render_json_dump(
+      site_settings:
+        SiteSetting.all_settings(
+          filter_categories: params[:categories],
+          filter_plugin: params[:plugin],
+        ),
+    )
   end
 
   def update
@@ -37,7 +45,7 @@ class Admin::SiteSettingsController < Admin::AdminController
     when :file_size_restriction
       value = value.tr("^0-9", "").to_i
     when :uploaded_image_list
-      value = Upload.get_from_urls(value.split("|")).to_a
+      value = value.blank? ? "" : Upload.get_from_urls(value.split("|")).to_a
     end
 
     value = Upload.get_from_url(value) || "" if SiteSetting.type_supervisor.get_type(id) == :upload

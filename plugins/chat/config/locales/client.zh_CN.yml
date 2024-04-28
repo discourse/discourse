@@ -45,6 +45,7 @@ zh_CN:
       back_to_forum: "论坛"
       deleted_chat_username: 已删除
       dates:
+        yesterday: "昨天"
         time_tiny: "h:mm"
       all_loaded: "显示所有消息"
       already_enabled: "此话题已启用聊天。请刷新。"
@@ -55,6 +56,7 @@ zh_CN:
       cancel_reply: "取消回复"
       chat_channels: "频道"
       browse_all_channels: "浏览所有频道"
+      see_in: "参见"
       move_to_channel:
         title: "将消息移至频道"
         instructions:
@@ -114,6 +116,7 @@ zh_CN:
         direct_message_cta: "开始个人聊天"
         direct_message: "您还可以与一位或多位用户开始个人聊天。"
         title: "找不到频道"
+        my_threads: "你还没有任何对话。你参与的主题将在此处显示。"
       email_frequency:
         description: "只有在过去 15 分钟内没有见到您，我们才会给您发送电子邮件。"
         never: "永不"
@@ -294,7 +297,7 @@ zh_CN:
         back: "返回"
         title: 频道
         filter_all: 所有
-        filter_open: 已打开
+        filter_open: 开放
         filter_closed: 已关闭
         filter_archived: 已归档
         filter_input_placeholder: 按名称搜索频道
@@ -531,6 +534,7 @@ zh_CN:
       flags:
         off_topic: "此消息与频道标题定义的当前讨论无关，可能应当移至其他地方。"
         inappropriate: "此消息包含理性的人会认为具有攻击性、辱骂性或违反<a href=\"%{basePath}/guidelines\">我们的社区准则</a>的内容。"
+        illegal: "本帖需要工作人员注意，因为我认为其中包含非法内容。"
         spam: "此消息是广告或破坏行为。它对当前频道没有用，也不相关。"
         notify_user: "我想亲自直接与此人谈谈他们的消息。"
         notify_moderators: "由于上面未列出的另一个原因，此消息需要管理人员加以注意。"

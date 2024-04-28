@@ -42,7 +42,7 @@ RSpec.describe UserAction do
         end
 
       expect(m[0].group_ids).to eq([Group::AUTO_GROUPS[:admins]])
-      expect(m[0].user_ids).to eq([user.id])
+      expect(m[0].user_ids).to eq(nil)
     end
 
     describe "integration" do
@@ -121,7 +121,7 @@ RSpec.describe UserAction do
     end
 
     describe "assignments" do
-      let(:stream) { UserAction.stream(user_id: user.id, guardian: Guardian.new(user)) }
+      let(:stream) { UserAction.stream(user_id: user.id, guardian: user.guardian) }
 
       before do
         log_test_action(action_type: UserAction::ASSIGNED)
@@ -146,7 +146,7 @@ RSpec.describe UserAction do
     describe "mentions" do
       before { log_test_action(action_type: UserAction::MENTION) }
 
-      let(:stream) { UserAction.stream(user_id: user.id, guardian: Guardian.new(user)) }
+      let(:stream) { UserAction.stream(user_id: user.id, guardian: user.guardian) }
 
       it "is returned by the stream" do
         expect(stream.count).to eq(1)
@@ -156,6 +156,33 @@ RSpec.describe UserAction do
       it "isn't returned when mentions aren't enabled" do
         SiteSetting.enable_mentions = false
         expect(stream).to be_blank
+      end
+    end
+
+    describe "when a plugin registers the :user_action_stream_builder modifier" do
+      before do
+        log_test_action(action_type: UserAction::LIKE)
+        log_test_action(action_type: UserAction::WAS_LIKED)
+      end
+
+      after { DiscoursePluginRegistry.clear_modifiers! }
+
+      it "allows the plugin to modify the builder query" do
+        Plugin::Instance
+          .new
+          .register_modifier(:user_action_stream_builder) do |builder|
+            expect(builder).to be_a(MiniSqlMultisiteConnection::CustomBuilder)
+            builder.limit(1)
+          end
+
+        stream = UserAction.stream(user_id: user.id, guardian: user.guardian)
+
+        expect(stream.count).to eq(1)
+
+        DiscoursePluginRegistry.clear_modifiers!
+
+        stream = UserAction.stream(user_id: user.id, guardian: user.guardian)
+        expect(stream.count).to eq(2)
       end
     end
   end

@@ -206,8 +206,6 @@ bs_BA:
         not_found: |-
           Oh ne, moj gadni post još nije označen kao neprikladan. :worried: Možete li to označiti neprimjerenim upotrebom ** zastave ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Ne zaboravite da upotrijebite dugme Prikaži više <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> da biste otkrili više mogućnosti za svaki post.
       search:
-        instructions: |-
-          _psst_… Sakrio sam iznenađenje u ovoj temi. Ako ste spremni za izazov, ** odaberite ikonu za pretraživanje ** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> gore desno ↗ da ga potražite. Pokušajte tražiti pojam "capy&#8203;bara" u ovoj temi
         hidden_message: |-
           Kako ste uspjeli propustiti ovu kapibaru? :wink:
 

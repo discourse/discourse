@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { equal, gt, gte } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import DeleteThemesConfirm from "discourse/components/modal/delete-themes-confirm";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
@@ -76,6 +76,13 @@ export default class ThemesList extends Component {
 
   @equal("filter", ACTIVE_FILTER) activeFilter;
   @equal("filter", INACTIVE_FILTER) inactiveFilter;
+
+  willRender() {
+    super.willRender(...arguments);
+    if (!this.showSearchAndFilter) {
+      this.set("searchTerm", null);
+    }
+  }
 
   @discourseComputed("themes", "components", "currentTab")
   themesList(themes, components) {
@@ -208,11 +215,8 @@ export default class ThemesList extends Component {
   changeView(newTab) {
     if (newTab !== this.currentTab) {
       this.set("selectInactiveMode", false);
-      this.set("currentTab", newTab);
       this.set("filter", ALL_FILTER);
-      if (!this.showSearchAndFilter) {
-        this.set("searchTerm", null);
-      }
+      this.router.transitionTo("adminCustomizeThemes", newTab);
     }
   }
 

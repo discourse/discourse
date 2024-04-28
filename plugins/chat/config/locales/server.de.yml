@@ -31,6 +31,7 @@ de:
     chat_editing_grace_period: "Für (n) Sekunden nach dem Senden eines Chats wird das Schlagwort „(bearbeitet)“ nicht in der Chat-Nachricht angezeigt."
     chat_editing_grace_period_max_diff_low_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 0 und 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 2 und höher)."
+    chat_preferred_mobile_index: "Bevorzugter Tab beim Laden von /chat auf dem Handy."
     errors:
       chat_default_channel: "Der Standard-Chat-Kanal muss ein öffentlicher Kanal sein."
       direct_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass andere Personen als Teammitglieder Direktnachrichten senden, wähle die Gruppe für Teammitglieder aus."
@@ -99,6 +100,7 @@ de:
       original_message_not_found: "Der Vorgänger der Nachricht, auf die du antwortest, kann nicht gefunden werden oder wurde gelöscht."
       thread_invalid_for_channel: "Der Thread ist nicht Teil des bereitgestellten Kanals."
       thread_does_not_match_parent: "Der Thread stimmt nicht mit der übergeordneten Nachricht überein."
+      invalid_direct_message: "Du bist nicht berechtigt, diese Direktnachricht zu erstellen."
     reviewables:
       message_already_handled: "Danke, aber wir haben diese Nachricht bereits überprüft und festgestellt, dass sie nicht erneut markiert werden muss."
       actions:

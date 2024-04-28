@@ -1,28 +1,25 @@
-import { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
+import { service } from "@ember/service";
+import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import DiscourseRoute from "discourse/routes/discourse";
-import { ADMIN_PANEL, MAIN_PANEL } from "discourse/services/sidebar-state";
 import I18n from "discourse-i18n";
 
 export default class AdminRoute extends DiscourseRoute {
   @service sidebarState;
   @service siteSettings;
+  @service store;
   @service currentUser;
+  @service adminSidebarStateManager;
+  @tracked initialSidebarState;
 
   titleToken() {
     return I18n.t("admin_title");
   }
 
   activate() {
-    if (
-      this.siteSettings.userInAnyGroups(
-        "admin_sidebar_enabled_groups",
-        this.currentUser
-      )
-    ) {
-      this.sidebarState.setPanel(ADMIN_PANEL);
-      this.sidebarState.setSeparatedMode();
-      this.sidebarState.hideSwitchPanelButtons();
-    }
+    this.adminSidebarStateManager.maybeForceAdminSidebar({
+      onlyIfAlreadyActive: false,
+    });
 
     this.controllerFor("application").setProperties({
       showTop: false,
@@ -32,12 +29,7 @@ export default class AdminRoute extends DiscourseRoute {
   deactivate(transition) {
     this.controllerFor("application").set("showTop", true);
 
-    if (
-      this.siteSettings.userInAnyGroups(
-        "admin_sidebar_enabled_groups",
-        this.currentUser
-      )
-    ) {
+    if (this.adminSidebarStateManager.currentUserUsingAdminSidebar) {
       if (!transition?.to.name.startsWith("admin")) {
         this.sidebarState.setPanel(MAIN_PANEL);
       }

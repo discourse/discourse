@@ -1,14 +1,28 @@
-import Component from "@glimmer/component";
-import avatar from "discourse/helpers/bound-avatar-template";
-import dIcon from "discourse-common/helpers/d-icon";
+import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse-common/helpers/d-icon";
+import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
 
-export default class IconAvatar extends Component {
-  <template>
-    <div class="icon-avatar">
-      {{avatar @data.avatarTemplate "small"}}
-      <div class="icon-avatar__icon-wrapper">
-        {{dIcon @data.icon}}
-      </div>
+const avatarPx = translateSize("small");
+
+const IconAvatar = <template>
+  <div class={{concatClass "icon-avatar" @data.classNames}}>
+    {{!--
+        avoiding {{avatar}} helper because its html would be fully
+        re-rendered whenever arguments change, even if the argument values
+        are identical. On some browsers, re-rendering a lazy-loaded image
+        causes a visible flicker.
+      --}}
+    <img
+      lazy="lazy"
+      src={{avatarUrl @data.avatarTemplate "small"}}
+      width={{avatarPx}}
+      height={{avatarPx}}
+      class="avatar"
+    />
+    <div class="icon-avatar__icon-wrapper">
+      {{icon @data.icon}}
     </div>
-  </template>
-}
+  </div>
+</template>;
+
+export default IconAvatar;

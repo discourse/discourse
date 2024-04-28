@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias } from "@ember/object/computed";
 import { on } from "@ember/object/evented";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import LoadMore from "discourse/mixins/load-more";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import TopicBulkActions from "./modal/topic-bulk-actions";
@@ -49,6 +49,11 @@ export default Component.extend(LoadMore, {
   },
 
   @discourseComputed
+  experimentalTopicBulkActionsEnabled() {
+    return this.currentUser?.use_experimental_topic_bulk_actions;
+  },
+
+  @discourseComputed
   sortable() {
     return !!this.changeSort;
   },
@@ -71,7 +76,7 @@ export default Component.extend(LoadMore, {
     }
   },
 
-  @observes("topics", "order", "ascending", "category", "top")
+  @observes("topics", "order", "ascending", "category", "top", "hot")
   lastVisitedTopicChanged() {
     this.refreshLastVisited();
   },
@@ -86,7 +91,7 @@ export default Component.extend(LoadMore, {
     onScroll.call(this);
   },
 
-  _updateLastVisitedTopic(topics, order, ascending, top) {
+  _updateLastVisitedTopic(topics, order, ascending, top, hot) {
     this.set("lastVisitedTopic", null);
 
     if (!this.highlightLastVisited) {
@@ -97,7 +102,7 @@ export default Component.extend(LoadMore, {
       return;
     }
 
-    if (top) {
+    if (top || hot) {
       return;
     }
 
@@ -151,7 +156,8 @@ export default Component.extend(LoadMore, {
       this.topics,
       this.order,
       this.ascending,
-      this.top
+      this.top,
+      this.hot
     );
   },
 

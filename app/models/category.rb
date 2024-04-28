@@ -211,6 +211,12 @@ class Category < ActiveRecord::Base
         )
       SQL
 
+  scope :with_parents, ->(ids) { where(<<~SQL, ids: ids) }
+    id IN (:ids)
+    OR
+    id IN (SELECT DISTINCT parent_category_id FROM categories WHERE id IN (:ids))
+  SQL
+
   delegate :post_template, to: "self.class"
 
   # permission is just used by serialization
@@ -220,7 +226,8 @@ class Category < ActiveRecord::Base
                 :subcategory_ids,
                 :subcategory_list,
                 :notification_level,
-                :has_children
+                :has_children,
+                :subcategory_count
 
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
@@ -238,9 +245,9 @@ class Category < ActiveRecord::Base
         Category.topic_create_allowed(guardian).where(id: category_ids).pluck(:id).to_set
       end
 
-    # Categories with children
-    with_children =
-      Category.where(parent_category_id: category_ids).pluck(:parent_category_id).to_set
+    # Load subcategory counts (used to fill has_children property)
+    subcategory_count =
+      Category.secured(guardian).where.not(parent_category_id: nil).group(:parent_category_id).count
 
     # Update category attributes
     categories.each do |category|
@@ -249,8 +256,27 @@ class Category < ActiveRecord::Base
       category.permission = CategoryGroup.permission_types[:full] if guardian.is_admin? ||
         allowed_topic_create_ids&.include?(category[:id])
 
-      category.has_children = with_children.include?(category[:id])
+      category.has_children = subcategory_count.key?(category[:id])
+
+      category.subcategory_count = subcategory_count[category[:id]] if category.has_children
     end
+  end
+
+  def self.ancestors_of(category_ids)
+    ancestor_ids = []
+
+    SiteSetting.max_category_nesting.times do
+      category_ids =
+        where(id: category_ids)
+          .where.not(parent_category_id: nil)
+          .pluck("DISTINCT parent_category_id")
+
+      ancestor_ids.concat(category_ids)
+
+      break if category_ids.empty?
+    end
+
+    where(id: ancestor_ids)
   end
 
   def self.topic_id_cache
@@ -915,7 +941,7 @@ class Category < ActiveRecord::Base
   end
 
   def url
-    @@url_cache.defer_get_set(self.id) do
+    @@url_cache.defer_get_set(self.id.to_s) do
       "#{Discourse.base_path}/c/#{slug_path.join("/")}/#{self.id}"
     end
   end

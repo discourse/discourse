@@ -37,11 +37,9 @@ ru:
       long_with_year: "D MMM YYYY, HH:mm"
       long_with_year_no_time: "D MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
-      long_date_with_year: "D MMM YYYY, LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM YYYY <br/>LT"
       wrap_ago: "%{date} назад"
       wrap_on: "%{date}"
       tiny:
@@ -244,9 +242,9 @@ ru:
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Никакие уведомления по электронной почте отправляться не будут."
     emails_are_disabled_non_staff: "Отправка писем отключена для пользователей, не являющихся сотрудниками."
     software_update_prompt:
-      message: "Сайт обновлён. <span>Перезагрузите страницу</span> (иначе вы можете столкнуться с неожиданным поведением)."
       dismiss: "Закрыть"
     bootstrap_mode: "Начало работы"
+    back_button: "Назад"
     themes:
       default_description: "По умолчанию"
       broken_theme_alert: "Сайт может не работать: в теме (компоненте) есть ошибки."
@@ -256,7 +254,6 @@ ru:
     broken_page_change_alert: "В обработчике OnPageChange возникла ошибка. Дополнительные сведения см. в инструментах для разработчиков браузера."
     broken_plugin_alert: "Причина — плагин '%{name}'"
     critical_deprecation:
-      notice: "<b>[Уведомление администратора]</b> Вашу тему или плагин необходимо обновить для совместимости с предстоящими изменениями ядра Discourse (<a target='_blank' href='https://meta.discourse.org/t/287211'>подробнее</a>)."
       theme_source: "Выявленная тема: <a target='_blank' href='%{path}'>'%{name}'</a>."
       plugin_source: "Выявленный плагин: '%{name}'"
     s3:
@@ -284,7 +281,8 @@ ru:
         us_west_1: "Запад США (Северная Калифорния)"
         us_west_2: "Запад США (Орегон)"
     clear_input: "Очистить"
-    edit: "отредактировать название и категорию темы"
+    edit: "Отредактировать"
+    edit_topic: "отредактировать название и категорию темы"
     expand: "Развернуть"
     not_implemented: "Эта функция ещё не реализована!"
     no_value: "Нет"
@@ -333,7 +331,11 @@ ru:
     weekly: "еженедельно"
     every_month: "каждый месяц"
     every_six_months: "каждые шесть месяцев"
-    max_of_count: "%{count} макс."
+    max_of_count:
+      one: "%{count} макс."
+      few: "%{count} макс."
+      many: "%{count} макс."
+      other: "%{count} макс."
     character_count:
       one: "%{count} символ"
       few: "%{count} символа"
@@ -379,6 +381,7 @@ ru:
         unbookmark: "Удалить все закладки в этой теме"
         unbookmark_with_reminder: "Удалить все закладки и напоминания из этой темы"
     bookmarks:
+      bookmarked_success: "В закладках!"
       created: "Вы добавили это сообщение в закладки: «%{name}»"
       created_generic: "Добавлено в закладки: «%{name}»"
       create: "Создать закладку"
@@ -403,6 +406,7 @@ ru:
         clear_reminder: "Сохранить закладку, но удалить напоминание"
       search_placeholder: "Поиск закладок по имени, названию темы или по содержанию сообщения"
       search: "Поиск"
+      bookmark: "Закладка"
       reminders:
         today_with_time: "сегодня в %{time}"
         tomorrow_with_time: "завтра в %{time}"
@@ -668,7 +672,7 @@ ru:
         all:
           title: "Все"
       context_question:
-        is_this_post: "Это %{reviewable_type} %{reviewable_human_score_types}?"
+        is_this_post: "Эта %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "или"
         something_else_wrong: "Что-то не так со следующим: %{reviewable_type}?"
       types:
@@ -755,6 +759,7 @@ ru:
       never: "Никогда"
       last_custom: "Использовать ранее установленные дату и время"
       custom: "Установить дату и время"
+      custom_short: "Другое…"
       select_timeframe: "Выбор периода"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> создал(а) <a href='%{topicUrl}'>тему</a>"
@@ -783,7 +788,6 @@ ru:
       topic_count_long: "Создано тем"
       post_count: "Ответов"
       post_count_long: "Ответов написано"
-      no_results: "Ничего не найдено."
       days_visited: "Посещений"
       days_visited_long: "Дней посещения"
       posts_read: "Прочитано"
@@ -1047,7 +1051,6 @@ ru:
         image: "Загрузить изображение"
       default_notifications:
         modal_title: "Стандартные уведомления пользователя"
-        modal_description: "Применить это изменение к уже существующим пользователям? Это изменит настройки для существующих пользователей (%{count})."
         modal_yes: "Да"
         modal_no: "Нет, применить изменение только к будущим пользователям"
     user_action_groups:
@@ -1064,10 +1067,18 @@ ru:
       "13": "Входящие"
       "14": "Ожидают одобрения"
       "15": "Черновики"
+      "17": "Ссылки"
     categories:
-      all: "все категории"
-      all_subcategories: "все"
-      no_subcategory: "нет"
+      categories_label: "категории"
+      subcategories_label: "подкатегории"
+      no_subcategories: "без подкатегорий"
+      remove_filter: "отменить фильтр"
+      plus_more_count:
+        one: "+ещё %{count}"
+        few: "+ещё %{count}"
+        many: "+ещё %{count}"
+        other: "+ещё %{count}"
+      view_all: "Просмотреть всё"
       category: "Категория"
       category_list: "Показать список категорий"
       reorder:
@@ -1109,7 +1120,11 @@ ru:
         few: "%{count} новых темы в прошлом месяце."
         many: "%{count} новых тем в прошлом месяце."
         other: "%{count} новой темы в прошлом месяце."
-      n_more: "Категории (ещё %{count})…"
+      n_more:
+        one: "Категории (ещё %{count})…"
+        few: "Категории (ещё %{count})…"
+        many: "Категории (ещё %{count})…"
+        other: "Категории (ещё %{count})…"
     ip_lookup:
       title: Поиск IP-адреса
       hostname: Название хоста
@@ -1118,7 +1133,11 @@ ru:
       organisation: Организация
       phone: Телефон
       other_accounts: "Другие аккаунты с этим IP-адресом:"
-      delete_other_accounts: "Удалить %{count}"
+      delete_other_accounts:
+        one: "Удалить %{count}"
+        few: "Удалить %{count}"
+        many: "Удалить %{count}"
+        other: "Удалить %{count}"
       username: "имя пользователя"
       trust_level: "Уровень доверия"
       read_time: "время чтения"
@@ -1247,7 +1266,6 @@ ru:
         description: "Не выдавать награды и не показывать советы новым пользователям"
       reset_seen_user_tips: "Показать советы для пользователей еще раз"
       theme_default_on_all_devices: "Сделать эту тему темой по умолчанию на всех моих устройствах"
-      color_scheme_default_on_all_devices: "Установить цветовую схему по умолчанию на всех моих устройствах"
       color_scheme: "Цветовая схема"
       color_schemes:
         default_description: "Тема по умолчанию"
@@ -1263,7 +1281,6 @@ ru:
       allow_private_messages: "Разрешить другим пользователям отправлять мне личные сообщения"
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
       enable_quoting: "Разрешить отвечать с цитированием выделенного текста"
-      enable_defer: "Включить кнопку «Отложить», чтобы помечать темы как непрочитанные"
       experimental_sidebar:
         enable: "Включить боковую панель"
         options: "Параметры"
@@ -1581,8 +1598,7 @@ ru:
         save: "Сохранить"
         title: "Ключи доступа"
         short_description: "Ключи доступа — это заменители пароля, которые подтверждают вашу личность биометрически (например, отпечаток, FaceID) либо с помощью ПИН-кода или пароля устройства."
-        added_prefix: "Добавлено"
-        last_used_prefix: "Последнее использование"
+        added_date: "Добавлено: %{date}"
         never_used: "Никогда не использовался"
         not_allowed_error: "Процесс регистрации ключа либо завершился по времени, либо был отменен, либо не разрешен."
         already_added_error: "Вы уже зарегистрировали этот ключ доступа. Вам не нужно регистрировать его снова."
@@ -1606,6 +1622,15 @@ ru:
         success_via_admin: "На указанный адрес электронной почты отправлено письмо. Для подтверждения адреса пользователь должен следовать инструкциям в письме."
         success_staff: "На текущий адрес электронной почты отправлено письмо. Следуйте инструкциям по подтверждению в письме."
         back_to_preferences: "Вернуться в настройки"
+        confirm_success: "Адрес электронной почты обновлён."
+        confirm: "Подтвердить"
+        authorizing_new:
+          description: "Подтвердите изменение адреса электронной почты на новый:"
+          description_add: "Подтвердите добавление дополнительного адреса электронной почты:"
+        authorizing_old:
+          old_email: "Старая эл. почта: %{email}"
+          new_email: "Новая эл. почта: %{email}"
+          confirm_success: "Мы отправили письмо на новый адрес, чтобы подтвердить изменение!"
       change_avatar:
         title: "Изменить аватар"
         gravatar: "На основе <a href='//%{gravatarBaseUrl}%{gravatarLoginUrl}' target='_blank'>%{gravatarName}</a>"
@@ -1692,6 +1717,8 @@ ru:
         instructions: "Язык интерфейса сайта. Чтобы изменения вступили в силу, перезагрузите страницу."
         default: "(по умолчанию)"
         any: "любые"
+      homepage:
+        default: "(домашнюю страницу)"
       password_confirmation:
         title: "Пароль ещё раз"
       invite_code:
@@ -1884,7 +1911,6 @@ ru:
         same_as_username: "Пароль совпадает с именем пользователя."
         same_as_email: "Пароль совпадает с адресом электронной почты."
         ok: "Допустимый пароль."
-        instructions: "Минимум символов: %{count}."
         required: "Введите пароль"
         confirm: "Подтвердить"
         incorrect_password: "Введен неправильный пароль."
@@ -1996,7 +2022,6 @@ ru:
         content: "Уведомления используются для того, чтобы держать вас в курсе происходящего в сообществе."
       topic_timeline:
         title: "Шкала времени"
-        content: "Вы можете быстро прокрутить сообщение, используя шкалу времени."
       post_menu:
         title: "Меню сообщения"
         content: "Нажав на три точки, вы увидите дополнительные варианты действий с сообщением."
@@ -2006,10 +2031,6 @@ ru:
       suggested_topics:
         title: "Читайте еще!"
         content: "Вот темы, которые вам может быть интересно прочитать в следующий раз."
-      admin_guide:
-        title: "Приветствуем на вашем новом сайте!"
-        content: "Чтобы продолжить создание сайта и формирование сообщества, <a href='%{admin_guide_url}'>прочтите руководство администратора</a>."
-        content_no_url: "Чтобы продолжить создание сайта и формирование сообщества, прочтите руководство администратора."
     loading: "Загрузка…"
     errors:
       prev_page: "при попытке загрузки"
@@ -2034,7 +2055,6 @@ ru:
       close: "закрыть"
       dismiss_error: "Отклонить ошибку"
     close: "Закрыть"
-    assets_changed_confirm: "Для этого сайта есть обновление программного обеспечения. Получить последнюю версию?"
     logout: "Необходимо заново войти в систему."
     refresh: "Обновить"
     home: "Главная"
@@ -2288,6 +2308,11 @@ ru:
     conditional_loading_section:
       loading: Загрузка…
     category_row:
+      subcategory_count:
+        one: "+ %{count} подкатегория"
+        few: "+ %{count} подкатегории"
+        many: "+ %{count} подкатегорий"
+        other: "+ %{count} подкатегории"
       topic_count:
         one: "%{count} тема в этой категории"
         few: "%{count} темы в этой категории"
@@ -2318,10 +2343,11 @@ ru:
         many: "Выберите хотя бы %{count} элементов."
         other: "Выберите хотя бы %{count} элемента."
       components:
-        tag_drop:
-          filter_for_more: Больше тегов…
+        filter_for_more: Больше тегов…
         categories_admin_dropdown:
           title: "Управление категориями"
+        bulk_select_topics_dropdown:
+          title: "Массовые действия"
     date_time_picker:
       from: От
       to: До
@@ -2382,7 +2408,6 @@ ru:
         few: "Упоминание группы %{group} оповестит <a href='%{group_link}'>%{count} чел.</a>"
         many: "Упоминание группы %{group} оповестит <a href='%{group_link}'>%{count} чел.</a>"
         other: "Упоминание группы %{group} оповестит <a href='%{group_link}'>%{count} чел.</a>"
-      larger_group_mentioned: "Упоминание группы %{group} оповестит <a href='%{group_link}'>%{count} чел.</a> Вы уверены?"
       cannot_see_mention:
         category: "Вы упомянули @%{username}, но уведомление отправлено не будет, потому что у пользователя нет доступа к этой категории. Вам нужно добавить его в группу с доступом к этой категории."
         private: "Вы упомянули @%{username}, но уведомление отправлено не будет, потому что пользователь не может видеть это личное сообщение. Вам нужно пригласить его в это личное сообщение."
@@ -2435,7 +2460,6 @@ ru:
       reply: "Ответить"
       cancel: "Отмена"
       create_topic: "Создать тему"
-      create_pm: "Сообщение"
       create_whisper: "Скрытое сообщение"
       create_shared_draft: "Создать общий черновик"
       edit_shared_draft: "Редактировать общий черновик"
@@ -2596,6 +2620,7 @@ ru:
         many: "понравилось %{count} ваших сообщений"
         other: "понравились %{count} вашего сообщения"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2782,7 +2807,6 @@ ru:
           seen: Прочитанные
           unseen: Непрочитанные
           wiki: Являются вики
-          images: Содержат изображения
           all_tags: Все вышеуказанные теги
         statuses:
           label: Где темы
@@ -2891,12 +2915,12 @@ ru:
     topics:
       new_messages_marker: "последнее посещение"
       bulk:
+        confirm: "Подтвердить"
         select_all: "Выбрать всё"
         clear_all: "Отменить выбор"
         unlist_topics: "Скрыть темы"
         relist_topics: "Показать темы"
         reset_bump_dates: "Сбросить даты поднятия"
-        defer: "Отложить"
         delete: "Удалить темы"
         dismiss: "Отложить"
         dismiss_read: "Отложить все непрочитанные"
@@ -2949,6 +2973,11 @@ ru:
           few: "Вы выбрали <b>%{count}</b> темы."
           many: "Вы выбрали <b>%{count}</b> тем."
           other: "Вы выбрали <b>%{count}</b> темы."
+        selected_count:
+          one: "Выбрано %{count}"
+          few: "Выбрано %{count}"
+          many: "Выбрано %{count}"
+          other: "Выбрано %{count}"
         change_tags: "Заменить теги"
         append_tags: "Добавить теги"
         choose_new_tags: "Выберите новые теги для этих тем:"
@@ -2992,6 +3021,24 @@ ru:
         top: "Обсуждаемых тем больше нет."
         bookmarks: "Тем, помеченных закладкам,. больше нет."
         filter: "Тем больше нет."
+    topic_bulk_actions:
+      close_topics:
+        name: "Закрыть темы"
+        optional: (необязательно)
+      archive_topics:
+        name: "Архивировать темы"
+      unlist_topics:
+        name: "Скрыть темы"
+      relist_topics:
+        name: "Показать темы"
+      remove_tags:
+        name: "Удалить теги"
+      append_tags:
+        name: "Добавить теги"
+      replace_tags:
+        name: "Заменить теги"
+      delete_topics:
+        name: "Удалить темы"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -3009,9 +3056,6 @@ ru:
       move_to_inbox:
         title: "Переместить во входящие"
         help: "Вернуть сообщение во входящие"
-      defer:
-        help: "Отметить как непрочитанное"
-        title: "Отложить"
       list: "Темы"
       new: "новая тема"
       unread: "не прочитано"
@@ -4227,8 +4271,6 @@ ru:
         show_incoming_updated_topics: "%{shortcut} Показать обновлённые темы"
         search: "%{shortcut} Поиск"
         help: "%{shortcut} Показать эту справку"
-        dismiss_new: "%{shortcut} Отложить новые"
-        dismiss_topics: "%{shortcut} Отложить темы"
         log_out: "%{shortcut} Выйти"
       composing:
         title: "Редактирование"
@@ -4268,7 +4310,6 @@ ru:
         mark_tracking: "%{shortcut} Следить за темой"
         mark_watching: "%{shortcut} Наблюдать за темой"
         print: "%{shortcut} Распечатать тему"
-        defer: "%{shortcut} Отложить тему"
         topic_admin_actions: "%{shortcut} Открыть в теме меню действий администратора"
         archive_private_message: "%{shortcut} Переключатель для архивации личных сообщений"
       search_menu:
@@ -4338,8 +4379,10 @@ ru:
     tagging:
       all_tags: "Все теги"
       other_tags: "Другие теги"
+      selector_tags: "теги"
       selector_all_tags: "Все теги"
       selector_no_tags: "Без тегов"
+      selector_remove_filter: "отменить фильтр"
       tags: "Теги"
       choose_for_topic: "Выберите теги..."
       choose_for_topic_required:
@@ -4588,23 +4631,19 @@ ru:
               label: "Иконка"
               validation:
                 blank: "Значок не может быть пустым"
-                maximum: "Максимум символов в значке: %{count}"
             name:
               label: "Название"
               validation:
                 blank: "Название не может быть пустым"
-                maximum: "Максимум символов в названии: %{count}"
             value:
               label: "Ссылка"
               validation:
                 blank: "Ссылка не может быть пустой"
-                maximum: "Максимум символов в ссылке: %{count}"
                 invalid: "Недопустимый формат"
           title:
             label: "Заголовок раздела"
             validation:
               blank: "Заголовок не может быть пустым"
-              maximum: "Максимум символов в заголовке: %{count}"
         about:
           header_link_text: "Информация"
         messages:
@@ -4669,11 +4708,18 @@ ru:
             review:
               content: "Очередь проверки"
               title: "Сообщения, на которые поступили жалобы, и другие элементы в очереди"
-              pending_count: "В ожидании: %{count}"
+              pending_count:
+                one: "В ожидании: %{count}"
+                few: "В ожидании: %{count}"
+                many: "В ожидании: %{count}"
+                other: "В ожидании: %{count}"
         global_section: "Глобальный раздел, видимый для всех"
       panels:
         forum:
           label: Форум
+      filter: "Фильтр"
+      no_results:
+        title: "Нет результатов"
     welcome_topic_banner:
       title: "Создать приветственную тему"
       description: "Ваша приветственная тема — это первое, что прочитают новички. Постарайтесь максимально коротко и ярко выразить в ней наиболее важную информацию, которую вы хотите донести до новых пользователей форума."
@@ -4688,12 +4734,12 @@ ru:
         upload: "Загрузка"
         uploading: "Загрузка"
       errors:
-        valueMissing:
+        value_missing:
           default: "Заполните это поле."
-          select-one: "Выберите пункт в списке."
-          select-multiple: "Выберите как минимум один пункт в списке."
+          select_one: "Выберите пункт в списке."
+          select_multiple: "Выберите как минимум один пункт в списке."
           checkbox: "Чтобы продолжить, поставьте этот флажок."
-        typeMismatch:
+        type_mismatch:
           default: "Введите корректное значение."
           color: "Введите цвет."
           date: "Введите дату."
@@ -4703,28 +4749,28 @@ ru:
           tel: "Введите действительный номер телефона."
           text: "Введите текстовое значение."
           url: "Введите действительный URL-адрес."
-        tooShort:
+        too_short:
           one: "Минимум символов — %{count}."
           few: "Минимум символов — %{count}."
           many: "Минимум символов — %{count}."
           other: "Минимум символов — %{count}."
-        tooLong:
+        too_long:
           one: "Максимум символов — %{count}."
           few: "Максимум символов — %{count}."
           many: "Максимум символов — %{count}."
           other: "Максимум символов — %{count}."
-        rangeOverflow:
+        range_overflow:
           one: "Максимум — %{count}."
           few: "Максимум — %{count}."
           many: "Максимум — %{count}."
           other: "Максимум — %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "Минимум — %{count}."
           few: "Минимум — %{count}."
           many: "Минимум — %{count}."
           other: "Минимум — %{count}."
-        patternMismatch: "Введите в указанном формате."
-        badInput: "Введите корректное значение."
+        pattern_mismatch: "Введите в указанном формате."
+        bad_input: "Введите корректное значение."
     table_builder:
       title: "Конструктор таблиц"
       modal:
@@ -4788,6 +4834,7 @@ ru:
       title: "Администратор Discourse"
       moderator: "Модератор"
       back_to_forum: "Вернуться на форум"
+      filter_reports: Фильтр отчётов
       tags:
         remove_muted_tags_from_latest:
           always: "Всегда"
@@ -4796,6 +4843,11 @@ ru:
       reports:
         title: "Список доступных отчётов"
         meta_doc: "Ознакомьтесь с нашей <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>документацией</a> для подробного обзора отчетов."
+        sidebar_title: "Отчёты"
+        sidebar_link:
+          all: "Все настройки"
+      new_features:
+        title: "Что нового"
       dashboard:
         title: "Панель управления"
         last_updated: "Панель управления обновлена:"
@@ -4804,10 +4856,8 @@ ru:
         up_to_date: "Обновлений нет"
         critical_available: "Доступно критическое обновление."
         updates_available: "Доступны обновления."
-        please_upgrade: "Обновитесь!"
         no_check_performed: "Проверка обновлений не производится. Убедитесь, что запущен процесс sidekiq."
         stale_data: "Проверка обновлений в последнее время не производилась. Убедитесь, что запущен процесс sidekiq."
-        version_check_pending: "Вы недавно обновились. Замечательно!"
         installed_version: "Установленная версия"
         latest_version: "Последняя версия"
         problems_found: "Несколько советов по текущим настройкам сайта"
@@ -4855,7 +4905,6 @@ ru:
         exception_error: Произошла ошибка при выполнении запроса
         too_many_requests: Вы выполняете это действие слишком часто. Подождите, прежде чем пытаться снова.
         not_found_error: Этого отчёта не существует
-        filter_reports: Фильтр отчётов
         custom_date_range: Свой диапазон дат
         reports:
           trend_title: "Изменилось на %{percent}. В настоящее время — %{current}, было %{prev} в предыдущий период."
@@ -5049,7 +5098,6 @@ ru:
             users:
               bookmarks: Список закладок пользователя. Возвращает напоминания о закладках при использовании формата ICS.
               sync_sso: Синхронизация пользователя с помощью DiscourseConnect.
-              show: Получение информации о пользователе.
               check_emails: Список электронных писем пользователя.
               update: Обновление информации в профиле пользователя.
               log_out: Завершение всех сессий пользователя.
@@ -5170,14 +5218,10 @@ ru:
           post_liked: "При пометке публикации лайком."
         notification_event:
           group_name: "События уведомления"
-          notification_created: "Пользователь получает уведомление в своей ленте"
         group_user_event:
           group_name: "События группы пользователей"
-          user_added_to_group: "Пользователь добавлен в группу"
-          user_removed_from_group: "Пользователь удален из группы"
         user_promoted_event:
           group_name: "События повышения уровня доверия"
-          user_promoted: "Уровень доверия к пользователю повышен"
         delivery_status:
           title: "Статус передачи"
           inactive: "Неактивна"
@@ -5209,6 +5253,52 @@ ru:
           timestamp: "Создано"
           completion: "Время завершения"
           actions: "Действия"
+      home:
+        title: "Главная"
+      account:
+        title: "Аккаунт"
+        sidebar_link:
+          backups: "Резервные копии"
+      community:
+        title: "Сообщество"
+        sidebar_link:
+          badges: "Значки"
+          notifications: "Уведомления"
+          permalinks: "Постоянные ссылки"
+          trust_levels: "Уровни доверия"
+          users: "По пользователям"
+          user_fields: "Поля пользователя"
+          watched_words: "Контролируемые слова"
+          legal: "Юридическое"
+      appearance:
+        title: "Внешний вид"
+        sidebar_link:
+          emoji: "Эмодзи"
+          navigation: "Навигация"
+          themes: "Темы"
+          components:
+            title: "Компоненты"
+      email_settings:
+        sidebar_link:
+          appearance: "Внешний вид"
+          preview_summary: "Предпросмотр сводки"
+      email_logs:
+        sidebar_link:
+          sent: "Отправленные"
+          skipped: "Пропущено"
+          bounced: "Возвращено"
+          received: "Получено"
+          rejected: "Отклонено"
+      security:
+        title: "Безопасность"
+        sidebar_link:
+          error_logs: "Журнал ошибок"
+          screened_emails: "Проверяемые адреса электронной почты"
+          screened_ips: "Проверяемые IP-адреса"
+          screened_urls: "Проверяемые ссылки"
+          search_logs: "Журналы поиска"
+          security: "Безопасность"
+          spam: "Спам"
       plugins:
         title: "Плагины"
         installed: "Установленные плагины"
@@ -5225,6 +5315,20 @@ ru:
         author: "Автор: %{author}"
         experimental_badge: "экспериментальный"
         learn_more: "Подробнее"
+        sidebar_link:
+          installed: "Установленные"
+      advanced:
+        title: "Дополнительно"
+        sidebar_link:
+          developer: "Разработчикам"
+          embedding: "Встраивание"
+          rate_limits: "Ограничения"
+          user_api: "Пользовательский API"
+          web_hooks: "Вебхуки"
+          onebox: "Умная вставка"
+          files: "Файлы"
+          other_options: "Разное"
+          search: "Найти"
       navigation_menu:
         sidebar: "Боковая панель"
         header_dropdown: "Выпадающий список заголовка"
@@ -5255,6 +5359,7 @@ ru:
           uploading_progress: "Загрузка… %{progress}%"
           success: "Файл «%{filename}» загружен. Обработка файла займёт не более минуты, после чего он отобразится в списке."
           error: "При загрузке файла «%{filename}» произошла ошибка: %{message}"
+        settings: "Настройки"
         operations:
           is_running: "Операция в данный момент выполняется…"
           failed: "Операция %{operation} закончилась неудачей. Проверьте журнал."
@@ -5399,13 +5504,21 @@ ru:
           convert_theme_tooltip: "Преобразовать эту тему в компонент"
           inactive_themes: "Неактивные темы:"
           inactive_components: "Неиспользуемые компоненты:"
-          selected: "Выбрано %{count}"
+          selected:
+            one: "Выбрано %{count}"
+            few: "Выбрано %{count}"
+            many: "Выбрано %{count}"
+            other: "Выбрано %{count}"
           cancel: "Отмена"
           broken_theme_tooltip: "Эта тема содержит ошибки в CSS, HTML или YAML"
           disabled_component_tooltip: "Этот компонент отключён"
           default_theme_tooltip: "Эта тема является темой по умолчанию"
           updates_available_tooltip: "Доступны обновления для этой темы"
-          and_x_more: "и ещё %{count}."
+          and_x_more:
+            one: "и ещё %{count}."
+            few: "и ещё %{count}."
+            many: "и ещё %{count}."
+            other: "и ещё %{count}."
           collapse: Свернуть
           uploads: "Загрузки"
           no_uploads: "Вы можете загрузить различные ресурсы для темы, такие как шрифты и изображения"
@@ -5527,6 +5640,12 @@ ru:
           active_filter: "Активна"
           inactive_filter: "Неактивна"
           updates_available_filter: "Доступны обновления"
+          schema:
+            fields:
+              required: "*обязательное"
+              number:
+                too_small: "должно быть больше или равно %{count}"
+                too_large: "должно быть меньше или равно %{count}"
         colors:
           select_base:
             title: "Выберите базовую цветовую палитру"
@@ -5603,7 +5722,6 @@ ru:
           instructions: "Настройте шаблон, в котором отображаются все почтовые html-сообщения. Настройте стиль шаблона, используя CSS."
       email:
         title: "Письма"
-        settings: "Настройки"
         templates: "Шаблоны"
         templates_title: "Шаблоны электронных писем"
         preview_digest: "Предпросмотр сводки"
@@ -6272,7 +6390,6 @@ ru:
             other: "За последние %{count} дня:"
           value_heading: "Значение"
           requirement_heading: "Требование"
-          visits: "Посещений"
           days: "Дней"
           topics_replied_to: "Ответов на темы"
           topics_viewed: "Просмотров тем"
@@ -6390,7 +6507,6 @@ ru:
           empty: "Изображений пока нет — загрузите что-нибудь."
           upload:
             label: "Загрузить"
-            title: "Загрузка изображений"
         selectable_avatars:
           title: "Список доступных для выбора аватаров"
         categories:
@@ -6426,7 +6542,6 @@ ru:
         secret_list:
           invalid_input: "Поля ввода не могут быть пустыми или содержать символ вертикальной черты."
         default_categories:
-          modal_description: "Применить это изменение к уже существующим пользователям? Это изменит настройки для существующих пользователей (%{count})."
           modal_yes: "Да"
           modal_no: "Нет, применять изменения только в будущем"
         simple_list:
@@ -6527,9 +6642,7 @@ ru:
           perform: "Наградить пользователей"
           upload_csv: Загрузите файл в формате CSV с адресами электронной почты или именами пользователей
           aborted: Загрузите файл в формате CSV, содержащий адреса электронной почты или имена пользователей
-          success: Файл CSV получен. Пользователи (%{count}) получат награды в ближайшее время.
           csv_has_unmatched_users: "Следующие записи находятся в CSV-файле, но они не могут быть сопоставлены с существующими пользователями, поэтому указанные пользователи не получат награду:"
-          csv_has_unmatched_users_truncated_list: "В CSV-файле есть записи (%{count}), которые не удалось сопоставить с существующими пользователями, поэтому эти пользователи не получат награду. Из-за большого количества несовпадающих записей отображаются только первые 100 значений:"
           replace_owners: Удалять эту награду у предыдущих владельцев
           grant_existing_holders: Предоставление награждённым дополнительных наград
       emoji:
@@ -6543,6 +6656,7 @@ ru:
         image: "Изображение"
         alt: "предпросмотр пользовательских эмодзи"
         delete_confirm: "Действительно удалить эмодзи :%{name}:?"
+        settings: "Настройки"
       embedding:
         get_started: "Для встраивания на другой сайт необходимо добавить соответствующий хост."
         confirm_delete: "Действительно удалить этот хост?"
@@ -6582,6 +6696,7 @@ ru:
         category_title: "Категория"
         tag_name: "Имя тега"
         external_url: "Внешняя или относительная ссылка"
+        username: "Псевдоним"
         destination: "Назначения"
         copy_to_clipboard: "Скопировать ссылку в буфер обмена"
         delete_confirm: Удалить эту постоянную ссылку?

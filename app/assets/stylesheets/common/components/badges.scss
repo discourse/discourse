@@ -72,6 +72,8 @@
 
 .badge-notification {
   @extend %badge;
+  position: relative;
+  top: -2px;
   padding: 0.21em 0.42em;
   min-width: 0.5em;
   color: var(--secondary);
@@ -97,6 +99,7 @@
 
   &.new-topic {
     background-color: transparent;
+    padding-left: 0.15em;
   }
 
   &.new-topic::before {

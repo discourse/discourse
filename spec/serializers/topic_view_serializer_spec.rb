@@ -14,7 +14,7 @@ RSpec.describe TopicViewSerializer do
   fab!(:topic)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
 
   describe "#featured_link and #featured_link_root_domain" do
     fab!(:featured_link) { "http://meta.discourse.org" }
@@ -95,8 +95,6 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe "#suggested_topics" do
-    before { Group.refresh_automatic_groups! }
-
     fab!(:topic2) { Fabricate(:topic) }
 
     before { TopicUser.update_last_read(user, topic2.id, 0, 0, 0) }
@@ -125,8 +123,6 @@ RSpec.describe TopicViewSerializer do
     end
 
     describe "with private messages" do
-      before { Group.refresh_automatic_groups! }
-
       fab!(:topic) do
         Fabricate(
           :private_message_topic,
@@ -166,8 +162,6 @@ RSpec.describe TopicViewSerializer do
   describe "#suggested_group_name" do
     fab!(:pm) { Fabricate(:private_message_post).topic }
     fab!(:group)
-
-    before { Group.refresh_automatic_groups! }
 
     it "is nil for a regular topic" do
       json = serialize_topic(topic, user)
@@ -457,8 +451,7 @@ RSpec.describe TopicViewSerializer do
         json = serialize_topic(topic, user)
         expect(json[:details][:can_edit_tags]).to be_nil
 
-        user.update!(trust_level: 2)
-        Group.refresh_automatic_groups!
+        user.change_trust_level!(TrustLevel[2])
 
         json = serialize_topic(topic, user.reload)
         expect(json[:details][:can_edit_tags]).to eq(true)

@@ -11,11 +11,15 @@
   {{on "dragleave" this.dragLeave}}
   {{on "dragend" this.dragEnd}}
   {{on "drop" this.dropItem}}
+  role="row"
+  data-row-id={{@link.objectId}}
 >
-  <div class="draggable" data-link-name={{@link.name}}>
-    {{d-icon "grip-lines"}}
-  </div>
-  <div class="input-group">
+  {{#if this.site.desktopView}}
+    <div class="draggable" data-link-name={{@link.name}}>
+      {{d-icon "grip-lines"}}
+    </div>
+  {{/if}}
+  <div class="input-group" role="cell">
     <IconPicker
       @name="icon"
       @value={{@link.icon}}
@@ -27,38 +31,41 @@
       }}
       class={{@link.iconCssClass}}
       @onlyAvailable={{true}}
-      @onChange={{action (mut @link.icon)}}
+      @onChange={{fn (mut @link.icon)}}
+      ariaLabel={{i18n "sidebar.sections.custom.links.icon.label"}}
     />
     {{#if @link.invalidIconMessage}}
-      <div class="icon warning">
+      <div class="icon warning" role="alert" aria-live="assertive">
         {{@link.invalidIconMessage}}
       </div>
     {{/if}}
   </div>
-  <div class="input-group">
+  <div class="input-group" role="cell">
     <Input
       name="link-name"
       @type="text"
       @value={{@link.name}}
       class={{@link.nameCssClass}}
-      {{on "input" (action (mut @link.name) value="target.value")}}
+      ariaLabel={{i18n "sidebar.sections.custom.links.name.label"}}
+      {{on "input" (with-event-value (fn (mut @link.name)))}}
     />
     {{#if @link.invalidNameMessage}}
-      <div class="name warning">
+      <div class="name warning" role="alert" aria-live="assertive">
         {{@link.invalidNameMessage}}
       </div>
     {{/if}}
   </div>
-  <div class="input-group">
+  <div class="input-group" role="cell">
     <Input
       name="link-url"
       @type="text"
       @value={{@link.value}}
       class={{@link.valueCssClass}}
-      {{on "input" (action (mut @link.value) value="target.value")}}
+      ariaLabel={{i18n "sidebar.sections.custom.links.value.label"}}
+      {{on "input" (with-event-value (fn (mut @link.value)))}}
     />
     {{#if @link.invalidValueMessage}}
-      <div class="value warning">
+      <div class="value warning" role="alert" aria-live="assertive">
         {{@link.invalidValueMessage}}
       </div>
     {{/if}}
@@ -68,5 +75,6 @@
     @action={{fn @deleteLink @link}}
     @title="sidebar.sections.custom.links.delete"
     class="btn-flat delete-link"
+    role="cell"
   />
 </div>

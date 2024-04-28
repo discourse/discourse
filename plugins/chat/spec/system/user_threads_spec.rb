@@ -17,10 +17,27 @@ RSpec.describe "User threads", type: :system do
   end
 
   context "when in sidebar" do
-    it "shows a link to user threads" do
-      visit("/")
+    context "when user is a member of at least one channel with threads" do
+      before { channel_1.add(current_user) }
 
-      expect(sidebar_page).to have_user_threads_section
+      it "shows a link to user threads" do
+        visit("/")
+
+        expect(sidebar_page).to have_user_threads_section
+      end
+    end
+
+    context "when user is not a member of any channel with threads" do
+      before do
+        channel_1.update!(threading_enabled: false)
+        channel_1.add(current_user)
+      end
+
+      it "does not show a link to user threads" do
+        visit("/")
+
+        expect(sidebar_page).to have_no_user_threads_section
+      end
     end
 
     context "when user has unreads" do
@@ -97,14 +114,48 @@ RSpec.describe "User threads", type: :system do
 
       expect(user_threads_page).to have_threads
     end
+
+    it "updates the thread when another user replies" do
+      chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
+      thread = channel_1.threads.last
+      last_user = Fabricate(:user)
+
+      chat_page.visit_user_threads
+
+      last_message = Fabricate(:chat_message, thread: thread, user: last_user, use_service: true)
+
+      indicator = PageObjects::Components::Chat::ThreadIndicator.new(".c-user-thread")
+      expect(indicator).to have_reply_count(4)
+      expect(indicator).to have_participant(last_user)
+      expect(indicator).to have_excerpt(last_message.excerpt)
+      expect(indicator).to have_user(last_user)
+    end
   end
 
   context "when in drawer" do
-    it "shows a link to user threads" do
-      visit("/")
-      chat_page.open_from_header
+    context "when user is a member of at least one channel with threads" do
+      before { channel_1.add(current_user) }
 
-      expect(drawer_page).to have_user_threads_section
+      it "shows a link to user threads" do
+        visit("/")
+        chat_page.open_from_header
+
+        expect(drawer_page).to have_user_threads_section
+      end
+    end
+
+    context "when user is not a member of any channel with threads" do
+      before do
+        channel_1.update!(threading_enabled: false)
+        channel_1.add(current_user)
+      end
+
+      it "does not show a link to user threads" do
+        visit("/")
+        chat_page.open_from_header
+
+        expect(drawer_page).to have_no_user_threads_section
+      end
     end
 
     context "when user has unreads" do
@@ -189,6 +240,24 @@ RSpec.describe "User threads", type: :system do
       drawer_page.back
 
       expect(user_threads_page).to have_threads
+    end
+  end
+
+  context "when in mobile", mobile: true do
+    before do
+      chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
+    end
+
+    it "has the expected UI elements" do
+      chat_page.visit_user_threads
+
+      expect(user_threads_page).to have_threads(count: 1)
+      expect(user_threads_page).to have_css(".chat-user-avatar")
+      expect(user_threads_page).to have_css(".chat__thread-title__name")
+      expect(user_threads_page).to have_css(".chat-channel-name")
+      expect(user_threads_page).to have_css(".c-user-thread__excerpt")
+      expect(user_threads_page).to have_css(".c-user-thread__excerpt-poster")
+      expect(user_threads_page).to have_css(".c-user-thread .relative-date")
     end
   end
 end

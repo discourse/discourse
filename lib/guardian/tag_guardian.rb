@@ -7,16 +7,11 @@ module TagGuardian
   end
 
   def can_create_tag?
-    SiteSetting.tagging_enabled &&
-      (
-        @user.has_trust_level_or_staff?(SiteSetting.min_trust_to_create_tag) ||
-          @user.in_any_groups?(SiteSetting.create_tag_allowed_groups_map)
-      )
+    SiteSetting.tagging_enabled && @user.in_any_groups?(SiteSetting.create_tag_allowed_groups_map)
   end
 
   def can_tag_topics?
-    SiteSetting.tagging_enabled &&
-      @user.has_trust_level_or_staff?(SiteSetting.min_trust_level_to_tag_topics)
+    SiteSetting.tagging_enabled && @user.in_any_groups?(SiteSetting.tag_topic_allowed_groups_map)
   end
 
   def can_tag_pms?

@@ -19,6 +19,8 @@ module PageObjects
         find(".dialog-footer .btn-primary").click
       end
 
+      alias click_ok click_yes
+
       def click_no
         find(".dialog-footer .btn-default").click
       end

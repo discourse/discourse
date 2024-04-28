@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
-import { and, readOnly } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { and } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { underscore } from "@ember/string";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -22,7 +22,6 @@ export default Controller.extend({
   showTooltip: false,
   createdCategory: false,
   expandedMenu: false,
-  mobileView: readOnly("site.mobileView"),
   parentParams: null,
   showDeleteReason: and("showTooltip", "model.cannot_delete_reason"),
 
@@ -90,37 +89,33 @@ export default Controller.extend({
       if (this.validators.some((validator) => validator())) {
         return;
       }
-      const model = this.model;
-      const parentCategory = this.site.categories.findBy(
-        "id",
-        parseInt(model.parent_category_id, 10)
-      );
 
       this.set("saving", true);
-      const previousParentCategory = model.get("parentCategory");
-      model.set("parentCategory", parentCategory);
 
-      model
+      this.model
         .save()
         .then((result) => {
-          this.set("saving", false);
-          if (!model.id) {
-            model.setProperties({
+          if (!this.model.id) {
+            this.model.setProperties({
               slug: result.category.slug,
               id: result.category.id,
               can_edit: result.category.can_edit,
               permission: PermissionType.FULL,
               notification_level: NotificationLevels.REGULAR,
             });
-            this.site.updateCategory(model);
-            this.router.transitionTo("editCategory", Category.slugFor(model));
+            this.site.updateCategory(this.model);
+            this.router.transitionTo(
+              "editCategory",
+              Category.slugFor(this.model)
+            );
           }
         })
         .catch((error) => {
           popupAjaxError(error);
+          this.model.set("parent_category_id", undefined);
+        })
+        .finally(() => {
           this.set("saving", false);
-          model.set("parent_category_id", undefined);
-          model.set("parentCategory", previousParentCategory);
         });
     },
 

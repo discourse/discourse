@@ -8,7 +8,7 @@ class StrippedLengthValidator < ActiveModel::EachValidator
       record.errors.add attribute,
                         I18n.t(
                           "errors.messages.too_long_validation",
-                          max: range.end,
+                          count: range.end,
                           length: value.length,
                         )
     else

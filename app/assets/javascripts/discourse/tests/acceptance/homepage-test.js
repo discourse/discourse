@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/application";
-import { click, visit } from "@ember/test-helpers";
+import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -27,9 +27,11 @@ acceptance("Dynamic homepage handling", function () {
     assertOnLatest("/");
 
     await router.transitionTo("/").followRedirects();
+    await settled();
     assertOnLatest("/");
 
     await router.transitionTo("discovery.index").followRedirects();
+    await settled();
     assertOnLatest("/");
 
     await click(".nav-item_latest a");
@@ -66,12 +68,28 @@ acceptance("Dynamic homepage handling", function () {
     assertOnCategories("/");
 
     await router.transitionTo("/").followRedirects();
+    await settled();
     assertOnCategories("/");
 
     await router.transitionTo("discovery.index").followRedirects();
+    await settled();
     assertOnCategories("/");
 
     await click(".nav-item_categories a");
     assertOnCategories("/categories");
+  });
+
+  test("it passes query params through", async function (assert) {
+    await visit("/?test-one=true");
+
+    const router = getOwner(this).lookup("service:router");
+    assert.strictEqual(router.currentURL, "/?test-one=true");
+  });
+
+  test("it removes the _discourse_homepage_rewrite param from the URL", async function (assert) {
+    await visit("/?_discourse_homepage_rewrite=1&test-one=true");
+
+    const router = getOwner(this).lookup("service:router");
+    assert.strictEqual(router.currentURL, "/?test-one=true");
   });
 });

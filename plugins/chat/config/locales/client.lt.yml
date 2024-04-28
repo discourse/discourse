@@ -19,6 +19,7 @@ lt:
     chat:
       deleted_chat_username: ištrintas
       dates:
+        yesterday: "Vakar"
         time_tiny: "h:mm"
       bot: "botas"
       create: "Sukurti"
@@ -65,6 +66,7 @@ lt:
       browse:
         back: "Atgal"
         filter_all: Visos
+        filter_open: Atidaryti
         filter_closed: Uždaryta
       chat_message_separator:
         today: Šiandien

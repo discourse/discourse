@@ -6,16 +6,6 @@
   <div class="alert alert-info">{{this.redirectedReason}}</div>
 {{/if}}
 
-<TopicDismissButtons
-  @position="top"
-  @selectedTopics={{@bulkSelectHelper.selected}}
-  @model={{@model}}
-  @showResetNew={{@showResetNew}}
-  @showDismissRead={{@showDismissRead}}
-  @resetNew={{this.resetNew}}
-  @dismissRead={{this.dismissRead}}
-/>
-
 {{#if @model.sharedDrafts}}
   <TopicList
     @listTitle="shared_drafts.title"
@@ -42,19 +32,26 @@
       />
     </div>
   {{else}}
-    {{#if this.topicTrackingState.hasIncoming}}
+    {{#if (or this.topicTrackingState.hasIncoming @model.loadingBefore)}}
       <div class="show-more {{if this.hasTopics 'has-topics'}}">
         <a
           tabindex="0"
           href
           {{on "click" this.showInserted}}
-          class="alert alert-info clickable"
+          class="alert alert-info clickable
+            {{if @model.loadingBefore 'loading'}}"
         >
           <CountI18n
             @key="topic_count_"
             @suffix={{this.topicTrackingState.filter}}
-            @count={{this.topicTrackingState.incomingCount}}
+            @count={{or
+              @model.loadingBefore
+              this.topicTrackingState.incomingCount
+            }}
           />
+          {{#if @model.loadingBefore}}
+            {{loading-spinner size="small"}}
+          {{/if}}
         </a>
       </div>
     {{/if}}
@@ -81,6 +78,7 @@
     <TopicList
       @highlightLastVisited={{true}}
       @top={{this.top}}
+      @hot={{this.hot}}
       @showTopicPostBadges={{this.showTopicPostBadges}}
       @showPosters={{true}}
       @canBulkSelect={{@canBulkSelect}}
@@ -129,8 +127,8 @@
         @model={{@model}}
         @showResetNew={{@showResetNew}}
         @showDismissRead={{@showDismissRead}}
-        @resetNew={{this.resetNew}}
-        @dismissRead={{this.dismissRead}}
+        @resetNew={{@resetNew}}
+        @dismissRead={{@dismissRead}}
       />
 
       <FooterMessage

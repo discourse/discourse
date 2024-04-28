@@ -66,6 +66,7 @@ RSpec.describe Middleware::RequestTracker do
       CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon.first.count).to eq(2)
+      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(2)
     end
 
     it "can log requests correctly" do
@@ -119,6 +120,23 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon_mobile.first.count).to eq(1)
 
       expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
+
+      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
+    end
+
+    it "logs deferred pageviews correctly" do
+      data =
+        Middleware::RequestTracker.get_data(
+          env(:path => "/message-bus/abcde/poll", "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1"),
+          ["200", { "Content-Type" => "text/html" }],
+          0.1,
+        )
+      Middleware::RequestTracker.log_request(data)
+
+      expect(data[:deferred_track]).to eq(true)
+      CachedCounting.flush
+
+      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
     end
 
     it "logs API requests correctly" do
@@ -260,7 +278,7 @@ RSpec.describe Middleware::RequestTracker do
 
       # rate limiter tests depend on checks for retry-after
       # they can be sensitive to clock skew during test runs
-      freeze_time DateTime.parse("2021-01-01 01:00")
+      freeze_time_safe
     end
 
     use_redis_snapshotting
@@ -329,7 +347,7 @@ RSpec.describe Middleware::RequestTracker do
       stub_const(
         Middleware::RequestTracker,
         "STATIC_IP_SKIPPER",
-        "177.33.14.73 191.209.88.192/30"&.split&.map { |ip| IPAddr.new(ip) },
+        "177.33.14.73 191.209.88.192/30".split.map { |ip| IPAddr.new(ip) },
       ) do
         global_setting :max_reqs_per_ip_per_10_seconds, 1
         global_setting :max_reqs_per_ip_mode, "block"

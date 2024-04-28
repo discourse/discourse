@@ -56,6 +56,7 @@
       line-height: var(--line-height-large);
       display: flex;
       align-items: center;
+      border-radius: var(--d-input-border-radius);
       .d-icon {
         margin-left: 5px;
         margin-right: 0;
@@ -448,10 +449,6 @@ tr.category-topic-link {
   margin: 1.5em 0 1em;
 }
 
-button.dismiss-read {
-  margin-bottom: 10px;
-}
-
 // base defines extra padding for easier click/top of title field
 // this is a bit too much for mobile
 td .main-link {
@@ -525,7 +522,7 @@ td .main-link {
       }
       &.default {
         display: flex;
-        span:not(.bulk-select-topics) {
+        .bulk-select-topic-dropdown__count {
           display: none;
         }
       }
@@ -539,9 +536,12 @@ td .main-link {
 
 .bulk-select-topics {
   display: flex;
+  flex-wrap: wrap;
   padding-left: 0.85em;
-  .btn {
-    margin-right: 0.5em;
+  gap: 0.5em;
+  font-size: var(--font-down-1);
+  .select-kit-collection {
+    font-size: var(--font-up-1);
   }
 }
 
@@ -572,5 +572,13 @@ td .main-link {
       color: var(--quaternary);
       box-shadow: 0 3px 0 var(--quaternary);
     }
+  }
+}
+
+#list-area .show-more .alert {
+  align-items: center;
+  gap: 0.5em;
+  &.loading {
+    color: var(--primary-medium);
   }
 }

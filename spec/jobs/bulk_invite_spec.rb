@@ -55,7 +55,6 @@ RSpec.describe Jobs::BulkInvite do
     it "handles daylight savings time correctly" do
       # EDT (-04:00) transitions to EST (-05:00) on the first Sunday in November.
       # Freeze time to the last Day of October, so that the creation and expiration date will be in different time zones.
-
       Time.use_zone("Eastern Time (US & Canada)") do
         freeze_time DateTime.parse("2023-10-31 06:00:00 -0400")
         described_class.new.execute(current_user_id: east_coast_user.id, invites: invites)
@@ -141,6 +140,15 @@ RSpec.describe Jobs::BulkInvite do
         expect(invite.emailed_status).to eq(Invite.emailed_status_types[:bulk_pending])
         expect(Jobs::ProcessBulkInviteEmails.jobs.size).to eq(1)
       end
+    end
+
+    it "does not send an invite email when skip_email_bulk_invites is true" do
+      SiteSetting.skip_email_bulk_invites = true
+
+      described_class.new.execute(current_user_id: admin.id, invites: invites)
+
+      invite = Invite.last
+      expect(invite.emailed_status).to eq(Invite.emailed_status_types[:not_required])
     end
   end
 end

@@ -17,10 +17,6 @@ class DiscourseJsProcessor
     "proposal-export-namespace-from",
   ]
 
-  def self.plugin_transpile_paths
-    @@plugin_transpile_paths ||= Set.new
-  end
-
   def self.ember_cli?(filename)
     filename.include?("/app/assets/javascripts/discourse/dist/")
   end
@@ -32,19 +28,6 @@ class DiscourseJsProcessor
     data = input[:data]
 
     data = transpile(data, root_path, logical_path) if should_transpile?(input[:filename])
-
-    # add sourceURL until we can do proper source maps
-    if !Rails.env.production? && !ember_cli?(input[:filename])
-      plugin_name = root_path[%r{/plugins/([\w-]+)/assets}, 1]
-      source_url =
-        if plugin_name
-          "plugins/#{plugin_name}/assets/javascripts/#{logical_path}"
-        else
-          logical_path
-        end
-
-      data = "eval(#{data.inspect} + \"\\n//# sourceURL=#{source_url}\");\n"
-    end
 
     { data: data }
   end
@@ -73,22 +56,6 @@ class DiscourseJsProcessor
 
     return false if relative_path.start_with?("#{js_root}/locales/")
     return false if relative_path.start_with?("#{js_root}/plugins/")
-
-    if %w[
-         start-discourse
-         onpopstate-handler
-         google-tag-manager
-         google-universal-analytics-v3
-         google-universal-analytics-v4
-         activate-account
-         auto-redirect
-         embed-application
-         app-boot
-       ].any? { |f| relative_path == "#{js_root}/#{f}.js" }
-      return true
-    end
-
-    return true if plugin_transpile_paths.any? { |prefix| relative_path.start_with?(prefix) }
 
     !!(relative_path =~ %r{^#{js_root}/[^/]+/} || relative_path =~ %r{^#{test_root}/[^/]+/})
   end

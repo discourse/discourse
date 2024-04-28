@@ -26,9 +26,15 @@ zh_TW:
           descriptions:
             chat:
               create_message: "在指定頻道中建立聊天訊息。"
+    about:
+      chat_messages_count: "聊天訊息"
+      chat_channels_count: "聊天頻道"
+      chat_users_count: "聊天使用者"
     chat:
+      back_to_forum: "論壇"
       deleted_chat_username: 已刪除
       dates:
+        yesterday: "昨天"
         time_tiny: "h:mm"
       all_loaded: "顯示所有訊息"
       already_enabled: "此主題已啟用聊天功能。請重新整理。"
@@ -65,6 +71,9 @@ zh_TW:
         title: "關閉頻道"
       channel_delete:
         title: "刪除頻道"
+        confirm_channel_name: "輸入頻道名稱"
+      channels_list_popup:
+        browse: "瀏覽頻道"
       close: "關閉"
       remove: "移除"
       delete: "刪除"
@@ -79,6 +88,7 @@ zh_TW:
       header_indicator_preference:
         all_new: "所有新訊息"
         never: "永不"
+      enable: "啟用聊天"
       flag: "檢舉"
       heading: "聊天"
       join: "加入"
@@ -124,7 +134,7 @@ zh_TW:
         back: "上一步"
         title: 頻道
         filter_all: 全部
-        filter_open: 已打開
+        filter_open: 開啟
         filter_closed: 不公開
         filter_archived: 已封存
       chat_message_separator:
@@ -179,6 +189,7 @@ zh_TW:
       notification_levels:
         never: "永不"
       settings:
+        auto_join_users_label: "自動新增使用者"
         follow: "加入"
         followed: "建立日期"
         threading_enabled: "啟用"

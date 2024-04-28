@@ -93,20 +93,13 @@ id:
       optimized_link: Tautan gambar yang dioptimalkan bersifat sementara dan tidak boleh disertakan dalam kode sumber tema.
     settings_errors:
       invalid_yaml: "YAML yang diberikan tidak valid."
-      data_type_not_a_number: "Pengaturan jenis `%{name}` tidak didukung. Jenis yang didukung adalah `integer`, `bool`, `list`, `enum` dan `upload`"
+      data_type_inclusion: "Pengaturan jenis `%{name}` tidak didukung. Jenis yang didukung adalah `integer`, `bool`, `list`, `enum` dan `upload`"
       name_too_long: "Ada pengaturan dengan nama yang terlalu panjang. Panjang maksimum adalah 255"
-      default_value_missing: "Pengaturan `%{name}` tidak memiliki nilai bawaan"
+      default_value_missing: "Pengaturan `%{name}` tidak memiliki nilai bawaan."
       default_not_match_type: "Pengaturan jenis nilai bawaan `%{name}` tidak cocok dengan jenis pengaturan."
-      default_out_range: "Pengaturan nilai bawaan `%{name}` tidak dalam rentang yang ditentukan."
       enum_value_not_valid: "Nilai yang dipilih bukan salah satu pilihan enum."
-      number_value_not_valid: "Nilai baru tidak berada dalam rentang yang diizinkan."
-      number_value_not_valid_min_max: "Itu harus antara %{min} dan %{max}."
-      number_value_not_valid_min: "Itu harus lebih besar dari atau sama dengan %{min}."
-      number_value_not_valid_max: "Itu harus lebih kecil dari atau sama dengan %{max}."
-      string_value_not_valid: "Panjang nilai baru tidak berada dalam rentang yang diizinkan."
-      string_value_not_valid_min_max: "Panjangnya harus antara %{min} dan %{max} karakter."
-      string_value_not_valid_min: "Panjangnya minimal %{min} karakter."
-      string_value_not_valid_max: "Panjangnya harus maksimal %{max} karakter."
+      objects:
+        not_valid_integer_value: "harus integer"
     locale_errors:
       top_level_locale: "Kunci level teratas dalam file locale harus cocok dengan nama locale"
       invalid_yaml: "Terjemahan YAML tidak valid"
@@ -146,7 +139,8 @@ id:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "Dibatasi hingga %{max} karakter; Anda memasukkan %{length} karakter."
+      too_long_validation:
+        other: "Dibatasi hingga %{count} karakter; Anda memasukkan %{length} karakter."
       invalid_boolean: "boolean tidak valid."
       taken: "sudah diambil"
       accepted: harus diterima
@@ -251,7 +245,6 @@ id:
     rate_limit:
       other: "Anda telah mengirim %{count} undangan dalam 24 jam terakhir, harap tunggu %{time_left} sebelum mencoba lagi."
     confirm_email: "<p>Anda hampir selesai! Kami mengirim email aktivasi ke alamat email Anda. Silakan ikuti petunjuk dalam surel untuk mengaktifkan akun Anda.</p><p>Jika tidak sampai, periksa folder spam Anda.</p>"
-    cant_invite_to_group: "Anda tidak diizinkan mengundang pengguna ke grup(-grup) tertentu. Pastikan Anda adalah pemilik grup(-grup) yang ingin Anda undang."
     disabled_errors:
       discourse_connect_enabled: "Undangan dinonaktifkan karena DiscourseConnect diaktifkan."
       invalid_access: "Anda tidak diijinkan untuk melihat sumber yang diminta."
@@ -335,7 +328,7 @@ id:
   no_mentions_allowed_newuser: "Maaf, pengguna baru tidak diijinkan untuk menyebut pengguna lain."
   too_many_mentions_newuser:
     other: "Maaf, pengguna baru hanya diperbolehkan untuk menyebut %{count} pengguna dalam satu posting."
-  no_embedded_media_allowed_trust: "Maaf, Anda tidak dapat menyematkan item media dalam sebuah post."
+  no_embedded_media_allowed_group: "Maaf, Anda tidak dapat menyematkan item media dalam sebuah post."
   no_embedded_media_allowed: "Maaf, pengguna baru tidak dapat menyematkan item media dalam post."
   too_many_embedded_media:
     other: "Maaf, pengguna baru hanya dapat menempatkan %{count} item media yang disematkan dalam sebuah post."
@@ -356,7 +349,6 @@ id:
   pm_reached_recipients_limit: "Maaf, Anda tidak dapat memiliki lebih dari %{recipients_limit} penerima dalam satu pesan."
   removed_direct_reply_full_quotes: "Secara otomatis menghapus kutipan dari seluruh post sebelumnya."
   watched_words_auto_tag: "Topik yang diberi tag secara otomatis"
-  secure_upload_not_allowed_in_public_topic: "Maaf, unggahan(-unggahan) aman berikut tidak dapat digunakan dalam topik publik: %{upload_filenames}."
   create_pm_on_existing_topic: "Maaf, Anda tidak dapat membuat PM untuk topik yang sudah ada."
   slow_mode_enabled: "Topik ini dalam mode lambat."
   just_posted_that: "tingkat kemiripan dengan post sebelumnya sangat tinggi"
@@ -477,7 +469,8 @@ id:
 
       Untuk lebih lanjut, [lihat pedoman komunitas kami](%{base_path}/guidelines). Panel ini hanya akan muncul untuk %{education_posts_text} pertama Anda.
     dominating_topic: Anda telah memposting banyak hal dalam topik ini! Pertimbangkan untuk memberikan kesempatan kepada orang lain untuk membalas di sini dan juga mendiskusikan berbagai hal satu sama lain.
-    get_a_room: Anda telah membalas ke @%{reply_username} %{count} kali, tahukah Anda bahwa Anda dapat mengirimkan pesan pribadi kepada mereka?
+    get_a_room:
+      other: Anda telah membalas ke @%{reply_username} %{count} kali, tahukah Anda bahwa Anda dapat mengirimkan pesan pribadi kepada mereka?
     dont_feed_the_trolls: Posting ini telah ditandai untuk mendapat perhatian moderator. Apakah Anda yakin ingin membalasnya? Balasan ke konten negatif cenderung mendorong lebih banyak perilaku negatif.
   activerecord:
     attributes:
@@ -725,23 +718,10 @@ id:
       windows: "Microsoft Windows"
       unknown: "sistem operasi yang tidak dikenal"
   change_email:
-    confirmed: "Surel anda telah diperbaharui."
-    please_continue: "Lanjut ke %{site_name}"
     error: "Ada kesalahan dalam merubah alamat email Anda. Mungkinkah alamat ini telah digunakan oleh pengguna lain?"
     error_staged: "Ada kesalahan dalam merubah alamat email Anda. Alamat ini telah digunakan oleh pengguna lain."
     already_done: "Maaf, tautan konfirmasi ini sudah tidak valid. Apakah anda telah mengubah surel anda?"
     confirm: "Konfirmasi"
-    authorizing_new:
-      title: "Konfirmasi email baru Anda"
-      description: "Konfirmasikan bahwa Anda ingin alamat email Anda diubah menjadi:"
-      description_add: "Konfirmasikan bahwa Anda ingin menambahkan alamat email alternatif:"
-    authorizing_old:
-      title: "Ubah alamat email Anda"
-      description: "Harap konfirmasi perubahan alamat email Anda"
-      description_add: "Konfirmasikan bahwa Anda ingin menambahkan alamat email alternatif:"
-      old_email: "Email lama: %{email}"
-      new_email: "Email baru: %{email}"
-      almost_done_title: "Konfirmasi alamat email baru"
   associated_accounts:
     revoke_failed: "Gagal mencabut akun Anda di %{provider_name}."
     connected: "(terhubung)"
@@ -778,6 +758,9 @@ id:
       title: "Tidak pantas"
       description: 'Post ini berisi konten yang oleh orang awam dianggap ofensif, kasar, sebagai perilaku penuh kebencian, atau pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>.'
       short_description: 'Pelanggaran terhadap <a href="%{base_path}/guidelines">pedoman komunitas kami</a>'
+    illegal:
+      email_title: 'Post di "%{title}" membutuhkan perhatian staf'
+      email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Kirim @%{username} sebuah pesan"
       description: "Saya ingin berbicara dengan orang ini secara langsung dan pribadi tentang post-nya."
@@ -848,6 +831,9 @@ id:
       long_form: "menandai sebagai membutuhkan perhatian moderator"
       short_description: "Membutuhkan perhatian staf karena alasan lain"
       email_title: 'Perhatian moderator dibutuhkan di topik "%{title}"'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      email_title: 'Post di "%{title}" membutuhkan perhatian staf'
       email_body: "%{link}\n\n%{message}"
   ignored:
     hidden_content: "<p>Konten yang diabaikan</p>"
@@ -1213,7 +1199,6 @@ id:
     min_post_length: "Panjang post minimum yang diperbolehkan dalam karakter (tidak termasuk pesan pribadi)"
     min_first_post_length: "Panjang post pertama (isi topik) minimum yang diperbolehkan (tidak termasuk pesan pribadi)"
     min_personal_message_post_length: "Panjang post minimum yang diperbolehkan dalam karakter untuk pesan (postingan pertama dan balasan)"
-    topic_featured_link_enabled: "Aktifkan post tautan dengan topik."
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
     max_form_template_title_length: "Panjang maksimum yang diperbolehkan untuk judul templat formulir."
     max_form_template_content_length: "Panjang maksimum yang diperbolehkan untuk konten templat formulir."
@@ -1240,8 +1225,6 @@ id:
     tl4_delete_posts_and_topics: "Izinkan pengguna TL4 untuk menghapus posting dan topik yang dibuat oleh pengguna lain. Pengguna TL4 juga akan dapat melihat topik dan postingan yang dihapus."
     edit_all_topic_groups: "Izinkan pengguna di grup ini untuk mengedit judul topik, tag, dan kategori dari pengguna lain"
     edit_all_post_groups: "Izinkan pengguna di grup ini untuk mengedit post pengguna lain"
-    invite_allowed_groups: "Grup yang diperbolehkan mengundang pengguna."
-    ignore_allowed_groups: "Grup yang diperbolehkan mengabaikan pengguna lain."
     dark_mode_none: "Tidak ada"
     sendgrid_verification_key: "Kunci verifikasi Sendgrid digunakan untuk memverifikasi pesan webhook."
     mailjet_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/mailjet?t=supersecret"
@@ -1250,7 +1233,6 @@ id:
     sparkpost_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/sparkpost?t=supersecret"
     email_in: "Izinkan pengguna membuat topik baru melalui surel. Setelah mengaktifkan setelan ini, Anda akan dapat melakukan konfigurasi alamat surel masuk untuk grup dan kategori."
     email_editable: "Perbolehkan pengguna untuk mengganti alamat email setelah registrasi."
-    allow_anonymous_likes: "Izinkan pengguna anonim untuk menyukai post"
     dont_feed_the_trolls_threshold: "Jumlah penanda dari pengguna lain sebelum diperingatkan."
     disable_category_edit_notifications: "Nonaktifkan notifikasi untuk pengeditan kategori topik. Ini termasuk topik yang 'dipublikasikan' (misalnya draf bersama)."
     disable_tags_edit_notifications: "Nonaktifkan notifikasi untuk pengeditan tag topik. Ini termasuk topik yang 'dipublikasikan' (misalnya draf bersama)."
@@ -1258,8 +1240,6 @@ id:
     native_app_install_banner_android: "Menampilkan spanduk aplikasi DiscourseHub di perangkat Android ke pengguna dasar (trust level 1) dan lebih tinggi."
     max_prints_per_hour_per_user: "Jumlah maksimum tayangan halaman /print (atur ke 0 untuk menonaktifkan pencetakan)"
     notify_about_reviewable_item_after: "Jika ada item yang dapat ditinjau yang belum ditangani setelah berjam-jam ini, kirim pesan pribadi ke moderator. Setel ke 0 untuk menonaktifkan."
-    bootstrap_mode_min_users: "Jumlah minimum pengguna yang diperlukan untuk menonaktifkan mode bootstrap (diatur ke 0 untuk menonaktifkan, dapat memakan waktu hingga 24 jam)"
-    emoji_set: "Bagaimana dengan emoji Anda?"
     emoji_deny_list: "Emoji ini tidak akan tersedia untuk digunakan dalam menu atau kode singkat."
     enable_offline_indicator: "Menampilkan pesan kepada pengguna saat terdeteksi bahwa mereka tidak memiliki koneksi jaringan"
     default_sidebar_link_to_filtered_list: "Jadikan link menu navigasi terhubung ke daftar yang difilter secara bawaan."
@@ -1291,6 +1271,14 @@ id:
     keywords:
       invite_allowed_groups: "min_trust_level_to_allow_invite"
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
+      clean_up_inactive_users_after_days:
+      - "dinonaktifkan"
+      - "tidak aktif"
+      - "tidak diaktifkan"
+      purge_unactivated_users_grace_period_days:
+      - "dinonaktifkan"
+      - "tidak aktif"
+      - "tidak diaktifkan"
   search:
     within_post: "#%{post_number} oleh %{username}"
     types:
@@ -1317,6 +1305,34 @@ id:
       blank: "tidak boleh kosong."
       not_allowed: "tidak diijinkan dari penyedia layanan email ini. Silahkan gunakan alamat email yang lain."
       blocked: "tidak diperbolehkan."
+  new_version_mailer:
+    text_body_template: |
+      Hore, versi baru dari [Discourse] (https://www.discourse.org) telah tersedia!
+
+      Versi Anda: %{installed_version}
+      Versi baru: **%{new_version}**
+
+      - Perbarui menggunakan **[pembaruan browser sekali klik] kami yang mudah (%{base_url}/admin/update) **
+
+      - Lihat apa yang baru di [catatan rilis](https://meta.discourse.org/tag/release-notes) atau lihat [catatan perubahan GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - Kunjungi [meta.discourse.org](https://meta.discourse.org) untuk berita, diskusi, dan dukungan untuk Discourse
+  new_version_mailer_with_notes:
+    text_body_template: |
+      Hore, versi baru [Discourse] (https://www.discourse.org) tersedia!
+
+      Versi Anda: %{installed_version}
+      Versi baru: **%{new_version}**
+
+      - Perbarui menggunakan ** [pembaruan browser satu-klik] kami yang mudah (%{base_url}/admin/update) **
+
+      - Lihat apa yang baru di [catatan rilis] (https://meta.discourse.org/tag/release-notes) atau lihat [perubahan GitHub mentah](https://github.com/discourse/discourse/commits/main)
+
+      - Kunjungi [meta.discourse.org](https://meta.discourse.org) untuk berita, diskusi, dan dukungan untuk Discourse
+
+      ### Catatan rilis
+
+      %{notes}
   system_messages:
     queued_by_staff:
       title: "Pesan Membutuhkan Persetujuan"

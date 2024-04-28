@@ -1,16 +1,13 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Jobs::Chat::NotifyMentioned do
   subject(:job) { described_class.new }
 
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:public_channel) { Fabricate(:category_channel) }
 
   before do
-    Group.refresh_automatic_groups!
     user_1.reload
     user_2.reload
 

@@ -45,6 +45,7 @@ tr_TR:
       back_to_forum: "Forum"
       deleted_chat_username: silindi
       dates:
+        yesterday: "Dün"
         time_tiny: "h:mm"
       all_loaded: "Tüm mesajlar gösteriliyor"
       already_enabled: "Bu konuda sohbet zaten etkin. Lütfen yenileyin."
@@ -55,6 +56,7 @@ tr_TR:
       cancel_reply: "Yanıtı iptal et"
       chat_channels: "Kanallar"
       browse_all_channels: "Tüm kanallara göz atın"
+      see_in: "Bakınız"
       move_to_channel:
         title: "Mesajları kanala taşı"
         instructions:
@@ -116,6 +118,7 @@ tr_TR:
         direct_message_cta: "Kişisel bir Sohbet başlatın"
         direct_message: "Bir veya daha fazla kullanıcıyla da kişisel sohbet başlatabilirsiniz."
         title: "Kanal bulunamadı"
+        my_threads: "Henüz konunuz yok. Katıldığınız konular burada görüntülenecektir."
       email_frequency:
         description: "Yalnızca sizi son 15 dakika içinde görmediğimiz takdirde size e-posta göndeririz."
         never: "Asla"
@@ -225,6 +228,7 @@ tr_TR:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"
         channels_list: "Sohbet kanalları listesi"
+      no_direct_message_channels: "Herhangi bir doğrudan mesaj kanalına katılmadınız."
       no_public_channels: "Hiçbir kanala katılmadınız."
       kicked_from_channel: "Artık bu kanala erişemezsiniz."
       only_chat_push_notifications:
@@ -302,7 +306,7 @@ tr_TR:
         back: "Geri"
         title: Kanallar
         filter_all: Tümü
-        filter_open: Açıldı
+        filter_open: Aç
         filter_closed: Kapalı
         filter_archived: Arşivlendi
         filter_input_placeholder: Ada göre kanal ara
@@ -342,6 +346,7 @@ tr_TR:
         filter: "Filtrele"
         cant_add_more_members: "Maksimum üye sayısına ulaşıldı"
         create_new_group_chat: "Grup sohbeti oluştur"
+        group_with_too_many_members: "çok fazla üyesi var (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Kanalı düzenleyin
         input_placeholder: Ad ekleyin
@@ -418,8 +423,14 @@ tr_TR:
         only_you: "<span>Şu şekilde tepki verdiniz: </span>:%{emoji}:"
         you_and_single_user: "<span>Siz ve %{username} şu şekilde tepki verdiniz: </span>:%{emoji}:"
         you_and_multiple_users: "<span>Siz, %{commaSeparatedUsernames} ve %{username} şu şekilde tepki verdiniz</span>:%{emoji}"
+        you_multiple_users_and_more:
+          one: "<span>Siz, %{commaSeparatedUsernames} ve diğer %{count} kişi şu şekilde tepki verdiniz: </span>:%{emoji}:"
+          other: "<span>Siz, %{commaSeparatedUsernames} ve diğer %{count} kişi şu şekilde tepki verdiniz: </span>:%{emoji}:"
         single_user: "<span>%{username} şu şekilde tepki verdi</span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} ve %{username} şu şekilde tepki verdi</span>:%{emoji}:"
+        multiple_users_and_more:
+          one: "<span>%{commaSeparatedUsernames} ve diğer %{count} kişi şu şekilde tepki verdi: </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} ve diğer %{count} kişi şu şekilde tepki verdi: </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Araç çubuğunu aç/kapat"
         italic_text: "vurgulanan yazı"
@@ -470,7 +481,12 @@ tr_TR:
           description: "Bu, tüm kanallardan gelen tüm mesajları dışa aktarır."
           create_export: "Dışa aktarma oluştur"
           export_has_started: "Dışa aktarma başladı. Hazır olduğunda bir kişisel mesaj alacaksınız."
+      my_threads:
+        title: Konularım
+        aria_label: "Konu listeme geç"
       direct_messages:
+        title: "Direkt Mesajlar"
+        aria_label: "Doğrudan mesajlara geçin"
         new: "Kişisel sohbet oluşturun"
         create: "Git"
         leave: "Bu kişisel sohbetten ayrıl"
@@ -478,6 +494,7 @@ tr_TR:
         cannot_create: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
       channel_list:
         title: "Kanallar"
+        aria_label: "Kanal listesine dön"
       incoming_webhooks:
         back: "Geri"
         channel_placeholder: "Kanal seçin"
@@ -546,6 +563,7 @@ tr_TR:
       flags:
         off_topic: "Bu mesaj, kanal başlığı tarafından tanımlanan mevcut tartışma ile ilgili değildir ve muhtemelen başka bir yere taşınmalıdır."
         inappropriate: "Bu mesaj, makul bir kişinin saldırgan, taciz edici veya <a href=\"%{basePath}/guidelines\">topluluk kurallarımızı</a> ihlal ettiğini düşüneceği içerik içeriyor."
+        illegal: "Bu gönderi yetkililerin dikkatini çekmesi gerekiyor çünkü illegal içerikler içeriyor."
         spam: "Bu mesaj bir reklam veya vandalizm içerikli. Kullanışlı veya mevcut kanalla ilgili değil."
         notify_user: "Bu kişiyle doğrudan ve kişisel olarak mesajı hakkında konuşmak istiyorum."
         notify_moderators: "Bu mesaj, yukarıda listelenmeyen başka bir nedenden dolayı personelin dikkatini gerektiriyor."

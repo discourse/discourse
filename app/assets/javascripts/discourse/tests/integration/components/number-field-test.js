@@ -2,6 +2,7 @@ import { fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 
 module("Integration | Component | number-field", function (hooks) {
   setupRenderingTest(hooks);
@@ -9,9 +10,11 @@ module("Integration | Component | number-field", function (hooks) {
   test("number field", async function (assert) {
     this.set("value", 123);
 
-    await render(hbs`
-      <NumberField @value={{this.value}} @classNames="number-field-test" />
-    `);
+    await withSilencedDeprecationsAsync("discourse.number-field", async () => {
+      await render(hbs`
+        <NumberField @value={{this.value}} @classNames="number-field-test" />
+      `);
+    });
 
     await fillIn(".number-field-test", "33");
 
@@ -34,9 +37,11 @@ module("Integration | Component | number-field", function (hooks) {
   test("number field | min value", async function (assert) {
     this.set("value", "");
 
-    await render(hbs`
-      <NumberField @value={{this.value}} @classNames="number-field-test" @min="1" />
-    `);
+    await withSilencedDeprecationsAsync("discourse.number-field", async () => {
+      await render(hbs`
+        <NumberField @value={{this.value}} @classNames="number-field-test" @min="1" />
+      `);
+    });
 
     await triggerKeyEvent(".number-field-test", "keydown", 189); // -
     await triggerKeyEvent(".number-field-test", "keydown", 49); // 1
@@ -47,9 +52,11 @@ module("Integration | Component | number-field", function (hooks) {
       "value is cleared when the input is less than the min"
     );
 
-    await render(hbs`
-      <NumberField @value={{this.value}} @classNames="number-field-test" @min="-10" />
-    `);
+    await withSilencedDeprecationsAsync("discourse.number-field", async () => {
+      await render(hbs`
+        <NumberField @value={{this.value}} @classNames="number-field-test" @min="-10" />
+      `);
+    });
 
     await fillIn(".number-field-test", "-1");
 

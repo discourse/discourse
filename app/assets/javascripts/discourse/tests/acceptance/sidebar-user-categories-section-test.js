@@ -90,6 +90,10 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     server.get("/c/:categorySlug/:categoryId/find_by_slug.json", () => {
       return helper.response(cloneJSON(categoryFixture["/c/1/show.json"]));
     });
+
+    server.get("/categories/search", () => {
+      return helper.response({ categories: [], ancestors: [] });
+    });
   });
 
   const setupUserSidebarCategories = function () {
@@ -203,35 +207,44 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     const site = Site.current();
     const siteCategories = site.categories;
 
-    siteCategories[0].parent_category_id = -1001;
-    siteCategories[0].id = -1000;
-    siteCategories[0].name = "Parent B Child A";
-
-    siteCategories[1].parent_category_id = null;
-    siteCategories[1].id = -1001;
-    siteCategories[1].name = "Parent B";
-
-    siteCategories[2].parent_category_id = null;
-    siteCategories[2].id = -1002;
-    siteCategories[2].name = "Parent A";
-
-    siteCategories[3].parent_category_id = -1001;
-    siteCategories[3].id = -1003;
-    siteCategories[3].name = "Parent B Child B";
-
-    siteCategories[4].parent_category_id = -1002;
-    siteCategories[4].id = -1004;
-    siteCategories[4].name = "Parent A Child A";
-
-    siteCategories[5].parent_category_id = -1000;
-    siteCategories[5].id = -1005;
-    siteCategories[5].name = "Parent B Child A Child A";
-
-    site.categoriesById.clear();
-
-    siteCategories.forEach((category) => {
-      site.categoriesById[category.id] = category;
+    siteCategories[0].setProperties({
+      parent_category_id: -1001,
+      id: -1000,
+      name: "Parent B Child A",
     });
+
+    siteCategories[1].setProperties({
+      parent_category_id: null,
+      id: -1001,
+      name: "Parent B",
+    });
+
+    siteCategories[2].setProperties({
+      parent_category_id: null,
+      id: -1002,
+      name: "Parent A",
+    });
+
+    siteCategories[3].setProperties({
+      parent_category_id: -1001,
+      id: -1003,
+      name: "Parent B Child B",
+    });
+
+    siteCategories[4].setProperties({
+      parent_category_id: -1002,
+      id: -1004,
+      name: "Parent A Child A",
+    });
+
+    siteCategories[5].setProperties({
+      parent_category_id: -1000,
+      id: -1005,
+      name: "Parent B Child A Child A",
+    });
+
+    // Changes to ID are not normally expected, let's force a change
+    site.notifyPropertyChange("categories");
 
     updateCurrentUser({
       sidebar_category_ids: [-1005, -1004, -1003, -1002, -1000],
@@ -266,35 +279,44 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     const site = Site.current();
     const siteCategories = site.categories;
 
-    siteCategories[0].parent_category_id = -1001;
-    siteCategories[0].id = -1000;
-    siteCategories[0].name = "Parent A Child A";
-
-    siteCategories[1].parent_category_id = null;
-    siteCategories[1].id = -1001;
-    siteCategories[1].name = "Parent A";
-
-    siteCategories[2].parent_category_id = null;
-    siteCategories[2].id = -1002;
-    siteCategories[2].name = "Parent B";
-
-    siteCategories[3].parent_category_id = -1001;
-    siteCategories[3].id = -1003;
-    siteCategories[3].name = "Parent A Child B";
-
-    siteCategories[4].parent_category_id = -1002;
-    siteCategories[4].id = -1004;
-    siteCategories[4].name = "Parent B Child A";
-
-    siteCategories[5].parent_category_id = -1000;
-    siteCategories[5].id = -1005;
-    siteCategories[5].name = "Parent A Child A Child A";
-
-    site.categoriesById.clear();
-
-    siteCategories.forEach((category) => {
-      site.categoriesById[category.id] = category;
+    siteCategories[0].setProperties({
+      parent_category_id: -1001,
+      id: -1000,
+      name: "Parent A Child A",
     });
+
+    siteCategories[1].setProperties({
+      parent_category_id: null,
+      id: -1001,
+      name: "Parent A",
+    });
+
+    siteCategories[2].setProperties({
+      parent_category_id: null,
+      id: -1002,
+      name: "Parent B",
+    });
+
+    siteCategories[3].setProperties({
+      parent_category_id: -1001,
+      id: -1003,
+      name: "Parent A Child B",
+    });
+
+    siteCategories[4].setProperties({
+      parent_category_id: -1002,
+      id: -1004,
+      name: "Parent B Child A",
+    });
+
+    siteCategories[5].setProperties({
+      parent_category_id: -1000,
+      id: -1005,
+      name: "Parent A Child A Child A",
+    });
+
+    // Changes to ID are not normally expected, let's force a change
+    site.notifyPropertyChange("categories");
 
     updateCurrentUser({
       sidebar_category_ids: [-1005, -1004, -1003, -1002, -1000],
@@ -329,35 +351,44 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     const site = Site.current();
     const siteCategories = site.categories;
 
-    siteCategories[0].parent_category_id = -1001;
-    siteCategories[0].id = -1000;
-    siteCategories[0].name = "Parent A Child A";
-
-    siteCategories[1].parent_category_id = null;
-    siteCategories[1].id = -1001;
-    siteCategories[1].name = "Parent A";
-
-    siteCategories[2].parent_category_id = null;
-    siteCategories[2].id = -1002;
-    siteCategories[2].name = "Parent B";
-
-    siteCategories[3].parent_category_id = -1001;
-    siteCategories[3].id = -1003;
-    siteCategories[3].name = "Parent A Child B";
-
-    siteCategories[4].parent_category_id = -1002;
-    siteCategories[4].id = -1004;
-    siteCategories[4].name = "Parent B Child A";
-
-    siteCategories[5].parent_category_id = -1000;
-    siteCategories[5].id = -1005;
-    siteCategories[5].name = "Parent A Child A Child A";
-
-    site.categoriesById.clear();
-
-    siteCategories.forEach((category) => {
-      site.categoriesById[category.id] = category;
+    siteCategories[0].setProperties({
+      parent_category_id: -1001,
+      id: -1000,
+      name: "Parent A Child A",
     });
+
+    siteCategories[1].setProperties({
+      parent_category_id: null,
+      id: -1001,
+      name: "Parent A",
+    });
+
+    siteCategories[2].setProperties({
+      parent_category_id: null,
+      id: -1002,
+      name: "Parent B",
+    });
+
+    siteCategories[3].setProperties({
+      parent_category_id: -1001,
+      id: -1003,
+      name: "Parent A Child B",
+    });
+
+    siteCategories[4].setProperties({
+      parent_category_id: -1002,
+      id: -1004,
+      name: "Parent B Child A",
+    });
+
+    siteCategories[5].setProperties({
+      parent_category_id: -1000,
+      id: -1005,
+      name: "Parent A Child A Child A",
+    });
+
+    // Changes to ID are not normally expected, let's force a change
+    site.notifyPropertyChange("categories");
 
     updateCurrentUser({
       sidebar_category_ids: [-1005, -1004, -1003, -1002, -1000],

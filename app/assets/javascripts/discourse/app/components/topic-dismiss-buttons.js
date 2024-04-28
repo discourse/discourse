@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DismissReadModal from "discourse/components/modal/dismiss-read";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -34,10 +34,9 @@ export default Component.extend({
   @discourseComputed("position", "model.topics.length")
   showBasedOnPosition(position, topicCount) {
     if (position !== "top") {
-      return true;
+      return topicCount > 5;
     }
-
-    return this.currentUser?.new_new_view_enabled || topicCount > 5;
+    return true;
   },
 
   @discourseComputed("selectedTopics.length")

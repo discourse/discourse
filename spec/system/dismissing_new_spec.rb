@@ -110,6 +110,10 @@ RSpec.describe "Dismissing New", type: :system do
       expect(topic_list_controls).to have_new(count: 0)
 
       using_session(:tab_1) { expect(topic_list_controls).to have_new(count: 0) }
+
+      topic_list_controls.click_latest
+
+      expect(topic_list_controls).to have_new(count: 0)
     end
 
     it "displays confirmation modal with preselected options" do

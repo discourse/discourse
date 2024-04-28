@@ -3,7 +3,8 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse-common/helpers/d-icon";
@@ -12,6 +13,8 @@ import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsListPublic extends Component {
   @service chatChannelsManager;
+  @service chatStateManager;
+  @service chatTrackingStateManager;
   @service site;
   @service siteSettings;
   @service currentUser;
@@ -21,11 +24,18 @@ export default class ChannelsListPublic extends Component {
   }
 
   get publicMessageChannelsEmpty() {
-    return this.chatChannelsManager.publicMessageChannels?.length === 0;
+    return (
+      this.chatChannelsManager.publicMessageChannels?.length === 0 &&
+      this.chatStateManager.hasPreloadedChannels
+    );
   }
 
   get displayPublicChannels() {
     if (!this.siteSettings.enable_public_channels) {
+      return false;
+    }
+
+    if (!this.chatStateManager.hasPreloadedChannels) {
       return false;
     }
 
@@ -40,9 +50,11 @@ export default class ChannelsListPublic extends Component {
   }
 
   get hasUnreadThreads() {
-    return this.chatChannelsManager.publicMessageChannels.some(
-      (channel) => channel.unreadThreadsCount > 0
-    );
+    return this.chatTrackingStateManager.hasUnreadThreads;
+  }
+
+  get hasThreadedChannels() {
+    return this.chatChannelsManager.hasThreadedChannels;
   }
 
   @action
@@ -51,7 +63,7 @@ export default class ChannelsListPublic extends Component {
   }
 
   <template>
-    {{#if this.site.desktopView}}
+    {{#if (and this.site.desktopView this.hasThreadedChannels)}}
       <LinkTo @route="chat.threads" class="chat-channel-row --threads">
         <span class="chat-channel-title">
           {{dIcon "discourse-threads" class="chat-user-threads__icon"}}

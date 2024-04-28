@@ -5,7 +5,7 @@ import { action, computed } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import i18n from "discourse-common/helpers/i18n";
@@ -28,7 +28,7 @@ export default class ChatRoutesBrowse extends Component {
   get channelsCollection() {
     return this.chatApi.channels({
       filter: this.filter,
-      status: this.attrs.status,
+      status: this.status,
     });
   }
 
@@ -68,8 +68,8 @@ export default class ChatRoutesBrowse extends Component {
         <navbar.BackButton />
         <navbar.Title @title={{i18n "chat.browse.title"}} />
 
-        <navbar.Actions as |action|>
-          <action.NewChannelButton />
+        <navbar.Actions as |a|>
+          <a.NewChannelButton />
         </navbar.Actions>
       </Navbar>
 

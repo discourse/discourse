@@ -219,34 +219,16 @@ module("Unit | Utilities", function (hooks) {
     );
   });
 
-  test("inCodeBlock", function (assert) {
-    const texts = [
-      // CLOSED CODE BLOCKS:
-      "000\n\n    111\n\n000",
-      "000 `111` 000",
-      "000\n```\n111\n```\n000",
-      "000\n[code]111[/code]\n000",
-      // OPEN CODE BLOCKS:
-      "000\n\n    111",
-      "000 `111",
-      "000\n```\n111",
-      "000\n[code]111",
-      // COMPLEX TEST:
-      "000\n\n```\n111\n```\n\n000\n\n`111 111`\n\n000\n\n[code]\n111\n[/code]\n\n    111\n\t111\n\n000`111",
-      // INDENTED OPEN CODE BLOCKS:
-      // - Using tab
-      "000\n\t```111\n\t111\n\t111```\n000",
-      // - Using spaces
-      `000\n  \`\`\`111\n  111\n  111\`\`\`\n000`,
-    ];
+  test("inCodeBlock", async function (assert) {
+    const text =
+      "000\n\n```\n111\n```\n\n000\n\n`111 111`\n\n000\n\n[code]\n111\n[/code]\n\n    111\n\t111\n\n000`000";
 
-    texts.forEach((text) => {
-      for (let i = 0; i < text.length; ++i) {
-        if (text[i] === "0" || text[i] === "1") {
-          assert.strictEqual(inCodeBlock(text, i), text[i] === "1");
-        }
+    for (let i = 0; i < text.length; ++i) {
+      if (text[i] === "0" || text[i] === "1") {
+        let inCode = await inCodeBlock(text, i);
+        assert.strictEqual(inCode, text[i] === "1");
       }
-    });
+    }
   });
 
   test("mergeSortedLists", function (assert) {

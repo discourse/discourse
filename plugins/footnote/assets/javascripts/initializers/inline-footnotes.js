@@ -29,47 +29,49 @@ function applyInlineFootnotes(elem) {
 }
 
 function buildTooltip() {
-  let html = `
+  const template = document.createElement("template");
+  template.innerHTML = `
     <div id="footnote-tooltip" role="tooltip">
       <div class="footnote-tooltip-content"></div>
       <div id="arrow" data-popper-arrow></div>
     </div>
-  `;
+  `.trim();
 
-  let template = document.createElement("template");
-  html = html.trim();
-  template.innerHTML = html;
   return template.content.firstChild;
 }
 
-function footNoteEventHandler(event) {
-  inlineFootnotePopper?.destroy();
-
+function footnoteEventHandler(event) {
   const tooltip = document.getElementById("footnote-tooltip");
+  const displayedFootnoteId = tooltip?.dataset.footnoteId;
+  const expandableFootnote = event.target;
+  const footnoteId = expandableFootnote.dataset.footnoteId;
 
-  // reset state by hidding tooltip, it handles "click outside"
-  // allowing to hide the tooltip when you click anywhere else
+  inlineFootnotePopper?.destroy();
   tooltip?.removeAttribute("data-show");
+  tooltip?.removeAttribute("data-footnote-id");
 
-  // if we didn't actually click a footnote button, exit early
   if (!event.target.classList.contains("expand-footnote")) {
+    // dismissing the tooltip by clicking outside
     return;
   }
 
   event.preventDefault();
   event.stopPropagation();
 
-  // append footnote to tooltip body
-  const expandableFootnote = event.target;
-  const cooked = expandableFootnote.closest(".cooked");
-  const footnoteId = expandableFootnote.dataset.footnoteId;
-  const footnoteContent = tooltip.querySelector(".footnote-tooltip-content");
-  let newContent = cooked.querySelector(footnoteId);
+  if (displayedFootnoteId === footnoteId) {
+    // dismissing the tooltip by clicking the footnote button
+    return;
+  }
 
+  // append footnote to tooltip body
+  const footnoteContent = tooltip.querySelector(".footnote-tooltip-content");
+  const cooked = expandableFootnote.closest(".cooked");
+  const newContent = cooked.querySelector(footnoteId);
   footnoteContent.innerHTML = newContent.innerHTML;
 
   // display tooltip
   tooltip.dataset.show = "";
+  tooltip.dataset.footnoteId = footnoteId;
 
   // setup popper
   inlineFootnotePopper?.destroy();
@@ -100,13 +102,12 @@ export default {
   name: "inline-footnotes",
 
   initialize(container) {
-    if (!container.lookup("site-settings:main").display_footnotes_inline) {
+    if (!container.lookup("service:site-settings").display_footnotes_inline) {
       return;
     }
 
-    document.documentElement.append(buildTooltip());
-
-    window.addEventListener("click", footNoteEventHandler);
+    document.body.append(buildTooltip());
+    window.addEventListener("click", footnoteEventHandler);
 
     withPluginApi("0.8.9", (api) => {
       api.decorateCookedElement((elem) => applyInlineFootnotes(elem), {
@@ -115,16 +116,18 @@ export default {
       });
 
       api.onPageChange(() => {
-        document
-          .getElementById("footnote-tooltip")
-          ?.removeAttribute("data-show");
+        inlineFootnotePopper?.destroy();
+
+        const tooltip = document.getElementById("footnote-tooltip");
+        tooltip?.removeAttribute("data-show");
+        tooltip?.removeAttribute("data-footnote-id");
       });
     });
   },
 
   teardown() {
     inlineFootnotePopper?.destroy();
-    window.removeEventListener("click", footNoteEventHandler);
+    window.removeEventListener("click", footnoteEventHandler);
     document.getElementById("footnote-tooltip")?.remove();
   },
 };

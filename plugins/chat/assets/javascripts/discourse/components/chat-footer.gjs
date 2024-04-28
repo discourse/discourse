@@ -1,45 +1,67 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
-import eq from "truth-helpers/helpers/eq";
+import {
+  UnreadChannelsIndicator,
+  UnreadDirectMessagesIndicator,
+  UnreadThreadsIndicator,
+} from "discourse/plugins/chat/discourse/components/chat/footer/unread-indicator";
 
 export default class ChatFooter extends Component {
   @service router;
   @service chat;
   @service siteSettings;
+  @service currentUser;
+  @service chatChannelsManager;
+  @service chatStateManager;
 
-  threadsEnabled = this.siteSettings.chat_threads_enabled;
+  get includeThreads() {
+    if (!this.siteSettings.chat_threads_enabled) {
+      return false;
+    }
+    return this.chatChannelsManager.hasThreadedChannels;
+  }
 
   get directMessagesEnabled() {
     return this.chat.userCanAccessDirectMessages;
   }
 
   get shouldRenderFooter() {
-    return this.threadsEnabled || this.directMessagesEnabled;
+    return (
+      this.chatStateManager.hasPreloadedChannels &&
+      (this.includeThreads || this.directMessagesEnabled)
+    );
   }
 
   <template>
     {{#if this.shouldRenderFooter}}
-      <nav class="c-footer" {{this.updateThreadCount}}>
+      <nav class="c-footer">
         <DButton
           @route="chat.channels"
-          @class={{concatClass
+          @icon="comments"
+          @translatedLabel={{i18n "chat.channel_list.title"}}
+          aria-label={{i18n "chat.channel_list.aria_label"}}
+          id="c-footer-channels"
+          class={{concatClass
             "btn-flat"
             "c-footer__item"
             (if (eq this.router.currentRouteName "chat.channels") "--active")
           }}
-          @icon="comments"
-          @id="c-footer-channels"
-          @translatedLabel={{i18n "chat.channel_list.title"}}
-          aria-label={{i18n "chat.channel_list.aria_label"}}
-        />
+        >
+          <UnreadChannelsIndicator />
+        </DButton>
 
         {{#if this.directMessagesEnabled}}
           <DButton
             @route="chat.direct-messages"
-            @class={{concatClass
+            @icon="users"
+            @translatedLabel={{i18n "chat.direct_messages.title"}}
+            aria-label={{i18n "chat.direct_messages.aria_label"}}
+            id="c-footer-direct-messages"
+            class={{concatClass
               "btn-flat"
               "c-footer__item"
               (if
@@ -47,26 +69,26 @@ export default class ChatFooter extends Component {
                 "--active"
               )
             }}
-            @icon="users"
-            @id="c-footer-direct-messages"
-            @translatedLabel={{i18n "chat.direct_messages.title"}}
-            aria-label={{i18n "chat.direct_messages.aria_label"}}
-          />
+          >
+            <UnreadDirectMessagesIndicator />
+          </DButton>
         {{/if}}
 
-        {{#if this.threadsEnabled}}
+        {{#if this.includeThreads}}
           <DButton
             @route="chat.threads"
-            @class={{concatClass
+            @icon="discourse-threads"
+            @translatedLabel={{i18n "chat.my_threads.title"}}
+            aria-label={{i18n "chat.my_threads.aria_label"}}
+            id="c-footer-threads"
+            class={{concatClass
               "btn-flat"
               "c-footer__item"
               (if (eq this.router.currentRouteName "chat.threads") "--active")
             }}
-            @icon="discourse-threads"
-            @id="c-footer-threads"
-            @translatedLabel={{i18n "chat.my_threads.title"}}
-            aria-label={{i18n "chat.my_threads.aria_label"}}
-          />
+          >
+            <UnreadThreadsIndicator />
+          </DButton>
         {{/if}}
       </nav>
     {{/if}}

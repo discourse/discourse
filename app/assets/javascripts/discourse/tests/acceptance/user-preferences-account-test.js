@@ -15,7 +15,7 @@ import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
 acceptance("User Preferences - Account", function (needs) {
-  needs.user();
+  needs.user({ can_upload_avatar: true });
 
   let customUserProps = {};
   let pickAvatarRequestData = null;

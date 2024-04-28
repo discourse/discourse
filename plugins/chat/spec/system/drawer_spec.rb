@@ -18,13 +18,13 @@ RSpec.describe "Drawer", type: :system do
     end
 
     context "when clicking channel title" do
-      it "opens channel info page" do
+      it "opens channel settings page" do
         visit("/")
         chat_page.open_from_header
         drawer_page.open_channel(channel)
         page.find(".c-navbar__channel-title").click
 
-        expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}/info/members")
+        expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}/info/settings")
       end
     end
   end
@@ -106,6 +106,7 @@ RSpec.describe "Drawer", type: :system do
     fab!(:user_1) { Fabricate(:user) }
 
     before do
+      current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel_1.id)
       channel_1.add(current_user)
       channel_2.add(current_user)
       channel_1.add(user_1)
@@ -140,6 +141,7 @@ RSpec.describe "Drawer", type: :system do
     fab!(:channel) { Fabricate(:chat_channel) }
 
     before do
+      current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel.id)
       channel.add(current_user)
       set_subfolder "/discuss"
     end
@@ -149,6 +151,58 @@ RSpec.describe "Drawer", type: :system do
       chat_page.minimize_full_page
 
       expect(drawer_page).to have_open_channel(channel)
+    end
+  end
+
+  context "when sending a message from topic" do
+    fab!(:topic)
+    fab!(:posts) { Fabricate.times(5, :post, topic: topic) }
+    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:membership) do
+      Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
+    end
+
+    let(:topic_page) { PageObjects::Pages::Topic.new }
+
+    context "when on a channel" do
+      xit "has context" do
+        ::Chat::CreateMessage
+          .expects(:call)
+          .with do |value|
+            value["topic_id"] === topic.id.to_s &&
+              value["post_ids"] === [posts[1].id.to_s, posts[2].id.to_s, posts[3].id.to_s]
+          end
+
+        topic_page.visit_topic(topic, post_number: 3)
+        chat_page.open_from_header
+        drawer_page.open_channel(channel)
+        channel_page.send_message
+      end
+    end
+
+    context "when on a thread" do
+      before { channel.update!(threading_enabled: true) }
+
+      fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
+
+      let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
+      let(:thread_page) { PageObjects::Pages::ChatThread.new }
+
+      xit "has context" do
+        ::Chat::CreateMessage
+          .expects(:call)
+          .with do |value|
+            value["topic_id"] === topic.id.to_s &&
+              value["post_ids"] === [posts[1].id.to_s, posts[2].id.to_s, posts[3].id.to_s]
+          end
+
+        topic_page.visit_topic(topic, post_number: 3)
+        chat_page.open_from_header
+        drawer_page.open_channel(channel)
+        drawer_page.open_thread_list
+        thread_list_page.open_thread(thread_1)
+        thread_page.send_message
+      end
     end
   end
 end

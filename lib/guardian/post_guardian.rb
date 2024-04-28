@@ -3,7 +3,7 @@
 # mixin for all guardian methods dealing with post permissions
 module PostGuardian
   def unrestricted_link_posting?
-    authenticated? && @user.in_any_groups?(SiteSetting.post_links_allowed_groups_map)
+    authenticated? && (is_staff? || @user.in_any_groups?(SiteSetting.post_links_allowed_groups_map))
   end
 
   def link_posting_access
@@ -163,7 +163,7 @@ module PostGuardian
       return can_create_post?(post.topic)
     end
 
-    return false if !trusted_with_edits?
+    return false if !trusted_with_post_edits?
 
     if is_my_own?(post)
       return false if @user.silenced?
@@ -261,8 +261,21 @@ module PostGuardian
   def can_delete_post_action?(post_action)
     return false unless is_my_own?(post_action) && !post_action.is_private_message?
 
-    post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago &&
-      !post_action.post&.topic&.archived?
+    ok_to_delete =
+      post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago &&
+        !post_action.post&.topic&.archived?
+
+    # NOTE: This looks strange...but we are checking if someone is posting anonymously
+    # as a AnonymousUser model, _not_ as Guardian::AnonymousUser which is a different thing
+    # used when !authenticated?
+    if authenticated? && is_anonymous?
+      return(
+        ok_to_delete && SiteSetting.allow_anonymous_likes? && post_action.is_like? &&
+          is_my_own?(post_action)
+      )
+    end
+
+    ok_to_delete
   end
 
   def can_receive_post_notifications?(post)
@@ -358,7 +371,7 @@ module PostGuardian
   end
 
   def can_view_raw_email?(post)
-    post && is_staff?
+    post && @user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
   end
 
   def can_unhide?(post)
@@ -369,12 +382,11 @@ module PostGuardian
     is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
-  private
-
-  def trusted_with_edits?
-    @user.trust_level >= SiteSetting.min_trust_to_edit_post ||
-      @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
+  def trusted_with_post_edits?
+    is_staff? || @user.in_any_groups?(SiteSetting.edit_post_allowed_groups_map)
   end
+
+  private
 
   def can_create_post_in_topic?(topic)
     if !SiteSetting.enable_system_message_replies? && topic.try(:subtype) == "system_message"

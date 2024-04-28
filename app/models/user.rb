@@ -151,7 +151,10 @@ class User < ActiveRecord::Base
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create }
   validates :primary_email, presence: true, unless: :skip_email_validation
-  validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
+  validates :validatable_user_fields_values,
+            watched_words: true,
+            unless: :should_skip_user_fields_validation?
+
   validates_associated :primary_email,
                        message: ->(_, user_email) { user_email[:value]&.errors&.[](:email)&.first }
 
@@ -180,7 +183,7 @@ class User < ActiveRecord::Base
   before_save :ensure_password_is_hashed
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
-  before_save :apply_watched_words, unless: :custom_fields_clean?
+  before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -256,12 +259,19 @@ class User < ActiveRecord::Base
           )
         end
 
-  scope :human_users, -> { where("users.id > 0") }
+  scope :human_users,
+        ->(allowed_bot_user_ids: nil) do
+          if allowed_bot_user_ids.present?
+            where("users.id > 0 OR users.id IN (?)", allowed_bot_user_ids)
+          else
+            where("users.id > 0")
+          end
+        end
 
   # excluding fake users like the system user or anonymous users
   scope :real,
-        -> do
-          human_users.where(
+        ->(allowed_bot_user_ids: nil) do
+          human_users(allowed_bot_user_ids: allowed_bot_user_ids).where(
             "NOT EXISTS(
                      SELECT 1
                      FROM anonymous_users a
@@ -350,8 +360,11 @@ class User < ActiveRecord::Base
         post_menu: 3,
         topic_notification_levels: 4,
         suggested_topics: 5,
-        admin_guide: 6,
       )
+  end
+
+  def should_skip_user_fields_validation?
+    custom_fields_clean? || SiteSetting.disable_watched_word_checking_in_user_fields
   end
 
   def secured_sidebar_category_ids(user_guardian = nil)
@@ -550,7 +563,7 @@ class User < ActiveRecord::Base
 
   def enqueue_staff_welcome_message(role)
     return unless staff?
-    return if role == :admin && User.real.where(admin: true).count == 1
+    return if is_singular_admin?
 
     Jobs.enqueue(
       :send_system_message,
@@ -2005,8 +2018,11 @@ class User < ActiveRecord::Base
     destroyer = UserDestroyer.new(Discourse.system_user)
 
     User
+      .joins(
+        "LEFT JOIN user_histories ON user_histories.target_user_id = users.id AND action = #{UserHistory.actions[:deactivate_user]} AND acting_user_id IS NOT NULL",
+      )
       .where(active: false)
-      .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
+      .where("users.created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
       .where("NOT admin AND NOT moderator")
       .where(
         "NOT EXISTS
@@ -2018,6 +2034,7 @@ class User < ActiveRecord::Base
               (SELECT 1 FROM posts p WHERE p.user_id = users.id LIMIT 1)
             ",
       )
+      .where("user_histories.id IS NULL")
       .limit(200)
       .find_each do |user|
         begin

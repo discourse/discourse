@@ -196,7 +196,16 @@ class GroupsController < ApplicationController
 
     posts =
       group.posts_for(guardian, params.permit(:before_post_id, :before, :category_id)).limit(20)
-    render_serialized posts.to_a, GroupPostSerializer
+
+    response = { posts: serialize_data(posts, GroupPostSerializer) }
+
+    if guardian.can_lazy_load_categories?
+      category_ids = posts.map { |p| p.topic.category_id }.compact.uniq
+      categories = Category.secured(guardian).with_parents(category_ids)
+      response[:categories] = serialize_data(categories, CategoryBadgeSerializer)
+    end
+
+    render json: response
   end
 
   def posts_feed

@@ -163,9 +163,15 @@ class TopicView
       topic_embed = topic.topic_embed
       return topic_embed.embed_url if topic_embed
     end
-    path = relative_url.dup
-    path << ((@page > 1) ? "?page=#{@page}" : "")
-    path
+    current_page_path
+  end
+
+  def current_page_path
+    if @page > 1
+      "#{relative_url}?page=#{@page}"
+    else
+      relative_url
+    end
   end
 
   def contains_gaps?
@@ -239,7 +245,10 @@ class TopicView
       else
         title += I18n.t("inline_oneboxer.topic_page_title_post_number", post_number: @post_number)
       end
+    elsif @page > 1
+      title += " - #{I18n.t("page_num", num: @page)}"
     end
+
     if SiteSetting.topic_page_title_includes_category
       if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id &&
            @topic.category
@@ -263,6 +272,18 @@ class TopicView
     @desired_post = posts.detect { |p| p.post_number == @post_number }
     @desired_post ||= posts.first
     @desired_post
+  end
+
+  def crawler_posts
+    if single_post_request?
+      [desired_post]
+    else
+      posts
+    end
+  end
+
+  def single_post_request?
+    @post_number && @post_number != 1
   end
 
   def summary(opts = {})
@@ -727,9 +748,9 @@ class TopicView
   end
 
   def categories
-    categories = [category, category&.parent_category]
-    categories += suggested_topics.categories if suggested_topics
-    categories.compact.uniq
+    @categories ||= [category&.parent_category, category, suggested_topics&.categories].flatten
+      .uniq
+      .compact
   end
 
   protected

@@ -104,6 +104,26 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
               expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator")
               expect(channel_index_page).to have_unread_channel(channel_1, count: 1)
             end
+
+            it "shows correct count when there are multiple messages but only 1 is urgent" do
+              Jobs.run_immediately!
+
+              visit("/chat/channels")
+
+              create_message(
+                channel_1,
+                user: user_1,
+                text: "Are you busy @#{current_user.username}?",
+              )
+
+              3.times { create_message(channel_1, user: user_1) }
+
+              expect(page).to have_css(
+                ".chat-header-icon .chat-channel-unread-indicator",
+                text: "1",
+              )
+              expect(channel_index_page).to have_unread_channel(channel_1, count: 1)
+            end
           end
         end
       end

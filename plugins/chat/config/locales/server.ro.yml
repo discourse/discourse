@@ -5,6 +5,8 @@
 # https://translate.discourse.org/
 
 ro:
+  site_settings:
+    chat_preferred_mobile_index: "Filă preferată la încărcarea /chat pe mobil."
   system_messages:
     private_channel_title: "Canal %{id}"
   chat:
@@ -12,6 +14,7 @@ ro:
     errors:
       users_cant_be_added_to_channel: "Utilizatorii nu pot fi adăugați la acest canal."
       not_accepting_dms: "%{username} nu acceptă mesaje în acest moment."
+      invalid_direct_message: "Nu ai voie să creezi acest mesaj direct."
     reviewables:
       actions:
         agree_and_suspend:

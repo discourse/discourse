@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
 import getURL from "discourse-common/lib/get-url";
 import { debounce } from "discourse-common/utils/decorators";
@@ -95,7 +95,10 @@ export default class AssistantItem extends Component {
   @debounce(100)
   itemSelected() {
     let updatedTerm = "";
-    if (this.args.slug) {
+    if (
+      this.args.slug &&
+      (this.args.suggestionKeyword || this.args.concatSlug)
+    ) {
       updatedTerm = this.prefix.concat(this.args.slug);
     } else {
       updatedTerm = this.prefix.trim();

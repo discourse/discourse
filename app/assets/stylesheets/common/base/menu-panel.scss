@@ -91,6 +91,10 @@
   .badge-notification {
     vertical-align: text-bottom;
   }
+
+  .sidebar-filter {
+    width: calc(320px - 2 * var(--d-sidebar-row-horizontal-padding));
+  }
 }
 
 .search-menu .menu-panel {
@@ -344,6 +348,24 @@
   div.discourse-tags {
     font-size: var(--font-down-1);
   }
+
+  .sidebar-admin-header__row {
+    width: calc(320px - 2 * var(--d-sidebar-row-horizontal-padding));
+  }
+
+  .sidebar-sections {
+    &__back-to-forum {
+      color: var(--d-sidebar-link-color);
+      display: flex;
+      align-items: center;
+      svg {
+        margin-right: var(--d-sidebar-section-link-prefix-margin-right);
+        height: 0.75em;
+        width: 0.75em;
+        color: var(--d-sidebar-link-icon-color);
+      }
+    }
+  }
 }
 
 // Panel / user-notification-list styles. **not** menu panel sizing styles
@@ -562,6 +584,7 @@
   li.bookmark,
   li.message {
     a {
+      color: var(--primary);
       align-items: center;
       padding: 0.15em 0;
 
@@ -659,7 +682,7 @@
 
   height: var(--base-height);
 
-  body.footer-nav-ipad & {
+  html.footer-nav-ipad & {
     height: calc(var(--base-height) - var(--footer-nav-height));
   }
 }

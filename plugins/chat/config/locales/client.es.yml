@@ -45,6 +45,7 @@ es:
       back_to_forum: "Foro"
       deleted_chat_username: eliminado
       dates:
+        yesterday: "Ayer"
         time_tiny: "h:mm"
       all_loaded: "Mostrando todos los mensajes"
       already_enabled: "El chat ya está activado en este tema. Actualiza."
@@ -549,6 +550,7 @@ es:
       flags:
         off_topic: "Este mensaje no es relevante para la discusión actual, tal y como se define en el título del canal, y probablemente debería moverse a otro lugar."
         inappropriate: "Este mensaje tiene un contenido que una persona razonable consideraría ofensivo, abusivo o que viola las <a href=\"%{basePath}/guidelines\">directrices de nuestra comunidad</a>."
+        illegal: "Esta publicación requiere la atención del personal porque creo que contiene contenido ilegal."
         spam: "Este mensaje es un anuncio o vandalismo. No es útil ni relevante para el canal actual."
         notify_user: "Quiero hablar con esta persona directa y personalmente sobre su mensaje."
         notify_moderators: "Este mensaje requiere la atención del personal por otra razón no mencionada anteriormente."

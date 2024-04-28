@@ -1,13 +1,14 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import DButton from "discourse/components/d-button";
+
 export default class ChatChannelLeaveBtn extends Component {
   @service chat;
   @service site;
 
   get shouldRender() {
-    return !this.site.mobileView && isPresent(this.args.channel);
+    return this.site.desktopView && isPresent(this.args.channel);
   }
 
   get leaveChatTitleKey() {

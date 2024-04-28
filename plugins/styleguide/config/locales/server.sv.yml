@@ -8,3 +8,4 @@ sv:
   site_settings:
     styleguide_enabled: 'Aktivera en `/styleguide`-sökväg för att underlätta Discourse-stilar'
     styleguide_admin_only: "Begränsar stilguidens synlighet till administratörer"
+    styleguide_allowed_groups: "Begränsar stilguidens synlighet till medlemmar i de angivna grupperna"

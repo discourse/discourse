@@ -83,8 +83,8 @@ RSpec.describe PostsController do
   fab!(:admin)
   fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user_trust_level_0) { Fabricate(:trust_level_0, refresh_auto_groups: true) }
-  fab!(:user_trust_level_1) { Fabricate(:trust_level_1, refresh_auto_groups: true) }
+  fab!(:user_trust_level_0) { Fabricate(:trust_level_0) }
+  fab!(:user_trust_level_1) { Fabricate(:trust_level_1) }
   fab!(:category)
   fab!(:topic)
   fab!(:post_by_user) { Fabricate(:post, user: user) }
@@ -1372,7 +1372,7 @@ RSpec.describe PostsController do
 
       it "cannot create a post with a tag without tagging permission" do
         SiteSetting.tagging_enabled = true
-        SiteSetting.min_trust_level_to_tag_topics = 4
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
         tag = Fabricate(:tag)
 
         post "/posts.json",
@@ -1643,7 +1643,7 @@ RSpec.describe PostsController do
 
         it "it triggers flag_linked_posts_as_spam when the post creator returns spam" do
           SiteSetting.newuser_spam_host_threshold = 1
-          sign_in(Fabricate(:user, trust_level: 0, refresh_auto_groups: true))
+          sign_in(Fabricate(:user, trust_level: TrustLevel[0]))
 
           post "/posts.json",
                params: {
@@ -1936,7 +1936,7 @@ RSpec.describe PostsController do
       end
 
       context "with TL4 users" do
-        fab!(:trust_level_4) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
+        fab!(:trust_level_4)
 
         before { sign_in(trust_level_4) }
 
@@ -2699,6 +2699,17 @@ RSpec.describe PostsController do
 
         get "/posts/#{post.id}/raw-email.json"
         expect(response.status).to eq(403)
+      end
+
+      it "can view raw email if the user is in the allowed group" do
+        sign_in(user)
+        SiteSetting.view_raw_email_allowed_groups = "trust_level_0"
+
+        get "/posts/#{post.id}/raw-email.json"
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        expect(json["raw_email"]).to eq("email_content")
       end
 
       it "can view raw email" do

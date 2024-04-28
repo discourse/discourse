@@ -240,7 +240,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_categories?
-    !scope.can_lazy_load_categories?
+    object.categories.present?
   end
 
   def markdown_additional_options

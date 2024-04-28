@@ -13,6 +13,8 @@ th:
           never: "ไม่เคย"
     chat:
       deleted_chat_username: ลบ
+      dates:
+        yesterday: "เมื่อวาน"
       create: "สร้าง"
       cancel: "ยกเลิก"
       channel_settings:
@@ -47,6 +49,7 @@ th:
       browse:
         back: "กลับ"
         filter_all: ทั้งหมด
+        filter_open: เปิด
         filter_closed: ปิด
       chat_message_separator:
         today: วันนี้

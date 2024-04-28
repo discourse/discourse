@@ -49,7 +49,7 @@ RSpec.describe Report do
       subject(:json) { Report.find("http_total_reqs").as_json }
 
       before do
-        freeze_time DateTime.parse("2017-03-01 12:00")
+        freeze_time_safe
 
         # today, an incomplete day:
         application_requests = [
@@ -97,7 +97,7 @@ RSpec.describe Report do
     describe "topics" do
       before do
         Report.clear_cache
-        freeze_time DateTime.parse("2017-03-01 12:00")
+        freeze_time_safe
         user = Fabricate(:user)
         topics =
           ((0..32).to_a + [60, 61, 62, 63]).map do |i|
@@ -145,7 +145,7 @@ RSpec.describe Report do
       let(:user) { Fabricate(:user) }
 
       it "returns a report with data" do
-        freeze_time DateTime.parse("2000-01-01")
+        freeze_time_safe
         user.user_visits.create(visited_at: 1.hour.from_now)
         user.user_visits.create(visited_at: 1.day.ago)
         user.user_visits.create(visited_at: 2.days.ago, mobile: true)
@@ -169,7 +169,7 @@ RSpec.describe Report do
       let(:user) { Fabricate(:user) }
 
       it "returns a report with data" do
-        freeze_time DateTime.parse("2000-01-01")
+        freeze_time_safe
         user.user_visits.create(visited_at: 1.hour.from_now)
         user.user_visits.create(visited_at: 2.days.ago, mobile: true)
         user.user_visits.create(visited_at: 45.days.ago)
@@ -197,7 +197,7 @@ RSpec.describe Report do
 
       context "with #{pluralized}" do
         before(:each) do
-          freeze_time DateTime.parse("2017-03-01 12:00")
+          freeze_time_safe
 
           if arg == :flag
             user = Fabricate(:user, refresh_auto_groups: true)
@@ -262,7 +262,7 @@ RSpec.describe Report do
 
       context "with #{request_type}" do
         before do
-          freeze_time DateTime.parse("2017-03-01 12:00")
+          freeze_time_safe
           application_requests = [
             {
               date: 35.days.ago.to_time,
@@ -519,7 +519,7 @@ RSpec.describe Report do
 
     context "with different users/visits" do
       before do
-        freeze_time DateTime.parse("2017-03-01 12:00")
+        freeze_time_safe
 
         arpit = Fabricate(:user)
         arpit.user_visits.create(visited_at: 1.day.ago)
@@ -552,7 +552,7 @@ RSpec.describe Report do
 
     context "with different activities" do
       before do
-        freeze_time DateTime.parse("2017-03-01 12:00")
+        freeze_time_safe
 
         UserActionManager.enable
 
@@ -1146,7 +1146,7 @@ RSpec.describe Report do
 
     context "with data" do
       it "works" do
-        freeze_time DateTime.parse("2017-03-01 12:00")
+        freeze_time_safe
 
         ip = [81, 2, 69, 142]
 

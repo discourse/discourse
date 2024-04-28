@@ -28,11 +28,11 @@ module Chat
     end
 
     def last_reply_excerpt
-      object.last_message.excerpt(max_length: Chat::Thread::EXCERPT_LENGTH)
+      object.last_message.excerpt || object.last_message.build_excerpt
     end
 
     def last_reply_user
-      object.last_message.user
+      object.last_message.user || Chat::NullUser.new
     end
 
     def include_participant_data?

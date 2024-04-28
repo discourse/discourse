@@ -1,18 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 import {
   buildAdminSidebar,
   useAdminNavConfig,
-} from "discourse/instance-initializers/admin-sidebar";
-import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
+} from "discourse/lib/sidebar/admin-sidebar";
 import { resetPanelSections } from "discourse/lib/sidebar/custom-sections";
-import { ADMIN_PANEL } from "discourse/services/sidebar-state";
+import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
 
 // TODO (martin) (2024-02-01) Remove this experimental UI.
 export default class AdminConfigAreaSidebarExperiment extends Component {
-  @service adminSidebarExperimentStateManager;
+  @service adminSidebarStateManager;
   @service toasts;
   @service router;
   @tracked editedNavConfig;
@@ -46,7 +46,7 @@ export default class AdminConfigAreaSidebarExperiment extends Component {
 
   @action
   loadDefaultNavConfig() {
-    const savedConfig = this.adminSidebarExperimentStateManager.navConfig;
+    const savedConfig = this.adminSidebarStateManager.navConfig;
     this.editedNavConfig = savedConfig
       ? JSON.stringify(savedConfig, null, 2)
       : this.defaultAdminNav;
@@ -87,6 +87,7 @@ export default class AdminConfigAreaSidebarExperiment extends Component {
         // Using the private `_routerMicrolib` is not ideal, but Ember doesn't provide
         // any other way for us to easily check for route validity.
         try {
+          // eslint-disable-next-line ember/no-private-routing-service
           this.router._router._routerMicrolib.recognizer.handlersFor(
             link.route
           );
@@ -115,7 +116,7 @@ export default class AdminConfigAreaSidebarExperiment extends Component {
   }
 
   #saveConfig(config) {
-    this.adminSidebarExperimentStateManager.navConfig = config;
+    this.adminSidebarStateManager.navConfig = config;
     resetPanelSections(
       ADMIN_PANEL,
       useAdminNavConfig(config),

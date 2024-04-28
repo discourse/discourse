@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 @disableImplicitInjections
@@ -10,6 +10,6 @@ export default class NavigationMenu extends Service {
     const headerDropdownMode =
       this.siteSettings.navigation_menu === "header dropdown";
 
-    return !this.site.mobileView && headerDropdownMode;
+    return this.site.desktopView && headerDropdownMode;
   }
 }

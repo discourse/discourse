@@ -1,11 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/application";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import FlagModal from "discourse/components/modal/flag";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { BookmarkFormData } from "discourse/lib/bookmark";
+import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Bookmark from "discourse/models/bookmark";
 import getURL from "discourse-common/lib/get-url";
@@ -337,12 +337,12 @@ export default class ChatMessageInteractor {
               this.message.id
             )
         ),
-        afterSave: (savedData) => {
-          const bookmark = Bookmark.create(savedData);
+        afterSave: (bookmarkFormData) => {
+          const bookmark = Bookmark.create(bookmarkFormData.saveData);
           this.message.bookmark = bookmark;
           this.appEvents.trigger(
             "bookmarks:changed",
-            savedData,
+            bookmarkFormData.saveData,
             bookmark.attachedTo()
           );
         },

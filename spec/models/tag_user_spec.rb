@@ -5,7 +5,7 @@ RSpec.describe TagUser do
   before do
     SiteSetting.tagging_enabled = true
     SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-    SiteSetting.min_trust_level_to_tag_topics = 0
+    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
   end
 
   def regular
@@ -186,7 +186,7 @@ RSpec.describe TagUser do
   end
 
   describe "integration" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:watched_tag) { Fabricate(:tag) }
     let(:muted_tag) { Fabricate(:tag) }
     fab!(:tracked_tag) { Fabricate(:tag) }
@@ -311,7 +311,7 @@ RSpec.describe TagUser do
       end
 
       it "correctly handles staff tags" do
-        staff = Fabricate(:admin)
+        staff = Fabricate(:admin, refresh_auto_groups: true)
         topic = create_post.topic
 
         create_staff_only_tags(["foo"])

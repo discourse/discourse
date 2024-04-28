@@ -27,20 +27,28 @@
 
   {{#each this.inlineActionables as |actionable|}}
     {{#if (eq actionable.type "inline-button")}}
-      <DButton
-        @action={{actionable.action}}
-        @icon={{actionable.icon}}
-        @translatedLabel={{actionable.label}}
-        @translatedTitle={{actionable.title}}
-        @translatedAriaLabel={{actionable.ariaLabel}}
-        @disabled={{actionable.disabled}}
-        id={{concat "topic-footer-button-" actionable.id}}
-        class={{concat-class
-          "btn-default"
-          "topic-footer-button"
-          actionable.classNames
-        }}
-      />
+      {{#if (eq actionable.id "bookmark")}}
+        <BookmarkMenu
+          @showLabel={{true}}
+          @bookmarkManager={{this.topicBookmarkManager}}
+          @buttonClasses="btn-default"
+        />
+      {{else}}
+        <DButton
+          @action={{actionable.action}}
+          @icon={{actionable.icon}}
+          @translatedLabel={{actionable.label}}
+          @translatedTitle={{actionable.title}}
+          @translatedAriaLabel={{actionable.ariaLabel}}
+          @disabled={{actionable.disabled}}
+          id={{concat "topic-footer-button-" actionable.id}}
+          class={{concat-class
+            "btn-default"
+            "topic-footer-button"
+            actionable.classNames
+          }}
+        />
+      {{/if}}
     {{else}}
       <DropdownSelectBox
         @id={{concat "topic-footer-dropdown-" actionable.id}}

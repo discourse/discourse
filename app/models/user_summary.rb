@@ -88,7 +88,13 @@ class UserSummary
       .joins(
         "JOIN posts replies ON posts.topic_id = replies.topic_id AND posts.reply_to_post_number = replies.post_number",
       )
-      .where("replies.user_id <> ?", @user.id)
+      .joins(
+        "JOIN topics ON replies.topic_id = topics.id AND topics.archetype <> 'private_message'",
+      )
+      .joins(
+        "AND replies.post_type IN (#{Topic.visible_post_types(@user, include_moderator_actions: false).join(",")})",
+      )
+      .where("replies.user_id <> posts.user_id")
       .group("replies.user_id")
       .order("COUNT(*) DESC")
       .limit(MAX_SUMMARY_RESULTS)

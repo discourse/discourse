@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 class UserOption < ActiveRecord::Base
+  HOMEPAGES = {
+    # -1 => reserved for "custom homepage"
+    1 => "latest",
+    2 => "categories",
+    3 => "unread",
+    4 => "new",
+    5 => "top",
+    6 => "bookmarks",
+    7 => "unseen",
+    # 8 => reserved for "hot"
+  }
+
   self.ignored_columns = [
     "disable_jump_reply", # Remove once 20210706091905 is promoted from post_deploy to regular migration
     "sidebar_list_destination", # TODO(osama): Remove in January 2024
@@ -170,30 +182,9 @@ class UserOption < ActiveRecord::Base
   end
 
   def homepage
-    case homepage_id
-    when 1
-      "latest"
-    when 2
-      "categories"
-    when 3
-      "unread"
-    when 4
-      "new"
-    when 5
-      "top"
-    when 6
-      "bookmarks"
-    when 7
-      "unseen"
-    when 8
-      if SiteSetting.experimental_hot_topics
-        "hot"
-      else
-        SiteSetting.homepage
-      end
-    else
-      SiteSetting.homepage
-    end
+    return HOMEPAGES[homepage_id] if HOMEPAGES.keys.include?(homepage_id)
+
+    "hot" if homepage_id == 8 && SiteSetting.top_menu_map.include?("hot")
   end
 
   def text_size
@@ -299,6 +290,7 @@ end
 #  sidebar_show_count_of_new_items      :boolean          default(FALSE), not null
 #  watched_precedence_over_muted        :boolean
 #  chat_separate_sidebar_mode           :integer          default(0), not null
+#  topics_unread_when_closed            :boolean          default(TRUE), not null
 #
 # Indexes
 #

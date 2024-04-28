@@ -7,7 +7,7 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
   let(:secure_session) { SecureSession.new("tester") }
   let(:client_data_challenge) { Base64.encode64(challenge) }
   let(:client_data_webauthn_type) { "webauthn.create" }
-  let(:client_data_origin) { "http://localhost:3000" }
+  let(:client_data_origin) { "http://test.localhost" }
   let(:client_data_param) do
     {
       challenge: client_data_challenge,

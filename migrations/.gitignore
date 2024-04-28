@@ -1,2 +1,4 @@
+!/db/schema/*.sql
+
 tmp/*
-!/common/intermediate_db_schema/*.sql
+Gemfile.lock

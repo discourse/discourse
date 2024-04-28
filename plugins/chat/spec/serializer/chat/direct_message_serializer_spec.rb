@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::DirectMessageSerializer do
   describe "#user" do
     it "returns you when there are two of us" do
@@ -10,8 +8,9 @@ describe Chat::DirectMessageSerializer do
       direct_message = Fabricate.build(:direct_message, users: [me, you])
 
       serializer = described_class.new(direct_message, scope: Guardian.new(me), root: false)
+      json = serializer.as_json
 
-      expect(serializer.users).to eq([you])
+      expect(json[:users].map { |u| u[:username] }).to eq([you.username])
     end
 
     it "returns you both if there are three of us" do
@@ -21,8 +20,11 @@ describe Chat::DirectMessageSerializer do
       direct_message = Fabricate.build(:direct_message, users: [me, you, other_you])
 
       serializer = described_class.new(direct_message, scope: Guardian.new(me), root: false)
+      json = serializer.as_json
 
-      expect(serializer.users).to match_array([you, other_you])
+      expect(json[:users].map { |u| u[:username] }).to match_array(
+        [you.username, other_you.username],
+      )
     end
 
     it "returns me if there is only me" do
@@ -30,8 +32,9 @@ describe Chat::DirectMessageSerializer do
       direct_message = Fabricate.build(:direct_message, users: [me])
 
       serializer = described_class.new(direct_message, scope: Guardian.new(me), root: false)
+      json = serializer.as_json
 
-      expect(serializer.users).to eq([me])
+      expect(json[:users].map { |u| u[:username] }).to eq([me.username])
     end
 
     context "when a user is destroyed" do
@@ -43,9 +46,10 @@ describe Chat::DirectMessageSerializer do
         you.destroy!
 
         serializer =
-          described_class.new(direct_message.reload, scope: Guardian.new(me), root: false).as_json
+          described_class.new(direct_message.reload, scope: Guardian.new(me), root: false)
+        json = serializer.as_json
 
-        expect(serializer[:users][0][:username]).to eq(I18n.t("chat.deleted_chat_username"))
+        expect(json[:users][0][:username]).to eq(I18n.t("chat.deleted_chat_username"))
       end
     end
   end

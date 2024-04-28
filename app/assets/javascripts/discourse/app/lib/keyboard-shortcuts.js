@@ -41,6 +41,8 @@ const DEFAULT_BINDINGS = {
   "!": { postAction: "showFlags" },
   "#": { handler: "goToPost", anonymous: true },
   "/": { handler: "toggleSearch", anonymous: true },
+  "meta+/": { handler: "filterSidebar", anonymous: true },
+  [`${PLATFORM_KEY_MODIFIER}+/`]: { handler: "filterSidebar", anonymous: true },
   "ctrl+alt+f": { handler: "toggleSearch", anonymous: true, global: true },
   "=": { handler: "toggleHamburgerMenu", anonymous: true },
   "?": { handler: "showHelpModal", anonymous: true },
@@ -114,12 +116,14 @@ const DEFAULT_BINDINGS = {
   "shift+f11": { handler: "fullscreenComposer", global: true },
   "shift+u": { handler: "deferTopic" },
   "shift+a": { handler: "toggleAdminActions" },
+  "shift+b": { handler: "toggleBulkSelect" },
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
-  "x r": {
-    click: "#dismiss-new-bottom,#dismiss-new-top",
-  }, // dismiss new
-  "x t": { click: "#dismiss-topics-bottom,#dismiss-topics-top" }, // dismiss topics
+  x: { handler: "bulkSelectItem" },
+  "shift+d": {
+    click:
+      "#dismiss-new-bottom, #dismiss-new-top, #dismiss-topics-bottom, #dismiss-topics-top",
+  }, // dismiss new or unread
 };
 
 const animationDuration = 100;
@@ -403,11 +407,18 @@ export default {
   },
 
   selectDown() {
-    this._moveSelection(1);
+    this._moveSelection({ direction: 1, scrollWithinPosts: true });
   },
 
   selectUp() {
-    this._moveSelection(-1);
+    this._moveSelection({ direction: -1, scrollWithinPosts: true });
+  },
+
+  bulkSelectItem() {
+    const elem = document.querySelector(
+      ".selected input.bulk-select, .selected .select-post"
+    );
+    elem?.click();
   },
 
   goBack() {
@@ -467,6 +478,15 @@ export default {
       event.stopPropagation();
     }
     composer.focusComposer(event);
+  },
+
+  filterSidebar() {
+    const filterInput = document.querySelector(".sidebar-filter__input");
+
+    if (filterInput) {
+      this._scrollTo(0);
+      filterInput.focus();
+    }
   },
 
   fullscreenComposer() {
@@ -640,7 +660,7 @@ export default {
     }
   },
 
-  _moveSelection(direction) {
+  _moveSelection({ direction, scrollWithinPosts }) {
     // Pressing a move key (J/K) very quick (i.e. keeping J or K pressed) will
     // move fast by disabling smooth page scrolling.
     const now = +new Date();
@@ -691,7 +711,7 @@ export default {
     let article = selected;
 
     // Try doing a page scroll in the context of current post.
-    if (!fast && direction !== 0 && article) {
+    if (!fast && direction !== 0 && article && scrollWithinPosts) {
       // The beginning of first article is the beginning of the page.
       const beginArticle =
         article.classList.contains("topic-post") &&
@@ -761,7 +781,12 @@ export default {
 
     const articleTop = domUtils.offset(article).top,
       articleTopPosition = articleTop - headerOffset();
-    if (!fast && direction < 0 && article.offsetHeight > window.innerHeight) {
+    if (
+      scrollWithinPosts &&
+      !fast &&
+      direction < 0 &&
+      article.offsetHeight > window.innerHeight
+    ) {
       // Scrolling to the last "page" of the previous post if post has multiple
       // "pages" (if its height does not fit in the screen).
       return this._scrollTo(
@@ -827,12 +852,18 @@ export default {
   },
 
   _changeSection(direction) {
-    const sections = Array.from(document.querySelectorAll(".nav.nav-pills li"));
-    const active = document.querySelector(".nav.nav-pills li.active");
-    const index = sections.indexOf(active) + direction;
+    if (document.querySelector(".post-stream")) {
+      this._moveSelection({ direction, scrollWithinPosts: false });
+    } else {
+      const sections = Array.from(
+        document.querySelectorAll(".nav.nav-pills li")
+      );
+      const active = document.querySelector(".nav.nav-pills li.active");
+      const index = sections.indexOf(active) + direction;
 
-    if (index >= 0 && index < sections.length) {
-      sections[index].querySelector("a")?.click();
+      if (index >= 0 && index < sections.length) {
+        sections[index].querySelector("a, button")?.click();
+      }
     }
   },
 
@@ -873,7 +904,17 @@ export default {
   },
 
   toggleAdminActions() {
-    this.appEvents.trigger("topic:toggle-actions");
+    document.querySelector(".toggle-admin-menu")?.click();
+  },
+
+  toggleBulkSelect() {
+    const bulkSelect = document.querySelector("button.bulk-select");
+
+    if (bulkSelect) {
+      bulkSelect.click();
+    } else {
+      getOwner(this).lookup("controller:topic").send("toggleMultiSelect");
+    }
   },
 
   toggleArchivePM() {

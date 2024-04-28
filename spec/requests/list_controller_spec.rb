@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ListController do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:group) { Fabricate(:group, name: "AwesomeGroup") }
   fab!(:admin)
@@ -366,7 +366,6 @@ RSpec.describe ListController do
       before do
         group.add(user)
         SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
-        Group.refresh_automatic_groups!
       end
 
       it "should display group private messages for an admin" do
@@ -424,7 +423,6 @@ RSpec.describe ListController do
         group.add(user)
         sign_in(user)
         SiteSetting.unicode_usernames = false
-        Group.refresh_automatic_groups!
       end
 
       it "should return the right response when user does not belong to group" do
@@ -451,7 +449,6 @@ RSpec.describe ListController do
       before do
         sign_in(user)
         SiteSetting.unicode_usernames = true
-        Group.refresh_automatic_groups!
       end
 
       it "Returns a 200 with unicode group name" do

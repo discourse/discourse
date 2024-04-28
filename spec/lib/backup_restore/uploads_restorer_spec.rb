@@ -6,7 +6,7 @@ require_relative "shared_context_for_backup_restore"
 RSpec.describe BackupRestore::UploadsRestorer do
   subject(:restorer) { BackupRestore::UploadsRestorer.new(logger) }
 
-  include_context "with shared stuff"
+  include_context "with shared backup restore context"
 
   def with_temp_uploads_directory(name: "default", with_optimized: false)
     Dir.mktmpdir do |directory|
@@ -153,7 +153,12 @@ RSpec.describe BackupRestore::UploadsRestorer do
         Fabricate(:optimized_image)
 
         upload = Fabricate(:upload_s3)
-        post = Fabricate(:post, raw: "![#{upload.original_filename}](#{upload.short_url})")
+        post =
+          Fabricate(
+            :post,
+            raw: "![#{upload.original_filename}](#{upload.short_url})",
+            user: Fabricate(:user, refresh_auto_groups: true),
+          )
         post.link_post_uploads
 
         FileHelper.stubs(:download).returns(file_from_fixtures("logo.png"))

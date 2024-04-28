@@ -1,7 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { capitalize } from "@ember/string";
+import { service } from "@ember/service";
 import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
@@ -110,11 +109,6 @@ export default Controller.extend({
     return isGroupUser || (this.currentUser && this.currentUser.admin);
   },
 
-  @discourseComputed("model.displayName", "model.full_name")
-  groupName(displayName, fullName) {
-    return capitalize(fullName || displayName);
-  },
-
   @discourseComputed("model.messageable")
   displayGroupMessageButton(messageable) {
     return this.currentUser && messageable;
@@ -150,13 +144,17 @@ export default Controller.extend({
       didConfirm: () => {
         model
           .destroy()
-          .then(() => this.router.transitionTo("groups.index"))
           .catch((error) => {
             // eslint-disable-next-line no-console
             console.error(error);
             this.dialog.alert(I18n.t("admin.groups.delete_failed"));
           })
-          .finally(() => this.set("destroying", false));
+          .then(() => {
+            this.router.transitionTo("groups.index");
+          })
+          .finally(() => {
+            this.set("destroying", false);
+          });
       },
       didCancel: () => this.set("destroying", false),
     });

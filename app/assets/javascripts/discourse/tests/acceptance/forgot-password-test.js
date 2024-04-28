@@ -16,10 +16,6 @@ acceptance("Forgot password", function (needs) {
         user_found: userFound,
       });
     });
-
-    server.get(`/session/passkey/challenge.json`, () =>
-      helper.response({ challenge: "smth" })
-    );
   });
 
   test("requesting password reset", async function (assert) {
@@ -96,10 +92,6 @@ acceptance(
       server.post("/session/forgot_password", () => {
         return helper.response({});
       });
-
-      server.get(`/session/passkey/challenge.json`, () =>
-        helper.response({ challenge: "smth" })
-      );
     });
 
     test("requesting password reset", async function (assert) {

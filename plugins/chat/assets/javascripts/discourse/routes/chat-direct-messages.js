@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ChatDirectMessagesRoute extends DiscourseRoute {
@@ -7,6 +7,12 @@ export default class ChatDirectMessagesRoute extends DiscourseRoute {
 
   activate() {
     this.chat.activeChannel = null;
+  }
+
+  beforeModel() {
+    if (this.site.desktopView) {
+      this.router.transitionTo("chat");
+    }
   }
 
   model() {

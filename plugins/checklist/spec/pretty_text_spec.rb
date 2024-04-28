@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe PrettyText do
   describe "markdown it" do
     it "can properly bake boxes" do

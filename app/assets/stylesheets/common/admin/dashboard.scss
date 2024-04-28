@@ -1,12 +1,10 @@
 .admin-reports,
-.dashboard,
 .dashboard-next {
   &.admin-contents {
     margin: 10px 0 0 0;
   }
 }
 
-.dashboard,
 .dashboard-next {
   .navigation {
     display: flex;
@@ -504,36 +502,6 @@
   }
 }
 
-.dashboard-reports {
-  .reports-list {
-    display: flex;
-    flex-wrap: wrap;
-    list-style-type: none;
-    margin: 0 -1.5%;
-  }
-  .report {
-    margin: 1.5%;
-    border: 1px solid var(--primary-low);
-    flex: 1 1 28%;
-    transition: box-shadow 0.25s;
-    min-width: 225px;
-    max-width: 550px;
-    a {
-      display: block;
-      width: 100%;
-      height: 100%;
-      box-sizing: border-box;
-      padding: 1em;
-      .report-description {
-        color: var(--primary-high);
-      }
-    }
-    &:hover {
-      box-shadow: var(--shadow-card);
-    }
-  }
-}
-
 .version-checks {
   display: flex;
   flex-wrap: wrap;
@@ -558,7 +526,7 @@
   justify-content: space-between;
   padding-top: 1em;
 
-  .upgrade-header {
+  .update-header {
     flex: 1 1 100%;
 
     @media screen and (max-width: 650px) {
@@ -681,6 +649,7 @@
   margin-bottom: 1.5em;
   background-color: var(--primary-very-low);
   padding: 1em;
+  max-width: 45rem;
 
   &__new-feature-emoji {
     font-size: 1.2em;

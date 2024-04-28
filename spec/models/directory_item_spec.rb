@@ -45,7 +45,7 @@ RSpec.describe DirectoryItem do
 
   describe ".refresh!" do
     before do
-      freeze_time DateTime.parse("2017-02-02 12:00")
+      freeze_time_safe
       UserActionManager.enable
     end
 

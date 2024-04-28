@@ -130,6 +130,8 @@ class BaseBookmarkable
       display_username: bookmark.user.username,
       bookmark_name: bookmark.name,
       bookmark_id: bookmark.id,
+      bookmarkable_type: bookmark.bookmarkable_type,
+      bookmarkable_id: bookmark.bookmarkable_id,
     ).to_json
     notification_data[:notification_type] = Notification.types[:bookmark_reminder]
     bookmark.user.notifications.create!(notification_data)
@@ -144,6 +146,18 @@ class BaseBookmarkable
   # @param [Bookmark] bookmark The bookmark which we are checking access for using the bookmarkable association.
   # @return [Boolean]
   def self.can_see?(guardian, bookmark)
+    raise NotImplementedError
+  end
+
+  ##
+  # The can_see? method calls this one directly. can_see_bookmarkable? can be used
+  # in cases where you know the bookmarkable based on type but don't have a bookmark
+  # record to check against.
+  #
+  # @param [Guardian] guardian The guardian class for the user that we are performing the access check for.
+  # @param [Bookmark] bookmarkable The bookmarkable which we are checking access for (e.g. Post, Topic) which is an ActiveModel instance.
+  # @return [Boolean]
+  def self.can_see_bookmarkable?(guardian, bookmarkable)
     raise NotImplementedError
   end
 

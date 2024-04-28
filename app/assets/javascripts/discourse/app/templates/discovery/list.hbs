@@ -16,6 +16,11 @@
       @canCreateTopicOnTag={{this.model.canCreateTopicOnTag}}
       @toggleTagInfo={{this.toggleTagInfo}}
       @tagNotification={{this.model.tagNotification}}
+      @model={{this.model.list}}
+      @showDismissRead={{this.showDismissRead}}
+      @showResetNew={{this.showResetNew}}
+      @dismissRead={{this.dismissRead}}
+      @resetNew={{this.resetNew}}
     />
   </:navigation>
 
@@ -44,6 +49,8 @@
       @tag={{this.model.tag}}
       @changeSort={{this.changeSort}}
       @changeNewListSubset={{this.changeNewListSubset}}
+      @dismissRead={{this.dismissRead}}
+      @resetNew={{this.resetNew}}
     />
   </:list>
 </Discovery::Layout>
