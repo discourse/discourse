@@ -747,6 +747,7 @@ export default class ChatChannel extends Component {
             @channel={{@channel}}
             @uploadDropZone={{this.uploadDropZone}}
             @onSendMessage={{this.onSendMessage}}
+            @scroller={{this.scroller}}
           />
         {{/if}}
       {{/if}}

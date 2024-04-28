@@ -16,7 +16,7 @@ export default class ChatChannelComposer extends Service {
   @service site;
 
   @tracked textarea;
-  @tracked scrollable;
+  @tracked scroller;
 
   init() {
     super.init(...arguments);
@@ -34,7 +34,7 @@ export default class ChatChannelComposer extends Service {
 
     schedule("afterRender", () => {
       if (this.capabilities.isIOS && !this.capabilities.isIpadOS) {
-        disableBodyScroll(this.scrollable, { reverse: true });
+        disableBodyScroll(this.scroller, { reverse: true });
       }
     });
   }

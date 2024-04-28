@@ -578,6 +578,7 @@ export default class ChatThread extends Component {
           @thread={{@thread}}
           @onSendMessage={{this.onSendMessage}}
           @uploadDropZone={{this.uploadDropZone}}
+          @scroller={{this.scroller}}
         />
       {{/if}}
 
