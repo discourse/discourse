@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 
-export default class GlimmerTopicLink extends Component {
+export default class TopicLink extends Component {
   get url() {
     return this.args.topic.linked_post_number
       ? this.args.topic.urlForPostNumber(this.args.topic.linked_post_number)

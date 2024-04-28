@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
 
-export default class GlimmerNewListHeaderControls extends Component {
+export default class NewListHeaderControls extends Component {
   get topicsActive() {
     return this.args.current === "topics";
   }

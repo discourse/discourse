@@ -6,7 +6,7 @@ import coldAgeClass from "discourse/helpers/cold-age-class";
 import concatClass from "discourse/helpers/concat-class";
 import formatDate from "discourse/helpers/format-date";
 
-export default class GlimmerActivityColumn extends Component {
+export default class ActivityColumn extends Component {
   @service siteSettings;
 
   get wrapperElement() {

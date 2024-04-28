@@ -1,8 +1,8 @@
 import { and } from "truth-helpers";
-import GlimmerPostsCountColumn from "discourse/components/glimmer-posts-count-column";
+import PostsCountColumn from "discourse/components/topic-list/posts-count-column";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 
-const GlimmerPostCountOrBadges = <template>
+const PostCountOrBadges = <template>
   {{#if (and @postBadgesEnabled @topic.unread_posts)}}
     <TopicPostBadges
       @unreadPosts={{@topic.unread_posts}}
@@ -10,8 +10,8 @@ const GlimmerPostCountOrBadges = <template>
       @url={{@topic.lastUnreadUrl}}
     />
   {{else}}
-    <GlimmerPostsCountColumn @topic={{@topic}} @tagName="div" />
+    <PostsCountColumn @topic={{@topic}} @tagName="div" />
   {{/if}}
 </template>;
 
-export default GlimmerPostCountOrBadges;
+export default PostCountOrBadges;

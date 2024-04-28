@@ -1,7 +1,7 @@
 import i18n from "discourse-common/helpers/i18n";
 import BulkSelectTopicsDropdown from "select-kit/components/bulk-select-topics-dropdown";
 
-const GlimmerTopicBulkSelectDropdown = <template>
+const TopicBulkSelectDropdown = <template>
   <div class="bulk-select-topics-dropdown">
     <span class="bulk-select-topic-dropdown__count">
       {{i18n
@@ -13,4 +13,4 @@ const GlimmerTopicBulkSelectDropdown = <template>
   </div>
 </template>;
 
-export default GlimmerTopicBulkSelectDropdown;
+export default TopicBulkSelectDropdown;

@@ -1,6 +1,6 @@
 <thead class="topic-list-header">
   {{#if (eq this.siteSettings.glimmer_topic_list_mode "enabled")}}
-    <GlimmerTopicListHeader
+    <TopicList::TopicListHeader
       @canBulkSelect={{this.canBulkSelect}}
       @toggleInTitle={{this.toggleInTitle}}
       @hideCategory={{this.hideCategory}}
@@ -60,7 +60,7 @@
 <tbody class="topic-list-body">
   {{#each this.filteredTopics as |topic index|}}
     {{#if (eq this.siteSettings.glimmer_topic_list_mode "enabled")}}
-      <GlimmerTopicListItem
+      <TopicList::TopicListItem
         @topic={{topic}}
         @bulkSelectEnabled={{this.bulkSelectEnabled}}
         @showTopicPostBadges={{this.showTopicPostBadges}}
@@ -99,7 +99,7 @@
     {{/if}}
 
     {{#if (eq this.siteSettings.glimmer_topic_list_mode "enabled")}}
-      <GlimmerVisitedLine
+      <TopicList::VisitedLine
         @lastVisitedTopic={{this.lastVisitedTopic}}
         @topic={{topic}}
       />

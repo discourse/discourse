@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
+import NewListHeaderControls from "discourse/components/topic-list/new-list-header-controls";
+import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import GlimmerNewListHeaderControls from "./glimmer-new-list-header-controls";
-import GlimmerTopicBulkSelectDropdown from "./glimmer-topic-bulk-select-dropdown";
 
-export default class GlimmerTopicListHeaderColumn extends Component {
+export default class TopicListHeaderColumn extends Component {
   get localizedName() {
     if (this.args.forceName) {
       return this.args.forceName;
@@ -61,7 +61,7 @@ export default class GlimmerTopicListHeaderColumn extends Component {
           <span class="bulk-select-topics">
             {{#if @canDoBulkActions}}
               {{#if @experimentalTopicBulkActionsEnabled}}
-                <GlimmerTopicBulkSelectDropdown
+                <TopicBulkSelectDropdown
                   @bulkSelectHelper={{@bulkSelectHelper}}
                 />
               {{else}}
@@ -83,7 +83,7 @@ export default class GlimmerTopicListHeaderColumn extends Component {
 
       {{#unless @bulkSelectEnabled}}
         {{#if this.showTopicsAndRepliesToggle}}
-          <GlimmerNewListHeaderControls
+          <NewListHeaderControls
             @current={{@newListSubset}}
             @newRepliesCount={{@newRepliesCount}}
             @newTopicsCount={{@newTopicsCount}}

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
 import { service } from "@ember/service";
-import GlimmerPostsCountColumn from "discourse/components/glimmer-posts-count-column";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import PostsCountColumn from "discourse/components/topic-list/posts-count-column";
 import {
   navigateToTopic,
   showEntrance,
@@ -19,7 +19,7 @@ import formatDate from "discourse/helpers/format-date";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import topicLink from "discourse/helpers/topic-link";
 
-export default class GlimmerLatestTopicListItem extends Component {
+export default class LatestTopicListItem extends Component {
   @service appEvents;
 
   showEntrance = showEntrance;
@@ -96,7 +96,7 @@ export default class GlimmerLatestTopicListItem extends Component {
           @outletArgs={{hash topic=@topic}}
         />
 
-        <GlimmerPostsCountColumn @topic={{@topic}} @tagName="div" />
+        <PostsCountColumn @topic={{@topic}} @tagName="div" />
 
         <div class="topic-last-activity">
           <a

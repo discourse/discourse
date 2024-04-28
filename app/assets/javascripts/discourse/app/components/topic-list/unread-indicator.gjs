@@ -3,7 +3,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
-const GlimmerUnreadIndicator = <template>
+const UnreadIndicator = <template>
   {{#if @includeUnreadIndicator~}}
     &nbsp;<span
       title={{i18n "topic.unread_indicator"}}
@@ -18,4 +18,4 @@ const GlimmerUnreadIndicator = <template>
   {{~/if}}
 </template>;
 
-export default GlimmerUnreadIndicator;
+export default UnreadIndicator;

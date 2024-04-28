@@ -6,16 +6,16 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import $ from "jquery";
 import { eq, gt } from "truth-helpers";
-import GlimmerActionList from "discourse/components/glimmer-action-list";
-import GlimmerActivityColumn from "discourse/components/glimmer-activity-column";
-import GlimmerParticipantGroups from "discourse/components/glimmer-participant-groups";
-import GlimmerPostCountOrBadges from "discourse/components/glimmer-post-count-or-badges";
-import GlimmerPostersColumn from "discourse/components/glimmer-posters-column";
-import GlimmerPostsCountColumn from "discourse/components/glimmer-posts-count-column";
-import GlimmerTopicExcerpt from "discourse/components/glimmer-topic-excerpt";
-import GlimmerTopicLink from "discourse/components/glimmer-topic-link";
-import GlimmerUnreadIndicator from "discourse/components/glimmer-unread-indicator";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import ActionList from "discourse/components/topic-list/action-list";
+import ActivityColumn from "discourse/components/topic-list/activity-column";
+import ParticipantGroups from "discourse/components/topic-list/participant-groups";
+import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
+import PostersColumn from "discourse/components/topic-list/posters-column";
+import PostsCountColumn from "discourse/components/topic-list/posts-count-column";
+import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
+import TopicLink from "discourse/components/topic-list/topic-link";
+import UnreadIndicator from "discourse/components/topic-list/unread-indicator";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import { topicTitleDecorators } from "discourse/components/topic-title";
@@ -33,7 +33,7 @@ import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default class GlimmerTopicListItem extends Component {
+export default class TopicListItem extends Component {
   @service appEvents;
   @service currentUser;
   @service historyStore;
@@ -339,7 +339,7 @@ export default class GlimmerTopicListItem extends Component {
           }}<TopicStatus
               @topic={{@topic}}
             />{{! no whitespace
-          }}<GlimmerTopicLink
+          }}<TopicLink
               {{on "focus" this.onTitleFocus}}
               {{on "blur" this.onTitleBlur}}
               @topic={{@topic}}
@@ -353,7 +353,7 @@ export default class GlimmerTopicListItem extends Component {
               @name="topic-list-after-title"
             />{{! no whitespace
           }}
-            <GlimmerUnreadIndicator
+            <UnreadIndicator
               @includeUnreadIndicator={{this.includeUnreadIndicator}}
               @topicId={{@topic.id}}
               class={{this.unreadClass}}
@@ -379,10 +379,10 @@ export default class GlimmerTopicListItem extends Component {
             {{discourseTags @topic mode="list" tagsForUser=@tagsForUser}}
 
             {{#if this.participantGroups}}
-              <GlimmerParticipantGroups @groups={{this.participantGroups}} />
+              <ParticipantGroups @groups={{this.participantGroups}} />
             {{/if}}
 
-            <GlimmerActionList
+            <ActionList
               @topic={{@topic}}
               @postNumbers={{@topic.liked_post_numbers}}
               @icon="heart"
@@ -391,7 +391,7 @@ export default class GlimmerTopicListItem extends Component {
           </div>
 
           {{#if this.expandPinned}}
-            <GlimmerTopicExcerpt @topic={{@topic}} />
+            <TopicExcerpt @topic={{@topic}} />
           {{/if}}
 
           <PluginOutlet @name="topic-list-main-link-bottom" />
@@ -400,10 +400,10 @@ export default class GlimmerTopicListItem extends Component {
         <PluginOutlet @name="topic-list-after-main-link" />
 
         {{#if @showPosters}}
-          <GlimmerPostersColumn @posters={{@topic.featuredUsers}} />
+          <PostersColumn @posters={{@topic.featuredUsers}} />
         {{/if}}
 
-        <GlimmerPostsCountColumn @topic={{@topic}} />
+        <PostsCountColumn @topic={{@topic}} />
 
         {{#if @showLikes}}
           <td class="num likes topic-list-data">
@@ -432,7 +432,7 @@ export default class GlimmerTopicListItem extends Component {
           {{number @topic.views numberKey="views_long"}}
         </td>
 
-        <GlimmerActivityColumn @topic={{@topic}} class="num topic-list-data" />
+        <ActivityColumn @topic={{@topic}} class="num topic-list-data" />
 
         <PluginOutlet @name="topic-list-after-columns" />
       {{else}}
@@ -476,7 +476,7 @@ export default class GlimmerTopicListItem extends Component {
               }}<TopicStatus
                 @topic={{@topic}}
               />{{! no whitespace
-              }}<GlimmerTopicLink
+              }}<TopicLink
                 {{on "focus" this.onTitleFocus}}
                 {{on "blur" this.onTitleBlur}}
                 @topic={{@topic}}
@@ -492,7 +492,7 @@ export default class GlimmerTopicListItem extends Component {
                   ></span></span>
               {{~/if~}}
               {{~#if this.expandPinned~}}
-                <GlimmerTopicExcerpt @topic={{@topic}} />
+                <TopicExcerpt @topic={{@topic}} />
               {{~/if~}}
               <PluginOutlet @name="topic-list-main-link-bottom" />
             </div>{{! no whitespace
@@ -501,7 +501,7 @@ export default class GlimmerTopicListItem extends Component {
             />
 
             <div class="pull-right">
-              <GlimmerPostCountOrBadges
+              <PostCountOrBadges
                 @topic={{@topic}}
                 @postBadgesEnabled={{@showTopicPostBadges}}
               />

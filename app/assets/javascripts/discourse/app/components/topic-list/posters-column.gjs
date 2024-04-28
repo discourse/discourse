@@ -1,6 +1,6 @@
 import avatar from "discourse/helpers/avatar";
 
-const GlimmerPostersColumn = <template>
+const PostersColumn = <template>
   <td class="posters topic-list-data">
     {{#each @posters as |poster|}}
       {{#if poster.moreCount}}
@@ -22,4 +22,4 @@ const GlimmerPostersColumn = <template>
   </td>
 </template>;
 
-export default GlimmerPostersColumn;
+export default PostersColumn;

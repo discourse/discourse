@@ -1,7 +1,7 @@
 import dirSpan from "discourse/helpers/dir-span";
 import i18n from "discourse-common/helpers/i18n";
 
-const GlimmerTopicExcerpt = <template>
+const TopicExcerpt = <template>
   {{#if @topic.hasExcerpt}}
     <a href={{@topic.url}} class="topic-excerpt">
       {{dirSpan @topic.escapedExcerpt htmlSafe="true"}}
@@ -13,4 +13,4 @@ const GlimmerTopicExcerpt = <template>
   {{/if}}
 </template>;
 
-export default GlimmerTopicExcerpt;
+export default TopicExcerpt;

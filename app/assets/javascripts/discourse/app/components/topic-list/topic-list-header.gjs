@@ -1,9 +1,9 @@
 import PluginOutlet from "discourse/components/plugin-outlet";
+import TopicListHeaderColumn from "discourse/components/topic-list/topic-list-header-column";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
-import GlimmerTopicListHeaderColumn from "./glimmer-topic-list-header-column";
 
-const GlimmerTopicListHeader = <template>
+const TopicListHeader = <template>
   <PluginOutlet @name="topic-list-header-before" />
 
   {{#if @bulkSelectEnabled}}
@@ -19,7 +19,7 @@ const GlimmerTopicListHeader = <template>
     </th>
   {{/if}}
 
-  <GlimmerTopicListHeaderColumn
+  <TopicListHeaderColumn
     @order="default"
     @activeOrder={{@order}}
     @ascending={{@ascending}}
@@ -39,7 +39,7 @@ const GlimmerTopicListHeader = <template>
   <PluginOutlet @name="topic-list-header-after-main-link" />
 
   {{#if @showPosters}}
-    <GlimmerTopicListHeaderColumn
+    <TopicListHeaderColumn
       @order="posters"
       @activeOrder={{@order}}
       @ascending={{@ascending}}
@@ -47,7 +47,7 @@ const GlimmerTopicListHeader = <template>
     />
   {{/if}}
 
-  <GlimmerTopicListHeaderColumn
+  <TopicListHeaderColumn
     @sortable={{@sortable}}
     @number="true"
     @order="posts"
@@ -58,7 +58,7 @@ const GlimmerTopicListHeader = <template>
   />
 
   {{#if @showLikes}}
-    <GlimmerTopicListHeaderColumn
+    <TopicListHeaderColumn
       @sortable={{@sortable}}
       @number="true"
       @order="likes"
@@ -70,7 +70,7 @@ const GlimmerTopicListHeader = <template>
   {{/if}}
 
   {{#if @showOpLikes}}
-    <GlimmerTopicListHeaderColumn
+    <TopicListHeaderColumn
       @sortable={{@sortable}}
       @number="true"
       @order="op_likes"
@@ -81,7 +81,7 @@ const GlimmerTopicListHeader = <template>
     />
   {{/if}}
 
-  <GlimmerTopicListHeaderColumn
+  <TopicListHeaderColumn
     @sortable={{@sortable}}
     @number="true"
     @order="views"
@@ -91,7 +91,7 @@ const GlimmerTopicListHeader = <template>
     aria-label={{i18n "sr_views"}}
   />
 
-  <GlimmerTopicListHeaderColumn
+  <TopicListHeaderColumn
     @sortable={{@sortable}}
     @number="true"
     @order="activity"
@@ -104,4 +104,4 @@ const GlimmerTopicListHeader = <template>
   <PluginOutlet @name="topic-list-header-after" />
 </template>;
 
-export default GlimmerTopicListHeader;
+export default TopicListHeader;

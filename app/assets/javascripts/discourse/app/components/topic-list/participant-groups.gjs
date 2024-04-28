@@ -1,7 +1,7 @@
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
-const GlimmerParticipantGroups = <template>
+const ParticipantGroups = <template>
   <div
     role="list"
     aria-label={{i18n "topic.participant_groups"}}
@@ -22,4 +22,4 @@ const GlimmerParticipantGroups = <template>
   </div>
 </template>;
 
-export default GlimmerParticipantGroups;
+export default ParticipantGroups;
