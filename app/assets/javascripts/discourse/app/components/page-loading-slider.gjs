@@ -1,12 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { eq } from "truth-helpers";
+import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse-common/utils/decorators";
 
-export default class extends Component {
+export default class PageLoadingSlider extends Component {
   @service loadingSlider;
   @service capabilities;
 
@@ -15,6 +18,11 @@ export default class extends Component {
   constructor() {
     super(...arguments);
     this.loadingSlider.on("stateChanged", this.stateChanged);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.loadingSlider.off("stateChange", this, "stateChange");
   }
 
   @bind
@@ -34,9 +42,9 @@ export default class extends Component {
     }
   }
 
-  destroy() {
-    this.loadingSlider.off("stateChange", this, "stateChange");
-    super.destroy();
+  get containerStyle() {
+    const duration = this.loadingSlider.averageLoadingDuration.toFixed(2);
+    return htmlSafe(`--loading-duration: ${duration}s`);
   }
 
   @action
@@ -60,8 +68,23 @@ export default class extends Component {
     }
   }
 
-  get containerStyle() {
-    const duration = this.loadingSlider.averageLoadingDuration.toFixed(2);
-    return htmlSafe(`--loading-duration: ${duration}s`);
-  }
+  <template>
+    {{#if (eq this.loadingSlider.mode "slider")}}
+      <div
+        {{on "transitionend" this.onContainerTransitionEnd}}
+        style={{this.containerStyle}}
+        class={{concatClass
+          "loading-indicator-container"
+          this.state
+          (if this.capabilities.isAppWebview "discourse-hub-webview")
+        }}
+      >
+        <div
+          {{on "transitionend" this.onBarTransitionEnd}}
+          class="loading-indicator"
+        >
+        </div>
+      </div>
+    {{/if}}
+  </template>
 }
