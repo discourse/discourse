@@ -13,8 +13,12 @@ class Admin::WatchedWordsController < Admin::StaffController
   end
 
   def create
+    opts = watched_words_params
+    action = opts[:action] || self.class.actions[opts[:action_key].to_sym]
+    words = opts.delete(:words)
+
     watched_word_group = WatchedWordGroup.new(action: action)
-    watched_word_group.create_or_update_members(words, watched_words_params)
+    watched_word_group.create_or_update_members(words, opts)
 
     if watched_word_group.valid?
       StaffActionLogger.new(current_user).log_watched_words_creation(watched_word_group)
@@ -108,15 +112,5 @@ class Admin::WatchedWordsController < Admin::StaffController
   def watched_words_params
     @watched_words_params ||=
       params.permit(:id, :replacement, :action, :action_key, :case_sensitive, words: [])
-  end
-
-  def action
-    opts = watched_words_params
-    opts[:action] || self.class.actions[opts[:action_key].to_sym]
-  end
-
-  def words
-    @words ||= watched_words_params.delete(:words)
-    @words
   end
 end
