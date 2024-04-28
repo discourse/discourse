@@ -9,32 +9,11 @@ class WatchedWordGroup < ActiveRecord::Base
     WatchedWord.actions
   end
 
-  def self.create_membership(params)
-    words = params.delete(:words)
-    action = params[:action] || WatchedWord.actions[params[:action_key].to_sym]
-    group = self.new(action: action)
-
-    group.create_or_update_members(words, params) { group.save! }
-
-    group
-  end
-
-  def update_membership(params)
-    words = params.delete(:words)
-    action = params[:action] || WatchedWord.actions[params[:action_key]] || self.action
-    removed_members = self.watched_words.where.not(word: words)
-
-    self.create_or_update_members(words, params) do
-      self.update!(action: action) if self.action != action
-      removed_members.destroy_all
-    end
-
-    self
-  end
-
   def create_or_update_members(words, params)
     WatchedWordGroup.transaction do
-      yield if block_given?
+      self.action_key = params[:action_key] if params[:action_key]
+      self.action = params[:action] if params[:action]
+      self.save! if self.changed?
 
       words.each do |word|
         watched_word =
@@ -43,14 +22,16 @@ class WatchedWordGroup < ActiveRecord::Base
           )
 
         unless watched_word.valid?
-          # TODO: Properly bubble up error
-          self.errors.add(:invalid, watched_word.inspect)
           self.errors.merge!(watched_word.errors)
 
           raise ActiveRecord::Rollback
         end
       end
     end
+  end
+
+  def action_key=(arg)
+    self.action = WatchedWordGroup.actions[arg.to_sym]
   end
 
   def action_log_details

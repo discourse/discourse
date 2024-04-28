@@ -13,7 +13,9 @@ class Admin::WatchedWordsController < Admin::StaffController
   end
 
   def create
-    watched_word_group = WatchedWordGroup.create_membership(watched_words_params)
+    watched_word_group = WatchedWordGroup.new(action: action)
+    watched_word_group.create_or_update_members(words, watched_words_params)
+
     if watched_word_group.valid?
       StaffActionLogger.new(current_user).log_watched_words_creation(watched_word_group)
       render_json_dump WatchedWordListSerializer.new(
@@ -104,6 +106,17 @@ class Admin::WatchedWordsController < Admin::StaffController
   private
 
   def watched_words_params
-    params.permit(:id, :replacement, :action_key, :case_sensitive, words: [])
+    @watched_words_params ||=
+      params.permit(:id, :replacement, :action, :action_key, :case_sensitive, words: [])
+  end
+
+  def action
+    opts = watched_words_params
+    opts[:action] || self.class.actions[opts[:action_key].to_sym]
+  end
+
+  def words
+    @words ||= watched_words_params.delete(:words)
+    @words
   end
 end
