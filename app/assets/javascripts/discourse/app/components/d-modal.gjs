@@ -7,11 +7,15 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
+import { modifier as modifierFn } from "ember-modifier";
 import { and, not, or } from "truth-helpers";
 import ConditionalInElement from "discourse/components/conditional-in-element";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import { disableBodyScroll } from "discourse/lib/body-scroll-lock";
+import {
+  disableBodyScroll,
+  enableBodyScroll,
+} from "discourse/lib/body-scroll-lock";
 import swipe from "discourse/modifiers/swipe";
 import trapTab from "discourse/modifiers/trap-tab";
 import { bind } from "discourse-common/utils/decorators";
@@ -35,8 +39,20 @@ export default class DModal extends Component {
   @tracked wrapperElement;
   @tracked animating = false;
 
+  setupModalBody = modifierFn((element) => {
+    if (this.site.mobileView) {
+      disableBodyScroll(element);
+    }
+
+    return () => {
+      if (this.site.mobileView) {
+        enableBodyScroll(element);
+      }
+    };
+  });
+
   @action
-  setupModal(element) {
+  async setupModal(element) {
     document.documentElement.addEventListener(
       "keydown",
       this.handleDocumentKeydown
@@ -48,17 +64,18 @@ export default class DModal extends Component {
     );
 
     if (this.site.mobileView) {
-      disableBodyScroll(element.querySelector(".d-modal__body"));
-
       this.animating = true;
-      element
-        .animate(
-          [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
-          { duration: ANIMATE_MODAL_DURATION, easing: "ease", fill: "forwards" }
-        )
-        .finished.then(() => {
-          this.animating = false;
-        });
+
+      await element.animate(
+        [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
+        {
+          duration: ANIMATE_MODAL_DURATION,
+          easing: "ease",
+          fill: "forwards",
+        }
+      ).finished;
+
+      this.animating = false;
     }
 
     this.wrapperElement = element;
@@ -375,7 +392,11 @@ export default class DModal extends Component {
             </div>
           {{/if}}
 
-          <div class={{concatClass "d-modal__body" @bodyClass}} tabindex="-1">
+          <div
+            class={{concatClass "d-modal__body" @bodyClass}}
+            {{this.setupModalBody}}
+            tabindex="-1"
+          >
             {{#if (has-block "body")}}
               {{yield to="body"}}
             {{else}}
