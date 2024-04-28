@@ -1,0 +1,12 @@
+<div class="container">
+  <div class="title-wrapper">
+    {{yield}}
+  </div>
+  <span>
+    <PluginOutlet
+      @name="topic-title"
+      @connectorTagName="div"
+      @outletArgs={{hash model=this.model}}
+    />
+  </span>
+</div>
