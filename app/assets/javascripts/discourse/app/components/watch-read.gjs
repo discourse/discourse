@@ -40,8 +40,4 @@ export default class WatchRead extends Component {
     await ajax(userPath("read-faq"), { type: "POST" });
     this.currentUser.set("read_faq", true);
   }
-
-  <template>
-    {{yield}}
-  </template>
 }
