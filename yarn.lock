@@ -5560,10 +5560,10 @@ ember-cli-version-checker@^5.1.1, ember-cli-version-checker@^5.1.2:
     semver "^7.3.4"
     silent-error "^1.1.1"
 
-ember-cli@~5.8.0:
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/ember-cli/-/ember-cli-5.8.0.tgz#40f7dd3b126d495a00c5f07e510f570361b6aee8"
-  integrity sha512-9hRDyG9WfS6NbbFGVU+eaoHxn4paZFaBmKc/eOrUXyj3BYVtTnZgtEPYPxP5rQkPvVn2BM9NXvdbVN3dnzmbLA==
+ember-cli@~5.8.1:
+  version "5.8.1"
+  resolved "https://registry.yarnpkg.com/ember-cli/-/ember-cli-5.8.1.tgz#75196a4037a23e543e9eaf90230fc02acd32d5ad"
+  integrity sha512-rW7NFCaC02Bj52ZaI22UM43YT7gaRNLkQzBfhZYVpWW1+SMrdQXCxuPs6kqKRxqk4xauUpfCzCDFH92icq+mKg==
   dependencies:
     "@pnpm/find-workspace-dir" "^6.0.2"
     broccoli "^3.5.2"
@@ -5619,7 +5619,7 @@ ember-cli@~5.8.0:
     is-git-url "^1.0.0"
     is-language-code "^3.1.0"
     isbinaryfile "^5.0.0"
-    lodash.template "^4.5.0"
+    lodash "^4.17.21"
     markdown-it "^13.0.1"
     markdown-it-terminal "^0.4.0"
     minimatch "^7.4.3"
