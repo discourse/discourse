@@ -66,7 +66,7 @@ export default class ShowThreadTitlePrompt extends Component {
   get canShowToast() {
     if (
       this.site.desktopView ||
-      (this.args.thread.user_id !== this.currentUser.id &&
+      (this.args.thread.originalMessage?.user?.id !== this.currentUser.id &&
         !this.currentUser.admin)
     ) {
       return false;
