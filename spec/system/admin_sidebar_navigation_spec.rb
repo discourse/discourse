@@ -9,10 +9,12 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   let(:filter) { PageObjects::Components::Filter.new }
 
   before do
+    SiteSetting.navigation_menu = "sidebar"
     SiteSetting.admin_sidebar_enabled_groups = [
       Group::AUTO_GROUPS[:admins],
       Group::AUTO_GROUPS[:moderators],
     ]
+
     sign_in(admin)
   end
 
@@ -106,6 +108,9 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   end
 
   it "allows further filtering of site settings or users if links do not show results" do
+    user_1 = Fabricate(:user, username: "moltisanti", name: "Christopher Moltisanti")
+    user_2 = Fabricate(:user, username: "bevelaqua", name: "Matthew Bevelaqua")
+
     visit("/admin")
     filter.filter("user locale")
     find(".sidebar-additional-filter-settings").click
@@ -120,9 +125,6 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
       "/admin/site_settings/category/all_results?filter=log_search_queries",
     )
     expect(page).to have_content(I18n.t("site_settings.log_search_queries"))
-
-    user_1 = Fabricate(:user, username: "moltisanti", name: "Christopher Moltisanti")
-    user_2 = Fabricate(:user, username: "bevelaqua", name: "Matthew Bevelaqua")
 
     filter.filter("bevelaqua")
     find(".sidebar-additional-filter-users").click
