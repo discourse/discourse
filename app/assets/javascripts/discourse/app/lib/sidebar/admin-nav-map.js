@@ -85,6 +85,7 @@ export const ADMIN_NAV_MAP = [
         route: "adminUsers",
         label: "admin.community.sidebar_link.users",
         icon: "users",
+        moderator: true,
       },
       {
         name: "admin_user_fields",
@@ -97,6 +98,7 @@ export const ADMIN_NAV_MAP = [
         route: "adminWatchedWords",
         label: "admin.community.sidebar_link.watched_words",
         icon: "eye",
+        moderator: true,
       },
       {
         name: "admin_legal",
@@ -247,24 +249,28 @@ export const ADMIN_NAV_MAP = [
         route: "adminLogs.screenedEmails",
         label: "admin.security.sidebar_link.screened_emails",
         icon: "envelope",
+        moderator: true,
       },
       {
         name: "admin_logs_screened_ip_addresses",
         route: "adminLogs.screenedIpAddresses",
         label: "admin.security.sidebar_link.screened_ips",
         icon: "globe",
+        moderator: true,
       },
       {
         name: "admin_logs_screened_urls",
         route: "adminLogs.screenedUrls",
         label: "admin.security.sidebar_link.screened_urls",
         icon: "globe",
+        moderator: true,
       },
       {
         name: "admin_logs_search_logs",
         route: "adminSearchLogs",
         label: "admin.security.sidebar_link.search_logs",
         icon: "search",
+        moderator: true,
       },
       {
         name: "admin_security",
@@ -287,6 +293,7 @@ export const ADMIN_NAV_MAP = [
         route: "adminLogs.staffActionLogs",
         label: "admin.security.sidebar_link.staff_action_logs",
         icon: "user-shield",
+        moderator: true,
       },
     ],
   },

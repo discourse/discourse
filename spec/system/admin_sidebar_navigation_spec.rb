@@ -2,14 +2,19 @@
 
 describe "Admin Revamp | Sidebar Navigation", type: :system do
   fab!(:admin)
+  fab!(:moderator)
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
   let(:filter) { PageObjects::Components::Filter.new }
 
   before do
-    SiteSetting.admin_sidebar_enabled_groups = Group::AUTO_GROUPS[:admins]
     SiteSetting.navigation_menu = "sidebar"
+    SiteSetting.admin_sidebar_enabled_groups = [
+      Group::AUTO_GROUPS[:admins],
+      Group::AUTO_GROUPS[:moderators],
+    ]
+
     sign_in(admin)
   end
 
@@ -184,5 +189,26 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(sidebar).to have_add_section_button
     visit("/admin")
     expect(sidebar).to have_no_add_section_button
+  end
+
+  it "displays limited links for moderator" do
+    sign_in(moderator)
+    visit("/admin")
+
+    sidebar.toggle_all_sections
+
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.map(&:text)).to eq(
+      [
+        "Dashboard",
+        "Users",
+        "Watched Words",
+        "Screened Emails",
+        "Screened IPs",
+        "Screened URLs",
+        "Search Logs",
+        "Staff Action Logs",
+      ],
+    )
   end
 end
