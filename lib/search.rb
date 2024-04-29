@@ -1076,7 +1076,7 @@ class Search
 
   def posts_query(limit, type_filter: nil, aggregate_search: false)
     posts =
-      Post.where(post_type: Topic.visible_post_types(@guardian.user)).joins(
+      Post.where(post_type: Topic.visible_post_types(@guardian.user), hidden: false).joins(
         :post_search_data,
         :topic,
       )
