@@ -45,10 +45,6 @@ module Chat
                   base.chat_separate_sidebar_mode,
                   prefix: "chat_separate_sidebar_mode"
       end
-
-      if !base.method_defined?(:show_thread_title_prompts?)
-        base.attribute :show_thread_title_prompts, :boolean, default: true
-      end
     end
   end
 end

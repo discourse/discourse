@@ -12,7 +12,6 @@ import { resetIdle } from "discourse/lib/desktop-notifications";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
-import ShowThreadTitlePrompt from "discourse/plugins/chat/discourse/components/chat-thread-title-prompt";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 import ChatChannelThreadSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-thread-subscription-manager";
 import {
@@ -584,7 +583,6 @@ export default class ChatThread extends Component {
       {{/if}}
 
       <ChatUploadDropZone @model={{@thread}} />
-      <ShowThreadTitlePrompt @thread={{@thread}} />
     </div>
   </template>
 }

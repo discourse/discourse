@@ -11,7 +11,6 @@ const CHAT_ATTRS = [
   "chat_enabled",
   "only_chat_push_notifications",
   "ignore_channel_wide_mention",
-  "show_thread_title_prompts",
   "chat_sound",
   "chat_email_frequency",
   "chat_header_indicator_preference",

@@ -291,7 +291,6 @@ end
 #  watched_precedence_over_muted        :boolean
 #  chat_separate_sidebar_mode           :integer          default(0), not null
 #  topics_unread_when_closed            :boolean          default(TRUE), not null
-#  show_thread_title_prompts            :boolean          default(TRUE), not null
 #
 # Indexes
 #

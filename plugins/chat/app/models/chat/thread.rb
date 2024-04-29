@@ -42,12 +42,8 @@ module Chat
     # as the last message in this case as a fallback.
     before_create { self.last_message_id = self.original_message_id }
 
-    def add(user, notification_level: Chat::NotificationLevels.all[:tracking])
-      Chat::UserChatThreadMembership.find_or_create_by!(
-        user: user,
-        thread: self,
-        notification_level: notification_level,
-      )
+    def add(user)
+      Chat::UserChatThreadMembership.find_or_create_by!(user: user, thread: self)
     end
 
     def remove(user)

@@ -238,9 +238,6 @@ en:
       ignore_channel_wide_mention:
         title: "Ignore channel-wide mentions"
         description: "Do not send notifications for channel-wide mentions (@here and @all)"
-      show_thread_title_prompts:
-        title: "Show thread title prompts"
-        description: "Show prompts to set a title for new threads"
       open: "Open chat"
       open_full_page: "Open full-screen chat"
       close_full_page: "Close full-screen chat"
@@ -637,17 +634,6 @@ en:
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
-      thread_title_toast:
-        title: "Set a thread title"
-        message: "Help others discover this conversation."
-        dismiss_action: "Don't show again"
-        primary_action: "Set title"
-      thread_title_modal:
-        title: "Set thread title"
-        input_placeholder: "Tell others what this conversation is about..."
-        discourse_ai:
-          title: "Generate thread titles automatically"
-          description: "Check out %{url} to learn more about this and other enhancements to your Discourse experience."
       threads:
         open: "Open Thread"
         list: "Threads"
