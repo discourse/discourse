@@ -346,15 +346,13 @@ module BulkImport
 
     def extract_filename_from_response(response, uri)
       filename =
-        if (header = response.header["Content-Disposition"])
-          filename =
+        if (header = response.header["Content-Disposition"].presence)
+          disposition_filename =
             header[/filename\*=UTF-8''(\S+)\b/i, 1] || header[/filename=(?:"(.+)"|[^\s;]+)/i, 1]
-          URI.decode_www_form_component(filename)
-        else
-          File.basename(uri.path)
+          disposition_filename.present? ? URI.decode_www_form_component(disposition_filename) : nil
         end
 
-      filename = "file" if filename.blank?
+      filename = File.basename(uri.path).presence || "file" if filename.blank?
 
       if File.extname(filename).blank? && response.content_type.present?
         ext = MiniMime.lookup_by_content_type(response.content_type)&.extension
