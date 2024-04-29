@@ -151,12 +151,10 @@ export default class CreateAccount extends Component.extend(
 
   @discourseComputed
   disclaimerHtml() {
-    if (this.site.tos_url && this.site.privacy_policy_url) {
-      return I18n.t("create_account.disclaimer", {
-        tos_link: this.site.tos_url,
-        privacy_link: this.site.privacy_policy_url,
-      });
-    }
+    return I18n.t("create_account.disclaimer", {
+      tos_link: "/tos",
+      privacy_link: "/privacy",
+    });
   }
 
   // Check the email address
