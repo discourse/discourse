@@ -54,6 +54,7 @@ class BulkImport::Generic < BulkImport::Base
     import_user_fields
     import_user_field_values
     import_single_sign_on_records
+    import_user_associated_accounts
     import_muted_users
     import_user_histories
     import_user_notes
@@ -609,6 +610,34 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     users.close
+  end
+
+  def import_user_associated_accounts
+    puts "", "Importing user associated accounts..."
+
+    accounts = query(<<~SQL)
+      SELECT a.*, COALESCE(u.last_seen_at, u.created_at) AS last_used_at, u.email, u.username
+        FROM user_associated_accounts a
+             JOIN users u ON u.id = a.user_id
+       ORDER BY a.user_id, a.provider_name
+    SQL
+
+    existing_user_ids = UserAssociatedAccount.pluck(:user_id).to_set
+
+    create_user_associated_accounts(accounts) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if user_id && existing_user_ids.include?(user_id)
+
+      {
+        user_id: user_id,
+        provider_name: row["provider_name"],
+        provider_uid: row["provider_uid"],
+        last_used: to_datetime(row["last_used_at"]),
+        info: row["info"].presence || { nickname: row["username"], email: row["email"] }.to_json,
+      }
+    end
+
+    accounts.close
   end
 
   def import_topics
