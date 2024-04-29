@@ -1026,6 +1026,13 @@ RSpec.describe Search do
       expect(results.posts).to eq([post])
     end
 
+    it "does not return hidden posts" do
+      Fabricate(:post, raw: "Can you see me? I'm a hidden post", hidden: true)
+
+      results = Search.execute("hidden post")
+      expect(results.posts.count).to eq(0)
+    end
+
     it "does not rely on postgres's proximity opreators" do
       topic.update!(title: "End-to-end something something testing")
 
