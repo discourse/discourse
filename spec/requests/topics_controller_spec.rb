@@ -1224,6 +1224,9 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(topic.reload.visible).to eq(false)
+        expect(topic.reload.visibility_reason_id).to eq(
+          Topic.visibility_reasons[:manually_unlisted],
+        )
         expect(topic.posts.last.action_code).to eq("visible.disabled")
       end
 
@@ -1234,6 +1237,9 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(topic.reload.visible).to eq(true)
+        expect(topic.reload.visibility_reason_id).to eq(
+          Topic.visibility_reasons[:manually_relisted],
+        )
         expect(topic.posts.last.action_code).to eq("visible.enabled")
       end
     end

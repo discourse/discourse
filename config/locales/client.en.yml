@@ -4084,10 +4084,17 @@ en:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
       unlisted:
-        help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
+        help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link. %{unlistedReason}"
       personal_message:
         title: "This topic is a personal message"
         help: "This topic is a personal message"
+      visibility_reasons:
+        op_flag_threshold_reached: "This topic was automatically unlisted because it reached the flag threshold"
+        op_unhidden: "This topic was relisted by the author"
+        embedded_topic: "This topic was relisted because it is an embedded topic"
+        manually_unlisted: "This topic was manually unlisted by an admin or moderator"
+        manually_relisted: "This topic was manually relisted by an admin or moderator"
+        bulk_action: "This topic's visibility was changed because of a bulk action performed by a user"
     posts: "Posts"
     pending_posts:
       label: "Pending"
