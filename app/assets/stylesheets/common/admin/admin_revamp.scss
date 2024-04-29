@@ -28,4 +28,7 @@
 
 .admin-area .sidebar-wrapper {
   background-color: var(--d-sidebar-admin-background);
+  .sidebar-section-header-text {
+    font-weight: bold;
+  }
 }
