@@ -2642,11 +2642,6 @@ RSpec.describe Search do
     end
     let!(:post1) { Fabricate(:post, raw: "this is the second post about advanced filter") }
 
-    after do
-      Search.advanced_filters.clear
-      Search.advanced_orders.clear
-    end
-
     it "allows to define custom filter" do
       expect(Search.new("advanced").execute.posts).to eq([post1, post0])
 
@@ -2655,6 +2650,8 @@ RSpec.describe Search do
       end
 
       expect(Search.new("advanced min_chars:50").execute.posts).to eq([post0])
+    ensure
+      Search.advanced_filters.delete(/^min_chars:(\d+)$/)
     end
 
     it "allows to define custom order" do
@@ -2663,6 +2660,8 @@ RSpec.describe Search do
       Search.advanced_order(:chars) { |posts| posts.reorder("MAX(LENGTH(posts.raw)) DESC") }
 
       expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
+    ensure
+      Search.advanced_orders.delete(:chars)
     end
   end
 
