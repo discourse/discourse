@@ -213,6 +213,7 @@ module BulkImport
                         file,
                         metadata.original_filename,
                         type: row["type"],
+                        origin: metadata.origin_url,
                       ).create_for(Discourse::SYSTEM_USER_ID)
                     rescue StandardError => e
                       error_message = e.message
