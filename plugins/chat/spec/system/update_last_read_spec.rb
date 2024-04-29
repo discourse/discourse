@@ -3,7 +3,7 @@
 RSpec.describe "Update last read", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:first_unread) { Fabricate(:chat_message, chat_channel: channel_1) }
+  fab!(:messages) { Fabricate.times(15, :chat_message, chat_channel: channel_1) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -12,21 +12,27 @@ RSpec.describe "Update last read", type: :system do
   before do
     chat_system_bootstrap
     channel_1.add(current_user)
-    membership.update!(last_read_message_id: first_unread.id)
-    Fabricate.times(25, :chat_message, chat_channel: channel_1)
+
+    membership.update!(last_read_message_id: messages.last.id)
     sign_in(current_user)
   end
 
   context "when the full message is visible" do
-    xit "marks it as read" do
+    it "marks it as read" do
       last_message = Fabricate(:chat_message, chat_channel: channel_1)
       chat_page.visit_channel(channel_1)
 
-      try_until_success do
-        page.execute_script("document.querySelector('.chat-messages-scroll').scrollTo(0, 1)")
-        page.execute_script("document.querySelector('.chat-messages-scroll').scrollTo(0, 0)")
-        expect(membership.reload.last_read_message_id).to eq(last_message.id)
-      end
+      try_until_success { expect(membership.reload.last_read_message_id).to eq(last_message.id) }
+    end
+  end
+
+  context "when receiving a messages" do
+    it "marks it as read" do
+      chat_page.visit_channel(channel_1)
+
+      last_message = Fabricate(:chat_message, chat_channel: channel_1, use_service: true)
+
+      try_until_success { expect(membership.reload.last_read_message_id).to eq(last_message.id) }
     end
   end
 

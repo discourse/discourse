@@ -1338,6 +1338,15 @@ en:
         user_api: "User API"
       yaxis: "Day"
       description: "API requests for regular API keys and user API keys."
+    consolidated_page_views_browser_detection:
+      title: "Consolidated Pageviews with Browser Detection (Experimental)"
+      xaxis:
+        page_view_anon_browser: "Anonymous Browser"
+        page_view_logged_in_browser: "Logged In Browser"
+        page_view_crawler: "Known Crawler"
+        page_view_other: "Other pageviews"
+      yaxis: "Day"
+      description: "Pageviews for logged in users, anonymous users, known crawlers and other. This experimental report ensures logged-in/anon requests are coming from real browsers before counting them."
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Day"
@@ -1497,6 +1506,16 @@ en:
       xaxis: "Day"
       yaxis: "Mobile Anon Pageviews"
       description: "Number of new pageviews from visitors on a mobile device who are not logged in."
+    page_view_anon_browser_reqs:
+      title: "Anonymous Browser Pageviews"
+      xaxis: "Day"
+      yaxis: "Anonymous Browser Pageviews"
+      description: "Number of pageviews by anonymous visitors using real browsers."
+    page_view_logged_in_browser_reqs:
+      title: "Logged In Browser Pageviews"
+      xaxis: "Day"
+      yaxis: "Logged In Browser Pageviews"
+      description: "Number of pageviews by logged-in visitors using real browsers."
     http_background_reqs:
       title: "Background"
       xaxis: "Day"

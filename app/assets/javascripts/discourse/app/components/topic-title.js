@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { schedule } from "@ember/runloop";
-import KeyEnterEscape from "discourse/mixins/key-enter-escape";
+import { isiPad } from "discourse/lib/utilities";
 
 export let topicTitleDecorators = [];
 
@@ -12,7 +12,7 @@ export function resetTopicTitleDecorators() {
   topicTitleDecorators.length = 0;
 }
 
-export default Component.extend(KeyEnterEscape, {
+export default Component.extend({
   elementId: "topic-title",
 
   didInsertElement() {
@@ -29,5 +29,25 @@ export default Component.extend(KeyEnterEscape, {
           );
       }
     });
+  },
+
+  keyDown(e) {
+    if (document.body.classList.contains("modal-open")) {
+      return;
+    }
+
+    if (e.key === "Escape") {
+      e.preventDefault();
+      this.cancelled();
+    } else if (
+      e.key === "Enter" &&
+      (e.ctrlKey || e.metaKey || (isiPad() && e.altKey))
+    ) {
+      // Ctrl+Enter or Cmd+Enter
+      // iPad physical keyboard does not offer Command or Ctrl detection
+      // so use Alt+Enter
+      e.preventDefault();
+      this.save(undefined, e);
+    }
   },
 });

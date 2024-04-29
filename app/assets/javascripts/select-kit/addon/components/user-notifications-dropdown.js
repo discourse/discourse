@@ -33,7 +33,7 @@ export default DropdownSelectBox.extend({
     });
 
     content.push({
-      icon: "times-circle",
+      icon: "bell-slash",
       id: "changeToMuted",
       description: I18n.t("user.user_notifications.mute_option_title"),
       name: I18n.t("user.user_notifications.mute_option"),

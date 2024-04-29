@@ -4,9 +4,9 @@ module Chat
   # Service responsible for updating the last read message id of a membership.
   #
   # @example
-  #  Chat::UpdateUserLastRead.call(channel_id: 2, message_id: 3, guardian: guardian)
+  #  Chat::UpdateUserChannelLastRead.call(channel_id: 2, message_id: 3, guardian: guardian)
   #
-  class UpdateUserLastRead
+  class UpdateUserChannelLastRead
     include ::Service::Base
 
     # @!method call(channel_id:, message_id:, guardian:)
@@ -17,7 +17,7 @@ module Chat
 
     contract
     model :channel
-    model :active_membership
+    model :membership
     policy :invalid_access
     model :message
     policy :ensure_message_id_recency
@@ -41,31 +41,30 @@ module Chat
       ::Chat::Channel.find_by(id: contract.channel_id)
     end
 
-    def fetch_active_membership(guardian:, channel:)
+    def fetch_membership(guardian:, channel:)
       ::Chat::ChannelMembershipManager.new(channel).find_for_user(guardian.user, following: true)
     end
 
-    def invalid_access(guardian:, active_membership:)
-      guardian.can_join_chat_channel?(active_membership.chat_channel)
+    def invalid_access(guardian:, membership:)
+      guardian.can_join_chat_channel?(membership.chat_channel)
     end
 
     def fetch_message(channel:, contract:)
       ::Chat::Message.with_deleted.find_by(chat_channel_id: channel.id, id: contract.message_id)
     end
 
-    def ensure_message_id_recency(message:, active_membership:)
-      !active_membership.last_read_message_id ||
-        message.id >= active_membership.last_read_message_id
+    def ensure_message_id_recency(message:, membership:)
+      !membership.last_read_message_id || message.id >= membership.last_read_message_id
     end
 
-    def update_membership_state(message:, active_membership:)
-      active_membership.update!(last_read_message_id: message.id, last_viewed_at: Time.zone.now)
+    def update_membership_state(message:, membership:)
+      membership.update!(last_read_message_id: message.id, last_viewed_at: Time.zone.now)
     end
 
-    def mark_associated_mentions_as_read(active_membership:, message:)
+    def mark_associated_mentions_as_read(membership:, message:)
       ::Chat::Action::MarkMentionsRead.call(
-        active_membership.user,
-        channel_ids: [active_membership.chat_channel.id],
+        membership.user,
+        channel_ids: [membership.chat_channel.id],
         message_id: message.id,
       )
     end

@@ -36,6 +36,60 @@ describe ThemeSettingsMigrationsRunner do
       )
     end
 
+    it "passes values of `objects` typed settings to migrations and the values are parsed (not json string)" do
+      settings_field.update!(value: <<~YAML)
+        objects_setting:
+          type: objects
+          default:
+            - text: "hello, default link"
+              url: "https://google.com"
+            - text: "hi, another default link"
+              url: "https://discourse.org"
+          schema:
+            name: link
+            properties:
+              text:
+                type: string
+              url:
+                type: string
+      YAML
+      theme.update_setting(
+        :objects_setting,
+        [{ text: "custom link 1", url: "https://meta.discourse.org" }],
+      )
+      theme.save!
+
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings) {
+          settings.get("objects_setting").push(
+            {
+              text: "another custom link",
+              url: "https://try.discourse.org"
+            }
+          )
+          return settings;
+        }
+      JS
+
+      results = described_class.new(theme).run
+
+      expect(results.first[:settings_before]).to eq(
+        {
+          "objects_setting" => [
+            { "url" => "https://meta.discourse.org", "text" => "custom link 1" },
+          ],
+        },
+      )
+      expect(results.first[:settings_after]).to eq(
+        {
+          "objects_setting" => [
+            { "url" => "https://meta.discourse.org", "text" => "custom link 1" },
+            { "url" => "https://try.discourse.org", "text" => "another custom link" },
+          ],
+        },
+      )
+    end
+
     it "passes the output of the previous migration as input to the next one" do
       theme.update_setting(:integer_setting, 1)
 
