@@ -3336,6 +3336,9 @@ RSpec.describe TopicsController do
       describe "custom filters" do
         fab!(:post2) { Fabricate(:post, user: post_author2, topic: topic, percent_rank: 0.2) }
         fab!(:post3) { Fabricate(:post, user: post_author3, topic: topic, percent_rank: 0.5) }
+
+        after { TopicView.custom_filters.clear }
+
         it "should return the right posts" do
           TopicView.add_custom_filter("percent") do |posts, topic_view|
             posts.where(percent_rank: 0.5)
@@ -3348,8 +3351,6 @@ RSpec.describe TopicsController do
           body = response.parsed_body
 
           expect(body["post_stream"]["posts"].map { |p| p["id"] }).to eq([post3.id])
-        ensure
-          TopicView.instance_variable_set(:@custom_filters, {})
         end
       end
     end

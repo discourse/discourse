@@ -2635,11 +2635,18 @@ RSpec.describe Search do
     end
     let!(:post1) { Fabricate(:post, raw: "this is the second post about advanced filter") }
 
+    after do
+      Search.advanced_filters.clear
+      Search.advanced_orders.clear
+    end
+
     it "allows to define custom filter" do
       expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+
       Search.advanced_filter(/^min_chars:(\d+)$/) do |posts, match|
         posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
       end
+
       expect(Search.new("advanced min_chars:50").execute.posts).to eq([post0])
     end
 

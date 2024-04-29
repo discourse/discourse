@@ -87,11 +87,11 @@ class TopicsFilter
   end
 
   def self.add_filter_by_status(status, &blk)
-    (@custom_status_filters ||= {})[status] = blk
+    custom_status_filters[status] = blk
   end
 
   def self.custom_status_filters
-    @custom_status_filters || {}
+    @custom_status_filters ||= {}
   end
 
   def filter_status(status:, category_id: nil)
