@@ -86,6 +86,17 @@ RSpec.describe Admin::WatchedWordsController do
         expect(WatchedWord.find_by(id: watched_word.id)).to eq(nil)
         expect(UserHistory.where(action: UserHistory.actions[:watched_word_destroy]).count).to eq(1)
       end
+
+      it "should delete watched word group if it's the last word" do
+        watched_word_group = Fabricate(:watched_word_group)
+        watched_word.update!(watched_word_group: watched_word_group)
+
+        delete "/admin/customize/watched_words/#{watched_word.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(WatchedWordGroup.exists?(id: watched_word_group.id)).to be_falsey
+        expect(WatchedWord.exists?(id: watched_word.id)).to be_falsey
+      end
     end
   end
 

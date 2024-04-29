@@ -35,7 +35,14 @@ class Admin::WatchedWordsController < Admin::StaffController
   def destroy
     watched_word = WatchedWord.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless watched_word
-    watched_word.destroy!
+
+    watched_word_group = watched_word.watched_word_group
+    if watched_word_group&.watched_words&.count == 1
+      watched_word_group.destroy!
+    else
+      watched_word.destroy!
+    end
+
     StaffActionLogger.new(current_user).log_watched_words_deletion(watched_word)
     render json: success_json
   end
