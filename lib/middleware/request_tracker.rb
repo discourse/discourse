@@ -203,7 +203,7 @@ class Middleware::RequestTracker
       begin
         self.class.get_data(env, result, info, request)
       rescue StandardError => e
-        Rails.logger.warn("RequestTracker.get_data failed: #{e}")
+        Discourse.warn_exception(e, message: "RequestTracker.get_data failed")
         nil
       end
 
