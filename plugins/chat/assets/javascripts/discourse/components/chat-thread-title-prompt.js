@@ -7,7 +7,7 @@ import ThreadSettingsModal from "discourse/plugins/chat/discourse/components/cha
 import { THREAD_TITLE_PROMPT_THRESHOLD } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 
-export default class ShowThreadTitlePrompt extends Component {
+export default class ChatThreadTitlePrompt extends Component {
   @service chatApi;
   @service modal;
   @service toasts;
@@ -66,7 +66,7 @@ export default class ShowThreadTitlePrompt extends Component {
   get canShowToast() {
     if (
       this.site.desktopView ||
-      (this.args.thread.user_id !== this.currentUser.id &&
+      (this.args.thread.originalMessage?.user?.id !== this.currentUser.id &&
         !this.currentUser.admin)
     ) {
       return false;
