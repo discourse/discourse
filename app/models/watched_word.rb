@@ -48,6 +48,16 @@ class WatchedWord < ActiveRecord::Base
       )
   end
 
+  belongs_to :watched_word_group
+
+  scope :for,
+        ->(word:) do
+          where(
+            "(word ILIKE :word AND case_sensitive = 'f') OR (word LIKE :word AND case_sensitive = 't')",
+            word: word,
+          )
+        end
+
   def self.create_or_update_word(params)
     word = normalize_word(params[:word])
     word = self.for(word: word).first_or_initialize(word: word)
@@ -55,6 +65,7 @@ class WatchedWord < ActiveRecord::Base
     word.action_key = params[:action_key] if params[:action_key]
     word.action = params[:action] if params[:action]
     word.case_sensitive = params[:case_sensitive] if !params[:case_sensitive].nil?
+    word.watched_word_group_id = params[:watched_word_group_id]
     word.save
     word
   end
@@ -102,15 +113,17 @@ end
 #
 # Table name: watched_words
 #
-#  id             :integer          not null, primary key
-#  word           :string           not null
-#  action         :integer          not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  replacement    :string
-#  case_sensitive :boolean          default(FALSE), not null
+#  id                    :integer          not null, primary key
+#  word                  :string           not null
+#  action                :integer          not null
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  replacement           :string
+#  case_sensitive        :boolean          default(FALSE), not null
+#  watched_word_group_id :bigint
 #
 # Indexes
 #
-#  index_watched_words_on_action_and_word  (action,word) UNIQUE
+#  index_watched_words_on_action_and_word        (action,word) UNIQUE
+#  index_watched_words_on_watched_word_group_id  (watched_word_group_id)
 #

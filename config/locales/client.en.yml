@@ -6122,9 +6122,9 @@ en:
           silence: "Silence new accounts if their very first post contains any of these words. The post will be automatically hidden until staff approves it."
           link: "Replace words in posts with links."
         form:
-          label: "Has word or phrase"
-          placeholder: "Enter word or phrase (* is a wildcard)"
-          placeholder_regexp: "regular expression"
+          label: "Has words or phrases"
+          placeholder: "words or phrases (* is a wildcard)"
+          placeholder_regexp: "regular expressions"
           replace_label: "Replacement"
           replace_placeholder: "example"
           tag_label: "Tag"
@@ -6137,6 +6137,7 @@ en:
           upload_successful: "Upload successful. Words have been added."
           case_sensitivity_label: "Is case-sensitive"
           case_sensitivity_description: "Only words with matching character casing"
+          words_or_phrases: "words or phrases"
         test:
           button_label: "Test"
           modal_title: "%{action}: Test Watched Words"
