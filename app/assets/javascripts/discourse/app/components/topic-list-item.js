@@ -105,7 +105,7 @@ export default Component.extend({
         const rawTopicLink = this.element.querySelector(".raw-topic-link");
 
         rawTopicLink &&
-          topicTitleDecorators?.forEach((cb) =>
+          topicTitleDecorators.forEach((cb) =>
             cb(this.topic, rawTopicLink, "topic-list-item-title")
           );
       }
