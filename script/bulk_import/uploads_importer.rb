@@ -113,7 +113,7 @@ module BulkImport
 
       producer_thread =
         Thread.new do
-          query("SELECT * FROM uploads", @source_db).tap do |result_set|
+          query("SELECT * FROM uploads ORDER BY id", @source_db).tap do |result_set|
             result_set.each { |row| queue << row unless output_existing_ids.include?(row["id"]) }
             result_set.close
           end
