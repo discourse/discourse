@@ -319,9 +319,9 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
 
     if (!currentUser.admin && currentUser.moderator) {
       navConfig.forEach((section) => {
-        section.links = section.links.filter((link) => link.moderator);
+        section.links = section.links.filterBy("moderator");
       });
-      navConfig = navConfig.filter((section) => section.links.length > 0);
+      navConfig = navConfig.filterBy("links.length");
     }
 
     return navConfig.map((adminNavSectionData) => {
