@@ -201,6 +201,8 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         "Dashboard",
+        "What's New",
+        "All",
         "Users",
         "Watched Words",
         "Screened Emails",
