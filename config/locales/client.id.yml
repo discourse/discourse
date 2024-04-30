@@ -1899,6 +1899,8 @@ id:
         help: "Topik ini telah ditutup; tidak lagi menerima jawaban baru"
       locked_and_archived:
         help: "Topik ini telah ditutup dan diarsip; tidak lagi menerima jawaban baru dan tidak dapat dirubah lagi"
+      unlisted:
+        help: "Topik ini tidak terdaftar; sehingga tidak akan ditampilkan dalam daftar topik, dan hanya dapat diakses melalui tautan langsung"
     posts: "Pos"
     pending_posts:
       label: "Tertunda"
