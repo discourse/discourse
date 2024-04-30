@@ -1,4 +1,4 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
@@ -8,8 +8,8 @@ import { bind } from "discourse-common/utils/decorators";
 export default class WatchRead extends Component {
   @service currentUser;
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
+  constructor() {
+    super(...arguments);
 
     if (!this.currentUser || this.currentUser.read_faq) {
       return;
@@ -20,8 +20,8 @@ export default class WatchRead extends Component {
     window.addEventListener("scroll", this._checkIfRead, false);
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
+  willDestroy() {
+    super.willDestroy(...arguments);
 
     window.removeEventListener("resize", this._checkIfRead);
     window.removeEventListener("scroll", this._checkIfRead);
