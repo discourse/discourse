@@ -294,33 +294,38 @@ export default class TopicAdminMenu extends Component {
                     {{/if}}
                   </ul>
 
-                  <ul class="topic-admin-menu-undefined">
-                    {{#if this.currentUser.staff}}
-                      <li class="topic-admin-moderation-history">
-                        <DButton
-                          class="btn-transparent"
-                          @label="review.moderation_history"
-                          @href={{this.topicModerationHistoryUrl}}
-                          @icon="list"
-                        />
-                      </li>
-                    {{/if}}
+                  {{#if (or this.currentUser.staff this.extraButtons.length)}}
+                    <ul class="topic-admin-menu-undefined">
+                      {{#if this.currentUser.staff}}
+                        <li class="topic-admin-moderation-history">
+                          <DButton
+                            class="btn-transparent"
+                            @label="review.moderation_history"
+                            @href={{this.topicModerationHistoryUrl}}
+                            @icon="list"
+                          />
+                        </li>
+                      {{/if}}
 
-                    {{#each this.extraButtons as |button|}}
-                      <li>
-                        <DButton
-                          @label={{button.label}}
-                          @translatedLabel={{button.translatedLabel}}
-                          @icon={{button.icon}}
-                          class={{concatClass
-                            "btn-transparent"
-                            button.className
-                          }}
-                          @action={{fn this.onExtraButtonAction button.action}}
-                        />
-                      </li>
-                    {{/each}}
-                  </ul>
+                      {{#each this.extraButtons as |button|}}
+                        <li>
+                          <DButton
+                            @label={{button.label}}
+                            @translatedLabel={{button.translatedLabel}}
+                            @icon={{button.icon}}
+                            class={{concatClass
+                              "btn-transparent"
+                              button.className
+                            }}
+                            @action={{fn
+                              this.onExtraButtonAction
+                              button.action
+                            }}
+                          />
+                        </li>
+                      {{/each}}
+                    </ul>
+                  {{/if}}
                 </ul>
               </div>
             </:content>
