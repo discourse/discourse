@@ -1284,6 +1284,8 @@ pl_PL:
         user_api: "API użytkownika"
       yaxis: "Dzień"
       description: "Żądania API dotyczące zwykłych kluczy API i kluczy API użytkownika."
+    consolidated_page_views_browser_detection:
+      yaxis: "Dzień"
     dau_by_mau:
       title: "DAU / MAU"
       xaxis: "Dzień"
@@ -1443,6 +1445,10 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Odsłony anonimowych użytkowników mobilnych"
       description: "Liczba nowych odsłon strony użytkowników urządzenia mobilnego, którzy nie są zalogowani."
+    page_view_anon_browser_reqs:
+      xaxis: "Dzień"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dzień"
     http_background_reqs:
       title: "Tło"
       xaxis: "Dzień"

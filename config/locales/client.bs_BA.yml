@@ -879,9 +879,7 @@ bs_BA:
         ignore_duration_time_frame_required: "Odaberite vremenski okvir"
         ignore_no_users: "Nemate ignorisanih korisnika."
         ignore_option: "Ignorisano"
-        ignore_option_title: "Nećete primati obavijesti koje se odnose na ovog korisnika i sve njihove teme i odgovori će biti skriveni."
         mute_option: "Utišan"
-        mute_option_title: "Nećete primati nikakve obavijesti koje se odnose na ovog korisnika."
         normal_option: "Normalno"
         normal_option_title: "Bićete obaviješteni ako vam ovaj korisnik odgovori , citira vas ili vas spomene."
       notification_schedule:
@@ -2624,8 +2622,6 @@ bs_BA:
       pinned:
         title: "Zakačena"
         help: "Ova tema je zakačena; prikazivati će se na vrhu svoje kategorije"
-      unlisted:
-        help: "Ovu temu sajt ne lista među najnovijim temama. Neće biti prisutna ni među listama tema unutar kategorija. Jedini način da se dođe do ove teme je direktan link"
       personal_message:
         title: "Ova tema je lična poruka"
         help: "Ova tema je lična poruka"
@@ -3915,7 +3911,6 @@ bs_BA:
           silence: "Stišaj"
           link: "Link"
         form:
-          placeholder_regexp: "regularni izraz"
           link_label: "Link"
           link_placeholder: "https://example.com"
           add: "Dodaj"

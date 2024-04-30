@@ -558,6 +558,8 @@ et:
         api: "API"
         user_api: "Kasutaja API"
       yaxis: "Päev"
+    consolidated_page_views_browser_detection:
+      yaxis: "Päev"
     dau_by_mau:
       xaxis: "Päev"
     daily_engaged_users:
@@ -672,6 +674,10 @@ et:
     page_view_logged_in_mobile_reqs:
       xaxis: "Päev"
     page_view_anon_mobile_reqs:
+      xaxis: "Päev"
+    page_view_anon_browser_reqs:
+      xaxis: "Päev"
+    page_view_logged_in_browser_reqs:
       xaxis: "Päev"
     http_background_reqs:
       title: "Taustal"

@@ -178,6 +178,8 @@ he:
             once_per_user:
               label: פעם אחת לכל משתמש
               description: יוזנק רק פעם אחת לכל משתמש
+            new_users_only:
+              label: משתמשים חדשים בלבד
         category_created_edited:
           fields:
             restricted_category:
@@ -249,6 +251,8 @@ he:
               label: תוכן הפוסט
         topic:
           fields:
+            creator:
+              updated_user_context: המשתמש המעודכן
             body:
               label: גוף הנושא
             title:

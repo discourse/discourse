@@ -2276,8 +2276,6 @@ et:
       pinned:
         title: "Esiletõstetud"
         help: "OIed selle teema on esile tõstnud; kuvatakse Sulle oma foorumi esimeste seas"
-      unlisted:
-        help: "See teema on salastatud; teda ei kuvata teemade loendites ning on kättesaadav vaid otseviite kaudu"
     posts: "Postitused"
     pending_posts:
       label: "Ootel"
@@ -3249,7 +3247,6 @@ et:
           flag: "Tähista"
           silence: "Vaigista"
         form:
-          placeholder_regexp: "regulaaravaldis"
           link_placeholder: "https://example.com"
           add: "isa"
           success: "Korras"

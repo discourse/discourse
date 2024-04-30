@@ -918,9 +918,7 @@ nb_NO:
         ignore_duration_time_frame_required: "Vennligst velg et tidsrom"
         ignore_no_users: "Du har ingen ignorerte brukere."
         ignore_option: "Ignorert"
-        ignore_option_title: "Du vil ikke motta varsler om denne brukeren og alle deres emner og svar vil bli skjult."
         mute_option: "Ignorert"
-        mute_option_title: "Du vil ikke motta noen varsler relatert til denne brukeren."
         normal_option: "Normal"
         normal_option_title: "Du vil bli varslet hvis denne brukeren svarer på deg, siterer deg eller nevner deg."
       notification_schedule:
@@ -2927,8 +2925,6 @@ nb_NO:
       pinned:
         title: "Fastsatt"
         help: "Dette emnet er festet for deg; det vil vises øverst i sin kategori"
-      unlisted:
-        help: "Dette emnet er ikke synlig; det vil ikke vises i lister over emner, og er kun tilgjengelig via en direkte lenke"
       personal_message:
         title: "Dette emnet er en personlig melding"
         help: "Dette emnet er en personlig melding"
@@ -4214,7 +4210,6 @@ nb_NO:
           flag: "Flagg"
           silence: "Demp"
         form:
-          placeholder_regexp: "regulært uttrykk"
           add: "Legg til"
           success: "Suksess"
           exists: "Eksisterer fra før"

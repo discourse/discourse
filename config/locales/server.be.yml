@@ -636,6 +636,8 @@ be:
       xaxis:
         api: "API"
       yaxis: "дзень"
+    consolidated_page_views_browser_detection:
+      yaxis: "дзень"
     dau_by_mau:
       xaxis: "дзень"
     daily_engaged_users:
@@ -785,6 +787,10 @@ be:
       xaxis: "дзень"
       yaxis: "Мабільны Анон прагляд старонак"
       description: "Колькасць новых праглядаў старонак з наведвальнікаў на мабільным прыладзе, якія не ўвайшлі ў сістэму."
+    page_view_anon_browser_reqs:
+      xaxis: "дзень"
+    page_view_logged_in_browser_reqs:
+      xaxis: "дзень"
     http_background_reqs:
       title: "фон"
       xaxis: "дзень"

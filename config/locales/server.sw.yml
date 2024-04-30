@@ -572,6 +572,8 @@ sw:
         api: "API"
         user_api: "API ya Mtumiaji"
       yaxis: "Siku"
+    consolidated_page_views_browser_detection:
+      yaxis: "Siku"
     dau_by_mau:
       xaxis: "Siku"
     daily_engaged_users:
@@ -690,6 +692,10 @@ sw:
       xaxis: "Siku"
       yaxis: "Karatasi imeonwa Kupitia Kifaa cha kiganjani"
     page_view_anon_mobile_reqs:
+      xaxis: "Siku"
+    page_view_anon_browser_reqs:
+      xaxis: "Siku"
+    page_view_logged_in_browser_reqs:
       xaxis: "Siku"
     http_background_reqs:
       title: "Mandharinyuma"

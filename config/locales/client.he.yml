@@ -1195,10 +1195,10 @@ he:
         ignore_duration_time_frame_required: "נא לבחור מסגרת זמנים"
         ignore_no_users: "אין לך משתמשים ברשימת ההתעלמות."
         ignore_option: "זכה להתעלמות"
-        ignore_option_title: "לא יגיעו אליך התראות שקשורות למשתמש הזה וכל הנושאים שנכתבו על ידיו לרבות התגובות יוסתרו."
+        ignore_option_title: "לא תגענה אליך התראות שקשורות למשתמש הזה וכל התוכן שלו יוסתר."
         add_ignored_user: "הוספה…"
         mute_option: "מושתק"
-        mute_option_title: "לא תגענה אליך התראות בנוגע למשתמש זה."
+        mute_option_title: "לא תגענה אליך התראות, הודעות פרטיות או הודעות צ׳אט ישירות מהמשתמש הזה."
         normal_option: "רגיל"
         normal_option_title: "תגיע אליך התראה אם המשתמש הזה יגיב לך, יצטט אותך או יאזכר אותך."
       notification_schedule:
@@ -1281,6 +1281,7 @@ he:
         description: "דילוג על עצות ועיטורים של קבלת משתמשים חדשים"
       reset_seen_user_tips: "הצגת עצות למשתמש שוב"
       theme_default_on_all_devices: "הגדרת ערכת עיצוב זו כבררת המחדל לכל המכשירים שלי"
+      color_scheme_default_on_all_devices: "הגדרת ערכת צבעים כברירת מחדל לכל המכשירים שלי"
       color_scheme: "ערכת צבעים"
       color_schemes:
         default_description: "ברירת המחדל לערכת העיצוב"
@@ -1296,6 +1297,7 @@ he:
       allow_private_messages: "אפשר למשתמשים אחרים לשלוח לי הודעות פרטיות"
       external_links_in_new_tab: "פתיחת כל הקישורים החיצוניים בלשונית חדשה"
       enable_quoting: "הפעלת תגובת ציטוט לטקסט מסומן"
+      enable_defer: "הפעלת סימון נושאים כלא נקראו"
       experimental_sidebar:
         enable: "הפעלת סרגל צד"
         options: "אפשרויות"
@@ -3009,6 +3011,11 @@ he:
           two: "בחרת ב־<b>%{count}</b> נושאים."
           many: "בחרת ב־<b>%{count}</b> נושאים."
           other: "בחרת ב־<b>%{count}</b> נושאים."
+        selected_sole_category:
+          one: "בחרת נושא <b>%{count}</b> מהקטגוריה:"
+          two: "בחרת <b>%{count}</b> נושאים מהקטגוריה:"
+          many: "בחרת <b>%{count}</b> נושאים מהקטגוריה:"
+          other: "בחרת <b>%{count}</b> נושאים מהקטגוריה:"
         selected_count:
           one: "%{count} נבחרו"
           two: "%{count} נבחרו"
@@ -3065,6 +3072,7 @@ he:
     topic_bulk_actions:
       close_topics:
         name: "סגירת נושאים"
+        note: "הערה"
         optional: (רשות)
       archive_topics:
         name: "העברת נושאים לארכיון"
@@ -4109,8 +4117,6 @@ he:
       pinned:
         title: "נעוץ"
         help: "נושא זה ננעץ עבורכם, הוא יופיע בראש הקטגוריה"
-      unlisted:
-        help: "נושא זה מוסתר; הוא לא יוצג ברשימות הנושאים, וזמין רק באמצעות קישור ישיר."
       personal_message:
         title: "הנושא הזה הוא הודעה אישית"
         help: "הנושא הזה הוא הודעה אישית"
@@ -4332,6 +4338,7 @@ he:
         filter_sidebar: "%{shortcut} סרגל צד סינון"
         help: "%{shortcut} פתיחת קיצורי מקשים"
         toggle_bulk_select: "%{shortcut} החלפת מצב בחירה במרוכז"
+        dismiss: "%{shortcut} התעלמות מהנושאים הנבחרים"
         x: "%{shortcut} החלפת מצב בחירה (במצב בחירה במרוכז)"
         log_out: "%{shortcut} התנתקות"
       composing:
@@ -6124,9 +6131,9 @@ he:
           silence: "להשתיק חשבונות חדשים אם הפוסט הראשון שלהם מכיל אחת מהמילים האלו. הפוסט יוסתר אוטומטית עד לאישור הסגל."
           link: "החלפת מילים בפוסטים בקישורים."
         form:
-          label: "יש מילה או ביטוי"
-          placeholder: "נא למלא מילה או ביטוי (* הוא תו כללי)"
-          placeholder_regexp: "ביטוי רגולרי"
+          label: "יש בו מילים או ביטויים"
+          placeholder: "מילים או ביטויים (* הוא תו כוללני)"
+          placeholder_regexp: "ביטויים רגולריים"
           replace_label: "חלופה"
           replace_placeholder: "דוגמה"
           tag_label: "תגית"
@@ -6139,6 +6146,7 @@ he:
           upload_successful: "העלאה הצליחה. מילים נוספו."
           case_sensitivity_label: "הוא תלוי רישיות"
           case_sensitivity_description: "רק מילים עם התאמת אותיות רישיות/קטנות"
+          words_or_phrases: "מילים או ביטויים"
         test:
           button_label: "נסיון"
           modal_title: "%{action}: בדיקת מילים במעקב"

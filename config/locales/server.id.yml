@@ -990,6 +990,8 @@ id:
         user_api: "API Pengguna"
       yaxis: "Hari"
       description: "Permintaan API untuk kunci API reguler dan kunci API pengguna."
+    consolidated_page_views_browser_detection:
+      yaxis: "Hari"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Hari"
@@ -1113,6 +1115,10 @@ id:
       xaxis: "Hari"
       yaxis: "Tampilan Halaman Anon Seluler"
       description: "Jumlah tampilan halaman baru dari pengunjung di perangkat seluler yang tidak masuk."
+    page_view_anon_browser_reqs:
+      xaxis: "Hari"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Hari"
     http_background_reqs:
       title: "Latar Belakang"
       xaxis: "Hari"

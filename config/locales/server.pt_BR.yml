@@ -1135,6 +1135,8 @@ pt_BR:
         user_api: "API de usuário(a)"
       yaxis: "Dia"
       description: "Pedidos de API para chaves de API regulares e chaves de API do usuário."
+    consolidated_page_views_browser_detection:
+      yaxis: "Dia"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dia"
@@ -1294,6 +1296,10 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Visualizações de página anônimas em dispositivos móveis"
       description: "Quantidade de novas visualizações de páginas de visitantes em um dispositivo móvel, que não entraram com a conta."
+    page_view_anon_browser_reqs:
+      xaxis: "Dia"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dia"
     http_background_reqs:
       title: "Plano de fundo"
       xaxis: "Dia"
