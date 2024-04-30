@@ -229,7 +229,8 @@ GEM
       ruby2_keywords (>= 0.0.5)
     msgpack (1.7.2)
     multi_json (1.15.0)
-    multi_xml (0.6.0)
+    multi_xml (0.7.0)
+      bigdecimal (~> 3.1)
     mustache (1.1.1)
     net-http (0.4.1)
       uri
