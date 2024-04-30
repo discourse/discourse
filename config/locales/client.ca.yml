@@ -854,9 +854,7 @@ ca:
         ignore_duration_time_frame_required: "Seleccioneu un període de temps"
         ignore_no_users: "No teniu usuaris ignorats."
         ignore_option: "Ignorat"
-        ignore_option_title: "No rebreu notificacions relacionades amb aquest usuari i tots els seus temes i respostes seran ocultats."
         mute_option: "Silenciat"
-        mute_option_title: "No rebreu cap notificació relacionada amb aquest usuari."
         normal_option: "Normal"
         normal_option_title: "Sereu notificat si l'usuari us respon, us cita o us menciona."
       notification_schedule:
@@ -2543,8 +2541,6 @@ ca:
       pinned:
         title: "Afixat"
         help: "Aquest tema està afixat per a vós; es mostrarà al capdamunt de la seva categoria"
-      unlisted:
-        help: "Aquest tema no és visible; no es mostrarà en la llista de temes i només és accessible amb un enllaç directe."
       personal_message:
         title: "Aquest tema és un missatge personal"
         help: "Aquest tema és un missatge personal"
@@ -3770,7 +3766,6 @@ ca:
           replace: "Reemplaça"
           silence: "Silencia"
         form:
-          placeholder_regexp: "expressió regular"
           link_placeholder: "https://example.com"
           add: "Afegeix"
           success: "Èxit"

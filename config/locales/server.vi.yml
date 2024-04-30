@@ -769,6 +769,8 @@ vi:
         api: "API"
         user_api: "API người dùng"
       yaxis: "Ngày"
+    consolidated_page_views_browser_detection:
+      yaxis: "Ngày"
     dau_by_mau:
       xaxis: "Ngày"
     daily_engaged_users:
@@ -895,6 +897,10 @@ vi:
       xaxis: "Ngày"
       description: "Số lượt xem trang mới từ thành viên trên thiết bị di động và đăng nhập vào tài khoản."
     page_view_anon_mobile_reqs:
+      xaxis: "Ngày"
+    page_view_anon_browser_reqs:
+      xaxis: "Ngày"
+    page_view_logged_in_browser_reqs:
       xaxis: "Ngày"
     http_background_reqs:
       title: "Hình nền"

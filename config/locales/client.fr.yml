@@ -1059,10 +1059,8 @@ fr:
         ignore_duration_time_frame_required: "Veuillez sélectionner un intervalle de temps"
         ignore_no_users: "Vous n'ignorez aucun utilisateur."
         ignore_option: "Ignoré"
-        ignore_option_title: "Vous ne recevrez pas de notifications en lien avec cet utilisateur et ses messages et réponses seront masqués."
         add_ignored_user: "Ajouter…"
         mute_option: "En sourdine"
-        mute_option_title: "Vous ne recevrez pas de notifications en lien avec cet utilisateur."
         normal_option: "Normal"
         normal_option_title: "Vous recevrez une notification si cet utilisateur vous répond, vous cite ou vous mentionne."
       notification_schedule:
@@ -3686,8 +3684,6 @@ fr:
       pinned:
         title: "Épinglé"
         help: "Ce sujet est épinglé pour vous ; il s'affichera en haut de sa catégorie"
-      unlisted:
-        help: "Ce sujet n'apparaît plus dans la liste des sujets et sera seulement accessible via un lien direct"
       personal_message:
         title: "Ce sujet est un message direct"
         help: "Ce sujet est un message direct"
@@ -5559,9 +5555,6 @@ fr:
           silence: "Mettre les nouveaux comptes en sourdine si leur tout premier message contient l'un de ces mots. Le message sera automatiquement masqué jusqu'à ce qu'un responsable l'approuve."
           link: "Remplacer ces mots par des liens."
         form:
-          label: "Contient le mot ou l'expression"
-          placeholder: "Saisissez un mot ou une expression (* sert de caractère générique)"
-          placeholder_regexp: "expression régulière"
           replace_label: "Mot ou expression de substitution"
           replace_placeholder: "exemple"
           tag_label: "Étiquette"

@@ -428,6 +428,8 @@ bs_BA:
         api: "API"
         user_api: "Korisnički API"
       yaxis: "Day"
+    consolidated_page_views_browser_detection:
+      yaxis: "Day"
     dau_by_mau:
       xaxis: "Day"
     daily_engaged_users:
@@ -540,6 +542,10 @@ bs_BA:
     page_view_logged_in_mobile_reqs:
       xaxis: "Day"
     page_view_anon_mobile_reqs:
+      xaxis: "Day"
+    page_view_anon_browser_reqs:
+      xaxis: "Day"
+    page_view_logged_in_browser_reqs:
       xaxis: "Day"
     http_background_reqs:
       xaxis: "Day"

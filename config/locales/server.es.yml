@@ -1141,6 +1141,8 @@ es:
         user_api: "API de usuario"
       yaxis: "Día"
       description: "Solicitudes de API para claves de API normales y claves de API de usuario."
+    consolidated_page_views_browser_detection:
+      yaxis: "Día"
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -1300,6 +1302,10 @@ es:
       xaxis: "Día"
       yaxis: "Vistas de página anónimas desde una conexión móvil"
       description: "Número de vistas de página nuevas de visitantes en dispositivos móviles y con una sesión iniciada."
+    page_view_anon_browser_reqs:
+      xaxis: "Día"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Día"
     http_background_reqs:
       title: "Background"
       xaxis: "Día"

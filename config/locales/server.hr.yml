@@ -884,6 +884,8 @@ hr:
         api: "API"
         user_api: "Korisnički API"
       yaxis: "Dan"
+    consolidated_page_views_browser_detection:
+      yaxis: "Dan"
     dau_by_mau:
       xaxis: "Dan"
     daily_engaged_users:
@@ -1021,6 +1023,10 @@ hr:
       xaxis: "Dan"
       yaxis: "Mobilni Anon prikazi stranica"
       description: "Broj novih prikaza stranica od posjetitelja na mobilnom uređaju koji nisu prijavljeni."
+    page_view_anon_browser_reqs:
+      xaxis: "Dan"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dan"
     http_background_reqs:
       title: "Pozadina"
       xaxis: "Dan"

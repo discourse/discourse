@@ -1135,6 +1135,8 @@ fr:
         user_api: "API utilisateur"
       yaxis: "Jour"
       description: "Requêtes d'API pour les clés API ordinaires et les clés API de l'utilisateur."
+    consolidated_page_views_browser_detection:
+      yaxis: "Jour"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Jour"
@@ -1294,6 +1296,10 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs non connectés sur mobile"
       description: "Nombre de nouvelles vues de pages par les utilisateurs anonymes depuis des appareils mobiles."
+    page_view_anon_browser_reqs:
+      xaxis: "Jour"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Jour"
     http_background_reqs:
       title: "Arrière-plan"
       xaxis: "Jour"

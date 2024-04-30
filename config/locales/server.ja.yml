@@ -1086,6 +1086,8 @@ ja:
         user_api: "ユーザー API"
       yaxis: "日"
       description: "通常の API キーとユーザー API キーの API リクエスト。"
+    consolidated_page_views_browser_detection:
+      yaxis: "日"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "日"
@@ -1245,6 +1247,10 @@ ja:
       xaxis: "日"
       yaxis: "モバイル匿名ページビュー"
       description: "ログインしていないモバイルデバイスの訪問者による新しいページビュー数。"
+    page_view_anon_browser_reqs:
+      xaxis: "日"
+    page_view_logged_in_browser_reqs:
+      xaxis: "日"
     http_background_reqs:
       title: "背景"
       xaxis: "日"

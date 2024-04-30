@@ -754,6 +754,8 @@ pt:
         api: "API"
         user_api: "API de Utlizador"
       yaxis: "Dia"
+    consolidated_page_views_browser_detection:
+      yaxis: "Dia"
     dau_by_mau:
       xaxis: "Dia"
     daily_engaged_users:
@@ -875,6 +877,10 @@ pt:
       title: "Vistas de Página Anónimas"
       xaxis: "Dia"
       yaxis: "Vistas de Página Anónimas Móveis"
+    page_view_anon_browser_reqs:
+      xaxis: "Dia"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dia"
     http_background_reqs:
       title: "Fundo"
       xaxis: "Dia"

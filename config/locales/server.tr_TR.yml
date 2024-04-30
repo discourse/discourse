@@ -1175,6 +1175,8 @@ tr_TR:
         user_api: "Kullanıcı API'sı"
       yaxis: "Gün"
       description: "Normal API anahtarları ve kullanıcı API anahtarları için API istekleri."
+    consolidated_page_views_browser_detection:
+      yaxis: "Gün"
     dau_by_mau:
       title: "Günlük Aktif Kullanıcı/Aylık Aktif Kullanıcı"
       xaxis: "Gün"
@@ -1334,6 +1336,10 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Mobil Anonim Sayfa Görüntülemeleri"
       description: "Mobil cihazda giriş yapmamış ziyaretçilerden gelen yeni sayfa görüntüleme sayısı."
+    page_view_anon_browser_reqs:
+      xaxis: "Gün"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Gün"
     http_background_reqs:
       title: "Arka plan"
       xaxis: "Gün"

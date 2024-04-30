@@ -1149,6 +1149,8 @@ sv:
         user_api: "Användar-API"
       yaxis: "Dag"
       description: "API-förfrågningar för vanliga API-nycklar och användar-API-nycklar."
+    consolidated_page_views_browser_detection:
+      yaxis: "Dag"
     dau_by_mau:
       title: "DAA/MAA"
       xaxis: "Dag"
@@ -1308,6 +1310,10 @@ sv:
       xaxis: "Dag"
       yaxis: "Mobila anon. sidvisningar"
       description: "Antal nya sidvisningar från besökare på en mobil enhet som inte är inloggade."
+    page_view_anon_browser_reqs:
+      xaxis: "Dag"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Bakgrund"
       xaxis: "Dag"
