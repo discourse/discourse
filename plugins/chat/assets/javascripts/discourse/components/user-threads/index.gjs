@@ -98,25 +98,28 @@ export default class UserThreads extends Component {
             <ChannelIcon @thread={{thread}} />
           {{/if}}
 
-          <LinkTo
-            class="c-user-thread__link"
-            @route="chat.channel.thread"
-            @models={{thread.routeModels}}
-          >
+          {{#if this.site.mobileView}}
+            <LinkTo
+              class="c-user-thread__link"
+              @route="chat.channel.thread"
+              @models={{thread.routeModels}}
+            >
+              <ChannelTitle @channel={{thread.channel}} />
+              <ThreadTitle @thread={{thread}} />
+
+              <ThreadPreview @preview={{thread.preview}} />
+            </LinkTo>
+          {{else}}
             <ChannelTitle @channel={{thread.channel}} />
             <ThreadTitle @thread={{thread}} />
 
-            {{#if this.site.mobileView}}
-              <ThreadPreview @preview={{thread.preview}} />
-            {{else}}
-              <ThreadIndicator
-                @message={{thread.originalMessage}}
-                @interactiveUser={{false}}
-                @interactiveThread={{false}}
-                tabindex="-1"
-              />
-            {{/if}}
-          </LinkTo>
+            <ThreadIndicator
+              @message={{thread.originalMessage}}
+              @interactiveUser={{false}}
+              @interactiveThread={{false}}
+              tabindex="-1"
+            />
+          {{/if}}
         </div>
       </list.Item>
       <list.EmptyState>
