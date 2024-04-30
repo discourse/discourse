@@ -63,6 +63,7 @@ export default class LatestTopicListItem extends Component {
 
   <template>
     <div
+      {{! template-lint-disable no-invalid-interactive }}
       {{on "click" this.click}}
       data-topic-id={{@topic.id}}
       class={{concatClass

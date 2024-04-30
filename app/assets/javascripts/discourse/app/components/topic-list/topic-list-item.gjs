@@ -283,8 +283,8 @@ export default class TopicListItem extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
     <tr
+      {{! template-lint-disable no-invalid-interactive }}
       {{didInsert this.applyTitleDecorators}}
       {{didInsert this.highlightIfNeeded}}
       {{on "keydown" this.keyDown}}
