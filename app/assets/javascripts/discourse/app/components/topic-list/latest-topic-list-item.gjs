@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
 import { concat, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
+import $ from "jquery";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostsCountColumn from "discourse/components/topic-list/posts-count-column";
-import {
-  navigateToTopic,
-  showEntrance,
-} from "discourse/components/topic-list-item";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
@@ -22,16 +21,38 @@ import topicLink from "discourse/helpers/topic-link";
 export default class LatestTopicListItem extends Component {
   @service appEvents;
 
-  showEntrance = showEntrance;
-  navigateToTopic = navigateToTopic;
+  showEntrance(e) {
+    let target = $(e.target);
 
+    if (
+      target.hasClass("posts-map") ||
+      target.parents(".posts-map").length > 0
+    ) {
+      if (target.prop("tagName") !== "A") {
+        target = target.find("a");
+        if (target.length === 0) {
+          target = target.end();
+        }
+      }
+
+      this.appEvents.trigger("topic-entrance:show", {
+        topic: this.args.topic,
+        position: target.offset(),
+      });
+      return false;
+    }
+  }
+
+  @action
   click(e) {
     // for events undefined has a different meaning than false
     if (this.showEntrance(e) === false) {
-      return false;
+      e.preventDefault();
+      return;
     }
 
-    return this.unhandledRowClick(e, this.args.topic);
+    // TODO:
+    // return this.unhandledRowClick(e, this.args.topic);
   }
 
   get tagClassNames() {
@@ -42,6 +63,7 @@ export default class LatestTopicListItem extends Component {
 
   <template>
     <div
+      {{on "click" this.click}}
       data-topic-id={{@topic.id}}
       class={{concatClass
         "latest-topic-list-item"
