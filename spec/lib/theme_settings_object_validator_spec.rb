@@ -424,7 +424,7 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(errors["/string_property"].full_messages).to contain_exactly("must be a string")
       end
 
-      it "should not return an empty hash when string property satsify url validation" do
+      it "should not return an empty hash when string property satisfy url validation" do
         schema = {
           name: "section",
           properties: {

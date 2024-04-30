@@ -336,6 +336,25 @@ describe ThemeSettingsMigrationsRunner do
       expect(results[0][:settings_after]).to eq({})
     end
 
+    it "attaches the isValidUrl() function to the context of the migrations" do
+      theme.update_setting(:string_setting, "https://google.com")
+      theme.save!
+
+      migration_field.update!(value: <<~JS)
+        export default function migrate(settings, helpers) {
+          if (!helpers.isValidUrl("some_invalid_string")) {
+            settings.set("string_setting", "is_not_valid_string");
+          }
+
+          return settings;
+        }
+      JS
+
+      results = described_class.new(theme).run
+
+      expect(results[0][:settings_after]).to eq({ "string_setting" => "is_not_valid_string" })
+    end
+
     it "attaches the getCategoryIdByName() function to the context of the migrations" do
       category = Fabricate(:category, name: "some-category")
 
