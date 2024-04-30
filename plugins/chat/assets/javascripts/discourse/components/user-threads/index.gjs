@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
@@ -97,19 +98,25 @@ export default class UserThreads extends Component {
             <ChannelIcon @thread={{thread}} />
           {{/if}}
 
-          <ChannelTitle @channel={{thread.channel}} />
-          <ThreadTitle @thread={{thread}} />
+          <LinkTo
+            class="c-user-thread__link"
+            @route="chat.channel.thread"
+            @models={{thread.routeModels}}
+          >
+            <ChannelTitle @channel={{thread.channel}} />
+            <ThreadTitle @thread={{thread}} />
 
-          {{#if this.site.mobileView}}
-            <ThreadPreview @preview={{thread.preview}} />
-          {{else}}
-            <ThreadIndicator
-              @message={{thread.originalMessage}}
-              @interactiveUser={{false}}
-              @interactiveThread={{false}}
-              tabindex="-1"
-            />
-          {{/if}}
+            {{#if this.site.mobileView}}
+              <ThreadPreview @preview={{thread.preview}} />
+            {{else}}
+              <ThreadIndicator
+                @message={{thread.originalMessage}}
+                @interactiveUser={{false}}
+                @interactiveThread={{false}}
+                tabindex="-1"
+              />
+            {{/if}}
+          </LinkTo>
         </div>
       </list.Item>
       <list.EmptyState>
