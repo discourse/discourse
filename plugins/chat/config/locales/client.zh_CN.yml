@@ -459,7 +459,7 @@ zh_CN:
           export_has_started: "导出已开始。导出完成后，您将收到一条私信。"
       my_threads:
         title: 我的对话
-        aria_label: "切换到我的话题列表"
+        aria_label: "切换到我的对话列表"
       direct_messages:
         title: "私信"
         aria_label: "切换到私信"
