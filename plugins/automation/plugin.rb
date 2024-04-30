@@ -28,6 +28,14 @@ module ::DiscourseAutomation
 
   AUTO_RESPONDER_TRIGGERED_IDS = "auto_responder_triggered_ids"
   USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT = 1000
+
+  def self.set_active_automation(id)
+    @active_automation_id = id
+  end
+
+  def self.get_active_automation
+    @active_automation_id
+  end
 end
 
 require_relative "lib/discourse_automation/engine"
