@@ -5,6 +5,7 @@ require "securerandom"
 class HtmlToMarkdown
   def initialize(html, opts = {})
     @opts = opts
+    @within_html_block = false
 
     # we're only interested in <body>
     @doc = Nokogiri.HTML5(html).at("body")
@@ -25,8 +26,12 @@ class HtmlToMarkdown
     string.gsub(/\n/, " ")&.squeeze(" ")
   end
 
+  def allowed_tags
+    []
+  end
+
   def remove_not_allowed!(doc)
-    allowed = Set.new
+    allowed = Set.new(allowed_tags)
 
     HtmlToMarkdown.private_instance_methods.each do |m|
       if tag = m.to_s[/^visit_(.+)/, 1]
@@ -139,8 +144,16 @@ class HtmlToMarkdown
     end
   end
 
-  def traverse(node)
-    node.children.map { |n| visit(n) }.join
+  def traverse(node, within_html_block: false)
+    within_html_block_changed = false
+    if within_html_block
+      within_html_block_changed = true
+      @within_html_block = true
+    end
+
+    text = node.children.map { |n| visit(n) }.join
+    @within_html_block = false if within_html_block_changed
+    text
   end
 
   def visit(node)
@@ -188,7 +201,9 @@ class HtmlToMarkdown
 
   ALLOWED ||= %w[kbd del ins small big sub sup dl dd dt mark]
   ALLOWED.each do |tag|
-    define_method("visit_#{tag}") { |node| "<#{tag}>#{traverse(node)}</#{tag}>" }
+    define_method("visit_#{tag}") do |node|
+      create_element(tag, traverse(node, within_html_block: true)).to_html
+    end
   end
 
   def visit_blockquote(node)
@@ -211,7 +226,7 @@ class HtmlToMarkdown
     "\n\n#{traverse(node)}\n\n"
   end
 
-  TRAVERSABLES ||= %w[aside font span thead tbody tfooter u]
+  TRAVERSABLES ||= %w[aside font span thead tbody tfoot u center]
   TRAVERSABLES.each { |tag| define_method("visit_#{tag}") { |node| traverse(node) } }
 
   def visit_tt(node)
@@ -241,8 +256,8 @@ class HtmlToMarkdown
 
   def visit_abbr(node)
     title = node["title"].presence
-    title_attr = title ? %[ title="#{title}"] : ""
-    "<abbr#{title_attr}>#{traverse(node)}</abbr>"
+    attributes = { title: } if title
+    create_element("abbr", traverse(node, within_html_block: true), attributes).to_html
   end
 
   def visit_acronym(node)
@@ -251,11 +266,8 @@ class HtmlToMarkdown
 
   (1..6).each { |n| define_method("visit_h#{n}") { |node| "#{"#" * n} #{traverse(node)}" } }
 
-  CELLS ||= %w[th td]
-  CELLS.each { |tag| define_method("visit_#{tag}") { |node| "#{traverse(node)} " } }
-
   def visit_table(node)
-    if rows = extract_rows(node)
+    if (rows = extract_rows(node))
       headers = rows[0].css("td, th")
       text = "| " + headers.map { |td| traverse(td).gsub(/\n/, "<br>") }.join(" | ") + " |\n"
       text << "| " + (["-"] * headers.size).join(" | ") + " |\n"
@@ -265,7 +277,7 @@ class HtmlToMarkdown
       end
       "\n\n#{text}\n\n"
     else
-      traverse(node)
+      "<table>\n#{traverse(node, within_html_block: true)}</table>"
     end
   end
 
@@ -275,6 +287,27 @@ class HtmlToMarkdown
     headers_count = rows[0].css("td, th").size
     return if rows[1..-1].any? { |row| row.css("td").size != headers_count }
     rows
+  end
+
+  def visit_tr(node)
+    text = traverse(node)
+    @within_html_block ? "<tr>\n#{text}</tr>\n" : text
+  end
+
+  TABLE_CELLS ||= %w[th td]
+  TABLE_CELLS.each do |tag|
+    define_method("visit_#{tag}") do |node|
+      text = traverse(node)
+      if @within_html_block
+        element = create_element(tag, "\n\n#{text}\n\n")
+        node.attribute_nodes.each do |a|
+          element[a.name] = a.value if %w[rowspan colspan].include?(a.name)
+        end
+        "#{element.to_html}\n"
+      else
+        text
+      end
+    end
   end
 
   LISTS ||= %w[ul ol]
@@ -352,7 +385,11 @@ class HtmlToMarkdown
   end
 
   def visit_text(node)
-    node.text
+    if @within_html_block
+      node.to_html
+    else
+      node.text
+    end
   end
 
   HTML5_BLOCK_ELEMENTS ||= %w[
@@ -371,5 +408,15 @@ class HtmlToMarkdown
   def block?(node)
     return false if !node
     node.description&.block? || HTML5_BLOCK_ELEMENTS.include?(node.name)
+  end
+
+  def fragment_document
+    @fragment_document ||= Nokogiri::HTML5::DocumentFragment.parse("").document
+  end
+
+  def create_element(tag, inner_html = nil, attributes = {})
+    element = fragment_document.create_element(tag, nil, attributes)
+    element.inner_html = inner_html if inner_html
+    element
   end
 end

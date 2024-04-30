@@ -248,16 +248,32 @@ RSpec.describe HtmlToMarkdown do
 
   it "supports <small>" do
     expect(html_to_markdown("<small>Small</small>")).to eq("<small>Small</small>")
+    expect(html_to_markdown("<mark><small>Small</small></mark>")).to eq(
+      "<mark><small>Small</small></mark>",
+    )
+    expect(html_to_markdown("<strong><small>Small</small></strong>")).to eq(
+      "**<small>Small</small>**",
+    )
+    expect(html_to_markdown("<small><strong>&lt;small&gt;</strong></small>")).to eq(
+      "<small>**&lt;small&gt;**</small>",
+    )
   end
 
   it "supports <kbd>" do
     expect(html_to_markdown("<kbd>CTRL</kbd>+<kbd>C</kbd>")).to eq("<kbd>CTRL</kbd>+<kbd>C</kbd>")
+    expect(html_to_markdown("<kbd>&lt;</kbd>")).to eq("<kbd>&lt;</kbd>")
   end
 
   it "supports <abbr>" do
     expect(
       html_to_markdown(%Q{<abbr title="Civilized Discourse Construction Kit, Inc.">CDCK</abbr>}),
     ).to eq(%Q{<abbr title="Civilized Discourse Construction Kit, Inc.">CDCK</abbr>})
+
+    expect(
+      html_to_markdown(
+        %Q{<abbr title="&quot;abbr&quot;: The Abbreviation element">&lt;abbr&gt;</abbr>},
+      ),
+    ).to eq(%Q{<abbr title="&quot;abbr&quot;: The Abbreviation element">&lt;abbr&gt;</abbr>})
   end
 
   it "supports <s>" do
@@ -374,6 +390,10 @@ RSpec.describe HtmlToMarkdown do
 
   it "swallows <u>" do
     expect(html_to_markdown("<u>Underline</u>")).to eq("Underline")
+  end
+
+  it "swallows <center>" do
+    expect(html_to_markdown("<center>Centered</center>")).to eq("Centered")
   end
 
   it "removes <script>" do
@@ -507,7 +527,7 @@ RSpec.describe HtmlToMarkdown do
     )
   end
 
-  it "doesn't swallow badly formatted <table>" do
+  it "keeps HTML for badly formatted <table>" do
     html = <<~HTML
       <table>
         <tr>
@@ -517,13 +537,153 @@ RSpec.describe HtmlToMarkdown do
           <th>4</th>
         </tr>
         <tr>
-          <td>One</td>
-          <td>Two</td>
+          <td>&lt;One&gt;</td>
+          <td><strong>Two</strong></td>
           <td>Three</td>
         </tr>
       </table>
     HTML
 
-    expect(html_to_markdown(html)).to eq("1 2 3 4 \nOne Two Three")
+    markdown = <<~MD
+      <table>
+      <tr>
+      <th>
+      
+      1
+      
+      </th>
+      <th>
+      
+      2
+      
+      </th>
+      <th>
+      
+      3
+      
+      </th>
+      <th>
+      
+      4
+      
+      </th>
+      </tr>
+      <tr>
+      <td>
+
+      &lt;One&gt;
+
+      </td>
+      <td>
+      
+      **Two**
+
+      </td>
+      <td>
+      
+      Three
+
+      </td>
+      </tr>
+      </table>
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
+  end
+
+  it "keeps HTML for <table> with colspan" do
+    html = <<~HTML
+      <table>
+        <tr>
+          <th>1</th>
+          <th>2</th>
+        </tr>
+        <tr>
+          <td colspan="2">One / Two</td>
+        </tr>
+      </table>
+    HTML
+
+    markdown = <<~MD
+      <table>
+      <tr>
+      <th>
+      
+      1
+      
+      </th>
+      <th>
+      
+      2
+      
+      </th>
+      </tr>
+      <tr>
+      <td colspan="2">
+
+      One / Two
+
+      </td>
+      </tr>
+      </table>
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
+  end
+
+  it "keeps HTML for <table> with rowspan" do
+    html = <<~HTML
+      <table>
+        <tr>
+          <th>1</th>
+          <th>2</th>
+        </tr>
+        <tr>
+          <td>A</td>
+          <td rowspan="2">B</td>
+        </tr>
+        <tr>
+          <td>C</td>
+        </tr>
+      </table>
+    HTML
+
+    markdown = <<~MD
+      <table>
+      <tr>
+      <th>
+
+      1
+      
+      </th>
+      <th>
+      
+      2
+      
+      </th>
+      </tr>
+      <tr>
+      <td>
+
+      A
+      
+      </td>
+      <td rowspan="2">
+      
+      B
+      
+      </td>
+      </tr>
+      <tr>
+      <td>
+      
+      C
+      
+      </td>
+      </tr>
+      </table>
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
   end
 end
