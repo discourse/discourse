@@ -19,6 +19,7 @@
 
   .chat__thread-title__name {
     font-size: var(--font-up-1-rem);
+    word-break: break-all;
 
     &:hover {
       color: var(--primary-very-high);
