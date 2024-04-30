@@ -148,23 +148,9 @@
       display: flex;
     }
   }
-  .topic-admin-popup-menu.right-side {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: auto;
-    transition: bottom 0.5s;
-    transform: translateZ(
-      0
-    ); // iOS11 Rendering bug https://meta.discourse.org/t/wrench-menu-not-disappearing-on-ios/94297
-  }
 
   &.docked {
     position: initial;
-    .topic-admin-popup-menu.right-side {
-      bottom: unset;
-      right: 10px;
-    }
   }
 
   html:not(.footer-nav-visible) & {

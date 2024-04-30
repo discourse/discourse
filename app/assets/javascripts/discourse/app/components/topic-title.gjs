@@ -22,7 +22,7 @@ export default class TopicTitle extends Component {
     const fancyTitle = element.querySelector(".fancy-title");
 
     if (fancyTitle) {
-      topicTitleDecorators?.forEach((cb) =>
+      topicTitleDecorators.forEach((cb) =>
         cb(this.args.model, fancyTitle, "topic-title")
       );
     }

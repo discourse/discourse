@@ -292,9 +292,9 @@ GEM
       openssl (> 2.0)
     optimist (3.1.0)
     parallel (1.24.0)
-    parallel_tests (4.7.0)
+    parallel_tests (4.7.1)
       parallel
-    parser (3.3.0.5)
+    parser (3.3.1.0)
       ast (~> 2.4.1)
       racc
     pg (1.5.4)
@@ -308,6 +308,9 @@ GEM
       pry (>= 0.13, < 0.15)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
+    pry-stack_explorer (0.6.1)
+      binding_of_caller (~> 1.0)
+      pry (~> 0.13)
     public_suffix (5.0.5)
     puma (6.4.2)
       nio4r (~> 2.0)
@@ -402,7 +405,7 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.63.3)
+    rubocop (1.63.4)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -413,8 +416,8 @@ GEM
       rubocop-ast (>= 1.31.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.31.2)
-      parser (>= 3.3.0.4)
+    rubocop-ast (1.31.3)
+      parser (>= 3.3.1.0)
     rubocop-capybara (2.20.0)
       rubocop (~> 1.41)
     rubocop-discourse (3.7.1)
@@ -454,7 +457,7 @@ GEM
       sass-embedded (~> 1.75)
     selenium-devtools (0.124.0)
       selenium-webdriver (~> 4.2)
-    selenium-webdriver (4.20.0)
+    selenium-webdriver (4.20.1)
       base64 (~> 0.2)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
@@ -623,6 +626,7 @@ DEPENDENCIES
   pg
   pry-byebug
   pry-rails
+  pry-stack_explorer
   puma
   rack
   rack-mini-profiler

@@ -70,3 +70,13 @@ export const AUTO_GROUPS = {
 };
 
 export const MAX_NOTIFICATIONS_LIMIT_PARAMS = 60;
+
+export const TOPIC_VISIBILITY_REASONS = {
+  op_flag_threshold_reached: 0,
+  op_unhidden: 1,
+  embedded_topic: 2,
+  manually_unlisted: 3,
+  manually_relisted: 4,
+  bulk_action: 5,
+  unknown: 99,
+};

@@ -150,7 +150,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.29.0";
+export const PLUGIN_API_VERSION = "1.31.0";
 
 const DEPRECATED_HEADER_WIDGETS = [
   "header",
@@ -672,6 +672,30 @@ class PluginApi {
   addPostAdminMenuButton(callback) {
     this.container
       .lookup("service:admin-post-menu-buttons")
+      .addButton(callback);
+  }
+
+  /**
+   * Add a new button in the topic admin menu.
+   *
+   * Example:
+   *
+   * ```
+   * api.addTopicAdminMenuButton((topic) => {
+   *   return {
+   *     action: () => {
+   *       alert('You clicked on the coffee button!');
+   *     },
+   *     icon: 'coffee',
+   *     className: 'hot-coffee',
+   *     label: 'coffee.title',
+   *   };
+   * });
+   * ```
+   **/
+  addTopicAdminMenuButton(callback) {
+    this.container
+      .lookup("service:admin-topic-menu-buttons")
       .addButton(callback);
   }
 

@@ -53,7 +53,7 @@ describe "Admin Customize Themes", type: :system do
     end
 
     it "switching between themes and components tabs keeps the search visible only if both tabs have at least 10 items" do
-      6.times { Fabricate(:theme) }
+      (1..6).each { |number| Fabricate(:theme, component: false, name: "Cool theme #{number}") }
       (1..5).each { |number| Fabricate(:theme, component: true, name: "Cool component #{number}") }
 
       visit("/admin/customize/themes")

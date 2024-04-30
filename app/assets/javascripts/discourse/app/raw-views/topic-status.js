@@ -67,7 +67,17 @@ export default EmberObject.extend({
     }
 
     results.forEach((result) => {
-      result.title = I18n.t(`topic_statuses.${result.key}.help`);
+      const translationParams = {};
+
+      if (result.key === "unlisted") {
+        translationParams.unlistedReason = topic.visibilityReasonTranslated;
+      }
+
+      result.title = I18n.t(
+        `topic_statuses.${result.key}.help`,
+        translationParams
+      );
+
       if (
         this.currentUser &&
         (result.key === "pinned" || result.key === "unpinned")

@@ -60,7 +60,7 @@ module Reports::ConsolidatedPageViewsBrowserDetection
           req: "page_view_crawler",
           label:
             I18n.t("reports.consolidated_page_views_browser_detection.xaxis.page_view_crawler"),
-          color: report.colors[2],
+          color: report.colors[3],
           data: data.map { |row| { x: row.date, y: row.page_view_crawler } },
         },
         {

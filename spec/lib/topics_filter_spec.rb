@@ -619,6 +619,8 @@ RSpec.describe TopicsFilter do
       fab!(:deleted_topic_id) { Fabricate(:topic, deleted_at: Time.zone.now).id }
       fab!(:foobar_topic) { Fabricate(:topic, closed: true, word_count: 42) }
 
+      after { TopicsFilter.custom_status_filters.clear }
+
       it "supports custom status filters" do
         TopicsFilter.add_filter_by_status("foobar") { |scope| scope.where("word_count = 42") }
 

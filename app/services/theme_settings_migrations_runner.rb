@@ -15,6 +15,12 @@ class ThemeSettingsMigrationsRunner
     def get_category_id_by_name(category_name)
       Category.where(name_lower: category_name).pick(:id)
     end
+
+    # @param [String] URL string to check if it is a valid absolute URL, path or anchor.
+    # @return [Boolean] True if the URL is a valid URL or path, false otherwise.
+    def is_valid_url(url)
+      UrlHelper.is_valid_url?(url)
+    end
   end
 
   Migration = Struct.new(:version, :name, :original_name, :code, :theme_field_id)
