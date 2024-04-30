@@ -30,8 +30,8 @@ export default class CategoryList extends ArrayProxy {
     result.category_list.categories.forEach((c) => {
       c = this._buildCategoryResult(c, statPeriod);
       if (
-        !c.parent_category_id ||
-        c.parent_category_id === parentCategory?.id
+        (parentCategory && c.parent_category_id === parentCategory?.id) ||
+        (!parentCategory && !c.parent_category_id)
       ) {
         categories.pushObject(c);
       }

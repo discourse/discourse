@@ -180,10 +180,12 @@ class CategoryList
 
     include_subcategories = @options[:include_subcategories] == true
 
-    notification_levels = CategoryUser.notification_levels_for(@guardian.user)
-    default_notification_level = CategoryUser.default_notification_level
-
     if @guardian.can_lazy_load_categories?
+      # Add ancestors to the list of categories because they are needed for lazy loading
+      @categories =
+        Category.secured(@guardian).ancestors_of(@categories.map(&:id)).to_a + @categories
+
+      # Populate subcategory_ids field
       subcategory_ids = {}
       Category
         .secured(@guardian)

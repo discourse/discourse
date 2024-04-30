@@ -94,6 +94,7 @@ export default ComboBoxComponent.extend({
 
       if (
         this.selectKit.options.subCategory &&
+        this.filterType !== "categories" &&
         (this.value || !this.selectKit.options.noSubcategories)
       ) {
         shortcuts.push({
