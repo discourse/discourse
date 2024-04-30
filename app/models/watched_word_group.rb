@@ -5,14 +5,9 @@ class WatchedWordGroup < ActiveRecord::Base
 
   has_many :watched_words, dependent: :destroy
 
-  def self.actions
-    WatchedWord.actions
-  end
-
   def create_or_update_members(words, params)
     WatchedWordGroup.transaction do
-      self.action_key = params[:action_key] if params[:action_key]
-      self.action = params[:action] if params[:action]
+      self.action = WatchedWord.actions[params[:action_key].to_sym]
       self.save! if self.changed?
 
       words.each do |word|
@@ -21,22 +16,16 @@ class WatchedWordGroup < ActiveRecord::Base
             params.merge(word: word, watched_word_group_id: self.id),
           )
 
-        unless watched_word.valid?
+        if !watched_word.valid?
           self.errors.merge!(watched_word.errors)
-
           raise ActiveRecord::Rollback
         end
       end
     end
   end
 
-  def action_key=(arg)
-    self.action = WatchedWordGroup.actions[arg.to_sym]
-  end
-
   def action_log_details
-    action_key = WatchedWord.actions.key(self.action)
-    "#{action_key} → #{watched_words.pluck(:word).join(", ")}"
+    "#{WatchedWord.actions.key(self.action)} → #{watched_words.pluck(:word).join(", ")}"
   end
 end
 
