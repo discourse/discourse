@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import User from "discourse/models/user";
 
 export default class ChatThreadPreview {
   static create(args = {}) {
@@ -36,18 +35,5 @@ export default class ChatThreadPreview {
 
   get otherParticipantCount() {
     return this.participantCount - this.participantUsers.length;
-  }
-
-  updateFromMessageObject(messageObject) {
-    const user = User.create(messageObject.user);
-    if (!this.participantUsers.find((u) => u.id === user.id)) {
-      this.participantUsers.push(user);
-      this.participantCount += 1;
-    }
-    this.replyCount += 1;
-    this.lastReplyAt = messageObject.created_at;
-    this.lastReplyId = messageObject.id;
-    this.lastReplyExcerpt = messageObject.excerpt;
-    this.lastReplyUser = user;
   }
 }

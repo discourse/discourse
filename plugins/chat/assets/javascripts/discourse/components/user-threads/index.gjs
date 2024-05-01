@@ -9,16 +9,30 @@ import List from "discourse/plugins/chat/discourse/components/chat/list";
 import ThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
 import ThreadTitle from "discourse/plugins/chat/discourse/components/thread-title";
 import ThreadPreview from "discourse/plugins/chat/discourse/components/user-threads/preview";
+import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
 
 export default class UserThreads extends Component {
   @service chat;
   @service chatApi;
   @service chatChannelsManager;
+  @service messageBus;
   @service site;
+
+  trackedChannels = {};
 
   @cached
   get threadsCollection() {
     return this.chatApi.userThreads(this.handleLoadedThreads);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    Object.keys(this.trackedChannels).forEach((id) => {
+      this.messageBus.unsubscribe(`/chat/${id}`, this.onMessage);
+    });
+
+    this.trackedChannels = {};
   }
 
   @bind
@@ -32,8 +46,43 @@ export default class UserThreads extends Component {
         thread.tracking.mentionCount = tracking.mention_count;
         thread.tracking.unreadCount = tracking.unread_count;
       }
+
+      this.trackChannel(thread.channel);
       return thread;
     });
+  }
+
+  trackChannel(channel) {
+    if (this.trackedChannels[channel.id]) {
+      return;
+    }
+
+    this.trackedChannels[channel.id] = channel;
+
+    this.messageBus.subscribe(
+      `/chat/${channel.id}`,
+      this.onMessage,
+      channel.channelMessageBusLastId
+    );
+  }
+
+  @bind
+  onMessage(data) {
+    if (data.type === "update_thread_original_message") {
+      const channel = this.trackedChannels[data.channel_id];
+
+      if (!channel) {
+        return;
+      }
+
+      const thread = channel.threadsManager.threads.find(
+        (t) => t.id === data.thread_id
+      );
+
+      if (thread) {
+        thread.preview = ChatThreadPreview.create(data.preview);
+      }
+    }
   }
 
   <template>

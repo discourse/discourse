@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import htmlSafe from "discourse-common/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 import BooleanField from "admin/components/schema-theme-setting/types/boolean";
 import CategoriesField from "admin/components/schema-theme-setting/types/categories";
 import EnumField from "admin/components/schema-theme-setting/types/enum";

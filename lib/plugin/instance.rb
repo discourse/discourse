@@ -236,6 +236,14 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
   end
 
+  # Allows to define custom "status:" filter. Example usage:
+  #   register_custom_filter_by_status("foobar") do |scope|
+  #     scope.where("word_count = 42")
+  #   end
+  def register_custom_filter_by_status(status, &block)
+    TopicsFilter.add_filter_by_status(status, &block)
+  end
+
   # Allows to define custom search order. Example usage:
   #   Search.advanced_order(:chars) do |posts|
   #     posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")

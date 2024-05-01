@@ -1079,10 +1079,10 @@ de:
         ignore_duration_time_frame_required: "Bitte wähle einen Zeitrahmen aus"
         ignore_no_users: "Du hast keine Benutzer ignoriert."
         ignore_option: "Ignoriert"
-        ignore_option_title: "Du wirst keine Benachrichtigungen zu dieser Person erhalten und ihre Themen und Antworten werden ausgeblendet."
+        ignore_option_title: "Du wirst keine Benachrichtigungen zu dieser Person erhalten und ihre Beiträge werden ausgeblendet."
         add_ignored_user: "Hinzufügen …"
         mute_option: "Stummgeschaltet"
-        mute_option_title: "Du wirst keine Benachrichtigungen zu dieser Person bekommen."
+        mute_option_title: "Du wirst keine Benachrichtigungen, persönlichen Nachrichten oder Chat-Direktnachrichten von diesem Nutzer erhalten."
         normal_option: "Normal"
         normal_option_title: "Du wirst benachrichtigt, wenn diese Person dir antwortet, dich zitiert oder erwähnt."
       notification_schedule:
@@ -1889,10 +1889,6 @@ de:
       suggested_topics:
         title: "Lies weiter!"
         content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
-      admin_guide:
-        title: "Willkommen auf deiner neuen Website!"
-        content: "<a href='%{admin_guide_url}'>Lies den Administrator-Leitfaden</a>, um deine Website und deine Community weiter auszubauen."
-        content_no_url: "Lies den Administrator-Leitfaden, um deine Website und deine Community weiter auszubauen."
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -2119,6 +2115,10 @@ de:
         name: "Discord"
         title: "Mit Discord anmelden"
         sr_title: "Mit Discord anmelden"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "Mit LinkedIn anmelden"
+        sr_title: "Mit LinkedIn anmelden"
       passkey:
         name: "Mit einem Passkey anmelden"
       second_factor_toggle:
@@ -3768,10 +3768,17 @@ de:
         title: "Angeheftet"
         help: "Dieses Thema ist für dich angeheftet; es wird immer am Anfang seiner Kategorie auftauchen"
       unlisted:
-        help: "Dieses Thema ist unsichtbar. Es wird in keiner Themenliste angezeigt und kann nur mit einem direkten Link betrachtet werden."
+        help: "Dieses Thema ist unsichtbar. Es wird in keiner Themenliste angezeigt und kann nur mit einem direkten Link betrachtet werden. %{unlistedReason}"
       personal_message:
         title: "Dieses Thema ist eine persönliche Nachricht"
         help: "Dieses Thema ist eine persönliche Nachricht"
+      visibility_reasons:
+        op_flag_threshold_reached: "Dieses Thema wurde automatisch unsichtbar gemacht, weil es die Meldungsschwelle erreicht hat"
+        op_unhidden: "Dieses Thema wurde vom Autor wieder sichtbar gemacht"
+        embedded_topic: "Dieses Thema wurde wieder sichtbar gemacht, weil es ein eingebettetes Thema ist"
+        manually_unlisted: "Dieses Thema wurde manuell von einem Administrator oder Moderator unsichtbar gemacht"
+        manually_relisted: "Dieses Thema wurde manuell von einem Administrator oder Moderator wieder sichtbar gemacht"
+        bulk_action: "Die Sichtbarkeit dieses Themas wurde aufgrund einer Massenoperation eines Benutzers geändert"
     posts: "Beiträge"
     pending_posts:
       label: "Ausstehend"
@@ -4404,7 +4411,7 @@ de:
       clear_filter: "Filter löschen"
       no_results:
         title: "Keine Ergebnisse"
-        description: "Wir konnten nichts finden, das zu '%{filter}' passt"
+        description: "Wir konnten nichts finden, das zu '%{filter}' passt.<br><br>Wolltest du die <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">Seiteneinstellungen</a> oder die <a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">Benutzerliste</a> durchsuchen?"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -4940,7 +4947,9 @@ de:
         title: "Konto"
         sidebar_link:
           backups: "Backups"
-          whats_new: "Was ist neu?"
+          whats_new:
+            title: "Was ist neu?"
+            keywords: "Änderungsprotokoll|Feature|Release"
       community:
         title: "Gemeinschaft"
         sidebar_link:
@@ -4963,6 +4972,9 @@ de:
           emoji: "Emoji"
           navigation: "Navigation"
           themes: "Themes"
+          components:
+            title: "Komponenten"
+            keywords: "Theme|Erweiterung"
           site_texts: "Website-Texte"
       email_settings:
         title: "E-Mail-Einstellungen"
@@ -5717,9 +5729,9 @@ de:
           silence: "Neue Konten stummschalten, wenn ihr allererster Beitrag eines dieser Wörter enthält. Der Beitrag wird automatisch ausgeblendet, bis Team-Mitglieder ihn genehmigen."
           link: "Wörter in Beiträgen durch Links ersetzen."
         form:
-          label: "Hat Wort oder Wortgruppe"
-          placeholder: "Wort oder Ausdruck eingeben (* ist ein Platzhalter)"
-          placeholder_regexp: "regulärer Ausdruck"
+          label: "Hat Wörter oder Wortgruppen"
+          placeholder: "Wörter oder Wortgruppen (* ist ein Platzhalter)"
+          placeholder_regexp: "reguläre Ausdrücke"
           replace_label: "Ersatz"
           replace_placeholder: "Beispiel"
           tag_label: "Schlagwort"
@@ -5732,6 +5744,7 @@ de:
           upload_successful: "Hochladen erfolgreich. Wörter wurden hinzugefügt."
           case_sensitivity_label: "Groß- und Kleinschreibung wird unterschieden"
           case_sensitivity_description: "Nur Wörter mit passender Groß- und Kleinschreibung"
+          words_or_phrases: "Wörter oder Wortgruppen"
         test:
           button_label: "Test"
           modal_title: "%{action}: Beobachtete Wörter testen"
@@ -6245,6 +6258,7 @@ de:
           add_document_types: "Dokumente"
           add_types_title: "Erweiterungen zulassen %{types}"
           add_types_toast: "%{types} Dateitypen hinzugefügt"
+        mandatory_group: "Gruppe ist obligatorisch"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen

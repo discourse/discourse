@@ -990,6 +990,8 @@ id:
         user_api: "API Pengguna"
       yaxis: "Hari"
       description: "Permintaan API untuk kunci API reguler dan kunci API pengguna."
+    consolidated_page_views_browser_detection:
+      yaxis: "Hari"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Hari"
@@ -1113,6 +1115,10 @@ id:
       xaxis: "Hari"
       yaxis: "Tampilan Halaman Anon Seluler"
       description: "Jumlah tampilan halaman baru dari pengunjung di perangkat seluler yang tidak masuk."
+    page_view_anon_browser_reqs:
+      xaxis: "Hari"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Hari"
     http_background_reqs:
       title: "Latar Belakang"
       xaxis: "Hari"
@@ -1225,8 +1231,6 @@ id:
     tl4_delete_posts_and_topics: "Izinkan pengguna TL4 untuk menghapus posting dan topik yang dibuat oleh pengguna lain. Pengguna TL4 juga akan dapat melihat topik dan postingan yang dihapus."
     edit_all_topic_groups: "Izinkan pengguna di grup ini untuk mengedit judul topik, tag, dan kategori dari pengguna lain"
     edit_all_post_groups: "Izinkan pengguna di grup ini untuk mengedit post pengguna lain"
-    invite_allowed_groups: "Grup yang diperbolehkan mengundang pengguna."
-    ignore_allowed_groups: "Grup yang diperbolehkan mengabaikan pengguna lain."
     dark_mode_none: "Tidak ada"
     sendgrid_verification_key: "Kunci verifikasi Sendgrid digunakan untuk memverifikasi pesan webhook."
     mailjet_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/mailjet?t=supersecret"

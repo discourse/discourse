@@ -1586,8 +1586,6 @@ sr:
       pinned:
         title: "Zakvačeno"
         help: "Ova tema je zakvačena, prikazivati će se na vrhu svoje kategorije."
-      unlisted:
-        help: "Ova tema je ne-listovana; neće se prikazivati na listi tema i može joj se pristupiti samo preko direktnog linka."
     posts: "Poruke"
     pending_posts:
       label: "U toku"

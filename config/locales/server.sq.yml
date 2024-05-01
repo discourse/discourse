@@ -439,6 +439,8 @@ sq:
         api: "API"
         user_api: "API e përdoruesit"
       yaxis: "Dit"
+    consolidated_page_views_browser_detection:
+      yaxis: "Dit"
     dau_by_mau:
       xaxis: "Day"
     daily_engaged_users:
@@ -542,6 +544,10 @@ sq:
     page_view_logged_in_mobile_reqs:
       xaxis: "Ditë"
     page_view_anon_mobile_reqs:
+      xaxis: "Dit"
+    page_view_anon_browser_reqs:
+      xaxis: "Dit"
+    page_view_logged_in_browser_reqs:
       xaxis: "Dit"
     http_background_reqs:
       title: "Background"

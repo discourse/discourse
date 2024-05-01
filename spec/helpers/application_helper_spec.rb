@@ -19,7 +19,15 @@ RSpec.describe ApplicationHelper do
 
     it "sends crawler content to logged on users who wants to print" do
       helper.stubs(:current_user).returns(Fabricate(:user))
+      controller.stubs(:use_crawler_layout?).returns(false)
       helper.stubs(:params).returns(print: true)
+
+      expect(helper.include_crawler_content?).to eq(true)
+    end
+
+    it "sends crawler content to logged on users with a crawler user agent" do
+      helper.stubs(:current_user).returns(Fabricate(:user))
+      controller.stubs(:use_crawler_layout?).returns(true)
 
       expect(helper.include_crawler_content?).to eq(true)
     end

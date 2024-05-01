@@ -135,39 +135,6 @@ sub sub {
   flex-wrap: wrap;
 }
 
-@media screen and (max-height: 600px) {
-  .topic-admin-popup-menu {
-    box-sizing: border-box;
-    padding: 0.25em;
-    width: unset;
-    ul {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-
-      @media screen and (max-width: 550px) {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      ul {
-        display: contents;
-      }
-
-      .d-button-label {
-        @include ellipsis;
-      }
-
-      .popup-menu-btn {
-        @include ellipsis;
-      }
-
-      li {
-        border: 0;
-        min-width: 0;
-      }
-    }
-  }
-}
-
 .container.posts .topic-navigation {
   // better positioning for the docked progress bar on large screens using mobile view
   grid-area: posts;

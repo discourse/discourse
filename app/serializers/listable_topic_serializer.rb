@@ -26,7 +26,8 @@ class ListableTopicSerializer < BasicTopicSerializer
              :liked,
              :unicode_title,
              :unread_by_group_member,
-             :thumbnails
+             :thumbnails,
+             :visibility_reason_id
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
 
@@ -157,6 +158,10 @@ class ListableTopicSerializer < BasicTopicSerializer
 
   def include_unread_by_group_member?
     !!object.topic_list&.publish_read_state
+  end
+
+  def include_visibility_reason_id?
+    object.visibility_reason_id.present?
   end
 
   protected

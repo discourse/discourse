@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -21,6 +20,7 @@ import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
+import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 import ChatChannelSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-subscription-manager";
 import {
   FUTURE,
@@ -28,10 +28,7 @@ import {
   READ_INTERVAL_MS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
-import {
-  checkMessageBottomVisibility,
-  checkMessageTopVisibility,
-} from "discourse/plugins/chat/discourse/lib/check-message-visibility";
+import { checkMessageTopVisibility } from "discourse/plugins/chat/discourse/lib/check-message-visibility";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
 import {
@@ -40,14 +37,14 @@ import {
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { stackingContextFix } from "../lib/chat-ios-hacks";
-import ChatOnResize from "../modifiers/chat/on-resize";
-import ChatScrollableList from "../modifiers/chat/scrollable-list";
 import ChatComposerChannel from "./chat/composer/channel";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
 import ChatChannelPreviewCard from "./chat-channel-preview-card";
 import ChatMentionWarnings from "./chat-mention-warnings";
 import Message from "./chat-message";
+import ChatMessagesContainer from "./chat-messages-container";
+import ChatMessagesScroller from "./chat-messages-scroller";
 import ChatNotices from "./chat-notices";
 import ChatSkeleton from "./chat-skeleton";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
@@ -78,7 +75,7 @@ export default class ChatChannel extends Component {
   @tracked uploadDropZone;
   @tracked isScrolling = false;
 
-  scrollable = null;
+  scroller = null;
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
@@ -101,8 +98,8 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  setScrollable(element) {
-    this.scrollable = element;
+  registerScroller(element) {
+    this.scroller = element;
   }
 
   @action
@@ -117,7 +114,8 @@ export default class ChatChannel extends Component {
   @action
   didResizePane() {
     this.debounceFillPaneAttempt();
-    DatesSeparatorsPositioner.apply(this.scrollable);
+    this.debouncedUpdateLastReadMessage();
+    DatesSeparatorsPositioner.apply(this.scroller);
   }
 
   @action
@@ -180,7 +178,7 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    stackingContextFix(this.scrollable, () => {
+    stackingContextFix(this.scroller, () => {
       this.messagesManager.addMessages([message]);
     });
     this.debouncedUpdateLastReadMessage();
@@ -244,7 +242,7 @@ export default class ChatChannel extends Component {
     }
 
     const targetMessageId = this.messagesManager.messages.lastObject.id;
-    stackingContextFix(this.scrollable, () => {
+    stackingContextFix(this.scroller, () => {
       this.messagesManager.addMessages(messages);
     });
 
@@ -261,14 +259,14 @@ export default class ChatChannel extends Component {
   @action
   async scrollToBottom() {
     this._ignoreNextScroll = true;
-    await scrollListToBottom(this.scrollable);
+    await scrollListToBottom(this.scroller);
     this.debouncedUpdateLastReadMessage();
   }
 
   scrollToMessageId(messageId, options = {}) {
     this._ignoreNextScroll = true;
     const message = this.messagesManager.findMessage(messageId);
-    scrollListToMessage(this.scrollable, message, options);
+    scrollListToMessage(this.scroller, message, options);
   }
 
   debounceFillPaneAttempt() {
@@ -309,12 +307,12 @@ export default class ChatChannel extends Component {
 
     schedule("afterRender", () => {
       const firstMessageId = this.messagesManager.messages.firstObject?.id;
-      const messageContainer = this.scrollable.querySelector(
+      const messageContainer = this.scroller.querySelector(
         `.chat-message-container[data-id="${firstMessageId}"]`
       );
       if (
         messageContainer &&
-        checkMessageTopVisibility(this.scrollable, messageContainer)
+        checkMessageTopVisibility(this.scroller, messageContainer)
       ) {
         this.fetchMoreMessages({ direction: PAST });
       }
@@ -415,41 +413,28 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    schedule("afterRender", () => {
-      let lastFullyVisibleMessageNode = null;
+    const firstFullyVisibleMessageId = firstVisibleMessageId(this.scroller);
+    if (!firstFullyVisibleMessageId) {
+      return;
+    }
 
-      this.scrollable
-        .querySelectorAll(".chat-message-container")
-        .forEach((item) => {
-          if (checkMessageBottomVisibility(this.scrollable, item)) {
-            lastFullyVisibleMessageNode = item;
-          }
-        });
+    let firstMessage = this.messagesManager.findMessage(
+      firstFullyVisibleMessageId
+    );
+    if (!firstMessage) {
+      return;
+    }
 
-      if (!lastFullyVisibleMessageNode) {
-        return;
-      }
+    const lastReadId =
+      this.args.channel.currentUserMembership?.lastReadMessageId;
+    if (lastReadId >= firstMessage.id) {
+      return;
+    }
 
-      let lastUnreadVisibleMessage = this.messagesManager.findMessage(
-        lastFullyVisibleMessageNode.dataset.id
-      );
-
-      if (!lastUnreadVisibleMessage) {
-        return;
-      }
-
-      const lastReadId =
-        this.args.channel.currentUserMembership?.lastReadMessageId;
-      // we don't return early if === as we want to ensure different tabs will do the check
-      if (lastReadId > lastUnreadVisibleMessage.id) {
-        return;
-      }
-
-      return this.chatApi.markChannelAsRead(
-        this.args.channel.id,
-        lastUnreadVisibleMessage.id
-      );
-    });
+    return this.chatApi.markChannelAsRead(
+      this.args.channel.id,
+      firstMessage.id
+    );
   }
 
   @action
@@ -457,7 +442,7 @@ export default class ChatChannel extends Component {
     if (this.messagesLoader.canLoadMoreFuture) {
       this.fetchMessages();
     } else if (this.messagesManager.messages.length > 0) {
-      this.scrollToBottom(this.scrollable);
+      this.scrollToBottom(this.scroller);
     }
   }
 
@@ -468,7 +453,7 @@ export default class ChatChannel extends Component {
         return;
       }
 
-      DatesSeparatorsPositioner.apply(this.scrollable);
+      DatesSeparatorsPositioner.apply(this.scroller);
 
       this.needsArrow =
         (this.messagesLoader.fetchedOnce &&
@@ -506,7 +491,7 @@ export default class ChatChannel extends Component {
     } else {
       this.chatChannelScrollPositions.set(
         this.args.channel.id,
-        state.lastVisibleId
+        state.firstVisibleId
       );
     }
   }
@@ -537,7 +522,7 @@ export default class ChatChannel extends Component {
     this.resetComposerMessage();
 
     try {
-      stackingContextFix(this.scrollable, async () => {
+      stackingContextFix(this.scroller, async () => {
         await this.chatApi.editMessage(this.args.channel.id, message.id, data);
       });
     } catch (e) {
@@ -553,7 +538,7 @@ export default class ChatChannel extends Component {
 
     resetIdle();
 
-    stackingContextFix(this.scrollable, async () => {
+    stackingContextFix(this.scroller, async () => {
       await this.args.channel.stageMessage(message);
     });
 
@@ -712,19 +697,12 @@ export default class ChatChannel extends Component {
       <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />
 
-      <div
-        class="chat-messages-scroll chat-messages-container popper-viewport"
-        {{didInsert this.setScrollable}}
-        {{ChatScrollableList
-          (hash
-            onScroll=this.onScroll onScrollEnd=this.onScrollEnd reverse=true
-          )
-        }}
+      <ChatMessagesScroller
+        @onRegisterScroller={{this.registerScroller}}
+        @onScroll={{this.onScroll}}
+        @onScrollEnd={{this.onScrollEnd}}
       >
-        <div
-          class="chat-messages-container"
-          {{ChatOnResize this.didResizePane (hash delay=100 immediate=true)}}
-        >
+        <ChatMessagesContainer @didResizePane={{this.didResizePane}}>
           {{#each this.messagesManager.messages key="id" as |message|}}
             <Message
               @message={{message}}
@@ -738,7 +716,7 @@ export default class ChatChannel extends Component {
               <ChatSkeleton />
             {{/unless}}
           {{/each}}
-        </div>
+        </ChatMessagesContainer>
 
         {{! at bottom even if shown at top due to column-reverse  }}
         {{#if this.messagesLoader.loadedPast}}
@@ -746,7 +724,7 @@ export default class ChatChannel extends Component {
             {{i18n "chat.all_loaded"}}
           </div>
         {{/if}}
-      </div>
+      </ChatMessagesScroller>
 
       <ChatScrollToBottomArrow
         @onScrollToBottom={{this.scrollToLatestMessage}}
@@ -769,7 +747,7 @@ export default class ChatChannel extends Component {
             @channel={{@channel}}
             @uploadDropZone={{this.uploadDropZone}}
             @onSendMessage={{this.onSendMessage}}
-            @scrollable={{this.scrollable}}
+            @scroller={{this.scroller}}
           />
         {{/if}}
       {{/if}}

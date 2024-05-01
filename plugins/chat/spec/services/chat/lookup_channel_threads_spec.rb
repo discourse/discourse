@@ -170,9 +170,9 @@ RSpec.describe ::Chat::LookupChannelThreads do
 
           [thread_4, thread_5, thread_6, thread_7].each do |t|
             t.add(current_user)
-            t.mark_read_for_user!(current_user)
+            t.membership_for(current_user).mark_read!
           end
-          [thread_1, thread_2, thread_3].each { |t| t.mark_read_for_user!(current_user) }
+          [thread_1, thread_2, thread_3].each { |t| t.membership_for(current_user).mark_read! }
 
           # The old unread messages.
           Fabricate(:chat_message, chat_channel: channel_1, thread: thread_7).update!(

@@ -230,6 +230,9 @@ zh_CN:
       ignore_channel_wide_mention:
         title: "忽略频道范围内的提及"
         description: "不发送频道范围内提及（@here 和 @all）的通知"
+      show_thread_title_prompts:
+        title: "显示对话标题提示"
+        description: "显示为新对话设置标题的提示"
       open: "打开聊天"
       open_full_page: "打开全屏聊天"
       close_full_page: "关闭全屏聊天"
@@ -460,7 +463,7 @@ zh_CN:
           export_has_started: "导出已开始。导出完成后，您将收到一条私信。"
       my_threads:
         title: 我的对话
-        aria_label: "切换到我的话题列表"
+        aria_label: "切换到我的对话列表"
       direct_messages:
         title: "私信"
         aria_label: "切换到私信"
@@ -573,6 +576,17 @@ zh_CN:
             description: "此对话将在对话列表和频道中显示的新回复数。如果其他人在此对话中提及 (@) 您的名字，您将收到通知。"
         participants_other_count:
           other: "+%{count}"
+      thread_title_toast:
+        title: "设置一个对话标题"
+        message: "帮助他人发现此对话。"
+        dismiss_action: "不再显示"
+        primary_action: "设置标题"
+      thread_title_modal:
+        title: "设置对话标题"
+        input_placeholder: "告诉其他人这次对话的内容..."
+        discourse_ai:
+          title: "自动生成对话标题"
+          description: "查看 %{url} 来了解有关此功能以及 Discourse 体验的其他增强功能的更多信息。"
       threads:
         open: "打开对话"
         list: "对话"

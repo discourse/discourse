@@ -271,6 +271,8 @@ lv:
         api: "API"
         user_api: "Lietotāja API"
       yaxis: "Diena"
+    consolidated_page_views_browser_detection:
+      yaxis: "Diena"
     dau_by_mau:
       xaxis: "Diena"
     daily_engaged_users:
@@ -347,6 +349,10 @@ lv:
     page_view_logged_in_mobile_reqs:
       xaxis: "Diena"
     page_view_anon_mobile_reqs:
+      xaxis: "Diena"
+    page_view_anon_browser_reqs:
+      xaxis: "Diena"
+    page_view_logged_in_browser_reqs:
       xaxis: "Diena"
     http_background_reqs:
       xaxis: "Diena"

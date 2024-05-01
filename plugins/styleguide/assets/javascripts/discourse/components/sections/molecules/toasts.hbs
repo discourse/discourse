@@ -61,6 +61,12 @@
         {{on "click" this.toggleAutoClose}}
       />
     </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="[@options.showProgressBar]">
+      <DToggleSwitch
+        @state={{this.showProgressBar}}
+        {{on "click" this.toggleShowProgressBar}}
+      />
+    </Styleguide::Controls::Row>
     {{#if this.autoClose}}
       <Styleguide::Controls::Row @name="[@options.duration] ms">
         <Input @value={{this.duration}} @type="number" />

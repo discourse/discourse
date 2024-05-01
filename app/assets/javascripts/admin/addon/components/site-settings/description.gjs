@@ -1,4 +1,4 @@
-import htmlSafe from "discourse-common/helpers/html-safe";
+import { htmlSafe } from "@ember/template";
 
 <template>
   <div class="desc">{{htmlSafe @description}}</div>

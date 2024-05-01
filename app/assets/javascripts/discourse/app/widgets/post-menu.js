@@ -828,6 +828,7 @@ export default createWidget("post-menu", {
       identifier: "admin-post-menu",
       component: AdminPostMenu,
       extraClassName: "popup-menu",
+      modalForMobile: true,
       data: {
         scheduleRerender: this.scheduleRerender.bind(this),
         transformedPost: this.attrs,

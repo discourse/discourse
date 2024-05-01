@@ -842,6 +842,8 @@ ca:
         api: "API"
         user_api: "API d'usuari"
       yaxis: "Dia"
+    consolidated_page_views_browser_detection:
+      yaxis: "Dia"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dia"
@@ -1001,6 +1003,10 @@ ca:
       xaxis: "Dia"
       yaxis: "Pàgines vistes anònimes en mòbil"
       description: "Nombre de pàgines vistes noves de visitants en dispositius mòbils que no han iniciat la sessió."
+    page_view_anon_browser_reqs:
+      xaxis: "Dia"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dia"
     http_background_reqs:
       title: "Fons"
       xaxis: "Dia"

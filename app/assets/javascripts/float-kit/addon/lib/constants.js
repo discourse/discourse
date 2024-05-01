@@ -46,6 +46,7 @@ export const MENU = {
   options: {
     animated: true,
     arrow: false,
+    autofocus: false,
     beforeTrigger: null,
     closeOnEscape: true,
     closeOnClickOutside: true,
@@ -69,6 +70,7 @@ export const MENU = {
     onShow: null,
     onRegisterApi: null,
     modalForMobile: false,
+    inline: null,
   },
   portalOutletId: "d-menu-portal-outlet",
 };

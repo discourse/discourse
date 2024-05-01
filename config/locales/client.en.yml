@@ -1153,10 +1153,10 @@ en:
         ignore_duration_time_frame_required: "Please select a time frame"
         ignore_no_users: "You have no ignored users."
         ignore_option: "Ignored"
-        ignore_option_title: "You will not receive notifications related to this user and all of their topics and replies will be hidden."
+        ignore_option_title: "You will not receive any notifications related to this user and all their content will be hidden."
         add_ignored_user: "Add…"
         mute_option: "Muted"
-        mute_option_title: "You will not receive any notifications related to this user."
+        mute_option_title: "You will not receive any notifications, personal messages, or chat direct messages from this user."
         normal_option: "Normal"
         normal_option_title: "You will be notified if this user replies to you, quotes you, or mentions you."
       notification_schedule:
@@ -4084,10 +4084,17 @@ en:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
       unlisted:
-        help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
+        help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link. %{unlistedReason}"
       personal_message:
         title: "This topic is a personal message"
         help: "This topic is a personal message"
+      visibility_reasons:
+        op_flag_threshold_reached: "This topic was automatically unlisted because it reached the flag threshold"
+        op_unhidden: "This topic was relisted by the author"
+        embedded_topic: "This topic was relisted because it is an embedded topic"
+        manually_unlisted: "This topic was manually unlisted by an admin or moderator"
+        manually_relisted: "This topic was manually relisted by an admin or moderator"
+        bulk_action: "This topic's visibility was changed because of a bulk action performed by a user"
     posts: "Posts"
     pending_posts:
       label: "Pending"
@@ -6115,9 +6122,9 @@ en:
           silence: "Silence new accounts if their very first post contains any of these words. The post will be automatically hidden until staff approves it."
           link: "Replace words in posts with links."
         form:
-          label: "Has word or phrase"
-          placeholder: "Enter word or phrase (* is a wildcard)"
-          placeholder_regexp: "regular expression"
+          label: "Has words or phrases"
+          placeholder: "words or phrases (* is a wildcard)"
+          placeholder_regexp: "regular expressions"
           replace_label: "Replacement"
           replace_placeholder: "example"
           tag_label: "Tag"
@@ -6130,6 +6137,7 @@ en:
           upload_successful: "Upload successful. Words have been added."
           case_sensitivity_label: "Is case-sensitive"
           case_sensitivity_description: "Only words with matching character casing"
+          words_or_phrases: "words or phrases"
         test:
           button_label: "Test"
           modal_title: "%{action}: Test Watched Words"

@@ -43,6 +43,7 @@ class TopicViewSerializer < ApplicationSerializer
     :image_url,
     :slow_mode_seconds,
     :external_id,
+    :visibility_reason_id,
   )
 
   attributes(
@@ -320,5 +321,9 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_categories?
     scope.can_lazy_load_categories?
+  end
+
+  def include_visibility_reason_id?
+    object.topic.visibility_reason_id.present?
   end
 end

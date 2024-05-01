@@ -692,6 +692,8 @@ fa_IR:
         user_api: "API کاربر"
       yaxis: "روز"
       description: "درخواست‌های API برای کلیدهای API معمولی و کلیدهای API کاربر."
+    consolidated_page_views_browser_detection:
+      yaxis: "روز"
     dau_by_mau:
       xaxis: "روز"
     daily_engaged_users:
@@ -814,6 +816,10 @@ fa_IR:
       title: "بازدید ناشناس"
       xaxis: "روز"
       yaxis: "بازدید ناشناس موبایلی"
+    page_view_anon_browser_reqs:
+      xaxis: "روز"
+    page_view_logged_in_browser_reqs:
+      xaxis: "روز"
     http_background_reqs:
       title: "پس زمینه"
       xaxis: "روز"
@@ -1038,8 +1044,6 @@ fa_IR:
     min_trust_to_edit_wiki_post: "حداقل سطح اعتماد برای ویرایش نوشته ای که به‌عنوان دانشنامه نشانه‌گزاری شده است. "
     min_trust_to_edit_post: "حداقل سطح اعتماد برای ویرایش نوشته مورد نیاز است."
     min_trust_to_allow_self_wiki: "حداقل سطح اعتماد برای تبدیل نوشته‌ی خود به دانش‌نامه نیاز است."
-    invite_allowed_groups: "گروه‌هایی که مجاز به دعوت از کاربران هستند."
-    ignore_allowed_groups: "گروه‌هایی که مجاز به نادیده گرفتن سایر کاربران هستند."
     newuser_max_links: "کاربر جدید می تواند چند پیوند به نوشته اضافه کند. "
     newuser_max_attachments: "کاربر جدید می تواند چند پیوست اضافه کند به پست. "
     newuser_max_mentions_per_post: "حداکثر تعداد @نام اطلاعیه ها که کاربر جدید در یک پست می تواند استفاده کند. "
@@ -1188,7 +1192,6 @@ fa_IR:
     max_tags_in_filter_list: "حداکثر تعداد برچسب‌ها برای نمایش در منو کشویی. بیشترین استفاده شده ها نمایش داده می‌شوند."
     tags_sort_alphabetically: "نمایش برچسب‌ها به ترتیب الفبا. پیشفرض نمایش به ترتیب محبوبیت است."
     min_trust_level_to_tag_topics: "حداقل سطح اعتماد مورد نیاز برای برچسب زدن به موضوع"
-    tag_topic_allowed_groups: "گروه‌هایی که مجاز به برچسب‌گذاری موضوعات هستند."
     suppress_overlapping_tags_in_list: "اگر برچسب با عنوان موضوع دقیقا یکی بودند، برچسب را نشان نده."
     enable_sitemap: "یک نقشه سایت برای سایت خود ایجاد کنید و آن را در پرونده robots.txt قرار دهید."
     sitemap_page_size: "تعداد آدرس‌های اینترنتی که باید در هر صفحه نقشه سایت گنجانده شود. حداکثر ۵۰٫۰۰۰"

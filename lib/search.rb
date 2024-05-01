@@ -349,19 +349,19 @@ class Search
   end
 
   def self.advanced_order(trigger, &block)
-    (@advanced_orders ||= {})[trigger] = block
+    advanced_orders[trigger] = block
   end
 
   def self.advanced_orders
-    @advanced_orders
+    @advanced_orders ||= {}
   end
 
   def self.advanced_filter(trigger, &block)
-    (@advanced_filters ||= {})[trigger] = block
+    advanced_filters[trigger] = block
   end
 
   def self.advanced_filters
-    @advanced_filters
+    @advanced_filters ||= {}
   end
 
   def self.custom_topic_eager_load(tables = nil, &block)
@@ -1076,7 +1076,7 @@ class Search
 
   def posts_query(limit, type_filter: nil, aggregate_search: false)
     posts =
-      Post.where(post_type: Topic.visible_post_types(@guardian.user)).joins(
+      Post.where(post_type: Topic.visible_post_types(@guardian.user), hidden: false).joins(
         :post_search_data,
         :topic,
       )

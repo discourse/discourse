@@ -82,7 +82,17 @@ export default Component.extend({
 
   _set(name, icon, key, iconArgs) {
     this.set(`${name}Icon`, htmlSafe(iconHTML(`${icon}`, iconArgs)));
-    this.set(`${name}Title`, I18n.t(`topic_statuses.${key}.help`));
+
+    const translationParams = {};
+
+    if (name === "invisible") {
+      translationParams.unlistedReason = this.topic.visibilityReasonTranslated;
+    }
+
+    this.set(
+      `${name}Title`,
+      I18n.t(`topic_statuses.${key}.help`, translationParams)
+    );
     return true;
   },
 

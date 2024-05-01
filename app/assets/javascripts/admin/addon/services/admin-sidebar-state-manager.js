@@ -20,9 +20,13 @@ export default class AdminSidebarStateManager extends Service {
       return;
     }
 
-    this.keywords[link_name].navigation = keywords.map((keyword) =>
-      keyword.toLowerCase()
-    );
+    this.keywords[link_name].navigation = [
+      ...new Set(
+        this.keywords[link_name].navigation.concat(
+          keywords.map((keyword) => keyword.toLowerCase())
+        )
+      ),
+    ];
   }
 
   get navConfig() {

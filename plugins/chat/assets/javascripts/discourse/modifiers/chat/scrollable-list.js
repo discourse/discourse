@@ -3,7 +3,7 @@ import { cancel, throttle } from "@ember/runloop";
 import Modifier from "ember-modifier";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
-import { checkMessageBottomVisibility } from "discourse/plugins/chat/discourse/lib/check-message-visibility";
+import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 
 const UP = "up";
 const DOWN = "down";
@@ -27,6 +27,8 @@ export default class ChatScrollableList extends Modifier {
     this.element.addEventListener("wheel", this.handleWheel, {
       passive: true,
     });
+
+    this.throttleComputeScroll();
   }
 
   @bind
@@ -52,7 +54,7 @@ export default class ChatScrollableList extends Modifier {
     this.scrollTimer = discourseLater(() => {
       this.options.onScrollEnd?.(
         Object.assign(this.computeState(), {
-          lastVisibleId: this.computeFirstVisibleMessageId(),
+          firstVisibleId: firstVisibleMessageId(this.element),
         })
       );
     }, this.options.delay || 250);
@@ -131,24 +133,5 @@ export default class ChatScrollableList extends Modifier {
     }
 
     return this.element.scrollTop < this.lastScrollTop ? UP : DOWN;
-  }
-
-  computeFirstVisibleMessageId() {
-    let firstVisibleMessage;
-    const messages = this.element.querySelectorAll(
-      ":scope .chat-messages-container > [data-id]"
-    );
-
-    for (let i = messages.length - 1; i >= 0; i--) {
-      const message = messages[i];
-
-      if (checkMessageBottomVisibility(this.element, message)) {
-        firstVisibleMessage = message;
-        break;
-      }
-    }
-
-    const id = firstVisibleMessage?.dataset?.id;
-    return id ? parseInt(id, 10) : null;
   }
 }

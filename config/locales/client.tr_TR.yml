@@ -1073,10 +1073,8 @@ tr_TR:
         ignore_duration_time_frame_required: "Lütfen bir zaman aralığı seçin"
         ignore_no_users: "Yok saydığınız kullanıcı bulunmuyor."
         ignore_option: "Yok sayıldı"
-        ignore_option_title: "Bu kullanıcıyla ilgili bildirim almayacaksınız ve kullanıcının tüm başlık ve yanıtları gizlenecek."
         add_ignored_user: "Ekle…"
         mute_option: "Sessize alındı"
-        mute_option_title: "Bu kullanıcıyla ilgili bildirim almayacaksınız."
         normal_option: "Normal"
         normal_option_title: "Bu kullanıcı size yanıt verirse, sizi alıntılarsa veya sizden bahsederse bildirim alırsınız."
       notification_schedule:
@@ -1879,10 +1877,6 @@ tr_TR:
       suggested_topics:
         title: "Okumaya devam edin!"
         content: "İşte daha sonra okumak isteyebileceğinizi düşündüğümüz bazı konular."
-      admin_guide:
-        title: "Yeni sitenize hoş geldiniz!"
-        content: "Sitenizi ve topluluğunuzu oluşturmaya devam etmek için <a href='%{admin_guide_url}'>yönetici kılavuzunu okuyun</a>."
-        content_no_url: "Sitenizi ve topluluğunuzu oluşturmaya devam etmek için yönetici kılavuzunu okuyun."
     loading: "Yükleniyor…"
     errors:
       prev_page: "şunu yüklemeye çalışırken:"
@@ -3746,8 +3740,6 @@ tr_TR:
       pinned:
         title: "Sabitlendi"
         help: "Bu konu sizin için sabitlendi; kategorisinin en üstünde gösterilecek"
-      unlisted:
-        help: "Bu konu listeden kaldırıldı; konu listelerinde gösterilmeyecek ve sadece doğrudan bir bağlantı üzerinden erişilebilir"
       personal_message:
         title: "Bu konu bir kişisel mesajdır"
         help: "Bu konu bir kişisel mesajdır"
@@ -4367,7 +4359,6 @@ tr_TR:
       clear_filter: "Filtreyi temizle"
       no_results:
         title: "Sonuç yok"
-        description: "'%{filter}' ile eşleşen hiçbir şey bulamadık"
     welcome_topic_banner:
       title: "Karşılama Konunuzu oluşturun"
       description: "Karşılama konunuz, yeni üyelerin okuyacağı ilk şeydir. Bunu “asansör konuşmanız” veya “hedef tanımınız” olarak düşünün. Herkese bu topluluğun kimler için olduğunu, burada ne bulmayı bekleyebileceklerini ve önce ne yapmalarını istediğinizi açıklayın."
@@ -4903,7 +4894,8 @@ tr_TR:
         title: "Hesap"
         sidebar_link:
           backups: "Yedeklemeler"
-          whats_new: "Yenilikler"
+          whats_new:
+            title: "Yenilikler"
       community:
         title: "Topluluk"
         sidebar_link:
@@ -4926,6 +4918,8 @@ tr_TR:
           emoji: "Emoji"
           navigation: "Gezinti"
           themes: "Temalar"
+          components:
+            title: "Bileşenler"
           site_texts: "Site Metinleri"
       email_settings:
         title: "e-posta ayarları"
@@ -5668,9 +5662,6 @@ tr_TR:
           silence: "İlk gönderileri bu kelimelerden herhangi birini içeriyorsa yeni hesapları sessize alın. Personel onaylayana kadar gönderi otomatik olarak gizlenir."
           link: "Gönderilerdeki kelimeleri bağlantılarla değiştirin."
         form:
-          label: "Kelime veya kelime öbeği içerir"
-          placeholder: "Kelime veya kelime öbeği girin (* joker karakterdir)"
-          placeholder_regexp: "normal ifade"
           replace_label: "Değiştirme"
           replace_placeholder: "örnek"
           tag_label: "Etiket"

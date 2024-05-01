@@ -3,7 +3,7 @@
 RSpec.describe "Chat channel", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+  fab!(:message_1) { Fabricate(:chat_message, use_service: true, chat_channel: channel_1) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -146,7 +146,7 @@ RSpec.describe "Chat channel", type: :system do
   end
 
   context "when returning to a channel where last read is not last message" do
-    it "jumps to the bottom of the channel" do
+    it "scrolls to the correct last read message" do
       channel_1.membership_for(current_user).update!(last_read_message: message_1)
       messages = Fabricate.times(50, :chat_message, chat_channel: channel_1)
       chat_page.visit_channel(channel_1)
@@ -278,6 +278,7 @@ RSpec.describe "Chat channel", type: :system do
         :chat_message,
         user: other_user,
         chat_channel: channel_1,
+        use_service: true,
         message: "<mark>not marked</mark>",
       )
     end
@@ -348,7 +349,7 @@ RSpec.describe "Chat channel", type: :system do
         ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
       )
 
-      find(".chat-messages-scroll").scroll_to(0, -1000)
+      find(".chat-messages-scroller").scroll_to(0, -1000)
 
       expect(page).to have_no_css(
         ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",

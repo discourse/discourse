@@ -86,6 +86,14 @@ class TopicsFilter
     @scope
   end
 
+  def self.add_filter_by_status(status, &blk)
+    custom_status_filters[status] = blk
+  end
+
+  def self.custom_status_filters
+    @custom_status_filters ||= {}
+  end
+
   def filter_status(status:, category_id: nil)
     case status
     when "open"
@@ -106,6 +114,10 @@ class TopicsFilter
       end
     when "public"
       @scope = @scope.joins(:category).where("NOT categories.read_restricted")
+    else
+      if custom_filter = TopicsFilter.custom_status_filters[status]
+        @scope = custom_filter.call(@scope)
+      end
     end
 
     @scope

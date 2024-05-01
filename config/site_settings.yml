@@ -1958,7 +1958,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot"
     type: list
     list_type: compact
   browser_update_user_agents:
@@ -2006,7 +2006,7 @@ security:
     list_type: compact
   slow_down_crawler_user_agents:
     type: list
-    default: ""
+    default: "gptbot|claudebot|anthropic-ai|brightbot"
     list_type: compact
   slow_down_crawler_rate: 60
   content_security_policy:
@@ -2375,7 +2375,7 @@ developer:
   admin_sidebar_enabled_groups:
     type: group_list
     list_type: compact
-    default: "1"
+    default: "1|2"
     allow_any: false
     refresh: true
   lazy_load_categories_groups:

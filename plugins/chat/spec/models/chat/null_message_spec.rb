@@ -9,9 +9,9 @@ describe Chat::NullMessage do
     end
   end
 
-  describe "#excerpt" do
+  describe "#build_excerpt" do
     it "returns nil" do
-      expect(null_message.excerpt(max_length: 1)).to be_nil
+      expect(null_message.build_excerpt).to be_nil
     end
   end
 
