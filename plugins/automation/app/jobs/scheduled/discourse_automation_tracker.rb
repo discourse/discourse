@@ -23,22 +23,36 @@ module Jobs
     end
 
     def send_pending_pm(pending_pm)
-      DiscourseAutomation::Scriptable::Utils.send_pm(
-        pending_pm.attributes.slice("target_usernames", "title", "raw"),
-        sender: pending_pm.sender,
-        prefers_encrypt: pending_pm.prefers_encrypt,
-      )
+      DistributedMutex.synchronize(
+        "automation_send_pending_pm_#{pending_pm.id}",
+        validity: 30.minutes,
+      ) do
+        next if !DiscourseAutomation::PendingPm.exists?(pending_pm.id)
 
-      pending_pm.destroy!
+        DiscourseAutomation::Scriptable::Utils.send_pm(
+          pending_pm.attributes.slice("target_usernames", "title", "raw"),
+          sender: pending_pm.sender,
+          prefers_encrypt: pending_pm.prefers_encrypt,
+        )
+
+        pending_pm.destroy!
+      end
     end
 
     def run_pending_automation(pending_automation)
-      pending_automation.automation.trigger!(
-        "kind" => pending_automation.automation.trigger,
-        "execute_at" => pending_automation.execute_at,
-      )
+      DistributedMutex.synchronize(
+        "process_pending_automation_#{pending_automation.id}",
+        validity: 30.minutes,
+      ) do
+        next if !DiscourseAutomation::PendingAutomation.exists?(pending_automation.id)
 
-      pending_automation.destroy!
+        pending_automation.automation.trigger!(
+          "kind" => pending_automation.automation.trigger,
+          "execute_at" => pending_automation.execute_at,
+        )
+
+        pending_automation.destroy!
+      end
     end
   end
 end
