@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
-describe Jobs::StalledTopicTracker do
+describe Jobs::DiscourseAutomation::StalledTopicTracker do
   before { SiteSetting.discourse_automation_enabled = true }
 
   fab!(:automation) do
@@ -21,7 +19,7 @@ describe Jobs::StalledTopicTracker do
       create_post(topic: topic_1, user: user_1, created_at: 1.month.ago)
       create_post(topic: topic_1, user: user_1, created_at: 1.month.ago)
 
-      list = capture_contexts { Jobs::StalledTopicTracker.new.execute }
+      list = capture_contexts { Jobs::DiscourseAutomation::StalledTopicTracker.new.execute }
 
       expect(list.length).to eq(1)
 

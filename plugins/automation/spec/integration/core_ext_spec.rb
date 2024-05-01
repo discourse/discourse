@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "Core extensions" do
   fab!(:automation_1) { Fabricate(:automation) }
   fab!(:automation_2) { Fabricate(:automation) }
