@@ -4,7 +4,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import $ from "jquery";
 import { eq, gt } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ActionList from "discourse/components/topic-list/action-list";
@@ -121,28 +120,6 @@ export default class TopicListItem extends Component {
     return this.args.topic.unread_by_group_member ? "" : "read";
   }
 
-  showEntrance(e) {
-    let target = $(e.target);
-
-    if (
-      target.hasClass("posts-map") ||
-      target.parents(".posts-map").length > 0
-    ) {
-      if (target.prop("tagName") !== "A") {
-        target = target.find("a");
-        if (target.length === 0) {
-          target = target.end();
-        }
-      }
-
-      this.appEvents.trigger("topic-entrance:show", {
-        topic: this.args.topic,
-        position: target.offset(),
-      });
-      return false;
-    }
-  }
-
   navigateToTopic(topic, href) {
     this.historyStore.set("lastTopicIdViewed", topic.id);
     DiscourseURL.routeTo(href || topic.url);
@@ -226,12 +203,6 @@ export default class TopicListItem extends Component {
 
   @action
   click(e) {
-    const result = this.showEntrance(e);
-    if (result === false) {
-      e.preventDefault();
-      return;
-    }
-
     if (
       e.target.classList.contains("raw-topic-link") ||
       e.target.classList.contains("post-activity")
@@ -269,9 +240,6 @@ export default class TopicListItem extends Component {
       this.args.topic.togglePinnedForUser();
       return;
     }
-
-    // TODO:
-    // this.unhandledRowClick(e, this.args.topic);
   }
 
   @action
