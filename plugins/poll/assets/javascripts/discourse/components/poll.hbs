@@ -1,0 +1,190 @@
+<div class="poll {{pollClasses}}">
+  <div class="poll-container">
+    <div class="poll-title">{{this.titleHTML}}</div>
+    {{#if this.notInVotingGroup}}
+      <div class="alert alert-danger">{{this.pollGroups}}</div>
+    {{/if}}
+    {{#if this.isIrv}}
+      <div class="multi-poll">
+        {{#each this.options as |option|}}
+          <div
+            class="multi-poll-option"
+            data-poll-option-id={{option.id}}
+            data-poll-option-rank={{option.rank}}
+          >
+            {{#if this.isIrv}}
+              <PollOptionsDropdown
+                @rank={{option.rank}}
+                @option={{option}}
+                @irv_dropdown_content={{this.irv_dropdown_content}}
+                @sendRank={{this.sendRank}}
+              />
+            {{/if}}
+            {{#if this.isMultiple}}
+              <PollOptionsCheckbox
+                @option={{option}}
+                @sendCheck={{this.sendCheck}}
+              />
+            {{/if}}
+            <span class="option-text">{{option.html}}</span>
+          </div>
+        {{/each}}
+      </div>
+    {{else}}
+      <PollOptions
+        @isCheckbox={{this.isCheckbox}}
+        @options={{this.options}}
+        @votes={{this.vote}}
+        @sendRadioClick={{this.toggleOption}}
+      />
+    {{/if}}
+  </div>
+  <PollInfo @attrs={{this.attributes}} />
+  <div class="poll-buttons">
+    {{#if this.addCastVotesButton}}
+      <button
+        class={{this.castVotesButtonClass}}
+        label="poll.cast-votes.label"
+        title="poll.cast-votes.title"
+        icon={{this.castVotesButtonIcon}}
+        disabled={{this.castVotesDisabled}}
+        action="castVotes"
+      />
+    {{/if}}
+
+    {{#if this.showHideResultsButton}}
+      <button
+        class="btn-default toggle-results"
+        label="poll.hide-results.label"
+        title="poll.hide-results.title"
+        icon="chevron-left"
+        action="toggleResults"
+      />
+    {{/if}}
+
+    {{#if this.showShowResultsButton}}
+      <button
+        class="btn-default toggle-results"
+        label="poll.show-results.label"
+        title="poll.show-results.title"
+        icon="chart-bar"
+        action="toggleResults"
+      />
+    {{/if}}
+
+    {{#if this.showRemoveVoteButton}}
+      <button
+        class="btn-default remove-vote"
+        label="poll.remove-vote.label"
+        title="poll.remove-vote.title"
+        icon="undo"
+        action="removeVote"
+      />
+    {{/if}}
+
+    {{#if this.showDropdown}}
+      <div class="poll-buttons-dropdown">
+        <DropdownSelectBox
+          @candidate={{@option.id}}
+          @value={{this.rank}}
+          @content={{this.getDropdownContent}}
+          @onChange={{action this.selectRank @option.id}}
+          @options={{hash showCaret=true filterable=false}}
+          class="poll-option-dropdown"
+        />
+      </div>
+    {{/if}}
+  </div>
+</div>
+
+{{! html(attrs) {
+    const contents = [];
+    const { poll, post } = attrs;
+    const topicArchived = post.get("topic.archived");
+    const closed = attrs.isClosed;
+    const staffOnly = poll.results === "staff_only";
+    const isStaff = this.currentUser && this.currentUser.staff;
+    const isMe = this.currentUser && post.user_id === this.currentUser.id;
+    const hideResultsDisabled = !staffOnly && (closed || topicArchived);
+    const dropdown = this.attach("discourse-poll-buttons-dropdown", attrs);
+    const dropdownOptionsCount = dropdown.optionsCount(attrs);
+
+    if ((attrs.isMultiple || attrs.isIrv) && !hideResultsDisabled && !attrs.showResults) {
+      const castVotesDisabled = !attrs.canCastVotes;
+      contents.push(
+        this.attach("button", {
+          className: `cast-votes ${castVotesDisabled ? "btn-default" : "btn-primary"
+            }`,
+          label: "poll.cast-votes.label",
+          title: "poll.cast-votes.title",
+          icon: castVotesDisabled ? "far-square" : "check",
+          disabled: castVotesDisabled,
+          action: "castVotes",
+        })
+      );
+    }
+
+    if (attrs.showResults && !hideResultsDisabled) {
+      contents.push(
+        this.attach("button", {
+          className: "btn-default toggle-results",
+          label: "poll.hide-results.label",
+          title: "poll.hide-results.title",
+          icon: "chevron-left",
+          action: "toggleResults",
+        })
+      );
+    }
+
+    if (!attrs.showResults && !hideResultsDisabled) {
+      let showResultsButton;
+
+      if (
+        !(poll.results === "on_vote" && !attrs.hasVoted && !isMe) &&
+        !(poll.results === "on_close" && !closed) &&
+        !(poll.results === "staff_only" && !isStaff) &&
+        poll.voters > 0
+      ) {
+        showResultsButton = this.attach("button", {
+          className: "btn-default toggle-results",
+          label: "poll.show-results.label",
+          title: "poll.show-results.title",
+          icon: "chart-bar",
+          action: "toggleResults",
+        });
+      }
+
+      if (attrs.hasSavedVote) {
+        contents.push(
+          this.attach("button", {
+            className: "btn-default remove-vote",
+            label: "poll.remove-vote.label",
+            title: "poll.remove-vote.title",
+            icon: "undo",
+            action: "removeVote",
+          })
+        );
+      }
+
+      if (showResultsButton) {
+        contents.push(showResultsButton);
+      }
+    }
+
+    // only show the dropdown if there's more than 1 button
+    // otherwise just show the button
+    if (dropdownOptionsCount > 1) {
+      contents.push(dropdown);
+    } else if (dropdownOptionsCount === 1) {
+      const singleOptionId = dropdown._buildContent(attrs)[0].id;
+      let singleOption = buttonOptionsMap[singleOptionId];
+      if (singleOptionId === "toggleStatus") {
+        singleOption = closed
+          ? buttonOptionsMap.openPoll
+          : buttonOptionsMap.closePoll;
+      }
+      contents.push(this.attach("button", singleOption));
+    }
+    return [contents];
+  },
+}); }}

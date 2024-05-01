@@ -23,6 +23,31 @@ div.poll {
     word-break: break-word;
   }
 
+  .multi-poll {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    padding: 0.5em;
+
+    .multi-poll-option {
+      display: inline-flex;
+      details {
+        padding: 0;
+      }
+      summary {
+        min-width: 100px;
+      }
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5em;
+      padding: 0.5em;
+    }
+  }
+
+  // li {
+  //   display: inline-block;
+  // }
+
   img {
     // Hacky way to stop images without width/height
     // from causing abrupt unintended scrolling

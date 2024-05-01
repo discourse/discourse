@@ -72,75 +72,49 @@ function checkUserGroups(user, poll) {
   return userGroups && pollGroups.some((g) => userGroups.includes(g));
 }
 
-createWidget("discourse-poll-option", {
-  tagName: "li",
-  buildKey: (attrs) => `discourse-poll-option-${attrs.option.id}`,
+// createWidget("discourse-poll-option", {
+//   tagName: "li",
+//   buildKey: (attrs) => `discourse-poll-option-${attrs.option.id}`,
 
-  buildAttributes(attrs) {
-    return { tabindex: 0, "data-poll-option-id": attrs.option.id };
-  },
+//   buildAttributes(attrs) {
+//     return { tabindex: 0, "data-poll-option-id": attrs.option.id };
+//   },
 
-  html(attrs) {
-    const contents = [];
-    const { option, vote } = attrs;
-    const chosen = vote.includes(option.id);
+//   html(attrs) {
+//     const contents = [];
+//     const { option, vote } = attrs;
+//     const chosen = vote.includes(option.id);
 
-    if (attrs.isMultiple) {
-      contents.push(iconNode(chosen ? "far-check-square" : "far-square"));
-    } else if (attrs.isIrv) {
-      contents.push(iconNode("circle"));
-    } else {
-      contents.push(iconNode(chosen ? "circle" : "far-circle"));
-    }
+//     if (attrs.isMultiple) {
+//       contents.push(iconNode(chosen ? "far-check-square" : "far-square"));
+//     } else if (attrs.isIrv) {
+//       contents.push(this.attach("discourse-poll-option-dropdown", attrs));
+//     } else {
+//       contents.push(iconNode(chosen ? "circle" : "far-circle"));
+//     }
 
-    contents.push(" ");
-    contents.push(optionHtml(option, this.siteSettings));
+//     contents.push(" ");
+//     contents.push(optionHtml(option, this.siteSettings));
 
-    if (attrs.isIrv) {
-      contents.push(this.attach("discourse-poll-option-dropdown", attrs));
-    }
+//     // if (attrs.isIrv) {
+//     //   contents.push(this.attach("discourse-poll-option-dropdown", attrs));
+//     // }
 
-    return contents;
-  },
+//     return contents;
+//   },
 
-  click(e) {
-    if (!e.target.closest("a")) {
-      this.sendWidgetAction("toggleOption", this.attrs.option);
-    }
-  },
+//   click(e) {
+//     if (!e.target.closest("a")) {
+//       this.sendWidgetAction("toggleOption", this.attrs.option);
+//     }
+//   },
 
-  keyDown(e) {
-    if (e.key === "Enter") {
-      this.click(e);
-    }
-  },
-});
-
-createWidget("discourse-poll-option-dropdown", {
-  tagName: "div.irv-dropdown",
-  buildKey: (attrs) => `discourse-poll-option-dropdown-${attrs.option.id}`,
-
-  html(attrs) {
-    return [
-      new RenderGlimmer(
-        this,
-        "div.irv-dropdown-content",
-        hbsCli`<DropdownSelectBox @value={{@data.value}} @content={{data.content}} @onChange={{action (mut data.selectRank)}} @options={{hash showCaret=false filterable=false none="poll.options.irv.abstain" }} class="poll-option-dropdown"/>`,
-        {
-          ...attrs,
-          value: 0 || "poll.options.irv.abstain", //option.value
-          content: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-          selectRank: this.selectRank.bind(this),
-        }
-      ),
-    ];
-  },
-
-  // TODO Placeholder
-  selectRank(value) {
-    return value * 2;
-  },
-});
+//   keyDown(e) {
+//     if (e.key === "Enter") {
+//       this.click(e);
+//     }
+//   },
+// });
 
 createWidget("discourse-poll-load-more", {
   tagName: "div.poll-voters-toggle-expand",
@@ -355,19 +329,16 @@ createWidget("discourse-poll-container", {
       }
 
       contents.push(
-        h(
-          "ul",
-          options.map((option) => {
-            return this.attach("discourse-poll-option", {
-              option,
-              isMultiple: attrs.isMultiple,
-              isIrv: attrs.isIrv,
-              vote: attrs.vote,
-            });
-          })
+        new RenderGlimmer(
+          this,
+          "div-poll",
+          hbsCli`<Poll @attrs={{@data.attrs}} />`,
+          {
+            ...attrs,
+            attrs,
+          }
         )
       );
-
       return contents;
     }
   },
@@ -821,7 +792,11 @@ createWidget("discourse-poll-buttons", {
     const dropdown = this.attach("discourse-poll-buttons-dropdown", attrs);
     const dropdownOptionsCount = dropdown.optionsCount(attrs);
 
-    if (attrs.isMultiple && !hideResultsDisabled && !attrs.showResults) {
+    if (
+      (attrs.isMultiple || attrs.isIrv) &&
+      !hideResultsDisabled &&
+      !attrs.showResults
+    ) {
       const castVotesDisabled = !attrs.canCastVotes;
       contents.push(
         this.attach("button", {
@@ -950,10 +925,19 @@ export default createWidget("discourse-poll", {
     };
 
     return [
-      this.attach("discourse-poll-container", newAttrs),
-      this.attach("discourse-poll-info", newAttrs),
-      this.attach("discourse-poll-buttons", newAttrs),
+      new RenderGlimmer(
+        this,
+        "div-poll",
+        hbsCli`<Poll @attrs={{@data.attrs}} />`,
+        {
+          attrs: newAttrs,
+        }
+      ),
     ];
+    //   this.attach("discourse-poll-container", newAttrs),
+    //   this.attach("discourse-poll-info", newAttrs),
+    //   this.attach("discourse-poll-buttons", newAttrs),
+    // ];
   },
 
   min() {

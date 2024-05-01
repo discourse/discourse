@@ -1,0 +1,10 @@
+<div class="irv-dropdown">
+  <DropdownSelectBox
+    @candidate={{@option.id}}
+    @value={{this.rank}}
+    @content={{@irv_dropdown_content}}
+    @onChange={{action this.selectRank @option.id}}
+    @options={{hash showCaret=true filterable=false}}
+    class="poll-option-dropdown"
+  />
+</div>

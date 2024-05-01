@@ -1,0 +1,22 @@
+<ul>
+  {{#each @options key="chosen" as |option|}}
+    <li data-poll-option-id={{option.id}} data-poll-option-rank={{option.rank}}>
+      <button onclick={{action this.sendClick option}}>
+        {{#if (this.isChosen option)}}
+          {{#if @isCheckbox}}
+            {{d-icon "far-check-square"}}
+          {{else}}
+            {{d-icon "circle"}}
+          {{/if}}
+        {{else}}
+          {{#if @isCheckbox}}
+            {{d-icon "far-square"}}
+          {{else}}
+            {{d-icon "far-circle"}}
+          {{/if}}
+        {{/if}}
+        <span class="option-text">{{option.html}}</span>
+      </button>
+    </li>
+  {{/each}}
+</ul>
