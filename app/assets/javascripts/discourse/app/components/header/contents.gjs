@@ -56,6 +56,12 @@ export default class Contents extends Component {
         />
       </div>
       <div class="panel" role="navigation">{{yield}}</div>
+      <div class="after-header-panel-outlet">
+        <PluginOutlet
+          @name="after-header-panel"
+          @outletArgs={{hash topic=this.header.topic}}
+        />
+      </div>
     </div>
   </template>
 }
