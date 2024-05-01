@@ -59,6 +59,47 @@ describe Jobs::DiscourseAutomationTracker do
         }
       end
     end
+
+    it "doesn't run multiple times if the job is invoked multiple times concurrently" do
+      count = 0
+
+      DiscourseAutomation::Scriptable.add("no_race_condition") do
+        script { count += 1 }
+
+        triggerables [DiscourseAutomation::Triggers::RECURRING]
+      end
+
+      automation =
+        Fabricate(
+          :automation,
+          script: "no_race_condition",
+          trigger: DiscourseAutomation::Triggers::RECURRING,
+        )
+
+      automation.upsert_field!(
+        "start_date",
+        "date_time",
+        { value: 61.minutes.ago },
+        target: "trigger",
+      )
+
+      automation.upsert_field!(
+        "recurrence",
+        "period",
+        { value: { interval: 1, frequency: "hour" } },
+        target: "trigger",
+      )
+
+      freeze_time(2.hours.from_now) do
+        threads = []
+        5.times { threads << Thread.new { Jobs::DiscourseAutomationTracker.new.execute } }
+        threads.each(&:join)
+      end
+
+      expect(count).to eq(1)
+    ensure
+      DiscourseAutomation::Scriptable.remove("no_race_condition")
+    end
   end
 
   describe "pending pms" do
@@ -100,6 +141,17 @@ describe Jobs::DiscourseAutomationTracker do
           automation.pending_pms.count
         }
       end
+    end
+
+    it "doesn't send multiple messages if the job is invoked multiple times concurrently" do
+      pending_pm.update!(execute_at: 1.hour.from_now)
+      expect do
+        freeze_time(2.hours.from_now) do
+          threads = []
+          5.times { threads << Thread.new { Jobs::DiscourseAutomationTracker.new.execute } }
+          threads.each(&:join)
+        end
+      end.to change { Topic.private_messages_for_user(Discourse.system_user).count }.by(1)
     end
   end
 end

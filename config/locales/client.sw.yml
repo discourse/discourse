@@ -1977,8 +1977,6 @@ sw:
       pinned:
         title: "Imebandikwa"
         help: "Mada hii imebandikwa kwa ajili yako; itatokea juu ya kategoria yake"
-      unlisted:
-        help: "Mada hii imeondolewa kwenye orodha. Haitaonyeshwa kwenye orodha za mada, na njia pekee ya kuifia ni kupitia kiungo chake"
     posts: "Machapisho"
     pending_posts:
       label: "subiria"
@@ -2933,7 +2931,6 @@ sw:
           flag: "Bendera"
           silence: "Imenyamazishwa"
         form:
-          placeholder_regexp: "muonekano wa kawaida"
           link_placeholder: "https://example.com"
           add: "Ongeza"
           success: "Mafanikio"

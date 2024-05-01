@@ -46,6 +46,7 @@ export const MENU = {
   options: {
     animated: true,
     arrow: false,
+    autofocus: false,
     beforeTrigger: null,
     closeOnEscape: true,
     closeOnClickOutside: true,

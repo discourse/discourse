@@ -237,6 +237,9 @@ de:
       ignore_channel_wide_mention:
         title: "Kanalweite Erwähnungen ignorieren"
         description: "Keine Benachrichtigungen für kanalweite Erwähnungen senden (@here und @all)"
+      show_thread_title_prompts:
+        title: "Eingabeaufforderungen für Thread-Titel anzeigen"
+        description: "Eingabeaufforderungen zum Festlegen eines Titels für neue Threads anzeigen"
       open: "Chat öffnen"
       open_full_page: "Vollbild-Chat öffnen"
       close_full_page: "Vollbild-Chat schließen"
@@ -604,6 +607,17 @@ de:
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Thread-Titel festlegen"
+        message: "Hilf anderen, diese Unterhaltung zu entdecken."
+        dismiss_action: "Nicht erneut anzeigen"
+        primary_action: "Titel festlegen"
+      thread_title_modal:
+        title: "Thread-Titel festlegen"
+        input_placeholder: "Sag anderen, worum es in dieser Unterhaltung geht..."
+        discourse_ai:
+          title: "Generiere Thread-Titel automatisch"
+          description: "Unter %{url} erfährst du mehr über diese und andere Verbesserungen für dein Discourse-Erlebnis."
       threads:
         open: "Thread öffnen"
         list: "Threads"

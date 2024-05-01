@@ -899,6 +899,8 @@ cs:
         user_api: "Uživatelské API"
       yaxis: "Den"
       description: "Požadavky API na běžné klíče API a uživatelské klíče API."
+    consolidated_page_views_browser_detection:
+      yaxis: "Den"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Den"
@@ -1030,6 +1032,10 @@ cs:
     page_view_logged_in_mobile_reqs:
       xaxis: "Den"
     page_view_anon_mobile_reqs:
+      xaxis: "Den"
+    page_view_anon_browser_reqs:
+      xaxis: "Den"
+    page_view_logged_in_browser_reqs:
       xaxis: "Den"
     http_background_reqs:
       title: "Pozadí"

@@ -1135,6 +1135,8 @@ fi:
         user_api: "Käyttäjä-API"
       yaxis: "Päivä"
       description: "API-pyynnöt tavallisille API-avaimille ja käyttäjän API-avaimille."
+    consolidated_page_views_browser_detection:
+      yaxis: "Päivä"
     dau_by_mau:
       title: "PAK/KAK"
       xaxis: "Päivä"
@@ -1294,6 +1296,10 @@ fi:
       xaxis: "Päivä"
       yaxis: "Anonyymien mobiilikäyttäjien sivukatselut"
       description: "Kuinka monta sivukatselua kirjautumattomilta mobiilikäyttäjiltä."
+    page_view_anon_browser_reqs:
+      xaxis: "Päivä"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Päivä"
     http_background_reqs:
       title: "Tausta"
       xaxis: "Päivä"

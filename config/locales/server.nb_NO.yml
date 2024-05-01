@@ -696,6 +696,8 @@ nb_NO:
         api: "API"
         user_api: "Bruker-API"
       yaxis: "Dag"
+    consolidated_page_views_browser_detection:
+      yaxis: "Dag"
     dau_by_mau:
       title: "DAB/MAB"
       xaxis: "Dag"
@@ -828,6 +830,10 @@ nb_NO:
       title: "Anonyme Sidevisninger"
       xaxis: "Dag"
       yaxis: "Mobile Anonyme Sidevisninger"
+    page_view_anon_browser_reqs:
+      xaxis: "Dag"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Bakgrunn"
       xaxis: "Dag"

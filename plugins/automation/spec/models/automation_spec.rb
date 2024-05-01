@@ -46,16 +46,6 @@ describe DiscourseAutomation::Automation do
         Jobs::DiscourseAutomationTrigger.jobs.size
       }.by(1)
     end
-
-    it "also runs the script properly" do
-      Jobs.run_immediately!
-      post = Fabricate(:post)
-      user = post.user
-      list = capture_contexts { automation.trigger!({ post: post, user: user, test: :test }) }
-      expect(list[0]["post"].id).to eq(post.id)
-      expect(list[0]["user"].id).to eq(user.id)
-      expect(list[0]["test"]).to eq(:test)
-    end
   end
 
   describe "#detach_custom_field" do

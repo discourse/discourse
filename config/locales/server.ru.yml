@@ -1241,6 +1241,8 @@ ru:
         user_api: "Пользовательский API"
       yaxis: "Дата"
       description: "Запросы к API для обычных и пользовательских API-ключей."
+    consolidated_page_views_browser_detection:
+      yaxis: "Дата"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Дата"
@@ -1400,6 +1402,10 @@ ru:
       xaxis: "Дата"
       yaxis: "Анонимные просмотры с мобильных устройств"
       description: "Количество новых просмотров с мобильных устройств посетителями, которые не вошли в систему."
+    page_view_anon_browser_reqs:
+      xaxis: "Дата"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Дата"
     http_background_reqs:
       title: "Фоновые"
       xaxis: "Дата"

@@ -961,6 +961,8 @@ gl:
         api: "API"
         user_api: "API de usuario"
       yaxis: "Día"
+    consolidated_page_views_browser_detection:
+      yaxis: "Día"
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -1120,6 +1122,10 @@ gl:
       xaxis: "Día"
       yaxis: "Visualizacións de páxinas anónimas desde un dispositivo móbil"
       description: "Número de novas visualizacións de páxina por parte de visitantes desde un dispositivo móbil sen a sesión iniciada."
+    page_view_anon_browser_reqs:
+      xaxis: "Día"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Día"
     http_background_reqs:
       title: "Fondo"
       xaxis: "Día"

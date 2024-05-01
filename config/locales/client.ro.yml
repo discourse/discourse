@@ -1054,9 +1054,7 @@ ro:
         ignore_duration_time_frame_required: "Te rog selectează un interval de timp"
         ignore_no_users: "Nu aveți utilizatori ignorați."
         ignore_option: "Ignorat"
-        ignore_option_title: "Nu vei primi notificări legate de acest utilizator și toate subiectele și răspunsurile acestuia vor fi ascunse."
         mute_option: "Setate pe silențios"
-        mute_option_title: "Nu vei primi notificări legate de acest utilizator."
         normal_option: "Normal"
         normal_option_title: "Vei fi notificat dacă acest utilizator îți răspunde, te citează sau te menționează."
       notification_schedule:
@@ -2802,8 +2800,6 @@ ro:
       pinned:
         title: "Fixat"
         help: "Acest subiect este fixat. Va fi afișat la începutul categoriei din care face parte."
-      unlisted:
-        help: "Acest subiect este invizibil; nu va fi afișat în listele de subiecte și va putea fi accesat numai prin link direct"
     posts: "Postări"
     pending_posts:
       label: "În așteptare"

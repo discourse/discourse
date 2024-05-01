@@ -1198,10 +1198,8 @@ pl_PL:
         ignore_duration_time_frame_required: "Wybierz przedział czasowy"
         ignore_no_users: "Nie posiadasz ignorowanych użytkowników."
         ignore_option: "Zignorowany"
-        ignore_option_title: "Nie będziesz otrzymywać powiadomień związanych z tym użytkownikiem, a wszystkie ich tematy i odpowiedzi będą ukryte."
         add_ignored_user: "Dodaj…"
         mute_option: "Wyciszenie"
-        mute_option_title: "Nie będziesz otrzymywać żadnych powiadomień związanych z tym użytkownikiem."
         normal_option: "Normalny"
         normal_option_title: "Zostaniesz powiadomiony, jeśli ten użytkownik odpowie ci, zacytuje lub o tobie wspomni."
       notification_schedule:
@@ -4115,8 +4113,6 @@ pl_PL:
       pinned:
         title: "Przypięty"
         help: "Temat przypięty dla twojego konta. Będzie wyświetlany na początku swojej kategorii."
-      unlisted:
-        help: "Temat jest niewidoczny: nie będzie wyświetlany na listach tematów a dostęp do niego można uzyskać jedynie poprzez link bezpośredni"
       personal_message:
         title: "Ten temat jest wiadomością prywatną"
         help: "Ten temat jest wiadomością prywatną"
@@ -6139,9 +6135,6 @@ pl_PL:
           silence: "Wycisz nowe konta, jeśli ich pierwszy post zawiera którekolwiek z tych słów. Post zostanie automatycznie ukryty, dopóki personel go nie zatwierdzi."
           link: "Zastąp słowa w postach linkami."
         form:
-          label: "Zawiera słowo lub frazę"
-          placeholder: "Wpisz słowo lub frazę (* to symbol wieloznaczny)"
-          placeholder_regexp: "wyrażenie regularne"
           replace_label: "Zastąpienie"
           replace_placeholder: "przykład"
           tag_label: "Tag"

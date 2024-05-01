@@ -1910,6 +1910,15 @@ id:
         help: "Topik ini telah ditutup; tidak lagi menerima jawaban baru"
       locked_and_archived:
         help: "Topik ini telah ditutup dan diarsip; tidak lagi menerima jawaban baru dan tidak dapat dirubah lagi"
+      unlisted:
+        help: "Topik ini tidak terdaftar; sehingga tidak akan ditampilkan dalam daftar topik, dan hanya dapat diakses melalui tautan langsung. %{unlistedReason}"
+      visibility_reasons:
+        op_flag_threshold_reached: "Topik ini secara otomatis tidak terdaftar karena mencapai ambang batas penandaan"
+        op_unhidden: "Topik ini dicantumkan kembali oleh penulis"
+        embedded_topic: "Topik ini dicantumkan kembali karena merupakan topik tersemat"
+        manually_unlisted: "Topik ini tidak dicantumkan secara manual oleh admin atau moderator"
+        manually_relisted: "Topik ini dicantumkan kembali secara manual oleh admin atau moderator"
+        bulk_action: "Visibilitas topik ini diubah karena tindakan massal yang dilakukan oleh pengguna"
     posts: "Pos"
     pending_posts:
       label: "Tertunda"
