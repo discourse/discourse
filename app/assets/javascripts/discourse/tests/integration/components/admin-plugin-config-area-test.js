@@ -13,7 +13,7 @@ import AdminPlugin from "admin/models/admin-plugin";
 module("Integration | Component | admin-plugin-config-area", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("it renders the plugin config nav and content in the sidebar mode", async function (assert) {
+  test("it renders the plugin config nav and content in the sidebar mode but not along the top", async function (assert) {
     registerAdminPluginConfigNav(
       "discourse-test-plugin",
       PLUGIN_NAV_MODE_SIDEBAR,
@@ -39,8 +39,8 @@ module("Integration | Component | admin-plugin-config-area", function (hooks) {
 
     assert.strictEqual(
       document.querySelectorAll(".admin-plugin-inner-sidebar-nav__item").length,
-      2,
-      "it renders the correct number of nav items"
+      3,
+      "it renders the correct number of sidebar nav items (including always adding a Settings link)"
     );
 
     assert.strictEqual(
@@ -50,7 +50,7 @@ module("Integration | Component | admin-plugin-config-area", function (hooks) {
     );
   });
 
-  test("it does not render the nav items in the sidebar when using top mode", async function (assert) {
+  test("it does not render the nav items in the sidebar when using top mode but it does along the top", async function (assert) {
     registerAdminPluginConfigNav("discourse-test-plugin", PLUGIN_NAV_MODE_TOP, [
       {
         route: "adminPlugins.show.discourse-test-plugin.one",
@@ -73,7 +73,7 @@ module("Integration | Component | admin-plugin-config-area", function (hooks) {
     assert.strictEqual(
       document.querySelectorAll(".admin-plugin-inner-sidebar-nav__item").length,
       0,
-      "it renders the correct number of nav items"
+      "it renders the correct number of sidebar nav items"
     );
 
     assert.strictEqual(
