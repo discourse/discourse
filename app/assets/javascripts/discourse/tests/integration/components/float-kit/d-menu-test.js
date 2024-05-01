@@ -242,4 +242,17 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     assert.dom(".fk-d-menu").doesNotExist();
   });
+
+  test("@autofocus", async function (assert) {
+    await render(hbs`
+      <DMenu @inline={{true}} @autofocus={{true}}>
+        <:content>
+          <DButton class="my-button" />
+        </:content>
+      </DMenu>
+    `);
+    await open();
+
+    assert.dom(document.activeElement).hasClass("my-button");
+  });
 });
