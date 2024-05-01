@@ -1058,10 +1058,8 @@ fi:
         ignore_duration_time_frame_required: "Valitse ajanjakso"
         ignore_no_users: "Et ole sivuuttanut ketään."
         ignore_option: "Sivuutettu"
-        ignore_option_title: "Et saa käyttäjään liittyviä ilmoituksia, ja kaikki hänen aloittamansa ketjut ja vastaukset piilotetaan."
         add_ignored_user: "Lisää…"
         mute_option: "Vaimennettu"
-        mute_option_title: "Et saa tähän käyttäjään liittyviä ilmoituksia."
         normal_option: "Normaali"
         normal_option_title: "Saat ilmoituksen, jos käyttäjä vastaa sinulle, lainaa sinua tai mainitsee sinut."
       notification_schedule:
@@ -1852,10 +1850,6 @@ fi:
       suggested_topics:
         title: "Jatka lukemista!"
         content: "Tässä on muutamia ketjuja, joita saatat haluta lukea seuraavaksi."
-      admin_guide:
-        title: "Tervetuloa uudelle sivustollesi!"
-        content: "<a href='%{admin_guide_url}'>Lue ylläpito-opas</a> jatkaaksesi sivustosi ja yhteisösi rakentamista."
-        content_no_url: "Lue ylläpito-opas jatkaaksesi sivustosi ja yhteisösi rakentamista."
     loading: "Ladataan…"
     errors:
       prev_page: "yrittäessä ladata"
@@ -3689,8 +3683,6 @@ fi:
       pinned:
         title: "Kiinnitetty"
         help: "Tämä ketju on kiinnitetty sinulle; se näytetään alueensa yläosassa"
-      unlisted:
-        help: "Tämä ketju on piilotettu; sitä ei näytetä ketjuluetteloissa, ja siihen pääsee vain suoran linkin kautta"
       personal_message:
         title: "Tämä ketju on yksityisviesti"
         help: "Tämä ketju on yksityisviesti"
@@ -4834,6 +4826,8 @@ fi:
           emoji: "Emojit"
           navigation: "Navigointi"
           themes: "Teemat"
+          components:
+            title: "Komponentit"
       email_settings:
         sidebar_link:
           appearance: "Ulkoasu"
@@ -5559,9 +5553,6 @@ fi:
           silence: "Hiljennä uudet tilit, jos heidän ensimmäinen viestinsä sisältää jonkin näistä sanoista. Viesti piilotetaan automaattisesti, kunnes henkilökunta hyväksyy sen."
           link: "Korvaa sanoja viesteissä linkeillä."
         form:
-          label: "Sisältää sanan tai lauseen"
-          placeholder: "Syötä sana tai lause (* on jokerimerkki)"
-          placeholder_regexp: "säännöllinen lauseke"
           replace_label: "Korvaava teksti"
           replace_placeholder: "esimerkki"
           tag_label: "Tunniste"

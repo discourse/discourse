@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
@@ -13,6 +12,8 @@ import { resetIdle } from "discourse/lib/desktop-notifications";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
+import ChatThreadTitlePrompt from "discourse/plugins/chat/discourse/components/chat-thread-title-prompt";
+import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 import ChatChannelThreadSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-thread-subscription-manager";
 import {
   FUTURE,
@@ -30,12 +31,12 @@ import {
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
-import ChatOnResize from "../modifiers/chat/on-resize";
-import ChatScrollableList from "../modifiers/chat/scrollable-list";
 import ChatComposerThread from "./chat/composer/thread";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
 import Message from "./chat-message";
+import ChatMessagesContainer from "./chat-messages-container";
+import ChatMessagesScroller from "./chat-messages-scroller";
 import ChatSkeleton from "./chat-skeleton";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
 
@@ -58,7 +59,7 @@ export default class ChatThread extends Component {
   @tracked needsArrow = false;
   @tracked uploadDropZone;
 
-  scrollable = null;
+  scroller = null;
 
   @action
   resetIdle() {
@@ -116,7 +117,7 @@ export default class ChatThread extends Component {
         return;
       }
 
-      DatesSeparatorsPositioner.apply(this.scrollable);
+      DatesSeparatorsPositioner.apply(this.scroller);
 
       this.needsArrow =
         (this.messagesLoader.fetchedOnce &&
@@ -164,16 +165,37 @@ export default class ChatThread extends Component {
 
   @bind
   updateLastReadMessage() {
-    // HACK: We don't have proper scroll visibility over
-    // what message we are looking at, don't have the lastReadMessageId
-    // for the thread, and this updateLastReadMessage function is only
-    // called when scrolling all the way to the bottom.
-    this.markThreadAsRead();
+    if (!this.args.thread?.currentUserMembership) {
+      return;
+    }
+
+    const firstFullyVisibleMessageId = firstVisibleMessageId(this.scroller);
+    if (!firstFullyVisibleMessageId) {
+      return;
+    }
+
+    const firstMessage = this.messagesManager.findMessage(
+      firstFullyVisibleMessageId
+    );
+    if (!firstMessage) {
+      return;
+    }
+
+    const lastReadId = this.args.thread.currentUserMembership.lastReadMessageId;
+    if (lastReadId >= firstMessage.id) {
+      return;
+    }
+
+    return this.chatApi.markThreadAsRead(
+      this.args.thread.channel.id,
+      this.args.thread.id,
+      firstMessage.id
+    );
   }
 
   @action
-  setScrollable(element) {
-    this.scrollable = element;
+  registerScroller(element) {
+    this.scroller = element;
   }
 
   @action
@@ -191,7 +213,7 @@ export default class ChatThread extends Component {
     this._ignoreNextScroll = true;
     this.debounceFillPaneAttempt();
     this.debounceUpdateLastReadMessage();
-    DatesSeparatorsPositioner.apply(this.scrollable);
+    DatesSeparatorsPositioner.apply(this.scroller);
   }
 
   async fetchMessages(findArgs = {}) {
@@ -215,17 +237,13 @@ export default class ChatThread extends Component {
     }
 
     const [messages, meta] = this.processMessages(this.args.thread, result);
-    stackingContextFix(this.scrollable, () => {
+    stackingContextFix(this.scroller, () => {
       this.messagesManager.addMessages(messages);
     });
     this.args.thread.details = meta;
 
-    if (this.args.targetMessageId) {
-      this.scrollToMessageId(this.args.targetMessageId, { highlight: true });
-    } else if (this.args.thread.currentUserMembership?.lastReadMessageId) {
-      this.scrollToMessageId(
-        this.args.thread.currentUserMembership?.lastReadMessageId
-      );
+    if (meta.target_message_id) {
+      this.scrollToMessageId(meta.target_message_id, { highlight: true });
     } else {
       this.scrollToTop();
     }
@@ -249,7 +267,7 @@ export default class ChatThread extends Component {
       return;
     }
 
-    stackingContextFix(this.scrollable, () => {
+    stackingContextFix(this.scroller, () => {
       this.messagesManager.addMessages(messages);
     });
     this.args.thread.details = meta;
@@ -311,7 +329,7 @@ export default class ChatThread extends Component {
   ) {
     this._ignoreNextScroll = true;
     const message = this.messagesManager.findMessage(messageId);
-    scrollListToMessage(this.scrollable, message, opts);
+    scrollListToMessage(this.scroller, message, opts);
   }
 
   @bind
@@ -322,7 +340,7 @@ export default class ChatThread extends Component {
       return;
     }
 
-    stackingContextFix(this.scrollable, () => {
+    stackingContextFix(this.scroller, () => {
       this.messagesManager.addMessages([message]);
     });
   }
@@ -343,20 +361,6 @@ export default class ChatThread extends Component {
     });
 
     return [messages, result.meta];
-  }
-
-  // NOTE: At some point we want to do this based on visible messages
-  // and scrolling; for now it's enough to do it when the thread panel
-  // opens/messages are loaded since we have no pagination for threads.
-  markThreadAsRead() {
-    if (!this.args.thread) {
-      return;
-    }
-
-    return this.chatApi.markThreadAsRead(
-      this.args.thread.channel.id,
-      this.args.thread.id
-    );
   }
 
   @action
@@ -424,7 +428,7 @@ export default class ChatThread extends Component {
 
     this.chatThreadPane.sending = true;
     this._ignoreNextScroll = true;
-    stackingContextFix(this.scrollable, async () => {
+    stackingContextFix(this.scroller, async () => {
       await this.args.thread.stageMessage(message);
     });
     this.resetComposerMessage();
@@ -495,13 +499,13 @@ export default class ChatThread extends Component {
   @action
   async scrollToBottom() {
     this._ignoreNextScroll = true;
-    await scrollListToBottom(this.scrollable);
+    await scrollListToBottom(this.scroller);
   }
 
   @action
   async scrollToTop() {
     this._ignoreNextScroll = true;
-    await scrollListToTop(this.scrollable);
+    await scrollListToTop(this.scroller);
   }
 
   @action
@@ -538,19 +542,12 @@ export default class ChatThread extends Component {
       {{didInsert this.setup}}
       {{willDestroy this.teardown}}
     >
-      <div
-        class="chat-thread__body popper-viewport chat-messages-scroll"
-        {{didInsert this.setScrollable}}
-        {{ChatScrollableList
-          (hash
-            onScroll=this.onScroll onScrollEnd=this.onScrollEnd reverse=true
-          )
-        }}
+      <ChatMessagesScroller
+        @onRegisterScroller={{this.registerScroller}}
+        @onScroll={{this.onScroll}}
+        @onScrollEnd={{this.onScrollEnd}}
       >
-        <div
-          class="chat-messages-container"
-          {{ChatOnResize this.didResizePane (hash delay=100 immediate=true)}}
-        >
+        <ChatMessagesContainer @didResizePane={{this.didResizePane}}>
           {{#each this.messagesManager.messages key="id" as |message|}}
             <Message
               @message={{message}}
@@ -566,8 +563,8 @@ export default class ChatThread extends Component {
               <ChatSkeleton />
             {{/if}}
           {{/unless}}
-        </div>
-      </div>
+        </ChatMessagesContainer>
+      </ChatMessagesScroller>
 
       <ChatScrollToBottomArrow
         @onScrollToBottom={{this.scrollToLatestMessage}}
@@ -582,11 +579,12 @@ export default class ChatThread extends Component {
           @thread={{@thread}}
           @onSendMessage={{this.onSendMessage}}
           @uploadDropZone={{this.uploadDropZone}}
-          @scrollable={{this.scrollable}}
+          @scroller={{this.scroller}}
         />
       {{/if}}
 
       <ChatUploadDropZone @model={{@thread}} />
+      <ChatThreadTitlePrompt @thread={{@thread}} />
     </div>
   </template>
 }

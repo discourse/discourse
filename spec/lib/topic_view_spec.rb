@@ -72,6 +72,8 @@ RSpec.describe TopicView do
     fab!(:p0) { Fabricate(:post, topic: topic) }
     fab!(:p1) { Fabricate(:post, topic: topic, wiki: true) }
 
+    after { TopicView.custom_filters.clear }
+
     it "allows to register custom filters" do
       tv = TopicView.new(topic.id, evil_trout, { filter: "wiki" })
       expect(tv.filter_posts({ filter: "wiki" })).to eq([p0, p1])
@@ -83,8 +85,6 @@ RSpec.describe TopicView do
 
       tv = TopicView.new(topic.id, evil_trout, { filter: "whatever" })
       expect(tv.filter_posts).to eq([p0, p1])
-    ensure
-      TopicView.instance_variable_set(:@custom_filters, {})
     end
   end
 

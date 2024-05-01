@@ -521,6 +521,7 @@ export default {
           notification_level: null,
           background_url: null,
           has_children: true,
+          subcategory_count: 2,
         },
         {
           id: 1002,

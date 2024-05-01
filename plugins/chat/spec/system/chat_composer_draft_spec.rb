@@ -6,6 +6,7 @@ RSpec.describe "Chat composer draft", type: :system do
   fab!(:message_1) do
     Fabricate(
       :chat_message,
+      use_service: true,
       chat_channel: channel_1,
       message: "This is a message for draft and replies",
     )

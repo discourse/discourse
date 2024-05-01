@@ -55,9 +55,7 @@ module ChatSystemHelpers
   end
 
   def thread_excerpt(message)
-    CGI.escapeHTML(
-      message.censored_excerpt(max_length: ::Chat::Thread::EXCERPT_LENGTH).gsub("&hellip;", "…"),
-    )
+    message.excerpt
   end
 end
 

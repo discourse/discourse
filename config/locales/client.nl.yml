@@ -1059,10 +1059,8 @@ nl:
         ignore_duration_time_frame_required: "Selecteer een tijdsbestek"
         ignore_no_users: "Je hebt geen genegeerde gebruikers."
         ignore_option: "Genegeerd"
-        ignore_option_title: "Je ontvangt geen meldingen met betrekking tot deze gebruiker en alle topics en antwoorden ervan worden verborgen."
         add_ignored_user: "Toevoegen…"
         mute_option: "Gedempt"
-        mute_option_title: "Je ontvangt geen meldingen met betrekking tot deze gebruiker."
         normal_option: "Normaal"
         normal_option_title: "Je ontvangt een melding als deze gebruiker een bericht van je beantwoordt, je citeert, of je naam noemt."
       notification_schedule:
@@ -1856,10 +1854,6 @@ nl:
       suggested_topics:
         title: "Blijf lezen!"
         content: "Hier zijn enkele topics waarvan we denken dat je ze misschien leuk vindt om te lezen."
-      admin_guide:
-        title: "Welkom op je nieuwe site!"
-        content: "<a href='%{admin_guide_url}'>Lees de beheerdersgids</a> om door te gaan met het bouwen van je site en community."
-        content_no_url: "Lees de beheerdersgids om door te gaan met het bouwen van je site en community."
     loading: "Laden…"
     errors:
       prev_page: "tijdens het laden van"
@@ -3699,8 +3693,6 @@ nl:
       pinned:
         title: "Vastgemaakt"
         help: "Dit topic is voor je vastgemaakt; het wordt weergegeven bovenaan de categorie"
-      unlisted:
-        help: "Dit topic is niet zichtbaar; het wordt niet weergegeven niet in topiclijsten en is alleen toegankelijk via een rechtstreekse link"
       personal_message:
         title: "Dit topic is een persoonlijk bericht"
         help: "Dit topic is een persoonlijk bericht"
@@ -4850,6 +4842,8 @@ nl:
           emoji: "Emoji"
           navigation: "Navigatie"
           themes: "Thema's"
+          components:
+            title: "Onderdelen"
       email_settings:
         sidebar_link:
           appearance: "Vormgeving"
@@ -5575,9 +5569,6 @@ nl:
           silence: "Demp nieuwe accounts als hun allereerste bericht een of meer van deze woorden bevat. Het bericht wordt automatisch verborgen totdat het personeel het goedkeurt."
           link: "Vervang woorden in berichten door links."
         form:
-          label: "Bevat woord of zin"
-          placeholder: "Voer woord of zin in (* is een joker)"
-          placeholder_regexp: "reguliere expressie"
           replace_label: "Vervanging"
           replace_placeholder: "voorbeeld"
           tag_label: "Tag"

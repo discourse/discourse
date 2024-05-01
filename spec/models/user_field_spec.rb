@@ -30,4 +30,14 @@ RSpec.describe UserField do
 
     expect(user_field.description).to eq(link)
   end
+
+  it "enqueues index user fields job on save" do
+    user_field = Fabricate(:user_field)
+
+    user_field.update!(description: "tomtom")
+
+    expect(
+      job_enqueued?(job: Jobs::IndexUserFieldsForSearch, args: { user_field_id: user_field.id }),
+    ).to eq(true)
+  end
 end

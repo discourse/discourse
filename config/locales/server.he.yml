@@ -141,6 +141,7 @@ he:
         not_valid_boolean_value: "חייב להיות ערך בוליאני"
         humanize_not_valid_enum_value: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות אחד מהבאים %{choices}."
         not_valid_enum_value: "חייב להיות אחד מהבאים: %{choices}"
+        not_valid_categories_value: "חייב להיות מערך של מזהי קטגוריות תקניים"
         humanize_not_valid_topic_value: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות מזהה נושא תקין."
         not_valid_topic_value: "חייב להיות מזהה נושא תקין"
         humanize_not_valid_post_value: "המאפיין במצביע ה־JSON‏ ‚%{property_json_pointer}’ חייב להיות מזהה פוסט תקין."
@@ -1296,6 +1297,13 @@ he:
         user_api: "API של משתמש"
       yaxis: "יום"
       description: "בקשות API למפתחות API רגילים ומפתחות API של משתמשים."
+    consolidated_page_views_browser_detection:
+      title: "צפיות עמודים מאוחדות עם זיהוי דפדפן (ניסיוני)"
+      xaxis:
+        page_view_anon_browser: "דפדפן אלמוני"
+        page_view_logged_in_browser: "דפדפן עם כניסה למערכת"
+        page_view_crawler: "סורק ידוע"
+      yaxis: "יום"
     dau_by_mau:
       title: "יחס פעילות יומי/חודשי"
       xaxis: "יום"
@@ -1455,6 +1463,10 @@ he:
       xaxis: "יום"
       yaxis: "צפיות אלמוניות מניידים"
       description: "מספר צפיות העמודים החדשות ממשתמשים במכשירים ניידים שלא נכנסו לחשבונם."
+    page_view_anon_browser_reqs:
+      xaxis: "יום"
+    page_view_logged_in_browser_reqs:
+      xaxis: "יום"
     http_background_reqs:
       title: "רקע"
       xaxis: "יום"
@@ -1694,6 +1706,7 @@ he:
     summarization_strategy: "דרכים נוספות לסכם תוכן שנרשם על ידי תוספים"
     custom_summarization_allowed_groups: "קבוצות שמורשות לסכם תכנים באמצעות `summarization_strategy` (אסטרטגיית תקצור)."
     enable_personal_messages: "יצא מכלל שימוש, יש להשתמש בהגדרה ‚קבוצות בהן מופעלות הודעות אישיות’. לאפשר למשתמשים בדרגת אמון 1 (ניתן להגדרה דרך אמון מזערי לשליחת הודעות) ליצור הודעות ולענות להודעות. נא לשים לב שהסגל תמיד יכול לשלוח הודעות, ללא קשר."
+    personal_message_enabled_groups: "לאפשר למשתמשים בקבוצות האלה ליצור הודעות אישיות. חשוב: 1) כל המשתמשים יכולים להגיב להודעות. 2) מנהלים ומפקחים יכולים ליצור הודעות לכל משתמש שהוא. 3) קבוצות דרגות האמון כוללות רמות גבוהות יותר, נא לבחור trust_level_1 כדי לאפשר דרגות 1, 2, 3, 4 אבל לא להרשות ל־0. 4) הגדרות התכתבות קבוצתיות דורסות את ההגדרה הזאת להתכתבות בקבוצות מסוימות."
     enable_system_message_replies: "מאפשר למשתמשים להגיב להודעות מערכת אפילו כשהודעות אישיות מושבתות"
     enable_chunked_encoding: "הפעלת תגובות קידוד מחולקות מצד השרת. תכונה זו עובדת ברוב התצורות אך חלק מהמתווכים עשויים לכלוא כצעד ביניים, מה שעלול לגרום להאטה"
     long_polling_base_url: "כתובת הבסיס שמשמשת לתשאול ארוך (כאשר CDN מגיש תוכן דינמי, יש להגדיר זאת למשיכה המקורית) למשל: http://origin.site.com"
@@ -1846,6 +1859,9 @@ he:
     enable_discord_logins: "לאפשר למשתמשים לעבור אימות דרך Discord?"
     discord_client_id: 'מזהה לקוח Discord (אין לך כזה? יש לבקר ב<a href="https://discordapp.com/developers/applications/me">פורטל המפתחים של Discord</a>)'
     discord_trusted_guilds: 'לאפשר רק למשתמש מגילדות ה־Discord האלה להיכנס באמצעות Discord. עליך להשתמש במזהה המספרי של הגילדה. למידע נוסף, יש לעיין בהנחיות ש<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">כאן</a>. שדה ריק משמעו כל גילדה שהיא.'
+    enable_linkedin_oidc_logins: "הפעלת אימות דרך LinkedIn, דורש את הגדרת linkedin_client_id ו־linkedin_client_secret."
+    linkedin_oidc_client_id: "מזהה לקוח לאימות מול LinkedIn, ניתן להירשם ב־<a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
+    linkedin_oidc_client_secret: "סוד לקוח לאימות מול LinkedIn, ניתן להירשם ב־<a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
     enable_backups: "לאפשר למנהלים ליצור גיבויים של הפורום"
     allow_restore: "לאפשר שחזור, מה שיכול להחליף את כל (!) המידע באתר! יש להשבית אלא אם כן בכוונתך לשחזר גיבוי"
     maximum_backups: "המספר המרבי של גיבויים לשמירה. גיבויים ישנים יותר יימחקו אוטומטית"
@@ -1956,31 +1972,20 @@ he:
     edit_all_topic_groups: "לאפשר למשתמשים בקבוצה זו לערוך את כותרות הנושאים, התגיות והקטגוריות של משתמשים אחרים"
     edit_all_post_groups: "לאפשר למשתמשים בקבוצה זו לערוך פוסטים של משתמשים אחרים"
     min_trust_to_create_topic: "דרגת האמון המזערית הנדרשת ליצירת נושא חדש."
-    create_topic_allowed_groups: "קבוצות שמורשות ליצור פוסטים חדשים."
     allow_flagging_staff: "אם אפשרות זו פעילה, משתמשים יכולים לסמן בדגל פוסטים שפורסמו על ידי חשבונות סגל."
     min_trust_to_edit_wiki_post: "דרגת האמון המזערית הנדרשת לעריכת פוסט המסומן כוויקי."
-    edit_wiki_post_allowed_groups: "קבוצות שמורשות לפרסם דברים שמסומנים כוויקי."
     min_trust_to_edit_post: "דרגת האמון המזערית הנדרשת לעריכת פוסטים."
-    edit_post_allowed_groups: "קבוצות שמורשות לערוך פוסטים."
     min_trust_to_allow_self_wiki: "דרגת האמון המזערית הנדרשת להפיכת פוסט עצמי של משתמש לוויקי."
-    self_wiki_allowed_groups: "קבוצות שבהן משתמשים יכולים ליצור פוסט משל עצמם בוויקי."
     min_trust_to_send_messages: "יצא מכלל שימוש, יש להשתמש בהגדרה ‚קבוצות בהן מופעלות הודעות אישיות’. דרגת האמון המזערית שנדרשת ליצירת הודעות אישיות."
     min_trust_to_send_email_messages: "דרגת האמון המזערית שנדרשת לשליחת הודעות פרטיות בדוא״ל."
-    send_email_messages_allowed_groups: "קבוצות המורשות לשלוח הודעות אישיות בדוא״ל."
     min_trust_to_flag_posts: "דרגת האמון המזערית הנדרשת לסימון פוסטים בדגל"
-    flag_post_allowed_groups: "קבוצות שמורשות לסמן פוסטים."
     min_trust_to_post_links: "דרגת האמון המזערית להוספת קישורים לפוסטים"
     post_links_allowed_groups: "קבוצות שמורשות לכלול קישורים בפוסטים. מנהלים ומפקחים תמיד מורשים לפרסם קישורים."
     min_trust_to_post_embedded_media: "דרגת האמון המזערית הנדרשת להטמעת מדיה בפוסט"
-    embedded_media_post_allowed_groups: "למשתמשים בקבוצות האלה מותר להטמיע פריטי מדיה בפוסט"
     min_trust_level_to_allow_profile_background: "דרגת האמון המזערית שנדרשת להעלאת רקע לפרופיל"
-    profile_background_allowed_groups: "קבוצות שמורשות להעלות רקע לפרופיל המשתמש."
     min_trust_level_to_allow_user_card_background: "דרגת האמון המזערית שנדרשת להעלאת רקע לכרטיס המשתמש"
-    user_card_background_allowed_groups: "קבוצות שמורשות להעלות רקע לכרטיס המשתמש."
     min_trust_level_to_allow_invite: "דרגת האמון המזערית הנדרשת להזמנת משתמשים"
-    invite_allowed_groups: "קבוצות שמורשות להזמין משתמשים."
     min_trust_level_to_allow_ignore: "דרגת האמון המזערית הנדרשת להתעלמות ממשתמשים"
-    ignore_allowed_groups: "קבוצות שמורשות להתעלם ממשתמשים אחרים."
     allowed_link_domains: "שמות תחום אליהם משתמשים יכולים לקשר גם אם אינם בדרגת האמון הנדרשת לפרסום קישורים"
     newuser_max_links: "כמה קישורים יכול משתמש חדש להוסיף לפוסט."
     newuser_max_embedded_media: "כמה פריטי מדיה מוטמעים יכול משתמש חדש להוסיף לפוסט."
@@ -1992,7 +1997,6 @@ he:
     here_mention: "שם שישמש ל־@איזכור כדי לאפשר למשתמשים מורשים להודיע לכמות של עד ‚max_here_mentioned’ (כמות מאוזכרים מרבית במקום) אנשים שמשתתפים בנושא. לא יכול להיות שם משתמש קיים."
     max_here_mentioned: "מספר האנשים המרבי שמוזכרים על ידי ‎@here."
     min_trust_level_for_here_mention: "דרגת האמון המזערית המורשית להזכיר את ‎@here."
-    here_mention_allowed_groups: "קבוצות שמורשות לאזכר את ‎@here (@כאן)"
     create_thumbnails: "יצירת תמונות מוקטנות והארת תמונות גדולות מידי מלהיכלל בפוסט."
     email_time_window_mins: "להמתין (n) דקות בטרם כל שליחת התראה בדוא״ל, כדי לאפשר למשתמשים הזדמנות לערוך ולוודא באופן סופי את הפוסטים שלהם."
     personal_email_time_window_seconds: "להמתין (n) שניות בטרם שליחת הודעות בדוא״ל עם התראות על הודעות אישיות, כדי לתת למשתמשים הזדמנות לסיים את עריכת ההודעות שלהם."
@@ -2111,7 +2115,6 @@ he:
     log_mail_processing_failures: "לתעד את כל שגיאות עיבוד הדוא״ל אל <a href='%{base_path}/logs' target='_blank'>‎/logs</a>"
     email_in: "לאפשר למשתמשים לפרסם נושאים חדשים דרך דוא״ל. לאחר הפעלת ההגדרה הזאת, יתאפשר לך להגדיר כתובות דוא״ל נכנסות לקבוצות ולקטגוריות."
     email_in_min_trust: "דרגת האמון המזערית הנדרשת למשתמש כדי לפרסם נושאים חדשים דרך הדוא״ל."
-    email_in_allowed_groups: "קבוצות שמורשות לפרסם נושאים חדשים דרך דוא״ל."
     email_in_authserv_id: "מזהה השירות מבצע בדיקות אימות על הודעות דוא״ל נכנסות. יש לעיין ב־<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> לקבלת הנחיות כיצד להגדיר זאת."
     enable_imap: "הפעלת IMAP לסנכרון הודעות קבוצתיות."
     enable_imap_write: "הפעלת סנכרון IMAP דו־כיווני. אם האפשרות מושבתת, כל פעולות הכתיבה בחשבונות ה־IMAP יושבתו."
@@ -2224,6 +2227,7 @@ he:
     notify_about_reviewable_item_after: "אם יש פריטים לסקירה שלא טופלו לאחר כמות זו של שעות, תישלח הודעה אישית אל המפקחים. 0 להשבתה."
     delete_drafts_older_than_n_days: "מחיקת טיוטות שלא נערכו במשך למעלה מ־(n) ימים."
     delete_merged_stub_topics_after_days: "מספר הימים להמתנה לפני מחיקה אוטומטית של נושאים מקוצרים שמוזגו במלואם. יש להגדיר ל־0 כדי לא למחוק נושאים מקוצרים לעולם."
+    bootstrap_mode_min_users: "מספר משתמשים מזערי שנדרש כדי להשבית מצב ראשוניות ולהסיר את כפתור איך מתחילים (0 להשבתה, יכול לארוך עד 24 שעות)"
     prevent_anons_from_downloading_files: "למנוע ממשתמשים אלמוניים להוריד קבצים מצורפים."
     secure_uploads: 'מגביל גישה לכל ההעלאות (תמונות, סרטונים, שמע, טקסט, קובצי PDF, ארכיוני zip ועוד). אם מופעלת האפשרות „דרישת כניסה”, רק משתמשים שנכנסו למערכת יכולים לגשת להעלאות. אחרת, הגישה תוגבל רק להעלאות מסוגי מדיה בהודעות פרטיות ובקטגוריות פרטיות. אזהרה: מדובר בהגדרה מסובכת שדורשת הבנה עמוקה בניהול המערכת. יש לעיין ב<a target="_blank" href="https://meta.discourse.org/t/-/140017">נושא ההעלאות המאובטחות ב־Meta</a> לקבלת פרטים נוספים.'
     secure_uploads_allow_embed_images_in_emails: "מאפשר להטמיע תמונות מאובטחות שבדרך כלל יידחסו אם הגודל שלהן קטן מההגדרה ‚secure uploads max email embed image size kb’ (גודל העלאות מרבי להטמעה כתמונה בקילובתים)."
@@ -2237,9 +2241,7 @@ he:
     emoji_deny_list: "סמלי האמוג׳י האלה לא יהיו זמינים לשימוש בתפריטים או בקודים מקוצרים."
     approve_post_count: "מספר הפוסטים ממשתמשים חדשים או בסיסיים שחייבים לאשר אותם"
     approve_unless_trust_level: "פוסטים שנוצרו על ידי משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
-    approve_unless_allowed_groups: "פוסטים שנוצרו על ידי משתמשים שאינם בקבוצות האלו דורשים אישור"
     approve_new_topics_unless_trust_level: "נושאים חדשים שנוצרו על ידי משתמשים מתחת לדרגת אמון זו חייבים לעבור אישור"
-    approve_new_topics_unless_allowed_groups: "נושאים חדשים שנוצרו על ידי משתמשים שאינם בקבוצות האלו דורשים אישור"
     approve_unless_staged: "יש לאשר נושאים ופוסטים חדשים שנוצרו על ידי משתמשים מבוימים"
     notify_about_queued_posts_after: "אם יש פוסטים שממתינים לסקירה מעבר לכמות כזו של שעות, יש לשלוח התראה לכל המפקחים. 0 משבית את ההתראות האלה."
     reviewable_revision_reasons: "רשימת סיבות שניתן לבחור בעת דחיית פוסט לסקירה שעומד בתור עם מהדורה. ‚אחר’ תמיד זמין בנוסף, הוא מאפשר לך לציין סיבה משלך."
@@ -2257,7 +2259,6 @@ he:
     returning_user_notice_tl: "דרגת האמון המזערית הדרושה לצפייה בהתראות משתמש חוזר."
     returning_users_days: "כמה ימים אמורים לעבור לפני שמשתמש נחשב למשתמש חוזר."
     review_media_unless_trust_level: "הסגל יסקור פוסטים של משתמשים עם דרגות אמון נמוכות יותר אם הוטמעה בהם מדיה."
-    skip_review_media_groups: "פוסטים של משתמשים שאינם באף אחת מהקבוצות האלה יישלחו לסגל לסקירה אם הפוסט מכיל מדיה מוטמעת."
     blur_tl0_flagged_posts_media: "לטשטש פוסטים שסומנו בדגל כדי להסתיר תוכן שעוי להיות פוגעני."
     enable_page_publishing: "לאפשר לחברי סגל לפרסם נושאים לכתובות חדשות עם סגנון עצמאי."
     show_published_pages_login_required: "משתמשים אלמוניים יכולים לראות דפים שפורסמו, אפילו כשנדרשת כניסה למערכת."
@@ -2305,16 +2306,12 @@ he:
     min_trust_level_for_user_api_key: |
       נדרשת דרגת אמון ליצירת מפתחות API למשתמש.<br>
       <b>אזהרה</b>: שינוי דרגת האמון ימנע ממשתמשים עם דרגת אמון נמוכה יותר להיכנס דרך Discourse Hub
-    user_api_key_allowed_groups: |
-      נדרשת חברות בקבוצה ליצירת מפתחות API למשתמש.<br>
-      <b>אזהרה</b>: שינוי דרגת האמון ימנע ממשתמשים עם דרגת אמון נמוכה יותר להיכנס דרך Discourse Hub
     allowed_user_api_auth_redirects: "כתובת מורשית להפניית אימות למפתחות API של משתמש. בסימן התו־כל * ניתן להשתמש כדי ללכוד חלק ממנה (למשל: www.example.com/*‎)."
     allowed_user_api_push_urls: "URLים מורשים לדחיפת שרת ל API של משתמשים."
     revoke_user_api_keys_unused_days: "מספר הימים אחרי השימוש האחרון במפתח API של משתמש לפני שלילתו אוטומטית (0 כדי לא לשלול לעולם)"
     revoke_user_api_keys_maxlife_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API של משתמש (0 - לעולם לא)."
     tagging_enabled: "להפעיל תגיות על נושאים? אפשר לעיין <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>במדריך למנהלים על תגיות ב־Meta</a> למידע נוסף."
     min_trust_to_create_tag: "דרגת האמון המזערית שנדרשת כדי ליצור תגית."
-    create_tag_allowed_groups: "קבוצות שמורשות ליצור תגיות."
     max_tags_per_topic: "כמות התגיות המרבית שניתן להקצות לנושא."
     enable_max_tags_per_email_subject: "להשתמש ב־max_tags_per_email_subject (כמות תגיות מרבית לנושא הודעת דוא״ל) בעת יצירת נושא להודעת דוא״ל"
     max_tags_per_email_subject: "מס׳ התגיות המרבי שיכול להיות בנושא של הודעת דוא״ל"
@@ -2324,7 +2321,6 @@ he:
     tags_sort_alphabetically: "הצגת תגיות בסדר אלפביתי. בררת המחדל היא להציג אותן לפי פופולאריות."
     tags_listed_by_group: "הצגת תגיות לפי קבוצת תגיות ב<a href='%{base_path}/tags' target='_blank'>עמוד התגיות</a>."
     min_trust_level_to_tag_topics: "דרגת האמון המזערית שדרושה כדי לתייג נושאים"
-    tag_topic_allowed_groups: "קבוצות שמורשות לתייג נושאים."
     suppress_overlapping_tags_in_list: "אם תגיות תואמות מילים בכותרות נושאים באופן מדויק, לא להציג את התגית"
     remove_muted_tags_from_latest: "לא להציג נושאים שמתויגים רק בתגיות מושתקות ברשימת הנושאים האחרונים."
     force_lowercase_tags: "לאלץ את כל התגיות החדשות להיות באותיות קטנות בלבד."
@@ -2367,6 +2363,7 @@ he:
     enable_custom_sidebar_sections: "ניסיוני: הפעלת אגפים משלך בסרגל הצד"
     experimental_topics_filter: "ניסיוני: מפעיל את נתיב סינון הנושאים הניסיוני תחת ‎/filter"
     enable_experimental_lightbox: "ניסיוני: להחליף את התיבה הקלילה לתמונות כברירת מחדל לעיצוב המשופר."
+    enable_experimental_bookmark_redesign_groups: "ניסיוני: הצגת תפריט גישה מהירה לסימניות על פוסטים וחלונית בורחת חדשה"
     experimental_form_templates: "ניסיוני: יש להפעיל את יכולת תבניות הטפסים. <b>לאחר ההפעלה,</b> אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
     admin_sidebar_enabled_groups: "ניסיוני: הפעלת ניווט בסרגל הצד למנשק המשתמש של הניהול לקבוצות שצוינו, מחליף את כפתורי הניווט באפשרויות הניהול ברמה העליונה."
     lazy_load_categories_groups: "ניסיוני: לטעון בעצלות את פרטי הקטגוריה רק למשתמשים בקבוצות האלה. הגדרה זו משפרת את הביצועים באתרים עם הרבה קטגוריות."
@@ -2421,6 +2418,7 @@ he:
       unicode_usernames_avatars: "התמונות הייצוגיות הפנימיות של המערכת אינן תומכות בשמות משתמשים עם יוניקוד."
       markdown_linkify_tlds: "לא ניתן לכלול ערך של ‚*’."
       google_oauth2_hd_groups: "עליך להגדיר את כל הגדרות ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
+      linkedin_oidc_credentials: "יש להגדיר פרטי גישה ל־LinkedIn מסוג OIDC‏ (‚linkedin_oidc_client_id’ ואת ‚linkedin_oidc_client_secret’) בטרם הפעלת ההגדרה הזאת."
       search_tokenize_chinese_enabled: "עליך להשבית את ‚search_tokenize_chinese’ (חיפוש מפרק סינית) בטרם הפעלת הגדרה זו."
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
@@ -2687,6 +2685,7 @@ he:
         updating_site_settings: "הגדרות האתר מתעדכנות…"
         updating_user_stats: "סטטיסטיקת המשתמש מתעדכנת…"
         merging_user_attributes: "מאפייני המשתמש מתמזגים…"
+        merging_user_associated_accounts: "החשבונות המשויכים למשתמש ממוזגים…"
         updating_user_ids: "מזהי המשתמש מתעדכנים…"
         deleting_source_user: "משתמש המקור נמחק…"
   user:
@@ -2861,9 +2860,35 @@ he:
   new_version_mailer:
     title: "שולח-מיילים של גרסה חדשה"
     subject_template: "[%{email_prefix}] גרסת Discourse חדשה, עדכון זמין."
+    text_body_template: |
+      הידד, יצאה גרסה חדשה של [Discourse](https://www.discourse.org)!
+
+      הגרסה שלך: %{installed_version}
+      הגרסה החדשה: **%{new_version}**
+
+      - ניתן לעדכן בעזרת **[עדכון מהיר בלחיצה אחת דרך הדפדפן](%{base_url}/admin/update)**
+
+      - מה שחדש בגרסה מופיע ב[הערות ההפצה](https://meta.discourse.org/tag/release-notes) או שניתן לצפות [ביומן השינויים הגולמי ב־GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - ממליצים לך לבקר ב־[meta.discourse.org](https://meta.discourse.org) לקבלת חדשות, דיונים ותמיכה ב־Discourse
   new_version_mailer_with_notes:
     title: "שולח-מיילים של גרסה חדשה עם הערות"
     subject_template: "[%{email_prefix}] עדכון זמין"
+    text_body_template: |
+      היאח, יצאה גרסה חדשה של [Discourse](https://www.discourse.org)!
+
+      הגרסה שלך: %{installed_version}
+      הגרסה החדשה: **%{new_version}**
+
+      - אפשר לעדכן בעזרת **[עדכון בלחיצה אחת דרך הדפדפן](%{base_url}/admin/update)**
+
+      - צפייה ב[הערות המהדורה](https://meta.discourse.org/tag/release-notes) תציג בפניך את כל השינויים או צפייה ב[יומן השינויים הגולמי של GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - ניתן לבקר ב־[meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים ותמיכה ב־Discourse
+
+      ### הערות מהדורה
+
+      %{notes}
   flag_reasons:
     off_topic: "הפוסט שלך סומן כ**מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון."
     inappropriate: "הפוסט שלך סומן כ**בלתי הולם**: הקהילה מרגישה שהוא מעליב, פוגע, מלבה שנאה או מפר את [הנחיות הקהילה שלנו](%{base_path}/guidelines)"

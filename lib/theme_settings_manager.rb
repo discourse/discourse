@@ -10,7 +10,7 @@ class ThemeSettingsManager
   def self.cast_row_value(row)
     type_name = self.types.invert[row.data_type].downcase.capitalize
     klass = "ThemeSettingsManager::#{type_name}".constantize
-    klass.cast(row.value)
+    klass.cast(klass.extract_value_from_row(row))
   end
 
   def self.create(name, default, type, theme, opts = {})
@@ -21,6 +21,10 @@ class ThemeSettingsManager
 
   def self.cast(value)
     value
+  end
+
+  def self.extract_value_from_row(row)
+    row.value
   end
 
   def initialize(name, default, theme, opts = {})

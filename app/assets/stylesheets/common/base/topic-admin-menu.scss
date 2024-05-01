@@ -1,42 +1,10 @@
 // Styles for the topic admin menu
 
 .topic-admin-popup-menu {
-  @include breakpoint(mobile-extra-large) {
-    width: calc(100% - 20px);
-    margin: 0 10px;
-    padding: 0;
-    padding-bottom: env(safe-area-inset-bottom);
-    z-index: z("modal", "popover");
-
-    @keyframes slideUp {
-      0% {
-        transform: translateY(100%);
-      }
-      100% {
-        transform: translateY(0);
-      }
-    }
-    animation: slideUp 0.3s;
-    @media (prefers-reduced-motion) {
-      animation-duration: 0s;
-    }
-  }
-
-  .mobile-view & {
-    z-index: z("modal", "popover");
-  }
-
-  .btn {
-    padding: 0.5rem;
-
-    .d-icon {
-      font-size: var(--font-down-1);
-      margin-top: 2px; // vertical alignment
-      margin-right: 0.75em;
-    }
-  }
-
   ul {
+    margin: 0;
+    list-style: none;
+
     li {
       border: none;
       &:not(:last-of-type) {
@@ -45,81 +13,22 @@
       }
     }
     ul {
-      padding: 0.5rem;
+      padding: 0.5em;
       &:not(:last-of-type) {
         border-bottom: 1px solid var(--primary-low);
       }
     }
-  }
-}
 
-.modal-body.feature-topic {
-  max-height: 70vh !important;
-  padding: 0 1em;
-  input.date-picker {
-    margin: 0;
-  }
-  .feature-section {
-    display: block;
-    padding: 1.25em 0;
-    &:not(:last-of-type) {
-      border-bottom: 1px solid var(--primary-low);
-    }
-    .desc {
-      display: inline-block;
-      vertical-align: middle;
-      p:first-of-type {
-        margin: 0;
-      }
-      p {
-        margin: 10px 0 0;
-        max-width: 31em;
-      }
-    }
-    .with-validation {
-      position: relative;
-
-      > span {
-        display: flex;
-        align-items: flex-start;
-        > .d-icon {
-          padding-top: 0.75em;
-          margin-right: 0.5em;
-        }
-      }
+    .btn {
+      justify-content: left;
+      text-align: left;
+      width: 100%;
+      padding: 0.5em;
     }
   }
 }
-
-// Select posts
-
-.selected-posts {
-  border: 1px solid var(--tertiary-medium);
-  background-color: var(--tertiary-low);
-  .btn {
-    border: none;
-    color: var(--secondary);
-    font-weight: normal;
-    margin-bottom: 10px;
-    &:not(.btn-danger) {
-      background: var(--tertiary);
-      border-color: var(--tertiary);
-      &[href] {
-        color: var(--secondary);
-      }
-      &:hover {
-        color: var(--secondary);
-        background: var(--tertiary-high);
-      }
-      &:active {
-        @include linear-gradient(var(--tertiary-hover), var(--tertiary));
-        color: var(--secondary);
-      }
-    }
-    &[disabled] {
-      text-shadow: 0 1px 0 rgba(var(--primary-rgb), 0.2);
-      @include linear-gradient(var(--tertiary), var(--tertiary-hover));
-      box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.33);
-    }
+.fk-d-menu {
+  .topic-admin-popup-menu {
+    width: 14em;
   }
 }

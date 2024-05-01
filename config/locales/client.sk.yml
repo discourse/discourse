@@ -1133,10 +1133,8 @@ sk:
         ignore_duration_time_frame_required: "Vyberte časový rámec"
         ignore_no_users: "Nemáte žiadnych ignorovaných používateľov."
         ignore_option: "Ignorované"
-        ignore_option_title: "Nebudete dostávať upozornenia týkajúce sa tohto používateľa a všetky jeho témy a odpovede budú skryté."
         add_ignored_user: "Pridať…"
         mute_option: "Ignorované"
-        mute_option_title: "Nebudete dostávať žiadne upozornenia týkajúce sa tohto používateľa."
         normal_option: "Normálne"
         normal_option_title: "Budete upozornení, ak vám tento používateľ odpovie, cituje vás alebo sa o vás zmieni."
       notification_schedule:
@@ -2801,8 +2799,6 @@ sk:
       pinned:
         title: "Pripnutý"
         help: "Túto tému ste pripli. Bude zobrazená na vrchole svojej kategórie"
-      unlisted:
-        help: "Táto téma je skrytá. Nebude zobrazená v zozname tém a prístup k nej bude možný len prostrednictvom priameho odkazu na ňu"
     posts: "Príspevky"
     pending_posts:
       label: "Čakajúce správy"
@@ -3453,6 +3449,8 @@ sk:
         sidebar_link:
           emoji: "Emoji"
           navigation: "Navigácia"
+          components:
+            title: "Komponenty"
       email_settings:
         sidebar_link:
           preview_summary: "Súhrn"

@@ -7,6 +7,12 @@ import getURL from "discourse-common/lib/get-url";
 
 const LONG_POLL_AFTER_UNSEEN_TIME = 1200000; // 20 minutes
 
+let _sendDeferredPageview = false;
+
+export function sendDeferredPageview() {
+  _sendDeferredPageview = true;
+}
+
 function mbAjax(messageBus, opts) {
   opts.headers ||= {};
 
@@ -20,6 +26,11 @@ function mbAjax(messageBus, opts) {
 
   if (userPresent()) {
     opts.headers["Discourse-Present"] = "true";
+  }
+
+  if (_sendDeferredPageview) {
+    opts.headers["Discourse-Deferred-Track-View"] = "true";
+    _sendDeferredPageview = false;
   }
 
   const oldComplete = opts.complete;

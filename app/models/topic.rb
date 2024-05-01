@@ -43,6 +43,19 @@ class Topic < ActiveRecord::Base
     [self.share_thumbnail_size] + DiscoursePluginRegistry.topic_thumbnail_sizes
   end
 
+  def self.visibility_reasons
+    @visible_reasons ||=
+      Enum.new(
+        op_flag_threshold_reached: 0,
+        op_unhidden: 1,
+        embedded_topic: 2,
+        manually_unlisted: 3,
+        manually_relisted: 4,
+        bulk_action: 5,
+        unknown: 99,
+      )
+  end
+
   def thumbnail_job_redis_key(sizes)
     "generate_topic_thumbnail_enqueue_#{id}_#{sizes.inspect}"
   end
@@ -2178,6 +2191,7 @@ end
 #  slow_mode_seconds         :integer          default(0), not null
 #  bannered_until            :datetime
 #  external_id               :string
+#  visibility_reason_id      :integer
 #
 # Indexes
 #

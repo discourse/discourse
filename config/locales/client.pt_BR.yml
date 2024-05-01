@@ -1059,10 +1059,8 @@ pt_BR:
         ignore_duration_time_frame_required: "Selecione um intervalo de tempo"
         ignore_no_users: "Você não tem usuários(as) ignorados(as)."
         ignore_option: "Ignorado(a)"
-        ignore_option_title: "Você não receberá notificações relacionadas a este(a) usuário(a), e todos os tópicos e respostas serão ocultos."
         add_ignored_user: "Adicionar…"
         mute_option: "Silenciado(a)"
-        mute_option_title: "Você não receberá notificações relacionadas a este(a) usuário(a)."
         normal_option: "Normal"
         normal_option_title: "Você receberá uma notificação se este(a) usuário(a) responder, citar ou mencionar."
       notification_schedule:
@@ -1856,10 +1854,6 @@ pt_BR:
       suggested_topics:
         title: "Continue lendo!"
         content: "Confira alguns tópicos que achamos que você possa gostar de ler em seguida."
-      admin_guide:
-        title: "Boas-vindas ao nosso novo site!"
-        content: "<a href='%{admin_guide_url}'>Leia o guia da administração</a> para continuar criando seu site e comunidade."
-        content_no_url: "Leia o guia da administração para continuar criando seu site e comunidade."
     loading: "Carregando…"
     errors:
       prev_page: "ao tentar carregar"
@@ -3697,8 +3691,6 @@ pt_BR:
       pinned:
         title: "Fixado"
         help: "Este tópico está fixado para você. Será exibido no topo de sua categoria"
-      unlisted:
-        help: "Este tópico não está listado. Não será exibido nas listas de tópicos e só poderá ser acessado por meio de um link direto"
       personal_message:
         title: "Este tópico é uma mensagem pessoal"
         help: "Este tópico é uma mensagem pessoal"
@@ -4848,6 +4840,8 @@ pt_BR:
           emoji: "Emoji"
           navigation: "Navegação"
           themes: "Temas"
+          components:
+            title: "Componentes"
       email_settings:
         sidebar_link:
           appearance: "Aparência"
@@ -5572,9 +5566,6 @@ pt_BR:
           silence: "Silencie novas contas se a primeira postagem contiver qualquer uma destas palavras. A postagem será ocultada automaticamente até ter a aprovação da equipe."
           link: "Substitua palavras em postagens por links."
         form:
-          label: "Tem palavra ou frase"
-          placeholder: "Digite uma palavra ou frase (* é um curinga)"
-          placeholder_regexp: "expressão regular"
           replace_label: "Substituição"
           replace_placeholder: "exemplo"
           tag_label: "Etiqueta"

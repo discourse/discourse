@@ -910,9 +910,7 @@ el:
         ignore_duration_time_frame_required: "Παρακαλώ επιλέξτε ένα χρονικό πλαίσιο"
         ignore_no_users: "Δεν έχετε αγνοήσει χρήστες."
         ignore_option: "Αγνοήθηκε "
-        ignore_option_title: "Δε θα λαμβάνετε ειδοποιήσεις που σχετίζονται με αυτόν τον χρήστη και όλα τα θέματα και οι απαντήσεις τους θα είναι κρυφά."
         mute_option: "Σίγαση"
-        mute_option_title: "Δε θα λάβετε ειδοποιήσεις σχετικά με αυτόν τον χρήστη."
         normal_option: "Φυσιολογικά"
         normal_option_title: "Θα ειδοποιηθείτε εάν αυτός ο χρήστης σας απαντήσει, σας παραθέσει ή σας αναφέρει."
       notification_schedule:
@@ -2865,8 +2863,6 @@ el:
       pinned:
         title: "Καρφιτσωμένο"
         help: "Αυτό το νήμα είναι καρφιτσωμένο για σένα. Θα εμφανίζεται πάντα στην κορυφή της κατηγορίας του "
-      unlisted:
-        help: "Αυτό το νήμα είναι αόρατο. Δε θα εμφανίζεται σε καμια λίστα νημάτων και μπορεί να εμφανιστεί μόνο αν ακολουθήσεις ένα άμεσο σύνδεσμο προς αυτό."
       personal_message:
         title: "Αυτό το θέμα είναι ένα προσωπικό μήνυμα"
         help: "Αυτό το θέμα είναι ένα προσωπικό μήνυμα"
@@ -3633,6 +3629,8 @@ el:
           emoji: "Emoji"
           navigation: "Πλοήγηση"
           themes: "Θέματα"
+          components:
+            title: "Συστατικά"
       email_settings:
         sidebar_link:
           appearance: "Εμφάνιση"
@@ -4237,7 +4235,6 @@ el:
           silence: "Σίγαση"
           link: "Σύνδεσμος"
         form:
-          placeholder_regexp: "regular expression"
           link_label: "Σύνδεσμος"
           link_placeholder: "https://example.com"
           add: "Προσθήκη"

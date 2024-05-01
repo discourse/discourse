@@ -1540,6 +1540,25 @@ RSpec.describe Post do
 
       expect(post.hidden).to eq(false)
       expect(hidden_topic.visible).to eq(true)
+      expect(hidden_topic.visibility_reason_id).to eq(Topic.visibility_reasons[:op_unhidden])
+    end
+
+    it "will not unhide the topic if the topic visibility_reason_id is not op_flag_threshold_reached" do
+      hidden_topic =
+        Fabricate(
+          :topic,
+          visible: false,
+          visibility_reason_id: Topic.visibility_reasons[:manually_unlisted],
+        )
+      post = create_post(topic: hidden_topic)
+      post.update_columns(hidden: true, hidden_at: Time.now, hidden_reason_id: 1)
+      post.reload
+
+      expect(post.hidden).to eq(true)
+      post.unhide!
+
+      hidden_topic.reload
+      expect(hidden_topic.visible).to eq(false)
     end
 
     it "should increase user_stat topic_count for first post" do

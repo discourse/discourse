@@ -13,7 +13,7 @@ module Chat
                :user
 
     def excerpt
-      object.censored_excerpt
+      object.excerpt || object.build_excerpt
     end
 
     def mentioned_users

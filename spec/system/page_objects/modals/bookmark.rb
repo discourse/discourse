@@ -39,6 +39,16 @@ module PageObjects
         has_css?(".bookmark-options-panel")
       end
 
+      def select_relative_time_duration(duration)
+        find("#bookmark-relative-time-picker").fill_in(with: duration)
+      end
+
+      def select_relative_time_interval(interval)
+        select_kit = PageObjects::Components::SelectKit.new(".relative-time-intervals")
+        select_kit.expand
+        select_kit.select_row_by_value(interval)
+      end
+
       def select_auto_delete_preference(preference)
         select_kit = PageObjects::Components::SelectKit.new("#bookmark-auto-delete-preference")
         select_kit.expand

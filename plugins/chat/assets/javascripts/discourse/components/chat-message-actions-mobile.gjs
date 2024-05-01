@@ -64,6 +64,12 @@ export default class ChatMessageActionsMobile extends Component {
   }
 
   @action
+  react(name, operation) {
+    this.args.closeModal();
+    this.messageInteractor.react(name, operation);
+  }
+
+  @action
   openEmojiPicker(_, event) {
     this.args.closeModal();
     this.messageInteractor.openEmojiPicker(_, event);
@@ -115,7 +121,7 @@ export default class ChatMessageActionsMobile extends Component {
                 {{#each this.messageInteractor.emojiReactions as |reaction|}}
                   <ChatMessageReaction
                     @reaction={{reaction}}
-                    @onReaction={{this.messageInteractor.react}}
+                    @onReaction={{this.react}}
                     @message={{this.message}}
                     @showCount={{false}}
                   />

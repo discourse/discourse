@@ -636,10 +636,6 @@ class Guardian
     other && authenticated? && other.is_a?(User) && @user == other
   end
 
-  def is_discourse_hub_request?
-    request&.user_agent == "Discourse Hub"
-  end
-
   private
 
   def is_my_own?(obj)

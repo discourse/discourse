@@ -972,6 +972,8 @@ ko:
         api: "API"
         user_api: "사용자 API"
       yaxis: "일"
+    consolidated_page_views_browser_detection:
+      yaxis: "일"
     dau_by_mau:
       title: "DAU / MAU"
       xaxis: "일"
@@ -1131,6 +1133,10 @@ ko:
       xaxis: "일"
       yaxis: "모바일 익명 페이지뷰"
       description: "모바일 디바이스에서 계정에 로그인하지 않은 방문자의 새 페이지뷰 수입니다."
+    page_view_anon_browser_reqs:
+      xaxis: "일"
+    page_view_logged_in_browser_reqs:
+      xaxis: "일"
     http_background_reqs:
       title: "백그라운드"
       xaxis: "일"

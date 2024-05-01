@@ -49,6 +49,7 @@ class Report
   include Reports::UserFlaggingRatio
   include Reports::TrustLevelGrowth
   include Reports::ConsolidatedPageViews
+  include Reports::ConsolidatedPageViewsBrowserDetection
   include Reports::ConsolidatedApiRequests
   include Reports::Visits
   include Reports::TimeToFirstResponse

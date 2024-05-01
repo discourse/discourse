@@ -1128,10 +1128,8 @@ hr:
         ignore_duration_time_frame_required: "Odaberi vremenski okvir"
         ignore_no_users: "Nemate ignoriranih korisnika."
         ignore_option: "Ignorirao"
-        ignore_option_title: "Nećete primati obavijesti vezane uz ovog korisnika i sve njihove teme i odgovori bit će skriveni."
         add_ignored_user: "Dodaj…"
         mute_option: "Utišano"
-        mute_option_title: "Nećete primati obavijesti vezane uz ovog korisnika."
         normal_option: "Normalno"
         normal_option_title: "Bit ćete obaviješteni ako vam ovaj korisnik odgovara, citira vas ili spominje."
       notification_schedule:
@@ -1934,10 +1932,6 @@ hr:
       suggested_topics:
         title: "Nastavi čitati!"
         content: "Evo nekih tema za koje mislimo da biste ih željeli pročitati sljedeće."
-      admin_guide:
-        title: "Dobro došli na svoju novu stranicu!"
-        content: "<a href='%{admin_guide_url}'>Pročitajte vodič za administratore</a> da biste nastavili s izgradnjom svoje stranice i zajednice."
-        content_no_url: "Pročitajte vodič za administratore da biste nastavili s izgradnjom svoje stranice i zajednice."
     loading: "Učitavanje…"
     errors:
       prev_page: "pri pokušaju očitanja"
@@ -3825,8 +3819,6 @@ hr:
       pinned:
         title: "Zakvačeno"
         help: "Ova vam je tema zakvačena, prikazivati će se na vrhu svoje kategorije."
-      unlisted:
-        help: "Ova je tema ne-popisana; neće se prikazivati na popisima tema i može joj se pristupiti samo preko direktne poveznice."
       personal_message:
         title: "Ova tema je osobna poruka"
         help: "Ova tema je osobna poruka"
@@ -4769,7 +4761,8 @@ hr:
         title: "Račun"
         sidebar_link:
           backups: "Sigurnosne kopije"
-          whats_new: "Što je novo"
+          whats_new:
+            title: "Što je novo"
       community:
         title: "Zajednica"
         sidebar_link:
@@ -4787,6 +4780,8 @@ hr:
           emoji: "Emoji"
           navigation: "Navigacija"
           themes: "Teme"
+          components:
+            title: "Komponente"
       email_settings:
         sidebar_link:
           appearance: "Izgled"
@@ -5468,9 +5463,6 @@ hr:
           replace: "Zamijenite riječi u objavama drugim riječima."
           link: "Zamijenite riječi u objavama vezama."
         form:
-          label: "Ima riječ ili frazu"
-          placeholder: "Unesite riječ ili izraz (* je zamjenski znak)"
-          placeholder_regexp: "regularni izraz"
           replace_label: "Zamjena"
           replace_placeholder: "primjer"
           tag_label: "Označiti"
