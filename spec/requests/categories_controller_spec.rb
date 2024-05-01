@@ -1408,6 +1408,18 @@ RSpec.describe CategoriesController do
           [category4.id, category2.id, category3.id, category1.id],
         )
       end
+
+      it "returns categories in the correct order when the limit is lower than the total number of categories" do
+        categories =
+          4.times.flat_map do |i|
+            get "/categories/search.json", params: { term: "ordered", page: i + 1, limit: 1 }
+            response.parsed_body["categories"]
+          end
+
+        expect(categories.map { |c| c["id"] }).to eq(
+          [category4.id, category2.id, category3.id, category1.id],
+        )
+      end
     end
 
     it "returns user fields" do

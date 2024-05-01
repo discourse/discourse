@@ -412,6 +412,13 @@ class CategoriesController < ApplicationController
         )
         .joins("LEFT JOIN topics t on t.id = categories.topic_id")
         .select("categories.*, t.slug topic_slug")
+        .order(
+          "starts_with(lower(categories.name), #{ActiveRecord::Base.connection.quote(term)}) DESC",
+          "categories.parent_category_id IS NULL DESC",
+          "categories.id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
+          "categories.parent_category_id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
+          "categories.id ASC",
+        )
         .limit(limit)
         .offset((page - 1) * limit)
 
@@ -420,19 +427,6 @@ class CategoriesController < ApplicationController
     end
 
     Category.preload_user_fields!(guardian, categories)
-
-    # Prioritize categories that start with the term, then top-level
-    # categories, then subcategories
-    categories =
-      categories.to_a.sort_by do |category|
-        [
-          category.name.downcase.starts_with?(term) ? 0 : 1,
-          category.parent_category_id.blank? ? 0 : 1,
-          category.id == prioritized_category_id ? 0 : 1,
-          category.parent_category_id == prioritized_category_id ? 0 : 1,
-          category.id,
-        ]
-      end
 
     response = {
       categories_count: categories_count,
