@@ -48,7 +48,7 @@ export default class TopicList extends Component {
   }
 
   get sortable() {
-    return !!this.changeSort;
+    return !!this.args.changeSort;
   }
 
   get showLikes() {

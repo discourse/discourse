@@ -196,8 +196,8 @@ export default class TopicListItem extends Component {
 
       this.args.updateLastCheckedElementId(e.target.id);
     } else {
-      this.selected.removeObject(this.args.topic);
-      this.updateLastCheckedElementId(null);
+      this.args.selected.removeObject(this.args.topic);
+      this.args.updateLastCheckedElementId(null);
     }
   }
 
