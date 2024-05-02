@@ -90,6 +90,7 @@ export default class TopicList extends Component {
   }
 
   <template>
+    {{! template-lint-disable table-groups }}
     <table
       class={{concatClass
         "topic-list"
