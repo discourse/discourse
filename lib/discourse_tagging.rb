@@ -509,8 +509,8 @@ module DiscourseTagging
 
     term = opts[:term]
     if term.present?
-      term = term.gsub("_", "\\_").downcase
       builder_params[:cleaned_term] = term
+      term = term.gsub("_", "\\_").downcase
 
       if opts[:term_type] == DiscourseTagging.term_types[:starts_with]
         builder_params[:term] = "#{term}%"
