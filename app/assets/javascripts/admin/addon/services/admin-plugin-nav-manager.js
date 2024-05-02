@@ -15,7 +15,44 @@ export default class AdminPluginNavManager extends Service {
   }
 
   get currentConfigNav() {
-    return configNavForPlugin(this.currentPlugin.id);
+    const configNav = configNavForPlugin(this.currentPlugin.id);
+    const settingsNav = {
+      mode: PLUGIN_NAV_MODE_TOP,
+      links: [
+        {
+          label: "admin.plugins.change_settings_short",
+          route: "adminPlugins.show.settings",
+        },
+      ],
+    };
+
+    // Not all plugins have a more complex config UI and navigation,
+    // in that case only the settings route will be available.
+    if (!configNav) {
+      return settingsNav;
+    }
+
+    // Automatically inject the settings link.
+    if (
+      !configNav.links.mapBy("route").includes("adminPlugins.show.settings")
+    ) {
+      configNav.links.unshift(settingsNav.links[0]);
+    }
+    return configNav;
+  }
+
+  get currentPluginDefaultRoute() {
+    const currentConfigNavLinks = this.currentConfigNav.links;
+    const linksExceptSettings = currentConfigNavLinks.reject(
+      (link) => link.route === "adminPlugins.show.settings"
+    );
+
+    // Some plugins only have the Settings route, if so it's fine to use it as default.
+    if (linksExceptSettings.length === 0) {
+      return currentConfigNavLinks[0].route;
+    }
+
+    return linksExceptSettings[0].route;
   }
 
   get isSidebarMode() {
