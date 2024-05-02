@@ -24,7 +24,7 @@
     "ember-template-lint": "^5.13.0",
     "esbuild": "^0.20.2",
     "eslint": "^8.57.0",
-    "jsdoc": "^4.0.0",
+    "jsdoc": "^4.0.3",
     "lefthook": "^1.6.10",
     "lint-to-the-future": "^2.0.0",
     "lint-to-the-future-ember-template": "^1.1.1",
