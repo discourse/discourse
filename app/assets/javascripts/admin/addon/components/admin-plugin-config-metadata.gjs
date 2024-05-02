@@ -1,6 +1,6 @@
 import i18n from "discourse-common/helpers/i18n";
 
-<template>
+const AdminPluginConfigMetadata = <template>
   <div class="admin-plugin-config-page__metadata">
     <div class="admin-plugin-config-area__metadata-title">
       <h2>
@@ -17,4 +17,6 @@ import i18n from "discourse-common/helpers/i18n";
       </p>
     </div>
   </div>
-</template>
+</template>;
+
+export default AdminPluginConfigMetadata;
