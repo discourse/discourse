@@ -12,20 +12,12 @@
             data-poll-option-id={{option.id}}
             data-poll-option-rank={{option.rank}}
           >
-            {{#if this.isIrv}}
-              <PollOptionsDropdown
-                @rank={{option.rank}}
-                @option={{option}}
-                @irv_dropdown_content={{this.irv_dropdown_content}}
-                @sendRank={{this.sendRank}}
-              />
-            {{/if}}
-            {{#if this.isMultiple}}
-              <PollOptionsCheckbox
-                @option={{option}}
-                @sendCheck={{this.sendCheck}}
-              />
-            {{/if}}
+            <PollOptionsDropdown
+              @rank={{option.rank}}
+              @option={{option}}
+              @irv_dropdown_content={{this.irv_dropdown_content}}
+              @sendRank={{this.toggleOption}}
+            />
             <span class="option-text">{{option.html}}</span>
           </div>
         {{/each}}

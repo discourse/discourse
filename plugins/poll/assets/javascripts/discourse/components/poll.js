@@ -66,7 +66,8 @@ export default class PollComponent extends Component {
 
   irv_dropdown_content = [];
 
-  toggleOption = (option) => {
+  @action
+  toggleOption = (option, rank = 0) => {
     if (this.closed) {
       return;
     }
@@ -79,21 +80,24 @@ export default class PollComponent extends Component {
 
     if (
       !this.isMultiple &&
+      !this.isIrv &&
       this.vote.length === 1 &&
       this.vote[0] === option.id
     ) {
       return this.removeVote();
     }
 
-    if (!this.isMultiple) {
+    if (!this.isMultiple && !this.isIrv) {
       this.vote.length = 0;
     }
 
-    this._toggleOption(option);
-    if (!this.isMultiple) {
+    this._toggleOption(option, rank);
+
+    if (!this.isMultiple && !this.isIrv) {
       return this.castVotes().catch(() => this._toggleOption(option));
     }
   };
+
   showLogin = () => {
     this.register.lookup("route:application").send("showLogin");
   };
@@ -155,29 +159,69 @@ export default class PollComponent extends Component {
         }
       });
   };
-  _toggleOption = (option) => {
+
+  areRanksValid = (arr) => {
+    let ranks = new Set(); // Using a Set to keep track of unique ranks
+    let hasNonZeroDuplicate = false;
+
+    arr.forEach((obj) => {
+      const rank = obj.rank;
+
+      if (rank !== 0) {
+        if (ranks.has(rank)) {
+          hasNonZeroDuplicate = true;
+          return; // Exit forEach loop if a non-zero duplicate is found
+        }
+        ranks.add(rank);
+      }
+    });
+
+    return !hasNonZeroDuplicate;
+  };
+  _toggleOption = (option, rank = 0) => {
     let options = this.options;
     let vote = this.vote;
 
-    const chosenIdx = vote.indexOf(option.id);
+    if (this.isMultiple) {
+      const chosenIdx = vote.indexOf(option.id);
 
-    if (chosenIdx !== -1) {
-      vote.splice(chosenIdx, 1);
-    } else {
-      vote.push(option.id);
-    }
-
-    options.forEach((o, i) => {
-      if (vote.includes(options[i].id)) {
-        options[i].chosen = true;
+      if (chosenIdx !== -1) {
+        vote.splice(chosenIdx, 1);
       } else {
-        options[i].chosen = false;
+        vote.push(option.id);
       }
-    });
+
+      options.forEach((o, i) => {
+        if (vote.includes(options[i].id)) {
+          options[i].chosen = true;
+        } else {
+          options[i].chosen = false;
+        }
+      });
+    } else if (this.isIrv) {
+      options.forEach((candidate, i) => {
+        const chosenIdx = vote.findIndex((object) => {
+          return object.id === candidate.id;
+        });
+
+        if (chosenIdx === -1) {
+          vote.push({
+            id: candidate.id,
+            rank: candidate.id === option ? rank : 0,
+          });
+        } else {
+          if (candidate.id === option) {
+            vote[chosenIdx].rank = rank;
+            options[i].rank = rank;
+          }
+        }
+      });
+    }
 
     this.vote = [...vote];
     this.options = [...options];
   };
+
   constructor() {
     super(...arguments);
     this.options = this.args.attrs.poll.options;
@@ -218,6 +262,13 @@ export default class PollComponent extends Component {
 
     if (this.isMultiple) {
       return selectedOptionCount >= this.min && selectedOptionCount <= this.max;
+    }
+
+    if (this.isIrv) {
+      return (
+        this.options.length === this.vote.length &&
+        this.areRanksValid(this.vote)
+      );
     }
 
     return selectedOptionCount > 0;
@@ -316,42 +367,29 @@ export default class PollComponent extends Component {
     return contents;
   }
 
-  @action
-  sendRank(option, rank) {
-    this.options.forEach((candidate, i) => {
-      if (candidate.id === option) {
-        this.options[i].rank = rank;
-      } else {
-        if (candidate.rank === rank) {
-          this.options[i].rank = 0;
-        }
-      }
-    });
-  }
+  // @action
+  // sendCheck(option, value) {
+  //   this.options.forEach((candidate) => {
+  //     if (candidate.id === option) {
+  //       candidate.chosen = value;
+  //     }
+  //   });
+  // }
 
-  @action
-  sendCheck(option, value) {
-    this.options.forEach((candidate) => {
-      if (candidate.id === option) {
-        candidate.chosen = value;
-      }
-    });
-  }
-
-  @action
-  sendRadioSelect(option) {
-    let options = this.options;
-    options.forEach((candidate, index) => {
-      if (candidate.id === option) {
-        options[index].chosen = true;
-      } else {
-        options[index].chosen = false;
-      }
-    });
-    this.options = [...options];
-    this.vote = [option];
-    this.chosen = option;
-  }
+  // @action
+  // sendRadioSelect(option) {
+  //   let options = this.options;
+  //   options.forEach((candidate, index) => {
+  //     if (candidate.id === option) {
+  //       options[index].chosen = true;
+  //     } else {
+  //       options[index].chosen = false;
+  //     }
+  //   });
+  //   this.options = [...options];
+  //   this.vote = [option];
+  //   this.chosen = option;
+  // }
 
   removeVote() {
     return ajax("/polls/vote", {
