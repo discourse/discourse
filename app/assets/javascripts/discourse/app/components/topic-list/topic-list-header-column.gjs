@@ -14,20 +14,14 @@ export default class TopicListHeaderColumn extends Component {
     return this.args.name ? i18n(this.args.name) : "";
   }
 
-  get sortIcon() {
-    return this.args.ascending ? "chevron-up" : "chevron-down";
-  }
-
   get isSorting() {
     return this.args.sortable && this.args.order === this.args.activeOrder;
   }
 
   get ariaSort() {
-    if (!this.isSorting) {
-      return false;
+    if (this.isSorting) {
+      return this.args.ascending ? "ascending" : "descending";
     }
-
-    return this.args.ascending ? "ascending" : "descending";
   }
 
   <template>
@@ -94,7 +88,7 @@ export default class TopicListHeaderColumn extends Component {
       {{/unless}}
 
       {{#if this.isSorting}}
-        {{icon this.sortIcon}}
+        {{icon (if @ascending "chevron-up" "chevron-down")}}
       {{/if}}
     </th>
   </template>
