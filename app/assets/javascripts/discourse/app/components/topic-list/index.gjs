@@ -1,8 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
-import { action } from "@ember/object";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -10,20 +8,13 @@ import TopicListHeader from "discourse/components/topic-list/topic-list-header";
 import TopicListItem from "discourse/components/topic-list/topic-list-item";
 import VisitedLine from "discourse/components/topic-list/visited-line";
 import concatClass from "discourse/helpers/concat-class";
-import { observes } from "discourse-common/utils/decorators";
 
 export default class TopicList extends Component {
   @service currentUser;
   @service router;
   @service siteSettings;
 
-  @tracked lastVisitedTopic;
   @tracked lastCheckedElementId;
-
-  constructor() {
-    super(...arguments);
-    this.updateLastVisitedTopic();
-  }
 
   get selected() {
     return this.args.bulkSelectHelper?.selected;
@@ -57,20 +48,8 @@ export default class TopicList extends Component {
     return this.args.order === "op_likes";
   }
 
-  // TODO:
-  @observes("topics.[]")
-  topicsAdded() {
-    // special case so we don't keep scanning huge lists
-    if (!this.lastVisitedTopic) {
-      this.updateLastVisitedTopic();
-    }
-  }
-
-  @action
-  updateLastVisitedTopic() {
+  get lastVisitedTopic() {
     const { topics, order, ascending, top, hot } = this.args;
-
-    this.lastVisitedTopic = null;
 
     if (
       !this.args.highlightLastVisited ||
@@ -80,18 +59,18 @@ export default class TopicList extends Component {
       !topics ||
       topics.length === 1 ||
       (order && order !== "activity") ||
-      !this.currentUser?.previous_visit_at
+      !this.currentUser?.get("previous_visit_at")
     ) {
       return;
     }
 
-    // this is more efficient cause we keep appending to list
     // work backwards
-    const start = topics.findIndex((topic) => !topic.pinned);
+    // this is more efficient cause we keep appending to list
+    const start = topics.findIndex((topic) => !topic.get("pinned"));
     let lastVisitedTopic, topic;
 
     for (let i = topics.length - 1; i >= start; i--) {
-      if (topics[i].bumpedAt > this.currentUser.previousVisitAt) {
+      if (topics[i].get("bumpedAt") > this.currentUser.get("previousVisitAt")) {
         lastVisitedTopic = topics[i];
         break;
       }
@@ -103,24 +82,15 @@ export default class TopicList extends Component {
     }
 
     // end of list that was scanned
-    if (topic.bumpedAt > this.currentUser.previousVisitAt) {
+    if (topic.get("bumpedAt") > this.currentUser.get("previousVisitAt")) {
       return;
     }
 
-    this.lastVisitedTopic = lastVisitedTopic;
+    return lastVisitedTopic;
   }
 
   <template>
     <table
-      {{didUpdate
-        this.updateLastVisitedTopic
-        @topics
-        @order
-        @ascending
-        @category
-        @top
-        @hot
-      }}
       class={{concatClass
         "topic-list"
         (if this.bulkSelectEnabled "sticky-header")
