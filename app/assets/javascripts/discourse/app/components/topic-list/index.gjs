@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { service } from "@ember/service";
+import { or } from "truth-helpers";
 import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicListHeader from "discourse/components/topic-list/topic-list-header";
@@ -8,7 +10,7 @@ import TopicListItem from "discourse/components/topic-list/topic-list-item";
 import VisitedLine from "discourse/components/topic-list/visited-line";
 import concatClass from "discourse/helpers/concat-class";
 // import LoadMore from "discourse/mixins/load-more";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import { observes } from "discourse-common/utils/decorators";
 
 export default class TopicList extends Component {
   // TODO: .extend(LoadMore)
@@ -17,25 +19,12 @@ export default class TopicList extends Component {
   @service router;
   @service siteSettings;
 
-  showTopicPostBadges = true;
-  listTitle = "topic.title";
-  lastCheckedElementId;
+  @tracked lastVisitedTopic;
+  @tracked lastCheckedElementId;
 
   constructor() {
     super(...arguments);
-    this.refreshLastVisited();
-  }
-
-  get canDoBulkActions() {
-    return (
-      this.currentUser?.canManageTopic &&
-      this.args.bulkSelectHelper?.selected.length
-    );
-  }
-
-  // Overwrite this to perform client side filtering of topics, if desired
-  get filteredTopics() {
-    return this.topics;
+    this.updateLastVisitedTopic();
   }
 
   get selected() {
@@ -46,11 +35,12 @@ export default class TopicList extends Component {
     return this.args.bulkSelectHelper?.bulkSelectEnabled;
   }
 
+  get canDoBulkActions() {
+    return this.currentUser?.canManageTopic && this.selected?.length;
+  }
+
   get toggleInTitle() {
-    return (
-      !this.args.bulkSelectHelper?.bulkSelectEnabled &&
-      this.get("canBulkSelect")
-    );
+    return !this.bulkSelectEnabled && this.args.canBulkSelect;
   }
 
   get experimentalTopicBulkActionsEnabled() {
@@ -61,30 +51,31 @@ export default class TopicList extends Component {
     return !!this.changeSort;
   }
 
-  @discourseComputed("order")
-  showLikes(order) {
-    return order === "likes";
+  get showLikes() {
+    return this.args.order === "likes";
   }
 
   get showOpLikes() {
     return this.args.order === "op_likes";
   }
 
+  // TODO:
   @observes("topics.[]")
   topicsAdded() {
     // special case so we don't keep scanning huge lists
     if (!this.lastVisitedTopic) {
-      this.refreshLastVisited();
+      this.updateLastVisitedTopic();
     }
   }
 
+  // TODO:
   @observes("topics", "order", "ascending", "category", "top", "hot")
   lastVisitedTopicChanged() {
-    this.refreshLastVisited();
+    this.updateLastVisitedTopic();
   }
 
+  // TODO
   scrolled() {
-    // TODO
     // this._super(...arguments);
     let onScroll = this.onScroll;
     if (!onScroll) {
@@ -94,48 +85,31 @@ export default class TopicList extends Component {
     onScroll.call(this);
   }
 
-  _updateLastVisitedTopic(topics, order, ascending, top, hot) {
-    this.set("lastVisitedTopic", null);
+  updateLastVisitedTopic() {
+    const { topics, order, ascending, top, hot } = this.args;
 
-    if (!this.highlightLastVisited) {
+    this.lastVisitedTopic = null;
+
+    if (
+      !this.args.highlightLastVisited ||
+      top ||
+      hot ||
+      ascending ||
+      !topics ||
+      topics.length === 1 ||
+      (order && order !== "activity") ||
+      !this.currentUser?.previous_visit_at
+    ) {
       return;
     }
-
-    if (order && order !== "activity") {
-      return;
-    }
-
-    if (top || hot) {
-      return;
-    }
-
-    if (!topics || topics.length === 1) {
-      return;
-    }
-
-    if (ascending) {
-      return;
-    }
-
-    let user = this.currentUser;
-    if (!user || !user.previous_visit_at) {
-      return;
-    }
-
-    let lastVisitedTopic, topic;
-
-    let prevVisit = user.get("previousVisitAt");
 
     // this is more efficient cause we keep appending to list
     // work backwards
-    let start = 0;
-    while (topics[start] && topics[start].get("pinned")) {
-      start++;
-    }
+    const start = topics.findIndex((topic) => !topic.pinned);
+    let lastVisitedTopic, topic;
 
-    let i;
-    for (i = topics.length - 1; i >= start; i--) {
-      if (topics[i].get("bumpedAt") > prevVisit) {
+    for (let i = topics.length - 1; i >= start; i--) {
+      if (topics[i].bumpedAt > this.currentUser.previousVisitAt) {
         lastVisitedTopic = topics[i];
         break;
       }
@@ -147,21 +121,11 @@ export default class TopicList extends Component {
     }
 
     // end of list that was scanned
-    if (topic.get("bumpedAt") > prevVisit) {
+    if (topic.bumpedAt > this.currentUser.previousVisitAt) {
       return;
     }
 
-    this.set("lastVisitedTopic", lastVisitedTopic);
-  }
-
-  refreshLastVisited() {
-    this._updateLastVisitedTopic(
-      this.topics,
-      this.args.order,
-      this.ascending,
-      this.top,
-      this.hot
-    );
+    this.lastVisitedTopic = lastVisitedTopic;
   }
 
   click(e) {
@@ -200,7 +164,7 @@ export default class TopicList extends Component {
     onClick("button.bulk-select-actions", () => {
       this.modal.show(TopicBulkActions, {
         model: {
-          topics: this.args.bulkSelectHelper.selected,
+          topics: this.selected,
           category: this.category,
           refreshClosure: () => this.router.refresh(),
         },
@@ -209,11 +173,11 @@ export default class TopicList extends Component {
 
     onClick("button.topics-replies-toggle", (element) => {
       if (element.classList.contains("--all")) {
-        this.changeNewListSubset(null);
+        this.args.changeNewListSubset(null);
       } else if (element.classList.contains("--topics")) {
-        this.changeNewListSubset("topics");
+        this.args.changeNewListSubset("topics");
       } else if (element.classList.contains("--replies")) {
-        this.changeNewListSubset("replies");
+        this.args.changeNewListSubset("replies");
       }
       this.rerender();
     });
@@ -245,57 +209,57 @@ export default class TopicList extends Component {
     >
       <thead class="topic-list-header">
         <TopicListHeader
-          @canBulkSelect={{this.canBulkSelect}}
+          @canBulkSelect={{@canBulkSelect}}
           @toggleInTitle={{this.toggleInTitle}}
-          @hideCategory={{this.hideCategory}}
-          @showPosters={{this.showPosters}}
+          @hideCategory={{@hideCategory}}
+          @showPosters={{@showPosters}}
           @showLikes={{this.showLikes}}
           @showOpLikes={{this.showOpLikes}}
           @order={{@order}}
-          @ascending={{this.ascending}}
+          @ascending={{@ascending}}
           @sortable={{this.sortable}}
-          @listTitle={{this.listTitle}}
+          @listTitle={{or @listTitle "topic.title"}}
           @bulkSelectEnabled={{this.bulkSelectEnabled}}
-          @bulkSelectHelper={{this.args.bulkSelectHelper}}
+          @bulkSelectHelper={{@bulkSelectHelper}}
           @experimentalTopicBulkActionsEnabled={{this.experimentalTopicBulkActionsEnabled}}
           @canDoBulkActions={{this.canDoBulkActions}}
-          @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
-          @newListSubset={{this.newListSubset}}
-          @newRepliesCount={{this.newRepliesCount}}
-          @newTopicsCount={{this.newTopicsCount}}
+          @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
+          @newListSubset={{@newListSubset}}
+          @newRepliesCount={{@newRepliesCount}}
+          @newTopicsCount={{@newTopicsCount}}
         />
       </thead>
 
       <PluginOutlet
         @name="before-topic-list-body"
         @outletArgs={{hash
-          topics=this.topics
+          topics=@topics
           selected=this.selected
           bulkSelectEnabled=this.bulkSelectEnabled
           lastVisitedTopic=this.lastVisitedTopic
-          discoveryList=this.discoveryList
-          hideCategory=this.hideCategory
+          discoveryList=@discoveryList
+          hideCategory=@hideCategory
         }}
       />
 
       <tbody class="topic-list-body">
-        {{#each this.filteredTopics as |topic index|}}
+        {{#each @topics as |topic index|}}
           <TopicListItem
             @topic={{topic}}
             @bulkSelectEnabled={{this.bulkSelectEnabled}}
-            @showTopicPostBadges={{this.showTopicPostBadges}}
-            @hideCategory={{this.hideCategory}}
-            @showPosters={{this.showPosters}}
+            @showTopicPostBadges={{@showTopicPostBadges}}
+            @hideCategory={{@hideCategory}}
+            @showPosters={{@showPosters}}
             @showLikes={{this.showLikes}}
             @showOpLikes={{this.showOpLikes}}
-            @expandGloballyPinned={{this.expandGloballyPinned}}
-            @expandAllPinned={{this.expandAllPinned}}
+            @expandGloballyPinned={{@expandGloballyPinned}}
+            @expandAllPinned={{@expandAllPinned}}
             @lastVisitedTopic={{this.lastVisitedTopic}}
             @selected={{this.selected}}
             @lastCheckedElementId={{this.lastCheckedElementId}}
             @updateLastCheckedElementId={{fn (mut this.lastCheckedElementId)}}
-            @tagsForUser={{this.tagsForUser}}
-            @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+            @tagsForUser={{@tagsForUser}}
+            @focusLastVisitedTopic={{@focusLastVisitedTopic}}
             @index={{index}}
           />
 
@@ -315,12 +279,12 @@ export default class TopicList extends Component {
       <PluginOutlet
         @name="after-topic-list-body"
         @outletArgs={{hash
-          topics=this.topics
+          topics=@topics
           selected=this.selected
           bulkSelectEnabled=this.bulkSelectEnabled
           lastVisitedTopic=this.lastVisitedTopic
-          discoveryList=this.discoveryList
-          hideCategory=this.hideCategory
+          discoveryList=@discoveryList
+          hideCategory=@hideCategory
         }}
       />
     </table>
