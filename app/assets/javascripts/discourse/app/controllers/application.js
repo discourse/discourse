@@ -2,6 +2,7 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import runAfterFramePaint from "discourse/lib/after-frame-paint";
+import { isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -127,13 +128,21 @@ export default Controller.extend({
 
   @action
   trackDiscoursePainted() {
+    if (isTesting()) {
+      return;
+    }
     runAfterFramePaint(() => {
       performance.mark("discourse-paint");
-      performance.measure(
-        "discourse-init-to-paint",
-        "discourse-init",
-        "discourse-paint"
-      );
+      try {
+        performance.measure(
+          "discourse-init-to-paint",
+          "discourse-init",
+          "discourse-paint"
+        );
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn("Failed to measure init-to-paint", e);
+      }
     });
   },
 });
