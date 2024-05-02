@@ -1,3 +1,4 @@
+import { on } from "@ember/modifier";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicListHeaderColumn from "discourse/components/topic-list/topic-list-header-column";
 import icon from "discourse-common/helpers/d-icon";
@@ -10,6 +11,7 @@ const TopicListHeader = <template>
     <th class="bulk-select topic-list-data">
       {{#if @canBulkSelect}}
         <button
+          {{on "click" @bulkSelectHelper.toggleBulkSelect}}
           title={{i18n "topics.bulk.toggle"}}
           class="btn-flat bulk-select"
         >
@@ -21,7 +23,9 @@ const TopicListHeader = <template>
 
   <TopicListHeaderColumn
     @order="default"
+    @category={{@category}}
     @activeOrder={{@order}}
+    @changeSort={{@changeSort}}
     @ascending={{@ascending}}
     @name={{@listTitle}}
     @bulkSelectEnabled={{@bulkSelectEnabled}}
@@ -34,6 +38,7 @@ const TopicListHeader = <template>
     @newTopicsCount={{@newTopicsCount}}
     @experimentalTopicBulkActionsEnabled={{@experimentalTopicBulkActionsEnabled}}
     @bulkSelectHelper={{@bulkSelectHelper}}
+    @changeNewListSubset={{@changeNewListSubset}}
   />
 
   <PluginOutlet @name="topic-list-header-after-main-link" />
@@ -42,6 +47,7 @@ const TopicListHeader = <template>
     <TopicListHeaderColumn
       @order="posters"
       @activeOrder={{@order}}
+      @changeSort={{@changeSort}}
       @ascending={{@ascending}}
       aria-label={{i18n "category.sort_options.posters"}}
     />
@@ -52,6 +58,7 @@ const TopicListHeader = <template>
     @number="true"
     @order="posts"
     @activeOrder={{@order}}
+    @changeSort={{@changeSort}}
     @ascending={{@ascending}}
     @name="replies"
     aria-label={{i18n "sr_replies"}}
@@ -63,6 +70,7 @@ const TopicListHeader = <template>
       @number="true"
       @order="likes"
       @activeOrder={{@order}}
+      @changeSort={{@changeSort}}
       @ascending={{@ascending}}
       @name="likes"
       aria-label={{i18n "sr_likes"}}
@@ -75,6 +83,7 @@ const TopicListHeader = <template>
       @number="true"
       @order="op_likes"
       @activeOrder={{@order}}
+      @changeSort={{@changeSort}}
       @ascending={{@ascending}}
       @name="likes"
       aria-label={{i18n "sr_op_likes"}}
@@ -86,6 +95,7 @@ const TopicListHeader = <template>
     @number="true"
     @order="views"
     @activeOrder={{@order}}
+    @changeSort={{@changeSort}}
     @ascending={{@ascending}}
     @name="views"
     aria-label={{i18n "sr_views"}}
@@ -96,6 +106,7 @@ const TopicListHeader = <template>
     @number="true"
     @order="activity"
     @activeOrder={{@order}}
+    @changeSort={{@changeSort}}
     @ascending={{@ascending}}
     @name="activity"
     aria-label={{i18n "sr_activity"}}

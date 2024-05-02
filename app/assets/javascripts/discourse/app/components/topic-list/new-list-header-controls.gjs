@@ -1,4 +1,6 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
 
@@ -55,6 +57,7 @@ export default class NewListHeaderControls extends Component {
       <span class="static-label">{{this.staticLabel}}</span>
     {{else}}
       <button
+        {{on "click" (fn @changeNewListSubset null)}}
         class={{concatClass
           "topics-replies-toggle --all"
           (if this.allActive "active")
@@ -64,6 +67,7 @@ export default class NewListHeaderControls extends Component {
       </button>
 
       <button
+        {{on "click" (fn @changeNewListSubset "topics")}}
         class={{concatClass
           "topics-replies-toggle --topics"
           (if this.topicsActive "active")
@@ -73,6 +77,7 @@ export default class NewListHeaderControls extends Component {
       </button>
 
       <button
+        {{on "click" (fn @changeNewListSubset "replies")}}
         class={{concatClass
           "topics-replies-toggle --replies"
           (if this.repliesActive "active")

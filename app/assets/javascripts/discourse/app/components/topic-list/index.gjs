@@ -1,21 +1,19 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
+import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { or } from "truth-helpers";
-import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicListHeader from "discourse/components/topic-list/topic-list-header";
 import TopicListItem from "discourse/components/topic-list/topic-list-item";
 import VisitedLine from "discourse/components/topic-list/visited-line";
 import concatClass from "discourse/helpers/concat-class";
-// import LoadMore from "discourse/mixins/load-more";
 import { observes } from "discourse-common/utils/decorators";
 
 export default class TopicList extends Component {
-  // TODO: .extend(LoadMore)
   @service currentUser;
-  @service modal;
   @service router;
   @service siteSettings;
 
@@ -68,23 +66,7 @@ export default class TopicList extends Component {
     }
   }
 
-  // TODO:
-  @observes("topics", "order", "ascending", "category", "top", "hot")
-  lastVisitedTopicChanged() {
-    this.updateLastVisitedTopic();
-  }
-
-  // TODO
-  scrolled() {
-    // this._super(...arguments);
-    let onScroll = this.onScroll;
-    if (!onScroll) {
-      return;
-    }
-
-    onScroll.call(this);
-  }
-
+  @action
   updateLastVisitedTopic() {
     const { topics, order, ascending, top, hot } = this.args;
 
@@ -128,80 +110,17 @@ export default class TopicList extends Component {
     this.lastVisitedTopic = lastVisitedTopic;
   }
 
-  click(e) {
-    const onClick = (sel, callback) => {
-      let target = e.target.closest(sel);
-
-      if (target) {
-        callback(target);
-      }
-    };
-
-    onClick("button.bulk-select", () => {
-      this.args.bulkSelectHelper.toggleBulkSelect();
-      this.rerender();
-    });
-
-    onClick("button.bulk-select-all", () => {
-      this.args.bulkSelectHelper.autoAddTopicsToBulkSelect = true;
-      document
-        .querySelectorAll("input.bulk-select:not(:checked)")
-        .forEach((el) => el.click());
-    });
-
-    onClick("button.bulk-clear-all", () => {
-      this.args.bulkSelectHelper.autoAddTopicsToBulkSelect = false;
-      document
-        .querySelectorAll("input.bulk-select:checked")
-        .forEach((el) => el.click());
-    });
-
-    onClick("th.sortable", (element) => {
-      this.changeSort(element.dataset.sortOrder);
-      this.rerender();
-    });
-
-    onClick("button.bulk-select-actions", () => {
-      this.modal.show(TopicBulkActions, {
-        model: {
-          topics: this.selected,
-          category: this.category,
-          refreshClosure: () => this.router.refresh(),
-        },
-      });
-    });
-
-    onClick("button.topics-replies-toggle", (element) => {
-      if (element.classList.contains("--all")) {
-        this.args.changeNewListSubset(null);
-      } else if (element.classList.contains("--topics")) {
-        this.args.changeNewListSubset("topics");
-      } else if (element.classList.contains("--replies")) {
-        this.args.changeNewListSubset("replies");
-      }
-      this.rerender();
-    });
-  }
-
-  keyDown(e) {
-    if (e.key === "Enter" || e.key === " ") {
-      let onKeyDown = (sel, callback) => {
-        let target = e.target.closest(sel);
-
-        if (target) {
-          callback.call(this, target);
-        }
-      };
-
-      onKeyDown("th.sortable", (element) => {
-        this.changeSort(element.dataset.sortOrder);
-        this.rerender();
-      });
-    }
-  }
-
   <template>
     <table
+      {{didUpdate
+        this.updateLastVisitedTopic
+        @topics
+        @order
+        @ascending
+        @category
+        @top
+        @hot
+      }}
       class={{concatClass
         "topic-list"
         (if this.bulkSelectEnabled "sticky-header")
@@ -211,11 +130,13 @@ export default class TopicList extends Component {
         <TopicListHeader
           @canBulkSelect={{@canBulkSelect}}
           @toggleInTitle={{this.toggleInTitle}}
+          @category={{@category}}
           @hideCategory={{@hideCategory}}
           @showPosters={{@showPosters}}
           @showLikes={{this.showLikes}}
           @showOpLikes={{this.showOpLikes}}
           @order={{@order}}
+          @changeSort={{@changeSort}}
           @ascending={{@ascending}}
           @sortable={{this.sortable}}
           @listTitle={{or @listTitle "topic.title"}}
@@ -227,6 +148,7 @@ export default class TopicList extends Component {
           @newListSubset={{@newListSubset}}
           @newRepliesCount={{@newRepliesCount}}
           @newTopicsCount={{@newTopicsCount}}
+          @changeNewListSubset={{@changeNewListSubset}}
         />
       </thead>
 
