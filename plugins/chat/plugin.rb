@@ -41,6 +41,13 @@ end
 require_relative "lib/chat/engine"
 
 after_initialize do
+  %w[
+    app/jobs/scheduled/chat/auto_join_users
+    app/jobs/scheduled/chat/delete_old_messages
+    app/jobs/scheduled/chat/email_notifications
+    app/jobs/scheduled/chat/periodical_updates
+  ].each { |path| require_relative path }
+
   register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))
 
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
