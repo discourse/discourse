@@ -8,6 +8,9 @@ module ::Chat
     engine_name PLUGIN_NAME
     isolate_namespace Chat
     config.autoload_paths << File.join(config.root, "lib")
+    config.to_prepare do
+      Rails.autoloaders.main.eager_load_dir("#{Chat::Engine.config.root}/app/jobs/scheduled")
+    end
   end
 
   def self.allowed_group_ids
