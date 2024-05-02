@@ -29,7 +29,7 @@
     "jspreadsheet-ce": "^4.13.4",
     "morphlex": "^0.0.15",
     "pretty-text": "1.0.0",
-    "decorator-transforms": "^1.2.1"
+    "decorator-transforms": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.5",
@@ -43,8 +43,8 @@
     "@ember/render-modifiers": "^2.1.0",
     "@ember/string": "^3.1.1",
     "@ember/test-helpers": "^3.3.0",
-    "@embroider/compat": "^3.4.8",
-    "@embroider/core": "^3.4.8",
+    "@embroider/compat": "^3.4.9",
+    "@embroider/core": "^3.4.9",
     "@embroider/macros": "^1.13.1",
     "@embroider/router": "^2.1.4",
     "@embroider/webpack": "^4.0.0",
@@ -108,7 +108,7 @@
     "pretender": "^3.4.7",
     "qunit": "^2.20.1",
     "qunit-dom": "^3.1.2",
-    "sass": "^1.75.0",
+    "sass": "^1.76.0",
     "select-kit": "1.0.0",
     "sinon": "^17.0.1",
     "source-map": "^0.7.4",

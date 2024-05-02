@@ -30,5 +30,10 @@ RSpec.describe Chat::InReplyToSerializer do
     it "censors words" do
       expect(serializer.as_json[:excerpt]).to eq("ok ■■■■■")
     end
+
+    it "builds an excerpt for replied to message if it doesn’t have one" do
+      message.update!(excerpt: nil)
+      expect(serializer.as_json[:excerpt]).to eq(message.build_excerpt)
+    end
   end
 end

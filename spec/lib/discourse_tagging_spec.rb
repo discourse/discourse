@@ -426,6 +426,24 @@ RSpec.describe DiscourseTagging do
         expect(tags).to contain_exactly(tag1.name, tag3.name)
       end
 
+      context "with tags with underscores" do
+        fab!(:tag_with_underscore) { Fabricate(:tag, name: "tag_1") }
+        fab!(:another_tag_with_underscore) do
+          Fabricate(:tag, name: "tag_1a", public_topic_count: 10)
+        end
+
+        it "puts the exact match at the start of the results" do
+          tags =
+            DiscourseTagging.filter_allowed_tags(
+              nil,
+              term: "tag_1",
+              order_search_results: true,
+            ).map(&:name)
+
+          expect(tags).to eq(%w[tag_1 tag_1a])
+        end
+      end
+
       context "with tag with colon" do
         fab!(:tag_with_colon) { Fabricate(:tag, name: "with:colon") }
 

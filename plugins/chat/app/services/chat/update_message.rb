@@ -21,6 +21,7 @@ module Chat
     step :enforce_system_membership
     policy :can_modify_channel_message
     policy :can_modify_message
+    step :clean_message
 
     transaction do
       step :modify_message
@@ -40,6 +41,8 @@ module Chat
       attribute :upload_ids, :array
 
       attribute :streaming, :boolean, default: false
+
+      attribute :strip_whitespaces, :boolean, default: true
 
       attribute :process_inline, :boolean, default: Rails.env.test?
     end
@@ -79,6 +82,15 @@ module Chat
 
     def can_modify_message(guardian:, message:)
       guardian.can_edit_chat?(message)
+    end
+
+    def clean_message(contract:)
+      contract.message =
+        TextCleaner.clean(
+          contract.message,
+          strip_whitespaces: contract.strip_whitespaces,
+          strip_zero_width_spaces: true,
+        )
     end
 
     def modify_message(contract:, message:, guardian:, uploads:)

@@ -10,5 +10,9 @@ module Chat
     def user
       object.user || Chat::NullUser.new
     end
+
+    def excerpt
+      object.excerpt || object.build_excerpt
+    end
   end
 end

@@ -66,6 +66,19 @@ RSpec.describe Chat::CreateMessage do
         expect { result }.to change { Chat::Mention.count }.by(1)
       end
 
+      it "cleans the message" do
+        params[:message] = "aaaaaaa\n"
+        expect(message.message).to eq("aaaaaaa")
+      end
+
+      context "when strip_whitespace is disabled" do
+        it "doesn't strip newlines" do
+          params[:strip_whitespaces] = false
+          params[:message] = "aaaaaaa\n"
+          expect(message.message).to eq("aaaaaaa\n")
+        end
+      end
+
       context "when coming from a webhook" do
         let(:incoming_webhook) { Fabricate(:incoming_chat_webhook, chat_channel: channel) }
 
