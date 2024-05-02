@@ -10,44 +10,36 @@
 
             {{#if this.bulkSelectEnabled}}
               <th class="bulk-select topic-list-data">
-                {{! TODO: CREATE FLAGS FOR BULK BOOKMARKS }}
                 {{raw
                   "flat-button"
                   class="bulk-select"
-                  icon="tasks"
-                  title="topics.bulk.toggle"
+                  icon="list"
+                  title="bookmarks.bulk.toggle"
                 }}
-
               </th>
             {{/if}}
             <th class="topic-list-data">
               {{#if this.bulkSelectEnabled}}
                 <span class="bulk-select-topics">
                   {{~#if this.canDoBulkActions}}
-                    {{~#if this.experimentalTopicBulkActionsEnabled}}
-                      {{raw
-                        "topic-bulk-select-dropdown"
-                        bulkSelectHelper=this.bulkSelectHelper
-                      }}
-                    {{else}}
-                      <button
-                        class="btn btn-icon no-text bulk-select-actions"
-                      >{{d-icon "cog"}}&#8203;</button>
-                    {{/if~}}
+                    {{raw
+                      "bookmark-bulk-select-dropdown"
+                      bulkSelectHelper=this.bulkSelectHelper
+                    }}
                   {{/if~}}
                   <button class="btn btn-default bulk-select-all">{{i18n
-                      "topics.bulk.select_all"
+                      "bookmarks.bulk.select_all"
                     }}</button>
                   <button class="btn btn-default bulk-clear-all">{{i18n
-                      "topics.bulk.clear_all"
+                      "bookmarks.bulk.clear_all"
                     }}</button>
                 </span>
               {{else}}
                 {{raw
                   "flat-button"
                   class="bulk-select"
-                  icon="list"
-                  title="topics.bulk.toggle"
+                  icon="tasks"
+                  title="bookmarks.bulk.toggle"
                 }}
                 {{i18n "topic.title"}}
               {{/if~}}
@@ -62,12 +54,8 @@
         {{/if}}
       </thead>
       <tbody class="topic-list-body">
-
         {{#each this.content as |bookmark|}}
           <tr class="topic-list-item bookmark-list-item">
-
-            {{! TODO: CREATE FLAGS FOR BULK BOOKMARKS }}
-            {{!-- {{#if this.experimentalBookmarkBulkActionsEnabled}} --}}
             {{#if this.bulkSelectEnabled}}
               <td class="bulk-select bookmark-list-data">
                 <label for="bulk-select-{{bookmark.id}}">
@@ -80,8 +68,6 @@
                 </label>
               </td>
             {{/if}}
-            {{!-- {{/if}} --}}
-
             <th scope="row" class="main-link topic-list-data">
               <span class="link-top-line">
                 <div class="bookmark-metadata">

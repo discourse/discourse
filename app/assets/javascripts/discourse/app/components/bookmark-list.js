@@ -10,7 +10,6 @@ import {
   openLinkInNewTab,
   shouldOpenInNewTab,
 } from "discourse/lib/click-track";
-import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default Component.extend({
@@ -19,9 +18,7 @@ export default Component.extend({
   classNames: ["bookmark-list-wrapper"],
 
   get canDoBulkActions() {
-    return (
-      this.currentUser?.canManageTopic && this.bulkSelectHelper?.selected.length
-    );
+    return this.bulkSelectHelper?.selected.length;
   },
 
   get selected() {
@@ -102,13 +99,6 @@ export default Component.extend({
     bookmark.togglePin().then(this.reload);
   },
 
-  @discourseComputed
-  experimentalBookmarkBulkActionsEnabled() {
-    return true;
-    // return this.currentUser?.use_experimental_topic_bulk_actions;
-    // return this.bulkSelectHelper?.bulkSelectEnabled;
-  },
-
   @dependentKeyCompat // for the classNameBindings
   get bulkSelectEnabled() {
     return this.bulkSelectHelper?.bulkSelectEnabled;
@@ -116,6 +106,35 @@ export default Component.extend({
 
   _removeBookmarkFromList(bookmark) {
     this.content.removeObject(bookmark);
+  },
+
+  _toggleBookmark(target, bookmark, isSelectingRange) {
+    const selected = this.selected;
+
+    if (target.checked) {
+      selected.addObject(bookmark);
+
+      if (isSelectingRange) {
+        const bulkSelects = Array.from(
+            document.querySelectorAll("input.bulk-select")
+          ),
+          from = bulkSelects.indexOf(target),
+          to = bulkSelects.findIndex((el) => el.id === this.lastChecked.id),
+          start = Math.min(from, to),
+          end = Math.max(from, to);
+
+        bulkSelects
+          .slice(start, end)
+          .filter((el) => el.checked !== true)
+          .forEach((checkbox) => {
+            checkbox.click();
+          });
+      }
+      this.set("lastChecked", target);
+    } else {
+      selected.removeObject(bookmark);
+      this.set("lastChecked", null);
+    }
   },
 
   click(e) {
@@ -134,36 +153,25 @@ export default Component.extend({
 
     onClick("input.bulk-select", () => {
       const target = e.target;
-      const selected = this.selected;
       const bookmarkId = target.dataset.id;
       const bookmark = this.content.find(
         (item) => item.id.toString() === bookmarkId
       );
+      this._toggleBookmark(target, bookmark, this.lastChecked && e.shiftKey);
+    });
 
-      if (target.checked) {
-        selected.addObject(bookmark);
+    onClick("button.bulk-select-all", () => {
+      this.bulkSelectHelper.autoAddBookmarksToBulkSelect = true;
+      document
+        .querySelectorAll("input.bulk-select:not(:checked)")
+        .forEach((el) => el.click());
+    });
 
-        if (this.lastChecked && e.shiftKey) {
-          const bulkSelects = Array.from(
-              document.querySelectorAll("input.bulk-select")
-            ),
-            from = bulkSelects.indexOf(target),
-            to = bulkSelects.findIndex((el) => el.id === this.lastChecked.id),
-            start = Math.min(from, to),
-            end = Math.max(from, to);
-
-          bulkSelects
-            .slice(start, end)
-            .filter((el) => el.checked !== true)
-            .forEach((checkbox) => {
-              checkbox.click();
-            });
-        }
-        this.set("lastChecked", target);
-      } else {
-        selected.removeObject(bookmark);
-        this.set("lastChecked", null);
-      }
+    onClick("button.bulk-clear-all", () => {
+      this.bulkSelectHelper.autoAddBookmarksToBulkSelect = false;
+      document
+        .querySelectorAll("input.bulk-select:checked")
+        .forEach((el) => el.click());
     });
   },
 });

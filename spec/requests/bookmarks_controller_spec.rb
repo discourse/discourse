@@ -6,9 +6,9 @@ RSpec.describe BookmarksController do
   let(:bookmark_topic) { Fabricate(:topic) }
   let(:bookmark_user) { current_user }
 
-  before { sign_in(current_user) }
-
   describe "#create" do
+    before { sign_in(current_user) }
+
     use_redis_snapshotting
 
     it "rate limits creates" do
@@ -95,6 +95,8 @@ RSpec.describe BookmarksController do
   end
 
   describe "#destroy" do
+    before { sign_in(current_user) }
+
     let!(:bookmark) { Fabricate(:bookmark, bookmarkable: bookmark_post, user: bookmark_user) }
 
     it "destroys the bookmark" do
@@ -139,6 +141,64 @@ RSpec.describe BookmarksController do
 
         expect(response.status).to eq(403)
         expect(response.parsed_body["errors"].first).to include(I18n.t("invalid_access"))
+      end
+    end
+  end
+
+  describe "#bulk" do
+    it "needs you to be logged in" do
+      put "/bookmarks/bulk.json"
+      expect(response.status).to eq(403)
+    end
+
+    describe "when logged in" do
+      before { sign_in(current_user) }
+
+      let!(:operation) { { type: "clear_reminder" } }
+      let!(:bookmark_ids) { [1, 2] }
+
+      it "requires a list of bookmark_ids" do
+        put "/bookmarks/bulk.json", params: { operation: operation }
+        expect(response.status).to eq(400)
+      end
+
+      it "requires an operation param" do
+        put "/bookmarks/bulk.json", params: { bookmark_ids: bookmark_ids }
+        expect(response.status).to eq(400)
+      end
+
+      it "can clear reminder for the given bookmarks" do
+        Guardian.any_instance.stubs(:can_edit?).returns(true)
+        bookmark = Fabricate(:bookmark_next_business_day_reminder)
+
+        expect do
+          put "/bookmarks/bulk.json",
+              params: {
+                operation: {
+                  type: "clear_reminder",
+                },
+                bookmark_ids: [bookmark.id],
+              }
+          expect(response.status).to eq(200)
+        end.to change { Bookmark.find(bookmark.id).reminder_set_at }.to(nil)
+      end
+
+      it "can delete bookmarks" do
+        Guardian.any_instance.stubs(:can_edit?).returns(true)
+        bookmark_1 = Fabricate(:bookmark_next_business_day_reminder)
+        bookmark_2 = Fabricate(:bookmark_next_business_day_reminder)
+
+        expect do
+          put "/bookmarks/bulk.json",
+              params: {
+                operation: {
+                  type: "delete",
+                },
+                bookmark_ids: [bookmark_1.id, bookmark_2.id],
+              }
+
+          expect(response.status).to eq(200)
+        end.to change { Bookmark.where(id: [bookmark_1, bookmark_2]).count }.from(2).to(0)
       end
     end
   end

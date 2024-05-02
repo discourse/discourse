@@ -85,6 +85,11 @@ export default Controller.extend({
       .finally(() => this.set("loadingMore", false));
   },
 
+  @action
+  updateAutoAddBookmarksToBulkSelect(value) {
+    this.bulkSelectHelper.autoAddBookmarksToBulkSelect = value;
+  },
+
   _loadMoreBookmarks(searchQuery) {
     if (!this.model.loadMoreUrl) {
       return Promise.resolve();
