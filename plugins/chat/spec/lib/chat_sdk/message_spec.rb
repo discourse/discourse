@@ -150,8 +150,6 @@ describe ChatSDK::Message do
     fab!(:message_1) { Fabricate(:chat_message, message: "first") }
 
     it "enables streaming" do
-      initial_message = message_1.message
-
       edit =
         MessageBus
           .track_publish("/chat/#{message_1.chat_channel.id}") do
@@ -168,24 +166,22 @@ describe ChatSDK::Message do
   end
 
   describe ".stream" do
-    fab!(:message_1) { Fabricate(:chat_message, message: "first") }
+    fab!(:message_1) { Fabricate(:chat_message, message: "first\n") }
     before { message_1.update!(streaming: true) }
 
     it "streams" do
-      initial_message = message_1.message
-
       edit =
         MessageBus
           .track_publish("/chat/#{message_1.chat_channel.id}") do
             described_class.stream(
-              raw: " test",
+              raw: " test\n",
               message_id: message_1.id,
               guardian: message_1.user.guardian,
             )
           end
           .find { |m| m.data["type"] == "edit" }
 
-      expect(edit.data["chat_message"]["message"]).to eq("first test")
+      expect(edit.data["chat_message"]["message"]).to eq("first\n test\n")
       expect(message_1.reload.streaming).to eq(true)
     end
   end

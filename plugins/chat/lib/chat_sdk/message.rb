@@ -37,7 +37,7 @@ module ChatSDK
     #
     # @see #create
     def self.create_with_stream(**params, &block)
-      self.create(**params, streaming: true, &block)
+      self.create(**params, streaming: true, strip_whitespaces: false, &block)
     end
 
     # Streams to a specific chat message.
@@ -114,6 +114,7 @@ module ChatSDK
       streaming: false,
       enforce_membership: false,
       force_thread: false,
+      strip_whitespaces: false,
       &block
     )
       message =
@@ -179,6 +180,7 @@ module ChatSDK
         message: self.message.message + raw,
         guardian: self.guardian,
         streaming: true,
+        strip_whitespaces: false,
       ) { on_failure { raise "Unexpected error" } }
 
       self.message
