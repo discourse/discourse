@@ -229,4 +229,70 @@ module Helpers
   ensure
     SearchIndexer.disable
   end
+
+  # Uploads a theme from a directory.
+  #
+  # @param set_theme_as_default [Boolean] Whether to set the uploaded theme as the default theme for the site. Defaults to true.
+  #
+  # @return [Theme] The uploaded theme model given by `models/theme.rb`.
+  #
+  # @example Upload a theme and set it as default
+  #   upload_theme("/path/to/theme")
+  def upload_theme(set_theme_as_default: true)
+    theme = RemoteTheme.import_theme_from_directory(theme_dir_from_caller)
+
+    if theme.component
+      raise "Uploaded theme is a theme component, please use the `upload_theme_component` method instead."
+    end
+
+    theme.set_default! if set_theme_as_default
+    theme
+  end
+
+  # Uploads a theme component from a directory.
+  #
+  # @param parent_theme_id [Integer] The ID of the theme to add the theme component to. Defaults to `SiteSetting.default_theme_id`.
+  #
+  # @return [Theme] The uploaded theme model given by `models/theme.rb`.
+  #
+  # @example Upload a theme component
+  #   upload_theme_component("/path/to/theme_component")
+  #
+  # @example Upload a theme component and add it to a specific theme
+  #   upload_theme_component("/path/to/theme_component", parent_theme_id: 123)
+  def upload_theme_component(parent_theme_id: SiteSetting.default_theme_id)
+    theme = RemoteTheme.import_theme_from_directory(theme_dir_from_caller)
+
+    if !theme.component
+      raise "Uploaded theme is not a theme component, please use the `upload_theme` method instead."
+    end
+
+    Theme.find(parent_theme_id).child_themes << theme
+    theme
+  end
+
+  # Runs named migration for a given theme.
+  #
+  # @params [Theme] theme The theme to run the migration for.
+  # @params [String] migration_name The name of the migration to run.
+  #
+  # @return [nil]
+  #
+  # @example
+  #   run_theme_migration(theme, "0001-migrate-some-settings")
+  def run_theme_migration(theme, migration_name)
+    migration_theme_field = theme.theme_fields.find_by(name: migration_name)
+    theme.migrate_settings(fields: [migration_theme_field], allow_out_of_sequence_migration: true)
+    nil
+  end
+
+  private
+
+  def theme_dir_from_caller
+    caller.each do |line|
+      if (split = line.split(%r{/spec/*/.+_spec.rb})).length > 1
+        return split.first
+      end
+    end
+  end
 end
