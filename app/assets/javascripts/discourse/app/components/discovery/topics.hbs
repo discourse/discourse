@@ -8,7 +8,7 @@
 
 {{#if @model.sharedDrafts}}
   {{#if this.currentUser.use_glimmer_topic_list}}
-    <TopicList::Index
+    <TopicList::List
       @listTitle="shared_drafts.title"
       @top={{this.top}}
       @hideCategory="true"
@@ -88,7 +88,7 @@
 
   {{#if this.hasTopics}}
     {{#if this.currentUser.use_glimmer_topic_list}}
-      <TopicList::Index
+      <TopicList::List
         @highlightLastVisited={{true}}
         @top={{this.top}}
         @hot={{this.hot}}
