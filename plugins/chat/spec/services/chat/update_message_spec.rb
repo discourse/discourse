@@ -66,12 +66,7 @@ RSpec.describe Chat::UpdateMessage do
       new_message = "2 short"
 
       expect do
-        update =
-          described_class.call(
-            guardian: guardian,
-            message_id: chat_message.id,
-            message: new_message,
-          )
+        described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
       end.to raise_error(ActiveRecord::RecordInvalid).with_message(
         "Validation failed: " +
           I18n.t(
@@ -135,6 +130,29 @@ RSpec.describe Chat::UpdateMessage do
 
       described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
       expect(chat_message.reload.message).to eq(new_message)
+    end
+
+    it "cleans message's content" do
+      chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
+      new_message = "bbbbb\n"
+
+      described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
+      expect(chat_message.reload.message).to eq("bbbbb")
+    end
+
+    context "when strip_whitespaces is disabled" do
+      it "doesn't remove new lines" do
+        chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
+        new_message = "bbbbb\n"
+
+        described_class.call(
+          guardian: guardian,
+          message_id: chat_message.id,
+          message: new_message,
+          strip_whitespaces: false,
+        )
+        expect(chat_message.reload.message).to eq("bbbbb\n")
+      end
     end
 
     it "cooks the message" do
@@ -510,8 +528,7 @@ RSpec.describe Chat::UpdateMessage do
       old_message = "It's a thrsday!"
       new_message = "Today is Thursday, it's almost the weekend already!"
       chat_message = create_chat_message(user1, old_message, public_chat_channel)
-      updater =
-        described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
+      described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
 
       revision = chat_message.revisions.last
       expect(revision.old_message).to eq(old_message)

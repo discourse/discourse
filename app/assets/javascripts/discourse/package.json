@@ -29,7 +29,7 @@
     "jspreadsheet-ce": "^4.13.4",
     "morphlex": "^0.0.15",
     "pretty-text": "1.0.0",
-    "decorator-transforms": "^1.2.1"
+    "decorator-transforms": "^2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.5",

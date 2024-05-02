@@ -638,7 +638,10 @@ class GroupsController < ApplicationController
 
     if (term = params[:term]).present?
       groups =
-        groups.where("groups.name ILIKE :term OR groups.full_name ILIKE :term", term: "%#{term}%")
+        groups.where(
+          "position(LOWER(:term) IN LOWER(groups.name)) <> 0 OR position(LOWER(:term) IN LOWER(groups.full_name)) <> 0",
+          term: term,
+        )
     end
 
     groups = groups.where(automatic: false) if params[:ignore_automatic].to_s == "true"

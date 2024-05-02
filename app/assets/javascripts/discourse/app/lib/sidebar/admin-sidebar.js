@@ -229,7 +229,7 @@ function pluginAdminRouteLinks() {
       return {
         name: `admin_plugin_${plugin.admin_route.location}`,
         route: plugin.admin_route.use_new_show_route
-          ? `adminPlugins.show.${plugin.admin_route.location}`
+          ? `adminPlugins.show`
           : `adminPlugins.${plugin.admin_route.location}`,
         routeModels: plugin.admin_route.use_new_show_route
           ? [plugin.admin_route.location]

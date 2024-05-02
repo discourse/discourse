@@ -34,6 +34,7 @@ module Chat
     policy :ensure_valid_thread_for_channel
     policy :ensure_thread_matches_parent
     model :uploads, optional: true
+    step :clean_message
     model :message_instance, :instantiate_message
 
     transaction do
@@ -64,6 +65,7 @@ module Chat
       attribute :incoming_chat_webhook
       attribute :process_inline, :boolean, default: Rails.env.test?
       attribute :force_thread, :boolean, default: false
+      attribute :strip_whitespaces, :boolean, default: true
 
       validates :chat_channel_id, presence: true
       validates :message, presence: true, if: -> { upload_ids.blank? }
@@ -131,6 +133,15 @@ module Chat
     def fetch_uploads(contract:, guardian:)
       return [] if !SiteSetting.chat_allow_uploads
       guardian.user.uploads.where(id: contract.upload_ids)
+    end
+
+    def clean_message(contract:)
+      contract.message =
+        TextCleaner.clean(
+          contract.message,
+          strip_whitespaces: contract.strip_whitespaces,
+          strip_zero_width_spaces: true,
+        )
     end
 
     def instantiate_message(channel:, guardian:, contract:, uploads:, thread:, reply:)
