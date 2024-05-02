@@ -198,6 +198,7 @@ task "emails:test", [:email] => [:environment] do |_, args|
   rescue => error
     puts "Sending mail failed."
     puts error.message
+    puts "Maybe \"reply by email address\" is incorrect"
   end
 
   puts <<~TEXT if SiteSetting.disable_emails != "no"
