@@ -41,45 +41,49 @@
   </div>
   <PollInfo @attrs={{this.attributes}} />
   <div class="poll-buttons">
-    {{#if this.addCastVotesButton}}
+    {{#if this.showCastVotesButton}}
       <button
         class={{this.castVotesButtonClass}}
-        label="poll.cast-votes.label"
         title="poll.cast-votes.title"
-        icon={{this.castVotesButtonIcon}}
         disabled={{this.castVotesDisabled}}
-        action="castVotes"
-      />
+        action={{this.castVotes}}
+      >
+        {{d-icon this.castVotesButtonIcon}}
+        <span class="d-button-label">{{I18n "poll.cast-votes.label"}}</span>
+      </button>
     {{/if}}
 
     {{#if this.showHideResultsButton}}
       <button
-        class="btn-default toggle-results"
-        label="poll.hide-results.label"
+        class="btn btn-default toggle-results"
         title="poll.hide-results.title"
-        icon="chevron-left"
-        action="toggleResults"
-      />
+        action={{this.toggleResults}}
+      >
+        {{d-icon "chevron-left"}}
+        <span class="d-button-label">{{I18n "poll.hide-results.label"}}</span>
+      </button>
     {{/if}}
 
     {{#if this.showShowResultsButton}}
       <button
-        class="btn-default toggle-results"
-        label="poll.show-results.label"
+        class="btn btn-default toggle-results"
         title="poll.show-results.title"
-        icon="chart-bar"
-        action="toggleResults"
-      />
+        action={{this.toggleResults}}
+      >
+        {{d-icon "chart-bar"}}
+        <span class="d-button-label">{{I18n "poll.show-results.label"}}</span>
+      </button>
     {{/if}}
 
     {{#if this.showRemoveVoteButton}}
       <button
         class="btn-default remove-vote"
-        label="poll.remove-vote.label"
         title="poll.remove-vote.title"
-        icon="undo"
-        action="removeVote"
-      />
+        action={{this.removeVote}}
+      >
+        {{d-icon "undo"}}
+        <span>{{I18n "poll.remove-vote.label"}}</span>
+      </button>
     {{/if}}
 
     {{#if this.showDropdown}}

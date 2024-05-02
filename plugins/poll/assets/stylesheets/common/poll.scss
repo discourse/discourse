@@ -21,6 +21,10 @@ div.poll {
     color: var(--primary);
     padding: 0.5em 0;
     word-break: break-word;
+    button {
+      background-color: var(--secondary);
+      border: none;
+    }
   }
 
   .multi-poll {

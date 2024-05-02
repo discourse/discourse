@@ -42,8 +42,8 @@ export default class PollComponent extends Component {
   @service siteSettings;
   @service appEvents;
   @tracked isStaff = this.currentUser && this.currentUser.staff;
-  @tracked vote = this.args.attrs.vote;
-  @tracked closed = this.args.attrs.isClosed;
+  @tracked vote;
+  @tracked closed;
   @tracked titleHTML = htmlSafe(this.args.attrs.titleHTML);
   @tracked topicArchived = this.args.attrs.post.get("topic.archived");
   @tracked options = [];
@@ -51,13 +51,12 @@ export default class PollComponent extends Component {
   @tracked staffOnly = this.args.attrs.poll.results === "staff_only";
   @tracked isIrv = this.args.attrs.poll.type === "irv";
   @tracked isMultiple = this.args.attrs.poll.type === "multiple";
-  @tracked min = this.args.attrs.min;
-  @tracked max = this.args.attrs.max;
+
   @tracked isMultiVoteType = this.isIrv || this.isMultiple;
   @tracked isNumber = this.args.attrs.poll.type === "number";
   @tracked
   hideResultsDisabled = !this.staffOnly && (this.closed || this.topicArchived);
-  @tracked showingResults = false;
+  @tracked showingResults;
   @tracked
   showResults =
     this.showingResults ||
@@ -95,11 +94,9 @@ export default class PollComponent extends Component {
       return this.castVotes().catch(() => this._toggleOption(option));
     }
   };
-  //     vote.push(option.id);
   showLogin = () => {
     this.register.lookup("route:application").send("showLogin");
   };
-  //   } else {
   checkUserGroups = (user, poll) => {
     const pollGroups =
       poll && poll.groups && poll.groups.split(",").map((g) => g.toLowerCase());
@@ -113,25 +110,6 @@ export default class PollComponent extends Component {
 
     return userGroups && pollGroups.some((g) => userGroups.includes(g));
   };
-
-  canCastVotes = () => {
-    // const { state, attrs } = this;
-
-    if (this.closed || this.showingResults) {
-      return false;
-    }
-
-    const selectedOptionCount = this.vote.length;
-
-    if (this.isMultiple) {
-      return (
-        selectedOptionCount >= this.min() && selectedOptionCount <= this.max()
-      );
-    }
-
-    return selectedOptionCount > 0;
-  };
-
   castVotes = () => {
     if (!this.canCastVotes()) {
       return;
@@ -139,10 +117,6 @@ export default class PollComponent extends Component {
     if (!this.currentUser) {
       return this.showLogin();
     }
-
-    // const { attrs, state } = this;
-
-    // state.loading = true;
 
     return ajax("/polls/vote", {
       type: "PUT",
@@ -181,27 +155,38 @@ export default class PollComponent extends Component {
         }
       });
   };
-
   _toggleOption = (option) => {
     let options = this.options;
-    const chosenIdx = this.vote.indexOf(option.id);
+    let vote = this.vote;
+
+    const chosenIdx = vote.indexOf(option.id);
+
     if (chosenIdx !== -1) {
-      this.vote.splice(chosenIdx, 1);
+      vote.splice(chosenIdx, 1);
     } else {
-      this.vote.push(option.id);
+      vote.push(option.id);
     }
-    this.options.forEach((o) => {
-      if (o.id === option.id) {
-        o.chosen = !o.chosen;
+
+    options.forEach((o, i) => {
+      if (vote.includes(options[i].id)) {
+        options[i].chosen = true;
+      } else {
+        options[i].chosen = false;
       }
     });
+
+    this.vote = [...vote];
     this.options = [...options];
   };
-
   constructor() {
     super(...arguments);
     this.options = this.args.attrs.poll.options;
+    this.vote = this.args.attrs.vote;
     this.attributes = this.args.attrs;
+    this.min = this.args.attrs.min;
+    this.max = this.args.attrs.max;
+    this.closed = this.args.attrs.isClosed;
+    this.showingResults = false;
 
     if (this.args.attrs.isIrv) {
       this.irv_dropdown_content.push({
@@ -224,10 +209,20 @@ export default class PollComponent extends Component {
     });
   }
 
-  //if (this.args.attrs.isMultiple || this.args.attrs.isNumber) {
-  // includedVote(optionId) {
-  //   return this.args.attrs.vote.includes(optionId);
-  // }
+  get canCastVotes() {
+    if (this.closed || this.showingResults) {
+      return false;
+    }
+
+    const selectedOptionCount = this.vote.length;
+
+    if (this.isMultiple) {
+      return selectedOptionCount >= this.min && selectedOptionCount <= this.max;
+    }
+
+    return selectedOptionCount > 0;
+  }
+
   get pollGroups() {
     return I18n.t("poll.results.groups.title", { groups: this.poll.groups });
   }
@@ -239,6 +234,20 @@ export default class PollComponent extends Component {
         !this.hideResultsDisabled &&
         !this.args.attrs.showResults)
     );
+  }
+
+  get castVotesButtonClass() {
+    return `btn cast-votes ${
+      this.canCastVotes ? "btn-primary" : "btn-default"
+    }`;
+  }
+
+  get castVotesButtonIcon() {
+    return !this.castVotesDisabled ? "check" : "far-square";
+  }
+
+  get castVotesDisabled() {
+    return !this.canCastVotes;
   }
 
   get showHideResultsButton() {
