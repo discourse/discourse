@@ -21,6 +21,7 @@
     "ember-template-imports": "^4.1.0"
   },
   "devDependencies": {
+    "@bagaar/ember-breadcrumbs": "^5.0.0",
     "@ember/optional-features": "^2.1.0",
     "@embroider/test-setup": "^4.0.0",
     "@glimmer/component": "^1.1.2",
@@ -37,6 +38,7 @@
     "ember-resolver": "^11.0.1",
     "ember-source": "~5.5.0",
     "ember-source-channel-url": "^3.0.0",
+    "ember-auto-import": "^2.7.2",
     "loader.js": "^4.7.0",
     "webpack": "^5.91.0"
   },
