@@ -392,7 +392,7 @@ class Notification < ActiveRecord::Base
   end
 
   def send_email
-    #return if skip_send_email
+    return if skip_send_email
 
     if user.do_not_disturb?
       ShelvedNotification.create(notification_id: self.id)
