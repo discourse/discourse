@@ -77,9 +77,7 @@ export default class RelativeTimePicker extends Component {
         this.args.durationMinutes / 30 / 60 / 24
       );
     } else if (this.args.durationMinutes >= 1440) {
-      duration = this._roundedDuration(
-        this.args.durationMinutes / 60 / 24
-      );
+      duration = this._roundedDuration(this.args.durationMinutes / 60 / 24);
     } else if (this.args.durationMinutes >= 60) {
       duration = this._roundedDuration(this.args.durationMinutes / 60);
     } else {
@@ -163,10 +161,7 @@ export default class RelativeTimePicker extends Component {
 
   @action
   onChangeInterval(interval) {
-    const minutes = this.calculateMinutes(
-      this.duration,
-      interval
-    );
+    const minutes = this.calculateMinutes(this.duration, interval);
     this.args.onChange?.(minutes);
   }
 
