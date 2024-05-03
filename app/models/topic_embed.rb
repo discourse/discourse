@@ -61,6 +61,8 @@ class TopicEmbed < ActiveRecord::Base
     if embed.blank?
       Topic.transaction do
         eh = EmbeddableHost.record_for_url(url)
+        tags = eh.tags || tags
+        user = eh.user || user
 
         cook_method ||=
           if SiteSetting.embed_support_markdown
@@ -99,6 +101,10 @@ class TopicEmbed < ActiveRecord::Base
       absolutize_urls(url, contents)
       post = embed.post
 
+      eh = EmbeddableHost.record_for_url(url)
+      tags = eh.tags || tags
+      user = eh.user || user
+
       # Update the topic if it changed
       if post&.topic
         if post.user != user
@@ -115,6 +121,9 @@ class TopicEmbed < ActiveRecord::Base
 
         if (content_sha1 != embed.content_sha1) || (title && title != post&.topic&.title)
           changes = { raw: absolutize_urls(url, contents) }
+
+          # TODO tags not working!
+          changes[:tags] = tags.map(&:name) if SiteSetting.tagging_enabled && tags.present?
           changes[:title] = title if title.present?
 
           post.revise(user, changes, skip_validations: true, bypass_rate_limiter: true)

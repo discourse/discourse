@@ -141,6 +141,7 @@ class User < ActiveRecord::Base
   belongs_to :uploaded_avatar, class_name: "Upload"
 
   has_many :sidebar_section_links, dependent: :delete_all
+  has_many :embeddable_hosts
 
   delegate :last_sent_email_address, to: :email_logs
 

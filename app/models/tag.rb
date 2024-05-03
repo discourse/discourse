@@ -57,6 +57,9 @@ class Tag < ActiveRecord::Base
   has_many :synonyms, class_name: "Tag", foreign_key: "target_tag_id", dependent: :destroy
   has_many :sidebar_section_links, as: :linkable, dependent: :delete_all
 
+  has_many :embeddable_host_tags
+  has_many :embeddable_hosts, through: :embeddable_host_tags
+
   before_save :sanitize_description
 
   after_save :index_search

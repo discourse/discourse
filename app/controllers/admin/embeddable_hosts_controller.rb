@@ -28,6 +28,12 @@ class Admin::EmbeddableHostsController < Admin::AdminController
     host.category_id = params[:embeddable_host][:category_id]
     host.category_id = SiteSetting.uncategorized_category_id if host.category_id.blank?
 
+    # Handle tags
+    username = params[:embeddable_host][:user]
+    tags = params[:embeddable_host][:tags]&.map(&:strip)
+    host.tags = Tag.where(name: tags) if tags.present?
+    host.user = User.find_by_username(username) if username.present?
+
     if host.save
       changes = host.saved_changes if action == :update
       StaffActionLogger.new(current_user).log_embeddable_host(
