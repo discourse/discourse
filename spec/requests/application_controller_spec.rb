@@ -1332,5 +1332,27 @@ RSpec.describe ApplicationController do
         expect(JSON.parse(preloaded_json["visiblePlugins"])).to eq([])
       end
     end
+
+    describe "readonly serialization" do
+      it "serializes regular readonly mode correctly" do
+        Discourse.enable_readonly_mode(Discourse::USER_READONLY_MODE_KEY)
+
+        get "/latest"
+        expect(JSON.parse(preloaded_json["isReadOnly"])).to eq(true)
+        expect(JSON.parse(preloaded_json["isStaffWritesOnly"])).to eq(false)
+      ensure
+        Discourse.disable_readonly_mode(Discourse::USER_READONLY_MODE_KEY)
+      end
+
+      it "serializes staff readonly mode correctly" do
+        Discourse.enable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+
+        get "/latest"
+        expect(JSON.parse(preloaded_json["isReadOnly"])).to eq(true)
+        expect(JSON.parse(preloaded_json["isStaffWritesOnly"])).to eq(true)
+      ensure
+        Discourse.disable_readonly_mode(Discourse::STAFF_WRITES_ONLY_MODE_KEY)
+      end
+    end
   end
 end

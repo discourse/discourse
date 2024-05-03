@@ -38,8 +38,8 @@ module ReadOnlyMixin
   end
 
   def get_or_check_staff_writes_only_mode
-    check_readonly_mode if @readonly_mode.nil?
-    @readonly_mode
+    check_readonly_mode if @staff_writes_only_mode.nil?
+    @staff_writes_only_mode
   end
 
   def add_readonly_header
