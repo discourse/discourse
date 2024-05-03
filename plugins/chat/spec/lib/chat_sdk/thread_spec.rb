@@ -5,12 +5,7 @@ describe ChatSDK::Thread do
     fab!(:thread_1) { Fabricate(:chat_thread) }
 
     let(:params) do
-      {
-        title: "New Title",
-        channel_id: thread_1.channel_id,
-        thread_id: thread_1.id,
-        guardian: Discourse.system_user.guardian,
-      }
+      { title: "New Title", thread_id: thread_1.id, guardian: Discourse.system_user.guardian }
     end
 
     it "changes the title" do
@@ -23,7 +18,9 @@ describe ChatSDK::Thread do
       it "fails" do
         params.delete(:thread_id)
 
-        expect { described_class.update_title(**params) }.to raise_error("Thread can't be blank")
+        expect { described_class.update_title(**params) }.to raise_error(
+          "missing keyword: :thread_id",
+        )
       end
     end
 
@@ -63,8 +60,69 @@ describe ChatSDK::Thread do
       it "fails" do
         params[:thread_id] = -999
         expect { described_class.update_title(**params) }.to raise_error(
-          "Couldn’t find thread with id: `-999`",
+          "Couldn't find thread with id: `-999`",
         )
+      end
+    end
+  end
+
+  describe ".first_messages" do
+    fab!(:thread_1) { Fabricate(:chat_thread) }
+    fab!(:messages) do
+      Fabricate.times(5, :chat_message, thread: thread_1, chat_channel: thread_1.channel)
+    end
+
+    let(:params) { { thread_id: thread_1.id, guardian: Discourse.system_user.guardian } }
+
+    it "returns messages" do
+      expect(described_class.first_messages(**params)).to eq([thread_1.original_message, *messages])
+    end
+  end
+
+  describe ".last_messages" do
+    fab!(:thread_1) { Fabricate(:chat_thread) }
+    fab!(:messages) do
+      Fabricate.times(
+        5,
+        :chat_message,
+        thread: thread_1,
+        chat_channel: thread_1.channel,
+        use_service: true,
+      )
+    end
+
+    let(:params) do
+      { thread_id: thread_1.id, guardian: Discourse.system_user.guardian, page_size: 5 }
+    end
+
+    it "returns messages" do
+      expect(described_class.last_messages(**params)).to eq([*messages])
+    end
+  end
+
+  describe ".messages" do
+    fab!(:thread_1) { Fabricate(:chat_thread) }
+    fab!(:messages) do
+      Fabricate.times(
+        5,
+        :chat_message,
+        thread: thread_1,
+        chat_channel: thread_1.channel,
+        use_service: true,
+      )
+    end
+
+    let(:params) { { thread_id: thread_1.id, guardian: Discourse.system_user.guardian } }
+
+    it "returns messages" do
+      expect(described_class.messages(**params)).to eq([thread_1.original_message, *messages])
+    end
+
+    describe "page_size:" do
+      before { params[:page_size] = 2 }
+
+      it "limits returned messages" do
+        expect(described_class.messages(**params)).to eq([thread_1.original_message, messages[0]])
       end
     end
 

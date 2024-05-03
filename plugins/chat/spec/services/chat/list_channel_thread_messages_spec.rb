@@ -71,6 +71,20 @@ RSpec.describe Chat::ListChannelThreadMessages do
   end
 
   context "when determine_target_message_id" do
+    let(:optional_params) { { fetch_from_last_message: true } }
+
+    context "when fetch_from_last_message is true" do
+      it "sets target_message_id to last thread message id" do
+        expect(result.target_message_id).to eq(thread.chat_messages.last.id)
+      end
+    end
+
+    context "when fetch_from_first_message is true" do
+      it "sets target_message_id to first thread message id" do
+        expect(result.target_message_id).to eq(thread.chat_messages.first.id)
+      end
+    end
+
     context "when fetch_from_last_read is true" do
       let(:optional_params) { { fetch_from_last_read: true } }
 
