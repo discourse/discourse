@@ -67,7 +67,7 @@ module Chat
     end
 
     def can_view_thread(guardian:, thread:)
-      guardian.can_preview_chat_channel?(thread.channel)
+      guardian.user == Discourse.system_user || guardian.can_preview_chat_channel?(thread.channel)
     end
 
     def determine_target_message_id(contract:, membership:, guardian:, thread:)

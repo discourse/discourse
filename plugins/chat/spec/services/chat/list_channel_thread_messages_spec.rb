@@ -67,6 +67,12 @@ RSpec.describe Chat::ListChannelThreadMessages do
       end
 
       it { is_expected.to fail_a_policy(:can_view_thread) }
+
+      context "with system user" do
+        fab!(:user) { Discourse.system_user }
+
+        it { is_expected.to be_a_success }
+      end
     end
   end
 
