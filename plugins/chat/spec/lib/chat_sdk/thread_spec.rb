@@ -60,7 +60,7 @@ describe ChatSDK::Thread do
       it "fails" do
         params[:thread_id] = -999
         expect { described_class.update_title(**params) }.to raise_error(
-          "Couldn't find thread with id: `-999`",
+          "Couldn’t find thread with id: `-999`",
         )
       end
     end
