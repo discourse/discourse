@@ -25,6 +25,10 @@ export default Component.extend({
     return this.bulkSelectHelper?.selected;
   },
 
+  get selectedCount() {
+    return this.selected?.length || 0;
+  },
+
   @action
   removeBookmark(bookmark) {
     return new Promise((resolve, reject) => {
@@ -99,6 +103,12 @@ export default Component.extend({
     bookmark.togglePin().then(this.reload);
   },
 
+  @action
+  toggleBulkSelect() {
+    this.bulkSelectHelper?.toggleBulkSelect();
+    this.rerender();
+  },
+
   @dependentKeyCompat // for the classNameBindings
   get bulkSelectEnabled() {
     return this.bulkSelectHelper?.bulkSelectEnabled;
@@ -145,11 +155,6 @@ export default Component.extend({
         callback(target);
       }
     };
-
-    onClick("button.bulk-select", () => {
-      this.bulkSelectHelper?.toggleBulkSelect();
-      this.rerender();
-    });
 
     onClick("input.bulk-select", () => {
       const target = e.target;

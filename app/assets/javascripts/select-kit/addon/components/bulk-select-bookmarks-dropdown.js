@@ -54,26 +54,6 @@ export default DropdownSelectBoxComponent.extend({
     return [...options, ..._customButtons];
   },
 
-  showBulkBookmarksActionsModal(operationType, description, successMessage) {
-    this.dialog.yesNoConfirm({
-      message: description,
-      didConfirm: () => {
-        Bookmark.bulkOperation(this.getSelectedBookmarks(), {
-          type: operationType,
-        })
-          .then(() => {
-            this.router.refresh();
-            this.bulkSelectHelper.toggleBulkSelect();
-            this.toasts.success({
-              duration: 3000,
-              data: { message: successMessage },
-            });
-          })
-          .catch(popupAjaxError);
-      },
-    });
-  },
-
   getSelectedBookmarks() {
     return this.bulkSelectHelper.selected;
   },
@@ -82,23 +62,52 @@ export default DropdownSelectBoxComponent.extend({
   onSelect(id) {
     switch (id) {
       case "clear-reminders":
-        this.showBulkBookmarksActionsModal(
-          "clear_reminder",
-          i18n(`js.bookmark_bulk_actions.clear_reminders.description`, {
-            count: this.getSelectedBookmarks().length,
-          }),
-          i18n("bookmarks.bulk.reminders_cleared")
-        );
+        this.dialog.yesNoConfirm({
+          message: i18n(
+            `js.bookmark_bulk_actions.clear_reminders.description`,
+            {
+              count: this.getSelectedBookmarks().length,
+            }
+          ),
+          didConfirm: () => {
+            Bookmark.bulkOperation(this.getSelectedBookmarks(), {
+              type: "clear_reminder",
+            })
+              .then(() => {
+                this.router.refresh();
+                this.bulkSelectHelper.toggleBulkSelect();
+                this.toasts.success({
+                  duration: 3000,
+                  data: { message: i18n("bookmarks.bulk.reminders_cleared") },
+                });
+              })
+              .catch(popupAjaxError);
+          },
+        });
         break;
       case "delete-bookmarks":
-        this.showBulkBookmarksActionsModal(
-          "delete",
-          i18n(`js.bookmark_bulk_actions.delete_bookmarks.description`, {
-            count: this.getSelectedBookmarks().length,
-          }),
-          i18n("bookmarks.bulk.delete_completed")
-        );
-        break;
+        this.dialog.deleteConfirm({
+          message: i18n(
+            `js.bookmark_bulk_actions.delete_bookmarks.description`,
+            {
+              count: this.getSelectedBookmarks().length,
+            }
+          ),
+          didConfirm: () => {
+            Bookmark.bulkOperation(this.getSelectedBookmarks(), {
+              type: "delete",
+            })
+              .then(() => {
+                this.router.refresh();
+                this.bulkSelectHelper.toggleBulkSelect();
+                this.toasts.success({
+                  duration: 3000,
+                  data: { message: i18n("bookmarks.bulk.delete_completed") },
+                });
+              })
+              .catch(popupAjaxError);
+          },
+        });
     }
   },
 });

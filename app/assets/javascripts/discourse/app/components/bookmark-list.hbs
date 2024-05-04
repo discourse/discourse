@@ -7,25 +7,33 @@
       <thead class="topic-list-header">
         {{#if this.site.desktopView}}
           <PluginOutlet @name="bookmark-list-table-header">
-
             {{#if this.bulkSelectEnabled}}
               <th class="bulk-select topic-list-data">
-                {{raw
-                  "flat-button"
-                  class="bulk-select"
-                  icon="list"
-                  title="bookmarks.bulk.toggle"
-                }}
+                <FlatButton
+                  @action={{this.toggleBulkSelect}}
+                  @class="bulk-select"
+                  @icon="tasks"
+                  @title="bookmarks.bulk.toggle"
+                />
               </th>
             {{/if}}
             <th class="topic-list-data">
+
               {{#if this.bulkSelectEnabled}}
                 <span class="bulk-select-topics">
                   {{~#if this.canDoBulkActions}}
-                    {{raw
-                      "bookmark-bulk-select-dropdown"
-                      bulkSelectHelper=this.bulkSelectHelper
-                    }}
+                    <div class="bulk-select-bookmarks-dropdown">
+                      <span class="bulk-select-bookmark-dropdown__count">
+                        {{i18n
+                          "bookmarks.bulk.selected_count"
+                          count=this.selectedCount
+                        }}
+                      </span>
+                      <BulkSelectBookmarksDropdown
+                        @bulkSelectHelper={{this.bulkSelectHelper}}
+                      />
+                    </div>
+
                   {{/if~}}
                   <button class="btn btn-default bulk-select-all">{{i18n
                       "bookmarks.bulk.select_all"
@@ -35,12 +43,12 @@
                     }}</button>
                 </span>
               {{else}}
-                {{raw
-                  "flat-button"
-                  class="bulk-select"
-                  icon="tasks"
-                  title="bookmarks.bulk.toggle"
-                }}
+                <FlatButton
+                  @action={{this.toggleBulkSelect}}
+                  @class="bulk-select"
+                  @icon="tasks"
+                  @title="bookmarks.bulk.toggle"
+                />
                 {{i18n "topic.title"}}
               {{/if~}}
             </th>

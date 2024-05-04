@@ -13,11 +13,6 @@ class BookmarksBulkAction
     @operations ||= %w[clear_reminder delete]
   end
 
-  def self.register_operation(name, &block)
-    operations << name
-    define_method(name, &block)
-  end
-
   def perform!
     unless BookmarksBulkAction.operations.include?(@operation[:type])
       raise Discourse::InvalidParameters.new(:operation)
@@ -43,6 +38,8 @@ class BookmarksBulkAction
       if guardian.can_edit?(b)
         BookmarkReminderNotificationHandler.new(b).clear_reminder
         @changed_ids << b.id
+      else
+        raise Discourse::InvalidAccess.new
       end
     end
   end

@@ -87,12 +87,7 @@ class BookmarksController < ApplicationController
       raise ActionController::ParameterMissing.new(:bookmark_ids)
     end
 
-    operation =
-      params
-        .require(:operation)
-        .permit(:type, *DiscoursePluginRegistry.permitted_bulk_action_parameters)
-        .to_h
-        .symbolize_keys
+    operation = params.require(:operation).permit(:type).to_h.symbolize_keys
 
     raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
     operator = BookmarksBulkAction.new(current_user, bookmark_ids, operation)

@@ -2,7 +2,9 @@
 
 RSpec.describe BookmarksController do
   let(:current_user) { Fabricate(:user) }
+  let(:user_2) { Fabricate(:user) }
   let(:bookmark_post) { Fabricate(:post) }
+  let(:bookmark_post_2) { Fabricate(:post) }
   let(:bookmark_topic) { Fabricate(:topic) }
   let(:bookmark_user) { current_user }
 
@@ -152,10 +154,13 @@ RSpec.describe BookmarksController do
     end
 
     describe "when logged in" do
-      before { sign_in(current_user) }
+      before { sign_in(bookmark_user) }
+
+      let!(:bookmark) { Fabricate(:bookmark, bookmarkable: bookmark_post, user: bookmark_user) }
+      let!(:bookmark_2) { Fabricate(:bookmark, bookmarkable: bookmark_post_2, user: bookmark_user) }
 
       let!(:operation) { { type: "clear_reminder" } }
-      let!(:bookmark_ids) { [1, 2] }
+      let!(:bookmark_ids) { [bookmark.id, bookmark_2.id] }
 
       it "requires a list of bookmark_ids" do
         put "/bookmarks/bulk.json", params: { operation: operation }
@@ -168,9 +173,6 @@ RSpec.describe BookmarksController do
       end
 
       it "can clear reminder for the given bookmarks" do
-        Guardian.any_instance.stubs(:can_edit?).returns(true)
-        bookmark = Fabricate(:bookmark_next_business_day_reminder)
-
         expect do
           put "/bookmarks/bulk.json",
               params: {
@@ -184,21 +186,55 @@ RSpec.describe BookmarksController do
       end
 
       it "can delete bookmarks" do
-        Guardian.any_instance.stubs(:can_edit?).returns(true)
-        bookmark_1 = Fabricate(:bookmark_next_business_day_reminder)
-        bookmark_2 = Fabricate(:bookmark_next_business_day_reminder)
-
         expect do
           put "/bookmarks/bulk.json",
               params: {
                 operation: {
                   type: "delete",
                 },
-                bookmark_ids: [bookmark_1.id, bookmark_2.id],
+                bookmark_ids: [bookmark.id, bookmark_2.id],
               }
 
           expect(response.status).to eq(200)
-        end.to change { Bookmark.where(id: [bookmark_1, bookmark_2]).count }.from(2).to(0)
+        end.to change { Bookmark.where(id: [bookmark, bookmark_2]).count }.from(2).to(0)
+      end
+    end
+
+    describe "can't update other user's bookmarks" do
+      before { sign_in(user_2) }
+
+      let!(:bookmark) { Fabricate(:bookmark, bookmarkable: bookmark_post, user: bookmark_user) }
+      let!(:bookmark_2) { Fabricate(:bookmark, bookmarkable: bookmark_post_2, user: bookmark_user) }
+
+      let!(:operation) { { type: "clear_reminder" } }
+      let!(:bookmark_ids) { [bookmark.id, bookmark_2.id] }
+
+      it "CAN'T clear reminder if the bookmark does not belong to the user" do
+        expect do
+          put "/bookmarks/bulk.json",
+              params: {
+                operation: {
+                  type: "clear_reminder",
+                },
+                bookmark_ids: [bookmark.id, bookmark_2.id],
+              }
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"].first).to include(I18n.t("invalid_access"))
+        end.to_not change { Bookmark.find(bookmark.id).reminder_set_at }
+      end
+
+      it "CAN'T delete bookmarks that does not belong to the user" do
+        expect do
+          put "/bookmarks/bulk.json",
+              params: {
+                operation: {
+                  type: "delete",
+                },
+                bookmark_ids: [bookmark.id, bookmark_2.id],
+              }
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"].first).to include(I18n.t("invalid_access"))
+        end.to_not change { Bookmark.where(id: [bookmark, bookmark_2]).count }.from(2)
       end
     end
   end
