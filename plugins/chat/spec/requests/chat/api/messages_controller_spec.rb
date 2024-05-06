@@ -394,7 +394,9 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
 
       it "errors when the user is not part of the direct message channel" do
+        Chat::UserChatChannelMembership.where(user_id: user1.id).destroy_all
         Chat::DirectMessageUser.find_by(user: user1, direct_message: chatable).destroy!
+
         sign_in(user1)
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
         expect(response.status).to eq(403)
