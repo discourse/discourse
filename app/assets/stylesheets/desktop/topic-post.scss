@@ -310,7 +310,6 @@ pre.codeblock-buttons:hover {
       transform: translate(17%, 230%);
       z-index: 1;
     }
-    margin-left: var(--topic-avatar-width);
     width: calc(
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
         var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
