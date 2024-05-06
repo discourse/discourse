@@ -356,14 +356,14 @@ describe ThemeSettingsMigrationsRunner do
     end
 
     it "attaches the getCategoryIdByName() function to the context of the migrations" do
-      category = Fabricate(:category, name: "some-category")
+      category = Fabricate(:category, name: "Some Category Name")
 
       theme.update_setting(:integer_setting, -10)
       theme.save!
 
       migration_field.update!(value: <<~JS)
         export default function migrate(settings, helpers) {
-          const categoryId = helpers.getCategoryIdByName("some-category");
+          const categoryId = helpers.getCategoryIdByName("some CatEgory Name");
           settings.set("integer_setting", categoryId);
           return settings;
         }
