@@ -11,8 +11,8 @@ class Post < ActiveRecord::Base
   include LimitedEdit
 
   self.ignored_columns = [
-    "avg_time", # TODO(2021-01-04): remove
-    "image_url", # TODO(2021-06-01): remove
+    "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    "image_url", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
