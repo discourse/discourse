@@ -3,12 +3,6 @@
 class Category < ActiveRecord::Base
   RESERVED_SLUGS = ["none"]
 
-  self.ignored_columns = [
-    :suppress_from_latest, # TODO(2020-11-18): remove
-    :required_tag_group_id, # TODO(2023-04-01): remove
-    :min_tags_from_required_group, # TODO(2023-04-01): remove
-  ]
-
   include Searchable
   include Positionable
   include HasCustomFields
