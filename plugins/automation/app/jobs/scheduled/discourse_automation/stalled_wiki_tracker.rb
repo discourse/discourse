@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Jobs
-  class StalledWikiTracker < ::Jobs::Scheduled
+  class DiscourseAutomation::StalledWikiTracker < ::Jobs::Scheduled
     every 10.minutes
 
     def execute(_args = nil)
-      name = DiscourseAutomation::Triggers::STALLED_WIKI
+      name = ::DiscourseAutomation::Triggers::STALLED_WIKI
 
-      DiscourseAutomation::Automation
+      ::DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
         .find_each do |automation|
           stalled_after = automation.trigger_field("stalled_after")
@@ -43,7 +43,7 @@ module Jobs
         ).compact.uniq
 
       automation.trigger!(
-        "kind" => DiscourseAutomation::Triggers::STALLED_WIKI,
+        "kind" => ::DiscourseAutomation::Triggers::STALLED_WIKI,
         "post" => post,
         "topic" => post.topic,
         "usernames" => User.where(id: user_ids).pluck(:username),

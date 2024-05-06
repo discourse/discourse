@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class StalledTopicFinder
+class DiscourseAutomation::StalledTopicFinder
   def self.call(stalled_date, tags: nil, categories: nil)
     sql = <<~SQL
       SELECT t.id

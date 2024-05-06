@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class DiscourseAutomationTrigger < ::Jobs::Base
+  class DiscourseAutomation::Trigger < ::Jobs::Base
     RETRY_TIMES = [5.minute, 15.minute, 120.minute]
 
     sidekiq_options retry: RETRY_TIMES.size
@@ -18,11 +18,12 @@ module Jobs
     end
 
     def execute(args)
-      automation = DiscourseAutomation::Automation.find_by(id: args[:automation_id], enabled: true)
+      automation =
+        ::DiscourseAutomation::Automation.find_by(id: args[:automation_id], enabled: true)
 
       return if !automation
 
-      context = DiscourseAutomation::Automation.deserialize_context(args[:context])
+      context = ::DiscourseAutomation::Automation.deserialize_context(args[:context])
 
       automation.running_in_background!
       automation.trigger!(context)

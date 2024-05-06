@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
-def capture_contexts(&blk)
-  DiscourseAutomation::CapturedContext.capture(&blk)
+module AutomationSpecHelpers
+  def capture_contexts(&blk)
+    DiscourseAutomation::CapturedContext.capture(&blk)
+  end
 end
 
 module DiscourseAutomation::CapturedContext
@@ -34,3 +34,5 @@ end
 DiscourseAutomation::Scriptable.add("nothing_about_us") do
   triggerables [DiscourseAutomation::Triggers::API_CALL]
 end
+
+RSpec.configure { |config| config.include AutomationSpecHelpers }
