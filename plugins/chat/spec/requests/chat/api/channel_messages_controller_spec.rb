@@ -47,7 +47,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
     end
 
-    context "when channnel doesn’t exist" do
+    context "when channel doesn’t exist" do
       it "returns a 404" do
         get "/chat/api/channels/-999/messages"
 
