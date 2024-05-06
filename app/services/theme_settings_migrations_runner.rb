@@ -13,7 +13,7 @@ class ThemeSettingsMigrationsRunner
     # @return [Integer|nil] The id of the category with the given name or nil if a category does not exist for the given
     #   name.
     def get_category_id_by_name(category_name)
-      Category.where(name_lower: category_name).pick(:id)
+      Category.where("name_lower = LOWER(?)", category_name).pick(:id)
     end
 
     # @param [String] URL string to check if it is a valid absolute URL, path or anchor.
