@@ -1580,7 +1580,7 @@ export default class ComposerService extends Service {
       return this.keyValueStore.getItem("composerHeight");
     }
 
-    // The two custom properties below can be overriden by themes/plugins to set different default composer heights.
+    // The two custom properties below can be overridden by themes/plugins to set different default composer heights.
     if (this.model.action === "reply") {
       return "var(--reply-composer-height, 300px)";
     } else {

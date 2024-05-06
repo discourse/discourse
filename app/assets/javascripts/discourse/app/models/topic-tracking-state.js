@@ -585,7 +585,7 @@ export default class TopicTrackingState extends EmberObject {
         filterFn = isNewOrUnread;
         break;
       default:
-        throw new Error(`Unkown filter type ${type}`);
+        throw new Error(`Unknown filter type ${type}`);
     }
 
     return Array.from(this.states.values()).filter((topic) => {

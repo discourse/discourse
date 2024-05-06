@@ -30,7 +30,7 @@ export default class DAG {
   /**
    * Adds a key/value pair to the map. Can optionally specify before/after position requirements.
    *
-   * @param {string} key The key of the item to be added. Can be referenced by other member's postition parameters.
+   * @param {string} key The key of the item to be added. Can be referenced by other member's position parameters.
    * @param {any} value
    * @param {Object} position
    * @param {string | string[]} position.before A key or array of keys of items which should appear before this one.

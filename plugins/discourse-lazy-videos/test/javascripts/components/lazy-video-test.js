@@ -34,7 +34,7 @@ module("Discourse Lazy Videos | Component | lazy-video", function (hooks) {
     assert.dom(".icon.youtube-icon").exists();
   });
 
-  test("uses tthe dominant color from the dom", async function (assert) {
+  test("uses the dominant color from the dom", async function (assert) {
     await render(hbs`<LazyVideo @videoAttributes={{this.attributes}} />`);
 
     assert
