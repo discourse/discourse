@@ -1091,11 +1091,13 @@ class Category < ActiveRecord::Base
       .find_each { |category| category.create_category_definition }
   end
 
-  def slug_path
+  def slug_path(parent_ids = Set.new)
     if self.parent_category_id.present?
-      slug_path = self.parent_category.slug_path
-      slug_path.push(self.slug_for_url)
-      slug_path
+      if parent_ids.add?(self.parent_category_id)
+        self.parent_category.slug_path(parent_ids) << self.slug_for_url
+      else
+        []
+      end
     else
       [self.slug_for_url]
     end
