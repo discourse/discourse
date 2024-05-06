@@ -5,6 +5,7 @@
 <li class="sidebar-section-link-wrapper">
   <button
     class="sidebar-section-link sidebar-row sidebar-more-section-links-details-summary --link-button"
+    aria-expanded={{if this.open "true" "false"}}
     {{on "click" this.toggleSectionLinks}}
   >
     <span class="sidebar-section-link-prefix icon">
