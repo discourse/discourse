@@ -111,12 +111,7 @@ class Site
       if @guardian.authenticated?
         sidebar_category_ids = @guardian.user.secured_sidebar_category_ids(@guardian)
         preloaded_category_ids.concat(
-          Category
-            .secured(@guardian)
-            .select(:parent_category_id)
-            .distinct
-            .where(id: sidebar_category_ids)
-            .pluck(:parent_category_id),
+          Category.secured(@guardian).ancestors_of(sidebar_category_ids).pluck(:id),
         )
         preloaded_category_ids.concat(sidebar_category_ids)
       end
