@@ -3,9 +3,6 @@
 require "net/imap"
 
 class Group < ActiveRecord::Base
-  # TODO(2021-05-26): remove
-  self.ignored_columns = %w[flair_url]
-
   include HasCustomFields
   include AnonCacheInvalidator
   include HasDestroyedWebHook

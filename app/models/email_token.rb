@@ -40,9 +40,6 @@ class EmailToken < ActiveRecord::Base
     end
   end
 
-  # TODO(2022-01-01): Remove
-  self.ignored_columns = %w[token]
-
   def self.scopes
     @scopes ||= Enum.new(signup: 1, password_reset: 2, email_login: 3, email_update: 4)
   end

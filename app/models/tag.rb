@@ -5,10 +5,6 @@ class Tag < ActiveRecord::Base
   include HasDestroyedWebHook
   include HasSanitizableFields
 
-  self.ignored_columns = [
-    "topic_count", # TODO(tgxworld): Remove on 1 July 2023
-  ]
-
   RESERVED_TAGS = [
     "none",
     "constructor", # prevents issues with javascript's constructor of objects
