@@ -92,7 +92,8 @@ module Chat
     end
 
     def allowed_to_join_channel(guardian:, channel:)
-      channel.membership_for(guardian.user) || guardian.can_join_chat_channel?(channel)
+      (channel.public_channel? && channel.membership_for(guardian.user)) ||
+        guardian.can_join_chat_channel?(channel)
     end
 
     def fetch_channel_membership(guardian:, channel:)
