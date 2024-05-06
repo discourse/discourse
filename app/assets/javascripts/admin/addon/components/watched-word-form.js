@@ -19,15 +19,13 @@ export default class WatchedWordForm extends Component {
   actionKey = null;
   showMessage = false;
   isCaseSensitive = false;
+  isHtml = false;
   selectedTags = [];
   words = [];
 
   @empty("words") submitDisabled;
-
   @equal("actionKey", "replace") canReplace;
-
   @equal("actionKey", "tag") canTag;
-
   @equal("actionKey", "link") canLink;
 
   @discourseComputed("siteSettings.watched_words_regular_expressions")
@@ -102,6 +100,7 @@ export default class WatchedWordForm extends Component {
             : null,
         action: this.actionKey,
         isCaseSensitive: this.isCaseSensitive,
+        isHtml: this.isHtml,
       });
 
       watchedWord
@@ -114,6 +113,7 @@ export default class WatchedWordForm extends Component {
             showMessage: true,
             message: I18n.t("admin.watched_words.form.success"),
             isCaseSensitive: false,
+            isHtml: false,
           });
           if (result.words) {
             result.words.forEach((word) => {
