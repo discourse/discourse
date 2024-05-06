@@ -1,8 +1,6 @@
 .c-user-thread {
-  display: grid;
-  grid-template-areas: "avatar details";
-  grid-template-columns: auto 1fr;
-  grid-column-gap: 0.75em;
+  display: flex;
+  gap: 1rem;
   margin-inline: 0;
   padding: 0.5rem 1.5rem;
 
@@ -19,13 +17,12 @@
 
   .c-user-thread__link {
     display: grid;
-    grid-area: details;
     grid-column-gap: 0.75em;
     grid-template-columns: 1fr auto;
     margin-inline: 0;
     grid-template-areas:
       "category timestamp"
-      "title indicator"
+      "title title"
       "excerpt excerpt";
   }
 
@@ -42,9 +39,10 @@
   }
 
   .chat__thread-title-container {
-    @include ellipsis;
+    display: flex;
     grid-area: title;
     .chat__thread-title {
+      @include ellipsis;
       &__name {
         @include ellipsis;
       }

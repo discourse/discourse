@@ -34,8 +34,8 @@ export default class ChatThreadTitle extends Component {
           </span>
         {{/if}}
 
-        <ThreadUnreadIndicator @thread={{@thread}} />
       </span>
+      <ThreadUnreadIndicator @thread={{@thread}} />
     </span>
   </template>
 }
