@@ -4766,7 +4766,7 @@ en:
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
-        description: "We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">search site settings</a> or the <a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">admin user list?</a>"
+        description: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">search site settings</a> or the <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">admin user list?</a>'
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -6102,6 +6102,7 @@ en:
           one: "show %{count} word"
           other: "show %{count} words"
         case_sensitive: "(case-sensitive)"
+        html: "(html)"
         download: Download
         clear_all: Clear All
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
@@ -6141,6 +6142,8 @@ en:
           upload_successful: "Upload successful. Words have been added."
           case_sensitivity_label: "Is case-sensitive"
           case_sensitivity_description: "Only words with matching character casing"
+          html_label: "HTML"
+          html_description: "Outputs HTML in the replacement"
           words_or_phrases: "words or phrases"
         test:
           button_label: "Test"
