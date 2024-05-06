@@ -259,6 +259,7 @@ Discourse::Application.routes.draw do
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
         get "components/:id" => "themes#index"
+        get "components/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id/export" => "themes#export"
         get "themes/:id/schema/:setting_name" => "themes#schema"
         get "components/:id/schema/:setting_name" => "themes#schema"
