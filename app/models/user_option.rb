@@ -13,6 +13,11 @@ class UserOption < ActiveRecord::Base
     # 8 => reserved for "hot"
   }
 
+  self.ignored_columns = [
+    "disable_jump_reply", # Remove once 20210706091905 is promoted from post_deploy to regular migration
+    "sidebar_list_destination", # TODO(osama): Remove in January 2024
+  ]
+
   self.primary_key = :user_id
   belongs_to :user
   before_create :set_defaults

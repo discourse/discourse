@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class UserProfile < ActiveRecord::Base
+  # TODO Remove `badge_granted_title` after 2023-09-01
+  self.ignored_columns = ["badge_granted_title"]
+
   BAKED_VERSION = 1
 
   belongs_to :user, inverse_of: :user_profile
