@@ -105,7 +105,7 @@ RSpec.describe "Send message", type: :system do
     end
   end
 
-  context "sending message from drawer" do
+  context "when sending message from drawer" do
     let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
     let(:topic_page) { PageObjects::Pages::Topic.new }
 
