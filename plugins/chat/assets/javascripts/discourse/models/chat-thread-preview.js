@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
 export default class ChatThreadPreview {
   static create(args = {}) {
