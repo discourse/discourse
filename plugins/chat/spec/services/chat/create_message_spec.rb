@@ -227,9 +227,15 @@ RSpec.describe Chat::CreateMessage do
 
         context "when channel model is found" do
           context "when user can't join channel" do
-            let(:guardian) { Guardian.new }
+            let(:guardian) { other_user.guardian }
 
             it { is_expected.to fail_a_policy(:allowed_to_join_channel) }
+
+            context "when the user is already member of the channel" do
+              before { channel.add(guardian.user) }
+
+              it { is_expected.to be_a_success }
+            end
           end
 
           context "when user is system" do
