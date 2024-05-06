@@ -188,6 +188,13 @@ class Site
     query
   end
 
+  def anonymous_sidebar_sections
+    SidebarSection
+      .public_sections
+      .includes(:sidebar_urls)
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
+  end
+
   def archetypes
     Archetype.list.reject { |t| t.id == Archetype.private_message }
   end

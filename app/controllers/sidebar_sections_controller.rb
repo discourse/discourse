@@ -11,7 +11,14 @@ class SidebarSectionsController < ApplicationController
         .includes(:sidebar_urls)
         .where("public OR user_id = ?", current_user.id)
         .order("(public IS TRUE) DESC, title ASC")
-        .map { |section| SidebarSectionSerializer.new(section, root: false) }
+
+    sections =
+      ActiveModel::ArraySerializer.new(
+        sections,
+        each_serializer: SidebarSectionSerializer,
+        scope: guardian,
+        root: "sidebar_sections",
+      )
 
     render json: sections
   end
