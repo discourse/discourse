@@ -8,6 +8,7 @@ import BulkTopicActions, {
   addBulkDropdownAction,
 } from "discourse/components/modal/bulk-topic-actions";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import DMenu from "float-kit/components/d-menu";
 
@@ -39,8 +40,7 @@ export default class BulkSelectTopicsDropdown extends Component {
   @service siteSettings;
 
   get buttons() {
-    let options = [];
-    options = options.concat([
+    let options = [
       {
         id: "update-category",
         icon: "pencil-alt",
@@ -115,7 +115,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         name: i18n("topic_bulk_actions.delete_topics.name"),
         visible: ({ currentUser }) => currentUser.staff,
       },
-    ]);
+    ];
 
     return [...options, ..._customButtons].filter(({ visible }) => {
       if (visible) {
@@ -228,24 +228,28 @@ export default class BulkSelectTopicsDropdown extends Component {
 
   <template>
     <DMenu
-      @triggerClass="toggle-admin-menu"
       @modalForMobile={{true}}
-      @label={{i18n "select_kit.components.bulk_select_topics_dropdown.title"}}
       @autofocus={{true}}
+      @identifier="bulk-select-topics-dropdown"
     >
+      <:trigger>
+        <span class="d-button-label">
+          {{i18n "select_kit.components.bulk_select_topics_dropdown.title"}}
+        </span>
+        {{icon "angle-down"}}
+      </:trigger>
+
       <:content>
         <DropdownMenu as |dropdown|>
           {{#each this.buttons as |button|}}
-            {{#if button.visible}}
-              <dropdown.item>
-                <DButton
-                  @translatedLabel={{button.name}}
-                  @icon={{button.icon}}
-                  class={{concatClass "btn-transparent" button.id}}
-                  @action={{fn this.onSelect button.id}}
-                />
-              </dropdown.item>
-            {{/if}}
+            <dropdown.item>
+              <DButton
+                @translatedLabel={{button.name}}
+                @icon={{button.icon}}
+                class={{concatClass "btn-transparent" button.id}}
+                @action={{fn this.onSelect button.id}}
+              />
+            </dropdown.item>
           {{/each}}
         </DropdownMenu>
       </:content>
