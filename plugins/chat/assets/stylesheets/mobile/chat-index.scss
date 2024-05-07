@@ -7,7 +7,11 @@
     font-size: var(--font-up-1-rem);
   }
 }
-
+.channel-list-empty-message {
+  position: relative;
+  transform: translateY(-25%);
+  margin-top: 50%;
+}
 .c-routes-direct-messages,
 .c-routes-channels,
 .c-routes-threads {
