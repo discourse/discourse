@@ -48,7 +48,7 @@ Now that you have a few collaborators, you can start trying things out together 
 
 - The [#Site Feedback](/c/-/2) is intended as a long term home for discussions like these about your site, how it works, and how you can improve it. It's designed to be open to participation by everyone who can access your community.
 
-- The [#General](/c/-/124) category is a place to start discussions on topics of general interest to your community. You can create additional categories as you decide how you want to make space for different kinds of topics.
+- The [#General](/c/-/4) category is a place to start discussions on topics of general interest to your community. You can create additional categories as you decide how you want to make space for different kinds of topics.
 
 - The [#Staff](/c/-/3) category is only visible to admins and moderators and can be used for topics you wish to discuss privately with other admins and moderators. 
 
