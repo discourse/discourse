@@ -41,7 +41,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     );
     await hover();
 
-    assert.dom(".fk-d-tooltip").hasText("content");
+    assert.dom(".fk-d-tooltip__content").hasText("content");
   });
 
   test("@onRegisterApi", async function (assert) {
@@ -108,7 +108,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
     await hover();
 
-    assert.dom(".fk-d-tooltip").hasAttribute("data-identifier", "tip");
+    assert.dom(".fk-d-tooltip__content").hasAttribute("data-identifier", "tip");
   });
 
   test("aria-expanded attribute", async function (assert) {
@@ -136,7 +136,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
     await hover();
 
-    assert.dom(".fk-d-tooltip").hasText("content");
+    assert.dom(".fk-d-tooltip__content").hasText("content");
   });
 
   test("content role attribute", async function (assert) {
@@ -144,7 +144,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
     await hover();
 
-    assert.dom(".fk-d-tooltip").hasAttribute("role", "tooltip");
+    assert.dom(".fk-d-tooltip__content").hasAttribute("role", "tooltip");
   });
 
   test("@component", async function (assert) {
@@ -156,11 +156,11 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
     await hover();
 
-    assert.dom(".fk-d-tooltip").containsText("content");
+    assert.dom(".fk-d-tooltip__content").containsText("content");
 
     await click(".fk-d-tooltip .btn");
 
-    assert.dom(".fk-d-tooltip").doesNotExist();
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
   });
 
   test("content aria-labelledby attribute", async function (assert) {
@@ -170,7 +170,9 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
     assert.strictEqual(
       document.querySelector(".fk-d-tooltip__trigger").id,
-      document.querySelector(".fk-d-tooltip").getAttribute("aria-labelledby")
+      document
+        .querySelector(".fk-d-tooltip__content")
+        .getAttribute("aria-labelledby")
     );
   });
 
@@ -181,7 +183,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await hover();
     await close();
 
-    assert.dom(".fk-d-tooltip").doesNotExist();
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
 
     await render(
       hbs`<DTooltip @inline={{true}} @label="label" @closeOnEscape={{false}} />`
@@ -189,7 +191,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await hover();
     await close();
 
-    assert.dom(".fk-d-tooltip").exists();
+    assert.dom(".fk-d-tooltip__content").exists();
   });
 
   test("@closeOnClickOutside", async function (assert) {
@@ -199,7 +201,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await hover();
     await triggerEvent(".test", "pointerdown");
 
-    assert.dom(".fk-d-tooltip").doesNotExist();
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
 
     await render(
       hbs`<span class="test">test</span><DTooltip @inline={{true}} @label="label" @closeOnClickOutside={{false}} />`
@@ -207,7 +209,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await hover();
     await triggerEvent(".test", "pointerdown");
 
-    assert.dom(".fk-d-tooltip").exists();
+    assert.dom(".fk-d-tooltip__content").exists();
   });
 
   test("@maxWidth", async function (assert) {
@@ -217,7 +219,9 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await hover();
 
     assert.ok(
-      find(".fk-d-tooltip").getAttribute("style").includes("max-width: 20px;")
+      find(".fk-d-tooltip__content")
+        .getAttribute("style")
+        .includes("max-width: 20px;")
     );
   });
 
@@ -225,8 +229,12 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
     await hover();
 
-    assert.ok(find(".fk-d-tooltip").getAttribute("style").includes("left: "));
-    assert.ok(find(".fk-d-tooltip").getAttribute("style").includes("top: "));
+    assert.ok(
+      find(".fk-d-tooltip__content").getAttribute("style").includes("left: ")
+    );
+    assert.ok(
+      find(".fk-d-tooltip__content").getAttribute("style").includes("top: ")
+    );
   });
 
   test("a tooltip can be closed by identifier", async function (assert) {

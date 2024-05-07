@@ -3,11 +3,10 @@ import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 export default class Tooltip extends Service {
-  @tracked registeredTooltips = new TrackedArray();
+  @tracked registeredTooltips = [];
 
   /**
    * Render a tooltip
@@ -48,24 +47,31 @@ export default class Tooltip extends Service {
     }
 
     if (instance.options.identifier) {
-      this.registeredTooltips.forEach((tooltip) => {
+      for (const tooltip of this.registeredTooltips) {
         if (
           tooltip.options.identifier === instance.options.identifier &&
           tooltip !== instance
         ) {
-          this.close(tooltip);
+          await this.close(tooltip);
         }
+      }
+    }
+
+    if (instance.expanded) {
+      return await this.close(instance);
+    }
+
+    await new Promise((resolve) => {
+      if (!this.registeredTooltips.includes(instance)) {
+        this.registeredTooltips = this.registeredTooltips.concat(instance);
+      }
+
+      instance.expanded = true;
+
+      schedule("afterRender", () => {
+        resolve();
       });
-    }
-
-    if (!this.registeredTooltips.includes(instance)) {
-      this.registeredTooltips.push(instance);
-    } else if (instance.expanded) {
-      this.close(instance);
-      return;
-    }
-
-    instance.expanded = true;
+    });
 
     return instance;
   }
@@ -89,10 +95,8 @@ export default class Tooltip extends Service {
     tooltip.expanded = false;
 
     await new Promise((resolve) => {
-      this.registeredTooltips = new TrackedArray(
-        this.registeredTooltips.filter(
-          (registeredTooltips) => tooltip.id !== registeredTooltips.id
-        )
+      this.registeredTooltips = this.registeredTooltips.filter(
+        (registeredTooltips) => tooltip.id !== registeredTooltips.id
       );
 
       schedule("afterRender", () => {

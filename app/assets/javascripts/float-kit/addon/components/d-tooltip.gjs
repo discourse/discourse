@@ -30,10 +30,7 @@ export default class DTooltip extends Component {
   get tooltipInstance() {
     return new DTooltipInstance(getOwner(this), {
       ...this.allowedProperties(),
-      ...{
-        autoUpdate: true,
-        listeners: true,
-      },
+      ...{ autoUpdate: true, listeners: true },
     });
   }
 
@@ -93,7 +90,6 @@ export default class DTooltip extends Component {
         @instance={{this.tooltipInstance}}
         @trapTab={{and this.options.interactive this.options.trapTab}}
         @mainClass={{concatClass
-          "fk-d-tooltip"
           "fk-d-tooltip__content"
           (concat this.options.identifier "-content")
         }}

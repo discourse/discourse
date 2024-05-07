@@ -3,11 +3,10 @@ import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 export default class Menu extends Service {
-  @tracked registeredMenus = new TrackedArray();
+  @tracked registeredMenus = [];
 
   /**
    * Render a menu
@@ -65,9 +64,7 @@ export default class Menu extends Service {
 
     await new Promise((resolve) => {
       if (!this.registeredMenus.includes(instance)) {
-        this.registeredMenus = new TrackedArray(
-          this.registeredMenus.concat(instance)
-        );
+        this.registeredMenus = this.registeredMenus.concat(instance);
       }
 
       instance.expanded = true;
@@ -99,10 +96,8 @@ export default class Menu extends Service {
     await new Promise((resolve) => {
       menu.expanded = false;
 
-      this.registeredMenus = new TrackedArray(
-        this.registeredMenus.filter(
-          (registeredMenu) => menu.id !== registeredMenu.id
-        )
+      this.registeredMenus = this.registeredMenus.filter(
+        (registeredMenu) => menu.id !== registeredMenu.id
       );
 
       schedule("afterRender", () => {
