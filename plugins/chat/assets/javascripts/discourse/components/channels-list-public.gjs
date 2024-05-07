@@ -9,6 +9,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import EmptyChannelsList from "discourse/plugins/chat/discourse/components/empty-channels-list";
 import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsListPublic extends Component {
@@ -18,6 +19,7 @@ export default class ChannelsListPublic extends Component {
   @service site;
   @service siteSettings;
   @service currentUser;
+  @service router;
 
   get inSidebar() {
     return this.args.inSidebar ?? false;
@@ -60,6 +62,11 @@ export default class ChannelsListPublic extends Component {
   @action
   toggleChannelSection(section) {
     this.args.toggleSection(section);
+  }
+
+  @action
+  openBrowseChannels() {
+    this.router.transitionTo("chat.browse");
   }
 
   <template>
@@ -114,14 +121,11 @@ export default class ChannelsListPublic extends Component {
         }}
       >
         {{#if this.publicMessageChannelsEmpty}}
-          <div class="channel-list-empty-message">
-            <span class="channel-title">{{i18n
-                "chat.no_public_channels"
-              }}</span>
-            <LinkTo @route="chat.browse">
-              {{i18n "chat.click_to_join"}}
-            </LinkTo>
-          </div>
+          <EmptyChannelsList
+            @title={{i18n "chat.no_public_channels"}}
+            @ctaTitle={{i18n "chat.no_public_channels_cta"}}
+            @ctaAction={{this.openBrowseChannels}}
+          />
         {{else}}
           {{#each this.chatChannelsManager.publicMessageChannels as |channel|}}
             <ChatChannelRow
@@ -130,7 +134,6 @@ export default class ChannelsListPublic extends Component {
             />
           {{/each}}
         {{/if}}
-
       </div>
     {{/if}}
 

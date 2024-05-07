@@ -8,6 +8,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+import EmptyChannelsList from "discourse/plugins/chat/discourse/components/empty-channels-list";
 import ChatChannelRow from "./chat-channel-row";
 
 export default class ChannelsListDirect extends Component {
@@ -15,11 +16,6 @@ export default class ChannelsListDirect extends Component {
   @service chatChannelsManager;
   @service site;
   @service modal;
-
-  @action
-  openNewMessageModal() {
-    this.modal.show(ChatModalNewMessage);
-  }
 
   get inSidebar() {
     return this.args.inSidebar ?? false;
@@ -56,6 +52,11 @@ export default class ChannelsListDirect extends Component {
   @action
   toggleChannelSection(section) {
     this.args.toggleSection(section);
+  }
+
+  @action
+  openNewMessageModal() {
+    this.modal.show(ChatModalNewMessage);
   }
 
   <template>
@@ -105,11 +106,11 @@ export default class ChannelsListDirect extends Component {
       class={{this.directMessageChannelClasses}}
     >
       {{#if this.directMessageChannelsEmpty}}
-        <div class="channel-list-empty-message">
-          <span class="channel-title">{{i18n
-              "chat.no_direct_message_channels"
-            }}</span>
-        </div>
+        <EmptyChannelsList
+          @title={{i18n "chat.no_direct_message_channels"}}
+          @ctaTitle={{i18n "chat.no_direct_message_channels_cta"}}
+          @ctaAction={{this.openNewMessageModal}}
+        />
       {{else}}
         {{#each
           this.chatChannelsManager.truncatedDirectMessageChannels

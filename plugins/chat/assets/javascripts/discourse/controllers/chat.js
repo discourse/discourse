@@ -1,4 +1,5 @@
 import Controller from "@ember/controller";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { FOOTER_NAV_ROUTES } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
@@ -23,6 +24,17 @@ export default class ChatController extends Controller {
     return this.siteSettings.navigation_menu === "sidebar";
   }
 
+  get activeTab() {
+    switch (this.router.currentRouteName) {
+      case "chat.threads":
+        return "threads";
+      case "chat.direct-messages":
+        return "direct-messages";
+      case "chat.channels":
+        return "channels";
+    }
+  }
+
   get shouldUseChatFooter() {
     return (
       this.site.mobileView &&
@@ -45,5 +57,17 @@ export default class ChatController extends Controller {
     }
 
     return modifierClasses.join(" ");
+  }
+
+  @action
+  onClickTab(tab) {
+    switch (tab) {
+      case "threads":
+        return this.router.transitionTo("chat.threads");
+      case "direct-messages":
+        return this.router.transitionTo("chat.direct-messages");
+      case "channels":
+        return this.router.transitionTo("chat.channels");
+    }
   }
 }
