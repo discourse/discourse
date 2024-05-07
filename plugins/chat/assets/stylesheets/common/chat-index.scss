@@ -27,7 +27,7 @@
 }
 
 .channels-list,
-.channels-list__container {
+.channels-list-container {
   padding-bottom: env(safe-area-inset-bottom);
   position: relative;
   @include chat-scrollbar();
