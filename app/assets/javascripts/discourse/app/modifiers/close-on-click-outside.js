@@ -18,7 +18,7 @@ export default class CloseOnClickOutside extends Modifier {
     this.targetSelector = targetSelector;
     this.secondaryTargetSelector = secondaryTargetSelector;
 
-    document.addEventListener("pointerdown", this.check, {
+    document.addEventListener("click", this.check, {
       passive: true,
     });
   }
@@ -45,6 +45,6 @@ export default class CloseOnClickOutside extends Modifier {
   }
 
   cleanup() {
-    document.removeEventListener("pointerdown", this.check);
+    document.removeEventListener("click", this.check);
   }
 }
