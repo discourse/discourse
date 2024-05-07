@@ -39,8 +39,10 @@ module("Integration | Modifier | swipe", function (hooks) {
   }
 
   test("it calls onDidStartSwipe on touchstart", async function (assert) {
+    const done = assert.async();
     this.didStartSwipe = (state) => {
       assert.ok(state, "didStartSwipe called with state");
+      done();
     };
 
     await render(
@@ -51,8 +53,10 @@ module("Integration | Modifier | swipe", function (hooks) {
   });
 
   test("it calls didSwipe on touchmove", async function (assert) {
+    const done = assert.async();
     this.didSwipe = (state) => {
       assert.ok(state, "didSwipe called with state");
+      done();
     };
 
     await render(hbs`<div {{swipe onDidSwipe=this.didSwipe}}>x</div>`);
@@ -61,8 +65,10 @@ module("Integration | Modifier | swipe", function (hooks) {
   });
 
   test("it calls didEndSwipe on touchend", async function (assert) {
+    const done = assert.async();
     this.didEndSwipe = (state) => {
       assert.ok(state, "didEndSwipe called with state");
+      done();
     };
 
     await render(hbs`<div {{swipe onDidEndSwipe=this.didEndSwipe}}>x</div>`);
@@ -73,30 +79,46 @@ module("Integration | Modifier | swipe", function (hooks) {
   test("it does not trigger when disabled", async function (assert) {
     let calls = 0;
 
-    this.didStartSwipe = () => {
+    this.didStartSwipe1 = () => {
       calls++;
     };
 
     this.set("isEnabled", false);
 
     await render(
-      hbs`<div {{swipe onDidStartSwipe=this.didStartSwipe enabled=this.isEnabled}}>x</div>`
+      hbs`<div {{swipe onDidStartSwipe=this.didStartSwipe1 enabled=this.isEnabled}}>x</div>`
     );
 
     await swipe();
 
-    this.set("isEnabled", true);
-
-    await swipe();
-
-    assert.deepEqual(calls, 1, "didStartSwipe should be called once");
+    assert.deepEqual(calls, 0, "swipe is disabled");
 
     await clearRender();
 
+    this.set("isEnabled", true);
+    const done = assert.async();
+    this.didStartSwipe2 = () => {
+      calls++;
+      done();
+    };
+
+    await render(
+      hbs`<div {{swipe onDidStartSwipe=this.didStartSwipe2 enabled=this.isEnabled}}>x</div>`
+    );
+
+    await swipe();
+
+    assert.deepEqual(calls, 1, "swipe is enabled");
+
+    await clearRender();
+
+    this.didStartSwipe3 = () => {
+      calls++;
+    };
     getOwner(this).lookup("service:site").mobileView = false;
 
     await render(
-      hbs`<div {{swipe onDidStartSwipe=this.didStartSwipe enabled=this.isEnabled}}>x</div>`
+      hbs`<div {{swipe onDidStartSwipe=this.didStartSwipe3 enabled=this.isEnabled}}>x</div>`
     );
 
     await swipe();
