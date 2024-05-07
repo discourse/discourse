@@ -6,16 +6,34 @@ import { module, test } from "qunit";
 module("Integration | Modifier | swipe", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("it calls didStartSwipe on touchstart", async function (assert) {
+  async function swipe() {
+    await triggerEvent("div", "touchstart", {
+      touches: [{ clientX: 0, clientY: 0 }],
+    });
+    await triggerEvent("div", "touchmove", {
+      touches: [{ clientX: 1, clientY: 0 }],
+    });
+    await triggerEvent("div", "touchmove", {
+      touches: [{ clientX: 5, clientY: 0 }],
+    });
+    await triggerEvent("div", "touchmove", {
+      touches: [{ clientX: 10, clientY: 0 }],
+    });
+    await triggerEvent("div", "touchend", {
+      touches: [{ clientX: 10, clientY: 0 }],
+    });
+  }
+
+  test("it calls onDidStartSwipe on touchstart", async function (assert) {
     this.didStartSwipe = (state) => {
       assert.ok(state, "didStartSwipe called with state");
     };
 
-    await render(hbs`<div {{swipe didStartSwipe=this.didStartSwipe}}></div>`);
+    await render(
+      hbs`<div {{swipe onDidStartSwipe=this.didStartSwipe}}>x</div>`
+    );
 
-    await triggerEvent("div", "touchstart", {
-      touches: [{ clientX: 0, clientY: 0 }],
-    });
+    await swipe();
   });
 
   test("it calls didSwipe on touchmove", async function (assert) {
@@ -23,16 +41,9 @@ module("Integration | Modifier | swipe", function (hooks) {
       assert.ok(state, "didSwipe called with state");
     };
 
-    await render(hbs`<div {{swipe didSwipe=this.didSwipe}}></div>`);
+    await render(hbs`<div {{swipe onDidSwipe=this.didSwipe}}>x</div>`);
 
-    await triggerEvent("div", "touchstart", {
-      touches: [{ clientX: 0, clientY: 0 }],
-      changedTouches: [{ clientX: 0, clientY: 0 }],
-    });
-
-    await triggerEvent("div", "touchmove", {
-      touches: [{ clientX: 5, clientY: 5 }],
-    });
+    await swipe();
   });
 
   test("it calls didEndSwipe on touchend", async function (assert) {
@@ -40,21 +51,9 @@ module("Integration | Modifier | swipe", function (hooks) {
       assert.ok(state, "didEndSwipe called with state");
     };
 
-    await render(hbs`<div {{swipe didEndSwipe=this.didEndSwipe}}></div>`);
+    await render(hbs`<div {{swipe onDidEndSwipe=this.didEndSwipe}}>x</div>`);
 
-    await triggerEvent("div", "touchstart", {
-      touches: [{ clientX: 0, clientY: 0 }],
-      changedTouches: [{ clientX: 0, clientY: 0 }],
-    });
-
-    await triggerEvent("div", "touchmove", {
-      touches: [{ clientX: 10, clientY: 0 }],
-      changedTouches: [{ clientX: 10, clientY: 0 }],
-    });
-
-    await triggerEvent("div", "touchend", {
-      changedTouches: [{ clientX: 10, clientY: 0 }],
-    });
+    await swipe();
   });
 
   test("it does not trigger when disabled", async function (assert) {
@@ -67,18 +66,14 @@ module("Integration | Modifier | swipe", function (hooks) {
     this.set("isEnabled", false);
 
     await render(
-      hbs`<div {{swipe didStartSwipe=this.didStartSwipe enabled=this.isEnabled}}></div>`
+      hbs`<div {{swipe onDidStartSwipe=this.didStartSwipe enabled=this.isEnabled}}>x</div>`
     );
 
-    await triggerEvent("div", "touchstart", {
-      touches: [{ clientX: 0, clientY: 0 }],
-    });
+    await swipe();
 
     this.set("isEnabled", true);
 
-    await triggerEvent("div", "touchstart", {
-      touches: [{ clientX: 0, clientY: 0 }],
-    });
+    await swipe();
 
     assert.deepEqual(calls, 1, "didStartSwipe should be called once");
   });

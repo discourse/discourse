@@ -82,7 +82,7 @@ export default class SwipeEvents {
       this.element.dispatchEvent(event);
       return;
     }
-    this.#swipeStart(e.touches[0]);
+    this.swipeState = this.#swipeStart(e.touches[0]);
   }
 
   @bind
@@ -174,7 +174,7 @@ export default class SwipeEvents {
   }
 
   #swipeStart(e) {
-    const newState = {
+    return {
       center: { x: e.clientX, y: e.clientY },
       startLocation: { x: e.clientX, y: e.clientY },
       velocityX: 0,
@@ -188,7 +188,6 @@ export default class SwipeEvents {
       goingUp: () => false,
       goingDown: () => false,
     };
-    this.swipeState = newState;
   }
 
   #swipeMove(e, originalEvent) {
@@ -196,7 +195,7 @@ export default class SwipeEvents {
       return;
     }
     if (!this.swipeState) {
-      this.#swipeStart(e);
+      this.swipeState = this.#swipeStart(e);
       return;
     }
 
