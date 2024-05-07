@@ -91,7 +91,14 @@ export default class DAG {
   @bind
   resolve() {
     const result = [];
-    this.#dag.each((key, value) => result.push({ key, value }));
+    this.#dag.each((key, value) => {
+      // We need to filter keys that do not exist in the rawData because the DAGMap will insert a vertex for
+      // dependencies, for example if an item has a "before: search" dependency, the "search" vertex will be included
+      // even if it was explicitly excluded from the raw data.
+      if (this.has(key)) {
+        result.push({ key, value });
+      }
+    });
     return result;
   }
 
