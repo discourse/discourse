@@ -1,6 +1,5 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/application";
-import { isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
