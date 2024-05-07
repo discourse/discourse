@@ -37,7 +37,6 @@ opts =
       ENV["DISCOURSE_DUMP_HEAP"] = "1"
     end
     o.on("-m", "--memory_stats") { @mem_stats = true }
-    o.on("-u", "--unicorn", "Use unicorn to serve pages as opposed to puma") { @unicorn = true }
     o.on(
       "-c",
       "--concurrency [NUM]",
@@ -207,32 +206,22 @@ begin
     run("bundle exec rake assets:precompile")
   end
 
-  pid =
-    if @unicorn
-      ENV["UNICORN_PORT"] = @port.to_s
-      ENV["UNICORN_WORKERS"] = @unicorn_workers.to_s
-      FileUtils.mkdir_p(File.join("tmp", "pids"))
-      unicorn_pid = spawn("bundle exec unicorn -c config/unicorn.conf.rb")
+  ENV["UNICORN_PORT"] = @port.to_s
+  ENV["UNICORN_WORKERS"] = @unicorn_workers.to_s
 
-      while (
-              unicorn_master_pid =
-                `ps aux | grep "unicorn master" | grep -v "grep" | awk '{print $2}'`.strip.to_i
-            ) == 0
-        sleep 1
-      end
+  FileUtils.mkdir_p(File.join("tmp", "pids"))
+  pid = spawn("bundle exec unicorn -c config/unicorn.conf.rb")
 
-      while `ps -f --ppid #{unicorn_master_pid} | grep worker | awk '{ print $2 }'`.split("\n")
-              .map(&:to_i)
-              .size != @unicorn_workers.to_i
-        sleep 1
-      end
+  while (
+          unicorn_master_pid =
+            `ps aux | grep "unicorn master" | grep -v "grep" | awk '{print $2}'`.strip.to_i
+        ) == 0
+    sleep 1
+  end
 
-      unicorn_pid
-    else
-      spawn("bundle exec puma -p #{@port} -e production")
-    end
-
-  sleep 1 while port_available? @port
+  while `pgrep -P #{unicorn_master_pid}`.split("\n").map(&:to_i).size != @unicorn_workers.to_i
+    sleep 1
+  end
 
   puts "Starting benchmark..."
 
@@ -296,12 +285,7 @@ begin
 
   puts "Your Results: (note for timings- percentile is first, duration is second in millisecs)"
 
-  if @unicorn
-    puts "Unicorn: (workers: #{@unicorn_workers})"
-  else
-    # TODO we want to also bench puma clusters
-    puts "Puma: (single threaded)"
-  end
+  puts "Unicorn: (workers: #{@unicorn_workers})"
   puts "Include env: #{@include_env}"
   puts "Iterations: #{@iterations}, Best of: #{@best_of}"
   puts "Concurrency: #{@concurrency}"

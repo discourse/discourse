@@ -68,7 +68,7 @@ class AdminPluginSerializer < ApplicationSerializer
 
     ret = route.slice(:location, :label)
     if route[:use_new_show_route]
-      ret[:full_location] = "adminPlugins.show.#{ret[:location]}"
+      ret[:full_location] = "adminPlugins.show"
       ret[:use_new_show_route] = true
     else
       ret[:full_location] = "adminPlugins.#{ret[:location]}"

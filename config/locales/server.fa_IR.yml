@@ -692,6 +692,8 @@ fa_IR:
         user_api: "API کاربر"
       yaxis: "روز"
       description: "درخواست‌های API برای کلیدهای API معمولی و کلیدهای API کاربر."
+    consolidated_page_views_browser_detection:
+      yaxis: "روز"
     dau_by_mau:
       xaxis: "روز"
     daily_engaged_users:
@@ -814,6 +816,10 @@ fa_IR:
       title: "بازدید ناشناس"
       xaxis: "روز"
       yaxis: "بازدید ناشناس موبایلی"
+    page_view_anon_browser_reqs:
+      xaxis: "روز"
+    page_view_logged_in_browser_reqs:
+      xaxis: "روز"
     http_background_reqs:
       title: "پس زمینه"
       xaxis: "روز"

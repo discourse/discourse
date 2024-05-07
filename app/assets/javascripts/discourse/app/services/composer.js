@@ -1071,7 +1071,7 @@ export default class ComposerService extends Service {
 
     // for now handle a very narrow use case
     // if we are replying to a topic
-    // AND are on on a different topic
+    // AND are on a different topic
     // AND topic is open (or we are staff)
     // --> pop the window up
     if (!force && composer.replyingToTopic) {
@@ -1580,7 +1580,7 @@ export default class ComposerService extends Service {
       return this.keyValueStore.getItem("composerHeight");
     }
 
-    // The two custom properties below can be overriden by themes/plugins to set different default composer heights.
+    // The two custom properties below can be overridden by themes/plugins to set different default composer heights.
     if (this.model.action === "reply") {
       return "var(--reply-composer-height, 300px)";
     } else {

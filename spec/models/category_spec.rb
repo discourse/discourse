@@ -47,8 +47,7 @@ RSpec.describe Category do
 
     it "should delete associated sidebar_section_links when category is destroyed" do
       category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
-      category_sidebar_section_link_2 =
-        Fabricate(:category_sidebar_section_link, linkable: category_sidebar_section_link.linkable)
+      Fabricate(:category_sidebar_section_link, linkable: category_sidebar_section_link.linkable)
       tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
 
       expect { category_sidebar_section_link.linkable.destroy! }.to change {
@@ -996,7 +995,7 @@ RSpec.describe Category do
         )
       category.clear_auto_bump_cache!
 
-      post1 = create_post(category: category, created_at: 15.seconds.ago)
+      create_post(category: category, created_at: 15.seconds.ago)
 
       # no limits on post creation or category creation please
       RateLimiter.enable
@@ -1419,7 +1418,7 @@ RSpec.describe Category do
 
     it 'returns nil when input is ["category:invalid-slug:sub-subcategory"] and maximum category nesting is 3' do
       SiteSetting.max_category_nesting = 3
-      sub_subcategory = Fabricate(:category, parent_category: subcategory, slug: "sub-subcategory")
+      Fabricate(:category, parent_category: subcategory, slug: "sub-subcategory")
 
       expect(Category.ids_from_slugs(%w[category:invalid-slug:sub-subcategory])).to eq([])
     end
@@ -1461,6 +1460,34 @@ RSpec.describe Category do
         category.allowed_tags = [tag.name, synonym.name, tag2.name]
         expect_same_tag_names(category.reload.tags, [tag.name, synonym.name, tag2.name])
       end
+    end
+  end
+
+  describe "#slug_path" do
+    before { SiteSetting.max_category_nesting = 3 }
+
+    fab!(:grandparent) { Fabricate(:category, slug: "foo") }
+    fab!(:parent) { Fabricate(:category, parent_category: grandparent, slug: "bar") }
+    let(:child) { Fabricate(:category, parent_category: parent, slug: "boo") }
+
+    it "returns the slug for categories without parents" do
+      expect(grandparent.slug_path).to eq [grandparent.slug]
+    end
+
+    it "returns the slug for categories with parent" do
+      expect(parent.slug_path).to eq [grandparent.slug, parent.slug]
+    end
+
+    it "returns the slug for categories with grand-parent" do
+      expect(child.slug_path).to eq [grandparent.slug, parent.slug, child.slug]
+    end
+
+    it "avoids infinite loops with circular references" do
+      grandparent.parent_category = parent
+      grandparent.save!(validate: false)
+
+      expect(grandparent.slug_path).to eq [parent.slug, grandparent.slug]
+      expect(parent.slug_path).to eq [grandparent.slug, parent.slug]
     end
   end
 

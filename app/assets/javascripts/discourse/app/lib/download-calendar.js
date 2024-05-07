@@ -89,6 +89,8 @@ export function generateIcsData(title, dates, options = {}) {
         `DTSTART:${startDate.utc().format("YMMDDTHHmmss")}Z\n` +
         `DTEND:${endDate.utc().format("YMMDDTHHmmss")}Z\n` +
         (options.recurrenceRule ? `RRULE:${options.recurrenceRule}\n` : ``) +
+        (options.location ? `LOCATION:${options.location}\n` : ``) +
+        (options.details ? `DESCRIPTION:${options.details}\n` : ``) +
         `SUMMARY:${title}\n` +
         "END:VEVENT\n"
     );

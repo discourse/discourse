@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe DiscourseAutomation::Triggers::USER_FIRST_LOGGED_IN do
   before { SiteSetting.discourse_automation_enabled = true }
 

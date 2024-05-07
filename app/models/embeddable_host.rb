@@ -13,8 +13,7 @@ class EmbeddableHost < ActiveRecord::Base
     self.host.sub!(%r{/.*\z}, "")
   end
 
-  # TODO(2021-07-23): Remove
-  self.ignored_columns = ["path_whitelist"]
+  self.ignored_columns = ["path_whitelist"] # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
 
   def self.record_for_url(uri)
     if uri.is_a?(String)

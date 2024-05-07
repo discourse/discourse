@@ -806,6 +806,8 @@ zh_TW:
         api: "API"
         user_api: "使用者 API"
       yaxis: "天"
+    consolidated_page_views_browser_detection:
+      yaxis: "天"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "天"
@@ -964,6 +966,10 @@ zh_TW:
       xaxis: "天"
       yaxis: "移動端未登錄頁面訪問"
       description: "來自未登入且使用行動裝置的訪客新的頁面瀏覽次數。"
+    page_view_anon_browser_reqs:
+      xaxis: "天"
+    page_view_logged_in_browser_reqs:
+      xaxis: "天"
     http_background_reqs:
       title: "後台"
       xaxis: "天"

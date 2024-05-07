@@ -7,12 +7,12 @@
 .topic-list-item.selected td:first-child,
 .latest-topic-list-item.selected,
 .search-results .fps-result.selected {
-  box-shadow: inset 3px 0 0 var(--danger);
+  box-shadow: inset 3px 0 0 var(--quaternary);
 }
 
 .featured-topic.selected,
 .topic-post.selected {
-  box-shadow: -3px 0 0 var(--danger);
+  box-shadow: -3px 0 0 var(--quaternary);
 }
 
 .topic-list tr.selected,

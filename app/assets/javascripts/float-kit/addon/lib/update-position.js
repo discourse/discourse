@@ -12,6 +12,10 @@ import domFromString from "discourse-common/lib/dom-from-string";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { FLOAT_UI_PLACEMENTS } from "float-kit/lib/constants";
 
+const centerOffset = offset(({ rects }) => {
+  return -rects.reference.height / 2 - rects.floating.height / 2;
+});
+
 export async function updatePosition(trigger, content, options) {
   let padding = 0;
   if (!isTesting()) {
@@ -28,16 +32,21 @@ export async function updatePosition(trigger, content, options) {
     padding,
   };
 
-  const middleware = [
-    offset(options.offset ? parseInt(options.offset, 10) : 10),
-  ];
+  const middleware = [];
+  const isCentered = options.placement === "center";
 
-  if (options.inline) {
-    middleware.push(inline());
+  if (isCentered) {
+    middleware.push(centerOffset);
+  } else {
+    middleware.push(offset(options.offset ? parseInt(options.offset, 10) : 10));
+
+    if (options.inline) {
+      middleware.push(inline());
+    }
+
+    middleware.push(flip(flipOptions));
+    middleware.push(shift({ padding }));
   }
-
-  middleware.push(flip(flipOptions));
-  middleware.push(shift({ padding }));
 
   let arrowElement;
   if (options.arrow) {
@@ -59,7 +68,7 @@ export async function updatePosition(trigger, content, options) {
     trigger,
     content,
     {
-      placement: options.placement,
+      placement: isCentered ? "bottom" : options.placement,
       strategy: options.strategy || "absolute",
       middleware,
     }

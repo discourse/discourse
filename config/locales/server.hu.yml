@@ -762,6 +762,8 @@ hu:
         user_api: "Felhasználói API"
       yaxis: "Nap"
       description: "API-kérelmek a normál API-kulcsokhoz és a felhasználói API-kulcsokhoz."
+    consolidated_page_views_browser_detection:
+      yaxis: "Nap"
     dau_by_mau:
       xaxis: "Nap"
     daily_engaged_users:
@@ -888,6 +890,10 @@ hu:
       xaxis: "Nap"
       yaxis: "Mobilról bejelentkezett oldalmegtekintések"
     page_view_anon_mobile_reqs:
+      xaxis: "Nap"
+    page_view_anon_browser_reqs:
+      xaxis: "Nap"
+    page_view_logged_in_browser_reqs:
       xaxis: "Nap"
     http_background_reqs:
       title: "Háttér"
@@ -1712,7 +1718,7 @@ hu:
         Ha nem te voltál, nyugodtan figyelmen kívül hagyhatod ezt az e-mailt.
 
         Kattints a következő linkre az új jelszó létrehozásához:
-        %{base_url}/u/ password-reset/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
     email_login:
       text_body_template: |
         Itt van a link a bejelentkezéshez a [%{site_name}](%{base_url}) címen.

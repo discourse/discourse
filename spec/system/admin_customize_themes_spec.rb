@@ -2,7 +2,7 @@
 
 describe "Admin Customize Themes", type: :system do
   fab!(:color_scheme)
-  fab!(:theme)
+  fab!(:theme) { Fabricate(:theme, name: "Cool theme 1") }
   fab!(:admin) { Fabricate(:admin, locale: "en") }
 
   let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
@@ -10,8 +10,8 @@ describe "Admin Customize Themes", type: :system do
   before { sign_in(admin) }
 
   describe "when visiting the page to customize themes" do
-    fab!(:theme_2) { Fabricate(:theme) }
-    fab!(:theme_3) { Fabricate(:theme) }
+    fab!(:theme_2) { Fabricate(:theme, name: "Cool theme 2") }
+    fab!(:theme_3) { Fabricate(:theme, name: "Cool theme 3") }
     let(:delete_themes_confirm_modal) { PageObjects::Modals::DeleteThemesConfirm.new }
 
     it "should allow admin to bulk delete inactive themes" do

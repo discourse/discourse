@@ -129,12 +129,12 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     filter.filter("bevelaqua")
     find(".sidebar-additional-filter-users").click
     expect(page).to have_current_path("/admin/users/list/active?username=bevelaqua")
-    within(".users-list-container") { expect(page).to have_content("bevelaqua") }
+    expect(find(".users-list-container")).to have_content("bevelaqua")
 
     filter.filter("moltisanti")
     find(".sidebar-additional-filter-users").click
     expect(page).to have_current_path("/admin/users/list/active?username=moltisanti")
-    within(".users-list-container") { expect(page).to have_content("moltisanti") }
+    expect(find(".users-list-container")).to have_content("moltisanti")
   end
 
   it "allows sections to be expanded" do
@@ -201,6 +201,8 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(links.map(&:text)).to eq(
       [
         "Dashboard",
+        "What's New",
+        "All",
         "Users",
         "Watched Words",
         "Screened Emails",

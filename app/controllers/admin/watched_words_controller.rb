@@ -14,7 +14,7 @@ class Admin::WatchedWordsController < Admin::StaffController
 
   def create
     opts = watched_words_params
-    action = opts[:action] || self.class.actions[opts[:action_key].to_sym]
+    action = WatchedWord.actions[opts[:action_key].to_sym]
     words = opts.delete(:words)
 
     watched_word_group = WatchedWordGroup.new(action: action)
@@ -118,6 +118,6 @@ class Admin::WatchedWordsController < Admin::StaffController
 
   def watched_words_params
     @watched_words_params ||=
-      params.permit(:id, :replacement, :action, :action_key, :case_sensitive, words: [])
+      params.permit(:id, :replacement, :action_key, :case_sensitive, words: [])
   end
 end

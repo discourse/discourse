@@ -998,10 +998,8 @@ ja:
         ignore_duration_time_frame_required: "時間枠を選択してください"
         ignore_no_users: "無視されたユーザーはいません。"
         ignore_option: "無視"
-        ignore_option_title: "このユーザーに関連する通知は送信されません。またこのユーザーのすべてのトピックと返信は非表示になります。"
         add_ignored_user: "追加…"
         mute_option: "ミュート"
-        mute_option_title: "このユーザーに関連する通知は送信されません。"
         normal_option: "通常"
         normal_option_title: "このユーザーがあなたに返信したり、引用したり、メンションすると通知されます。"
       notification_schedule:
@@ -3504,8 +3502,6 @@ ja:
       pinned:
         title: "固定"
         help: "このトピックは固定されています。常にカテゴリのトップに表示されます"
-      unlisted:
-        help: "このトピックは非表示です。トピックリストには表示されません。直リンクでのみアクセス可能です"
       personal_message:
         title: "このトピックは個人メッセージです"
         help: "このトピックは個人メッセージです"
@@ -5346,9 +5342,6 @@ ja:
           silence: "新規アカウントの最初の投稿にこれらのいずれかの語が含まれる場合、そのアカウントを投稿禁止にします。投稿はスタッフが承認するまで自動的に非表示になります。"
           link: "投稿内の語をリンクに置き換える."
         form:
-          label: "語またはフレーズがある"
-          placeholder: "語またはフレーズを入力してください (* はワイルカード)"
-          placeholder_regexp: "正規表現"
           replace_label: "置換"
           replace_placeholder: "例"
           tag_label: "タグ"

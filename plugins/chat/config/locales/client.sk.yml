@@ -197,6 +197,9 @@ sk:
       ignore_channel_wide_mention:
         title: "Ignorovať zmienky v rámci celého kanála"
         description: "Neposielať upozornenia na zmienky v rámci celého kanála (@tu a @všetci)"
+      show_thread_title_prompts:
+        title: "Zobraziť výzvy na názov vlákna"
+        description: "Zobraziť výzvy na nastavenie názvu pre nové vlákna"
       open: "Otvoriť chat"
       open_full_page: "Otvoriť chat na celú obrazovku"
       close_full_page: "Zatvorenie chatu na celej obrazovke"
@@ -573,6 +576,7 @@ sk:
       flags:
         off_topic: "Táto správa nie je relevantná pre aktuálnu diskusiu definovanú názvom kanála a mala by byť pravdepodobne presunutá inam."
         inappropriate: "Táto správa obsahuje obsah, ktorý by rozumná osoba považovala za urážlivý, urážlivý alebo za porušenie <a href=\"%{basePath}/guidelines\">našich pokynov pre komunitu</a>."
+        illegal: "Tento príspevok si vyžaduje pozornosť zamestnancov, pretože podľa môjho názoru obsahuje obsah, ktorý je nezákonný."
         spam: "Táto správa je reklama alebo vandalizmus. Nie je to užitočné ani relevantné pre aktuálny kanál."
         notify_user: "Chcem sa s touto osobou porozprávať priamo a osobne o jej posolstve."
         notify_moderators: "Táto správa si vyžaduje pozornosť personálu z iného dôvodu, ktorý nie je uvedený vyššie."
@@ -617,6 +621,17 @@ sk:
           few: "+%{count}"
           many: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Nastavte názov vlákna"
+        message: "Pomôžte ostatným objaviť túto konverzáciu."
+        dismiss_action: "Už nezobrazovať"
+        primary_action: "Nastaviť názov"
+      thread_title_modal:
+        title: "Nastaviť názov vlákna"
+        input_placeholder: "Povedzte ostatným, o čom je táto konverzácia..."
+        discourse_ai:
+          title: "Automaticky generujte názvy vlákien"
+          description: "Pozrite si stránku %{url} , kde sa dozviete viac o tomto a ďalších vylepšeniach Discourse."
       threads:
         open: "Otvoriť vlákno"
         list: "Vlákna"

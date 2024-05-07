@@ -126,7 +126,7 @@ module DiscourseAutomation
 
     def trigger_in_background!(context = {})
       Jobs.enqueue(
-        :discourse_automation_trigger,
+        Jobs::DiscourseAutomation::Trigger,
         automation_id: id,
         context: self.class.serialize_context(context),
       )
@@ -134,11 +134,23 @@ module DiscourseAutomation
 
     def trigger!(context = {})
       if enabled
-        if scriptable.background && !running_in_background
-          trigger_in_background!(context)
-        else
-          triggerable&.on_call&.call(self, serialized_fields)
-          scriptable.script.call(context, serialized_fields, self)
+        if active_id = DiscourseAutomation.get_active_automation
+          Rails.logger.warn(<<~TEXT.strip)
+            [automation] potential automations infinite loop detected: skipping automation #{self.id} because automation #{active_id} is still executing.")
+          TEXT
+          return
+        end
+
+        begin
+          DiscourseAutomation.set_active_automation(self.id)
+          if scriptable.background && !running_in_background
+            trigger_in_background!(context)
+          else
+            triggerable&.on_call&.call(self, serialized_fields)
+            scriptable.script.call(context, serialized_fields, self)
+          end
+        ensure
+          DiscourseAutomation.set_active_automation(nil)
         end
       end
     end

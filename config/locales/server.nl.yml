@@ -1134,6 +1134,8 @@ nl:
         user_api: "Gebruikers-API"
       yaxis: "Dag"
       description: "API-verzoeken voor reguliere API-sleutels en gebruikers-API-sleutels."
+    consolidated_page_views_browser_detection:
+      yaxis: "Day"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dag"
@@ -1293,6 +1295,10 @@ nl:
       xaxis: "Dag"
       yaxis: "Mobiele anonieme paginaweergaven"
       description: "Aantal nieuwe paginaweergaven van bezoekers op een mobiel apparaat die niet zijn aangemeld."
+    page_view_anon_browser_reqs:
+      xaxis: "Day"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Day"
     http_background_reqs:
       title: "Achtergrond"
       xaxis: "Dag"

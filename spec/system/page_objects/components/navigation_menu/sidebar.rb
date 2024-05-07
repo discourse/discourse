@@ -18,7 +18,7 @@ module PageObjects
         end
 
         def has_no_customize_community_section_button?
-          community_section.has_no_button?(class: "sidebar-section-link-button")
+          community_section.has_no_button?('[data-list-item-name="customize"]')
         end
 
         def click_customize_community_section_button

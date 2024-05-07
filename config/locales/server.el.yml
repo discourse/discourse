@@ -686,6 +686,8 @@ el:
         api: "API"
         user_api: "User API"
       yaxis: "Ημέρα"
+    consolidated_page_views_browser_detection:
+      yaxis: "Ημέρα"
     dau_by_mau:
       xaxis: "Ημέρα"
     daily_engaged_users:
@@ -808,6 +810,10 @@ el:
       title: "Ανώνυμες προβολές σελίδας"
       xaxis: "Ημέρα"
       yaxis: "Ανώνυμες προβολές σελίδας από κινητό τηλέφωνο"
+    page_view_anon_browser_reqs:
+      xaxis: "Ημέρα"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Ημέρα"
     http_background_reqs:
       title: "Φόντο"
       xaxis: "Ημέρα"

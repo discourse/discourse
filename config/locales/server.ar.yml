@@ -1346,6 +1346,8 @@ ar:
         user_api: "واجهة برمجة التطبيقات للمستخدم"
       yaxis: "اليوم"
       description: "طلبات API لمفاتيح API العادية ومفاتيح API للمستخدم."
+    consolidated_page_views_browser_detection:
+      yaxis: "اليوم"
     dau_by_mau:
       title: "المستخدمون النشطون يوميًا/المستخدمون النشطون شهريًا"
       xaxis: "اليوم"
@@ -1505,6 +1507,10 @@ ar:
       xaxis: "اليوم"
       yaxis: "مرات عرض المجهولين للصفحة على الجوَّال"
       description: "عدد مرات العرض الجديدة للصفحة من الزوار على الأجهزة الجوَّالة والذين لم يسجِّلوا الدخول"
+    page_view_anon_browser_reqs:
+      xaxis: "اليوم"
+    page_view_logged_in_browser_reqs:
+      xaxis: "اليوم"
     http_background_reqs:
       title: "الخلفية"
       xaxis: "اليوم"

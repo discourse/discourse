@@ -120,21 +120,21 @@ module Jobs
 
       if type == "digest"
         return if user.staged
-        if user.last_emailed_at &&
-             user.last_emailed_at >
+
+        if user.last_seen_at
+          if user.last_seen_at >
                (
                  user.user_option&.digest_after_minutes ||
                    SiteSetting.default_email_digest_frequency.to_i
                ).minutes.ago
-          return
+            return
+          end
         end
       end
 
       seen_recently =
-        (
-          user.last_seen_at.present? &&
-            user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago
-        )
+        user.last_seen_at && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago
+
       if !args[:force_respect_seen_recently] &&
            (
              always_email_regular?(user, type) || always_email_private_message?(user, type) ||

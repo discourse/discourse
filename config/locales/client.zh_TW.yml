@@ -860,9 +860,7 @@ zh_TW:
         ignore_duration_time_frame_required: "請選擇一個有效時間範圍"
         ignore_no_users: "你沒有被忽略的使用者"
         ignore_option: "已忽略"
-        ignore_option_title: "您將不會收到與此使用者相關的通知，並且該使用者的所有主題與留言都將被隱藏。"
         mute_option: "靜音"
-        mute_option_title: "您將不會收到與此使用者相關的任何通知。"
         normal_option: "一般"
         normal_option_title: "如果有人@你或回覆你的帖子，將通知你。"
       notification_schedule:
@@ -2568,8 +2566,6 @@ zh_TW:
       pinned:
         title: "已釘選"
         help: "此話題已置頂，將顯示在它所屬分類話題列表的最上方"
-      unlisted:
-        help: "此話題已被隱藏，不會顯示於話題列表，只能由直接連結存取。"
     posts: "貼文"
     pending_posts:
       label: "申請中"
@@ -3788,7 +3784,6 @@ zh_TW:
           silence: "靜音"
           link: "連結"
         form:
-          placeholder_regexp: "正規表示法"
           tag_label: "標記"
           link_label: "連結"
           link_placeholder: "https://example.com"

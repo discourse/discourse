@@ -1016,9 +1016,7 @@ lt:
         ignore_duration_time_frame_required: "Pasirinkite laikotarpį"
         ignore_no_users: "Neturite ignoruojamų naudotojų."
         ignore_option: "Nepaisoma"
-        ignore_option_title: "Jūs negausite pranešimų, susijusių su šiuo vartotoju, ir visos jo temos bei atsakymai bus paslėpti."
         mute_option: "Nutildyta"
-        mute_option_title: "Jūs negausite jokių pranešimų, susijusių su šiuo vartotoju."
         normal_option: "Įprastas"
         normal_option_title: "Būsite informuoti, jei šis vartotojas jums atsakys, cituos ar paminės jus."
       notification_schedule:
@@ -3098,8 +3096,6 @@ lt:
       pinned:
         title: "Prisegta"
         help: "Ši tema yra Pažymėta tik tau. Ji bus rodoma sąrašo kategorijos sąrašo viršuje."
-      unlisted:
-        help: "Ši tema yra išimta iš sąrašo. Ji daugiau nebebus rodoma temų sąraše ir ją galima pasiekti tik su tiesiogine nuoroda."
       personal_message:
         title: "Ši tema yra asmeninė žinutė"
         help: "Ši tema yra asmeninė žinutė"
@@ -4484,8 +4480,6 @@ lt:
         action_descriptions:
           replace: "Pakeiskite žodžius įrašuose kitais žodžiais."
         form:
-          label: "Turi žodį ar frazę"
-          placeholder_regexp: "Įprasta išraiška"
           replace_label: "Pakeitimas"
           replace_placeholder: "pavyzdys"
           tag_label: "Žymėti"
