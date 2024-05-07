@@ -1,9 +1,7 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import BreadcrumbsContainer from "@bagaar/ember-breadcrumbs/components/breadcrumbs-container";
 import AdminPluginConfigArea from "./admin-plugin-config-area";
 import AdminPluginConfigMetadata from "./admin-plugin-config-metadata";
-import AdminPluginConfigTopNav from "./admin-plugin-config-top-nav";
 
 export default class AdminPluginConfigPage extends Component {
   @service currentUser;
@@ -23,15 +21,7 @@ export default class AdminPluginConfigPage extends Component {
 
   <template>
     <div class="admin-plugin-config-page">
-      {{#if this.adminPluginNavManager.isTopMode}}
-        <AdminPluginConfigTopNav />
-      {{/if}}
 
-      <BreadcrumbsContainer
-        @itemClass="breadcrumbs__item"
-        @linkClass="breadcrumbs__link"
-        class="breadcrumbs"
-      />
       <AdminPluginConfigMetadata @plugin={{@plugin}} />
 
       <div class="admin-plugin-config-page__content">

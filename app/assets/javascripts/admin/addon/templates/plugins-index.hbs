@@ -1,5 +1,16 @@
 <div class="admin-plugins-list-container">
   {{#if this.model.length}}
+    <DBreadcrumbsContainer />
+    <DBreadcrumbsItem as |linkClass|>
+      <LinkTo @route="admin" class={{linkClass}}>
+        {{i18n "admin_title"}}
+      </LinkTo>
+    </DBreadcrumbsItem>
+    <DBreadcrumbsItem as |linkClass|>
+      <LinkTo @route="adminPlugins" class={{linkClass}}>
+        {{i18n "admin.plugins.title"}}
+      </LinkTo>
+    </DBreadcrumbsItem>
     <h2>{{i18n "admin.plugins.installed"}}</h2>
     <AdminPluginsList @plugins={{this.model}} />
   {{else}}

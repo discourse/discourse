@@ -16,21 +16,26 @@ export default class AdminPluginConfigTopNav extends Component {
   }
 
   <template>
-    <div class="admin-controls">
-      <HorizontalOverflowNav
-        class="nav-pills action-list main-nav nav plugin-nav"
-      >
-        {{#each this.adminPluginNavManager.currentConfigNav.links as |navLink|}}
-          <NavItem
-            @route={{navLink.route}}
-            @i18nLabel={{this.linkText navLink}}
-            title={{this.linkText navLink}}
-            class="admin-plugin-config-page__top-nav-item"
-          >
-            {{this.linkText navLink}}
-          </NavItem>
-        {{/each}}
-      </HorizontalOverflowNav>
-    </div>
+    {{#if this.adminPluginNavManager.isTopMode}}
+      <div class="admin-controls">
+        <HorizontalOverflowNav
+          class="nav-pills action-list main-nav nav plugin-nav"
+        >
+          {{#each
+            this.adminPluginNavManager.currentConfigNav.links
+            as |navLink|
+          }}
+            <NavItem
+              @route={{navLink.route}}
+              @i18nLabel={{this.linkText navLink}}
+              title={{this.linkText navLink}}
+              class="admin-plugin-config-page__top-nav-item"
+            >
+              {{this.linkText navLink}}
+            </NavItem>
+          {{/each}}
+        </HorizontalOverflowNav>
+      </div>
+    {{/if}}
   </template>
 }

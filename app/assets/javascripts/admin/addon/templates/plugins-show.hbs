@@ -1,3 +1,18 @@
+<AdminPluginConfigTopNav />
+
+<DBreadcrumbsContainer />
+
+<DBreadcrumbsItem as |linkClass|>
+  <LinkTo @route="admin" class={{linkClass}}>
+    {{i18n "admin_title"}}
+  </LinkTo>
+</DBreadcrumbsItem>
+<DBreadcrumbsItem as |linkClass|>
+  <LinkTo @route="adminPlugins" class={{linkClass}}>
+    {{i18n "admin.plugins.title"}}
+  </LinkTo>
+</DBreadcrumbsItem>
+
 <AdminPluginConfigPage @plugin={{this.model}}>
   {{outlet}}
 </AdminPluginConfigPage>
