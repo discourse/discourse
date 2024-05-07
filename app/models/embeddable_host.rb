@@ -84,4 +84,5 @@ end
 #  updated_at    :datetime         not null
 #  class_name    :string
 #  allowed_paths :string
+#  user_id :integer
 #

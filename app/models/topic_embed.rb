@@ -60,9 +60,10 @@ class TopicEmbed < ActiveRecord::Base
     # If there is no embed, create a topic, post and the embed.
     if embed.blank?
       Topic.transaction do
-        eh = EmbeddableHost.record_for_url(url)
-        tags = eh.tags.presence || tags
-        user = eh.user.presence || user
+        if eh = EmbeddableHost.record_for_url(url)
+          tags = eh.tags.presence || tags
+          user = eh.user.presence || user
+        end
 
         cook_method ||=
           if SiteSetting.embed_support_markdown
@@ -101,9 +102,10 @@ class TopicEmbed < ActiveRecord::Base
       absolutize_urls(url, contents)
       post = embed.post
 
-      eh = EmbeddableHost.record_for_url(url)
-      tags = eh.tags.presence || tags
-      user = eh.user.presence || user
+      if eh = EmbeddableHost.record_for_url(url)
+        tags = eh.tags.presence || tags
+        user = eh.user.presence || user
+      end
 
       # Update the topic if it changed
       if post&.topic
