@@ -63,8 +63,16 @@
   }
 
   .channel-list-empty-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
     margin: 1em 0.5em 0.5em 0.5em;
     padding: 0 1em;
+
+    .channel-title {
+      margin-bottom: 1rem;
+    }
   }
 
   .chat-channel-divider {
