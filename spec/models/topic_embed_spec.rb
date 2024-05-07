@@ -320,29 +320,28 @@ RSpec.describe TopicEmbed do
       fab!(:tag1) { Fabricate(:tag, name: "interesting") }
       fab!(:tag2) { Fabricate(:tag, name: "article") }
 
-      let!(:new_user) { Fabricate(:user) }
+      let!(:admin) { Fabricate(:admin) }
+      let!(:new_admin) { Fabricate(:admin) }
       let(:tags) { [tag1.name, tag2.name] }
 
       before { SiteSetting.tagging_enabled = true }
 
       it "updates the user and adds new tags" do
-        original_post = TopicEmbed.import(user, url, title, contents)
+        original_post = TopicEmbed.import(admin, url, title, contents)
 
-        expect(original_post.user).to eq(user)
+        expect(original_post.user).to eq(admin)
         expect(original_post.topic.tags).to be_empty
 
         embeddable_host.update!(
           tags: [tag1, tag2],
-          user: new_user,
+          user: new_admin,
           category: category,
           host: "eviltrout.com",
         )
-        embeddable_host.save!
-        embeddable_host.reload
-        puts "ID HERE: #{embeddable_host.id.inspect}"
-        edited_post = TopicEmbed.import(user, url, title, "#{contents} - updated")
 
-        expect(edited_post.user).to eq(new_user)
+        edited_post = TopicEmbed.import(admin, url, title, contents)
+
+        expect(edited_post.user).to eq(new_admin)
         expect(edited_post.topic.tags).to match_array([tag1, tag2])
       end
     end
