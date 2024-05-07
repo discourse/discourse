@@ -158,7 +158,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
     assert.dom(".fk-d-tooltip__content").containsText("content");
 
-    await click(".fk-d-tooltip .btn");
+    await click(".fk-d-tooltip__content .btn");
 
     assert.dom(".fk-d-tooltip__content").doesNotExist();
   });
