@@ -4,8 +4,8 @@ RSpec.describe Chat::StopMessageStreaming do
   describe ".call" do
     subject(:result) { described_class.call(params) }
 
-    let(:params) { { guardian: guardian } }
     let(:guardian) { Guardian.new(current_user) }
+    let(:params) { { guardian: guardian, message_id: message_1.id } }
 
     fab!(:current_user) { Fabricate(:user) }
     fab!(:channel_1) { Fabricate(:chat_channel) }
@@ -15,8 +15,6 @@ RSpec.describe Chat::StopMessageStreaming do
       channel_1.add(current_user)
       SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
     end
-
-    let(:params) { { guardian: guardian, message_id: message_1.id } }
 
     context "with valid params" do
       fab!(:current_user) { Fabricate(:admin) }
