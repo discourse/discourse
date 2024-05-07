@@ -105,6 +105,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
     end
 
     before do
+      public_channel.add(current_user)
       thread_1.add(current_user)
       thread_3.add(current_user)
     end
