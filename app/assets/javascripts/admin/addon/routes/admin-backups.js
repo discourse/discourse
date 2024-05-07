@@ -3,7 +3,6 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import PreloadStore from "discourse/lib/preload-store";
-import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
@@ -15,6 +14,7 @@ import BackupStatus from "admin/models/backup-status";
 const LOG_CHANNEL = "/admin/backups/logs";
 
 export default class AdminBackupsRoute extends DiscourseRoute {
+  @service currentUser;
   @service dialog;
   @service router;
   @service messageBus;
@@ -43,7 +43,7 @@ export default class AdminBackupsRoute extends DiscourseRoute {
   @bind
   onMessage(log) {
     if (log.message === "[STARTED]") {
-      User.currentProp("hideReadOnlyAlert", true);
+      this.currentUser.set("hideReadOnlyAlert", true);
       this.controllerFor("adminBackups").set("model.isOperationRunning", true);
       this.controllerFor("adminBackupsLogs").get("logs").clear();
     } else if (log.message === "[FAILED]") {
@@ -54,7 +54,7 @@ export default class AdminBackupsRoute extends DiscourseRoute {
         })
       );
     } else if (log.message === "[SUCCESS]") {
-      User.currentProp("hideReadOnlyAlert", false);
+      this.currentUser.set("hideReadOnlyAlert", false);
       this.controllerFor("adminBackups").set("model.isOperationRunning", false);
       if (log.operation === "restore") {
         // redirect to homepage when the restore is done (session might be lost)

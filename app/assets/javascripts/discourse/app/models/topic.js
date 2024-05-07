@@ -1,5 +1,6 @@
 import EmberObject, { computed } from "@ember/object";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
@@ -16,7 +17,6 @@ import ActionSummary from "discourse/models/action-summary";
 import Bookmark from "discourse/models/bookmark";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
-import User from "discourse/models/user";
 import { flushMap } from "discourse/services/store";
 import deprecated from "discourse-common/lib/deprecated";
 import getURL from "discourse-common/lib/get-url";
@@ -291,6 +291,9 @@ export default class Topic extends RestModel {
     await applyModelTransformations("topic", topics);
   }
 
+  @service currentUser;
+  @service siteSettings;
+
   message = null;
   errorLoading = false;
 
@@ -493,8 +496,7 @@ export default class Topic extends RestModel {
 
   @discourseComputed("url")
   shareUrl(url) {
-    const user = User.current();
-    return resolveShareUrl(url, user);
+    return resolveShareUrl(url, this.currentUser);
   }
 
   @discourseComputed("id", "slug")
