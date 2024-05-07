@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import { setOwner } from "@ember/application";
+import { getOwner, setOwner } from "@ember/application";
+import { isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
@@ -55,6 +56,10 @@ export default class DMenuInstance extends FloatKitInstance {
 
   @action
   async close() {
+    if (getOwner(this).isDestroying) {
+      return;
+    }
+
     await super.close(...arguments);
 
     if (this.site.mobileView && this.options.modalForMobile) {
