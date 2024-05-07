@@ -4,31 +4,39 @@
     {{#if this.notInVotingGroup}}
       <div class="alert alert-danger">{{this.pollGroups}}</div>
     {{/if}}
-    {{#if this.isIrv}}
-      <div class="multi-poll">
-        {{#each this.options as |option|}}
-          <div
-            class="multi-poll-option"
-            data-poll-option-id={{option.id}}
-            data-poll-option-rank={{option.rank}}
-          >
-            <PollOptionsDropdown
-              @rank={{option.rank}}
-              @option={{option}}
-              @irv_dropdown_content={{this.irv_dropdown_content}}
-              @sendRank={{this.toggleOption}}
-            />
-            <span class="option-text">{{option.html}}</span>
-          </div>
-        {{/each}}
+    {{#if this.showResults}}
+      <div class={{this.resultsWidgetTypeClass}}>
+        {{#if this.isNumber}}
+          <span>{{this.averageRating}}</span>
+        {{/if}}
       </div>
     {{else}}
-      <PollOptions
-        @isCheckbox={{this.isCheckbox}}
-        @options={{this.options}}
-        @votes={{this.vote}}
-        @sendRadioClick={{this.toggleOption}}
-      />
+      {{#if this.isIrv}}
+        <div class="multi-poll">
+          {{#each this.options as |option|}}
+            <div
+              class="multi-poll-option"
+              data-poll-option-id={{option.id}}
+              data-poll-option-rank={{option.rank}}
+            >
+              <PollOptionsDropdown
+                @rank={{option.rank}}
+                @option={{option}}
+                @irv_dropdown_content={{this.irv_dropdown_content}}
+                @sendRank={{this.toggleOption}}
+              />
+              <span class="option-text">{{option.html}}</span>
+            </div>
+          {{/each}}
+        </div>
+      {{else}}
+        <PollOptions
+          @isCheckbox={{this.isCheckbox}}
+          @options={{this.options}}
+          @votes={{this.vote}}
+          @sendRadioClick={{this.toggleOption}}
+        />
+      {{/if}}
     {{/if}}
   </div>
   <PollInfo @attrs={{this.attributes}} />
@@ -38,7 +46,7 @@
         class={{this.castVotesButtonClass}}
         title="poll.cast-votes.title"
         disabled={{this.castVotesDisabled}}
-        action={{this.castVotes}}
+        {{on "click" this.castVotes}}
       >
         {{d-icon this.castVotesButtonIcon}}
         <span class="d-button-label">{{I18n "poll.cast-votes.label"}}</span>
@@ -49,7 +57,7 @@
       <button
         class="btn btn-default toggle-results"
         title="poll.hide-results.title"
-        action={{this.toggleResults}}
+        {{on "click" this.toggleResults}}
       >
         {{d-icon "chevron-left"}}
         <span class="d-button-label">{{I18n "poll.hide-results.label"}}</span>
@@ -60,7 +68,7 @@
       <button
         class="btn btn-default toggle-results"
         title="poll.show-results.title"
-        action={{this.toggleResults}}
+        {{on "click" this.toggleResults}}
       >
         {{d-icon "chart-bar"}}
         <span class="d-button-label">{{I18n "poll.show-results.label"}}</span>
@@ -69,12 +77,12 @@
 
     {{#if this.showRemoveVoteButton}}
       <button
-        class="btn-default remove-vote"
+        class="btn btn-default remove-vote"
         title="poll.remove-vote.title"
-        action={{this.removeVote}}
+        {{on "click" this.removeVote}}
       >
         {{d-icon "undo"}}
-        <span>{{I18n "poll.remove-vote.label"}}</span>
+        <span class="d-button-label">{{I18n "poll.remove-vote.label"}}</span>
       </button>
     {{/if}}
 

@@ -5,7 +5,9 @@ import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import round from "discourse/lib/round";
 import I18n from "I18n";
+import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 
 const buttonOptionsMap = {
   exportResults: {
@@ -42,8 +44,9 @@ export default class PollComponent extends Component {
   @service siteSettings;
   @service appEvents;
   @tracked isStaff = this.currentUser && this.currentUser.staff;
-  @tracked vote;
-  @tracked closed;
+  @tracked vote = this.args.attrs.vote || [];
+  @tracked voters = this.args.attrs.poll.voters || 0;
+  @tracked closed = this.args.attrs.isClosed;
   @tracked titleHTML = htmlSafe(this.args.attrs.titleHTML);
   @tracked topicArchived = this.args.attrs.post.get("topic.archived");
   @tracked options = [];
@@ -56,7 +59,8 @@ export default class PollComponent extends Component {
   @tracked isNumber = this.args.attrs.poll.type === "number";
   @tracked
   hideResultsDisabled = !this.staffOnly && (this.closed || this.topicArchived);
-  @tracked showingResults;
+  @tracked showingResults = false;
+  @tracked hasSavedVote = this.args.attrs.hasSavedVote;
   @tracked
   showResults =
     this.showingResults ||
@@ -65,38 +69,6 @@ export default class PollComponent extends Component {
   post = this.args.attrs.post;
 
   irv_dropdown_content = [];
-
-  @action
-  toggleOption = (option, rank = 0) => {
-    if (this.closed) {
-      return;
-    }
-    if (!this.currentUser) {
-      return this.showLogin();
-    }
-    if (!this.checkUserGroups(this.currentUser, this.args.attrs.poll)) {
-      return;
-    }
-
-    if (
-      !this.isMultiple &&
-      !this.isIrv &&
-      this.vote.length === 1 &&
-      this.vote[0] === option.id
-    ) {
-      return this.removeVote();
-    }
-
-    if (!this.isMultiple && !this.isIrv) {
-      this.vote.length = 0;
-    }
-
-    this._toggleOption(option, rank);
-
-    if (!this.isMultiple && !this.isIrv) {
-      return this.castVotes().catch(() => this._toggleOption(option));
-    }
-  };
 
   showLogin = () => {
     this.register.lookup("route:application").send("showLogin");
@@ -114,8 +86,8 @@ export default class PollComponent extends Component {
 
     return userGroups && pollGroups.some((g) => userGroups.includes(g));
   };
-  castVotes = () => {
-    if (!this.canCastVotes()) {
+  castVotes = (option) => {
+    if (!this.canCastVotes) {
       return;
     }
     if (!this.currentUser) {
@@ -131,7 +103,9 @@ export default class PollComponent extends Component {
       },
     })
       .then(({ poll }) => {
+        this.options = [...poll.options];
         this.args.attrs.hasSavedVote = true;
+        this.hasSavedVote = true;
         this.args.attrs.poll.setProperties(poll);
         this.appEvents.trigger(
           "poll:voted",
@@ -139,6 +113,9 @@ export default class PollComponent extends Component {
           this.args.attrs.post,
           this.args.attrs.vote
         );
+
+        const voters = poll.voters;
+        this.voters = [Number(voters)][0];
 
         if (this.args.attrs.poll.results !== "on_close") {
           this.showResults = true;
@@ -153,13 +130,15 @@ export default class PollComponent extends Component {
       })
       .catch((error) => {
         if (error) {
+          if (!this.isMultiple && !this.isIrv) {
+            this._toggleOption(option);
+          }
           popupAjaxError(error);
         } else {
           this.dialog.alert(I18n.t("poll.error_while_casting_votes"));
         }
       });
   };
-
   areRanksValid = (arr) => {
     let ranks = new Set(); // Using a Set to keep track of unique ranks
     let hasNonZeroDuplicate = false;
@@ -216,21 +195,19 @@ export default class PollComponent extends Component {
           }
         }
       });
+    } else {
+      vote = [option.id];
     }
 
     this.vote = [...vote];
     this.options = [...options];
   };
-
   constructor() {
     super(...arguments);
     this.options = this.args.attrs.poll.options;
-    this.vote = this.args.attrs.vote;
     this.attributes = this.args.attrs;
     this.min = this.args.attrs.min;
     this.max = this.args.attrs.max;
-    this.closed = this.args.attrs.isClosed;
-    this.showingResults = false;
 
     if (this.args.attrs.isIrv) {
       this.irv_dropdown_content.push({
@@ -252,13 +229,49 @@ export default class PollComponent extends Component {
       }
     });
   }
+  @action
+  toggleOption(option, rank = 0) {
+    if (this.closed) {
+      return;
+    }
+    if (!this.currentUser) {
+      return this.showLogin();
+    }
+    if (!this.checkUserGroups(this.currentUser, this.args.attrs.poll)) {
+      return;
+    }
+
+    if (
+      !this.isMultiple &&
+      !this.isIrv &&
+      this.vote.length === 1 &&
+      this.vote[0] === option.id
+    ) {
+      return this.removeVote();
+    }
+
+    if (!this.isMultiple && !this.isIrv) {
+      this.vote.length = 0;
+    }
+
+    this._toggleOption(option, rank);
+
+    if (!this.isMultiple && !this.isIrv) {
+      this.castVotes(option);
+    }
+  }
+
+  @action
+  toggleResults() {
+    this.showResults = !this.showResults;
+  }
 
   get canCastVotes() {
     if (this.closed || this.showingResults) {
       return false;
     }
 
-    const selectedOptionCount = this.vote.length;
+    const selectedOptionCount = this.vote?.length || 0;
 
     if (this.isMultiple) {
       return selectedOptionCount >= this.min && selectedOptionCount <= this.max;
@@ -302,15 +315,15 @@ export default class PollComponent extends Component {
   }
 
   get showHideResultsButton() {
-    return this.args.attrs.showResults && !this.hideResultsDisabled;
+    return this.showResults && !this.hideResultsDisabled;
   }
 
   get showShowResultsButton() {
-    return !this.args.attrs.showResults && !this.hideResultsDisabled;
+    return !this.showResults && !this.hideResultsDisabled;
   }
 
   get showRemoveVoteButton() {
-    return this.args.attrs.hasSavedVote;
+    return this.hasSavedVote;
   }
 
   get showDropdown() {
@@ -323,6 +336,24 @@ export default class PollComponent extends Component {
     } else {
       return false;
     }
+  }
+
+  get resultsWidgetTypeClass() {
+    const type = this.args.attrs.poll.type;
+    return type === "number" ||
+      this.args.attrs.poll.chart_type !== PIE_CHART_TYPE
+      ? `discourse-poll-${type}-results`
+      : "discourse-poll-pie-chart";
+  }
+
+  get averageRating() {
+    const totalScore = this.options.reduce((total, o) => {
+      return total + parseInt(o.html, 10) * parseInt(o.votes, 10);
+    }, 0);
+
+    const average = this.voters === 0 ? 0 : round(totalScore / this.voters, -2);
+
+    return htmlSafe(I18n.t("poll.average_rating", { average }));
   }
 
   getDropdownContent() {
@@ -391,6 +422,7 @@ export default class PollComponent extends Component {
   //   this.chosen = option;
   // }
 
+  @action
   removeVote() {
     return ajax("/polls/vote", {
       type: "DELETE",
@@ -400,9 +432,12 @@ export default class PollComponent extends Component {
       },
     })
       .then(({ poll }) => {
+        this.options = [...poll.options];
         this.poll.setProperties(poll);
         this.vote.length = 0;
         this.hasSavedVote = false;
+        this.args.attrs.hasSavedVote = false;
+
         this.appEvents.trigger("poll:voted", poll, this.post, this.vote);
       })
       .catch((error) => popupAjaxError(error));
