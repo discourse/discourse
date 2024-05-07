@@ -2716,6 +2716,7 @@ fr:
         progress:
           one: "Progression : <strong>%{count}</strong> sujet"
           other: "Progression : <strong>%{count}</strong> sujets"
+        silent: "Effectue cette action sans notification."
       none:
         unread: "Vous n'avez aucun sujet non lu."
         unseen: "Vous n'avez aucun sujet non lu."
@@ -2726,6 +2727,7 @@ fr:
         bookmarks: "Vous n'avez encore attribué aucun signet."
         category: "Il n'y a pas de sujets dans %{category}."
         top: "Il n'y a pas de meilleurs sujets."
+        hot: "Il n'y a pas de sujets en tendance."
         filter: "Il n'y a pas de sujets."
         educate:
           new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
@@ -2741,11 +2743,15 @@ fr:
         category: "Il n'y a pas d'autres sujets à consulter dans %{category}."
         tag: "Il n'y a pas d'autres sujets à consulter dans %{tag}."
         top: "Il n'y a pas d'autres meilleurs sujets à consulter."
+        hot: "Il n'y a plus de sujets en tendance."
         bookmarks: "Il n'y a pas d'autres sujets enregistrés dans les signets."
         filter: "Il n'y a plus de sujets."
     topic_bulk_actions:
       close_topics:
         name: "Fermer les sujets"
+      update_category:
+        name: "Mettre à jour la catégorie"
+        description: "Choisir la nouvelle catégorie pour les sujets sélectionnés"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"

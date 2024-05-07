@@ -173,6 +173,7 @@ sk:
       page_publishing_requirements: "Publikovanie stránky nie je možné povoliť, ak je povolené zabezpečené nahrávanie."
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "Používateľské agendy musia mať dĺžku aspoň 3 znaky, aby nedošlo k náhodnému obmedzeniu rýchlosti legitímnych používateľov."
   invite:
+    cant_invite_to_group: "Nemáte povolené pozývať používateľov do určených skupín. Uistite sa, že ste vlastníkom skupín, do ktorých sa pokúšate pozvať."
     disabled_errors:
       invalid_access: "Nemáte oprávnenie na zobrazenie požadovaných údajov!"
     max_invite_emails_limit_exceeded: "Požiadavka zlyhala, pretože počet e-mailov prekročil maximum (%{max})."
@@ -242,6 +243,7 @@ sk:
   spamming_host: "Ľutujeme, nemôžete publikovať odkaz na tento zdroj"
   user_is_suspended: "Suspendovaní používatelia nemôžu vkladať príspevky"
   topic_not_found: "Niečo sa pokazilo. Téma mohla byť napríklad uzavretá, alebo zmazaná kým ste ju prezerali."
+  secure_upload_not_allowed_in_public_topic: "Ľutujeme, nasledujúce zabezpečené nahrávanie nie je možné použiť vo verejnej téme: %{upload_filenames}."
   just_posted_that: "je to príliš podobné Vášmu predchádzajúcemu príspevku"
   invalid_characters: "obsahuje neplatné znaky"
   is_invalid: "je to nejasné, je to kompletná veta?"
@@ -321,6 +323,7 @@ sk:
       Uvažovali ste **[návštíviť svoj používateľský profil](%{profile_path})** a nahrať obrázok, ktorý vás vystihuje?
 
       Je jednoduchšie sledovať diskusiu a nájsť zaujímavých ľudí v rozhovoroch, keď má každý jedinečný profilový obrázok!
+    get_a_room: Odpovedali ste na @%{reply_username} %{count} -krát, vedeli ste, že im namiesto toho môžete poslať osobnú správu?
   activerecord:
     attributes:
       category:
@@ -849,6 +852,7 @@ sk:
     queue_size_warning: "Počet úloh v zásobníku je %{queue_size}, čo je dosť veľa. To môže byť príznakom problému s procesom (procesmi) Sidekiq, alebo by ste mali spustiť viac Sidekiq procesov."
     memory_warning: "Váš server beží s menej než 1 GB pamäte. Odporúča sa minimálne 1GB. "
     subfolder_ends_in_slash: "Vaše nastavenie podadresára je chybné, DISCOURSE_RELATIVE_URL_ROOT je ukončené lomítkom."
+    watched_word_regexp_error: "Regulárny výraz pre sledované slová „%{action}“ je neplatný. Skontrolujte nastavenia <a href='%{base_path}/admin/customize/watched_words'>Sledované Word</a>alebo vypnite nastavenie stránky „pravidelné výrazy sledovaných slov“."
     category_style_deprecated: "Váš diskurz v súčasnosti používa zastaraný štýl kategórie, ktorý bude odstránený pred konečným vydaním beta verzie Discusu 3.2. Pokyny, ako zachovať zvolený štýl kategórie, nájdete v časti <a href='https://meta.discourse.org/t/282441'>Presun na nastavenie lokality v štýle jednej kategórie</a> ."
     ember_version_warning: "Vaše stránky bežia s nepodporovanou konfiguráciou EMBER_VERSION=3. To môže viesť k neočakávaným problémom s témami/doplnkami. Odstráňte konfiguráciu EMBER_VERSION zo súboru app.yml a znova ho vytvorte. Ďalšie informácie nájdete v <a href='https://meta.discourse.org/t/287211'>https://meta.discourse.org/t/287211</a> ."
   site_settings:

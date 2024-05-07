@@ -1462,6 +1462,9 @@ fi:
           description: "Vahvista, että haluat sähköpostiosoitteesi muutettavan seuraavasti:"
           description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
         authorizing_old:
+          title: "Vahvista vanha sähköpostiosoite"
+          description: "Jatka sähköpostiosoitteesi vaihtamista vahvistamalla vanha osoitteesi:"
+          description_add: "Jatka vaihtoehtoisen sähköpostiosoitteen lisäämistä vahvistamalla nykyinen osoitteesi:"
           old_email: "Vanha sähköposti: %{email}"
           new_email: "Uusi sähköposti: %{email}"
           confirm_success: "Lähetimme sinulle sähköpostin uuteen osoitteeseesi, jotta voit vahvistaa muutoksen!"
