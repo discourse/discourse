@@ -121,15 +121,17 @@ class TopicEmbed < ActiveRecord::Base
           post.reload
         end
 
-        existing_tag_names = post.topic.tags.map(&:name)
-        incoming_tag_names = Array.wrap(tags).map(&:name)
+        existing_tag_names = post.topic.tags.pluck(:name).sort
+        incoming_tag_names = Array(tags).map(&:name).sort
 
-        new_tags_being_added = (incoming_tag_names - existing_tag_names).any?
+        # Determine if there are any changes in the tags
+        tags_changed = existing_tag_names != incoming_tag_names
+
         if (content_sha1 != embed.content_sha1) || (title && title != post&.topic&.title) ||
-             new_tags_being_added
+             tags_changed
           changes = { raw: absolutize_urls(url, contents) }
 
-          changes[:tags] = tags.map(&:name) if SiteSetting.tagging_enabled && tags.present?
+          changes[:tags] = incoming_tag_names if SiteSetting.tagging_enabled && tags_changed
           changes[:title] = title if title.present?
 
           post.revise(user, changes, skip_validations: true, bypass_rate_limiter: true)

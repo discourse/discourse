@@ -31,7 +31,13 @@ class Admin::EmbeddableHostsController < Admin::AdminController
     # Handle tags
     username = params[:embeddable_host][:user]
     tags = params[:embeddable_host][:tags]&.map(&:strip)
-    host.tags = Tag.where(name: tags) if tags.present?
+
+    if tags.present?
+      host.tags = Tag.where(name: tags)
+    else
+      host.tags = []
+    end
+
     host.user = User.find_by_username(username) if username.present?
 
     if host.save
