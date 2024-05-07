@@ -5,7 +5,10 @@ import ItsATrap from "@discourse/itsatrap";
 import MountWidget from "discourse/components/mount-widget";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import scrollLock from "discourse/lib/scroll-lock";
-import SwipeEvents from "discourse/lib/swipe-events";
+import SwipeEvents, {
+  getMaxAnimationTimeMs,
+  shouldCloseMenu,
+} from "discourse/lib/swipe-events";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import Docking from "discourse/mixins/docking";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
@@ -58,9 +61,9 @@ const SiteHeaderComponent = MountWidget.extend(
 
     _animateOpening(panel, event = null) {
       const headerCloak = document.querySelector(".header-cloak");
-      let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+      let durationMs = getMaxAnimationTimeMs();
       if (event && this.pxClosed > 0) {
-        durationMs = this._swipeEvents.getMaxAnimationTimeMs(
+        durationMs = getMaxAnimationTimeMs(
           this.pxClosed / Math.abs(event.velocityX)
         );
       }
@@ -77,10 +80,10 @@ const SiteHeaderComponent = MountWidget.extend(
     _animateClosing(event, panel, menuOrigin) {
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
-      let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+      let durationMs = getMaxAnimationTimeMs();
       if (event && this.pxClosed > 0) {
         const distancePx = this._PANEL_WIDTH - this.pxClosed;
-        durationMs = this._swipeEvents.getMaxAnimationTimeMs(
+        durationMs = getMaxAnimationTimeMs(
           distancePx / Math.abs(event.velocityX)
         );
       }
@@ -139,7 +142,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const menuOrigin = this._swipeMenuOrigin;
       scrollLock(false, document.querySelector(".panel-body"));
       menuPanels.forEach((panel) => {
-        if (this._swipeEvents.shouldCloseMenu(e, menuOrigin)) {
+        if (shouldCloseMenu(e, menuOrigin)) {
           this._animateClosing(e, panel, menuOrigin);
         } else {
           this._animateOpening(panel, e);
