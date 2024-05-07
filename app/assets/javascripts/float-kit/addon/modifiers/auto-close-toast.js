@@ -35,6 +35,7 @@ export default class AutoCloseToast extends Modifier {
     this.progressBar = progressBar;
     this.element.addEventListener("touchstart", this.stopTimer, {
       passive: true,
+      once: true,
     });
     this.element.addEventListener("mouseenter", this.stopTimer, {
       passive: true,
