@@ -60,6 +60,7 @@ export default class UserTip extends Component {
           showSkipButton: this.args.showSkipButton,
         },
       });
+      instance.detachedTrigger = true;
 
       this.tooltip.show(instance);
 

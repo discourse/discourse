@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import {
   click,
   find,
@@ -221,10 +222,21 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   });
 
   test("applies position", async function (assert) {
-    await render(hbs`<DTooltip @inline={{true}} @label="label"  />`);
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
     await hover();
 
     assert.ok(find(".fk-d-tooltip").getAttribute("style").includes("left: "));
     assert.ok(find(".fk-d-tooltip").getAttribute("style").includes("top: "));
+  });
+
+  test("a tooltip can be closed by identifier", async function (assert) {
+    await render(
+      hbs`<DTooltip @inline={{true}} @label="label" @identifier="test">test</DTooltip>`
+    );
+    await open();
+
+    await getOwner(this).lookup("service:tooltip").close("test");
+
+    assert.dom(".fk-d-tooltip__content.test-content").doesNotExist();
   });
 });

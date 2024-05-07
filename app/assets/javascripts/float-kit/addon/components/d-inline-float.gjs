@@ -32,7 +32,7 @@ export default class DInlineFloat extends Component {
           @mainClass={{@mainClass}}
           @innerClass={{@innerClass}}
           @role={{@role}}
-          @portalOutletElement={{@portalOutletElement}}
+          @portalOutletElement={{@instance.portalOutletElement}}
           @inline={{@inline}}
         >
           {{#if @instance.options.component}}
