@@ -143,7 +143,7 @@ export default class DModal extends Component {
       return await this.#animateWrapperPosition(0);
     }
 
-    if (Math.abs(swipeEvent.velocityY) >= SWIPE_VELOCITY_THRESHOLD) {
+    if (swipeEvent.velocityY >= SWIPE_VELOCITY_THRESHOLD) {
       this.wrapperElement.querySelector(
         ".d-modal__container"
       ).style.transform = `translateY(${swipeEvent.deltaY}px)`;

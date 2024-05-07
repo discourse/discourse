@@ -8,7 +8,7 @@ import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
 import autoCloseToast from "float-kit/modifiers/auto-close-toast";
 
-const VELOCITY_THRESHOLD = 1.2;
+const VELOCITY_THRESHOLD = -1.2;
 
 export default class DToast extends Component {
   @service site;
@@ -27,7 +27,7 @@ export default class DToast extends Component {
       return;
     }
 
-    if (Math.abs(state.velocityY) > VELOCITY_THRESHOLD) {
+    if (state.velocityY < VELOCITY_THRESHOLD) {
       await this.#close(state.element);
     } else {
       await this.#animateWrapperPosition(state.element, state.deltaY);
@@ -36,7 +36,7 @@ export default class DToast extends Component {
 
   @action
   async didEndSwipe(state) {
-    if (Math.abs(state.velocityY) > VELOCITY_THRESHOLD) {
+    if (state.velocityY < VELOCITY_THRESHOLD) {
       await this.#close(state.element);
     } else {
       await this.#animateWrapperPosition(state.element, 0);
