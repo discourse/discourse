@@ -1,10 +1,15 @@
+import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import BulkTopicActions, {
   addBulkDropdownAction,
 } from "discourse/components/modal/bulk-topic-actions";
+import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
-import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import DMenu from "float-kit/components/d-menu";
 
 const _customButtons = [];
 const _customOnSelection = {};
@@ -27,22 +32,13 @@ export function addBulkDropdownButton(opts) {
   _customOnSelection[opts.label] = actionOpts;
 }
 
-export default DropdownSelectBoxComponent.extend({
-  classNames: ["bulk-select-topics-dropdown"],
-  headerIcon: null,
-  showFullTitle: true,
-  selectKitOptions: {
-    showCaret: true,
-    showFullTitle: true,
-    none: "select_kit.components.bulk_select_topics_dropdown.title",
-  },
+export default class BulkSelectTopicsDropdown extends Component {
+  @service modal;
+  @service router;
+  @service currentUser;
+  @service siteSettings;
 
-  modal: service(),
-  router: service(),
-  currentUser: service(),
-  siteSettings: service(),
-
-  computeContent() {
+  get buttons() {
     let options = [];
     options = options.concat([
       {
@@ -124,7 +120,7 @@ export default DropdownSelectBoxComponent.extend({
     return [...options, ..._customButtons].filter(({ visible }) => {
       if (visible) {
         return visible({
-          topics: this.bulkSelectHelper.selected,
+          topics: this.args.bulkSelectHelper.selected,
           currentUser: this.currentUser,
           siteSettings: this.siteSettings,
         });
@@ -132,7 +128,7 @@ export default DropdownSelectBoxComponent.extend({
         return true;
       }
     });
-  },
+  }
 
   showBulkTopicActionsModal(actionName, title, opts = {}) {
     let allowSilent = false;
@@ -160,14 +156,14 @@ export default DropdownSelectBoxComponent.extend({
         action: actionName,
         title,
         description,
-        bulkSelectHelper: this.bulkSelectHelper,
+        bulkSelectHelper: this.args.bulkSelectHelper,
         refreshClosure: () => this.router.refresh(),
         allowSilent,
         initialAction,
         initialActionLabel,
       },
     });
-  },
+  }
 
   @action
   onSelect(id) {
@@ -228,5 +224,31 @@ export default DropdownSelectBoxComponent.extend({
           });
         }
     }
-  },
-});
+  }
+
+  <template>
+    <DMenu
+      @triggerClass="toggle-admin-menu"
+      @modalForMobile={{true}}
+      @label={{i18n "select_kit.components.bulk_select_topics_dropdown.title"}}
+      @autofocus={{true}}
+    >
+      <:content>
+        <DropdownMenu as |dropdown|>
+          {{#each this.buttons as |button|}}
+            {{#if button.visible}}
+              <dropdown.item>
+                <DButton
+                  @translatedLabel={{button.name}}
+                  @icon={{button.icon}}
+                  class={{concatClass "btn-transparent" button.id}}
+                  @action={{fn this.onSelect button.id}}
+                />
+              </dropdown.item>
+            {{/if}}
+          {{/each}}
+        </DropdownMenu>
+      </:content>
+    </DMenu>
+  </template>
+}

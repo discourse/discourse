@@ -99,6 +99,8 @@ export default class DMenu extends Component {
             (concat this.options.identifier "-content")
           }}
           @inline={{(isTesting)}}
+          data-identifier={{@instance.options.identifier}}
+          data-content
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}
