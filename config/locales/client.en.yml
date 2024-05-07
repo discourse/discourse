@@ -6808,6 +6808,8 @@ en:
         allowed_paths: "Path Allowlist"
         edit: "edit"
         category: "Post to Category"
+        tags: "Tags"
+        user: "Author"
         add_host: "Add Host"
         settings: "Embedding Settings"
         crawling_settings: "Crawler Settings"

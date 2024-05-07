@@ -29,7 +29,6 @@
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.category"}}</div>
     <TagChooser
-      @id="category-allowed-tags"
       @tags={{this.tags}}
       @everyTag={{true}}
       @excludeSynonyms={{true}}
@@ -41,13 +40,9 @@
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.category"}}</div>
     <UserChooser
-      @id="topic-author"
       @value={{this.user}}
       @onChange={{action "onUserChange"}}
-      @options={{hash
-      maximum=1
-      excludeCurrentUser=false
-    }}
+      @options={{hash maximum=1 excludeCurrentUser=false}}
     />
   </td>
   <td class="editing-controls">
