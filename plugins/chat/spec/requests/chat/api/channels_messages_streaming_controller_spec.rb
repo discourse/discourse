@@ -56,8 +56,6 @@ RSpec.describe Chat::Api::ChannelsMessagesStreamingController do
       fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
 
       it "returns a 404 error" do
-        # channel_1.membership_for(current_user).destroy!
-
         delete "/chat/api/channels/#{channel_1.id}/messages/#{message_1.id}/streaming"
 
         expect(response.status).to eq(404)
