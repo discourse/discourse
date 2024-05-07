@@ -35,9 +35,11 @@ fi:
       long_with_year: "D. MMMM[ta] YYYY H.mm"
       long_with_year_no_time: "D. MMMM[ta] YYYY"
       full_with_year_no_time: "Do MMMM[ta] YYYY"
+      long_date_with_year: "D. MMM YYYY, LT"
       long_date_without_year: "D. MMMM[ta] LT"
       long_date_with_year_without_time: "D. MMMM[ta] YYYY"
       long_date_without_year_with_linebreak: "D. MMMM[ta] <br/>LT"
+      long_date_with_year_with_linebreak: "D. MMM YYYY <br/>LT"
       wrap_ago: "%{date} sitten"
       wrap_on: "%{date}"
       tiny:
@@ -1438,6 +1440,7 @@ fi:
         title: "Suojausavaimet"
         short_description: "Suojausavaimet ovat perinteisen salasanan korvikkeita, joilla henkilöllisyytesi todennetaan biometrisesti (esim. sormenjäljellä tai kasvojen tunnistuksella) tai laitteen PIN-koodilla/salasanalla."
         added_date: "Lisättiin %{date}"
+        last_used_date: "Käytetty viimeksi %{date}"
         never_used: "Käyttämätön"
         not_allowed_error: "Suojausavaimen rekisteröintiprosessi aikakatkaistiin, peruttiin tai sitä ei sallita."
         already_added_error: "Olet jo rekisteröinyt tämän suojausavaimen. Sitä ei tarvitse rekisteröidä uudelleen."
@@ -1467,6 +1470,9 @@ fi:
           description: "Vahvista, että haluat sähköpostiosoitteesi muutettavan seuraavasti:"
           description_add: "Vahvista, että haluat lisätä vaihtoehtoisen sähköpostiosoitteen:"
         authorizing_old:
+          title: "Vahvista vanha sähköpostiosoite"
+          description: "Jatka sähköpostiosoitteesi vaihtamista vahvistamalla vanha osoitteesi:"
+          description_add: "Jatka vaihtoehtoisen sähköpostiosoitteen lisäämistä vahvistamalla nykyinen osoitteesi:"
           old_email: "Vanha sähköposti: %{email}"
           new_email: "Uusi sähköposti: %{email}"
           confirm_success: "Lähetimme sinulle sähköpostin uuteen osoitteeseesi, jotta voit vahvistaa muutoksen!"
@@ -1737,6 +1743,9 @@ fi:
         incorrect_password: "Syötetty salasana on virheellinen."
         incorrect_passkey: "Tämä suojausavain on virheellinen."
         logged_in_as: "Olet kirjautunut tunnuksella: "
+        forgot_password: "Unohditko salasanasi?"
+        password_reset_email_sent: "Salasanan palautusviesti on lähetetty."
+        cannot_send_password_reset_email: "Salasanan nollausviestiä ei voitu lähettää."
         instructions: "Vahvista henkilöllisyytesi suorittaaksesi tämän toimenpiteen loppuun."
         fine_print: "Pyydämme sinua todentamaan henkilöllisyytesi, koska tämä voi olla arkaluonteinen toimenpide. Kun olet tunnistautunut, todennusta pyydetään uudelleen vain muutaman tunnin käyttämättömyyden kuluttua."
       password:
@@ -1836,6 +1845,7 @@ fi:
       remove_status: "Poista tila"
     user_tips:
       button: "Selvä!"
+      skip: "Ohita vinkit"
       first_notification:
         title: "Ensimmäinen ilmoituksesi!"
         content: "Ilmoitusten avulla pysyt ajan tasalla siitä, mitä yhteisössä tapahtuu."
@@ -2075,6 +2085,10 @@ fi:
         name: "Discord"
         title: "Kirjaudu Discordilla"
         sr_title: "Kirjaudu Discordilla"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "Kirjaudu LinkedInillä"
+        sr_title: "Kirjaudu LinkedInillä"
       passkey:
         name: "Kirjaudu suojausavaimella"
       second_factor_toggle:
@@ -2247,6 +2261,7 @@ fi:
       reply: "Vastaa"
       cancel: "Peruuta"
       create_topic: "Aloita ketju"
+      create_pm: "Lähetä viesti"
       create_whisper: "Kuiskaa"
       create_shared_draft: "Luo jaettu luonnos"
       edit_shared_draft: "Muokkaa jaettua luonnosta"
@@ -2344,6 +2359,7 @@ fi:
       ignore: "Ohita"
       image_alt_text:
         aria_label: Kuvan vaihtoehtoinen teksti
+        title: "Lisää kuvalle kuvaus"
       delete_image_button: Poista kuva
       toggle_image_grid: Kuvaruudukko päälle/pois päältä
     notifications:
@@ -2664,6 +2680,7 @@ fi:
         unlist_topics: "Poista ketjuja listauksista"
         relist_topics: "Palauta ketjuja listauksiin"
         reset_bump_dates: "Nollaa nostopäivät"
+        defer: "Merkitse lukemattomaksi"
         delete: "Poista ketjut"
         dismiss: "Kuittaa"
         dismiss_read: "Kuittaa luetuiksi"
@@ -4206,10 +4223,16 @@ fi:
               label: "Kuvake"
               validation:
                 blank: "Kuvake ei voi olla tyhjä"
+                maximum:
+                  one: "Kuvakkeen on oltava alle %{count} merkkiä"
+                  other: "Kuvakkeen nimen täytyy olla lyhyempi kuin %{count} merkkiä"
             name:
               label: "Nimi"
               validation:
                 blank: "Nimi ei voi olla tyhjä"
+                maximum:
+                  one: "Nimen on oltava alle %{count} merkkiä"
+                  other: "Nimen on oltava alle %{count} merkkiä"
             value:
               label: "Linkki"
               validation:
@@ -4289,6 +4312,7 @@ fi:
         forum:
           label: Keskustelualuea
       filter: "Suodatin"
+      clear_filter: "Tyhjennä suodatin"
       no_results:
         title: "Ei tuloksia"
     welcome_topic_banner:
@@ -4391,6 +4415,7 @@ fi:
           copy: "Kopioi..."
           paste: "Liitä..."
           save: "Tallenna nimellä..."
+    powered_by_discourse: "Voimanlähteenä Discourse"
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi…"
     admin:
@@ -4398,6 +4423,8 @@ fi:
       moderator: "Valvoja"
       back_to_forum: "Takaisin foorumille"
       filter_reports: Suodata raportteja
+      expand_all_sections: "Laajenna kaikki osiot"
+      collapse_all_sections: "Pienennä kaikki osiot"
       tags:
         remove_muted_tags_from_latest:
           always: "aina"
@@ -4419,6 +4446,7 @@ fi:
         up_to_date: "Sivusto on ajan tasalla!"
         critical_available: "Kriittinen päivitys on saatavilla."
         updates_available: "Päivityksiä on saatavilla."
+        please_update: "Päivitä!"
         no_check_performed: "Päivityksiä ei ole tarkistettu. Varmista, että sidekiq on käynnissä."
         stale_data: "Pävityksiä ei ole tarkistettu viime aikoina. Varmista, että sidekiq on käynnissä."
         installed_version: "Asennettu"
@@ -4631,12 +4659,18 @@ fi:
               write: Aloita uusi ketju tai kirjoita olemassa olevaan.
               update: Päivitä ketju. Muuta otsikkoa, aluetta, tunnisteita, tilaa, arkkityyppiä, featured_linkiä jne.
               delete: Poista ketju.
+              recover: Palauta ketju.
               read_lists: Lue ketjuluetteloita, kuten suositut, uudet, tuoreimmat jne. RSS on myös tuettu.
               status: "Päivitä aiheen tila. Tila: suljettu, arkistoitu, näkyvissä, kiinnitetty. Käytössä: tosi, epätosi. Salli vain tietyn kategorian aiheiden tilamuutokset määrittämällä \"category_id\" tänne ja pyynnön hyötykuormalle."
             posts:
               edit: Muokkaa mitä tahansa viestiä tai tiettyä viestiä.
               delete: Poista viesti.
+              recover: Palauta viesti.
               list: Listaa viimeisimmät viestit ja yksityisviestit. Myös RSS on tuettu.
+            revisions:
+              read: "Nouda uusin tai tietty versio."
+              modify: "Piilota, näytä tai palauta versiot."
+              permanently_delete: "Poista versio pysyvästi."
             tags:
               list: Listaa tunnisteet.
             tag_groups:
@@ -4652,6 +4686,7 @@ fi:
             users:
               bookmarks: Listaa käyttäjien kirjanmerkit. Palauttaa kirjanmerkkien muistutukset, kun käytetään ICS-muotoa.
               sync_sso: Synkronoi käyttäjä DiscourseConnectin avulla.
+              show: Nouda tietoja käyttäjästä.
               check_emails: Listaa käyttäjien sähköpostiosoitteet.
               update: Päivitä käyttäjäprofiilin tiedot.
               log_out: Kirjaa ulos kaikista käyttäjän istunnoista.
@@ -4809,10 +4844,15 @@ fi:
         title: "Tili"
         sidebar_link:
           backups: "Varmuuskopiot"
+          whats_new:
+            title: "Mitä uutta"
+            keywords: "muutokset|ominaisuus|julkaisu"
       community:
         title: "Yhteisö"
         sidebar_link:
+          about_your_site: "Tietoa sivustostasi"
           badges: "Kunniamerkit"
+          login_and_authentication: "Kirjautuminen ja todennus"
           notifications: "Ilmoitukset"
           permalinks: "Pysyvät linkit"
           trust_levels: "Luottamustasot"
@@ -4823,16 +4863,24 @@ fi:
       appearance:
         title: "Ulkoasu"
         sidebar_link:
+          font_style: "Kirjasimen tyyli"
+          site_logo: "Sivuston logo"
+          color_schemes: "Värimallit"
           emoji: "Emojit"
           navigation: "Navigointi"
           themes: "Teemat"
           components:
             title: "Komponentit"
+            keywords: "teema|laajennus"
+          site_texts: "Sivuston tekstit"
       email_settings:
+        title: "Sähköpostiasetukset"
         sidebar_link:
           appearance: "Ulkoasu"
           preview_summary: "Esikatsele yhteenveto"
+          server_setup: "Palvelimen määritys"
       email_logs:
+        title: "Sähköpostilokit"
         sidebar_link:
           sent: "Lähetetyt"
           skipped: "Ohitettu"
@@ -4849,6 +4897,7 @@ fi:
           search_logs: "Hakulokit"
           security: "Tietoturva"
           spam: "Roskaposti"
+          staff_action_logs: "Henkilöstön toimintalokit"
       plugins:
         title: "Lisäosat"
         installed: "Asennetut lisäosat"
@@ -4870,6 +4919,7 @@ fi:
       advanced:
         title: "Lisäasetukset"
         sidebar_link:
+          api_keys: "API-avaimet"
           developer: "Kehittäjä"
           embedding: "Upottaminen"
           rate_limits: "Rajat"
@@ -4879,6 +4929,8 @@ fi:
           files: "Tiedostot"
           other_options: "Muut"
           search: "Hae"
+          experimental: "Kokeellinen"
+          all_site_settings: "Kaikki sivustoasetukset"
       navigation_menu:
         sidebar: "Sivupalkki"
         header_dropdown: "Yläpalkin avattava valikko"

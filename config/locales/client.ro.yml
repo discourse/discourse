@@ -3954,10 +3954,14 @@ ro:
         action_descriptions:
           flag: "Permite articole care conțin aceste cuvinte, dar semnalează-te ca nepotrivite pentru a fi analizate de către moderatori."
         form:
+          label: "Are cuvinte sau fraze"
+          placeholder: "cuvinte sau fraze (* este un metacaracter)"
+          placeholder_regexp: "expresii regulate"
           link_label: "Legătură"
           link_placeholder: "https://example.com"
           add: "Adaugă"
           success: "Succes"
+          words_or_phrases: "cuvinte sau fraze"
         test:
           button_label: "Test"
           no_matches: "Nu s-au găsit potriviri"
