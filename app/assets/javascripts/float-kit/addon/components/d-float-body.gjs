@@ -11,16 +11,6 @@ import FloatKitApplyFloatingUi from "float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "float-kit/modifiers/close-on-escape";
 
 export default class DFloatBody extends Component {
-  trapClick = modifierFn(() => {
-    const trap = (event) => {
-      event.stopPropagation();
-    };
-
-    this.content.addEventListener("click", trap);
-
-    return () => this.content?.removeEventListener("click", trap);
-  });
-
   closeOnScroll = modifierFn(() => {
     const firstScrollParent = getScrollParent(this.trigger);
 
@@ -84,7 +74,6 @@ export default class DFloatBody extends Component {
             closeOnClickOutside @instance.close (hash target=this.content)
           )
         )}}
-        {{(if this.supportsCloseOnClickOutside (modifier this.trapClick))}}
         {{(if
           this.supportsCloseOnEscape
           (modifier FloatKitCloseOnEscape @instance.close)
