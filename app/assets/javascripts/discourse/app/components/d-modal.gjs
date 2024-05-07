@@ -29,7 +29,7 @@ export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 
 const FLASH_TYPES = ["success", "error", "warning", "info"];
 
-const SWIPE_VELOCITY_THRESHOLD = 1.2;
+const SWIPE_VELOCITY_THRESHOLD = 0.7;
 
 export default class DModal extends Component {
   @service modal;
@@ -270,6 +270,7 @@ export default class DModal extends Component {
       [{ transform: `translateY(${position}px)` }],
       {
         fill: "forwards",
+        duration: getMaxAnimationTimeMs(),
       }
     ).finished;
   }
