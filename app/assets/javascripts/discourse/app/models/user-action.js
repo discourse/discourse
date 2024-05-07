@@ -1,8 +1,8 @@
 import { equal, or } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
-import User from "discourse/models/user";
 import UserActionGroup from "discourse/models/user-action-group";
 import discourseComputed from "discourse-common/utils/decorators";
 import Category from "./category";
@@ -82,6 +82,8 @@ export default class UserAction extends RestModel {
     return collapsed;
   }
 
+  @service currentUser;
+
   @or("name", "username") presentName;
   @or("target_name", "target_username") targetDisplayName;
   @or("acting_name", "acting_username") actingDisplayName;
@@ -133,12 +135,12 @@ export default class UserAction extends RestModel {
 
   @discourseComputed("username")
   sameUser(username) {
-    return username === User.currentProp("username");
+    return username === this.currentUser?.get("username");
   }
 
   @discourseComputed("target_username")
   targetUser(targetUsername) {
-    return targetUsername === User.currentProp("username");
+    return targetUsername === this.currentUser?.get("username");
   }
 
   @discourseComputed("target_username")

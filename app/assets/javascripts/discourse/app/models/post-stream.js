@@ -1,6 +1,7 @@
 import { get } from "@ember/object";
 import { and, equal, not, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
@@ -10,7 +11,6 @@ import DiscourseURL from "discourse/lib/url";
 import { highlightPost } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import { loadTopicView } from "discourse/models/topic";
-import User from "discourse/models/user";
 import deprecated from "discourse-common/lib/deprecated";
 import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -34,6 +34,9 @@ export function resetLastEditNotificationClick() {
 }
 
 export default class PostStream extends RestModel {
+  @service currentUser;
+  @service store;
+
   posts = null;
   stream = null;
   userFilters = null;
@@ -745,10 +748,9 @@ export default class PostStream extends RestModel {
       return this.findPostsByIds(this._loadingPostIds, opts)
         .then((posts) => {
           this._loadingPostIds = null;
-          const ignoredUsers =
-            User.current() && User.current().get("ignored_users");
+          const ignoredUsers = this.currentUser?.ignored_users;
           posts.forEach((p) => {
-            if (ignoredUsers && ignoredUsers.includes(p.username)) {
+            if (ignoredUsers?.includes(p.username)) {
               this.stream.removeObject(p.id);
               return;
             }
@@ -1270,7 +1272,7 @@ export default class PostStream extends RestModel {
   }
 
   _initUserModels(post) {
-    post.user = User.create({
+    post.user = this.store.createRecord("user", {
       id: post.user_id,
       username: post.username,
     });
@@ -1280,7 +1282,9 @@ export default class PostStream extends RestModel {
     }
 
     if (post.mentioned_users) {
-      post.mentioned_users = post.mentioned_users.map((u) => User.create(u));
+      post.mentioned_users = post.mentioned_users.map((u) =>
+        this.store.createRecord("user", u)
+      );
     }
   }
 

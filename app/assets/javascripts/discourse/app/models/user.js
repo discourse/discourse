@@ -174,6 +174,9 @@ function userOption(userOptionKey) {
 
 export default class User extends RestModel.extend(Evented) {
   @service appEvents;
+  @service currentUser;
+  @service site;
+  @service siteSettings;
   @service userTips;
 
   @tracked do_not_disturb_until;
@@ -798,7 +801,7 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   findStaffInfo() {
-    if (!User.currentProp("staff")) {
+    if (!this.currentUser?.staff) {
       return Promise.resolve(null);
     }
     return ajax(userPath(`${this.username_lower}/staff-info.json`)).then(
@@ -983,9 +986,8 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   updateNotificationLevel({ level, expiringAt = null, actingUser = null }) {
-    if (!actingUser) {
-      actingUser = User.current();
-    }
+    actingUser ||= this.currentUser;
+
     return ajax(`${userPath(this.username)}/notification_level.json`, {
       type: "PUT",
       data: {
