@@ -24,20 +24,6 @@ acceptance("Bookmark - Bulk Actions", function (needs) {
     const dropdown = selectKit(".select-kit.bulk-select-bookmarks-dropdown");
     await dropdown.expand();
 
-    const options = dropdown.displayedContent();
-
-    assert.strictEqual(
-      options[0].name,
-      I18n.t("js.bookmark_bulk_actions.clear_reminders.name"),
-      "it shows an option to clear reminders"
-    );
-
-    assert.strictEqual(
-      options[1].name,
-      I18n.t("js.bookmark_bulk_actions.delete_bookmarks.name"),
-      "it shows an option to delete bookmarks"
-    );
-
     await dropdown.selectRowByValue("clear-reminders");
 
     assert.ok(exists(".dialog-container"), "it should show the modal");

@@ -109,6 +109,22 @@ export default Component.extend({
     this.rerender();
   },
 
+  @action
+  selectAll() {
+    this.bulkSelectHelper.autoAddBookmarksToBulkSelect = true;
+    document
+      .querySelectorAll("input.bulk-select:not(:checked)")
+      .forEach((el) => el.click());
+  },
+
+  @action
+  clearAll() {
+    this.bulkSelectHelper.autoAddBookmarksToBulkSelect = false;
+    document
+      .querySelectorAll("input.bulk-select:checked")
+      .forEach((el) => el.click());
+  },
+
   @dependentKeyCompat // for the classNameBindings
   get bulkSelectEnabled() {
     return this.bulkSelectHelper?.bulkSelectEnabled;
@@ -163,20 +179,6 @@ export default Component.extend({
         (item) => item.id.toString() === bookmarkId
       );
       this._toggleBookmark(target, bookmark, this.lastChecked && e.shiftKey);
-    });
-
-    onClick("button.bulk-select-all", () => {
-      this.bulkSelectHelper.autoAddBookmarksToBulkSelect = true;
-      document
-        .querySelectorAll("input.bulk-select:not(:checked)")
-        .forEach((el) => el.click());
-    });
-
-    onClick("button.bulk-clear-all", () => {
-      this.bulkSelectHelper.autoAddBookmarksToBulkSelect = false;
-      document
-        .querySelectorAll("input.bulk-select:checked")
-        .forEach((el) => el.click());
     });
   },
 });

@@ -35,12 +35,16 @@
                     </div>
 
                   {{/if~}}
-                  <button class="btn btn-default bulk-select-all">{{i18n
-                      "bookmarks.bulk.select_all"
-                    }}</button>
-                  <button class="btn btn-default bulk-clear-all">{{i18n
-                      "bookmarks.bulk.clear_all"
-                    }}</button>
+                  <DButton
+                    @action={{this.selectAll}}
+                    class="btn btn-default bulk-select-all"
+                    @label="bookmarks.bulk.select_all"
+                  />
+                  <DButton
+                    @action={{this.clearAll}}
+                    class="btn btn-default bulk-clear-all"
+                    @label="bookmarks.bulk.clear_all"
+                  />
                 </span>
               {{else}}
                 <FlatButton

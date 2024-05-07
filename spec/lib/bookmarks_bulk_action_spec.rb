@@ -6,8 +6,8 @@ RSpec.describe BookmarksBulkAction do
   fab!(:bookmark_1) { Fabricate(:bookmark, user: user) }
   fab!(:bookmark_2) { Fabricate(:bookmark, user: user) }
 
-  describe "delete" do
-    describe "when user can't delete" do
+  describe "#delete" do
+    describe "when user is not the bookmark owner" do
       it "does NOT delete the bookmarks" do
         bba = BookmarksBulkAction.new(user_2, [bookmark_1.id, bookmark_2.id], type: "delete")
         expect { bba.perform! }.to raise_error Discourse::InvalidAccess
@@ -17,27 +17,7 @@ RSpec.describe BookmarksBulkAction do
       end
     end
 
-    describe "when user can't edit" do
-      it "does NOT delete the bookmarks" do
-        bba = BookmarksBulkAction.new(user_2, [bookmark_1.id, bookmark_2.id], type: "delete")
-        expect { bba.perform! }.to raise_error Discourse::InvalidAccess
-
-        expect(Bookmark.where(id: bookmark_1.id)).to_not be_empty
-        expect(Bookmark.where(id: bookmark_2.id)).to_not be_empty
-      end
-    end
-
-    describe "when user can delete" do
-      it "deletes the bookmarks" do
-        bba = BookmarksBulkAction.new(user, [bookmark_1.id, bookmark_2.id], type: "delete")
-        bba.perform!
-
-        expect(Bookmark.where(id: bookmark_1.id)).to be_empty
-        expect(Bookmark.where(id: bookmark_2.id)).to be_empty
-      end
-    end
-
-    describe "when user can edit" do
+    describe "when user is the bookmark owner" do
       it "deletes the bookmarks" do
         bba = BookmarksBulkAction.new(user, [bookmark_1.id, bookmark_2.id], type: "delete")
         bba.perform!
@@ -48,10 +28,10 @@ RSpec.describe BookmarksBulkAction do
     end
   end
 
-  describe "clear reminder" do
+  describe "#clear_reminder" do
     fab!(:bookmark_with_reminder) { Fabricate(:bookmark_next_business_day_reminder, user: user) }
 
-    describe "when user can't edit" do
+    describe "when user is not the bookmark owner" do
       it "does NOT clear the reminder" do
         bba = BookmarksBulkAction.new(user_2, [bookmark_with_reminder], type: "clear_reminder")
         expect { bba.perform! }.to raise_error Discourse::InvalidAccess
@@ -59,7 +39,7 @@ RSpec.describe BookmarksBulkAction do
       end
     end
 
-    describe "when user can edit" do
+    describe "when user is the bookmark owner" do
       it "deletes the bookmarks" do
         expect do
           bba = BookmarksBulkAction.new(user, [bookmark_with_reminder.id], type: "clear_reminder")

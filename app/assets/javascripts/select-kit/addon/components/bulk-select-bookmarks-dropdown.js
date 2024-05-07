@@ -36,7 +36,7 @@ export default DropdownSelectBoxComponent.extend({
   toasts: service(),
   dialog: service(),
 
-  computeContent() {
+  get content() {
     let options = [];
     options = options.concat([
       {
@@ -75,7 +75,6 @@ export default DropdownSelectBoxComponent.extend({
             })
               .then(() => {
                 this.router.refresh();
-                this.bulkSelectHelper.toggleBulkSelect();
                 this.toasts.success({
                   duration: 3000,
                   data: { message: i18n("bookmarks.bulk.reminders_cleared") },
@@ -99,7 +98,6 @@ export default DropdownSelectBoxComponent.extend({
             })
               .then(() => {
                 this.router.refresh();
-                this.bulkSelectHelper.toggleBulkSelect();
                 this.toasts.success({
                   duration: 3000,
                   data: { message: i18n("bookmarks.bulk.delete_completed") },
