@@ -1,4 +1,5 @@
 import { registerDestructor } from "@ember/destroyable";
+import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import {
   disableBodyScroll,
@@ -6,7 +7,6 @@ import {
 } from "discourse/lib/body-scroll-lock";
 import SwipeEvents from "discourse/lib/swipe-events";
 import { bind } from "discourse-common/utils/decorators";
-
 /**
  * A modifier for handling swipe gestures on an element.
  *
@@ -34,6 +34,8 @@ import { bind } from "discourse-common/utils/decorators";
  * SwipeModifier class.
  */
 export default class SwipeModifier extends Modifier {
+  @service site;
+
   /**
    * Creates an instance of SwipeModifier.
    * @param {Owner} owner - The owner.
@@ -60,7 +62,7 @@ export default class SwipeModifier extends Modifier {
     _,
     { onDidStartSwipe, onDidSwipe, onDidEndSwipe, onDidCancelSwipe, enabled }
   ) {
-    if (enabled === false) {
+    if (enabled === false || !this.site.mobileView) {
       this.enabled = enabled;
       return;
     }
@@ -122,7 +124,7 @@ export default class SwipeModifier extends Modifier {
    * Cleans up the swipe modifier.
    */
   cleanup() {
-    if (!this.enabled) {
+    if (!this.enabled || !this.element || !this._swipeEvents) {
       return;
     }
 

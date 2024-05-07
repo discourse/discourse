@@ -1,10 +1,15 @@
-import { render, triggerEvent } from "@ember/test-helpers";
+import { getOwner } from "@ember/application";
+import { clearRender, render, triggerEvent } from "@ember/test-helpers";
 import { setupRenderingTest } from "ember-qunit";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 
 module("Integration | Modifier | swipe", function (hooks) {
   setupRenderingTest(hooks);
+
+  hooks.beforeEach(function () {
+    getOwner(this).lookup("service:site").mobileView = true;
+  });
 
   async function swipe() {
     await triggerEvent("div", "touchstart", {
@@ -76,5 +81,17 @@ module("Integration | Modifier | swipe", function (hooks) {
     await swipe();
 
     assert.deepEqual(calls, 1, "didStartSwipe should be called once");
+
+    await clearRender();
+
+    getOwner(this).lookup("service:site").mobileView = false;
+
+    await render(
+      hbs`<div {{swipe onDidStartSwipe=this.didStartSwipe enabled=this.isEnabled}}>x</div>`
+    );
+
+    await swipe();
+
+    assert.deepEqual(calls, 1, "swipe is not enabled on desktop");
   });
 });

@@ -318,7 +318,7 @@ export default class DModal extends Component {
               {{swipe
                 onDidSwipe=this.handleSwipe
                 onDidEndSwipe=this.handleSwipeEnded
-                enabled=(and this.dismissable this.site.mobileView)
+                enabled=this.dismissable
               }}
             >
               {{yield to="headerAboveTitle"}}
@@ -416,7 +416,7 @@ export default class DModal extends Component {
           {{swipe
             onDidSwipe=this.handleSwipe
             onDidEndSwipe=this.handleSwipeEnded
-            enabled=(and this.dismissable this.site.mobileView)
+            enabled=this.dismissable
           }}
           {{on "click" this.handleWrapperClick}}
         ></div>

@@ -72,11 +72,7 @@ export default class DToast extends Component {
         progressBar=this.progressBar
         enabled=@toast.options.autoClose
       }}
-      {{swipe
-        onDidSwipe=this.didSwipe
-        onDidEndSwipe=this.didEndSwipe
-        enabled=this.site.mobileView
-      }}
+      {{swipe onDidSwipe=this.didSwipe onDidEndSwipe=this.didEndSwipe}}
     >
       <@toast.options.component
         @data={{@toast.options.data}}

@@ -425,7 +425,6 @@ export default class GlimmerSiteHeader extends Component {
         onDidEndSwipe=this.onSwipeEnd
         onDidCancelSwipe=this.onSwipeCancel
         onDidSwipe=this.onSwipe
-        enabled=this.site.mobileView
       }}
     >
       <Header
