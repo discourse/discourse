@@ -37,7 +37,7 @@ describe "Homepage", type: :system do
 
       expect(page).to have_css(".fk-d-tooltip .user-tip__title", text: "Your first notification!")
 
-      find(".d-header #current-user").click
+      find(".d-header").click
 
       # Clicking outside element dismisses the tip
       expect(page).to have_no_css(
