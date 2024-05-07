@@ -13,19 +13,28 @@ module("Integration | Modifier | swipe", function (hooks) {
 
   async function swipe() {
     await triggerEvent("div", "touchstart", {
+      changedTouches: [{ screenX: 0, screenY: 0 }],
       touches: [{ clientX: 0, clientY: 0 }],
     });
     await triggerEvent("div", "touchmove", {
-      touches: [{ clientX: 1, clientY: 0 }],
+      changedTouches: [{ screenX: 2, screenY: 2 }],
+      touches: [{ clientX: 2, clientY: 2 }],
     });
     await triggerEvent("div", "touchmove", {
-      touches: [{ clientX: 5, clientY: 0 }],
+      changedTouches: [{ screenX: 4, screenY: 4 }],
+      touches: [{ clientX: 4, clientY: 4 }],
     });
     await triggerEvent("div", "touchmove", {
-      touches: [{ clientX: 10, clientY: 0 }],
+      changedTouches: [{ screenX: 7, screenY: 7 }],
+      touches: [{ clientX: 7, clientY: 7 }],
+    });
+    await triggerEvent("div", "touchmove", {
+      changedTouches: [{ screenX: 9, screenY: 9 }],
+      touches: [{ clientX: 9, clientY: 9 }],
     });
     await triggerEvent("div", "touchend", {
-      touches: [{ clientX: 10, clientY: 0 }],
+      changedTouches: [{ screenX: 10, screenY: 10 }],
+      touches: [{ clientX: 10, clientY: 10 }],
     });
   }
 
