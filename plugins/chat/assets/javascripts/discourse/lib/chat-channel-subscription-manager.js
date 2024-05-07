@@ -234,10 +234,10 @@ export default class ChatChannelSubscriptionManager {
   handleThreadOriginalMessageUpdate(data) {
     const message = this.messagesManager.findMessage(data.original_message_id);
     if (message?.thread) {
-      if (!message.thread.preview) {
-        message.thread.preview ??= ChatThreadPreview.create(data.preview);
-      } else {
+      if (message.thread.preview) {
         message.thread.preview.update(data.preview);
+      } else {
+        message.thread.preview = ChatThreadPreview.create(data.preview);
       }
     }
   }
