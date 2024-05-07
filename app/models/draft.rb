@@ -237,19 +237,18 @@ class Draft < ActiveRecord::Base
   end
 
   def self.cleanup!
-    DB.exec(<<~SQL)
-      DELETE FROM drafts
-       WHERE sequence < (
+    Draft.where(<<~SQL).in_batches(of: 100).destroy_all
+      sequence < (
         SELECT MAX(s.sequence)
           FROM draft_sequences s
-         WHERE s.draft_key = drafts.draft_key
-           AND s.user_id = drafts.user_id
+          WHERE s.draft_key = drafts.draft_key
+          AND s.user_id = drafts.user_id
       )
     SQL
 
     # remove old drafts
     delete_drafts_older_than_n_days = SiteSetting.delete_drafts_older_than_n_days.days.ago
-    Draft.where("updated_at < ?", delete_drafts_older_than_n_days).destroy_all
+    Draft.where("updated_at < ?", delete_drafts_older_than_n_days).in_batches(of: 100).destroy_all
 
     UserStat.update_draft_count
   end

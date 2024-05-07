@@ -126,7 +126,7 @@ module DiscourseAutomation
 
     def trigger_in_background!(context = {})
       Jobs.enqueue(
-        :discourse_automation_trigger,
+        Jobs::DiscourseAutomation::Trigger,
         automation_id: id,
         context: self.class.serialize_context(context),
       )

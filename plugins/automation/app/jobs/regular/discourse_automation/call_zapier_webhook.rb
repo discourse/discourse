@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Jobs
-  class DiscourseAutomationCallZapierWebhook < ::Jobs::Base
+  class DiscourseAutomation::CallZapierWebhook < ::Jobs::Base
     def execute(args)
       RateLimiter.new(nil, "discourse_automation_call_zapier", 5, 30).performed!
 

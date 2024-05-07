@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe DiscourseAutomation::Field do
   describe "post field" do
     DiscourseAutomation::Scriptable.add("test_post_field") { field :foo, component: :post }

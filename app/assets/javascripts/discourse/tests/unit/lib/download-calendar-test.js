@@ -24,12 +24,21 @@ module("Unit | Utility | download-calendar", function (hooks) {
       shouldAdvanceTime: true,
       shouldClearNativeTimers: true,
     });
-    const data = generateIcsData("event test", [
+    const data = generateIcsData(
+      "event test",
+      [
+        {
+          startsAt: "2021-10-12T15:00:00.000Z",
+          endsAt: "2021-10-12T16:00:00.000Z",
+        },
+      ],
       {
-        startsAt: "2021-10-12T15:00:00.000Z",
-        endsAt: "2021-10-12T16:00:00.000Z",
-      },
-    ]);
+        recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR",
+        location: "Paris",
+        details: "Good soup",
+      }
+    );
+
     assert.equal(
       data,
       `BEGIN:VCALENDAR
@@ -40,6 +49,9 @@ UID:1634050800000_1634054400000
 DTSTAMP:20220404T211500Z
 DTSTART:20211012T150000Z
 DTEND:20211012T160000Z
+RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR
+LOCATION:Paris
+DESCRIPTION:Good soup
 SUMMARY:event test
 END:VEVENT
 END:VCALENDAR`

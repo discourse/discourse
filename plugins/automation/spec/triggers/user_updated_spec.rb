@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "UserUpdated" do
   before { SiteSetting.discourse_automation_enabled = true }
 

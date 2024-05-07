@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe DiscourseAutomation::Triggerable do
   before do
     DiscourseAutomation::Triggerable.add("cats_everywhere") do

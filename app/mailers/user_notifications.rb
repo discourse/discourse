@@ -224,7 +224,7 @@ class UserNotifications < ActionMailer::Base
     build_summary_for(user)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, UnsubscribeKey::DIGEST_TYPE)
 
-    min_date = opts[:since] || user.last_emailed_at || user.last_seen_at || 1.month.ago
+    min_date = opts[:since] || user.last_seen_at || 1.month.ago
 
     # Fetch some topics and posts to show
     digest_opts = {
