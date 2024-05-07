@@ -2,18 +2,22 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import closeOnClickOutside from "../../modifiers/close-on-click-outside";
-import HamburgerDropdown from "../sidebar/hamburger-dropdown";
+import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown";
 
 const CLOSE_ON_CLICK_SELECTORS =
   "a[href], .sidebar-section-header-button, .sidebar-section-link-button, .sidebar-section-link";
 
 export default class HamburgerDropdownWrapper extends Component {
+  @service currentUser;
+  @service siteSettings;
+
   @action
   click(e) {
     if (e.target.closest(CLOSE_ON_CLICK_SELECTORS)) {
@@ -54,6 +58,19 @@ export default class HamburgerDropdownWrapper extends Component {
       this.args.toggleHamburger();
     }
   }
+
+  get forceMainSidebarPanel() {
+    if (
+      this.currentUser?.use_admin_sidebar &&
+      this.args.sidebarEnabled &&
+      this.siteSettings.navigation_menu === "header dropdown"
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   <template>
     <div
       class="hamburger-dropdown-wrapper"
@@ -69,7 +86,9 @@ export default class HamburgerDropdownWrapper extends Component {
         )
       }}
     >
-      <HamburgerDropdown />
+      <SidebarHamburgerDropdown
+        @forceMainSidebarPanel={{this.forceMainSidebarPanel}}
+      />
     </div>
   </template>
 }

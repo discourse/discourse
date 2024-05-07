@@ -7,11 +7,12 @@
     <div class="panel-body">
       <div class="panel-body-contents">
         <div class="sidebar-hamburger-dropdown">
-          {{#if this.sidebarState.showMainPanel}}
+          {{#if (or this.sidebarState.showMainPanel @forceMainSidebarPanel)}}
             <Sidebar::Sections
               @currentUser={{this.currentUser}}
               @collapsableSections={{this.collapsableSections}}
               @panel={{this.sidebarState.currentPanel}}
+              @hideApiSections={{@forceMainSidebarPanel}}
             />
           {{else}}
             <Sidebar::ApiPanels

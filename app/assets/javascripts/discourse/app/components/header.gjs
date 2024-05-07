@@ -40,6 +40,7 @@ export default class GlimmerHeader extends Component {
   @service router;
   @service search;
   @service currentUser;
+  @service siteSettings;
   @service site;
   @service appEvents;
   @service header;
@@ -149,7 +150,11 @@ export default class GlimmerHeader extends Component {
 
   @action
   toggleHamburger() {
-    if (this.args.sidebarEnabled && !this.site.narrowDesktopView) {
+    if (
+      this.args.sidebarEnabled &&
+      !this.site.narrowDesktopView &&
+      this.siteSettings.navigation_menu !== "header dropdown"
+    ) {
       this.args.toggleSidebar();
       this.args.animateMenu();
     } else {
@@ -205,6 +210,7 @@ export default class GlimmerHeader extends Component {
           {{else if this.header.hamburgerVisible}}
             <HamburgerDropdownWrapper
               @toggleHamburger={{this.toggleHamburger}}
+              @sidebarEnabled={{@sidebarEnabled}}
             />
           {{else if this.header.userVisible}}
             <UserMenuWrapper @toggleUserMenu={{this.toggleUserMenu}} />

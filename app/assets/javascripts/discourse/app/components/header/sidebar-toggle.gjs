@@ -30,7 +30,7 @@ export default class SidebarToggle extends Component {
         aria-controls="d-sidebar"
         {{on "click" this.toggleWithBlur}}
       >
-        {{icon "bars"}}
+        {{icon "discourse-sidebar"}}
       </button>
     </span>
   </template>

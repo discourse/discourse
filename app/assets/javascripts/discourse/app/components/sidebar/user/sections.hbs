@@ -10,5 +10,7 @@
     <Sidebar::User::MessagesSection @collapsable={{@collapsableSections}} />
   {{/if}}
 
-  <Sidebar::ApiSections @collapsable={{@collapsableSections}} />
+  {{#unless @hideApiSections}}
+    <Sidebar::ApiSections @collapsable={{@collapsableSections}} />
+  {{/unless}}
 </div>

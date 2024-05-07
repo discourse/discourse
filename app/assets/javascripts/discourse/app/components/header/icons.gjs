@@ -27,8 +27,24 @@ export function clearExtraHeaderIcons() {
 export default class Icons extends Component {
   @service site;
   @service currentUser;
+  @service siteSettings;
   @service header;
   @service search;
+
+  get showHamburger() {
+    // NOTE: In this scenario, we are forcing the sidebar on admin users,
+    // so we need to still show the hamburger menu to be able to
+    // access the legacy hamburger forum menu.
+    if (
+      this.currentUser?.use_admin_sidebar &&
+      this.args.sidebarEnabled &&
+      this.siteSettings.navigation_menu === "header dropdown"
+    ) {
+      return true;
+    }
+
+    return !this.args.sidebarEnabled || this.site.mobileView;
+  }
 
   <template>
     <ul class="icons d-header-icons">
@@ -45,7 +61,7 @@ export default class Icons extends Component {
             @targetSelector=".search-menu-panel"
           />
         {{else if (eq entry.key "hamburger")}}
-          {{#if (or (not @sidebarEnabled) this.site.mobileView)}}
+          {{#if this.showHamburger}}
             <Dropdown
               @title="hamburger_menu"
               @icon="bars"

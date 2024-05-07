@@ -270,8 +270,9 @@ createWidget("header-icons", {
           })
         );
       } else if (
-        icon.key === "hamburger" &&
-        (!attrs.sidebarEnabled || this.site.mobileView)
+        icon.key === "hamburger"
+        // &&
+        // (!attrs.sidebarEnabled || this.site.mobileView)
       ) {
         icons.push(
           this.attach("header-dropdown", {
@@ -288,6 +289,16 @@ createWidget("header-icons", {
         icons.push(this.attach("extra-icon", { component: icon.value }));
       }
     });
+
+    if (attrs.user) {
+      icons.push(
+        this.attach("user-dropdown", {
+          active: attrs.userVisible,
+          action: "toggleUserMenu",
+          user: attrs.user,
+        })
+      );
+    }
 
     return icons;
   },
@@ -645,7 +656,12 @@ export default createWidget("header", {
 
   toggleHamburger() {
     if (this.attrs.sidebarEnabled && !this.site.narrowDesktopView) {
-      this.sendWidgetAction("toggleSidebar");
+      if (!this.attrs.showSidebar) {
+        this.sendWidgetAction("toggleSidebar");
+        this.closeAll();
+      } else {
+        this.state.hamburgerVisible = !this.state.hamburgerVisible;
+      }
     } else {
       this.state.hamburgerVisible = !this.state.hamburgerVisible;
       this.toggleBodyScrolling(this.state.hamburgerVisible);
