@@ -26,6 +26,5 @@ end
 #
 # Indexes
 #
-#  idx_user_custom_fields_discourse_automation_unique_id_partial  (user_id,value) UNIQUE WHERE ((name)::text = 'discourse_automation_ids'::text)
-#  index_user_custom_fields_on_user_id_and_name                   (user_id,name)
+#  index_user_custom_fields_on_user_id_and_name  (user_id,name)
 #
