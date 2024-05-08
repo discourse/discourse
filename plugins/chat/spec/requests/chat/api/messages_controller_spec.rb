@@ -207,12 +207,13 @@ RSpec.describe Chat::Api::ChannelMessagesController do
     describe "for category" do
       fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
 
+      before do
+        chat_channel.add(user)
+        sign_in(user)
+      end
+
       context "when current user is silenced" do
-        before do
-          chat_channel.add(user)
-          sign_in(user)
-          UserSilencer.new(user).silence
-        end
+        before { UserSilencer.new(user).silence }
 
         it "raises invalid acces" do
           post "/chat/#{chat_channel.id}.json", params: { message: message }
@@ -221,24 +222,20 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
 
       it "errors for regular user when chat is staff-only" do
-        sign_in(user)
         SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
 
         post "/chat/#{chat_channel.id}.json", params: { message: message }
         expect(response.status).to eq(403)
       end
 
-      it "errors when the user isn't following the channel" do
-        sign_in(user)
+      it "errors when the user isn't member of the channel" do
+        chat_channel.membership_for(user).destroy!
 
         post "/chat/#{chat_channel.id}.json", params: { message: message }
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
 
       it "errors when the user is not staff and the channel is not open" do
-        Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: user)
-        sign_in(user)
-
         chat_channel.update(status: :closed)
         post "/chat/#{chat_channel.id}.json", params: { message: message }
         expect(response.status).to eq(422)
@@ -247,20 +244,21 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         )
       end
 
-      it "errors when the user is staff and the channel is not open or closed" do
-        Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: admin)
-        sign_in(admin)
+      context "when the user is staff" do
+        fab!(:user) { Fabricate(:admin) }
 
-        chat_channel.update(status: :closed)
-        post "/chat/#{chat_channel.id}.json", params: { message: message }
-        expect(response.status).to eq(200)
+        it "errors when the channel is not open or closed" do
+          chat_channel.update(status: :closed)
+          post "/chat/#{chat_channel.id}.json", params: { message: message }
+          expect(response.status).to eq(200)
 
-        chat_channel.update(status: :read_only)
-        post "/chat/#{chat_channel.id}.json", params: { message: message }
-        expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"]).to include(
-          I18n.t("chat.errors.channel_new_message_disallowed.read_only"),
-        )
+          chat_channel.update(status: :read_only)
+          post "/chat/#{chat_channel.id}.json", params: { message: message }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("chat.errors.channel_new_message_disallowed.read_only"),
+          )
+        end
       end
 
       context "when the regular user is following the channel" do
@@ -275,8 +273,6 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         end
 
         it "sends a message for regular user when staff-only is disabled and they are following channel" do
-          sign_in(user)
-
           expect { post "/chat/#{chat_channel.id}.json", params: { message: message } }.to change {
             Chat::Message.count
           }.by(1)
@@ -292,7 +288,6 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         end
 
         it "publishes user tracking state using the new chat message as the last_read_message_id" do
-          sign_in(user)
           messages =
             MessageBus.track_publish(
               Chat::Publisher.user_tracking_state_message_bus_channel(user.id),
@@ -305,8 +300,6 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           fab!(:thread) do
             Fabricate(:chat_thread, channel: chat_channel, original_message: message_1)
           end
-
-          before { sign_in(user) }
 
           it "does not update the last_read_message_id for the user who sent the message" do
             post "/chat/#{chat_channel.id}.json", params: { message: message, thread_id: thread.id }
@@ -332,9 +325,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           context "when thread is not part of the provided channel" do
             let!(:another_channel) { Fabricate(:category_channel) }
 
-            before do
-              Fabricate(:user_chat_channel_membership, chat_channel: another_channel, user: user)
-            end
+            before { another_channel.add(user) }
 
             it "returns an error" do
               post "/chat/#{another_channel.id}.json",
@@ -394,10 +385,12 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
 
       it "errors when the user is not part of the direct message channel" do
+        Chat::UserChatChannelMembership.where(user_id: user1.id).destroy_all
         Chat::DirectMessageUser.find_by(user: user1, direct_message: chatable).destroy!
+
         sign_in(user1)
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
 
         Chat::UserChatChannelMembership.find_by(user_id: user2.id).update!(following: true)
         sign_in(user2)

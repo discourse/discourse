@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
-describe Jobs::DiscourseAutomationTracker do
+describe Jobs::DiscourseAutomation::Tracker do
   before { SiteSetting.discourse_automation_enabled = true }
 
   describe "pending automation" do
@@ -36,7 +34,7 @@ describe Jobs::DiscourseAutomationTracker do
 
       it "consumes the pending automation" do
         freeze_time 4.hours.from_now do
-          expect { Jobs::DiscourseAutomationTracker.new.execute }.to change {
+          expect { Jobs::DiscourseAutomation::Tracker.new.execute }.to change {
             automation.pending_automations.count
           }.by(-1)
         end
@@ -54,7 +52,7 @@ describe Jobs::DiscourseAutomationTracker do
       end
 
       it "doesn’t consume the pending automation" do
-        expect { Jobs::DiscourseAutomationTracker.new.execute }.not_to change {
+        expect { Jobs::DiscourseAutomation::Tracker.new.execute }.not_to change {
           automation.pending_automations.count
         }
       end
@@ -92,7 +90,7 @@ describe Jobs::DiscourseAutomationTracker do
 
       freeze_time(2.hours.from_now) do
         threads = []
-        5.times { threads << Thread.new { Jobs::DiscourseAutomationTracker.new.execute } }
+        5.times { threads << Thread.new { Jobs::DiscourseAutomation::Tracker.new.execute } }
         threads.each(&:join)
       end
 
@@ -127,7 +125,7 @@ describe Jobs::DiscourseAutomationTracker do
       before { pending_pm.update!(execute_at: 2.hours.ago) }
 
       it "consumes the pending pm" do
-        expect { Jobs::DiscourseAutomationTracker.new.execute }.to change {
+        expect { Jobs::DiscourseAutomation::Tracker.new.execute }.to change {
           automation.pending_pms.count
         }.by(-1)
       end
@@ -137,7 +135,7 @@ describe Jobs::DiscourseAutomationTracker do
       before { pending_pm.update!(execute_at: 2.hours.from_now) }
 
       it "doesn’t consume the pending pm" do
-        expect { Jobs::DiscourseAutomationTracker.new.execute }.not_to change {
+        expect { Jobs::DiscourseAutomation::Tracker.new.execute }.not_to change {
           automation.pending_pms.count
         }
       end
@@ -148,7 +146,7 @@ describe Jobs::DiscourseAutomationTracker do
       expect do
         freeze_time(2.hours.from_now) do
           threads = []
-          5.times { threads << Thread.new { Jobs::DiscourseAutomationTracker.new.execute } }
+          5.times { threads << Thread.new { Jobs::DiscourseAutomation::Tracker.new.execute } }
           threads.each(&:join)
         end
       end.to change { Topic.private_messages_for_user(Discourse.system_user).count }.by(1)

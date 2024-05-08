@@ -42,6 +42,7 @@ jobs:
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       MINIO_RUNNER_LOG_LEVEL: DEBUG
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/main/head' }}
+      CHEAP_SOURCE_MAPS: "1"
 
     strategy:
       fail-fast: false
@@ -362,6 +363,7 @@ jobs:
     env:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
+      CHEAP_SOURCE_MAPS: "1"
 
     steps:
       - uses: actions/checkout@v4

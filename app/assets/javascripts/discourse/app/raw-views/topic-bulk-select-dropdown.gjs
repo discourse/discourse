@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
+import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dropdown";
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
 import i18n from "discourse-common/helpers/i18n";
-import BulkSelectTopicsDropdown from "select-kit/components/bulk-select-topics-dropdown";
 
 export default class extends EmberObject {
   get selectedCount() {

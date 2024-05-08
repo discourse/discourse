@@ -983,9 +983,8 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   updateNotificationLevel({ level, expiringAt = null, actingUser = null }) {
-    if (!actingUser) {
-      actingUser = User.current();
-    }
+    actingUser ||= User.current();
+
     return ajax(`${userPath(this.username)}/notification_level.json`, {
       type: "PUT",
       data: {

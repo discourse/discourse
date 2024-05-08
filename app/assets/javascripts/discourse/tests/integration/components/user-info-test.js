@@ -125,7 +125,7 @@ module("Integration | Component | user-info", function (hooks) {
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
     await render(
-      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}}  /><DInlineTooltip />`
+      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}}  /><DTooltips />`
     );
     await triggerEvent(query(".user-status-message"), "mousemove");
 

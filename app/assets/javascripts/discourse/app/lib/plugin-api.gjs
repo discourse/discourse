@@ -1,5 +1,6 @@
 import $ from "jquery";
 import { h } from "virtual-dom";
+import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import {
   addApiImageWrapperButtonClickEvent,
   addComposerUploadHandler,
@@ -141,7 +142,6 @@ import {
   replaceIcon,
 } from "discourse-common/lib/icon-library";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
-import { addBulkDropdownButton } from "select-kit/components/bulk-select-topics-dropdown";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 

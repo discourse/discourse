@@ -6,7 +6,7 @@ class Tag < ActiveRecord::Base
   include HasSanitizableFields
 
   self.ignored_columns = [
-    "topic_count", # TODO(tgxworld): Remove on 1 July 2023
+    "topic_count", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   RESERVED_TAGS = [

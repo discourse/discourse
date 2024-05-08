@@ -76,14 +76,14 @@ describe "Topic page", type: :system do
 
     visit("/t/#{topic.slug}/#{topic.id}")
 
-    expect(".topic-admin-menu-button-container").to be_present
+    expect(".toggle-admin-menu").to be_present
 
     send_keys([:shift, "a"])
 
-    expect(page).to have_css(".topic-admin-popup-menu")
+    expect(page).to have_css(".topic-admin-menu-content")
 
     send_keys([:shift, "a"])
 
-    expect(page).to have_no_css(".topic-admin-popup-menu")
+    expect(page).to have_no_css(".topic-admin-menu-content")
   end
 end

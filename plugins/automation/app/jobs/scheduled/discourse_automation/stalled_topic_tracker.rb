@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Jobs
-  class StalledTopicTracker < ::Jobs::Scheduled
+  class DiscourseAutomation::StalledTopicTracker < ::Jobs::Scheduled
     every 1.hour
 
     def execute(_args = nil)
-      name = DiscourseAutomation::Triggers::STALLED_TOPIC
+      name = ::DiscourseAutomation::Triggers::STALLED_TOPIC
 
-      DiscourseAutomation::Automation
+      ::DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
         .find_each do |automation|
           fields = automation.serialized_fields
@@ -17,7 +17,7 @@ module Jobs
           categories = fields.dig("categories", "value")
           tags = fields.dig("tags", "value")
 
-          StalledTopicFinder
+          ::DiscourseAutomation::StalledTopicFinder
             .call(stalled_date, categories: categories, tags: tags)
             .each do |result|
               topic = Topic.find_by(id: result.id)
@@ -30,7 +30,7 @@ module Jobs
 
     def run_trigger(automation, topic)
       automation.trigger!(
-        "kind" => DiscourseAutomation::Triggers::STALLED_TOPIC,
+        "kind" => ::DiscourseAutomation::Triggers::STALLED_TOPIC,
         "topic" => topic,
         "placeholders" => {
           "topic_url" => topic.url,

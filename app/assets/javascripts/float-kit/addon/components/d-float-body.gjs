@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
+import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import TrapTab from "discourse/modifiers/trap-tab";
 import DFloatPortal from "float-kit/components/d-float-portal";
 import { getScrollParent } from "float-kit/lib/get-scroll-parent";
 import FloatKitApplyFloatingUi from "float-kit/modifiers/apply-floating-ui";
-import FloatKitCloseOnClickOutside from "float-kit/modifiers/close-on-click-outside";
 import FloatKitCloseOnEscape from "float-kit/modifiers/close-on-escape";
 
 export default class DFloatBody extends Component {
@@ -38,7 +38,11 @@ export default class DFloatBody extends Component {
   }
 
   get trigger() {
-    return this.args.instance.trigger;
+    return this.args.instance?.trigger;
+  }
+
+  get content() {
+    return this.args.instance?.content;
   }
 
   get options() {
@@ -48,7 +52,7 @@ export default class DFloatBody extends Component {
   <template>
     <DFloatPortal
       @inline={{@inline}}
-      @portalOutletElement={{@portalOutletElement}}
+      @portalOutletElement={{@instance.portalOutletElement}}
     >
       <div
         class={{concatClass
@@ -66,7 +70,9 @@ export default class DFloatBody extends Component {
         {{(if @trapTab (modifier TrapTab autofocus=this.options.autofocus))}}
         {{(if
           this.supportsCloseOnClickOutside
-          (modifier FloatKitCloseOnClickOutside this.trigger @instance.close)
+          (modifier
+            closeOnClickOutside @instance.close (hash target=this.content)
+          )
         )}}
         {{(if
           this.supportsCloseOnEscape

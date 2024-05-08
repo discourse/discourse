@@ -61,8 +61,6 @@ export default class ChatMessageReaction extends Component {
       this.args.reaction.emoji,
       this.args.reaction.reacted ? "remove" : "add"
     );
-
-    this.tooltip.close();
   }
 
   @cached

@@ -318,6 +318,9 @@ class DiscoursePoll::Poll
     # creation process. `raw` could be nil here.
     return [] if raw.blank?
 
+    # bail-out early if the post does not contain a poll
+    return [] if !raw.include?("[/poll]")
+
     # TODO: we should fix the callback mess so that the cooked version is available
     # in the validators instead of cooking twice
     raw = raw.sub(%r{\[quote.+/quote\]}m, "")

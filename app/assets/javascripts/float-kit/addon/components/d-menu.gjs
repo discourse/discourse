@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
@@ -18,33 +19,25 @@ export default class DMenu extends Component {
   @service menu;
   @service site;
 
-  @tracked menuInstance = null;
+  registerTrigger = modifier((element) => {
+    if (!this.menuInstance.trigger) {
+      next(() => {
+        this.menuInstance.trigger = element;
+        this.options.onRegisterApi?.(this.menuInstance);
+      });
+    }
+  });
 
-  registerTrigger = modifier((element, [properties]) => {
-    const options = {
-      ...properties,
+  @cached
+  get menuInstance() {
+    return new DMenuInstance(getOwner(this), {
+      ...this.allowedProperties(),
       ...{
         autoUpdate: true,
         listeners: true,
-        beforeTrigger: () => {
-          this.menu.close();
-        },
       },
-    };
-    const instance = new DMenuInstance(getOwner(this), element, options);
-
-    this.menuInstance = instance;
-
-    this.options.onRegisterApi?.(this.menuInstance);
-
-    return () => {
-      instance.destroy();
-
-      if (this.isDestroying) {
-        this.menuInstance = null;
-      }
-    };
-  });
+    });
+  }
 
   get menuId() {
     return `d-menu-${this.menuInstance.id}`;
@@ -88,7 +81,7 @@ export default class DMenu extends Component {
       @translatedTitle={{@title}}
       @disabled={{@disabled}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
-      {{this.registerTrigger (this.allowedProperties)}}
+      {{this.registerTrigger}}
       ...attributes
     >
       {{#if (has-block "trigger")}}
@@ -106,6 +99,8 @@ export default class DMenu extends Component {
             (concat this.options.identifier "-content")
           }}
           @inline={{(isTesting)}}
+          data-identifier={{@instance.options.identifier}}
+          data-content
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}
@@ -126,12 +121,12 @@ export default class DMenu extends Component {
           @trapTab={{this.options.trapTab}}
           @mainClass={{concatClass
             "fk-d-menu"
+            "fk-d-menu__content"
             (concat this.options.identifier "-content")
           }}
           @innerClass="fk-d-menu__inner-content"
           @role="dialog"
           @inline={{this.options.inline}}
-          @portalOutletElement={{this.menu.portalOutletElement}}
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}

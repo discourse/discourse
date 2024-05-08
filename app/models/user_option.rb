@@ -14,8 +14,7 @@ class UserOption < ActiveRecord::Base
   }
 
   self.ignored_columns = [
-    "disable_jump_reply", # Remove once 20210706091905 is promoted from post_deploy to regular migration
-    "sidebar_list_destination", # TODO(osama): Remove in January 2024
+    "sidebar_list_destination", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   self.primary_key = :user_id

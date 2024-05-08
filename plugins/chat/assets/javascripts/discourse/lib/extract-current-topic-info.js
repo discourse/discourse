@@ -7,7 +7,7 @@ export function extractCurrentTopicInfo(context) {
     return;
   }
 
-  const info = { topic_id: topic.id };
+  const info = { context_topic_id: topic.id };
   const currentPostNumber = parseInt(topic.current_post_number, 10);
   const posts = topic.postStream.posts;
 
@@ -23,7 +23,11 @@ export function extractCurrentTopicInfo(context) {
       !post.hidden && !post.deleted_at && post.post_number > currentPostNumber
   );
 
-  info.post_ids = [previousPost?.id, currentPost?.id, nextPost?.id];
+  info.context_post_ids = [
+    previousPost?.id,
+    currentPost?.id,
+    nextPost?.id,
+  ].filter(Boolean);
 
   return info;
 }

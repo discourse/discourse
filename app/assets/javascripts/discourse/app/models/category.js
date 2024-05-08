@@ -7,7 +7,6 @@ import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
-import User from "discourse/models/user";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -773,9 +772,9 @@ export default class Category extends RestModel {
   }
 
   setNotification(notification_level) {
-    User.currentProp(
+    this.currentUser.set(
       "muted_category_ids",
-      User.current().calculateMutedIds(
+      this.currentUser.calculateMutedIds(
         notification_level,
         this.id,
         "muted_category_ids"
@@ -785,7 +784,7 @@ export default class Category extends RestModel {
     const url = `/category/${this.id}/notifications`;
     return ajax(url, { data: { notification_level }, type: "POST" }).then(
       (data) => {
-        User.current().set(
+        this.currentUser.set(
           "indirectly_muted_category_ids",
           data.indirectly_muted_category_ids
         );

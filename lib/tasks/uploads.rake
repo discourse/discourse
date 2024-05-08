@@ -353,7 +353,16 @@ def regenerate_missing_optimized
 
         if File.exist?(original) && File.size(original) > 0
           FileUtils.mkdir_p(File.dirname(thumbnail))
-          OptimizedImage.resize(original, thumbnail, optimized_image.width, optimized_image.height)
+          if upload.extension == "svg"
+            FileUtils.cp(original, thumbnail)
+          else
+            OptimizedImage.resize(
+              original,
+              thumbnail,
+              optimized_image.width,
+              optimized_image.height,
+            )
+          end
           putc "#"
         else
           missing_uploads << original
