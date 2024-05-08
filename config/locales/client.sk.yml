@@ -382,6 +382,10 @@ sk:
         unbookmark: "Kliknutím odstánite všetky záložky v tejto téme"
         unbookmark_with_reminder: "Kliknutím odstránite všetky záložky a pripomenutia v tejto téme"
     bookmarks:
+      also_set_reminder: "Nastaviť aj pripomienku?"
+      bookmarked_success: "Pridané do záložky!"
+      deleted_bookmark_success: "Záložka odstránená!"
+      reminder_set_success: "Pripomienka nastavená!"
       created: "Tento príspevok ste pridali medzi záložky. %{name}"
       created_generic: "Toto ste si priradili do záložiek. %{name}"
       create: "Vytvoriť záložku"
@@ -404,6 +408,8 @@ sk:
         when_reminder_sent: "Odstrániť záložku"
         on_owner_reply: "Odstrániť záložku, akonáhle odpoviem"
         clear_reminder: "Udržujte záložku a jasnú pripomienku"
+        after_reminder_label: "Po pripomenutí by sme mali..."
+        after_reminder_checkbox: "Nastaviť toto ako predvolené pre všetky budúce pripomenutia záložiek"
       search_placeholder: "Vyhľadávajte záložky podľa názvu, názvu témy alebo obsahu príspevku"
       search: "Hľadať"
       bookmark: "Záložka"
@@ -697,6 +703,7 @@ sk:
       in_two_hours: "Za dve hodiny"
       later_today: "Neskôr dnes"
       two_days: "Dva dni"
+      three_days: "Za tri dni"
       next_business_day: "Nasledujúci pracovný deň"
       tomorrow: "Zajtra"
       post_local_date: "Dátum v príspevku"
@@ -718,6 +725,7 @@ sk:
       never: "Nikdy"
       last_custom: "Posledný vlastný dátum"
       custom: "Vyberte dátum a čas"
+      custom_short: "Vlastné..."
       select_timeframe: "Vyberte časový rámec"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> založil <a href='%{topicUrl}'>tému</a>"
@@ -746,6 +754,9 @@ sk:
       topic_count_long: "Vytvorených tém"
       post_count: "Odpovede"
       post_count_long: "Odpovedí"
+      no_results:
+        body: "Tu sa zobrazí zoznam členov komunity s ich aktivitou. Zoznam je zatiaľ prázdny, pretože vaša komunita je ešte stále úplne nová!"
+        extra_body: "Administrátori a moderátori môžu vidieť a spravovať používateľov v aplikácii <a href='%{basePath}/admin/users/'>User Admin</a>."
       days_visited: "Návštev"
       days_visited_long: "Navštívených dní"
       posts_read: "Prečítané"
@@ -1029,12 +1040,15 @@ sk:
     categories:
       categories_label: "kategórie"
       subcategories_label: "podkategórie"
+      all_subcategories: "všetky podkategórie"
+      no_subcategories: "žiadne podkategórie"
       remove_filter: "zruš filter"
       plus_more_count:
         one: "+%{count} ďalší"
         few: "+%{count} ďalšie"
         many: "+%{count} ďalších"
         other: "+%{count} ďalší"
+      view_all: "zobraziť všetko"
       category: "Kategória"
       category_list: "Zobraziť zoznam kategórií"
       reorder:
@@ -1133,8 +1147,10 @@ sk:
         ignore_duration_time_frame_required: "Vyberte časový rámec"
         ignore_no_users: "Nemáte žiadnych ignorovaných používateľov."
         ignore_option: "Ignorované"
+        ignore_option_title: "Nebudete dostávať žiadne upozornenia týkajúce sa tohto používateľa a celý jeho obsah bude skrytý."
         add_ignored_user: "Pridať…"
         mute_option: "Ignorované"
+        mute_option_title: "Od tohto používateľa nebudete dostávať žiadne oznámenia, osobné správy ani priame správy v chate."
         normal_option: "Normálne"
         normal_option_title: "Budete upozornení, ak vám tento používateľ odpovie, cituje vás alebo sa o vás zmieni."
       notification_schedule:
@@ -1165,6 +1181,7 @@ sk:
           warning: "Naozaj chcete vymazať odporúčanú tému?"
       use_current_timezone: "Použiť aktuálne časové pásmo"
       profile_hidden: "Tento užívateľský profil je skrytý."
+      login_to_view_profile: "Pre zobrazenie užívateľských profilov sa musíte prihlásiť"
       inactive_user: "Tento používateľ už nie je aktívny."
       expand_profile: "Rozbaľ"
       sr_expand_profile: "Rozšíriť podrobnosti profilu"
@@ -1216,6 +1233,7 @@ sk:
         description: "Preskočiť tipy a odznaky na registráciu nového používateľa"
       reset_seen_user_tips: "Znova zobraziť tipy používateľov"
       theme_default_on_all_devices: "Nastaviť túto tému ako predvolenú na všetkých mojich zariadeniach"
+      color_scheme_default_on_all_devices: "Nastaviť predvolenú farebnú schému na všetkých mojich zariadeniach"
       color_scheme: "Farebná schéma"
       color_schemes:
         default_description: "Predvolená téma"
@@ -1231,6 +1249,7 @@ sk:
       allow_private_messages: "Umožniť iným používateľom, aby mi posielali osobné správy"
       external_links_in_new_tab: "Otvárať všekty externé odkazy na novej karte"
       enable_quoting: "Umožniť odpoveď s citáciou z označeného textu"
+      enable_defer: "Povoliť označenie tém ako neprečítaných"
       experimental_sidebar:
         enable: "Povoliť bočný panel"
         options: "Možnosti"
@@ -1437,6 +1456,8 @@ sk:
         save: "Uložiť"
         title: "Prístupové kľúče"
         short_description: "Prístupové kľúče sú náhrady hesiel, ktoré overujú vašu identitu biometricky (napr. dotyk, faceID) alebo prostredníctvom PIN/hesla vášho zariadenia."
+        added_date: "Pridané %{date}"
+        last_used_date: "Naposledy použité %{date}"
         never_used: "Nikdy nepoužíté"
         not_allowed_error: "Proces registrácie prístupového kľúča buď vypršal, bol zrušený alebo nie je povolený."
         already_added_error: "Tento prístupový kľúč ste už zaregistrovali. Nemusíte ho registrovať znova."
@@ -1523,14 +1544,21 @@ sk:
           many: "Odošleme vám email iba ak sme vás nevideli posledných %{count} minút"
           other: "Odošleme vám email iba ak sme vás nevideli posledných %{count} minút"
       associated_accounts:
+        title: "Pridružené účty"
         connect: "Pripojiť"
         revoke: "Odobrať"
         cancel: "Zrušiť"
         not_connected: "(nepripojený)"
+        confirm_modal_title: "Pripojiť účet %{provider}"
+        confirm_description:
+          disconnect: "Váš existujúci %{provider} účet '%{account_description}' bude odpojený."
+          account_specific: "Na autentifikáciu sa použije váš účet %{provider} '%{account_description}'."
+          generic: "Na autentifikáciu sa použije váš účet %{provider} ."
       name:
         title: "Meno"
         instructions: "Vaše celé meno (nepovinné)."
         instructions_required: "Vaše celé meno."
+        required: "Prosím zadajte meno"
         too_short: "Vaše meno je prikrátke"
         ok: "Vaše meno je v poriadku"
       username:
@@ -1544,6 +1572,8 @@ sk:
         too_long: "Vaše používateľské meno je pridlhé"
         checking: "Kontrola dostupnosti používateľského mena…"
         prefilled: "Email zodpovedá tomuto registrovanému používateľskému menu"
+        required: "Zadajte používateľské meno"
+        edit: "Upraviť používateľské meno"
       locale:
         title: "Jazyk rozhrania"
         instructions: "Jazyk úžívateľského rozhrania. Zmení sa po obnovení stránky."
@@ -1553,10 +1583,20 @@ sk:
         default: "(predvolené)"
       password_confirmation:
         title: "Heslo znova"
+      invite_code:
+        title: "Pozývací kód"
+        instructions: "Registrácia účtu vyžaduje pozývací kód"
       auth_tokens:
+        title: "Nedávno použité zariadenia"
         short_description: "Toto je zoznam zariadení, ktoré sa nedávno prihlásili do vášho konta."
         details: "Detaily"
         log_out_all: "Odhlásiť všetky"
+        not_you: "Vy nie?"
+        show_all: "Zobraziť všetko (%{count})"
+        show_few: "Zobraziť menej"
+        was_this_you: "Boli ste to vy?"
+        was_this_you_description: "Ak ste to neboli vy, odporúčame vám zmeniť si heslo a všade sa odhlásiť."
+        browser_and_device: "%{browser} na %{device}"
         secure_account: "Zabezpečiť moje konto"
       last_posted: "Posledný príspevok"
       last_seen: "Videný"
@@ -1870,7 +1910,9 @@ sk:
       other: odpovedí
     signup_cta:
       sign_up: "Registrovať sa"
+      hide_session: "Možno neskôr"
       hide_forever: "nie, ďakujem"
+      hidden_for_session: "Dobre, zajtra sa ťa opýtame. Na vytvorenie účtu môžete vždy použiť aj 'Prihlásiť sa'."
     summary:
       disable: "Zobraziť všetky príspevky"
     deleted_filter:

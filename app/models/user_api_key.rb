@@ -2,7 +2,7 @@
 
 class UserApiKey < ActiveRecord::Base
   self.ignored_columns = [
-    "scopes", # TODO(2020-12-18): remove
+    "scopes", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   REVOKE_MATCHER = RouteMatcher.new(actions: "user_api_keys#revoke", methods: :post, params: [:id])

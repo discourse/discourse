@@ -25,6 +25,8 @@ export default class DownloadCalendar extends Component {
         this.args.model.calendar.dates,
         {
           recurrenceRule: this.args.model.calendar.recurrenceRule,
+          location: this.args.model.calendar.location,
+          details: this.args.model.calendar.details,
         }
       );
     } else {

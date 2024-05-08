@@ -1,155 +1,146 @@
-Congratulations, you are now the proud owner of your very own [Civilized Discourse Construction Kit](https://www.discourse.org). :hatching_chick:
+:hatching_chick: Congratulations, you are now the proud owner of your very own [Civilized Discourse Construction Kit](https://www.discourse.org)!
 
 ![](https://www.discourse.org/images/welcome/welcome-to-discourse-hosting-690x314.jpg)
 
-# 1. Initial setup 
-Discourse is a powerful, versatile platform with many options. To help you make sure you're covering all the bases as you get started with your new community, we provided some checklists and guidance in this Getting Started guide. The Getting started button at the top is only visible to you and will go away when you have invited more members ([if you prefer, you can remove it now](/admin/site_settings/category/all_results?filter=bootstrap)).
+This guide includes suggestions for things to do as you get started.
 
-You now also need to [test your email](#h-4-maintaining-your-discourse-server-14) to make sure it is configured correctly, otherwise new signups and notifications will not work. 
+> :bulb: If you need to get back here later, scroll to the top of any page and click the <kbd>Getting started</kbd> button.
 
-For more assistance on configuring and running your Discourse forum, see [meta.discourse.org](https://meta.discourse.org/).
- 
-### Recommended before inviting most of your members
-It is essential that you provide a meaningful name and description for your site, so your members immediately know what your community is about. Also edit the welcome topic. In a few sentences, let everyone know who this community is for, what they can expect to find here, and what you'd like them to do as soon as they arrive. 
+## :sun_behind_small_cloud: Overview
 
-[] Add your site name and description
-[] Edit your welcome topic
+Discourse is a powerful and flexible platform with many options for customization that you'll want to explore over time, but to get started, we recommend you:
 
-### Legal
-You are responsible for providing your organization's details and legal notices. Discourse will place boilerplate templates in your [#staff](/c/-/3) category when you add your company name in the setup wizard. 
+- [ ] Test your email configuration
+- [ ] Complete the setup wizard
+- [ ] Invite a few people to join you
+- [ ] Discuss ideas with your community 
+- [ ] Update your welcome topic and guidelines
+- [ ] Adjust other customizations
+- [ ] Repeat!
+- [ ] Launch your community
 
-[] Add your company name and details
-[] Edit the boilerplate TOS or provide a link to the TOS on your main site
-[] Edit the boilerplate Privacy Notice or provide a link to the Privacy Notice on your main site
+> :speaking_head: Please join meta.discourse.org, our official community, for documentation and support from other Discourse users. 
 
-### Customization options 
+## :email: Test your email configuration
 
-Out of the box, Discourse provides a clean, friendly design. Via the setup wizard and admin dashboard, you can make changes easily to make your site look and feel unique. No special skills are required, but advanced options are available if you have access to the tech skills. 
+Email is required for new account signups and notifications. **Test your email to make sure it is configured correctly!**  Visit [the admin email settings](/admin/email), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>.
 
-[] Upload logo images
-[] Change the color scheme
-[] Change the font used for text and headers
-[] Install a different site theme 
-[] Choose a different homepage style
-[] Customize the default categories and tags shown on the sidebar
-[] Add a custom section to the sidebar
-[] Add custom user fields to let members provide more info about themselves
+- You got the test email? 
+  Great! **Read that email closely**, it has important email deliverability tips.
+- You didn't get the test email? 
+  Email deliverability is important to ensure users get signup emails and other notifications. Please see [Recommended Email Providers for Discourse](https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md) for template configurations for different providers.
+
+## :magic_wand: Complete the setup wizard
+
+You've already been through the setup wizard, but if you skipped some steps, you can go back now and update some basic settings at this link: [/wizard](/wizard).
+
+## :handshake: Invite a few people to join you
+
+It's helpful to collaborate with at least one or two other people early that can provide feedback on the decisions you're making about your community. 
+- **If your community allows people to freely sign up**, send them the link and ask them to join. 
+- **If your community is invite only**, go to [your invites page](/my/invited) and look for the <kbd>+ Invite</kbd> button to create invite links you can share or directly email everyone you want to have in your community.
+
+> :bulb: Your community starts off in “bootstrap mode”, which gives early members [a higher level of trust ](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)than the typical new member so they can help you launch your community. Your can adjust how long your community remains in bootstrap mode [here](/admin/site_settings/category/all_results?filter=bootstrap).
+
+## :thought_balloon: Discuss ideas with your community
+
+Now that you have a few collaborators, you can start trying things out together and discussing ideas for your community. 
+
+- The [#Site Feedback](/c/-/2) is intended as a long term home for discussions like these about your site, how it works, and how you can improve it. It's designed to be open to participation by everyone who can access your community.
+
+- The [#General](/c/-/4) category is a place to start discussions on topics of general interest to your community. You can create additional categories as you decide how you want to make space for different kinds of topics.
+
+- The [#Staff](/c/-/3) category is only visible to admins and moderators and can be used for topics you wish to discuss privately with other admins and moderators. 
+
+  If you'd like to promote any members to become admins or moderators, visit their user page and click on the <kbd>:wrench: Admin</kbd> button, then click <kbd>Grant Admin</kbd> or <kbd>Grant Moderator</kbd>.
+
+> :bulb: You can use [chat](/chat) for faster paced discussions.
+
+## :wave: Update your welcome topic and guidelines
+
+Update the welcome topic in the [#General](/c/-/4) category and the community guidelines on your [FAQ](/faq) page as you see fit. Go through it yourself with your initial members and see if there's anything you want to add or change.
+
+To get you started, think about what you want new members to **know about your community** or **do when they first join**. 
+
+## :art: Adjust other customizations
+
+To customize the look and feel of your community beyond what you configured in the [setup wizard](/wizard), you can change the following settings in the [admin section](/admin):
+
+- [Logo images](/admin/site_settings/category/branding)
+- [Color schemes](/admin/customize/colors)
+- [Font styles](/admin/site_settings/category/all_results?filter=font)
+- [Site theme](/admin/customize/themes)
+- [Navigation menu](/admin/site_settings/category/navigation)
+- [Custom user fields](/admin/customize/user_fields)
+- [Terms of service and privacy policies](/admin/site_settings/category/legal)
 
 [details="Advanced options"]
 
 Discourse is very configurable and there is a great deal programmers and web designers can do to customize it, integrate it into other platforms, or address any use case. Users going down this route are highly encouraged to join meta.discourse.org, our support community, to learn from what others have and to give and get advice. 
 
-[] Add one or more social login options: [Google](https://meta.discourse.org/t/configuring-google-oauth2-login-for-discourse/15858), [Twitter](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395), [Facebook](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394), [GitHub](https://meta.discourse.org/t/configuring-github-login-for-discourse/13745), [Discord](https://meta.discourse.org/t/configure-discord-login-for-discourse/127129?u=tobiaseigen), [Apple](https://www.discourse.org/plugins/apple-login), [Amazon, LinkedIn, and Microsoft](https://www.discourse.org/plugins/amazon-linkedin-microsoft-login)
-[] [Embed Discourse in your WordPress website](https://github.com/discourse/wp-discourse), or [on your static HTML site](https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963)
-[] Set up [single-sign on](https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045) with your main site 
-[] [Build your own login method](https://meta.discourse.org/t/login-to-discourse-with-custom-oauth2-provider/14717)
-[] [Create your own theme](https://meta.discourse.org/docs?topic=93648) 
-[] [Interact with Discourse from other applications using the API](https://meta.discourse.org/t/create-and-configure-an-api-key/230124?u=tobiaseigen)
+- Add one or more social login options: [Google](https://meta.discourse.org/t/configuring-google-oauth2-login-for-discourse/15858), [Twitter](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395), [Facebook](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394), [GitHub](https://meta.discourse.org/t/configuring-github-login-for-discourse/13745), [Discord](https://meta.discourse.org/t/configure-discord-login-for-discourse/127129?u=tobiaseigen), [Apple](https://www.discourse.org/plugins/apple-login), [Amazon, LinkedIn, and Microsoft](https://www.discourse.org/plugins/amazon-linkedin-microsoft-login)
+- [Embed Discourse in your WordPress website](https://github.com/discourse/wp-discourse), or [on your static HTML site](https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963)
+- Set up [single-sign on](https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045) with your main site 
+- [Build your own login method](https://meta.discourse.org/t/login-to-discourse-with-custom-oauth2-provider/14717)
+- [Create your own theme](https://meta.discourse.org/docs?topic=93648) 
+- [Interact with Discourse from other applications using the API](https://meta.discourse.org/t/create-and-configure-an-api-key/230124?u=tobiaseigen)
 [/details]
 
-# 2. Invite your members
-Once you've done the initial setup, you're ready to invite your founding members who can help you finish setup and get some conversations started. Go to [your invites page](/my/invited) and look for the <kbd>+ Invite</kbd> button to create invite links you can share or directly email everyone you want to have in your community. **Be sure to follow up to make sure they join and start participating!**
+## :arrows_clockwise: Repeat!
 
-### To complete together with your founding members
-[] Founding members sign up and commit to visiting and participating regularly (at least 3 recommended)
-[] Members provide their name, bio and picture
-[] Create interesting topics (at least 5 topics and 30 replies recommended)
-[] Start talking in chat
-[] Talk in [#site-feedback](/c/-/2) about how to use the site and how it is organized
-[] Review and edit the provided Community Guidelines (FAQ) 
+While you're getting started, you may find it helpful to repeat the steps above a few times. Invite a few more people, discuss ideas with them, and make adjustments to your site based on their input and feedback. 
 
-### When you're ready, launch your community!
-[] For public sites, link your community everywhere and promote it so people can find it!
-[] Send out invitations by email and by sharing invite links in channels used by your community (you can also create [bulk invites](https://meta.discourse.org/t/sending-bulk-user-invites/16468) and [invite users into groups](https://meta.discourse.org/t/invite-individual-users-to-a-group/15544))
-[] Keep following up to make sure as many people as possible are joining and communicating with each other on your Discourse site
+After one or two rounds, you should have a good sense of what kind of experience people have as they join your community and be ready to invite a wider audience.
 
-> **Note:** To make launching your new site easier, all new members will have daily email summary emails enabled (instead of the usual weekly) and be given a higher level of trust. See below to learn more about the trust system and bootstrap mode.
+## :rocket: Launch your community
 
-# 3. Managing your forum
+Once you feel like things are in a good place to invite a wider audience, launch your community:
 
-### Admin and Moderator tools 
-Exercise your admin superpowers anytime via the [admin dashboard](/admin). You can access it via the :wrench: admin link on the menu. Admin and moderator functions are generally marked with the wrench :wrench: icon, so look for that.
+- Publicize your site where you expect to find interested members
+- Invite more members
+- Help new members find ways to participate
 
-### Staff
-Staff members are official representatives of this community. There are two kinds of Staff in Discourse:
+You can continue to improve your community as you receive feedback from you members.
 
-1. **Admins**, who can do anything and configure anything on this site.
-2. **Moderators**, who can edit all posts and users but cannot add categories or change any site settings.
+## :books: Learn more
 
-Promoting members of your community is easy:
+Here are some additional resources from [the Discourse blog](http://blog.discourse.org) and https://meta.discourse.org that you may also want to explore.
 
-- select :wrench: admin wrench on their user page
-- look for the <kbd>Grant Admin</kbd> and <kbd>Grant Moderator</kbd> buttons there
+- [Building a Discourse Community](http://blog.discourse.org/2014/08/building-a-discourse-community/) 
+- [Understanding Trust Levels](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+- [What is "Site Feedback"?](https://meta.discourse.org/t/-/5249)
+- [How you can use invitations to add users](https://meta.discourse.org/tags/c/documentation/10/invites)
+- [Banners and pinned topics](https://meta.discourse.org/t/-/153718)
+- [Groups and category permissions](https://meta.discourse.org/t/-/87678)
+- [Admin guide to tags](https://meta.discourse.org/t/-/121041)
+- [Configuring Discourse Chat](https://meta.discourse.org/t/-/230881)
+- [An Overview of Discourse Chat for users](https://meta.discourse.org/t/-/239695)
+- [All admin documentation topics](https://meta.discourse.org/c/-/53)
+- [All moderator documentation topics](https://meta.discourse.org/c/-/125)
+- [All user documentation topics](https://meta.discourse.org/c/-/126)
 
-### Categories
-You have three default categories:
-
-1. [#General](/c/-/4) – create topics here that don't fit into any other existing category.
-2. [#Site Feedback](/c/-/2) – Discussion about this site, its organization, how it works, and how you and your community can improve it. [It's important!](https://meta.discourse.org/t/5249)
-3. [#Staff](/c/-/3) – Visible only to staff (admins and moderators)
-   
-**Only create a few initial categories**, as you can overwhelm your community. You can always add more categories later and easily bulk recategorize topics. You and your members will have a better experience if you figure out the organization as you go rather than assuming you'll get it all right from the beginning.
-
-Select the :wrench: admin wrench on the [categories page](/categories) to add a category. You can set security per-category so only certain groups of users can see topics in that category. ([Learn more about groups and category permissions](https://meta.discourse.org/t/-/87678))
-
-Every category has an initial "About this category" topic which you will want to edit to suit your needs. This topic will be pinned to the top of the category, and the description you enter in the first paragraph will appear throughout. Be sure to give your new category a good, clear description, so people understand what belongs there!
-
-In addition to categories, Discourse allows you to organize topics with tags. Tags offer a flexible alternative to categories. Create tags when editing topics.
-
-### Pinned topics and banners
-Note how pinning topics works in Discourse:
-
-- Once someone reads to the bottom of a pinned topic, it is automatically unpinned for them specifically. They can change this via the personal pin controls at the bottom of the topic.
-- When staff pins a topic, they can pin it globally to all topic lists, or just within its category.
-
-If a pin isn't visible enough, you can also turn one single topic into a **banner**. The banner topic floats on top of all topics and all primary pages. Users can permanently dismiss this floating banner by clicking the × in the upper right corner.
-
-To make (or remove) a pin or banner, use the topic :wrench: admin wrench.
-
-### Forum moderation and community building
-Discourse has a trust level system where users earn trust over time and gain abilities to assist in governing their community. The trust level system is designed to offer safe defaults, even for public communities with no active moderation. You should not have to change them. For more details, see [Understanding Trust Levels](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/).
-
-> **0 (new) → 1 (basic) → 2 (member) → 3 (regular) → 4 (leader)**
-
-To make launching your new site easier, all new users will have daily email summary emails enabled (instead of the usual weekly) and be given a higher level of trust that allows them to bypass new user restrictions. Once you've reached a certain number of users (adjustable via the [Bootstrap mode admin setting](/admin/site_settings/category/all_results?filter=bootstrap)) new users will have to spend 15 minutes reading to remove new user restrictions, or be invited by another trusted user.
-
-# 4. Maintaining your Discourse server
-
-### Test Your Email
-
-Email is required for new account signups and notifications. **Test your email to make sure it is configured correctly!**  Visit [the admin email settings](/admin/email), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>.
-
-- You got the test email? Great! **Read that email closely**, it has important email deliverability tips.
-- You didn't get the test email? This means your users probably aren't getting any signup or notification emails either.
-- Email deliverability can be hard. Read [**Email Service Configuration**](https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md).
-
-If you'd like to enable *replying* to topics via email, [see this howto](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
-
-### Maintenance
+[details="Additional resources for maintaining your server"]
 
 - One CPU and 1GB of memory, with swap, is the minimum for a basic Discourse community. As your community grows you may need more memory or CPU resources.
-
 - [Our Docker container install](https://github.com/discourse/discourse/blob/main/docs/INSTALL.md) is the only one we officially support. It guarantees easy updates, and all recommended optimizations from the Discourse team.
-
 - You should get an email notification when new versions of Discourse are released. To update your instance via our easy one click process, visit [/admin/update](/admin/update).
 
 ### Optional things you might eventually want to set up
-[] [Automatic daily backups](https://meta.discourse.org/t/configure-automatic-backups-for-discourse/14855)
-[] [HTTPS support](https://meta.discourse.org/t/allowing-ssl-for-your-discourse-docker-setup/13847)
-[] [Content Delivery Network support](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857)
-[] [Reply via Email](https://meta.discourse.org/t/set-up-reply-via-email-support/14003)
-[] [Import and Export your data](https://meta.discourse.org/t/move-your-discourse-instance-to-a-different-server/15721)
-[] [Change the domain name](https://meta.discourse.org/t/how-do-i-change-the-domain-name/16098)
-[] [Multiple Discourse instances on the same server](https://meta.discourse.org/t/multisite-configuration-with-docker/14084)
-[] [Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc](https://github.com/discourse/discourse/tree/main/script/import_scripts)
-[] [Configure a firewall on your server](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584).
-[] [A user friendly offline page when rebuilding or upgrading](https://meta.discourse.org/t/adding-an-offline-page-when-rebuilding/45238)
+- [All sysadmin documentation topics](https://meta.discourse.org/c/-/55)
+- [Automatic daily backups](https://meta.discourse.org/t/configure-automatic-backups-for-discourse/14855)
+- [HTTPS support](https://meta.discourse.org/t/allowing-ssl-for-your-discourse-docker-setup/13847)
+- [Content Delivery Network support](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857)
+- [Reply via Email](https://meta.discourse.org/t/set-up-reply-via-email-support/14003)
+- [Import and Export your data](https://meta.discourse.org/t/move-your-discourse-instance-to-a-different-server/15721)
+- [Change the domain name](https://meta.discourse.org/t/how-do-i-change-the-domain-name/16098)
+- [Multiple Discourse instances on the same server](https://meta.discourse.org/t/multisite-configuration-with-docker/14084)
+- [Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc](https://github.com/discourse/discourse/tree/main/script/import_scripts)
+- [Configure a firewall on your server](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584).
+- [A user friendly offline page when rebuilding or upgrading](https://meta.discourse.org/t/adding-an-offline-page-when-rebuilding/45238)
 
-#  Resources and help are a click away
-* Read our blog post [Building a Discourse Community](http://blog.discourse.org/2014/08/building-a-discourse-community/) 
-* Join meta.discourse.org, our official community, to discuss features, bugs, hosting, development and general support with other Discourse users 
-* Search <https://meta.discourse.org/docs> for detailed documentation about using discourse, moderation, the admin dashboard, theming and customization, and much much more. 
+[/details]
 
 ----
 
 Have suggestions to improve or update this guide? Submit a [pull request](https://github.com/discourse/discourse/blob/main/docs/ADMIN-QUICK-START-GUIDE.md).
+

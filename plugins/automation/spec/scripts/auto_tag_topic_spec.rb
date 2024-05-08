@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "AutoTagTopic" do
   fab!(:topic)
   fab!(:tag1) { Fabricate(:tag, name: "tag1") }

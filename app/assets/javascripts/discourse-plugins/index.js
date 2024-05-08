@@ -97,11 +97,20 @@ module.exports = {
 
   options: {
     babel: {
-      plugins: [require.resolve("deprecation-silencer")],
+      plugins: [
+        require.resolve("deprecation-silencer"),
+        [
+          require.resolve("decorator-transforms"),
+          {
+            runEarly: true,
+          },
+        ],
+      ],
     },
 
     "ember-cli-babel": {
       throwUnlessParallelizable: true,
+      disableDecoratorTransforms: true,
     },
 
     "ember-this-fallback": {

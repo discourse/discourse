@@ -20,14 +20,12 @@ module PageObjects
 
       def has_bulk_select_topics_dropdown?
         page.has_css?(
-          "#{TOPIC_LIST_HEADER_SELECTOR} .bulk-select-topics div.bulk-select-topics-dropdown",
+          "#{TOPIC_LIST_HEADER_SELECTOR} .bulk-select-topics .bulk-select-topics-dropdown",
         )
       end
 
       def click_bulk_select_topics_dropdown
-        find(
-          "#{TOPIC_LIST_HEADER_SELECTOR} .bulk-select-topics div.bulk-select-topics-dropdown",
-        ).click
+        find("#{TOPIC_LIST_HEADER_SELECTOR} .bulk-select-topics .bulk-select-topics-dropdown").click
       end
 
       def click_bulk_button(name)
@@ -68,7 +66,7 @@ module PageObjects
       private
 
       def bulk_select_dropdown_item(name)
-        "#{TOPIC_LIST_HEADER_SELECTOR} .bulk-select-topics div.bulk-select-topics-dropdown li[data-value='#{name}']"
+        ".bulk-select-topics-dropdown-content li.dropdown-menu__item .btn.#{name}"
       end
     end
   end

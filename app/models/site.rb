@@ -111,12 +111,7 @@ class Site
       if @guardian.authenticated?
         sidebar_category_ids = @guardian.user.secured_sidebar_category_ids(@guardian)
         preloaded_category_ids.concat(
-          Category
-            .secured(@guardian)
-            .select(:parent_category_id)
-            .distinct
-            .where(id: sidebar_category_ids)
-            .pluck(:parent_category_id),
+          Category.secured(@guardian).ancestors_of(sidebar_category_ids).pluck(:id),
         )
         preloaded_category_ids.concat(sidebar_category_ids)
       end
@@ -186,6 +181,13 @@ class Site
     query = DiscoursePluginRegistry.apply_modifier(:site_groups_query, query, self)
 
     query
+  end
+
+  def anonymous_sidebar_sections
+    SidebarSection
+      .public_sections
+      .includes(:sidebar_urls)
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
   end
 
   def archetypes

@@ -48,7 +48,7 @@ describe ChatSDK::Message do
         params[:guardian] = Fabricate(:user).guardian
 
         expect { described_class.create(**params) }.to raise_error(
-          "User with id: `#{params[:guardian].user.id}` can't join this channel",
+          "Couldn't find membership for user with id: `#{params[:guardian].user.id}`",
         )
       end
     end
@@ -111,6 +111,7 @@ describe ChatSDK::Message do
 
     before do
       SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+      message_1.chat_channel.add(message_1.user)
       message_1.update!(streaming: true)
     end
 
@@ -131,7 +132,7 @@ describe ChatSDK::Message do
       end
     end
 
-    context "when user can't join channel" do
+    context "when user is not part of the channel" do
       fab!(:message_1) do
         Fabricate(:chat_message, chat_channel: Fabricate(:private_category_channel))
       end
@@ -141,7 +142,7 @@ describe ChatSDK::Message do
 
         expect {
           described_class.stop_stream(message_id: message_1.id, guardian: user.guardian)
-        }.to raise_error("User with id: `#{user.id}` can't join this channel")
+        }.to raise_error("Couldn't find membership for user with id: `#{user.id}`")
       end
     end
   end
@@ -167,7 +168,11 @@ describe ChatSDK::Message do
 
   describe ".stream" do
     fab!(:message_1) { Fabricate(:chat_message, message: "first\n") }
-    before { message_1.update!(streaming: true) }
+
+    before do
+      message_1.chat_channel.add(message_1.user)
+      message_1.update!(streaming: true)
+    end
 
     it "streams" do
       edit =

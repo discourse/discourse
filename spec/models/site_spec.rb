@@ -195,14 +195,17 @@ RSpec.describe Site do
         expect(site.categories).to eq([])
       end
 
-      it "returns only sidebar categories and their parent categories" do
-        parent_category = Fabricate(:category)
+      it "returns only sidebar categories and their ancestors" do
+        SiteSetting.max_category_nesting = 3
+        grandfather_category = Fabricate(:category)
+        parent_category = Fabricate(:category, parent_category: grandfather_category)
         category.update!(parent_category: parent_category)
         Fabricate(:category_sidebar_section_link, linkable: category, user: user)
 
         site = Site.new(Guardian.new(user))
 
         expect(site.categories.map { |c| c[:id] }).to contain_exactly(
+          grandfather_category.id,
           parent_category.id,
           category.id,
         )

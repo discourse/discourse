@@ -1718,7 +1718,7 @@ hu:
         Ha nem te voltál, nyugodtan figyelmen kívül hagyhatod ezt az e-mailt.
 
         Kattints a következő linkre az új jelszó létrehozásához:
-        %{base_url}/u/ password-reset/%{email_token}
+        %{base_url}/u/password-reset/%{email_token}
     email_login:
       text_body_template: |
         Itt van a link a bejelentkezéshez a [%{site_name}](%{base_url}) címen.

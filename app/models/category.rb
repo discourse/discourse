@@ -4,9 +4,9 @@ class Category < ActiveRecord::Base
   RESERVED_SLUGS = ["none"]
 
   self.ignored_columns = [
-    :suppress_from_latest, # TODO(2020-11-18): remove
-    :required_tag_group_id, # TODO(2023-04-01): remove
-    :min_tags_from_required_group, # TODO(2023-04-01): remove
+    :suppress_from_latest, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    :required_tag_group_id, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    :min_tags_from_required_group, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   include Searchable
@@ -1097,11 +1097,13 @@ class Category < ActiveRecord::Base
       .find_each { |category| category.create_category_definition }
   end
 
-  def slug_path
+  def slug_path(parent_ids = Set.new)
     if self.parent_category_id.present?
-      slug_path = self.parent_category.slug_path
-      slug_path.push(self.slug_for_url)
-      slug_path
+      if parent_ids.add?(self.parent_category_id)
+        self.parent_category.slug_path(parent_ids) << self.slug_for_url
+      else
+        []
+      end
     else
       [self.slug_for_url]
     end
