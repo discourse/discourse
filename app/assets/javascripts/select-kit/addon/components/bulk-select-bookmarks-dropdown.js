@@ -12,16 +12,6 @@ export function addBulkDropdownAction(name, customAction) {
   _customActions[name] = customAction;
 }
 
-export function addBulkDropdownButton(opts) {
-  _customButtons.push({
-    id: opts.label,
-    icon: opts.icon,
-    name: i18n(opts.label),
-    visible: opts.visible,
-  });
-  addBulkDropdownAction(opts.label, opts.action);
-}
-
 export default DropdownSelectBoxComponent.extend({
   classNames: ["bulk-select-bookmarks-dropdown"],
   headerIcon: null,

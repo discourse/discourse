@@ -134,7 +134,7 @@ export default Component.extend({
     this.content.removeObject(bookmark);
   },
 
-  _toggleBookmark(target, bookmark, isSelectingRange) {
+  _toggleSelection(target, bookmark, isSelectingRange) {
     const selected = this.selected;
 
     if (target.checked) {
@@ -178,7 +178,7 @@ export default Component.extend({
       const bookmark = this.content.find(
         (item) => item.id.toString() === bookmarkId
       );
-      this._toggleBookmark(target, bookmark, this.lastChecked && e.shiftKey);
+      this._toggleSelection(target, bookmark, this.lastChecked && e.shiftKey);
     });
   },
 });
