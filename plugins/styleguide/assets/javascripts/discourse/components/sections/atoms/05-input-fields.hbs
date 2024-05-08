@@ -1,15 +1,5 @@
 {{! template-lint-disable}}
 
-<strong>Joff, 2 options for you:</strong>
-<ol>
-  <li>Have the structure of a stacked and horitzontal form exactly the same, in
-    which case the text inputs in the stacked form will use some superfluous
-    wrappers. In this case ==> simply adding `--ltr` to the section changes it
-    from stacked to horizontal.</li>
-  <li>The HTML for stacked does not need the `d-form-field__value` wrappers, but
-    in that case, the HTMl for both forms is different.</li>
-</ol>
-
 <strong>Other info</strong>
 <ul>
   <li>Im not married to any classnames. Open to ideas.</li>
@@ -41,39 +31,27 @@
         input
         <span class="d-form-field__optional">(Optional)</span>
       </label>
-      <div class="d-form-field__value-container">
-        <p class="d-form-field__info">Explanation text.</p>
-        <div class="d-form-field__value">
-          <input
-            type="text"
-            class="d-form-field__input"
-            id="normal-input"
-            size="25"
-          />
-          <div class="d-form-field__meta">
-            <p class="d-form-field__meta-text">Format: XYZ-123</p>
-            <span class="d-form-field__character-count has-error">0/25</span>
-          </div>
+
+      <p class="d-form-field__info">Explanation text.</p>
+      <div class="d-form-field__value">
+        <input type="text" class="d-form-field__input" id="normal-input" />
+        <div class="d-form-field__meta">
+          <p class="d-form-field__meta-text">Format: XYZ-123</p>
+          <span class="d-form-field__character-count has-error">0/25</span>
         </div>
+
       </div>
     </div>
 
     <div class="d-form-field has-error">
       <label class="d-form-field__label" for="error-input">Error highlighting
       </label>
-      <div class="d-form-field__value-container">
-        <div class="d-form-field__value">
-          <input
-            type="text"
-            class="d-form-field__input"
-            id="error-input"
-            size="25"
-          />
-          <div class="d-form-field__meta --warning">
-            <p class="d-form-field__meta-text">
-              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
-            <span class="d-form-field__character-count has-error">0/25</span>
-          </div>
+      <div class="d-form-field__value">
+        <input type="text" class="d-form-field__input" id="error-input" />
+        <div class="d-form-field__meta --warning">
+          <p class="d-form-field__meta-text">
+            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          <span class="d-form-field__character-count has-error">0/25</span>
         </div>
       </div>
     </div>
@@ -81,24 +59,23 @@
     <div class="d-form-field">
       <label class="d-form-field__label" for="disabled-input">Disabled input
       </label>
-      <div class="d-form-field__value-container">
-        <div class="d-form-field__value">
-          <input
-            type="text"
-            class="d-form-field__input"
-            id="disabled-input"
-            size="25"
-            disabled
-            value="Disabled input"
-          />
-        </div>
+
+      <div class="d-form-field__value">
+        <input
+          type="text"
+          class="d-form-field__input"
+          id="disabled-input"
+          disabled
+          value="Disabled input"
+        />
       </div>
+
     </div>
 
     <fieldset class="d-form-field --checkbox">
       <legend class="d-form-field__label">Set as default
       </legend>
-      <div class="d-form-field__value-container">
+      <div class="d-form-field__value">
         <div class="d-form-field__input-group">
           <label class="checkbox-label" for="checkbox-agree">
             <input
@@ -117,9 +94,8 @@
 
     <fieldset class="d-form-field --radiobtns">
       <legend>After reminding you, we should…</legend>
-      <div class="d-form-field__value-container">
-        <p class="d-form-field__info">Some random explanation about this
-          setting.</p>
+      <p class="d-form-field__info">Some random explanation about this setting.</p>
+      <div class="d-form-field__value">
         <div class="d-form-field__input-group">
           <label for="radio-1" class="checkbox-label">
             <input
@@ -159,15 +135,13 @@
           <p class="d-form-field__meta-text">
             {{d-icon "warning"}}<span>Error: explanation of error</span></p>
         </div>
-        <p class="d-form-field__info">Some random explanation again but put
-          behind the inputs.</p>
       </div>
     </fieldset>
 
     <fieldset class="d-form-field --checkbox">
       <legend class="d-form-field__label">Multi checkbox options
       </legend>
-      <div class="d-form-field__value-container">
+      <div class="d-form-field__value">
         <div class="d-form-field__input-group">
           <label class="checkbox-label" for="checkbox1multi">
             <input
@@ -209,11 +183,10 @@
   <div class="d-form__section">
     <div class="d-form-field">
       <label class="d-form-field__label" for="normal-input">Streetname</label>
-      <div class="d-form-field__value-container">
-        <div class="d-form-field__value">
-          <input type="text" class="d-form-field__input" size="35" />
-        </div>
+      <div class="d-form-field__value">
+        <input type="text" class="d-form-field__input" />
       </div>
+
     </div>
 
     <div class="d-form-field__group">
@@ -224,8 +197,7 @@
           <div class="d-form-field__value">
             <input
               type="text"
-              class="d-form-field__input"
-              size="10"
+              class="d-form-field__input --small"
               id="number"
             />
           </div>
@@ -237,87 +209,80 @@
         </label>
         <div class="d-form-field__value-container">
           <div class="d-form-field__value">
-            <input type="text" class="d-form-field__input" size="10" />
+            <input type="text" class="d-form-field__input --small" />
           </div>
         </div>
+      </div>
+
+      <div class="d-form-field__meta --warning">
+        <p class="d-form-field__meta-text">
+          {{d-icon "warning"}}<span>Error: explanation of error</span></p>
       </div>
     </div>
 
     <div class="d-form-field">
       <label class="d-form-field__label" for="normal-input">Country
       </label>
-      <div class="d-form-field__value-container">
-        <div class="d-form-field__value">
-          <select>
-            <option value="">--Country of residence--</option>
-          </select>
-        </div>
+
+      <div class="d-form-field__value">
+        <select>
+          <option value="">--Country of residence--</option>
+        </select>
       </div>
+
     </div>
   </div>
 
   <h2>Horizontal form (classic)</h2>
   <div class="d-form__section --ltr">
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Standard stacked
-        input
-        <span class="d-form-field__optional">(Optional)</span>
-      </label>
 
-      <div class="d-form-field__value-container">
-        <p class="d-form-field__info">In left-to-right forms, the explanation
-          text needs to always be inside the `value-container` element.</p>
-        <div class="d-form-field__value">
-          <input
-            type="text"
-            class="d-form-field__input"
-            id="normal-input"
-            size="25"
-          />
-          <div class="d-form-field__meta">
-            <p class="d-form-field__meta-text">Format: XYZ-123</p>
-            <span class="d-form-field__character-count has-error">0/25</span>
-          </div>
+    <label class="d-form-field__label" for="normal-input">Standard stacked input
+      <span class="d-form-field__optional">(Optional)</span>
+    </label>
+
+    <div class="d-form-field__value-container">
+      <p class="d-form-field__info">In left-to-right forms, the explanation text
+        needs to always be inside the `value-container` element.</p>
+      <div class="d-form-field__value">
+        <input type="text" class="d-form-field__input" id="normal-input" />
+        <div class="d-form-field__meta">
+          <p class="d-form-field__meta-text">Format: XYZ-123</p>
+          <span class="d-form-field__character-count has-error">0/25</span>
         </div>
-
       </div>
+
     </div>
 
-    <div class="d-form-field has-error">
-      <label class="d-form-field__label" for="normal-input">Error highlighting
-      </label>
-      <div class="d-form-field__value-container">
-        <div class="d-form-field__value">
-          <input
-            type="text"
-            class="d-form-field__input"
-            id="normal-input"
-            size="15"
-          />
-          <div class="d-form-field__meta --warning">
-            <p class="d-form-field__meta-text">
-              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
-            <span class="d-form-field__character-count has-error">0/25</span>
-          </div>
+    <label class="d-form-field__label" for="normal-input">Error highlighting
+    </label>
+    <div class="d-form-field__value-container has-error">
+      <div class="d-form-field__value">
+        <input
+          type="text"
+          class="d-form-field__input --small"
+          id="normal-input"
+        />
+        <div class="d-form-field__meta --warning">
+          <p class="d-form-field__meta-text">
+            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          <span class="d-form-field__character-count has-error">0/25</span>
         </div>
       </div>
     </div>
 
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Disabled input
-      </label>
-      <div class="d-form-field__value-container">
-        <div class="d-form-field__value">
-          <input
-            type="text"
-            class="d-form-field__input"
-            id="normal-input"
-            size="25"
-            disabled
-            value="Disabled input"
-          />
-        </div>
+    <label class="d-form-field__label" for="normal-input">Disabled input
+    </label>
+    <div class="d-form-field__value-container">
+      <div class="d-form-field__value">
+        <input
+          type="text"
+          class="d-form-field__input"
+          id="normal-input"
+          disabled
+          value="Disabled input"
+        />
       </div>
+
     </div>
 
     <fieldset class="d-form-field --checkbox">
@@ -432,11 +397,6 @@
   </div>
 
   <h2>Inline form</h2>
-  <strong>Joff: We don't want a lot of the classes in a normal form here,
-    because this is gridded. Cleanest is to have separate HTML. _However_, if
-    you prefer to be able to drop in a full form-field component, I can use
-    `display:contents` to strip out all the wrappers so the grid still works.
-    Lmk if unclear and what you prefer.</strong>
   <p class="d-form__section-info">
     A form row should not contain checkboxes or radiobuttons. Be reasonable. It
     can have 3 or 4 columns (including an action). Unlike other forms, every
@@ -596,6 +556,93 @@
         </span>
       </p>
     </div>
+  </div>
+</form>
+
+<h2>Other input types</h2>
+<form class="d-form">
+  <div class="d-form__section">
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="prefilled">Fixed prefilled input
+      </label>
+      <div class="d-form-field__value">
+        <div class="d-form-field__input-group --prefilled">
+          <div class="d-form-field__prefilled-text">https://</div>
+          <input type="text" class="d-form-field__input" id="prefilled" />
+        </div>
+        <div class="d-form-field__meta">
+          <p class="d-form-field__meta-text">Format: XYZ-123</p>
+          <span class="d-form-field__character-count has-error">0/25</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="prefilled">Fixed prefilled input
+        after
+      </label>
+      <div class="d-form-field__value">
+        <div class="d-form-field__input-group --prefilled --after">
+          <input type="text" class="d-form-field__input" id="prefilled" />
+          <div class="d-form-field__prefilled-text">discourse.org</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="icons">Icons
+      </label>
+      <div class="d-form-field__value">
+        <div class="d-form-field__input-group --icon">
+          <input type="text" class="d-form-field__input" id="icons" />
+          <div class="d-form-field__input-buttons">
+            <span>X</span>
+            <span>@</span>
+          </div>
+        </div>
+        <div class="d-form-field__meta">
+          <p class="d-form-field__meta-text">Format: XYZ-123</p>
+          <span class="d-form-field__character-count has-error">0/25</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field --toggle">
+      <label class="d-form-field__label" for="toggle">Turn on/off
+      </label>
+      <div class="d-form-field__value">
+        <DToggleSwitch @state={{@enabled}} {{on "click" @action}} />
+      </div>
+      <p class="d-form-field__info">This setting only has 2 options and takes
+        effect immediately,.</p>
+      <div class="d-form-field__meta --warning">
+        <p class="d-form-field__meta-text">You need to turn this on.</p>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="combobox">Combobox/datalist
+      </label>
+      <div class="d-form-field__value">
+        <input list="browsers" name="browser" id="browser" />
+        <datalist id="browsers">
+          <option value="Edge" />
+          <option value="Firefox" />
+          <option value="Chrome" />
+          <option value="Opera" />
+          <option value="Safari" />
+        </datalist>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="datetime">Datepicker
+      </label>
+      <div class="d-form-field__value">
+        <input type="datetime-local" />
+      </div>
+    </div>
+
   </div>
 </form>
 
