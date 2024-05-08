@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 81
+  BASE_COMPILER_VERSION = 82
 
   class SettingsMigrationError < StandardError
   end
