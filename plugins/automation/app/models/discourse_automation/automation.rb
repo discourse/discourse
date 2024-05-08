@@ -34,41 +34,32 @@ module DiscourseAutomation
     MAX_NAME_LENGTH = 30
     validates :name, length: { in: MIN_NAME_LENGTH..MAX_NAME_LENGTH }
 
-    def attach_custom_field(target)
+    def add_id_to_custom_field(target, custom_field_key)
       if ![Topic, Post, User].any? { |m| target.is_a?(m) }
         raise "Expected an instance of Topic/Post/User."
       end
 
-      now = Time.now
-      fk = target.custom_fields_fk
-      row = {
-        fk => target.id,
-        :name => DiscourseAutomation::CUSTOM_FIELD,
-        :value => id,
-        :created_at => now,
-        :updated_at => now,
-      }
-
-      relation = "#{target.class.name}CustomField".constantize
-      relation.upsert(
-        row,
-        unique_by:
-          "idx_#{target.class.name.downcase}_custom_fields_discourse_automation_unique_id_partial",
-      )
+      ids = Array(target.custom_fields[custom_field_key])
+      if !ids.include?(self.id)
+        ids << self.id
+        ids = ids.compact.uniq
+        target.custom_fields[custom_field_key] = ids
+        target.save_custom_fields
+      end
     end
 
-    def detach_custom_field(target)
+    def remove_id_from_custom_field(target, custom_field_key)
       if ![Topic, Post, User].any? { |m| target.is_a?(m) }
         raise "Expected an instance of Topic/Post/User."
       end
 
-      fk = target.custom_fields_fk
-      relation = "#{target.class.name}CustomField".constantize
-      relation.where(
-        fk => target.id,
-        :name => DiscourseAutomation::CUSTOM_FIELD,
-        :value => id,
-      ).delete_all
+      ids = Array(target.custom_fields[custom_field_key])
+      if ids.include?(self.id)
+        ids = ids.compact.uniq
+        ids.delete(self.id)
+        target.custom_fields[custom_field_key] = ids
+        target.save_custom_fields
+      end
     end
 
     def trigger_field(name)
