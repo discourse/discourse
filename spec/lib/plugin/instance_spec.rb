@@ -998,4 +998,53 @@ TEXT
       expect(sum).to eq(3)
     end
   end
+
+  describe "#add_guardian_check" do
+    let(:plugin) { Plugin::Instance.new }
+    let!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+    let!(:user) { Fabricate(:user) }
+    let!(:post) { Fabricate(:post) }
+
+    after { DiscoursePluginRegistry.reset! }
+
+    context "with before check" do
+      context "when check is true" do
+        it "guardian method returns method value" do
+          plugin.add_guardian_check(:before, :edit_post) { true }
+          expect(Guardian.new(admin).can_edit_post?(post)).to be_truthy
+          expect(Guardian.new(user).can_edit_post?(post)).to be_falsey
+        end
+      end
+
+      context "when check is false" do
+        it "guardian method returns false" do
+          plugin.add_guardian_check(:before, :edit_post) { false }
+          expect(Guardian.new(admin).can_edit_post?(post)).to be_falsey
+        end
+      end
+    end
+
+    context "with after check" do
+      context "when method value is true" do
+        it "guardian method returns check value" do
+          plugin.add_guardian_check(:after, :edit_post) { false }
+          expect(Guardian.new(admin).can_edit_post?(post)).to be_falsey
+        end
+      end
+
+      context "when method value is false" do
+        it "guardian method returns check value" do
+          plugin.add_guardian_check(:after, :edit_post) { true }
+          expect(Guardian.new(user).can_edit_post?(post)).to be_truthy
+        end
+      end
+    end
+
+    it "respects check priority" do
+      plugin.add_guardian_check(:after, :edit_post, 2) { false }
+      plugin.add_guardian_check(:after, :edit_post, 0) { true }
+      plugin.add_guardian_check(:after, :edit_post, 1) { false }
+      expect(Guardian.new(user).can_edit_post?(post)).to be_truthy
+    end
+  end
 end

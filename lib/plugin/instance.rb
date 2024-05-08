@@ -190,6 +190,20 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_modifier(self, modifier_name, &blk)
   end
 
+  def add_guardian_check(check_type, check_name, priority = 0, &block)
+    raise ArgumentError.new("Check type is not valid") unless %i[before after].include?(check_type)
+
+    reloadable_patch do |plugin|
+      DiscoursePluginRegistry.guardian_checks[check_type] ||= {}
+      DiscoursePluginRegistry.guardian_checks[check_type][check_name] ||= []
+      DiscoursePluginRegistry.guardian_checks[check_type][check_name] << {
+        priority: priority,
+        proc: Proc.new { |*args| block.call(*args) if plugin.enabled? },
+      }
+      DiscoursePluginRegistry.guardian_checks[check_type][check_name].sort_by! { |h| -h[:priority] }
+    end
+  end
+
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def add_report(name, &block)
     reloadable_patch { |plugin| Report.add_report(name, &block) }
