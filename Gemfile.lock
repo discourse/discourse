@@ -157,7 +157,7 @@ GEM
     highline (3.0.1)
     htmlentities (4.3.4)
     http_accept_language (2.1.1)
-    i18n (1.14.4)
+    i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     image_optim (0.31.3)
       exifr (~> 1.2, >= 1.2.2)
