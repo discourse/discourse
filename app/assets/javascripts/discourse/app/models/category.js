@@ -421,6 +421,7 @@ export default class Category extends RestModel {
       );
     }
   }
+
   @service currentUser;
 
   permissions = null;
