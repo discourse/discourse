@@ -5306,9 +5306,6 @@ en:
           chat_enabled:
             placeholder: "Enable chat"
             extra_description: "Engage with your members in real time"
-          enable_sidebar:
-            placeholder: "Enable sidebar"
-            extra_description: "Access your favorite spaces with ease"
 
       ready:
         title: "Your site is ready!"
