@@ -3,7 +3,7 @@
   <WatchedWords
     @id="watched-words"
     @value={{this.words}}
-    @onChange={{action (mut this.words)}}
+    @onChange={{fn (mut this.words)}}
     @options={{hash
       filterPlaceholder=this.placeholderKey
       disabled=this.formSubmitted
