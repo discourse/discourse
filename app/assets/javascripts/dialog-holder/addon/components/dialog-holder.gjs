@@ -33,7 +33,7 @@ export default class DialogHolder extends Component {
             <div class="dialog-header">
               <h3 id={{this.dialog.titleElementId}}>{{this.dialog.title}}</h3>
               <DButton
-                @action={{action this.dialog.cancel}}
+                @action={{this.dialog.cancel}}
                 @title="modal.close"
                 @icon="times"
                 class="btn-flat dialog-close close"
