@@ -281,11 +281,11 @@ export default class TopicAdminMenu extends Component {
                       @icon="hourglass-start"
                     />
                   </dropdown.item>
-
-                  <dropdown.divider />
                 {{/if}}
 
                 {{#if (or this.currentUser.staff this.extraButtons.length)}}
+                  <dropdown.divider />
+
                   {{#if this.currentUser.staff}}
                     <dropdown.item class="topic-admin-moderation-history">
                       <DButton
