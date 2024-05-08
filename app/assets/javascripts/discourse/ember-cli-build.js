@@ -29,16 +29,16 @@ module.exports = function (defaults) {
 
   const isProduction = EmberApp.env().includes("production");
 
-  const disableSourceMaps = process.env.DISABLE_SOURCE_MAPS === "1";
-  const cheapSourceMaps = process.env.CHEAP_SOURCE_MAPS === "1";
-
   const app = new EmberApp(defaults, {
     autoRun: false,
     "ember-qunit": {
       insertContentForTestBody: false,
     },
     sourcemaps: {
-      enabled: !disableSourceMaps,
+      // There seems to be a bug with broccoli-concat when sourcemaps are disabled
+      // that causes the `app.import` statements below to fail in production mode.
+      // This forces the use of `fast-sourcemap-concat` which works in production.
+      enabled: true,
     },
     fingerprint: {
       // Handled by Rails asset pipeline
@@ -131,19 +131,15 @@ module.exports = function (defaults) {
     .digest("hex")
     .slice(0, 8);
 
-  let webpackDevToolMode = "source-map";
-  if (disableSourceMaps) {
-    webpackDevToolMode = false;
-  } else if (cheapSourceMaps) {
-    webpackDevToolMode = "cheap-source-map";
-  }
-
   const appTree = compatBuild(app, Webpack, {
     splitAtRoutes: ["wizard"],
     staticAppPaths: ["static"],
     packagerOptions: {
       webpackConfig: {
-        devtool: webpackDevToolMode,
+        devtool:
+          process.env.CHEAP_SOURCE_MAPS === "1"
+            ? "cheap-source-map"
+            : "source-map",
         output: {
           publicPath: "auto",
           filename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
