@@ -17,12 +17,13 @@ const _customOnSelection = {};
 
 export function addBulkDropdownButton(opts) {
   _customButtons.push({
-    id: opts.label,
+    id: opts.id,
     icon: opts.icon,
     name: i18n(opts.label),
     visible: opts.visible,
+    class: opts.class,
   });
-  addBulkDropdownAction(opts.label, opts.action);
+  addBulkDropdownAction(opts.id, opts.action);
   const actionOpts = {
     label: opts.label,
     setComponent: true,
@@ -30,7 +31,7 @@ export function addBulkDropdownButton(opts) {
   if (opts.actionType === "performAndRefresh") {
     actionOpts.setComponent = false;
   }
-  _customOnSelection[opts.label] = actionOpts;
+  _customOnSelection[opts.id] = actionOpts;
 }
 
 export default class BulkSelectTopicsDropdown extends Component {
@@ -224,6 +225,13 @@ export default class BulkSelectTopicsDropdown extends Component {
           });
         }
     }
+
+    this.dMenu.close();
+  }
+
+  @action
+  onRegisterApi(api) {
+    this.dMenu = api;
   }
 
   <template>
@@ -231,6 +239,7 @@ export default class BulkSelectTopicsDropdown extends Component {
       @modalForMobile={{true}}
       @autofocus={{true}}
       @identifier="bulk-select-topics-dropdown"
+      @onRegisterApi={{this.onRegisterApi}}
     >
       <:trigger>
         <span class="d-button-label">
@@ -246,7 +255,7 @@ export default class BulkSelectTopicsDropdown extends Component {
               <DButton
                 @translatedLabel={{button.name}}
                 @icon={{button.icon}}
-                class={{concatClass "btn-transparent" button.id}}
+                class={{concatClass "btn-transparent" button.id button.class}}
                 @action={{fn this.onSelect button.id}}
               />
             </dropdown.item>
