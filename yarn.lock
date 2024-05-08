@@ -1388,13 +1388,14 @@
     ember-cli-version-checker "^5.1.2"
     semver "^7.3.5"
 
-"@embroider/addon-shim@^1.0.0", "@embroider/addon-shim@^1.8.3", "@embroider/addon-shim@^1.8.4", "@embroider/addon-shim@^1.8.6", "@embroider/addon-shim@^1.8.7":
-  version "1.8.7"
-  resolved "https://registry.yarnpkg.com/@embroider/addon-shim/-/addon-shim-1.8.7.tgz#ba2dcb0647ed2cb0c500c835326266b89ceec595"
-  integrity sha512-JGOQNRj3UR0NdWEg8MsM2eqPLncEwSB1IX+rwntIj22TEKj8biqx7GDgSbeH+ZedijmCh354Hf2c5rthrdzUAw==
+"@embroider/addon-shim@^1.0.0", "@embroider/addon-shim@^1.8.3", "@embroider/addon-shim@^1.8.4", "@embroider/addon-shim@^1.8.6", "@embroider/addon-shim@^1.8.7", "@embroider/addon-shim@^1.8.8":
+  version "1.8.8"
+  resolved "https://registry.yarnpkg.com/@embroider/addon-shim/-/addon-shim-1.8.8.tgz#91e1ce4f71b0cb9d6d5831147a549c523fd39867"
+  integrity sha512-+SkD/JJqnmCBJpsjPu419iNA9kQdqojNBrldE7f5H80A4FWUGRO9s622+SwdzKiXCaMWcNeww7Ah7CL/YZPoHg==
   dependencies:
-    "@embroider/shared-internals" "^2.5.1"
+    "@embroider/shared-internals" "^2.6.0"
     broccoli-funnel "^3.0.8"
+    common-ancestor-path "^1.0.1"
     semver "^7.3.8"
 
 "@embroider/babel-loader-9@3.1.1":
@@ -1405,10 +1406,10 @@
     "@babel/core" "^7.14.5"
     babel-loader "^9.0.0"
 
-"@embroider/compat@^3.4.9":
-  version "3.4.9"
-  resolved "https://registry.yarnpkg.com/@embroider/compat/-/compat-3.4.9.tgz#0a6df563fe968a2d04fb841bb3386e7b91687220"
-  integrity sha512-1KuKlCx4wGxxo+GsTeS8AX6S4Ka2Ht6EKYlFsm0Ln38mQyPolIefVUeEURe9FKKaQsOdj8bdPdjJlGU1ZVF8Aw==
+"@embroider/compat@^3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@embroider/compat/-/compat-3.5.0.tgz#342dc07a583e3b40c0c6bc539453cd45948e762d"
+  integrity sha512-KFv4CGXiNZA9D+T89bQgmHRyJBIMq6NLzNHTTpD8lKWL0egZpaw2irzIH/1SqdktRf86Ee8pkWfqEi0W+UWXxA==
   dependencies:
     "@babel/code-frame" "^7.14.5"
     "@babel/core" "^7.14.5"
@@ -1501,15 +1502,15 @@
     resolve "^1.20.0"
     semver "^7.3.2"
 
-"@embroider/router@^2.1.4":
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/@embroider/router/-/router-2.1.6.tgz#c706794075ecc214fa456ce0131e8be3aab15733"
-  integrity sha512-geEJF0iKpGQ4YcP2oc30BGPgxer7Umeeg/C07m6xe2OYltQxIzSNWm//A7F/ZrwhVwSSai1W7YyFw8r5wS3OsA==
+"@embroider/router@^2.1.7":
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/@embroider/router/-/router-2.1.7.tgz#498626c1962d49cef4714fb7659d5b22d0231100"
+  integrity sha512-EcmWgFP0stVbKQkQIJ+moXWqOLADkh4ByKo6zviCxktXxCEzx11NGm6G2eDd3JJYy1JR2XSI1Tn2T+Hsjefb9A==
   dependencies:
     "@ember/test-waiters" "^3.0.2"
-    "@embroider/addon-shim" "^1.8.7"
+    "@embroider/addon-shim" "^1.8.8"
 
-"@embroider/shared-internals@2.6.0", "@embroider/shared-internals@^2.0.0", "@embroider/shared-internals@^2.5.1":
+"@embroider/shared-internals@2.6.0", "@embroider/shared-internals@^2.0.0", "@embroider/shared-internals@^2.6.0":
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@embroider/shared-internals/-/shared-internals-2.6.0.tgz#851fd8d051fd4f7f93b2b7130e2ae5cdd537c5d6"
   integrity sha512-A2BYQkhotdKOXuTaxvo9dqOIMbk+2LqFyqvfaaePkZcFJvtCkvTaD31/sSzqvRF6rdeBHjdMwU9Z2baPZ55fEQ==
@@ -4597,6 +4598,11 @@ commander@^9.4.1:
   version "9.5.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-9.5.0.tgz#bc08d1eb5cedf7ccb797a96199d41c7bc3e60d30"
   integrity sha512-KRs7WVDKg86PWiuAqhDrAQnTXZKraVcCc6vFdL14qrZ/DcWwuRo7VoiYXalXO7S5GKpqYiVEwCbgFDfxNHKJBQ==
+
+common-ancestor-path@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/common-ancestor-path/-/common-ancestor-path-1.0.1.tgz#4f7d2d1394d91b7abdf51871c62f71eadb0182a7"
+  integrity sha512-L3sHRo1pXXEqX8VU28kfgUY+YGsk09hPqZiZmLacNib6XNTCM8ubYeT7ryXQw8asB1sKgcU5lkB7ONug08aB8w==
 
 common-path-prefix@^3.0.0:
   version "3.0.0"
