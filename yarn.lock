@@ -1241,10 +1241,10 @@
   resolved "https://registry.yarnpkg.com/@discourse/backburner.js/-/backburner.js-2.7.1-0.tgz#0fc5f93c8f3ee013af2beed55d30ff10362d8f06"
   integrity sha512-r0cjllX/niPSxot/lpz0Tj9CXmyYoFE6kvEN9oL0D0sOGpknmK9FielZqcPGxuD/Z8vOb67penUElHRjH+F4cQ==
 
-"@discourse/ember-instantsearch@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@discourse/ember-instantsearch/-/ember-instantsearch-1.1.0.tgz#c7c303f83a6abcbdc337daea05304e211c6e1445"
-  integrity sha512-3rgTtc2mwVTI6gCMj9HjEOX2VqdIR6S+5HWwTRw3Vy/EsNti/IuHi66GhyAMyhXmzec0o14y+SUjTM4C0n8TFg==
+"@discourse/ember-instantsearch@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@discourse/ember-instantsearch/-/ember-instantsearch-1.1.2.tgz#68b2d6bd78c3910817938817e3af61a83922ea91"
+  integrity sha512-zCVfrz1QVjQXz2I8RDFjqqhLdis6OPsQ7kfY9kU9LtXaYQg9VNyxYYlDaeArJPnHWy4G5pxkWYetgoD67s+gbw==
   dependencies:
     "@babel/runtime" "^7.24.4"
     "@ember/render-modifiers" "^2.1.0"
