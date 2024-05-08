@@ -747,7 +747,7 @@ span.highlighted {
 }
 
 .topic-post.sticky-avatar {
-  .topic-avatar {
+  > article > .row > .topic-avatar {
     position: sticky;
     top: calc(var(--header-offset) - 0.25em);
     margin-bottom: 25px;
