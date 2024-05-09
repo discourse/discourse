@@ -56,17 +56,26 @@ export default class SwipeModifier extends Modifier {
    * @param {Function} options.onDidEndSwipe - Callback function when swipe ends.
    * @param {Function} options.onDidCancelSwipe - Callback function when swipe is canceled.
    * @param {boolean} options.enabled - Flag to enable/disable swipe.
+   * @param {boolean} options.lockBody - Automatically enable/disable body scroll lock.
    */
   modify(
     element,
     _,
-    { onDidStartSwipe, onDidSwipe, onDidEndSwipe, onDidCancelSwipe, enabled }
+    {
+      onDidStartSwipe,
+      onDidSwipe,
+      onDidEndSwipe,
+      onDidCancelSwipe,
+      enabled,
+      lockBody,
+    }
   ) {
     if (enabled === false || !this.site.mobileView) {
       this.enabled = enabled;
       return;
     }
 
+    this.lockBody = lockBody ?? true;
     this.element = element;
     this.onDidSwipeCallback = onDidSwipe;
     this.onDidStartSwipeCallback = onDidStartSwipe;
@@ -87,7 +96,10 @@ export default class SwipeModifier extends Modifier {
    */
   @bind
   onDidStartSwipe(event) {
-    disableBodyScroll(this.element);
+    if (this.lockBody) {
+      disableBodyScroll(this.element);
+    }
+
     this.onDidStartSwipeCallback?.(event.detail);
   }
 
@@ -97,7 +109,10 @@ export default class SwipeModifier extends Modifier {
    */
   @bind
   onDidEndSwipe() {
-    enableBodyScroll(this.element);
+    if (this.lockBody) {
+      enableBodyScroll(this.element);
+    }
+
     this.onDidEndSwipeCallback?.(event.detail);
   }
 
@@ -116,7 +131,10 @@ export default class SwipeModifier extends Modifier {
    */
   @bind
   onDidCancelSwipe(event) {
-    enableBodyScroll(this.element);
+    if (this.lockBody) {
+      enableBodyScroll(this.element);
+    }
+
     this.onDidCancelSwipe?.(event.detail);
   }
 
@@ -134,6 +152,8 @@ export default class SwipeModifier extends Modifier {
     this.element.removeEventListener("swipe", this.onDidSwipe);
     this._swipeEvents.removeTouchListeners();
 
-    enableBodyScroll(this.element);
+    if (this.lockBody) {
+      enableBodyScroll(this.element);
+    }
   }
 }
