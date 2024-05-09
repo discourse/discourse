@@ -11,10 +11,11 @@
     "a11y-dialog": "8.0.4",
     "ember-auto-import": "^2.7.2",
     "ember-cli-babel": "^8.2.0",
-    "ember-cli-htmlbars": "^6.3.0"
+    "ember-cli-htmlbars": "^6.3.0",
+    "ember-template-imports": "^4.1.0"
   },
   "devDependencies": {
-    "@types/jquery": "^3.5.29",
+    "@types/jquery": "^3.5.30",
     "@types/qunit": "^2.19.10",
     "@types/rsvp": "^4.0.9",
     "webpack": "^5.91.0"

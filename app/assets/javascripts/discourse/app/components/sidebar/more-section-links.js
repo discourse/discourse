@@ -47,10 +47,14 @@ export default class SidebarMoreSectionLinks extends Component {
 
   @bind
   closeDetails(event) {
+    if (event.target.closest(".sidebar-more-section-links-details-summary")) {
+      return;
+    }
+
     if (this.open) {
       const isLinkClick =
         event.target.className.includes("sidebar-section-link") ||
-        event.target.className.includes("sidebar-section-link-button");
+        event.target.className.includes("--link-button");
 
       if (isLinkClick || this.#isOutsideDetailsClick(event)) {
         this.open = false;
@@ -69,7 +73,8 @@ export default class SidebarMoreSectionLinks extends Component {
   }
 
   @action
-  toggleSectionLinks() {
+  toggleSectionLinks(event) {
+    event.stopPropagation();
     this.open = !this.open;
   }
 

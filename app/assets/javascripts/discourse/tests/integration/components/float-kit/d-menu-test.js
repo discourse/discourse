@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import {
   click,
   find,
@@ -254,5 +255,14 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await open();
 
     assert.dom(document.activeElement).hasClass("my-button");
+  });
+
+  test("a menu can be closed by identifier", async function (assert) {
+    await render(hbs`<DMenu @inline={{true}} @identifier="test">test</DMenu>`);
+    await open();
+
+    await getOwner(this).lookup("service:menu").close("test");
+
+    assert.dom(".fk-d-menu__content.test-content").doesNotExist();
   });
 });

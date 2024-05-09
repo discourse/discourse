@@ -9,7 +9,7 @@
   "dependencies": {
     "@babel/standalone": "^7.24.5",
     "@zxing/text-encoding": "^0.9.0",
-    "babel-plugin-ember-template-compilation": "^2.2.3",
+    "babel-plugin-ember-template-compilation": "^2.2.4",
     "content-tag": "^2.0.1",
     "discourse-common": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
@@ -19,7 +19,8 @@
     "handlebars": "^4.7.8",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
-    "terser": "^5.31.0"
+    "terser": "^5.31.0",
+    "decorator-transforms": "^2.0.0"
   },
   "engines": {
     "node": ">= 18",

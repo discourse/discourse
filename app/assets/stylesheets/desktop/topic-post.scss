@@ -104,11 +104,31 @@ nav.post-controls {
     }
   }
   .show-replies {
-    margin-left: calc(
-      var(--topic-body-width-padding) * -1
-    ); // negates padding-left on .cooked, for visual alignment
+    display: flex;
+    align-items: center;
+    margin-left: 0;
+    border-radius: var(--d-button-border-radius);
+    .topic-post & {
+      margin-right: 0.5em;
+    }
+    white-space: nowrap;
     .d-icon {
-      margin-right: var(--control-icon-space);
+      margin-inline: var(--control-icon-space);
+      margin-left: 0;
+    }
+    &[aria-expanded="true"] {
+      background: var(--primary-low);
+      color: var(--primary-high);
+      box-shadow: 0px 0px 0px 1px var(--primary-300);
+      z-index: 1;
+      .d-icon {
+        color: var(--primary-high);
+      }
+      &:hover,
+      &:focus {
+        background: var(--primary-300);
+        color: var(--primary);
+      }
     }
   }
 }
@@ -175,42 +195,144 @@ pre.codeblock-buttons:hover {
         }
       }
     }
-  } // bottom means "reply expansion" below a post
-  &.bottom {
-    border-top: none;
-    margin-bottom: 20px;
-    &.hidden {
-      display: block;
-      opacity: 0;
-    }
   }
+
+  // bottom means "reply expansion" below a post
   &.bottom {
-    .collapse-up {
-      transform: translate(-50%, -164%);
-    }
-    .row {
-      padding-bottom: 0.5em;
-      .topic-avatar,
-      .topic-body {
-        border-top: 1px solid var(--primary-low);
+    position: relative;
+    max-width: calc(100% - 66px);
+    margin-bottom: 30px;
+    border: none;
+    > div {
+      position: relative;
+      margin-bottom: 1.5em;
+      &:last-of-type {
+        margin-bottom: 0;
+        .row {
+          // Main reply line
+          &:before {
+            content: "";
+            position: absolute;
+            top: -22px;
+            width: 1px;
+            height: calc(100% + 1.25em);
+            background: var(--primary-300);
+            left: 32px;
+          }
+        }
+      }
+      .row {
+        padding-bottom: 0.5em;
+        // Main reply line
+        &:before {
+          content: "";
+          position: absolute;
+          top: -22px;
+          width: 1px;
+          height: calc(100% + 1.5em);
+          background: var(--primary-300);
+          left: 32px;
+        }
+        .topic-avatar {
+          border-top: none;
+          padding-left: 9px;
+          position: relative;
+        }
+        .topic-body {
+          border-top: none;
+          padding-bottom: 2.5em;
+          .topic-meta-data {
+            position: unset;
+            .post-link-arrow {
+              position: absolute;
+              bottom: 0.75em;
+              .archetype-private_message & {
+                bottom: 0;
+              }
+              .post-info.arrow {
+                display: block;
+                margin-right: 0;
+                .d-icon {
+                  margin-left: 0;
+                }
+                &:hover,
+                &:focus {
+                  color: var(--primary-high);
+                }
+              }
+            }
+          }
+          .cooked {
+            margin-top: 0.25em;
+            padding-top: 0.5em;
+          }
+        }
+      }
+      &.hidden {
+        display: block;
+        opacity: 0;
       }
     }
-  } // top means "in reply to expansion" above a post
-  &.top {
-    border-bottom: none;
-    .collapse-down {
-      transform: translate(-50%, 55%);
+    .collapse-up {
+      transform: translate(-50%, -164%);
+      background: var(--primary-low);
+      color: var(--primary-high);
+      border: 1px solid var(--primary-300);
+      padding: 6px;
+      left: 32px;
+      bottom: -3em;
+      z-index: 1;
+      .archetype-private_message & {
+        display: flex;
+      }
+      .d-icon {
+        transform: scale(0.871);
+      }
+      .discourse-no-touch & {
+        &:hover,
+        &:focus {
+          color: var(--primary);
+          background: var(--primary-300);
+        }
+      }
     }
-    margin-left: var(--topic-avatar-width);
+
+    .topic-avatar {
+      padding-left: 1em;
+    }
+  }
+
+  // top means "in reply to expansion" above a post
+  &.top {
+    margin-left: 0px;
+    border: none;
+    .collapse-down {
+      transform: translate(17%, 230%);
+      z-index: 1;
+    }
     width: calc(
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
         var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
     ); // 2px accounts for left and right borders
     .row {
-      border-bottom: none;
-      .topic-avatar,
+      .topic-body,
+      .topic-avatar {
+        border-top: none;
+      }
+      .topic-avatar {
+        padding-left: 0;
+      }
       .topic-body {
-        border-top: 1px solid var(--primary-low);
+        overflow: visible;
+        &::before {
+          content: "";
+          position: absolute;
+          top: 16px;
+          width: 1px;
+          height: calc(100% + 1.5em);
+          background: var(--primary-300);
+          left: -22px;
+        }
       }
     }
   }
@@ -503,7 +625,7 @@ blockquote {
 }
 
 .time-gap + .topic-post .embedded-posts.top {
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: none;
 }
 
 .posts-wrapper {
@@ -625,7 +747,7 @@ span.highlighted {
 }
 
 .topic-post.sticky-avatar {
-  .topic-avatar {
+  > article > .row > .topic-avatar {
     position: sticky;
     top: calc(var(--header-offset) - 0.25em);
     margin-bottom: 25px;

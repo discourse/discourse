@@ -14,7 +14,7 @@ describe "Homepage", type: :system do
       sign_in user
       visit "/"
 
-      expect(page).to have_no_css(".fk-d-tooltip .user-tip__title")
+      expect(page).to have_no_css(".fk-d-tooltip__content .user-tip__title")
     end
 
     it "does not show the boostrapping tip to an admin user" do
@@ -22,7 +22,7 @@ describe "Homepage", type: :system do
       sign_in admin
       visit "/"
 
-      expect(page).to have_no_css(".fk-d-tooltip .user-tip__title")
+      expect(page).to have_no_css(".fk-d-tooltip__content .user-tip__title")
     end
   end
 
@@ -35,20 +35,23 @@ describe "Homepage", type: :system do
 
       visit "/"
 
-      expect(page).to have_css(".fk-d-tooltip .user-tip__title", text: "Your first notification!")
+      expect(page).to have_css(
+        ".fk-d-tooltip__content .user-tip__title",
+        text: "Your first notification!",
+      )
 
-      find(".d-header #current-user").click
+      find(".d-header").click
 
       # Clicking outside element dismisses the tip
       expect(page).to have_no_css(
-        ".fk-d-tooltip .user-tip__title",
+        ".fk-d-tooltip__content .user-tip__title",
         text: "Your first notification!",
       )
 
       page.refresh
 
       expect(page).to have_no_css(
-        ".fk-d-tooltip .user-tip__title",
+        ".fk-d-tooltip__content .user-tip__title",
         text: "Your first notification!",
       )
     end
@@ -57,25 +60,25 @@ describe "Homepage", type: :system do
       sign_in user
       visit "/"
 
-      find(".fk-d-tooltip .user-tip__buttons .btn-primary").click
-      expect(page).to have_no_css(".fk-d-tooltip .user-tip__title")
+      find(".fk-d-tooltip__content .user-tip__buttons .btn-primary").click
+      expect(page).to have_no_css(".fk-d-tooltip__content .user-tip__title")
 
       discovery.topic_list.visit_topic(topics[0])
-      expect(page).to have_css(".fk-d-tooltip .user-tip__title", text: "Topic timeline")
+      expect(page).to have_css(".fk-d-tooltip__content .user-tip__title", text: "Topic timeline")
 
-      find(".fk-d-tooltip .user-tip__buttons .btn-primary").click
-      expect(page).to have_css(".fk-d-tooltip .user-tip__title", text: "Keep reading!")
+      find(".fk-d-tooltip__content .user-tip__buttons .btn-primary").click
+      expect(page).to have_css(".fk-d-tooltip__content .user-tip__title", text: "Keep reading!")
     end
 
     it "can skip all tips" do
       sign_in user
       visit "/"
 
-      find(".fk-d-tooltip .user-tip__buttons .btn", text: "Skip tips").click
-      expect(page).to have_no_css(".fk-d-tooltip .user-tip__title")
+      find(".fk-d-tooltip__content .user-tip__buttons .btn", text: "Skip tips").click
+      expect(page).to have_no_css(".fk-d-tooltip__content .user-tip__title")
 
       discovery.topic_list.visit_topic(topics[0])
-      expect(page).to have_no_css(".fk-d-tooltip .user-tip__title")
+      expect(page).to have_no_css(".fk-d-tooltip__content .user-tip__title")
     end
   end
 end

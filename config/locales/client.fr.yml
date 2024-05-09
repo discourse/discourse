@@ -186,6 +186,7 @@ fr:
     emails_are_disabled: "L'e-mail sortant a été désactivé par un administrateur. Aucune notification par e-mail ne sera envoyée."
     emails_are_disabled_non_staff: "L'envoi d'e-mail est désactivé pour les utilisateurs ne faisant pas partie des responsables."
     software_update_prompt:
+      message: "Nous avons mis à jour ce site, <span>veuillez actualiser</span> pour que tout fonctionne correctement."
       dismiss: "Rejeter"
     bootstrap_mode: "Pour commencer"
     back_button: "Revenir en arrière"
@@ -198,6 +199,7 @@ fr:
     broken_page_change_alert: "Un gestionnaire onPageChange a généré une erreur. Consultez les outils de développement du navigateur pour obtenir plus d'informations."
     broken_plugin_alert: "Causé par l'extension « %{name}»"
     critical_deprecation:
+      notice: "<b>[Avis d'administration]</b> L'un de vos thèmes ou extensions doit être mis à jour pour être compatible avec les prochaines modifications principales de Discourse."
       theme_source: "Thème identifié : <a target='_blank' href='%{path}'>« %{name} »</a>."
       plugin_source: "Extension identifiée : « %{name} »"
     s3:
@@ -317,7 +319,10 @@ fr:
         unbookmark: "Cliquez pour retirer tous les signets de ce sujet"
         unbookmark_with_reminder: "Cliquez pour retirer tous les signets et rappels de ce sujet"
     bookmarks:
-      bookmarked_success: "Ajouté aux signets!"
+      also_set_reminder: "Programmer également un rappel ?"
+      bookmarked_success: "Ajouté aux signets !"
+      deleted_bookmark_success: "Signet supprimé !"
+      reminder_set_success: "Rappel programmé !"
       created: "Vous avez mis un signet à ce message. %{name}"
       created_generic: "Vous avez mis ceci en signet. %{name}"
       create: "Créer un signet"
@@ -340,6 +345,8 @@ fr:
         when_reminder_sent: "Supprimer le signet"
         on_owner_reply: "Supprimer le signet quand j'aurai répondu"
         clear_reminder: "Conserver le signet et supprimer le rappel"
+        after_reminder_label: "Après le rappel nous devrions..."
+        after_reminder_checkbox: "Définir cette option par défaut pour tous les futurs rappels de signets."
       search_placeholder: "Rechercher des signets par nom, titre de sujet ou contenu de message"
       search: "Recherche"
       bookmark: "Signet"
@@ -1738,6 +1745,9 @@ fr:
         incorrect_password: "Le mot de passe saisi est incorrect."
         incorrect_passkey: "Cette clé d'accès est incorrecte."
         logged_in_as: "Vous êtes connecté(e) en tant que : "
+        forgot_password: "Mot de passe oublié ?"
+        password_reset_email_sent: "E-mail de réinitialisation du mot de passe envoyé."
+        cannot_send_password_reset_email: "Impossible d'envoyer l'e-mail de réinitialisation du mot de passe."
         instructions: "Veuillez confirmer votre identité afin de terminer cette action."
         fine_print: "Nous vous demandons de confirmer votre identité, car il s'agit d'une action potentiellement sensible. Une fois que vous serez authentifié(e), il ne vous sera demandé de vous réauthentifier qu'après quelques heures d'inactivité."
       password:
@@ -1837,11 +1847,13 @@ fr:
       remove_status: "Supprimer le statut"
     user_tips:
       button: "J'ai compris !"
+      skip: "Ignorer les astuces"
       first_notification:
         title: "Votre première notification !"
         content: "Les notifications sont utilisées pour vous tenir au courant de ce qui se passe dans la communauté."
       topic_timeline:
         title: "Chronologie du sujet"
+        content: "Parcourez rapidement un article à l'aide de la chronologie des sujets."
       post_menu:
         title: "Menu du message"
         content: "Découvrez comment vous pouvez interagir autrement avec le message en cliquant sur les trois points !"
@@ -1875,6 +1887,7 @@ fr:
       close: "fermer"
       dismiss_error: "Ignorer l'erreur"
     close: "Fermer"
+    assets_changed_confirm: "Une mise à jour est disponible pour ce site. Souhaitez-vous obtenir la dernière version ?"
     logout: "Vous avez été déconnecté(e)."
     refresh: "Actualiser"
     home: "Accueil"
@@ -2076,6 +2089,10 @@ fr:
         name: "Discord"
         title: "Se connecter avec Discord"
         sr_title: "Se connecter avec Discord"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "Se connecter avec LinkedIn"
+        sr_title: "Se connecter avec LinkedIn"
       passkey:
         name: "Se connecter avec une clé d'accès"
       second_factor_toggle:
@@ -2248,6 +2265,7 @@ fr:
       reply: "Répondre"
       cancel: "Annuler"
       create_topic: "Créer le sujet"
+      create_pm: "Envoyer le message"
       create_whisper: "Murmurer"
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
@@ -2345,6 +2363,8 @@ fr:
       ignore: "Ignorer"
       image_alt_text:
         aria_label: Texte alternatif pour l'image
+        title: "Ajouter une description de l'image"
+      image_scale_button: "Mettre l'image à l'échelle de %{percent}%"
       delete_image_button: Supprimer l'image
       toggle_image_grid: Activer/désactiver la grille des images
     notifications:
@@ -2463,6 +2483,7 @@ fr:
         watching_first_post: "nouveau sujet"
         topic_reminder: "rappel de sujet"
         liked_consolidated: "nouveaux « J'aime »"
+        linked_consolidated: "nouveaux liens"
         post_approved: "message approuvé"
         membership_request_consolidated: "nouvelles demandes d'adhésion"
         reaction: "nouvelle réaction"
@@ -2567,6 +2588,7 @@ fr:
           seen: que j'ai lus
           unseen: que je n'ai pas lus
           wiki: qui sont des wikis
+          images: inclure des images
           all_tags: Contient toutes ces étiquettes
         statuses:
           label: et dont les sujets
@@ -2665,6 +2687,7 @@ fr:
         unlist_topics: "Rendre les sujets invisibles"
         relist_topics: "Lister les sujets"
         reset_bump_dates: "Réinitialiser la date d'actualisation"
+        defer: "Marquer comme non lu"
         delete: "Supprimer les sujets"
         dismiss: "Marquer comme vus"
         dismiss_read: "Marquer tous les sujets comme vus"
@@ -2705,6 +2728,9 @@ fr:
         selected:
           one: "Vous avez sélectionné <b>%{count}</b> sujet."
           other: "Vous avez sélectionné <b>%{count}</b> sujets."
+        selected_sole_category:
+          one: "Vous avez sélectionné <b>%{count}</b> sujet de la catégorie :"
+          other: "Vous avez sélectionné <b>%{count}</b> sujets de la catégorie :"
         selected_count:
           one: "%{count} sélectionné"
           other: "%{count} sélectionné"
@@ -2720,6 +2746,9 @@ fr:
         progress:
           one: "Progression : <strong>%{count}</strong> sujet"
           other: "Progression : <strong>%{count}</strong> sujets"
+        silent: "Effectue cette action sans notification."
+        performing: "Effectue des opérations en masse, merci de patienter…"
+        completed: "Les opérations en masse ont été menées à bien !"
       none:
         unread: "Vous n'avez aucun sujet non lu."
         unseen: "Vous n'avez aucun sujet non lu."
@@ -2730,6 +2759,7 @@ fr:
         bookmarks: "Vous n'avez encore attribué aucun signet."
         category: "Il n'y a pas de sujets dans %{category}."
         top: "Il n'y a pas de meilleurs sujets."
+        hot: "Il n'y a pas de sujets en tendance."
         filter: "Il n'y a pas de sujets."
         educate:
           new: '<p>Vos nouveaux sujets vont apparaître ici. Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
@@ -2745,11 +2775,13 @@ fr:
         category: "Il n'y a pas d'autres sujets à consulter dans %{category}."
         tag: "Il n'y a pas d'autres sujets à consulter dans %{tag}."
         top: "Il n'y a pas d'autres meilleurs sujets à consulter."
+        hot: "Il n'y a plus de sujets en tendance."
         bookmarks: "Il n'y a pas d'autres sujets enregistrés dans les signets."
         filter: "Il n'y a plus de sujets."
     topic_bulk_actions:
       close_topics:
         name: "Fermer les sujets"
+        note: "Note"
         optional: (facultatif)
       archive_topics:
         name: "Archiver les sujets"
@@ -2765,6 +2797,15 @@ fr:
         name: "Remplacer des étiquettes"
       delete_topics:
         name: "Supprimer les sujets"
+      update_category:
+        name: "Mettre à jour la catégorie"
+        description: "Choisir la nouvelle catégorie pour les sujets sélectionnés"
+      reset_bump_dates:
+        name: "Réinitialiser la date d'actualisation"
+        description: "Réinitialise la date de démarrage du sujet à la date du dernier message créé, ce qui affecte l'ordre dans la liste des sujets."
+      defer:
+        name: "Marquer comme non lu"
+        description: "Marquer les sujets comme non lus"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -4399,6 +4440,7 @@ fr:
       moderator: "Modérateur"
       back_to_forum: "Retour au forum"
       filter_reports: Filtrer les rapports
+      collapse_all_sections: "Réduire toutes les sections"
       tags:
         remove_muted_tags_from_latest:
           always: "toujours"
@@ -4420,8 +4462,10 @@ fr:
         up_to_date: "À jour !"
         critical_available: "Une mise à jour critique est disponible."
         updates_available: "Des mises à jour sont disponibles."
+        please_update: "Veuillez mettre à jour !"
         no_check_performed: "Une vérification de mises à jour n'a pas été effectuée. Vérifiez que sidekiq est en cours d'exécution."
         stale_data: "Une vérification de mises à jour n'a pas été effectuée récemment. Vérifiez que sidekiq est en cours d'exécution."
+        version_check_pending: "On dirait que vous avez mis à jour récemment. Fantastique!"
         installed_version: "Installée"
         latest_version: "Dernière"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
@@ -4633,12 +4677,17 @@ fr:
               write: Créer un nouveau sujet ou publier sur un sujet existant.
               update: Mettre à jour un sujet. Modifiez le titre, la catégorie, les étiquettes, le statut, l'archétype, le lien en vedette, etc.
               delete: Supprimez un sujet.
+              recover: Récupérer un sujet.
               read_lists: Lire les listes de sujets comme top, nouveaux, récents, etc. Le RSS est aussi accepté.
               status: "Mettre à jour le statut d'un sujet. Statut : fermé, archivé, visible, épinglé. Activé : vrai, faux. Spécifiez une category_id ici et dans la charge utile de la demande pour autoriser uniquement les changements de statut sur les sujets de cette catégorie."
             posts:
               edit: Modifiez n'importe quel message ou un message spécifique.
               delete: Supprimez un message.
+              recover: Récupérer un message.
               list: Répertorier les derniers messages et les messages privés. Le RSS est également pris en charge.
+            revisions:
+              read: "Obtenir la dernière révision ou une révision spécifique."
+              modify: "Masquer, afficher ou annuler les révisions."
             tags:
               list: Répertorier les étiquettes.
             tag_groups:

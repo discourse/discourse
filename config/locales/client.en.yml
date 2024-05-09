@@ -3186,6 +3186,7 @@ en:
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
       jump_reply: "Jump to post's original location"
       jump_reply_aria: "Jump to @%{username}'s post in its original location"
+      jump_reply_button: "Jump to post"
       deleted: "The topic has been deleted"
 
       slow_mode_update:

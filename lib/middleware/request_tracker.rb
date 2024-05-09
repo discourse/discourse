@@ -120,7 +120,10 @@ class Middleware::RequestTracker
 
   def self.get_data(env, result, timing, request = nil)
     status, headers = result
+
+    # result may be nil if the downstream app raised an exception
     status = status.to_i
+    headers ||= {}
 
     request ||= Rack::Request.new(env)
     helper = Middleware::AnonymousCache::Helper.new(env, request)

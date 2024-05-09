@@ -513,6 +513,8 @@ describe Chat::Message do
 
       it "keeps the same hashtags the user has permission to after rebake" do
         group.add(chat_message.user)
+        chat_message.chat_channel.add(chat_message.user)
+
         update_message!(
           chat_message,
           user: chat_message.user,

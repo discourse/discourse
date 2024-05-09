@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
@@ -15,33 +17,22 @@ export default class DTooltip extends Component {
   @service tooltip;
   @service internalTooltip;
 
-  @tracked tooltipInstance = null;
-
-  registerTrigger = modifier((element, [properties]) => {
-    const options = {
-      ...properties,
-      ...{
-        listeners: true,
-        beforeTrigger: (instance) => {
-          this.internalTooltip.activeTooltip?.close?.();
-          this.internalTooltip.activeTooltip = instance;
-        },
-      },
-    };
-    const instance = new DTooltipInstance(getOwner(this), element, options);
-
-    this.tooltipInstance = instance;
-
-    this.options.onRegisterApi?.(instance);
-
-    return () => {
-      instance.destroy();
-
-      if (this.isDestroying) {
-        this.tooltipInstance = null;
-      }
-    };
+  registerTrigger = modifier((element) => {
+    if (!this.tooltipInstance?.trigger) {
+      next(() => {
+        this.tooltipInstance.trigger = element;
+        this.options.onRegisterApi?.(this.tooltipInstance);
+      });
+    }
   });
+
+  @cached
+  get tooltipInstance() {
+    return new DTooltipInstance(getOwner(this), {
+      ...this.allowedProperties(),
+      ...{ autoUpdate: true, listeners: true },
+    });
+  }
 
   get options() {
     return this.tooltipInstance?.options;
@@ -98,11 +89,13 @@ export default class DTooltip extends Component {
       <DFloatBody
         @instance={{this.tooltipInstance}}
         @trapTab={{and this.options.interactive this.options.trapTab}}
-        @mainClass="fk-d-tooltip"
+        @mainClass={{concatClass
+          "fk-d-tooltip__content"
+          (concat this.options.identifier "-content")
+        }}
         @innerClass="fk-d-tooltip__inner-content"
         @role="tooltip"
         @inline={{this.options.inline}}
-        @portalOutletElement={{this.tooltip.portalOutletElement}}
       >
         {{#if (has-block)}}
           {{yield this.componentArgs}}

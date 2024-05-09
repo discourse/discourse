@@ -22,7 +22,7 @@
     "concurrently": "^8.2.2",
     "diffhtml": "1.0.0-beta.30",
     "ember-template-lint": "^5.13.0",
-    "esbuild": "^0.20.2",
+    "esbuild": "^0.21.1",
     "eslint": "^8.57.0",
     "jsdoc": "^4.0.0",
     "lefthook": "^1.6.10",
@@ -36,7 +36,7 @@
     "pikaday": "1.8.2",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.8.8",
-    "puppeteer-core": "^22.7.1",
+    "puppeteer-core": "^22.8.0",
     "squoosh": "discourse/squoosh#dc9649d",
     "typescript": "^5.4.5"
   },
