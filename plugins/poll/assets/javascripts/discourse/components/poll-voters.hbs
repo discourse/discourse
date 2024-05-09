@@ -1,0 +1,18 @@
+<div class="poll-voters">
+  <ul class="poll-voters-list">
+    {{#each this.voters as |user|}}
+      <li>
+        {{avatar user imageSize="tiny"}}
+      </li>
+    {{/each}}
+  </ul>
+  {{#if this.showMore}}
+    {{#if this.loading}}
+      <div class="spinner small"></div>
+    {{else}}
+      <button onclick={{action this.fetchVoters}}>
+        {{d-icon "chevron-down"}}
+      </button>
+    {{/if}}
+  {{/if}}
+</div>

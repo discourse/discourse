@@ -8,6 +8,8 @@
       <div class={{this.resultsWidgetTypeClass}}>
         {{#if this.isNumber}}
           <span>{{this.averageRating}}</span>
+        {{else}}
+          <PollResultsStandard @attrs={{this.attributes}} />
         {{/if}}
       </div>
     {{else}}

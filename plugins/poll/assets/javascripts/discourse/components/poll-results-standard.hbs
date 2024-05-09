@@ -1,0 +1,16 @@
+<ul class="results">
+  {{#each this.orderedOptions as |option|}}
+    <li class={{if option.chosen "chosen" ""}}>
+      <div class="option">
+        <p>
+          <span class="percentage">{{option.percentage}}%</span>
+          <span class="option-text">{{option.html}}</span>
+        </p>
+        <div class="bar-back">
+          <div class="bar" style={{htmlSafe (concat "width:" option.percentage "%")}} /> 
+        </div>
+        <PollVoters @postId={{this.postId}} @pollType={{this.pollType}} @optionId={{option.id}} @pollName={{this.pollName}} @totalVotes={{option.votes}} @voters={{this.voters}} />
+      </div>
+    </li>
+  {{/each}}
+</ul>

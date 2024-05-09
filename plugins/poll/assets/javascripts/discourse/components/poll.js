@@ -104,9 +104,8 @@ export default class PollComponent extends Component {
     })
       .then(({ poll }) => {
         this.options = [...poll.options];
-        this.args.attrs.hasSavedVote = true;
         this.hasSavedVote = true;
-        this.args.attrs.poll.setProperties(poll);
+        this.poll.setProperties(poll);
         this.appEvents.trigger(
           "poll:voted",
           poll,
@@ -292,12 +291,7 @@ export default class PollComponent extends Component {
   }
 
   get showCastVotesButton() {
-    return (
-      this.args.attrs.isMultiple ||
-      (this.args.attrs.isIrv &&
-        !this.hideResultsDisabled &&
-        !this.args.attrs.showResults)
-    );
+    return (this.isMultiple || this.isIrv) && !this.showResults;
   }
 
   get castVotesButtonClass() {
@@ -323,7 +317,7 @@ export default class PollComponent extends Component {
   }
 
   get showRemoveVoteButton() {
-    return this.hasSavedVote;
+    return !this.showResults && !this.hideResultsDisabled && this.hasSavedVote;
   }
 
   get showDropdown() {
@@ -398,30 +392,6 @@ export default class PollComponent extends Component {
     return contents;
   }
 
-  // @action
-  // sendCheck(option, value) {
-  //   this.options.forEach((candidate) => {
-  //     if (candidate.id === option) {
-  //       candidate.chosen = value;
-  //     }
-  //   });
-  // }
-
-  // @action
-  // sendRadioSelect(option) {
-  //   let options = this.options;
-  //   options.forEach((candidate, index) => {
-  //     if (candidate.id === option) {
-  //       options[index].chosen = true;
-  //     } else {
-  //       options[index].chosen = false;
-  //     }
-  //   });
-  //   this.options = [...options];
-  //   this.vote = [option];
-  //   this.chosen = option;
-  // }
-
   @action
   removeVote() {
     return ajax("/polls/vote", {
@@ -434,107 +404,10 @@ export default class PollComponent extends Component {
       .then(({ poll }) => {
         this.options = [...poll.options];
         this.poll.setProperties(poll);
-        this.vote.length = 0;
+        this.vote = [];
         this.hasSavedVote = false;
-        this.args.attrs.hasSavedVote = false;
-
         this.appEvents.trigger("poll:voted", poll, this.post, this.vote);
       })
       .catch((error) => popupAjaxError(error));
   }
 }
-
-// createWidget("discourse-poll-buttons", {
-//   tagName: "div.poll-buttons",
-
-//   html(attrs) {
-//     const contents = [];
-//     const { poll, post } = attrs;
-//     const topicArchived = post.get("topic.archived");
-//     const closed = attrs.isClosed;
-//     const staffOnly = poll.results === "staff_only";
-//     const isStaff = this.currentUser && this.currentUser.staff;
-//     const isMe = this.currentUser && post.user_id === this.currentUser.id;
-//     const this.hideResultsDisabled = !staffOnly && (closed || topicArchived);
-//     const dropdown = this.attach("discourse-poll-buttons-dropdown", attrs);
-//     const dropdownOptionsCount = dropdown.optionsCount(attrs);
-
-//     if ((attrs.isMultiple || attrs.isIrv) && !hideResultsDisabled && !attrs.showResults) {
-//       const castVotesDisabled = !attrs.canCastVotes;
-//       contents.push(
-//         this.attach("button", {
-//           className: `cast-votes ${castVotesDisabled ? "btn-default" : "btn-primary"
-//             }`,
-//           label: "poll.cast-votes.label",
-//           title: "poll.cast-votes.title",
-//           icon: castVotesDisabled ? "far-square" : "check",
-//           disabled: castVotesDisabled,
-//           action: "castVotes",
-//         })
-//       );
-//     }
-
-//     if (attrs.showResults && !hideResultsDisabled) {
-//       contents.push(
-//         this.attach("button", {
-//           className: "btn-default toggle-results",
-//           label: "poll.hide-results.label",
-//           title: "poll.hide-results.title",
-//           icon: "chevron-left",
-//           action: "toggleResults",
-//         })
-//       );
-//     }
-
-//     if (!attrs.showResults && !hideResultsDisabled) {
-//       let showResultsButton;
-
-//       if (
-//         !(poll.results === "on_vote" && !attrs.hasVoted && !isMe) &&
-//         !(poll.results === "on_close" && !closed) &&
-//         !(poll.results === "staff_only" && !isStaff) &&
-//         poll.voters > 0
-//       ) {
-//         showResultsButton = this.attach("button", {
-//           className: "btn-default toggle-results",
-//           label: "poll.show-results.label",
-//           title: "poll.show-results.title",
-//           icon: "chart-bar",
-//           action: "toggleResults",
-//         });
-//       }
-
-//       if (attrs.hasSavedVote) {
-//         contents.push(
-//           this.attach("button", {
-//             className: "btn-default remove-vote",
-//             label: "poll.remove-vote.label",
-//             title: "poll.remove-vote.title",
-//             icon: "undo",
-//             action: "removeVote",
-//           })
-//         );
-//       }
-
-//       if (showResultsButton) {
-//         contents.push(showResultsButton);
-//       }
-//     }
-
-//     // only show the dropdown if there's more than 1 button
-//     // otherwise just show the button
-//     if (dropdownOptionsCount > 1) {
-//       contents.push(dropdown);
-//     } else if (dropdownOptionsCount === 1) {
-//       const singleOptionId = dropdown._buildContent(attrs)[0].id;
-//       let singleOption = buttonOptionsMap[singleOptionId];
-//       if (singleOptionId === "toggleStatus") {
-//         singleOption = closed
-//           ? buttonOptionsMap.openPoll
-//           : buttonOptionsMap.closePoll;
-//       }
-//       contents.push(this.attach("button", singleOption));
-//     }
-//     return [contents];
-//   },
-// });
