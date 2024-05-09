@@ -1,5 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { formatUsername } from "discourse/lib/utilities";
+import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 
@@ -35,7 +36,7 @@ export default {
                   url += `/${data.chat_message_id}`;
                 }
 
-                return url;
+                return getURL(url);
               }
 
               get label() {
@@ -65,7 +66,7 @@ export default {
                 } else {
                   notificationRoute += `/${this.notification.data.chat_message_id}`;
                 }
-                return notificationRoute;
+                return getURL(notificationRoute);
               }
 
               get linkTitle() {

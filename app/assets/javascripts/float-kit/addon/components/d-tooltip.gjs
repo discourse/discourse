@@ -1,9 +1,6 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { concat } from "@ember/helper";
-import { action } from "@ember/object";
-import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
@@ -17,22 +14,16 @@ export default class DTooltip extends Component {
   @service tooltip;
   @service internalTooltip;
 
-  registerTrigger = modifier((element) => {
-    if (!this.tooltipInstance?.trigger) {
-      next(() => {
-        this.tooltipInstance.trigger = element;
-        this.options.onRegisterApi?.(this.tooltipInstance);
-      });
-    }
+  tooltipInstance = new DTooltipInstance(getOwner(this), {
+    ...this.allowedProperties,
+    autoUpdate: true,
+    listeners: true,
   });
 
-  @cached
-  get tooltipInstance() {
-    return new DTooltipInstance(getOwner(this), {
-      ...this.allowedProperties(),
-      ...{ autoUpdate: true, listeners: true },
-    });
-  }
+  registerTrigger = modifier((element) => {
+    this.tooltipInstance.trigger = element;
+    this.options.onRegisterApi?.(this.tooltipInstance);
+  });
 
   get options() {
     return this.tooltipInstance?.options;
@@ -45,18 +36,17 @@ export default class DTooltip extends Component {
     };
   }
 
-  @action
-  allowedProperties() {
+  get allowedProperties() {
     const properties = {};
-    Object.keys(TOOLTIP.options).forEach((key) => {
-      const value = TOOLTIP.options[key];
+    for (const [key, value] of Object.entries(TOOLTIP.options)) {
       properties[key] = this.args[key] ?? value;
-    });
+    }
     return properties;
   }
 
   <template>
     <span
+      {{this.registerTrigger this.allowedProperties}}
       class={{concatClass
         "fk-d-tooltip__trigger"
         (if this.tooltipInstance.expanded "-expanded")
@@ -66,7 +56,6 @@ export default class DTooltip extends Component {
       data-identifier={{this.options.identifier}}
       data-trigger
       aria-expanded={{if this.tooltipInstance.expanded "true" "false"}}
-      {{this.registerTrigger (this.allowedProperties)}}
       ...attributes
     >
       <span class="fk-d-tooltip__trigger-container">

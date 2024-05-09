@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
@@ -7,28 +6,6 @@ import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
 export default class RelativeTimePicker extends Component {
-  @tracked duration;
-  @tracked selectedInterval;
-
-  constructor() {
-    super(...arguments);
-
-    const usesHours = this.args.durationHours !== undefined;
-    const usesMinutes = this.args.durationMinutes !== undefined;
-
-    if (usesHours && usesMinutes) {
-      throw new Error(
-        "relative-time needs initial duration in hours OR minutes, both are not supported"
-      );
-    }
-
-    if (usesHours) {
-      this._setInitialDurationFromHours();
-    } else {
-      this._setInitialDurationFromMinutes();
-    }
-  }
-
   _roundedDuration(duration) {
     const rounded = parseFloat(duration.toFixed(2));
 
@@ -36,50 +13,79 @@ export default class RelativeTimePicker extends Component {
     return rounded % 1 === 0 ? parseInt(rounded, 10) : rounded;
   }
 
-  _setInitialDurationFromHours() {
-    if (this.args.durationHours === null) {
-      this.duration = this.args.durationHours;
-      this.selectedInterval = "hours";
-    } else if (this.args.durationHours >= 8760) {
-      this.duration = this._roundedDuration(this.args.durationHours / 365 / 24);
-      this.selectedInterval = "years";
-    } else if (this.args.durationHours >= 730) {
-      this.duration = this._roundedDuration(this.args.durationHours / 30 / 24);
-      this.selectedInterval = "months";
-    } else if (this.args.durationHours >= 24) {
-      this.duration = this._roundedDuration(this.args.durationHours / 24);
-      this.selectedInterval = "days";
-    } else if (this.args.durationHours < 1) {
-      this.duration = this._roundedDuration(this.args.durationHours * 60);
-      this.selectedInterval = "mins";
+  get duration() {
+    if (this.args.durationMinutes !== undefined) {
+      return this._durationFromMinutes;
     } else {
-      this.duration = this.args.durationHours;
-      this.selectedInterval = "hours";
+      return this._durationFromHours;
     }
   }
 
-  _setInitialDurationFromMinutes() {
-    if (this.args.durationMinutes >= 525600) {
-      this.duration = this._roundedDuration(
-        this.args.durationMinutes / 365 / 60 / 24
-      );
-      this.selectedInterval = "years";
-    } else if (this.args.durationMinutes >= 43800) {
-      this.duration = this._roundedDuration(
-        this.args.durationMinutes / 30 / 60 / 24
-      );
-      this.selectedInterval = "months";
-    } else if (this.args.durationMinutes >= 1440) {
-      this.duration = this._roundedDuration(
-        this.args.durationMinutes / 60 / 24
-      );
-      this.selectedInterval = "days";
-    } else if (this.args.durationMinutes >= 60) {
-      this.duration = this._roundedDuration(this.args.durationMinutes / 60);
-      this.selectedInterval = "hours";
+  get selectedInterval() {
+    if (this.args.durationMinutes !== undefined) {
+      return this._intervalFromMinutes;
     } else {
-      this.duration = this.args.durationMinutes;
-      this.selectedInterval = "mins";
+      return this._intervalFromHours;
+    }
+  }
+
+  get _durationFromHours() {
+    if (this.args.durationHours === null) {
+      return this.args.durationHours;
+    } else if (this.args.durationHours >= 8760) {
+      return this._roundedDuration(this.args.durationHours / 365 / 24);
+    } else if (this.args.durationHours >= 730) {
+      return this._roundedDuration(this.args.durationHours / 30 / 24);
+    } else if (this.args.durationHours >= 24) {
+      return this._roundedDuration(this.args.durationHours / 24);
+    } else if (this.args.durationHours >= 1) {
+      return this.args.durationHours;
+    } else {
+      return this._roundedDuration(this.args.durationHours * 60);
+    }
+  }
+
+  get _intervalFromHours() {
+    if (this.args.durationHours === null) {
+      return "hours";
+    } else if (this.args.durationHours >= 8760) {
+      return "years";
+    } else if (this.args.durationHours >= 730) {
+      return "months";
+    } else if (this.args.durationHours >= 24) {
+      return "days";
+    } else if (this.args.durationHours < 1) {
+      return "mins";
+    } else {
+      return "hours";
+    }
+  }
+
+  get _durationFromMinutes() {
+    if (this.args.durationMinutes >= 525600) {
+      return this._roundedDuration(this.args.durationMinutes / 365 / 60 / 24);
+    } else if (this.args.durationMinutes >= 43800) {
+      return this._roundedDuration(this.args.durationMinutes / 30 / 60 / 24);
+    } else if (this.args.durationMinutes >= 1440) {
+      return this._roundedDuration(this.args.durationMinutes / 60 / 24);
+    } else if (this.args.durationMinutes >= 60) {
+      return this._roundedDuration(this.args.durationMinutes / 60);
+    } else {
+      return this.args.durationMinutes;
+    }
+  }
+
+  get _intervalFromMinutes() {
+    if (this.args.durationMinutes >= 525600) {
+      return "years";
+    } else if (this.args.durationMinutes >= 43800) {
+      return "months";
+    } else if (this.args.durationMinutes >= 1440) {
+      return "days";
+    } else if (this.args.durationMinutes >= 60) {
+      return "hours";
+    } else {
+      return "mins";
     }
   }
 
@@ -118,14 +124,14 @@ export default class RelativeTimePicker extends Component {
     ].filter((interval) => !this.args.hiddenIntervals?.includes(interval.id));
   }
 
-  get calculatedMinutes() {
-    if (isBlank(this.duration)) {
+  calculateMinutes(duration, interval) {
+    if (isBlank(duration)) {
       return null;
     }
 
-    const duration = parseFloat(this.duration);
+    duration = parseFloat(duration);
 
-    switch (this.selectedInterval) {
+    switch (interval) {
       case "mins":
         // we round up here in case the user manually inputted a step < 1
         return Math.ceil(duration);
@@ -142,14 +148,17 @@ export default class RelativeTimePicker extends Component {
 
   @action
   onChangeInterval(interval) {
-    this.selectedInterval = interval;
-    this.args.onChange?.(this.calculatedMinutes);
+    const minutes = this.calculateMinutes(this.duration, interval);
+    this.args.onChange?.(minutes);
   }
 
   @action
   onChangeDuration(event) {
-    this.duration = event.target.value;
-    this.args.onChange?.(this.calculatedMinutes);
+    const minutes = this.calculateMinutes(
+      event.target.value,
+      this.selectedInterval
+    );
+    this.args.onChange?.(minutes);
   }
 
   <template>

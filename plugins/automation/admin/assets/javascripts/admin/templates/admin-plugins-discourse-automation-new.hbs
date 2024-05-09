@@ -27,7 +27,7 @@
         <DropdownSelectBox
           @value={{form.script}}
           @content={{model.scriptables.content}}
-          @onChange={{action (mut form.script)}}
+          @onChange={{fn (mut form.script)}}
           @options={{hash
             showCaret=true
             filterable=true
@@ -39,12 +39,11 @@
     </div>
 
     <div class="control-group">
-
       <div class="controls">
         <DButton
           @icon="plus"
           @label="discourse_automation.create"
-          @action={{action "saveAutomation" model.automation}}
+          @action={{this.saveAutomation}}
           class="btn-primary create-automation"
         />
       </div>

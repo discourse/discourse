@@ -16,7 +16,7 @@
     "postinstall": "../run-patch-package"
   },
   "dependencies": {
-    "@discourse/ember-instantsearch": "^1.0.9",
+    "@discourse/ember-instantsearch": "^1.1.2",
     "@faker-js/faker": "^8.4.1",
     "@glimmer/syntax": "^0.92.0",
     "@highlightjs/cdn-assets": "^11.9.0",
