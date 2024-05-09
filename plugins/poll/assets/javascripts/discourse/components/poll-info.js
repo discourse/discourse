@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { relativeAge } from "discourse/lib/formatter";
@@ -7,17 +6,11 @@ import I18n from "I18n";
 
 export default class PollInfoComponent extends Component {
   @service currentUser;
-  @tracked min = this.args.attrs.min;
-  @tracked max = this.args.attrs.max;
-  @tracked length = this.args.attrs.poll.options.length;
-  @tracked poll = this.args.attrs.poll;
-  @tracked post = this.args.attrs.post;
-  @tracked isAutomaticallyClosed = this.args.attrs.isAutomaticallyClosed;
 
   get multipleHelpText() {
-    const min = this.min;
-    const max = this.max;
-    const options = this.length;
+    const min = this.args.attrs.min;
+    const max = this.args.attrs.max;
+    const options = this.args.attrs.poll.options.length;
 
     if (max > 0) {
       if (min === max) {
@@ -87,7 +80,10 @@ export default class PollInfoComponent extends Component {
   }
 
   get closeTitle() {
-    const closeDate = moment.utc(this.poll.close, "YYYY-MM-DD HH:mm:ss Z");
+    const closeDate = moment.utc(
+      this.args.attrs.poll.close,
+      "YYYY-MM-DD HH:mm:ss Z"
+    );
     if (closeDate.isValid()) {
       return closeDate.format("LLL");
     } else {
@@ -96,7 +92,10 @@ export default class PollInfoComponent extends Component {
   }
 
   get age() {
-    const closeDate = moment.utc(this.poll.close, "YYYY-MM-DD HH:mm:ss Z");
+    const closeDate = moment.utc(
+      this.args.attrs.poll.close,
+      "YYYY-MM-DD HH:mm:ss Z"
+    );
     if (closeDate.isValid()) {
       return relativeAge(closeDate.toDate(), { addAgo: true });
     } else {
@@ -105,7 +104,10 @@ export default class PollInfoComponent extends Component {
   }
 
   get timeLeft() {
-    const closeDate = moment.utc(this.poll.close, "YYYY-MM-DD HH:mm:ss Z");
+    const closeDate = moment.utc(
+      this.args.attrs.poll.close,
+      "YYYY-MM-DD HH:mm:ss Z"
+    );
     if (closeDate.isValid()) {
       return moment().to(closeDate, true);
     } else {
@@ -117,7 +119,10 @@ export default class PollInfoComponent extends Component {
     return (
       this.args.attrs.poll.results === "on_vote" &&
       !this.args.attrs.hasVoted &&
-      !(this.currentUser && this.post.user_id === this.currentUser.id)
+      !(
+        this.currentUser &&
+        this.args.attrs.poll.post.user_id === this.currentUser.id
+      )
     );
   }
 
@@ -150,7 +155,7 @@ export default class PollInfoComponent extends Component {
   get showInstructionsSection() {
     if (
       this.showMultipleHelpText ||
-      this.poll.close ||
+      this.args.attrs.poll.close ||
       this.resultsOnVote ||
       this.resultsOnClose ||
       this.resultsStaffOnly ||
