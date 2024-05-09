@@ -270,9 +270,8 @@ createWidget("header-icons", {
           })
         );
       } else if (
-        icon.key === "hamburger"
-        // &&
-        // (!attrs.sidebarEnabled || this.site.mobileView)
+        icon.key === "hamburger" &&
+        (!attrs.sidebarEnabled || this.site.mobileView)
       ) {
         icons.push(
           this.attach("header-dropdown", {

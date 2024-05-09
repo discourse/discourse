@@ -17,11 +17,21 @@ const CLOSE_ON_CLICK_SELECTORS =
 export default class HamburgerDropdownWrapper extends Component {
   @service currentUser;
   @service siteSettings;
+  @service sidebarState;
+
+  @action
+  toggleNavigation() {
+    this.args.toggleNavigationMenu(
+      this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu
+        ? "hamburger"
+        : null
+    );
+  }
 
   @action
   click(e) {
     if (e.target.closest(CLOSE_ON_CLICK_SELECTORS)) {
-      this.args.toggleHamburger();
+      this.toggleNavigation();
     }
   }
 
@@ -42,9 +52,9 @@ export default class HamburgerDropdownWrapper extends Component {
         })
         .finished.then(() => {
           if (isTesting()) {
-            this.args.toggleHamburger();
+            this.toggleNavigation();
           } else {
-            discourseLater(() => this.args.toggleHamburger());
+            discourseLater(() => this.toggleNavigation());
           }
         });
       const cloakAnimatePromise = headerCloak.animate([{ opacity: 0 }], {
@@ -55,15 +65,17 @@ export default class HamburgerDropdownWrapper extends Component {
       waitForPromise(panelAnimatePromise);
       waitForPromise(cloakAnimatePromise);
     } else {
-      this.args.toggleHamburger();
+      this.toggleNavigation();
     }
   }
 
   get forceMainSidebarPanel() {
+    // NOTE: In this scenario, we are forcing the sidebar on admin users,
+    // so we need to still show the hamburger menu and always show the main
+    // panel in that menu.
     if (
-      this.currentUser?.use_admin_sidebar &&
       this.args.sidebarEnabled &&
-      this.siteSettings.navigation_menu === "header dropdown"
+      this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu
     ) {
       return true;
     }

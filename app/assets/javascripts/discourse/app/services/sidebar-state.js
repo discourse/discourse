@@ -17,6 +17,9 @@ import {
 @disableImplicitInjections
 export default class SidebarState extends Service {
   @service keyValueStore;
+  @service currentUser;
+  @service siteSettings;
+
   @tracked currentPanelKey = currentPanelKey;
   @tracked panels = panels;
   @tracked mode = COMBINED_MODE;
@@ -123,6 +126,13 @@ export default class SidebarState extends Service {
 
   get showMainPanel() {
     return this.currentPanelKey === MAIN_PANEL;
+  }
+
+  get adminSidebarAllowedWithLegacyNavigationMenu() {
+    return (
+      this.currentUser?.use_admin_sidebar &&
+      this.siteSettings.navigation_menu === "header dropdown"
+    );
   }
 
   #reset() {

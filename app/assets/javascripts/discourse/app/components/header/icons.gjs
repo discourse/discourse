@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq, not, or } from "truth-helpers";
+import { eq } from "truth-helpers";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse-common/lib/get-url";
 import Dropdown from "./dropdown";
@@ -28,6 +29,7 @@ export default class Icons extends Component {
   @service site;
   @service currentUser;
   @service siteSettings;
+  @service sidebarState;
   @service header;
   @service search;
 
@@ -36,14 +38,22 @@ export default class Icons extends Component {
     // so we need to still show the hamburger menu to be able to
     // access the legacy hamburger forum menu.
     if (
-      this.currentUser?.use_admin_sidebar &&
       this.args.sidebarEnabled &&
-      this.siteSettings.navigation_menu === "header dropdown"
+      this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu
     ) {
       return true;
     }
 
     return !this.args.sidebarEnabled || this.site.mobileView;
+  }
+
+  @action
+  toggleHamburger() {
+    if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
+      this.args.toggleNavigationMenu("hamburger");
+    } else {
+      this.args.toggleNavigationMenu();
+    }
   }
 
   <template>
@@ -67,7 +77,7 @@ export default class Icons extends Component {
               @icon="bars"
               @iconId="toggle-hamburger-menu"
               @active={{this.header.hamburgerVisible}}
-              @onClick={{@toggleHamburger}}
+              @onClick={{this.toggleHamburger}}
               @className="hamburger-dropdown"
             />
           {{/if}}
