@@ -8,12 +8,8 @@ import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
 import concatClass from "discourse/helpers/concat-class";
 import scrollLock from "discourse/lib/scroll-lock";
-import {
-  getMaxAnimationTimeMs,
-  shouldCloseMenu,
-} from "discourse/lib/swipe-events";
+import SwipeEvents from "discourse/lib/swipe-events";
 import { isDocumentRTL } from "discourse/lib/text-direction";
-import swipe from "discourse/modifiers/swipe";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import { bind, debounce } from "discourse-common/utils/decorators";
@@ -35,6 +31,7 @@ export default class GlimmerSiteHeader extends Component {
   _animate = false;
   _headerWrap;
   _swipeMenuOrigin;
+  _swipeEvents;
   _applicationElement;
   _resizeObserver;
   _docAt;
@@ -145,6 +142,15 @@ export default class GlimmerSiteHeader extends Component {
       });
 
       this._resizeObserver.observe(this._headerWrap);
+
+      this._swipeEvents = new SwipeEvents(this._headerWrap);
+      if (this.site.mobileView) {
+        this._swipeEvents.addTouchListeners();
+        this._headerWrap.addEventListener("swipestart", this.onSwipeStart);
+        this._headerWrap.addEventListener("swipeend", this.onSwipeEnd);
+        this._headerWrap.addEventListener("swipecancel", this.onSwipeCancel);
+        this._headerWrap.addEventListener("swipe", this.onSwipe);
+      }
     }
   }
 
@@ -268,9 +274,9 @@ export default class GlimmerSiteHeader extends Component {
   @bind
   _animateOpening(panel, event = null) {
     const cloakElement = document.querySelector(".header-cloak");
-    let durationMs = getMaxAnimationTimeMs();
+    let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
     if (event && this.pxClosed > 0) {
-      durationMs = getMaxAnimationTimeMs(
+      durationMs = this._swipeEvents.getMaxAnimationTimeMs(
         this.pxClosed / Math.abs(event.velocityX)
       );
     }
@@ -288,10 +294,10 @@ export default class GlimmerSiteHeader extends Component {
   _animateClosing(event, panel, menuOrigin) {
     this._animate = true;
     const cloakElement = document.querySelector(".header-cloak");
-    let durationMs = getMaxAnimationTimeMs();
+    let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
     if (event && this.pxClosed > 0) {
       const distancePx = PANEL_WIDTH - this.pxClosed;
-      durationMs = getMaxAnimationTimeMs(
+      durationMs = this._swipeEvents.getMaxAnimationTimeMs(
         distancePx / Math.abs(event.velocityX)
       );
     }
@@ -322,8 +328,9 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   @bind
-  onSwipeStart(swipeEvent) {
-    const center = swipeEvent.center;
+  onSwipeStart(event) {
+    const e = event.detail;
+    const center = e.center;
     const swipeOverValidElement = document
       .elementsFromPoint(center.x, center.y)
       .some(
@@ -333,7 +340,7 @@ export default class GlimmerSiteHeader extends Component {
       );
     if (
       swipeOverValidElement &&
-      (swipeEvent.direction === "left" || swipeEvent.direction === "right")
+      (e.direction === "left" || e.direction === "right")
     ) {
       scrollLock(true, document.querySelector(".panel-body"));
     } else {
@@ -342,15 +349,16 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   @bind
-  onSwipeEnd(swipeEvent) {
+  onSwipeEnd(event) {
+    const e = event.detail;
     const menuPanels = document.querySelectorAll(".menu-panel");
     scrollLock(false, document.querySelector(".panel-body"));
     menuPanels.forEach((panel) => {
-      if (shouldCloseMenu(swipeEvent, this._swipeMenuOrigin)) {
-        this._animateClosing(swipeEvent, panel, this._swipeMenuOrigin);
+      if (this._swipeEvents.shouldCloseMenu(e, this._swipeMenuOrigin)) {
+        this._animateClosing(e, panel, this._swipeMenuOrigin);
         scrollLock(false);
       } else {
-        this._animateOpening(panel, swipeEvent);
+        this._animateOpening(panel, e);
       }
     });
   }
@@ -365,15 +373,17 @@ export default class GlimmerSiteHeader extends Component {
   }
 
   @bind
-  onSwipe(swipeEvent) {
+  onSwipe(event) {
+    const e = event.detail;
+
     const movingElement = document.querySelector(".menu-panel");
     const cloakElement = document.querySelector(".header-cloak");
 
     //origin left
-    this.pxClosed = Math.max(0, -swipeEvent.deltaX);
+    this.pxClosed = Math.max(0, -e.deltaX);
     let translation = -this.pxClosed;
     if (this._swipeMenuOrigin === "right") {
-      this.pxClosed = Math.max(0, swipeEvent.deltaX);
+      this.pxClosed = Math.max(0, e.deltaX);
       translation = this.pxClosed;
     }
 
@@ -411,6 +421,13 @@ export default class GlimmerSiteHeader extends Component {
 
     window.removeEventListener("scroll", this._onScroll);
     this._resizeObserver?.disconnect();
+    if (this.site.mobileView) {
+      this._headerWrap.removeEventListener("swipestart", this.onSwipeStart);
+      this._headerWrap.removeEventListener("swipeend", this.onSwipeEnd);
+      this._headerWrap.removeEventListener("swipecancel", this.onSwipeCancel);
+      this._headerWrap.removeEventListener("swipe", this.onSwipe);
+      this._swipeEvents.removeTouchListeners();
+    }
   }
 
   <template>
@@ -420,12 +437,6 @@ export default class GlimmerSiteHeader extends Component {
         "d-header-wrap"
       }}
       {{didInsert this.setupHeader}}
-      {{swipe
-        onDidStartSwipe=this.onSwipeStart
-        onDidEndSwipe=this.onSwipeEnd
-        onDidCancelSwipe=this.onSwipeCancel
-        onDidSwipe=this.onSwipe
-      }}
     >
       <Header
         @canSignUp={{@canSignUp}}

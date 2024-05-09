@@ -48,7 +48,6 @@ module("Integration | Component | FloatKit | d-toast", function (hooks) {
     });
 
     await triggerEvent(TOAST_SELECTOR, "touchend", {
-      touches: [{ clientX: 0, clientY: -100 }],
       changedTouches: [{ clientX: 0, clientY: -100 }],
     });
 
