@@ -47,7 +47,29 @@ RSpec.describe Chat::CreateMessage do
     end
     let(:message) { result[:message_instance].reload }
 
-    before { channel.add(guardian.user) }
+    before do
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+      channel.add(guardian.user)
+    end
+
+    context "when posting in a direct message channel" do
+      fab!(:channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
+
+      it { is_expected.to be_a_success }
+
+      context "when user is not allowed to chat" do
+        before { SiteSetting.chat_allowed_groups = "" }
+
+        it { is_expected.to fail_a_policy(:allowed_to_create_message_in_channel) }
+      end
+
+      context "when user is not allowed to create direct messages" do
+        before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
+
+        it { is_expected.to fail_a_policy(:allowed_to_create_message_in_channel) }
+      end
+    end
 
     shared_examples "creating a new message" do
       it "saves the message" do
@@ -256,6 +278,12 @@ RSpec.describe Chat::CreateMessage do
 
             context "when user can't create a message in the channel" do
               before { channel.closed!(Discourse.system_user) }
+
+              it { is_expected.to fail_a_policy(:allowed_to_create_message_in_channel) }
+            end
+
+            context "when user is not allowed to chat" do
+              before { SiteSetting.chat_allowed_groups = "" }
 
               it { is_expected.to fail_a_policy(:allowed_to_create_message_in_channel) }
             end

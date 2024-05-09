@@ -2,15 +2,67 @@
 
 RSpec.describe Chat::GuardianExtensions do
   fab!(:chatters) { Fabricate(:group) }
-  fab!(:user) { Fabricate(:user, group_ids: [chatters.id], refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:staff) { Fabricate(:user, admin: true) }
-  fab!(:chat_group) { Fabricate(:group) }
   fab!(:channel) { Fabricate(:category_channel) }
   fab!(:dm_channel) { Fabricate(:direct_message_channel) }
+
   let(:guardian) { Guardian.new(user) }
   let(:staff_guardian) { Guardian.new(staff) }
+  let(:bot_guardian) { Discourse.system_user.guardian }
+  let(:anonymous_guardian) { Guardian.new }
 
-  before { SiteSetting.chat_allowed_groups = [chatters] }
+  describe "#can_direct_message?" do
+    context "when the user is not in allowed to chat" do
+      let(:guardian) { Guardian.new(Fabricate(:user)) }
+
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
+
+      it "cannot direct message" do
+        expect(guardian.can_direct_message?).to eq(false)
+      end
+
+      context "when the user is a bot" do
+        let(:guardian) { bot_guardian }
+
+        it "can direct message" do
+          expect(guardian.can_direct_message?).to eq(true)
+        end
+      end
+
+      context "when user is staff" do
+        let(:guardian) { staff_guardian }
+
+        it "can direct message" do
+          expect(guardian.can_direct_message?).to eq(true)
+        end
+      end
+    end
+
+    context "when user is anonymous" do
+      let(:guardian) { anonymous_guardian }
+
+      it "cannot chat" do
+        expect(guardian.can_direct_message?).to eq(false)
+      end
+    end
+
+    it "allows TL1 to chat by default and by extension higher trust levels" do
+      expect(guardian.can_direct_message?).to eq(true)
+      user.change_trust_level!(TrustLevel[3])
+      expect(guardian.can_direct_message?).to eq(true)
+    end
+
+    context "when user is in allowed group" do
+      before { SiteSetting.direct_message_enabled_groups = chatters.id }
+
+      it "can chat" do
+        expect { chatters.add(user) }.to change { user.reload.guardian.can_direct_message? }.from(
+          false,
+        ).to(true)
+      end
+    end
+  end
 
   describe "#can_chat?" do
     context "when the user is not in allowed to chat" do
@@ -21,7 +73,7 @@ RSpec.describe Chat::GuardianExtensions do
       end
 
       context "when the user is a bot" do
-        let(:guardian) { Discourse.system_user.guardian }
+        let(:guardian) { bot_guardian }
 
         it "can chat" do
           expect(guardian.can_chat?).to eq(true)
@@ -38,7 +90,7 @@ RSpec.describe Chat::GuardianExtensions do
     end
 
     context "when user is anonymous" do
-      let(:guardian) { Guardian.new }
+      let(:guardian) { anonymous_guardian }
 
       it "cannot chat" do
         expect(guardian.can_chat?).to eq(false)
@@ -51,12 +103,14 @@ RSpec.describe Chat::GuardianExtensions do
       expect(guardian.can_chat?).to eq(true)
     end
 
-    it "allows user in specific group to chat" do
-      SiteSetting.chat_allowed_groups = chat_group.id
-      expect(guardian.can_chat?).to eq(false)
-      chat_group.add(user)
-      user.reload
-      expect(guardian.can_chat?).to eq(true)
+    context "when user is in allowed group" do
+      before { SiteSetting.chat_allowed_groups = chatters.id }
+
+      it "can chat" do
+        expect { chatters.add(user) }.to change { user.reload.guardian.can_chat? }.from(false).to(
+          true,
+        )
+      end
     end
   end
 

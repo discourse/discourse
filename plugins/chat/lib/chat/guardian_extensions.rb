@@ -17,7 +17,8 @@ module Chat
     end
 
     def can_direct_message?
-      @user.in_any_groups?(SiteSetting.direct_message_enabled_groups_map)
+      return false if anonymous?
+      is_staff? || @user.bot? || @user.in_any_groups?(SiteSetting.direct_message_enabled_groups_map)
     end
 
     def can_create_chat_message?
@@ -25,7 +26,7 @@ module Chat
     end
 
     def can_create_direct_message?
-      is_staff? || can_direct_message?
+      can_direct_message?
     end
 
     def hidden_tag_names

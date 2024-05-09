@@ -40,6 +40,7 @@ RSpec.describe Chat::UpdateMessage do
     before do
       SiteSetting.chat_enabled = true
       SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
       SiteSetting.chat_duplicate_message_sensitivity = 0
       Jobs.run_immediately!
 
@@ -850,12 +851,12 @@ RSpec.describe Chat::UpdateMessage do
     subject(:result) { described_class.call(params) }
 
     fab!(:current_user) { Fabricate(:user) }
-    fab!(:channel_1) { Fabricate(:chat_channel) }
     fab!(:upload_1) { Fabricate(:upload, user: current_user) }
+    fab!(:channel_1) { Fabricate(:chat_channel) }
     fab!(:message_1) do
       Fabricate(
         :chat_message,
-        chat_channel_id: channel_1.id,
+        chat_channel: channel_1,
         message: "old",
         upload_ids: [upload_1.id],
         user: current_user,
@@ -874,6 +875,8 @@ RSpec.describe Chat::UpdateMessage do
       SiteSetting.chat_editing_grace_period = 10
       SiteSetting.chat_editing_grace_period_max_diff_low_trust = 10
       SiteSetting.chat_editing_grace_period_max_diff_high_trust = 40
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
 
       channel_1.add(current_user)
     end
@@ -935,6 +938,29 @@ RSpec.describe Chat::UpdateMessage do
 
     context "when user can't modify a channel message" do
       before { channel_1.update!(status: :read_only) }
+
+      it { is_expected.to fail_a_policy(:can_modify_channel_message) }
+    end
+
+    context "when user is not allowed to chat" do
+      before { SiteSetting.chat_allowed_groups = "" }
+
+      it { is_expected.to fail_a_policy(:can_modify_channel_message) }
+    end
+
+    context "when user is not allowed to chat in direct message channels" do
+      fab!(:channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
+      fab!(:message_1) do
+        Fabricate(
+          :chat_message,
+          chat_channel: channel_1,
+          message: "old",
+          upload_ids: [upload_1.id],
+          user: current_user,
+        )
+      end
+
+      before { SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:staff] }
 
       it { is_expected.to fail_a_policy(:can_modify_channel_message) }
     end

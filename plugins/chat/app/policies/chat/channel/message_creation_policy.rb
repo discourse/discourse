@@ -4,7 +4,8 @@ class Chat::Channel::MessageCreationPolicy < PolicyBase
   class DirectMessageStrategy
     class << self
       def call(guardian, channel)
-        guardian.can_create_channel_message?(channel) || guardian.can_create_direct_message?
+        guardian.can_create_channel_message?(channel) && guardian.can_create_direct_message? &&
+          guardian.can_chat?
       end
 
       def reason(*)
@@ -16,7 +17,7 @@ class Chat::Channel::MessageCreationPolicy < PolicyBase
   class CategoryStrategy
     class << self
       def call(guardian, channel)
-        guardian.can_create_channel_message?(channel)
+        guardian.can_create_channel_message?(channel) && guardian.can_chat?
       end
 
       def reason(_, channel)

@@ -82,7 +82,9 @@ module Chat
     end
 
     def can_modify_channel_message(guardian:, message:)
-      guardian.can_modify_channel_message?(message.chat_channel)
+      result = guardian.can_modify_channel_message?(message.chat_channel) && guardian.can_chat?
+      result &&= guardian.can_direct_message? if message.chat_channel.direct_message_channel?
+      result
     end
 
     def can_modify_message(guardian:, message:)
