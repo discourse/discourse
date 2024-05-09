@@ -20,6 +20,7 @@
     grid-column-gap: 0.75em;
     grid-template-columns: 1fr auto;
     margin-inline: 0;
+    width: 100%;
     grid-template-areas:
       "category timestamp"
       "title title"
