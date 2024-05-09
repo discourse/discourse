@@ -511,9 +511,24 @@ export function applyDefaultHandlers(pretender) {
     return response(data);
   });
 
-  pretender.get("/categories_and_latest", () =>
-    response(fixturesByUrl["/categories_and_latest.json"])
-  );
+  pretender.get("/categories_and_latest", (request) => {
+    const data = cloneJSON(fixturesByUrl["/categories_and_latest.json"]);
+
+    // replace categories list if parent_category_id filter is present
+    if (request.queryParams.parent_category_id) {
+      const parentCategoryId = parseInt(
+        request.queryParams.parent_category_id,
+        10
+      );
+      data.category_list.categories = fixturesByUrl[
+        "site.json"
+      ].site.categories.filter(
+        (c) => c.parent_category_id === parentCategoryId
+      );
+    }
+
+    return response(data);
+  });
 
   pretender.get("/c/bug/find_by_slug.json", () =>
     response(fixturesByUrl["/c/1/show.json"])
