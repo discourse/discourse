@@ -36,10 +36,8 @@ acceptance("Category Edit - Settings", function (needs) {
     await categoryBreadcrumb.fillInFilter("support");
     await categoryBreadcrumb.selectRowByIndex(0);
 
-    assert.strictEqual(
-      query("input#category-default-slow-mode").value,
-      "10",
-      "slow mode value is updated"
-    );
+    assert
+      .dom("input#category-default-slow-mode")
+      .hasValue("10", "slow mode value is updated");
   });
 });
