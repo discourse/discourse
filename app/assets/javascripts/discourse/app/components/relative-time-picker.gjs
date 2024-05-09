@@ -29,7 +29,7 @@ export default class RelativeTimePicker extends Component {
     }
   }
 
-  _durationFromHours() {
+  get _durationFromHours() {
     if (this.args.durationHours === null) {
       return this.args.durationHours;
     } else if (this.args.durationHours >= 8760) {
@@ -45,58 +45,52 @@ export default class RelativeTimePicker extends Component {
     }
   }
 
-  _intervalFromHours() {
-    let interval;
+  get _intervalFromHours() {
     if (this.args.durationHours === null) {
-      interval = "hours";
+      return "hours";
     } else if (this.args.durationHours >= 8760) {
-      interval = "years";
+      return "years";
     } else if (this.args.durationHours >= 730) {
-      interval = "months";
+      return "months";
     } else if (this.args.durationHours >= 24) {
-      interval = "days";
+      return "days";
     } else if (this.args.durationHours < 1) {
-      interval = "mins";
+      return "mins";
     } else {
-      interval = "hours";
+      return "hours";
     }
-    return interval;
   }
 
-  _durationFromMinutes() {
-    let duration;
+  get _durationFromMinutes() {
     if (this.args.durationMinutes >= 525600) {
-      duration = this._roundedDuration(
+      return this._roundedDuration(
         this.args.durationMinutes / 365 / 60 / 24
       );
     } else if (this.args.durationMinutes >= 43800) {
-      duration = this._roundedDuration(
+      return this._roundedDuration(
         this.args.durationMinutes / 30 / 60 / 24
       );
     } else if (this.args.durationMinutes >= 1440) {
-      duration = this._roundedDuration(this.args.durationMinutes / 60 / 24);
+      return this._roundedDuration(this.args.durationMinutes / 60 / 24);
     } else if (this.args.durationMinutes >= 60) {
-      duration = this._roundedDuration(this.args.durationMinutes / 60);
+      return this._roundedDuration(this.args.durationMinutes / 60);
     } else {
-      duration = this.args.durationMinutes;
+      return this.args.durationMinutes;
     }
-    return duration;
   }
 
-  _intervalFromMinutes() {
-    let interval;
+  get _intervalFromMinutes() {
     if (this.args.durationMinutes >= 525600) {
-      interval = "years";
+      return "years";
     } else if (this.args.durationMinutes >= 43800) {
-      interval = "months";
+      return "months";
     } else if (this.args.durationMinutes >= 1440) {
-      interval = "days";
+      return "days";
     } else if (this.args.durationMinutes >= 60) {
-      interval = "hours";
+      return "hours";
     } else {
-      interval = "mins";
+      return "mins";
     }
-    return interval;
   }
 
   get durationMin() {
