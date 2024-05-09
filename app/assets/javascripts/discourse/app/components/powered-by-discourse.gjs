@@ -2,6 +2,7 @@ import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
 const PoweredByDiscourse = <template>
+  {{! template-lint-disable link-rel-noopener }}
   <a
     class="powered-by-discourse"
     href="https://discourse.org/powered-by"
