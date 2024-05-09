@@ -432,226 +432,6 @@
 </form>
 
 <form class="d-form">
-
-  {{!-- <h2>Grouped input (stacked only)</h2>
-  <div class="d-form__section">
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Streetname</label>
-      <div class="d-form-field__value">
-        <input type="text" class="d-form-field__input" />
-      </div>
-
-    </div>
-
-    <div class="d-form-field__group">
-      <div class="d-form-field">
-        <label class="d-form-field__label" for="number">Number
-        </label>
-
-        <div class="d-form-field__value">
-          <input type="text" class="d-form-field__input --small" id="number" />
-
-        </div>
-      </div>
-
-      <div class="d-form-field">
-        <label class="d-form-field__label" for="normal-input">Bus
-        </label>
-
-        <div class="d-form-field__value">
-          <input type="text" class="d-form-field__input --small" />
-        </div>
-
-      </div>
-
-      <div class="d-form-field__meta --warning">
-        <p class="d-form-field__meta-text">
-          {{d-icon "warning"}}<span>Error: explanation of error</span></p>
-      </div>
-    </div>
-
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Country
-      </label>
-
-      <div class="d-form-field__value">
-        <select>
-          <option value="">--Country of residence--</option>
-        </select>
-      </div>
-
-    </div>
-  </div> --}}
-  {{!-- 
-  <h2>Horizontal form (classic)</h2>
-  <div class="d-form__section --ltr">
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Standard stacked
-        input
-        <span class="d-form-field__optional">(Optional)</span>
-      </label>
-
-      <div class="d-form-field__value-container">
-        <p class="d-form-field__info">In left-to-right forms, the explanation
-          text needs to always be inside the `value-container` element.</p>
-        <div class="d-form-field__value">
-          <input type="text" class="d-form-field__input" id="normal-input" />
-          <div class="d-form-field__meta">
-            <p class="d-form-field__meta-text">Format: XYZ-123</p>
-            <span class="d-form-field__character-count has-error">0/25</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Error highlighting
-      </label>
-      <div class="d-form-field__value-container has-error">
-        <div class="d-form-field__value">
-          <input
-            type="text"
-            class="d-form-field__input --small"
-            id="normal-input"
-          />
-          <div class="d-form-field__meta --warning">
-            <p class="d-form-field__meta-text">
-              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
-            <span class="d-form-field__character-count has-error">0/25</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="normal-input">Disabled input
-      </label>
-      <div class="d-form-field__value-container">
-        <div class="d-form-field__value">
-          <input
-            type="text"
-            class="d-form-field__input"
-            id="normal-input"
-            disabled
-            value="Disabled input"
-          />
-        </div>
-
-      </div>
-    </div>
-
-    <fieldset class="d-form-field --checkbox">
-      <legend class="d-form-field__label">Set as default
-      </legend>
-      <div class="d-form-field__value-container">
-        <div class="d-form-field__input-group">
-          <label class="checkbox-label" for="ltr-checkbox-agree">
-            <input
-              class="d-form-field__input"
-              type="checkbox"
-              id="ltr-checkbox-agree"
-            />Agree
-          </label>
-        </div>
-        <div class="d-form-field__meta --warning">
-          <p class="d-form-field__meta-text">
-            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
-        </div>
-      </div>
-    </fieldset>
-
-    <fieldset class="d-form-field --radiobtns">
-      <legend>After reminding you, we should…</legend>
-      <div class="d-form-field__value-container">
-        <p class="d-form-field__info">Some random explanation about this
-          setting.</p>
-        <div class="d-form-field__input-group">
-          <label for="ltr-radio-1" class="checkbox-label">
-            <input
-              type="radio"
-              id="ltr-radio-1"
-              name="ltr-radio"
-              class="d-form-field__input"
-            />Keep bookmark and delete reminder</label>
-
-          <label for="ltr-radio-2" class="checkbox-label">
-            <input
-              type="radio"
-              id="ltr-radio-2"
-              name="ltr-radio"
-              class="d-form-field__input"
-            />Keep bookmark</label>
-
-          <label for="ltr-radio-3" class="checkbox-label">
-            <input
-              type="radio"
-              id="ltr-radio-3"
-              name="ltr-radio"
-              class="d-form-field__input"
-            />Delete bookmark
-          </label>
-
-          <label for="ltr-radio-4" class="checkbox-label">
-            <input
-              type="radio"
-              id="ltr-radio-4"
-              name="ltr-radio"
-              class="d-form-field__input"
-            />Delete bookmark once I reply
-          </label>
-        </div>
-        <div class="d-form-field__meta --warning">
-          <p class="d-form-field__meta-text">
-            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
-        </div>
-        <p class="d-form-field__info">Some random explanation again but put
-          behind the inputs.</p>
-      </div>
-    </fieldset>
-
-    <fieldset class="d-form-field --checkbox">
-      <legend class="d-form-field__label">Multi checkbox options
-      </legend>
-      <div class="d-form-field__value-container">
-        <div class="d-form-field__input-group">
-          <label class="checkbox-label" for="ltr-checkbox1multi">
-            <input
-              class="d-form-field__input"
-              type="checkbox"
-              id="ltr-checkbox1multi"
-              name="ltr-checkboxmulti"
-            />I
-          </label>
-
-          <label class="checkbox-label" for="ltr-checkbox2multi">
-            <input
-              class="d-form-field__input"
-              type="checkbox"
-              id="ltr-checkbox2multi"
-              name="ltr-checkboxmulti"
-            />like
-          </label>
-
-          <label class="checkbox-label" for="ltr-checkbox3multi">
-            <input
-              class="d-form-field__input"
-              type="checkbox"
-              id="ltr-checkbox3multi"
-              name="ltr-checkboxmulti"
-            />courgette
-          </label>
-
-        </div>
-        <div class="d-form-field__meta --warning">
-          <p class="d-form-field__meta-text">
-            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
-        </div>
-      </div>
-    </fieldset>
-
-  </div> --}}
-
   <h2>Multiple inline fields with unique labels</h2>
 
   This is a problem with the col-system: impossible to align a button in this
@@ -660,40 +440,39 @@
   layouts are quite specific and for now only a equal 3 column and 4 column
   layout exists. We can create more on a need-it-now basis.
 
-  <div class="d-form__section --inline --4-col">
+  <div class="d-form__section">
+    <div class="d-form-grid --4-col">
 
-    <label class="d-form-field__label" for="normal-input">Name
-      <span class="d-form-field__optional">(Optional)</span>
-    </label>
+      <label class="d-form-field__label" for="normal-input">Name
+        <span class="d-form-field__optional">(Optional)</span>
+      </label>
 
-    <input type="text" class="d-form-field__input" id="normal-input" />
+      <input type="text" class="d-form-field__input" id="normal-input" />
 
-    <div class="d-form-field__meta">
-      <p class="d-form-field__meta-text">Format: XYZ-123</p>
+      <div class="d-form-field__meta">
+        <p class="d-form-field__meta-text">Format: XYZ-123</p>
+      </div>
+
+      <label class="d-form-field__label" for="normal-input">url</label>
+
+      <select>
+        <option value="">--URL--</option>
+        <option value="">Google</option>
+        <option value="">DuckDuckGo</option>
+      </select>
+
+      <div class="d-form-field__meta"></div>
+
+      <label class="d-form-field__label" for="normal-input">Reason</label>
+
+      <input type="text" class="d-form-field__input" id="normal-input" />
+
+      <div class="d-form-field__meta">
+      </div>
+
+      <button type="submit" class="btn btn-primary d-form-grid__btn">Submit
+      </button>
     </div>
-
-    <label class="d-form-field__label" for="normal-input">url</label>
-
-    <select>
-      <option value="">--URL--</option>
-      <option value="">Google</option>
-      <option value="">DuckDuckGo</option>
-    </select>
-
-    <div class="d-form-field__meta"></div>
-
-    <label class="d-form-field__label" for="normal-input">Reason</label>
-
-    <input type="text" class="d-form-field__input" id="normal-input" />
-
-    <div class="d-form-field__meta">
-    </div>
-
-    <button
-      type="submit"
-      class="btn btn-primary d-form__section-inline-btn"
-    >Submit
-    </button>
   </div>
 
   <h2>Multirow form with shared labels</h2>
