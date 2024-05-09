@@ -262,6 +262,46 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def self.with_ancestor_ids
+    # We're building up ancestor_ids by starting at the category and
+    # iteratively working our way up the chain. For performance, during the
+    # iteration, the first element is in a separate field of the query
+    categories =
+      select(
+        "categories.id",
+        "categories.parent_category_id AS ancestor_id",
+        "ARRAY[]::integer[] AS ancestor_ids",
+      )
+
+    # We already have the category and the parent_category_id, so -2
+    (SiteSetting.max_category_nesting - 2).times do
+      # Find the next ancestor and push the current ancestor onto ancestor_ids
+      categories =
+        Category.from("(#{categories.to_sql}) AS category_ancestors").select(
+          "category_ancestors.id",
+          "(SELECT c.parent_category_id FROM categories c WHERE c.id = category_ancestors.ancestor_id) AS ancestor_id",
+          "category_ancestors.ancestor_id || category_ancestors.ancestor_ids AS ancestor_ids",
+        )
+    end
+
+    # Add the last ancestor_id to ancestor_ids and remove NULLs
+    categories =
+      Category.from("(#{categories.to_sql}) AS category_ancestors").select(
+        "category_ancestors.id",
+        "(SELECT array_remove(category_ancestors.ancestor_id || category_ancestors.ancestor_ids, NULL)) AS ancestor_ids",
+      )
+
+    # Join to get the other columns from categories and use Category.from one
+    # more time so that ancestor_ids exists on the relation called
+    # 'categories'.
+    categories =
+      Category.joins(
+        "INNER JOIN (#{categories.to_sql}) AS category_ancestors ON categories.id = category_ancestors.id",
+      ).select("categories.*", "category_ancestors.ancestor_ids")
+
+    Category.from("(#{categories.to_sql}) AS categories")
+  end
+
   def self.ancestors_of(category_ids)
     ancestor_ids = []
 
