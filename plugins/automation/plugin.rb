@@ -39,21 +39,9 @@ module ::DiscourseAutomation
 end
 
 require_relative "lib/discourse_automation/engine"
-require_relative "lib/discourse_automation/scriptable"
-require_relative "lib/discourse_automation/triggerable"
-require_relative "lib/plugin/instance"
 
 after_initialize do
   %w[
-    app/jobs/regular/discourse_automation_call_zapier_webhook
-    app/jobs/regular/discourse_automation_trigger
-    app/jobs/scheduled/discourse_automation_tracker
-    app/jobs/scheduled/stalled_topic_tracker
-    app/jobs/scheduled/stalled_wiki_tracker
-    app/queries/stalled_topic_finder
-    app/services/discourse_automation/user_badge_granted_handler
-    lib/discourse_automation/event_handlers
-    lib/discourse_automation/post_extension
     lib/discourse_automation/scripts
     lib/discourse_automation/scripts/add_user_to_group_through_custom_field
     lib/discourse_automation/scripts/append_last_checked_by
@@ -93,7 +81,10 @@ after_initialize do
     lib/discourse_automation/triggers/user_updated
   ].each { |path| require_relative path }
 
-  reloadable_patch { Post.prepend DiscourseAutomation::PostExtension }
+  reloadable_patch do
+    Post.prepend DiscourseAutomation::PostExtension
+    Plugin::Instance.prepend DiscourseAutomation::PluginInstanceExtension
+  end
 
   add_admin_route "discourse_automation.title", "discourse-automation"
 

@@ -89,13 +89,6 @@ class Wizard
           )
         end
 
-        step.add_field(
-          id: "enable_sidebar",
-          type: "checkbox",
-          icon: "bars",
-          value: SiteSetting.navigation_menu == NavigationMenuSiteSetting::SIDEBAR,
-        )
-
         step.on_update do |updater|
           updater.update_setting(:login_required, updater.fields[:login_required])
           updater.update_setting(:invite_only, updater.fields[:invite_only])

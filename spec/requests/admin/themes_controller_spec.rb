@@ -478,6 +478,18 @@ RSpec.describe Admin::ThemesController do
       end
     end
 
+    it "allows themes and components to be edited" do
+      sign_in(admin)
+      theme = Fabricate(:theme, name: "Awesome Theme")
+      component = Fabricate(:theme, name: "Awesome component", component: true)
+
+      get "/admin/customize/themes/#{theme.id}/common/scss/edit"
+      expect(response.status).to eq(200)
+
+      get "/admin/customize/components/#{component.id}/common/scss/edit"
+      expect(response.status).to eq(200)
+    end
+
     shared_examples "themes inaccessible" do
       it "denies access with a 404 response" do
         get "/admin/themes.json"

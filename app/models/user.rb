@@ -367,6 +367,13 @@ class User < ActiveRecord::Base
     custom_fields_clean? || SiteSetting.disable_watched_word_checking_in_user_fields
   end
 
+  def all_sidebar_sections
+    sidebar_sections
+      .or(SidebarSection.public_sections)
+      .includes(:sidebar_urls)
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
+  end
+
   def secured_sidebar_category_ids(user_guardian = nil)
     user_guardian ||= guardian
 

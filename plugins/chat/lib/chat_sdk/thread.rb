@@ -13,12 +13,9 @@ module ChatSDK
     #
     # @example Updating the title of a chat thread
     #   ChatSDK::Thread.update_title(title: "New Thread Title", thread_id: 1, guardian: Guardian.new)
-    def self.update_title(**params)
-      new.update(title: params[:title], thread_id: params[:thread_id], guardian: params[:guardian])
-    end
-
-    def self.update(**params)
-      new.update(**params)
+    #
+    def self.update_title(thread_id:, guardian:, title:)
+      new.update(title: title, thread_id: thread_id, guardian: guardian)
     end
 
     # Retrieves messages from a specified thread.
@@ -34,13 +31,57 @@ module ChatSDK
       new.messages(thread_id: thread_id, guardian: guardian, **params)
     end
 
-    def messages(thread_id:, guardian:, **params)
+    # Fetches the first messages from a specified chat thread, starting from the first available message.
+    #
+    # @param thread_id [Integer] The ID of the chat thread from which to fetch messages.
+    # @param guardian [Guardian] The guardian object representing the user's permissions.
+    # @param page_size [Integer] (optional) The number of messages to fetch, defaults to 10.
+    # @return [Array<Chat::Message>] An array of message objects representing the first messages in the thread.
+    #
+    # @example Fetching the first 15 messages from a thread
+    #   ChatSDK::Thread.first_messages(thread_id: 1, guardian: Guardian.new, page_size: 15)
+    #
+    def self.first_messages(thread_id:, guardian:, page_size: 10)
+      new.messages(
+        thread_id: thread_id,
+        guardian: guardian,
+        page_size: page_size,
+        direction: "future",
+        fetch_from_first_message: true,
+      )
+    end
+
+    # Fetches the last messages from a specified chat thread, starting from the last available message.
+    #
+    # @param thread_id [Integer] The ID of the chat thread from which to fetch messages.
+    # @param guardian [Guardian] The guardian object representing the user's permissions.
+    # @param page_size [Integer] (optional) The number of messages to fetch, defaults to 10.
+    # @return [Array<Chat::Message>] An array of message objects representing the last messages in the thread.
+    #
+    # @example Fetching the last 20 messages from a thread
+    #   ChatSDK::Thread.last_messages(thread_id: 2, guardian: Guardian.new, page_size: 20)
+    #
+    def self.last_messages(thread_id:, guardian:, page_size: 10)
+      new.messages(
+        thread_id: thread_id,
+        guardian: guardian,
+        page_size: page_size,
+        direction: "past",
+        fetch_from_last_message: true,
+      )
+    end
+
+    def self.update(**params)
+      new.update(**params)
+    end
+
+    def messages(thread_id:, guardian:, direction: "future", **params)
       with_service(
         Chat::ListChannelThreadMessages,
         thread_id: thread_id,
         guardian: guardian,
+        direction: direction,
         **params,
-        direction: "future",
       ) do
         on_success { result.messages }
         on_failed_policy(:can_view_thread) { raise "Guardian can't view thread" }

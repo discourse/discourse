@@ -58,7 +58,7 @@ export default class CoreFabricators {
   user(args = {}) {
     return this.store.createRecord("user", {
       id: args.id || incrementSequence(),
-      username: args.username || getLoadedFaker().faker.person.firstName(),
+      username: args.username || getLoadedFaker().faker.internet.domainWord(),
       name: args.name,
       avatar_template: "/letter_avatar_proxy/v3/letter/t/41988e/{size}.png",
       suspended_till: args.suspended_till,

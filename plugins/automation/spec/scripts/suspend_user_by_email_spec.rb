@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "SuspendUserByEmail" do
   let(:suspend_until) { 10.days.from_now }
   let(:reason) { "banned for spam" }

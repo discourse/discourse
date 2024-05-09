@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "StalledWiki" do
   fab!(:topic_1) { Fabricate(:topic) }
   fab!(:automation) { Fabricate(:automation, trigger: DiscourseAutomation::Triggers::STALLED_WIKI) }
@@ -39,7 +37,7 @@ describe "StalledWiki" do
           { force_new_version: true, revised_at: 40.minutes.ago },
         )
 
-        list = capture_contexts { Jobs::StalledWikiTracker.new.execute(nil) }
+        list = capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
 
         expect(list.length).to eq(0)
       end
@@ -53,7 +51,7 @@ describe "StalledWiki" do
           { force_new_version: true, revised_at: 1.month.ago },
         )
 
-        list = capture_contexts { Jobs::StalledWikiTracker.new.execute(nil) }
+        list = capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
 
         expect(list.length).to eq(1)
         expect(list[0]["kind"]).to eq("stalled_wiki")
@@ -98,7 +96,8 @@ describe "StalledWiki" do
               { force_new_version: true, revised_at: 40.minutes.ago },
             )
 
-            list = capture_contexts { Jobs::StalledWikiTracker.new.execute(nil) }
+            list =
+              capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
 
             expect(list).to be_empty
           end
@@ -114,7 +113,8 @@ describe "StalledWiki" do
               { force_new_version: true, revised_at: 1.month.ago },
             )
 
-            list = capture_contexts { Jobs::StalledWikiTracker.new.execute(nil) }
+            list =
+              capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
 
             expect(list.length).to eq(1)
             expect(list[0]["kind"]).to eq("stalled_wiki")
@@ -129,7 +129,8 @@ describe "StalledWiki" do
               { force_new_version: true, revised_at: 40.minutes.ago },
             )
 
-            list = capture_contexts { Jobs::StalledWikiTracker.new.execute(nil) }
+            list =
+              capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
 
             expect(list).to be_empty
           end
@@ -147,7 +148,7 @@ describe "StalledWiki" do
             { wiki: true },
             { force_new_version: true, revised_at: 1.month.ago },
           )
-          Jobs::StalledWikiTracker.new.execute(nil)
+          Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil)
 
           expect(post.reload.custom_fields["stalled_wiki_triggered_at"]).to eq(Time.zone.now.to_s)
         end
@@ -160,7 +161,7 @@ describe "StalledWiki" do
           )
           post.upsert_custom_fields(stalled_wiki_triggered_at: 2.months.ago)
 
-          list = capture_contexts { Jobs::StalledWikiTracker.new.execute(nil) }
+          list = capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
 
           expect(list.length).to eq(1)
           expect(list[0]["kind"]).to eq("stalled_wiki")
@@ -179,7 +180,7 @@ describe "StalledWiki" do
           )
           post.upsert_custom_fields(stalled_wiki_triggered_at: 10.minutes.ago)
 
-          list = capture_contexts { Jobs::StalledWikiTracker.new.execute(nil) }
+          list = capture_contexts { Jobs::DiscourseAutomation::StalledWikiTracker.new.execute(nil) }
 
           expect(list.length).to eq(0)
           expect(post.reload.custom_fields["stalled_wiki_triggered_at"]).to eq(10.minutes.ago.to_s)

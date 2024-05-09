@@ -1,22 +1,16 @@
 .bookmark-menu-content {
-  .bookmark-menu__body {
-    background: var(--secondary);
-    display: flex;
-    flex-direction: column;
+  .dropdown-menu {
+    padding: 0;
     min-width: 200px;
   }
-  .bookmark-menu__actions {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
+
   .bookmark-menu__title {
     display: flex;
     align-items: center;
     gap: 0.75em;
     background: var(--tertiary-low);
     color: var(--tertiary);
-    padding: 0.75rem;
+    padding: 0.75rem 1rem;
     font-weight: bold;
 
     .d-icon {
@@ -25,7 +19,6 @@
   }
 
   .bookmark-menu__row {
-    width: 100%;
     display: flex;
 
     &:hover,
@@ -39,19 +32,18 @@
   }
 
   .bookmark-menu__row-title {
-    padding: 0.75rem;
-    border-bottom: 1px solid var(--primary-low);
+    padding: 0.75rem 1rem;
     font-weight: bold;
   }
 
   .bookmark-menu__row-btn {
     margin: 0;
-    padding: 0.75rem !important;
     width: 100%;
     text-align: left;
     justify-content: left !important;
-    gap: 0.75em;
+    gap: 0.75rem;
     color: var(--primary);
+
     &:hover,
     &:focus {
       color: var(--primary) !important;

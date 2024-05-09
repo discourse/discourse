@@ -60,10 +60,20 @@ module.exports = function (defaults) {
 
     "ember-cli-babel": {
       throwUnlessParallelizable: true,
+      disableDecoratorTransforms: true,
     },
 
     babel: {
-      plugins: [require.resolve("deprecation-silencer")],
+      sourceMaps: false,
+      plugins: [
+        require.resolve("deprecation-silencer"),
+        [
+          require.resolve("decorator-transforms"),
+          {
+            runEarly: true,
+          },
+        ],
+      ],
     },
 
     vendorFiles: {
@@ -136,11 +146,18 @@ module.exports = function (defaults) {
     staticAppPaths: ["static"],
     packagerOptions: {
       webpackConfig: {
-        devtool: "source-map",
+        devtool:
+          process.env.CHEAP_SOURCE_MAPS === "1"
+            ? "cheap-source-map"
+            : "source-map",
         output: {
           publicPath: "auto",
           filename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
           chunkFilename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
+        },
+        optimization: {
+          // Disable webpack minimization. Embroider automatically applies terser after webpack.
+          minimize: false,
         },
         cache: isProduction
           ? false

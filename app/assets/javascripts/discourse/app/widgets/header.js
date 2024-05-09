@@ -357,7 +357,6 @@ createWidget("hamburger-dropdown-wrapper", {
   click(event) {
     if (
       event.target.closest(".sidebar-section-header-button") ||
-      event.target.closest(".sidebar-section-link-button") ||
       event.target.closest(".sidebar-section-link")
     ) {
       this.sendWidgetAction("toggleHamburger");
@@ -649,7 +648,6 @@ export default createWidget("header", {
     } else {
       this.state.hamburgerVisible = !this.state.hamburgerVisible;
       this.toggleBodyScrolling(this.state.hamburgerVisible);
-
       schedule("afterRender", () => {
         // Remove focus from hamburger toggle button
         document.querySelector("#toggle-hamburger-menu")?.blur();

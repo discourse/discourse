@@ -10,7 +10,7 @@ export default class DFloatPortal extends Component {
     {{#if this.inline}}
       {{yield}}
     {{else}}
-      {{#in-element @portalOutletElement}}
+      {{#in-element @portalOutletElement insertBefore=null}}
         {{yield}}
       {{/in-element}}
     {{/if}}

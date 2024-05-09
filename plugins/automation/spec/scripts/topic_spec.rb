@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "Topic" do
   let!(:raw) { "this is me testing a new topic by automation" }
   let!(:title) { "This is a new topic created by automation" }
@@ -40,7 +38,7 @@ describe "Topic" do
     it "creates expected topic" do
       freeze_time 6.hours.from_now do
         expect {
-          Jobs::DiscourseAutomationTracker.new.execute
+          Jobs::DiscourseAutomation::Tracker.new.execute
 
           topic = Topic.last
           expect(topic.category.id).to eq(category.id)

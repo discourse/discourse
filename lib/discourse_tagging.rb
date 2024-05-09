@@ -510,16 +510,14 @@ module DiscourseTagging
     term = opts[:term]
     if term.present?
       builder_params[:cleaned_term] = term
-      term = term.gsub("_", "\\_").downcase
 
       if opts[:term_type] == DiscourseTagging.term_types[:starts_with]
-        builder_params[:term] = "#{term}%"
+        builder.where("starts_with(LOWER(name), LOWER(:cleaned_term))")
+        sql.gsub!("/*and_name_like*/", "AND starts_with(LOWER(t.name), LOWER(:cleaned_term))")
       else
-        builder_params[:term] = "%#{term}%"
+        builder.where("position(LOWER(:cleaned_term) IN LOWER(t.name)) <> 0")
+        sql.gsub!("/*and_name_like*/", "AND position(LOWER(:cleaned_term) IN LOWER(t.name)) <> 0")
       end
-
-      builder.where("LOWER(name) LIKE :term")
-      sql.gsub!("/*and_name_like*/", "AND LOWER(t.name) LIKE :term")
     else
       sql.gsub!("/*and_name_like*/", "")
     end
