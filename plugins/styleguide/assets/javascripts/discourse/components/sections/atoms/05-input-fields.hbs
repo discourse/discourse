@@ -432,7 +432,7 @@
 </form>
 
 <form class="d-form">
-  <h2>Multiple inline fields with unique labels</h2>
+  <h2>Multiple inline fields with unique labels (single-row grid)</h2>
 
   This is a problem with the col-system: impossible to align a button in this
   system due to to labels and error/help texts. It also doesn't work well with
@@ -475,122 +475,127 @@
     </div>
   </div>
 
-  <h2>Multirow form with shared labels</h2>
-  <p class="d-form__section-info">Multirow form is made of multiple inline
-    sections. It can not have an error or help text displayed directly under the
-    field, due to alignment issues. It uses aria-labelledby to associate the
-    label with the input.
+  <h2>Multirow form with shared labels (multi-row grid)</h2>
+  <p>Multirow form is made of multiple inline sections. It can not have an error
+    or help text displayed directly under the field, due to alignment issues. It
+    uses aria-labelledby to associate the label with the input.
   </p>
-  <div class="d-form__section --rows">
 
-    <div class="d-form-multirow">
+  <div class="d-form__section">
 
-      <div class="d-form-field">
-        <label class="d-form-field__label" id="row-name">Name
-          <span class="d-form-field__optional">(Optional)</span></label>
-        <input
-          type="text"
-          class="d-form-field__input"
-          aria-labelledby="row-name"
-        />
+    <div class="d-form-grid --rows --4-col">
+
+      <div class="d-form-grid__row">
+        <div class="d-form-field">
+          <label class="d-form-field__label" id="row-name">Name
+            <span class="d-form-field__optional">(Optional)</span></label>
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
+        </div>
+
+        <div class="d-form-field">
+          <label class="d-form-field__label" id="row-url">url
+          </label>
+          <select aria-labelledby="row-url">
+            <option value="">--URL--</option>
+            <option value="">Google</option>
+            <option value="">DuckDuckGo</option>
+          </select>
+        </div>
+
+        <div class="d-form-field">
+          <label class="d-form-field__label" id="row-reason">Reason
+          </label>
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary d-form__section-inline-btn"
+        >Submit</button>
       </div>
 
-      <div class="d-form-field">
-        <label class="d-form-field__label" id="row-url">url
-        </label>
-        <select aria-labelledby="row-url">
-          <option value="">--URL--</option>
-          <option value="">Google</option>
-          <option value="">DuckDuckGo</option>
-        </select>
-      </div>
-      <div class="d-form-field">
-        <label class="d-form-field__label" id="row-reason">Reason
-        </label>
-        <input
-          type="text"
-          class="d-form-field__input"
-          aria-labelledby="row-name"
-        />
+      <div class="d-form-grid__row">
+        <div class="d-form-field">
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
+        </div>
+
+        <div class="d-form-field has-error">
+          <select aria-labelledby="row-url">
+            <option value="">--URL--</option>
+            <option value="">Google</option>
+            <option value="">DuckDuckGo</option>
+          </select>
+        </div>
+        <div class="d-form-field">
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary d-form__section-inline-btn"
+        >Submit</button>
       </div>
 
-      <button
-        type="submit"
-        class="btn btn-primary d-form__section-inline-btn"
-      >Submit</button>
+      <div class="d-form-grid__row">
+
+        <div class="d-form-field">
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
+        </div>
+        <div class="d-form-field">
+          <select aria-labelledby="row-url">
+            <option value="">--URL--</option>
+            <option value="">Google</option>
+            <option value="">DuckDuckGo</option>
+          </select>
+        </div>
+        <div class="d-form-field has-error">
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary d-form__section-inline-btn"
+        >Submit</button>
+      </div>
+
+      <div class="d-form-field__meta --warning">
+        <p class="d-form-field__meta-text">
+          {{d-icon "warning"}}<span>Whatever errors are in this field, they
+            should be consolidated in a numbered error summary at the bottom,
+            like this:
+            <ol>
+              <li>urls should start with https/</li>
+              <li>the reason can't be empty/</li>
+            </ol>
+          </span>
+        </p>
+      </div>
     </div>
 
-    <div class="d-form-multirow">
-      <div class="d-form-field">
-        <input
-          type="text"
-          class="d-form-field__input"
-          aria-labelledby="row-name"
-        />
-      </div>
-
-      <div class="d-form-field has-error">
-        <select aria-labelledby="row-url">
-          <option value="">--URL--</option>
-          <option value="">Google</option>
-          <option value="">DuckDuckGo</option>
-        </select>
-      </div>
-      <div class="d-form-field">
-        <input
-          type="text"
-          class="d-form-field__input"
-          aria-labelledby="row-name"
-        />
-      </div>
-
-      <button
-        type="submit"
-        class="btn btn-primary d-form__section-inline-btn"
-      >Submit</button>
-    </div>
-
-    <div class="d-form-multirow">
-
-      <div class="d-form-field">
-        <input
-          type="text"
-          class="d-form-field__input"
-          aria-labelledby="row-name"
-        />
-      </div>
-      <div class="d-form-field">
-        <select aria-labelledby="row-url">
-          <option value="">--URL--</option>
-          <option value="">Google</option>
-          <option value="">DuckDuckGo</option>
-        </select>
-      </div>
-      <div class="d-form-field has-error">
-        <input
-          type="text"
-          class="d-form-field__input"
-          aria-labelledby="row-name"
-        />
-      </div>
-
-      <button
-        type="submit"
-        class="btn btn-primary d-form__section-inline-btn"
-      >Submit</button>
-    </div>
-
-    <div class="d-form-field__meta --warning">
-      <p class="d-form-field__meta-text">
-        {{d-icon "warning"}}<span>Whatever errors are in this field, they should
-          be consolidated in a numbered error summary at the bottom, like this:
-          <ol>
-            <li>urls should start with https/</li>
-            <li>the reason can't be empty/</li>
-          </ol>
-        </span>
-      </p>
-    </div>
   </div>
 </form>
 
