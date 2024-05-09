@@ -14,6 +14,12 @@
   max-width: 100%;
   overflow: hidden;
 
+  &__section {
+    &.--ltr {
+      grid-template-columns: 1fr;
+    }
+  }
+
   &__footer {
     justify-content: flex-end;
 
@@ -30,6 +36,12 @@
 }
 
 .d-form-field {
+  &__label {
+    .--ltr & {
+      align-items: center;
+      flex-direction: row;
+    }
+  }
   &__value {
     width: 100%;
   }

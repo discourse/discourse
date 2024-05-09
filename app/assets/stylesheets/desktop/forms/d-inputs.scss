@@ -1,0 +1,14 @@
+.d-form-field {
+  &__input[type="text"],
+  &__input[type="textarea"],
+  select,
+  input[list],
+  &__input[type="datatime-local"] {
+    width: 200px;
+  }
+
+  //core overrules
+  select {
+    width: 200px;
+  }
+}
