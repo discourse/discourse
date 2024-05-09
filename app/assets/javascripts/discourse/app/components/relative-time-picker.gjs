@@ -30,21 +30,19 @@ export default class RelativeTimePicker extends Component {
   }
 
   _durationFromHours() {
-    let duration;
     if (this.args.durationHours === null) {
-      duration = this.args.durationHours;
+      return this.args.durationHours;
     } else if (this.args.durationHours >= 8760) {
-      duration = this._roundedDuration(this.args.durationHours / 365 / 24);
+      return this._roundedDuration(this.args.durationHours / 365 / 24);
     } else if (this.args.durationHours >= 730) {
-      duration = this._roundedDuration(this.args.durationHours / 30 / 24);
+      return this._roundedDuration(this.args.durationHours / 30 / 24);
     } else if (this.args.durationHours >= 24) {
-      duration = this._roundedDuration(this.args.durationHours / 24);
-    } else if (this.args.durationHours < 1) {
-      duration = this._roundedDuration(this.args.durationHours * 60);
+      return this._roundedDuration(this.args.durationHours / 24);
+    } else if (this.args.durationHours >= 1) {
+      return this.args.durationHours;
     } else {
-      duration = this.args.durationHours;
+      return this._roundedDuration(this.args.durationHours * 60);
     }
-    return duration;
   }
 
   _intervalFromHours() {
