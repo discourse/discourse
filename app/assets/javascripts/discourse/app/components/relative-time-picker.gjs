@@ -15,17 +15,17 @@ export default class RelativeTimePicker extends Component {
 
   get duration() {
     if (this.args.durationMinutes !== undefined) {
-      return this._durationFromMinutes();
+      return this._durationFromMinutes;
     } else {
-      return this._durationFromHours();
+      return this._durationFromHours;
     }
   }
 
   get selectedInterval() {
     if (this.args.durationMinutes !== undefined) {
-      return this._intervalFromMinutes();
+      return this._intervalFromMinutes;
     } else {
-      return this._intervalFromHours();
+      return this._intervalFromHours;
     }
   }
 
