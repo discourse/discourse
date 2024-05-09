@@ -58,11 +58,13 @@ export default function () {
 
     this.route("filter");
     this.route("categories");
-    this.route("subcategories", { path: "/categories/:parent_category_id" });
 
     // default filter for a category
     this.route("categoryNone", { path: "/c/*category_slug_path_with_id/none" });
     this.route("categoryAll", { path: "/c/*category_slug_path_with_id/all" });
+    this.route("subcategories", {
+      path: "/c/*category_slug_path_with_id/subcategories",
+    });
     this.route("category", { path: "/c/*category_slug_path_with_id" });
 
     this.route("custom");

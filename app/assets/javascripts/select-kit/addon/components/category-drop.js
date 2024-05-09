@@ -240,10 +240,10 @@ export default ComboBoxComponent.extend({
         // rendered on categories page
         if (categoryId === "all-categories" || categoryId === "no-categories") {
           route = this.selectKit.options.parentCategory
-            ? `/categories/${this.selectKit.options.parentCategory.id}`
+            ? `${this.selectKit.options.parentCategory.url}/subcategories`
             : "/categories";
         } else if (categoryId) {
-          route = `/categories/${categoryId}`;
+          route = `${Category.findById(categoryId).url}/subcategories`;
         } else {
           route = "/categories";
         }

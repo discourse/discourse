@@ -43,11 +43,12 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
 
   async model(params) {
     let parentCategory;
-    if (params.parent_category_id) {
-      const categoryId = parseInt(params.parent_category_id, 10);
+    if (params.category_slug_path_with_id) {
       parentCategory = this.site.lazy_load_categories
-        ? await Category.asyncFindById(categoryId)
-        : Category.findById(categoryId);
+        ? await Category.asyncFindBySlugPathWithID(
+            params.category_slug_path_with_id
+          )
+        : Category.findBySlugPathWithID(params.category_slug_path_with_id);
     }
 
     return this.findCategories(parentCategory).then((model) => {
