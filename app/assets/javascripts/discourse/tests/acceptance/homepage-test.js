@@ -74,4 +74,18 @@ acceptance("Dynamic homepage handling", function () {
     await click(".nav-item_categories a");
     assertOnCategories("/categories");
   });
+
+  test("it passes query params through", async function (assert) {
+    await visit("/?test-one=true");
+
+    const router = getOwner(this).lookup("service:router");
+    assert.strictEqual(router.currentURL, "/?test-one=true");
+  });
+
+  test("it removes the _discourse_homepage_rewrite param from the URL", async function (assert) {
+    await visit("/?_discourse_homepage_rewrite=1&test-one=true");
+
+    const router = getOwner(this).lookup("service:router");
+    assert.strictEqual(router.currentURL, "/?test-one=true");
+  });
 });
