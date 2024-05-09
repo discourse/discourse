@@ -20,15 +20,15 @@ export default class TopicAdminMenu extends Component {
   }
 
   @action
-  onButtonAction(buttonAction) {
+  async onButtonAction(buttonAction) {
+    await this.dMenu.close();
     this.args[buttonAction]?.();
-    this.dMenu.close();
   }
 
   @action
-  onExtraButtonAction(buttonAction) {
+  async onExtraButtonAction(buttonAction) {
+    await this.dMenu.close();
     buttonAction?.();
-    this.dMenu.close();
   }
 
   get extraButtons() {
