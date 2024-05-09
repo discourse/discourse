@@ -12,6 +12,7 @@
     padding-inline: 0.5em;
     height: 2em;
     box-sizing: border-box;
+    width: auto;
   }
 
   &__section {
@@ -29,11 +30,11 @@
       grid-template-rows: auto 1fr auto;
 
       &.--3-col {
-        grid-template-columns: repeat(2, 1fr) auto;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
       }
 
       &.--4-col {
-        grid-template-columns: repeat(3, 1fr) auto;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
       }
     }
     &.--landscape {
@@ -46,6 +47,9 @@
     &.--rows {
       gap: 0.5em;
     }
+  }
+
+  &__grid {
   }
 
   &__multi-section {
@@ -146,11 +150,11 @@
     font-size: var(--font-down-1-rem);
     color: var(--primary-high);
 
-    .--landscape & {
-      flex-direction: column;
-      align-items: flex-end;
-      text-align: right;
-    }
+    // .--landscape & {
+    //   flex-direction: column;
+    //   align-items: flex-end;
+    //   text-align: right;
+    // }
 
     .--inline & {
       flex-basis: 100%;
@@ -168,15 +172,12 @@
     flex-direction: column;
     gap: 0.25em;
     width: max-content;
-  }
-  &__value-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25em;
 
-    .--inline & {
+    .--fluid & {
+      width: 100%;
     }
   }
+
   &__input-group {
     display: flex;
     flex-direction: column;
@@ -233,10 +234,15 @@
       border: 1px solid var(--danger);
     }
 
-    .--inline & {
-      align-self: center;
+    .--fluid & {
       width: 100%;
+      padding-right: 1em;
     }
+
+    // .--inline & {
+    // //   align-self: center;
+    // //   width: 100%;
+    // // }
 
     .--rows & {
       width: auto;
@@ -284,17 +290,17 @@
       cursor: not-allowed;
     }
 
-    &.--small {
-      width: 75px;
-    }
+    // &.--small {
+    //   width: 75px;
+    // }
 
-    &.--large {
-      width: 325px;
-    }
+    // &.--large {
+    //   width: 325px;
+    // }
 
-    &.--full-width {
-      width: 100%;
-    }
+    // &.--full-width {
+    //   width: 100%;
+    // }
   }
 
   &__input[type="radio"],
@@ -384,12 +390,12 @@ select {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  gap: 0.25em;
+  row-gap: 0.25em;
 
-  .--landscape & {
-    flex-direction: row;
-    gap: 1em;
-  }
+  // .--landscape & {
+  //   flex-direction: row;
+  //   gap: 1em;
+  // }
 
   &.--toggle {
     flex-direction: row;
@@ -406,12 +412,24 @@ select {
       flex-wrap: nowrap;
     }
   }
+
+  &.--fluid {
+    column-gap: 0;
+  }
 }
 
 .d-form__col {
   flex: 0 0 auto;
+  box-sizing: border-box;
+  .--fluid & {
+    padding-right: 1em;
+  }
 
-  .--landscape & {
+  .--landscape &,
+  .--inline & {
+    &.--col-1 {
+      width: 8.33333333%;
+    }
     &.--col-2 {
       width: 16.66666667%;
     }

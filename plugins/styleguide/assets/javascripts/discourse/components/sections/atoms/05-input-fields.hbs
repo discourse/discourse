@@ -7,13 +7,14 @@
       <label
         class="d-form__col --col-4 d-form-field__label"
         for="normal-input"
-      >Standard stacked input
+      >Standard input
         <span class="d-form-field__optional">(Optional)</span>
       </label>
 
       <div class="d-form__col --col-8">
         <p class="d-form-field__info">An explanation about the usecase of this
-          form.</p>
+          form. In landscape forms, the explanation needs to be inside the first
+          `col` element.</p>
         <div class="d-form-field__value">
           <input type="text" class="d-form-field__input" id="normal-input" />
           <div class="d-form-field__meta">
@@ -33,8 +34,6 @@
       </label>
 
       <div class="d-form__col --col-8">
-        <p class="d-form-field__info">In left-to-right forms, the explanation
-          text needs to always be inside the `value-container` element.</p>
         <div class="d-form-field__value">
           <div class="d-form-field__input-group">
             <label for="ltr-radio-1" class="checkbox-label">
@@ -84,7 +83,7 @@
       <label
         class="d-form__col --col-4 d-form-field__label"
         for="short-input-1"
-      >A double input field
+      >A grouped input field (will stack on mobile)
       </label>
       <div class="d-form__col">
         <div class="d-form-field__value has-error">
@@ -124,9 +123,9 @@
         <span class="d-form-field__optional">(Optional)</span>
       </label>
 
+      <p class="d-form-field__info">An explanation about the usecase of this
+        form.</p>
       <div class="d-form__col --col-8">
-        <p class="d-form-field__info">An explanation about the usecase of this
-          form.</p>
         <div class="d-form-field__value">
           <input
             type="text"
@@ -148,8 +147,6 @@
       </label>
 
       <div class="d-form__col --col-8">
-        <p class="d-form-field__info">In left-to-right forms, the explanation
-          text needs to always be inside the `value-container` element.</p>
         <div class="d-form-field__value">
           <div class="d-form-field__input-group">
             <label for="ltr-radio-1" class="checkbox-label">
@@ -196,7 +193,7 @@
     </div>
 
     <div class="d-form__row --inline">
-      <label class="d-form-field__label" for="short-input-1">A double input
+      <label class="d-form-field__label" for="short-input-1">A grouped input
         field
       </label>
       <div class="d-form__col">
@@ -218,6 +215,67 @@
         </div>
       </div>
     </div>
+    <p>By default, an inline row will still follow the regular input sizing on
+      desktop (75px, 200px, 350px). If you want to specify the width with the
+      col-sizes instead, make sure to remove any size modifiers and use the
+      `--fluid` modifier.</p>
+    <p>On mobile, an inline row will stack, except if you use the
+      fluid-modifier; then it will in a 2-column grid. (More specific wrapping
+      styles are V2)</p>
+    <div class="d-form__row --inline --fluid">
+      <label class="d-form-field__label" for="short-input-1">A responsive
+        grouped input field
+      </label>
+      <div class="d-form__col --col-3">
+        <div class="d-form-field__value has-error">
+          <input type="text" class="d-form-field__input" id="short-input-1" />
+          <div class="d-form-field__meta --warning">
+            <p class="d-form-field__meta-text">
+              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="d-form__col --col-8">
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="short-input-2" />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form__row --inline --fluid">
+      <label class="d-form-field__label" for="short-input-1">A reponsive grouped
+        input field with many inputs
+      </label>
+      <div class="d-form__col --col-4">
+        <div class="d-form-field__value has-error">
+          <input type="text" class="d-form-field__input" id="short-input-1" />
+          <div class="d-form-field__meta --warning">
+            <p class="d-form-field__meta-text">
+              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="d-form__col --col-2">
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="short-input-2" />
+        </div>
+      </div>
+      <div class="d-form__col --col-2">
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="short-input-3" />
+        </div>
+      </div>
+      <div class="d-form__col --col-3">
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="short-input-4" />
+        </div>
+      </div>
+      <div class="d-form__col --col-1">
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="short-input-5" />
+        </div>
+      </div>
+    </div>
 
     <div class="d-form__row --toggle">
       <label class="d-form-field__label" for="toggle-1">Turn on/off
@@ -233,7 +291,7 @@
     <div class="d-form__row">
       <label class="d-form-field__label" for="error-input">Error highlighting
       </label>
-      <div class="d-form-field has-error">
+      <div class="d-form-col has-error">
         <div class="d-form-field__value">
           <input type="text" class="d-form-field__input" id="error-input" />
           <div class="d-form-field__meta --warning">
@@ -248,7 +306,7 @@
     <div class="d-form__row">
       <label class="d-form-field__label" for="disabled-input">Disabled input
       </label>
-      <div class="d-form-field has-error">
+      <div class="d-form-col">
         <div class="d-form-field__value">
           <input
             type="text"
@@ -264,7 +322,7 @@
         </div>
       </div>
     </div>
-    {{!-- 
+
     <fieldset class="d-form-field --checkbox">
       <legend class="d-form-field__label">Set as default
       </legend>
@@ -369,7 +427,7 @@
             {{d-icon "warning"}}<span>Error: explanation of error</span></p>
         </div>
       </div>
-    </fieldset> --}}
+    </fieldset>
   </div>
 </form>
 
@@ -597,57 +655,10 @@
   <h2>Multiple inline fields with unique labels</h2>
 
   This is a problem with the col-system: impossible to align a button in this
-  system due to to labels and error/help texts. Hence these multifield rows need
-  to be done with grid.
-  <div class="d-form__section">
-    <div class="d-form__row --inline --nowrap">
-      <div class="d-form-col --col-3">
-        <label class="d-form-field__label" for="mif-1">Name
-        </label>
-        <div class="d-form-field__value has-error">
-          <input type="text" class="d-form-field__input" id="mif-1" />
-          <div class="d-form-field__meta --warning">
-            <p class="d-form-field__meta-text">
-              {{d-icon "warning"}}<span>only this field has an error</span></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="d-form-col --col-3">
-        <label class="d-form-field__label" for="mif-2">Last name
-        </label>
-        <div class="d-form-field__value">
-          <input type="text" class="d-form-field__input" id="mif-2" />
-        </div>
-      </div>
-
-      <div class="d-form-col --col-3">
-        <label class="d-form-field__label" for="mif-3">Nickname
-        </label>
-        <div class="d-form-field__value">
-          <select id="mif-3">
-            <option value="">--URL--</option>
-            <option value="">Google</option>
-            <option value="">DuckDuckGo</option>
-          </select>
-          <div class="d-form-field__meta">
-            <p class="d-form-field__meta-text">Don't forget this.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="d-form-col">
-        <label class="d-form-field__label">
-        </label>
-        <button
-          type="submit"
-          class="btn btn-primary d-form__section-inline-btn"
-        >Submit
-        </button>
-      </div>
-
-    </div>
-  </div>
+  system due to to labels and error/help texts. It also doesn't work well with
+  wrapping labels. Hence these multifield rows need to be done with grid. These
+  layouts are quite specific and for now only a equal 3 column and 4 column
+  layout exists. We can create more on a need-it-now basis.
 
   <div class="d-form__section --inline --4-col">
 
@@ -685,7 +696,7 @@
     </button>
   </div>
 
-  <h2>Multirow form</h2>
+  <h2>Multirow form with shared labels</h2>
   <p class="d-form__section-info">Multirow form is made of multiple inline
     sections. It can not have an error or help text displayed directly under the
     field, due to alignment issues. It uses aria-labelledby to associate the
@@ -891,7 +902,7 @@
   </div>
 </form>
 
-<StyleguideExample @title="text-field">
+{{!-- <StyleguideExample @title="text-field">
   <TextField @placeholder="Placeholder" />
 </StyleguideExample>
 
@@ -998,4 +1009,4 @@
     />
     <DButton @icon="reply" @type="submit" @translatedLabel="Button" />
   </div>
-</StyleguideExample>
+</StyleguideExample> --}}
