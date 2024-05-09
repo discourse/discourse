@@ -34,7 +34,7 @@ class DiscourseIpInfo
         license_key = GlobalSetting.maxmind_license_key
 
         if license_key.blank?
-          STDERR.puts "MaxMind IP databases download require a acconunt ID and license key"
+          STDERR.puts "MaxMind IP database download requires an account ID and a license key"
           STDERR.puts "Please set DISCOURSE_MAXMIND_ACCOUNT_ID and DISCOURSE_MAXMIND_LICENSE_KEY. See https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941 for more details."
           return
         end
