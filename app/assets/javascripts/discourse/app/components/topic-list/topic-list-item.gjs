@@ -395,7 +395,7 @@ export default class TopicListItem extends Component {
           </td>
         {{/if}}
 
-        <td class="num views {{@topic.viewsHeat}} topic-list-data">
+        <td class={{concatClass "num views topic-list-data" @topic.viewsHeat}}>
           <PluginOutlet @name="topic-list-before-view-count" />
           {{number @topic.views numberKey="views_long"}}
         </td>
