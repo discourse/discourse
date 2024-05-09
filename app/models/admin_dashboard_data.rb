@@ -3,7 +3,7 @@
 class AdminDashboardData
   include StatsCacheable
 
-  cattr_reader :problem_messages
+  cattr_reader :problem_messages, default: []
 
   # kept for backward compatibility
   GLOBAL_REPORTS ||= []
@@ -88,6 +88,19 @@ class AdminDashboardData
         nil
       end
     end
+  end
+
+  ##
+  # We call this method in the class definition below
+  # so all of the problem checks in this class are registered on
+  # boot. These problem checks are run when the problems are loaded in
+  # the admin dashboard controller.
+  #
+  # This method also can be used in testing to reset checks between
+  # tests. It will also fire multiple times in development mode because
+  # classes are not cached.
+  def self.reset_problem_checks
+    @@problem_messages = []
   end
 
   def self.fetch_stats
