@@ -9,7 +9,6 @@ export default class PollInfoComponent extends Component {
   @service currentUser;
   @tracked min = this.args.attrs.min;
   @tracked max = this.args.attrs.max;
-  @tracked options = this.args.attrs.poll.options;
   @tracked length = this.args.attrs.poll.options.length;
   @tracked poll = this.args.attrs.poll;
   @tracked post = this.args.attrs.post;
@@ -57,18 +56,18 @@ export default class PollInfoComponent extends Component {
   get showTotalVotes() {
     return (
       this.args.attrs.isMultiple &&
-      (this.args.attrs.showResults || this.args.attrs.isClosed)
+      (this.args.showResults || this.args.attrs.isClosed)
     );
   }
 
   get totalVotes() {
-    return this.poll.options.reduce((total, o) => {
+    return this.args.options.reduce((total, o) => {
       return total + parseInt(o.votes, 10);
     }, 0);
   }
 
   get totalVotesLabel() {
-    return I18n.t("poll.total_votes", this.totalVotes);
+    return I18n.t("poll.total_votes", { count: this.totalVotes });
   }
 
   get automaticCloseAgeLabel() {
@@ -82,7 +81,7 @@ export default class PollInfoComponent extends Component {
   get showMultipleHelpText() {
     return (
       this.args.attrs.isMultiple &&
-      !this.args.attrs.showResults &&
+      !this.args.showResults &&
       !this.args.attrs.isClosed
     );
   }
@@ -138,7 +137,7 @@ export default class PollInfoComponent extends Component {
   get publicTitle() {
     return (
       !this.args.attrs.isClosed &&
-      !this.args.attrs.showResults &&
+      !this.args.showResults &&
       this.args.attrs.poll.public &&
       this.args.attrs.poll.results !== "staff_only"
     );
@@ -146,5 +145,18 @@ export default class PollInfoComponent extends Component {
 
   get publicTitleLabel() {
     return htmlSafe(I18n.t("poll.public.title"));
+  }
+
+  get showInstructionsSection() {
+    if (
+      this.showMultipleHelpText ||
+      this.poll.close ||
+      this.resultsOnVote ||
+      this.resultsOnClose ||
+      this.resultsStaffOnly ||
+      this.publicTitle
+    ) {
+      return true;
+    }
   }
 }

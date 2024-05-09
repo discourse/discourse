@@ -1,6 +1,6 @@
 <div class="poll {{pollClasses}}">
   <div class="poll-container">
-    <div class="poll-title">{{this.titleHTML}}</div>
+    {{this.titleHTML}}
     {{#if this.notInVotingGroup}}
       <div class="alert alert-danger">{{this.pollGroups}}</div>
     {{/if}}
@@ -41,7 +41,11 @@
       {{/if}}
     {{/if}}
   </div>
-  <PollInfo @attrs={{this.attributes}} />
+  <PollInfo
+    @attrs={{this.attributes}}
+    @options={{this.options}}
+    @showResults={{this.showResults}}
+  />
   <div class="poll-buttons">
     {{#if this.showCastVotesButton}}
       <button

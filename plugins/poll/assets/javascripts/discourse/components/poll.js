@@ -262,7 +262,8 @@ export default class PollComponent extends Component {
 
   @action
   toggleResults() {
-    this.showResults = !this.showResults;
+    const showResults = !this.showResults;
+    this.showResults = showResults;
   }
 
   get canCastVotes() {
