@@ -27,11 +27,9 @@ acceptance("Category Edit - Settings", function (needs) {
   test("values updating while switching the category", async function (assert) {
     await visit("/c/uncategorized/edit/settings");
 
-    assert.strictEqual(
-      query("input#category-default-slow-mode").value,
-      "20",
-      "slow mode value is updated"
-    );
+    assert
+      .dom("input#category-default-slow-mode")
+      .hasValue("20", "slow mode value is updated");
 
     const categoryBreadcrumb = selectKit(".category-breadcrumb .select-kit");
     await categoryBreadcrumb.expand();
