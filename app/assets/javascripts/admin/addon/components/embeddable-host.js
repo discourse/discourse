@@ -30,7 +30,7 @@ export default class EmbeddableHost extends Component.extend(
     const categoryId = host.category_id || this.site.uncategorized_category_id;
     const category = Category.findById(categoryId);
     const tags = host.tags || [];
-    const user = host.user || null;
+    const user = host.user;
 
     this.set("category", category);
     this.set("tags", tags);
