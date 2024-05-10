@@ -1,200 +1,122 @@
-<div class="poll {{pollClasses}}">
-  <div class="poll-container">
-    {{this.titleHTML}}
-    {{#if this.notInVotingGroup}}
-      <div class="alert alert-danger">{{this.pollGroups}}</div>
-    {{/if}}
-    {{#if this.showResults}}
-      <div class={{this.resultsWidgetTypeClass}}>
-        {{#if this.isNumber}}
-          <span>{{this.averageRating}}</span>
-        {{else}}
-          <PollResultsStandard @attrs={{this.attributes}} />
-        {{/if}}
+<div class="poll-container">
+  {{this.titleHTML}}
+  {{#if this.notInVotingGroup}}
+    <div class="alert alert-danger">{{this.pollGroups}}</div>
+  {{/if}}
+  {{#if this.showResults}}
+    <div class={{this.resultsWidgetTypeClass}}>
+      {{#if this.isNumber}}
+        <span>{{this.averageRating}}</span>
+      {{else}}
+        <PollResultsStandard @attrs={{this.attributes}} />
+      {{/if}}
+    </div>
+  {{else}}
+    {{#if this.isIrv}}
+      <div class="multi-poll">
+        {{#each this.options as |option|}}
+          <div
+            class="multi-poll-option"
+            data-poll-option-id={{option.id}}
+            data-poll-option-rank={{option.rank}}
+          >
+            <PollOptionsDropdown
+              @rank={{option.rank}}
+              @option={{option}}
+              @irv_dropdown_content={{this.irv_dropdown_content}}
+              @sendRank={{this.toggleOption}}
+            />
+            <span class="option-text">{{option.html}}</span>
+          </div>
+        {{/each}}
       </div>
     {{else}}
-      {{#if this.isIrv}}
-        <div class="multi-poll">
-          {{#each this.options as |option|}}
-            <div
-              class="multi-poll-option"
-              data-poll-option-id={{option.id}}
-              data-poll-option-rank={{option.rank}}
-            >
-              <PollOptionsDropdown
-                @rank={{option.rank}}
-                @option={{option}}
-                @irv_dropdown_content={{this.irv_dropdown_content}}
-                @sendRank={{this.toggleOption}}
-              />
-              <span class="option-text">{{option.html}}</span>
-            </div>
-          {{/each}}
-        </div>
-      {{else}}
-        <PollOptions
-          @isCheckbox={{this.isCheckbox}}
-          @options={{this.options}}
-          @votes={{this.vote}}
-          @sendRadioClick={{this.toggleOption}}
-        />
+      <PollOptions
+        @isCheckbox={{this.isCheckbox}}
+        @options={{this.options}}
+        @votes={{this.vote}}
+        @sendRadioClick={{this.toggleOption}}
+      />
+    {{/if}}
+  {{/if}}
+</div>
+<PollInfo
+  @attrs={{this.attributes}}
+  @options={{this.options}}
+  @showResults={{this.showResults}}
+  @voters={{this.voters}}
+/>
+<div class="poll-buttons">
+  {{#if this.showCastVotesButton}}
+    <button
+      class={{this.castVotesButtonClass}}
+      title="poll.cast-votes.title"
+      disabled={{this.castVotesDisabled}}
+      {{on "click" this.castVotes}}
+    >
+      {{d-icon this.castVotesButtonIcon}}
+      <span class="d-button-label">{{I18n "poll.cast-votes.label"}}</span>
+    </button>
+  {{/if}}
+
+  {{#if this.showHideResultsButton}}
+    <button
+      class="btn btn-default toggle-results"
+      title="poll.hide-results.title"
+      {{on "click" this.toggleResults}}
+    >
+      {{d-icon "chevron-left"}}
+      <span class="d-button-label">{{I18n "poll.hide-results.label"}}</span>
+    </button>
+  {{/if}}
+
+  {{#if this.showShowResultsButton}}
+    <button
+      class="btn btn-default toggle-results"
+      title="poll.show-results.title"
+      {{on "click" this.toggleResults}}
+    >
+      {{d-icon "chart-bar"}}
+      <span class="d-button-label">{{I18n "poll.show-results.label"}}</span>
+    </button>
+  {{/if}}
+
+  {{#if this.showRemoveVoteButton}}
+    <button
+      class="btn btn-default remove-vote"
+      title="poll.remove-vote.title"
+      {{on "click" this.removeVote}}
+    >
+      {{d-icon "undo"}}
+      <span class="d-button-label">{{I18n "poll.remove-vote.label"}}</span>
+    </button>
+  {{/if}}
+
+  <div class="poll-buttons-dropdown">
+    <div class="widget-dropdown {{this.dropDownButtonState}}">
+      {{#if this.showDropdown}}
+        <button
+          class="widget-dropdown-header btn btn-default"
+          title="poll.dropdown.title"
+          {{on "click" this.toggleDropdownButtonState}}
+        >
+          {{d-icon "cog"}}
+        </button>
       {{/if}}
-    {{/if}}
-  </div>
-  <PollInfo
-    @attrs={{this.attributes}}
-    @options={{this.options}}
-    @showResults={{this.showResults}}
-  />
-  <div class="poll-buttons">
-    {{#if this.showCastVotesButton}}
-      <button
-        class={{this.castVotesButtonClass}}
-        title="poll.cast-votes.title"
-        disabled={{this.castVotesDisabled}}
-        {{on "click" this.castVotes}}
-      >
-        {{d-icon this.castVotesButtonIcon}}
-        <span class="d-button-label">{{I18n "poll.cast-votes.label"}}</span>
-      </button>
-    {{/if}}
-
-    {{#if this.showHideResultsButton}}
-      <button
-        class="btn btn-default toggle-results"
-        title="poll.hide-results.title"
-        {{on "click" this.toggleResults}}
-      >
-        {{d-icon "chevron-left"}}
-        <span class="d-button-label">{{I18n "poll.hide-results.label"}}</span>
-      </button>
-    {{/if}}
-
-    {{#if this.showShowResultsButton}}
-      <button
-        class="btn btn-default toggle-results"
-        title="poll.show-results.title"
-        {{on "click" this.toggleResults}}
-      >
-        {{d-icon "chart-bar"}}
-        <span class="d-button-label">{{I18n "poll.show-results.label"}}</span>
-      </button>
-    {{/if}}
-
-    {{#if this.showRemoveVoteButton}}
-      <button
-        class="btn btn-default remove-vote"
-        title="poll.remove-vote.title"
-        {{on "click" this.removeVote}}
-      >
-        {{d-icon "undo"}}
-        <span class="d-button-label">{{I18n "poll.remove-vote.label"}}</span>
-      </button>
-    {{/if}}
-
-    {{#if this.showDropdown}}
-      <div class="poll-buttons-dropdown">
-        <DropdownSelectBox
-          @candidate={{@option.id}}
-          @value={{this.rank}}
-          @content={{this.getDropdownContent}}
-          @onChange={{action this.selectRank @option.id}}
-          @options={{hash showCaret=true filterable=false}}
-          class="poll-option-dropdown"
-        />
+      <div class="widget-dropdown-body">
+        {{#each this.getDropdownContent as |content|}}
+          <div class="widget-dropdown-item">
+            <button
+              class="widget-button"
+              title={{I18n content.title}}
+              {{on "click" (fn this.dropDownClick content.action)}}
+            >
+              {{d-icon content.icon}}
+              <span>{{I18n content.label}}</span>
+            </button>
+          </div>
+        {{/each}}
       </div>
-    {{/if}}
+    </div>
   </div>
 </div>
-
-{{! html(attrs) {
-    const contents = [];
-    const { poll, post } = attrs;
-    const topicArchived = post.get("topic.archived");
-    const closed = attrs.isClosed;
-    const staffOnly = poll.results === "staff_only";
-    const isStaff = this.currentUser && this.currentUser.staff;
-    const isMe = this.currentUser && post.user_id === this.currentUser.id;
-    const hideResultsDisabled = !staffOnly && (closed || topicArchived);
-    const dropdown = this.attach("discourse-poll-buttons-dropdown", attrs);
-    const dropdownOptionsCount = dropdown.optionsCount(attrs);
-
-    if ((attrs.isMultiple || attrs.isIrv) && !hideResultsDisabled && !attrs.showResults) {
-      const castVotesDisabled = !attrs.canCastVotes;
-      contents.push(
-        this.attach("button", {
-          className: `cast-votes ${castVotesDisabled ? "btn-default" : "btn-primary"
-            }`,
-          label: "poll.cast-votes.label",
-          title: "poll.cast-votes.title",
-          icon: castVotesDisabled ? "far-square" : "check",
-          disabled: castVotesDisabled,
-          action: "castVotes",
-        })
-      );
-    }
-
-    if (attrs.showResults && !hideResultsDisabled) {
-      contents.push(
-        this.attach("button", {
-          className: "btn-default toggle-results",
-          label: "poll.hide-results.label",
-          title: "poll.hide-results.title",
-          icon: "chevron-left",
-          action: "toggleResults",
-        })
-      );
-    }
-
-    if (!attrs.showResults && !hideResultsDisabled) {
-      let showResultsButton;
-
-      if (
-        !(poll.results === "on_vote" && !attrs.hasVoted && !isMe) &&
-        !(poll.results === "on_close" && !closed) &&
-        !(poll.results === "staff_only" && !isStaff) &&
-        poll.voters > 0
-      ) {
-        showResultsButton = this.attach("button", {
-          className: "btn-default toggle-results",
-          label: "poll.show-results.label",
-          title: "poll.show-results.title",
-          icon: "chart-bar",
-          action: "toggleResults",
-        });
-      }
-
-      if (attrs.hasSavedVote) {
-        contents.push(
-          this.attach("button", {
-            className: "btn-default remove-vote",
-            label: "poll.remove-vote.label",
-            title: "poll.remove-vote.title",
-            icon: "undo",
-            action: "removeVote",
-          })
-        );
-      }
-
-      if (showResultsButton) {
-        contents.push(showResultsButton);
-      }
-    }
-
-    // only show the dropdown if there's more than 1 button
-    // otherwise just show the button
-    if (dropdownOptionsCount > 1) {
-      contents.push(dropdown);
-    } else if (dropdownOptionsCount === 1) {
-      const singleOptionId = dropdown._buildContent(attrs)[0].id;
-      let singleOption = buttonOptionsMap[singleOptionId];
-      if (singleOptionId === "toggleStatus") {
-        singleOption = closed
-          ? buttonOptionsMap.openPoll
-          : buttonOptionsMap.closePoll;
-      }
-      contents.push(this.attach("button", singleOption));
-    }
-    return [contents];
-  },
-}); }}

@@ -329,15 +329,10 @@ createWidget("discourse-poll-container", {
       }
 
       contents.push(
-        new RenderGlimmer(
-          this,
-          "div-poll",
-          hbsCli`<Poll @attrs={{@data.attrs}} />`,
-          {
-            ...attrs,
-            attrs,
-          }
-        )
+        new RenderGlimmer(this, "", hbsCli`<Poll @attrs={{@data.attrs}} />`, {
+          ...attrs,
+          attrs,
+        })
       );
       return contents;
     }
@@ -883,7 +878,7 @@ export default createWidget("discourse-poll", {
   services: ["dialog"],
 
   buildAttributes(attrs) {
-    let cssClasses = "poll";
+    let cssClasses = "poll-outer";
     if (attrs.poll.chart_type === PIE_CHART_TYPE) {
       cssClasses += " pie";
     }
@@ -927,7 +922,7 @@ export default createWidget("discourse-poll", {
     return [
       new RenderGlimmer(
         this,
-        "div-poll",
+        "div.poll",
         hbsCli`<Poll @attrs={{@data.attrs}} />`,
         {
           attrs: newAttrs,

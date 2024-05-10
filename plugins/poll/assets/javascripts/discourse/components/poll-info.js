@@ -43,7 +43,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get votersLabel() {
-    return I18n.t("poll.voters", { count: this.args.attrs.poll.voters });
+    return I18n.t("poll.voters", { count: this.args.voters });
   }
 
   get showTotalVotes() {

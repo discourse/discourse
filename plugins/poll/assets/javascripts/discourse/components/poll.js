@@ -43,6 +43,7 @@ export default class PollComponent extends Component {
   @service currentUser;
   @service siteSettings;
   @service appEvents;
+  @service dialog;
   @tracked isStaff = this.currentUser && this.currentUser.staff;
   @tracked vote = this.args.attrs.vote || [];
   @tracked voters = this.args.attrs.poll.voters || 0;
@@ -66,7 +67,16 @@ export default class PollComponent extends Component {
     this.showingResults ||
     (this.args.attrs.post.get("topic.archived") && !this.staffOnly) ||
     (this.closed && !this.staffOnly);
+  @tracked getDropdownButtonState = false;
   post = this.args.attrs.post;
+  // isAutomaticallyClosed = this.args.attrs.isAutomaticallyClosed;
+
+  isAutomaticallyClosed = () => {
+    const poll = this.args.attrs.poll;
+    return (
+      poll.close && moment.utc(poll.close, "YYYY-MM-DD HH:mm:ss Z") <= moment()
+    );
+  };
 
   irv_dropdown_content = [];
 
@@ -318,11 +328,12 @@ export default class PollComponent extends Component {
   }
 
   get showRemoveVoteButton() {
-    return !this.showResults && !this.hideResultsDisabled && this.hasSavedVote;
-  }
-
-  get showDropdown() {
-    return this.getDropdownContent.length > 1;
+    return (
+      !this.showResults &&
+      !this.closed &&
+      !this.hideResultsDisabled &&
+      this.hasSavedVote
+    );
   }
 
   get isCheckbox() {
@@ -351,7 +362,30 @@ export default class PollComponent extends Component {
     return htmlSafe(I18n.t("poll.average_rating", { average }));
   }
 
-  getDropdownContent() {
+  @action
+  toggleDropdownButtonState() {
+    this.getDropdownButtonState = !this.getDropdownButtonState;
+  }
+
+  get dropDownButtonState() {
+    return this.getDropdownButtonState ? "opened" : "closed";
+  }
+
+  get showDropdown() {
+    return this.getDropdownContent.length > 1;
+  }
+
+  get showDropdownAsButton() {
+    return this.getDropdownContent.length === 1;
+  }
+
+  @action
+  dropDownClick(dropDownAction) {
+    this.toggleDropdownButtonState();
+    this[dropDownAction]();
+  }
+
+  get getDropdownContent() {
     const contents = [];
     const isAdmin = this.currentUser && this.currentUser.admin;
     const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
@@ -406,9 +440,91 @@ export default class PollComponent extends Component {
         this.options = [...poll.options];
         this.poll.setProperties(poll);
         this.vote = [];
+        this.voters = poll.voters;
         this.hasSavedVote = false;
         this.appEvents.trigger("poll:voted", poll, this.post, this.vote);
       })
       .catch((error) => popupAjaxError(error));
+  }
+
+  @action
+  toggleStatus() {
+    if (this.isAutomaticallyClosed()) {
+      return;
+    }
+
+    this.dialog.yesNoConfirm({
+      message: I18n.t(this.closed ? "poll.open.confirm" : "poll.close.confirm"),
+      didConfirm: () => {
+        const status = this.closed ? "open" : "closed";
+        ajax("/polls/toggle_status", {
+          type: "PUT",
+          data: {
+            post_id: this.post.id,
+            poll_name: this.poll.name,
+            status,
+          },
+        })
+          .then(() => {
+            this.poll.status = status;
+            if (status === "closed") {
+              this.closed = true;
+            } else {
+              this.closed = false;
+            }
+            if (this.poll.results === "on_close") {
+              this.showResults = status === "closed";
+            }
+          })
+          .catch((error) => {
+            if (error) {
+              popupAjaxError(error);
+            } else {
+              this.dialog.alert(I18n.t("poll.error_while_toggling_status"));
+            }
+          });
+      },
+    });
+  }
+
+  @action
+  exportResults() {
+    const queryID = this.siteSettings.poll_export_data_explorer_query_id;
+
+    // This uses the Data Explorer plugin export as CSV route
+    // There is detection to check if the plugin is enabled before showing the button
+    ajax(`/admin/plugins/explorer/queries/${queryID}/run.csv`, {
+      type: "POST",
+      data: {
+        // needed for data-explorer route compatibility
+        params: JSON.stringify({
+          poll_name: this.poll.name,
+          post_id: this.post.id.toString(), // needed for data-explorer route compatibility
+        }),
+        explain: false,
+        limit: 1000000,
+        download: 1,
+      },
+    })
+      .then((csvContent) => {
+        const downloadLink = document.createElement("a");
+        const blob = new Blob([csvContent], {
+          type: "text/csv;charset=utf-8;",
+        });
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.setAttribute(
+          "download",
+          `poll-export-${this.poll.name}-${this.post.id}.csv`
+        );
+        downloadLink.click();
+        downloadLink.remove();
+      })
+      .catch((error) => {
+        if (error) {
+          popupAjaxError(error);
+        } else {
+          this.dialog.alert(I18n.t("poll.error_while_exporting_results"));
+        }
+      });
   }
 }
