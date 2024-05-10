@@ -78,8 +78,22 @@ export default class Menu extends Service {
   }
 
   /**
-   * Closes the active menu
-   * @param {DMenuInstance} [menu] - the menu to close, if not provider will close any active menu
+   * Returns an existing menu by its identifier if found
+   *
+   * @param {String} identifier - the menu identifier to retrieve
+   *
+   * @returns {Promise<DMenuInstance>}
+   */
+  getByIdentifier(identifier) {
+    return this.registeredMenus.find(
+      (registeredMenu) => registeredMenu.options.identifier === identifier
+    );
+  }
+
+  /**
+   * Closes the given menu
+   *
+   * @param {DMenuInstance | String} [menu | identifier] - the menu to close, can accept an instance or an identifier
    */
   @action
   async close(menu) {
