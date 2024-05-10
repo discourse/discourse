@@ -31,6 +31,7 @@
   padding-bottom: env(safe-area-inset-bottom);
   position: relative;
   @include chat-scrollbar();
+  height: 100%;
 
   @include breakpoint(mobile-large) {
     @include chat-scrollbar();
@@ -66,10 +67,10 @@
   .channel-list-empty-message {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     gap: 1rem;
-    margin: 1em 0.5em 0.5em 0.5em;
-    padding: 0 1em;
+    height: 100%;
 
     .channel-title {
       margin-bottom: 1rem;

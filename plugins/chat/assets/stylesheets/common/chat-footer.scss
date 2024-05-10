@@ -4,7 +4,7 @@
   border-top: 1px solid var(--primary-low);
   display: flex;
   align-items: flex-end;
-  justify-content: space-around;
+  justify-content: space-between;
   position: sticky;
   bottom: 0;
   left: 0;
@@ -23,6 +23,7 @@
     align-items: center;
     flex-basis: 33%;
     flex-shrink: 0;
+    flex-grow: 1;
     padding-block: 0.75rem;
     height: 100%;
     position: relative;
@@ -31,6 +32,17 @@
       .d-icon,
       .d-button-label {
         color: var(--quaternary);
+      }
+    }
+    &:hover,
+    &:focus {
+      .discourse-no-touch &,
+      .discourse-touch & {
+        background-color: var(--primary-low);
+        .d-icon,
+        .d-button-label {
+          color: var(--quaternary);
+        }
       }
     }
 
