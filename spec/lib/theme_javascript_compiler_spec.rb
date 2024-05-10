@@ -251,7 +251,7 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.raw_content).to include(
         "define(\"discourse/theme-1/discourse/components/my-component\", [\"exports\",",
       )
-      expect(compiler.raw_content).to include('value = "foo";')
+      expect(compiler.raw_content).to include("_defineProperty(this, \"value\", \"foo\");")
       expect(compiler.raw_content).to include("setComponentTemplate")
       expect(compiler.raw_content).to include("createTemplateFactory")
     end
