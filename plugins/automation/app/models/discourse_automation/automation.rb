@@ -39,12 +39,15 @@ module DiscourseAutomation
         raise "Expected an instance of Topic/Post/User."
       end
 
-      ids = Array(target.custom_fields[custom_field_key])
-      if !ids.include?(self.id)
-        ids << self.id
-        ids = ids.compact.uniq
-        target.custom_fields[custom_field_key] = ids
-        target.save_custom_fields
+      change_automation_ids_custom_field_in_mutex(target, custom_field_key) do
+        target.reload
+        ids = Array(target.custom_fields[custom_field_key])
+        if !ids.include?(self.id)
+          ids << self.id
+          ids = ids.compact.uniq
+          target.custom_fields[custom_field_key] = ids
+          target.save_custom_fields
+        end
       end
     end
 
@@ -53,12 +56,15 @@ module DiscourseAutomation
         raise "Expected an instance of Topic/Post/User."
       end
 
-      ids = Array(target.custom_fields[custom_field_key])
-      if ids.include?(self.id)
-        ids = ids.compact.uniq
-        ids.delete(self.id)
-        target.custom_fields[custom_field_key] = ids
-        target.save_custom_fields
+      change_automation_ids_custom_field_in_mutex(target, custom_field_key) do
+        target.reload
+        ids = Array(target.custom_fields[custom_field_key])
+        if ids.include?(self.id)
+          ids = ids.compact.uniq
+          ids.delete(self.id)
+          target.custom_fields[custom_field_key] = ids
+          target.save_custom_fields
+        end
       end
     end
 
@@ -177,6 +183,13 @@ module DiscourseAutomation
 
     def validate_trigger_fields
       !triggerable || triggerable.valid?(self)
+    end
+
+    def change_automation_ids_custom_field_in_mutex(target, key)
+      DistributedMutex.synchronize(
+        "automation_custom_field_#{key}_#{target.class.table_name}_#{target.id}",
+        validity: 5.seconds,
+      ) { yield }
     end
   end
 end
