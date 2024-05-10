@@ -352,6 +352,10 @@ export default class PollComponent extends Component {
       : "discourse-poll-pie-chart";
   }
 
+  get resultsPie() {
+    return this.args.attrs.poll.chart_type === PIE_CHART_TYPE;
+  }
+
   get averageRating() {
     const totalScore = this.options.reduce((total, o) => {
       return total + parseInt(o.html, 10) * parseInt(o.votes, 10);
