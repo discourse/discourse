@@ -14,7 +14,7 @@ register_asset "stylesheets/common/discourse-automation.scss"
 module ::DiscourseAutomation
   PLUGIN_NAME = "automation"
 
-  CUSTOM_FIELD = "discourse_automation_ids"
+  AUTOMATION_IDS_CUSTOM_FIELD = "discourse_automation_ids_json"
   TOPIC_LAST_CHECKED_BY = "discourse_automation_last_checked_by"
   TOPIC_LAST_CHECKED_AT = "discourse_automation_last_checked_at"
 
@@ -26,7 +26,7 @@ module ::DiscourseAutomation
     { id: "TL34", name: "discourse_automation.triggerables.user_promoted.trust_levels.TL34" },
   ]
 
-  AUTO_RESPONDER_TRIGGERED_IDS = "auto_responder_triggered_ids"
+  AUTO_RESPONDER_TRIGGERED_IDS = "auto_responder_triggered_ids_json"
   USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT = 1000
 
   def self.set_active_automation(id)
@@ -203,15 +203,15 @@ after_initialize do
 
   on(:post_created) { |post| DiscourseAutomation::EventHandlers.handle_stalled_topic(post) }
 
-  register_topic_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
-  register_topic_custom_field_type(DiscourseAutomation::AUTO_RESPONDER_TRIGGERED_IDS, [:integer])
+  register_topic_custom_field_type(DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD, :json)
+  register_topic_custom_field_type(DiscourseAutomation::AUTO_RESPONDER_TRIGGERED_IDS, :json)
 
   on(:user_updated) { |user| DiscourseAutomation::EventHandlers.handle_user_updated(user) }
   on(:user_created) do |user|
     DiscourseAutomation::EventHandlers.handle_user_updated(user, new_user: true)
   end
 
-  register_user_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
-  register_post_custom_field_type(DiscourseAutomation::CUSTOM_FIELD, [:integer])
+  register_user_custom_field_type(DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD, :json)
+  register_post_custom_field_type(DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD, :json)
   register_post_custom_field_type("stalled_wiki_triggered_at", :string)
 end

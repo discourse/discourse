@@ -38,90 +38,122 @@ describe "Core extensions" do
   describe "post custom fields" do
     it "supports discourse_automation_ids" do
       post = create_post
-      automation_1.attach_custom_field(post)
+      automation_1.add_id_to_custom_field(post, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
 
-      expect(post.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to eq([automation_1.id])
+      expect(post.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq(
+        [automation_1.id],
+      )
 
-      automation_2.attach_custom_field(post)
+      automation_2.add_id_to_custom_field(post, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
 
-      expect(post.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to eq(
+      expect(post.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq(
         [automation_1.id, automation_2.id],
       )
 
-      PostCustomField.where(post_id: post.id, name: DiscourseAutomation::CUSTOM_FIELD).delete_all
+      PostCustomField.where(
+        post_id: post.id,
+        name: DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD,
+      ).delete_all
 
-      expect(post.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to be(nil)
+      expect(post.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to be(nil)
 
-      automation_1.attach_custom_field(post)
-      automation_1.attach_custom_field(post)
-      automation_1.attach_custom_field(post)
-      automation_1.attach_custom_field(post)
+      automation_1.add_id_to_custom_field(post, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
+      automation_1.add_id_to_custom_field(post, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
+      automation_1.add_id_to_custom_field(post, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
+      automation_1.add_id_to_custom_field(post, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
 
-      expect(post.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to eq([automation_1.id])
+      expect(post.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq(
+        [automation_1.id],
+      )
 
-      automation_1.detach_custom_field(post)
+      automation_1.remove_id_from_custom_field(
+        post,
+        DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD,
+      )
 
-      expect(post.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to be(nil)
+      expect(post.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq([])
     end
   end
 
   describe "topic custom fields" do
     it "supports discourse_automation_ids" do
       topic = create_topic
-      automation_1.attach_custom_field(topic)
+      automation_1.add_id_to_custom_field(topic, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
 
-      expect(topic.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to eq([automation_1.id])
+      expect(topic.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq(
+        [automation_1.id],
+      )
 
-      automation_2.attach_custom_field(topic)
+      automation_2.add_id_to_custom_field(topic, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
 
-      expect(topic.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to eq(
+      expect(topic.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq(
         [automation_1.id, automation_2.id],
       )
 
-      TopicCustomField.where(topic_id: topic.id, name: DiscourseAutomation::CUSTOM_FIELD).delete_all
+      TopicCustomField.where(
+        topic_id: topic.id,
+        name: DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD,
+      ).delete_all
 
-      expect(topic.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to be(nil)
+      expect(topic.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq(
+        nil,
+      )
 
-      automation_1.attach_custom_field(topic)
-      automation_1.attach_custom_field(topic)
-      automation_1.attach_custom_field(topic)
-      automation_1.attach_custom_field(topic)
+      automation_1.add_id_to_custom_field(topic, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
+      automation_1.add_id_to_custom_field(topic, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
+      automation_1.add_id_to_custom_field(topic, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
+      automation_1.add_id_to_custom_field(topic, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
 
-      expect(topic.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to eq([automation_1.id])
+      expect(topic.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq(
+        [automation_1.id],
+      )
 
-      automation_1.detach_custom_field(topic)
+      automation_1.remove_id_from_custom_field(
+        topic,
+        DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD,
+      )
 
-      expect(topic.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to be(nil)
+      expect(topic.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq([])
     end
   end
 
   describe "user custom fields" do
     it "supports discourse_automation_ids" do
       user = create_user
-      automation_1.attach_custom_field(user)
+      automation_1.add_id_to_custom_field(user, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
 
-      expect(user.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to eq([automation_1.id])
+      expect(user.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq(
+        [automation_1.id],
+      )
 
-      automation_2.attach_custom_field(user)
+      automation_2.add_id_to_custom_field(user, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
 
-      expect(user.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to eq(
+      expect(user.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq(
         [automation_1.id, automation_2.id],
       )
 
-      UserCustomField.where(user_id: user.id, name: DiscourseAutomation::CUSTOM_FIELD).delete_all
+      UserCustomField.where(
+        user_id: user.id,
+        name: DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD,
+      ).delete_all
 
-      expect(user.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to be(nil)
+      expect(user.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq(nil)
 
-      automation_1.attach_custom_field(user)
-      automation_1.attach_custom_field(user)
-      automation_1.attach_custom_field(user)
-      automation_1.attach_custom_field(user)
+      automation_1.add_id_to_custom_field(user, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
+      automation_1.add_id_to_custom_field(user, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
+      automation_1.add_id_to_custom_field(user, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
+      automation_1.add_id_to_custom_field(user, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
 
-      expect(user.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to eq([automation_1.id])
+      expect(user.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq(
+        [automation_1.id],
+      )
 
-      automation_1.detach_custom_field(user)
+      automation_1.remove_id_from_custom_field(
+        user,
+        DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD,
+      )
 
-      expect(user.reload.custom_fields[DiscourseAutomation::CUSTOM_FIELD]).to be(nil)
+      expect(user.reload.custom_fields[DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD]).to eq([])
     end
   end
 end

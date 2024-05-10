@@ -46,19 +46,29 @@ describe DiscourseAutomation::Automation do
     end
   end
 
-  describe "#detach_custom_field" do
+  describe "#remove_id_from_custom_field" do
     fab!(:automation)
 
     it "expects a User/Topic/Post instance" do
-      expect { automation.detach_custom_field(Invite.new) }.to raise_error(RuntimeError)
+      expect {
+        automation.remove_id_from_custom_field(
+          Invite.new,
+          DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD,
+        )
+      }.to raise_error(RuntimeError)
     end
   end
 
-  describe "#attach_custom_field" do
+  describe "#add_id_to_custom_field" do
     fab!(:automation)
 
     it "expects a User/Topic/Post instance" do
-      expect { automation.attach_custom_field(Invite.new) }.to raise_error(RuntimeError)
+      expect {
+        automation.add_id_to_custom_field(
+          Invite.new,
+          DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD,
+        )
+      }.to raise_error(RuntimeError)
     end
   end
 
