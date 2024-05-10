@@ -42,12 +42,6 @@
     }
   }
 
-  // &.--toggle {
-  //   flex-direction: row;
-  //   flex-wrap: wrap;
-  //   column-gap: 2em;
-  // }
-
   &__label {
     display: flex;
     align-items: center;
@@ -156,6 +150,18 @@
       border-bottom-right-radius: 0;
     }
 
+    &__prefilled-text {
+      border-right: 1px solid var(--primary-low-mid);
+      padding-inline: 0.5em;
+      line-height: 2em;
+      background-color: var(--primary-low);
+      color: var(--primary-high);
+
+      .--after & {
+        border-right: 0;
+      }
+    }
+
     .--icon & {
       &:focus,
       &:focus-visible,
@@ -187,18 +193,6 @@
   &__input[type="radio"],
   &__input[type="checkbox"] {
     margin: 0.17em 0 0;
-  }
-
-  &__prefilled-text {
-    border-right: 1px solid var(--primary-low-mid);
-    padding-inline: 0.5em;
-    line-height: 2em;
-    background-color: var(--primary-low);
-    color: var(--primary-high);
-
-    .--after & {
-      border-right: 0;
-    }
   }
 
   &__info {
@@ -250,20 +244,12 @@
 }
 
 //to include
-.d-form-grid__row {
-  display: grid;
-  column-gap: 0.5em;
-  row-gap: 0.25em;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
-}
-
-select {
+.d-form-grid select {
   .has-error & {
     border: 1px solid var(--danger);
   }
 }
 
-//grid rows
 .d-form__row {
   display: flex;
   flex-direction: column;
@@ -367,6 +353,13 @@ select {
     display: flex;
     flex-direction: column;
     gap: 0.25em;
+  }
+
+  &__row {
+    display: grid;
+    column-gap: 0.5em;
+    row-gap: 0.25em;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
   }
 
   &__btn {
