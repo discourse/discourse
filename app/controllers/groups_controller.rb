@@ -478,7 +478,6 @@ class GroupsController < ApplicationController
       PostCreator.new(
         current_user,
         post_type: Post.types[:regular],
-        archetype: Archetype.private_message,
         target_usernames: user.username,
         topic_id: request_topic.id,
         raw: I18n.t("groups.request_accepted_pm.body", group_name: group.name),

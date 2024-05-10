@@ -2166,6 +2166,7 @@ RSpec.describe GroupsController do
     end
 
     it "sends a reply to the request membership topic when accepted" do
+    it "sends a reply to the request membership topic when accepted" do
       GroupRequest.create!(group: group, user: other_user)
 
       # send the initial request PM
@@ -2178,6 +2179,8 @@ RSpec.describe GroupsController do
         skip_validations: true,
       ).create!
 
+      topic = Topic.last
+
       expect {
         put "/groups/#{group.id}/handle_membership_request.json",
             params: {
@@ -2186,17 +2189,17 @@ RSpec.describe GroupsController do
             }
       }.to_not change { Topic.count }
 
+      expect(topic.archetype).to eq(Archetype.private_message)
+      expect(Topic.first.title).to eq(
+        I18n.t("groups.request_membership_pm.title", group_name: group.name),
+      )
+
       post = Post.last
       expect(post.topic_id).to eq(Topic.last.id)
-      expect(Topic.last.posts.count).to eq(2)
-      # expect(post.raw).to eq(
-      #   I18n.t("groups.request_accepted_pm.body", group_name: group.name).strip,
-      # )
-      # edge cases?
-
-      # topic = Topic.last
-      # expect(topic.archetype).to eq(Archetype.private_message)
-      # expect(Topic.first.title).to eq(I18n.t("groups.request_membership_pm.title", group_name: group.name))
+      expect(topic.posts.count).to eq(2)
+      expect(post.raw).to eq(
+        I18n.t("groups.request_accepted_pm.body", group_name: group.name).strip,
+      )
     end
   end
 
