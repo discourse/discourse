@@ -29,12 +29,10 @@ export default class EmbeddableHost extends Component.extend(
     const host = this.host;
     const categoryId = host.category_id || this.site.uncategorized_category_id;
     const category = Category.findById(categoryId);
-    const tags = host.tags || [];
-    const user = host.user;
 
     this.set("category", category);
-    this.set("tags", tags);
-    this.set("user", user);
+    this.set("tags", host.tags || []);
+    this.set("user", host.user);
   }
 
   @discourseComputed("buffered.host", "host.isSaving")
