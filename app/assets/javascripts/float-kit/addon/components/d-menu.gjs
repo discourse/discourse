@@ -1,10 +1,7 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { concat } from "@ember/helper";
-import { action } from "@ember/object";
-import { next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -19,25 +16,16 @@ export default class DMenu extends Component {
   @service menu;
   @service site;
 
-  registerTrigger = modifier((element) => {
-    if (!this.menuInstance.trigger) {
-      next(() => {
-        this.menuInstance.trigger = element;
-        this.options.onRegisterApi?.(this.menuInstance);
-      });
-    }
+  menuInstance = new DMenuInstance(getOwner(this), {
+    ...this.allowedProperties,
+    autoUpdate: true,
+    listeners: true,
   });
 
-  @cached
-  get menuInstance() {
-    return new DMenuInstance(getOwner(this), {
-      ...this.allowedProperties(),
-      ...{
-        autoUpdate: true,
-        listeners: true,
-      },
-    });
-  }
+  registerTrigger = modifier((element) => {
+    this.menuInstance.trigger = element;
+    this.options.onRegisterApi?.(this.menuInstance);
+  });
 
   get menuId() {
     return `d-menu-${this.menuInstance.id}`;
@@ -54,18 +42,17 @@ export default class DMenu extends Component {
     };
   }
 
-  @action
-  allowedProperties() {
+  get allowedProperties() {
     const properties = {};
-    Object.keys(MENU.options).forEach((key) => {
-      const value = MENU.options[key];
+    for (const [key, value] of Object.entries(MENU.options)) {
       properties[key] = this.args[key] ?? value;
-    });
+    }
     return properties;
   }
 
   <template>
     <DButton
+      {{this.registerTrigger}}
       class={{concatClass
         "fk-d-menu__trigger"
         (if this.menuInstance.expanded "-expanded")
@@ -81,7 +68,6 @@ export default class DMenu extends Component {
       @translatedTitle={{@title}}
       @disabled={{@disabled}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
-      {{this.registerTrigger}}
       ...attributes
     >
       {{#if (has-block "trigger")}}

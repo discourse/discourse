@@ -10,14 +10,14 @@ export default class ThreadPreview extends Component {
     <span class="chat-message-thread-indicator__last-reply-timestamp">
       {{this.lastReplyDate}}
     </span>
-    <div class="c-user-thread__excerpt">
-      <div class="c-user-thread__excerpt-poster">
+    <span class="c-user-thread__excerpt">
+      <span class="c-user-thread__excerpt-poster">
         {{@preview.lastReplyUser.username}}
-      </div>
+      </span>
       <span>:</span>
       <span class="c-user-thread__excerpt-text">
         {{@preview.lastReplyExcerpt}}
       </span>
-    </div>
+    </span>
   </template>
 }
