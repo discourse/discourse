@@ -265,4 +265,17 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     assert.dom(".fk-d-menu__content.test-content").doesNotExist();
   });
+
+  test("get a menu by identifier", async function (assert) {
+    await render(hbs`<DMenu @inline={{true}} @identifier="test">test</DMenu>`);
+    await open();
+
+    const activeMenu = getOwner(this)
+      .lookup("service:menu")
+      .getByIdentifier("test");
+
+    await activeMenu.close();
+
+    assert.dom(".fk-d-menu__content.test-content").doesNotExist();
+  });
 });
