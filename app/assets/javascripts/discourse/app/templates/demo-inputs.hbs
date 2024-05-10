@@ -1,0 +1,239 @@
+{{! template-lint-disable}}
+<h1>Bookmark modal</h1>
+
+<form class="d-form">
+
+  <div class="d-form-field">
+    <label class="d-form-field__label" for="bookmark-reason">What is this
+      bookmark for?
+      <span class="d-form-field__optional">(Optional)</span></label>
+    <div class="d-form-field__value">
+      <input
+        type="text"
+        class="d-form-field__input"
+        id="bookmark-reason"
+        size="50"
+      />
+      <div class="d-form-field__meta">
+        <span class="d-form-field__character-count has-error">0/100</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-form-field">
+    <label class="d-form-field__label" for="bookmark-dtpicker">Set reminder
+      <span class="d-form-field__optional">(Optional)</span>
+    </label>
+    <div class="d-form-field__value">
+      <input
+        type="datetime-local"
+        class="d-form-field__input"
+        id="bookmark-dtpicker"
+      />
+    </div>
+  </div>
+
+  <fieldset class="d-form-field --radiobtns">
+    <legend>After reminding you, we should…</legend>
+    <div class="d-form-field__value-container">
+      <div class="d-form-field__value">
+        <input
+          type="radio"
+          id="radio-1"
+          name="radio"
+          class="d-form-field__input"
+        />
+        <label for="radio-1" class="checkbox-label">Keep bookmark and delete
+          reminder</label>
+      </div>
+
+      <div class="d-form-field__value">
+        <input
+          type="radio"
+          id="radio-2"
+          name="radio"
+          class="d-form-field__input"
+        />
+        <label for="radio-2" class="checkbox-label">Keep bookmark</label>
+      </div>
+
+      <div class="d-form-field__value">
+        <input
+          type="radio"
+          id="radio-3"
+          name="radio"
+          class="d-form-field__input"
+        />
+        <label for="radio-3" class="checkbox-label">Delete bookmark</label>
+      </div>
+
+      <div class="d-form-field__value">
+        <input
+          type="radio"
+          id="radio-4"
+          name="radio"
+          class="d-form-field__input"
+        />
+        <label for="radio-4" class="checkbox-label">Delete bookmark once I reply</label>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="d-form-field --checkbox">
+    <div class="d-form-field__value-container">
+      <div class="d-form-field__value">
+        <input class="d-form-field__input" type="checkbox" id="checkbox" />
+        <label class="checkbox-label" for="checkbox">Set this as default for all
+          future bookmark reminders.
+        </label>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="d-form__footer">
+    <button class="btn btn-primary" type="submit">Save bookmark</button>
+    <a href="#" class="">Cancel</a>
+  </div>
+</form>
+
+<h1>Edit sidebar section</h1>
+
+<form class="d-form">
+  <div class="d-form__section">
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="normal-input">Section title</label>
+      <div class="d-form-field__value">
+        <input
+          type="text"
+          class="d-form-field__input"
+          id="normal-input"
+          size="25"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="d-form__section --rows">
+
+    <div class="d-form-multirow">
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" id="row-icon">Icon
+        </label>
+        <select aria-labelledby="row-icon">
+          <option value="">icon</option>
+          <option value="">link</option>
+          <option value="">file</option>
+        </select>
+      </div>
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" id="row-name">Name
+        </label>
+        <input
+          type="text"
+          class="d-form-field__input"
+          aria-labelledby="row-name"
+        />
+      </div>
+
+      <div class="d-form-field">
+        <label class="d-form-field__label" id="row-url">url
+        </label>
+        <select aria-labelledby="row-url">
+          <option value="">--URL--</option>
+          <option value="">Google</option>
+          <option value="">DuckDuckGo</option>
+        </select>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-default d-form__section-inline-btn"
+      >Del</button>
+    </div>
+
+    <div class="d-form-multirow">
+      <div class="d-form-field">
+        <select aria-labelledby="row-icon">
+          <option value="">icon</option>
+          <option value="">link</option>
+          <option value="">file</option>
+        </select>
+      </div>
+
+      <div class="d-form-field">
+        <input
+          type="text"
+          class="d-form-field__input"
+          aria-labelledby="row-name"
+        />
+      </div>
+
+      <div class="d-form-field">
+        <select aria-labelledby="row-url">
+          <option value="">--URL--</option>
+          <option value="">Google</option>
+          <option value="">DuckDuckGo</option>
+        </select>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-default d-form__section-inline-btn"
+      >Del</button>
+    </div>
+
+    <div class="d-form-multirow">
+
+      <div class="d-form-field">
+        <select aria-labelledby="row-icon">
+          <option value="">icon</option>
+          <option value="">link</option>
+          <option value="">file</option>
+        </select>
+      </div>
+
+      <div class="d-form-field">
+        <input
+          type="text"
+          class="d-form-field__input"
+          aria-labelledby="row-name"
+        />
+      </div>
+
+      <div class="d-form-field">
+        <select aria-labelledby="row-url">
+          <option value="">--URL--</option>
+          <option value="">Google</option>
+          <option value="">DuckDuckGo</option>
+        </select>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-default d-form__section-inline-btn"
+      >Del</button>
+    </div>
+
+    <div class="d-form-field__meta --warning">
+      <p class="d-form-field__meta-text">
+        {{d-icon "warning"}}<span>Whatever errors are in this field, they should
+          be consolidated in a numbered error summary at the bottom, like this:
+          <ol>
+            <li>urls should start with https/</li>
+            <li>the reason can't be empty/</li>
+          </ol>
+        </span>
+      </p>
+    </div>
+  </div>
+  <div class="d-form__footer">
+    <button class="btn btn-primary" type="submit">Save section</button>
+    <a href="#" class="">Cancel</a>
+    <button
+      class="btn btn-danger d-form__secondary-cta"
+      type="button"
+    >Delete</button>
+  </div>
+</form>

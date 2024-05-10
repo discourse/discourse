@@ -1,0 +1,41 @@
+.d-form-field {
+  &__input[type="text"],
+  &__input[type="textarea"],
+  select,
+  input[list],
+  &__input[type="datatime-local"] {
+    width: 200px;
+
+    &.--small {
+      width: 75px;
+    }
+
+    &.--large {
+      width: 325px;
+    }
+
+    &.--full-width {
+      width: 100%;
+    }
+  }
+
+  &__label {
+    .--landscape & {
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+    }
+  }
+
+  //core overrules
+  select {
+    width: 200px;
+  }
+}
+
+.d-form__row {
+  .--landscape & {
+    flex-direction: row;
+    gap: 1em;
+  }
+}

@@ -2,6 +2,8 @@ import { capitalize } from "@ember/string";
 import Site from "discourse/models/site";
 
 export default function () {
+  this.route("demo-inputs");
+
   // Error page
   this.route("exception");
   this.route("exception-unknown", { path: "/404" });

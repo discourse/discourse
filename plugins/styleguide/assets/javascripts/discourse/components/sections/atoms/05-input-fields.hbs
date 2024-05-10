@@ -1,4 +1,692 @@
-<StyleguideExample @title="text-field">
+{{! template-lint-disable}}
+
+<form class="d-form">
+  <h2>Horizontal form (classic)</h2>
+  <div class="d-form__section --landscape">
+    <div class="d-form__row">
+      <label
+        class="d-form__col --col-4 d-form-field__label"
+        for="normal-input"
+      >Standard input
+        <span class="d-form-field__optional">(Optional)</span>
+      </label>
+
+      <div class="d-form__col --col-8">
+        <p class="d-form-field__info">An explanation about the usecase of this
+          form. In landscape forms, the explanation needs to be inside the first
+          `col` element.</p>
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="normal-input" />
+          <div class="d-form-field__meta">
+            <p class="d-form-field__meta-text">Format: XYZ-123</p>
+            <span class="d-form-field__character-count has-error">0/25</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="d-form__row">
+      <label
+        class="d-form__col --col-4 d-form-field__label"
+        for="reminders"
+      >After reminding you, we should…
+      </label>
+
+      <div class="d-form__col --col-8">
+        <div class="d-form-field__value">
+          <div class="d-form-field__input-group">
+            <label for="ltr-radio-1" class="checkbox-label">
+              <input
+                type="radio"
+                id="ltr-radio-1"
+                name="ltr-radio"
+                class="d-form-field__input"
+              />Keep bookmark and delete reminder</label>
+
+            <label for="ltr-radio-2" class="checkbox-label">
+              <input
+                type="radio"
+                id="ltr-radio-2"
+                name="ltr-radio"
+                class="d-form-field__input"
+              />Keep bookmark</label>
+
+            <label for="ltr-radio-3" class="checkbox-label">
+              <input
+                type="radio"
+                id="ltr-radio-3"
+                name="ltr-radio"
+                class="d-form-field__input"
+              />Delete bookmark
+            </label>
+
+            <label for="ltr-radio-4" class="checkbox-label">
+              <input
+                type="radio"
+                id="ltr-radio-4"
+                name="ltr-radio"
+                class="d-form-field__input"
+              />Delete bookmark once I reply
+            </label>
+          </div>
+          <div class="d-form-field__meta --warning">
+            <p class="d-form-field__meta-text">
+              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="d-form__row">
+      <label
+        class="d-form__col --col-4 d-form-field__label"
+        for="short-input-1"
+      >A grouped input field (will stack on mobile)
+      </label>
+      <div class="d-form__col">
+        <div class="d-form-field__value has-error">
+          <input type="text" class="d-form-field__input" id="short-input-1" />
+          <div class="d-form-field__meta --warning">
+            <p class="d-form-field__meta-text">
+              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="d-form__col">
+        <div class="d-form-field__value">
+          <input
+            type="text"
+            class="d-form-field__input --small"
+            id="short-input-2"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form__row --toggle">
+      <label class="d-form__col --col-4 d-form-field__label" for="toggle-1">Turn
+        on/off
+      </label>
+      <div class="d-form__col">
+        <DToggleSwitch @state={{@enabled}} {{on "click" @action}} />
+      </div>
+    </div>
+  </div>
+
+  <h2> Stacked form</h2>
+  <div class="d-form__section">
+    <div class="d-form__row">
+      <label class="d-form-field__label" for="normal-input-stacked">Standard
+        stacked input
+        <span class="d-form-field__optional">(Optional)</span>
+      </label>
+
+      <p class="d-form-field__info">An explanation about the usecase of this
+        form.</p>
+      <div class="d-form__col --col-8">
+        <div class="d-form-field__value">
+          <input
+            type="text"
+            class="d-form-field__input"
+            id="normal-input-stacked"
+          />
+          <div class="d-form-field__meta">
+            <p class="d-form-field__meta-text">Format: XYZ-123</p>
+            <span class="d-form-field__character-count has-error">0/25</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="d-form__row">
+      <label class="d-form-field__label" for="reminders">After reminding you, we
+        should…
+      </label>
+
+      <div class="d-form__col --col-8">
+        <div class="d-form-field__value">
+          <div class="d-form-field__input-group">
+            <label for="ltr-radio-1" class="checkbox-label">
+              <input
+                type="radio"
+                id="ltr-radio-1"
+                name="ltr-radio"
+                class="d-form-field__input"
+              />Keep bookmark and delete reminder</label>
+
+            <label for="ltr-radio-2" class="checkbox-label">
+              <input
+                type="radio"
+                id="ltr-radio-2"
+                name="ltr-radio"
+                class="d-form-field__input"
+              />Keep bookmark</label>
+
+            <label for="ltr-radio-3" class="checkbox-label">
+              <input
+                type="radio"
+                id="ltr-radio-3"
+                name="ltr-radio"
+                class="d-form-field__input"
+              />Delete bookmark
+            </label>
+
+            <label for="ltr-radio-4" class="checkbox-label">
+              <input
+                type="radio"
+                id="ltr-radio-4"
+                name="ltr-radio"
+                class="d-form-field__input"
+              />Delete bookmark once I reply
+            </label>
+          </div>
+          <div class="d-form-field__meta --warning">
+            <p class="d-form-field__meta-text">
+              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="d-form__row --inline">
+      <label class="d-form-field__label" for="short-input-1">A grouped input
+        field
+      </label>
+      <div class="d-form__col">
+        <div class="d-form-field__value has-error">
+          <input type="text" class="d-form-field__input" id="short-input-1" />
+          <div class="d-form-field__meta --warning">
+            <p class="d-form-field__meta-text">
+              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="d-form__col">
+        <div class="d-form-field__value">
+          <input
+            type="text"
+            class="d-form-field__input --small"
+            id="short-input-2"
+          />
+        </div>
+      </div>
+    </div>
+    <p>By default, an inline row will still follow the regular input sizing on
+      desktop (75px, 200px, 350px). If you want to specify the width with the
+      col-sizes instead, make sure to remove any size modifiers and use the
+      `--fluid` modifier.</p>
+    <p>On mobile, an inline row will stack, except if you use the
+      fluid-modifier; then it will in a 2-column grid. (More specific wrapping
+      styles are V2)</p>
+    <div class="d-form__row --inline --fluid">
+      <label class="d-form-field__label" for="short-input-1">A responsive
+        grouped input field
+      </label>
+      <div class="d-form__col --col-3">
+        <div class="d-form-field__value has-error">
+          <input type="text" class="d-form-field__input" id="short-input-1" />
+          <div class="d-form-field__meta --warning">
+            <p class="d-form-field__meta-text">
+              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="d-form__col --col-8">
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="short-input-2" />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form__row --inline --fluid">
+      <label class="d-form-field__label" for="short-input-1">A reponsive grouped
+        input field with many inputs
+      </label>
+      <div class="d-form__col --col-4">
+        <div class="d-form-field__value has-error">
+          <input type="text" class="d-form-field__input" id="short-input-1" />
+          <div class="d-form-field__meta --warning">
+            <p class="d-form-field__meta-text">
+              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="d-form__col --col-2">
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="short-input-2" />
+        </div>
+      </div>
+      <div class="d-form__col --col-2">
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="short-input-3" />
+        </div>
+      </div>
+      <div class="d-form__col --col-3">
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="short-input-4" />
+        </div>
+      </div>
+      <div class="d-form__col --col-1">
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="short-input-5" />
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form__row --toggle">
+      <label class="d-form-field__label" for="toggle-1">Turn on/off
+      </label>
+      <div class="d-form__col">
+        <DToggleSwitch @state={{@enabled}} {{on "click" @action}} />
+      </div>
+    </div>
+  </div>
+
+  <h2>Input states</h2>
+  <div class="d-form__section">
+    <div class="d-form__row">
+      <label class="d-form-field__label" for="error-input">Error highlighting
+      </label>
+      <div class="d-form-col has-error">
+        <div class="d-form-field__value">
+          <input type="text" class="d-form-field__input" id="error-input" />
+          <div class="d-form-field__meta --warning">
+            <p class="d-form-field__meta-text">
+              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+            <span class="d-form-field__character-count has-error">0/25</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form__row">
+      <label class="d-form-field__label" for="disabled-input">Disabled input
+      </label>
+      <div class="d-form-col">
+        <div class="d-form-field__value">
+          <input
+            type="text"
+            class="d-form-field__input"
+            id="disabled-input"
+            disabled
+            value="Disabled input"
+          />
+          <div class="d-form-field__meta">
+            <p class="d-form-field__meta-text">
+              This field isn't available right now.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <fieldset class="d-form-field --checkbox">
+      <legend class="d-form-field__label">Set as default
+      </legend>
+      <div class="d-form-field__value">
+        <div class="d-form-field__input-group">
+          <label class="checkbox-label" for="checkbox-agree">
+            <input
+              class="d-form-field__input"
+              type="checkbox"
+              id="checkbox-agree"
+            />Agree
+          </label>
+        </div>
+        <div class="d-form-field__meta --warning">
+          <p class="d-form-field__meta-text">
+            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="d-form-field --radiobtns">
+      <legend>After reminding you, we should…</legend>
+      <p class="d-form-field__info">Some random explanation about this setting.</p>
+      <div class="d-form-field__value">
+        <div class="d-form-field__input-group">
+          <label for="radio-1" class="checkbox-label">
+            <input
+              type="radio"
+              id="radio-1"
+              name="radio"
+              class="d-form-field__input"
+            />Keep bookmark and delete reminder</label>
+
+          <label for="radio-2" class="checkbox-label">
+            <input
+              type="radio"
+              id="radio-2"
+              name="radio"
+              class="d-form-field__input"
+            />Keep bookmark</label>
+
+          <label for="radio-3" class="checkbox-label">
+            <input
+              type="radio"
+              id="radio-3"
+              name="radio"
+              class="d-form-field__input"
+            />Delete bookmark
+          </label>
+
+          <label for="radio-4" class="checkbox-label">
+            <input
+              type="radio"
+              id="radio-4"
+              name="radio"
+              class="d-form-field__input"
+            />Delete bookmark once I reply
+          </label>
+        </div>
+        <div class="d-form-field__meta --warning">
+          <p class="d-form-field__meta-text">
+            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="d-form-field --checkbox">
+      <legend class="d-form-field__label">Multi checkbox options
+      </legend>
+      <div class="d-form-field__value">
+        <div class="d-form-field__input-group">
+          <label class="checkbox-label" for="checkbox1multi">
+            <input
+              class="d-form-field__input"
+              type="checkbox"
+              id="checkbox1multi"
+              name="checkboxmulti"
+            />I
+          </label>
+
+          <label class="checkbox-label" for="checkbox2multi">
+            <input
+              class="d-form-field__input"
+              type="checkbox"
+              id="checkbox2multi"
+              name="checkboxmulti"
+            />like
+          </label>
+
+          <label class="checkbox-label" for="checkbox3multi">
+            <input
+              class="d-form-field__input"
+              type="checkbox"
+              id="checkbox3multi"
+              name="checkboxmulti"
+            />courgette
+          </label>
+
+        </div>
+        <div class="d-form-field__meta --warning">
+          <p class="d-form-field__meta-text">
+            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</form>
+
+<form class="d-form">
+  <h2>Multiple inline fields with unique labels (single-row grid)</h2>
+
+  This is a problem with the col-system: impossible to align a button in this
+  system due to to labels and error/help texts. It also doesn't work well with
+  wrapping labels. Hence these multifield rows need to be done with grid. These
+  layouts are quite specific and for now only a equal 3 column and 4 column
+  layout exists. We can create more on a need-it-now basis.
+
+  <div class="d-form__section">
+    <div class="d-form-grid --4-col">
+
+      <label class="d-form-field__label" for="normal-input">Name
+        <span class="d-form-field__optional">(Optional)</span>
+      </label>
+
+      <input type="text" class="d-form-field__input" id="normal-input" />
+
+      <div class="d-form-field__meta">
+        <p class="d-form-field__meta-text">Format: XYZ-123</p>
+      </div>
+
+      <label class="d-form-field__label" for="normal-input">url</label>
+
+      <select>
+        <option value="">--URL--</option>
+        <option value="">Google</option>
+        <option value="">DuckDuckGo</option>
+      </select>
+
+      <div class="d-form-field__meta"></div>
+
+      <label class="d-form-field__label" for="normal-input">Reason</label>
+
+      <input type="text" class="d-form-field__input" id="normal-input" />
+
+      <div class="d-form-field__meta">
+      </div>
+
+      <button type="submit" class="btn btn-primary d-form-grid__btn">Submit
+      </button>
+    </div>
+  </div>
+
+  <h2>Multirow form with shared labels (multi-row grid)</h2>
+  <p>Multirow form is made of multiple inline sections. It can not have an error
+    or help text displayed directly under the field, due to alignment issues. It
+    uses aria-labelledby to associate the label with the input.
+  </p>
+
+  <div class="d-form__section">
+
+    <div class="d-form-grid --rows --4-col">
+
+      <div class="d-form-grid__row">
+        <div class="d-form-field">
+          <label class="d-form-field__label" id="row-name">Name
+            <span class="d-form-field__optional">(Optional)</span></label>
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
+        </div>
+
+        <div class="d-form-field">
+          <label class="d-form-field__label" id="row-url">url
+          </label>
+          <select aria-labelledby="row-url">
+            <option value="">--URL--</option>
+            <option value="">Google</option>
+            <option value="">DuckDuckGo</option>
+          </select>
+        </div>
+
+        <div class="d-form-field">
+          <label class="d-form-field__label" id="row-reason">Reason
+          </label>
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary d-form__section-inline-btn"
+        >Submit</button>
+      </div>
+
+      <div class="d-form-grid__row">
+        <div class="d-form-field">
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
+        </div>
+
+        <div class="d-form-field has-error">
+          <select aria-labelledby="row-url">
+            <option value="">--URL--</option>
+            <option value="">Google</option>
+            <option value="">DuckDuckGo</option>
+          </select>
+        </div>
+        <div class="d-form-field">
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary d-form__section-inline-btn"
+        >Submit</button>
+      </div>
+
+      <div class="d-form-grid__row">
+
+        <div class="d-form-field">
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
+        </div>
+        <div class="d-form-field">
+          <select aria-labelledby="row-url">
+            <option value="">--URL--</option>
+            <option value="">Google</option>
+            <option value="">DuckDuckGo</option>
+          </select>
+        </div>
+        <div class="d-form-field has-error">
+          <input
+            type="text"
+            class="d-form-field__input"
+            aria-labelledby="row-name"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary d-form__section-inline-btn"
+        >Submit</button>
+      </div>
+
+      <div class="d-form-field__meta --warning">
+        <p class="d-form-field__meta-text">
+          {{d-icon "warning"}}<span>Whatever errors are in this field, they
+            should be consolidated in a numbered error summary at the bottom,
+            like this:
+            <ol>
+              <li>urls should start with https/</li>
+              <li>the reason can't be empty/</li>
+            </ol>
+          </span>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</form>
+
+<h2>Other input types</h2>
+<form class="d-form">
+  <div class="d-form__section">
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="prefilled">Fixed prefilled input
+      </label>
+      <div class="d-form-field__value">
+        <div class="d-form-field__input-group --prefilled">
+          <div class="d-form-field__prefilled-text">https://</div>
+          <input type="text" class="d-form-field__input" id="prefilled" />
+        </div>
+        <div class="d-form-field__meta">
+          <p class="d-form-field__meta-text">Format: XYZ-123</p>
+          <span class="d-form-field__character-count has-error">0/25</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="prefilled">Fixed prefilled input
+        after
+      </label>
+      <div class="d-form-field__value">
+        <div class="d-form-field__input-group --prefilled --after">
+          <input type="text" class="d-form-field__input" id="prefilled" />
+          <div class="d-form-field__prefilled-text">discourse.org</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="icons">Icons
+      </label>
+      <div class="d-form-field__value">
+        <div class="d-form-field__input-group --icon">
+          <input type="text" class="d-form-field__input" id="icons" />
+          <div class="d-form-field__input-buttons">
+            <span>X</span>
+            <span>@</span>
+          </div>
+        </div>
+        <div class="d-form-field__meta">
+          <p class="d-form-field__meta-text">Format: XYZ-123</p>
+          <span class="d-form-field__character-count has-error">0/25</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-form-field --toggle">
+      <label class="d-form-field__label" for="toggle">Turn on/off
+      </label>
+      <div class="d-form-field__value">
+        <DToggleSwitch @state={{@enabled}} {{on "click" @action}} />
+      </div>
+      <p class="d-form-field__info">This setting only has 2 options and takes
+        effect immediately,.</p>
+      <div class="d-form-field__meta --warning">
+        <p class="d-form-field__meta-text">You need to turn this on.</p>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="combobox">Combobox/datalist
+      </label>
+      <div class="d-form-field__value">
+        <input list="browsers" name="browser" id="browser" />
+        <datalist id="browsers">
+          <option value="Edge" />
+          <option value="Firefox" />
+          <option value="Chrome" />
+          <option value="Opera" />
+          <option value="Safari" />
+        </datalist>
+      </div>
+    </div>
+
+    <div class="d-form-field">
+      <label class="d-form-field__label" for="datetime">Datepicker
+      </label>
+      <div class="d-form-field__value">
+        <input type="datetime-local" />
+      </div>
+    </div>
+
+  </div>
+</form>
+
+{{!-- <StyleguideExample @title="text-field">
   <TextField @placeholder="Placeholder" />
 </StyleguideExample>
 
@@ -105,4 +793,4 @@
     />
     <DButton @icon="reply" @type="submit" @translatedLabel="Button" />
   </div>
-</StyleguideExample>
+</StyleguideExample> --}}
