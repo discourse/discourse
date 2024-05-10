@@ -278,4 +278,63 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     assert.dom(".fk-d-menu__content.test-content").doesNotExist();
   });
+
+  test("opening a menu with the same identifier", async function (assert) {
+    await render(
+      hbs`<DMenu @inline={{true}} @identifier="foo" @class="first">1</DMenu><DMenu @inline={{true}} @identifier="foo" @class="second">2</DMenu>`
+    );
+
+    await click(".first.fk-d-menu__trigger");
+
+    assert.dom(".foo-content.first").exists();
+    assert.dom(".foo-content.second").doesNotExist();
+
+    await click(".second.fk-d-menu__trigger");
+
+    assert.dom(".foo-content.first").doesNotExist();
+    assert.dom(".foo-content.second").exists();
+  });
+
+  test("@groupIdentifier", async function (assert) {
+    await render(
+      hbs`<DMenu @inline={{true}} @groupIdentifier="foo" @class="first">1</DMenu><DMenu @inline={{true}} @groupIdentifier="foo" @class="second">2</DMenu>`
+    );
+
+    await click(".first.fk-d-menu__trigger");
+
+    assert.dom(".fk-d-menu__content.first").exists();
+    assert.dom(".fk-d-menu__content.second").doesNotExist();
+
+    await click(".second.fk-d-menu__trigger");
+
+    assert.dom(".fk-d-menu__content.first").doesNotExist();
+    assert.dom(".fk-d-menu__content.second").exists();
+  });
+
+  test("@class", async function (assert) {
+    await render(hbs`<DMenu @inline={{true}} @class="first">1</DMenu>`);
+
+    await open();
+
+    assert.dom(".fk-d-menu__trigger.first").exists();
+    assert.dom(".fk-d-menu__content.first").exists();
+  });
+
+  test("@triggerClass", async function (assert) {
+    await render(hbs`<DMenu @inline={{true}} @triggerClass="first">1</DMenu>`);
+
+    await open();
+
+    assert.dom(".fk-d-menu__trigger.first").exists();
+    assert.dom(".fk-d-menu__content.first").doesNotExist();
+  });
+
+  test("@contentClass", async function (assert) {
+    await render(hbs`<DMenu @inline={{true}} @contentClass="first">1</DMenu>`);
+
+    await open();
+
+    assert.dom(".fk-d-menu__trigger.first").doesNotExist();
+    assert.dom(".fk-d-menu__content.first").exists();
+  });
 });

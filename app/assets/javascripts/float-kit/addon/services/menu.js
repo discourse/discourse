@@ -20,7 +20,9 @@ export default class Menu extends Service {
    * @param {Object} [options.data] - An object which will be passed as the `@data` argument when content is a `Component`
    * @param {Boolean} [options.arrow] - Determines if the menu has an arrow
    * @param {Boolean} [options.offset] - Displaces the content from its reference trigger in pixels
-   * @param {String} [options.identifier] - Add a data-identifier attribute to the trigger and the content
+   * @param {String} [options.identifier] - Add a data-identifier attribute to the trigger and the content, multiple menus can have the same identifier,
+   * only one menu with the same identifier can be open at a time
+   * @param {String} [options.groupIdentifier] - Only one menu with the same groupIdentifier can be open at a time
    * @param {Boolean} [options.inline] - Improves positioning for trigger that spans over multiple lines
    *
    * @returns {Promise<DMenuInstance>}
@@ -47,13 +49,15 @@ export default class Menu extends Service {
       }
     }
 
-    if (instance.options.identifier) {
-      for (const menu of this.registeredMenus) {
+    if (instance.options.identifier || instance.options.groupIdentifier) {
+      for (const registeredMenu of this.registeredMenus) {
         if (
-          menu.options.identifier === instance.options.identifier &&
-          menu !== instance
+          (registeredMenu.options.identifier === instance.options.identifier ||
+            registeredMenu.options.groupIdentifier ===
+              instance.options.groupIdentifier) &&
+          registeredMenu !== instance
         ) {
-          await this.close(menu);
+          await this.close(registeredMenu);
         }
       }
     }
