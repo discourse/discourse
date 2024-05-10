@@ -277,7 +277,7 @@ select {
 
   &.--toggle {
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     gap: 1em;
   }
 
@@ -372,5 +372,10 @@ select {
   &__btn {
     grid-row: 2;
     height: 2em;
+
+    .--rows & {
+      grid-row: unset;
+      align-self: flex-end;
+    }
   }
 }

@@ -518,7 +518,7 @@
 
         <button
           type="submit"
-          class="btn btn-primary d-form__section-inline-btn"
+          class="btn btn-primary d-form-grid__btn"
         >Submit</button>
       </div>
 
@@ -548,7 +548,7 @@
 
         <button
           type="submit"
-          class="btn btn-primary d-form__section-inline-btn"
+          class="btn btn-primary d-form-grid__btn"
         >Submit</button>
       </div>
 
@@ -578,7 +578,7 @@
 
         <button
           type="submit"
-          class="btn btn-primary d-form__section-inline-btn"
+          class="btn btn-primary d-form-grid__btn"
         >Submit</button>
       </div>
 
@@ -602,87 +602,97 @@
 <h2>Other input types</h2>
 <form class="d-form">
   <div class="d-form__section">
-    <div class="d-form-field">
+    <div class="d-form__row">
       <label class="d-form-field__label" for="prefilled">Fixed prefilled input
       </label>
-      <div class="d-form-field__value">
-        <div class="d-form-field__input-group --prefilled">
-          <div class="d-form-field__prefilled-text">https://</div>
-          <input type="text" class="d-form-field__input" id="prefilled" />
-        </div>
-        <div class="d-form-field__meta">
-          <p class="d-form-field__meta-text">Format: XYZ-123</p>
-          <span class="d-form-field__character-count has-error">0/25</span>
+      <div class="d-form__col">
+        <div class="d-form-field__value">
+          <div class="d-form-field__input-group --prefilled">
+            <div class="d-form-field__prefilled-text">https://</div>
+            <input type="text" class="d-form-field__input" id="prefilled" />
+          </div>
+          <div class="d-form-field__meta">
+            <p class="d-form-field__meta-text">Format: XYZ-123</p>
+            <span class="d-form-field__character-count has-error">0/25</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="d-form-field">
+    <div class="d-form__row">
       <label class="d-form-field__label" for="prefilled">Fixed prefilled input
         after
       </label>
-      <div class="d-form-field__value">
-        <div class="d-form-field__input-group --prefilled --after">
-          <input type="text" class="d-form-field__input" id="prefilled" />
-          <div class="d-form-field__prefilled-text">discourse.org</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="d-form-field">
-      <label class="d-form-field__label" for="icons">Icons
-      </label>
-      <div class="d-form-field__value">
-        <div class="d-form-field__input-group --icon">
-          <input type="text" class="d-form-field__input" id="icons" />
-          <div class="d-form-field__input-buttons">
-            <span>X</span>
-            <span>@</span>
+      <div class="d-form__col">
+        <div class="d-form-field__value">
+          <div class="d-form-field__input-group --prefilled --after">
+            <input type="text" class="d-form-field__input" id="prefilled" />
+            <div class="d-form-field__prefilled-text">discourse.org</div>
           </div>
         </div>
-        <div class="d-form-field__meta">
-          <p class="d-form-field__meta-text">Format: XYZ-123</p>
-          <span class="d-form-field__character-count has-error">0/25</span>
+      </div>
+    </div>
+
+    <div class="d-form__row">
+      <label class="d-form-field__label" for="icons">Icons
+      </label>
+      <div class="d-form__col">
+        <div class="d-form-field__value">
+          <div class="d-form-field__input-group --icon">
+            <input type="text" class="d-form-field__input" id="icons" />
+            <div class="d-form-field__input-buttons">
+              <span>X</span>
+              <span>@</span>
+            </div>
+          </div>
+          <div class="d-form-field__meta">
+            <p class="d-form-field__meta-text">Format: XYZ-123</p>
+            <span class="d-form-field__character-count has-error">0/25</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="d-form-field --toggle">
+    <div class="d-form__row --toggle">
       <label class="d-form-field__label" for="toggle">Turn on/off
       </label>
-      <div class="d-form-field__value">
-        <DToggleSwitch @state={{@enabled}} {{on "click" @action}} />
-      </div>
-      <p class="d-form-field__info">This setting only has 2 options and takes
-        effect immediately,.</p>
-      <div class="d-form-field__meta --warning">
-        <p class="d-form-field__meta-text">You need to turn this on.</p>
+      <div class="d-form__col">
+        <div class="d-form-field__value">
+          <DToggleSwitch @state={{@enabled}} {{on "click" @action}} />
+        </div>
+        <p class="d-form-field__info">This setting only has 2 options and takes
+          effect immediately,.</p>
+        <div class="d-form-field__meta --warning">
+          <p class="d-form-field__meta-text">You need to turn this on.</p>
+        </div>
       </div>
     </div>
 
-    <div class="d-form-field">
+    <div class="d-form__row">
       <label class="d-form-field__label" for="combobox">Combobox/datalist
       </label>
-      <div class="d-form-field__value">
-        <input list="browsers" name="browser" id="browser" />
-        <datalist id="browsers">
-          <option value="Edge" />
-          <option value="Firefox" />
-          <option value="Chrome" />
-          <option value="Opera" />
-          <option value="Safari" />
-        </datalist>
+      <div class="d-form__col">
+        <div class="d-form-field__value">
+          <input list="browsers" name="browser" id="browser" />
+          <datalist id="browsers">
+            <option value="Edge" />
+            <option value="Firefox" />
+            <option value="Chrome" />
+            <option value="Opera" />
+            <option value="Safari" />
+          </datalist>
+        </div>
       </div>
     </div>
-
-    <div class="d-form-field">
+    <div class="d-form__row">
       <label class="d-form-field__label" for="datetime">Datepicker
       </label>
-      <div class="d-form-field__value">
-        <input type="datetime-local" />
+      <div class="d-form__col">
+        <div class="d-form-field__value">
+          <input type="datetime-local" />
+        </div>
       </div>
     </div>
-
   </div>
 </form>
 
