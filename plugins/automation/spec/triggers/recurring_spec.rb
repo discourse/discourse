@@ -25,7 +25,7 @@ describe "Recurring" do
     context "when date is in future" do
       before { freeze_time Time.parse("2021-06-04 10:00 UTC") }
 
-      it "creates a pending trigger" do
+      it "creates a pending trigger with execute_at set to the start_date" do
         expect {
           automation.upsert_field!(
             "start_date",
@@ -34,10 +34,10 @@ describe "Recurring" do
             target: "trigger",
           )
           upsert_period_field!(1, "hour")
-        }.to change { DiscourseAutomation::PendingAutomation.count }.by(1)
+        }.to change { automation.pending_automations.count }.by(1)
 
-        expect(DiscourseAutomation::PendingAutomation.last.execute_at).to be_within_one_minute_of(
-          1.hours.from_now,
+        expect(automation.pending_automations.last.execute_at).to be_within_one_second_of(
+          2.hours.from_now,
         )
       end
     end
@@ -51,7 +51,7 @@ describe "Recurring" do
             { value: 2.hours.ago },
             target: "trigger",
           )
-        }.not_to change { DiscourseAutomation::PendingAutomation.count }
+        }.not_to change { automation.pending_automations.count }
       end
     end
   end
@@ -78,35 +78,91 @@ describe "Recurring" do
       automation.upsert_field!("test", "text", { value: "something" }, target: "script")
     end
 
-    context "when start date changes" do
-      it "resets the pending automations" do
-        expect {
+    context "when interval changes" do
+      before { freeze_time(DateTime.parse("2024-05-23")) }
+
+      context "when start_date is in the future" do
+        before do
           automation.upsert_field!(
             "start_date",
             "date_time",
-            { value: 1.day.from_now },
+            { value: 5.days.from_now },
             target: "trigger",
           )
-        }.to change { DiscourseAutomation::PendingAutomation.last.execute_at }
-        expect(DiscourseAutomation::PendingAutomation.count).to eq(1)
-      end
-    end
+        end
 
-    context "when interval changes" do
-      it "resets the pending automations" do
-        expect { upsert_period_field!(2, "week") }.to change {
-          DiscourseAutomation::PendingAutomation.last.execute_at
-        }
-        expect(DiscourseAutomation::PendingAutomation.count).to eq(1)
+        it "recreates pending automation with execute_at set to start_date" do
+          upsert_period_field!(4, "week")
+
+          expect(automation.pending_automations.count).to eq(1)
+          expect(automation.pending_automations.last.execute_at).to be_within_one_second_of(
+            5.days.from_now,
+          )
+        end
+      end
+
+      context "when start_date is in the past" do
+        before do
+          automation.upsert_field!(
+            "start_date",
+            "date_time",
+            { value: 4.days.ago },
+            target: "trigger",
+          )
+        end
+
+        it "recreates pending automation with execute_at set to the first occurrence date after the current time" do
+          upsert_period_field!(3, "day")
+
+          expect(automation.pending_automations.count).to eq(1)
+          expect(automation.pending_automations.last.execute_at).to be_within_one_second_of(
+            Time.zone.now + 2.days,
+          )
+        end
       end
     end
 
     context "when frequency changes" do
-      it "resets the pending automations" do
-        expect { upsert_period_field!(1, "month") }.to change {
-          DiscourseAutomation::PendingAutomation.last.execute_at
-        }
-        expect(DiscourseAutomation::PendingAutomation.count).to eq(1)
+      before { freeze_time(DateTime.parse("2024-05-23")) }
+
+      context "when start_date is in the future" do
+        before do
+          automation.upsert_field!(
+            "start_date",
+            "date_time",
+            { value: 2.hours.from_now },
+            target: "trigger",
+          )
+        end
+
+        it "recreates pending automation with execute_at set to start_date" do
+          upsert_period_field!(1, "hour")
+
+          expect(automation.pending_automations.count).to eq(1)
+          expect(automation.pending_automations.last.execute_at).to be_within_one_second_of(
+            2.hours.from_now,
+          )
+        end
+      end
+
+      context "when start_date is in the past" do
+        before do
+          automation.upsert_field!(
+            "start_date",
+            "date_time",
+            { value: 3.days.ago },
+            target: "trigger",
+          )
+        end
+
+        it "recreates pending automation with execute_at set to the first occurrence date after the current time" do
+          upsert_period_field!(2, "hour")
+
+          expect(automation.pending_automations.count).to eq(1)
+          expect(automation.pending_automations.last.execute_at).to be_within_one_second_of(
+            Time.zone.now + 2.hour,
+          )
+        end
       end
     end
 
@@ -114,8 +170,8 @@ describe "Recurring" do
       it "doesn't reset the pending automations" do
         expect {
           automation.upsert_field!("test", "text", { value: "somethingelse" }, target: "script")
-        }.to_not change { DiscourseAutomation::PendingAutomation.last.execute_at }
-        expect(DiscourseAutomation::PendingAutomation.count).to eq(1)
+        }.to_not change { automation.pending_automations.last.execute_at }
+        expect(automation.pending_automations.count).to eq(1)
       end
 
       context "when there are no existing pending automations" do
@@ -124,7 +180,7 @@ describe "Recurring" do
         it "creates a new one" do
           expect {
             automation.upsert_field!("test", "text", { value: "somethingelse" }, target: "script")
-          }.to change { DiscourseAutomation::PendingAutomation.count }.by(1)
+          }.to change { automation.pending_automations.count }.by(1)
         end
       end
     end
@@ -159,11 +215,9 @@ describe "Recurring" do
     end
 
     it "creates the next iteration" do
-      expect { automation.trigger! }.to change { DiscourseAutomation::PendingAutomation.count }.by(
-        1,
-      )
+      expect { automation.trigger! }.to change { automation.pending_automations.count }.by(1)
 
-      pending_automation = DiscourseAutomation::PendingAutomation.last
+      pending_automation = automation.pending_automations.last
 
       start_date = Time.parse(automation.trigger_field("start_date")["value"])
       expect(pending_automation.execute_at).to be_within_one_minute_of(start_date + 7.days)
@@ -175,7 +229,7 @@ describe "Recurring" do
       it "creates the next iteration one month later" do
         automation.trigger!
 
-        pending_automation = DiscourseAutomation::PendingAutomation.last
+        pending_automation = automation.pending_automations.last
         expect(pending_automation.execute_at).to be_within_one_minute_of(
           Time.parse("2021-07-02 08:00:00 UTC"),
         )
@@ -196,7 +250,7 @@ describe "Recurring" do
       it "creates the next iteration one day later" do
         automation.trigger!
 
-        pending_automation = DiscourseAutomation::PendingAutomation.last
+        pending_automation = automation.pending_automations.last
         start_date = Time.parse(automation.trigger_field("start_date")["value"])
         expect(pending_automation.execute_at).to be_within_one_minute_of(start_date)
       end
@@ -207,7 +261,7 @@ describe "Recurring" do
         upsert_period_field!(1, "weekday")
         automation.trigger!
 
-        pending_automation = DiscourseAutomation::PendingAutomation.last
+        pending_automation = automation.pending_automations.last
         start_date = Time.parse(automation.trigger_field("start_date")["value"])
         expect(pending_automation.execute_at).to be_within_one_minute_of(start_date + 3.day)
       end
@@ -239,7 +293,7 @@ describe "Recurring" do
       it "creates the next iteration one hour later" do
         automation.trigger!
 
-        pending_automation = DiscourseAutomation::PendingAutomation.last
+        pending_automation = automation.pending_automations.last
         expect(pending_automation.execute_at).to be_within_one_minute_of(
           (Time.zone.now + 1.hour).beginning_of_hour,
         )
@@ -252,7 +306,7 @@ describe "Recurring" do
       it "creates the next iteration one minute later" do
         automation.trigger!
 
-        pending_automation = DiscourseAutomation::PendingAutomation.last
+        pending_automation = automation.pending_automations.last
         expect(pending_automation.execute_at).to be_within_one_minute_of(
           (Time.zone.now + 1.minute).beginning_of_minute,
         )
@@ -265,7 +319,7 @@ describe "Recurring" do
       it "creates the next iteration one year later" do
         automation.trigger!
 
-        pending_automation = DiscourseAutomation::PendingAutomation.last
+        pending_automation = automation.pending_automations.last
         start_date = Time.parse(automation.trigger_field("start_date")["value"])
         expect(pending_automation.execute_at).to be_within_one_minute_of(start_date + 1.year)
       end
@@ -277,7 +331,7 @@ describe "Recurring" do
       it "creates the next iteration two weeks later" do
         automation.trigger!
 
-        pending_automation = DiscourseAutomation::PendingAutomation.last
+        pending_automation = automation.pending_automations.last
         start_date = Time.parse(automation.trigger_field("start_date")["value"])
         expect(pending_automation.execute_at).to be_within_one_minute_of(start_date + 2.weeks)
       end

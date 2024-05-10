@@ -12,28 +12,52 @@ RSpec.describe Chat::GuardianExtensions do
 
   before { SiteSetting.chat_allowed_groups = [chatters] }
 
-  it "cannot chat if the user is not in the Chat.allowed_group_ids" do
-    SiteSetting.chat_allowed_groups = ""
-    expect(guardian.can_chat?).to eq(false)
-  end
+  describe "#can_chat?" do
+    context "when the user is not in allowed to chat" do
+      before { SiteSetting.chat_allowed_groups = "" }
 
-  it "staff can always chat regardless of chat_allowed_grups" do
-    SiteSetting.chat_allowed_groups = ""
-    expect(staff_guardian.can_chat?).to eq(true)
-  end
+      it "cannot chat" do
+        expect(guardian.can_chat?).to eq(false)
+      end
 
-  it "allows TL1 to chat by default and by extension higher trust levels" do
-    expect(guardian.can_chat?).to eq(true)
-    user.change_trust_level!(TrustLevel[3])
-    expect(guardian.can_chat?).to eq(true)
-  end
+      context "when the user is a bot" do
+        let(:guardian) { Discourse.system_user.guardian }
 
-  it "allows user in specific group to chat" do
-    SiteSetting.chat_allowed_groups = chat_group.id
-    expect(guardian.can_chat?).to eq(false)
-    chat_group.add(user)
-    user.reload
-    expect(guardian.can_chat?).to eq(true)
+        it "can chat" do
+          expect(guardian.can_chat?).to eq(true)
+        end
+      end
+
+      context "when user is staff" do
+        let(:guardian) { staff_guardian }
+
+        it "can chat" do
+          expect(guardian.can_chat?).to eq(true)
+        end
+      end
+    end
+
+    context "when user is anonymous" do
+      let(:guardian) { Guardian.new }
+
+      it "cannot chat" do
+        expect(guardian.can_chat?).to eq(false)
+      end
+    end
+
+    it "allows TL1 to chat by default and by extension higher trust levels" do
+      expect(guardian.can_chat?).to eq(true)
+      user.change_trust_level!(TrustLevel[3])
+      expect(guardian.can_chat?).to eq(true)
+    end
+
+    it "allows user in specific group to chat" do
+      SiteSetting.chat_allowed_groups = chat_group.id
+      expect(guardian.can_chat?).to eq(false)
+      chat_group.add(user)
+      user.reload
+      expect(guardian.can_chat?).to eq(true)
+    end
   end
 
   describe "chat channel" do

@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { cancel, next } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
 import { makeArray } from "discourse-common/lib/helpers";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
@@ -13,48 +13,44 @@ function cancelEvent(event) {
 }
 
 export default class FloatKitInstance {
-  @tracked expanded = false;
   @tracked id = null;
 
-  trigger = null;
-  content = null;
-
   @action
-  show() {
-    this.expanded = true;
-
-    next(() => {
-      this.options.onShow?.();
-    });
+  async show() {
+    await this.options.onShow?.();
   }
 
   @action
-  close() {
-    this.expanded = false;
-
-    next(() => {
-      this.options.onClose?.();
-    });
+  async close() {
+    await this.options.onClose?.();
   }
 
   @action
-  onFocus(event) {
-    this.onTrigger(event);
+  async onFocus(event) {
+    await this.onTrigger(event);
   }
 
   @action
-  onBlur(event) {
-    this.onTrigger(event);
+  async onBlur(event) {
+    await this.onTrigger(event);
   }
 
   @action
-  onFocusIn(event) {
-    this.onTrigger(event);
+  async onFocusIn(event) {
+    await this.onTrigger(event);
   }
 
   @action
-  onFocusOut(event) {
-    this.onTrigger(event);
+  async onFocusOut(event) {
+    await this.onTrigger(event);
+  }
+
+  @action
+  trapPointerDown(event) {
+    // this is done to avoid trigger on click outside when you click on your own trigger
+    // given trigger and content are not in the same div, we can't just check if target is
+    // inside the menu
+    event.stopPropagation();
   }
 
   @action
@@ -105,7 +101,11 @@ export default class FloatKitInstance {
   }
 
   tearDownListeners() {
-    if (!this.options.listeners) {
+    if (typeof this.trigger.addEventListener === "function") {
+      this.trigger.removeEventListener("pointerdown", this.trapPointerDown);
+    }
+
+    if (!this.options?.listeners) {
       return;
     }
 
@@ -141,7 +141,11 @@ export default class FloatKitInstance {
   }
 
   setupListeners() {
-    if (!this.options.listeners) {
+    if (typeof this.trigger.addEventListener === "function") {
+      this.trigger.addEventListener("pointerdown", this.trapPointerDown);
+    }
+
+    if (!this.options?.listeners) {
       return;
     }
 

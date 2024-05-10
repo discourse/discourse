@@ -1,14 +1,12 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
-import { guidFor } from "@ember/object/internals";
+import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
-import { updatePosition } from "float-kit/lib/update-position";
 
 export default class Tooltip extends Service {
-  @tracked activeTooltip;
-  @tracked portalOutletElement;
+  @tracked registeredTooltips = [];
 
   /**
    * Render a tooltip
@@ -34,36 +32,48 @@ export default class Tooltip extends Service {
     if (arguments[0] instanceof DTooltipInstance) {
       instance = arguments[0];
 
-      if (this.activeTooltip === instance && this.activeTooltip.expanded) {
+      if (instance.expanded) {
         return;
       }
     } else {
-      const trigger = arguments[0];
-      if (
-        this.activeTooltip &&
-        this.activeTooltip.id ===
-          (trigger?.id?.length ? trigger.id : guidFor(trigger)) &&
-        this.activeTooltip.expanded
-      ) {
-        this.activeTooltip?.close();
-        return;
+      instance = this.registeredTooltips.find(
+        (registeredTooltips) => registeredTooltips.trigger === arguments[0]
+      );
+      if (!instance) {
+        instance = new DTooltipInstance(getOwner(this), arguments[1]);
+        instance.trigger = arguments[0];
+        instance.detachedTrigger = true;
       }
-
-      instance = new DTooltipInstance(getOwner(this), trigger, arguments[1]);
     }
 
-    await this.replace(instance);
-    instance.expanded = true;
-    return instance;
-  }
+    if (instance.options.identifier) {
+      for (const tooltip of this.registeredTooltips) {
+        if (
+          tooltip.options.identifier === instance.options.identifier &&
+          tooltip !== instance
+        ) {
+          await this.close(tooltip);
+        }
+      }
+    }
 
-  /**
-   * Replaces any active tooltip
-   */
-  @action
-  async replace(tooltip) {
-    await this.activeTooltip?.close();
-    this.activeTooltip = tooltip;
+    if (instance.expanded) {
+      return await this.close(instance);
+    }
+
+    await new Promise((resolve) => {
+      if (!this.registeredTooltips.includes(instance)) {
+        this.registeredTooltips = this.registeredTooltips.concat(instance);
+      }
+
+      instance.expanded = true;
+
+      schedule("afterRender", () => {
+        resolve();
+      });
+    });
+
+    return instance;
   }
 
   /**
@@ -72,26 +82,27 @@ export default class Tooltip extends Service {
    */
   @action
   async close(tooltip) {
-    if (this.activeTooltip && tooltip && this.activeTooltip.id !== tooltip.id) {
+    if (typeof tooltip === "string") {
+      tooltip = this.registeredTooltips.find(
+        (registeredTooltip) => registeredTooltip.options.identifier === tooltip
+      );
+    }
+
+    if (!tooltip) {
       return;
     }
 
-    await this.activeTooltip?.close();
-    this.activeTooltip = null;
-  }
+    tooltip.expanded = false;
 
-  /**
-   * Update the tooltip position
-   * @param {DTooltipInstance} [tooltip] - the tooltip to update, if not provider will update any active tooltip
-   */
-  @action
-  async update(tooltip) {
-    const instance = tooltip || this.activeTooltip;
-    if (!instance) {
-      return;
-    }
-    await updatePosition(instance.trigger, instance.content, instance.options);
-    await instance.show();
+    await new Promise((resolve) => {
+      this.registeredTooltips = this.registeredTooltips.filter(
+        (registeredTooltips) => tooltip.id !== registeredTooltips.id
+      );
+
+      schedule("afterRender", () => {
+        resolve();
+      });
+    });
   }
 
   /**
@@ -104,17 +115,12 @@ export default class Tooltip extends Service {
    */
   @action
   register(trigger, options = {}) {
-    return new DTooltipInstance(getOwner(this), trigger, {
+    const instance = new DTooltipInstance(getOwner(this), {
       ...options,
       listeners: true,
-      beforeTrigger: async (tooltip) => {
-        await this.replace(tooltip);
-      },
     });
-  }
-
-  @action
-  registerPortalOutletElement(element) {
-    this.portalOutletElement = element;
+    instance.trigger = trigger;
+    instance.detachedTrigger = true;
+    return instance;
   }
 }
