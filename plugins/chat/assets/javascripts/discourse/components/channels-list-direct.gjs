@@ -66,7 +66,7 @@ export default class ChannelsListDirect extends Component {
       @outletArgs={{hash inSidebar=this.inSidebar}}
     />
 
-    {{#if this.showDirectMessageChannels}}
+    {{!-- {{#if this.showDirectMessageChannels}}
       {{#if this.site.desktopView}}
         <div class="chat-channel-divider direct-message-channels-section">
           {{#if this.inSidebar}}
@@ -99,7 +99,7 @@ export default class ChannelsListDirect extends Component {
           {{/if}}
         </div>
       {{/if}}
-    {{/if}}
+    {{/if}} --}}
 
     <div
       id="direct-message-channels"

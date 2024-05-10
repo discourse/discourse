@@ -70,7 +70,7 @@ export default class ChannelsListPublic extends Component {
   }
 
   <template>
-    {{#if (and this.site.desktopView this.hasThreadedChannels)}}
+    {{!-- {{#if (and this.site.desktopView this.hasThreadedChannels)}}
       <LinkTo @route="chat.threads" class="chat-channel-row --threads">
         <span class="chat-channel-title">
           {{dIcon "discourse-threads" class="chat-user-threads__icon"}}
@@ -82,35 +82,38 @@ export default class ChannelsListPublic extends Component {
           </div>
         {{/if}}
       </LinkTo>
-    {{/if}}
+    {{/if}} --}}
 
     {{#if this.displayPublicChannels}}
-      {{#if this.site.desktopView}}
-        <div class="chat-channel-divider public-channels-section">
-          {{#if this.inSidebar}}
-            <span
-              class="title-caret"
-              id="public-channels-caret"
-              role="button"
-              title="toggle nav list"
-              {{on "click" (fn this.toggleChannelSection "public-channels")}}
-              data-toggleable="public-channels"
+      {{! i guess we don't need this divider anymore?  }}
+      {{!-- {{#if this.site.desktopView}}
+
+          <div class="chat-channel-divider public-channels-section">
+            {{#if this.inSidebar}}
+              <span
+                class="title-caret"
+                id="public-channels-caret"
+                role="button"
+                title="toggle nav list"
+                {{on "click" (fn this.toggleChannelSection "public-channels")}}
+                data-toggleable="public-channels"
+              >
+                {{dIcon "angle-up"}}
+              </span>
+            {{/if}}
+
+            <span class="channel-title">{{i18n "chat.chat_channels"}}</span>
+
+            <LinkTo
+              @route="chat.browse"
+              class="btn no-text btn-flat open-browse-page-btn title-action"
+              title={{i18n "chat.channels_list_popup.browse"}}
             >
-              {{dIcon "angle-up"}}
-            </span>
-          {{/if}}
+              {{dIcon "pencil-alt"}}
+            </LinkTo>
+          </div>
 
-          <span class="channel-title">{{i18n "chat.chat_channels"}}</span>
-
-          <LinkTo
-            @route="chat.browse"
-            class="btn no-text btn-flat open-browse-page-btn title-action"
-            title={{i18n "chat.channels_list_popup.browse"}}
-          >
-            {{dIcon "pencil-alt"}}
-          </LinkTo>
-        </div>
-      {{/if}}
+      {{/if}} --}}
 
       <div
         id="public-channels"
