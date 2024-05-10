@@ -38,7 +38,11 @@ class Admin::EmbeddableHostsController < Admin::AdminController
       host.tags = []
     end
 
-    host.user = User.find_by_username(username) if username.present?
+    if username.blank?
+      host.user = nil
+    else
+      host.user = User.find_by_username(username)
+    end
 
     if host.save
       changes = host.saved_changes if action == :update

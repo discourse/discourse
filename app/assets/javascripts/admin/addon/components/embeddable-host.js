@@ -64,7 +64,7 @@ export default class EmbeddableHost extends Component.extend(
     props.category_id = this.category.id;
     props.tags = this.tags;
     props.user =
-      Array.isArray(this.user) && this.user.length > 0 ? this.user[0] : "";
+      Array.isArray(this.user) && this.user.length > 0 ? this.user[0] : null;
 
     const host = this.host;
 
