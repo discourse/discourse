@@ -7,7 +7,10 @@
         <th style="width: 18%">{{i18n "admin.embedding.category"}}</th>
         <th style="width: 18%">{{i18n "admin.embedding.tags"}}</th>
         {{#if this.embedding.embed_by_username}}
-          <th style="width: 18%">{{i18n "admin.embedding.post_author" author=this.embedding.embed_by_username}}</th>
+          <th style="width: 18%">{{i18n
+              "admin.embedding.post_author"
+              author=this.embedding.embed_by_username
+            }}</th>
         {{else}}
           <th style="width: 18%">{{i18n "admin.embedding.post_author"}}</th>
         {{/if}}
