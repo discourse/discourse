@@ -934,8 +934,11 @@ class StaffActionLogger
   def log_watched_words_creation(watched_word)
     raise Discourse::InvalidParameters.new(:watched_word) unless watched_word
 
+    action_key = :watched_word_create
+    action_key = :create_watched_word_group if watched_word.is_a?(WatchedWordGroup)
+
     UserHistory.create!(
-      action: UserHistory.actions[:watched_word_create],
+      action: UserHistory.actions[action_key],
       acting_user_id: @admin.id,
       details: watched_word.action_log_details,
       context: WatchedWord.actions[watched_word.action],
@@ -945,8 +948,11 @@ class StaffActionLogger
   def log_watched_words_deletion(watched_word)
     raise Discourse::InvalidParameters.new(:watched_word) unless watched_word
 
+    action_key = :watched_word_destroy
+    action_key = :delete_watched_word_group if watched_word.is_a?(WatchedWordGroup)
+
     UserHistory.create!(
-      action: UserHistory.actions[:watched_word_destroy],
+      action: UserHistory.actions[action_key],
       acting_user_id: @admin.id,
       details: watched_word.action_log_details,
       context: WatchedWord.actions[watched_word.action],
