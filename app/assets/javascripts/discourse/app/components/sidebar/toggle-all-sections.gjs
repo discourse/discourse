@@ -30,13 +30,15 @@ export default class ToggleAllSections extends Component {
 
   @action
   toggleAllSections() {
-    const collapseOrExpand = this.allSectionsExpanded
-      ? this.sidebarState.collapseSection.bind(this)
-      : this.sidebarState.expandSection.bind(this);
+    const collapse = this.allSectionsExpanded;
+
     ADMIN_NAV_MAP.forEach((adminNav) => {
-      collapseOrExpand(
-        `${this.sidebarState.currentPanel.key}-${adminNav.name}`
-      );
+      const key = `${this.sidebarState.currentPanel.key}-${adminNav.name}`;
+      if (collapse) {
+        this.sidebarState.collapseSection(key);
+      } else {
+        this.sidebarState.expandSection(key);
+      }
     });
   }
 
