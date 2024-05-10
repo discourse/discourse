@@ -37,13 +37,15 @@ class Admin::WatchedWordsController < Admin::StaffController
     raise Discourse::InvalidParameters.new(:id) unless watched_word
 
     watched_word_group = watched_word.watched_word_group
+
     if watched_word_group&.watched_words&.count == 1
       watched_word_group.destroy!
+      StaffActionLogger.new(current_user).log_watched_words_deletion(watched_word_group)
     else
       watched_word.destroy!
+      StaffActionLogger.new(current_user).log_watched_words_deletion(watched_word)
     end
 
-    StaffActionLogger.new(current_user).log_watched_words_deletion(watched_word)
     render json: success_json
   end
 
