@@ -27,7 +27,7 @@
     />
   </td>
   <td class="editing-input">
-    <div class="label">{{i18n "admin.embedding.category"}}</div>
+    <div class="label">{{i18n "admin.embedding.tags"}}</div>
     <TagChooser
       @tags={{this.tags}}
       @everyTag={{true}}
@@ -38,7 +38,7 @@
     />
   </td>
   <td class="editing-input">
-    <div class="label">{{i18n "admin.embedding.category"}}</div>
+    <div class="label">{{i18n "admin.embedding.user"}}</div>
     <UserChooser
       @value={{this.user}}
       @onChange={{action "onUserChange"}}
@@ -75,11 +75,9 @@
     {{category-badge this.category allowUncategorized=true}}
   </td>
   <td>
-    <div class="label">{{i18n "admin.embedding.tags"}}</div>
     {{this.tags}}
   </td>
   <td>
-    <div class="label">{{i18n "admin.embedding.tags"}}</div>
     {{this.user}}
   </td>
   <td class="controls">
