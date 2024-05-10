@@ -1,0 +1,20 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+bg:
+  discourse_automation:
+    triggerables:
+      user_promoted:
+        transition_placeholder: "от %{from_level_name} до %{to_level_name}"
+      topic:
+        title: Тема
+    scriptables:
+      pin_topic:
+        title: Закови темата
+      close_topic:
+        title: Изчисти темата
+      append_last_checked_by:
+        button_text: Готово

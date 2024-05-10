@@ -341,10 +341,10 @@ HTML
       expect(scss).to include("font-size:30px")
 
       # Escapes correctly. If not, compiling this would throw an exception
-      setting.value = <<~CSS
+      setting.value = <<~SCSS
           \#{$fakeinterpolatedvariable}
           andanothervalue 'withquotes'; margin: 0;
-      CSS
+      SCSS
 
       theme.set_field(target: :common, name: :scss, value: "body {font-size: quote($font-size)}")
       theme.save!
@@ -464,6 +464,47 @@ HTML
 
     expect(Theme.theme_ids).to eq([])
     expect(Theme.user_theme_ids).to eq([])
+  end
+
+  it "correctly caches enabled_theme_and_component_ids" do
+    Theme.destroy_all
+
+    theme2 = Fabricate(:theme)
+
+    expect(Theme.enabled_theme_and_component_ids).to eq([])
+
+    theme2.update!(user_selectable: true)
+
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id)
+
+    theme2.update!(user_selectable: false)
+    theme2.set_default!
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id)
+
+    child2 = Fabricate(:theme, component: true)
+    theme2.add_relative_theme!(:child, child2)
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id, child2.id)
+
+    child2.update!(enabled: false)
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id)
+
+    theme3 = Fabricate(:theme, user_selectable: true)
+    child2.update!(enabled: true)
+
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(
+      theme2.id,
+      child2.id,
+      theme3.id,
+    )
+
+    theme3.update!(enabled: false)
+
+    expect(Theme.enabled_theme_and_component_ids).to contain_exactly(theme2.id, child2.id)
+
+    theme2.destroy
+    theme3.destroy
+
+    expect(Theme.enabled_theme_and_component_ids).to eq([])
   end
 
   it "correctly caches user_themes template" do
@@ -1305,6 +1346,55 @@ HTML
         "additions" => [],
         "deletions" => [{ "key" => "setting_that_will_be_removed", "val" => 1023 }],
       )
+    end
+
+    it "does not raise an out of sequence error and does not create `ThemeSettingsMigration` record for out of sequence migration when `allow_out_of_sequence_migration` kwarg is set to true" do
+      second_migration_field =
+        Fabricate(
+          :migration_theme_field,
+          name: "0001-some-other-migration-name",
+          theme: theme,
+          value: <<~JS,
+          export default function migrate(settings) {
+            settings.set("integer_setting", 3);
+            return settings;
+          }
+        JS
+          version: 1,
+        )
+
+      expect do theme.migrate_settings end.to raise_error(
+        Theme::SettingsMigrationError,
+        /'0001-some-other-migration-name' is out of sequence/,
+      )
+
+      expect(theme.get_setting("integer_setting")).to eq(1)
+
+      theme.migrate_settings(allow_out_of_sequence_migration: true)
+
+      expect(theme.theme_settings_migrations.count).to eq(1)
+      expect(theme.theme_settings_migrations.first.theme_field_id).to eq(migration_field.id)
+      expect(theme.get_setting("integer_setting")).to eq(3)
+    end
+
+    it "allows custom migration fields to be run by specifing the `fields` kwarg" do
+      expect do theme.migrate_settings(fields: []) end.not_to change {
+        theme.theme_settings_migrations.count
+      }
+
+      second_migration_field =
+        Fabricate(:migration_theme_field, theme: theme, value: <<~JS, version: 2)
+          export default function migrate(settings) {
+            settings.set("integer_setting", 3);
+            return settings;
+          }
+        JS
+
+      theme.migrate_settings(fields: [second_migration_field])
+
+      expect(theme.theme_settings_migrations.count).to eq(1)
+      expect(theme.theme_settings_migrations.first.theme_field_id).to eq(second_migration_field.id)
+      expect(theme.get_setting("integer_setting")).to eq(3)
     end
   end
 

@@ -1,17 +1,18 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays last message created at", async function (assert) {
     let lastMessageSentAt = moment().subtract(1, "day").format();
-    this.channel = fabricators.directMessageChannel();
-    this.channel.lastMessage = fabricators.message({
+    this.channel = new ChatFabricators(getOwner(this)).directMessageChannel();
+    this.channel.lastMessage = new ChatFabricators(getOwner(this)).message({
       channel: this.channel,
       created_at: lastMessageSentAt,
     });
@@ -30,7 +31,7 @@ module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
   });
 
   test("unreadIndicator", async function (assert) {
-    this.channel = fabricators.directMessageChannel();
+    this.channel = new ChatFabricators(getOwner(this)).directMessageChannel();
     this.channel.tracking.unreadCount = 1;
 
     this.unreadIndicator = true;

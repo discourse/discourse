@@ -1,11 +1,11 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { equal, not } from "@ember/object/computed";
-import { schedule } from "@ember/runloop";
+import { empty, equal } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { classNames, tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import WatchedWord from "admin/models/watched-word";
@@ -18,21 +18,17 @@ export default class WatchedWordForm extends Component {
   formSubmitted = false;
   actionKey = null;
   showMessage = false;
-  selectedTags = null;
   isCaseSensitive = false;
+  selectedTags = [];
+  words = [];
 
-  @not("word") submitDisabled;
+  @empty("words") submitDisabled;
 
   @equal("actionKey", "replace") canReplace;
 
   @equal("actionKey", "tag") canTag;
 
   @equal("actionKey", "link") canLink;
-
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-    this.set("selectedTags", []);
-  }
 
   @discourseComputed("siteSettings.watched_words_regular_expressions")
   placeholderKey(watchedWordsRegularExpressions) {
@@ -43,29 +39,38 @@ export default class WatchedWordForm extends Component {
     }
   }
 
-  @observes("word")
+  @observes("words.[]")
   removeMessage() {
-    if (this.showMessage && !isEmpty(this.word)) {
+    if (this.showMessage && !isEmpty(this.words)) {
       this.set("showMessage", false);
     }
   }
 
-  @discourseComputed("word")
-  isUniqueWord(word) {
-    const words = this.filteredContent || [];
-    const filtered = words.filter(
-      (content) => content.action === this.actionKey
-    );
-    return filtered.every((content) => {
-      if (content.case_sensitive === true) {
-        return content.word !== word;
-      }
-      return content.word.toLowerCase() !== word.toLowerCase();
+  @observes("actionKey")
+  actionChanged() {
+    this.setProperties({
+      showMessage: false,
     });
   }
 
-  focusInput() {
-    schedule("afterRender", () => this.element.querySelector("input").focus());
+  @discourseComputed("words.[]")
+  isUniqueWord(words) {
+    const existingWords = this.filteredContent || [];
+    const filtered = existingWords.filter(
+      (content) => content.action === this.actionKey
+    );
+
+    const duplicate = filtered.find((content) => {
+      if (content.case_sensitive === true) {
+        return words.includes(content.word);
+      } else {
+        return words
+          .map((w) => w.toLowerCase())
+          .includes(content.word.toLowerCase());
+      }
+    });
+
+    return !duplicate;
   }
 
   @action
@@ -90,7 +95,7 @@ export default class WatchedWordForm extends Component {
       this.set("formSubmitted", true);
 
       const watchedWord = WatchedWord.create({
-        word: this.word,
+        words: this.words,
         replacement:
           this.canReplace || this.canTag || this.canLink
             ? this.replacement
@@ -103,30 +108,23 @@ export default class WatchedWordForm extends Component {
         .save()
         .then((result) => {
           this.setProperties({
-            word: "",
+            words: [],
             replacement: "",
-            formSubmitted: false,
             selectedTags: [],
             showMessage: true,
             message: I18n.t("admin.watched_words.form.success"),
             isCaseSensitive: false,
           });
-          this.action(WatchedWord.create(result));
-          this.focusInput();
+          if (result.words) {
+            result.words.forEach((word) => {
+              this.action(WatchedWord.create(word));
+            });
+          } else {
+            this.action(result);
+          }
         })
-        .catch((e) => {
-          this.set("formSubmitted", false);
-          const message = e.jqXHR.responseJSON?.errors
-            ? I18n.t("generic_error_with_reason", {
-                error: e.jqXHR.responseJSON.errors.join(". "),
-              })
-            : I18n.t("generic_error");
-          this.dialog.alert({
-            message,
-            didConfirm: () => this.focusInput(),
-            didCancel: () => this.focusInput(),
-          });
-        });
+        .catch(popupAjaxError)
+        .finally(this.set("formSubmitted", false));
     }
   }
 }

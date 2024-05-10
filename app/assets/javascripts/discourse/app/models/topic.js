@@ -1,10 +1,12 @@
 import EmberObject, { computed } from "@ember/object";
 import { alias, and, equal, notEmpty, or } from "@ember/object/computed";
+import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { resolveShareUrl } from "discourse/helpers/share-url";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { fmt, propertyEqual } from "discourse/lib/computed";
+import { TOPIC_VISIBILITY_REASONS } from "discourse/lib/constants";
 import { longDate } from "discourse/lib/formatter";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
 import PreloadStore from "discourse/lib/preload-store";
@@ -15,7 +17,6 @@ import ActionSummary from "discourse/models/action-summary";
 import Bookmark from "discourse/models/bookmark";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
-import User from "discourse/models/user";
 import { flushMap } from "discourse/services/store";
 import deprecated from "discourse-common/lib/deprecated";
 import getURL from "discourse-common/lib/get-url";
@@ -290,6 +291,9 @@ export default class Topic extends RestModel {
     await applyModelTransformations("topic", topics);
   }
 
+  @service currentUser;
+  @service siteSettings;
+
   message = null;
   errorLoading = false;
 
@@ -461,12 +465,27 @@ export default class Topic extends RestModel {
     return visible !== undefined ? !visible : undefined;
   }
 
+  @discourseComputed("visibility_reason_id")
+  visibilityReasonTranslated() {
+    if (
+      this.visibility_reason_id &&
+      this.visibility_reason_id !== TOPIC_VISIBILITY_REASONS.unknown
+    ) {
+      const reasonKey = Object.keys(TOPIC_VISIBILITY_REASONS).find(
+        (key) => TOPIC_VISIBILITY_REASONS[key] === this.visibility_reason_id
+      );
+      return I18n.t(`topic_statuses.visibility_reasons.${reasonKey}`);
+    }
+
+    return "";
+  }
+
   @discourseComputed("id")
   searchContext(id) {
     return { type: "topic", id };
   }
 
-  @computed("category_id")
+  @computed("category_id", "site.categoriesById.[]")
   get category() {
     return Category.findById(this.category_id);
   }
@@ -477,8 +496,7 @@ export default class Topic extends RestModel {
 
   @discourseComputed("url")
   shareUrl(url) {
-    const user = User.current();
-    return resolveShareUrl(url, user);
+    return resolveShareUrl(url, this.currentUser);
   }
 
   @discourseComputed("id", "slug")

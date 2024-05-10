@@ -111,6 +111,15 @@ describe "Thread list in side panel | full page", type: :system do
       )
     end
 
+    it "builds an excerpt for the original message if it doesn’t have one" do
+      thread_1.original_message.update!(excerpt: nil)
+      chat_page.visit_threads_list(channel)
+
+      expect(thread_list_page.item_by_id(thread_1.id)).to have_content(
+        thread_1.original_message.build_excerpt,
+      )
+    end
+
     it "doesn’t show the thread original message user avatar" do
       chat_page.visit_threads_list(channel)
 

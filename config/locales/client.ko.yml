@@ -184,7 +184,8 @@ ko:
         us_west_1: "미국 서부(북캘리포니아)"
         us_west_2: "미국 서부(오리건)"
     clear_input: "입력 지우기"
-    edit: "이 주제의 제목과 카테고리 편집"
+    edit: "편집"
+    edit_topic: "이 글의 제목과 카테고리 편집"
     expand: "펼치기"
     not_implemented: "죄송합니다. 아직 사용할 수 없는 기능입니다."
     no_value: "아니오"
@@ -227,7 +228,8 @@ ko:
     weekly: "매주"
     every_month: "매달"
     every_six_months: "6개월마다"
-    max_of_count: "최대 %{count}"
+    max_of_count:
+      other: "최대 %{count}"
     character_count:
       other: "%{count}자"
     period_chooser:
@@ -281,6 +283,7 @@ ko:
         clear_reminder: "북마크 유지 및 미리 알림 지우기"
       search_placeholder: "이름, 주제 또는 게시물 콘텐츠로 북마크 검색"
       search: "검색"
+      bookmark: "북마크"
       reminders:
         today_with_time: "오늘 %{time}"
         tomorrow_with_time: "내일 %{time}"
@@ -539,6 +542,7 @@ ko:
       never: "절대"
       last_custom: "마지막 사용자 지정 시간"
       custom: "사용자 지정 날짜 및 시간"
+      custom_short: "사용자 지정..."
       select_timeframe: "기간 선택"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> 님이 <a href='%{topicUrl}'>주제</a>를 게시함"
@@ -567,7 +571,6 @@ ko:
       topic_count_long: "생성한 주제"
       post_count: "댓글"
       post_count_long: "게시된 댓글"
-      no_results: "결과가 없습니다."
       days_visited: "방문"
       days_visited_long: "방문 일수"
       posts_read: "읽음"
@@ -822,7 +825,8 @@ ko:
         image: "이미지 업로드"
       default_notifications:
         modal_title: "사용자 디폴트 알림"
-        modal_description: "이 변경사항을 기존 항목에도 일괄 적용할까요? 기존 사용자 %{count}명의 환경설정이 변경됩니다."
+        modal_description:
+          other: "이 변경 사항을 일괄 적용 하시겠습니까? 기존 사용자 %{count}명의 환경 설정이 변경됩니다."
         modal_yes: "예"
         modal_no: "아니요, 지금부터 적용합니다"
     user_action_groups:
@@ -839,12 +843,14 @@ ko:
       "13": "받은 편지함"
       "14": "보류 중"
       "15": "임시저장"
+      "17": "링크"
     categories:
       categories_label: "카테고리"
       subcategories_label: "하위 카테고리"
       no_subcategories: "하위 카테고리 없음"
       remove_filter: "필터 제거"
-      plus_more_count: "+%{count}개 더보기"
+      plus_more_count:
+        other: "+%{count}개 더보기"
       view_all: "모두 보기"
       category: "카테고리"
       category_list: "카테고리 목록 표시"
@@ -880,7 +886,8 @@ ko:
       organisation: 조직
       phone: 전화
       other_accounts: "이 IP 주소의 다른 계정:"
-      delete_other_accounts: "%{count}개 삭제"
+      delete_other_accounts:
+        other: "%{count}개 삭제"
       username: "사용자명"
       trust_level: "TL"
       read_time: "읽은 시간"
@@ -916,9 +923,7 @@ ko:
         ignore_duration_time_frame_required: "기간을 선택하세요"
         ignore_no_users: "무시된 사용자가 없습니다."
         ignore_option: "무시됨"
-        ignore_option_title: "이 사용자와 관련된 알림을 받지 않으며 해당 사용자의 주제와 댓글이 모두 숨겨집니다."
         mute_option: "뮤트"
-        mute_option_title: "이 사용자와 관련된 알림을 모두 받지 않습니다."
         normal_option: "일반"
         normal_option_title: "이 사용자가 나에게 댓글을 작성하거나, 인용하거나, 멘션하면 알림이 전송됩니다."
       notification_schedule:
@@ -990,7 +995,6 @@ ko:
         description: "새 사용자 온보딩 팁 및 배지 건너뛰기"
       reset_seen_user_tips: "사용자 팁 다시 보기"
       theme_default_on_all_devices: "이 테마를 모든 디바이스에서 디폴트 테마로 설정"
-      color_scheme_default_on_all_devices: "모든 디바이스에서 디폴트 색상 구성표 설정"
       color_scheme: "색상 구성표"
       color_schemes:
         default_description: "디폴트 테마"
@@ -1006,7 +1010,6 @@ ko:
       allow_private_messages: "다른 사용자가 나에게 개인 메시지 보내기 허용"
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
       enable_quoting: "하이라이트된 텍스트에 대한 인용 댓글 활성화"
-      enable_defer: "주제를 읽지 않은 상태로 표시하도록 연기 활성화"
       experimental_sidebar:
         enable: "사이드바 활성화"
         options: "옵션"
@@ -1302,6 +1305,8 @@ ko:
         instructions: "사용자 인터페이스 언어입니다. 페이지를 새로고침하면 반영됩니다."
         default: "(디폴트)"
         any: "모두"
+      homepage:
+        default: "(기본)"
       password_confirmation:
         title: "비밀번호 다시 입력"
       invite_code:
@@ -1476,7 +1481,8 @@ ko:
         same_as_username: "비밀번호가 사용자명과 동일합니다."
         same_as_email: "비밀번호가 이메일과 동일합니다."
         ok: "올바른 비밀번호입니다."
-        instructions: "%{count}자 이상."
+        instructions:
+          other: "%{count}자 이상."
         required: "비밀번호를 입력하세요"
         confirm: "확인"
       summary:
@@ -1576,7 +1582,6 @@ ko:
       close: "닫기"
       dismiss_error: "오류 무시"
     close: "닫기"
-    assets_changed_confirm: "이 사이트에 소프트웨어 업그레이드가 존재합니다. 지금 최신 버전을 받을까요?"
     logout: "로그아웃되었습니다."
     refresh: "새로 고침"
     home: "홈"
@@ -1979,6 +1984,7 @@ ko:
       liked_consolidated_description:
         other: "내 게시물 중 %{count}개를 좋아합니다"
       liked_consolidated: "<span>%{username}</span> %{description} "
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2138,7 +2144,6 @@ ko:
           seen: 읽음
           unseen: 읽지 않음
           wiki: 위키
-          images: 이미지 포함
           all_tags: 위의 모든 태그
         statuses:
           label: 주제 상태
@@ -2211,7 +2216,6 @@ ko:
         unlist_topics: "목록에서 주제 숨기기"
         relist_topics: "목록에서 주제 다시 표시"
         reset_bump_dates: "끌어올림 날짜 초기화"
-        defer: "연기"
         delete: "글 삭제"
         dismiss: "무시"
         dismiss_read: "읽지 않은 항목 모두 무시"
@@ -2271,6 +2275,7 @@ ko:
     topic_bulk_actions:
       close_topics:
         name: "글 닫기"
+        optional: (선택 사항)
       archive_topics:
         name: "글 보관"
       unlist_topics:
@@ -2298,9 +2303,6 @@ ko:
       move_to_inbox:
         title: "받은 편지함으로 이동"
         help: "메시지를 받은 편지함으로 다시 이동"
-      defer:
-        help: "읽지 않음으로 표시"
-        title: "연기"
       list: "글"
       new: "새 주제"
       unread: "읽지 않음"
@@ -3061,8 +3063,6 @@ ko:
       pinned:
         title: "핀 지정됨"
         help: "이 주제는 고정되었습니다. 카테고리의 상단에 표시됩니다."
-      unlisted:
-        help: "이 주제는 목록에서 제외되었니다. 주제 목록에 표시되지 않으며 다이렉트 링크를 통해서만 액세스할 수 있습니다."
       personal_message:
         title: "이 주제는 개인 메시지입니다"
         help: "이 주제는 개인 메시지입니다"
@@ -3263,7 +3263,6 @@ ko:
         mark_tracking: "%{shortcut} 주제 추적"
         mark_watching: "%{shortcut} 주제 구독"
         print: "%{shortcut} 주제 인쇄"
-        defer: "%{shortcut} 주제 지연"
         topic_admin_actions: "%{shortcut} 주제 관리자 작업 열기"
       search_menu:
         title: "검색 메뉴"
@@ -3548,7 +3547,7 @@ ko:
         upload: "업로드"
         uploading: "업로드 중"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "유효한 값을 입력하십시오."
     table_builder:
       modal:
@@ -3586,10 +3585,8 @@ ko:
         up_to_date: "최신상태입니다!"
         critical_available: "중요 업데이트를 사용할 수 있습니다."
         updates_available: "업데이트를 사용할 수 있습니다."
-        please_upgrade: "업그레이드하세요!"
         no_check_performed: "업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."
         stale_data: "최근 업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."
-        version_check_pending: "최근에 업그레이드하셨네요. 잘하셨습니다!"
         installed_version: "설치됨"
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
@@ -3888,6 +3885,8 @@ ko:
           emoji: "이모티콘"
           navigation: "내비게이션"
           themes: "테마"
+          components:
+            title: "구성 요소"
       email_settings:
         sidebar_link:
           appearance: "외관"
@@ -4090,7 +4089,8 @@ ko:
           disabled_component_tooltip: "이 구성 요소가 비활성화되었습니다"
           default_theme_tooltip: "이 테마는 사이트의 디폴트 테마입니다"
           updates_available_tooltip: "이 테마에 대한 업데이트가 있습니다"
-          and_x_more: "외 %{count}개"
+          and_x_more:
+            other: "그리고 %{count} 더."
           collapse: 접기
           uploads: "업로드"
           no_uploads: "폰트나 이미지 같은 테마와 관련된 파일만 업로드할 수 있습니다"
@@ -4201,7 +4201,8 @@ ko:
             fields:
               required: "*필수"
               string:
-                too_short: "최소 %{count}자 이상이어야 합니다."
+                too_short:
+                  other: "최소 %{count}자 이상이어야 합니다."
               number:
                 too_small: "%{count}보다 크거나 같아야 함"
                 too_large: "%{count}보다 작거나 같아야 함"
@@ -4543,9 +4544,6 @@ ko:
           replace: "게시물의 단어를 다른 단어로 바꾸기."
           link: "게시물의 단어를 링크로 바꾸기."
         form:
-          label: "단어 또는 구문 포함"
-          placeholder: "단어 또는 구문 입력(*는 와일드카드)"
-          placeholder_regexp: "정규식"
           replace_label: "대체"
           replace_placeholder: "예시"
           tag_label: "태그"
@@ -4937,7 +4935,6 @@ ko:
           empty: "아직 사진이 없습니다. 업로드하세요."
           upload:
             label: "업로드"
-            title: "이미지 업로드"
         selectable_avatars:
           title: "사용자가 선택할 수있는 아바타 목록"
         categories:
@@ -4973,7 +4970,8 @@ ko:
         secret_list:
           invalid_input: "입력 필드는 비워 두거나 수직 막대 문자를 포함할 수 없습니다."
         default_categories:
-          modal_description: "이 변경사항을 기존 항목에도 일괄 적용할까요? 기존 사용자 %{count}명의 환경설정이 변경됩니다."
+          modal_description:
+            other: "이 변경 사항을 일괄 적용 하시겠습니까? 기존 사용자 %{count}명의 환경 설정이 변경됩니다."
           modal_yes: "네"
           modal_no: "아니요, 지금부터 적용합니다"
         json_schema:
@@ -5065,7 +5063,8 @@ ko:
           perform: "사용자에게 배지 수여"
           upload_csv: 사용자 이메일 또는 아이디 포함 CSV 업로드
           aborted: 사용자 이메일 또는 아이디가 포함된 CSV를 업로드하세요
-          success: CSV가 업로드되었으며 %{count}명의 사용자가 곧 배지를 받게 됩니다.
+          success:
+            other: "CSV가 등록 되었으며 %{count}명의 사용자가 곧 배지를 받게 됩니다."
           csv_has_unmatched_users: "다음 엔트리는 CSV 파일에 있지만 기존 사용자와 일치하지 않아 배지를 받지 못합니다."
           replace_owners: 이전 소유자에게서 배지 제거
           grant_existing_holders: 기존 배지 소지자에게 추가 배지 부여

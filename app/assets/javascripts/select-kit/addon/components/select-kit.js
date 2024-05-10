@@ -198,7 +198,9 @@ export default Component.extend(
       this.appEvents.on("keyboard-visibility-change", this, this._updatePopper);
 
       if (this.selectKit.options.expandedOnInsert) {
-        this._open();
+        next(() => {
+          this._open();
+        });
       }
     },
 
@@ -916,6 +918,26 @@ export default Component.extend(
         );
         const strategy = this._computePlacementStrategy();
 
+        let bottomOffset = 0;
+        if (this.capabilities.isIOS) {
+          bottomOffset +=
+            parseInt(
+              getComputedStyle(document.documentElement)
+                .getPropertyValue("--safe-area-inset-bottom")
+                .trim(),
+              10
+            ) || 0;
+        }
+        if (this.site.mobileView) {
+          bottomOffset +=
+            parseInt(
+              getComputedStyle(document.documentElement)
+                .getPropertyValue("--footer-nav-height")
+                .trim(),
+              10
+            ) || 0;
+        }
+
         this.popper = createPopper(anchor, popper, {
           eventsEnabled: false,
           strategy,
@@ -940,6 +962,7 @@ export default Component.extend(
                       ),
                       10
                     ) || 0,
+                  bottom: bottomOffset,
                 },
               },
             },

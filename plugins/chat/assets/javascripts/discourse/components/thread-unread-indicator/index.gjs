@@ -15,11 +15,11 @@ export default class ChatThreadUnreadIndicator extends Component {
 
   <template>
     {{#if this.showUnreadIndicator}}
-      <div class="chat-thread-list-item-unread-indicator">
-        <div class="chat-thread-list-item-unread-indicator__number">
+      <span class="chat-thread-list-item-unread-indicator">
+        <span class="chat-thread-list-item-unread-indicator__number">
           {{this.unreadCountLabel}}
-        </div>
-      </div>
+        </span>
+      </span>
     {{/if}}
   </template>
 }

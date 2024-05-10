@@ -60,8 +60,7 @@
             {{on "input" this.onInput}}
             {{on "keydown" this.onKeyDown}}
             {{on "focusin" this.onTextareaFocusIn}}
-            {{on "focusin" (fn this.computeIsFocused true)}}
-            {{on "focusout" (fn this.computeIsFocused false)}}
+            {{on "focusout" this.onTextareaFocusOut}}
             {{did-insert this.setupAutocomplete}}
             data-chat-composer-context={{this.context}}
           />

@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   after_action :add_noindex_header_to_non_canonical, if: :spa_boot_request?
   after_action :set_cross_origin_opener_policy_header, if: :spa_boot_request?
   after_action :clean_xml, if: :is_feed_response?
-  around_action :add_link_header, if: -> { spa_boot_request? }
+  after_action :add_early_hint_header, if: -> { spa_boot_request? }
 
   HONEYPOT_KEY ||= "HONEYPOT_KEY"
   CHALLENGE_KEY ||= "CHALLENGE_KEY"
@@ -519,7 +519,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_homepage
-    current_user&.user_option&.homepage || SiteSetting.anonymous_homepage
+    current_user&.user_option&.homepage || HomepageHelper.resolve(request, current_user)
   end
 
   def serialize_data(obj, serializer, opts = nil)
@@ -641,8 +641,8 @@ class ApplicationController < ActionController::Base
     store_preloaded("customHTML", custom_html_json)
     store_preloaded("banner", banner_json)
     store_preloaded("customEmoji", custom_emoji)
-    store_preloaded("isReadOnly", @readonly_mode.to_s)
-    store_preloaded("isStaffWritesOnly", @staff_writes_only_mode.to_s)
+    store_preloaded("isReadOnly", get_or_check_readonly_mode.to_json)
+    store_preloaded("isStaffWritesOnly", get_or_check_staff_writes_only_mode.to_json)
     store_preloaded("activatedThemes", activated_themes_json)
   end
 
@@ -1096,29 +1096,25 @@ class ApplicationController < ActionController::Base
     result
   end
 
-  def add_link_header
-    @links_to_preload = [] if GlobalSetting.preload_link_header
-
-    yield
+  # We don't actually send 103 Early Hint responses from Discourse. However, upstream proxies can be configured
+  # to cache a response header from the app and use that to send an Early Hint response to future clients.
+  # See 'early_hint_header_mode' and 'early_hint_header_name' Global Setting descriptions for more info.
+  def add_early_hint_header
+    return if GlobalSetting.early_hint_header_mode.nil?
 
     links = []
 
-    if SiteSetting.experimental_preconnect_link_header
+    if GlobalSetting.early_hint_header_mode == "preconnect"
       [GlobalSetting.cdn_url, SiteSetting.s3_cdn_url].each do |url|
         next if url.blank?
         base_url = URI.join(url, "/").to_s.chomp("/")
-
         links.push("<#{base_url}>; rel=preconnect")
-        # Not all browsers support the preconnect resource hint so we are adding dns-prefetch as the fallback
-        links.push("<#{base_url}>; rel=dns-prefetch")
       end
+    elsif GlobalSetting.early_hint_header_mode == "preload"
+      links.push(*@asset_preload_links)
     end
 
-    if GlobalSetting.preload_link_header && !@links_to_preload.empty?
-      links = links.concat(@links_to_preload)
-    end
-
-    response.headers["Link"] = links.join(", ") if links.present?
+    response.headers[GlobalSetting.early_hint_header_name] = links.join(", ") if links.present?
   end
 
   def spa_boot_request?

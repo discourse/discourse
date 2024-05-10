@@ -478,6 +478,18 @@ RSpec.describe Admin::ThemesController do
       end
     end
 
+    it "allows themes and components to be edited" do
+      sign_in(admin)
+      theme = Fabricate(:theme, name: "Awesome Theme")
+      component = Fabricate(:theme, name: "Awesome component", component: true)
+
+      get "/admin/customize/themes/#{theme.id}/common/scss/edit"
+      expect(response.status).to eq(200)
+
+      get "/admin/customize/components/#{component.id}/common/scss/edit"
+      expect(response.status).to eq(200)
+    end
+
     shared_examples "themes inaccessible" do
       it "denies access with a 404 response" do
         get "/admin/themes.json"
@@ -1063,9 +1075,32 @@ RSpec.describe Admin::ThemesController do
         expect(user_history.action).to eq(UserHistory.actions[:change_theme_setting])
       end
 
-      it "should be able to update a theme setting of `objects` typed" do
-        SiteSetting.experimental_objects_type_for_theme_settings = true
+      it "should return the right error when value used to update a theme setting of `objects` typed is invalid" do
+        field =
+          theme.set_field(
+            target: :settings,
+            name: "yaml",
+            value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+          )
 
+        theme.save!
+
+        put "/admin/themes/#{theme.id}/setting.json",
+            params: {
+              name: "objects_setting",
+              value: [
+                { name: "new_section", links: [{ name: "a" * 21, url: "https://some.url.com" }] },
+              ].to_json,
+            }
+
+        expect(response.status).to eq(422)
+
+        expect(response.parsed_body["errors"]).to eq(
+          ["The property at JSON Pointer '/0/links/0/name' must be at most 20 characters long."],
+        )
+      end
+
+      it "should be able to update a theme setting of `objects` typed" do
         field =
           theme.set_field(
             target: :settings,
@@ -1324,8 +1359,6 @@ RSpec.describe Admin::ThemesController do
       theme.settings
     end
 
-    before { SiteSetting.experimental_objects_type_for_theme_settings = true }
-
     it "returns 404 if user is not an admin" do
       get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
 
@@ -1346,14 +1379,6 @@ RSpec.describe Admin::ThemesController do
 
     context "when user is an admin" do
       before { sign_in(admin) }
-
-      it "returns 403 if `experimental_objects_type_for_theme_settings` site setting is not enabled" do
-        SiteSetting.experimental_objects_type_for_theme_settings = false
-
-        get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
-
-        expect(response.status).to eq(403)
-      end
 
       it "returns 400 if the `id` param is not the id of a valid theme" do
         get "/admin/themes/some_invalid_id/objects_setting_metadata/objects_with_categories.json"
@@ -1384,12 +1409,63 @@ RSpec.describe Admin::ThemesController do
 
         expect(response.parsed_body["property_descriptions"]).to eq(
           {
-            "links.name" => "Name of the link",
-            "links.url" => "URL of the link",
-            "name" => "Section Name",
+            "links.name.description" => "Name of the link",
+            "links.name.label" => "Name",
+            "links.url.description" => "URL of the link",
+            "links.url.label" => "URL",
+            "name.description" => "Section Name",
+            "name.label" => "Name",
           },
         )
       end
+
+      it "returns 200 with the right `categories` attribute for a theme setting with categories propertoes" do
+        category_1 = Fabricate(:category)
+        category_2 = Fabricate(:category)
+        category_3 = Fabricate(:category)
+
+        theme_setting[:objects_with_categories].value = [
+          {
+            "category_ids" => [category_1.id, category_2.id],
+            "child_categories" => [{ "category_ids" => [category_3.id] }],
+          },
+        ]
+
+        get "/admin/themes/#{theme.id}/objects_setting_metadata/objects_with_categories.json"
+
+        expect(response.status).to eq(200)
+
+        categories = response.parsed_body["categories"]
+
+        expect(categories.keys.map(&:to_i)).to contain_exactly(
+          category_1.id,
+          category_2.id,
+          category_3.id,
+        )
+
+        expect(categories[category_1.id.to_s]["name"]).to eq(category_1.name)
+        expect(categories[category_2.id.to_s]["name"]).to eq(category_2.name)
+        expect(categories[category_3.id.to_s]["name"]).to eq(category_3.name)
+      end
+    end
+  end
+
+  describe "#schema" do
+    fab!(:theme)
+    fab!(:theme_component) { Fabricate(:theme, component: true) }
+
+    before { sign_in(admin) }
+
+    it "returns 200 when customizing a theme's setting of objects type" do
+      get "/admin/customize/themes/#{theme.id}/schema/some_setting_name"
+
+      expect(response.status).to eq(200)
+    end
+
+    it "returns 200 when customizing a theme component's setting of objects type" do
+      get "/admin/customize/components/#{theme_component.id}/schema/some_setting_name"
+
+      expect(response.status).to eq(200)
     end
   end
 end

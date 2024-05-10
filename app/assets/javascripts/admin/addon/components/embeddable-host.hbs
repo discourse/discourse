@@ -21,8 +21,8 @@
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.category"}}</div>
     <CategoryChooser
-      @value={{this.categoryId}}
-      @onChange={{fn (mut this.categoryId)}}
+      @value={{this.category.id}}
+      @onChangeCategory={{fn (mut this.category)}}
       class="small"
     />
   </td>

@@ -21,6 +21,44 @@ class ProblemCheck
   #
   config_accessor :retry_after, default: 30.seconds, instance_writer: false
 
+  # How many consecutive times the check can fail without notifying admins.
+  # This can be used to give some leeway for transient problems. Note that
+  # retries are not counted. So a check that ultimately fails after e.g. two
+  # retries is counted as one "blip".
+  #
+  config_accessor :max_blips, default: 0, instance_writer: false
+
+  # Problem check classes need to be registered here in order to be enabled.
+  #
+  # Note: This list must come after the `config_accessor` declarations.
+  #
+  CORE_PROBLEM_CHECKS = [
+    ProblemCheck::EmailPollingErroredRecently,
+    ProblemCheck::FacebookConfig,
+    ProblemCheck::FailingEmails,
+    ProblemCheck::ForceHttps,
+    ProblemCheck::GithubConfig,
+    ProblemCheck::GoogleAnalyticsVersion,
+    ProblemCheck::GoogleOauth2Config,
+    ProblemCheck::GroupEmailCredentials,
+    ProblemCheck::HostNames,
+    ProblemCheck::ImageMagick,
+    ProblemCheck::MissingMailgunApiKey,
+    ProblemCheck::OutOfDateThemes,
+    ProblemCheck::RailsEnv,
+    ProblemCheck::Ram,
+    ProblemCheck::S3BackupConfig,
+    ProblemCheck::S3Cdn,
+    ProblemCheck::S3UploadConfig,
+    ProblemCheck::SidekiqCheck,
+    ProblemCheck::SubfolderEndsInSlash,
+    ProblemCheck::TranslationOverrides,
+    ProblemCheck::TwitterConfig,
+    ProblemCheck::TwitterLogin,
+    ProblemCheck::UnreachableThemes,
+    ProblemCheck::WatchedWords,
+  ].freeze
+
   def self.[](key)
     key = key.to_sym
 
@@ -28,7 +66,7 @@ class ProblemCheck
   end
 
   def self.checks
-    descendants
+    CORE_PROBLEM_CHECKS | DiscoursePluginRegistry.problem_checks
   end
 
   def self.scheduled

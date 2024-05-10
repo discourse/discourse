@@ -216,7 +216,8 @@ pt:
         us_west_1: "Oeste dos E.U.A. (California do Norte)"
         us_west_2: "Oeste dos E.U.A. (Óregon)"
     clear_input: "Limpar entrada"
-    edit: "editar o título e a categoria deste tópico"
+    edit: "Editar"
+    edit_topic: "editar o título e a categoria deste tópico"
     expand: "Expandir"
     not_implemented: "Essa funcionalidade ainda não foi implementada, pedimos desculpa!"
     no_value: "Não"
@@ -261,7 +262,9 @@ pt:
     weekly: "semanal"
     every_month: "cada mês"
     every_six_months: "a cada seis meses"
-    max_of_count: "máximo de %{count}"
+    max_of_count:
+      one: "máximo de %{count}"
+      other: "máximo de %{count}"
     character_count:
       one: "%{count} caracter"
       other: "%{count} caracteres"
@@ -323,6 +326,7 @@ pt:
         when_reminder_sent: "Excluir favorito"
       search_placeholder: "Pesquise favoritos por nome, título do tópico ou conteúdo do post"
       search: "Pesquisar"
+      bookmark: "Adicionar Marcador"
       reminders:
         today_with_time: "hoje às %{time}"
         tomorrow_with_time: "amanhã às %{time}"
@@ -617,6 +621,7 @@ pt:
       never: "Nunca"
       last_custom: "Data e hora do último personalizado"
       custom: "Data e hora personalizadas"
+      custom_short: "Personalizar..."
       select_timeframe: "Selecione um intervalo de tempo"
     user_action:
       user_posted_topic: "<a href='%{userUrl}'>%{user}</a> publicou <a href='%{topicUrl}'>o tópico</a>"
@@ -645,7 +650,6 @@ pt:
       topic_count_long: "Tópicos Criados"
       post_count: "Respostas"
       post_count_long: "Respostas Publicadas"
-      no_results: "Não foram encontrados resultados."
       days_visited: "Visitas"
       days_visited_long: "Dias Visitados"
       posts_read: "Ler"
@@ -918,12 +922,15 @@ pt:
       "13": "Caixa de Entrada"
       "14": "Pendente"
       "15": "Rascunhos"
+      "17": "Hiperligações"
     categories:
       categories_label: "categorias"
       subcategories_label: "subcategorias"
       no_subcategories: "sem subcategorias"
       remove_filter: "remover filtro"
-      plus_more_count: "+%{count} mais"
+      plus_more_count:
+        one: "+%{count} mais"
+        other: "+%{count} mais"
       category: "Categoria"
       category_list: "Exibir lista de categorias"
       reorder:
@@ -963,7 +970,9 @@ pt:
       organisation: Organização
       phone: Telefone
       other_accounts: "Outras contas com este endereço IP:"
-      delete_other_accounts: "Apagar %{count}"
+      delete_other_accounts:
+        one: "Apagar %{count}"
+        other: "Apagar %{count}"
       username: "nome de utilizador"
       trust_level: "TL"
       read_time: "tempo de leitura"
@@ -1002,10 +1011,8 @@ pt:
         ignore_duration_time_frame_required: "Por favor selecione um intervalo de tempo"
         ignore_no_users: "Não tem utilizadores ignorados."
         ignore_option: "Ignorados"
-        ignore_option_title: "Não irá receber notificações relacionadas com este utilizador e todas as publicações deste serão escondidas."
         add_ignored_user: "Adicionar…"
         mute_option: "Silenciado"
-        mute_option_title: "Não irá receber quaisquer notificações relacionadas com este utilizador."
         normal_option: "Normal"
         normal_option_title: "Será notificado se este usuário lhe responder, citar ou mencionar."
       notification_schedule:
@@ -1073,7 +1080,6 @@ pt:
         description: "Ignorar dicas e emblemas de integração de novos usuários"
       reset_seen_user_tips: "Mostrar dicas do utilizador novamente"
       theme_default_on_all_devices: "Usar este tema por defeito em todos os meus dispositivos"
-      color_scheme_default_on_all_devices: "Definir esquema(s) de cor padrão em todos os meus dispositivos"
       color_scheme: "Esquema de Cores"
       color_schemes:
         default_description: "Tema padrão"
@@ -1089,7 +1095,6 @@ pt:
       allow_private_messages: "Permitir que outros utilizadores me enviem mensagens diretamente"
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
       enable_quoting: "Ativar resposta usando citação de texto destacado"
-      enable_defer: "Ativar adiamento para marcar tópicos não lidos"
       experimental_sidebar:
         options: "Opções"
         navigation_section: "Navegação"
@@ -1363,6 +1368,8 @@ pt:
         instructions: "O idioma da interface do utilizador. Este será alterado quando recarregar a página."
         default: "(predefinição)"
         any: "qualquer"
+      homepage:
+        default: "(predefinição)"
       password_confirmation:
         title: "Palavra-passe Novamente"
       invite_code:
@@ -1536,7 +1543,6 @@ pt:
         same_as_username: "A sua palavra-passe é a mesma que o seu nome de utilizador."
         same_as_email: "A sua palavra-passe é a mesma que o seu e-mail."
         ok: "A sua palavra-passe parece estar bem."
-        instructions: "Pelo menos %{count} carateres."
         required: "Por favor, digite uma senha"
       summary:
         title: "Resumo"
@@ -1656,7 +1662,6 @@ pt:
       close: "fechar"
       dismiss_error: "Dispensar erro"
     close: "Fechar"
-    assets_changed_confirm: "Este site acabou de receber uma atualização de software. Obter a versão mais recente agora?"
     logout: "A sua sessão foi encerrada."
     refresh: "Atualizar"
     home: "Início"
@@ -2059,6 +2064,7 @@ pt:
         one: "gostou de %{count} das suas publicações"
         other: "gostou de %{count} das suas publicações"
       liked_consolidated: "<span>%{username}</span>%{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2208,7 +2214,6 @@ pt:
           seen: Eu li
           unseen: Eu não li
           wiki: são wiki
-          images: incluir imagens
           all_tags: Todas as etiquetas acima
         statuses:
           label: Aonde tópicos
@@ -2255,7 +2260,6 @@ pt:
         clear_all: "Remover Tudo"
         unlist_topics: "Remover Tópicos da Lista"
         relist_topics: "Voltar a Listar Tópicos"
-        defer: "Diferir"
         delete: "Eliminar Tópicos"
         dismiss: "Marcar Visto"
         dismiss_read: "Marcar todos os não lidos como vistos"
@@ -2325,6 +2329,7 @@ pt:
     topic_bulk_actions:
       close_topics:
         name: "Fechar Tópicos"
+        optional: (opcional)
       archive_topics:
         name: "Arquivar tópicos"
       unlist_topics:
@@ -2351,9 +2356,6 @@ pt:
       move_to_inbox:
         title: "Mover para Caixa de Entrada"
         help: "Mover mensagem de volta para a Caixa de Entrada"
-      defer:
-        help: "Marcar como não lida"
-        title: "Diferir"
       list: "Tópicos"
       new: "novo tópico"
       unread: "não lido"
@@ -3101,8 +3103,6 @@ pt:
       pinned:
         title: "Fixado"
         help: "Este tópico foi fixado por si; será mostrado no topo da sua categoria"
-      unlisted:
-        help: "Este tópico não está listado; não será apresentado na lista de tópicos e poderá ser acedido apenas através de uma ligação direta"
       personal_message:
         title: "Este tópico é uma mensagem pessoal"
         help: "Este tópico é uma mensagem pessoal"
@@ -3295,7 +3295,6 @@ pt:
         mark_tracking: "%{shortcut} Seguir tópico"
         mark_watching: "%{shortcut} Vigiar tópico"
         print: "%{shortcut} Imprimir tópico"
-        defer: "%{shortcut} Tópico adiado"
       search_menu:
         title: "Menu de Busca"
         prev_next: "%{shortcut} Mover seleção para cima e para baixo"
@@ -3534,7 +3533,7 @@ pt:
         upload: "Enviar"
         uploading: "A enviar"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Por favor introduza um valor válido."
           email: "Por favor introduza um endereço de email válido."
     table_builder:
@@ -3572,10 +3571,8 @@ pt:
         up_to_date: "Está atualizado!"
         critical_available: "Uma atualização crítica está disponível."
         updates_available: "Há atualizações disponíveis."
-        please_upgrade: "Por favor, atualize!"
         no_check_performed: "Não foi feita nenhuma verificação por atualizações. Certifique-se que o sidekiq está em execução."
         stale_data: "Não foi feita verificação por atualizações ultimamente. Certifique-se de que o sidekiq está em execução."
-        version_check_pending: "Parece que atualizou recentemente. Fantástico!"
         installed_version: "Instalado"
         latest_version: "Recentes"
         problems_found: "Alguns conselhos com base nas configurações atuais do seu site"
@@ -3842,6 +3839,8 @@ pt:
           emoji: "Emoji"
           navigation: "Navegação"
           themes: "Temas"
+          components:
+            title: "Componentes"
       email_settings:
         sidebar_link:
           appearance: "Aparência"
@@ -4104,8 +4103,6 @@ pt:
           schema:
             fields:
               required: "*necessário"
-              string:
-                too_short: "deve ter pelo menos %{count} caracteres"
               number:
                 too_small: "tem que ser maior ou igual a %{count}"
                 too_large: "tem que ser menos ou igual a %{count}"

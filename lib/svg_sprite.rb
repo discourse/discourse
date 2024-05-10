@@ -99,6 +99,7 @@ module SvgSprite
         fab-facebook
         fab-github
         fab-instagram
+        fab-linkedin-in
         fab-linux
         fab-threads
         fab-threads-square
@@ -164,6 +165,7 @@ module SvgSprite
         italic
         key
         keyboard
+        language
         layer-group
         link
         list
@@ -197,6 +199,7 @@ module SvgSprite
         random
         redo
         reply
+        robot
         rocket
         search
         search-plus

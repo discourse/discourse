@@ -68,6 +68,20 @@ RSpec.describe Jobs::UserEmail do
         user.user_option.update!(digest_after_minutes: 1.day.to_i / 60)
       end
 
+      it "still sends the digest email" do
+        Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
+        expect(ActionMailer::Base.deliveries).to_not be_empty
+        expect(user.user_stat.reload.digest_attempted_at).to eq_time(Time.zone.now)
+      end
+    end
+
+    context "when recently seen" do
+      before do
+        freeze_time
+        user.update!(last_seen_at: 2.hours.ago)
+        user.user_option.update!(digest_after_minutes: 1.day.to_i / 60)
+      end
+
       it "skips sending digest email" do
         Jobs::UserEmail.new.execute(type: :digest, user_id: user.id)
         expect(ActionMailer::Base.deliveries).to eq([])
@@ -269,8 +283,8 @@ RSpec.describe Jobs::UserEmail do
     it "creates an email log when the mail is sent (via Email::Sender)" do
       freeze_time
 
-      last_emailed_at = 7.days.ago
-      user.update!(last_emailed_at: last_emailed_at)
+      last_seen_at = 7.days.ago
+      user.update!(last_seen_at: last_seen_at)
       Topic.last.update(created_at: 1.minute.ago)
 
       expect do Jobs::UserEmail.new.execute(type: :digest, user_id: user.id) end.to change {
@@ -282,7 +296,7 @@ RSpec.describe Jobs::UserEmail do
       expect(email_log.user).to eq(user)
       expect(email_log.post).to eq(nil)
       # last_emailed_at should have changed
-      expect(email_log.user.last_emailed_at).to_not eq_time(last_emailed_at)
+      expect(email_log.user.last_emailed_at).to_not eq_time(last_seen_at)
     end
 
     it "creates a skipped email log when the mail is skipped" do

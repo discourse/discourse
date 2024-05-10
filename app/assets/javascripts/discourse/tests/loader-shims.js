@@ -6,3 +6,4 @@ loaderShim("pretender", () => importSync("pretender"));
 loaderShim("qunit", () => importSync("qunit"));
 loaderShim("sinon", () => importSync("sinon"));
 loaderShim("ember-qunit", () => importSync("ember-qunit"));
+loaderShim("@faker-js/faker", () => importSync("@faker-js/faker"));

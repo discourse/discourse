@@ -766,6 +766,19 @@ RSpec.describe Email::Receiver do
       expect(topic.posts.last.raw).not_to match %r{upload://}
     end
 
+    it "tries not to repeat duplicate secure attachments" do
+      setup_s3
+      stub_s3_store
+      SiteSetting.secure_uploads = true
+      SiteSetting.authorized_extensions = "jpg"
+
+      expect { process(:logo_1) }.to change { UploadReference.count }.by(1)
+      expect(topic.posts.last.raw).to match %r{upload://}
+
+      expect { process(:logo_2) }.not_to change { UploadReference.count }
+      expect(topic.posts.last.raw).not_to match %r{upload://}
+    end
+
     it "works with removed attachments" do
       SiteSetting.authorized_extensions = "jpg"
 

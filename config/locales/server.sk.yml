@@ -106,7 +106,6 @@ sk:
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
-      too_long_validation: "je obmedzený na %{max} znakov, zadali ste %{length}."
       invalid_boolean: "Neplatná logická hodnota."
       taken: "je už použité"
       accepted: sa musí akceptovať
@@ -675,6 +674,8 @@ sk:
       xaxis:
         api: "API"
       yaxis: "Deň"
+    consolidated_page_views_browser_detection:
+      yaxis: "Deň"
     dau_by_mau:
       xaxis: "Deň"
     daily_engaged_users:
@@ -781,6 +782,10 @@ sk:
     page_view_logged_in_mobile_reqs:
       xaxis: "Deň"
     page_view_anon_mobile_reqs:
+      xaxis: "Deň"
+    page_view_anon_browser_reqs:
+      xaxis: "Deň"
+    page_view_logged_in_browser_reqs:
       xaxis: "Deň"
     http_background_reqs:
       title: "Pozadie"
@@ -971,23 +976,14 @@ sk:
     tl3_links_no_follow: "Neodstraňujte rel=nofollow z odkazov pridaných používateľmi so stupňom dôvery 3."
     delete_all_posts_and_topics_allowed_groups: "Skupiny môžu odstraňovať príspevky a témy vytvorené inými používateľmi. Tieto skupiny budú môcť vidieť aj odstránené témy a príspevky."
     min_trust_to_create_topic: "MInimálna úroveň dôvery na vytvorenie novej témy."
-    create_topic_allowed_groups: "Skupiny, ktoré môžu vytvárať nové témy."
     min_trust_to_edit_wiki_post: "MInimálna úroveň dôvery na úpravu wiki príspevku."
-    edit_wiki_post_allowed_groups: "Skupiny, ktoré majú povolené upravovať príspevky, sú označené ako wiki."
-    edit_post_allowed_groups: "Skupiny, ktoré majú povolené upravovať príspevky."
     min_trust_to_allow_self_wiki: "MInimálna úroveň dôvery k tomu aby mohol používateľ svoje témy meniť na wiki."
-    self_wiki_allowed_groups: "Skupiny, v ktorých môžu používatelia vytvárať vlastné príspevky wiki."
-    flag_post_allowed_groups: "Skupiny, ktoré môžu označovať príspevky."
-    user_card_background_allowed_groups: "Skupiny, ktoré majú povolené nahrať pozadie karty používateľa."
-    invite_allowed_groups: "Skupiny, ktoré môžu pozývať používateľov."
-    ignore_allowed_groups: "Skupiny, ktoré môžu ignorovať ostatných používateľov."
     newuser_max_links: "Koľko odkazov môže nový používateľ pridať do príspevku."
     newuser_max_attachments: "Koľko príloh môže nový používateľ pridať do príspevku."
     newuser_max_mentions_per_post: "Maximálny počet notifikácií typu @meno môže nový užívateľ použiť v príspevku."
     newuser_max_replies_per_topic: "Maximálny počet odpovedí ktoré môže nový používateľ pridať do jednej témy pokiaľ na ne niekto neodpovie."
     max_mentions_per_post: "Maximálný počet notifikácií typu @meno, ktoré môže ktokoľvek použiť v rámci jedného príspevku."
     max_users_notified_per_group_mention: "Maximálny počet používateľov, ktorý môže dostať upozornenie ak je zmienená skupina (ak je dosiahnutá hranica, žiadne upozornenie nebude poslané)"
-    here_mention_allowed_groups: "Skupiny, ktoré môžu uvádzať @here."
     create_thumbnails: "Vytvor náhľad a okraje pre obrázoky, ktoré sú príliš veľké aby sa zmestili do príspevku."
     email_time_window_mins: "Počkať (n) minút pred poslaním akýchkoľvek notifikačných emailov, aby mali používatelia čas úpraviť a dokončiť svoje príspevky."
     email_posts_context: "Koľko posledných odpovedí zahrnúť do obsahu v notifikačných emailoch."
@@ -1041,7 +1037,6 @@ sk:
     pop3_polling_username: "Používateľské meno na kontrolu emailového POP3 účtu."
     pop3_polling_password: "Heslo na kontrolu emailového POP3 účtu."
     email_in_min_trust: "MInimálna úroveň dôveru použivateľa, ktorý môže posielať nové príspevky pomocou emailu."
-    email_in_allowed_groups: "Skupiny, ktoré majú povolené uverejňovať nové témy prostredníctvom e-mailu."
     email_prefix: "[Menovka], ktorá má byť použitá ako predmet emailov. Ak nie je nastavená bude nahradená 'nadpisom'."
     email_site_title: "Názov stránok, použitý ako odosieľateľ emailov zo stránok. Ak nie ne nastavený bude použitý 'nadpis'. Použite toto nastavenie, ak Váš nadpis obsahuje nepovolené znaky pre emailový reťazec odosieľateľ."
     minimum_topics_similar: "Koľko tém musí existovať predtým, ako sa začnú zobraznovať podobné témy pri zakladaní novej témy."
@@ -1117,8 +1112,6 @@ sk:
       must_include_latest: "Horné menu musí obsahovať záložku 'posledné'."
       invalid_string: "Nesprávna hodnota."
       invalid_string_min_max: "Musí byť medzi %{min} a %{max} znakmi."
-      invalid_string_min: "Musí byť minimálne %{min} znakov."
-      invalid_string_max: "Nesmie byť viac ako %{max} znakov."
       invalid_reply_by_email_address: "Hodnota musí obsahovať '%{reply_key}' a byť odlišná od notifikačného emailu."
       pop3_polling_host_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 adresu'."
       pop3_polling_username_is_empty: "Pred nastavením POP3 sťahovania musíte nastaviť 'pop3 používateľské meno'."
@@ -1213,8 +1206,6 @@ sk:
       sent_test: "odoslané!"
   user:
     username:
-      short: "musí mať minimálne %{min} znakov"
-      long: "nesmie byť dlhší než %{max} znakov"
       unique: "musí byť jedinečné"
       blank: "musí existovať"
       must_not_contain_two_special_chars_in_seq: "nesmie obsahovať reťazec 2 alebo viac špeciálnych znakov po sebe (.-_)"

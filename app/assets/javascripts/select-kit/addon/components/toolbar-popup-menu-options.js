@@ -20,7 +20,7 @@ export default DropdownSelectBoxComponent.extend({
           return {
             icon: content.icon,
             name: I18n.t(content.label),
-            id: content.action,
+            id: { name: content.name, action: content.action },
           };
         }
       })

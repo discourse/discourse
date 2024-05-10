@@ -42,20 +42,6 @@ module("Unit | Model | site", function (hooks) {
       "Test Subcategory",
     ]);
 
-    const parent = site.categories.findBy("id", 1234);
-    assert.present(parent, "it loaded the parent category");
-    assert.blank(parent.parentCategory, "it has no parent category");
-
-    assert.strictEqual(parent.subcategories.length, 1);
-
-    const subcategory = site.categories.findBy("id", 3456);
-    assert.present(subcategory, "it loaded the subcategory");
-    assert.strictEqual(
-      subcategory.parentCategory,
-      parent,
-      "it has associated the child with the parent"
-    );
-
     // remove invalid category and child
     site.categories.removeObject(site.categories[2]);
     site.categories.removeObject(site.categories[0]);

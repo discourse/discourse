@@ -87,7 +87,7 @@ RSpec.describe About do
 
     it "lists moderators of the category that the current user can see" do
       results = About.new(private_cat_moderator).category_moderators
-      expect(results.map(&:category_id)).to contain_exactly(public_cat.id, private_cat.id)
+      expect(results.map(&:category).map(&:id)).to contain_exactly(public_cat.id, private_cat.id)
       expect(results.map(&:moderators).flatten.map(&:id).uniq).to contain_exactly(
         public_cat_moderator.id,
         common_moderator.id,
@@ -97,7 +97,7 @@ RSpec.describe About do
 
       [public_cat_moderator, user, nil].each do |u|
         results = About.new(u).category_moderators
-        expect(results.map(&:category_id)).to contain_exactly(public_cat.id)
+        expect(results.map(&:category).map(&:id)).to contain_exactly(public_cat.id)
         expect(results.map(&:moderators).flatten.map(&:id)).to eq(
           [public_cat_moderator.id, common_moderator.id, common_moderator_2.id],
         )

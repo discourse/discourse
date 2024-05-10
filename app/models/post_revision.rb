@@ -28,6 +28,12 @@ class PostRevision < ActiveRecord::Base
     SQL
   end
 
+  def categories
+    return [] if modifications["category_id"].blank?
+
+    @categories ||= Category.with_parents(modifications["category_id"])
+  end
+
   def hide!
     update_column(:hidden, true)
   end

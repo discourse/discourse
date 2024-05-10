@@ -617,6 +617,20 @@ RSpec.describe TopicsFilter do
       fab!(:closed_topic) { Fabricate(:topic, closed: true) }
       fab!(:archived_topic) { Fabricate(:topic, archived: true) }
       fab!(:deleted_topic_id) { Fabricate(:topic, deleted_at: Time.zone.now).id }
+      fab!(:foobar_topic) { Fabricate(:topic, closed: true, word_count: 42) }
+
+      after { TopicsFilter.custom_status_filters.clear }
+
+      it "supports custom status filters" do
+        TopicsFilter.add_filter_by_status("foobar") { |scope| scope.where("word_count = 42") }
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("status:foobar")
+            .pluck(:id),
+        ).to contain_exactly(foobar_topic.id)
+      end
 
       it "should only return topics that have not been closed or archived when query string is `status:open`" do
         expect(
@@ -642,7 +656,7 @@ RSpec.describe TopicsFilter do
             .new(guardian: Guardian.new)
             .filter_from_query_string("status:deleted")
             .pluck(:id),
-        ).to contain_exactly(topic.id, closed_topic.id, archived_topic.id)
+        ).to contain_exactly(topic.id, closed_topic.id, archived_topic.id, foobar_topic.id)
       end
 
       it "should only return topics that have been archived when query string is `status:archived`" do

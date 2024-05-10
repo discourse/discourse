@@ -2,6 +2,7 @@ import {
   click,
   currentURL,
   fillIn,
+  triggerEvent,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
@@ -18,6 +19,9 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "discourse-i18n";
+
+const clickOutside = () =>
+  triggerEvent(document.querySelector("header.d-header"), "pointerdown");
 
 acceptance("Search - Anonymous", function (needs) {
   needs.pretender((server, helper) => {
@@ -106,7 +110,7 @@ acceptance("Search - Anonymous", function (needs) {
     await click("#search-button");
     assert.ok(exists(".search-menu"));
 
-    await click(".d-header"); // click outside
+    await clickOutside();
     assert.ok(!exists(".search-menu"));
 
     await click("#search-button");
@@ -495,6 +499,10 @@ acceptance("Search - Authenticated", function (needs) {
 
     server.get("/t/2179.json", () => {
       return helper.response({});
+    });
+
+    server.post("/search/click", () => {
+      return helper.response({ success: "OK" });
     });
   });
 
@@ -1140,6 +1148,10 @@ acceptance("Search - assistant", function (needs) {
         ],
       });
     });
+
+    server.post("/search/click", () => {
+      return helper.response({ success: "OK" });
+    });
   });
 
   test("initial options - shows category shortcuts when typing #", async function (assert) {
@@ -1241,7 +1253,7 @@ acceptance("Search - assistant", function (needs) {
 
     assert.notOk(exists(".btn.search-context"), "it removes the button");
 
-    await click(".d-header");
+    await clickOutside();
     await click("#search-button");
     assert.ok(
       exists(".btn.search-context"),

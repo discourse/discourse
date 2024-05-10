@@ -123,7 +123,6 @@ da:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "er begrænset til %{max} tegn; du har brugt %{length}."
       invalid_boolean: "Ugyldig boolsk operator"
       taken: "er allerede blevet taget"
       accepted: skal accepteres
@@ -217,7 +216,6 @@ da:
       one: "Du har allerede sendt %{count} invitation den seneste dag, vent venligst %{time_left}, før du prøver igen."
       other: "Du har allerede sendt %{count} invitationer den seneste dag, vent venligst %{time_left}, før du prøver igen."
     confirm_email: "<p> Du er næsten færdig! Vi har sendt en aktiveringsmail til din emailadresse. Følg instruktionerne i mailen for at aktivere din konto. </p><p> Hvis den ikke ankommer, så tjek din spam-mappe. </p>"
-    cant_invite_to_group: "Du har ikke tilladelse til at invitere brugere til angivne gruppe(r). Sørg for, at du er ejer af de(n) gruppe(r), du prøver at invitere til."
     disabled_errors:
       discourse_connect_enabled: "Invitationer er deaktiveret, fordi DiscourseConnect er aktiveret."
       invalid_access: "Du har ikke tilladelse til at se den ønskede ressource."
@@ -325,7 +323,6 @@ da:
   pm_reached_recipients_limit: "Beklager, du kan ikke have mere end %{recipients_limit}-modtagere i en meddelelse."
   removed_direct_reply_full_quotes: "Automatisk fjernet citat af hele forrige indlæg."
   watched_words_auto_tag: "Automatisk mærket emne"
-  secure_upload_not_allowed_in_public_topic: "Beklager, følgende sikre overførsler kan ikke bruges i et offentligt emne: %{upload_filenames}."
   create_pm_on_existing_topic: "Beklager, du kan ikke oprette en PM på et eksisterende emne."
   slow_mode_enabled: "Dette emne er i langsom tilstand."
   just_posted_that: "ligner et andet indlæg for meget, som du har skrevet for nyligt"
@@ -461,7 +458,6 @@ da:
 
       Det er nemmere for alle at læse emner som har færre detaljerede svar i stedet for mange mindre, individuelle svar.
     dominating_topic: Du har skrevet meget i dette emne! Overvej at give andre mulighed for at svare her og også diskutere tingene med hinanden.
-    get_a_room: Du har svaret @%{reply_username} %{count} gange, vidste du, at du kunne sende dem en personlig besked i stedet?
     too_many_replies: |
       ### Du kan ikke skrive flere indlæg i dette emne
 
@@ -979,6 +975,8 @@ da:
         api: "API"
         user_api: "Bruger API"
       yaxis: "Dag"
+    consolidated_page_views_browser_detection:
+      yaxis: "Dag"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dag"
@@ -1131,6 +1129,10 @@ da:
       xaxis: "Dag"
       yaxis: "anonyme mobile sidevisninger"
       description: "Antal nye sidevisninger fra besøgende på en mobil enhed, der ikke er logget ind."
+    page_view_anon_browser_reqs:
+      xaxis: "Dag"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Baggrund"
       xaxis: "Dag"
@@ -1598,8 +1600,6 @@ da:
       must_include_latest: "Topmenuen skal inkludere 'seneste' fanen."
       invalid_string: "Ugyldig værdi."
       invalid_string_min_max: "Skal være mellem %{min} og %{max} tegn."
-      invalid_string_min: "Skal være mindst %{min} tegn."
-      invalid_string_max: "Må ikke være mere end %{max} tegn."
       invalid_json: "Ugyldig JSON."
       invalid_reply_by_email_address: "Værdien skal indeholde '%{reply_key}' og være forskellig fra notifikations e-mail."
       invalid_alternative_reply_by_email_addresses: "Alle værdier skal indeholde '%{reply_key}' og være forskellige fra notifikations e-mail."
@@ -1609,6 +1609,15 @@ da:
       max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       invalid_hex_value: "Farveværdier skal være 6-cifrede hexadecimale koder."
       empty_selectable_avatars: "Du skal først overføre mindst to valgbare avatarer før du aktiverer denne indstilling."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "inaktiv"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "inaktiv"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.eksempel.dk"
@@ -1739,8 +1748,6 @@ da:
     activated_by_staff: "Aktiveret af hjælperteamet"
     new_user_typed_too_fast: "Ny bruger tastede for hurtigt"
     username:
-      short: "skal være på mindst %%{min} tegn."
-      long: "skal være kortere end %{max} tegn"
       too_long: "er for lang"
       characters: "må kun indeholde tal, bogstaver, bindestreger, prikker og understregninger"
       unique: "skal være unik"
@@ -2852,7 +2859,6 @@ da:
   badges:
     mass_award:
       errors:
-        too_many_csv_entries: For mange poster i CSV-filen. Send venligst en CSV-fil med ikke mere end %{count} poster.
         badge_disabled: Aktiver venligst %{badge_name} emblemet først.
         cant_grant_multiple_times: Kan ikke tildele %{badge_name} emblemet flere gange til en enkelt bruger.
     editor:

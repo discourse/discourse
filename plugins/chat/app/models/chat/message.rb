@@ -8,6 +8,7 @@ module Chat
     self.table_name = "chat_messages"
 
     BAKED_VERSION = 2
+    EXCERPT_LENGTH = 150
 
     attribute :has_oneboxes, default: false
 
@@ -95,9 +96,6 @@ module Chat
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
 
     def validate_message
-      self.message =
-        TextCleaner.clean(self.message, strip_whitespaces: true, strip_zero_width_spaces: true)
-
       WatchedWordsValidator.new(attributes: [:message]).validate(self)
 
       if self.new_record? || self.changed.include?("message")
@@ -122,7 +120,7 @@ module Chat
       end
     end
 
-    def excerpt(max_length: 100)
+    def build_excerpt
       # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
       return message if UrlHelper.relaxed_parse(message).is_a?(URI)
 
@@ -130,11 +128,7 @@ module Chat
       return uploads.first.original_filename if cooked.blank? && uploads.present?
 
       # this may return blank for some complex things like quotes, that is acceptable
-      PrettyText.excerpt(cooked, max_length, strip_links: true, keep_mentions: true)
-    end
-
-    def censored_excerpt(max_length: 100)
-      WordWatcher.censor(excerpt(max_length: max_length))
+      PrettyText.excerpt(cooked, EXCERPT_LENGTH, strip_links: true, keep_mentions: true)
     end
 
     def cooked_for_excerpt
@@ -200,6 +194,7 @@ module Chat
       text-post-process
       upload-protocol
       watched-words
+      chat-html-inline
     ]
 
     MARKDOWN_IT_RULES = %w[

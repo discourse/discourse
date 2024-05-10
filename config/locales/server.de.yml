@@ -124,8 +124,12 @@ de:
       number_value_not_valid_min: "Der Wert muss größer oder gleich %{min} sein."
       number_value_not_valid_max: "Der Wert muss kleiner oder gleich %{max} sein."
       string_value_not_valid_min_max: "Der Wert muss zwischen %{min} und %{max} Zeichen lang sein."
-      string_value_not_valid_min: "Der Wert muss mindestens %{min} Zeichen lang sein."
-      string_value_not_valid_max: "Der Wert darf höchstens %{max} Zeichen lang sein."
+      string_value_not_valid_min:
+        one: "Der Wert muss mindestens %{count} Zeichen lang sein."
+        other: "Der Wert muss mindestens %{count} Zeichen lang sein."
+      string_value_not_valid_max:
+        one: "Der Wert darf höchstens %{count} Zeichen lang sein."
+        other: "Der Wert darf höchstens %{count} Zeichen lang sein."
       objects:
         humanize_required: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss vorhanden sein."
         required: "muss angegeben werden"
@@ -141,26 +145,66 @@ de:
         not_valid_boolean_value: "muss ein boolescher Wert sein"
         humanize_not_valid_enum_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine der folgenden sein: %{choices}."
         not_valid_enum_value: "muss einer der folgenden sein: %{choices}"
-        humanize_not_valid_category_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Kategorie-ID sein."
-        not_valid_category_value: "muss eine gültige Kategorie-ID sein"
+        humanize_not_valid_categories_value: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss ein Array mit gültigen Kategorie-IDs sein."
+        not_valid_categories_value: "muss ein Array gültiger Kategorie-IDs sein"
+        humanize_categories_value_not_valid_min:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{count} Kategorie-ID haben."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{count} Kategorie-IDs haben."
+        categories_value_not_valid_min:
+          one: "muss mindestens %{count} Kategorie-ID haben"
+          other: "muss mindestens %{count} Kategorie-IDs haben"
+        humanize_categories_value_not_valid_max:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Kategorie-ID haben."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Kategorie-IDs haben."
+        categories_value_not_valid_max:
+          one: "darf höchstens %{count} Kategorie-ID haben"
+          other: "darf höchstens %{count} Kategorie-IDs haben"
         humanize_not_valid_topic_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Themen-ID sein."
         not_valid_topic_value: "muss eine gültige Themen-ID sein"
         humanize_not_valid_post_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Beitrag-ID sein."
         not_valid_post_value: "muss eine gültige Beitrags-ID sein"
-        humanize_not_valid_group_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Gruppen-ID sein."
-        not_valid_group_value: "muss eine gültige Gruppen-ID sein"
+        humanize_not_valid_groups_value: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss ein Array mit gültigen Gruppen-IDs sein."
+        not_valid_groups_value: "muss ein Array mit gültigen Gruppen-IDs sein"
+        humanize_groups_value_not_valid_min:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{count} Gruppen-ID haben."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{count} Gruppen-IDs haben."
+        groups_value_not_valid_min:
+          one: "muss mindestens %{count} Gruppen-ID haben"
+          other: "muss mindestens %{count} Gruppen-IDs haben"
+        humanize_groups_value_not_valid_max:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Gruppen-ID haben."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Gruppen-IDs haben."
+        groups_value_not_valid_max:
+          one: "darf höchstens %{count} Gruppen-ID haben"
+          other: "darf höchstens %{count} Gruppen-IDs haben"
         humanize_not_valid_tags_value: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss ein Array mit gültigen Schlagwort-Namen sein."
         not_valid_tags_value: "muss ein Array mit gültigen Schlagwort-Namen sein"
-        humanize_tags_value_not_valid_min: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss mindestens %{min} Schlagwort-Namen haben."
-        tags_value_not_valid_min: "muss mindestens %{min} Schlagwort-Namen haben"
-        humanize_tags_value_not_valid_max: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' darf höchstens %{max} Schlagwort-Namen haben."
-        tags_value_not_valid_max: "darf höchstens %{max} Schlagwort-Namen haben"
+        humanize_tags_value_not_valid_min:
+          one: "Die Eigenschaft am JSON-Point '%{property_json_pointer}' muss mindestens %{count} Schlagwort-Namen haben."
+          other: "Die Eigenschaft am JSON-Point '%{property_json_pointer}' muss mindestens %{count} Schlagwort-Namen haben."
+        tags_value_not_valid_min:
+          one: "muss mindestens %{count} Schlagwort-Namen haben"
+          other: "muss mindestens %{count} Schlagwort-Namen haben"
+        humanize_tags_value_not_valid_max:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Schlagwort-Namen haben."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Schlagwort-Namen haben."
+        tags_value_not_valid_max:
+          one: "darf höchstens %{count} Schlagwort-Namen haben"
+          other: "darf höchstens %{count} Schlagwort-Namen haben"
         humanize_not_valid_upload_value: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss eine gültige Upload-ID sein."
         not_valid_upload_value: "muss eine gültige Upload-ID sein"
-        humanize_string_value_not_valid_min: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss mindestens %{min} Zeichen lang sein."
-        string_value_not_valid_min: "muss mindestens %{min} Zeichen lang sein"
-        humanize_string_value_not_valid_max: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' darf höchstens %{max} Zeichen lang sein."
-        string_value_not_valid_max: "darf höchstens %{max} Zeichen lang sein"
+        humanize_string_value_not_valid_min:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{count} Zeichen lang sein."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss mindestens %{count} Zeichen lang sein."
+        string_value_not_valid_min:
+          one: "muss mindestens %{count} Zeichen lang sein"
+          other: "muss mindestens %{count} Zeichen lang sein"
+        humanize_string_value_not_valid_max:
+          one: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Zeichen lang sein."
+          other: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' darf höchstens %{count} Zeichen lang sein."
+        string_value_not_valid_max:
+          one: "darf höchstens %{count} Zeichen lang sein"
+          other: "darf höchstens %{count} Zeichen lang sein"
         humanize_number_value_not_valid_min: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss größer oder gleich %{min}sein."
         number_value_not_valid_min: "muss größer als oder gleich %{min} sein."
         humanize_number_value_not_valid_max: "Die Eigenschaft am JSON-Zeiger '%{property_json_pointer}' muss kleiner oder gleich %{max}sein."
@@ -207,7 +251,9 @@ de:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "darf höchstens %{max} Zeichen lang sein; du hast %{length} eingegeben."
+      too_long_validation:
+        one: "darf höchstens %{count} Zeichen lang sein; du hast %{length} eingegeben."
+        other: "darf höchstens %{count} Zeichen lang sein; du hast %{length} eingegeben."
       invalid_boolean: "Ungültiger boolescher Wert."
       taken: "wird bereits verwendet"
       accepted: muss akzeptiert werden
@@ -321,7 +367,6 @@ de:
       one: "Du hast in den letzten 24 Stunden bereits %{count} Einladung verschickt, bitte warte %{time_left}, bevor du es erneut versuchst."
       other: "Du hast in den letzten 24 Stunden bereits %{count} Einladungen verschickt, bitte warte %{time_left}, bevor du es erneut versuchst."
     confirm_email: "<p>Du bist fast fertig! Wir haben eine Aktivierungs-E-Mail an deine E-Mail-Adresse geschickt. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn keine E-Mail ankommt, überprüfe bitte deinen Spam-Ordner.</p>"
-    cant_invite_to_group: "Du darfst keine Benutzer in die angegebene(n) Gruppe(n) einladen. Vergewissere dich, dass du der Eigentümer der Gruppe(n) bist, in die du einladen möchtest."
     disabled_errors:
       discourse_connect_enabled: "Einladungen sind deaktiviert, da DiscourseConnect aktiviert ist."
       invalid_access: "Du bist nicht berechtigt, die angeforderte Ressource anzuzeigen."
@@ -440,7 +485,6 @@ de:
   pm_reached_recipients_limit: "Entschuldige, du kannst nicht mehr als %{recipients_limit} Empfänger in einer Nachricht haben."
   removed_direct_reply_full_quotes: "Automatisch entferntes Zitat des gesamten vorherigen Beitrags."
   watched_words_auto_tag: "Thema automatisch mit Schlagwort versehen"
-  secure_upload_not_allowed_in_public_topic: "Entschuldige, die folgenden sicheren Uploads können nicht in einem öffentlichen Thema verwendet werden: %{upload_filenames}."
   create_pm_on_existing_topic: "Entschuldige, du kannst keine private Nachricht zu einem bestehenden Thema erstellen."
   slow_mode_enabled: "Dieses Thema befindet sich im langsamen Modus."
   just_posted_that: "ist einer vor Kurzem von dir geschriebenen Nachricht zu ähnlich"
@@ -448,6 +492,7 @@ de:
   is_invalid: "scheint unklar zu sein, ist das ein ganzer Satz?"
   next_page: "nächste Seite →"
   prev_page: "← vorherige Seite"
+  show_post_in_topic: "Beitrag im Thema anzeigen"
   page_num: "Seite %{num}"
   crawler_content_hidden: "HTML-Inhalte wurden ausgelassen, weil du eingeloggt bist oder ein modernes Mobilgerät verwendest."
   home_title: "Startseite"
@@ -584,7 +629,9 @@ de:
 
       Es ist für alle einfacher, Themen zu lesen, die wenige umfassende Antworten statt viele kleine und einzelne Antworten haben.
     dominating_topic: Du hast in diesem Thema schon eine Menge gepostet! Gib doch auch anderen die Möglichkeit, hier zu antworten und miteinander zu diskutieren.
-    get_a_room: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
+    get_a_room:
+      one: Du hast @%{reply_username} einmal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
+      other: Du hast @%{reply_username} %{count} Mal geantwortet. Wusstest du, dass du der Person stattdessen eine persönliche Nachricht schicken kannst?
     dont_feed_the_trolls: Dieser Beitrag wurde bereits für die Moderation markiert. Bist du sicher, dass du darauf antworten möchtest? Antworten auf negative Inhalte ermutigen eher zu noch mehr negativem Verhalten.
     too_many_replies: |
       ### Du hast das Antwort-Limit für dieses Thema erreicht
@@ -1195,6 +1242,15 @@ de:
         user_api: "Benutzer-API"
       yaxis: "Tag"
       description: "API-Anfragen für reguläre API-Schlüssel und Benutzer-API-Schlüssel."
+    consolidated_page_views_browser_detection:
+      title: "Konsolidierte Seitenaufrufe mit Browser-Erkennung (experimentell)"
+      xaxis:
+        page_view_anon_browser: "Anonymer Browser"
+        page_view_logged_in_browser: "Eingeloggter Browser"
+        page_view_crawler: "Bekannter Crawler"
+        page_view_other: "Andere Seitenaufrufe"
+      yaxis: "Tag"
+      description: "Seitenaufrufe für eingeloggte Benutzer, anonyme Benutzer, bekannte Crawler und andere. Dieser experimentelle Bericht stellt sicher, dass eingeloggte/anonyme Anfragen von echten Browsern kommen, bevor sie gezählt werden."
     dau_by_mau:
       title: "TAB/MAB"
       xaxis: "Tag"
@@ -1354,6 +1410,16 @@ de:
       xaxis: "Tag"
       yaxis: "Anonyme Seitenaufrufe (mobil)"
       description: "Anzahl neuer Seitenaufrufe von nicht angemeldeten Besuchern auf mobilen Endgeräten."
+    page_view_anon_browser_reqs:
+      title: "Anonyme Browser-Seitenaufrufe"
+      xaxis: "Tag"
+      yaxis: "Anonyme Browser-Seitenaufrufe"
+      description: "Anzahl der Seitenaufrufe durch anonyme Besucher mit echten Browsern."
+    page_view_logged_in_browser_reqs:
+      title: "Eingeloggte Browser-Seitenaufrufe"
+      xaxis: "Tag"
+      yaxis: "Eingeloggte Browser-Seitenaufrufe"
+      description: "Anzahl der Seitenaufrufe von eingeloggten Besuchern, die echte Browser verwenden."
     http_background_reqs:
       title: "Hintergrund"
       xaxis: "Tag"
@@ -1595,7 +1661,7 @@ de:
     summarization_strategy: "Zusätzliche Möglichkeiten, von Plug-ins registrierte Inhalte zusammenzufassen"
     custom_summarization_allowed_groups: "Gruppen, die Inhalte mit `summarization_strategy` zusammenfassen dürfen."
     enable_personal_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Benutzern mit Vertrauensstufe 1 erlauben (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Team-Mitglieder können immer Nachrichten senden."
-    personal_message_enabled_groups: "Benutzern innerhalb dieser Gruppen erlauben, Nachrichten zu erstellen und auf Nachrichten zu antworten. Vertrauensstufengruppen umfassen alle Vertrauensstufen über dieser Nummer, zum Beispiel erlaubt die Wahl von trust_level_1 auch Benutzern mit trust_level_2, 3, 4 private Nachrichten zu senden. Team-Mitglieder können immer Nachrichten senden."
+    personal_message_enabled_groups: "Erlaube den Benutzern in diesen Gruppen, persönliche Nachrichten zu ERSTELLEN. WICHTIG: 1) Alle Benutzer können auf Nachrichten ANTWORTEN. 2) Administratoren und Moderatoren können Nachrichten an jeden Benutzer ERSTELLEN. 3) Vertrauensstufengruppen beinhalten höhere Stufen; wähle Vertrauensstufe_1, um VS1, VS2, VS3, VS4 zuzulassen, nicht aber VS0. 4) Gruppeninteraktionseinstellungen überschreiben diese Einstellung für Nachrichten an bestimmte Gruppen."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
     enable_chunked_encoding: "Aktiviere „chunked encoding“-Antworten durch den Server. Diese Funktion ist mit den meisten Set-ups kompatibel, aber einige Proxys können puffern, wodurch die Antworten verzögert werden"
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze dies auf Origin-Pull), z. B. http://origin.site.com"
@@ -1757,6 +1823,9 @@ de:
     discord_client_id: 'Discord-Client-ID (Hast du noch keine? Besuche <a href="https://discordapp.com/developers/applications/me">das Discord-Entwickler-Portal</a>)'
     discord_secret: "Geheimer Discord-Client-Schlüssel Wird für die Authentifizierung und Aktivierung von Discord-bezogenen Funktionen auf der Website verwendet, z. B. Discord-Logins. Dieser geheime Schlüssel gehört zu der Discord-Anwendung, die für die Website erstellt wurde, und ist für die sichere Kommunikation mit der Discord-API erforderlich."
     discord_trusted_guilds: 'Das Anmelden per Discord nur Mitgliedern dieser Discord-Gilden gestatten. Verwende die numerische ID der Gilde. Lies die Anleitung <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">hier</a>, um mehr zu erfahren. Leer lassen, um jede Gilde zuzulassen.'
+    enable_linkedin_oidc_logins: "Aktiviere die LinkedIn-Authentifizierung, erfordert linkedin_client_id und linkedin_client_secret."
+    linkedin_oidc_client_id: "Client-ID für die LinkedIn-Authentifizierung, registriert unter <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
+    linkedin_oidc_client_secret: "Client-Geheimnis für LinkedIn-Authentifizierung, registriert auf <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
     enable_backups: "Erlaube Administratoren, Backups des Forums zu erstellen"
     allow_restore: "Wiederherstellung zulassen, die ALLE Website-Daten ersetzen kann! Lasse dies deaktiviert, es sei denn, du möchtest ein Backup wiederherstellen"
     maximum_backups: "Die maximale Anzahl an Backups, die gespeichert werden. Ältere Backups werden automatisch gelöscht."
@@ -1871,31 +1940,31 @@ de:
     edit_all_topic_groups: "Benutzern in dieser Gruppe erlauben, die Thementitel, -schlagwörter und -kategorien anderer Benutzer zu bearbeiten"
     edit_all_post_groups: "Benutzern in dieser Gruppe erlauben, die Beiträge anderer Nutzer zu bearbeiten"
     min_trust_to_create_topic: "Minimale Vertrauensstufe, um ein neues Thema zu erstellen."
-    create_topic_allowed_groups: "Gruppen, denen es erlaubt ist, neue Themen zu erstellen."
+    create_topic_allowed_groups: "Gruppen, denen es erlaubt ist, neue Themen zu erstellen. Administratoren und Moderatoren können immer Themen erstellen."
     allow_flagging_staff: "Wenn aktiviert, können Benutzer auch Beiträge von Team-Konten melden."
     min_trust_to_edit_wiki_post: "Minimale Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
-    edit_wiki_post_allowed_groups: "Gruppen, die als Wiki markierte Beiträge bearbeiten dürfen."
+    edit_wiki_post_allowed_groups: "Gruppen, die als Wiki markierte Beiträge bearbeiten dürfen. Administratoren und Moderatoren können als Wiki markierte Beiträge immer bearbeiten."
     min_trust_to_edit_post: "Minimale Vertrauensstufe, um Beiträge bearbeiten zu können."
-    edit_post_allowed_groups: "Gruppen, die Beiträge bearbeiten dürfen."
+    edit_post_allowed_groups: "Gruppen, die Beiträge bearbeiten dürfen. Administratoren und Moderatoren können Beiträge jederzeit bearbeiten."
     min_trust_to_allow_self_wiki: "Minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki-Eintrag zu erstellen."
-    self_wiki_allowed_groups: "Gruppen, in denen Benutzer ihr eigenes Posting-Wiki erstellen können."
+    self_wiki_allowed_groups: "Gruppen, deren Mitglieder ihren Beitrag als Wiki markieren können. Administratoren und Moderatoren können ihre Beiträge immer als Wiki markieren."
     min_trust_to_send_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Die Mindestvertrauensstufe, die zum Erstellen neuer persönlicher Nachrichten erforderlich ist."
     min_trust_to_send_email_messages: "Minimale Vertrauensstufe, um persönliche Nachrichten per E-Mail zu versenden."
-    send_email_messages_allowed_groups: "Gruppen, denen es erlaubt ist, persönliche Nachrichten per E-Mail zu versenden."
+    send_email_messages_allowed_groups: "Gruppen, denen es erlaubt ist, persönliche Nachrichten per E-Mail zu senden. Administratoren und Moderatoren können immer persönliche Nachrichten per E-Mail versenden."
     min_trust_to_flag_posts: "Minimale Vertrauensstufe, um Beiträge melden zu können"
-    flag_post_allowed_groups: "Gruppen, die Beiträge melden dürfen."
+    flag_post_allowed_groups: "Gruppen, die Beiträge melden dürfen. Administratoren und Moderatoren können immer Beiträge melden."
     min_trust_to_post_links: "Minimale Vertrauensstufe, um Links in Beiträge einzufügen"
-    post_links_allowed_groups: "Gruppen, die Links in Beiträge einfügen dürfen. Admins und Moderatoren dürfen immer Links posten."
+    post_links_allowed_groups: "Gruppen, die Links in Beiträge einfügen dürfen. Administratoren und Moderatoren dürfen immer Links posten."
     min_trust_to_post_embedded_media: "Minimale Vertrauensstufe, die zum Einbetten von Medienelementen in einen Beitrag erforderlich ist"
-    embedded_media_post_allowed_groups: "Die Benutzer in diesen Gruppen dürfen Medienelemente in einen Beitrag einbetten"
+    embedded_media_post_allowed_groups: "Die Benutzer in diesen Gruppen dürfen Medienelemente in einen Beitrag einbetten. Administratoren und Moderatoren können immer Medienelemente einbetten."
     min_trust_level_to_allow_profile_background: "Minimale Vertrauensstufe, die zum Hochladen eines Profilhintergrunds erforderlich ist"
-    profile_background_allowed_groups: "Gruppen, die einen Profilhintergrund hochladen dürfen."
+    profile_background_allowed_groups: "Gruppen, die einen Profilhintergrund hochladen dürfen. Administratoren und Moderatoren können immer einen Profilhintergrund hochladen."
     min_trust_level_to_allow_user_card_background: "Minimale Vertrauensstufe, die zum Hochladen eines Benutzerkartenhintergrunds erforderlich ist"
-    user_card_background_allowed_groups: "Gruppen, die einen Benutzerkartenhintergrund hochladen dürfen."
+    user_card_background_allowed_groups: "Gruppen, die einen Benutzerkartenhintergrund hochladen dürfen. Administratoren und Moderatoren können immer einen Hintergrund für die Benutzerkarte hochladen."
     min_trust_level_to_allow_invite: "Minimale Vertrauensstufe, die zum Einladen von Benutzern erforderlich ist"
-    invite_allowed_groups: "Gruppen, die Benutzer einladen dürfen."
+    invite_allowed_groups: "Gruppen, die Benutzer einladen dürfen. Administratoren und Moderatoren können immer Benutzer einladen."
     min_trust_level_to_allow_ignore: "Minimale Vertrauensstufe, um Benutzer ignorieren zu können"
-    ignore_allowed_groups: "Gruppen, die andere Benutzer ignorieren dürfen."
+    ignore_allowed_groups: "Gruppen, denen es erlaubt ist, andere Benutzer zu ignorieren. Administratoren und Moderatoren können andere Nutzer immer ignorieren."
     allowed_link_domains: "Domains, auf die Benutzer verlinken dürfen, auch wenn sie nicht die entsprechende Vertrauensstufe haben, um Links zu setzen."
     newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
     newuser_max_embedded_media: "Maximale Anzahl der eingebetteten Medienelemente, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -1908,7 +1977,7 @@ de:
     here_mention: "Name, der für eine Erwähnung per @ verwendet wird, damit privilegierte Benutzer bis zu „max_here_mentioned“ Personen benachrichtigen können, die an dem Thema teilnehmen. Darf kein bestehender Benutzername sein."
     max_here_mentioned: "Maximale Anzahl der erwähnten Personen per @here."
     min_trust_level_for_here_mention: "Die Mindestvertrauensstufe, die erforderlich ist, um @here zu erwähnen."
-    here_mention_allowed_groups: "Gruppen, die @here erwähnen dürfen."
+    here_mention_allowed_groups: "Gruppen, die @here erwähnen dürfen. Administratoren und Moderatoren können @here immer erwähnen."
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
     email_time_window_mins: "Warte (n) Minuten, bevor eine E-Mail-Benachrichtigung geschickt wird, um Benutzern Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
     personal_email_time_window_seconds: "Warte (n) Sekunden, bevor E-Mail-Benachrichtigungen zu persönlichen Nachrichten verschickt werden, um Benutzern die Gelegenheit zu geben, ihre Nachrichten abschließend bearbeiten zu können."
@@ -1976,7 +2045,7 @@ de:
     high_trust_flaggers_auto_hide_posts: "Beiträge von neuen Benutzern werden automatisch ausgeblendet, nachdem sie von einem Benutzer mit VS3+ als Spam gemeldet wurden"
     cooldown_hours_until_reflag: "Wie lange Benutzer warten müssen, bevor sie einen Beitrag erneut melden können"
     slow_mode_prevents_editing: "Verhindert der langsame Modus die Bearbeitung nach editing_grace_period?"
-    reply_by_email_enabled: "Aktiviere die Funktion, die es Benutzern ermöglicht, direkt per E-Mail auf Themen zu antworten, anstatt sich auf der Website anmelden zu müssen. Weitere Informationen findest du unter <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>im Leitfaden auf Meta</a> ."
+    reply_by_email_enabled: "Aktiviere die Funktion, die es Benutzern ermöglicht, direkt per E-Mail auf Themen zu antworten, anstatt sich auf der Website anmelden zu müssen. Weitere Informationen findest du <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>im Leitfaden auf Meta</a> ."
     reply_by_email_address: "Vorlage für Antwort per E-Mail (eingehende E-Mail-Adresse), zum Beispiel: %%{reply_key}@reply.example.com oder replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste der alternativen Vorlagen für die Beantwortung per E-Mail (eingehende E-Mail-Adressen). Beispiel: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Verwende HTML statt Text für eingehende E-Mails."
@@ -2031,7 +2100,7 @@ de:
     log_mail_processing_failures: "Protokolliere alle Fehler bei der E-Mail-Verarbeitung unter <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Benutzern erlauben, neue Themen per E-Mail zu posten. Nachdem du diese Einstellung aktiviert hast, kannst du eingehende E-Mail-Adressen für Gruppen und Kategorien konfigurieren."
     email_in_min_trust: "Minimale Vertrauensstufe, um neue Themen per E-Mail erstellen zu können."
-    email_in_allowed_groups: "Gruppen, denen es erlaubt ist, neue Themen per E-Mail zu posten."
+    email_in_allowed_groups: "Gruppen, denen es erlaubt ist, neue Themen per E-Mail zu posten. Administratoren und Moderatoren können immer neue Themen per E-Mail posten."
     email_in_authserv_id: "Die Kennung des Dienstes, der Authentifizierungsprüfungen für eingehende E-Mails durchführt. Siehe <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> für Hinweise zur Konfiguration."
     email_in_spam_header: "Wählt den spezifischen E-Mail-Header aus, der zur Identifizierung von Spam verwendet wird. Diese Option kann X-Spam-Flag, X-Spam-Status oder X-SES-Spam-Verdict sein, und die E-Mail wird anhand des Werts des Headers als Spam gekennzeichnet. Wenn die gewählte Einstellung zum Beispiel X-Spam-Flag ist, wird eine E-Mail mit dem Header-Wert YES als Spam eingestuft."
     enable_imap: "Aktiviere IMAP für die Synchronisation von Gruppen-Nachrichten."
@@ -2078,7 +2147,7 @@ de:
     enable_category_group_moderation: "Gruppen erlauben, Inhalte in bestimmten Kategorien zu moderieren"
     group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf den Namen der ersten Gruppe in der privaten Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Betreffformat für Standard-E-Mails anpassen</a>"
     allow_anonymous_posting: "Aktiviere die Option, dass Benutzer beim Posten in den anonymen Modus wechseln können. Wenn diese Option aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website erstellen. Siehe auch `allow_anonymous_likes`."
-    allow_anonymous_likes: "Aktiviere diese Einstellung, um Benutzern, die deine Seite anonym besuchen, zu erlauben, Beiträge zu mögen. Wenn diese Einstellung aktiviert ist, kann sie das Engagement von Besuchern, die nicht angemeldet sind, fördern, da sie mit den Inhalten interagieren können. Siehe auch `allow_anonymous_posting`."
+    allow_anonymous_likes: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website liken. Siehe auch `allow_anonymous_posting`."
     anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
     anonymous_posting_allowed_groups: "Gruppen, die anonyme Beiträge zulassen dürfen"
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
@@ -2113,6 +2182,7 @@ de:
     disable_tags_edit_notifications: "Deaktiviere Benachrichtigungen für Änderungen an Themenschlagwörtern. Hierzu zählen auch Themen, die „veröffentlicht“ sind (z. B. geteilte Entwürfe)."
     notification_consolidation_threshold: "Anzahl von „Gefällt mir“- oder Mitgliedschaftsanfragen-Benachrichtigungen, bevor die Benachrichtigungen zu einer einzelnen zusammengefasst werden. Zum Deaktivieren auf 0 setzen."
     likes_notification_consolidation_window_mins: "Zeitfenster in Minuten, in dem mehrere „Gefällt mir“-Benachrichtigungen zu einer einzelnen Benachrichtigung zusammengefasst werden, sobald der Schwellenwert erreicht wird. Der Schwellenwert kann mittels `SiteSetting.notification_consolidation_threshold` eingestellt werden."
+    linked_notification_consolidation_window_mins: "Dauer in Minuten, in der verknüpfte Benachrichtigungen zu einer einzigen Benachrichtigung zusammengefasst werden, sobald der Schwellenwert erreicht ist. Der Schwellenwert kann über `SiteSetting.notification_consolidation_threshold` konfiguriert werden."
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     read_time_word_count: "Wörter pro Minute für die Berechnung der geschätzten Lesezeit."
     topic_page_title_includes_category: "<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>„title“-Tag</a> der Themen-Seite enthält einen Kategorienamen."
@@ -2142,6 +2212,7 @@ de:
     embed_set_canonical_url: "Lege die kanonische URL für eingebettete Themen auf die URL des eingebetteten Inhalts fest."
     embed_truncate: "Verkürze den Inhalt von Beiträgen, die von externen Quellen eingebettet werden. Diese Einstellung sorgt dafür, dass nur der erste Teil des Inhalts angezeigt wird, wenn ein Beitrag von einer externen URL auf deiner Seite eingebettet wird. Wenn du es vorziehst, den gesamten Inhalt der externen Beiträge anzuzeigen, kannst du diese Einstellung deaktivieren."
     embed_unlisted: "Eingebettete Themen werden nicht aufgelistet, bis ein Benutzer antwortet."
+    import_embed_unlisted: "Importierte eingebettete Themen werden aus der Liste genommen, bis ein Benutzer antwortet (auch wenn die Einstellung „Nicht aufgelistete Seiten einbetten“ deaktiviert ist)."
     embed_support_markdown: "Markdown-Formatierung für eingebettete Beiträge unterstützen."
     allowed_embed_selectors: "Eine kommaseparierte Liste von CSS-Elementen, die in Einbettungen erlaubt sind."
     allowed_href_schemes: "URI-Schemas, die in Links zusätzlich zu http und https erlaubt sind."
@@ -2150,7 +2221,7 @@ de:
     notify_about_reviewable_item_after: "Falls es Elemente zur Überprüfung gibt, die nach so vielen Stunden noch nicht bearbeitet wurden, eine persönliche Nachricht an die Moderatoren senden. Zum Deaktivieren auf 0 setzen."
     delete_drafts_older_than_n_days: "Lösche Entwürfe, die seit mehr als (n) Tagen nicht mehr geändert wurden."
     delete_merged_stub_topics_after_days: "Anzahl der abzuwartenden Tage, bevor vollständig zusammengeführte Stub-Themen automatisch gelöscht werden. Auf 0 setzen, um Stub-Themen nie zu löschen."
-    bootstrap_mode_min_users: "Mindestanzahl der Benutzer, die erforderlich ist, um den Starthilfe-Modus zu deaktivieren (zum Deaktivieren auf 0 setzen, kann bis zu 24 Stunden dauern)"
+    bootstrap_mode_min_users: "Mindestanzahl der Benutzer, die erforderlich ist, um den Starthilfe-Modus zu deaktivieren und die Schaltfläche \"Erste Schritte\" zu entfernen (zum Deaktivieren auf 0 setzen, kann bis zu 24 Stunden dauern)"
     prevent_anons_from_downloading_files: "Verhindern, dass anonyme Benutzer Anhänge herunterladen können."
     secure_uploads: 'Beschränkt den Zugriff auf ALLE Uploads (Bilder, Videos, Audio, Text, PDFs, ZIPs und andere). Wenn „Anmeldung erforderlich“ aktiviert ist, können nur angemeldete Benutzer auf Uploads zugreifen. Andernfalls ist der Zugriff nur für Medienuploads in privaten Nachrichten und privaten Kategorien beschränkt. WARNUNG: Diese Einstellung ist komplex und erfordert ein umfassendes administratives Verständnis. Siehe <a target="_blank" href="https://meta.discourse.org/t/-/140017">das Thema „Sichere Uploads“ auf Meta</a> für Details.'
     secure_uploads_allow_embed_images_in_emails: "Ermöglicht das Einbetten sicherer Bilder, die normalerweise in E-Mails geschwärzt werden würden, wenn ihre Größe kleiner ist als die Einstellung „secure uploads max email embed image size kb“."
@@ -2164,9 +2235,9 @@ de:
     emoji_deny_list: "Diese Emoji können nicht in Menüs oder Shortcodes verwendet werden."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzers oder Anwärters, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge, die von Benutzern unterhalb dieser Vertrauensstufe erstellt werden, müssen genehmigt werden"
-    approve_unless_allowed_groups: "Beiträge von Benutzern, die nicht in diesen Gruppen sind, müssen genehmigt werden"
+    approve_unless_allowed_groups: "Beiträge, die von Benutzern erstellt werden, die nicht zu diesen Gruppen gehören, müssen genehmigt werden. Beiträge, die von Administratoren und Moderatoren erstellt werden, werden immer genehmigt."
     approve_new_topics_unless_trust_level: "Neue Themen, die von Benutzern unterhalb dieser Vertrauensstufe erstellt werden, müssen genehmigt werden"
-    approve_new_topics_unless_allowed_groups: "Neue Themen, die von Benutzern erstellt werden, die nicht in diesen Gruppen sind, müssen genehmigt werden"
+    approve_new_topics_unless_allowed_groups: "Neue Themen, die von Benutzern erstellt werden, die nicht zu diesen Gruppen gehören, müssen genehmigt werden. Themen, die von Administratoren und Moderatoren erstellt werden, werden immer genehmigt."
     approve_unless_staged: "Neue Themen und Beiträge, die von vorbereiteten Benutzern erstellt werden, müssen genehmigt werden"
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl an Stunden auf ihre Überprüfung warten, sende eine Benachrichtigung an alle Moderatoren. Setze die Einstellung auf 0, um diese Benachrichtigungen zu deaktivieren."
     reviewable_revision_reasons: "Liste der Gründe, die ausgewählt werden können, wenn ein überprüfbarer Beitrag in der Warteschlange mit einer Überarbeitung abgelehnt wird. „Sonstiges“ ist auch immer verfügbar, damit ein benutzerdefinierter Grund eingegeben werden kann."
@@ -2185,7 +2256,7 @@ de:
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
     returning_users_days: "Wie viele Tage vergehen sollten, bevor ein Benutzer als wiederkehrend betrachtet wird."
     review_media_unless_trust_level: "Das Team wird Beiträge von Benutzern mit niedrigeren Vertrauensstufen überprüfen, wenn sie eingebettete Medien enthalten."
-    skip_review_media_groups: "Wenn Benutzer keiner dieser Gruppen angehören und der Beitrag eingebettete Medien enthält, werden ihre Beiträge zur Überprüfung ans Team gesendet."
+    skip_review_media_groups: "Beiträge von Benutzern, die keiner dieser Gruppen angehören, werden zur Überprüfung an das Team weitergeleitet, wenn der Beitrag eingebettete Medien enthält. Beiträge, die von Administratoren und Moderatoren erstellt werden, sind immer erlaubt."
     blur_tl0_flagged_posts_media: "Bilder von gemeldeten Beiträgen mit Unschärfe versehen, um potenzielle NSFW-Inhalte auszublenden."
     enable_page_publishing: "Erlaube Team-Mitgliedern, Themen unter neuen URLs mit eigenem Styling zu veröffentlichen."
     show_published_pages_login_required: "Anonyme Benutzer können veröffentlichte Seiten sehen, auch wenn eine Anmeldung erforderlich ist."
@@ -2235,15 +2306,16 @@ de:
       Vertrauensstufe, die für die Generierung von Benutzer-API-Schlüsseln erforderlich ist.<br>
       <b>WARNUNG</b>: Die Änderung der Vertrauensstufe verhindert, dass sich Benutzer mit einer niedrigeren Vertrauensstufe über Discourse Hub anmelden können.
     user_api_key_allowed_groups: |
-      Gruppenmitgliedschaft die für die Generierung von Benutzer-API-Schlüsseln erforderlich ist.<br>
-      <b>WARNUNG</b>: Die Änderung der Vertrauensstufe verhindert, dass sich Benutzer mit einer niedrigeren Vertrauensstufe über Discourse Hub anmelden können.
+      Die Gruppenzugehörigkeit ist für die Generierung von Benutzer-API-Schlüsseln erforderlich.<br>
+      <b>WARNUNG</b>: Wenn du die Vertrauensstufe änderst, können sich Benutzer mit einer niedrigeren Vertrauensstufe nicht mehr über Discourse Hub anmelden.<br>
+       Administratoren und Moderatoren können immer Benutzer-API-Schlüssel erstellen.
     allowed_user_api_auth_redirects: "Zulässige URL für Authentifizierungs-Umleitung für Benutzer-API-Schlüssel. Das Platzhaltersymbol * kann verwendet werden, um jeden Bestandteil der Adresse zu ersetzen (z. B. www.example.com/*)."
     allowed_user_api_push_urls: "Erlaubte URLs für Server-Push zur Benutzer-API"
     revoke_user_api_keys_unused_days: "Anzahl der Tage seit der letzten Verwendung eines Benutzer-API-Schlüssels, bevor er automatisch widerrufen wird (0 für nie)"
     revoke_user_api_keys_maxlife_days: "Anzahl der Tage, bevor ein Benutzer-API-Schlüssel automatisch widerrufen wird (0 für nie)"
     tagging_enabled: "Schlagwörter für Themen aktivieren? Weitere Informationen findest du in der <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Admin-Anleitung zu Schlagwörtern auf Meta</a> ."
     min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
-    create_tag_allowed_groups: "Gruppen, die Schlagwörter erstellen dürfen."
+    create_tag_allowed_groups: "Gruppen, die Schlagwörter erstellen dürfen. Administratoren und Moderatoren können immer Schlagwörter erstellen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
     enable_max_tags_per_email_subject: "max_tags_per_email_subject beim Erstellen des Betreffs einer E-Mail verwenden"
     max_tags_per_email_subject: "Die maximale Anzahl von Schlagwörtern, die im Betreff einer E-Mail enthalten sein können"
@@ -2253,9 +2325,9 @@ de:
     tags_sort_alphabetically: "Zeige Schlagwörter in alphabetischer Reihenfolge. Standardmäßig werden sie nach Beliebtheit sortiert."
     tags_listed_by_group: "Zeige Schlagwörter auf der <a href='%{base_path}/tags' target='_blank'>Schlagwort-Seite</a> geordnet nach Schlagwortgruppe an."
     tag_style: "Lege das visuelle Erscheinungsbild der Schlagwort-Abzeichen auf der Website fest. Mit dieser Einstellung kannst du die visuelle Darstellung der Tags in allen Bereichen der Website anpassen und so die Konsistenz des Layouts und die Zugänglichkeit für die Benutzer verbessern."
-    pm_tags_allowed_for_groups: "Mitgliedern der einbezogenen Gruppe(n) erlauben, jede persönliche Nachricht zu markieren"
+    pm_tags_allowed_for_groups: "Mitgliedern der einbezogenen Gruppen erlauben, jede persönliche Nachricht zu markieren"
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
-    tag_topic_allowed_groups: "Gruppen, die Themen mit Schlüsselwörtern versehen dürfen."
+    tag_topic_allowed_groups: "Gruppen, die Schlagwörter zu Themen hinzufügen dürfen. Administratoren und Moderatoren können immer Schlagwörter zu Themen hinzufügen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genauso im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
@@ -2300,10 +2372,12 @@ de:
     enable_custom_sidebar_sections: "EXPERIMENTELL: Benutzerdefinierte Seitenleistenabschnitte aktivieren"
     experimental_topics_filter: "EXPERIMENTELL: Experimentelle Filterroute für Themen unter /filter aktivieren"
     enable_experimental_lightbox: "EXPERIMENTELL: Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
-    experimental_glimmer_header_groups: "EXPERIMENTELL: Rendere die Kopfzeile der Seite als Glimmer-Komponenten."
+    enable_experimental_bookmark_redesign_groups: "EXPERIMENTELL: Zeige ein Schnellzugriffsmenü für Lesezeichen in Beiträgen und ein neu gestaltetes Modal"
+    glimmer_header_mode: "Legt fest, ob die neue \"Glimmer\"-Header-Implementierung verwendet wird. Der Standardwert ist \"auto\", sodass automatisch aktiviert wird, sobald alle deine Themes und Plugins bereit sind. https://meta.discourse.org/t/296544"
     experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     admin_sidebar_enabled_groups: "EXPERIMENTELL: Aktiviere die Seitenleistennavigation für die Administrator-Benutzeroberfläche für die angegebenen Gruppen, wodurch die Administrator-Navigationsschaltflächen der obersten Ebene ersetzt werden."
     lazy_load_categories_groups: "EXPERIMENTELL: Lazy-Load-Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
+    experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTELL: Aktiviere das neue Drop-down für Massenoperationen."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
@@ -2321,8 +2395,12 @@ de:
       must_include_latest: "Das Menü oben muss die Registerkarte „Aktuell“ enthalten."
       invalid_string: "Ungültiger Wert."
       invalid_string_min_max: "Anzahl der Zeichen muss zwischen %{min} und %{max} liegen."
-      invalid_string_min: "Muss mindestens %{min} Zeichen lang sein."
-      invalid_string_max: "Darf nicht länger als %{max} Zeichen sein."
+      invalid_string_min:
+        one: "Muss mindestens %{count} Zeichen lang sein."
+        other: "Muss mindestens %{count} Zeichen lang sein."
+      invalid_string_max:
+        one: "Darf nicht länger als %{count} Zeichen sein."
+        other: "Darf nicht länger als %{count} Zeichen sein."
       invalid_json: "Ungültiges JSON."
       invalid_reply_by_email_address: "Wert muss „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
       invalid_alternative_reply_by_email_addresses: "Alle Werte müssen „%{reply_key}“ enthalten und sich von der Benachrichtigungs-E-Mail unterscheiden."
@@ -2355,9 +2433,12 @@ de:
         regex_invalid: "Der reguläre Ausdruck ist ungültig: %{error}"
         leading_trailing_slash: "Der reguläre Ausdruck darf nicht mit einem Schrägstrich beginnen und enden."
       unicode_usernames_avatars: "Die internen System-Avatare unterstützen keine Unicode-Benutzernamen."
-      list_value_count: "Die Liste muss genau %{count} Werte enthalten."
+      list_value_count:
+        one: "Die Liste muss genau %{count} Wert enthalten."
+        other: "Die Liste muss genau %{count} Werte enthalten."
       markdown_linkify_tlds: "Du kannst den Wert „*“ nicht angeben."
       google_oauth2_hd_groups: "Vor Aktivierung dieser Einstellung müssen zuerst alle „google oauth2 hd“-Einstellungen festgelegt werden."
+      linkedin_oidc_credentials: "Du musst die LinkedIn OIDC-Anmeldedaten (\"linkedin_oidc_client_id\" und \"linkedin_oidc_client_secret\") konfigurieren, bevor du diese Einstellung aktivierst."
       search_tokenize_chinese_enabled: "Du musst „search_tokenize_chinese“ deaktivieren, bevor du diese Einstellung aktivierst."
       search_tokenize_japanese_enabled: "Du musst „search_tokenize_japanese“ deaktivieren, bevor du diese Einstellung aktivierst."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Du kannst DiscourseConnect nicht aktivieren, wenn 2FA erzwungen wird."
@@ -2389,6 +2470,14 @@ de:
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
       profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
+      clean_up_inactive_users_after_days:
+      - "deaktiviert"
+      - "inaktiv"
+      - "nicht aktiviert"
+      purge_unactivated_users_grace_period_days:
+      - "deaktiviert"
+      - "inaktiv"
+      - "nicht aktiviert"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2578,6 +2667,7 @@ de:
         updating_site_settings: "Website-Einstellungen aktualisieren …"
         updating_user_stats: "Benutzerstatistik aktualisieren …"
         merging_user_attributes: "Zusammenführen von Benutzerattributen …"
+        merging_user_associated_accounts: "Zusammenführen von zugehörigen Konten…"
         updating_user_ids: "Benutzer-IDs aktualisieren …"
         deleting_source_user: "Quellbenutzer löschen …"
   user:
@@ -2590,8 +2680,12 @@ de:
     new_user_typed_too_fast: "Neuer Benutzer hat zu schnell getippt"
     content_matches_auto_silence_regex: "Inhalt stimmt mit regulärem Ausdruck für Auto-Stummschaltung überein"
     username:
-      short: "muss mindestens %{min} Zeichen lang sein"
-      long: "darf nicht länger als %{max} Zeichen sein"
+      short:
+        one: "muss mindestens %{count} Zeichen lang sein"
+        other: "muss mindestens %{count} Zeichen lang sein"
+      long:
+        one: "darf nicht länger als %{count} Zeichen sein"
+        other: "darf nicht länger als %{count} Zeichen sein"
       too_long: "ist zu lang"
       characters: "darf nur Zahlen, Buchstaben, Bindestriche, Punkte und Unterstriche enthalten"
       unique: "muss eindeutig sein"
@@ -2757,7 +2851,7 @@ de:
       Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
 
-      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)** durchführen
+      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)** durchführen
 
       - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
 
@@ -2771,7 +2865,7 @@ de:
       Deine Version: %{installed_version}
       Neue Version: **%{new_version}**
 
-      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Upgrade](%{base_url}/admin/upgrade)** durchführen
+      - Aktualisierung mit dem einfachen **[Ein-Klick-Browser-Update](%{base_url}/admin/update)** durchführen
 
       - Sieh dir die Neuerungen in den [Versionshinweisen](https://meta.discourse.org/tag/release-notes) an oder wirf einen Blick auf alle [Änderungen bei GitHub](https://github.com/discourse/discourse/commits/main)
 
@@ -4089,7 +4183,7 @@ de:
 
       Wenn du schlechtes Verhalten siehst, antworte nicht. Antworten fördert schlechtes Verhalten, indem es bestätigt wird, es verbraucht deine Energie und verschwendet die Zeit von allen. _Melde es einfach_. Wenn genügend Meldungen zusammenkommen, werden Maßnahmen ergriffen, entweder automatisch oder durch das Eingreifen eines Moderators.
 
-      Um unsere Community aufrechtzuerhalten, behalten sich Moderatoren das Recht vor, jeden Inhalten und jedes Benutzerkonto jederzeit aus irgendeinem Grund zu entfernen. Moderatoren sehen neue Beiträge in keiner Weise früher; die Moderatoren und die Betreiber der Seite übernehmen keine Verantwortung für Inhalte, die von der Community gepostet werden.
+      Um unsere Community aufrechtzuerhalten, behalten sich Moderatoren das Recht vor, jeden Inhalt und jedes Benutzerkonto jederzeit aus irgendeinem Grund zu entfernen. Moderatoren sehen neue Beiträge in keiner Weise früher; die Moderatoren und die Betreiber der Seite übernehmen keine Verantwortung für Inhalte, die von der Community gepostet werden.
 
       <a name="be-civil"></a>
 
@@ -4131,12 +4225,6 @@ de:
       ## [Betrieben von Euch](#power)
 
       Diese Seite wird von eurem [freundlichen Team](%{base_path}/about) und *euch*, der Community, betrieben. Wenn du weitere Fragen dazu hast, wie die Dinge hier funktionieren sollen, eröffne ein neues Thema in %{feedback_category} und lass es uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, das nicht mit einem Meta-Thema oder einer Meldung behandelt werden kann, kontaktiere uns über die [Team-Seite](%{base_path}/about).
-
-      <a name="tos"></a>
-
-      ## [Nutzungsbedingungen](#tos)
-
-      Ja, die rechtliche Seite ist langweilig, aber wir müssen uns selbst &ndash; und damit auch dich und deine Daten &ndash; vor unfreundlichen Leuten schützen. Wir haben [Nutzungsbedingungen](%{base_path}/tos), die deines (und unser) Verhalten und deine Rechte in Bezug auf Inhalte, Datenschutz und Gesetze beschreiben. Um diesen Dienst nutzen zu können, musst du dich mit unseren [Nutzungsbedingungen](%{base_path}/tos) einverstanden erklären.
   tos_topic:
     title: "Nutzungsbedingungen"
     body: |
@@ -4404,7 +4492,9 @@ de:
     mass_award:
       errors:
         invalid_csv: Wir haben einen Fehler in Zeile %{line_number} festgestellt. Bitte stelle sicher, dass die CSV-Datei eine E-Mail-Adresse pro Zeile enthält.
-        too_many_csv_entries: Zu viele Einträge in der CSV-Datei. Bitte gib eine CSV-Datei mit nicht mehr als %{count} Einträgen an.
+        too_many_csv_entries:
+          one: Zu viele Einträge in der CSV-Datei. Bitte stelle eine CSV-Datei mit nicht mehr als %{count} Eintrag bereit.
+          other: Zu viele Einträge in der CSV-Datei. Bitte stelle eine CSV-Datei mit nicht mehr als %{count} Einträgen bereit.
         badge_disabled: Bitte aktiviere zunächst das Abzeichen „%{badge_name}“.
         cant_grant_multiple_times: Das %{badge_name}-Abzeichen kann einem einzelnen Benutzer nicht mehrfach verliehen werden.
     editor:
@@ -4689,6 +4779,7 @@ de:
     limited_to_one_tag_from_group: "Die Schlagwörter %{tags} können nicht gleichzeitig verwendet werden. Bitte füge nur eines von ihnen ein."
     invalid_target_tag: "kann kein Synonym für ein Synonym sein"
     synonyms_exist: "ist nicht erlaubt, solange Synonyme existieren"
+    user_not_permitted: "Du darfst keine Themen mit Schlagwörtern versehen"
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
   finish_installation:
     congratulations: "Glückwunsch, du hast Discourse installiert!"

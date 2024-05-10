@@ -150,6 +150,27 @@ RSpec.describe TopicCreator do
         end
       end
 
+      context "with skip_validations option" do
+        it "allows the user to add tags even if they're not permitted" do
+          SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+          user.update!(trust_level: TrustLevel[1])
+          Group.user_trust_level_change!(user.id, user.trust_level)
+          topic =
+            TopicCreator.create(
+              user,
+              Guardian.new(user),
+              valid_attrs.merge(
+                title: "This is a valid title",
+                raw: "Somewhat lengthy body for my cool topic",
+                tags: [tag1.name, tag2.name, "brandnewtag434"],
+                skip_validations: true,
+              ),
+            )
+          expect(topic).to be_persisted
+          expect(topic.tags.pluck(:name)).to contain_exactly(tag1.name, tag2.name, "brandnewtag434")
+        end
+      end
+
       context "with staff-only tags" do
         before { create_staff_only_tags(["alpha"]) }
 

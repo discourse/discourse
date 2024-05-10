@@ -10,7 +10,7 @@ export default class BackToForum extends Component {
   @service sidebarState;
 
   get shouldDisplay() {
-    return this.sidebarState.currentPanel.key === ADMIN_PANEL;
+    return this.sidebarState.isCurrentPanel(ADMIN_PANEL);
   }
 
   get homepage() {

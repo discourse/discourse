@@ -1,5 +1,6 @@
 import $ from "jquery";
 import { h } from "virtual-dom";
+import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import {
   addApiImageWrapperButtonClickEvent,
   addComposerUploadHandler,
@@ -9,10 +10,10 @@ import {
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { headerButtonsDAG } from "discourse/components/glimmer-header";
-import { headerIconsDAG } from "discourse/components/glimmer-header/icons";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
+import { headerButtonsDAG } from "discourse/components/header";
+import { headerIconsDAG } from "discourse/components/header/icons";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import MountWidget, {
   addWidgetCleanCallback,
@@ -141,7 +142,6 @@ import {
   replaceIcon,
 } from "discourse-common/lib/icon-library";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
-import { addBulkDropdownButton } from "select-kit/components/bulk-select-topics-dropdown";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
@@ -150,7 +150,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.29.0";
+export const PLUGIN_API_VERSION = "1.31.0";
 
 const DEPRECATED_HEADER_WIDGETS = [
   "header",
@@ -201,19 +201,6 @@ function wrapWithErrorHandler(func, messageKey) {
       return;
     }
   };
-}
-
-function deprecatedHeaderWidgetOverride(widgetName, override) {
-  if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
-    deprecated(
-      `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
-      {
-        since: "v3.3.0.beta1-dev",
-        id: "discourse.header-widget-overrides",
-        url: "https://meta.discourse.org/t/296544",
-      }
-    );
-  }
 }
 
 class PluginApi {
@@ -560,7 +547,7 @@ class PluginApi {
    **/
   decorateWidget(name, fn) {
     const widgetName = name.split(":")[0];
-    deprecatedHeaderWidgetOverride(widgetName, "decorateWidget");
+    this.#deprecatedHeaderWidgetOverride(widgetName, "decorateWidget");
 
     decorateWidget(name, fn);
   }
@@ -591,7 +578,7 @@ class PluginApi {
       return;
     }
 
-    deprecatedHeaderWidgetOverride(widget, "attachWidgetAction");
+    this.#deprecatedHeaderWidgetOverride(widget, "attachWidgetAction");
 
     widgetClass.prototype[actionName] = fn;
   }
@@ -685,6 +672,30 @@ class PluginApi {
   addPostAdminMenuButton(callback) {
     this.container
       .lookup("service:admin-post-menu-buttons")
+      .addButton(callback);
+  }
+
+  /**
+   * Add a new button in the topic admin menu.
+   *
+   * Example:
+   *
+   * ```
+   * api.addTopicAdminMenuButton((topic) => {
+   *   return {
+   *     action: () => {
+   *       alert('You clicked on the coffee button!');
+   *     },
+   *     icon: 'coffee',
+   *     className: 'hot-coffee',
+   *     label: 'coffee.title',
+   *   };
+   * });
+   * ```
+   **/
+  addTopicAdminMenuButton(callback) {
+    this.container
+      .lookup("service:admin-topic-menu-buttons")
       .addButton(callback);
   }
 
@@ -910,7 +921,7 @@ class PluginApi {
    *
    **/
   changeWidgetSetting(widgetName, settingName, newValue) {
-    deprecatedHeaderWidgetOverride(widgetName, "changeWidgetSetting");
+    this.#deprecatedHeaderWidgetOverride(widgetName, "changeWidgetSetting");
     changeSetting(widgetName, settingName, newValue);
   }
 
@@ -944,7 +955,7 @@ class PluginApi {
    **/
 
   reopenWidget(name, args) {
-    deprecatedHeaderWidgetOverride(name, "reopenWidget");
+    this.#deprecatedHeaderWidgetOverride(name, "reopenWidget");
     return reopenWidget(name, args);
   }
 
@@ -979,6 +990,7 @@ class PluginApi {
         url: "https://meta.discourse.org/t/296544",
       }
     );
+    this.container.lookup("service:header").anyWidgetHeaderOverrides = true;
     attachAdditionalPanel(name, toggle, transformAttrs);
   }
 
@@ -1850,17 +1862,17 @@ class PluginApi {
    * api.headerIcons.has("chat")
    * ```
    *
-   * Additionally, you can utilize the `@panelPortal` argument to create a dropdown panel. This can be useful when
+   * If you are looking to add a button with a dropdown, you can implement a `DMenu` which has a `content` block
    * you want create a button in the header that opens a dropdown panel with additional content.
    *
    * ```
    * const IconWithDropdown = <template>
-   *   <DButton @icon="icon" @onClick={{this.toggleVisible}} />
-   *   {{#if this.visible}}
-   *     <@panelPortal>
-   *       <div>Panel</div>
-   *     </@panelPortal>
-   *   {{/if}}
+   *   <DMenu @icon="foo" title={{i18n "title"}}>
+   *     <:content as |args|>
+   *       dropdown content here
+   *       <DButton @action={{args.close}} @icon="bar" />
+   *     </:content>
+   *   </DMenu>
    * </template>;
    *
    * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
@@ -2951,6 +2963,20 @@ class PluginApi {
     }
 
     registerAdminPluginConfigNav(pluginId, mode, links);
+  }
+
+  #deprecatedHeaderWidgetOverride(widgetName, override) {
+    if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
+      this.container.lookup("service:header").anyWidgetHeaderOverrides = true;
+      deprecated(
+        `The ${widgetName} widget has been deprecated and ${override} is no longer a supported override.`,
+        {
+          since: "v3.3.0.beta1-dev",
+          id: "discourse.header-widget-overrides",
+          url: "https://meta.discourse.org/t/296544",
+        }
+      );
+    }
   }
 }
 

@@ -65,6 +65,8 @@ export default function () {
     this.route("categoryNone", { path: "/c/*category_slug_path_with_id/none" });
     this.route("categoryAll", { path: "/c/*category_slug_path_with_id/all" });
     this.route("category", { path: "/c/*category_slug_path_with_id" });
+
+    this.route("custom");
   });
 
   this.route("groups", { resetNamespace: true, path: "/g" }, function () {
@@ -140,6 +142,7 @@ export default function () {
           this.route("likesReceived", { path: "likes-received" });
           this.route("mentions");
           this.route("edits");
+          this.route("links");
         }
       );
 
@@ -177,7 +180,6 @@ export default function () {
         this.route("emails");
         this.route("notifications");
         this.route("tracking");
-        this.route("categories");
         this.route("users");
         this.route("tags");
         this.route("interface");

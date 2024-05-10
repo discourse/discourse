@@ -1,7 +1,12 @@
 import { registerDestructor } from "@ember/destroyable";
+import { service } from "@ember/service";
 import Modifier from "ember-modifier";
+import {
+  disableBodyScroll,
+  enableBodyScroll,
+} from "discourse/lib/body-scroll-lock";
+import SwipeEvents from "discourse/lib/swipe-events";
 import { bind } from "discourse-common/utils/decorators";
-
 /**
  * A modifier for handling swipe gestures on an element.
  *
@@ -12,121 +17,143 @@ import { bind } from "discourse-common/utils/decorators";
  * with the current state of the swipe, including its direction, orientation, and delta values.
  *
  * @example
- * <div {{swipe didStartSwipe=this.didStartSwipe
- *            didSwipe=this.didSwipe
- *            didEndSwipe=this.didEndSwipe}}>
+ * <div {{swipe
+ *        onDidStartSwipe=this.onDidStartSwipe
+ *        onDidSwipe=this.onDidSwipe
+ *        onDidEndSwipe=this.onDidEndSwipe
+ *        onDidCancelSwipe=this.onDidCancelSwipe
+ *      }}
+ * >
  *   Swipe here
  * </div>
  *
  * @extends Modifier
  */
-export default class SwipeModifier extends Modifier {
-  /**
-   * The DOM element the modifier is attached to.
-   * @type {Element}
-   */
-  element;
 
+/**
+ * SwipeModifier class.
+ */
+export default class SwipeModifier extends Modifier {
+  @service site;
+
+  /**
+   * Creates an instance of SwipeModifier.
+   * @param {Owner} owner - The owner.
+   * @param {Object} args - The arguments.
+   */
   constructor(owner, args) {
     super(owner, args);
-    registerDestructor(this, (instance) => instance.cleanup(instance.element));
+    registerDestructor(this, (instance) => instance.cleanup());
   }
 
   /**
-   * Sets up the modifier by attaching event listeners for touch events to the element.
-   *
-   * @param {Element} element The DOM element to which the modifier is applied.
-   * @param {unused} _ Unused parameter, placeholder for positional arguments.
-   * @param {Object} options The named arguments passed to the modifier.
-   * @param {Function} options.didStartSwipe Callback to be executed when a swipe starts.
-   * @param {Function} options.didSwipe Callback to be executed when a swipe moves.
-   * @param {Function} options.didEndSwipe Callback to be executed when a swipe ends.
+   * Modifies the element for swipe functionality.
+   * @param {HTMLElement} element - The element to modify.
+   * @param {*} _ - Unused argument.
+   * @param {Object} options - Options for modifying the swipe behavior.
+   * @param {Function} options.onDidStartSwipe - Callback function when swipe starts.
+   * @param {Function} options.onDidSwipe - Callback function when swipe occurs.
+   * @param {Function} options.onDidEndSwipe - Callback function when swipe ends.
+   * @param {Function} options.onDidCancelSwipe - Callback function when swipe is canceled.
+   * @param {boolean} options.enabled - Flag to enable/disable swipe.
+   * @param {boolean} options.lockBody - Automatically enable/disable body scroll lock.
    */
-  modify(element, _, { didStartSwipe, didSwipe, didEndSwipe }) {
+  modify(
+    element,
+    _,
+    {
+      onDidStartSwipe,
+      onDidSwipe,
+      onDidEndSwipe,
+      onDidCancelSwipe,
+      enabled,
+      lockBody,
+    }
+  ) {
+    if (enabled === false || !this.site.mobileView) {
+      this.enabled = enabled;
+      return;
+    }
+
+    this.lockBody = lockBody ?? true;
     this.element = element;
-    this.didSwipeCallback = didSwipe;
-    this.didStartSwipeCallback = didStartSwipe;
-    this.didEndSwipeCallback = didEndSwipe;
+    this.onDidSwipeCallback = onDidSwipe;
+    this.onDidStartSwipeCallback = onDidStartSwipe;
+    this.onDidCancelSwipeCallback = onDidCancelSwipe;
+    this.onDidEndSwipeCallback = onDidEndSwipe;
 
-    element.addEventListener("touchstart", this.handleTouchStart, {
-      passive: true,
-    });
-    element.addEventListener("touchmove", this.handleTouchMove, {
-      passive: true,
-    });
-    element.addEventListener("touchend", this.handleTouchEnd, {
-      passive: true,
-    });
+    this._swipeEvents = new SwipeEvents(this.element);
+    this._swipeEvents.addTouchListeners();
+    this.element.addEventListener("swipestart", this.onDidStartSwipe);
+    this.element.addEventListener("swipeend", this.onDidEndSwipe);
+    this.element.addEventListener("swipecancel", this.onDidCancelSwipe);
+    this.element.addEventListener("swipe", this.onDidSwipe);
   }
 
   /**
-   * Handles the touchstart event.
-   * Initializes the swipe state and executes the `didStartSwipe` callback.
-   *
-   * @param {TouchEvent} event The touchstart event object.
+   * Handler for swipe start event.
+   * @param {Event} event - The swipe start event.
    */
   @bind
-  handleTouchStart(event) {
-    this.state = {
-      initialY: event.touches[0].clientY,
-      initialX: event.touches[0].clientX,
-      deltaY: 0,
-      deltaX: 0,
-      direction: null,
-      orientation: null,
-    };
+  onDidStartSwipe(event) {
+    if (this.lockBody) {
+      disableBodyScroll(this.element);
+    }
 
-    this.didStartSwipeCallback?.(this.state);
+    this.onDidStartSwipeCallback?.(event.detail);
   }
 
   /**
-   * Handles the touchend event.
-   * Executes the `didEndSwipe` callback.
-   *
-   * @param {TouchEvent} event The touchend event object.
+   * Handler for swipe end event.
+   * @param {Event} event - The swipe end event.
    */
   @bind
-  handleTouchEnd() {
-    this.didEndSwipeCallback?.(this.state);
+  onDidEndSwipe() {
+    if (this.lockBody) {
+      enableBodyScroll(this.element);
+    }
+
+    this.onDidEndSwipeCallback?.(event.detail);
   }
 
   /**
-   * Handles the touchmove event.
-   * Updates the swipe state based on movement and executes the `didSwipe` callback.
-   *
-   * @param {TouchEvent} event The touchmove event object.
+   * Handler for swipe event.
+   * @param {Event} event - The swipe event.
    */
   @bind
-  handleTouchMove(event) {
-    const touch = event.touches[0];
-    const deltaY = this.state.initialY - touch.clientY;
-    const deltaX = this.state.initialX - touch.clientX;
-
-    this.state.direction =
-      Math.abs(deltaY) > Math.abs(deltaX) ? "vertical" : "horizontal";
-    this.state.orientation =
-      this.state.direction === "vertical"
-        ? deltaY > 0
-          ? "up"
-          : "down"
-        : deltaX > 0
-        ? "left"
-        : "right";
-
-    this.state.deltaY = deltaY;
-    this.state.deltaX = deltaX;
-
-    this.didSwipeCallback?.(this.state);
+  onDidSwipe(event) {
+    this.onDidSwipeCallback?.(event.detail);
   }
 
   /**
-   * Cleans up the modifier by removing event listeners from the element.
-   *
-   * @param {Element} element The DOM element from which to remove event listeners.
+   * Handler for swipe cancel event.
+   * @param {Event} event - The swipe cancel event.
    */
-  cleanup(element) {
-    element.removeEventListener("touchstart", this.handleTouchStart);
-    element.removeEventListener("touchmove", this.handleTouchMove);
-    element.removeEventListener("touchend", this.handleTouchEnd);
+  @bind
+  onDidCancelSwipe(event) {
+    if (this.lockBody) {
+      enableBodyScroll(this.element);
+    }
+
+    this.onDidCancelSwipe?.(event.detail);
+  }
+
+  /**
+   * Cleans up the swipe modifier.
+   */
+  cleanup() {
+    if (!this.enabled || !this.element || !this._swipeEvents) {
+      return;
+    }
+
+    this.element.removeEventListener("swipestart", this.onDidStartSwipe);
+    this.element.removeEventListener("swipeend", this.onDidEndSwipe);
+    this.element.removeEventListener("swipecancel", this.onDidCancelSwipe);
+    this.element.removeEventListener("swipe", this.onDidSwipe);
+    this._swipeEvents.removeTouchListeners();
+
+    if (this.lockBody) {
+      enableBodyScroll(this.element);
+    }
   }
 }

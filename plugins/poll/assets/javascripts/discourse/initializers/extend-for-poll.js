@@ -120,6 +120,7 @@ function initializePolls(api) {
           groupableUserFields: (pollGroupableUserFields || "")
             .split("|")
             .filter(Boolean),
+          _postCookedWidget: helper.widget,
         };
         const glue = new WidgetGlue("discourse-poll", register, attrs);
         glue.appendTo(pollNode);

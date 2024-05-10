@@ -85,6 +85,10 @@ class ThemeSettingsObjectValidator
     @errors
   end
 
+  def property_values_of_type(type)
+    fetch_property_values_of_type(@properties, @object, type)
+  end
+
   private
 
   def validate_child_objects(objects, property_name:, schema:)
@@ -114,13 +118,13 @@ class ThemeSettingsObjectValidator
     value = @object[property_name]
     type = property_attributes[:type]
 
-    return true if (value.nil? && type != "enum")
+    return true if value.nil?
 
     is_value_valid =
       case type
       when "string"
         value.is_a?(String)
-      when "integer", "category", "topic", "post", "group", "upload"
+      when "integer", "topic", "post", "upload"
         value.is_a?(Integer)
       when "float"
         value.is_a?(Float) || value.is_a?(Integer)
@@ -128,6 +132,8 @@ class ThemeSettingsObjectValidator
         [true, false].include?(value)
       when "enum"
         property_attributes[:choices].include?(value)
+      when "categories", "groups"
+        value.is_a?(Array) && value.all? { |id| id.is_a?(Integer) }
       when "tags"
         value.is_a?(Array) && value.all? { |tag| tag.is_a?(String) }
       else
@@ -151,38 +157,38 @@ class ThemeSettingsObjectValidator
     return true if value.nil?
 
     case type
-    when "topic", "category", "upload", "post", "group"
+    when "topic", "upload", "post"
       if !valid_ids(type).include?(value)
         add_error(property_name, :"not_valid_#{type}_value")
         return false
       end
-    when "tags"
+    when "tags", "categories", "groups"
       if !Array(value).to_set.subset?(valid_ids(type))
         add_error(property_name, :"not_valid_#{type}_value")
         return false
       end
 
       if (min = validations&.dig(:min)) && value.length < min
-        add_error(property_name, :tags_value_not_valid_min, min:)
+        add_error(property_name, :"#{type}_value_not_valid_min", count: min)
         return false
       end
 
       if (max = validations&.dig(:max)) && value.length > max
-        add_error(property_name, :tags_value_not_valid_max, max:)
+        add_error(property_name, :"#{type}_value_not_valid_max", count: max)
         return false
       end
     when "string"
       if (min = validations&.dig(:min_length)) && value.length < min
-        add_error(property_name, :string_value_not_valid_min, min:)
+        add_error(property_name, :string_value_not_valid_min, count: min)
         return false
       end
 
       if (max = validations&.dig(:max_length)) && value.length > max
-        add_error(property_name, :string_value_not_valid_max, max:)
+        add_error(property_name, :string_value_not_valid_max, count: max)
         return false
       end
 
-      if validations&.dig(:url) && !UrlHelper.relaxed_parse(value)
+      if validations&.dig(:url) && !UrlHelper.is_valid_url?(value)
         add_error(property_name, :string_value_not_valid_url)
         return false
       end
@@ -202,7 +208,7 @@ class ThemeSettingsObjectValidator
   end
 
   def is_property_present?(property_name)
-    if @object[property_name].nil?
+    if @object[property_name].blank?
       add_error(property_name, :required)
       false
     else
@@ -225,7 +231,7 @@ class ThemeSettingsObjectValidator
   end
 
   TYPE_TO_MODEL_MAP = {
-    "category" => {
+    "categories" => {
       klass: Category,
     },
     "topic" => {
@@ -234,7 +240,7 @@ class ThemeSettingsObjectValidator
     "post" => {
       klass: Post,
     },
-    "group" => {
+    "groups" => {
       klass: Group,
     },
     "upload" => {

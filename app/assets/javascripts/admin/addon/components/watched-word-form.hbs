@@ -1,14 +1,13 @@
 <div class="watched-word-input">
   <label for="watched-word">{{i18n "admin.watched_words.form.label"}}</label>
-  <TextField
-    @id="watched-word"
-    @value={{this.word}}
-    @disabled={{this.formSubmitted}}
-    @autocorrect="off"
-    @autocapitalize="off"
-    @placeholderKey={{this.placeholderKey}}
-    @title={{i18n this.placeholderKey}}
-    class="watched-word-input-field"
+  <WatchedWords
+    @id="watched-words"
+    @value={{this.words}}
+    @onChange={{fn (mut this.words)}}
+    @options={{hash
+      filterPlaceholder=this.placeholderKey
+      disabled=this.formSubmitted
+    }}
   />
 </div>
 

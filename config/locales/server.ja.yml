@@ -157,7 +157,8 @@ ja:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "は、最大 %{max} 文字に制限されていますが、%{length} 文字が入力されました。"
+      too_long_validation:
+        other: "は、最大 %{count} 文字に制限されていますが、%{length} 文字が入力されました。"
       invalid_boolean: "無効なブール値。"
       taken: "はすでに使用されています"
       accepted: に同意する必要があります
@@ -263,7 +264,6 @@ ja:
     rate_limit:
       other: "過去 24 時間以内に %{count} 通の招待を送信済みです。%{time_left} 待ってからもう一度お試しください。"
     confirm_email: "<p>ほぼ完了です！メールアドレスにアクティベーションメールを送信しました。メールに記載の手順に従って、アカウントを確認してください。</p><p>まだ届いていない場合は、迷惑フォルダを確認してください。</p>"
-    cant_invite_to_group: "指定したグループにユーザーを招待することはできません。招待しようとしているグループのオーナーであることを確認してください。"
     disabled_errors:
       discourse_connect_enabled: "DiscourseConnect が有効であるため、招待は無効です。"
       invalid_access: "リクエストしたリソースの閲覧が許可されていません。"
@@ -371,7 +371,6 @@ ja:
   pm_reached_recipients_limit: "メッセージにつき %{recipients_limit} 人の受信者しか含めることはできません。"
   removed_direct_reply_full_quotes: "以前の投稿全体の引用を自動的に削除しました。"
   watched_words_auto_tag: "自動的にタグ付けされたトピック"
-  secure_upload_not_allowed_in_public_topic: "次のセキュアアップロードを公開トピックで使用することはできません: %{upload_filenames}"
   create_pm_on_existing_topic: "既存のトピックで PM を作成することはできません。"
   slow_mode_enabled: "このトピックは低速モードです。"
   just_posted_that: "は最近の投稿に非常に似ています"
@@ -508,7 +507,8 @@ ja:
 
       短い個別の返信を多数読むよりも、詳細な返信を数件読む方が、トピックをフォローしやすくなります。
     dominating_topic: このトピックにたくさん投稿されましたね！ここに返信して互いに話し合うチャンスを他の人にも与えることを検討してください。
-    get_a_room: '@%{reply_username} に %{count} 回返信しましたが、個人メッセージを送信できることをご存知ですか？'
+    get_a_room:
+      other: '@%{reply_username} に %{count} 回返信しましたが、個人メッセージを送信できることをご存知ですか？'
     dont_feed_the_trolls: この投稿は、モデレーターの注意が必要としてすでに通報されています。返信してもよろしいですか？否定的なコンテンツへの返信は、さらに否定的な行動を助長する傾向があります。
     too_many_replies: |
       ### このトピックへの返信数の制限に達しました
@@ -1086,6 +1086,8 @@ ja:
         user_api: "ユーザー API"
       yaxis: "日"
       description: "通常の API キーとユーザー API キーの API リクエスト。"
+    consolidated_page_views_browser_detection:
+      yaxis: "日"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "日"
@@ -1245,6 +1247,10 @@ ja:
       xaxis: "日"
       yaxis: "モバイル匿名ページビュー"
       description: "ログインしていないモバイルデバイスの訪問者による新しいページビュー数。"
+    page_view_anon_browser_reqs:
+      xaxis: "日"
+    page_view_logged_in_browser_reqs:
+      xaxis: "日"
     http_background_reqs:
       title: "背景"
       xaxis: "日"
@@ -1477,7 +1483,6 @@ ja:
     summarization_strategy: "プラグインによって登録されたコンテンツを要約する他の方法"
     custom_summarization_allowed_groups: "`summarization_strategy` を使ってコンテンツを要約できるグループ。"
     enable_personal_messages: "非推奨。代わりに 'personal message enabled groups' 設定を使用してください。信頼レベル 1 (メッセージを送信できる最低信頼レベルで構成可能) ユーザーに、メッセージの作成とメッセージへの返信を許可します。それにも関わらず、スタッフは常にメッセージを送信できることに注意してください。"
-    personal_message_enabled_groups: "これらのグループ内のユーザーに、メッセージの作成とメッセージへの返信を許可します。信頼レベルグループには、その数値を超えるすべての信頼レベルが含まれます。たとえば、trust_level_1 を選択すると、rust_level_2、3、4 のユーザーにも、個人メッセージの送信が許可されます。それにも関わらず、スタッフは常にメッセージを送信できることに注意してください。"
     enable_system_message_replies: "個人メッセージが無効である場合でも、ユーザーによるシステムメッセージへの返信を許可する"
     enable_chunked_encoding: "サーバーによるチャンク形式エンコーディング応答を有効にする。この機能はほとんどのセットアップで動作しますが、一部のプロキシではバッファリングが生じ、応答が遅延する可能性があります。"
     long_polling_base_url: "ロングポーリングのベース URL (CDN が動的コンテンツを配信している場合、これを origin pull に指定してください) 例: http://origin.site.com"
@@ -1738,28 +1743,19 @@ ja:
     edit_all_topic_groups: "このグループのユーザーが他のユーザーのトピックタイトル、タグ、およびカテゴリを編集することを許可する"
     edit_all_post_groups: "このグループのユーザーが他のユーザーの投稿を編集することを許可する"
     min_trust_to_create_topic: "新規トピックを作成するために必要な最低信頼レベル。"
-    create_topic_allowed_groups: "新しいトピックを作成できるグループ。"
     allow_flagging_staff: "有効にすると、ユーザーはスタッフアカウントの投稿を通報できるようになります。"
     min_trust_to_edit_wiki_post: "ウィキとしてマークされた投稿を編集するために必要な最低信頼レベル。"
-    edit_wiki_post_allowed_groups: "Wiki としてマークされた投稿を編集できるグループ。"
     min_trust_to_edit_post: "投稿を編集するために必要な最低信頼レベル。"
-    edit_post_allowed_groups: "投稿を編集できるグループ。"
     min_trust_to_allow_self_wiki: "ユーザー自身の投稿をウィキにするために必要な最低信頼レベル。"
-    self_wiki_allowed_groups: "ユーザーが自分の投稿を Wiki にできるグループ。"
     min_trust_to_send_messages: "非推奨。代わりに '個人メッセージが有効なグループ' 設定を使用してください。新しい個人メッセージを作成するのに必要な最低限の信頼レベルです。"
     min_trust_to_send_email_messages: "メールで個人メッセージを送信するために必要な最低信頼レベル。"
-    send_email_messages_allowed_groups: "メールで個人メッセージを送信できるグループ。"
     min_trust_to_flag_posts: "投稿を通報するために必要な最低信頼レベル"
-    flag_post_allowed_groups: "投稿を通報できるグループ。"
     min_trust_to_post_links: "投稿にリンクを含めるために必要な最低信頼レベル"
     min_trust_to_post_embedded_media: "投稿にメディア項目を埋め込むために必要な最低信頼レベル"
     min_trust_level_to_allow_profile_background: "プロファイルの背景をアップロードするために必要な最低信頼レベル"
     min_trust_level_to_allow_user_card_background: "ユーザーカードの背景をアップロードするために必要な最低信頼レベル"
-    user_card_background_allowed_groups: "ユーザーカードの背景をアップロードできるグループ。"
     min_trust_level_to_allow_invite: "ユーザーを招待するために必要な最低信頼レベル"
-    invite_allowed_groups: "ユーザーを招待できるグループ。"
     min_trust_level_to_allow_ignore: "ユーザーを無視するために必要な最低信頼レベル"
-    ignore_allowed_groups: "他のユーザーを無視できるグループ。"
     allowed_link_domains: "リンクを投稿するための適切な信頼レベルに達していなくてもリンクできるドメイン"
     newuser_max_links: "新規ユーザーが投稿に追加できるリンクの数"
     newuser_max_embedded_media: "新規ユーザーが投稿に追加できる埋め込みメディア項目の数。"
@@ -1771,7 +1767,6 @@ ja:
     here_mention: "特権ユーザーが最大 'max_here_mentioned' 人のトピック参加者に通知できるようにする、@メンションに使用される名前。既存のユーザー名は使用できません。"
     max_here_mentioned: "@here でメンションされるユーザーの最大数です。"
     min_trust_level_for_here_mention: "@here をメンションできる最低信頼レベルです。"
-    here_mention_allowed_groups: "@here をメンションできるグループ。"
     create_thumbnails: "大きすぎて投稿に収まらないが画像のサムネイルを作成し、ライトボックスにします。"
     email_time_window_mins: "ユーザーに最終編集の機会を与えられるよう、通知メールを送信するまで (n) 分待機する。"
     personal_email_time_window_seconds: "ユーザーがメッセージの最終編集を行えるよう、 (n) 秒待ってから個人メッセージの通知メールを送信する。"
@@ -1887,7 +1882,6 @@ ja:
     log_mail_processing_failures: "すべてのメール処理の失敗を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
     email_in: "ユーザーがメール経由で新規トピックを作成できるようにします。この設定を有効にすると、グループとカテゴリの受信メールアドレスを構成できるようになります。"
     email_in_min_trust: "メールでのトピック作成を許可する最低信頼レベル"
-    email_in_allowed_groups: "メールで新しいトピックを投稿できるグループ。"
     email_in_authserv_id: "受信メールに認証チェックを実行するサービスの識別子。この構成方法については、<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> をご覧ください。"
     enable_imap: "グループメッセージを同期するために IMAP を有効にする。"
     enable_imap_write: "双方向の IMAP 同期を有効にする。無効にすると、IMAP アカウントのすべての書き込み操作が無効になります。"
@@ -1995,7 +1989,6 @@ ja:
     embed_username_required: "トピック作成用のユーザー名が必要です。"
     notify_about_reviewable_item_after: "この時間の経過後に未処理のレビュー待ち項目がある場合、モデレーターに個人メッセージを送信します。無効にするには 0 に設定します。"
     delete_merged_stub_topics_after_days: "完全にマージされたスタブトピックを自動的に削除するまで待機する日数。0 に設定すると、スタブトピックは削除されません。"
-    bootstrap_mode_min_users: "ブートストラップモードを無効にするために必要な最低ユーザー数 (0 に設定すると無効になります。最長 24 時間かかる場合があります)"
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードできないようにする。"
     secure_uploads: 'すべてのアップロード (画像、動画、音声、テキスト、pdf、zip など) へのアクセスを制限する。“login required” が有効である場合、ログイン済みのユーザーのみがアップロードにアクセスできます。そうでない場合は、個人メッセージと非公開カテゴリのメディアアップロードのアクセスのみが制限されます。警告: この設定は複雑であるため、管理を十分に理解している必要があります。詳細については、<a target="_blank" href="https://meta.discourse.org/t/-/140017">メタに関するセキュリティで保護されたアップロードのトピック</a>をご覧ください。'
     secure_uploads_allow_embed_images_in_emails: "通常はメールで編集されるセキュリティで保護された画像のサイズが 'secure uploads max email embed image size kb' 設定よりも小さい場合、その埋め込みを許可します。"
@@ -2020,7 +2013,6 @@ ja:
     returning_user_notice_tl: "リピートユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_users_days: "ユーザーがリピートとみなされる経過日数。"
     review_media_unless_trust_level: "スタッフは、信頼レベルの低いユーザーの投稿に埋め込みメディアが含まれているかどうかをレビューします。"
-    skip_review_media_groups: "これらのどのグループにも属しないユーザーの投稿に埋め込みメディアが含まれている場合、その投稿はスタッフに送信されてレビューされます。"
     blur_tl0_flagged_posts_media: "通報された投稿の画像をぼかして、潜在的に NSFW のコンテンツを非表示にする。"
     enable_page_publishing: "スタッフメンバーが独自のスタイルを使ったトピックを新しい URL に公開することを許可する。"
     show_published_pages_login_required: "匿名ユーザーは、ログインが必要な場合でも、公開されたページを閲覧できる。"
@@ -2071,7 +2063,6 @@ ja:
     revoke_user_api_keys_unused_days: "ユーザー API キーが最後に使用されてから自動的に取り消されるまでの日数 (取り消さない場合は 0)"
     revoke_user_api_keys_maxlife_days: "ユーザー API キーが自動的に取り消されるまでの日数 (取り消さない場合は 0)"
     min_trust_to_create_tag: "タグを作成するために必要な最低信頼レベル。"
-    create_tag_allowed_groups: "タグを作成できるグループ。"
     max_tags_per_topic: "トピックに適用できる最大タグ数。"
     enable_max_tags_per_email_subject: "メールの件名を生成する際に、max_tags_per_email_subjec を使用する"
     max_tags_per_email_subject: "メールの件名に使用できる最大タグ数"
@@ -2080,7 +2071,6 @@ ja:
     max_tags_in_filter_list: "フィルタのドロップダウンに表示するタグの最大数。最も使用されているタグが表示されます。"
     tags_sort_alphabetically: "タグをアルファベット順に表示する。デフォルトでは人気順に表示されます。"
     tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>タグページ</a>にタググループごとにタグをリストする。"
-    pm_tags_allowed_for_groups: "グループ内のメンバーが任意の個人メッセージにタグ付けすることを許可する"
     min_trust_level_to_tag_topics: "トピックのタグ付けに必要な最低信頼レベル"
     suppress_overlapping_tags_in_list: "タグがトピックタイトルの語に完全に一致する場合、タグを表示しない"
     remove_muted_tags_from_latest: "ミュートされたタグのみがタグ付けされたトピックを最新のトピックリストに表示しない。"
@@ -2136,8 +2126,10 @@ ja:
       must_include_latest: "トップメニューに [最新] タブを含む必要があります。"
       invalid_string: "無効な値です。"
       invalid_string_min_max: "文字数は %{min} から %{max} の間である必要があります。"
-      invalid_string_min: "少なくとも %{min} 文字である必要があります。"
-      invalid_string_max: "%{max} 文字以下である必要があります。"
+      invalid_string_min:
+        other: "は少なくとも %{count} 文字である必要があります."
+      invalid_string_max:
+        other: "は %{count} 文字以下である必要があります."
       invalid_json: "無効な JSON。"
       invalid_reply_by_email_address: "値に '%{reply_key}' を含める必要があり、通知メールとは異なる必要があります。"
       invalid_alternative_reply_by_email_addresses: "すべての値には '%{reply_key}' が含まれている必要があり、通知メールとは異なるものである必要があります。"
@@ -2170,7 +2162,8 @@ ja:
         regex_invalid: "正規表現は無効です: %{error}"
         leading_trailing_slash: "正規表現の開始と終了にスラッシュを使用してはいけません。"
       unicode_usernames_avatars: "内部システムのアバターは Unicode のユーザー名をサポートしていません。"
-      list_value_count: "リストには正確に %{count} この値が含まれている必要があります。"
+      list_value_count:
+        other: "リストには正確に %{count} この値が含まれている必要があります。"
       markdown_linkify_tlds: "値 '*' を含めることはできません。"
       google_oauth2_hd_groups: "この設定を有効にする前に、すべての 'google oauth2 hd' 設定を構成する必要があります。"
       search_tokenize_chinese_enabled: "この設定を有効にする前に 'search_tokenize_chinese' を無効にする必要があります。"
@@ -2199,6 +2192,14 @@ ja:
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
       skip_review_media_groups: "review_media_unless_trust_level"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "非アクティブ"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "非アクティブ"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2378,8 +2379,10 @@ ja:
     new_user_typed_too_fast: "新規ユーザーは入力が速すぎます"
     content_matches_auto_silence_regex: "コンテンツは自動投稿禁止の正規表現に一致します"
     username:
-      short: "は少なくとも %{min} 文字である必要があります"
-      long: "は %{max} 文字以下である必要があります"
+      short:
+        other: "は少なくとも %{count} 文字である必要があります"
+      long:
+        other: "は %{count} 文字以下である必要があります"
       too_long: "は長すぎます"
       characters: "には数字、文字、ダッシュ、ドット、およびアンダースコアのみを含める必要があります"
       unique: "は一意である必要があります"
@@ -2532,35 +2535,9 @@ ja:
   new_version_mailer:
     title: "新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 新しい Discourse バージョン、更新が利用可能になりました"
-    text_body_template: |
-      やったー！新バージョンの [Discourse](https://www.discourse.org) が公開されました！
-
-      あなたのバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      - **[ワンクリックのブラウザアップデート](%{base_url}/admin/upgrade)**で簡単にアップグレード
-
-      - 新機能については、[リリースノート](https://meta.discourse.org/tag/release-notes)か[生の GitHub 変更ログ](https://github.com/discourse/discourse/commits/main)をご覧ください。
-
-      - Discourse のニュース、ディスカッション、およびサポートは、[meta.discourse.org](https://meta.discourse.org)にアクセス！
   new_version_mailer_with_notes:
     title: "注意付きの新しいバージョンメーラー"
     subject_template: "[%{email_prefix}] 更新が利用可能になりました"
-    text_body_template: |
-      やったー！新バージョンの [Discourse](https://www.discourse.org) が公開されました！
-
-      あなたのバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      - **[ワンクリックのブラウザアップデート](%{base_url}/admin/upgrade)**で簡単にアップグレード
-
-      - 新機能については、[リリースノート](https://meta.discourse.org/tag/release-notes)か[生の GitHub 変更ログ](https://github.com/discourse/discourse/commits/main)をご覧ください。
-
-      - Discourse のニュース、ディスカッション、およびサポートは、[meta.discourse.org](https://meta.discourse.org)にアクセス！
-
-      ### リリースノート
-
-      %{notes}
   flag_reasons:
     off_topic: "あなたの投稿は「話題に関係ない」として通報されました。コミュニティーはあなたの投稿がタイトルと最初の投稿で定義されているトピックにふさわしくないと判断しました。"
     inappropriate: "あなたの投稿は**不適切**として通報されました。コミュニティーは投稿が攻撃的、虐待的、ヘイト行為、または[コミュニティーガイドライン](%{base_path}/guidelines)に違反すると感じています。"
@@ -4068,7 +4045,8 @@ ja:
     mass_award:
       errors:
         invalid_csv: '%{line_number} 行目でエラーが発生しました。メールが 1 行ごとに 1 件あることを CSV で確認してください。'
-        too_many_csv_entries: CSV ファイルのエントリが多すぎます。%{count} エントリ以下の CSV ファイルを提供してください。
+        too_many_csv_entries:
+          other: CSV ファイルのエントリが多すぎます。%{count} エントリ以下の CSV ファイルを提供してください。
         badge_disabled: 先に %{badge_name} バッジを有効にしてください。
         cant_grant_multiple_times: 1 人のユーザーに %{badge_name} バッジを何度も付与することはできません。
     editor:

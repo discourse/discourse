@@ -7,12 +7,12 @@ module Chat
 
     attributes :id, :cooked, :excerpt
 
-    def excerpt
-      object.censored_excerpt
-    end
-
     def user
       object.user || Chat::NullUser.new
+    end
+
+    def excerpt
+      object.excerpt || object.build_excerpt
     end
   end
 end

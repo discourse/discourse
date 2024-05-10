@@ -66,6 +66,11 @@ class Plugin::Instance
     }
   end
 
+  def root_dir
+    return if Rails.env.production?
+    File.dirname(path)
+  end
+
   def seed_data
     @seed_data ||= HashWithIndifferentAccess.new({})
   end
@@ -231,6 +236,14 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_editable_group_custom_field(field, self)
   end
 
+  # Allows to define custom "status:" filter. Example usage:
+  #   register_custom_filter_by_status("foobar") do |scope|
+  #     scope.where("word_count = 42")
+  #   end
+  def register_custom_filter_by_status(status, &block)
+    TopicsFilter.add_filter_by_status(status, &block)
+  end
+
   # Allows to define custom search order. Example usage:
   #   Search.advanced_order(:chars) do |posts|
   #     posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
@@ -310,6 +323,10 @@ class Plugin::Instance
   #   register_preloaded_category_custom_fields("custom_field")
   def register_preloaded_category_custom_fields(field)
     Site.preloaded_category_custom_fields << field
+  end
+
+  def register_problem_check(klass)
+    DiscoursePluginRegistry.register_problem_check(klass, self)
   end
 
   def custom_avatar_column(column)

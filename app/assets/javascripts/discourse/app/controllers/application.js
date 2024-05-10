@@ -1,6 +1,8 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import runAfterFramePaint from "discourse/lib/after-frame-paint";
+import { isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -13,9 +15,11 @@ export default Controller.extend({
   showTop: true,
   router: service(),
   footer: service(),
+  header: service(),
+  sidebarState: service(),
   showSidebar: false,
-  navigationMenuQueryParamOverride: null,
   sidebarDisabledRouteOverride: false,
+  navigationMenuQueryParamOverride: null,
   showSiteHeader: true,
 
   init() {
@@ -33,6 +37,10 @@ export default Controller.extend({
       { id: "discourse.application-show-footer" }
     );
     this.footer.showFooter = value;
+  },
+
+  get showPoweredBy() {
+    return this.showFooter && this.siteSettings.enable_powered_by_discourse;
   },
 
   @discourseComputed
@@ -59,40 +67,28 @@ export default Controller.extend({
     return this.capabilities.isAppWebview || this.capabilities.isiOSPWA;
   },
 
-  @discourseComputed
-  showPoweredBy() {
-    return this.showFooter && this.siteSettings.enable_powered_by_discourse;
-  },
-
   _mainOutletAnimate() {
     document.body.classList.remove("sidebar-animate");
   },
 
-  @discourseComputed(
-    "navigationMenuQueryParamOverride",
-    "siteSettings.navigation_menu",
-    "canDisplaySidebar",
-    "sidebarDisabledRouteOverride"
-  )
-  sidebarEnabled(
-    navigationMenuQueryParamOverride,
-    navigationMenu,
-    canDisplaySidebar,
-    sidebarDisabledRouteOverride
-  ) {
-    if (!canDisplaySidebar) {
+  get sidebarEnabled() {
+    if (!this.canDisplaySidebar) {
       return false;
     }
 
-    if (sidebarDisabledRouteOverride) {
+    if (this.sidebarState.sidebarHidden) {
       return false;
     }
 
-    if (navigationMenuQueryParamOverride === "sidebar") {
+    if (this.sidebarDisabledRouteOverride) {
+      return false;
+    }
+
+    if (this.navigationMenuQueryParamOverride === "sidebar") {
       return true;
     }
 
-    if (navigationMenuQueryParamOverride === "header_dropdown") {
+    if (this.navigationMenuQueryParamOverride === "header_dropdown") {
       return false;
     }
 
@@ -101,7 +97,7 @@ export default Controller.extend({
       return false;
     }
 
-    return navigationMenu === "sidebar";
+    return this.siteSettings.navigation_menu === "sidebar";
   },
 
   calculateShowSidebar() {
@@ -128,5 +124,25 @@ export default Controller.extend({
         this.keyValueStore.setItem(HIDE_SIDEBAR_KEY, "true");
       }
     }
+  },
+
+  @action
+  trackDiscoursePainted() {
+    if (isTesting()) {
+      return;
+    }
+    runAfterFramePaint(() => {
+      performance.mark("discourse-paint");
+      try {
+        performance.measure(
+          "discourse-init-to-paint",
+          "discourse-init",
+          "discourse-paint"
+        );
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn("Failed to measure init-to-paint", e);
+      }
+    });
   },
 });

@@ -165,7 +165,7 @@ class TopicsBulkAction
   def close
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status("closed", true, @user)
+        t.update_status("closed", true, @user, { message: @operation[:message] })
         @changed_ids << t.id
       end
     end
@@ -174,7 +174,7 @@ class TopicsBulkAction
   def silent_close
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status("autoclosed", true, @user)
+        t.update_status("autoclosed", true, @user, { message: @operation[:message] })
         @changed_ids << t.id
       end
     end
@@ -183,7 +183,12 @@ class TopicsBulkAction
   def unlist
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status("visible", false, @user)
+        t.update_status(
+          "visible",
+          false,
+          @user,
+          { visibility_reason_id: Topic.visibility_reasons[:bulk_action] },
+        )
         @changed_ids << t.id
       end
     end
@@ -192,7 +197,12 @@ class TopicsBulkAction
   def relist
     topics.each do |t|
       if guardian.can_moderate?(t)
-        t.update_status("visible", true, @user)
+        t.update_status(
+          "visible",
+          true,
+          @user,
+          { visibility_reason_id: Topic.visibility_reasons[:bulk_action] },
+        )
         @changed_ids << t.id
       end
     end

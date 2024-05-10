@@ -29,6 +29,6 @@ export default class FileSizeRestriction extends Component {
     />
 
     <SettingValidationMessage @message={{this.validationMessage}} />
-    <SiteSettingsDescription @description={{this.setting.description}} />
+    <SiteSettingsDescription @description={{@setting.description}} />
   </template>
 }

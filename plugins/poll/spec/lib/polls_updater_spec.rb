@@ -186,5 +186,27 @@ RSpec.describe DiscoursePoll::PollsUpdater do
         end
       end
     end
+
+    context "when no polls" do
+      it "does not attempt to update polls" do
+        DiscoursePoll::PollsUpdater.stubs(:update).raises(StandardError)
+        no_poll_post = Fabricate(:post)
+
+        raw = <<~RAW
+          no poll here, moving on
+        RAW
+
+        no_poll_post.raw = raw
+        expect(no_poll_post.valid?).to eq(true)
+      end
+
+      it "does not need to validate post" do
+        DiscoursePoll::PostValidator.stubs(:validate_post).raises(StandardError)
+        no_poll_post =
+          Post.new(user: user, topic: Fabricate(:topic), raw: "no poll here, meoving on")
+
+        expect(no_poll_post.valid?).to eq(true)
+      end
+    end
   end
 end

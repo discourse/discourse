@@ -6,7 +6,7 @@ module Chat
       nil
     end
 
-    def excerpt(max_length: nil)
+    def build_excerpt
       nil
     end
 

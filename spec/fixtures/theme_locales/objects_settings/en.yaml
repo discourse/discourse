@@ -5,7 +5,13 @@ en:
         description: "This is a description for objects setting"
         schema:
           properties:
-            name: "Section Name"
+            name:
+              label: Name
+              description: "Section Name"
             links:
-              name: "Name of the link"
-              url: "URL of the link"
+              name:
+                label: Name
+                description: "Name of the link"
+              url:
+                label: URL
+                description: "URL of the link"

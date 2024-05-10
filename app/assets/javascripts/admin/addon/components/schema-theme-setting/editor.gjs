@@ -1,163 +1,234 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { gt } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import dIcon from "discourse-common/helpers/d-icon";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
-import FieldInput from "./field";
+import Tree from "admin/components/schema-theme-setting/editor/tree";
+import FieldInput from "admin/components/schema-theme-setting/field";
 
-class Node {
-  @tracked text;
-  object;
-  schema;
-  index;
-  active = false;
-  parentTree;
-  trees = [];
-
-  constructor({ text, index, object, schema, parentTree }) {
-    this.text = text;
-    this.index = index;
-    this.object = object;
-    this.schema = schema;
-    this.parentTree = parentTree;
-  }
-}
-
-class Tree {
-  @tracked nodes = [];
-  data = [];
-  propertyName;
-  schema;
-}
-
-export default class SchemaThemeSettingEditor extends Component {
+export default class SchemaThemeSettingNewEditor extends Component {
   @service router;
+
+  @tracked history = [];
   @tracked activeIndex = 0;
-  @tracked backButtonText;
+  @tracked activeDataPaths = [];
+  @tracked activeSchemaPaths = [];
   @tracked saveButtonDisabled = false;
+  @tracked validationErrorMessage;
+  inputFieldObserver = new Map();
 
   data = cloneJSON(this.args.setting.value);
-  history = [];
   schema = this.args.setting.objects_schema;
 
-  @cached
-  get tree() {
-    let schema = this.schema;
-    let data = this.data;
-    let tree = new Tree();
-    tree.data = data;
-    tree.schema = schema;
-
-    for (const point of this.history) {
-      data = data[point.parentNode.index][point.propertyName];
-      schema = schema.properties[point.propertyName].schema;
-
-      tree.propertyName = point.propertyName;
-      tree.schema = point.node.schema;
-      tree.data = data;
-    }
-
-    data.forEach((object, index) => {
-      const node = new Node({
-        index,
-        schema,
-        object,
-        text:
-          object[schema.identifier] ||
-          this.defaultSchemaIdentifier(schema.name, index),
-        parentTree: tree,
-      });
-
-      if (index === this.activeIndex) {
-        node.active = true;
-
-        const childObjectsProperties = this.findChildObjectsProperties(
-          schema.properties
-        );
-
-        for (const childObjectsProperty of childObjectsProperties) {
-          const subtree = new Tree();
-          subtree.propertyName = childObjectsProperty.name;
-          subtree.schema = childObjectsProperty.schema;
-          subtree.data = data[index][childObjectsProperty.name] ||= [];
-
-          data[index][childObjectsProperty.name]?.forEach(
-            (childObj, childIndex) => {
-              subtree.nodes.push(
-                new Node({
-                  text:
-                    childObj[childObjectsProperty.schema.identifier] ||
-                    `${childObjectsProperty.schema.name} ${childIndex + 1}`,
-                  index: childIndex,
-                  object: childObj,
-                  schema: childObjectsProperty.schema,
-                  parentTree: subtree,
-                })
-              );
-            }
-          );
-
-          node.trees.push(subtree);
-        }
-      }
-
-      tree.nodes.push(node);
+  @action
+  onChildClick(index, propertyName, parentNodeIndex) {
+    this.history.pushObject({
+      dataPaths: [...this.activeDataPaths],
+      schemaPaths: [...this.activeSchemaPaths],
+      index: this.activeIndex,
     });
 
-    return tree;
+    this.activeIndex = index;
+    this.activeDataPaths.pushObjects([parentNodeIndex, propertyName]);
+    this.activeSchemaPaths.pushObject(propertyName);
+    this.inputFieldObserver.clear();
   }
 
-  @cached
-  get activeNode() {
-    return this.tree.nodes.find((node, index) => {
-      return index === this.activeIndex;
+  @action
+  updateIndex(index) {
+    this.activeIndex = index;
+  }
+
+  @action
+  generateSchemaTitle(object, schema, index) {
+    let title;
+
+    if (schema.properties[schema.identifier]?.type === "categories") {
+      title = this.activeData[index][schema.identifier]
+        ?.map((categoryId) => {
+          return this.args.setting.metadata.categories[categoryId].name;
+        })
+        .join(", ");
+    } else {
+      title = object[schema.identifier];
+    }
+
+    return title || `${schema.name} ${index + 1}`;
+  }
+
+  get backButtonText() {
+    if (this.history.length === 0) {
+      return;
+    }
+
+    const lastHistory = this.history[this.history.length - 1];
+
+    return I18n.t("admin.customize.theme.schema.back_button", {
+      name: this.generateSchemaTitle(
+        this.#resolveDataFromPaths(lastHistory.dataPaths)[lastHistory.index],
+        this.#resolveSchemaFromPaths(lastHistory.schemaPaths),
+        lastHistory.index
+      ),
     });
+  }
+
+  get activeData() {
+    return this.#resolveDataFromPaths(this.activeDataPaths);
+  }
+
+  #resolveDataFromPaths(paths) {
+    if (paths.length === 0) {
+      return this.data;
+    }
+
+    let data = this.data;
+
+    paths.forEach((path) => {
+      data = data[path];
+    });
+
+    return data;
+  }
+
+  get activeSchema() {
+    return this.#resolveSchemaFromPaths(this.activeSchemaPaths);
+  }
+
+  #resolveSchemaFromPaths(paths) {
+    if (paths.length === 0) {
+      return this.schema;
+    }
+
+    let schema = this.schema;
+
+    paths.forEach((path) => {
+      schema = schema.properties[path].schema;
+    });
+
+    return schema;
+  }
+
+  @action
+  registerInputFieldObserver(index, callback) {
+    this.inputFieldObserver[index] = callback;
+  }
+
+  @action
+  unregisterInputFieldObserver(index) {
+    delete this.inputFieldObserver[index];
+  }
+
+  descriptions(fieldName, key) {
+    // The `property_descriptions` metadata is an object with keys in the following format as an example:
+    //
+    // {
+    //   some_property.description: <some description>,
+    //   some_property.label: <some label>,
+    //   some_objects_property.some_other_property.description: <some description>,
+    //   some_objects_property.some_other_property.label: <some label>,
+    // }
+    const descriptions = this.args.setting.metadata?.property_descriptions;
+
+    if (!descriptions) {
+      return;
+    }
+
+    if (this.activeSchemaPaths.length > 0) {
+      key = `${this.activeSchemaPaths.join(".")}.${fieldName}.${key}`;
+    } else {
+      key = `${fieldName}.${key}`;
+    }
+
+    return descriptions[key];
+  }
+
+  fieldLabel(fieldName) {
+    return this.descriptions(fieldName, "label") || fieldName;
+  }
+
+  fieldDescription(fieldName) {
+    return this.descriptions(fieldName, "description");
   }
 
   get fields() {
-    const node = this.activeNode;
     const list = [];
+    const activeObject = this.activeData[this.activeIndex];
 
-    if (!node) {
-      return list;
-    }
+    if (activeObject) {
+      for (const [name, spec] of Object.entries(this.activeSchema.properties)) {
+        if (spec.type === "objects") {
+          continue;
+        }
 
-    for (const [name, spec] of Object.entries(node.schema.properties)) {
-      if (spec.type === "objects") {
-        continue;
-      }
-
-      list.push({
-        name,
-        spec,
-        value: node.object[name],
-        description: this.fieldDescription(name),
-      });
-    }
-
-    return list;
-  }
-
-  findChildObjectsProperties(properties) {
-    const list = [];
-
-    for (const [name, spec] of Object.entries(properties)) {
-      if (spec.type === "objects") {
         list.push({
           name,
-          schema: spec.schema,
+          spec,
+          value: activeObject[name],
+          description: this.fieldDescription(name),
+          label: this.fieldLabel(name),
         });
       }
     }
 
     return list;
+  }
+
+  @action
+  clickBack() {
+    const {
+      dataPaths: lastDataPaths,
+      schemaPaths: lastSchemaPaths,
+      index: lastIndex,
+    } = this.history.popObject();
+
+    this.activeDataPaths = lastDataPaths;
+    this.activeSchemaPaths = lastSchemaPaths;
+    this.activeIndex = lastIndex;
+    this.inputFieldObserver.clear();
+  }
+
+  @action
+  addChildItem(propertyName, parentNodeIndex) {
+    this.activeData[parentNodeIndex][propertyName].pushObject({});
+
+    this.onChildClick(
+      this.activeData[parentNodeIndex][propertyName].length - 1,
+      propertyName,
+      parentNodeIndex
+    );
+  }
+
+  @action
+  addItem() {
+    this.activeData.pushObject({});
+    this.activeIndex = this.activeData.length - 1;
+  }
+
+  @action
+  removeItem() {
+    this.activeData.removeAt(this.activeIndex);
+
+    if (this.activeData.length > 0) {
+      this.activeIndex = Math.max(this.activeIndex - 1, 0);
+    } else if (this.history.length > 0) {
+      this.clickBack();
+    } else {
+      this.activeIndex = 0;
+    }
+  }
+
+  @action
+  inputFieldChanged(field, newVal) {
+    this.activeData[this.activeIndex][field.name] = newVal;
+
+    if (field.name === this.activeSchema.identifier) {
+      this.inputFieldObserver[this.activeIndex]();
+    }
   }
 
   @action
@@ -174,227 +245,74 @@ export default class SchemaThemeSettingEditor extends Component {
           this.args.themeId
         );
       })
-      .catch(popupAjaxError)
+      .catch((e) => {
+        if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+          this.validationErrorMessage = e.jqXHR.responseJSON.errors[0];
+        } else {
+          popupAjaxError(e);
+        }
+      })
       .finally(() => (this.saveButtonDisabled = false));
   }
 
-  @action
-  onClick(node) {
-    this.activeIndex = node.index;
-  }
-
-  @action
-  onChildClick(node, tree, parentNode) {
-    this.history.push({
-      propertyName: tree.propertyName,
-      parentNode,
-      node,
-    });
-
-    this.backButtonText = I18n.t("admin.customize.theme.schema.back_button", {
-      name: parentNode.text,
-    });
-
-    this.activeIndex = node.index;
-  }
-
-  @action
-  backButtonClick() {
-    const historyPoint = this.history.pop();
-    this.activeIndex = historyPoint.parentNode.index;
-
-    if (this.history.length > 0) {
-      this.backButtonText = I18n.t("admin.customize.theme.schema.back_button", {
-        name: this.history[this.history.length - 1].parentNode.text,
-      });
-    } else {
-      this.backButtonText = null;
-    }
-  }
-
-  @action
-  inputFieldChanged(field, newVal) {
-    if (field.name === this.activeNode.schema.identifier) {
-      this.activeNode.text = newVal;
-    }
-
-    this.activeNode.object[field.name] = newVal;
-  }
-
-  @action
-  addItem(tree) {
-    const schema = tree.schema;
-    const node = this.createNodeFromSchema(schema, tree);
-    tree.data.push(node.object);
-    tree.nodes = [...tree.nodes, node];
-  }
-
-  @action
-  removeItem() {
-    const data = this.activeNode.parentTree.data;
-    data.splice(this.activeIndex, 1);
-    this.tree.nodes = this.tree.nodes.filter((n, i) => i !== this.activeIndex);
-
-    if (data.length > 0) {
-      this.activeIndex = Math.max(this.activeIndex - 1, 0);
-    } else if (this.history.length > 0) {
-      this.backButtonClick();
-    }
-  }
-
-  fieldDescription(fieldName) {
-    const descriptions = this.args.setting.metadata?.property_descriptions;
-
-    if (!descriptions) {
-      return;
-    }
-
-    let key;
-
-    if (this.activeNode.parentTree.propertyName) {
-      key = `${this.activeNode.parentTree.propertyName}.${fieldName}`;
-    } else {
-      key = `${fieldName}`;
-    }
-
-    return descriptions[key];
-  }
-
-  defaultSchemaIdentifier(schemaName, index) {
-    return `${schemaName} ${index + 1}`;
-  }
-
-  createNodeFromSchema(schema, tree) {
-    const object = {};
-    const index = tree.nodes.length;
-    const defaultName = this.defaultSchemaIdentifier(schema.name, index);
-
-    if (schema.identifier) {
-      object[schema.identifier] = defaultName;
-    }
-
-    for (const [name, spec] of Object.entries(schema.properties)) {
-      if (spec.type === "objects") {
-        object[name] = [];
-      }
-    }
-
-    return new Node({
-      schema,
-      object,
-      index,
-      text: defaultName,
-      parentTree: tree,
-    });
-  }
-
   <template>
-    {{! template-lint-disable no-nested-interactive }}
     <div class="schema-theme-setting-editor">
-      <div class="schema-theme-setting-editor__navigation">
-        <ul class="schema-theme-setting-editor__tree">
-          {{#if this.backButtonText}}
-            <li
-              role="link"
-              class="schema-theme-setting-editor__tree-node --back-btn"
-              {{on "click" this.backButtonClick}}
-            >
-              <div class="schema-theme-setting-editor__tree-node-text">
-                {{dIcon "arrow-left"}}
-                {{this.backButtonText}}
-              </div>
-            </li>
-          {{/if}}
+      {{#if this.validationErrorMessage}}
+        <div class="schema-theme-setting-editor__errors">
+          <div class="alert alert-error">
+            {{this.validationErrorMessage}}
+          </div>
+        </div>
+      {{/if}}
 
-          {{#each this.tree.nodes as |node|}}
-            <li
-              role="link"
-              class="schema-theme-setting-editor__tree-node --parent
-                {{if node.active ' --active'}}"
-              {{on "click" (fn this.onClick node)}}
-            >
-              <div class="schema-theme-setting-editor__tree-node-text">
-                <span>{{node.text}}</span>
-                {{#if node.parentTree.propertyName}}
-                  {{dIcon "chevron-right"}}
-                {{else}}
-                  {{dIcon (if node.active "chevron-down" "chevron-right")}}
-                {{/if}}
-              </div>
+      <div class="schema-theme-setting-editor__wrapper">
+        <div class="schema-theme-setting-editor__navigation">
+          <Tree
+            @data={{this.activeData}}
+            @schema={{this.activeSchema}}
+            @onChildClick={{this.onChildClick}}
+            @clickBack={{this.clickBack}}
+            @backButtonText={{this.backButtonText}}
+            @activeIndex={{this.activeIndex}}
+            @updateIndex={{this.updateIndex}}
+            @addItem={{this.addItem}}
+            @addChildItem={{this.addChildItem}}
+            @generateSchemaTitle={{this.generateSchemaTitle}}
+            @registerInputFieldObserver={{this.registerInputFieldObserver}}
+            @unregisterInputFieldObserver={{this.unregisterInputFieldObserver}}
+          />
 
-              {{#each node.trees as |nestedTree|}}
-                <ul>
-                  {{#each nestedTree.nodes as |childNode|}}
-                    <li
-                      role="link"
-                      class="schema-theme-setting-editor__tree-node --child"
-                      {{on
-                        "click"
-                        (fn this.onChildClick childNode nestedTree node)
-                      }}
-                      data-test-parent-index={{node.index}}
-                    >
-                      <div class="schema-theme-setting-editor__tree-node-text">
-                        <span>{{childNode.text}}</span>
-                        {{dIcon "chevron-right"}}
-                      </div>
-                    </li>
-                  {{/each}}
-                  <li
-                    class="schema-theme-setting-editor__tree-node --child --add-button"
-                  >
-                    <DButton
-                      @action={{fn this.addItem nestedTree}}
-                      @translatedLabel={{nestedTree.schema.name}}
-                      @icon="plus"
-                      class="btn-transparent schema-theme-setting-editor__tree-add-button --child"
-                      data-test-parent-index={{node.index}}
-                    />
-                  </li>
-                </ul>
-              {{/each}}
-            </li>
+          <div class="schema-theme-setting-editor__footer">
+            <DButton
+              @disabled={{this.saveButtonDisabled}}
+              @action={{this.saveChanges}}
+              @label="save"
+              class="btn-primary"
+            />
+          </div>
+        </div>
+
+        <div class="schema-theme-setting-editor__fields">
+          {{#each this.fields as |field|}}
+            <FieldInput
+              @name={{field.name}}
+              @value={{field.value}}
+              @spec={{field.spec}}
+              @onValueChange={{fn this.inputFieldChanged field}}
+              @description={{field.description}}
+              @label={{field.label}}
+              @setting={{@setting}}
+            />
           {{/each}}
 
-          <li
-            class="schema-theme-setting-editor__tree-node --parent --add-button"
-          >
+          {{#if (gt this.fields.length 0)}}
             <DButton
-              @action={{fn this.addItem this.tree}}
-              @translatedLabel={{this.tree.schema.name}}
-              @icon="plus"
-              class="btn-transparent schema-theme-setting-editor__tree-add-button --root"
+              @action={{this.removeItem}}
+              @icon="trash-alt"
+              class="btn-danger schema-theme-setting-editor__remove-btn"
             />
-          </li>
-        </ul>
-      </div>
-
-      <div class="schema-theme-setting-editor__fields">
-        {{#each this.fields as |field|}}
-          <FieldInput
-            @name={{field.name}}
-            @value={{field.value}}
-            @spec={{field.spec}}
-            @onValueChange={{fn this.inputFieldChanged field}}
-            @description={{field.description}}
-          />
-        {{/each}}
-        {{#if (gt this.fields.length 0)}}
-          <DButton
-            @action={{this.removeItem}}
-            @icon="trash-alt"
-            class="btn-danger schema-theme-setting-editor__remove-btn"
-          />
-        {{/if}}
-      </div>
-
-      <div class="schema-theme-setting-editor__footer">
-        <DButton
-          @disabled={{this.saveButtonDisabled}}
-          @action={{this.saveChanges}}
-          @label="save"
-          class="btn-primary"
-        />
+          {{/if}}
+        </div>
       </div>
     </div>
   </template>

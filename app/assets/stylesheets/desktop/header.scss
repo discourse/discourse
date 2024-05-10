@@ -16,7 +16,7 @@
   }
 }
 
-@media all and (max-width: 570px) {
+@include breakpoint(mobile-extra-large) {
   .extra-info-wrapper {
     display: none;
   }

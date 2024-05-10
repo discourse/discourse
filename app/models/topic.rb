@@ -16,8 +16,8 @@ class Topic < ActiveRecord::Base
   EXTERNAL_ID_MAX_LENGTH = 50
 
   self.ignored_columns = [
-    "avg_time", # TODO(2021-01-04): remove
-    "image_url", # TODO(2021-06-01): remove
+    "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    "image_url", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   def_delegator :featured_users, :user_ids, :featured_user_ids
@@ -41,6 +41,19 @@ class Topic < ActiveRecord::Base
 
   def self.thumbnail_sizes
     [self.share_thumbnail_size] + DiscoursePluginRegistry.topic_thumbnail_sizes
+  end
+
+  def self.visibility_reasons
+    @visible_reasons ||=
+      Enum.new(
+        op_flag_threshold_reached: 0,
+        op_unhidden: 1,
+        embedded_topic: 2,
+        manually_unlisted: 3,
+        manually_relisted: 4,
+        bulk_action: 5,
+        unknown: 99,
+      )
   end
 
   def thumbnail_job_redis_key(sizes)
@@ -2178,6 +2191,7 @@ end
 #  slow_mode_seconds         :integer          default(0), not null
 #  bannered_until            :datetime
 #  external_id               :string
+#  visibility_reason_id      :integer
 #
 # Indexes
 #

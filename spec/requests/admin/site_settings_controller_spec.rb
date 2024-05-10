@@ -259,7 +259,7 @@ RSpec.describe Admin::SiteSettingsController do
 
         expect(response.status).to eq(422)
         expect(SiteSetting.personal_message_enabled_groups).to eq(
-          Group::AUTO_GROUPS[:trust_level_4],
+          "1|2|#{Group::AUTO_GROUPS[:trust_level_4]}",
         )
       end
 
@@ -267,6 +267,13 @@ RSpec.describe Admin::SiteSettingsController do
         put "/admin/site_settings/title.json", params: { title: "" }
         expect(response.status).to eq(200)
         expect(SiteSetting.title).to eq("")
+      end
+
+      it "allows value to be a blank string for selectable_avatars" do
+        SiteSetting.selectable_avatars = [Fabricate(:image_upload)]
+        put "/admin/site_settings/selectable_avatars.json", params: { selectable_avatars: "" }
+        expect(response.status).to eq(200)
+        expect(SiteSetting.selectable_avatars).to eq([])
       end
 
       it "sanitizes integer values" do

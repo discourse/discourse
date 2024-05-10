@@ -15,7 +15,7 @@ RSpec.describe ThemeSettingsObjectValidator do
             },
           },
           category_property: {
-            type: "category",
+            type: "categories",
             required: true,
           },
           links: {
@@ -49,10 +49,10 @@ RSpec.describe ThemeSettingsObjectValidator do
           objects: [
             {
               title: "1234",
-              category_property: category.id,
+              category_property: [category.id],
               links: [{ position: 1, float: 4.5 }, { position: "string", float: 12 }],
             },
-            { title: "12345678910", category_property: 99_999_999, links: [{ float: 5 }] },
+            { title: "12345678910", category_property: [99_999_999], links: [{ float: 5 }] },
           ],
         )
 
@@ -63,7 +63,7 @@ RSpec.describe ThemeSettingsObjectValidator do
           "The property at JSON Pointer '/0/links/1/position' must be an integer.",
           "The property at JSON Pointer '/0/links/1/float' must be smaller than or equal to 11.5.",
           "The property at JSON Pointer '/1/title' must be at most 10 characters long.",
-          "The property at JSON Pointer '/1/category_property' must be a valid category id.",
+          "The property at JSON Pointer '/1/category_property' must be an array of valid category ids.",
           "The property at JSON Pointer '/1/links/0/position' must be present.",
           "The property at JSON Pointer '/1/links/0/float' must be larger than or equal to 5.5.",
         ],
@@ -155,8 +155,8 @@ RSpec.describe ThemeSettingsObjectValidator do
     end
 
     context "for enum properties" do
-      let(:schema) do
-        {
+      def schema(required: false)
+        property = {
           name: "section",
           properties: {
             enum_property: {
@@ -165,6 +165,9 @@ RSpec.describe ThemeSettingsObjectValidator do
             },
           },
         }
+
+        property[:properties][:enum_property][:required] = true if required
+        property
       end
 
       it "should not return any error messages when the value of the property is in the enum" do
@@ -184,14 +187,16 @@ RSpec.describe ThemeSettingsObjectValidator do
         )
       end
 
-      it "should return the right hash of error messages when enum property is not present" do
-        errors = described_class.new(schema: schema, object: {}).validate
+      it "should not return any error messages when enum property is not present but is not required" do
+        expect(described_class.new(schema: schema(required: false), object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when enum property is not present and is required" do
+        errors = described_class.new(schema: schema(required: true), object: {}).validate
 
         expect(errors.keys).to eq(["/enum_property"])
 
-        expect(errors["/enum_property"].full_messages).to contain_exactly(
-          "must be one of the following: [\"choice 1\", 2, false]",
-        )
+        expect(errors["/enum_property"].full_messages).to contain_exactly("must be present")
       end
     end
 
@@ -419,7 +424,7 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(errors["/string_property"].full_messages).to contain_exactly("must be a string")
       end
 
-      it "should not return an empty hash when string property satsify url validation" do
+      it "should not return an empty hash when string property satisfy url validation" do
         schema = {
           name: "section",
           properties: {
@@ -777,7 +782,7 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(errors.keys).to eq(["/tags_property"])
 
         expect(errors["/tags_property"].full_messages).to contain_exactly(
-          "must have at least 1 tag names",
+          "must have at least 1 tag name",
         )
 
         errors =
@@ -845,19 +850,19 @@ RSpec.describe ThemeSettingsObjectValidator do
       end
     end
 
-    context "for group properties" do
-      it "should not return any error message when the value of the property is a valid id of a group record" do
+    context "for groups properties" do
+      it "should not return any error message when the value of the property is an array of valid group record ids" do
         group = Fabricate(:group)
 
-        schema = { name: "section", properties: { group_property: { type: "group" } } }
+        schema = { name: "section", properties: { groups_property: { type: "groups" } } }
 
         expect(
-          described_class.new(schema: schema, object: { group_property: group.id }).validate,
+          described_class.new(schema: schema, object: { groups_property: [group.id] }).validate,
         ).to eq({})
       end
 
       it "should not return any error messages when the value is not present and it's not required in the schema" do
-        schema = { name: "section", properties: { group_property: { type: "group" } } }
+        schema = { name: "section", properties: { groups_property: { type: "groups" } } }
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
       end
 
@@ -865,44 +870,85 @@ RSpec.describe ThemeSettingsObjectValidator do
         schema = {
           name: "section",
           properties: {
-            group_property: {
-              type: "group",
+            groups_property: {
+              type: "groups",
               required: true,
             },
           },
         }
         errors = described_class.new(schema: schema, object: {}).validate
 
-        expect(errors.keys).to eq(["/group_property"])
-        expect(errors["/group_property"].full_messages).to contain_exactly("must be present")
+        expect(errors.keys).to eq(["/groups_property"])
+        expect(errors["/groups_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not an integer" do
-        schema = { name: "section", properties: { group_property: { type: "group" } } }
+      it "should return the right hash of error messages when value of property is not an array of valid group ids" do
+        schema = { name: "section", properties: { groups_property: { type: "groups" } } }
 
-        errors = described_class.new(schema: schema, object: { group_property: "string" }).validate
+        errors = described_class.new(schema: schema, object: { groups_property: "string" }).validate
 
-        expect(errors.keys).to eq(["/group_property"])
+        expect(errors.keys).to eq(["/groups_property"])
 
-        expect(errors["/group_property"].full_messages).to contain_exactly(
-          "must be a valid group id",
+        expect(errors["/groups_property"].full_messages).to contain_exactly(
+          "must be an array of valid group ids",
         )
       end
 
-      it "should return the right hash of error messages when value of property is not a valid id of a group record" do
+      it "should return the right hash of error messages when number of groups ids does not satisfy min or max validations" do
+        group_1 = Fabricate(:group)
+        group_2 = Fabricate(:group)
+        group_3 = Fabricate(:group)
+
         schema = {
           name: "section",
           properties: {
             group_property: {
-              type: "group",
+              type: "groups",
+              validations: {
+                min: 1,
+                max: 2,
+              },
+            },
+          },
+        }
+
+        errors = described_class.new(schema: schema, object: { group_property: [] }).validate
+
+        expect(errors.keys).to eq(["/group_property"])
+
+        expect(errors["/group_property"].full_messages).to contain_exactly(
+          "must have at least 1 group id",
+        )
+
+        errors =
+          described_class.new(
+            schema: schema,
+            object: {
+              group_property: [group_1.id, group_2.id, group_3.id],
+            },
+          ).validate
+
+        expect(errors.keys).to eq(["/group_property"])
+
+        expect(errors["/group_property"].full_messages).to contain_exactly(
+          "must have at most 2 group ids",
+        )
+      end
+
+      it "should return the right hash of error messages when value of property is an array containing invalid group ids" do
+        schema = {
+          name: "section",
+          properties: {
+            groups_property: {
+              type: "groups",
             },
             child_groups: {
               type: "objects",
               schema: {
                 name: "child_group",
                 properties: {
-                  group_property_2: {
-                    type: "group",
+                  groups_property_2: {
+                    type: "groups",
                   },
                 },
               },
@@ -916,19 +962,19 @@ RSpec.describe ThemeSettingsObjectValidator do
               described_class.new(
                 schema:,
                 object: {
-                  group_property: 99_999_999,
-                  child_groups: [{ group_property_2: 99_999_999 }],
+                  groups_property: [99_999_999],
+                  child_groups: [{ groups_property_2: [99_999_999] }],
                 },
               ).validate
 
-            expect(errors.keys).to eq(%w[/group_property /child_groups/0/group_property_2])
+            expect(errors.keys).to eq(%w[/groups_property /child_groups/0/groups_property_2])
 
-            expect(errors["/group_property"].full_messages).to contain_exactly(
-              "must be a valid group id",
+            expect(errors["/groups_property"].full_messages).to contain_exactly(
+              "must be an array of valid group ids",
             )
 
-            expect(errors["/child_groups/0/group_property_2"].full_messages).to contain_exactly(
-              "must be a valid group id",
+            expect(errors["/child_groups/0/groups_property_2"].full_messages).to contain_exactly(
+              "must be an array of valid group ids",
             )
           end
 
@@ -1027,20 +1073,42 @@ RSpec.describe ThemeSettingsObjectValidator do
       end
     end
 
-    context "for category properties" do
-      it "should not return any error message when the value of the property is a valid id of a category record" do
-        category = Fabricate(:category)
+    context "for categories properties" do
+      fab!(:category_1) { Fabricate(:category) }
+      fab!(:category_2) { Fabricate(:category) }
 
-        schema = { name: "section", properties: { category_property: { type: "category" } } }
+      it "should not return any error message when the value of the property is an array of valid category ids" do
+        schema = { name: "section", properties: { category_property: { type: "categories" } } }
 
         expect(
-          described_class.new(schema: schema, object: { category_property: category.id }).validate,
+          described_class.new(
+            schema: schema,
+            object: {
+              category_property: [category_1.id, category_2.id],
+            },
+          ).validate,
         ).to eq({})
       end
 
       it "should not return any error messages when the value is not present and it's not required in the schema" do
-        schema = { name: "section", properties: { category_property: { type: "category" } } }
+        schema = { name: "section", properties: { category_property: { type: "categories" } } }
         expect(described_class.new(schema: schema, object: {}).validate).to eq({})
+      end
+
+      it "should return the right hash of error messages when value of property is present but empty and it's required" do
+        schema = {
+          name: "section",
+          properties: {
+            category_property: {
+              type: "categories",
+              required: true,
+            },
+          },
+        }
+        errors = described_class.new(schema: schema, object: { category_property: [] }).validate
+
+        expect(errors.keys).to eq(["/category_property"])
+        expect(errors["/category_property"].full_messages).to contain_exactly("must be present")
       end
 
       it "should return the right hash of error messages when value of property is not present and it's required" do
@@ -1048,7 +1116,7 @@ RSpec.describe ThemeSettingsObjectValidator do
           name: "section",
           properties: {
             category_property: {
-              type: "category",
+              type: "categories",
               required: true,
             },
           },
@@ -1059,30 +1127,51 @@ RSpec.describe ThemeSettingsObjectValidator do
         expect(errors["/category_property"].full_messages).to contain_exactly("must be present")
       end
 
-      it "should return the right hash of error messages when value of property is not an integer" do
-        schema = { name: "section", properties: { category_property: { type: "category" } } }
+      it "should return the right hash of error messages when value of property contains an array where not all values are integers" do
+        schema = { name: "section", properties: { category_property: { type: "categories" } } }
 
         errors =
-          described_class.new(schema: schema, object: { category_property: "string" }).validate
+          described_class.new(schema: schema, object: { category_property: ["string"] }).validate
 
         expect(errors.keys).to eq(["/category_property"])
 
         expect(errors["/category_property"].full_messages).to contain_exactly(
-          "must be a valid category id",
+          "must be an array of valid category ids",
         )
       end
 
-      it "should return the right hash of error messages when value of property is not a valid id of a category record" do
-        category = Fabricate(:category)
-
+      it "should return the right hash of error messages when number of category ids does not satisfy min or max validations" do
         schema = {
           name: "section",
           properties: {
             category_property: {
-              type: "category",
+              type: "categories",
+              validations: {
+                min: 1,
+                max: 2,
+              },
+            },
+          },
+        }
+
+        errors = described_class.new(schema: schema, object: { category_property: [] }).validate
+
+        expect(errors.keys).to eq(["/category_property"])
+
+        expect(errors["/category_property"].full_messages).to contain_exactly(
+          "must have at least 1 category id",
+        )
+      end
+
+      it "should return the right hash of error messages when value of property is not an array of valid category ids" do
+        schema = {
+          name: "section",
+          properties: {
+            category_property: {
+              type: "categories",
             },
             category_property_2: {
-              type: "category",
+              type: "categories",
             },
             child_categories: {
               type: "objects",
@@ -1090,7 +1179,7 @@ RSpec.describe ThemeSettingsObjectValidator do
                 name: "child_category",
                 properties: {
                   category_property_3: {
-                    type: "category",
+                    type: "categories",
                   },
                 },
               },
@@ -1098,36 +1187,34 @@ RSpec.describe ThemeSettingsObjectValidator do
           },
         }
 
+        object = {
+          category_property: [99_999_999, category_1.id],
+          category_property_2: [99_999_999],
+          child_categories: [
+            { category_property_3: [99_999_999, category_2.id] },
+            { category_property_3: [category_2.id] },
+          ],
+        }
+
         queries =
           track_sql_queries do
-            errors =
-              described_class.new(
-                schema: schema,
-                object: {
-                  category_property: 99_999_999,
-                  category_property_2: 99_999_999,
-                  child_categories: [
-                    { category_property_3: 99_999_999 },
-                    { category_property_3: category.id },
-                  ],
-                },
-              ).validate
+            errors = described_class.new(schema:, object:).validate
 
             expect(errors.keys).to eq(
               %w[/category_property /category_property_2 /child_categories/0/category_property_3],
             )
 
             expect(errors["/category_property"].full_messages).to contain_exactly(
-              "must be a valid category id",
+              "must be an array of valid category ids",
             )
 
             expect(errors["/category_property_2"].full_messages).to contain_exactly(
-              "must be a valid category id",
+              "must be an array of valid category ids",
             )
 
             expect(
               errors["/child_categories/0/category_property_3"].full_messages,
-            ).to contain_exactly("must be a valid category id")
+            ).to contain_exactly("must be an array of valid category ids")
           end
 
         # only 1 SQL query should be executed to check if category ids are valid

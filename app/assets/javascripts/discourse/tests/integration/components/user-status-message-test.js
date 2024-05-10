@@ -48,7 +48,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     this.status.ends_at = "2100-02-01T12:30:00.000Z";
 
     await render(
-      hbs`<UserStatusMessage @status={{this.status}} /><DInlineTooltip />`
+      hbs`<UserStatusMessage @status={{this.status}} /><DTooltips />`
     );
     await mouseenter();
 
@@ -66,7 +66,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     this.status.ends_at = "2100-02-02T12:30:00.000Z";
 
     await render(
-      hbs`<UserStatusMessage @status={{this.status}} /><DInlineTooltip />`
+      hbs`<UserStatusMessage @status={{this.status}} /><DTooltips />`
     );
     await mouseenter();
 
@@ -84,7 +84,7 @@ module("Integration | Component | user-status-message", function (hooks) {
     this.status.ends_at = null;
 
     await render(
-      hbs`<UserStatusMessage @status={{this.status}} /><DInlineTooltip />`
+      hbs`<UserStatusMessage @status={{this.status}} /><DTooltips />`
     );
     await mouseenter();
 
@@ -97,7 +97,7 @@ module("Integration | Component | user-status-message", function (hooks) {
 
   test("it shows tooltip by default", async function (assert) {
     await render(
-      hbs`<UserStatusMessage @status={{this.status}} /><DInlineTooltip />`
+      hbs`<UserStatusMessage @status={{this.status}} /><DTooltips />`
     );
     await mouseenter();
 

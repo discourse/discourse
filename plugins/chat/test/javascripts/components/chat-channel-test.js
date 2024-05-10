@@ -1,10 +1,11 @@
+import { getOwner } from "@ember/application";
 import { render, triggerEvent, waitFor } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
   "Discourse Chat | Component | chat-channel | status on mentions",
@@ -58,7 +59,7 @@ module(
         })
       );
 
-      this.channel = fabricators.channel({
+      this.channel = new ChatFabricators(getOwner(this)).channel({
         id: channelId,
         currentUserMembership: { following: true },
         meta: { can_join_chat_channel: false },
@@ -157,9 +158,7 @@ module(
     });
 
     test("it shows status tooltip", async function (assert) {
-      await render(
-        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
-      );
+      await render(hbs`<ChatChannel @channel={{this.channel}} /><DTooltips />`);
       await triggerEvent(statusSelector(mentionedUser.username), "mousemove");
 
       assert.equal(

@@ -21,7 +21,7 @@ export default {
         preview: null,
         secret: false,
         type: "username",
-        keywords: "blah blah",
+        keywords: ["blah blah"],
       },
       {
         setting: "logo",

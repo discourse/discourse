@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::RunProblemChecks do
-  before do
+  around do |example|
     ProblemCheck::ScheduledCheck =
       Class.new(ProblemCheck) do
         self.perform_every = 30.minutes
@@ -10,9 +10,14 @@ RSpec.describe Jobs::RunProblemChecks do
       end
 
     ProblemCheck::NonScheduledCheck = Class.new(ProblemCheck) { def call = [] }
-  end
 
-  after do
+    stub_const(
+      ProblemCheck,
+      "CORE_PROBLEM_CHECKS",
+      [ProblemCheck::ScheduledCheck, ProblemCheck::NonScheduledCheck],
+      &example
+    )
+
     Discourse.redis.flushdb
     AdminDashboardData.reset_problem_checks
 

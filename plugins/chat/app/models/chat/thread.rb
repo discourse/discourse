@@ -2,7 +2,6 @@
 
 module Chat
   class Thread < ActiveRecord::Base
-    EXCERPT_LENGTH = 150
     MAX_TITLE_LENGTH = 100
 
     include Chat::ThreadCache
@@ -43,8 +42,12 @@ module Chat
     # as the last message in this case as a fallback.
     before_create { self.last_message_id = self.original_message_id }
 
-    def add(user)
-      Chat::UserChatThreadMembership.find_or_create_by!(user: user, thread: self)
+    def add(user, notification_level: Chat::NotificationLevels.all[:tracking])
+      Chat::UserChatThreadMembership.find_or_create_by!(
+        user: user,
+        thread: self,
+        notification_level: notification_level,
+      )
     end
 
     def remove(user)
@@ -53,12 +56,6 @@ module Chat
 
     def membership_for(user)
       user_chat_thread_memberships.find_by(user: user)
-    end
-
-    def mark_read_for_user!(user, last_read_message_id: nil)
-      membership_for(user)&.update!(
-        last_read_message_id: last_read_message_id || self.last_message_id,
-      )
     end
 
     def replies
@@ -74,7 +71,7 @@ module Chat
     end
 
     def excerpt
-      original_message.excerpt(max_length: EXCERPT_LENGTH)
+      original_message.excerpt
     end
 
     def update_last_message_id!

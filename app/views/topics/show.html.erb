@@ -51,7 +51,7 @@
         <% end %>
       </div>
 
-      <% if @topic_view.posts&.first && !@topic_view.posts.first.is_first_post? %>
+      <% if @topic_view.crawler_posts&.first && !@topic_view.crawler_posts.first.is_first_post? %>
         <span itemprop='author' itemscope itemtype="http://schema.org/Person">
           <meta itemprop='name' content='<%= @topic_view.topic.user.username %>'>
           <link itemprop='url' href='<%= Discourse.base_url %>/u/<%= @topic_view.topic.user.username %>'>

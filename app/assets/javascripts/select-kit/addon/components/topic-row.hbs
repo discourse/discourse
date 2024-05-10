@@ -3,7 +3,7 @@
 <div class="topic-categories">
   {{bound-category-link
     this.item.category
-    recursive=true
+    ancestors=this.item.category.predecessors
     hideParent=true
     link=false
   }}

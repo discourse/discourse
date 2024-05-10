@@ -36,8 +36,7 @@
             {{if this.model.loadingBefore 'loading'}}"
         >
           <CountI18n
-            @key="topic_count_"
-            @suffix="latest"
+            @key="topic_count_latest"
             @count={{or this.model.loadingBefore this.incomingCount}}
           />
           {{#if @model.loadingBefore}}

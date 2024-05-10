@@ -41,6 +41,7 @@ export default class AdminCustomizeThemesShowRoute extends Route {
       colorSchemes: parentController.get("model.extras.color_schemes"),
       editingName: false,
       editingThemeSetting: false,
+      userLocale: parentController.get("model.extras.locale"),
     });
 
     this.handleHighlight(model);

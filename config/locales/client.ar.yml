@@ -337,7 +337,8 @@ ar:
         us_west_1: "غرب الولايات المتحدة (كاليفورنيا الشمالية)"
         us_west_2: "غرب الولايات المتحدة (أوريغون)"
     clear_input: "مسح الإدخال"
-    edit: "عدَّل عنوان هذا الموضوع وفئته"
+    edit: "تعديل"
+    edit_topic: "عدَّل عنوان هذا الموضوع وفئته"
     expand: "وسّع"
     not_implemented: "عذرًا، لم يتم تنفيذ هذه الميزة بعد."
     no_value: "لا"
@@ -390,7 +391,13 @@ ar:
     weekly: "أسبوعيًا"
     every_month: "كل شهر"
     every_six_months: "كل ستة أشهر"
-    max_of_count: "%{count} كحدٍ أقصى"
+    max_of_count:
+      zero: "%{count} كحدٍ أقصى"
+      one: "%{count} كحدٍ أقصى"
+      two: "%{count} كحدٍ أقصى"
+      few: "%{count} كحدٍ أقصى"
+      many: "%{count} كحدٍ أقصى"
+      other: "%{count} كحدٍ أقصى"
     character_count:
       zero: "%{count} حرف"
       one: "حرف واحد (%{count})"
@@ -438,6 +445,7 @@ ar:
         unbookmark: "انقر لإزالة كل الإشارات المرجعية في هذا الموضوع"
         unbookmark_with_reminder: "انقر لإزالة جميع الإشارات المرجعية والتذكيرات في هذا الموضوع"
     bookmarks:
+      bookmarked_success: "وضع إشارة مرجعية!"
       created: "لقد وضعت إشارة مرجعية على هذا المنشور. %{name}"
       created_generic: "لقد وضعت إشارة مرجعية على هذا. %{name}"
       create: "إنشاء إشارة مرجعية"
@@ -462,6 +470,7 @@ ar:
         clear_reminder: "الاحتفاظ بالعلامة المرجعية ومسح التذكير"
       search_placeholder: "البحث عن الإشارات المرجعية بالاسم أو عنوان الموضوع أو محتوى المنشور"
       search: "البحث"
+      bookmark: "وضع إشارة مرجعية"
       reminders:
         today_with_time: "اليوم في الساعة %{time}"
         tomorrow_with_time: "غدًا في الساعة %{time}"
@@ -852,6 +861,7 @@ ar:
       never: "أبدًا"
       last_custom: "آخر تاريخ ووقت مخصَّصين"
       custom: "تاريخ ووقت مخصَّصان"
+      custom_short: "مخصَّص..."
       select_timeframe: "تحديد إطار زمني"
     user_action:
       user_posted_topic: "نشر <a href='%{userUrl}'>%{user}</a> ‏<a href='%{topicUrl}'>الموضوع</a>"
@@ -880,7 +890,6 @@ ar:
       topic_count_long: "الموضوعات المنشأة"
       post_count: "الردود"
       post_count_long: "الردود المنشورة"
-      no_results: "لم يتم العثور على أي نتيجة."
       days_visited: "الزيارات"
       days_visited_long: "أيام الزيارة"
       posts_read: "المقروءة"
@@ -1148,7 +1157,6 @@ ar:
         image: "تحميل صورة"
       default_notifications:
         modal_title: "الإشعارات الافتراضية للمستخدم"
-        modal_description: "هل ترغب في تطبيق هذا التغيير بأثر رجعي؟ سيؤدي ذلك إلى تغيير التفضيلات لعدد %{count} مستخدم حالي."
         modal_yes: "نعم"
         modal_no: "لا، تطبيق التغيير من الآن فصاعدًا فقط"
     user_action_groups:
@@ -1165,12 +1173,19 @@ ar:
       "13": "صندوق الوارد"
       "14": "قيد الانتظار"
       "15": "المسودات"
+      "17": "الروابط"
     categories:
       categories_label: "الفئات"
       subcategories_label: "الفئات الفرعية"
       no_subcategories: "لا توجد فئات فرعية"
       remove_filter: "إزالة التصفية"
-      plus_more_count: "+%{count} أكثر"
+      plus_more_count:
+        zero: "+%{count} أكثر"
+        one: "+%{count} أكثر"
+        two: "+%{count} أكثر"
+        few: "+%{count} أكثر"
+        many: "+%{count} أكثر"
+        other: "+%{count} أكثر"
       category: "الفئة"
       category_list: "عرض قائمة الفئات"
       reorder:
@@ -1222,7 +1237,13 @@ ar:
         few: "%{count} موضوعات جديدة خلال الشهر الماضي."
         many: "%{count} موضوعًا جديدًا خلال الشهر الماضي."
         other: "%{count} موضوع جديد خلال الشهر الماضي."
-      n_more: "الفئات (%{count} أكثر)…"
+      n_more:
+        zero: "الفئات (%{count} أكثر)…"
+        one: "الفئات (%{count} أكثر)…"
+        two: "الفئات (%{count} أكثر)…"
+        few: "الفئات (%{count} أكثر)…"
+        many: "الفئات (%{count} أكثر)…"
+        other: "الفئات (%{count} أكثر)…"
     ip_lookup:
       title: البحث عن عناوين IP
       hostname: اسم المضيف
@@ -1231,7 +1252,13 @@ ar:
       organisation: المؤسسة
       phone: الهاتف
       other_accounts: "الحسابات الأخرى بعنوان IP هذا:"
-      delete_other_accounts: "حذف %{count}"
+      delete_other_accounts:
+        zero: "حذف %{count}"
+        one: "حذف %{count}"
+        two: "حذف %{count}"
+        few: "حذف %{count}"
+        many: "حذف %{count}"
+        other: "حذف %{count}"
       username: "اسم المستخدم"
       trust_level: "مستوى الثقة"
       read_time: "وقت القراءة"
@@ -1276,10 +1303,8 @@ ar:
         ignore_duration_time_frame_required: "يُرجى تحديد إطار زمني"
         ignore_no_users: "ليس لديك أي مستخدمين تم تجاهلهم."
         ignore_option: "التجاهل"
-        ignore_option_title: "لن تتلقى إشعارات ذات صلة بهذا المستخدم وسيتم إخفاء جميع موضوعاته وردوده."
         add_ignored_user: "إضافة…"
         mute_option: "الكتم"
-        mute_option_title: "لن تتلقى أي إشعارات ذات صلة بهذا المستخدم."
         normal_option: "عادية"
         normal_option_title: "سنُرسل إليك إشعارًا في حال ردَّ هذا المستخدم عليك أو اقتبس كلامك أو أشار إليك."
       notification_schedule:
@@ -1361,7 +1386,6 @@ ar:
         description: "تخطي نصائح وشارات تهيئة المستخدم الجديد"
       reset_seen_user_tips: "عرض نصائح المستخدم مرة أخرى"
       theme_default_on_all_devices: "جعل هذه السمة الافتراضية على كل أجهزتي"
-      color_scheme_default_on_all_devices: "تعيين نظام (أنظمة) الألوان الافتراضي على جميع أجهزتي"
       color_scheme: "نظام الألوان"
       color_schemes:
         default_description: "السمة الافتراضية"
@@ -1377,7 +1401,6 @@ ar:
       allow_private_messages: "السماح للمستخدمين الآخرين بإرسال رسائل خاصة إليَّ"
       external_links_in_new_tab: "فتح كل الروابط الخارجية في علامة تبويب جديدة"
       enable_quoting: "تفعيل الرد باقتباس للنص المميز"
-      enable_defer: "تفعيل التأجيل لوضع علامة على الموضوعات كغير مقروءة"
       experimental_sidebar:
         enable: "تفعيل الشريط الجانبي"
         options: "الخيارات"
@@ -1847,6 +1870,8 @@ ar:
         instructions: "لغة واجهة المستخدم. ستتغير عند تحديث الصفحة."
         default: "(الافتراضية)"
         any: "أي"
+      homepage:
+        default: "(الافتراضية)"
       password_confirmation:
         title: "تكرار كلمة المرور"
       invite_code:
@@ -2041,7 +2066,6 @@ ar:
         same_as_username: "كلمة المرور تُطابق اسم المستخدم."
         same_as_email: "كلمة المرور تُطابق عنوان البريد الإلكتروني."
         ok: "تبدو كلمة مرورك جيدة."
-        instructions: "يجب ألا يقل عن %{count} من الأحرف."
         required: "يُرجى إدخال كلمة المرور"
         confirm: "تأكيد"
         incorrect_password: "كلمة المرور المدخلة غير صحيحة."
@@ -2169,7 +2193,6 @@ ar:
         content: "تُستخدَم الإشعارات لإبقائك على اطِّلاع بما يحدث في المجتمع."
       topic_timeline:
         title: "الجدول الزمني للموضوع"
-        content: "مرِّر عبر المنشور بسرعة باستخدام الجدول الزمني للموضوع."
       post_menu:
         title: "قائمة المشاركة"
         content: "انظر كيف يمكنك التفاعل بطريقة أخرى مع المنشور بالنقر على النقاط الثلاثة!"
@@ -2179,10 +2202,6 @@ ar:
       suggested_topics:
         title: "واصل القراءة!"
         content: "إليك بعض الموضوعات التي نظن أنك قد ترغب في قراءتها بعد ذلك."
-      admin_guide:
-        title: "مرحبًا بك في موقعك الجديد!"
-        content: "<a href='%{admin_guide_url}'>اقرأ دليل المشرف</a> لمواصلة بناء موقعك و مجتمعك."
-        content_no_url: "اقرأ دليل المسؤول لمتابعة بناء موقعك ومجتمعك."
     loading: "جارٍ التحميل…"
     errors:
       prev_page: "في أثناء محاولة التحميل"
@@ -2207,7 +2226,6 @@ ar:
       close: "إغلاق"
       dismiss_error: "تجاهل الخطأ"
     close: "إغلاق"
-    assets_changed_confirm: "لقد تلقى هذا الموقع ترقية برمجية للتو. هل تريد الحصول على أحدث نسخة الآن؟"
     logout: "تم تسجيل خروجك."
     refresh: "تحديث"
     home: "الصفحة الرئيسية"
@@ -2581,7 +2599,6 @@ ar:
         few: "ستؤدي الإشارة إلى %{group} إلى إرسال إشعار إلى <a href='%{group_link}'>%{count} أشخاص</a>."
         many: "ستؤدي الإشارة إلى %{group} إلى إرسال إشعار إلى <a href='%{group_link}'>%{count} شخصًا</a>."
         other: "ستؤدي الإشارة إلى %{group} إلى إرسال إشعار إلى <a href='%{group_link}'>%{count} شخص</a>."
-      larger_group_mentioned: "ستؤدي الإشارة إلى %{group} إلى إرسال إشعار إلى <a href='%{group_link}'>%{count} من الأشخاص</a>. هل أنت متأكد؟"
       cannot_see_mention:
         category: "لقد أشرت إلى @%{username}، لكنه لن يتلقى إشعارًا لأنه ليس لديه إذن بالوصول إلى هذه الفئة. عليك إضافته إلى إحدى المجموعات التي لديها إذن بالوصول إلى هذه الفئة."
         private: "لقد أشرت إلى @%{username}، لكنه لن يتلقى إشعارًا لأنه لا يمكنه رؤية هذه الرسالة الخاصة. عليك دعوته إلى هذه الرسالة الخاصة."
@@ -2822,6 +2839,7 @@ ar:
         many: "سجَّل إعجابه على %{count} من منشوراتك"
         other: "سجَّل إعجابه على %{count} من منشوراتك"
       liked_consolidated: "‏<span>⁨%{username}⁩</span> ‏%{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       invited_to_private_message: "‏<p><span>⁨%{username}⁩</span> ‏%{description}"
       invited_to_topic: "‏<span>⁨%{username}⁩</span> ‏%{description}"
@@ -3020,7 +3038,6 @@ ar:
           seen: قرأتها
           unseen: لم أقرأها
           wiki: تكون من النوع Wiki
-          images: يتضمَّن صورًا
           all_tags: كل الوسوم أعلاه
         statuses:
           label: حيث تكون الموضوعات
@@ -3151,7 +3168,6 @@ ar:
         unlist_topics: "إلغاء إدراج الموضوعات"
         relist_topics: "إعادة إدراج الموضوعات"
         reset_bump_dates: "إعادة تعيين تواريخ الرفع"
-        defer: "تأجيل"
         delete: "حذف الموضوعات"
         dismiss: "تجاهل"
         dismiss_read: "تجاهل كل الموضوعات غير المقروءة"
@@ -3216,6 +3232,13 @@ ar:
           few: "لقد حدَّدت <b>%{count}</b> موضوعات."
           many: "لقد حدَّدت <b>%{count}</b> موضوعًا."
           other: "لقد حدَّدت <b>%{count}</b> موضوع."
+        selected_count:
+          zero: "المحدَّدة: %{count}"
+          one: "المحدَّدة: %{count}"
+          two: "المحدَّدة: %{count}"
+          few: "المحدَّدة: %{count}"
+          many: "المحدَّدة: %{count}"
+          other: "المحدَّدة: %{count}"
         change_tags: "استبدال الوسوم"
         append_tags: "إضافة الوسوم"
         choose_new_tags: "اختيار الوسوم الجديدة لهذه الموضوعات:"
@@ -3269,6 +3292,7 @@ ar:
     topic_bulk_actions:
       close_topics:
         name: "إغلاق الموضوعات"
+        optional: (اختياري)
       archive_topics:
         name: "أرشفة الموضوعات"
       unlist_topics:
@@ -3287,7 +3311,7 @@ ar:
         name: "تحديث الفئة"
         description: "اختر الفئة الجديدة للموضوعات المحددة"
       update_notifications:
-        name: "تحديث الإشعارات…"
+        name: "تحديث الإشعارات"
     topic:
       filter_to:
         zero: "%{count} منشور في الموضوع"
@@ -3307,9 +3331,6 @@ ar:
       move_to_inbox:
         title: "النقل إلى صندوق الوارد"
         help: "نقل الرسالة مرة أخرى إلى صندوق الوارد"
-      defer:
-        help: "وضع علامة كغير مقروءة"
-        title: "تأجيل"
       list: "الموضوعات"
       new: "موضوع جديد"
       unread: "غير مقروء"
@@ -4398,8 +4419,6 @@ ar:
       pinned:
         title: "مثبَّت"
         help: "هذا الموضوع مثبَّت لك وسيتم عرضه في أعلى فئته"
-      unlisted:
-        help: "هذا الموضوع غير مدرج؛ لذا فإنه لن يظهر في قوائم الموضوعات، ولا يمكن الوصول إليه إلا برابط مباشر"
       personal_message:
         title: "هذا الموضوع عبارة عن رسالة خاصة"
         help: "هذا الموضوع عبارة عن رسالة خاصة"
@@ -4678,7 +4697,6 @@ ar:
         mark_tracking: "%{shortcut} تتبُّع الموضوع"
         mark_watching: "%{shortcut} مراقبة الموضوع"
         print: "%{shortcut} طباعة الموضوع"
-        defer: "%{shortcut} تأجيل الموضوع"
         topic_admin_actions: "%{shortcut} فتح إجراءات المشرف على الموضوع"
         archive_private_message: "%{shortcut} تبديل أرشفة الرسائل الخاصة"
       search_menu:
@@ -5032,23 +5050,19 @@ ar:
               label: "الأيقونة"
               validation:
                 blank: "لا يمكن ترك الأيقونة فارغة"
-                maximum: "يجب أن يكون اسم الأيقونة أقصر من %{count} من الأحرف"
             name:
               label: "الاسم"
               validation:
                 blank: "لا يمكن ترك الاسم فارغًا"
-                maximum: "يجب يكون الاسم أقصر من %{count} من الأحرف"
             value:
               label: "رابط"
               validation:
                 blank: "لا يمكن ترك الرابط فارغًا"
-                maximum: "يجب يكون الرابط أقصر من %{count} من الأحرف"
                 invalid: "التنسيق غير صالح"
           title:
             label: "عنوان القسم"
             validation:
               blank: "لا يمكن ترك العنوان فارغًا"
-              maximum: "يجب أن يكون العنوان أقصر من %{count} من الأحرف"
         about:
           header_link_text: "نبذة"
         messages:
@@ -5115,7 +5129,13 @@ ar:
             review:
               content: "المراجعة"
               title: "المنشورات المُبلَغ عنها والعناصر الأخرى في قائمة الانتظار"
-              pending_count: "بقي %{count}"
+              pending_count:
+                zero: "بقي %{count}"
+                one: "بقي %{count}"
+                two: "بقي %{count}"
+                few: "بقي %{count}"
+                many: "بقي %{count}"
+                other: "بقي %{count}"
         global_section: "القسم العام، مرئي للجميع"
       panels:
         forum:
@@ -5137,12 +5157,12 @@ ar:
         upload: "تحميل"
         uploading: "جارٍ التحميل"
       errors:
-        valueMissing:
+        value_missing:
           default: "يُرجى ملء هذا الحقل."
-          select-one: "يُرجى تحديد عنصر في القائمة."
-          select-multiple: "يُرجى تحديد عنصر واحد على الأقل في القائمة."
+          select_one: "يُرجى تحديد عنصر في القائمة."
+          select_multiple: "يُرجى تحديد عنصر واحد على الأقل في القائمة."
           checkbox: "يُرجى تحديد هذا المربع إذا كنت تريد المتابعة."
-        typeMismatch:
+        type_mismatch:
           default: "يُرجى إدخال قيمة صالحة."
           color: "يُرجى إدخال لون."
           date: "يُرجى إدخال تاريخ."
@@ -5152,36 +5172,36 @@ ar:
           tel: "يُرجى إدخال رقم هاتف صالح."
           text: "يُرجى إدخال قيمة نصية."
           url: "يُرجى إدخال عنوان URL صالح."
-        tooShort:
-          zero: "يجب أن يكون طول الإدخال %{count} حرف أو أطول."
+        too_short:
+          zero: "يجب أن يكون طول الإدخال %{count} حرفًا أو أطول."
           one: "يجب أن يكون طول الإدخال حرفًا واحدًا (%{count}) أو أطول."
           two: "يجب أن يكون طول الإدخال حرفَين (%{count}) أو أطول."
           few: "يجب أن يكون طول الإدخال %{count} أحرف أو أطول."
           many: "يجب أن يكون طول الإدخال %{count} حرفًا أو أطول."
-          other: "يجب أن يكون طول الإدخال %{count} حرف أو أطول."
-        tooLong:
-          zero: "يجب أن يكون طول الإدخال أقل من %{count} حرف."
+          other: "يجب أن يكون طول الإدخال %{count} حرفًا أو أطول."
+        too_long:
+          zero: "يجب أن يكون طول الإدخال أقل من %{count} حرفًا."
           one: "يجب أن يكون طول الإدخال أقل من حرف واحد (%{count})."
           two: "يجب أن يكون طول الإدخال أقل من حرفين (%{count})."
           few: "يجب أن يكون طول الإدخال أقل من %{count} أحرف."
           many: "يجب أن يكون طول الإدخال أقل من %{count} حرفًا."
-          other: "يجب أن يكون طول الإدخال أقل من %{count} حرف."
-        rangeOverflow:
+          other: "يجب أن يكون طول الإدخال أقل من %{count} حرفًا."
+        range_overflow:
           zero: "يجب أن يكون الإدخال أقصر من %{count}."
           one: "يجب أن يكون الإدخال أقصر من %{count}."
           two: "يجب أن يكون الإدخال أقصر من %{count}."
           few: "يجب أن يكون الإدخال أقصر من %{count}."
           many: "يجب أن يكون الإدخال أقصر من %{count}."
           other: "يجب أن يكون الإدخال أقصر من %{count}."
-        rangeUnderflow:
+        range_underflow:
           zero: "يجب ان يكون الإدخال أطول من %{count}."
           one: "يجب ان يكون الإدخال أطول من %{count}."
           two: "يجب ان يكون الإدخال أطول من %{count}."
           few: "يجب ان يكون الإدخال أطول من %{count}."
           many: "يجب ان يكون الإدخال أطول من %{count}."
           other: "يجب ان يكون الإدخال أطول من %{count}."
-        patternMismatch: "يُرجى مطابقة التنسيق المطلوب."
-        badInput: "يُرجى إدخال قيمة صالحة."
+        pattern_mismatch: "يُرجى مطابقة التنسيق المطلوب."
+        bad_input: "يُرجى إدخال قيمة صالحة."
     table_builder:
       title: "أداة إنشاء الجداول"
       modal:
@@ -5267,10 +5287,8 @@ ar:
         up_to_date: "أنت على اطِّلاع بآخر المستجدات!"
         critical_available: "يتوفَّر تحديث مهم."
         updates_available: "تتوفَّر تحديثات."
-        please_upgrade: "يُرجى الترقية!"
         no_check_performed: "لم يتم التحقُّق من وجود تحديثات. تأكَّد أن sidekiq قيد التشغيل."
         stale_data: "لم يتم التحقُّق من توفُّر تحديثات مؤخرًا. تأكَّد أن sidekiq قيد التشغيل."
-        version_check_pending: "يبدو أنك قد حدَّثت مؤخرًا. رائع!"
         installed_version: "مثبَّت"
         latest_version: "الحديثة"
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
@@ -5702,6 +5720,8 @@ ar:
           emoji: "الرمز التعبيري"
           navigation: "التنقل"
           themes: "السمات"
+          components:
+            title: "المكوِّنات"
       email_settings:
         title: "إعدادات البريد الإلكتروني"
         sidebar_link:
@@ -5929,13 +5949,25 @@ ar:
           convert_theme_tooltip: "تحويل هذه السمة إلى مكوِّن"
           inactive_themes: "السمات غير النشطة:"
           inactive_components: "المكوِّنات غير المستخدمة:"
-          selected: "المحدَّدة: %{count}"
+          selected:
+            zero: "المحدَّدة: %{count}"
+            one: "المحدَّدة: %{count}"
+            two: "المحدَّدة: %{count}"
+            few: "المحدَّدة: %{count}"
+            many: "المحدَّدة: %{count}"
+            other: "المحدَّدة: %{count}"
           cancel: "إلغاء"
           broken_theme_tooltip: "هذه السمة بها أخطاء في CSS أو HTML أو YAML"
           disabled_component_tooltip: "لقد تم إيقاف هذا المكوِّن"
           default_theme_tooltip: "هذه السمة هي السمة الافتراضية للموقع"
           updates_available_tooltip: "تتوفَّر تحديثات لهذه السمة"
-          and_x_more: "و%{count} أخرى."
+          and_x_more:
+            zero: "و%{count} أخرى."
+            one: "و%{count} أخرى."
+            two: "و%{count} أخرى."
+            few: "و%{count} أخرى."
+            many: "و%{count} أخرى."
+            other: "و%{count} أخرى."
           collapse: طي
           uploads: "التحميلات"
           no_uploads: "يمكنك تحميل الملفات المرتبطة بسمتك، مثل الخطوط والصور"
@@ -6062,8 +6094,6 @@ ar:
           schema:
             fields:
               required: "*مطلوب"
-              string:
-                too_short: "يجب ألا يقل عدد الأحرف عن %{count}"
               number:
                 too_small: "يجب أن تكون أكبر من أو تساوي %{count}"
                 too_large: "يجب أن تكون أقل من أو تساوي %{count}"
@@ -6435,9 +6465,6 @@ ar:
           silence: "كتم الحسابات الجديدة إذا كانت أول منشور لها يحتوي على أيٍّ من هذه الكلمات. سيتم إخفاء المنشور تلقائيًا إلى أن يوافق عليه فريق العمل."
           link: "استبدال الكلمات في المنشورات بروابط."
         form:
-          label: "تتضمَّن كلمة أو عبارة"
-          placeholder: "إدخال الكلمة أو العبارة (الرمز * هو حرف بدل)"
-          placeholder_regexp: "تعبير عادي"
           replace_label: "استبدال"
           replace_placeholder: "مثال"
           tag_label: "الوسم"
@@ -6933,7 +6960,6 @@ ar:
           empty: "لا توجد صور حتى الآن. يُرجى تحميل واحدة."
           upload:
             label: "تحميل"
-            title: "تحميل الصور"
         selectable_avatars:
           title: "قائمة الصور الرمزية التي يمكن للمستخدمين الاختيار منها"
         categories:
@@ -6969,7 +6995,6 @@ ar:
         secret_list:
           invalid_input: "لا يمكن ترك حقول الإدخال فارغة أو أن تتضمَّن شريطًا عموديًا."
         default_categories:
-          modal_description: "هل ترغب في تطبيق هذا التغيير بأثر رجعي؟ سيؤدي ذلك إلى تغيير التفضيلات لعدد %{count} مستخدم حالي."
           modal_yes: "نعم"
           modal_no: "لا، تطبيق التغيير من الآن فصاعدًا فقط"
         simple_list:
@@ -7072,9 +7097,7 @@ ar:
           perform: "منح شارة للمستخدمين"
           upload_csv: تحميل ملف CSV يتضمَّن عناوين البريد الإلكتروني للمستخدمين أو أسماء المستخدمين
           aborted: يُرجى تحميل ملف CSV يتضمَّن عناوين البريد الإلكتروني للمستخدمين أو أسماء المستخدمين
-          success: تم استلام ملف CSV وسيتلقَّى %{count} مستخدم الشارة قريبًا.
           csv_has_unmatched_users: "الإدخالات التالية موجودة في ملف CSV ولكن لا يمكن مطابقتها مع المستخدمين الحاليين، وبالتالي لن تتلقى الشارة:"
-          csv_has_unmatched_users_truncated_list: "كان هناك %{count} إدخال في ملف CSV تعذَّرت مطابقته مع المستخدمين الحاليين، وبالتالي لن تتلقى الشارة. نظرًا للعدد الكبير من الإدخالات غير المتطابقة، يتم عرض أول 100 فقط:"
           replace_owners: إزالة الشارة من مالكيها السابقين
           grant_existing_holders: منح شارات إضافة لحاملي الشارات الحاليين
       emoji:

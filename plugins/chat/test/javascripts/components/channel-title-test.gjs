@@ -1,14 +1,15 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | <ChannelTitle />", function (hooks) {
   setupRenderingTest(hooks);
 
   test("icon", async function (assert) {
-    const channel = fabricators.channel();
+    const channel = new ChatFabricators(getOwner(this)).channel();
 
     await render(<template><ChannelTitle @channel={{channel}} /></template>);
 
@@ -16,7 +17,7 @@ module("Discourse Chat | Component | <ChannelTitle />", function (hooks) {
   });
 
   test("label", async function (assert) {
-    const channel = fabricators.channel();
+    const channel = new ChatFabricators(getOwner(this)).channel();
 
     await render(<template><ChannelTitle @channel={{channel}} /></template>);
 

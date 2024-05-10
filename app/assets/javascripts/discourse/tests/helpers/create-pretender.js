@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Pretender from "pretender";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
@@ -972,9 +973,24 @@ export function applyDefaultHandlers(pretender) {
   pretender.delete("/admin/customize/watched_words/:id.json", success);
 
   pretender.post("/admin/customize/watched_words.json", (request) => {
-    const result = parsePostData(request.requestBody);
-    result.id = new Date().getTime();
-    result.case_sensitive = result.case_sensitive === "true";
+    const requestData = parsePostData(request.requestBody);
+
+    const result = cloneJSON(
+      fixturesByUrl["/admin/customize/watched_words.json"]
+    );
+    result.words = [];
+
+    const words = requestData.words || requestData["words[]"];
+    words.forEach((word, index) => {
+      result.words[index] = EmberObject.create({
+        id: new Date().getTime(),
+        word,
+        action: requestData.action_key,
+        replacement: requestData.replacement,
+        case_sensitive: requestData.case_sensitive === "true",
+      });
+    });
+
     return response(200, result);
   });
 

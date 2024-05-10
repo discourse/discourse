@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import {
   click,
   find,
@@ -9,12 +10,17 @@ import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDefaultToast from "float-kit/components/d-default-toast";
+import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   setupRenderingTest(hooks);
 
   async function hover() {
     await triggerEvent(".fk-d-tooltip__trigger", "mousemove");
+  }
+
+  async function close() {
+    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
   }
 
   test("@label", async function (assert) {
@@ -35,11 +41,44 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     );
     await hover();
 
-    assert.dom(".fk-d-tooltip").hasText("content");
+    assert.dom(".fk-d-tooltip__content").hasText("content");
+  });
+
+  test("@onRegisterApi", async function (assert) {
+    this.api = null;
+    this.onRegisterApi = (api) => (this.api = api);
+
+    await render(
+      hbs`<DTooltip @inline={{true}} @onRegisterApi={{this.onRegisterApi}} />`
+    );
+
+    assert.ok(this.api instanceof DTooltipInstance);
+  });
+
+  test("@onShow", async function (assert) {
+    this.test = false;
+    this.onShow = () => (this.test = true);
+
+    await render(hbs`<DTooltip @inline={{true}} @onShow={{this.onShow}} />`);
+
+    await hover();
+
+    assert.strictEqual(this.test, true);
+  });
+
+  test("@onClose", async function (assert) {
+    this.test = false;
+    this.onClose = () => (this.test = true);
+
+    await render(hbs`<DTooltip @inline={{true}} @onClose={{this.onClose}} />`);
+    await hover();
+    await close();
+
+    assert.strictEqual(this.test, true);
   });
 
   test("-expanded class", async function (assert) {
-    await render(hbs`<DTooltip @inline={{true}} @label="label"  />`);
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
 
     assert.dom(".fk-d-tooltip__trigger").doesNotHaveClass("-expanded");
 
@@ -69,7 +108,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
     await hover();
 
-    assert.dom(".fk-d-tooltip").hasAttribute("data-identifier", "tip");
+    assert.dom(".fk-d-tooltip__content").hasAttribute("data-identifier", "tip");
   });
 
   test("aria-expanded attribute", async function (assert) {
@@ -97,7 +136,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
     await hover();
 
-    assert.dom(".fk-d-tooltip").hasText("content");
+    assert.dom(".fk-d-tooltip__content").hasText("content");
   });
 
   test("content role attribute", async function (assert) {
@@ -105,7 +144,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
     await hover();
 
-    assert.dom(".fk-d-tooltip").hasAttribute("role", "tooltip");
+    assert.dom(".fk-d-tooltip__content").hasAttribute("role", "tooltip");
   });
 
   test("@component", async function (assert) {
@@ -117,11 +156,11 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
     await hover();
 
-    assert.dom(".fk-d-tooltip").containsText("content");
+    assert.dom(".fk-d-tooltip__content").containsText("content");
 
-    await click(".fk-d-tooltip .btn");
+    await click(".fk-d-tooltip__content .btn");
 
-    assert.dom(".fk-d-tooltip").doesNotExist();
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
   });
 
   test("content aria-labelledby attribute", async function (assert) {
@@ -131,7 +170,9 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
     assert.strictEqual(
       document.querySelector(".fk-d-tooltip__trigger").id,
-      document.querySelector(".fk-d-tooltip").getAttribute("aria-labelledby")
+      document
+        .querySelector(".fk-d-tooltip__content")
+        .getAttribute("aria-labelledby")
     );
   });
 
@@ -140,17 +181,17 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
       hbs`<DTooltip @inline={{true}} @label="label" @closeOnEscape={{true}} />`
     );
     await hover();
-    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+    await close();
 
-    assert.dom(".fk-d-tooltip").doesNotExist();
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
 
     await render(
       hbs`<DTooltip @inline={{true}} @label="label" @closeOnEscape={{false}} />`
     );
     await hover();
-    await triggerKeyEvent(document.activeElement, "keydown", "Escape");
+    await close();
 
-    assert.dom(".fk-d-tooltip").exists();
+    assert.dom(".fk-d-tooltip__content").exists();
   });
 
   test("@closeOnClickOutside", async function (assert) {
@@ -160,7 +201,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await hover();
     await triggerEvent(".test", "pointerdown");
 
-    assert.dom(".fk-d-tooltip").doesNotExist();
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
 
     await render(
       hbs`<span class="test">test</span><DTooltip @inline={{true}} @label="label" @closeOnClickOutside={{false}} />`
@@ -168,7 +209,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await hover();
     await triggerEvent(".test", "pointerdown");
 
-    assert.dom(".fk-d-tooltip").exists();
+    assert.dom(".fk-d-tooltip__content").exists();
   });
 
   test("@maxWidth", async function (assert) {
@@ -178,15 +219,32 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
     await hover();
 
     assert.ok(
-      find(".fk-d-tooltip").getAttribute("style").includes("max-width: 20px;")
+      find(".fk-d-tooltip__content")
+        .getAttribute("style")
+        .includes("max-width: 20px;")
     );
   });
 
   test("applies position", async function (assert) {
-    await render(hbs`<DTooltip @inline={{true}} @label="label"  />`);
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
     await hover();
 
-    assert.ok(find(".fk-d-tooltip").getAttribute("style").includes("left: "));
-    assert.ok(find(".fk-d-tooltip").getAttribute("style").includes("top: "));
+    assert.ok(
+      find(".fk-d-tooltip__content").getAttribute("style").includes("left: ")
+    );
+    assert.ok(
+      find(".fk-d-tooltip__content").getAttribute("style").includes("top: ")
+    );
+  });
+
+  test("a tooltip can be closed by identifier", async function (assert) {
+    await render(
+      hbs`<DTooltip @inline={{true}} @label="label" @identifier="test">test</DTooltip>`
+    );
+    await open();
+
+    await getOwner(this).lookup("service:tooltip").close("test");
+
+    assert.dom(".fk-d-tooltip__content.test-content").doesNotExist();
   });
 });

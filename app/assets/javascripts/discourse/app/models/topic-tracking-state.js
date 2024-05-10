@@ -1,11 +1,11 @@
 import EmberObject, { get } from "@ember/object";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
-import User from "discourse/models/user";
 import { deepEqual, deepMerge } from "discourse-common/lib/object";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
@@ -48,6 +48,10 @@ function hasMutedTags(topicTags, mutedTags, siteSettings) {
 }
 
 export default class TopicTrackingState extends EmberObject {
+  @service currentUser;
+  @service messageBus;
+  @service siteSettings;
+
   messageCount = 0;
 
   init() {
@@ -585,7 +589,7 @@ export default class TopicTrackingState extends EmberObject {
         filterFn = isNewOrUnread;
         break;
       default:
-        throw new Error(`Unkown filter type ${type}`);
+        throw new Error(`Unknown filter type ${type}`);
     }
 
     return Array.from(this.states.values()).filter((topic) => {
@@ -994,13 +998,12 @@ export default class TopicTrackingState extends EmberObject {
     }
 
     if (["new_topic", "latest"].includes(data.message_type)) {
-      const mutedCategoryIds = User.currentProp("muted_category_ids")?.concat(
-        User.currentProp("indirectly_muted_category_ids")
+      const mutedCategoryIds = this.currentUser?.muted_category_ids?.concat(
+        this.currentUser?.indirectly_muted_category_ids
       );
 
       if (
-        mutedCategoryIds &&
-        mutedCategoryIds.includes(data.payload.category_id) &&
+        mutedCategoryIds?.includes(data.payload.category_id) &&
         !this.isUnmutedTopic(data.topic_id)
       ) {
         return;
@@ -1008,9 +1011,13 @@ export default class TopicTrackingState extends EmberObject {
     }
 
     if (["new_topic", "latest"].includes(data.message_type)) {
-      const mutedTags = User.currentProp("muted_tags");
-
-      if (hasMutedTags(data.payload.tags, mutedTags, this.siteSettings)) {
+      if (
+        hasMutedTags(
+          data.payload.tags,
+          this.currentUser?.muted_tags,
+          this.siteSettings
+        )
+      ) {
         return;
       }
     }

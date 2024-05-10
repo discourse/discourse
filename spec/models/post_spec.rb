@@ -148,12 +148,12 @@ RSpec.describe Post do
     end
   end
 
-  describe "with_secure_uploads?" do
+  describe "should_secure_uploads?" do
     let(:topic) { Fabricate(:topic) }
     let!(:post) { Fabricate(:post, topic: topic) }
 
     it "returns false if secure uploads is not enabled" do
-      expect(post.with_secure_uploads?).to eq(false)
+      expect(post.should_secure_uploads?).to eq(false)
     end
 
     context "when secure uploads is enabled" do
@@ -167,14 +167,14 @@ RSpec.describe Post do
         before { SiteSetting.login_required = true }
 
         it "returns true" do
-          expect(post.with_secure_uploads?).to eq(true)
+          expect(post.should_secure_uploads?).to eq(true)
         end
 
         context "if secure_uploads_pm_only" do
           before { SiteSetting.secure_uploads_pm_only = true }
 
           it "returns false" do
-            expect(post.with_secure_uploads?).to eq(false)
+            expect(post.should_secure_uploads?).to eq(false)
           end
         end
       end
@@ -184,7 +184,7 @@ RSpec.describe Post do
         before { topic.change_category_to_id(category.id) }
 
         it "returns true" do
-          expect(post.with_secure_uploads?).to eq(true)
+          expect(post.should_secure_uploads?).to eq(true)
         end
 
         context "when the topic is deleted" do
@@ -194,7 +194,7 @@ RSpec.describe Post do
           end
 
           it "returns true" do
-            expect(post.with_secure_uploads?).to eq(true)
+            expect(post.should_secure_uploads?).to eq(true)
           end
         end
 
@@ -202,7 +202,7 @@ RSpec.describe Post do
           before { SiteSetting.secure_uploads_pm_only = true }
 
           it "returns false" do
-            expect(post.with_secure_uploads?).to eq(false)
+            expect(post.should_secure_uploads?).to eq(false)
           end
         end
       end
@@ -211,14 +211,14 @@ RSpec.describe Post do
         let(:topic) { Fabricate(:private_message_topic) }
 
         it "returns true" do
-          expect(post.with_secure_uploads?).to eq(true)
+          expect(post.should_secure_uploads?).to eq(true)
         end
 
         context "when the topic is deleted" do
           before { topic.trash! }
 
           it "returns true" do
-            expect(post.with_secure_uploads?).to eq(true)
+            expect(post.should_secure_uploads?).to eq(true)
           end
         end
 
@@ -226,7 +226,7 @@ RSpec.describe Post do
           before { SiteSetting.secure_uploads_pm_only = true }
 
           it "returns true" do
-            expect(post.with_secure_uploads?).to eq(true)
+            expect(post.should_secure_uploads?).to eq(true)
           end
         end
       end
@@ -1540,6 +1540,25 @@ RSpec.describe Post do
 
       expect(post.hidden).to eq(false)
       expect(hidden_topic.visible).to eq(true)
+      expect(hidden_topic.visibility_reason_id).to eq(Topic.visibility_reasons[:op_unhidden])
+    end
+
+    it "will not unhide the topic if the topic visibility_reason_id is not op_flag_threshold_reached" do
+      hidden_topic =
+        Fabricate(
+          :topic,
+          visible: false,
+          visibility_reason_id: Topic.visibility_reasons[:manually_unlisted],
+        )
+      post = create_post(topic: hidden_topic)
+      post.update_columns(hidden: true, hidden_at: Time.now, hidden_reason_id: 1)
+      post.reload
+
+      expect(post.hidden).to eq(true)
+      post.unhide!
+
+      hidden_topic.reload
+      expect(hidden_topic.visible).to eq(false)
     end
 
     it "should increase user_stat topic_count for first post" do

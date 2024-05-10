@@ -5,7 +5,7 @@ RSpec.describe "Glimmer Header", type: :system do
   let(:search) { PageObjects::Pages::Search.new }
   fab!(:current_user) { Fabricate(:user) }
   fab!(:topic)
-  before { SiteSetting.experimental_glimmer_header_groups = Group::AUTO_GROUPS[:everyone] }
+  before { SiteSetting.glimmer_header_mode = "enabled" }
 
   it "renders basics" do
     visit "/"

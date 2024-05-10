@@ -53,7 +53,6 @@ sr:
       default_subject: "Ovoj temi je potreban naslov"
   errors: &errors
     messages:
-      too_long_validation: "je limitirano na %{max} karaktera; koje ste vi uneli %{length}."
       invalid_boolean: "Nepravilan boolean."
       even: mora biti parno
       exclusion: je rezervisano

@@ -1,7 +1,16 @@
 # frozen_string_literal: true
 
 class ThemeObjectsSettingMetadataSerializer < ApplicationSerializer
-  attributes :property_descriptions
+  attributes :categories, :property_descriptions
+
+  def categories
+    object
+      .categories(scope)
+      .reduce({}) do |acc, category|
+        acc[category.id] = BasicCategorySerializer.new(category, scope: scope, root: false).as_json
+        acc
+      end
+  end
 
   def property_descriptions
     locales = {}

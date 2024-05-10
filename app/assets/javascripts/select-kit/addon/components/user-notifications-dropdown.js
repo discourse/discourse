@@ -26,14 +26,14 @@ export default DropdownSelectBox.extend({
     const content = [];
 
     content.push({
-      icon: "user",
+      icon: "bell",
       id: "changeToNormal",
       description: I18n.t("user.user_notifications.normal_option_title"),
       name: I18n.t("user.user_notifications.normal_option"),
     });
 
     content.push({
-      icon: "times-circle",
+      icon: "bell-slash",
       id: "changeToMuted",
       description: I18n.t("user.user_notifications.mute_option_title"),
       name: I18n.t("user.user_notifications.mute_option"),

@@ -4,9 +4,9 @@ class Category < ActiveRecord::Base
   RESERVED_SLUGS = ["none"]
 
   self.ignored_columns = [
-    :suppress_from_latest, # TODO(2020-11-18): remove
-    :required_tag_group_id, # TODO(2023-04-01): remove
-    :min_tags_from_required_group, # TODO(2023-04-01): remove
+    :suppress_from_latest, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    :required_tag_group_id, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    :min_tags_from_required_group, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   include Searchable
@@ -211,6 +211,12 @@ class Category < ActiveRecord::Base
         )
       SQL
 
+  scope :with_parents, ->(ids) { where(<<~SQL, ids: ids) }
+    id IN (:ids)
+    OR
+    id IN (SELECT DISTINCT parent_category_id FROM categories WHERE id IN (:ids))
+  SQL
+
   delegate :post_template, to: "self.class"
 
   # permission is just used by serialization
@@ -220,7 +226,8 @@ class Category < ActiveRecord::Base
                 :subcategory_ids,
                 :subcategory_list,
                 :notification_level,
-                :has_children
+                :has_children,
+                :subcategory_count
 
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
@@ -238,13 +245,9 @@ class Category < ActiveRecord::Base
         Category.topic_create_allowed(guardian).where(id: category_ids).pluck(:id).to_set
       end
 
-    # Categories with children
-    with_children =
-      Category
-        .secured(guardian)
-        .where(parent_category_id: category_ids)
-        .pluck(:parent_category_id)
-        .to_set
+    # Load subcategory counts (used to fill has_children property)
+    subcategory_count =
+      Category.secured(guardian).where.not(parent_category_id: nil).group(:parent_category_id).count
 
     # Update category attributes
     categories.each do |category|
@@ -253,7 +256,9 @@ class Category < ActiveRecord::Base
       category.permission = CategoryGroup.permission_types[:full] if guardian.is_admin? ||
         allowed_topic_create_ids&.include?(category[:id])
 
-      category.has_children = with_children.include?(category[:id])
+      category.has_children = subcategory_count.key?(category[:id])
+
+      category.subcategory_count = subcategory_count[category[:id]] if category.has_children
     end
   end
 
@@ -1092,11 +1097,13 @@ class Category < ActiveRecord::Base
       .find_each { |category| category.create_category_definition }
   end
 
-  def slug_path
+  def slug_path(parent_ids = Set.new)
     if self.parent_category_id.present?
-      slug_path = self.parent_category.slug_path
-      slug_path.push(self.slug_for_url)
-      slug_path
+      if parent_ids.add?(self.parent_category_id)
+        self.parent_category.slug_path(parent_ids) << self.slug_for_url
+      else
+        []
+      end
     else
       [self.slug_for_url]
     end

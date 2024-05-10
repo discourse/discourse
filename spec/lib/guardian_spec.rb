@@ -18,7 +18,7 @@ RSpec.describe Guardian do
   fab!(:trust_level_1)
   fab!(:trust_level_2)
   fab!(:trust_level_3)
-  fab!(:trust_level_4)
+  fab!(:trust_level_4) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
   fab!(:another_admin) { Fabricate(:admin) }
   fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
 
@@ -3794,13 +3794,9 @@ RSpec.describe Guardian do
           SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:admins]
         end
 
-        it "returns false if not admin" do
-          expect(Guardian.new(trust_level_4).can_create_tag?).to eq(false)
-          expect(Guardian.new(moderator).can_create_tag?).to eq(false)
-        end
-
-        it "returns true if admin" do
+        it "returns true if admin or moderator" do
           expect(Guardian.new(admin).can_create_tag?).to be_truthy
+          expect(Guardian.new(moderator).can_create_tag?).to be_truthy
         end
       end
     end
@@ -4362,12 +4358,12 @@ RSpec.describe Guardian do
       expect(admin.guardian.can_mention_here?).to eq(true)
     end
 
-    it "works with admin" do
+    it "works with admin or moderator" do
       SiteSetting.min_trust_level_for_here_mention = "admin"
       SiteSetting.here_mention_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(trust_level_4.guardian.can_mention_here?).to eq(false)
-      expect(moderator.guardian.can_mention_here?).to eq(false)
+      expect(moderator.guardian.can_mention_here?).to eq(true)
       expect(admin.guardian.can_mention_here?).to eq(true)
     end
   end

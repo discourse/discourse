@@ -125,7 +125,6 @@ pt:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "está limitado a %{max} caracteres; inseriu %{length}."
       invalid_boolean: "Valor lógico inválido."
       taken: "já está a ser utilizado"
       accepted: tem que ser aceite
@@ -210,7 +209,6 @@ pt:
       one: "Você já enviou %{count} convite no último dia, aguarde %{time_left} antes de tentar novamente."
       other: "Você já enviou %{count} convites no último dia, aguarde %{time_left} antes de tentar novamente."
     confirm_email: "<p>Está quase pronto! Enviámos um email de ativação para o seu endereço de e-mail. Por favor, siga as instruções no e-mail para ativar a sua conta.</p><p>Se não o tiver recebido, verifique a sua pasta de spam.</p>"
-    cant_invite_to_group: "Você não tem permissão para convidar usuários para grupos específicos. Certifique-se de que você é o proprietário do(s) grupo(s) para o qual está tentando convidar."
     disabled_errors:
       discourse_connect_enabled: "Os convites estão desativados porque o DiscourseConnect está ativado."
       invalid_access: "Você não tem permissão para visualizar o recurso solicitado."
@@ -315,7 +313,6 @@ pt:
   pm_reached_recipients_limit: "Desculpe, você não pode ter mais de %{recipients_limit} destinatários em uma mensagem."
   removed_direct_reply_full_quotes: "Citação removida automaticamente de toda a postagem anterior."
   watched_words_auto_tag: "Tópico tagueado automaticamente"
-  secure_upload_not_allowed_in_public_topic: "Desculpe, os seguintes uploads seguros não podem ser usados em um tópico público: %{upload_filenames}."
   create_pm_on_existing_topic: "Desculpe, você não pode criar uma MP em um tópico existente."
   slow_mode_enabled: "Este tópico está em modo lento."
   just_posted_that: "é demasiado semelhante ao que publicaste recentemente"
@@ -757,6 +754,8 @@ pt:
         api: "API"
         user_api: "API de Utlizador"
       yaxis: "Dia"
+    consolidated_page_views_browser_detection:
+      yaxis: "Dia"
     dau_by_mau:
       xaxis: "Dia"
     daily_engaged_users:
@@ -878,6 +877,10 @@ pt:
       title: "Vistas de Página Anónimas"
       xaxis: "Dia"
       yaxis: "Vistas de Página Anónimas Móveis"
+    page_view_anon_browser_reqs:
+      xaxis: "Dia"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dia"
     http_background_reqs:
       title: "Fundo"
       xaxis: "Dia"
@@ -1254,8 +1257,6 @@ pt:
       must_include_latest: "O menu do topo deve incluir o separador 'último'"
       invalid_string: "Valor inválido."
       invalid_string_min_max: "Deve ser entre %{min} e %{max} caracteres."
-      invalid_string_min: "Deve ser pelo menos %{min} caracteres."
-      invalid_string_max: "Não deve ser mais que %{max} caracteres."
       invalid_reply_by_email_address: "O valor deve conter '%{reply_key}' e ser diferente do email de notificação."
       invalid_alternative_reply_by_email_addresses: "Todos os valores devem conter '%{reply_key}' e ser diferentes do email de notificação."
       pop3_polling_host_is_empty: "Deve definir um 'anfitrião de obtenção pop3' antes de ativar a obtenção POP3."
@@ -1267,6 +1268,15 @@ pt:
       invalid_regex: "A expressão regular não é válida ou permitida."
       min_username_length_range: "Não pode definir o mínimo acima do máximo."
       max_username_length_range: "Não pode definir o máximo abaixo do mínimo."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "inativo"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "inativo"
+      - ""
   search:
     within_post: "#%{post_number} por %{username}"
     types:
@@ -1360,8 +1370,6 @@ pt:
   user:
     deactivated: "Conta desactivada devido a demasiados emails redirecionados para '%{email}'."
     username:
-      short: "deve ter pelo menos %{min} caracteres"
-      long: "não deve ter mais que %{max} caracteres"
       unique: "tem que ser único"
       blank: "tem que estar preenchido"
       must_begin_with_alphanumeric_or_underscore: "tem de começar por uma letra, um número ou o carácter sublinhado"

@@ -18,6 +18,7 @@ class UserMerger
     merge_user_visits
     update_site_settings
     merge_user_attributes
+    merge_user_associated_accounts
 
     DiscourseEvent.trigger(:merging_users, @source_user, @target_user)
     update_user_stats
@@ -291,6 +292,29 @@ class UserMerger
         views                = t.views + s.views
       FROM user_profiles AS s
       WHERE t.user_id = :target_user_id AND s.user_id = :source_user_id
+    SQL
+  end
+
+  def merge_user_associated_accounts
+    if @acting_user
+      ::MessageBus.publish "/merge_user",
+                           {
+                             message:
+                               I18n.t("admin.user.merge_user.merging_user_associated_accounts"),
+                           },
+                           user_ids: [@acting_user.id]
+    end
+
+    UserAssociatedAccount.where(user_id: @source_user.id).update_all(<<~SQL)
+      user_id = CASE
+        WHEN EXISTS (
+          SELECT 1
+          FROM user_associated_accounts AS conflicts
+          WHERE (conflicts.user_id = #{@target_user.id} AND conflicts.provider_name = user_associated_accounts.provider_name)
+        )
+        THEN NULL
+        ELSE #{@target_user.id}
+      END
     SQL
   end
 

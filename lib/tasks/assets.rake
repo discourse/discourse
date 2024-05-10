@@ -17,8 +17,9 @@ task "assets:precompile:build" do
     heap_size_limit = check_node_heap_size_limit
 
     if heap_size_limit < 2048
-      STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 2048MB. Setting --max-old-space-size=2048."
-      compile_command = "NODE_OPTIONS='--max-old-space-size=2048' #{compile_command}"
+      STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 2048MB. Setting --max-old-space-size=2048 and CHEAP_SOURCE_MAPS=1"
+      compile_command =
+        "JOBS=0 CI=1 NODE_OPTIONS='--max-old-space-size=2048' CHEAP_SOURCE_MAPS=1 #{compile_command}"
     end
 
     ember_env = ENV["EMBER_ENV"] || "production"
@@ -267,7 +268,6 @@ task "assets:precompile:compress_js": "environment" do
         manifest
           .files
           .select { |k, v| k =~ /\.js\z/ }
-          .reject { |k, v| k =~ %r{/workbox-.*'/} }
           .each do |file, info|
             path = "#{assets_path}/#{file}"
             _file =

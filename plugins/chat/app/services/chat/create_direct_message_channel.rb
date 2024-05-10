@@ -33,7 +33,6 @@ module Chat
            class_name: Chat::DirectMessageChannel::CanCommunicateAllPartiesPolicy
     model :direct_message, :fetch_or_create_direct_message
     model :channel, :fetch_or_create_channel
-    step :validate_user_count
     step :set_optional_name
     step :update_memberships
     step :recompute_users_count
@@ -71,12 +70,6 @@ module Chat
 
     def fetch_user_comm_screener(target_users:, guardian:)
       UserCommScreener.new(acting_user: guardian.user, target_user_ids: target_users.map(&:id))
-    end
-
-    def validate_user_count(target_users:)
-      if target_users.length > SiteSetting.chat_max_direct_message_users
-        fail!("should have less than #{SiteSetting.chat_max_direct_message_users} elements")
-      end
     end
 
     def actor_allows_dms(user_comm_screener:)

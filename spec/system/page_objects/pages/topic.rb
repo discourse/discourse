@@ -63,17 +63,15 @@ module PageObjects
       end
 
       def has_post_more_actions?(post)
-        within post_by_number(post) do
-          has_css?(".show-more-actions")
-        end
+        within_post(post) { has_css?(".show-more-actions") }
       end
 
-      def has_post_bookmarked?(post)
-        is_post_bookmarked(post, bookmarked: true)
+      def has_post_bookmarked?(post, with_reminder: false)
+        is_post_bookmarked(post, bookmarked: true, with_reminder: with_reminder)
       end
 
-      def has_no_post_bookmarked?(post)
-        is_post_bookmarked(post, bookmarked: false)
+      def has_no_post_bookmarked?(post, with_reminder: false)
+        is_post_bookmarked(post, bookmarked: false, with_reminder: with_reminder)
       end
 
       def expand_post_actions(post)
@@ -83,18 +81,20 @@ module PageObjects
       def click_post_action_button(post, button)
         case button
         when :bookmark
-          post_by_number(post).find(".bookmark.with-reminder").click
+          within_post(post) { find(".bookmark").click }
         when :reply
-          post_by_number(post).find(".post-controls .reply").click
+          within_post(post) { find(".post-controls .reply").click }
         when :flag
-          post_by_number(post).find(".post-controls .create-flag").click
+          within_post(post) { find(".post-controls .create-flag").click }
         when :copy_link
-          post_by_number(post).find(".post-controls .post-action-menu__copy-link").click
+          within_post(post) { find(".post-controls .post-action-menu__copy-link").click }
+        when :edit
+          within_post(post) { find(".post-controls .edit").click }
         end
       end
 
       def expand_post_admin_actions(post)
-        post_by_number(post).find(".show-post-admin-menu").click
+        within_post(post) { find(".show-post-admin-menu").click }
       end
 
       def click_post_admin_action_button(post, button)
@@ -109,24 +109,22 @@ module PageObjects
         find(element_klass).click
       end
 
-      def click_topic_footer_button(button)
-        find_topic_footer_button(button).click
+      def click_topic_bookmark_button
+        within_topic_footer_buttons { find(".bookmark-menu-trigger").click }
       end
 
-      def has_topic_bookmarked?
-        has_css?("#{topic_footer_button_id("bookmark")}.bookmarked", text: "Edit Bookmark")
+      def has_topic_bookmarked?(topic)
+        within_topic_footer_buttons do
+          has_css?(".bookmark-menu-trigger.bookmarked", text: "Edit Bookmark")
+        end
       end
 
-      def has_no_bookmarks?
-        has_no_css?("#{topic_footer_button_id("bookmark")}.bookmarked")
-      end
-
-      def find_topic_footer_button(button)
-        find(topic_footer_button_id(button))
+      def has_no_bookmarks?(topic)
+        within_topic_footer_buttons { has_no_css?(".bookmark-menu-trigger.bookmarked") }
       end
 
       def click_reply_button
-        find(".topic-footer-main-buttons > .create").click
+        within_topic_footer_buttons { find(".create").click }
         has_expanded_composer?
       end
 
@@ -184,9 +182,7 @@ module PageObjects
       end
 
       def click_mention(post, mention)
-        within post_by_number(post) do
-          find("a.mention-group", text: mention).click
-        end
+        within_post(post) { find("a.mention-group", text: mention).click }
       end
 
       def click_footer_reply
@@ -195,7 +191,7 @@ module PageObjects
       end
 
       def click_like_reaction_for(post)
-        post_by_number(post).find(".post-controls .actions .like").click
+        within_post(post) { find(".post-controls .actions .like").click }
       end
 
       def has_topic_map?
@@ -215,7 +211,7 @@ module PageObjects
       end
 
       def click_admin_menu_button
-        find("#topic-footer-buttons .topic-admin-menu-button").click
+        within_topic_footer_buttons { find(".topic-admin-menu-button").click }
       end
 
       def watch_topic
@@ -234,16 +230,18 @@ module PageObjects
 
       private
 
-      def topic_footer_button_id(button)
-        "#topic-footer-button-#{button}"
+      def within_post(post)
+        within(post_by_number(post)) { yield }
       end
 
-      def is_post_bookmarked(post, bookmarked:)
-        within post_by_number(post) do
-          page.public_send(
-            bookmarked ? :has_css? : :has_no_css?,
-            ".bookmark.with-reminder.bookmarked",
-          )
+      def within_topic_footer_buttons
+        within("#topic-footer-buttons") { yield }
+      end
+
+      def is_post_bookmarked(post, bookmarked:, with_reminder: false)
+        within_post(post) do
+          css_class = ".bookmark.bookmarked#{with_reminder ? ".with-reminder" : ""}"
+          page.public_send(bookmarked ? :has_css? : :has_no_css?, css_class)
         end
       end
     end

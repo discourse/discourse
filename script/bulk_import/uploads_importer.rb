@@ -20,6 +20,10 @@ rescue LoadError
 end
 
 module BulkImport
+  MAX_FILE_SIZE = 1.gigabyte
+
+  UploadMetadata = Struct.new(:original_filename, :origin_url, :description)
+
   class UploadsImporter
     TRANSACTION_SIZE = 1000
     QUEUE_SIZE = 1000
@@ -109,7 +113,7 @@ module BulkImport
 
       producer_thread =
         Thread.new do
-          query("SELECT * FROM uploads", @source_db).tap do |result_set|
+          query("SELECT * FROM uploads ORDER BY id", @source_db).tap do |result_set|
             result_set.each { |row| queue << row unless output_existing_ids.include?(row["id"]) }
             result_set.close
           end
@@ -131,7 +135,7 @@ module BulkImport
                 puts "", "Failed to create upload: #{params[:id]} (#{error_message})", ""
               end
 
-              @output_db.execute(<<~SQL, params)
+              insert(<<~SQL, params)
                 INSERT INTO uploads (id, upload, markdown, skip_reason)
                 VALUES (:id, :upload, :markdown, :skip_reason)
               SQL
@@ -158,14 +162,23 @@ module BulkImport
             begin
               data_file = nil
               path = nil
+              metadata =
+                UploadMetadata.new(
+                  original_filename: row["display_filename"] || row["filename"],
+                  description: row["description"].presence,
+                )
 
               if row["data"].present?
                 data_file = Tempfile.new("discourse-upload", binmode: true)
                 data_file.write(row["data"])
                 data_file.rewind
                 path = data_file.path
+              elsif row["url"].present?
+                path, metadata.original_filename = download_file(url: row["url"], id: row["id"])
+                metadata.origin_url = row["url"]
+                next if !path
               else
-                relative_path = row["relative_path"]
+                relative_path = row["relative_path"] || ""
                 file_exists = false
 
                 @root_paths.each do |root_path|
@@ -198,8 +211,9 @@ module BulkImport
                     begin
                       UploadCreator.new(
                         file,
-                        row["display_filename"] || row["filename"],
+                        metadata.original_filename,
                         type: row["type"],
+                        origin: metadata.origin_url,
                       ).create_for(Discourse::SYSTEM_USER_ID)
                     rescue StandardError => e
                       error_message = e.message
@@ -228,7 +242,8 @@ module BulkImport
                   status_queue << {
                     id: row["id"],
                     upload: upload.attributes.to_json,
-                    markdown: UploadMarkdown.new(upload).to_markdown,
+                    markdown:
+                      UploadMarkdown.new(upload).to_markdown(display_name: metadata.description),
                     skip_reason: nil,
                   }
                   break
@@ -267,6 +282,85 @@ module BulkImport
       consumer_threads.each(&:join)
       status_queue.close
       status_thread.join
+    end
+
+    def download_file(url:, id:, retry_count: 0)
+      path = download_cache_path(id)
+      original_filename = nil
+
+      if File.exist?(path) && (original_filename = get_original_filename(id))
+        return path, original_filename
+      end
+
+      fd = FinalDestination.new(url)
+      file = nil
+
+      fd.get do |response, chunk, uri|
+        if file.nil?
+          check_response!(response, uri)
+          original_filename = extract_filename_from_response(response, uri)
+          file = File.open(path, "wb")
+        end
+
+        file.write(chunk)
+
+        if file.size > MAX_FILE_SIZE
+          file.close
+          file.unlink
+          file = nil
+          throw :done
+        end
+      end
+
+      if file
+        file.close
+        insert(
+          "INSERT INTO downloads (id, original_filename) VALUES (?, ?)",
+          [id, original_filename],
+        )
+        return path, original_filename
+      end
+
+      nil
+    end
+
+    def download_cache_path(id)
+      id = id.gsub("/", "_").gsub("=", "-")
+      File.join(@settings[:download_cache_path], id)
+    end
+
+    def get_original_filename(id)
+      @output_db.get_first_value("SELECT original_filename FROM downloads WHERE id = ?", id)
+    end
+
+    def check_response!(response, uri)
+      if uri.blank?
+        code = response.code.to_i
+
+        if code >= 400
+          raise "#{code} Error"
+        else
+          throw :done
+        end
+      end
+    end
+
+    def extract_filename_from_response(response, uri)
+      filename =
+        if (header = response.header["Content-Disposition"].presence)
+          disposition_filename =
+            header[/filename\*=UTF-8''(\S+)\b/i, 1] || header[/filename=(?:"(.+)"|[^\s;]+)/i, 1]
+          disposition_filename.present? ? URI.decode_www_form_component(disposition_filename) : nil
+        end
+
+      filename = File.basename(uri.path).presence || "file" if filename.blank?
+
+      if File.extname(filename).blank? && response.content_type.present?
+        ext = MiniMime.lookup_by_content_type(response.content_type)&.extension
+        filename = "#{filename}.#{ext}" if ext.present?
+      end
+
+      filename
     end
 
     def fix_missing
@@ -419,7 +513,7 @@ module BulkImport
 
             case params.delete(:status)
             when :ok
-              @output_db.execute(<<~SQL, params)
+              insert(<<~SQL, params)
                 INSERT INTO optimized_images (id, optimized_images)
                 VALUES (:id, :optimized_images)
               SQL
@@ -602,6 +696,13 @@ module BulkImport
         CREATE TABLE IF NOT EXISTS optimized_images (
           id TEXT PRIMARY KEY NOT NULL,
           optimized_images JSON_TEXT
+        )
+      SQL
+
+      @output_db.execute(<<~SQL)
+        CREATE TABLE IF NOT EXISTS downloads (
+          id TEXT PRIMARY KEY NOT NULL,
+          original_filename TEXT NOT NULL
         )
       SQL
     end

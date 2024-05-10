@@ -87,6 +87,10 @@ module SiteSettingExtension
     @categories ||= {}
   end
 
+  def mandatory_values
+    @mandatory_values ||= {}
+  end
+
   def shadowed_settings
     @shadowed_settings ||= []
   end
@@ -238,6 +242,7 @@ module SiteSettingExtension
           preview: previews[s],
           secret: secret_settings.include?(s),
           placeholder: placeholder(s),
+          mandatory_values: mandatory_values[s],
         }.merge!(type_hash)
 
         opts[:plugin] = plugins[s] if plugins[s]
@@ -260,7 +265,7 @@ module SiteSettingExtension
   end
 
   def keywords(setting)
-    I18n.t("site_settings.keywords.#{setting}", default: "")
+    Array.wrap(I18n.t("site_settings.keywords.#{setting}", default: ""))
   end
 
   def placeholder(setting)
@@ -365,6 +370,12 @@ module SiteSettingExtension
     sanitize_override = val.is_a?(String) && client_settings.include?(name)
 
     sanitized_val = sanitize_override ? sanitize_field(val) : val
+
+    if mandatory_values[name.to_sym]
+      sanitized_val =
+        (mandatory_values[name.to_sym].split("|") | sanitized_val.to_s.split("|")).join("|")
+    end
+
     provider.save(name, sanitized_val, type)
     current[name] = type_supervisor.to_rb_value(name, sanitized_val)
 
@@ -554,12 +565,13 @@ module SiteSettingExtension
           return false if !plugin.configurable? && plugin.enabled_site_setting == name
         end
 
-        if (c = current[name]).nil?
-          refresh!
-          current[name]
-        else
-          c
+        refresh! if current[name].nil?
+        value = current[name]
+
+        if mandatory_values[name]
+          return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")
         end
+        value
       end
     end
 
@@ -626,6 +638,8 @@ module SiteSettingExtension
 
     mutex.synchronize do
       defaults.load_setting(name, default, opts.delete(:locale_default))
+
+      mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
 
       categories[name] = opts[:category] || :uncategorized
 

@@ -80,7 +80,7 @@ export default class PostTextSelection extends Component {
     super.willDestroy(...arguments);
 
     cancel(this.debouncedSelectionChanged);
-    this.menuInstance?.destroy();
+    this.menuInstance?.close();
   }
 
   @bind

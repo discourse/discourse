@@ -188,7 +188,8 @@ el:
         us_west_1: "Δυτικές ΗΠΑ (Β. Καλιφόρνια)"
         us_west_2: "Δυτικές ΗΠΑ (Όρεγκον)"
     clear_input: "Εκκαθάριση εισόδου"
-    edit: "επεξεργασία του τίτλου και της κατηγορίας αυτού του θέματος"
+    edit: "Επεξεργασία"
+    edit_topic: "επεξεργασία του τίτλου και της κατηγορίας αυτού του θέματος"
     expand: "Επέκταση"
     not_implemented: "Αυτή η λειτουργία δεν έχει υλοποιηθεί ακόμα, συγγνώμη!"
     no_value: "Όχι"
@@ -233,7 +234,9 @@ el:
     weekly: "κάθε εβδομάδα"
     every_month: "κάθε μήνα"
     every_six_months: "κάθε έξι μήνες"
-    max_of_count: "μέγιστο %{count}"
+    max_of_count:
+      one: "μέγιστο %{count}"
+      other: "μέγιστο %{count}"
     character_count:
       one: "%{count} χαρακτήρα"
       other: "%{count} χαρακτήρες"
@@ -290,6 +293,7 @@ el:
         clear_reminder: "Διατήρηση σελιδοδείκτη και διαγραφή υπενθύμισης"
       search_placeholder: "Αναζήτηση σελιδοδεικτών με βάση το όνομα, τον τίτλο θέματος ή το περιεχόμενο δημοσίευσης"
       search: "Αναζήτηση"
+      bookmark: "Σελιδοδείκτης"
       reminders:
         today_with_time: "σήμερα στις %{time}"
         tomorrow_with_time: "αύριο στις %{time}"
@@ -580,7 +584,6 @@ el:
       topic_count_long: "Δημιουργημένα Νήματα"
       post_count: "Απαντήσεις"
       post_count_long: "Αναρτημένες Απαντήσεις"
-      no_results: "Δεν βρέθηκαν αποτελέσματα."
       days_visited: "Επισκέψεις"
       days_visited_long: "Ημέρες Επίσκεψης"
       posts_read: "Διαβασμένο"
@@ -806,7 +809,6 @@ el:
         icon: "Επιλέξτε ένα εικονίδιο"
         image: "Επιφορτώστε μια εικόνα"
       default_notifications:
-        modal_description: "Θα θέλατε να εφαρμόσετε αυτήν την αλλαγή αναδρομικά; Αυτό θα αλλάξει τις προτιμήσεις για %{count} υπάρχοντες χρήστες."
         modal_yes: "Ναι"
         modal_no: "Όχι, εφαρμόστε την αλλαγή μόνο προς τα εμπρός"
     user_action_groups:
@@ -823,12 +825,15 @@ el:
       "13": "Εισερχόμενα"
       "14": "Εκκρεμή"
       "15": "Προσχέδια"
+      "17": "Σύνδεσμοι"
     categories:
       categories_label: "κατηγορίες"
       subcategories_label: "υποκατηγορίες"
       no_subcategories: "χωρίς υποκατηγορίες"
       remove_filter: "αφαίρεση φίλτρου"
-      plus_more_count: "+%{count} περισσότερο"
+      plus_more_count:
+        one: "+%{count} περισσότερο"
+        other: "+%{count} περισσότερα"
       view_all: "προβολή όλων"
       category: "Κατηγορία"
       category_list: "Εμφάνισε τη λίστα κατηγοριών"
@@ -863,7 +868,9 @@ el:
       organisation: Οργανισμός
       phone: Τηλέφωνο
       other_accounts: "Άλλοι λογαριασμοί με αυτή την IP διεύθυνση:"
-      delete_other_accounts: "Διαγραφή %{count}"
+      delete_other_accounts:
+        one: "Διαγραφή %{count}"
+        other: "Διαγραφή %{count}"
       username: "όνομα χρήστη"
       trust_level: "TL"
       read_time: "χρόνος ανάγνωσης"
@@ -903,9 +910,7 @@ el:
         ignore_duration_time_frame_required: "Παρακαλώ επιλέξτε ένα χρονικό πλαίσιο"
         ignore_no_users: "Δεν έχετε αγνοήσει χρήστες."
         ignore_option: "Αγνοήθηκε "
-        ignore_option_title: "Δε θα λαμβάνετε ειδοποιήσεις που σχετίζονται με αυτόν τον χρήστη και όλα τα θέματα και οι απαντήσεις τους θα είναι κρυφά."
         mute_option: "Σίγαση"
-        mute_option_title: "Δε θα λάβετε ειδοποιήσεις σχετικά με αυτόν τον χρήστη."
         normal_option: "Φυσιολογικά"
         normal_option_title: "Θα ειδοποιηθείτε εάν αυτός ο χρήστης σας απαντήσει, σας παραθέσει ή σας αναφέρει."
       notification_schedule:
@@ -968,7 +973,6 @@ el:
       skip_new_user_tips:
         description: "Παράλειψη συμβουλών και σημάτων για την ενσωμάτωση νέου χρήστη"
       theme_default_on_all_devices: "Όρισε αυτό ως προεπιλεγμένο θέμα σε όλες τις συσκευές μου"
-      color_scheme_default_on_all_devices: "Όρισε προεπιλεγμένο συνδυασμό χρωμάτων σε όλες τις συσκευές μου"
       color_scheme: "Συνδυασμός χρωμάτων"
       color_schemes:
         default_description: "Προεπιλογή θέματος"
@@ -984,7 +988,6 @@ el:
       allow_private_messages: "Επίτρεψε σε άλλους χρήστες να μου στέλνουν προσωπικά μηνύματα"
       external_links_in_new_tab: "Άνοιγε όλους τους εξωτερικούς συνδέσμους σε νέα καρτέλα"
       enable_quoting: "Το κείμενο που επισημαίνεται να παρατίθεται στην απάντηση "
-      enable_defer: "Ενεργοποίηση αναβολής για επισήμανση θεμάτων ως μη αναγνωσμένων"
       experimental_sidebar:
         enable: "Ενεργοποίηση πλαϊνής γραμμής"
         options: "Επιλογές"
@@ -1232,6 +1235,8 @@ el:
         instructions: "Η γλώσσα της διεπαφής. Θα αλλάξει μόλις ανανεωθεί η σελίδα"
         default: "(προεπιλογή)"
         any: "καθένα"
+      homepage:
+        default: "(προεπιλογή)"
       password_confirmation:
         title: "Επανάληψη του κωδικού πρόσβασης"
       invite_code:
@@ -1389,7 +1394,6 @@ el:
         same_as_username: "Ο κωδικός πρόσβασης που έδωσες είναι ο ίδιος με το όνομα χρήστη."
         same_as_email: "Ο κωδικός πρόσβασής σου είναι ίδιος με τη διεύθυνση email σου."
         ok: "Ο κωδικός πρόσβασης φαίνεται καλός."
-        instructions: "Τουλάχιστον %{count} χαρακτήρες."
         required: "Παρακαλώ εισαγάγετε έναν κωδικό πρόσβασης"
       summary:
         title: "Περίληψη"
@@ -1495,7 +1499,6 @@ el:
       close: "κλείσιμο"
       dismiss_error: "Παράβλεψη σφάλματος"
     close: "Κλείσιμο"
-    assets_changed_confirm: "Αυτός ο ιστότοπος μόλις έλαβε μια αναβάθμιση λογισμικού. Λήψη της πιο πρόσφατης έκδοσης τώρα;"
     logout: "Αποσυνδέθηκες."
     refresh: "Ανανέωση"
     home: "Αρχική Σελίδα"
@@ -1874,6 +1877,7 @@ el:
         one: "μου άρεσε %{count} από τις αναρτήσεις σας"
         other: "μου άρεσαν %{count} από τις αναρτήσεις σας"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2018,7 +2022,6 @@ el:
           seen: Διάβασα
           unseen: δεν διάβασα
           wiki: ' είναι βίκι'
-          images: συμπεριλάβετε εικόνες
           all_tags: Όλες οι παραπάνω ετικέτες
         statuses:
           label: Όπου τα θέματα
@@ -2073,7 +2076,6 @@ el:
         clear_all: "Καθαρισμός Όλων"
         unlist_topics: "Απόκρυψη Νημάτων"
         relist_topics: "Εμφάνιση Νημάτων"
-        defer: "Αναβολή"
         delete: "Διαγραφή Νημάτων"
         dismiss: "Απόρριψη"
         dismiss_read: "Απόρριψη όλων των μη αναγνωσμένων"
@@ -2117,6 +2119,7 @@ el:
     topic_bulk_actions:
       close_topics:
         name: "Κλείσιμο Νημάτων"
+        optional: (προεραιτικό)
       archive_topics:
         name: "Αρχειοθέτηση Νημάτων"
       unlist_topics:
@@ -2143,9 +2146,6 @@ el:
       move_to_inbox:
         title: "Μετακίνηση στα Εισερχόμενα"
         help: "Μετακίνηση μηνύματος πίσω στα Εισερχόμενα"
-      defer:
-        help: "Σήμανση ως μη αναγνωσμένο"
-        title: "Αναβολή"
       list: "Θέματα"
       new: "νέο θέμα"
       unread: "αδιάβαστο"
@@ -2863,8 +2863,6 @@ el:
       pinned:
         title: "Καρφιτσωμένο"
         help: "Αυτό το νήμα είναι καρφιτσωμένο για σένα. Θα εμφανίζεται πάντα στην κορυφή της κατηγορίας του "
-      unlisted:
-        help: "Αυτό το νήμα είναι αόρατο. Δε θα εμφανίζεται σε καμια λίστα νημάτων και μπορεί να εμφανιστεί μόνο αν ακολουθήσεις ένα άμεσο σύνδεσμο προς αυτό."
       personal_message:
         title: "Αυτό το θέμα είναι ένα προσωπικό μήνυμα"
         help: "Αυτό το θέμα είναι ένα προσωπικό μήνυμα"
@@ -3067,7 +3065,6 @@ el:
         mark_tracking: "%{shortcut} Παρακολούθηση νήματος"
         mark_watching: "%{shortcut} Επιτήρηση Νήματος"
         print: "%{shortcut} Εκτύπωση νήματος"
-        defer: "%{shortcut} Αναβολή θέματος"
         topic_admin_actions: "%{shortcut} Άνοιγμα ενεργειών διαχείρισης θέματος"
       search_menu:
         title: "Μενού αναζήτησης"
@@ -3330,7 +3327,7 @@ el:
         upload: "Επιφόρτωση"
         uploading: "Επιφόρτωση"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Παρακαλώ εισάγετε μια έγκυρη αξία."
           email: "Παρακαλώ δώσε μία έγκυρη διεύθυνση email."
     table_builder:
@@ -3368,10 +3365,8 @@ el:
         up_to_date: "Είσαι ενήμερος!"
         critical_available: "Μια κρίσιμη ενημέρωση είναι διαθέσιμη"
         updates_available: "Υπάρχουν διαθέσιμες ενημερώσεις"
-        please_upgrade: "Παρακαλώ κάνε αναβάθμιση!"
         no_check_performed: "Δεν έγινε έλεγχος για ενημερώσεις. Βεβαιώσου πως το sidekiq τρέχει."
         stale_data: "Δεν έγινε έλεγχος για ενημερώσεις εδώ και αρκετό καιρό. Βεβαιώσου πως το sidekiq τρέχει."
-        version_check_pending: "Φαίνεται πως πρόσφατα έκανες ενημέρωση. Τέλεια!"
         installed_version: "Εγκατεστημένα"
         latest_version: "Τελευταία"
         problems_found: "Μερικές συμβουλές με βάση τις τρέχουσες ρυθμίσεις του ιστότοπού σας"
@@ -3634,6 +3629,8 @@ el:
           emoji: "Emoji"
           navigation: "Πλοήγηση"
           themes: "Θέματα"
+          components:
+            title: "Συστατικά"
       email_settings:
         sidebar_link:
           appearance: "Εμφάνιση"
@@ -3830,7 +3827,9 @@ el:
           disabled_component_tooltip: "Αυτό το συστατικό έχει απενεργοποιηθεί"
           default_theme_tooltip: "Αυτό το θέμα είναι το προεπιλεγμένο θέμα του ιστότοπου"
           updates_available_tooltip: "Διατίθενται ενημερώσεις για αυτό το θέμα"
-          and_x_more: "και %{count} ακόμη."
+          and_x_more:
+            one: "και %{count} ακόμη."
+            other: "και %{count} ακόμη."
           collapse: Σύμπτυξη
           uploads: "Μεταφορτώσεις"
           no_uploads: "Μπορείτε να μεταφορτώσετε στοιχεία σχετικά με το θέμα σας, όπως γραμματοσειρές και εικόνες."
@@ -3922,8 +3921,6 @@ el:
           schema:
             fields:
               required: "*απαιτείται"
-              string:
-                too_short: "πρέπει να είναι τουλάχιστον %{count} χαρακτήρες"
               number:
                 too_small: "πρέπει να είναι μεγαλύτερο ή ίσο με %{count}"
                 too_large: "πρέπει να είναι λιγότερο ή ίσο με %{count}"
@@ -4238,7 +4235,6 @@ el:
           silence: "Σίγαση"
           link: "Σύνδεσμος"
         form:
-          placeholder_regexp: "regular expression"
           link_label: "Σύνδεσμος"
           link_placeholder: "https://example.com"
           add: "Προσθήκη"
@@ -4576,7 +4572,6 @@ el:
           empty: "Δεν υπάρχουν ακόμα εικόνες. Παρακαλώ επιφορτώστε μία."
           upload:
             label: "Μεταφόρτωση"
-            title: "Επιφόρτωση εικόνων"
         selectable_avatars:
           title: "Λίστα των avatars που μπορούν να επιλέξουν οι χρήστες"
         categories:
@@ -4612,7 +4607,6 @@ el:
         secret_list:
           invalid_input: "Τα πεδία εισαγωγής δε μπορούν να είναι κενά ή να περιέχουν χαρακτήρα κάθετης γραμμής."
         default_categories:
-          modal_description: "Θα θέλατε να εφαρμόσετε αυτήν την αλλαγή αναδρομικά; Αυτό θα αλλάξει τις προτιμήσεις για %{count} υπάρχοντες χρήστες."
           modal_yes: "Ναι "
           modal_no: "Όχι, εφαρμόστε την αλλαγή μόνο προς τα εμπρός"
         file_types_list:
