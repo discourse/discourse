@@ -457,6 +457,14 @@ class GroupsController < ApplicationController
     user = User.find_by(id: params[:user_id])
     raise Discourse::InvalidParameters.new(:user_id) if user.blank?
 
+    # find original membership request PM
+    request_topic =
+      Topic.find_by(
+        title: I18n.t("groups.request_membership_pm.title", group_name: group.name),
+        archetype: "private_message",
+        user_id: user.id,
+      )
+
     ActiveRecord::Base.transaction do
       if params[:accept]
         group.add(user)
@@ -469,10 +477,12 @@ class GroupsController < ApplicationController
     if params[:accept]
       PostCreator.new(
         current_user,
-        title: I18n.t("groups.request_accepted_pm.title", group_name: group.name),
-        raw: I18n.t("groups.request_accepted_pm.body", group_name: group.name),
+        post_type: Post.types[:regular],
         archetype: Archetype.private_message,
         target_usernames: user.username,
+        topic_id: request_topic.id,
+        raw: I18n.t("groups.request_accepted_pm.body", group_name: group.name),
+        reply_to_post_number: 1,
         skip_validations: true,
       ).create!
     end
