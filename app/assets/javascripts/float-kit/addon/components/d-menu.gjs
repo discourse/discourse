@@ -58,6 +58,7 @@ export default class DMenu extends Component {
         (if this.menuInstance.expanded "-expanded")
         (concat this.options.identifier "-trigger")
         @triggerClass
+        @class
       }}
       id={{this.menuInstance.id}}
       data-identifier={{this.options.identifier}}
@@ -83,6 +84,8 @@ export default class DMenu extends Component {
           class={{concatClass
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")
+            @contentClass
+            @class
           }}
           @inline={{(isTesting)}}
           data-identifier={{@instance.options.identifier}}
@@ -109,6 +112,8 @@ export default class DMenu extends Component {
             "fk-d-menu"
             "fk-d-menu__content"
             (concat this.options.identifier "-content")
+            @class
+            @contentClass
           }}
           @innerClass="fk-d-menu__inner-content"
           @role="dialog"
