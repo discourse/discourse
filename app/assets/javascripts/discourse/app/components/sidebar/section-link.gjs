@@ -154,7 +154,7 @@ export default class SectionLink extends Component {
               }}
             >
               {{@content}}
-              {{@contentComponent}}
+              <@contentComponent />
             </span>
 
             {{#if @badgeText}}
