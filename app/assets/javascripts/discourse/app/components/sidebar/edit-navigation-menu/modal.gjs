@@ -12,7 +12,7 @@ import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
-export default class extends Component {
+export default class SidebarEditNavigationMenuModal extends Component {
   @tracked filter = "";
   @tracked filterDropdownValue = "all";
 

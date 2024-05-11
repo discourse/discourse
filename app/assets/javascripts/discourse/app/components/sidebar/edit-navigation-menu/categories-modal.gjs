@@ -59,7 +59,7 @@ function applyMode(mode, categories, selectedSidebarCategoryIds) {
   });
 }
 
-export default class extends Component {
+export default class SidebarEditNavigationMenuCategoriesModal extends Component {
   @service currentUser;
   @service site;
   @service siteSettings;

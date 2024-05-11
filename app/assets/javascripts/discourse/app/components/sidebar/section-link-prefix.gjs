@@ -6,7 +6,7 @@ import { isHex } from "discourse/components/sidebar/section-link";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 
-export default class extends Component {
+export default class SidebarSectionLinkPrefix extends Component {
   get prefixValue() {
     if (!this.args.prefixType && !this.args.prefixValue) {
       return;

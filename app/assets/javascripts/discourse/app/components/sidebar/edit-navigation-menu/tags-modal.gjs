@@ -15,7 +15,7 @@ import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import EditNavigationMenuModal from "./modal";
 
-export default class extends Component {
+export default class SidebarEditNavigationMenuTagsModal extends Component {
   @service currentUser;
   @service siteSettings;
   @service store;
