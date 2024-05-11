@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
@@ -8,11 +7,10 @@ import { ADMIN_NAV_MAP } from "discourse/lib/sidebar/admin-nav-map";
 export default class ToggleAllSections extends Component {
   @service sidebarState;
   @service keyValueStore;
-  @tracked collapsedSections = this.sidebarState.collapsedSections;
 
   get allSectionsExpanded() {
     return ADMIN_NAV_MAP.every((adminNav) => {
-      return !this.collapsedSections.includes(
+      return !this.sidebarState.collapsedSections.has(
         `sidebar-section-${this.sidebarState.currentPanel.key}-${adminNav.name}-collapsed`
       );
     });
@@ -32,13 +30,15 @@ export default class ToggleAllSections extends Component {
 
   @action
   toggleAllSections() {
-    const collapseOrExpand = this.allSectionsExpanded
-      ? this.sidebarState.collapseSection.bind(this)
-      : this.sidebarState.expandSection.bind(this);
+    const collapse = this.allSectionsExpanded;
+
     ADMIN_NAV_MAP.forEach((adminNav) => {
-      collapseOrExpand(
-        `${this.sidebarState.currentPanel.key}-${adminNav.name}`
-      );
+      const key = `${this.sidebarState.currentPanel.key}-${adminNav.name}`;
+      if (collapse) {
+        this.sidebarState.collapseSection(key);
+      } else {
+        this.sidebarState.expandSection(key);
+      }
     });
   }
 

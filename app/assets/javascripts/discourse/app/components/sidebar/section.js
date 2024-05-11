@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
@@ -8,7 +7,6 @@ export default class SidebarSection extends Component {
   @service keyValueStore;
   @service sidebarState;
 
-  @tracked collapsedSections = this.sidebarState.collapsedSections;
   sidebarSectionContentID = `sidebar-section-content-${this.args.sectionName}`;
   collapsedSidebarSectionKey = `sidebar-section-${this.args.sectionName}-collapsed`;
 
@@ -36,7 +34,9 @@ export default class SidebarSection extends Component {
   }
 
   get displaySectionContent() {
-    return !this.collapsedSections.includes(this.collapsedSidebarSectionKey);
+    return !this.sidebarState.collapsedSections.has(
+      this.collapsedSidebarSectionKey
+    );
   }
 
   willDestroy() {
