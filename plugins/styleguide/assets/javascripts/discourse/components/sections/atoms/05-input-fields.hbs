@@ -2,14 +2,32 @@
 
 <form class="d-form">
   <h2>Horizontal form (classic)</h2>
+
+  <FormKit @onSubmit={{@dummy.onSubmit}} as |fk|>
+    <fk.ValidationMessages />
+
+    <fk.Row>
+      <fk.Col @size={{4}}>
+        <fk.Text @name="foo" @label="test" @validation="required" />
+      </fk.Col>
+      <fk.Col @size={{8}}>
+        <fk.Text @name="bar" @help="coucou" @value="something" />
+      </fk.Col>
+    </fk.Row>
+    <fk.Row>
+      <fk.Col @size={{12}}>
+        <fk.Text @name="baz" />
+      </fk.Col>
+    </fk.Row>
+  </FormKit>
+
   <div class="d-form__section --landscape">
     <div class="d-form__row">
-      <label
-        class="d-form__col --col-4 d-form-field__label"
-        for="normal-input"
-      >Standard input
-        <span class="d-form-field__optional">(Optional)</span>
-      </label>
+      <div class="d-form__col --col-4">
+        <label class="d-form-field__label" for="normal-input">Standard input
+          <span class="d-form-field__optional">(Optional)</span>
+        </label>
+      </div>
 
       <div class="d-form__col --col-8">
         <p class="d-form-field__info">An explanation about the usecase of this

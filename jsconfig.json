@@ -27,6 +27,9 @@
       "float-kit/*": [
         "./app/assets/javascripts/float-kit/addon/*"
       ],
+      "form-kit/*": [
+        "./app/assets/javascripts/form-kit/addon/*"
+      ],
       "truth-helpers/*": [
         "./app/assets/javascripts/truth-helpers/addon/*"
       ],

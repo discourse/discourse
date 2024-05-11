@@ -225,6 +225,10 @@ export function createData(store) {
 
     toggleSwitchState: true,
 
+    onSubmit: (data) => {
+      console.log("onSubmit", data);
+    },
+
     navItems: ["latest", "categories", "top"].map((name) => {
       let item = NavItem.fromText(name);
 

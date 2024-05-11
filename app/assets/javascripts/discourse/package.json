@@ -20,6 +20,7 @@
     "@faker-js/faker": "^8.4.1",
     "@glimmer/syntax": "^0.92.0",
     "@highlightjs/cdn-assets": "^11.9.0",
+    "decorator-transforms": "^2.0.0",
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
     "ember-route-template": "^1.0.3",
@@ -29,7 +30,7 @@
     "jspreadsheet-ce": "^4.13.4",
     "morphlex": "^0.0.15",
     "pretty-text": "1.0.0",
-    "decorator-transforms": "^2.0.0"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.24.5",
@@ -98,6 +99,7 @@
     "ember-template-imports": "^4.1.0",
     "ember-test-selectors": "^6.0.0",
     "float-kit": "1.0.0",
+    "form-kit": "1.0.0",
     "html-entities": "^2.5.2",
     "imports-loader": "^5.0.0",
     "jquery": "^3.7.1",
