@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
@@ -81,7 +81,7 @@ export default class extends Component {
             }}
 
             <Input
-              {{on "input" (withEventValue (fn @onFilterInput))}}
+              {{on "input" (withEventValue @onFilterInput)}}
               @type="text"
               @value={{this.filter}}
               placeholder={{@inputFilterPlaceholder}}
