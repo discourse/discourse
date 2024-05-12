@@ -11,6 +11,7 @@ class DiscoursePoll::Poll
         available_options = poll.poll_options.map { |o| o.digest }.to_set
 
         if poll.type == "irv"
+          options = options.values.map { |hash| hash }
           options.select! { |o| available_options.include?(o[:digest]) }
         else
           options.select! { |o| available_options.include?(o) }
@@ -40,11 +41,21 @@ class DiscoursePoll::Poll
               obj << option.id if option.poll_votes.where(user_id: user.id).exists?
             end
 
-        # remove non-selected votes
-        PollVote.where(poll: poll, user: user).where.not(poll_option_id: new_option_ids).delete_all
+        if poll.type == "irv"
+          # for IRV, we need to remove all votes and re-create them as there is no way to update them due to lack of primary key.
+          PollVote.where(poll: poll, user: user).delete_all
+          creation_set = new_option_ids
+        else
+          # remove non-selected votes
+          PollVote
+            .where(poll: poll, user: user)
+            .where.not(poll_option_id: new_option_ids)
+            .delete_all
+          creation_set = new_option_ids - old_option_ids
+        end
 
         # create missing votes
-        (new_option_ids - old_option_ids).each do |option_id|
+        creation_set.each do |option_id|
           if poll.type == "irv"
             PollVote.create!(
               poll: poll,
@@ -97,6 +108,27 @@ class DiscoursePoll::Poll
       WHERE poll_votes.poll_id = to_delete_poll_votes.poll_id
       AND poll_votes.user_id = to_delete_poll_votes.user_id
       SQL
+    end
+
+    serialized_poll[:options].each do |option|
+      if serialized_poll[:type] == "irv"
+        option.merge!(
+          rank:
+            PollVote
+              .joins(:poll_option)
+              .where(poll_options: { digest: option[:id] }, user_id: user.id, poll_id: poll_id)
+              .pluck(:rank)
+              .first,
+        )
+      elsif serialized_poll[:type] == "multiple"
+        option.merge!(
+          chosen:
+            PollVote
+              .joins(:poll_option)
+              .where(poll_options: { digest: option[:id] }, user_id: user.id, poll_id: poll_id)
+              .exists?,
+        )
+      end
     end
 
     [serialized_poll, options]

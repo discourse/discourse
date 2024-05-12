@@ -69,7 +69,6 @@ export default class PollComponent extends Component {
     (this.closed && !this.staffOnly);
   @tracked getDropdownButtonState = false;
   post = this.args.attrs.post;
-  // isAutomaticallyClosed = this.args.attrs.isAutomaticallyClosed;
 
   isAutomaticallyClosed = () => {
     const poll = this.args.attrs.poll;
@@ -189,12 +188,12 @@ export default class PollComponent extends Component {
     } else if (this.isIrv) {
       options.forEach((candidate, i) => {
         const chosenIdx = vote.findIndex((object) => {
-          return object.id === candidate.id;
+          return object.digest === candidate.id;
         });
 
         if (chosenIdx === -1) {
           vote.push({
-            id: candidate.id,
+            digest: candidate.id,
             rank: candidate.id === option ? rank : 0,
           });
         } else {
@@ -229,6 +228,11 @@ export default class PollComponent extends Component {
       option.rank = 0;
       if (this.args.attrs.isIrv) {
         this.irv_dropdown_content.push({ id: i + 1, name: (i + 1).toString() });
+        this.args.attrs.vote.forEach((vote) => {
+          if (vote.digest === option.id) {
+            option.rank = vote.rank;
+          }
+        });
       } else {
         if (this.args.attrs.vote.includes(option.id)) {
           option.chosen = true;

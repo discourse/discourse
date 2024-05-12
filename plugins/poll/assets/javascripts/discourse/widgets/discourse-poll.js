@@ -929,10 +929,6 @@ export default createWidget("discourse-poll", {
         }
       ),
     ];
-    //   this.attach("discourse-poll-container", newAttrs),
-    //   this.attach("discourse-poll-info", newAttrs),
-    //   this.attach("discourse-poll-buttons", newAttrs),
-    // ];
   },
 
   min() {
