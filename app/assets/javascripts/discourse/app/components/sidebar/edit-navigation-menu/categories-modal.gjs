@@ -59,7 +59,7 @@ function applyMode(mode, categories, selectedSidebarCategoryIds) {
   });
 }
 
-export default class extends Component {
+export default class SidebarEditNavigationMenuCategoriesModal extends Component {
   @service currentUser;
   @service site;
   @service siteSettings;
@@ -67,7 +67,7 @@ export default class extends Component {
   @tracked initialLoad = true;
   @tracked filteredCategoriesGroupings = [];
   @tracked filteredCategoryIds = [];
-
+  // TODO: tracked array, no ember array methods
   @tracked
   selectedSidebarCategoryIds = [...this.currentUser.sidebar_category_ids];
 
@@ -307,31 +307,31 @@ export default class extends Component {
           <div class="sidebar-categories-form__loading">
             {{loadingSpinner size="small"}}
           </div>
-        {{else if (gt this.filteredCategoriesGroupings.length 0)}}
+        {{else}}
           {{#each this.filteredCategoriesGroupings as |categories|}}
             <div
-              class="sidebar-categories-form__row"
-              style={{borderColor (get categories "0.color") "left"}}
               {{didInsert this.didInsert}}
+              style={{borderColor (get categories "0.color") "left"}}
+              class="sidebar-categories-form__row"
             >
-
               {{#each categories as |category|}}
                 <div
-                  class="sidebar-categories-form__category-row"
                   data-category-id={{category.id}}
                   data-category-level={{category.level}}
+                  class="sidebar-categories-form__category-row"
                 >
                   <label
-                    class="sidebar-categories-form__category-label"
                     for={{concat
                       "sidebar-categories-form__input--"
                       category.id
                     }}
+                    class="sidebar-categories-form__category-label"
                   >
                     <div class="sidebar-categories-form__category-wrapper">
                       <div class="sidebar-categories-form__category-badge">
                         {{categoryBadge category}}
                       </div>
+
                       {{#unless category.parentCategory}}
                         <div
                           class="sidebar-categories-form__category-description"
@@ -345,11 +345,7 @@ export default class extends Component {
                     </div>
 
                     <Input
-                      id={{concat
-                        "sidebar-categories-form__input--"
-                        category.id
-                      }}
-                      class="sidebar-categories-form__input"
+                      {{on "click" (fn this.toggleCategory category.id)}}
                       @type="checkbox"
                       @checked={{includes
                         this.selectedSidebarCategoryIds
@@ -358,17 +354,21 @@ export default class extends Component {
                       disabled={{not
                         (includes this.filteredCategoryIds category.id)
                       }}
-                      {{on "click" (fn this.toggleCategory category.id)}}
+                      id={{concat
+                        "sidebar-categories-form__input--"
+                        category.id
+                      }}
+                      class="sidebar-categories-form__input"
                     />
                   </label>
                 </div>
               {{/each}}
             </div>
+          {{else}}
+            <div class="sidebar-categories-form__no-categories">
+              {{i18n "sidebar.categories_form_modal.no_categories"}}
+            </div>
           {{/each}}
-        {{else}}
-          <div class="sidebar-categories-form__no-categories">
-            {{i18n "sidebar.categories_form_modal.no_categories"}}
-          </div>
         {{/if}}
       </form>
     </EditNavigationMenuModal>
