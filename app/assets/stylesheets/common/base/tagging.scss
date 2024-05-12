@@ -28,6 +28,9 @@
   }
 
   .tag-count {
+    &:before {
+      content: "x";
+    }
     font-size: var(--font-down-1);
     vertical-align: middle;
     line-height: var(--line-height-small);
