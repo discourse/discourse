@@ -3410,10 +3410,10 @@ babel-plugin-ember-modules-api-polyfill@^3.5.0:
   dependencies:
     ember-rfc176-data "^0.3.17"
 
-babel-plugin-ember-template-compilation@^2.0.0, babel-plugin-ember-template-compilation@^2.0.1, babel-plugin-ember-template-compilation@^2.0.2, babel-plugin-ember-template-compilation@^2.1.1, babel-plugin-ember-template-compilation@^2.2.4:
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/babel-plugin-ember-template-compilation/-/babel-plugin-ember-template-compilation-2.2.4.tgz#26afc304fd5a4d838725b3f773025a31adcf8542"
-  integrity sha512-g1p/6CZL4lYUl2gnmdZ1/2ZRSL412Hm67+jpKocG6Ac0ZArEY4+uwrLiaOxd/31SgkkDtAykhycBV9VamZG+bw==
+babel-plugin-ember-template-compilation@^2.0.0, babel-plugin-ember-template-compilation@^2.0.1, babel-plugin-ember-template-compilation@^2.0.2, babel-plugin-ember-template-compilation@^2.1.1, babel-plugin-ember-template-compilation@^2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/babel-plugin-ember-template-compilation/-/babel-plugin-ember-template-compilation-2.2.5.tgz#9f00cc88eeefdc7d228cfac63c2a40e59691fbf3"
+  integrity sha512-NQ2DT0DsYyHVrEpFQIy2U8S91JaKSE8NOSZzMd7KZFJVgA6KodJq3Uj852HcH9LsSfvwppnM+dRo1G8bzTnnFw==
   dependencies:
     "@glimmer/syntax" "^0.84.3"
     babel-import-util "^3.0.0"
