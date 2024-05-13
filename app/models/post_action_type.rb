@@ -82,21 +82,19 @@ class PostActionType < ActiveRecord::Base
     def initialize_flag_settings
       @types = nil
       @flag_settings = FlagSettings.new
-      if ActiveRecord::Base.connection.table_exists?(:post_flags)
-        PostFlag
-          .enabled
-          .order(:position)
-          .find_each do |post_flag|
-            @flag_settings.add(
-              post_flag.id,
-              post_flag.name.to_sym,
-              topic_type: post_flag.topic_type,
-              notify_type: post_flag.notify_type,
-              auto_action_type: post_flag.auto_action_type,
-              custom_type: post_flag.custom_type,
-            )
-          end
-      end
+      Flag
+        .enabled
+        .order(:position)
+        .each do |post_flag|
+          @flag_settings.add(
+            post_flag.id,
+            post_flag.name.to_sym,
+            topic_type: post_flag.topic_type,
+            notify_type: post_flag.notify_type,
+            auto_action_type: post_flag.auto_action_type,
+            custom_type: post_flag.custom_type,
+          )
+        end
     end
   end
 
