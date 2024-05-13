@@ -311,6 +311,38 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu__content.second").exists();
   });
 
+  test("empty @groupIdentifier", async function (assert) {
+    await render(
+      hbs`<DMenu @inline={{true}} @class="first">1</DMenu><DMenu @inline={{true}} @class="second">2</DMenu>`
+    );
+
+    await click(".first.fk-d-menu__trigger");
+
+    assert.dom(".fk-d-menu__content.first").exists();
+    assert.dom(".fk-d-menu__content.second").doesNotExist();
+
+    await click(".second.fk-d-menu__trigger");
+
+    assert.dom(".fk-d-menu__content.first").exists("it doesn’t autoclose");
+    assert.dom(".fk-d-menu__content.second").exists();
+  });
+
+  test("empty @identifier", async function (assert) {
+    await render(
+      hbs`<DMenu @inline={{true}} @class="first">1</DMenu><DMenu @inline={{true}} @class="second">2</DMenu>`
+    );
+
+    await click(".first.fk-d-menu__trigger");
+
+    assert.dom(".fk-d-menu__content.first").exists();
+    assert.dom(".fk-d-menu__content.second").doesNotExist();
+
+    await click(".second.fk-d-menu__trigger");
+
+    assert.dom(".fk-d-menu__content.first").exists("it doesn’t autoclose");
+    assert.dom(".fk-d-menu__content.second").exists();
+  });
+
   test("@class", async function (assert) {
     await render(hbs`<DMenu @inline={{true}} @class="first">1</DMenu>`);
 
