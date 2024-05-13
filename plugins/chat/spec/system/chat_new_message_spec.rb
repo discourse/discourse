@@ -42,5 +42,20 @@ RSpec.describe "Chat New Message from params", type: :system do
         "/chat/c/#{user_1.username}-#{user_2.username}/#{Chat::Channel.last.id}",
       )
     end
+
+    it "loads existing dm channel when it exists" do
+      chat_page.visit_new_message([user_1, user_2])
+      chat_channel = Chat::Channel.last
+
+      expect(page).to have_current_path(
+        "/chat/c/#{user_1.username}-#{user_2.username}/#{chat_channel.id}",
+      )
+
+      chat_page.visit_new_message([user_1, user_2])
+
+      expect(page).to have_current_path(
+        "/chat/c/#{user_1.username}-#{user_2.username}/#{chat_channel.id}",
+      )
+    end
   end
 end

@@ -19,7 +19,6 @@ module Chat
 
       def for_user_ids(user_ids)
         joins(:users)
-          .where(group: false)
           .group("direct_message_channels.id")
           .having("ARRAY[?] = ARRAY_AGG(users.id ORDER BY users.id)", user_ids.sort)
           .first
