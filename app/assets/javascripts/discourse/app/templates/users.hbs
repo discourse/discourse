@@ -80,13 +80,17 @@
             <div class="empty-state">
               <div class="empty-state-body">
                 <p>
-                  {{i18n "directory.no_results.body"}}
-                  {{#if this.currentUser.staff}}
-                    {{html-safe
-                      (i18n
-                        "directory.no_results.extra_body" basePath=(base-path)
-                      )
-                    }}
+                  {{#if this.name}}
+                    {{i18n "directory.no_results_with_search"}}
+                  {{else}}
+                    {{i18n "directory.no_results.body"}}
+                    {{#if this.currentUser.staff}}
+                      {{html-safe
+                        (i18n
+                          "directory.no_results.extra_body" basePath=(base-path)
+                        )
+                      }}
+                    {{/if}}
                   {{/if}}
                 </p>
               </div>
