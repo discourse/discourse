@@ -1,9 +1,17 @@
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import ApiSections from "./api-sections";
 
-const SidebarApiPanels = <template>
-  <div class="sidebar-sections">
-    <ApiSections @collapsable={{@collapsableSections}} />
-  </div>
-</template>;
+export default class SidebarApiPanels extends Component {
+  @service sidebarState;
 
-export default SidebarApiPanels;
+  get panelCssClass() {
+    return `${this.sidebarState.currentPanel.key}-panel`;
+  }
+
+  <template>
+    <div class="sidebar-sections {{this.panelCssClass}}">
+      <ApiSections @collapsable={{@collapsableSections}} />
+    </div>
+  </template>
+}

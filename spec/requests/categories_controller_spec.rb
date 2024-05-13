@@ -1211,9 +1211,9 @@ RSpec.describe CategoriesController do
       category2.upsert_custom_fields("bob" => "marley")
 
       # Warm up caches
-      get "/categories/search.json", params: { term: "Notfoo" }
+      post "/categories/search.json", params: { term: "Notfoo" }
 
-      queries = track_sql_queries { get "/categories/search.json", params: { term: "Notfoo" } }
+      queries = track_sql_queries { post "/categories/search.json", params: { term: "Notfoo" } }
 
       expect(queries.length).to eq(8)
 
@@ -1225,7 +1225,7 @@ RSpec.describe CategoriesController do
 
     context "without include_ancestors" do
       it "doesn't return ancestors" do
-        get "/categories/search.json", params: { term: "Notfoo" }
+        post "/categories/search.json", params: { term: "Notfoo" }
 
         expect(response.parsed_body).not_to have_key("ancestors")
       end
@@ -1233,7 +1233,7 @@ RSpec.describe CategoriesController do
 
     context "with include_ancestors=false" do
       it "returns ancestors" do
-        get "/categories/search.json", params: { term: "Notfoo", include_ancestors: false }
+        post "/categories/search.json", params: { term: "Notfoo", include_ancestors: false }
 
         expect(response.parsed_body).not_to have_key("ancestors")
       end
@@ -1241,7 +1241,7 @@ RSpec.describe CategoriesController do
 
     context "with include_ancestors=true" do
       it "returns ancestors" do
-        get "/categories/search.json", params: { term: "Notfoo", include_ancestors: true }
+        post "/categories/search.json", params: { term: "Notfoo", include_ancestors: true }
 
         expect(response.parsed_body).to have_key("ancestors")
       end
@@ -1249,7 +1249,7 @@ RSpec.describe CategoriesController do
 
     context "with term" do
       it "returns categories" do
-        get "/categories/search.json", params: { term: "Foo" }
+        post "/categories/search.json", params: { term: "Foo" }
 
         expect(response.parsed_body["categories"].size).to eq(3)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
@@ -1262,7 +1262,7 @@ RSpec.describe CategoriesController do
 
     context "with parent_category_id" do
       it "returns categories" do
-        get "/categories/search.json", params: { parent_category_id: category.id }
+        post "/categories/search.json", params: { parent_category_id: category.id }
 
         expect(response.parsed_body["categories"].size).to eq(1)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
@@ -1271,7 +1271,7 @@ RSpec.describe CategoriesController do
       end
 
       it "can return only top-level categories" do
-        get "/categories/search.json", params: { parent_category_id: -1 }
+        post "/categories/search.json", params: { parent_category_id: -1 }
 
         expect(response.parsed_body["categories"].size).to eq(3)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
@@ -1284,7 +1284,7 @@ RSpec.describe CategoriesController do
 
     context "with include_uncategorized" do
       it "returns Uncategorized" do
-        get "/categories/search.json", params: { include_uncategorized: true }
+        post "/categories/search.json", params: { include_uncategorized: true }
 
         expect(response.parsed_body["categories"].size).to eq(4)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
@@ -1296,7 +1296,7 @@ RSpec.describe CategoriesController do
       end
 
       it "does not return Uncategorized" do
-        get "/categories/search.json", params: { include_uncategorized: false }
+        post "/categories/search.json", params: { include_uncategorized: false }
 
         expect(response.parsed_body["categories"].size).to eq(3)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
@@ -1309,14 +1309,14 @@ RSpec.describe CategoriesController do
 
     context "with select_category_ids" do
       it "returns categories" do
-        get "/categories/search.json", params: { select_category_ids: [category.id] }
+        post "/categories/search.json", params: { select_category_ids: [category.id] }
 
         expect(response.parsed_body["categories"].size).to eq(1)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly("Foo")
       end
 
       it "works with empty categories list" do
-        get "/categories/search.json", params: { select_category_ids: [""] }
+        post "/categories/search.json", params: { select_category_ids: [""] }
 
         expect(response.parsed_body["categories"].size).to eq(0)
       end
@@ -1324,7 +1324,7 @@ RSpec.describe CategoriesController do
 
     context "with reject_category_ids" do
       it "returns categories" do
-        get "/categories/search.json", params: { reject_category_ids: [category2.id] }
+        post "/categories/search.json", params: { reject_category_ids: [category2.id] }
 
         expect(response.parsed_body["categories"].size).to eq(3)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
@@ -1335,7 +1335,7 @@ RSpec.describe CategoriesController do
       end
 
       it "works with empty categories list" do
-        get "/categories/search.json", params: { reject_category_ids: [""] }
+        post "/categories/search.json", params: { reject_category_ids: [""] }
 
         expect(response.parsed_body["categories"].size).to eq(4)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
@@ -1349,7 +1349,7 @@ RSpec.describe CategoriesController do
 
     context "with include_subcategories" do
       it "returns categories" do
-        get "/categories/search.json", params: { include_subcategories: false }
+        post "/categories/search.json", params: { include_subcategories: false }
 
         expect(response.parsed_body["categories"].size).to eq(3)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
@@ -1360,7 +1360,7 @@ RSpec.describe CategoriesController do
       end
 
       it "returns categories and subcategories" do
-        get "/categories/search.json", params: { include_subcategories: true }
+        post "/categories/search.json", params: { include_subcategories: true }
 
         expect(response.parsed_body["categories"].size).to eq(4)
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
@@ -1374,7 +1374,7 @@ RSpec.describe CategoriesController do
 
     context "with prioritized_category_id" do
       it "returns categories" do
-        get "/categories/search.json", params: { prioritized_category_id: category2.id }
+        post "/categories/search.json", params: { prioritized_category_id: category2.id }
 
         expect(response.parsed_body["categories"].size).to eq(4)
         expect(response.parsed_body["categories"][0]["name"]).to eq("Notfoo")
@@ -1383,7 +1383,7 @@ RSpec.describe CategoriesController do
 
     context "with limit" do
       it "returns categories" do
-        get "/categories/search.json", params: { limit: 2 }
+        post "/categories/search.json", params: { limit: 2 }
 
         expect(response.parsed_body["categories"].size).to eq(2)
       end
@@ -1402,7 +1402,7 @@ RSpec.describe CategoriesController do
       end
 
       it "returns in correct order" do
-        get "/categories/search.json", params: { term: "ordered" }
+        post "/categories/search.json", params: { term: "ordered" }
 
         expect(response.parsed_body["categories"].map { |c| c["id"] }).to eq(
           [category4.id, category2.id, category3.id, category1.id],
@@ -1412,7 +1412,7 @@ RSpec.describe CategoriesController do
       it "returns categories in the correct order when the limit is lower than the total number of categories" do
         categories =
           4.times.flat_map do |i|
-            get "/categories/search.json", params: { term: "ordered", page: i + 1, limit: 1 }
+            post "/categories/search.json", params: { term: "ordered", page: i + 1, limit: 1 }
             response.parsed_body["categories"]
           end
 
@@ -1425,7 +1425,7 @@ RSpec.describe CategoriesController do
     it "returns user fields" do
       sign_in(admin)
 
-      get "/categories/search.json", params: { select_category_ids: [category.id] }
+      post "/categories/search.json", params: { select_category_ids: [category.id] }
 
       category = response.parsed_body["categories"].first
       expect(category["notification_level"]).to eq(NotificationLevels.all[:regular])

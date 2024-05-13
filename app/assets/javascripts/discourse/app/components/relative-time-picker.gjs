@@ -125,7 +125,7 @@ export default class RelativeTimePicker extends Component {
   }
 
   calculateMinutes(duration, interval) {
-    if (isBlank(duration)) {
+    if (isBlank(duration) || isNaN(duration)) {
       return null;
     }
 

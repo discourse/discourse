@@ -13,9 +13,18 @@ export default class Contents extends Component {
   @service currentUser;
   @service siteSettings;
   @service header;
+  @service sidebarState;
 
   get topicPresent() {
     return !!this.header.topic;
+  }
+
+  get sidebarIcon() {
+    if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
+      return "discourse-sidebar";
+    }
+
+    return "bars";
   }
 
   <template>
@@ -23,8 +32,9 @@ export default class Contents extends Component {
       {{#if this.site.desktopView}}
         {{#if @sidebarEnabled}}
           <SidebarToggle
-            @toggleHamburger={{@toggleHamburger}}
+            @toggleNavigationMenu={{@toggleNavigationMenu}}
             @showSidebar={{@showSidebar}}
+            @icon={{this.sidebarIcon}}
           />
         {{/if}}
       {{/if}}

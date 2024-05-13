@@ -108,6 +108,7 @@ GEM
     crass (1.0.6)
     css_parser (1.17.1)
       addressable
+    csv (3.3.0)
     date (3.3.4)
     debug_inspector (1.2.0)
     diff-lcs (1.5.1)
@@ -360,7 +361,7 @@ GEM
     redis (4.8.1)
     redis-namespace (1.11.0)
       redis (>= 4)
-    regexp_parser (2.9.0)
+    regexp_parser (2.9.1)
     request_store (1.7.0)
       rack (>= 1.4)
     rexml (3.2.6)
@@ -446,13 +447,13 @@ GEM
     sanitize (6.1.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    sass-embedded (1.77.0-aarch64-linux-gnu)
+    sass-embedded (1.77.1-aarch64-linux-gnu)
       google-protobuf (>= 3.25, < 5.0)
-    sass-embedded (1.77.0-arm64-darwin)
+    sass-embedded (1.77.1-arm64-darwin)
       google-protobuf (>= 3.25, < 5.0)
-    sass-embedded (1.77.0-x86_64-darwin)
+    sass-embedded (1.77.1-x86_64-darwin)
       google-protobuf (>= 3.25, < 5.0)
-    sass-embedded (1.77.0-x86_64-linux-gnu)
+    sass-embedded (1.77.1-x86_64-linux-gnu)
       google-protobuf (>= 3.25, < 5.0)
     sassc-embedded (1.76.0)
       sass-embedded (~> 1.76)
@@ -568,6 +569,7 @@ DEPENDENCIES
   cose
   cppjieba_rb
   css_parser
+  csv
   diffy
   digest
   discourse-fonts

@@ -6,6 +6,7 @@ const SidebarSections = <template>
     <UserSections
       @collapsableSections={{@collapsableSections}}
       @panel={{@panel}}
+      @hideApiSections={{@hideApiSections}}
     />
   {{else}}
     <AnonymousSections @collapsableSections={{@collapsableSections}} />
