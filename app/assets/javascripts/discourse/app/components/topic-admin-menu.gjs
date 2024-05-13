@@ -91,7 +91,7 @@ export default class TopicAdminMenu extends Component {
             @triggerClass="toggle-admin-menu"
             @modalForMobile={{true}}
             @autofocus={{true}}
-            @class="btn-default btn-icon"
+            @triggerClass="btn-default btn-icon"
           >
             <:trigger>
               {{icon "wrench"}}
