@@ -248,7 +248,14 @@ export default class Composer extends RestModel {
     this._categoryId = categoryId;
 
     if (oldCategoryId !== categoryId) {
-      this.applyTopicTemplate(oldCategoryId, categoryId);
+      let promise = Promise.resolve();
+      if (this.site.lazy_load_categories && categoryId) {
+        promise = Category.asyncFindById(categoryId);
+      }
+
+      promise.then(() => {
+        this.applyTopicTemplate(oldCategoryId, categoryId);
+      });
     }
   }
 
