@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq, not, or } from "truth-helpers";
+import { eq } from "truth-helpers";
 import DAG from "discourse/lib/dag";
 import getURL from "discourse-common/lib/get-url";
 import Dropdown from "./dropdown";
@@ -27,8 +28,33 @@ export function clearExtraHeaderIcons() {
 export default class Icons extends Component {
   @service site;
   @service currentUser;
+  @service siteSettings;
+  @service sidebarState;
   @service header;
   @service search;
+
+  get showHamburger() {
+    // NOTE: In this scenario, we are forcing the sidebar on admin users,
+    // so we need to still show the hamburger menu to be able to
+    // access the legacy hamburger forum menu.
+    if (
+      this.args.sidebarEnabled &&
+      this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu
+    ) {
+      return true;
+    }
+
+    return !this.args.sidebarEnabled || this.site.mobileView;
+  }
+
+  @action
+  toggleHamburger() {
+    if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
+      this.args.toggleNavigationMenu("hamburger");
+    } else {
+      this.args.toggleNavigationMenu();
+    }
+  }
 
   <template>
     <ul class="icons d-header-icons">
@@ -45,13 +71,13 @@ export default class Icons extends Component {
             @targetSelector=".search-menu-panel"
           />
         {{else if (eq entry.key "hamburger")}}
-          {{#if (or (not @sidebarEnabled) this.site.mobileView)}}
+          {{#if this.showHamburger}}
             <Dropdown
               @title="hamburger_menu"
               @icon="bars"
               @iconId="toggle-hamburger-menu"
               @active={{this.header.hamburgerVisible}}
-              @onClick={{@toggleHamburger}}
+              @onClick={{this.toggleHamburger}}
               @className="hamburger-dropdown"
             />
           {{/if}}

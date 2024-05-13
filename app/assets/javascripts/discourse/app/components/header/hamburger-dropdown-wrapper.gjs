@@ -2,22 +2,36 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import discourseLater from "discourse-common/lib/later";
 import closeOnClickOutside from "../../modifiers/close-on-click-outside";
-import HamburgerDropdown from "../sidebar/hamburger-dropdown";
+import SidebarHamburgerDropdown from "../sidebar/hamburger-dropdown";
 
 const CLOSE_ON_CLICK_SELECTORS =
   "a[href], .sidebar-section-header-button, .sidebar-section-link-button, .sidebar-section-link";
 
 export default class HamburgerDropdownWrapper extends Component {
+  @service currentUser;
+  @service siteSettings;
+  @service sidebarState;
+
+  @action
+  toggleNavigation() {
+    this.args.toggleNavigationMenu(
+      this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu
+        ? "hamburger"
+        : null
+    );
+  }
+
   @action
   click(e) {
     if (e.target.closest(CLOSE_ON_CLICK_SELECTORS)) {
-      this.args.toggleHamburger();
+      this.toggleNavigation();
     }
   }
 
@@ -38,9 +52,9 @@ export default class HamburgerDropdownWrapper extends Component {
         })
         .finished.then(() => {
           if (isTesting()) {
-            this.args.toggleHamburger();
+            this.toggleNavigation();
           } else {
-            discourseLater(() => this.args.toggleHamburger());
+            discourseLater(() => this.toggleNavigation());
           }
         });
       const cloakAnimatePromise = headerCloak.animate([{ opacity: 0 }], {
@@ -51,9 +65,24 @@ export default class HamburgerDropdownWrapper extends Component {
       waitForPromise(panelAnimatePromise);
       waitForPromise(cloakAnimatePromise);
     } else {
-      this.args.toggleHamburger();
+      this.toggleNavigation();
     }
   }
+
+  get forceMainSidebarPanel() {
+    // NOTE: In this scenario, we are forcing the sidebar on admin users,
+    // so we need to still show the hamburger menu and always show the main
+    // panel in that menu.
+    if (
+      this.args.sidebarEnabled &&
+      this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   <template>
     <div
       class="hamburger-dropdown-wrapper"
@@ -69,7 +98,9 @@ export default class HamburgerDropdownWrapper extends Component {
         )
       }}
     >
-      <HamburgerDropdown />
+      <SidebarHamburgerDropdown
+        @forceMainSidebarPanel={{this.forceMainSidebarPanel}}
+      />
     </div>
   </template>
 }

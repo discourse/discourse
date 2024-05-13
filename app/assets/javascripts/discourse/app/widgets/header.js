@@ -289,6 +289,16 @@ createWidget("header-icons", {
       }
     });
 
+    if (attrs.user) {
+      icons.push(
+        this.attach("user-dropdown", {
+          active: attrs.userVisible,
+          action: "toggleUserMenu",
+          user: attrs.user,
+        })
+      );
+    }
+
     return icons;
   },
 });
@@ -644,7 +654,12 @@ export default createWidget("header", {
 
   toggleHamburger() {
     if (this.attrs.sidebarEnabled && !this.site.narrowDesktopView) {
-      this.sendWidgetAction("toggleSidebar");
+      if (!this.attrs.showSidebar) {
+        this.sendWidgetAction("toggleSidebar");
+        this.closeAll();
+      } else {
+        this.state.hamburgerVisible = !this.state.hamburgerVisible;
+      }
     } else {
       this.state.hamburgerVisible = !this.state.hamburgerVisible;
       this.toggleBodyScrolling(this.state.hamburgerVisible);

@@ -9,6 +9,14 @@ module PageObjects
           wait_for_animation(find("div.menu-panel"))
         end
 
+        def click_header_toggle
+          find(header_toggle_css).click
+        end
+
+        def header_toggle_css
+          ".header-sidebar-toggle"
+        end
+
         def visible?
           page.has_css?("#d-sidebar")
         end

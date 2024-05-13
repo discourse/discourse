@@ -22,7 +22,9 @@ export default class SidebarUserSections extends Component {
         <MessagesSection @collapsable={{@collapsableSections}} />
       {{/if}}
 
-      <ApiSections @collapsable={{@collapsableSections}} />
+      {{#unless @hideApiSections}}
+        <ApiSections @collapsable={{@collapsableSections}} />
+      {{/unless}}
     </div>
   </template>
 }
