@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
 import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { gt, includes, not } from "truth-helpers";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { gt, has, includes, not } from "truth-helpers";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
 import borderColor from "discourse/helpers/border-color";
 import categoryBadge from "discourse/helpers/category-badge";
@@ -46,19 +46,6 @@ function findAncestors(categories) {
   return ancestors;
 }
 
-function applyMode(mode, categories, selectedSidebarCategoryIds) {
-  return categories.filter((c) => {
-    switch (mode) {
-      case "everything":
-        return true;
-      case "only-selected":
-        return selectedSidebarCategoryIds.includes(c.id);
-      case "only-unselected":
-        return !selectedSidebarCategoryIds.includes(c.id);
-    }
-  });
-}
-
 export default class SidebarEditNavigationMenuCategoriesModal extends Component {
   @service currentUser;
   @service site;
@@ -67,26 +54,32 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   @tracked initialLoad = true;
   @tracked filteredCategoriesGroupings = [];
   @tracked filteredCategoryIds = [];
-  // TODO: tracked array, no ember array methods
   @tracked
-  selectedSidebarCategoryIds = [...this.currentUser.sidebar_category_ids];
+  selectedSidebarCategoryIds = new TrackedSet([
+    ...this.currentUser.sidebar_category_ids,
+  ]);
+  hasMorePages;
+  loadedFilter;
+  loadedMode;
+  loadedPage;
+  processing = false;
+  requestedFilter;
+  requestedMode;
+  saving = false;
+  observer = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        this.observer.disconnect();
+        this.loadMore();
+      }
+    },
+    {
+      threshold: 1.0,
+    }
+  );
 
   constructor() {
     super(...arguments);
-
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          this.observer.disconnect();
-          this.loadMore();
-        }
-      },
-      {
-        threshold: 1.0,
-      }
-    );
-
-    this.processing = false;
     this.setFilterAndMode("", "everything");
   }
 
@@ -108,15 +101,24 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   }
 
   setFetchedCategories(mode, categories) {
-    this.setFilteredCategories(
-      applyMode(mode, categories, this.selectedSidebarCategoryIds)
-    );
+    this.setFilteredCategories(this.applyMode(mode, categories));
   }
 
   concatFetchedCategories(mode, categories) {
-    this.concatFilteredCategories(
-      applyMode(mode, categories, this.selectedSidebarCategoryIds)
-    );
+    this.concatFilteredCategories(this.applyMode(mode, categories));
+  }
+
+  applyMode(mode, categories) {
+    return categories.filter((c) => {
+      switch (mode) {
+        case "everything":
+          return true;
+        case "only-selected":
+          return this.selectedSidebarCategoryIds.has(c.id);
+        case "only-unselected":
+          return !this.selectedSidebarCategoryIds.has(c.id);
+      }
+    });
   }
 
   @action
@@ -128,7 +130,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   async searchCategories(filter, mode) {
     if (filter === "" && mode === "only-selected") {
       this.setFilteredCategories(
-        await Category.asyncFindByIds(this.selectedSidebarCategoryIds)
+        await Category.asyncFindByIds([...this.selectedSidebarCategoryIds])
       );
 
       this.loadedPage = null;
@@ -241,43 +243,40 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   @action
   toggleCategory(categoryId) {
-    if (this.selectedSidebarCategoryIds.includes(categoryId)) {
-      this.selectedSidebarCategoryIds.removeObject(categoryId);
+    if (this.selectedSidebarCategoryIds.has(categoryId)) {
+      this.selectedSidebarCategoryIds.delete(categoryId);
     } else {
-      this.selectedSidebarCategoryIds.addObject(categoryId);
+      this.selectedSidebarCategoryIds.add(categoryId);
     }
   }
 
   @action
   resetToDefaults() {
-    this.selectedSidebarCategoryIds =
+    this.selectedSidebarCategoryIds = new TrackedSet(
       this.siteSettings.default_navigation_menu_categories
         .split("|")
-        .map((id) => parseInt(id, 10));
+        .map((id) => parseInt(id, 10))
+    );
   }
 
   @action
-  save() {
+  async save() {
     this.saving = true;
     const initialSidebarCategoryIds = this.currentUser.sidebar_category_ids;
 
-    this.currentUser.set(
-      "sidebar_category_ids",
-      this.selectedSidebarCategoryIds
-    );
+    this.currentUser.set("sidebar_category_ids", [
+      ...this.selectedSidebarCategoryIds,
+    ]);
 
-    this.currentUser
-      .save(["sidebar_category_ids"])
-      .then(() => {
-        this.args.closeModal();
-      })
-      .catch((error) => {
-        this.currentUser.set("sidebar_category_ids", initialSidebarCategoryIds);
-        popupAjaxError(error);
-      })
-      .finally(() => {
-        this.saving = false;
-      });
+    try {
+      await this.currentUser.save(["sidebar_category_ids"]);
+      this.args.closeModal();
+    } catch (error) {
+      this.currentUser.set("sidebar_category_ids", initialSidebarCategoryIds);
+      popupAjaxError(error);
+    } finally {
+      this.saving = false;
+    }
   }
 
   <template>
@@ -344,10 +343,10 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                       {{/unless}}
                     </div>
 
-                    <Input
+                    <input
                       {{on "click" (fn this.toggleCategory category.id)}}
-                      @type="checkbox"
-                      @checked={{includes
+                      type="checkbox"
+                      checked={{has
                         this.selectedSidebarCategoryIds
                         category.id
                       }}
