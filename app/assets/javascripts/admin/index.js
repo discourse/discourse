@@ -6,23 +6,6 @@ const path = require("path");
 module.exports = {
   name: require("./package").name,
 
-  options: {
-    babel: {
-      plugins: [
-        [
-          require.resolve("decorator-transforms"),
-          {
-            runEarly: true,
-          },
-        ],
-      ],
-    },
-
-    "ember-cli-babel": {
-      disableDecoratorTransforms: true,
-    },
-  },
-
   // return an empty tree here as we do not want the addon modules to be
   // included into vendor.js; instead, we will produce a separate bundle
   // (admin.js) to be included via a script tag as needed
