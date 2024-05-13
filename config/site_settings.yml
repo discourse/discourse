@@ -1579,6 +1579,8 @@ files:
     default: false
   s3_configure_tombstone_policy:
     default: true
+  s3_configure_inventory_lifecycle_policy:
+    default: true
   s3_use_acls:
     default: true
   enable_s3_inventory:

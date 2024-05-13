@@ -230,6 +230,11 @@ class S3Helper
     )
   end
 
+  def update_inventory_lifecycle(grace_period)
+    return if !SiteSetting.s3_configure_inventory_lifecycle_policy
+    update_lifecycle("purge_inventory", grace_period, prefix: self.s3_inventory_path)
+  end
+
   def update_tombstone_lifecycle(grace_period)
     return if !SiteSetting.s3_configure_tombstone_policy
     return if @tombstone_prefix.blank?

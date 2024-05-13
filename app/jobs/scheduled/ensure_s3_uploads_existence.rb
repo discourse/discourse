@@ -47,6 +47,8 @@ module Jobs
       else
         S3Inventory.new(s3_helper, :upload).backfill_etags_and_list_missing
       end
+
+      S3Inventory.purge_inventory(s3_helper)
     end
 
     def executable?

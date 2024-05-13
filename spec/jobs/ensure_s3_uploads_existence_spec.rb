@@ -11,11 +11,15 @@ RSpec.describe Jobs::EnsureS3UploadsExistence do
 
     it "works" do
       S3Inventory.any_instance.expects(:backfill_etags_and_list_missing).once
+      S3Inventory.expects(:purge_inventory).once
+
       job.execute({})
     end
 
     it "doesn't execute when the site was restored within the last 48 hours" do
       S3Inventory.any_instance.expects(:backfill_etags_and_list_missing).never
+      S3Inventory.expects(:purge_inventory).never
+
       BackupMetadata.update_last_restore_date(47.hours.ago)
 
       job.execute({})
@@ -23,7 +27,16 @@ RSpec.describe Jobs::EnsureS3UploadsExistence do
 
     it "executes when the site was restored more than 48 hours ago" do
       S3Inventory.any_instance.expects(:backfill_etags_and_list_missing).once
+      S3Inventory.expects(:purge_inventory).once
+
       BackupMetadata.update_last_restore_date(49.hours.ago)
+
+      job.execute({})
+    end
+
+    it "purges S3 old inventories" do
+      S3Inventory.any_instance.expects(:backfill_etags_and_list_missing).once
+      S3Inventory.expects(:purge_inventory).once
 
       job.execute({})
     end

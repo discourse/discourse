@@ -12,6 +12,19 @@ class S3Inventory
   INVENTORY_VERSION ||= "1"
   INVENTORY_LAG ||= 2.days
 
+  # This is set to twice the period of the scheduled `Jobs::EnsureS3UploadsExistence` job.
+  PURGE_INVENTORY_GRACE_PERIOD_DAYS = 2
+
+  def self.purge_inventory(s3_helper)
+    return if !SiteSetting.s3_configure_inventory_lifecycle_policy
+
+    s3_helper.update_lifecycle(
+      "purge_inventory",
+      PURGE_INVENTORY_GRACE_PERIOD_DAYS,
+      prefix: s3_helper.s3_inventory_path,
+    )
+  end
+
   def initialize(s3_helper, type, preloaded_inventory_file: nil, preloaded_inventory_date: nil)
     @s3_helper = s3_helper
 

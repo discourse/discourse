@@ -4,7 +4,7 @@ require "s3_helper"
 require "s3_inventory"
 require "file_store/s3_store"
 
-RSpec.describe "S3Inventory" do
+RSpec.describe S3Inventory do
   let(:client) { Aws::S3::Client.new(stub_responses: true) }
   let(:helper) { S3Helper.new(SiteSetting.Upload.s3_upload_bucket.downcase, "", client: client) }
   let(:inventory) { S3Inventory.new(helper, :upload) }
@@ -212,6 +212,60 @@ RSpec.describe "S3Inventory" do
       expect(config[:included_object_versions]).to eq("Current")
       expect(config[:optional_fields]).to eq(["ETag"])
       expect(config[:filter][:prefix]).to eq(subfolder_path)
+    end
+  end
+
+  describe ".purge_inventory" do
+    it "should not send any request to S3 to update the lifecycle policy when `s3_configure_inventory_lifecycle_policy` site setting is false" do
+      SiteSetting.s3_configure_inventory_lifecycle_policy = false
+
+      s3_helper = S3Helper.new("some-bucket-name")
+      described_class.purge_inventory(s3_helper)
+
+      expect(WebMock).not_to have_requested(
+        :get,
+        "https://some-bucket-name.s3.#{SiteSetting.s3_region}.amazonaws.com/?lifecycle",
+      )
+
+      expect(WebMock).not_to have_requested(
+        :put,
+        "https://some-bucket-name.s3.#{SiteSetting.s3_region}.amazonaws.com/?lifecycle",
+      )
+    end
+
+    it "should send the right request to S3 to update the lifecycle policy for the S3 Inventory path when `s3_configure_inventory_lifecycle_policy` is `true`" do
+      SiteSetting.s3_configure_inventory_lifecycle_policy = true
+
+      lifecycle = <<~XML
+      <?xml version="1.0" encoding="UTF-8"?>
+      <LifecycleConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+      </LifecycleConfiguration>
+      XML
+
+      stub_request(
+        :get,
+        "https://some-bucket-name.s3.#{SiteSetting.s3_region}.amazonaws.com/?lifecycle",
+      ).to_return(status: 200, body: lifecycle, headers: {})
+
+      stub_request(
+        :put,
+        "https://some-bucket-name.s3.#{SiteSetting.s3_region}.amazonaws.com/?lifecycle",
+      )
+        .with do |req|
+          hash = Hash.from_xml(req.body.to_s)
+          rule = hash["LifecycleConfiguration"]["Rule"]
+
+          expect(rule["ID"]).to eq("purge_inventory")
+          expect(rule["Filter"]["Prefix"]).to eq("inventory")
+
+          expect(rule["Expiration"]["Days"]).to eq(
+            described_class::PURGE_INVENTORY_GRACE_PERIOD_DAYS.to_s,
+          )
+        end
+        .to_return(status: 200, body: "", headers: {})
+
+      s3_helper = S3Helper.new("some-bucket-name")
+      described_class.purge_inventory(s3_helper)
     end
   end
 end
