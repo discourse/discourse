@@ -3,8 +3,9 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
+import FieldWrapper from "form-kit/components/field-wrapper";
+import InputWrapper from "form-kit/components/input-wrapper";
 import Node from "form-kit/lib/node";
-import concatClass from "discourse/helpers/concat-class";
 import Label from "../label";
 import Meta from "../meta";
 
@@ -16,7 +17,13 @@ export default class Text extends Component {
       name: this.args.name,
       parent: this.args.node,
     },
-    { label: this.args.label, help: this.args.help }
+    {
+      label: this.args.label,
+      help: this.args.help,
+      validation: this.args.validation,
+      optional: this.args.optional,
+      horizontal: this.args.horizontal,
+    }
   );
 
   constructor() {
@@ -25,7 +32,7 @@ export default class Text extends Component {
     next(() => {
       this.args.node.add(this.node);
 
-      console.log(this.args.node);
+      this.node.validate();
     });
   }
 
@@ -36,27 +43,19 @@ export default class Text extends Component {
   }
 
   <template>
-    {{log this.node.props}}
-    <div
-      class={{concatClass "d-form-field" (unless this.node.valid "has-error")}}
-    >
-      {{#if this.node.props.label}}
-        <Label
-          @label={{this.node.props.label}}
-          @for={{this.node.config.name}}
-        />
-      {{/if}}
+    {{#if this.node.props.label}}
+      <Label @node={{this.node}} />
+    {{/if}}
 
-      <Input
-        @type="text"
-        @value={{readonly this.node.config.value}}
-        name={{this.node.config.name}}
-        class="d-form-field__input"
-        {{on "input" this.onInput}}
-        ...attributes
-      />
+    <Input
+      @type="text"
+      @value={{readonly this.node.config.value}}
+      name={{this.node.config.name}}
+      class="d-form-field__input"
+      {{on "input" this.onInput}}
+      ...attributes
+    />
 
-      <Meta @node={{this.node}} />
-    </div>
+    <Meta @node={{this.node}} />
   </template>
 }

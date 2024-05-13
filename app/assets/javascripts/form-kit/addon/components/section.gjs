@@ -1,14 +1,14 @@
 import concatClass from "discourse/helpers/concat-class";
 
-const Row = <template>
+const Section = <template>
   <div
     class={{concatClass
-      "d-form__row"
-      (if @node.context.horizontal "--horizontal")
+      "d-form__section"
+      (if @node.context.horizontal "--landcaspe")
     }}
   >
     {{yield}}
   </div>
 </template>;
 
-export default Row;
+export default Section;

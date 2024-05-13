@@ -1,25 +1,49 @@
 {{! template-lint-disable}}
 
+<h2>HORIZONTAL</h2>
+
+<FormKit @onSubmit={{@dummy.onSubmit}} @horizontal={{true}} as |fk|>
+  <fk.row>
+    <fk.Text
+      @name="foo"
+      @label="test"
+      @validation="required|length:5,16"
+      @optional={{true}}
+    />
+  </fk.row>
+  <fk.Text
+    @label="test"
+    @name="bar"
+    @help="coucou"
+    @value="something"
+    @optional={{true}}
+  />
+  <fk.Text @name="baz" @validation="between:8,14" />
+</FormKit>
+
+<hr />
+
+<h2>STACKED</h2>
+
+<FormKit @onSubmit={{@dummy.onSubmit}} as |fk|>
+  <fk.Text
+    @name="foo"
+    @label="test"
+    @validation="required|length:5,16"
+    @optional={{true}}
+  />
+  <fk.Text
+    @label="test"
+    @name="bar"
+    @help="coucou"
+    @value="something"
+    @optional={{true}}
+  />
+  <fk.Text @name="baz" @validation="between:8,14" />
+</FormKit>
+
 <form class="d-form">
   <h2>Horizontal form (classic)</h2>
-
-  <FormKit @onSubmit={{@dummy.onSubmit}} as |fk|>
-    <fk.ValidationMessages />
-
-    <fk.Row>
-      <fk.Col @size={{4}}>
-        <fk.Text @name="foo" @label="test" @validation="required" />
-      </fk.Col>
-      <fk.Col @size={{8}}>
-        <fk.Text @name="bar" @help="coucou" @value="something" />
-      </fk.Col>
-    </fk.Row>
-    <fk.Row>
-      <fk.Col @size={{12}}>
-        <fk.Text @name="baz" />
-      </fk.Col>
-    </fk.Row>
-  </FormKit>
 
   <div class="d-form__section --landscape">
     <div class="d-form__row">
@@ -90,7 +114,7 @@
           </div>
           <div class="d-form-field__meta --warning">
             <p class="d-form-field__meta-text">
-              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+              {{d-icon "exclamation-triangle"}}<span>Error: explanation of error</span></p>
           </div>
         </div>
       </div>
@@ -108,7 +132,7 @@
           <input type="text" class="d-form-field__input" id="short-input-1" />
           <div class="d-form-field__meta --warning">
             <p class="d-form-field__meta-text">
-              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+              {{d-icon "exclamation-triangle"}}<span>Error: explanation of error</span></p>
           </div>
         </div>
       </div>
@@ -203,7 +227,7 @@
           </div>
           <div class="d-form-field__meta --warning">
             <p class="d-form-field__meta-text">
-              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+              {{d-icon "exclamation-triangle"}}<span>Error: explanation of error</span></p>
           </div>
         </div>
       </div>
@@ -219,7 +243,7 @@
           <input type="text" class="d-form-field__input" id="short-input-1" />
           <div class="d-form-field__meta --warning">
             <p class="d-form-field__meta-text">
-              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+              {{d-icon "exclamation-triangle"}}<span>Error: explanation of error</span></p>
           </div>
         </div>
       </div>
@@ -249,7 +273,7 @@
           <input type="text" class="d-form-field__input" id="short-input-1" />
           <div class="d-form-field__meta --warning">
             <p class="d-form-field__meta-text">
-              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+              {{d-icon "exclamation-triangle"}}<span>Error: explanation of error</span></p>
           </div>
         </div>
       </div>
@@ -269,7 +293,7 @@
           <input type="text" class="d-form-field__input" id="short-input-1" />
           <div class="d-form-field__meta --warning">
             <p class="d-form-field__meta-text">
-              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+              {{d-icon "exclamation-triangle"}}<span>Error: explanation of error</span></p>
           </div>
         </div>
       </div>
@@ -314,7 +338,7 @@
           <input type="text" class="d-form-field__input" id="error-input" />
           <div class="d-form-field__meta --warning">
             <p class="d-form-field__meta-text">
-              {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+              {{d-icon "exclamation-triangle"}}<span>Error: explanation of error</span></p>
             <span class="d-form-field__character-count has-error">0/25</span>
           </div>
         </div>
@@ -356,7 +380,7 @@
         </div>
         <div class="d-form-field__meta --warning">
           <p class="d-form-field__meta-text">
-            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+            {{d-icon "exclamation-triangle"}}<span>Error: explanation of error</span></p>
         </div>
       </div>
     </fieldset>
@@ -402,7 +426,7 @@
         </div>
         <div class="d-form-field__meta --warning">
           <p class="d-form-field__meta-text">
-            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+            {{d-icon "exclamation-triangle"}}<span>Error: explanation of error</span></p>
         </div>
       </div>
     </fieldset>
@@ -442,7 +466,7 @@
         </div>
         <div class="d-form-field__meta --warning">
           <p class="d-form-field__meta-text">
-            {{d-icon "warning"}}<span>Error: explanation of error</span></p>
+            {{d-icon "exclamation-triangle"}}<span>Error: explanation of error</span></p>
         </div>
       </div>
     </fieldset>
@@ -602,9 +626,9 @@
 
       <div class="d-form-field__meta --warning">
         <p class="d-form-field__meta-text">
-          {{d-icon "warning"}}<span>Whatever errors are in this field, they
-            should be consolidated in a numbered error summary at the bottom,
-            like this:
+          {{d-icon "exclamation-triangle"}}<span>Whatever errors are in this
+            field, they should be consolidated in a numbered error summary at
+            the bottom, like this:
             <ol>
               <li>urls should start with https/</li>
               <li>the reason can't be empty/</li>

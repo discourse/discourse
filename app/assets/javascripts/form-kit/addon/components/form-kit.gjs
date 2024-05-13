@@ -1,23 +1,14 @@
 import Component from "@glimmer/component";
-import { getOwner } from "@ember/application";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import ValidationMessages from "form-kit/components/validation-messages";
 import Node from "form-kit/lib/node";
-import { and } from "truth-helpers";
-import { z } from "zod";
 import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import concatClass from "discourse/helpers/concat-class";
-import { isTesting } from "discourse-common/config/environment";
-import DFloatBody from "float-kit/components/d-float-body";
-import { MENU } from "float-kit/lib/constants";
-import DMenuInstance from "float-kit/lib/d-menu-instance";
 import Col from "./col";
 import Text from "./inputs/text";
 import Row from "./row";
+import Section from "./section";
 
 export default class FormKit extends Component {
   formeElement = null;
@@ -28,14 +19,17 @@ export default class FormKit extends Component {
 
   constructor() {
     super(...arguments);
-    console.log("init");
 
-    this.node = new Node({ type: "group" });
+    console.log("form kit", this.args.horizontal);
+
+    this.node = new Node(
+      { type: "group" },
+      { horizontal: this.args.horizontal }
+    );
   }
 
   @action
   onSubmit(event) {
-    console.log(z);
     const formData = new FormData(this.formElement);
     console.log(Object.fromEntries(formData.entries()));
     // this.args.onSubmit(Object.fromEntries(this.formData.entries()));
@@ -46,19 +40,21 @@ export default class FormKit extends Component {
       {{yield
         (hash
           Text=(component Text node=this.node)
-          Row=Row
-          Col=Col
+          Section=(component Section node=this.node)
+          Row=(component Row node=this.node)
+          Col=(component Col node=this.node)
+          Section=(component Section node=this.node)
           ValidationMessages=(component ValidationMessages node=this.node)
         )
       }}
 
-      {{#if @onSubmit}}
+      {{!-- {{#if @onSubmit}}
         <DButton
           class="d-form__submit btn-primary"
           @label="Submit"
           @action={{this.onSubmit}}
         />
-      {{/if}}
+      {{/if}} --}}
     </form>
   </template>
 }
