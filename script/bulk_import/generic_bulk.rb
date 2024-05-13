@@ -623,14 +623,13 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     existing_user_ids = UserAssociatedAccount.pluck(:user_id).to_set
-    existing_provider_uids = UserAssociatedAccount.pluck(:provider_uid).to_set
+    existing_provider_uids = UserAssociatedAccount.pluck(:provider_uid, :provider_name).to_set
 
     create_user_associated_accounts(accounts) do |row|
       user_id = user_id_from_imported_id(row["user_id"])
-      provider_uid = row["provider_uid"]
 
       next if user_id && existing_user_ids.include?(user_id)
-      next if provider_uid && existing_provider_uids.include?(provider_uid)
+      next if provider_uid && existing_provider_uids.include?([row["provider_uid"], row["provider_name"]])
 
       {
         user_id: user_id,
