@@ -52,6 +52,7 @@ module ReadOnlyMixin
 
   def block_if_readonly_mode
     return if request.fullpath.start_with?(path "/admin/backups")
+    return if request.fullpath.start_with?(path "/categories/search")
     return if request.get? || request.head?
 
     if @staff_writes_only_mode
