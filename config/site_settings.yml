@@ -1958,7 +1958,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot|googleother"
     type: list
     list_type: compact
   browser_update_user_agents:
