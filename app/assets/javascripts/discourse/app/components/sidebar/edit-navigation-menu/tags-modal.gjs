@@ -21,7 +21,6 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
   @service store;
 
   @tracked disableFiltering = false;
-  @tracked filter = "";
   @tracked saving = false;
   @tracked selectedTags = new TrackedSet([...this.currentUser.sidebarTagNames]);
   @tracked tags = [];
@@ -142,9 +141,9 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
   @action
   toggleTag(tag) {
     if (this.selectedTags.has(tag)) {
-      this.selectedTags.add(tag);
-    } else {
       this.selectedTags.delete(tag);
+    } else {
+      this.selectedTags.add(tag);
     }
   }
 
