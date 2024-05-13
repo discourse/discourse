@@ -243,7 +243,7 @@ export default class GlimmerSiteHeader extends Component {
 
   @bind
   dockCheck() {
-    if (this._docAt === null) {
+    if (this._docAt === undefined || this._docAt === null) {
       if (!this.headerElement) {
         return;
       }
