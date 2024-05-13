@@ -289,16 +289,6 @@ createWidget("header-icons", {
       }
     });
 
-    if (attrs.user) {
-      icons.push(
-        this.attach("user-dropdown", {
-          active: attrs.userVisible,
-          action: "toggleUserMenu",
-          user: attrs.user,
-        })
-      );
-    }
-
     return icons;
   },
 });
