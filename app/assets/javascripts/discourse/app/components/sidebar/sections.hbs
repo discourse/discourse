@@ -1,9 +1,0 @@
-{{#if @currentUser}}
-  <Sidebar::User::Sections
-    @collapsableSections={{@collapsableSections}}
-    @panel={{@panel}}
-    @hideApiSections={{@hideApiSections}}
-  />
-{{else}}
-  <Sidebar::Anonymous::Sections @collapsableSections={{@collapsableSections}} />
-{{/if}}
