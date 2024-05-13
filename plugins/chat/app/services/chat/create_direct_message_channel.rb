@@ -78,9 +78,9 @@ module Chat
 
     def fetch_or_create_direct_message(target_users:, contract:)
       ids = target_users.map(&:id)
-      is_group = ids.size > 2 || contract.name.present?
+      is_group = ids.size > 2 && contract.name.present?
 
-      ::Chat::DirectMessage.for_user_ids(ids) ||
+      ::Chat::DirectMessage.for_user_ids(ids, group: is_group) ||
         ::Chat::DirectMessage.create(user_ids: ids, group: is_group)
     end
 

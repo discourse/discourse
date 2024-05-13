@@ -65,7 +65,7 @@ RSpec.describe Chat::Api::DirectMessagesController do
       end
     end
 
-    describe "dm with two other users" do
+    describe "dm with multiple users" do
       let(:usernames) { [user1, user2, user3].map(&:username) }
       let(:direct_message_user_ids) { [current_user.id, user1.id, user2.id, user3.id] }
 
@@ -78,7 +78,7 @@ RSpec.describe Chat::Api::DirectMessagesController do
         )
       end
 
-      it "createsa new dm channel" do
+      it "creates a new dm channel" do
         create_dm_channel(direct_message_user_ids)
 
         expect {
