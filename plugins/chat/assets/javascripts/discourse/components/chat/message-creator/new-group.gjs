@@ -29,6 +29,10 @@ export default class NewGroup extends Component {
     }, 1);
   }
 
+  get maxMembers() {
+    return this.siteSettings.chat_max_direct_message_users + 1;
+  }
+
   @action
   async createGroup() {
     try {
@@ -70,7 +74,7 @@ export default class NewGroup extends Component {
 
             <MembersCount
               @count={{this.membersCount}}
-              @max={{this.siteSettings.chat_max_direct_message_users}}
+              @max={{this.maxMembers}}
             />
           </div>
         </div>
@@ -84,7 +88,7 @@ export default class NewGroup extends Component {
           @membersCount={{this.membersCount}}
           @maxReached={{gte
             this.membersCount
-            this.siteSettings.chat_max_direct_message_users
+            this.maxMembers
           }}
         />
 
