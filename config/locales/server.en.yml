@@ -1298,7 +1298,7 @@ en:
       title: "User Visits"
       xaxis: "Day"
       yaxis: "Number of visits"
-      description: "Number of all user visits."
+      description: "Number of signed-in user visits."
     signups:
       title: "Signups"
       xaxis: "Day"
@@ -1554,7 +1554,7 @@ en:
       title: "User Visits (mobile)"
       xaxis: "Day"
       yaxis: "Number of visits"
-      description: "Number of unique users who visited using a mobile device."
+      description: "Number of unique signed-in users who visited using a mobile device."
     web_crawlers:
       title: "Web Crawler User Agents"
       labels:
