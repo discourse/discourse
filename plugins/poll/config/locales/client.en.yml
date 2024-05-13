@@ -81,6 +81,14 @@ en:
         percentage: "Percentage"
         count: "Count"
       
+      irv:
+        none: "None"
+        majority: "Majority"
+        eliminated: "Elminated"
+        round: "Round"
+        winner: "Winner was %{winner} after %{count} rounds."
+        tied: "Tied after %{count} rounds between the following candidates:"
+
       options:
         label: "Options"
         irv:

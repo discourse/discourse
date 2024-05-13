@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DiscoursePoll::Irv
-  def self.irv_outcome(starting_votes)
+  def self.irv_outcome(starting_votes, options)
     current_votes = starting_votes.dup
     round_activity = []
     round = 0
@@ -17,13 +17,14 @@ class DiscoursePoll::Irv
 
       # If a majority is found or only one candidate remains
       if max_votes > total_votes / 2 || potential_winners.count == 1
-        round_activity << { round: round, majority: potential_winners.keys.first, eliminated: nil }
+        majority_candidate = enrich(potential_winners.keys.first, options)
+        round_activity << { round: round, majority: majority_candidate, eliminated: nil }
         return(
           {
             tied: false,
             tied_candidates: nil,
             winner: true,
-            winning_candidate: potential_winners.keys.first,
+            winning_candidate: majority_candidate,
             round_activity: round_activity,
           }
         )
@@ -39,13 +40,15 @@ class DiscoursePoll::Irv
         vote.reject! { |candidate| losers.include?(candidate) }
       end
 
+      losers = losers.map { |loser| enrich(loser, options) }
       all_empty = current_votes.all? { |arr| arr.empty? }
+
       if all_empty
         round_activity << { round: round, majority: nil, eliminated: losers }
         return(
           {
             tied: true,
-            tied_candidates: potential_winners.keys,
+            tied_candidates: losers,
             winner: nil,
             winning_candidate: nil,
             round_activity: round_activity,
@@ -65,5 +68,9 @@ class DiscoursePoll::Irv
     end
     current_votes.each { |vote| tally[vote.first] += 1 if vote.first }
     tally
+  end
+
+  def self.enrich(digest, options)
+    { digest: digest, html: options.find { |option| option[:id] == digest }[:html] }
   end
 end

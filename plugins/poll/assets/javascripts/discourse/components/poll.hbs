@@ -11,7 +11,11 @@
         {{#if this.resultsPie}}
           <PollResultsPie @attrs={{this.attributes}} />
         {{else}}
-          <PollResultsStandard @attrs={{this.attributes}} />
+          {{#if this.isIrv}}
+            <PollResultsIrv @irvOutcome={{this.irvOutcome}} />
+          {{else}}
+            <PollResultsStandard @attrs={{this.attributes}} />
+          {{/if}}
         {{/if}}
       {{/if}}
     </div>

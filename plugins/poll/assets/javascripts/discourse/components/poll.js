@@ -54,6 +54,7 @@ export default class PollComponent extends Component {
   @tracked poll = this.args.attrs.poll;
   @tracked staffOnly = this.args.attrs.poll.results === "staff_only";
   @tracked isIrv = this.args.attrs.poll.type === "irv";
+  @tracked irvOutcome = this.args.attrs.poll.irv_outcome || [];
   @tracked isMultiple = this.args.attrs.poll.type === "multiple";
 
   @tracked isMultiVoteType = this.isIrv || this.isMultiple;
@@ -114,6 +115,7 @@ export default class PollComponent extends Component {
       .then(({ poll }) => {
         this.options = [...poll.options];
         this.hasSavedVote = true;
+        this.irvOutcome = poll.irv_outcome || [];
         this.poll.setProperties(poll);
         this.appEvents.trigger(
           "poll:voted",
