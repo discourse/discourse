@@ -131,6 +131,7 @@ GEM
       faker (~> 2.16)
       literate_randomizer
     docile (1.4.0)
+    drb (2.2.1)
     email_reply_trimmer (0.1.13)
     erubi (1.12.0)
     excon (0.109.0)
@@ -230,6 +231,7 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     mustache (1.1.1)
+    mutex_m (0.2.0)
     net-http (0.4.1)
       uri
     net-imap (0.4.9.1)
@@ -557,6 +559,7 @@ DEPENDENCIES
   discourse-fonts
   discourse-seed-fu
   discourse_dev_assets
+  drb
   email_reply_trimmer
   excon
   execjs
@@ -595,6 +598,7 @@ DEPENDENCIES
   mocha
   multi_json
   mustache
+  mutex_m
   net-http
   net-imap
   net-pop
