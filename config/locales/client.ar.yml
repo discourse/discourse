@@ -6477,6 +6477,7 @@ ar:
           upload_successful: "تم التحميل بنجاح. وتمت إضافة الكلمات."
           case_sensitivity_label: "حساس لحالة الأحرف"
           case_sensitivity_description: "الكلمات ذات حالة الأحرف المطابقة فقط"
+          html_label: "HTML"
         test:
           button_label: "اختبار"
           modal_title: "%{action}: اختبار الكلمات المُراقَبة"

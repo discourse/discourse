@@ -5616,6 +5616,7 @@ fr:
           upload_successful: "Envoi effectué avec succès. Les mots et expressions à surveiller ont été ajoutés."
           case_sensitivity_label: "Est sensible à la casse"
           case_sensitivity_description: "Seulement les mots dont la casse des caractères correspond"
+          html_label: "HTML"
         test:
           button_label: "Tester"
           modal_title: "%{action} : Tester les mots surveillés"

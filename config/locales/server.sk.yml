@@ -358,21 +358,6 @@ sk:
   meta_category_description: "Diskusia o stránke, organizácii, ako funguje a ako ju môžme vylepšit"
   staff_category_name: "Zamestnanci"
   staff_category_description: "Súkromna kategória pre zamestnaneckú diskusiu. Témy su viditeľné len pre správcov a moderátorov diskusie"
-  discourse_welcome_topic:
-    body: |
-      Sme veľmi radi, že ste sa k nám pridali.
-
-      %{site_info_quote}
-
-      Tu je niekoľko vecí, ktoré môžete urobiť, aby ste mohli začať:
-
-      :speaking_head: **Predstavte sa** pridaním svojej fotografie a informácií o sebe a svojich záujmoch do [svojho profilu](%{base_path}/my/preferences/account). Na akú vec by ste sa chceli opýtať?
-
-      :open_book: **Oboznámte sa s komunitou** tak, že si [prezriete diskusie](%{base_path}/top), ktoré tu už prebiehajú. Keď sa vám nejaký príspevok zdá zaujímavý, informatívny alebo zábavný, použite :heart: , aby ste vyjadrili svoje uznanie alebo podporu!
-
-      :handshake: **Pridávajte** komentovaním, zdieľaním vlastného pohľadu, kladením otázok alebo ponúkaním spätnej väzby v diskusii. Pred odpovedaním alebo zakladaním nových tém si prečítajte [Usmernenia komunity](%{base_path}/faq).
-
-      > Ak potrebujete pomoc alebo máte návrh, neváhajte sa opýtať na %{feedback_category} alebo [kontaktujte administrátorov](%{base_path}/o).
   category:
     topic_prefix: "O kategórii: %{category} "
     post_template: "%{replace_paragraph}\n\nDo tohoto odstavce dajte dlhší popis kategórie, alebo popíšte pokyny alebo pravidlá:\n\n- Prečo by ľudia mali použiť túto kategóriu? Na čo je určená?\n\n- V čom sa líši od ostatných existujúcich kategórií ktoré už máte?\n\n- Čo by vo všeobecnosti mala obsahovať téma v tejto kategórií?\n\n- Potrebujeme túto kategóriu? Môžeme ju spojiť s inóu kategóriou alebo pod-kategóriou?\n"

@@ -734,7 +734,6 @@ te:
       title: "సభ్యుని గణాంకాలు"
       xaxis: "రోజు"
       yaxis: "దర్శనాల సంఖ్య"
-      description: "అన్ని సభ్యుల సందర్శనల సంఖ్య."
     signups:
       title: "సైన్అప్‌లు"
       xaxis: "రోజు"
@@ -2613,9 +2612,6 @@ te:
           chat_enabled:
             placeholder: "చాట్‌ని ప్రారంభించండి"
             extra_description: "మీ సభ్యులతో నిజ సమయంలో పాల్గొనండి"
-          enable_sidebar:
-            placeholder: "సైడ్‌బార్‌ని ప్రారంభించండి"
-            extra_description: "మీకు ఇష్టమైన ప్రదేశాలను సులభంగా యాక్సెస్ చేయండి"
       ready:
         title: "మీ సైట్ సిద్ధంగా ఉంది!"
       styling:

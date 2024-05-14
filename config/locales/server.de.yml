@@ -733,6 +733,7 @@ de:
             base:
               invalid_url: "Ersatz-URL ist ungültig"
               invalid_tag_list: "Ersatz-Schlagwort-Liste ist ungültig"
+              invalid_html: "HTML kann nur zum Ersetzen verwendet werden"
         sidebar_section_link:
           attributes:
             linkable_type:
@@ -756,7 +757,7 @@ de:
 
       :speaking_head: **Stelle dich vor**, indem du dein Bild und Informationen über dich und deine Interessen in [dein Profil](%{base_path}/my/preferences/account) einstellst. Worüber würdest du gerne befragt werden?
 
-      :open_book: **Lerne die Community** kennen, indem du [in den Diskussionen stöberst](%{base_path}/top), die hier bereits stattfinden. Wenn du einen Beitrag interessant, informativ oder unterhaltsam findest, benutze :heart:, um deine Wertschätzung oder Unterstützung zu zeigen!
+      :open_book: **Lerne die Community** kennen, indem du [in den Diskussionen stöberst](%{base_path}/latest), die hier bereits stattfinden. Wenn du einen Beitrag interessant, informativ oder unterhaltsam findest, benutze :heart:, um deine Wertschätzung oder Unterstützung zu zeigen!
 
       :handshake: **Trage zur Diskussion bei**, indem du kommentierst, deine eigene Sichtweise teilst, Fragen stellst oder Feedback gibst. Bevor du antwortest oder neue Themen beginnst, lies bitte die [Community-Richtlinien](%{base_path}/faq).
 
@@ -1202,7 +1203,7 @@ de:
       title: "Nutzerbesuche"
       xaxis: "Tag"
       yaxis: "Anzahl der Besuche"
-      description: "Anzahl aller Besuche."
+      description: "Anzahl der Besuche von angemeldeten Benutzern."
     signups:
       title: "Neue Benutzer"
       xaxis: "Tag"
@@ -1458,7 +1459,7 @@ de:
       title: "Benutzerbesuche (mobil)"
       xaxis: "Tag"
       yaxis: "Anzahl der Besuche"
-      description: "Anzahl der eindeutigen Benutzer, welche die Website auf einem mobilen Endgerät besucht haben."
+      description: "Anzahl der eindeutigen angemeldeten Benutzer, welche die Website auf einem mobilen Endgerät besucht haben."
     web_crawlers:
       title: "Webcrawler-Browserkennungen"
       labels:
@@ -1525,6 +1526,7 @@ de:
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben – wie zum Beispiel das Versenden von E-Mails – werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq" target="_blank">Mehr über Sidekiq erfährst du hier</a>.'
     queue_size_warning: "Eine hohe Anzahl an Aufgaben (%{queue_size}) befindet sich in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder du musst zusätzliche Sidekiq Worker starten."
     memory_warning: "Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen."
+    maxmind_db_configuration_warning: 'Der Server wurde so konfiguriert, dass er MaxMind-Datenbanken für Reverse-IP-Lookups verwendet, aber es wurde keine gültige MaxMind-Konto-ID konfiguriert, was dazu führen kann, dass MaxMind-Datenbanken in Zukunft nicht mehr heruntergeladen werden können. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">In diesem Leitfaden erfährst du mehr</a>.'
     google_oauth2_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Google OAuth2 erlaubt (enable_google_oauth2_logins), aber die Client-ID und die Client-Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
     facebook_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Facebook erlaubt (enable_facebook_logins), aber die App-ID und die Geheimnis-Werte der App sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
     twitter_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Twitter erlaubt (enable_twitter_logins), aber der Schlüssel und die Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
@@ -4834,9 +4836,6 @@ de:
           chat_enabled:
             placeholder: "Chat aktivieren"
             extra_description: "Interagiere in Echtzeit mit deinen Mitgliedern"
-          enable_sidebar:
-            placeholder: "Seitenleiste aktivieren"
-            extra_description: "Einfacher Zugriff auf deine Lieblingsplätze"
       ready:
         title: "Deine Website ist bereit!"
         description: "Das war's! Du hast die Grundlagen für die Einrichtung deiner Community geschaffen. Jetzt kannst du dich umsehen, ein Willkommensthema schreiben und Einladungen verschicken!<br><br>Viel Spaß!"

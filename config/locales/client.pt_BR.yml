@@ -5578,6 +5578,7 @@ pt_BR:
           upload_successful: "Envio bem-sucedido. As palavras foram adicionadas."
           case_sensitivity_label: "É sensível a maiúsculas"
           case_sensitivity_description: "Apenas palavras com maiúsculas e minúsculas de caracteres correspondentes"
+          html_label: "HTML"
         test:
           button_label: "Testar"
           modal_title: "%{action}: testar palavras acompanhadas"

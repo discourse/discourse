@@ -2200,6 +2200,7 @@ ro:
       options: "Opțiuni pentru subiect"
       show_links: "arată legăturile din acest subiect"
       suggest_create_topic: Ești gata să <a href>începi o nouă conversație?</a>
+      jump_reply_button: "Sari la articol"
       deleted: "Subiectul a fost șters"
       slow_mode_update:
         title: "Modul lent"
@@ -3943,6 +3944,7 @@ ro:
       watched_words:
         search: "caută"
         clear_filter: "Șterge"
+        html: "(html)"
         download: Descărcare
         clear_all: Deselectează tot
         actions:
@@ -3961,6 +3963,8 @@ ro:
           link_placeholder: "https://example.com"
           add: "Adaugă"
           success: "Succes"
+          html_label: "HTML"
+          html_description: "Produce HTML în înlocuire"
           words_or_phrases: "cuvinte sau fraze"
         test:
           button_label: "Test"
