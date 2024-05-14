@@ -52,7 +52,7 @@ export default class MembersSelector extends Component {
 
     if (
       this.args.membersCount + chatableMembers >
-      this.siteSettings.chat_max_direct_message_users
+      (this.siteSettings.chat_max_direct_message_users + 1)
     ) {
       return;
     }
