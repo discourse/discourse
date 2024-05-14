@@ -7,6 +7,10 @@ module PageObjects
         super && has_css?(".login-modal")
       end
 
+      def closed?
+        super && has_no_css?(".login-modal")
+      end
+
       def open
         visit("/login")
       end

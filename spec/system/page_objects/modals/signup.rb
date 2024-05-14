@@ -7,6 +7,10 @@ module PageObjects
         super && has_css?(".modal.create-account")
       end
 
+      def closed?
+        super && has_no_css?(".modal.create-account")
+      end
+
       def open
         visit("/signup")
       end
@@ -66,17 +70,6 @@ module PageObjects
       # def has_username?(value)
       #   find("#new-account-username").value == value
       # end
-
-      def signup(email: nil, username: nil, name: nil, password: nil)
-        if (email.present? && username.present? && password.present?)
-          fill_email(email)
-          fill_username(username)
-          fill_password(password)
-
-          fill_name(name) if name.present?
-          confirm_signup
-        end
-      end
 
       def select_facebook
         find(".btn-social.facebook").click
