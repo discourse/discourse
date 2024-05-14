@@ -760,6 +760,7 @@ class UserNotifications < ActionMailer::Base
       subject_pm: subject_pm,
       participants: participants,
       include_respond_instructions: !(user.suspended? || user.staged?),
+      notification_type: notification_type,
       template: template,
       use_topic_title_subject: use_topic_title_subject,
       site_description: SiteSetting.site_description,

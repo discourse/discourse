@@ -38,6 +38,7 @@ export default class WatchedWord extends EmberObject {
           replacement: this.replacement,
           action_key: this.action,
           case_sensitive: this.isCaseSensitive,
+          html: this.isHtml,
         },
         dataType: "json",
       }

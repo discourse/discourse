@@ -19,7 +19,6 @@ globalThis.console = {
 import { transform as babelTransform } from "@babel/standalone";
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import { Preprocessor } from "content-tag";
-import DecoratorTransforms from "decorator-transforms";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/dist/ember-template-compiler";
 import EmberThisFallback from "ember-this-fallback";
@@ -139,8 +138,6 @@ globalThis.transpile = function (source, options = {}) {
   if (moduleId && !skipModule) {
     plugins.push(["transform-modules-amd", { noInterop: true }]);
   }
-  commonPlugins.find((p) => p[0] === "decorator-transforms")[0] =
-    DecoratorTransforms;
   plugins.push(...commonPlugins);
 
   try {

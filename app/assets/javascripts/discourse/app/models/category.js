@@ -403,7 +403,7 @@ export default class Category extends RestModel {
     };
 
     const result = (CATEGORY_ASYNC_SEARCH_CACHE[JSON.stringify(data)] ||=
-      await ajax("/categories/search", { data }));
+      await ajax("/categories/search", { method: "POST", data }));
 
     if (opts.includeAncestors) {
       return {

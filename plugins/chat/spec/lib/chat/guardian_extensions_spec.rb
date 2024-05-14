@@ -3,7 +3,7 @@
 RSpec.describe Chat::GuardianExtensions do
   fab!(:chatters) { Fabricate(:group) }
   fab!(:user) { Fabricate(:user, group_ids: [chatters.id], refresh_auto_groups: true) }
-  fab!(:staff) { Fabricate(:user, admin: true) }
+  fab!(:staff) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:chat_group) { Fabricate(:group) }
   fab!(:channel) { Fabricate(:category_channel) }
   fab!(:dm_channel) { Fabricate(:direct_message_channel) }
@@ -324,6 +324,7 @@ RSpec.describe Chat::GuardianExtensions do
 
     describe "#can_flag_chat_message?" do
       let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
+
       before { SiteSetting.chat_message_flag_allowed_groups = "" }
 
       context "when user isn't staff" do

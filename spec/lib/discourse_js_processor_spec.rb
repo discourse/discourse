@@ -92,7 +92,7 @@ RSpec.describe DiscourseJsProcessor do
     JS
 
     result = DiscourseJsProcessor.transpile(script, "blah", "blah/mymodule")
-    expect(result).to include("static #_ = dt7948.n")
+    expect(result).to include("_applyDecoratedDescriptor")
   end
 
   it "correctly transpiles widget hbs" do

@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
+import UserStatusMessage from "discourse/components/user-status-message";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
@@ -315,7 +316,7 @@ export default {
 
             get contentComponent() {
               if (this.oneOnOneMessage) {
-                return "user-status-message";
+                return UserStatusMessage;
               }
             }
 

@@ -41,6 +41,7 @@
           </label>
           <RelativeTimePicker
             @id="bookmark-relative-time-picker"
+            @durationMinutes={{this.selectedDurationMins}}
             @onChange={{action "relativeTimeChanged"}}
           />
         </div>

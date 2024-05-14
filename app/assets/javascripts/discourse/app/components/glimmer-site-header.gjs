@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel, schedule } from "@ember/runloop";
@@ -28,10 +29,11 @@ export default class GlimmerSiteHeader extends Component {
   @service site;
   @service header;
 
+  docking;
   pxClosed;
   headerElement;
-  docking;
-  _dockedHeader = false;
+
+  @tracked _dockedHeader = false;
   _animate = false;
   _headerWrap;
   _swipeMenuOrigin;
@@ -241,7 +243,7 @@ export default class GlimmerSiteHeader extends Component {
 
   @bind
   dockCheck() {
-    if (this._docAt === null) {
+    if (this._docAt === undefined || this._docAt === null) {
       if (!this.headerElement) {
         return;
       }
@@ -425,6 +427,7 @@ export default class GlimmerSiteHeader extends Component {
         onDidEndSwipe=this.onSwipeEnd
         onDidCancelSwipe=this.onSwipeCancel
         onDidSwipe=this.onSwipe
+        lockBody=false
       }}
     >
       <Header

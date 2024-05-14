@@ -70,7 +70,7 @@ describe "UserUpdated" do
     end
 
     it "doesnt trigger if automation already triggered" do
-      automation.attach_custom_field(user)
+      UserUpdater.new(user, user).update(location: "Korea", bio_raw: "good")
 
       output =
         capture_contexts { UserUpdater.new(user, user).update(location: "Japan", bio_raw: "fine") }
