@@ -82,12 +82,19 @@ en:
         count: "Count"
       
       irv:
+        title:
+          rounds: "IRV Rounds"
+          outcome: "Outcome"
         none: "None"
         majority: "Majority"
         eliminated: "Elminated"
         round: "Round"
-        winner: "Winner was %{winner} after %{count} rounds."
-        tied: "Tied after %{count} rounds between the following candidates:"
+        winner:
+          one: "Winner was %{winner} after one round."
+          other: "Winner was %{winner} after %{count} rounds."
+        tied:
+          one: "Tied after one round between the following candidates:"
+          other: "Tied after %{count} rounds between the following candidates:"
 
       options:
         label: "Options"

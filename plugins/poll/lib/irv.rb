@@ -1,7 +1,27 @@
 # frozen_string_literal: true
 
 class DiscoursePoll::Irv
-  def self.irv_outcome(starting_votes, options)
+  def self.irv_outcome(poll_id)
+    poll = Poll.find(poll_id)
+    options = PollOption.where(poll_id: poll_id).map { |hash| { id: hash.digest, html: hash.html } }
+
+    ballot = []
+    PollVote
+      .where(poll_id: poll_id)
+      .pluck(:user_id)
+      .uniq
+      .each do |user_id|
+        ballot_paper = []
+        PollVote
+          .where(poll_id: poll_id, user_id: user_id)
+          .order(rank: :asc)
+          .each { |vote| ballot_paper << vote.poll_option.digest if vote.rank > 0 }
+        ballot << ballot_paper
+      end
+    DiscoursePoll::Irv.run_irv(ballot, options)
+  end
+
+  def self.run_irv(starting_votes, options)
     current_votes = starting_votes.dup
     round_activity = []
     round = 0

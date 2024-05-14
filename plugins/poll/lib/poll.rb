@@ -93,6 +93,10 @@ class DiscoursePoll::Poll
       SQL
     end
 
+    if serialized_poll[:type] == "irv"
+      serialized_poll[:irv_outcome] = DiscoursePoll::Irv.irv_outcome(poll_id)
+    end
+
     serialized_poll[:options].each do |option|
       if serialized_poll[:type] == "irv"
         option.merge!(
@@ -112,26 +116,6 @@ class DiscoursePoll::Poll
               .exists?,
         )
       end
-    end
-
-    if serialized_poll[:type] == "irv"
-      ballot = []
-      PollVote
-        .where(poll_id: poll_id)
-        .pluck(:user_id)
-        .uniq
-        .each do |user_id|
-          ballot_paper = []
-          PollVote
-            .where(poll_id: poll_id, user_id: user_id)
-            .order(rank: :asc)
-            .each { |vote| ballot_paper << vote.poll_option.digest if vote.rank > 0 }
-          ballot << ballot_paper
-        end
-      serialized_poll[:irv_outcome] = DiscoursePoll::Irv.irv_outcome(
-        ballot,
-        serialized_poll[:options],
-      )
     end
 
     [serialized_poll, options]

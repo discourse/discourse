@@ -1,3 +1,6 @@
+<h3 class="poll-results-irv-subtitle-rounds">
+  {{i18n "poll.irv.title.rounds"}}
+</h3>
 <table class="poll-results-irv">
   <thead>
     <tr>
@@ -28,13 +31,16 @@
     {{/each}}
   </tbody>
 </table>
+<h3 class="poll-results-irv-subtitle-outcome">
+  {{i18n "poll.irv.title.outcome"}}
+</h3>
 {{#if @irvOutcome.tied}}
-  <span class="poll-results-irv-info">{{this.irvTiedText}}: </span>
-  {{#each @irvOutcome.tied_candidates as |tied_candidate|}}
-    <span class="poll-results-irv-tied-candidate">
-      {{tied_candidate.html}}
-    </span>
-  {{/each}}
+  <span class="poll-results-irv-info">{{this.irvTiedText}}</span>
+  <ul class="poll-results-irv-tied-candidates">
+    {{#each @irvOutcome.tied_candidates as |tied_candidate|}}
+      <li class="poll-results-irv-tied-candidate">{{tied_candidate.html}}</li>
+    {{/each}}
+  </ul>
 {{else}}
   <span class="poll-results-irv-info">{{this.irvWinnerText}}</span>
 {{/if}}
