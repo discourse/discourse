@@ -17,8 +17,13 @@ RSpec.describe FlagGuardian do
       expect(Guardian.new(admin).can_edit_flag?(flag)).to eq(false)
     end
 
-    it "returns false when flag was already used" do
+    it "returns false when flag was already used with post action" do
       Fabricate(:post_action, post_action_type_id: flag.id)
+      expect(Guardian.new(admin).can_edit_flag?(flag)).to eq(false)
+    end
+
+    it "returns false when flag was already used with reviewable" do
+      Fabricate(:reviewable_score, reviewable_score_type: flag.id)
       expect(Guardian.new(admin).can_edit_flag?(flag)).to eq(false)
     end
   end

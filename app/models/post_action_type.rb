@@ -18,7 +18,7 @@ class PostActionType < ActiveRecord::Base
       if settings
         @flag_settings = settings
       else
-        initialize_flag_settings
+        reload_types
       end
       @types = nil
     end
@@ -79,7 +79,7 @@ class PostActionType < ActiveRecord::Base
       flag_types.valid?(sym)
     end
 
-    def initialize_flag_settings
+    def reload_types
       @types = nil
       @flag_settings = FlagSettings.new
       Flag
@@ -98,7 +98,7 @@ class PostActionType < ActiveRecord::Base
     end
   end
 
-  initialize_flag_settings
+  reload_types
 end
 
 # == Schema Information

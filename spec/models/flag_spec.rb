@@ -18,20 +18,41 @@ RSpec.describe Flag, type: :model do
     expect(PostActionType.flag_types.keys).to eq(
       %i[notify_user notify_moderators off_topic inappropriate spam illegal],
     )
+    expect(ReviewableScore.types.keys).to eq(
+      %i[notify_user notify_moderators off_topic inappropriate spam illegal needs_approval],
+    )
 
     flag = Fabricate(:flag, name: "custom")
     expect(PostActionType.flag_types.keys).to eq(
       %i[notify_user notify_moderators off_topic inappropriate spam illegal custom],
+    )
+    expect(ReviewableScore.types.keys).to eq(
+      %i[notify_user notify_moderators off_topic inappropriate spam illegal custom needs_approval],
     )
 
     flag.update!(name: "edited_custom")
     expect(PostActionType.flag_types.keys).to eq(
       %i[notify_user notify_moderators off_topic inappropriate spam illegal edited_custom],
     )
+    expect(ReviewableScore.types.keys).to eq(
+      %i[
+        notify_user
+        notify_moderators
+        off_topic
+        inappropriate
+        spam
+        illegal
+        edited_custom
+        needs_approval
+      ],
+    )
 
     flag.destroy!
     expect(PostActionType.flag_types.keys).to eq(
       %i[notify_user notify_moderators off_topic inappropriate spam illegal],
+    )
+    expect(ReviewableScore.types.keys).to eq(
+      %i[notify_user notify_moderators off_topic inappropriate spam illegal needs_approval],
     )
   end
 end

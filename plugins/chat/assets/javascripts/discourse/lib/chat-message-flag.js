@@ -35,7 +35,10 @@ export default class ChatMessageFlag {
     return flags.map((flag) => {
       flag.set(
         "description",
-        I18n.t(`chat.flags.${flag.name_key}`, { basePath: getURL("") })
+        I18n.t(`chat.flags.${flag.name_key}`, {
+          basePath: getURL(""),
+          defaultValue: "",
+        })
       );
       return flag;
     });
@@ -45,8 +48,10 @@ export default class ChatMessageFlag {
     let flagsAvailable = flagModal.site.flagTypes;
 
     flagsAvailable = flagsAvailable.filter((flag) => {
-      return flagModal.args.model.flagModel.availableFlags.includes(
-        flag.name_key
+      const availableFlags = flagModal.args.model.flagModel.availableFlags;
+      return (
+        availableFlags.includes(flag.name_key) ||
+        availableFlags.includes(flag.name)
       );
     });
 

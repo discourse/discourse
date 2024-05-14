@@ -8,11 +8,13 @@ class Flag < ActiveRecord::Base
   after_destroy :reset_flag_settings!
 
   def used?
-    PostAction.exists?(post_action_type_id: self.id)
+    PostAction.exists?(post_action_type_id: self.id) ||
+      ReviewableScore.exists?(reviewable_score_type: self.id)
   end
 
   def self.reset_flag_settings!
-    PostActionType.initialize_flag_settings
+    PostActionType.reload_types
+    ReviewableScore.reload_types
   end
 
   def system?
