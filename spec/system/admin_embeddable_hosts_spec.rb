@@ -10,7 +10,7 @@ RSpec.describe "Admin EmbeddableHost Management", type: :system do
 
   before { sign_in(admin) }
 
-  it "allows an admin to add a new embeddable host" do
+  it "allows admin to add and edit embeddable hosts" do
     visit "/admin/customize/embedding"
 
     find("button.btn-icon-text", text: "Add Host").click
