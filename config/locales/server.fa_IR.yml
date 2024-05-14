@@ -2229,8 +2229,6 @@ fa_IR:
             extra_description: "فقط کاربرانی که در حسای‌کاربردی خود وارد شده‌اند، می‌توانند به این انجمن دسترسی داشته باشند"
           chat_enabled:
             placeholder: "فعال کردن گفتگو"
-          enable_sidebar:
-            placeholder: "فعال کردن نوار کناری"
       ready:
         title: "سایت شما آماده است!"
       styling:

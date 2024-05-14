@@ -645,20 +645,6 @@ nl:
   staff_category_description: "Privécategorie voor medewerkergesprekken. Topics zijn alleen zichtbaar voor beheerders en moderators."
   discourse_welcome_topic:
     title: "Welkom bij %{site_title}! :wave:"
-    body: |
-      We zijn erg blij dat je je bij ons hebt aangesloten.
-
-      %{site_info_quote}
-
-      Hier zijn enkele dingen die je kunt doen om te beginnen:
-
-      :speaking_head: **Stel jezelf voor** door je foto, informatie over jezelf en je interesses toe te voegen aan [je profiel](%{base_path}/my/preferences/account). Wat is iets waar je graag naar gevraagd wilt worden?
-
-      :open_book: **Maak kennis met de community** door [discussies te bekijken](%{base_path}/top) die hier al plaatsvinden. Als je een bericht interessant, informatief of onderhoudend vindt, gebruik dan de :heart: om je waardering of steun te laten blijken!
-
-      :handshake: **Lever een bijdrage** door te reageren, je eigen perspectief te delen, vragen te stellen of feedback te geven in de discussie. Lees voordat je reageert of nieuwe topics start de [Communityrichtlijnen](%{base_path}/faq).
-
-      > Als je hulp nodig hebt of een suggestie wilt doen, vraag het dan gerust in %{feedback_category} of [neem contact op met de beheerders](%{base_path}/about).
   admin_quick_start_title: "Beheerdersgids: Aan de slag"
   category:
     topic_prefix: "Over de categorie %{category}"
@@ -1094,7 +1080,6 @@ nl:
       title: "Gebruikersbezoeken"
       xaxis: "Dag"
       yaxis: "Aantal bezoeken"
-      description: "Aantal alle gebruikersbezoeken."
     signups:
       title: "Registraties"
       xaxis: "Dag"
@@ -1337,7 +1322,6 @@ nl:
       title: "Gebruikersbezoeken (mobiel)"
       xaxis: "Dag"
       yaxis: "Aantal bezoeken"
-      description: "Aantal unieke gebruikers die de website hebben bezocht met een mobiel apparaat."
     web_crawlers:
       title: "Webcrawler-useragents"
       labels:
@@ -4476,9 +4460,6 @@ nl:
           chat_enabled:
             placeholder: "Chat inschakelen"
             extra_description: "Ga in realtime in gesprek met je leden"
-          enable_sidebar:
-            placeholder: "Zijbalk inschakelen"
-            extra_description: "Krijg eenvoudig toegang tot je favoriete spaces"
       ready:
         title: "Je site is klaar!"
         description: "Dat was het! Je hebt de basis van het opzetten van je community voltooid. Je kunt nu beginnen en rondkijken, een welkomsttopic schrijven en uitnodigingen sturen!<br><br>Veel plezier!"

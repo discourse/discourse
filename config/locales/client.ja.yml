@@ -5354,6 +5354,7 @@ ja:
           upload_successful: "アップロードが成功し、言葉が追加されました。"
           case_sensitivity_label: "大文字と小文字を区別"
           case_sensitivity_description: "大文字と小文字が一致する語のみ"
+          html_label: "HTML"
         test:
           button_label: "テスト"
           modal_title: "%{action}: ウォッチ語をテスト"

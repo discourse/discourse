@@ -2468,6 +2468,7 @@ sq:
           flag: "Sinjalizoni"
         form:
           add: "Shto"
+          html_label: "HTML"
       form_templates:
         nav_title: "Shabllonet"
         list_table:

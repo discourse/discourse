@@ -16,6 +16,7 @@ class WatchedWord < ActiveRecord::Base
   validates :action, presence: true
   validate :replacement_is_url, if: -> { action == WatchedWord.actions[:link] }
   validate :replacement_is_tag_list, if: -> { action == WatchedWord.actions[:tag] }
+  validate :replacement_is_html, if: -> { replacement.present? && html? }
 
   validates_each :word do |record, attr, val|
     if WatchedWord.where(action: record.action).count >= MAX_WORDS_PER_ACTION
@@ -65,6 +66,7 @@ class WatchedWord < ActiveRecord::Base
     word.action_key = params[:action_key] if params[:action_key]
     word.action = params[:action] if params[:action]
     word.case_sensitive = params[:case_sensitive] if !params[:case_sensitive].nil?
+    word.html = params[:html] if params[:html]
     word.watched_word_group_id = params[:watched_word_group_id]
     word.save
     word
@@ -79,11 +81,7 @@ class WatchedWord < ActiveRecord::Base
   end
 
   def action_log_details
-    if replacement.present?
-      "#{word} → #{replacement}"
-    else
-      word
-    end
+    replacement.present? ? "#{word} → #{replacement}" : word
   end
 
   private
@@ -107,6 +105,10 @@ class WatchedWord < ActiveRecord::Base
       errors.add(:base, :invalid_tag_list)
     end
   end
+
+  def replacement_is_html
+    errors.add(:base, :invalid_html) if action != WatchedWord.actions[:replace]
+  end
 end
 
 # == Schema Information
@@ -121,6 +123,7 @@ end
 #  replacement           :string
 #  case_sensitive        :boolean          default(FALSE), not null
 #  watched_word_group_id :bigint
+#  html                  :boolean          default(FALSE), not null
 #
 # Indexes
 #

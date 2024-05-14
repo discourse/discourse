@@ -18,12 +18,11 @@ export default class Notifications extends Component {
   avatarSize = "medium";
 
   get avatar() {
-    let avatarAttrs = {};
-    addExtraUserClasses(this.currentUser, avatarAttrs);
+    const avatarAttrs = addExtraUserClasses(this.currentUser, {});
     return htmlSafe(
       renderAvatar(this.currentUser, {
         imageSize: this.avatarSize,
-        alt: "user.avatar.header_title",
+        title: i18n("user.avatar.header_title"),
         template: this.currentUser.avatar_template,
         username: this.currentUser.username,
         name: this.siteSettings.enable_names && this.currentUser.name,
