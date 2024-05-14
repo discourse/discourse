@@ -25,10 +25,10 @@ module Chat
     contract
     model :channel
     policy :can_add_users_to_channel
+    policy :exceeds_max_direct_message_users
     model :users, optional: true
 
     transaction do
-      step :validate_user_count
       step :upsert_memberships
       step :recompute_users_count
       step :notice_channel
@@ -68,10 +68,9 @@ module Chat
       ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
     end
 
-    def validate_user_count(channel:, users:)
-      if channel.user_count + users.length > SiteSetting.chat_max_direct_message_users
-        fail!("should have less than #{SiteSetting.chat_max_direct_message_users} elements")
-      end
+    def exceeds_max_direct_message_users(channel:, contract:)
+      channel.user_count + contract.usernames.length >
+        (SiteSetting.chat_max_direct_message_users + 1)
     end
 
     def upsert_memberships(channel:, users:)
