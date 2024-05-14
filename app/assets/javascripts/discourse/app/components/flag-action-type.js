@@ -15,7 +15,7 @@ export default Component.extend({
   @discourseComputed("flag.name_key")
   customPlaceholder(nameKey) {
     return I18n.t("flagging.custom_placeholder_" + nameKey, {
-      defaultValue: I18n.t("flagging.custom_placeholder_default"),
+      defaultValue: I18n.t("flagging.custom_placeholder_notify_moderators"),
     });
   },
 

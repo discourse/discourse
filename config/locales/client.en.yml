@@ -4035,7 +4035,6 @@ en:
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
       notify_moderators_textarea_label: "Message for the moderators"
       custom_placeholder_illegal: "Let us know specifically why you believe this content is illegal, and provide relevant links and examples where possible."
-      custom_placeholder_default: "Let us know specifically why you believe this content is illegal, and provide relevant links and examples where possible."
       confirmation_illegal: "What I’ve written above is accurate and complete."
       custom_message:
         at_least:
