@@ -2161,8 +2161,6 @@ hu:
             placeholder: "Privát"
           chat_enabled:
             placeholder: "Csevegés engedélyezése"
-          enable_sidebar:
-            placeholder: "Oldalsáv engedélyezése"
       styling:
         fields:
           color_scheme:

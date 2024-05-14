@@ -1065,7 +1065,6 @@ hr:
       title: "Korisničke posjete (mobilni)"
       xaxis: "Dan"
       yaxis: "Broj posjeta"
-      description: "Broj jedinstvenih korisnika koji su posjetili putem mobilnog uređaja."
     web_crawlers:
       title: "Korisnički agenti web indeksiranja"
       labels:
@@ -2251,7 +2250,7 @@ hr:
     search_title: "Pretraži ovu stranicu"
     search_button: "Pretraži"
   upload:
-    unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije autorizirana (autorizirana proširenja: %{authorized_extensions})."
+    unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije dopuštena (dopuštene ekstenzije: %{authorized_extensions})."
     size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."
   color_schemes:
     default_theme_name: "Zadano"
@@ -2340,8 +2339,6 @@ hr:
             placeholder: "Privatno"
           chat_enabled:
             placeholder: "Omogući chat"
-          enable_sidebar:
-            placeholder: "Omogući bočnu traku"
       styling:
         fields:
           styling_preview:

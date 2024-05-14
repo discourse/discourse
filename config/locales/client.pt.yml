@@ -4375,6 +4375,7 @@ pt:
         form:
           link_placeholder: "https://example.com"
           add: "Adicionar"
+          html_label: "HTML"
         test:
           button_label: "Testar"
           description: "Insira o texto abaixo para verificar as correspondências com palavras vigiadas"

@@ -376,6 +376,10 @@ ro:
           attributes:
             execute_at:
               in_the_past: "trebuie să fie în viitor."
+        watched_word:
+          attributes:
+            base:
+              invalid_html: "HTML poate fi folosit doar pentru înlocuire"
       <<: *errors
   uncategorized_category_name: "Necategorisite"
   general_category_name: "General"
@@ -655,6 +659,7 @@ ro:
       title: "Vizite ale utilizatorilor"
       xaxis: "Zi"
       yaxis: "Număr de vizite"
+      description: "Numărul de vizite ale utilizatorilor conectați."
     signups:
       xaxis: "Zi"
     new_contributors:
@@ -834,6 +839,7 @@ ro:
     mobile_visits:
       xaxis: "Zi"
       yaxis: "Număr de vizite"
+      description: "Numărul de utilizatori unici conectați care au vizitat site-ul cu ajutorul unui dispozitiv mobil."
     web_crawlers:
       labels:
         page_views: "Vizualizări"

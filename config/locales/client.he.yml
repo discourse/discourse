@@ -4793,7 +4793,7 @@ he:
       clear_filter: "פינוי המסנן"
       no_results:
         title: "אין תוצאות"
-        description: "לא מצאנו שום דבר שעונה לחיפוש ‚%{filter}’.<br><br>התכוונת במקרה <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">לחפש בהגדרות האתר</a> או ב<a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">רשימת משתמשי ההנהלה?</a>"
+        description: 'לא מצאנו שום דבר שעונה לחיפוש ‚%{filter}’.<br><br>התכוונת במקרה <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">לחפש בהגדרות האתר</a> או ב<a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">רשימת משתמשי ההנהלה?</a>'
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
       description: "נושא קבלת הפנים שלך הוא הדבר הראשון שחברים חדשים יקראו. אפשר לחשוב על זה כמו על „נאום מעלית” או „הצהרת כוונות”. כדאי לתאר למי מיועדת הקהילה הזאת, מה אפשר לצפות למצוא כאן ומה מומלץ לעשות בהתחלה."
@@ -6057,6 +6057,9 @@ he:
             update_public_sidebar_section: "עדכון סעיף ציבורי בסרגל הצד"
             destroy_public_sidebar_section: "השמדת סעיף ציבורי בסרגל הצד"
             reset_bounce_score: "איפוס ניקוד-החזר"
+            create_watched_word_group: "יצירת קבוצת מילים במעקב"
+            update_watched_word_group: "עדכון קבוצת מילים במעקב"
+            delete_watched_word_group: "מחיקת קבוצת מילים במעקב"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -6146,6 +6149,7 @@ he:
           upload_successful: "העלאה הצליחה. מילים נוספו."
           case_sensitivity_label: "הוא תלוי רישיות"
           case_sensitivity_description: "רק מילים עם התאמת אותיות רישיות/קטנות"
+          html_label: "HTML"
           words_or_phrases: "מילים או ביטויים"
         test:
           button_label: "נסיון"
