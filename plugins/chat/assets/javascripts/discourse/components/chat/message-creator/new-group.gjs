@@ -86,10 +86,7 @@ export default class NewGroup extends Component {
           @close={{@close}}
           @cancel={{@cancel}}
           @membersCount={{this.membersCount}}
-          @maxReached={{gte
-            this.membersCount
-            this.maxMembers
-          }}
+          @maxReached={{gte this.membersCount this.maxMembers}}
         />
 
         {{#if @members.length}}

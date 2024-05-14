@@ -17,8 +17,9 @@ export default class ChatableGroup extends Component {
       return !this.args.item.enabled;
     }
 
-    return(this.args.membersCount + this.args.item.model.chat_enabled_user_count >
-      (this.siteSettings.chat_max_direct_message_users + 1)
+    return (
+      this.args.membersCount + this.args.item.model.chat_enabled_user_count >
+      this.siteSettings.chat_max_direct_message_users + 1
     );
   }
 

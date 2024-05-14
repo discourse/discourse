@@ -64,10 +64,7 @@ export default class AddMembers extends Component {
   <template>
     <div class="chat-message-creator__add-members-container">
       <div class="chat-message-creator__add-members">
-        <MembersCount
-          @count={{this.membersCount}}
-          @max={{this.maxMembers}}
-        />
+        <MembersCount @count={{this.membersCount}} @max={{this.maxMembers}} />
 
         <MembersSelector
           @channel={{@channel}}
@@ -76,10 +73,7 @@ export default class AddMembers extends Component {
           @close={{@close}}
           @cancel={{@cancel}}
           @membersCount={{this.membersCount}}
-          @maxReached={{gte
-            this.membersCount
-            this.maxMembers
-          }}
+          @maxReached={{gte this.membersCount this.maxMembers}}
         />
 
         {{#if @members.length}}
