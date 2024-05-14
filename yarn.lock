@@ -5954,10 +5954,10 @@ ember-template-imports@^3.4.1, ember-template-imports@^3.4.2:
     string.prototype.matchall "^4.0.6"
     validate-peer-dependencies "^1.1.0"
 
-ember-template-imports@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/ember-template-imports/-/ember-template-imports-4.1.0.tgz#30a7a5fbc2d15a95e07f8730adf4b164402ba960"
-  integrity sha512-FMC13/FWPZBL4zMkFtspgGqc9zYfrUXf8/MV83Eke3ZYVR4oKb9CuB65BRmgCvFwv8R5PGkpUhks0i5kjYeAHw==
+ember-template-imports@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/ember-template-imports/-/ember-template-imports-4.1.1.tgz#4a537ce868403112287bac039b159e35397b7ffd"
+  integrity sha512-mnbL3hjo/Ctg7rkBtuYkBRJUn5bDYRQCEZQxmNozRnfoEp2RLSbT6SFJRAFDYXT2OrY+8i821S4kPL1i0QuGIw==
   dependencies:
     broccoli-stew "^3.0.0"
     content-tag "^2.0.1"
