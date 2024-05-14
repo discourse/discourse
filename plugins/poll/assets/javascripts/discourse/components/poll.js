@@ -447,8 +447,14 @@ export default class PollComponent extends Component {
       },
     })
       .then(({ poll }) => {
+        if (this.poll.type === "irv") {
+          poll.options.forEach((option) => {
+            option.rank = 0;
+          });
+        }
         this.options = [...poll.options];
         this.poll.setProperties(poll);
+        this.irvOutcome = poll.irv_outcome || [];
         this.vote = [];
         this.voters = poll.voters;
         this.hasSavedVote = false;

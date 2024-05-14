@@ -122,9 +122,19 @@ class DiscoursePoll::Poll
   end
 
   def self.remove_vote(user, post_id, poll_name)
-    DiscoursePoll::Poll.change_vote(user, post_id, poll_name) do |poll|
-      PollVote.where(poll: poll, user: user).delete_all
+    poll_id = nil
+
+    serialized_poll =
+      DiscoursePoll::Poll.change_vote(user, post_id, poll_name) do |poll|
+        poll_id = poll.id
+        PollVote.where(poll: poll, user: user).delete_all
+      end
+
+    if serialized_poll[:type] == "irv"
+      serialized_poll[:irv_outcome] = DiscoursePoll::Irv.irv_outcome(poll_id)
     end
+
+    serialized_poll
   end
 
   def self.toggle_status(user, post_id, poll_name, status, raise_errors = true)

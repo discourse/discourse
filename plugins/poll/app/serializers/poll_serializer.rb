@@ -82,6 +82,6 @@ class PollSerializer < ApplicationSerializer
   end
 
   def irv_outcome
-    DiscoursePoll::Irv.irv_outcome(id)
+    DiscoursePoll::Irv.irv_outcome(object.id)
   end
 end
