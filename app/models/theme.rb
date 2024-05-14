@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 80
+  BASE_COMPILER_VERSION = 81
 
   class SettingsMigrationError < StandardError
   end
@@ -89,6 +89,8 @@ class Theme < ActiveRecord::Base
             theme_fields: %i[upload theme_settings_migration],
           )
         end
+
+  delegate :remote_url, to: :remote_theme, private: true, allow_nil: true
 
   def notify_color_change(color, scheme: nil)
     scheme ||= color.color_scheme
@@ -236,6 +238,19 @@ class Theme < ActiveRecord::Base
   def self.user_theme_ids
     get_set_cache "user_theme_ids" do
       Theme.user_selectable.pluck(:id)
+    end
+  end
+
+  def self.enabled_theme_and_component_ids
+    get_set_cache "enabled_theme_and_component_ids" do
+      theme_ids = Theme.user_selectable.where(enabled: true).pluck(:id)
+      component_ids =
+        ChildTheme
+          .where(parent_theme_id: theme_ids)
+          .joins(:child_theme)
+          .where(themes: { enabled: true })
+          .pluck(:child_theme_id)
+      (theme_ids | component_ids)
     end
   end
 
@@ -471,7 +486,6 @@ class Theme < ActiveRecord::Base
             .compact
 
         caches.map { |c| <<~HTML.html_safe }.join("\n")
-          <link rel="preload" href="#{c.url}" as="script" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}">
           <script defer src="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
         HTML
       end
@@ -843,10 +857,11 @@ class Theme < ActiveRecord::Base
     contents
   end
 
-  def migrate_settings(start_transaction: true)
+  def migrate_settings(start_transaction: true, fields: nil, allow_out_of_sequence_migration: false)
     block = -> do
       runner = ThemeSettingsMigrationsRunner.new(self)
-      results = runner.run
+      results =
+        runner.run(fields:, raise_error_on_out_of_sequence: !allow_out_of_sequence_migration)
 
       next if results.blank?
 
@@ -879,8 +894,12 @@ class Theme < ActiveRecord::Base
             name: res[:name],
             theme_field_id: res[:theme_field_id],
           )
+
         record.calculate_diff(res[:settings_before], res[:settings_after])
-        record.save!
+
+        # If out of sequence migration is allowed we don't want to raise an error if the record is invalid due to version
+        # conflicts
+        allow_out_of_sequence_migration ? record.save : record.save!
       end
 
       self.reload
@@ -948,6 +967,18 @@ class Theme < ActiveRecord::Base
     end
 
     [content, Digest::SHA1.hexdigest(content)]
+  end
+
+  def repository_url
+    return unless remote_url
+    remote_url.gsub(
+      %r{([^@]+@)?(http(s)?://)?(?<host>[^:/]+)[:/](?<path>((?!\.git).)*)(\.git)?(?<rest>.*)},
+      '\k<host>/\k<path>\k<rest>',
+    )
+  end
+
+  def user_selectable_count
+    UserOption.where(theme_ids: [id]).count
   end
 
   private

@@ -362,17 +362,21 @@ class CategoriesController < ApplicationController
     prioritized_category_id = params[:prioritized_category_id].to_i if params[
       :prioritized_category_id
     ].present?
-    limit = params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT) if params[:limit].present?
+    limit =
+      (
+        if params[:limit].present?
+          params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT)
+        else
+          MAX_CATEGORIES_LIMIT
+        end
+      )
+    page = [1, params[:page].to_i].max
 
     categories = Category.secured(guardian)
 
-    categories =
-      categories
-        .includes(:category_search_data)
-        .references(:category_search_data)
-        .where(
-          "category_search_data.search_data @@ #{Search.ts_query(term: term)}",
-        ) if term.present?
+    if term.present? && words = term.split
+      words.each { |word| categories = categories.where("name ILIKE ?", "%#{word}%") }
+    end
 
     categories =
       (
@@ -392,35 +396,50 @@ class CategoriesController < ApplicationController
 
     categories = categories.where(parent_category_id: nil) if !include_subcategories
 
-    categories = categories.limit(limit || MAX_CATEGORIES_LIMIT)
+    categories_count = categories.count
+
+    categories =
+      categories
+        .includes(
+          :uploaded_logo,
+          :uploaded_logo_dark,
+          :uploaded_background,
+          :uploaded_background_dark,
+          :tags,
+          :tag_groups,
+          :form_templates,
+          category_required_tag_groups: :tag_group,
+        )
+        .joins("LEFT JOIN topics t on t.id = categories.topic_id")
+        .select("categories.*, t.slug topic_slug")
+        .order(
+          "starts_with(lower(categories.name), #{ActiveRecord::Base.connection.quote(term)}) DESC",
+          "categories.parent_category_id IS NULL DESC",
+          "categories.id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
+          "categories.parent_category_id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
+          "categories.id ASC",
+        )
+        .limit(limit)
+        .offset((page - 1) * limit)
+
+    if Site.preloaded_category_custom_fields.present?
+      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+    end
 
     Category.preload_user_fields!(guardian, categories)
 
-    # Prioritize categories that start with the term, then top-level
-    # categories, then subcategories
-    categories =
-      categories.to_a.sort_by do |category|
-        [
-          category.name.downcase.starts_with?(term) ? 0 : 1,
-          category.parent_category_id.blank? ? 0 : 1,
-          category.id == prioritized_category_id ? 0 : 1,
-          category.parent_category_id == prioritized_category_id ? 0 : 1,
-          category.id,
-        ]
-      end
+    response = {
+      categories_count: categories_count,
+      categories: serialize_data(categories, SiteCategorySerializer, scope: guardian),
+    }
 
     if include_ancestors
       ancestors = Category.secured(guardian).ancestors_of(categories.map(&:id))
-
-      render_json_dump(
-        {
-          categories: serialize_data(categories, SiteCategorySerializer, scope: guardian),
-          ancestors: serialize_data(ancestors, SiteCategorySerializer, scope: guardian),
-        },
-      )
-    else
-      render_serialized(categories, SiteCategorySerializer, root: :categories, scope: guardian)
+      Category.preload_user_fields!(guardian, ancestors)
+      response[:ancestors] = serialize_data(ancestors, SiteCategorySerializer, scope: guardian)
     end
+
+    render_json_dump(response)
   end
 
   private

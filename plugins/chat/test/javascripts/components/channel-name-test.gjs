@@ -1,9 +1,11 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import ChannelName from "discourse/plugins/chat/discourse/components/channel-name";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
 const CHANNEL_NAME_LABEL = ".chat-channel-name__label";
@@ -12,7 +14,7 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
   setupRenderingTest(hooks);
 
   test("category channel - label", async function (assert) {
-    const channel = fabricators.channel();
+    const channel = new ChatFabricators(getOwner(this)).channel();
 
     await render(<template><ChannelName @channel={{channel}} /></template>);
 
@@ -20,7 +22,7 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
   });
 
   test("category channel - escapes label", async function (assert) {
-    const channel = fabricators.channel({
+    const channel = new ChatFabricators(getOwner(this)).channel({
       chatable_type: CHATABLE_TYPES.categoryChannel,
       title: "<div class='xss'>evil</div>",
     });
@@ -31,9 +33,9 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
   });
 
   test("dm channel - one user", async function (assert) {
-    const channel = fabricators.directMessageChannel({
-      chatable: fabricators.directMessage({
-        users: [fabricators.user()],
+    const channel = new ChatFabricators(getOwner(this)).directMessageChannel({
+      chatable: new ChatFabricators(getOwner(this)).directMessage({
+        users: [new CoreFabricators(getOwner(this)).user()],
       }),
     });
     const user = channel.chatable.users[0];
@@ -47,8 +49,12 @@ module("Discourse Chat | Component | <ChannelName />", function (hooks) {
   });
 
   test("dm channel - multiple users", async function (assert) {
-    const channel = fabricators.directMessageChannel({
-      users: [fabricators.user(), fabricators.user(), fabricators.user()],
+    const channel = new ChatFabricators(getOwner(this)).directMessageChannel({
+      users: [
+        new CoreFabricators(getOwner(this)).user(),
+        new CoreFabricators(getOwner(this)).user(),
+        new CoreFabricators(getOwner(this)).user(),
+      ],
     });
     channel.chatable.group = true;
     const users = channel.chatable.users;

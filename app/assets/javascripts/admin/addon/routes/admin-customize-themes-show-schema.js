@@ -5,10 +5,12 @@ export default class AdminCustomizeThemesShowSchemaRoute extends Route {
     const theme = this.modelFor("adminCustomizeThemesShow");
     const setting = theme.settings.findBy("setting", params.setting_name);
 
-    return {
-      data: setting.value,
-      schema: setting.objects_schema,
-    };
+    return setting.loadMetadata(theme.id).then(() => {
+      return {
+        theme,
+        setting,
+      };
+    });
   }
 
   setupController() {

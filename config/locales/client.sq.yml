@@ -134,6 +134,7 @@ sq:
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
     software_update_prompt:
       dismiss: "Hiqe"
+    back_button: "Kthehu mbrapa"
     themes:
       default_description: "Paracaktuar"
     s3:
@@ -150,7 +151,8 @@ sq:
         us_east_1: "US East (N. Virginia)"
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
-    edit: "redakto titullin dhe kategorinë e kësaj teme"
+    edit: "Redakto"
+    edit_topic: "redakto titullin dhe kategorinë e kësaj teme"
     expand: "Shpalos"
     not_implemented: "Kjo veçori nuk është implementuar akoma, na vjen keq!"
     no_value: "Jo"
@@ -189,7 +191,9 @@ sq:
     every_hour: "çdo orë"
     daily: "çdo ditë"
     weekly: "çdo javë"
-    max_of_count: "max i %{count}"
+    max_of_count:
+      one: "max i %{count}"
+      other: "max i %{count}"
     character_count:
       one: "%{count} shkronjë"
       other: "%{count} shkronja"
@@ -215,6 +219,7 @@ sq:
       not_bookmarked: "shto postimin tek të preferuarat"
       save: "Ruaj"
       search: "Kërko"
+      bookmark: "Shto tek të preferuarat"
     drafts:
       remove: "Hiq"
     preview: "shiko"
@@ -330,7 +335,6 @@ sq:
       topic_count_long: "Topics Created"
       post_count: "Përgjigje"
       post_count_long: "Replies Posted"
-      no_results: "Nuk u gjet asnjë rezultat."
       days_visited: "Vizita"
       days_visited_long: "Vizita Ditore"
       posts_read: "Lexuar"
@@ -452,10 +456,14 @@ sq:
       "12": "Të dërguar"
       "13": "Inbox"
       "14": "Në pritje"
+      "17": "Lidhjet"
     categories:
-      all: "kategoritë"
-      all_subcategories: "të gjitha"
-      no_subcategory: "asnjë"
+      categories_label: "categories"
+      subcategories_label: "nënkategori"
+      remove_filter: "hiq filtrin"
+      plus_more_count:
+        one: "+%{count} tjetër"
+        other: "+%{count} të tjera"
       category: "Kategori"
       category_list: "Trego listën e kategorive"
       reorder:
@@ -482,7 +490,9 @@ sq:
       organisation: Organizata
       phone: Telefoni
       other_accounts: "Llogari të tjera me këtë adresë IP:"
-      delete_other_accounts: "Fshi %{count}"
+      delete_other_accounts:
+        one: "Fshi %{count}"
+        other: "Fshi %{count}"
       username: "emri i përdoruesit"
       trust_level: "TL"
       read_time: "koha e leximit"
@@ -698,6 +708,8 @@ sq:
         instructions: "Gjuha e faqes për përdoruesin. Do të ndryshojë pasi të rifreskoni faqen. "
         default: "(paracaktuar)"
         any: "ndonjë"
+      homepage:
+        default: "(paracaktuar)"
       password_confirmation:
         title: "Rishkruani fjalëkalimin"
       auth_tokens:
@@ -789,7 +801,6 @@ sq:
         same_as_username: "Fjalëkalimi është i njëjtë me emrin e përdoruesit."
         same_as_email: "Fjalëkalimi është i njëjtë me adresën email."
         ok: "Fjalëkalimi është i pranueshëm."
-        instructions: "Të pakTën %{count} shkronja."
       summary:
         title: "Përmbledhja"
         stats: "Statistikat"
@@ -1012,7 +1023,6 @@ sq:
       reply: "Përgjigju"
       cancel: "Anulo"
       create_topic: "Krijo temën"
-      create_pm: "Mesazh"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
       edit_reason_placeholder: "pse jeni duke e redaktuar?"
@@ -1133,7 +1143,6 @@ sq:
         select_all: "Zgjidh të gjitha"
         clear_all: "Pastro kriteret"
         unlist_topics: "Hiq temat nga lista"
-        defer: "Shty"
         delete: "Fshi temat"
         dismiss: "Hiqe"
         dismiss_read: "Hiq të gjitha temat e palexuara"
@@ -1192,8 +1201,6 @@ sq:
       move_to_inbox:
         title: "Lëviz në Inbox"
         help: "Riktheje mesazhin në inbox"
-      defer:
-        title: "Shty"
       list: "Temat"
       new: "temë e re"
       unread: "palexuar"
@@ -1647,8 +1654,6 @@ sq:
       pinned:
         title: "E përzgjedhur"
         help: "Kjo temë është e ngjitur për ju; do të paraqitet në majë të kategorisë përkatëse"
-      unlisted:
-        help: "Kjo temë nuk është e listuar, pra nuk do të paraqitet nue listat e temave të faqes dhe mund të shikohet vetëm me lidhje direkte"
     posts: "Postime"
     pending_posts:
       label: "Në pritje"
@@ -1783,7 +1788,6 @@ sq:
         user_profile_menu: "%{shortcut} Hap menunë e përdoruesit"
         show_incoming_updated_topics: "%{shortcut} Shiko temat e përditësuara"
         help: "%{shortcut} Trego shkurtimet e tastierës"
-        dismiss_topics: "%{shortcut} Hiq temat"
         log_out: "%{shortcut} Shkëputu"
       actions:
         title: "Veprimet"
@@ -1834,8 +1838,10 @@ sq:
     download_calendar:
       download: "Shkarko"
     tagging:
+      selector_tags: "etiketat"
       selector_all_tags: "të gjitha etiketat"
       selector_no_tags: "asnjë etiketë"
+      selector_remove_filter: "hiq filtrin"
       tags: "Etiketat"
       add_synonyms: "Shto"
       delete_tag: "Fshi etiketën"
@@ -1957,7 +1963,7 @@ sq:
         upload: "Ngarko"
         uploading: "Duke ngarkuar"
       errors:
-        typeMismatch:
+        type_mismatch:
           default: "Ju lutem shkruani një vlerë të vlefshme."
           email: "Ju lutemi të vendosni një email të vlefshëm."
     table_builder:
@@ -1977,16 +1983,17 @@ sq:
         remove_muted_tags_from_latest:
           always: "gjithmonë"
           never: "asnjëherë"
+      reports:
+        sidebar_link:
+          all: "Të Gjithë"
       dashboard:
         title: "Paneli i kontrollit"
         version: "Versioni"
         up_to_date: "Jeni të azhurnuar!"
         critical_available: "Përditësim i rëndësishëm."
         updates_available: "Ka përditësime."
-        please_upgrade: "Ju lutem, azhornoje!"
         no_check_performed: "Verifikimi i updejteve nuk është kryer. Sigurohuni që sidekiq punon. "
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "
-        version_check_pending: "Me sa shohim keni rinovuar faqen se fundmi. Fantastike!"
         installed_version: "Instaluar"
         latest_version: "Të fundit"
         new_features:
@@ -2085,6 +2092,44 @@ sq:
           body: "Trupi"
           timestamp: "Krijuar"
           actions: "Veprimet"
+      home:
+        title: "Kryefaqja"
+      account:
+        title: "Llogaria"
+        sidebar_link:
+          backups: "Rezervat"
+      community:
+        title: "Komuniteti"
+        sidebar_link:
+          badges: "Stemat"
+          notifications: "Njoftimet"
+          permalinks: "Permalinks"
+          trust_levels: "Nivelet e besimit"
+          users: "Users"
+          user_fields: "Fushat e përdoruesit"
+          legal: "Legale"
+      appearance:
+        sidebar_link:
+          emoji: "Emoji"
+          navigation: "Shfletimi"
+      email_settings:
+        sidebar_link:
+          preview_summary: "Parashiko emailin përmbledhës"
+      email_logs:
+        sidebar_link:
+          sent: "Dërguar"
+          skipped: "Skipped"
+          received: "Marrë"
+          rejected: "Rejected"
+      security:
+        title: "Siguria"
+        sidebar_link:
+          error_logs: "Ditar Gabimesh"
+          screened_emails: "Kontroll Email-ash"
+          screened_ips: "Kontroll IP-sh"
+          screened_urls: "Kontroll URL-sh"
+          security: "Siguria"
+          spam: "Spam"
       plugins:
         title: "Pluginet"
         installed: "Pluginet e instaluar"
@@ -2098,6 +2143,19 @@ sq:
         howto: "Si mund të instaloj një plugin?"
         author: "Nga %{author}"
         learn_more: "Mëso më shumë"
+        sidebar_link:
+          installed: "Instaluar"
+      advanced:
+        sidebar_link:
+          developer: "Developer"
+          embedding: "Embedding"
+          rate_limits: "Kufizimet"
+          user_api: "API e përdoruesit"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Skedarë"
+          other_options: "Të tjerë"
+          search: "Kërko"
       backups:
         title: "Rezervat"
         menu:
@@ -2119,6 +2177,7 @@ sq:
           label: "Ngarko"
           title: "Upload a backup to this instance"
           error: "There has been an error while uploading '%{filename}': %{message}"
+        settings: "Rregullimet"
         operations:
           failed: "The %{operation} failed. Please check the logs."
           cancel:
@@ -2208,6 +2267,12 @@ sq:
             text: "Trupi"
           all_filter: "Të Gjithë"
           active_filter: "Aktiv"
+          schema:
+            fields:
+              required: "*e nevojshme"
+              number:
+                too_small: "must be greater than or equal to %{count}"
+                too_large: "must be less than or equal to %{count}"
         colors:
           title: "Ngjyrat"
           copy_name_prefix: "Kopje e"
@@ -2754,6 +2819,7 @@ sq:
         group: "Grupi"
         image: "Imazh"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
+        settings: "Rregullimet"
       embedding:
         title: "Embedding"
         edit: "redakto"

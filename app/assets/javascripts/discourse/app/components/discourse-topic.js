@@ -96,6 +96,13 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
     }
   },
 
+  init() {
+    this._super(...arguments);
+    this.appEvents.on("discourse:focus-changed", this, "gotFocus");
+    this.appEvents.on("post:highlight", this, "_highlightPost");
+    this.appEvents.on("header:update-topic", this, "_updateTopic");
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
@@ -106,9 +113,16 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
       ".cooked a, a.track-link",
       (e) => ClickTrack.trackClick(e, getOwner(this))
     );
-    this.appEvents.on("discourse:focus-changed", this, "gotFocus");
-    this.appEvents.on("post:highlight", this, "_highlightPost");
-    this.appEvents.on("header:update-topic", this, "_updateTopic");
+  },
+
+  willDestroy() {
+    this._super(...arguments);
+
+    // this happens after route exit, stuff could have trickled in
+    this._hideTopicInHeader();
+    this.appEvents.off("discourse:focus-changed", this, "gotFocus");
+    this.appEvents.off("post:highlight", this, "_highlightPost");
+    this.appEvents.off("header:update-topic", this, "_updateTopic");
   },
 
   willDestroyElement() {
@@ -121,12 +135,6 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
     $(this.element).off("click.discourse-redirect", ".cooked a, a.track-link");
 
     this.resetExamineDockCache();
-
-    // this happens after route exit, stuff could have trickled in
-    this._hideTopicInHeader();
-    this.appEvents.off("discourse:focus-changed", this, "gotFocus");
-    this.appEvents.off("post:highlight", this, "_highlightPost");
-    this.appEvents.off("header:update-topic", this, "_updateTopic");
   },
 
   gotFocus(hasFocus) {
@@ -145,7 +153,7 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
     // On desktop the user only needs to scroll past the topic title.
     return (
       offset > this.dockAt &&
-      (!this.site.mobileView || this.mobileScrollDirection === "down")
+      (this.site.desktopView || this.mobileScrollDirection === "down")
     );
   },
 

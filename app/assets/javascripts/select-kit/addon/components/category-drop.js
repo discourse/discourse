@@ -9,18 +9,22 @@ import DiscourseURL, {
 } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import I18n from "discourse-i18n";
+import CategoryDropMoreCollection from "select-kit/components/category-drop-more-collection";
 import CategoryRow from "select-kit/components/category-row";
 import ComboBoxComponent from "select-kit/components/combo-box";
+import { MAIN_COLLECTION } from "select-kit/components/select-kit";
 
 export const NO_CATEGORIES_ID = "no-categories";
 export const ALL_CATEGORIES_ID = "all-categories";
+
+const MORE_COLLECTION = "MORE_COLLECTION";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-drop"],
   classNames: ["category-drop"],
   value: readOnly("category.id"),
   content: readOnly("categoriesWithShortcuts.[]"),
-  noCategoriesLabel: I18n.t("categories.no_subcategory"),
+  noCategoriesLabel: I18n.t("categories.no_subcategories"),
   navigateToEdit: false,
   editingCategory: false,
   editingCategoryTab: null,
@@ -42,6 +46,18 @@ export default ComboBoxComponent.extend({
     headerComponent: "category-drop/category-drop-header",
     parentCategory: false,
     allowUncategorized: "allowUncategorized",
+  },
+
+  init() {
+    this._super(...arguments);
+
+    this.insertAfterCollection(MAIN_COLLECTION, MORE_COLLECTION);
+  },
+
+  modifyComponentForCollection(collection) {
+    if (collection === MORE_COLLECTION) {
+      return CategoryDropMoreCollection;
+    }
   },
 
   modifyComponentForRow() {
@@ -85,6 +101,12 @@ export default ComboBoxComponent.extend({
         });
       }
 
+      // If there is a single shortcut, we can have a single "remove filter"
+      // option
+      if (shortcuts.length === 1 && shortcuts[0].id === ALL_CATEGORIES_ID) {
+        shortcuts[0].name = I18n.t("categories.remove_filter");
+      }
+
       return shortcuts;
     }
   ),
@@ -96,9 +118,17 @@ export default ComboBoxComponent.extend({
 
   modifyNoSelection() {
     if (this.selectKit.options.noSubcategories) {
-      return this.defaultItem(NO_CATEGORIES_ID, this.noCategoriesLabel);
+      return this.defaultItem(
+        NO_CATEGORIES_ID,
+        I18n.t("categories.no_subcategories")
+      );
     } else {
-      return this.defaultItem(ALL_CATEGORIES_ID, this.allCategoriesLabel);
+      return this.defaultItem(
+        ALL_CATEGORIES_ID,
+        this.selectKit.options.subCategory
+          ? I18n.t("categories.subcategories_label")
+          : I18n.t("categories.categories_label")
+      );
     }
   },
 
@@ -149,16 +179,23 @@ export default ComboBoxComponent.extend({
         parentCategoryId = -1;
       }
 
-      const results = (
-        await Category.asyncSearch(filter, {
-          parentCategoryId,
-          includeUncategorized: this.siteSettings.allow_uncategorized_topics,
-          includeAncestors: true,
-          limit: 15,
-        })
-      ).categories;
+      const result = await Category.asyncSearch(filter, {
+        parentCategoryId,
+        includeUncategorized: this.siteSettings.allow_uncategorized_topics,
+        includeAncestors: true,
+        // Show all categories if possible (up to 18), otherwise show just
+        // first 15 and let CategoryDropMoreCollection show the "show more" link
+        limit: 18,
+      });
 
-      return this.shortcuts.concat(results);
+      const categories =
+        result.categoriesCount > 18
+          ? result.categories.slice(0, 15)
+          : result.categories;
+
+      this.selectKit.totalCount = result.categoriesCount;
+
+      return this.shortcuts.concat(categories);
     }
 
     const opts = {

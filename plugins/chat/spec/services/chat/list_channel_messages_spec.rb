@@ -211,4 +211,19 @@ RSpec.describe Chat::ListChannelMessages do
       ).of(Time.zone.now)
     end
   end
+
+  context "when update_user_last_channel" do
+    it "updates the custom field" do
+      expect { result }.to change { user.custom_fields[Chat::LAST_CHAT_CHANNEL_ID] }.from(nil).to(
+        channel.id,
+      )
+    end
+
+    it "doesn’t update the custom field when it was already set to this value" do
+      user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel.id)
+      field = UserCustomField.find_by(name: Chat::LAST_CHAT_CHANNEL_ID, user_id: user.id)
+
+      expect { result }.to_not change { field.reload.updated_at }
+    end
+  end
 end

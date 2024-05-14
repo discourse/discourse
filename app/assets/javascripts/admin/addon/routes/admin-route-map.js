@@ -55,7 +55,7 @@ export default function () {
 
         this.route(
           "adminCustomizeThemes",
-          { path: "themes", resetNamespace: true },
+          { path: "/:type", resetNamespace: true },
           function () {
             this.route("show", { path: "/:theme_id" }, function () {
               this.route("schema", { path: "schema/:setting_name" });
@@ -63,11 +63,6 @@ export default function () {
             this.route("edit", { path: "/:theme_id/:target/:field_name/edit" });
           }
         );
-
-        this.route("adminCustomizeThemeComponents", {
-          path: "theme-components",
-          resetNamespace: true,
-        });
 
         this.route(
           "adminSiteText",
@@ -158,6 +153,7 @@ export default function () {
       "adminReports",
       { path: "/reports", resetNamespace: true },
       function () {
+        this.route("index", { path: "/" });
         this.route("show", { path: ":type" });
       }
     );
@@ -218,8 +214,16 @@ export default function () {
       { path: "/plugins", resetNamespace: true },
       function () {
         this.route("index", { path: "/" });
+        this.route("show", { path: "/:plugin_id" }, function () {
+          this.route("settings");
+        });
       }
     );
+
+    this.route("admin.whatsNew", {
+      path: "/whats-new",
+      resetNamespace: true,
+    });
   });
 
   // EXPERIMENTAL: These admin routes are hidden behind an `admin_sidebar_enabled_groups`

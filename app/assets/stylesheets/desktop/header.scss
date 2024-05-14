@@ -3,7 +3,6 @@
 // --------------------------------------------------
 
 .d-header {
-  left: 0;
   height: 4em;
   #site-text-logo {
     font-size: var(--font-up-3);
@@ -17,7 +16,7 @@
   }
 }
 
-@media all and (max-width: 570px) {
+@include breakpoint(mobile-extra-large) {
   .extra-info-wrapper {
     display: none;
   }

@@ -106,7 +106,7 @@ RSpec.describe Chat::TrashMessage do
           expect(membership_3.reload.last_read_message_id).to eq(other_message.id)
         end
 
-        it "updates the tracking to nil when there are no other messages left in the channnel" do
+        it "updates the tracking to nil when there are no other messages left in the channel" do
           membership_1 =
             Fabricate(
               :user_chat_channel_membership,

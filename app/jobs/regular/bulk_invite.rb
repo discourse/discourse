@@ -24,6 +24,8 @@ module Jobs
       @current_user = User.find_by(id: args[:current_user_id])
       raise Discourse::InvalidParameters.new(:current_user_id) unless @current_user
 
+      @skip_email = SiteSetting.skip_email_bulk_invites
+
       @guardian = Guardian.new(@current_user)
 
       process_invites(@invites)
@@ -168,7 +170,12 @@ module Jobs
             user.save!
           end
 
-          invite_opts = { email: email, topic: topic, group_ids: groups.map(&:id) }
+          invite_opts = {
+            email: email,
+            topic: topic,
+            group_ids: groups.map(&:id),
+            skip_email: @skip_email,
+          }
 
           if @invites.length > Invite::BULK_INVITE_EMAIL_LIMIT
             invite_opts[:emailed_status] = Invite.emailed_status_types[:bulk_pending]

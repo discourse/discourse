@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::ChannelUnreadsQuery do
   subject(:query) do
     described_class.call(

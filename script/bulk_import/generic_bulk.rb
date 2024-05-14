@@ -31,6 +31,7 @@ class BulkImport::Generic < BulkImport::Base
 
     # Now that the migration is complete, do some more work:
 
+    ENV["SKIP_USER_STATS"] = "1"
     Discourse::Application.load_tasks
 
     puts "running 'import:ensure_consistency' rake task."
@@ -53,6 +54,7 @@ class BulkImport::Generic < BulkImport::Base
     import_user_fields
     import_user_field_values
     import_single_sign_on_records
+    import_user_associated_accounts
     import_muted_users
     import_user_histories
     import_user_notes
@@ -608,6 +610,34 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     users.close
+  end
+
+  def import_user_associated_accounts
+    puts "", "Importing user associated accounts..."
+
+    accounts = query(<<~SQL)
+      SELECT a.*, COALESCE(u.last_seen_at, u.created_at) AS last_used_at, u.email, u.username
+        FROM user_associated_accounts a
+             JOIN users u ON u.id = a.user_id
+       ORDER BY a.user_id, a.provider_name
+    SQL
+
+    existing_user_ids = UserAssociatedAccount.pluck(:user_id).to_set
+
+    create_user_associated_accounts(accounts) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if user_id && existing_user_ids.include?(user_id)
+
+      {
+        user_id: user_id,
+        provider_name: row["provider_name"],
+        provider_uid: row["provider_uid"],
+        last_used: to_datetime(row["last_used_at"]),
+        info: row["info"].presence || { nickname: row["username"], email: row["email"] }.to_json,
+      }
+    end
+
+    accounts.close
   end
 
   def import_topics
@@ -1258,35 +1288,91 @@ class BulkImport::Generic < BulkImport::Base
 
     DB.exec(<<~SQL)
         WITH
-          post_stats AS (
-                          SELECT p.user_id, COUNT(p.id) AS post_count, MIN(p.created_at) AS first_post_created_at,
-                                 SUM(like_count) AS likes_received
-                            FROM posts p
-                           GROUP BY p.user_id
-                        ),
+          visible_posts AS (
+                             SELECT p.id, p.post_number, p.user_id, p.created_at, p.like_count, p.topic_id
+                               FROM posts p
+                                    JOIN topics t ON p.topic_id = t.id
+                              WHERE t.archetype = 'regular'
+                                AND t.deleted_at IS NULL
+                                AND t.visible
+                                AND p.deleted_at IS NULL
+                                AND p.post_type = 1 /* regular_post_type */
+                                AND NOT p.hidden
+                           ),
           topic_stats AS (
-                           SELECT t.user_id, COUNT(t.id) AS topic_count FROM topics t GROUP BY t.user_id
-                         ),
+                             SELECT t.user_id, COUNT(t.id) AS topic_count
+                               FROM topics t
+                              WHERE t.archetype = 'regular'
+                                AND t.deleted_at IS NULL
+                                AND t.visible
+                              GROUP BY t.user_id
+                           ),
+          post_stats AS (
+                             SELECT p.user_id, MIN(p.created_at) AS first_post_created_at, SUM(p.like_count) AS likes_received
+                               FROM visible_posts p
+                              GROUP BY p.user_id
+                           ),
+          reply_stats AS (
+                             SELECT p.user_id, COUNT(p.id) AS reply_count
+                               FROM visible_posts p
+                              WHERE p.post_number > 1
+                              GROUP BY p.user_id
+                           ),
           like_stats AS (
-                          SELECT pa.user_id, COUNT(*) AS likes_given
-                            FROM post_actions pa
-                           WHERE pa.post_action_type_id = 2
-                           GROUP BY pa.user_id
-                        )
+                             SELECT pa.user_id, COUNT(*) AS likes_given
+                               FROM post_actions pa
+                                    JOIN visible_posts p ON pa.post_id = p.id
+                              WHERE pa.post_action_type_id = 2 /* like */
+                                AND pa.deleted_at IS NULL
+                              GROUP BY pa.user_id
+                           ),
+          badge_stats AS (
+                             SELECT ub.user_id, COUNT(DISTINCT ub.badge_id) AS distinct_badge_count
+                               FROM user_badges ub
+                                    JOIN badges b ON ub.badge_id = b.id AND b.enabled
+                              GROUP BY ub.user_id
+                           ),
+          post_action_stats AS ( -- posts created by user and likes given by user
+                             SELECT p.user_id, p.id AS post_id, p.created_at::DATE, p.topic_id, p.post_number
+                               FROM visible_posts p
+                              UNION
+                             SELECT pa.user_id, pa.post_id, pa.created_at::DATE, p.topic_id, p.post_number
+                               FROM post_actions pa
+                                    JOIN visible_posts p ON pa.post_id = p.id
+                              WHERE pa.post_action_type_id = 2
+                           ),
+          topic_reading_stats AS (
+                             SELECT user_id, COUNT(DISTINCT topic_id) AS topics_entered,
+                                    COUNT(DISTINCT created_at) AS days_visited
+                               FROM post_action_stats
+                              GROUP BY user_id
+                           ),
+          posts_reading_stats AS (
+                             SELECT user_id, SUM(max_post_number) AS posts_read_count
+                               FROM (
+                                      SELECT user_id, MAX(post_number) AS max_post_number
+                                        FROM post_action_stats
+                                       GROUP BY user_id, topic_id
+                                    ) x
+                              GROUP BY user_id
+                           )
       INSERT
-        INTO user_stats (user_id, new_since, post_count, topic_count, first_post_created_at, likes_received, likes_given)
-      SELECT u.id, u.created_at AS new_since, COALESCE(ps.post_count, 0) AS post_count,
+        INTO user_stats (user_id, new_since, post_count, topic_count, first_post_created_at, likes_received,
+                         likes_given, distinct_badge_count, days_visited, topics_entered, posts_read_count, time_read)
+      SELECT u.id AS user_id, u.created_at AS new_since, COALESCE(rs.reply_count, 0) AS reply_count,
              COALESCE(ts.topic_count, 0) AS topic_count, ps.first_post_created_at,
-             COALESCE(ps.likes_received, 0) AS likes_received, COALESCE(ls.likes_given, 0) AS likes_given
+             COALESCE(ps.likes_received, 0) AS likes_received, COALESCE(ls.likes_given, 0) AS likes_given,
+             COALESCE(bs.distinct_badge_count, 0) AS distinct_badge_count, COALESCE(trs.days_visited, 1) AS days_visited,
+             COALESCE(trs.topics_entered, 0) AS topics_entered, COALESCE(prs.posts_read_count, 0) AS posts_read_count,
+             COALESCE(prs.posts_read_count, 0) * 30 AS time_read -- assume 30 seconds / post
         FROM users u
-             LEFT JOIN post_stats ps ON u.id = ps.user_id
              LEFT JOIN topic_stats ts ON u.id = ts.user_id
+             LEFT JOIN post_stats ps ON u.id = ps.user_id
+             LEFT JOIN reply_stats rs ON u.id = rs.user_id
              LEFT JOIN like_stats ls ON u.id = ls.user_id
-       WHERE NOT EXISTS (
-                          SELECT 1
-                            FROM user_stats us
-                           WHERE us.user_id = u.id
-                        )
+             LEFT JOIN badge_stats bs ON u.id = bs.user_id
+             LEFT JOIN topic_reading_stats trs ON u.id = trs.user_id
+             LEFT JOIN posts_reading_stats prs ON u.id = prs.user_id
           ON CONFLICT DO NOTHING
     SQL
 
@@ -1702,7 +1788,10 @@ class BulkImport::Generic < BulkImport::Base
 
     tags.each do |row|
       cleaned_tag_name = DiscourseTagging.clean_tag(row["name"])
-      tag = Tag.find_or_create_by!(name: cleaned_tag_name)
+      tag =
+        Tag.where("LOWER(name) = ?", cleaned_tag_name.downcase).first_or_create!(
+          name: cleaned_tag_name,
+        )
       @tag_mapping[row["id"]] = tag.id
 
       if row["tag_group_id"]

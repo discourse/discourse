@@ -544,6 +544,9 @@ RSpec.describe PostAction do
       expect(post.hidden_at).to be_present
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached])
       expect(post.topic.visible).to eq(false)
+      expect(post.topic.visibility_reason_id).to eq(
+        Topic.visibility_reasons[:op_flag_threshold_reached],
+      )
 
       post.revise(post.user, raw: post.raw + " ha I edited it ")
 
@@ -553,6 +556,7 @@ RSpec.describe PostAction do
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached]) # keep most recent reason
       expect(post.hidden_at).to be_present # keep the most recent hidden_at time
       expect(post.topic.visible).to eq(true)
+      expect(post.topic.visibility_reason_id).to eq(Topic.visibility_reasons[:op_unhidden])
 
       PostActionCreator.spam(eviltrout, post)
       PostActionCreator.off_topic(walterwhite, post)
@@ -567,6 +571,9 @@ RSpec.describe PostAction do
       expect(post.hidden_at).to be_present
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached_again])
       expect(post.topic.visible).to eq(false)
+      expect(post.topic.visibility_reason_id).to eq(
+        Topic.visibility_reasons[:op_flag_threshold_reached],
+      )
 
       post.revise(post.user, raw: post.raw + " ha I edited it again ")
 
@@ -575,7 +582,10 @@ RSpec.describe PostAction do
       expect(post.hidden).to eq(true)
       expect(post.hidden_at).to be_present
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached_again])
-      expect(post.topic.visible).to eq(false)
+      expect(post.topic.reload.visible).to eq(false)
+      expect(post.topic.visibility_reason_id).to eq(
+        Topic.visibility_reasons[:op_flag_threshold_reached],
+      )
     end
 
     it "doesn't fail when post has nil user" do

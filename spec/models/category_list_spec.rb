@@ -12,6 +12,29 @@ RSpec.describe CategoryList do
   fab!(:admin)
   let(:category_list) { CategoryList.new(Guardian.new(user), include_topics: true) }
 
+  context "when a category has a secret subcategory" do
+    fab!(:category)
+
+    fab!(:secret_subcategory) do
+      cat = Fabricate(:category, parent_category: category)
+      cat.set_permissions(admins: :full)
+      cat.save!
+      cat
+    end
+
+    let(:admin_category_list) { CategoryList.new(Guardian.new(admin), include_topics: true) }
+
+    it "doesn't set has_children when an unpriveleged user is querying" do
+      found = category_list.categories.find { |c| c.id == category.id }
+      expect(found.has_children).to eq(false)
+    end
+
+    it "sets has_children when an admin is querying" do
+      found = admin_category_list.categories.find { |c| c.id == category.id }
+      expect(found.has_children).to eq(true)
+    end
+  end
+
   describe "security" do
     it "properly hide secure categories" do
       cat = Fabricate(:category_with_definition)
@@ -413,6 +436,14 @@ RSpec.describe CategoryList do
         nil,
         category.id,
       )
+    end
+
+    context "with parent_category_id" do
+      it "returns subcategories" do
+        category_list = CategoryList.new(Guardian.new(user), parent_category_id: category.id)
+
+        expect(category_list.categories.size).to eq(1)
+      end
     end
   end
 end

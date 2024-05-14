@@ -11,7 +11,7 @@ class AdminWebHookSerializer < ApplicationSerializer
              :active,
              :web_hook_event_types
 
-  has_many :categories, serializer: BasicCategorySerializer, embed: :ids, include: false
+  has_many :categories, serializer: BasicCategorySerializer, embed: :ids, include: true
   has_many :tags,
            key: :tag_names,
            serializer: TagSerializer,

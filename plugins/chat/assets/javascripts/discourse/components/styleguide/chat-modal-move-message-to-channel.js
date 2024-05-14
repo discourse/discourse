@@ -1,16 +1,17 @@
 import Component from "@glimmer/component";
+import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ChatModalMoveMessageToChannel from "discourse/plugins/chat/discourse/components/chat/modal/move-message-to-channel";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 export default class ChatStyleguideChatModalMoveMessageToChannel extends Component {
   @service modal;
 
-  channel = fabricators.channel();
-  selectedMessageIds = [fabricators.message({ channel: this.channel })].mapBy(
-    "id"
-  );
+  channel = new ChatFabricators(getOwner(this)).channel();
+  selectedMessageIds = [
+    new ChatFabricators(getOwner(this)).message({ channel: this.channel }),
+  ].mapBy("id");
 
   @action
   openModal() {
@@ -18,7 +19,9 @@ export default class ChatStyleguideChatModalMoveMessageToChannel extends Compone
       model: {
         sourceChannel: this.channel,
         selectedMessageIds: [
-          fabricators.message({ channel: this.channel }),
+          new ChatFabricators(getOwner(this)).message({
+            channel: this.channel,
+          }),
         ].mapBy("id"),
       },
     });

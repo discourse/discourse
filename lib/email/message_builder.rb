@@ -126,7 +126,7 @@ module Email
       else
         subject = @opts[:subject]
       end
-      subject
+      DiscoursePluginRegistry.apply_modifier(:message_builder_subject, subject, @opts)
     end
 
     def html_part
@@ -164,6 +164,7 @@ module Email
             html_body: html_override.html_safe,
           },
         )
+      html = DiscoursePluginRegistry.apply_modifier(:message_builder_html_part, html, @opts)
 
       Mail::Part.new do
         content_type "text/html; charset=UTF-8"
@@ -184,8 +185,7 @@ module Email
         body << "\n"
         body << @template_args[:unsubscribe_instructions]
       end
-
-      body
+      DiscoursePluginRegistry.apply_modifier(:message_builder_body, body, @opts)
     end
 
     def build_args
@@ -218,7 +218,9 @@ module Email
       end
 
       result["X-Discourse-Post-Id"] = @opts[:post_id].to_s if @opts[:post_id]
+      result["X-Discourse-Post-Ids"] = @opts[:post_ids].join(",") if @opts[:post_ids].present?
       result["X-Discourse-Topic-Id"] = @opts[:topic_id].to_s if @opts[:topic_id]
+      result["X-Discourse-Topic-Ids"] = @opts[:topic_ids].join(",") if @opts[:topic_ids].present?
 
       # at this point these have been filtered by the recipient's guardian for visibility,
       # see UserNotifications#send_notification_email

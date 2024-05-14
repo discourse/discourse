@@ -46,6 +46,14 @@ module PageObjects
         page.has_no_css?("#{topic_list_item_unread_badge(topic)}")
       end
 
+      def has_checkbox_selected_on_row?(n)
+        page.has_css?("#{TOPIC_LIST_ITEM_SELECTOR}:nth-child(#{n}) input.bulk-select:checked")
+      end
+
+      def has_no_checkbox_selected_on_row?(n)
+        page.has_no_css?("#{TOPIC_LIST_ITEM_SELECTOR}:nth-child(#{n}) input.bulk-select:checked")
+      end
+
       def click_topic_checkbox(topic)
         find("#{topic_list_item_class(topic)} input#bulk-select-#{topic.id}").click
       end
@@ -67,11 +75,11 @@ module PageObjects
         find("#topic-entrance button.jump-top").native.send_keys(:return)
       end
 
-      private
-
       def topic_list_item_class(topic)
         "#{TOPIC_LIST_ITEM_SELECTOR}[data-topic-id='#{topic.id}']"
       end
+
+      private
 
       def topic_list_item_closed(topic)
         "#{topic_list_item_class(topic)} .topic-statuses .topic-status svg.locked"

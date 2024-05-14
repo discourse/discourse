@@ -10,6 +10,18 @@ import i18n from "discourse-common/helpers/i18n";
 import { avatarImg } from "discourse-common/lib/avatar-utils";
 
 export default class TopicMapSummary extends Component {
+  get linksCount() {
+    return this.args.topicDetails.links?.length ?? 0;
+  }
+
+  get createdByUsername() {
+    return this.args.topicDetails.created_by?.username;
+  }
+
+  get lastPosterUsername() {
+    return this.args.topicDetails.last_poster?.username;
+  }
+
   get toggleMapButton() {
     return {
       title: this.args.collapsed
@@ -17,7 +29,7 @@ export default class TopicMapSummary extends Component {
         : "topic.collapse_details",
       icon: this.args.collapsed ? "chevron-down" : "chevron-up",
       ariaExpanded: this.args.collapsed ? "false" : "true",
-      ariaControls: "topic-map-expanded",
+      ariaControls: "topic-map-expanded__aria-controls",
       action: this.args.toggleMap,
     };
   }
@@ -25,20 +37,20 @@ export default class TopicMapSummary extends Component {
   get shouldShowParticipants() {
     return (
       this.args.collapsed &&
-      this.args.postAttrs.topicPostsCount > 2 &&
-      this.args.postAttrs.participants &&
-      this.args.postAttrs.participants.length > 0
+      this.args.topic.posts_count > 2 &&
+      this.args.topicDetails.participants &&
+      this.args.topicDetails.participants.length > 0
     );
   }
 
   get createdByAvatar() {
     return htmlSafe(
       avatarImg({
-        avatarTemplate: this.args.postAttrs.createdByAvatarTemplate,
+        avatarTemplate: this.args.topicDetails.created_by?.avatar_template,
         size: "tiny",
         title:
-          this.args.postAttrs.createdByName ||
-          this.args.postAttrs.createdByUsername,
+          this.args.topicDetails.created_by?.name ||
+          this.args.topicDetails.created_by?.username,
       })
     );
   }
@@ -46,11 +58,11 @@ export default class TopicMapSummary extends Component {
   get lastPostAvatar() {
     return htmlSafe(
       avatarImg({
-        avatarTemplate: this.args.postAttrs.lastPostAvatarTemplate,
+        avatarTemplate: this.args.topicDetails.last_poster?.avatar_template,
         size: "tiny",
         title:
-          this.args.postAttrs.lastPostName ||
-          this.args.postAttrs.lastPostUsername,
+          this.args.topicDetails.last_poster?.name ||
+          this.args.topicDetails.last_poster?.username,
       })
     );
   }
@@ -72,71 +84,67 @@ export default class TopicMapSummary extends Component {
         <div class="topic-map-post created-at">
           <a
             class="trigger-user-card"
-            data-user-card={{@postAttrs.createdByUsername}}
-            title={{@postAttrs.createdByUsername}}
+            data-user-card={{this.createdByUsername}}
+            title={{this.createdByUsername}}
             aria-hidden="true"
           />
           {{this.createdByAvatar}}
-          <RelativeDate @date={{@postAttrs.topicCreatedAt}} />
+          <RelativeDate @date={{@topic.created_at}} />
         </div>
       </li>
       <li class="last-reply">
-        <a href={{@postAttrs.lastPostUrl}}>
+        <a href={{@topic.lastPostUrl}}>
           <h4 role="presentation">{{i18n "last_reply_lowercase"}}</h4>
           <div class="topic-map-post last-reply">
             <a
               class="trigger-user-card"
-              data-user-card={{@postAttrs.lastPostUsername}}
-              title={{@postAttrs.lastPostUsername}}
+              data-user-card={{this.lastPosterUsername}}
+              title={{this.lastPosterUsername}}
               aria-hidden="true"
             />
             {{this.lastPostAvatar}}
-            <RelativeDate @date={{@postAttrs.lastPostAt}} />
+            <RelativeDate @date={{@topic.last_posted_at}} />
           </div>
         </a>
       </li>
       <li class="replies">
-        {{number @postAttrs.topicReplyCount noTitle="true"}}
+        {{number @topic.replyCount noTitle="true"}}
         <h4 role="presentation">{{i18n
             "replies_lowercase"
-            count=@postAttrs.topicReplyCount
+            count=@topic.replyCount
           }}</h4>
       </li>
       <li class="secondary views">
-        {{number
-          @postAttrs.topicViews
-          noTitle="true"
-          class=@postAttrs.topicViewsHeat
-        }}
+        {{number @topic.views noTitle="true" class=@topic.viewsHeat}}
         <h4 role="presentation">{{i18n
             "views_lowercase"
-            count=@postAttrs.topicViews
+            count=@topic.views
           }}</h4>
       </li>
-      {{#if (gt @postAttrs.participantCount 0)}}
+      {{#if (gt @topic.participant_count 0)}}
         <li class="secondary users">
-          {{number @postAttrs.participantCount noTitle="true"}}
+          {{number @topic.participant_count noTitle="true"}}
           <h4 role="presentation">{{i18n
               "users_lowercase"
-              count=@postAttrs.participantCount
+              count=@topic.participant_count
             }}</h4>
         </li>
       {{/if}}
-      {{#if (gt @postAttrs.topicLikeCount 0)}}
+      {{#if (gt @topic.like_count 0)}}
         <li class="secondary likes">
-          {{number @postAttrs.topicLikeCount noTitle="true"}}
+          {{number @topic.like_count noTitle="true"}}
           <h4 role="presentation">{{i18n
               "likes_lowercase"
-              count=@postAttrs.topicLikeCount
+              count=@topic.like_count
             }}</h4>
         </li>
       {{/if}}
-      {{#if (gt @postAttrs.topicLinkCount 0)}}
+      {{#if (gt this.linksCount 0)}}
         <li class="secondary links">
-          {{number @postAttrs.topicLinkCount noTitle="true"}}
+          {{number this.linksCount noTitle="true"}}
           <h4 role="presentation">{{i18n
               "links_lowercase"
-              count=@postAttrs.topicLinkCount
+              count=this.linksCount
             }}</h4>
         </li>
       {{/if}}
@@ -144,8 +152,8 @@ export default class TopicMapSummary extends Component {
       {{#if this.shouldShowParticipants}}
         <li class="avatars">
           <TopicParticipants
-            @participants={{slice 0 3 @postAttrs.participants}}
-            @userFilters={{@postAttrs.userFilters}}
+            @participants={{slice 0 3 @topicDetails.participants}}
+            @userFilters={{@userFilters}}
           />
         </li>
       {{/if}}

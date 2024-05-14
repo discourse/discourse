@@ -122,7 +122,6 @@ lt:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>:%{message}"
     messages:
-      too_long_validation: "yra apribotas iki %{max} simbolių; įvedėte %{length}."
       invalid_boolean: "Neteisinga loginė vertė."
       taken: "jau užimtas"
       accepted: privalo buti patvirtintas
@@ -183,7 +182,6 @@ lt:
     user_exists: "Nereikia kviesti <b>%{email}</b>, jie jau turi paskyrą!"
     invalid_email: "%{email} nėra galiojantis el. pašto adresas."
     confirm_email: "<p>Beveik baigėte! Jūsų el. pašto adresu išsiuntėme aktyvavimo laišką. Norėdami suaktyvinti paskyrą, vadovaukitės laiške pateiktomis instrukcijomis.</p><p>Jei laiško negaunate, patikrinkite savo šlamšto aplanką.</p>"
-    cant_invite_to_group: "Neleidžiama kviesti vartotojų į nurodytą grupę (-as). Įsitikinkite, kad esate grupės (-ų), į kurią bandote pakviesti, savininkas."
     disabled_errors:
       discourse_connect_enabled: "Kvietimai išjungti, nes įgalintas „DiscourseConnect“."
       invalid_access: "Jums neleidžiama peržiūrėti prašomo šaltinio."
@@ -275,7 +273,6 @@ lt:
   pm_reached_recipients_limit: "Deja, pranešime negali būti daugiau nei %{recipients_limit} gavėjų."
   removed_direct_reply_full_quotes: "Automatiškai pašalinta viso ankstesnio įrašo citata."
   watched_words_auto_tag: "Automatiškai pažymėta tema"
-  secure_upload_not_allowed_in_public_topic: "Atsiprašome, šis saugus įkėlimas (-ai) negali būti naudojamas viešoje temoje: %{upload_filenames}."
   slow_mode_enabled: "Ši tema veikia lėtu režimu."
   just_posted_that: "labai panašu į tai, ką parašėte prieš tai"
   invalid_characters: "turi neleistinų simbolių"
@@ -391,7 +388,6 @@ lt:
       Ar pagalvojote ** [apsilankyti savo vartotojo profilyje] (%{profile_path}) ** ir įkelti nuotrauką, vaizduojančią jus?
 
       Lengviau sekti diskusijas ir susirasti įdomių žmonių pokalbiuose, kai kiekvienas turi unikalią profilio nuotrauką!
-    get_a_room: Jūs atsakėte į @%{reply_username} %{count} kartus, ar žinojote, kad galėtumėte nusiųsti jiems asmeninę žinutę?
     too_many_replies: |
       ### Jūs pasiekėte šios temos atsakymo limitą
 
@@ -954,6 +950,8 @@ lt:
         api: "API"
         user_api: "Nario API"
       yaxis: "Diena"
+    consolidated_page_views_browser_detection:
+      yaxis: "Diena"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Diena"
@@ -1101,6 +1099,10 @@ lt:
     page_view_anon_mobile_reqs:
       xaxis: "Diena"
       description: "Naujų puslapių skaičius iš lankytojų mobiliajame įrenginyje, kurie nėra prisijungę."
+    page_view_anon_browser_reqs:
+      xaxis: "Diena"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Diena"
     http_background_reqs:
       title: "Fonas"
       xaxis: "Diena"
@@ -1437,8 +1439,6 @@ lt:
       invalid_integer: "Reikšmė turi būti sveikas skaičius."
       invalid_string: "Netinkama vertė."
       invalid_string_min_max: "Turi būti tarp %{min} ir %{max} simbolių."
-      invalid_string_min: "Turi būti ne mažiau kaip %{min} simbolių."
-      invalid_string_max: "Turi būti ne daugiau kaip %{max} simbolių."
       invalid_json: "Netinkamas JSON."
       invalid_reply_by_email_address: "Reikšmę turi sudaryti „%{reply_key}“ ir ji turi skirtis nuo pranešimo el. pašto."
       max_username_length_exists: "Negalite nustatyti maksimalaus vartotojo vardo ilgio žemiau ilgiausio vartotojo vardo (%{username})."
@@ -1447,6 +1447,15 @@ lt:
       empty_selectable_avatars: "Prieš įgalindami šį nustatymą, pirmiausia turite įkelti bent du pasirinktus avatarus."
       allowed_unicode_usernames:
         leading_trailing_slash: "Reguliarioji išraiška neturi prasidėti ir baigtis pasviruoju brūkšniu."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "neaktyvus"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "neaktyvus"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -1536,8 +1545,6 @@ lt:
     deactivated_by_staff: "Išjungė darbuotojai"
     activated_by_staff: "Aktyvuoja darbuotojai"
     username:
-      short: "turi būti ne mažiau kaip %{min} simbolių"
-      long: "turi būti ne daugiau kaip %{max} simbolių"
       too_long: "yra per ilgas"
       characters: "turi būti tik skaičiai, raidės, brūkšneliai, taškai ir pabraukimai"
       unique: "privalo buti unikalus"
@@ -1612,17 +1619,6 @@ lt:
   new_version_mailer:
     title: "Nauja versija Mailer"
     subject_template: "[%{email_prefix}] Išleista Nauja Discourse versija"
-    text_body_template: |
-      Oho, yra nauja [Discourse]versija (https://www.discourse.org)!
-
-      Jūsų versija: %{installed_version}
-      Nauja versija: **%{new_version}**
-
-      – Atnaujinkite naudodami mūsų paprastą **[naršyklės naujinimas vienu spustelėjimu](%{base_url}/admin/upgrade)**
-
-      – Sužinokite, kas naujo [leidimo pastabose]( https://meta.discourse.org/tag/release-notes) arba peržiūrėkite [neapdorotą „GitHub“ pakeitimų žurnalą](https://github.com/discourse/discourse/commits/main)
-
-      – Apsilankykite [meta.discourse.org](https:// meta.discourse.org) naujienoms, diskusijoms ir Discourse palaikymui
   new_version_mailer_with_notes:
     subject_template: "[%{email_prefix}] Galimas atnaujinimas"
   flag_reasons:

@@ -1026,6 +1026,13 @@ RSpec.describe Search do
       expect(results.posts).to eq([post])
     end
 
+    it "does not return hidden posts" do
+      Fabricate(:post, raw: "Can you see me? I'm a hidden post", hidden: true)
+
+      results = Search.execute("hidden post")
+      expect(results.posts.count).to eq(0)
+    end
+
     it "does not rely on postgres's proximity opreators" do
       topic.update!(title: "End-to-end something something testing")
 
@@ -2637,10 +2644,14 @@ RSpec.describe Search do
 
     it "allows to define custom filter" do
       expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+
       Search.advanced_filter(/^min_chars:(\d+)$/) do |posts, match|
         posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
       end
+
       expect(Search.new("advanced min_chars:50").execute.posts).to eq([post0])
+    ensure
+      Search.advanced_filters.delete(/^min_chars:(\d+)$/)
     end
 
     it "allows to define custom order" do
@@ -2649,6 +2660,8 @@ RSpec.describe Search do
       Search.advanced_order(:chars) { |posts| posts.reorder("MAX(LENGTH(posts.raw)) DESC") }
 
       expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
+    ensure
+      Search.advanced_orders.delete(:chars)
     end
   end
 

@@ -1,12 +1,13 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
-  "Discourse Chat | Component | <Chat::UserCardButton />",
+  "Discourse Chat | Component | <Chat::DirectMessageButton />",
   function (hooks) {
     setupRenderingTest(hooks);
 
@@ -14,23 +15,27 @@ module(
       sinon
         .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
         .value(true);
-      this.user = fabricators.user();
+      this.user = new CoreFabricators(getOwner(this)).user();
 
-      await render(hbs`<Chat::UserCardButton @user={{user}} />`);
+      await render(
+        hbs`<Chat::DirectMessageButton @user={{user}} @modal={{true}} />`
+      );
 
-      assert.dom(".chat-user-card-btn").exists("it shows the chat button");
+      assert.dom(".chat-direct-message-btn").exists("it shows the chat button");
     });
 
     test("when current user can’t send direct messages", async function (assert) {
       sinon
         .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
         .value(false);
-      this.user = fabricators.user();
+      this.user = new CoreFabricators(getOwner(this)).user();
 
-      await render(hbs`<Chat::UserCardButton @user={{user}} />`);
+      await render(
+        hbs`<Chat::DirectMessageButton @user={{user}} @modal={{true}} />`
+      );
 
       assert
-        .dom(".chat-user-card-btn")
+        .dom(".chat-direct-message-btn")
         .doesNotExist("it doesn’t show the chat button");
     });
 
@@ -39,14 +44,16 @@ module(
         .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
         .value(true);
 
-      this.user = fabricators.user({
+      this.user = new CoreFabricators(getOwner(this)).user({
         suspended_till: moment().add(1, "year").toDate(),
       });
 
-      await render(hbs`<Chat::UserCardButton @user={{user}}/>`);
+      await render(
+        hbs`<Chat::DirectMessageButton @user={{user}} @modal={{true}} />`
+      );
 
       assert
-        .dom(".chat-user-card-btn")
+        .dom(".chat-direct-message-btn")
         .doesNotExist("it doesn’t show the chat button");
     });
   }

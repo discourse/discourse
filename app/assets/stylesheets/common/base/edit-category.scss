@@ -44,6 +44,12 @@ div.edit-category {
     margin-bottom: 1em;
   }
 
+  .category-name-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+  }
+
   .warning {
     background-color: var(--tertiary-low);
     padding: 0.5em 2.5em 0.5em 1em;

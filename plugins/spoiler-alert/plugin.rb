@@ -6,7 +6,6 @@
 # version: 1.1.0
 # authors: Discourse Team
 # url: https://github.com/discourse/discourse/tree/main/plugins/spoiler-alert
-# transpile_js: true
 
 enabled_site_setting :spoiler_enabled
 

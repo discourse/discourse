@@ -125,7 +125,8 @@ ko:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>:%{message}"
     messages:
-      too_long_validation: "%{max}자로 제한되어 있습니다. 입력한 글자수는 %{length}자입니다."
+      too_long_validation:
+        other: "%{length}자를 입력하셨습니다. 최대 %{count}자까지 입력 가능합니다. "
       invalid_boolean: "유효하지 않은 부울입니다."
       taken: "이미 사용 중"
       accepted: 승인 필요
@@ -212,7 +213,6 @@ ko:
     rate_limit:
       other: "이미 %{count}개의 초대를 전송했습니다. %{time_left} 후 다시 시도하세요."
     confirm_email: "<p>거의 다 끝났습니다! 이메일 주소로 활성화 메일을 보냈습니다. 메일의 지침에 따라 계정을 활성화하세요. </p><p>메일이 도착하지 않았다면 스팸 폴더를 확인하세요. </p>"
-    cant_invite_to_group: "사용자를 지정된 그룹에 초대할 수 없습니다. 초대하려는 그룹의 소유자인지 확인하세요."
     disabled_errors:
       discourse_connect_enabled: "DiscourseConnect가 활성화되어 있기 때문에 초대가 비활성화됩니다."
       invalid_access: "요청한 리소스를 볼 권한이 없습니다."
@@ -311,7 +311,6 @@ ko:
   pm_reached_recipients_limit: "메시지에 수신자가 %{recipients_limit}명을 초과할 수 없습니다."
   removed_direct_reply_full_quotes: "이전 전체 게시물의 인용을 자동으로 제거했습니다."
   watched_words_auto_tag: "자동으로 태그가 지정된 주제"
-  secure_upload_not_allowed_in_public_topic: "공개 주제에서 다음 보안 업로드를 사용할 수 없습니다. %{upload_filenames}."
   create_pm_on_existing_topic: "기존 주제에 대해 개인 메시지를 생성할 수 없습니다."
   slow_mode_enabled: "이 주제는 느린 모드입니다."
   just_posted_that: "최근 게시한 것과 너무 비슷합니다"
@@ -973,6 +972,8 @@ ko:
         api: "API"
         user_api: "사용자 API"
       yaxis: "일"
+    consolidated_page_views_browser_detection:
+      yaxis: "일"
     dau_by_mau:
       title: "DAU / MAU"
       xaxis: "일"
@@ -1132,6 +1133,10 @@ ko:
       xaxis: "일"
       yaxis: "모바일 익명 페이지뷰"
       description: "모바일 디바이스에서 계정에 로그인하지 않은 방문자의 새 페이지뷰 수입니다."
+    page_view_anon_browser_reqs:
+      xaxis: "일"
+    page_view_logged_in_browser_reqs:
+      xaxis: "일"
     http_background_reqs:
       title: "백그라운드"
       xaxis: "일"
@@ -1760,7 +1765,6 @@ ko:
     embed_post_limit: "임베드할 최대 게시물 수입니다."
     embed_username_required: "주제 생성을 위해 아이디가 필요합니다."
     delete_merged_stub_topics_after_days: "완전히 병합된 스텁 주제를 자동으로 삭제하기 전에 대기할 일 수입니다. 스텁 주제를 삭제하지 않으려면 0으로 설정하세요."
-    bootstrap_mode_min_users: "부트스트랩 모드를 비활성화하는 데 필요한 최소 사용자 수(비활성화하려면 0으로 설정, 최대 24시간이 소요될 수 있음)"
     prevent_anons_from_downloading_files: "익명 사용자가 첨부 파일을 다운로드하지 못하도록 합니다."
     slug_generation_method: "슬러그 생성 방법을 선택합니다. 'encoded'는 퍼센트 인코딩 스트링을 생성합니다. 'none'은 슬러그를 완전히 비활성화합니다."
     enable_emoji_shortcuts: ":) : p :( 같은 일반적인 스마일 텍스트는 이모티콘으로 변환됩니다."
@@ -1853,8 +1857,10 @@ ko:
       must_include_latest: "주요 메뉴는 '최근' 탭을 포함해야 합니다."
       invalid_string: "유요하지 않은 값입니다."
       invalid_string_min_max: "%{min} ~ %{max}자 사이여야 합니다."
-      invalid_string_min: "%{min}자 이상이어야 합니다."
-      invalid_string_max: "%{max}자 이하여야 합니다."
+      invalid_string_min:
+        other: "글자수가 %{count}자 이상이어야 합니다."
+      invalid_string_max:
+        other: "글자 수가 %{count}자 이상이어야 합니다."
       invalid_json: "유효하지 않은 JSON입니다."
       invalid_reply_by_email_address: "값은 '%{reply_key}' 키를 포함해야 하며 알림 이메일과 달라야 합니다."
       invalid_alternative_reply_by_email_addresses: "모든 값은 '%{reply_key}' 키를 포함해야 하며 알림 이메일과 달라야 합니다."
@@ -1884,10 +1890,20 @@ ko:
         regex_invalid: "정규식이 유효하지 않습니다. %{error}"
         leading_trailing_slash: "정규식은 슬래시로 시작하거나 끝나서는 안 됩니다."
       unicode_usernames_avatars: "내부 시스템 아바타는 유니코드 아이디를 지원하지 않습니다."
-      list_value_count: "목록에 정확히 %{count} 값을 포함해야 합니다."
+      list_value_count:
+        other: "목록에는 정확히 %{count} 값이 포함되어야합니다."
       markdown_linkify_tlds: "'*' 값을 포함할 수 없습니다."
       search_tokenize_chinese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_chinese'를 비활성화해야 합니다."
       search_tokenize_japanese_enabled: "이 설정을 활성화하기 전에 'search_tokenize_japanese'를 비활성화해야 합니다."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "비활성화"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "비활성화"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2042,8 +2058,10 @@ ko:
     new_user_typed_too_fast: "입력이 너무 빠른 신규 사용자"
     content_matches_auto_silence_regex: "콘텐츠가 자동 차단 정규식과 일치합니다"
     username:
-      short: "최소 %{min}자 이상이어야 합니다"
-      long: "%{max}자 이하여야 합니다"
+      short:
+        other: "최소 %{count}자 이상이어야 합니다."
+      long:
+        other: "%{count}자 이상 사용할 수 없습니다."
       too_long: "너무 깁니다"
       characters: "숫자, 문자, 대시, 마침표 및 언더스코어만 포함해야 합니다"
       unique: "고유해야 합니다"
@@ -2186,35 +2204,9 @@ ko:
   new_version_mailer:
     title: "새 버전 메일러"
     subject_template: "[%{email_prefix}] 새 Discourse 버전 업데이트 사용 가능"
-    text_body_template: |
-      [Discourse](https://www.discourse.org)의 새 버전이 출시되었습니다!
-
-      내 현재 버전: %{installed_version}
-      새 버전: **%{new_version}**
-
-      - 간편한 **[원클릭 브라우저 업그레이드](%{base_url}/admin/upgrade)**로 업그레이드
-
-      - [출시 노트](https://meta.discourse.org/tag/release-notes) 또는 [GitHub 체인지로그](https://github.com/discourse/discourse/commits/main)의 새 소식 확인하기
-
-      - [meta.discourse.org](https:// meta.discourse.org)에서 뉴스, 토론 및 Discourse 지원 확인
   new_version_mailer_with_notes:
     title: "노트가 있는 새 버전 메일러"
     subject_template: "[%{email_prefix}] 업데이트 사용 가능"
-    text_body_template: |
-      [Discourse](https://www.discourse.org)의 새 버전이 출시되었습니다!
-
-      내 현재 버전: %{installed_version}
-      새 버전: **%{new_version}**
-
-      - 간편한 **[원클릭 브라우저 업그레이드](%{base_url}/admin/upgrade)**로 업그레이드
-
-      - [출시 노트](https://meta.discourse.org/tag/release-notes) 또는 [GitHub 체인지로그](https://github.com/discourse/discourse/commits/main)의 새 소식 확인하기
-
-      - [meta.discourse.org](https:// meta.discourse.org)에서 뉴스, 토론 및 Discourse 지원 확인
-
-      ### 출시 노트
-
-      %{notes}
   flag_reasons:
     off_topic: "내 게시물이 **주제에 벗어남** 으로 신고되었습니다. 커뮤니티에서 이 게시물이 현재 제목 및 첫 게시물로 지정된 이 주제와 맞지 않는다고 생각하는 것 같습니다. "
     spam: "내 게시물이 **스팸** 으로 신고되었습니다. 커뮤니티에서 이 게시물이 유용하거나 주제와 관련되지 않고 생각보다 너무 프로모션 성격을 갖고 있어 광고라고 생각하는 것 같습니다."
@@ -3342,7 +3334,8 @@ ko:
     mass_award:
       errors:
         invalid_csv: '%{line_number}행에서 오류가 발생했습니다. CSV에 한 줄에 하나의 이메일이 있는지 확인하세요.'
-        too_many_csv_entries: CSV 파일에 엔트리가 너무 많습니다. 엔트리가 %{count}개 이하인 CSV 파일을 제공하세요.
+        too_many_csv_entries:
+          other: CSV 파일에 항목이 너무 많습니다. 항목이 %{count}개 이하인 CSV 파일을 제공하십시오.
         badge_disabled: 먼저 %{badge_name} 배지를 활성화하세요.
         cant_grant_multiple_times: 단일 사용자에게 %{badge_name} 배지를 여러 번 부여할 수 없습니다.
     editor:

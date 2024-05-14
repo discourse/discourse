@@ -1,0 +1,76 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  site_settings:
+    discourse_automation_enabled: "Aktivera discourse-automation plugin"
+  discourse_automation:
+    triggerables:
+      user_badge_granted:
+        title: Användarmärke beviljat
+        doc: Utlöser en automatisering när en användare tilldelas ett märke.
+      api_call:
+        title: API-anrop
+        description: Gör en POST-förfrågan för att utlösa en automatisering
+        doc: POST-förfrågan ska göras till `/automations/:id/trigger.json` med en global API-nyckel.
+      recurring:
+        title: Återkommande
+      point_in_time:
+        title: Tidpunkt
+        description: När datumet har nåtts kommer automatiseringen att utlösas
+      user_added_to_group:
+        title: Användare tillagd i grupp
+        description: När en användare läggs till i den angivna gruppen kommer automatiseringen att utlösas
+      user_removed_from_group:
+        title: Användare borttagen från gruppen
+        description: När en användare tas bort från den angivna gruppen utlöses automatiseringen.
+      user_promoted:
+        title: Användare befordrad
+        description: När en användare befordras från en förtroendenivå till en annan
+        transition_placeholder: "från %{from_level_name} till %{to_level_name}"
+      stalled_wiki:
+        description: När en wiki inte har redigerats under en längre period än den som definierats, aktiveras automatiseringen.
+      post_created_edited:
+        title: Inlägg skapat/redigerat
+        description: När ett giltigt inlägg redigeras eller skapas kommer automatiseringen att utlösas
+      pm_created:
+        title: Personligt meddelande skapat
+      topic:
+        title: Ämne
+    scriptables:
+      topic:
+        title: Skapa ett ämne
+      auto_responder:
+        title: Automatiskt svar
+        description: Skickar ett svar på ett inlägg inklusive specificerade nyckelord
+      pin_topic:
+        title: Fäst ämne
+        description: Fäster ett angivet ämne vid ett visst datum
+      banner_topic:
+        title: Omvandla en banner till ett ämne
+        description: Omvandla ett ämne till en banner
+      send_pms:
+        title: Skicka PM
+        description: Tillåter att skicka PMs (eventuellt fördröjt).
+        doc: Gör det möjligt att skicka flera PM till en användare. Varje PM accepterar en fördröjning.
+      suspend_user_by_email:
+        title: Stäng av användare via e-post
+      topic_required_words:
+        title: Obligatoriska ord för ämnet
+      close_topic:
+        title: Stäng ämne
+        description: Stänger ett ämne med ett valfritt avslutningsmeddelande
+      append_last_edited_by:
+        title: Lägg till senast redigerad av
+        text: "Senast redigerad av @%{username} %{date_time}"
+      append_last_checked_by:
+        title: Lägg till senast kontrollerad av
+        text: "Senast kontrollerad av @%{username} %{date_time}"
+        summary: Kontrollera dokument
+        details: "Utför kontroll av dokument: "
+        button_text: Klar
+      add_user_to_group_through_custom_field:
+        title: "Lägg till användare till grupp genom användaranpassat fält"

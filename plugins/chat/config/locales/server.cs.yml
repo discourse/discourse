@@ -5,6 +5,18 @@
 # https://translate.discourse.org/
 
 cs:
+  system_messages:
+    chat_channel_archive_complete:
+      subject_template: "Archivace kanálů chatu byla úspěšně dokončena"
+      text_body_template: |
+        Archivace kanálu chatu %{channel_hashtag_or_name} byla úspěšně dokončena. Zprávy byly zkopírovány do tématu [%{topic_title}](%{topic_url}).
+    chat_channel_archive_failed_no_topic:
+      text_body_template: |
+        Archivace kanálu chatu %{channel_hashtag_or_name} selhala. Žádné zprávy nebyly archivovány. Téma nebylo úspěšně vytvořeno z následujících důvodů:
+
+          %{topic_validation_errors}
+
+        Navštivte kanál %{channel_url} a zkuste to znovu.
   chat:
     deleted_chat_username: smazáno
     errors:
@@ -31,8 +43,26 @@ cs:
           other: "%{comma_separated_usernames} a %{count} dalších"
     mention_warning:
       dismiss: "označit jako přečtené"
+      without_membership: "%{first_identifier} se k tomuto kanálu nepřipojil."
+      without_membership_multiple:
+        one: "%{first_identifier} a %{count} další uživatel se nepřipojili k tomuto kanálu."
+        few: "%{first_identifier} a %{count} další uživatelé se nepřipojili k tomuto kanálu."
+        many: "%{first_identifier} a %{count} dalších uživatelů se nepřipojilo k tomuto kanálu."
+        other: "%{first_identifier} a %{count} dalších uživatelů se nepřipojilo k tomuto kanálu."
+      too_many_members: "%{first_identifier} má příliš mnoho členů. Nikdo nebyl upozorněn."
+      too_many_members_multiple:
+        one: "%{first_identifier} a %{count} další skupina má příliš mnoho členů. Nikdo nebyl upozorněn."
+        few: "%{first_identifier} a %{count} další skupiny mají příliš mnoho členů. Nikdo nebyl upozorněn."
+        many: "%{first_identifier} a %{count} další skupin má příliš mnoho členů. Nikdo nebyl upozorněn."
+        other: "%{first_identifier} a %{count} další skupin má příliš mnoho členů. Nikdo nebyl upozorněn."
+    personal_chat: "osobní chat"
     onebox:
       thread_title_connector: "v"
+      x_members:
+        one: "%{count} člen"
+        few: "%{count} členové"
+        many: "%{count} členů"
+        other: "%{count} členů"
     transcript:
       default_thread_title: "Vlákno"
       split_thread_range: "zprávy %{start} až %{end} z %{total}"
@@ -40,6 +70,10 @@ cs:
     popup:
       chat_mention:
         direct: 'Uživatel %{username} vás zmínil v "%{channel}"'
+      direct_message_chat_mention:
+        direct: "%{username} se o vás zmínil v osobním chatu"
+        other_type: "%{username} zmínil/a %{identifier} v osobním chatu"
+      new_direct_chat_message: "%{username} poslal/a zprávu v osobním chatu"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\\n\\n%{message}\n"

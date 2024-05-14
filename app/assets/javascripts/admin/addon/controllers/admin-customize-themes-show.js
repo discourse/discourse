@@ -6,8 +6,10 @@ import {
   mapBy,
   match,
   notEmpty,
+  readOnly,
 } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { url } from "discourse/lib/computed";
 import { makeArray } from "discourse-common/lib/helpers";
@@ -23,12 +25,15 @@ const THEME_UPLOAD_VAR = 2;
 export default class AdminCustomizeThemesShowController extends Controller {
   @service dialog;
   @service router;
+  @service siteSettings;
   @service modal;
 
   editRouteName = "adminCustomizeThemes.edit";
 
   @url("model.id", "/admin/customize/themes/%@/export") downloadUrl;
   @url("model.id", "/admin/themes/%@/preview") previewUrl;
+  @url("model.id", "model.locale", "/admin/themes/%@/translations/%@")
+  getTranslationsUrl;
   @empty("selectedChildThemeId") addButtonDisabled;
   @mapBy("model.parentThemes", "name") parentThemesNames;
   @filterBy("allThemes", "component", false) availableParentThemes;
@@ -43,6 +48,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
   @notEmpty("settings") hasSettings;
   @notEmpty("translations") hasTranslations;
   @match("model.remote_theme.remote_url", /^http(s)?:\/\//) sourceIsHttp;
+  @readOnly("model.settings") settings;
 
   @discourseComputed("model.component", "model.remote_theme")
   showCheckboxes() {
@@ -144,11 +150,6 @@ export default class AdminCustomizeThemesShowController extends Controller {
   convertTooltip(component) {
     const type = component ? "component" : "theme";
     return `admin.customize.theme.convert_${type}_tooltip`;
-  }
-
-  @discourseComputed("model.settings")
-  settings(settings) {
-    return settings.map((setting) => ThemeSettings.create(setting));
   }
 
   @discourseComputed("model.translations")
@@ -294,6 +295,26 @@ export default class AdminCustomizeThemesShowController extends Controller {
     let model = this.model;
     model.setField("common", info.name, "", info.upload_id, THEME_UPLOAD_VAR);
     model.saveChanges("theme_fields").catch((e) => popupAjaxError(e));
+  }
+
+  get availableLocales() {
+    return JSON.parse(this.siteSettings.available_locales);
+  }
+
+  get locale() {
+    return (
+      this.get("model.locale") ||
+      this.userLocale ||
+      this.siteSettings.default_locale
+    );
+  }
+
+  @action
+  updateLocale(value) {
+    this.set("model.locale", value);
+    ajax(this.getTranslationsUrl).then(({ translations }) =>
+      this.set("model.translations", translations)
+    );
   }
 
   @action

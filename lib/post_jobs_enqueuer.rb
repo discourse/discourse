@@ -43,7 +43,7 @@ class PostJobsEnqueuer
 
   def make_visible
     return if @topic.private_message?
-    return unless SiteSetting.embed_unlisted?
+    return unless SiteSetting.embed_unlisted? || SiteSetting.import_embed_unlisted?
     return if @post.post_number == 1
     return if @topic.visible?
     return if @post.post_type != Post.types[:regular]

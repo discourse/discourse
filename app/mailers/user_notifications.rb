@@ -167,7 +167,7 @@ class UserNotifications < ActionMailer::Base
         reason: user_history.details,
       )
     else
-      silenced_till = user.silenced_till.in_time_zone(user.user_option.timezone)
+      silenced_till = user.silenced_till.in_time_zone(user.user_option.timezone.presence || "UTC")
       build_email(
         user.email,
         template: "user_notifications.account_silenced",
@@ -191,7 +191,7 @@ class UserNotifications < ActionMailer::Base
         reason: user_history.details,
       )
     else
-      suspended_till = user.suspended_till.in_time_zone(user.user_option.timezone)
+      suspended_till = user.suspended_till.in_time_zone(user.user_option.timezone.presence || "UTC")
       build_email(
         user.email,
         template: "user_notifications.account_suspended",
@@ -224,21 +224,21 @@ class UserNotifications < ActionMailer::Base
     build_summary_for(user)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, UnsubscribeKey::DIGEST_TYPE)
 
-    min_date = opts[:since] || user.last_emailed_at || user.last_seen_at || 1.month.ago
+    min_date = opts[:since] || user.last_seen_at || 1.month.ago
 
     # Fetch some topics and posts to show
     digest_opts = {
       limit: SiteSetting.digest_topics + SiteSetting.digest_other_topics,
       top_order: true,
     }
-    topics_for_digest = Topic.for_digest(user, min_date, digest_opts).to_a
+    topics_for_digest = Topic.for_digest(user, min_date, digest_opts)
     if topics_for_digest.empty? && !user.user_option.try(:include_tl0_in_digests)
       # Find some topics from new users that are at least 24 hours old
       topics_for_digest =
-        Topic
-          .for_digest(user, min_date, digest_opts.merge(include_tl0: true))
-          .where("topics.created_at < ?", 24.hours.ago)
-          .to_a
+        Topic.for_digest(user, min_date, digest_opts.merge(include_tl0: true)).where(
+          "topics.created_at < ?",
+          24.hours.ago,
+        )
     end
 
     @popular_topics = topics_for_digest[0, SiteSetting.digest_topics]
@@ -349,6 +349,9 @@ class UserNotifications < ActionMailer::Base
           ),
         add_unsubscribe_link: true,
         unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
+        topic_ids: topics_for_digest.pluck(:id),
+        post_ids:
+          topics_for_digest.joins(:posts).where(posts: { post_number: 1 }).pluck("posts.id"),
       }
 
       build_email(user.email, opts)
@@ -757,6 +760,7 @@ class UserNotifications < ActionMailer::Base
       subject_pm: subject_pm,
       participants: participants,
       include_respond_instructions: !(user.suspended? || user.staged?),
+      notification_type: notification_type,
       template: template,
       use_topic_title_subject: use_topic_title_subject,
       site_description: SiteSetting.site_description,

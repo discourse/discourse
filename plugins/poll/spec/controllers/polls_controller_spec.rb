@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe ::DiscoursePoll::PollsController do
   routes { ::DiscoursePoll::Engine.routes }
 

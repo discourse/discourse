@@ -159,7 +159,6 @@ fr:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b> : %{message}"
     messages:
-      too_long_validation: "est limité à %{max} caractères maximum ; il y en a %{length}."
       invalid_boolean: "Booléen invalide."
       taken: "a déjà été pris"
       accepted: doit être accepté
@@ -273,7 +272,6 @@ fr:
       one: "Vous avez déjà envoyé %{count} invitation dans la journée, veuillez patienter %{time_left} avant de réessayer."
       other: "Vous avez déjà envoyé %{count} invitations dans la journée, veuillez patienter %{time_left} avant de réessayer."
     confirm_email: "<p>Vous y êtes presque ! Nous avons envoyé un e-mail d'activation à votre adresse. Merci de suivre les instructions figurant dans l'e-mail pour activer votre compte.</p><p>Si vous ne le recevez pas, veuillez vérifier votre dossier de courrier indésirable.</p>"
-    cant_invite_to_group: "Vous n'êtes pas autorisé(e) à inviter des utilisateurs dans le(s) groupe(s) spécifié(s). Assurez-vous que vous êtes le ou la propriétaire du ou des groupes dans lesquels vous essayez d'inviter."
     disabled_errors:
       discourse_connect_enabled: "Les invitations sont désactivées car DiscourseConnect est activé."
       invalid_access: "Vous n'êtes pas autorisé(e) à afficher la ressource demandée."
@@ -391,7 +389,6 @@ fr:
   pm_reached_recipients_limit: "Nous sommes désolés, vous ne pouvez pas avoir plus de %{recipients_limit} destinataires dans un même message direct."
   removed_direct_reply_full_quotes: "La citation complète du message précédent a été supprimée automatiquement."
   watched_words_auto_tag: "Sujet automatiquement étiqueté"
-  secure_upload_not_allowed_in_public_topic: "Nous sommes désolés, les envois sécurisés suivants ne peuvent pas être utilisés dans un sujet public : %{upload_filenames}."
   create_pm_on_existing_topic: "Nous sommes désolés, vous ne pouvez pas créer un message direct sur un sujet existant."
   slow_mode_enabled: "Ce sujet est en mode ralenti."
   just_posted_that: "est trop similaire à ce que vous avez récemment publié"
@@ -534,7 +531,6 @@ fr:
 
       Il est plus facile de lire des discussions comprenant des réponses approfondies plutôt que de nombreuses réponses individuelles brèves.
     dominating_topic: Vous avez beaucoup publié dans ce sujet ! Envisagez de donner aux autres l'occasion de répondre et de discuter entre eux également.
-    get_a_room: Nous remarquons que vous avez déjà envoyé un certain nombre de réponses (%{count}) à @%{reply_username}. Saviez-vous qu'il est également possible d'échanger des messages directs avec cette personne sur notre site ?
     dont_feed_the_trolls: Ce message a déjà été signalé à l'attention du modérateur. Voulez-vous vraiment y répondre ? Les réponses à un contenu négatif ont tendance à encourager un comportement plus négatif.
     too_many_replies: |
       ### Vous avez atteint le nombre maximal de réponses dans ce sujet
@@ -1139,6 +1135,8 @@ fr:
         user_api: "API utilisateur"
       yaxis: "Jour"
       description: "Requêtes d'API pour les clés API ordinaires et les clés API de l'utilisateur."
+    consolidated_page_views_browser_detection:
+      yaxis: "Jour"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Jour"
@@ -1298,6 +1296,10 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs non connectés sur mobile"
       description: "Nombre de nouvelles vues de pages par les utilisateurs anonymes depuis des appareils mobiles."
+    page_view_anon_browser_reqs:
+      xaxis: "Jour"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Jour"
     http_background_reqs:
       title: "Arrière-plan"
       xaxis: "Jour"
@@ -1423,7 +1425,6 @@ fr:
     force_https_warning: "Votre site Web utilise SSL. Mais l'option « <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a> » n'est pas encore activée dans les paramètres du site."
     out_of_date_themes: "Des mises à jour sont disponibles pour les thèmes suivants :"
     unreachable_themes: "Nous n'avons pas pu vérifier les mises à jour pour les thèmes suivants :"
-    watched_word_regexp_error: "L'expression régulière pour détecter des mots suivis et déclencher l'action « %{action} » n'est pas valide. Veuillez vérifier la <a href='%{base_path}/admin/customize/watched_words'>configuration des mots surveillés</a> ou désactiver le paramètre « watched words regular expressions »."
     v3_analytics_deprecated: "Votre Discourse utilise actuellement Google Analytics 3, qui ne sera plus pris en charge après le mois de juillet 2023. <a href='https://meta.discourse.org/t/260498'>Passez à Google Analytics 4</a> dès maintenant pour continuer à recevoir des informations et des analyses précieuses sur les performances de votre site Web."
     category_style_deprecated: "Votre Discourse utilise actuellement un style de catégorie obsolète qui sera supprimé avant la version bêta finale de Discourse 3.2. Veuillez vous référer à <a href='https://meta.discourse.org/t/282441'>Passage à un paramètre de site de style de catégorie unique</a> pour obtenir des instructions sur la façon de conserver le style de catégorie sélectionné."
   site_settings:
@@ -1532,7 +1533,6 @@ fr:
     summarization_strategy: "Autres moyens de résumer le contenu enregistré par les extensions"
     custom_summarization_allowed_groups: "Groupes autorisés à résumer le contenu à l'aide de la « summarization_strategy »."
     enable_personal_messages: "OBSOLÈTE, utilisez plutôt le paramètre « Groupes activés par messages personnels ». Autorisez les utilisateurs de niveau de confiance 1 (configurable via une confiance minimale pour envoyer des messages) à créer des messages et à y répondre. Notez que les responsables peuvent toujours envoyer des messages quoi qu'il arrive."
-    personal_message_enabled_groups: "Autorisez les utilisateurs de ces groupes à créer des messages et à y répondre. Les groupes de niveaux de confiance incluent tous les niveaux de confiance supérieurs à ce nombre. Par exemple, le fait de choisir trust_level_1 permet également aux utilisateurs des niveaux trust_level_2, 3, 4 d'envoyer des messages directs. Notez que le personnel peut toujours envoyer des messages quoi qu'il arrive."
     enable_system_message_replies: "Permettre aux utilisateurs de répondre aux messages système, même si les messages directs sont désactivés."
     enable_chunked_encoding: "Activer les réponses d'encodage par bloc par le serveur. Cette fonctionnalité fonctionne dans la plupart des configurations, mais certains proxys peuvent mettre les réponses en mémoire tampon et risquent donc de les retarder"
     long_polling_base_url: "Racine de l'URL utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode « origin pull »). Par exemple : http://origin.site.com"
@@ -1592,7 +1592,6 @@ fr:
     content_security_policy_report_only: "Activer Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Activer la collecte des rapports de violation CSP sur la page /csp_reports"
     content_security_policy_frame_ancestors: "Limiter les parties autorisées à intégrer ce site dans une iframe par le biais de l'attribut « csp ». Appliquer les restrictions d'hôtes définies dans la page <a href='%{base_path}/admin/customize/embedding'>Intégration externe</a>."
-    content_security_policy_script_src: "Sources de script supplémentaires autorisées. L'hôte actuel et le CDN sont inclus par défaut. Voir <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Empêcher les attaques XSS avec Content Security Policy.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Les comptes administrateurs qui n'ont pas visité le site depuis ce nombre de jours devront revalider leur adresse e-mail avant de se connecter. Mettre à 0 pour désactiver."
     include_secure_categories_in_tag_counts: "Lorsque cette option est activée, le nombre de sujets pour une étiquette inclut les sujets appartenant à des catégories dont la lecture est limitée pour tous les utilisateurs. Lorsque cette option est désactivée, les utilisateurs normaux ne voient apparaître que le nombre de sujets pour une étiquette dont tous les sujets se trouvent dans des catégories publiques."
     display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages personnels marqués d'une étiquette donnée s'affiche."
@@ -1794,28 +1793,19 @@ fr:
     edit_all_topic_groups: "Autoriser les utilisateurs de ce groupe à modifier les titres, les étiquettes et les catégories des autres utilisateurs"
     edit_all_post_groups: "Autoriser les utilisateurs de ce groupe à modifier les messages des autres utilisateurs"
     min_trust_to_create_topic: "Le niveau de confiance minimal pour créer un nouveau sujet."
-    create_topic_allowed_groups: "Groupes autorisés à créer de nouveaux sujets."
     allow_flagging_staff: "Si cette option est activée, les utilisateurs peuvent signaler les messages des responsables."
     min_trust_to_edit_wiki_post: "Le niveau de confiance minimal requis pour modifier les messages de type wiki."
-    edit_wiki_post_allowed_groups: "Groupes autorisés à modifier les publications marquées comme wiki."
     min_trust_to_edit_post: "Le niveau de confiance minimal requis pour modifier des messages."
-    edit_post_allowed_groups: "Groupes autorisés à modifier les messages."
     min_trust_to_allow_self_wiki: "Le niveau de confiance minimal requis pour transformer ses propres messages en type wiki."
-    self_wiki_allowed_groups: "Groupes dans lesquels les utilisateurs peuvent créer leur propre wiki de publication."
     min_trust_to_send_messages: "OBSOLÈTE, utilisez plutôt le paramètre « Groupes activés par messages directs ». Le niveau de confiance minimal requis pour créer de nouveaux messages directs."
     min_trust_to_send_email_messages: "Le niveau de confiance minimal pour envoyer un message privé par e-mail."
-    send_email_messages_allowed_groups: "Groupes autorisés à envoyer des messages personnels par e-mail."
     min_trust_to_flag_posts: "Le niveau de confiance minimal requis pour signaler des messages"
-    flag_post_allowed_groups: "Groupes autorisés à signaler des messages."
     min_trust_to_post_links: "Le niveau de confiance minimal requis pour inclure des liens dans les messages"
     min_trust_to_post_embedded_media: "Le niveau de confiance minimal requis pour intégrer des éléments multimédia dans un message"
     min_trust_level_to_allow_profile_background: "Le niveau de confiance minimal requis pour envoyer un arrière-plan de profil"
     min_trust_level_to_allow_user_card_background: "Le niveau de confiance minimal requis pour envoyer un arrière-plan de carte utilisateur"
-    user_card_background_allowed_groups: "Groupes autorisés à téléverser un arrière-plan de carte utilisateur."
     min_trust_level_to_allow_invite: "Le niveau de confiance minimal requis pour inviter des utilisateurs"
-    invite_allowed_groups: "Groupes autorisés à inviter des utilisateurs."
     min_trust_level_to_allow_ignore: "Le niveau de confiance minimal requis pour ignorer les utilisateurs"
-    ignore_allowed_groups: "Groupes autorisés à ignorer les autres utilisateurs."
     allowed_link_domains: "Domaines vers lesquels les utilisateurs peuvent créer des liens, même s'ils n'ont pas le niveau de confiance suffisant pour publier des liens."
     newuser_max_links: "Combien de liens un nouvel utilisateur peut-il ajouter à un message."
     newuser_max_embedded_media: "Combien de médias un nouvel utilisateur peut-il ajouter à un message."
@@ -1827,7 +1817,6 @@ fr:
     here_mention: "Nom d'une @mention permettant aux utilisateurs privilégiés d'envoyer une notification à chaque participant à un sujet, avec une limite de « max_here_mentioned » notifications envoyées. Doit être distinct de tout nom d'utilisateur existant."
     max_here_mentioned: "Nombre maximal de personnes recevant une notification lorsque la mention @here est utilisée."
     min_trust_level_for_here_mention: "Niveau de confiance minimal requis pour utiliser la mention @here."
-    here_mention_allowed_groups: "Groupes autorisés à mentionner @ici."
     create_thumbnails: "Créer un aperçu et une visionneuse pour les images qui sont trop grandes pour le message."
     email_time_window_mins: "Attendre (n) minutes avant l'envoi des e-mails de notification, afin de laisser une chance aux utilisateurs de modifier ou de finaliser leurs messages."
     personal_email_time_window_seconds: "Attendre (n) secondes avant d'envoyer des e-mails de notification directs, afin de donner aux utilisateurs la possibilité de modifier et de finaliser leurs messages."
@@ -1943,7 +1932,6 @@ fr:
     log_mail_processing_failures: "Enregistrer tous les problèmes d'e-mail dans <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Autoriser les utilisateurs à publier de nouveaux sujets par e-mail. Après avoir activé ce paramètre, vous pourrez configurer les adresses e-mail entrantes pour les groupes et les catégories."
     email_in_min_trust: "Le niveau de confiance minimal qu'un utilisateur doit avoir pour être autorisé à créer de nouveaux sujets par e-mail."
-    email_in_allowed_groups: "Groupes autorisés à publier de nouveaux sujets par e-mail."
     email_in_authserv_id: "L'identifiant du service vérifiant l'authentification des e-mails entrants. Voir <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> pour obtenir plus d'informations."
     enable_imap: "Activer IMAP pour synchroniser les messages de groupes."
     enable_imap_write: "Activer la synchronisation IMAP bidirectionnelle. Si elle est désactivée, toutes les opérations d'écriture sur les comptes IMAP sont désactivées."
@@ -2051,7 +2039,6 @@ fr:
     embed_username_required: "Un nom d'utilisateur est nécessaire pour la création du sujet."
     notify_about_reviewable_item_after: "Si certains éléments susceptibles d'être révisés n'ont pas été traités après ces nombreuses heures, envoyez un message personnel aux modérateurs. Réglez l'option sur 0 pour la désactiver."
     delete_merged_stub_topics_after_days: "Délai (en jours) de suppression automatique des sujets fusionnés, c'est-à-dire les sujets sans réponses résultant de la fusion de deux sujets par déplacement de messages. Si la valeur est fixée à 0, les sujets fusionnés ne seront pas supprimés."
-    bootstrap_mode_min_users: "Nombre minimal d'utilisateurs requis pour désactiver le mode bootstrap (définissez l'option sur 0 pour la désactiver, cela peut prendre jusqu'à 24 heures)"
     prevent_anons_from_downloading_files: "Empêcher les utilisateurs anonymes de télécharger les pièces jointes."
     secure_uploads: 'Limite l''accès à TOUS les fichiers envoyés (image, vidéo, audio, texte, PDF, ZIP, etc.). Si le paramètre « connexion requise » est activé, seuls les utilisateurs connectés peuvent accéder aux fichiers envoyés. Sinon, l''accès sera limité uniquement aux contenus multimédias des messages et catégories privés. ATTENTION : ce paramètre est complexe et nécessite des connaissances d''administration approfondies. Consultez <a target="_blank" href="https://meta.discourse.org/t/-/140017">ce sujet sur les téléversements sécurisés</a> pour en savoir plus.'
     secure_uploads_allow_embed_images_in_emails: "Autorise l'intégration d'images sécurisées (qui seraient autrement expurgées) dans les e-mails, si leur taille est inférieure à la valeur du paramètre « secure uploads max email embed image size kb »."
@@ -2126,7 +2113,6 @@ fr:
     revoke_user_api_keys_unused_days: "Nombre de jours écoulés depuis la dernière utilisation d'une clé API utilisateur avant qu'elle soit automatiquement révoquée (0 pour jamais)"
     revoke_user_api_keys_maxlife_days: "Nombre de jours avant qu'une clé API utilisateur soit automatiquement révoquée (0 pour jamais)"
     min_trust_to_create_tag: "Le niveau de confiance minimal requis pour créer une étiquette."
-    create_tag_allowed_groups: "Groupes autorisés à créer des étiquettes."
     max_tags_per_topic: "Le nombre maximal d'étiquettes pouvant être ajoutées à un sujet."
     enable_max_tags_per_email_subject: "Utiliser max_tags_per_email_subject lors de la génération de l'objet d'un e-mail"
     max_tags_per_email_subject: "Le nombre maximal d'étiquettes pouvant figurer dans l'objet d'un e-mail"
@@ -2135,7 +2121,6 @@ fr:
     max_tags_in_filter_list: "Nombre maximal d'étiquettes à afficher dans la liste déroulante des filtres. Les étiquettes les plus utilisées seront affichées."
     tags_sort_alphabetically: "Afficher les étiquettes par ordre alphabétique. Par défaut, elles sont affichées par ordre de popularité."
     tags_listed_by_group: "Lister les étiquettes par groupe d'étiquettes sur la <a href='%{base_path}/tags' target='_blank'>page Étiquettes</a>."
-    pm_tags_allowed_for_groups: "Autoriser les membres du ou des groupes inclus à étiqueter tout message personnel"
     min_trust_level_to_tag_topics: "Niveau de confiance minimal requis pour étiqueter des sujets"
     suppress_overlapping_tags_in_list: "Si des étiquettes correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces étiquettes"
     remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des étiquettes mises en sourdine dans la liste des sujets récents."
@@ -2191,8 +2176,6 @@ fr:
       must_include_latest: "Le menu du haut doit contenir l'onglet « Récents »."
       invalid_string: "Valeur invalide."
       invalid_string_min_max: "La chaîne de caractères doit contenir entre %{min} et %{max} caractères."
-      invalid_string_min: "La chaîne de caractères doit contenir au moins %{min} caractères."
-      invalid_string_max: "La chaîne de caractères doit contenir au plus %{max} caractères."
       invalid_json: "Données JSON non valides."
       invalid_reply_by_email_address: "La valeur doit contenir « %{reply_key} » et être différente de l'e-mail de notification."
       invalid_alternative_reply_by_email_addresses: "Toutes les valeurs doivent contenir « %{reply_key} » et être différentes de l'e-mail de notification."
@@ -2225,7 +2208,6 @@ fr:
         regex_invalid: "L'expression régulière n'est pas valide : %{error}"
         leading_trailing_slash: "L'expression régulière ne doit pas commencer et se terminer par une barre oblique."
       unicode_usernames_avatars: "Les avatars du système n'acceptent pas les noms d'utilisateurs contenant des caractères Unicode."
-      list_value_count: "La liste doit contenir exactement %{count} valeurs."
       markdown_linkify_tlds: "Vous ne pouvez pas inclure la valeur « * »."
       google_oauth2_hd_groups: "Vous devez configurer tous les paramètres « google oauth2 HD » avant d'activer ce paramètre."
       search_tokenize_chinese_enabled: "Pour activer ce paramètre, vous devez d'abord désactiver « search_tokenize_chinese »."
@@ -2253,6 +2235,14 @@ fr:
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "inactif"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "inactif"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2452,8 +2442,6 @@ fr:
     new_user_typed_too_fast: "Le nouvel utilisateur écrivait trop rapidement"
     content_matches_auto_silence_regex: "Le contenu correspond à l'expression régulière de mise en sourdine automatique"
     username:
-      short: "doit contenir au moins %{min} caractères"
-      long: "ne doit pas contenir plus de %{max} caractères"
       too_long: "est trop long"
       characters: "doit uniquement contenir des chiffres, lettres, points, tirets et tirets bas."
       unique: "doit être unique"
@@ -2622,35 +2610,9 @@ fr:
   new_version_mailer:
     title: "Nouvelle version"
     subject_template: "[%{email_prefix}] Nouvelle version de Discourse, mise à jour disponible"
-    text_body_template: |
-      Hourra, une nouvelle version de [Discourse](https://www.discourse.org) est disponible !
-
-      Votre version : %{installed_version}
-      Nouvelle version : **%{new_version}**
-
-      - Effectuez facilement la mise à jour depuis votre navigateur en utilisant la **[mise à jour en 1 clic](%{base_url}/admin/upgrade)**
-
-      - Découvrez les nouveautés en consultant les [notes de version](https://meta.discourse.org/tag/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Rendez vous sur [meta.discourse.org](https://meta.discourse.org) pour consulter des actualités, des discussions et obtenir de l'aide concernant Discourse
   new_version_mailer_with_notes:
     title: "Nouvelle version avec notes de modifications"
     subject_template: "[%{email_prefix}] Mise à jour disponible"
-    text_body_template: |
-      Hourra, une nouvelle version de [Discourse](https://www.discourse.org) est disponible !
-
-      Votre version : %{installed_version}
-      Nouvelle version : **%{new_version}**
-
-      - Effectuez facilement la mise à jour depuis votre navigateur en utilisant la **[mise à jour en 1 clic](%{base_url}/admin/upgrade)**
-
-      - Découvrez les nouveautés en consultant les [notes de version](https://meta.discourse.org/tag/release-notes) ou l'[historique GitHub](https://github.com/discourse/discourse/commits/main)
-
-      - Rendez vous sur [meta.discourse.org](https://meta.discourse.org) pour consulter des actualités, des discussions et obtenir de l'aide concernant Discourse
-
-      ### Notes de version
-
-      %{notes}
   flag_reasons:
     off_topic: "Votre message a été signalé comme étant **hors sujet** : la communauté considère qu'il ne correspond pas au sujet en question qui est défini par son titre et son premier message."
     inappropriate: "Votre message a été signalé comme étant **inapproprié** : la communauté estime qu'il est offensant, abusif, qu'il s'agit d'un comportement haineux ou qu'il enfreint notre [charte communautaire](%{base_path}/directives)."
@@ -4175,7 +4137,6 @@ fr:
     mass_award:
       errors:
         invalid_csv: Une erreur s'est produite à la ligne %{line_number}. Veuillez confirmer que le fichier CSV contient une adresse e-mail par ligne.
-        too_many_csv_entries: Trop de lignes dans le fichier CSV. Veuillez fournir un fichier CSV contenant un maximum de %{count} lignes.
         badge_disabled: Veuillez préalablement activer le badge %{badge_name}.
         cant_grant_multiple_times: Impossible d'attribuer le badge %{badge_name} plusieurs fois à un même utilisateur.
     editor:

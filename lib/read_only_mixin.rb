@@ -32,6 +32,16 @@ module ReadOnlyMixin
     end
   end
 
+  def get_or_check_readonly_mode
+    check_readonly_mode if @readonly_mode.nil?
+    @readonly_mode
+  end
+
+  def get_or_check_staff_writes_only_mode
+    check_readonly_mode if @staff_writes_only_mode.nil?
+    @staff_writes_only_mode
+  end
+
   def add_readonly_header
     response.headers["Discourse-Readonly"] = "true" if @readonly_mode
   end
@@ -42,6 +52,7 @@ module ReadOnlyMixin
 
   def block_if_readonly_mode
     return if request.fullpath.start_with?(path "/admin/backups")
+    return if request.fullpath.start_with?(path "/categories/search")
     return if request.get? || request.head?
 
     if @staff_writes_only_mode

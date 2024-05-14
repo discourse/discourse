@@ -43,9 +43,7 @@ RSpec.describe Chat::UpdateMessage do
       SiteSetting.chat_duplicate_message_sensitivity = 0
       Jobs.run_immediately!
 
-      [admin1, admin2, user1, user2, user3, user4].each do |user|
-        Fabricate(:user_chat_channel_membership, chat_channel: public_chat_channel, user: user)
-      end
+      [admin1, admin2, user1, user2, user3, user4].each { |user| public_chat_channel.add(user) }
     end
 
     def create_chat_message(user, message, channel, upload_ids: nil)
@@ -66,12 +64,7 @@ RSpec.describe Chat::UpdateMessage do
       new_message = "2 short"
 
       expect do
-        update =
-          described_class.call(
-            guardian: guardian,
-            message_id: chat_message.id,
-            message: new_message,
-          )
+        described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
       end.to raise_error(ActiveRecord::RecordInvalid).with_message(
         "Validation failed: " +
           I18n.t(
@@ -137,12 +130,46 @@ RSpec.describe Chat::UpdateMessage do
       expect(chat_message.reload.message).to eq(new_message)
     end
 
+    it "cleans message's content" do
+      chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
+      new_message = "bbbbb\n"
+
+      described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
+      expect(chat_message.reload.message).to eq("bbbbb")
+    end
+
+    context "when strip_whitespaces is disabled" do
+      it "doesn't remove new lines" do
+        chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
+        new_message = "bbbbb\n"
+
+        described_class.call(
+          guardian: guardian,
+          message_id: chat_message.id,
+          message: new_message,
+          strip_whitespaces: false,
+        )
+        expect(chat_message.reload.message).to eq("bbbbb\n")
+      end
+    end
+
     it "cooks the message" do
       chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
       new_message = "Change **to** this!"
 
       described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
       expect(chat_message.reload.cooked).to eq("<p>Change <strong>to</strong> this!</p>")
+    end
+
+    it "updates the excerpt" do
+      chat_message = create_chat_message(user1, "This is a message", public_chat_channel)
+
+      described_class.call(
+        guardian: guardian,
+        message_id: chat_message.id,
+        message: "Change to this!",
+      )
+      expect(chat_message.reload.excerpt).to eq("Change to this!")
     end
 
     it "publishes a DiscourseEvent for updated messages" do
@@ -423,11 +450,7 @@ RSpec.describe Chat::UpdateMessage do
 
         it "doesn't notify the second time users that has already been notified when creating the message" do
           group_user = Fabricate(:user)
-          Fabricate(
-            :user_chat_channel_membership,
-            chat_channel: public_chat_channel,
-            user: group_user,
-          )
+          public_chat_channel.add(group_user)
           group =
             Fabricate(
               :public_group,
@@ -454,7 +477,7 @@ RSpec.describe Chat::UpdateMessage do
       describe "with @here mentions" do
         it "doesn't notify the second time users that has already been notified when creating the message" do
           user = Fabricate(:user)
-          Fabricate(:user_chat_channel_membership, chat_channel: public_chat_channel, user: user)
+          public_chat_channel.add(user)
           user.update!(last_seen_at: 4.minutes.ago)
 
           chat_message = create_chat_message(user1, "Mentioning @here", public_chat_channel)
@@ -475,7 +498,7 @@ RSpec.describe Chat::UpdateMessage do
       describe "with @all mentions" do
         it "doesn't notify the second time users that has already been notified when creating the message" do
           user = Fabricate(:user)
-          Fabricate(:user_chat_channel_membership, chat_channel: public_chat_channel, user: user)
+          public_chat_channel.add(user)
 
           chat_message = create_chat_message(user1, "Mentioning @all", public_chat_channel)
           notification_id = user.notifications.first.id
@@ -499,8 +522,7 @@ RSpec.describe Chat::UpdateMessage do
       old_message = "It's a thrsday!"
       new_message = "Today is Thursday, it's almost the weekend already!"
       chat_message = create_chat_message(user1, old_message, public_chat_channel)
-      updater =
-        described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
+      described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
 
       revision = chat_message.revisions.last
       expect(revision.old_message).to eq(old_message)
@@ -740,6 +762,9 @@ RSpec.describe Chat::UpdateMessage do
 
     describe "watched words" do
       fab!(:watched_word)
+      let!(:censored_word) do
+        Fabricate(:watched_word, word: "test", action: WatchedWord.actions[:censor])
+      end
 
       it "errors when a blocked word is present" do
         chat_message = create_chat_message(user1, "something", public_chat_channel)
@@ -754,6 +779,18 @@ RSpec.describe Chat::UpdateMessage do
         end.to raise_error(ActiveRecord::RecordInvalid).with_message(msg)
 
         expect(chat_message.reload.message).not_to eq("bad word - #{watched_word.word}")
+      end
+
+      it "hides censored word within the excerpt" do
+        chat_message = create_chat_message(user1, "something", public_chat_channel)
+
+        described_class.call(
+          guardian: guardian,
+          message_id: chat_message.id,
+          message: "bad word - #{censored_word.word}",
+        )
+
+        expect(chat_message.reload.excerpt).to eq("bad word - ■■■■")
       end
     end
 
@@ -837,6 +874,8 @@ RSpec.describe Chat::UpdateMessage do
       SiteSetting.chat_editing_grace_period = 10
       SiteSetting.chat_editing_grace_period_max_diff_low_trust = 10
       SiteSetting.chat_editing_grace_period_max_diff_high_trust = 40
+
+      channel_1.add(current_user)
     end
 
     context "when all steps pass" do
@@ -877,6 +916,15 @@ RSpec.describe Chat::UpdateMessage do
         Jobs::Chat::ProcessMessage.any_instance.expects(:execute).once
         expect_not_enqueued_with(job: Jobs::Chat::ProcessMessage) { result }
       end
+
+      context "when user is a bot" do
+        fab!(:bot) { Discourse.system_user }
+        let(:guardian) { Guardian.new(bot) }
+
+        it "creates the membership" do
+          expect { result }.to change { channel_1.membership_for(bot) }.from(nil).to(be_present)
+        end
+      end
     end
 
     context "when params are not valid" do
@@ -891,10 +939,10 @@ RSpec.describe Chat::UpdateMessage do
       it { is_expected.to fail_a_policy(:can_modify_channel_message) }
     end
 
-    context "when user can't modify this message" do
+    context "when user is not member of the channel" do
       let(:message_id) { Fabricate(:chat_message).id }
 
-      it { is_expected.to fail_a_policy(:can_modify_message) }
+      it { is_expected.to fail_to_find_a_model(:membership) }
     end
 
     context "when edit grace period" do

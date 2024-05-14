@@ -121,6 +121,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :post_strippers
 
+  define_filtered_register :problem_checks
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end

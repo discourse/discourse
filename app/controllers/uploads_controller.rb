@@ -25,6 +25,13 @@ class UploadsController < ApplicationController
     # capture current user for block later on
     me = current_user
 
+    RateLimiter.new(
+      current_user,
+      "uploads-per-minute",
+      SiteSetting.max_uploads_per_minute,
+      1.minute.to_i,
+    ).performed!
+
     params.permit(:type, :upload_type)
     raise Discourse::InvalidParameters if params[:type].blank? && params[:upload_type].blank?
     # 50 characters ought to be enough for the upload type

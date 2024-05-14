@@ -11,7 +11,7 @@ RSpec.describe UsersController do
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
 
-  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:moderator)
   fab!(:inactive_user)
 
@@ -1739,7 +1739,7 @@ RSpec.describe UsersController do
         body = response.parsed_body
 
         expect(body["errors"].first).to include(
-          I18n.t("user.username.short", min: User.username_length.begin),
+          I18n.t("user.username.short", count: User.username_length.begin),
         )
 
         expect(user.reload.username).to eq(old_username)
@@ -1893,7 +1893,7 @@ RSpec.describe UsersController do
       it 'should return the "too long" message' do
         expect(response.status).to eq(200)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t(:"user.username.long", max: SiteSetting.max_username_length),
+          I18n.t(:"user.username.long", count: SiteSetting.max_username_length),
         )
       end
     end
@@ -4542,12 +4542,19 @@ RSpec.describe UsersController do
         expect(parsed["trust_level"]).to be_blank
       end
 
-      it "should redirect to login page for anonymous user when profiles are hidden" do
+      it "should 403 for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}.json"
         expect(response).to have_http_status(:forbidden)
         get "/u/#{user.username}/messages.json"
         expect(response).to have_http_status(:forbidden)
+      end
+
+      it "should 403 correctly for crawlers when profiles are hidden" do
+        SiteSetting.hide_user_profiles_from_public = true
+        get "/u/#{user.username}", headers: { "User-Agent" => "Googlebot" }
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to have_tag("body.crawler")
       end
 
       describe "user profile views" do
@@ -6624,7 +6631,7 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
-    it "returns an error if the the current user does not have access" do
+    it "returns an error if the current user does not have access" do
       sign_in(user1)
       topic.update(user_id: another_user.id)
       put "/u/#{another_user.username}/clear-featured-topic.json"

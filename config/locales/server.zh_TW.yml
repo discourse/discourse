@@ -117,7 +117,8 @@ zh_TW:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>：%{message}"
     messages:
-      too_long_validation: "限制 %{max} 個字元，你已經輸入了 %{length} 個字元"
+      too_long_validation:
+        other: "限制 %{count} 個字元，你已經輸入了 %{length} 個字元"
       invalid_boolean: "無效的真假值。"
       taken: "已經被採用"
       accepted: 必須被接受
@@ -805,6 +806,8 @@ zh_TW:
         api: "API"
         user_api: "使用者 API"
       yaxis: "天"
+    consolidated_page_views_browser_detection:
+      yaxis: "天"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "天"
@@ -963,6 +966,10 @@ zh_TW:
       xaxis: "天"
       yaxis: "移動端未登錄頁面訪問"
       description: "來自未登入且使用行動裝置的訪客新的頁面瀏覽次數。"
+    page_view_anon_browser_reqs:
+      xaxis: "天"
+    page_view_logged_in_browser_reqs:
+      xaxis: "天"
     http_background_reqs:
       title: "後台"
       xaxis: "天"
@@ -1509,8 +1516,10 @@ zh_TW:
       must_include_latest: "頂級菜單必須包括“最新”標籤。"
       invalid_string: "無效的值。"
       invalid_string_min_max: "必須介於 %{min} 到 %{max} 字之間。"
-      invalid_string_min: "必須至少 %{min} 個字。"
-      invalid_string_max: "不能超過 %{max} 個字。"
+      invalid_string_min:
+        other: "必須至少 %{count} 個字."
+      invalid_string_max:
+        other: "不能超過 %{count} 個字."
       invalid_reply_by_email_address: "值必須包含 '%{reply_key}' 並且要與通知郵件不同。"
       invalid_alternative_reply_by_email_addresses: "必須包括 “%{reply_key}” 並與通知郵件地址不同。"
       pop3_polling_host_is_empty: "在啟用 POP3 輪詢前，你必須設置 'pop3 polling host'。"
@@ -1533,6 +1542,15 @@ zh_TW:
         regex_invalid: "正則表達式無效：%{error}"
         leading_trailing_slash: "正則表達式不能以斜杠（/）開頭和結尾"
       unicode_usernames_avatars: "內部系統頭像不支援Unicode使用者名稱"
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "不活躍"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "不活躍"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.範例.com"
@@ -1650,8 +1668,10 @@ zh_TW:
     activated_by_staff: "已由管理員啟動"
     new_user_typed_too_fast: "新的使用者輸入太快"
     username:
-      short: "必須至少 %{min} 個字"
-      long: "不能超過 %{max} 個字"
+      short:
+        other: "必須至少 %{count} 個字"
+      long:
+        other: "不能超過 %{count} 個字"
       too_long: "過長"
       unique: "必須是唯一的"
       blank: "必須存在"
@@ -1779,21 +1799,6 @@ zh_TW:
   new_version_mailer_with_notes:
     title: "包含提醒的新版本 Mailer"
     subject_template: "[%{email_prefix}] 有得更新了"
-    text_body_template: |
-      好耶，[Discourse](https://www.discourse.org) 有新版本了！
-
-      您的版本：%{installed_version}
-      新版本：**%{new_version}**
-
-      - 使用我們的**[一鍵瀏覽器升級](%{base_url}/admin/upgrade)**來輕鬆升級
-
-      - 閱讀[版本資訊](https://meta.discourse.org/tag/release-notes)以了解有什麼新功能，或查看 [GitHub 原始變更日誌](https://github.com/discourse/discourse/commits/main)
-
-      - 前往 [meta.discourse.org](https://meta.discourse.org) 以查看新聞，參與討論，或取得支援。
-
-      ### 版本資訊
-
-      %{notes}
   flag_reasons:
     off_topic: "你的貼文被標記為 **偏離主題**：鑒於當前的主題標題和第一個貼文，社群成員們感覺它不適合處于這個主題中。"
     spam: "你的貼文被標記為 **廣告**：社群成員覺得它是廣告，像是在過度地推廣着什麼，而不是預期中與主題有關的內容。"

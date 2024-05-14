@@ -17,7 +17,7 @@ import JumpToPost from "discourse/components/modal/jump-to-post";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { BookmarkFormData } from "discourse/lib/bookmark";
+import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
@@ -172,11 +172,10 @@ export default Controller.extend(bufferedProperty("model"), {
 
   _showRevision(postNumber, revision) {
     const post = this.model.get("postStream").postForPostNumber(postNumber);
-    if (!post) {
-      return;
-    }
 
-    schedule("afterRender", () => this.send("showHistory", post, revision));
+    if (post && post.version > 1 && post.can_view_edit_history) {
+      schedule("afterRender", () => this.send("showHistory", post, revision));
+    }
   },
 
   showCategoryChooser: not("model.isPrivateMessage"),
@@ -515,7 +514,7 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    // Called the the bottommost visible post on the page changes.
+    // Called the bottommost visible post on the page changes.
     bottomVisibleChanged(event) {
       const { post, refresh } = event;
 
@@ -840,6 +839,16 @@ export default Controller.extend(bufferedProperty("model"), {
 
       if (editingSharedDraft) {
         opts.destinationCategoryId = topic.get("destination_category_id");
+      }
+
+      // Reopen the composer if we're editing the same post
+      const editingExisting =
+        post.id === composerModel?.post?.id &&
+        opts?.action === Composer.EDIT &&
+        composerModel?.draftKey === opts.draftKey;
+      if (editingExisting) {
+        composer.unshrink();
+        return;
       }
 
       // Cancel and reopen the composer for the first post
@@ -1282,14 +1291,14 @@ export default Controller.extend(bufferedProperty("model"), {
     this.modal.show(BookmarkModal, {
       model: {
         bookmark: new BookmarkFormData(bookmark),
-        afterSave: (savedData) => {
-          this._syncBookmarks(savedData);
+        afterSave: (bookmarkFormData) => {
+          this._syncBookmarks(bookmarkFormData.saveData);
           this.model.set("bookmarking", false);
           this.model.set("bookmarked", true);
           this.model.incrementProperty("bookmarksWereChanged");
           this.appEvents.trigger(
             "bookmarks:changed",
-            savedData,
+            bookmarkFormData.saveData,
             bookmark.attachedTo()
           );
         },

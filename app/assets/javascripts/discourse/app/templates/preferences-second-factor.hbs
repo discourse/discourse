@@ -146,10 +146,13 @@
                 @label="user.second_factor.disable_all"
                 class="btn-danger"
               />
-              <CancelLink
+              <LinkTo
                 @route="preferences.security"
-                @args={{this.model.username}}
-              />
+                @model={{this.model.username}}
+                class="cancel"
+              >
+                {{i18n "cancel"}}
+              </LinkTo>
             </div>
           </div>
         {{/unless}}

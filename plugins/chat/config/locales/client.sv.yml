@@ -563,6 +563,7 @@ sv:
       flags:
         off_topic: "Det här meddelandet är inte relevant för den aktuella diskussionen enligt kanaltiteln och bör förmodligen flyttas någon annanstans."
         inappropriate: "Detta meddelande innehåller saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href=\"%{basePath}/guidelines\">vårt forums riktlinjer</a>."
+        illegal: "Det här inlägget kräver personalens uppmärksamhet eftersom jag tror att det innehåller innehåll som är olagligt."
         spam: "Det här meddelandet är en annons eller vandalism. Det är inte lämpligt eller relevant med avseende på den aktuella kanalen."
         notify_user: "Jag vill prata med den här personen direkt och privat om meddelandet."
         notify_moderators: "Detta meddelande kräver personalens uppmärksamhet av en annan anledning som inte anges ovan."

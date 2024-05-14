@@ -36,7 +36,6 @@ export default class ChatChannelSubscriptionManager {
 
   teardown() {
     this.messageBus.unsubscribe(this.messageBusChannel, this.onMessage);
-    this.modelId = null;
   }
 
   @bind
@@ -194,7 +193,7 @@ export default class ChatChannelSubscriptionManager {
     if (message) {
       message.deletedAt = null;
     } else {
-      const newMessage = ChatMessage.create(this.model, data.chat_message);
+      const newMessage = ChatMessage.create(this.channel, data.chat_message);
       newMessage.manager = this.messagesManager;
       this.messagesManager.addMessages([newMessage]);
     }
@@ -235,7 +234,11 @@ export default class ChatChannelSubscriptionManager {
   handleThreadOriginalMessageUpdate(data) {
     const message = this.messagesManager.findMessage(data.original_message_id);
     if (message?.thread) {
-      message.thread.preview = ChatThreadPreview.create(data.preview);
+      if (message.thread.preview) {
+        message.thread.preview.update(data.preview);
+      } else {
+        message.thread.preview = ChatThreadPreview.create(data.preview);
+      }
     }
   }
 }

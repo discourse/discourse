@@ -185,11 +185,9 @@ RSpec.describe CookedPostProcessor do
              - #{url_with_query_param}
           RAW
 
-        let(:staff_post) do
-          Fabricate(:post, user: Fabricate(:admin, refresh_auto_groups: true), raw: <<~RAW)
+        let(:staff_post) { Fabricate(:post, user: Fabricate(:admin), raw: <<~RAW) }
           This is a #{url_with_path} topic
           RAW
-        end
 
         before do
           urls.each do |url|
@@ -1162,7 +1160,7 @@ RSpec.describe CookedPostProcessor do
         Oneboxer.unstub(:onebox)
       end
 
-      context "when the post is with_secure_uploads and the upload is secure and secure uploads is enabled" do
+      context "when the post is should_secure_uploads and the upload is secure and secure uploads is enabled" do
         before do
           setup_s3
           upload.update(secure: true)

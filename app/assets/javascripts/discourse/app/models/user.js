@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/application";
 import { A } from "@ember/array";
 import EmberObject, { computed, get, getProperties } from "@ember/object";
@@ -130,6 +131,7 @@ let userOptionFields = [
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
   "watched_precedence_over_muted",
+  "topics_unread_when_closed",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -174,6 +176,9 @@ export default class User extends RestModel.extend(Evented) {
   @service appEvents;
   @service userTips;
 
+  @tracked do_not_disturb_until;
+  @tracked status;
+
   @userOption("mailing_list_mode") mailing_list_mode;
   @userOption("external_links_in_new_tab") external_links_in_new_tab;
   @userOption("enable_quoting") enable_quoting;
@@ -205,6 +210,7 @@ export default class User extends RestModel.extend(Evented) {
   @alias("sidebar_sections") sidebarSections;
   @mapBy("sidebarTags", "name") sidebarTagNames;
   @filterBy("groups", "has_messages", true) groupsWithMessages;
+  @alias("can_pick_theme_with_custom_homepage") canPickThemeWithCustomHomepage;
 
   numGroupsToDisplay = 2;
 
@@ -978,9 +984,8 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   updateNotificationLevel({ level, expiringAt = null, actingUser = null }) {
-    if (!actingUser) {
-      actingUser = User.current();
-    }
+    actingUser ||= User.current();
+
     return ajax(`${userPath(this.username)}/notification_level.json`, {
       type: "PUT",
       data: {

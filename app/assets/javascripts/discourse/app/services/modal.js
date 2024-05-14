@@ -2,7 +2,9 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
+import { clearAllBodyScrollLocks } from "discourse/lib/body-scroll-lock";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import deprecated from "discourse-common/lib/deprecated";
 
 const LEGACY_OPTS = new Set([
@@ -38,7 +40,7 @@ export default class ModalService extends Service {
    *
    * @returns {Promise} A promise that resolves when the modal is closed, with any data passed to closeModal
    */
-  show(modal, opts) {
+  async show(modal, opts) {
     if (typeof modal === "string") {
       this.dialog.alert(
         `Error: the '${modal}' modal needs updating to work with the latest version of Discourse. See https://meta.discourse.org/t/268057.`
@@ -57,6 +59,8 @@ export default class ModalService extends Service {
     }
 
     this.close({ initiatedBy: CLOSE_INITIATED_BY_MODAL_SHOW });
+
+    await waitForClosedKeyboard(this);
 
     let resolveShowPromise;
     const promise = new Promise((resolve) => {
@@ -81,6 +85,7 @@ export default class ModalService extends Service {
   }
 
   close(data) {
+    clearAllBodyScrollLocks();
     this.activeModal?.resolveShowPromise?.(data);
     this.activeModal = null;
     this.opts = {};

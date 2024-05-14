@@ -68,8 +68,6 @@ ro:
       number_value_not_valid_min: "Valoarea trebuie să fie mai mare sau egală cu %{min}."
       number_value_not_valid_max: "Valoarea trebuie să fie mai mică sau egală cu %{max}."
       string_value_not_valid_min_max: "Valoarea trebuie să aibă o lungime cuprinsă între %{min} și %{max} caractere."
-      string_value_not_valid_min: "Valoarea trebuie să aibă cel puțin %{min} caractere."
-      string_value_not_valid_max: "Valoarea trebuie să aibă cel mult %{max} caractere."
       objects:
         humanize_required: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie prezentă."
         required: "trebuie să fie prezent"
@@ -85,22 +83,18 @@ ro:
         not_valid_boolean_value: "trebuie să fie un boolean"
         humanize_not_valid_enum_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie una dintre următoarele %{choices}."
         not_valid_enum_value: "trebuie să fie dintre următoarele: %{choices}"
-        humanize_not_valid_category_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de categorie."
-        not_valid_category_value: "trebuie să fie un ID de categorie valid"
+        humanize_not_valid_categories_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un vector cu ID-uri valide de categorii."
+        not_valid_categories_value: "trebuie să fie un vector cu ID-uri valide de categorii"
         humanize_not_valid_topic_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de subiect."
         not_valid_topic_value: "trebuie să fie un ID valid de subiect"
         humanize_not_valid_post_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de articol."
         not_valid_post_value: "trebuie să fie un ID valid de articol"
-        humanize_not_valid_group_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de grup."
-        not_valid_group_value: "trebuie să fie un ID valid de grup"
-        humanize_not_valid_tag_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un ID valid de etichetă."
-        not_valid_tag_value: "trebuie să fie un ID valid de etichetă"
+        humanize_not_valid_groups_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un vector cu ID-uri valide de grupuri."
+        not_valid_groups_value: "trebuie să fie un vector cu ID-uri valide de grupuri"
+        humanize_not_valid_tags_value: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie un vector cu nume de etichete valide."
+        not_valid_tags_value: "trebuie să fie un vector cu nume de etichete valide"
         humanize_not_valid_upload_value: "Proprietatea de la JSON Pointer „%{property_json_pointer}” trebuie să fie un ID valid de încărcare."
         not_valid_upload_value: "trebuie să fie un ID valid de încărcare"
-        humanize_string_value_not_valid_min: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să aibă cel puțin %{min} caractere."
-        string_value_not_valid_min: "trebuie să aibă cel puțin %{min} caractere"
-        humanize_string_value_not_valid_max: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să aibă maxim %{max} caractere."
-        string_value_not_valid_max: "trebuie să aibă cel mult %{max} caractere"
         humanize_number_value_not_valid_min: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie mai mare sau egală cu %{min}."
         number_value_not_valid_min: "trebuie să fie mai mare sau egal cu %{min}"
         humanize_number_value_not_valid_max: "Proprietatea de la pointerul JSON „%{property_json_pointer}” trebuie să fie mai mică sau egală cu %{max}."
@@ -128,7 +122,6 @@ ro:
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
-      too_long_validation: "este limitat la %{max} de caractere; ai introdus %{length}."
       invalid_boolean: "Valoare logică invalidă."
       taken: "nu este disponibil"
       accepted: trebuie acceptat
@@ -187,6 +180,7 @@ ro:
     disabled_errors:
       invalid_access: "Nu ai permisiunea să vezi această resursă."
     max_invite_emails_limit_exceeded: "Cererea a eșuat pentru că numărul de e-mailuri a depășit numărul maxim (%{max})."
+    domain_not_allowed_admin: "Acest domeniu nu poate fi folosit pentru invitații."
   bulk_invite:
     file_should_be_csv: "Fișierul de încărcat trebuie să fie în format csv."
     error: "A apărut o eroare la încărcarea acestui fișier. Te rugăm să încerci din nou, mai târziu."
@@ -220,7 +214,7 @@ ro:
       one: "Încă un răspuns"
       few: "Încă %{count} răspunsuri"
       other: "Încă %{count} de răspunsuri"
-    permalink: "Link permanent"
+    permalink: "Legătură permanentă"
     imported_from: "Acesta este un subiect de discuție adăugat la discuția originală de la %{link}"
     in_reply_to: "▶ %{username}"
     replies:
@@ -257,7 +251,9 @@ ro:
   is_invalid: "pare neclar, e completă propoziția?"
   next_page: "pagina următoare →"
   prev_page: "← pagina precedentă"
+  show_post_in_topic: "arată articolul în subiect"
   page_num: "Pagina %{num}"
+  crawler_content_hidden: "Conținutul HTML a fost omis pentru că ești conectat sau utilizezi un dispozitiv mobil modern."
   home_title: "Acasă"
   topics_in_category: "Subiecte în categoria '%{category}'"
   rss_posts_in_topic: "RSS din '%{topic}'"
@@ -398,7 +394,7 @@ ro:
       email_already_used_in_group: "'%{email}' este deja folosit de grupul '%{group_name}'."
       email_already_used_in_category: "'%{email}' este deja folosit de categoria '%{category_name}'."
     cannot_delete:
-      has_subcategories: "Nu putem șterge categoria aceasta pentru că are sub-categorii."
+      has_subcategories: "Nu putem șterge această categorie pentru că are subcategorii."
       topic_exists_no_oldest: "Nu poți șterge categoria fiindcă numărul subiectelor este de %{count}."
     uncategorized_description: "Subiecte care nu au nevoie de o categorie, sau care nu se potrivesc în nicio categorie deja existentă."
   trust_levels:
@@ -646,7 +642,7 @@ ro:
         edit_reason: Motiv
     user_flagging_ratio:
       labels:
-        user: Utilizatori
+        user: Utilizator
         score: Scor
     moderators_activity:
       labels:
@@ -675,6 +671,8 @@ ro:
       xaxis:
         api: "API"
         user_api: "API Utilizator"
+      yaxis: "Zi"
+    consolidated_page_views_browser_detection:
       yaxis: "Zi"
     dau_by_mau:
       xaxis: "Zi"
@@ -751,11 +749,11 @@ ro:
       yaxis: "Număr de mesaje"
     top_referrers:
       title: "Top referenți"
-      xaxis: "Utilizatori"
+      xaxis: "Utilizator"
       num_clicks: "Click-uri"
       num_topics: "Subiecte"
       labels:
-        user: "Utilizatori"
+        user: "Utilizator"
         num_clicks: "Click-uri"
         num_topics: "Discuții"
     top_traffic_sources:
@@ -797,6 +795,10 @@ ro:
       title: "Vizualizări de pagină anonime"
       xaxis: "Zi"
       yaxis: "Vizualizări de pagină anonime de pe mobil"
+    page_view_anon_browser_reqs:
+      xaxis: "Zi"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Zi"
     http_background_reqs:
       title: "Fundal"
       xaxis: "Zi"
@@ -837,26 +839,26 @@ ro:
         page_views: "Vizualizări"
     suspicious_logins:
       labels:
-        user: Utilizatori
+        user: Utilizator
         location: Locație
     staff_logins:
       labels:
-        user: Utilizatori
+        user: Utilizator
         location: Locație
     top_uploads:
       labels:
         filename: Numele fișierului
     top_users_by_likes_received:
       labels:
-        user: Utilizatori
+        user: Utilizator
         qtt_like: Aprecieri primite
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
-        user: Utilizatori
+        user: Utilizator
         qtt_like: Aprecieri primite
     top_users_by_likes_received_from_a_variety_of_people:
       labels:
-        user: Utilizatori
+        user: Utilizator
         qtt_like: Aprecieri primite
   dashboard:
     twitter_login_warning: 'Conectarea la Twitter pare să nu funcționeze în acest moment. Verifică datele de conectare în <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">setările site-ului</a>.'
@@ -942,6 +944,7 @@ ro:
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
     log_out_strict: "La ieșire, închide TOATE sesiunile pentru utilizator, pe toate dispozitivele."
     new_version_emails: "Trimite un email la adresa contact_email când o nouă versiune de Discourse este disponibilă."
+    include_in_discourse_discover: "Permite CDCK, Inc. („Discourse”) să prezinte această comunitate pe <a href='https://www.discourse.org/discover'>pagina Discover</a> și în materialele de marketing Discourse. Procedând astfel, vei partaja datele necesare pentru ca site-ul tău să fie inclus în serviciu. Te rugăm să reții că promovarea comunităților este la discreția Discourse."
     invite_expiry_days: "Cât timp sunt valabile cheile de invitație ale utilizatorilor, în zile"
     login_required: "Cere autentificare pentru a citi conținutul acestui site, blochează accesul anonim."
     block_common_passwords: "Nu permite parole ce sunt printre cele 10,000 cele mai cunoscute parole."
@@ -1011,26 +1014,16 @@ ro:
     tl3_links_no_follow: "Nu scoate parametrul rel=nofollow din linkurile postate de utilizatori cu nivelul de încredere 3."
     delete_all_posts_and_topics_allowed_groups: "Grupurile care pot șterge articolele și subiectele create de alți utilizatori. Aceste grupuri vor putea să și vadă subiectele și articolele șterse."
     min_trust_to_create_topic: "Nivelul de încredere minim necesar pentru a crea un subiect nou."
-    create_topic_allowed_groups: "Grupuri cărora li se permite să creeze subiecte noi."
     min_trust_to_edit_wiki_post: "Nivelul de încredere minim necesar pentru a edita o postare marcată ca wiki."
-    edit_wiki_post_allowed_groups: "Grupuri cărora li se permite să editeze articole marcate ca wiki."
     min_trust_to_edit_post: "Nivelul de încredere minim necesar pentru a edita postări."
-    edit_post_allowed_groups: "Grupuri cărora li se permite să editeze articole."
     min_trust_to_allow_self_wiki: "Nivelul de încredere minim necesar pentru transformarea propriilor mesaje în wiki."
-    self_wiki_allowed_groups: "Grupuri în care utilizatorii își pot face propriile articole wiki."
-    flag_post_allowed_groups: "Grupuri cărora li se permite să semnaleze articole."
     post_links_allowed_groups: "Grupuri cărora li se permite să includă legături în articole. Administratorii și moderatorii au voie să publice legături întotdeauna."
-    profile_background_allowed_groups: "Grupuri cărora li se permite să încarce un fundal de profil."
-    user_card_background_allowed_groups: "Grupuri care au permisiunea să încarce un fundal cu card de utilizator."
-    invite_allowed_groups: "Grupuri care au voie să invite utilizatori."
-    ignore_allowed_groups: "Grupuri au voie să ignore alți utilizatori."
     newuser_max_links: "Câte linkuri poate adăuga un nou utilizator într-o postare."
     newuser_max_attachments: "Câte atașamente poate adăuga un nou utilizator într-o postare."
     newuser_max_mentions_per_post: "Numărul maxim de notificări @nume pe care le poate folosi un nou utilizator într-o postare."
     newuser_max_replies_per_topic: "Numărul maxim de răspunsuri pe care un utilizator nou le poate adăuga într-un singur subiect înainte ca cineva să răspundă."
     max_mentions_per_post: "Numărul maxim de notificări de @nume pe care le poate folosi oricine într-o postare."
     max_users_notified_per_group_mention: "Numărul maxim de utilizatori care pot primi o notificare dacă un grup este menționat (dacă pragul este atins, nici o notificare nu va fi trimisă)"
-    here_mention_allowed_groups: "Grupuri cărora li se permite să menționeze @aici."
     create_thumbnails: "Creează previzualizări de tipul thumbnail și lightbox ale imaginilor ce sunt prea mari să încapă într-o postare."
     email_time_window_mins: "Așteaptă (n) minute până să trimiți un email de notificare, pentru a da utilizatorilor șansa să-și editeze și să-și finalizeze postările."
     email_posts_context: "Câte răspunsuri precedente să fie incluse drept context în email-urile de notificare."
@@ -1101,7 +1094,6 @@ ro:
     pop3_polling_username: "Numele de utilizator al contului POP3 pentru retragerea emailurilor."
     pop3_polling_password: "Parola contului de POP3 pentru retragerea emailurilor."
     email_in_min_trust: "Nivelul minim de încredere de care are nevoie un utilizator pentru a i se permite să posteze noi subiecte prin email."
-    email_in_allowed_groups: "Grupuri cărora li se permite să publice subiecte noi prin email."
     email_prefix: "[Eticheta] e folosită în subiectul email-ului. Implicit va fi \"titlul\", dacă nu este setată altfel."
     email_site_title: "Titlul site-ului folosit ca expeditor de email-uri trimise de site. Implicit va fi 'titlu', dacă nu este setat altfel. Dacă 'titlul' conține caractere care nu sunt permise în email, folosiți această setare."
     minimum_topics_similar: "Câte subiecte trebuie să existe deja până ce câmpul subiecte similare este prezent când se compune o discuție nouă."
@@ -1139,6 +1131,7 @@ ro:
     disable_system_edit_notifications: "Deactivează editarea notificărilo de către utilizator atunci când setarea 'download_remote_images_to_local' este activată."
     automatically_unpin_topics: "Desprinde automat subiecte când utilizatorul ajunge la sfârșitul paginii."
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."
+    enable_powered_by_discourse: "Afișează legătura „Propulsat de Discourse” către discourse.org în partea de jos a majorității paginilor."
     full_name_required: "Numele întreg este un câmp obligatoriu în profilul utilizator."
     enable_names: "Afișează numele întreg al utilizatorului în profilul său, în cardul utilizator și în emailuri. Dezactivează pentru ascunde numele peste tot."
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
@@ -1148,9 +1141,11 @@ ro:
     warn_reviving_old_topic_age: "Când cineva răspunde la un subiect unde ultimul răspuns e mai vechi decât atâtea zile, va fi afișată o avertizare. Dezactivează prin alegerea cifrei 0."
     autohighlight_all_code: "Aplică evidențierea sintaxei la blocurile de tip &lt;code&gt; HTML, chiar dacă nu au specificat un limbaj. Pentru a configura blocurile de cod scrise în markdown, folosește setarea „limbaj de programare implicit”."
     embed_unlisted: "Subiectele încorporate vor fi nelistate până când un utilizator răspunde."
+    import_embed_unlisted: "Subiectele încorporate importate vor fi de-listate până când un utilizator răspunde (chiar și atunci când setarea site-ului „încorporează de-listate” este debifată)."
     allowed_href_schemes: "Alte tipuri de linkuri permise, în afară de http și https."
     embed_post_limit: "Numărul maxim de postări care să fie încorporate."
     embed_username_required: "Numele utilizator pentru acest subiect este obligatoriu."
+    bootstrap_mode_min_users: "Numărul minim de utilizatori necesari pentru a dezactiva modul de pornire și a elimina butonul Începe (setează la 0 pentru a dezactiva, poate dura până la 24 de ore)"
     slug_generation_method: "Alege o metodă de generare de identificator. 'encodat' va genera șir de caractere encodate cu procentaje. 'nimic' va dezactiva complet identificatorii."
     approve_post_count: "Numărul de postări de la un utilizator simplu trebuie să fie aprobat"
     auto_close_messages_post_count: "Numărul maxim de postări permise într-un mesaj privat înainte să fie închis automat (0 pentru dezactivare) "
@@ -1168,7 +1163,7 @@ ro:
     default_other_external_links_in_new_tab: "Implicit, deschide link-urile externe în taburi noi."
     default_other_enable_quoting: "Implicit, activează citarea textului evidențiat."
     default_other_dynamic_favicon: "Implicit, arată contorul de subiecte noi/actualizate în icoana browserului."
-    default_other_skip_new_user_tips: "Omitete sfaturile și insignele de înscriere pentru utilizatori noi."
+    default_other_skip_new_user_tips: "Omite sfaturi și insigne de înscriere pentru utilizatori noi."
     default_topics_automatic_unpin: "Desprinde automat subiecte din fixate la vârf, atunci când utilizatorul ajunge la sfârșitul paginii."
     default_categories_watching: "Implicit, listează categoriile care sunt urmărite în mod activ."
     default_categories_tracking: "Implicit, listează categoriile care sunt urmărite."
@@ -1185,6 +1180,9 @@ ro:
     min_trust_level_to_tag_topics: "Nivelul minim de încredere necesar pentru a pune etichete pe subiecte."
     suppress_overlapping_tags_in_list: "Dacă etichetele corespund exact cu cuvintele din titlul subiectelor, nu mai afișa aceste etichete."
     shared_drafts_allowed_groups: "Permit utilizatorilor din aceste grupuri să vadă și să editeze ciorne comune."
+    enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Afișează un meniu de acces rapid pentru semne de carte în articole și un nou modal reproiectat"
+    glimmer_header_mode: "Controlează dacă se utilizează noua implementare a antetului cu efect de „licărire”. Valoarea implicită este „auto”, care va fi activată automat odată ce toate temele și modulele sunt gata. https://meta.discourse.org/t/296544"
+    experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTAL: Activează noua listă derulantă de acțiuni în masă."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     errors:
       invalid_email: "Adresă de email invalidă."
@@ -1197,14 +1195,12 @@ ro:
       must_include_latest: "Meniul de sus trebuie să includă tab-ul \"recente\"."
       invalid_string: "Valoare invalidă."
       invalid_string_min_max: "Trebuie să aibă între %{min} și %{max} caractere."
-      invalid_string_min: "Trebuie să aibă %{min} caractere."
-      invalid_string_max: "Nu trebuie să depășească %{max} caractere."
       invalid_reply_by_email_address: "Valoarea trebuie să conțină '%{reply_key}' și să fie diferită de emailul de notificare."
       invalid_alternative_reply_by_email_addresses: "Toate valorile trebuie să conțină '%{reply_key}' și să fie diferite de emailul de notificare."
       pop3_polling_host_is_empty: "Trebuie să setezi „numele serverului de POP3” înainte să poți activa retragerea de emailuri prin POP3"
       pop3_polling_username_is_empty: "Trebuie să setezi „numele utilizator pe serverul POP3” înainte să poți activa retragerea de emailuri prin POP3."
       pop3_polling_password_is_empty: "Trebuie să setezi „parola pe serverul POP3” înainte să poți activa retragerea de emailuri prin POP3."
-      pop3_polling_authentication_failed: "Autentificarea POP3 a eșuat. Te rugăm să verifici detaliile din setările POP3."
+      pop3_polling_authentication_failed: "Autentificarea POP3 a eșuat. Te rugăm să verifici datele de conectare POP3."
       reply_by_email_address_is_empty: "Trebuie să setezi o adresă pentru „răspunde prin email” înainte să poți activa răspunsul prin email."
       user_locale_not_enabled: "Trebuie să activezi întâi „permite locale utilizator” înainte de activa această setare."
       invalid_regex: "Regex invalid sau nepermis."
@@ -1227,6 +1223,14 @@ ro:
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
+      clean_up_inactive_users_after_days:
+      - "dezactivat"
+      - "inactiv"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - "dezactivat"
+      - "inactiv"
+      - ""
   search:
     within_post: "#%{post_number} de %{username}:"
     types:
@@ -1240,6 +1244,8 @@ ro:
     account_not_approved: "Contul tău este în așteptarea aprobării. Vei primi un email de notificare imediat ce va fi aprobat."
     unknown_error: "Există o problema legată de contul tău. Te rugăm contactează administratorul site-ului."
     timeout_expired: "Autentificarea în cont a expirat, te rugăm să încerci din să te autentifici din nou."
+    payload_parse_error: "Autentificarea a eșuat (sarcina nu este validă Base64). Te rugăm să contactezi administratorul site-ului."
+    signature_error: "Autentificarea a eșuat (semnătură incorectă). Te rugăm să contactezi administratorul site-ului."
   original_poster: "Creatorul unui subiect"
   most_recent_poster: "Cel mai recent autor"
   frequent_poster: "Autor prodigios"
@@ -1321,11 +1327,17 @@ ro:
   admin:
     email:
       sent_test: "trimis!"
+    user:
+      merge_user:
+        merging_user_associated_accounts: "Fuzionarea conturilor asociate utilizatorilor…"
   user:
-    deactivated: "A fost dezactivat din cauza pre a multor emailuri ricoșate la '%{email}'."
+    deactivated: "A fost dezactivat din cauza prea multor emailuri respinse la „%{email}”."
+    deactivated_by_staff: "Dezactivat de echipă"
+    deactivated_by_inactivity:
+      one: "Dezactivat automat după %{count} zi de inactivitate"
+      few: "Dezactivat automat după %{count} zile de inactivitate"
+      other: "Dezactivat automat după %{count} de zile de inactivitate"
     username:
-      short: "trebuie să fie cel puțin %{min} de caractere"
-      long: "trebuie să nu aibă mai mult de %{max} caractere"
       characters: "trebuie să includă numai cifre, litere, liniuțe, puncte și liniuțe de subliniere"
       unique: "trebuie să fie unic"
       blank: "trebuie să fie prezent"
@@ -1981,6 +1993,7 @@ ro:
     initial_topic_title: Rapoarte de performanță website
   tags:
     title: "Etichete"
+    user_not_permitted: "Nu ai voie să etichetezi subiecte"
   rss_by_tag: "Subiecte etichetate %{tag}"
   finish_installation:
     congratulations: "Felicitări, ai instalat Discourse!"
@@ -2048,6 +2061,7 @@ ro:
       private_message: '%{username} ți-a trimis un mesaj privat în discuția "%{topic}" - %{site_title}'
       linked: '%{username} a creat o legătură către postarea ta din discuția "%{topic}" - %{site_title}'
   staff_action_logs:
+    json_too_long: "Valorile nu au fost înregistrate pentru că depășesc limitele lungimii coloanei"
     unknown: "necunoscută"
   reviewables:
     priorities:
@@ -2083,7 +2097,7 @@ ro:
           title: "Şterge utilizatorul"
       reject:
         title: "Respingere"
-  fallback_username: "utilizatori"
+  fallback_username: "utilizator"
   activemodel:
     errors:
       <<: *errors

@@ -45,7 +45,7 @@ export default Mixin.create({
   _show(username, target, event) {
     // No user card for anon
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
-      return false;
+      return true;
     }
 
     username = escapeExpression(username.toString());
@@ -157,9 +157,15 @@ export default Mixin.create({
         return true;
       }
 
-      event.preventDefault();
-      event.stopPropagation();
-      return this._show(transformText(matchingEl), matchingEl, event);
+      const shouldBubble = this._show(
+        transformText(matchingEl),
+        matchingEl,
+        event
+      );
+      if (!shouldBubble) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
     }
 
     return false;

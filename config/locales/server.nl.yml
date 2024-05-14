@@ -158,7 +158,6 @@ nl:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "is beperkt tot %{max} tekens; je hebt er %{length} ingevoerd."
       invalid_boolean: "Ongeldige boolean."
       taken: "is al in gebruik"
       accepted: moet worden geaccepteerd
@@ -272,7 +271,6 @@ nl:
       one: "Je hebt de afgelopen 24 uur al %{count} uitnodiging gestuurd. Wacht %{time_left} voordat je het opnieuw probeert."
       other: "Je hebt de afgelopen 24 uur al %{count} uitnodigingen gestuurd. Wacht %{time_left} voordat je het opnieuw probeert."
     confirm_email: "<p>Je bent er bijna! We hebben een activerings-e-mail naar je e-mailadres gestuurd. Volg de instructies in de e-mail om je account te activeren.</p><p>Als deze niet aankomt, controleer dan je spammap.</p>"
-    cant_invite_to_group: "Je mag geen gebruikers uitnodigen voor de opgegeven groep(en). Zorg dat je eigenaar bent van de groep(en) waarvoor je probeert uit te nodigen."
     disabled_errors:
       discourse_connect_enabled: "Uitnodigingen zijn uitgeschakeld omdat DiscourseConnect is ingeschakeld."
       invalid_access: "Je mag de opgevraagde bron niet bekijken."
@@ -390,7 +388,6 @@ nl:
   pm_reached_recipients_limit: "Sorry, je kunt niet meer dan %{recipients_limit} ontvangers hebben in een bericht."
   removed_direct_reply_full_quotes: "Citaat van hele voorgaande bericht is automatisch verwijderd."
   watched_words_auto_tag: "Automatisch getagd topic"
-  secure_upload_not_allowed_in_public_topic: "Sorry, de volgende beveiligde upload(s) kan/kunnen niet worden gebruikt in een openbaar topic: %{upload_filenames}."
   create_pm_on_existing_topic: "Sorry, je kunt geen PB maken bij een bestaand topic."
   slow_mode_enabled: "Dit topic is in de langzame modus."
   just_posted_that: "lijkt te veel op wat je recent hebt geplaatst"
@@ -533,7 +530,6 @@ nl:
 
       Het is voor iedereen makkelijker om topics te lezen die minder, maar uitgebreidere antwoorden bevatten dan met veel kleine, individuele antwoorden.
     dominating_topic: Je hebt veel geplaatst in dit topic! Overweeg om anderen de kans te geven om hier te reageren en ook met elkaar te overleggen.
-    get_a_room: Je hebt %{count} keer geantwoord @%{reply_username}. Wist je dat je ze in plaats daarvan een persoonlijk bericht kunt sturen?
     dont_feed_the_trolls: Dit bericht is al gemarkeerd voor aandacht van de moderator. Weet je zeker dat je erop wilt antwoorden? Antwoorden op negatieve content hebben de neiging om meer negatief gedrag aan te moedigen.
     too_many_replies: |
       ### Je hebt de antwoordlimiet voor dit topic bereikt
@@ -1138,6 +1134,8 @@ nl:
         user_api: "Gebruikers-API"
       yaxis: "Dag"
       description: "API-verzoeken voor reguliere API-sleutels en gebruikers-API-sleutels."
+    consolidated_page_views_browser_detection:
+      yaxis: "Day"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dag"
@@ -1297,6 +1295,10 @@ nl:
       xaxis: "Dag"
       yaxis: "Mobiele anonieme paginaweergaven"
       description: "Aantal nieuwe paginaweergaven van bezoekers op een mobiel apparaat die niet zijn aangemeld."
+    page_view_anon_browser_reqs:
+      xaxis: "Day"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Day"
     http_background_reqs:
       title: "Achtergrond"
       xaxis: "Dag"
@@ -1422,7 +1424,6 @@ nl:
     force_https_warning: "Je website gebruikt SSL, maar '<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>' is nog niet ingeschakeld in je website-instellingen."
     out_of_date_themes: "Er zijn updates voor de volgende thema's beschikbaar:"
     unreachable_themes: "We konden niet op updates controleren voor de volgende thema's:"
-    watched_word_regexp_error: "De reguliere expressie voor '%{action}' geobserveerde woorden is ongeldig. Controleer je <a href='%{base_path}/admin/customize/watched_words'>instellingen voor geobserveerde woorden</a> of schakel de website-instelling 'reguliere expressies voor geobserveerde woorden' uit."
     v3_analytics_deprecated: "Je Discourse gebruikt momenteel Google Analytics 3, dat na juli 2023 niet meer wordt ondersteund. <a href='https://meta.discourse.org/t/260498'>Upgrade nu naar Google Analytics 4</a> om waardevolle inzichten en analyses te blijven ontvangen voor de prestaties van je website."
     category_style_deprecated: "Je Discourse gebruikt op dit moment een verouderde categoriestijl die wordt verwijderd voorafgaand aan de definitieve bètaversie van Discourse 3.2. Zie <a href='https://meta.discourse.org/t/282441'>Overstappen op een website-instelling met één categoriestijl</a> voor instructies over hoe je de geselecteerde categoriestijl kunt behouden."
   site_settings:
@@ -1531,7 +1532,6 @@ nl:
     summarization_strategy: "Aanvullende manieren om door plug-ins geregistreerde content samen te vatten"
     custom_summarization_allowed_groups: "Groepen mogen content samenvatten met behulp van de 'summarization_strategy'."
     enable_personal_messages: "VEROUDERD, gebruik in plaats daarvan de instelling 'groepen waarvoor persoonlijke berichten zijn ingeschakeld'. Geef gebruikers met vertrouwensniveau 1 (configureerbaar via minimaal vertrouwen om berichten te verzenden) de mogelijkheid om berichten te maken en berichten te beantwoorden. Houd er rekening mee dat medewerkers altijd berichten kunnen sturen, wat er ook gebeurt."
-    personal_message_enabled_groups: "Sta gebruikers binnen deze groepen toe berichten te maken en berichten te beantwoorden. Vertrouwensniveaugroepen omvatten alle vertrouwensniveaus boven dat getal, bijvoorbeeld door trust_level_1 te kiezen, kunnen gebruikers van trust_level_2, 3, 4 ook PB's sturen. Houd er rekening mee dat medewerkers altijd berichten kunnen sturen, ongeacht de instellingen."
     enable_system_message_replies: "Toestaan dat gebruikers op systeemberichten kunnen antwoorden, zelfs als persoonlijke berichten zijn uitgeschakeld"
     enable_chunked_encoding: "Gesegmenteerde coderingsantwoorden van de server inschakelen. Deze functie werkt in de meeste configuraties, hoewel sommige proxy's kunnen bufferen, waardoor reacties worden vertraagd"
     long_polling_base_url: "Basis-URL voor 'long polling' (als een CDN dynamische inhoud aanbiedt, zorg er dan voor dat dit op 'origin pull' is ingesteld), zoals http://origin.site.com"
@@ -1591,7 +1591,6 @@ nl:
     content_security_policy_report_only: "Content-Security-Policy-Report-Only (CSP) inschakelen"
     content_security_policy_collect_reports: "Rapportverzameling voor CSP-schendingen inschakelen via /csp_reports"
     content_security_policy_frame_ancestors: "Beperken wie deze website kan insluiten in iframes via CSP. Beheer toegestane hosts op <a href='%{base_path}/admin/customize/embedding'>Insluiten</a>"
-    content_security_policy_script_src: "Aanvullende scriptbronnen op de acceptatielijst. De huidige host en CDN zijn standaard inbegrepen. Zie <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>XSS-aanvallen tegengaan met Content Security Policy</a> (CSP)."
     invalidate_inactive_admin_email_after_days: "Beheerdersaccounts die de website dit aantal dagen niet hebben bezocht, dienen hun e-mailadres voor het aanmelden opnieuw te valideren. Stel dit in op 0 om uit te schakelen."
     include_secure_categories_in_tag_counts: "Indien ingeschakeld, omvat het aantal topics voor een tag ook topics die in leesbeperkte categorieën staan voor alle gebruikers. Indien uitgeschakeld, krijgen normale gebruikers alleen het aantal topics voor een tag te zien waarbij alle topics in openbare categorieën staan."
     display_personal_messages_tag_counts: "Indien ingeschakeld, wordt het aantal persoonlijke berichten weergegeven dat is getagd met een bepaalde tag."
@@ -1793,29 +1792,19 @@ nl:
     edit_all_topic_groups: "Sta gebruikers in deze groep toe om topictitels, tags en categorieën van andere gebruikers te bewerken"
     edit_all_post_groups: "Sta gebruikers in deze groep toe berichten van andere gebruikers te bewerken"
     min_trust_to_create_topic: "Het minimale vertrouwensniveau dat nodig is om een topic te maken."
-    create_topic_allowed_groups: "Groepen die nieuwe topics mogen maken."
     allow_flagging_staff: "Wanneer ingeschakeld, kunnen gebruikers berichten van medewerkeraccounts markeren."
     min_trust_to_edit_wiki_post: "Het minimale vertrouwensniveau dat nodig is om een bericht te bewerken dat als wiki is gemarkeerd."
-    edit_wiki_post_allowed_groups: "Groepen die berichten gemarkeerd als wiki mogen bewerken."
     min_trust_to_edit_post: "Het minimale vertrouwensniveau dat nodig is om berichten te bewerken."
-    edit_post_allowed_groups: "Groepen die berichten mogen bewerken."
     min_trust_to_allow_self_wiki: "Het minimale vertrouwensniveau dat nodig is om een gebruiker een eigen bericht naar een wiki te laten omzetten."
-    self_wiki_allowed_groups: "Groepen waarvan gebruikers hun eigen berichtwiki kunnen maken."
     min_trust_to_send_messages: "VEROUDERD, gebruik in plaats daarvan de instelling 'groepen met persoonlijke berichten ingeschakeld'. Het minimale vertrouwensniveau dat vereist is om nieuwe persoonlijke berichten te maken."
     min_trust_to_send_email_messages: "Het minimale vertrouwensniveau dat vereist is om persoonlijke berichten te sturen via e-mail."
-    send_email_messages_allowed_groups: "Groepen die persoonlijke berichten via e-mail mogen verzenden."
     min_trust_to_flag_posts: "Het minimale vertrouwensniveau dat nodig is om berichten te markeren"
-    flag_post_allowed_groups: "Groepen die topics mogen markeren."
     min_trust_to_post_links: "Het minimale vertrouwensniveau dat nodig is om links op te nemen in berichten"
     min_trust_to_post_embedded_media: "Het minimale vertrouwensniveau dat nodig is om media-items in een bericht in te bedden"
-    embedded_media_post_allowed_groups: "De gebruikers in deze groepen mogen media-items opnemen in een bericht"
     min_trust_level_to_allow_profile_background: "Het minimale vertrouwensniveau dat nodig is om een profielachtergrond te uploaden"
     min_trust_level_to_allow_user_card_background: "Het minimale vertrouwensniveau dat nodig is om een gebruikerskaartachtergrond te uploaden"
-    user_card_background_allowed_groups: "Groepen die een gebruikerskaartachtergrond mogen uploaden."
     min_trust_level_to_allow_invite: "Het minimale vertrouwensniveau dat nodig is om gebruikers uit te nodigen"
-    invite_allowed_groups: "Groepen die gebruikers mogen uitnodigen."
     min_trust_level_to_allow_ignore: "Het minimale vertrouwensniveau dat nodig is om gebruikers te negeren"
-    ignore_allowed_groups: "Groepen die andere gebruikers mogen negeren."
     allowed_link_domains: "Domeinen waar gebruikers naartoe mogen linken, ook als ze niet het juiste vertrouwensniveau hebben om links te plaatsen"
     newuser_max_links: "Hoeveel links een nieuwe gebruiker kan toevoegen aan een bericht."
     newuser_max_embedded_media: "Hoeveel ingesloten media-items een nieuwe gebruiker aan een bericht kan toevoegen."
@@ -1827,7 +1816,6 @@ nl:
     here_mention: "De naam die wordt gebruikt voor een @vermelding zodat gemachtigde gebruikers maximaal 'max_here_mentioned' mensen die aan de topic deelnemen op de hoogte kunnen stellen. Mag geen bestaande gebruikersnaam zijn."
     max_here_mentioned: "Maximaal aantal genoemde personen door @hier."
     min_trust_level_for_here_mention: "Het minimale vertrouwensniveau dat is toegestaan om @hier te vermelden."
-    here_mention_allowed_groups: "Groepen die @here mogen vermelden."
     create_thumbnails: "Miniaturen maken voor lightbox-afbeeldingen die te groot zijn om in een bericht te passen."
     email_time_window_mins: "(n) minuten wachten met het verzenden van meldingen per e-mail, zodat gebruikers de kans hebben om hun berichten te bewerken en te voltooien."
     personal_email_time_window_seconds: "(n) minuten wachten met het verzenden van meldingen per e-mail voor persoonlijke berichten, zodat gebruikers de kans hebben om hun berichten te bewerken en te voltooien."
@@ -1943,7 +1931,6 @@ nl:
     log_mail_processing_failures: "Alle fouten van e-mailverwerking opslaan in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Sta gebruikers toe om nieuwe topics te plaatsen via e-mail. Na het inschakelen van deze instelling kun je inkomende e-mailadressen configureren voor groepen en categorieën."
     email_in_min_trust: "Het minimale vertrouwensniveau dat een gebruiker moet hebben om nieuwe topics te kunnen plaatsen via e-mail."
-    email_in_allowed_groups: "Groepen die nieuwe topics via e-mail mogen plaatsen."
     email_in_authserv_id: "De ID van de service die verificatiecontroles op inkomende e-mails uitvoert. Zie <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> voor instructies over het configureren hiervan."
     enable_imap: "IMAP inschakelen voor het synchroniseren van groepsberichten."
     enable_imap_write: "IMAP-synchronisatie in twee richtingen inschakelen. Wanneer uitgeschakeld, zijn alle schrijfbewerkingen op IMAP-accounts uitgeschakeld."
@@ -2051,7 +2038,6 @@ nl:
     embed_username_required: "De gebruikersnaam voor het maken van topics is vereist."
     notify_about_reviewable_item_after: "Stuur een privébericht naar moderators als er na dit aantal uren beoordeelbare items zijn die nog niet zijn afgehandeld. Stel dit in op 0 om het uit te schakelen."
     delete_merged_stub_topics_after_days: "Aantal dagen dat moet worden gewacht voordat volledig samengevoegde stubtopics automatisch worden verwijderd. Stel dit in op 0 om stubtopics niet te verwijderen."
-    bootstrap_mode_min_users: "Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen (stel dit in op 0 om het uit te schakelen, dit kan tot 24 uur duren)"
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen downloaden."
     secure_uploads: 'Beperkt de toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf''s, zips en andere). Als ''aanmelding vereist'' is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is de toegang alleen beperkt voor media-uploads in privéberichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist diepgaande beheerkennis. Zie <a target="_blank" href="https://meta.discourse.org/t/-/140017">het onderwerp Veilige uploads op Meta</a> voor meer informatie.'
     secure_uploads_allow_embed_images_in_emails: "Staat het insluiten van beveiligde afbeeldingen toe die normaal gesproken zouden worden geredigeerd in e-mails, als hun grootte kleiner is dan de instelling 'veilige uploads max. afbeeldingsgrootte insluiten in e-mail kb'."
@@ -2063,7 +2049,6 @@ nl:
     emoji_deny_list: "Deze emoji zijn niet beschikbaar voor gebruik in menu's of shortcodes."
     approve_post_count: "Het aantal berichten van een nieuwe of basisgebruiker dat moet worden goedgekeurd"
     approve_unless_trust_level: "Berichten gemaakt door gebruikers onder dit vertrouwensniveau moeten worden goedgekeurd"
-    approve_unless_allowed_groups: "Berichten gemaakt door gebruikers niet in deze groepen moeten worden goedgekeurd"
     notify_about_queued_posts_after: "Als er berichten zijn die meer dan dit aantal uren op beoordeling wachten, een melding naar alle moderators sturen. Stel dit in op 0 om deze meldingen uit te schakelen."
     reviewable_revision_reasons: "Lijst van redenen die kunnen worden geselecteerd bij het afwijzen van een te beoordelen bericht in de wachtrij met een revisie. 'Anders' is ook altijd beschikbaar, waarmee een aangepaste reden kan worden ingevoerd."
     auto_close_messages_post_count: "Maximale aantal toegestane berichten in een bericht voordat het automatisch wordt gesloten (0 voor uitschakelen)"
@@ -2128,7 +2113,6 @@ nl:
     revoke_user_api_keys_unused_days: "Aantal dagen sinds het laatste gebruik van een gebruikers-API-sleutel voordat deze automatisch wordt ingetrokken (0 voor nooit)"
     revoke_user_api_keys_maxlife_days: "Aantal dagen voordat een gebruikers-API-sleutel automatisch wordt ingetrokken (0 voor nooit)"
     min_trust_to_create_tag: "Het minimale vertrouwensniveau dat nodig is om een tag te maken."
-    create_tag_allowed_groups: "Groepen die tags mogen maken."
     max_tags_per_topic: "De maximale tags die op een topic kunnen worden toegepast."
     enable_max_tags_per_email_subject: "Gebruik max_tags_per_email_subject bij het genereren van het onderwerp van een e-mail"
     max_tags_per_email_subject: "Het maximale aantal tags dat in het onderwerp van een e-mail kan voorkomen"
@@ -2137,9 +2121,7 @@ nl:
     max_tags_in_filter_list: "Maximale aantal weer te geven tags in het vervolgkeuzemenu van het filter. De meest gebruikte tags worden weergegeven."
     tags_sort_alphabetically: "Tags in alfabetische volgorde weergeven. Standaard is de volgorde van populariteit."
     tags_listed_by_group: "Tags vermelden op tag-groep op de <a href='%{base_path}/tags' target='_blank'>pagina Tags</a>."
-    pm_tags_allowed_for_groups: "Sta leden van opgenomen groep(en) toe om elk persoonlijk bericht te taggen"
     min_trust_level_to_tag_topics: "Het minimale vertrouwensniveau dat nodig is om topics te taggen"
-    tag_topic_allowed_groups: "Groepen die onderwerpen mogen taggen."
     suppress_overlapping_tags_in_list: "Als tags exacte overeenkomsten met woorden in topictitels hebben, de tag niet weergeven"
     remove_muted_tags_from_latest: "Topics met alleen gedempte tags niet weergeven in de lijst van nieuwste topics."
     force_lowercase_tags: "Gebruik van kleine letters voor alle nieuwe tags afdwingen."
@@ -2195,8 +2177,6 @@ nl:
       must_include_latest: "Topmenu moet het tabblad 'nieuwste' bevatten."
       invalid_string: "Ongeldige waarde."
       invalid_string_min_max: "Moet tussen %{min} en %{max} tekens zijn."
-      invalid_string_min: "Moet uit minstens %{min} tekens bestaan."
-      invalid_string_max: "Mag uit niet meer dan %{max} tekens bestaan."
       invalid_json: "Ongeldige JSON."
       invalid_reply_by_email_address: "Waarde moet '%{reply_key}' bevatten en afwijken van de melding per e-mail."
       invalid_alternative_reply_by_email_addresses: "Alle waarden moeten '%{reply_key}' bevatten en afwijken van de melding per e-mail."
@@ -2229,7 +2209,6 @@ nl:
         regex_invalid: "De reguliere expressie is ongeldig: %{error}"
         leading_trailing_slash: "De reguliere expressie mag niet met een schuine streep beginnen en eindigen."
       unicode_usernames_avatars: "De interne systeemavatars ondersteunen geen Unicode-gebruikersnamen."
-      list_value_count: "De lijst moet precies %{count} waarden bevatten."
       markdown_linkify_tlds: "Je kunt de waarde '*' niet gebruiken."
       google_oauth2_hd_groups: "Je moet alle 'Google OAuth2 HD'-instellingen configureren voordat je deze instelling inschakelt."
       search_tokenize_chinese_enabled: "Je moet 'search_tokenize_chinese' uitschakelen voordat je deze instelling inschakelt."
@@ -2262,6 +2241,14 @@ nl:
       post_links_allowed_groups: "min_trust_to_post_links"
       user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "inactief"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "inactief"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2461,8 +2448,6 @@ nl:
     new_user_typed_too_fast: "Nieuwe gebruiker typte te snel"
     content_matches_auto_silence_regex: "Inhoud komt overeen met reguliere expressie voor automatisch dempen"
     username:
-      short: "moet uit minstens %{min} tekens bestaan"
-      long: "mag niet meer dan %{max} tekens zijn"
       too_long: "is te lang"
       characters: "mag alleen cijfers, letters, streepjes, punten en onderstrepingstekens bevatten"
       unique: "moet uniek zijn"
@@ -2621,35 +2606,9 @@ nl:
   new_version_mailer:
     title: "Nieuwe versie mailer"
     subject_template: "[%{email_prefix}] Nieuwe Discourse-versie, update beschikbaar"
-    text_body_template: |
-      Hoera, er is een nieuwe versie van [Discourse](https://www.discourse.org) beschikbaar!
-
-      Jouw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      - Upgrade via onze eenvoudige **[browserupgrade in één klik](%{base_url}/admin/upgrade)**
-
-      - Lees wat er nieuw is in de [releaseopmerkingen](https://meta.discourse.org/tag/release-notes), of bekijk de [ruwe GitHub-veranderingslog](https://github.com/discourse/discourse/commits/main)
-
-      - Ga naar [meta.discourse.org](https://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse
   new_version_mailer_with_notes:
     title: "Nieuwe versie Mailer met aantekeningen"
     subject_template: "[%{email_prefix}] update beschikbaar"
-    text_body_template: |
-      Hoera, er is een nieuwe versie van [Discourse](https://www.discourse.org) beschikbaar!
-
-      Jouw versie: %{installed_version}
-      Nieuwe versie: **%{new_version}**
-
-      - Upgrade via onze eenvoudige **[browserupgrade in één klik](%{base_url}/admin/upgrade)**
-
-      - Lees wat er nieuw is in de [release-opmerkingen](https://meta.discourse.org/tag/release-notes), of bekijk de [ruwe GitHub-veranderingslog](https://github.com/discourse/discourse/commits/master)
-
-      - Bezoek [meta.discourse.org](https://meta.discourse.org) voor nieuws, discussie en ondersteuning voor Discourse
-
-      ### Release-opmerkingen
-
-      %{notes}
   flag_reasons:
     off_topic: "Je bericht is gemarkeerd als **off-topic**: de community vindt dat het niet goed bij het topic past, zoals momenteel bepaald door de titel en het eerste bericht."
     inappropriate: "Je bericht is gemarkeerd als **ongepast**: de community vindt het bericht beledigend, grof, hatelijk gedrag of een schending van [onze communityrichtlijnen](%{base_path}/guidelines)."
@@ -4179,7 +4138,6 @@ nl:
     mass_award:
       errors:
         invalid_csv: Er is een fout ontdekt op regel %{line_number}. Bevestig dat het CSV-bestand één e-mailadres per regel bevat.
-        too_many_csv_entries: Te veel vermeldingen in het CSV-bestand. Geef een CSV-bestand op met niet meer dan %{count} vermeldingen.
         badge_disabled: Schakel eerst de badge %{badge_name} in.
         cant_grant_multiple_times: Kan de badge %{badge_name} niet meerdere keren aan één gebruiker toekennen.
     editor:

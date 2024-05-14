@@ -173,10 +173,10 @@ class Admin::ThemesController < Admin::AdminController
     @color_schemes = ColorScheme.all.includes(:theme, color_scheme_colors: :color_scheme).to_a
 
     payload = {
-      themes: ActiveModel::ArraySerializer.new(@themes, each_serializer: ThemeSerializer),
+      themes: serialize_data(@themes, ThemeSerializer),
       extras: {
-        color_schemes:
-          ActiveModel::ArraySerializer.new(@color_schemes, each_serializer: ColorSchemeSerializer),
+        color_schemes: serialize_data(@color_schemes, ColorSchemeSerializer),
+        locale: current_user.effective_locale,
       },
     }
 
@@ -293,7 +293,7 @@ class Admin::ThemesController < Admin::AdminController
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme
 
-    render json: ThemeSerializer.new(@theme)
+    render_serialized(@theme, ThemeSerializer)
   end
 
   def export
@@ -311,6 +311,25 @@ class Admin::ThemesController < Admin::AdminController
     exporter.cleanup!
   end
 
+  def get_translations
+    params.require(:locale)
+    unless I18n.available_locales.include?(params[:locale].to_sym)
+      raise Discourse::InvalidParameters.new(:locale)
+    end
+
+    I18n.locale = params[:locale]
+
+    @theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless @theme
+
+    translations =
+      @theme.translations.map do |translation|
+        { key: translation.key, value: translation.value, default: translation.default }
+      end
+
+    render json: { translations: translations }, status: :ok
+  end
+
   def update_single_setting
     params.require("name")
     @theme = Theme.find_by(id: params[:id])
@@ -320,7 +339,13 @@ class Admin::ThemesController < Admin::AdminController
     new_value = params[:value] || nil
 
     previous_value = @theme.cached_settings[setting_name]
-    @theme.update_setting(setting_name, new_value)
+
+    begin
+      @theme.update_setting(setting_name, new_value)
+    rescue Discourse::InvalidParameters => e
+      return render_json_error e.message
+    end
+
     @theme.save
 
     log_theme_setting_change(setting_name, previous_value, new_value)
@@ -330,7 +355,16 @@ class Admin::ThemesController < Admin::AdminController
   end
 
   def schema
-    raise Discourse::InvalidAccess if !SiteSetting.experimental_objects_type_for_theme_settings
+  end
+
+  def objects_setting_metadata
+    theme = Theme.find_by(id: params[:id])
+    raise Discourse::InvalidParameters.new(:id) unless theme
+
+    theme_setting = theme.settings[params[:setting_name].to_sym]
+    raise Discourse::InvalidParameters.new(:setting_name) unless theme_setting
+
+    render_serialized(theme_setting, ThemeObjectsSettingMetadataSerializer, root: false)
   end
 
   private
@@ -369,6 +403,7 @@ class Admin::ThemesController < Admin::AdminController
           :component,
           :enabled,
           :auto_update,
+          :locale,
           settings: {
           },
           translations: {
@@ -407,6 +442,14 @@ class Admin::ThemesController < Admin::AdminController
 
   def update_translations
     return unless target_translations = theme_params[:translations]
+
+    locale = theme_params[:locale].presence
+    if locale
+      unless I18n.available_locales.include?(locale.to_sym)
+        raise Discourse::InvalidParameters.new(:locale)
+      end
+      I18n.locale = locale
+    end
 
     target_translations.each_pair do |translation_key, new_value|
       @theme.update_translation(translation_key, new_value)

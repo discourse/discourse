@@ -6,7 +6,7 @@ RSpec.describe "Mentions warnings", type: :system do
   fab!(:channel_2) { Fabricate(:chat_channel) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
-  let(:chat_channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   before do
     chat_system_bootstrap(current_user, [channel_1, channel_2])
@@ -22,7 +22,7 @@ RSpec.describe "Mentions warnings", type: :system do
 
         it "displays a warning" do
           chat_page.visit_channel(channel_1)
-          chat_channel_page.type_in_composer("@#{admin_mentionable_group.name} ")
+          channel_page.type_in_composer("@#{admin_mentionable_group.name} ")
 
           expect(page).to have_css(".chat-mention-warnings")
           expect(page.find(".chat-mention-warnings-list__simple")).to have_content(
@@ -46,7 +46,7 @@ RSpec.describe "Mentions warnings", type: :system do
 
           it "displays a warning" do
             chat_page.visit_channel(channel_1)
-            chat_channel_page.type_in_composer("@#{publicly_mentionable_group.name} ")
+            channel_page.type_in_composer("@#{publicly_mentionable_group.name} ")
 
             expect(page).to have_css(".chat-mention-warnings")
             expect(page.find(".chat-mention-warnings-list__simple")).to have_content(
@@ -60,12 +60,31 @@ RSpec.describe "Mentions warnings", type: :system do
 
           it "displays a warning" do
             chat_page.visit_channel(channel_1)
-            chat_channel_page.type_in_composer(
+            channel_page.type_in_composer(
               "@#{user_2.username} @#{publicly_mentionable_group.name} ",
             )
 
             expect(page).to have_css(".chat-mention-warnings")
             expect(page.find(".chat-mention-warnings-list__simple")).to be_present
+          end
+
+          it "doesn’t count duplicates" do
+            chat_page.visit_channel(channel_1)
+            channel_page.type_in_composer("@#{user_2.username} @#{user_2.username} ")
+
+            expect(page).to have_no_css(".chat-mention-warnings")
+          end
+
+          it "doesn't consider code-blocks when counting mentions" do
+            raw =
+              "Hey @#{user_2.username}\n\n```\ndef foo\n  @#{publicly_mentionable_group.name} = true\nend\n```\n"
+            message_1 =
+              Fabricate(:chat_message, user: current_user, chat_channel: channel_1, message: raw)
+            chat_page.visit_channel(channel_1)
+
+            channel_page.messages.edit(message_1)
+
+            expect(page).to have_no_css(".chat-mention-warnings")
           end
         end
       end
@@ -77,7 +96,7 @@ RSpec.describe "Mentions warnings", type: :system do
       %w[@here @all].each do |mention_text|
         it "displays a warning" do
           chat_page.visit_channel(channel_1)
-          chat_channel_page.type_in_composer(mention_text)
+          channel_page.type_in_composer(mention_text)
 
           expect(page).to have_css(".chat-mention-warnings")
           expect(page.find(".chat-mention-warnings-list__simple")).to be_present

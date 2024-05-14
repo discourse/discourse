@@ -5,7 +5,7 @@
   >
     <table class="topic-list bookmark-list">
       <thead class="topic-list-header">
-        {{#unless this.site.mobileView}}
+        {{#if this.site.desktopView}}
           <PluginOutlet @name="bookmark-list-table-header">
             <th class="topic-list-data">{{i18n "topic.title"}}</th>
             <th class="topic-list-data">&nbsp;</th>
@@ -15,7 +15,7 @@
             <th class="post-metadata topic-list-data">{{i18n "activity"}}</th>
             <th>&nbsp;</th>
           </PluginOutlet>
-        {{/unless}}
+        {{/if}}
       </thead>
       <tbody class="topic-list-body">
         {{#each this.content as |bookmark|}}
@@ -98,7 +98,7 @@
                 {{on "click" this.screenExcerptForExternalLink}}
               >{{html-safe bookmark.excerpt}}</p>
             </th>
-            {{#unless this.site.mobileView}}
+            {{#if this.site.desktopView}}
               <td class="author-avatar topic-list-data">
                 {{#if bookmark.user.avatar_template}}
                   <a
@@ -126,7 +126,7 @@
                 class="num post-metadata"
                 tagName="td"
               }}
-            {{/unless}}
+            {{/if}}
             <td class="topic-list-data">
               <BookmarkActionsDropdown
                 @bookmark={{bookmark}}

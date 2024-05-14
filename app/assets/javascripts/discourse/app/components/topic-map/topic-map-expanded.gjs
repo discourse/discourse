@@ -14,6 +14,14 @@ const TRUNCATED_LINKS_LIMIT = 5;
 export default class TopicMapExpanded extends Component {
   @tracked allLinksShown = false;
 
+  get topicLinks() {
+    return this.args.topicDetails.links;
+  }
+
+  get participants() {
+    return this.args.topicDetails.participants;
+  }
+
   @action
   showAllLinks() {
     this.allLinksShown = true;
@@ -21,21 +29,21 @@ export default class TopicMapExpanded extends Component {
 
   get linksToShow() {
     return this.allLinksShown
-      ? this.args.postAttrs.topicLinks
-      : this.args.postAttrs.topicLinks.slice(0, TRUNCATED_LINKS_LIMIT);
+      ? this.topicLinks
+      : this.topicLinks.slice(0, TRUNCATED_LINKS_LIMIT);
   }
 
   <template>
-    {{#if @postAttrs.participants}}
+    {{#if this.participants}}
       <section class="avatars">
         <TopicParticipants
           @title={{i18n "topic_map.participants_title"}}
-          @userFilters={{@postAttrs.userFilters}}
-          @participants={{@postAttrs.participants}}
+          @userFilters={{@userFilters}}
+          @participants={{this.participants}}
         />
       </section>
     {{/if}}
-    {{#if @postAttrs.topicLinks}}
+    {{#if this.topicLinks}}
       <section class="links">
         <h3>{{i18n "topic_map.links_title"}}</h3>
         <table class="topic-links">
@@ -66,7 +74,7 @@ export default class TopicMapExpanded extends Component {
         {{#if
           (and
             (not this.allLinksShown)
-            (lt TRUNCATED_LINKS_LIMIT @postAttrs.topicLinks.length)
+            (lt TRUNCATED_LINKS_LIMIT this.topicLinks.length)
           )
         }}
           <div class="link-summary">

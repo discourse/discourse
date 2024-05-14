@@ -353,7 +353,16 @@ def regenerate_missing_optimized
 
         if File.exist?(original) && File.size(original) > 0
           FileUtils.mkdir_p(File.dirname(thumbnail))
-          OptimizedImage.resize(original, thumbnail, optimized_image.width, optimized_image.height)
+          if upload.extension == "svg"
+            FileUtils.cp(original, thumbnail)
+          else
+            OptimizedImage.resize(
+              original,
+              thumbnail,
+              optimized_image.width,
+              optimized_image.height,
+            )
+          end
           putc "#"
         else
           missing_uploads << original
@@ -604,7 +613,7 @@ task "uploads:secure_upload_analyse_and_update" => :environment do
       # If secure upload is enabled we need to first set the access control post of
       # all post uploads (even uploads that are linked to multiple posts). If the
       # upload is not set to secure upload then this has no other effect on the upload,
-      # but we _must_ know what the access control post is because the with_secure_uploads?
+      # but we _must_ know what the access control post is because the should_secure_uploads?
       # method is on the post, and this knows about the category security & PM status
       update_uploads_access_control_post if SiteSetting.secure_uploads?
 

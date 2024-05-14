@@ -497,6 +497,18 @@ class TopicsController < ApplicationController
         Topic.find_by(id: topic_id)
       end
 
+    status_opts = { until: params[:until].presence }
+
+    if status == "visible"
+      status_opts[:visibility_reason_id] = (
+        if enabled
+          Topic.visibility_reasons[:manually_relisted]
+        else
+          Topic.visibility_reasons[:manually_unlisted]
+        end
+      )
+    end
+
     case status
     when "closed"
       guardian.ensure_can_close_topic!(@topic)
@@ -510,9 +522,7 @@ class TopicsController < ApplicationController
       guardian.ensure_can_moderate!(@topic)
     end
 
-    params[:until] === "" ? params[:until] = nil : params[:until]
-
-    @topic.update_status(status, enabled, current_user, until: params[:until])
+    @topic.update_status(status, enabled, current_user, status_opts)
 
     render json:
              success_json.merge!(
@@ -1010,6 +1020,7 @@ class TopicsController < ApplicationController
           :group,
           :category_id,
           :notification_level_id,
+          :message,
           *DiscoursePluginRegistry.permitted_bulk_action_parameters,
           tags: [],
         )
@@ -1255,7 +1266,19 @@ class TopicsController < ApplicationController
       raise(SiteSetting.detailed_404 ? ex : Discourse::NotFound)
     end
 
-    opts = params.slice(:page, :print, :filter_top_level_replies, :preview_theme_id)
+    # Allow plugins to append allowed query parameters, so they aren't scrubbed on redirect to proper topic URL
+    additional_allowed_query_parameters =
+      DiscoursePluginRegistry.apply_modifier(
+        :redirect_to_correct_topic_additional_query_parameters,
+        [],
+      )
+
+    opts =
+      params.slice(
+        *%i[page print filter_top_level_replies preview_theme_id].concat(
+          additional_allowed_query_parameters,
+        ),
+      )
     opts.delete(:page) if params[:page] == 0
 
     url = topic.relative_url

@@ -74,9 +74,31 @@ class Middleware::RequestTracker
       elsif data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in)
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
+        if data[:explicit_track_view]
+          # Must be a browser if it had this header from our ajax implementation
+          ApplicationRequest.increment!(:page_view_logged_in_browser)
+          ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
+        end
       elsif !SiteSetting.login_required
         ApplicationRequest.increment!(:page_view_anon)
         ApplicationRequest.increment!(:page_view_anon_mobile) if data[:is_mobile]
+        if data[:explicit_track_view]
+          # Must be a browser if it had this header from our ajax implementation
+          ApplicationRequest.increment!(:page_view_anon_browser)
+          ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
+        end
+      end
+    end
+
+    # Message-bus requests may include this 'deferred track' header which we use to detect
+    # 'real browser' views.
+    if data[:deferred_track] && !data[:is_crawler]
+      if data[:has_auth_cookie]
+        ApplicationRequest.increment!(:page_view_logged_in_browser)
+        ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
+      elsif !SiteSetting.login_required
+        ApplicationRequest.increment!(:page_view_anon_browser)
+        ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
       end
     end
 
@@ -98,17 +120,28 @@ class Middleware::RequestTracker
 
   def self.get_data(env, result, timing, request = nil)
     status, headers = result
+
+    # result may be nil if the downstream app raised an exception
     status = status.to_i
+    headers ||= {}
 
     request ||= Rack::Request.new(env)
     helper = Middleware::AnonymousCache::Helper.new(env, request)
 
+    # Value of the discourse-track-view request header
     env_track_view = env["HTTP_DISCOURSE_TRACK_VIEW"]
-    track_view = status == 200
-    track_view &&= env_track_view != "0" && env_track_view != "false"
-    track_view &&=
-      env_track_view || (request.get? && !request.xhr? && headers["Content-Type"] =~ %r{text/html})
-    track_view = !!track_view
+
+    # Was the discourse-track-view request header set to true? Likely
+    # set by our ajax library to indicate a page view.
+    explicit_track_view = status == 200 && %w[1 true].include?(env_track_view)
+
+    # An HTML response to a GET request is tracked implicitly
+    implicit_track_view =
+      status == 200 && !%w[0 false].include?(env_track_view) && request.get? && !request.xhr? &&
+        headers["Content-Type"] =~ %r{text/html}
+
+    track_view = !!(explicit_track_view || implicit_track_view)
+
     has_auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request).present?
     has_auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env).present?
 
@@ -117,6 +150,10 @@ class Middleware::RequestTracker
 
     is_message_bus = request.path.start_with?("#{Discourse.base_path}/message-bus/")
     is_topic_timings = request.path.start_with?("#{Discourse.base_path}/topics/timings")
+
+    # This header is sent on a follow-up request after a real browser loads up a page
+    # see `scripts/pageview.js` and `instance-initializers/page-tracking.js`
+    has_deferred_track_header = %w[1 true].include?(env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"])
 
     h = {
       status: status,
@@ -129,6 +166,8 @@ class Middleware::RequestTracker
       track_view: track_view,
       timing: timing,
       queue_seconds: env["REQUEST_QUEUE_SECONDS"],
+      explicit_track_view: explicit_track_view,
+      deferred_track: has_deferred_track_header,
     }
 
     if h[:is_background]
@@ -166,7 +205,8 @@ class Middleware::RequestTracker
     data =
       begin
         self.class.get_data(env, result, info, request)
-      rescue StandardError
+      rescue StandardError => e
+        Discourse.warn_exception(e, message: "RequestTracker.get_data failed")
         nil
       end
 
@@ -218,6 +258,7 @@ class Middleware::RequestTracker
         Error code: #{error_code}.
       TEXT
       headers = {
+        "Content-Type" => "text/plain",
         "Retry-After" => available_in.to_s,
         "Discourse-Rate-Limit-Error-Code" => error_code,
       }

@@ -106,6 +106,7 @@ RSpec.describe "Drawer", type: :system do
     fab!(:user_1) { Fabricate(:user) }
 
     before do
+      current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel_1.id)
       channel_1.add(current_user)
       channel_2.add(current_user)
       channel_1.add(user_1)
@@ -140,6 +141,7 @@ RSpec.describe "Drawer", type: :system do
     fab!(:channel) { Fabricate(:chat_channel) }
 
     before do
+      current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel.id)
       channel.add(current_user)
       set_subfolder "/discuss"
     end

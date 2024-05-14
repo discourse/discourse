@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "Glimmer Header", type: :system do
+  let(:header) { PageObjects::Pages::Header.new }
+  let(:search) { PageObjects::Pages::Search.new }
   fab!(:current_user) { Fabricate(:user) }
-  before { SiteSetting.experimental_glimmer_header_groups = Group::AUTO_GROUPS[:everyone] }
+  fab!(:topic)
+  before { SiteSetting.glimmer_header_mode = "enabled" }
 
   it "renders basics" do
     visit "/"
@@ -18,7 +21,7 @@ RSpec.describe "Glimmer Header", type: :system do
     find("button.sign-up-button").click
     expect(page).to have_css(".d-modal.create-account")
 
-    click_outside
+    header.click_outside
 
     find("button.login-button").click
     expect(page).to have_css(".d-modal.login-modal")
@@ -73,32 +76,48 @@ RSpec.describe "Glimmer Header", type: :system do
   it "sets header's height css property" do
     sign_in(current_user)
     visit "/"
-    resize_element(".d-header", 90)
-    wait_for(timeout: 100) { get_computed_style_value(".d-header", "--header-offset") == "90px" }
-    expect(get_computed_style_value(".d-header", "--header-offset")).to eq("90px")
+    header.resize_element(".d-header", 90)
+    wait_for(timeout: 100) do
+      header.get_computed_style_value(".d-header", "--header-offset") == "90px"
+    end
+    expect(header.get_computed_style_value(".d-header", "--header-offset")).to eq("90px")
 
-    resize_element(".d-header", 60)
-    wait_for(timeout: 100) { get_computed_style_value(".d-header", "--header-offset") == "60px" }
-    expect(get_computed_style_value(".d-header", "--header-offset")).to eq("60px")
+    header.resize_element(".d-header", 60)
+    wait_for(timeout: 100) do
+      header.get_computed_style_value(".d-header", "--header-offset") == "60px"
+    end
+    expect(header.get_computed_style_value(".d-header", "--header-offset")).to eq("60px")
+  end
+
+  it "body document is permanently docked regardless of scroll positioning" do
+    Fabricate.times(20, :topic)
+    sign_in(current_user)
+    visit "/"
+
+    expect(page).to have_selector("body.docked")
+    page.execute_script("window.scrollBy(0, 1000)")
+    expect(page).to have_selector("body.docked")
+    page.execute_script("window.scrollTo(0, 0)")
+    expect(page).to have_selector("body.docked")
   end
 
   it "moves focus between tabs using arrow keys" do
     sign_in(current_user)
     visit "/"
     find(".header-dropdown-toggle.current-user").click
-    expect(active_element_id).to eq("user-menu-button-all-notifications")
+    expect(header.active_element_id).to eq("user-menu-button-all-notifications")
 
-    find("##{active_element_id}").send_keys(:arrow_down)
-    expect(active_element_id).to eq("user-menu-button-replies")
+    find("##{header.active_element_id}").send_keys(:arrow_down)
+    expect(header.active_element_id).to eq("user-menu-button-replies")
 
-    4.times { find("##{active_element_id}").send_keys(:arrow_down) }
-    expect(active_element_id).to eq("user-menu-button-profile")
+    4.times { find("##{header.active_element_id}").send_keys(:arrow_down) }
+    expect(header.active_element_id).to eq("user-menu-button-profile")
 
-    find("##{active_element_id}").send_keys(:arrow_down)
-    expect(active_element_id).to eq("user-menu-button-all-notifications")
+    find("##{header.active_element_id}").send_keys(:arrow_down)
+    expect(header.active_element_id).to eq("user-menu-button-all-notifications")
 
-    find("##{active_element_id}").send_keys(:arrow_up)
-    expect(active_element_id).to eq("user-menu-button-profile")
+    find("##{header.active_element_id}").send_keys(:arrow_up)
+    expect(header.active_element_id).to eq("user-menu-button-profile")
   end
 
   it "prioritizes new personal messages bubble over unseen reviewables and regular notifications bubbles" do
@@ -189,23 +208,16 @@ RSpec.describe "Glimmer Header", type: :system do
     end
   end
 
-  private
+  context "when cmd + f keyboard shortcut pressed - when within a topic with 20+ posts" do
+    before { sign_in(current_user) }
+    fab!(:posts) { Fabricate.times(21, :post, topic: topic) }
 
-  def get_computed_style_value(selector, property)
-    page.evaluate_script(
-      "window.getComputedStyle(document.querySelector('#{selector}')).getPropertyValue('#{property}')",
-    ).strip
-  end
-
-  def resize_element(selector, size)
-    page.evaluate_script("document.querySelector('#{selector}').style.height = '#{size}px'")
-  end
-
-  def active_element_id
-    page.evaluate_script("document.activeElement.id")
-  end
-
-  def click_outside
-    find(".d-modal").click(x: 0, y: 0)
+    it "opens search on first press, and closes on the second" do
+      visit "/t/#{topic.slug}/#{topic.id}"
+      header.search_in_topic_keyboard_shortcut
+      expect(search).to have_search_menu_visible
+      header.search_in_topic_keyboard_shortcut
+      expect(search).to have_no_search_menu_visible
+    end
   end
 end

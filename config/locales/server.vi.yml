@@ -126,7 +126,8 @@ vi:
   errors: &errors
     format: ! "%{attribute} %{message}"
     messages:
-      too_long_validation: "cho phép tối đa %{max} ký tự; bạn đã nhập %{length}."
+      too_long_validation:
+        other: "cho phép tối đa %{count} ký tự; bạn đã nhập %{length}."
       invalid_boolean: "Giá trị logic không hợp lệ"
       taken: "đã được lấy trước"
       accepted: phải được chấp nhận
@@ -199,7 +200,6 @@ vi:
     rate_limit:
       other: "Bạn đã gửi %{count} lời mời trong 24 giờ qua, vui lòng đợi %{time_left} lời mời trước khi thử lại."
     confirm_email: "<p>Bạn sắp hoàn thành! Chúng tôi đã gửi một thư kích hoạt đến địa chỉ email của bạn. Vui lòng làm theo hướng dẫn trong thư để kích hoạt tài khoản của bạn.</p><p>Nếu nó không đến, hãy kiểm tra thư mục thư rác của bạn.</p>"
-    cant_invite_to_group: "Bạn không được phép mời người dùng vào (các) nhóm được chỉ định. Đảm bảo rằng bạn là chủ sở hữu của (các) nhóm mà bạn đang cố gắng mời tham gia."
     disabled_errors:
       discourse_connect_enabled: "Lời mời bị tắt vì DiscourseConnect được bật."
       invalid_access: "Bạn không được phép xem tài nguyên đã yêu cầu."
@@ -299,7 +299,6 @@ vi:
   pm_reached_recipients_limit: "Xin lỗi, bạn không thể có nhiều hơn %{recipients_limit} người nhận trong một tin nhắn."
   removed_direct_reply_full_quotes: "Đã tự động xóa trích dẫn của toàn bộ bài viết trước đó."
   watched_words_auto_tag: "Chủ đề được gắn thẻ tự động"
-  secure_upload_not_allowed_in_public_topic: "Xin lỗi, không thể sử dụng (các) nội dung tải lên an toàn sau trong một chủ đề công khai: %{upload_filenames}."
   create_pm_on_existing_topic: "Xin lỗi, bạn không thể tạo PM về một chủ đề hiện có."
   slow_mode_enabled: "Chủ đề này đang ở chế độ chậm."
   just_posted_that: "rất giống với những gì bạn đã viết gần đây"
@@ -770,6 +769,8 @@ vi:
         api: "API"
         user_api: "API người dùng"
       yaxis: "Ngày"
+    consolidated_page_views_browser_detection:
+      yaxis: "Ngày"
     dau_by_mau:
       xaxis: "Ngày"
     daily_engaged_users:
@@ -896,6 +897,10 @@ vi:
       xaxis: "Ngày"
       description: "Số lượt xem trang mới từ thành viên trên thiết bị di động và đăng nhập vào tài khoản."
     page_view_anon_mobile_reqs:
+      xaxis: "Ngày"
+    page_view_anon_browser_reqs:
+      xaxis: "Ngày"
+    page_view_logged_in_browser_reqs:
       xaxis: "Ngày"
     http_background_reqs:
       title: "Hình nền"
@@ -1024,7 +1029,6 @@ vi:
     summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của bài viết"
     summary_max_results: "Các bài đăng tối đa được trả về bởi 'Tóm tắt Chủ đề này'"
     enable_personal_messages: "KHÔNG ĐƯỢC PHÉP, hãy sử dụng cài đặt 'nhóm hỗ trợ tin nhắn cá nhân' để thay thế. Cho phép người dùng cấp độ tin cậy 1 (có thể định cấu hình thông qua độ tin cậy tối thiểu để gửi tin nhắn) tạo tin nhắn và trả lời tin nhắn. Lưu ý rằng nhân viên luôn có thể gửi tin nhắn bất kể điều gì."
-    personal_message_enabled_groups: "Cho phép người dùng trong các nhóm này tạo tin nhắn và trả lời tin nhắn. Nhóm cấp độ tin cậy bao gồm tất cả các cấp độ tin cậy trên con số đó, ví dụ: việc chọn trust_level_1 cũng cho phép người dùng trust_level_2, 3, 4 gửi PM. Lưu ý rằng nhân viên luôn có thể gửi tin nhắn bất kể điều gì."
     enable_system_message_replies: "Cho phép người dùng trả lời tin nhắn hệ thống, ngay cả khi tin nhắn cá nhân bị tắt"
     long_polling_base_url: "URL chính sử dụng cho vòng gọi dài (khi một CDN phục vụ nội dung động, hãy chắc chắn để thiết lập này là vòng gọi gốc), vd: http://origin.site.com"
     polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"
@@ -1330,8 +1334,10 @@ vi:
       must_include_latest: "Top menu phải kèm theo tab 'latest'."
       invalid_string: "Giá trị không hợp lệ."
       invalid_string_min_max: "Phải nằm giữa %{min} và %{max} ký tự."
-      invalid_string_min: "Phải ít nhất %{min} ký tự."
-      invalid_string_max: "Không nhiều hơn %{max} ký tự."
+      invalid_string_min:
+        other: "Phải ít nhất %{count} ký tự."
+      invalid_string_max:
+        other: "Không nhiều hơn %{count} ký tự."
       invalid_reply_by_email_address: "Giá trị phải chứa '%{reply_key}' và phải khác với email thông báo."
       pop3_polling_host_is_empty: "Bạn phải thiết lập 'pop3 polling host' trước khi kích hoạt POP3 polling."
       pop3_polling_username_is_empty: "Bạn phải thiết lập 'pop3 polling username' trước khi kích hoạt POP3 polling."
@@ -1341,6 +1347,15 @@ vi:
       user_locale_not_enabled: "Bạn phải bật 'allow user locale' trước khi kích hoạt thiết lập này."
       min_username_length_range: "Bạn không thiết lập giá trị nhỏ nhất lớn hơn giá trị lớn nhất"
       max_username_length_range: "Bạn không thể thiết lập số tối đa nhỏ hơn số tối thiểu"
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "không hoạt động"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "không hoạt động"
+      - ""
   search:
     within_post: "#%{post_number} bởi %{username}"
     types:
@@ -1455,8 +1470,10 @@ vi:
     activated_by_staff: "Kích hoạt bởi nhân viên"
     new_user_typed_too_fast: "Người dùng mới nhập quá nhanh"
     username:
-      short: "phải dài ít nhất %{min} ký tự"
-      long: "không được dài hơn %{max} ký tự"
+      short:
+        other: "phải ít nhất %{count} ký tự"
+      long:
+        other: "không nhiều hơn %{count} ký tự"
       too_long: "nó quá dài"
       characters: "chỉ được bao gồm số, chữ cái, dấu gạch ngang, dấu chấm và dấu gạch dưới"
       unique: "phải độc nhất"

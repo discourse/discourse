@@ -172,6 +172,20 @@
   z-index: 2;
 }
 
+.bulk-select-topics-dropdown {
+  .select-kit.single-select.dropdown-select-box .select-kit-row {
+    .texts .name {
+      font-weight: normal;
+    }
+    .icons {
+      font-size: var(--font-down-2);
+      margin-right: 0.75em;
+      position: relative;
+      top: 0.15em;
+    }
+  }
+}
+
 .topic-list {
   width: 100%;
   border-collapse: collapse;
@@ -232,10 +246,8 @@
       pointer-events: none;
     }
 
-    &.focused {
-      box-shadow: inset 3px 0 0 var(--tertiary);
-    }
-    /* we have a custom focus indicator so we can remove the native one */
+    // we have a custom focus indicator via .selected
+    // we can remove the native one
     .title:focus {
       outline: none;
     }

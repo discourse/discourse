@@ -5,6 +5,9 @@ root_paths:
   - "/path/to/your/files"
   - "/path/to/more/files"
 
+# Files that are downloaded from URLs are cached in this directory.
+download_cache_path: "/path/to/downloaded/files"
+
 # The number of threads to use for processing uploads is calculated as:
 #   thread_count = [number of cores] * [thread_count_factor]
 # The thread count will be doubled if uploads are stored on S3 because there's a higher latency.

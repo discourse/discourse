@@ -2148,7 +2148,7 @@ class UsersController < ApplicationController
   end
 
   def deprecate_modify_user_params_method
-    # only issue a deprecation warning if the method is overriden somewhere
+    # only issue a deprecation warning if the method is overridden somewhere
     if method(:modify_user_params).source_location[0] !=
          "#{Rails.root}/app/controllers/users_controller.rb"
       Discourse.deprecate(

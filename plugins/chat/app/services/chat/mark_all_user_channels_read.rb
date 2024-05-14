@@ -22,7 +22,7 @@ module Chat
 
     private
 
-    def update_last_read_message_ids(guardian:, **)
+    def update_last_read_message_ids(guardian:)
       updated_memberships = DB.query(<<~SQL, user_id: guardian.user.id)
         UPDATE user_chat_channel_memberships
         SET last_read_message_id = chat_channels.last_message_id
@@ -38,7 +38,7 @@ module Chat
       context[:updated_memberships] = updated_memberships
     end
 
-    def mark_associated_mentions_as_read(guardian:, updated_memberships:, **)
+    def mark_associated_mentions_as_read(guardian:, updated_memberships:)
       return if updated_memberships.empty?
 
       ::Chat::Action::MarkMentionsRead.call(
@@ -47,7 +47,7 @@ module Chat
       )
     end
 
-    def publish_user_tracking_state(guardian:, updated_memberships:, **)
+    def publish_user_tracking_state(guardian:, updated_memberships:)
       data =
         updated_memberships.each_with_object({}) do |membership, data_hash|
           data_hash[membership.channel_id] = {

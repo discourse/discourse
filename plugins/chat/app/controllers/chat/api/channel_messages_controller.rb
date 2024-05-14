@@ -4,28 +4,50 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
   def index
     with_service(::Chat::ListChannelMessages) do
       on_success { render_serialized(result, ::Chat::MessagesSerializer, root: false) }
+      on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
       on_failed_policy(:target_message_exists) { raise Discourse::NotFound }
       on_model_not_found(:channel) { raise Discourse::NotFound }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+      end
     end
   end
 
   def destroy
-    with_service(Chat::TrashMessage) { on_model_not_found(:message) { raise Discourse::NotFound } }
+    with_service(Chat::TrashMessage) do
+      on_success { render(json: success_json) }
+      on_failure { render(json: failed_json, status: 422) }
+      on_model_not_found(:message) { raise Discourse::NotFound }
+      on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+      end
+    end
   end
 
   def restore
     with_service(Chat::RestoreMessage) do
+      on_success { render(json: success_json) }
+      on_failure { render(json: failed_json, status: 422) }
+      on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_model_not_found(:message) { raise Discourse::NotFound }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+      end
     end
   end
 
   def update
     with_service(Chat::UpdateMessage) do
       on_success { render json: success_json.merge(message_id: result[:message].id) }
+      on_failure { render(json: failed_json, status: 422) }
       on_model_not_found(:message) { raise Discourse::NotFound }
       on_model_errors(:message) do |model|
         render_json_error(model.errors.map(&:full_message).join(", "))
+      end
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
       end
     end
   end
@@ -38,10 +60,11 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
 
     with_service(Chat::CreateMessage) do
       on_success { render json: success_json.merge(message_id: result[:message_instance].id) }
+      on_failure { render(json: failed_json, status: 422) }
       on_failed_policy(:no_silenced_user) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_failed_policy(:allowed_to_join_channel) { raise Discourse::InvalidAccess }
-      on_model_not_found(:channel_membership) { raise Discourse::InvalidAccess }
+      on_model_not_found(:membership) { raise Discourse::NotFound }
       on_failed_policy(:ensure_reply_consistency) { raise Discourse::NotFound }
       on_failed_policy(:allowed_to_create_message_in_channel) do |policy|
         render_json_error(policy.reason)
@@ -54,6 +77,9 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
       end
       on_model_errors(:message_instance) do |model|
         render_json_error(model.errors.map(&:full_message).join(", "))
+      end
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
       end
     end
   end

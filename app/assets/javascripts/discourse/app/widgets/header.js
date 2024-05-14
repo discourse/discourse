@@ -2,11 +2,12 @@ import { schedule } from "@ember/runloop";
 import { hbs } from "ember-cli-htmlbars";
 import $ from "jquery";
 import { h } from "virtual-dom";
-import { headerIconsDAG } from "discourse/components/glimmer-header/icons";
+import { headerButtonsDAG } from "discourse/components/header";
+import { headerIconsDAG } from "discourse/components/header/icons";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import scrollLock from "discourse/lib/scroll-lock";
-import { logSearchLinkClick } from "discourse/lib/search";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { avatarImg } from "discourse/widgets/post";
@@ -21,13 +22,19 @@ import discourseLater from "discourse-common/lib/later";
 import I18n from "discourse-i18n";
 
 const SEARCH_BUTTON_ID = "search-button";
-export const PANEL_WRAPPER_ID = "additional-panel-wrapper";
 
 let _extraHeaderIcons;
 clearExtraHeaderIcons();
 
+let _extraHeaderButtons;
+clearExtraHeaderButtons();
+
 export function clearExtraHeaderIcons() {
   _extraHeaderIcons = headerIconsDAG();
+}
+
+export function clearExtraHeaderButtons() {
+  _extraHeaderButtons = headerButtonsDAG();
 }
 
 export const dropdown = {
@@ -173,16 +180,14 @@ createWidget(
 
       html(attrs) {
         return h(
-          "button.icon.btn-flat",
+          "button.icon.btn.no-text.btn-flat",
           {
             attributes: {
               "aria-haspopup": true,
               "aria-expanded": attrs.active,
-              href: attrs.user.path,
               "aria-label": I18n.t("user.account_possessive", {
                 name: attrs.user.name || attrs.user.username,
               }),
-              "data-auto-route": true,
             },
           },
           this.attach("header-notifications", attrs)
@@ -208,13 +213,11 @@ createWidget(
         }
 
         return h(
-          "button.icon.btn-flat",
+          "button.icon.btn.no-text.btn-flat",
           {
             attributes: {
               "aria-expanded": attrs.active,
               "aria-haspopup": true,
-              href: attrs.href,
-              "data-auto-route": true,
               title,
               "aria-label": title,
               id: attrs.iconId,
@@ -233,11 +236,7 @@ createWidget("header-icons", {
   tagName: "ul.icons.d-header-icons",
 
   init() {
-    registerWidgetShim(
-      "extra-icon",
-      "div.wrapper",
-      hbs`<LegacyHeaderIconShim @component={{@data.component}} />`
-    );
+    registerWidgetShim("extra-icon", "span.wrapper", hbs`<@data.component />`);
   },
 
   html(attrs) {
@@ -248,48 +247,47 @@ createWidget("header-icons", {
     const icons = [];
 
     const resolvedIcons = _extraHeaderIcons.resolve();
+
     resolvedIcons.forEach((icon) => {
-      if (["search", "user-menu", "hamburger"].includes(icon.key)) {
-        return;
+      if (icon.key === "search") {
+        icons.push(
+          this.attach("header-dropdown", {
+            title: "search.title",
+            icon: "search",
+            iconId: SEARCH_BUTTON_ID,
+            action: "toggleSearchMenu",
+            active: this.search.visible,
+            href: getURL("/search"),
+            classNames: ["search-dropdown"],
+          })
+        );
+      } else if (icon.key === "user-menu" && attrs.user) {
+        icons.push(
+          this.attach("user-dropdown", {
+            active: attrs.userVisible,
+            action: "toggleUserMenu",
+            user: attrs.user,
+          })
+        );
+      } else if (
+        icon.key === "hamburger" &&
+        (!attrs.sidebarEnabled || this.site.mobileView)
+      ) {
+        icons.push(
+          this.attach("header-dropdown", {
+            title: "hamburger_menu",
+            icon: "bars",
+            iconId: "toggle-hamburger-menu",
+            active: attrs.hamburgerVisible,
+            action: "toggleHamburger",
+            href: "",
+            classNames: ["hamburger-dropdown"],
+          })
+        );
+      } else {
+        icons.push(this.attach("extra-icon", { component: icon.value }));
       }
-      icons.push(this.attach("extra-icon", { component: icon.value }));
     });
-
-    const search = this.attach("header-dropdown", {
-      title: "search.title",
-      icon: "search",
-      iconId: SEARCH_BUTTON_ID,
-      action: "toggleSearchMenu",
-      active: this.search.visible,
-      href: getURL("/search"),
-      classNames: ["search-dropdown"],
-    });
-
-    icons.push(search);
-
-    const hamburger = this.attach("header-dropdown", {
-      title: "hamburger_menu",
-      icon: "bars",
-      iconId: "toggle-hamburger-menu",
-      active: attrs.hamburgerVisible,
-      action: "toggleHamburger",
-      href: "",
-      classNames: ["hamburger-dropdown"],
-    });
-
-    if (!attrs.sidebarEnabled || this.site.mobileView) {
-      icons.push(hamburger);
-    }
-
-    if (attrs.user) {
-      icons.push(
-        this.attach("user-dropdown", {
-          active: attrs.userVisible,
-          action: "toggleUserMenu",
-          user: attrs.user,
-        })
-      );
-    }
 
     return icons;
   },
@@ -359,7 +357,6 @@ createWidget("hamburger-dropdown-wrapper", {
   click(event) {
     if (
       event.target.closest(".sidebar-section-header-button") ||
-      event.target.closest(".sidebar-section-link-button") ||
       event.target.closest(".sidebar-section-link")
     ) {
       this.sendWidgetAction("toggleHamburger");
@@ -373,10 +370,7 @@ createWidget("hamburger-dropdown-wrapper", {
     ) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
-      const finishPosition =
-        document.querySelector("html").classList["direction"] === "rtl"
-          ? "340px"
-          : "-340px";
+      const finishPosition = isDocumentRTL() ? "340px" : "-340px";
       panel
         .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
           duration: 200,
@@ -430,10 +424,7 @@ createWidget("revamped-user-menu-wrapper", {
     ) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
-      const finishPosition =
-        document.querySelector("html").classList["direction"] === "rtl"
-          ? "-340px"
-          : "340px";
+      const finishPosition = isDocumentRTL() ? "-340px" : "340px";
       panel
         .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
           duration: 200,
@@ -496,6 +487,14 @@ export default createWidget("header", {
   buildKey: () => `header`,
   services: ["router", "search"],
 
+  init() {
+    registerWidgetShim(
+      "extra-button",
+      "span.wrapper",
+      hbs`<@data.component />`
+    );
+  },
+
   defaultState() {
     let states = {
       searchVisible: false,
@@ -531,22 +530,17 @@ export default createWidget("header", {
         return headerIcons;
       }
 
-      const panels = [
-        h("span.header-buttons", [
-          new RenderGlimmer(
-            this,
-            "span.before-header-buttons",
-            hbs`<PluginOutlet @name="before-header-buttons"/>`
-          ),
-          this.attach("header-buttons", attrs),
-          new RenderGlimmer(
-            this,
-            "span.after-header-buttons",
-            hbs`<PluginOutlet @name="after-header-buttons"/>`
-          ),
-        ]),
-        headerIcons,
-      ];
+      const buttons = [];
+      const resolvedButtons = _extraHeaderButtons.resolve();
+      resolvedButtons.forEach((button) => {
+        if (button.key === "auth") {
+          buttons.push(this.attach("header-buttons", attrs));
+        }
+        buttons.push(this.attach("extra-button", { component: button.value }));
+      });
+
+      const panels = [];
+      panels.push(h("span.header-buttons", buttons), headerIcons);
 
       if (this.search.visible) {
         this.search.inTopicContext = this.search.inTopicContext && inTopicRoute;
@@ -568,8 +562,6 @@ export default createWidget("header", {
         }
       });
 
-      panels.push(h(`div#${PANEL_WRAPPER_ID}`));
-
       if (this.site.mobileView || this.site.narrowDesktopView) {
         panels.push(this.attach("header-cloak"));
       }
@@ -582,10 +574,23 @@ export default createWidget("header", {
       minimized: !!attrs.topic,
     };
 
-    return h(
-      "div.wrap",
-      this.attach("header-contents", { ...attrs, ...contentsAttrs })
-    );
+    return [
+      h(
+        "div.wrap",
+        this.attach("header-contents", { ...attrs, ...contentsAttrs })
+      ),
+      new RenderGlimmer(
+        this,
+        "div.widget-component-connector",
+        hbs`
+          <PluginOutlet
+            @name="after-header"
+            @outletArgs={{hash minimized=@data.minimized}}
+          />
+        `,
+        { minimized: !!attrs.topic }
+      ),
+    ];
   },
 
   updateHighlight() {
@@ -599,24 +604,6 @@ export default createWidget("header", {
     this.state.hamburgerVisible = false;
     this.search.visible = false;
     this.toggleBodyScrolling(false);
-  },
-
-  linkClickedEvent(attrs) {
-    let searchContextEnabled = false;
-    if (attrs) {
-      searchContextEnabled = attrs.searchContextEnabled;
-
-      const { searchLogId, searchResultId, searchResultType } = attrs;
-      if (searchLogId && searchResultId && searchResultType) {
-        logSearchLinkClick({ searchLogId, searchResultId, searchResultType });
-      }
-    }
-
-    if (!searchContextEnabled) {
-      this.closeAll();
-    }
-
-    this.updateHighlight();
   },
 
   toggleSearchMenu() {
@@ -657,11 +644,15 @@ export default createWidget("header", {
 
   toggleHamburger() {
     if (this.attrs.sidebarEnabled && !this.site.narrowDesktopView) {
-      this.sendWidgetAction("toggleSidebar");
+      if (!this.attrs.showSidebar) {
+        this.sendWidgetAction("toggleSidebar");
+        this.closeAll();
+      } else {
+        this.state.hamburgerVisible = !this.state.hamburgerVisible;
+      }
     } else {
       this.state.hamburgerVisible = !this.state.hamburgerVisible;
       this.toggleBodyScrolling(this.state.hamburgerVisible);
-
       schedule("afterRender", () => {
         // Remove focus from hamburger toggle button
         document.querySelector("#toggle-hamburger-menu")?.blur();
@@ -670,10 +661,9 @@ export default createWidget("header", {
   },
 
   toggleBodyScrolling(bool) {
-    if (!this.site.mobileView) {
-      return;
+    if (this.site.mobileView) {
+      scrollLock(bool);
     }
-    scrollLock(bool);
   },
 
   togglePageSearch() {

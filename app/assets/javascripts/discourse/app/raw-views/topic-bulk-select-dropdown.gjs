@@ -1,6 +1,7 @@
 import EmberObject from "@ember/object";
+import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dropdown";
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
-import BulkSelectTopicsDropdown from "select-kit/components/bulk-select-topics-dropdown";
+import i18n from "discourse-common/helpers/i18n";
 
 export default class extends EmberObject {
   get selectedCount() {
@@ -12,7 +13,9 @@ export default class extends EmberObject {
       this,
       "div.bulk-select-topics-dropdown",
       <template>
-        <span>{{@data.selectedCount}} selected</span>
+        <span class="bulk-select-topic-dropdown__count">
+          {{i18n "topics.bulk.selected_count" count=@data.selectedCount}}
+        </span>
         <BulkSelectTopicsDropdown
           @bulkSelectHelper={{@data.bulkSelectHelper}}
         />

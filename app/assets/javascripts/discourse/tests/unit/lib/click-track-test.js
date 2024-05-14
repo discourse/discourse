@@ -81,7 +81,7 @@ module("Unit | Utility | click-track", function (hooks) {
       assert.true(false, "should not request a csrf token");
     });
 
-    sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
+    sinon.stub(DiscourseURL, "origin").get(() => "http://discuss.domain.com");
 
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
@@ -101,7 +101,7 @@ module("Unit | Utility | click-track", function (hooks) {
   });
 
   test("does not track attachments", async function (assert) {
-    sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
+    sinon.stub(DiscourseURL, "origin").get(() => "http://discuss.domain.com");
 
     pretender.post("/clicks/track", () => assert.true(false));
 

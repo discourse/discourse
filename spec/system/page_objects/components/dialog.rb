@@ -19,6 +19,12 @@ module PageObjects
         find(".dialog-footer .btn-primary").click
       end
 
+      def click_danger
+        find(".dialog-footer .btn-danger").click
+      end
+
+      alias click_ok click_yes
+
       def click_no
         find(".dialog-footer .btn-default").click
       end

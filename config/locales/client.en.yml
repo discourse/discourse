@@ -213,6 +213,7 @@ en:
       dismiss: "Dismiss"
 
     bootstrap_mode: "Getting started"
+    back_button: "Back"
 
     themes:
       default_description: "Default"
@@ -258,7 +259,8 @@ en:
         us_west_2: "US West (Oregon)"
 
     clear_input: "Clear input"
-    edit: "edit the title and category of this topic"
+    edit: "Edit"
+    edit_topic: "edit the title and category of this topic"
     expand: "Expand"
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
@@ -303,7 +305,9 @@ en:
     weekly: "weekly"
     every_month: "every month"
     every_six_months: "every six months"
-    max_of_count: "max of %{count}"
+    max_of_count:
+      one: "max of %{count}"
+      other: "max of %{count}"
     character_count:
       one: "%{count} character"
       other: "%{count} characters"
@@ -352,6 +356,10 @@ en:
         unbookmark_with_reminder: "Click to remove all bookmarks and reminders in this topic"
 
     bookmarks:
+      also_set_reminder: "Also set a reminder?"
+      bookmarked_success: "Bookmarked!"
+      deleted_bookmark_success: "Bookmark deleted!"
+      reminder_set_success: "Reminder set!"
       created: "You've bookmarked this post. %{name}"
       created_generic: "You've bookmarked this. %{name}"
       create: "Create bookmark"
@@ -374,8 +382,11 @@ en:
         when_reminder_sent: "Delete bookmark"
         on_owner_reply: "Delete bookmark, once I reply"
         clear_reminder: "Keep bookmark and clear reminder"
+        after_reminder_label: "After reminding you we should..."
+        after_reminder_checkbox: "Set this as default for all future bookmark reminders"
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
+      bookmark: "Bookmark"
       reminders:
         today_with_time: "today at %{time}"
         tomorrow_with_time: "tomorrow at %{time}"
@@ -699,6 +710,7 @@ en:
       in_two_hours: "In two hours"
       later_today: "Later today"
       two_days: "Two days"
+      three_days: "In three days"
       next_business_day: "Next business day"
       tomorrow: "Tomorrow"
       post_local_date: "Date in post"
@@ -720,6 +732,7 @@ en:
       never: "Never"
       last_custom: "Last custom datetime"
       custom: "Custom date and time"
+      custom_short: "Custom..."
       select_timeframe: "Select a timeframe"
 
     user_action:
@@ -752,7 +765,9 @@ en:
       topic_count_long: "Topics Created"
       post_count: "Replies"
       post_count_long: "Replies Posted"
-      no_results: "No results were found."
+      no_results:
+        body: "A list of community members showing their activity will be shown here. For now the list is empty because your community is still brand new!"
+        extra_body: "Admins and moderators can see and manage users in <a href='%{basePath}/admin/users/'>User Admin</a>."
       days_visited: "Visits"
       days_visited_long: "Days Visited"
       posts_read: "Read"
@@ -1014,7 +1029,9 @@ en:
         image: "Upload an image"
       default_notifications:
         modal_title: "User default notifications"
-        modal_description: "Would you like to apply this change historically? This will change preferences for %{count} existing users."
+        modal_description:
+          one: "Would you like to apply this change historically? This will change preferences for %{count} existing user."
+          other: "Would you like to apply this change historically? This will change preferences for %{count} existing users."
         modal_yes: "Yes"
         modal_no: "No, only apply change going forward"
 
@@ -1032,11 +1049,18 @@ en:
       "13": "Inbox"
       "14": "Pending"
       "15": "Drafts"
+      "17": "Links"
 
     categories:
-      all: "all categories"
-      all_subcategories: "all"
-      no_subcategory: "none"
+      categories_label: "categories"
+      subcategories_label: "subcategories"
+      all_subcategories: "all subcategories"
+      no_subcategories: "no subcategories"
+      remove_filter: "remove filter"
+      plus_more_count:
+        one: "+%{count} more"
+        other: "+%{count} more"
+      view_all: "view all"
       category: "Category"
       category_list: "Display category list"
       reorder:
@@ -1068,7 +1092,9 @@ en:
       topic_stat_sentence_month:
         one: "%{count} new topic in the past month."
         other: "%{count} new topics in the past month."
-      n_more: "Categories (%{count} more)…"
+      n_more:
+        one: "Categories (%{count} more)…"
+        other: "Categories (%{count} more)…"
 
     ip_lookup:
       title: IP Address Lookup
@@ -1078,7 +1104,9 @@ en:
       organisation: Organization
       phone: Phone
       other_accounts: "Other accounts with this IP address:"
-      delete_other_accounts: "Delete %{count}"
+      delete_other_accounts:
+        one: "Delete %{count}"
+        other: "Delete %{count}"
       username: "username"
       trust_level: "TL"
       read_time: "read time"
@@ -1125,10 +1153,10 @@ en:
         ignore_duration_time_frame_required: "Please select a time frame"
         ignore_no_users: "You have no ignored users."
         ignore_option: "Ignored"
-        ignore_option_title: "You will not receive notifications related to this user and all of their topics and replies will be hidden."
+        ignore_option_title: "You will not receive any notifications related to this user and all their content will be hidden."
         add_ignored_user: "Add…"
         mute_option: "Muted"
-        mute_option_title: "You will not receive any notifications related to this user."
+        mute_option_title: "You will not receive any notifications, personal messages, or chat direct messages from this user."
         normal_option: "Normal"
         normal_option_title: "You will be notified if this user replies to you, quotes you, or mentions you."
       notification_schedule:
@@ -1159,6 +1187,7 @@ en:
           warning: "Are you sure you want to clear your featured topic?"
       use_current_timezone: "Use Current Timezone"
       profile_hidden: "This user's public profile is hidden."
+      login_to_view_profile: "You must log in to view user profiles"
       inactive_user: "This user is no longer active."
       expand_profile: "Expand"
       sr_expand_profile: "Expand profile details"
@@ -1217,7 +1246,7 @@ en:
         description: "Skip new user onboarding tips and badges"
       reset_seen_user_tips: "Show user tips again"
       theme_default_on_all_devices: "Make this the default theme on all my devices"
-      color_scheme_default_on_all_devices: "Set default color scheme(s) on all my devices"
+      color_scheme_default_on_all_devices: "Set default color scheme on all my devices"
       color_scheme: "Color Scheme"
       color_schemes:
         default_description: "Theme default"
@@ -1233,7 +1262,7 @@ en:
       allow_private_messages: "Allow other users to send me personal messages"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
-      enable_defer: "Enable defer to mark topics unread"
+      enable_defer: "Enable mark topics as unread"
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -1532,8 +1561,8 @@ en:
         save: "Save"
         title: "Passkeys"
         short_description: "Passkeys are password replacements that validate your identity biometrically (e.g. touch, faceID) or via a device PIN/password."
-        added_prefix: "Added"
-        last_used_prefix: "Last Used"
+        added_date: "Added %{date}"
+        last_used_date: "Last Used %{date}"
         never_used: "Never Used"
         not_allowed_error: "The passkey registration process either timed out, was cancelled or is not allowed."
         already_added_error: "You have already registered this passkey. You don’t have to register it again."
@@ -1666,6 +1695,9 @@ en:
         default: "(default)"
         any: "any"
 
+      homepage:
+        default: "(default)"
+
       password_confirmation:
         title: "Password Again"
 
@@ -1770,6 +1802,7 @@ en:
         after_10_minutes: "after 10 minutes"
 
       notification_level_when_replying: "When I post in a topic, set that topic to"
+      topics_unread_when_closed: "Consider topics unread when they are closed"
 
       invited:
         title: "Invites"
@@ -1883,7 +1916,9 @@ en:
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
-        instructions: "At least %{count} characters."
+        instructions:
+          one: "At least %{count} character."
+          other: "At least %{count} characters."
         required: "Please enter a password"
         confirm: "Confirm"
         incorrect_password: "The entered password is incorrect."
@@ -1980,6 +2015,7 @@ en:
 
     user_tips:
       button: "Got it!"
+      skip: "Skip tips"
 
       first_notification:
         title: "Your first notification!"
@@ -1987,7 +2023,7 @@ en:
 
       topic_timeline:
         title: "Topic timeline"
-        content: "Scroll quickly through a post using the topic timeline."
+        content: "Scroll quickly through long topics using the topic timeline."
 
       post_menu:
         title: "Post menu"
@@ -2000,11 +2036,6 @@ en:
       suggested_topics:
         title: "Keep reading!"
         content: "Here are some topics we think you might like to read next."
-
-      admin_guide:
-        title: "Welcome to your new site!"
-        content: "<a href='%{admin_guide_url}'>Read the admin guide</a> to continue building your site and community."
-        content_no_url: "Read the admin guide to continue building your site and community."
 
     loading: "Loading…"
     errors:
@@ -2030,7 +2061,7 @@ en:
       close: "close"
       dismiss_error: "Dismiss error"
     close: "Close"
-    assets_changed_confirm: "This site just received a software upgrade. Get the latest version now?"
+    assets_changed_confirm: "This site just received a software update. Get the latest version now?"
     logout: "You were logged out."
     refresh: "Refresh"
     home: "Home"
@@ -2288,6 +2319,10 @@ en:
         name: "Discord"
         title: "Log in with Discord"
         sr_title: "Log in with Discord"
+      linkedin_oidc:
+        name: "LinkedIn"
+        title: "Log in with LinkedIn"
+        sr_title: "Log in with LinkedIn"
       passkey:
         name: "Log in with a passkey"
       second_factor_toggle:
@@ -2434,7 +2469,9 @@ en:
       group_mentioned:
         one: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} person</a>."
         other: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} people</a>."
-      larger_group_mentioned: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} people</a>. Are you sure?"
+      larger_group_mentioned:
+        one: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} person</a>. Are you sure?"
+        other: "Mentioning %{group} will notify <a href='%{group_link}'>%{count} people</a>. Are you sure?"
       cannot_see_mention:
         category: "You mentioned @%{username} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
         private: "You mentioned @%{username} but they won't be notified because they are unable to see this personal message. You will need to invite them to this personal message."
@@ -2477,7 +2514,7 @@ en:
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
-      create_pm: "Message"
+      create_pm: "Send Message"
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
@@ -2581,7 +2618,9 @@ en:
 
       image_alt_text:
         aria_label: Alt text for image
+        title: "Add image description"
 
+      image_scale_button: "Scale image to %{percent}%"
       delete_image_button: Delete Image
       toggle_image_grid: Toggle image grid
 
@@ -2630,6 +2669,10 @@ en:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated_description:
+        one: "linked %{count} of your posts"
+        other: "linked %{count} of your posts"
+      linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
       invited_to_topic: "<span>%{username}</span> %{description}"
@@ -2703,6 +2746,7 @@ en:
         watching_first_post: "new topic"
         topic_reminder: "topic reminder"
         liked_consolidated: "new likes"
+        linked_consolidated: "new links"
         post_approved: "post approved"
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
@@ -2813,7 +2857,7 @@ en:
           seen: I read
           unseen: I've not read
           wiki: are wiki
-          images: include image(s)
+          images: include images
           all_tags: All the above tags
         statuses:
           label: Where topics
@@ -2914,7 +2958,7 @@ en:
         unlist_topics: "Unlist Topics"
         relist_topics: "Relist Topics"
         reset_bump_dates: "Reset bump dates"
-        defer: "Defer"
+        defer: "Mark unread"
         delete: "Delete Topics"
         dismiss: "Dismiss"
         dismiss_read: "Dismiss all unread"
@@ -2955,6 +2999,12 @@ en:
         selected:
           one: "You have selected <b>%{count}</b> topic."
           other: "You have selected <b>%{count}</b> topics."
+        selected_sole_category:
+          one: "You have selected <b>%{count}</b> topic from category:"
+          other: "You have selected <b>%{count}</b> topics from category:"
+        selected_count:
+          one: "%{count} selected"
+          other: "%{count} selected"
         change_tags: "Replace Tags"
         append_tags: "Append Tags"
         choose_new_tags: "Choose new tags for these topics:"
@@ -3004,6 +3054,8 @@ en:
     topic_bulk_actions:
       close_topics:
         name: "Close Topics"
+        note: "Note"
+        optional: (optional)
       archive_topics:
         name: "Archive Topics"
       unlist_topics:
@@ -3025,10 +3077,10 @@ en:
         name: "Reset Bump Dates"
         description: "Reset the topic bump date to the last created post date, which affects ordering in the topic list"
       defer:
-        name: "Defer Topics"
+        name: "Mark Unread"
         description: "Mark topics as unread"
       update_notifications:
-        name: "Update Notifications…"
+        name: "Update Notifications"
         description: "Change notification level to Watching, Tracking, Normal, or Muted"
 
     topic:
@@ -3047,8 +3099,8 @@ en:
         title: "Move to Inbox"
         help: "Move message back to Inbox"
       defer:
-        help: "Mark as unread"
-        title: "Defer"
+        help: "Mark topic as unread"
+        title: "Mark unread"
 
       list: "Topics"
       new: "new topic"
@@ -3134,6 +3186,7 @@ en:
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
       jump_reply: "Jump to post's original location"
       jump_reply_aria: "Jump to @%{username}'s post in its original location"
+      jump_reply_button: "Jump to post"
       deleted: "The topic has been deleted"
 
       slow_mode_update:
@@ -4032,10 +4085,17 @@ en:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
       unlisted:
-        help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
+        help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link. %{unlistedReason}"
       personal_message:
         title: "This topic is a personal message"
         help: "This topic is a personal message"
+      visibility_reasons:
+        op_flag_threshold_reached: "This topic was automatically unlisted because it reached the flag threshold"
+        op_unhidden: "This topic was relisted by the author"
+        embedded_topic: "This topic was relisted because it is an embedded topic"
+        manually_unlisted: "This topic was manually unlisted by an admin or moderator"
+        manually_relisted: "This topic was manually relisted by an admin or moderator"
+        bulk_action: "This topic's visibility was changed because of a bulk action performed by a user"
     posts: "Posts"
     pending_posts:
       label: "Pending"
@@ -4174,6 +4234,9 @@ en:
         this_week: "Week"
         today: "Today"
 
+    custom_homepage:
+      admin_message: 'One of your themes has enabled the "custom_homepage" modifier but it does not output anything in the [custom-homepage] connector. (This message is only shown to site administrators.)'
+
     browser_update: 'Unfortunately, <a href="https://www.discourse.org/faq/#browser">your browser is unsupported</a>. Please <a href="https://browsehappy.com">switch to a supported browser</a> to view rich content, log in and reply.'
 
     permission_types:
@@ -4250,8 +4313,9 @@ en:
         search: "%{shortcut} Search"
         filter_sidebar: "%{shortcut} Filter sidebar"
         help: "%{shortcut} Open keyboard help"
-        dismiss_new: "%{shortcut} Dismiss New"
-        dismiss_topics: "%{shortcut} Dismiss Topics"
+        toggle_bulk_select: "%{shortcut} Toggle bulk select"
+        dismiss: "%{shortcut} Dismiss selected topics"
+        x: "%{shortcut} Toggle selection (in bulk select mode)"
         log_out: "%{shortcut} Log Out"
       composing:
         title: "Composing"
@@ -4291,7 +4355,7 @@ en:
         mark_tracking: "%{shortcut} Track topic"
         mark_watching: "%{shortcut} Watch topic"
         print: "%{shortcut} Print topic"
-        defer: "%{shortcut} Defer topic"
+        defer: "%{shortcut} Mark topic as unread"
         topic_admin_actions: "%{shortcut} Open topic admin actions"
         archive_private_message: "%{shortcut} Toggle archive private message"
       search_menu:
@@ -4353,8 +4417,10 @@ en:
     tagging:
       all_tags: "All tags"
       other_tags: "Other Tags"
+      selector_tags: "tags"
       selector_all_tags: "all tags"
       selector_no_tags: "no tags"
+      selector_remove_filter: "remove filter"
       tags: "Tags"
       choose_for_topic: "optional tags"
       choose_for_topic_required:
@@ -4587,6 +4653,9 @@ en:
           save: "Save"
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
+          delete_public_confirm: "This section is <strong>visible to everyone</strong>, are you sure you want to delete it?"
+          update_public_confirm: "Changes will be <strong>visible to everyone</strong> on this site. Are you sure?"
+          mark_as_private_confirm: "This section is <strong>visible to everyone</strong>. After the update, it will be <strong>visible only to you</strong>. Are you sure?"
           reset_confirm: "Are you sure you want to reset this section to default?"
           public: "Visible to everyone"
           always_public: "Content in this section is always public"
@@ -4599,23 +4668,31 @@ en:
               label: "Icon"
               validation:
                 blank: "Icon cannot be blank"
-                maximum: "Icon must be shorter than %{count} characters"
+                maximum:
+                  one: "Icon must be shorter than %{count} character"
+                  other: "Icon must be shorter than %{count} characters"
             name:
               label: "Name"
               validation:
                 blank: "Name cannot be blank"
-                maximum: "Name must be shorter than %{count} characters"
+                maximum:
+                  one: "Name must be shorter than %{count} character"
+                  other: "Name must be shorter than %{count} characters"
             value:
               label: "Link"
               validation:
                 blank: "Link cannot be blank"
-                maximum: "Link must be shorter than %{count} characters"
+                maximum:
+                  one: "Link must be shorter than %{count} character"
+                  other: "Link must be shorter than %{count} characters"
                 invalid: "Format is invalid"
           title:
             label: "Section title"
             validation:
               blank: "Title cannot be blank"
-              maximum: "Title must be shorter than %{count} characters"
+              maximum:
+                one: "Title must be shorter than %{count} character"
+                other: "Title must be shorter than %{count} characters"
         about:
           header_link_text: "About"
         messages:
@@ -4678,7 +4755,9 @@ en:
             review:
               content: "Review"
               title: "Flagged posts and other queued items"
-              pending_count: "%{count} pending"
+              pending_count:
+                one: "%{count} pending"
+                other: "%{count} pending"
         global_section: "Global section, visible to everyone"
       panels:
         forum:
@@ -4687,7 +4766,7 @@ en:
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
-        description: "We couldn’t find anything matching ‘%{filter}’"
+        description: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">search site settings</a> or the <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">admin user list?</a>'
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -4706,12 +4785,12 @@ en:
         upload: "Upload"
         uploading: "Uploading"
       errors:
-        valueMissing:
+        value_missing:
           default: "Please fill out this field."
-          select-one: "Please select an item in the list."
-          select-multiple: "Please select at least one item in the list."
+          select_one: "Please select an item in the list."
+          select_multiple: "Please select at least one item in the list."
           checkbox: "Please check this box if you want to proceed."
-        typeMismatch:
+        type_mismatch:
           default: "Please enter a valid value."
           color: "Please enter a color."
           date: "Please enter a date."
@@ -4721,20 +4800,20 @@ en:
           tel: "Please enter a valid telephone number."
           text: "Please enter a text value."
           url: "Please enter a valid URL."
-        tooShort:
+        too_short:
           one: "The input must be %{count} character or longer."
           other: "The input must be %{count} characters or longer."
-        tooLong:
+        too_long:
           one: "The input must be less than %{count} character."
           other: "The input must be less than %{count} characters."
-        rangeOverflow:
+        range_overflow:
           one: "The input must be less than %{count}."
           other: "The input must be less than %{count}."
-        rangeUnderflow:
+        range_underflow:
           one: "The input must be more than %{count}."
           other: "The input must be more than %{count}."
-        patternMismatch: "Please match the requested format."
-        badInput: "Please enter a valid input."
+        pattern_mismatch: "Please match the requested format."
+        bad_input: "Please enter a valid input."
 
     table_builder:
       title: "Table Builder"
@@ -4793,6 +4872,7 @@ en:
           copy: "Copy..."
           paste: "Paste..."
           save: "Save as..."
+    powered_by_discourse: "Powered by Discourse"
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4803,6 +4883,9 @@ en:
       title: "Discourse Admin"
       moderator: "Moderator"
       back_to_forum: "Back to Forum"
+      filter_reports: Filter reports
+      expand_all_sections: "Expand all sections"
+      collapse_all_sections: "Collapse all sections"
 
       tags:
         remove_muted_tags_from_latest:
@@ -4813,7 +4896,12 @@ en:
       reports:
         title: "List of available reports"
         meta_doc: "Explore our <a href='https://meta.discourse.org/t/-/240233' rel='noopener noreferrer' target='_blank'>documentation</a> for a detailed overview of the reports."
+        sidebar_title: "Reports"
+        sidebar_link:
+          all: "All"
 
+      new_features:
+        title: "What's new"
       dashboard:
         title: "Dashboard"
         last_updated: "Dashboard updated:"
@@ -4822,10 +4910,10 @@ en:
         up_to_date: "You're up to date!"
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
-        please_upgrade: "Please upgrade!"
+        please_update: "Please update!"
         no_check_performed: "A check for updates has not been performed. Ensure Sidekiq is running."
         stale_data: "A check for updates has not been performed lately. Ensure Sidekiq is running."
-        version_check_pending: "Looks like you upgraded recently. Fantastic!"
+        version_check_pending: "Looks like you updated recently. Fantastic!"
         installed_version: "Installed"
         latest_version: "Latest"
         problems_found: "Some advice based on your current site settings"
@@ -4871,7 +4959,6 @@ en:
         exception_error: Sorry, an error occurred while executing the query
         too_many_requests: You’ve performed this action too many times. Please wait before trying again.
         not_found_error: Sorry, this report doesn’t exist
-        filter_reports: Filter reports
         custom_date_range: Custom date range
 
         reports:
@@ -5050,6 +5137,10 @@ en:
               delete: Delete a post.
               recover: Recover a post.
               list: List latest posts and private posts. RSS is also supported.
+            revisions:
+              read: "Get the latest or a specific revision."
+              modify: "Hide, show, or revert revisions."
+              permanently_delete: "Permanently delete a revision."
             tags:
               list: List tags.
             tag_groups:
@@ -5222,6 +5313,72 @@ en:
           timestamp: "Created"
           completion: "Completion Time"
           actions: "Actions"
+      home:
+        title: "Home"
+      account:
+        title: "Account"
+        sidebar_link:
+          backups: "Backups"
+          whats_new:
+            title: "What's New"
+            keywords: "changelog|feature|release"
+
+      community:
+        title: "Community"
+        sidebar_link:
+          about_your_site: "About Your Site"
+          badges: "Badges"
+          login_and_authentication: "Login & Authentication"
+          notifications: "Notifications"
+          permalinks: "Permalinks"
+          trust_levels: "Trust Levels"
+          users: "Users"
+          user_fields: "User Fields"
+          watched_words: "Watched Words"
+          legal: "Legal"
+
+      appearance:
+        title: "Appearance"
+        sidebar_link:
+          font_style: "Font Style"
+          site_logo: "Site Logo"
+          color_schemes: "Color Schemes"
+          emoji: "Emoji"
+          navigation: "Navigation"
+          themes: "Themes"
+          components:
+            title: "Components"
+            keywords: "theme|extension"
+          site_texts: "Site Texts"
+
+      email_settings:
+        title: "Email Settings"
+        sidebar_link:
+          appearance: "Appearance"
+          preview_summary: "Preview Summary"
+          server_setup: "Server Setup"
+
+      email_logs:
+        title: "Email Logs"
+        sidebar_link:
+          sent: "Sent"
+          skipped: "Skipped"
+          bounced: "Bounced"
+          received: "Received"
+          rejected: "Rejected"
+
+      security:
+        title: "Security"
+        sidebar_link:
+          error_logs: "Error Logs"
+          screened_emails: "Screened Emails"
+          screened_ips: "Screened IPs"
+          screened_urls: "Screened URLs"
+          search_logs: "Search Logs"
+          security: "Security"
+          spam: "Spam"
+          staff_action_logs: "Staff Action Logs"
+
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
@@ -5238,6 +5395,24 @@ en:
         author: "By %{author}"
         experimental_badge: "experimental"
         learn_more: "Learn more"
+        sidebar_link:
+          installed: "Installed"
+
+      advanced:
+        title: "Advanced"
+        sidebar_link:
+          api_keys: "API keys"
+          developer: "Developer"
+          embedding: "Embedding"
+          rate_limits: "Rate Limits"
+          user_api: "User API"
+          web_hooks: "Webhooks"
+          onebox: "Onebox"
+          files: "Files"
+          other_options: "Other"
+          search: "Search"
+          experimental: "Experimental"
+          all_site_settings: "All Site Settings"
 
       navigation_menu:
         sidebar: "Sidebar"
@@ -5270,6 +5445,7 @@ en:
           uploading_progress: "Uploading… %{progress}%"
           success: "'%{filename}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
           error: "There has been an error while uploading '%{filename}': %{message}"
+        settings: "Settings"
         operations:
           is_running: "An operation is currently running…"
           failed: "The %{operation} failed. Please check the logs."
@@ -5417,13 +5593,17 @@ en:
           convert_theme_tooltip: "Convert this theme to component"
           inactive_themes: "Inactive themes:"
           inactive_components: "Unused components:"
-          selected: "%{count} selected"
+          selected:
+            one: "%{count} selected"
+            other: "%{count} selected"
           cancel: "Cancel"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
           disabled_component_tooltip: "This component has been disabled"
           default_theme_tooltip: "This theme is the site's default theme"
           updates_available_tooltip: "Updates are available for this theme"
-          and_x_more: "and %{count} more."
+          and_x_more:
+            one: "and %{count} more."
+            other: "and %{count} more."
           collapse: Collapse
           uploads: "Uploads"
           no_uploads: "You can upload assets associated with your theme such as fonts and images"
@@ -5546,7 +5726,30 @@ en:
           inactive_filter: "Inactive"
           updates_available_filter: "Updates Available"
           schema:
+            title: "Edit %{name} setting"
             back_button: "Back to %{name}"
+            fields:
+              required: "*required"
+              groups:
+                at_least:
+                  one: "at least %{count} group is required"
+                  other: "at least %{count} groups are required"
+              categories:
+                at_least:
+                  one: "at least %{count} category is required"
+                  other: "at least %{count} categories are required"
+              tags:
+                at_least:
+                  one: "at least %{count} tag is required"
+                  other: "at least %{count} tags are required"
+              string:
+                too_short:
+                  one: "must be at least %{count} character"
+                  other: "must be at least %{count} characters"
+              number:
+                too_small: "must be greater than or equal to %{count}"
+                too_large: "must be less than or equal to %{count}"
+
         colors:
           select_base:
             title: "Select base color palette"
@@ -5847,6 +6050,9 @@ en:
             update_public_sidebar_section: "update public sidebar section"
             destroy_public_sidebar_section: "destroy public sidebar section"
             reset_bounce_score: "reset bounce score"
+            create_watched_word_group: "create watched word group"
+            update_watched_word_group: "update watched word group"
+            delete_watched_word_group: "delete watched word group"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -5896,6 +6102,7 @@ en:
           one: "show %{count} word"
           other: "show %{count} words"
         case_sensitive: "(case-sensitive)"
+        html: "(html)"
         download: Download
         clear_all: Clear All
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
@@ -5920,9 +6127,9 @@ en:
           silence: "Silence new accounts if their very first post contains any of these words. The post will be automatically hidden until staff approves it."
           link: "Replace words in posts with links."
         form:
-          label: "Has word or phrase"
-          placeholder: "Enter word or phrase (* is a wildcard)"
-          placeholder_regexp: "regular expression"
+          label: "Has words or phrases"
+          placeholder: "words or phrases (* is a wildcard)"
+          placeholder_regexp: "regular expressions"
           replace_label: "Replacement"
           replace_placeholder: "example"
           tag_label: "Tag"
@@ -5935,6 +6142,9 @@ en:
           upload_successful: "Upload successful. Words have been added."
           case_sensitivity_label: "Is case-sensitive"
           case_sensitivity_description: "Only words with matching character casing"
+          html_label: "HTML"
+          html_description: "Outputs HTML in the replacement"
+          words_or_phrases: "words or phrases"
         test:
           button_label: "Test"
           modal_title: "%{action}: Test Watched Words"
@@ -6429,7 +6639,7 @@ en:
           empty: "There are no pictures yet. Please upload one."
           upload:
             label: "Upload"
-            title: "Upload image(s)"
+            title: "Upload images"
         selectable_avatars:
           title: "List of avatars users can choose from"
         categories:
@@ -6465,7 +6675,9 @@ en:
         secret_list:
           invalid_input: "Input fields cannot be empty or contain vertical bar character."
         default_categories:
-          modal_description: "Would you like to apply this change historically? This will change preferences for %{count} existing users."
+          modal_description:
+            one: "Would you like to apply this change historically? This will change preferences for %{count} existing user."
+            other: "Would you like to apply this change historically? This will change preferences for %{count} existing users."
           modal_yes: "Yes"
           modal_no: "No, only apply change going forward"
         simple_list:
@@ -6480,6 +6692,7 @@ en:
           add_document_types: "Documents"
           add_types_title: "Allow extensions %{types}"
           add_types_toast: "%{types} file types added"
+        mandatory_group: "Group is mandatory"
 
       badges:
         title: Badges
@@ -6565,9 +6778,13 @@ en:
           perform: "Award Badge to Users"
           upload_csv: Upload a CSV with either user emails or usernames
           aborted: Please upload a CSV containing either user emails or usernames
-          success: Your CSV was received and %{count} users will receive their badge shortly.
+          success:
+            one: "Your CSV was received and %{count} user will receive their badge shortly."
+            other: "Your CSV was received and %{count} users will receive their badge shortly."
           csv_has_unmatched_users: "The following entries are in the CSV file but they couldn't be matched to existing users, and therefore won't receive the badge:"
-          csv_has_unmatched_users_truncated_list: "There were %{count} entries in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
+          csv_has_unmatched_users_truncated_list:
+            one: "There was %{count} entry in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
+            other: "There were %{count} entries in the CSV file that couldn't be matched to existing users, and therefore won't receive the badge. Due to the large number of unmatched entries, only the first 100 are shown:"
           replace_owners: Remove the badge from previous owners
           grant_existing_holders: Grant additional badges to existing badge holders
 
@@ -6582,6 +6799,7 @@ en:
         image: "Image"
         alt: "custom emoji preview"
         delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
+        settings: "Settings"
 
       embedding:
         get_started: "If you'd like to embed Discourse on another website, begin by adding its host."

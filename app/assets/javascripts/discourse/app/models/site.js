@@ -1,4 +1,5 @@
-import EmberObject, { get } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import EmberObject, { computed, get } from "@ember/object";
 import { alias, sort } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -24,39 +25,10 @@ export default class Site extends RestModel.extend().reopenClass(Singleton) {
 
   static create() {
     const result = super.create.apply(this, arguments);
-    const store = result.store;
 
     if (result.categories) {
-      let subcatMap = {};
-
-      result.categoriesById = new Map();
       result.categories = result.categories.map((c) => {
-        if (c.parent_category_id) {
-          subcatMap[c.parent_category_id] =
-            subcatMap[c.parent_category_id] || [];
-          subcatMap[c.parent_category_id].push(c.id);
-        }
-        return (result.categoriesById[c.id] = store.createRecord(
-          "category",
-          c
-        ));
-      });
-
-      // Associate the categories with their parents
-      result.categories.forEach((c) => {
-        let subcategoryIds = subcatMap[c.get("id")];
-        if (subcategoryIds) {
-          c.set(
-            "subcategories",
-            subcategoryIds.map((id) => result.categoriesById[id])
-          );
-        }
-        if (c.get("parent_category_id")) {
-          c.set(
-            "parentCategory",
-            result.categoriesById[c.get("parent_category_id")]
-          );
-        }
+        return result.store.createRecord("category", c);
       });
     }
 
@@ -103,9 +75,19 @@ export default class Site extends RestModel.extend().reopenClass(Singleton) {
     return result;
   }
 
+  @tracked categories;
+
   @alias("is_readonly") isReadOnly;
 
   @sort("categories", "topicCountDesc") categoriesByCount;
+
+  @computed("categories.[]")
+  get categoriesById() {
+    const map = new Map();
+    this.categories.forEach((c) => map.set(c.id, c));
+    return map;
+  }
+
   init() {
     super.init(...arguments);
 
@@ -191,7 +173,6 @@ export default class Site extends RestModel.extend().reopenClass(Singleton) {
     const existingCategory = categories.findBy("id", id);
     if (existingCategory) {
       categories.removeObject(existingCategory);
-      delete this.categoriesById.categoryId;
     }
   }
 
@@ -212,21 +193,6 @@ export default class Site extends RestModel.extend().reopenClass(Singleton) {
       // TODO insert in right order?
       newCategory = this.store.createRecord("category", newCategory);
       categories.pushObject(newCategory);
-      this.categoriesById[categoryId] = newCategory;
-      newCategory.set(
-        "parentCategory",
-        this.categoriesById[newCategory.parent_category_id]
-      );
-      newCategory.set(
-        "subcategories",
-        this.categories.filterBy("parent_category_id", categoryId)
-      );
-      if (newCategory.parentCategory) {
-        if (!newCategory.parentCategory.subcategories) {
-          newCategory.parentCategory.set("subcategories", []);
-        }
-        newCategory.parentCategory.subcategories.pushObject(newCategory);
-      }
       return newCategory;
     }
   }

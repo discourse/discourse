@@ -218,7 +218,17 @@
   }
 }
 
+.topic-bulk-actions-modal {
+  &__selection-info {
+    margin-bottom: 0.5em;
+  }
+}
+
 .d-modal.topic-bulk-actions-modal {
+  .d-modal__title-text {
+    font-size: var(--font-up-2);
+  }
+
   .d-modal {
     &__container {
       display: flex;
@@ -229,6 +239,9 @@
   }
   #bulk-topics-cancel {
     margin-left: auto;
+  }
+  .bulk-close-note-section {
+    margin-top: 1em;
   }
 }
 

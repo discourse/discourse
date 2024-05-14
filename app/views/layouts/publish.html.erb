@@ -8,6 +8,7 @@
     <%= render_google_tag_manager_head_code %>
     <%= render_google_universal_analytics_code %>
     <%= preload_script 'publish' %>
+    <%= preload_script 'pageview' %>
   </head>
   <body class="<%= @body_classes.to_a.join(' ') %>">
     <%= theme_lookup("header") %>

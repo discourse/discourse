@@ -1,6 +1,52 @@
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
 
+// common max animation time in ms for swipe events for swipe end
+// prefers reduced motion and tests return 0
+export function getMaxAnimationTimeMs(durationMs = MAX_ANIMATION_TIME) {
+  if (
+    isTesting() ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    return 0;
+  }
+  return Math.min(durationMs, MAX_ANIMATION_TIME);
+}
+
+//functions to calculate if a swipe should close
+//based on origin of right, left, top, bottom
+// menu should close after a swipe either:
+// if a user moved the panel closed past a threshold and away and is NOT swiping back open
+// if a user swiped to close fast enough regardless of distance
+export function shouldCloseMenu(e, origin) {
+  if (origin === "right") {
+    return (
+      (e.deltaX > SWIPE_DISTANCE_THRESHOLD &&
+        e.velocityX > -SWIPE_VELOCITY_THRESHOLD) ||
+      e.velocityX > 0
+    );
+  } else if (origin === "left") {
+    return (
+      (e.deltaX < -SWIPE_DISTANCE_THRESHOLD &&
+        e.velocityX < SWIPE_VELOCITY_THRESHOLD) ||
+      e.velocityX < 0
+    );
+  } else if (origin === "bottom") {
+    return (
+      (e.deltaY > SWIPE_DISTANCE_THRESHOLD &&
+        e.velocityY > -SWIPE_VELOCITY_THRESHOLD) ||
+      e.velocityY > 0
+    );
+  } else if (origin === "top") {
+    return (
+      (e.deltaY < -SWIPE_DISTANCE_THRESHOLD &&
+        e.velocityY < SWIPE_VELOCITY_THRESHOLD) ||
+      e.velocityY < 0
+    );
+  }
+  return false;
+}
+
 /**
    Swipe events is a class that allows components to detect and respond to swipe gestures
    It sets up custom events for swipestart, swipeend, and swipe for beginning swipe, end swipe, and during swipe. Event returns detail.state with swipe state, and the original event.
@@ -11,6 +57,7 @@ export const SWIPE_DISTANCE_THRESHOLD = 50;
 export const SWIPE_VELOCITY_THRESHOLD = 0.12;
 export const MINIMUM_SWIPE_DISTANCE = 5;
 export const MAX_ANIMATION_TIME = 200;
+
 export default class SwipeEvents {
   //velocity is pixels per ms
 
@@ -35,7 +82,7 @@ export default class SwipeEvents {
       this.element.dispatchEvent(event);
       return;
     }
-    this.#swipeStart(e.touches[0]);
+    this.swipeState = this.#swipeStart(e.touches[0]);
   }
 
   @bind
@@ -63,9 +110,8 @@ export default class SwipeEvents {
   }
 
   addTouchListeners() {
-    const opts = {
-      passive: false,
-    };
+    const opts = { passive: false };
+
     this.element.addEventListener("touchstart", this.touchStart, opts);
     this.element.addEventListener("touchmove", this.touchMove, opts);
     this.element.addEventListener("touchend", this.touchEnd, opts);
@@ -78,52 +124,6 @@ export default class SwipeEvents {
     this.element.removeEventListener("touchmove", this.touchMove);
     this.element.removeEventListener("touchend", this.touchEnd);
     this.element.removeEventListener("touchcancel", this.touchCancel);
-  }
-
-  // common max animation time in ms for swipe events for swipe end
-  // prefers reduced motion and tests return 0
-  getMaxAnimationTimeMs(durationMs = MAX_ANIMATION_TIME) {
-    if (
-      isTesting() ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return 0;
-    }
-    return Math.min(durationMs, MAX_ANIMATION_TIME);
-  }
-
-  //functions to calculate if a swipe should close
-  //based on origin of right, left, top, bottom
-  // menu should close after a swipe either:
-  // if a user moved the panel closed past a threshold and away and is NOT swiping back open
-  // if a user swiped to close fast enough regardless of distance
-  shouldCloseMenu(e, origin) {
-    if (origin === "right") {
-      return (
-        (e.deltaX > SWIPE_DISTANCE_THRESHOLD &&
-          e.velocityX > -SWIPE_VELOCITY_THRESHOLD) ||
-        e.velocityX > 0
-      );
-    } else if (origin === "left") {
-      return (
-        (e.deltaX < -SWIPE_DISTANCE_THRESHOLD &&
-          e.velocityX < SWIPE_VELOCITY_THRESHOLD) ||
-        e.velocityX < 0
-      );
-    } else if (origin === "bottom") {
-      return (
-        (e.deltaY > SWIPE_DISTANCE_THRESHOLD &&
-          e.velocityY > -SWIPE_VELOCITY_THRESHOLD) ||
-        e.velocityY > 0
-      );
-    } else if (origin === "top") {
-      return (
-        (e.deltaY < -SWIPE_DISTANCE_THRESHOLD &&
-          e.velocityY < SWIPE_VELOCITY_THRESHOLD) ||
-        e.velocityY < 0
-      );
-    }
-    return false;
   }
 
   #calculateDirection(oldState, deltaX, deltaY) {
@@ -155,6 +155,7 @@ export default class SwipeEvents {
     const eventDeltaY = e.clientY - oldState.center.y;
     const velocityX = eventDeltaX / timeDiffSeconds;
     const velocityY = eventDeltaY / timeDiffSeconds;
+    const direction = this.#calculateDirection(oldState, deltaX, deltaY);
 
     return {
       startLocation: oldState.startLocation,
@@ -165,12 +166,15 @@ export default class SwipeEvents {
       deltaY,
       start: false,
       timestamp: newTimestamp,
-      direction: this.#calculateDirection(oldState, deltaX, deltaY),
+      direction,
+      element: this.element,
+      goingUp: () => direction === "up",
+      goingDown: () => direction === "down",
     };
   }
 
   #swipeStart(e) {
-    const newState = {
+    return {
       center: { x: e.clientX, y: e.clientY },
       startLocation: { x: e.clientX, y: e.clientY },
       velocityX: 0,
@@ -180,8 +184,10 @@ export default class SwipeEvents {
       start: true,
       timestamp: Date.now(),
       direction: null,
+      element: this.element,
+      goingUp: () => false,
+      goingDown: () => false,
     };
-    this.swipeState = newState;
   }
 
   #swipeMove(e, originalEvent) {
@@ -189,7 +195,7 @@ export default class SwipeEvents {
       return;
     }
     if (!this.swipeState) {
-      this.#swipeStart(e);
+      this.swipeState = this.#swipeStart(e);
       return;
     }
 

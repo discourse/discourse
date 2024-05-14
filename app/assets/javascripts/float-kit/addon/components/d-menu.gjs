@@ -1,40 +1,30 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
+import { concat } from "@ember/helper";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
+import { isTesting } from "discourse-common/config/environment";
 import DFloatBody from "float-kit/components/d-float-body";
+import { MENU } from "float-kit/lib/constants";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 export default class DMenu extends Component {
   @service menu;
+  @service site;
 
-  @tracked menuInstance = null;
+  menuInstance = new DMenuInstance(getOwner(this), {
+    ...this.allowedProperties,
+    autoUpdate: true,
+    listeners: true,
+  });
 
   registerTrigger = modifier((element) => {
-    const options = {
-      ...this.args,
-      ...{
-        autoUpdate: true,
-        listeners: true,
-        beforeTrigger: () => {
-          this.menu.close();
-        },
-      },
-    };
-    const instance = new DMenuInstance(getOwner(this), element, options);
-
-    this.menuInstance = instance;
-
-    return () => {
-      instance.destroy();
-
-      if (this.isDestroying) {
-        this.menuInstance = null;
-      }
-    };
+    this.menuInstance.trigger = element;
+    this.options.onRegisterApi?.(this.menuInstance);
   });
 
   get menuId() {
@@ -52,11 +42,23 @@ export default class DMenu extends Component {
     };
   }
 
+  get allowedProperties() {
+    const properties = {};
+    for (const [key, value] of Object.entries(MENU.options)) {
+      properties[key] = this.args[key] ?? value;
+    }
+    return properties;
+  }
+
   <template>
     <DButton
+      {{this.registerTrigger}}
       class={{concatClass
         "fk-d-menu__trigger"
         (if this.menuInstance.expanded "-expanded")
+        (concat this.options.identifier "-trigger")
+        @triggerClass
+        @class
       }}
       id={{this.menuInstance.id}}
       data-identifier={{this.options.identifier}}
@@ -67,7 +69,6 @@ export default class DMenu extends Component {
       @translatedTitle={{@title}}
       @disabled={{@disabled}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
-      {{this.registerTrigger}}
       ...attributes
     >
       {{#if (has-block "trigger")}}
@@ -76,28 +77,62 @@ export default class DMenu extends Component {
     </DButton>
 
     {{#if this.menuInstance.expanded}}
-      <DFloatBody
-        @instance={{this.menuInstance}}
-        @trapTab={{this.options.trapTab}}
-        @mainClass="fk-d-menu"
-        @innerClass="fk-d-menu__inner-content"
-        @role="dialog"
-        @inline={{this.options.inline}}
-        @portalOutletElement={{this.menu.portalOutletElement}}
-      >
-        {{#if (has-block)}}
-          {{yield this.componentArgs}}
-        {{else if (has-block "content")}}
-          {{yield this.componentArgs to="content"}}
-        {{else if this.options.component}}
-          <this.options.component
-            @data={{this.options.data}}
-            @close={{this.menuInstance.close}}
-          />
-        {{else if this.options.content}}
-          {{this.options.content}}
-        {{/if}}
-      </DFloatBody>
+      {{#if (and this.site.mobileView this.options.modalForMobile)}}
+        <DModal
+          @closeModal={{this.menuInstance.close}}
+          @hideHeader={{true}}
+          class={{concatClass
+            "fk-d-menu-modal"
+            (concat this.options.identifier "-content")
+            @contentClass
+            @class
+          }}
+          @inline={{(isTesting)}}
+          data-identifier={{@instance.options.identifier}}
+          data-content
+        >
+          {{#if (has-block)}}
+            {{yield this.componentArgs}}
+          {{else if (has-block "content")}}
+            {{yield this.componentArgs to="content"}}
+          {{else if this.options.component}}
+            <this.options.component
+              @data={{this.options.data}}
+              @close={{this.menuInstance.close}}
+            />
+          {{else if this.options.content}}
+            {{this.options.content}}
+          {{/if}}
+        </DModal>
+      {{else}}
+        <DFloatBody
+          @instance={{this.menuInstance}}
+          @trapTab={{this.options.trapTab}}
+          @mainClass={{concatClass
+            "fk-d-menu"
+            "fk-d-menu__content"
+            (concat this.options.identifier "-content")
+            @class
+            @contentClass
+          }}
+          @innerClass="fk-d-menu__inner-content"
+          @role="dialog"
+          @inline={{this.options.inline}}
+        >
+          {{#if (has-block)}}
+            {{yield this.componentArgs}}
+          {{else if (has-block "content")}}
+            {{yield this.componentArgs to="content"}}
+          {{else if this.options.component}}
+            <this.options.component
+              @data={{this.options.data}}
+              @close={{this.menuInstance.close}}
+            />
+          {{else if this.options.content}}
+            {{this.options.content}}
+          {{/if}}
+        </DFloatBody>
+      {{/if}}
     {{/if}}
   </template>
 }

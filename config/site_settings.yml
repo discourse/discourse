@@ -15,12 +15,28 @@
 #                      The key should be as the same as possible value of default_locale.
 #
 #
-# type: email    - Must be a valid email address.
-# type: username - Must match the username of an existing user.
-# type: list     - A list of values, chosen from a set of valid values defined in the choices option.
-# type: enum     - A single value, chosen from a set of valid values in the choices option.
+# type: email                 - Must be a valid email address.
+# type: username              - Must match the username of an existing user.
+# type: list                  - A list of values, chosen from a set of valid values
+#                               defined in the choices option. A type:list setting with the word 'colors' in
+#                               its name will make color values have a bold line of the corresponding color
 #
-# A type:list setting with the word 'colors' in its name will make color values have a bold line of the corresponding color
+# type: enum                  - A single value, chosen from a set of valid values in the choices option.
+# type: json_schema           - The setting value is stored as JSON in the database. Used
+#                               in the format `json_schema: ClassName` where the class implements
+#                               a `.schema` class method and returns a hash in the JSON schema
+#                               format (c.f. https://json-schema.org/)
+# type: host_list             - A list of domain names that does not allow * or ? wildcards.
+# type: category_list         - A list of category ids, which shows a special picker in the UI.
+# type: category              - A single category ID, which shows a special picker in the UI.
+# type: uploaded_image_list   - A list of upload IDs that should be images.
+# type: upload                - A single upload ID.
+# type: group                 - A single group ID.
+# type: group_list            - A list of group IDs.
+# type: tag_list              - A list of tag names.
+# type: emoji_list            - A list of emoji names (e.g. joy, cold_hands)
+# type: tag_group_list        - A list of tag group names.
+# type: file_size_restriction - A file size restriction in bytes.
 #
 required:
   title:
@@ -488,6 +504,16 @@ login:
     default: ""
     type: list
     list_type: simple
+  enable_linkedin_oidc_logins:
+    default: false
+    validator: "LinkedinOidcCredentialsValidator"
+  linkedin_oidc_client_id:
+    default: ""
+    regex: "^[a-z0-9]+$"
+  linkedin_oidc_client_secret:
+    default: ""
+    regex: "^[a-zA-Z0-9]+$"
+    secret: true
   auth_skip_create_confirm:
     default: false
     client: true
@@ -727,6 +753,7 @@ users:
     client: true
   max_notifications_per_user:
     default: 10000
+    hidden: true
   gravatar_name:
     default: Gravatar
     client: true
@@ -859,11 +886,11 @@ posting:
   enable_system_message_replies:
     default: true
   personal_message_enabled_groups:
-    default: "3|11" # auto group trust_level_1
+    default: "1|2|11" # auto group admins, moderators, trust_level_1
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   editing_grace_period: 300
   editing_grace_period_max_diff: 100
   editing_grace_period_max_diff_high_trust: 400
@@ -956,11 +983,11 @@ posting:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   here_mention_allowed_groups:
-    default: "3|12" # auto group staff and trust_level_2
+    default: "1|2|12" # auto group admins, moderators, trust_level_2
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   title_max_word_length:
     default: 30
     locale_default:
@@ -1065,21 +1092,21 @@ posting:
     enum: "TrustLevelSetting"
     hidden: true
   approve_unless_allowed_groups:
-    default: "3|10" # auto groups staff and trust_level_0
+    default: "1|2|10" # auto groups admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   approve_new_topics_unless_trust_level:
     default: 0
     enum: "TrustLevelSetting"
     hidden: true
   approve_new_topics_unless_allowed_groups:
-    default: "3|10" # auto groups staff and trust_level_0
+    default: "1|2|10" # auto groups admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   approve_suspect_users:
     default: true
   approve_unless_staged:
@@ -1104,7 +1131,8 @@ posting:
   embed_any_origin: false
   embed_topics_list: false
   embed_set_canonical_url: false
-  embed_unlisted: true
+  embed_unlisted: false
+  import_embed_unlisted: true
   embed_truncate: true
   embed_support_markdown: false
   allowed_embed_selectors: ""
@@ -1149,11 +1177,11 @@ posting:
     enum: "TrustLevelSetting"
     hidden: true
   skip_review_media_groups:
-    default: "3|10" # auto groups staff and trust_level_0
+    default: "1|2|10" # auto groups admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   blur_tl0_flagged_posts_media:
     default: true
     client: true
@@ -1267,11 +1295,11 @@ email:
     enum: "TrustLevelSetting"
     hidden: true
   email_in_allowed_groups:
-    default: "3|12" # auto group staff and trust_level_2
+    default: "1|2|12" # auto group admins, moderators, trust_level_2
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   email_in_authserv_id:
     default: ""
   email_in_spam_header:
@@ -1701,88 +1729,89 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   create_topic_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_edit_wiki_post:
     default: 1
     enum: "TrustLevelSetting"
     hidden: true
   edit_wiki_post_allowed_groups:
-    default: "3|11" # auto group staff and trust_level_1
+    default: "1|2|11" # auto group admins, moderators, trust_level_1
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_edit_post:
     default: 0
     enum: "TrustLevelSetting"
     hidden: true
   edit_post_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_allow_self_wiki:
     default: 3
     enum: "TrustLevelSetting"
     hidden: true
   self_wiki_allowed_groups:
-    default: "3|13" # auto group staff and trust_level_3
+    default: "1|2|13" # auto group admins, moderators, trust_level_3
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_send_email_messages:
     default: "4"
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   send_email_messages_allowed_groups:
-    default: "1|3|14" # auto group admin, staff, and trust_level_4
+    default: "1|2|14" # auto group admins, moderators, trust_level_4
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_flag_posts:
     default: 1
     enum: "TrustLevelSetting"
     hidden: true
   flag_post_allowed_groups:
-    default: "3|11" # auto group staff and trust_level_1
+    default: "1|2|11" # auto group admins, moderators, trust_level_1
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_post_links:
     default: 0
     enum: "TrustLevelSetting"
     hidden: true
   post_links_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_to_post_embedded_media:
     default: 0
     enum: "TrustLevelSetting"
     hidden: true
   embedded_media_post_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_allow_profile_background:
     default: 0
     client: true
     enum: "TrustLevelSetting"
     hidden: true
   profile_background_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
@@ -1792,7 +1821,8 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   user_card_background_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
@@ -1801,22 +1831,22 @@ trust:
     enum: "TrustLevelSetting"
     hidden: true
   invite_allowed_groups:
-    default: "3|12" # auto group staff and trust_level_2
+    default: "1|2|12" # auto group admins, moderators, trust_level_2
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_allow_ignore:
     default: 2
     enum: "TrustLevelSetting"
     client: true
     hidden: true
   ignore_allowed_groups:
-    default: "3|12" # auto group staff and trust_level_2
+    default: "1|2|12" # auto group admins, moderators, trust_level_2
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
   send_tl2_promotion_message: true
@@ -1928,7 +1958,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot|googleother"
     type: list
     list_type: compact
   browser_update_user_agents:
@@ -1976,7 +2006,7 @@ security:
     list_type: compact
   slow_down_crawler_user_agents:
     type: list
-    default: ""
+    default: "gptbot|claudebot|anthropic-ai|brightbot"
     list_type: compact
   slow_down_crawler_rate: 60
   content_security_policy:
@@ -1992,7 +2022,7 @@ security:
     type: simple_list
     default: ""
   content_security_policy_strict_dynamic:
-    default: false
+    default: true
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
@@ -2228,6 +2258,9 @@ rate_limits:
   max_complete_multipart_per_minute:
     default: 10
     hidden: true
+  max_uploads_per_minute:
+    default: 10
+    hidden: true
 
 developer:
   force_hostname:
@@ -2331,16 +2364,18 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
-  experimental_glimmer_header_groups:
+  glimmer_header_mode:
     client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
+    type: enum
+    choices:
+      - disabled
+      - auto
+      - enabled
+    default: auto
   admin_sidebar_enabled_groups:
     type: group_list
     list_type: compact
-    default: ""
+    default: "1|2"
     allow_any: false
     refresh: true
   lazy_load_categories_groups:
@@ -2357,14 +2392,10 @@ developer:
     hidden: true
   experimental_topic_bulk_actions_enabled_groups:
     default: ""
-    hidden: true
     type: group_list
     list_type: compact
     allow_any: false
     refresh: true
-  experimental_objects_type_for_theme_settings:
-    default: false
-    hidden: true
 
 navigation:
   navigation_menu:
@@ -2732,6 +2763,10 @@ uncategorized:
     default: 120
     min: 1
 
+  linked_notification_consolidation_window_mins:
+    default: 120
+    min: 1
+
   delete_drafts_older_than_n_days:
     default: 180
     max: 36500
@@ -2818,6 +2853,10 @@ uncategorized:
 
   share_anonymized_statistics: true
 
+  enable_powered_by_discourse:
+    default: true
+    client: true
+
   auto_handle_queued_age:
     default: 60
     min: 0
@@ -2847,6 +2886,10 @@ uncategorized:
 
   max_bulk_invites:
     default: 50000
+    hidden: true
+
+  skip_email_bulk_invites:
+    default: false
     hidden: true
 
   max_api_invites:
@@ -3007,11 +3050,11 @@ user_api:
     enum: "TrustLevelSetting"
     hidden: true
   user_api_key_allowed_groups:
-    default: "3|10" # auto group staff and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   allowed_user_api_push_urls:
     default: ""
     type: list
@@ -3060,23 +3103,23 @@ tags:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   create_tag_allowed_groups:
-    default: "1|3|13" # auto group admin, staff, and trust_level_3
+    default: "1|2|13" # auto group admins, moderators, trust_level_3
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
-    validator: "AtLeastOneGroupValidator"
   min_trust_level_to_tag_topics:
     default: "0"
     enum: "TrustLevelAndStaffSetting"
     client: true
     hidden: true
   tag_topic_allowed_groups:
-    default: "1|3|10" # auto group admin, staff, and trust_level_0
+    default: "1|2|10" # auto group admins, moderators, trust_level_0
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
     client: true
-    validator: "AtLeastOneGroupValidator"
   max_tag_search_results:
     client: true
     default: 5

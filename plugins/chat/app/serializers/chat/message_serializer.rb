@@ -57,7 +57,7 @@ module Chat
     end
 
     def excerpt
-      object.censored_excerpt
+      object.excerpt || object.build_excerpt
     end
 
     def reactions

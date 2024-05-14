@@ -4,10 +4,19 @@
   @flash={{this.flash}}
   @flashType="error"
   id="bookmark-reminder-modal"
-  class="bookmark-reminder-modal bookmark-with-reminder"
+  class="bookmark-reminder-modal"
   data-bookmark-id={{this.bookmark.id}}
   {{did-insert this.didInsert}}
 >
+  <:headerPrimaryAction>
+    <DButton
+      @label="bookmarks.save"
+      @action={{this.saveAndClose}}
+      @title="modal.close"
+      class="btn-transparent btn-primary"
+    />
+  </:headerPrimaryAction>
+
   <:body>
     <div class="control-group bookmark-name-wrap">
       <Input

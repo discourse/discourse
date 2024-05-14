@@ -102,7 +102,6 @@ nb_NO:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "er begrenset til %{max} tegn; du brukte %{length}."
       invalid_boolean: "Ugyldig boolsk verdi."
       taken: "er allerede tatt"
       accepted: må bli godkjent
@@ -697,6 +696,8 @@ nb_NO:
         api: "API"
         user_api: "Bruker-API"
       yaxis: "Dag"
+    consolidated_page_views_browser_detection:
+      yaxis: "Dag"
     dau_by_mau:
       title: "DAB/MAB"
       xaxis: "Dag"
@@ -829,6 +830,10 @@ nb_NO:
       title: "Anonyme Sidevisninger"
       xaxis: "Dag"
       yaxis: "Mobile Anonyme Sidevisninger"
+    page_view_anon_browser_reqs:
+      xaxis: "Dag"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Bakgrunn"
       xaxis: "Dag"
@@ -1005,10 +1010,17 @@ nb_NO:
       invalid_integer_min_max: "Verdien må være mellom %{min} og %{max}."
       invalid_integer: "Verdien må være et heltall."
       invalid_string: "Ugyldig verdi"
-      invalid_string_min: "Må være minst %{min} tegn."
-      invalid_string_max: "Må ikke være mer enn %{max} tegn."
       min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
       max_username_length_range: "Du kan ikke sette maksimum under minimum."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "inaktiv"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "inaktiv"
+      - ""
   search:
     within_post: "#%{post_number} av %{username}"
     types:
@@ -1074,8 +1086,6 @@ nb_NO:
       sent_test: "sendt!"
   user:
     username:
-      short: "må være på minst %{min} tegn"
-      long: "kan ikke være mer enn %{max} tegn"
       unique: "må være unik"
       blank: "Må være til stede"
     email:

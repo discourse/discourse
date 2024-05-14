@@ -68,7 +68,7 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     const text = this.subject.header().label();
     assert.strictEqual(
       text,
-      I18n.t("category.all").toLowerCase(),
+      I18n.t("categories.categories_label"),
       "it uses the noneLabel"
     );
   });

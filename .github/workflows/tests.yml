@@ -3,6 +3,9 @@ name: Tests
 on:
   pull_request:
     paths-ignore:
+      - ".github/workflows/migration-tests.yml"
+      - ".github/dependabot.yml"
+      - ".github/labeler.yml"
       - "migrations/**"
   push:
     branches:
@@ -10,6 +13,9 @@ on:
       - beta
       - stable
     paths-ignore:
+      - ".github/workflows/migration-tests.yml"
+      - ".github/dependabot.yml"
+      - ".github/labeler.yml"
       - "migrations/**"
 
 concurrency:
@@ -24,7 +30,7 @@ jobs:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: ${{ matrix.target }} ${{ matrix.build_type }} # Update fetch-job-id step if changing this
     runs-on: ${{ (matrix.build_type == 'annotations') && 'ubuntu-latest' || 'ubuntu-20.04-8core' }}
-    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}${{ (matrix.ruby == '3.1') && '-ruby-3.1.0' || '' }}
+    container: discourse/discourse_test:slim${{ (matrix.build_type == 'frontend' || matrix.build_type == 'system') && '-browsers' || '' }}
     timeout-minutes: 20
 
     env:
@@ -36,6 +42,7 @@ jobs:
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       MINIO_RUNNER_LOG_LEVEL: DEBUG
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && github.ref == 'refs/main/head' }}
+      CHEAP_SOURCE_MAPS: "1"
 
     strategy:
       fail-fast: false
@@ -43,7 +50,6 @@ jobs:
       matrix:
         build_type: [backend, frontend, system, annotations]
         target: [core, plugins, themes]
-        ruby: ["3.2"]
         exclude:
           - build_type: annotations
             target: plugins
@@ -60,6 +66,11 @@ jobs:
     steps:
       - name: Set working directory owner
         run: chown root:root .
+
+      - name: Remove Chromium
+        continue-on-error: true
+        if: matrix.build_type == 'system'
+        run: apt remove -y chromium-driver chromium
 
       - uses: actions/checkout@v4
         with:
@@ -80,11 +91,18 @@ jobs:
           sudo -E -u postgres script/start_test_db.rb
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
+      - name: Container envs
+        id: container-envs
+        run: |
+          echo "ruby_version=$RUBY_VERSION" >> $GITHUB_OUTPUT
+          echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Bundler cache
         uses: actions/cache@v4
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
+          key: ${{ runner.os }}-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-gem-${{ hashFiles('**/Gemfile.lock') }}-cachev2
 
       - name: Setup gems
         run: |
@@ -92,7 +110,7 @@ jobs:
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
-          bundle install --jobs 4
+          bundle install --jobs $(($(nproc) - 1))
           bundle clean
 
       - name: Get yarn cache directory
@@ -121,13 +139,13 @@ jobs:
         uses: actions/cache@v4
         with:
           path: plugins/*/gems
-          key: ${{ runner.os }}-plugin-gems-${{matrix.ruby}}-${{ hashFiles('plugins/*/plugin.rb') }}
+          key: ${{ runner.os }}-plugin-gems-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-${{ hashFiles('plugins/*/plugin.rb') }}
 
       - name: Checkout official themes
         if: matrix.target == 'themes' && matrix.build_type == 'system'
         run: bin/rake themes:clone_all_official
 
-      - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
+      - name: Add hosts to /etc/hosts, otherwise Chromium cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: |
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
@@ -340,11 +358,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
+        browser: ["Chromium", "Firefox ESR", "Firefox Evergreen"]
 
     env:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
+      CHEAP_SOURCE_MAPS: "1"
 
     steps:
       - uses: actions/checkout@v4

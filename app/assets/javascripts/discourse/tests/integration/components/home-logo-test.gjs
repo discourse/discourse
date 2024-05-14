@@ -1,7 +1,7 @@
 import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import HomeLogo from "discourse/components/glimmer-header/home-logo";
+import HomeLogo from "discourse/components/header/home-logo";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 const bigLogo = "/images/d-logo-sketch.png?test";

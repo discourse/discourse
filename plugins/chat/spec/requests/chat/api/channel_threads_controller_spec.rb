@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::Api::ChannelThreadsController do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:public_channel) { Fabricate(:chat_channel, threading_enabled: true) }
@@ -107,6 +105,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
     end
 
     before do
+      public_channel.add(current_user)
       thread_1.add(current_user)
       thread_3.add(current_user)
     end
@@ -120,6 +119,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
     end
 
     it "has preloaded chat mentions and users for the thread original message" do
+      public_channel.add(thread_1.original_message.user)
       update_message!(
         thread_1.original_message,
         user: thread_1.original_message.user,
@@ -166,6 +166,13 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       it "returns 404" do
         get "/chat/api/channels/#{public_channel.id}/threads"
         expect(response.status).to eq(404)
+      end
+    end
+
+    context "when params are invalid" do
+      it "returns a 400" do
+        get "/chat/api/channels/#{public_channel.id}/threads?limit=9999"
+        expect(response.status).to eq(400)
       end
     end
   end

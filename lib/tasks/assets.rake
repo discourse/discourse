@@ -17,11 +17,13 @@ task "assets:precompile:build" do
     heap_size_limit = check_node_heap_size_limit
 
     if heap_size_limit < 2048
-      STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 2048MB. Setting --max-old-space-size=2048."
-      compile_command = "NODE_OPTIONS='--max-old-space-size=2048' #{compile_command}"
+      STDERR.puts "Node.js heap_size_limit (#{heap_size_limit}) is less than 2048MB. Setting --max-old-space-size=2048 and CHEAP_SOURCE_MAPS=1"
+      compile_command =
+        "JOBS=0 CI=1 NODE_OPTIONS='--max-old-space-size=2048' CHEAP_SOURCE_MAPS=1 #{compile_command}"
     end
 
-    compile_command = "EMBER_ENV=production #{compile_command}" if ENV["EMBER_ENV"].nil?
+    ember_env = ENV["EMBER_ENV"] || "production"
+    compile_command = "#{compile_command} -prod" if ember_env == "production"
 
     only_ember_precompile_build_remaining = (ARGV.last == "assets:precompile:build")
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
@@ -196,7 +198,8 @@ end
 
 # different brotli versions use different parameters
 def brotli_command(path, max_compress)
-  compression_quality = max_compress ? "11" : "6"
+  compression_quality =
+    max_compress ? "11" : (ENV["DISCOURSE_ASSETS_PRECOMPILE_DEFAULT_BROTLI_QUALITY"] || "6")
   "brotli -f --quality=#{compression_quality} #{path} --output=#{path}.br"
 end
 
@@ -265,7 +268,6 @@ task "assets:precompile:compress_js": "environment" do
         manifest
           .files
           .select { |k, v| k =~ /\.js\z/ }
-          .reject { |k, v| k =~ %r{/workbox-.*'/} }
           .each do |file, info|
             path = "#{assets_path}/#{file}"
             _file =

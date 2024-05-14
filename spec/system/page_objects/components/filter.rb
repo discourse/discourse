@@ -12,6 +12,11 @@ module PageObjects
         page.find(".sidebar-filter__clear").click
         self
       end
+
+      def click_back_to_forum
+        page.find(".sidebar-sections__back-to-forum").click
+        self
+      end
     end
   end
 end

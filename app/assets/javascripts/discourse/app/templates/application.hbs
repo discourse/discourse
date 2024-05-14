@@ -1,4 +1,7 @@
-<DiscourseRoot>
+<DStyles />
+<DVirtualHeight />
+
+<DiscourseRoot {{did-insert this.trackDiscoursePainted}}>
   <a href="#main-container" id="skip-link">{{i18n "skip_to_main_content"}}</a>
   <DDocument />
   <PageLoadingSlider />
@@ -9,7 +12,7 @@
   />
 
   {{#if this.showSiteHeader}}
-    {{#if this.currentUser.glimmer_header_enabled}}
+    {{#if this.header.useGlimmerHeader}}
       <GlimmerSiteHeader
         @canSignUp={{this.canSignUp}}
         @showCreateAccount={{route-action "showCreateAccount"}}
@@ -87,6 +90,10 @@
     </div>
 
     <PluginOutlet @name="after-main-outlet" />
+
+    {{#if this.showPoweredBy}}
+      <PoweredByDiscourse />
+    {{/if}}
   </div>
 
   <PluginOutlet
@@ -119,6 +126,6 @@
   {{/if}}
 </DiscourseRoot>
 
-<DInlineMenu />
-<DInlineTooltip />
+<DMenus />
+<DTooltips />
 <DToasts />

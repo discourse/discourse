@@ -29,12 +29,11 @@ class ThemeSettingsSerializer < ApplicationSerializer
   end
 
   def description
+    description_regexp = /^theme_metadata\.settings\.#{setting}(\.description)?$/
+
     locale_file_description =
-      object
-        .theme
-        .internal_translations
-        .find { |t| t.key == "theme_metadata.settings.#{setting}" }
-        &.value
+      object.theme.internal_translations.find { |t| t.key.match?(description_regexp) }&.value
+
     locale_file_description || object.description
   end
 

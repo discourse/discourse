@@ -116,12 +116,14 @@ const DEFAULT_BINDINGS = {
   "shift+f11": { handler: "fullscreenComposer", global: true },
   "shift+u": { handler: "deferTopic" },
   "shift+a": { handler: "toggleAdminActions" },
+  "shift+b": { handler: "toggleBulkSelect" },
   t: { postAction: "replyAsNewTopic" },
   u: { handler: "goBack", anonymous: true },
-  "x r": {
-    click: "#dismiss-new-bottom,#dismiss-new-top",
-  }, // dismiss new
-  "x t": { click: "#dismiss-topics-bottom,#dismiss-topics-top" }, // dismiss topics
+  x: { handler: "bulkSelectItem" },
+  "shift+d": {
+    click:
+      "#dismiss-new-bottom, #dismiss-new-top, #dismiss-topics-bottom, #dismiss-topics-top",
+  }, // dismiss new or unread
 };
 
 const animationDuration = 100;
@@ -410,6 +412,13 @@ export default {
 
   selectUp() {
     this._moveSelection({ direction: -1, scrollWithinPosts: true });
+  },
+
+  bulkSelectItem() {
+    const elem = document.querySelector(
+      ".selected input.bulk-select, .selected .select-post"
+    );
+    elem?.click();
   },
 
   goBack() {
@@ -895,7 +904,17 @@ export default {
   },
 
   toggleAdminActions() {
-    this.appEvents.trigger("topic:toggle-actions");
+    document.querySelector(".toggle-admin-menu")?.click();
+  },
+
+  toggleBulkSelect() {
+    const bulkSelect = document.querySelector("button.bulk-select");
+
+    if (bulkSelect) {
+      bulkSelect.click();
+    } else {
+      getOwner(this).lookup("controller:topic").send("toggleMultiSelect");
+    }
   },
 
   toggleArchivePM() {

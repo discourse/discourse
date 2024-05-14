@@ -10,6 +10,9 @@ RSpec.describe Email::MessageBuilder do
   let(:build_args) { builder.build_args }
   let(:header_args) { builder.header_args }
   let(:allow_reply_header) { described_class::ALLOW_REPLY_BY_EMAIL_HEADER }
+  let(:subject_modifier_block) { Proc.new { |subject, opts| "modified subject" } }
+
+  let(:body_modifier_block) { Proc.new { |subject, opts| "modified body" } }
 
   it "has the correct to address" do
     expect(build_args[:to]).to eq(to_address)
@@ -21,6 +24,30 @@ RSpec.describe Email::MessageBuilder do
 
   it "has the body" do
     expect(builder.body).to eq(body)
+  end
+
+  it "uses the message_builder subject modifier properly" do
+    plugin_instance = Plugin::Instance.new
+    plugin_instance.register_modifier(:message_builder_subject, &subject_modifier_block)
+    expect(builder.subject).to eq("modified subject")
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(
+      plugin_instance,
+      :message_builder_subject,
+      &subject_modifier_block
+    )
+  end
+
+  it "uses the message_builder body modifier properly" do
+    plugin_instance = Plugin::Instance.new
+    plugin_instance.register_modifier(:message_builder_body, &body_modifier_block)
+    expect(builder.body).to eq("modified body")
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(
+      plugin_instance,
+      :message_builder_body,
+      &body_modifier_block
+    )
   end
 
   it "has a utf-8 charset" do

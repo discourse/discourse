@@ -5,11 +5,11 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
-import htmlSafe from "discourse-common/helpers/html-safe";
 import i18n from "discourse-common/helpers/i18n";
 import { makeArray } from "discourse-common/lib/helpers";
 import I18n from "discourse-i18n";
 import SettingValidationMessage from "admin/components/setting-validation-message";
+import SiteSettingsDescription from "admin/components/site-settings/description";
 import ListSetting from "select-kit/components/list-setting";
 
 const IMAGE_TYPES = [
@@ -146,7 +146,7 @@ export default class FileTypesList extends Component {
       class="btn file-types-list__button document"
     />
 
-    <SettingValidationMessage @message={{this.validationMessage}} />
-    <div class="desc">{{htmlSafe @setting.description}}</div>
+    <SettingValidationMessage @message={{@validationMessage}} />
+    <SiteSettingsDescription @description={{@setting.description}} />
   </template>
 }

@@ -62,19 +62,19 @@ module Chat
       SiteSetting.enable_public_channels
     end
 
-    def can_create_channel(guardian:, **)
+    def can_create_channel(guardian:)
       guardian.can_create_chat_channel?
     end
 
-    def fetch_category(contract:, **)
+    def fetch_category(contract:)
       Category.find_by(id: contract.category_id)
     end
 
-    def category_channel_does_not_exist(category:, contract:, **)
+    def category_channel_does_not_exist(category:, contract:)
       !Chat::Channel.exists?(chatable: category, name: contract.name)
     end
 
-    def create_channel(category:, contract:, **)
+    def create_channel(category:, contract:)
       category.create_chat_channel(
         name: contract.name,
         slug: contract.slug,
@@ -85,11 +85,11 @@ module Chat
       )
     end
 
-    def create_membership(channel:, guardian:, **)
+    def create_membership(channel:, guardian:)
       channel.user_chat_channel_memberships.create(user: guardian.user, following: true)
     end
 
-    def enforce_automatic_channel_memberships(channel:, **)
+    def enforce_automatic_channel_memberships(channel:)
       return if !channel.auto_join_users?
       Chat::ChannelMembershipManager.new(channel).enforce_automatic_channel_memberships
     end

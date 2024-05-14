@@ -19,7 +19,7 @@ gem "json"
 
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
 # We intend to drop sprockets rather than upgrade to 4.x
-gem "sprockets", git: "https://github.com/rails/sprockets", branch: "3.x"
+gem "sprockets", "~> 3.7.3"
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master
@@ -31,7 +31,9 @@ gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
-gem "redis"
+# config/initializers/006-mini_profiler.rb depends upon the RedisClient#call.
+# Rework this when upgrading to redis client 5.0 and above.
+gem "redis", "< 5.0"
 
 # This is explicitly used by Sidekiq and is an optional dependency.
 # We tell Sidekiq to use the namespace "sidekiq" which triggers this
@@ -54,8 +56,6 @@ gem "discourse-fonts", require: "discourse_fonts"
 gem "message_bus"
 
 gem "rails_multisite"
-
-gem "fast_xs", platform: :ruby
 
 gem "fastimage"
 
@@ -146,6 +146,7 @@ group :test, :development do
 
   gem "shoulda-matchers", require: false
   gem "rspec-html-matchers"
+  gem "pry-stack_explorer", require: false
   gem "byebug", require: ENV["RM_INFO"].nil?, platform: :mri
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
@@ -197,8 +198,6 @@ gem "unicorn", require: false, platform: :ruby
 gem "puma", require: false
 
 gem "rbtrace", require: false, platform: :mri
-
-gem "gc_tracer", require: false, platform: :mri
 
 # required for feed importing and embedding
 gem "ruby-readability", require: false
@@ -268,3 +267,8 @@ gem "net-http"
 gem "cgi", ">= 0.3.6", require: false
 
 gem "tzinfo-data"
+gem "csv", require: false
+
+# dependencies for the automation plugin
+gem "iso8601"
+gem "rrule"

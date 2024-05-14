@@ -68,14 +68,6 @@
   position: relative;
 }
 
-.chat-channel-title .chat-user-avatar {
-  font-size: var(--font-up-1);
-
-  + .chat-channel-title__usernames {
-    margin-left: 0.5rem;
-  }
-}
-
 .chat-channel-title__restricted-category-icon {
   background-color: var(--secondary);
   position: absolute;

@@ -1,5 +1,3 @@
-$topic-progress-height: 42px;
-
 @keyframes button-jump-up {
   0% {
     margin-bottom: -60px;
@@ -150,23 +148,9 @@ $topic-progress-height: 42px;
       display: flex;
     }
   }
-  .topic-admin-popup-menu.right-side {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: auto;
-    transition: bottom 0.5s;
-    transform: translateZ(
-      0
-    ); // iOS11 Rendering bug https://meta.discourse.org/t/wrench-menu-not-disappearing-on-ios/94297
-  }
 
   &.docked {
     position: initial;
-    .topic-admin-popup-menu.right-side {
-      bottom: unset;
-      right: 10px;
-    }
   }
 
   html:not(.footer-nav-visible) & {
@@ -191,12 +175,13 @@ $topic-progress-height: 42px;
 }
 
 #topic-progress {
+  --topic-progress-height: 42px;
   position: relative;
   background-color: var(--secondary);
   color: var(--tertiary);
   border: 1px solid var(--tertiary-low);
   width: 145px;
-  height: $topic-progress-height;
+  height: var(--topic-progress-height);
 
   /* as a big ol' click target, don't let text inside be selected */
   @include unselectable;

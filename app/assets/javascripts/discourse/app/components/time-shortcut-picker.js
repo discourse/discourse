@@ -52,6 +52,7 @@ export default Component.extend({
   selectedDate: null,
   selectedDatetime: null,
   prefilledDatetime: null,
+  selectedDurationMins: null,
 
   hiddenOptions: null,
   customOptions: null,
@@ -208,7 +209,10 @@ export default Component.extend({
   relativeTimeChanged(relativeTimeMins) {
     let dateTime = now(this.userTimezone).add(relativeTimeMins, "minutes");
 
-    this.set("selectedDatetime", dateTime);
+    this.setProperties({
+      selectedDurationMins: relativeTimeMins,
+      selectedDatetime: dateTime,
+    });
 
     if (this.onTimeSelected) {
       this.onTimeSelected(TIME_SHORTCUT_TYPES.RELATIVE, dateTime);

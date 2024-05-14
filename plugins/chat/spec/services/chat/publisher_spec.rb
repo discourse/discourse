@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::Publisher do
   fab!(:channel) { Fabricate(:category_channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }

@@ -238,6 +238,9 @@ en:
       ignore_channel_wide_mention:
         title: "Ignore channel-wide mentions"
         description: "Do not send notifications for channel-wide mentions (@here and @all)"
+      show_thread_title_prompts:
+        title: "Show thread title prompts"
+        description: "Show prompts to set a title for new threads"
       open: "Open chat"
       open_full_page: "Open full-screen chat"
       close_full_page: "Close full-screen chat"
@@ -590,6 +593,7 @@ en:
       flags:
         off_topic: "This message is not relevant to the current discussion as defined by the channel title, and should probably be moved elsewhere."
         inappropriate: "This message contains content that a reasonable person would consider offensive, abusive, or a violation of <a href=\"%{basePath}/guidelines\">our community guidelines</a>."
+        illegal: "This post requires staff attention because I believe it contains content that is illegal."
         spam: "This message is an advertisement, or vandalism. It is not useful or relevant to the current channel."
         notify_user: "I want to talk to this person directly and personally about their message."
         notify_moderators: "This message requires staff attention for another reason not listed above."
@@ -633,6 +637,17 @@ en:
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Set a thread title"
+        message: "Help others discover this conversation."
+        dismiss_action: "Don't show again"
+        primary_action: "Set title"
+      thread_title_modal:
+        title: "Set thread title"
+        input_placeholder: "Tell others what this conversation is about..."
+        discourse_ai:
+          title: "Generate thread titles automatically"
+          description: "Check out %{url} to learn more about this and other enhancements to your Discourse experience."
       threads:
         open: "Open Thread"
         list: "Threads"

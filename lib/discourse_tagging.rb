@@ -214,9 +214,11 @@ module DiscourseTagging
         new_tag_names: topic.tags.map(&:name),
       )
 
-      return true
+      true
+    else
+      topic.errors.add(:base, I18n.t("tags.user_not_permitted"))
+      false
     end
-    false
   end
 
   def self.validate_category_tags(guardian, model, category, tags = [])
@@ -507,17 +509,15 @@ module DiscourseTagging
 
     term = opts[:term]
     if term.present?
-      term = term.gsub("_", "\\_").downcase
       builder_params[:cleaned_term] = term
 
       if opts[:term_type] == DiscourseTagging.term_types[:starts_with]
-        builder_params[:term] = "#{term}%"
+        builder.where("starts_with(LOWER(name), LOWER(:cleaned_term))")
+        sql.gsub!("/*and_name_like*/", "AND starts_with(LOWER(t.name), LOWER(:cleaned_term))")
       else
-        builder_params[:term] = "%#{term}%"
+        builder.where("position(LOWER(:cleaned_term) IN LOWER(t.name)) <> 0")
+        sql.gsub!("/*and_name_like*/", "AND position(LOWER(:cleaned_term) IN LOWER(t.name)) <> 0")
       end
-
-      builder.where("LOWER(name) LIKE :term")
-      sql.gsub!("/*and_name_like*/", "AND LOWER(t.name) LIKE :term")
     else
       sql.gsub!("/*and_name_like*/", "")
     end

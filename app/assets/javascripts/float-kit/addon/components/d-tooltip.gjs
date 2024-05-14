@@ -1,42 +1,28 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
+import { concat } from "@ember/helper";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import DFloatBody from "float-kit/components/d-float-body";
+import { TOOLTIP } from "float-kit/lib/constants";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 export default class DTooltip extends Component {
   @service tooltip;
   @service internalTooltip;
 
-  @tracked tooltipInstance = null;
+  tooltipInstance = new DTooltipInstance(getOwner(this), {
+    ...this.allowedProperties,
+    autoUpdate: true,
+    listeners: true,
+  });
 
   registerTrigger = modifier((element) => {
-    const options = {
-      ...this.args,
-      ...{
-        listeners: true,
-        beforeTrigger: (instance) => {
-          this.internalTooltip.activeTooltip?.close?.();
-          this.internalTooltip.activeTooltip = instance;
-        },
-      },
-    };
-    const instance = new DTooltipInstance(getOwner(this), element, options);
-
-    this.tooltipInstance = instance;
-
-    return () => {
-      instance.destroy();
-
-      if (this.isDestroying) {
-        this.tooltipInstance = null;
-      }
-    };
+    this.tooltipInstance.trigger = element;
+    this.options.onRegisterApi?.(this.tooltipInstance);
   });
 
   get options() {
@@ -50,8 +36,17 @@ export default class DTooltip extends Component {
     };
   }
 
+  get allowedProperties() {
+    const properties = {};
+    for (const [key, value] of Object.entries(TOOLTIP.options)) {
+      properties[key] = this.args[key] ?? value;
+    }
+    return properties;
+  }
+
   <template>
     <span
+      {{this.registerTrigger this.allowedProperties}}
       class={{concatClass
         "fk-d-tooltip__trigger"
         (if this.tooltipInstance.expanded "-expanded")
@@ -61,10 +56,9 @@ export default class DTooltip extends Component {
       data-identifier={{this.options.identifier}}
       data-trigger
       aria-expanded={{if this.tooltipInstance.expanded "true" "false"}}
-      {{this.registerTrigger}}
       ...attributes
     >
-      <div class="fk-d-tooltip__trigger-container">
+      <span class="fk-d-tooltip__trigger-container">
         {{#if (has-block "trigger")}}
           {{yield this.componentArgs to="trigger"}}
         {{else}}
@@ -77,18 +71,20 @@ export default class DTooltip extends Component {
             <span class="fk-d-tooltip__label">{{@label}}</span>
           {{/if}}
         {{/if}}
-      </div>
+      </span>
     </span>
 
     {{#if this.tooltipInstance.expanded}}
       <DFloatBody
         @instance={{this.tooltipInstance}}
         @trapTab={{and this.options.interactive this.options.trapTab}}
-        @mainClass="fk-d-tooltip"
+        @mainClass={{concatClass
+          "fk-d-tooltip__content"
+          (concat this.options.identifier "-content")
+        }}
         @innerClass="fk-d-tooltip__inner-content"
         @role="tooltip"
         @inline={{this.options.inline}}
-        @portalOutletElement={{this.tooltip.portalOutletElement}}
       >
         {{#if (has-block)}}
           {{yield this.componentArgs}}

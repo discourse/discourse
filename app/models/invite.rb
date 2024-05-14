@@ -13,8 +13,7 @@ class Invite < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
 
-  # TODO(2021-05-22): remove
-  self.ignored_columns = %w[user_id redeemed_at]
+  self.ignored_columns = %w[user_id redeemed_at] # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
 
   BULK_INVITE_EMAIL_LIMIT = 200
   DOMAIN_REGEX =
@@ -32,8 +31,9 @@ class Invite < ActiveRecord::Base
   has_many :topics, through: :topic_invites, source: :topic
 
   validates_presence_of :invited_by_id
-  validates :email, email: true, allow_blank: true
+  validates :email, email: true, allow_blank: true, length: { maximum: 500 }
   validates :custom_message, length: { maximum: 1000 }
+  validates :domain, length: { maximum: 500 }
   validate :ensure_max_redemptions_allowed
   validate :valid_redemption_count
   validate :valid_domain, if: :will_save_change_to_domain?
@@ -350,7 +350,7 @@ class Invite < ActiveRecord::Base
     self.domain.downcase!
 
     if self.domain !~ Invite::DOMAIN_REGEX
-      self.errors.add(:base, I18n.t("invite.domain_not_allowed"))
+      self.errors.add(:base, I18n.t("invite.domain_not_allowed_admin"))
     end
   end
 

@@ -159,7 +159,6 @@ fi:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "on rajoitettu %{max} merkkiin; sinä syötit %{length} merkkiä."
       invalid_boolean: "Totuusarvomuuttuja ei kelpaa"
       taken: "on jo varattu"
       accepted: täytyy hyväksyä
@@ -273,7 +272,6 @@ fi:
       one: "Olet jo lähettänyt %{count} kutsun viimeisen päivän aikana. Odota %{time_left} ennen kuin yrität uudelleen."
       other: "Olet jo lähettänyt %{count} kutsua viimeisen päivän aikana. Odota %{time_left} ennen kuin yrität uudelleen."
     confirm_email: "<p>Melkein valmista! Lähetimme aktivointiviestin sähköpostiosoitteeseesi. Aktivoi tilisi noudattamalla sähköpostissa kerrottuja ohjeita.</p><p>Jos viesti ei saavu, tarkistathan roskapostikansiosi.</p>"
-    cant_invite_to_group: "Sinulla ei ole oikeuksia kutsua käyttäjiä määriteltyihin ryhmiin. Varmista, että olet niiden ryhmien omistaja, joihin yrität kutsua."
     disabled_errors:
       discourse_connect_enabled: "Kutsut on poistettu käytöstä, koska DiscourseConnect on aktiivinen."
       invalid_access: "Sinulla ei ole oikeutta nähdä pyydettyä resurssia."
@@ -391,7 +389,6 @@ fi:
   pm_reached_recipients_limit: "Yksityisviestillä ei voi olla yli %{recipients_limit} vastaanottajaa."
   removed_direct_reply_full_quotes: "Automaattisesti poistettu koko edellisen viestin lainaus."
   watched_words_auto_tag: "Automaattisesti merkitty ketju"
-  secure_upload_not_allowed_in_public_topic: "Näitä suojattuja latauksia ei voi käyttää julkisessa ketjussa: %{upload_filenames}"
   create_pm_on_existing_topic: "Et voi luoda yksityisviestiä olemassa olevasta ketjusta."
   slow_mode_enabled: "Tämä ketju on hidastetussa tilassa."
   just_posted_that: "on liian samanlainen kuin aiempi viestisi"
@@ -534,7 +531,6 @@ fi:
 
       On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
     dominating_topic: Olet kirjoittanut paljon tähän ketjuun! Voisit antaa muille mahdollisuuden vastata täällä ja keskustella asioista myös keskenään.
-    get_a_room: Olet vastannut käyttäjälle @%{reply_username} %{count} kertaa, tiesitkö, että voit lähettää hänelle yksityisviestin?
     dont_feed_the_trolls: Tästä viestistä on jo ilmoitettu ylläpidolle. Haluatko varmasti vastata siihen? Vastaukset negatiiviseen sisältöön rohkaisevat negatiivisempaan käyttäytymiseen.
     too_many_replies: |
       ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
@@ -1139,6 +1135,8 @@ fi:
         user_api: "Käyttäjä-API"
       yaxis: "Päivä"
       description: "API-pyynnöt tavallisille API-avaimille ja käyttäjän API-avaimille."
+    consolidated_page_views_browser_detection:
+      yaxis: "Päivä"
     dau_by_mau:
       title: "PAK/KAK"
       xaxis: "Päivä"
@@ -1298,6 +1296,10 @@ fi:
       xaxis: "Päivä"
       yaxis: "Anonyymien mobiilikäyttäjien sivukatselut"
       description: "Kuinka monta sivukatselua kirjautumattomilta mobiilikäyttäjiltä."
+    page_view_anon_browser_reqs:
+      xaxis: "Päivä"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Päivä"
     http_background_reqs:
       title: "Tausta"
       xaxis: "Päivä"
@@ -1423,7 +1425,6 @@ fi:
     force_https_warning: "Sivusto käyttää SSL-salausta, mutta `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ei ole valittuna sivuston asetuksissa."
     out_of_date_themes: "Päivityksiä on saatavilla näihin teemoihin:"
     unreachable_themes: "Näille teemoille ei voitu tarkistaa päivityksiä:"
-    watched_word_regexp_error: "Säännöllinen lauseke %{action}-tyypin tarkkailuille sanoille ei kelpaa. Tarkista <a href='%{base_path}/admin/customize/watched_words'>tarkkailtujen sanojen asetukset</a> tai poista käytöstä \"watched words regular expressions\" -sivustoasetus."
     v3_analytics_deprecated: "Discoursesi käyttää tällä hetkellä Google Analytics 3:a, jota ei enää tueta heinäkuun 2023 jälkeen. <a href='https://meta.discourse.org/t/260498'>Päivitä Google Analytics 4:ään</a> nyt, jotta saat jatkossakin arvokkaita tietoja ja analytiikkaa verkkosivustosi suoriutumisesta."
     category_style_deprecated: "Discourse käyttää tällä hetkellä vanhentunutta kategoriatyyliä, joka poistuu ennen Discourse 3.2:n lopullista beta-julkaisua. Löydät <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> -artikkelista tietoja siitä, miten voit säilyttää valitsemasi kategoriatyylin."
   site_settings:
@@ -1532,7 +1533,6 @@ fi:
     summarization_strategy: "Muita tapoja tehdä yhteenveto lisäosien rekisteröimästä sisällöstä"
     custom_summarization_allowed_groups: "Ryhmät voivat tehdä yhteenvetoja sisällöistä käyttämällä \"summarization_strategy\"-asetusta."
     enable_personal_messages: "VANHENTUNUT, käytä tämän sijaan \"personal message enabled groups\" -asetusta. Salli luottamustason 1 (määritettävissä viestien lähettämiseen vaadittavan vähimmäisluottamustason kautta) käyttäjien luoda viestejä ja vastata viesteihin. Henkilökunta voi aina lähettää viestejä asetuksista riippumatta."
-    personal_message_enabled_groups: "Salli näiden ryhmien käyttäjien luoda viestejä ja vastata viesteihin. Luottamustasoryhmät sisältävät kaikki tämän luvun yläpuolella olevat luottamustasot. Esimerkiksi luottamustason 1 valitseminen sallii myös luottamustasojen 2, 3 ja 4 käyttäjien lähettää yksityisviestejä. Henkilökunta voi aina lähettää viestejä asetuksista riippumatta."
     enable_system_message_replies: "Sallii käyttäjien vastata järjestelmän viesteihin, vaikka yksityisviestit eivät olisikaan käytössä"
     enable_chunked_encoding: "Ota käyttöön palvelimen joukkokoodausvastaukset. Tämä ominaisuus toimii useimmissa määrityksissä, mutta jotkin välityspalvelimet saattavat puskuroida, mikä aiheuttaa vastausten viivästymisen"
     long_polling_base_url: "Perus-URL, jota käytetään long pollingissa (kun CDN tarjoaa dynaamista sisältöä, varmista että tämä on asetettu noudoksi lähteestä) esim: http://lähde.sivusto.com"
@@ -1592,7 +1592,6 @@ fi:
     content_security_policy_report_only: "Käytä epäilyttävän sisällön raportointia (Content-Security-Policy-Report-Only)"
     content_security_policy_collect_reports: "Ota käyttöön CSP-seulontojen kerääminen lokiin kohteessa /csp_reports"
     content_security_policy_frame_ancestors: "Rajoita sitä, ketkä voivat upottaa tämän sivuston iframe-kehyksiin CSP:n kautta. Hallitse sallittuja isäntiä <a href='%{base_path}/admin/customize/embedding'>Upottaminen</a>-sivulla"
-    content_security_policy_script_src: "Muut sallitut skriptilähteet. Nykyinen palvelin ja CDN sallitaan oletusarvoisesti. Ks. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Ylläpitäjätilit, jotka eivät ole vierailleet sivustolla näin moneen päivään, joutuvat vahvistamaan sähköpostiosoitteensa uudelleen ennen sisäänkirjautumista. Aseta 0 poistaaksesi käytöstä."
     include_secure_categories_in_tag_counts: "Kun tämä on käytössä, tunnisteen ketjujen määrä sisältää ketjut, jotka kuuluvat kaikkien käyttäjien lukurajoitetuille alueille. Kun tämä ei ole käytössä, normaaleille käyttäjille näytetään vain ketjujen määrä tunnisteelle, joissa kaikki ketjut ovat julkisilla alueilla."
     display_personal_messages_tag_counts: "Kun tämä on käytössä, tietyllä tunnisteella merkittyjen yksityisviestien määrä näytetään."
@@ -1794,28 +1793,19 @@ fi:
     edit_all_topic_groups: "Salli ryhmän käyttäjien muokata muiden käyttäjien aiheotsikoita, tunnisteita ja kategorioita"
     edit_all_post_groups: "Salli tämän ryhmän käyttäjien muokata muiden käyttäjien julkaisuja"
     min_trust_to_create_topic: "Ketjun aloittamiseen vaadittava luottamustaso."
-    create_topic_allowed_groups: "Ryhmät, jotka saavat luoda uusia ketjuja."
     allow_flagging_staff: "Jos käytössä, käyttäjät voivat merkitä henkilökunnan viestejä."
     min_trust_to_edit_wiki_post: "Wiki-viestin muokkaamiseen vaadittava luottamustaso."
-    edit_wiki_post_allowed_groups: "Ryhmät, jotka saavat muokata wikiksi merkittyjä viestejä."
     min_trust_to_edit_post: "Viestin muokkaamiseen vaadittava luottamustaso."
-    edit_post_allowed_groups: "Ryhmät, jotka saavat muokata viestejä."
     min_trust_to_allow_self_wiki: "Minimiluottamustaso, jolla käyttäjä voi tehdä omasta viestistään wiki-viestin."
-    self_wiki_allowed_groups: "Ryhmät, joissa käyttäjät voivat luoda oman viestiwikin."
     min_trust_to_send_messages: "VANHENTUNUT, käytä tämän sijaan 'personal message enabled groups' -asetusta. Uusien yksityisviestin luomiseen vaadittava vähimmäisluottamustaso."
     min_trust_to_send_email_messages: "Vähimmäisluottamustaso, jolla voi lähettää yksityisviestejä sähköpostitse."
-    send_email_messages_allowed_groups: "Ryhmät, jotka saavat lähettää yksityisviestejä sähköpostitse."
     min_trust_to_flag_posts: "Vähimmäisluottamustaso, jolla voi merkitä viestejä"
-    flag_post_allowed_groups: "Ryhmät, jotka saavat liputtaa viestejä."
     min_trust_to_post_links: "Vähimmäisluottamustaso, jolla voi lisätä linkkejä viesteihin"
     min_trust_to_post_embedded_media: "Vähimmäisluottamustaso, jolla voi upottaa mediakohteita viesteihin"
     min_trust_level_to_allow_profile_background: "Vähimmäisluottamustaso, jolla voi ladata profiilin taustakuvan"
     min_trust_level_to_allow_user_card_background: "Vähimmäisluottamustaso, jolla voi ladata käyttäjäkortin taustakuvan"
-    user_card_background_allowed_groups: "Ryhmät, jotka saavat ladata verkkoon käyttäjäkortin taustan."
     min_trust_level_to_allow_invite: "Vähimmäisluottamustaso, jolla voi kutsua käyttäjiä"
-    invite_allowed_groups: "Ryhmät, jotka saavat kutsua käyttäjiä."
     min_trust_level_to_allow_ignore: "Vähimmäisluottamustaso, jolla voi sivuuttaa käyttäjiä"
-    ignore_allowed_groups: "Ryhmät, jotka saavat sivuuttaa muita käyttäjiä."
     allowed_link_domains: "Verkkotunnukset, joihin käyttäjät voivat linkittää, vaikkei heillä olisikaan riittävää luottamustasoa lisätä linkkejä"
     newuser_max_links: "Kuinka monta linkkiä uusi käyttäjä voi lisätä viestiin."
     newuser_max_embedded_media: "Kuinka monta upotettua mediakohdetta uusi käyttäjä voi lisätä viestiin."
@@ -1827,7 +1817,6 @@ fi:
     here_mention: "@maininnassa käytettävä nimi, jolla oikeutetut käyttäjät voivat ilmoittaa enintään \"max_here_mentioned\"-asetuksen mukaiselle ketjuun osallistuvalle henkilömäärälle. Ei saa olla olemassa oleva käyttäjätunnus."
     max_here_mentioned: "Enimmäismäärä mainittuja henkilöitä @here-maininnalla."
     min_trust_level_for_here_mention: "Vähimmäisluottamustaso, jolla tehdä @here-maininnan."
-    here_mention_allowed_groups: "Ryhmät, jotka saavat tehdä @here-mainintoja."
     create_thumbnails: "Luo esikatselu- ja lightbox-kuvia, jotka ovat liian suuria mahtuakseen viestiin."
     email_time_window_mins: "Odota (n) minuuttia ennen ilmoitussähköpostien lähettämistä, jotta käyttäjällä on aikaa muokata ja viimeistellä viestinsä."
     personal_email_time_window_seconds: "Odota (n) sekuntia ennen kuin yksityisviestien sähköposti-ilmoitusten lähettämistä, jotta käyttäjillä on mahdollisuus muokata ja viimeistellä viestinsä."
@@ -1943,7 +1932,6 @@ fi:
     log_mail_processing_failures: "Kirjaa kaikki sähköpostin käsittelyvirheet lokiin: <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Salli käyttäjien julkaista uusia aiheita sähköpostitse. Kun asetustus on käytössä, voidaan ryhmille ja kategorioille määrittää vastaanottoon käytettävät sähköpostiosoitteet."
     email_in_min_trust: "Vähimmäisluottamustaso, jonka käyttäjä tarvitsee uuden ketjun aloittamiseen sähköpostitse."
-    email_in_allowed_groups: "Ryhmät, jotka saavat julkaista uusia ketjuja sähköpostitse."
     email_in_authserv_id: "Saapuvien sähköpostien todennustarkistukset suorittavan palvelun tunniste. Katso ohjeet tämän määrittämiseen osoitteesta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>."
     enable_imap: "Ota IMAP käyttöön ryhmäviestien synkronoimiseksi."
     enable_imap_write: "Ota kaksisuuntainen IMAP-synkronointi käyttöön. Jos se on poistettu käytöstä, kaikki IMAP-tilien kirjoitustoiminnot poistetaan käytöstä."
@@ -2051,7 +2039,6 @@ fi:
     embed_username_required: "Käyttäjätunnus vaaditaan ketjun luomiseksi."
     notify_about_reviewable_item_after: "Jos tarkastettavia kohteita ei ole käsitelty määritetyn tuntimäärän sisällä, ilmoita valvojille yksityisviesteillä. Poista käytöstä arvolla 0."
     delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 0, tynkäketjuja ei poistetan koskaan."
-    bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (poista käytöstä arvolla 0, voi kestää jopa 24 tuntia)"
     prevent_anons_from_downloading_files: "Estä tuntemattomia käyttäjiä lataamasta liitteitä."
     secure_uploads: 'Rajoittaa pääsyä KAIKKIIN latauksiin (kuvat, videot, äänet, tekstit, pdf-tiedostot, zip-tiedostot ja muut). Jos "sisäänkirjautuminen vaaditaan" on käytössä, vain kirjautuneilla käyttäjillä on pääsy latauksiin. Muussa tapauksessa pääsy rajoitetaan vain yksityisviesteihin ja yksityisiin alueisiin ladattuihin mediatiedostoihin. VAROITUS: Tämä asetus on monimutkainen ja vaatii syvällistä hallinnollista ymmärrystä. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/-/140017">turvallisia latauksia palvelimeen käsittelevästä ketjusta Metassa</a>.'
     secure_uploads_allow_embed_images_in_emails: "Sallii turvallisten kuvien upottamisen, jotka normaalisti karsittaisiin sähköposteissa, jos niiden koko on pienempi kuin \"secure uploads max email embed image size kb\" -asetus."
@@ -2126,7 +2113,6 @@ fi:
     revoke_user_api_keys_unused_days: "Päivien määrä käyttäjän API-avaimen viimeisimmästä käytöstä ennen kuin se peruutetaan automaattisesti (0 on ei koskaan)"
     revoke_user_api_keys_maxlife_days: "Kuinka monen päivän kuluttua käyttäjän API-avain mitätöidään automaattisesti (0 on ei koskaan)"
     min_trust_to_create_tag: "Vähimmäisluottamustaso, jolla voi luoda tunnisteita."
-    create_tag_allowed_groups: "Ryhmät, jotka saavat luoda tunnisteita."
     max_tags_per_topic: "Suurin tunnisteiden määrä, joka voi liittyä ketjuun."
     enable_max_tags_per_email_subject: "Käytä max_tags_per_email_subject-asetusta luodessasi sähköpostin aihetta"
     max_tags_per_email_subject: "Enimmäismäärä tunnisteita, joka sähköpostin aiheessa voi olla"
@@ -2135,7 +2121,6 @@ fi:
     max_tags_in_filter_list: "Enimmäismäärä tunnisteita, joka näytetään suodatuspudotusvalikossa. Käytetyimmät tunnisteet näytetään."
     tags_sort_alphabetically: "Näytä tunnisteet aakkosjärjestyksessä. Oletusasetus on näyttäminen suosion mukaan."
     tags_listed_by_group: "Listaa tunnisteet tunnisteryhmittäin <a href='%{base_path}/tags' target='_blank'>Tunnisteet-sivulla</a>."
-    pm_tags_allowed_for_groups: "Sallita sisältyvien ryhmien jäsenten merkitä tunnisteella mikä tahansa yksityisviesti"
     min_trust_level_to_tag_topics: "Vähimmäisluottamustaso, jolla voi lisätä tunnisteita ketjuihin"
     suppress_overlapping_tags_in_list: "Jos tunniste esiintyy sanana täsmälleen ketjun otsikossa, älä näytä tunnistetta"
     remove_muted_tags_from_latest: "Jos ketjulla on vain vaimennettuja tunnisteita, älä näytä ketjua Tuoreimmat-ketjuluettelossa."
@@ -2191,8 +2176,6 @@ fi:
       must_include_latest: "Ylävalikon täytyy sisältää 'tuoreimmat'-välilehti."
       invalid_string: "Arvo ei kelpaa."
       invalid_string_min_max: "Merkkien lukumäärän täytyy olla %{min}–%{max}."
-      invalid_string_min: "Täytyy olla vähintään %{min} merkkiä."
-      invalid_string_max: "Ei saa olla yli %{max} merkkiä."
       invalid_json: "Virheellinen JSON."
       invalid_reply_by_email_address: "Arvon täytyy sisältää '%{reply_key}' ja erota ilmoitusten sähköpostiosoitteesta."
       invalid_alternative_reply_by_email_addresses: "Kaikkien arvojen täytyy sisältää '%{reply_key}' ja erota ilmoitusten sähköpostiosoitteesta."
@@ -2225,7 +2208,6 @@ fi:
         regex_invalid: "Säännöllinen lauseke ei kelpaa: %{error}"
         leading_trailing_slash: "Säännöllinen lauseke ei voi alkaa eikä loppua kauttaviivalla."
       unicode_usernames_avatars: "Sisäinen avatarjärjestelmä ei tue Unicode-käyttäjätunnuksia."
-      list_value_count: "Luettelon täytyy sisältää täsmälleen %{count} arvoa."
       markdown_linkify_tlds: "Et voi lisätä arvoa \"*\"."
       google_oauth2_hd_groups: "Sinun täytyy määrittää kaikki \"google oauth2 hd\" -asetukset ennen kuin otat tämän asetuksen käyttöön."
       search_tokenize_chinese_enabled: "\"search_tokenize_chinese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
@@ -2253,6 +2235,14 @@ fi:
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
       send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "ei aktiivinen"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "ei aktiivinen"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2452,8 +2442,6 @@ fi:
     new_user_typed_too_fast: "Uusi käyttäjä näppäili liian nopeasti"
     content_matches_auto_silence_regex: "Sisältö vastaa automaattisesti hiljennettävää säännöllistä lauseketta"
     username:
-      short: "täytyy olla vähintään %{min} merkkiä"
-      long: "ei saa olla yli %{max} merkkiä"
       too_long: "on liian pitkä"
       characters: "voi sisältää vain numeroita, kirjaimia, väliviivoja, pisteitä ja alaviivoja"
       unique: "täytyy olla uniikki"
@@ -2612,35 +2600,9 @@ fi:
   new_version_mailer:
     title: "Uusi versio"
     subject_template: "[%{email_prefix}] Uusi Discourse-versio, päivitys saatavilla"
-    text_body_template: |
-      Hurraa, uusi [Discourse-versio](https://www.discourse.org) on saatavilla!
-
-      Sinun versiosi: %{installed_version}
-      Uusi versio: **%{new_version}**
-
-      – Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
-
-      – Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tag/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/main)
-
-      – Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
   new_version_mailer_with_notes:
     title: "Uusi versio julkaisumuistiolla"
     subject_template: "[%{email_prefix}] päivitys saatavilla"
-    text_body_template: |
-      Hurraa, uusi [Discourse-versio](https://www.discourse.org) on saatavilla!
-
-      Sinun versiosi: %{installed_version}
-      Uusi versio: **%{new_version}**
-
-      – Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
-
-      – Katso mikä on uutta [julkaisutiedoista](https://meta.discourse.org/tag/release-notes) tai tutki [raakaa GitHubin muutoslokia](https://github.com/discourse/discourse/commits/main)
-
-      – Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
-
-      ### Julkaisutiedot
-
-      %{notes}
   flag_reasons:
     off_topic: "Viestisi merkittiin **eksyvän aiheesta**: koetaan, ettei se ei kuulu ketjun aiheeseen, jonka määrittelevät sen aloitusviesti ja otsikko."
     inappropriate: "Viestisi liputettiin **sopimattomaksi**: se koetaan loukkaavaksi, herjaavaksi, vihamieliseksi toiminnaksi tai [yhteisön sääntöjen](%{base_path}/guidelines) vastaiseksi."
@@ -4161,7 +4123,6 @@ fi:
     mass_award:
       errors:
         invalid_csv: Rivillä %{line_number} havaittiin virhe. Varmista, että CSV:ssä on yksi sähköpostiosoite riviä kohden.
-        too_many_csv_entries: Liian monta merkintää CSV-tiedostossa. Anna CSV-tiedosto, jossa on enintään %{count} merkintää.
         badge_disabled: Ota kunniamerkki %{badge_name} käyttöön ensin.
         cant_grant_multiple_times: Kunniamerkkiä %{badge_name} ei voi myöntää useita kertoja yhdelle käyttäjälle.
     editor:

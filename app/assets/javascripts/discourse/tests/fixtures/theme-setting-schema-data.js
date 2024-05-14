@@ -1,5 +1,8 @@
+import ThemeSettings from "admin/models/theme-settings";
+
 export default function schemaAndData(version = 1) {
   let schema, data;
+
   if (version === 1) {
     schema = {
       name: "level1",
@@ -170,12 +173,20 @@ export default function schemaAndData(version = 1) {
         integer_field: {
           type: "integer",
         },
+        float_field: {
+          type: "float",
+        },
         boolean_field: {
           type: "boolean",
         },
-        enum_field: {
-          type: "enum",
-          choices: ["nice", "awesome", "cool"]
+        category_field: {
+          type: "categories",
+        },
+        group_field: {
+          type: "groups",
+        },
+        tags_field: {
+          type: "tags",
         }
       },
     };
@@ -184,17 +195,20 @@ export default function schemaAndData(version = 1) {
         name: "lamb",
         integer_field: 92,
         boolean_field: true,
-        enum_field: "awesome"
       },
       {
         name: "cow",
         integer_field: 820,
         boolean_field: false,
-        enum_field: "cool"
       },
     ];
   } else {
     throw new Error("unknown fixture version");
   }
-  return [schema, data];
+
+  return ThemeSettings.create({
+    objects_schema: schema,
+    value: data,
+    setting: "objects_setting"
+  });
 }

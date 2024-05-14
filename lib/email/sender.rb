@@ -253,6 +253,9 @@ module Email
       if post.present?
         @stripped_secure_upload_shas = style.stripped_upload_sha_map.values
         add_attachments(post)
+      elsif @email_type == :digest
+        @stripped_secure_upload_shas = style.stripped_upload_sha_map.values
+        digest_posts.each { |p| add_attachments(p) }
       end
 
       # Suppress images from short emails
@@ -346,6 +349,10 @@ module Email
     end
 
     private
+
+    def digest_posts
+      Post.where(id: header_value("X-Discourse-Post-Ids")&.split(","))
+    end
 
     def add_attachments(post)
       max_email_size = SiteSetting.email_total_attachment_size_limit_kb.kilobytes

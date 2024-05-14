@@ -139,7 +139,8 @@ id:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "Dibatasi hingga %{max} karakter; Anda memasukkan %{length} karakter."
+      too_long_validation:
+        other: "Dibatasi hingga %{count} karakter; Anda memasukkan %{length} karakter."
       invalid_boolean: "boolean tidak valid."
       taken: "sudah diambil"
       accepted: harus diterima
@@ -244,7 +245,6 @@ id:
     rate_limit:
       other: "Anda telah mengirim %{count} undangan dalam 24 jam terakhir, harap tunggu %{time_left} sebelum mencoba lagi."
     confirm_email: "<p>Anda hampir selesai! Kami mengirim email aktivasi ke alamat email Anda. Silakan ikuti petunjuk dalam surel untuk mengaktifkan akun Anda.</p><p>Jika tidak sampai, periksa folder spam Anda.</p>"
-    cant_invite_to_group: "Anda tidak diizinkan mengundang pengguna ke grup(-grup) tertentu. Pastikan Anda adalah pemilik grup(-grup) yang ingin Anda undang."
     disabled_errors:
       discourse_connect_enabled: "Undangan dinonaktifkan karena DiscourseConnect diaktifkan."
       invalid_access: "Anda tidak diijinkan untuk melihat sumber yang diminta."
@@ -349,7 +349,6 @@ id:
   pm_reached_recipients_limit: "Maaf, Anda tidak dapat memiliki lebih dari %{recipients_limit} penerima dalam satu pesan."
   removed_direct_reply_full_quotes: "Secara otomatis menghapus kutipan dari seluruh post sebelumnya."
   watched_words_auto_tag: "Topik yang diberi tag secara otomatis"
-  secure_upload_not_allowed_in_public_topic: "Maaf, unggahan(-unggahan) aman berikut tidak dapat digunakan dalam topik publik: %{upload_filenames}."
   create_pm_on_existing_topic: "Maaf, Anda tidak dapat membuat PM untuk topik yang sudah ada."
   slow_mode_enabled: "Topik ini dalam mode lambat."
   just_posted_that: "tingkat kemiripan dengan post sebelumnya sangat tinggi"
@@ -470,7 +469,8 @@ id:
 
       Untuk lebih lanjut, [lihat pedoman komunitas kami](%{base_path}/guidelines). Panel ini hanya akan muncul untuk %{education_posts_text} pertama Anda.
     dominating_topic: Anda telah memposting banyak hal dalam topik ini! Pertimbangkan untuk memberikan kesempatan kepada orang lain untuk membalas di sini dan juga mendiskusikan berbagai hal satu sama lain.
-    get_a_room: Anda telah membalas ke @%{reply_username} %{count} kali, tahukah Anda bahwa Anda dapat mengirimkan pesan pribadi kepada mereka?
+    get_a_room:
+      other: Anda telah membalas ke @%{reply_username} %{count} kali, tahukah Anda bahwa Anda dapat mengirimkan pesan pribadi kepada mereka?
     dont_feed_the_trolls: Posting ini telah ditandai untuk mendapat perhatian moderator. Apakah Anda yakin ingin membalasnya? Balasan ke konten negatif cenderung mendorong lebih banyak perilaku negatif.
   activerecord:
     attributes:
@@ -990,6 +990,8 @@ id:
         user_api: "API Pengguna"
       yaxis: "Hari"
       description: "Permintaan API untuk kunci API reguler dan kunci API pengguna."
+    consolidated_page_views_browser_detection:
+      yaxis: "Hari"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Hari"
@@ -1113,6 +1115,10 @@ id:
       xaxis: "Hari"
       yaxis: "Tampilan Halaman Anon Seluler"
       description: "Jumlah tampilan halaman baru dari pengunjung di perangkat seluler yang tidak masuk."
+    page_view_anon_browser_reqs:
+      xaxis: "Hari"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Hari"
     http_background_reqs:
       title: "Latar Belakang"
       xaxis: "Hari"
@@ -1225,8 +1231,6 @@ id:
     tl4_delete_posts_and_topics: "Izinkan pengguna TL4 untuk menghapus posting dan topik yang dibuat oleh pengguna lain. Pengguna TL4 juga akan dapat melihat topik dan postingan yang dihapus."
     edit_all_topic_groups: "Izinkan pengguna di grup ini untuk mengedit judul topik, tag, dan kategori dari pengguna lain"
     edit_all_post_groups: "Izinkan pengguna di grup ini untuk mengedit post pengguna lain"
-    invite_allowed_groups: "Grup yang diperbolehkan mengundang pengguna."
-    ignore_allowed_groups: "Grup yang diperbolehkan mengabaikan pengguna lain."
     dark_mode_none: "Tidak ada"
     sendgrid_verification_key: "Kunci verifikasi Sendgrid digunakan untuk memverifikasi pesan webhook."
     mailjet_webhook_token: "Token digunakan untuk memverifikasi payload webhook. Itu harus diteruskan sebagai parameter kueri 't' dari webhook, misalnya: https://example.com/webhook/mailjet?t=supersecret"
@@ -1242,7 +1246,6 @@ id:
     native_app_install_banner_android: "Menampilkan spanduk aplikasi DiscourseHub di perangkat Android ke pengguna dasar (trust level 1) dan lebih tinggi."
     max_prints_per_hour_per_user: "Jumlah maksimum tayangan halaman /print (atur ke 0 untuk menonaktifkan pencetakan)"
     notify_about_reviewable_item_after: "Jika ada item yang dapat ditinjau yang belum ditangani setelah berjam-jam ini, kirim pesan pribadi ke moderator. Setel ke 0 untuk menonaktifkan."
-    bootstrap_mode_min_users: "Jumlah minimum pengguna yang diperlukan untuk menonaktifkan mode bootstrap (diatur ke 0 untuk menonaktifkan, dapat memakan waktu hingga 24 jam)"
     emoji_deny_list: "Emoji ini tidak akan tersedia untuk digunakan dalam menu atau kode singkat."
     enable_offline_indicator: "Menampilkan pesan kepada pengguna saat terdeteksi bahwa mereka tidak memiliki koneksi jaringan"
     default_sidebar_link_to_filtered_list: "Jadikan link menu navigasi terhubung ke daftar yang difilter secara bawaan."
@@ -1274,6 +1277,14 @@ id:
     keywords:
       invite_allowed_groups: "min_trust_level_to_allow_invite"
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
+      clean_up_inactive_users_after_days:
+      - "dinonaktifkan"
+      - "tidak aktif"
+      - "tidak diaktifkan"
+      purge_unactivated_users_grace_period_days:
+      - "dinonaktifkan"
+      - "tidak aktif"
+      - "tidak diaktifkan"
   search:
     within_post: "#%{post_number} oleh %{username}"
     types:
@@ -1300,6 +1311,34 @@ id:
       blank: "tidak boleh kosong."
       not_allowed: "tidak diijinkan dari penyedia layanan email ini. Silahkan gunakan alamat email yang lain."
       blocked: "tidak diperbolehkan."
+  new_version_mailer:
+    text_body_template: |
+      Hore, versi baru dari [Discourse] (https://www.discourse.org) telah tersedia!
+
+      Versi Anda: %{installed_version}
+      Versi baru: **%{new_version}**
+
+      - Perbarui menggunakan **[pembaruan browser sekali klik] kami yang mudah (%{base_url}/admin/update) **
+
+      - Lihat apa yang baru di [catatan rilis](https://meta.discourse.org/tag/release-notes) atau lihat [catatan perubahan GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - Kunjungi [meta.discourse.org](https://meta.discourse.org) untuk berita, diskusi, dan dukungan untuk Discourse
+  new_version_mailer_with_notes:
+    text_body_template: |
+      Hore, versi baru [Discourse] (https://www.discourse.org) tersedia!
+
+      Versi Anda: %{installed_version}
+      Versi baru: **%{new_version}**
+
+      - Perbarui menggunakan ** [pembaruan browser satu-klik] kami yang mudah (%{base_url}/admin/update) **
+
+      - Lihat apa yang baru di [catatan rilis] (https://meta.discourse.org/tag/release-notes) atau lihat [perubahan GitHub mentah](https://github.com/discourse/discourse/commits/main)
+
+      - Kunjungi [meta.discourse.org](https://meta.discourse.org) untuk berita, diskusi, dan dukungan untuk Discourse
+
+      ### Catatan rilis
+
+      %{notes}
   system_messages:
     queued_by_staff:
       title: "Pesan Membutuhkan Persetujuan"

@@ -159,7 +159,6 @@ es:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "está limitado a %{max} caracteres; has introducido %{length}."
       invalid_boolean: "Booleano no válido."
       taken: "ya ha sido escogido"
       accepted: debe ser aceptado
@@ -273,7 +272,6 @@ es:
       one: "Ya has enviado %{count} invitación en el último día, espera %{time_left} antes de volverlo a intentar."
       other: "Ya has enviado %{count} invitaciones en el último día, espera %{time_left} antes de volverlo a intentar."
     confirm_email: "<p>¡Ya casi has terminado! Te enviamos un correo electrónico de activación a tu dirección de correo electrónico. Sigue las instrucciones que allí se encuentran para activar tu cuenta.</p><p>Si no llega, revisa la carpeta de spam o correo electrónico no deseado.</p>"
-    cant_invite_to_group: "No tienes permisos para invitar usuarios a los grupos especificados. Asegúrate de que eres propietario en los grupos a los que estás intentando invitar."
     disabled_errors:
       discourse_connect_enabled: "Las invitaciones están desactivadas porque DiscourseConnect está activado."
       invalid_access: "No tienes permitido ver el recurso solicitado."
@@ -391,7 +389,6 @@ es:
   pm_reached_recipients_limit: "Lo sentimos, no puedes tener más de %{recipients_limit} destinatarios en un mensaje."
   removed_direct_reply_full_quotes: "Cita de toda la publicación anterior eliminada automáticamente."
   watched_words_auto_tag: "Tema etiquetado automáticamente"
-  secure_upload_not_allowed_in_public_topic: "Lo sentimos, la(s) siguiente(s) subida(s) no se pueden utilizar en un tema público: %{upload_filenames}."
   create_pm_on_existing_topic: "Lo sentimos, no puedes crear un mensaje privado en un tema existente."
   slow_mode_enabled: "Este tema está en modo lento."
   just_posted_that: "es demasiado parecido a lo que has publicado recientemente"
@@ -534,7 +531,6 @@ es:
 
       Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
     dominating_topic: '¡Has publicado mucho en este tema! Considera la posibilidad de dar a los demás la oportunidad de responder aquí y debatir también entre ellos.'
-    get_a_room: Has respondido a @%{reply_username} %{count} veces, ¿sabías que también puedes enviarle un mensaje personal directamente?
     dont_feed_the_trolls: Este mensaje ya ha sido marcado para llamar la atención del moderador. ¿Seguro que deseas responder a él? Las respuestas a contenido negativo tienden a fomentar un comportamiento más negativo.
     too_many_replies: |
       ### Has llegado al límite de respuestas en este tema
@@ -1145,6 +1141,8 @@ es:
         user_api: "API de usuario"
       yaxis: "Día"
       description: "Solicitudes de API para claves de API normales y claves de API de usuario."
+    consolidated_page_views_browser_detection:
+      yaxis: "Día"
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -1304,6 +1302,10 @@ es:
       xaxis: "Día"
       yaxis: "Vistas de página anónimas desde una conexión móvil"
       description: "Número de vistas de página nuevas de visitantes en dispositivos móviles y con una sesión iniciada."
+    page_view_anon_browser_reqs:
+      xaxis: "Día"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Día"
     http_background_reqs:
       title: "Background"
       xaxis: "Día"
@@ -1429,7 +1431,6 @@ es:
     force_https_warning: "Tu sitio web está usando SSL. Pero «<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>» no está activado todavía en la configuración de tu sitio."
     out_of_date_themes: "Hay actualizaciones disponibles para los siguientes temas:"
     unreachable_themes: "No pudimos verificar actualizaciones de los siguientes temas:"
-    watched_word_regexp_error: "Expresión regular no válida para las palabras vigiladas con acción de «%{action}». Por favor, revisa los <a href='%{base_path}/admin/customize/watched_words'>ajustes sobre palabras vigiladas</a> o desactiva el ajuste «watched words regular expressions»."
     v3_analytics_deprecated: "Tu Discourse utiliza actualmente Google Analytics 3, que dejará de ser compatible después de julio de 2023. <a href='https://meta.discourse.org/t/260498'>Actualízate a Google Analytics 4</a> ahora para seguir recibiendo información y análisis valiosos sobre el rendimiento de tu sitio web."
     category_style_deprecated: "Tu Discourse utiliza actualmente un estilo de categoría obsoleto que se eliminará antes de la versión beta final de Discourse 3.2. Consulta <a href='https://meta.discourse.org/t/282441'>Cambiar a una configuración de sitio de estilo de categoría única</a> para obtener instrucciones sobre cómo mantener el estilo de categoría seleccionado."
     back_from_logster_text: "Volver al sitio"
@@ -1539,7 +1540,6 @@ es:
     summarization_strategy: "Formas adicionales de resumir el contenido registrado por los plugins"
     custom_summarization_allowed_groups: "Grupos que pueden resumir contenidos utilizando la `summarization_strategy`."
     enable_personal_messages: "DEPRECIADO, utiliza en su lugar el ajuste «grupos habilitados para mensajes personales». Permitir a los usuarios de nivel de confianza 1 (configurable a través de la confianza mínima para enviar mensajes) crear mensajes y responder a mensajes. Ten en cuenta que el personal siempre puede enviar mensajes, sea cual sea."
-    personal_message_enabled_groups: "Permite a los usuarios de estos grupos crear mensajes y responder a los mismos. Los grupos de nivel de confianza incluyen todos los niveles de confianza por encima de ese número, por ejemplo, elegir el nivel de confianza_1 también permite a los usuarios del nivel de confianza_2, 3, 4 enviar MP. Ten en cuenta que el personal siempre puede enviar mensajes, sea cual sea."
     enable_system_message_replies: "Permite a los usuarios responder a los mensajes del sistema, incluso si los mensajes personales están desactivados."
     enable_chunked_encoding: "Activar respuestas en lotes del servidor. Esta funcionalidad debería funcionar en casi todos los entornos, pero algunos proxies pueden causar que las respuestas tarden"
     long_polling_base_url: "URL base usada para el long polling (cuando un CDN esta sirviendo contenido dinámico, asegúrate de ajustar esto al pull de origen) ejemplo: http://origin.site.com"
@@ -1599,7 +1599,6 @@ es:
     content_security_policy_report_only: "Activar la política de seguridad de contenido de solo denuncias (CSP)"
     content_security_policy_collect_reports: "Activar la recolección de denuncias de violación de CSP en /csp_reports"
     content_security_policy_frame_ancestors: "Restringir quién puede incrustar este sitio en iframes a través de CSP. Controla los hosts permitidos en <a href='%{base_path}/admin/customize/embedding'>Insertado</a>"
-    content_security_policy_script_src: "Fuentes de scripts adicionales permitidas. El host actual y la CDN se incluyen por defecto. Ver <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigar los ataques XSS con la Política de Seguridad de Contenidos.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Las cuentas administrativas que no hayan visitado la página en este número de días deberán validar de nuevo su dirección de correo electrónico antes de iniciar sesión. Establecer a 0 para desactivar."
     include_secure_categories_in_tag_counts: "Si está activada, el recuento de temas de una etiqueta incluirá los temas que estén en categorías de lectura restringida para todos los usuarios. Si está desactivada, a los usuarios normales solo se les mostrará un recuento de temas para una etiqueta en la que todos los temas estén en categorías públicas."
     display_personal_messages_tag_counts: "Si está activada, se mostrará el recuento de mensajes personales etiquetados con una etiqueta determinada."
@@ -1801,28 +1800,20 @@ es:
     edit_all_topic_groups: "Permitir a los usuarios de este grupo editar los títulos, etiquetas y categorías de los temas de otros usuarios"
     edit_all_post_groups: "Permitir a los usuarios de este grupo editar las publicaciones de otros usuarios"
     min_trust_to_create_topic: "El nivel mínimo de confianza requerido para crear un nuevo tema."
-    create_topic_allowed_groups: "Grupos que pueden crear temas nuevos."
     allow_flagging_staff: "Si está activado, los usuarios pueden denunciar publicaciones hechas desde cuentas del personal."
     min_trust_to_edit_wiki_post: "El nivel mínimo de confianza requerido para editar una publicación marcada como wiki."
-    edit_wiki_post_allowed_groups: "Grupos que pueden editar las publicaciones marcadas como wiki."
     min_trust_to_edit_post: "El nivel mínimo de confianza requerido para editar publicaciones."
-    edit_post_allowed_groups: "Grupos que pueden editar publicaciones."
     min_trust_to_allow_self_wiki: "El nivel mínimo de confianza requerido para que un usuario convierta sus propias publicaciones a wiki."
-    self_wiki_allowed_groups: "Grupos en los que los usuarios pueden crear su propia wiki de publicaciones."
     min_trust_to_send_messages: "DEPRECIADO, utiliza en su lugar el ajuste «grupos habilitados para mensajes personales». El nivel de confianza mínimo requerido para crear nuevos mensajes personales."
     min_trust_to_send_email_messages: "Nivel de confianza mínimo para mandar mensajes personales a través de correo electrónico."
     min_trust_to_flag_posts: "El nivel mínimo de confianza requerido para denunciar publicaciones"
-    flag_post_allowed_groups: "Grupos que pueden denunciar publicaciones."
     min_trust_to_post_links: "El nivel mínimo de confianza requerido para incluir enlaces en una publicación"
     post_links_allowed_groups: "Grupos a los que se les permite incluir enlaces en las publicaciones. Los administradores y moderadores siempre pueden publicar enlaces."
     min_trust_to_post_embedded_media: "Nivel confianza mínimo para incluir imágenes en una publicación"
     min_trust_level_to_allow_profile_background: "Nivel confianza mínimo para subir un fondo de perfil"
     min_trust_level_to_allow_user_card_background: "Nivel confianza mínimo para subir un fondo de tarjeta de usuario"
-    user_card_background_allowed_groups: "Grupos que pueden subir un fondo de tarjeta de usuario."
     min_trust_level_to_allow_invite: "Nivel confianza mínimo para invitar usuarios"
-    invite_allowed_groups: "Grupos que pueden invitar a usuarios."
     min_trust_level_to_allow_ignore: "Nivel confianza mínimo para ignorar usuarios"
-    ignore_allowed_groups: "Grupos que pueden ignorar a otros usuarios."
     allowed_link_domains: "Dominios a los que usuarios pueden enlazar incluso si no tienen el nivel de confianza necesario para publicar enlaces"
     newuser_max_links: "Cantidad de enlaces un usuario nuevo puede añadir a una publicación."
     newuser_max_embedded_media: "Número de imágenes que un usuario nuevo puede añadir a una publicación."
@@ -1834,7 +1825,6 @@ es:
     here_mention: "Nombre utilizado para una @mención que permite a los usuarios privilegiados notificar a hasta 'max_here_mentioned' personas que participan en el tema. No debe ser un nombre de usuario existente."
     max_here_mentioned: "Número máximo de personas mencionadas por @here."
     min_trust_level_for_here_mention: "Nivel de confianza mínimo que hay que tener para mencionar a @here."
-    here_mention_allowed_groups: "Grupos a los que se permite mencionar @aquí."
     create_thumbnails: "Crear miniaturas y lightbox cuando las imágenes son demasiado grandes y no caben en una publicación."
     email_time_window_mins: "Esperar (n) minutos antes de enviar cualquier correo electrónico de notificación para dar a los usuarios la posibilidad de editar y finalizar sus publicaciones."
     personal_email_time_window_seconds: "Espera (n) segundos antes de enviar cualquier correo electrónico de notificación para dar a los usuarios la posibilidad de editar y finalizar sus publicaciones."
@@ -1950,7 +1940,6 @@ es:
     log_mail_processing_failures: "Registra todos los fallos de procesamiento de correo electrónico en <a href='%{base_path}/logs' target='_blank'>/registros</a>"
     email_in: "Permitir a los usuarios enviar nuevos temas por correo electrónico. Tras activar esta opción, podrás configurar las direcciones de correo electrónico entrantes para grupos y categorías."
     email_in_min_trust: "El nivel de confianza mínimo requerido para poder publicar temas nuevos por correo electrónico."
-    email_in_allowed_groups: "Grupos que pueden publicar nuevos temas por correo electrónico."
     email_in_authserv_id: "El identificador del servicio realizando revisiones de autenticación en correos electrónicos entrantes. Consulta: <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obtener instrucciones sobre cómo configurar esto."
     enable_imap: "Activar IMAP para sincronizar mensajes de grupo."
     enable_imap_write: "Activar sincronización IMAP bidireccional. Si está desactivado, todas las operaciones de escritura en cuentas IMAP están desactivadas."
@@ -2058,7 +2047,6 @@ es:
     embed_username_required: "Se requiere el nombre de usuario para la creación de temas."
     notify_about_reviewable_item_after: "Si hay elementos revisables que no se han tratado después de estas horas, envía un mensaje personal a los moderadores. Ponlo a 0 para desactivarlo."
     delete_merged_stub_topics_after_days: "Número de días que hay que esperar antes de eliminar automáticamente los temas pendientes totalmente fusionados. Poner a 0 para no eliminar nunca los temas pendientes."
-    bootstrap_mode_min_users: "Número mínimo de usuarios necesarios para desactivar el modo de arranque (ponlo a 0 para desactivarlo, puede tardar hasta 24 horas)"
     prevent_anons_from_downloading_files: "Impedir que usuarios anónimos descarguen archivos adjuntos."
     secure_uploads: 'Limita el acceso a TODAS las subidas (imágenes, vídeo, audio, texto, pdfs, zips y otros). Si se activa la opción de «inicio de sesión obligatorio», solo los usuarios que hayan iniciado sesión podrán acceder a las subidas. De lo contrario, el acceso se limitará solo a las subidas de medios en los mensajes privados y en las categorías privadas. ADVERTENCIA: Esta configuración es compleja y requiere un profundo conocimiento administrativo. Consulta <a target="_blank" href="https://meta.discourse.org/t/-/140017">el tema de subidas seguras en Meta</a> para más detalles.'
     secure_uploads_allow_embed_images_in_emails: "Permite incrustar imágenes seguras que normalmente estarían redactadas en los correos electrónicos, si su tamaño es menor que el ajuste de «tamaño máximo de la imagen incrustada en el correo electrónico»."
@@ -2133,7 +2121,6 @@ es:
     revoke_user_api_keys_unused_days: "Número de días transcurridos desde que se utilizó por última vez una clave API de usuario antes de que se revoque automáticamente (0 para nunca)."
     revoke_user_api_keys_maxlife_days: "Número de días antes de que se revoque automáticamente la clave API de un usuario (0 para nunca)"
     min_trust_to_create_tag: "El nivel de confianza mínimo requerido para crear una etiqueta."
-    create_tag_allowed_groups: "Grupos que pueden crear etiquetas."
     max_tags_per_topic: "El número máximo de etiquetas que se pueden añadir a un tema."
     enable_max_tags_per_email_subject: "Utiliza max_tags_per_email_subject al generar el asunto de un correo electrónico"
     max_tags_per_email_subject: "El máximo de etiquetas que puede haber en el asunto de un correo electrónico"
@@ -2142,7 +2129,6 @@ es:
     max_tags_in_filter_list: "Número máximo de etiquetas en el desplegable de filtro. Se mostrarán primero aquellas más utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas en orden alfabético. Por defecto se mostrarán por popularidad."
     tags_listed_by_group: "Listar etiquetas por grupo de etiquetas en la <a href='%{base_path}/tags' target='_blank'>página de etiquetas</a>."
-    pm_tags_allowed_for_groups: "Permitir que los miembros de los grupos incluidos etiqueten cualquier mensaje personal"
     min_trust_level_to_tag_topics: "Nivel mínimo de confianza requerido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Si alguna etiqueta coincide con palabras en el título de los temas, ocultarla."
     remove_muted_tags_from_latest: "No muestre temas etiquetados unicamente con etiquetas silenciadas en la lista de temas más reciente."
@@ -2197,8 +2183,6 @@ es:
       must_include_latest: "El menú superior debe incluir la pestaña «recientes»."
       invalid_string: "Valor no válido."
       invalid_string_min_max: "Debe tener entre %{min} y %{max} caracteres."
-      invalid_string_min: "Debe tener un mínimo de %{min} caracteres. "
-      invalid_string_max: "No debe exceder los %{max} caracteres. "
       invalid_json: "JSON no válido."
       invalid_reply_by_email_address: "El valor debe contener «%{reply_key}» y debe ser diferente al correo electrónico de notificación."
       invalid_alternative_reply_by_email_addresses: "Todas los valores deben contener «%{reply_key}» y deben ser diferentes al correo electrónico de notificación"
@@ -2231,7 +2215,6 @@ es:
         regex_invalid: "La expresión regular no es válida: %{error}"
         leading_trailing_slash: "La expresión regular no puede empezar y terminar con una barra."
       unicode_usernames_avatars: "El sistema interno de avatares no soporta nombres de usuario Unicode."
-      list_value_count: "La lista debe contener exactamente %{count} valores."
       markdown_linkify_tlds: "No puedes incluir el valor «*»"
       google_oauth2_hd_groups: "Debes configurar todos los ajustes de «google oauth2 hd» antes de activar este ajuste."
       search_tokenize_chinese_enabled: "Debes desactivar el ajuste «search_tokenize_chinese» antes de activar este."
@@ -2258,6 +2241,14 @@ es:
       ignore_allowed_groups: "min_trust_level_to_allow_ignore"
       self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
       create_tag_allowed_groups: "min_trust_to_create_tag"
+      clean_up_inactive_users_after_days:
+      - ""
+      - "inactivo"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "inactivo"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ejemplo.com"
@@ -2457,8 +2448,6 @@ es:
     new_user_typed_too_fast: "El nuevo usuario escribió demasiado rápido"
     content_matches_auto_silence_regex: "Contenido coincide con regex para autosilenciar"
     username:
-      short: "debe tener al menos %{min} caracteres"
-      long: "no puede tener más de %{max} caracteres"
       too_long: "es demasiado largo"
       characters: "debe incluir únicamente números, letras, guiones, puntos y guiones bajos."
       unique: "debe ser único"
@@ -2617,35 +2606,9 @@ es:
   new_version_mailer:
     title: "Correo electrónico de nueva versión"
     subject_template: "[%{email_prefix}] Nueva versión de Discourse, actualización disponible"
-    text_body_template: |
-      ¡Bien! Hay una nueva versión de [Discourse](https://www.discourse.org) disponible
-
-      Tu versión: %{installed_version}
-      Nueva versión: **%{new_version}**
-
-      - Actualiza usando el **[actualizador en un clic en tu navegador](%{base_url}/admin/upgrade)**
-
-      - Echa un vistazo a las novedades en las [notas de la versión](https://meta.discourse.org/tag/release-notes), o mira el [registro de cambios completo en Github](https://github.com/discourse/discourse/commits/main)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, debate y ayuda sobre Discourse
   new_version_mailer_with_notes:
     title: "Correo electrónico de nueva versión con notas"
     subject_template: "[%{email_prefix}] actualización disponible"
-    text_body_template: |
-      ¡Bien! Hay una nueva versión de [Discourse](https://www.discourse.org) disponible
-
-      Tu versión: %{installed_version}
-      Nueva versión: **%{new_version}**
-
-      - Actualiza usando el **[actualizador en un clic en tu navegador](%{base_url}/admin/upgrade)**
-
-      - Echa un vistazo a las novedades en las [notas de la versión](https://meta.discourse.org/tag/release-notes), o mira el [registro de cambios completo en Github](https://github.com/discourse/discourse/commits/main)
-
-      - Visita [meta.discourse.org](https://meta.discourse.org) para noticias, debate y ayuda sobre Discourse
-
-      ### Notas de la versión
-
-      %{notes}
   flag_reasons:
     off_topic: "Tu publicación fue denunciada como **sin relación con el tema**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o la primera publicación."
     inappropriate: "Tu publicación fue denunciada como **inapropiada**: la comunidad piensa que es ofensiva, abusiva, una conducta de odio o que vulnera alguna de las [directrices de la comunidad](%{base_path}/guidelines)."
@@ -4171,7 +4134,6 @@ es:
     mass_award:
       errors:
         invalid_csv: Encontramos un error en la línea %{line_number}. Asegúrate de que el CSV tiene un solo correo electrónico por línea.
-        too_many_csv_entries: El archivo CSV tiene demasiadas líneas. Por favor, incluye un archivo CSV con no más de %{count} líneas.
         badge_disabled: Activa primero la insignia %{badge_name}.
         cant_grant_multiple_times: No es posible conceder más de una vez a la misma cuenta la medalla %{badge_name}.
     editor:

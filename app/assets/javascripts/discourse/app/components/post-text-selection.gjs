@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { cancel } from "@ember/runloop";
+import { cancel, debounce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import PostTextSelectionToolbar from "discourse/components/post-text-selection-toolbar";
+import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import toMarkdown from "discourse/lib/to-markdown";
 import {
   selectedNode,
@@ -62,9 +63,15 @@ export default class PostTextSelection extends Component {
   });
 
   appEventsListeners = modifier(() => {
+    this.appEvents.on("topic:current-post-scrolled", this, "handleTopicScroll");
     this.appEvents.on("quote-button:quote", this, "insertQuote");
 
     return () => {
+      this.appEvents.off(
+        "topic:current-post-scrolled",
+        this,
+        "handleTopicScroll"
+      );
       this.appEvents.off("quote-button:quote", this, "insertQuote");
     };
   });
@@ -72,7 +79,8 @@ export default class PostTextSelection extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
 
-    this.menuInstance?.destroy();
+    cancel(this.debouncedSelectionChanged);
+    this.menuInstance?.close();
   }
 
   @bind
@@ -81,8 +89,7 @@ export default class PostTextSelection extends Component {
     await this.menuInstance?.close();
   }
 
-  @bind
-  async selectionChanged() {
+  async selectionChanged(options = {}) {
     if (this.isSelecting) {
       return;
     }
@@ -102,6 +109,7 @@ export default class PostTextSelection extends Component {
     // it's also generally unecessary work to go
     // through this if the selection hasn't changed
     if (
+      !options.force &&
       this.menuInstance?.expanded &&
       this.prevSelectedText === _selectedText
     ) {
@@ -184,7 +192,26 @@ export default class PostTextSelection extends Component {
       }
     }
 
-    const options = {
+    let offset = 3;
+    if (this.shouldRenderUnder) {
+      // on mobile, we ideally want to show the toolbar at the end of the selection
+      offset = 20;
+
+      if (
+        !isElementInViewport(selectedRange().startContainer.parentNode) ||
+        !isElementInViewport(selectedRange().endContainer.parentNode)
+      ) {
+        // we force a higher offset in two cases:
+        // - the start of the selection is not in viewport, in this case on iOS for example
+        //   the native menu will be shown at the bottom of the screen, right after text selection
+        //   so we need more space
+        // - the end of the selection is not in viewport, in this case our menu will be shown at the top
+        //   of the screen, so we need more space to avoid overlapping with the native menu
+        offset = 70;
+      }
+    }
+
+    const menuOptions = {
       identifier: "post-text-selection-toolbar",
       component: PostTextSelectionToolbar,
       inline: true,
@@ -192,8 +219,9 @@ export default class PostTextSelection extends Component {
       fallbackPlacements: this.shouldRenderUnder
         ? ["bottom-end", "top-start"]
         : ["bottom-start"],
-      offset: this.shouldRenderUnder ? 25 : 3,
+      offset,
       trapTab: false,
+      closeOnScroll: false,
       data: {
         canEditPost: this.canEditPost,
         canCopyQuote: this.canCopyQuote,
@@ -211,7 +239,7 @@ export default class PostTextSelection extends Component {
 
     this.menuInstance = await this.menu.show(
       virtualElementFromTextRange(),
-      options
+      menuOptions
     );
   }
 
@@ -264,6 +292,19 @@ export default class PostTextSelection extends Component {
   get shouldRenderUnder() {
     const { isIOS, isAndroid, isOpera } = this.capabilities;
     return this.site.isMobileDevice || isIOS || isAndroid || isOpera;
+  }
+
+  @action
+  handleTopicScroll() {
+    if (this.site.mobileView) {
+      this.debouncedSelectionChanged = debounce(
+        this,
+        this.selectionChanged,
+        { force: true },
+        250,
+        false
+      );
+    }
   }
 
   @action

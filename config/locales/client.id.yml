@@ -191,7 +191,8 @@ id:
         us_west_1: "US West (N. California)"
         us_west_2: "US West (Oregon)"
     clear_input: "Hapus masukan"
-    edit: "Ubah judul dan kategori topik ini"
+    edit: "Ubah"
+    edit_topic: "Ubah judul dan kategori topik ini"
     expand: "Perluas"
     not_implemented: "Maaf, fitur ini belum diimplementasikan."
     no_value: "Tidak"
@@ -234,7 +235,8 @@ id:
     weekly: "mingguan"
     every_month: "setiap bulan"
     every_six_months: "setiap enam bulan"
-    max_of_count: "maksimal dari %{count}"
+    max_of_count:
+      other: "maksimal dari %{count}"
     character_count:
       other: "%{count} karakter"
     period_chooser:
@@ -300,6 +302,7 @@ id:
         clear_reminder: "Simpan penanda dan hapus pengingat"
       search_placeholder: "Cari penanda berdasarkan nama, judul topik, atau isi kiriman"
       search: "Cari"
+      bookmark: "Penandaan"
       reminders:
         today_with_time: "hari ini pada %{time}"
         tomorrow_with_time: "besok pada %{time}"
@@ -622,7 +625,6 @@ id:
       topic_count_long: "Topik Dibuat"
       post_count: "Balasan"
       post_count_long: "Pesan Terbalas"
-      no_results: "Tidak ada hasil yang ditemukan."
       days_visited: "mengunjungi"
       days_visited_long: "Hari yang dikunjungi"
       posts_read: "baca"
@@ -858,10 +860,13 @@ id:
       "13": "Kotak masuk"
       "14": "tertunda"
       "15": "Konsep"
+      "17": "Tautan"
     categories:
-      all: "Semua kategori"
-      all_subcategories: "Semua"
-      no_subcategory: "Tak ada"
+      categories_label: "kategori"
+      subcategories_label: "subkategori"
+      remove_filter: "hapus filter"
+      plus_more_count:
+        other: "+%{count} lainnya"
       category: "Kategori"
       category_list: "Tampilan daftar kategori"
       reorder:
@@ -895,7 +900,8 @@ id:
       organisation: Organisasi
       phone: Telepon
       other_accounts: "Akun lain dengan alamat IP ini: "
-      delete_other_accounts: "Hapus %{count}"
+      delete_other_accounts:
+        other: "Hapus %{count}"
       username: "username"
       trust_level: "TL"
       read_time: "waktu baca"
@@ -989,7 +995,6 @@ id:
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
       no_messages_title: "Anda tidak memiliki pesan apa pun"
       theme_default_on_all_devices: "Jadikan ini tema default di semua perangkat saya"
-      color_scheme_default_on_all_devices: "Setel skema warna default di semua perangkat saya"
       color_scheme: "Skema warna"
       color_schemes:
         default_description: "Default tema"
@@ -1005,6 +1010,7 @@ id:
       allow_private_messages: "Izinkan pengguna lain mengirimi saya pesan pribadi"
       external_links_in_new_tab: "Buka semua link eksternal ke dalam tab baru"
       enable_quoting: "Aktifkan balasan kutipan untuk teks yang disorot"
+      enable_defer: "Mengaktifkan tandai topik sebagai belum dibaca"
       experimental_sidebar:
         enable: "Aktifkan bilah sisi"
         options: "Pilihan"
@@ -1148,7 +1154,7 @@ id:
           save: "Simpan"
       passkeys:
         save: "Simpan"
-        added_prefix: "Ditambahkan"
+        added_date: "Ditambahkan %{date}"
       change_about:
         title: "Ganti Tentang Saya"
         error: "Ada kesalahan saat mengganti nilai ini"
@@ -1223,6 +1229,8 @@ id:
         title: "Bahasa antarmuka"
         default: "(standar)"
         any: "apa saja"
+      homepage:
+        default: "(bawaan)"
       password_confirmation:
         title: "Kata Sandi Lagi"
       auth_tokens:
@@ -1317,7 +1325,8 @@ id:
         same_as_username: "Password dan nama pengguna kamu sama"
         same_as_email: "Password dan email kamu sama"
         ok: "Kata sandi Anda terlihat baik."
-        instructions: "Paling tidak %{count} karakter."
+        instructions:
+          other: "Paling tidak %{count} karakter."
         confirm: "Konfirmasi"
       summary:
         title: "Ringkasan"
@@ -1377,10 +1386,6 @@ id:
       save: "Simpan"
     user_tips:
       button: "Mengerti!"
-      admin_guide:
-        title: "Selamat datang di situs baru Anda!"
-        content: "<a href='%{admin_guide_url}'>Baca panduan admin</a> untuk terus membangun situs dan komunitas Anda."
-        content_no_url: "Baca panduan admin untuk terus membangun situs dan komunitas Anda."
     errors:
       reasons:
         network: "Gangguan Jaringan"
@@ -1400,6 +1405,7 @@ id:
     modal:
       close: "tutup"
     close: "Tutup"
+    assets_changed_confirm: "Situs ini baru saja menerima pembaruan perangkat lunak. Dapatkan versi terbaru sekarang?"
     logout: "Anda telah keluar."
     refresh: "Segarkan"
     home: "Beranda"
@@ -1561,7 +1567,6 @@ id:
       reply: "Balas"
       cancel: "Batal"
       create_topic: "Buat Topik"
-      create_pm: "Pesan"
       create_shared_draft: "Buat Konsep Bersama"
       edit_shared_draft: "Sunting Konsep Bersama"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
@@ -1682,6 +1687,7 @@ id:
       bulk:
         confirm: "Konfirmasi"
         select_all: "Pilih Semua"
+        defer: "Tandai belum dibaca"
         dismiss: "Bubar"
         dismiss_new_modal:
           title: "Abaikan yang baru"
@@ -1694,6 +1700,8 @@ id:
           replies: "Abaikan balasan baru"
           untrack: "Berhenti melacak topik ini agar tidak lagi muncul di daftar baru saya"
         move_messages_to_inbox: "Pindah ke Kotak Masuk"
+        selected_count:
+          other: "%{count} dipilih"
         choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
       none:
         new: "Anda tidak memiliki topik baru"
@@ -1703,6 +1711,11 @@ id:
           new_new: "<p>Topik baru Anda akan muncul di sini, dan topik Anda yang belum dibaca juga akan ditampilkan. Secara bawaan, topik dianggap baru dan akan menampilkan indikator <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> jika dibuat dalam 2 hari terakhir. Topik yang belum dibaca akan menampilkan jumlah yang belum dibaca <span class=\"badge unread-posts badge-notification\">1</span> jika Anda: membuat topik, membalas topik, membaca topik selama lebih dari 5 menit, atau jika Anda secara eksplisit menyetel topik ke Dilacak atau Diikuti melalui \U0001F514 di setiap topik.</p><p>Kunjungi <a href=\"%{userPrefsUrl}\">preferensi</a> Anda untuk mengubahnya.</p>"
       bottom:
         new: "Tidak ada topik baru lagi"
+    topic_bulk_actions:
+      close_topics:
+        optional: (opsional)
+      defer:
+        name: "Tandai Belum Dibaca"
     topic:
       create: "Topik Baru"
       create_long: "Pilih topik baru"
@@ -1710,6 +1723,9 @@ id:
         title: "Arsip"
       move_to_inbox:
         title: "Pindah ke Kotak Masuk"
+      defer:
+        help: "Tandai topik sebagai belum dibaca"
+        title: "Tandai belum dibaca"
       list: "Topik"
       new: "topik baru"
       unread: "belum dibaca"
@@ -1894,6 +1910,15 @@ id:
         help: "Topik ini telah ditutup; tidak lagi menerima jawaban baru"
       locked_and_archived:
         help: "Topik ini telah ditutup dan diarsip; tidak lagi menerima jawaban baru dan tidak dapat dirubah lagi"
+      unlisted:
+        help: "Topik ini tidak terdaftar; sehingga tidak akan ditampilkan dalam daftar topik, dan hanya dapat diakses melalui tautan langsung. %{unlistedReason}"
+      visibility_reasons:
+        op_flag_threshold_reached: "Topik ini secara otomatis tidak terdaftar karena mencapai ambang batas penandaan"
+        op_unhidden: "Topik ini dicantumkan kembali oleh penulis"
+        embedded_topic: "Topik ini dicantumkan kembali karena merupakan topik tersemat"
+        manually_unlisted: "Topik ini tidak dicantumkan secara manual oleh admin atau moderator"
+        manually_relisted: "Topik ini dicantumkan kembali secara manual oleh admin atau moderator"
+        bulk_action: "Visibilitas topik ini diubah karena tindakan massal yang dilakukan oleh pengguna"
     posts: "Pos"
     pending_posts:
       label: "Tertunda"
@@ -1949,6 +1974,8 @@ id:
         all:
           title: "Sepanjang Waktu"
         all_time: "Sepanjang Waktu"
+    custom_homepage:
+      admin_message: 'Salah satu tema Anda telah mengaktifkan pengubah "custom_homepage" tetapi tidak menampilkan apa pun di konektor [custom-homepage]. (Pesan ini hanya ditampilkan kepada administrator situs.)'
     preloader_text: "Memuat"
     lightbox:
       download: "unduh"
@@ -1978,6 +2005,7 @@ id:
         notifications: "%{shortcut} Buka notifikasi"
       actions:
         title: "Aksi"
+        defer: "%{shortcut} Tandai topik sebagai belum dibaca"
         archive_private_message: "%{shortcut} Alihkan arsipkan pesan pribadi"
     badges:
       others_count:
@@ -1995,6 +2023,8 @@ id:
         posting:
           name: Posting
     tagging:
+      selector_tags: "label"
+      selector_remove_filter: "hapus filter"
       tags: "Label"
       add_synonyms: "Menambahkan"
       description: "Deskripsi (maks 1000 karakter)"
@@ -2113,12 +2143,12 @@ id:
         upload: "Unggah"
         uploading: "Mengunggah"
       errors:
-        valueMissing:
+        value_missing:
           default: "Harap isi kolom ini."
-          select-one: "Harap pilih item dalam daftar."
-          select-multiple: "Pilih setidaknya satu item dalam daftar."
+          select_one: "Harap pilih item dalam daftar."
+          select_multiple: "Pilih setidaknya satu item dalam daftar."
           checkbox: "Harap centang kotak ini jika Anda ingin melanjutkan."
-        typeMismatch:
+        type_mismatch:
           default: "Harap masukkan nilai yang valid."
           color: "Harap masukkan warna."
           date: "Harap masukkan tanggal."
@@ -2128,16 +2158,16 @@ id:
           tel: "Harap masukkan nomor telepon yang valid."
           text: "Harap masukkan nilai teks."
           url: "Harap masukkan URL yang valid."
-        tooShort:
+        too_short:
           other: "Input harus %{count} karakter atau lebih."
-        tooLong:
+        too_long:
           other: "Input harus kurang dari %{count} karakter."
-        rangeOverflow:
+        range_overflow:
           other: "Masukan harus kurang dari %{count}."
-        rangeUnderflow:
+        range_underflow:
           other: "Masukan harus lebih dari %{count}."
-        patternMismatch: "Harap sesuaikan dengan format yang diminta."
-        badInput: "Harap masukkan masukan yang valid."
+        pattern_mismatch: "Harap sesuaikan dengan format yang diminta."
+        bad_input: "Harap masukkan masukan yang valid."
     table_builder:
       modal:
         help:
@@ -2155,11 +2185,17 @@ id:
       title: "Admin Discourse"
       moderator: "Moderator"
       back_to_forum: "Kembali ke Forum"
+      filter_reports: Filter laporan
       tags:
         remove_muted_tags_from_latest:
           always: "selalu"
           never: "tidak pernah"
+      reports:
+        sidebar_link:
+          all: "Semua"
       dashboard:
+        please_update: "Harap perbarui!"
+        version_check_pending: "Sepertinya Anda baru saja melakukan pembaruan. Fantastis!"
         latest_version: "Terbaru"
         last_checked: "Terakhir dicek"
         refresh_problems: "Segarkan"
@@ -2170,7 +2206,6 @@ id:
         general_tab: "Umum"
         report_filter_any: "apa saja"
         disabled: Dinonaktifkan
-        filter_reports: Filter laporan
         custom_date_range: Rentang tanggal tertentu
         reports:
           last_7_days: "7 terakhir"
@@ -2244,15 +2279,40 @@ id:
           body: "Konten"
           timestamp: "Dibuat"
           actions: "Aksi"
+      home:
+        title: "Beranda"
+      account:
+        title: "Akun"
+      community:
+        sidebar_link:
+          notifications: "Pemberitahuan"
+          users: "Pengguna"
+      appearance:
+        sidebar_link:
+          navigation: "Navigasi"
+      email_logs:
+        sidebar_link:
+          sent: "Mengirim"
+          received: "Menerima"
+          rejected: "Ditolak"
+      security:
+        sidebar_link:
+          spam: "Spam"
       plugins:
         name: "Nama"
         enabled: "Diaktifkan?"
         change_settings_short: "Pengaturan"
+      advanced:
+        sidebar_link:
+          user_api: "API Pengguna"
+          other_options: "Lainnya"
+          search: "Cari"
       backups:
         menu:
           logs: "Log"
         upload:
           label: "Unggah"
+        settings: "Pengaturan"
         operations:
           cancel:
             label: "Batal"
@@ -2290,6 +2350,8 @@ id:
           save: "Simpan"
           edit: "Ubah"
           settings: "Pengaturan"
+          selected:
+            other: "%{count} dipilih"
           cancel: "Batal"
           collapse: Persempit
           upload: "Unggah"
@@ -2306,6 +2368,11 @@ id:
             text: "Konten"
           all_filter: "Semua"
           active_filter: "Aktif"
+          schema:
+            fields:
+              number:
+                too_small: "harus sama dengan atau lebih besar dari %{count}"
+                too_large: "harus sama dengan atau kurang dari %{count}"
         colors:
           title: "Warna"
           undo: "Batalkan perintah"
@@ -2552,6 +2619,7 @@ id:
         disabled: dinonaktifkan
       emoji:
         name: "Nama"
+        settings: "Pengaturan"
       embedding:
         edit: "ubah"
       permalink:

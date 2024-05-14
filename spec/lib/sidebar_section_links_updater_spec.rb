@@ -7,6 +7,7 @@ RSpec.describe SidebarSectionLinksUpdater do
   describe ".update_category_section_links" do
     fab!(:public_category) { Fabricate(:category) }
     fab!(:public_category2) { Fabricate(:category) }
+    fab!(:public_category3) { Fabricate(:category) }
 
     fab!(:user_category_section_link) do
       Fabricate(:category_sidebar_section_link, linkable: public_category, user: user)
@@ -36,6 +37,17 @@ RSpec.describe SidebarSectionLinksUpdater do
       expect(
         SidebarSectionLink.where(linkable_type: "Category", user: user).pluck(:linkable_id),
       ).to contain_exactly(public_category.id, public_category2.id)
+    end
+
+    it "limits the number of category links a user can have" do
+      stub_const(SidebarSection, :MAX_USER_CATEGORY_LINKS, 2) do
+        described_class.update_category_section_links(
+          user,
+          category_ids: [public_category.id, public_category2.id, public_category3.id],
+        )
+
+        expect(SidebarSectionLink.where(linkable_type: "Category", user: user).count).to eq(2)
+      end
     end
   end
 

@@ -8,6 +8,7 @@ import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
 import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import deprecated from "discourse-common/lib/deprecated";
 import getUrl from "discourse-common/lib/get-url";
+import { bind } from "discourse-common/utils/decorators";
 import UserMenuBookmarksList from "./bookmarks-list";
 import UserMenuLikesNotificationsList from "./likes-notifications-list";
 import UserMenuMessagesList from "./messages-list";
@@ -35,7 +36,7 @@ const CORE_TOP_TABS = [
 
   class extends UserMenuTab {
     id = "replies";
-    icon = "reply";
+    icon = "user_menu.replies";
     panelComponent = UserMenuRepliesNotificationsList;
     notificationTypes = [
       "mentioned",
@@ -187,14 +188,30 @@ function resolvePanelComponent(owner, panelComponent) {
 }
 
 export default class UserMenu extends Component {
-  @service currentUser;
-  @service siteSettings;
-  @service site;
   @service appEvents;
+  @service currentUser;
+  @service router;
+  @service site;
+  @service siteSettings;
 
   @tracked currentTabId = DEFAULT_TAB_ID;
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;
   @tracked currentNotificationTypes;
+
+  constructor() {
+    super(...arguments);
+    this.router.on("routeDidChange", this.onRouteChange);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.router.off("routeDidChange", this.onRouteChange);
+  }
+
+  @bind
+  onRouteChange() {
+    this.args.closeUserMenu();
+  }
 
   get classNames() {
     let classes = ["user-menu", "revamped", "menu-panel", "drop-down"];

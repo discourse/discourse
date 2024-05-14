@@ -155,7 +155,7 @@
                 href
                 {{on "click" this.editTopic}}
                 class="edit-topic"
-                title={{i18n "edit"}}
+                title={{i18n "edit_topic"}}
               >{{d-icon "pencil-alt"}}</a>
             {{/if}}
 
@@ -280,7 +280,7 @@
                 }}
               />
             </span>
-            <TopicAdminMenuButton
+            <TopicAdminMenu
               @topic={{this.model}}
               @openUpwards="true"
               @rightSide="true"
@@ -502,6 +502,11 @@
             {{/if}}
           </ConditionalLoadingSpinner>
 
+          <PluginOutlet
+            @name="topic-area-bottom"
+            @connectorTagName="div"
+            @outletArgs={{hash model=this.model}}
+          />
         </section>
       </div>
 

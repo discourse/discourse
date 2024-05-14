@@ -1,5 +1,7 @@
 import { tracked } from "@glimmer/tracking";
-import Service from "@ember/service";
+import { registerDestructor } from "@ember/destroyable";
+import Service, { service } from "@ember/service";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   currentPanelKey,
@@ -13,16 +15,30 @@ import {
 
 @disableImplicitInjections
 export default class SidebarState extends Service {
+  @service keyValueStore;
+  @service currentUser;
+  @service siteSettings;
+
   @tracked currentPanelKey = currentPanelKey;
-  @tracked panels = panels;
   @tracked mode = COMBINED_MODE;
   @tracked displaySwitchPanelButtons = false;
   @tracked filter = "";
-  previousState = {};
 
-  constructor() {
-    super(...arguments);
-    this.#reset();
+  panels = panels;
+  collapsedSections = new TrackedSet();
+  previousState = {};
+  #hiders = new TrackedSet();
+
+  get sidebarHidden() {
+    return this.#hiders.size > 0;
+  }
+
+  registerHider(ref) {
+    this.#hiders.add(ref);
+
+    registerDestructor(ref, () => {
+      this.#hiders.delete(ref);
+    });
   }
 
   setPanel(name) {
@@ -63,6 +79,22 @@ export default class SidebarState extends Service {
     };
   }
 
+  collapseSection(sectionKey) {
+    const collapsedSidebarSectionKey = `sidebar-section-${sectionKey}-collapsed`;
+    this.keyValueStore.setItem(collapsedSidebarSectionKey, true);
+    this.collapsedSections.add(collapsedSidebarSectionKey);
+  }
+
+  expandSection(sectionKey) {
+    const collapsedSidebarSectionKey = `sidebar-section-${sectionKey}-collapsed`;
+    this.keyValueStore.setItem(collapsedSidebarSectionKey, false);
+    this.collapsedSections.delete(collapsedSidebarSectionKey);
+  }
+
+  isCurrentPanel(panel) {
+    return this.currentPanel.key === panel;
+  }
+
   restorePreviousState() {
     const state = this.previousState[this.currentPanelKey];
     if (!state) {
@@ -90,10 +122,11 @@ export default class SidebarState extends Service {
     return this.currentPanelKey === MAIN_PANEL;
   }
 
-  #reset() {
-    this.currentPanelKey = currentPanelKey;
-    this.panels = panels;
-    this.mode = COMBINED_MODE;
+  get adminSidebarAllowedWithLegacyNavigationMenu() {
+    return (
+      this.currentUser?.use_admin_sidebar &&
+      this.siteSettings.navigation_menu === "header dropdown"
+    );
   }
 
   clearFilter() {

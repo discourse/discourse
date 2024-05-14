@@ -33,6 +33,7 @@ export default class ChatChannelsManager extends Service {
     }
   }
 
+  @cached
   get channels() {
     return Object.values(this._cached);
   }
@@ -98,6 +99,13 @@ export default class ChatChannelsManager extends Service {
   remove(model) {
     this.chatSubscriptionsManager.stopChannelSubscription(model);
     delete this._cached[model.id];
+  }
+
+  @cached
+  get hasThreadedChannels() {
+    return this.publicMessageChannels?.some(
+      (channel) => channel.threadingEnabled
+    );
   }
 
   get allChannels() {

@@ -616,7 +616,7 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.reply");
 
     await menu.expand();
-    await menu.selectRowByValue("toggleWhisper");
+    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
 
     assert.strictEqual(
       count(".composer-actions svg.d-icon-far-eye-slash"),
@@ -625,7 +625,7 @@ acceptance("Composer", function (needs) {
     );
 
     await menu.expand();
-    await menu.selectRowByValue("toggleWhisper");
+    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
 
     assert.ok(
       !exists(".composer-actions svg.d-icon-far-eye-slash"),
@@ -633,14 +633,14 @@ acceptance("Composer", function (needs) {
     );
 
     await menu.expand();
-    await menu.selectRowByValue("toggleWhisper");
+    await menu.selectRowByName(I18n.t("composer.toggle_whisper"));
 
     await click(".toggle-fullscreen");
 
     await menu.expand();
 
     assert.ok(
-      menu.rowByValue("toggleWhisper").exists(),
+      menu.rowByName(I18n.t("composer.toggle_whisper")).exists(),
       "whisper toggling is still present when going fullscreen"
     );
   });
@@ -728,8 +728,9 @@ acceptance("Composer", function (needs) {
     await click(".topic-post:nth-of-type(1) button.reply");
 
     await selectKit(".toolbar-popup-menu-options").expand();
-    await selectKit(".toolbar-popup-menu-options").selectRowByValue(
-      "toggleWhisper"
+
+    await selectKit(".toolbar-popup-menu-options").selectRowByName(
+      I18n.t("composer.toggle_whisper")
     );
 
     assert.strictEqual(
@@ -748,8 +749,8 @@ acceptance("Composer", function (needs) {
     );
 
     await selectKit(".toolbar-popup-menu-options").expand();
-    await selectKit(".toolbar-popup-menu-options").selectRowByValue(
-      "toggleInvisible"
+    await selectKit(".toolbar-popup-menu-options").selectRowByName(
+      I18n.t("composer.toggle_unlisted")
     );
 
     assert.ok(
@@ -1391,6 +1392,51 @@ acceptance("Composer - current time", function (needs) {
     assert.ok(
       inputValue.startsWith(`and the time now is: [date=${date}`),
       "it adds the current date"
+    );
+  });
+});
+
+acceptance("composer buttons API", function (needs) {
+  needs.user();
+  needs.settings({
+    allow_uncategorized_topics: true,
+  });
+
+  test("buttons can be added conditionally", async function (assert) {
+    withPluginApi("0", (api) => {
+      api.addComposerToolbarPopupMenuOption({
+        action: (toolbarEvent) => {
+          toolbarEvent.applySurround("**", "**");
+        },
+        icon: "far-bold",
+        label: "some_label",
+        condition: (composer) => {
+          return composer.model.creatingTopic;
+        },
+      });
+    });
+
+    await visit("/t/internationalization-localization/280");
+
+    await click(".post-controls button.reply");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
+
+    const expectedName = "[en.some_label]";
+    const dropdown = selectKit(".toolbar-popup-menu-options");
+    await dropdown.expand();
+
+    assert.false(
+      dropdown.rowByName(expectedName).exists(),
+      "custom button is not displayed for reply"
+    );
+
+    await visit("/latest");
+    await click("#create-topic");
+
+    await dropdown.expand();
+    assert.true(
+      dropdown.rowByName(expectedName).exists(),
+      "custom button is displayed for new topic"
     );
   });
 });

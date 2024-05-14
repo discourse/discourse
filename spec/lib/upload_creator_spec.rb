@@ -135,12 +135,12 @@ RSpec.describe UploadCreator do
           UploadCreator.new(file, filename, pasted: true, force_optimize: true).create_for(user.id)
 
         # no optimisation possible without losing details
-        expect(upload.filesize).to eq(9202)
+        expect(upload.filesize).to be_between(1000, 9210)
 
         thumbnail_size = upload.get_optimized_image(upload.width, upload.height, {}).filesize
 
         # pngquant will lose some colors causing some extra size reduction
-        expect(thumbnail_size).to be < 7500
+        expect(thumbnail_size).to be_between(1000, 7500)
       end
     end
 

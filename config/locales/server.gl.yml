@@ -122,7 +122,6 @@ gl:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
-      too_long_validation: "límite de %{max} caracteres; inseriu %{length}."
       invalid_boolean: "Booleano non válido."
       taken: "xa está en uso"
       accepted: debe ser aceptado
@@ -210,7 +209,6 @@ gl:
 
       <p>Se non, <a href="%{base_url}/password-reset">restableza o contrasinal</a></p>
     confirm_email: "<p>Xa case está! Enviámoslle un correo de activación ao seu enderezo electrónico. Siga as instrucións para activar a súa conta.</p><p>Se non lle chegan, comprobe o cartafol de correo lixo.</p>"
-    cant_invite_to_group: "Non ten permisos para convidar a usuarios a grupo(s) específico(s). Asegúrese de ser o propietario do(s) grupo(s) a que está tentando convidar."
     disabled_errors:
       discourse_connect_enabled: "Os convites están desactivados porque está activado DiscourseConnect"
       invalid_access: "Non ten permiso para ver o recurso solicitado."
@@ -313,7 +311,6 @@ gl:
   pm_reached_recipients_limit: "Sentímolo, non pode ter máis de %{recipients_limit} destinatarios nunha mensaxe."
   removed_direct_reply_full_quotes: "Cita de toda a publicación anterior retirada automaticamente."
   watched_words_auto_tag: "Tema etiquetado automaticamente"
-  secure_upload_not_allowed_in_public_topic: "Sentímolo, a(s) seguinte(s) carga(s) segura(s) non pode(n) ser utilizada(s) nun tema público: %{upload_filenames}."
   create_pm_on_existing_topic: "Sentímolo, non pode crear unha mensaxe privada nun tema existente."
   slow_mode_enabled: "Este tema está en modo lento."
   just_posted_that: "é moi semellante ao que xa publicou hai pouco"
@@ -964,6 +961,8 @@ gl:
         api: "API"
         user_api: "API de usuario"
       yaxis: "Día"
+    consolidated_page_views_browser_detection:
+      yaxis: "Día"
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -1123,6 +1122,10 @@ gl:
       xaxis: "Día"
       yaxis: "Visualizacións de páxinas anónimas desde un dispositivo móbil"
       description: "Número de novas visualizacións de páxina por parte de visitantes desde un dispositivo móbil sen a sesión iniciada."
+    page_view_anon_browser_reqs:
+      xaxis: "Día"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Día"
     http_background_reqs:
       title: "Fondo"
       xaxis: "Día"
@@ -1809,8 +1812,6 @@ gl:
       must_include_latest: "O menú superior debe incluír a lapela «Recentes»."
       invalid_string: "Valor non válido."
       invalid_string_min_max: "Debe ter entre %{min} e %{max} caracteres."
-      invalid_string_min: "Debe ter polo menos %{min} caracteres."
-      invalid_string_max: "Non debe ter máis de %{max} caracteres."
       invalid_json: "JSON non válido."
       invalid_reply_by_email_address: "O valor debe conter '%{reply_key}' e ser diferente ao correo electrónico da notificación."
       invalid_alternative_reply_by_email_addresses: "Todos os valores deben conter '%{reply_key}' e ser diferentes ao correo electrónico da notificación."
@@ -1839,7 +1840,15 @@ gl:
         regex_invalid: "A expresión regular non é válida: %{error}"
         leading_trailing_slash: "A expresión regular non debe comezar e rematar con barra."
       unicode_usernames_avatars: "O sistema interno de avatares non admite nomes de usuario Unicode."
-      list_value_count: "A listaxe debe conter exactamente %{count} valores."
+    keywords:
+      clean_up_inactive_users_after_days:
+      - ""
+      - "inactivo"
+      - ""
+      purge_unactivated_users_grace_period_days:
+      - ""
+      - "inactivo"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2011,8 +2020,6 @@ gl:
     activated_by_staff: "Activado polo equipo"
     new_user_typed_too_fast: "O novo usuario escribe moi rápido"
     username:
-      short: "debe ter polo menos %{min} caracteres"
-      long: "non debe ter máis de %{max} caracteres"
       too_long: "é demasiado longo"
       characters: "só debe incluír números, letras, guións, puntos e guións baixos"
       unique: "debe ser único"

@@ -267,7 +267,6 @@ export default class ChatSubscriptionsManager extends Service {
                   busData.thread_id,
                   busData.message.created_at
                 );
-                thread.preview.updateFromMessageObject(busData.message);
                 thread.tracking.unreadCount++;
                 this._updateActiveLastViewedAt(channel);
               }

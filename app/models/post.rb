@@ -11,8 +11,8 @@ class Post < ActiveRecord::Base
   include LimitedEdit
 
   self.ignored_columns = [
-    "avg_time", # TODO(2021-01-04): remove
-    "image_url", # TODO(2021-06-01): remove
+    "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    "image_url", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
@@ -326,7 +326,7 @@ class Post < ActiveRecord::Base
     options[:user_id] = self.last_editor_id
     options[:omit_nofollow] = true if omit_nofollow?
 
-    if self.with_secure_uploads?
+    if self.should_secure_uploads?
       each_upload_url do |url|
         uri = URI.parse(url)
         if FileHelper.is_supported_media?(File.basename(uri.path))
@@ -565,10 +565,25 @@ class Post < ActiveRecord::Base
     ReviewableFlaggedPost.pending.find_by(target: self)
   end
 
-  def with_secure_uploads?
+  # NOTE (martin): This is turning into hack city; when changing this also
+  # consider how it interacts with UploadSecurity and the uploads.rake tasks.
+  def should_secure_uploads?
     return false if !SiteSetting.secure_uploads?
     topic_including_deleted = Topic.with_deleted.find_by(id: self.topic_id)
     return false if topic_including_deleted.blank?
+
+    # NOTE: This is to be used for plugins where adding a new public upload
+    # type that should not be secured via UploadSecurity.register_custom_public_type
+    # is not an option. This also is not taken into account in the secure upload
+    # rake tasks, and will more than likely change in future.
+    modifier_result =
+      DiscoursePluginRegistry.apply_modifier(
+        :post_should_secure_uploads?,
+        nil,
+        self,
+        topic_including_deleted,
+      )
+    return modifier_result if !modifier_result.nil?
 
     # NOTE: This is meant to be a stopgap solution to prevent secure uploads
     # in a single place (private messages) for sensitive admin data exports.
@@ -597,15 +612,26 @@ class Post < ActiveRecord::Base
 
     Post.transaction do
       self.skip_validation = true
+      should_update_user_stat = true
 
       update!(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: reason)
 
-      Topic.where(
-        "id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)",
-        topic_id: topic_id,
-      ).update_all(visible: false)
+      any_visible_posts_in_topic =
+        Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])
 
-      UserStatCountUpdater.decrement!(self)
+      if !any_visible_posts_in_topic
+        self.topic.update_status(
+          "visible",
+          false,
+          Discourse.system_user,
+          { visibility_reason_id: Topic.visibility_reasons[:op_flag_threshold_reached] },
+        )
+        should_update_user_stat = false
+      end
+
+      # We need to do this because TopicStatusUpdater also does the decrement
+      # and we don't want to double count for the OP.
+      UserStatCountUpdater.decrement!(self) if should_update_user_stat
     end
 
     # inform user
@@ -637,8 +663,29 @@ class Post < ActiveRecord::Base
   def unhide!
     Post.transaction do
       self.update!(hidden: false)
-      self.topic.update(visible: true) if is_first_post?
-      UserStatCountUpdater.increment!(self)
+      should_update_user_stat = true
+
+      # NOTE: We have to consider `nil` a valid reason here because historically
+      # topics didn't have a visibility_reason_id, if we didn't do this we would
+      # break backwards compat since we cannot backfill data.
+      hidden_because_of_op_flagging =
+        self.topic.visibility_reason_id == Topic.visibility_reasons[:op_flag_threshold_reached] ||
+          self.topic.visibility_reason_id.nil?
+
+      if is_first_post? && hidden_because_of_op_flagging
+        self.topic.update_status(
+          "visible",
+          true,
+          Discourse.system_user,
+          { visibility_reason_id: Topic.visibility_reasons[:op_unhidden] },
+        )
+        should_update_user_stat = false
+      end
+
+      # We need to do this because TopicStatusUpdater also does the increment
+      # and we don't want to double count for the OP.
+      UserStatCountUpdater.increment!(self) if should_update_user_stat
+
       save(validate: false)
     end
 
@@ -1353,10 +1400,10 @@ end
 #  index_posts_on_id_and_baked_version                    (id DESC,baked_version) WHERE (deleted_at IS NULL)
 #  index_posts_on_id_topic_id_where_not_deleted_or_empty  (id,topic_id) WHERE ((deleted_at IS NULL) AND (raw <> ''::text))
 #  index_posts_on_image_upload_id                         (image_upload_id)
-#  index_posts_on_reply_to_post_number                    (reply_to_post_number)
 #  index_posts_on_topic_id_and_created_at                 (topic_id,created_at)
 #  index_posts_on_topic_id_and_percent_rank               (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE
+#  index_posts_on_topic_id_and_reply_to_post_number       (topic_id,reply_to_post_number)
 #  index_posts_on_topic_id_and_sort_order                 (topic_id,sort_order)
 #  index_posts_on_user_id_and_created_at                  (user_id,created_at)
 #  index_posts_user_and_likes                             (user_id,like_count DESC,created_at DESC) WHERE (post_number > 1)
