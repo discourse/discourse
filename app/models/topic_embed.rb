@@ -124,7 +124,6 @@ class TopicEmbed < ActiveRecord::Base
         existing_tag_names = post.topic.tags.pluck(:name).sort
         incoming_tag_names = Array(tags).map(&:name).sort
 
-        # Determine if there are any changes in the tags
         tags_changed = existing_tag_names != incoming_tag_names
 
         if (content_sha1 != embed.content_sha1) || (title && title != post&.topic&.title) ||
