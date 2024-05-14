@@ -1226,10 +1226,11 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   isInDoNotDisturb() {
-    return (
-      this.do_not_disturb_until &&
-      new Date(this.do_not_disturb_until) >= new Date()
-    );
+    if (this !== getOwner(this).lookup("service:current-user")) {
+      throw "isInDoNotDisturb is only supported for currentUser";
+    }
+
+    return getOwner(this).lookup("service:notifications").isInDoNotDisturb;
   }
 
   @discourseComputed(
