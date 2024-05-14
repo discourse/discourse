@@ -30,13 +30,6 @@ class Admin::EmbeddableHostsController < Admin::AdminController
 
     # Handle tags
     username = params[:embeddable_host][:user]
-    tags = params[:embeddable_host][:tags]&.map(&:strip)
-
-    if tags.present?
-      host.tags = Tag.where(name: tags)
-    else
-      host.tags = []
-    end
 
     if username.blank?
       host.user = nil
@@ -44,21 +37,48 @@ class Admin::EmbeddableHostsController < Admin::AdminController
       host.user = User.find_by_username(username)
     end
 
-    if host.save
-      changes = host.saved_changes if action == :update
-      StaffActionLogger.new(current_user).log_embeddable_host(
-        host,
-        UserHistory.actions[:"embeddable_host_#{action}"],
-        changes: changes,
-      )
-      render_serialized(
-        host,
-        EmbeddableHostSerializer,
-        root: "embeddable_host",
-        rest_serializer: true,
-      )
-    else
-      render_json_error(host)
+    ActiveRecord::Base.transaction do
+      if host.save
+        manage_tags(host, params[:embeddable_host][:tags]&.map(&:strip))
+
+        changes = host.saved_changes if action == :update
+        StaffActionLogger.new(current_user).log_embeddable_host(
+          host,
+          UserHistory.actions[:"embeddable_host_#{action}"],
+          changes: changes,
+        )
+        render_serialized(
+          host,
+          EmbeddableHostSerializer,
+          root: "embeddable_host",
+          rest_serializer: true,
+        )
+      else
+        render_json_error(host)
+        raise ActiveRecord::Rollback
+      end
     end
+  end
+
+  def manage_tags(host, tags)
+    if tags.blank?
+      host.tags.clear
+      return
+    end
+
+    existing_tags = Tag.where(name: tags).index_by(&:name)
+    tags_to_associate = []
+
+    tags.each do |tag_name|
+      tag = existing_tags[tag_name] || Tag.create(name: tag_name)
+      if tag.persisted?
+        tags_to_associate << tag
+      else
+        host.errors.add(:tags, "Failed to create or find tag: #{tag_name}")
+        raise ActiveRecord::Rollback
+      end
+    end
+
+    host.tags = tags_to_associate
   end
 end

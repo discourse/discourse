@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class CreateEmbeddableHostTags < ActiveRecord::Migration[6.1]
+class CreateEmbeddableHostTags < ActiveRecord::Migration[7.0]
   def change
     create_table :embeddable_host_tags do |t|
       t.integer :embeddable_host_id, null: false
