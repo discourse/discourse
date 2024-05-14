@@ -6,9 +6,10 @@ export default DiscourseRoute.extend({
     return I18n.t(`groups.topics`);
   },
 
-  model() {
+  model(params = {}) {
     return this.store.findFiltered("topicList", {
       filter: `topics/groups/${this.modelFor("group").get("name")}`,
+      params,
     });
   },
 });
