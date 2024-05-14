@@ -1533,6 +1533,8 @@ sk:
             placeholder: "Súkromné"
           chat_enabled:
             placeholder: "Povoliť chat"
+          enable_sidebar:
+            placeholder: "Povoliť bočný panel"
       styling:
         fields:
           styling_preview:
