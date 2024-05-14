@@ -4,7 +4,7 @@ require "aws-sdk-s3"
 require "csv"
 
 class S3Inventory
-  attr_reader :type, :model, :inventory_date
+  attr_reader :type, :model, :inventory_date, :s3_helper
 
   CSV_KEY_INDEX ||= 1
   CSV_ETAG_INDEX ||= 2
@@ -12,8 +12,15 @@ class S3Inventory
   INVENTORY_VERSION ||= "1"
   INVENTORY_LAG ||= 2.days
 
-  def initialize(s3_helper, type, preloaded_inventory_file: nil, preloaded_inventory_date: nil)
-    @s3_helper = s3_helper
+  def initialize(type:, preloaded_inventory_file: nil, preloaded_inventory_date: nil)
+    @s3_helper =
+      begin
+        if SiteSetting.s3_inventory_bucket.present?
+          S3Helper.new(SiteSetting.s3_inventory_bucket)
+        else
+          Discourse.store.s3_helper
+        end
+      end
 
     if preloaded_inventory_file && preloaded_inventory_date
       # Data preloaded, so we don't need to fetch it again
@@ -28,6 +35,10 @@ class S3Inventory
       @type = "optimized"
       @model = OptimizedImage
     end
+  end
+
+  def s3_client
+    @s3_helper.s3_client
   end
 
   def backfill_etags_and_list_missing

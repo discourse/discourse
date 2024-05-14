@@ -1962,6 +1962,7 @@ en:
     automatic_backups_enabled: "Run automatic backups as defined in backup frequency"
     backup_frequency: "Specifies the interval, in days, at which automatic backups of the site are created. If set to 7, for example, a new backup will be generated every week. The activation of this setting is contingent upon `automatic_backups_enabled`."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
+    s3_inventory_bucket: "The remote bucket to hold S3 inventory files. If this is not set and `enable_s3_inventory` is enabled, the bucket defaults to `s3_upload_bucket`. WARNING: Make sure it is a private bucket."
     s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Leave blank if using AWS S3."
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Prevent removal of old backups from S3 when there are more backups than the maximum allowed."

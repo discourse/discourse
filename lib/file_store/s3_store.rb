@@ -14,6 +14,7 @@ module FileStore
              :presign_multipart_part,
              :list_multipart_parts,
              :complete_multipart,
+             :s3_client,
              to: :s3_helper
 
     def initialize(s3_helper = nil)
@@ -299,8 +300,8 @@ module FileStore
     def list_missing_uploads(skip_optimized: false)
       if SiteSetting.enable_s3_inventory
         require "s3_inventory"
-        S3Inventory.new(s3_helper, :upload).backfill_etags_and_list_missing
-        S3Inventory.new(s3_helper, :optimized).backfill_etags_and_list_missing unless skip_optimized
+        S3Inventory.new(type: :upload).backfill_etags_and_list_missing
+        S3Inventory.new(type: :optimized).backfill_etags_and_list_missing unless skip_optimized
       else
         list_missing(Upload.by_users, "original/")
         list_missing(OptimizedImage, "optimized/") unless skip_optimized

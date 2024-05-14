@@ -5,9 +5,7 @@ require "s3_inventory"
 require "file_store/s3_store"
 
 RSpec.describe "S3Inventory", type: :multisite do
-  let(:client) { Aws::S3::Client.new(stub_responses: true) }
-  let(:helper) { S3Helper.new(SiteSetting.Upload.s3_upload_bucket.downcase, "", client: client) }
-  let(:inventory) { S3Inventory.new(helper, :upload) }
+  let(:inventory) { S3Inventory.new(type: :upload) }
   let(:csv_filename) { "#{Rails.root}/spec/fixtures/csv/s3_inventory.csv" }
 
   it "can create per-site files" do

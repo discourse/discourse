@@ -9,8 +9,7 @@ RSpec.describe Jobs::UpdateS3Inventory do
     SiteSetting.enable_s3_inventory = true
 
     store = FileStore::S3Store.new
-    @client = Aws::S3::Client.new(stub_responses: true)
-    store.s3_helper.stubs(:s3_client).returns(@client)
+    @client = store.s3_client
     Discourse.stubs(:store).returns(store)
   end
 

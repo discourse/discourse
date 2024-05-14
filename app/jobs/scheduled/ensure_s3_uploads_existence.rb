@@ -17,12 +17,8 @@ module Jobs
       end
     end
 
-    def s3_helper
-      Discourse.store.s3_helper
-    end
-
     def prepare_for_all_sites
-      inventory = S3Inventory.new(s3_helper, :upload)
+      inventory = S3Inventory.new(type: :upload)
       @db_inventories = inventory.prepare_for_all_sites
       @inventory_date = inventory.inventory_date
     end
@@ -39,13 +35,12 @@ module Jobs
            preloaded_inventory_file =
              @db_inventories[RailsMultisite::ConnectionManagement.current_db]
         S3Inventory.new(
-          s3_helper,
-          :upload,
+          type: :upload,
           preloaded_inventory_file: preloaded_inventory_file,
           preloaded_inventory_date: @inventory_date,
         ).backfill_etags_and_list_missing
       else
-        S3Inventory.new(s3_helper, :upload).backfill_etags_and_list_missing
+        S3Inventory.new(type: :upload).backfill_etags_and_list_missing
       end
     end
 

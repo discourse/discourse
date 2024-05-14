@@ -5,16 +5,16 @@ require "s3_inventory"
 require "file_store/s3_store"
 
 RSpec.describe "S3Inventory" do
-  let(:client) { Aws::S3::Client.new(stub_responses: true) }
-  let(:helper) { S3Helper.new(SiteSetting.Upload.s3_upload_bucket.downcase, "", client: client) }
-  let(:inventory) { S3Inventory.new(helper, :upload) }
+  let(:inventory) { S3Inventory.new(type: :upload) }
   let(:csv_filename) { "#{Rails.root}/spec/fixtures/csv/s3_inventory.csv" }
 
   before do
     setup_s3
     SiteSetting.enable_s3_inventory = true
 
-    client.stub_responses(
+    s3_client = inventory.s3_helper.stub_client_responses!
+
+    s3_client.stub_responses(
       :list_objects,
       ->(context) do
         expect(context.params[:prefix]).to eq(
@@ -55,7 +55,7 @@ RSpec.describe "S3Inventory" do
   end
 
   it "should raise error if an inventory file is not found" do
-    client.stub_responses(:list_objects, contents: [])
+    inventory.s3_client.stub_responses(:list_objects, contents: [])
     output = capture_stdout { inventory.backfill_etags_and_list_missing }
     expect(output).to eq("Failed to list inventory from S3\n")
   end
@@ -179,8 +179,7 @@ RSpec.describe "S3Inventory" do
         File.open(csv_filename) do |f|
           preloaded_inventory =
             S3Inventory.new(
-              helper,
-              :upload,
+              type: :upload,
               preloaded_inventory_file: f,
               preloaded_inventory_date: Time.now,
             )
@@ -192,26 +191,113 @@ RSpec.describe "S3Inventory" do
     expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
   end
 
-  describe "s3 inventory configuration" do
-    let(:bucket_name) { "s3-upload-bucket" }
-    let(:subfolder_path) { "subfolder" }
-    before { SiteSetting.s3_upload_bucket = "#{bucket_name}/#{subfolder_path}" }
+  describe "#update_bucket_inventory_configuration" do
+    it "submits the request with the right inventory configuration when `s3_upload_bucket` site setting does not contain a prefix" do
+      bucket_name = "s3-upload-bucket"
+      SiteSetting.s3_upload_bucket = "#{bucket_name}"
 
-    it "is formatted correctly for subfolders" do
-      s3_helper = S3Helper.new(SiteSetting.Upload.s3_upload_bucket.downcase, "", client: client)
-      config = S3Inventory.new(s3_helper, :upload).send(:inventory_configuration)
+      expected_inventory_configuration = <<~XML.gsub(/\\n/, "").gsub(/>\s*/, ">").gsub(/\s*</, "<")
+      <InventoryConfiguration xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">
+        <Destination>
+          <S3BucketDestination>
+            <Bucket>arn:aws:s3:::#{bucket_name}</Bucket>
+            <Format>CSV</Format>
+            <Prefix>inventory/1</Prefix>
+          </S3BucketDestination>
+        </Destination>
+        <IsEnabled>true</IsEnabled>
+        <Filter>
+          <Prefix>original</Prefix>
+        </Filter>
+        <Id>original</Id>
+        <IncludedObjectVersions>Current</IncludedObjectVersions>
+        <OptionalFields>
+          <Field>ETag</Field>
+        </OptionalFields>
+        <Schedule>
+          <Frequency>Daily</Frequency>
+        </Schedule>
+      </InventoryConfiguration>
+      XML
 
-      expect(config[:destination][:s3_bucket_destination][:bucket]).to eq(
-        "arn:aws:s3:::#{bucket_name}",
-      )
-      expect(config[:destination][:s3_bucket_destination][:prefix]).to eq(
-        "#{subfolder_path}/inventory/1",
-      )
-      expect(config[:id]).to eq("#{subfolder_path}-original")
-      expect(config[:schedule][:frequency]).to eq("Daily")
-      expect(config[:included_object_versions]).to eq("Current")
-      expect(config[:optional_fields]).to eq(["ETag"])
-      expect(config[:filter][:prefix]).to eq(subfolder_path)
+      stub_request(
+        :put,
+        "https://#{bucket_name}.s3.#{SiteSetting.s3_region}.amazonaws.com/?id=original&inventory",
+      ).with(body: expected_inventory_configuration).to_return(status: 200)
+
+      S3Inventory.new(type: :upload).update_bucket_inventory_configuration
+    end
+
+    it "submits the request with the right inventory configuration when `s3_upload_bucket` site setting contains a prefix" do
+      bucket_name = "s3-upload-bucket"
+      subfolder_path = "subfolder"
+      SiteSetting.s3_upload_bucket = "#{bucket_name}/#{subfolder_path}"
+
+      expected_inventory_configuration = <<~XML.gsub(/\\n/, "").gsub(/>\s*/, ">").gsub(/\s*</, "<")
+      <InventoryConfiguration xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">
+        <Destination>
+          <S3BucketDestination>
+            <Bucket>arn:aws:s3:::#{bucket_name}</Bucket>
+            <Format>CSV</Format>
+            <Prefix>#{subfolder_path}/inventory/1</Prefix>
+          </S3BucketDestination>
+        </Destination>
+        <IsEnabled>true</IsEnabled>
+        <Filter>
+          <Prefix>#{subfolder_path}</Prefix>
+        </Filter>
+        <Id>#{subfolder_path}-original</Id>
+        <IncludedObjectVersions>Current</IncludedObjectVersions>
+        <OptionalFields>
+          <Field>ETag</Field>
+        </OptionalFields>
+        <Schedule>
+          <Frequency>Daily</Frequency>
+        </Schedule>
+      </InventoryConfiguration>
+      XML
+
+      stub_request(
+        :put,
+        "https://#{bucket_name}.s3.#{SiteSetting.s3_region}.amazonaws.com/?id=#{subfolder_path}-original&inventory",
+      ).with(body: expected_inventory_configuration).to_return(status: 200)
+
+      S3Inventory.new(type: :upload).update_bucket_inventory_configuration
+    end
+
+    it "submits the request with the right inventory configuration when `s3_inventory_bucket` site setting has been set" do
+      SiteSetting.s3_inventory_bucket = "s3-inventory-bucket"
+
+      expected_inventory_configuration = <<~XML.gsub(/\\n/, "").gsub(/>\s*/, ">").gsub(/\s*</, "<")
+      <InventoryConfiguration xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\">
+        <Destination>
+          <S3BucketDestination>
+            <Bucket>arn:aws:s3:::#{SiteSetting.s3_inventory_bucket}</Bucket>
+            <Format>CSV</Format>
+            <Prefix>inventory/1</Prefix>
+          </S3BucketDestination>
+        </Destination>
+        <IsEnabled>true</IsEnabled>
+        <Filter>
+          <Prefix>original</Prefix>
+        </Filter>
+        <Id>original</Id>
+        <IncludedObjectVersions>Current</IncludedObjectVersions>
+        <OptionalFields>
+          <Field>ETag</Field>
+        </OptionalFields>
+        <Schedule>
+          <Frequency>Daily</Frequency>
+        </Schedule>
+      </InventoryConfiguration>
+      XML
+
+      stub_request(
+        :put,
+        "https://#{SiteSetting.s3_inventory_bucket}.s3.#{SiteSetting.s3_region}.amazonaws.com/?id=original&inventory",
+      ).with(body: expected_inventory_configuration).to_return(status: 200)
+
+      S3Inventory.new(type: :upload).update_bucket_inventory_configuration
     end
   end
 end

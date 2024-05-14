@@ -1586,6 +1586,9 @@ files:
   s3_configure_inventory_policy:
     default: true
     hidden: true
+  s3_inventory_bucket:
+    default: ""
+    regex: '^[a-z0-9\-\/_]+$'
   s3_presigned_get_url_expires_after_seconds:
     default: 300
     hidden: true

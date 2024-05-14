@@ -12,7 +12,7 @@ module Jobs
       end
 
       %i[upload optimized].each do |type|
-        s3_inventory = S3Inventory.new(Discourse.store.s3_helper, type)
+        s3_inventory = S3Inventory.new(type:)
         s3_inventory.update_bucket_policy if type == :upload
         s3_inventory.update_bucket_inventory_configuration
       end
