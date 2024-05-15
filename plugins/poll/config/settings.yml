@@ -31,6 +31,7 @@ plugins:
     min: -9999
     client: true
   poll_export_data_explorer_query_id_irv:
+    default: 0
     min: -9999
     client: true
   poll_default_public:
