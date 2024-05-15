@@ -505,7 +505,10 @@ export default class PollComponent extends Component {
 
   @action
   exportResults() {
-    const queryID = this.siteSettings.poll_export_data_explorer_query_id;
+    const queryID =
+      this.poll.type === "irv"
+        ? this.siteSettings.poll_export_data_explorer_query_id_irv
+        : this.siteSettings.poll_export_data_explorer_query_id;
 
     // This uses the Data Explorer plugin export as CSV route
     // There is detection to check if the plugin is enabled before showing the button

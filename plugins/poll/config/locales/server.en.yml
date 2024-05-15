@@ -7,6 +7,7 @@ en:
     poll_create_allowed_groups: "The groups that are allowed to create polls."
     poll_groupable_user_fields: "A set of user field names that can be used to group and filter poll results."
     poll_export_data_explorer_query_id: "ID of the Data Explorer Query to use for exporting poll results (0 to disable)."
+    poll_export_data_explorer_query_id_irv: "ID of the Data Explorer Query to use for exporting IRV poll results."
     poll_default_public: "When creating a new poll, enable the 'show who voted' option by default."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
