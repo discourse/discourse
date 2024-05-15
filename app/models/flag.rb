@@ -2,8 +2,10 @@
 
 class Flag < ActiveRecord::Base
   scope :enabled, -> { where(enabled: true) }
+  scope :system, -> { where(system: true) }
 
   before_save :set_position
+  before_save :set_name_key
   after_save :reset_flag_settings!
   after_destroy :reset_flag_settings!
 
@@ -21,6 +23,10 @@ class Flag < ActiveRecord::Base
     self.id < 1000
   end
 
+  def applies_to?(type)
+    self.applies_to.include?(type)
+  end
+
   private
 
   def reset_flag_settings!
@@ -29,6 +35,10 @@ class Flag < ActiveRecord::Base
 
   def set_position
     self.position = Flag.maximum(:position).to_i + 1 if !self.position
+  end
+
+  def set_name_key
+    self.name_key = self.name.gsub(" ", "_").gsub(/[^\w]/, "").downcase
   end
 end
 

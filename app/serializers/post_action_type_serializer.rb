@@ -14,7 +14,7 @@ class PostActionTypeSerializer < ApplicationSerializer
   end
 
   def name
-    i18n("title", default: PostActionType.types[object.id].to_s)
+    i18n("title", default: object.class.flag_settings.names[object.id])
   end
 
   def description
@@ -26,7 +26,7 @@ class PostActionTypeSerializer < ApplicationSerializer
   end
 
   def name_key
-    PostActionType.types[object.id].to_s.downcase.gsub(" ", "_").gsub(/[^\w]/, "")
+    PostActionType.types[object.id].to_s
   end
 
   protected

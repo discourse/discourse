@@ -85,14 +85,15 @@ class PostActionType < ActiveRecord::Base
       Flag
         .enabled
         .order(:position)
-        .each do |post_flag|
+        .each do |flag|
           @flag_settings.add(
-            post_flag.id,
-            post_flag.name.to_sym,
-            topic_type: post_flag.topic_type,
-            notify_type: post_flag.notify_type,
-            auto_action_type: post_flag.auto_action_type,
-            custom_type: post_flag.custom_type,
+            flag.id,
+            flag.name_key.to_sym,
+            topic_type: flag.applies_to?("Topic"),
+            notify_type: flag.notify_type,
+            auto_action_type: flag.auto_action_type,
+            custom_type: flag.custom_type,
+            name: flag.name,
           )
         end
     end
