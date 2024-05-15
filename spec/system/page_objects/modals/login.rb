@@ -31,6 +31,10 @@ module PageObjects
         find("#forgot-password-link").click
       end
 
+      def invite_code
+        find("#inviteCode").click
+      end
+
       def fill_username(username)
         find("#login-account-name").fill_in(with: username)
       end

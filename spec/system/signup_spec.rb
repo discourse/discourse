@@ -33,8 +33,35 @@ describe "Signup", type: :system do
     end
 
     context "with invite code" do
-      it "can signup" do
-        # TODO: add test
+      before { SiteSetting.invite_code = "cupcake" }
+
+      it "can signup with valid code" do
+        signup_modal.open
+        signup_modal.fill_email("johndoe@example.com")
+        signup_modal.fill_username("john")
+        signup_modal.fill_password("supersecurepassword")
+        signup_modal.fill_code("cupcake")
+        expect(signup_modal).to have_valid_email
+        expect(signup_modal).to have_valid_username
+        expect(signup_modal).to have_valid_password
+
+        signup_modal.confirm_signup
+        expect(page).to have_css(".account-created")
+      end
+
+      it "can not signup with invalid code" do
+        signup_modal.open
+        signup_modal.fill_email("johndoe@example.com")
+        signup_modal.fill_username("john")
+        signup_modal.fill_password("supersecurepassword")
+        signup_modal.fill_code("pudding")
+        expect(signup_modal).to have_valid_email
+        expect(signup_modal).to have_valid_username
+        expect(signup_modal).to have_valid_password
+
+        signup_modal.confirm_signup
+        expect(signup_modal).to have_content(I18n.t("login.wrong_invite_code"))
+        expect(signup_modal).to have_no_css(".account-created")
       end
     end
 
@@ -61,3 +88,7 @@ describe "Signup", type: :system do
     end
   end
 end
+
+# auto approve email domains
+# allowed email domains
+# blocked email domains

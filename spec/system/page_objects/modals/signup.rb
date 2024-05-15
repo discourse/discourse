@@ -51,6 +51,10 @@ module PageObjects
         find("#new-account-password").fill_in(with: password)
       end
 
+      def fill_code(code)
+        find("#inviteCode").fill_in(with: code)
+      end
+
       def has_valid_email?
         find(".create-account-email").has_css?("#account-email-validation.good")
       end
