@@ -236,7 +236,10 @@ export default ComboBoxComponent.extend({
           categoryId !== NO_CATEGORIES_ID,
           this.editingCategoryTab
         );
-      } else if (this.filterType === "categories") {
+      } else if (
+        this.site.lazy_load_categories &&
+        this.filterType === "categories"
+      ) {
         // rendered on categories page
         if (categoryId === "all-categories" || categoryId === "no-categories") {
           route = this.selectKit.options.parentCategory

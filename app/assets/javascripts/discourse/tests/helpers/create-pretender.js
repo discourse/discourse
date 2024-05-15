@@ -563,6 +563,26 @@ export function applyDefaultHandlers(pretender) {
     response(fixturesByUrl["/c/11/show.json"])
   );
 
+  pretender.get("/categories/find", () => {
+    return response({
+      categories: fixturesByUrl["site.json"].site.categories,
+    });
+  });
+
+  pretender.post("/categories/search", (request) => {
+    const data = parsePostData(request.requestBody);
+    if (data.include_ancestors) {
+      return response({
+        categories: fixturesByUrl["site.json"].site.categories,
+        ancestors: fixturesByUrl["site.json"].site.categories,
+      });
+    } else {
+      return response({
+        categories: fixturesByUrl["site.json"].site.categories,
+      });
+    }
+  });
+
   pretender.get("/c/testing/find_by_slug.json", () =>
     response(fixturesByUrl["/c/11/show.json"])
   );

@@ -3,7 +3,11 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance("Subcategories", function () {
+acceptance("Subcategories", function (needs) {
+  needs.site({
+    lazy_load_categories: true,
+  });
+
   test("navigation can be used to navigate subcategories pages", async function (assert) {
     await visit("/categories");
 
