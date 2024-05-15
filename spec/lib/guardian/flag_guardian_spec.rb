@@ -12,9 +12,7 @@ RSpec.describe FlagGuardian do
     end
 
     it "returns false when flag is system" do
-      flag.update!(id: 5)
-      Fabricate(:post_action, post_action_type_id: flag.id)
-      expect(Guardian.new(admin).can_edit_flag?(flag)).to eq(false)
+      expect(Guardian.new(admin).can_edit_flag?(Flag.system.first)).to eq(false)
     end
 
     it "returns false when flag was already used with post action" do

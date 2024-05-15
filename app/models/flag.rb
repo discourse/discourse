@@ -2,7 +2,7 @@
 
 class Flag < ActiveRecord::Base
   scope :enabled, -> { where(enabled: true) }
-  scope :system, -> { where(system: true) }
+  scope :system, -> { where("id < 1000") }
 
   before_save :set_position
   before_save :set_name_key
