@@ -70,7 +70,7 @@ export default class ChannelsListPublic extends Component {
   }
 
   <template>
-    {{!-- {{#if (and this.site.desktopView this.hasThreadedChannels)}}
+    {{#if (and this.site.desktopView this.inSidebar this.hasThreadedChannels)}}
       <LinkTo @route="chat.threads" class="chat-channel-row --threads">
         <span class="chat-channel-title">
           {{dIcon "discourse-threads" class="chat-user-threads__icon"}}
@@ -82,12 +82,11 @@ export default class ChannelsListPublic extends Component {
           </div>
         {{/if}}
       </LinkTo>
-    {{/if}} --}}
+    {{/if}}
 
-    {{#if this.displayPublicChannels}}
-      {{! i guess we don't need this divider anymore?  }}
-      {{!-- {{#if this.site.desktopView}}
-
+    {{#unless this.publicMessageChannelsEmpty}}
+      {{#if this.displayPublicChannels}}
+        {{#if this.site.desktopView}}
           <div class="chat-channel-divider public-channels-section">
             {{#if this.inSidebar}}
               <span
@@ -112,33 +111,33 @@ export default class ChannelsListPublic extends Component {
               {{dIcon "pencil-alt"}}
             </LinkTo>
           </div>
-
-      {{/if}} --}}
-
-      <div
-        id="public-channels"
-        class={{concatClass
-          "channels-list-container"
-          "public-channels"
-          (if this.inSidebar "collapsible-sidebar-section")
-        }}
-      >
-        {{#if this.publicMessageChannelsEmpty}}
-          <EmptyChannelsList
-            @title={{i18n "chat.no_public_channels"}}
-            @ctaTitle={{i18n "chat.no_public_channels_cta"}}
-            @ctaAction={{this.openBrowseChannels}}
-          />
-        {{else}}
-          {{#each this.chatChannelsManager.publicMessageChannels as |channel|}}
-            <ChatChannelRow
-              @channel={{channel}}
-              @options={{hash settingsButton=true}}
-            />
-          {{/each}}
         {{/if}}
-      </div>
-    {{/if}}
+      {{/if}}
+    {{/unless}}
+
+    <div
+      id="public-channels"
+      class={{concatClass
+        "channels-list-container"
+        "public-channels"
+        (if this.inSidebar "collapsible-sidebar-section")
+      }}
+    >
+      {{#if this.publicMessageChannelsEmpty}}
+        <EmptyChannelsList
+          @title={{i18n "chat.no_public_channels"}}
+          @ctaTitle={{i18n "chat.no_public_channels_cta"}}
+          @ctaAction={{this.openBrowseChannels}}
+        />
+      {{else}}
+        {{#each this.chatChannelsManager.publicMessageChannels as |channel|}}
+          <ChatChannelRow
+            @channel={{channel}}
+            @options={{hash settingsButton=true}}
+          />
+        {{/each}}
+      {{/if}}
+    </div>
 
     <PluginOutlet
       @name="below-public-chat-channels"
