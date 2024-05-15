@@ -49,10 +49,7 @@ export default class ChatMessageFlag {
 
     flagsAvailable = flagsAvailable.filter((flag) => {
       const availableFlags = flagModal.args.model.flagModel.availableFlags;
-      return (
-        availableFlags.includes(flag.name_key) ||
-        availableFlags.includes(flag.name)
-      );
+      return availableFlags.includes(flag.name_key);
     });
 
     // "message user" option should be at the top
