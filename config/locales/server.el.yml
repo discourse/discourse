@@ -2359,8 +2359,6 @@ el:
         fields:
           login_required:
             placeholder: "Ιδιωτική"
-          enable_sidebar:
-            placeholder: "Ενεργοποίηση πλαϊνής γραμμής"
       styling:
         fields:
           styling_preview:

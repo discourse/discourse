@@ -573,20 +573,6 @@ id:
   staff_category_description: "Kategori pribadi untuk diskusi staf. Topik hanya dapat dilihat oleh admin dan moderator."
   discourse_welcome_topic:
     title: "Selamat datang di %{site_title}! :wave:"
-    body: |
-      Kami sangat senang Anda bergabung dengan kami.
-
-      %{site_info_quote}
-
-      Berikut adalah beberapa hal yang dapat Anda lakukan untuk memulai:
-
-      :speaking_head: **Perkenalkan diri Anda** dengan menambahkan gambar dan informasi tentang diri Anda dan minat Anda ke [profil Anda](%{base_path}/my/preferences/account). Ada hal yang ingin Anda tanyakan?
-
-      :open_book: **Kenali komunitas** dengan [menjelajahi diskusi](%{base_path}/top) yang sedang berlangsung di sini. Saat Anda menemukan post yang menarik, informatif, atau menghibur, gunakan :heart: untuk menunjukkan penghargaan atau dukungan Anda!
-
-      :handshake: **Berkontribusi** dengan berkomentar, membagikan perspektif Anda sendiri, mengajukan pertanyaan, atau menawarkan umpan balik dalam diskusi. Sebelum membalas atau memulai topik baru, harap tinjau [Pedoman Komunitas](%{base_path}/faq).
-
-      > Jika Anda memerlukan bantuan atau memiliki saran, silakan bertanya di %{feedback_category} atau [hubungi admin](%{base_path}/about).
   admin_quick_start_title: "Panduan Admin: Memulai"
   category:
     topic_prefix: "Tentang kategori %{category}"
@@ -1703,8 +1689,6 @@ id:
             placeholder: "Pribadi"
           chat_enabled:
             placeholder: "Aktifkan obrolan"
-          enable_sidebar:
-            placeholder: "Aktifkan bilah sisi"
       styling:
         fields:
           homepage_style:

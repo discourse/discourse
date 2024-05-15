@@ -6,6 +6,8 @@
 
 ro:
   site_settings:
+    chat_allowed_groups: "Utilizatorii din aceste grupuri pot discuta pe chat. Reține că administratorii și moderatorii pot accesa întotdeauna chat-ul."
+    chat_message_flag_allowed_groups: "Utilizatorii din aceste grupuri au dreptul de a marca mesajele de chat. Reține că administratorii și moderatorii pot marca întotdeauna mesajele de chat."
     chat_preferred_mobile_index: "Filă preferată la încărcarea /chat pe mobil."
   system_messages:
     private_channel_title: "Canal %{id}"

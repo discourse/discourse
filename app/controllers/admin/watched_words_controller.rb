@@ -120,6 +120,6 @@ class Admin::WatchedWordsController < Admin::StaffController
 
   def watched_words_params
     @watched_words_params ||=
-      params.permit(:id, :replacement, :action_key, :case_sensitive, words: [])
+      params.permit(:id, :replacement, :action_key, :case_sensitive, :html, words: [])
   end
 end

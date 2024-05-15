@@ -646,20 +646,6 @@ fi:
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
   discourse_welcome_topic:
     title: "Tervetuloa sivustolle %{site_title}! :wave:"
-    body: |
-      Mukavaa, että liityit joukkoomme.
-
-      %{site_info_quote}
-
-      Tässä muutamia asioita, joita voit tehdä päästäksesi alkuun:
-
-      :speaking_head: **Esittele itsesi** lisäämällä kuvasi ja tietoa itsestäsi ja kiinnostuksen kohteistasi [profiiliisi](%{base_path}/my/preferences/account). Mikä on päällimmäinen asia, josta haluaisit ihmisten kysyvän sinulta?
-
-      :open_book: **Tutustu yhteisöön** [selaamalla keskusteluita](%{base_path}/top), joita on jo käynnissä. Kun viesti on mielestäsi kiinnostava, informatiivinen tai viihdyttävä, osoita arvostuksesi tai tukesi käyttämällä :heart:-painiketta!
-
-      :handshake: **Osallistu** kommentoimalla, jakamalla oman näkökantasi, kysymällä kysymyksiä tai tarjoamalla palautetta keskustelussa. Ennen kuin vastaat tai aloitat uusia ketjuja, tutustu [yhteisön sääntöihin](%{base_path}/faq).
-
-      > Jos tarvitset apua tai sinulla on ehdotus, voit esittää kysymyksesi alueella %{feedback_category} tai [ottaa yhteyttä ylläpitäjiin](%{base_path}/about).
   admin_quick_start_title: "Ylläpitäjän opas: aloittaminen"
   category:
     topic_prefix: "Tietoa alueesta %{category}"
@@ -1095,7 +1081,6 @@ fi:
       title: "Käyttäjien vierailut"
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
-      description: "Vierailleiden käyttäjien määrä."
     signups:
       title: "Rekisteröitymiset"
       xaxis: "Päivä"
@@ -1338,7 +1323,6 @@ fi:
       title: "Käyttäjävierailut (mobiili)"
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
-      description: "Uniikkien mobiilikävijöiden määrä."
     web_crawlers:
       title: "Hakurobottikäyttäjäagentit"
       labels:
@@ -4461,9 +4445,6 @@ fi:
           chat_enabled:
             placeholder: "Ota chat käyttöön"
             extra_description: "Pidä yhteyttä jäseniisi reaaliajassa"
-          enable_sidebar:
-            placeholder: "Ota sivupalkki käyttöön"
-            extra_description: "Helppo pääsy suosikkitiloihisi"
       ready:
         title: "Sivustosi on valmis!"
         description: "Olet nyt tehnyt perusasioat yhteisösi määrittämiseksi. Nyt voit alkaa tutustumaan paikkoihin, kirjoittaa tervetuloketjun ja lähettää kutsuja!<br><br>Pidä hauskaa!"

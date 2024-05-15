@@ -4226,6 +4226,7 @@ sl:
           link_label: "Povezava"
           add: "Dodaj"
           success: "Uspeh"
+          html_label: "HTML"
         test:
           no_matches: "Ni zadetkov"
       form_templates:

@@ -811,7 +811,6 @@ ca:
       title: "Visites de l'usuari"
       xaxis: "Dia"
       yaxis: "Nombre de visites"
-      description: "Nombre de visites de tots els usuaris."
     signups:
       title: "Registres"
       xaxis: "Dia"
@@ -1045,7 +1044,6 @@ ca:
       title: "Visites d'usuari (mòbil)"
       xaxis: "Dia"
       yaxis: "Nombre de visites"
-      description: "Nombre d'usuaris únics que han visitat el lloc web amb un dispositiu mòbil."
     web_crawlers:
       title: "Agents d'usuari de rastrejadors web"
       labels:

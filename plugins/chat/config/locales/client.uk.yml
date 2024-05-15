@@ -263,6 +263,9 @@ uk:
       ignore_channel_wide_mention:
         title: "Ігнорувати на каналі масові згадки"
         description: "Не надсилати масові сповіщення про згадки на весь канал (@here та @all)"
+      show_thread_title_prompts:
+        title: "Показувати заголовок списку тем"
+        description: "Показати підказки для встановлення заголовка для нових тем"
       open: "Відкрити чат"
       open_full_page: "Відкрити повноекранний чат"
       close_full_page: "Закрити повноекранний чат"
@@ -684,6 +687,17 @@ uk:
           few: "+%{count}"
           many: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Встановіть назву потоку"
+        message: "Допоможіть іншим знайти цю розмову."
+        dismiss_action: "Не показувати знову"
+        primary_action: "Встановити назву"
+      thread_title_modal:
+        title: "Встановити заголовок потоку"
+        input_placeholder: "Розкажіть іншим, про що ця розмова..."
+        discourse_ai:
+          title: "Автоматично генерувати заголовки потоків"
+          description: "Завітайте на %{url} , щоб дізнатися більше про це та інші покращення вашого досвіду роботи з Дискурсом."
       threads:
         open: "Відкрийте тему"
         list: "Потоки"

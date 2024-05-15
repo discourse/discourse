@@ -140,6 +140,10 @@ module PageObjects
         messages.edit(message)
         send_message(message.message + " " + text) if text
       end
+
+      def has_bookmarked_message?(message)
+        find(message_by_id_selector(message.id) + ".-bookmarked")
+      end
     end
   end
 end

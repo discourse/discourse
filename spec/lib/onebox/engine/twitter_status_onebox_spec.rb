@@ -143,6 +143,25 @@ RSpec.describe Onebox::Engine::TwitterStatusOnebox do
 
       expect(html).to eq("")
     end
+
+    describe "it resorts to html open graph tags" do
+      context "with a standard tweet" do
+        let(:tweet_content) { "I've never played Minecraft" }
+        include_context "with standard tweet info"
+        before { @onebox_fixture = "twitterstatus_noclient" }
+        include_context "with engines"
+
+        let(:avatar) do
+          "https://pbs.twimg.com/profile_images/1468001914302390278/B_Xv_8gu_200x200.jpg"
+        end
+        let(:timestamp) { "" }
+        let(:favorite_count) { "" }
+        let(:retweets_count) { "" }
+
+        it_behaves_like "an engine"
+        it_behaves_like "#to_html"
+      end
+    end
   end
 
   context "with twitter client" do

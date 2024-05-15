@@ -4214,6 +4214,7 @@ nb_NO:
           success: "Suksess"
           exists: "Eksisterer fra før"
           upload_successful: "Opplastet. Ord lagt til."
+          html_label: "HTML"
         test:
           button_label: "Test"
           no_matches: "Ingen treff funnet"
