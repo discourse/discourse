@@ -9,8 +9,8 @@ describe "Signup", type: :system do
       Jobs.run_immediately!
 
       signup_modal.open
-      signup_modal.fill_email("alex@example.com")
-      signup_modal.fill_username("alex")
+      signup_modal.fill_email("johndoe@example.com")
+      signup_modal.fill_username("john")
       signup_modal.fill_password("supersecurepassword")
       expect(signup_modal).to have_valid_email
       expect(signup_modal).to have_valid_username
@@ -21,7 +21,7 @@ describe "Signup", type: :system do
       wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
 
       mail = ActionMailer::Base.deliveries.last
-      expect(mail.to).to contain_exactly("alex@example.com")
+      expect(mail.to).to contain_exactly("johndoe@example.com")
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}, 0]
 
       visit "/"

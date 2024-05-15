@@ -2,8 +2,8 @@
 
 describe "Login", type: :system do
   let(:login_modal) { PageObjects::Modals::Login.new }
-  fab!(:alex) do
-    Fabricate(:user, username: "alex", password: "supersecurepassword", approved: true)
+  fab!(:user) do
+    Fabricate(:user, username: "john", password: "supersecurepassword", approved: true)
   end
 
   context "with username and password" do
@@ -11,7 +11,7 @@ describe "Login", type: :system do
       Jobs.run_immediately!
 
       login_modal.open
-      login_modal.fill_username("alex")
+      login_modal.fill_username("john")
       login_modal.fill_password("supersecurepassword")
       login_modal.confirm_login
 
@@ -20,7 +20,7 @@ describe "Login", type: :system do
       wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
 
       mail = ActionMailer::Base.deliveries.last
-      expect(mail.to).to contain_exactly(alex.email)
+      expect(mail.to).to contain_exactly(user.email)
       activation_link = mail.body.to_s[%r{/u/activate-account/\S+}, 0]
 
       visit activation_link

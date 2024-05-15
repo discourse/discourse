@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module OmniauthHelpers
-  FIRST_NAME = "Alex"
-  LAST_NAME = "Jones"
-  FULL_NAME = "Alex Jones"
-  USERNAME = "alexjones"
-  EMAIL = "alexjones@example.com"
+  FIRST_NAME = "John"
+  LAST_NAME = "Doe"
+  FULL_NAME = "John Doe"
+  USERNAME = "john"
+  EMAIL = "johndoe@example.com"
 
   def mock_facebook_auth(email: EMAIL, name: FULL_NAME)
     OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(
