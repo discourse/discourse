@@ -48,12 +48,14 @@ end
 #
 #  id               :bigint           not null, primary key
 #  name             :string
-#  position         :integer          not null
-#  enabled          :boolean          default(TRUE), not null
-#  topic_type       :boolean          default(FALSE), not null
+#  name_key         :string
+#  description      :text
 #  notify_type      :boolean          default(FALSE), not null
 #  auto_action_type :boolean          default(FALSE), not null
 #  custom_type      :boolean          default(FALSE), not null
+#  applies_to       :string           not null, is an Array
+#  position         :integer          not null
+#  enabled          :boolean          default(TRUE), not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #
