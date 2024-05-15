@@ -3235,6 +3235,7 @@ uk:
       suggest_create_topic: Готові <a href>почати нову розмову?</a>
       jump_reply: "Перейти до початкового розташування публікації"
       jump_reply_aria: "Перейти до повідомлення @%{username} в його оригінальному розташуванні"
+      jump_reply_button: "Перейти до публікації"
       deleted: "Тему було видалено"
       slow_mode_update:
         title: "Повільний режим"
@@ -4838,7 +4839,7 @@ uk:
       clear_filter: "Очистити фільтр"
       no_results:
         title: "Немає результатів"
-        description: "Ми не змогли знайти нічого, що відповідає \"%{filter}\".<br><br>Ви хотіли <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">шукати налаштування сайту</a> чи <a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">список користувачів адміністратора?</a>"
+        description: 'Ми не змогли знайти нічого, що відповідає "%{filter}".<br><br>Ви хотіли <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">шукати налаштування сайту</a> чи <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">список користувачів адміністратора?</a>'
     welcome_topic_banner:
       title: "Створіть тему привітання"
       description: "Ваша привітальна тема – це перше, що прочитають нові учасники. Думайте про це як про свою «початкову презентацію» або «програмну заяву». Повідомте всім, для кого ця спільнота, що вони можуть очікувати тут знайти та що ви хочете, щоб вони зробили в першу чергу."
@@ -6112,6 +6113,9 @@ uk:
             update_public_sidebar_section: "оновити публічний розділ бічної панелі"
             destroy_public_sidebar_section: "знищити публічний розділ бічної панелі"
             reset_bounce_score: "скинути рахунок відмов"
+            create_watched_word_group: "створити контрольовану групу слів"
+            update_watched_word_group: "оновити контрольовану групу слів"
+            delete_watched_word_group: "видалити контрольовану групу слів"
         screened_emails:
           title: "Screened Emails"
           description: "Коли хтось намагатиметься створити новий обліковий запис, наступні електронні скриньки буде перевірено, і реєстрацію заблоковано, або вжито якихось інших дій."
@@ -6162,6 +6166,7 @@ uk:
           many: "показати %{count} слів"
           other: "показати %{count} слів"
         case_sensitive: "(з урахуванням регістру)"
+        html: "(html)"
         download: Завантажити
         clear_all: Скинути все
         clear_all_confirm: "Ви впевнені, що хочете видалити всі контрольні слова на %{action}?"
@@ -6201,6 +6206,8 @@ uk:
           upload_successful: "Завантаження пройшло успішно. Слова додані."
           case_sensitivity_label: "З урахуванням регістру"
           case_sensitivity_description: "Тільки слова з відповідним регістром"
+          html_label: "HTML"
+          html_description: "Виводить HTML в заміні"
           words_or_phrases: "слова або фрази"
         test:
           button_label: "Тест"

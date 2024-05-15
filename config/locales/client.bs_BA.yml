@@ -3918,6 +3918,7 @@ bs_BA:
           exists: "Već postoji"
           upload: "Dodaj iz datoteke"
           upload_successful: "Otpremanje je uspješno. Riječi su dodane."
+          html_label: "HTML"
         test:
           no_matches: "Nije pronađen traženi pojam"
       form_templates:

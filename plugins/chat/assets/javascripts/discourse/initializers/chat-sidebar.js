@@ -8,7 +8,6 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { avatarUrl } from "discourse-common/lib/avatar-utils";
-import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
@@ -40,7 +39,7 @@ export default {
             switchButtonIcon = "d-chat";
 
             get switchButtonDefaultUrl() {
-              return getURL(chatStateManager.lastKnownChatURL || "/chat");
+              return chatStateManager.lastKnownChatURL || "/chat";
             }
           }
       );

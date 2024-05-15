@@ -9,6 +9,7 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "discourse-i18n";
 
 acceptance("User Directory", function () {
   test("Visit Page", async function (assert) {
@@ -92,6 +93,46 @@ acceptance("User Directory", function () {
       query(`${secondHeading} .d-icon-chevron-up`),
       "list has been sorted"
     );
+  });
+
+  test("Visit with no users", async function (assert) {
+    pretender.get("/directory_items", () => {
+      return response({
+        directory_items: [],
+        meta: {
+          last_updated_at: "2024-05-13T18:42:32.000Z",
+          total_rows_directory_items: 0,
+        },
+      });
+    });
+    await visit("/u");
+
+    assert
+      .dom(".empty-state-body")
+      .hasText(
+        I18n.t("directory.no_results.body"),
+        "a JIT message is shown when there are no users"
+      );
+  });
+
+  test("Visit with no search results", async function (assert) {
+    pretender.get("/directory_items", () => {
+      return response({
+        directory_items: [],
+        meta: {
+          last_updated_at: "2024-05-13T18:42:32.000Z",
+          total_rows_directory_items: 0,
+        },
+      });
+    });
+    await visit("/u?name=somenamethatdoesnotexist");
+
+    assert
+      .dom(".empty-state-body")
+      .hasText(
+        I18n.t("directory.no_results_with_search"),
+        "a different JIT message is used when there are no results for the search term"
+      );
   });
 });
 

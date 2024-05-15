@@ -742,7 +742,6 @@ vi:
       title: "Các thành viên truy cập"
       xaxis: "Ngày"
       yaxis: "Số lần truy cập"
-      description: "Số lượt truy cập của người dùng."
     signups:
       xaxis: "Ngày"
     new_contributors:
@@ -939,7 +938,6 @@ vi:
       title: "Lượt truy cập của người dùng (di động)"
       xaxis: "Ngày"
       yaxis: "Số lần truy cập"
-      description: "Số Thành viên duy nhất đã truy cập bằng thiết bị di động."
     web_crawlers:
       labels:
         page_views: "Số lượt xem"
@@ -2126,8 +2124,6 @@ vi:
         fields:
           login_required:
             placeholder: "Riêng tư"
-          enable_sidebar:
-            placeholder: "Bật thanh bên"
       styling:
         fields:
           styling_preview:

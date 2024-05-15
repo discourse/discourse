@@ -1,10 +1,10 @@
-.topic-list-item td:first-child,
+.topic-list-item td:first-of-type,
 .topic-post {
   border-left: 1px solid transparent;
 }
 
-.topic-list tr.selected td:first-child,
-.topic-list-item.selected td:first-child,
+.topic-list tr.selected td:first-of-type,
+.topic-list-item.selected td:first-of-type,
 .latest-topic-list-item.selected,
 .search-results .fps-result.selected {
   box-shadow: inset 3px 0 0 var(--quaternary);

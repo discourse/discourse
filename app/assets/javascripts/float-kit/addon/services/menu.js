@@ -52,9 +52,12 @@ export default class Menu extends Service {
     if (instance.options.identifier || instance.options.groupIdentifier) {
       for (const registeredMenu of this.registeredMenus) {
         if (
-          (registeredMenu.options.identifier === instance.options.identifier ||
-            registeredMenu.options.groupIdentifier ===
-              instance.options.groupIdentifier) &&
+          ((instance.options.identifier &&
+            registeredMenu.options.identifier ===
+              instance.options.identifier) ||
+            (instance.options.groupIdentifier &&
+              registeredMenu.options.groupIdentifier ===
+                instance.options.groupIdentifier)) &&
           registeredMenu !== instance
         ) {
           await this.close(registeredMenu);

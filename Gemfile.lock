@@ -122,6 +122,7 @@ GEM
       faker (~> 2.16)
       literate_randomizer
     docile (1.4.0)
+    drb (2.2.1)
     email_reply_trimmer (0.1.13)
     erubi (1.12.0)
     excon (0.110.0)
@@ -233,6 +234,7 @@ GEM
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
     mustache (1.1.1)
+    mutex_m (0.2.0)
     net-http (0.4.1)
       uri
     net-imap (0.4.11)
@@ -245,13 +247,13 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.3)
-    nokogiri (1.16.4-aarch64-linux)
+    nokogiri (1.16.5-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.16.4-arm64-darwin)
+    nokogiri (1.16.5-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.4-x86_64-darwin)
+    nokogiri (1.16.5-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.4-x86_64-linux)
+    nokogiri (1.16.5-x86_64-linux)
       racc (~> 1.4)
     oauth (1.1.0)
       oauth-tty (~> 1.0, >= 1.0.1)
@@ -575,6 +577,7 @@ DEPENDENCIES
   discourse-fonts
   discourse-seed-fu
   discourse_dev_assets
+  drb
   email_reply_trimmer
   excon
   execjs
@@ -613,6 +616,7 @@ DEPENDENCIES
   mocha
   multi_json
   mustache
+  mutex_m
   net-http
   net-imap
   net-pop
