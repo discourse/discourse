@@ -21,6 +21,68 @@ RSpec.describe Admin::EmbeddableHostsController do
           ).exists?,
         ).to eq(true)
       end
+
+      it "creates an embeddable host with associated tags" do
+        tag1 = Fabricate(:tag, name: "tag1")
+        tag2 = Fabricate(:tag, name: "tag2")
+
+        post "/admin/embeddable_hosts.json",
+             params: {
+               embeddable_host: {
+                 host: "example.com",
+                 tags: %w[tag1 tag2],
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(EmbeddableHost.last.tags).to contain_exactly(tag1, tag2)
+      end
+
+      it "updates an embeddable host with associated tags" do
+        tag1 = Fabricate(:tag, name: "newTag1")
+        tag2 = Fabricate(:tag, name: "newTag2")
+
+        put "/admin/embeddable_hosts/#{embeddable_host.id}.json",
+            params: {
+              embeddable_host: {
+                host: "updated-example.com",
+                tags: %w[newTag1 newTag2],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(EmbeddableHost.find(embeddable_host.id).tags).to contain_exactly(tag1, tag2)
+      end
+
+      it "creates an embeddable host with an associated author" do
+        user = Fabricate(:user, username: "johndoe")
+
+        post "/admin/embeddable_hosts.json",
+             params: {
+               embeddable_host: {
+                 host: "example.com",
+                 user: "johndoe",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(EmbeddableHost.last.user).to eq(user)
+      end
+
+      it "updates an embeddable host with a new author" do
+        new_user = Fabricate(:user, username: "johndoe")
+
+        put "/admin/embeddable_hosts/#{embeddable_host.id}.json",
+            params: {
+              embeddable_host: {
+                host: "updated-example.com",
+                user: "johndoe",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(EmbeddableHost.find(embeddable_host.id).user).to eq(new_user)
+      end
     end
 
     shared_examples "embeddable host creation not allowed" do
