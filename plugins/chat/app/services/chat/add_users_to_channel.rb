@@ -69,6 +69,8 @@ module Chat
     end
 
     def exceeds_max_direct_message_users(channel:, contract:)
+      return false unless channel.direct_message_channel?
+
       channel.user_count + contract.usernames.length >
         (SiteSetting.chat_max_direct_message_users + 1)
     end
