@@ -2,6 +2,8 @@
 
 class UpdateUserOptionsForThreadTitlePrompts < ActiveRecord::Migration[7.0]
   def up
+    change_column_default :user_options, :show_thread_title_prompts, true
+
     min, max = DB.query_single("SELECT MIN(user_id), MAX(user_id) FROM user_options")
     while min <= max
       DB.exec(
@@ -10,7 +12,6 @@ class UpdateUserOptionsForThreadTitlePrompts < ActiveRecord::Migration[7.0]
       min += 100_000
     end
 
-    change_column_default :user_options, :show_thread_title_prompts, from: nil, to: true
     change_column_null :user_options, :show_thread_title_prompts, false
   end
   def down
