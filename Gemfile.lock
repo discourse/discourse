@@ -226,7 +226,7 @@ GEM
     mini_suffix (0.3.3)
       ffi (~> 1.9)
     minio_runner (0.1.2)
-    minitest (5.22.3)
+    minitest (5.23.0)
     mocha (2.2.0)
       ruby2_keywords (>= 0.0.5)
     msgpack (1.7.2)
