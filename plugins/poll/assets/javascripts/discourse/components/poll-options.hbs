@@ -1,22 +1,38 @@
-<ul>
-  {{#each @options key="chosen" as |option|}}
-    <li data-poll-option-id={{option.id}}>
-      <button onclick={{action this.sendClick option}}>
-        {{#if (this.isChosen option)}}
-          {{#if @isCheckbox}}
-            {{d-icon "far-check-square"}}
-          {{else}}
-            {{d-icon "circle"}}
-          {{/if}}
-        {{else}}
-          {{#if @isCheckbox}}
-            {{d-icon "far-square"}}
-          {{else}}
-            {{d-icon "far-circle"}}
-          {{/if}}
-        {{/if}}
+<ul class={{this.classes}}>
+  {{#each @options as |option|}}
+    {{#if @isIrv}}
+      <div
+        class="irv-poll-option"
+        data-poll-option-id={{option.id}}
+        data-poll-option-rank={{option.rank}}
+      >
+        <PollOptionsDropdown
+          @rank={{option.rank}}
+          @option={{option}}
+          @irv_dropdown_content={{@irv_dropdown_content}}
+          @sendRank={{this.toggleOption}}
+        />
         <span class="option-text">{{option.html}}</span>
-      </button>
-    </li>
+      </div>
+    {{else}}
+      <li data-poll-option-id={{option.id}}>
+        <button onclick={{action this.sendClick option}}>
+          {{#if (this.isChosen option)}}
+            {{#if @isCheckbox}}
+              {{d-icon "far-check-square"}}
+            {{else}}
+              {{d-icon "circle"}}
+            {{/if}}
+          {{else}}
+            {{#if @isCheckbox}}
+              {{d-icon "far-square"}}
+            {{else}}
+              {{d-icon "far-circle"}}
+            {{/if}}
+          {{/if}}
+          <span class="option-text">{{option.html}}</span>
+        </button>
+      </li>
+    {{/if}}
   {{/each}}
 </ul>

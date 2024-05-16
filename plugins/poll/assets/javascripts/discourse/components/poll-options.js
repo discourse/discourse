@@ -6,8 +6,17 @@ export default class PollOptionsComponent extends Component {
     return this.args.votes.includes(option.id);
   };
 
+  get classes() {
+    return this.args.isIrv ? "irv-poll-options" : "";
+  }
+
   @action
   sendClick(option) {
     this.args.sendRadioClick(option);
+  }
+
+  @action
+  toggleOption(option, rank = 0) {
+    this.args.sendRadioClick(option, rank);
   }
 }

@@ -27,13 +27,13 @@ div.poll {
     }
   }
 
-  .multi-poll {
+  .irv-poll-options {
     display: flex;
     flex-direction: column;
     gap: 0.5em;
     padding: 0.5em;
 
-    .multi-poll-option {
+    .irv-poll-option {
       display: inline-flex;
       details {
         padding: 0;

@@ -20,32 +20,14 @@
       {{/if}}
     </div>
   {{else}}
-    {{#if this.isIrv}}
-      <div class="multi-poll">
-        {{#each this.options as |option|}}
-          <div
-            class="multi-poll-option"
-            data-poll-option-id={{option.id}}
-            data-poll-option-rank={{option.rank}}
-          >
-            <PollOptionsDropdown
-              @rank={{option.rank}}
-              @option={{option}}
-              @irv_dropdown_content={{this.irv_dropdown_content}}
-              @sendRank={{this.toggleOption}}
-            />
-            <span class="option-text">{{option.html}}</span>
-          </div>
-        {{/each}}
-      </div>
-    {{else}}
-      <PollOptions
-        @isCheckbox={{this.isCheckbox}}
-        @options={{this.options}}
-        @votes={{this.vote}}
-        @sendRadioClick={{this.toggleOption}}
-      />
-    {{/if}}
+    <PollOptions
+      @isCheckbox={{this.isCheckbox}}
+      @isIrv={{this.isIrv}}
+      @irv_dropdown_content={{this.irv_dropdown_content}}
+      @options={{this.options}}
+      @votes={{this.vote}}
+      @sendRadioClick={{this.toggleOption}}
+    />
   {{/if}}
 </div>
 <PollInfo
