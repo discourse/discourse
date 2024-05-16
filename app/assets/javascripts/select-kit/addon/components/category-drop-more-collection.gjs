@@ -30,14 +30,24 @@ export default class CategoryDropMoreCollection extends Component {
   <template>
     {{#if this.moreCount}}
       <div class="category-drop-footer">
-        <span>{{i18n
-            "categories.plus_more_count"
-            (hash count=this.moreCount)
-          }}</span>
-        <LinkTo @route="discovery.categories">
-          {{i18n "categories.view_all"}}
-          {{icon "external-link-alt"}}
-        </LinkTo>
+        <span>
+          {{i18n "categories.plus_more_count" (hash count=this.moreCount)}}
+        </span>
+
+        {{#if @selectKit.options.parentCategory}}
+          <LinkTo
+            @route="discovery.subcategories"
+            @model={{@selectKit.options.parentCategory.id}}
+          >
+            {{i18n "categories.view_all"}}
+            {{icon "external-link-alt"}}
+          </LinkTo>
+        {{else}}
+          <LinkTo @route="discovery.categories">
+            {{i18n "categories.view_all"}}
+            {{icon "external-link-alt"}}
+          </LinkTo>
+        {{/if}}
       </div>
     {{/if}}
   </template>

@@ -180,9 +180,6 @@ class CategoryList
 
     include_subcategories = @options[:include_subcategories] == true
 
-    notification_levels = CategoryUser.notification_levels_for(@guardian.user)
-    default_notification_level = CategoryUser.default_notification_level
-
     if @guardian.can_lazy_load_categories?
       subcategory_ids = {}
       Category

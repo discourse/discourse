@@ -46,6 +46,7 @@ export default ComboBoxComponent.extend({
     headerComponent: "category-drop/category-drop-header",
     parentCategory: false,
     allowUncategorized: "allowUncategorized",
+    disableIfHasNoChildren: false,
   },
 
   init() {
@@ -93,6 +94,7 @@ export default ComboBoxComponent.extend({
 
       if (
         this.selectKit.options.subCategory &&
+        this.filterType !== "categories" &&
         (this.value || !this.selectKit.options.noSubcategories)
       ) {
         shortcuts.push({
@@ -157,6 +159,7 @@ export default ComboBoxComponent.extend({
       if (this.editingCategory) {
         return this.noCategoriesLabel;
       }
+
       if (this.selectKit.options.subCategory) {
         return I18n.t("categories.all_subcategories", {
           categoryName: this.parentCategoryName,
@@ -225,17 +228,35 @@ export default ComboBoxComponent.extend({
           ? this.selectKit.options.parentCategory
           : Category.findById(parseInt(categoryId, 10));
 
-      const route = this.editingCategory
-        ? getEditCategoryUrl(
-            category,
-            categoryId !== NO_CATEGORIES_ID,
-            this.editingCategoryTab
-          )
-        : getCategoryAndTagUrl(
-            category,
-            categoryId !== NO_CATEGORIES_ID,
-            this.tagId
-          );
+      let route;
+      if (this.editingCategoryTab) {
+        // rendered on category page
+        route = getEditCategoryUrl(
+          category,
+          categoryId !== NO_CATEGORIES_ID,
+          this.editingCategoryTab
+        );
+      } else if (
+        this.site.lazy_load_categories &&
+        this.filterType === "categories"
+      ) {
+        // rendered on categories page
+        if (categoryId === "all-categories" || categoryId === "no-categories") {
+          route = this.selectKit.options.parentCategory
+            ? `${this.selectKit.options.parentCategory.url}/subcategories`
+            : "/categories";
+        } else if (categoryId) {
+          route = `${Category.findById(categoryId).url}/subcategories`;
+        } else {
+          route = "/categories";
+        }
+      } else {
+        route = getCategoryAndTagUrl(
+          category,
+          categoryId !== NO_CATEGORIES_ID,
+          this.tagId
+        );
+      }
 
       DiscourseURL.routeToUrl(route);
     },

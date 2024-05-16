@@ -24,11 +24,13 @@
         @tagId={{this.tag.id}}
         @editingCategory={{this.editingCategory}}
         @editingCategoryTab={{this.editingCategoryTab}}
+        @filterType={{this.filterType}}
         @options={{hash
           parentCategory=breadcrumb.parentCategory
           subCategory=breadcrumb.isSubcategory
           noSubcategories=breadcrumb.noSubcategories
           autoFilterable=true
+          disableIfHasNoChildren=(eq this.filterType "categories")
         }}
       />
     </li>

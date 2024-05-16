@@ -16,6 +16,20 @@ describe DiscourseAutomation::Triggerable do
 
   fab!(:automation) { Fabricate(:automation, trigger: "foo") }
 
+  describe "active automation thread safety" do
+    after { DiscourseAutomation.set_active_automation(nil) }
+
+    it "ensurese thread safety when setting automation id" do
+      DiscourseAutomation.set_active_automation(10)
+
+      thread = Thread.new { DiscourseAutomation.get_active_automation }
+      thread.join
+      expect(thread.value).to eq(nil)
+
+      expect(DiscourseAutomation.get_active_automation).to eq(10)
+    end
+  end
+
   describe "#setting" do
     before { DiscourseAutomation::Triggerable.add("foo") { setting :bar, :baz } }
 

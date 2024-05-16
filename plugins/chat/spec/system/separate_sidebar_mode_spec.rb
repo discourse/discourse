@@ -205,6 +205,25 @@ RSpec.describe "Separate sidebar mode", type: :system do
         expect(sidebar_component).to have_section_link(channel_2.name, active: true)
       end
     end
+
+    context "with subfolder" do
+      let!(:channel_browse_page) { PageObjects::Pages::ChatBrowse.new }
+
+      before do
+        set_subfolder "/discuss"
+        chat_page.prefers_full_page
+      end
+
+      it "has the expected behavior" do
+        visit("/discuss/about")
+
+        sidebar_component.switch_to_chat
+        expect(channel_browse_page.component).to be_present
+
+        sidebar_component.switch_to_main
+        expect(page).to have_current_path("/discuss/")
+      end
+    end
   end
 
   describe "when separate sidebar mode is fullscreen" do

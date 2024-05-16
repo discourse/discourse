@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import {
   addExtraUserClasses,
   renderAvatar,
@@ -44,6 +45,7 @@ export default class Notifications extends Component {
   }
 
   <template>
+    <PluginOutlet @name="user-dropdown-notifications__before" />
     {{this.avatar}}
 
     {{#if this._shouldHighlightAvatar}}
@@ -118,5 +120,6 @@ export default class Notifications extends Component {
         </a>
       {{/if}}
     {{/if}}
+    <PluginOutlet @name="user-dropdown-notifications__after" />
   </template>
 }
