@@ -64,15 +64,7 @@ RSpec.describe UserMerger do
   end
 
   it "will use source user's vote if poll was type irv" do
-    Fabricate(
-      :poll_vote,
-      poll: poll_irv,
-      user: source_user,
-      poll_option: {
-        id: poll_irv_optionA,
-        rank: 2,
-      },
-    )
+    Fabricate(:poll_vote, poll: poll_irv, user: source_user, poll_option: poll_irv_optionA, rank: 2)
 
     DiscourseEvent.trigger(:merging_users, source_user, target_user)
 

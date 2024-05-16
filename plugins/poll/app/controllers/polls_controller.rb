@@ -53,7 +53,14 @@ class DiscoursePoll::PollsController < ::ApplicationController
     poll = Poll.find_by(post_id: post_id, name: poll_name)
     raise Discourse::InvalidParameters.new(:poll_name) if !poll&.can_see_voters?(current_user)
 
-    render json: { voters: DiscoursePoll::Poll.serialized_voters(poll, opts) }
+    if poll.type == "irv"
+      render json: {
+               error: "Invalid poll type, IRV does not support listing voters.",
+             },
+             status: :unprocessable_entity
+    else
+      render json: { voters: DiscoursePoll::Poll.serialized_voters(poll, opts) }
+    end
   end
 
   def grouped_poll_results
@@ -61,18 +68,27 @@ class DiscoursePoll::PollsController < ::ApplicationController
     poll_name = params.require(:poll_name)
     user_field_name = params.require(:user_field_name)
 
-    begin
+    #raise Discourse::InvalidParameters.new(:poll_name)
+
+    if Poll.find_by(post_id: post_id, name: poll_name).type == "irv"
       render json: {
-               grouped_results:
-                 DiscoursePoll::Poll.grouped_poll_results(
-                   current_user,
-                   post_id,
-                   poll_name,
-                   user_field_name,
-                 ),
-             }
-    rescue DiscoursePoll::Error => e
-      render_json_error e.message
+               error: "Invalid poll type, IRV does not support grouped results.",
+             },
+             status: :unprocessable_entity
+    else
+      begin
+        render json: {
+                 grouped_results:
+                   DiscoursePoll::Poll.grouped_poll_results(
+                     current_user,
+                     post_id,
+                     poll_name,
+                     user_field_name,
+                   ),
+               }
+      rescue DiscoursePoll::Error => e
+        render_json_error e.message
+      end
     end
   end
 end

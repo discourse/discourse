@@ -75,44 +75,40 @@ RSpec.describe "DiscoursePoll endpoints" do
       expect(option.first["username"]).to eq(user.username)
     end
 
-    it "should return the right response for a IRV option" do
+    it "should return unprocessable response for a IRV option" do
+      irv_poll = post_with_irv_poll.polls.first
+      irv_poll_options = irv_poll.poll_options
+      irv_votes = {
+        "0": {
+          digest: irv_poll_options.first.digest,
+          rank: "0",
+        },
+        "1": {
+          digest: irv_poll_options.second.digest,
+          rank: "2",
+        },
+        "2": {
+          digest: irv_poll_options.third.digest,
+          rank: "1",
+        },
+      }
+
       DiscoursePoll::Poll.vote(
         user,
         post_with_irv_poll.id,
         DiscoursePoll::DEFAULT_POLL_NAME,
-        [irv_option_a, irv_option_b, irv_option_c],
+        irv_votes,
       )
 
       get "/polls/voters.json",
           params: {
             post_id: post_with_irv_poll.id,
             poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
-            option_id: irv_option_b["id"],
+            option_id: irv_poll_options[1]["id"],
           }
 
-      expect(response.status).to eq(200)
-
-      poll = response.parsed_body["voters"]
-
-      option = poll[irv_option_a]
-
-      expect(option.length).to eq(1)
-      expect(option.first["rank"]).to eq(2)
-      expect(option.first["users"].first["id"]).to eq(user.id)
-      expect(option.first["users"].first["username"]).to eq(user.username)
-
-      option = poll[irv_option_b]
-
-      expect(option.length).to eq(1)
-      expect(option.first["rank"]).to eq(1)
-      expect(option.first["users"].first["id"]).to eq(user.id)
-      expect(option.first["users"].first["username"]).to eq(user.username)
-
-      option = poll[irv_option_c]
-
-      expect(option.first["rank"]).to eq(0)
-      expect(option.first["users"].first["id"]).to eq(user.id)
-      expect(option.first["users"].first["username"]).to eq(user.username)
+      expect(response.status).to eq(422)
+      expect(response.body).to include("IRV")
     end
 
     describe "when post_id is blank" do
@@ -204,14 +200,60 @@ RSpec.describe "DiscoursePoll endpoints" do
     let(:option_a) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:option_b) { "e89dec30bbd9bf50fabf6a05b4324edf" }
 
-    let(:irv_option_a) { { id: "5c24fc1df56d764b550ceae1b9319125", rank: 2 } }
-    let(:irv_option_b) { { id: "e89dec30bbd9bf50fabf6a05b4324edf", rank: 1 } }
-    let(:irv_option_c) { { id: "a1a6e2779b52caadb93579c0c3db7c0c", rank: 0 } }
+    let(:irv_vote_a) { { digest: "5c24fc1df56d764b550ceae1b9319125", rank: 2 } }
+    let(:irv_vote_b) { { digest: "e89dec30bbd9bf50fabf6a05b4324edf", rank: 1 } }
+    let(:irv_vote_c) { { digest: "a1a6e2779b52caadb93579c0c3db7c0c", rank: 0 } }
 
     before do
       sign_in(user1)
       user_votes = { user_0: option_a, user_1: option_a, user_2: option_b }
-      user_irv_votes = { user_0: irv_option_a, user_1: irv_option_b, user_2: irv_option_c }
+      irv_poll = post_with_irv_poll.polls.first
+      irv_poll_options = irv_poll.poll_options
+
+      user_irv_votes = [
+        {
+          "0": {
+            digest: irv_poll_options.first.digest,
+            rank: "0",
+          },
+          "1": {
+            digest: irv_poll_options.second.digest,
+            rank: "2",
+          },
+          "2": {
+            digest: irv_poll_options.third.digest,
+            rank: "1",
+          },
+        },
+        {
+          "0": {
+            digest: irv_poll_options.first.digest,
+            rank: "0",
+          },
+          "1": {
+            digest: irv_poll_options.second.digest,
+            rank: "2",
+          },
+          "2": {
+            digest: irv_poll_options.third.digest,
+            rank: "1",
+          },
+        },
+        {
+          "0": {
+            digest: irv_poll_options.first.digest,
+            rank: "0",
+          },
+          "1": {
+            digest: irv_poll_options.second.digest,
+            rank: "2",
+          },
+          "2": {
+            digest: irv_poll_options.third.digest,
+            rank: "1",
+          },
+        },
+      ]
 
       [user1, user2, user3].each_with_index do |user, index|
         DiscoursePoll::Poll.vote(
@@ -224,7 +266,7 @@ RSpec.describe "DiscoursePoll endpoints" do
           user,
           post_with_irv_poll.id,
           DiscoursePoll::DEFAULT_POLL_NAME,
-          [user_irv_votes["user_#{index}".to_sym]],
+          user_irv_votes[index],
         )
         UserCustomField.create(user_id: user.id, name: "something", value: "value#{index}")
       end
@@ -286,7 +328,7 @@ RSpec.describe "DiscoursePoll endpoints" do
             user_field_name: "something",
           }
 
-      expect(response.status).to eq(400)
+      expect(response.status).to eq(422)
       expect(response.body).to include("IRV")
     end
 

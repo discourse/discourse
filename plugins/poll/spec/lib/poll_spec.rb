@@ -176,33 +176,60 @@ RSpec.describe DiscoursePoll::Poll do
         user,
         post_with_irv_poll.id,
         "poll",
-        [
-          { digest: poll_options.first.digest, rank: 2 },
-          { digest: poll_options.second.digest, rank: 1 },
-          { digest: poll_options.third.digest, rank: 0 },
-        ],
+        {
+          "0": {
+            digest: poll_options.first.digest,
+            rank: "2",
+          },
+          "1": {
+            digest: poll_options.second.digest,
+            rank: "1",
+          },
+          "2": {
+            digest: poll_options.third.digest,
+            rank: "0",
+          },
+        },
       )
 
       DiscoursePoll::Poll.vote(
         user_2,
         post_with_irv_poll.id,
         "poll",
-        [
-          { digest: poll_options.first.digest, rank: 0 },
-          { digest: poll_options.second.digest, rank: 2 },
-          { digest: poll_options.third.digest, rank: 1 },
-        ],
+        {
+          "0": {
+            digest: poll_options.first.digest,
+            rank: "0",
+          },
+          "1": {
+            digest: poll_options.second.digest,
+            rank: "2",
+          },
+          "2": {
+            digest: poll_options.third.digest,
+            rank: "1",
+          },
+        },
       )
 
       DiscoursePoll::Poll.vote(
         user,
         post_with_irv_poll.id,
         "poll",
-        [
-          { digest: poll_options.first.digest, rank: 1 },
-          { digest: poll_options.second.digest, rank: 2 },
-          { digest: poll_options.third.digest, rank: 0 },
-        ],
+        {
+          "0": {
+            digest: poll_options.first.digest,
+            rank: "1",
+          },
+          "1": {
+            digest: poll_options.second.digest,
+            rank: "2",
+          },
+          "2": {
+            digest: poll_options.third.digest,
+            rank: "0",
+          },
+        },
       )
 
       expect(PollVote.count).to eq(6)
