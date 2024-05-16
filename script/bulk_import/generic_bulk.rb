@@ -629,7 +629,10 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["user_id"])
 
       next if user_id && existing_user_ids.include?(user_id)
-      next if provider_uid && existing_provider_uids.include?([row["provider_uid"], row["provider_name"]])
+      if provider_uid &&
+           existing_provider_uids.include?([row["provider_uid"], row["provider_name"]])
+        next
+      end
 
       {
         user_id: user_id,
