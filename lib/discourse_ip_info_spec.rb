@@ -9,7 +9,19 @@ RSpec.describe DiscourseIpInfo do
       stub_request(
         :get,
         "https://download.maxmind.com/geoip/databases/GeoLite2-City/download?suffix=tar.gz",
-      ).with(basic_auth: %w[account_id license_key]).to_return(status: 200, body: "", headers: {})
+      ).with(basic_auth: %w[account_id license_key]).to_return(
+        status: 302,
+        body: "",
+        headers: {
+          location:
+            "https://mm-prod-geoip-databases.a2649acb697e2c09b632799562c076f2.r2.cloudflarestorage.com/some-path",
+        },
+      )
+
+      stub_request(
+        :get,
+        "https://mm-prod-geoip-databases.a2649acb697e2c09b632799562c076f2.r2.cloudflarestorage.com/some-path",
+      ).with { |req| expect(req.headers.key?("Authorization")).to eq(false) }.to_return(status: 200)
 
       described_class.mmdb_download("GeoLite2-City")
     end
