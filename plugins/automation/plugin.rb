@@ -30,11 +30,11 @@ module ::DiscourseAutomation
   USER_GROUP_MEMBERSHIP_THROUGH_BADGE_BULK_MODIFY_START_COUNT = 1000
 
   def self.set_active_automation(id)
-    @active_automation_id = id
+    Thread.current[:active_automation_id] = id
   end
 
   def self.get_active_automation
-    @active_automation_id
+    Thread.current[:active_automation_id]
   end
 end
 
