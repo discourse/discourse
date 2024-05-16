@@ -103,7 +103,7 @@ class TopicSummarization
     main_summary =
       SummarySection.create!(
         target: topic,
-        algorithm: strategy.model,
+        algorithm: strategy.display_name,
         content_range: (post_numbers.first..post_numbers.last),
         summarized_text: result[:summary],
         original_content_sha: build_sha(post_numbers),
@@ -112,7 +112,7 @@ class TopicSummarization
     result[:chunks].each do |chunk|
       SummarySection.create!(
         target: topic,
-        algorithm: strategy.model,
+        algorithm: strategy.display_name,
         content_range: chunk[:ids].min..chunk[:ids].max,
         summarized_text: chunk[:summary],
         original_content_sha: build_sha(chunk[:ids]),

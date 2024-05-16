@@ -3969,6 +3969,7 @@ bg:
           flag: "Сигнализиране"
         form:
           add: "Добави"
+          html_label: "HTML"
         test:
           no_matches: "Няма намерени съвпадения"
       form_templates:

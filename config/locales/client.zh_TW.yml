@@ -3791,6 +3791,7 @@ zh_TW:
           success: "成功"
           exists: "已存在"
           upload_successful: "上傳成功，文字已被添加。"
+          html_label: "HTML"
         test:
           button_label: "測試"
           no_matches: "找不到符合的項目"

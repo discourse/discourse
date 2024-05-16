@@ -5617,6 +5617,7 @@ fi:
           upload_successful: "Lataus onnistui. Sanoja lisättiin."
           case_sensitivity_label: "Huomioi kirjainkoon"
           case_sensitivity_description: "Vain sanat, joissa on vastaava kirjainkoko"
+          html_label: "HTML"
         test:
           button_label: "Testi"
           modal_title: "%{action}: Testaa tarkkailtuja sanoja"

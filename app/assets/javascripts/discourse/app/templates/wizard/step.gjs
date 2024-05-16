@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import RouteTemplate from "ember-route-template";
+import DiscourseURL from "discourse/lib/url";
 import { defaultHomepage } from "discourse/lib/utilities";
 import WizardCanvas from "discourse/static/wizard/components/wizard-canvas";
 import WizardStep from "discourse/static/wizard/components/wizard-step";
@@ -34,6 +35,16 @@ export default RouteTemplate(
       return this.step.id === "ready";
     }
 
+    #goHomeOrQuickStart() {
+      if (this.siteSettings.bootstrap_mode_enabled) {
+        DiscourseURL.routeTo(
+          `/t/${this.siteSettings.admin_quick_start_topic_id}`
+        );
+      } else {
+        this.router.transitionTo(`discovery.${defaultHomepage()}`);
+      }
+    }
+
     @action
     goNext(response) {
       const next = this.step.next;
@@ -43,7 +54,7 @@ export default RouteTemplate(
       } else if (response?.success && next) {
         this.router.transitionTo("wizard.step", next);
       } else if (response?.success) {
-        this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        this.#goHomeOrQuickStart();
       }
     }
 
@@ -54,7 +65,7 @@ export default RouteTemplate(
 
     @action
     goHome() {
-      this.router.transitionTo(`discovery.${defaultHomepage()}`);
+      this.#goHomeOrQuickStart();
     }
   }
 );

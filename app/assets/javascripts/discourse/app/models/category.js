@@ -1,5 +1,6 @@
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
+import { service } from "@ember/service";
 import { on } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -402,7 +403,7 @@ export default class Category extends RestModel {
     };
 
     const result = (CATEGORY_ASYNC_SEARCH_CACHE[JSON.stringify(data)] ||=
-      await ajax("/categories/search", { data }));
+      await ajax("/categories/search", { method: "POST", data }));
 
     if (opts.includeAncestors) {
       return {
@@ -420,6 +421,8 @@ export default class Category extends RestModel {
       );
     }
   }
+
+  @service currentUser;
 
   permissions = null;
 

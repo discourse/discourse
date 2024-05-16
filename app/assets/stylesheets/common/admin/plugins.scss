@@ -123,4 +123,9 @@
       margin-bottom: 1em;
     }
   }
+
+  &__empty-list {
+    padding: 1em;
+    border: 1px solid var(--primary-low);
+  }
 }

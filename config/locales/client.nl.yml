@@ -5581,6 +5581,7 @@ nl:
           upload_successful: "Uploaden geslaagd. Woorden zijn toegevoegd."
           case_sensitivity_label: "Is hoofdlettergevoelig"
           case_sensitivity_description: "Alleen woorden met overeenkomend hoofdlettergebruik"
+          html_label: "HTML"
         test:
           button_label: "Testen"
           modal_title: "%{action}: Geobserveerde woorden testen"

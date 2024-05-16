@@ -267,6 +267,11 @@ gem "net-http"
 gem "cgi", ">= 0.3.6", require: false
 
 gem "tzinfo-data"
+gem "csv", require: false
+
+# TODO: Can be removed once we upgrade to Rails 7.1
+gem "mutex_m"
+gem "drb"
 
 # dependencies for the automation plugin
 gem "iso8601"

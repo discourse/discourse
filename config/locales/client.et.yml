@@ -3250,6 +3250,7 @@ et:
           link_placeholder: "https://example.com"
           add: "isa"
           success: "Korras"
+          html_label: "HTML"
         test:
           button_label: "Proovi"
           no_matches: "Midagi ei leitud"

@@ -98,7 +98,12 @@ export default class ChatRoute extends DiscourseRoute {
     });
 
     if (transition) {
-      const url = this.router.urlFor(transition.from.name);
+      let url = this.router.urlFor(transition.from.name);
+
+      if (this.router.rootURL !== "/") {
+        url = url.replace(new RegExp(`^${this.router.rootURL}`), "/");
+      }
+
       this.chatStateManager.storeChatURL(url);
     }
 

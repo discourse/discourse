@@ -1166,10 +1166,11 @@ Discourse::Application.routes.draw do
 
     get "/c", to: redirect(relative_url_root + "categories")
 
-    resources :categories, except: %i[show new edit]
+    resources :categories, only: %i[index create update destroy]
     post "categories/reorder" => "categories#reorder"
     get "categories/find" => "categories#find"
-    get "categories/search" => "categories#search"
+    post "categories/search" => "categories#search"
+    get "categories/:parent_category_id" => "categories#index"
 
     scope path: "category/:category_id" do
       post "/move" => "categories#move"
@@ -1211,6 +1212,9 @@ Discourse::Application.routes.draw do
           :constraints => {
             format: "html",
           }
+
+      get "/subcategories" => "categories#index"
+
       get "/" => "list#category_default", :as => "category_default"
     end
 

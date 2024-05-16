@@ -934,7 +934,6 @@ ko:
       title: "사용자 방문 횟수"
       xaxis: "일"
       yaxis: "방문 횟수"
-      description: "모든 사용자 방문 횟수"
     signups:
       title: "가입"
       xaxis: "일"
@@ -1175,7 +1174,6 @@ ko:
       title: "사용자 방문 횟수(모바일)"
       xaxis: "일"
       yaxis: "방문 횟수"
-      description: "모바일 디바이스로 방문한 고유 사용자 수입니다."
     web_crawlers:
       title: "웹 크롤러 사용자 에이전트"
       labels:
@@ -3657,8 +3655,6 @@ ko:
             extra_description: "로그인 한 사용자 만이 커뮤니티에 액세스 할 수 있습니다"
           chat_enabled:
             placeholder: "채팅 활성화"
-          enable_sidebar:
-            placeholder: "사이드바 활성화"
       styling:
         fields:
           color_scheme:

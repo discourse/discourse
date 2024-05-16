@@ -1,9 +1,7 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { concat } from "@ember/helper";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -18,32 +16,15 @@ export default class DMenu extends Component {
   @service menu;
   @service site;
 
-  @tracked menuInstance = null;
+  menuInstance = new DMenuInstance(getOwner(this), {
+    ...this.allowedProperties,
+    autoUpdate: true,
+    listeners: true,
+  });
 
-  registerTrigger = modifier((element, [properties]) => {
-    const options = {
-      ...properties,
-      ...{
-        autoUpdate: true,
-        listeners: true,
-        beforeTrigger: () => {
-          this.menu.close();
-        },
-      },
-    };
-    const instance = new DMenuInstance(getOwner(this), element, options);
-
-    this.menuInstance = instance;
-
+  registerTrigger = modifier((element) => {
+    this.menuInstance.trigger = element;
     this.options.onRegisterApi?.(this.menuInstance);
-
-    return () => {
-      instance.destroy();
-
-      if (this.isDestroying) {
-        this.menuInstance = null;
-      }
-    };
   });
 
   get menuId() {
@@ -61,23 +42,23 @@ export default class DMenu extends Component {
     };
   }
 
-  @action
-  allowedProperties() {
+  get allowedProperties() {
     const properties = {};
-    Object.keys(MENU.options).forEach((key) => {
-      const value = MENU.options[key];
+    for (const [key, value] of Object.entries(MENU.options)) {
       properties[key] = this.args[key] ?? value;
-    });
+    }
     return properties;
   }
 
   <template>
     <DButton
+      {{this.registerTrigger}}
       class={{concatClass
         "fk-d-menu__trigger"
         (if this.menuInstance.expanded "-expanded")
         (concat this.options.identifier "-trigger")
         @triggerClass
+        @class
       }}
       id={{this.menuInstance.id}}
       data-identifier={{this.options.identifier}}
@@ -88,7 +69,6 @@ export default class DMenu extends Component {
       @translatedTitle={{@title}}
       @disabled={{@disabled}}
       aria-expanded={{if this.menuInstance.expanded "true" "false"}}
-      {{this.registerTrigger (this.allowedProperties)}}
       ...attributes
     >
       {{#if (has-block "trigger")}}
@@ -104,8 +84,12 @@ export default class DMenu extends Component {
           class={{concatClass
             "fk-d-menu-modal"
             (concat this.options.identifier "-content")
+            @contentClass
+            @class
           }}
           @inline={{(isTesting)}}
+          data-identifier={{@instance.options.identifier}}
+          data-content
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}
@@ -126,12 +110,14 @@ export default class DMenu extends Component {
           @trapTab={{this.options.trapTab}}
           @mainClass={{concatClass
             "fk-d-menu"
+            "fk-d-menu__content"
             (concat this.options.identifier "-content")
+            @class
+            @contentClass
           }}
           @innerClass="fk-d-menu__inner-content"
           @role="dialog"
           @inline={{this.options.inline}}
-          @portalOutletElement={{this.menu.portalOutletElement}}
         >
           {{#if (has-block)}}
             {{yield this.componentArgs}}

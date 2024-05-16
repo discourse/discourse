@@ -1,6 +1,5 @@
 import { capitalize } from "@ember/string";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
-import { cleanNullQueryParams } from "discourse/lib/utilities";
 import createPMRoute from "discourse/routes/build-private-messages-route";
 import I18n from "discourse-i18n";
 
@@ -40,8 +39,6 @@ export default (inboxType, filter) => {
       if (lastTopicList) {
         return lastTopicList;
       }
-
-      params = cleanNullQueryParams(params);
 
       return this.store
         .findFiltered("topicList", {
