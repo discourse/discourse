@@ -7,7 +7,7 @@ class UpdateUserOptionsForThreadTitlePrompts < ActiveRecord::Migration[7.0]
     batch_size = 100_000
     min_id = DB.query_single("SELECT MIN(user_id) FROM user_options").first.to_i
     max_id = DB.query_single("SELECT MAX(user_id) FROM user_options").first.to_i
-    while max_id > min_id
+    while max_id >= min_id
       DB.exec(
         "UPDATE user_options SET show_thread_title_prompts = true WHERE user_id > #{max_id - batch_size} AND user_id <= #{max_id}",
       )
