@@ -16,11 +16,8 @@ export default class HomeLogo extends Component {
   @service site;
   @service siteSettings;
 
+  href = getURL("/");
   darkModeAvailable = this.session.darkModeAvailable;
-
-  get href() {
-    return this.args.href || getURL("/");
-  }
 
   get showMobileLogo() {
     return this.site.mobileView && this.logoResolver("mobile_logo").length > 0;
