@@ -526,6 +526,46 @@ RSpec.describe GroupsController do
     end
   end
 
+  describe "#mentions" do
+    it "ensures mentions are enabled" do
+      SiteSetting.enable_mentions = false
+
+      sign_in(user)
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "ensures the group can be seen" do
+      sign_in(user)
+      group.update!(visibility_level: Group.visibility_levels[:owners])
+
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "ensures the group members can be seen" do
+      sign_in(user)
+      group.update!(members_visibility_level: Group.visibility_levels[:owners])
+
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns the right response" do
+      post = Fabricate(:post)
+      GroupMention.create!(post: post, group: group)
+
+      sign_in(user)
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
+    end
+  end
+
   describe "#posts" do
     it "ensures the group can be seen" do
       sign_in(user)
