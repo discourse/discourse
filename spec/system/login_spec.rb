@@ -119,5 +119,41 @@ describe "Login", type: :system do
       login_modal.click_login
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
+
+    it "can login with login link and totp" do
+      login_modal.open
+      login_modal.fill_username("john")
+      login_modal.email_login_link
+
+      wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
+
+      mail = ActionMailer::Base.deliveries.last
+      expect(mail.to).to contain_exactly(user.email)
+      login_link = mail.body.to_s[%r{/session/email-login/\S+}, 0]
+      visit login_link
+
+      totp = ROTP::TOTP.new(user_second_factor.data).now
+      find(".second-factor-token-input").fill_in(with: totp)
+      find(".email-login-form .btn-primary").click
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+
+    it "can login with login link and backup code" do
+      login_modal.open
+      login_modal.fill_username("john")
+      login_modal.email_login_link
+
+      wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
+
+      mail = ActionMailer::Base.deliveries.last
+      expect(mail.to).to contain_exactly(user.email)
+      login_link = mail.body.to_s[%r{/session/email-login/\S+}, 0]
+      visit login_link
+
+      find(".toggle-second-factor-method").click
+      find(".second-factor-token-input").fill_in(with: "iAmValidBackupCode")
+      find(".email-login-form .btn-primary").click
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
   end
 end
