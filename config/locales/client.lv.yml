@@ -867,9 +867,7 @@ lv:
         ignore_duration_time_frame_required: "Lūdzu, izvēlieties laika periodu"
         ignore_no_users: "Jums nav ignorētu lietotāju."
         ignore_option: "Ignorēts"
-        ignore_option_title: "Jūs nesaņemsiet paziņojumus, kas saistīti ar šo lietotāju, un visas viņa tēmas un atbildes tiks paslēptas."
         mute_option: "Noklusināts"
-        mute_option_title: "Jūs nesaņemsit paziņojumus, kas saistīti ar šo lietotāju."
         normal_option: "Normāls"
         normal_option_title: "Jūs tiksit informēts, ja šis lietotājs jums atbildēs, citēs vai pieminēs jūs."
       notification_schedule:
@@ -2454,8 +2452,6 @@ lv:
       pinned:
         title: "Piesprausts"
         help: "Jums šī tēma ir piesprausta; tā parādīsies savas sadaļas augšgalā"
-      unlisted:
-        help: "Šī tēma nav iekļauta sarakstos; tā netiks attēlota tēmu sarakstos, un piekļūt tai varēs, tikai izmantojot tiešu saiti"
     posts: "Ieraksti"
     pending_posts:
       label: "Gaidošie"
@@ -3345,6 +3341,7 @@ lv:
           add: "Pievienot"
           success: "Veiksmīgi"
           upload_successful: "Augšupielāde ir veiksmīga. Vārdi ir pievienoti."
+          html_label: "HTML"
       form_templates:
         nav_title: "Veidnes"
         list_table:

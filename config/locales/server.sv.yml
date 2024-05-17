@@ -654,20 +654,6 @@ sv:
   staff_category_description: "Privat kategori för personaldiskussioner. Ämnen är bara synliga för administratörer och moderatorer."
   discourse_welcome_topic:
     title: "Välkommen till %{site_title}! :wave:"
-    body: |
-      Vi är så glada över att du kom till oss.
-
-      %{site_info_quote}
-
-      Här är några saker du kan göra för att komma igång:
-
-      :speaking_head: **Presentera dig** genom att lägga till en bild och information om dig själv och dina intressen i [din profil](%{base_path}/my/preferences/account). Vad skulle du vilja få frågor om?
-
-      :open_book: **Lär känna forumet** genom att [bläddra i diskussioner](%{base_path}/top) som redan pågår här. När du tycker att ett inlägg är intressant, informativt eller underhållande, använd :heart: för att visa din uppskattning eller ditt stöd!
-
-      :handshake: **Bidra** genom att kommentera, dela med dig av ditt perspektiv, ställa frågor eller ge feedback i diskussionen. Innan du svarar eller startar nya ämnen bör du läsa igenom [forumets riktlinjer](%{base_path}/faq).
-
-      > Om du behöver hjälp eller har ett förslag, fråga gärna i %{feedback_category} eller [kontakta administratörerna](%{base_path}/about).
   admin_quick_start_title: "Administratörsguide: Komma igång"
   category:
     topic_prefix: "Om kategorin %{category}"
@@ -1109,7 +1095,6 @@ sv:
       title: "Användarbesök"
       xaxis: "Dag"
       yaxis: "Antal besök"
-      description: "Totalt antal användarbesök."
     signups:
       title: "Registreringar"
       xaxis: "Dag"
@@ -1149,6 +1134,8 @@ sv:
         user_api: "Användar-API"
       yaxis: "Dag"
       description: "API-förfrågningar för vanliga API-nycklar och användar-API-nycklar."
+    consolidated_page_views_browser_detection:
+      yaxis: "Dag"
     dau_by_mau:
       title: "DAA/MAA"
       xaxis: "Dag"
@@ -1308,6 +1295,10 @@ sv:
       xaxis: "Dag"
       yaxis: "Mobila anon. sidvisningar"
       description: "Antal nya sidvisningar från besökare på en mobil enhet som inte är inloggade."
+    page_view_anon_browser_reqs:
+      xaxis: "Dag"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Bakgrund"
       xaxis: "Dag"
@@ -1346,7 +1337,6 @@ sv:
       title: "Användarbesök (mobil)"
       xaxis: "Dag"
       yaxis: "Antal besök"
-      description: "Antal unika användare som kom via en mobil enhet."
     web_crawlers:
       title: "Användaragenter för sökrobotar"
       labels:
@@ -4315,9 +4305,6 @@ sv:
           chat_enabled:
             placeholder: "Aktivera chatt"
             extra_description: "Engagera dina medlemmar i realtid"
-          enable_sidebar:
-            placeholder: "Aktivera sidofältet"
-            extra_description: "Få enkelt tillgång till dina favoritutrymmen"
       ready:
         title: "Din webbplats är klar!"
         description: "Det var allt! Du har gjort det grundläggande för att konfigurera ditt forum. Nu kan du hoppa in och ta en titt, skriva ett välkomstämne och skicka inbjudningar!<br><br>Ha kul!"

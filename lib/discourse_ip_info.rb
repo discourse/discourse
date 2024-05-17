@@ -25,17 +25,34 @@ class DiscourseIpInfo
   end
 
   def self.mmdb_download(name)
+    extra_headers = {}
+
     url =
       if GlobalSetting.maxmind_mirror_url.present?
         File.join(GlobalSetting.maxmind_mirror_url, "#{name}.tar.gz").to_s
       else
-        if GlobalSetting.maxmind_license_key.blank?
-          STDERR.puts "MaxMind IP database updates require a license"
-          STDERR.puts "Please set DISCOURSE_MAXMIND_LICENSE_KEY to one you generated at https://www.maxmind.com"
+        license_key = GlobalSetting.maxmind_license_key
+
+        if license_key.blank?
+          STDERR.puts "MaxMind IP database download requires an account ID and a license key"
+          STDERR.puts "Please set DISCOURSE_MAXMIND_ACCOUNT_ID and DISCOURSE_MAXMIND_LICENSE_KEY. See https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941 for more details."
           return
         end
 
-        "https://download.maxmind.com/app/geoip_download?license_key=#{GlobalSetting.maxmind_license_key}&edition_id=#{name}&suffix=tar.gz"
+        account_id = GlobalSetting.maxmind_account_id
+
+        if account_id.present?
+          extra_headers[
+            "Authorization"
+          ] = "Basic #{Base64.strict_encode64("#{account_id}:#{license_key}")}"
+
+          "https://download.maxmind.com/geoip/databases/#{name}/download?suffix=tar.gz"
+        else
+          # This URL is not documented by MaxMind, but it works but we don't know when it will stop working. Therefore,
+          # we are deprecating this in 3.3 and will remove it in 3.4. An admin dashboard warning has been added to inform
+          # site admins about this deprecation. See `ProblemCheck::MaxmindDbConfiguration` for more information.
+          "https://download.maxmind.com/app/geoip_download?license_key=#{license_key}&edition_id=#{name}&suffix=tar.gz"
+        end
       end
 
     gz_file =
@@ -45,6 +62,7 @@ class DiscourseIpInfo
         tmp_file_name: "#{name}.gz",
         validate_uri: false,
         follow_redirect: true,
+        extra_headers:,
       )
 
     filename = File.basename(gz_file.path)

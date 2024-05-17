@@ -183,6 +183,9 @@ uk:
             once_per_user:
               label: Один раз на користувача
               description: Спрацює лише один раз для кожного користувача
+            new_users_only:
+              label: Тільки для нових користувачів
+              description: Активується лише для нових користувачів, які приєднаються після ввімкнення цієї автоматизації
         category_created_edited:
           fields:
             restricted_category:

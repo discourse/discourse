@@ -1,5 +1,5 @@
 <div class="topic-footer-main-buttons">
-  <TopicAdminMenuButton
+  <TopicAdminMenu
     @topic={{this.topic}}
     @openUpwards="true"
     @toggleMultiSelect={{this.toggleMultiSelect}}
@@ -29,7 +29,7 @@
     {{#if (eq actionable.type "inline-button")}}
       {{#if (eq actionable.id "bookmark")}}
         <BookmarkMenu
-          @showLabel={{true}}
+          @showLabel={{this.showBookmarkLabel}}
           @bookmarkManager={{this.topicBookmarkManager}}
           @buttonClasses="btn-default"
         />

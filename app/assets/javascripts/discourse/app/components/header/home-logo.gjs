@@ -11,13 +11,30 @@ import icon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";
 import Logo from "./logo";
 
+let hrefCallback;
+
+export function registerHomeLogoHrefCallback(callback) {
+  hrefCallback = callback;
+}
+
+export function clearHomeLogoHrefCallback() {
+  hrefCallback = null;
+}
+
 export default class HomeLogo extends Component {
   @service session;
   @service site;
   @service siteSettings;
 
-  href = getURL("/");
   darkModeAvailable = this.session.darkModeAvailable;
+
+  get href() {
+    if (hrefCallback) {
+      return hrefCallback();
+    }
+
+    return getURL("/");
+  }
 
   get showMobileLogo() {
     return this.site.mobileView && this.logoResolver("mobile_logo").length > 0;
@@ -81,36 +98,46 @@ export default class HomeLogo extends Component {
     <PluginOutlet @name="home-logo" @outletArgs={{hash minimized=@minimized}}>
       <div class={{concatClass (if @minimized "title--minimized") "title"}}>
         <a href={{this.href}} {{on "click" this.click}}>
-          {{#if @minimized}}
-            {{#if this.logoSmallUrl}}
+          <PluginOutlet
+            @name="home-logo-contents"
+            @outletArgs={{hash
+              minimized=@minimized
+              logoUrl=this.logoUrl
+              logoSmallUrl=this.logoSmallUrl
+              showMobileLogo=this.showMobileLogo
+            }}
+          >
+            {{#if @minimized}}
+              {{#if this.logoSmallUrl}}
+                <Logo
+                  @key="logo-small"
+                  @url={{this.logoSmallUrl}}
+                  @title={{this.siteSettings.title}}
+                  @darkUrl={{this.logoSmallUrlDark}}
+                />
+              {{else}}
+                {{icon "home"}}
+              {{/if}}
+            {{else if this.showMobileLogo}}
               <Logo
-                @key="logo-small"
-                @url={{this.logoSmallUrl}}
+                @key="logo-mobile"
+                @url={{this.mobileLogoUrl}}
                 @title={{this.siteSettings.title}}
-                @darkUrl={{this.logoSmallUrlDark}}
+                @darkUrl={{this.mobileLogoUrlDark}}
+              />
+            {{else if this.logoUrl}}
+              <Logo
+                @key="logo-big"
+                @url={{this.logoUrl}}
+                @title={{this.siteSettings.title}}
+                @darkUrl={{this.logoUrlDark}}
               />
             {{else}}
-              {{icon "home"}}
+              <h1 id="site-text-logo" class="text-logo">
+                {{this.siteSettings.title}}
+              </h1>
             {{/if}}
-          {{else if this.showMobileLogo}}
-            <Logo
-              @key="logo-mobile"
-              @url={{this.mobileLogoUrl}}
-              @title={{this.siteSettings.title}}
-              @darkUrl={{this.mobileLogoUrlDark}}
-            />
-          {{else if this.logoUrl}}
-            <Logo
-              @key="logo-big"
-              @url={{this.logoUrl}}
-              @title={{this.siteSettings.title}}
-              @darkUrl={{this.logoUrlDark}}
-            />
-          {{else}}
-            <h1 id="site-text-logo" class="text-logo">
-              {{this.siteSettings.title}}
-            </h1>
-          {{/if}}
+          </PluginOutlet>
         </a>
       </div>
     </PluginOutlet>

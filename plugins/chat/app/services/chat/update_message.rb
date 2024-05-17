@@ -18,9 +18,11 @@ module Chat
     contract
     model :message
     model :uploads, optional: true
-    step :enforce_system_membership
+    step :enforce_membership
+    model :membership
     policy :can_modify_channel_message
     policy :can_modify_message
+    step :clean_message
 
     transaction do
       step :modify_message
@@ -41,13 +43,15 @@ module Chat
 
       attribute :streaming, :boolean, default: false
 
+      attribute :strip_whitespaces, :boolean, default: true
+
       attribute :process_inline, :boolean, default: Rails.env.test?
     end
 
     private
 
-    def enforce_system_membership(guardian:, message:)
-      message.chat_channel.add(guardian.user) if guardian.user.is_system_user?
+    def enforce_membership(guardian:, message:)
+      message.chat_channel.add(guardian.user) if guardian.user.bot?
     end
 
     def fetch_message(contract:)
@@ -68,6 +72,10 @@ module Chat
       ).find_by(id: contract.message_id)
     end
 
+    def fetch_membership(guardian:, message:)
+      message.chat_channel.membership_for(guardian.user)
+    end
+
     def fetch_uploads(contract:, guardian:)
       return if !SiteSetting.chat_allow_uploads
       guardian.user.uploads.where(id: contract.upload_ids)
@@ -79,6 +87,15 @@ module Chat
 
     def can_modify_message(guardian:, message:)
       guardian.can_edit_chat?(message)
+    end
+
+    def clean_message(contract:)
+      contract.message =
+        TextCleaner.clean(
+          contract.message,
+          strip_whitespaces: contract.strip_whitespaces,
+          strip_zero_width_spaces: true,
+        )
     end
 
     def modify_message(contract:, message:, guardian:, uploads:)

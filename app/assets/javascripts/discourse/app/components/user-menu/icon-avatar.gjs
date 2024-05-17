@@ -2,7 +2,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
 import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
 
-const avatarPx = translateSize("small");
+const avatarPx = translateSize("medium");
 
 const IconAvatar = <template>
   <div class={{concatClass "icon-avatar" @data.classNames}}>
@@ -14,7 +14,7 @@ const IconAvatar = <template>
       --}}
     <img
       lazy="lazy"
-      src={{avatarUrl @data.avatarTemplate "small"}}
+      src={{avatarUrl @data.avatarTemplate "medium"}}
       width={{avatarPx}}
       height={{avatarPx}}
       class="avatar"

@@ -156,6 +156,7 @@ export function useAdminNavConfig(navMap) {
           route: "admin.dashboard.general",
           label: "admin.dashboard.title",
           icon: "home",
+          moderator: true,
         },
         {
           name: "admin_all_site_settings",
@@ -228,7 +229,7 @@ function pluginAdminRouteLinks() {
       return {
         name: `admin_plugin_${plugin.admin_route.location}`,
         route: plugin.admin_route.use_new_show_route
-          ? `adminPlugins.show.${plugin.admin_route.location}`
+          ? `adminPlugins.show`
           : `adminPlugins.${plugin.admin_route.location}`,
         routeModels: plugin.admin_route.use_new_show_route
           ? [plugin.admin_route.location]
@@ -314,7 +315,14 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
       })
     );
 
-    const navConfig = useAdminNavConfig(navMap);
+    let navConfig = useAdminNavConfig(navMap);
+
+    if (!currentUser.admin && currentUser.moderator) {
+      navConfig.forEach((section) => {
+        section.links = section.links.filterBy("moderator");
+      });
+      navConfig = navConfig.filterBy("links.length");
+    }
 
     return navConfig.map((adminNavSectionData) => {
       return defineAdminSection(

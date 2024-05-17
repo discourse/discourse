@@ -120,7 +120,10 @@ class Middleware::RequestTracker
 
   def self.get_data(env, result, timing, request = nil)
     status, headers = result
+
+    # result may be nil if the downstream app raised an exception
     status = status.to_i
+    headers ||= {}
 
     request ||= Rack::Request.new(env)
     helper = Middleware::AnonymousCache::Helper.new(env, request)
@@ -203,7 +206,7 @@ class Middleware::RequestTracker
       begin
         self.class.get_data(env, result, info, request)
       rescue StandardError => e
-        Rails.logger.warn("RequestTracker.get_data failed: #{e}")
+        Discourse.warn_exception(e, message: "RequestTracker.get_data failed")
         nil
       end
 

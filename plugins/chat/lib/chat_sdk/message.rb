@@ -37,7 +37,7 @@ module ChatSDK
     #
     # @see #create
     def self.create_with_stream(**params, &block)
-      self.create(**params, streaming: true, &block)
+      self.create(**params, streaming: true, strip_whitespaces: false, &block)
     end
 
     # Streams to a specific chat message.
@@ -94,6 +94,9 @@ module ChatSDK
       with_service(Chat::StopMessageStreaming, message_id: message_id, guardian: guardian) do
         on_success { result.message }
         on_model_not_found(:message) { raise "Couldn't find message with id: `#{message_id}`" }
+        on_model_not_found(:membership) do
+          raise "Couldn't find membership for user with id: `#{guardian.user.id}`"
+        end
         on_failed_policy(:can_join_channel) do
           raise "User with id: `#{guardian.user.id}` can't join this channel"
         end
@@ -114,6 +117,7 @@ module ChatSDK
       streaming: false,
       enforce_membership: false,
       force_thread: false,
+      strip_whitespaces: true,
       &block
     )
       message =
@@ -128,10 +132,11 @@ module ChatSDK
           streaming: streaming,
           enforce_membership: enforce_membership,
           force_thread: force_thread,
+          strip_whitespaces: strip_whitespaces,
         ) do
           on_model_not_found(:channel) { raise "Couldn't find channel with id: `#{channel_id}`" }
-          on_model_not_found(:channel_membership) do
-            raise "User with id: `#{guardian.user.id}` has no membership to this channel"
+          on_model_not_found(:membership) do
+            raise "Couldn't find membership for user with id: `#{guardian.user.id}`"
           end
           on_failed_policy(:ensure_valid_thread_for_channel) do
             raise "Couldn't find thread with id: `#{thread_id}`"
@@ -179,6 +184,7 @@ module ChatSDK
         message: self.message.message + raw,
         guardian: self.guardian,
         streaming: true,
+        strip_whitespaces: false,
       ) { on_failure { raise "Unexpected error" } }
 
       self.message

@@ -4,6 +4,7 @@ import { Input } from "@ember/component";
 import { concat, fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { gt, includes, not } from "truth-helpers";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
@@ -45,7 +46,20 @@ function findAncestors(categories) {
   return ancestors;
 }
 
-export default class extends Component {
+function applyMode(mode, categories, selectedSidebarCategoryIds) {
+  return categories.filter((c) => {
+    switch (mode) {
+      case "everything":
+        return true;
+      case "only-selected":
+        return selectedSidebarCategoryIds.includes(c.id);
+      case "only-unselected":
+        return !selectedSidebarCategoryIds.includes(c.id);
+    }
+  });
+}
+
+export default class SidebarEditNavigationMenuCategoriesModal extends Component {
   @service currentUser;
   @service site;
   @service siteSettings;
@@ -53,24 +67,33 @@ export default class extends Component {
   @tracked initialLoad = true;
   @tracked filteredCategoriesGroupings = [];
   @tracked filteredCategoryIds = [];
-
+  // TODO: tracked array, no ember array methods
   @tracked
   selectedSidebarCategoryIds = [...this.currentUser.sidebar_category_ids];
 
   constructor() {
     super(...arguments);
 
+    this.observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          this.observer.disconnect();
+          this.loadMore();
+        }
+      },
+      {
+        threshold: 1.0,
+      }
+    );
+
     this.processing = false;
     this.setFilterAndMode("", "everything");
   }
 
   setFilteredCategories(categories) {
+    this.filteredCategories = categories;
     const ancestors = findAncestors(categories);
     const allCategories = categories.concat(ancestors).uniqBy((c) => c.id);
-
-    if (this.siteSettings.fixed_category_positions) {
-      allCategories.sort((a, b) => a.position - b.position);
-    }
 
     this.filteredCategoriesGroupings = splitWhere(
       Category.sortCategories(allCategories),
@@ -80,54 +103,106 @@ export default class extends Component {
     this.filteredCategoryIds = categories.map((c) => c.id);
   }
 
+  concatFilteredCategories(categories) {
+    this.setFilteredCategories(this.filteredCategories.concat(categories));
+  }
+
+  setFetchedCategories(mode, categories) {
+    this.setFilteredCategories(
+      applyMode(mode, categories, this.selectedSidebarCategoryIds)
+    );
+  }
+
+  concatFetchedCategories(mode, categories) {
+    this.concatFilteredCategories(
+      applyMode(mode, categories, this.selectedSidebarCategoryIds)
+    );
+  }
+
+  @action
+  didInsert(element) {
+    this.observer.disconnect();
+    this.observer.observe(element);
+  }
+
   async searchCategories(filter, mode) {
     if (filter === "" && mode === "only-selected") {
       this.setFilteredCategories(
         await Category.asyncFindByIds(this.selectedSidebarCategoryIds)
       );
+
+      this.loadedPage = null;
+      this.hasMorePages = false;
     } else {
       const { categories } = await Category.asyncSearch(filter, {
         includeAncestors: true,
         includeUncategorized: false,
       });
 
-      const filteredFetchedCategories = categories.filter((c) => {
-        switch (mode) {
-          case "everything":
-            return true;
-          case "only-selected":
-            return this.selectedSidebarCategoryIds.includes(c.id);
-          case "only-unselected":
-            return !this.selectedSidebarCategoryIds.includes(c.id);
-        }
-      });
+      this.setFetchedCategories(mode, categories);
 
-      this.setFilteredCategories(filteredFetchedCategories);
+      this.loadedPage = 1;
+      this.hasMorePages = true;
     }
   }
 
   async setFilterAndMode(newFilter, newMode) {
-    this.filter = newFilter;
-    this.mode = newMode;
+    this.requestedFilter = newFilter;
+    this.requestedMode = newMode;
 
     if (!this.processing) {
       this.processing = true;
 
       try {
-        while (true) {
-          const filter = this.filter;
-          const mode = this.mode;
+        while (
+          this.loadedFilter !== this.requestedFilter ||
+          this.loadedMode !== this.requestedMode
+        ) {
+          const filter = this.requestedFilter;
+          const mode = this.requestedMode;
 
           await this.searchCategories(filter, mode);
 
+          this.loadedFilter = filter;
+          this.loadedMode = mode;
           this.initialLoad = false;
-
-          if (filter === this.filter && mode === this.mode) {
-            break;
-          }
         }
       } finally {
         this.processing = false;
+      }
+    }
+  }
+
+  async loadMore() {
+    if (!this.processing && this.hasMorePages) {
+      this.processing = true;
+
+      try {
+        const page = this.loadedPage + 1;
+        const { categories } = await Category.asyncSearch(
+          this.requestedFilter,
+          {
+            includeAncestors: true,
+            includeUncategorized: false,
+            page,
+          }
+        );
+        this.loadedPage = page;
+
+        if (categories.length === 0) {
+          this.hasMorePages = false;
+        } else {
+          this.concatFetchedCategories(this.requestedMode, categories);
+        }
+      } finally {
+        this.processing = false;
+      }
+
+      if (
+        this.loadedFilter !== this.requestedFilter ||
+        this.loadedMode !== this.requestedMode
+      ) {
+        await this.setFilterAndMode(this.requestedFilter, this.requestedMode);
       }
     }
   }
@@ -138,22 +213,25 @@ export default class extends Component {
 
   @action
   resetFilter() {
-    this.debouncedSetFilterAndMode(this.filter, "everything");
+    this.debouncedSetFilterAndMode(this.requestedFilter, "everything");
   }
 
   @action
   filterSelected() {
-    this.debouncedSetFilterAndMode(this.filter, "only-selected");
+    this.debouncedSetFilterAndMode(this.requestedFilter, "only-selected");
   }
 
   @action
   filterUnselected() {
-    this.debouncedSetFilterAndMode(this.filter, "only-unselected");
+    this.debouncedSetFilterAndMode(this.requestedFilter, "only-unselected");
   }
 
   @action
   onFilterInput(filter) {
-    this.debouncedSetFilterAndMode(filter.toLowerCase().trim(), this.mode);
+    this.debouncedSetFilterAndMode(
+      filter.toLowerCase().trim(),
+      this.requestedMode
+    );
   }
 
   @action
@@ -229,30 +307,31 @@ export default class extends Component {
           <div class="sidebar-categories-form__loading">
             {{loadingSpinner size="small"}}
           </div>
-        {{else if (gt this.filteredCategoriesGroupings.length 0)}}
+        {{else}}
           {{#each this.filteredCategoriesGroupings as |categories|}}
             <div
-              class="sidebar-categories-form__row"
+              {{didInsert this.didInsert}}
               style={{borderColor (get categories "0.color") "left"}}
+              class="sidebar-categories-form__row"
             >
-
               {{#each categories as |category|}}
                 <div
-                  class="sidebar-categories-form__category-row"
                   data-category-id={{category.id}}
                   data-category-level={{category.level}}
+                  class="sidebar-categories-form__category-row"
                 >
                   <label
-                    class="sidebar-categories-form__category-label"
                     for={{concat
                       "sidebar-categories-form__input--"
                       category.id
                     }}
+                    class="sidebar-categories-form__category-label"
                   >
                     <div class="sidebar-categories-form__category-wrapper">
                       <div class="sidebar-categories-form__category-badge">
                         {{categoryBadge category}}
                       </div>
+
                       {{#unless category.parentCategory}}
                         <div
                           class="sidebar-categories-form__category-description"
@@ -266,11 +345,7 @@ export default class extends Component {
                     </div>
 
                     <Input
-                      id={{concat
-                        "sidebar-categories-form__input--"
-                        category.id
-                      }}
-                      class="sidebar-categories-form__input"
+                      {{on "click" (fn this.toggleCategory category.id)}}
                       @type="checkbox"
                       @checked={{includes
                         this.selectedSidebarCategoryIds
@@ -279,17 +354,21 @@ export default class extends Component {
                       disabled={{not
                         (includes this.filteredCategoryIds category.id)
                       }}
-                      {{on "click" (fn this.toggleCategory category.id)}}
+                      id={{concat
+                        "sidebar-categories-form__input--"
+                        category.id
+                      }}
+                      class="sidebar-categories-form__input"
                     />
                   </label>
                 </div>
               {{/each}}
             </div>
+          {{else}}
+            <div class="sidebar-categories-form__no-categories">
+              {{i18n "sidebar.categories_form_modal.no_categories"}}
+            </div>
           {{/each}}
-        {{else}}
-          <div class="sidebar-categories-form__no-categories">
-            {{i18n "sidebar.categories_form_modal.no_categories"}}
-          </div>
         {{/if}}
       </form>
     </EditNavigationMenuModal>

@@ -64,3 +64,4 @@ reviewed:
     - tilt # MIT
     - unf # BSD-2-Clause
     - unicorn # Ruby or GPLv2/GPLv3
+    - drb # BSD-2-Clause

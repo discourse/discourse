@@ -750,20 +750,6 @@ he:
   staff_category_description: "קטגוריה פרטית לדיוני הסגל. הנושאים חשופים רק בפני מנהלים ומפקחים."
   discourse_welcome_topic:
     title: "ברוך בואך אל %{site_title}! :wave:"
-    body: |
-      אנחנו מאוד שמחים שהצטרפת אלינו.
-
-      %{site_info_quote}
-
-      הנה מספר דברים שניתן לעשות כדי להתחיל:
-
-      :speaking_head: **לערוך היכרות** על ידי הוספת התמונה שלך ומידע עליך ועל תחומי העניין שלך ל[פרופיל שלך](%{base_path}/my/preferences/account). על מה הכי מעניין אותך שישאלו אותך?
-
-      :open_book: **היכרות עם הקהילה** על ידי [עיון בדיונים](%{base_path}/top) שכבר מתרחשים להם. אם מצאת פוסט מעניין, מעשיר או מבדר אפשר ללחוץ על :heart: כדי להביע את הערכתך או תמיכתך!
-
-      :handshake: **תרומה** על ידי תגובה, שיתוף נקודת המבט שלך, פרסום שאלות או הצעת משוב בדיון. בטרם פרסום תגובות או נושאים חדשים, נא לעיין ב[כללי הקהילה](%{base_path}/faq).
-
-      > לקבלת עזרה או הגשת הצעה, אפשר לשאול אותנו דרך %{feedback_category} או [ליצור קשר עם המנהלים](%{base_path}/about).
   admin_quick_start_title: "מדריך למנהלים: איך מתחילים"
   category:
     topic_prefix: "על הקטגוריה %{category}"
@@ -1257,7 +1243,7 @@ he:
       title: "ביקורי משתמש"
       xaxis: "יום"
       yaxis: "מספר ביקורים"
-      description: "מספר כל המשתמשים המבקרים."
+      description: "מספר המשתמשים המבקרים שנכנסו למערכת."
     signups:
       title: "הרשמות"
       xaxis: "יום"
@@ -1297,6 +1283,13 @@ he:
         user_api: "API של משתמש"
       yaxis: "יום"
       description: "בקשות API למפתחות API רגילים ומפתחות API של משתמשים."
+    consolidated_page_views_browser_detection:
+      title: "צפיות עמודים מאוחדות עם זיהוי דפדפן (ניסיוני)"
+      xaxis:
+        page_view_anon_browser: "דפדפן אלמוני"
+        page_view_logged_in_browser: "דפדפן עם כניסה למערכת"
+        page_view_crawler: "סורק ידוע"
+      yaxis: "יום"
     dau_by_mau:
       title: "יחס פעילות יומי/חודשי"
       xaxis: "יום"
@@ -1456,6 +1449,10 @@ he:
       xaxis: "יום"
       yaxis: "צפיות אלמוניות מניידים"
       description: "מספר צפיות העמודים החדשות ממשתמשים במכשירים ניידים שלא נכנסו לחשבונם."
+    page_view_anon_browser_reqs:
+      xaxis: "יום"
+    page_view_logged_in_browser_reqs:
+      xaxis: "יום"
     http_background_reqs:
       title: "רקע"
       xaxis: "יום"
@@ -1494,7 +1491,7 @@ he:
       title: "ביקורי משתמשים (נייד)"
       xaxis: "יום"
       yaxis: "מספר ביקורים"
-      description: "מספר המשתמשים הייחודיים שביקרו ממכשיר נייד."
+      description: "מספר המשתמשים הייחודיים שנכנסו למערכת וביקרו ממכשיר נייד."
     web_crawlers:
       title: "סוכני משתמשים של סורקי אינטרנט"
       labels:
@@ -1695,6 +1692,7 @@ he:
     summarization_strategy: "דרכים נוספות לסכם תוכן שנרשם על ידי תוספים"
     custom_summarization_allowed_groups: "קבוצות שמורשות לסכם תכנים באמצעות `summarization_strategy` (אסטרטגיית תקצור)."
     enable_personal_messages: "יצא מכלל שימוש, יש להשתמש בהגדרה ‚קבוצות בהן מופעלות הודעות אישיות’. לאפשר למשתמשים בדרגת אמון 1 (ניתן להגדרה דרך אמון מזערי לשליחת הודעות) ליצור הודעות ולענות להודעות. נא לשים לב שהסגל תמיד יכול לשלוח הודעות, ללא קשר."
+    personal_message_enabled_groups: "לאפשר למשתמשים בקבוצות האלה ליצור הודעות אישיות. חשוב: 1) כל המשתמשים יכולים להגיב להודעות. 2) מנהלים ומפקחים יכולים ליצור הודעות לכל משתמש שהוא. 3) קבוצות דרגות האמון כוללות רמות גבוהות יותר, נא לבחור trust_level_1 כדי לאפשר דרגות 1, 2, 3, 4 אבל לא להרשות ל־0. 4) הגדרות התכתבות קבוצתיות דורסות את ההגדרה הזאת להתכתבות בקבוצות מסוימות."
     enable_system_message_replies: "מאפשר למשתמשים להגיב להודעות מערכת אפילו כשהודעות אישיות מושבתות"
     enable_chunked_encoding: "הפעלת תגובות קידוד מחולקות מצד השרת. תכונה זו עובדת ברוב התצורות אך חלק מהמתווכים עשויים לכלוא כצעד ביניים, מה שעלול לגרום להאטה"
     long_polling_base_url: "כתובת הבסיס שמשמשת לתשאול ארוך (כאשר CDN מגיש תוכן דינמי, יש להגדיר זאת למשיכה המקורית) למשל: http://origin.site.com"
@@ -1847,6 +1845,9 @@ he:
     enable_discord_logins: "לאפשר למשתמשים לעבור אימות דרך Discord?"
     discord_client_id: 'מזהה לקוח Discord (אין לך כזה? יש לבקר ב<a href="https://discordapp.com/developers/applications/me">פורטל המפתחים של Discord</a>)'
     discord_trusted_guilds: 'לאפשר רק למשתמש מגילדות ה־Discord האלה להיכנס באמצעות Discord. עליך להשתמש במזהה המספרי של הגילדה. למידע נוסף, יש לעיין בהנחיות ש<a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">כאן</a>. שדה ריק משמעו כל גילדה שהיא.'
+    enable_linkedin_oidc_logins: "הפעלת אימות דרך LinkedIn, דורש את הגדרת linkedin_client_id ו־linkedin_client_secret."
+    linkedin_oidc_client_id: "מזהה לקוח לאימות מול LinkedIn, ניתן להירשם ב־<a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
+    linkedin_oidc_client_secret: "סוד לקוח לאימות מול LinkedIn, ניתן להירשם ב־<a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
     enable_backups: "לאפשר למנהלים ליצור גיבויים של הפורום"
     allow_restore: "לאפשר שחזור, מה שיכול להחליף את כל (!) המידע באתר! יש להשבית אלא אם כן בכוונתך לשחזר גיבוי"
     maximum_backups: "המספר המרבי של גיבויים לשמירה. גיבויים ישנים יותר יימחקו אוטומטית"
@@ -2212,6 +2213,7 @@ he:
     notify_about_reviewable_item_after: "אם יש פריטים לסקירה שלא טופלו לאחר כמות זו של שעות, תישלח הודעה אישית אל המפקחים. 0 להשבתה."
     delete_drafts_older_than_n_days: "מחיקת טיוטות שלא נערכו במשך למעלה מ־(n) ימים."
     delete_merged_stub_topics_after_days: "מספר הימים להמתנה לפני מחיקה אוטומטית של נושאים מקוצרים שמוזגו במלואם. יש להגדיר ל־0 כדי לא למחוק נושאים מקוצרים לעולם."
+    bootstrap_mode_min_users: "מספר משתמשים מזערי שנדרש כדי להשבית מצב ראשוניות ולהסיר את כפתור איך מתחילים (0 להשבתה, יכול לארוך עד 24 שעות)"
     prevent_anons_from_downloading_files: "למנוע ממשתמשים אלמוניים להוריד קבצים מצורפים."
     secure_uploads: 'מגביל גישה לכל ההעלאות (תמונות, סרטונים, שמע, טקסט, קובצי PDF, ארכיוני zip ועוד). אם מופעלת האפשרות „דרישת כניסה”, רק משתמשים שנכנסו למערכת יכולים לגשת להעלאות. אחרת, הגישה תוגבל רק להעלאות מסוגי מדיה בהודעות פרטיות ובקטגוריות פרטיות. אזהרה: מדובר בהגדרה מסובכת שדורשת הבנה עמוקה בניהול המערכת. יש לעיין ב<a target="_blank" href="https://meta.discourse.org/t/-/140017">נושא ההעלאות המאובטחות ב־Meta</a> לקבלת פרטים נוספים.'
     secure_uploads_allow_embed_images_in_emails: "מאפשר להטמיע תמונות מאובטחות שבדרך כלל יידחסו אם הגודל שלהן קטן מההגדרה ‚secure uploads max email embed image size kb’ (גודל העלאות מרבי להטמעה כתמונה בקילובתים)."
@@ -2347,6 +2349,7 @@ he:
     enable_custom_sidebar_sections: "ניסיוני: הפעלת אגפים משלך בסרגל הצד"
     experimental_topics_filter: "ניסיוני: מפעיל את נתיב סינון הנושאים הניסיוני תחת ‎/filter"
     enable_experimental_lightbox: "ניסיוני: להחליף את התיבה הקלילה לתמונות כברירת מחדל לעיצוב המשופר."
+    enable_experimental_bookmark_redesign_groups: "ניסיוני: הצגת תפריט גישה מהירה לסימניות על פוסטים וחלונית בורחת חדשה"
     experimental_form_templates: "ניסיוני: יש להפעיל את יכולת תבניות הטפסים. <b>לאחר ההפעלה,</b> אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
     admin_sidebar_enabled_groups: "ניסיוני: הפעלת ניווט בסרגל הצד למנשק המשתמש של הניהול לקבוצות שצוינו, מחליף את כפתורי הניווט באפשרויות הניהול ברמה העליונה."
     lazy_load_categories_groups: "ניסיוני: לטעון בעצלות את פרטי הקטגוריה רק למשתמשים בקבוצות האלה. הגדרה זו משפרת את הביצועים באתרים עם הרבה קטגוריות."
@@ -2401,6 +2404,7 @@ he:
       unicode_usernames_avatars: "התמונות הייצוגיות הפנימיות של המערכת אינן תומכות בשמות משתמשים עם יוניקוד."
       markdown_linkify_tlds: "לא ניתן לכלול ערך של ‚*’."
       google_oauth2_hd_groups: "עליך להגדיר את כל הגדרות ‚google oauth2 hd’ בטרם הפעלת ההגדרה הזאת."
+      linkedin_oidc_credentials: "יש להגדיר פרטי גישה ל־LinkedIn מסוג OIDC‏ (‚linkedin_oidc_client_id’ ואת ‚linkedin_oidc_client_secret’) בטרם הפעלת ההגדרה הזאת."
       search_tokenize_chinese_enabled: "עליך להשבית את ‚search_tokenize_chinese’ (חיפוש מפרק סינית) בטרם הפעלת הגדרה זו."
       search_tokenize_japanese_enabled: "עליך להשבית את ‚search_tokenize_japanese’ (חיפוש מפרק יפנית) בטרם הפעלת הגדרה זו."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "אי אפשר להפעיל את DiscourseConnect אם נאכף אימות דו־שלבי."
@@ -2842,9 +2846,35 @@ he:
   new_version_mailer:
     title: "שולח-מיילים של גרסה חדשה"
     subject_template: "[%{email_prefix}] גרסת Discourse חדשה, עדכון זמין."
+    text_body_template: |
+      הידד, יצאה גרסה חדשה של [Discourse](https://www.discourse.org)!
+
+      הגרסה שלך: %{installed_version}
+      הגרסה החדשה: **%{new_version}**
+
+      - ניתן לעדכן בעזרת **[עדכון מהיר בלחיצה אחת דרך הדפדפן](%{base_url}/admin/update)**
+
+      - מה שחדש בגרסה מופיע ב[הערות ההפצה](https://meta.discourse.org/tag/release-notes) או שניתן לצפות [ביומן השינויים הגולמי ב־GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - ממליצים לך לבקר ב־[meta.discourse.org](https://meta.discourse.org) לקבלת חדשות, דיונים ותמיכה ב־Discourse
   new_version_mailer_with_notes:
     title: "שולח-מיילים של גרסה חדשה עם הערות"
     subject_template: "[%{email_prefix}] עדכון זמין"
+    text_body_template: |
+      היאח, יצאה גרסה חדשה של [Discourse](https://www.discourse.org)!
+
+      הגרסה שלך: %{installed_version}
+      הגרסה החדשה: **%{new_version}**
+
+      - אפשר לעדכן בעזרת **[עדכון בלחיצה אחת דרך הדפדפן](%{base_url}/admin/update)**
+
+      - צפייה ב[הערות המהדורה](https://meta.discourse.org/tag/release-notes) תציג בפניך את כל השינויים או צפייה ב[יומן השינויים הגולמי של GitHub](https://github.com/discourse/discourse/commits/main)
+
+      - ניתן לבקר ב־[meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים ותמיכה ב־Discourse
+
+      ### הערות מהדורה
+
+      %{notes}
   flag_reasons:
     off_topic: "הפוסט שלך סומן כ**מחוץ לנושא**: הקהילה מרגישה שהוא לא מתאים לנושא, כפי שמוגדר על ידי הכותרת והפוסט הראשון."
     inappropriate: "הפוסט שלך סומן כ**בלתי הולם**: הקהילה מרגישה שהוא מעליב, פוגע, מלבה שנאה או מפר את [הנחיות הקהילה שלנו](%{base_path}/guidelines)"
@@ -4711,9 +4741,6 @@ he:
           chat_enabled:
             placeholder: "הפעלת צ׳אט"
             extra_description: "יצירת חיבור מיידי לחבריך בזמן אמת"
-          enable_sidebar:
-            placeholder: "הפעלת סרגל צד"
-            extra_description: "גישה למרחבים המועדפים עליך בקלות"
       ready:
         title: "האתר שלך מוכן!"
         description: "זהו זה! סיימת את ההגדרות הראשוניות של הקהילה שלך. עכשיו אפשר לצלול פנימה ולחקור קצת את המערכת, לכתוב נושא לקבלת פנים ולשלוח הזמנות!<br><br>שיהיה בכיף!"

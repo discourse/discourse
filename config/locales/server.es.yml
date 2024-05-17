@@ -646,20 +646,6 @@ es:
   staff_category_description: "Categoría privada para debates entre moderadores y administradores. Los temas solo serán visibles para miembros del equipo."
   discourse_welcome_topic:
     title: "¡Te damos la bienvenida a %{site_title}! :wave:"
-    body: |
-      Nos alegra mucho que te hayas unido a nosotros.
-
-      %{site_info_quote}
-
-      Aquí tienes algunas cosas que puedes hacer para empezar:
-
-      :speaking_head: **Preséntate** añadiendo tu foto e información sobre ti y tus intereses a [tu perfil](%{base_path}/my/preferences/account). ¿Qué te gustaría que te preguntaran?
-
-      :open_book: **Conoce a la comunidad** [examinando los debates](%{base_path}/top) que ya se están produciendo aquí. Cuando encuentres una publicación interesante, informativa o entretenida, ¡usa el :heart: para mostrar tu agradecimiento o apoyo!
-
-      :handshake: **Contribuye** comentando, compartiendo tu propia perspectiva, haciendo preguntas u ofreciendo tu opinión en la discusión. Antes de responder o iniciar nuevos temas, revisa las [Directrices de la Comunidad](%{base_path}/faq).
-
-      > Si necesitas ayuda o tienes alguna sugerencia, no dudes en preguntar en %{feedback_category} o [contacta con los administradores](%{base_path}/about).
   admin_quick_start_title: "Guía del administrador: Primeros pasos"
   category:
     topic_prefix: "Acerca de la categoría %{category}"
@@ -1101,7 +1087,6 @@ es:
       title: "Visitas de usuario"
       xaxis: "Día"
       yaxis: "Número de visitas"
-      description: "Número de todas las visitas de usuario."
     signups:
       title: "Registros"
       xaxis: "Día"
@@ -1141,6 +1126,8 @@ es:
         user_api: "API de usuario"
       yaxis: "Día"
       description: "Solicitudes de API para claves de API normales y claves de API de usuario."
+    consolidated_page_views_browser_detection:
+      yaxis: "Día"
     dau_by_mau:
       title: "UAD/UAM"
       xaxis: "Día"
@@ -1300,6 +1287,10 @@ es:
       xaxis: "Día"
       yaxis: "Vistas de página anónimas desde una conexión móvil"
       description: "Número de vistas de página nuevas de visitantes en dispositivos móviles y con una sesión iniciada."
+    page_view_anon_browser_reqs:
+      xaxis: "Día"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Día"
     http_background_reqs:
       title: "Background"
       xaxis: "Día"
@@ -1338,7 +1329,6 @@ es:
       title: "Visitas de usuarios (móvil)"
       xaxis: "Día"
       yaxis: "Número de visitas"
-      description: "Número de usuarios únicos que han visitado desde dispositivos móviles."
     web_crawlers:
       title: "Agentes de usuario de crawlers"
       labels:
@@ -4466,9 +4456,6 @@ es:
           chat_enabled:
             placeholder: "Activar chat"
             extra_description: "Interactúa con tus miembros en tiempo real"
-          enable_sidebar:
-            placeholder: "Activar barra lateral"
-            extra_description: "Accede fácilmente a tus espacios favoritos"
       ready:
         title: "¡Tu sitio está listo!"
         description: "Ya está. Has hecho lo básico para configurar tu comunidad. Ahora puedes entrar y echar un vistazo, escribir un tema de bienvenida y enviar invitaciones.<br><br>¡Disfrútala!"

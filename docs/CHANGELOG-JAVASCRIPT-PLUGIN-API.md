@@ -7,6 +7,14 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.32.0] - 2024-05-16
+
+- Adds `registerHomeLogoHrefCallback` which allows to set a callback to change the home logo URL.
+
+## [1.31.0] - 2024-04-22
+
+- Adds `addTopicAdminMenuButton` which allows to register a new button in the topic admin menu.
+
 ## [1.30.0] - 2024-03-20
 
 - Added `addAdminPluginConfigurationNav`, which defines a list of links used in the adminPlugins.show page for a specific plugin, and displays them either in an inner sidebar or in a top horizontal nav.

@@ -737,20 +737,6 @@ pl_PL:
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
   discourse_welcome_topic:
     title: "Witamy w %{site_title}! :wave:"
-    body: |
-      Bardzo się cieszymy, że do nas dołączyłeś.
-
-      %{site_info_quote}
-
-      Oto kilka rzeczy, które możesz zrobić, aby zacząć:
-
-      :speaking_head: **Przedstaw się**, dodając swoje zdjęcie oraz informacje o sobie i swoich zainteresowaniach do [swojego profilu](%{base_path}/my/preferences/account). Jaka jest jedna rzecz, o którą chciałbyś zostać zapytany?
-
-      :open_book: **Poznaj społeczność**, [przeglądając dyskusje](%{base_path}/top), które już się tutaj toczą. Gdy uznasz post za interesujący, pouczający lub zabawny, użyj :heart:, aby okazać uznanie lub wsparcie!
-
-      :handshake: **Wnieś swój wkład**, komentując, dzieląc się własną perspektywą, zadając pytania lub wyrażając opinie w dyskusji. Przed udzieleniem odpowiedzi lub rozpoczęciem nowych tematów zapoznaj się z [wytycznymi dla społeczności](%{base_path}/faq).
-
-      > Jeśli potrzebujesz pomocy lub masz sugestie, nie krępuj się zapytać w %{feedback_category} lub [skontaktuj się z administratorami](%{base_path}/about).
   admin_quick_start_title: "Przewodnik administratora: Pierwsze kroki"
   category:
     topic_prefix: "O kategorii %{category}"
@@ -1244,7 +1230,6 @@ pl_PL:
       title: "Wizyty użytkowników"
       xaxis: "Dzień"
       yaxis: "Liczba wizyt"
-      description: "Liczba wszystkich wizyt użytkowników."
     signups:
       title: "Podpisy"
       xaxis: "Dzień"
@@ -1284,6 +1269,8 @@ pl_PL:
         user_api: "API użytkownika"
       yaxis: "Dzień"
       description: "Żądania API dotyczące zwykłych kluczy API i kluczy API użytkownika."
+    consolidated_page_views_browser_detection:
+      yaxis: "Dzień"
     dau_by_mau:
       title: "DAU / MAU"
       xaxis: "Dzień"
@@ -1443,6 +1430,10 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Odsłony anonimowych użytkowników mobilnych"
       description: "Liczba nowych odsłon strony użytkowników urządzenia mobilnego, którzy nie są zalogowani."
+    page_view_anon_browser_reqs:
+      xaxis: "Dzień"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dzień"
     http_background_reqs:
       title: "Tło"
       xaxis: "Dzień"
@@ -1481,7 +1472,6 @@ pl_PL:
       title: "Odwiedziny użytkowników (mobilne)"
       xaxis: "Dzień"
       yaxis: "Liczba wizyt"
-      description: "Liczba unikalnych użytkowników, którzy odwiedzili przy użyciu urządzenia mobilnego."
     web_crawlers:
       title: "User-agent robotów internetowych"
       labels:
@@ -4749,9 +4739,6 @@ pl_PL:
           chat_enabled:
             placeholder: "Włącz czat"
             extra_description: "Współpracuj ze swoimi członkami w czasie rzeczywistym"
-          enable_sidebar:
-            placeholder: "Włącz pasek boczny"
-            extra_description: "Uzyskaj łatwy dostęp do ulubionych przestrzeni"
       ready:
         title: "Twoja strona jest gotowa!"
         description: "Otóż to! Wykonałeś podstawowe czynności związane z utworzeniem swojej społeczności. Teraz możesz wejść i rozejrzeć się, napisać temat powitalny i wysłać zaproszenia!<br><br>Baw się dobrze!"

@@ -218,26 +218,43 @@ class GroupsController < ApplicationController
       "#{SiteSetting.title} - #{I18n.t("rss_description.group_posts", group_name: group.name)}"
     @link = Discourse.base_url
     @description = I18n.t("rss_description.group_posts", group_name: group.name)
+
     render "posts/latest", formats: [:rss]
   end
 
   def mentions
     raise Discourse::NotFound unless SiteSetting.enable_mentions?
+
     group = find_group(:group_id)
+    guardian.ensure_can_see_group_members!(group)
+
     posts =
       group.mentioned_posts_for(guardian, params.permit(:before_post_id, :category_id)).limit(20)
-    render_serialized posts.to_a, GroupPostSerializer
+
+    response = { posts: serialize_data(posts, GroupPostSerializer) }
+
+    if guardian.can_lazy_load_categories?
+      category_ids = posts.map { |p| p.topic.category_id }.compact.uniq
+      categories = Category.secured(guardian).with_parents(category_ids)
+      response[:categories] = serialize_data(categories, CategoryBadgeSerializer)
+    end
+
+    render json: response
   end
 
   def mentions_feed
     raise Discourse::NotFound unless SiteSetting.enable_mentions?
+
     group = find_group(:group_id)
+    guardian.ensure_can_see_group_members!(group)
+
     @posts =
       group.mentioned_posts_for(guardian, params.permit(:before_post_id, :category_id)).limit(50)
     @title =
       "#{SiteSetting.title} - #{I18n.t("rss_description.group_mentions", group_name: group.name)}"
     @link = Discourse.base_url
     @description = I18n.t("rss_description.group_mentions", group_name: group.name)
+
     render "posts/latest", formats: [:rss]
   end
 
@@ -638,7 +655,10 @@ class GroupsController < ApplicationController
 
     if (term = params[:term]).present?
       groups =
-        groups.where("groups.name ILIKE :term OR groups.full_name ILIKE :term", term: "%#{term}%")
+        groups.where(
+          "position(LOWER(:term) IN LOWER(groups.name)) <> 0 OR position(LOWER(:term) IN LOWER(groups.full_name)) <> 0",
+          term: term,
+        )
     end
 
     groups = groups.where(automatic: false) if params[:ignore_automatic].to_s == "true"

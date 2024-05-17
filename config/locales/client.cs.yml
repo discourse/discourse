@@ -1116,10 +1116,8 @@ cs:
         ignore_duration_time_frame_required: "Vyberte prosím časové období"
         ignore_no_users: "Nemáte žádné ignorované uživatele."
         ignore_option: "Ignorováno"
-        ignore_option_title: "Nebudete dostávat upozornění týkající se tohoto uživatele a všechna jejich témata a odpovědi budou skryty."
         add_ignored_user: "Přidat…"
         mute_option: "Ztišené"
-        mute_option_title: "Nebudete dostávat žádná upozornění týkající se tohoto uživatele."
         normal_option: "Normální"
         normal_option_title: "Budete upozorněni, pokud vám tento uživatel odpoví, cituje vás nebo vás zmiňuje."
       notification_schedule:
@@ -3986,8 +3984,6 @@ cs:
       pinned:
         title: "Připnuto"
         help: "Pro vás je toto téma připnuté; bude se zobrazovat na vrcholu seznamu ve své kategorii"
-      unlisted:
-        help: "Toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
       personal_message:
         title: "Toto téma je osobní zpráva"
         help: "Toto téma je osobní zpráva"
@@ -5721,12 +5717,12 @@ cs:
           silence: "Ztišit"
           link: "Odkaz"
         form:
-          placeholder_regexp: "obvyklý výraz"
           link_label: "Odkaz"
           link_placeholder: "https://example.com"
           add: "přidat"
           success: "Úspěch"
           upload_successful: "Nahráno úspěšně. Slova byla přidána "
+          html_label: "HTML"
         test:
           no_matches: "Nebyly nalezeny žádné výsledky"
       form_templates:

@@ -1017,10 +1017,10 @@ zh_CN:
         ignore_duration_time_frame_required: "请选择时间范围"
         ignore_no_users: "您没有忽略任何用户。"
         ignore_option: "已忽略"
-        ignore_option_title: "您将不会收到与此用户相关的通知，并且他们的所有话题和回复都将被隐藏。"
+        ignore_option_title: "你将不会接收到与该用户相关的任何通知，并且其所有内容都将被隐藏。"
         add_ignored_user: "添加…"
         mute_option: "已设为免打扰"
-        mute_option_title: "您不会收到与此用户相关的任何通知。"
+        mute_option_title: "你将不会收到来自该用户的任何通知、个人信息或直接聊天信息。"
         normal_option: "常规"
         normal_option_title: "如果此用户回复、引用或提到您，您将收到通知。"
       notification_schedule:
@@ -2782,6 +2782,7 @@ zh_CN:
       suggest_create_topic: 准备好<a href>开始新对话</a>了吗？
       jump_reply: "跳转到帖子的原始位置"
       jump_reply_aria: "跳转到 @%{username} 帖子的原始位置"
+      jump_reply_button: "跳转到帖子"
       deleted: "该话题已被删除"
       slow_mode_update:
         title: "慢速模式"
@@ -3576,10 +3577,17 @@ zh_CN:
         title: "已置顶"
         help: "此话题已对您置顶；它将显示在所属类别的顶部"
       unlisted:
-        help: "此话题已被取消公开；它不会显示在话题列表中，只能通过直接链接访问"
+        help: "此主题未列出；它不会显示在话题列表中，只能通过直接链接访问。 %{unlistedReason}"
       personal_message:
         title: "此话题是一条个人消息"
         help: "此话题是一条个人消息"
+      visibility_reasons:
+        op_flag_threshold_reached: "此话题已自动隐藏，因为它已达到举报阈值"
+        op_unhidden: "此话题由作者重新列出"
+        embedded_topic: "此话题已重新列出，因为它是嵌入式话题"
+        manually_unlisted: "此话题已被管理员或版主手动隐藏"
+        manually_relisted: "此话题已被管理员或版主手动重新列出"
+        bulk_action: "由于用户执行的批量操作，此话题的可见性已发生改变"
     posts: "帖子"
     pending_posts:
       label: "待处理"
@@ -4180,7 +4188,7 @@ zh_CN:
       clear_filter: "清除过滤器"
       no_results:
         title: "没有结果"
-        description: "我们找不到与“%{filter}”匹配的任何内容。<br><br>你是否要 <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">搜索站点设置</a> 或 <a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">管理员用户列表？</a>"
+        description: '我们找不到与“%{filter}”匹配的任何内容。<br><br>你是否要 <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">搜索站点设置</a> 或 <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">管理员用户列表？</a>'
     welcome_topic_banner:
       title: "创建您的欢迎话题"
       description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
@@ -5409,6 +5417,9 @@ zh_CN:
             update_public_sidebar_section: "更新公开边栏版块"
             destroy_public_sidebar_section: "销毁公开边栏版块"
             reset_bounce_score: "重置退回分数"
+            create_watched_word_group: "创建关注词组"
+            update_watched_word_group: "更新关注词组"
+            delete_watched_word_group: "删除关注词组"
         screened_emails:
           title: "已屏蔽的电子邮件"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -5480,8 +5491,8 @@ zh_CN:
           silence: "如果新帐户的第一篇帖子包含这些字词，则将其禁言。该帖子将被自动隐藏，直到工作人员批准。"
           link: "使用链接替换帖子中的字词。"
         form:
-          label: "包含字词或短语"
-          placeholder: "包含字词或短语（* 为通配符）"
+          label: "包含单词或短语"
+          placeholder: "单词或短语 (* 为通配符)"
           placeholder_regexp: "正则表达式"
           replace_label: "替换"
           replace_placeholder: "示例"
@@ -5495,6 +5506,8 @@ zh_CN:
           upload_successful: "上传成功。关注词已添加。"
           case_sensitivity_label: "是否区分大小写"
           case_sensitivity_description: "仅限字符大小写匹配的单词"
+          html_label: "HTML"
+          words_or_phrases: "单词或短语"
         test:
           button_label: "测试"
           modal_title: "%{action}：测试关注词"

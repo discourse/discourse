@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class UserProfile < ActiveRecord::Base
-  # TODO Remove `badge_granted_title` after 2023-09-01
-  self.ignored_columns = ["badge_granted_title"]
+  self.ignored_columns = ["badge_granted_title"] # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
 
   BAKED_VERSION = 1
 

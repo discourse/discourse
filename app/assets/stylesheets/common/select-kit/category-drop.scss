@@ -60,6 +60,10 @@
         span {
           color: var(--primary-high);
           margin: 0 10px;
+
+          &.active {
+            display: none;
+          }
         }
       }
     }

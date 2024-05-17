@@ -1063,10 +1063,8 @@ sv:
         ignore_duration_time_frame_required: "Välj en tidsram"
         ignore_no_users: "Du har inga ignorerade användare."
         ignore_option: "Ignorerade"
-        ignore_option_title: "Du kommer inte att få aviseringar om denna användare och alla ämnen och svar kommer att döljas."
         add_ignored_user: "Lägg till…"
         mute_option: "Tystad"
-        mute_option_title: "Du kommer inte att få några aviseringar från denna användare."
         normal_option: "Normal"
         normal_option_title: "Du kommer att aviseras om denna användare svarar dig, citerar dig eller nämner dig."
       notification_schedule:
@@ -3705,8 +3703,6 @@ sv:
       pinned:
         title: "Fäst"
         help: "Detta ämne är fäst för dig. Det visas i toppen av dess kategori"
-      unlisted:
-        help: "Det här ämnet är olistat; det kommer inte att visas i ämneslistorna och kan bara nås via en direktlänk"
       personal_message:
         title: "Detta ämne är ett personligt meddelande"
         help: "Detta ämne är ett personligt meddelande"
@@ -5587,9 +5583,6 @@ sv:
           silence: "Tysta nya konton om deras allra första inlägg innehåller något av dessa ord. Inlägget döljs automatiskt tills personalen godkänner det."
           link: "Ersätt ord i inlägg med länkar."
         form:
-          label: "Har ord eller fras"
-          placeholder: "Ange ord eller fras (* är ett jokertecken)"
-          placeholder_regexp: "reguljärt uttryck"
           replace_label: "Ersättning"
           replace_placeholder: "exempel"
           tag_label: "Tagg"
@@ -5602,6 +5595,7 @@ sv:
           upload_successful: "Uppladdning lyckades. Ord har lagts till."
           case_sensitivity_label: "Är skiftlägeskänsligt"
           case_sensitivity_description: "Endast ord med bokstäver i samma skiftläge"
+          html_label: "HTML"
         test:
           button_label: "Testa"
           modal_title: "%{action}: Testa bevakade ord"

@@ -161,11 +161,10 @@ describe "Topic bulk select", type: :system do
     it "closes topics silently" do
       # Watch the topic as a user
       sign_in(user)
-      visit("/latest")
       topic = topics.first
       visit("/t/#{topic.slug}/#{topic.id}")
-      topic_page.watch_topic
       expect(topic_page).to have_read_post(1)
+      topic_page.watch_topic
 
       # Bulk close the topic as an admin
       sign_in(admin)

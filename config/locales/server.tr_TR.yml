@@ -680,20 +680,6 @@ tr_TR:
   staff_category_description: "Personel tartışmaları için özel kategori. Konular sadece yöneticiler ve moderatörler tarafından görülebilir."
   discourse_welcome_topic:
     title: "%{site_title} sitesine hoş geldiniz! :wave:"
-    body: |
-      Bize katıldığınız için çok mutluyuz.
-
-      %{site_info_quote}
-
-      Başlamak için yapabileceğiniz bazı şeyler:
-
-      :speaking_head: Resminizi, kendiniz ve ilgi alanlarınız hakkındaki bilgileri [profilinize](%{base_path}/my/preferences/account) ekleyerek **kendinizi tanıtın**. Size sorulmasını istediğiniz tek bir soru olsa bu ne olurdu?
-
-      :open_book: Zaten başlamış olan [tartışmalara göz atarak](%{base_path}/top) **topluluğu tanıyın**. Bir gönderiyi ilginç, bilgilendirici veya eğlenceli bulduğunuzda, takdirinizi veya desteğinizi göstermek için :heart: kullanın!
-
-      :handshake: Tartışmalara yorum yaparak, kendi bakış açınızı paylaşarak, sorular sorarak veya geri bildirimde bulunarak **katkıda bulunun**. Yanıt vermeden veya yeni konulara başlamadan önce lütfen [Topluluk Kurallarını](%{base_path}/sss) inceleyin.
-
-      > Yardıma ihtiyacınız olursa veya öneriniz varsa %{feedback_category} bölümünde veya [yöneticilerle ile iletişime geçerek](%{base_path}/about) bunu paylaşabilirsiniz.
   admin_quick_start_title: "Yönetici Kılavuzu: Başlarken"
   category:
     topic_prefix: "%{category} kategorisi hakkında"
@@ -1135,7 +1121,6 @@ tr_TR:
       title: "Kullanıcı Ziyaretleri"
       xaxis: "Gün"
       yaxis: "Ziyaret sayısı"
-      description: "Tüm kullanıcı ziyaretlerinin sayısı."
     signups:
       title: "Kayıtlar"
       xaxis: "Gün"
@@ -1175,6 +1160,8 @@ tr_TR:
         user_api: "Kullanıcı API'sı"
       yaxis: "Gün"
       description: "Normal API anahtarları ve kullanıcı API anahtarları için API istekleri."
+    consolidated_page_views_browser_detection:
+      yaxis: "Gün"
     dau_by_mau:
       title: "Günlük Aktif Kullanıcı/Aylık Aktif Kullanıcı"
       xaxis: "Gün"
@@ -1334,6 +1321,10 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Mobil Anonim Sayfa Görüntülemeleri"
       description: "Mobil cihazda giriş yapmamış ziyaretçilerden gelen yeni sayfa görüntüleme sayısı."
+    page_view_anon_browser_reqs:
+      xaxis: "Gün"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Gün"
     http_background_reqs:
       title: "Arka plan"
       xaxis: "Gün"
@@ -1372,7 +1363,6 @@ tr_TR:
       title: "Kullanıcı Ziyaretleri (mobil)"
       xaxis: "Gün"
       yaxis: "Ziyaret sayısı"
-      description: "Mobil cihaz kullanarak ziyaret eden eşsiz kullanıcı sayısı."
     web_crawlers:
       title: "Web Veri Gezgini Kullanıcı Aracıları"
       labels:
@@ -4538,9 +4528,6 @@ tr_TR:
           chat_enabled:
             placeholder: "Sohbeti etkinleştir"
             extra_description: "Üyelerinizle gerçek zamanlı olarak etkileşim kurun"
-          enable_sidebar:
-            placeholder: "Kenar çubuğunu etkinleştir"
-            extra_description: "Favori alanlarınıza kolaylıkla erişin"
       ready:
         title: "Siteniz hazır!"
         description: "İşte bu kadar! Topluluğunuzu kurmak için temel işlemleri bitirdiniz. Şimdi içeri girip etrafa bir göz atabilir, bir karşılama konusu yazabilir ve davet gönderebilirsiniz!<br><br>İyi eğlenceler!"

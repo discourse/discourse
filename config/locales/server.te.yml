@@ -734,7 +734,6 @@ te:
       title: "సభ్యుని గణాంకాలు"
       xaxis: "రోజు"
       yaxis: "దర్శనాల సంఖ్య"
-      description: "అన్ని సభ్యుల సందర్శనల సంఖ్య."
     signups:
       title: "సైన్అప్‌లు"
       xaxis: "రోజు"
@@ -770,6 +769,8 @@ te:
       xaxis:
         api: "ఏపీఐ"
         user_api: "సబ్యుల API"
+      yaxis: "రోజు"
+    consolidated_page_views_browser_detection:
       yaxis: "రోజు"
     dau_by_mau:
       title: "డిఏయూ/ఎంఏయూ"
@@ -904,6 +905,10 @@ te:
       yaxis: "మొబైల్ లాగిన్ చేసిన పేజీవీక్షణలు"
     page_view_anon_mobile_reqs:
       title: "అనామక పేజీ వీక్షణలు"
+      xaxis: "రోజు"
+    page_view_anon_browser_reqs:
+      xaxis: "రోజు"
+    page_view_logged_in_browser_reqs:
       xaxis: "రోజు"
     http_background_reqs:
       title: "వెనుతలం"
@@ -2607,9 +2612,6 @@ te:
           chat_enabled:
             placeholder: "చాట్‌ని ప్రారంభించండి"
             extra_description: "మీ సభ్యులతో నిజ సమయంలో పాల్గొనండి"
-          enable_sidebar:
-            placeholder: "సైడ్‌బార్‌ని ప్రారంభించండి"
-            extra_description: "మీకు ఇష్టమైన ప్రదేశాలను సులభంగా యాక్సెస్ చేయండి"
       ready:
         title: "మీ సైట్ సిద్ధంగా ఉంది!"
       styling:

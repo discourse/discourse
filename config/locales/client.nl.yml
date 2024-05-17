@@ -1059,10 +1059,8 @@ nl:
         ignore_duration_time_frame_required: "Selecteer een tijdsbestek"
         ignore_no_users: "Je hebt geen genegeerde gebruikers."
         ignore_option: "Genegeerd"
-        ignore_option_title: "Je ontvangt geen meldingen met betrekking tot deze gebruiker en alle topics en antwoorden ervan worden verborgen."
         add_ignored_user: "Toevoegen…"
         mute_option: "Gedempt"
-        mute_option_title: "Je ontvangt geen meldingen met betrekking tot deze gebruiker."
         normal_option: "Normaal"
         normal_option_title: "Je ontvangt een melding als deze gebruiker een bericht van je beantwoordt, je citeert, of je naam noemt."
       notification_schedule:
@@ -3695,8 +3693,6 @@ nl:
       pinned:
         title: "Vastgemaakt"
         help: "Dit topic is voor je vastgemaakt; het wordt weergegeven bovenaan de categorie"
-      unlisted:
-        help: "Dit topic is niet zichtbaar; het wordt niet weergegeven niet in topiclijsten en is alleen toegankelijk via een rechtstreekse link"
       personal_message:
         title: "Dit topic is een persoonlijk bericht"
         help: "Dit topic is een persoonlijk bericht"
@@ -5573,9 +5569,6 @@ nl:
           silence: "Demp nieuwe accounts als hun allereerste bericht een of meer van deze woorden bevat. Het bericht wordt automatisch verborgen totdat het personeel het goedkeurt."
           link: "Vervang woorden in berichten door links."
         form:
-          label: "Bevat woord of zin"
-          placeholder: "Voer woord of zin in (* is een joker)"
-          placeholder_regexp: "reguliere expressie"
           replace_label: "Vervanging"
           replace_placeholder: "voorbeeld"
           tag_label: "Tag"
@@ -5588,6 +5581,7 @@ nl:
           upload_successful: "Uploaden geslaagd. Woorden zijn toegevoegd."
           case_sensitivity_label: "Is hoofdlettergevoelig"
           case_sensitivity_description: "Alleen woorden met overeenkomend hoofdlettergebruik"
+          html_label: "HTML"
         test:
           button_label: "Testen"
           modal_title: "%{action}: Geobserveerde woorden testen"

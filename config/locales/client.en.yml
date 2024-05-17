@@ -789,6 +789,7 @@ en:
       no_results:
         body: "A list of community members showing their activity will be shown here. For now the list is empty because your community is still brand new!"
         extra_body: "Admins and moderators can see and manage users in <a href='%{basePath}/admin/users/'>User Admin</a>."
+      no_results_with_search: "No results were found."
       days_visited: "Visits"
       days_visited_long: "Days Visited"
       posts_read: "Read"
@@ -3209,6 +3210,7 @@ en:
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
       jump_reply: "Jump to post's original location"
       jump_reply_aria: "Jump to @%{username}'s post in its original location"
+      jump_reply_button: "Jump to post"
       deleted: "The topic has been deleted"
 
       slow_mode_update:
@@ -4107,10 +4109,17 @@ en:
         title: "Pinned"
         help: "This topic is pinned for you; it will display at the top of its category"
       unlisted:
-        help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
+        help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link. %{unlistedReason}"
       personal_message:
         title: "This topic is a personal message"
         help: "This topic is a personal message"
+      visibility_reasons:
+        op_flag_threshold_reached: "This topic was automatically unlisted because it reached the flag threshold"
+        op_unhidden: "This topic was relisted by the author"
+        embedded_topic: "This topic was relisted because it is an embedded topic"
+        manually_unlisted: "This topic was manually unlisted by an admin or moderator"
+        manually_relisted: "This topic was manually relisted by an admin or moderator"
+        bulk_action: "This topic's visibility was changed because of a bulk action performed by a user"
     posts: "Posts"
     pending_posts:
       label: "Pending"
@@ -4781,7 +4790,7 @@ en:
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
-        description: "We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">search site settings</a> or the <a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">admin user list?</a>"
+        description: 'We couldn’t find anything matching ‘%{filter}’.<br><br>Did you want to <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">search site settings</a> or the <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">admin user list?</a>'
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -6065,6 +6074,9 @@ en:
             update_public_sidebar_section: "update public sidebar section"
             destroy_public_sidebar_section: "destroy public sidebar section"
             reset_bounce_score: "reset bounce score"
+            create_watched_word_group: "create watched word group"
+            update_watched_word_group: "update watched word group"
+            delete_watched_word_group: "delete watched word group"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -6114,6 +6126,7 @@ en:
           one: "show %{count} word"
           other: "show %{count} words"
         case_sensitive: "(case-sensitive)"
+        html: "(html)"
         download: Download
         clear_all: Clear All
         clear_all_confirm: "Are you sure you want to clear all watched words for the %{action} action?"
@@ -6138,9 +6151,9 @@ en:
           silence: "Silence new accounts if their very first post contains any of these words. The post will be automatically hidden until staff approves it."
           link: "Replace words in posts with links."
         form:
-          label: "Has word or phrase"
-          placeholder: "Enter word or phrase (* is a wildcard)"
-          placeholder_regexp: "regular expression"
+          label: "Has words or phrases"
+          placeholder: "words or phrases (* is a wildcard)"
+          placeholder_regexp: "regular expressions"
           replace_label: "Replacement"
           replace_placeholder: "example"
           tag_label: "Tag"
@@ -6153,6 +6166,9 @@ en:
           upload_successful: "Upload successful. Words have been added."
           case_sensitivity_label: "Is case-sensitive"
           case_sensitivity_description: "Only words with matching character casing"
+          html_label: "HTML"
+          html_description: "Outputs HTML in the replacement"
+          words_or_phrases: "words or phrases"
         test:
           button_label: "Test"
           modal_title: "%{action}: Test Watched Words"
@@ -6823,6 +6839,8 @@ en:
         allowed_paths: "Path Allowlist"
         edit: "edit"
         category: "Post to Category"
+        tags: "Topic Tags"
+        post_author: "Post Author - Defaults to %{author}"
         add_host: "Add Host"
         settings: "Embedding Settings"
         crawling_settings: "Crawler Settings"

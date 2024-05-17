@@ -141,6 +141,7 @@ class User < ActiveRecord::Base
   belongs_to :uploaded_avatar, class_name: "Upload"
 
   has_many :sidebar_section_links, dependent: :delete_all
+  has_many :embeddable_hosts
 
   delegate :last_sent_email_address, to: :email_logs
 
@@ -171,6 +172,7 @@ class User < ActiveRecord::Base
   after_create :set_default_categories_preferences
   after_create :set_default_tags_preferences
   after_create :set_default_sidebar_section_links
+  after_create :refresh_user_directory, if: Proc.new { SiteSetting.bootstrap_mode_enabled }
   after_update :set_default_sidebar_section_links, if: Proc.new { self.saved_change_to_staged? }
 
   after_update :trigger_user_updated_event,
@@ -365,6 +367,13 @@ class User < ActiveRecord::Base
 
   def should_skip_user_fields_validation?
     custom_fields_clean? || SiteSetting.disable_watched_word_checking_in_user_fields
+  end
+
+  def all_sidebar_sections
+    sidebar_sections
+      .or(SidebarSection.public_sections)
+      .includes(:sidebar_urls)
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
   end
 
   def secured_sidebar_category_ids(user_guardian = nil)
@@ -2161,6 +2170,10 @@ class User < ActiveRecord::Base
 
   def validate_status!(status)
     UserStatus.new(status).validate!
+  end
+
+  def refresh_user_directory
+    DirectoryItem.refresh!
   end
 end
 

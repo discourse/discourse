@@ -5,6 +5,7 @@ RSpec.describe "Bookmark message", type: :system do
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:bookmark_modal) { PageObjects::Modals::Bookmark.new }
 
   fab!(:category_channel_1) { Fabricate(:category_channel) }
@@ -25,6 +26,26 @@ RSpec.describe "Bookmark message", type: :system do
       bookmark_modal.select_preset_reminder(:next_month)
 
       expect(channel_page).to have_bookmarked_message(message_1)
+    end
+
+    it "supports linking to a bookmark in a long thread" do
+      category_channel_1.update!(threading_enabled: true)
+      category_channel_1.add(current_user)
+
+      thread =
+        chat_thread_chain_bootstrap(
+          channel: category_channel_1,
+          users: [current_user, Fabricate(:user)],
+          messages_count: Chat::MessagesQuery::MAX_PAGE_SIZE + 1,
+        )
+
+      first_message = thread.replies.first
+
+      bookmark = Bookmark.create!(bookmarkable: first_message, user: current_user)
+
+      visit bookmark.bookmarkable.url
+
+      expect(thread_page).to have_bookmarked_message(first_message)
     end
 
     context "when the user has a bookmark auto_delete_preference" do

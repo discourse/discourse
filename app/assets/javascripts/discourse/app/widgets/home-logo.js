@@ -7,6 +7,16 @@ import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
 
+let hrefCallback;
+
+export function registerHomeLogoHrefCallback(callback) {
+  hrefCallback = callback;
+}
+
+export function clearHomeLogoHrefCallback() {
+  hrefCallback = null;
+}
+
 export default createWidget("home-logo", {
   services: ["session"],
   tagName: "div.title",
@@ -23,6 +33,11 @@ export default createWidget("home-logo", {
 
   href() {
     const href = this.settings.href;
+
+    if (hrefCallback) {
+      return hrefCallback();
+    }
+
     return typeof href === "function" ? href() : href;
   },
 

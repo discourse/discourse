@@ -1128,10 +1128,8 @@ hr:
         ignore_duration_time_frame_required: "Odaberi vremenski okvir"
         ignore_no_users: "Nemate ignoriranih korisnika."
         ignore_option: "Ignorirao"
-        ignore_option_title: "Nećete primati obavijesti vezane uz ovog korisnika i sve njihove teme i odgovori bit će skriveni."
         add_ignored_user: "Dodaj…"
         mute_option: "Utišano"
-        mute_option_title: "Nećete primati obavijesti vezane uz ovog korisnika."
         normal_option: "Normalno"
         normal_option_title: "Bit ćete obaviješteni ako vam ovaj korisnik odgovara, citira vas ili spominje."
       notification_schedule:
@@ -3821,8 +3819,6 @@ hr:
       pinned:
         title: "Zakvačeno"
         help: "Ova vam je tema zakvačena, prikazivati će se na vrhu svoje kategorije."
-      unlisted:
-        help: "Ova je tema ne-popisana; neće se prikazivati na popisima tema i može joj se pristupiti samo preko direktne poveznice."
       personal_message:
         title: "Ova tema je osobna poruka"
         help: "Ova tema je osobna poruka"
@@ -5467,9 +5463,6 @@ hr:
           replace: "Zamijenite riječi u objavama drugim riječima."
           link: "Zamijenite riječi u objavama vezama."
         form:
-          label: "Ima riječ ili frazu"
-          placeholder: "Unesite riječ ili izraz (* je zamjenski znak)"
-          placeholder_regexp: "regularni izraz"
           replace_label: "Zamjena"
           replace_placeholder: "primjer"
           tag_label: "Označiti"
@@ -5482,6 +5475,7 @@ hr:
           upload_successful: "Prijenos uspješno. Riječi su dodane."
           case_sensitivity_label: "Je li osjetljiv na velika i mala slova"
           case_sensitivity_description: "Samo riječi s odgovarajućim malim slovima"
+          html_label: "HTML"
         test:
           button_label: "Test"
           modal_title: "%{action}: Testirajte gledane riječi"

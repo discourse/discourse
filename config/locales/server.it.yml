@@ -646,20 +646,6 @@ it:
   staff_category_description: "Categoria privata per discussioni dello staff. Gli argomenti sono visibili solo agli amministratori e ai moderatori."
   discourse_welcome_topic:
     title: "Ti diamo il benvenuto su %{site_title}! :wave:"
-    body: |
-      Siamo lieti che tu abbia voluto partecipare con noi.
-
-      %{site_info_quote}
-
-      Ecco alcune cose che puoi fare per iniziare:
-
-      :speaking_head: **Presentati** aggiungendo la tua foto e informazioni su di te e sui tuoi interessi al [tuo profilo](%{base_path}/my/preferences/account). Cosa vorresti che ti chiedessero?
-
-      :open_book: **Scopri la community** [sfogliando le discussioni](%{base_path}/top) che si stanno già svolgendo qui. Quando trovi un messaggio interessante, informativo o divertente, usa :heart: per mostrare il tuo apprezzamento o supporto!
-
-      :handshake: **Contribuisci** commentando, condividendo il tuo punto di vista, ponendo domande oppure offrendo feedback durante la discussione. Prima di rispondere o iniziare nuovi argomenti, consulta le [Linee guida della community](%{base_path}/faq).
-
-      > Se hai bisogno di aiuto o hai un suggerimento, non esitare a chiedere in %{feedback_category} o [contatta gli amministratori](%{base_path}/about).
   admin_quick_start_title: "Guida dell'amministratore: come iniziare"
   category:
     topic_prefix: "Definizione della categoria %{category}"
@@ -1095,7 +1081,6 @@ it:
       title: "Visite Utente"
       xaxis: "Giorno"
       yaxis: "Numero di visite"
-      description: "Numero di tutte le visite degli utenti."
     signups:
       title: "Iscrizioni"
       xaxis: "Giorno"
@@ -1135,6 +1120,8 @@ it:
         user_api: "API Utente"
       yaxis: "Giorno"
       description: "Richieste API per chiavi API normali e chiavi API utente."
+    consolidated_page_views_browser_detection:
+      yaxis: "Giorno"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Giorno"
@@ -1294,6 +1281,10 @@ it:
       xaxis: "Giorno"
       yaxis: "Pagine Viste da Visitatori Anonimi in mobilità"
       description: "Numero di nuove pagine viste da utenti su dispositivi mobili e non connessi ad un account."
+    page_view_anon_browser_reqs:
+      xaxis: "Giorno"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Giorno"
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"
@@ -1332,7 +1323,6 @@ it:
       title: "Visite Utente (da mobile)"
       xaxis: "Giorno"
       yaxis: "Numero di visite"
-      description: "Numero di utenti distinti che hanno visitato il sito con un dispositivo mobile."
     web_crawlers:
       title: "User Agents Web Crawler"
       labels:
@@ -4057,9 +4047,6 @@ it:
           chat_enabled:
             placeholder: "Abilita chat"
             extra_description: "Coinvolgi i tuoi membri in tempo reale"
-          enable_sidebar:
-            placeholder: "Abilita barra laterale"
-            extra_description: "Accedi facilmente ai tuoi spazi preferiti"
       ready:
         title: "Il tuo sito è pronto!"
         description: "Ecco fatto! Hai messo le basi per configurare la tua community Ora puoi entrare e dare un'occhiata in giro, scrivere un argomento di benvenuto e inviare inviti!<br><br>Buon divertimento!"

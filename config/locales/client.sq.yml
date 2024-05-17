@@ -1654,8 +1654,6 @@ sq:
       pinned:
         title: "E përzgjedhur"
         help: "Kjo temë është e ngjitur për ju; do të paraqitet në majë të kategorisë përkatëse"
-      unlisted:
-        help: "Kjo temë nuk është e listuar, pra nuk do të paraqitet nue listat e temave të faqes dhe mund të shikohet vetëm me lidhje direkte"
     posts: "Postime"
     pending_posts:
       label: "Në pritje"
@@ -2470,6 +2468,7 @@ sq:
           flag: "Sinjalizoni"
         form:
           add: "Shto"
+          html_label: "HTML"
       form_templates:
         nav_title: "Shabllonet"
         list_table:

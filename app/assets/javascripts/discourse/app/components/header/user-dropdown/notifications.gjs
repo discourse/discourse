@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import {
   addExtraUserClasses,
   renderAvatar,
@@ -18,12 +19,11 @@ export default class Notifications extends Component {
   avatarSize = "medium";
 
   get avatar() {
-    let avatarAttrs = {};
-    addExtraUserClasses(this.currentUser, avatarAttrs);
+    const avatarAttrs = addExtraUserClasses(this.currentUser, {});
     return htmlSafe(
       renderAvatar(this.currentUser, {
         imageSize: this.avatarSize,
-        alt: "user.avatar.header_title",
+        title: i18n("user.avatar.header_title"),
         template: this.currentUser.avatar_template,
         username: this.currentUser.username,
         name: this.siteSettings.enable_names && this.currentUser.name,
@@ -45,6 +45,7 @@ export default class Notifications extends Component {
   }
 
   <template>
+    <PluginOutlet @name="user-dropdown-notifications__before" />
     {{this.avatar}}
 
     {{#if this._shouldHighlightAvatar}}
@@ -119,5 +120,6 @@ export default class Notifications extends Component {
         </a>
       {{/if}}
     {{/if}}
+    <PluginOutlet @name="user-dropdown-notifications__after" />
   </template>
 }

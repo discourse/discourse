@@ -977,7 +977,6 @@ ur:
       title: "صارف وِزِٹس"
       xaxis: "دن"
       yaxis: "وِزِٹس کی تعداد"
-      description: "تمام صارف کے دوروں کی تعداد۔"
     signups:
       title: "سائن اَپ"
       xaxis: "دن"
@@ -1014,6 +1013,8 @@ ur:
       xaxis:
         api: "API"
         user_api: "یُوزَر API"
+      yaxis: "دن"
+    consolidated_page_views_browser_detection:
       yaxis: "دن"
     dau_by_mau:
       title: "DAU/MAU"
@@ -1174,6 +1175,10 @@ ur:
       xaxis: "دن"
       yaxis: "صفحہ موبائل گمنام ملاحظات"
       description: "موبائل ڈیوائسوں پر زائرین جو لاگ اِن نہ ہوئے ہوں، اُن کی طرف سے نئے صفحہ ملاحظات کی تعداد۔"
+    page_view_anon_browser_reqs:
+      xaxis: "دن"
+    page_view_logged_in_browser_reqs:
+      xaxis: "دن"
     http_background_reqs:
       title: "پس منظر"
       xaxis: "دن"
@@ -1212,7 +1217,6 @@ ur:
       title: "صارف وِزِٹس (موبائل)"
       xaxis: "دن"
       yaxis: "وِزِٹس کی تعداد"
-      description: "منفرد صارفین کی تعداد جنہوں نے موبائل ڈیوائس کا استعمال کرتے ہوئے سائیٹ کا دورہ کیا۔"
     web_crawlers:
       title: "وَیب کرالر صارف ایجنٹس"
       labels:

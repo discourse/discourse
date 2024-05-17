@@ -811,7 +811,6 @@ ca:
       title: "Visites de l'usuari"
       xaxis: "Dia"
       yaxis: "Nombre de visites"
-      description: "Nombre de visites de tots els usuaris."
     signups:
       title: "Registres"
       xaxis: "Dia"
@@ -841,6 +840,8 @@ ca:
       xaxis:
         api: "API"
         user_api: "API d'usuari"
+      yaxis: "Dia"
+    consolidated_page_views_browser_detection:
       yaxis: "Dia"
     dau_by_mau:
       title: "DAU/MAU"
@@ -1001,6 +1002,10 @@ ca:
       xaxis: "Dia"
       yaxis: "Pàgines vistes anònimes en mòbil"
       description: "Nombre de pàgines vistes noves de visitants en dispositius mòbils que no han iniciat la sessió."
+    page_view_anon_browser_reqs:
+      xaxis: "Dia"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dia"
     http_background_reqs:
       title: "Fons"
       xaxis: "Dia"
@@ -1039,7 +1044,6 @@ ca:
       title: "Visites d'usuari (mòbil)"
       xaxis: "Dia"
       yaxis: "Nombre de visites"
-      description: "Nombre d'usuaris únics que han visitat el lloc web amb un dispositiu mòbil."
     web_crawlers:
       title: "Agents d'usuari de rastrejadors web"
       labels:

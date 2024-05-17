@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class AdminPostMenu extends Component {
@@ -46,20 +47,20 @@ export default class AdminPostMenu extends Component {
   }
 
   <template>
-    <ul>
+    <DropdownMenu as |dropdown|>
       {{#if this.currentUser.staff}}
-        <li>
+        <dropdown.item>
           <DButton
             @label="review.moderation_history"
             @icon="list"
-            class="btn popup-menu-btn moderation-history"
+            class="btn btn-transparent moderation-history"
             @href={{this.reviewUrl}}
           />
-        </li>
+        </dropdown.item>
       {{/if}}
 
       {{#if (and this.currentUser.staff (not @data.transformedPost.isWhisper))}}
-        <li>
+        <dropdown.item>
           <DButton
             @label={{if
               @data.transformedPost.isModeratorAction
@@ -68,16 +69,16 @@ export default class AdminPostMenu extends Component {
             }}
             @icon="shield-alt"
             class={{concatClass
-              "btn popup-menu-btn toggle-post-type"
+              "btn btn-transparent toggle-post-type"
               (if @data.transformedPost.isModeratorAction "btn-success")
             }}
             @action={{fn this.topicAction "togglePostType"}}
           />
-        </li>
+        </dropdown.item>
       {{/if}}
 
       {{#if @data.transformedPost.canEditStaffNotes}}
-        <li>
+        <dropdown.item>
           <DButton
             @icon="user-shield"
             @label={{if
@@ -87,24 +88,24 @@ export default class AdminPostMenu extends Component {
             }}
             title="post.controls.unhide"
             class={{concatClass
-              "btn popup-menu-btn"
+              "btn btn-transparent"
               (if @data.transformedPost.notice "change-notice" "add-notice")
               (if @data.transformedPost.notice "btn-success")
             }}
             @action={{fn this.topicAction "changeNotice"}}
           />
-        </li>
+        </dropdown.item>
       {{/if}}
 
       {{#if (and this.currentUser.staff @data.transformedPost.hidden)}}
-        <li>
+        <dropdown.item>
           <DButton
             @label="post.controls.unhide"
             @icon="far-eye"
-            class="btn popup-menu-btn unhide-post"
+            class="btn btn-transparent unhide-post"
             @action={{fn this.topicAction "unhidePost"}}
           />
-        </li>
+        </dropdown.item>
       {{/if}}
 
       {{#if
@@ -116,124 +117,124 @@ export default class AdminPostMenu extends Component {
           )
         )
       }}
-        <li>
+        <dropdown.item>
           <DButton
             @label="post.controls.change_owner"
             @icon="user"
             title="post.controls.lock_post_description"
-            class="btn popup-menu-btn change-owner"
+            class="btn btn-transparent change-owner"
             @action={{fn this.topicAction "changePostOwner"}}
           />
-        </li>
+        </dropdown.item>
       {{/if}}
 
       {{#if (and @data.transformedPost.user_id this.currentUser.staff)}}
         {{#if this.siteSettings.enable_badges}}
-          <li>
+          <dropdown.item>
             <DButton
               @label="post.controls.grant_badge"
               @icon="certificate"
-              class="btn popup-menu-btn grant-badge"
+              class="btn btn-transparent grant-badge"
               @action={{fn this.topicAction "grantBadge"}}
             />
-          </li>
+          </dropdown.item>
         {{/if}}
 
         {{#if @data.transformedPost.locked}}
-          <li>
+          <dropdown.item>
             <DButton
               @label="post.controls.unlock_post"
               @icon="unlock"
               title="post.controls.unlock_post_description"
               class={{concatClass
-                "btn popup-menu-btn unlock-post"
+                "btn btn-transparent unlock-post"
                 (if @data.post.locked "btn-success")
               }}
               @action={{fn this.topicAction "unlockPost"}}
             />
-          </li>
+          </dropdown.item>
         {{else}}
-          <li>
+          <dropdown.item>
             <DButton
               @label="post.controls.lock_post"
               @icon="lock"
               title="post.controls.lock_post_description"
-              class="btn popup-menu-btn lock-post"
+              class="btn btn-transparent lock-post"
               @action={{fn this.topicAction "lockPost"}}
             />
-          </li>
+          </dropdown.item>
         {{/if}}
       {{/if}}
 
       {{#if @data.transformedPost.canPermanentlyDelete}}
-        <li>
+        <dropdown.item>
           <DButton
             @label="post.controls.permanently_delete"
             @icon="trash-alt"
-            class="btn popup-menu-btn permanently-delete"
+            class="btn btn-transparent permanently-delete"
             @action={{fn this.topicAction "permanentlyDeletePost"}}
           />
-        </li>
+        </dropdown.item>
       {{/if}}
 
       {{#if (or @data.transformedPost.canManage @data.transformedPost.canWiki)}}
         {{#if @data.transformedPost.wiki}}
-          <li>
+          <dropdown.item>
             <DButton
               @label="post.controls.unwiki"
               @icon="far-edit"
               class={{concatClass
-                "btn popup-menu-btn wiki wikied"
+                "btn btn-transparent wiki wikied"
                 (if @data.transformedPost.wiki "btn-success")
               }}
               @action={{fn this.topicAction "toggleWiki"}}
             />
-          </li>
+          </dropdown.item>
         {{else}}
-          <li>
+          <dropdown.item>
             <DButton
               @label="post.controls.wiki"
               @icon="far-edit"
-              class="btn popup-menu-btn wiki"
+              class="btn btn-transparent wiki"
               @action={{fn this.topicAction "toggleWiki"}}
             />
-          </li>
+          </dropdown.item>
         {{/if}}
       {{/if}}
 
       {{#if @data.transformedPost.canPublishPage}}
-        <li>
+        <dropdown.item>
           <DButton
             @label="post.controls.publish_page"
             @icon="file"
-            class="btn popup-menu-btn publish-page"
+            class="btn btn-transparent publish-page"
             @action={{fn this.topicAction "showPagePublish"}}
           />
-        </li>
+        </dropdown.item>
       {{/if}}
 
       {{#if @data.transformedPost.canManage}}
-        <li>
+        <dropdown.item>
           <DButton
             @label="post.controls.rebake"
             @icon="sync-alt"
-            class="btn popup-menu-btn rebuild-html"
+            class="btn btn-transparent rebuild-html"
             @action={{fn this.topicAction "rebakePost"}}
           />
-        </li>
+        </dropdown.item>
       {{/if}}
 
       {{#each this.extraButtons as |button|}}
-        <li>
+        <dropdown.item>
           <DButton
             @label={{button.label}}
             @translatedLabel={{button.translatedLabel}}
             @icon={{button.icon}}
-            class={{concatClass "btn popup-menu-btn" button.className}}
+            class={{concatClass "btn btn-transparent" button.className}}
             @action={{fn this.extraAction button}}
           />
-        </li>
+        </dropdown.item>
       {{/each}}
-    </ul>
+    </DropdownMenu>
   </template>
 }

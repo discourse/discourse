@@ -646,20 +646,6 @@ fr:
   staff_category_description: "Catégorie privée pour les discussions entre responsables. Les sujets ne sont visibles que pour les administrateurs et les modérateurs."
   discourse_welcome_topic:
     title: "Bienvenue sur %{site_title} ! :wave:"
-    body: |
-      Nous sommes ravis que vous nous ayez rejoint.
-
-      %{site_info_quote}
-
-      Voici certaines choses que vous pouvez faire pour commencer :
-
-      :speaking_head: **Présentez-vous** en ajoutant votre photo et des informations vous concernant et concernant vos centres d'intérêt à [votre profil](%{base_path}/my/preferences/account). Quelle est le sujet sur lequel vous aimeriez qu'on vous pose des questions ?
-
-      :open_book: **Apprenez à connaître la communauté** en [parcourant les discussions](%{base_path}/top) qui ont déjà lieu ici. Lorsque vous trouvez un message intéressant, informatif ou divertissant, utilisez le :heart: pour montrer votre appréciation ou votre soutien !
-
-      :handshake: **Contribuez** en commentant, en partageant votre propre point de vue, en posant des questions ou en publiant des commentaires dans la discussion. Avant de répondre ou de commencer de nouveaux sujets, veuillez consulter notre [Charte communautaire](%{base_path}/faq).
-
-      Si vous avez besoin d'aide ou des suggestions à apporter, n'hésitez pas à poser vos questions dans %{feedback_category} ou [contactez les administrateurs](%{base_path}/about).
   admin_quick_start_title: "Guide de l'administrateur : premiers pas"
   category:
     topic_prefix: "À propos de la catégorie %{category}"
@@ -1095,7 +1081,6 @@ fr:
       title: "Visites d'utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de visites"
-      description: "Nombre total de visites d'utilisateurs."
     signups:
       title: "Inscriptions"
       xaxis: "Jour"
@@ -1135,6 +1120,8 @@ fr:
         user_api: "API utilisateur"
       yaxis: "Jour"
       description: "Requêtes d'API pour les clés API ordinaires et les clés API de l'utilisateur."
+    consolidated_page_views_browser_detection:
+      yaxis: "Jour"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Jour"
@@ -1294,6 +1281,10 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs non connectés sur mobile"
       description: "Nombre de nouvelles vues de pages par les utilisateurs anonymes depuis des appareils mobiles."
+    page_view_anon_browser_reqs:
+      xaxis: "Jour"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Jour"
     http_background_reqs:
       title: "Arrière-plan"
       xaxis: "Jour"
@@ -1332,7 +1323,6 @@ fr:
       title: "Visites d'utilisateur (mobile)"
       xaxis: "Jour"
       yaxis: "Nombre de visites"
-      description: "Nombre de visites uniques d'utilisateurs depuis un appareil mobile."
     web_crawlers:
       title: "Agents utilisateurs des robots d'indexation"
       labels:
@@ -4469,9 +4459,6 @@ fr:
           chat_enabled:
             placeholder: "Activer la discussion"
             extra_description: "Interagissez avec vos membres en temps réel"
-          enable_sidebar:
-            placeholder: "Activer la barre latérale"
-            extra_description: "Accédez facilement à vos espaces préférés"
       ready:
         title: "Votre site est prêt !"
         description: "C'est ça ! Vous avez terminé les bases pour configurer votre communauté. Vous pouvez maintenant vous lancer et jeter un coup d'œil, écrire un sujet de bienvenue et envoyer des invitations !<br><br>Amusez-vous bien !"

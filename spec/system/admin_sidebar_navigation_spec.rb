@@ -2,13 +2,19 @@
 
 describe "Admin Revamp | Sidebar Navigation", type: :system do
   fab!(:admin)
+  fab!(:moderator)
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:sidebar_dropdown) { PageObjects::Components::SidebarHeaderDropdown.new }
   let(:filter) { PageObjects::Components::Filter.new }
 
   before do
-    SiteSetting.admin_sidebar_enabled_groups = Group::AUTO_GROUPS[:admins]
+    SiteSetting.navigation_menu = "sidebar"
+    SiteSetting.admin_sidebar_enabled_groups = [
+      Group::AUTO_GROUPS[:admins],
+      Group::AUTO_GROUPS[:moderators],
+    ]
+
     sign_in(admin)
   end
 
@@ -102,6 +108,9 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
   end
 
   it "allows further filtering of site settings or users if links do not show results" do
+    user_1 = Fabricate(:user, username: "moltisanti", name: "Christopher Moltisanti")
+    user_2 = Fabricate(:user, username: "bevelaqua", name: "Matthew Bevelaqua")
+
     visit("/admin")
     filter.filter("user locale")
     find(".sidebar-additional-filter-settings").click
@@ -117,18 +126,15 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     )
     expect(page).to have_content(I18n.t("site_settings.log_search_queries"))
 
-    user_1 = Fabricate(:user, username: "moltisanti", name: "Christopher Moltisanti")
-    user_2 = Fabricate(:user, username: "bevelaqua", name: "Matthew Bevelaqua")
-
     filter.filter("bevelaqua")
     find(".sidebar-additional-filter-users").click
     expect(page).to have_current_path("/admin/users/list/active?username=bevelaqua")
-    within(".users-list-container") { expect(page).to have_content("bevelaqua") }
+    expect(find(".users-list-container")).to have_content("bevelaqua")
 
     filter.filter("moltisanti")
     find(".sidebar-additional-filter-users").click
     expect(page).to have_current_path("/admin/users/list/active?username=moltisanti")
-    within(".users-list-container") { expect(page).to have_content("moltisanti") }
+    expect(find(".users-list-container")).to have_content("moltisanti")
   end
 
   it "allows sections to be expanded" do
@@ -183,5 +189,28 @@ describe "Admin Revamp | Sidebar Navigation", type: :system do
     expect(sidebar).to have_add_section_button
     visit("/admin")
     expect(sidebar).to have_no_add_section_button
+  end
+
+  it "displays limited links for moderator" do
+    sign_in(moderator)
+    visit("/admin")
+
+    sidebar.toggle_all_sections
+
+    links = page.all(".sidebar-section-link-content-text")
+    expect(links.map(&:text)).to eq(
+      [
+        "Dashboard",
+        "What's New",
+        "All",
+        "Users",
+        "Watched Words",
+        "Screened Emails",
+        "Screened IPs",
+        "Screened URLs",
+        "Search Logs",
+        "Staff Action Logs",
+      ],
+    )
   end
 end

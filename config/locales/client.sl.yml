@@ -1017,10 +1017,8 @@ sl:
         ignore_duration_time_frame_required: "Izberite časovni okvir"
         ignore_no_users: "Nimate prezrtih uporabnikov"
         ignore_option: "Prezrti"
-        ignore_option_title: "Ne boste prejemali obvestil povezanih z tem uporabnikom in vse njihove teme in odgovori bodo skriti."
         add_ignored_user: "Dodaj..."
         mute_option: "Utišani"
-        mute_option_title: "Ne boste prejemali obvestil povezanih s tem uporabnikom."
         normal_option: "Običajno"
         normal_option_title: "Obveščeni boste, če vam ta uporabnik odgovori, vas citira ali vas omeni."
       notification_schedule:
@@ -3124,8 +3122,6 @@ sl:
       pinned:
         title: "Pripeto"
         help: "Ta tema je pripeta; prikazala se bo na vrhu njene kategorije."
-      unlisted:
-        help: "Ta tema je izločena; ne bo se prikazovala na seznamih tem in se jo lahko dostopa samo preko neposredne povezave."
       personal_message:
         title: "Ta tema je zasebno sporočilo"
         help: "Ta tema je zasebno sporočilo"
@@ -4226,11 +4222,11 @@ sl:
           silence: "Utišaj"
           link: "Povezava"
         form:
-          placeholder_regexp: "Regularni izraz"
           replace_label: "Zamenjava"
           link_label: "Povezava"
           add: "Dodaj"
           success: "Uspeh"
+          html_label: "HTML"
         test:
           no_matches: "Ni zadetkov"
       form_templates:
