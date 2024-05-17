@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
+import { htmlSafe } from "@ember/template";
 import formatDate from "discourse/helpers/format-date";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 
 export default class ThreadPreview extends Component {
   get lastReplyDate() {
@@ -16,7 +18,7 @@ export default class ThreadPreview extends Component {
       </span>
       <span>:</span>
       <span class="c-user-thread__excerpt-text">
-        {{@preview.lastReplyExcerpt}}
+        {{replaceEmoji (htmlSafe @preview.lastReplyExcerpt)}}
       </span>
     </span>
   </template>
