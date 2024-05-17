@@ -8,6 +8,7 @@ import {
   count,
   exists,
 } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 
 acceptance("Admin Sidebar - Sections", function (needs) {
   needs.user({
@@ -210,3 +211,44 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
     );
   });
 });
+
+let _locale;
+acceptance(
+  "Admin Sidebar - Sections - Plugin API - Translation Fallbacks",
+  function (needs) {
+    needs.user({
+      admin: true,
+      groups: [AUTO_GROUPS.admins],
+      use_admin_sidebar: true,
+    });
+
+    needs.hooks.beforeEach(() => {
+      _locale = I18n.locale;
+      I18n.locale = "fr_FOO";
+
+      withPluginApi("1.24.0", (api) => {
+        api.addAdminSidebarSectionLink("root", {
+          name: "test_section_link",
+          label: "admin.plugins.title",
+          route: "adminPlugins.index",
+          icon: "cog",
+        });
+      });
+    });
+
+    needs.hooks.afterEach(() => {
+      I18n.locale = _locale;
+    });
+
+    test("valid links that are yet to be translated can be added to a section with the plugin API because of I18n fallback", async function (assert) {
+      await visit("/admin");
+
+      assert.ok(
+        exists(
+          ".sidebar-section[data-section-name='admin-root'] .sidebar-section-link-wrapper[data-list-item-name=\"admin_additional_root_test_section_link\"]"
+        ),
+        "link is appended to the root section"
+      );
+    });
+  }
+);
