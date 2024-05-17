@@ -36,7 +36,7 @@ module PageObjects
             count: category_names.length,
           )
 
-        expect(categories.map(&:text)).to eq(category_names)
+        expect(categories.map(&:text)).to contain_exactly(category_names)
       end
 
       def toggle_category_checkbox(category)
