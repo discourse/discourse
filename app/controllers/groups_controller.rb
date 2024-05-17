@@ -229,7 +229,10 @@ class GroupsController < ApplicationController
     guardian.ensure_can_see_group_members!(group)
 
     posts =
-      group.mentioned_posts_for(guardian, params.permit(:before_post_id, :category_id)).limit(20)
+      group.mentioned_posts_for(
+        guardian,
+        params.permit(:before_post_id, :before, :category_id),
+      ).limit(20)
 
     response = { posts: serialize_data(posts, GroupPostSerializer) }
 
@@ -249,7 +252,10 @@ class GroupsController < ApplicationController
     guardian.ensure_can_see_group_members!(group)
 
     @posts =
-      group.mentioned_posts_for(guardian, params.permit(:before_post_id, :category_id)).limit(50)
+      group.mentioned_posts_for(
+        guardian,
+        params.permit(:before_post_id, :before, :category_id),
+      ).limit(50)
     @title =
       "#{SiteSetting.title} - #{I18n.t("rss_description.group_mentions", group_name: group.name)}"
     @link = Discourse.base_url
