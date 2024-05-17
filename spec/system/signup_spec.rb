@@ -19,7 +19,7 @@ describe "Signup", type: :system do
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.to).to contain_exactly("johndoe@example.com")
-      activation_link = mail.body.to_s[%r{/u/activate-account/\S+}, 0]
+      activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
 
       visit "/"
       visit activation_link

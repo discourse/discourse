@@ -28,7 +28,7 @@ describe "Login", type: :system do
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.to).to contain_exactly(user.email)
-      activation_link = mail.body.to_s[%r{/u/activate-account/\S+}, 0]
+      activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
       visit activation_link
 
       find("#activate-account-button").click
@@ -47,7 +47,7 @@ describe "Login", type: :system do
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.to).to contain_exactly(user.email)
-      reset_password_link = mail.body.to_s[%r{/u/password-reset/\S+}, 0]
+      reset_password_link = mail.body.to_s[%r{/u/password-reset/\S+}]
       visit reset_password_link
 
       find("#new-account-password").fill_in(with: "newsuperpassword")
@@ -66,7 +66,7 @@ describe "Login", type: :system do
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.to).to contain_exactly(user.email)
-      login_link = mail.body.to_s[%r{/session/email-login/\S+}, 0]
+      login_link = mail.body.to_s[%r{/session/email-login/\S+}]
       visit login_link
 
       find(".email-login-form .btn-primary").click
@@ -129,7 +129,7 @@ describe "Login", type: :system do
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.to).to contain_exactly(user.email)
-      login_link = mail.body.to_s[%r{/session/email-login/\S+}, 0]
+      login_link = mail.body.to_s[%r{/session/email-login/\S+}]
       visit login_link
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
@@ -147,7 +147,7 @@ describe "Login", type: :system do
 
       mail = ActionMailer::Base.deliveries.last
       expect(mail.to).to contain_exactly(user.email)
-      login_link = mail.body.to_s[%r{/session/email-login/\S+}, 0]
+      login_link = mail.body.to_s[%r{/session/email-login/\S+}]
       visit login_link
 
       find(".toggle-second-factor-method").click
