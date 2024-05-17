@@ -27,7 +27,7 @@ describe "Social authentication", type: :system do
       expect(signup_modal).to have_no_password_input
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_email
-      signup_modal.confirm_signup
+      signup_modal.click_create_account
     end
   end
 
@@ -45,7 +45,7 @@ describe "Social authentication", type: :system do
       expect(signup_modal).to have_no_password_input
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_email
-      signup_modal.confirm_signup
+      signup_modal.click_create_account
     end
   end
 
@@ -64,7 +64,7 @@ describe "Social authentication", type: :system do
       expect(signup_modal).to have_no_password_input
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_email
-      signup_modal.confirm_signup
+      signup_modal.click_create_account
     end
   end
 
@@ -83,7 +83,7 @@ describe "Social authentication", type: :system do
       signup_modal.fill_email(OmniauthHelpers::EMAIL)
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_email
-      signup_modal.confirm_signup
+      signup_modal.click_create_account
     end
   end
 
@@ -101,7 +101,7 @@ describe "Social authentication", type: :system do
       expect(signup_modal).to have_no_password_input
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_email
-      signup_modal.confirm_signup
+      signup_modal.click_create_account
     end
   end
 
@@ -123,7 +123,7 @@ describe "Social authentication", type: :system do
       expect(signup_modal).to have_no_password_input
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_email
-      signup_modal.confirm_signup
+      signup_modal.click_create_account
     end
   end
 end

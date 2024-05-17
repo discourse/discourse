@@ -23,7 +23,7 @@ module PageObjects
         find("#login-link").click
       end
 
-      def confirm_signup
+      def click_create_account
         find(".modal.create-account .btn-primary").click
       end
 
@@ -66,14 +66,6 @@ module PageObjects
       def has_valid_password?
         find(".create-account__password").has_css?("#password-validation.good")
       end
-
-      # def has_email?(value)
-      #   find("#new-account-email").value == value
-      # end
-
-      # def has_username?(value)
-      #   find("#new-account-username").value == value
-      # end
 
       def select_facebook
         find(".btn-social.facebook").click

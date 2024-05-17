@@ -23,7 +23,7 @@ module PageObjects
         find("#new-account-link").click
       end
 
-      def confirm_login
+      def click_login
         find("#login-button").click
       end
 
@@ -47,7 +47,7 @@ module PageObjects
         if (username.present? && password.present?)
           fill_username(username)
           fill_password(password)
-          confirm_login
+          click_login
         end
       end
 

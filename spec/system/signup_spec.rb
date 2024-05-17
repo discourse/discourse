@@ -15,7 +15,7 @@ describe "Signup", type: :system do
       expect(signup_modal).to have_valid_email
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_password
-      signup_modal.confirm_signup
+      signup_modal.click_create_account
 
       wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
 
@@ -44,7 +44,7 @@ describe "Signup", type: :system do
         expect(signup_modal).to have_valid_username
         expect(signup_modal).to have_valid_password
 
-        signup_modal.confirm_signup
+        signup_modal.click_create_account
         expect(page).to have_css(".account-created")
       end
 
@@ -58,7 +58,7 @@ describe "Signup", type: :system do
         expect(signup_modal).to have_valid_username
         expect(signup_modal).to have_valid_password
 
-        signup_modal.confirm_signup
+        signup_modal.click_create_account
         expect(signup_modal).to have_content(I18n.t("login.wrong_invite_code"))
         expect(signup_modal).to have_no_css(".account-created")
       end
@@ -78,13 +78,13 @@ describe "Signup", type: :system do
         expect(signup_modal).to have_valid_email
         expect(signup_modal).to have_valid_username
         expect(signup_modal).to have_valid_password
-        signup_modal.confirm_signup
+        signup_modal.click_create_account
 
         visit "/"
         login_modal.open
         login_modal.fill_username("john")
         login_modal.fill_password("supersecurepassword")
-        login_modal.confirm_login
+        login_modal.click_login
         expect(login_modal).to have_content(I18n.t("login.not_approved"))
 
         wait_for(timeout: 5) { User.find_by(username: "john") != nil }
@@ -92,7 +92,7 @@ describe "Signup", type: :system do
         user.update!(approved: true)
         EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
-        login_modal.confirm_login
+        login_modal.click_login
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
 
@@ -104,7 +104,7 @@ describe "Signup", type: :system do
         expect(signup_modal).to have_valid_email
         expect(signup_modal).to have_valid_username
         expect(signup_modal).to have_valid_password
-        signup_modal.confirm_signup
+        signup_modal.click_create_account
 
         wait_for(timeout: 5) { User.find_by(username: "john") != nil }
         user = User.find_by(username: "john")
@@ -113,7 +113,7 @@ describe "Signup", type: :system do
         login_modal.open
         login_modal.fill_username("john")
         login_modal.fill_password("supersecurepassword")
-        login_modal.confirm_login
+        login_modal.click_login
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
     end

@@ -13,7 +13,7 @@ describe "Login", type: :system do
       login_modal.open
       login_modal.fill_username("john")
       login_modal.fill_password("supersecurepassword")
-      login_modal.confirm_login
+      login_modal.click_login
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
@@ -23,7 +23,7 @@ describe "Login", type: :system do
       login_modal.open
       login_modal.fill_username("john")
       login_modal.fill_password("supersecurepassword")
-      login_modal.confirm_login
+      login_modal.click_login
       find(".activation-controls button.resend").click
 
       wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
@@ -97,7 +97,7 @@ describe "Login", type: :system do
         login_modal.open
         login_modal.fill_username("jane")
         login_modal.fill_password("supersecurepassword")
-        login_modal.confirm_login
+        login_modal.click_login
         expect(page).to have_css(".header-dropdown-toggle.current-user")
         expect(page).to have_content(I18n.t("js.user.second_factor.enforced_notice"))
       end
@@ -107,12 +107,12 @@ describe "Login", type: :system do
       login_modal.open
       login_modal.fill_username("john")
       login_modal.fill_password("supersecurepassword")
-      login_modal.confirm_login
+      login_modal.click_login
       expect(page).to have_css(".login-modal-body.second-factor")
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
       find("#login-second-factor").fill_in(with: totp)
-      login_modal.confirm_login
+      login_modal.click_login
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
@@ -120,12 +120,12 @@ describe "Login", type: :system do
       login_modal.open
       login_modal.fill_username("john")
       login_modal.fill_password("supersecurepassword")
-      login_modal.confirm_login
+      login_modal.click_login
       expect(page).to have_css(".login-modal-body.second-factor")
 
       find(".toggle-second-factor-method").click
       find(".second-factor-token-input").fill_in(with: "iAmValidBackupCode")
-      login_modal.confirm_login
+      login_modal.click_login
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
