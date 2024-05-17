@@ -7,7 +7,7 @@ RSpec.describe ProblemCheckTracker do
     let(:record) { described_class.new(identifier: "twitter_login") }
 
     it { expect(record).to validate_presence_of(:identifier) }
-    it { expect(record).to validate_uniqueness_of(:identifier) }
+    it { expect(record).to validate_uniqueness_of(:identifier).scoped_to(:target) }
 
     it { expect(record).to validate_numericality_of(:blips).is_greater_than_or_equal_to(0) }
   end
@@ -92,7 +92,12 @@ RSpec.describe ProblemCheckTracker do
 
   describe "#problem!" do
     let(:problem_tracker) do
-      Fabricate(:problem_check_tracker, identifier: "twitter_login", **original_attributes)
+      Fabricate(
+        :problem_check_tracker,
+        identifier: "twitter_login",
+        target: "foo",
+        **original_attributes,
+      )
     end
 
     let(:original_attributes) do
@@ -123,6 +128,41 @@ RSpec.describe ProblemCheckTracker do
         expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.to change {
           AdminNotice.problem.count
         }.by(1)
+      end
+    end
+
+    context "when there's an alarm sounding for multi-target trackers" do
+      let(:blips) { 1 }
+
+      before do
+        Fabricate(
+          :admin_notice,
+          subject: "problem",
+          identifier: "twitter_login",
+          details: {
+            target: target,
+          },
+        )
+      end
+
+      context "when the alarm is for a different target" do
+        let(:target) { "bar" }
+
+        it "sounds the alarm" do
+          expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.to change {
+            AdminNotice.problem.count
+          }.by(1)
+        end
+      end
+
+      context "when the alarm is for a the same target" do
+        let(:target) { "foo" }
+
+        it "does not duplicate the alarm" do
+          expect { problem_tracker.problem!(next_run_at: 24.hours.from_now) }.not_to change {
+            AdminNotice.problem.count
+          }
+        end
       end
     end
 

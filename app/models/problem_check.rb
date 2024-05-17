@@ -141,12 +141,16 @@ class ProblemCheck
     next_run_at = perform_every&.from_now
 
     if problems.empty?
-      tracker.no_problem!(next_run_at:)
+      targets.each { |t| tracker(t).no_problem!(next_run_at:) }
     else
-      tracker.problem!(
-        next_run_at:,
-        details: translation_data.merge(base_path: Discourse.base_path),
-      )
+      problems
+        .uniq(&:target)
+        .each do |problem|
+          tracker(problem.target).problem!(
+            next_run_at:,
+            details: translation_data.merge(problem.details).merge(base_path: Discourse.base_path),
+          )
+        end
     end
 
     problems
@@ -154,8 +158,12 @@ class ProblemCheck
 
   private
 
-  def tracker
-    ProblemCheckTracker[identifier]
+  def tracker(target = nil)
+    ProblemCheckTracker[identifier, target]
+  end
+
+  def targets
+    [nil]
   end
 
   def problem(override_key: nil, override_data: {})

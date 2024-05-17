@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class ProblemCheckTracker < ActiveRecord::Base
-  validates :identifier, presence: true, uniqueness: true
+  validates :identifier, presence: true, uniqueness: { scope: :target }
   validates :blips, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   scope :failing, -> { where("last_problem_at = last_run_at") }
   scope :passing, -> { where("last_success_at = last_run_at") }
 
-  def self.[](identifier)
-    find_or_create_by(identifier:)
+  def self.[](identifier, target = nil)
+    find_or_create_by(identifier:, target:)
   end
 
   def ready_to_run?
@@ -50,14 +50,22 @@ class ProblemCheckTracker < ActiveRecord::Base
   end
 
   def sound_the_alarm
-    AdminNotice
-      .problem
-      .create_with(priority: check.priority, details:)
-      .find_or_create_by(identifier:)
+    admin_notice.create_with(
+      priority: check.priority,
+      details: details.merge(target:),
+    ).find_or_create_by(identifier:)
   end
 
   def silence_the_alarm
-    AdminNotice.problem.where(identifier:).delete_all
+    admin_notice.where(identifier:).delete_all
+  end
+
+  def admin_notice
+    if target.present?
+      AdminNotice.problem.where("details->>'target' = ?", target)
+    else
+      AdminNotice.problem.where("(details->>'target') IS NULL")
+    end
   end
 end
 
@@ -73,8 +81,9 @@ end
 #  last_success_at :datetime
 #  last_problem_at :datetime
 #  details         :json
+#  target          :string
 #
 # Indexes
 #
-#  index_problem_check_trackers_on_identifier  (identifier) UNIQUE
+#  index_problem_check_trackers_on_identifier_and_target  (identifier,target) UNIQUE
 #
