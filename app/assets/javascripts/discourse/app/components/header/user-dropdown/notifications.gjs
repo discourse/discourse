@@ -16,7 +16,7 @@ export default class Notifications extends Component {
   @service currentUser;
   @service siteSettings;
 
-  avatarSize = "medium";
+  #defaultAvatarSize = "medium";
 
   get avatar() {
     const avatarAttrs = addExtraUserClasses(this.currentUser, {});
@@ -30,6 +30,10 @@ export default class Notifications extends Component {
         ...avatarAttrs,
       })
     );
+  }
+
+  get avatarSize() {
+    return this.#defaultAvatarSize;
   }
 
   get _shouldHighlightAvatar() {
