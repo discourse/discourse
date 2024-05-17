@@ -12,9 +12,7 @@ describe "Signup", type: :system do
       signup_modal.fill_email("johndoe@example.com")
       signup_modal.fill_username("john")
       signup_modal.fill_password("supersecurepassword")
-      expect(signup_modal).to have_valid_email
-      expect(signup_modal).to have_valid_username
-      expect(signup_modal).to have_valid_password
+      expect(signup_modal).to have_valid_fields
       signup_modal.click_create_account
 
       wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
@@ -40,9 +38,7 @@ describe "Signup", type: :system do
         signup_modal.fill_username("john")
         signup_modal.fill_password("supersecurepassword")
         signup_modal.fill_code("cupcake")
-        expect(signup_modal).to have_valid_email
-        expect(signup_modal).to have_valid_username
-        expect(signup_modal).to have_valid_password
+        expect(signup_modal).to have_valid_fields
 
         signup_modal.click_create_account
         expect(page).to have_css(".account-created")
@@ -54,9 +50,7 @@ describe "Signup", type: :system do
         signup_modal.fill_username("john")
         signup_modal.fill_password("supersecurepassword")
         signup_modal.fill_code("pudding")
-        expect(signup_modal).to have_valid_email
-        expect(signup_modal).to have_valid_username
-        expect(signup_modal).to have_valid_password
+        expect(signup_modal).to have_valid_fields
 
         signup_modal.click_create_account
         expect(signup_modal).to have_content(I18n.t("login.wrong_invite_code"))
@@ -75,9 +69,7 @@ describe "Signup", type: :system do
         signup_modal.fill_email("johndoe@example.com")
         signup_modal.fill_username("john")
         signup_modal.fill_password("supersecurepassword")
-        expect(signup_modal).to have_valid_email
-        expect(signup_modal).to have_valid_username
-        expect(signup_modal).to have_valid_password
+        expect(signup_modal).to have_valid_fields
         signup_modal.click_create_account
 
         visit "/"
@@ -101,9 +93,7 @@ describe "Signup", type: :system do
         signup_modal.fill_email("johndoe@awesomeemail.com")
         signup_modal.fill_username("john")
         signup_modal.fill_password("supersecurepassword")
-        expect(signup_modal).to have_valid_email
-        expect(signup_modal).to have_valid_username
-        expect(signup_modal).to have_valid_password
+        expect(signup_modal).to have_valid_fields
         signup_modal.click_create_account
 
         wait_for(timeout: 5) { User.find_by(username: "john") != nil }

@@ -67,6 +67,12 @@ module PageObjects
         find(".create-account__password").has_css?("#password-validation.good")
       end
 
+      def has_valid_fields?
+        has_valid_email?
+        has_valid_username?
+        has_valid_password?
+      end
+
       def select_facebook
         find(".btn-social.facebook").click
       end

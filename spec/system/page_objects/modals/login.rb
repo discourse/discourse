@@ -43,12 +43,9 @@ module PageObjects
         find("#login-account-password").fill_in(with: password)
       end
 
-      def login(username: nil, password: nil)
-        if (username.present? && password.present?)
-          fill_username(username)
-          fill_password(password)
-          click_login
-        end
+      def fill(username: nil, password: nil)
+        fill_username(username) if username
+        fill_password(password) if password
       end
 
       def select_facebook

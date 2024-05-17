@@ -11,8 +11,7 @@ describe "Login", type: :system do
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
       login_modal.open
-      login_modal.fill_username("john")
-      login_modal.fill_password("supersecurepassword")
+      login_modal.fill(username: "john", password: "supersecurepassword")
       login_modal.click_login
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
@@ -21,8 +20,7 @@ describe "Login", type: :system do
       Jobs.run_immediately!
 
       login_modal.open
-      login_modal.fill_username("john")
-      login_modal.fill_password("supersecurepassword")
+      login_modal.fill(username: "john", password: "supersecurepassword")
       login_modal.click_login
       find(".activation-controls button.resend").click
 
@@ -95,8 +93,7 @@ describe "Login", type: :system do
 
       it "requires to set 2FA after login" do
         login_modal.open
-        login_modal.fill_username("jane")
-        login_modal.fill_password("supersecurepassword")
+        login_modal.fill(username: "jane", password: "supersecurepassword")
         login_modal.click_login
         expect(page).to have_css(".header-dropdown-toggle.current-user")
         expect(page).to have_content(I18n.t("js.user.second_factor.enforced_notice"))
@@ -105,8 +102,7 @@ describe "Login", type: :system do
 
     it "can login with totp" do
       login_modal.open
-      login_modal.fill_username("john")
-      login_modal.fill_password("supersecurepassword")
+      login_modal.fill(username: "john", password: "supersecurepassword")
       login_modal.click_login
       expect(page).to have_css(".login-modal-body.second-factor")
 
@@ -118,8 +114,7 @@ describe "Login", type: :system do
 
     it "can login with backup code" do
       login_modal.open
-      login_modal.fill_username("john")
-      login_modal.fill_password("supersecurepassword")
+      login_modal.fill(username: "john", password: "supersecurepassword")
       login_modal.click_login
       expect(page).to have_css(".login-modal-body.second-factor")
 
