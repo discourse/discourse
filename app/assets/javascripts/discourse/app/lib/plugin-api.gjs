@@ -109,6 +109,7 @@ import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { attachAdditionalPanel } from "discourse/widgets/header";
+import { registerHomeLogoHrefCallback as registerHomeLogoHrefCallbackOnWidget } from "discourse/widgets/home-logo";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
@@ -1986,6 +1987,7 @@ class PluginApi {
    */
   registerHomeLogoHrefCallback(callback) {
     registerHomeLogoHrefCallback(callback);
+    registerHomeLogoHrefCallbackOnWidget(callback); // for compatibility with the legacy header
   }
 
   /**
