@@ -158,7 +158,7 @@ class ProblemCheck
     ProblemCheckTracker[identifier]
   end
 
-  def problem(override_key = nil, override_data = {})
+  def problem(override_key: nil, override_data: {})
     [
       Problem.new(
         message ||
