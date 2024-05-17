@@ -8,14 +8,9 @@ describe "Social authentication", type: :system do
 
   before { OmniAuth.config.test_mode = true }
 
-  after do
-    OmniAuth.config.test_mode = false
-    Rails.application.env_config["omniauth.auth"] = nil
-  end
-
   context "for Facebook" do
     before { SiteSetting.enable_facebook_logins = true }
-    after { OmniAuth.config.mock_auth[:facebook] = nil }
+    after { reset_omniauth_config(:facebook) }
 
     it "works" do
       mock_facebook_auth
@@ -33,7 +28,7 @@ describe "Social authentication", type: :system do
 
   context "for Google" do
     before { SiteSetting.enable_google_oauth2_logins = true }
-    after { OmniAuth.config.mock_auth[:google_oauth2] = nil }
+    after { reset_omniauth_config(:google_oauth2) }
 
     it "works" do
       mock_google_auth
@@ -51,7 +46,7 @@ describe "Social authentication", type: :system do
 
   context "for Github" do
     before { SiteSetting.enable_github_logins = true }
-    after { OmniAuth.config.mock_auth[:github] = nil }
+    after { reset_omniauth_config(:github) }
 
     it "works" do
       mock_github_auth
@@ -70,7 +65,7 @@ describe "Social authentication", type: :system do
 
   context "for Twitter" do
     before { SiteSetting.enable_twitter_logins = true }
-    after { OmniAuth.config.mock_auth[:twitter] = nil }
+    after { reset_omniauth_config(:twitter) }
 
     it "works" do
       mock_twitter_auth
@@ -89,7 +84,7 @@ describe "Social authentication", type: :system do
 
   context "for Discord" do
     before { SiteSetting.enable_discord_logins = true }
-    after { OmniAuth.config.mock_auth[:discord] = nil }
+    after { reset_omniauth_config(:discord) }
 
     it "works" do
       mock_discord_auth
@@ -111,7 +106,7 @@ describe "Social authentication", type: :system do
       SiteSetting.linkedin_oidc_client_secret = "abcde"
       SiteSetting.enable_linkedin_oidc_logins = true
     end
-    after { OmniAuth.config.mock_auth[:linkedin_oidc] = nil }
+    after { reset_omniauth_config(:linkedin_oidc) }
 
     it "works" do
       mock_linkedin_auth

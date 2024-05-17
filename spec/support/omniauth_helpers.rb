@@ -79,4 +79,10 @@ module OmniauthHelpers
 
     Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:linkedin_oidc]
   end
+
+  def reset_omniauth_config(provider)
+    OmniAuth.config.test_mode = false
+    OmniAuth.config.mock_auth[provider] = nil
+    Rails.application.env_config["omniauth.auth"] = nil
+  end
 end
