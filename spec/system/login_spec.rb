@@ -6,6 +6,8 @@ describe "Login", type: :system do
   let(:login_modal) { PageObjects::Modals::Login.new }
   fab!(:user) { Fabricate(:user, username: "john", password: "supersecurepassword") }
 
+  before { Jobs.run_immediately! }
+
   context "with username and password" do
     it "can login" do
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
@@ -17,8 +19,6 @@ describe "Login", type: :system do
     end
 
     it "can login and activate account" do
-      Jobs.run_immediately!
-
       login_modal.open
       login_modal.fill(username: "john", password: "supersecurepassword")
       login_modal.click_login
@@ -38,8 +38,6 @@ describe "Login", type: :system do
     end
 
     it "can reset password" do
-      Jobs.run_immediately!
-
       login_modal.open
       login_modal.fill_username("john")
       login_modal.forgot_password
@@ -60,8 +58,6 @@ describe "Login", type: :system do
 
   context "with login link" do
     it "can login" do
-      Jobs.run_immediately!
-
       login_modal.open
       login_modal.fill_username("john")
       login_modal.email_login_link
