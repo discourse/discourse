@@ -223,11 +223,12 @@ export default class ChatThread extends Component {
 
     this.messagesManager.clear();
 
-    findArgs.targetMessageId ??=
+    findArgs.target_message_id ??=
+      findArgs.targetMessageId ||
       this.args.targetMessageId ||
       this.args.thread.currentUserMembership?.lastReadMessageId;
 
-    if (!findArgs.targetMessageId) {
+    if (!findArgs.target_message_id) {
       findArgs.direction = FUTURE;
     }
 

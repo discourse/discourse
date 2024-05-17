@@ -8,7 +8,6 @@ id:
   site_settings:
     chat_enabled: "Aktifkan obrolan."
     enable_public_channels: "Aktifkan saluran publik berdasarkan kategori."
-    chat_allowed_groups: "Pengguna dalam grup ini dapat mengobrol. Perhatikan bahwa staf selalu dapat mengakses obrolan."
     chat_channel_retention_days: "Pesan obrolan di kanal reguler akan disimpan selama beberapa hari ini. Setel ke '0' untuk mempertahankan pesan selamanya."
     chat_dm_retention_days: "Pesan obrolan di kanal obrolan pribadi akan dipertahankan selama beberapa hari ini. Setel ke '0' untuk mempertahankan pesan selamanya."
     chat_auto_silence_duration: "Jumlah menit pengguna akan disenyapkan ketika mereka melebihi batas tingkat pembuatan pesan obrolan. Setel ke '0' untuk menonaktifkan senyap otomatis."
@@ -23,7 +22,6 @@ id:
     chat_archive_destination_topic_status: "Status topik tujuan setelah arsip kanal selesai. Ini hanya berlaku bila topik tujuan adalah topik baru, bukan topik yang sudah ada."
     default_emoji_reactions: "Reaksi emoji bawaan untuk pesan obrolan. Tambahkan hingga 5 emoji untuk reaksi cepat."
     direct_message_enabled_groups: "Izinkan pengguna dalam grup ini untuk membuat Obrolan Pribadi pengguna-ke-pengguna. Catatan: staf selalu dapat membuat Obrolan Pribadi, dan pengguna akan dapat membalas Obrolan Pribadi yang dimulai oleh pengguna yang memiliki izin untuk membuatnya."
-    chat_message_flag_allowed_groups: "Pengguna dalam grup ini diizinkan untuk menandai pesan obrolan."
     max_mentions_per_chat_message: "Jumlah maksimum notifikasi @nama yang dapat digunakan pengguna dalam pesan obrolan."
     chat_max_direct_message_users: "Pengguna tidak dapat menambahkan lebih dari jumlah pengguna lain saat membuat pesan langsung baru. Setel ke 0 untuk hanya mengizinkan pesan untuk diri sendiri. Staf dibebaskan dari pengaturan ini."
     chat_allow_archiving_channels: "Izinkan staf untuk mengarsipkan pesan ke suatu topik saat menutup kanal."

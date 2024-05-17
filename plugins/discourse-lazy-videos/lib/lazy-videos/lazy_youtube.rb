@@ -30,7 +30,7 @@ class Onebox::Engine::YoutubeOnebox
           data-video-title="#{escaped_title}"
           data-video-start-time="#{escaped_start_time}"
           data-provider-name="youtube">
-          <a href="https://www.youtube.com/watch?v=#{video_id}#{t_param}" target="_blank">
+          <a href="https://www.youtube.com/watch?v=#{video_id}#{t_param}" target="_blank" class="video-thumbnail">
             <img class="youtube-thumbnail"
               src="#{thumbnail_url}"
               title="#{escaped_title}">

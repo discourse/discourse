@@ -4556,6 +4556,7 @@ ko:
           upload_successful: "업로드되었습니다. 단어가 추가되었습니다."
           case_sensitivity_label: "대소문자를 구분합니다"
           case_sensitivity_description: "대/소문자가 일치하는 단어만"
+          html_label: "HTML"
         test:
           button_label: "테스트"
           modal_title: "%{action}: 검열 단어 테스트"

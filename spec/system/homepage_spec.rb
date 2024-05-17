@@ -83,7 +83,7 @@ describe "Homepage", type: :system do
         expect(page).to have_css(".new-home", text: "Hi friends!")
         expect(page).to have_no_css(".list-container")
 
-        find("#sidebar-section-content-community .sidebar-section-link:first-child").click
+        find("#sidebar-section-content-community li:first-child").click
         expect(page).to have_css(".list-container")
 
         find("#site-logo").click

@@ -8,7 +8,8 @@ chat:
   chat_allowed_groups:
     type: group_list
     list_type: compact
-    default: "3|11" # 3: @staff, 11: @trust_level_1
+    default: "1|2|11" # @admins, @moderators, @trust_level_1
+    mandatory_values: "1|2" # @admins, @moderators
     allow_any: false
     refresh: true
   chat_threads_enabled:
@@ -104,7 +105,8 @@ chat:
     refresh: true
     validator: "Chat::DirectMessageEnabledGroupsValidator"
   chat_message_flag_allowed_groups:
-    default: "11" # @trust_level_1
+    default: "1|2|11" # @admins, @moderators, @trust_level_1
+    mandatory_values: "1|2" # @admins, @moderators
     type: group_list
     allow_any: false
     refresh: true

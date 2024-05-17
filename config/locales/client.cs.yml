@@ -5722,6 +5722,7 @@ cs:
           add: "přidat"
           success: "Úspěch"
           upload_successful: "Nahráno úspěšně. Slova byla přidána "
+          html_label: "HTML"
         test:
           no_matches: "Nebyly nalezeny žádné výsledky"
       form_templates:

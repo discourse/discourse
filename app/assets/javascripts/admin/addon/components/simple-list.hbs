@@ -38,7 +38,7 @@
       <ComboBox
         @content={{this.validValues}}
         @value={{this.newValue}}
-        @onChange={{action this.addValue}}
+        @onChange={{this.addValue}}
         @valueProperty={{this.setting.computedValueProperty}}
         @nameProperty={{this.setting.computedNameProperty}}
         @options={{hash castInteger=true allowAny=false}}

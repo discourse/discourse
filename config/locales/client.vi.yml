@@ -4644,6 +4644,7 @@ vi:
           exists: "Đã tồn tại"
           upload: "Thêm từ tệp"
           upload_successful: "Tải lên thành công. Các từ đã được thêm vào."
+          html_label: "HTML"
         test:
           no_matches: "Không tìm thấy"
       form_templates:

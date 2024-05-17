@@ -71,7 +71,7 @@ GEM
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
       rouge (>= 1.0.0)
-    bigdecimal (3.1.7)
+    bigdecimal (3.1.8)
     binding_of_caller (1.0.1)
       debug_inspector (>= 1.2.0)
     bootsnap (1.18.3)
@@ -108,6 +108,7 @@ GEM
     crass (1.0.6)
     css_parser (1.17.1)
       addressable
+    csv (3.3.0)
     date (3.3.4)
     debug_inspector (1.2.0)
     diff-lcs (1.5.1)
@@ -121,6 +122,7 @@ GEM
       faker (~> 2.16)
       literate_randomizer
     docile (1.4.0)
+    drb (2.2.1)
     email_reply_trimmer (0.1.13)
     erubi (1.12.0)
     excon (0.110.0)
@@ -157,7 +159,7 @@ GEM
     highline (3.0.1)
     htmlentities (4.3.4)
     http_accept_language (2.1.1)
-    i18n (1.14.4)
+    i18n (1.14.5)
       concurrent-ruby (~> 1.0)
     image_optim (0.31.3)
       exifr (~> 1.2, >= 1.2.2)
@@ -224,7 +226,7 @@ GEM
     mini_suffix (0.3.3)
       ffi (~> 1.9)
     minio_runner (0.1.2)
-    minitest (5.22.3)
+    minitest (5.23.0)
     mocha (2.2.0)
       ruby2_keywords (>= 0.0.5)
     msgpack (1.7.2)
@@ -232,9 +234,10 @@ GEM
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
     mustache (1.1.1)
+    mutex_m (0.2.0)
     net-http (0.4.1)
       uri
-    net-imap (0.4.10)
+    net-imap (0.4.11)
       date
       net-protocol
     net-pop (0.1.2)
@@ -243,14 +246,14 @@ GEM
       timeout
     net-smtp (0.5.0)
       net-protocol
-    nio4r (2.7.1)
-    nokogiri (1.16.4-aarch64-linux)
+    nio4r (2.7.3)
+    nokogiri (1.16.5-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.16.4-arm64-darwin)
+    nokogiri (1.16.5-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.4-x86_64-darwin)
+    nokogiri (1.16.5-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.4-x86_64-linux)
+    nokogiri (1.16.5-x86_64-linux)
       racc (~> 1.4)
     oauth (1.1.0)
       oauth-tty (~> 1.0, >= 1.0.1)
@@ -360,10 +363,11 @@ GEM
     redis (4.8.1)
     redis-namespace (1.11.0)
       redis (>= 4)
-    regexp_parser (2.9.0)
+    regexp_parser (2.9.2)
     request_store (1.7.0)
       rack (>= 1.4)
-    rexml (3.2.6)
+    rexml (3.2.8)
+      strscan (>= 3.0.9)
     rinku (2.0.6)
     rotp (6.3.0)
     rouge (4.2.1)
@@ -385,7 +389,7 @@ GEM
     rspec-html-matchers (0.10.0)
       nokogiri (~> 1)
       rspec (>= 3.0.0.a)
-    rspec-mocks (3.13.0)
+    rspec-mocks (3.13.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-rails (6.1.2)
@@ -406,7 +410,7 @@ GEM
       rspec-core (>= 2.14)
     rtlcss (0.2.1)
       mini_racer (>= 0.6.3)
-    rubocop (1.63.4)
+    rubocop (1.63.5)
       json (~> 2.3)
       language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
@@ -446,13 +450,13 @@ GEM
     sanitize (6.1.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    sass-embedded (1.76.0-aarch64-linux-gnu)
+    sass-embedded (1.77.1-aarch64-linux-gnu)
       google-protobuf (>= 3.25, < 5.0)
-    sass-embedded (1.76.0-arm64-darwin)
+    sass-embedded (1.77.1-arm64-darwin)
       google-protobuf (>= 3.25, < 5.0)
-    sass-embedded (1.76.0-x86_64-darwin)
+    sass-embedded (1.77.1-x86_64-darwin)
       google-protobuf (>= 3.25, < 5.0)
-    sass-embedded (1.76.0-x86_64-linux-gnu)
+    sass-embedded (1.77.1-x86_64-linux-gnu)
       google-protobuf (>= 3.25, < 5.0)
     sassc-embedded (1.76.0)
       sass-embedded (~> 1.76)
@@ -494,6 +498,7 @@ GEM
     sqlite3 (1.7.3-x86_64-linux)
     sshkey (3.0.0)
     stackprof (0.2.26)
+    strscan (3.1.0)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
@@ -528,7 +533,7 @@ GEM
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
     yard (0.9.36)
-    zeitwerk (2.6.13)
+    zeitwerk (2.6.14)
 
 PLATFORMS
   aarch64-linux
@@ -568,11 +573,13 @@ DEPENDENCIES
   cose
   cppjieba_rb
   css_parser
+  csv
   diffy
   digest
   discourse-fonts
   discourse-seed-fu
   discourse_dev_assets
+  drb
   email_reply_trimmer
   excon
   execjs
@@ -611,6 +618,7 @@ DEPENDENCIES
   mocha
   multi_json
   mustache
+  mutex_m
   net-http
   net-imap
   net-pop

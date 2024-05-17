@@ -913,7 +913,6 @@ lt:
       title: "Nario aplankymai"
       xaxis: "Diena"
       yaxis: "Apsilankymai"
-      description: "Visų vartotojų apsilankymų skaičius."
     signups:
       title: "Registracijos"
       xaxis: "Diena"
@@ -1141,7 +1140,6 @@ lt:
       title: "Vartotojo apsilankymai (mobili)"
       xaxis: "Diena"
       yaxis: "Apsilankymai"
-      description: "Unikalių naudotojų, kurie apsilankė naudodami mobilųjį įrenginį, skaičius."
     web_crawlers:
       labels:
         page_views: "Puslapio peržiūros"

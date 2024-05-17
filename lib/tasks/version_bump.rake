@@ -103,13 +103,25 @@ end
 def make_pr(base:, branch:, title:)
   params = { expand: 1, title: title, body: <<~MD }
       > :warning: This PR should not be merged via the GitHub web interface
-      > 
+      >
       > It should only be merged (via fast-forward) using the associated `bin/rake version_bump:*` task.
     MD
 
   if !test_mode?
+    open_command =
+      case RbConfig::CONFIG["host_os"]
+      when /darwin|mac os/
+        "open"
+      when /linux|solaris|bsd/
+        "xdg-open"
+      when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+        "start"
+      else
+        raise "Unsupported OS"
+      end
+
     system(
-      "open",
+      open_command,
       "https://github.com/discourse/discourse/compare/#{base}...#{branch}?#{params.to_query}",
       exception: true,
     )

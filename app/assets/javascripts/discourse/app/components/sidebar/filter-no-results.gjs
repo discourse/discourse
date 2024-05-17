@@ -5,7 +5,7 @@ import i18n from "discourse-common/helpers/i18n";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
-export default class FilterNoResulsts extends Component {
+export default class FilterNoResults extends Component {
   @service sidebarState;
 
   /**

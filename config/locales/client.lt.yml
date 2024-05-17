@@ -4490,6 +4490,7 @@ lt:
           exists: "Jau egzistuoja"
           upload: "Pridėti iš failo"
           upload_successful: "Įkėlimas sėkmingas. Žodžiai buvo pridėti."
+          html_label: "HTML"
         test:
           button_label: "Bandymas"
           modal_title: "%{action}: išbandykite žiūrėtus žodžius"

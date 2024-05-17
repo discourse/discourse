@@ -16,8 +16,8 @@ class Topic < ActiveRecord::Base
   EXTERNAL_ID_MAX_LENGTH = 50
 
   self.ignored_columns = [
-    "avg_time", # TODO(2021-01-04): remove
-    "image_url", # TODO(2021-06-01): remove
+    "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    "image_url", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   def_delegator :featured_users, :user_ids, :featured_user_ids

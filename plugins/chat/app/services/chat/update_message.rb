@@ -18,7 +18,8 @@ module Chat
     contract
     model :message
     model :uploads, optional: true
-    step :enforce_system_membership
+    step :enforce_membership
+    model :membership
     policy :can_modify_channel_message
     policy :can_modify_message
     step :clean_message
@@ -49,8 +50,8 @@ module Chat
 
     private
 
-    def enforce_system_membership(guardian:, message:)
-      message.chat_channel.add(guardian.user) if guardian.user.is_system_user?
+    def enforce_membership(guardian:, message:)
+      message.chat_channel.add(guardian.user) if guardian.user.bot?
     end
 
     def fetch_message(contract:)
@@ -69,6 +70,10 @@ module Chat
         ],
         user: :user_status,
       ).find_by(id: contract.message_id)
+    end
+
+    def fetch_membership(guardian:, message:)
+      message.chat_channel.membership_for(guardian.user)
     end
 
     def fetch_uploads(contract:, guardian:)

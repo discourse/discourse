@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import { inject as service } from "@ember/service";
 import { and } from "truth-helpers";
 import DModal from "discourse/components/d-modal";
+import concatClass from "discourse/helpers/concat-class";
 import DFloatBody from "float-kit/components/d-float-body";
 
 export default class DInlineFloat extends Component {
@@ -15,6 +17,10 @@ export default class DInlineFloat extends Component {
           @hideHeader={{true}}
           data-identifier={{@instance.options.identifier}}
           data-content
+          class={{concatClass
+            "fk-d-menu-modal"
+            (concat @instance.options.identifier "-content")
+          }}
         >
           {{#if @instance.options.component}}
             <@instance.options.component
@@ -32,7 +38,7 @@ export default class DInlineFloat extends Component {
           @mainClass={{@mainClass}}
           @innerClass={{@innerClass}}
           @role={{@role}}
-          @portalOutletElement={{@portalOutletElement}}
+          @portalOutletElement={{@instance.portalOutletElement}}
           @inline={{@inline}}
         >
           {{#if @instance.options.component}}

@@ -13,15 +13,20 @@ module Onebox
       html.gsub(/<[^>]+>/, " ").gsub(/\n/, "")
     end
 
+    # Fetches the HTML response body for a URL.
+    #
+    # Note that the size of the response body is capped at `Onebox.options.max_download_kb`. When the limit has been reached,
+    # this method will return the response body that has been downloaded up to the limit.
     def self.fetch_html_doc(url, headers = nil, body_cacher = nil)
       response =
         (
           begin
-            fetch_response(url, headers: headers, body_cacher: body_cacher)
+            fetch_response(url, headers:, body_cacher:, raise_error_when_response_too_large: false)
           rescue StandardError
             nil
           end
         )
+
       doc = Nokogiri.HTML(response)
       uri = Addressable::URI.parse(url)
 
@@ -45,7 +50,12 @@ module Onebox
             response =
               (
                 begin
-                  fetch_response(uri.to_s, headers: headers, body_cacher: body_cacher)
+                  fetch_response(
+                    uri.to_s,
+                    headers:,
+                    body_cacher:,
+                    raise_error_when_response_too_large: false,
+                  )
                 rescue StandardError
                   nil
                 end
@@ -63,7 +73,8 @@ module Onebox
       redirect_limit: 5,
       domain: nil,
       headers: nil,
-      body_cacher: nil
+      body_cacher: nil,
+      raise_error_when_response_too_large: true
     )
       redirect_limit = Onebox.options.redirect_limit if redirect_limit >
         Onebox.options.redirect_limit
@@ -125,7 +136,11 @@ module Onebox
 
           response.read_body do |chunk|
             result.write(chunk)
-            raise DownloadTooLarge.new if result.size > size_bytes
+
+            if result.size > size_bytes
+              raise_error_when_response_too_large ? raise(DownloadTooLarge.new) : break
+            end
+
             raise Timeout::Error.new if (Time.now - start_time) > Onebox.options.timeout
           end
 

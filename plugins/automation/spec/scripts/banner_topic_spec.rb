@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../discourse_automation_helper"
-
 describe "BannerTopic" do
   before { automation.upsert_field!("topic_id", "text", { value: topic.id }) }
 

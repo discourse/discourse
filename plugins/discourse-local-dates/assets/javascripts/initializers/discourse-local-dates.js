@@ -361,7 +361,7 @@ export default {
         },
       ]);
 
-      return tooltip.close();
+      return tooltip.close("local-date");
     }
 
     if (!event?.target?.classList?.contains("discourse-local-date")) {
@@ -370,6 +370,7 @@ export default {
 
     const siteSettings = this.container.lookup("service:site-settings");
     return tooltip.show(event.target, {
+      identifier: "local-date",
       content: htmlSafe(buildHtmlPreview(event.target, siteSettings)),
     });
   },

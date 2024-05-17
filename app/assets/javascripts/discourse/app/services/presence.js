@@ -502,6 +502,10 @@ export default class PresenceService extends Service {
   }
 
   async _updateServer() {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
     this._lastUpdate = new Date();
     this._updateRunning = true;
 

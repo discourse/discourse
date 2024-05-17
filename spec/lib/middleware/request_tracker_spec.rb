@@ -816,4 +816,22 @@ RSpec.describe Middleware::RequestTracker do
       expect(@data[:background_type]).to eq("message-bus-dontchunk")
     end
   end
+
+  describe "error handling" do
+    before do
+      @original_logger = Rails.logger
+      Rails.logger = @fake_logger = FakeLogger.new
+    end
+
+    after { Rails.logger = @original_logger }
+
+    it "logs requests even if they cause exceptions" do
+      app = lambda { |env| raise RateLimiter::LimitExceeded, 1 }
+      tracker = Middleware::RequestTracker.new(app)
+      expect { tracker.call(env) }.to raise_error(RateLimiter::LimitExceeded)
+      CachedCounting.flush
+      expect(ApplicationRequest.stats).to include("http_total_total" => 1)
+      expect(@fake_logger.warnings).to be_empty
+    end
+  end
 end

@@ -4,27 +4,27 @@ class PostValidator < ActiveModel::Validator
   def validate(record)
     presence(record)
 
-    return if record.acting_user.try(:staged?)
-    if record.acting_user.try(:admin?) && Discourse.static_doc_topic_ids.include?(record.topic_id)
-      return
-    end
+    return if record.acting_user&.staged?
+    return if record.acting_user&.admin? && Discourse.static_doc_topic_ids.include?(record.topic_id)
 
     post_body_validator(record)
     max_posts_validator(record)
-    max_mention_validator(record)
-    max_embedded_media_validator(record)
-    max_attachments_validator(record)
-    can_post_links_validator(record)
     unique_post_validator(record)
-    force_edit_last_validator(record)
+
+    # These validators might cook the post or do SQL queries.
+    # So we only run them if the post is otherwise valid.
+    if record.errors.empty?
+      max_mention_validator(record)
+      max_embedded_media_validator(record)
+      max_attachments_validator(record)
+      max_links_validator(record)
+      force_edit_last_validator(record)
+    end
   end
 
   def presence(post)
-    unless options[:skip_topic]
-      post.errors.add(:topic_id, :blank, **options) if post.topic_id.blank?
-    end
-
-    post.errors.add(:user_id, :blank, **options) if post.new_record? && post.user_id.nil?
+    post.errors.add(:topic_id, :blank, **options) if !options[:skip_topic] && post.topic_id.blank?
+    post.errors.add(:user_id, :blank, **options) if post.new_record? && post.user_id.blank?
   end
 
   def post_body_validator(post)
@@ -37,31 +37,40 @@ class PostValidator < ActiveModel::Validator
   def stripped_length(post)
     range =
       if private_message?(post)
-        # private message
         SiteSetting.private_message_post_length
       elsif post.is_first_post? || (post.topic.present? && post.topic.posts_count == 0)
-        # creating/editing first post
         if post.topic&.featured_link&.present?
           (0..SiteSetting.max_post_length)
         else
           SiteSetting.first_post_length
         end
       else
-        # regular post
         SiteSetting.post_length
       end
 
     StrippedLengthValidator.validate(post, :raw, post.raw, range)
   end
 
-  def raw_quality(post)
-    sentinel = TextSentinel.body_sentinel(post.raw, private_message: private_message?(post))
-    post.errors.add(:raw, I18n.t(:is_invalid)) unless sentinel.valid?
+  def max_posts_validator(post)
+    if post.new_record? && post.acting_user&.posted_too_much_in_topic?(post.topic_id)
+      post.errors.add(
+        :base,
+        I18n.t(:too_many_replies, count: SiteSetting.newuser_max_replies_per_topic),
+      )
+    end
   end
 
-  # Ensure maximum amount of mentions in a post
+  def unique_post_validator(post)
+    return if SiteSetting.unique_posts_mins == 0
+    return if post.skip_unique_check
+    return if post.acting_user&.staff?
+    return if post.raw.blank?
+
+    post.errors.add(:raw, I18n.t(:just_posted_that)) if post.matches_recent_post?
+  end
+
   def max_mention_validator(post)
-    return if post.acting_user.try(:staff?)
+    return if post.acting_user&.staff?
 
     if acting_user_is_trusted?(post) || private_message?(post)
       add_error_if_count_exceeded(
@@ -82,19 +91,9 @@ class PostValidator < ActiveModel::Validator
     end
   end
 
-  def max_posts_validator(post)
-    if post.new_record? && post.acting_user.present? &&
-         post.acting_user.posted_too_much_in_topic?(post.topic_id)
-      post.errors.add(
-        :base,
-        I18n.t(:too_many_replies, count: SiteSetting.newuser_max_replies_per_topic),
-      )
-    end
-  end
-
-  # Ensure new users can not put too many media embeds (images, video, audio) in a post
   def max_embedded_media_validator(post)
-    return if post.acting_user.blank? || post.acting_user&.staff?
+    return if post.acting_user.nil?
+    return if post.acting_user.staff?
 
     if !post.acting_user.in_any_groups?(SiteSetting.embedded_media_post_allowed_groups_map)
       add_error_if_count_exceeded(
@@ -115,9 +114,9 @@ class PostValidator < ActiveModel::Validator
     end
   end
 
-  # Ensure new users can not put too many attachments in a post
   def max_attachments_validator(post)
     return if acting_user_is_trusted?(post) || private_message?(post)
+
     add_error_if_count_exceeded(
       post,
       :no_attachments_allowed,
@@ -127,7 +126,7 @@ class PostValidator < ActiveModel::Validator
     )
   end
 
-  def can_post_links_validator(post)
+  def max_links_validator(post)
     if (post.link_count == 0 && !post.has_oneboxes?) || private_message?(post)
       return newuser_links_validator(post)
     end
@@ -140,35 +139,11 @@ class PostValidator < ActiveModel::Validator
     post.errors.add(:base, I18n.t(:links_require_trust))
   end
 
-  # Ensure new users can not put too many links in a post
-  def newuser_links_validator(post)
-    return if acting_user_is_trusted?(post) || private_message?(post)
-    add_error_if_count_exceeded(
-      post,
-      :no_links_allowed,
-      :too_many_links,
-      post.link_count,
-      SiteSetting.newuser_max_links,
-    )
-  end
-
-  # Stop us from posting the same thing too quickly
-  def unique_post_validator(post)
-    return if SiteSetting.unique_posts_mins == 0
-    return if post.skip_unique_check
-    return if post.acting_user.try(:staff?)
-
-    # If the post is empty, default to the validates_presence_of
-    return if post.raw.blank?
-
-    post.errors.add(:raw, I18n.t(:just_posted_that)) if post.matches_recent_post?
-  end
-
   def force_edit_last_validator(post)
-    if SiteSetting.max_consecutive_replies == 0 || post.id || post.acting_user&.staff? ||
-         private_message?(post)
-      return
-    end
+    return if post.id
+    return if private_message?(post)
+    return if post.acting_user&.staff?
+    return if SiteSetting.max_consecutive_replies == 0
 
     topic = post.topic
     return if topic&.ordered_posts&.first&.user == post.user
@@ -207,12 +182,29 @@ class PostValidator < ActiveModel::Validator
 
   private
 
+  def raw_quality(post)
+    return if TextSentinel.body_sentinel(post.raw, private_message: private_message?(post)).valid?
+    post.errors.add(:raw, I18n.t(:is_invalid))
+  end
+
   def acting_user_is_trusted?(post, level = 1)
-    post.acting_user.present? && post.acting_user.has_trust_level?(TrustLevel[level])
+    post.acting_user&.has_trust_level?(TrustLevel[level])
   end
 
   def private_message?(post)
-    post.topic.try(:private_message?) || options[:private_message]
+    post.topic&.private_message? || options[:private_message]
+  end
+
+  def newuser_links_validator(post)
+    return if acting_user_is_trusted?(post) || private_message?(post)
+
+    add_error_if_count_exceeded(
+      post,
+      :no_links_allowed,
+      :too_many_links,
+      post.link_count,
+      SiteSetting.newuser_max_links,
+    )
   end
 
   def add_error_if_count_exceeded(
