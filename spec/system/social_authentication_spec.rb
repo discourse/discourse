@@ -23,6 +23,7 @@ describe "Social authentication", type: :system do
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_email
       signup_modal.click_create_account
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
 
@@ -41,6 +42,7 @@ describe "Social authentication", type: :system do
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_email
       signup_modal.click_create_account
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
 
@@ -55,11 +57,11 @@ describe "Social authentication", type: :system do
       login_modal.open
       login_modal.select_github
       expect(signup_modal).to be_open
-
       expect(signup_modal).to have_no_password_input
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_email
       signup_modal.click_create_account
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
 
@@ -79,6 +81,7 @@ describe "Social authentication", type: :system do
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_email
       signup_modal.click_create_account
+      expect(page).to have_css(".account-created")
     end
   end
 
@@ -97,6 +100,7 @@ describe "Social authentication", type: :system do
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_email
       signup_modal.click_create_account
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
 
@@ -119,6 +123,7 @@ describe "Social authentication", type: :system do
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_email
       signup_modal.click_create_account
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
 end
