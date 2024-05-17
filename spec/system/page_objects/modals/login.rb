@@ -27,12 +27,12 @@ module PageObjects
         find("#login-button").click
       end
 
-      def forgot_password
-        find("#forgot-password-link").click
+      def email_login_link
+        find("#email-login-link").click
       end
 
-      def invite_code
-        find("#inviteCode").click
+      def forgot_password
+        find("#forgot-password-link").click
       end
 
       def fill_username(username)

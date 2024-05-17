@@ -15,7 +15,6 @@ describe "Signup", type: :system do
       expect(signup_modal).to have_valid_email
       expect(signup_modal).to have_valid_username
       expect(signup_modal).to have_valid_password
-
       signup_modal.confirm_signup
 
       wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
@@ -49,7 +48,7 @@ describe "Signup", type: :system do
         expect(page).to have_css(".account-created")
       end
 
-      it "can not signup with invalid code" do
+      it "cannot signup with invalid code" do
         signup_modal.open
         signup_modal.fill_email("johndoe@example.com")
         signup_modal.fill_username("john")
@@ -66,29 +65,96 @@ describe "Signup", type: :system do
     end
 
     context "when user requires aproval" do
-      it "can signup" do
-        # TODO: add test
+      before do
+        SiteSetting.must_approve_users = true
+        SiteSetting.auto_approve_email_domains = "awesomeemail.com"
       end
+
+      it "can signup but cannot login until aproval" do
+        signup_modal.open
+        signup_modal.fill_email("johndoe@example.com")
+        signup_modal.fill_username("john")
+        signup_modal.fill_password("supersecurepassword")
+        expect(signup_modal).to have_valid_email
+        expect(signup_modal).to have_valid_username
+        expect(signup_modal).to have_valid_password
+        signup_modal.confirm_signup
+
+        visit "/"
+        login_modal.open
+        login_modal.fill_username("john")
+        login_modal.fill_password("supersecurepassword")
+        login_modal.confirm_login
+        expect(login_modal).to have_content(I18n.t("login.not_approved"))
+
+        wait_for(timeout: 5) { User.find_by(username: "john") != nil }
+        user = User.find_by(username: "john")
+        user.update!(approved: true)
+        EmailToken.confirm(Fabricate(:email_token, user: user).token)
+
+        login_modal.confirm_login
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+
+      it "can login directly when using an auto aproved email" do
+        signup_modal.open
+        signup_modal.fill_email("johndoe@awesomeemail.com")
+        signup_modal.fill_username("john")
+        signup_modal.fill_password("supersecurepassword")
+        expect(signup_modal).to have_valid_email
+        expect(signup_modal).to have_valid_username
+        expect(signup_modal).to have_valid_password
+        signup_modal.confirm_signup
+
+        wait_for(timeout: 5) { User.find_by(username: "john") != nil }
+        user = User.find_by(username: "john")
+        EmailToken.confirm(Fabricate(:email_token, user: user).token)
+
+        login_modal.open
+        login_modal.fill_username("john")
+        login_modal.fill_password("supersecurepassword")
+        login_modal.confirm_login
+        expect(page).to have_css(".header-dropdown-toggle.current-user")
+      end
+    end
+  end
+
+  context "when the email domain is blocked" do
+    before { SiteSetting.blocked_email_domains = "example.com" }
+
+    it "cannot signup" do
+      signup_modal.open
+      signup_modal.fill_email("johndoe@example.com")
+      signup_modal.fill_username("john")
+      signup_modal.fill_password("supersecurepassword")
+      expect(signup_modal).to have_valid_username
+      expect(signup_modal).to have_valid_password
+      expect(signup_modal).to have_content(I18n.t("user.email.not_allowed"))
     end
   end
 
   context "when site is invite only" do
     before { SiteSetting.invite_only = true }
 
-    it "cannot open signup modal" do
+    it "cannot open the signup modal" do
       signup_modal.open
       expect(signup_modal).to be_closed
       expect(page).to have_no_css(".sign-up-button")
+
       login_modal.open_from_header
       expect(login_modal).to have_no_css("#new-account-link")
     end
 
     it "can signup with invite link" do
-      # TODO: add test
+      invite = Fabricate(:invite, email: "johndoe@example.com")
+      visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
+
+      find("#new-account-password").fill_in(with: "supersecurepassword")
+      find(".username-input").has_css?("#username-validation.good")
+      find(".create-account__password-tip-validation").has_css?("#password-validation.good")
+      find(".invitation-cta__accept").click
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
 end
-
-# auto approve email domains
-# allowed email domains
-# blocked email domains
