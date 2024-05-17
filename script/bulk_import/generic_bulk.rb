@@ -86,6 +86,7 @@ class BulkImport::Generic < BulkImport::Base
 
     import_topic_tags
     import_topic_allowed_users
+    import_topic_allowed_groups
 
     import_likes
     import_votes
@@ -705,6 +706,40 @@ class BulkImport::Generic < BulkImport::Base
     topics.close
 
     puts "  Added #{added} topic_allowed_users records."
+  end
+
+  def import_topic_allowed_groups
+    puts "", "Importing topic_allowed_groups..."
+
+    topics = query(<<~SQL)
+      SELECT
+        t.id,
+        group_ids.value AS group_id
+      FROM topics t, JSON_EACH(t.private_message, '$.group_ids') AS group_ids
+      WHERE t.private_message IS NOT NULL
+      ORDER BY t.id
+    SQL
+
+    added = 0
+    existing_topic_allowed_groups = TopicAllowedGroup.pluck(:topic_id, :group_id).to_set
+
+    create_topic_allowed_groups(topics) do |row|
+      topic_id = topic_id_from_imported_id(row["id"])
+      group_id = group_id_from_imported_id(row["group_id"])
+
+      next unless topic_id && group_id
+      next unless existing_topic_allowed_groups.add?([topic_id, group_id])
+
+      added += 1
+
+      { topic_id: topic_id, group_id: group_id }
+    end
+
+    # TODO: Add support for special group names
+
+    topics.close
+
+    puts "  Added #{added} topic_allowed_groups records."
   end
 
   def import_posts
