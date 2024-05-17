@@ -58,13 +58,13 @@ describe "Signup", type: :system do
       end
     end
 
-    context "when user requires aproval" do
+    context "when user requires approval" do
       before do
         SiteSetting.must_approve_users = true
         SiteSetting.auto_approve_email_domains = "awesomeemail.com"
       end
 
-      it "can signup but cannot login until aproval" do
+      it "can signup but cannot login until approval" do
         signup_modal.open
         signup_modal.fill_email("johndoe@example.com")
         signup_modal.fill_username("john")
@@ -88,7 +88,7 @@ describe "Signup", type: :system do
         expect(page).to have_css(".header-dropdown-toggle.current-user")
       end
 
-      it "can login directly when using an auto aproved email" do
+      it "can login directly when using an auto approved email" do
         signup_modal.open
         signup_modal.fill_email("johndoe@awesomeemail.com")
         signup_modal.fill_username("john")

@@ -84,7 +84,7 @@ describe "Login", type: :system do
       EmailToken.confirm(Fabricate(:email_token, user: other_user).token)
     end
 
-    context "when is required" do
+    context "when it is required" do
       before { SiteSetting.enforce_second_factor = "all" }
 
       it "requires to set 2FA after login" do
