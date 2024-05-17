@@ -136,10 +136,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       this.loadedPage = null;
       this.hasMorePages = false;
     } else {
-      const { categories } = await Category.asyncSearch(filter, {
-        includeAncestors: true,
-        includeUncategorized: false,
-      });
+      const categories = await Category.asyncHierarchicalSearch(filter, {});
 
       this.setFetchedCategories(mode, categories);
 

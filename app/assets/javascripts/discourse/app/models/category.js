@@ -14,6 +14,7 @@ import { MultiCache } from "discourse-common/utils/multi-cache";
 
 const STAFF_GROUP_NAME = "staff";
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
+const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
 
 export default class Category extends RestModel {
   // Sort subcategories directly under parents
@@ -383,6 +384,28 @@ export default class Category extends RestModel {
     }
 
     return data.sortBy("read_restricted");
+  }
+
+  static async asyncHierarchicalSearch(term, opts) {
+    opts ||= {};
+
+    const data = {
+      term,
+      parent_category_id: opts.parentCategoryId,
+      limit: opts.limit,
+      page: opts.page,
+    };
+
+    const result = (CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE[
+      JSON.stringify(data)
+    ] ||= await ajax("/categories/hierarchical_search", {
+      method: "GET",
+      data,
+    }));
+
+    return result["categories"].map((category) =>
+      Site.current().updateCategory(category)
+    );
   }
 
   static async asyncSearch(term, opts) {

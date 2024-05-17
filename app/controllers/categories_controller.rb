@@ -334,6 +334,49 @@ class CategoriesController < ApplicationController
     render_serialized(categories, serializer, root: :categories, scope: guardian)
   end
 
+  def hierarchical_search
+    term = params[:term].to_s.strip
+    page = [1, params[:page].to_i].max
+    parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
+
+    limit =
+      (
+        if params[:limit].present?
+          params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT)
+        else
+          MAX_CATEGORIES_LIMIT
+        end
+      )
+
+    categories =
+      Category
+        .limited_categories_matching(parent_category_id, term)
+        .includes(
+          :uploaded_logo,
+          :uploaded_logo_dark,
+          :uploaded_background,
+          :uploaded_background_dark,
+          :tags,
+          :tag_groups,
+          :form_templates,
+          category_required_tag_groups: :tag_group,
+        )
+        .joins("LEFT JOIN topics t on t.id = categories.topic_id")
+        .select("categories.*, t.slug topic_slug")
+        .limit(limit)
+        .offset((page - 1) * limit)
+
+    if Site.preloaded_category_custom_fields.present?
+      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+    end
+
+    Category.preload_user_fields!(guardian, categories)
+
+    response = { categories: serialize_data(categories, SiteCategorySerializer, scope: guardian) }
+
+    render_json_dump(response)
+  end
+
   def search
     term = params[:term].to_s.strip
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
