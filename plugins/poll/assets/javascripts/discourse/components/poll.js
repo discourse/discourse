@@ -46,23 +46,20 @@ export default class PollComponent extends Component {
   @service dialog;
   @tracked isStaff = this.currentUser && this.currentUser.staff;
   @tracked vote = this.args.attrs.vote || [];
-  @tracked voters = this.args.attrs.poll.voters || 0;
-  @tracked closed = this.args.attrs.isClosed;
   @tracked titleHTML = htmlSafe(this.args.attrs.titleHTML);
   @tracked topicArchived = this.args.attrs.post.get("topic.archived");
   @tracked options = [];
   @tracked poll = this.args.attrs.poll;
-  @tracked staffOnly = this.args.attrs.poll.results === "staff_only";
-  @tracked isIrv = this.args.attrs.poll.type === "irv";
-  @tracked irvOutcome = this.args.attrs.poll.irv_outcome || [];
-  @tracked isMultiple = this.args.attrs.poll.type === "multiple";
-
+  @tracked voters = this.poll.voters || 0;
+  @tracked staffOnly = this.poll.results === "staff_only";
+  @tracked isIrv = this.poll.type === "irv";
+  @tracked irvOutcome = this.poll.irv_outcome || [];
+  @tracked isMultiple = this.poll.type === "multiple";
+  @tracked isNumber = this.poll.type === "number";
   @tracked isMultiVoteType = this.isIrv || this.isMultiple;
-  @tracked isNumber = this.args.attrs.poll.type === "number";
-  @tracked
-  hideResultsDisabled = !this.staffOnly && (this.closed || this.topicArchived);
   @tracked showingResults = false;
   @tracked hasSavedVote = this.args.attrs.hasSavedVote;
+  @tracked status = this.poll.status;
   @tracked
   showResults =
     this.showingResults ||
@@ -72,14 +69,13 @@ export default class PollComponent extends Component {
   post = this.args.attrs.post;
 
   isAutomaticallyClosed = () => {
-    const poll = this.args.attrs.poll;
+    const poll = this.poll;
     return (
       poll.close && moment.utc(poll.close, "YYYY-MM-DD HH:mm:ss Z") <= moment()
     );
   };
 
   irvDropdownContent = [];
-
   showLogin = () => {
     this.register.lookup("route:application").send("showLogin");
   };
@@ -108,7 +104,7 @@ export default class PollComponent extends Component {
       type: "PUT",
       data: {
         post_id: this.args.attrs.post.id,
-        poll_name: this.args.attrs.poll.name,
+        poll_name: this.poll.name,
         options: this.vote,
       },
     })
@@ -127,10 +123,10 @@ export default class PollComponent extends Component {
         const voters = poll.voters;
         this.voters = [Number(voters)][0];
 
-        if (this.args.attrs.poll.results !== "on_close") {
+        if (this.poll.results !== "on_close") {
           this.showResults = true;
         }
-        if (this.args.attrs.poll.results === "staff_only") {
+        if (this.poll.results === "staff_only") {
           if (this.currentUser && this.currentUser.staff) {
             this.showResults = true;
           } else {
@@ -206,7 +202,7 @@ export default class PollComponent extends Component {
   };
   constructor() {
     super(...arguments);
-    this.options = this.args.attrs.poll.options;
+    this.options = this.poll.options;
     this.min = this.args.attrs.min;
     this.max = this.args.attrs.max;
 
@@ -229,6 +225,14 @@ export default class PollComponent extends Component {
       }
     });
   }
+  get closed() {
+    return this.status === "closed" || this.isAutomaticallyClosed();
+  }
+
+  get hideResultsDisabled() {
+    return !this.staffOnly && (this.closed || this.topicArchived);
+  }
+
   @action
   toggleOption(option, rank = 0) {
     if (this.closed) {
@@ -237,7 +241,7 @@ export default class PollComponent extends Component {
     if (!this.currentUser) {
       return this.showLogin();
     }
-    if (!this.checkUserGroups(this.currentUser, this.args.attrs.poll)) {
+    if (!this.checkUserGroups(this.currentUser, this.poll)) {
       return;
     }
 
@@ -336,14 +340,14 @@ export default class PollComponent extends Component {
   }
 
   get resultsWidgetTypeClass() {
-    const type = this.args.attrs.poll.type;
-    return this.isNumber || this.args.attrs.poll.chart_type !== PIE_CHART_TYPE
+    const type = this.poll.type;
+    return this.isNumber || this.poll.chart_type !== PIE_CHART_TYPE
       ? `discourse-poll-${type}-results`
       : "discourse-poll-pie-chart";
   }
 
   get resultsPie() {
-    return this.args.attrs.poll.chart_type === PIE_CHART_TYPE;
+    return this.poll.chart_type === PIE_CHART_TYPE;
   }
 
   get averageRating() {
@@ -467,13 +471,12 @@ export default class PollComponent extends Component {
         })
           .then(() => {
             this.poll.status = status;
-            if (status === "closed") {
-              this.closed = true;
-            } else {
-              this.closed = false;
-            }
-            if (this.poll.results === "on_close") {
-              this.showResults = status === "closed";
+            this.status = status;
+            if (
+              this.poll.results === "on_close" ||
+              this.poll.results === "always"
+            ) {
+              this.showResults = this.status === "closed";
             }
           })
           .catch((error) => {
