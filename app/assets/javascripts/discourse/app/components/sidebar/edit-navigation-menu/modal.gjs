@@ -6,12 +6,13 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
-import dIcon from "discourse-common/helpers/d-icon";
+import withEventValue from "discourse/helpers/with-event-value";
+import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
-export default class extends Component {
+export default class SidebarEditNavigationMenuModal extends Component {
   @tracked filter = "";
   @tracked filterDropdownValue = "all";
 
@@ -33,11 +34,6 @@ export default class extends Component {
       ),
     },
   ];
-
-  @action
-  onFilterInput(input) {
-    this.args.onFilterInput(input.target.value);
-  }
 
   @action
   onFilterDropdownChange(value) {
@@ -79,18 +75,18 @@ export default class extends Component {
       <:belowHeader>
         <div class="sidebar__edit-navigation-menu__filter">
           <div class="sidebar__edit-navigation-menu__filter-input">
-            {{dIcon
+            {{icon
               "search"
               class="sidebar__edit-navigation-menu__filter-input-icon"
             }}
 
             <Input
-              class="sidebar__edit-navigation-menu__filter-input-field"
-              placeholder={{@inputFilterPlaceholder}}
+              {{on "input" (withEventValue @onFilterInput)}}
               @type="text"
               @value={{this.filter}}
-              {{on "input" this.onFilterInput}}
+              placeholder={{@inputFilterPlaceholder}}
               autofocus="true"
+              class="sidebar__edit-navigation-menu__filter-input-field"
             />
           </div>
 
@@ -113,18 +109,18 @@ export default class extends Component {
       <:footer>
         <div class="sidebar__edit-navigation-menu__footer">
           <DButton
+            @action={{@save}}
             @label="save"
             @disabled={{@saving}}
-            @action={{@save}}
             class="btn-primary sidebar__edit-navigation-menu__save-button"
           />
 
           {{#if @showResetDefaultsButton}}
             <DButton
-              @icon="undo"
-              @label="sidebar.edit_navigation_modal_form.reset_to_defaults"
-              @disabled={{@saving}}
               @action={{@resetToDefaults}}
+              @label="sidebar.edit_navigation_modal_form.reset_to_defaults"
+              @icon="undo"
+              @disabled={{@saving}}
               class="btn-flat btn-text sidebar__edit-navigation-menu__reset-defaults-button"
             />
           {{/if}}

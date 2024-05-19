@@ -157,6 +157,7 @@ export default ComboBoxComponent.extend({
       if (this.editingCategory) {
         return this.noCategoriesLabel;
       }
+
       if (this.selectKit.options.subCategory) {
         return I18n.t("categories.all_subcategories", {
           categoryName: this.parentCategoryName,
@@ -225,17 +226,21 @@ export default ComboBoxComponent.extend({
           ? this.selectKit.options.parentCategory
           : Category.findById(parseInt(categoryId, 10));
 
-      const route = this.editingCategory
-        ? getEditCategoryUrl(
-            category,
-            categoryId !== NO_CATEGORIES_ID,
-            this.editingCategoryTab
-          )
-        : getCategoryAndTagUrl(
-            category,
-            categoryId !== NO_CATEGORIES_ID,
-            this.tagId
-          );
+      let route;
+      if (this.editingCategoryTab) {
+        // rendered on category page
+        route = getEditCategoryUrl(
+          category,
+          categoryId !== NO_CATEGORIES_ID,
+          this.editingCategoryTab
+        );
+      } else {
+        route = getCategoryAndTagUrl(
+          category,
+          categoryId !== NO_CATEGORIES_ID,
+          this.tagId
+        );
+      }
 
       DiscourseURL.routeToUrl(route);
     },

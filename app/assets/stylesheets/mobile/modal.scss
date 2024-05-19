@@ -34,7 +34,6 @@ html:not(.keyboard-visible.mobile-view) {
     width: 100%;
     max-width: 100%;
     max-height: calc(var(--composer-vh, var(--1dvh)) * 85);
-    will-change: auto;
   }
 
   &__header {

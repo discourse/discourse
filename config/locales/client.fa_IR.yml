@@ -4276,6 +4276,7 @@ fa_IR:
           success: "موفقیت"
           upload_successful: "بارگذاری با موفقیت انجام شد. واژه‌ها اضافه شدند."
           case_sensitivity_label: "به حروف بزرگ و کوچک حساس است"
+          html_label: "HTML"
         test:
           no_matches: "چیزی یافت نشد."
       form_templates:

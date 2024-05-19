@@ -5572,6 +5572,7 @@ es:
           upload_successful: "Subida completada. Las palabras se han añadido."
           case_sensitivity_label: "Distingue entre mayúsculas y minúsculas"
           case_sensitivity_description: "Solo palabras con caracteres coincidentes"
+          html_label: "HTML"
         test:
           button_label: "Prueba"
           modal_title: "%{action}: Prueba de palabras vigiladas"

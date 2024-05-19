@@ -13,7 +13,7 @@
     "discourse-widget-hbs": "1.0.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
-    "ember-template-imports": "^4.1.0",
+    "ember-template-imports": "^4.1.1",
     "ember-this-fallback": "^0.4.0"
   },
   "devDependencies": {

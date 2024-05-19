@@ -80,6 +80,10 @@ export default class Info extends Component {
     <div
       class={{concatClass (if this.twoRows "two-rows") "extra-info-wrapper"}}
     >
+      <PluginOutlet
+        @name="header-topic-info__before"
+        @outletArgs={{hash topic=@topic}}
+      />
       <div class={{concatClass (if this.twoRows "two-rows") "extra-info"}}>
         <div class="title-wrapper">
           <h1 class="header-title">
@@ -178,6 +182,10 @@ export default class Info extends Component {
           {{/if}}
         </div>
       </div>
+      <PluginOutlet
+        @name="header-topic-info__after"
+        @outletArgs={{hash topic=@topic}}
+      />
     </div>
   </template>
 }

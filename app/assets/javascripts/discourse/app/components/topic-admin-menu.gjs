@@ -88,9 +88,9 @@ export default class TopicAdminMenu extends Component {
           <DMenu
             @identifier="topic-admin-menu"
             @onRegisterApi={{this.onRegisterApi}}
-            @triggerClass="toggle-admin-menu"
             @modalForMobile={{true}}
             @autofocus={{true}}
+            @triggerClass="btn-default btn-icon toggle-admin-menu"
           >
             <:trigger>
               {{icon "wrench"}}

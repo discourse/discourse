@@ -5693,6 +5693,7 @@ hu:
           upload_successful: "A feltöltés sikeres, egy Word-öt hozzáadtunk."
           case_sensitivity_label: "Nagy- és kisbetű érzékeny"
           case_sensitivity_description: "Csak a megfelelő kis- és nagybetűkkel rendelkező szavak"
+          html_label: "HTML"
         test:
           button_label: "Teszt"
           modal_title: "%{action}: Figyelt szavak tesztelése"

@@ -584,9 +584,9 @@ module SiteSettingExtension
       end
     end
 
-    # Same logic as above for group_list settings, with the caveat that normal
+    # Same logic as above for other list type settings, with the caveat that normal
     # list settings are not necessarily integers, so we just want to handle the splitting.
-    if type_supervisor.get_type(name) == :list
+    if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))
       list_type = type_supervisor.get_list_type(name)
 
       if %w[simple compact].include?(list_type) || list_type.nil?

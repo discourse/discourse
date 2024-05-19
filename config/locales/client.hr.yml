@@ -5475,6 +5475,7 @@ hr:
           upload_successful: "Prijenos uspješno. Riječi su dodane."
           case_sensitivity_label: "Je li osjetljiv na velika i mala slova"
           case_sensitivity_description: "Samo riječi s odgovarajućim malim slovima"
+          html_label: "HTML"
         test:
           button_label: "Test"
           modal_title: "%{action}: Testirajte gledane riječi"

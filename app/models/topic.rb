@@ -185,7 +185,7 @@ class Topic < ActiveRecord::Base
   rate_limit :limit_private_messages_per_day
 
   validates :title,
-            if: Proc.new { |t| t.new_record? || t.title_changed? },
+            if: Proc.new { |t| t.new_record? || t.title_changed? || t.category_id_changed? },
             presence: true,
             topic_title_length: true,
             censored_words: true,
@@ -855,14 +855,22 @@ class Topic < ActiveRecord::Base
         FROM posts
         WHERE deleted_at IS NULL AND post_type <> 4
         GROUP BY topic_id
-      )
+      ),
+      Z as (
+        SELECT topic_id,
+               SUM(COALESCE(posts.word_count, 0)) word_count
+        FROM posts
+        WHERE deleted_at IS NULL AND post_type <> 4
+        GROUP BY topic_id
+      )       
       UPDATE topics
       SET
         highest_staff_post_number = X.highest_post_number,
         highest_post_number = Y.highest_post_number,
         last_posted_at = Y.last_posted_at,
-        posts_count = Y.posts_count
-      FROM X, Y
+        posts_count = Y.posts_count,
+        word_count = Z.word_count
+      FROM X, Y, Z
       WHERE
         topics.archetype <> 'private_message' AND
         X.topic_id = topics.id AND
@@ -870,7 +878,8 @@ class Topic < ActiveRecord::Base
           topics.highest_staff_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
-          topics.posts_count <> Y.posts_count
+          topics.posts_count <> Y.posts_count OR
+          topics.word_count <> Z.word_count
         )
     SQL
 
@@ -891,14 +900,22 @@ class Topic < ActiveRecord::Base
         FROM posts
         WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
         GROUP BY topic_id
+      ),
+      Z as (
+        SELECT topic_id,
+                SUM(COALESCE(posts.word_count, 0)) word_count
+        FROM posts
+        WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
+        GROUP BY topic_id
       )
       UPDATE topics
       SET
         highest_staff_post_number = X.highest_post_number,
         highest_post_number = Y.highest_post_number,
         last_posted_at = Y.last_posted_at,
-        posts_count = Y.posts_count
-      FROM X, Y
+        posts_count = Y.posts_count,
+        word_count = Z.word_count
+      FROM X, Y, Z
       WHERE
         topics.archetype = 'private_message' AND
         X.topic_id = topics.id AND
@@ -906,7 +923,8 @@ class Topic < ActiveRecord::Base
           topics.highest_staff_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
-          topics.posts_count <> Y.posts_count
+          topics.posts_count <> Y.posts_count OR
+          topics.word_count <> Z.word_count
         )
     SQL
   end
@@ -938,6 +956,13 @@ class Topic < ActiveRecord::Base
           SELECT count(*) FROM posts
           WHERE deleted_at IS NULL AND
                 topic_id = :topic_id AND
+                post_type <> 4
+                #{post_type}
+        ),
+        word_count = (
+          SELECT SUM(COALESCE(posts.word_count, 0)) FROM posts
+          WHERE topic_id = :topic_id AND
+                deleted_at IS NULL AND
                 post_type <> 4
                 #{post_type}
         ),
@@ -1817,18 +1842,11 @@ class Topic < ActiveRecord::Base
   end
 
   def convert_to_public_topic(user, category_id: nil)
-    public_topic = TopicConverter.new(self, user).convert_to_public_topic(category_id)
-    Tag.update_counters(public_topic.tags, { public_topic_count: 1 }) if !category.read_restricted
-    add_small_action(user, "public_topic") if public_topic
-    public_topic
+    TopicConverter.new(self, user).convert_to_public_topic(category_id)
   end
 
   def convert_to_private_message(user)
-    read_restricted = category.read_restricted
-    private_topic = TopicConverter.new(self, user).convert_to_private_message
-    Tag.update_counters(private_topic.tags, { public_topic_count: -1 }) if !read_restricted
-    add_small_action(user, "private_topic") if private_topic
-    private_topic
+    TopicConverter.new(self, user).convert_to_private_message
   end
 
   def update_excerpt(excerpt)

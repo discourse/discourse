@@ -2,12 +2,12 @@ import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
+import UserStatusMessage from "discourse/components/user-status-message";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { avatarUrl } from "discourse-common/lib/avatar-utils";
-import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
@@ -39,7 +39,7 @@ export default {
             switchButtonIcon = "d-chat";
 
             get switchButtonDefaultUrl() {
-              return getURL(chatStateManager.lastKnownChatURL || "/chat");
+              return chatStateManager.lastKnownChatURL || "/chat";
             }
           }
       );
@@ -315,7 +315,7 @@ export default {
 
             get contentComponent() {
               if (this.oneOnOneMessage) {
-                return "user-status-message";
+                return UserStatusMessage;
               }
             }
 

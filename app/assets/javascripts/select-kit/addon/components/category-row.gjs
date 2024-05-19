@@ -225,7 +225,6 @@ export default class CategoryRow extends Component {
         event.preventDefault();
       } else if (event.key === "Enter") {
         event.stopImmediatePropagation();
-
         this.args.selectKit.select(
           this.args.selectKit.highlighted.id,
           this.args.selectKit.highlighted

@@ -13,7 +13,7 @@ module Chat
 
     def can_chat?
       return false if anonymous?
-      is_staff? || @user.bot? || @user.in_any_groups?(Chat.allowed_group_ids)
+      @user.bot? || @user.in_any_groups?(Chat.allowed_group_ids)
     end
 
     def can_direct_message?
@@ -140,8 +140,6 @@ module Chat
 
     def can_flag_chat_messages?
       return false if @user.silenced?
-      return true if is_staff?
-
       @user.in_any_groups?(SiteSetting.chat_message_flag_allowed_groups_map)
     end
 

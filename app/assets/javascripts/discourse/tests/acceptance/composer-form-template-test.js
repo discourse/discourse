@@ -20,6 +20,11 @@ const FORM_TEMPLATES = [
         id: description
         attributes:
           label: "Description"
+      - type: input
+        id: disabled-input
+        attributes: 
+          label: "Disabled input"
+          disabled: true
     `,
   },
   {
@@ -122,6 +127,13 @@ acceptance("Composer Form Template", function (needs) {
     assert.ok(
       document.querySelector("#reply-control").classList.contains("open"),
       "reply control is open"
+    );
+
+    assert.ok(
+      document.querySelector(
+        ".form-template-field__input[name='disabled-input']"
+      ).disabled,
+      "disabled-input is disabled"
     );
 
     await fillIn(".form-template-field__input[name='full-name']", "John Smith");

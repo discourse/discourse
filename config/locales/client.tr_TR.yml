@@ -5674,6 +5674,7 @@ tr_TR:
           upload_successful: "Yükleme başarılı. Kelimeler eklendi."
           case_sensitivity_label: "büyük/küçük harfe duyarlı"
           case_sensitivity_description: "Sadece eşleşen karakter muhafazası olan kelimeler"
+          html_label: "HTML"
         test:
           button_label: "Test"
           modal_title: "%{action}: İzlenen Kelimeleri Test Et"

@@ -338,7 +338,6 @@ export default function setupTests(config) {
 
     resetCategoryCache();
 
-    sinon.stub(ScrollingDOMMethods, "screenNotFull");
     sinon.stub(ScrollingDOMMethods, "bindOnScroll");
     sinon.stub(ScrollingDOMMethods, "unbindOnScroll");
   });

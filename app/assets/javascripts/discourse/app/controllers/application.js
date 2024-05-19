@@ -97,6 +97,14 @@ export default Controller.extend({
       return false;
     }
 
+    // Always show sidebar for admin if user can see the admin sidbar
+    if (
+      this.router.currentRouteName.startsWith("admin.") &&
+      this.currentUser?.use_admin_sidebar
+    ) {
+      return true;
+    }
+
     return this.siteSettings.navigation_menu === "sidebar";
   },
 

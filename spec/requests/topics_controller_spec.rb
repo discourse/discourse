@@ -4613,7 +4613,7 @@ RSpec.describe TopicsController do
       end
 
       context "with success" do
-        it "returns success" do
+        it "returns success and the new url" do
           sign_in(admin)
           put "/t/#{topic.id}/convert-topic/public.json?category_id=#{category.id}"
 
@@ -4625,6 +4625,20 @@ RSpec.describe TopicsController do
           result = response.parsed_body
           expect(result["success"]).to eq(true)
           expect(result["url"]).to be_present
+        end
+      end
+
+      context "with some errors" do
+        it "returns the error messages" do
+          Fabricate(:topic, title: topic.title, category: category)
+
+          sign_in(admin)
+          put "/t/#{topic.id}/convert-topic/public.json?category_id=#{category.id}"
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"][0]).to end_with(
+            I18n.t("errors.messages.has_already_been_used"),
+          )
         end
       end
     end

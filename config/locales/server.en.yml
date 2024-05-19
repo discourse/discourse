@@ -800,6 +800,7 @@ en:
             base:
               invalid_url: "Replacement URL is invalid"
               invalid_tag_list: "Replacement tag list is invalid"
+              invalid_html: "HTML can only be used for replacement"
         sidebar_section_link:
           attributes:
             linkable_type:
@@ -1298,7 +1299,7 @@ en:
       title: "User Visits"
       xaxis: "Day"
       yaxis: "Number of visits"
-      description: "Number of all user visits."
+      description: "Number of signed-in user visits."
     signups:
       title: "Signups"
       xaxis: "Day"
@@ -1554,7 +1555,7 @@ en:
       title: "User Visits (mobile)"
       xaxis: "Day"
       yaxis: "Number of visits"
-      description: "Number of unique users who visited using a mobile device."
+      description: "Number of unique signed-in users who visited using a mobile device."
     web_crawlers:
       title: "Web Crawler User Agents"
       labels:
@@ -3473,6 +3474,12 @@ en:
       text_body_template: |
         Your bulk user invite file was processed, %{sent} invites mailed, %{skipped} skipped and %{warnings} warning(s).
 
+        Skipped Invites for Emails: 
+
+        ``` text
+        %{skipped_emails}
+        ```
+
         ``` text
         %{logs}
         ```
@@ -3482,6 +3489,18 @@ en:
       subject_template: "Bulk user invite processed with errors"
       text_body_template: |
         Your bulk user invite file was processed, %{sent} invites mailed, %{skipped} skipped, %{warnings} warning(s) and %{failed} error(s).
+
+        Skipped Invites for Emails: 
+
+        ``` text
+        %{skipped_emails}
+        ```
+
+        Failed Invites for Emails: 
+
+        ``` text
+        %{failed_emails}
+        ```
 
         Here's the log:
 

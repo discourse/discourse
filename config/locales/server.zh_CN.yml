@@ -700,20 +700,6 @@ zh_CN:
   staff_category_description: "适用于管理人员讨论的不公开类别。话题仅对管理员和版主可见。"
   discourse_welcome_topic:
     title: "欢迎来到 %{site_title}！:wave:"
-    body: |
-      我们非常高兴看到您加入我们。
-
-      %{site_info_quote}
-
-      以下是一些可以帮助您入门的事情：
-
-      :speaking_head: 在[个人资料](%{base_path}/my/account)中添加您的照片和关于您自己和您的兴趣的信息，**介绍您自己**。您希望被别人了解的一件事是什么？
-
-      :open_book: 通过[浏览这些已经发生的讨论](%{base_path}/top)来**了解社区**。当您发现一个帖子很有趣、信息量很大或者很有娱乐性时，请使用 :heart: 表达您的欣赏或支持！
-
-      :handshake: 通过评论、分享您自己的观点、提出问题或在讨论中提供反馈来**贡献**。在回复或开始新话题之前，请查阅[社区准则](%{base_path}/faq)。
-
-      > 如果您需要帮助或有建议，请随时在%{feedback_category}中提问或[联系管理员](%{base_path}/about)。
   admin_quick_start_title: "管理员指南：使用入门"
   category:
     topic_prefix: "关于“%{category}”类别"
@@ -1129,7 +1115,6 @@ zh_CN:
       title: "用户访问"
       xaxis: "天"
       yaxis: "访问次数"
-      description: "所有用户访问量。"
     signups:
       title: "注册"
       xaxis: "天"
@@ -1385,7 +1370,6 @@ zh_CN:
       title: "用户访问（移动端）"
       xaxis: "天"
       yaxis: "访问次数"
-      description: "使用移动设备访问的唯一用户数。"
     web_crawlers:
       title: "网络抓取工具用户代理"
       labels:
@@ -2257,9 +2241,12 @@ zh_CN:
     enable_custom_sidebar_sections: "实验性：启用自定义边栏版块"
     experimental_topics_filter: "实验性：在 /filter 下启用实验性话题筛选路由"
     enable_experimental_lightbox: "实验性：将默认图片灯箱替换为全新设计。"
+    enable_experimental_bookmark_redesign_groups: "实验：显示帖子书签的快速访问菜单和重新设计的新模式"
+    glimmer_header_mode: "控制是否使用新的 \"glimmer \"标头实现。默认为 \"auto\"，一旦所有主题和插件都准备就绪，就会自动启用。https://meta.discourse.org/t/296544"
     experimental_form_templates: "实验性：启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     admin_sidebar_enabled_groups: "实验：为指定组的管理员界面启用侧边栏导航，取代顶层管理员导航按钮。"
     lazy_load_categories_groups: "实验：只为这些组的用户懒加载类别信息。这可以提高有许多类别的网站的性能。"
+    experimental_topic_bulk_actions_enabled_groups: "实验：启用新的批量操作下拉菜单。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
     errors:
@@ -2348,11 +2335,11 @@ zh_CN:
       tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
       profile_background_allowed_groups: "允许配置个人资料背景的最小信任等级"
       clean_up_inactive_users_after_days:
-      - ""
+      - "已停用"
       - "停用"
-      - ""
+      - "未激活"
       purge_unactivated_users_grace_period_days:
-      - ""
+      - "已停用"
       - "停用"
       - ""
     placeholder:
@@ -4552,9 +4539,6 @@ zh_CN:
           chat_enabled:
             placeholder: "启用聊天"
             extra_description: "与您的成员实时互动"
-          enable_sidebar:
-            placeholder: "启用边栏"
-            extra_description: "轻松访问您最喜欢的空间"
       ready:
         title: "您的站点已准备就绪！"
         description: "就是这样！您已经完成建立社区的基础工作。现在，您可以进去看一看，撰写一个欢迎话题，然后发送邀请！<br><br>玩得开心！"
