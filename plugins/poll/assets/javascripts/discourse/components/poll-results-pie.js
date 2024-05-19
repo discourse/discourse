@@ -93,25 +93,23 @@ export default class PollResultsPieComponent extends Component {
   };
 
   get canvasId() {
-    return htmlSafe(`poll-results-chart-${this.args.attrs.id}`);
+    return htmlSafe(`poll-results-chart-${this.args.id}`);
   }
 
   get legendId() {
-    return htmlSafe(`poll-results-legend-${this.args.attrs.id}`);
+    return htmlSafe(`poll-results-legend-${this.args.id}`);
   }
 
   @action
   drawPie() {
     loadScript("/javascripts/Chart.min.js").then(() => {
-      const data = this.args.attrs.poll.options.mapBy("votes");
-      const labels = this.args.attrs.poll.options.mapBy("html");
+      const data = this.args.options.mapBy("votes");
+      const labels = this.args.options.mapBy("html");
       const config = this.pieChartConfig(data, labels, {
-        legendContainerId: `poll-results-legend-${this.args.attrs.id}`,
+        legendContainerId: `poll-results-legend-${this.args.id}`,
       });
 
-      const el = document.getElementById(
-        `poll-results-chart-${this.args.attrs.id}`
-      );
+      const el = document.getElementById(`poll-results-chart-${this.args.id}`);
       // eslint-disable-next-line no-undef
       this._chart = new Chart(el.getContext("2d"), config);
     });

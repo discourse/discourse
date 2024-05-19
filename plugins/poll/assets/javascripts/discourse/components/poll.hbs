@@ -9,7 +9,7 @@
         <span>{{this.averageRating}}</span>
       {{else}}
         {{#if this.resultsPie}}
-          <PollResultsPie @attrs={{this.attributes}} />
+          <PollResultsPie @id={{this.attrs.id}} @options={{this.options}} />
         {{else}}
           {{#if this.isIrv}}
             <PollResultsIrv @irvOutcome={{this.irvOutcome}} />
