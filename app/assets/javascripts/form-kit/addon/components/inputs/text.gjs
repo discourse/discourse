@@ -3,8 +3,6 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
-import FieldWrapper from "form-kit/components/field-wrapper";
-import InputWrapper from "form-kit/components/input-wrapper";
 import Node from "form-kit/lib/node";
 import Label from "../label";
 import Meta from "../meta";
@@ -44,7 +42,11 @@ export default class Text extends Component {
 
   <template>
     {{#if this.node.props.label}}
-      <Label @node={{this.node}} />
+      <Label
+        @label={{@node.props.label}}
+        @name={{@node.config.name}}
+        @optional={{@node.props.optional}}
+      />
     {{/if}}
 
     <Input

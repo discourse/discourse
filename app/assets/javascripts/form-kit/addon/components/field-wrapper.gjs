@@ -1,14 +1,52 @@
 import Component from "@glimmer/component";
-import Row from "./row";
+import Col from "form-kit/components/col";
+import Label from "form-kit/components/label";
+import Row from "form-kit/components/row";
 
 export default class FieldWrapper extends Component {
+  isGroup = false;
+
+  isHorizontal = this.args.node.props.horizontal;
+
   <template>
-    {{#if @node.context.horizontal}}
-      <Row @node={{@node}}>
-        {{yield}}
-      </Row>
+    {{#if this.isGroup}}
+      {{! TODO: IMPLEMENT MULTI INPUTS }}
     {{else}}
-      {{yield}}
+      {{#if this.isHorizontal}}
+        <Row>
+          <Col @size={{4}}>
+            <Label
+              @label={{@label}}
+              @name={{@node.config.name}}
+              @optional={{@node.props.optional}}
+            />
+          </Col>
+          <Col @size={{8}}>
+            <div class="d-form-field__value">
+              <@component
+                @node={{@node}}
+                @validation={{@validation}}
+                @name={{@name}}
+                @help={{@help}}
+                @value={{@value}}
+              />
+            </div>
+          </Col>
+        </Row>
+      {{else}}
+        <Row>
+          <Col @size={{@size}}>
+            <@component
+              @node={{@node}}
+              @label={{@label}}
+              @validation={{@validation}}
+              @name={{@name}}
+              @help={{@help}}
+              @value={{@value}}
+            />
+          </Col>
+        </Row>
+      {{/if}}
     {{/if}}
   </template>
 }

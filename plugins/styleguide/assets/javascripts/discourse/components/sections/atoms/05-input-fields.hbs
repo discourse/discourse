@@ -3,14 +3,12 @@
 <h2>HORIZONTAL</h2>
 
 <FormKit @onSubmit={{@dummy.onSubmit}} @horizontal={{true}} as |fk|>
-  <fk.row>
-    <fk.Text
-      @name="foo"
-      @label="test"
-      @validation="required|length:5,16"
-      @optional={{true}}
-    />
-  </fk.row>
+  <fk.Text
+    @name="foo"
+    @label="test"
+    @validation="required|length:5,16"
+    @optional={{true}}
+  />
   <fk.Text
     @label="test"
     @name="bar"

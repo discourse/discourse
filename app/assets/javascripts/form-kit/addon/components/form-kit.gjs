@@ -2,9 +2,11 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
+import FieldWrapper from "form-kit/components/field-wrapper";
 import ValidationMessages from "form-kit/components/validation-messages";
 import Node from "form-kit/lib/node";
 import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
 import Col from "./col";
 import Text from "./inputs/text";
 import Row from "./row";
@@ -36,17 +38,19 @@ export default class FormKit extends Component {
   }
 
   <template>
-    <form class="d-form" {{this.registerFormElement}}>
-      {{yield
-        (hash
-          Text=(component Text node=this.node)
-          Section=(component Section node=this.node)
-          Row=(component Row node=this.node)
-          Col=(component Col node=this.node)
-          Section=(component Section node=this.node)
-          ValidationMessages=(component ValidationMessages node=this.node)
-        )
-      }}
+    <form class={{concatClass "d-form"}} {{this.registerFormElement}}>
+      <Section @node={{this.node}}>
+        {{yield
+          (hash
+            Text=(component FieldWrapper component=Text node=this.node)
+            Section=(component Section node=this.node)
+            Row=(component Row node=this.node)
+            Col=(component Col node=this.node)
+            Section=(component Section node=this.node)
+            ValidationMessages=(component ValidationMessages node=this.node)
+          )
+        }}
+      </Section>
 
       {{!-- {{#if @onSubmit}}
         <DButton

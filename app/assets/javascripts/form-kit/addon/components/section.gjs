@@ -4,7 +4,7 @@ const Section = <template>
   <div
     class={{concatClass
       "d-form__section"
-      (if @node.context.horizontal "--landcaspe")
+      (if @node.context.horizontal "--landscape")
     }}
   >
     {{yield}}
