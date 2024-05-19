@@ -6816,6 +6816,8 @@ en:
         allowed_paths: "Path Allowlist"
         edit: "edit"
         category: "Post to Category"
+        tags: "Topic Tags"
+        post_author: "Post Author - Defaults to %{author}"
         add_host: "Add Host"
         settings: "Embedding Settings"
         crawling_settings: "Crawler Settings"

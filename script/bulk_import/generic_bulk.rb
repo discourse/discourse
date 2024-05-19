@@ -86,6 +86,7 @@ class BulkImport::Generic < BulkImport::Base
 
     import_topic_tags
     import_topic_allowed_users
+    import_topic_allowed_groups
 
     import_likes
     import_votes
@@ -623,10 +624,13 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     existing_user_ids = UserAssociatedAccount.pluck(:user_id).to_set
+    existing_provider_uids = UserAssociatedAccount.pluck(:provider_uid, :provider_name).to_set
 
     create_user_associated_accounts(accounts) do |row|
       user_id = user_id_from_imported_id(row["user_id"])
+
       next if user_id && existing_user_ids.include?(user_id)
+      next if existing_provider_uids.include?([row["provider_uid"], row["provider_name"]])
 
       {
         user_id: user_id,
@@ -673,35 +677,69 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_topic_allowed_users
-    # FIXME: This is not working correctly because it imports only the first user from the list!
-    # Groups are ignored completely. And there is no check for existing records.
-
     puts "", "Importing topic_allowed_users..."
 
     topics = query(<<~SQL)
-      SELECT *
-      FROM topics
-      WHERE private_message IS NOT NULL
-      ORDER BY id
+      SELECT
+        t.id,
+        user_ids.value AS user_id
+      FROM topics t, JSON_EACH(t.private_message, '$.user_ids') AS user_ids
+      WHERE t.private_message IS NOT NULL
+      ORDER BY t.id
     SQL
 
     added = 0
+    existing_topic_allowed_users = TopicAllowedUser.pluck(:topic_id, :user_id).to_set
 
     create_topic_allowed_users(topics) do |row|
-      next unless (topic_id = topic_id_from_imported_id(row["id"]))
-      imported_user_id = JSON.parse(row["private_message"])["user_ids"].first
-      user_id = user_id_from_imported_id(imported_user_id)
+      topic_id = topic_id_from_imported_id(row["id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+
+      next unless topic_id && user_id
+      next unless existing_topic_allowed_users.add?([topic_id, user_id])
+
       added += 1
-      {
-        # FIXME: missing imported_id
-        topic_id: topic_id,
-        user_id: user_id,
-      }
+
+      { topic_id: topic_id, user_id: user_id }
     end
 
     topics.close
 
     puts "  Added #{added} topic_allowed_users records."
+  end
+
+  def import_topic_allowed_groups
+    puts "", "Importing topic_allowed_groups..."
+
+    topics = query(<<~SQL)
+      SELECT
+        t.id,
+        group_ids.value AS group_id
+      FROM topics t, JSON_EACH(t.private_message, '$.group_ids') AS group_ids
+      WHERE t.private_message IS NOT NULL
+      ORDER BY t.id
+    SQL
+
+    added = 0
+    existing_topic_allowed_groups = TopicAllowedGroup.pluck(:topic_id, :group_id).to_set
+
+    create_topic_allowed_groups(topics) do |row|
+      topic_id = topic_id_from_imported_id(row["id"])
+      group_id = group_id_from_imported_id(row["group_id"])
+
+      next unless topic_id && group_id
+      next unless existing_topic_allowed_groups.add?([topic_id, group_id])
+
+      added += 1
+
+      { topic_id: topic_id, group_id: group_id }
+    end
+
+    # TODO: Add support for special group names
+
+    topics.close
+
+    puts "  Added #{added} topic_allowed_groups records."
   end
 
   def import_posts

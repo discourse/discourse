@@ -33,7 +33,7 @@
           {{i18n "admin.customize.theme_owner"}}
           <LinkTo
             @route="adminCustomizeThemes.show"
-            @model={{this.model.theme_id}}
+            @models={{array "themes" this.model.theme_id}}
           >{{this.model.theme_name}}</LinkTo>
         </span>
       {{else}}
