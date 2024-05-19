@@ -39,9 +39,17 @@
   {{/if}}
 </div>
 <PollInfo
-  @attrs={{this.attributes}}
   @options={{this.options}}
+  @min={{this.min}}
+  @max={{this.max}}
+  @isMultiple={{this.isMultiple}}
+  @close={{this.close}}
+  @closed={{this.closed}}
+  @results={{this.attrs.poll.results}}
   @showResults={{this.showResults}}
+  @postUserId={{this.attrs.poll.post.user_id}}
+  @isPublic={{this.attrs.poll.public}}
+  @hasVoted={{this.attrs.hasVoted}}
   @voters={{this.voters}}
 />
 <div class="poll-buttons">

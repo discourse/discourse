@@ -207,7 +207,6 @@ export default class PollComponent extends Component {
   constructor() {
     super(...arguments);
     this.options = this.args.attrs.poll.options;
-    this.attributes = this.args.attrs;
     this.min = this.args.attrs.min;
     this.max = this.args.attrs.max;
 

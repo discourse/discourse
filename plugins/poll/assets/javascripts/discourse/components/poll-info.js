@@ -8,9 +8,9 @@ export default class PollInfoComponent extends Component {
   @service currentUser;
 
   get multipleHelpText() {
-    const min = this.args.attrs.min;
-    const max = this.args.attrs.max;
-    const options = this.args.attrs.poll.options.length;
+    const min = this.args.min;
+    const max = this.args.max;
+    const optionsCount = this.args.options.length;
 
     if (max > 0) {
       if (min === max) {
@@ -20,7 +20,7 @@ export default class PollInfoComponent extends Component {
           );
         }
       } else if (min > 1) {
-        if (max < options) {
+        if (max < optionsCount) {
           return htmlSafe(
             I18n.t("poll.multiple.help.between_min_and_max_options", {
               min,
@@ -34,7 +34,7 @@ export default class PollInfoComponent extends Component {
             })
           );
         }
-      } else if (max <= options) {
+      } else if (max <= optionsCount) {
         return htmlSafe(
           I18n.t("poll.multiple.help.up_to_max_options", { count: max })
         );
@@ -47,10 +47,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get showTotalVotes() {
-    return (
-      this.args.attrs.isMultiple &&
-      (this.args.showResults || this.args.attrs.isClosed)
-    );
+    return this.args.isMultiple && (this.args.showResults || this.args.closed);
   }
 
   get totalVotes() {
@@ -72,18 +69,11 @@ export default class PollInfoComponent extends Component {
   }
 
   get showMultipleHelpText() {
-    return (
-      this.args.attrs.isMultiple &&
-      !this.args.showResults &&
-      !this.args.attrs.isClosed
-    );
+    return this.args.isMultiple && !this.args.showResults && !this.args.closed;
   }
 
   get closeTitle() {
-    const closeDate = moment.utc(
-      this.args.attrs.poll.close,
-      "YYYY-MM-DD HH:mm:ss Z"
-    );
+    const closeDate = moment.utc(this.args.close, "YYYY-MM-DD HH:mm:ss Z");
     if (closeDate.isValid()) {
       return closeDate.format("LLL");
     } else {
@@ -92,10 +82,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get age() {
-    const closeDate = moment.utc(
-      this.args.attrs.poll.close,
-      "YYYY-MM-DD HH:mm:ss Z"
-    );
+    const closeDate = moment.utc(this.args.close, "YYYY-MM-DD HH:mm:ss Z");
     if (closeDate.isValid()) {
       return relativeAge(closeDate.toDate(), { addAgo: true });
     } else {
@@ -104,10 +91,7 @@ export default class PollInfoComponent extends Component {
   }
 
   get timeLeft() {
-    const closeDate = moment.utc(
-      this.args.attrs.poll.close,
-      "YYYY-MM-DD HH:mm:ss Z"
-    );
+    const closeDate = moment.utc(this.args.close, "YYYY-MM-DD HH:mm:ss Z");
     if (closeDate.isValid()) {
       return moment().to(closeDate, true);
     } else {
@@ -117,34 +101,29 @@ export default class PollInfoComponent extends Component {
 
   get resultsOnVote() {
     return (
-      this.args.attrs.poll.results === "on_vote" &&
-      !this.args.attrs.hasVoted &&
-      !(
-        this.currentUser &&
-        this.args.attrs.poll.post.user_id === this.currentUser.id
-      )
+      this.args.results === "on_vote" &&
+      !this.args.hasVoted &&
+      !(this.currentUser && this.args.postUserId === this.currentUser.id)
     );
   }
 
   get resultsOnClose() {
-    return (
-      this.args.attrs.poll.results === "on_close" && !this.args.attrs.isClosed
-    );
+    return this.args.results === "on_close" && !this.args.closed;
   }
 
   get resultsStaffOnly() {
     return (
-      this.args.attrs.poll.results === "staff_only" &&
+      this.args.results === "staff_only" &&
       !(this.currentUser && this.currentUser.staff)
     );
   }
 
   get publicTitle() {
     return (
-      !this.args.attrs.isClosed &&
+      !this.args.closed &&
       !this.args.showResults &&
-      this.args.attrs.poll.public &&
-      this.args.attrs.poll.results !== "staff_only"
+      this.args.isPublic &&
+      this.args.results !== "staff_only"
     );
   }
 
@@ -155,7 +134,7 @@ export default class PollInfoComponent extends Component {
   get showInstructionsSection() {
     if (
       this.showMultipleHelpText ||
-      this.args.attrs.poll.close ||
+      this.args.close ||
       this.resultsOnVote ||
       this.resultsOnClose ||
       this.resultsStaffOnly ||
