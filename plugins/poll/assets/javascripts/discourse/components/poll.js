@@ -78,7 +78,7 @@ export default class PollComponent extends Component {
     );
   };
 
-  irv_dropdown_content = [];
+  irvDropdownContent = [];
 
   showLogin = () => {
     this.register.lookup("route:application").send("showLogin");
@@ -179,14 +179,6 @@ export default class PollComponent extends Component {
       } else {
         vote.push(option.id);
       }
-
-      options.forEach((o, i) => {
-        if (vote.includes(options[i].id)) {
-          options[i].chosen = true;
-        } else {
-          options[i].chosen = false;
-        }
-      });
     } else if (this.isIrv) {
       options.forEach((candidate, i) => {
         const chosenIdx = vote.findIndex((object) => {
@@ -220,7 +212,7 @@ export default class PollComponent extends Component {
     this.max = this.args.attrs.max;
 
     if (this.args.attrs.isIrv) {
-      this.irv_dropdown_content.push({
+      this.irvDropdownContent.push({
         id: 0,
         name: I18n.t("poll.options.irv.abstain"),
       });
@@ -229,18 +221,12 @@ export default class PollComponent extends Component {
     this.options.forEach((option, i) => {
       option.rank = 0;
       if (this.args.attrs.isIrv) {
-        this.irv_dropdown_content.push({ id: i + 1, name: (i + 1).toString() });
+        this.irvDropdownContent.push({ id: i + 1, name: (i + 1).toString() });
         this.args.attrs.vote.forEach((vote) => {
           if (vote.digest === option.id) {
             option.rank = vote.rank;
           }
         });
-      } else {
-        if (this.args.attrs.vote.includes(option.id)) {
-          option.chosen = true;
-        } else {
-          option.chosen = false;
-        }
       }
     });
   }
@@ -352,8 +338,7 @@ export default class PollComponent extends Component {
 
   get resultsWidgetTypeClass() {
     const type = this.args.attrs.poll.type;
-    return type === "number" ||
-      this.args.attrs.poll.chart_type !== PIE_CHART_TYPE
+    return this.isNumber || this.args.attrs.poll.chart_type !== PIE_CHART_TYPE
       ? `discourse-poll-${type}-results`
       : "discourse-poll-pie-chart";
   }

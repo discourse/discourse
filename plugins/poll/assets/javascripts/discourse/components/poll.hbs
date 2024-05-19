@@ -14,7 +14,15 @@
           {{#if this.isIrv}}
             <PollResultsIrv @irvOutcome={{this.irvOutcome}} />
           {{else}}
-            <PollResultsStandard @attrs={{this.attributes}} />
+            <PollResultsStandard
+              @options={{this.options}}
+              @pollName={{this.attrs.poll.name}}
+              @pollType={{this.attrs.poll.type}}
+              @postId={{this.attrs.post.id}}
+              @vote={{this.vote}}
+              @voters={{this.attrs.poll.preloaded_voters}}
+              @votersCount={{this.attrs.poll.voters}}
+            />
           {{/if}}
         {{/if}}
       {{/if}}
@@ -23,10 +31,10 @@
     <PollOptions
       @isCheckbox={{this.isCheckbox}}
       @isIrv={{this.isIrv}}
-      @irv_dropdown_content={{this.irv_dropdown_content}}
+      @irvDropdownContent={{this.irvDropdownContent}}
       @options={{this.options}}
       @votes={{this.vote}}
-      @sendRadioClick={{this.toggleOption}}
+      @sendOptionSelect={{this.toggleOption}}
     />
   {{/if}}
 </div>

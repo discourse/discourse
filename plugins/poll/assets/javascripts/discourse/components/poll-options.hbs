@@ -2,6 +2,7 @@
   {{#each @options as |option|}}
     {{#if @isIrv}}
       <div
+        tabindex="0"
         class="irv-poll-option"
         data-poll-option-id={{option.id}}
         data-poll-option-rank={{option.rank}}
@@ -9,13 +10,13 @@
         <PollOptionsDropdown
           @rank={{option.rank}}
           @option={{option}}
-          @irv_dropdown_content={{@irv_dropdown_content}}
-          @sendRank={{this.toggleOption}}
+          @irvDropdownContent={{@irvDropdownContent}}
+          @sendRank={{this.sendRank}}
         />
         <span class="option-text">{{option.html}}</span>
       </div>
     {{else}}
-      <li data-poll-option-id={{option.id}}>
+      <li tabindex="0" data-poll-option-id={{option.id}}>
         <button onclick={{action this.sendClick option}}>
           {{#if (this.isChosen option)}}
             {{#if @isCheckbox}}

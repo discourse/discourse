@@ -12,11 +12,11 @@ export default class PollOptionsComponent extends Component {
 
   @action
   sendClick(option) {
-    this.args.sendRadioClick(option);
+    this.args.sendOptionSelect(option);
   }
 
   @action
-  toggleOption(option, rank = 0) {
-    this.args.sendRadioClick(option, rank);
+  sendRank(option, rank = 0) {
+    this.args.sendOptionSelect(option, rank);
   }
 }
