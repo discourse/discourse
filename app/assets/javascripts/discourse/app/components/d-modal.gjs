@@ -11,7 +11,7 @@ import { and, not, or } from "truth-helpers";
 import ConditionalInElement from "discourse/components/conditional-in-element";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
-import { element } from "discourse/helpers/element";
+import element from "discourse/helpers/element";
 import {
   disableBodyScroll,
   enableBodyScroll,
