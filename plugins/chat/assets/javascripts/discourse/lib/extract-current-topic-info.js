@@ -1,14 +1,14 @@
 import { getOwner } from "@ember/application";
 
 export function extractCurrentTopicInfo(context) {
-  const topic = getOwner(context).lookup("controller:topic")?.get("model");
+  const topic = getOwner(context).lookup("controller:topic")?.model;
 
   if (!topic) {
     return;
   }
 
   const info = { context_topic_id: topic.id };
-  const currentPostNumber = parseInt(topic.current_post_number, 10);
+  const currentPostNumber = topic.currentPost;
   const posts = topic.postStream.posts;
 
   const currentPost = posts.find(
