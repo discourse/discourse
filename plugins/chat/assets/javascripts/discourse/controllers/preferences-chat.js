@@ -87,7 +87,7 @@ export default class PreferencesChatController extends Controller {
   @action
   onChangeChatSound(sound) {
     if (sound) {
-      this.chatAudioManager.playImmediately(sound);
+      this.chatAudioManager.play(sound);
     }
     this.model.set("user_option.chat_sound", sound);
   }
