@@ -242,7 +242,7 @@ export default class GlimmerHeader extends Component {
       </div>
       <PluginOutlet
         @name="after-header"
-        @outletArgs={{hash minimized=(globalThis.Boolean this.header.topic)}}
+        @outletArgs={{hash minimized=this.header.inTopic}}
       />
     </header>
   </template>

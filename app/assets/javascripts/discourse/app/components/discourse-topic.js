@@ -56,7 +56,7 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
 
   _hideTopicInHeader() {
     this.appEvents.trigger("header:hide-topic");
-    this.header.topic = null;
+    this.header.inTopic = false;
     this._lastShowTopic = false;
   },
 
@@ -65,7 +65,7 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
       return;
     }
     this.appEvents.trigger("header:show-topic", topic);
-    this.header.topic = topic;
+    this.header.inTopic = true;
     this._lastShowTopic = true;
   },
 
@@ -113,6 +113,7 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
       ".cooked a, a.track-link",
       (e) => ClickTrack.trackClick(e, getOwner(this))
     );
+    this.header.topic = this.topic;
   },
 
   willDestroy() {

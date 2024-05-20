@@ -16,7 +16,7 @@ export default class Contents extends Component {
   @service sidebarState;
 
   get topicPresent() {
-    return !!this.header.topic;
+    return this.header.inTopic;
   }
 
   get sidebarIcon() {
