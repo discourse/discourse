@@ -1,6 +1,6 @@
 import icon from "discourse-common/helpers/d-icon";
 
-const GlimmerActionList = <template>
+const ActionList = <template>
   {{#if @postNumbers}}
     <div class="post-actions" ...attributes>
       {{icon @icon}}
@@ -11,4 +11,4 @@ const GlimmerActionList = <template>
   {{/if}}
 </template>;
 
-export default GlimmerActionList;
+export default ActionList;
