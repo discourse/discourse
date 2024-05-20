@@ -73,6 +73,10 @@ module PageObjects
         find(".user-field-#{name.downcase} input").fill_in(with: value)
       end
 
+      def fill_custom_field(name, value)
+        find(".user-field-#{name.downcase} input").fill_in(with: value)
+      end
+
       def has_valid_email?
         find(".create-account-email").has_css?("#account-email-validation.good")
       end
