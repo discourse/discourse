@@ -636,6 +636,8 @@ class BulkImport::Base
 
   TOPIC_ALLOWED_USER_COLUMNS ||= %i[topic_id user_id created_at updated_at]
 
+  TOPIC_ALLOWED_GROUP_COLUMNS ||= %i[topic_id group_id created_at updated_at]
+
   TOPIC_TAG_COLUMNS ||= %i[topic_id tag_id created_at updated_at]
 
   TOPIC_USER_COLUMNS ||= %i[
@@ -877,6 +879,10 @@ class BulkImport::Base
 
   def create_topic_allowed_users(rows, &block)
     create_records(rows, "topic_allowed_user", TOPIC_ALLOWED_USER_COLUMNS, &block)
+  end
+
+  def create_topic_allowed_groups(rows, &block)
+    create_records(rows, "topic_allowed_group", TOPIC_ALLOWED_GROUP_COLUMNS, &block)
   end
 
   def create_topic_tags(rows, &block)
@@ -1305,6 +1311,12 @@ class BulkImport::Base
     topic_allowed_user[:created_at] = NOW
     topic_allowed_user[:updated_at] = NOW
     topic_allowed_user
+  end
+
+  def process_topic_allowed_group(topic_allowed_group)
+    topic_allowed_group[:created_at] = NOW
+    topic_allowed_group[:updated_at] = NOW
+    topic_allowed_group
   end
 
   def process_topic_tag(topic_tag)

@@ -878,6 +878,10 @@ table.permalinks {
   margin-bottom: 2em;
   table.grid {
     margin-bottom: 1em;
+    .tag-chooser,
+    .user-chooser {
+      width: 100%;
+    }
     tr td {
       word-wrap: break-word;
       max-width: 25vw;

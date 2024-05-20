@@ -791,25 +791,6 @@ class Plugin::Instance
         provider.public_send("#{sym}=", opts.delete(sym)) if opts.has_key?(sym)
       end
 
-      begin
-        provider.authenticator.enabled?
-      rescue NotImplementedError
-        provider
-          .authenticator
-          .define_singleton_method(:enabled?) do
-            Discourse.deprecate(
-              "#{provider.authenticator.class.name} should define an `enabled?` function. Patching for now.",
-              drop_from: "2.9.0",
-            )
-            return SiteSetting.get(provider.enabled_setting) if provider.enabled_setting
-            Discourse.deprecate(
-              "#{provider.authenticator.class.name} has not defined an enabled_setting. Defaulting to true.",
-              drop_from: "2.9.0",
-            )
-            true
-          end
-      end
-
       DiscoursePluginRegistry.register_auth_provider(provider)
     end
   end

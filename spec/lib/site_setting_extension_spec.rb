@@ -906,6 +906,16 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.respond_to?(:discourse_connect_provider_secrets_map)).to eq(false)
     end
 
+    it "handles splitting emoji_list settings" do
+      SiteSetting.emoji_deny_list = "smile|frown"
+      expect(SiteSetting.emoji_deny_list_map).to eq(%w[smile frown])
+    end
+
+    it "handles splitting tag_list settings" do
+      SiteSetting.digest_suppress_tags = "blah|blah2"
+      expect(SiteSetting.digest_suppress_tags_map).to eq(%w[blah blah2])
+    end
+
     it "handles null values for settings" do
       SiteSetting.ga_universal_auto_link_domains = nil
       SiteSetting.pm_tags_allowed_for_groups = nil

@@ -38,6 +38,14 @@ RSpec.describe AboutController do
         expect(response.status).to eq(200)
         expect(response.body).to include("/u/anadminuser")
       end
+
+      it "supports unicode usernames" do
+        SiteSetting.unicode_usernames = true
+        Fabricate(:admin, username: "martínez")
+        get "/about", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+        expect(response.status).to eq(200)
+        expect(response.body).to include("/u/mart%25C3%25ADnez")
+      end
     end
 
     it "serializes stats when 'Guardian#can_see_about_stats?' is true" do

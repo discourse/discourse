@@ -205,7 +205,9 @@ RSpec.describe Chat::Api::ChannelMessagesController do
     let(:message) { "This is a message" }
 
     describe "for category" do
-      fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
+      fab!(:chat_channel) do
+        Fabricate(:category_channel, chatable: category, threading_enabled: true)
+      end
 
       before do
         chat_channel.add(user)
