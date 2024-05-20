@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import ClassicComponent from "@ember/component";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -12,6 +11,7 @@ import { and, not, or } from "truth-helpers";
 import ConditionalInElement from "discourse/components/conditional-in-element";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import { element } from "discourse/helpers/element";
 import {
   disableBodyScroll,
   enableBodyScroll,
@@ -226,9 +226,7 @@ export default class DModal extends Component {
       throw `@tagName must be form or div`;
     }
 
-    return class WrapperComponent extends ClassicComponent {
-      tagName = tagName;
-    };
+    return element(tagName);
   }
 
   @bind
