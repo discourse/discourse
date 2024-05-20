@@ -81,11 +81,11 @@ module Chat
       ids = target_users.map(&:id)
       is_group = ids.size > 2 || contract.name.present?
 
-      if is_group && !contract.chat_link
-        ::Chat::DirectMessage.create(user_ids: ids, group: is_group)
-      else
+      if contract.chat_link || !is_group
         ::Chat::DirectMessage.for_user_ids(ids, group: is_group) ||
           ::Chat::DirectMessage.create(user_ids: ids, group: is_group)
+      else
+        ::Chat::DirectMessage.create(user_ids: ids, group: is_group)
       end
     end
 

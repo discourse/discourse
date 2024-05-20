@@ -42,7 +42,7 @@ export default class NewGroup extends Component {
 
       const channel = await this.chat.upsertDmChannel(
         { usernames, groups },
-        this.newGroupTitle
+        { name: this.newGroupTitle }
       );
 
       if (!channel) {
