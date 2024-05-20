@@ -90,13 +90,6 @@ export default class CategoryRow extends Component {
     return this.category.description_text;
   }
 
-  get isDisabled() {
-    return (
-      this.args.selectKit.options.disableIfHasNoChildren &&
-      this.args.item.has_children === false
-    );
-  }
-
   @cached
   get category() {
     if (isEmpty(this.rowValue)) {
@@ -194,9 +187,7 @@ export default class CategoryRow extends Component {
   handleClick(event) {
     event.preventDefault();
     event.stopPropagation();
-    if (!this.isDisabled) {
-      this.args.selectKit.select(this.rowValue, this.args.item);
-    }
+    this.args.selectKit.select(this.rowValue, this.args.item);
     return false;
   }
 
@@ -234,13 +225,10 @@ export default class CategoryRow extends Component {
         event.preventDefault();
       } else if (event.key === "Enter") {
         event.stopImmediatePropagation();
-
-        if (!this.isDisabled) {
-          this.args.selectKit.select(
-            this.args.selectKit.highlighted.id,
-            this.args.selectKit.highlighted
-          );
-        }
+        this.args.selectKit.select(
+          this.args.selectKit.highlighted.id,
+          this.args.selectKit.highlighted
+        );
         event.preventDefault();
       } else if (event.key === "Escape") {
         this.args.selectKit.close(event);
@@ -283,7 +271,6 @@ export default class CategoryRow extends Component {
         (if this.isSelected "is-selected")
         (if this.isHighlighted "is-highlighted")
         (if this.isNone "is-none")
-        (if this.isDisabled "is-disabled")
       }}
       role="menuitemradio"
       data-index={{@index}}

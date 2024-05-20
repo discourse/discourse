@@ -1146,18 +1146,18 @@ class TopicsController < ApplicationController
   def convert_topic
     params.require(:id)
     params.require(:type)
+
     topic = Topic.find_by(id: params[:id])
     guardian.ensure_can_convert_topic!(topic)
 
-    if params[:type] == "public"
-      converted_topic =
+    topic =
+      if params[:type] == "public"
         topic.convert_to_public_topic(current_user, category_id: params[:category_id])
-    else
-      converted_topic = topic.convert_to_private_message(current_user)
-    end
-    render_topic_changes(converted_topic)
-  rescue ActiveRecord::RecordInvalid => ex
-    render_json_error(ex)
+      else
+        topic.convert_to_private_message(current_user)
+      end
+
+    topic.valid? ? render_topic_changes(topic) : render_json_error(topic)
   end
 
   def reset_bump_date

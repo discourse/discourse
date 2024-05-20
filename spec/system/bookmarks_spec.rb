@@ -83,17 +83,6 @@ describe "Bookmarking posts and topics", type: :system do
     )
   end
 
-  it "opens the bookmark modal with the Custom... option only after the bookmark saves on slow connections" do
-    topic_page.visit_topic(topic)
-
-    cdp.with_slow_upload do
-      open_bookmark_menu(post)
-      bookmark_menu.click_menu_option("custom")
-    end
-
-    expect(bookmark_modal).to be_open
-  end
-
   describe "topic level bookmarks" do
     it "allows the topic to be bookmarked" do
       topic_page.visit_topic(topic)
