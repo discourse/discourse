@@ -228,33 +228,31 @@ export default Component.extend({
     this._penalize("showSilenceModal", reviewable, performAction);
   },
 
-  clientEdit(reviewable, performAction) {
-    this.store.find("post", reviewable.post_id).then((p) => {
-      Topic.find(p.topic_id, {}).then((t_json) => {
-        const t = Topic.create(t_json);
-        p.set("topic", t);
+  async clientEdit(reviewable, performAction) {
+    const post = await this.store.find("post", reviewable.post_id);
+    const topic_json = await Topic.find(post.topic_id, {});
 
-        if (!this.currentUser) {
-          return this.dialog.alert(I18n.t("post.controls.edit_anonymous"));
-        } else if (!p.can_edit) {
-          return false;
-        }
+    const topic = Topic.create(topic_json);
+    post.set("topic", topic);
 
-        const opts = {
-          post: p,
-          action: Composer.EDIT,
-          draftKey: p.get("topic.draft_key"),
-          draftSequence: p.get("topic.draft_sequence"),
-          skipDraftCheck: true,
-          skipJumpOnSave: true,
-        };
+    if (!this.currentUser) {
+      return this.dialog.alert(I18n.t("post.controls.edit_anonymous"));
+    } else if (!post.can_edit) {
+      return false;
+    }
 
-        this.composer.open(opts);
+    const opts = {
+      post,
+      action: Composer.EDIT,
+      draftKey: post.get("topic.draft_key"),
+      draftSequence: post.get("topic.draft_sequence"),
+      skipDraftCheck: true,
+      skipJumpOnSave: true,
+    };
 
-        return performAction();
-      });
-    });
-    return;
+    this.composer.open(opts);
+
+    return performAction();
   },
 
   _penalize(adminToolMethod, reviewable, performAction) {
