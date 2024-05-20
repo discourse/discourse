@@ -53,13 +53,11 @@
       @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
       @index={{index}}
     />
-
     {{raw
       "list/visited-line"
       lastVisitedTopic=this.lastVisitedTopic
       topic=topic
     }}
-
     <PluginOutlet
       @name="after-topic-list-item"
       @outletArgs={{hash topic=topic index=index}}
