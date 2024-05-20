@@ -74,3 +74,49 @@ export function resettableTracked(prototype, key, descriptor) {
     },
   };
 }
+
+/**
+ * @decorator
+ *
+ * Same as `@tracked`, but skips notifying about updates if the value is unchanged. This introduces some
+ * performance overhead, so should only be used where excessive downstream re-evaluations are a problem.
+ *
+ * @example
+ *
+ * ```js
+ * class UserRenameForm {
+ *   ⁣@dedupeTracked fullName;
+ * }
+ *
+ * const form = new UserRenameForm();
+ * form.fullName = "Alice"; // Downstream consumers will be notified
+ * form.fullName = "Alice"; // Downstream consumers will not be re-notified
+ * form.fullName = "Bob"; // Downstream consumers will be notified
+ * ```
+ *
+ */
+export function dedupeTracked(target, key, desc) {
+  let { initializer } = desc;
+  let { get, set } = tracked(target, key, desc);
+
+  let values = new WeakMap();
+
+  return {
+    get() {
+      if (!values.has(this)) {
+        let value = initializer?.call(this);
+        values.set(this, value);
+        set.call(this, value);
+      }
+
+      return get.call(this);
+    },
+
+    set(value) {
+      if (!values.has(this) || values.get(this) !== value) {
+        values.set(this, value);
+        set.call(this, value);
+      }
+    },
+  };
+}
