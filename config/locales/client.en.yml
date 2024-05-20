@@ -768,6 +768,7 @@ en:
       no_results:
         body: "A list of community members showing their activity will be shown here. For now the list is empty because your community is still brand new!"
         extra_body: "Admins and moderators can see and manage users in <a href='%{basePath}/admin/users/'>User Admin</a>."
+      no_results_with_search: "No results were found."
       days_visited: "Visits"
       days_visited_long: "Days Visited"
       posts_read: "Read"
@@ -6815,6 +6816,8 @@ en:
         allowed_paths: "Path Allowlist"
         edit: "edit"
         category: "Post to Category"
+        tags: "Topic Tags"
+        post_author: "Post Author - Defaults to %{author}"
         add_host: "Add Host"
         settings: "Embedding Settings"
         crawling_settings: "Crawler Settings"

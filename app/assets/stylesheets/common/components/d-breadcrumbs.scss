@@ -1,0 +1,19 @@
+.d-breadcrumbs {
+  display: flex;
+  margin: 1em 0 0.5em 0;
+
+  &__item {
+    list-style-type: none;
+  }
+
+  &__link,
+  &__link:visited {
+    color: var(--primary-medium);
+  }
+
+  li:not(:last-child) a::after {
+    display: inline;
+    padding: 0 0.25em;
+    content: ">";
+  }
+}

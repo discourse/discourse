@@ -4605,6 +4605,7 @@ ur:
           exists: "پہلے سے موجود"
           upload: "فائل میں سے شامل کریں"
           upload_successful: "اَپ لوڈ کامیاب ہوا۔ الفاظ شامل کردیے گئے ہیں۔"
+          html_label: "HTML"
         test:
           button_label: "ٹیسٹ"
           modal_title: "%{action}: دیکھے گئے الفاظ کو جانچیں"

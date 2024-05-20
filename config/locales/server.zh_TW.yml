@@ -433,21 +433,6 @@ zh_TW:
   meta_category_description: "討論這個網站、整體的組織規劃、社群的運作方式、以及我們該如何改善這些事務。"
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
-  discourse_welcome_topic:
-    body: |
-      我們很高興您能加入我們。
-
-      %{site_info_quote}
-
-      這些事情能夠幫助您入門：
-
-      :speaking_head: **自我介紹**：將您的照片、資訊、興趣加到[您的個人檔案](%{base_path}/my/preferences/account)。您希望被問到的一件事是什麼？
-
-      :open_book: **通過[瀏覽進行中的討論串](%{base_path}/top)來認識社群**。當您發現某篇貼文有趣、內容豐富或好笑時，請使用 :heart: 來表達您的欣賞或支持！
-
-      :handshake: 通過評論、分享您的觀點、提出問題或在討論串中提供回饋來做出**貢獻**。在回覆或開始新主題之前，請查看[社群準則](%{base_path}/faq)。
-
-      > 如果您需要幫助或有任何建議，歡迎在 %{feedback_category} 中詢問或[聯繫管理員](%{base_path}/about)。
   category:
     topic_prefix: "對於分類：%{category} 的定義"
     replace_paragraph: "（以新分類的簡短說明文字取代此段落。這段說明會出現在選擇分類的區塊，因此請將內容限於 200 字以內。）"
@@ -1007,7 +992,6 @@ zh_TW:
       title: "使用者訪問次數（行動裝置）"
       xaxis: "天"
       yaxis: "訪問次數"
-      description: "使用行動裝置訪問的唯一使用者數"
     web_crawlers:
       title: "網路爬蟲使用者代理"
       labels:
@@ -2883,8 +2867,6 @@ zh_TW:
             placeholder: "僅限邀請"
           must_approve_users:
             extra_description: "使用者必須經過工作人員的批准"
-          enable_sidebar:
-            placeholder: "啟用側選單"
       styling:
         fields:
           styling_preview:

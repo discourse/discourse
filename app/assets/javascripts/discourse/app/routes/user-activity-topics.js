@@ -8,11 +8,12 @@ import I18n from "discourse-i18n";
 export default UserTopicListRoute.extend({
   userActionType: UserAction.TYPES.topics,
 
-  model() {
+  model(params = {}) {
     return this.store
       .findFiltered("topicList", {
         filter:
           "topics/created-by/" + this.modelFor("user").get("username_lower"),
+        params,
       })
       .then((model) => {
         // andrei: we agreed that this is an anti pattern,

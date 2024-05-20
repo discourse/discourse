@@ -111,7 +111,7 @@ module Onebox
         if twitter_api_credentials_present?
           raw.dig(:includes, :users)&.first&.dig(:name)
         else
-          meta_tags_data("givenName")[tweet_index]
+          twitter_data[:title]
         end
       end
 
@@ -119,13 +119,15 @@ module Onebox
         if twitter_api_credentials_present?
           raw.dig(:includes, :users)&.first&.dig(:username)
         else
-          meta_tags_data("additionalName")[tweet_index]
+          twitter_data[:title][/\(@([^\)\(]*)\) on X/, 1] if twitter_data[:title].present?
         end
       end
 
       def avatar
         if twitter_api_credentials_present?
           raw.dig(:includes, :users)&.first&.dig(:profile_image_url)
+        else
+          twitter_data[:image] if twitter_data[:image]&.include?("profile_images")
         end
       end
 

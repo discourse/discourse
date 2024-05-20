@@ -78,7 +78,10 @@ class GroupMessage
       begin
         h = { base_url: Discourse.base_url }.merge(@opts[:message_params] || {})
         if @opts[:user]
-          h.merge!(username: @opts[:user].username, user_url: user_path(@opts[:user].username))
+          h.merge!(
+            username: @opts[:user].username,
+            user_url: user_path(@opts[:user].encoded_username(lower: true)),
+          )
         end
         h
       end

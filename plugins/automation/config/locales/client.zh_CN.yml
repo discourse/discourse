@@ -169,6 +169,10 @@ zh_CN:
               description: 仅当该话题是用户创建的第一个话题时才会触发
           created: 创建
           edited: 编辑
+        user_updated:
+          fields:
+            user_profile:
+              label: 用户个人资料字段
         category_created_edited:
           fields:
             restricted_category:

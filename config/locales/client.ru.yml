@@ -6019,6 +6019,7 @@ ru:
           upload_successful: "Загрузка выполнена. Слова добавлены."
           case_sensitivity_label: "С учётом регистра"
           case_sensitivity_description: "Только слова с соответствующим регистром символов"
+          html_label: "HTML"
         test:
           button_label: "Тестирование слов"
           modal_title: "%{action}: тестирование контролируемых слов"

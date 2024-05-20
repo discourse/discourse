@@ -70,7 +70,7 @@ RSpec.describe "User menu notifications | sidebar", type: :system do
     end
 
     context "when category channel" do
-      fab!(:channel_1) { Fabricate(:chat_channel) }
+      fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
 
       before do
         Jobs.run_immediately!

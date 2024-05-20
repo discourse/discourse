@@ -2935,6 +2935,7 @@ de:
       suggest_create_topic: Bereit, <a href>eine neue Unterhaltung zu beginnen?</a>
       jump_reply: "Zum ursprünglichen Ort des Beitrags springen"
       jump_reply_aria: "Zum Beitrag von @%{username} an dessen ursprünglichen Ort springen"
+      jump_reply_button: "Zum Beitrag springen"
       deleted: "Das Thema wurde gelöscht"
       slow_mode_update:
         title: "Langsamer Modus"
@@ -3774,7 +3775,7 @@ de:
         help: "Dieses Thema ist eine persönliche Nachricht"
       visibility_reasons:
         op_flag_threshold_reached: "Dieses Thema wurde automatisch unsichtbar gemacht, weil es die Meldungsschwelle erreicht hat"
-        op_unhidden: "Dieses Thema wurde vom Autor wieder sichtbar gemacht"
+        op_unhidden: "Dieses Thema wurde vom Verfasser wieder sichtbar gemacht"
         embedded_topic: "Dieses Thema wurde wieder sichtbar gemacht, weil es ein eingebettetes Thema ist"
         manually_unlisted: "Dieses Thema wurde manuell von einem Administrator oder Moderator unsichtbar gemacht"
         manually_relisted: "Dieses Thema wurde manuell von einem Administrator oder Moderator wieder sichtbar gemacht"
@@ -4411,7 +4412,7 @@ de:
       clear_filter: "Filter löschen"
       no_results:
         title: "Keine Ergebnisse"
-        description: "Wir konnten nichts finden, das zu '%{filter}' passt.<br><br>Wolltest du die <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">Seiteneinstellungen</a> oder die <a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">Benutzerliste</a> durchsuchen?"
+        description: 'Wir konnten nichts finden, das zu ''%{filter}'' passt.<br><br>Wolltest du die <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">Seiteneinstellungen</a> oder die <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">Benutzerliste</a> durchsuchen?'
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -5657,6 +5658,9 @@ de:
             update_public_sidebar_section: "öffentlichen Seitenleistenabschnitt aktualisieren"
             destroy_public_sidebar_section: "öffentlichen Seitenleistenabschnitt zerstören"
             reset_bounce_score: "Bounce-Score zurücksetzen"
+            create_watched_word_group: "Beobachtete Wortgruppe erstellen"
+            update_watched_word_group: "Beobachtete Wortgruppe aktualisieren"
+            delete_watched_word_group: "Beobachtete Wortgruppe löschen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -5705,6 +5709,7 @@ de:
           one: "zeige %{count} Wort"
           other: "zeige %{count} Wörter"
         case_sensitive: "(Groß-/Kleinschreibung beachten)"
+        html: "(html)"
         download: Herunterladen
         clear_all: Alle löschen
         clear_all_confirm: "Bist du sicher, dass du alle beobachteten Wörter für die Aktion %{action} löschen möchtest?"
@@ -5744,6 +5749,8 @@ de:
           upload_successful: "Hochladen erfolgreich. Wörter wurden hinzugefügt."
           case_sensitivity_label: "Groß- und Kleinschreibung wird unterschieden"
           case_sensitivity_description: "Nur Wörter mit passender Groß- und Kleinschreibung"
+          html_label: "HTML"
+          html_description: "Gibt HTML im Ersatz aus"
           words_or_phrases: "Wörter oder Wortgruppen"
         test:
           button_label: "Test"

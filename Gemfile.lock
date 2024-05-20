@@ -122,6 +122,7 @@ GEM
       faker (~> 2.16)
       literate_randomizer
     docile (1.4.0)
+    drb (2.2.1)
     email_reply_trimmer (0.1.13)
     erubi (1.12.0)
     excon (0.110.0)
@@ -225,14 +226,15 @@ GEM
     mini_suffix (0.3.3)
       ffi (~> 1.9)
     minio_runner (0.1.2)
-    minitest (5.22.3)
-    mocha (2.2.0)
+    minitest (5.23.0)
+    mocha (2.3.0)
       ruby2_keywords (>= 0.0.5)
     msgpack (1.7.2)
     multi_json (1.15.0)
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
     mustache (1.1.1)
+    mutex_m (0.2.0)
     net-http (0.4.1)
       uri
     net-imap (0.4.11)
@@ -350,7 +352,7 @@ GEM
     raindrops (0.20.1)
     rake (13.2.1)
     rb-fsevent (0.11.2)
-    rb-inotify (0.10.1)
+    rb-inotify (0.11.1)
       ffi (~> 1.0)
     rbtrace (0.5.1)
       ffi (>= 1.0.6)
@@ -361,10 +363,11 @@ GEM
     redis (4.8.1)
     redis-namespace (1.11.0)
       redis (>= 4)
-    regexp_parser (2.9.1)
+    regexp_parser (2.9.2)
     request_store (1.7.0)
       rack (>= 1.4)
-    rexml (3.2.6)
+    rexml (3.2.8)
+      strscan (>= 3.0.9)
     rinku (2.0.6)
     rotp (6.3.0)
     rouge (4.2.1)
@@ -457,7 +460,7 @@ GEM
       google-protobuf (>= 3.25, < 5.0)
     sassc-embedded (1.76.0)
       sass-embedded (~> 1.76)
-    selenium-devtools (0.124.0)
+    selenium-devtools (0.125.0)
       selenium-webdriver (~> 4.2)
     selenium-webdriver (4.20.1)
       base64 (~> 0.2)
@@ -495,6 +498,7 @@ GEM
     sqlite3 (1.7.3-x86_64-linux)
     sshkey (3.0.0)
     stackprof (0.2.26)
+    strscan (3.1.0)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     syntax_tree-disable_ternary (1.0.0)
@@ -529,7 +533,7 @@ GEM
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
     yard (0.9.36)
-    zeitwerk (2.6.13)
+    zeitwerk (2.6.14)
 
 PLATFORMS
   aarch64-linux
@@ -575,6 +579,7 @@ DEPENDENCIES
   discourse-fonts
   discourse-seed-fu
   discourse_dev_assets
+  drb
   email_reply_trimmer
   excon
   execjs
@@ -613,6 +618,7 @@ DEPENDENCIES
   mocha
   multi_json
   mustache
+  mutex_m
   net-http
   net-imap
   net-pop

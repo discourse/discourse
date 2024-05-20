@@ -5595,6 +5595,7 @@ sv:
           upload_successful: "Uppladdning lyckades. Ord har lagts till."
           case_sensitivity_label: "Är skiftlägeskänsligt"
           case_sensitivity_description: "Endast ord med bokstäver i samma skiftläge"
+          html_label: "HTML"
         test:
           button_label: "Testa"
           modal_title: "%{action}: Testa bevakade ord"

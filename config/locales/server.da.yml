@@ -939,7 +939,6 @@ da:
       title: "Brugerbesøg"
       xaxis: "Dag"
       yaxis: "Antal besøg"
-      description: "Antal af alle brugerbesøg."
     signups:
       title: "Tilmeldinger"
       xaxis: "Dag"
@@ -1171,7 +1170,6 @@ da:
       title: "Brugerbesøg (mobil)"
       xaxis: "Dag"
       yaxis: "Antal besøg"
-      description: "Antal unikke brugere, der besøgte ved hjælp af en mobil enhed."
     web_crawlers:
       title: "Web Crawler Bruger Agenter"
       labels:

@@ -4,7 +4,6 @@ import KeyValueStore from "discourse/lib/key-value-store";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import { defaultHomepage } from "discourse/lib/utilities";
-import getURL from "discourse-common/lib/get-url";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 
 const PREFERRED_MODE_KEY = "preferred_mode";
@@ -182,16 +181,17 @@ export default class ChatStateManager extends Service {
   }
 
   get lastKnownAppURL() {
-    let url = this._appURL;
-    if (!url || url === "/") {
-      url = this.router.urlFor(`discovery.${defaultHomepage()}`);
+    const url = this._appURL;
+
+    if (url && url !== "/") {
+      return url;
     }
 
-    return getURL(url);
+    return this.router.urlFor(`discovery.${defaultHomepage()}`);
   }
 
   get lastKnownChatURL() {
-    return getURL(this._chatURL || "/chat");
+    return this._chatURL || "/chat";
   }
 
   #publishStateChange() {

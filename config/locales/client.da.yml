@@ -4717,6 +4717,7 @@ da:
           exists: "Eksisterer allerede"
           upload: "Tilføj fra fil"
           upload_successful: "Overførsel er vellykket. Der er tilføjet ord."
+          html_label: "HTML"
         test:
           button_label: "Test"
           description: "Indtast tekst nedenfor for at kontrollere, om den indeholder overvågede ord"

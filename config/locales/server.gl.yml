@@ -923,7 +923,6 @@ gl:
       title: "Visitas de usuarios"
       xaxis: "Día"
       yaxis: "Número de visitas"
-      description: "Número de todas as visitas do usuario."
     signups:
       title: "Rexistros"
       xaxis: "Día"
@@ -1164,7 +1163,6 @@ gl:
       title: "Visitas de usuarios (móbil)"
       xaxis: "Día"
       yaxis: "Número de visitas"
-      description: "Número de usuarios únicos que utilizaron un dispositivo móbil."
     web_crawlers:
       title: "Axentes de usuario de rastrexadores web"
       labels:

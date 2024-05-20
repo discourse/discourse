@@ -5565,6 +5565,7 @@ it:
           upload_successful: "Caricamento andato a buon fine. Le parole sono state aggiunte."
           case_sensitivity_label: "distingue fra maiuscole e minuscole"
           case_sensitivity_description: "Solo parole con maiuscole e minuscole corrispondenti"
+          html_label: "HTML"
         test:
           button_label: "Test"
           modal_title: "%{action}: Test delle parole osservate"
