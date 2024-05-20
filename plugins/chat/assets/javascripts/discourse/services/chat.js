@@ -356,13 +356,14 @@ export default class Chat extends Service {
   // @param {array} [targets.usernames] - The usernames to include in the direct message channel.
   // @param {array} [targets.groups] - The groups to include in the direct message channel.
   // @param {string|null} [name=null] - Optional name for the direct message channel.
-  upsertDmChannel(targets, name = null) {
+  upsertDmChannel(targets, opts = { name: null, chat_link: false }) {
     return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
       data: {
         target_usernames: targets.usernames?.uniq(),
         target_groups: targets.groups?.uniq(),
-        name,
+        chat_link: opts.chat_link,
+        name: opts.name,
       },
     })
       .then((response) => {

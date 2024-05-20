@@ -13,7 +13,7 @@ RSpec.describe Chat::Api::DirectMessagesController do
   end
 
   def create_dm_channel(user_ids)
-    direct_messages_channel = Chat::DirectMessage.create!
+    direct_messages_channel = Chat::DirectMessage.create!(group: user_ids.length > 2)
     user_ids.each do |user_id|
       direct_messages_channel.direct_message_users.create!(user_id: user_id)
     end
@@ -84,6 +84,18 @@ RSpec.describe Chat::Api::DirectMessagesController do
         expect {
           post "/chat/api/direct-message-channels.json", params: { target_usernames: [usernames] }
         }.to change { Chat::DirectMessage.count }.by(1)
+      end
+
+      it "returns existing dm channel when using chat link" do
+        create_dm_channel(direct_message_user_ids)
+
+        expect {
+          post "/chat/api/direct-message-channels.json",
+               params: {
+                 target_usernames: [usernames],
+                 chat_link: true,
+               }
+        }.not_to change { Chat::DirectMessage.count }
       end
     end
 

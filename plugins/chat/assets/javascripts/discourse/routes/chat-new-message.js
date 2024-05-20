@@ -13,8 +13,10 @@ export default class ChatNewMessageRoute extends DiscourseRoute {
       return this.router.transitionTo("chat");
     }
 
-    this.chat.upsertDmChannel({ usernames: recipients }).then((channel) => {
-      this.router.transitionTo("chat.channel", channel.title, channel.id);
-    });
+    this.chat
+      .upsertDmChannel({ usernames: recipients }, { chat_link: true })
+      .then((channel) => {
+        this.router.transitionTo("chat.channel", channel.title, channel.id);
+      });
   }
 }
