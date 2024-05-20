@@ -2,7 +2,10 @@
 
 class UserField < ActiveRecord::Base
   include AnonCacheInvalidator
+  include HasDeprecatedColumns
   include HasSanitizableFields
+
+  deprecate_column :required, drop_from: "3.3"
 
   validates_presence_of :description, :field_type
   validates_presence_of :name, unless: -> { field_type == "confirm" }
@@ -15,8 +18,14 @@ class UserField < ActiveRecord::Base
 
   scope :public_fields, -> { where(show_on_profile: true).or(where(show_on_user_card: true)) }
 
+  enum :requirement, { optional: 0, for_all_users: 1, on_signup: 2 }.freeze
+
   def self.max_length
     2048
+  end
+
+  def required?
+    !optional?
   end
 
   def queue_index_search
@@ -50,4 +59,5 @@ end
 #  external_name     :string
 #  external_type     :string
 #  searchable        :boolean          default(FALSE), not null
+#  requirement       :integer          default("optional"), not null
 #

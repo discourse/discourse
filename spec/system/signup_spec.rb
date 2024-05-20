@@ -47,6 +47,40 @@ describe "Signup", type: :system do
       end
     end
 
+    context "when there are required user fields" do
+      before do
+        Fabricate(
+          :user_field,
+          name: "Occupation",
+          requirement: "on_signup",
+          description: "What you do for work",
+        )
+      end
+
+      it "can signup when filling the custom field" do
+        signup_modal.open
+        signup_modal.fill_email("johndoe@example.com")
+        signup_modal.fill_username("john")
+        signup_modal.fill_password("supersecurepassword")
+        signup_modal.fill_custom_field("Occupation", "Jedi")
+        expect(signup_modal).to have_valid_fields
+
+        signup_modal.click_create_account
+        expect(page).to have_css(".account-created")
+      end
+
+      it "cannot signup without filling the custom field" do
+        signup_modal.open
+        signup_modal.fill_email("johndoe@example.com")
+        signup_modal.fill_username("john")
+        signup_modal.fill_password("supersecurepassword")
+
+        signup_modal.click_create_account
+        expect(signup_modal).to have_content(I18n.t("js.user_fields.required", name: "Occupation"))
+        expect(signup_modal).to have_no_css(".account-created")
+      end
+    end
+
     context "when user requires approval" do
       before do
         SiteSetting.must_approve_users = true

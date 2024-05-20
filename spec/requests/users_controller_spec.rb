@@ -1432,7 +1432,7 @@ RSpec.describe UsersController do
     context "with custom fields" do
       fab!(:user_field)
       fab!(:another_field) { Fabricate(:user_field) }
-      fab!(:optional_field) { Fabricate(:user_field, required: false) }
+      fab!(:optional_field) { Fabricate(:user_field, requirement: "optional") }
 
       context "without a value for the fields" do
         let(:create_params) do
@@ -1492,7 +1492,7 @@ RSpec.describe UsersController do
           it "value can't be nil or empty if the field is required" do
             put update_user_url, params: { user_fields: { field_id => valid_options } }
 
-            user_field.update!(required: true)
+            user_field.for_all_users!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1506,7 +1506,7 @@ RSpec.describe UsersController do
           it "value can nil or empty if the field is not required" do
             put update_user_url, params: { user_fields: { field_id => valid_options } }
 
-            user_field.update!(required: false)
+            user_field.optional!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1547,7 +1547,7 @@ RSpec.describe UsersController do
           it "value can't be nil if the field is required" do
             put update_user_url, params: { user_fields: { field_id => valid_options.first } }
 
-            user_field.update!(required: true)
+            user_field.for_all_users!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1557,7 +1557,7 @@ RSpec.describe UsersController do
           it "value can be set to nil if the field is not required" do
             put update_user_url, params: { user_fields: { field_id => valid_options.last } }
 
-            user_field.update!(required: false)
+            user_field.optional!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1614,7 +1614,7 @@ RSpec.describe UsersController do
     end
 
     context "with only optional custom fields" do
-      fab!(:user_field) { Fabricate(:user_field, required: false) }
+      fab!(:user_field) { Fabricate(:user_field, requirement: "optional") }
 
       context "without values for the fields" do
         let(:create_params) do
@@ -2378,8 +2378,8 @@ RSpec.describe UsersController do
 
         context "with user fields" do
           context "with an editable field" do
-            fab!(:user_field)
-            fab!(:optional_field) { Fabricate(:user_field, required: false) }
+            fab!(:user_field) { Fabricate(:user_field, requirement: "for_all_users") }
+            fab!(:optional_field) { Fabricate(:user_field, requirement: "optional") }
 
             it "should update the user field" do
               put "/u/#{user.username}.json",
