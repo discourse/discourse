@@ -7,16 +7,17 @@ import {
   addExtraUserClasses,
   renderAvatar,
 } from "discourse/helpers/user-avatar";
+import { applyValueModifier } from "discourse/lib/plugin-api/value-modifier";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import UserTip from "../../user-tip";
 import UserStatusBubble from "./user-status-bubble";
 
+const DEFAULT_AVATAR_SIZE = "medium";
+
 export default class Notifications extends Component {
   @service currentUser;
   @service siteSettings;
-
-  #defaultAvatarSize = "medium";
 
   get avatar() {
     const avatarAttrs = addExtraUserClasses(this.currentUser, {});
@@ -33,7 +34,10 @@ export default class Notifications extends Component {
   }
 
   get avatarSize() {
-    return this.#defaultAvatarSize;
+    return applyValueModifier(
+      "header-notifications-avatar-size",
+      DEFAULT_AVATAR_SIZE
+    );
   }
 
   get _shouldHighlightAvatar() {

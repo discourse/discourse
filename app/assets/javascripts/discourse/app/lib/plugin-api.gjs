@@ -147,6 +147,7 @@ import {
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
+import { registerValueModifier } from "./plugin-api/value-modifier";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -326,6 +327,10 @@ class PluginApi {
     }
 
     return klass;
+  }
+
+  registerValueModifier(modifierName, pluginId, modifier, position) {
+    registerValueModifier(modifierName, pluginId, modifier, position);
   }
 
   /**
