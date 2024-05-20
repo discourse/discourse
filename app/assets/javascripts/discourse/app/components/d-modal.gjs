@@ -39,24 +39,24 @@ export default class DModal extends Component {
   @tracked wrapperElement;
   @tracked animating = false;
 
-  registerModalContainer = modifierFn((element) => {
-    this.modalContainer = element;
+  registerModalContainer = modifierFn((el) => {
+    this.modalContainer = el;
   });
 
-  setupModalBody = modifierFn((element) => {
+  setupModalBody = modifierFn((el) => {
     if (!this.site.mobileView) {
       return;
     }
 
-    disableBodyScroll(element);
+    disableBodyScroll(el);
 
     return () => {
-      enableBodyScroll(element);
+      enableBodyScroll(el);
     };
   });
 
   @action
-  async setupModal(element) {
+  async setupModal(el) {
     document.documentElement.addEventListener(
       "keydown",
       this.handleDocumentKeydown
@@ -70,7 +70,7 @@ export default class DModal extends Component {
     if (this.site.mobileView) {
       this.animating = true;
 
-      await element.animate(
+      await el.animate(
         [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
         {
           duration: getMaxAnimationTimeMs(),
@@ -82,7 +82,7 @@ export default class DModal extends Component {
       this.animating = false;
     }
 
-    this.wrapperElement = element;
+    this.wrapperElement = el;
   }
 
   @action

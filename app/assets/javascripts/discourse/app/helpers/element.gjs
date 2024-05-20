@@ -1,6 +1,8 @@
 import ClassicComponent from "@ember/component";
 
-const empty = <template>{{yield}}</template>;
+const empty = <template>
+  {{! template-lint-disable no-yield-only}}{{yield}}
+</template>;
 const shortcuts = {
   div: <template><div ...attributes>{{yield}}</div></template>,
   span: <template><span ...attributes>{{yield}}</span></template>,
