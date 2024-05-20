@@ -1,48 +1,25 @@
 <thead class="topic-list-header">
-  {{#if this.currentUser.use_glimmer_topic_list}}
-    <TopicList::TopicListHeader
-      @canBulkSelect={{this.canBulkSelect}}
-      @toggleInTitle={{this.toggleInTitle}}
-      @hideCategory={{this.hideCategory}}
-      @showPosters={{this.showPosters}}
-      @showLikes={{this.showLikes}}
-      @showOpLikes={{this.showOpLikes}}
-      @order={{this.order}}
-      @ascending={{this.ascending}}
-      @sortable={{this.sortable}}
-      @listTitle={{this.listTitle}}
-      @bulkSelectEnabled={{this.bulkSelectEnabled}}
-      @bulkSelectHelper={{this.bulkSelectHelper}}
-      @experimentalTopicBulkActionsEnabled={{this.experimentalTopicBulkActionsEnabled}}
-      @canDoBulkActions={{this.canDoBulkActions}}
-      @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
-      @newListSubset={{this.newListSubset}}
-      @newRepliesCount={{this.newRepliesCount}}
-      @newTopicsCount={{this.newTopicsCount}}
-    />
-  {{else}}
-    {{raw
-      "topic-list-header"
-      canBulkSelect=this.canBulkSelect
-      toggleInTitle=this.toggleInTitle
-      hideCategory=this.hideCategory
-      showPosters=this.showPosters
-      showLikes=this.showLikes
-      showOpLikes=this.showOpLikes
-      order=this.order
-      ascending=this.ascending
-      sortable=this.sortable
-      listTitle=this.listTitle
-      bulkSelectEnabled=this.bulkSelectEnabled
-      bulkSelectHelper=this.bulkSelectHelper
-      experimentalTopicBulkActionsEnabled=this.experimentalTopicBulkActionsEnabled
-      canDoBulkActions=this.canDoBulkActions
-      showTopicsAndRepliesToggle=this.showTopicsAndRepliesToggle
-      newListSubset=this.newListSubset
-      newRepliesCount=this.newRepliesCount
-      newTopicsCount=this.newTopicsCount
-    }}
-  {{/if}}
+  {{raw
+    "topic-list-header"
+    canBulkSelect=this.canBulkSelect
+    toggleInTitle=this.toggleInTitle
+    hideCategory=this.hideCategory
+    showPosters=this.showPosters
+    showLikes=this.showLikes
+    showOpLikes=this.showOpLikes
+    order=this.order
+    ascending=this.ascending
+    sortable=this.sortable
+    listTitle=this.listTitle
+    bulkSelectEnabled=this.bulkSelectEnabled
+    bulkSelectHelper=this.bulkSelectHelper
+    experimentalTopicBulkActionsEnabled=this.experimentalTopicBulkActionsEnabled
+    canDoBulkActions=this.canDoBulkActions
+    showTopicsAndRepliesToggle=this.showTopicsAndRepliesToggle
+    newListSubset=this.newListSubset
+    newRepliesCount=this.newRepliesCount
+    newTopicsCount=this.newTopicsCount
+  }}
 </thead>
 
 <PluginOutlet
@@ -59,57 +36,29 @@
 
 <tbody class="topic-list-body">
   {{#each this.filteredTopics as |topic index|}}
-    {{#if this.currentUser.use_glimmer_topic_list}}
-      <TopicList::TopicListItem
-        @topic={{topic}}
-        @bulkSelectEnabled={{this.bulkSelectEnabled}}
-        @showTopicPostBadges={{this.showTopicPostBadges}}
-        @hideCategory={{this.hideCategory}}
-        @showPosters={{this.showPosters}}
-        @showLikes={{this.showLikes}}
-        @showOpLikes={{this.showOpLikes}}
-        @expandGloballyPinned={{this.expandGloballyPinned}}
-        @expandAllPinned={{this.expandAllPinned}}
-        @lastVisitedTopic={{this.lastVisitedTopic}}
-        @selected={{this.selected}}
-        @lastCheckedElementId={{this.lastCheckedElementId}}
-        @updateLastCheckedElementId={{fn (mut this.lastCheckedElementId)}}
-        @tagsForUser={{this.tagsForUser}}
-        @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
-        @index={{index}}
-      />
-    {{else}}
-      <TopicListItem
-        @topic={{topic}}
-        @bulkSelectEnabled={{this.bulkSelectEnabled}}
-        @showTopicPostBadges={{this.showTopicPostBadges}}
-        @hideCategory={{this.hideCategory}}
-        @showPosters={{this.showPosters}}
-        @showLikes={{this.showLikes}}
-        @showOpLikes={{this.showOpLikes}}
-        @expandGloballyPinned={{this.expandGloballyPinned}}
-        @expandAllPinned={{this.expandAllPinned}}
-        @lastVisitedTopic={{this.lastVisitedTopic}}
-        @selected={{this.selected}}
-        @lastChecked={{this.lastChecked}}
-        @tagsForUser={{this.tagsForUser}}
-        @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
-        @index={{index}}
-      />
-    {{/if}}
+    <TopicListItem
+      @topic={{topic}}
+      @bulkSelectEnabled={{this.bulkSelectEnabled}}
+      @showTopicPostBadges={{this.showTopicPostBadges}}
+      @hideCategory={{this.hideCategory}}
+      @showPosters={{this.showPosters}}
+      @showLikes={{this.showLikes}}
+      @showOpLikes={{this.showOpLikes}}
+      @expandGloballyPinned={{this.expandGloballyPinned}}
+      @expandAllPinned={{this.expandAllPinned}}
+      @lastVisitedTopic={{this.lastVisitedTopic}}
+      @selected={{this.selected}}
+      @lastChecked={{this.lastChecked}}
+      @tagsForUser={{this.tagsForUser}}
+      @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+      @index={{index}}
+    />
 
-    {{#if this.currentUser.use_glimmer_topic_list}}
-      <TopicList::VisitedLine
-        @lastVisitedTopic={{this.lastVisitedTopic}}
-        @topic={{topic}}
-      />
-    {{else}}
-      {{raw
-        "list/visited-line"
-        lastVisitedTopic=this.lastVisitedTopic
-        topic=topic
-      }}
-    {{/if}}
+    {{raw
+      "list/visited-line"
+      lastVisitedTopic=this.lastVisitedTopic
+      topic=topic
+    }}
 
     <PluginOutlet
       @name="after-topic-list-item"
