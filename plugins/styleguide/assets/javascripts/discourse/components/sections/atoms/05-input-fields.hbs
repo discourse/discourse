@@ -10,6 +10,7 @@
     @optional={{true}}
   />
   <fk.Text
+    @info="An explanation about the usecase of this form."
     @label="test"
     @name="bar"
     @help="coucou"
@@ -25,6 +26,7 @@
 
 <FormKit @onSubmit={{@dummy.onSubmit}} as |fk|>
   <fk.Text
+    @info="An explanation about the usecase of this form."
     @name="foo"
     @label="test"
     @validation="required|length:5,16"

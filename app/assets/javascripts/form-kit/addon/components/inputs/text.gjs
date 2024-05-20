@@ -17,6 +17,7 @@ export default class Text extends Component {
     },
     {
       label: this.args.label,
+      info: this.args.info,
       help: this.args.help,
       validation: this.args.validation,
       optional: this.args.optional,
@@ -43,10 +44,14 @@ export default class Text extends Component {
   <template>
     {{#if this.node.props.label}}
       <Label
-        @label={{@node.props.label}}
-        @name={{@node.config.name}}
-        @optional={{@node.props.optional}}
+        @label={{this.node.props.label}}
+        @name={{this.node.config.name}}
+        @optional={{this.node.props.optional}}
       />
+    {{/if}}
+
+    {{#if this.node.props.help}}
+      <p class="d-form-field__info">{{this.node.props.help}}</p>
     {{/if}}
 
     <Input

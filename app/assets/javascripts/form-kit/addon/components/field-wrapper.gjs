@@ -29,6 +29,7 @@ export default class FieldWrapper extends Component {
                 @name={{@name}}
                 @help={{@help}}
                 @value={{@value}}
+                @info={{@info}}
               />
             </div>
           </Col>
@@ -36,14 +37,17 @@ export default class FieldWrapper extends Component {
       {{else}}
         <Row>
           <Col @size={{@size}}>
-            <@component
-              @node={{@node}}
-              @label={{@label}}
-              @validation={{@validation}}
-              @name={{@name}}
-              @help={{@help}}
-              @value={{@value}}
-            />
+            <div class="d-form-field__value">
+              <@component
+                @node={{@node}}
+                @label={{@label}}
+                @validation={{@validation}}
+                @name={{@name}}
+                @help={{@help}}
+                @value={{@value}}
+                @info={{@info}}
+              />
+            </div>
           </Col>
         </Row>
       {{/if}}
