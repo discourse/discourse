@@ -3474,7 +3474,7 @@ en:
       text_body_template: |
         Your bulk user invite file was processed, %{sent} invites mailed, %{skipped} skipped and %{warnings} warning(s).
 
-        Skipped Invites for Emails: 
+        Skipped Invites for Emails:
 
         ``` text
         %{skipped_emails}
@@ -3490,13 +3490,13 @@ en:
       text_body_template: |
         Your bulk user invite file was processed, %{sent} invites mailed, %{skipped} skipped, %{warnings} warning(s) and %{failed} error(s).
 
-        Skipped Invites for Emails: 
+        Skipped Invites for Emails:
 
         ``` text
         %{skipped_emails}
         ```
 
-        Failed Invites for Emails: 
+        Failed Invites for Emails:
 
         ``` text
         %{failed_emails}
@@ -5523,6 +5523,9 @@ en:
       agree_and_hide:
         title: "Hide post"
         description: "Agree with flag and hide this post + automatically send the user a message urging them to edit it."
+      agree_and_edit:
+        title: "Agree and Edit Post"
+        description: "Agree with flag and open a composer window to edit the post."
       delete_single:
         title: "Delete"
       delete:

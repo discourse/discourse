@@ -9,6 +9,7 @@ class ReviewableFlaggedPost < Reviewable
       agree_and_keep_hidden: :agree_and_keep,
       agree_and_silence: :agree_and_keep,
       agree_and_suspend: :agree_and_keep,
+      agree_and_edit: :agree_and_keep,
       disagree_and_restore: :disagree,
       ignore_and_do_nothing: :ignore,
     }
@@ -59,6 +60,13 @@ class ReviewableFlaggedPost < Reviewable
       build_action(actions, :agree_and_keep_hidden, icon: "thumbs-up", bundle: agree_bundle)
     else
       build_action(actions, :agree_and_keep, icon: "thumbs-up", bundle: agree_bundle)
+      build_action(
+        actions,
+        :agree_and_edit,
+        icon: "pencil-alt",
+        bundle: agree_bundle,
+        client_action: "edit",
+      )
     end
 
     if guardian.can_delete_post_or_topic?(post)

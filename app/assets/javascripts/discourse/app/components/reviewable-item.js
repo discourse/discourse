@@ -10,6 +10,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import optionalService from "discourse/lib/optional-service";
 import Category from "discourse/models/category";
+import Composer from "discourse/models/composer";
+import Topic from "discourse/models/topic";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -45,6 +47,7 @@ export default Component.extend({
   modal: service(),
   siteSettings: service(),
   currentUser: service(),
+  composer: service(),
   tagName: "",
   updating: null,
   editing: false,
@@ -223,6 +226,35 @@ export default Component.extend({
 
   clientSilence(reviewable, performAction) {
     this._penalize("showSilenceModal", reviewable, performAction);
+  },
+
+  clientEdit(reviewable, performAction) {
+    this.store.find("post", reviewable.post_id).then((p) => {
+      Topic.find(p.topic_id, {}).then((t_json) => {
+        const t = Topic.create(t_json);
+        p.set("topic", t);
+
+        if (!this.currentUser) {
+          return this.dialog.alert(I18n.t("post.controls.edit_anonymous"));
+        } else if (!p.can_edit) {
+          return false;
+        }
+
+        const opts = {
+          post: p,
+          action: Composer.EDIT,
+          draftKey: p.get("topic.draft_key"),
+          draftSequence: p.get("topic.draft_sequence"),
+          skipDraftCheck: true,
+          skipJumpOnSave: true,
+        };
+
+        this.composer.open(opts);
+
+        return performAction();
+      });
+    });
+    return;
   },
 
   _penalize(adminToolMethod, reviewable, performAction) {
