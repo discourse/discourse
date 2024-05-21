@@ -23,9 +23,7 @@ export default class ToggleAllSections extends Component {
   }
 
   get icon() {
-    return this.allSectionsExpanded
-      ? "angle-double-up"
-      : "angle-double-down";
+    return this.allSectionsExpanded ? "angle-double-up" : "angle-double-down";
   }
 
   @action
