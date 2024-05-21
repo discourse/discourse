@@ -4,19 +4,14 @@ import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import coldAgeClass from "discourse/helpers/cold-age-class";
 import concatClass from "discourse/helpers/concat-class";
+import element from "discourse/helpers/element";
 import formatDate from "discourse/helpers/format-date";
 
 export default class ActivityColumn extends Component {
   @service siteSettings;
 
   get wrapperElement() {
-    if (!this.args.tagName) {
-      return <template><td ...attributes>{{yield}}</td></template>;
-    } else if (this.args.tagName === "div") {
-      return <template><div ...attributes>{{yield}}</div></template>;
-    } else {
-      throw new Error("Unsupported activity-column @tagName");
-    }
+    return element(this.args.tagName ?? "td");
   }
 
   <template>

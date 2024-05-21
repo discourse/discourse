@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicEntrance from "discourse/components/topic-list/topic-entrance";
+import element from "discourse/helpers/element";
 import number from "discourse/helpers/number";
 import I18n from "discourse-i18n";
 
@@ -46,13 +47,7 @@ export default class PostsCountColumn extends Component {
   }
 
   get wrapperElement() {
-    if (!this.args.tagName) {
-      return <template><td ...attributes>{{yield}}</td></template>;
-    } else if (this.args.tagName === "div") {
-      return <template><div ...attributes>{{yield}}</div></template>;
-    } else {
-      throw new Error("Unsupported posts-count-column @tagName");
-    }
+    return element(this.args.tagName ?? "td");
   }
 
   <template>
