@@ -55,7 +55,7 @@ acceptance(
       assert.deepEqual(await this.subject.play(channel), false);
     });
 
-    test("not chat sound", async function (assert) {
+    test("no chat sound", async function (assert) {
       updateCurrentUser({ chat_sound: null });
       const channel = buildDirectMessageChannel(getOwner(this));
 
