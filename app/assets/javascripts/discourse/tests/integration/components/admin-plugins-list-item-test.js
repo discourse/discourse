@@ -1,0 +1,57 @@
+import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import AdminPlugin from "admin/models/admin-plugin";
+
+module("Integration | Component | admin-plugins-list-item", function (hooks) {
+  setupRenderingTest(hooks);
+
+  function pluginAttrs() {
+    return {
+      id: "discourse-test-plugin",
+      name: "discourse-test-plugin",
+      admin_route: {
+        location: "discourse-test-plugin",
+        label: "admin.plugins.title",
+        use_new_show_route: false,
+        full_location: "admin",
+      },
+      has_settings: true,
+    };
+  }
+
+  test("settings link route", async function (assert) {
+    this.currentUser.admin = true;
+    this.plugin = AdminPlugin.create(pluginAttrs());
+
+    await render(hbs`<AdminPluginsListItem @plugin={{this.plugin}} />`);
+
+    assert
+      .dom(".admin-plugins-list__settings a")
+      .hasAttribute(
+        "href",
+        "/admin/site_settings/category/plugins?filter=plugin%3Adiscourse-test-plugin"
+      );
+
+    this.plugin.adminRoute.use_new_show_route = true;
+    await render(hbs`<AdminPluginsListItem @plugin={{this.plugin}} />`);
+
+    assert
+      .dom(".admin-plugins-list__settings a")
+      .hasAttribute("href", "/admin/plugins/discourse-test-plugin");
+  });
+
+  test("settings link show or hide", async function (assert) {
+    this.currentUser.admin = true;
+    this.plugin = AdminPlugin.create(pluginAttrs());
+
+    await render(hbs`<AdminPluginsListItem @plugin={{this.plugin}} />`);
+
+    assert.dom(".admin-plugins-list__settings a").exists();
+
+    this.plugin.hasSettings = false;
+    await render(hbs`<AdminPluginsListItem @plugin={{this.plugin}} />`);
+    assert.dom(".admin-plugins-list__settings a").doesNotExist();
+  });
+});
