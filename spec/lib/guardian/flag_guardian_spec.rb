@@ -32,4 +32,11 @@ RSpec.describe FlagGuardian do
       flag.destroy!
     end
   end
+
+  describe "#can_toggle_flag?" do
+    it "returns true for admin and false for regular user" do
+      expect(Guardian.new(admin).can_toggle_flag?).to eq(true)
+      expect(Guardian.new(user).can_toggle_flag?).to eq(false)
+    end
+  end
 end

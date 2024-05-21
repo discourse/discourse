@@ -5023,6 +5023,10 @@ en:
               label: Category
             include_subcategories:
               label: "Include Subcategories"
+      flags:
+        title: "Moderation Flags"
+        description: "Description"
+        enabled: "Enabled?"
 
       groups:
         new:
@@ -5362,6 +5366,8 @@ en:
           user_fields: "User Fields"
           watched_words: "Watched Words"
           legal: "Legal"
+          moderation_flags: "Moderation Flags"
+
 
       appearance:
         title: "Appearance"

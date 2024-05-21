@@ -393,6 +393,9 @@ Discourse::Application.routes.draw do
           post "preview" => "badges#preview"
         end
       end
+      resources :flags, only: %i[index] do
+        put "toggle"
+      end
     end # admin namespace
 
     get "email/unsubscribe/:key" => "email#unsubscribe", :as => "email_unsubscribe"

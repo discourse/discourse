@@ -37,6 +37,7 @@ class PostActionType < ActiveRecord::Base
       @all_flags = nil
       @flag_settings = FlagSettings.new
       ReviewableScore.reload_types
+      PostActionType.new.expire_cache
     end
 
     def overridden_by_plugin_or_skipped_db?
@@ -86,6 +87,10 @@ class PostActionType < ActiveRecord::Base
       else
         flag_enum(all_flags.select { |flag| flag.applies_to?("Topic") })
       end
+    end
+
+    def disabled_flag_types
+      flag_enum(all_flags.reject(&:enabled))
     end
 
     def custom_types
