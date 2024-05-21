@@ -228,6 +228,10 @@ module PageObjects
         post_by_number(post).has_css?(".read-state.read", visible: :all, wait: 3)
       end
 
+      def has_suggested_topic?(topic)
+        page.has_css?("#suggested-topics .topic-list-item[data-topic-id='#{topic.id}']")
+      end
+
       def move_to_public_category(category)
         click_admin_menu_button
         find(".topic-admin-menu-content li.topic-admin-convert").click
