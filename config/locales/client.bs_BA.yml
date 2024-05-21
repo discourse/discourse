@@ -572,6 +572,7 @@ bs_BA:
       topic_count_long: "Kreirano temi"
       post_count: "Replike"
       post_count_long: "Odgovoreno"
+      no_results_with_search: "Bez rezultata pretrage."
       days_visited: "Posjete"
       days_visited_long: "Dani posjete"
       posts_read: "Čitaj"
