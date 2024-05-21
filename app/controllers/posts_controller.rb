@@ -110,8 +110,6 @@ class PostsController < ApplicationController
 
     posts = posts.to_a
 
-    # Remove posts the user doesn't have permission to see
-    # This isn't leaking any information we weren't already through the post ID numbers
     counts = PostAction.counts_for(posts, current_user)
 
     respond_to do |format|
