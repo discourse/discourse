@@ -38,9 +38,9 @@ RSpec.describe "Chat New Message from params", type: :system do
     it "creates a dm channel with multiple users" do
       chat_page.visit_new_message([user_1, user_2])
 
-      expect(page).to have_current_path(
-        "/chat/c/#{user_1.username}-#{user_2.username}/#{Chat::Channel.last.id}",
-      )
+      users = [user_1.username, user_2.username].permutation.map { |u| u.join("-") }.join("|")
+
+      expect(page).to have_current_path(%r{/chat/c/(#{users})/#{Chat::Channel.last.id}})
     end
   end
 end
