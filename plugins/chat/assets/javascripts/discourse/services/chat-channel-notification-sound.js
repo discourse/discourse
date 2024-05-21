@@ -28,12 +28,19 @@ export default class ChatChannelNotificationSound extends Service {
     }
 
     const membership = channel.currentUserMembership;
-    if (
-      !membership.following ||
-      membership.desktopNotificationLevel !== "always" ||
-      membership.muted ||
-      this.chat.activeChannel === channel
-    ) {
+    if (!membership.following) {
+      return false;
+    }
+    
+    if (membership.desktopNotificationLevel !== "always") {
+      return false;
+    }
+    
+    if (membership.muted) {
+      return false;
+    }
+    
+    if (this.chat.activeChannel === channel) {
       return false;
     }
 
