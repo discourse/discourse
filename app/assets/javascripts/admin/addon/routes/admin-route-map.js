@@ -210,6 +210,14 @@ export default function () {
     );
 
     this.route(
+      "adminFlags",
+      { path: "/flags", resetNamespace: true },
+      function () {
+        this.route("index", { path: "/" });
+      }
+    );
+
+    this.route(
       "adminPlugins",
       { path: "/plugins", resetNamespace: true },
       function () {
