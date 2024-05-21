@@ -232,6 +232,18 @@ module PageObjects
         page.has_css?("#suggested-topics .topic-list-item[data-topic-id='#{topic.id}']")
       end
 
+      def move_to_public_category(category)
+        click_admin_menu_button
+        find(".topic-admin-menu-content li.topic-admin-convert").click
+        move_to_public_modal.find(".category-chooser").click
+        find(".category-row[data-value=\"#{category.id}\"]").click
+        move_to_public_modal.find(".btn-primary").click
+      end
+
+      def move_to_public_modal
+        find(".modal.convert-to-public-topic")
+      end
+
       private
 
       def within_post(post)
