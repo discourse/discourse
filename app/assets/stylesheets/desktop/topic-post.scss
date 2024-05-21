@@ -577,7 +577,7 @@ blockquote {
   min-width: 0; // prevents some elements, like <pre>, from blowing out the width
   position: relative;
   border-top: 1px solid var(--primary-low);
-  padding: 12px 0 0 0;
+  padding: 0.8em 0 0 0;
   .topic-meta-data {
     padding: 0 var(--topic-body-width-padding) 0.25em
       var(--topic-body-width-padding);
