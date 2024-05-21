@@ -17,6 +17,12 @@ RSpec.describe Flag, type: :model do
   it "has correct name key" do
     flag = Fabricate(:flag, name: "CuStOm Flag!!!")
     expect(flag.name_key).to eq("custom_flag")
+
+    flag.update!(name: "It's Illegal")
+    expect(flag.name_key).to eq("its_illegal")
+
+    flag.update!(name: "THIS IS    SPaM!+)(*&^%$#@@@!)")
+    expect(flag.name_key).to eq("this_is_spam")
   end
 
   it "updates post action types when created, modified or destroyed" do

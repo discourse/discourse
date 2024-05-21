@@ -38,7 +38,7 @@ class Flag < ActiveRecord::Base
   end
 
   def set_name_key
-    self.name_key = self.name.gsub(" ", "_").gsub(/[^\w]/, "").downcase
+    self.name_key = self.name.squeeze(" ").gsub(" ", "_").gsub(/[^\w]/, "").downcase
   end
 end
 
