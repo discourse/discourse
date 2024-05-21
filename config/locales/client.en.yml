@@ -3748,7 +3748,6 @@ en:
           illegal: "You flagged this as illegal"
           notify_moderators: "You flagged this for moderation"
           notify_user: "You sent a message to this user"
-          custom: "You flagged this topic as %{custom}"
 
       delete:
         confirm:

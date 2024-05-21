@@ -14,9 +14,7 @@ export default Component.extend({
 
   @discourseComputed("flag.name_key")
   customPlaceholder(nameKey) {
-    return I18n.t("flagging.custom_placeholder_" + nameKey, {
-      defaultValue: I18n.t("flagging.custom_placeholder_notify_moderators"),
-    });
+    return I18n.t("flagging.custom_placeholder_" + nameKey);
   },
 
   @discourseComputed("flag.name", "flag.name_key", "username")
@@ -24,9 +22,7 @@ export default Component.extend({
     if (["notify_user", "notify_moderators"].includes(nameKey)) {
       return name.replace(/{{username}}|%{username}/, username);
     } else {
-      return I18n.t("flagging.formatted_name." + nameKey, {
-        defaultValue: name,
-      });
+      return I18n.t("flagging.formatted_name." + nameKey);
     }
   },
 
