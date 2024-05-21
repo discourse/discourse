@@ -37,10 +37,12 @@ export default class ChatAudioManager extends Service {
   }
 
   async play(soundName) {
+    if (isTesting()) {
+      return;
+    }
+
     const audio =
       this._audioCache[soundName] || this._audioCache[DEFAULT_SOUND_NAME];
-
-    audio.muted = isTesting();
 
     if (!audio.paused) {
       audio.pause();
