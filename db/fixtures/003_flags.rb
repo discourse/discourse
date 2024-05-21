@@ -41,7 +41,7 @@ Flag.seed do |s|
   s.name = "notify_moderators"
   s.position = 1
   s.notify_type = true
-  s.auto_action_type = true
+  s.auto_action_type = false
   s.custom_type = true
   s.applies_to = %w[Post Topic Chat::Message]
 end
@@ -50,7 +50,7 @@ Flag.seed do |s|
   s.name = "illegal"
   s.position = 5
   s.notify_type = true
-  s.auto_action_type = true
+  s.auto_action_type = false
   s.custom_type = true
   s.applies_to = %w[Post Topic Chat::Message]
 end
