@@ -55,8 +55,6 @@ gem "message_bus"
 
 gem "rails_multisite"
 
-gem "fast_xs", platform: :ruby
-
 gem "fastimage"
 
 gem "aws-sdk-s3", require: false
@@ -199,8 +197,6 @@ gem "puma", require: false
 
 gem "rbtrace", require: false, platform: :mri
 
-gem "gc_tracer", require: false, platform: :mri
-
 # required for feed importing and embedding
 gem "ruby-readability", require: false
 
@@ -269,3 +265,8 @@ gem "net-http"
 gem "cgi", ">= 0.3.6", require: false
 
 gem "tzinfo-data"
+gem "csv", require: false
+
+# TODO: Can be removed once we upgrade to Rails 7.1
+gem "mutex_m"
+gem "drb"
