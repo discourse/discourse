@@ -28,6 +28,11 @@ sk:
       fields:
         key_value:
           label_without_count: "Konfigurovať"
+          label_with_count:
+            one: "Upraviť konfiguráciu (%{count})"
+            few: "Upraviť konfiguráciu (%{count})"
+            many: "Upraviť konfiguráciu (%{count})"
+            other: "Upraviť konfiguráciu (%{count})"
         user:
           label: Používateľ
         pm:

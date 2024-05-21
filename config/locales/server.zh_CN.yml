@@ -686,6 +686,7 @@ zh_CN:
             base:
               invalid_url: "替换 URL 无效"
               invalid_tag_list: "替换标签列表无效"
+              invalid_html: "HTML 只能用于替换"
         sidebar_section_link:
           attributes:
             linkable_type:
@@ -700,6 +701,20 @@ zh_CN:
   staff_category_description: "适用于管理人员讨论的不公开类别。话题仅对管理员和版主可见。"
   discourse_welcome_topic:
     title: "欢迎来到 %{site_title}！:wave:"
+    body: |
+      我们非常高兴看到您加入我们。
+
+      %{site_info_quote}
+
+      以下是一些可以帮助您入门的事情：
+
+      :speaking_head: 在[个人资料](%{base_path}/my/preferences/account)中添加您的照片和关于您自己和您的兴趣的信息，**介绍您自己**。您希望被别人了解的一件事是什么？
+
+      :open_book: 通过[浏览这些已经发生的讨论](%{base_path}/latest)来**了解社区**。当您发现一个帖子很有趣、信息量很大或者很有娱乐性时，请使用 :heart: 表达您的欣赏或支持！
+
+      :handshake: 通过评论、分享您自己的观点、提出问题或在讨论中提供反馈来**贡献**。在回复或开始新话题之前，请查阅[社区准则](%{base_path}/faq)。
+
+      > 如果您需要帮助或有建议，请随时在 %{feedback_category} 中提问或[联系管理员](%{base_path}/about)。
   admin_quick_start_title: "管理员指南：使用入门"
   category:
     topic_prefix: "关于“%{category}”类别"
@@ -1115,6 +1130,7 @@ zh_CN:
       title: "用户访问"
       xaxis: "天"
       yaxis: "访问次数"
+      description: "登录用户访问的次数。"
     signups:
       title: "注册"
       xaxis: "天"
@@ -1370,6 +1386,7 @@ zh_CN:
       title: "用户访问（移动端）"
       xaxis: "天"
       yaxis: "访问次数"
+      description: "使用移动设备访问的唯一登录用户数。"
     web_crawlers:
       title: "网络抓取工具用户代理"
       labels:
@@ -2341,7 +2358,7 @@ zh_CN:
       purge_unactivated_users_grace_period_days:
       - "已停用"
       - "停用"
-      - ""
+      - "未激活"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2683,9 +2700,35 @@ zh_CN:
   new_version_mailer:
     title: "新版本邮件"
     subject_template: "[%{email_prefix}] 新 Discourse 版本，有可用更新"
+    text_body_template: |
+      太好了，[Discourse](https://www.discourse.org) 新版本发布！
+
+      您的版本 %{installed_version}
+      新版本：**%{new_version}**
+
+      - 使用我们的**[一键式浏览器更新](%{base_url}/admin/update)**
+
+      - 查看[发布说明](https://meta.discourse.org/tag/release-notes)中的新内容，或查看[原始 GitHub 更新日志](https://github.com/discourse/discourse/commits/main)
+
+      - 访问 [meta.discourse.org](https://meta.discourse.org) 了解 Discourse 的新闻、讨论和支持。
   new_version_mailer_with_notes:
     title: "带版本说明的新版本邮件"
     subject_template: "[%{email_prefix}] 有可用更新"
+    text_body_template: |
+      太好了，[Discourse](https://www.discourse.org) 的新版本发布！
+
+      您的版本 %{installed_version}
+      新版本：**%{new_version}**
+
+      - 使用我们简单的**[一键式浏览器更新](%{base_url}/admin/update)**更新
+
+      - 查看[发布说明](https://meta.discourse.org/tag/release-notes)中的新内容或查看[原始 GitHub 更新日志](https://github.com/discourse/discourse/commits/main)
+
+      - 访问 [meta.discourse.org](https://meta.discourse.org) 了解 Discourse 的新闻、讨论和支持
+
+      ### 发布说明
+
+      %{notes}
   flag_reasons:
     off_topic: "您的帖子被举报为**偏离话题**：鉴于话题标题和第一个帖子，社区认为它不适合该话题。"
     inappropriate: "您的帖子被举报为**不当言论**：社区认为它具有冒犯性、侮辱性、属于仇恨行为或违反了[我们的社区准则](%{base_path}/guidelines)。"
@@ -2956,23 +2999,9 @@ zh_CN:
     bulk_invite_succeeded:
       title: "批量邀请成功"
       subject_template: "批量用户邀请处理成功"
-      text_body_template: |
-        您的批量用户邀请文件已被处理，%{sent} 个邀请已发送，其中 %{skipped} 个跳过，包含 %{warnings} 个警告。
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_failed:
       title: "批量邀请失败"
       subject_template: "批量用户邀请已被处理，但存在错误"
-      text_body_template: |
-        您的批量用户邀请文件已被处理， %{sent} 个邀请已发送，其中 %{skipped} 个跳过，包含 %{warnings} 个警告和 %{failed} 个错误。
-
-        下面是日志：
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "作为所有者被添加到群组"
       subject_template: "您已被添加为 %{group_name} 群组的所有者"
@@ -4485,6 +4514,7 @@ zh_CN:
     limited_to_one_tag_from_group: "标签 %{tags} 不能同时使用。请仅包含其中一个标签。"
     invalid_target_tag: "不能是同义词的同义词"
     synonyms_exist: "存在同义词时不允许"
+    user_not_permitted: "你无权标记话题"
   rss_by_tag: "使用%{tag}标记的话题"
   finish_installation:
     congratulations: "恭喜，您已安装 Discourse！"

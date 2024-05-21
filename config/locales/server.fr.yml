@@ -2868,23 +2868,9 @@ fr:
     bulk_invite_succeeded:
       title: "Invitation en masse réussie"
       subject_template: "Envoi des invitations en masse réussi"
-      text_body_template: |
-        Votre fichier d'invitation d'utilisateurs en masse a été traité, %{sent} invitations ont été envoyées, %{skipped} ont été ignorées et %{warnings} avertissement(s) ont été émis.
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_failed:
       title: "Invitation en masse échouée"
       subject_template: "Envoi des invitations en masse effectué avec des erreurs"
-      text_body_template: |
-        Votre fichier d'invitation d'utilisateurs en masse a été traité, %{sent} invitations ont été envoyées, %{skipped} ont été ignorées, %{warnings} avertissement(s) ont été émis et %{failed} erreur(s) ont été reçues.
-
-        Voici le journal :
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Désigné(e) comme propriétaire du groupe"
       subject_template: "Vous avez été désigné(e) comme l'un(e) des propriétaire du groupe %{group_name}"

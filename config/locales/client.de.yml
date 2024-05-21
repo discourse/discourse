@@ -701,6 +701,7 @@ de:
       no_results:
         body: "Hier wird eine Liste der Community-Mitglieder und ihrer Aktivitäten angezeigt. Im Moment ist die Liste noch leer, weil deine Community noch ganz neu ist!"
         extra_body: "Admins und Moderatoren können Benutzer in der <a href='%{basePath}/admin/users/'>Benutzerverwaltung</a> sehen und verwalten."
+      no_results_with_search: "Es wurden keine Ergebnisse gefunden."
       days_visited: "Aufrufe"
       days_visited_long: "Besuchstage"
       posts_read: "Gelesen"
@@ -6385,6 +6386,8 @@ de:
         allowed_paths: "Pfad-Positivliste"
         edit: "bearbeiten"
         category: "In Kategorie posten"
+        tags: "Schlagwörter des Themas"
+        post_author: "Verfasser des Beitrags – Standardmäßig %{author}"
         add_host: "Host hinzufügen"
         settings: "Einbettungseinstellungen"
         crawling_settings: "Crawler-Einstellungen"
