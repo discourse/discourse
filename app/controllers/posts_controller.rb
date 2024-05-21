@@ -65,17 +65,31 @@ class PostsController < ApplicationController
 
     if params[:id] == "private_posts"
       raise Discourse::NotFound if current_user.nil?
+
+      allowed_private_topics = TopicAllowedUser.where(user_id: current_user.id).select(:topic_id)
+
+      allowed_groups = GroupUser.where(user_id: current_user.id).select(:group_id)
+      allowed_private_topics_by_group =
+        TopicAllowedGroup.where(group_id: allowed_groups).select(:topic_id)
+
+      all_allowed =
+        Topic
+          .where(id: allowed_private_topics)
+          .or(Topic.where(id: allowed_private_topics_by_group))
+          .select(:id)
+
       posts =
         Post
           .private_posts
           .order(created_at: :desc)
           .where("posts.id <= ?", last_post_id)
-          .where("posts.id > ?", last_post_id - 50)
           .includes(topic: :category)
           .includes(user: %i[primary_group flair_group])
           .includes(:reply_to_user)
           .limit(50)
       rss_description = I18n.t("rss_description.private_posts")
+
+      posts = posts.where(topic_id: all_allowed) if !current_user.admin?
     else
       posts =
         Post
@@ -84,18 +98,20 @@ class PostsController < ApplicationController
           .where(post_type: Post.types[:regular])
           .order(created_at: :desc)
           .where("posts.id <= ?", last_post_id)
-          .where("posts.id > ?", last_post_id - 50)
           .includes(topic: :category)
           .includes(user: %i[primary_group flair_group])
           .includes(:reply_to_user)
+          .where("categories.id" => Category.secured(guardian).select(:id))
           .limit(50)
+
       rss_description = I18n.t("rss_description.posts")
       @use_canonical = true
     end
 
+    posts = posts.to_a
+
     # Remove posts the user doesn't have permission to see
     # This isn't leaking any information we weren't already through the post ID numbers
-    posts = posts.reject { |post| !guardian.can_see?(post) || post.topic.blank? }
     counts = PostAction.counts_for(posts, current_user)
 
     respond_to do |format|
