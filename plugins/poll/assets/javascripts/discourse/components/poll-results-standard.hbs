@@ -1,5 +1,5 @@
 <ul class="results">
-  {{#each this.orderedOptions as |option|}}
+  {{#each this.orderedOptions key="voters" as |option|}}
     <li class={{if option.chosen "chosen" ""}}>
       <div class="option">
         <p>
@@ -18,7 +18,9 @@
           @optionId={{option.id}}
           @pollName={{@pollName}}
           @totalVotes={{option.votes}}
-          @voters={{this.voters}}
+          @voters={{option.voters}}
+          @fetchVoters={{@fetchVoters}}
+          @loading={{option.loading}}
         />
       </div>
     </li>

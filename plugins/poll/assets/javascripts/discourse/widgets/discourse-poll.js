@@ -923,9 +923,11 @@ export default createWidget("discourse-poll", {
       new RenderGlimmer(
         this,
         "div.poll",
-        hbsCli`<Poll @attrs={{@data.attrs}} />`,
+        hbsCli`<Poll @attrs={{@data.attrs}} @preloadedVoters={{@data.preloadedVoters}} @options={{@data.options}} />`,
         {
           attrs: newAttrs,
+          preloadedVoters: attrs.poll.preloaded_voters,
+          options: attrs.poll.options,
         }
       ),
     ];

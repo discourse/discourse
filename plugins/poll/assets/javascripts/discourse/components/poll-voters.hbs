@@ -1,16 +1,19 @@
 <div class="poll-voters">
   <ul class="poll-voters-list">
-    {{#each this.voters as |user|}}
+    {{#each @voters as |user|}}
       <li>
         {{avatar user imageSize="tiny"}}
       </li>
     {{/each}}
   </ul>
   {{#if this.showMore}}
-    {{#if this.loading}}
+    {{#if @loading}}
       <div class="spinner small"></div>
     {{else}}
-      <button onclick={{action this.fetchVoters}}>
+      <button
+        onclick={{action @fetchVoters @optionId}}
+        class="poll-voters-toggle-expand"
+      >
         {{d-icon "chevron-down"}}
       </button>
     {{/if}}

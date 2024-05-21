@@ -1,4 +1,4 @@
-<div class="poll-container">
+<div {{did-update this.updatedVoters @preloadedVoters}} class="poll-container">
   {{this.titleHTML}}
   {{#if this.notInVotingGroup}}
     <div class="alert alert-danger">{{this.pollGroups}}</div>
@@ -20,8 +20,9 @@
               @pollType={{this.attrs.poll.type}}
               @postId={{this.attrs.post.id}}
               @vote={{this.vote}}
-              @voters={{this.attrs.poll.preloaded_voters}}
+              @voters={{this.preloadedVoters}}
               @votersCount={{this.attrs.poll.voters}}
+              @fetchVoters={{this.fetchVoters}}
             />
           {{/if}}
         {{/if}}

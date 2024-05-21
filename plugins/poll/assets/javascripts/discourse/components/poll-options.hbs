@@ -17,22 +17,41 @@
       </div>
     {{else}}
       <li tabindex="0" data-poll-option-id={{option.id}}>
-        <button onclick={{action this.sendClick option}}>
-          {{#if (this.isChosen option)}}
-            {{#if @isCheckbox}}
-              {{d-icon "far-check-square"}}
+        {{#if this.currentUser}}
+          <button onclick={{action this.sendClick option}}>
+            {{#if (this.isChosen option)}}
+              {{#if @isCheckbox}}
+                {{d-icon "far-check-square"}}
+              {{else}}
+                {{d-icon "circle"}}
+              {{/if}}
             {{else}}
-              {{d-icon "circle"}}
+              {{#if @isCheckbox}}
+                {{d-icon "far-square"}}
+              {{else}}
+                {{d-icon "far-circle"}}
+              {{/if}}
             {{/if}}
-          {{else}}
-            {{#if @isCheckbox}}
-              {{d-icon "far-square"}}
+            <span class="option-text">{{option.html}}</span>
+          </button>
+        {{else}}
+          <button onclick={{route-action "showLogin"}}>
+            {{#if (this.isChosen option)}}
+              {{#if @isCheckbox}}
+                {{d-icon "far-check-square"}}
+              {{else}}
+                {{d-icon "circle"}}
+              {{/if}}
             {{else}}
-              {{d-icon "far-circle"}}
+              {{#if @isCheckbox}}
+                {{d-icon "far-square"}}
+              {{else}}
+                {{d-icon "far-circle"}}
+              {{/if}}
             {{/if}}
-          {{/if}}
-          <span class="option-text">{{option.html}}</span>
-        </button>
+            <span class="option-text">{{option.html}}</span>
+          </button>
+        {{/if}}
       </li>
     {{/if}}
   {{/each}}

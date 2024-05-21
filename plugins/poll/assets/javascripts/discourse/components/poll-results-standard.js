@@ -6,9 +6,10 @@ export default class PollResultsStandardComponent extends Component {
     return this.args.votersCount || 0;
   }
 
-  get voters() {
-    return this.args.voters || [];
-  }
+  // get voters() {
+  //   debugger;
+  //   return this.args.voters || [];
+  // }
 
   get orderedOptions() {
     const votersCount = this.votersCount;
@@ -41,6 +42,8 @@ export default class PollResultsStandardComponent extends Component {
       const chosen = (this.args.vote || []).includes(option.id);
       option.percentage = per;
       option.chosen = chosen;
+      let voters = this.args.voters[option.id] || [];
+      option.voters = [...voters];
     });
 
     return ordered;

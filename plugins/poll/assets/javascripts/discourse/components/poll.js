@@ -9,6 +9,8 @@ import round from "discourse/lib/round";
 import I18n from "I18n";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 
+const FETCH_VOTERS_COUNT = 25;
+
 const buttonOptionsMap = {
   exportResults: {
     className: "btn-default export-results",
@@ -44,6 +46,7 @@ export default class PollComponent extends Component {
   @service siteSettings;
   @service appEvents;
   @service dialog;
+  @service router;
   @tracked isStaff = this.currentUser && this.currentUser.staff;
   @tracked vote = this.args.attrs.vote || [];
   @tracked titleHTML = htmlSafe(this.args.attrs.titleHTML);
@@ -51,6 +54,7 @@ export default class PollComponent extends Component {
   @tracked options = [];
   @tracked poll = this.args.attrs.poll;
   @tracked voters = this.poll.voters || 0;
+  @tracked preloadedVoters = this.args.preloadedVoters || [];
   @tracked staffOnly = this.poll.results === "staff_only";
   @tracked isIrv = this.poll.type === "irv";
   @tracked irvOutcome = this.poll.irv_outcome || [];
@@ -62,11 +66,14 @@ export default class PollComponent extends Component {
   @tracked status = this.poll.status;
   @tracked
   showResults =
+    this.hasSavedVote ||
     this.showingResults ||
     (this.args.attrs.post.get("topic.archived") && !this.staffOnly) ||
     (this.closed && !this.staffOnly);
   @tracked getDropdownButtonState = false;
   post = this.args.attrs.post;
+  isMe =
+    this.currentUser && this.args.attrs.post.user_id === this.currentUser.id;
 
   isAutomaticallyClosed = () => {
     const poll = this.poll;
@@ -76,9 +83,10 @@ export default class PollComponent extends Component {
   };
 
   irvDropdownContent = [];
-  showLogin = () => {
-    this.register.lookup("route:application").send("showLogin");
-  };
+  // showLogin = () => {
+  //   this.showLogin();
+  //   //this.register.lookup("route:application").send("showLogin");
+  // };
   checkUserGroups = (user, poll) => {
     const pollGroups =
       poll && poll.groups && poll.groups.split(",").map((g) => g.toLowerCase());
@@ -97,7 +105,7 @@ export default class PollComponent extends Component {
       return;
     }
     if (!this.currentUser) {
-      return this.showLogin();
+      return;
     }
 
     return ajax("/polls/vote", {
@@ -239,7 +247,8 @@ export default class PollComponent extends Component {
       return;
     }
     if (!this.currentUser) {
-      return this.showLogin();
+      // unlikely, handled by template logic
+      return;
     }
     if (!this.checkUserGroups(this.currentUser, this.poll)) {
       return;
@@ -272,7 +281,7 @@ export default class PollComponent extends Component {
   }
 
   get canCastVotes() {
-    if (this.closed || this.showingResults) {
+    if (this.closed || this.showingResults || !this.currentUser) {
       return false;
     }
 
@@ -319,7 +328,14 @@ export default class PollComponent extends Component {
   }
 
   get showShowResultsButton() {
-    return !this.showResults && !this.hideResultsDisabled;
+    return (
+      !this.showResults &&
+      !this.hideResultsDisabled &&
+      !(this.poll.results === "on_vote" && !this.hasSavedVote && !this.isMe) &&
+      !(this.poll.results === "on_close" && !this.closed) &&
+      !(this.poll.results === "staff_only" && !this.isStaff) &&
+      this.voters > 0
+    );
   }
 
   get showRemoveVoteButton() {
@@ -358,6 +374,80 @@ export default class PollComponent extends Component {
     const average = this.voters === 0 ? 0 : round(totalScore / this.voters, -2);
 
     return htmlSafe(I18n.t("poll.average_rating", { average }));
+  }
+
+  @action
+  updatedVoters() {
+    this.preloadedVoters = this.args.preloadedVoters;
+    this.options = [...this.args.options];
+    if (this.isIrv) {
+      this.options.forEach((candidate) => {
+        let specificVote = this.vote.find(
+          (vote) => vote.digest === candidate.id
+        );
+        let rank = specificVote ? specificVote.rank : 0;
+        candidate.rank = rank;
+      });
+    }
+  }
+
+  @action
+  fetchVoters(optionId) {
+    let votersCount;
+    this.loading = true;
+    let options = this.options;
+    options.find((option) => option.id === optionId).loading = true;
+    this.options = [...options];
+
+    votersCount = this.options.find((option) => option.id === optionId).votes;
+
+    return ajax("/polls/voters.json", {
+      data: {
+        post_id: this.args.postId,
+        poll_name: this.args.pollName,
+        option_id: optionId,
+        page: Math.floor(votersCount / FETCH_VOTERS_COUNT) + 1,
+        limit: FETCH_VOTERS_COUNT,
+      },
+    })
+      .then((result) => {
+        const voters = optionId
+          ? this.preloadedVoters[optionId]
+          : this.preloadedVoters;
+        const newVoters = optionId ? result.voters[optionId] : result.voters;
+        const votersSet = new Set(voters.map((voter) => voter.username));
+        newVoters.forEach((voter) => {
+          if (!votersSet.has(voter.username)) {
+            votersSet.add(voter.username);
+            voters.push(voter);
+          }
+        });
+        // remove users who changed their vote
+        if (this.poll.type === "regular") {
+          Object.keys(this.preloadedVoters).forEach((otherOptionId) => {
+            if (optionId !== otherOptionId) {
+              this.preloadedVoters[otherOptionId] = this.preloadedVoters[
+                otherOptionId
+              ].filter((voter) => !votersSet.has(voter.username));
+            }
+          });
+        }
+
+        this.preloadedVoters[optionId] = [
+          ...new Set([...this.preloadedVoters[optionId], ...newVoters]),
+        ];
+      })
+      .catch((error) => {
+        if (error) {
+          popupAjaxError(error);
+        } else {
+          this.dialog.alert(I18n.t("poll.error_while_fetching_voters"));
+        }
+      })
+      .finally(() => {
+        options.find((option) => option.id === optionId).loading = false;
+        this.options = [...options];
+      });
   }
 
   @action

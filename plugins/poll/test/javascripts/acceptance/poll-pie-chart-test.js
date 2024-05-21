@@ -16,7 +16,7 @@ acceptance("Rendering polls with pie charts", function (needs) {
   test("Displays the pie chart", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
 
-    const poll = query(".poll");
+    const poll = query(".poll-outer");
 
     assert.strictEqual(
       query(".info-number", poll).innerHTML,

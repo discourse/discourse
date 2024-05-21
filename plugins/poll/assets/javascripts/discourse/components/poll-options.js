@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-
+import { inject as service } from "@ember/service";
 export default class PollOptionsComponent extends Component {
+  @service currentUser;
+
   isChosen = (option) => {
     return this.args.votes.includes(option.id);
   };
