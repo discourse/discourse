@@ -2,12 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { service } from "@ember/service";
-import { or } from "truth-helpers";
+import { eq, or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicListHeader from "discourse/components/topic-list/topic-list-header";
 import TopicListItem from "discourse/components/topic-list/topic-list-item";
-import VisitedLine from "discourse/components/topic-list/visited-line";
 import concatClass from "discourse/helpers/concat-class";
+import i18n from "discourse-common/helpers/i18n";
 
 export default class TopicList extends Component {
   @service currentUser;
@@ -156,10 +156,15 @@ export default class TopicList extends Component {
             @index={{index}}
           />
 
-          <VisitedLine
-            @lastVisitedTopic={{this.lastVisitedTopic}}
-            @topic={{topic}}
-          />
+          {{#if (eq topic this.lastVisitedTopic)}}
+            <tr class="topic-list-item-separator">
+              <td class="topic-list-data" colspan="6">
+                <span>
+                  {{i18n "topics.new_messages_marker"}}
+                </span>
+              </td>
+            </tr>
+          {{/if}}
 
           <PluginOutlet
             @name="after-topic-list-item"
