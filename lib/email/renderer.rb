@@ -29,10 +29,16 @@ module Email
             )
           Email::Styles.new(unstyled, @opts)
         end
-
+      Rails.logger.info("xxxxx EmailRenderer apply styles")
       style.format_basic
       style.format_html
-      DiscoursePluginRegistry.apply_modifier(:email_renderer_html, style, @message)
+      Rails.logger.info("xxxxx EmailRenderer post apply styles")
+      begin
+        DiscoursePluginRegistry.apply_modifier(:email_renderer_html, style, @message)
+      rescue => e
+        Rails.logger.info("xxxxx DiscoursePluginRegistry.apply_modifier error: #{e}")
+      end
+      Rails.logger.info("xxxxx EmailRenderer post apply plugin styles")
       style.to_html
     end
   end

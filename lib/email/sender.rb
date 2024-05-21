@@ -70,18 +70,26 @@ module Email
       @message.charset = "UTF-8"
 
       opts = {}
+      Rails.logger.info("xxxxx Sender.send pre renderer")
 
       renderer = Email::Renderer.new(@message, opts)
+      Rails.logger.info("xxxxx Sender Send 2")
 
       if @message.html_part
+        Rails.logger.info("xxxxx Sender Send 2a")
         @message.html_part.body = renderer.html
+        Rails.logger.info("xxxxx Sender Send 2b")
       else
+        Rails.logger.info("xxxxx Sender Send 2c")
         @message.html_part =
           Mail::Part.new do
             content_type "text/html; charset=UTF-8"
             body renderer.html
           end
+        Rails.logger.info("xxxxx Sender Send 2d")
+
       end
+      Rails.logger.info("xxxxx Sender Send 3")
 
       # Fix relative (ie upload) HTML links in markdown which do not work well in plain text emails.
       # These are the links we add when a user uploads a file or image.
@@ -128,6 +136,7 @@ module Email
 
       # always set a default Message ID from the host
       @message.header["Message-ID"] = Email::MessageIdService.generate_default
+      Rails.logger.info("xxxxx Sender Send 4")
 
       post = nil
       topic = nil
@@ -178,6 +187,7 @@ module Email
           end
         end
       end
+      Rails.logger.info("xxxxx Sender Send 5")
 
       if Email::Sender.bounceable_reply_address?
         email_log.bounce_key = SecureRandom.hex
@@ -195,6 +205,7 @@ module Email
         @message.header["Reply-To"] = header_value("Reply-To").gsub!("%{reply_key}", reply_key)
         @message.header[Email::MessageBuilder::ALLOW_REPLY_BY_EMAIL_HEADER] = nil
       end
+      Rails.logger.info("xxxxx Sender Send 6")
 
       MessageBuilder
         .custom_headers(SiteSetting.email_custom_headers)
@@ -236,6 +247,7 @@ module Email
             @message.header[key] = value.gsub!("%{reply_key}", reply_key) if reply_key.present?
           end
         end
+      Rails.logger.info("xxxxx Sender Send 7")
 
       # pass the original message_id when using mailjet/mandrill/sparkpost
       case ActionMailer::Base.smtp_settings[:address]
@@ -246,6 +258,7 @@ module Email
       when "smtp.sparkpostmail.com"
         merge_json_x_header("X-MSYS-API", metadata: { message_id: @message.message_id })
       end
+      Rails.logger.info("xxxxx Sender Send 8")
 
       # Parse the HTML again so we can make any final changes before
       # sending
@@ -264,14 +277,17 @@ module Email
            @message.html_part.body =~ /<img[^>]+>/
         style.strip_avatars_and_emojis
       end
+      Rails.logger.info("xxxxx Sender Send 9")
 
       # Embeds any of the secure images that have been attached inline,
       # removing the redaction notice.
       if SiteSetting.secure_uploads_allow_embed_images_in_emails
         style.inline_secure_images(@message.attachments, @message_attachments_index)
       end
+      Rails.logger.info("xxxxx Sender Send 10")
 
       @message.html_part.body = style.to_s
+      Rails.logger.info("xxxxx Sender Send 11")
 
       email_log.message_id = @message.message_id
 
@@ -291,6 +307,8 @@ module Email
       DiscourseEvent.trigger(:before_email_send, @message, @email_type)
 
       begin
+        Rails.logger.info("xxxxx Sender Send 12")
+
         message_response = @message.deliver!
 
         # TestMailer from the Mail gem does not return a real response, it

@@ -9,6 +9,8 @@ module Email
     ALLOW_REPLY_BY_EMAIL_HEADER = "X-Discourse-Allow-Reply-By-Email"
 
     def initialize(to, opts = nil)
+      Rails.logger.info("xxxxx mb init")
+
       @to = to
       @opts = opts || {}
 
@@ -37,16 +39,22 @@ module Email
             "user_notifications.visit_link_to_respond",
             @opts,
           )
+        Rails.logger.info("xxxxx ri here 1")
 
         if @opts[:include_respond_instructions] == false
+          Rails.logger.info("xxxxx ri here 2")
+
           @template_args[:respond_instructions] = ""
           @template_args[:respond_instructions] = I18n.t(
             "user_notifications.pm_participants",
             @template_args,
           ) if @opts[:private_reply]
         else
+
           if @opts[:only_reply_by_email]
             string = +"user_notifications.only_reply_by_email"
+            Rails.logger.info("xxxxx ri here 4  string: #{string}")
+
             string << "_pm" if @opts[:private_reply]
           else
             string =
@@ -57,8 +65,14 @@ module Email
                   +visit_link_to_respond_key
                 end
               )
+            Rails.logger.info("xxxxx ri here 5  string: #{string}")
+
             string << "_pm" if @opts[:private_reply]
           end
+          ri = "---\n" + I18n.t(string, @template_args)
+          Rails.logger.info("xxxxx ri: #{ri}")
+          Rails.logger.info("xxxxx string: #{string}")
+          Rails.logger.info("xxxxx ri: #{template_args.inspect}")
           @template_args[:respond_instructions] = "---\n" + I18n.t(string, @template_args)
         end
 
@@ -163,6 +177,10 @@ module Email
       if @template_args[:respond_instructions].present?
         respond_instructions =
           PrettyText.cook(@template_args[:respond_instructions], sanitize: false).html_safe
+        Rails.logger.info("xxxxx @template_args[:respond_instructions]: #{@template_args[:respond_instructions]}")
+        Rails.logger.info(@template_args[:respond_instructions])
+        Rails.logger.info("xxxxx respond_instructions: #{respond_instructions}")
+        Rails.logger.info(respond_instructions)
         html_override.gsub!("%{respond_instructions}", respond_instructions)
       else
         html_override.gsub!("%{respond_instructions}", "")

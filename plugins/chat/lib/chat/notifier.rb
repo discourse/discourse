@@ -107,7 +107,7 @@ module Chat
     private
 
     def list_users_to_notify
-      skip_notifications = @parsed_mentions.count > SiteSetting.max_mentions_per_chat_message
+      skip_notifications = false #@parsed_mentions.count > SiteSetting.max_mentions_per_chat_message
 
       to_notify = {}
       inaccessible = {}

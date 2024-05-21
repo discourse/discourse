@@ -3,6 +3,8 @@
 module Chat
   module UserNotificationsExtension
     def chat_summary(user, _ = nil)
+      Rails.logger.info("xxxxx chat_summary")
+
       guardian = Guardian.new(user)
       return unless guardian.can_chat?
 
@@ -48,7 +50,7 @@ module Chat
         from_alias: I18n.t("user_notifications.chat_summary.from", site_name: Email.site_title),
         subject: summary_subject(user, @grouped_messages),
       }
-
+      Rails.logger.info("xxxxx build_email")
       build_email(user.email, opts)
     end
 

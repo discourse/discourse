@@ -27,6 +27,7 @@ module Jobs
     end
 
     def execute(args)
+      Rails.logger.info("xxxxx UserEmail.execute")
       raise Discourse::InvalidParameters.new(:user_id) unless args[:user_id].present?
       raise Discourse::InvalidParameters.new(:type) unless args[:type].present?
 
@@ -45,10 +46,13 @@ module Jobs
     end
 
     def send_user_email(args)
+      Rails.logger.info("xxxxx send_user_email?")
+
       post = nil
       notification = nil
       type = args[:type]
       user = User.find_by(id: args[:user_id])
+      Rails.logger.info("xxxxx send_user_email? 2")
       to_address =
         args[:to_address].presence || user&.primary_email&.email.presence || "no_email_found"
 
@@ -58,6 +62,7 @@ module Jobs
       if to_address == "no_email_found"
         return skip(SkippedEmailLog.reason_types[:user_email_no_email])
       end
+      Rails.logger.info("xxxxx send_user_email? 3")
 
       if args[:post_id].present?
         post = Post.find_by(id: args[:post_id])
@@ -68,14 +73,16 @@ module Jobs
           return skip(SkippedEmailLog.reason_types[:user_email_access_denied])
         end
       end
+      Rails.logger.info("xxxxx send_user_email? 4")
 
       if args[:notification_id].present?
         notification = Notification.find_by(id: args[:notification_id])
       end
 
       message, skip_reason_type = message_for_email(user, post, type, notification, args)
-
+      Rails.logger.info("xxxxx send_user_email? 5")
       if message
+
         Email::Sender.new(message, type, user).send
 
         if (b = user.user_stat.bounce_score) > SiteSetting.bounce_score_erode_on_send
@@ -144,13 +151,16 @@ module Jobs
       end
 
       email_args = {}
+      Rails.logger.info("xxxxx message_for_email 1")
 
       if (post || notification || notification_type || args[:force_respect_seen_recently]) &&
            (seen_recently && !user.suspended?)
         return skip_message(SkippedEmailLog.reason_types[:user_email_seen_recently])
       end
+      Rails.logger.info("xxxxx message_for_email 2")
 
       email_args[:post] = post if post
+      Rails.logger.info("xxxxx message_for_email 3")
 
       if notification || notification_type
         email_args[:notification_type] ||= notification_type || notification.try(:notification_type)
@@ -163,6 +173,7 @@ module Jobs
           end
           email_args[:notification_type] = email_args[:notification_type].to_s
         end
+        Rails.logger.info("xxxxx message_for_email 5")
 
         if !SiteSetting.disable_mailing_list_mode && user.user_option.mailing_list_mode? &&
              user.user_option.mailing_list_mode_frequency > 0 && # don't catch notifications for users on daily mailing list mode
@@ -171,6 +182,7 @@ module Jobs
           # no need to log a reason when the mail was already sent via the mailing list job
           return nil, nil
         end
+        Rails.logger.info("xxxxx message_for_email 6")
 
         unless always_email_regular?(user, type) || always_email_private_message?(user, type)
           if (notification && notification.read?) || (post && post.seen?(user))
@@ -178,14 +190,17 @@ module Jobs
           end
         end
       end
+      Rails.logger.info("xxxxx message_for_email 7")
 
       skip_reason_type = skip_email_for_post(post, user)
       return skip_message(skip_reason_type) if skip_reason_type.present?
+      Rails.logger.info("xxxxx message_for_email 8")
 
       # Make sure that mailer exists
       unless UserNotifications.respond_to?(type)
         raise Discourse::InvalidParameters.new("type=#{type}")
       end
+      Rails.logger.info("xxxxx message_for_email 9")
 
       if email_token.present?
         email_args[:email_token] = email_token
@@ -196,6 +211,7 @@ module Jobs
           email_args[:requested_by_admin] = change_req.requested_by_admin? if change_req
         end
       end
+      Rails.logger.info("xxxxx message_for_email 10")
 
       email_args[:new_email] = args[:new_email] || user.email if type == "notify_old_email" ||
         type == "notify_old_email_add"
@@ -204,15 +220,18 @@ module Jobs
         email_args[:client_ip] = args[:client_ip]
         email_args[:user_agent] = args[:user_agent]
       end
+      Rails.logger.info("xxxxx message_for_email 11")
 
-      if EmailLog.reached_max_emails?(user, type)
-        return skip_message(SkippedEmailLog.reason_types[:exceeded_emails_limit])
-      end
+      # if EmailLog.reached_max_emails?(user, type)
+      #   return skip_message(SkippedEmailLog.reason_types[:exceeded_emails_limit])
+      # end
+      Rails.logger.info("xxxxx message_for_email 12")
 
       if !EmailLog::CRITICAL_EMAIL_TYPES.include?(type) &&
            user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
         return skip_message(SkippedEmailLog.reason_types[:exceeded_bounces_limit])
       end
+      Rails.logger.info("xxxxx message_for_email 13")
 
       if args[:user_history_id]
         email_args[:user_history] = UserHistory.where(id: args[:user_history_id]).first
@@ -227,6 +246,7 @@ module Jobs
 
       # Update the to address if we have a custom one
       message.to = to_address if message && to_address.present?
+      Rails.logger.info("xxxxx message_for_email 14")
 
       [message, nil]
     end

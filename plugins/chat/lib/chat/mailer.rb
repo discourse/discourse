@@ -3,6 +3,8 @@
 module Chat
   class Mailer
     def self.send_unread_mentions_summary
+      Rails.logger.info("xxxxx send_unread_mentions_summary")
+
       return unless SiteSetting.chat_enabled
 
       users_with_unprocessed_unread_mentions.find_each do |user|
@@ -41,14 +43,14 @@ module Chat
       users =
         User
           .joins(:user_option)
-          .where(user_options: { chat_enabled: true, chat_email_frequency: when_away_frequency })
-          .where("users.last_seen_at < ?", 15.minutes.ago)
+      # .where(user_options: { chat_enabled: true, chat_email_frequency: when_away_frequency })
+      #.where("users.last_seen_at < ?", 15.minutes.ago)
 
       if !allowed_group_ids.include?(Group::AUTO_GROUPS[:everyone])
         users = users.joins(:groups).where(groups: { id: allowed_group_ids })
       end
 
-      users
+      u = users
         .select(
           "users.id",
           "ARRAY_AGG(ARRAY[uccm.id, c_msg.id]) AS memberships_with_unread_messages",
@@ -72,6 +74,8 @@ module Chat
         )
       SQL
         .group("users.id, uccm.user_id")
+      Rails.logger.info("xxxxx u.count : #{u.length}")
+      u
     end
   end
 end
