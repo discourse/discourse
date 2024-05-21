@@ -69,7 +69,7 @@ acceptance(
       assert.deepEqual(await this.subject.play(channel), false);
     });
 
-    test("default", async function (assert) {
+    test("plays sound", async function (assert) {
       const channel = buildDirectMessageChannel(getOwner(this));
 
       assert.deepEqual(await this.subject.play(channel), true);
