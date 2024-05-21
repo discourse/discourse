@@ -219,7 +219,7 @@
       position: relative; // Chrome needs this, otherwise the line is above the text
       background-color: var(--secondary);
       color: var(--danger-medium);
-      padding: 0 8px;
+      padding: 0 0.55em;
       font-size: var(--font-down-1);
     }
   }

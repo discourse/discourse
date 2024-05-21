@@ -323,7 +323,7 @@ textarea {
 
 .radio.inline .radio.inline,
 .checkbox.inline .checkbox.inline {
-  margin-left: 10px;
+  margin-left: 0.67em;
 }
 
 .container {
@@ -331,7 +331,7 @@ textarea {
 }
 
 .wrap {
-  --d-wrap-padding-h: 10px;
+  --d-wrap-padding-h: 0.67em;
   max-width: var(--d-max-width);
   margin-right: auto;
   margin-left: auto;
