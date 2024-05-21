@@ -9,6 +9,7 @@ const shortcuts = {
   form: <template><form ...attributes>{{yield}}</form></template>,
   a: <template><a ...attributes>{{yield}}</a></template>,
   button: <template><button ...attributes>{{yield}}</button></template>,
+  td: <template><td ...attributes>{{yield}}</td></template>,
 };
 
 /**
