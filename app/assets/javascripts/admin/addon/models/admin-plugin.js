@@ -29,6 +29,10 @@ export default class AdminPlugin {
     this.extras = args.extras;
   }
 
+  get useNewShowRoute() {
+    return this.adminRoute?.use_new_show_route;
+  }
+
   get snakeCaseName() {
     return this.name.replaceAll("-", "_");
   }
