@@ -2960,23 +2960,9 @@ tr_TR:
     bulk_invite_succeeded:
       title: "Toplu Davet Başarılı"
       subject_template: "Toplu kullanıcı daveti başarıyla işlendi"
-      text_body_template: |
-        Toplu kullanıcı daveti dosyanız işlendi, %{sent} davet postalandı, %{skipped} atlandı ve %{warnings} uyarı.
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_failed:
       title: "Toplu Davet Başarısız"
       subject_template: "Toplu kullanıcı daveti hatalarla işlendi"
-      text_body_template: |
-        Toplu kullanıcı davet dosyanız işlendi, %{sent} davet postalandı, %{skipped} atlandı, %{warnings} uyarı ve %{failed} hata.
-
-        İşte günlük:
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Gruba Sahip Olarak Eklendi"
       subject_template: "%{group_name} grubunun sahibi olarak eklendiniz"

@@ -7,15 +7,27 @@
 {{/if}}
 
 {{#if @model.sharedDrafts}}
-  <TopicList
-    @listTitle="shared_drafts.title"
-    @top={{this.top}}
-    @hideCategory="true"
-    @category={{@category}}
-    @topics={{@model.sharedDrafts}}
-    @discoveryList={{true}}
-    class="shared-drafts"
-  />
+  {{#if this.currentUser.use_glimmer_topic_list}}
+    <TopicList::List
+      @listTitle="shared_drafts.title"
+      @top={{this.top}}
+      @hideCategory="true"
+      @category={{@category}}
+      @topics={{@model.sharedDrafts}}
+      @discoveryList={{true}}
+      class="shared-drafts"
+    />
+  {{else}}
+    <TopicList
+      @listTitle="shared_drafts.title"
+      @top={{this.top}}
+      @hideCategory="true"
+      @category={{@category}}
+      @topics={{@model.sharedDrafts}}
+      @discoveryList={{true}}
+      class="shared-drafts"
+    />
+  {{/if}}
 {{/if}}
 
 <DiscoveryTopicsList
@@ -75,31 +87,59 @@
   </span>
 
   {{#if this.hasTopics}}
-    <TopicList
-      @highlightLastVisited={{true}}
-      @top={{this.top}}
-      @hot={{this.hot}}
-      @showTopicPostBadges={{this.showTopicPostBadges}}
-      @showPosters={{true}}
-      @canBulkSelect={{@canBulkSelect}}
-      @bulkSelectHelper={{@bulkSelectHelper}}
-      @changeSort={{@changeSort}}
-      @hideCategory={{@model.hideCategory}}
-      @order={{this.order}}
-      @ascending={{this.ascending}}
-      @expandGloballyPinned={{this.expandGloballyPinned}}
-      @expandAllPinned={{this.expandAllPinned}}
-      @category={{@category}}
-      @topics={{@model.topics}}
-      @discoveryList={{true}}
-      @focusLastVisitedTopic={{true}}
-      @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
-      @newListSubset={{@model.params.subset}}
-      @changeNewListSubset={{@changeNewListSubset}}
-      @newRepliesCount={{this.newRepliesCount}}
-      @newTopicsCount={{this.newTopicsCount}}
-    />
+    {{#if this.currentUser.use_glimmer_topic_list}}
+      <TopicList::List
+        @highlightLastVisited={{true}}
+        @top={{this.top}}
+        @hot={{this.hot}}
+        @showTopicPostBadges={{this.showTopicPostBadges}}
+        @showPosters={{true}}
+        @canBulkSelect={{@canBulkSelect}}
+        @bulkSelectHelper={{@bulkSelectHelper}}
+        @changeSort={{@changeSort}}
+        @hideCategory={{@model.hideCategory}}
+        @order={{this.order}}
+        @ascending={{this.ascending}}
+        @expandGloballyPinned={{this.expandGloballyPinned}}
+        @expandAllPinned={{this.expandAllPinned}}
+        @category={{@category}}
+        @topics={{@model.topics}}
+        @discoveryList={{true}}
+        @focusLastVisitedTopic={{true}}
+        @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
+        @newListSubset={{@model.params.subset}}
+        @changeNewListSubset={{@changeNewListSubset}}
+        @newRepliesCount={{this.newRepliesCount}}
+        @newTopicsCount={{this.newTopicsCount}}
+      />
+    {{else}}
+      <TopicList
+        @highlightLastVisited={{true}}
+        @top={{this.top}}
+        @hot={{this.hot}}
+        @showTopicPostBadges={{this.showTopicPostBadges}}
+        @showPosters={{true}}
+        @canBulkSelect={{@canBulkSelect}}
+        @bulkSelectHelper={{@bulkSelectHelper}}
+        @changeSort={{@changeSort}}
+        @hideCategory={{@model.hideCategory}}
+        @order={{this.order}}
+        @ascending={{this.ascending}}
+        @expandGloballyPinned={{this.expandGloballyPinned}}
+        @expandAllPinned={{this.expandAllPinned}}
+        @category={{@category}}
+        @topics={{@model.topics}}
+        @discoveryList={{true}}
+        @focusLastVisitedTopic={{true}}
+        @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
+        @newListSubset={{@model.params.subset}}
+        @changeNewListSubset={{@changeNewListSubset}}
+        @newRepliesCount={{this.newRepliesCount}}
+        @newTopicsCount={{this.newTopicsCount}}
+      />
+    {{/if}}
   {{/if}}
+
   <span>
     <PluginOutlet
       @name="after-topic-list"

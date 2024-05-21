@@ -1,3 +1,13 @@
+<DBreadcrumbsItem as |linkClass|>
+  <LinkTo
+    @route="adminPlugins.show.settings"
+    @model={{@model.plugin}}
+    class={{linkClass}}
+  >
+    {{i18n "admin.plugins.change_settings_short"}}
+  </LinkTo>
+</DBreadcrumbsItem>
+
 <div
   class="content-body admin-plugin-config-area__settings admin-detail pull-left"
 >

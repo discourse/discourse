@@ -50,7 +50,6 @@ RSpec.describe Users::OmniauthCallbacksController do
             end
             .new
 
-        provider.enabled_setting = "ubuntu_login_enabled"
         provider
       end
 

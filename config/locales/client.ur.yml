@@ -598,6 +598,7 @@ ur:
       topic_count_long: "بنائے گئے ٹاپک"
       post_count: "جوابات"
       post_count_long: "پوسٹ کیے گئے جوابات"
+      no_results_with_search: "کوئی نتائج نہیں پائے گئے۔"
       days_visited: "زائرین کی تعداد"
       days_visited_long: "زیارت کے دن"
       posts_read: "پڑھ لیا گیا"

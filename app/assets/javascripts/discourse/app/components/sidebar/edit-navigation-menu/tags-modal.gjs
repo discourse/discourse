@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import { gt, includes, or } from "truth-helpers";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { gt, has, or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -20,13 +20,14 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
   @service siteSettings;
   @service store;
 
-  @tracked filter = "";
-  @tracked onlySelected = false;
-  @tracked onlyUnSelected = false;
+  @tracked disableFiltering = false;
+  @tracked saving = false;
+  @tracked selectedTags = new TrackedSet([...this.currentUser.sidebarTagNames]);
   @tracked tags = [];
-  @tracked tagsLoading;
-  @tracked disableFiltering;
-  @tracked selectedTags = [...this.currentUser.sidebarTagNames];
+  @tracked tagsLoading = false;
+  observer;
+  onlySelected = false;
+  onlyUnselected = false;
 
   constructor() {
     super(...arguments);
@@ -38,30 +39,25 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
 
     const findArgs = {};
 
-    if (this.filter !== "") {
+    if (this.filter) {
       findArgs.filter = this.filter;
     }
 
     if (this.onlySelected) {
-      findArgs.only_tags = this.selectedTags.join(",");
+      findArgs.only_tags = [...this.selectedTags].join(",");
+    } else if (this.onlyUnselected) {
+      findArgs.exclude_tags = [...this.selectedTags].join(",");
     }
 
-    if (this.onlyUnselected) {
-      findArgs.exclude_tags = this.selectedTags.join(",");
+    try {
+      const tags = await this.store.findAll("listTag", findArgs);
+      this.tags = tags;
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.tagsLoading = false;
+      this.disableFiltering = false;
     }
-
-    await this.store
-      .findAll("listTag", findArgs)
-      .then((tags) => {
-        this.tags = tags;
-      })
-      .catch((error) => {
-        popupAjaxError(error);
-      })
-      .finally(() => {
-        this.tagsLoading = false;
-        this.disableFiltering = false;
-      });
   }
 
   @action
@@ -137,38 +133,36 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
 
   @action
   resetToDefaults() {
-    this.selectedTags =
-      this.siteSettings.default_navigation_menu_tags.split("|");
+    this.selectedTags = new TrackedSet(
+      this.siteSettings.default_navigation_menu_tags.split("|")
+    );
   }
 
   @action
   toggleTag(tag) {
-    if (this.selectedTags.includes(tag)) {
-      this.selectedTags.removeObject(tag);
+    if (this.selectedTags.has(tag)) {
+      this.selectedTags.delete(tag);
     } else {
-      this.selectedTags.addObject(tag);
+      this.selectedTags.add(tag);
     }
   }
 
   @action
-  save() {
+  async save() {
     this.saving = true;
     const initialSidebarTags = this.currentUser.sidebar_tags;
-    this.currentUser.set("sidebar_tag_names", this.selectedTags);
+    this.currentUser.set("sidebar_tag_names", [...this.selectedTags]);
 
-    this.currentUser
-      .save(["sidebar_tag_names"])
-      .then((result) => {
-        this.currentUser.set("sidebar_tags", result.user.sidebar_tags);
-        this.args.closeModal();
-      })
-      .catch((error) => {
-        this.currentUser.set("sidebar_tags", initialSidebarTags);
-        popupAjaxError(error);
-      })
-      .finally(() => {
-        this.saving = false;
-      });
+    try {
+      const result = await this.currentUser.save(["sidebar_tag_names"]);
+      this.currentUser.set("sidebar_tags", result.user.sidebar_tags);
+      this.args.closeModal();
+    } catch (error) {
+      this.currentUser.set("sidebar_tags", initialSidebarTags);
+      popupAjaxError(error);
+    } finally {
+      this.saving = false;
+    }
   }
 
   <template>
@@ -204,10 +198,10 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
               data-tag-name={{tag.name}}
               class="sidebar-tags-form__tag"
             >
-              <Input
+              <input
                 {{on "click" (fn this.toggleTag tag.name)}}
-                @type="checkbox"
-                @checked={{includes this.selectedTags tag.name}}
+                type="checkbox"
+                checked={{has this.selectedTags tag.name}}
                 id={{concat "sidebar-tags-form__input--" tag.name}}
                 class="sidebar-tags-form__input"
               />

@@ -687,6 +687,7 @@ fi:
       topic_count_long: "Ketjunaloituksia"
       post_count: "Vastauksia"
       post_count_long: "Kirjoitettuja vastauksia"
+      no_results_with_search: "Ei tuloksia."
       days_visited: "Vierailut"
       days_visited_long: "Vierailupäiviä"
       posts_read: "Luetut"

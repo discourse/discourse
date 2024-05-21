@@ -586,6 +586,7 @@ vi:
       topic_count_long: "Chủ đề đã được tạo"
       post_count: "Trả lời"
       post_count_long: "Trả lời đã đăng"
+      no_results_with_search: "Không tìm thấy kết quả."
       days_visited: "Ghé thăm"
       days_visited_long: "Ngày đã ghé thăm"
       posts_read: "Đã đọc"

@@ -2352,6 +2352,13 @@ developer:
     default: ""
     allow_any: false
     refresh: true
+  experimental_glimmer_topic_list_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
   enable_experimental_lightbox:
     default: false
     client: true
