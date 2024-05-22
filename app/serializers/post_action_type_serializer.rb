@@ -14,7 +14,7 @@ class PostActionTypeSerializer < ApplicationSerializer
   end
 
   def name
-    i18n("title", default: object.class.flag_settings.names[object.id])
+    i18n("title", default: object.class.names[object.id])
   end
 
   def description

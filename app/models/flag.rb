@@ -9,14 +9,15 @@ class Flag < ActiveRecord::Base
   after_save :reset_flag_settings!
   after_destroy :reset_flag_settings!
 
+  default_scope { order(:position) }
+
   def used?
     PostAction.exists?(post_action_type_id: self.id) ||
       ReviewableScore.exists?(reviewable_score_type: self.id)
   end
 
   def self.reset_flag_settings!
-    PostActionType.reload_types
-    ReviewableScore.reload_types
+    DiscourseEvent.trigger(:reload_post_action_types)
   end
 
   def system?

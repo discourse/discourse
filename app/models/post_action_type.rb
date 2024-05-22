@@ -11,39 +11,51 @@ class PostActionType < ActiveRecord::Base
     ApplicationSerializer.expire_cache_fragment!(/\Apost_action_flag_types_/)
   end
 
+  DiscourseEvent.on(:reload_post_action_types) { self.reload_types }
+
   class << self
     attr_reader :flag_settings
 
-    def replace_flag_settings(settings)
-      if settings
-        @flag_settings = settings
-      else
-        reload_types
-      end
-      @types = nil
+    def initialize_flag_settings
+      @flag_settings = FlagSettings.new
     end
 
-    def ordered
-      order("position asc")
+    def replace_flag_settings(settings)
+      @flag_settings = settings if settings
+      @all_flags = nil
     end
 
     def types
-      unless @types
-        # NOTE: Previously bookmark was type 1 but that has been superseded
-        # by the separate Bookmark model and functionality
-        @types = Enum.new(like: 2)
-        @types.merge!(flag_settings.flag_types)
+      if overriden_by_plugin?
+        Enum.new(like: 2).merge!(flag_settings.flag_types)
+      else
+        Enum.new(like: 2).merge(flag_types)
       end
+    end
 
-      @types
+    def reload_types
+      @all_flags = nil
+      ReviewableScore.reload_types
+    end
+
+    def overriden_by_plugin?
+      flag_settings.flag_types.present?
+    end
+
+    def all_flags
+      @all_flags ||= Flag.all
     end
 
     def auto_action_flag_types
-      flag_settings.auto_action_types
+      if overriden_by_plugin?
+        flag_settings.auto_action_types
+      else
+        flag_enum(all_flags.select { |flag| flag.auto_action_type })
+      end
     end
 
     def public_types
-      @public_types ||= types.except(*flag_types.keys << :notify_user)
+      types.except(*flag_types.keys << :notify_user)
     end
 
     def public_type_ids
@@ -51,11 +63,19 @@ class PostActionType < ActiveRecord::Base
     end
 
     def flag_types_without_custom
-      flag_settings.without_custom_types
+      if overriden_by_plugin?
+        flag_settings.without_custom_types
+      else
+        flag_enum(all_flags.select { |flag| !flag.custom_type })
+      end
     end
 
     def flag_types
-      flag_settings.flag_types
+      if overriden_by_plugin?
+        flag_settings.flag_types
+      else
+        flag_enum(all_flags)
+      end
     end
 
     # flags resulting in mod notifications
@@ -64,42 +84,45 @@ class PostActionType < ActiveRecord::Base
     end
 
     def notify_flag_types
-      flag_settings.notify_types
+      if overriden_by_plugin?
+        flag_settings.notify_types
+      else
+        flag_enum(all_flags.select { |flag| flag.notify_type })
+      end
     end
 
     def topic_flag_types
-      flag_settings.topic_flag_types
+      if overriden_by_plugin?
+        flag_settings.topic_flag_types
+      else
+        flag_enum(all_flags.select { |flag| flag.applies_to?("Topic") })
+      end
     end
 
     def custom_types
-      flag_settings.custom_types
+      if overriden_by_plugin?
+        flag_settings.custom_types
+      else
+        flag_enum(all_flags.select { |flag| flag.custom_type })
+      end
+    end
+
+    def names
+      all_flags.pluck(:id, :name).to_h
     end
 
     def is_flag?(sym)
       flag_types.valid?(sym)
     end
 
-    def reload_types
-      @types = nil
-      @flag_settings = FlagSettings.new
-      Flag
-        .enabled
-        .order(:position)
-        .each do |flag|
-          @flag_settings.add(
-            flag.id,
-            flag.name_key.to_sym,
-            topic_type: flag.applies_to?("Topic"),
-            notify_type: flag.notify_type,
-            auto_action_type: flag.auto_action_type,
-            custom_type: flag.custom_type,
-            name: flag.name,
-          )
-        end
+    private
+
+    def flag_enum(scope)
+      Enum.new(scope.map { |flag| [flag.name_key.to_sym, flag.id] }.to_h)
     end
   end
 
-  reload_types
+  initialize_flag_settings
 end
 
 # == Schema Information
