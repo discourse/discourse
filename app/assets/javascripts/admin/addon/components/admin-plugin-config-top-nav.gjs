@@ -18,7 +18,7 @@ export default class AdminPluginConfigTopNav extends Component {
   <template>
     <div class="admin-controls">
       <HorizontalOverflowNav
-        class="nav-pills action-list main-nav nav plugin-nav"
+        class="nav-pills action-list main-nav nav plugin-nav admin-plugin-config-page__top-nav"
       >
         {{#each this.adminPluginNavManager.currentConfigNav.links as |navLink|}}
           <NavItem
