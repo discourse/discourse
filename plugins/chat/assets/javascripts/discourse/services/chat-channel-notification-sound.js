@@ -1,4 +1,5 @@
 import Service, { service } from "@ember/service";
+import { canUserReceiveNotifications } from "discourse/lib/desktop-notifications";
 
 export default class ChatChannelNotificationSound extends Service {
   @service chat;
@@ -7,15 +8,15 @@ export default class ChatChannelNotificationSound extends Service {
   @service site;
 
   async play(channel) {
+    if (!canUserReceiveNotifications(this.currentUser)) {
+      return false;
+    }
+
     if (channel.isCategoryChannel) {
       return false;
     }
 
     if (channel.chatable.group) {
-      return false;
-    }
-
-    if (this.currentUser.isInDoNotDisturb()) {
       return false;
     }
 
