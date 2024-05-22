@@ -26,11 +26,8 @@ class PostActionType < ActiveRecord::Base
     end
 
     def types
-      if overriden_by_plugin?
-        Enum.new(like: 2).merge!(flag_settings.flag_types)
-      else
-        Enum.new(like: 2).merge(flag_types)
-      end
+      return Enum.new(like: 2).merge!(flag_settings.flag_types) if overridden_by_plugin?
+      Enum.new(like: 2).merge(flag_types)
     end
 
     def reload_types
@@ -38,7 +35,7 @@ class PostActionType < ActiveRecord::Base
       ReviewableScore.reload_types
     end
 
-    def overriden_by_plugin?
+    def overridden_by_plugin?
       flag_settings.flag_types.present?
     end
 
@@ -47,8 +44,8 @@ class PostActionType < ActiveRecord::Base
     end
 
     def auto_action_flag_types
-  return flag_settings.auto_action_types if overriden_by_plugin?
-  flag_enum(all_flags.select { |flag| flag.auto_action_type })
+      return flag_settings.auto_action_types if overridden_by_plugin?
+      flag_enum(all_flags.select { |flag| flag.auto_action_type })
     end
 
     def public_types
@@ -60,19 +57,13 @@ class PostActionType < ActiveRecord::Base
     end
 
     def flag_types_without_custom
-      if overriden_by_plugin?
-        flag_settings.without_custom_types
-      else
-        flag_enum(all_flags.select { |flag| !flag.custom_type })
-      end
+      return flag_settings.without_custom_types if overridden_by_plugin?
+      flag_enum(all_flags.select { |flag| !flag.custom_type })
     end
 
     def flag_types
-      if overriden_by_plugin?
-        flag_settings.flag_types
-      else
-        flag_enum(all_flags)
-      end
+      return flag_settings.flag_types if overridden_by_plugin?
+      flag_enum(all_flags)
     end
 
     # flags resulting in mod notifications
@@ -81,15 +72,12 @@ class PostActionType < ActiveRecord::Base
     end
 
     def notify_flag_types
-      if overriden_by_plugin?
-        flag_settings.notify_types
-      else
-        flag_enum(all_flags.select { |flag| flag.notify_type })
-      end
+      return flag_settings.notify_types if overridden_by_plugin?
+      flag_enum(all_flags.select { |flag| flag.notify_type })
     end
 
     def topic_flag_types
-      if overriden_by_plugin?
+      if overridden_by_plugin?
         flag_settings.topic_flag_types
       else
         flag_enum(all_flags.select { |flag| flag.applies_to?("Topic") })
@@ -97,11 +85,8 @@ class PostActionType < ActiveRecord::Base
     end
 
     def custom_types
-      if overriden_by_plugin?
-        flag_settings.custom_types
-      else
-        flag_enum(all_flags.select { |flag| flag.custom_type })
-      end
+      return flag_settings.custom_types if overridden_by_plugin?
+      flag_enum(all_flags.select { |flag| flag.custom_type })
     end
 
     def names
