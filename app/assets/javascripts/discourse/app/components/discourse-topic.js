@@ -113,7 +113,6 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
       ".cooked a, a.track-link",
       (e) => ClickTrack.trackClick(e, getOwner(this))
     );
-    this.header.topic = this.topic;
   },
 
   willDestroy() {
