@@ -3,7 +3,7 @@ import concatClass from "discourse/helpers/concat-class";
 
 export default class Label extends Component {
   <template>
-    <label class={{concatClass "d-form-field__label"}} for={{@name}}>
+    <label class={{concatClass "d-form-field__label"}} for={{@for}}>
       {{@label}}
       {{#if @optional}}
         <span class="d-form-field__optional">(Optional)</span>

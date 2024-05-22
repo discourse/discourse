@@ -8,11 +8,13 @@ import Node from "form-kit/lib/node";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import Col from "./col";
+import FormGroup from "./form/group";
+import FormInput from "./form/input";
 import Text from "./inputs/text";
 import Row from "./row";
 import Section from "./section";
 
-export default class FormKit extends Component {
+export default class Form extends Component {
   formeElement = null;
 
   registerFormElement = modifier((element) => {
@@ -39,18 +41,18 @@ export default class FormKit extends Component {
 
   <template>
     <form class={{concatClass "d-form"}} {{this.registerFormElement}}>
-      <Section @node={{this.node}}>
-        {{yield
-          (hash
-            Text=(component FieldWrapper component=Text node=this.node)
-            Section=(component Section node=this.node)
-            Row=(component Row node=this.node)
-            Col=(component Col node=this.node)
-            Section=(component Section node=this.node)
-            ValidationMessages=(component ValidationMessages node=this.node)
-          )
-        }}
-      </Section>
+      {{yield
+        (hash
+          Text=(component FieldWrapper component=Text node=this.node)
+          Section=(component Section node=this.node)
+          Row=(component Row node=this.node)
+          Col=(component Col node=this.node)
+          Group=(component FormGroup node=this.node)
+          Input=(component FormInput node=this.node)
+          Section=(component Section node=this.node)
+          ValidationMessages=(component ValidationMessages node=this.node)
+        )
+      }}
 
       {{!-- {{#if @onSubmit}}
         <DButton

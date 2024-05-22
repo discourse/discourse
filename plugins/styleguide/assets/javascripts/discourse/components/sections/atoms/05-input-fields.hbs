@@ -2,8 +2,22 @@
 
 <h2>HORIZONTAL</h2>
 
-<FormKit @onSubmit={{@dummy.onSubmit}} @horizontal={{true}} as |fk|>
-  <fk.Text
+<Form @onSubmit={{@dummy.onSubmit}} @horizontal={{true}} as |form|>
+  <form.Group
+    @label="test"
+    @for="something"
+    @help="help"
+    @description="description"
+  >
+    <form.Input
+      @id="input-1"
+      @value="something"
+      @type="email"
+      @placeholder="Enter email"
+    />
+  </form.Group>
+
+  {{!-- <fk.Text
     @name="foo"
     @label="test"
     @validation="required|length:5,16"
@@ -17,14 +31,14 @@
     @value="something"
     @optional={{true}}
   />
-  <fk.Text @name="baz" @validation="between:8,14" />
-</FormKit>
+  <fk.Text @name="baz" @validation="between:8,14" /> --}}
+</Form>
 
 <hr />
 
 <h2>STACKED</h2>
 
-<FormKit @onSubmit={{@dummy.onSubmit}} as |fk|>
+{{!-- <FormKit @onSubmit={{@dummy.onSubmit}} as |fk|>
   <fk.Text
     @info="An explanation about the usecase of this form."
     @name="foo"
@@ -40,7 +54,7 @@
     @optional={{true}}
   />
   <fk.Text @name="baz" @validation="between:8,14" />
-</FormKit>
+</FormKit> --}}
 
 <form class="d-form">
   <h2>Horizontal form (classic)</h2>
