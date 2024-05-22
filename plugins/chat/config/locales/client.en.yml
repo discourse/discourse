@@ -58,6 +58,10 @@ en:
           one: "You are moving <strong>%{count}</strong> message. Select a destination channel. A placeholder message will be created in the <strong>%{channelTitle}</strong> channel to indicate that this message has been moved. Note that reply chains will not be preserved in the new channel, and messages in the old channel will no longer show as replying to any moved messages."
           other: "You are moving <strong>%{count}</strong> messages. Select a destination channel. A placeholder message will be created in the <strong>%{channelTitle}</strong> channel to indicate that these messages have been moved. Note that reply chains will not be preserved in the new channel, and messages in the old channel will no longer show as replying to any moved messages."
         confirm_move: "Move Messages"
+      delete_messages:
+        confirm:
+          one: "Are you sure you want to delete this message?"
+          other: "Are you sure you want to delete these %{count} messages?"
       channel_settings:
         title: "Channel settings"
         edit: "Edit"
@@ -552,6 +556,7 @@ en:
         cancel: "Cancel"
         quote_selection: "Quote in Topic"
         copy: "Copy"
+        delete: "Delete (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "Move to Channel"
         error: "There was an error moving the chat messages"
         title: "Move Chat to Topic"
