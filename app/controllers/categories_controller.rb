@@ -338,6 +338,8 @@ class CategoriesController < ApplicationController
     term = params[:term].to_s.strip
     page = [1, params[:page].to_i].max
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
+    only = Category.where(id: params[:only].to_a.map(&:to_i)) if params[:only].present?
+    except = Category.where(id: params[:except].to_a.map(&:to_i)) if params[:except].present?
 
     limit =
       (
@@ -350,7 +352,7 @@ class CategoriesController < ApplicationController
 
     categories =
       Category
-        .limited_categories_matching(parent_category_id, term)
+        .limited_categories_matching(only, except, parent_category_id, term)
         .includes(
           :uploaded_logo,
           :uploaded_logo_dark,

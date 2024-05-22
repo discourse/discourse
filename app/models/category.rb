@@ -283,7 +283,7 @@ class Category < ActiveRecord::Base
   # Also check for prefix matches. If a category has a prefix match, its
   # ancestors report a match too.
   scope :tree_search,
-        ->(term) do
+        ->(only, except, term) do
           term = term.strip
           escaped_term = ActiveRecord::Base.connection.quote(term.downcase)
           prefix_match = "starts_with(LOWER(categories.name), #{escaped_term})"
@@ -298,6 +298,17 @@ class Category < ActiveRecord::Base
               false
             )
           SQL
+
+          if except
+            prefix_match =
+              "NOT categories.id IN (#{except.reselect(:id).to_sql}) AND #{prefix_match}"
+            word_match = "NOT categories.id IN (#{except.reselect(:id).to_sql}) AND #{word_match}"
+          end
+
+          if only
+            prefix_match = "categories.id IN (#{only.reselect(:id).to_sql}) AND #{prefix_match}"
+            word_match = "categories.id IN (#{only.reselect(:id).to_sql}) AND #{word_match}"
+          end
 
           categories =
             Category.select(
@@ -329,10 +340,10 @@ class Category < ActiveRecord::Base
               )
           end
 
-          Category
-            .from("(#{categories.to_sql}) AS categories")
-            .where(has_word_match: true)
-            .select("has_prefix_match AS matches", :id)
+          categories =
+            Category.from("(#{categories.to_sql}) AS categories").where(has_word_match: true)
+
+          categories.select("has_prefix_match AS matches", :id)
         end
 
   # Given a relation, 'matches', which contains category ids and a 'matches'
@@ -383,10 +394,10 @@ class Category < ActiveRecord::Base
         end
 
   scope :limited_categories_matching,
-        ->(parent_id, term) do
+        ->(only, except, parent_id, term) do
           Category.joins(<<~SQL).order("c.ancestors || ARRAY[ROW(NOT c.matches, c.name)]")
             INNER JOIN (
-              WITH matches AS (#{Category.tree_search(term).where.not(id: SiteSetting.uncategorized_category_id).to_sql})
+              WITH matches AS (#{Category.tree_search(only, except, term).to_sql})
               #{Category.where(parent_category_id: parent_id).select_descendants(Category.from("matches").select(:matches, :id), 5).to_sql}
             ) AS c
             ON categories.id = c.id
