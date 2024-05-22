@@ -112,6 +112,8 @@ function setupNotifications(appEvents) {
   });
 
   window.addEventListener("focus", function () {
+    resetIdle();
+
     if (!primaryTab) {
       primaryTab = true;
       keyValueStore.setItem(focusTrackerKey, mbClientId);
