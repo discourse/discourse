@@ -171,7 +171,7 @@ function canUserReceiveNotifications(user) {
 // Call-in point from message bus
 async function onNotification(data, siteSettings, user, appEvents) {
   if (!canUserReceiveNotifications(user)) {
-    return;
+    return false;
   }
 
   if (!liveEnabled) {
