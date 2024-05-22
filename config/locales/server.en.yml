@@ -638,7 +638,6 @@ en:
     request_membership_pm:
       title: "Membership Request for @%{group_name}"
     request_accepted_pm:
-      title: "You've been accepted into @%{group_name}"
       body: |
         Your request to enter @%{group_name} has been accepted and you are now a member.
 
