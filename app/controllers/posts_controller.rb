@@ -61,7 +61,7 @@ class PostsController < ApplicationController
   def latest
     params.permit(:before)
     last_post_id = params[:before].to_i
-    last_post_id = Post.last.id if last_post_id <= 0
+    last_post_id = nil if last_post_id <= 0
 
     if params[:id] == "private_posts"
       raise Discourse::NotFound if current_user.nil?
@@ -81,8 +81,7 @@ class PostsController < ApplicationController
       posts =
         Post
           .private_posts
-          .order(created_at: :desc)
-          .where("posts.id <= ?", last_post_id)
+          .order(id: :desc)
           .includes(topic: :category)
           .includes(user: %i[primary_group flair_group])
           .includes(:reply_to_user)
@@ -96,8 +95,7 @@ class PostsController < ApplicationController
           .public_posts
           .visible
           .where(post_type: Post.types[:regular])
-          .order(created_at: :desc)
-          .where("posts.id <= ?", last_post_id)
+          .order(id: :desc)
           .includes(topic: :category)
           .includes(user: %i[primary_group flair_group])
           .includes(:reply_to_user)
@@ -107,6 +105,8 @@ class PostsController < ApplicationController
       rss_description = I18n.t("rss_description.posts")
       @use_canonical = true
     end
+
+    posts = posts.where("posts.id <= ?", last_post_id) if last_post_id
 
     posts = posts.to_a
 
