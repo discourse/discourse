@@ -698,6 +698,7 @@ hu:
       topic_count_long: "Létrehozott téma"
       post_count: "Válasz"
       post_count_long: "Közzétett válasz"
+      no_results_with_search: "Nincs találat."
       days_visited: "Látogatás"
       days_visited_long: "Látogatott nap"
       posts_read: "Olvasott"

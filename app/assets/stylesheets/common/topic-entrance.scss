@@ -3,11 +3,25 @@
   padding: 5px;
   background: var(--secondary);
   box-shadow: var(--shadow-card);
-  z-index: z("dropdown");
-
-  position: absolute;
   width: 133px;
   @include unselectable;
+
+  &:not(.--glimmer) {
+    z-index: z("dropdown");
+    position: absolute;
+
+    button.full .d-icon {
+      display: block;
+      width: 100%;
+    }
+  }
+
+  &.--glimmer {
+    button.full {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 
   button.full {
     width: 100%;
@@ -15,12 +29,11 @@
     flex-wrap: wrap;
 
     .d-icon {
-      display: block;
       margin: 2px auto;
-      width: 100%;
       transform: rotate(90deg);
     }
   }
+
   button.btn.jump-bottom {
     margin: 5px 0 0 0;
   }

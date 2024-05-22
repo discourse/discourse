@@ -85,6 +85,12 @@
     .title {
       margin-right: 5px;
     }
+
+    &.--glimmer button.-trigger {
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
   }
 
   tbody {

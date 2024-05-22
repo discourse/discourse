@@ -369,6 +369,7 @@ sw:
       topic_count_long: "Mada Zilizotengenezwa"
       post_count: "Majibu"
       post_count_long: "Majibu Yaliyochapishwa"
+      no_results_with_search: "Hakuna majibu yaliyopatikana."
       days_visited: "Matembezi"
       days_visited_long: "Siku Zilizotembelewa"
       posts_read: "Soma"

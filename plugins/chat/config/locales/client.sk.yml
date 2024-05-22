@@ -174,6 +174,60 @@ sk:
             few: "@%{group} a %{count} iné skupiny nepovoľujú zmienky."
             many: "@%{group} a %{count} iných skupín nepovoľujú zmienky."
             other: "@%{group} a %{count} iných skupín nepovoľujú zmienky."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Označenie @{group1} prekračuje <a href="{siteSettingUrl}" target="_blank">limit upozornení</a> pre # používateľa.}
+                              other {Označenie @{group1} prekračuje <a href="{siteSettingUrl}" target="_blank">limit upozornení</a> pre # používateľov.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Označenie @{group1} prekračuje limit upozornení pre # používateľa.}
+                              other {Označenie @{group1} prekračuje limit upozornení pre # používateľov.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Označenie @{group1} a @{group2} prekračuje <a href="{siteSettingUrl}" target="_blank">limit upozornení</a> pre # používateľa.}
+                            other {Označenie @{group1} a @{group2} prekračuje <a href="{siteSettingUrl}" target="_blank">limit upozornení</a> pre # používateľov.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Označenie @{group1} a @{group2} prekračuje limit upozornení pre # používateľa.}
+                            other {Označenie @{group1} a @{group2} prekračuje limit upozornení pre # používateľov.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Označenie týchto {groupCount} skupín prekračuje <a href="{siteSettingUrl}" target="_blank">limit upozornení</a> pre # používateľa.}
+                            other {Označenie týchto {groupCount} skupín prekračuje <a href="{siteSettingUrl}" target="_blank">limit upozornení</a> pre # používateľov.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Označenie týchto {groupCount} skupín prekračuje limit upozornení pre # používateľa.}
+                            other {Označenie týchto {groupCount} skupín prekračuje limit upozornení pre # používateľov.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
         too_many_mentions:
           one: "Táto správa presahuje limit upozornení na zmienku %{count} ."
           few: "Táto správa prekračuje limit oznámenia %{count} zmienok."

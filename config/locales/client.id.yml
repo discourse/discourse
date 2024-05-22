@@ -625,6 +625,7 @@ id:
       topic_count_long: "Topik Dibuat"
       post_count: "Balasan"
       post_count_long: "Pesan Terbalas"
+      no_results_with_search: "Tidak ada hasil yang ditemukan."
       days_visited: "mengunjungi"
       days_visited_long: "Hari yang dikunjungi"
       posts_read: "baca"
@@ -2622,6 +2623,8 @@ id:
         settings: "Pengaturan"
       embedding:
         edit: "ubah"
+        tags: "Tag Topik"
+        post_author: "Penulis Post - Bawaannya adalah %{author}"
       permalink:
         topic_title: "Topik"
         post_title: "Postingan"

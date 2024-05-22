@@ -295,6 +295,10 @@ zh_CN:
         not_found: |-
           哦不，我讨厌的帖子还没有被举报为不当言论。:worried: 你可以使用**举报** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 将其举报为不当言论吗？不要忘记使用“显示更多”按钮 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 来显示每个帖子的更多操作。
       search:
+        instructions: |-
+          _psst_ … 我在这个话题中藏了一个惊喜。如果你愿意接受挑战，**选择右上方的搜索图标**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> &#8599;，选择 "在此主题中"，然后搜索它。
+
+          请尝试在此主题中搜索 "caly&#8203;bara"。
         hidden_message: |-
           你怎么错过了这只水豚？:wink:
 

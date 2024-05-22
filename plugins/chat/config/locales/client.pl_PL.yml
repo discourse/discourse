@@ -656,6 +656,12 @@ pl_PL:
           few: "+%{count}"
           many: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Ustaw tytuł wątku"
+        dismiss_action: "Nie pokazuj ponownie"
+        primary_action: "Ustaw tytuł"
+      thread_title_modal:
+        title: "Ustaw tytuł wątku"
       threads:
         open: "Otwórz wątek"
         list: "Wątki"

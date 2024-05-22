@@ -118,7 +118,7 @@ de:
         direct_message_cta: "Persönlichen Chat beginnen"
         direct_message: "Du kannst auch einen persönlichen Chat mit einem oder mehreren Benutzern beginnen."
         title: "Keine Kanäle gefunden"
-        my_threads: "Du hast noch keine Themen. Themen, an denen du teilnimmst, werden hier angezeigt."
+        my_threads: "Du hast noch keine Threads. Threads, an denen du teilnimmst, werden hier angezeigt."
       email_frequency:
         description: "Wir schicken dir nur dann eine E-Mail, wenn wir dich in den letzten 15 Minuten nicht gesehen haben."
         never: "Niemals"

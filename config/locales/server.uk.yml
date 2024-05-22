@@ -3187,23 +3187,9 @@ uk:
     bulk_invite_succeeded:
       title: "Успішне масове розсилання запрошень"
       subject_template: "Масове запрошення користувачів пройшло успішно"
-      text_body_template: |
-        Ваш файл масового запрошення користувача оброблено, %{sent} запрошень надіслано, %{skipped} пропущено та %{warnings} попередження.
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_failed:
       title: "Помилка масового запрошення"
       subject_template: "Масове запрошення користувачів оброблено з помилками"
-      text_body_template: |
-        Ваш файл масового запрошення користувача оброблено, %{sent} запрошень надіслано, %{skipped} пропущено, %{warnings} попередження та %{failed} помилки.
-
-        Ось журнал:
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Додано в групу як власника"
       subject_template: "Вас додано як власника групи %{group_name}"

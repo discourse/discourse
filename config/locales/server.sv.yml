@@ -2863,23 +2863,9 @@ sv:
     bulk_invite_succeeded:
       title: "Massinbjudan lyckades"
       subject_template: "Massinbjudan av användare behandlades utan fel"
-      text_body_template: |
-        Din fil för massinbjudan av användare behandlades, %{sent} inbjudningar skickades, %{skipped} hoppades över, med %{warnings} varning(ar).
-
-        `` text
-        %{logs}
-        ```
     bulk_invite_failed:
       title: "Massinbjudan misslyckades"
       subject_template: "Massinbjudan av användare genererade fel"
-      text_body_template: |
-        Din fil för massinbjudan av användare behandlades, %{sent} inbjudningar skickades, %{skipped} hoppades över, med %{warnings} varning(ar) och %{failed} fel.
-
-        Här är loggen:
-
-        `` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Tillagd i gruppen som ägare"
       subject_template: "Du har lagts till som ägare av gruppen %{group_name}"

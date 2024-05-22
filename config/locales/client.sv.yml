@@ -689,6 +689,7 @@ sv:
       topic_count_long: "Ämnen skapade"
       post_count: "Svar"
       post_count_long: "Svar publicerade"
+      no_results_with_search: "Inga resultat hittades."
       days_visited: "Besök"
       days_visited_long: "Dagar besökta"
       posts_read: "Lästa"

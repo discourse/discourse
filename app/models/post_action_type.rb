@@ -18,7 +18,7 @@ class PostActionType < ActiveRecord::Base
       if settings
         @flag_settings = settings
       else
-        reload_types
+        initialize_flag_settings
       end
       @types = nil
     end
@@ -79,27 +79,34 @@ class PostActionType < ActiveRecord::Base
       flag_types.valid?(sym)
     end
 
-    def reload_types
-      @types = nil
+    private
+
+    def initialize_flag_settings
       @flag_settings = FlagSettings.new
-      Flag
-        .enabled
-        .order(:position)
-        .each do |flag|
-          @flag_settings.add(
-            flag.id,
-            flag.name_key.to_sym,
-            topic_type: flag.applies_to?("Topic"),
-            notify_type: flag.notify_type,
-            auto_action_type: flag.auto_action_type,
-            custom_type: flag.custom_type,
-            name: flag.name,
-          )
-        end
+      @flag_settings.add(3, :off_topic, notify_type: true, auto_action_type: true)
+      @flag_settings.add(
+        4,
+        :inappropriate,
+        topic_type: true,
+        notify_type: true,
+        auto_action_type: true,
+      )
+      @flag_settings.add(8, :spam, topic_type: true, notify_type: true, auto_action_type: true)
+      @flag_settings.add(6, :notify_user, topic_type: false, notify_type: false, custom_type: true)
+      @flag_settings.add(
+        7,
+        :notify_moderators,
+        topic_type: true,
+        notify_type: true,
+        custom_type: true,
+      )
+      @flag_settings.add(10, :illegal, topic_type: true, notify_type: true, custom_type: true)
+      # When adding a new ID here, check that it doesn't clash with any added in
+      # `ReviewableScore.types`. You can thank me later.
     end
   end
 
-  reload_types
+  initialize_flag_settings
 end
 
 # == Schema Information

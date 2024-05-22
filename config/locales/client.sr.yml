@@ -503,6 +503,7 @@ sr:
       topic_count_long: "Tema kreirano"
       post_count: "Odgovori"
       post_count_long: "Odgovora poslato"
+      no_results_with_search: "Rezultati nisu pronađeni"
       days_visited: "Poseta"
       days_visited_long: "Dana posećivano"
       posts_read: "Pročitano"

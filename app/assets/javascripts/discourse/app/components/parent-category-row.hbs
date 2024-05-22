@@ -71,7 +71,11 @@
       {{#if this.showTopics}}
         <td class="latest">
           {{#each this.category.featuredTopics as |t|}}
-            <FeaturedTopic @topic={{t}} />
+            {{#if this.currentUser.use_glimmer_topic_list}}
+              <TopicList::FeaturedTopic @topic={{t}} />
+            {{else}}
+              <FeaturedTopic @topic={{t}} />
+            {{/if}}
           {{/each}}
         </td>
       {{/if}}

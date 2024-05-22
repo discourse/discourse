@@ -693,6 +693,7 @@ fr:
       topic_count_long: "Sujets créés"
       post_count: "Réponses"
       post_count_long: "Réponses envoyées"
+      no_results_with_search: "Aucun résultat n'a été trouvé."
       days_visited: "Visites"
       days_visited_long: "Jours visités"
       posts_read: "Lus"

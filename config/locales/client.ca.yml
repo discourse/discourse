@@ -569,6 +569,7 @@ ca:
       topic_count_long: "Temes creats"
       post_count: "Respostes"
       post_count_long: "Respostes publicades"
+      no_results_with_search: "No s'han trobat resultats"
       days_visited: "Visites"
       days_visited_long: "Dies visitats"
       posts_read: "Llegit"
