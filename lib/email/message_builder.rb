@@ -25,6 +25,18 @@ module Email
           "user_notifications.header_instructions",
           @template_args,
         )
+        reply_by_email_key =
+          DiscoursePluginRegistry.apply_modifier(
+            :message_builder_modifier,
+            "user_notifications.reply_by_email",
+            @opts,
+          )
+        visit_link_to_respond_key =
+          DiscoursePluginRegistry.apply_modifier(
+            :message_builder_modifier,
+            "user_notifications.visit_link_to_respond",
+            @opts,
+          )
 
         if @opts[:include_respond_instructions] == false
           @template_args[:respond_instructions] = ""
@@ -40,9 +52,9 @@ module Email
             string =
               (
                 if allow_reply_by_email?
-                  +"user_notifications.reply_by_email"
+                  +reply_by_email_key
                 else
-                  +"user_notifications.visit_link_to_respond"
+                  +visit_link_to_respond_key
                 end
               )
             string << "_pm" if @opts[:private_reply]
