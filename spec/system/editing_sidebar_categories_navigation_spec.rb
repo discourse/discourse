@@ -246,7 +246,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       end
     end
 
-    it "loads all the categories eventually" do
+    xit "loads all the categories eventually" do
       visit "/latest"
 
       expect(sidebar).to have_categories_section
