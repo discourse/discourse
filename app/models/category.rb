@@ -356,9 +356,9 @@ class Category < ActiveRecord::Base
 
           (1...max_nesting).each { |i| categories = categories.joins(<<~SQL) }
             INNER JOIN LATERAL (
-              SELECT c#{i}.id, c#{i}.name, c#{i}.ancestors, c#{i}.depth, c#{i}.matches
+              (SELECT c#{i}.id, c#{i}.name, c#{i}.ancestors, c#{i}.depth, c#{i}.matches)
               UNION ALL
-              SELECT
+              (SELECT
                 categories.id,
                 categories.name,
                 c#{i}.ancestors || ARRAY[ROW(NOT c#{i}.matches, c#{i}.name)] AS ancestors,
@@ -369,7 +369,8 @@ class Category < ActiveRecord::Base
               ON matches.id = categories.id
               WHERE categories.parent_category_id = c#{i}.id
               AND c#{i}.depth = #{i - 1}
-              LIMIT #{limit}
+              ORDER BY (NOT matches.matches, categories.name)
+              LIMIT #{limit})
             ) c#{i + 1} ON true
           SQL
 
