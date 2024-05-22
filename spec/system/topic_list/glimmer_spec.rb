@@ -2,9 +2,10 @@
 
 describe "glimmer topic list", type: :system do
   fab!(:user)
+  fab!(:group) { Fabricate(:group, users: [user]) }
 
   before do
-    SiteSetting.experimental_glimmer_topic_list_groups = "1"
+    SiteSetting.experimental_glimmer_topic_list_groups = group.name
     sign_in(user)
   end
 
@@ -40,11 +41,29 @@ describe "glimmer topic list", type: :system do
     let(:topic_page) { PageObjects::Pages::Topic.new }
 
     it "shows the list" do
-      topic = Fabricate(:post).topic
+      topic1 = Fabricate(:post).topic
       topic2 = Fabricate(:post).topic
-      visit(topic.relative_url)
+
+      new_reply =
+        Fabricate(:post).topic.tap do |topic|
+          TopicUser.change(
+            user.id,
+            topic.id,
+            notification_level: TopicUser.notification_levels[:tracking],
+          )
+          TopicUser.update_last_read(user, topic.id, 1, 1, 1)
+          Fabricate.times(3, :post, topic: topic)
+        end
+
+      visit(topic1.relative_url)
 
       expect(topic_page).to have_suggested_topic(topic2)
+      expect(page).to have_css("[data-topic-id='#{topic2.id}'] a.badge-notification.new-topic")
+
+      expect(topic_page).to have_suggested_topic(new_reply)
+      expect(
+        find("[data-topic-id='#{new_reply.id}'] a.badge-notification.unread-posts").text,
+      ).to eq("3")
     end
   end
 end
