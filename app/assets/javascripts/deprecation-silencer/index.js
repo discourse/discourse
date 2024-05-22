@@ -1,5 +1,6 @@
 const SILENCED_WARN_PREFIXES = [
   "Setting the `jquery-integration` optional feature flag",
+  'unexpectedly found "!',
 ];
 
 class DeprecationSilencer {
