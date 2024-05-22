@@ -1,8 +1,8 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import AdminPlugin from "admin/models/admin-plugin";
 
 module("Integration | Component | admin-plugins-list-item", function (hooks) {
   setupRenderingTest(hooks);
@@ -23,7 +23,8 @@ module("Integration | Component | admin-plugins-list-item", function (hooks) {
 
   test("settings link route", async function (assert) {
     this.currentUser.admin = true;
-    this.plugin = AdminPlugin.create(pluginAttrs());
+    const store = getOwner(this).lookup("service:store");
+    this.plugin = store.createRecord("admin-plugin", pluginAttrs());
 
     await render(hbs`<AdminPluginsListItem @plugin={{this.plugin}} />`);
 
@@ -44,7 +45,8 @@ module("Integration | Component | admin-plugins-list-item", function (hooks) {
 
   test("settings link show or hide", async function (assert) {
     this.currentUser.admin = true;
-    this.plugin = AdminPlugin.create(pluginAttrs());
+    const store = getOwner(this).lookup("service:store");
+    this.plugin = store.createRecord("admin-plugin", pluginAttrs());
 
     await render(hbs`<AdminPluginsListItem @plugin={{this.plugin}} />`);
 
