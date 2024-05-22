@@ -21,7 +21,7 @@ class PostActionType < ActiveRecord::Base
     end
 
     def replace_flag_settings(settings)
-      @flag_settings = settings if settings
+      @flag_settings = settings || FlagSettings.new
       @all_flags = nil
     end
 
