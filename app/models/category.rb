@@ -352,7 +352,7 @@ class Category < ActiveRecord::Base
               "matches.matches",
             )
 
-          categories = Category.unscoped.from("(#{categories.to_sql}) AS c1")
+          categories = Category.from("(#{categories.to_sql}) AS c1")
 
           (1...max_nesting).each { |i| categories = categories.joins(<<~SQL) }
             INNER JOIN LATERAL (
