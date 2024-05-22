@@ -24,7 +24,7 @@ RSpec.describe Chat::TrashMessages do
       context "when the user does not have permission to delete" do
         before { message1.update!(user: Fabricate(:admin)) }
 
-        it { is_expected.to fail_a_policy(:invalid_access) }
+        it { is_expected.to fail_a_policy(:can_delete_all_chat_messages) }
       end
 
       context "when the channel does not match the message" do

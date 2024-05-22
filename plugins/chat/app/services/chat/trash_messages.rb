@@ -19,7 +19,7 @@ module Chat
 
     contract
     model :messages
-    policy :invalid_access
+    policy :can_delete_all_chat_messages
     transaction do
       step :trash_messages
       step :destroy_notifications
@@ -46,7 +46,7 @@ module Chat
       )
     end
 
-    def invalid_access(guardian:, messages:)
+    def can_delete_all_chat_messages(guardian:, messages:)
       messages.all? { |message| guardian.can_delete_chat?(message, message.chat_channel.chatable) }
     end
 
