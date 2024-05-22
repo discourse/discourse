@@ -24,21 +24,13 @@ export default class DeleteMessagesConfirm extends Component {
     }
   }
 
-  get multipleMessages() {
-    return this.args.model.selectedMessageIds.length > 1;
-  }
-
   <template>
     <DModal @closeModal={{@closeModal}} @headerClass="hidden">
       <:body>
-        {{#if this.multipleMessages}}
-          {{i18n
-            "chat.delete_messages.confirm.other"
-            count=@model.selectedMessageIds.length
-          }}
-        {{else}}
-          {{i18n "chat.delete_messages.confirm.one"}}
-        {{/if}}
+        {{i18n
+          "chat.delete_messages.confirm"
+          count=@model.selectedMessageIds.length
+        }}
       </:body>
       <:footer>
         <DButton
