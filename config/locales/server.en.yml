@@ -4251,7 +4251,7 @@ en:
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
     digest:
-      why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
+      why: "A brief summary of %{site_link} since %{since}"
       since_last_visit: "Since your last visit"
       new_topics: "New Topics"
       unread_notifications: "Unread Notifications"
@@ -4267,7 +4267,7 @@ en:
       your_email_settings: "your email settings"
       click_here: "click here"
       from: "%{site_name}"
-      preheader: "A brief summary since your last visit on %{last_seen_at}"
+      preheader: "A brief summary since %{since}"
       custom:
         html:
           header: ""
