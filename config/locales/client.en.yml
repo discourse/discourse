@@ -5390,6 +5390,7 @@ en:
         is_enabled: "Y"
         not_enabled: "N"
         change_settings_short: "Settings"
+        settings_disabled: "This plugin can only be enabled or disabled, it has no additional settings."
         howto: "How do I install plugins?"
         official: "Official Discourse Plugin"
         broken_route: "Unable to configure link to '%{name}'. Ensure ad-blockers are disabled and try reloading the page."
