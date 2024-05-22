@@ -45,7 +45,7 @@ export default class Contents extends Component {
         </PluginOutlet>
       </div>
 
-      {{#if this.header.topic}}
+      {{#if this.header.inTopic}}
         <TopicInfo @topic={{this.header.topic}} />
       {{else if
         (and
