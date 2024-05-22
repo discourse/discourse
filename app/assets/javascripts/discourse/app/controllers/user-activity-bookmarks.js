@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import Bookmark from "discourse/models/bookmark";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -22,6 +23,13 @@ export default Controller.extend({
   permissionDenied: false,
   inSearchMode: notEmpty("q"),
   noContent: equal("model.bookmarks.length", 0),
+
+  bulkSelectHelper: null,
+
+  init() {
+    this._super(...arguments);
+    this.bulkSelectHelper = new BulkSelectHelper(this);
+  },
 
   searchTerm: computed("q", {
     get() {
@@ -75,6 +83,11 @@ export default Controller.extend({
       .then((response) => this._processLoadResponse(this.q, response))
       .catch(() => this._bookmarksListDenied())
       .finally(() => this.set("loadingMore", false));
+  },
+
+  @action
+  updateAutoAddBookmarksToBulkSelect(value) {
+    this.bulkSelectHelper.autoAddBookmarksToBulkSelect = value;
   },
 
   _loadMoreBookmarks(searchQuery) {
