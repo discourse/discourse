@@ -13,6 +13,10 @@ RSpec.describe Email::MessageBuilder do
   let(:subject_modifier_block) { Proc.new { |subject, opts| "modified subject" } }
 
   let(:body_modifier_block) { Proc.new { |subject, opts| "modified body" } }
+  let(:visit_link_to_respond_modifier_block) do
+    Proc.new { |subject, opts| "modified visit_link_to_respond" }
+  end
+  let(:reply_by_email_modifier_block) { Proc.new { |subject, opts| "modified reply_by_email" } }
 
   it "has the correct to address" do
     expect(build_args[:to]).to eq(to_address)
@@ -47,6 +51,55 @@ RSpec.describe Email::MessageBuilder do
       plugin_instance,
       :message_builder_body,
       &body_modifier_block
+    )
+  end
+
+  it "uses the message_builder_reply_by_email modifier properly" do
+    plugin_instance = Plugin::Instance.new
+    plugin_instance.register_modifier(
+      :message_builder_reply_by_email,
+      &reply_by_email_modifier_block
+    )
+    builder2 =
+      Email::MessageBuilder.new(
+        "to@to.com",
+        subject: "email_subject",
+        body: "body",
+        allow_reply_by_email: true,
+        include_respond_instructions: true,
+        url: "http://localhost",
+      )
+    expect(builder2.reply_by_email_key).to equal("modified reply_by_email")
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(
+      plugin_instance,
+      :message_builder_reply_by_email,
+      &reply_by_email_modifier_block
+    )
+  end
+
+  it "uses the message_builder_visit_link_to_respond modifier" do
+    plugin_instance = Plugin::Instance.new
+    plugin_instance.register_modifier(
+      :message_builder_visit_link_to_respond,
+      &visit_link_to_respond_modifier_block
+    )
+    builder2 =
+      Email::MessageBuilder.new(
+        "to@to.com",
+        subject: "email_subject",
+        body: "body",
+        include_respond_instructions: true,
+        url: "http://localhost",
+      )
+    expect(builder2.template_args[:respond_instructions]).to include(
+      "modified visit_link_to_respond",
+    )
+  ensure
+    DiscoursePluginRegistry.unregister_modifier(
+      plugin_instance,
+      :message_builder_visit_link_to_respond,
+      &visit_link_to_respond_modifier_block
     )
   end
 
