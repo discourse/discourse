@@ -3149,7 +3149,15 @@ de:
       title: "Masseneinladung erfolgreich"
       subject_template: "Masseneinladung von Benutzern erfolgreich verarbeitet"
       text_body_template: |
-        Deine Masseneinladungsdatei wurde verarbeitet. %{sent} Einladungen wurden verschickt, %{skipped} wurden übersprungen und es gab %{warnings} Warnung(en).
+        Deine Datei für die Masseneinladung von Benutzern wurde verarbeitet, %{sent} Einladungen per E-Mail versendet, %{skipped} übersprungen und %{warnings} Warnung(en).
+
+        Einladungen für folgende E-Mails übersprungen:
+
+        ``` text
+        %{skipped_emails}
+        ```
+
+        Hier ist das Protokoll:
 
         ``` text
         %{logs}
@@ -3158,7 +3166,19 @@ de:
       title: "Masseneinladung fehlgeschlagen"
       subject_template: "Bei der Verarbeitung der Masseneinladung von Benutzern sind Fehler aufgetreten"
       text_body_template: |
-        Deine Masseneinladungsdatei wurde verarbeitet. %{sent} Einladungen wurden verschickt, %{skipped} wurden übersprungen und es gab %{warnings} Warnung(en) und %{failed} Fehler.
+        Deine Datei für die Masseneinladung von Benutzern wurde verarbeitet, %{sent} Einladungen per E-Mail versendet, %{skipped} übersprungen, %{warnings} Warnung(en) und %{failed} Fehler.
+
+        Einladungen für folgende E-Mails übersprungen:
+
+        ``` text
+        %{skipped_emails}
+        ```
+
+        Einladungen für folgende E-Mails fehlgeschlagen:
+
+        ``` text
+        %{failed_emails}
+        ```
 
         Hier ist das Protokoll:
 

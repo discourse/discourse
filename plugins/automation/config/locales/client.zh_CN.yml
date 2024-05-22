@@ -173,6 +173,14 @@ zh_CN:
           fields:
             user_profile:
               label: 用户个人资料字段
+            custom_fields:
+              description: 仅当用户填写了所有这些字段时才会触发
+            once_per_user:
+              label: 每个用户一次
+              description: 每个用户仅触发一次
+            new_users_only:
+              label: 仅限新用户
+              description: 只有在启用此自动化后加入的新用户才会触发
         category_created_edited:
           fields:
             restricted_category:

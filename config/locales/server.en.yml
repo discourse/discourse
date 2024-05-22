@@ -1879,7 +1879,7 @@ en:
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the <a href='%{base_path}/admin' target='_blank'>/admin</a> dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
-    include_in_discourse_discover: "Let CDCK, Inc. (“Discourse”) feature this community on the <a href='https://www.discourse.org/discover'>Discover page</a> and in Discourse marketing materials. By doing so, you will share the data required for your site to be included in the service. Please note that the promotion of communities is at Discourse’s discretion."
+    include_in_discourse_discover: "Let CDCK, Inc. (“Discourse”) feature this community on the <a href='https://discover.discourse.org' target='_blank'>Discover page</a> and in Discourse marketing materials. By doing so, you will share the data required for your site to be included in the service. Please note that the promotion of communities is at Discourse’s discretion."
 
     invite_expiry_days: "How long user invitation keys are valid, in days"
 
@@ -2647,6 +2647,7 @@ en:
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTAL: Show a quick access menu for bookmarks on posts and a new redesigned modal"
     glimmer_header_mode: "Control whether the new 'glimmer' header implementation is used. Defaults to 'auto', which will enable automatically once all your themes and plugins are ready. https://meta.discourse.org/t/296544"
+    experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Enable the new 'glimmer' topic list implementation. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     admin_sidebar_enabled_groups: "EXPERIMENTAL: Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
     lazy_load_categories_groups: "EXPERIMENTAL: Lazy load category information only for users of these groups. This improves performance on sites with many categories."
@@ -3474,7 +3475,7 @@ en:
       text_body_template: |
         Your bulk user invite file was processed, %{sent} invites mailed, %{skipped} skipped and %{warnings} warning(s).
 
-        Skipped Invites for Emails: 
+        Skipped Invites for Emails:
 
         ``` text
         %{skipped_emails}
@@ -3490,13 +3491,13 @@ en:
       text_body_template: |
         Your bulk user invite file was processed, %{sent} invites mailed, %{skipped} skipped, %{warnings} warning(s) and %{failed} error(s).
 
-        Skipped Invites for Emails: 
+        Skipped Invites for Emails:
 
         ``` text
         %{skipped_emails}
         ```
 
-        Failed Invites for Emails: 
+        Failed Invites for Emails:
 
         ``` text
         %{failed_emails}
@@ -4250,7 +4251,7 @@ en:
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
     digest:
-      why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
+      why: "A brief summary of %{site_link} since %{since}"
       since_last_visit: "Since your last visit"
       new_topics: "New Topics"
       unread_notifications: "Unread Notifications"
@@ -4266,7 +4267,7 @@ en:
       your_email_settings: "your email settings"
       click_here: "click here"
       from: "%{site_name}"
-      preheader: "A brief summary since your last visit on %{last_seen_at}"
+      preheader: "A brief summary since %{since}"
       custom:
         html:
           header: ""

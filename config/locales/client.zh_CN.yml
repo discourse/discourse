@@ -650,6 +650,7 @@ zh_CN:
       no_results:
         body: "此处将显示社区成员的活动列表。目前列表为空，因为你的社区是新的！"
         extra_body: "管理员和版主可以在 <a href='%{basePath}/admin/users/'>用户管理员</a>中查看和管理用户。"
+      no_results_with_search: "没有找到结果。"
       days_visited: "访问天数"
       days_visited_long: "访问天数"
       posts_read: "已读"
@@ -5467,6 +5468,7 @@ zh_CN:
         show_words:
           other: "显示 %{count} 个字词"
         case_sensitive: "（区分大小写）"
+        html: "(html)"
         download: 下载
         clear_all: 全部清除
         clear_all_confirm: "确定要清除%{action}操作的所有关注词吗？"
@@ -5507,6 +5509,7 @@ zh_CN:
           case_sensitivity_label: "是否区分大小写"
           case_sensitivity_description: "仅限字符大小写匹配的单词"
           html_label: "HTML"
+          html_description: "在替换中输出 HTML"
           words_or_phrases: "单词或短语"
         test:
           button_label: "测试"
@@ -6131,6 +6134,8 @@ zh_CN:
         allowed_paths: "路径许可名单"
         edit: "编辑"
         category: "发布到类别"
+        tags: "话题标签"
+        post_author: "帖子作者 - 默认为 %{author}"
         add_host: "添加主机"
         settings: "嵌入设置"
         crawling_settings: "抓取工具设置"

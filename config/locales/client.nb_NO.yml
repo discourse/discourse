@@ -579,6 +579,7 @@ nb_NO:
       topic_count_long: "Emner opprettet"
       post_count: "Svar"
       post_count_long: "Svar"
+      no_results_with_search: "Ingen treff"
       days_visited: "Besøk"
       days_visited_long: "Dager besøkt"
       posts_read: "Lest"

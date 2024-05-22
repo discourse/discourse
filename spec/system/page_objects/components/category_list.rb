@@ -3,6 +3,8 @@
 module PageObjects
   module Components
     class CategoryList < PageObjects::Components::Base
+      TOPIC_LIST_ITEM_SELECTOR = ".category-list.with-topics .featured-topic"
+
       def has_category?(category)
         page.has_css?("tr[data-category-id='#{category.id}']")
       end
@@ -29,6 +31,10 @@ module PageObjects
 
       def click_topic(topic)
         page.find("a", text: topic.title).click
+      end
+
+      def topic_list_item_class(topic)
+        "#{TOPIC_LIST_ITEM_SELECTOR}[data-topic-id='#{topic.id}']"
       end
     end
   end

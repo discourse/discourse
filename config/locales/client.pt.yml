@@ -650,6 +650,7 @@ pt:
       topic_count_long: "Tópicos Criados"
       post_count: "Respostas"
       post_count_long: "Respostas Publicadas"
+      no_results_with_search: "Não foram encontrados resultados."
       days_visited: "Visitas"
       days_visited_long: "Dias Visitados"
       posts_read: "Ler"

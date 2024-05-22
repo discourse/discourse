@@ -136,29 +136,46 @@ function setupNotifications(appEvents) {
   appEvents.on("page:changed", resetIdle);
 }
 
-export function resetIdle() {
+function resetIdle() {
   lastAction = Date.now();
 }
+
 function isIdle() {
   return lastAction + idleThresholdTime < Date.now();
 }
 
+function setLastAction(time) {
+  lastAction = time;
+}
+
+function canUserReceiveNotifications(user) {
+  if (!primaryTab) {
+    return false;
+  }
+
+  if (!isIdle()) {
+    return false;
+  }
+
+  if (user.isInDoNotDisturb()) {
+    return false;
+  }
+
+  if (keyValueStore.getItem("notifications-disabled")) {
+    return false;
+  }
+
+  return true;
+}
+
 // Call-in point from message bus
 async function onNotification(data, siteSettings, user, appEvents) {
+  if (!canUserReceiveNotifications(user)) {
+    return false;
+  }
+
   if (!liveEnabled) {
-    return;
-  }
-  if (!primaryTab) {
-    return;
-  }
-  if (!isIdle()) {
-    return;
-  }
-  if (user.isInDoNotDisturb()) {
-    return;
-  }
-  if (keyValueStore.getItem("notifications-disabled")) {
-    return;
+    return false;
   }
 
   const notificationTitle =
@@ -244,4 +261,7 @@ export {
   alertChannel,
   confirmNotification,
   disable,
+  canUserReceiveNotifications,
+  resetIdle,
+  setLastAction,
 };

@@ -803,6 +803,7 @@ pl_PL:
       no_results:
         body: "Tutaj zostanie wyświetlona lista członków społeczności pokazująca ich aktywność. Na razie lista jest pusta, ponieważ Twoja społeczność jest wciąż zupełnie nowa!"
         extra_body: "Administratorzy i moderatorzy mogą przeglądać użytkowników i zarządzać nimi w <a href='%{basePath}/admin/users/'>Zarządzaniu użytkownikami</a>."
+      no_results_with_search: "Nie znaleziono wyników."
       days_visited: "Odwiedziny"
       days_visited_long: "Dni odwiedzin"
       posts_read: "Przeczytane"
@@ -2290,6 +2291,9 @@ pl_PL:
         name: "Discord"
         title: "Zaloguj się przez Discord"
         sr_title: "Zaloguj się przez Discord"
+      linkedin_oidc:
+        title: "Zaloguj się za pomocą LinkedIn"
+        sr_title: "Zaloguj się za pomocą LinkedIn"
       passkey:
         name: "Zaloguj się za pomocą klucza"
       second_factor_toggle:
@@ -2436,6 +2440,11 @@ pl_PL:
         few: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>."
         many: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>."
         other: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>."
+      larger_group_mentioned:
+        one: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osobę</a>. Jesteś pewny/a?"
+        few: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>. Jesteś pewny/a?"
+        many: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osoby</a>. Jesteś pewny/a?"
+        other: "Wzmianka o %{group} powiadomi <a href='%{group_link}'>%{count} osób</a>. Czy na pewno?"
       cannot_see_mention:
         category: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie ma dostępu do tej kategorii. Będziesz musiał dodać go do grupy, która ma dostęp do tej kategorii."
         private: "Wspomniano o @%{username}, lecz nie zostanie on powiadomiony, ponieważ nie może zobaczyć tej wiadomości osobistej. Będziesz musiał zaprosić go do tej wiadomości osobistej."
@@ -2651,6 +2660,11 @@ pl_PL:
         many: "polubił %{count} twoich postów"
         other: "polubił %{count} twoich postów"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated_description:
+        one: "połączono %{count} twój post"
+        few: "połączono %{count} twoich postów"
+        many: "połączono %{count} twoich postów"
+        other: "połączono %{count} twoich postów"
       linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -3203,6 +3217,7 @@ pl_PL:
       suggest_create_topic: Gotowy na <a href>rozpoczęcie nowej rozmowy?</a>
       jump_reply: "Przejdź do pierwotnej lokalizacji posta"
       jump_reply_aria: "Przejdź do postu @%{username} w jego oryginalnej lokalizacji"
+      jump_reply_button: "Przejdź do postu"
       deleted: "Temat został usunięty"
       slow_mode_update:
         title: "Tryb powolny"
@@ -4113,9 +4128,14 @@ pl_PL:
       pinned:
         title: "Przypięty"
         help: "Temat przypięty dla twojego konta. Będzie wyświetlany na początku swojej kategorii."
+      unlisted:
+        help: "Ten temat nie znajduje się na liście; nie będzie wyświetlany na listach tematów i można uzyskać do niego dostęp tylko za pośrednictwem bezpośredniego linku. %{unlistedReason}"
       personal_message:
         title: "Ten temat jest wiadomością prywatną"
         help: "Ten temat jest wiadomością prywatną"
+      visibility_reasons:
+        op_flag_threshold_reached: "Ten temat został automatycznie usunięty z listy, ponieważ osiągnięto próg zgłoszeń"
+        op_unhidden: "Temat ten został ponownie poruszony przez autora"
     posts: "Wpisy"
     pending_posts:
       label: "Oczekujące"
@@ -6670,6 +6690,7 @@ pl_PL:
           add_document_types: "Dokumenty"
           add_types_title: "Zezwalaj na rozszerzenia %{types}"
           add_types_toast: "%{types} dodane typy plików"
+        mandatory_group: "Grupa jest obowiązkowa"
       badges:
         title: Odznaki
         new_badge: Nowa odznaka

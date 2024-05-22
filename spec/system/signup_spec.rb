@@ -5,7 +5,7 @@ describe "Signup", type: :system do
   let(:signup_modal) { PageObjects::Modals::Signup.new }
 
   context "when anyone can create an account" do
-    it "can signup and activate account" do
+    it "can signup" do
       Jobs.run_immediately!
 
       signup_modal.open
@@ -13,20 +13,9 @@ describe "Signup", type: :system do
       signup_modal.fill_username("john")
       signup_modal.fill_password("supersecurepassword")
       expect(signup_modal).to have_valid_fields
+
       signup_modal.click_create_account
-
-      wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
-
-      mail = ActionMailer::Base.deliveries.last
-      expect(mail.to).to contain_exactly("johndoe@example.com")
-      activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
-
-      visit "/"
-      visit activation_link
-      find("#activate-account-button").click
-
-      visit "/"
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      expect(page).to have_css(".account-created")
     end
 
     context "with invite code" do

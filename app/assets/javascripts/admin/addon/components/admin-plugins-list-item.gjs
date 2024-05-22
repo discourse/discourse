@@ -38,6 +38,10 @@ export default class AdminPluginsListItem extends Component {
     return this.args.plugin.nameTitleizedLower.match(this.sidebarState.filter);
   }
 
+  get showPluginSettingsButton() {
+    return this.currentUser.admin && this.args.plugin.hasSettings;
+  }
+
   <template>
     <tr
       data-plugin-name={{@plugin.name}}
@@ -101,8 +105,18 @@ export default class AdminPluginsListItem extends Component {
         {{/if}}
       </td>
       <td class="admin-plugins-list__settings">
-        {{#if this.currentUser.admin}}
-          {{#if @plugin.hasSettings}}
+        {{#if this.showPluginSettingsButton}}
+          {{#if @plugin.useNewShowRoute}}
+            <LinkTo
+              class="btn-default btn btn-icon-text"
+              @route="adminPlugins.show"
+              @model={{@plugin}}
+              data-plugin-setting-button={{@plugin.name}}
+            >
+              {{icon "cog"}}
+              {{i18n "admin.plugins.change_settings_short"}}
+            </LinkTo>
+          {{else}}
             <LinkTo
               class="btn-default btn btn-icon-text"
               @route="adminSiteSettingsCategory"

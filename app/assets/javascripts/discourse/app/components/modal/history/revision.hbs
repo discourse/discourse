@@ -35,17 +35,48 @@
         {{/if}}
 
         {{#if @model.wiki_changes}}
-          <DisabledIcon @icon="far-edit" @disabled={{@wikiDisabled}} />
+          {{d-icon
+            "far-edit"
+            class=(if @model.wiki_changes.current "diff-ins" "diff-del")
+          }}
         {{/if}}
 
         {{#if @model.post_type_changes}}
-          <DisabledIcon @icon="shield-alt" @disabled={{@postTypeDisabled}} />
+          {{d-icon
+            "shield-alt"
+            class=(if
+              (eq
+                @model.post_type_changes.current
+                @site.post_types.moderator_action
+              )
+              "diff-del"
+              "diff-ins"
+            )
+          }}
         {{/if}}
 
-        {{#if @model.category_id_changes}}
-          {{html-safe @previousCategory}}
+        {{#if @model.archetype_changes}}
+          {{d-icon
+            (if
+              (eq @model.archetype_changes.current "private_message")
+              "envelope"
+              "comment"
+            )
+          }}
+        {{/if}}
+
+        {{#if (and @model.category_id_changes (not @model.archetype_changes))}}
+          {{#if @previousCategory}}
+            {{html-safe @previousCategory}}
+          {{else}}
+            {{d-icon "far-eye-slash" class="diff-del"}}
+          {{/if}}
           &rarr;
-          {{html-safe @currentCategory}}
+          {{#if @currentCategory}}
+            {{html-safe @currentCategory}}
+          {{else}}
+            {{d-icon "far-eye-slash" class="diff-ins"}}
+          {{/if}}
         {{/if}}
       </span>
     {{/if}}

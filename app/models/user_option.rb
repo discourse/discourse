@@ -85,14 +85,8 @@ class UserOption < ActiveRecord::Base
 
     self.like_notification_frequency = SiteSetting.default_other_like_notification_frequency
 
-    if SiteSetting.default_email_digest_frequency.to_i <= 0
-      self.email_digests = false
-    else
-      self.email_digests = true
-    end
-
-    self.digest_after_minutes ||= SiteSetting.default_email_digest_frequency.to_i
-
+    self.email_digests = SiteSetting.default_email_digest_frequency.to_i > 0
+    self.digest_after_minutes = SiteSetting.default_email_digest_frequency.to_i
     self.include_tl0_in_digests = SiteSetting.default_include_tl0_in_digests
 
     self.text_size = SiteSetting.default_text_size
@@ -107,8 +101,7 @@ class UserOption < ActiveRecord::Base
   end
 
   def mailing_list_mode
-    return false if SiteSetting.disable_mailing_list_mode
-    super
+    SiteSetting.disable_mailing_list_mode ? false : super
   end
 
   def redirected_to_top_yet?

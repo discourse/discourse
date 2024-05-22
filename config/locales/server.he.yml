@@ -736,6 +736,7 @@ he:
             base:
               invalid_url: "כתובת ההחלפה שגויה"
               invalid_tag_list: "רשימת התגיות להחלפה שגויה"
+              invalid_html: "אפשר להשתמש ב־HTML רק להחלפה"
         sidebar_section_link:
           attributes:
             linkable_type:
@@ -750,6 +751,20 @@ he:
   staff_category_description: "קטגוריה פרטית לדיוני הסגל. הנושאים חשופים רק בפני מנהלים ומפקחים."
   discourse_welcome_topic:
     title: "ברוך בואך אל %{site_title}! :wave:"
+    body: |
+      אנחנו מאוד שמחים שהצטרפת אלינו.
+
+      %{site_info_quote}
+
+      הנה מספר דברים שניתן לעשות כדי להתחיל:
+
+      :speaking_head: **לערוך היכרות** על ידי הוספת התמונה שלך ומידע עליך ועל תחומי העניין שלך ל[פרופיל שלך](%{base_path}/my/preferences/account). על מה הכי מעניין אותך שישאלו אותך?
+
+      :open_book: **היכרות עם הקהילה** על ידי [עיון בדיונים](%{base_path}/latest) שכבר מתרחשים להם. אם מצאת פוסט מעניין, מעשיר או מבדר אפשר ללחוץ על :heart: כדי להביע את הערכתך או תמיכתך!
+
+      :handshake: **תרומה** על ידי תגובה, שיתוף נקודת המבט שלך, פרסום שאלות או הצעת משוב בדיון. בטרם פרסום תגובות או נושאים חדשים, נא לעיין ב[כללי הקהילה](%{base_path}/faq).
+
+      > לקבלת עזרה או הגשת הצעה, אפשר לשאול אותנו דרך %{feedback_category} או [ליצור קשר עם המנהלים](%{base_path}/about).
   admin_quick_start_title: "מדריך למנהלים: איך מתחילים"
   category:
     topic_prefix: "על הקטגוריה %{category}"
@@ -1558,6 +1573,7 @@ he:
     sidekiq_warning: 'Sidekiq לא רץ. משימות רבות, כמו שליחת דוא״ל, מבוצעות אסינכרונית באמצעות Sidekiq. אנא לוודא שלפחות תהליך אחד של Sidekiq רץ. <a href="https://github.com/mperham/sidekiq" target="_blank">כאן יש מידע נוסף על Sidekiq</a>.'
     queue_size_warning: "מספר העבודות בתור הוא %{queue_size}, שהוא גבוה. זה עלול להצביע על בעיה עם תהליך(י) Sidekiq, או שייתכן שאתם צריכים יותר Sidekiq workers."
     memory_warning: "בשרת שלך יש פחות מגיגה זיכרון בסך הכול. מומלץ לפחות גיגה של זיכרון."
+    maxmind_db_configuration_warning: 'השרת הוגדר להשתמש במסד הנתונים של MaxMind לאיתור IP הפוך אך לא הוגדר מזהה חשבון ב־MaxMind מה שעלול לגרום לכשל בהורדת מסד הנתונים של MaxMind. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">המדריך הזה יסביר קצת מעבר</a>.'
     google_oauth2_config_warning: 'השרת מוגדר לאפשר הרשמה דרך OAuth2 עם Google‏ (enable_google_oauth2_logins), אך לא הוגדרו ערכים למזהה לקוח ולסוד לקוח. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">מדריך זה יסביר לך כיצד</a>.'
     facebook_config_warning: 'השרת מוגדר לאפשר הרשמה דרך פייסבוק (enable_facebook_logins), אך לא הוגדרו ערכים למזהה יישום ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">מדריך זה יסביר לך כיצד</a>.'
     twitter_config_warning: 'השרת מוגדר לאפשר הרשמה דרך טוויטר (enable_twitter_logins), אך לא הוגדרו ערכים למפתח ולסוד. יש לגשת אל <a href="%{base_path}/admin/site_settings">הגדרות האתר</a> ולעדכן את ההגדרות. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">מדריך זה יסביר לך כיצד</a>.'
@@ -3147,7 +3163,13 @@ he:
       title: "הזמנה קבוצתית הצליחה"
       subject_template: "ההזמנה הקבוצתית עובדה בהצלחה"
       text_body_template: |
-        ההזמנה המרוכזת שלך עברה עיבוד, %{sent} הזמנות נשלחו בדוא״ל, %{skipped} דולגו ו־%{warnings} אזהרות.
+        קובץ הזמנת המשתמשים המרוכז שלך עבר עיבוד, %{sent} הזמנות נשלחו, %{skipped} נפסחו %{warnings} אזהרות.
+
+        נפסחו הזמנות לכתובות:
+
+        ``` text
+        %{skipped_emails}
+        ```
 
         ``` text
         %{logs}
@@ -3155,13 +3177,6 @@ he:
     bulk_invite_failed:
       title: "הזמנה קבוצתית נכשלה"
       subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
-      text_body_template: |
-        ההזמנה הקבוצתית שלך עברה עיבוד, %{sent} הזמנות נשלחו בדוא״ל, %{skipped} דולגו, %{warnings} אזהרות ו־%{failed} שגיאות.
-
-        הנה התיעוד:
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "נוסף לקבוצה כבעלים"
       subject_template: "נוספת לקבוצה %{group_name} כבעלים"
@@ -4390,6 +4405,11 @@ he:
     mass_award:
       errors:
         invalid_csv: נתקלנו בשגיאה בשורה מס׳ %{line_number}. נא לוודא שב־CSV יש כתובת דוא״ל אחת בכל שורה.
+        too_many_csv_entries:
+          one: יותר מדי רשומות בקובץ ה־CSV. נא לספק קובץ CSV עם לא יותר מרשומה.
+          two: יותר מדי רשומות בקובץ ה־CSV. נא לספק קובץ CSV עם לא יותר מ־%{count} רשומות.
+          many: יותר מדי רשומות בקובץ ה־CSV. נא לספק קובץ CSV עם לא יותר מ־%{count} רשומות.
+          other: יותר מדי רשומות בקובץ ה־CSV. נא לספק קובץ CSV עם לא יותר מ־%{count} רשומות.
         badge_disabled: נא לפעיל את העיטור %{badge_name} תחילה.
         cant_grant_multiple_times: לא ניתן להעניק את %{badge_name} מספר פעמים לאותו המשתמש.
     editor:
