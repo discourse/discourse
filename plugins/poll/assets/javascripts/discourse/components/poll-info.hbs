@@ -14,7 +14,7 @@
   {{#if this.showInstructionsSection}}
     <ul class="poll-info_instructions">
       {{#if this.showMultipleHelpText}}
-        <li>
+        <li class="multiple-help-text">
           {{d-icon "list-ul"}}
           <span>{{this.multipleHelpText}}</span>
         </li>
@@ -51,7 +51,7 @@
         </li>
       {{/if}}
       {{#if this.publicTitle}}
-        <li>
+        <li class="is-public">
           {{d-icon "far-eye"}}
           <span>{{this.publicTitleLabel}}</span>
         </li>

@@ -6,11 +6,6 @@ export default class PollResultsStandardComponent extends Component {
     return this.args.votersCount || 0;
   }
 
-  // get voters() {
-  //   debugger;
-  //   return this.args.voters || [];
-  // }
-
   get orderedOptions() {
     const votersCount = this.votersCount;
 
