@@ -47,11 +47,8 @@ class PostActionType < ActiveRecord::Base
     end
 
     def auto_action_flag_types
-      if overriden_by_plugin?
-        flag_settings.auto_action_types
-      else
-        flag_enum(all_flags.select { |flag| flag.auto_action_type })
-      end
+  return flag_settings.auto_action_types if overriden_by_plugin?
+  flag_enum(all_flags.select { |flag| flag.auto_action_type })
     end
 
     def public_types
