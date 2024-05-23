@@ -15,56 +15,61 @@ export default DiscourseRoute.extend({
     const userName = params.username;
     const groupName = params.groupname || params.group_name;
 
-    if (this.currentUser) {
-      if (transition.from) {
-        transition.abort();
-
-        if (userName) {
-          this.openComposer(transition, userName);
-        } else if (groupName) {
-          // send a message to a group
-          Group.messageable(groupName)
-            .then((result) => {
-              if (result.messageable) {
-                this.openComposer(transition, groupName);
-              } else {
-                this.dialog.alert(
-                  I18n.t("composer.cant_send_pm", { username: groupName })
-                );
-              }
-            })
-            .catch(() => this.dialog.alert(I18n.t("generic_error")));
-        } else {
-          this.openComposer(transition);
-        }
-      } else {
-        this.router
-          .replaceWith("discovery.latest")
-          .followRedirects()
-          .then(() => {
-            if (userName) {
-              this.openComposer(transition, userName);
-            } else if (groupName) {
-              // send a message to a group
-              Group.messageable(groupName)
-                .then((result) => {
-                  if (result.messageable) {
-                    this.openComposer(transition, groupName);
-                  } else {
-                    this.dialog.alert(
-                      I18n.t("composer.cant_send_pm", { username: groupName })
-                    );
-                  }
-                })
-                .catch(() => this.dialog.alert(I18n.t("generic_error")));
-            } else {
-              this.openComposer(transition);
-            }
-          });
-      }
-    } else {
+    if (!this.currentUser) {
       cookie("destination_url", window.location.href);
       this.router.replaceWith("login");
+      return;
+    }
+
+    if (transition.from) {
+      transition.abort();
+
+      if (userName) {
+        return this.openComposer(transition, userName);
+      }
+
+      if (groupName) {
+        // send a message to a group
+        return Group.messageable(groupName)
+          .then((result) => {
+            if (result.messageable) {
+              this.openComposer(transition, groupName);
+            } else {
+              this.dialog.alert(
+                I18n.t("composer.cant_send_pm", { username: groupName })
+              );
+            }
+          })
+          .catch(() => this.dialog.alert(I18n.t("generic_error")));
+      }
+
+      return this.openComposer(transition);
+    } else {
+      this.router
+        .replaceWith("discovery.latest")
+        .followRedirects()
+        .then(() => {
+          if (userName) {
+            return this.openComposer(transition, userName);
+          }
+
+          if (groupName) {
+            // send a message to a group
+            return Group.messageable(groupName)
+              .then((result) => {
+                if (result.messageable) {
+                  this.openComposer(transition, groupName);
+                } else {
+                  this.dialog.alert(
+                    I18n.t("composer.cant_send_pm", { username: groupName })
+                  );
+                }
+              })
+              .catch(() => this.dialog.alert(I18n.t("generic_error")));
+          }
+
+          return this.openComposer(transition);
+        });
     }
   },
 
