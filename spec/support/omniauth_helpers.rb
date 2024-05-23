@@ -6,11 +6,12 @@ module OmniauthHelpers
   FULL_NAME = "John Doe"
   USERNAME = "john"
   EMAIL = "johndoe@example.com"
+  UID = "12345"
 
   def mock_facebook_auth(email: EMAIL, name: FULL_NAME)
     OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(
       provider: "facebook",
-      uid: "12345",
+      uid: UID,
       info: OmniAuth::AuthHash::InfoHash.new(email: email, name: name),
     )
 
@@ -20,7 +21,7 @@ module OmniauthHelpers
   def mock_google_auth(email: EMAIL, name: FULL_NAME, verified: true)
     OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new(
       provider: "google_oauth2",
-      uid: "12345",
+      uid: UID,
       info: OmniAuth::AuthHash::InfoHash.new(email: email, name: name),
       extra: {
         raw_info: {
@@ -35,7 +36,7 @@ module OmniauthHelpers
   def mock_github_auth(email: EMAIL, nickname: USERNAME, name: FULL_NAME, verified: true)
     OmniAuth.config.mock_auth[:github] = OmniAuth::AuthHash.new(
       provider: "github",
-      uid: "12345",
+      uid: UID,
       info: OmniAuth::AuthHash::InfoHash.new(email: email, nickname: nickname, name: name),
       extra: {
         all_emails: [{ email: email, primary: true, verified: verified, visibility: "private" }],
@@ -48,7 +49,7 @@ module OmniauthHelpers
   def mock_twitter_auth(nickname: USERNAME, name: FULL_NAME, verified: true)
     OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new(
       provider: "twitter",
-      uid: "12345",
+      uid: UID,
       info: OmniAuth::AuthHash::InfoHash.new(nickname: nickname, name: name),
     )
 
@@ -58,7 +59,7 @@ module OmniauthHelpers
   def mock_discord_auth(email: EMAIL, username: USERNAME, name: FULL_NAME)
     OmniAuth.config.mock_auth[:discord] = OmniAuth::AuthHash.new(
       provider: "discord",
-      uid: "12345",
+      uid: UID,
       info: OmniAuth::AuthHash::InfoHash.new(email: email, name: name),
     )
 
@@ -68,7 +69,7 @@ module OmniauthHelpers
   def mock_linkedin_auth(email: EMAIL, first_name: FIRST_NAME, last_name: LAST_NAME)
     OmniAuth.config.mock_auth[:linkedin_oidc] = OmniAuth::AuthHash.new(
       provider: "linkedin_oidc",
-      uid: "12345",
+      uid: UID,
       info:
         OmniAuth::AuthHash::InfoHash.new(
           email: email,
