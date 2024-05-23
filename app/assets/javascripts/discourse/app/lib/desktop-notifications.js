@@ -142,20 +142,20 @@ function resetIdle() {
   lastAction = Date.now();
 }
 
-function isIdle() {
-  return lastAction + idleThresholdTime < Date.now();
+function isIdle(idleThreshold = idleThresholdTime) {
+  return lastAction + idleThreshold < Date.now();
 }
 
 function setLastAction(time) {
   lastAction = time;
 }
 
-function canUserReceiveNotifications(user) {
+function canUserReceiveNotifications(user, options = { idleThresholdTime }) {
   if (!primaryTab) {
     return false;
   }
 
-  if (!isIdle()) {
+  if (!isIdle(options.idleThresholdTime)) {
     return false;
   }
 
