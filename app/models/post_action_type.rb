@@ -27,7 +27,9 @@ class PostActionType < ActiveRecord::Base
     end
 
     def types
-      return Enum.new(like: 2).merge!(flag_settings.flag_types) if overridden_by_plugin?
+      if overridden_by_plugin_or_skipped_db?
+        return Enum.new(like: 2).merge!(flag_settings.flag_types)
+      end
       Enum.new(like: 2).merge(flag_types)
     end
 
@@ -37,8 +39,8 @@ class PostActionType < ActiveRecord::Base
       ReviewableScore.reload_types
     end
 
-    def overridden_by_plugin?
-      flag_settings.flag_types.present?
+    def overridden_by_plugin_or_skipped_db?
+      flag_settings.flag_types.present? || GlobalSetting.skip_db?
     end
 
     def all_flags
@@ -46,7 +48,7 @@ class PostActionType < ActiveRecord::Base
     end
 
     def auto_action_flag_types
-      return flag_settings.auto_action_types if overridden_by_plugin?
+      return flag_settings.auto_action_types if overridden_by_plugin_or_skipped_db?
       flag_enum(all_flags.select(&:auto_action_type))
     end
 
@@ -59,12 +61,12 @@ class PostActionType < ActiveRecord::Base
     end
 
     def flag_types_without_custom
-      return flag_settings.without_custom_types if overridden_by_plugin?
+      return flag_settings.without_custom_types if overridden_by_plugin_or_skipped_db?
       flag_enum(all_flags.reject(&:custom_type))
     end
 
     def flag_types
-      return flag_settings.flag_types if overridden_by_plugin?
+      return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
       flag_enum(all_flags)
     end
 
@@ -74,12 +76,12 @@ class PostActionType < ActiveRecord::Base
     end
 
     def notify_flag_types
-      return flag_settings.notify_types if overridden_by_plugin?
+      return flag_settings.notify_types if overridden_by_plugin_or_skipped_db?
       flag_enum(all_flags.select(&:notify_type))
     end
 
     def topic_flag_types
-      if overridden_by_plugin?
+      if overridden_by_plugin_or_skipped_db?
         flag_settings.topic_flag_types
       else
         flag_enum(all_flags.select { |flag| flag.applies_to?("Topic") })
@@ -87,7 +89,7 @@ class PostActionType < ActiveRecord::Base
     end
 
     def custom_types
-      return flag_settings.custom_types if overridden_by_plugin?
+      return flag_settings.custom_types if overridden_by_plugin_or_skipped_db?
       flag_enum(all_flags.select(&:custom_type))
     end
 
