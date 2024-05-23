@@ -1142,6 +1142,7 @@ class Post < ActiveRecord::Base
 
   def each_upload_url(fragments: nil, include_local_upload: true)
     current_db = RailsMultisite::ConnectionManagement.current_db
+
     upload_patterns = [
       %r{/uploads/#{current_db}/},
       %r{/original/},
@@ -1150,6 +1151,7 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML5.fragment(self.cooked)
+
     selectors =
       fragments.css(
         "a/@href",
@@ -1183,7 +1185,17 @@ class Post < ActiveRecord::Base
         sha1 = Upload.sha1_from_short_url(src)
         yield(src, nil, sha1)
         next
-      elsif src.include?("/uploads/short-url/")
+      end
+
+      if src.include?("/uploads/short-url/")
+        host =
+          begin
+            URI(src).host
+          rescue URI::Error
+          end
+
+        next if host.present? && host != Discourse.current_hostname
+
         sha1 = Upload.sha1_from_short_path(src)
         yield(src, nil, sha1)
         next
@@ -1193,6 +1205,7 @@ class Post < ActiveRecord::Base
       next if Rails.configuration.multisite && src.exclude?(current_db)
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
+
       if !Discourse.store.has_been_uploaded?(src) && !Upload.secure_uploads_url?(src) &&
            !(include_local_upload && src =~ %r{\A/[^/]}i)
         next
@@ -1226,6 +1239,7 @@ class Post < ActiveRecord::Base
 
     DistributedMutex.synchronize("find_missing_uploads", validity: 30.minutes) do
       PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
+
       query =
         Post
           .have_uploads
