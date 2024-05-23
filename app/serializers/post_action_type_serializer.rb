@@ -14,25 +14,25 @@ class PostActionTypeSerializer < ApplicationSerializer
   end
 
   def name
-    i18n("title")
+    i18n("title", default: object.class.names[object.id])
   end
 
   def description
-    i18n("description", tos_url: tos_url, base_path: Discourse.base_path)
+    i18n("description", vars: { tos_url:, base_path: Discourse.base_path })
   end
 
   def short_description
-    i18n("short_description", tos_url: tos_url, base_path: Discourse.base_path)
+    i18n("short_description", vars: { tos_url: tos_url, base_path: Discourse.base_path })
   end
 
   def name_key
-    PostActionType.types[object.id]
+    PostActionType.types[object.id].to_s
   end
 
   protected
 
-  def i18n(field, vars = nil)
+  def i18n(field, default: nil, vars: nil)
     key = "post_action_types.#{name_key}.#{field}"
-    vars ? I18n.t(key, vars) : I18n.t(key)
+    vars ? I18n.t(key, vars, default: default) : I18n.t(key, default: default)
   end
 end

@@ -484,7 +484,7 @@ RSpec.describe PostRevisor do
 
         post = Fabricate(:post, raw: "hello world")
 
-        Fabricate(:flag, post: post, user: user)
+        Fabricate(:flag_post_action, post: post, user: user)
 
         revisor = PostRevisor.new(post)
         revisor.revise!(
