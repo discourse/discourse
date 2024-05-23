@@ -6586,6 +6586,7 @@ en:
         name: "Field Name"
         type: "Field Type"
         description: "Field Description"
+        preferences: "Preferences"
         save: "Save"
         edit: "Edit"
         delete: "Delete"
@@ -6596,6 +6597,13 @@ en:
           title: "Required at signup"
           enabled: "required"
           disabled: "not required"
+        requirement:
+          title: "Field Requirement"
+          optional:
+            title: "Optional"
+          on_signup:
+            title: "On signup"
+            description: "When new users sign up, they must fill out this field. Existing users are unaffected."
         editable:
           title: "Editable after signup"
           enabled: "editable"

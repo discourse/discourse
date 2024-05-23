@@ -994,6 +994,22 @@ table.permalinks {
             width: 100%;
           }
         }
+        label {
+          font-weight: normal;
+          padding: 0.5em 0;
+        }
+
+        .label-text {
+          display: inline-flex;
+          flex-direction: column;
+        }
+
+        .description {
+          margin-top: 0.25em;
+          color: var(--primary-medium);
+          font-size: var(--font-down-1);
+          line-height: var(--line-height-large);
+        }
       }
       &.label-area {
         width: 25%;

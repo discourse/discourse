@@ -44,15 +44,12 @@ export default Component.extend(bufferedProperty("userField"), {
   },
 
   @discourseComputed(
-    "userField.{editable,required,show_on_profile,show_on_user_card,searchable}"
+    "userField.{editable,show_on_profile,show_on_user_card,searchable}"
   )
   flags(userField) {
     const ret = [];
     if (userField.editable) {
       ret.push(I18n.t("admin.user_fields.editable.enabled"));
-    }
-    if (userField.required) {
-      ret.push(I18n.t("admin.user_fields.required.enabled"));
     }
     if (userField.show_on_profile) {
       ret.push(I18n.t("admin.user_fields.show_on_profile.enabled"));
@@ -74,7 +71,7 @@ export default Component.extend(bufferedProperty("userField"), {
       "description",
       "field_type",
       "editable",
-      "required",
+      "requirement",
       "show_on_profile",
       "show_on_user_card",
       "searchable",
