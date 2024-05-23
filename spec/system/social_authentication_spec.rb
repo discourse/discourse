@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
-describe "Social authentication", type: :system do
+shared_context "with omniauth setup" do
   include OmniauthHelpers
 
   let(:login_modal) { PageObjects::Modals::Login.new }
   let(:signup_modal) { PageObjects::Modals::Signup.new }
 
   before { OmniAuth.config.test_mode = true }
+end
+
+shared_examples "social authentication scenarios" do
+  include_context "with omniauth setup"
 
   context "for Facebook" do
     before { SiteSetting.enable_facebook_logins = true }
@@ -17,7 +21,7 @@ describe "Social authentication", type: :system do
       visit("/")
 
       login_modal.open
-      login_modal.select_facebook
+      login_modal.click_social_button("facebook")
       expect(signup_modal).to be_open
       expect(signup_modal).to have_no_password_input
       expect(signup_modal).to have_valid_username
@@ -35,8 +39,8 @@ describe "Social authentication", type: :system do
       mock_google_auth
       visit("/")
 
-      login_modal.open_from_header
-      login_modal.select_google
+      login_modal.open
+      login_modal.click_social_button("google_oauth2")
       expect(signup_modal).to be_open
       expect(signup_modal).to have_no_password_input
       expect(signup_modal).to have_valid_username
@@ -55,7 +59,7 @@ describe "Social authentication", type: :system do
       visit("/")
 
       login_modal.open
-      login_modal.select_github
+      login_modal.click_social_button("github")
       expect(signup_modal).to be_open
       expect(signup_modal).to have_no_password_input
       expect(signup_modal).to have_valid_username
@@ -74,7 +78,7 @@ describe "Social authentication", type: :system do
       visit("/")
 
       login_modal.open
-      login_modal.select_twitter
+      login_modal.click_social_button("twitter")
       expect(signup_modal).to be_open
       expect(signup_modal).to have_no_password_input
       signup_modal.fill_email(OmniauthHelpers::EMAIL)
@@ -94,7 +98,7 @@ describe "Social authentication", type: :system do
       visit("/")
 
       login_modal.open
-      login_modal.select_discord
+      login_modal.click_social_button("discord")
       expect(signup_modal).to be_open
       expect(signup_modal).to have_no_password_input
       expect(signup_modal).to have_valid_username
@@ -117,7 +121,7 @@ describe "Social authentication", type: :system do
       visit("/")
 
       login_modal.open
-      login_modal.select_linkedin
+      login_modal.click_social_button("linkedin_oidc")
       expect(signup_modal).to be_open
       expect(signup_modal).to have_no_password_input
       expect(signup_modal).to have_valid_username
@@ -125,5 +129,15 @@ describe "Social authentication", type: :system do
       signup_modal.click_create_account
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
+  end
+end
+
+describe "Social authentication", type: :system do
+  context "when desktop" do
+    include_examples "social authentication scenarios"
+  end
+
+  context "when mobile", mobile: true do
+    include_examples "social authentication scenarios"
   end
 end
