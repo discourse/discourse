@@ -1,4 +1,3 @@
-// import { visit } from "@ember/test-helpers";
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
