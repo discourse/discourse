@@ -28,6 +28,7 @@
       <div class="alert alert-info">{{i18n "user.no_bookmarks_search"}}</div>
     {{else}}
       <BookmarkList
+        @bulkSelectHelper={{this.bulkSelectHelper}}
         @loadMore={{action "loadMore"}}
         @reload={{action "reload"}}
         @loadingMore={{this.loadingMore}}

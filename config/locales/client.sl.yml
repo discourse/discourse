@@ -657,6 +657,7 @@ sl:
       topic_count_long: "Ustvarjenih tem"
       post_count: "Odgovorov"
       post_count_long: "Objavljenih odgovorov"
+      no_results_with_search: "Noben rezultat ni bil najden."
       days_visited: "Obiskov"
       days_visited_long: "Dni prisotnosti"
       posts_read: "Prebrano"

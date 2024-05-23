@@ -72,12 +72,12 @@ RSpec.describe Jobs::PublishTopicToCategory do
 
       now = freeze_time
 
-      message =
-        MessageBus
-          .track_publish do
-            described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
-          end
-          .last
+      messages =
+        MessageBus.track_publish do
+          described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
+        end
+
+      expect(messages.any? { |m| m.data[:reload_topic] && m.data[:refresh_stream] }).to eq(true)
 
       topic.reload
       expect(topic.category).to eq(another_category)
@@ -87,9 +87,6 @@ RSpec.describe Jobs::PublishTopicToCategory do
       %w[created_at bumped_at updated_at last_posted_at].each do |attribute|
         expect(topic.public_send(attribute)).to eq_time(now)
       end
-
-      expect(message.data[:reload_topic]).to be_present
-      expect(message.data[:refresh_stream]).to be_present
     end
 
     it "does nothing if the user can't see the PM" do

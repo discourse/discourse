@@ -4,6 +4,7 @@ require "guardian/bookmark_guardian"
 require "guardian/category_guardian"
 require "guardian/ensure_magic"
 require "guardian/group_guardian"
+require "guardian/flag_guardian"
 require "guardian/post_guardian"
 require "guardian/post_revision_guardian"
 require "guardian/sidebar_guardian"
@@ -16,6 +17,7 @@ class Guardian
   include BookmarkGuardian
   include CategoryGuardian
   include EnsureMagic
+  include FlagGuardian
   include GroupGuardian
   include PostGuardian
   include PostRevisionGuardian

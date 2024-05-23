@@ -7,6 +7,7 @@
 # problem checks, and if any credentials have issues they will show up on
 # the admin dashboard as a high priority issue.
 class ProblemCheck::GroupEmailCredentials < ProblemCheck
+  self.priority = "high"
   self.perform_every = 30.minutes
 
   def call
@@ -14,6 +15,10 @@ class ProblemCheck::GroupEmailCredentials < ProblemCheck
   end
 
   private
+
+  def targets
+    [*Group.with_smtp_configured.pluck(:name), *Group.with_imap_configured.pluck(:name)]
+  end
 
   def smtp_errors
     return [] if !SiteSetting.enable_smtp
@@ -52,7 +57,7 @@ class ProblemCheck::GroupEmailCredentials < ProblemCheck
     rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
       message =
         I18n.t(
-          "dashboard.group_email_credentials_warning",
+          "dashboard.problem.group_email_credentials",
           {
             base_path: Discourse.base_path,
             group_name: group.name,
@@ -61,7 +66,17 @@ class ProblemCheck::GroupEmailCredentials < ProblemCheck
           },
         )
 
-      Problem.new(message, priority: "high", identifier: "group_#{group.id}_email_credentials")
+      Problem.new(
+        message,
+        priority: "high",
+        identifier: "group_email_credentials",
+        target: group.id,
+        details: {
+          group_name: group.name,
+          group_full_name: group.full_name,
+          error: EmailSettingsExceptionHandler.friendly_exception_message(err, group.smtp_server),
+        },
+      )
     rescue => err
       Discourse.warn_exception(
         err,

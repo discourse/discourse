@@ -492,6 +492,7 @@ et:
       topic_count_long: "Teemasid loodud"
       post_count: "Vastuseid"
       post_count_long: "Vastuseid postitatud"
+      no_results_with_search: "Ei leitud ühtegi tulemust."
       days_visited: "Külastusi"
       days_visited_long: "Päevi külastatud"
       posts_read: "Loetud"

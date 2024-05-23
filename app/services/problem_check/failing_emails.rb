@@ -15,10 +15,6 @@ class ProblemCheck::FailingEmails < ProblemCheck
     @failed_job_count ||= Jobs.num_email_retry_jobs
   end
 
-  def translation_key
-    "dashboard.failing_emails_warning"
-  end
-
   def translation_data
     { num_failed_jobs: failed_job_count }
   end

@@ -35,7 +35,10 @@ export default class ChatMessageFlag {
     return flags.map((flag) => {
       flag.set(
         "description",
-        I18n.t(`chat.flags.${flag.name_key}`, { basePath: getURL("") })
+        I18n.t(`chat.flags.${flag.name_key}`, {
+          basePath: getURL(""),
+          defaultValue: "",
+        })
       );
       return flag;
     });

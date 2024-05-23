@@ -18,7 +18,7 @@
     "src"
   ],
   "dependencies": {
-    "@embroider/addon-shim": "^1.8.7",
+    "@embroider/addon-shim": "^1.8.9",
     "discourse-common": "1.0.0",
     "ember-auto-import": "^2.7.2",
     "markdown-it": "^14.0.0"

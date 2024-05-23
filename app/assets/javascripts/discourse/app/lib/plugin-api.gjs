@@ -13,6 +13,7 @@ import { addCategorySortCriteria } from "discourse/components/edit-category-sett
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
+import { registerHomeLogoHrefCallback } from "discourse/components/header/home-logo";
 import { headerIconsDAG } from "discourse/components/header/icons";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import MountWidget, {
@@ -108,6 +109,7 @@ import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { attachAdditionalPanel } from "discourse/widgets/header";
+import { registerHomeLogoHrefCallback as registerHomeLogoHrefCallbackOnWidget } from "discourse/widgets/home-logo";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
@@ -150,7 +152,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.31.0";
+export const PLUGIN_API_VERSION = "1.32.0";
 
 const DEPRECATED_HEADER_WIDGETS = [
   "header",
@@ -163,6 +165,7 @@ const DEPRECATED_HEADER_WIDGETS = [
   "header-topic-info",
   "header-notifications",
   "home-logo",
+  "user-dropdown",
 ];
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
@@ -1941,6 +1944,51 @@ class PluginApi {
       <template><MountWidget @widget={{icon}} /></template>,
       { before: "search" }
     );
+  }
+
+  /**
+   * Set a callback function to specify the URL used in the home logo.
+   *
+   * This API allows you change the URL of the home logo. As it receives a callback function, you can
+   * dynamically change the URL based on the current user, site settings, or any other context.
+   *
+   * Example: return a static URL
+   * ```
+   * api.registerHomeLogoHrefCallback(() => "https://example.com");
+   * ```
+   *
+   * Example: return a dynamic URL based on the current user
+   * ```
+   * api.registerHomeLogoHrefCallback(() => {
+   *   const currentUser = api.getCurrentUser();
+   *   return `https://example.com/${currentUser.username}`;
+   * });
+   * ```
+   *
+   * Example: return a URL based on a theme-component setting
+   * ```
+   * api.registerHomeLogoHrefCallback(() => {
+   *   return settings.example_logo_url_setting;
+   * });
+   * ```
+   *
+   * Example: return a URL based on the route
+   * ```
+   * api.registerHomeLogoHrefCallback(() => {
+   *   if (api.container.lookup("service:discovery").onDiscoveryRoute) {
+   *     return "https://forum.example.com/categories";
+   *   }
+   *
+   *   return "https://forum.example.com/";
+   * });
+   * ```
+   *
+   * @param {Function} callback - A function that returns the URL to be used in the home logo.
+   *
+   */
+  registerHomeLogoHrefCallback(callback) {
+    registerHomeLogoHrefCallback(callback);
+    registerHomeLogoHrefCallbackOnWidget(callback); // for compatibility with the legacy header
   }
 
   /**

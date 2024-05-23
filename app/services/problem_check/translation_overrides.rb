@@ -10,10 +10,4 @@ class ProblemCheck::TranslationOverrides < ProblemCheck
 
     problem
   end
-
-  private
-
-  def translation_key
-    "dashboard.outdated_translations_warning"
-  end
 end

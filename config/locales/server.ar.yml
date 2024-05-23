@@ -3152,23 +3152,9 @@ ar:
     bulk_invite_succeeded:
       title: "نجحت الدعوة الجماعية"
       subject_template: "تمت معالجة الدعوة الجماعية للمستخدمين بنجاح"
-      text_body_template: |
-        تمت معالجة ملف الدعوة الجماعية للمستخدمين، وتم إرسال %{sent} من الدعوات بالبريد، وتخطي %{skipped}، وظهر %{warnings} من التحذيرات.
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_failed:
       title: "فشلت الدعوة الجماعية"
       subject_template: "تمت معالجة الدعوة الجماعية للمستخدمين مع وجود أخطاء"
-      text_body_template: |
-        تمت معالجة ملف الدعوة الجماعية للمستخدمين، وإرسال %{sent} من الدعوات بالبريد، وتخطي %{skipped}، وظهر %{warnings} من التحذيرات و%{failed} من الأخطاء.
-
-        إليك السجل:
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "تمت إضافتك إلى المجموعة كمالك"
       subject_template: "تمت إضافتك كمالك إلى المجموعة %{group_name}"
