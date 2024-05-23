@@ -2267,21 +2267,83 @@ RSpec.describe GroupsController do
       sign_in(user)
     end
 
-    it "sends a private message when accepted" do
+    it "sends a reply to the request membership topic when accepted" do
       GroupRequest.create!(group: group, user: other_user)
+
+      # send the initial request PM
+      PostCreator.new(
+        other_user,
+        title: I18n.t("groups.request_membership_pm.title", group_name: group.name),
+        raw: "*British accent* Please, sir, may I have some group?",
+        archetype: Archetype.private_message,
+        target_usernames: "#{user.username}",
+        skip_validations: true,
+      ).create!
+
+      topic = Topic.last
+
       expect {
         put "/groups/#{group.id}/handle_membership_request.json",
             params: {
               user_id: other_user.id,
               accept: true,
             }
-      }.to change { Topic.count }.by(1).and change { Post.count }.by(1)
+      }.to_not change { Topic.count }
+
+      expect(topic.archetype).to eq(Archetype.private_message)
+      expect(Topic.first.title).to eq(
+        I18n.t("groups.request_membership_pm.title", group_name: group.name),
+      )
+
+      post = Post.last
+      expect(post.topic_id).to eq(Topic.last.id)
+      expect(topic.posts.count).to eq(2)
+      expect(post.raw).to eq(
+        I18n.t("groups.request_accepted_pm.body", group_name: group.name).strip,
+      )
+    end
+
+    it "sends accepted membership request reply even if request is in another language" do
+      SiteSetting.allow_user_locale = true
+      other_user.update!(locale: "fr")
+
+      GroupRequest.create!(group: group, user: other_user)
+
+      # send the initial request PM
+      PostCreator.new(
+        other_user,
+        title:
+          (
+            I18n.t "groups.request_membership_pm.title",
+                   group_name: group.name,
+                   locale: other_user.locale
+          ),
+        raw: "*French accent* Please let me in!",
+        archetype: Archetype.private_message,
+        target_usernames: "#{user.username}",
+        skip_validations: true,
+      ).create!
 
       topic = Topic.last
+
+      expect {
+        put "/groups/#{group.id}/handle_membership_request.json",
+            params: {
+              user_id: other_user.id,
+              accept: true,
+            }
+      }.to_not change { Topic.count }
+
       expect(topic.archetype).to eq(Archetype.private_message)
-      expect(topic.title).to eq(I18n.t("groups.request_accepted_pm.title", group_name: group.name))
-      expect(topic.first_post.raw).to eq(
-        I18n.t("groups.request_accepted_pm.body", group_name: group.name).strip,
+      expect(Topic.first.title).to eq(
+        I18n.t("groups.request_membership_pm.title", group_name: group.name, locale: "fr"),
+      )
+
+      post = Post.last
+      expect(post.topic_id).to eq(Topic.last.id)
+      expect(topic.posts.count).to eq(2)
+      expect(post.raw).to eq(
+        I18n.t("groups.request_accepted_pm.body", group_name: group.name, locale: "fr").strip,
       )
     end
   end

@@ -42,6 +42,20 @@ export default class AdminPluginsListItem extends Component {
     return this.currentUser.admin && this.args.plugin.hasSettings;
   }
 
+  get disablePluginSettingsButton() {
+    return (
+      this.showPluginSettingsButton && this.args.plugin.hasOnlyEnabledSetting
+    );
+  }
+
+  get settingsButtonTitle() {
+    if (this.disablePluginSettingsButton) {
+      return i18n("admin.plugins.settings_disabled");
+    }
+
+    return "";
+  }
+
   <template>
     <tr
       data-plugin-name={{@plugin.name}}
@@ -111,6 +125,8 @@ export default class AdminPluginsListItem extends Component {
               class="btn-default btn btn-icon-text"
               @route="adminPlugins.show"
               @model={{@plugin}}
+              @disabled={{this.disablePluginSettingsButton}}
+              title={{this.settingsButtonTitle}}
               data-plugin-setting-button={{@plugin.name}}
             >
               {{icon "cog"}}
@@ -122,6 +138,8 @@ export default class AdminPluginsListItem extends Component {
               @route="adminSiteSettingsCategory"
               @model={{@plugin.settingCategoryName}}
               @query={{hash filter=(concat "plugin:" @plugin.name)}}
+              @disabled={{this.disablePluginSettingsButton}}
+              title={{this.settingsButtonTitle}}
               data-plugin-setting-button={{@plugin.name}}
             >
               {{icon "cog"}}

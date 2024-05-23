@@ -34,6 +34,12 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
     );
   }
 
+  get hasUnreads() {
+    return (
+      this.unreadCount > 0 || this.chatTrackingStateManager.hasUnreadThreads
+    );
+  }
+
   get indicatorPreference() {
     return (
       this.args.indicatorPreference ||
@@ -57,7 +63,7 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
 
   get showUnreadIndicator() {
     return (
-      this.unreadCount > 0 &&
+      this.hasUnreads &&
       this.#hasAnyIndicatorPreference([HEADER_INDICATOR_PREFERENCE_ALL_NEW])
     );
   }

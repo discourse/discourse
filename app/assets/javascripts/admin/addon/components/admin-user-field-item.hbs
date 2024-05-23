@@ -30,29 +30,51 @@
       </AdminFormRow>
     {{/if}}
 
-    <AdminFormRow @wrapLabel="true" @type="checkbox">
-      <Input @type="checkbox" @checked={{this.buffered.editable}} />
-      <span>{{i18n "admin.user_fields.editable.title"}}</span>
+    <AdminFormRow @label="admin.user_fields.requirement.title">
+      <label class="optional">
+        <RadioButton
+          @value="optional"
+          @name="optional"
+          @selection={{this.buffered.requirement}}
+        />
+        <span>{{i18n "admin.user_fields.requirement.optional.title"}}</span>
+      </label>
+
+      <label class="on_signup">
+        <RadioButton
+          @value="on_signup"
+          @name="on_signup"
+          @selection={{this.buffered.requirement}}
+        />
+        <div class="label-text">
+          <span>{{i18n "admin.user_fields.requirement.on_signup.title"}}</span>
+          <div class="description">{{i18n
+              "admin.user_fields.requirement.on_signup.description"
+            }}</div>
+        </div>
+      </label>
     </AdminFormRow>
 
-    <AdminFormRow @wrapLabel="true" @type="checkbox">
-      <Input @type="checkbox" @checked={{this.buffered.required}} />
-      <span>{{i18n "admin.user_fields.required.title"}}</span>
-    </AdminFormRow>
+    <AdminFormRow @label="admin.user_fields.preferences">
+      <label>
+        <Input @type="checkbox" @checked={{this.buffered.editable}} />
+        <span>{{i18n "admin.user_fields.editable.title"}}</span>
+      </label>
 
-    <AdminFormRow @wrapLabel="true" @type="checkbox">
-      <Input @type="checkbox" @checked={{this.buffered.show_on_profile}} />
-      <span>{{i18n "admin.user_fields.show_on_profile.title"}}</span>
-    </AdminFormRow>
+      <label>
+        <Input @type="checkbox" @checked={{this.buffered.show_on_profile}} />
+        <span>{{i18n "admin.user_fields.show_on_profile.title"}}</span>
+      </label>
 
-    <AdminFormRow @wrapLabel="true" @type="checkbox">
-      <Input @type="checkbox" @checked={{this.buffered.show_on_user_card}} />
-      <span>{{i18n "admin.user_fields.show_on_user_card.title"}}</span>
-    </AdminFormRow>
+      <label>
+        <Input @type="checkbox" @checked={{this.buffered.show_on_user_card}} />
+        <span>{{i18n "admin.user_fields.show_on_user_card.title"}}</span>
+      </label>
 
-    <AdminFormRow @wrapLabel="true" @type="checkbox">
-      <Input @type="checkbox" @checked={{this.buffered.searchable}} />
-      <span>{{i18n "admin.user_fields.searchable.title"}}</span>
+      <label>
+        <Input @type="checkbox" @checked={{this.buffered.searchable}} />
+        <span>{{i18n "admin.user_fields.searchable.title"}}</span>
+      </label>
     </AdminFormRow>
 
     <PluginOutlet

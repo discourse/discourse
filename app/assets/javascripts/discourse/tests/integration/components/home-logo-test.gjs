@@ -2,11 +2,12 @@ import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import HomeLogo, {
-  clearHomeLogoHrefCallback,
+  clearHomeLogoHrefCallback as clearComponentHomeLogoHrefCallback,
 } from "discourse/components/header/home-logo";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
+import { clearHomeLogoHrefCallback as clearWidgetHomeLogoHrefCallback } from "discourse/widgets/home-logo";
 
 const bigLogo = "/images/d-logo-sketch.png?test";
 const smallLogo = "/images/d-logo-sketch-small.png?test";
@@ -22,7 +23,8 @@ module("Integration | Component | home-logo", function (hooks) {
     this.session = getOwner(this).lookup("service:session");
     this.session.set("darkModeAvailable", null);
     this.session.set("defaultColorSchemeIsDark", null);
-    clearHomeLogoHrefCallback();
+    clearWidgetHomeLogoHrefCallback();
+    clearComponentHomeLogoHrefCallback();
   });
 
   test("basics", async function (assert) {

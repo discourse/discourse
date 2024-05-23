@@ -32,7 +32,7 @@ export default class ChatChannelThread extends DiscourseRoute {
       return;
     }
 
-    this.chat.activeChannel.activeThread = thread;
+    channel.activeThread = thread;
   }
 
   @action

@@ -359,7 +359,7 @@ RSpec.describe TrustLevel3Requirements do
       flags =
         %i[off_topic inappropriate notify_user notify_moderators spam].map do |t|
           Fabricate(
-            :flag,
+            :flag_post_action,
             post: Fabricate(:post, user: user),
             post_action_type_id: PostActionType.types[t],
             agreed_at: 1.minute.ago,
@@ -369,7 +369,7 @@ RSpec.describe TrustLevel3Requirements do
       _deferred_flags =
         %i[off_topic inappropriate notify_user notify_moderators spam].map do |t|
           Fabricate(
-            :flag,
+            :flag_post_action,
             post: Fabricate(:post, user: user),
             post_action_type_id: PostActionType.types[t],
             deferred_at: 1.minute.ago,
@@ -379,7 +379,7 @@ RSpec.describe TrustLevel3Requirements do
       _deleted_flags =
         %i[off_topic inappropriate notify_user notify_moderators spam].map do |t|
           Fabricate(
-            :flag,
+            :flag_post_action,
             post: Fabricate(:post, user: user),
             post_action_type_id: PostActionType.types[t],
             deleted_at: 1.minute.ago,
@@ -388,7 +388,7 @@ RSpec.describe TrustLevel3Requirements do
 
       # Same post, different user:
       Fabricate(
-        :flag,
+        :flag_post_action,
         post: flags[1].post,
         post_action_type_id: PostActionType.types[:spam],
         agreed_at: 1.minute.ago,
@@ -396,7 +396,7 @@ RSpec.describe TrustLevel3Requirements do
 
       # Flagged their own post:
       Fabricate(
-        :flag,
+        :flag_post_action,
         user: user,
         post: Fabricate(:post, user: user),
         post_action_type_id: PostActionType.types[:spam],
@@ -405,7 +405,7 @@ RSpec.describe TrustLevel3Requirements do
 
       # More than 100 days ago:
       Fabricate(
-        :flag,
+        :flag_post_action,
         post: Fabricate(:post, user: user, created_at: 101.days.ago),
         post_action_type_id: PostActionType.types[:spam],
         created_at: 101.days.ago,
