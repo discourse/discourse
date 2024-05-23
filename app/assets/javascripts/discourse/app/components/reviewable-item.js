@@ -229,15 +229,16 @@ export default Component.extend({
   },
 
   async clientEdit(reviewable, performAction) {
+    if (!this.currentUser) {
+      return this.dialog.alert(I18n.t("post.controls.edit_anonymous"));
+    }
     const post = await this.store.find("post", reviewable.post_id);
     const topic_json = await Topic.find(post.topic_id, {});
 
     const topic = Topic.create(topic_json);
     post.set("topic", topic);
 
-    if (!this.currentUser) {
-      return this.dialog.alert(I18n.t("post.controls.edit_anonymous"));
-    } else if (!post.can_edit) {
+    if (!post.can_edit) {
       return false;
     }
 
