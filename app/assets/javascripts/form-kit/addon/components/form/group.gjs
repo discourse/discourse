@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse-common/helpers/d-icon";
 import Label from "../label";
 
 export default class FormGroup extends Component {

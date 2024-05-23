@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
-import FieldWrapper from "form-kit/components/field-wrapper";
 import ValidationMessages from "form-kit/components/validation-messages";
 import Node from "form-kit/lib/node";
 import DButton from "discourse/components/d-button";
@@ -43,7 +42,6 @@ export default class Form extends Component {
     <form class={{concatClass "d-form"}} {{this.registerFormElement}}>
       {{yield
         (hash
-          Text=(component FieldWrapper component=Text node=this.node)
           Section=(component Section node=this.node)
           Row=(component Row node=this.node)
           Col=(component Col node=this.node)
