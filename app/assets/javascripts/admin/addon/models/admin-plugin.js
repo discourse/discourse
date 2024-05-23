@@ -17,6 +17,7 @@ export default class AdminPlugin {
     this.enabled = args.enabled;
     this.enabledSetting = args.enabled_setting;
     this.hasSettings = args.has_settings;
+    this.hasOnlyEnabledSetting = args.has_only_enabled_setting;
     this.id = args.id;
     this.isOfficial = args.is_official;
     this.isDiscourseOwned = args.is_discourse_owned;
