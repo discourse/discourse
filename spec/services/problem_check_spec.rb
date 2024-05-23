@@ -5,16 +5,46 @@ RSpec.describe ProblemCheck do
     ScheduledCheck = Class.new(described_class) { self.perform_every = 30.minutes }
     RealtimeCheck = Class.new(described_class)
     PluginCheck = Class.new(described_class)
+    FailingCheck =
+      Class.new(described_class) do
+        def call
+          problem
+        end
 
-    stub_const(described_class, "CORE_PROBLEM_CHECKS", [ScheduledCheck, RealtimeCheck], &example)
+        def translation_key
+          "failing_check"
+        end
+      end
+    PassingCheck =
+      Class.new(described_class) do
+        def call
+          no_problem
+        end
+
+        def translation_key
+          "passing_check"
+        end
+      end
+
+    stub_const(
+      described_class,
+      "CORE_PROBLEM_CHECKS",
+      [ScheduledCheck, RealtimeCheck, FailingCheck, PassingCheck],
+      &example
+    )
 
     Object.send(:remove_const, ScheduledCheck.name)
     Object.send(:remove_const, RealtimeCheck.name)
     Object.send(:remove_const, PluginCheck.name)
+    Object.send(:remove_const, FailingCheck.name)
+    Object.send(:remove_const, PassingCheck.name)
   end
 
   let(:scheduled_check) { ScheduledCheck }
   let(:realtime_check) { RealtimeCheck }
+  let(:plugin_check) { PluginCheck }
+  let(:failing_check) { FailingCheck }
+  let(:passing_check) { PassingCheck }
 
   describe ".[]" do
     it { expect(described_class[:scheduled_check]).to eq(scheduled_check) }
@@ -57,13 +87,23 @@ RSpec.describe ProblemCheck do
     context "when the plugin is enabled" do
       let(:enabled) { true }
 
-      it { expect(described_class.checks).to include(PluginCheck) }
+      it { expect(described_class.checks).to include(plugin_check) }
     end
 
     context "when the plugin is disabled" do
       let(:enabled) { false }
 
-      it { expect(described_class.checks).not_to include(PluginCheck) }
+      it { expect(described_class.checks).not_to include(plugin_check) }
+    end
+  end
+
+  describe "#run" do
+    context "when check is failing" do
+      it { expect { failing_check.run }.to change { ProblemCheckTracker.failing.count }.by(1) }
+    end
+
+    context "when check is passing" do
+      it { expect { passing_check.run }.to change { ProblemCheckTracker.passing.count }.by(1) }
     end
   end
 end

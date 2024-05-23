@@ -12,10 +12,6 @@ class ProblemCheck::GoogleOauth2Config < ProblemCheck
 
   private
 
-  def translation_key
-    "dashboard.google_oauth2_config_warning"
-  end
-
   def google_oauth2_credentials_present?
     SiteSetting.google_oauth2_client_id.present? && SiteSetting.google_oauth2_client_secret.present?
   end

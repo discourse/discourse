@@ -788,6 +788,7 @@ ru:
       topic_count_long: "Создано тем"
       post_count: "Ответов"
       post_count_long: "Ответов написано"
+      no_results_with_search: "Ничего не найдено."
       days_visited: "Посещений"
       days_visited_long: "Дней посещения"
       posts_read: "Прочитано"

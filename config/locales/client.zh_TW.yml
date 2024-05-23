@@ -561,6 +561,7 @@ zh_TW:
       topic_count_long: "話題已開啟"
       post_count: "回覆"
       post_count_long: "回覆貼文"
+      no_results_with_search: "未找到任何結果。"
       days_visited: "造訪"
       days_visited_long: "到訪天數"
       posts_read: "已讀"

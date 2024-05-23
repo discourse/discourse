@@ -25,12 +25,12 @@
 
   margin: 0 0 10px;
   .topic-list-data {
-    padding: 12px 5px;
+    padding: 0.8em 0.33em;
     &:first-of-type {
-      padding-left: 10px;
+      padding-left: 0.67em;
     }
     &:last-of-type {
-      padding-right: 10px;
+      padding-right: 0.67em;
     }
     th & {
       border-bottom: 3px solid var(--primary-low);
@@ -48,7 +48,7 @@
     width: 30px;
     label {
       margin: 0px;
-      padding: 12px 10px 16px 10px;
+      padding: 0.8em 0.67em 1.1em 0.67em;
       cursor: pointer;
     }
     + .main-link {
@@ -101,13 +101,13 @@
   }
 
   .likes {
-    width: 65px;
+    width: 4.3em;
   }
   .views {
-    width: 65px;
+    width: 4.3em;
   }
   .posts {
-    width: 65px;
+    width: 4.3em;
   }
 
   .post-actions {
@@ -127,13 +127,13 @@
     }
   }
   .activity {
-    width: 60px;
+    width: 4em;
     &:lang(zh_CN) {
-      width: 80px;
+      width: 5.3em;
     }
   }
   .age {
-    width: 60px;
+    width: 4em;
   }
   .with-year {
     white-space: nowrap;

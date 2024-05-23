@@ -1270,6 +1270,8 @@ pl_PL:
       yaxis: "Dzień"
       description: "Żądania API dotyczące zwykłych kluczy API i kluczy API użytkownika."
     consolidated_page_views_browser_detection:
+      xaxis:
+        page_view_anon_browser: "Anonimowa przeglądarka"
       yaxis: "Dzień"
     dau_by_mau:
       title: "DAU / MAU"
@@ -3134,23 +3136,9 @@ pl_PL:
     bulk_invite_succeeded:
       title: "Zaproszenia hurtowe udane"
       subject_template: "Przetwarzanie masowej ilości zaproszeń zakończyło się sukcesem."
-      text_body_template: |
-        Twój zbiorczy plik zaproszeń użytkowników został przetworzony, %{sent} zaproszeń wysłanych, %{skipped} pominięto i %{warnings} ostrzeżeń.
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_failed:
       title: "Zaproszenia hurtowe Nieudane"
       subject_template: "Plik z zaproszeniami został przetworzony z błędami."
-      text_body_template: |
-        Twój zbiorczy plik zaproszeń użytkowników został przetworzony, wysłano %{sent} zaproszeń, %{skipped} pominięto, %{warnings} z ostrzeżeniami i %{failed} z błędami.
-
-        Oto dziennik:
-
-        ``` tekst
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Dodano do grupy jako właściciel"
       subject_template: "Zostałeś/łaś dodany jako właściciel grupy %{group_name}"

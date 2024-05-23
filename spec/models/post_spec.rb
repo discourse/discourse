@@ -2087,6 +2087,25 @@ RSpec.describe Post do
       expect(urls).to be_empty
     end
 
+    it "should skip external URLs following the `/uploads/short-url` pattern if a host is present and the host is not the configured host" do
+      upload = Fabricate(:upload)
+
+      raw = <<~RAW
+      [Upload link with Discourse.base_url](#{Discourse.base_url}/uploads/short-url/#{upload.sha1}.#{upload.extension})
+      [Upload link without Discourse.base_url](https://some.other.host/uploads/short-url/#{upload.sha1}.#{upload.extension})
+      [Upload link without host](/uploads/short-url/#{upload.sha1}.#{upload.extension})
+      RAW
+
+      post = Fabricate(:post, raw: raw)
+      urls = []
+      post.each_upload_url { |src, _, _| urls << src }
+
+      expect(urls).to contain_exactly(
+        "#{Discourse.base_url}/uploads/short-url/#{upload.sha1}.#{upload.extension}",
+        "/uploads/short-url/#{upload.sha1}.#{upload.extension}",
+      )
+    end
+
     it "skip S3 cdn urls with different path" do
       setup_s3
       SiteSetting.Upload.stubs(:s3_cdn_url).returns("https://cdn.example.com/site1")

@@ -9,10 +9,4 @@ class ProblemCheck::ImageMagick < ProblemCheck
 
     problem
   end
-
-  private
-
-  def translation_key
-    "dashboard.image_magick_warning"
-  end
 end

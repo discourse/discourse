@@ -466,6 +466,7 @@ th:
       topic_count_long: "กระทู้ถูกสร้าง"
       post_count: "ตอบ"
       post_count_long: "คำตอบถูกโพสต์แล้ว"
+      no_results_with_search: "ไม่พบผลการค้นหา"
       days_visited: "เยี่ยมชม"
       days_visited_long: "วันที่เยี่ยมชม"
       posts_read: "อ่าน"

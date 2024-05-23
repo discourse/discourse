@@ -22,19 +22,36 @@
     {{/if}}
     {{#if @model.wiki_changes}}
       <div class="row">
-        <DisabledIcon @icon="far-edit" @disabled={{@wikiDisabled}} />
+        {{d-icon
+          "far-edit"
+          class=(if @model.wiki_changes.current "diff-ins" "diff-del")
+        }}
       </div>
     {{/if}}
-    {{#if @model.post_type_changes}}
+    {{#if @model.archetype_changes}}
       <div class="row">
-        <DisabledIcon @icon="shield-alt" @disabled={{@postTypeDisabled}} />
+        {{d-icon
+          (if
+            (eq @model.archetype_changes.current "private_message")
+            "envelope"
+            "comment"
+          )
+        }}
       </div>
     {{/if}}
-    {{#if @model.category_id_changes}}
+    {{#if (and @model.category_id_changes (not @model.archetype_changes))}}
       <div class="row">
-        {{html-safe @previousCategory}}
+        {{#if @previousCategory}}
+          {{html-safe @previousCategory}}
+        {{else}}
+          {{d-icon "far-eye-slash" class="diff-del"}}
+        {{/if}}
         &rarr;
-        {{html-safe @currentCategory}}
+        {{#if @currentCategory}}
+          {{html-safe @currentCategory}}
+        {{else}}
+          {{d-icon "far-eye-slash" class="diff-ins"}}
+        {{/if}}
       </div>
     {{/if}}
   {{/if}}

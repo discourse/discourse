@@ -1,9 +1,6 @@
 import Service from "@ember/service";
 import { isTesting } from "discourse-common/config/environment";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
-import { debounce } from "discourse-common/utils/decorators";
-
-const AUDIO_DEBOUNCE_DELAY = 3000;
 
 export const CHAT_SOUNDS = {
   bell: [{ src: "/plugins/chat/audio/bell.mp3", type: "audio/mpeg" }],
@@ -39,20 +36,13 @@ export default class ChatAudioManager extends Service {
     this._audioCache = {};
   }
 
-  playImmediately(soundName) {
-    return this._play(soundName);
-  }
+  async play(soundName) {
+    if (isTesting()) {
+      return;
+    }
 
-  @debounce(AUDIO_DEBOUNCE_DELAY, true)
-  play(soundName) {
-    return this._play(soundName);
-  }
-
-  _play(soundName) {
     const audio =
       this._audioCache[soundName] || this._audioCache[DEFAULT_SOUND_NAME];
-
-    audio.muted = isTesting();
 
     if (!audio.paused) {
       audio.pause();
@@ -63,13 +53,15 @@ export default class ChatAudioManager extends Service {
       }
     }
 
-    return audio.play().catch(() => {
+    try {
+      await audio.play();
+    } catch (e) {
       if (!isTesting()) {
         // eslint-disable-next-line no-console
         console.info(
           "[chat] User needs to interact with DOM before we can play notification sounds."
         );
       }
-    });
+    }
   }
 }

@@ -57,6 +57,15 @@ const ROUTES = {
       };
     },
   },
+  "chat.channel.near-message-with-thread": {
+    name: ChatDrawerRoutesChannel,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
+        messageId: route.params.messageId,
+      };
+    },
+  },
   "chat.channel-legacy": {
     name: ChatDrawerRoutesChannel,
     extractParams: (route) => {

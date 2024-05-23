@@ -685,6 +685,7 @@ nl:
       topic_count_long: "Topics gemaakt"
       post_count: "Antwoorden"
       post_count_long: "Antwoorden geplaatst"
+      no_results_with_search: "Geen resultaten gevonden."
       days_visited: "Bezoeken"
       days_visited_long: "Dagen bezocht"
       posts_read: "Gelezen"

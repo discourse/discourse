@@ -634,6 +634,7 @@ ja:
       topic_count_long: "作成したトピック数"
       post_count: "返信"
       post_count_long: "投稿の返信数"
+      no_results_with_search: "結果はありませんでした。"
       days_visited: "アクセス"
       days_visited_long: "アクセス日数"
       posts_read: "既読"

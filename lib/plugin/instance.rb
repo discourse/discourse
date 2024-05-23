@@ -197,6 +197,9 @@ class Plugin::Instance
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def replace_flags(settings: ::FlagSettings.new, score_type_names: [])
+    Discourse.deprecate(
+      "replace flags should not be used as flags were moved to the database. Instead, a flag record should be added to the database. Alternatively, soon, the admin will be able to do this in the admin panel.",
+    )
     next_flag_id = ReviewableScore.types.values.max + 1
 
     yield(settings, next_flag_id) if block_given?

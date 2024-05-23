@@ -10,10 +10,4 @@ class ProblemCheck::MissingMailgunApiKey < ProblemCheck
 
     problem
   end
-
-  private
-
-  def translation_key
-    "dashboard.missing_mailgun_api_key"
-  end
 end

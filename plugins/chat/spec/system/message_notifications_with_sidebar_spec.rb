@@ -5,14 +5,21 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
 
   let!(:chat_page) { PageObjects::Pages::Chat.new }
   let!(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let!(:thread_page) { PageObjects::Pages::ChatThread.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
     chat_system_bootstrap
   end
 
-  def create_message(text: nil, channel:, creator: Fabricate(:user))
-    Fabricate(:chat_message_with_service, chat_channel: channel, message: text, user: creator)
+  def create_message(text: nil, channel: nil, thread: nil, creator: Fabricate(:user))
+    Fabricate(
+      :chat_message_with_service,
+      chat_channel: channel,
+      thread: thread,
+      message: text,
+      user: creator,
+    )
   end
 
   context "as a user" do
@@ -222,6 +229,40 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
             expect(page).to have_css(
               "#sidebar-section-content-chat-dms .sidebar-section-link-wrapper:nth-child(2) .channel-#{dm_channel_1.id}",
             )
+          end
+        end
+      end
+
+      context "with a thread" do
+        fab!(:channel) { Fabricate(:category_channel, threading_enabled: true) }
+        fab!(:other_user) { Fabricate(:user) }
+        fab!(:thread) do
+          chat_thread_chain_bootstrap(channel: channel, users: [current_user, other_user])
+        end
+
+        before do
+          channel.membership_for(current_user).mark_read!
+          thread.membership_for(current_user).mark_read!
+
+          visit("/")
+        end
+
+        context "when chat_header_indicator_preference is 'all_new'" do
+          before do
+            current_user.user_option.update!(
+              chat_header_indicator_preference:
+                UserOption.chat_header_indicator_preferences[:all_new],
+            )
+          end
+
+          context "when a reply is created" do
+            it "shows the unread indicator in the header" do
+              expect(page).to have_no_css(".chat-header-icon .chat-channel-unread-indicator")
+
+              create_message(thread: thread, creator: other_user)
+
+              expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator")
+            end
           end
         end
       end

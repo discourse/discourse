@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
@@ -15,7 +14,6 @@ import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 export default class SidebarEditNavigationMenuModal extends Component {
   @tracked filter = "";
   @tracked filterDropdownValue = "all";
-
   filterDropdownContent = [
     {
       id: "all",
@@ -80,10 +78,11 @@ export default class SidebarEditNavigationMenuModal extends Component {
               class="sidebar__edit-navigation-menu__filter-input-icon"
             }}
 
-            <Input
+            <input
+              {{on "input" (withEventValue (fn (mut this.filter)))}}
               {{on "input" (withEventValue @onFilterInput)}}
-              @type="text"
-              @value={{this.filter}}
+              type="text"
+              value={{this.filter}}
               placeholder={{@inputFilterPlaceholder}}
               autofocus="true"
               class="sidebar__edit-navigation-menu__filter-input-field"

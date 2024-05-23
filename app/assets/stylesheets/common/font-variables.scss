@@ -1,9 +1,9 @@
 :root {
   --base-font-size-smallest: 0.815em; // eq. to 13px
   --base-font-size-smaller: 0.875em; // eq. to 14px
-  --base-font-size: 0.938em; // eq. to 15px
-  --base-font-size-larger: 1.063em; // eq. to 17px
-  --base-font-size-largest: 1.118em; // eq. to 19px
+  --base-font-size: 1em; // eq. to 16px
+  --base-font-size-larger: 1.125em; // eq. to 18px
+  --base-font-size-largest: 1.25em; // eq. to 20px
 
   // Font-size definitions, multiplier ^ (step / interval)
   --font-up-6: 2.296em;

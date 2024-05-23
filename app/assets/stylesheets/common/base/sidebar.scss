@@ -363,6 +363,7 @@
 .sidebar-admin-header__row {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
   margin: 0 var(--d-sidebar-row-horizontal-padding) 0
     var(--d-sidebar-row-horizontal-padding);
   color: var(--d-sidebar-link-color);
@@ -376,5 +377,6 @@
   color: var(--d-sidebar-link-color);
   svg {
     width: 0.75em;
+    height: 0.85em;
   }
 }
