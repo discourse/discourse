@@ -40,6 +40,22 @@
         <span>{{i18n "admin.user_fields.requirement.optional.title"}}</span>
       </label>
 
+      <label class="for_all_users">
+        <RadioButton
+          @value="for_all_users"
+          @name="for_all_users"
+          @selection={{this.buffered.requirement}}
+        />
+        <div class="label-text">
+          <span>{{i18n
+              "admin.user_fields.requirement.for_all_users.title"
+            }}</span>
+          <div class="description">{{i18n
+              "admin.user_fields.requirement.for_all_users.description"
+            }}</div>
+        </div>
+      </label>
+
       <label class="on_signup">
         <RadioButton
           @value="on_signup"
