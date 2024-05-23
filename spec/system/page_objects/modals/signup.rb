@@ -19,12 +19,19 @@ module PageObjects
         find(".sign-up-button").click
       end
 
+      def click(selector)
+        if page.has_css?("html.mobile-view", wait: 0)
+          expect(page).to have_css(".d-modal:not(.is-animating)")
+        end
+        find(selector).click
+      end
+
       def open_login
-        find("#login-link").click
+        click("#login-link")
       end
 
       def click_create_account
-        find(".modal.create-account .btn-primary").click
+        click(".modal.create-account .btn-primary")
       end
 
       def has_password_input?
@@ -35,24 +42,31 @@ module PageObjects
         has_no_css?("#new-account-password")
       end
 
+      def fill_input(selector, text)
+        if page.has_css?("html.mobile-view", wait: 0)
+          expect(page).to have_css(".d-modal:not(.is-animating)")
+        end
+        find(selector).fill_in(with: text)
+      end
+
       def fill_email(email)
-        find("#new-account-email").fill_in(with: email)
+        fill_input("#new-account-email", email)
       end
 
       def fill_username(username)
-        find("#new-account-username").fill_in(with: username)
+        fill_input("#new-account-username", username)
       end
 
       def fill_name(name)
-        find("#new-account-name").fill_in(with: name)
+        fill_input("#new-account-name", name)
       end
 
       def fill_password(password)
-        find("#new-account-password").fill_in(with: password)
+        fill_input("#new-account-password", password)
       end
 
       def fill_code(code)
-        find("#inviteCode").fill_in(with: code)
+        fill_input("#inviteCode", code)
       end
 
       def fill_custom_field(name, value)
@@ -77,28 +91,8 @@ module PageObjects
         has_valid_password?
       end
 
-      def select_facebook
-        find(".btn-social.facebook").click
-      end
-
-      def select_google
-        find(".btn-social.google_oauth2").click
-      end
-
-      def select_github
-        find(".btn-social.github").click
-      end
-
-      def select_twitter
-        find(".btn-social.twitter").click
-      end
-
-      def select_discord
-        find(".btn-social.discord").click
-      end
-
-      def select_linkedin
-        find(".btn-social.linkedin_oidc").click
+      def click_social_button(provider)
+        click(".btn-social.#{provider}")
       end
     end
   end
