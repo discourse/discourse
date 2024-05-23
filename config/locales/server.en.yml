@@ -5524,6 +5524,9 @@ en:
       agree_and_hide:
         title: "Hide post"
         description: "Agree with flag and hide this post + automatically send the user a message urging them to edit it."
+      agree_and_edit:
+        title: "Agree and Edit Post"
+        description: "Agree with flag and open a composer window to edit the post."
       delete_single:
         title: "Delete"
       delete:
