@@ -21,6 +21,7 @@ class PostActionType < ActiveRecord::Base
     end
 
     def replace_flag_settings(settings)
+      Discourse.deprecate("Flags should not be replaced. Insert custom flags as database records.")
       @flag_settings = settings || FlagSettings.new
       @all_flags = nil
     end
@@ -32,6 +33,7 @@ class PostActionType < ActiveRecord::Base
 
     def reload_types
       @all_flags = nil
+      @flag_settings = FlagSettings.new
       ReviewableScore.reload_types
     end
 
@@ -86,7 +88,7 @@ class PostActionType < ActiveRecord::Base
 
     def custom_types
       return flag_settings.custom_types if overridden_by_plugin?
-      flag_enum(all_flags.select { |flag| flag.custom_type })
+      flag_enum(all_flags.select(&:custom_type))
     end
 
     def names

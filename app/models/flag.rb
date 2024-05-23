@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Flag < ActiveRecord::Base
+  MAX_SYSTEM_FLAG_ID = 1000
   scope :enabled, -> { where(enabled: true) }
   scope :system, -> { where("id < 1000") }
 
@@ -17,11 +18,13 @@ class Flag < ActiveRecord::Base
   end
 
   def self.reset_flag_settings!
+    # Flags are memoized for better performance. After the update, we need to reload them in all processes.
+    PostActionType.reload_types
     DiscourseEvent.trigger(:reload_post_action_types)
   end
 
   def system?
-    self.id < 1000
+    self.id < MAX_SYSTEM_FLAG_ID
   end
 
   def applies_to?(type)

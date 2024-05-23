@@ -14,6 +14,7 @@ class CreateFlags < ActiveRecord::Migration[7.0]
       t.boolean :enabled, default: true, null: false
       t.timestamps
     end
-    DB.exec("SELECT setval('flags_id_seq', 1001, FALSE);")
+    # IDs below 1000 are reserved for system flags
+    DB.exec("SELECT setval('flags_id_seq', #{Flag::MAX_SYSTEM_FLAG_ID + 1}, FALSE);")
   end
 end
