@@ -11,6 +11,40 @@ describe Chat::Message do
     it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
   end
 
+  describe ".in_thread?" do
+    context "when in a thread enabled channel" do
+      fab!(:message) do
+        Fabricate(
+          :chat_message,
+          thread_id: 1,
+          chat_channel: Fabricate(:chat_channel, threading_enabled: true),
+        )
+      end
+
+      it "returns true for messages in a thread" do
+        expect(message.in_thread?).to eq(true)
+      end
+
+      it "returns false for messages not in a thread" do
+        message.update!(thread_id: nil)
+        expect(message.in_thread?).to eq(false)
+      end
+    end
+
+    context "when the thread is forced" do
+      fab!(:message) { Fabricate(:chat_message, thread: Fabricate(:chat_thread, force: true)) }
+
+      it "returns true for messages in a thread" do
+        expect(message.in_thread?).to eq(true)
+      end
+
+      it "returns false for messages not in a thread" do
+        message.update!(thread_id: nil)
+        expect(message.in_thread?).to eq(false)
+      end
+    end
+  end
+
   describe ".cook" do
     it "does not support HTML tags" do
       cooked = described_class.cook("<h1>test</h1>")
