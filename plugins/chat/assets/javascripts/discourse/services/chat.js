@@ -357,14 +357,14 @@ export default class Chat extends Service {
   // @param {array} [targets.groups] - The groups to include in the direct message channel.
   // @param {object} opts - Optional values when fetching or creating the direct message channel.
   // @param {string|null} [opts.name] - Name for the direct message channel.
-  // @param {boolean} [opts.chat_link] - Was origin of request a chat link?
-  upsertDmChannel(targets, opts = { name: null, chat_link: false }) {
+  // @param {boolean} [opts.upsert] - Should we attempt to fetch existing channel before creating a new one.
+  upsertDmChannel(targets, opts = { name: null, upsert: true }) {
     return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
       data: {
         target_usernames: targets.usernames?.uniq(),
         target_groups: targets.groups?.uniq(),
-        chat_link: opts.chat_link,
+        upsert: opts.upsert,
         name: opts.name,
       },
     })

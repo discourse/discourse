@@ -93,7 +93,7 @@ RSpec.describe Chat::Api::DirectMessagesController do
           post "/chat/api/direct-message-channels.json",
                params: {
                  target_usernames: [usernames],
-                 chat_link: true,
+                 upsert: true,
                }
         }.not_to change { Chat::DirectMessage.count }
       end

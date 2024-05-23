@@ -42,7 +42,7 @@ module Chat
       attribute :name, :string
       attribute :target_usernames, :array
       attribute :target_groups, :array
-      attribute :chat_link, :boolean, default: false
+      attribute :upsert, :boolean, default: false
 
       validate :target_presence
 
@@ -81,7 +81,7 @@ module Chat
       ids = target_users.map(&:id)
       is_group = ids.size > 2 || contract.name.present?
 
-      if contract.chat_link || !is_group
+      if contract.upsert || !is_group
         ::Chat::DirectMessage.for_user_ids(ids, group: is_group) ||
           ::Chat::DirectMessage.create(user_ids: ids, group: is_group)
       else
