@@ -18,7 +18,7 @@ class PostActionTypeSerializer < ApplicationSerializer
   end
 
   def description
-    i18n("description", vars: { tos_url: tos_url, base_path: Discourse.base_path })
+    i18n("description", vars: { tos_url:, base_path: Discourse.base_path })
   end
 
   def short_description
