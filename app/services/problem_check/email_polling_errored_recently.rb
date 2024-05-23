@@ -15,10 +15,6 @@ class ProblemCheck::EmailPollingErroredRecently < ProblemCheck
     @polling_error_count ||= Jobs::PollMailbox.errors_in_past_24_hours
   end
 
-  def translation_key
-    "dashboard.email_polling_errored_recently"
-  end
-
   def translation_data
     { count: polling_error_count }
   end

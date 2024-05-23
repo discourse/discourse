@@ -16,7 +16,7 @@ class ProblemCheck::OutOfDateThemes < ProblemCheck
   end
 
   def message
-    "#{I18n.t("dashboard.out_of_date_themes")}<ul>#{themes_list}</ul>"
+    "#{I18n.t("dashboard.problem.out_of_date_themes")}<ul>#{themes_list}</ul>"
   end
 
   def themes_list
