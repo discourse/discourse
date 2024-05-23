@@ -58,7 +58,7 @@ class PostActionType < ActiveRecord::Base
 
     def flag_types_without_custom
       return flag_settings.without_custom_types if overridden_by_plugin?
-      flag_enum(all_flags.select { |flag| !flag.custom_type })
+      flag_enum(all_flags.reject(&:custom_type))
     end
 
     def flag_types
