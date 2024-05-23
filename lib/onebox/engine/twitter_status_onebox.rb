@@ -27,7 +27,7 @@ module Onebox
         response =
           begin
             # We need to allow cross domain cookies to prevent an
-            # infinit redirect loop between twitter.com and x.com
+            # infinite redirect loop between twitter.com and x.com
             Onebox::Helpers.fetch_response(
               url,
               headers: http_params,
