@@ -9,19 +9,19 @@
         <span>{{this.averageRating}}</span>
       {{else}}
         {{#if this.resultsPie}}
-          <PollResultsPie @id={{@attrs.id}} @options={{this.options}} />
+          <PollResultsPie @id={{this.id}} @options={{this.options}} />
         {{else}}
           {{#if this.isIrv}}
             <PollResultsIrv @irvOutcome={{this.irvOutcome}} />
           {{else}}
             <PollResultsStandard
               @options={{this.options}}
-              @pollName={{this.attrs.poll.name}}
-              @pollType={{this.attrs.poll.type}}
-              @postId={{this.attrs.post.id}}
+              @pollName={{this.poll.name}}
+              @pollType={{this.poll.type}}
+              @postId={{this.post.id}}
               @vote={{this.vote}}
               @voters={{this.preloadedVoters}}
-              @votersCount={{this.attrs.poll.voters}}
+              @votersCount={{this.poll.voters}}
               @fetchVoters={{this.fetchVoters}}
             />
           {{/if}}
@@ -46,11 +46,11 @@
   @isMultiple={{this.isMultiple}}
   @close={{this.close}}
   @closed={{this.closed}}
-  @results={{this.attrs.poll.results}}
+  @results={{this.poll.results}}
   @showResults={{this.showResults}}
-  @postUserId={{this.attrs.poll.post.user_id}}
-  @isPublic={{this.attrs.poll.public}}
-  @hasVoted={{this.attrs.hasVoted}}
+  @postUserId={{this.poll.post.user_id}}
+  @isPublic={{this.poll.public}}
+  @hasVoted={{this.hasVoted}}
   @voters={{this.voters}}
 />
 <div class="poll-buttons">

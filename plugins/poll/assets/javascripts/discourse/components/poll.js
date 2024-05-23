@@ -209,6 +209,8 @@ export default class PollComponent extends Component {
   };
   constructor() {
     super(...arguments);
+    this.id = this.args.attrs.id;
+    this.post = this.args.attrs.post;
     this.options = this.poll.options;
     this.getDropdownButtonState = false;
 
@@ -252,6 +254,10 @@ export default class PollComponent extends Component {
 
   get closed() {
     return this.status === "closed" || this.isAutomaticallyClosed();
+  }
+
+  get hasVoted() {
+    return this.vote && this.vote.length > 0;
   }
 
   get hideResultsDisabled() {
