@@ -114,8 +114,8 @@
         {{#each this.getDropdownContent as |content|}}
           <div class="widget-dropdown-item">
             <button
-              class="widget-button"
-              title={{I18n content.title}}
+              class="widget-button {{content.className}}"
+              title={{content.title}}
               {{on "click" (fn this.dropDownClick content.action)}}
             >
               {{d-icon content.icon}}

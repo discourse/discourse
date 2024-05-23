@@ -6,7 +6,8 @@ import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import round from "discourse/lib/round";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
+import PollBreakdownModal from "../components/modal/poll-breakdown";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 
 const FETCH_VOTERS_COUNT = 25;
@@ -47,6 +48,7 @@ export default class PollComponent extends Component {
   @service appEvents;
   @service dialog;
   @service router;
+  @service modal;
   @tracked isStaff = this.currentUser && this.currentUser.staff;
   @tracked vote = this.args.attrs.vote || [];
   @tracked titleHTML = htmlSafe(this.args.attrs.titleHTML);
@@ -70,7 +72,7 @@ export default class PollComponent extends Component {
     this.showingResults ||
     (this.args.attrs.post.get("topic.archived") && !this.staffOnly) ||
     (this.closed && !this.staffOnly);
-  @tracked getDropdownButtonState = false;
+  @tracked getDropdownButtonState;
   post = this.args.attrs.post;
   isMe =
     this.currentUser && this.args.attrs.post.user_id === this.currentUser.id;
@@ -83,10 +85,7 @@ export default class PollComponent extends Component {
   };
 
   irvDropdownContent = [];
-  // showLogin = () => {
-  //   this.showLogin();
-  //   //this.register.lookup("route:application").send("showLogin");
-  // };
+
   checkUserGroups = (user, poll) => {
     const pollGroups =
       poll && poll.groups && poll.groups.split(",").map((g) => g.toLowerCase());
@@ -211,8 +210,7 @@ export default class PollComponent extends Component {
   constructor() {
     super(...arguments);
     this.options = this.poll.options;
-    this.min = this.args.attrs.min;
-    this.max = this.args.attrs.max;
+    this.getDropdownButtonState = false;
 
     if (this.args.attrs.isIrv) {
       this.irvDropdownContent.push({
@@ -233,6 +231,25 @@ export default class PollComponent extends Component {
       }
     });
   }
+
+  get min() {
+    let min = parseInt(this.args.attrs.poll.min, 10);
+    if (isNaN(min) || min < 0) {
+      min = 1;
+    }
+
+    return min;
+  }
+
+  get max() {
+    let max = parseInt(this.args.attrs.poll.max, 10);
+    const numOptions = this.args.attrs.poll.options.length;
+    if (isNaN(max) || max > numOptions) {
+      max = numOptions;
+    }
+    return max;
+  }
+
   get closed() {
     return this.status === "closed" || this.isAutomaticallyClosed();
   }
@@ -299,6 +316,10 @@ export default class PollComponent extends Component {
     }
 
     return selectedOptionCount > 0;
+  }
+
+  get notInVotingGroup() {
+    return !this.checkUserGroups(this.currentUser, this.poll);
   }
 
   get pollGroups() {
@@ -577,6 +598,13 @@ export default class PollComponent extends Component {
             }
           });
       },
+    });
+  }
+
+  @action
+  showBreakdown() {
+    this.modal.show(PollBreakdownModal, {
+      model: this.args.attrs,
     });
   }
 
