@@ -73,7 +73,7 @@ class PostActionType < ActiveRecord::Base
 
     def notify_flag_types
       return flag_settings.notify_types if overridden_by_plugin?
-      flag_enum(all_flags.select { |flag| flag.notify_type })
+      flag_enum(all_flags.select(&:notify_type))
     end
 
     def topic_flag_types
