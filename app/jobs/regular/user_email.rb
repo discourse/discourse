@@ -119,22 +119,36 @@ module Jobs
       end
 
       if type == "digest"
-        return if user.staged
-        if user.last_emailed_at &&
-             user.last_emailed_at >
-               (
-                 user.user_option&.digest_after_minutes ||
-                   SiteSetting.default_email_digest_frequency.to_i
-               ).minutes.ago
-          return
+        # same checks as in the "enqueue_digest_emails" job
+        # in case something changed since the job was enqueued
+        return if SiteSetting.disable_digest_emails? || SiteSetting.private_email?
+
+        return if user.bot? || user.anonymous? || !user.active || user.suspended? || user.staged
+
+        return if !user.user_stat
+        return if user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
+
+        return if !user.user_option
+        return if !user.user_option.email_digests
+        return if user.user_option.mailing_list_mode
+
+        delay = user.user_option.digest_after_minutes || SiteSetting.default_email_digest_frequency
+        delay = delay.to_i
+
+        return if delay <= 0 # 0 means never send digest
+
+        if user.user_stat.digest_attempted_at
+          return if user.user_stat.digest_attempted_at > delay.minutes.ago
+        end
+
+        if user.last_seen_at
+          return if user.last_seen_at > delay.minutes.ago
         end
       end
 
       seen_recently =
-        (
-          user.last_seen_at.present? &&
-            user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago
-        )
+        user.last_seen_at && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago
+
       if !args[:force_respect_seen_recently] &&
            (
              always_email_regular?(user, type) || always_email_private_message?(user, type) ||
@@ -164,16 +178,17 @@ module Jobs
           email_args[:notification_type] = email_args[:notification_type].to_s
         end
 
-        if !SiteSetting.disable_mailing_list_mode && user.user_option.mailing_list_mode? &&
-             user.user_option.mailing_list_mode_frequency > 0 && # don't catch notifications for users on daily mailing list mode
-             (!post.try(:topic).try(:private_message?)) &&
-             NOTIFICATIONS_SENT_BY_MAILING_LIST.include?(email_args[:notification_type])
-          # no need to log a reason when the mail was already sent via the mailing list job
-          return nil, nil
+        # don't catch notifications for users on daily mailing list mode
+        if user.user_option.mailing_list_mode && user.user_option.mailing_list_mode_frequency > 0
+          if !post&.topic&.private_message? &&
+               NOTIFICATIONS_SENT_BY_MAILING_LIST.include?(email_args[:notification_type])
+            # no need to log a reason when the mail was already sent via the mailing list job
+            return
+          end
         end
 
         unless always_email_regular?(user, type) || always_email_private_message?(user, type)
-          if (notification && notification.read?) || (post && post.seen?(user))
+          if notification&.read? || post&.seen?(user)
             return skip_message(SkippedEmailLog.reason_types[:user_email_notification_already_read])
           end
         end

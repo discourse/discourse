@@ -1,6 +1,12 @@
 import { getOwner } from "@ember/application";
 import { test } from "qunit";
 import {
+  disable,
+  init,
+  resetIdle,
+  setLastAction,
+} from "discourse/lib/desktop-notifications";
+import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -44,6 +50,13 @@ acceptance(
       });
 
       updateCurrentUser({ chat_sound: "ding" });
+
+      init(
+        this.container.lookup("service:message-bus"),
+        this.container.lookup("service:app-events")
+      );
+
+      setLastAction(moment().subtract(1, "hour").valueOf());
     });
 
     needs.user();
@@ -112,6 +125,20 @@ acceptance(
     test("group", async function (assert) {
       const channel = buildDirectMessageChannel(getOwner(this));
       channel.chatable.group = true;
+
+      assert.deepEqual(await this.subject.play(channel), false);
+    });
+
+    test("not idle", async function (assert) {
+      const channel = buildDirectMessageChannel(getOwner(this));
+      resetIdle();
+
+      assert.deepEqual(await this.subject.play(channel), false);
+    });
+
+    test("notifications disabled", async function (assert) {
+      const channel = buildDirectMessageChannel(getOwner(this));
+      disable();
 
       assert.deepEqual(await this.subject.play(channel), false);
     });

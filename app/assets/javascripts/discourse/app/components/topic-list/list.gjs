@@ -89,6 +89,10 @@ export default class TopicList extends Component {
     return lastVisitedTopic;
   }
 
+  get showTopicPostBadges() {
+    return this.args.showTopicPostBadges ?? true;
+  }
+
   <template>
     {{! template-lint-disable table-groups }}
     <table
@@ -140,7 +144,7 @@ export default class TopicList extends Component {
           <TopicListItem
             @topic={{topic}}
             @bulkSelectEnabled={{this.bulkSelectEnabled}}
-            @showTopicPostBadges={{@showTopicPostBadges}}
+            @showTopicPostBadges={{this.showTopicPostBadges}}
             @hideCategory={{@hideCategory}}
             @showPosters={{@showPosters}}
             @showLikes={{this.showLikes}}

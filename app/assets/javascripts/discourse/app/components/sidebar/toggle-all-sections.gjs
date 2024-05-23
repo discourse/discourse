@@ -23,9 +23,7 @@ export default class ToggleAllSections extends Component {
   }
 
   get icon() {
-    return this.allSectionsExpanded
-      ? "discourse-chevron-collapse"
-      : "discourse-chevron-expand";
+    return this.allSectionsExpanded ? "angle-double-up" : "angle-double-down";
   }
 
   @action

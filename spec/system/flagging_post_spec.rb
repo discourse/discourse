@@ -12,7 +12,7 @@ describe "Flagging post", type: :system do
 
   describe "Using Take Action" do
     it "can select the default action to hide the post, agree with other flags, and reach the flag threshold" do
-      other_flag = Fabricate(:flag, post: post_to_flag, user: Fabricate(:moderator))
+      other_flag = Fabricate(:flag_post_action, post: post_to_flag, user: Fabricate(:moderator))
       other_flag_reviewable =
         Fabricate(:reviewable_flagged_post, target: post_to_flag, created_by: other_flag.user)
       expect(other_flag.reload.agreed_at).to be_nil

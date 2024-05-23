@@ -350,13 +350,6 @@ class SiteSerializer < ApplicationSerializer
   private
 
   def ordered_flags(flags)
-    notify_moderators_type = PostActionType.flag_types[:notify_moderators]
-    types = flags
-
-    if notify_moderators_flag = types.index(notify_moderators_type)
-      types.insert(types.length, types.delete_at(notify_moderators_flag))
-    end
-
-    types.map { |id| PostActionType.new(id: id) }
+    flags.map { |id| PostActionType.new(id: id) }
   end
 end

@@ -813,6 +813,7 @@ aside.quote {
     }
 
     .user {
+      @include ellipsis;
       border: 1px solid var(--primary-low);
       border-radius: 0.25em;
       padding: 0;
@@ -823,6 +824,7 @@ aside.quote {
 
       .user-link,
       .group-link {
+        @include ellipsis;
         color: var(--primary-high);
 
         &:hover {

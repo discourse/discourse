@@ -11,39 +11,49 @@ class PostActionType < ActiveRecord::Base
     ApplicationSerializer.expire_cache_fragment!(/\Apost_action_flag_types_/)
   end
 
+  DiscourseEvent.on(:reload_post_action_types) { self.reload_types }
+
   class << self
     attr_reader :flag_settings
 
-    def replace_flag_settings(settings)
-      if settings
-        @flag_settings = settings
-      else
-        initialize_flag_settings
-      end
-      @types = nil
+    def initialize_flag_settings
+      @flag_settings = FlagSettings.new
     end
 
-    def ordered
-      order("position asc")
+    def replace_flag_settings(settings)
+      Discourse.deprecate("Flags should not be replaced. Insert custom flags as database records.")
+      @flag_settings = settings || FlagSettings.new
+      @all_flags = nil
     end
 
     def types
-      unless @types
-        # NOTE: Previously bookmark was type 1 but that has been superseded
-        # by the separate Bookmark model and functionality
-        @types = Enum.new(like: 2)
-        @types.merge!(flag_settings.flag_types)
+      if overridden_by_plugin_or_skipped_db?
+        return Enum.new(like: 2).merge!(flag_settings.flag_types)
       end
+      Enum.new(like: 2).merge(flag_types)
+    end
 
-      @types
+    def reload_types
+      @all_flags = nil
+      @flag_settings = FlagSettings.new
+      ReviewableScore.reload_types
+    end
+
+    def overridden_by_plugin_or_skipped_db?
+      flag_settings.flag_types.present? || GlobalSetting.skip_db?
+    end
+
+    def all_flags
+      @all_flags ||= Flag.all
     end
 
     def auto_action_flag_types
-      flag_settings.auto_action_types
+      return flag_settings.auto_action_types if overridden_by_plugin_or_skipped_db?
+      flag_enum(all_flags.select(&:auto_action_type))
     end
 
     def public_types
-      @public_types ||= types.except(*flag_types.keys << :notify_user)
+      types.except(*flag_types.keys << :notify_user)
     end
 
     def public_type_ids
@@ -51,11 +61,13 @@ class PostActionType < ActiveRecord::Base
     end
 
     def flag_types_without_custom
-      flag_settings.without_custom_types
+      return flag_settings.without_custom_types if overridden_by_plugin_or_skipped_db?
+      flag_enum(all_flags.reject(&:custom_type))
     end
 
     def flag_types
-      flag_settings.flag_types
+      return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
+      flag_enum(all_flags)
     end
 
     # flags resulting in mod notifications
@@ -64,15 +76,25 @@ class PostActionType < ActiveRecord::Base
     end
 
     def notify_flag_types
-      flag_settings.notify_types
+      return flag_settings.notify_types if overridden_by_plugin_or_skipped_db?
+      flag_enum(all_flags.select(&:notify_type))
     end
 
     def topic_flag_types
-      flag_settings.topic_flag_types
+      if overridden_by_plugin_or_skipped_db?
+        flag_settings.topic_flag_types
+      else
+        flag_enum(all_flags.select { |flag| flag.applies_to?("Topic") })
+      end
     end
 
     def custom_types
-      flag_settings.custom_types
+      return flag_settings.custom_types if overridden_by_plugin_or_skipped_db?
+      flag_enum(all_flags.select(&:custom_type))
+    end
+
+    def names
+      all_flags.pluck(:id, :name).to_h
     end
 
     def is_flag?(sym)
@@ -81,28 +103,8 @@ class PostActionType < ActiveRecord::Base
 
     private
 
-    def initialize_flag_settings
-      @flag_settings = FlagSettings.new
-      @flag_settings.add(3, :off_topic, notify_type: true, auto_action_type: true)
-      @flag_settings.add(
-        4,
-        :inappropriate,
-        topic_type: true,
-        notify_type: true,
-        auto_action_type: true,
-      )
-      @flag_settings.add(8, :spam, topic_type: true, notify_type: true, auto_action_type: true)
-      @flag_settings.add(6, :notify_user, topic_type: false, notify_type: false, custom_type: true)
-      @flag_settings.add(
-        7,
-        :notify_moderators,
-        topic_type: true,
-        notify_type: true,
-        custom_type: true,
-      )
-      @flag_settings.add(10, :illegal, topic_type: true, notify_type: true, custom_type: true)
-      # When adding a new ID here, check that it doesn't clash with any added in
-      # `ReviewableScore.types`. You can thank me later.
+    def flag_enum(scope)
+      Enum.new(scope.map { |flag| [flag.name_key.to_sym, flag.id] }.to_h)
     end
   end
 

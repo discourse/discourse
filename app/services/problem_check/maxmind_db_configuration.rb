@@ -10,10 +10,4 @@ class ProblemCheck::MaxmindDbConfiguration < ProblemCheck
       no_problem
     end
   end
-
-  private
-
-  def translation_key
-    "dashboard.maxmind_db_configuration_warning"
-  end
 end

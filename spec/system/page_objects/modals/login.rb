@@ -19,28 +19,42 @@ module PageObjects
         find(".login-button").click
       end
 
+      def click(selector)
+        if page.has_css?("html.mobile-view", wait: 0)
+          expect(page).to have_css(".d-modal:not(.is-animating)")
+        end
+        find(selector).click
+      end
+
       def open_signup
-        find("#new-account-link").click
+        click("#new-account-link")
       end
 
       def click_login
-        find("#login-button").click
+        click("#login-button")
       end
 
       def email_login_link
-        find("#email-login-link").click
+        click("#email-login-link")
       end
 
       def forgot_password
-        find("#forgot-password-link").click
+        click("#forgot-password-link")
+      end
+
+      def fill_input(selector, text)
+        if page.has_css?("html.mobile-view", wait: 0)
+          expect(page).to have_css(".d-modal:not(.is-animating)")
+        end
+        find(selector).fill_in(with: text)
       end
 
       def fill_username(username)
-        find("#login-account-name").fill_in(with: username)
+        fill_input("#login-account-name", username)
       end
 
       def fill_password(password)
-        find("#login-account-password").fill_in(with: password)
+        fill_input("#login-account-password", password)
       end
 
       def fill(username: nil, password: nil)
@@ -48,32 +62,8 @@ module PageObjects
         fill_password(password) if password
       end
 
-      def select_facebook
-        find(".btn-social.facebook").click
-      end
-
-      def select_google
-        find(".btn-social.google_oauth2").click
-      end
-
-      def select_github
-        find(".btn-social.github").click
-      end
-
-      def select_twitter
-        find(".btn-social.twitter").click
-      end
-
-      def select_discord
-        find(".btn-social.discord").click
-      end
-
-      def select_linkedin
-        find(".btn-social.linkedin_oidc").click
-      end
-
-      def select_passkey
-        find(".btn-social.passkey-login-button").click
+      def click_social_button(provider)
+        click(".btn-social.#{provider}")
       end
     end
   end

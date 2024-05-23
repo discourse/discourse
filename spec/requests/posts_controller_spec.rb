@@ -92,7 +92,6 @@ RSpec.describe PostsController do
   let(:topicless_post) { Fabricate(:post, user: user, raw: "<p>Car 54, where are you?</p>") }
 
   let(:private_topic) { Fabricate(:topic, archetype: Archetype.private_message, category_id: nil) }
-
   let(:private_post) { Fabricate(:post, user: user, topic: private_topic) }
 
   describe "#show" do
@@ -2440,7 +2439,7 @@ RSpec.describe PostsController do
     it "can show whole topics" do
       topic = Fabricate(:topic)
       post = Fabricate(:post, topic: topic, post_number: 1, raw: "123456789")
-      post_2 = Fabricate(:post, topic: topic, post_number: 2, raw: "abcdefghij")
+      _post_2 = Fabricate(:post, topic: topic, post_number: 2, raw: "abcdefghij")
       post.save
       get "/raw/#{topic.id}"
       expect(response.status).to eq(200)
@@ -2580,6 +2579,23 @@ RSpec.describe PostsController do
         expect(body).to_not include(public_post.url)
       end
 
+      it "properly secures private posts" do
+        sign_in(user)
+
+        private_post
+
+        pm = Fabricate(:private_message_topic, recipient: user)
+        post_id = Fabricate(:post, topic: pm).id
+
+        get "/private-posts.json"
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        post_ids = json["private_posts"].map { |p| p["id"] }
+
+        expect(post_ids).to eq([post_id])
+      end
+
       it "returns private posts for json" do
         sign_in(admin)
 
@@ -2612,6 +2628,24 @@ RSpec.describe PostsController do
 
         expect(body).to include(public_post.canonical_url)
         expect(body).to_not include(private_post.url)
+      end
+
+      it "doesn't include posts from secured categories you have no access to" do
+        public_post
+        private_post
+
+        category = Fabricate(:category, read_restricted: true)
+        topic = Fabricate(:topic, category: category)
+        secure_post = Fabricate(:post, topic: topic)
+
+        get "/posts.json"
+
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        ids = body["latest_posts"].map { |p| p["id"] }
+
+        expect(ids).not_to include secure_post.id
       end
 
       it "doesn't include posts from hidden topics" do

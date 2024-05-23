@@ -34,6 +34,7 @@ export default class ChatRoute extends DiscourseRoute {
       "chat.channel.thread",
       "chat.channel.thread.index",
       "chat.channel.thread.near-message",
+      "chat.channel.near-message-with-thread",
       "chat.channel.threads",
       "chat.channel.index",
       "chat.channel.near-message",

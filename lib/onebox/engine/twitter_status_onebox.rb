@@ -9,7 +9,7 @@ module Onebox
       include ActionView::Helpers::NumberHelper
 
       matches_regexp(
-        %r{^https?://(mobile\.|www\.)?twitter\.com/.+?/status(es)?/\d+(/(video|photo)/\d?+)?+(/?\?.*)?/?$},
+        %r{^https?://(mobile\.|www\.)?(twitter\.com|x\.com)/.+?/status(es)?/\d+(/(video|photo)/\d?+)?+(/?\?.*)?/?$},
       )
       always_https
 
@@ -26,7 +26,13 @@ module Onebox
       def get_twitter_data
         response =
           begin
-            Onebox::Helpers.fetch_response(url, headers: http_params)
+            # We need to allow cross domain cookies to prevent an
+            # infinite redirect loop between twitter.com and x.com
+            Onebox::Helpers.fetch_response(
+              url,
+              headers: http_params,
+              allow_cross_domain_cookies: true,
+            )
           rescue StandardError
             return nil
           end
@@ -45,7 +51,7 @@ module Onebox
       end
 
       def match
-        @match ||= @url.match(%r{twitter\.com/.+?/status(es)?/(?<id>\d+)})
+        @match ||= @url.match(%r{(twitter\.com|x\.com)/.+?/status(es)?/(?<id>\d+)})
       end
 
       def twitter_data

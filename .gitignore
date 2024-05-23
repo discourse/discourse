@@ -35,20 +35,20 @@
 
 # Plugins except for the bundled ones
 /plugins/*
-!/plugins/discourse-details/
+!/plugins/discourse-details
 !/plugins/discourse-local-dates
 !/plugins/discourse-narrative-bot
 !/plugins/discourse-presence
-!/plugins/discourse-lazy-videos/
-!/plugins/automation/
+!/plugins/discourse-lazy-videos
+!/plugins/automation
 /plugins/automation/gems
-!/plugins/chat/
-!/plugins/poll/
+!/plugins/chat
+!/plugins/poll
 !/plugins/styleguide
-!/plugins/spoiler-alert/
-!/plugins/checklist/
-!/plugins/footnote/
-/plugins/*/auto_generated/
+!/plugins/spoiler-alert
+!/plugins/checklist
+!/plugins/footnote
+/plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
 
@@ -71,7 +71,7 @@ yarn-error.log
 
 # Linting artifacts
 .eslintcache
-/lint-progress/
+/lint-progress
 
 # Auto-generated plugin JS assets
 /app/assets/javascripts/plugins/*
