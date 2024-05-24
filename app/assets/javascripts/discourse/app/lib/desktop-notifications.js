@@ -139,11 +139,11 @@ function setupNotifications(appEvents) {
 }
 
 function resetIdle() {
-  lastAction = Date.now();
+  lastAction = Date.now() - 10;
 }
 
 function isIdle(idleThreshold = idleThresholdTime) {
-  return lastAction + idleThreshold < Date.now();
+  return lastAction + idleThreshold <= Date.now();
 }
 
 function setLastAction(time) {

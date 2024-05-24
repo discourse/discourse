@@ -9,50 +9,26 @@ export const CHAT_SOUNDS = {
 
 const DEFAULT_SOUND_NAME = "bell";
 
-const createAudioCache = (sources) => {
-  const audio = new Audio();
-  audio.pause();
-  sources.forEach(({ type, src }) => {
-    const source = document.createElement("source");
-    source.type = type;
-    source.src = getURLWithCDN(src);
-    audio.appendChild(source);
-  });
-  return audio;
-};
+const THROTTLE_TIME = 3000; // 3 seconds
 
 export default class ChatAudioManager extends Service {
-  _audioCache = {};
+  canPlay = true;
 
-  setup() {
-    Object.keys(CHAT_SOUNDS).forEach((soundName) => {
-      this._audioCache[soundName] = createAudioCache(CHAT_SOUNDS[soundName]);
-    });
+  async play(name) {
+    if (this.canPlay) {
+      await this.#tryPlay(name);
+      this.canPlay = false;
+      setTimeout(() => {
+        this.canPlay = true;
+      }, THROTTLE_TIME);
+    }
   }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    this._audioCache = {};
-  }
-
-  async play(soundName) {
-    if (isTesting()) {
-      return;
-    }
-
-    const audio =
-      this._audioCache[soundName] || this._audioCache[DEFAULT_SOUND_NAME];
-
-    if (!audio.paused) {
-      audio.pause();
-      if (typeof audio.fastSeek === "function") {
-        audio.fastSeek(0);
-      } else {
-        audio.currentTime = 0;
-      }
-    }
-
+  async #tryPlay(name) {
+    const src = getURLWithCDN(
+      (CHAT_SOUNDS[name] || CHAT_SOUNDS[DEFAULT_SOUND_NAME])[0].src
+    );
+    const audio = new Audio(src);
     try {
       await audio.play();
     } catch (e) {
