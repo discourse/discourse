@@ -40,7 +40,7 @@ describe "Reviewables", type: :system do
           PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide")
         select_kit.expand
 
-        expect(page).to have_selector("[data-value='post-agree_and_edit']")
+        expect(select_kit).to have_option_value("post-agree_and_edit")
       end
 
       it "agree_and_edit should open the composer" do
