@@ -24,7 +24,7 @@ en:
           title: "Results are only shown to <strong>staff</strong> members."
         tabs:
           votes: "Votes"
-          outcome: "Instant Run-off Vote Outcome"
+          outcome: "IRV Outcome"
       multiple:
         help:
           at_least_min_options:
