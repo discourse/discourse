@@ -11,6 +11,8 @@ export default class ChatNotificationManager extends Service {
   @service presence;
   @service chat;
   @service chatStateManager;
+  @service currentUser;
+  @service appEvents;
 
   _subscribedToCore = true;
   _subscribedToChat = false;
@@ -143,7 +145,12 @@ export default class ChatNotificationManager extends Service {
 
   @bind
   onMessage(data) {
-    return onNotification(data, this.siteSettings, this.currentUser);
+    return onNotification(
+      data,
+      this.siteSettings,
+      this.currentUser,
+      this.appEvents
+    );
   }
 
   _shouldRun() {
