@@ -7,7 +7,6 @@ import ChatChannelArchive from "../models/chat-channel-archive";
 export default class ChatSubscriptionsManager extends Service {
   @service store;
   @service chatChannelsManager;
-  @service chatChannelNotificationSound;
   @service chatTrackingStateManager;
   @service currentUser;
   @service appEvents;
@@ -206,14 +205,6 @@ export default class ChatSubscriptionsManager extends Service {
             channel.tracking.unreadCount++;
           }
 
-          const secondsPassed = moment().diff(
-            moment(busData.message.created_at),
-            "seconds"
-          );
-          if (secondsPassed < 10) {
-            this.chatChannelNotificationSound.play(channel);
-          }
-
           // Thread should be considered unread if not already.
           if (busData.thread_id && channel.threadingEnabled) {
             channel.threadsManager
@@ -265,14 +256,6 @@ export default class ChatSubscriptionsManager extends Service {
                   busData.message.id;
               }
             } else {
-              const secondsPassed = moment().diff(
-                moment(busData.message.created_at),
-                "seconds"
-              );
-              if (secondsPassed < 10) {
-                this.chatChannelNotificationSound.play(channel);
-              }
-
               // Message from other user. Increment unread for thread tracking state.
               if (
                 thread.currentUserMembership &&
