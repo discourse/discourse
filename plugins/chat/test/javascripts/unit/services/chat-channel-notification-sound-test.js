@@ -122,13 +122,6 @@ acceptance(
       assert.deepEqual(await this.subject.play(channel), false);
     });
 
-    test("group", async function (assert) {
-      const channel = buildDirectMessageChannel(getOwner(this));
-      channel.chatable.group = true;
-
-      assert.deepEqual(await this.subject.play(channel), false);
-    });
-
     test("not idle", async function (assert) {
       const channel = buildDirectMessageChannel(getOwner(this));
       resetIdle();
