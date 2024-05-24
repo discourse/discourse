@@ -557,7 +557,7 @@ class Guardian
 
   def can_ignore_users?
     return false if anonymous?
-    @user.staff? || @user.has_trust_level?(SiteSetting.min_trust_level_to_allow_ignore.to_i) ||
+    @user.staff? || @user.has_trust_level?(SiteSetting.ignore_allowed_groups.to_i) ||
       @user.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
   end
 
