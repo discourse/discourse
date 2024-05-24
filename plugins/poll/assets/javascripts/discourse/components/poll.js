@@ -84,8 +84,6 @@ export default class PollComponent extends Component {
     );
   };
 
-  irvDropdownContent = [];
-
   checkUserGroups = (user, poll) => {
     const pollGroups =
       poll && poll.groups && poll.groups.split(",").map((g) => g.toLowerCase());
@@ -213,8 +211,9 @@ export default class PollComponent extends Component {
     this.post = this.args.attrs.post;
     this.options = this.poll.options;
     this.getDropdownButtonState = false;
+    this.irvDropdownContent = [];
 
-    if (this.args.attrs.isIrv) {
+    if (this.isIrv) {
       this.irvDropdownContent.push({
         id: 0,
         name: I18n.t("poll.options.irv.abstain"),
@@ -223,7 +222,7 @@ export default class PollComponent extends Component {
 
     this.options.forEach((option, i) => {
       option.rank = 0;
-      if (this.args.attrs.isIrv) {
+      if (this.isIrv) {
         this.irvDropdownContent.push({ id: i + 1, name: (i + 1).toString() });
         this.args.attrs.vote.forEach((vote) => {
           if (vote.digest === option.id) {

@@ -1,10 +1,28 @@
 <div class="poll-voters">
   <ul class="poll-voters-list">
-    {{#each @voters as |user|}}
-      <li>
-        {{avatar user imageSize="tiny"}}
-      </li>
-    {{/each}}
+    {{#if @isIrv}}
+      {{#each this.irvVoters as |rank|}}
+        <ul>
+          {{#if (eq rank.rank "Abstain")}}
+            <span class="rank">{{d-icon "ban"}}</span>
+          {{else}}
+            <span class="rank">{{rank.rank}}</span>
+          {{/if}}
+          {{#each rank.voters as |user|}}
+            <li>
+              {{avatar user.user imageSize="tiny"}}
+            </li>
+          {{/each}}
+        </ul>
+      {{/each}}
+    {{else}}
+      {{#each @voters as |user|}}
+        <li>
+          {{avatar user imageSize="tiny"}}
+        </li>
+      {{/each}}
+
+    {{/if}}
   </ul>
   {{#if this.showMore}}
     {{#if @loading}}

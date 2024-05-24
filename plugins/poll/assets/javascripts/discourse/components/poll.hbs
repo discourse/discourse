@@ -11,20 +11,19 @@
         {{#if this.resultsPie}}
           <PollResultsPie @id={{this.id}} @options={{this.options}} />
         {{else}}
-          {{#if this.isIrv}}
-            <PollResultsIrv @irvOutcome={{this.irvOutcome}} />
-          {{else}}
-            <PollResultsStandard
-              @options={{this.options}}
-              @pollName={{this.poll.name}}
-              @pollType={{this.poll.type}}
-              @postId={{this.post.id}}
-              @vote={{this.vote}}
-              @voters={{this.preloadedVoters}}
-              @votersCount={{this.poll.voters}}
-              @fetchVoters={{this.fetchVoters}}
-            />
-          {{/if}}
+          <PollResultsTabs
+            @options={{this.options}}
+            @pollName={{this.poll.name}}
+            @pollType={{this.poll.type}}
+            @isIrv={{this.isIrv}}
+            @isPublic={{this.poll.public}}
+            @postId={{this.post.id}}
+            @vote={{this.vote}}
+            @voters={{this.preloadedVoters}}
+            @votersCount={{this.poll.voters}}
+            @fetchVoters={{this.fetchVoters}}
+            @irvOutcome={{this.irvOutcome}}
+          />
         {{/if}}
       {{/if}}
     </div>
@@ -39,6 +38,7 @@
     />
   {{/if}}
 </div>
+{{!-- {{log this.preloadedVoters}} --}}
 <PollInfo
   @options={{this.options}}
   @min={{this.min}}

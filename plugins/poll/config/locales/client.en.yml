@@ -22,7 +22,9 @@ en:
           title: "Results will be shown once <strong>closed</strong>."
         staff:
           title: "Results are only shown to <strong>staff</strong> members."
-
+        tabs:
+          votes: "Votes"
+          outcome: "IRV Outcome"
       multiple:
         help:
           at_least_min_options:
@@ -83,8 +85,8 @@ en:
       
       irv:
         title:
-          rounds: "IRV Rounds"
-          outcome: "Outcome"
+          rounds: "Rounds"
+          outcome: "Result"
         none: "None"
         majority: "Majority"
         eliminated: "Elminated"

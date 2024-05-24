@@ -226,10 +226,12 @@ class DiscoursePoll::Poll
 
       result = { option_digest => user_hashes }
     else
-      votes = DB.query <<~SQL
-        SELECT digest, user_id
+      if poll.type == "irv"
+        votes = DB.query <<~SQL
+        SELECT digest, rank, user_id
           FROM (
             SELECT digest
+                  , rank
                   , user_id
                   , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
               FROM poll_votes pv
@@ -238,7 +240,23 @@ class DiscoursePoll::Poll
                 AND po.poll_id = #{poll.id}
           ) v
           WHERE row BETWEEN #{offset} AND #{offset + limit}
-      SQL
+          ORDER BY digest, rank
+        SQL
+      else
+        votes = DB.query <<~SQL
+          SELECT digest, user_id
+            FROM (
+              SELECT digest
+                    , user_id
+                    , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
+                FROM poll_votes pv
+                JOIN poll_options po ON pv.poll_option_id = po.id
+                WHERE pv.poll_id = #{poll.id}
+                  AND po.poll_id = #{poll.id}
+            ) v
+            WHERE row BETWEEN #{offset} AND #{offset + limit}
+        SQL
+      end
 
       user_ids = votes.map(&:user_id).uniq
 
@@ -250,8 +268,14 @@ class DiscoursePoll::Poll
 
       result = {}
       votes.each do |v|
-        result[v.digest] ||= []
-        result[v.digest] << user_hashes[v.user_id]
+        if poll.type == "irv"
+          result[v.digest] ||= []
+          # result[v.digest][v.rank] ||= []
+          result[v.digest] << { rank: v.rank, user: user_hashes[v.user_id] }
+        else
+          result[v.digest] ||= []
+          result[v.digest] << user_hashes[v.user_id]
+        end
       end
     end
 

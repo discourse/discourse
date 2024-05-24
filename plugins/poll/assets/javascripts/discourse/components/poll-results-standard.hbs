@@ -3,18 +3,23 @@
     <li class={{if option.chosen "chosen" ""}}>
       <div class="option">
         <p>
-          <span class="percentage">{{option.percentage}}%</span>
+          {{#unless @isIrv}}
+            <span class="percentage">{{option.percentage}}%</span>
+          {{/unless}}
           <span class="option-text">{{option.html}}</span>
         </p>
-        <div class="bar-back">
-          <div
-            class="bar"
-            style={{htmlSafe (concat "width:" option.percentage "%")}}
-          />
-        </div>
+        {{#unless @isIrv}}
+          <div class="bar-back">
+            <div
+              class="bar"
+              style={{htmlSafe (concat "width:" option.percentage "%")}}
+            />
+          </div>
+        {{/unless}}
         <PollVoters
           @postId={{@postId}}
           @pollType={{@pollType}}
+          @isIrv={{@isIrv}}
           @optionId={{option.id}}
           @pollName={{@pollName}}
           @totalVotes={{option.votes}}
