@@ -3172,7 +3172,10 @@ RSpec.describe UsersController do
       fab!(:badge) { Fabricate(:badge, name: "Demogorgon", allow_title: true) }
       let(:user_badge) { BadgeGranter.grant(badge, user1) }
 
-      before { TranslationOverride.upsert!("en", "badges.demogorgon.name", "Boss") }
+      before do
+        I18n.backend.store_translations(:en, { badges: { demogorgon: { name: "D'Artagnan" } } })
+        TranslationOverride.upsert!("en", "badges.demogorgon.name", "Boss")
+      end
 
       after { TranslationOverride.revert!("en", ["badges.demogorgon.name"]) }
 

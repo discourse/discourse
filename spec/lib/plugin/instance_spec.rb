@@ -17,6 +17,8 @@ RSpec.describe Plugin::Instance do
 some_ruby
 TEXT
 
+  around { |example| allow_missing_translations(&example) }
+
   after { DiscoursePluginRegistry.reset! }
 
   # NOTE: sample_plugin_site_settings.yml is always loaded in tests in site_setting.rb

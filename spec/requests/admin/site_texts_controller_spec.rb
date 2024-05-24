@@ -108,33 +108,35 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       it "does not return overrides for keys that do not exist in English" do
-        SiteSetting.default_locale = :ru
-        TranslationOverride.create!(
-          locale: :ru,
-          translation_key: "missing_plural_key.one",
-          value: "ONE",
-        )
-        TranslationOverride.create!(
-          locale: :ru,
-          translation_key: "another_missing_key",
-          value: "foo",
-        )
+        allow_missing_translations do
+          SiteSetting.default_locale = :ru
+          TranslationOverride.create!(
+            locale: :ru,
+            translation_key: "missing_plural_key.one",
+            value: "ONE",
+          )
+          TranslationOverride.create!(
+            locale: :ru,
+            translation_key: "another_missing_key",
+            value: "foo",
+          )
 
-        get "/admin/customize/site_texts.json",
-            params: {
-              q: "missing_plural_key",
-              locale: default_locale,
-            }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["site_texts"]).to be_empty
+          get "/admin/customize/site_texts.json",
+              params: {
+                q: "missing_plural_key",
+                locale: default_locale,
+              }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["site_texts"]).to be_empty
 
-        get "/admin/customize/site_texts.json",
-            params: {
-              q: "another_missing_key",
-              locale: default_locale,
-            }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["site_texts"]).to be_empty
+          get "/admin/customize/site_texts.json",
+              params: {
+                q: "another_missing_key",
+                locale: default_locale,
+              }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["site_texts"]).to be_empty
+        end
       end
 
       it "returns site text from fallback locale if current locale doesn't have a translation" do

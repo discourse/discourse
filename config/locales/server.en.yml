@@ -556,6 +556,7 @@ en:
   private_message_abbrev: "Msg"
 
   rss_description:
+    hot: "Hot topics"
     latest: "Latest topics"
     top: "Top topics"
     top_all: "All time top topics"
@@ -1472,6 +1473,7 @@ en:
       description: "External sources that have linked to this site the most."
     top_referred_topics:
       title: "Top Referred Topics"
+      xaxis: ""
       labels:
         num_clicks: "Clicks"
         topic: "Topic"
