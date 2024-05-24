@@ -238,7 +238,7 @@ task "users:create", [:email, :password] => [:environment] do |_, args|
     exit 1
   end
   user = User.new(email: email, password: password)
-  admin.username = UserNameSuggester.suggest(admin.email)
+  user.username = UserNameSuggester.suggest(user.email)
   user.active = true
   user.save!
   puts "User #{email} created with password #{password}"
