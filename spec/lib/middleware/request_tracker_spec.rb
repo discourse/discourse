@@ -369,6 +369,31 @@ RSpec.describe Middleware::RequestTracker do
       end
     end
 
+    describe "crawler rate limits" do
+      context "when there are multiple matching crawlers" do
+        before { SiteSetting.slow_down_crawler_user_agents = "badcrawler2|badcrawler22" }
+
+        it "only checks limits for the first match" do
+          env = env("HTTP_USER_AGENT" => "badcrawler")
+
+          status, _ = middleware.call(env)
+          expect(status).to eq(200)
+        end
+      end
+
+      it "compares user agents in a case-insensitive manner" do
+        SiteSetting.slow_down_crawler_user_agents = "BaDCRawLer"
+        env1 = env("HTTP_USER_AGENT" => "bADcrAWLer")
+        env2 = env("HTTP_USER_AGENT" => "bADcrAWLer")
+
+        status, _ = middleware.call(env1)
+        expect(status).to eq(200)
+
+        status, _ = middleware.call(env2)
+        expect(status).to eq(429)
+      end
+    end
+
     describe "register_ip_skipper" do
       before do
         Middleware::RequestTracker.register_ip_skipper { |ip| ip == "1.1.1.2" }
