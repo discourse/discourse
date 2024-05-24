@@ -16,7 +16,7 @@ export default class AdminPluginConfigTopNav extends Component {
   }
 
   <template>
-    <div class="admin-controls">
+    <div class="admin-nav-submenu">
       <HorizontalOverflowNav
         class="plugin-nav admin-plugin-config-page__top-nav"
       >

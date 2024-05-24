@@ -105,10 +105,10 @@
   }
 
   &__metadata {
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-6);
   }
 
-  .admin-controls {
+  .admin-nav-submenu {
     background: transparent;
     border-bottom: 1px solid var(--primary-low);
 
@@ -125,17 +125,31 @@
     }
 
     .admin-plugin-config-page__top-nav {
+      --active-border-width: var(--space-1);
+
       width: auto !important;
-      padding: 0;
+      margin: 0;
 
-      a:hover {
-        border-radius: 0;
-      }
+      a {
+        font-size: var(--font-down-0);
+        padding: var(--space-2) var(--space-3)
+          calc(0.5rem + var(--active-border-width));
 
-      > li a.active {
-        border-radius: 0;
-        border-width: 0;
-        border-bottom-width: var(--space-1);
+        &:hover {
+          color: var(--quaternary);
+          background-color: transparent;
+          border-color: transparent;
+        }
+
+        &.active {
+          color: var(--quaternary);
+          background-color: transparent;
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+          border-width: 0;
+          border-bottom: var(--active-border-width) solid var(--quaternary);
+          padding-bottom: var(--space-2);
+        }
       }
 
       .has-sidebar-page & {
