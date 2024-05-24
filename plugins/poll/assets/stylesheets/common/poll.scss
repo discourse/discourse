@@ -1,3 +1,9 @@
+.topic-body {
+  .cooked {
+    overflow: visible;
+  }
+}
+
 div.poll {
   margin: 1em 0;
   border: 1px solid var(--primary-low);
@@ -358,29 +364,17 @@ div.poll {
         }
       }
       &.opened {
-        //  position: absolute;
-        // // top: 0;
-        // // left: -43px;
         display: flex;
         flex-direction: column;
         position: relative;
-        // height: 100%;
-        // width: 100%;
+
         overflow-y: visible;
         .widget-dropdown-body {
           display: block;
           position: absolute;
-          // inset: 0px auto auto 0px;
-          // top: 30px;
-          // left: -0px;
-          //   border: 1px solid var(--primary-low);
-          //   background: var(--secondary);
-          //   // height: 30px;
           z-index: 300;
-          // overflow-y: auto;
           overflow-y: visible;
-          //   max-height: 250px;
-          transform: translate(-46px, -80px);
+          transform: translate(-44px, 38px);
           .widget-dropdown-item {
             padding: 0;
             margin: 0;
@@ -400,20 +394,6 @@ div.poll {
             }
           }
         }
-        //   // width: 100%;
-        //   // // position: absolute;
-        //   // left: -20px;
-        // }
-        // :nth-child(2) {
-        //   transform: translate(685.556px, 214.444px);
-
-        // }
-        // :nth-child(3) {
-        //   transform: translate(685.556px, 254.444px);
-        // }
-        // :nth-child(4) {
-        //   transform: translate(685.556px, 294.444px);
-        // }
       }
 
       &-header {
