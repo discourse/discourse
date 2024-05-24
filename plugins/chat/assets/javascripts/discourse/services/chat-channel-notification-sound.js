@@ -8,7 +8,11 @@ export default class ChatChannelNotificationSound extends Service {
   @service site;
 
   async play(channel) {
-    if (!canUserReceiveNotifications(this.currentUser)) {
+    if (
+      !canUserReceiveNotifications(this.currentUser, {
+        idleThresholdTime: 0,
+      })
+    ) {
       return false;
     }
 

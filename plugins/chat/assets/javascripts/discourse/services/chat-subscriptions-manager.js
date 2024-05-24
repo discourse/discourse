@@ -206,7 +206,13 @@ export default class ChatSubscriptionsManager extends Service {
             channel.tracking.unreadCount++;
           }
 
-          this.chatChannelNotificationSound.play(channel);
+          const secondsPassed = moment().diff(
+            moment(busData.message.created_at),
+            "seconds"
+          );
+          if (secondsPassed < 10) {
+            this.chatChannelNotificationSound.play(channel);
+          }
 
           // Thread should be considered unread if not already.
           if (busData.thread_id && channel.threadingEnabled) {

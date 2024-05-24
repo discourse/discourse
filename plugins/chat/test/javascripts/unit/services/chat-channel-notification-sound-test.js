@@ -133,7 +133,7 @@ acceptance(
       const channel = buildDirectMessageChannel(getOwner(this));
       resetIdle();
 
-      assert.deepEqual(await this.subject.play(channel), false);
+      assert.deepEqual(await this.subject.play(channel), true);
     });
 
     test("notifications disabled", async function (assert) {
