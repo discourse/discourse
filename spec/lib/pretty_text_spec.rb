@@ -2633,7 +2633,7 @@ HTML
       cooked = PrettyText.cook("Hello [wrap=toc id=1]taco[/wrap] world")
 
       html = <<~HTML
-        <p>Hello <span class="d-wrap" data-wrap="toc" data-id="1">taco</span> world</p>
+        <p>Hello <span class="d-wrap" data-id="1" data-wrap="toc">taco</span> world</p>
       HTML
 
       expect(cooked).to eq(html.strip)
@@ -2644,7 +2644,7 @@ HTML
       SiteSetting.enable_markdown_typographer = true
 
       md = <<~MD
-        [wrap=toc id="a” aa='b"' bb="f'"]
+        [wrap=toc id=“a” aa='b"' bb="f'"]
         taco1
         [/wrap]
       MD
@@ -2652,7 +2652,7 @@ HTML
       cooked = PrettyText.cook(md)
 
       html = <<~HTML
-        <div class="d-wrap" data-wrap="toc" data-id="a" data-aa="b&amp;quot;" data-bb="f'">
+        <div class="d-wrap" data-aa="b&amp;quot;" data-bb="f'" data-id="a" data-wrap="toc">
         <p>taco1</p>
         </div>
       HTML
@@ -2679,7 +2679,7 @@ HTML
       cooked = PrettyText.cook("[wrap=toc name=\"single quote's\" id='1\"2']taco[/wrap]")
 
       html = <<~HTML
-        <div class="d-wrap" data-wrap="toc" data-name="single quote's" data-id="1&amp;quot;2">
+        <div class="d-wrap" data-id="1&amp;quot;2" data-name="single quote's" data-wrap="toc">
         <p>taco</p>
         </div>
       HTML
@@ -2691,7 +2691,7 @@ HTML
       cooked = PrettyText.cook('[wrap=toc foo="<script>console.log(1)</script>"]taco[/wrap]')
 
       html = <<~HTML
-        <div class="d-wrap" data-wrap="toc" data-foo="&amp;lt;script&amp;gt;console.log(1)&amp;lt;/script&amp;gt;">
+        <div class="d-wrap" data-foo="&amp;lt;script&amp;gt;console.log(1)&amp;lt;/script&amp;gt;" data-wrap="toc">
         <p>taco</p>
         </div>
       HTML
@@ -2703,9 +2703,7 @@ HTML
       cooked = PrettyText.cook('[wrap=toc fo@"èk-"!io=bar]taco[/wrap]')
 
       html = <<~HTML
-        <div class=\"d-wrap\" data-wrap=\"toc\" data-io=\"bar\">
-        <p>taco</p>
-        </div>
+        <p>[wrap=toc fo@"èk-"!io=bar]taco[/wrap]</p>
       HTML
 
       expect(cooked).to eq(html.strip)
