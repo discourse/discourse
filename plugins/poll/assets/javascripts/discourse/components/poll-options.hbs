@@ -7,12 +7,16 @@
         data-poll-option-id={{option.id}}
         data-poll-option-rank={{option.rank}}
       >
-        <PollOptionsDropdown
-          @rank={{option.rank}}
-          @option={{option}}
-          @irvDropdownContent={{@irvDropdownContent}}
-          @sendRank={{this.sendRank}}
-        />
+        {{#if this.currentUser}}
+          <PollOptionsDropdown
+            @rank={{option.rank}}
+            @option={{option}}
+            @irvDropdownContent={{@irvDropdownContent}}
+            @sendRank={{this.sendRank}}
+          />
+        {{else}}
+          <button class="btn btn-default" onclick={{route-action "showLogin"}}>{{I18n "poll.options.irv.login"}}</button>
+        {{/if}}
         <span class="option-text">{{option.html}}</span>
       </div>
     {{else}}

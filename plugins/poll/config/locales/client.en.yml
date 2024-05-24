@@ -102,6 +102,7 @@ en:
         label: "Options"
         irv:
           abstain: "Abstain"
+          login: "Login to vote!"
 
       error_while_toggling_status: "Sorry, there was an error toggling the status of this poll."
       error_while_casting_votes: "Sorry, there was an error casting your votes."
