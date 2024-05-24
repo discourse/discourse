@@ -268,7 +268,7 @@ div.poll {
     grid-area: poll;
     padding: 1em;
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
     align-self: center;
 
     li {
