@@ -38,6 +38,46 @@ RSpec.describe Middleware::RequestTracker do
 
       expect(WebCrawlerRequest.where(user_agent: agent.encode("utf-8")).count).to eq(1)
     end
+
+    it "can handle rogue user agents with invalid bytes sequences" do
+      agent = (+"Evil Googlebot String \xc3\x28").force_encoding("ASCII") # encode("utf-8") -> InvalidByteSequenceError
+
+      expect {
+        middleware =
+          Middleware::RequestTracker.new(
+            ->(env) { ["200", { "Content-Type" => "text/html" }, [""]] },
+          )
+        middleware.call(env("HTTP_USER_AGENT" => agent))
+
+        CachedCounting.flush
+
+        expect(
+          WebCrawlerRequest.where(
+            user_agent: agent.encode("utf-8", invalid: :replace, undef: :replace),
+          ).count,
+        ).to eq(1)
+      }.not_to raise_error
+    end
+
+    it "can handle rogue user agents with undefined characters in the destination encoding" do
+      agent = (+"Evil Googlebot String \xc3\x28").force_encoding("ASCII-8BIT") # encode("utf-8") -> UndefinedConversionError
+
+      expect {
+        middleware =
+          Middleware::RequestTracker.new(
+            ->(env) { ["200", { "Content-Type" => "text/html" }, [""]] },
+          )
+        middleware.call(env("HTTP_USER_AGENT" => agent))
+
+        CachedCounting.flush
+
+        expect(
+          WebCrawlerRequest.where(
+            user_agent: agent.encode("utf-8", invalid: :replace, undef: :replace),
+          ).count,
+        ).to eq(1)
+      }.not_to raise_error
+    end
   end
 
   describe "log_request" do
