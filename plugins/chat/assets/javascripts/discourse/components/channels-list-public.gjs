@@ -128,6 +128,7 @@ export default class ChannelsListPublic extends Component {
           @title={{i18n "chat.no_public_channels"}}
           @ctaTitle={{i18n "chat.no_public_channels_cta"}}
           @ctaAction={{this.openBrowseChannels}}
+          @showCTA={{this.displayPublicChannels}}
         />
       {{else}}
         {{#each this.chatChannelsManager.publicMessageChannels as |channel|}}

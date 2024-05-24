@@ -112,6 +112,7 @@ export default class ChannelsListDirect extends Component {
           @title={{i18n "chat.no_direct_message_channels"}}
           @ctaTitle={{i18n "chat.no_direct_message_channels_cta"}}
           @ctaAction={{this.openNewMessageModal}}
+          @showCTA={{this.canCreateDirectMessageChannel}}
         />
       {{else}}
         {{#each

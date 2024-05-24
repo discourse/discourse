@@ -53,9 +53,11 @@ const EmptyChannelsList = <template>
 
     <span class="channel-title">{{@title}}</span>
 
-    <DButton @action={{@ctaAction}} class="btn btn-primary">
-      {{@ctaTitle}}
-    </DButton>
+    {{#if @showCTA}}
+      <DButton @action={{@ctaAction}} class="btn btn-primary">
+        {{@ctaTitle}}
+      </DButton>
+    {{/if}}
   </div>
 </template>;
 
