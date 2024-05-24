@@ -10,8 +10,9 @@ import { bind } from "discourse-common/utils/decorators";
 export default class ChatNotificationManager extends Service {
   @service presence;
   @service chat;
-  @service appEvents;
   @service chatStateManager;
+  @service currentUser;
+  @service appEvents;
 
   _subscribedToCore = true;
   _subscribedToChat = false;
