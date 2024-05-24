@@ -788,18 +788,6 @@ class User < ActiveRecord::Base
     Reviewable.list_for(self, include_claimed_by_others: false).count
   end
 
-  def saw_notification_id(notification_id)
-    Discourse.deprecate(<<~TEXT, since: "2.9", drop_from: "3.0")
-      User#saw_notification_id is deprecated. Please use User#bump_last_seen_notification! instead.
-    TEXT
-    if seen_notification_id.to_i < notification_id.to_i
-      update_columns(seen_notification_id: notification_id.to_i)
-      true
-    else
-      false
-    end
-  end
-
   def bump_last_seen_notification!
     query = self.notifications.visible
     query = query.where("notifications.id > ?", seen_notification_id) if seen_notification_id
