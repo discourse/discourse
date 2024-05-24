@@ -40,7 +40,9 @@ export default DiscourseRoute.extend({
               );
             }
           })
-          .catch(() => this.dialog.alert(I18n.t("generic_error")));
+          .catch(() =>
+            this.dialog.alert(I18n.t("composer.create_message_error"))
+          );
       }
 
       return this.openComposer(transition);
@@ -65,7 +67,9 @@ export default DiscourseRoute.extend({
                   );
                 }
               })
-              .catch(() => this.dialog.alert(I18n.t("generic_error")));
+              .catch(() =>
+                this.dialog.alert(I18n.t("composer.create_message_error"))
+              );
           }
 
           return this.openComposer(transition);
