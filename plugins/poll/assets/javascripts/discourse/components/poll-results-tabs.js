@@ -13,10 +13,16 @@ export default class TabsComponent extends Component {
     super(...arguments);
     this.tabOne = tabOne;
     this.tabTwo = tabTwo;
-    this.activeTab = this.args.isIrv ? this.tabs[1] : this.tabs[0];
+    this.activeTab =
+      this.args.isIrv && this.args.isPublic ? this.tabs[1] : this.tabs[0];
   }
   get tabs() {
-    let tabs = [tabOne];
+    let tabs = [];
+
+    if (!this.args.isIrv || (this.args.isIrv && this.args.isPublic)) {
+      tabs.push(tabOne);
+    }
+
     if (this.args.isIrv) {
       tabs.push(tabTwo);
     }
