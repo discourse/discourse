@@ -210,6 +210,39 @@ task "users:list_recent_staff" => :environment do
   puts "user_ids = [#{all_ids.uniq.join(",")}]"
 end
 
+desc "Check if a user exists for given email address"
+task "users:exists", [:email] => [:environment] do |_, args|
+  email = args[:email]
+  if !email || email !~ /@/
+    puts "ERROR: Expecting rake users:exists[some@email.com]"
+    exit 1
+  end
+  if User.find_by_email(email)
+    puts "ERROR: User with email #{email} not found"
+    exit 1
+  end
+  puts "User with email #{email} exists"
+end
+
+desc "Create a new user with given credentials"
+task "users:create", [:email, :password] => [:environment] do |_, args|
+  email = args[:email]
+  password = args[:password]
+  if !email || email !~ || !password /@/
+    puts "ERROR: Expecting rake users:create[some@email.com,password]"
+    exit 1
+  end
+  existing_user = User.find_by_email(email)
+  if existing_user
+    puts "ERROR: User with email #{email} already exists"
+    exit 1
+  end
+  user = User.new(email: email, password: password)
+  admin.username = UserNameSuggester.suggest(admin.email)
+  user.active = true
+  user.save!
+  puts "User #{email} created with password #{password}"
+
 def find_user(username)
   user = User.find_by_username(username)
 
