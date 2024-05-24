@@ -228,7 +228,7 @@ desc "Create a new user with given credentials"
 task "users:create", [:email, :password] => [:environment] do |_, args|
   email = args[:email]
   password = args[:password]
-  if !email || email !~ || !password /@/
+  if !email || email !~ /@/ || !password
     puts "ERROR: Expecting rake users:create[some@email.com,password]"
     exit 1
   end
@@ -242,6 +242,7 @@ task "users:create", [:email, :password] => [:environment] do |_, args|
   user.active = true
   user.save!
   puts "User #{email} created with password #{password}"
+end
 
 def find_user(username)
   user = User.find_by_username(username)
