@@ -145,6 +145,10 @@ export default class ChatNotificationManager extends Service {
 
   @bind
   onMessage(data) {
+    if (data.channel_id === this.chat.activeChannel?.id) {
+      return;
+    }
+
     return onNotification(
       data,
       this.siteSettings,
