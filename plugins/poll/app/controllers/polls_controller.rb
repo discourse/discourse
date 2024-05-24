@@ -68,8 +68,6 @@ class DiscoursePoll::PollsController < ::ApplicationController
     poll_name = params.require(:poll_name)
     user_field_name = params.require(:user_field_name)
 
-    #raise Discourse::InvalidParameters.new(:poll_name)
-
     if Poll.find_by(post_id: post_id, name: poll_name).type == "irv"
       render json: {
                error: "Invalid poll type, IRV does not support grouped results.",

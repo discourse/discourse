@@ -14,8 +14,4 @@ export default class PollOptionsDropdownComponent extends Component {
     this.rank = rank;
     this.args.sendRank(option, rank);
   }
-
-  // get rank() {
-  //   return this.args.rank;
-  // }
 }
