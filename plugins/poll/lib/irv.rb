@@ -18,7 +18,7 @@ class DiscoursePoll::Irv
           .each { |vote| ballot_paper << vote.poll_option.digest if vote.rank > 0 }
         ballot << ballot_paper
       end
-    DiscoursePoll::Irv.run_irv(ballot, options)
+    DiscoursePoll::Irv.run_irv(ballot, options) if ballot.length > 0
   end
 
   def self.run_irv(starting_votes, options)
