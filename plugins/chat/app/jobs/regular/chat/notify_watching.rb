@@ -47,7 +47,6 @@ module Jobs
         user = membership.user
         return unless user.guardian.can_join_chat_channel?(@chat_channel)
         return if ::Chat::Notifier.user_has_seen_message?(membership, @chat_message.id)
-        return if online_user_ids.include?(user.id)
 
         translation_key =
           (
@@ -81,6 +80,7 @@ module Jobs
           translated_title: translated_title,
           tag: ::Chat::Notifier.push_notification_tag(:message, @chat_channel.id),
           excerpt: @chat_message.push_notification_excerpt,
+          channel_id: @chat_channel.id,
         }
 
         if membership.desktop_notifications_always? && !membership.muted?
@@ -100,10 +100,6 @@ module Jobs
         if membership.mobile_notifications_always? && !membership.muted?
           ::PostAlerter.push_notification(user, payload)
         end
-      end
-
-      def online_user_ids
-        @online_user_ids ||= ::PresenceChannel.new("/chat/online").user_ids
       end
     end
   end

@@ -10,6 +10,7 @@ import { bind } from "discourse-common/utils/decorators";
 export default class ChatNotificationManager extends Service {
   @service presence;
   @service chat;
+  @service appEvents;
   @service chatStateManager;
 
   _subscribedToCore = true;
@@ -143,7 +144,16 @@ export default class ChatNotificationManager extends Service {
 
   @bind
   onMessage(data) {
-    return onNotification(data, this.siteSettings, this.currentUser);
+    if (data.channel_id === this.chat.activeChannel?.id) {
+      return;
+    }
+
+    return onNotification(
+      data,
+      this.siteSettings,
+      this.currentUser,
+      this.appEvents
+    );
   }
 
   _shouldRun() {
