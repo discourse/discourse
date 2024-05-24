@@ -86,7 +86,7 @@ RSpec.describe Chat::Api::DirectMessagesController do
         }.to change { Chat::DirectMessage.count }.by(1)
       end
 
-      it "returns existing dm channel when using chat link" do
+      it "returns existing dm channel when using upsert" do
         create_dm_channel(direct_message_user_ids)
 
         expect {

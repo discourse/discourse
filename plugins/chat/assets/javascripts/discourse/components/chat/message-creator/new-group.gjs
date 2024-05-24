@@ -40,7 +40,7 @@ export default class NewGroup extends Component {
         .filter((member) => member.type === "group")
         .mapBy("model.name");
 
-      const channel = await this.chat.upsertDmChannel(
+      const channel = await this.chat.createDmChannel(
         { usernames, groups },
         { name: this.newGroupTitle }
       );

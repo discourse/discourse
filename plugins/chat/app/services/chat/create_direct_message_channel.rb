@@ -20,6 +20,7 @@ module Chat
     #   @param [Hash] params_to_create
     #   @option params_to_create [Array<String>] target_usernames
     #   @option params_to_create [Array<String>] target_groups
+    #   @option params_to_create [Boolean] upsert
     #   @return [Service::Base::Context]
 
     contract

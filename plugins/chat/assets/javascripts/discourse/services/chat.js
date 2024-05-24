@@ -358,7 +358,7 @@ export default class Chat extends Service {
   // @param {object} opts - Optional values when fetching or creating the direct message channel.
   // @param {string|null} [opts.name] - Name for the direct message channel.
   // @param {boolean} [opts.upsert] - Should we attempt to fetch existing channel before creating a new one.
-  upsertDmChannel(targets, opts = { name: null, upsert: true }) {
+  createDmChannel(targets, opts = { name: null, upsert: false }) {
     return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
       data: {
@@ -374,6 +374,10 @@ export default class Chat extends Service {
         return channel;
       })
       .catch(popupAjaxError);
+  }
+
+  upsertDmChannel(targets, name = null) {
+    return this.createDmChannel(targets, { name, upsert: true });
   }
 
   // @param {array} usernames - The usernames to fetch the direct message
