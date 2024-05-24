@@ -265,6 +265,14 @@ export default class ChatSubscriptionsManager extends Service {
                   busData.message.id;
               }
             } else {
+              const secondsPassed = moment().diff(
+                moment(busData.message.created_at),
+                "seconds"
+              );
+              if (secondsPassed < 10) {
+                this.chatChannelNotificationSound.play(channel);
+              }
+
               // Message from other user. Increment unread for thread tracking state.
               if (
                 thread.currentUserMembership &&
