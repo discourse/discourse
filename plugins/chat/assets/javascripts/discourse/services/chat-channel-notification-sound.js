@@ -16,10 +16,6 @@ export default class ChatChannelNotificationSound extends Service {
       return false;
     }
 
-    if (channel.isCategoryChannel) {
-      return false;
-    }
-
     if (!this.currentUser.chat_sound) {
       return false;
     }

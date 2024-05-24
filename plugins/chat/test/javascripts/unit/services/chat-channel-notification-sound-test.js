@@ -116,12 +116,6 @@ acceptance(
       assert.deepEqual(await this.subject.play(channel), false);
     });
 
-    test("category channel", async function (assert) {
-      const channel = buildCategoryMessageChannel(getOwner(this));
-
-      assert.deepEqual(await this.subject.play(channel), false);
-    });
-
     test("not idle", async function (assert) {
       const channel = buildDirectMessageChannel(getOwner(this));
       resetIdle();
