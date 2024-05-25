@@ -36,6 +36,11 @@ class Archetype
     @archetypes[name] = Archetype.new(name, options)
   end
 
+  def self.deregister(name)
+    @archetypes ||= {}
+    @archetypes.delete(name)
+  end
+
   # default archetypes
   register "regular"
   register "private_message"

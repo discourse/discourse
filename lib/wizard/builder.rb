@@ -94,7 +94,6 @@ class Wizard
           updater.update_setting(:invite_only, updater.fields[:invite_only])
           updater.update_setting(:must_approve_users, updater.fields[:must_approve_users])
           updater.update_setting(:chat_enabled, updater.fields[:chat_enabled]) if defined?(::Chat)
-          updater.update_setting(:navigation_menu, updater.fields[:enable_sidebar])
         end
       end
 

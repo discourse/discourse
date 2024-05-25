@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Signup", type: :system do
+shared_examples "signup scenarios" do
   let(:login_modal) { PageObjects::Modals::Login.new }
   let(:signup_modal) { PageObjects::Modals::Signup.new }
 
@@ -169,5 +169,15 @@ describe "Signup", type: :system do
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
+  end
+end
+
+describe "Signup", type: :system do
+  context "when desktop" do
+    include_examples "signup scenarios"
+  end
+
+  context "when mobile", mobile: true do
+    include_examples "signup scenarios"
   end
 end

@@ -2,7 +2,7 @@
 
 require "rotp"
 
-describe "Login", type: :system do
+shared_examples "login scenarios" do
   let(:login_modal) { PageObjects::Modals::Login.new }
   fab!(:user) { Fabricate(:user, username: "john", password: "supersecurepassword") }
 
@@ -22,7 +22,7 @@ describe "Login", type: :system do
       login_modal.open
       login_modal.fill(username: "john", password: "supersecurepassword")
       login_modal.click_login
-      find(".activation-controls button.resend").click
+      login_modal.click(".activation-controls button.resend")
 
       wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
 
@@ -155,5 +155,15 @@ describe "Login", type: :system do
       find(".email-login-form .btn-primary").click
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
+  end
+end
+
+describe "Login", type: :system do
+  context "when desktop" do
+    include_examples "login scenarios"
+  end
+
+  context "when mobile", mobile: true do
+    include_examples "login scenarios"
   end
 end

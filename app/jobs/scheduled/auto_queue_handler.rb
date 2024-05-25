@@ -12,7 +12,7 @@ module Jobs
       Reviewable
         .pending
         .where("created_at < ?", SiteSetting.auto_handle_queued_age.to_i.days.ago)
-        .each do |reviewable|
+        .find_each do |reviewable|
           if reviewable.is_a?(ReviewableFlaggedPost)
             reviewable.perform(Discourse.system_user, :ignore_and_do_nothing, expired: true)
           elsif reviewable.is_a?(ReviewableQueuedPost)

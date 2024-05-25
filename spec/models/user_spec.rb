@@ -2746,7 +2746,7 @@ RSpec.describe User do
   end
 
   describe "#title=" do
-    fab!(:badge) { Fabricate(:badge, name: "Badge", allow_title: false) }
+    fab!(:badge) { Badge.find_by(name: "Welcome") }
 
     it "sets granted_title_badge_id correctly" do
       BadgeGranter.grant(badge, user)

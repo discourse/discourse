@@ -556,6 +556,7 @@ en:
   private_message_abbrev: "Msg"
 
   rss_description:
+    hot: "Hot topics"
     latest: "Latest topics"
     top: "Top topics"
     top_all: "All time top topics"
@@ -1472,6 +1473,7 @@ en:
       description: "External sources that have linked to this site the most."
     top_referred_topics:
       title: "Top Referred Topics"
+      xaxis: ""
       labels:
         num_clicks: "Clicks"
         topic: "Topic"
@@ -5524,6 +5526,9 @@ en:
       agree_and_hide:
         title: "Hide post"
         description: "Agree with flag and hide this post + automatically send the user a message urging them to edit it."
+      agree_and_edit:
+        title: "Agree and Edit Post"
+        description: "Agree with flag and open a composer window to edit the post."
       delete_single:
         title: "Delete"
       delete:

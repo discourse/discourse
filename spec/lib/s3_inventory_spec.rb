@@ -4,53 +4,17 @@ require "s3_helper"
 require "s3_inventory"
 require "file_store/s3_store"
 
-RSpec.describe "S3Inventory" do
+RSpec.describe S3Inventory do
   let(:client) { Aws::S3::Client.new(stub_responses: true) }
-  let(:helper) { S3Helper.new(SiteSetting.Upload.s3_upload_bucket.downcase, "", client: client) }
+  let(:resource) { Aws::S3::Resource.new(client: client) }
+  let(:bucket) { resource.bucket(SiteSetting.Upload.s3_upload_bucket.downcase) }
+  let(:helper) { S3Helper.new(bucket.name, "", client: client, bucket: bucket) }
   let(:inventory) { S3Inventory.new(helper, :upload) }
   let(:csv_filename) { "#{Rails.root}/spec/fixtures/csv/s3_inventory.csv" }
 
   before do
     setup_s3
     SiteSetting.enable_s3_inventory = true
-
-    client.stub_responses(
-      :list_objects,
-      ->(context) do
-        expect(context.params[:prefix]).to eq(
-          "#{S3Inventory::INVENTORY_PREFIX}/#{S3Inventory::INVENTORY_VERSION}/bucket/original/hive",
-        )
-
-        {
-          contents: [
-            {
-              etag: "\"70ee1738b6b21e2c8a43f3a5ab0eee71\"",
-              key: "example1.csv.gz",
-              last_modified: Time.parse("2014-11-21T19:40:05.000Z"),
-              owner: {
-                display_name: "myname",
-                id: "12345example25102679df27bb0ae12b3f85be6f290b936c4393484be31bebcc",
-              },
-              size: 11,
-              storage_class: "STANDARD",
-            },
-            {
-              etag: "\"9c8af9a76df052144598c115ef33e511\"",
-              key: "example2.csv.gz",
-              last_modified: Time.parse("2013-11-15T01:10:49.000Z"),
-              owner: {
-                display_name: "myname",
-                id: "12345example25102679df27bb0ae12b3f85be6f290b936c4393484be31bebcc",
-              },
-              size: 713_193,
-              storage_class: "STANDARD",
-            },
-          ],
-          next_marker: "eyJNYXJrZXIiOiBudWxsLCAiYm90b190cnVuY2F0ZV9hbW91bnQiOiAyfQ==",
-        }
-      end,
-    )
-
     inventory.stubs(:cleanup!)
   end
 
@@ -160,6 +124,58 @@ RSpec.describe "S3Inventory" do
       end
 
     expect(Upload.by_users.order(:url).pluck(:url, :etag)).to eq(files)
+  end
+
+  context "when site was restored from a backup" do
+    before do
+      freeze_time
+      BackupMetadata.update_last_restore_date(Time.now)
+    end
+
+    it "should run if inventory files are at least #{described_class::WAIT_AFTER_RESTORE_DAYS.days} days older than the last restore date" do
+      client.stub_responses(
+        :list_objects_v2,
+        {
+          contents: [
+            {
+              key: "symlink.txt",
+              last_modified:
+                BackupMetadata.last_restore_date + described_class::WAIT_AFTER_RESTORE_DAYS.days,
+              size: 1,
+            },
+          ],
+        },
+      )
+
+      client.expects(:get_object).once
+
+      capture_stdout do
+        inventory = described_class.new(helper, :upload)
+        inventory.backfill_etags_and_list_missing
+      end
+    end
+
+    it "should not run if inventory files are not at least #{described_class::WAIT_AFTER_RESTORE_DAYS.days} days older than the last restore date" do
+      client.stub_responses(
+        :list_objects_v2,
+        {
+          contents: [
+            {
+              key: "symlink.txt",
+              last_modified: BackupMetadata.last_restore_date + 1.day,
+              size: 1,
+            },
+          ],
+        },
+      )
+
+      client.expects(:get_object).never
+
+      capture_stdout do
+        inventory = described_class.new(helper, :upload)
+        inventory.backfill_etags_and_list_missing
+      end
+    end
   end
 
   it "should work when passed preloaded data" do
