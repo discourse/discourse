@@ -4,6 +4,7 @@ import { htmlSafe } from "@ember/template";
 import loadScript from "discourse/lib/load-script";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 
 export default class PollResultsPieComponent extends Component {
   htmlLegendPlugin = {
@@ -114,4 +115,15 @@ export default class PollResultsPieComponent extends Component {
       this._chart = new Chart(el.getContext("2d"), config);
     });
   }
+  <template>
+    <div class="poll-results-chart">
+      <canvas
+        {{didInsert this.drawPie}}
+        id={{this.canvasId}}
+        class="poll-results-canvas"
+      ></canvas>
+      <ul id={{this.legendId}} class="pie-chart-legends">
+      </ul>
+    </div>
+  </template>
 }

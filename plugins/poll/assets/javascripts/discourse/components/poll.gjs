@@ -7,8 +7,17 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import round from "discourse/lib/round";
 import I18n from "discourse-i18n";
+import i18n from "discourse-common/helpers/i18n";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
+import PollResultsPie from "../components/poll-results-pie";
+import PollResultsTabs from "../components/poll-results-tabs";
+import PollOptions from "../components/poll-options";
+import PollInfo from "../components/poll-info";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { fn } from "@ember/helper";
+import { on } from '@ember/modifier';
+import dIcon from "discourse-common/helpers/d-icon";
 
 const FETCH_VOTERS_COUNT = 25;
 
@@ -656,4 +665,134 @@ export default class PollComponent extends Component {
         }
       });
   }
+  <template>
+    <div {{didUpdate this.updatedVoters @preloadedVoters}} class="poll-container">
+      {{this.titleHTML}}
+      {{#if this.notInVotingGroup}}
+        <div class="alert alert-danger">{{this.pollGroups}}</div>
+      {{/if}}
+      {{#if this.showResults}}
+        <div class={{this.resultsWidgetTypeClass}}>
+          {{#if this.isNumber}}
+            <span>{{this.averageRating}}</span>
+          {{else}}
+            {{#if this.resultsPie}}
+              <PollResultsPie @id={{this.id}} @options={{this.options}} />
+            {{else}}
+              <PollResultsTabs
+                @options={{this.options}}
+                @pollName={{this.poll.name}}
+                @pollType={{this.poll.type}}
+                @isIrv={{this.isIrv}}
+                @isPublic={{this.poll.public}}
+                @postId={{this.post.id}}
+                @vote={{this.vote}}
+                @voters={{this.preloadedVoters}}
+                @votersCount={{this.poll.voters}}
+                @fetchVoters={{this.fetchVoters}}
+                @irvOutcome={{this.irvOutcome}}
+              />
+            {{/if}}
+          {{/if}}
+        </div>
+      {{else}}
+        <PollOptions
+          @isCheckbox={{this.isCheckbox}}
+          @isIrv={{this.isIrv}}
+          @irvDropdownContent={{this.irvDropdownContent}}
+          @options={{this.options}}
+          @votes={{this.vote}}
+          @sendOptionSelect={{this.toggleOption}}
+        />
+      {{/if}}
+    </div>
+    <PollInfo
+      @options={{this.options}}
+      @min={{this.min}}
+      @max={{this.max}}
+      @isMultiple={{this.isMultiple}}
+      @close={{this.close}}
+      @closed={{this.closed}}
+      @results={{this.poll.results}}
+      @showResults={{this.showResults}}
+      @postUserId={{this.poll.post.user_id}}
+      @isPublic={{this.poll.public}}
+      @hasVoted={{this.hasVoted}}
+      @voters={{this.voters}}
+    />
+    <div class="poll-buttons">
+      {{#if this.showCastVotesButton}}
+        <button
+          class={{this.castVotesButtonClass}}
+          title="poll.cast-votes.title"
+          disabled={{this.castVotesDisabled}}
+          {{on "click" this.castVotes}}
+        >
+          {{dIcon this.castVotesButtonIcon}}
+          <span class="d-button-label">{{i18n "poll.cast-votes.label"}}</span>
+        </button>
+      {{/if}}
+
+      {{#if this.showHideResultsButton}}
+        <button
+          class="btn btn-default toggle-results"
+          title="poll.hide-results.title"
+          {{on "click" this.toggleResults}}
+        >
+          {{dIcon "chevron-left"}}
+          <span class="d-button-label">{{i18n "poll.hide-results.label"}}</span>
+        </button>
+      {{/if}}
+
+      {{#if this.showShowResultsButton}}
+        <button
+          class="btn btn-default toggle-results"
+          title="poll.show-results.title"
+          {{on "click" this.toggleResults}}
+        >
+          {{dIcon "chart-bar"}}
+          <span class="d-button-label">{{i18n "poll.show-results.label"}}</span>
+        </button>
+      {{/if}}
+
+      {{#if this.showRemoveVoteButton}}
+        <button
+          class="btn btn-default remove-vote"
+          title="poll.remove-vote.title"
+          {{on "click" this.removeVote}}
+        >
+          {{dIcon "undo"}}
+          <span class="d-button-label">{{i18n "poll.remove-vote.label"}}</span>
+        </button>
+      {{/if}}
+
+      <div class="poll-buttons-dropdown">
+        <div class="widget-dropdown {{this.dropDownButtonState}}">
+          {{#if this.showDropdown}}
+            <button
+              class="widget-dropdown-header btn btn-default"
+              title="poll.dropdown.title"
+              {{on "click" this.toggleDropdownButtonState}}
+            >
+              {{dIcon "cog"}}
+            </button>
+          {{/if}}
+          <div class="widget-dropdown-body">
+            {{#each this.getDropdownContent as |content|}}
+              <div class="widget-dropdown-item">
+                <button
+                  class="widget-button {{content.className}}"
+                  title={{content.title}}
+                  {{on "click" (fn this.dropDownClick content.action)}}
+                >
+                  {{dIcon content.icon}}
+                  <span>{{i18n content.label}}</span>
+                </button>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
 }

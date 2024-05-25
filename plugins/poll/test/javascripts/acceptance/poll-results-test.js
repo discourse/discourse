@@ -660,6 +660,7 @@ acceptance("Poll results", function (needs) {
 
   test("can unvote", async function (assert) {
     await visit("/t/load-more-poll-voters/134");
+
     await click(".toggle-results");
 
     assert.strictEqual(count(".poll-container .d-icon-circle"), 1);

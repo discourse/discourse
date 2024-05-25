@@ -6,6 +6,7 @@ import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
+import { on } from '@ember/modifier';
 
 @tagName("")
 export default class PollBreakdownOption extends Component {
@@ -48,4 +49,28 @@ export default class PollBreakdownOption extends Component {
 
     return htmlSafe(`background: ${color};`);
   }
+
+  <template>
+    <li
+      class="poll-breakdown-option"
+      style={{this.colorBackgroundStyle}}
+      {{on "mouseover" @onMouseOver}}
+      {{on "mouseout" @onMouseOut}}
+      role="button"
+    >
+      <span
+        class="poll-breakdown-option-color"
+        style={{this.colorPreviewStyle}}
+      ></span>
+
+      <span class="poll-breakdown-option-count">
+        {{#if this.showPercentage}}
+          {{this.percent}}%
+        {{else}}
+          {{@option.votes}}
+        {{/if}}
+      </span>
+      <span class="poll-breakdown-option-text">{{htmlSafe @option.html}}</span>
+    </li>
+  </template>
 }

@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { relativeAge } from "discourse/lib/formatter";
 import I18n from "I18n";
+import dIcon from "discourse-common/helpers/d-icon";
 
 export default class PollInfoComponent extends Component {
   @service currentUser;
@@ -143,4 +144,67 @@ export default class PollInfoComponent extends Component {
       return true;
     }
   }
+  <template>
+    <div class="poll-info">
+      <div class="poll-info_counts">
+        <div class="poll-info_counts-count">
+          <span class="info-number">{{@voters}}</span>
+          <span class="info-label">{{this.votersLabel}}</span>
+        </div>
+        {{#if this.showTotalVotes}}
+          <div class="poll-info_counts-count">
+            <span class="info-number">{{this.totalVotes}}</span>
+            <span class="info-label">{{this.totalVotesLabel}}</span>
+          </div>
+        {{/if}}
+      </div>
+      {{#if this.showInstructionsSection}}
+        <ul class="poll-info_instructions">
+          {{#if this.showMultipleHelpText}}
+            <li class="multiple-help-text">
+              {{dIcon "list-ul"}}
+              <span>{{this.multipleHelpText}}</span>
+            </li>
+          {{/if}}
+          {{#if this.poll.close}}
+            {{#if this.isAutomaticallyClosed}}
+              <li title={{this.title}}>
+                {{dIcon "lock"}}
+                <span>{{this.automaticCloseAgeLabel}}</span>
+              </li>
+            {{else}}
+              <li title={{this.title}}>
+                {{dIcon "far-clock"}}
+                <span>{{this.automaticCloseClosesInLabel}}</span>
+              </li>
+            {{/if}}
+          {{/if}}
+          {{#if this.resultsOnVote}}
+            <li>
+              {{dIcon "check"}}
+              <span>{{I18n "poll.results.vote.title"}}</span>
+            </li>
+          {{/if}}
+          {{#if this.resultsOnClose}}
+            <li>
+              {{dIcon "lock"}}
+              <span>{{I18n "poll.results.closed.title"}}</span>
+            </li>
+          {{/if}}
+          {{#if this.resultsStaffOnly}}
+            <li>
+              {{dIcon "shield-alt"}}
+              <span>{{I18n "poll.results.staff.title"}}</span>
+            </li>
+          {{/if}}
+          {{#if this.publicTitle}}
+            <li class="is-public">
+              {{dIcon "far-eye"}}
+              <span>{{this.publicTitleLabel}}</span>
+            </li>
+          {{/if}}
+        </ul>
+      {{/if}}
+    </div>
+  </template>
 }
