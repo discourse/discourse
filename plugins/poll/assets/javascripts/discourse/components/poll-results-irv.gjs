@@ -56,7 +56,9 @@ export default class PollResultsIrvComponent extends Component {
       <span class="poll-results-irv-info">{{this.irvTiedText}}</span>
       <ul class="poll-results-irv-tied-candidates">
         {{#each @irvOutcome.tied_candidates as |tied_candidate|}}
-          <li class="poll-results-irv-tied-candidate">{{tied_candidate.html}}</li>
+          <li
+            class="poll-results-irv-tied-candidate"
+          >{{tied_candidate.html}}</li>
         {{/each}}
       </ul>
     {{else}}

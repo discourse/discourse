@@ -16,7 +16,7 @@ import PollOptions from "../components/poll-options";
 import PollInfo from "../components/poll-info";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { fn } from "@ember/helper";
-import { on } from '@ember/modifier';
+import { on } from "@ember/modifier";
 import dIcon from "discourse-common/helpers/d-icon";
 
 const FETCH_VOTERS_COUNT = 25;
@@ -666,7 +666,10 @@ export default class PollComponent extends Component {
       });
   }
   <template>
-    <div {{didUpdate this.updatedVoters @preloadedVoters}} class="poll-container">
+    <div
+      {{didUpdate this.updatedVoters @preloadedVoters}}
+      class="poll-container"
+    >
       {{this.titleHTML}}
       {{#if this.notInVotingGroup}}
         <div class="alert alert-danger">{{this.pollGroups}}</div>

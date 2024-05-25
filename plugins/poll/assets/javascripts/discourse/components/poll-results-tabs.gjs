@@ -5,9 +5,8 @@ import I18n from "discourse-i18n";
 import PollResultsStandard from "./poll-results-standard";
 import PollResultsIrv from "./poll-results-irv";
 import { eq } from "truth-helpers";
-import { on } from '@ember/modifier';
+import { on } from "@ember/modifier";
 import { fn } from "@ember/helper";
-
 
 const tabOne = I18n.t("poll.results.tabs.votes");
 const tabTwo = I18n.t("poll.results.tabs.outcome");
