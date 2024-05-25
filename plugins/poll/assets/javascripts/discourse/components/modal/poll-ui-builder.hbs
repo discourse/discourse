@@ -6,43 +6,43 @@
 >
   <:body>
     <div class="input-group poll-type">
-      <a
+      <button
         href
         {{on "click" (fn this.updatePollType "regular")}}
         class="poll-type-value poll-type-value-regular
           {{if this.isRegular 'active'}}"
       >
         {{i18n "poll.ui_builder.poll_type.regular"}}
-      </a>
+      </button>
 
-      <a
+      <button
         href
         {{on "click" (fn this.updatePollType "multiple")}}
         class="poll-type-value poll-type-value-multiple
           {{if this.isMultiple 'active'}}"
       >
         {{i18n "poll.ui_builder.poll_type.multiple"}}
-      </a>
+      </button>
 
       {{#if this.showNumber}}
-        <a
+        <button
           href
           {{on "click" (fn this.updatePollType "number")}}
           class="poll-type-value poll-type-value-number
             {{if this.isNumber 'active'}}"
         >
           {{i18n "poll.ui_builder.poll_type.number"}}
-        </a>
+        </button>
       {{/if}}
 
       {{#if this.showIrv}}
-        <a
+        <button
           href
           {{on "click" (fn this.updatePollType "irv")}}
           class="poll-type-value poll-type-value-irv {{if this.isIrv 'active'}}"
         >
           {{i18n "poll.ui_builder.poll_type.irv"}}
-        </a>
+        </button>
       {{/if}}
     </div>
 

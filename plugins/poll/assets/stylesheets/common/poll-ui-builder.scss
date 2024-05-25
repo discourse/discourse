@@ -57,6 +57,8 @@
       color: var(--primary);
       display: inline-block;
       padding: 6px 12px 3px;
+      background-color: var(--secondary);
+      font-size: var(--font-down-1);
 
       &.active {
         background-color: var(--quaternary);
