@@ -1497,7 +1497,7 @@ class User < ActiveRecord::Base
     end
 
     # mark all the user's quoted posts as "needing a rebake"
-    Post.rebake_all_quoted_posts(self.id) if self.will_save_change_to_uploaded_avatar_id?
+    Post.rebake_all_quoted_posts(self.id) if saved_change_to_uploaded_avatar_id?
   end
 
   def first_post_created_at

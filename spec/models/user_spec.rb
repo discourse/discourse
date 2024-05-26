@@ -669,6 +669,30 @@ RSpec.describe User do
         expect(user.user_option.email_messages_level).to eq(UserOption.email_level_types[:always])
         expect(user.user_option.email_level).to eq(UserOption.email_level_types[:only_when_away])
       end
+
+      context "with avatar" do
+        let(:user) { build(:user, uploaded_avatar_id: 99, username: "Sam") }
+
+        it "mark all the user's quoted posts as 'needing a rebake' when the avatar changes" do
+          topic = Fabricate(:topic, user: user)
+          quoted_post = create_post(user: user, topic: topic, post_number: 1, raw: "quoted post")
+          post = create_post(raw: <<~RAW)
+            Lorem ipsum
+  
+            [quote="#{user.username}, post:1, topic:#{quoted_post.topic.id}"]
+            quoted post
+            [/quote]
+          RAW
+
+          expect(post.baked_version).not_to be_nil
+
+          user.update!(name: "Sam")
+          expect(post.reload.baked_version).not_to be_nil
+
+          user.update!(uploaded_avatar_id: 100)
+          expect(post.reload.baked_version).to be_nil
+        end
+      end
     end
 
     it "downcases email addresses" do
