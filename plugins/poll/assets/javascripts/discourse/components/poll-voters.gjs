@@ -11,31 +11,22 @@ export default class PollVotersComponent extends Component {
   }
 
   get irvVoters() {
-    let orderedVoters = [...this.args.voters];
-    // debugger;
+    const voters = [...this.args.voters];
 
-    orderedVoters.forEach((voter) => {
-      if (voter.rank === 0) {
-        voter.rank = "Abstain";
-      }
-    });
+    // Group voters by rank so they can be displayed together by rank
+    const groupedByRank = this.groupVotersByRank(voters);
 
-    orderedVoters.sort((a, b) => {
-      if (a.rank > b.rank) {
-        return 1;
-      } else if (a.rank === b.rank) {
-        if (a.user.username < b.user.username) {
-          return -1;
-        } else {
-          return 1;
-        }
-      } else {
-        return -1;
-      }
-    });
+    // Convert groups to array of objects with keys rank and voters
+    const groupedVoters = Object.keys(groupedByRank).map((rank) => ({
+      rank: rank,
+      voters: groupedByRank[rank],
+    }));
 
-    // Group voters by rank
-    const groupedObject = orderedVoters.reduce((groups, voter) => {
+    return groupedVoters;
+  }
+
+  groupVotersByRank = (voters) => {
+    return voters.reduce((groups, voter) => {
       const rank = voter.rank;
       if (!groups[rank]) {
         groups[rank] = [];
@@ -43,14 +34,8 @@ export default class PollVotersComponent extends Component {
       groups[rank].push(voter);
       return groups;
     }, {});
-
-    const groupedVoters = Object.keys(groupedObject).map((rank) => ({
-      rank,
-      voters: groupedObject[rank],
-    }));
-
-    return groupedVoters;
   }
+
   <template>
     <div class="poll-voters">
       <ul class="poll-voters-list">
@@ -75,7 +60,6 @@ export default class PollVotersComponent extends Component {
               {{avatar user.avatar_template "tiny"}}
             </li>
           {{/each}}
-
         {{/if}}
       </ul>
       {{#if this.showMore}}

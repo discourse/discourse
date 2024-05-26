@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class DiscoursePoll::Poll
+  IRV = "irv"
+  MULTIPLE = "multiple"
+  REGULAR = "regular"
+
   def self.vote(user, post_id, poll_name, options)
     poll_id = nil
 
@@ -10,7 +14,7 @@ class DiscoursePoll::Poll
         # remove options that aren't available in the poll
         available_options = poll.poll_options.map { |o| o.digest }.to_set
 
-        if poll.type == "irv"
+        if poll.type == IRV
           options = options.values.map { |hash| hash }
           options.select! { |o| available_options.include?(o[:digest]) }
         else
@@ -25,7 +29,7 @@ class DiscoursePoll::Poll
           poll
             .poll_options
             .each_with_object([]) do |option, obj|
-              if poll.type == "irv"
+              if poll.type == IRV
                 obj << option.id if options.any? { |o| o[:digest] == option.digest }
               else
                 obj << option.id if options.include?(option.digest)
@@ -41,7 +45,7 @@ class DiscoursePoll::Poll
               obj << option.id if option.poll_votes.where(user_id: user.id).exists?
             end
 
-        if poll.type == "irv"
+        if poll.type == IRV
           # for IRV, we need to remove all votes and re-create them as there is no way to update them due to lack of primary key.
           PollVote.where(poll: poll, user: user).delete_all
           creation_set = new_option_ids
@@ -56,7 +60,7 @@ class DiscoursePoll::Poll
 
         # create missing votes
         creation_set.each do |option_id|
-          if poll.type == "irv"
+          if poll.type == IRV
             PollVote.create!(
               poll: poll,
               user: user,
@@ -70,10 +74,10 @@ class DiscoursePoll::Poll
         end
       end
 
-    unless serialized_poll[:type] == "irv"
+    unless serialized_poll[:type] == IRV
       # Ensure consistency here as we do not have a unique index to limit the
       # number of votes per the poll's configuration.
-      is_multiple = serialized_poll[:type] == "multiple"
+      is_multiple = serialized_poll[:type] == MULTIPLE
       offset = is_multiple ? (serialized_poll[:max] || serialized_poll[:options].length) : 1
 
       DB.query(<<~SQL, poll_id: poll_id, user_id: user.id, offset: offset)
@@ -93,12 +97,12 @@ class DiscoursePoll::Poll
       SQL
     end
 
-    if serialized_poll[:type] == "irv"
+    if serialized_poll[:type] == IRV
       serialized_poll[:irv_outcome] = DiscoursePoll::Irv.irv_outcome(poll_id)
     end
 
     serialized_poll[:options].each do |option|
-      if serialized_poll[:type] == "irv"
+      if serialized_poll[:type] == IRV
         option.merge!(
           rank:
             PollVote
@@ -107,7 +111,7 @@ class DiscoursePoll::Poll
               .pluck(:rank)
               .first,
         )
-      elsif serialized_poll[:type] == "multiple"
+      elsif serialized_poll[:type] == MULTIPLE
         option.merge!(
           chosen:
             PollVote
@@ -130,7 +134,7 @@ class DiscoursePoll::Poll
         PollVote.where(poll: poll, user: user).delete_all
       end
 
-    if serialized_poll[:type] == "irv"
+    if serialized_poll[:type] == IRV
       serialized_poll[:irv_outcome] = DiscoursePoll::Irv.irv_outcome(poll_id)
     end
 
@@ -213,22 +217,24 @@ class DiscoursePoll::Poll
 
       raise Discourse::InvalidParameters.new(:option_id) unless poll_option
 
-      if poll.type == "irv"
+      if poll.type == IRV
         votes = DB.query <<~SQL
         SELECT digest, rank, user_id
           FROM (
             SELECT digest
-                  , rank
+                  , CASE rank WHEN 0 THEN 'Abstain' ELSE CAST(rank AS text) END AS rank
                   , user_id
+                  , username
                   , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
               FROM poll_votes pv
               JOIN poll_options po ON pv.poll_option_id = po.id
+              JOIN users u ON pv.user_id = u.id
               WHERE pv.poll_id = #{poll.id}
                 AND po.poll_id = #{poll.id}
                 AND po.digest = '#{option_digest}'
           ) v
           WHERE row BETWEEN #{offset} AND #{offset + limit}
-          ORDER BY digest, rank
+          ORDER BY digest, CASE WHEN rank = 'Abstain' THEN 1 ELSE CAST(rank AS integer) END, username
         SQL
 
         user_ids = votes.map(&:user_id).uniq
@@ -260,21 +266,23 @@ class DiscoursePoll::Poll
       end
       result = { option_digest => user_hashes }
     else
-      if poll.type == "irv"
+      if poll.type == IRV
         votes = DB.query <<~SQL
         SELECT digest, rank, user_id
           FROM (
             SELECT digest
-                  , rank
+                  , CASE rank WHEN 0 THEN 'Abstain' ELSE CAST(rank AS text) END AS rank
                   , user_id
+                  , username
                   , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
               FROM poll_votes pv
               JOIN poll_options po ON pv.poll_option_id = po.id
+              JOIN users u ON pv.user_id = u.id
               WHERE pv.poll_id = #{poll.id}
                 AND po.poll_id = #{poll.id}
           ) v
           WHERE row BETWEEN #{offset} AND #{offset + limit}
-          ORDER BY digest, rank
+          ORDER BY digest, CASE WHEN rank = 'Abstain' THEN 1 ELSE CAST(rank AS integer) END, username
         SQL
       else
         votes = DB.query <<~SQL
@@ -302,7 +310,7 @@ class DiscoursePoll::Poll
 
       result = {}
       votes.each do |v|
-        if poll.type == "irv"
+        if poll.type == IRV
           result[v.digest] ||= []
           result[v.digest] << { rank: v.rank, user: user_hashes[v.user_id] }
         else
@@ -416,7 +424,7 @@ class DiscoursePoll::Poll
         post_id: post_id,
         name: poll["name"].presence || "poll",
         close_at: close_at,
-        type: poll["type"].presence || "regular",
+        type: poll["type"].presence || REGULAR,
         status: poll["status"].presence || "open",
         visibility: poll["public"] == "true" ? "everyone" : "secret",
         title: poll["title"],
