@@ -75,7 +75,7 @@ RSpec.describe "DiscoursePoll endpoints" do
       expect(option.first["username"]).to eq(user.username)
     end
 
-    it "should return unprocessable response for a IRV option" do
+    it "should return valid response for a IRV option" do
       irv_poll = post_with_irv_poll.polls.first
       irv_poll_options = irv_poll.poll_options
       irv_votes = {
@@ -104,11 +104,12 @@ RSpec.describe "DiscoursePoll endpoints" do
           params: {
             post_id: post_with_irv_poll.id,
             poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
-            option_id: irv_poll_options[1]["id"],
+            option_id: irv_poll_options[1]["digest"],
           }
 
-      expect(response.status).to eq(422)
-      expect(response.body).to include("IRV")
+      expect(
+        JSON.parse(response.body)["voters"][irv_poll_options[1]["digest"]].first["rank"],
+      ).to eq(2)
     end
 
     describe "when post_id is blank" do
