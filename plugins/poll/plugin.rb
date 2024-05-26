@@ -221,7 +221,7 @@ after_initialize do
   ) do
     preloaded_polls
       .map do |poll|
-        if poll.type == "irv"
+        if poll.irv?
           user_poll_votes =
             poll
               .poll_votes
