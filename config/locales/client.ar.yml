@@ -890,6 +890,7 @@ ar:
       topic_count_long: "الموضوعات المنشأة"
       post_count: "الردود"
       post_count_long: "الردود المنشورة"
+      no_results_with_search: "لم يتم العثور على أي نتيجة."
       days_visited: "الزيارات"
       days_visited_long: "أيام الزيارة"
       posts_read: "المقروءة"
@@ -1303,10 +1304,8 @@ ar:
         ignore_duration_time_frame_required: "يُرجى تحديد إطار زمني"
         ignore_no_users: "ليس لديك أي مستخدمين تم تجاهلهم."
         ignore_option: "التجاهل"
-        ignore_option_title: "لن تتلقى إشعارات ذات صلة بهذا المستخدم وسيتم إخفاء جميع موضوعاته وردوده."
         add_ignored_user: "إضافة…"
         mute_option: "الكتم"
-        mute_option_title: "لن تتلقى أي إشعارات ذات صلة بهذا المستخدم."
         normal_option: "عادية"
         normal_option_title: "سنُرسل إليك إشعارًا في حال ردَّ هذا المستخدم عليك أو اقتبس كلامك أو أشار إليك."
       notification_schedule:
@@ -4421,8 +4420,6 @@ ar:
       pinned:
         title: "مثبَّت"
         help: "هذا الموضوع مثبَّت لك وسيتم عرضه في أعلى فئته"
-      unlisted:
-        help: "هذا الموضوع غير مدرج؛ لذا فإنه لن يظهر في قوائم الموضوعات، ولا يمكن الوصول إليه إلا برابط مباشر"
       personal_message:
         title: "هذا الموضوع عبارة عن رسالة خاصة"
         help: "هذا الموضوع عبارة عن رسالة خاصة"
@@ -6469,9 +6466,6 @@ ar:
           silence: "كتم الحسابات الجديدة إذا كانت أول منشور لها يحتوي على أيٍّ من هذه الكلمات. سيتم إخفاء المنشور تلقائيًا إلى أن يوافق عليه فريق العمل."
           link: "استبدال الكلمات في المنشورات بروابط."
         form:
-          label: "تتضمَّن كلمة أو عبارة"
-          placeholder: "إدخال الكلمة أو العبارة (الرمز * هو حرف بدل)"
-          placeholder_regexp: "تعبير عادي"
           replace_label: "استبدال"
           replace_placeholder: "مثال"
           tag_label: "الوسم"
@@ -6484,6 +6478,7 @@ ar:
           upload_successful: "تم التحميل بنجاح. وتمت إضافة الكلمات."
           case_sensitivity_label: "حساس لحالة الأحرف"
           case_sensitivity_description: "الكلمات ذات حالة الأحرف المطابقة فقط"
+          html_label: "HTML"
         test:
           button_label: "اختبار"
           modal_title: "%{action}: اختبار الكلمات المُراقَبة"

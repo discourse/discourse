@@ -698,6 +698,7 @@ hu:
       topic_count_long: "Létrehozott téma"
       post_count: "Válasz"
       post_count_long: "Közzétett válasz"
+      no_results_with_search: "Nincs találat."
       days_visited: "Látogatás"
       days_visited_long: "Látogatott nap"
       posts_read: "Olvasott"
@@ -1073,10 +1074,8 @@ hu:
         ignore_duration_time_frame_required: "Válasszon egy időkeretet"
         ignore_no_users: "Nincsenek figyelmen kívül hagyott felhasználók."
         ignore_option: "Figyelmen kívül hagyva"
-        ignore_option_title: "Nem fog értesítéseket kapni ezzel a felhasználóval kapcsolatban, és az összes témája és válasza el lesz rejtve."
         add_ignored_user: "Új..."
         mute_option: "Némított"
-        mute_option_title: "Nem fog értesítést kapni a felhasználóval kapcsolatban."
         normal_option: "Normál"
         normal_option_title: "Értesítést fog kapni, ha a felhasználó válaszol, idézi vagy megemlíti."
       notification_schedule:
@@ -3749,8 +3748,6 @@ hu:
       pinned:
         title: "Kiemelt"
         help: "Ez egy általad kiemelt témakör ezért a kategóriája elején lesz látható."
-      unlisted:
-        help: "Ez egy nem listázandó témakör, ezért nem fog megjelenni a témakörök listájában és csak közvetlen hivatkozással érhető el."
       personal_message:
         title: "Ez a téma egy személyes üzenet"
         help: "Ez a téma egy személyes üzenet"
@@ -5685,9 +5682,6 @@ hu:
           silence: "Némítsa el az új fiókokat, ha a legelső bejegyzésükben szerepelnek ezek a szavak. A bejegyzés automatikusan el lesz rejtve, amíg a személyzet jóváhagyja."
           link: "A hozzászólásokban szereplő szavakat helyettesítse linkekkel."
         form:
-          label: "Van szó vagy kifejezés"
-          placeholder: "Írjon be egy szót vagy kifejezést (a * helyettesítő karakter)"
-          placeholder_regexp: "reguláris kifejezés"
           replace_label: "Csere"
           replace_placeholder: "példa"
           tag_label: "Címke"
@@ -5700,6 +5694,7 @@ hu:
           upload_successful: "A feltöltés sikeres, egy Word-öt hozzáadtunk."
           case_sensitivity_label: "Nagy- és kisbetű érzékeny"
           case_sensitivity_description: "Csak a megfelelő kis- és nagybetűkkel rendelkező szavak"
+          html_label: "HTML"
         test:
           button_label: "Teszt"
           modal_title: "%{action}: Figyelt szavak tesztelése"

@@ -2,7 +2,7 @@
 
 class TopicUser < ActiveRecord::Base
   self.ignored_columns = [
-    :highest_seen_post_number, # Remove after 01 Jan 2022
+    :highest_seen_post_number, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   belongs_to :user

@@ -652,6 +652,16 @@ he:
           two: "+%{count}"
           many: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "הגדרת כותרת שרשור"
+        message: "סיוע לאחרים להכיר את הדיון."
+        dismiss_action: "לא להציג שוב"
+        primary_action: "הגדרת כותרת"
+      thread_title_modal:
+        title: "הגדרת כותרת שרשור"
+        input_placeholder: "לספר לאחרים על מה הדיון הזה…"
+        discourse_ai:
+          title: "יצירת כותרות שרשורים אוטומטית"
       threads:
         open: "פתיחת שרשור"
         list: "שרשורים"

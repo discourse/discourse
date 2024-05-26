@@ -507,6 +507,7 @@ hy:
       topic_count_long: "Ստեղծված Թեմա"
       post_count: "Պատասխան"
       post_count_long: "Հրապարակված Պատասխան"
+      no_results_with_search: "Արդյունքներ չեն գտնվել:"
       days_visited: "Այցելություն"
       days_visited_long: "Այցելության Օր"
       posts_read: "Կարդացած"
@@ -774,9 +775,7 @@ hy:
         ignore_duration_time_frame_required: "Խնդրում ենք ընտրել ժամանակահատված"
         ignore_no_users: "Դուք անտեսված օգտատերեր չունեք"
         ignore_option: "Անտեսված"
-        ignore_option_title: "Դուք չեք ստանա այս օգտատիրոջ ծանուցումները, և նրա բոլոր թեմաներն ու պատասխանները կթաքցվեն:"
         mute_option: "Խլացված"
-        mute_option_title: "Դուք այս օգտատիրոջից որևէ ծանուցում չեք ստանա:"
         normal_option: "Նորմալ"
         normal_option_title: "Դուք ծանուցում կստանաք, եթե այդ օգտատերը պատասխանի ձեր հրապարակմանը, մեջբերում անի կամ հիշատակի ձեր անունը:"
       notification_schedule:
@@ -2477,8 +2476,6 @@ hy:
       pinned:
         title: "Ամրակցված"
         help: "Այս թեման ամրակցված է Ձեզ համար; այն կցուցադրվի իր կատեգորիայի վերևում"
-      unlisted:
-        help: "Այս թեման հանված է ցանկից; այն չի ցուցադրվի թեմաների ցանկերում, և կարող է հասանելի լինել միայն ուղղակի հղումով"
       personal_message:
         title: "Այս թեման անձնական հաղորդագրություն է"
         help: "Այս թեման անձնական հաղորդագրություն է"
@@ -3751,13 +3748,13 @@ hy:
           replace: "Փոխարինել"
           silence: "Լռեցնել"
         form:
-          placeholder_regexp: "regular expression"
           link_placeholder: "https://example.com"
           add: "Ավելացնել"
           success: "Հաջողություն"
           exists: "Արդեն գոյություն ունի"
           upload: "Վերբեռնել ֆայլից"
           upload_successful: "Վերբեռնումը հաջող էր: Բառերն ավելացվել են:"
+          html_label: "HTML"
         test:
           button_label: "Փորձարկել"
           description: "Մուտքագրեք տեքստը ներքևում՝ դիտված բառերի համընկնումները ստուգելու համար"

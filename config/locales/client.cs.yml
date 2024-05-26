@@ -741,6 +741,7 @@ cs:
       no_results:
         body: "Zde se zobrazí seznam členů komunity zobrazující jejich aktivitu. Prozatím je seznam prázdný, protože vaše komunita je stále úplně nová!"
         extra_body: "Správci a moderátoři mohou vidět a spravovat uživatele v <a href='%{basePath}/admin/users/'>Administraci uživatelů</a>."
+      no_results_with_search: "Žádné výsledky"
       days_visited: "Návštěv"
       days_visited_long: "Dnů návštěv"
       posts_read: "Přečteno"
@@ -1116,10 +1117,8 @@ cs:
         ignore_duration_time_frame_required: "Vyberte prosím časové období"
         ignore_no_users: "Nemáte žádné ignorované uživatele."
         ignore_option: "Ignorováno"
-        ignore_option_title: "Nebudete dostávat upozornění týkající se tohoto uživatele a všechna jejich témata a odpovědi budou skryty."
         add_ignored_user: "Přidat…"
         mute_option: "Ztišené"
-        mute_option_title: "Nebudete dostávat žádná upozornění týkající se tohoto uživatele."
         normal_option: "Normální"
         normal_option_title: "Budete upozorněni, pokud vám tento uživatel odpoví, cituje vás nebo vás zmiňuje."
       notification_schedule:
@@ -3112,6 +3111,7 @@ cs:
       suggest_create_topic: Jste připraveni <a href>zahájit novou konverzaci?</a>
       jump_reply: "Přejít na původní umístění příspěvku"
       jump_reply_aria: "Přejít na příspěvek uživatele @%{username} v původním umístění"
+      jump_reply_button: "Přejít na příspěvek"
       deleted: "Téma bylo smazáno"
       slow_mode_update:
         title: "Pomalý režim"
@@ -3986,8 +3986,6 @@ cs:
       pinned:
         title: "Připnuto"
         help: "Pro vás je toto téma připnuté; bude se zobrazovat na vrcholu seznamu ve své kategorii"
-      unlisted:
-        help: "Toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
       personal_message:
         title: "Toto téma je osobní zpráva"
         help: "Toto téma je osobní zpráva"
@@ -4328,7 +4326,7 @@ cs:
     tagging:
       all_tags: "Všechny štítky"
       other_tags: "Ostatní štítky "
-      selector_tags: "tagy"
+      selector_tags: "štítky"
       selector_all_tags: "všechny štítky"
       selector_no_tags: "bez štítků"
       selector_remove_filter: "zrušit filtr"
@@ -4539,6 +4537,9 @@ cs:
           save: "Uložit"
           delete: "Smazat"
           delete_confirm: "Opravdu chcete odstranit tuto sekci?"
+          delete_public_confirm: "Tato sekce je <strong>viditelná pro všechny</strong>, opravdu ji chcete smazat?"
+          update_public_confirm: "Změny budou <strong>viditelné pro všechny</strong> na tomto webu. Jsi si jisti?"
+          mark_as_private_confirm: "Tato sekce je <strong>viditelná pro všechny</strong>. Po aktualizaci bude <strong>viditelné pouze pro vás</strong>. Jsi si jisti?"
           reset_confirm: "Opravdu chcete obnovit výchozí nastavení této sekce?"
           public: "Viditelné pro všechny"
           always_public: "Obsah v této sekci je vždy veřejný"
@@ -4641,6 +4642,7 @@ cs:
       clear_filter: "Vymazat filtr"
       no_results:
         title: "Žádné výsledky"
+        description: 'Nenašli jsme nic odpovídajícího ''%{filter}''.<br><br>Chtěli jste <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">prohledávat nastavení webu</a> nebo <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">v seznamu administrace uživatelů?</a>'
     welcome_topic_banner:
       title: "Vytvořte si uvítací téma"
       description: "Vaše uvítací téma je to první, co si noví členové přečtou. Považujte ho za svůj \"elevator pitch\" nebo \"poslání\". Dejte všem vědět, pro koho je tato komunita určena, co zde mohou očekávat a co byste chtěli, aby udělali jako první."
@@ -4757,6 +4759,8 @@ cs:
       moderator: "Moderátor"
       back_to_forum: "Zpět na fórum"
       filter_reports: Filtrovat přehledy
+      expand_all_sections: "Rozbalit všechny sekce"
+      collapse_all_sections: "Sbalit všechny sekce"
       tags:
         remove_muted_tags_from_latest:
           always: "vždy"
@@ -4778,8 +4782,10 @@ cs:
         up_to_date: "Máte aktuální!"
         critical_available: "Je k dispozici důležitá aktualizace."
         updates_available: "Jsou k dispozici aktualizace."
+        please_update: "Prosím, aktualizujte!"
         no_check_performed: "Kontrola na aktualizace nebyla provedena. Ujistěte se, že běží služby sidekiq."
         stale_data: "V poslední době neproběhal kontrola aktualizací. Ujistěte se, že běží služby sidekiq."
+        version_check_pending: "Zdá se, že jste nedávno aktualizovali. Báječné!"
         installed_version: "Nainstalováno"
         latest_version: "Poslední verze"
         problems_found: "Několik rad na základě vašeho aktuálního nastavení webu"
@@ -5721,12 +5727,12 @@ cs:
           silence: "Ztišit"
           link: "Odkaz"
         form:
-          placeholder_regexp: "obvyklý výraz"
           link_label: "Odkaz"
           link_placeholder: "https://example.com"
           add: "přidat"
           success: "Úspěch"
           upload_successful: "Nahráno úspěšně. Slova byla přidána "
+          html_label: "HTML"
         test:
           no_matches: "Nebyly nalezeny žádné výsledky"
       form_templates:

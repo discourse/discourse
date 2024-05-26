@@ -73,12 +73,11 @@ class TopicView
   end
 
   def self.add_custom_filter(key, &blk)
-    @custom_filters ||= {}
-    @custom_filters[key] = blk
+    custom_filters[key] = blk
   end
 
   def self.custom_filters
-    @custom_filters || {}
+    @custom_filters ||= {}
   end
 
   # Configure a default scope to be applied to @filtered_posts.

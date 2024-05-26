@@ -105,6 +105,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
     end
 
     before do
+      public_channel.add(current_user)
       thread_1.add(current_user)
       thread_3.add(current_user)
     end
@@ -118,6 +119,7 @@ RSpec.describe Chat::Api::ChannelThreadsController do
     end
 
     it "has preloaded chat mentions and users for the thread original message" do
+      public_channel.add(thread_1.original_message.user)
       update_message!(
         thread_1.original_message,
         user: thread_1.original_message.user,

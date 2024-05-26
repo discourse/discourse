@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
+import { htmlSafe } from "@ember/template";
 import formatDate from "discourse/helpers/format-date";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 
 export default class ThreadPreview extends Component {
   get lastReplyDate() {
@@ -10,14 +12,14 @@ export default class ThreadPreview extends Component {
     <span class="chat-message-thread-indicator__last-reply-timestamp">
       {{this.lastReplyDate}}
     </span>
-    <div class="c-user-thread__excerpt">
-      <div class="c-user-thread__excerpt-poster">
+    <span class="c-user-thread__excerpt">
+      <span class="c-user-thread__excerpt-poster">
         {{@preview.lastReplyUser.username}}
-      </div>
+      </span>
       <span>:</span>
       <span class="c-user-thread__excerpt-text">
-        {{@preview.lastReplyExcerpt}}
+        {{replaceEmoji (htmlSafe @preview.lastReplyExcerpt)}}
       </span>
-    </div>
+    </span>
   </template>
 }

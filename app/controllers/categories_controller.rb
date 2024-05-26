@@ -34,8 +34,12 @@ class CategoriesController < ApplicationController
     @description = SiteSetting.site_description
 
     parent_category =
-      Category.find_by_slug(params[:parent_category_id]) ||
-        Category.find_by(id: params[:parent_category_id].to_i)
+      if params[:parent_category_id].present?
+        Category.find_by_slug(params[:parent_category_id]) ||
+          Category.find_by(id: params[:parent_category_id].to_i)
+      elsif params[:category_slug_path_with_id].present?
+        Category.find_by_slug_path_with_id(params[:category_slug_path_with_id])
+      end
 
     include_subcategories =
       SiteSetting.desktop_category_page_style == "subcategories_with_featured_topics" ||
@@ -43,7 +47,7 @@ class CategoriesController < ApplicationController
 
     category_options = {
       is_homepage: current_homepage == "categories",
-      parent_category_id: params[:parent_category_id],
+      parent_category_id: parent_category&.id,
       include_topics: include_topics(parent_category),
       include_subcategories: include_subcategories,
       tag: params[:tag],
@@ -412,6 +416,13 @@ class CategoriesController < ApplicationController
         )
         .joins("LEFT JOIN topics t on t.id = categories.topic_id")
         .select("categories.*, t.slug topic_slug")
+        .order(
+          "starts_with(lower(categories.name), #{ActiveRecord::Base.connection.quote(term)}) DESC",
+          "categories.parent_category_id IS NULL DESC",
+          "categories.id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
+          "categories.parent_category_id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
+          "categories.id ASC",
+        )
         .limit(limit)
         .offset((page - 1) * limit)
 
@@ -420,19 +431,6 @@ class CategoriesController < ApplicationController
     end
 
     Category.preload_user_fields!(guardian, categories)
-
-    # Prioritize categories that start with the term, then top-level
-    # categories, then subcategories
-    categories =
-      categories.to_a.sort_by do |category|
-        [
-          category.name.downcase.starts_with?(term) ? 0 : 1,
-          category.parent_category_id.blank? ? 0 : 1,
-          category.id == prioritized_category_id ? 0 : 1,
-          category.parent_category_id == prioritized_category_id ? 0 : 1,
-          category.id,
-        ]
-      end
 
     response = {
       categories_count: categories_count,

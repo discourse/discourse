@@ -49,6 +49,8 @@ Chat::Engine.routes.draw do
     post "/channels/:channel_id/threads/:thread_id/drafts" => "channels_threads_drafts#create"
     put "/channels/:channel_id/threads/:thread_id/notifications-settings/me" =>
           "channel_threads_current_user_notifications_settings#update"
+    post "/channels/:channel_id/threads/:thread_id/mark-thread-title-prompt-seen/me" =>
+           "channel_threads_current_user_title_prompt_seen#update"
 
     # TODO (martin) Remove this when we refactor the DM channel creation to happen
     # via message creation in a different API controller.
@@ -56,6 +58,7 @@ Chat::Engine.routes.draw do
 
     put "/channels/:channel_id/messages/:message_id/restore" => "channel_messages#restore"
     delete "/channels/:channel_id/messages/:message_id" => "channel_messages#destroy"
+    delete "/channels/:channel_id/messages" => "channel_messages#bulk_destroy"
 
     get "/channels/:channel_id/summarize" => "summaries#get_summary"
   end

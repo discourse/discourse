@@ -12,17 +12,19 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::TOPIC) do
         previous_topic = Topic.find_by(id: previous_topic_id)
 
         if previous_topic
-          TopicCustomField.where(
-            topic_id: previous_topic_id,
-            name: DiscourseAutomation::CUSTOM_FIELD,
-            value: automation.id,
-          ).delete_all
+          automation.remove_id_from_custom_field(
+            previous_topic,
+            DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD,
+          )
         end
       end
 
       if topic_id
         topic = Topic.find_by(id: topic_id)
-        topic&.upsert_custom_fields(DiscourseAutomation::CUSTOM_FIELD => automation.id)
+
+        next if !topic
+
+        automation.add_id_to_custom_field(topic, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
       end
     end
   end

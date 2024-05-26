@@ -84,10 +84,6 @@
 }
 
 .admin-plugin-config-page {
-  .admin-controls {
-    margin-bottom: 1em;
-  }
-
   &__main-area {
     .admin-detail {
       padding-top: 15px;
@@ -107,10 +103,6 @@
   margin-top: 0;
 }
 
-.admin-plugins-list-container {
-  margin-top: 1em;
-}
-
 .admin-plugin-filtered-site-settings {
   &__filter {
     width: 100%;
@@ -122,5 +114,14 @@
     .admin-site-settings-filter-controls {
       margin-bottom: 1em;
     }
+
+    .setting-label {
+      margin-left: 18px;
+    }
+  }
+
+  &__empty-list {
+    padding: 1em;
+    border: 1px solid var(--primary-low);
   }
 }

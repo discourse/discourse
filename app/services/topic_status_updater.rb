@@ -55,6 +55,12 @@ TopicStatusUpdater =
         )
       end
 
+      if status.visible?
+        topic.update(
+          visibility_reason_id: opts[:visibility_reason_id] || Topic.visibility_reasons[:unknown],
+        )
+      end
+
       if @topic_timer
         if status.manually_closing_topic? || status.closing_topic?
           topic.delete_topic_timer(TopicTimer.types[:close])

@@ -4,7 +4,7 @@ import { isEmpty } from "@ember/utils";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
-import { cleanNullQueryParams, defaultHomepage } from "discourse/lib/utilities";
+import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -29,7 +29,7 @@ export async function findTopicList(
   store,
   tracking,
   filter,
-  filterParams,
+  filterParams = {},
   extras = {}
 ) {
   let list;
@@ -57,16 +57,10 @@ export async function findTopicList(
     session.setProperties({ topicList: null });
   }
 
-  if (!list) {
-    // Clean up any string parameters that might slip through
-    filterParams ||= {};
-    filterParams = cleanNullQueryParams(filterParams);
-
-    list = await store.findFiltered("topicList", {
-      filter,
-      params: filterParams,
-    });
-  }
+  list ||= await store.findFiltered("topicList", {
+    filter,
+    params: filterParams,
+  });
 
   list.set("listParams", filterParams);
 

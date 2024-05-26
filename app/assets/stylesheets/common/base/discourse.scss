@@ -323,7 +323,7 @@ textarea {
 
 .radio.inline .radio.inline,
 .checkbox.inline .checkbox.inline {
-  margin-left: 10px;
+  margin-left: 0.67em;
 }
 
 .container {
@@ -331,7 +331,7 @@ textarea {
 }
 
 .wrap {
-  --d-wrap-padding-h: 10px;
+  --d-wrap-padding-h: 0.67em;
   max-width: var(--d-max-width);
   margin-right: auto;
   margin-left: auto;
@@ -665,26 +665,64 @@ textarea {
 }
 
 .pref-email {
-  .row {
-    border-bottom: 1px solid #ddd;
-    margin: 5px 0px;
-    padding-bottom: 5px;
+  display: grid;
+  grid-template-areas:
+    "title title"
+    "email email"
+    "instructions controls";
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0 0.5em;
 
-    &:last-child {
-      border-bottom: 0;
-    }
+  .control-label {
+    grid-area: title;
+  }
+
+  .emails {
+    grid-area: email;
+  }
+
+  .instructions {
+    grid-area: instructions;
+  }
+
+  .controls {
+    margin-top: 0.5em;
+    grid-area: controls;
+  }
+
+  .resend-email-confirmation {
+    background: transparent;
+    border: none;
+    color: var(--tertiary);
+    padding: 0;
+    text-align: left;
+  }
+
+  .row {
+    border-bottom: 1px solid var(--primary-low);
+    padding: 0.25em 0;
+    display: grid;
+    grid-template-areas:
+      "email dropdown"
+      "meta dropdown";
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 1fr auto;
   }
 
   .email-first {
-    font-size: 1.1em;
+    grid-area: email;
+    align-self: center;
+    overflow-wrap: break-word;
+    min-width: 0;
   }
 
   .email-second {
+    grid-area: meta;
     color: var(--primary-medium);
 
     .primary {
       color: var(--success);
-      font-weight: bold;
     }
 
     .unconfirmed {
@@ -693,12 +731,11 @@ textarea {
   }
 
   .email-dropdown {
-    float: right;
-
-    .btn,
-    .btn:hover {
+    grid-area: dropdown;
+    align-self: center;
+    justify-self: end;
+    summary {
       background: transparent;
-
       .d-icon {
         color: var(--primary-high);
       }
@@ -707,10 +744,6 @@ textarea {
 
   .dropdown-menu {
     width: 120px;
-
-    & .icon {
-      margin-top: auto;
-    }
   }
 }
 

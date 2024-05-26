@@ -224,18 +224,18 @@ class UserNotifications < ActionMailer::Base
     build_summary_for(user)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, UnsubscribeKey::DIGEST_TYPE)
 
-    min_date = opts[:since] || user.last_emailed_at || user.last_seen_at || 1.month.ago
+    @since = opts[:since] || user.last_seen_at || user.user_stat&.digest_attempted_at || 1.month.ago
 
     # Fetch some topics and posts to show
     digest_opts = {
       limit: SiteSetting.digest_topics + SiteSetting.digest_other_topics,
       top_order: true,
     }
-    topics_for_digest = Topic.for_digest(user, min_date, digest_opts)
+    topics_for_digest = Topic.for_digest(user, @since, digest_opts)
     if topics_for_digest.empty? && !user.user_option.try(:include_tl0_in_digests)
       # Find some topics from new users that are at least 24 hours old
       topics_for_digest =
-        Topic.for_digest(user, min_date, digest_opts.merge(include_tl0: true)).where(
+        Topic.for_digest(user, @since, digest_opts.merge(include_tl0: true)).where(
           "topics.created_at < ?",
           24.hours.ago,
         )
@@ -257,7 +257,7 @@ class UserNotifications < ActionMailer::Base
         if SiteSetting.digest_posts > 0
           Post
             .order("posts.score DESC")
-            .for_mailing_list(user, min_date)
+            .for_mailing_list(user, @since)
             .where("posts.post_type = ?", Post.types[:regular])
             .where(
               "posts.deleted_at IS NULL AND posts.hidden = false AND posts.user_deleted = false",
@@ -275,20 +275,16 @@ class UserNotifications < ActionMailer::Base
 
       @excerpts = {}
 
-      @popular_topics.map do |t|
-        @excerpts[t.first_post.id] = email_excerpt(
-          t.first_post.cooked,
-          t.first_post,
-        ) if t.first_post.present?
+      @popular_topics.each do |t|
+        next if t.first_post.blank?
+        @excerpts[t.first_post.id] = email_excerpt(t.first_post.cooked, t.first_post)
       end
 
       # Try to find 3 interesting stats for the top of the digest
-      new_topics_count = Topic.for_digest(user, min_date).count
+      new_topics_count = Topic.for_digest(user, @since).count
+      # We used topics from new users instead, so count should match
+      new_topics_count = topics_for_digest.size if new_topics_count == 0
 
-      if new_topics_count == 0
-        # We used topics from new users instead, so count should match
-        new_topics_count = topics_for_digest.size
-      end
       @counts = [
         {
           id: "new_topics",
@@ -312,7 +308,7 @@ class UserNotifications < ActionMailer::Base
       end
 
       if @counts.size < 3
-        value = user.unread_notifications_of_type(Notification.types[:liked], since: min_date)
+        value = user.unread_notifications_of_type(Notification.types[:liked], since: @since)
         if value > 0
           @counts << {
             id: "likes_received",
@@ -324,7 +320,7 @@ class UserNotifications < ActionMailer::Base
       end
 
       if @counts.size < 3 && user.user_option.digest_after_minutes.to_i >= 1440
-        value = summary_new_users_count(min_date)
+        value = summary_new_users_count(@since)
         if value > 0
           @counts << {
             id: "new_users",
@@ -335,9 +331,7 @@ class UserNotifications < ActionMailer::Base
         end
       end
 
-      @last_seen_at = short_date(user.last_seen_at || user.created_at)
-
-      @preheader_text = I18n.t("user_notifications.digest.preheader", last_seen_at: @last_seen_at)
+      @preheader_text = I18n.t("user_notifications.digest.preheader", since: @since)
 
       opts = {
         from_alias: I18n.t("user_notifications.digest.from", site_name: Email.site_title),
@@ -760,6 +754,7 @@ class UserNotifications < ActionMailer::Base
       subject_pm: subject_pm,
       participants: participants,
       include_respond_instructions: !(user.suspended? || user.staged?),
+      notification_type: notification_type,
       template: template,
       use_topic_title_subject: use_topic_title_subject,
       site_description: SiteSetting.site_description,
@@ -840,7 +835,7 @@ class UserNotifications < ActionMailer::Base
   end
 
   def build_summary_for(user)
-    @site_name = SiteSetting.email_prefix.presence || SiteSetting.title # used by I18n
+    @site_name = SiteSetting.email_prefix.presence || SiteSetting.title
     @user = user
     @date = short_date(Time.now)
     @base_url = Discourse.base_url
@@ -852,24 +847,17 @@ class UserNotifications < ActionMailer::Base
     @disable_email_custom_styles = !SiteSetting.apply_custom_styles_to_digest
   end
 
-  def self.summary_new_users_count_key(min_date_str)
-    "summary-new-users:#{min_date_str}"
-  end
-
-  def summary_new_users_count(min_date)
-    min_date_str = min_date.is_a?(String) ? min_date : min_date.strftime("%Y-%m-%d")
-    key = self.class.summary_new_users_count_key(min_date_str)
-    ((count = Discourse.redis.get(key)) && count.to_i) ||
-      begin
-        count =
-          User
-            .real
-            .where(active: true, staged: false)
-            .not_suspended
-            .where("created_at > ?", min_date_str)
-            .count
-        Discourse.redis.setex(key, 1.day, count)
-        count
-      end
+  def summary_new_users_count(since)
+    date = since.is_a?(String) ? since : since.strftime("%Y-%m-%d")
+    key = "summary-new-users:#{date}"
+    Discourse.redis.get(key)&.to_i ||
+      User
+        .real
+        .activated
+        .not_staged
+        .not_suspended
+        .where("created_at > ?", date)
+        .count
+        .tap { Discourse.redis.setex(key, 1.day, _1) }
   end
 end

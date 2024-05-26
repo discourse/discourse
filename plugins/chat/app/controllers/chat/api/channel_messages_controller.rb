@@ -26,6 +26,18 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
     end
   end
 
+  def bulk_destroy
+    with_service(Chat::TrashMessages) do
+      on_success { render(json: success_json) }
+      on_failure { render(json: failed_json, status: 422) }
+      on_model_not_found(:messages) { raise Discourse::NotFound }
+      on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+      end
+    end
+  end
+
   def restore
     with_service(Chat::RestoreMessage) do
       on_success { render(json: success_json) }
@@ -64,7 +76,7 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
       on_failed_policy(:no_silenced_user) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise Discourse::NotFound }
       on_failed_policy(:allowed_to_join_channel) { raise Discourse::InvalidAccess }
-      on_model_not_found(:channel_membership) { raise Discourse::InvalidAccess }
+      on_model_not_found(:membership) { raise Discourse::NotFound }
       on_failed_policy(:ensure_reply_consistency) { raise Discourse::NotFound }
       on_failed_policy(:allowed_to_create_message_in_channel) do |policy|
         render_json_error(policy.reason)

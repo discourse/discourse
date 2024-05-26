@@ -40,7 +40,7 @@
       @name="timeline-controls-before"
       @outletArgs={{hash model=@model}}
     />
-    <TopicAdminMenuButton
+    <TopicAdminMenu
       @topic={{@model}}
       @addKeyboardTargetClass={{true}}
       @toggleMultiSelect={{@toggleMultiSelect}}
@@ -175,7 +175,7 @@
         @showCaret={{false}}
       />
       {{#if @mobileView}}
-        <TopicAdminMenuButton
+        <TopicAdminMenu
           @topic={{@model}}
           @addKeyboardTargetClass={{true}}
           @openUpwards={{true}}

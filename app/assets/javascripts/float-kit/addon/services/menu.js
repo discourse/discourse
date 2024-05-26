@@ -1,14 +1,12 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
-import { guidFor } from "@ember/object/internals";
+import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
-import { updatePosition } from "float-kit/lib/update-position";
 
 export default class Menu extends Service {
-  @tracked activeMenu;
-  @tracked portalOutletElement;
+  @tracked registeredMenus = [];
 
   /**
    * Render a menu
@@ -22,7 +20,9 @@ export default class Menu extends Service {
    * @param {Object} [options.data] - An object which will be passed as the `@data` argument when content is a `Component`
    * @param {Boolean} [options.arrow] - Determines if the menu has an arrow
    * @param {Boolean} [options.offset] - Displaces the content from its reference trigger in pixels
-   * @param {String} [options.identifier] - Add a data-identifier attribute to the trigger and the content
+   * @param {String} [options.identifier] - Add a data-identifier attribute to the trigger and the content, multiple menus can have the same identifier,
+   * only one menu with the same identifier can be open at a time
+   * @param {String} [options.groupIdentifier] - Only one menu with the same groupIdentifier can be open at a time
    * @param {Boolean} [options.inline] - Improves positioning for trigger that spans over multiple lines
    *
    * @returns {Promise<DMenuInstance>}
@@ -34,64 +34,97 @@ export default class Menu extends Service {
     if (arguments[0] instanceof DMenuInstance) {
       instance = arguments[0];
 
-      if (this.activeMenu === instance && this.activeMenu.expanded) {
+      if (instance.expanded) {
         return;
       }
     } else {
-      const trigger = arguments[0];
-      if (
-        this.activeMenu &&
-        this.activeMenu.id ===
-          (trigger?.id?.length ? trigger.id : guidFor(trigger)) &&
-        this.activeMenu.expanded
-      ) {
-        this.activeMenu?.close();
-        return;
-      }
+      instance = this.registeredMenus.find(
+        (registeredMenu) => registeredMenu.trigger === arguments[0]
+      );
 
-      instance = new DMenuInstance(getOwner(this), trigger, arguments[1]);
+      if (!instance) {
+        instance = new DMenuInstance(getOwner(this), arguments[1]);
+        instance.trigger = arguments[0];
+        instance.detachedTrigger = true;
+      }
     }
 
-    await this.replace(instance);
-    instance.expanded = true;
+    if (instance.options.identifier || instance.options.groupIdentifier) {
+      for (const registeredMenu of this.registeredMenus) {
+        if (
+          ((instance.options.identifier &&
+            registeredMenu.options.identifier ===
+              instance.options.identifier) ||
+            (instance.options.groupIdentifier &&
+              registeredMenu.options.groupIdentifier ===
+                instance.options.groupIdentifier)) &&
+          registeredMenu !== instance
+        ) {
+          await this.close(registeredMenu);
+        }
+      }
+    }
+
+    if (instance.expanded) {
+      return await this.close(instance);
+    }
+
+    await new Promise((resolve) => {
+      if (!this.registeredMenus.includes(instance)) {
+        this.registeredMenus = this.registeredMenus.concat(instance);
+      }
+
+      instance.expanded = true;
+
+      schedule("afterRender", () => {
+        resolve();
+      });
+    });
+
     return instance;
   }
 
   /**
-   * Replaces any active menu-
+   * Returns an existing menu by its identifier if found
+   *
+   * @param {String} identifier - the menu identifier to retrieve
+   *
+   * @returns {Promise<DMenuInstance>}
    */
-  @action
-  async replace(menu) {
-    await this.activeMenu?.close();
-    this.activeMenu = menu;
+  getByIdentifier(identifier) {
+    return this.registeredMenus.find(
+      (registeredMenu) => registeredMenu.options.identifier === identifier
+    );
   }
 
   /**
-   * Closes the active menu
-   * @param {DMenuInstance} [menu] - the menu to close, if not provider will close any active menu
+   * Closes the given menu
+   *
+   * @param {DMenuInstance | String} [menu | identifier] - the menu to close, can accept an instance or an identifier
    */
   @action
   async close(menu) {
-    if (this.activeMenu && menu && this.activeMenu.id !== menu.id) {
+    if (typeof menu === "string") {
+      menu = this.registeredMenus.find(
+        (registeredMenu) => registeredMenu.options.identifier === menu
+      );
+    }
+
+    if (!menu) {
       return;
     }
 
-    await this.activeMenu?.close();
-    this.activeMenu = null;
-  }
+    await new Promise((resolve) => {
+      menu.expanded = false;
 
-  /**
-   * Update the menu position
-   * @param {DMenuInstance} [menu] - the menu to update, if not provider will update any active menu
-   */
-  @action
-  async update(menu) {
-    const instance = menu || this.activeMenu;
-    if (!instance) {
-      return;
-    }
-    await updatePosition(instance.trigger, instance.content, instance.options);
-    await instance.show();
+      this.registeredMenus = this.registeredMenus.filter(
+        (registeredMenu) => menu.id !== registeredMenu.id
+      );
+
+      schedule("afterRender", () => {
+        resolve();
+      });
+    });
   }
 
   /**
@@ -104,17 +137,12 @@ export default class Menu extends Service {
    */
   @action
   register(trigger, options = {}) {
-    return new DMenuInstance(getOwner(this), trigger, {
+    const instance = new DMenuInstance(getOwner(this), {
       ...options,
       listeners: true,
-      beforeTrigger: async (menu) => {
-        await this.replace(menu);
-      },
     });
-  }
-
-  @action
-  registerPortalOutletElement(element) {
-    this.portalOutletElement = element;
+    instance.trigger = trigger;
+    instance.detachedTrigger = true;
+    return instance;
   }
 }

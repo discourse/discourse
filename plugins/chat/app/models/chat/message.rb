@@ -96,9 +96,6 @@ module Chat
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
 
     def validate_message
-      self.message =
-        TextCleaner.clean(self.message, strip_whitespaces: true, strip_zero_width_spaces: true)
-
       WatchedWordsValidator.new(attributes: [:message]).validate(self)
 
       if self.new_record? || self.changed.include?("message")
@@ -269,7 +266,7 @@ module Chat
     end
 
     def in_thread?
-      self.thread_id.present?
+      self.thread_id.present? && (self.chat_channel.threading_enabled || self.thread&.force)
     end
 
     def thread_reply?

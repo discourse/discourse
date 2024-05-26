@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -132,7 +133,7 @@ export default class BookmarkMenu extends Component {
         // a bookmark, it switches to the other Edit/Delete menu.
         this.quicksaved = true;
         this.toasts.success({
-          duration: 3000,
+          duration: 1500,
           views: ["mobile"],
           data: { message: I18n.t("bookmarks.bookmarked_success") },
         });
@@ -171,7 +172,7 @@ export default class BookmarkMenu extends Component {
       const response = await this.bookmarkManager.delete();
       this.bookmarkManager.afterDelete(response, this.existingBookmark.id);
       this.toasts.success({
-        duration: 3000,
+        duration: 1500,
         data: {
           icon: "trash-alt",
           message: I18n.t("bookmarks.deleted_bookmark_success"),
@@ -200,7 +201,7 @@ export default class BookmarkMenu extends Component {
       try {
         await this.bookmarkManager.save();
         this.toasts.success({
-          duration: 3000,
+          duration: 1500,
           views: ["mobile"],
           data: { message: I18n.t("bookmarks.reminder_set_success") },
         });
@@ -245,69 +246,72 @@ export default class BookmarkMenu extends Component {
       @onClose={{this.onCloseMenu}}
       @onShow={{this.onShowMenu}}
       @onRegisterApi={{this.onRegisterApi}}
-      @modalForMobile={{true}}
       @arrow={{false}}
     >
       <:content>
-        <div class="bookmark-menu__body">
-
+        <DropdownMenu as |dropdown|>
           {{#unless this.showEditDeleteMenu}}
-            <div class="bookmark-menu__title">{{icon "check-circle"}}<span
-              >{{i18n "bookmarks.bookmarked_success"}}</span>
-            </div>
+            <dropdown.item class="bookmark-menu__title">
+              {{icon "check-circle"}}
+              <span>{{i18n "bookmarks.bookmarked_success"}}</span>
+            </dropdown.item>
           {{/unless}}
 
           {{#if this.showEditDeleteMenu}}
             {{#if this.site.mobileView}}
-              <div class="bookmark-menu__title">{{icon "bookmark"}}<span>{{i18n
-                    "bookmarks.bookmark"
-                  }}</span>
-              </div>
+              <dropdown.item class="bookmark-menu__title">
+                {{icon "bookmark"}}
+                <span>{{i18n "bookmarks.bookmark"}}</span>
+              </dropdown.item>
             {{/if}}
-            <ul class="bookmark-menu__actions">
-              <li class="bookmark-menu__row -edit" data-menu-option-id="edit">
-                <DButton
-                  @icon="pencil-alt"
-                  @label="edit"
-                  @action={{this.onEditBookmark}}
-                  @class="bookmark-menu__row-btn btn-transparent"
-                />
-              </li>
-              <li
-                class="bookmark-menu__row --remove"
-                role="button"
-                tabindex="0"
-                data-menu-option-id="delete"
+
+            <dropdown.item
+              class="bookmark-menu__row -edit"
+              data-menu-option-id="edit"
+            >
+              <DButton
+                @icon="pencil-alt"
+                @label="edit"
+                @action={{this.onEditBookmark}}
+                @class="bookmark-menu__row-btn btn-transparent"
+              />
+            </dropdown.item>
+            <dropdown.item
+              class="bookmark-menu__row --remove"
+              role="button"
+              tabindex="0"
+              data-menu-option-id="delete"
+            >
+              <DButton
+                @icon="trash-alt"
+                @label="delete"
+                @action={{this.onRemoveBookmark}}
+                @class="bookmark-menu__row-btn btn-transparent btn-danger"
+              />
+            </dropdown.item>
+
+          {{else}}
+            <dropdown.item class="bookmark-menu__row-title">
+              {{i18n "bookmarks.also_set_reminder"}}
+            </dropdown.item>
+
+            <dropdown.divider />
+
+            {{#each this.reminderAtOptions as |option|}}
+              <dropdown.item
+                class="bookmark-menu__row"
+                data-menu-option-id={{option.id}}
               >
                 <DButton
-                  @icon="trash-alt"
-                  @label="delete"
-                  @action={{this.onRemoveBookmark}}
-                  @class="bookmark-menu__row-btn btn-transparent btn-danger"
+                  @label={{option.label}}
+                  @translatedTitle={{this.reminderShortcutTimeTitle option}}
+                  @action={{fn this.onChooseReminderOption option}}
+                  @class="bookmark-menu__row-btn btn-transparent"
                 />
-              </li>
-            </ul>
-          {{else}}
-            <span class="bookmark-menu__row-title">{{i18n
-                "bookmarks.also_set_reminder"
-              }}</span>
-            <ul class="bookmark-menu__actions">
-              {{#each this.reminderAtOptions as |option|}}
-                <li
-                  class="bookmark-menu__row"
-                  data-menu-option-id={{option.id}}
-                >
-                  <DButton
-                    @label={{option.label}}
-                    @translatedTitle={{this.reminderShortcutTimeTitle option}}
-                    @action={{fn this.onChooseReminderOption option}}
-                    @class="bookmark-menu__row-btn btn-transparent"
-                  />
-                </li>
-              {{/each}}
-            </ul>
+              </dropdown.item>
+            {{/each}}
           {{/if}}
-        </div>
+        </DropdownMenu>
       </:content>
     </DMenu>
   </template>

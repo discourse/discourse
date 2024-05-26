@@ -629,6 +629,7 @@ da:
       topic_count_long: "Emner oprettet"
       post_count: "Svar"
       post_count_long: "Svar sendt"
+      no_results_with_search: "Ingen resultater fundet."
       days_visited: "Besøg"
       days_visited_long: "Besøgsdage"
       posts_read: "Læste"
@@ -986,10 +987,8 @@ da:
         ignore_duration_time_frame_required: "Vælg en tidsramme"
         ignore_no_users: "Du har ingen ignorerede brugere."
         ignore_option: "Ignoreret"
-        ignore_option_title: "Du modtager ikke notifikationer relateret til denne bruger, og alle emner og svar, vil blive skjult."
         add_ignored_user: "Tilføj…"
         mute_option: "Stille!"
-        mute_option_title: "Du vil ikke modtage nogen notifikationer relateret til denne bruger."
         normal_option: "Normal"
         normal_option_title: "Du vil blive underrettet, hvis denne bruger svarer dig, citerer dig eller nævner dig."
       notification_schedule:
@@ -3185,8 +3184,6 @@ da:
       pinned:
         title: "Fastgjort"
         help: "Dette emne er fastgjort for dig; det vil blive vist i toppen af dets kategori"
-      unlisted:
-        help: "Dette emne er ulistet; det vil ikke blive vist i listen over emner og kan kun tilgås med et direkte link"
       personal_message:
         title: "Dette emne er en privat besked"
         help: "Dette emne er en privat besked"
@@ -4711,9 +4708,6 @@ da:
           replace: "Erstat ord i indlæg med andre ord."
           link: "Erstat ord i indlæg med links."
         form:
-          label: "Har ord eller sætning"
-          placeholder: "Indtast ord eller sætning (* er et jokertegn)"
-          placeholder_regexp: "almindelig udtryk"
           replace_label: "Erstatning"
           replace_placeholder: "eksempel"
           tag_label: "Mærke"
@@ -4724,6 +4718,7 @@ da:
           exists: "Eksisterer allerede"
           upload: "Tilføj fra fil"
           upload_successful: "Overførsel er vellykket. Der er tilføjet ord."
+          html_label: "HTML"
         test:
           button_label: "Test"
           description: "Indtast tekst nedenfor for at kontrollere, om den indeholder overvågede ord"

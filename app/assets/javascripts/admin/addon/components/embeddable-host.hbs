@@ -26,6 +26,25 @@
       class="small"
     />
   </td>
+  <td class="editing-input">
+    <div class="label">{{i18n "admin.embedding.tags"}}</div>
+    <TagChooser
+      @tags={{this.tags}}
+      @everyTag={{true}}
+      @excludeSynonyms={{true}}
+      @unlimitedTagCount={{true}}
+      @onChange={{fn (mut this.tags)}}
+      @options={{hash filterPlaceholder="category.tags_placeholder"}}
+    />
+  </td>
+  <td class="editing-input">
+    <div class="label">{{i18n "admin.embedding.user"}}</div>
+    <UserChooser
+      @value={{this.user}}
+      @onChange={{action "onUserChange"}}
+      @options={{hash maximum=1 excludeCurrentUser=false}}
+    />
+  </td>
   <td class="editing-controls">
     <DButton
       @icon="check"
@@ -54,6 +73,12 @@
   <td>
     <div class="label">{{i18n "admin.embedding.category"}}</div>
     {{category-badge this.category allowUncategorized=true}}
+  </td>
+  <td>
+    {{this.tags}}
+  </td>
+  <td>
+    {{this.user}}
   </td>
   <td class="controls">
     <DButton @icon="pencil-alt" @action={{this.edit}} />

@@ -576,7 +576,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("args", { canManage: true });
 
     await render(
-      hbs`<MountWidget @widget="post" @args={{this.args}} /><DInlineMenu />`
+      hbs`<MountWidget @widget="post" @args={{this.args}} /><DMenus />`
     );
 
     assert
@@ -597,7 +597,7 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("permanentlyDeletePost", () => (this.deleted = true));
 
     await render(
-      hbs`<MountWidget @widget="post" @args={{this.args}} @permanentlyDeletePost={{this.permanentlyDeletePost}} /><DInlineMenu />`
+      hbs`<MountWidget @widget="post" @args={{this.args}} @permanentlyDeletePost={{this.permanentlyDeletePost}} /><DMenus />`
     );
 
     await click(".post-menu-area .show-post-admin-menu");
@@ -616,7 +616,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`
       <MountWidget @widget="post" @args={{this.args}} @permanentlyDeletePost={{this.permanentlyDeletePost}} />
-      <DInlineMenu />
+      <DMenus />
     `);
 
     await click(".post-menu-area .show-post-admin-menu");
@@ -637,7 +637,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`
       <MountWidget @widget="post" @args={{this.args}} @togglePostType={{this.togglePostType}} />
-      <DInlineMenu />
+      <DMenus />
     `);
 
     await click(".post-menu-area .show-post-admin-menu");
@@ -657,7 +657,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`
       <MountWidget @widget="post" @args={{this.args}} @rebakePost={{this.rebakePost}} />
-      <DInlineMenu />
+      <DMenus />
     `);
 
     await click(".post-menu-area .show-post-admin-menu");
@@ -678,7 +678,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`
       <MountWidget @widget="post" @args={{this.args}} @unhidePost={{this.unhidePost}} />
-      <DInlineMenu />
+      <DMenus />
     `);
 
     await click(".post-menu-area .show-post-admin-menu");
@@ -701,7 +701,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`
       <MountWidget @widget="post" @args={{this.args}} @changePostOwner={{this.changePostOwner}} />
-      <DInlineMenu />
+      <DMenus />
     `);
 
     await click(".post-menu-area .show-post-admin-menu");

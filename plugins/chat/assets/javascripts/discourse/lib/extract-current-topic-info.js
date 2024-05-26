@@ -1,14 +1,14 @@
 import { getOwner } from "@ember/application";
 
 export function extractCurrentTopicInfo(context) {
-  const topic = getOwner(context).lookup("controller:topic")?.get("model");
+  const topic = getOwner(context).lookup("controller:topic")?.model;
 
   if (!topic) {
     return;
   }
 
-  const info = { topic_id: topic.id };
-  const currentPostNumber = parseInt(topic.current_post_number, 10);
+  const info = { context_topic_id: topic.id };
+  const currentPostNumber = topic.currentPost;
   const posts = topic.postStream.posts;
 
   const currentPost = posts.find(
@@ -23,7 +23,11 @@ export function extractCurrentTopicInfo(context) {
       !post.hidden && !post.deleted_at && post.post_number > currentPostNumber
   );
 
-  info.post_ids = [previousPost?.id, currentPost?.id, nextPost?.id];
+  info.context_post_ids = [
+    previousPost?.id,
+    currentPost?.id,
+    nextPost?.id,
+  ].filter(Boolean);
 
   return info;
 }

@@ -598,6 +598,7 @@ ur:
       topic_count_long: "بنائے گئے ٹاپک"
       post_count: "جوابات"
       post_count_long: "پوسٹ کیے گئے جوابات"
+      no_results_with_search: "کوئی نتائج نہیں پائے گئے۔"
       days_visited: "زائرین کی تعداد"
       days_visited_long: "زیارت کے دن"
       posts_read: "پڑھ لیا گیا"
@@ -954,9 +955,7 @@ ur:
         ignore_duration_time_frame_required: "براہ کرم ایک ٹائم فریم منتخب کریں"
         ignore_no_users: "آپ کے پاس کوئی نظر انداز صارفین موجود نہیں۔"
         ignore_option: "نظر انداز کردہ"
-        ignore_option_title: "آپ کو اِس صارف سے متعلق اطلاعات نہیں ملیں گی اور اِن کے تمام ٹاپک اور جوابات چھپا دیے جائیں گے۔"
         mute_option: "خاموش کِیا ہوا"
-        mute_option_title: "آپ کو اِس صارف سے متعلق اطلاعات نہیں ملیں گی۔"
         normal_option: "عمومی"
         normal_option_title: " آپ کو مطلع کر دیا جائے گا اگر یہ صارف آپ کو جواب دیتا ہے، آپ کا اقتباس کرتا ہے، یا آپ کا ذکر کرتا ہے۔"
       notification_schedule:
@@ -3103,8 +3102,6 @@ ur:
       pinned:
         title: "پِن ہوا"
         help: "یہ ٹاپک عالمی سطح پر پِن کیا ہوا ہے؛ یہ اپنے زمرہ کے سب سے اوپر دکھائی دے گا"
-      unlisted:
-        help: "یہ ٹاپک غیر کسی فہرست میں نہیں ہے؛ یہ ٹاپکس کی فہرست میں ظاہر نہیں ہو گا، اور صرف ایک براہ راست لنک کے ذریعے اِس تک رسائی ہو سکے گی"
       personal_message:
         title: "یہ ٹاپک ایک ذاتی پیغام ہے"
         help: "یہ ٹاپک ایک ذاتی پیغام ہے"
@@ -4599,9 +4596,6 @@ ur:
           replace: "پوسٹس میں الفاظ کو دوسرے الفاظ سے بدلیں."
           link: "پوسٹس میں الفاظ کو لنکس سے بدلیں."
         form:
-          label: "لفظ یا جملہ ہے۔"
-          placeholder: "لفظ یا جملہ درج کریں (* سب کیلیے )"
-          placeholder_regexp: "رَیگولر اَیکسپرَیشَن"
           replace_label: "متبادل"
           replace_placeholder: "مثال"
           tag_label: "ٹیگ"
@@ -4612,6 +4606,7 @@ ur:
           exists: "پہلے سے موجود"
           upload: "فائل میں سے شامل کریں"
           upload_successful: "اَپ لوڈ کامیاب ہوا۔ الفاظ شامل کردیے گئے ہیں۔"
+          html_label: "HTML"
         test:
           button_label: "ٹیسٹ"
           modal_title: "%{action}: دیکھے گئے الفاظ کو جانچیں"

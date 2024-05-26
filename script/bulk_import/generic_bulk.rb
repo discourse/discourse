@@ -54,6 +54,7 @@ class BulkImport::Generic < BulkImport::Base
     import_user_fields
     import_user_field_values
     import_single_sign_on_records
+    import_user_associated_accounts
     import_muted_users
     import_user_histories
     import_user_notes
@@ -85,6 +86,7 @@ class BulkImport::Generic < BulkImport::Base
 
     import_topic_tags
     import_topic_allowed_users
+    import_topic_allowed_groups
 
     import_likes
     import_votes
@@ -440,6 +442,7 @@ class BulkImport::Generic < BulkImport::Base
         suspended_at: suspended_at,
         suspended_till: suspended_till,
         registration_ip_address: row["registration_ip_address"],
+        date_of_birth: to_date(row["date_of_birth"]),
       }
     end
 
@@ -471,9 +474,8 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing user profiles..."
 
     users = query(<<~SQL)
-      SELECT id, bio
+      SELECT id, bio, location
       FROM users
-      WHERE bio IS NOT NULL
       ORDER BY id
     SQL
 
@@ -483,7 +485,7 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["id"])
       next if user_id && existing_user_ids.include?(user_id)
 
-      { user_id: user_id, bio_raw: row["bio"] }
+      { user_id: user_id, bio_raw: row["bio"], location: row["location"] }
     end
 
     users.close
@@ -611,6 +613,37 @@ class BulkImport::Generic < BulkImport::Base
     users.close
   end
 
+  def import_user_associated_accounts
+    puts "", "Importing user associated accounts..."
+
+    accounts = query(<<~SQL)
+      SELECT a.*, COALESCE(u.last_seen_at, u.created_at) AS last_used_at, u.email, u.username
+        FROM user_associated_accounts a
+             JOIN users u ON u.id = a.user_id
+       ORDER BY a.user_id, a.provider_name
+    SQL
+
+    existing_user_ids = UserAssociatedAccount.pluck(:user_id).to_set
+    existing_provider_uids = UserAssociatedAccount.pluck(:provider_uid, :provider_name).to_set
+
+    create_user_associated_accounts(accounts) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+
+      next if user_id && existing_user_ids.include?(user_id)
+      next if existing_provider_uids.include?([row["provider_uid"], row["provider_name"]])
+
+      {
+        user_id: user_id,
+        provider_name: row["provider_name"],
+        provider_uid: row["provider_uid"],
+        last_used: to_datetime(row["last_used_at"]),
+        info: row["info"].presence || { nickname: row["username"], email: row["email"] }.to_json,
+      }
+    end
+
+    accounts.close
+  end
+
   def import_topics
     puts "", "Importing topics..."
 
@@ -621,11 +654,10 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_topics(topics) do |row|
-      unless row["category_id"] && (category_id = category_id_from_imported_id(row["category_id"]))
-        next
-      end
+      category_id = category_id_from_imported_id(row["category_id"]) if row["category_id"].present?
 
       next if topic_id_from_imported_id(row["id"]).present?
+      next if row["private_message"].blank? && category_id.nil?
 
       {
         archetype: row["private_message"] ? Archetype.private_message : Archetype.default,
@@ -637,6 +669,9 @@ class BulkImport::Generic < BulkImport::Base
         closed: to_boolean(row["closed"]),
         views: row["views"],
         subtype: row["subtype"],
+        pinned_at: to_datetime(row["pinned_at"]),
+        pinned_until: to_datetime(row["pinned_until"]),
+        pinned_globally: to_boolean(row["pinned_globally"]),
       }
     end
 
@@ -644,35 +679,69 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_topic_allowed_users
-    # FIXME: This is not working correctly because it imports only the first user from the list!
-    # Groups are ignored completely. And there is no check for existing records.
-
     puts "", "Importing topic_allowed_users..."
 
     topics = query(<<~SQL)
-      SELECT *
-      FROM topics
-      WHERE private_message IS NOT NULL
-      ORDER BY id
+      SELECT
+        t.id,
+        user_ids.value AS user_id
+      FROM topics t, JSON_EACH(t.private_message, '$.user_ids') AS user_ids
+      WHERE t.private_message IS NOT NULL
+      ORDER BY t.id
     SQL
 
     added = 0
+    existing_topic_allowed_users = TopicAllowedUser.pluck(:topic_id, :user_id).to_set
 
     create_topic_allowed_users(topics) do |row|
-      next unless (topic_id = topic_id_from_imported_id(row["id"]))
-      imported_user_id = JSON.parse(row["private_message"])["user_ids"].first
-      user_id = user_id_from_imported_id(imported_user_id)
+      topic_id = topic_id_from_imported_id(row["id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+
+      next unless topic_id && user_id
+      next unless existing_topic_allowed_users.add?([topic_id, user_id])
+
       added += 1
-      {
-        # FIXME: missing imported_id
-        topic_id: topic_id,
-        user_id: user_id,
-      }
+
+      { topic_id: topic_id, user_id: user_id }
     end
 
     topics.close
 
     puts "  Added #{added} topic_allowed_users records."
+  end
+
+  def import_topic_allowed_groups
+    puts "", "Importing topic_allowed_groups..."
+
+    topics = query(<<~SQL)
+      SELECT
+        t.id,
+        group_ids.value AS group_id
+      FROM topics t, JSON_EACH(t.private_message, '$.group_ids') AS group_ids
+      WHERE t.private_message IS NOT NULL
+      ORDER BY t.id
+    SQL
+
+    added = 0
+    existing_topic_allowed_groups = TopicAllowedGroup.pluck(:topic_id, :group_id).to_set
+
+    create_topic_allowed_groups(topics) do |row|
+      topic_id = topic_id_from_imported_id(row["id"])
+      group_id = group_id_from_imported_id(row["group_id"])
+
+      next unless topic_id && group_id
+      next unless existing_topic_allowed_groups.add?([topic_id, group_id])
+
+      added += 1
+
+      { topic_id: topic_id, group_id: group_id }
+    end
+
+    # TODO: Add support for special group names
+
+    topics.close
+
+    puts "  Added #{added} topic_allowed_groups records."
   end
 
   def import_posts
@@ -1759,7 +1828,10 @@ class BulkImport::Generic < BulkImport::Base
 
     tags.each do |row|
       cleaned_tag_name = DiscourseTagging.clean_tag(row["name"])
-      tag = Tag.find_or_create_by!(name: cleaned_tag_name)
+      tag =
+        Tag.where("LOWER(name) = ?", cleaned_tag_name.downcase).first_or_create!(
+          name: cleaned_tag_name,
+        )
       @tag_mapping[row["id"]] = tag.id
 
       if row["tag_group_id"]

@@ -493,6 +493,18 @@ class BulkImport::Base
     external_card_background_url
   ]
 
+  USER_ASSOCIATED_ACCOUNT_COLUMNS ||= %i[
+    provider_name
+    provider_uid
+    user_id
+    last_used
+    info
+    credentials
+    extra
+    created_at
+    updated_at
+  ]
+
   USER_OPTION_COLUMNS ||= %i[
     user_id
     mailing_list_mode
@@ -577,6 +589,8 @@ class BulkImport::Base
     visible
     closed
     pinned_at
+    pinned_until
+    pinned_globally
     views
     subtype
     created_at
@@ -623,6 +637,8 @@ class BulkImport::Base
   ]
 
   TOPIC_ALLOWED_USER_COLUMNS ||= %i[topic_id user_id created_at updated_at]
+
+  TOPIC_ALLOWED_GROUP_COLUMNS ||= %i[topic_id group_id created_at updated_at]
 
   TOPIC_TAG_COLUMNS ||= %i[topic_id tag_id created_at updated_at]
 
@@ -815,6 +831,10 @@ class BulkImport::Base
     create_records(rows, "single_sign_on_record", USER_SSO_RECORD_COLUMNS, &block)
   end
 
+  def create_user_associated_accounts(rows, &block)
+    create_records(rows, "user_associated_account", USER_ASSOCIATED_ACCOUNT_COLUMNS, &block)
+  end
+
   def create_user_custom_fields(rows, &block)
     create_records(rows, "user_custom_field", USER_CUSTOM_FIELD_COLUMNS, &block)
   end
@@ -861,6 +881,10 @@ class BulkImport::Base
 
   def create_topic_allowed_users(rows, &block)
     create_records(rows, "topic_allowed_user", TOPIC_ALLOWED_USER_COLUMNS, &block)
+  end
+
+  def create_topic_allowed_groups(rows, &block)
+    create_records(rows, "topic_allowed_group", TOPIC_ALLOWED_GROUP_COLUMNS, &block)
   end
 
   def create_topic_tags(rows, &block)
@@ -1132,6 +1156,16 @@ class BulkImport::Base
     sso_record
   end
 
+  def process_user_associated_account(account)
+    account[:last_used] ||= NOW
+    account[:info] ||= "{}"
+    account[:credentials] ||= "{}"
+    account[:extra] ||= "{}"
+    account[:created_at] = NOW
+    account[:updated_at] = NOW
+    account
+  end
+
   def process_group_user(group_user)
     group_user[:created_at] = NOW
     group_user[:updated_at] = NOW
@@ -1279,6 +1313,12 @@ class BulkImport::Base
     topic_allowed_user[:created_at] = NOW
     topic_allowed_user[:updated_at] = NOW
     topic_allowed_user
+  end
+
+  def process_topic_allowed_group(topic_allowed_group)
+    topic_allowed_group[:created_at] = NOW
+    topic_allowed_group[:updated_at] = NOW
+    topic_allowed_group
   end
 
   def process_topic_tag(topic_tag)

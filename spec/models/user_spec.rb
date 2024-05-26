@@ -129,6 +129,27 @@ RSpec.describe User do
         ) { user.update(name: "Batman") }
       end
     end
+
+    describe "#refresh_user_directory" do
+      context "when bootstrap mode is enabled" do
+        before { SiteSetting.bootstrap_mode_enabled = true }
+
+        it "creates directory items for a new user for all periods" do
+          expect do user = Fabricate(:user) end.to change { DirectoryItem.count }.by(
+            DirectoryItem.period_types.count,
+          )
+          expect(DirectoryItem.where(user_id: user.id)).to exist
+        end
+      end
+
+      context "when bootstrap mode is disabled" do
+        before { SiteSetting.bootstrap_mode_enabled = false }
+
+        it "doesn't create directory items for a new user" do
+          expect do Fabricate(:user) end.not_to change { DirectoryItem.count }
+        end
+      end
+    end
   end
 
   describe "Validations" do
@@ -2725,7 +2746,7 @@ RSpec.describe User do
   end
 
   describe "#title=" do
-    fab!(:badge) { Fabricate(:badge, name: "Badge", allow_title: false) }
+    fab!(:badge) { Badge.find_by(name: "Welcome") }
 
     it "sets granted_title_badge_id correctly" do
       BadgeGranter.grant(badge, user)

@@ -497,6 +497,18 @@ class TopicsController < ApplicationController
         Topic.find_by(id: topic_id)
       end
 
+    status_opts = { until: params[:until].presence }
+
+    if status == "visible"
+      status_opts[:visibility_reason_id] = (
+        if enabled
+          Topic.visibility_reasons[:manually_relisted]
+        else
+          Topic.visibility_reasons[:manually_unlisted]
+        end
+      )
+    end
+
     case status
     when "closed"
       guardian.ensure_can_close_topic!(@topic)
@@ -510,9 +522,7 @@ class TopicsController < ApplicationController
       guardian.ensure_can_moderate!(@topic)
     end
 
-    params[:until] === "" ? params[:until] = nil : params[:until]
-
-    @topic.update_status(status, enabled, current_user, until: params[:until])
+    @topic.update_status(status, enabled, current_user, status_opts)
 
     render json:
              success_json.merge!(
@@ -1136,18 +1146,18 @@ class TopicsController < ApplicationController
   def convert_topic
     params.require(:id)
     params.require(:type)
+
     topic = Topic.find_by(id: params[:id])
     guardian.ensure_can_convert_topic!(topic)
 
-    if params[:type] == "public"
-      converted_topic =
+    topic =
+      if params[:type] == "public"
         topic.convert_to_public_topic(current_user, category_id: params[:category_id])
-    else
-      converted_topic = topic.convert_to_private_message(current_user)
-    end
-    render_topic_changes(converted_topic)
-  rescue ActiveRecord::RecordInvalid => ex
-    render_json_error(ex)
+      else
+        topic.convert_to_private_message(current_user)
+      end
+
+    topic.valid? ? render_topic_changes(topic) : render_json_error(topic)
   end
 
   def reset_bump_date

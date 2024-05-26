@@ -586,6 +586,7 @@ vi:
       topic_count_long: "Chủ đề đã được tạo"
       post_count: "Trả lời"
       post_count_long: "Trả lời đã đăng"
+      no_results_with_search: "Không tìm thấy kết quả."
       days_visited: "Ghé thăm"
       days_visited_long: "Ngày đã ghé thăm"
       posts_read: "Đã đọc"
@@ -932,10 +933,8 @@ vi:
         ignore_duration_time_frame_required: "Vui lòng chọn khung thời gian"
         ignore_no_users: "Bạn không có thành viên bị chặn nào."
         ignore_option: "Đã bỏ qua"
-        ignore_option_title: "Bạn sẽ không nhận được thông báo liên quan đến người dùng này và tất cả các chủ đề và câu trả lời của họ sẽ bị ẩn."
         add_ignored_user: "Thêm…"
         mute_option: "Im lặng"
-        mute_option_title: "Bạn sẽ không nhận được bất kỳ thông báo nào liên quan đến người dùng này."
         normal_option: "Bình thường"
         normal_option_title: "Bạn sẽ được thông báo nếu người dùng này trả lời bạn, trích dẫn bạn hoặc đề cập đến bạn."
       notification_schedule:
@@ -3111,8 +3110,6 @@ vi:
       pinned:
         title: "Gắn"
         help: "Chủ đề này đã được ghim, nó sẽ hiển thị ở trên cùng chuyên mục"
-      unlisted:
-        help: "Chủ đề này ẩn, nó sẽ không hiển thị trong danh sách chủ đề, và chỉ có thể truy cập thông qua liên kết trực tiếp"
       personal_message:
         title: "Chủ đề này là một tin nhắn cá nhân"
         help: "Chủ đề này là một tin nhắn cá nhân"
@@ -4648,6 +4645,7 @@ vi:
           exists: "Đã tồn tại"
           upload: "Thêm từ tệp"
           upload_successful: "Tải lên thành công. Các từ đã được thêm vào."
+          html_label: "HTML"
         test:
           no_matches: "Không tìm thấy"
       form_templates:

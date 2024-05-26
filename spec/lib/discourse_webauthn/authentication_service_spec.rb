@@ -320,10 +320,10 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
         # simulate missing user verification in the key data
         # by setting third bit to 0
         flags = "10000010" # correct flag sequence is "10100010"
-        overriden_auth_data = service.send(:auth_data)
-        overriden_auth_data[32] = [flags].pack("b*")
+        overridden_auth_data = service.send(:auth_data)
+        overridden_auth_data[32] = [flags].pack("b*")
 
-        service.instance_variable_set(:@auth_data, overriden_auth_data)
+        service.instance_variable_set(:@auth_data, overridden_auth_data)
 
         expect { service.authenticate_security_key }.to raise_error(
           DiscourseWebauthn::UserVerificationError,

@@ -913,7 +913,6 @@ lt:
       title: "Nario aplankymai"
       xaxis: "Diena"
       yaxis: "Apsilankymai"
-      description: "Visų vartotojų apsilankymų skaičius."
     signups:
       title: "Registracijos"
       xaxis: "Diena"
@@ -949,6 +948,8 @@ lt:
       xaxis:
         api: "API"
         user_api: "Nario API"
+      yaxis: "Diena"
+    consolidated_page_views_browser_detection:
       yaxis: "Diena"
     dau_by_mau:
       title: "DAU/MAU"
@@ -1097,6 +1098,10 @@ lt:
     page_view_anon_mobile_reqs:
       xaxis: "Diena"
       description: "Naujų puslapių skaičius iš lankytojų mobiliajame įrenginyje, kurie nėra prisijungę."
+    page_view_anon_browser_reqs:
+      xaxis: "Diena"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Diena"
     http_background_reqs:
       title: "Fonas"
       xaxis: "Diena"
@@ -1135,7 +1140,6 @@ lt:
       title: "Vartotojo apsilankymai (mobili)"
       xaxis: "Diena"
       yaxis: "Apsilankymai"
-      description: "Unikalių naudotojų, kurie apsilankė naudodami mobilųjį įrenginį, skaičius."
     web_crawlers:
       labels:
         page_views: "Puslapio peržiūros"

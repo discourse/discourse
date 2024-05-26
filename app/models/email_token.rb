@@ -40,8 +40,7 @@ class EmailToken < ActiveRecord::Base
     end
   end
 
-  # TODO(2022-01-01): Remove
-  self.ignored_columns = %w[token]
+  self.ignored_columns = %w[token] # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
 
   def self.scopes
     @scopes ||= Enum.new(signup: 1, password_reset: 2, email_login: 3, email_update: 4)

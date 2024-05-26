@@ -2,14 +2,17 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { not } from "truth-helpers";
+import { not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { clipboardCopyAsync } from "discourse/lib/utilities";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
+import DeleteMessagesConfirm from "discourse/plugins/chat/discourse/components/chat/modal/delete-messages-confirm";
 import ChatModalMoveMessageToChannel from "discourse/plugins/chat/discourse/components/chat/modal/move-message-to-channel";
+
+const DELETE_COUNT_LIMIT = 50;
 
 export default class ChatSelectionManager extends Component {
   @service("composer") topicComposer;
@@ -17,6 +20,7 @@ export default class ChatSelectionManager extends Component {
   @service modal;
   @service site;
   @service toasts;
+  @service currentUser;
   @service("chat-api") api;
 
   get enableMove() {
@@ -25,6 +29,40 @@ export default class ChatSelectionManager extends Component {
 
   get anyMessagesSelected() {
     return this.args.pane.selectedMessageIds.length > 0;
+  }
+
+  get deleteCountLimitReached() {
+    return this.args.pane.selectedMessageIds.length > DELETE_COUNT_LIMIT;
+  }
+
+  get canDeleteMessages() {
+    return this.args.pane.selectedMessageIds.every((id) => {
+      return this.canDeleteMessage(id);
+    });
+  }
+
+  canDeleteMessage(id) {
+    const message = this.args.messagesManager?.findMessage(id);
+
+    if (message) {
+      const canDelete =
+        this.currentUser.id === message.user.id
+          ? message.channel?.canDeleteSelf
+          : message.channel?.canDeleteOthers;
+
+      return (
+        canDelete &&
+        !message.deletedAt &&
+        message.channel?.canModifyMessages?.(this.currentUser)
+      );
+    }
+  }
+
+  get deleteButtonTitle() {
+    return I18n.t("chat.selection.delete", {
+      selectionCount: this.args.pane.selectedMessageIds.length,
+      totalCount: DELETE_COUNT_LIMIT,
+    });
   }
 
   @bind
@@ -40,6 +78,16 @@ export default class ChatSelectionManager extends Component {
   @action
   openMoveMessageModal() {
     this.modal.show(ChatModalMoveMessageToChannel, {
+      model: {
+        sourceChannel: this.args.pane.channel,
+        selectedMessageIds: this.args.pane.selectedMessageIds,
+      },
+    });
+  }
+
+  @action
+  openDeleteMessagesModal() {
+    this.modal.show(DeleteMessagesConfirm, {
       model: {
         sourceChannel: this.args.pane.channel,
         selectedMessageIds: this.args.pane.selectedMessageIds,
@@ -139,6 +187,18 @@ export default class ChatSelectionManager extends Component {
             id="chat-move-to-channel-btn"
           />
         {{/if}}
+
+        <DButton
+          @icon="trash-alt"
+          @translatedLabel={{this.deleteButtonTitle}}
+          @disabled={{or
+            (not this.anyMessagesSelected)
+            (not this.canDeleteMessages)
+            this.deleteCountLimitReached
+          }}
+          @action={{this.openDeleteMessagesModal}}
+          id="chat-delete-btn"
+        />
 
         <DButton
           @icon="times"

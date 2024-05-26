@@ -646,20 +646,6 @@ fi:
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
   discourse_welcome_topic:
     title: "Tervetuloa sivustolle %{site_title}! :wave:"
-    body: |
-      Mukavaa, että liityit joukkoomme.
-
-      %{site_info_quote}
-
-      Tässä muutamia asioita, joita voit tehdä päästäksesi alkuun:
-
-      :speaking_head: **Esittele itsesi** lisäämällä kuvasi ja tietoa itsestäsi ja kiinnostuksen kohteistasi [profiiliisi](%{base_path}/my/preferences/account). Mikä on päällimmäinen asia, josta haluaisit ihmisten kysyvän sinulta?
-
-      :open_book: **Tutustu yhteisöön** [selaamalla keskusteluita](%{base_path}/top), joita on jo käynnissä. Kun viesti on mielestäsi kiinnostava, informatiivinen tai viihdyttävä, osoita arvostuksesi tai tukesi käyttämällä :heart:-painiketta!
-
-      :handshake: **Osallistu** kommentoimalla, jakamalla oman näkökantasi, kysymällä kysymyksiä tai tarjoamalla palautetta keskustelussa. Ennen kuin vastaat tai aloitat uusia ketjuja, tutustu [yhteisön sääntöihin](%{base_path}/faq).
-
-      > Jos tarvitset apua tai sinulla on ehdotus, voit esittää kysymyksesi alueella %{feedback_category} tai [ottaa yhteyttä ylläpitäjiin](%{base_path}/about).
   admin_quick_start_title: "Ylläpitäjän opas: aloittaminen"
   category:
     topic_prefix: "Tietoa alueesta %{category}"
@@ -1095,7 +1081,6 @@ fi:
       title: "Käyttäjien vierailut"
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
-      description: "Vierailleiden käyttäjien määrä."
     signups:
       title: "Rekisteröitymiset"
       xaxis: "Päivä"
@@ -1135,6 +1120,8 @@ fi:
         user_api: "Käyttäjä-API"
       yaxis: "Päivä"
       description: "API-pyynnöt tavallisille API-avaimille ja käyttäjän API-avaimille."
+    consolidated_page_views_browser_detection:
+      yaxis: "Päivä"
     dau_by_mau:
       title: "PAK/KAK"
       xaxis: "Päivä"
@@ -1294,6 +1281,10 @@ fi:
       xaxis: "Päivä"
       yaxis: "Anonyymien mobiilikäyttäjien sivukatselut"
       description: "Kuinka monta sivukatselua kirjautumattomilta mobiilikäyttäjiltä."
+    page_view_anon_browser_reqs:
+      xaxis: "Päivä"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Päivä"
     http_background_reqs:
       title: "Tausta"
       xaxis: "Päivä"
@@ -1332,7 +1323,6 @@ fi:
       title: "Käyttäjävierailut (mobiili)"
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
-      description: "Uniikkien mobiilikävijöiden määrä."
     web_crawlers:
       title: "Hakurobottikäyttäjäagentit"
       labels:
@@ -2867,21 +2857,9 @@ fi:
     bulk_invite_succeeded:
       title: "Massakutsun lähetys onnistui"
       subject_template: "Massakutsun käsittely onnistui"
-      text_body_template: |
-        Massakutsutiedostosi käsiteltiin, %{sent} kutsua lähetettiin, %{skipped} ohitettiin, %{warnings} varoitus(ta).
-
-        Tässä loki:
-
-        %{logs}
     bulk_invite_failed:
       title: "Massakutsun lähetys epäonnistui"
       subject_template: "Massakutsun käsittelyssä tapahtui virhe"
-      text_body_template: |
-        Massakutsutiedostosi käsiteltiin, %{sent} kutsua lähetettiin, %{skipped} ohitettiin, %{warnings} varoitus(ta) ja %{failed} virhe(ttä).
-
-        Tässä loki:
-
-        %{logs}
     user_added_to_group_as_owner:
       title: "Lisätty ryhmään omistajana"
       subject_template: "Sinut on lisätty ryhmän %{group_name} omistajaksi"
@@ -4455,9 +4433,6 @@ fi:
           chat_enabled:
             placeholder: "Ota chat käyttöön"
             extra_description: "Pidä yhteyttä jäseniisi reaaliajassa"
-          enable_sidebar:
-            placeholder: "Ota sivupalkki käyttöön"
-            extra_description: "Helppo pääsy suosikkitiloihisi"
       ready:
         title: "Sivustosi on valmis!"
         description: "Olet nyt tehnyt perusasioat yhteisösi määrittämiseksi. Nyt voit alkaa tutustumaan paikkoihin, kirjoittaa tervetuloketjun ja lähettää kutsuja!<br><br>Pidä hauskaa!"

@@ -74,25 +74,21 @@ class CurrentUserSerializer < BasicUserSerializer
              :new_new_view_enabled?,
              :use_experimental_topic_bulk_actions?,
              :use_admin_sidebar,
-             :can_view_raw_email
+             :can_view_raw_email,
+             :use_glimmer_topic_list?
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
 
   has_one :user_option, embed: :object, serializer: CurrentUserOptionSerializer
+  has_many :all_sidebar_sections,
+           embed: :object,
+           key: :sidebar_sections,
+           serializer: SidebarSectionSerializer
 
   def initialize(object, options = {})
     super
     options[:include_status] = true
-  end
-
-  def sidebar_sections
-    SidebarSection
-      .public_sections
-      .or(SidebarSection.where(user_id: object.id))
-      .includes(:sidebar_urls)
-      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
-      .map { |section| SidebarSectionSerializer.new(section, root: false) }
   end
 
   def groups
@@ -133,7 +129,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def use_admin_sidebar
-    object.admin? && object.in_any_groups?(SiteSetting.admin_sidebar_enabled_groups_map)
+    object.staff? && object.in_any_groups?(SiteSetting.admin_sidebar_enabled_groups_map)
   end
 
   def include_user_admin_sidebar?
@@ -318,5 +314,9 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_view_raw_email
     scope.user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
+  end
+
+  def use_glimmer_topic_list?
+    scope.user.in_any_groups?(SiteSetting.experimental_glimmer_topic_list_groups_map)
   end
 end

@@ -259,6 +259,7 @@ Discourse::Application.routes.draw do
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
         get "components/:id" => "themes#index"
+        get "components/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id/export" => "themes#export"
         get "themes/:id/schema/:setting_name" => "themes#schema"
         get "components/:id/schema/:setting_name" => "themes#schema"
@@ -1100,6 +1101,8 @@ Discourse::Application.routes.draw do
     delete "admin/groups/:id/members" => "groups#remove_member", :constraints => AdminConstraint.new
     put "admin/groups/:id/members" => "groups#add_members", :constraints => AdminConstraint.new
 
+    put "bookmarks/bulk"
+
     resources :posts, only: %i[show update create destroy] do
       delete "bookmark", to: "posts#destroy_bookmark"
       put "wiki"
@@ -1165,10 +1168,11 @@ Discourse::Application.routes.draw do
 
     get "/c", to: redirect(relative_url_root + "categories")
 
-    resources :categories, except: %i[show new edit]
+    resources :categories, only: %i[index create update destroy]
     post "categories/reorder" => "categories#reorder"
     get "categories/find" => "categories#find"
-    get "categories/search" => "categories#search"
+    post "categories/search" => "categories#search"
+    get "categories/:parent_category_id" => "categories#index"
 
     scope path: "category/:category_id" do
       post "/move" => "categories#move"
@@ -1210,6 +1214,9 @@ Discourse::Application.routes.draw do
           :constraints => {
             format: "html",
           }
+
+      get "/subcategories" => "categories#index"
+
       get "/" => "list#category_default", :as => "category_default"
     end
 

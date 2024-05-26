@@ -330,6 +330,8 @@ RSpec.describe SiteSettingExtension do
 
   describe "string setting with regex" do
     it "Supports custom validation errors" do
+      I18n.backend.store_translations(:en, { oops: "oops" })
+
       settings.setting(:test_str, "bob", regex: "hi", regex_error: "oops")
       settings.refresh!
 
@@ -904,6 +906,16 @@ RSpec.describe SiteSettingExtension do
     it "does not handle splitting secret list settings" do
       SiteSetting.discourse_connect_provider_secrets = "test|secret1\ntest2|secret2"
       expect(SiteSetting.respond_to?(:discourse_connect_provider_secrets_map)).to eq(false)
+    end
+
+    it "handles splitting emoji_list settings" do
+      SiteSetting.emoji_deny_list = "smile|frown"
+      expect(SiteSetting.emoji_deny_list_map).to eq(%w[smile frown])
+    end
+
+    it "handles splitting tag_list settings" do
+      SiteSetting.digest_suppress_tags = "blah|blah2"
+      expect(SiteSetting.digest_suppress_tags_map).to eq(%w[blah blah2])
     end
 
     it "handles null values for settings" do

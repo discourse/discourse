@@ -650,6 +650,7 @@ pt:
       topic_count_long: "Tópicos Criados"
       post_count: "Respostas"
       post_count_long: "Respostas Publicadas"
+      no_results_with_search: "Não foram encontrados resultados."
       days_visited: "Visitas"
       days_visited_long: "Dias Visitados"
       posts_read: "Ler"
@@ -1011,10 +1012,8 @@ pt:
         ignore_duration_time_frame_required: "Por favor selecione um intervalo de tempo"
         ignore_no_users: "Não tem utilizadores ignorados."
         ignore_option: "Ignorados"
-        ignore_option_title: "Não irá receber notificações relacionadas com este utilizador e todas as publicações deste serão escondidas."
         add_ignored_user: "Adicionar…"
         mute_option: "Silenciado"
-        mute_option_title: "Não irá receber quaisquer notificações relacionadas com este utilizador."
         normal_option: "Normal"
         normal_option_title: "Será notificado se este usuário lhe responder, citar ou mencionar."
       notification_schedule:
@@ -3105,8 +3104,6 @@ pt:
       pinned:
         title: "Fixado"
         help: "Este tópico foi fixado por si; será mostrado no topo da sua categoria"
-      unlisted:
-        help: "Este tópico não está listado; não será apresentado na lista de tópicos e poderá ser acedido apenas através de uma ligação direta"
       personal_message:
         title: "Este tópico é uma mensagem pessoal"
         help: "Este tópico é uma mensagem pessoal"
@@ -4379,6 +4376,7 @@ pt:
         form:
           link_placeholder: "https://example.com"
           add: "Adicionar"
+          html_label: "HTML"
         test:
           button_label: "Testar"
           description: "Insira o texto abaixo para verificar as correspondências com palavras vigiadas"

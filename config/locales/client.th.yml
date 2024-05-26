@@ -466,6 +466,7 @@ th:
       topic_count_long: "กระทู้ถูกสร้าง"
       post_count: "ตอบ"
       post_count_long: "คำตอบถูกโพสต์แล้ว"
+      no_results_with_search: "ไม่พบผลการค้นหา"
       days_visited: "เยี่ยมชม"
       days_visited_long: "วันที่เยี่ยมชม"
       posts_read: "อ่าน"
@@ -710,9 +711,7 @@ th:
         ignore_duration_time_frame_required: "กรุณาเลือกระยะเวลา"
         ignore_no_users: "คุณไม่มีผู้ใช้ที่ถูกละเว้น"
         ignore_option: "ละเว้นแล้ว"
-        ignore_option_title: "คุณจะไม่ได้รับการแจ้งเตือนที่เกี่ยวข้องกับผู้ใช้รายนี้ และกระทู้และคำตอบทั้งหมดจะถูกซ่อนไว้"
         mute_option: "ปิด"
-        mute_option_title: "คุณจะไม่ได้รับการแจ้งเตือนใดๆที่เกี่ยวกับผู้ใช้นี้"
         normal_option: "ปกติ"
         normal_option_title: "คุณจะได้รับการแจ้งเตือนเมื่อผู้ใช้นี้ตอบคุณ อ้างอิงถึงคุณ หรือกล่าวถึงคุณ"
       notification_schedule:
@@ -2930,6 +2929,7 @@ th:
           exists: "มีอยู่แล้ว"
           upload: "เพิ่มจากไฟล์"
           upload_successful: "อัปโหลดสำเร็จแล้ว เพิ่มคำเรียบร้อย"
+          html_label: "HTML"
         test:
           no_matches: "ไม่พบผลลัพธ์ที่ตรงกัน"
       form_templates:

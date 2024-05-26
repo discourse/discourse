@@ -1,6 +1,8 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import runAfterFramePaint from "discourse/lib/after-frame-paint";
+import { isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -95,6 +97,14 @@ export default Controller.extend({
       return false;
     }
 
+    // Always show sidebar for admin if user can see the admin sidbar
+    if (
+      this.router.currentRouteName.startsWith("admin.") &&
+      this.currentUser?.use_admin_sidebar
+    ) {
+      return true;
+    }
+
     return this.siteSettings.navigation_menu === "sidebar";
   },
 
@@ -122,5 +132,25 @@ export default Controller.extend({
         this.keyValueStore.setItem(HIDE_SIDEBAR_KEY, "true");
       }
     }
+  },
+
+  @action
+  trackDiscoursePainted() {
+    if (isTesting()) {
+      return;
+    }
+    runAfterFramePaint(() => {
+      performance.mark("discourse-paint");
+      try {
+        performance.measure(
+          "discourse-init-to-paint",
+          "discourse-init",
+          "discourse-paint"
+        );
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn("Failed to measure init-to-paint", e);
+      }
+    });
   },
 });

@@ -19,6 +19,7 @@ require "rbtrace" if RUBY_ENGINE == "ruby"
 require "pry"
 require "pry-byebug"
 require "pry-rails"
+require "pry-stack_explorer"
 require "fabrication"
 require "mocha/api"
 require "certified"
@@ -203,6 +204,7 @@ RSpec.configure do |config|
   config.include FastImageHelpers
   config.include WithServiceHelper
   config.include ServiceMatchers
+  config.include I18nHelpers
 
   config.mock_framework = :mocha
   config.order = "random"

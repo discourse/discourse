@@ -294,6 +294,7 @@ be:
       topic_count: "тэмаў"
       topic_count_long: "тэмаў створана"
       post_count: "адказы"
+      no_results_with_search: "нічога не знойдзена."
       days_visited: "наведванне"
       days_visited_long: "дзён наведанае"
       posts_read: "прачытаныя"

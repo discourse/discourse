@@ -28,6 +28,11 @@ pl_PL:
       fields:
         key_value:
           label_without_count: "Skonfiguruj"
+          label_with_count:
+            one: "Edytuj konfigurację (%{count})"
+            few: "Edytuj konfigurację (%{count})"
+            many: "Edytuj konfigurację (%{count})"
+            other: "Edytuj konfigurację (%{count})"
         user:
           label: Użytkownik
         pm:
@@ -125,6 +130,14 @@ pl_PL:
               label: Grupa
           created: Utworzono
           edited: Edytowany
+        user_updated:
+          fields:
+            user_profile:
+              label: Pola profilu użytkownika
+            once_per_user:
+              label: Raz na użytkownika
+            new_users_only:
+              label: Tylko nowi użytkownicy
         category_created_edited:
           fields:
             restricted_category:
@@ -137,6 +150,8 @@ pl_PL:
               label: Grupa
             ignore_staff:
               label: Ignoruj personel
+            ignore_group_members:
+              label: Ignoruj członków grupy
             valid_trust_levels:
               label: Prawidłowe poziomy zaufania
         after_post_cook:
@@ -156,20 +171,38 @@ pl_PL:
           fields:
             once:
               label: Raz
+              description: Odpowiedzi tylko raz na temat
             answering_user:
               label: Odpowiada użytkownikowi
+              description: Domyślnie użytkownik systemowy
         auto_tag_topic:
           fields:
             tags:
               label: Tagi
+              description: Lista tagów do dodania do tematu.
         post:
           fields:
             creator:
               label: Twórca
+              post_creator_context: Twórca postu
+              updated_user_context: Zaktualizowany użytkownik
             topic:
               label: ID tematu
             post:
               label: Treść postu
+        topic:
+          fields:
+            creator:
+              label: Twórca
+              updated_user_context: Zaktualizowany użytkownik
+            body:
+              label: Treść tematu
+            title:
+              label: Tytuł tematu
+            category:
+              label: Kategoria tematu
+            tags:
+              label: Tagi tematu
         group_category_notification_default:
           fields:
             group:
@@ -193,6 +226,7 @@ pl_PL:
               label: Grupa
             badge:
               label: Odznaka
+              description: Wybierz odznakę
         suspend_user_by_email:
           fields:
             reason:

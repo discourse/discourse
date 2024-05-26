@@ -14,8 +14,7 @@ class UserOption < ActiveRecord::Base
   }
 
   self.ignored_columns = [
-    "disable_jump_reply", # Remove once 20210706091905 is promoted from post_deploy to regular migration
-    "sidebar_list_destination", # TODO(osama): Remove in January 2024
+    "sidebar_list_destination", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   self.primary_key = :user_id
@@ -86,14 +85,8 @@ class UserOption < ActiveRecord::Base
 
     self.like_notification_frequency = SiteSetting.default_other_like_notification_frequency
 
-    if SiteSetting.default_email_digest_frequency.to_i <= 0
-      self.email_digests = false
-    else
-      self.email_digests = true
-    end
-
-    self.digest_after_minutes ||= SiteSetting.default_email_digest_frequency.to_i
-
+    self.email_digests = SiteSetting.default_email_digest_frequency.to_i > 0
+    self.digest_after_minutes = SiteSetting.default_email_digest_frequency.to_i
     self.include_tl0_in_digests = SiteSetting.default_include_tl0_in_digests
 
     self.text_size = SiteSetting.default_text_size
@@ -108,8 +101,7 @@ class UserOption < ActiveRecord::Base
   end
 
   def mailing_list_mode
-    return false if SiteSetting.disable_mailing_list_mode
-    super
+    SiteSetting.disable_mailing_list_mode ? false : super
   end
 
   def redirected_to_top_yet?
@@ -291,6 +283,7 @@ end
 #  watched_precedence_over_muted        :boolean
 #  chat_separate_sidebar_mode           :integer          default(0), not null
 #  topics_unread_when_closed            :boolean          default(TRUE), not null
+#  show_thread_title_prompts            :boolean          default(TRUE), not null
 #
 # Indexes
 #

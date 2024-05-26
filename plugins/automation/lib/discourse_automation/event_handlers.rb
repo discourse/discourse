@@ -75,7 +75,9 @@ module DiscourseAutomation
         .find_each do |automation|
           once_per_user = automation.trigger_field("once_per_user")["value"]
           if once_per_user &&
-               UserCustomField.exists?(name: DiscourseAutomation::CUSTOM_FIELD, user_id: user.id)
+               user.custom_fields[
+                 DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD
+               ].presence&.include?(automation.id)
             next
           end
 
@@ -135,7 +137,8 @@ module DiscourseAutomation
             user.save_custom_fields
           end
 
-          automation.attach_custom_field(user)
+          automation.add_id_to_custom_field(user, DiscourseAutomation::AUTOMATION_IDS_CUSTOM_FIELD)
+
           automation.trigger!("kind" => name, "user" => user, "user_data" => user_data)
         end
     end

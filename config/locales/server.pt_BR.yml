@@ -646,20 +646,6 @@ pt_BR:
   staff_category_description: "Categoria particular para discussões da equipe. Tópicos só são visíveis para administradores(as) e moderadores(as)."
   discourse_welcome_topic:
     title: "Boas-vindas ao %{site_title}! :wave:"
-    body: |
-      Estamos felizes que você se juntou à nossa comunidade.
-
-      %{site_info_quote}
-
-      Confira alguma coisas que você pode fazer para começar:
-
-      :speaking_head: **Apresente-se** adicionando sua imagem e informações sobre si e seus interesses ao [seu perfil](%{base_path}/my/preferences/account). O que você gostaria que perguntassem a você?
-
-      :open_book: **Conheça a comunidade** [navegando pelas discussões](%{base_path}/top) que já estão acontecendo. Quando você achar uma postagem interessante, informativa ou divertida, use o :heart: para mostrar que gostou ou apoia!
-
-      :handshake: **Contribua** comentando, compartilhando seu próprio ponto de vista, fazendo perguntas ou comentando na discussão. Antes de responder ou começar tópicos novos, consulte as [Diretrizes da Comunidade](%{base_path}/faq).
-
-      > Se precisar de ajuda ou tiver alguma sugestão, pergunte em %{feedback_category} ou [fale com a administração](%{base_path}/about) quando quiser.
   admin_quick_start_title: "Guia de Administração: primeiros passos"
   category:
     topic_prefix: "Sobre a categoria %{category} "
@@ -1095,7 +1081,6 @@ pt_BR:
       title: "Acessos do(a) usuário(a)"
       xaxis: "Dia"
       yaxis: "Quantidade de acessos"
-      description: "Quantidade de acessos de todos(as) os(as) usuários(as)."
     signups:
       title: "Cadastros"
       xaxis: "Dia"
@@ -1135,6 +1120,8 @@ pt_BR:
         user_api: "API de usuário(a)"
       yaxis: "Dia"
       description: "Pedidos de API para chaves de API regulares e chaves de API do usuário."
+    consolidated_page_views_browser_detection:
+      yaxis: "Dia"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dia"
@@ -1294,6 +1281,10 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Visualizações de página anônimas em dispositivos móveis"
       description: "Quantidade de novas visualizações de páginas de visitantes em um dispositivo móvel, que não entraram com a conta."
+    page_view_anon_browser_reqs:
+      xaxis: "Dia"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dia"
     http_background_reqs:
       title: "Plano de fundo"
       xaxis: "Dia"
@@ -1332,7 +1323,6 @@ pt_BR:
       title: "Acessos de usuários(as) (móveis)"
       xaxis: "Dia"
       yaxis: "Quantidade de acessos"
-      description: "Quantidade de usuários(as) exclusivos(as) que acessaram com um dispositivo móvel."
     web_crawlers:
       title: "Agentes de usuários(as) de rastreadores da web"
       labels:
@@ -2868,23 +2858,9 @@ pt_BR:
     bulk_invite_succeeded:
       title: "Convites em massa realizados"
       subject_template: "Seus convites foram enviados com êxito."
-      text_body_template: |
-        Seu arquivo de convite de usuário em massa foi processado, %{sent} convites enviados, %{skipped} ignorado(s) e %{warnings} aviso(s).
-
-        ``` texto
-        %{logs}
-        ```
     bulk_invite_failed:
       title: "Os convites em massa falharam"
       subject_template: "Seus convites em massa não foram enviados, entre em contato com os(as) moderadores(as)."
-      text_body_template: |
-        Seu arquivo de convite de usuário em massa foi processado, %{sent} convites enviados, %{skipped} ignorado(s), %{warnings} aviso(s) e %{failed} erro(s).
-
-        Aqui está o log:
-
-        ``` texto
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "Adicionado ao grupo como proprietário(a)"
       subject_template: "Você foi adicionado(a) como um(a) dos(as) proprietários(as) do grupo %{group_name}"
@@ -4450,9 +4426,6 @@ pt_BR:
           chat_enabled:
             placeholder: "Ativar chat"
             extra_description: "Interaja com seus membros em tempo real"
-          enable_sidebar:
-            placeholder: "Ativar barra lateral"
-            extra_description: "Acesse seus espaços favoritos com facilidade"
       ready:
         title: "Seu site está pronto!"
         description: "É isso! Você fez o básico para configurar sua comunidade. Agora você pode entrar, dar uma olhada, escrever um tópico de boas-vindas e enviar convites!<br><br>Divirta-se!"

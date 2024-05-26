@@ -166,6 +166,7 @@ module PageObjects
           end
 
           expect(page).to have_css(".d-modal:not(.is-animating)")
+          expect(page).to have_css(".d-modal .sidebar-tags-form")
 
           PageObjects::Modals::SidebarEditTags.new
         end

@@ -524,6 +524,8 @@ bg:
       xaxis:
         api: "API"
       yaxis: "Ден"
+    consolidated_page_views_browser_detection:
+      yaxis: "Ден"
     dau_by_mau:
       xaxis: "Ден"
       description: "Броят на членовете, които са влезли в системата през последния ден, разделен на броя на членовете, които са влезли в системата през последния месец - дава %, който показва \"привързаността\" на общността. Стремете се към >20%."
@@ -634,6 +636,10 @@ bg:
     page_view_logged_in_mobile_reqs:
       xaxis: "Ден"
     page_view_anon_mobile_reqs:
+      xaxis: "Ден"
+    page_view_anon_browser_reqs:
+      xaxis: "Ден"
+    page_view_logged_in_browser_reqs:
       xaxis: "Ден"
     http_background_reqs:
       title: "Фон"
@@ -1596,8 +1602,6 @@ bg:
         fields:
           login_required:
             placeholder: "Затворени"
-          enable_sidebar:
-            placeholder: "Активиране на страничната лента"
       styling:
         fields:
           styling_preview:

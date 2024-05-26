@@ -512,7 +512,7 @@ login:
     regex: "^[a-z0-9]+$"
   linkedin_oidc_client_secret:
     default: ""
-    regex: "^[a-zA-Z0-9]+$"
+    regex: "^[a-zA-Z0-9_=\\.]+$"
     secret: true
   auth_skip_create_confirm:
     default: false
@@ -1958,7 +1958,7 @@ security:
     list_type: compact
   crawler_user_agents:
     hidden: true
-    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot"
+    default: "rss|bot|spider|crawler|facebook|archive|wayback|ping|monitor|lighthouse|google-inspectiontool|gptbot|claudebot|anthropic-ai|brightbot|googleother"
     type: list
     list_type: compact
   browser_update_user_agents:
@@ -2352,6 +2352,13 @@ developer:
     default: ""
     allow_any: false
     refresh: true
+  experimental_glimmer_topic_list_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
   enable_experimental_lightbox:
     default: false
     client: true
@@ -2375,7 +2382,7 @@ developer:
   admin_sidebar_enabled_groups:
     type: group_list
     list_type: compact
-    default: "1"
+    default: "1|2"
     allow_any: false
     refresh: true
   lazy_load_categories_groups:
@@ -2854,7 +2861,7 @@ uncategorized:
   share_anonymized_statistics: true
 
   enable_powered_by_discourse:
-    default: false
+    default: true
     client: true
 
   auto_handle_queued_age:

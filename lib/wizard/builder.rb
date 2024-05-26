@@ -89,19 +89,11 @@ class Wizard
           )
         end
 
-        step.add_field(
-          id: "enable_sidebar",
-          type: "checkbox",
-          icon: "bars",
-          value: SiteSetting.navigation_menu == NavigationMenuSiteSetting::SIDEBAR,
-        )
-
         step.on_update do |updater|
           updater.update_setting(:login_required, updater.fields[:login_required])
           updater.update_setting(:invite_only, updater.fields[:invite_only])
           updater.update_setting(:must_approve_users, updater.fields[:must_approve_users])
           updater.update_setting(:chat_enabled, updater.fields[:chat_enabled]) if defined?(::Chat)
-          updater.update_setting(:navigation_menu, updater.fields[:enable_sidebar])
         end
       end
 

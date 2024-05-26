@@ -376,6 +376,10 @@ ro:
           attributes:
             execute_at:
               in_the_past: "trebuie să fie în viitor."
+        watched_word:
+          attributes:
+            base:
+              invalid_html: "HTML poate fi folosit doar pentru înlocuire"
       <<: *errors
   uncategorized_category_name: "Necategorisite"
   general_category_name: "General"
@@ -655,6 +659,7 @@ ro:
       title: "Vizite ale utilizatorilor"
       xaxis: "Zi"
       yaxis: "Număr de vizite"
+      description: "Numărul de vizite ale utilizatorilor conectați."
     signups:
       xaxis: "Zi"
     new_contributors:
@@ -671,6 +676,8 @@ ro:
       xaxis:
         api: "API"
         user_api: "API Utilizator"
+      yaxis: "Zi"
+    consolidated_page_views_browser_detection:
       yaxis: "Zi"
     dau_by_mau:
       xaxis: "Zi"
@@ -793,6 +800,10 @@ ro:
       title: "Vizualizări de pagină anonime"
       xaxis: "Zi"
       yaxis: "Vizualizări de pagină anonime de pe mobil"
+    page_view_anon_browser_reqs:
+      xaxis: "Zi"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Zi"
     http_background_reqs:
       title: "Fundal"
       xaxis: "Zi"
@@ -828,6 +839,7 @@ ro:
     mobile_visits:
       xaxis: "Zi"
       yaxis: "Număr de vizite"
+      description: "Numărul de utilizatori unici conectați care au vizitat site-ul cu ajutorul unui dispozitiv mobil."
     web_crawlers:
       labels:
         page_views: "Vizualizări"

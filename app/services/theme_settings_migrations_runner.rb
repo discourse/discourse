@@ -13,7 +13,13 @@ class ThemeSettingsMigrationsRunner
     # @return [Integer|nil] The id of the category with the given name or nil if a category does not exist for the given
     #   name.
     def get_category_id_by_name(category_name)
-      Category.where(name_lower: category_name).pick(:id)
+      Category.where("name_lower = LOWER(?)", category_name).pick(:id)
+    end
+
+    # @param [String] URL string to check if it is a valid absolute URL, path or anchor.
+    # @return [Boolean] True if the URL is a valid URL or path, false otherwise.
+    def is_valid_url(url)
+      UrlHelper.is_valid_url?(url)
     end
   end
 
@@ -47,7 +53,7 @@ class ThemeSettingsMigrationsRunner
     }
   JS
 
-  private_constant :Migration, :MIGRATION_ENTRY_POINT_JS
+  private_constant :MIGRATION_ENTRY_POINT_JS
 
   def self.loader_js_lib_content
     @loader_js_lib_content ||=
@@ -61,8 +67,8 @@ class ThemeSettingsMigrationsRunner
     @memory = memory
   end
 
-  def run
-    fields = lookup_pending_migrations_fields
+  def run(fields: nil, raise_error_on_out_of_sequence: true)
+    fields ||= lookup_pending_migrations_fields
 
     count = fields.count
     return [] if count == 0
@@ -74,12 +80,13 @@ class ThemeSettingsMigrationsRunner
 
     current_migration_version =
       @theme.theme_settings_migrations.order(version: :desc).pick(:version)
+
     current_migration_version ||= -Float::INFINITY
 
     current_settings = lookup_overriden_settings
 
     migrations.map do |migration|
-      if migration.version <= current_migration_version
+      if migration.version <= current_migration_version && raise_error_on_out_of_sequence
         raise_error(
           "themes.import_error.migrations.out_of_sequence",
           name: migration.original_name,
@@ -88,6 +95,7 @@ class ThemeSettingsMigrationsRunner
       end
 
       migrated_settings = execute(migration, current_settings)
+
       results = {
         version: migration.version,
         name: migration.name,
@@ -151,6 +159,7 @@ class ThemeSettingsMigrationsRunner
       .migration_fields
       .left_joins(:theme_settings_migration)
       .where(theme_settings_migration: { id: nil })
+      .order(created_at: :asc)
   end
 
   def convert_fields_to_migrations(fields)

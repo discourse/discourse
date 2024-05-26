@@ -26,20 +26,48 @@ RSpec.describe Chat::MessagesQuery do
   end
 
   fab!(:message_1) do
-    message = Fabricate(:chat_message, chat_channel: channel)
+    message = Fabricate(:chat_message, chat_channel: channel, use_service: true)
     message.update!(created_at: 2.days.ago)
     message
   end
   fab!(:message_2) do
-    message = Fabricate(:chat_message, chat_channel: channel)
+    message = Fabricate(:chat_message, chat_channel: channel, use_service: true)
     message.update!(created_at: 6.hours.ago)
     message
   end
-  fab!(:message_3) { Fabricate(:chat_message, chat_channel: channel) }
+  fab!(:message_3) { Fabricate(:chat_message, chat_channel: channel, use_service: true) }
 
   context "when target_message_id provided" do
     let(:target_message) { message_2 }
     let(:target_message_id) { target_message.id }
+
+    context "when include_target_message_id is true" do
+      context "when querying future" do
+        it "includes the target message in the query" do
+          options[:direction] = "future"
+          options[:include_target_message_id] = true
+
+          expect(query).to eq(
+            messages: [target_message, message_3],
+            can_load_more_past: nil,
+            can_load_more_future: false,
+          )
+        end
+      end
+
+      context "when querying past" do
+        it "includes the target message in the query" do
+          options[:direction] = "past"
+          options[:include_target_message_id] = true
+
+          expect(query).to eq(
+            messages: [message_1, target_message],
+            can_load_more_past: false,
+            can_load_more_future: nil,
+          )
+        end
+      end
+    end
 
     it "queries messages in the channel and finds the past and future messages" do
       expect(query).to eq(

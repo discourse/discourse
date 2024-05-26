@@ -701,6 +701,7 @@ de:
       no_results:
         body: "Hier wird eine Liste der Community-Mitglieder und ihrer Aktivitäten angezeigt. Im Moment ist die Liste noch leer, weil deine Community noch ganz neu ist!"
         extra_body: "Admins und Moderatoren können Benutzer in der <a href='%{basePath}/admin/users/'>Benutzerverwaltung</a> sehen und verwalten."
+      no_results_with_search: "Es wurden keine Ergebnisse gefunden."
       days_visited: "Aufrufe"
       days_visited_long: "Besuchstage"
       posts_read: "Gelesen"
@@ -1079,10 +1080,10 @@ de:
         ignore_duration_time_frame_required: "Bitte wähle einen Zeitrahmen aus"
         ignore_no_users: "Du hast keine Benutzer ignoriert."
         ignore_option: "Ignoriert"
-        ignore_option_title: "Du wirst keine Benachrichtigungen zu dieser Person erhalten und ihre Themen und Antworten werden ausgeblendet."
+        ignore_option_title: "Du wirst keine Benachrichtigungen zu dieser Person erhalten und ihre Beiträge werden ausgeblendet."
         add_ignored_user: "Hinzufügen …"
         mute_option: "Stummgeschaltet"
-        mute_option_title: "Du wirst keine Benachrichtigungen zu dieser Person bekommen."
+        mute_option_title: "Du wirst keine Benachrichtigungen, persönlichen Nachrichten oder Chat-Direktnachrichten von diesem Nutzer erhalten."
         normal_option: "Normal"
         normal_option_title: "Du wirst benachrichtigt, wenn diese Person dir antwortet, dich zitiert oder erwähnt."
       notification_schedule:
@@ -2935,6 +2936,7 @@ de:
       suggest_create_topic: Bereit, <a href>eine neue Unterhaltung zu beginnen?</a>
       jump_reply: "Zum ursprünglichen Ort des Beitrags springen"
       jump_reply_aria: "Zum Beitrag von @%{username} an dessen ursprünglichen Ort springen"
+      jump_reply_button: "Zum Beitrag springen"
       deleted: "Das Thema wurde gelöscht"
       slow_mode_update:
         title: "Langsamer Modus"
@@ -3768,10 +3770,17 @@ de:
         title: "Angeheftet"
         help: "Dieses Thema ist für dich angeheftet; es wird immer am Anfang seiner Kategorie auftauchen"
       unlisted:
-        help: "Dieses Thema ist unsichtbar. Es wird in keiner Themenliste angezeigt und kann nur mit einem direkten Link betrachtet werden."
+        help: "Dieses Thema ist unsichtbar. Es wird in keiner Themenliste angezeigt und kann nur mit einem direkten Link betrachtet werden. %{unlistedReason}"
       personal_message:
         title: "Dieses Thema ist eine persönliche Nachricht"
         help: "Dieses Thema ist eine persönliche Nachricht"
+      visibility_reasons:
+        op_flag_threshold_reached: "Dieses Thema wurde automatisch unsichtbar gemacht, weil es die Meldungsschwelle erreicht hat"
+        op_unhidden: "Dieses Thema wurde vom Verfasser wieder sichtbar gemacht"
+        embedded_topic: "Dieses Thema wurde wieder sichtbar gemacht, weil es ein eingebettetes Thema ist"
+        manually_unlisted: "Dieses Thema wurde manuell von einem Administrator oder Moderator unsichtbar gemacht"
+        manually_relisted: "Dieses Thema wurde manuell von einem Administrator oder Moderator wieder sichtbar gemacht"
+        bulk_action: "Die Sichtbarkeit dieses Themas wurde aufgrund einer Massenoperation eines Benutzers geändert"
     posts: "Beiträge"
     pending_posts:
       label: "Ausstehend"
@@ -4404,7 +4413,7 @@ de:
       clear_filter: "Filter löschen"
       no_results:
         title: "Keine Ergebnisse"
-        description: "Wir konnten nichts finden, das zu '%{filter}' passt.<br><br>Wolltest du die <a class=\"sidebar-additional-filter-settings\" href=\"%{settings_filter_url}\">Seiteneinstellungen</a> oder die <a class=\"sidebar-additional-filter-users\" href=\"%{user_list_filter_url}\">Benutzerliste</a> durchsuchen?"
+        description: 'Wir konnten nichts finden, das zu ''%{filter}'' passt.<br><br>Wolltest du die <a class="sidebar-additional-filter-settings" href="%{settings_filter_url}">Seiteneinstellungen</a> oder die <a class="sidebar-additional-filter-users" href="%{user_list_filter_url}">Benutzerliste</a> durchsuchen?'
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -5650,6 +5659,9 @@ de:
             update_public_sidebar_section: "öffentlichen Seitenleistenabschnitt aktualisieren"
             destroy_public_sidebar_section: "öffentlichen Seitenleistenabschnitt zerstören"
             reset_bounce_score: "Bounce-Score zurücksetzen"
+            create_watched_word_group: "Beobachtete Wortgruppe erstellen"
+            update_watched_word_group: "Beobachtete Wortgruppe aktualisieren"
+            delete_watched_word_group: "Beobachtete Wortgruppe löschen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -5698,6 +5710,7 @@ de:
           one: "zeige %{count} Wort"
           other: "zeige %{count} Wörter"
         case_sensitive: "(Groß-/Kleinschreibung beachten)"
+        html: "(html)"
         download: Herunterladen
         clear_all: Alle löschen
         clear_all_confirm: "Bist du sicher, dass du alle beobachteten Wörter für die Aktion %{action} löschen möchtest?"
@@ -5722,9 +5735,9 @@ de:
           silence: "Neue Konten stummschalten, wenn ihr allererster Beitrag eines dieser Wörter enthält. Der Beitrag wird automatisch ausgeblendet, bis Team-Mitglieder ihn genehmigen."
           link: "Wörter in Beiträgen durch Links ersetzen."
         form:
-          label: "Hat Wort oder Wortgruppe"
-          placeholder: "Wort oder Ausdruck eingeben (* ist ein Platzhalter)"
-          placeholder_regexp: "regulärer Ausdruck"
+          label: "Hat Wörter oder Wortgruppen"
+          placeholder: "Wörter oder Wortgruppen (* ist ein Platzhalter)"
+          placeholder_regexp: "reguläre Ausdrücke"
           replace_label: "Ersatz"
           replace_placeholder: "Beispiel"
           tag_label: "Schlagwort"
@@ -5737,6 +5750,9 @@ de:
           upload_successful: "Hochladen erfolgreich. Wörter wurden hinzugefügt."
           case_sensitivity_label: "Groß- und Kleinschreibung wird unterschieden"
           case_sensitivity_description: "Nur Wörter mit passender Groß- und Kleinschreibung"
+          html_label: "HTML"
+          html_description: "Gibt HTML im Ersatz aus"
+          words_or_phrases: "Wörter oder Wortgruppen"
         test:
           button_label: "Test"
           modal_title: "%{action}: Beobachtete Wörter testen"
@@ -6370,6 +6386,8 @@ de:
         allowed_paths: "Pfad-Positivliste"
         edit: "bearbeiten"
         category: "In Kategorie posten"
+        tags: "Schlagwörter des Themas"
+        post_author: "Verfasser des Beitrags – Standardmäßig %{author}"
         add_host: "Host hinzufügen"
         settings: "Einbettungseinstellungen"
         crawling_settings: "Crawler-Einstellungen"

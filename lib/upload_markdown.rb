@@ -7,16 +7,17 @@ class UploadMarkdown
 
   def to_markdown(display_name: nil)
     if FileHelper.is_supported_image?(@upload.original_filename)
-      image_markdown
+      image_markdown(display_name: display_name)
     elsif FileHelper.is_supported_playable_media?(@upload.original_filename)
-      playable_media_markdown
+      playable_media_markdown(display_name: display_name)
     else
       attachment_markdown(display_name: display_name)
     end
   end
 
-  def image_markdown
-    "![#{@upload.original_filename}|#{@upload.width}x#{@upload.height}](#{@upload.short_url})"
+  def image_markdown(display_name: nil)
+    display_name ||= @upload.original_filename
+    "![#{display_name}|#{@upload.width}x#{@upload.height}](#{@upload.short_url})"
   end
 
   def attachment_markdown(display_name: nil, with_filesize: true)
@@ -26,7 +27,7 @@ class UploadMarkdown
     "[#{display_name}|attachment](#{@upload.short_url})#{human_filesize}"
   end
 
-  def playable_media_markdown
+  def playable_media_markdown(display_name: nil)
     type =
       if FileHelper.is_supported_audio?(@upload.original_filename)
         "audio"
@@ -34,6 +35,7 @@ class UploadMarkdown
         "video"
       end
     return attachment_markdown if !type
-    "![#{@upload.original_filename}|#{type}](#{@upload.short_url})"
+    display_name ||= @upload.original_filename
+    "![#{display_name}|#{type}](#{@upload.short_url})"
   end
 end

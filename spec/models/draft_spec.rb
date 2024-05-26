@@ -133,6 +133,7 @@ RSpec.describe Draft do
     key = Draft::NEW_TOPIC
 
     Draft.set(user, key, 0, "draft")
+
     Draft.cleanup!
     expect(Draft.count).to eq 1
     expect(user.user_stat.draft_count).to eq(1)
@@ -142,10 +143,16 @@ RSpec.describe Draft do
     Draft.set(user, key, seq, "draft")
     DraftSequence.update_all("sequence = sequence + 1")
 
+    draft = Draft.first
+    draft.upload_references << UploadReference.create!(target: draft, upload: Fabricate(:upload))
+
+    expect(UploadReference.count).to eq(1)
+
     Draft.cleanup!
 
     expect(Draft.count).to eq 0
     expect(user.reload.user_stat.draft_count).to eq(0)
+    expect(UploadReference.count).to eq(0)
 
     Draft.set(Fabricate(:user), Draft::NEW_TOPIC, 0, "draft")
 

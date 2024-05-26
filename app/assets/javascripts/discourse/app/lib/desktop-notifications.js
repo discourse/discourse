@@ -11,11 +11,8 @@ let primaryTab = false;
 let liveEnabled = false;
 let havePermission = null;
 let mbClientId = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
-let lastAction = -1;
 
 const focusTrackerKey = "focus-tracker";
-const idleThresholdTime = 1000 * 10; // 10 seconds
-
 const context = "discourse_desktop_notifications_";
 const keyValueStore = new KeyValueStore(context);
 
@@ -28,7 +25,7 @@ export function clearDesktopNotificationHandlers() {
 }
 
 // Called from an initializer
-function init(messageBus, appEvents) {
+function init(messageBus) {
   liveEnabled = false;
   mbClientId = messageBus.clientId;
 
@@ -72,7 +69,7 @@ function init(messageBus, appEvents) {
   liveEnabled = true;
   try {
     // Preliminary checks passed, continue with setup
-    setupNotifications(appEvents);
+    setupNotifications();
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
@@ -101,7 +98,7 @@ function confirmNotification(siteSettings) {
 }
 
 // This function is only called if permission was granted
-function setupNotifications(appEvents) {
+function setupNotifications() {
   window.addEventListener("storage", function (e) {
     // note: This event only fires when other tabs setItem()
     const key = e.key;
@@ -128,37 +125,32 @@ function setupNotifications(appEvents) {
     primaryTab = true;
     keyValueStore.setItem(focusTrackerKey, mbClientId);
   }
+}
 
-  if (document) {
-    document.addEventListener("scroll", resetIdle);
+function canUserReceiveNotifications(user) {
+  if (!primaryTab) {
+    return false;
   }
 
-  appEvents.on("page:changed", resetIdle);
-}
+  if (user.isInDoNotDisturb()) {
+    return false;
+  }
 
-export function resetIdle() {
-  lastAction = Date.now();
-}
-function isIdle() {
-  return lastAction + idleThresholdTime < Date.now();
+  if (keyValueStore.getItem("notifications-disabled")) {
+    return false;
+  }
+
+  return true;
 }
 
 // Call-in point from message bus
 async function onNotification(data, siteSettings, user, appEvents) {
+  if (!canUserReceiveNotifications(user)) {
+    return false;
+  }
+
   if (!liveEnabled) {
-    return;
-  }
-  if (!primaryTab) {
-    return;
-  }
-  if (!isIdle()) {
-    return;
-  }
-  if (user.isInDoNotDisturb()) {
-    return;
-  }
-  if (keyValueStore.getItem("notifications-disabled")) {
-    return;
+    return false;
   }
 
   const notificationTitle =
@@ -244,4 +236,5 @@ export {
   alertChannel,
   confirmNotification,
   disable,
+  canUserReceiveNotifications,
 };

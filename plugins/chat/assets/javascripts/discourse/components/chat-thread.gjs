@@ -8,10 +8,10 @@ import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { resetIdle } from "discourse/lib/desktop-notifications";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
+import ChatThreadTitlePrompt from "discourse/plugins/chat/discourse/components/chat-thread-title-prompt";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 import ChatChannelThreadSubscriptionManager from "discourse/plugins/chat/discourse/lib/chat-channel-thread-subscription-manager";
 import {
@@ -59,11 +59,6 @@ export default class ChatThread extends Component {
   @tracked uploadDropZone;
 
   scroller = null;
-
-  @action
-  resetIdle() {
-    resetIdle();
-  }
 
   @cached
   get messagesLoader() {
@@ -145,7 +140,6 @@ export default class ChatThread extends Component {
         this.messagesLoader.canLoadMoreFuture) ||
       (state.distanceToBottom.pixels > 250 && !state.atBottom);
     this.isScrolling = false;
-    this.resetIdle();
     this.atBottom = state.atBottom;
     this.args.setFullTitle?.(state.atTop);
 
@@ -222,11 +216,12 @@ export default class ChatThread extends Component {
 
     this.messagesManager.clear();
 
-    findArgs.targetMessageId ??=
+    findArgs.target_message_id ??=
+      findArgs.targetMessageId ||
       this.args.targetMessageId ||
       this.args.thread.currentUserMembership?.lastReadMessageId;
 
-    if (!findArgs.targetMessageId) {
+    if (!findArgs.target_message_id) {
       findArgs.direction = FUTURE;
     }
 
@@ -364,8 +359,6 @@ export default class ChatThread extends Component {
 
   @action
   async onSendMessage(message) {
-    resetIdle();
-
     await message.cook();
     if (message.editing) {
       await this.#sendEditMessage(message);
@@ -571,17 +564,22 @@ export default class ChatThread extends Component {
       />
 
       {{#if this.chatThreadPane.selectingMessages}}
-        <ChatSelectionManager @pane={{this.chatThreadPane}} />
+        <ChatSelectionManager
+          @pane={{this.chatThreadPane}}
+          @messagesManager={{this.messagesManager}}
+        />
       {{else}}
         <ChatComposerThread
           @channel={{@channel}}
           @thread={{@thread}}
           @onSendMessage={{this.onSendMessage}}
           @uploadDropZone={{this.uploadDropZone}}
+          @scroller={{this.scroller}}
         />
       {{/if}}
 
       <ChatUploadDropZone @model={{@thread}} />
+      <ChatThreadTitlePrompt @thread={{@thread}} />
     </div>
   </template>
 }

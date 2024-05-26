@@ -939,7 +939,6 @@ da:
       title: "Brugerbesøg"
       xaxis: "Dag"
       yaxis: "Antal besøg"
-      description: "Antal af alle brugerbesøg."
     signups:
       title: "Tilmeldinger"
       xaxis: "Dag"
@@ -974,6 +973,8 @@ da:
       xaxis:
         api: "API"
         user_api: "Bruger API"
+      yaxis: "Dag"
+    consolidated_page_views_browser_detection:
       yaxis: "Dag"
     dau_by_mau:
       title: "DAU/MAU"
@@ -1127,6 +1128,10 @@ da:
       xaxis: "Dag"
       yaxis: "anonyme mobile sidevisninger"
       description: "Antal nye sidevisninger fra besøgende på en mobil enhed, der ikke er logget ind."
+    page_view_anon_browser_reqs:
+      xaxis: "Dag"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dag"
     http_background_reqs:
       title: "Baggrund"
       xaxis: "Dag"
@@ -1165,7 +1170,6 @@ da:
       title: "Brugerbesøg (mobil)"
       xaxis: "Dag"
       yaxis: "Antal besøg"
-      description: "Antal unikke brugere, der besøgte ved hjælp af en mobil enhed."
     web_crawlers:
       title: "Web Crawler Bruger Agenter"
       labels:

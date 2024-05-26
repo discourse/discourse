@@ -686,6 +686,7 @@ it:
       topic_count_long: "Argomenti Creati"
       post_count: "Risposte"
       post_count_long: "Risposte Inviate"
+      no_results_with_search: "Nessun risultato trovato."
       days_visited: "Visite"
       days_visited_long: "Giorni di Frequenza"
       posts_read: "Letti"
@@ -1059,10 +1060,8 @@ it:
         ignore_duration_time_frame_required: "Selezionare un intervallo di tempo"
         ignore_no_users: "Non ci sono utenti ignorati."
         ignore_option: "Ignorato"
-        ignore_option_title: "Non riceverai più notifiche relative a questo utente, e i suoi argomenti e risposte saranno nascosti."
         add_ignored_user: "Aggiunta..."
         mute_option: "Silenziati"
-        mute_option_title: "Non riceverai più notifiche relative a questo utente."
         normal_option: "Normale"
         normal_option_title: "Riceverai una notifica quando questo utente ti risponde, ti cita o ti menziona."
       notification_schedule:
@@ -3684,8 +3683,6 @@ it:
       pinned:
         title: "Appuntato"
         help: "Questo argomento è appuntato per te; verrà mostrato in cima alla sua categoria"
-      unlisted:
-        help: "Questo argomento è invisibile; non verrà mostrato nella liste di argomenti ed è possibile accedervi solo tramite collegamento diretto"
       personal_message:
         title: "Questo argomento è un messaggio personale"
         help: "Questo argomento è un messaggio personale"
@@ -5557,9 +5554,6 @@ it:
           silence: "Silenzia i nuovi account se il loro primo messaggio contiene una di queste parole. Il messaggio verrà automaticamente nascosto fino a quando lo staff non lo approverà."
           link: "Nei messaggi sostituisce le parole con link."
         form:
-          label: "Ha una parola o frase"
-          placeholder: "Inserisci parola o frase (* è un carattere jolly)"
-          placeholder_regexp: "espressione regolare"
           replace_label: "Sostituzione"
           replace_placeholder: "esempio"
           tag_label: "Etichetta"
@@ -5572,6 +5566,7 @@ it:
           upload_successful: "Caricamento andato a buon fine. Le parole sono state aggiunte."
           case_sensitivity_label: "distingue fra maiuscole e minuscole"
           case_sensitivity_description: "Solo parole con maiuscole e minuscole corrispondenti"
+          html_label: "HTML"
         test:
           button_label: "Test"
           modal_title: "%{action}: Test delle parole osservate"

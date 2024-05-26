@@ -235,7 +235,14 @@ class PostActionCreator
     return if not_auto_action_flag_type && !@queue_for_review
 
     if @queue_for_review
-      @post.topic.update_status("visible", false, @created_by) if @post.is_first_post?
+      if @post.is_first_post?
+        @post.topic.update_status(
+          "visible",
+          false,
+          @created_by,
+          { visibility_reason_id: Topic.visibility_reasons[:op_flag_threshold_reached] },
+        )
+      end
 
       @post.hide!(
         @post_action_type_id,

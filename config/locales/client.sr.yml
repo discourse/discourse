@@ -503,6 +503,7 @@ sr:
       topic_count_long: "Tema kreirano"
       post_count: "Odgovori"
       post_count_long: "Odgovora poslato"
+      no_results_with_search: "Rezultati nisu pronađeni"
       days_visited: "Poseta"
       days_visited_long: "Dana posećivano"
       posts_read: "Pročitano"
@@ -1586,8 +1587,6 @@ sr:
       pinned:
         title: "Zakvačeno"
         help: "Ova tema je zakvačena, prikazivati će se na vrhu svoje kategorije."
-      unlisted:
-        help: "Ova tema je ne-listovana; neće se prikazivati na listi tema i može joj se pristupiti samo preko direktnog linka."
     posts: "Poruke"
     pending_posts:
       label: "U toku"

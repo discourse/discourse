@@ -645,6 +645,7 @@ bg:
       topic_count_long: "Създадени теми"
       post_count: "Отговори"
       post_count_long: "Публикувани отговори"
+      no_results_with_search: "Няма намерени резултати."
       days_visited: "Посещения"
       days_visited_long: "Посетени дни"
       posts_read: "Прочетени"
@@ -1011,9 +1012,7 @@ bg:
         ignore_duration_time_frame_required: "Моля, изберете времева рамка"
         ignore_no_users: "Нямате игнорирани потребители."
         ignore_option: "Игнориран"
-        ignore_option_title: "Няма да получавате известия, свързани с този потребител и всички негови теми и отговори ще бъдат скрити."
         mute_option: "Заглушен"
-        mute_option_title: "Няма да получавате никакви известия, свързани с този потребител."
         normal_option: "Нормален"
         normal_option_title: "Ще бъдете уведомени, ако този потребител ви отговори, цитира ви или ви спомене."
       notification_schedule:
@@ -3088,8 +3087,6 @@ bg:
       pinned:
         title: "Закована"
         help: "Тази тема е закована за Вас, тя ще се показва в началото на категорията "
-      unlisted:
-        help: "Тази тема е скрита; не се появява в списъка с теми и може да бъде достъпна само с директен линк."
     posts: "Публикации"
     pending_posts:
       label: "Чакащи"
@@ -3973,6 +3970,7 @@ bg:
           flag: "Сигнализиране"
         form:
           add: "Добави"
+          html_label: "HTML"
         test:
           no_matches: "Няма намерени съвпадения"
       form_templates:

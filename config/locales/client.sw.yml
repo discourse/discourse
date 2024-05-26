@@ -369,6 +369,7 @@ sw:
       topic_count_long: "Mada Zilizotengenezwa"
       post_count: "Majibu"
       post_count_long: "Majibu Yaliyochapishwa"
+      no_results_with_search: "Hakuna majibu yaliyopatikana."
       days_visited: "Matembezi"
       days_visited_long: "Siku Zilizotembelewa"
       posts_read: "Soma"
@@ -1977,8 +1978,6 @@ sw:
       pinned:
         title: "Imebandikwa"
         help: "Mada hii imebandikwa kwa ajili yako; itatokea juu ya kategoria yake"
-      unlisted:
-        help: "Mada hii imeondolewa kwenye orodha. Haitaonyeshwa kwenye orodha za mada, na njia pekee ya kuifia ni kupitia kiungo chake"
     posts: "Machapisho"
     pending_posts:
       label: "subiria"
@@ -2933,12 +2932,12 @@ sw:
           flag: "Bendera"
           silence: "Imenyamazishwa"
         form:
-          placeholder_regexp: "muonekano wa kawaida"
           link_placeholder: "https://example.com"
           add: "Ongeza"
           success: "Mafanikio"
           exists: "Tayari ipo"
           upload_successful: "Upakiaji Umemalizika. Maneno yameongezwa."
+          html_label: "HTML"
         test:
           button_label: "Majaribio"
           no_matches: "Hakuna uwiano uliopatikana"

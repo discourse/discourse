@@ -572,6 +572,7 @@ gl:
       topic_count_long: "Temas creados"
       post_count: "Respostas"
       post_count_long: "Respostas publicadas"
+      no_results_with_search: "Non se atoparon resultados."
       days_visited: "Visitas"
       days_visited_long: "Días visitados"
       posts_read: "Lidos"
@@ -898,9 +899,7 @@ gl:
         ignore_duration_time_frame_required: "Seleccione un marco temporal"
         ignore_no_users: "Non ten usuarios ignorados."
         ignore_option: "Ignorado"
-        ignore_option_title: "Non recibirá notificacións relacionadas con este usuario e todos os seus temas e respostas permanecerán agochados."
         mute_option: "Silenciado"
-        mute_option_title: "Non recibirá notificación ningunha relacionada con este usuario."
         normal_option: "Normal"
         normal_option_title: "Recibirá unha notificación se este usuario lle responde, cita a súa mensaxe ou menciona o seu nome."
       notification_schedule:
@@ -2911,8 +2910,6 @@ gl:
       pinned:
         title: "Fixado"
         help: "Este tema está fixado globalmente; presentarase na banda superior da súa categoría"
-      unlisted:
-        help: "Este tema non está listado. Non se presentará nas listas de temas e só estará accesíbel vía ligazón directa"
       personal_message:
         title: "Este tema é unha mensaxe privada"
         help: "Este tema é unha mensaxe privada"
@@ -4304,7 +4301,6 @@ gl:
           silence: "Silenciar"
           link: "Ligazón"
         form:
-          placeholder_regexp: "expresión regular"
           replace_label: "Substitución"
           tag_label: "Etiqueta"
           link_label: "Ligazón"
@@ -4314,6 +4310,7 @@ gl:
           exists: "Xa existe"
           upload: "Engadir desde ficheiro"
           upload_successful: "Carga realizada correctamente. Engadíronse palabras."
+          html_label: "HTML"
         test:
           button_label: "Proba"
           description: "Escriba texto a continuación para comprobar coincidencias con palabras observadas"

@@ -4,17 +4,16 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { and } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import swipe from "discourse/modifiers/swipe";
 import autoCloseToast from "float-kit/modifiers/auto-close-toast";
 
-const CLOSE_SWIPE_THRESHOLD = 50;
+const VELOCITY_THRESHOLD = -1.2;
 
 export default class DToast extends Component {
   @service site;
 
   @tracked progressBar;
-
-  animating = false;
 
   @action
   registerProgressBar(element) {
@@ -22,27 +21,23 @@ export default class DToast extends Component {
   }
 
   @action
-  async handleSwipe(state) {
-    if (this.animating) {
-      return;
-    }
-
-    if (state.deltaY < 0) {
+  async didSwipe(state) {
+    if (state.deltaY >= 0) {
       this.#animateWrapperPosition(state.element, 0);
       return;
     }
 
-    if (state.deltaY > CLOSE_SWIPE_THRESHOLD) {
-      this.#close(state.element);
+    if (state.velocityY < VELOCITY_THRESHOLD) {
+      await this.#close(state.element);
     } else {
       await this.#animateWrapperPosition(state.element, state.deltaY);
     }
   }
 
   @action
-  async handleSwipeEnded(state) {
-    if (state.deltaY > CLOSE_SWIPE_THRESHOLD) {
-      this.#close(state.element);
+  async didEndSwipe(state) {
+    if (state.velocityY < VELOCITY_THRESHOLD) {
+      await this.#close(state.element);
     } else {
       await this.#animateWrapperPosition(state.element, 0);
     }
@@ -54,24 +49,16 @@ export default class DToast extends Component {
   }
 
   async #closeWrapperAnimation(element) {
-    this.animating = true;
-
     await element.animate([{ transform: "translateY(-150px)" }], {
       fill: "forwards",
-      duration: 250,
+      duration: getMaxAnimationTimeMs(),
     }).finished;
-
-    this.animating = false;
   }
 
   async #animateWrapperPosition(element, position) {
-    this.animating = true;
-
-    await element.animate([{ transform: `translateY(${-position}px)` }], {
+    await element.animate([{ transform: `translateY(${position}px)` }], {
       fill: "forwards",
     }).finished;
-
-    this.animating = false;
   }
 
   <template>
@@ -85,11 +72,7 @@ export default class DToast extends Component {
         progressBar=this.progressBar
         enabled=@toast.options.autoClose
       }}
-      {{swipe
-        didSwipe=this.handleSwipe
-        didEndSwipe=this.handleSwipeEnded
-        enabled=this.site.mobileView
-      }}
+      {{swipe onDidSwipe=this.didSwipe onDidEndSwipe=this.didEndSwipe}}
     >
       <@toast.options.component
         @data={{@toast.options.data}}

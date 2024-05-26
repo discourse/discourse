@@ -884,6 +884,8 @@ hr:
         api: "API"
         user_api: "Korisnički API"
       yaxis: "Dan"
+    consolidated_page_views_browser_detection:
+      yaxis: "Dan"
     dau_by_mau:
       xaxis: "Dan"
     daily_engaged_users:
@@ -1021,6 +1023,10 @@ hr:
       xaxis: "Dan"
       yaxis: "Mobilni Anon prikazi stranica"
       description: "Broj novih prikaza stranica od posjetitelja na mobilnom uređaju koji nisu prijavljeni."
+    page_view_anon_browser_reqs:
+      xaxis: "Dan"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Dan"
     http_background_reqs:
       title: "Pozadina"
       xaxis: "Dan"
@@ -1059,7 +1065,6 @@ hr:
       title: "Korisničke posjete (mobilni)"
       xaxis: "Dan"
       yaxis: "Broj posjeta"
-      description: "Broj jedinstvenih korisnika koji su posjetili putem mobilnog uređaja."
     web_crawlers:
       title: "Korisnički agenti web indeksiranja"
       labels:
@@ -2245,7 +2250,7 @@ hr:
     search_title: "Pretraži ovu stranicu"
     search_button: "Pretraži"
   upload:
-    unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije autorizirana (autorizirana proširenja: %{authorized_extensions})."
+    unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije dopuštena (dopuštene ekstenzije: %{authorized_extensions})."
     size_zero_failure: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."
   color_schemes:
     default_theme_name: "Zadano"
@@ -2334,8 +2339,6 @@ hr:
             placeholder: "Privatno"
           chat_enabled:
             placeholder: "Omogući chat"
-          enable_sidebar:
-            placeholder: "Omogući bočnu traku"
       styling:
         fields:
           styling_preview:

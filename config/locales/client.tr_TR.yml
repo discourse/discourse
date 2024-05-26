@@ -698,6 +698,7 @@ tr_TR:
       topic_count_long: "Oluşturulan Konular"
       post_count: "Yanıtlar"
       post_count_long: "Gönderilen Yanıtlar"
+      no_results_with_search: "Sonuç bulunamadı."
       days_visited: "Ziyaretler"
       days_visited_long: "Ziyaret edilen günler"
       posts_read: "Okundu"
@@ -1073,10 +1074,8 @@ tr_TR:
         ignore_duration_time_frame_required: "Lütfen bir zaman aralığı seçin"
         ignore_no_users: "Yok saydığınız kullanıcı bulunmuyor."
         ignore_option: "Yok sayıldı"
-        ignore_option_title: "Bu kullanıcıyla ilgili bildirim almayacaksınız ve kullanıcının tüm başlık ve yanıtları gizlenecek."
         add_ignored_user: "Ekle…"
         mute_option: "Sessize alındı"
-        mute_option_title: "Bu kullanıcıyla ilgili bildirim almayacaksınız."
         normal_option: "Normal"
         normal_option_title: "Bu kullanıcı size yanıt verirse, sizi alıntılarsa veya sizden bahsederse bildirim alırsınız."
       notification_schedule:
@@ -3742,8 +3741,6 @@ tr_TR:
       pinned:
         title: "Sabitlendi"
         help: "Bu konu sizin için sabitlendi; kategorisinin en üstünde gösterilecek"
-      unlisted:
-        help: "Bu konu listeden kaldırıldı; konu listelerinde gösterilmeyecek ve sadece doğrudan bir bağlantı üzerinden erişilebilir"
       personal_message:
         title: "Bu konu bir kişisel mesajdır"
         help: "Bu konu bir kişisel mesajdır"
@@ -5666,9 +5663,6 @@ tr_TR:
           silence: "İlk gönderileri bu kelimelerden herhangi birini içeriyorsa yeni hesapları sessize alın. Personel onaylayana kadar gönderi otomatik olarak gizlenir."
           link: "Gönderilerdeki kelimeleri bağlantılarla değiştirin."
         form:
-          label: "Kelime veya kelime öbeği içerir"
-          placeholder: "Kelime veya kelime öbeği girin (* joker karakterdir)"
-          placeholder_regexp: "normal ifade"
           replace_label: "Değiştirme"
           replace_placeholder: "örnek"
           tag_label: "Etiket"
@@ -5681,6 +5675,7 @@ tr_TR:
           upload_successful: "Yükleme başarılı. Kelimeler eklendi."
           case_sensitivity_label: "büyük/küçük harfe duyarlı"
           case_sensitivity_description: "Sadece eşleşen karakter muhafazası olan kelimeler"
+          html_label: "HTML"
         test:
           button_label: "Test"
           modal_title: "%{action}: İzlenen Kelimeleri Test Et"

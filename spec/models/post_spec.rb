@@ -1540,6 +1540,25 @@ RSpec.describe Post do
 
       expect(post.hidden).to eq(false)
       expect(hidden_topic.visible).to eq(true)
+      expect(hidden_topic.visibility_reason_id).to eq(Topic.visibility_reasons[:op_unhidden])
+    end
+
+    it "will not unhide the topic if the topic visibility_reason_id is not op_flag_threshold_reached" do
+      hidden_topic =
+        Fabricate(
+          :topic,
+          visible: false,
+          visibility_reason_id: Topic.visibility_reasons[:manually_unlisted],
+        )
+      post = create_post(topic: hidden_topic)
+      post.update_columns(hidden: true, hidden_at: Time.now, hidden_reason_id: 1)
+      post.reload
+
+      expect(post.hidden).to eq(true)
+      post.unhide!
+
+      hidden_topic.reload
+      expect(hidden_topic.visible).to eq(false)
     end
 
     it "should increase user_stat topic_count for first post" do
@@ -2066,6 +2085,25 @@ RSpec.describe Post do
         )
       post.each_upload_url { |src, _, _| urls << src }
       expect(urls).to be_empty
+    end
+
+    it "should skip external URLs following the `/uploads/short-url` pattern if a host is present and the host is not the configured host" do
+      upload = Fabricate(:upload)
+
+      raw = <<~RAW
+      [Upload link with Discourse.base_url](#{Discourse.base_url}/uploads/short-url/#{upload.sha1}.#{upload.extension})
+      [Upload link without Discourse.base_url](https://some.other.host/uploads/short-url/#{upload.sha1}.#{upload.extension})
+      [Upload link without host](/uploads/short-url/#{upload.sha1}.#{upload.extension})
+      RAW
+
+      post = Fabricate(:post, raw: raw)
+      urls = []
+      post.each_upload_url { |src, _, _| urls << src }
+
+      expect(urls).to contain_exactly(
+        "#{Discourse.base_url}/uploads/short-url/#{upload.sha1}.#{upload.extension}",
+        "/uploads/short-url/#{upload.sha1}.#{upload.extension}",
+      )
     end
 
     it "skip S3 cdn urls with different path" do

@@ -923,7 +923,6 @@ gl:
       title: "Visitas de usuarios"
       xaxis: "Día"
       yaxis: "Número de visitas"
-      description: "Número de todas as visitas do usuario."
     signups:
       title: "Rexistros"
       xaxis: "Día"
@@ -960,6 +959,8 @@ gl:
       xaxis:
         api: "API"
         user_api: "API de usuario"
+      yaxis: "Día"
+    consolidated_page_views_browser_detection:
       yaxis: "Día"
     dau_by_mau:
       title: "UAD/UAM"
@@ -1120,6 +1121,10 @@ gl:
       xaxis: "Día"
       yaxis: "Visualizacións de páxinas anónimas desde un dispositivo móbil"
       description: "Número de novas visualizacións de páxina por parte de visitantes desde un dispositivo móbil sen a sesión iniciada."
+    page_view_anon_browser_reqs:
+      xaxis: "Día"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Día"
     http_background_reqs:
       title: "Fondo"
       xaxis: "Día"
@@ -1158,7 +1163,6 @@ gl:
       title: "Visitas de usuarios (móbil)"
       xaxis: "Día"
       yaxis: "Número de visitas"
-      description: "Número de usuarios únicos que utilizaron un dispositivo móbil."
     web_crawlers:
       title: "Axentes de usuario de rastrexadores web"
       labels:

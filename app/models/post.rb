@@ -11,8 +11,8 @@ class Post < ActiveRecord::Base
   include LimitedEdit
 
   self.ignored_columns = [
-    "avg_time", # TODO(2021-01-04): remove
-    "image_url", # TODO(2021-06-01): remove
+    "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    "image_url", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   cattr_accessor :plugin_permitted_create_params, :plugin_permitted_update_params
@@ -612,15 +612,26 @@ class Post < ActiveRecord::Base
 
     Post.transaction do
       self.skip_validation = true
+      should_update_user_stat = true
 
       update!(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: reason)
 
-      Topic.where(
-        "id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)",
-        topic_id: topic_id,
-      ).update_all(visible: false)
+      any_visible_posts_in_topic =
+        Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])
 
-      UserStatCountUpdater.decrement!(self)
+      if !any_visible_posts_in_topic
+        self.topic.update_status(
+          "visible",
+          false,
+          Discourse.system_user,
+          { visibility_reason_id: Topic.visibility_reasons[:op_flag_threshold_reached] },
+        )
+        should_update_user_stat = false
+      end
+
+      # We need to do this because TopicStatusUpdater also does the decrement
+      # and we don't want to double count for the OP.
+      UserStatCountUpdater.decrement!(self) if should_update_user_stat
     end
 
     # inform user
@@ -652,8 +663,29 @@ class Post < ActiveRecord::Base
   def unhide!
     Post.transaction do
       self.update!(hidden: false)
-      self.topic.update(visible: true) if is_first_post?
-      UserStatCountUpdater.increment!(self)
+      should_update_user_stat = true
+
+      # NOTE: We have to consider `nil` a valid reason here because historically
+      # topics didn't have a visibility_reason_id, if we didn't do this we would
+      # break backwards compat since we cannot backfill data.
+      hidden_because_of_op_flagging =
+        self.topic.visibility_reason_id == Topic.visibility_reasons[:op_flag_threshold_reached] ||
+          self.topic.visibility_reason_id.nil?
+
+      if is_first_post? && hidden_because_of_op_flagging
+        self.topic.update_status(
+          "visible",
+          true,
+          Discourse.system_user,
+          { visibility_reason_id: Topic.visibility_reasons[:op_unhidden] },
+        )
+        should_update_user_stat = false
+      end
+
+      # We need to do this because TopicStatusUpdater also does the increment
+      # and we don't want to double count for the OP.
+      UserStatCountUpdater.increment!(self) if should_update_user_stat
+
       save(validate: false)
     end
 
@@ -1110,6 +1142,7 @@ class Post < ActiveRecord::Base
 
   def each_upload_url(fragments: nil, include_local_upload: true)
     current_db = RailsMultisite::ConnectionManagement.current_db
+
     upload_patterns = [
       %r{/uploads/#{current_db}/},
       %r{/original/},
@@ -1118,6 +1151,7 @@ class Post < ActiveRecord::Base
     ]
 
     fragments ||= Nokogiri::HTML5.fragment(self.cooked)
+
     selectors =
       fragments.css(
         "a/@href",
@@ -1151,7 +1185,17 @@ class Post < ActiveRecord::Base
         sha1 = Upload.sha1_from_short_url(src)
         yield(src, nil, sha1)
         next
-      elsif src.include?("/uploads/short-url/")
+      end
+
+      if src.include?("/uploads/short-url/")
+        host =
+          begin
+            URI(src).host
+          rescue URI::Error
+          end
+
+        next if host.present? && host != Discourse.current_hostname
+
         sha1 = Upload.sha1_from_short_path(src)
         yield(src, nil, sha1)
         next
@@ -1161,6 +1205,7 @@ class Post < ActiveRecord::Base
       next if Rails.configuration.multisite && src.exclude?(current_db)
 
       src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
+
       if !Discourse.store.has_been_uploaded?(src) && !Upload.secure_uploads_url?(src) &&
            !(include_local_upload && src =~ %r{\A/[^/]}i)
         next
@@ -1194,6 +1239,7 @@ class Post < ActiveRecord::Base
 
     DistributedMutex.synchronize("find_missing_uploads", validity: 30.minutes) do
       PostCustomField.where(name: Post::MISSING_UPLOADS).delete_all
+
       query =
         Post
           .have_uploads

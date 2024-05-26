@@ -12,49 +12,78 @@ export default DiscourseRoute.extend({
 
   beforeModel(transition) {
     const params = transition.to.queryParams;
-
+    const userName = params.username;
     const groupName = params.groupname || params.group_name;
 
-    if (this.currentUser) {
+    if (!this.currentUser) {
+      cookie("destination_url", window.location.href);
+      this.router.replaceWith("login");
+      return;
+    }
+
+    if (transition.from) {
+      transition.abort();
+
+      if (userName) {
+        return this.openComposer(transition, userName);
+      }
+
+      if (groupName) {
+        // send a message to a group
+        return Group.messageable(groupName)
+          .then((result) => {
+            if (result.messageable) {
+              this.openComposer(transition, groupName);
+            } else {
+              this.dialog.alert(
+                I18n.t("composer.cant_send_pm", { username: groupName })
+              );
+            }
+          })
+          .catch(() =>
+            this.dialog.alert(I18n.t("composer.create_message_error"))
+          );
+      }
+
+      return this.openComposer(transition);
+    } else {
       this.router
         .replaceWith("discovery.latest")
         .followRedirects()
         .then(() => {
-          if (params.username) {
-            this.composer.openNewMessage({
-              recipients: params.username,
-              title: params.title,
-              body: params.body,
-            });
-          } else if (groupName) {
+          if (userName) {
+            return this.openComposer(transition, userName);
+          }
+
+          if (groupName) {
             // send a message to a group
-            Group.messageable(groupName)
+            return Group.messageable(groupName)
               .then((result) => {
                 if (result.messageable) {
-                  next(() =>
-                    this.composer.openNewMessage({
-                      recipients: groupName,
-                      title: params.title,
-                      body: params.body,
-                    })
-                  );
+                  this.openComposer(transition, groupName);
                 } else {
                   this.dialog.alert(
                     I18n.t("composer.cant_send_pm", { username: groupName })
                   );
                 }
               })
-              .catch(() => this.dialog.alert(I18n.t("generic_error")));
-          } else {
-            this.composer.openNewMessage({
-              title: params.title,
-              body: params.body,
-            });
+              .catch(() =>
+                this.dialog.alert(I18n.t("composer.create_message_error"))
+              );
           }
+
+          return this.openComposer(transition);
         });
-    } else {
-      cookie("destination_url", window.location.href);
-      this.router.replaceWith("login");
     }
+  },
+
+  openComposer(transition, recipients) {
+    next(() => {
+      this.composer.openNewMessage({
+        recipients,
+        title: transition.to.queryParams.title,
+        body: transition.to.queryParams.body,
+      });
+    });
   },
 });

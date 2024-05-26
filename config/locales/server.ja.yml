@@ -623,20 +623,6 @@ ja:
   staff_category_description: "スタッフディスカッション用の非公開カテゴリです。トピックは管理者とモデレーターのみが閲覧できます。"
   discourse_welcome_topic:
     title: "%{site_title} へようこそ！:wave:"
-    body: |
-      お目にかかれて光栄です！
-
-      %{site_info_quote}
-
-      まずは、以下のことを行えます。
-
-      :speaking_head: あなたの写真やあなた自身についての情報、そして関心事を[プロファイル](%{base_path}/my/preferences/account)に追加して**自己紹介**しましょう。どんなことを聞かれたいですか？
-
-      :open_book: ここですでに起こっている[ディスカッションを閲覧](%{base_path}/top)して、**コミュニティーのことを知りましょう**。興味深いと思った投稿や、ためになった、または面白い投稿を見つけたら、:heart: を使ってその気持ちを伝えましょう！
-
-      :handshake: コメントしたり、自分の観点を共有したり、質問やフィードバックを送信したりして、ディスカッションに**貢献**しましょう。トピックに返信したり新しいトピックを開始したリする前に、[コミュニティーガイドライン](%{base_path}/faq)を確認しましょう。
-
-      > ヘルプが必要な場合や提案がある場合は、お気軽に %{feedback_category} で質問するか、[管理者にお問い合わせ](%{base_path}/about)ください。
   admin_quick_start_title: "管理者ガイド: はじめに"
   category:
     topic_prefix: "%{category} カテゴリについて"
@@ -1046,7 +1032,6 @@ ja:
       title: "ユーザーアクセス"
       xaxis: "日"
       yaxis: "アクセス数"
-      description: "すべてのユーザー訪問数"
     signups:
       title: "登録"
       xaxis: "日"
@@ -1086,6 +1071,8 @@ ja:
         user_api: "ユーザー API"
       yaxis: "日"
       description: "通常の API キーとユーザー API キーの API リクエスト。"
+    consolidated_page_views_browser_detection:
+      yaxis: "日"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "日"
@@ -1245,6 +1232,10 @@ ja:
       xaxis: "日"
       yaxis: "モバイル匿名ページビュー"
       description: "ログインしていないモバイルデバイスの訪問者による新しいページビュー数。"
+    page_view_anon_browser_reqs:
+      xaxis: "日"
+    page_view_logged_in_browser_reqs:
+      xaxis: "日"
     http_background_reqs:
       title: "背景"
       xaxis: "日"
@@ -1283,7 +1274,6 @@ ja:
       title: "ユーザー訪問数 (モバイル)"
       xaxis: "日"
       yaxis: "アクセス数"
-      description: "モバイルデバイスを使って訪問したユニークユーザー数。"
     web_crawlers:
       title: "ウェブクローラーユーザーエージェント"
       labels:
@@ -2801,23 +2791,9 @@ ja:
     bulk_invite_succeeded:
       title: "一括招待に成功しました"
       subject_template: "ユーザーの一括招待に成功しました"
-      text_body_template: |
-        あなたの一括ユーザー招待ファイルは処理されました。招待を %{sent} 通メール送信し、%{skipped} 通をスキップし、%{warnings} 件の警告が発生しました。
-
-        ``` text
-        %{logs}
-        ```
     bulk_invite_failed:
       title: "一括招待に失敗しました"
       subject_template: "ユーザーの一括招待中にエラーが発生しました"
-      text_body_template: |
-        あなたの一括ユーザー招待ファイルは処理されました。招待を %{sent} 通メール送信し、%{skipped} 通をスキップし、%{warnings} 件の警告と %{failed} 個のエラーが発生しました。
-
-        こちらがログです。
-
-        ``` text
-        %{logs}
-        ```
     user_added_to_group_as_owner:
       title: "オーナーとしてグループに追加しました"
       subject_template: "%{group_name} グループのオーナーとして追加されました"
@@ -4373,9 +4349,6 @@ ja:
           chat_enabled:
             placeholder: "チャットを有効にする"
             extra_description: "メンバーとリアルタイムで交流"
-          enable_sidebar:
-            placeholder: "サイドバーを有効にする"
-            extra_description: "お気に入りのスペースに簡単にアクセス"
       ready:
         title: "サイトの準備が整いました！"
         description: "以上です！コミュニティーを設定するための基本を完了しました。後は、コミュニティーにアクセスして見て回り、ウェルカムトピックを書いて招待状を送信しましょう！<br><br>お楽しみください！"

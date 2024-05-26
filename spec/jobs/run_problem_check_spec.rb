@@ -27,49 +27,10 @@ RSpec.describe Jobs::RunProblemCheck do
       ProblemCheck.send(:remove_const, "TestCheck")
     end
 
-    it "adds the messages to the Redis problems array" do
-      described_class.new.execute(check_identifier: :test_check)
-
-      problems = AdminDashboardData.load_found_scheduled_check_problems
-
-      expect(problems.map(&:to_s)).to contain_exactly("Big problem", "Yuge problem")
-    end
-  end
-
-  context "with multiple problems with the same identifier" do
-    around do |example|
-      ProblemCheck::TestCheck =
-        Class.new(ProblemCheck) do
-          self.perform_every = 30.minutes
-          self.max_retries = 0
-
-          def call
-            [
-              ProblemCheck::Problem.new(
-                "Yuge problem",
-                priority: "high",
-                identifier: "config_is_a_mess",
-              ),
-              ProblemCheck::Problem.new(
-                "Nasty problem",
-                priority: "high",
-                identifier: "config_is_a_mess",
-              ),
-            ]
-          end
-        end
-
-      stub_const(ProblemCheck, "CORE_PROBLEM_CHECKS", [ProblemCheck::TestCheck], &example)
-
-      ProblemCheck.send(:remove_const, "TestCheck")
-    end
-
-    it "does not add the same problem twice" do
-      described_class.new.execute(check_identifier: :test_check)
-
-      problems = AdminDashboardData.load_found_scheduled_check_problems
-
-      expect(problems.map(&:to_s)).to match_array(["Yuge problem"])
+    it "updates the problem check tracker" do
+      expect {
+        described_class.new.execute(check_identifier: :test_check, retry_count: 0)
+      }.to change { ProblemCheckTracker.failing.count }.by(1)
     end
   end
 

@@ -1032,7 +1032,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       let(:another_post) { Fabricate(:post, user: discobot_user, topic: topic) }
       let(:flag) do
         Fabricate(
-          :flag,
+          :flag_post_action,
           post: post,
           user: user,
           post_action_type_id: PostActionType.types[:inappropriate],
@@ -1040,7 +1040,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
       let(:other_flag) do
         Fabricate(
-          :flag,
+          :flag_post_action,
           post: another_post,
           user: user,
           post_action_type_id: PostActionType.types[:spam],
@@ -1166,7 +1166,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
 
       describe "when post contain the right answer" do
         let(:post) { Fabricate(:post, user: discobot_user, topic: topic) }
-        let(:flag) { Fabricate(:flag, post: post, user: user) }
+        let(:flag) { Fabricate(:flag_post_action, post: post, user: user) }
 
         before do
           narrative.set_data(user, state: :tutorial_flag, topic_id: topic.id)

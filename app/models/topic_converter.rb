@@ -10,36 +10,41 @@ class TopicConverter
 
   def convert_to_public_topic(category_id = nil)
     Topic.transaction do
-      category_id =
-        if category_id
-          category_id
-        elsif SiteSetting.allow_uncategorized_topics
-          SiteSetting.uncategorized_category_id
-        else
-          Category
-            .where(read_restricted: false)
-            .where.not(id: SiteSetting.uncategorized_category_id)
-            .order("id asc")
-            .pick(:id)
-        end
+      category_id ||=
+        SiteSetting.uncategorized_category_id if SiteSetting.allow_uncategorized_topics
+
+      @category = Category.find_by(id: category_id) if category_id
+      @category ||=
+        Category
+          .where(read_restricted: false)
+          .where.not(id: SiteSetting.uncategorized_category_id)
+          .first
 
       PostRevisor.new(@topic.first_post, @topic).revise!(
         @user,
-        category_id: category_id,
+        category_id: @category.id,
         archetype: Archetype.default,
       )
 
+      raise ActiveRecord::Rollback if !@topic.valid?
+
       update_user_stats
       update_post_uploads_secure_status
+      add_small_action("public_topic")
+      Tag.update_counters(@topic.tags, { public_topic_count: 1 }) if !@category.read_restricted
+
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
-      watch_topic(topic)
+
+      watch_topic(@topic)
     end
+
     @topic
   end
 
   def convert_to_private_message
     Topic.transaction do
+      was_public = !@topic.category.read_restricted
       @topic.update_category_topic_count_by(-1) if @topic.visible
 
       PostRevisor.new(@topic.first_post, @topic).revise!(
@@ -48,15 +53,20 @@ class TopicConverter
         archetype: Archetype.private_message,
       )
 
+      raise ActiveRecord::Rollback if !@topic.valid?
+
       add_allowed_users
       update_post_uploads_secure_status
+      add_small_action("private_topic")
+      Tag.update_counters(@topic.tags, { public_topic_count: -1 }) if was_public
       UserProfile.remove_featured_topic_from_all_profiles(@topic)
 
       Jobs.enqueue(:topic_action_converter, topic_id: @topic.id)
       Jobs.enqueue(:delete_inaccessible_notifications, topic_id: @topic.id)
 
-      watch_topic(topic)
+      watch_topic(@topic)
     end
+
     @topic
   end
 
@@ -86,21 +96,21 @@ class TopicConverter
     #
     # Changes user_stats (post_count) by the number of posts in the topic.
     # First post, hidden posts and non-regular posts are ignored.
-    DB.exec(<<~SQL)
-    UPDATE user_stats
-    SET post_count = post_count #{operation} X.count
-    FROM (
-      SELECT
-        us.user_id,
-        COUNT(*) AS count
-      FROM user_stats us
-      INNER JOIN posts ON posts.topic_id = #{@topic.id.to_i} AND posts.user_id = us.user_id
-      WHERE posts.post_number > 1
-      AND NOT posts.hidden
-      AND posts.post_type = #{Post.types[:regular].to_i}
-      GROUP BY us.user_id
-    ) X
-    WHERE X.user_id = user_stats.user_id
+    DB.exec <<~SQL
+      UPDATE user_stats
+      SET post_count = post_count #{operation} X.count
+      FROM (
+        SELECT
+          us.user_id,
+          COUNT(*) AS count
+        FROM user_stats us
+        INNER JOIN posts ON posts.topic_id = #{@topic.id.to_i} AND posts.user_id = us.user_id
+        WHERE posts.post_number > 1
+        AND NOT posts.hidden
+        AND posts.post_type = #{Post.types[:regular].to_i}
+        GROUP BY us.user_id
+      ) X
+      WHERE X.user_id = user_stats.user_id
     SQL
   end
 
@@ -138,5 +148,9 @@ class TopicConverter
 
   def update_post_uploads_secure_status
     DB.after_commit { Jobs.enqueue(:update_topic_upload_security, topic_id: @topic.id) }
+  end
+
+  def add_small_action(action_code)
+    DB.after_commit { @topic.add_small_action(@user, action_code) }
   end
 end

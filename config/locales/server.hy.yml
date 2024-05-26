@@ -766,6 +766,8 @@ hy:
         api: "API"
         user_api: "Օգտատիրոջ API"
       yaxis: "Օր"
+    consolidated_page_views_browser_detection:
+      yaxis: "Օր"
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Օր"
@@ -924,6 +926,10 @@ hy:
       xaxis: "Օր"
       yaxis: "Հեռախոի միջոցով Անանուն Էջադիտումներ"
       description: "Մուտք չգործած օգտատերերի կողմից հեռախոսի միջոցով նոր էջադիտումների քանակը:"
+    page_view_anon_browser_reqs:
+      xaxis: "Օր"
+    page_view_logged_in_browser_reqs:
+      xaxis: "Օր"
     http_background_reqs:
       title: "Ֆոն"
       xaxis: "Օր"
@@ -961,7 +967,6 @@ hy:
       title: "Օգտատիրոջ Այցելություններ (հեռախոսային)"
       xaxis: "Օր"
       yaxis: "Այցելությունների քանակը"
-      description: "Հեռախոսային սարքավորմամբ այցելած եզակի օգտատերերի քանակը:"
     web_crawlers:
       title: "Ցանցային Տվյալների Հավաքագրիչի (crawler) Օգտատիրոջ Գործակալներ"
       labels:

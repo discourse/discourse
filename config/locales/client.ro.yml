@@ -724,6 +724,7 @@ ro:
       topic_count_long: "Subiecte create"
       post_count: "Răspunsuri"
       post_count_long: "Răspunsuri publicate"
+      no_results_with_search: "Nu s-au găsit rezultate."
       days_visited: "Vizite"
       days_visited_long: "Zile de vizită"
       posts_read: "Citite"
@@ -1054,9 +1055,7 @@ ro:
         ignore_duration_time_frame_required: "Te rog selectează un interval de timp"
         ignore_no_users: "Nu aveți utilizatori ignorați."
         ignore_option: "Ignorat"
-        ignore_option_title: "Nu vei primi notificări legate de acest utilizator și toate subiectele și răspunsurile acestuia vor fi ascunse."
         mute_option: "Setate pe silențios"
-        mute_option_title: "Nu vei primi notificări legate de acest utilizator."
         normal_option: "Normal"
         normal_option_title: "Vei fi notificat dacă acest utilizator îți răspunde, te citează sau te menționează."
       notification_schedule:
@@ -2202,6 +2201,7 @@ ro:
       options: "Opțiuni pentru subiect"
       show_links: "arată legăturile din acest subiect"
       suggest_create_topic: Ești gata să <a href>începi o nouă conversație?</a>
+      jump_reply_button: "Sari la articol"
       deleted: "Subiectul a fost șters"
       slow_mode_update:
         title: "Modul lent"
@@ -2802,8 +2802,6 @@ ro:
       pinned:
         title: "Fixat"
         help: "Acest subiect este fixat. Va fi afișat la începutul categoriei din care face parte."
-      unlisted:
-        help: "Acest subiect este invizibil; nu va fi afișat în listele de subiecte și va putea fi accesat numai prin link direct"
     posts: "Postări"
     pending_posts:
       label: "În așteptare"
@@ -3947,6 +3945,7 @@ ro:
       watched_words:
         search: "caută"
         clear_filter: "Șterge"
+        html: "(html)"
         download: Descărcare
         clear_all: Deselectează tot
         actions:
@@ -3958,10 +3957,16 @@ ro:
         action_descriptions:
           flag: "Permite articole care conțin aceste cuvinte, dar semnalează-te ca nepotrivite pentru a fi analizate de către moderatori."
         form:
+          label: "Are cuvinte sau fraze"
+          placeholder: "cuvinte sau fraze (* este un metacaracter)"
+          placeholder_regexp: "expresii regulate"
           link_label: "Legătură"
           link_placeholder: "https://example.com"
           add: "Adaugă"
           success: "Succes"
+          html_label: "HTML"
+          html_description: "Produce HTML în înlocuire"
+          words_or_phrases: "cuvinte sau fraze"
         test:
           button_label: "Test"
           no_matches: "Nu s-au găsit potriviri"
@@ -4368,6 +4373,8 @@ ro:
         host: "Host-uri permise"
         edit: "editează"
         category: "Postează în categoria"
+        tags: "Etichete subiect"
+        post_author: "Autor articol - Valoarea implicită este %{author}"
         add_host: "Adaugă host"
         settings: "Setări pentru embeding"
         crawling_settings: "Setări roboți de căutare"

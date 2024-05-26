@@ -733,6 +733,7 @@ de:
             base:
               invalid_url: "Ersatz-URL ist ungültig"
               invalid_tag_list: "Ersatz-Schlagwort-Liste ist ungültig"
+              invalid_html: "HTML kann nur zum Ersetzen verwendet werden"
         sidebar_section_link:
           attributes:
             linkable_type:
@@ -756,7 +757,7 @@ de:
 
       :speaking_head: **Stelle dich vor**, indem du dein Bild und Informationen über dich und deine Interessen in [dein Profil](%{base_path}/my/preferences/account) einstellst. Worüber würdest du gerne befragt werden?
 
-      :open_book: **Lerne die Community** kennen, indem du [in den Diskussionen stöberst](%{base_path}/top), die hier bereits stattfinden. Wenn du einen Beitrag interessant, informativ oder unterhaltsam findest, benutze :heart:, um deine Wertschätzung oder Unterstützung zu zeigen!
+      :open_book: **Lerne die Community** kennen, indem du [in den Diskussionen stöberst](%{base_path}/latest), die hier bereits stattfinden. Wenn du einen Beitrag interessant, informativ oder unterhaltsam findest, benutze :heart:, um deine Wertschätzung oder Unterstützung zu zeigen!
 
       :handshake: **Trage zur Diskussion bei**, indem du kommentierst, deine eigene Sichtweise teilst, Fragen stellst oder Feedback gibst. Bevor du antwortest oder neue Themen beginnst, lies bitte die [Community-Richtlinien](%{base_path}/faq).
 
@@ -1202,7 +1203,7 @@ de:
       title: "Nutzerbesuche"
       xaxis: "Tag"
       yaxis: "Anzahl der Besuche"
-      description: "Anzahl aller Besuche."
+      description: "Anzahl der Besuche von angemeldeten Benutzern."
     signups:
       title: "Neue Benutzer"
       xaxis: "Tag"
@@ -1242,6 +1243,15 @@ de:
         user_api: "Benutzer-API"
       yaxis: "Tag"
       description: "API-Anfragen für reguläre API-Schlüssel und Benutzer-API-Schlüssel."
+    consolidated_page_views_browser_detection:
+      title: "Konsolidierte Seitenaufrufe mit Browser-Erkennung (experimentell)"
+      xaxis:
+        page_view_anon_browser: "Anonymer Browser"
+        page_view_logged_in_browser: "Eingeloggter Browser"
+        page_view_crawler: "Bekannter Crawler"
+        page_view_other: "Andere Seitenaufrufe"
+      yaxis: "Tag"
+      description: "Seitenaufrufe für eingeloggte Benutzer, anonyme Benutzer, bekannte Crawler und andere. Dieser experimentelle Bericht stellt sicher, dass eingeloggte/anonyme Anfragen von echten Browsern kommen, bevor sie gezählt werden."
     dau_by_mau:
       title: "TAB/MAB"
       xaxis: "Tag"
@@ -1401,6 +1411,16 @@ de:
       xaxis: "Tag"
       yaxis: "Anonyme Seitenaufrufe (mobil)"
       description: "Anzahl neuer Seitenaufrufe von nicht angemeldeten Besuchern auf mobilen Endgeräten."
+    page_view_anon_browser_reqs:
+      title: "Anonyme Browser-Seitenaufrufe"
+      xaxis: "Tag"
+      yaxis: "Anonyme Browser-Seitenaufrufe"
+      description: "Anzahl der Seitenaufrufe durch anonyme Besucher mit echten Browsern."
+    page_view_logged_in_browser_reqs:
+      title: "Eingeloggte Browser-Seitenaufrufe"
+      xaxis: "Tag"
+      yaxis: "Eingeloggte Browser-Seitenaufrufe"
+      description: "Anzahl der Seitenaufrufe von eingeloggten Besuchern, die echte Browser verwenden."
     http_background_reqs:
       title: "Hintergrund"
       xaxis: "Tag"
@@ -1439,7 +1459,7 @@ de:
       title: "Benutzerbesuche (mobil)"
       xaxis: "Tag"
       yaxis: "Anzahl der Besuche"
-      description: "Anzahl der eindeutigen Benutzer, welche die Website auf einem mobilen Endgerät besucht haben."
+      description: "Anzahl der eindeutigen angemeldeten Benutzer, welche die Website auf einem mobilen Endgerät besucht haben."
     web_crawlers:
       title: "Webcrawler-Browserkennungen"
       labels:
@@ -1506,6 +1526,7 @@ de:
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben – wie zum Beispiel das Versenden von E-Mails – werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq" target="_blank">Mehr über Sidekiq erfährst du hier</a>.'
     queue_size_warning: "Eine hohe Anzahl an Aufgaben (%{queue_size}) befindet sich in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder du musst zusätzliche Sidekiq Worker starten."
     memory_warning: "Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen."
+    maxmind_db_configuration_warning: 'Der Server wurde so konfiguriert, dass er MaxMind-Datenbanken für Reverse-IP-Lookups verwendet, aber es wurde keine gültige MaxMind-Konto-ID konfiguriert, was dazu führen kann, dass MaxMind-Datenbanken in Zukunft nicht mehr heruntergeladen werden können. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">In diesem Leitfaden erfährst du mehr</a>.'
     google_oauth2_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Google OAuth2 erlaubt (enable_google_oauth2_logins), aber die Client-ID und die Client-Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
     facebook_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Facebook erlaubt (enable_facebook_logins), aber die App-ID und die Geheimnis-Werte der App sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
     twitter_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Twitter erlaubt (enable_twitter_logins), aber der Schlüssel und die Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
@@ -1642,7 +1663,7 @@ de:
     summarization_strategy: "Zusätzliche Möglichkeiten, von Plug-ins registrierte Inhalte zusammenzufassen"
     custom_summarization_allowed_groups: "Gruppen, die Inhalte mit `summarization_strategy` zusammenfassen dürfen."
     enable_personal_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Benutzern mit Vertrauensstufe 1 erlauben (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Team-Mitglieder können immer Nachrichten senden."
-    personal_message_enabled_groups: "Erlaube den Benutzern in diesen Gruppen, persönliche Nachrichten zu erstellen. WICHTIG: 1) Alle Benutzer können auf Nachrichten antworten. 2) Vertrauensstufengruppen beinhalten höhere Stufen; wähle Vertrauensstufe_1, um VS1, VS2, VS3, VS4 zuzulassen, nicht aber VS0. 3) Administratoren und Moderatoren können immer Nachrichten senden. 4) Gruppeninteraktionseinstellungen überschreiben diese Einstellung für Nachrichten an bestimmte Gruppen. Administratoren und Moderatoren können immer persönliche Nachrichten erstellen."
+    personal_message_enabled_groups: "Erlaube den Benutzern in diesen Gruppen, persönliche Nachrichten zu ERSTELLEN. WICHTIG: 1) Alle Benutzer können auf Nachrichten ANTWORTEN. 2) Administratoren und Moderatoren können Nachrichten an jeden Benutzer ERSTELLEN. 3) Vertrauensstufengruppen beinhalten höhere Stufen; wähle Vertrauensstufe_1, um VS1, VS2, VS3, VS4 zuzulassen, nicht aber VS0. 4) Gruppeninteraktionseinstellungen überschreiben diese Einstellung für Nachrichten an bestimmte Gruppen."
     enable_system_message_replies: "Erlaube Benutzern, auf Systemnachrichten zu antworten, auch wenn persönliche Nachrichten deaktiviert sind"
     enable_chunked_encoding: "Aktiviere „chunked encoding“-Antworten durch den Server. Diese Funktion ist mit den meisten Set-ups kompatibel, aber einige Proxys können puffern, wodurch die Antworten verzögert werden"
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze dies auf Origin-Pull), z. B. http://origin.site.com"
@@ -1928,7 +1949,7 @@ de:
     min_trust_to_edit_post: "Minimale Vertrauensstufe, um Beiträge bearbeiten zu können."
     edit_post_allowed_groups: "Gruppen, die Beiträge bearbeiten dürfen. Administratoren und Moderatoren können Beiträge jederzeit bearbeiten."
     min_trust_to_allow_self_wiki: "Minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki-Eintrag zu erstellen."
-    self_wiki_allowed_groups: "Gruppen, in denen Benutzer ihren Beitrag als Wiki markieren können. Administratoren und Moderatoren können ihre Beiträge immer als Wiki markieren."
+    self_wiki_allowed_groups: "Gruppen, deren Mitglieder ihren Beitrag als Wiki markieren können. Administratoren und Moderatoren können ihre Beiträge immer als Wiki markieren."
     min_trust_to_send_messages: "VERALTET, stattdessen die Einstellung „personal message enabled groups“ verwenden. Die Mindestvertrauensstufe, die zum Erstellen neuer persönlicher Nachrichten erforderlich ist."
     min_trust_to_send_email_messages: "Minimale Vertrauensstufe, um persönliche Nachrichten per E-Mail zu versenden."
     send_email_messages_allowed_groups: "Gruppen, denen es erlaubt ist, persönliche Nachrichten per E-Mail zu senden. Administratoren und Moderatoren können immer persönliche Nachrichten per E-Mail versenden."
@@ -1958,7 +1979,7 @@ de:
     here_mention: "Name, der für eine Erwähnung per @ verwendet wird, damit privilegierte Benutzer bis zu „max_here_mentioned“ Personen benachrichtigen können, die an dem Thema teilnehmen. Darf kein bestehender Benutzername sein."
     max_here_mentioned: "Maximale Anzahl der erwähnten Personen per @here."
     min_trust_level_for_here_mention: "Die Mindestvertrauensstufe, die erforderlich ist, um @here zu erwähnen."
-    here_mention_allowed_groups: "Gruppen, die @hier erwähnen dürfen. Administratoren und Moderatoren können @hier immer erwähnen."
+    here_mention_allowed_groups: "Gruppen, die @here erwähnen dürfen. Administratoren und Moderatoren können @here immer erwähnen."
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
     email_time_window_mins: "Warte (n) Minuten, bevor eine E-Mail-Benachrichtigung geschickt wird, um Benutzern Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
     personal_email_time_window_seconds: "Warte (n) Sekunden, bevor E-Mail-Benachrichtigungen zu persönlichen Nachrichten verschickt werden, um Benutzern die Gelegenheit zu geben, ihre Nachrichten abschließend bearbeiten zu können."
@@ -3128,7 +3149,15 @@ de:
       title: "Masseneinladung erfolgreich"
       subject_template: "Masseneinladung von Benutzern erfolgreich verarbeitet"
       text_body_template: |
-        Deine Masseneinladungsdatei wurde verarbeitet. %{sent} Einladungen wurden verschickt, %{skipped} wurden übersprungen und es gab %{warnings} Warnung(en).
+        Deine Datei für die Masseneinladung von Benutzern wurde verarbeitet, %{sent} Einladungen per E-Mail versendet, %{skipped} übersprungen und %{warnings} Warnung(en).
+
+        Einladungen für folgende E-Mails übersprungen:
+
+        ``` text
+        %{skipped_emails}
+        ```
+
+        Hier ist das Protokoll:
 
         ``` text
         %{logs}
@@ -3137,7 +3166,19 @@ de:
       title: "Masseneinladung fehlgeschlagen"
       subject_template: "Bei der Verarbeitung der Masseneinladung von Benutzern sind Fehler aufgetreten"
       text_body_template: |
-        Deine Masseneinladungsdatei wurde verarbeitet. %{sent} Einladungen wurden verschickt, %{skipped} wurden übersprungen und es gab %{warnings} Warnung(en) und %{failed} Fehler.
+        Deine Datei für die Masseneinladung von Benutzern wurde verarbeitet, %{sent} Einladungen per E-Mail versendet, %{skipped} übersprungen, %{warnings} Warnung(en) und %{failed} Fehler.
+
+        Einladungen für folgende E-Mails übersprungen:
+
+        ``` text
+        %{skipped_emails}
+        ```
+
+        Einladungen für folgende E-Mails fehlgeschlagen:
+
+        ``` text
+        %{failed_emails}
+        ```
 
         Hier ist das Protokoll:
 
@@ -4815,9 +4856,6 @@ de:
           chat_enabled:
             placeholder: "Chat aktivieren"
             extra_description: "Interagiere in Echtzeit mit deinen Mitgliedern"
-          enable_sidebar:
-            placeholder: "Seitenleiste aktivieren"
-            extra_description: "Einfacher Zugriff auf deine Lieblingsplätze"
       ready:
         title: "Deine Website ist bereit!"
         description: "Das war's! Du hast die Grundlagen für die Einrichtung deiner Community geschaffen. Jetzt kannst du dich umsehen, ein Willkommensthema schreiben und Einladungen verschicken!<br><br>Viel Spaß!"

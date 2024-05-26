@@ -3,8 +3,7 @@
 require "net/imap"
 
 class Group < ActiveRecord::Base
-  # TODO(2021-05-26): remove
-  self.ignored_columns = %w[flair_url]
+  self.ignored_columns = %w[flair_url] # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
 
   include HasCustomFields
   include AnonCacheInvalidator
@@ -434,29 +433,6 @@ class Group < ActiveRecord::Base
     result.order("posts.created_at desc")
   end
 
-  def messages_for(guardian, opts = nil)
-    opts ||= {}
-
-    result =
-      Post
-        .includes(:user, :topic, topic: :category)
-        .references(:posts, :topics, :category)
-        .where("topics.archetype = ?", Archetype.private_message)
-        .where(post_type: Post.types[:regular])
-        .where(
-          "topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)",
-          self.id,
-        )
-
-    if opts[:category_id].present?
-      result = result.where("topics.category_id = ?", opts[:category_id].to_i)
-    end
-
-    result = guardian.filter_allowed_categories(result)
-    result = result.where("posts.id < ?", opts[:before_post_id].to_i) if opts[:before_post_id]
-    result.order("posts.created_at desc")
-  end
-
   def mentioned_posts_for(guardian, opts = nil)
     opts ||= {}
     result =
@@ -474,6 +450,7 @@ class Group < ActiveRecord::Base
 
     result = guardian.filter_allowed_categories(result)
     result = result.where("posts.id < ?", opts[:before_post_id].to_i) if opts[:before_post_id]
+    result = result.where("posts.created_at < ?", opts[:before].to_datetime) if opts[:before]
     result.order("posts.created_at desc")
   end
 

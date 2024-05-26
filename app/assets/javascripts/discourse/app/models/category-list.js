@@ -4,6 +4,7 @@ import { number } from "discourse/lib/formatter";
 import PreloadStore from "discourse/lib/preload-store";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
+import deprecated from "discourse-common/lib/deprecated";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -29,8 +30,8 @@ export default class CategoryList extends ArrayProxy {
     result.category_list.categories.forEach((c) => {
       c = this._buildCategoryResult(c, statPeriod);
       if (
-        !c.parent_category_id ||
-        c.parent_category_id === parentCategory?.id
+        (parentCategory && c.parent_category_id === parentCategory.id) ||
+        (!parentCategory && !c.parent_category_id)
       ) {
         categories.pushObject(c);
       }
@@ -79,28 +80,30 @@ export default class CategoryList extends ArrayProxy {
   }
 
   static listForParent(store, category) {
-    return ajax(
-      `/categories.json?parent_category_id=${category.get("id")}`
-    ).then((result) =>
-      CategoryList.create({
-        store,
-        categories: this.categoriesFrom(store, result, category),
-        parentCategory: category,
-      })
+    deprecated(
+      "The listForParent method of CategoryList is deprecated. Use list instead",
+      { id: "discourse.category-list.listForParent" }
     );
+
+    return CategoryList.list(store, category);
   }
 
-  static list(store) {
-    return PreloadStore.getAndRemove("categories_list", () =>
-      ajax("/categories.json")
-    ).then((result) =>
-      CategoryList.create({
+  static list(store, parentCategory = null) {
+    return PreloadStore.getAndRemove("categories_list", () => {
+      const data = {};
+      if (parentCategory) {
+        data.parent_category_id = parentCategory?.id;
+      }
+      return ajax("/categories.json", { data });
+    }).then((result) => {
+      return CategoryList.create({
         store,
-        categories: this.categoriesFrom(store, result),
+        categories: this.categoriesFrom(store, result, parentCategory),
+        parentCategory,
         can_create_category: result.category_list.can_create_category,
         can_create_topic: result.category_list.can_create_topic,
-      })
-    );
+      });
+    });
   }
 
   init() {
@@ -119,6 +122,9 @@ export default class CategoryList extends ArrayProxy {
     this.set("isLoading", true);
 
     const data = { page: this.page + 1 };
+    if (this.parentCategory) {
+      data.parent_category_id = this.parentCategory.id;
+    }
     const result = await ajax("/categories.json", { data });
 
     this.set("page", data.page);
@@ -127,7 +133,10 @@ export default class CategoryList extends ArrayProxy {
     }
     this.set("isLoading", false);
 
-    const newCategoryList = CategoryList.categoriesFrom(this.store, result);
-    newCategoryList.forEach((c) => this.categories.pushObject(c));
+    CategoryList.categoriesFrom(
+      this.store,
+      result,
+      this.parentCategory
+    ).forEach((c) => this.categories.pushObject(c));
   }
 }

@@ -686,6 +686,7 @@ es:
       topic_count_long: "Temas creados"
       post_count: "Respuestas"
       post_count_long: "Respuestas publicadas"
+      no_results_with_search: "No se han encontrado resultados."
       days_visited: "Visitas"
       days_visited_long: "Días visitados"
       posts_read: "Leídos"
@@ -1059,10 +1060,8 @@ es:
         ignore_duration_time_frame_required: "Selecciona un intervalo de tiempo"
         ignore_no_users: "No ignoras a ningún usuario."
         ignore_option: "Ignorado"
-        ignore_option_title: "No recibirás notificaciones relacionadas con este usuario y todos sus temas y respuestas se ocultarán."
         add_ignored_user: "Añadir…"
         mute_option: "Silenciado"
-        mute_option_title: "No recibirás ninguna notificación relacionada con este usuario."
         normal_option: "Normal"
         normal_option_title: "Se te notificará si este usuario te responde, cita o menciona."
       notification_schedule:
@@ -3692,8 +3691,6 @@ es:
       pinned:
         title: "Anclado"
         help: "Este tema se ha anclado para ti; se mostrará en la parte superior de su categoría"
-      unlisted:
-        help: "Este tema es invisible. No se mostrará en la lista de temas y solo se le puede acceder mediante un enlace directo"
       personal_message:
         title: "Este tema es un mensaje personal"
         help: "Este tema es un mensaje personal"
@@ -5564,9 +5561,6 @@ es:
           silence: "Silenciar las cuentas nuevas si su primera publicación contiene alguna de estas palabras. La publicación se ocultará automáticamente hasta que el personal la apruebe."
           link: "Reemplazar palabras en publicaciones por enlaces."
         form:
-          label: "Contiene palabra o frase"
-          placeholder: "Escribe una palabra o frase (* es un comodín)"
-          placeholder_regexp: "expresión regular"
           replace_label: "Sustitución"
           replace_placeholder: "ejemplo"
           tag_label: "Etiqueta"
@@ -5579,6 +5573,7 @@ es:
           upload_successful: "Subida completada. Las palabras se han añadido."
           case_sensitivity_label: "Distingue entre mayúsculas y minúsculas"
           case_sensitivity_description: "Solo palabras con caracteres coincidentes"
+          html_label: "HTML"
         test:
           button_label: "Prueba"
           modal_title: "%{action}: Prueba de palabras vigiladas"
