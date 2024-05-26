@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { eq } from "truth-helpers";
 import avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse-common/helpers/d-icon";
+import DButton from "discourse/components/d-button";
 
 export default class PollVotersComponent extends Component {
   get showMore() {
@@ -66,12 +67,12 @@ export default class PollVotersComponent extends Component {
         {{#if @loading}}
           <div class="spinner small"></div>
         {{else}}
-          <button
+          <DButton
             {{on "click" (fn @fetchVoters @optionId)}}
             class="poll-voters-toggle-expand"
           >
             {{icon "chevron-down"}}
-          </button>
+          </DButton>
         {{/if}}
       {{/if}}
     </div>
