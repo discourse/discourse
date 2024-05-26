@@ -8,16 +8,13 @@ import I18n from "discourse-i18n";
 import PollResultsIrv from "./poll-results-irv";
 import PollResultsStandard from "./poll-results-standard";
 
-const tabOne = I18n.t("poll.results.tabs.votes");
-const tabTwo = I18n.t("poll.results.tabs.outcome");
-
 export default class TabsComponent extends Component {
-  @tracked activeTab = tabOne;
+  @tracked activeTab;
 
   constructor() {
     super(...arguments);
-    this.tabOne = tabOne;
-    this.tabTwo = tabTwo;
+    this.tabOne = I18n.t("poll.results.tabs.votes");
+    this.tabTwo = I18n.t("poll.results.tabs.outcome");
     this.activeTab =
       this.args.isIrv && this.args.isPublic ? this.tabs[1] : this.tabs[0];
   }
@@ -25,11 +22,11 @@ export default class TabsComponent extends Component {
     let tabs = [];
 
     if (!this.args.isIrv || (this.args.isIrv && this.args.isPublic)) {
-      tabs.push(tabOne);
+      tabs.push(this.tabOne);
     }
 
     if (this.args.isIrv) {
-      tabs.push(tabTwo);
+      tabs.push(this.tabTwo);
     }
     return tabs;
   }
