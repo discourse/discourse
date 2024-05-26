@@ -1,30 +1,32 @@
 import { z } from "zod";
 
 export default class Validator {
-  static async validate(node) {
-    return await new Validator().validate(node);
+  static async validate(value, rules = {}) {
+    return await new Validator().validate(value, rules);
   }
 
-  async validate(node) {
+  async validate(value, rules = {}) {
+    console.log("value", value, rules);
     let schema;
-    if (node.rules.between) {
+    if (rules.between) {
       schema = z.coerce.number();
     } else {
       schema = z.string();
     }
 
-    Object.keys(node.rules).forEach((rule) => {
+    Object.keys(rules).forEach((rule) => {
       if (this[rule + "Validator"]) {
-        schema = this[rule + "Validator"](schema, node.rules[rule]);
+        schema = this[rule + "Validator"](schema, rules[rule]);
       } else {
         console.warn(`Unknown validator: ${rule}`);
       }
     });
 
-    const parse = schema.safeParse(node.config.value);
+    const parse = schema.safeParse(value);
 
-    node.valid = parse.success;
-    node.validationMessages = parse.error?.formErrors?.formErrors ?? [];
+    if (!parse.success) {
+      return parse.error?.formErrors?.formErrors ?? [];
+    }
   }
 
   lengthValidator(schema, rule) {

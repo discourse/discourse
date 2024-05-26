@@ -225,6 +225,11 @@ export function createData(store) {
 
     toggleSwitchState: true,
 
+    formData: {
+      name: "joffrey",
+      age: 37,
+    },
+
     onSubmit: (data) => {
       console.log("onSubmit", data);
     },

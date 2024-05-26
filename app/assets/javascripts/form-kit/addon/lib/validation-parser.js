@@ -1,6 +1,6 @@
-export default class Rules {
+export default class ValidationParser {
   static parse(input) {
-    return new Rules().parse(input);
+    return new ValidationParser().parse(input);
   }
 
   parse(input) {

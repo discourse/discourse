@@ -1,54 +1,73 @@
 import Component from "@glimmer/component";
-import { Input } from "@ember/component";
+import { assert } from "@ember/debug";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { next } from "@ember/runloop";
-import Node from "form-kit/lib/node";
+
+const VALID_INPUT_TYPES = [
+  // 'button' - not useful as a control component
+  // 'checkbox' - handled separately, for handling `checked` correctly and operating with true boolean values
+  "color",
+  "date",
+  "datetime-local",
+  "email",
+  // 'file' - would need special handling
+  "hidden",
+  // 'image' - not useful as a control component
+  "month",
+  "number",
+  "password",
+  // 'radio' - handled separately, for handling groups or radio buttons
+  "range",
+  // 'reset' - would need special handling
+  "search",
+  // 'submit' - not useful as a control component
+  "tel",
+  "text",
+  "time",
+  "url",
+  "week",
+];
 
 export default class FormInput extends Component {
-  node = new Node(
-    {
-      type: "input",
-      value: this.args.value,
-      name: this.args.name,
-      parent: this.args.node,
-    },
-    {
-      validation: this.args.validation,
-      optional: this.args.optional,
-      horizontal: this.args.horizontal,
-      type: this.args.type,
-      id: this.args.id,
-      placeholder: this.args.placeholder,
-    }
-  );
-
-  constructor() {
+  constructor(owner, args) {
     super(...arguments);
 
-    next(() => {
-      this.args.node.add(this.node);
+    assert(
+      `input component does not support @type="${args.type}" as there is a dedicated component for this. Please use the \`field.${args.type}\` instead!`,
+      args.type === undefined || !["checkbox", "radio"].includes(args.type)
+    );
 
-      this.node.validate();
-    });
+    assert(
+      `input component does not support @type="${
+        args.type
+      }", must be one of ${VALID_INPUT_TYPES.join(", ")}!`,
+      args.type === undefined || VALID_INPUT_TYPES.includes(args.type)
+    );
+  }
+
+  get type() {
+    return this.args.type ?? "text";
   }
 
   @action
-  onInput(event) {
-    this.node.input(event.target.value);
-    this.node.validate();
+  handleInput(event) {
+    this.args.setValue(
+      this.type === "number"
+        ? parseFloat(event.target.value)
+        : event.target.value
+    );
   }
 
   <template>
-    <Input
-      id={{this.node.props.id}}
-      type={{this.node.props.type}}
-      @value={{readonly this.node.config.value}}
-      name={{this.node.config.name}}
-      class="d-form-field__input"
-      {{on "input" this.onInput}}
-      placeholder={{this.node.props.placeholder}}
+    <input
+      name={{@name}}
+      type={{this.type}}
+      value={{@value}}
+      id={{@fieldId}}
+      aria-invalid={{if @invalid "true"}}
+      aria-describedby={{if @invalid @errorId}}
       ...attributes
+      {{on "input" this.handleInput}}
     />
   </template>
 }

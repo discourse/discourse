@@ -2,20 +2,28 @@
 
 <h2>HORIZONTAL</h2>
 
-<Form @onSubmit={{@dummy.onSubmit}} as |form|>
-  <form.Group
+<Form @data={{@dummy.formData}} @onSubmit={{@dummy.onSubmit}} as |form|>
+  <form.Field
+    @name="name"
+    @validation="required|length:5,16"
     @label="test"
-    @for="something"
     @help="help"
     @description="description"
+    }}
+    as |field|
   >
-    <form.Input
-      @id="input-1"
-      @value="something"
-      @type="email"
-      @placeholder="Enter email"
-    />
-  </form.Group>
+    <field.Input @value="something" placeholder="Enter email" />
+  </form.Field>
+
+  <form.Field
+    @name="age"
+    @label="test"
+    @help="help"
+    @description="description"
+    as |field|
+  >
+    <field.Input @id="input-1" @value="something" @placeholder="Enter email" />
+  </form.Field>
 
   {{!-- <fk.Text
     @name="foo"
@@ -34,7 +42,7 @@
   <fk.Text @name="baz" @validation="between:8,14" /> --}}
 </Form>
 
-<hr />
+{{!-- <hr />
 
 <h2>STACKED</h2>
 
@@ -54,7 +62,7 @@
     @optional={{true}}
   />
   <fk.Text @name="baz" @validation="between:8,14" />
-</FormKit> --}}
+</FormKit>
 
 <form class="d-form">
   <h2>Horizontal form (classic)</h2>
@@ -752,7 +760,7 @@
   </div>
 </form>
 
-{{!-- <StyleguideExample @title="text-field">
+<StyleguideExample @title="text-field">
   <TextField @placeholder="Placeholder" />
 </StyleguideExample>
 
@@ -859,4 +867,5 @@
     />
     <DButton @icon="reply" @type="submit" @translatedLabel="Button" />
   </div>
-</StyleguideExample> --}}
+</StyleguideExample>
+--}}
