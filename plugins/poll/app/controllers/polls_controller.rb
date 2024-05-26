@@ -53,14 +53,7 @@ class DiscoursePoll::PollsController < ::ApplicationController
     poll = Poll.find_by(post_id: post_id, name: poll_name)
     raise Discourse::InvalidParameters.new(:poll_name) if !poll&.can_see_voters?(current_user)
 
-    if poll.type == "irv"
-      render json: {
-               error: "Invalid poll type, IRV does not support listing voters.",
-             },
-             status: :unprocessable_entity
-    else
-      render json: { voters: DiscoursePoll::Poll.serialized_voters(poll, opts) }
-    end
+    render json: { voters: DiscoursePoll::Poll.serialized_voters(poll, opts) }
   end
 
   def grouped_poll_results

@@ -213,17 +213,51 @@ class DiscoursePoll::Poll
 
       raise Discourse::InvalidParameters.new(:option_id) unless poll_option
 
-      user_ids =
-        PollVote
-          .where(poll: poll, poll_option: poll_option)
-          .group(:user_id)
-          .order("MIN(created_at)")
-          .offset(offset)
-          .limit(limit)
-          .pluck(:user_id)
+      if poll.type == "irv"
+        votes = DB.query <<~SQL
+        SELECT digest, rank, user_id
+          FROM (
+            SELECT digest
+                  , rank
+                  , user_id
+                  , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
+              FROM poll_votes pv
+              JOIN poll_options po ON pv.poll_option_id = po.id
+              WHERE pv.poll_id = #{poll.id}
+                AND po.poll_id = #{poll.id}
+                AND po.digest = '#{option_digest}'
+          ) v
+          WHERE row BETWEEN #{offset} AND #{offset + limit}
+          ORDER BY digest, rank
+        SQL
 
-      user_hashes = User.where(id: user_ids).map { |u| UserNameSerializer.new(u).serializable_hash }
+        user_ids = votes.map(&:user_id).uniq
 
+        user_hashes =
+          User
+            .where(id: user_ids)
+            .map { |u| [u.id, UserNameSerializer.new(u).serializable_hash] }
+            .to_h
+
+        irv_users = []
+        votes.each do |v|
+          irv_users ||= []
+          irv_users << { rank: v.rank, user: user_hashes[v.user_id] }
+        end
+        user_hashes = irv_users
+      else
+        user_ids =
+          PollVote
+            .where(poll: poll, poll_option: poll_option)
+            .group(:user_id)
+            .order("MIN(created_at)")
+            .offset(offset)
+            .limit(limit)
+            .pluck(:user_id)
+
+        user_hashes =
+          User.where(id: user_ids).map { |u| UserNameSerializer.new(u).serializable_hash }
+      end
       result = { option_digest => user_hashes }
     else
       if poll.type == "irv"
@@ -270,7 +304,6 @@ class DiscoursePoll::Poll
       votes.each do |v|
         if poll.type == "irv"
           result[v.digest] ||= []
-          # result[v.digest][v.rank] ||= []
           result[v.digest] << { rank: v.rank, user: user_hashes[v.user_id] }
         else
           result[v.digest] ||= []

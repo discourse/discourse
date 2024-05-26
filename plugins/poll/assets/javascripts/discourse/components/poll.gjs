@@ -438,8 +438,8 @@ export default class PollComponent extends Component {
 
     return ajax("/polls/voters.json", {
       data: {
-        post_id: this.args.postId,
-        poll_name: this.args.pollName,
+        post_id: this.post.id,
+        poll_name: this.poll.name,
         option_id: optionId,
         page: Math.floor(votersCount / FETCH_VOTERS_COUNT) + 1,
         limit: FETCH_VOTERS_COUNT,
@@ -450,24 +450,29 @@ export default class PollComponent extends Component {
           ? this.preloadedVoters[optionId]
           : this.preloadedVoters;
         const newVoters = optionId ? result.voters[optionId] : result.voters;
-        const votersSet = new Set(voters.map((voter) => voter.username));
-        newVoters.forEach((voter) => {
-          if (!votersSet.has(voter.username)) {
-            votersSet.add(voter.username);
-            voters.push(voter);
-          }
-        });
-        // remove users who changed their vote
-        if (this.poll.type === "regular") {
-          Object.keys(this.preloadedVoters).forEach((otherOptionId) => {
-            if (optionId !== otherOptionId) {
-              this.preloadedVoters[otherOptionId] = this.preloadedVoters[
-                otherOptionId
-              ].filter((voter) => !votersSet.has(voter.username));
+        if (this.isIrv) {
+          this.preloadedVoters[optionId] = [
+          ...new Set([...newVoters]),
+        ];
+        } else {
+          const votersSet = new Set(voters.map((voter) => voter.username));
+          newVoters.forEach((voter) => {
+            if (!votersSet.has(voter.username)) {
+              votersSet.add(voter.username);
+              voters.push(voter);
             }
           });
+          // remove users who changed their vote
+          if (this.poll.type === "regular") {
+            Object.keys(this.preloadedVoters).forEach((otherOptionId) => {
+              if (optionId !== otherOptionId) {
+                this.preloadedVoters[otherOptionId] = this.preloadedVoters[
+                  otherOptionId
+                ].filter((voter) => !votersSet.has(voter.username));
+              }
+            });
+          }
         }
-
         this.preloadedVoters[optionId] = [
           ...new Set([...this.preloadedVoters[optionId], ...newVoters]),
         ];

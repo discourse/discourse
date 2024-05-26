@@ -12,6 +12,7 @@ export default class PollVotersComponent extends Component {
 
   get irvVoters() {
     let orderedVoters = [...this.args.voters];
+    // debugger;
 
     orderedVoters.forEach((voter) => {
       if (voter.rank === 0) {
