@@ -9,7 +9,7 @@ import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import round from "discourse/lib/round";
-import dIcon from "discourse-common/helpers/d-icon";
+import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
@@ -734,7 +734,7 @@ export default class PollComponent extends Component {
           disabled={{this.castVotesDisabled}}
           {{on "click" this.castVotes}}
         >
-          {{dIcon this.castVotesButtonIcon}}
+          {{icon this.castVotesButtonIcon}}
           <span class="d-button-label">{{i18n "poll.cast-votes.label"}}</span>
         </button>
       {{/if}}
@@ -745,7 +745,7 @@ export default class PollComponent extends Component {
           title="poll.hide-results.title"
           {{on "click" this.toggleResults}}
         >
-          {{dIcon "chevron-left"}}
+          {{icon "chevron-left"}}
           <span class="d-button-label">{{i18n "poll.hide-results.label"}}</span>
         </button>
       {{/if}}
@@ -756,7 +756,7 @@ export default class PollComponent extends Component {
           title="poll.show-results.title"
           {{on "click" this.toggleResults}}
         >
-          {{dIcon "chart-bar"}}
+          {{icon "chart-bar"}}
           <span class="d-button-label">{{i18n "poll.show-results.label"}}</span>
         </button>
       {{/if}}
@@ -767,7 +767,7 @@ export default class PollComponent extends Component {
           title="poll.remove-vote.title"
           {{on "click" this.removeVote}}
         >
-          {{dIcon "undo"}}
+          {{icon "undo"}}
           <span class="d-button-label">{{i18n "poll.remove-vote.label"}}</span>
         </button>
       {{/if}}
@@ -780,7 +780,7 @@ export default class PollComponent extends Component {
               title="poll.dropdown.title"
               {{on "click" this.toggleDropdownButtonState}}
             >
-              {{dIcon "cog"}}
+              {{icon "cog"}}
             </button>
           {{/if}}
           <div class="widget-dropdown-body">
@@ -791,7 +791,7 @@ export default class PollComponent extends Component {
                   title={{content.title}}
                   {{on "click" (fn this.dropDownClick content.action)}}
                 >
-                  {{dIcon content.icon}}
+                  {{icon content.icon}}
                   <span>{{i18n content.label}}</span>
                 </button>
               </div>

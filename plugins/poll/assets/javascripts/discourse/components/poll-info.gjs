@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { relativeAge } from "discourse/lib/formatter";
-import dIcon from "discourse-common/helpers/d-icon";
+import icon from "discourse-common/helpers/d-icon";
 import I18n from "I18n";
 
 export default class PollInfoComponent extends Component {
@@ -162,44 +162,44 @@ export default class PollInfoComponent extends Component {
         <ul class="poll-info_instructions">
           {{#if this.showMultipleHelpText}}
             <li class="multiple-help-text">
-              {{dIcon "list-ul"}}
+              {{icon "list-ul"}}
               <span>{{this.multipleHelpText}}</span>
             </li>
           {{/if}}
           {{#if this.poll.close}}
             {{#if this.isAutomaticallyClosed}}
               <li title={{this.title}}>
-                {{dIcon "lock"}}
+                {{icon "lock"}}
                 <span>{{this.automaticCloseAgeLabel}}</span>
               </li>
             {{else}}
               <li title={{this.title}}>
-                {{dIcon "far-clock"}}
+                {{icon "far-clock"}}
                 <span>{{this.automaticCloseClosesInLabel}}</span>
               </li>
             {{/if}}
           {{/if}}
           {{#if this.resultsOnVote}}
             <li>
-              {{dIcon "check"}}
+              {{icon "check"}}
               <span>{{I18n "poll.results.vote.title"}}</span>
             </li>
           {{/if}}
           {{#if this.resultsOnClose}}
             <li>
-              {{dIcon "lock"}}
+              {{icon "lock"}}
               <span>{{I18n "poll.results.closed.title"}}</span>
             </li>
           {{/if}}
           {{#if this.resultsStaffOnly}}
             <li>
-              {{dIcon "shield-alt"}}
+              {{icon "shield-alt"}}
               <span>{{I18n "poll.results.staff.title"}}</span>
             </li>
           {{/if}}
           {{#if this.publicTitle}}
             <li class="is-public">
-              {{dIcon "far-eye"}}
+              {{icon "far-eye"}}
               <span>{{this.publicTitleLabel}}</span>
             </li>
           {{/if}}

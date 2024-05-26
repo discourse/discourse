@@ -3,7 +3,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { eq } from "truth-helpers";
 import avatar from "discourse/helpers/bound-avatar-template";
-import dIcon from "discourse-common/helpers/d-icon";
+import icon from "discourse-common/helpers/d-icon";
 
 export default class PollVotersComponent extends Component {
   get showMore() {
@@ -43,7 +43,7 @@ export default class PollVotersComponent extends Component {
           {{#each this.irvVoters as |rank|}}
             <ul>
               {{#if (eq rank.rank "Abstain")}}
-                <span class="rank">{{dIcon "ban"}}</span>
+                <span class="rank">{{icon "ban"}}</span>
               {{else}}
                 <span class="rank">{{rank.rank}}</span>
               {{/if}}
@@ -70,7 +70,7 @@ export default class PollVotersComponent extends Component {
             {{on "click" (fn @fetchVoters @optionId)}}
             class="poll-voters-toggle-expand"
           >
-            {{dIcon "chevron-down"}}
+            {{icon "chevron-down"}}
           </button>
         {{/if}}
       {{/if}}

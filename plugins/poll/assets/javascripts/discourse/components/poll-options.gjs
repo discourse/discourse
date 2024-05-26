@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import routeAction from "discourse/helpers/route-action";
-import dIcon from "discourse-common/helpers/d-icon";
+import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import PollOptionsDropdown from "./poll-options-dropdown";
 
@@ -59,15 +59,15 @@ export default class PollOptionsComponent extends Component {
               <button {{on "click" (fn this.sendClick option)}}>
                 {{#if (this.isChosen option)}}
                   {{#if @isCheckbox}}
-                    {{dIcon "far-check-square"}}
+                    {{icon "far-check-square"}}
                   {{else}}
-                    {{dIcon "circle"}}
+                    {{icon "circle"}}
                   {{/if}}
                 {{else}}
                   {{#if @isCheckbox}}
-                    {{dIcon "far-square"}}
+                    {{icon "far-square"}}
                   {{else}}
-                    {{dIcon "far-circle"}}
+                    {{icon "far-circle"}}
                   {{/if}}
                 {{/if}}
                 <span class="option-text">{{option.html}}</span>
@@ -76,15 +76,15 @@ export default class PollOptionsComponent extends Component {
               <button onclick={{routeAction "showLogin"}}>
                 {{#if (this.isChosen option)}}
                   {{#if @isCheckbox}}
-                    {{dIcon "far-check-square"}}
+                    {{icon "far-check-square"}}
                   {{else}}
-                    {{dIcon "circle"}}
+                    {{icon "circle"}}
                   {{/if}}
                 {{else}}
                   {{#if @isCheckbox}}
-                    {{dIcon "far-square"}}
+                    {{icon "far-square"}}
                   {{else}}
-                    {{dIcon "far-circle"}}
+                    {{icon "far-circle"}}
                   {{/if}}
                 {{/if}}
                 <span class="option-text">{{option.html}}</span>
