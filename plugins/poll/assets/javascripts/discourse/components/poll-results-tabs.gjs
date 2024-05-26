@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "truth-helpers";
 import I18n from "discourse-i18n";
+import DButton from "discourse/components/d-button";
 import PollResultsIrv from "./poll-results-irv";
 import PollResultsStandard from "./poll-results-standard";
 
@@ -41,9 +42,9 @@ export default class TabsComponent extends Component {
       <ul class="tabs nav nav-items">
         {{#each this.tabs as |tab|}}
           <li class="tab nav-item {{if (eq tab this.activeTab) 'active'}}">
-            <button {{on "click" (fn this.selectTab tab)}}>
+            <DButton {{on "click" (fn this.selectTab tab)}}>
               {{tab}}
-            </button>
+            </DButton>
           </li>
         {{/each}}
       </ul>

@@ -67,10 +67,12 @@ div.poll-outer {
           button {
             background-color: var(--secondary);
             border: none;
+            color: var(--primary-medium);
           }
-          color: var(--primary-medium);
           .active {
-            color: var(--primary);
+            button {
+              color: var(--primary);
+            }
           }
         }
       }
