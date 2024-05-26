@@ -18,13 +18,13 @@ export default class PollOptionsDropdownComponent extends Component {
     this.args.sendRank(option, rank);
   }
   <template>
-      <DropdownSelectBox
-        @candidate={{@option.id}}
-        @value={{this.rank}}
-        @content={{@irvDropdownContent}}
-        @onChange={{fn this.selectRank @option.id}}
-        @options={{hash showCaret=true filterable=false}}
-        class="poll-option-dropdown"
-      />
+    <DropdownSelectBox
+      @candidate={{@option.id}}
+      @value={{this.rank}}
+      @content={{@irvDropdownContent}}
+      @onChange={{fn this.selectRank @option.id}}
+      @options={{hash showCaret=true filterable=false}}
+      class="poll-option-dropdown"
+    />
   </template>
 }
