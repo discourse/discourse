@@ -18,7 +18,6 @@ export default class PollOptionsDropdownComponent extends Component {
     this.args.sendRank(option, rank);
   }
   <template>
-    <div class="irv-dropdown">
       <DropdownSelectBox
         @candidate={{@option.id}}
         @value={{this.rank}}
@@ -27,6 +26,5 @@ export default class PollOptionsDropdownComponent extends Component {
         @options={{hash showCaret=true filterable=false}}
         class="poll-option-dropdown"
       />
-    </div>
   </template>
 }
