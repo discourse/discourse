@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
 import loadScript from "discourse/lib/load-script";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 
 export default class PollResultsPieComponent extends Component {
   htmlLegendPlugin = {

@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import dIcon from "discourse-common/helpers/d-icon";
-import { eq } from "truth-helpers";
-import { on } from "@ember/modifier";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { eq } from "truth-helpers";
 import avatar from "discourse/helpers/bound-avatar-template";
+import dIcon from "discourse-common/helpers/d-icon";
 
 export default class PollVotersComponent extends Component {
   get showMore() {

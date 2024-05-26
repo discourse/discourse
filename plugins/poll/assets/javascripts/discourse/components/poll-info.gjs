@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { relativeAge } from "discourse/lib/formatter";
-import I18n from "I18n";
 import dIcon from "discourse-common/helpers/d-icon";
+import I18n from "I18n";
 
 export default class PollInfoComponent extends Component {
   @service currentUser;

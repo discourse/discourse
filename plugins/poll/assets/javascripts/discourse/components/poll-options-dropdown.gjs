@@ -1,9 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
-import { hash } from "@ember/helper";
-import { fn } from "@ember/helper";
 
 export default class PollOptionsDropdownComponent extends Component {
   @tracked rank = 0;

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import evenRound from "discourse/plugins/poll/lib/even-round";
 import PollVoters from "./poll-voters";
-import { htmlSafe } from "@ember/template";
-import { concat } from "@ember/helper";
 
 export default class PollResultsStandardComponent extends Component {
   get votersCount() {

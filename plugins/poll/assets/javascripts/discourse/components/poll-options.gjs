@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { on } from "@ember/modifier";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import PollOptionsDropdown from "./poll-options-dropdown";
 import dIcon from "discourse-common/helpers/d-icon";
+import PollOptionsDropdown from "./poll-options-dropdown";
+import routeAction from "discourse/helpers/routeAction";
+import i18n from "discourse-common/helpers/i18n";
 
 export default class PollOptionsComponent extends Component {
   @service currentUser;
@@ -46,8 +48,8 @@ export default class PollOptionsComponent extends Component {
             {{else}}
               <button
                 class="btn btn-default"
-                onclick={{route-action "showLogin"}}
-              >{{I18n "poll.options.irv.login"}}</button>
+                onclick={{routeAction "showLogin"}}
+              >{{i18n "poll.options.irv.login"}}</button>
             {{/if}}
             <span class="option-text">{{option.html}}</span>
           </div>
@@ -71,7 +73,7 @@ export default class PollOptionsComponent extends Component {
                 <span class="option-text">{{option.html}}</span>
               </button>
             {{else}}
-              <button onclick={{route-action "showLogin"}}>
+              <button onclick={{routeAction "showLogin"}}>
                 {{#if (this.isChosen option)}}
                   {{#if @isCheckbox}}
                     {{dIcon "far-check-square"}}

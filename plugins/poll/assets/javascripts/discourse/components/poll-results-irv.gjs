@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import I18n from "discourse-i18n";
 import i18n from "discourse-common/helpers/i18n";
+import I18n from "discourse-i18n";
 
 export default class PollResultsIrvComponent extends Component {
   get irvWinnerText() {

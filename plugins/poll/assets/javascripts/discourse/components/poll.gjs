@@ -1,23 +1,23 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import round from "discourse/lib/round";
-import I18n from "discourse-i18n";
+import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import I18n from "discourse-i18n";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
+import PollInfo from "../components/poll-info";
+import PollOptions from "../components/poll-options";
 import PollResultsPie from "../components/poll-results-pie";
 import PollResultsTabs from "../components/poll-results-tabs";
-import PollOptions from "../components/poll-options";
-import PollInfo from "../components/poll-info";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
-import dIcon from "discourse-common/helpers/d-icon";
 
 const FETCH_VOTERS_COUNT = 25;
 
