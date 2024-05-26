@@ -43,6 +43,10 @@ class Poll < ActiveRecord::Base
   def can_see_voters?(user)
     everyone? && can_see_results?(user)
   end
+
+  def irv?
+    type == "irv"
+  end
 end
 
 # == Schema Information

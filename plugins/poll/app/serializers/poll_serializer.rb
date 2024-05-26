@@ -78,7 +78,7 @@ class PollSerializer < ApplicationSerializer
   end
 
   def include_irv_outcome?
-    object.type == "irv"
+    object.irv?
   end
 
   def irv_outcome
