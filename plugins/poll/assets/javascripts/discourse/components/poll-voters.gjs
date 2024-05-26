@@ -2,13 +2,23 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { eq } from "truth-helpers";
-import avatar from "discourse/helpers/bound-avatar-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse-common/helpers/d-icon";
 
 export default class PollVotersComponent extends Component {
-  get showMore() {
+  groupVotersByRank = (voters) => {
+    return voters.reduce((groups, voter) => {
+      const rank = voter.rank;
+      if (!groups[rank]) {
+        groups[rank] = [];
+      }
+      groups[rank].push(voter);
+      return groups;
+    }, {});
+  };
+get showMore() {
     return this.args.voters.length < this.args.totalVotes;
   }
 
@@ -20,23 +30,14 @@ export default class PollVotersComponent extends Component {
 
     // Convert groups to array of objects with keys rank and voters
     const groupedVoters = Object.keys(groupedByRank).map((rank) => ({
-      rank: rank,
+      rank,
       voters: groupedByRank[rank],
     }));
 
     return groupedVoters;
   }
 
-  groupVotersByRank = (voters) => {
-    return voters.reduce((groups, voter) => {
-      const rank = voter.rank;
-      if (!groups[rank]) {
-        groups[rank] = [];
-      }
-      groups[rank].push(voter);
-      return groups;
-    }, {});
-  }
+
 
   <template>
     <div class="poll-voters">
