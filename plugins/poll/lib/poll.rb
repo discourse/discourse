@@ -14,7 +14,7 @@ class DiscoursePoll::Poll
         # remove options that aren't available in the poll
         available_options = poll.poll_options.map { |o| o.digest }.to_set
 
-        if poll.type == IRV
+        if poll.irv?
           options = options.values.map { |hash| hash }
           options.select! { |o| available_options.include?(o[:digest]) }
         else
@@ -29,7 +29,7 @@ class DiscoursePoll::Poll
           poll
             .poll_options
             .each_with_object([]) do |option, obj|
-              if poll.type == IRV
+              if poll.irv?
                 obj << option.id if options.any? { |o| o[:digest] == option.digest }
               else
                 obj << option.id if options.include?(option.digest)
@@ -45,7 +45,7 @@ class DiscoursePoll::Poll
               obj << option.id if option.poll_votes.where(user_id: user.id).exists?
             end
 
-        if poll.type == IRV
+        if poll.irv?
           # for IRV, we need to remove all votes and re-create them as there is no way to update them due to lack of primary key.
           PollVote.where(poll: poll, user: user).delete_all
           creation_set = new_option_ids
@@ -60,7 +60,7 @@ class DiscoursePoll::Poll
 
         # create missing votes
         creation_set.each do |option_id|
-          if poll.type == IRV
+          if poll.irv?
             PollVote.create!(
               poll: poll,
               user: user,
@@ -217,7 +217,7 @@ class DiscoursePoll::Poll
 
       raise Discourse::InvalidParameters.new(:option_id) unless poll_option
 
-      if poll.type == IRV
+      if poll.irv?
         votes = DB.query <<~SQL
         SELECT digest, rank, user_id
           FROM (
@@ -266,7 +266,7 @@ class DiscoursePoll::Poll
       end
       result = { option_digest => user_hashes }
     else
-      if poll.type == IRV
+      if poll.irv?
         votes = DB.query <<~SQL
         SELECT digest, rank, user_id
           FROM (
@@ -310,7 +310,7 @@ class DiscoursePoll::Poll
 
       result = {}
       votes.each do |v|
-        if poll.type == IRV
+        if poll.irv?
           result[v.digest] ||= []
           result[v.digest] << { rank: v.rank, user: user_hashes[v.user_id] }
         else
