@@ -3,8 +3,9 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { eq } from "truth-helpers";
 import avatar from "discourse/helpers/bound-avatar-template";
-import icon from "discourse-common/helpers/d-icon";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import icon from "discourse-common/helpers/d-icon";
 
 export default class PollVotersComponent extends Component {
   get showMore() {
@@ -64,16 +65,14 @@ export default class PollVotersComponent extends Component {
         {{/if}}
       </ul>
       {{#if this.showMore}}
-        {{#if @loading}}
-          <div class="spinner small"></div>
-        {{else}}
+        <ConditionalLoadingSpinner @condition={{@loading}}>
           <DButton
             {{on "click" (fn @fetchVoters @optionId)}}
             class="poll-voters-toggle-expand"
           >
             {{icon "chevron-down"}}
           </DButton>
-        {{/if}}
+        </ConditionalLoadingSpinner>
       {{/if}}
     </div>
   </template>
