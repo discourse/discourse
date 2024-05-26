@@ -3,10 +3,10 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import dIcon from "discourse-common/helpers/d-icon";
-import PollOptionsDropdown from "./poll-options-dropdown";
 import routeAction from "discourse/helpers/routeAction";
+import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import PollOptionsDropdown from "./poll-options-dropdown";
 
 export default class PollOptionsComponent extends Component {
   @service currentUser;
