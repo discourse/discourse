@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
 export default class PollOptionsDropdownComponent extends Component {
-  @tracked rank = 0;
+  @tracked rank;
   constructor() {
     super(...arguments);
     this.rank = this.args.rank;
