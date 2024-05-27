@@ -124,6 +124,72 @@ RSpec.describe Permalink do
       end
     end
 
+    context "with subfolder" do
+      before { set_subfolder "/community" }
+
+      context "when `topic_id` is set" do
+        it "returns an absolute path" do
+          permalink.topic_id = topic.id
+          expect(target_url).to eq(topic.relative_url)
+          expect(target_url).to start_with("/community/")
+        end
+      end
+
+      context "when `post_id` is set" do
+        it "returns an absolute path" do
+          permalink.post_id = post.id
+          expect(target_url).to eq(post.relative_url)
+          expect(target_url).to start_with("/community/")
+        end
+      end
+
+      context "when `category_id` is set" do
+        it "returns an absolute path" do
+          permalink.category_id = category.id
+          expect(target_url).to eq(category.url)
+          expect(target_url).to start_with("/community/")
+        end
+      end
+
+      context "when `tag_id` is set" do
+        it "returns an absolute path" do
+          permalink.tag_id = tag.id
+          expect(target_url).to eq(tag.relative_url)
+          expect(target_url).to start_with("/community/")
+        end
+      end
+
+      context "when `user_id` is set" do
+        it "returns an absolute path" do
+          permalink.user_id = user.id
+          expect(target_url).to eq(user.relative_url)
+          expect(target_url).to start_with("/community/")
+        end
+      end
+
+      context "when `external_url` is set" do
+        it "returns a URL when an absolute URL is set" do
+          permalink.external_url = "https://example.com"
+          expect(target_url).to eq("https://example.com")
+        end
+
+        it "returns a protocol-relative URL when a PRURL is set" do
+          permalink.external_url = "//example.com"
+          expect(target_url).to eq("//example.com")
+        end
+
+        it "returns an absolute path when an absolute path is set" do
+          permalink.external_url = "/my/preferences"
+          expect(target_url).to eq("/community/my/preferences")
+        end
+
+        it "returns a relative path when a relative path is set" do
+          permalink.external_url = "foo/bar"
+          expect(target_url).to eq("foo/bar")
+        end
+      end
+    end
+
     it "returns the highest priority url when multiple attributes are set" do
       permalink.external_url = "/my/preferences"
       permalink.post = post
