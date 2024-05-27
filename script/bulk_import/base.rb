@@ -1853,7 +1853,7 @@ class BulkImport::Base
   end
 
   def normalize_text(text)
-    return nil unless text.present?
+    return nil if text.blank?
     @html_entities.decode(normalize_charset(text.presence || "").scrub)
   end
 

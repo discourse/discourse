@@ -33,8 +33,8 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.5",
-    "@babel/standalone": "^7.24.5",
+    "@babel/core": "^7.24.6",
+    "@babel/standalone": "^7.24.6",
     "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",

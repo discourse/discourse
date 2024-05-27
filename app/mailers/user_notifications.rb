@@ -506,7 +506,7 @@ class UserNotifications < ActionMailer::Base
 
     if post && SiteSetting.enable_names && SiteSetting.display_name_on_email_from
       name = User.where(id: notification_data[:original_user_id] || post.user_id).pick(:name)
-      user_name = name unless name.blank?
+      user_name = name if name.present?
     end
 
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?

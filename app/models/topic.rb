@@ -262,6 +262,7 @@ class Topic < ActiveRecord::Base
 
   has_many :group_archived_messages, dependent: :destroy
   has_many :user_archived_messages, dependent: :destroy
+  has_many :topic_view_stats, dependent: :destroy
 
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_group_users, through: :allowed_groups, source: :users
@@ -862,7 +863,7 @@ class Topic < ActiveRecord::Base
         FROM posts
         WHERE deleted_at IS NULL AND post_type <> 4
         GROUP BY topic_id
-      )       
+      )
       UPDATE topics
       SET
         highest_staff_post_number = X.highest_post_number,
@@ -1371,7 +1372,7 @@ class Topic < ActiveRecord::Base
   self.slug_computed_callbacks = []
 
   def slug_for_topic(title)
-    return "" unless title.present?
+    return "" if title.blank?
     slug = Slug.for(title)
 
     # this is a hook for plugins that need to modify the generated slug
@@ -1383,7 +1384,7 @@ class Topic < ActiveRecord::Base
   # Even if the slug column in the database is null, topic.slug will return something:
   def slug
     unless slug = read_attribute(:slug)
-      return "" unless title.present?
+      return "" if title.blank?
       slug = slug_for_topic(title)
       if new_record?
         write_attribute(:slug, slug)
@@ -1444,12 +1445,12 @@ class Topic < ActiveRecord::Base
   end
 
   def clear_pin_for(user)
-    return unless user.present?
+    return if user.blank?
     TopicUser.change(user.id, id, cleared_pinned_at: Time.now)
   end
 
   def re_pin_for(user)
-    return unless user.present?
+    return if user.blank?
     TopicUser.change(user.id, id, cleared_pinned_at: nil)
   end
 
@@ -2061,7 +2062,7 @@ class Topic < ActiveRecord::Base
 
   def self.publish_stats_to_clients!(topic_id, type, opts = {})
     topic = Topic.find_by(id: topic_id)
-    return unless topic.present?
+    return if topic.blank?
 
     case type
     when :liked, :unliked

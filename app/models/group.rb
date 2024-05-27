@@ -857,7 +857,7 @@ class Group < ActiveRecord::Base
   end
 
   def bulk_add(user_ids)
-    return unless user_ids.present?
+    return if user_ids.blank?
 
     Group.transaction do
       sql = <<~SQL

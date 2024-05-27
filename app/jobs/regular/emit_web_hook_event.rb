@@ -38,7 +38,7 @@ module Jobs
     end
 
     def validate_argument!(key)
-      raise Discourse::InvalidParameters.new(key) unless @arguments[key].present?
+      raise Discourse::InvalidParameters.new(key) if @arguments[key].blank?
     end
 
     def send_webhook!

@@ -11,7 +11,7 @@ module Jobs
     def execute(args)
       @user = User.find_by(id: args[:user_id])
 
-      return unless user.present?
+      return if user.blank?
 
       # We need to account for the case where the instance allows
       # name to be empty by falling back to username.

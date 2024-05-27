@@ -29,7 +29,7 @@ File
   .each_line do |line|
     parsed = JSON.parse(line)
     if parsed && parsed["address"]
-      diff << parsed unless origs.include? parsed["address"]
+      diff << parsed if origs.exclude? parsed["address"]
     end
   end
 

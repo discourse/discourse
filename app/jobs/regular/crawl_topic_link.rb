@@ -9,7 +9,7 @@ module Jobs
     sidekiq_options queue: "low"
 
     def execute(args)
-      raise Discourse::InvalidParameters.new(:topic_link_id) unless args[:topic_link_id].present?
+      raise Discourse::InvalidParameters.new(:topic_link_id) if args[:topic_link_id].blank?
 
       topic_link = TopicLink.find_by(id: args[:topic_link_id], internal: false, crawled_at: nil)
       return if topic_link.blank?

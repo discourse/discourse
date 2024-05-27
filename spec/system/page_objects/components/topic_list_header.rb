@@ -32,12 +32,6 @@ module PageObjects
         find(bulk_select_dropdown_item(name)).click
       end
 
-      # TODO (martin) Remove all this once discourse-assign is using the new bulk select
-      # modal page object in specs.
-      def has_close_topics_button?
-        page.has_css?(bulk_select_dropdown_item("close-topics"))
-      end
-
       def click_close_topics_button
         find(bulk_select_dropdown_item("close-topics")).click
       end

@@ -788,18 +788,6 @@ class User < ActiveRecord::Base
     Reviewable.list_for(self, include_claimed_by_others: false).count
   end
 
-  def saw_notification_id(notification_id)
-    Discourse.deprecate(<<~TEXT, since: "2.9", drop_from: "3.0")
-      User#saw_notification_id is deprecated. Please use User#bump_last_seen_notification! instead.
-    TEXT
-    if seen_notification_id.to_i < notification_id.to_i
-      update_columns(seen_notification_id: notification_id.to_i)
-      true
-    else
-      false
-    end
-  end
-
   def bump_last_seen_notification!
     query = self.notifications.visible
     query = query.where("notifications.id > ?", seen_notification_id) if seen_notification_id
@@ -910,7 +898,7 @@ class User < ActiveRecord::Base
 
   def password=(password)
     # special case for passwordless accounts
-    @raw_password = password unless password.blank?
+    @raw_password = password if password.present?
   end
 
   def password
@@ -1497,7 +1485,7 @@ class User < ActiveRecord::Base
     end
 
     # mark all the user's quoted posts as "needing a rebake"
-    Post.rebake_all_quoted_posts(self.id) if self.will_save_change_to_uploaded_avatar_id?
+    Post.rebake_all_quoted_posts(self.id) if saved_change_to_uploaded_avatar_id?
   end
 
   def first_post_created_at

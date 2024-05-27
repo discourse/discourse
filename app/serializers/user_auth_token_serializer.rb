@@ -15,7 +15,7 @@ class UserAuthTokenSerializer < ApplicationSerializer
   end
 
   def seen_at
-    return object.created_at unless object.seen_at.present?
+    return object.created_at if object.seen_at.blank?
 
     object.seen_at
   end

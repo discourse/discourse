@@ -1,0 +1,103 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    styleguide:
+      title: "ئۇسلۇب يېتەكچىسى"
+      welcome: "باشلاش ئۈچۈن سول تەرەپتىكى تىزىملىكتىن بىر بۆلەكنى تاللاڭ."
+      categories:
+        syntax: گرامماتىكىسى
+        atoms: ئاتوم
+        molecules: مولېكۇلا
+        organisms: جانلىقلار
+      sections:
+        bem:
+          title: "BEM"
+        typography:
+          title: "مەتبەئە"
+          example: "Discourse قا خۇش كەپسىز"
+        date_time_inputs:
+          title: "Datum / tyd insette"
+        menus:
+          title: "تىزىملىك"
+        toasts:
+          title: "ئۇچۇر رامكىسى"
+        font_scale:
+          title: "خەت نۇسخا سىستېمىسى"
+        colors:
+          title: "رەڭ"
+        icons:
+          title: "سىنبەلگە"
+          full_list: "Font Awesome سىنبەلگىسىنىڭ تولۇق تىزىمىنى كۆرسىتىدۇ"
+        input_fields:
+          title: "كىرگۈزۈش بۆلىكى"
+        buttons:
+          title: "توپچە"
+        dropdowns:
+          title: "تارتما تىزىملىك"
+        categories:
+          title: "سەھىپە"
+        bread_crumbs:
+          title: "بەلگە ئىزى"
+        navigation:
+          title: "يولباشچى"
+        navigation_bar:
+          title: "يولباشچى بالداق"
+        navigation_stacked:
+          title: "دەستە يولباشچى"
+        categories_list:
+          title: "سەھىپە تىزىمى"
+        topic_link:
+          title: "تېما ئۇلانمىسى"
+        topic_list_item:
+          title: "تېما تىزىم تۈرى"
+        topic_statuses:
+          title: "تېما ئەھۋالى"
+        topic_list:
+          title: "تېما تىزىمى"
+        basic_topic_list:
+          title: "ئاساسىي تېما تىزىمى"
+        footer_message:
+          title: "بەت ئاستى ئۇچۇرى"
+        signup_cta:
+          title: "تىزىملىتىش چاقىرىق سۆزى"
+        topic_timer_info:
+          title: "تېما ۋاقىت خاتىرىلىگۈچ"
+        topic_footer_buttons:
+          title: "تېما بەت ئاستى توپچە"
+        topic_notifications:
+          title: "تېما ئۇقتۇرۇشى"
+        post:
+          title: "يازما"
+        topic_map:
+          title: "تېما خەرىتىسى"
+        site_header:
+          title: "بېكەت بېشى"
+        suggested_topics:
+          title: "تەۋسىيە تېما"
+        post_menu:
+          title: "يازما تىزىملىكى"
+        modal:
+          title: "مودېل كۆزنىكى"
+          header: "مودېل كۆزنەك ماۋزۇسى"
+          footer: "مودېل كۆزنەك بەت ئاستى"
+        user_about:
+          title: "ئىشلەتكۈچى ھەققىدە رامكىسى"
+        header_icons:
+          title: "ماۋزۇ سىنبەلگە"
+        spinners:
+          title: "چىغ توپچە"
+        empty_state:
+          title: "بوش ھالەت"
+        tooltips:
+          title: "قورال ئەسكەرتىشى"
+          description: "چۈشەندۈرۈش"
+          header: "بەت قاش"
+          hover_to_see: "قورال ئەسكەرتىشىنى كۆرۈشتە لەيلىتىلىدۇ"
+        char_counter:
+          title: "ھەرپ سانىغۇچ"
+          placeholder: "تېكىست كىرگۈزۈڭ…"
