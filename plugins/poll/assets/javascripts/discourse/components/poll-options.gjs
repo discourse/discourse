@@ -3,11 +3,9 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import routeAction from "discourse/helpers/route-action";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
-import PollOptionsDropdown from "./poll-options-dropdown";
+import PollOptionIrv from "./poll-option-irv";
 
 export default class PollOptionsComponent extends Component {
   @service currentUser;
@@ -33,27 +31,11 @@ export default class PollOptionsComponent extends Component {
     <ul class={{this.classes}}>
       {{#each @options as |option|}}
         {{#if @isIrv}}
-          <div
-            tabindex="0"
-            class="irv-poll-option"
-            data-poll-option-id={{option.id}}
-            data-poll-option-rank={{option.rank}}
-          >
-            {{#if this.currentUser}}
-              <PollOptionsDropdown
-                @rank={{option.rank}}
-                @option={{option}}
-                @irvDropdownContent={{@irvDropdownContent}}
-                @sendRank={{this.sendRank}}
-              />
-            {{else}}
-              <DButton
-                class="btn btn-default"
-                onclick={{routeAction "showLogin"}}
-              >{{i18n "poll.options.irv.login"}}</DButton>
-            {{/if}}
-            <span class="option-text">{{option.html}}</span>
-          </div>
+          <PollOptionIrv
+            @option={{option}}
+            @irvDropdownContent={{@irvDropdownContent}}
+            @sendRank={{this.sendRank}}
+          />
         {{else}}
           <li tabindex="0" data-poll-option-id={{option.id}}>
             {{#if this.currentUser}}
