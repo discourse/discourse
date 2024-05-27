@@ -7,7 +7,7 @@ class Permalink < ActiveRecord::Base
   belongs_to :tag
   belongs_to :user
 
-  before_validation :normalize_url
+  before_validation :normalize_url, :encode_url
 
   validates :url, uniqueness: true
 
@@ -66,10 +66,6 @@ class Permalink < ActiveRecord::Base
     find_by(url: normalize_url(url))
   end
 
-  def normalize_url
-    self.url = Permalink.normalize_url(url) if url
-  end
-
   def target_url
     return relative_external_url if external_url
     return post.relative_url if post
@@ -80,10 +76,6 @@ class Permalink < ActiveRecord::Base
     nil
   end
 
-  def relative_external_url
-    external_url.match?(%r{\A/[^/]}) ? "#{Discourse.base_path}#{external_url}" : external_url
-  end
-
   def self.filter_by(url = nil)
     permalinks =
       Permalink.includes(:topic, :post, :category, :tag, :user).order("permalinks.created_at desc")
@@ -91,6 +83,20 @@ class Permalink < ActiveRecord::Base
     permalinks.where!("url ILIKE :url OR external_url ILIKE :url", url: "%#{url}%") if url.present?
     permalinks.limit!(100)
     permalinks.to_a
+  end
+
+  private
+
+  def normalize_url
+    self.url = Permalink.normalize_url(url) if url
+  end
+
+  def encode_url
+    self.url = UrlHelper.encode(url) if url
+  end
+
+  def relative_external_url
+    external_url.match?(%r{\A/[^/]}) ? "#{Discourse.base_path}#{external_url}" : external_url
   end
 end
 
