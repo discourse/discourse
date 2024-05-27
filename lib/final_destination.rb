@@ -407,7 +407,7 @@ class FinalDestination
 
   def validate_uri_format
     return false unless @uri && @uri.host
-    return false unless %w[https http].include?(@uri.scheme)
+    return false if %w[https http].exclude?(@uri.scheme)
 
     # In some cases (like local/test environments) we may want to allow http URLs
     # to be used for internal hosts, but only if it's the case that the host is

@@ -315,7 +315,7 @@ class TopicEmbed < ActiveRecord::Base
           return result if result.size >= 100
         end
       end
-    return result unless result.blank?
+    return result if result.present?
 
     # If there is no first paragraph, return the first div (onebox)
     doc.css("div").first.to_s

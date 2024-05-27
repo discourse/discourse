@@ -318,7 +318,7 @@ class StaffActionLogger
   end
 
   def log_site_text_change(subject, new_text = nil, old_text = nil, opts = {})
-    raise Discourse::InvalidParameters.new(:subject) unless subject.present?
+    raise Discourse::InvalidParameters.new(:subject) if subject.blank?
     UserHistory.create!(
       params(opts).merge(
         action: UserHistory.actions[:change_site_text],
@@ -856,9 +856,7 @@ class StaffActionLogger
 
     if opts[:changes]
       old_values, new_values = get_changes(opts[:changes])
-      history_params[:previous_value] = old_values&.join(", ") unless opts[:changes].keys.include?(
-        "id",
-      )
+      history_params[:previous_value] = old_values&.join(", ") if opts[:changes].keys.exclude?("id")
       history_params[:new_value] = new_values&.join(", ")
     end
 

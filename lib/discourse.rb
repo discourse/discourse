@@ -1182,7 +1182,7 @@ module Discourse
   CDN_REQUEST_METHODS ||= %w[GET HEAD OPTIONS]
 
   def self.is_cdn_request?(env, request_method)
-    return unless CDN_REQUEST_METHODS.include?(request_method)
+    return if CDN_REQUEST_METHODS.exclude?(request_method)
 
     cdn_hostnames = GlobalSetting.cdn_hostnames
     return if cdn_hostnames.blank?

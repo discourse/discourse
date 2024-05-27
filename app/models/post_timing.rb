@@ -207,7 +207,7 @@ SQL
       new_posts_read = timings.size - existing.size if is_regular
 
       timings.each_with_index do |(post_number, time), index|
-        unless existing.include?(index)
+        if existing.exclude?(index)
           PostTiming.record_new_timing(
             topic_id: topic_id,
             post_number: post_number,

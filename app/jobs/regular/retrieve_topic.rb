@@ -4,7 +4,7 @@ module Jobs
   # Asynchronously retrieve a topic from an embedded site
   class RetrieveTopic < ::Jobs::Base
     def execute(args)
-      raise Discourse::InvalidParameters.new(:embed_url) unless args[:embed_url].present?
+      raise Discourse::InvalidParameters.new(:embed_url) if args[:embed_url].blank?
 
       user = nil
       user = User.find_by(id: args[:user_id]) if args[:user_id]

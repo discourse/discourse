@@ -27,8 +27,8 @@ module Jobs
     end
 
     def execute(args)
-      raise Discourse::InvalidParameters.new(:user_id) unless args[:user_id].present?
-      raise Discourse::InvalidParameters.new(:type) unless args[:type].present?
+      raise Discourse::InvalidParameters.new(:user_id) if args[:user_id].blank?
+      raise Discourse::InvalidParameters.new(:type) if args[:type].blank?
 
       # This is for performance. Quit out fast without doing a bunch
       # of extra work when emails are disabled.

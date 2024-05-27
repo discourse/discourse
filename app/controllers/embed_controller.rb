@@ -144,7 +144,7 @@ class EmbedController < ApplicationController
 
       topic_embeds.each do |te|
         url = te.embed_url
-        url = "#{url}#discourse-comments" unless params[:embed_url].include?(url)
+        url = "#{url}#discourse-comments" if params[:embed_url].exclude?(url)
         if te.topic.present?
           by_url[url] = I18n.t("embed.replies", count: te.topic.posts_count - 1)
         else

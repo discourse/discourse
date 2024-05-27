@@ -161,8 +161,8 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
 
     if bio || location
       profile = user.user_profile
-      profile.bio_raw = bio unless profile.bio_raw.present?
-      profile.location = location unless profile.location.present?
+      profile.bio_raw = bio if profile.bio_raw.blank?
+      profile.location = location if profile.location.blank?
       profile.save
     end
   end

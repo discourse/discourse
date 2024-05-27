@@ -136,7 +136,7 @@ module ImportScripts::PhpBB3
         # This appears to be a reply. Let's try to find the Discourse topic_id for this message.
         parent_msg_id = get_import_id(row[:root_msg_id])
         parent = @lookup.topic_lookup_from_imported_post_id(parent_msg_id)
-        parent[:topic_id] unless parent.blank?
+        parent[:topic_id] if parent.present?
       end
     end
 

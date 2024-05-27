@@ -111,7 +111,7 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
   def clone_http!
     uri = redirected_uri
 
-    raise_import_error! unless %w[http https].include?(@uri.scheme)
+    raise_import_error! if %w[http https].exclude?(@uri.scheme)
 
     addresses = FinalDestination::SSRFDetector.lookup_and_filter_ips(uri.host)
 
@@ -133,7 +133,7 @@ class ThemeStore::GitImporter < ThemeStore::BaseImporter
   end
 
   def clone_ssh!
-    raise_import_error! unless @private_key.present?
+    raise_import_error! if @private_key.blank?
 
     with_ssh_private_key do |ssh_folder|
       # Use only the specified SSH key

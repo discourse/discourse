@@ -477,7 +477,7 @@ class PostsController < ApplicationController
 
     post = find_post_from_params
     raise Discourse::InvalidParameters.new(:post) if post.blank?
-    raise Discourse::NotFound unless post.revisions.present?
+    raise Discourse::NotFound if post.revisions.blank?
 
     RateLimiter.new(
       current_user,

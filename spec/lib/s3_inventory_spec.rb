@@ -29,7 +29,7 @@ RSpec.describe S3Inventory do
       freeze_time
 
       CSV.foreach(csv_filename, headers: false) do |row|
-        next unless row[S3Inventory::CSV_KEY_INDEX].include?("default")
+        next if row[S3Inventory::CSV_KEY_INDEX].exclude?("default")
         Fabricate(
           :upload,
           etag: row[S3Inventory::CSV_ETAG_INDEX],
@@ -182,7 +182,7 @@ RSpec.describe S3Inventory do
     freeze_time
 
     CSV.foreach(csv_filename, headers: false) do |row|
-      next unless row[S3Inventory::CSV_KEY_INDEX].include?("default")
+      next if row[S3Inventory::CSV_KEY_INDEX].exclude?("default")
       Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX], updated_at: 2.days.ago)
     end
 
