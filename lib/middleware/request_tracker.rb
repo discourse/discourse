@@ -271,11 +271,7 @@ class Middleware::RequestTracker
     if !cookie
       if error_details = check_crawler_limits(env)
         available_in, error_code = error_details
-        message = <<~TEXT
-          Slow down, too many crawling requests.
-          Please retry again in #{available_in} seconds.
-          Error code: #{error_code}.
-        TEXT
+        message = "Too many crawling requests. Error code: #{error_code}."
         headers = {
           "Content-Type" => "text/plain",
           "Retry-After" => available_in.to_s,
