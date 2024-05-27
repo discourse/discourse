@@ -442,6 +442,7 @@ class BulkImport::Generic < BulkImport::Base
         suspended_at: suspended_at,
         suspended_till: suspended_till,
         registration_ip_address: row["registration_ip_address"],
+        date_of_birth: to_date(row["date_of_birth"]),
       }
     end
 
@@ -473,9 +474,8 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing user profiles..."
 
     users = query(<<~SQL)
-      SELECT id, bio
+      SELECT id, bio, location
       FROM users
-      WHERE bio IS NOT NULL
       ORDER BY id
     SQL
 
@@ -485,7 +485,7 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["id"])
       next if user_id && existing_user_ids.include?(user_id)
 
-      { user_id: user_id, bio_raw: row["bio"] }
+      { user_id: user_id, bio_raw: row["bio"], location: row["location"] }
     end
 
     users.close
@@ -654,11 +654,10 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_topics(topics) do |row|
-      unless row["category_id"] && (category_id = category_id_from_imported_id(row["category_id"]))
-        next
-      end
+      category_id = category_id_from_imported_id(row["category_id"]) if row["category_id"].present?
 
       next if topic_id_from_imported_id(row["id"]).present?
+      next if row["private_message"].blank? && category_id.nil?
 
       {
         archetype: row["private_message"] ? Archetype.private_message : Archetype.default,
@@ -670,6 +669,9 @@ class BulkImport::Generic < BulkImport::Base
         closed: to_boolean(row["closed"]),
         views: row["views"],
         subtype: row["subtype"],
+        pinned_at: to_datetime(row["pinned_at"]),
+        pinned_until: to_datetime(row["pinned_until"]),
+        pinned_globally: to_boolean(row["pinned_globally"]),
       }
     end
 

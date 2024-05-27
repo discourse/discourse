@@ -16,8 +16,7 @@ class Admin::EmojisController < Admin::AdminController
     hijack do
       # fix the name
       name = File.basename(name, ".*")
-      name = name.gsub(/[^a-z0-9]+/i, "_").gsub(/_{2,}/, "_").downcase
-
+      name = Emoji.sanitize_emoji_name(name)
       upload =
         UploadCreator.new(file.tempfile, file.original_filename, type: "custom_emoji").create_for(
           current_user.id,

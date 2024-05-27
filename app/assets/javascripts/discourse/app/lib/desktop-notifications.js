@@ -11,11 +11,8 @@ let primaryTab = false;
 let liveEnabled = false;
 let havePermission = null;
 let mbClientId = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
-let lastAction = -1;
 
 const focusTrackerKey = "focus-tracker";
-const idleThresholdTime = 1000 * 10; // 10 seconds
-
 const context = "discourse_desktop_notifications_";
 const keyValueStore = new KeyValueStore(context);
 
@@ -28,7 +25,7 @@ export function clearDesktopNotificationHandlers() {
 }
 
 // Called from an initializer
-function init(messageBus, appEvents) {
+function init(messageBus) {
   liveEnabled = false;
   mbClientId = messageBus.clientId;
 
@@ -72,7 +69,7 @@ function init(messageBus, appEvents) {
   liveEnabled = true;
   try {
     // Preliminary checks passed, continue with setup
-    setupNotifications(appEvents);
+    setupNotifications();
   } catch (e) {
     // eslint-disable-next-line no-console
     console.error(e);
@@ -101,7 +98,7 @@ function confirmNotification(siteSettings) {
 }
 
 // This function is only called if permission was granted
-function setupNotifications(appEvents) {
+function setupNotifications() {
   window.addEventListener("storage", function (e) {
     // note: This event only fires when other tabs setItem()
     const key = e.key;
@@ -112,8 +109,6 @@ function setupNotifications(appEvents) {
   });
 
   window.addEventListener("focus", function () {
-    resetIdle();
-
     if (!primaryTab) {
       primaryTab = true;
       keyValueStore.setItem(focusTrackerKey, mbClientId);
@@ -130,32 +125,10 @@ function setupNotifications(appEvents) {
     primaryTab = true;
     keyValueStore.setItem(focusTrackerKey, mbClientId);
   }
-
-  if (document) {
-    document.addEventListener("scroll", resetIdle);
-  }
-
-  appEvents.on("page:changed", resetIdle);
-}
-
-function resetIdle() {
-  lastAction = Date.now();
-}
-
-function isIdle() {
-  return lastAction + idleThresholdTime < Date.now();
-}
-
-function setLastAction(time) {
-  lastAction = time;
 }
 
 function canUserReceiveNotifications(user) {
   if (!primaryTab) {
-    return false;
-  }
-
-  if (!isIdle()) {
     return false;
   }
 
@@ -264,6 +237,4 @@ export {
   confirmNotification,
   disable,
   canUserReceiveNotifications,
-  resetIdle,
-  setLastAction,
 };

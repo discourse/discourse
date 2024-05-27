@@ -355,14 +355,17 @@ export default class Chat extends Service {
   // channel for. The current user will automatically be included in the channel when it is created.
   // @param {array} [targets.usernames] - The usernames to include in the direct message channel.
   // @param {array} [targets.groups] - The groups to include in the direct message channel.
-  // @param {string|null} [name=null] - Optional name for the direct message channel.
-  upsertDmChannel(targets, name = null) {
+  // @param {object} opts - Optional values when fetching or creating the direct message channel.
+  // @param {string|null} [opts.name] - Name for the direct message channel.
+  // @param {boolean} [opts.upsert] - Should we attempt to fetch existing channel before creating a new one.
+  createDmChannel(targets, opts = { name: null, upsert: false }) {
     return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
       data: {
         target_usernames: targets.usernames?.uniq(),
         target_groups: targets.groups?.uniq(),
-        name,
+        upsert: opts.upsert,
+        name: opts.name,
       },
     })
       .then((response) => {
@@ -371,6 +374,10 @@ export default class Chat extends Service {
         return channel;
       })
       .catch(popupAjaxError);
+  }
+
+  upsertDmChannel(targets, name = null) {
+    return this.createDmChannel(targets, { name, upsert: true });
   }
 
   // @param {array} usernames - The usernames to fetch the direct message

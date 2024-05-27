@@ -23,6 +23,19 @@ describe "StalledWiki" do
     before do
       automation.upsert_field!("stalled_after", "choices", { value: "PT10H" }, target: "trigger")
       automation.upsert_field!("retriggered_after", "choices", { value: "PT1H" }, target: "trigger")
+      I18n.backend.store_translations(
+        :en,
+        {
+          discourse_automation: {
+            scriptables: {
+              something_about_us: {
+                title: "Something about us.",
+                description: "We rock!",
+              },
+            },
+          },
+        },
+      )
     end
 
     it "supports manual triggering" do
