@@ -27,7 +27,7 @@ class Archetype
   end
 
   def self.list
-    return [] unless @archetypes.present?
+    return [] if @archetypes.blank?
     @archetypes.values
   end
 

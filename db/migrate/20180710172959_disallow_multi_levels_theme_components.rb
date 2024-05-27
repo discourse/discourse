@@ -73,9 +73,9 @@ class DisallowMultiLevelsThemeComponents < ActiveRecord::Migration[5.2]
       )
 
     children.each do |child|
-      unless @handled.include?(
-               [top_parent.parent_theme_id, child.parent_theme_id, child.child_theme_id],
-             )
+      if @handled.exclude?(
+           [top_parent.parent_theme_id, child.parent_theme_id, child.child_theme_id],
+         )
         migrate_child(child, top_parent)
       end
     end

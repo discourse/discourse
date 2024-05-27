@@ -165,7 +165,7 @@ class BulkImport::Generic < BulkImport::Base
       when "append"
         raise "Cannot append to #{name} setting" if setting[:type] != "list"
         items = (SiteSetting.get(name) || "").split("|")
-        items << row["value"] unless items.include?(row["value"])
+        items << row["value"] if items.exclude?(row["value"])
         SiteSetting.set_and_log(name, items.join("|"))
       end
     end
@@ -2287,7 +2287,7 @@ class BulkImport::Generic < BulkImport::Base
 
     rows.each do |row|
       normalization = row["normalization"]
-      normalizations << normalization unless normalizations.include?(normalization)
+      normalizations << normalization if normalizations.exclude?(normalization)
     end
 
     SiteSetting.permalink_normalizations = normalizations.join("|")

@@ -423,7 +423,7 @@ module Email
         .css("a")
         .each do |link|
           begin
-            link["href"] = "#{site_uri}#{link["href"]}" unless URI(link["href"].to_s).host.present?
+            link["href"] = "#{site_uri}#{link["href"]}" if URI(link["href"].to_s).host.blank?
           rescue URI::Error
             # leave it
           end

@@ -299,7 +299,7 @@ class PostCreator
   end
 
   def self.set_reply_info(post)
-    return unless post.reply_to_post_number.present?
+    return if post.reply_to_post_number.blank?
 
     # Before the locking here was added, replying to a post and liking a post
     # at roughly the same time could cause a deadlock.
@@ -396,7 +396,7 @@ class PostCreator
   end
 
   def create_embedded_topic
-    return unless @opts[:embed_url].present?
+    return if @opts[:embed_url].blank?
 
     original_uri = URI.parse(@opts[:embed_url])
     raise Discourse::InvalidParameters.new(:embed_url) unless original_uri.is_a?(URI::HTTP)

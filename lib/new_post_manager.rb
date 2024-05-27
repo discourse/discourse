@@ -59,7 +59,7 @@ class NewPostManager
 
     pattern = SiteSetting.auto_silence_first_post_regex
 
-    return false unless pattern.present?
+    return false if pattern.blank?
     return false unless is_first_post?(manager)
 
     begin

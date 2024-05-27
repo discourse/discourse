@@ -338,7 +338,7 @@ desc <<~DESC
 DESC
 task "version_bump:major_stable_merge", [:version_bump_ref] do |t, args|
   merge_ref = args[:version_bump_ref]
-  raise "Must pass version_bump_ref" unless merge_ref.present?
+  raise "Must pass version_bump_ref" if merge_ref.blank?
 
   git "fetch", "origin", merge_ref
   raise "Unknown version_bump_ref: #{merge_ref.inspect}" unless ref_exists?(merge_ref)
@@ -395,7 +395,7 @@ desc <<~DESC
 DESC
 task "version_bump:stage_security_fixes", [:base] do |t, args|
   base = args[:base]
-  raise "Unknown base: #{base.inspect}" unless %w[stable main].include?(base)
+  raise "Unknown base: #{base.inspect}" if %w[stable main].exclude?(base)
 
   fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
   raise "No branches specified in SECURITY_FIX_REFS env" if fix_refs.nil? || fix_refs.empty?

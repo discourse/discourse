@@ -37,7 +37,7 @@ class TopicsBulkAction
   end
 
   def perform!
-    unless TopicsBulkAction.operations.include?(@operation[:type])
+    if TopicsBulkAction.operations.exclude?(@operation[:type])
       raise Discourse::InvalidParameters.new(:operation)
     end
     # careful these are private methods, we need send

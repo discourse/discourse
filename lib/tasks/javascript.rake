@@ -279,7 +279,7 @@ task "javascript:clean_up" do
     next if processed.include?(package_dir_name)
 
     versions = Dir["#{File.join(public_js, package_dir_name)}/*"].collect { |p| p.split("/").last }
-    next unless versions.present?
+    next if versions.blank?
 
     versions = versions.sort { |a, b| Gem::Version.new(a) <=> Gem::Version.new(b) }
     puts "Keeping #{package_dir_name} version: #{versions[-1]}"

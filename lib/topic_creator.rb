@@ -206,7 +206,7 @@ class TopicCreator
   end
 
   def setup_auto_close_time(topic)
-    return unless @opts[:auto_close_time].present?
+    return if @opts[:auto_close_time].blank?
     return unless @guardian.can_moderate?(topic)
     topic.set_auto_close(@opts[:auto_close_time], by_user: @user)
   end
@@ -215,8 +215,8 @@ class TopicCreator
     return unless @opts[:archetype] == Archetype.private_message
     topic.subtype = TopicSubtype.user_to_user unless topic.subtype
 
-    unless @opts[:target_usernames].present? || @opts[:target_emails].present? ||
-             @opts[:target_group_names].present?
+    if @opts[:target_usernames].blank? && @opts[:target_emails].blank? &&
+         @opts[:target_group_names].blank?
       rollback_with!(topic, :no_user_selected)
     end
 

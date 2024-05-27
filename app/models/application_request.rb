@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 class ApplicationRequest < ActiveRecord::Base
-  enum req_type: %i[
-         http_total
-         http_2xx
-         http_background
-         http_3xx
-         http_4xx
-         http_5xx
-         page_view_crawler
-         page_view_logged_in
-         page_view_anon
-         page_view_logged_in_mobile
-         page_view_anon_mobile
-         api
-         user_api
-         page_view_anon_browser
-         page_view_anon_browser_mobile
-         page_view_logged_in_browser
-         page_view_logged_in_browser_mobile
-       ]
+  enum req_type: {
+         http_total: 0,
+         http_2xx: 1,
+         http_background: 2,
+         http_3xx: 3,
+         http_4xx: 4,
+         http_5xx: 5,
+         page_view_crawler: 6,
+         page_view_logged_in: 7,
+         page_view_anon: 8,
+         page_view_logged_in_mobile: 9,
+         page_view_anon_mobile: 10,
+         api: 11,
+         user_api: 12,
+         page_view_anon_browser: 13,
+         page_view_anon_browser_mobile: 14,
+         page_view_logged_in_browser: 15,
+         page_view_logged_in_browser_mobile: 16,
+       }
 
   include CachedCounting
 

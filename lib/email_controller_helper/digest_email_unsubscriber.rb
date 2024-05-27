@@ -20,7 +20,7 @@ module EmailControllerHelper
           take_next: false,
         ) do |memo, v|
           memo[:current] = v[:name] if v[:value] == frequency_in_minutes && email_digests
-          next(memo) unless allowed_frequencies.include?(v[:name])
+          next(memo) if allowed_frequencies.exclude?(v[:name])
 
           memo.tap do |m|
             m[:selected] = v[:value] if m[:take_next] && email_digests

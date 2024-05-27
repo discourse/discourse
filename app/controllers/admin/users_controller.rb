@@ -619,7 +619,7 @@ class Admin::UsersController < Admin::StaffController
   private
 
   def perform_post_action
-    return unless params[:post_id].present? && params[:post_action].present?
+    return if params[:post_id].blank? || params[:post_action].blank?
 
     if post = Post.where(id: params[:post_id]).first
       case params[:post_action]

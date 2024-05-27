@@ -70,7 +70,7 @@ module Jobs
         .with_deleted
         .joins(quoted("posts.id"))
         .where("p.user_id = :user_id", user_id: @user_id)
-        .find_each { |post| update_post(post) unless updated_post_ids.include?(post.id) }
+        .find_each { |post| update_post(post) if updated_post_ids.exclude?(post.id) }
     end
 
     def update_revisions

@@ -542,7 +542,7 @@ class Category < ActiveRecord::Base
   end
 
   def ensure_slug
-    return unless name.present?
+    return if name.blank?
 
     self.name.strip!
 
@@ -948,7 +948,7 @@ class Category < ActiveRecord::Base
 
   # If the name changes, try and update the category definition topic too if it's an exact match
   def rename_category_definition
-    return unless topic.present?
+    return if topic.blank?
     old_name = saved_changes.transform_values(&:first)["name"]
     if topic.title == I18n.t("category.topic_prefix", category: old_name)
       topic.update_attribute(:title, I18n.t("category.topic_prefix", category: name))
