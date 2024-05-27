@@ -9,9 +9,8 @@ export default class PollInfoComponent extends Component {
   @service currentUser;
 
   get multipleHelpText() {
-    const min = this.args.min;
-    const max = this.args.max;
-    const optionsCount = this.args.options.length;
+  const { min, max, options } = this.args;
+  const optionsCount = options.length;
 
     if (max > 0) {
       if (min === max) {
