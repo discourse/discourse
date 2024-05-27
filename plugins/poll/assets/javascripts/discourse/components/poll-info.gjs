@@ -5,6 +5,10 @@ import { relativeAge } from "discourse/lib/formatter";
 import icon from "discourse-common/helpers/d-icon";
 import I18n from "I18n";
 
+const ON_VOTE = "on_vote";
+const ON_CLOSE = "on_close";
+const STAFF_ONLY = "staff_only";
+
 export default class PollInfoComponent extends Component {
   @service currentUser;
 
@@ -99,19 +103,19 @@ export default class PollInfoComponent extends Component {
 
   get resultsOnVote() {
     return (
-      this.args.results === "on_vote" &&
+      this.args.results === ON_VOTE &&
       !this.args.hasVoted &&
       !(this.currentUser && this.args.postUserId === this.currentUser.id)
     );
   }
 
   get resultsOnClose() {
-    return this.args.results === "on_close" && !this.args.closed;
+    return this.args.results === ON_CLOSE && !this.args.closed;
   }
 
   get resultsStaffOnly() {
     return (
-      this.args.results === "staff_only" &&
+      this.args.results === STAFF_ONLY &&
       !(this.currentUser && this.currentUser.staff)
     );
   }
@@ -121,7 +125,7 @@ export default class PollInfoComponent extends Component {
       !this.args.closed &&
       !this.args.showResults &&
       this.args.isPublic &&
-      this.args.results !== "staff_only"
+      this.args.results !== STAFF_ONLY
     );
   }
 
