@@ -102,18 +102,18 @@ export default class PollResultsPieComponent extends Component {
   }
 
   @action
-  drawPie() {
-    loadScript("/javascripts/Chart.min.js").then(() => {
-      const data = this.args.options.mapBy("votes");
-      const labels = this.args.options.mapBy("html");
-      const config = this.pieChartConfig(data, labels, {
-        legendContainerId: `poll-results-legend-${this.args.id}`,
-      });
+  async drawPie() {
+    await loadScript("/javascripts/Chart.min.js");
 
-      const el = document.getElementById(`poll-results-chart-${this.args.id}`);
-      // eslint-disable-next-line no-undef
-      this._chart = new Chart(el.getContext("2d"), config);
+    const data = this.args.options.mapBy("votes");
+    const labels = this.args.options.mapBy("html");
+    const config = this.pieChartConfig(data, labels, {
+      legendContainerId: `poll-results-legend-${this.args.id}`,
     });
+
+    const el = document.getElementById(`poll-results-chart-${this.args.id}`);
+    // eslint-disable-next-line no-undef
+    this._chart = new Chart(el.getContext("2d"), config);
   }
   <template>
     <div class="poll-results-chart">
