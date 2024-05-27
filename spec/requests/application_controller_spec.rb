@@ -1103,13 +1103,17 @@ RSpec.describe ApplicationController do
   end
 
   describe "crawlers in slow_down_crawler_user_agents site setting" do
-    before { RateLimiter.enable }
+    before do
+      Fabricate(:admin) # to prevent redirect to the wizard
+      RateLimiter.enable
+
+      SiteSetting.slow_down_crawler_rate = 128
+      SiteSetting.slow_down_crawler_user_agents = "badcrawler|problematiccrawler"
+    end
 
     use_redis_snapshotting
 
     it "are rate limited" do
-      SiteSetting.slow_down_crawler_rate = 128
-      SiteSetting.slow_down_crawler_user_agents = "badcrawler|problematiccrawler"
       now = Time.zone.now
       freeze_time now
 
@@ -1140,6 +1144,21 @@ RSpec.describe ApplicationController do
 
       get "/", headers: { "HTTP_USER_AGENT" => "iam problematiccrawler" }
       expect(response.status).to eq(200)
+    end
+
+    context "with anonymous caching" do
+      before do
+        global_setting :anon_cache_store_threshold, 1
+        Middleware::AnonymousCache.enable_anon_cache
+      end
+
+      it "don't bypass crawler rate limits" do
+        get "/", headers: { "HTTP_USER_AGENT" => "iam badcrawler" }
+        expect(response.status).to eq(200)
+
+        get "/", headers: { "HTTP_USER_AGENT" => "iam badcrawler" }
+        expect(response.status).to eq(429)
+      end
     end
   end
 
