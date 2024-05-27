@@ -114,7 +114,6 @@ after_initialize do
     notification = Notification.where(topic_id: topic.id, post_number: first_post.post_number).first
     if notification.present?
       Notification.read(self, notification.id)
-      self.saw_notification_id(notification.id)
       self.reload
       self.publish_notifications_state
     end
