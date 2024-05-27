@@ -946,6 +946,8 @@ class Category < ActiveRecord::Base
     end
   end
 
+  alias_method :relative_url, :url
+
   # If the name changes, try and update the category definition topic too if it's an exact match
   def rename_category_definition
     return if topic.blank?
