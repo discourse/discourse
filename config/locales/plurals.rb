@@ -107,6 +107,7 @@
   tl: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| [0, 1].include?(n) ? :one : :other } } } },
   to: { i18n: { plural: { keys: [:other], rule: lambda { |n| :other } } } },
   tr_TR: { i18n: { plural: { keys: [:other], rule: lambda { |n| :other } } } },
+  ug: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },
   # TODO put this back when translations are correct: :uk => { :i18n => { :plural => { :keys => [:one, :few, :many, :other], :rule => lambda { |n| n % 10 == 1 && n % 100 != 11 ? :one : [2, 3, 4].include?(n % 10) && ![12, 13, 14].include?(n % 100) ? :few : n % 10 == 0 || [5, 6, 7, 8, 9].include?(n % 10) || [11, 12, 13, 14].include?(n % 100) ? :many : :other } } } },
   uk: { i18n: { plural: { keys: [:one, :few, :other], rule: lambda { |n| n % 10 == 1 && n % 100 != 11 ? :one : [2, 3, 4].include?(n % 10) && ![12, 13, 14].include?(n % 100) ? :few : n % 10 == 0 || [5, 6, 7, 8, 9].include?(n % 10) || [11, 12, 13, 14].include?(n % 100) ? :other : :other } } } },
   ur: { i18n: { plural: { keys: [:one, :other], rule: lambda { |n| n == 1 ? :one : :other } } } },

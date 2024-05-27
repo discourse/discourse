@@ -1,0 +1,262 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  site_settings:
+    chat_separate_sidebar_mode: "مۇنبەر ۋە سۆھبەتكە ئايرىم يان بالداق ھالىتىنى كۆرسىتىدۇ."
+    chat_enabled: "سۆھبەتنى قوزغىتىدۇ."
+    enable_public_channels: "سەھىپە ئاساسىدىكى ئاممىۋى قانال قوزغىتىلدى."
+    chat_channel_retention_days: "ئادەتتىكى قانالدىكى سۆھبەت ئۇچۇرى بۇ كۈنلەردە ساقلىنىدۇ. «0» گە تەڭشەلسە ئۇچۇرلار مەڭگۈلۈك ساقلىنىدۇ."
+    chat_dm_retention_days: "شەخسىي سۆھبەت قانىلىدىكى سۆھبەت ئۇچۇرى بۇ كۈنلەردە ساقلىنىدۇ. «0» گە تەڭشەلسە ئۇچۇرلار مەڭگۈلۈك ساقلىنىدۇ."
+    chat_auto_silence_duration: "ئىشلەتكۈچى سۆھبەت ئۇچۇرى قۇرۇش چېكىدىن ھالقىغاندا ئۈنسىزلەيدىغان مىنۇت سانى. «0» گە تەڭشەلسە ئۆزلۈكىدىكى ئۈنسىزلەشنى چەكلەيدۇ."
+    chat_allowed_messages_for_trust_level_0: "ئىشەنچ دەرىجىسى 0 بولغان ئىشلەتكۈچىنىڭ 30 سېكۇنتتا يوللىيالايدىغان ئۇچۇر سانى. «0» گە تەڭشەلسە چەكلىمە بولمايدۇ."
+    chat_allowed_messages_for_other_trust_levels: "ئىشەنچ دەرىجىسى 1-4 كىچە بولغان ئىشلەتكۈچىنىڭ 30 سېكۇنتتا يوللىيالايدىغان ئۇچۇر سانى. «0» گە تەڭشەلسە چەكلىمە بولمايدۇ."
+    chat_silence_user_sensitivity: "پاش قىلىنغان ئىشلەتكۈچىنىڭ سۆھبەتتە ئۆزلۈكىدىن ئۈنسىزلىنىشىنىڭ ئېھتىماللىقى."
+    chat_auto_silence_from_flags_duration: "ئىشلەتكۈچى پاش قىلىنغان سۆھبەت ئۇچۇرى تۈپەيلىدىن ئۆزلۈكىدىن ئۈنسىزلەنگەندە، ئۈنسىزلىنىشنىڭ مىنۇت سانى."
+    chat_default_channel_id: "ئىشلەتكۈچىنىڭ باشقا قانالدا ئوقۇمىغان ئۇچۇر ياكى ئاتاش بولمىغاندا، كۆڭۈلدىكى ئەھۋالدا ئاچىدىغان قانال."
+    chat_duplicate_message_sensitivity: "ئوخشاش بىر ئۇچۇر يوللىغۇچىنىڭ قىسقا ۋاقىتتا تەكرارلىغان ئۇچۇر يوللانمىسىغا ئاساسەن توسۇلۇش ئېھتىماللىقى. 0 بىلەن 1.0 ئارىلىقىدىكى ئونلۇق كەسىر سان، 1.0 ئەڭ يۇقىرى قىممىتى تەڭشىكى (تېخىمۇ قىسقا ۋاقىت ئىچىدە تېخىمۇ يۇقىرى چاستوتىدا ئۇچۇرنى توسىدۇ). 0 گە تەڭشەلسە ئۇچۇرنى تەكرارلاشقا يول قويىدۇ."
+    chat_minimum_message_length: "سۆھبەت ئۇچۇرىنىڭ ئەڭ ئاز ھەرپ سانى."
+    chat_allow_uploads: "ئاممىۋى سۆھبەت قانىلى ۋە بىۋاسىتە ئۇچۇر قانىلىدا يۈكلەنمە يوللاشقا يول قويىدۇ."
+    chat_archive_destination_topic_status: "قانالنى ئارخىپلاشتۇرۇش تاماملانغاندىن كېيىن نىشان سۆھبەتنىڭ ھالىتى. بۇ پەقەت نىشان سۆھبەت نۆۋەتتىكى تېما بولماي يېڭى تېما بولغاندا قوللىنىلىدۇ."
+    default_emoji_reactions: "سۆھبەت ئۇچۇرىنىڭ كۆڭۈلدىكى چىراي ئىپادە ئىنكاسى. تېز ئىنكاس ئۈچۈن ئەڭ كۆپ بولغاندا 5 چىراي ئىپادە قوشقىلى بولىدۇ."
+    direct_message_enabled_groups: "بۇ گۇرۇپپىدىكى ئەزالارنىڭ ئىشلەتكۈچىدىن ئىشلەتكۈچىگە سۆھبەت قۇرۇشىغا يول قويۇلىدۇ. دىققەت: باشقۇرغۇچىلار ھەمىشە شەخسىي سۆھبەت قۇرالايدۇ، ئىشلەتكۈچى پەقەت شەخسىي سۆھبەت قۇرالايدىغان ئىشلەتكۈچى قۇرغان شەخسىي سۆھبەتكە جاۋاب قايتۇرالايدۇ."
+    max_mentions_per_chat_message: "ئىشلەتكۈچى سۆھبەت ئۇچۇرىدا @name نى ئىشلىتىپ ئۇقتۇرۇش قىلالايدىغان ئەڭ كۆپ كىشى سانى."
+    chat_max_direct_message_users: "يېڭى بىۋاسىتە ئۇچۇر قۇرغاندا ئىشلەتكۈچى قوشالايدىغان ئىشلەتكۈچىنىڭ سانى مۇشۇ ساندىن ئېشىپ كەتمەيدۇ. 0 قىلىپ تەڭشەلسە ئۆزىگىلا ئۇچۇر يوللاشقا يول قويىدۇ. باشقۇرغۇچى بۇ تەڭشەكنىڭ تەسىرىگە ئۇچرىمايدۇ."
+    chat_allow_archiving_channels: "باشقۇرغۇچى قانالنى تاقىغاندا ئۇچۇرلار بىر تېمىغا ئارخىپلىنىدۇ."
+    chat_editing_grace_period: "سۆھبەتنى يوللاپ (n) سېكۇنت ئىچىدە تەھرىرلىگەندە، سۆھبەت ئۇچۇرى يېنىدا (تەھرىرلەنگەن) بەلگىنى كۆرسەتمەيدۇ."
+    chat_editing_grace_period_max_diff_low_trust: "سۆھبەتنى تەھرىرلەش سۈرۈك ۋاقتىدا ئۆزگەرتىشكە يول قويىدىغان ئەڭ كۆپ ھەرپ سانى، ئەگەر بۇ قىممەتتىن ئېشىپ كەتسە سۆھبەت يىنىدا (تەھرىرلەنگەن) بەلگە كۆرۈنىدۇ (ئىشەنچلىك دەرىجىسى 0 ۋە 1)."
+    chat_editing_grace_period_max_diff_high_trust: "سۆھبەتنى تەھرىرلەش سۈرۈك ۋاقتىدا ئۆزگەرتىشكە يول قويىدىغان ئەڭ كۆپ ھەرپ سانى، ئەگەر بۇ قىممەتتىن ئېشىپ كەتسە سۆھبەت يىنىدا (تەھرىرلەنگەن) بەلگە كۆرۈنىدۇ (ئىشەنچلىك دەرىجىسى2 ۋە ئۇنىڭدىن يۇقىرى)."
+    chat_preferred_mobile_index: "كۆچمە ئۈسكۈنىدە /chat نى يۈكلىگەندە ياقتۇرىدىغان بەتكۈچ."
+    errors:
+      chat_default_channel: "سۈكۈتتىكى سۆھبەت قانىلى چوقۇم ئاممىۋى قانال بولۇشى كېرەك."
+      direct_message_enabled_groups_invalid: "بۇ تەڭشەك ئۈچۈن كەم دېگەندە بىر گۇرۇپپىنى بەلگىلىشىڭىز كېرەك. ئەگەر باشقۇرغۇچىلاردىن باشقا ھېچكىمنىڭ بىۋاسىتە ئۇچۇر ئەۋەتىشىنى خالىمىسىڭىز، باشقۇرغۇچى گۇرۇپپىسىنى تاللاڭ."
+      chat_upload_not_allowed_secure_uploads: "بىخەتەر يۈكلەش تور بېكەت تەڭشىكى قوزغىتىلغاندا، سۆھبەتتە ھۆججەت يۈكلەشكە يول قويۇلمايدۇ."
+  system_messages:
+    private_channel_title: "%{id} قانىلى"
+    chat_channel_archive_complete:
+      title: "سۆھبەت قانىلىنى ئارخىپلاشتۇرۇش تامام"
+      subject_template: "سۆھبەت قانىلىنى ئارخىپلاشتۇرۇش مۇۋەپپەقىيەتلىك تاماملاندى"
+      text_body_template: |
+        %{channel_hashtag_or_name} سۆھبەت قانىلى مۇۋەپپەقىيەتلىك ئارخىپلاشتۇرۇلدى. ئۇچۇرلار [%{topic_title}](%{topic_url}) تېمىغا كۆچۈرۈلدى.
+    chat_channel_archive_failed:
+      title: "سۆھبەت قانىلىنى ئارخىپلاشتۇرالمىدى"
+      subject_template: "سۆھبەت قانىلىنى ئارخىپلاشتۇرالمىدى"
+      text_body_template: |
+        %{channel_hashtag_or_name} سۆھبەت قانىلىنى ئارخىپلاشتۇرالمىدى. %{messages_archived} ئۇچۇر ئارخىپلاشتۇرۇلدى. ئارخىپلاشتۇرۇلغان قىسمەن ئۇچۇر [%{topic_title}](%{topic_url}) تېمىغا كۆچۈرۈلدى. قايتا سىناش ئۈچۈن %{channel_url} قانالنى زىيارەت قىلىڭ.
+    chat_channel_archive_failed_no_topic:
+      title: "سۆھبەت قانىلىنى ئارخىپلاشتۇرالمىدى"
+      subject_template: "سۆھبەت قانىلىنى ئارخىپلاشتۇرالمىدى"
+      text_body_template: |
+        %{channel_hashtag_or_name} سۆھبەت قانىلىنى ئارخىپلاشتۇرالمىدى. ھېچقانداق ئۇچۇر ئارخىپلاشتۇرۇلمىدى. تېما تۆۋەندىكى سەۋەب تۈپەيلىدىن مۇۋەپپەقىيەتلىك قۇرالمىدى:
+
+        %{topic_validation_errors}
+
+        قايتا سىناش ئۈچۈن %{channel_url} قانالنى زىيارەت قىلىڭ.
+  chat:
+    deleted_chat_username: ئۆچۈرۈلدى
+    errors:
+      users_cant_be_added_to_channel: "ئىشلەتكۈچىنى بۇ قانالغا قوشقىلى بولمايدۇ."
+      channel_exists_for_category: "بۇ سەھىپە ۋە ئىسىمدىكى قانال مەۋجۇت"
+      channel_new_message_disallowed:
+        archived: "بۇ قانال ئارخىپلاشتۇرۇلغان، ھېچقانداق يېڭى ئۇچۇر ئەۋەتكىلى بولمايدۇ"
+        closed: "بۇ قانال تاقالغان، ھېچقانداق يېڭى ئۇچۇر ئەۋەتكىلى بولمايدۇ"
+        read_only: "بۇ قانالنى ئوقۇشقىلا بولىدۇ، ھېچقانداق يېڭى ئۇچۇر ئەۋەتكىلى بولمايدۇ"
+      channel_modify_message_disallowed:
+        archived: "بۇ قانال ئارخىپلاشتۇرۇلغان، ھېچقانداق ئۇچۇرنى تەھرىرلىگىلى ياكى ئۆچۈرگىلى بولمايدۇ"
+        closed: "بۇ قانال تاقالغان، ھېچقانداق ئۇچۇرنى تەھرىرلىگىلى ياكى ئۆچۈرگىلى بولمايدۇ"
+        read_only: "بۇ قانالنى ئوقۇشقىلا بولىدۇ، ھېچقانداق ئۇچۇرنى تەھرىرلىگىلى ياكى ئۆچۈرگىلى بولمايدۇ"
+      user_cannot_send_message: "بۇ ۋاقىتتا ئۇچۇر يوللىيالمايسىز."
+      rate_limit_exceeded: "30 سېكۇنت ئىچىدە ئەۋەتكىلى بولىدىغان سۆھبەت ئۇچۇرىنىڭ چېكىدىن ئېشىپ كەتتى"
+      auto_silence_from_flags: "سۆھبەت ئۇچۇرىنى پاش قىلغان نومۇر ئىشلەتكۈچىنى ئۈنسىزلەشكە يېتىدۇ."
+      channel_cannot_be_archived: "بۇ قانالنى ھازىرچە ئارخىپلاشتۇرغىلى بولمايدۇ، ئۇ چوقۇم يېپىق ياكى ئوچۇق بولسا ئاندىن ئارخىپلاشتۇرغىلى بولىدۇ."
+      duplicate_message: "يېقىندا ئوخشاش ئۇچۇرنى يوللىدىڭىز."
+      delete_channel_failed: "قانالنى ئۆچۈرەلمىدى، قايتا سىناڭ."
+      minimum_length_not_met:
+        one: "ئۇچۇر بەك قىسقا، كەم دېگەندە %{count} ھەرپ بولۇشى كېرەك."
+        other: "ئۇچۇر بەك قىسقا، كەم دېگەندە %{count} ھەرپ بولۇشى كېرەك."
+      message_too_long:
+        one: "ئۇچۇر بەك ئۇزۇن، ئەڭ كۆپ بولغاندا %{count} ھەرپ بولۇشى كېرەك."
+        other: "ئۇچۇر بەك ئۇزۇن، ئەڭ كۆپ بولغاندا %{count} ھەرپ بولۇشى كېرەك."
+      draft_too_long: "دەسلەپكى نۇسخا بەك ئۇزۇن."
+      max_reactions_limit_reached: "بۇ ئۇچۇر يېڭى ئىنكاسقا يول قويمايدىۇ."
+      message_move_invalid_channel: "مەنبە ۋە نىشان قانال چوقۇم ئاممىۋى قانال بولۇشى كېرەك."
+      message_move_no_messages_found: "تەمىنلەنگەن ئۇچۇر كىملىكىدىكى ھېچقانداق ئۇچۇر تېپىلمىدى."
+      cant_update_direct_message_channel: "ئىسىم ۋە چۈشەندۈرۈشكە ئوخشاش بىۋاسىتە ئۇچۇر قانىلىنىڭ خاسلىقىنى يېڭىلىيالمايدۇ."
+      not_accepting_dms: "كەچۈرۈڭ، %{username} نۆۋەتتە ئۇچۇر قوبۇل قىلمايدۇ."
+      actor_ignoring_target_user: "سىز %{username} پەرۋا قىلمايۋاتىسىز، شۇڭا ئۇلارغا ئۇچۇر يوللىيالمايسىز."
+      actor_muting_target_user: "سىز %{username} ئۈنسىزلەۋاتىسىز، شۇڭا ئۇلارغا ئۇچۇر يوللىيالمايسىز."
+      actor_disallowed_dms: "ئىشلەتكۈچىنىڭ سىزگە شەخسىي ياكى بىۋاستىدە ئۇچۇر يوللىشىنى چەكلەشنى تاللىغان، شۇڭلاشقا يېڭىدىن بىۋاسىتە ئۇچۇر قۇرالمايسىز."
+      actor_preventing_target_user_from_dm: "%{username} ىنىڭ سىزگە شەخسىي ياكى بىۋاستىدە ئۇچۇر يوللىشىنى چەكلەشنى تاللىغان، شۇڭلاشقا ئۇلارغا يېڭىدىن بىۋاسىتە ئۇچۇر قۇرالمايسىز."
+      user_cannot_send_direct_messages: "كەچۈرۈڭ، بىۋاسىتە ئۇچۇر يوللىيالمايسىز."
+      over_chat_max_direct_message_users_allow_self: "سىز پەقەت ئۆزىڭىزگە بىۋاسىتە ئۇچۇر قۇرالايسىز."
+      over_chat_max_direct_message_users:
+        one: "سىز %{count} دىن ئاشقان باشقا ئىشلەتكۈچىنىڭ بىۋاسىتە ئۇچۇرىنى قۇرالمايسىز."
+        other: "سىز %{count} دىن ئاشقان باشقا ئىشلەتكۈچىنىڭ بىۋاسىتە ئۇچۇرىنى قۇرالمايسىز."
+      original_message_not_found: "سىز جاۋاب قايتۇرىدىغان ئۇچۇرنىڭ ئەجدادىنى تاپالمىدى ياكى ئۆچۈرۈلگەن بولۇشى مۇمكىن."
+      thread_invalid_for_channel: "تېما تەمىنلەنگەن قانالنىڭ بىر قىسمى ئەمەس."
+      thread_does_not_match_parent: "تېما ئانا ئۇچۇرىغا ماس كەلمىدى."
+      invalid_direct_message: "بۇ بىۋاسىتە ئۇچۇرنى قۇرۇش ئىجازىتىڭىز يوق."
+    reviewables:
+      message_already_handled: "رەھمەت، ئەمما بىز بۇ ئۇچۇرنى تەكشۈرگەن ھەمدە ئۇنى قايتا پاش قىلىشنىڭ ھاجىتى يوق قارىغان."
+      actions:
+        agree:
+          title: "قوشۇل…"
+        agree_and_keep_message:
+          title: "ئۇچۇرنى ساقلاپ قال"
+          description: "پاش قىلىشقا قوشۇلۇپ ئۇچۇرنى ئۆزگەرتمەي ساقلاپ قالىدۇ."
+        agree_and_keep_deleted:
+          title: "ئۇچۇرنىڭ ئۆچۈرۈلگەن ھالىتىنى ساقلاپ قال"
+          description: "پاش قىلىشقا قوشۇلۇپ ئۇچۇرنىڭ ئۆچۈرۈلگەن ھالىتىنى ساقلاپ قالىدۇ."
+        agree_and_suspend:
+          title: "توختىتىلغان ئىشلەتكۈچى"
+          description: "پاش قىلىشقا قوشۇلىدۇ ۋە ئىشلەتكۈچىنى توختىتىدۇ."
+        agree_and_silence:
+          title: "ئىشلەتكۈچىنى ئۈنسىزلە"
+          description: "پاش قىلىشقا قوشۇلىدۇ ۋە ئىشلەتكۈچىنى ئۈنسىزلەيدۇ."
+        agree_and_restore:
+          title: "ئۇچۇرنى ئەسلىگە كەلتۈر"
+          description: "ئۇچۇرنى ئىشلەتكۈچى كۆرەلەيدىغان ھالەتتە ئەسلىگە كەلتۈرىدۇ."
+        agree_and_delete:
+          title: "ئۇچۇر ئۆچۈر"
+          description: "ئۇچۇرنى ئۆچۈرىدۇ شۇڭا ئىشلەتكۈچى ئۇنى كۆرەلمەيدۇ."
+        delete_and_agree:
+          title: "پاش قىلىشقا پەرۋا قىلماي ئۇچۇرنى ئۆچۈرىدۇ"
+          description: "پاش قىلىشقا پەرۋا قىلماي ئۇنى پاش قىلىش قاتارىدىن چىقىرىۋېتىپ ئۇچۇرنى ئۆچۈرىدۇ."
+        disagree_and_restore:
+          title: "قوشۇلماي ئۇچۇرنى ئەسلىگە كەلتۈر"
+          description: "ئۇچۇرنى ھەممە ئىشلەتكۈچى كۆرەلەيدىغان ھالەتتە ئەسلىگە كەلتۈرىدۇ."
+        disagree:
+          title: "قوشۇلما"
+        ignore:
+          title: "ھېچ ئىش قىلما"
+          description: "پاش قىلىشنى ئۆچرەتتىن چىقىرىۋېتىپ پەرۋا قىلماي، ھېچقانداق مەشغۇلات قىلمايدۇ."
+      direct_messages:
+        transcript_title: "%{channel_name} دىكى ئىلگىرىكى ئۇچۇرنىڭ مەزمۇنى"
+        transcript_body: "تېخىمۇ كۆپ ئارقا كۆرۈنۈش مەزمۇنى بىلەن تەمىنلەش ئۈچۈن، بۇ سۆھبەتتە ئالدىنقى ئۇچۇرنىڭ مەزمۇنلىرىنىمۇ قوشتۇق (ئەڭ كۆپ بولغاندا 10):\n\n%{transcript}"
+    channel:
+      users_invited_to_channel:
+        one: "%{invited_users} نى %{inviting_user} تەكلىپ قىلغان."
+        other: "%{invited_users} نى %{inviting_user} تەكلىپ قىلغان."
+      archive:
+        first_post_raw: "بۇ تېما [%{channel_name}](%{channel_url}) سۆھبەت قانىلىنىڭ ئارخىپى."
+      messages_moved:
+        one: "@%{acting_username} ئۇچۇرنى [%{channel_name}](%{first_moved_message_url}) قانالغا يۆتكىدى."
+        other: "@%{acting_username} %{count} ئۇچۇرنى [%{channel_name}](%{first_moved_message_url}) قانالغا يۆتكىدى."
+      dm_title:
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} ۋە باشقا %{count} كىشى"
+          other: "%{comma_separated_usernames} ۋە باشقا %{count} كىشى"
+    mention_warning:
+      dismiss: "پەرۋا قىلما"
+      cannot_see: "%{first_identifier} بۇ قانالنى زىيارەت قىلالمايدۇ ھەمدە ئۇقتۇرۇش قىلىنمىغان."
+      cannot_see_multiple:
+        one: "%{first_identifier} ۋە باشقا %{count} ئىشلەتكۈچى بۇ قانالنى زىيارەت قىلالمايدۇ ھەمدە ئۇقتۇرۇش قىلىنمىغان."
+        other: "%{first_identifier} ۋە باشقا %{count} ئىشلەتكۈچى بۇ قانالنى زىيارەت قىلالمايدۇ ھەمدە ئۇقتۇرۇش قىلىنمىغان."
+      invitations_sent:
+        one: "تەكلىپنامە ئەۋەتىلدى"
+        other: "تەكلىپنامە ئەۋەتىلدى"
+      invite: "قانالغا تەكلىپ قىلىڭ"
+      without_membership: "%{first_identifier} بۇ قانالغا قوشۇلمىدى."
+      without_membership_multiple:
+        one: "%{first_identifier} ۋە باشقا %{count} ئىشلەتكۈچى بۇ قانالغا قوشۇلمىدى."
+        other: "%{first_identifier} ۋە باشقا %{count} ئىشلەتكۈچى بۇ قانالغا قوشۇلمىدى."
+      group_mentions_disabled: "%{first_identifier} ئاتاشنقا يول قويمايدۇ."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} ۋە باشقا %{count} گۇرۇپپا ئاتاشنقا يول قويمايدۇ."
+        other: "%{first_identifier} ۋە باشقا %{count} گۇرۇپپا ئاتاشنقا يول قويمايدۇ."
+      global_mentions_disallowed: "بۇ قانالدا @here ۋە @all دەپ ئاتاش چەكلەنگەن."
+      too_many_members: "%{first_identifier} نىڭ ئەزالىرى بەك كۆپ. ھېچكىمگە ئۇقتۇرۇلمىغان."
+      too_many_members_multiple:
+        one: "%{first_identifier} ۋە باشقا %{count} گۇرۇپپىنىڭ ئەزالىرى بەك كۆپ. ھېچكىمگە ئۇقتۇرۇلمىغان."
+        other: "%{first_identifier} ۋە باشقا %{count} گۇرۇپپىنىڭ ئەزالىرى بەك كۆپ. ھېچكىمگە ئۇقتۇرۇلمىغان."
+    category_channel:
+      errors:
+        slug_contains_non_ascii_chars: "ascii بولمىغان ھەرپلەر بار"
+        is_already_in_use: "ئىشلىتىلىۋاتىدۇ"
+    bookmarkable:
+      notification_title: "%{channel_name} دىكى ئۇچۇر"
+    personal_chat: "شەخسىي سۆھبەت"
+    onebox:
+      inline_to_message: "%{username} – #%{chat_channel} نىڭ #%{message_id} ئۇچۇرى"
+      inline_to_channel: "#%{chat_channel} سۆھبەت"
+      inline_to_topic_channel: "%{topic_title} تېمىنىڭ سۆھبىتى"
+      thread_title_connector: "ئورنى:"
+      x_members:
+        one: "%{count} ئەزا"
+        other: "%{count} ئەزا"
+      and_x_others:
+        one: "ۋە باشقا %{count}"
+        other: "ۋە باشقا %{count}"
+    summaries:
+      no_targets: "تاللىغان مەزگىلدىكى ئۇچۇر يوق."
+    transcript:
+      default_thread_title: "سۆھبەت ماۋزۇسى"
+      split_thread_range: "%{total} ئۇچۇر %{start}-%{end}"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} «%{channel}» دا سىزنى ئاتىدى'
+        other_type: '%{username} «%{channel}» دا %{identifier} ئاتالدى'
+      direct_message_chat_mention:
+        direct: "%{username} شەخسىي سۆھبەتتە سىزنى ئاتىدى"
+        other_type: "%{username} شەخسىي سۆھبەتتە %{identifier} ئاتالدى"
+      new_chat_message: '%{username}] «%{channel}» دا ئۇچۇر يوللىدى'
+      new_direct_chat_message: "%{username} شەخسىي سۆھبەتتە ئۇچۇر يوللىدى"
+  discourse_automation:
+    scriptables:
+      send_chat_message:
+        title: سۆھبەت ئۇچۇرى يوللا
+  reviewable_score_types:
+    needs_review:
+      title: "تەستىقلاش كېرەك"
+    notify_user:
+      chat_pm_title: '«%{channel_name}» دىكى سۆھبەت ئۇچۇرىڭىز'
+      chat_pm_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      chat_pm_title: '«%{channel_name}» دىكى بىر سۆھبەت ئۇچۇرىغا باشقۇرغۇچىلار دىققەت قىلىشى كېرەك'
+      chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "بىر باشقۇرغۇچى بۇ ئۇچۇرنى تەكشۈرۈش كېرەك دەپ قارايدۇ."
+  user_notifications:
+    chat_summary:
+      deleted_user: "ئىشلەتكۈچى ئۆچۈر"
+      description:
+        one: "يېڭى سۆھبەت ئۇچۇرىڭىز بار"
+        other: "يېڭى سۆھبەت ئۇچۇرىڭىز بار"
+      from: "%{site_name}"
+      subject:
+        private_message: "%{email_prefix} يېڭى ئۇچۇر"
+        direct_message_from_1: "[%{email_prefix}] %{username} دىن كەلگەن يېڭى ئۇچۇر"
+        direct_message_from_2: "[%{email_prefix}] %{username1} ۋە %{username2} دىن كەلگەن يېڭى ئۇچۇر"
+        direct_message_from_more:
+          one: "[%{email_prefix}] %{username} ۋە باشقا %{count} ئىشلەتكۈچىدىن كەلگەن يېڭى ئۇچۇر"
+          other: "[%{email_prefix}] %{username} ۋە باشقا %{count} ئىشلەتكۈچىدىن كەلگەن يېڭى ئۇچۇر"
+        chat_channel_1: "[%{email_prefix}] %{channel} دىكى يېڭى ئۇچۇر"
+        chat_channel_2: "[%{email_prefix}] %{channel1} ۋە %{channel2} دىكى يېڭى ئۇچۇر"
+        chat_channel_more:
+          one: "[%{email_prefix}] %{channel} ۋە باشقا %{count} قانالدىكى يېڭى ئۇچۇر"
+          other: "[%{email_prefix}] %{channel} ۋە باشقا %{count} قانالدىكى يېڭى ئۇچۇر"
+        chat_channel_and_direct_message: "[%{email_prefix}] %{channel} ۋە %{username} دىن كەلگەن يېڭى ئۇچۇر"
+      unsubscribe: "سىز ئايرىلغاندا %{site_link} دىن بۇ سۆھبەتنىڭ خۇلاسىسى ئەۋەتىلدى. %{email_preferences_link} نى ئۆزگەرتىڭ ياكى %{unsubscribe_link} مۇشتەرىلىكتىن چېكىنىڭ."
+      unsubscribe_no_link: "سىز ئايرىلغاندا %{site_link} دىن بۇ سۆھبەتنىڭ خۇلاسىسى ئەۋەتىلدى. %{email_preferences_link} نى ئۆزگەرتىڭ."
+      view_messages:
+        one: "ئۇچۇرنى كۆرسەت"
+        other: "%{count} ئۇچۇرنى كۆرسەت"
+      view_more:
+        one: "باشقا %{count} ئۇچۇرنى كۆرسەت"
+        other: "باشقا %{count} ئۇچۇرنى كۆرسەت"
+      your_chat_settings: "سۆھبەت ئېلخەت چاستوتا مايىللىقى"
+  unsubscribe:
+    chat_summary:
+      select_title: "سۆھبەت خۇلاسە ئېلخەت چاستوتا تەڭشىكى:"
+      never: ھەرگىز
+      when_away: ئايرىلغاندىلا
+  category:
+    cannot_delete:
+      has_chat_channels: "بۇ سەھىپىنى ئۆچۈرگىلى بولمايدۇ، چۈنكى ئۇنىڭ سۆھبەت قانىلى بار."

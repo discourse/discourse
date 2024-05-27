@@ -1,0 +1,43 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  site_settings:
+    discourse_automation_enabled: "discourse-automation قىستۇرمىنى قوزغات"
+  discourse_automation:
+    triggerables:
+      stalled_topic:
+        title: توختىغان تېما
+        doc: تېما مەلۇم ۋاقىت ئىچىدە تېما ئىگىسىنىڭ يېڭى جاۋابىنى تاپشۇرۇۋالمىغاندا ئاپتوماتلاشتۇرۇشنى قوزغىتىدۇ. تەسىر كۆرسىتىدىغان تېمىلارنىڭ سانى ناھايىتى كۆپ بولغاچقا، بۇ قوزغاتقۇچنى بەلگە/سەھىپىگە قوللىنىش تەۋسىيە قىلىنىدۇ. بىخەتەرلىك تەدبىرلىرى سۈپىتىدە تەسىرگە ئۇچرايدىغان تېمىنىڭ يۇقىرى چېكى250 گە تەڭشەلدى.
+      api_call:
+        title: API چاقىرىش
+      user_promoted:
+        transition_placeholder: "%{from_level_name} دىن %{to_level_name} غا"
+      topic:
+        title: تېما
+    scriptables:
+      post:
+        title: يازما قۇر
+        description: بەلگىلەنگەن تېمىدا يازما قۇرىدۇ
+      topic:
+        title: تېما قۇر
+        description: مەلۇم بىر ئىشلەتكۈچى سۈپىتىدە تېما قۇرىدۇ
+      flag_post_on_words:
+        title: سۆزگە ئاساسەن يازمىنى پاش قىل
+        description: ئەگەر يازمىدا مەلۇم سۆز بولسا يازمىنى پاش قىلىدۇ
+        flag_message: "يازمىدا يول قويۇلمايدىغان سۆز بار: %{words}"
+      pin_topic:
+        title: تېما چوققىلا
+      send_pms:
+        title: شەخسىي ئۇچۇر يوللايدۇ
+        description: شەخسىي ئۇچۇر ئەۋەتىشكە يول قويىدۇ (كېچىكىشى مۇمكىن).
+        doc: ئىشلەتكۈچىگە كۆپ شەخسىي ئۇچۇر يوللاشقا يول قويىدۇ. ھەر بىر شەخسىي ئۇچۇر كېچىكىشنى قوبۇل قىلىدۇ.
+      suspend_user_by_email:
+        title: ئىشلەتكۈچىنى ئېلخەت ئارقىلىق توختىتىدۇ
+      user_global_notice:
+        title: ئىشلەتكۈچى ئومۇمىيەت ئۇقتۇرۇشى
+      close_topic:
+        title: تېمىنى تاقا
