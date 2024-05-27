@@ -4,8 +4,8 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { eq } from "truth-helpers";
-import I18n from "discourse-i18n";
 import DButton from "discourse/components/d-button";
+import I18n from "discourse-i18n";
 import PollResultsIrv from "./poll-results-irv";
 import PollResultsStandard from "./poll-results-standard";
 

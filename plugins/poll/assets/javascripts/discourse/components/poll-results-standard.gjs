@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
+import i18n from "discourse-common/helpers/i18n";
 import evenRound from "discourse/plugins/poll/lib/even-round";
 import PollVoters from "./poll-voters";
 
@@ -57,7 +58,10 @@ export default class PollResultsStandardComponent extends Component {
           <div class="option">
             <p>
               {{#unless @isIrv}}
-                <span class="percentage">{{option.percentage}}%</span>
+                <span class="percentage">{{i18n
+                    "number.percent"
+                    count=option.percentage
+                  }}</span>
               {{/unless}}
               <span class="option-text">{{option.html}}</span>
             </p>
