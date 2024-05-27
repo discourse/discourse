@@ -61,12 +61,13 @@ class DiscoursePoll::Poll
         # create missing votes
         creation_set.each do |option_id|
           if poll.irv?
+            option_digest = poll.poll_options.find(option_id).digest
+
             PollVote.create!(
               poll: poll,
               user: user,
               poll_option_id: option_id,
-              rank:
-                options.find { |o| o[:digest] == poll.poll_options.find(option_id).digest }[:rank],
+              rank: options.find { |o| o[:digest] == option_digest }[:rank],
             )
           else
             PollVote.create!(poll: poll, user: user, poll_option_id: option_id)
