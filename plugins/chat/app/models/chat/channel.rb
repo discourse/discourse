@@ -5,9 +5,6 @@ module Chat
     include Trashable
     include TypeMappable
 
-    # TODO (martin) Remove once we are using last_message instead,
-    # should be around August 2023.
-    self.ignored_columns = %w[last_message_sent_at]
     self.table_name = "chat_channels"
 
     belongs_to :chatable, polymorphic: true
