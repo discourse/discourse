@@ -35,7 +35,7 @@ class PostTiming < ActiveRecord::Base
 
     DB.exec(sql_query, params)
 
-    TopicUser.ensure_consistency!(topic_id)
+    TopicUser.update_last_read_post_number(topic_id:)
   end
 
   def self.record_new_timing(args)
