@@ -13,33 +13,31 @@ export default class PollInfoComponent extends Component {
   const optionsCount = options.length;
 
     if (max > 0) {
-      if (min === max) {
-        if (min > 1) {
-          return htmlSafe(
-            I18n.t("poll.multiple.help.x_options", { count: min })
-          );
-        }
-      } else if (min > 1) {
-        if (max < optionsCount) {
-          return htmlSafe(
-            I18n.t("poll.multiple.help.between_min_and_max_options", {
-              min,
-              max,
-            })
-          );
-        } else {
-          return htmlSafe(
-            I18n.t("poll.multiple.help.at_least_min_options", {
-              count: min,
-            })
-          );
-        }
-      } else if (max <= optionsCount) {
-        return htmlSafe(
-          I18n.t("poll.multiple.help.up_to_max_options", { count: max })
-        );
-      }
+if (max > 0) {
+    if (min === max && min > 1) {
+      return htmlSafe(
+        I18n.t("poll.multiple.help.x_options", { count: min })
+      );
     }
+
+    if (min > 1) {
+      if (max < optionsCount) {
+        return htmlSafe(
+          I18n.t("poll.multiple.help.between_min_and_max_options", { min, max })
+        );
+      } 
+      
+      return htmlSafe(
+        I18n.t("poll.multiple.help.at_least_min_options", { count: min })
+      );
+    }
+
+    if (max <= optionsCount) {
+      return htmlSafe(
+        I18n.t("poll.multiple.help.up_to_max_options", { count: max })
+      );
+    }
+  }
   }
 
   get votersLabel() {
