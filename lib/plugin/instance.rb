@@ -718,7 +718,7 @@ class Plugin::Instance
   end
 
   def register_emoji(name, url, group = Emoji::DEFAULT_GROUP)
-    name = Emoji.sanitize_emoji_name name
+    name = Emoji.sanitize_emoji_name(name)
     Plugin::CustomEmoji.register(name, url, group)
     Emoji.clear_cache
   end
