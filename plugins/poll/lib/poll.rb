@@ -80,7 +80,9 @@ class DiscoursePoll::Poll
       is_multiple = serialized_poll[:type] == MULTIPLE
       offset = is_multiple ? (serialized_poll[:max] || serialized_poll[:options].length) : 1
 
-      DB.query(<<~SQL, poll_id: poll_id, user_id: user.id, offset: offset)
+      params = { poll_id: poll_id, offset: offset, user_id: user.id }
+
+      DB.query(<<~SQL, params)
       DELETE FROM poll_votes
       USING (
         SELECT
@@ -218,7 +220,14 @@ class DiscoursePoll::Poll
       raise Discourse::InvalidParameters.new(:option_id) unless poll_option
 
       if poll.irv?
-        votes = DB.query <<~SQL
+        params = {
+          poll_id: poll.id,
+          option_digest: option_digest,
+          offset: offset,
+          offset_plus_limit: offset + limit,
+        }
+
+        votes = DB.query(<<~SQL, params)
         SELECT digest, rank, user_id
           FROM (
             SELECT digest
@@ -229,11 +238,11 @@ class DiscoursePoll::Poll
               FROM poll_votes pv
               JOIN poll_options po ON pv.poll_option_id = po.id
               JOIN users u ON pv.user_id = u.id
-              WHERE pv.poll_id = #{poll.id}
-                AND po.poll_id = #{poll.id}
-                AND po.digest = '#{option_digest}'
+              WHERE pv.poll_id = :poll_id
+                AND po.poll_id = :poll_id
+                AND po.digest = :option_digest
           ) v
-          WHERE row BETWEEN #{offset} AND #{offset + limit}
+          WHERE row BETWEEN :offset AND :offset_plus_limit
           ORDER BY digest, CASE WHEN rank = 'Abstain' THEN 1 ELSE CAST(rank AS integer) END, username
         SQL
 
@@ -266,8 +275,9 @@ class DiscoursePoll::Poll
       end
       result = { option_digest => user_hashes }
     else
+      params = { poll_id: poll.id, offset: offset, offset_plus_limit: offset + limit }
       if poll.irv?
-        votes = DB.query <<~SQL
+        votes = DB.query(<<~SQL, params)
         SELECT digest, rank, user_id
           FROM (
             SELECT digest
@@ -278,14 +288,14 @@ class DiscoursePoll::Poll
               FROM poll_votes pv
               JOIN poll_options po ON pv.poll_option_id = po.id
               JOIN users u ON pv.user_id = u.id
-              WHERE pv.poll_id = #{poll.id}
-                AND po.poll_id = #{poll.id}
+              WHERE pv.poll_id = :poll_id
+                AND po.poll_id = :poll_id
           ) v
-          WHERE row BETWEEN #{offset} AND #{offset + limit}
+          WHERE row BETWEEN :offset AND :offset_plus_limit
           ORDER BY digest, CASE WHEN rank = 'Abstain' THEN 1 ELSE CAST(rank AS integer) END, username
         SQL
       else
-        votes = DB.query <<~SQL
+        votes = DB.query(<<~SQL, params)
           SELECT digest, user_id
             FROM (
               SELECT digest
@@ -293,10 +303,10 @@ class DiscoursePoll::Poll
                     , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
                 FROM poll_votes pv
                 JOIN poll_options po ON pv.poll_option_id = po.id
-                WHERE pv.poll_id = #{poll.id}
-                  AND po.poll_id = #{poll.id}
+                WHERE pv.poll_id = :poll_id
+                  AND po.poll_id = :poll_id
             ) v
-            WHERE row BETWEEN #{offset} AND #{offset + limit}
+            WHERE row BETWEEN :offset AND :offset_plus_limit
         SQL
       end
 
