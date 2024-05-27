@@ -675,7 +675,10 @@ TEXT
   end
 
   describe "#replace_flags" do
-    after { PostActionType.replace_flag_settings(nil) }
+    after do
+      PostActionType.replace_flag_settings(nil)
+      Flag.reset_flag_settings!
+    end
 
     let(:original_flags) { PostActionType.flag_settings }
 
