@@ -84,36 +84,32 @@ export default class ChannelsListPublic extends Component {
       </LinkTo>
     {{/if}}
 
-    {{#unless this.publicMessageChannelsEmpty}}
-      {{#if this.displayPublicChannels}}
-        {{#if this.site.desktopView}}
-          <div class="chat-channel-divider public-channels-section">
-            {{#if this.inSidebar}}
-              <span
-                class="title-caret"
-                id="public-channels-caret"
-                role="button"
-                title="toggle nav list"
-                {{on "click" (fn this.toggleChannelSection "public-channels")}}
-                data-toggleable="public-channels"
-              >
-                {{dIcon "angle-up"}}
-              </span>
-            {{/if}}
-
-            <span class="channel-title">{{i18n "chat.chat_channels"}}</span>
-
-            <LinkTo
-              @route="chat.browse"
-              class="btn no-text btn-flat open-browse-page-btn title-action"
-              title={{i18n "chat.channels_list_popup.browse"}}
-            >
-              {{dIcon "pencil-alt"}}
-            </LinkTo>
-          </div>
+    {{#if (and this.displayPublicChannels this.site.desktopView)}}
+      <div class="chat-channel-divider public-channels-section">
+        {{#if this.inSidebar}}
+          <span
+            class="title-caret"
+            id="public-channels-caret"
+            role="button"
+            title="toggle nav list"
+            {{on "click" (fn this.toggleChannelSection "public-channels")}}
+            data-toggleable="public-channels"
+          >
+            {{dIcon "angle-up"}}
+          </span>
         {{/if}}
-      {{/if}}
-    {{/unless}}
+
+        <span class="channel-title">{{i18n "chat.chat_channels"}}</span>
+
+        <LinkTo
+          @route="chat.browse"
+          class="btn no-text btn-flat open-browse-page-btn title-action"
+          title={{i18n "chat.channels_list_popup.browse"}}
+        >
+          {{dIcon "pencil-alt"}}
+        </LinkTo>
+      </div>
+    {{/if}}
 
     <div
       id="public-channels"
