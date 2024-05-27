@@ -6,6 +6,7 @@ import { inject as service } from "@ember/service";
 import routeAction from "discourse/helpers/route-action";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
+import DButton from "discourse/components/d-button";
 import PollOptionsDropdown from "./poll-options-dropdown";
 
 export default class PollOptionsComponent extends Component {
@@ -46,10 +47,10 @@ export default class PollOptionsComponent extends Component {
                 @sendRank={{this.sendRank}}
               />
             {{else}}
-              <button
+              <DButton
                 class="btn btn-default"
                 onclick={{routeAction "showLogin"}}
-              >{{i18n "poll.options.irv.login"}}</button>
+              >{{i18n "poll.options.irv.login"}}</DButton>
             {{/if}}
             <span class="option-text">{{option.html}}</span>
           </div>
