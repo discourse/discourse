@@ -72,11 +72,11 @@ class Permalink < ActiveRecord::Base
 
   def target_url
     return external_url if external_url
-    return "#{Discourse.base_path}#{post.url}" if post
+    return post.relative_url if post
     return topic.relative_url if topic
-    return category.url if category
-    return tag.full_url if tag
-    return user.full_url if user
+    return category.relative_url if category
+    return tag.relative_url if tag
+    return user.relative_url if user
     nil
   end
 

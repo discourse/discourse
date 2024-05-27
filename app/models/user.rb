@@ -1779,6 +1779,10 @@ class User < ActiveRecord::Base
     username_lower == User.normalize_username(another_username)
   end
 
+  def relative_url
+    "#{Discourse.base_path}/u/#{encoded_username}"
+  end
+
   def full_url
     "#{Discourse.base_url}/u/#{encoded_username}"
   end
