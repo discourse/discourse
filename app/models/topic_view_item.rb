@@ -52,20 +52,10 @@ class TopicViewItem < ActiveRecord::Base
 
         Topic.where(id: topic_id).update_all "views = views + 1"
 
-        sql = <<~SQL
-          INSERT INTO topic_view_stats (topic_id, viewed_at, anonymous_views, logged_in_views)
-          VALUES (:topic_id, :viewed_at, :anon_views, :logged_in_views)
-          ON CONFLICT (topic_id, viewed_at)
-          DO UPDATE SET
-            anonymous_views = topic_view_stats.anonymous_views + :anon_views,
-            logged_in_views = topic_view_stats.logged_in_views + :logged_in_views
-        SQL
-
-        DB.exec(
-          sql,
+        TopicViewStat.add(
           topic_id: topic_id,
-          viewed_at: at,
-          anon_views: user_id ? 0 : 1,
+          date: at,
+          anonymous_views: user_id ? 0 : 1,
           logged_in_views: user_id ? 1 : 0,
         )
       end
