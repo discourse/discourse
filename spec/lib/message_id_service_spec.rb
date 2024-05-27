@@ -52,22 +52,11 @@ RSpec.describe Email::MessageIdService do
   end
 
   describe "find_post_from_message_ids" do
-    let(:post_format_message_id) { "<topic/#{topic.id}/#{post.id}.test123@test.localhost>" }
-    let(:topic_format_message_id) { "<topic/#{topic.id}.test123@test.localhost>" }
     let(:discourse_format_message_id) { "<discourse/post/#{post.id}@test.localhost>" }
     let(:default_format_message_id) { "<36ac1ddd-5083-461d-b72c-6372fb0e7f33@test.localhost>" }
     let(:gmail_format_message_id) do
       "<CAPGrNgZ7QEFuPcsxJBRZLhBhAYPO_ruYpCANSdqiQEbc9Otpiw@mail.gmail.com>"
     end
-
-    it "finds a post based only on a post-format message id" do
-      expect(described_class.find_post_from_message_ids([post_format_message_id])).to eq(post)
-    end
-
-    it "finds a post based only on a topic-format message id" do
-      expect(described_class.find_post_from_message_ids([topic_format_message_id])).to eq(post)
-    end
-
     it "finds a post based only on a discourse-format message id" do
       expect(described_class.find_post_from_message_ids([discourse_format_message_id])).to eq(post)
     end
@@ -101,16 +90,6 @@ RSpec.describe Email::MessageIdService do
         incoming_email.post,
       )
     end
-
-    it "gets the last created post if multiple are returned" do
-      incoming_email =
-        Fabricate(
-          :incoming_email,
-          message_id: described_class.message_id_clean(post_format_message_id),
-          post: Fabricate(:post, created_at: 10.days.ago),
-        )
-      expect(described_class.find_post_from_message_ids([post_format_message_id])).to eq(post)
-    end
   end
 
   describe "#discourse_generated_message_id?" do
@@ -119,14 +98,6 @@ RSpec.describe Email::MessageIdService do
     end
 
     it "works correctly for the different possible formats" do
-      expect(check_format("topic/1223/4525.3c4f8n9@test.localhost")).to eq(true)
-      expect(check_format("<topic/1223/4525.3c4f8n9@test.localhost>")).to eq(true)
-      expect(check_format("topic/1223.fc3j4843@test.localhost")).to eq(true)
-      expect(check_format("<topic/1223.fc3j4843@test.localhost>")).to eq(true)
-      expect(check_format("topic/1223/4525@test.localhost")).to eq(true)
-      expect(check_format("<topic/1223/4525@test.localhost>")).to eq(true)
-      expect(check_format("topic/1223@test.localhost")).to eq(true)
-      expect(check_format("<topic/1223@test.localhost>")).to eq(true)
       expect(check_format("discourse/post/1223@test.localhost")).to eq(true)
       expect(check_format("<discourse/post/1223@test.localhost>")).to eq(true)
 
