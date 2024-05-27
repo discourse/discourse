@@ -110,8 +110,8 @@ class DiscoursePoll::Poll
             PollVote
               .joins(:poll_option)
               .where(poll_options: { digest: option[:id] }, user_id: user.id, poll_id: poll_id)
-              .pluck(:rank)
-              .first,
+              .limit(1)
+              .pluck(:rank),
         )
       elsif serialized_poll[:type] == MULTIPLE
         option.merge!(
