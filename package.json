@@ -5,7 +5,7 @@
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "devDependencies": {
-    "@discourse/lint-configs": "^1.3.8",
+    "@discourse/lint-configs": "^1.3.9",
     "@discourse/moment-timezone-names-translations": "^1.0.0",
     "@fortawesome/fontawesome-free": "5.15.4",
     "@glint/core": "^1.4.0",
