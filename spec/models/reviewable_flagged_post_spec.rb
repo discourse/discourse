@@ -27,6 +27,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         actions = reviewable.actions_for(guardian)
         expect(actions.has?(:agree_and_hide)).to eq(true)
         expect(actions.has?(:agree_and_keep)).to eq(true)
+        expect(actions.has?(:agree_and_edit)).to eq(true)
         expect(actions.has?(:agree_and_keep_hidden)).to eq(false)
         expect(actions.has?(:agree_and_silence)).to eq(true)
         expect(actions.has?(:agree_and_suspend)).to eq(true)
@@ -56,6 +57,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         post.hidden = true
         actions = reviewable.actions_for(guardian)
         expect(actions.has?(:agree_and_keep)).to eq(false)
+        expect(actions.has?(:agree_and_edit)).to eq(false)
         expect(actions.has?(:agree_and_keep_hidden)).to eq(true)
       end
 
@@ -117,6 +119,13 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "agree_and_keep agrees with the flags and keeps the post" do
+      reviewable.perform(moderator, :agree_and_keep)
+      expect(reviewable).to be_approved
+      expect(score.reload).to be_agreed
+      expect(post).not_to be_hidden
+    end
+
+    it "agree_and_keep agrees with the flags and edits the post" do
       reviewable.perform(moderator, :agree_and_keep)
       expect(reviewable).to be_approved
       expect(score.reload).to be_agreed

@@ -3,7 +3,26 @@
 describe DiscourseAutomation::AdminAutomationsController do
   fab!(:automation)
 
-  before { SiteSetting.discourse_automation_enabled = true }
+  before do
+    SiteSetting.discourse_automation_enabled = true
+    I18n.backend.store_translations(
+      :en,
+      {
+        discourse_automation: {
+          scriptables: {
+            something_about_us: {
+              title: "Something about us.",
+              description: "We rock!",
+            },
+          },
+          triggerables: {
+            title: "Triggerables",
+            description: "Triggerables",
+          },
+        },
+      },
+    )
+  end
 
   describe "#show" do
     context "when logged in as an admin" do

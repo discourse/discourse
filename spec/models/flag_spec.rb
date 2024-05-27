@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
 RSpec.describe Flag, type: :model do
-  before { Flag.reset_flag_settings! }
+  after(:each) { Flag.reset_flag_settings! }
 
   it "has id lower than 1000 for system flags" do
     flag = Fabricate(:flag, id: 1)
     expect(flag.system?).to be true
+    flag.destroy!
   end
 
   it "has id greater than 1000 for non-system flags" do
     flag = Fabricate(:flag)
     expect(flag.system?).to be false
     expect(flag.id).to be > 1000
+    flag.destroy!
   end
 
   it "has correct name key" do
@@ -23,6 +25,8 @@ RSpec.describe Flag, type: :model do
 
     flag.update!(name: "THIS IS    SPaM!+)(*&^%$#@@@!)")
     expect(flag.name_key).to eq("this_is_spam")
+
+    flag.destroy!
   end
 
   it "updates post action types when created, modified or destroyed" do

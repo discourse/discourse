@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  site_settings:
+    details_enabled: 'يازمىغا كېڭەيتكىلى بولىدىغان تەپسىلاتنى قوشۇش ئىقتىدارىنى ئۆز ئىچىگە ئالىدۇ. بۇ ئىقتىدارنى تەھرىرلىگۈچ قورال بالداق قاڭقىش تىزىملىكىدىن تاپقىلى بولىدۇ. ئەگەر بۇ تەڭشەكنى ئۆزگەرتسىڭىز، چوقۇم بارلىق يازمىلارنى «rake posts:rebake» بۇيرۇقى ئارقىلىق قايتا يوللايسىز.'
+  details:
+    excerpt_details: "(تېخىمۇ كۆپ تەپسىلات ئۈچۈن چېكىلىدۇ)"

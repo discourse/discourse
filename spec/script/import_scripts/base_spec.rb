@@ -3,7 +3,10 @@
 require_relative "../../../script/import_scripts/base"
 
 RSpec.describe ImportScripts::Base do
-  before { STDOUT.stubs(:write) }
+  before do
+    I18n.backend.store_translations(:en, { test: "Test" })
+    STDOUT.stubs(:write)
+  end
 
   class MockSpecImporter < ImportScripts::Base
     def initialize(data)

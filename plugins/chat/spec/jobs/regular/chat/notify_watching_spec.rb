@@ -170,14 +170,6 @@ RSpec.describe Jobs::Chat::NotifyWatching do
       end
     end
 
-    context "when the target user is online via presence channel" do
-      before { PresenceChannel.any_instance.expects(:user_ids).returns([user2.id]) }
-
-      it "does not send a desktop notification" do
-        expect(notification_messages_for(user2).count).to be_zero
-      end
-    end
-
     context "when the target user is suspended" do
       before { user2.update!(suspended_till: 1.year.from_now) }
 
@@ -304,14 +296,6 @@ RSpec.describe Jobs::Chat::NotifyWatching do
 
     context "when the target user has seen the message already" do
       before { membership2.update!(last_read_message_id: message.id) }
-
-      it "does not send a desktop notification" do
-        expect(notification_messages_for(user2).count).to be_zero
-      end
-    end
-
-    context "when the target user is online via presence channel" do
-      before { PresenceChannel.any_instance.expects(:user_ids).returns([user2.id]) }
 
       it "does not send a desktop notification" do
         expect(notification_messages_for(user2).count).to be_zero

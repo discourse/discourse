@@ -204,6 +204,7 @@ RSpec.configure do |config|
   config.include FastImageHelpers
   config.include WithServiceHelper
   config.include ServiceMatchers
+  config.include I18nHelpers
 
   config.mock_framework = :mocha
   config.order = "random"

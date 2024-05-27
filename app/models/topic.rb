@@ -262,6 +262,7 @@ class Topic < ActiveRecord::Base
 
   has_many :group_archived_messages, dependent: :destroy
   has_many :user_archived_messages, dependent: :destroy
+  has_many :topic_view_stats, dependent: :destroy
 
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_group_users, through: :allowed_groups, source: :users
@@ -862,7 +863,7 @@ class Topic < ActiveRecord::Base
         FROM posts
         WHERE deleted_at IS NULL AND post_type <> 4
         GROUP BY topic_id
-      )       
+      )
       UPDATE topics
       SET
         highest_staff_post_number = X.highest_post_number,

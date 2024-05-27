@@ -1,0 +1,122 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    poll:
+      voters:
+        one: "سايلىغۇچى"
+        other: "سايلىغۇچى"
+      total_votes:
+        one: "ئومۇمىي بېلەت"
+        other: "ئومۇمىي بېلەت"
+      average_rating: "ئوتتۇرىچە باھالاش: <strong>%{average}</strong>."
+      public:
+        title: "بېلەت تاشلاش <strong>ئاشكارا</strong>."
+      results:
+        groups:
+          title: "بۇ راي سىناشتا بېلەت تاشلاش ئۈچۈن %{groups} نىڭ ئەزاسى بولۇشىڭىز كېرەك."
+        vote:
+          title: "نەتىجە <strong>بېلەت</strong>تە كۆرسىتىلىدۇ."
+        closed:
+          title: "نەتىجە <strong>تاقالغان</strong>دا كۆرسىتىلىدۇ."
+        staff:
+          title: "نەتىجە پەقەت <strong>خىزمەتچى</strong> ئەزاغا كۆرسىتىلىدۇ."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "كەم دېگەندە <strong>%{count} تاللانما</strong> تاللىنىدۇ."
+            other: "كەم دېگەندە <strong>%{count} تاللانما</strong> تاللىنىدۇ."
+          up_to_max_options:
+            one: "كۆپ بولغاندا <strong>%{count} تاللانما</strong> تاللىنىدۇ."
+            other: "كۆپ بولغاندا <strong>%{count} تاللانما</strong> تاللىنىدۇ."
+          x_options:
+            one: "كۆپ بولغاندا <strong>%{count} تاللانما</strong> تاللىنىدۇ."
+            other: "<strong>%{count} تاللانما</strong> تاللىنىدۇ."
+          between_min_and_max_options: "<strong>%{min} بىلەن %{max} تاللانما</strong> ئارىسىدا تاللىنىدۇ."
+      cast-votes:
+        title: "بېلەت تاشلاڭ"
+        label: "ھازىر بېلەت تاشلاڭ!"
+      show-results:
+        title: "راي سىناش نەتىجىسىنى كۆرسىتىدۇ"
+        label: "نەتىجە"
+      remove-vote:
+        title: "بېلىتىڭىزنى چىقىرىۋېتىدۇ"
+        label: "بېلەت تاشلاشتىن يېنىۋال"
+      hide-results:
+        title: "بېلىتىڭىزگە قايتىدۇ"
+        label: "بېلەت تاشلاش"
+      group-results:
+        title: "ئىشلەتكۈچى بۆلىكى بويىچە بىلەتنى گۇرۇپپىلايدۇ"
+        label: "تۈرلىنىشىنى كۆرسەت"
+      export-results:
+        title: "راي سىناش نەتىجىسىنى چىقار"
+        label: "چىقار"
+      open:
+        title: "راي سىناشنى ئاچ"
+        label: "ئاچ"
+        confirm: "بۇ راي سىناشنى راستىنلا ئاچامسىز؟"
+      close:
+        title: "راي سىناشنى تاقا"
+        label: "تاقا"
+        confirm: "بۇ راي سىناشنى راستىنلا تاقامسىز؟"
+      automatic_close:
+        closes_in: "<strong>%{timeLeft}</strong> دا تاقىلىدۇ."
+        age: "تاقالدى <strong>%{age}</strong>"
+      breakdown:
+        title: "راي سىناش نەتىجىسى"
+        votes: "%{count} بېلەت"
+        breakdown: "تۈرلىنىشى"
+        percentage: "پىرسەنت"
+        count: "ساناق"
+      options:
+        label: "تاللانما"
+      error_while_toggling_status: "كەچۈرۈڭ ، بۇ راي سىناشنىڭ ھالىتىنى ئالماشتۇرۇۋاتقاندا خاتالىق كۆرۈلدى."
+      error_while_casting_votes: "كەچۈرۈڭ، بېلەت تاشلىسىڭىز خاتالىق كۆرۈلدى."
+      error_while_fetching_voters: "كەچۈرۈڭ، سايلىغۇچىلارنى كۆرسىتىۋاتقاندا خاتالىق كۆرۈلدى."
+      error_while_exporting_results: "كەچۈرۈڭ، راي سىناش نەتىجىسىنى چىقىرىۋاتقاندا خاتالىق كۆرۈلدى."
+      ui_builder:
+        title: راي سىناش قۇر
+        insert: راي سىناش قىستۇر
+        help:
+          options_min_count: كەم دېگەندە 1 تاللانما كىرگۈزۈلىدۇ.
+          options_max_count: ئەڭ كۆپ بولغاندا %{count} تاللانما كىرگۈزۈلىدۇ.
+          invalid_min_value: ئەڭ تۆۋەن قىممىتى كەم دېگەندە 1 بولۇشى كېرەك.
+          invalid_max_value: ئەڭ چوڭ قىممىتى كەم دېگەندە 1 بولۇشى كېرەك، ئەمما تاللانما سانىدىن ئاز ياكى تەڭ بولۇشى كېرەك.
+          invalid_values: ئەڭ كىچىك قىممەت ئەڭ چوڭ قىممەتتىن كىچىك بولۇشى كېرەك.
+          min_step_value: ئەڭ تۆۋەن قەدەم قىممىتى 1
+        poll_type:
+          label: تىپى
+          regular: يەككە تاللاش
+          multiple: كۆپ تاللاش
+          number: نومۇر دەرىجىسى
+        poll_result:
+          label: نەتىجىنى كۆرسەت…
+          always: ھەمىشە كۆرۈنىدۇ
+          vote: بېلەت تاشلىغاندىن كېيىنلا
+          closed: بېلەت تاشلاش ئاخىرلاشقاندا
+          staff: خىزمەتچىلەرلا
+        poll_groups:
+          label: بېلەت تاشلاشنى مۇشۇ گۇرۇپپىلاردىلا چەكلەيدۇ
+        poll_chart_type:
+          label: نەتىجە دىئاگراممىسى
+          bar: تۈۋرۈكسىمان دىئاگرامما
+          pie: يۇقىلاق دىئاگرامما
+        poll_config:
+          max: ئەڭ كۆپ تاللاش
+          min: ئەڭ ئاز تاللاش
+          step: قەدەم
+        poll_public:
+          label: بېلەت تاشلىغانلارنى كۆرسەت
+        poll_title:
+          label: ماۋزۇ (ئىختىيارى)
+        poll_options:
+          label: تاللانما (ھەر قۇرغا بىردىن)
+          add: تاللانما قوش
+        automatic_close:
+          label: راي سىناشنى ئاپتوماتىك تاقاش
+        show_advanced: "ئالىي تاللانمىلارنى كۆرسەت"
+        hide_advanced: "ئالىي تاللانمىلارنى كۆرسەت"

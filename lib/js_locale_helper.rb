@@ -233,7 +233,7 @@ module JsLocaleHelper
     output
   end
 
-  MOMENT_LOCALE_MAPPING ||= { "hy" => "hy-am" }
+  MOMENT_LOCALE_MAPPING ||= { "hy" => "hy-am", "ug" => "ug-cn" }
 
   def self.find_moment_locale(locale_chain, timezone_names: false)
     if timezone_names
