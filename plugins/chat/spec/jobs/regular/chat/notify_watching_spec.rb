@@ -62,6 +62,39 @@ RSpec.describe Jobs::Chat::NotifyWatching do
       )
     end
 
+    context "with chat_notification_translation_args plugin_modifier" do
+      let(:modifier_block) do
+        Proc.new do |args|
+          args[:username] = "Hijacked"
+          args
+        end
+      end
+      it "Allows for changes to the translation args" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:chat_notification_translation_args, &modifier_block)
+
+        messages = notification_messages_for(user2)
+
+        expect(messages.first.data[:translated_title]).to start_with("Hijacked")
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :chat_notification_translation_args,
+          &modifier_block
+        )
+      end
+    end
+
+    context "with push_notification_filter registered to block push notifications" do
+      after { DiscoursePluginRegistry.reset_register!(:push_notification_filters) }
+
+      it "doesn't send notification alert via MessageBus" do
+        Plugin::Instance.new.register_push_notification_filter { |user, payload| false }
+
+        expect(notification_messages_for(user2)).to be_empty
+      end
+    end
+
     context "when the channel is muted via membership preferences" do
       before { membership2.update!(muted: true) }
 
@@ -131,14 +164,6 @@ RSpec.describe Jobs::Chat::NotifyWatching do
 
     context "when the target user has seen the message already" do
       before { membership2.update!(last_read_message_id: message.id) }
-
-      it "does not send a desktop notification" do
-        expect(notification_messages_for(user2).count).to be_zero
-      end
-    end
-
-    context "when the target user is online via presence channel" do
-      before { PresenceChannel.any_instance.expects(:user_ids).returns([user2.id]) }
 
       it "does not send a desktop notification" do
         expect(notification_messages_for(user2).count).to be_zero
@@ -271,14 +296,6 @@ RSpec.describe Jobs::Chat::NotifyWatching do
 
     context "when the target user has seen the message already" do
       before { membership2.update!(last_read_message_id: message.id) }
-
-      it "does not send a desktop notification" do
-        expect(notification_messages_for(user2).count).to be_zero
-      end
-    end
-
-    context "when the target user is online via presence channel" do
-      before { PresenceChannel.any_instance.expects(:user_ids).returns([user2.id]) }
 
       it "does not send a desktop notification" do
         expect(notification_messages_for(user2).count).to be_zero

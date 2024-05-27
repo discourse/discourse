@@ -45,6 +45,9 @@ acceptance("Fast Edit", function (needs) {
     const textNode = query("#post_1 .cooked p").childNodes[0];
 
     await selectText(textNode, 9);
+
+    assert.dom(".quote-button").exists();
+
     await triggerKeyEvent(document, "keypress", "E");
 
     assert.dom("#fast-edit-input").exists();
@@ -60,7 +63,11 @@ acceptance("Fast Edit", function (needs) {
 
     // Closing
     await selectText(textNode, 9);
+
+    assert.dom(".quote-button").exists();
+
     await triggerKeyEvent(document, "keypress", "E");
+
     assert.dom("#fast-edit-input").exists();
 
     await triggerKeyEvent("#fast-edit-input", "keydown", "Escape");
@@ -79,18 +86,39 @@ acceptance("Fast Edit", function (needs) {
     assert.dom(".d-editor-input").exists();
   });
 
-  test("Opens full composer when editing non-ascii characters", async function (assert) {
+  test("Works with diacritics", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    query("#post_2 .cooked").append(
-      `Je suis désolé, ”comment ça va”? A bientôt!`
-    );
+    query("#post_2 .cooked").append(`Je suis désolé, comment ça va?`);
     const textNode = query("#post_2 .cooked").childNodes[2];
 
     await selectText(textNode);
     await click(".quote-button .quote-edit-label");
 
-    assert.dom("#fast-edit-input").doesNotExist();
-    assert.dom(".d-editor-input").exists();
+    assert.dom("#fast-edit-input").exists();
+  });
+
+  test("Works with CJK ranges", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    query("#post_2 .cooked").append(`这是一个测试`);
+    const textNode = query("#post_2 .cooked").childNodes[2];
+
+    await selectText(textNode);
+    await click(".quote-button .quote-edit-label");
+
+    assert.dom("#fast-edit-input").exists();
+  });
+
+  test("Works with emoji", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    query("#post_2 .cooked").append(`This is great 👍`);
+    const textNode = query("#post_2 .cooked").childNodes[2];
+
+    await selectText(textNode);
+    await click(".quote-button .quote-edit-label");
+
+    assert.dom("#fast-edit-input").exists();
   });
 });

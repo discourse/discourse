@@ -1,6 +1,8 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { debounce } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatComposer from "../../chat-composer";
 
 export default class ChatComposerThread extends ChatComposer {
@@ -8,18 +10,36 @@ export default class ChatComposerThread extends ChatComposer {
   @service("chat-thread-composer") composer;
   @service("chat-thread-pane") pane;
   @service currentUser;
+  @service chatDraftsManager;
 
   context = "thread";
 
   composerId = "thread-composer";
 
-  @action
-  reset() {
-    this.composer.reset(this.args.thread);
+  @debounce(2000)
+  persistDraft() {
+    this.chatDraftsManager.add(
+      this.draft,
+      this.args.thread.channel.id,
+      this.args.thread.id
+    );
   }
 
-  get shouldRenderReplyingIndicator() {
-    return this.args.thread;
+  @action
+  destroyDraft() {
+    this.chatDraftsManager.remove(
+      this.args.thread.channel.id,
+      this.args.thread.id
+    );
+  }
+
+  @action
+  resetDraft() {
+    this.args.thread.resetDraft(this.currentUser);
+  }
+
+  get draft() {
+    return this.args.thread.draft;
   }
 
   get disabled() {
@@ -43,9 +63,13 @@ export default class ChatComposerThread extends ChatComposer {
   }
 
   handleEscape(event) {
-    if (this.currentMessage.editing) {
+    if (this.draft.editing) {
       event.stopPropagation();
-      this.composer.cancel(this.args.thread);
+      this.args.thread.draft = ChatMessage.createDraftMessage(
+        this.args.thread.channel,
+        { user: this.currentUser, thread: this.args.thread }
+      );
+
       return;
     }
 

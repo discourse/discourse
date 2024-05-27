@@ -16,6 +16,7 @@ class WatchedWord < ActiveRecord::Base
   validates :action, presence: true
   validate :replacement_is_url, if: -> { action == WatchedWord.actions[:link] }
   validate :replacement_is_tag_list, if: -> { action == WatchedWord.actions[:tag] }
+  validate :replacement_is_html, if: -> { replacement.present? && html? }
 
   validates_each :word do |record, attr, val|
     if WatchedWord.where(action: record.action).count >= MAX_WORDS_PER_ACTION
@@ -27,12 +28,12 @@ class WatchedWord < ActiveRecord::Base
   after_destroy -> { WordWatcher.clear_cache! }
 
   scope :for,
-        ->(word:) {
+        ->(word:) do
           where(
             "(word ILIKE :word AND case_sensitive = 'f') OR (word LIKE :word AND case_sensitive = 't')",
             word: word,
           )
-        }
+        end
 
   def self.actions
     @actions ||=
@@ -48,6 +49,16 @@ class WatchedWord < ActiveRecord::Base
       )
   end
 
+  belongs_to :watched_word_group
+
+  scope :for,
+        ->(word:) do
+          where(
+            "(word ILIKE :word AND case_sensitive = 'f') OR (word LIKE :word AND case_sensitive = 't')",
+            word: word,
+          )
+        end
+
   def self.create_or_update_word(params)
     word = normalize_word(params[:word])
     word = self.for(word: word).first_or_initialize(word: word)
@@ -55,6 +66,8 @@ class WatchedWord < ActiveRecord::Base
     word.action_key = params[:action_key] if params[:action_key]
     word.action = params[:action] if params[:action]
     word.case_sensitive = params[:case_sensitive] if !params[:case_sensitive].nil?
+    word.html = params[:html] if params[:html]
+    word.watched_word_group_id = params[:watched_word_group_id]
     word.save
     word
   end
@@ -68,11 +81,7 @@ class WatchedWord < ActiveRecord::Base
   end
 
   def action_log_details
-    if replacement.present?
-      "#{word} → #{replacement}"
-    else
-      word
-    end
+    replacement.present? ? "#{word} → #{replacement}" : word
   end
 
   private
@@ -96,21 +105,28 @@ class WatchedWord < ActiveRecord::Base
       errors.add(:base, :invalid_tag_list)
     end
   end
+
+  def replacement_is_html
+    errors.add(:base, :invalid_html) if action != WatchedWord.actions[:replace]
+  end
 end
 
 # == Schema Information
 #
 # Table name: watched_words
 #
-#  id             :integer          not null, primary key
-#  word           :string           not null
-#  action         :integer          not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  replacement    :string
-#  case_sensitive :boolean          default(FALSE), not null
+#  id                    :integer          not null, primary key
+#  word                  :string           not null
+#  action                :integer          not null
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  replacement           :string
+#  case_sensitive        :boolean          default(FALSE), not null
+#  watched_word_group_id :bigint
+#  html                  :boolean          default(FALSE), not null
 #
 # Indexes
 #
-#  index_watched_words_on_action_and_word  (action,word) UNIQUE
+#  index_watched_words_on_action_and_word        (action,word) UNIQUE
+#  index_watched_words_on_watched_word_group_id  (watched_word_group_id)
 #

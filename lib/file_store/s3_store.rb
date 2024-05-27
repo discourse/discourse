@@ -163,7 +163,6 @@ module FileStore
         else
           return true
         end
-        return false
       end
 
       return false if SiteSetting.Upload.s3_cdn_url.blank?

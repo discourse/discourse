@@ -382,7 +382,6 @@ class ImportScripts::ZendeskApi < ImportScripts::Base
         html
       else
         puts "Error creating image upload"
-        "![](#{$1})"
         exit
       end
     end

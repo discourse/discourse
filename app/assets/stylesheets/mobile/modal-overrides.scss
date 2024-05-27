@@ -1,0 +1,32 @@
+.d-modal.discourse-local-dates-create-modal {
+  .date-time-configuration {
+    flex-direction: column;
+    gap: 0.5em;
+  }
+  .calendar-date-time-input {
+    width: 100%;
+    margin: 0 0 1rem 0;
+  }
+
+  .picker-panel {
+    //mysteriously needed to prevent it from overlapping the timezone-input
+    position: relative;
+    z-index: 0;
+  }
+
+  .pika-single {
+    justify-content: center;
+  }
+}
+
+.d-modal.add-pm-participants {
+  .d-modal__body {
+    overflow: visible;
+  }
+}
+
+.d-modal.bookmark-reminder-modal {
+  .d-modal__container {
+    min-height: calc(var(--composer-vh, var(--1dvh)) * 85);
+  }
+}

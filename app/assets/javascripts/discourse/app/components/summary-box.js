@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import I18n from "discourse-i18n";
 
 const MIN_POST_READ_TIME = 4;
@@ -9,7 +8,7 @@ export default class SummaryBox extends Component {
   @service siteSettings;
 
   get summary() {
-    return this.args.postAttrs.summary;
+    return this.args.postStream.topicSummary;
   }
 
   get generateSummaryTitle() {
@@ -28,7 +27,7 @@ export default class SummaryBox extends Component {
     let outdatedText = I18n.t("summary.outdated");
 
     if (
-      !this.args.postAttrs.hasTopRepliesSummary &&
+      !this.topRepliesSummaryEnabled &&
       this.summary.newPostsSinceSummary > 0
     ) {
       outdatedText += " ";
@@ -41,29 +40,29 @@ export default class SummaryBox extends Component {
   }
 
   get topRepliesSummaryEnabled() {
-    return this.args.postAttrs.topicSummaryEnabled;
+    return this.args.postStream.summary;
   }
 
   get topRepliesSummaryInfo() {
-    if (this.args.postAttrs.topicSummaryEnabled) {
+    if (this.topRepliesSummaryEnabled) {
       return I18n.t("summary.enabled_description");
     }
 
-    const wordCount = this.args.postAttrs.topicWordCount;
+    const wordCount = this.args.topic.word_count;
     if (wordCount && this.siteSettings.read_time_word_count > 0) {
       const readingTime = Math.ceil(
         Math.max(
           wordCount / this.siteSettings.read_time_word_count,
-          (this.args.postAttrs.topicPostsCount * MIN_POST_READ_TIME) / 60
+          (this.args.topic.posts_count * MIN_POST_READ_TIME) / 60
         )
       );
       return I18n.messageFormat("summary.description_time_MF", {
-        replyCount: this.args.postAttrs.topicReplyCount,
+        replyCount: this.args.topic.replyCount,
         readingTime,
       });
     }
     return I18n.t("summary.description", {
-      count: this.args.postAttrs.topicReplyCount,
+      count: this.args.topic.replyCount,
     });
   }
 
@@ -89,24 +88,5 @@ export default class SummaryBox extends Component {
     }
 
     return "layer-group";
-  }
-
-  @action
-  toggleTopRepliesFilter() {
-    const filterFunction = this.topRepliesSummaryEnabled
-      ? "cancelFilter"
-      : "showTopReplies";
-
-    this.args.actionDispatchFunc(filterFunction);
-  }
-
-  @action
-  collapseSummary() {
-    this.args.actionDispatchFunc("collapseSummary");
-  }
-
-  @action
-  generateSummary() {
-    this.args.actionDispatchFunc("showSummary");
   }
 }

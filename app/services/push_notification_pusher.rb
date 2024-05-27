@@ -49,11 +49,16 @@ class PushNotificationPusher
         "discourse_push_notifications.popup.#{Notification.types[payload[:notification_type]]}"
       end
 
+    # Payload modifier used to adjust arguments to the translation
+    payload =
+      DiscoursePluginRegistry.apply_modifier(:push_notification_pusher_title_payload, payload)
+
     I18n.t(
       translation_key,
       site_title: SiteSetting.title,
       topic: payload[:topic_title],
       username: payload[:username],
+      group_name: payload[:group_name],
     )
   end
 
@@ -161,6 +166,8 @@ class PushNotificationPusher
       if subscription.first_error_at || subscription.error_count != 0
         subscription.update_columns(error_count: 0, first_error_at: nil)
       end
+
+      DiscourseEvent.trigger(:push_notification_sent, user, message)
     rescue WebPush::ExpiredSubscription
       subscription.destroy!
     rescue WebPush::ResponseError => e

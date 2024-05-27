@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ChatChannelThread extends DiscourseRoute {
@@ -8,20 +8,31 @@ export default class ChatChannelThread extends DiscourseRoute {
   @service chat;
   @service chatThreadPane;
 
+  redirectToChannel(channel, transition) {
+    transition.abort();
+    this.chatStateManager.closeSidePanel();
+    this.router.transitionTo("chat.channel", ...channel.routeModels);
+  }
+
   model(params, transition) {
     const channel = this.modelFor("chat.channel");
     return channel.threadsManager
       .find(channel.id, params.threadId)
       .catch(() => {
-        transition.abort();
-        this.chatStateManager.closeSidePanel();
-        this.router.transitionTo("chat.channel", ...channel.routeModels);
+        this.redirectToChannel(channel, transition);
         return;
       });
   }
 
-  afterModel(model) {
-    this.chat.activeChannel.activeThread = model;
+  afterModel(thread, transition) {
+    const channel = this.modelFor("chat.channel");
+
+    if (!channel.threadingEnabled && !thread.force) {
+      this.redirectToChannel(channel, transition);
+      return;
+    }
+
+    channel.activeThread = thread;
   }
 
   @action
@@ -36,15 +47,7 @@ export default class ChatChannelThread extends DiscourseRoute {
     }
   }
 
-  beforeModel(transition) {
-    const channel = this.modelFor("chat.channel");
-
-    if (!channel.threadingEnabled) {
-      transition.abort();
-      this.router.transitionTo("chat.channel", ...channel.routeModels);
-      return;
-    }
-
+  beforeModel() {
     const { messageId } = this.paramsFor(this.routeName + ".near-message");
     if (
       !messageId &&

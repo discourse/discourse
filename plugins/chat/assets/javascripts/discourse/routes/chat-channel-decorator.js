@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 export default function withChatChannel(extendedClass) {
   return class WithChatChannel extends extendedClass {
@@ -34,6 +34,13 @@ export default function withChatChannel(extendedClass) {
       let { channelTitle } = this.paramsFor(this.routeName);
 
       if (channelTitle && channelTitle !== model.slugifiedTitle) {
+        if (this.routeName === "chat.channel.info") {
+          return this.router.replaceWith(
+            "chat.channel.info",
+            ...model.routeModels
+          );
+        }
+
         const messageId = this.paramsFor("chat.channel.near-message").messageId;
         const threadId = this.paramsFor("chat.channel.thread").threadId;
 

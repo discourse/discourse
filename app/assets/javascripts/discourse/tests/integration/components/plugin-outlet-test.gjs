@@ -226,6 +226,88 @@ module("Integration | Component | plugin-outlet", function (hooks) {
           .dom(".broken-theme-alert-banner")
           .exists("Error banner is shown to admins");
       });
+
+      test("can render content in a automatic outlet generated before the wrapped content", async function (assert) {
+        registerTemporaryModule(
+          `${TEMPLATE_PREFIX}/outlet-with-default__before/my-connector`,
+          hbs`<span class='before-result'>Before wrapped content</span>`
+        );
+
+        await render(hbs`
+          <PluginOutlet @name="outlet-with-default" @outletArgs={{hash shouldDisplay=true}}>
+            <span class='result'>Core implementation</span>
+          </PluginOutlet>
+        `);
+
+        assert.dom(".result").hasText("Plugin implementation");
+        assert.dom(".before-result").hasText("Before wrapped content");
+      });
+
+      test("can render multiple connector `before` the same wrapped content", async function (assert) {
+        registerTemporaryModule(
+          `${TEMPLATE_PREFIX}/outlet-with-default__before/my-connector`,
+          hbs`<span class='before-result'>First connector before the wrapped content</span>`
+        );
+        registerTemporaryModule(
+          `${TEMPLATE_PREFIX}/outlet-with-default__before/my-connector2`,
+          hbs`<span class='before-result2'>Second connector before the wrapped content</span>`
+        );
+
+        await render(hbs`
+          <PluginOutlet @name="outlet-with-default" @outletArgs={{hash shouldDisplay=true}}>
+            <span class='result'>Core implementation</span>
+          </PluginOutlet>
+        `);
+
+        assert.dom(".result").hasText("Plugin implementation");
+        assert
+          .dom(".before-result")
+          .hasText("First connector before the wrapped content");
+        assert
+          .dom(".before-result2")
+          .hasText("Second connector before the wrapped content");
+      });
+
+      test("can render content in a automatic outlet generated after the wrapped content", async function (assert) {
+        registerTemporaryModule(
+          `${TEMPLATE_PREFIX}/outlet-with-default__after/my-connector`,
+          hbs`<span class='after-result'>After wrapped content</span>`
+        );
+
+        await render(hbs`
+          <PluginOutlet @name="outlet-with-default" @outletArgs={{hash shouldDisplay=true}}>
+            <span class='result'>Core implementation</span>
+          </PluginOutlet>
+        `);
+
+        assert.dom(".result").hasText("Plugin implementation");
+        assert.dom(".after-result").hasText("After wrapped content");
+      });
+
+      test("can render multiple connector `after` the same wrapped content", async function (assert) {
+        registerTemporaryModule(
+          `${TEMPLATE_PREFIX}/outlet-with-default__after/my-connector`,
+          hbs`<span class='after-result'>First connector after the wrapped content</span>`
+        );
+        registerTemporaryModule(
+          `${TEMPLATE_PREFIX}/outlet-with-default__after/my-connector2`,
+          hbs`<span class='after-result2'>Second connector after the wrapped content</span>`
+        );
+
+        await render(hbs`
+          <PluginOutlet @name="outlet-with-default" @outletArgs={{hash shouldDisplay=true}}>
+            <span class='result'>Core implementation</span>
+          </PluginOutlet>
+        `);
+
+        assert.dom(".result").hasText("Plugin implementation");
+        assert
+          .dom(".after-result")
+          .hasText("First connector after the wrapped content");
+        assert
+          .dom(".after-result2")
+          .hasText("Second connector after the wrapped content");
+      });
     }
   );
 
@@ -465,6 +547,22 @@ module(
     test("renders the component in the outlet", async function (assert) {
       await render(hbs`<PluginOutlet @name="test-name" />`);
       assert.dom(".gjs-test").hasText("Hello world from gjs");
+    });
+
+    test("throws errors for invalid components", function (assert) {
+      assert.throws(() => {
+        extraConnectorComponent("test-name/blah", <template>
+          hello world
+        </template>);
+      }, /invalid outlet name/);
+
+      assert.throws(() => {
+        extraConnectorComponent("test-name", {});
+      }, /klass is not an Ember component/);
+
+      assert.throws(() => {
+        extraConnectorComponent("test-name", class extends Component {});
+      }, /connector component has no associated template/);
     });
   }
 );

@@ -20,7 +20,7 @@
       @content={{this.emailLevelOptions}}
       @value={{this.model.user_option.email_messages_level}}
       @id="user-email-messages-level"
-      @onChange={{action (mut this.model.user_option.email_messages_level)}}
+      @onChange={{fn (mut this.model.user_option.email_messages_level)}}
     />
     {{#if this.emailMessagesLevelAway}}
       <div class="instructions">{{this.emailFrequencyInstructions}}</div>
@@ -34,7 +34,7 @@
       @content={{this.emailLevelOptions}}
       @value={{this.model.user_option.email_level}}
       @id="user-email-level"
-      @onChange={{action (mut this.model.user_option.email_level)}}
+      @onChange={{fn (mut this.model.user_option.email_level)}}
     />
     {{#if this.emailLevelAway}}
       <div class="instructions">{{this.emailFrequencyInstructions}}</div>
@@ -50,7 +50,7 @@
       @valueProperty="value"
       @content={{this.previousRepliesOptions}}
       @value={{this.model.user_option.email_previous_replies}}
-      @onChange={{action (mut this.model.user_option.email_previous_replies)}}
+      @onChange={{fn (mut this.model.user_option.email_previous_replies)}}
     />
   </div>
   <PreferenceCheckbox
@@ -86,7 +86,7 @@
           @valueProperty="value"
           @content={{this.digestFrequencies}}
           @value={{this.model.user_option.digest_after_minutes}}
-          @onChange={{action (mut this.model.user_option.digest_after_minutes)}}
+          @onChange={{fn (mut this.model.user_option.digest_after_minutes)}}
           @options={{hash filterable=true}}
         />
       </div>

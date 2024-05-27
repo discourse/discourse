@@ -1,5 +1,6 @@
 .archetype-private_message {
-  --border-radius: 2em;
+  --pm-border-radius: 0;
+  --pm-padding: 1.25em;
 
   @keyframes current-user-background-fade-highlight {
     0% {
@@ -12,69 +13,29 @@
     }
   }
 
-  .topic-body .cooked {
-    box-sizing: border-box;
-    border: 1px solid var(--primary-low);
-    margin-top: 0.25em;
-    margin-left: -1.35em;
-    padding: 1.5em 1.5em 0.5em 2em;
-    border-radius: 0 var(--border-radius) var(--border-radius)
-      var(--border-radius);
-  }
-
-  .current-user-post {
-    &:not(.moderator) {
-      .topic-body .cooked {
-        background: var(--tertiary-very-low);
-      }
-      .topic-body.highlighted {
-        @media (prefers-reduced-motion: no-preference) {
-          .cooked {
-            animation: current-user-background-fade-highlight 2.5s ease-out;
-          }
-        }
-      }
-    }
-    .topic-body .cooked {
-      border: 1px solid transparent;
-    }
-    .embedded-posts {
-      .topic-body .cooked {
-        border: 1px solid var(--primary-low);
-        background: transparent;
-      }
-    }
-  }
-
-  .moderator {
-    .topic-body .cooked {
-      border: 1px solid transparent;
-    }
-  }
-
-  .deleted .topic-body {
-    .cooked {
-      background: var(--danger-low);
-    }
-  }
-
-  .whisper {
-    .topic-body .cooked {
-      background: transparent;
-      border: 2px dashed var(--primary-low);
-    }
-
-    &.my-post .topic-body .cooked {
-      border: 2px dashed var(--tertiary-very-low);
-    }
-  }
-
-  .topic-body.highlighted {
-    animation: none;
-    @media (prefers-reduced-motion: no-preference) {
-      .cooked {
+  @media (prefers-reduced-motion: no-preference) {
+    .topic-body.highlighted {
+      animation: none;
+      .regular.contents {
         animation: background-fade-highlight 2.5s ease-out;
       }
+    }
+  }
+
+  .topic-post {
+    margin-bottom: 0.5em;
+    &:last-child {
+      margin-bottom: 1.5em;
+    }
+  }
+
+  .regular.contents {
+    border-radius: 0 var(--pm-border-radius) var(--pm-border-radius)
+      var(--pm-border-radius);
+    border: 1px solid var(--primary-low);
+    padding-left: var(--pm-padding);
+    .desktop-view & {
+      margin-left: calc(var(--pm-padding) * -1);
     }
   }
 
@@ -83,25 +44,48 @@
     border: none;
   }
 
+  .topic-body .cooked {
+    box-sizing: border-box;
+    margin-top: 0.25em;
+    padding-right: calc(var(--topic-body-width-padding) * 2);
+  }
+
   .post-menu-area {
-    margin-top: 0.5em;
+    padding-right: calc(var(--topic-body-width-padding) * 2);
+    margin: 0.5em 0 var(--topic-body-width-padding);
+  }
+
+  .who-liked {
+    box-sizing: border-box;
+    padding-right: var(--topic-body-width-padding);
+  }
+
+  .small-action {
+    margin: 1em 0 0;
   }
 
   .post-notice {
-    margin-bottom: 1em;
-    border: none;
-    background: var(--primary-very-low);
-    border-radius: var(--border-radius);
-    margin-left: 1.5em;
     box-sizing: border-box;
-    padding: 1.5em 2em;
+    border-radius: var(--pm-border-radius);
+    background-color: var(--tertiary-very-low);
+    border-color: var(--tertiary-very-low);
+    margin-bottom: 1em;
+    margin-left: 1.65em;
+    padding: var(--pm-padding) 2em;
+    max-width: calc(
+      var(--topic-body-width) + var(--topic-body-width-padding) * 2 +
+        var(--topic-avatar-width) - 1.65em
+    );
+    &.old {
+      border: 1px solid var(--primary-low);
+    }
   }
 
   .topic-map {
-    margin-left: -1.5em;
+    margin-left: calc(var(--pm-padding) * -1);
     border: none;
-    border-radius: var(--border-radius);
-    padding: 1.25em;
+    border-radius: var(--pm-border-radius);
+    padding: var(--pm-padding);
 
     section {
       border: none;
@@ -118,28 +102,46 @@
         border: none;
         background: var(--primary-low);
         padding: 2px 4px;
-        border-radius: var(--border-radius);
+        border-radius: var(--pm-border-radius);
       }
     }
   }
 
   .map:first-of-type .buttons .btn {
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: var(--pm-border-radius);
   }
 
   .embedded-posts {
     border: none;
     .topic-body {
       overflow: visible;
+      width: 100%;
     }
-    .topic-body,
     .topic-avatar {
-      border: none !important; // overrides some specificity for .bottom
+      padding-left: 0;
     }
     .collapse-down,
     .collapse-up {
       display: none;
+    }
+    &.bottom {
+      margin-bottom: 0;
+      margin-right: calc(var(--topic-body-width-padding) * 2);
+    }
+    &.top {
+      .cooked {
+        border: 1px solid var(--primary-low);
+        border-radius: var(--pm-border-radius);
+        margin-left: calc(var(--pm-padding) * -1);
+        padding-left: 2.15em;
+      }
+      .row {
+        .topic-body,
+        .topic-avatar {
+          border: none;
+        }
+      }
     }
   }
 
@@ -149,7 +151,69 @@
     margin-right: 0.15em;
   }
 
-  .gap {
-    margin-bottom: 2em;
+  // special post type colors
+
+  .current-user-post {
+    .regular.contents {
+      background: var(--tertiary-very-low);
+      border-color: var(--tertiary-very-low);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .topic-body.highlighted {
+        .regular.contents {
+          animation: current-user-background-fade-highlight 2.5s ease-out;
+        }
+      }
+    }
+    .embedded-posts {
+      .topic-body .cooked {
+        background: transparent;
+      }
+    }
+  }
+
+  .moderator {
+    .topic-body.highlighted {
+      .regular.contents {
+        animation: none;
+      }
+    }
+
+    .regular.contents {
+      background: var(--highlight-low);
+      border-color: var(--highlight-low);
+      .cooked {
+        background: transparent;
+      }
+    }
+  }
+
+  .whisper {
+    .topic-body .regular.contents {
+      background: transparent;
+      border: 2px dashed var(--primary-low);
+    }
+
+    &.current-user-post .topic-body .regular.contents {
+      border: 2px dashed var(--tertiary-low);
+      @media (prefers-reduced-motion: no-preference) {
+        animation: background-fade-highlight 2.5s ease-out;
+      }
+    }
+  }
+
+  .deleted {
+    .topic-body .regular.contents {
+      background: var(--danger-low);
+      border-color: transparent;
+      .cooked {
+        background: transparent;
+      }
+    }
+    &.whisper {
+      .topic-body .regular.contents {
+        border-color: var(--danger-low-mid);
+      }
+    }
   }
 }

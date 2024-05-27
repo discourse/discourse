@@ -11,7 +11,7 @@ module PrettyText
       key = "js." + key
       return I18n.t(key) if opts.blank?
       str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
-      opts.each { |k, v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
+      opts.each { |k, v| str.gsub!("{{#{k}}}", v.to_s) }
       str
     end
 
@@ -92,7 +92,7 @@ module PrettyText
       if topic && Guardian.new.can_see?(topic)
         { title: Rack::Utils.escape_html(topic.title), href: topic.url }
       elsif topic
-        { title: I18n.t("on_another_topic"), href: Discourse.base_url + topic.slugless_url }
+        { title: I18n.t("on_another_topic"), href: topic.slugless_url }
       end
     end
 

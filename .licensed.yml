@@ -13,7 +13,9 @@ allowed:
 
 ignored:
   bundler:
+    - abbrev # Ruby (default gem)
     - base64 # Ruby (default gem)
+    - bigdecimal # Ruby (default gem)
     - cgi # Ruby (default gem)
     - date # Ruby (default gem)
     - digest # Ruby (default gem)
@@ -28,6 +30,7 @@ ignored:
     - strscan # Ruby (default gem)
     - timeout # Ruby (default gem)
     - uri # Ruby (default gem)
+    - mutex_m # BSD-2-Clause
 
 reviewed:
   bundler:
@@ -62,3 +65,4 @@ reviewed:
     - tilt # MIT
     - unf # BSD-2-Clause
     - unicorn # Ruby or GPLv2/GPLv3
+    - drb # BSD-2-Clause

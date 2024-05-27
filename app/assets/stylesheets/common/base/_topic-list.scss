@@ -3,11 +3,6 @@
 .list-controls {
   background: var(--d-content-background);
 
-  a.badge-category {
-    padding: 3px 12px;
-    font-size: var(--font-up-1);
-  }
-
   .combo-box .combo-box-header {
     background: var(--secondary);
     color: var(--primary);
@@ -81,6 +76,10 @@
       }
     }
   }
+
+  .dismiss-container-top:empty {
+    display: none;
+  }
 }
 
 .category-heading {
@@ -129,10 +128,11 @@
   a.title:not(.badge-notification) {
     color: var(--primary-medium);
   }
-  span.badge-category {
+  .badge-category {
     color: var(--primary-medium);
   }
-  a.discourse-tag {
+  .discourse-tag,
+  .discourse-tag:visited {
     color: var(--primary-medium);
   }
 }
@@ -172,6 +172,20 @@
   z-index: 2;
 }
 
+.bulk-select-topics-dropdown {
+  .select-kit.single-select.dropdown-select-box .select-kit-row {
+    .texts .name {
+      font-weight: normal;
+    }
+    .icons {
+      font-size: var(--font-down-2);
+      margin-right: 0.75em;
+      position: relative;
+      top: 0.15em;
+    }
+  }
+}
+
 .topic-list {
   width: 100%;
   border-collapse: collapse;
@@ -205,7 +219,7 @@
       position: relative; // Chrome needs this, otherwise the line is above the text
       background-color: var(--secondary);
       color: var(--danger-medium);
-      padding: 0 8px;
+      padding: 0 0.55em;
       font-size: var(--font-down-1);
     }
   }
@@ -228,13 +242,12 @@
     @extend .topic-list-main-link;
 
     .raw-topic-link > * {
+      // important to prevent clicks registering on non-link elements and resulting in a full page reload
       pointer-events: none;
     }
 
-    &.focused {
-      box-shadow: inset 3px 0 0 var(--tertiary);
-    }
-    /* we have a custom focus indicator so we can remove the native one */
+    // we have a custom focus indicator via .selected
+    // we can remove the native one
     .title:focus {
       outline: none;
     }
@@ -258,10 +271,10 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    gap: 0.5em;
     .discourse-tags {
       flex-wrap: wrap;
     }
-    a.badge-wrapper.box,
     a.discourse-tag.box {
       padding-top: 0;
       padding-bottom: 0;
@@ -295,10 +308,6 @@
         }
       }
     }
-  }
-
-  .topic-featured-link {
-    padding-left: 5px;
   }
 
   .topic-excerpt {
@@ -410,21 +419,19 @@
   display: flex;
   margin: 0.5em 0;
   flex-wrap: wrap;
-  font-size: var(--font-0-rem);
-
-  button {
-    margin-right: 0.5em;
-  }
+  font-size: var(--font-down-1);
+  gap: 0.5em;
 }
 
 div.education {
   color: var(--primary);
-  padding: 1em 2.5em 1em 1em;
   margin-bottom: 2em;
-  border-top: 3px solid var(--primary-low);
-  border-bottom: 1px solid var(--primary-low);
 
-  .badge-notification.unread-posts {
+  p {
+    max-width: 62em;
+  }
+
+  .badge-notification {
     vertical-align: text-bottom;
   }
 }

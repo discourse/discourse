@@ -6,7 +6,7 @@ class Tag < ActiveRecord::Base
   include HasSanitizableFields
 
   self.ignored_columns = [
-    "topic_count", # TODO(tgxworld): Remove on 1 July 2023
+    "topic_count", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   RESERVED_TAGS = [
@@ -19,21 +19,21 @@ class Tag < ActiveRecord::Base
   validate :target_tag_validator,
            if: Proc.new { |t| t.new_record? || t.will_save_change_to_target_tag_id? }
   validate :name_validator
-  validates :description, length: { maximum: 280 }
+  validates :description, length: { maximum: 1000 }
 
   scope :where_name,
-        ->(name) {
+        ->(name) do
           name = Array(name).map(&:downcase)
           where("lower(tags.name) IN (?)", name)
-        }
+        end
 
   # tags that have never been used and don't belong to a tag group
   scope :unused,
-        -> {
+        -> do
           where(staff_topic_count: 0, pm_topic_count: 0, target_tag_id: nil).joins(
             "LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id",
           ).where("tgm.tag_id IS NULL")
-        }
+        end
 
   scope :used_tags_in_regular_topics,
         ->(guardian) { where("tags.#{Tag.topic_count_column(guardian)} > 0") }
@@ -56,6 +56,9 @@ class Tag < ActiveRecord::Base
   belongs_to :target_tag, class_name: "Tag", optional: true
   has_many :synonyms, class_name: "Tag", foreign_key: "target_tag_id", dependent: :destroy
   has_many :sidebar_section_links, as: :linkable, dependent: :delete_all
+
+  has_many :embeddable_host_tags
+  has_many :embeddable_hosts, through: :embeddable_host_tags
 
   before_save :sanitize_description
 
@@ -250,6 +253,7 @@ class Tag < ActiveRecord::Base
   def sanitize_description
     self.description = sanitize_field(self.description) if description_changed?
   end
+
   def name_validator
     errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(self.name.strip.downcase)
   end
@@ -265,7 +269,7 @@ end
 #  updated_at         :datetime         not null
 #  pm_topic_count     :integer          default(0), not null
 #  target_tag_id      :integer
-#  description        :string
+#  description        :string(1000)
 #  public_topic_count :integer          default(0), not null
 #  staff_topic_count  :integer          default(0), not null
 #

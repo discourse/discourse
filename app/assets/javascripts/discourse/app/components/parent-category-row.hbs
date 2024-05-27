@@ -15,13 +15,8 @@
       {{if this.category.uploaded_logo.url 'has-logo' 'no-logo'}}"
   >
     <td
-      class="category
-        {{if this.isMuted 'muted'}}
-        {{if this.noCategoryStyle 'no-category-style'}}"
-      style={{unless
-        this.noCategoryStyle
-        (category-color-variable this.category.color)
-      }}
+      class="category {{if this.isMuted 'muted'}}"
+      style={{category-color-variable this.category.color}}
     >
       <CategoryTitleLink @category={{this.category}} />
       <PluginOutlet
@@ -66,9 +61,9 @@
       <CategoryUnread
         @category={{this.category}}
         @tagName="div"
-        @class="unread-new"
         @unreadTopicsCount={{this.unreadTopicsCount}}
         @newTopicsCount={{this.newTopicsCount}}
+        class="unread-new"
       />
     </td>
 
@@ -76,7 +71,11 @@
       {{#if this.showTopics}}
         <td class="latest">
           {{#each this.category.featuredTopics as |t|}}
-            <FeaturedTopic @topic={{t}} />
+            {{#if this.currentUser.use_glimmer_topic_list}}
+              <TopicList::FeaturedTopic @topic={{t}} />
+            {{else}}
+              <FeaturedTopic @topic={{t}} />
+            {{/if}}
           {{/each}}
         </td>
       {{/if}}

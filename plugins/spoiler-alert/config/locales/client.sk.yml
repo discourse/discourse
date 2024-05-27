@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 sk:
+  js:
+    spoiler:
+      title: Rozmazaný spojler
+      label:
+        show: "Zobraziť skrytý obsah"
+    composer:
+      spoiler_text: "Tento text bude rozmazaný"

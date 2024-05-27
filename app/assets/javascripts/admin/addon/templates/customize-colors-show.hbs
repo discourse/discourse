@@ -1,8 +1,8 @@
 <div class="color-scheme show-current-style">
   <div class="admin-container">
     <h1>{{#if this.model.theme_id}}{{this.model.name}}{{else}}<TextField
-          @class="style-name"
           @value={{this.model.name}}
+          class="style-name"
         />{{/if}}</h1>
     <div class="controls">
       {{#unless this.model.theme_id}}
@@ -33,7 +33,7 @@
           {{i18n "admin.customize.theme_owner"}}
           <LinkTo
             @route="adminCustomizeThemes.show"
-            @model={{this.model.theme_id}}
+            @models={{array "themes" this.model.theme_id}}
           >{{this.model.theme_name}}</LinkTo>
         </span>
       {{else}}

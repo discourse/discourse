@@ -10,6 +10,7 @@ import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-inje
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { isTesting } from "discourse-common/config/environment";
 import { buildResolver } from "discourse-common/resolver";
+import { VERSION } from "@ember/version";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -27,7 +28,9 @@ const Discourse = Application.extend({
 
   // Start up the Discourse application by running all the initializers we've defined.
   start() {
-    document.querySelector("noscript")?.remove();
+    printDebugInfo();
+
+    document.querySelectorAll("noscript").forEach((el) => el.remove());
 
     // Rewire event handling to eliminate event delegation for better compat
     // between Glimmer and Classic components.
@@ -40,6 +43,10 @@ const Discourse = Application.extend({
       // We need Errors to have full stack traces for `lib/source-identifier`
       Error.stackTraceLimit = Infinity;
     }
+
+    // Our scroll-manager service takes care of storing and restoring scroll position.
+    // Disable browser handling:
+    window.history.scrollRestoration = "manual";
 
     loadInitializers(this);
   },
@@ -211,4 +218,32 @@ function resolveDiscourseInitializer(moduleName, themeId) {
   return initializer;
 }
 
+let printedDebugInfo = false;
+function printDebugInfo() {
+  if (printedDebugInfo) {
+    return;
+  }
+
+  let str = "ℹ️ ";
+
+  const generator = document.querySelector("meta[name=generator]")?.content;
+  const parts = generator?.split(" ");
+  if (parts) {
+    const discourseVersion = parts[1];
+    const gitVersion = parts[5]?.substr(0, 10);
+    str += `Discourse v${discourseVersion} — https://github.com/discourse/discourse/commits/${gitVersion} — `;
+  }
+
+  str += `Ember v${VERSION}`;
+
+  // eslint-disable-next-line no-console
+  console.log(str);
+
+  printedDebugInfo = true;
+}
+
 export default Discourse;
+
+/**
+ * @typedef {import('ember-source/types')} EmberTypes
+ */

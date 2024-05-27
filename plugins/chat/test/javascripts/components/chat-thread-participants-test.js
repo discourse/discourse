@@ -1,8 +1,10 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
+import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(
   "Discourse Chat | Component | <ChatThreadParticipants />",
@@ -10,21 +12,25 @@ module(
     setupRenderingTest(hooks);
 
     test("no participants", async function (assert) {
-      this.thread = fabricators.thread();
+      this.thread = new ChatFabricators(getOwner(this)).thread();
       await render(hbs`<ChatThreadParticipants @thread={{this.thread}} />`);
 
       assert.dom(".chat-thread-participants").doesNotExist();
     });
 
     test("@includeOriginalMessageUser=true", async function (assert) {
-      const orignalMessageUser = fabricators.user({ username: "bob" });
-      this.thread = fabricators.thread({
-        original_message: fabricators.message({ user: orignalMessageUser }),
-        preview: fabricators.threadPreview({
+      const originalMessageUser = new CoreFabricators(getOwner(this)).user({
+        username: "bob",
+      });
+      this.thread = new ChatFabricators(getOwner(this)).thread({
+        original_message: new ChatFabricators(getOwner(this)).message({
+          user: originalMessageUser,
+        }),
+        preview: new ChatFabricators(getOwner(this)).threadPreview({
           channel: this.channel,
           participant_users: [
-            orignalMessageUser,
-            fabricators.user({ username: "alice" }),
+            originalMessageUser,
+            new CoreFabricators(getOwner(this)).user({ username: "alice" }),
           ],
         }),
       });
@@ -35,14 +41,18 @@ module(
     });
 
     test("@includeOriginalMessageUser=false", async function (assert) {
-      const orignalMessageUser = fabricators.user({ username: "bob" });
-      this.thread = fabricators.thread({
-        original_message: fabricators.message({ user: orignalMessageUser }),
-        preview: fabricators.threadPreview({
+      const originalMessageUser = new CoreFabricators(getOwner(this)).user({
+        username: "bob",
+      });
+      this.thread = new ChatFabricators(getOwner(this)).thread({
+        original_message: new ChatFabricators(getOwner(this)).message({
+          user: originalMessageUser,
+        }),
+        preview: new ChatFabricators(getOwner(this)).threadPreview({
           channel: this.channel,
           participant_users: [
-            orignalMessageUser,
-            fabricators.user({ username: "alice" }),
+            originalMessageUser,
+            new CoreFabricators(getOwner(this)).user({ username: "alice" }),
           ],
         }),
       });

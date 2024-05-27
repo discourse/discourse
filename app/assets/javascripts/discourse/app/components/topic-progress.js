@@ -23,7 +23,7 @@ export default Component.extend({
     "postStream.filteredPostsCount"
   )
   hideProgress(loaded, currentPost, filteredPostsCount) {
-    const hideOnShortStream = !this.site.mobileView && filteredPostsCount < 2;
+    const hideOnShortStream = this.site.desktopView && filteredPostsCount < 2;
     return !loaded || !currentPost || hideOnShortStream;
   },
 
@@ -141,7 +141,7 @@ export default Component.extend({
     // on desktop, pin this element to the composer
     // otherwise the grid layout will change too much when toggling the composer
     // and jitter when the viewport is near the topic bottom
-    if (!this.site.mobileView && composerH) {
+    if (this.site.desktopView && composerH) {
       this.set("docked", false);
       this.element.style.setProperty("bottom", `${composerH}px`);
       return;
@@ -177,6 +177,6 @@ export default Component.extend({
 
   @action
   goBack() {
-    this.attrs.jumpToPost(this.get("topic.last_read_post_number"));
+    this.jumpToPost(this.get("topic.last_read_post_number"));
   },
 });

@@ -9,3 +9,4 @@ sk:
     discourse_local_dates_enabled: "Povoliť vlastnosť discourse-local-dates. Táto vlastnosť pridá podporu dátumov s lokálnymi časovými zónami v príspevkoch s použítím prvku [date]."
     discourse_local_dates_default_formats: "Často používané časové zóny, viď. <a target='_blank' rel='noopener' href='https://momentjs.com/docs/#/parsing/string-format/'>formáty momentjs</a>"
     discourse_local_dates_default_timezones: "Predvolený zoznam časových zón, musí byť platná <a target='_blank' rel='noopener' href='https://en.wikipedia.org/wiki/List_of_tz_database_time_zones'>ČZ</a>"
+    discourse_local_dates_email_format: "Formát používaný na zobrazenie dátumu v e-mailoch."

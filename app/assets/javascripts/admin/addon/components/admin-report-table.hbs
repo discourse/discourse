@@ -8,7 +8,7 @@
             @currentSortDirection={{this.sortDirection}}
             @currentSortLabel={{this.sortLabel}}
             @label={{label}}
-            @sortByLabel={{action "sortByLabel" label}}
+            @sortByLabel={{fn this.sortByLabel label}}
           />
         {{/each}}
       {{else}}

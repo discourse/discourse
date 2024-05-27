@@ -34,7 +34,7 @@ acceptance("Create Account - User Fields", function (needs) {
     assert.dom(".create-account").exists("it shows the create account modal");
     assert.dom(".user-field").exists("it has at least one user field");
 
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
     assert
       .dom("#account-email-validation")
       .hasText(I18n.t("user.email.required"));
@@ -51,10 +51,10 @@ acceptance("Create Account - User Fields", function (needs) {
       .dom("#account-email-validation.good")
       .exists("the email validation is good");
 
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
     await fillIn(".user-field input[type=text]:nth-of-type(1)", "Barky");
     await click(".user-field input[type=checkbox]");
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
   });
 
   test("can submit with enter", async function (assert) {
@@ -74,7 +74,7 @@ acceptance("Create Account - User Fields", function (needs) {
     await fillIn("#new-account-password", "cool password bro");
     await fillIn(".user-field-whats-your-dad-like input", "cool password bro");
 
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
 
     assert
       .dom(".user-field-what-is-your-pets-name .tip.bad")

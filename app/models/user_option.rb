@@ -1,9 +1,20 @@
 # frozen_string_literal: true
 
 class UserOption < ActiveRecord::Base
+  HOMEPAGES = {
+    # -1 => reserved for "custom homepage"
+    1 => "latest",
+    2 => "categories",
+    3 => "unread",
+    4 => "new",
+    5 => "top",
+    6 => "bookmarks",
+    7 => "unseen",
+    # 8 => reserved for "hot"
+  }
+
   self.ignored_columns = [
-    "disable_jump_reply", # Remove once 20210706091905 is promoted from post_deploy to regular migration
-    "sidebar_list_destination", # TODO(osama): Remove in January 2024
+    "sidebar_list_destination", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   self.primary_key = :user_id
@@ -74,14 +85,8 @@ class UserOption < ActiveRecord::Base
 
     self.like_notification_frequency = SiteSetting.default_other_like_notification_frequency
 
-    if SiteSetting.default_email_digest_frequency.to_i <= 0
-      self.email_digests = false
-    else
-      self.email_digests = true
-    end
-
-    self.digest_after_minutes ||= SiteSetting.default_email_digest_frequency.to_i
-
+    self.email_digests = SiteSetting.default_email_digest_frequency.to_i > 0
+    self.digest_after_minutes = SiteSetting.default_email_digest_frequency.to_i
     self.include_tl0_in_digests = SiteSetting.default_include_tl0_in_digests
 
     self.text_size = SiteSetting.default_text_size
@@ -96,8 +101,7 @@ class UserOption < ActiveRecord::Base
   end
 
   def mailing_list_mode
-    return false if SiteSetting.disable_mailing_list_mode
-    super
+    SiteSetting.disable_mailing_list_mode ? false : super
   end
 
   def redirected_to_top_yet?
@@ -170,24 +174,9 @@ class UserOption < ActiveRecord::Base
   end
 
   def homepage
-    case homepage_id
-    when 1
-      "latest"
-    when 2
-      "categories"
-    when 3
-      "unread"
-    when 4
-      "new"
-    when 5
-      "top"
-    when 6
-      "bookmarks"
-    when 7
-      "unseen"
-    else
-      SiteSetting.homepage
-    end
+    return HOMEPAGES[homepage_id] if HOMEPAGES.keys.include?(homepage_id)
+
+    "hot" if homepage_id == 8 && SiteSetting.top_menu_map.include?("hot")
   end
 
   def text_size
@@ -293,6 +282,8 @@ end
 #  sidebar_show_count_of_new_items      :boolean          default(FALSE), not null
 #  watched_precedence_over_muted        :boolean
 #  chat_separate_sidebar_mode           :integer          default(0), not null
+#  topics_unread_when_closed            :boolean          default(TRUE), not null
+#  show_thread_title_prompts            :boolean          default(TRUE), not null
 #
 # Indexes
 #

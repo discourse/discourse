@@ -11,7 +11,10 @@ export default class AdminDashboard extends EmberObject {
   static fetch() {
     return ajax("/admin/dashboard.json").then((json) => {
       const model = AdminDashboard.create();
-      model.set("version_check", json.version_check);
+      model.setProperties({
+        version_check: json.version_check,
+        hasUnseenFeatures: json.has_unseen_features,
+      });
 
       return model;
     });

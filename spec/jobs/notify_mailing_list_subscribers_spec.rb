@@ -57,12 +57,12 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
     end
 
     context "with an invalid post_id" do
-      before { post.update(deleted_at: Time.now) }
+      before { post.destroy! }
       include_examples "no emails"
     end
 
     context "with a deleted post" do
-      before { post.update(deleted_at: Time.now) }
+      before { post.trash! }
       include_examples "no emails"
     end
 

@@ -42,6 +42,12 @@ RSpec.describe Chat::ListChannelThreadMessages do
       before { thread.channel.update!(threading_enabled: false) }
 
       it { is_expected.to fail_a_policy(:ensure_thread_enabled) }
+
+      context "when the thread is forced" do
+        before { thread.update!(force: true) }
+
+        it { is_expected.to be_a_success }
+      end
     end
 
     context "when channel and site setting are enabling threading" do
@@ -61,10 +67,30 @@ RSpec.describe Chat::ListChannelThreadMessages do
       end
 
       it { is_expected.to fail_a_policy(:can_view_thread) }
+
+      context "with system user" do
+        fab!(:user) { Discourse.system_user }
+
+        it { is_expected.to be_a_success }
+      end
     end
   end
 
   context "when determine_target_message_id" do
+    let(:optional_params) { { fetch_from_last_message: true } }
+
+    context "when fetch_from_last_message is true" do
+      it "sets target_message_id to last thread message id" do
+        expect(result.target_message_id).to eq(thread.chat_messages.last.id)
+      end
+    end
+
+    context "when fetch_from_first_message is true" do
+      it "sets target_message_id to first thread message id" do
+        expect(result.target_message_id).to eq(thread.chat_messages.first.id)
+      end
+    end
+
     context "when fetch_from_last_read is true" do
       let(:optional_params) { { fetch_from_last_read: true } }
 

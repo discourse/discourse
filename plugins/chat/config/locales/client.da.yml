@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 da:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chat
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Altid"
           fullscreen: "Når chat er i fuld skærm"
@@ -25,8 +28,10 @@ da:
             chat:
               create_message: "Opret en chatbesked i en angivet kanal."
     chat:
+      back_to_forum: "Forum"
       deleted_chat_username: slettet
       dates:
+        yesterday: "I går"
         time_tiny: "tt:mm"
       all_loaded: "Viser alle beskeder"
       already_enabled: "Chat er allerede aktiveret på dette emne. Opdater venligst."
@@ -85,6 +90,11 @@ da:
       heading: "Chat"
       join: "Tilslut"
       last_visit: "sidste besøg"
+      mention_warning:
+        invitations_sent:
+          one: "Invitation sendt"
+          other: "Invitationer sendt"
+        invite: "Inviter til kanal"
       reply: "Svar"
       edit: "Rediger"
       rebake_message: "Gendan HTML"
@@ -115,6 +125,7 @@ da:
         back: "Tilbage"
         title: Kanaler
         filter_all: Alle
+        filter_open: Åbn
         filter_closed: Lukket
         filter_archived: Arkiveret
       chat_message_separator:
@@ -131,6 +142,7 @@ da:
           settings: Indstillinger
       new_message_modal:
         no_items: "Ingen punkter"
+        filter: "Filter"
       direct_message_creator:
         title: Ny Besked
         prefix: "Til:"
@@ -148,8 +160,6 @@ da:
           topic: "Emne"
       reviewable:
         type: "Chatbesked"
-      reactions:
-        only_you: "Du reagerede med :%{emoji}:"
       composer:
         italic_text: "kursiv skrift"
         bold_text: "fed skrift"
@@ -265,12 +275,17 @@ da:
     review:
       types:
         reviewable_chat_message:
+          title: "Rapporteret chatbesked"
           noun: "chatbesked"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Skift kanal"
+    styleguide:
+      sections:
+        chat:
+          title: Chat
     sidebar:
       panels:
         chat:

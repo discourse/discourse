@@ -4,12 +4,12 @@
   <h5>{{filename}}</h5>
   <pre><code class="{{language}}">{{content}}</code></pre>
   {{#truncated?}}
-    This file has been truncated. <a href="{{link}}" target="_blank" rel="noopener">show original</a>
+   {{i18n.truncated_file}} <a href="{{link}}" target="_blank" rel="noopener">{{i18n.show_original}}</a>
   {{/truncated?}}
 {{/gist_files}}
 
 <p>
   {{#truncated_files?}}
-    There are more than three files. <a href="{{link}}" target="_blank" rel="noopener">show original</a>
+    {{i18n.more_than_three_files}} <a href="{{link}}" target="_blank" rel="noopener">{{i18n.show_original}}</a>
   {{/truncated_files?}}
 </p>

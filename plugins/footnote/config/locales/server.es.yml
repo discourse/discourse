@@ -6,5 +6,5 @@
 
 es:
   site_settings:
-    enable_markdown_footnotes: habilitar el marcado de notas a pie de página en este sitio
-    display_footnotes_inline: habilitar la expansión en línea de notas al pie
+    enable_markdown_footnotes: activar el marcado de notas a pie de página en este sitio
+    display_footnotes_inline: activar la expansión en línea de notas al pie

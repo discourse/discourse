@@ -13,6 +13,8 @@ be:
           never: "ніколі"
     chat:
       deleted_chat_username: аддалены
+      dates:
+        yesterday: "учора"
       create: "стварыць"
       cancel: "адмяніць"
       channel_settings:
@@ -52,6 +54,8 @@ be:
         tabs:
           members: Удзельнікі
           settings: Налады
+      new_message_modal:
+        filter: "Filter"
       direct_message_creator:
         title: новае паведамленне
         prefix: "да:"

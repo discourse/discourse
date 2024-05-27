@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
@@ -18,9 +18,11 @@ import I18n from "discourse-i18n";
 class AbstractCategoryRoute extends DiscourseRoute {
   @service composer;
   @service router;
+  @service site;
   @service store;
   @service topicTrackingState;
   @service("search") searchService;
+  @service historyStore;
 
   queryParams = queryParams;
 
@@ -28,9 +30,11 @@ class AbstractCategoryRoute extends DiscourseRoute {
   controllerName = "discovery/list";
 
   async model(params, transition) {
-    const category = Category.findBySlugPathWithID(
-      params.category_slug_path_with_id
-    );
+    const category = this.site.lazy_load_categories
+      ? await Category.asyncFindBySlugPathWithID(
+          params.category_slug_path_with_id
+        )
+      : Category.findBySlugPathWithID(params.category_slug_path_with_id);
 
     if (!category) {
       this.router.replaceWith("/404");
@@ -80,13 +84,13 @@ class AbstractCategoryRoute extends DiscourseRoute {
 
   async _createSubcategoryList(category) {
     if (category.isParent && category.show_subcategory_list) {
-      return CategoryList.listForParent(this.store, category);
+      return CategoryList.list(this.store, category);
     }
   }
 
   async _retrieveTopicList(category, transition, modelParams) {
     const findOpts = filterQueryParams(modelParams, this.routeConfig);
-    const extras = { cached: this.isPoppedState(transition) };
+    const extras = { cached: this.historyStore.isPoppedState };
 
     let listFilter = `c/${Category.slugFor(category)}/${category.id}`;
     if (findOpts.no_subcategories) {

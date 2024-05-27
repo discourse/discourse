@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { ajax } from "discourse/lib/ajax";
 import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
@@ -77,6 +77,16 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
     const topics = data.topics.map((t) => this.store.createRecord("topic", t));
     await Topic.applyTransformations(topics);
 
+    if (this.siteSettings.show_user_menu_avatars) {
+      // Populate avatar_template for lastPoster
+      const usersById = new Map(data.users.map((u) => [u.id, u]));
+      topics.forEach((t) => {
+        t.last_poster_avatar_template = usersById.get(
+          t.lastPoster.user_id
+        )?.avatar_template;
+      });
+    }
+
     const readNotifications = await Notification.initializeNotifications(
       data.read_notifications
     );
@@ -96,7 +106,13 @@ export default class UserMenuMessagesList extends UserMenuNotificationsList {
           })
         );
       } else {
-        content.push(new UserMenuMessageItem({ message: item }));
+        content.push(
+          new UserMenuMessageItem({
+            message: item,
+            siteSettings: this.siteSettings,
+            site: this.site,
+          })
+        );
       }
     });
 

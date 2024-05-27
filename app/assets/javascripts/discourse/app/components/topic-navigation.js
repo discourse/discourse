@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import $ from "jquery";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import SwipeEvents from "discourse/lib/swipe-events";
@@ -127,8 +127,8 @@ export default Component.extend({
       this.modal.show(JumpToPost, {
         model: {
           topic: this.topic,
-          jumpToIndex: this.attrs.jumpToIndex,
-          jumpToDate: this.attrs.jumpToDate,
+          jumpToIndex: this.jumpToIndex,
+          jumpToDate: this.jumpToDate,
         },
       });
     }

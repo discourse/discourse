@@ -2,6 +2,7 @@
 
 module ImportScripts
 end
+
 module ImportScripts::PhpBB3
 end
 

@@ -1,17 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe TopicLink do
-  it { is_expected.to validate_presence_of :url }
-
-  def test_uri
-    URI.parse(Discourse.base_url)
-  end
-
-  fab!(:topic) { Fabricate(:topic, title: "unique topic name") }
-
-  fab!(:user) { topic.user }
-
+  let(:test_uri) { URI.parse(Discourse.base_url) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:topic) { Fabricate(:topic, user: user, title: "unique topic name") }
   fab!(:post)
+
+  it { is_expected.to validate_presence_of :url }
 
   it "can't link to the same topic" do
     ftl = TopicLink.new(url: "/t/#{topic.id}", topic_id: topic.id, link_topic_id: topic.id)
@@ -25,7 +20,7 @@ RSpec.describe TopicLink do
       # prepare a title for one of the links
       stub_request(:get, non_png).with(
         headers: {
-          "Accept" => "*/*",
+          "Accept" => "text/html,*/*",
           "Accept-Encoding" => "gzip",
           "Host" => "b.com",
         },
@@ -74,6 +69,18 @@ RSpec.describe TopicLink do
   end
 
   describe "internal links" do
+    it "can exclude links with ?silent=true" do
+      url = topic.url
+      raw = "[silent link](#{url}?silent=true)"
+
+      post = Fabricate(:post, user: user, raw: raw)
+
+      TopicLink.extract_from(post)
+
+      expect(topic.topic_links.count).to eq(0)
+      expect(post.topic.topic_links.count).to eq(0)
+    end
+
     it "extracts onebox" do
       other_topic = Fabricate(:topic, user: user)
       Fabricate(:post, topic: other_topic, user: user, raw: "some content for the first post")
@@ -273,6 +280,7 @@ RSpec.describe TopicLink do
       let(:post) do
         Fabricate(:post, topic: topic, user: user, raw: "<a href='/faq'>faq link here</a>")
       end
+
       before { TopicLink.extract_from(post) }
 
       it "does not extract a link" do
@@ -447,7 +455,7 @@ RSpec.describe TopicLink do
 
     context "with data" do
       let(:post) do
-        topic = Fabricate(:topic)
+        topic = Fabricate(:topic, user: Fabricate(:user, refresh_auto_groups: true))
         Fabricate(:post_with_external_links, user: topic.user, topic: topic)
       end
 
@@ -540,7 +548,7 @@ RSpec.describe TopicLink do
     end
 
     describe ".duplicate_lookup" do
-      fab!(:user) { Fabricate(:user, username: "junkrat") }
+      fab!(:user) { Fabricate(:user, username: "junkrat", refresh_auto_groups: true) }
 
       let(:post_with_internal_link) do
         Fabricate(:post, user: user, raw: "Check out this topic #{post.topic.url}/122131")

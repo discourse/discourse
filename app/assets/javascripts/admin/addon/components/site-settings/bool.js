@@ -13,6 +13,5 @@ export default class Bool extends Component {
 
   set enabled(value) {
     this.set("value", value ? "true" : "false");
-    return value;
   }
 }

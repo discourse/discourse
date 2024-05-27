@@ -12,12 +12,9 @@
 }
 
 html.discourse-no-touch {
-  .btn-default:not(.btn-flat, .btn-danger, .btn-primary),
-  .btn-icon:not(.btn-flat, .btn-danger, .btn-primary) {
-    &.btn-default {
-      .d-icon {
-        color: var(--primary-medium);
-      }
+  .btn-default {
+    .d-icon {
+      color: var(--primary-medium);
     }
     &:hover,
     &.btn-hover,
@@ -32,7 +29,7 @@ html.discourse-no-touch {
   }
   .btn-icon.ok,
   .btn-icon.cancel,
-  .btn-danger:not(.btn-flat) {
+  .btn-danger:not(.btn-flat, .btn-transparent) {
     .d-icon {
       color: var(--secondary);
     }
@@ -95,7 +92,8 @@ html {
     }
   }
 
-  .d-header-icons .d-icon {
+  .d-header-icons .d-icon,
+  .header-sidebar-toggle button .d-icon {
     color: var(--primary-low-mid);
   }
 
@@ -411,11 +409,6 @@ html {
 
   .reviewable .status span.approved {
     color: var(--success-hover);
-  }
-
-  // Chat
-  .chat-channel .open-drawer-btn {
-    color: var(--primary-medium);
   }
 }
 

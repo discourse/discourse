@@ -1,5 +1,11 @@
 import EmberObject from "@ember/object";
-import { click, currentRouteName, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentRouteName,
+  currentURL,
+  settled,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
@@ -13,6 +19,21 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
+
+/**
+ * Workaround for https://github.com/tildeio/router.js/pull/335
+ */
+async function visitWithRedirects(url) {
+  try {
+    await visit(url);
+  } catch (error) {
+    const { message } = error;
+    if (message !== "TransitionAborted") {
+      throw error;
+    }
+    await settled();
+  }
+}
 
 acceptance("User Routes", function (needs) {
   needs.user();
@@ -57,12 +78,10 @@ acceptance("User Routes", function (needs) {
       "has the body class"
     );
 
-    const $links = queryAll(".item.notification a");
+    const $links = queryAll(".notification a");
 
     assert.ok(
-      $links[2].href.includes(
-        "/u/eviltrout/notifications/likes-received?acting_username=aquaman"
-      )
+      $links[2].href.includes("/u/eviltrout/notifications/likes-received")
     );
 
     updateCurrentUser({ moderator: true, admin: false });
@@ -323,7 +342,7 @@ acceptance(
       );
       await durationDropdown.expand();
       await durationDropdown.selectRowByIndex(0);
-      await click(".modal-footer .btn-primary");
+      await click(".d-modal__footer .btn-primary");
       await notificationLevelDropdown.expand();
       assert.strictEqual(
         notificationLevelDropdown.selectedRow().value(),
@@ -345,7 +364,7 @@ acceptance("User - Invalid view_user_route setting", function (needs) {
   });
 });
 
-acceptance("User - Valid view_user_route setting", function (needs) {
+acceptance("User - view_user_route setting set to activity", function (needs) {
   needs.settings({
     view_user_route: "activity",
   });
@@ -354,6 +373,14 @@ acceptance("User - Valid view_user_route setting", function (needs) {
     await visit("/u/eviltrout");
 
     assert.strictEqual(currentRouteName(), "userActivity.index");
+  });
+});
+
+acceptance("User - Valid view_user_route setting default", function () {
+  test("It defaults to summary", async function (assert) {
+    await visit("/u/eviltrout");
+
+    assert.strictEqual(currentRouteName(), "user.summary");
   });
 });
 
@@ -376,5 +403,27 @@ acceptance("User - Logout", function (needs) {
     );
 
     await click(".dialog-overlay");
+  });
+});
+
+acceptance("User - /my/ shortcuts for logged-in users", function (needs) {
+  needs.user({ username: "eviltrout" });
+
+  test("Redirects correctly", async function (assert) {
+    await visitWithRedirects("/my/activity");
+    assert.strictEqual(currentURL(), "/u/eviltrout/activity");
+
+    await visitWithRedirects("/my/preferences/account");
+    assert.strictEqual(currentURL(), "/u/eviltrout/preferences/account");
+  });
+});
+
+acceptance("User - /my/ shortcuts for anon users", function () {
+  test("Redirects correctly", async function (assert) {
+    await visitWithRedirects("/my/activity");
+    assert.strictEqual(currentURL(), "/login-preferences");
+
+    await visitWithRedirects("/my/preferences/account");
+    assert.strictEqual(currentURL(), "/login-preferences");
   });
 });

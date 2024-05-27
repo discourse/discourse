@@ -3,7 +3,8 @@
   --full-page-border-radius: 12px;
   --full-page-sidebar-width: 275px;
   --channel-list-avatar-size: 30px;
-  --chat-header-offset: 50px;
+  --chat-header-offset: 45px;
+  --chat-header-expanded-offset: 0px;
 }
 
 // Very specific hack to ensure the contextual menu (copy/paste/...) is
@@ -64,26 +65,25 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   }
 }
 
-.header-dropdown-toggle.chat-header-icon {
-  .icon {
-    .chat-channel-unread-indicator {
-      @include chat-unread-indicator;
-      border: 2px solid var(--header_background);
-      position: absolute;
-      top: 0;
-      right: 2px;
+.header-dropdown-toggle.chat-header-icon .icon,
+.c-footer .c-footer__item {
+  .chat-channel-unread-indicator {
+    @include chat-unread-indicator;
+    border: 2px solid var(--header_background);
+    position: absolute;
+    top: 0;
+    right: 2px;
 
-      &.-urgent {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: auto;
-        height: 1em;
-        min-width: 0.6em;
-        padding: 0.21em 0.42em;
-        top: -1px;
-        right: 0;
-      }
+    &.-urgent {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      height: 1em;
+      min-width: 0.6em;
+      padding: 0.21em 0.42em;
+      top: -1px;
+      right: 0;
     }
   }
 
@@ -136,6 +136,7 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
   .chat-time {
     color: var(--primary-high);
     font-size: var(--font-down-2);
+    vertical-align: bottom;
   }
 
   .emoji-picker {
@@ -161,20 +162,12 @@ html.ios-device.keyboard-visible body #main-outlet .full-page-chat {
 }
 
 .avatar {
-  border: 1px solid transparent;
-  padding: 0;
   box-sizing: border-box;
 
   .is-online & {
-    border: 1px solid var(--secondary);
-    box-shadow: 0px 0px 0px 1px var(--success);
-  }
-}
-
-.topic-title-chat-icon {
-  display: inline-block;
-  * {
-    display: inline-block;
+    padding: 2px;
+    box-shadow: inset 0px 0px 0px 1px var(--success),
+      inset 0px 0px 0px 2px var(--secondary);
   }
 }
 
@@ -197,107 +190,14 @@ body.has-full-page-chat {
   grid-template-columns: var(--full-page-sidebar-width) 1fr;
   background: var(--d-content-background);
 
-  .chat-full-page-header {
-    border-top: 1px solid var(--primary-low);
-    border-bottom: 1px solid var(--primary-low);
-    background: var(--secondary);
-    z-index: 3;
-    display: flex;
-    align-items: center;
-
-    &__back-btn {
-      width: 40px;
-      min-width: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .chat-channel-title {
-      .category-chat-name,
-      .chat-name,
-      .dm-usernames {
-        color: var(--primary);
-        display: inline;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-    }
-
-    .-not-following {
-      .chat-channel-title {
-        max-width: calc(100% - 50px);
-      }
-      .join-channel-btn {
-        margin-left: auto;
-      }
-    }
+  .c-navbar-container {
+    position: sticky;
+    top: var(--header-offset);
   }
 
-  .chat-messages-scroll {
+  .chat-messages-scroller {
     box-sizing: border-box;
     height: 100%;
-  }
-}
-
-.chat-full-page-header__left-actions {
-  display: flex;
-  align-items: stretch;
-}
-
-.chat-full-page-header__title {
-  display: flex;
-  align-items: stretch;
-}
-
-.chat-full-page-header__right-actions {
-  align-items: stretch;
-  display: flex;
-  flex-grow: 1;
-  gap: 0.5rem;
-  font-size: var(--font-up-1);
-  justify-content: flex-end;
-}
-
-.chat-full-page-header {
-  box-sizing: border-box;
-
-  .chat-channel-header-details {
-    display: flex;
-    align-items: stretch;
-    flex: 1;
-    max-width: 100%;
-
-    .chat-channel-archive-status {
-      text-align: right;
-      padding-right: 1em;
-    }
-  }
-
-  .chat-channel-title {
-    margin: 0;
-    max-width: 100%;
-
-    .d-icon:not(.d-icon-lock) {
-      height: 1.25em;
-      width: 1.25em;
-    }
-
-    .category-chat-name,
-    .dm-username {
-      font-weight: 700;
-      font-size: var(--font-up-1);
-      line-height: var(--font-up-1);
-    }
-
-    .dm-usernames {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-  .chat-channel-retry-archive {
-    display: flex;
-    margin-top: 1em;
   }
 }
 
@@ -348,6 +248,10 @@ html.has-full-page-chat {
   height: 100%;
   width: 100%;
 
+  &.footer-nav-ipad {
+    height: calc(100% - var(--footer-nav-height, 0px));
+  }
+
   body {
     height: 100%;
     width: 100%;
@@ -363,7 +267,7 @@ html.has-full-page-chat {
 
       .main-chat-outlet {
         min-height: 0;
-        overflow: hidden;
+        max-width: 100vw;
       }
     }
   }

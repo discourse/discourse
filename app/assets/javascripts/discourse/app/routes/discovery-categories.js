@@ -1,9 +1,10 @@
-import EmberObject, { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { hash } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "discourse/lib/preload-store";
 import { defaultHomepage } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
 import CategoryList from "discourse/models/category-list";
 import TopicList from "discourse/models/topic-list";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -17,28 +18,40 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   templateName = "discovery/categories";
   controllerName = "discovery/categories";
 
-  findCategories() {
-    let style =
-      !this.site.mobileView && this.siteSettings.desktop_category_page_style;
+  async findCategories(parentCategory) {
+    let model;
+
+    const style =
+      this.site.desktopView && this.siteSettings.desktop_category_page_style;
 
     if (
       style === "categories_and_latest_topics" ||
       style === "categories_and_latest_topics_created_date"
     ) {
-      return this._findCategoriesAndTopics("latest");
+      model = await this._findCategoriesAndTopics("latest", parentCategory);
     } else if (style === "categories_and_top_topics") {
-      return this._findCategoriesAndTopics("top");
+      model = await this._findCategoriesAndTopics("top", parentCategory);
     } else {
       // The server may have serialized this. Based on the logic above, we don't need it
       // so remove it to avoid it being used later by another TopicList route.
       PreloadStore.remove("topic_list");
+      model = await CategoryList.list(this.store, parentCategory);
     }
 
-    return CategoryList.list(this.store);
+    return model;
   }
 
-  model() {
-    return this.findCategories().then((model) => {
+  async model(params) {
+    let parentCategory;
+    if (params.category_slug_path_with_id) {
+      parentCategory = this.site.lazy_load_categories
+        ? await Category.asyncFindBySlugPathWithID(
+            params.category_slug_path_with_id
+          )
+        : Category.findBySlugPathWithID(params.category_slug_path_with_id);
+    }
+
+    return this.findCategories(parentCategory).then((model) => {
       const tracking = this.topicTrackingState;
       if (tracking) {
         tracking.sync(model, "categories");
@@ -79,47 +92,45 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
     };
   }
 
-  _findCategoriesAndTopics(filter) {
+  async _findCategoriesAndTopics(filter, parentCategory = null) {
     return hash({
-      wrappedCategoriesList: PreloadStore.getAndRemove("categories_list"),
+      categoriesList: PreloadStore.getAndRemove("categories_list"),
       topicsList: PreloadStore.getAndRemove("topic_list"),
-    }).then((response) => {
-      let { wrappedCategoriesList, topicsList } = response;
-      let categoriesList =
-        wrappedCategoriesList && wrappedCategoriesList.category_list;
-      let store = this.store;
-
-      if (categoriesList && topicsList) {
-        if (topicsList.topic_list?.top_tags) {
-          this.site.set("top_tags", topicsList.topic_list.top_tags);
+    })
+      .then((result) => {
+        if (
+          result.categoriesList?.category_list &&
+          result.topicsList?.topic_list
+        ) {
+          return { ...result.categoriesList, ...result.topicsList };
+        } else {
+          // Otherwise, return the ajax result
+          const data = {};
+          if (parentCategory) {
+            data.parent_category_id = parentCategory.id;
+          }
+          return ajax(`/categories_and_${filter}`, { data });
         }
-
-        return EmberObject.create({
-          categories: CategoryList.categoriesFrom(
-            this.store,
-            wrappedCategoriesList
-          ),
-          topics: TopicList.topicsFrom(this.store, topicsList),
-          can_create_category: categoriesList.can_create_category,
-          can_create_topic: categoriesList.can_create_topic,
-          loadBefore: this._loadBefore(store),
-        });
-      }
-      // Otherwise, return the ajax result
-      return ajax(`/categories_and_${filter}`).then((result) => {
+      })
+      .then((result) => {
         if (result.topic_list?.top_tags) {
           this.site.set("top_tags", result.topic_list.top_tags);
         }
 
-        return EmberObject.create({
-          categories: CategoryList.categoriesFrom(this.store, result),
+        return CategoryList.create({
+          store: this.store,
+          categories: CategoryList.categoriesFrom(
+            this.store,
+            result,
+            parentCategory
+          ),
+          parentCategory,
           topics: TopicList.topicsFrom(this.store, result),
           can_create_category: result.category_list.can_create_category,
           can_create_topic: result.category_list.can_create_topic,
-          loadBefore: this._loadBefore(store),
+          loadBefore: this._loadBefore(this.store),
         });
       });
-    });
   }
 
   titleToken() {

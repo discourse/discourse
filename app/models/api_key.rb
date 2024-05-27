@@ -12,10 +12,10 @@ class ApiKey < ActiveRecord::Base
   scope :revoked, -> { where("revoked_at IS NOT NULL") }
 
   scope :with_key,
-        ->(key) {
+        ->(key) do
           hashed = self.hash_key(key)
           where(key_hash: hashed)
-        }
+        end
 
   validates :description, length: { maximum: 255 }
 

@@ -6,7 +6,7 @@
         @title="search.clear_recent"
         @icon="times"
         @action={{this.clearRecent}}
-        @class="clear-recent-searches"
+        class="clear-recent-searches"
       />
     </div>
 
@@ -17,6 +17,8 @@
         @slug={{slug}}
         @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
+        @usage="recent-search"
+        @concatSlug={{true}}
       />
     {{/each}}
   </div>

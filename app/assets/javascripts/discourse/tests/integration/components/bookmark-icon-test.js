@@ -16,6 +16,7 @@ module("Integration | Component | bookmark-icon", function (hooks) {
       bookmark: Bookmark.create({
         reminder_at: tomorrow(this.currentUser.user_option.timezone),
         name: "some name",
+        currentUser: this.currentUser,
       }),
     });
 
@@ -41,6 +42,7 @@ module("Integration | Component | bookmark-icon", function (hooks) {
       "bookmark",
       Bookmark.create({
         name: "some name",
+        currentUser: this.currentUser,
       })
     );
 

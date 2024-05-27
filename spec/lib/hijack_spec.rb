@@ -73,6 +73,7 @@ RSpec.describe Hijack do
 
   it "handles cors" do
     SiteSetting.cors_origins = "www.rainbows.com"
+    global_setting :enable_cors, true
 
     app =
       lambda do |env|

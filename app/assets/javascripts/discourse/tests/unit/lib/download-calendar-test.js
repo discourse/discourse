@@ -16,29 +16,83 @@ module("Unit | Utility | download-calendar", function (hooks) {
     sinon.stub(win, "focus");
   });
 
-  test("correct data for Ics", function (assert) {
-    const data = generateIcsData("event test", [
+  test("correct data for ICS", function (assert) {
+    const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
+    sinon.useFakeTimers({
+      now,
+      toFake: ["Date"],
+      shouldAdvanceTime: true,
+      shouldClearNativeTimers: true,
+    });
+    const data = generateIcsData(
+      "event test",
+      [
+        {
+          startsAt: "2021-10-12T15:00:00.000Z",
+          endsAt: "2021-10-12T16:00:00.000Z",
+        },
+      ],
       {
-        startsAt: "2021-10-12T15:00:00.000Z",
-        endsAt: "2021-10-12T16:00:00.000Z",
-      },
-    ]);
-    assert.ok(
+        recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR",
+        location: "Paris",
+        details: "Good soup",
+      }
+    );
+
+    assert.equal(
       data,
-      `
-BEGIN:VCALENDAR
+      `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Discourse//EN
 BEGIN:VEVENT
 UID:1634050800000_1634054400000
-DTSTAMP:20213312T223320Z
-DTSTART:20210012T150000Z
-DTEND:20210012T160000Z
-SUMMARY:event2
+DTSTAMP:20220404T211500Z
+DTSTART:20211012T150000Z
+DTEND:20211012T160000Z
+RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR
+LOCATION:Paris
+DESCRIPTION:Good soup
+SUMMARY:event test
 END:VEVENT
-END:VCALENDAR
-    `
+END:VCALENDAR`
     );
+  });
+
+  test("correct data for ICS when recurring event", function (assert) {
+    const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
+    sinon.useFakeTimers({
+      now,
+      toFake: ["Date"],
+      shouldAdvanceTime: true,
+      shouldClearNativeTimers: true,
+    });
+    const data = generateIcsData(
+      "event test",
+      [
+        {
+          startsAt: "2021-10-12T15:00:00.000Z",
+          endsAt: "2021-10-12T16:00:00.000Z",
+        },
+      ],
+      { recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR" }
+    );
+    assert.equal(
+      data,
+      `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Discourse//EN
+BEGIN:VEVENT
+UID:1634050800000_1634054400000
+DTSTAMP:20220404T211500Z
+DTSTART:20211012T150000Z
+DTEND:20211012T160000Z
+RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR
+SUMMARY:event test
+END:VEVENT
+END:VCALENDAR`
+    );
+
+    sinon.restore();
   });
 
   test("correct url for Google", function (assert) {
@@ -50,7 +104,70 @@ END:VCALENDAR
     ]);
     assert.ok(
       window.open.calledWith(
-        "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z/20211012T160000Z",
+        "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z%2F20211012T160000Z",
+        "_blank",
+        "noopener",
+        "noreferrer"
+      )
+    );
+  });
+
+  test("correct url for Google when recurring event", function (assert) {
+    downloadGoogle(
+      "event",
+      [
+        {
+          startsAt: "2021-10-12T15:00:00.000Z",
+          endsAt: "2021-10-12T16:00:00.000Z",
+        },
+      ],
+      { recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR" }
+    );
+    assert.ok(
+      window.open.calledWith(
+        "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z%2F20211012T160000Z&recur=RRULE%3AFREQ%3DDAILY%3BBYDAY%3DMO%2CTU%2CWE%2CTH%2CFR",
+        "_blank",
+        "noopener",
+        "noreferrer"
+      )
+    );
+  });
+
+  test("correct location for Google when location given", function (assert) {
+    downloadGoogle(
+      "event",
+      [
+        {
+          startsAt: "2021-10-12T15:00:00.000Z",
+          endsAt: "2021-10-12T16:00:00.000Z",
+        },
+      ],
+      { location: "Paris" }
+    );
+    assert.ok(
+      window.open.calledWith(
+        "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z%2F20211012T160000Z&location=Paris",
+        "_blank",
+        "noopener",
+        "noreferrer"
+      )
+    );
+  });
+
+  test("correct details for Google when details given", function (assert) {
+    downloadGoogle(
+      "event",
+      [
+        {
+          startsAt: "2021-10-12T15:00:00.000Z",
+          endsAt: "2021-10-12T16:00:00.000Z",
+        },
+      ],
+      { details: "Cool" }
+    );
+    assert.ok(
+      window.open.calledWith(
+        "https://www.google.com/calendar/event?action=TEMPLATE&text=event&dates=20211012T150000Z%2F20211012T160000Z&details=Cool",
         "_blank",
         "noopener",
         "noreferrer"

@@ -32,10 +32,16 @@ class TopicSummarization
     }
 
     targets_data.map do |(pn, raw, username)|
-      content[:contents] << { poster: username, id: pn, text: raw }
+      raw_text = raw
+
+      if pn == 1 && topic.topic_embed&.embed_content_cache.present?
+        raw_text = topic.topic_embed&.embed_content_cache
+      end
+
+      content[:contents] << { poster: username, id: pn, text: raw_text }
     end
 
-    summarization_result = strategy.summarize(content, &on_partial_blk)
+    summarization_result = strategy.summarize(content, user, &on_partial_blk)
 
     cache_summary(summarization_result, targets_data.map(&:first), topic)
   end
@@ -97,7 +103,7 @@ class TopicSummarization
     main_summary =
       SummarySection.create!(
         target: topic,
-        algorithm: strategy.model,
+        algorithm: strategy.display_name,
         content_range: (post_numbers.first..post_numbers.last),
         summarized_text: result[:summary],
         original_content_sha: build_sha(post_numbers),
@@ -106,7 +112,7 @@ class TopicSummarization
     result[:chunks].each do |chunk|
       SummarySection.create!(
         target: topic,
-        algorithm: strategy.model,
+        algorithm: strategy.display_name,
         content_range: chunk[:ids].min..chunk[:ids].max,
         summarized_text: chunk[:summary],
         original_content_sha: build_sha(chunk[:ids]),

@@ -50,8 +50,27 @@ module Onebox
         else
           result["pr"] = true
         end
+        result["i18n"] = i18n
+        result["i18n"]["pr_summary"] = I18n.t(
+          "onebox.github.pr_summary",
+          {
+            commits: result["commits"],
+            changed_files: result["changed_files"],
+            additions: result["additions"],
+            deletions: result["deletions"],
+          },
+        )
 
         result
+      end
+
+      def i18n
+        {
+          opened: I18n.t("onebox.github.opened"),
+          commit_by: I18n.t("onebox.github.commit_by"),
+          comment_by: I18n.t("onebox.github.comment_by"),
+          review_by: I18n.t("onebox.github.review_by"),
+        }
       end
 
       def load_commit(link)

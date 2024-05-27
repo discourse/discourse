@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -26,6 +26,7 @@ export default class TagShowRoute extends DiscourseRoute {
   @service store;
   @service topicTrackingState;
   @service("search") searchService;
+  @service historyStore;
 
   queryParams = queryParams;
   controllerName = "discovery/list";
@@ -119,7 +120,7 @@ export default class TagShowRoute extends DiscourseRoute {
       filter,
       filteredQueryParams,
       {
-        cached: this.isPoppedState(transition),
+        cached: this.historyStore.isPoppedState,
       }
     );
 
@@ -170,26 +171,27 @@ export default class TagShowRoute extends DiscourseRoute {
     const filterText = I18n.t(
       `filters.${this.navMode.replace("/", ".")}.title`
     );
-    const controller = this.controllerFor(this.controllerName);
+    const model = this.currentModel;
 
-    if (controller.tag?.id) {
-      if (controller.category) {
+    const tag = model?.tag?.id;
+    if (tag && tag !== NONE) {
+      if (model.category) {
         return I18n.t("tagging.filters.with_category", {
           filter: filterText,
-          tag: controller.tag.id,
-          category: controller.category.name,
+          tag: model.tag.id,
+          category: model.category.name,
         });
       } else {
         return I18n.t("tagging.filters.without_category", {
           filter: filterText,
-          tag: controller.tag.id,
+          tag: model.tag.id,
         });
       }
     } else {
-      if (controller.category) {
+      if (model.category) {
         return I18n.t("tagging.filters.untagged_with_category", {
           filter: filterText,
-          category: controller.category.name,
+          category: model.category.name,
         });
       } else {
         return I18n.t("tagging.filters.untagged_without_category", {

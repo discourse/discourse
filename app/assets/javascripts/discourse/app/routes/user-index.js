@@ -1,24 +1,44 @@
-import { inject as service } from "@ember/service";
+import { getOwner } from "@ember/application";
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend({
-  router: service(),
-  site: service(),
-  currentUser: service(),
+export default class UserIndex extends DiscourseRoute {
+  @service router;
+  @service site;
+  @service currentUser;
+  @service siteSettings;
+
+  get viewingOtherUserDefaultRoute() {
+    let viewUserRoute = this.siteSettings.view_user_route;
+
+    if (viewUserRoute === "activity") {
+      viewUserRoute = "userActivity";
+    } else {
+      viewUserRoute = `user.${viewUserRoute}`;
+    }
+
+    if (getOwner(this).lookup(`route:${viewUserRoute}`)) {
+      return viewUserRoute;
+    } else {
+      // eslint-disable-next-line no-console
+      console.error(
+        `Invalid value for view_user_route '${viewUserRoute}'. Falling back to 'summary'.`
+      );
+      return "user.summary";
+    }
+  }
 
   beforeModel() {
     const viewingMe =
-      this.currentUser?.get("username") ===
-      this.modelFor("user").get("username");
-    const destination = viewingMe ? "userActivity" : "user.summary";
+      this.currentUser?.username === this.modelFor("user").username;
 
-    // HACK: Something with the way the user card intercepts clicks seems to break how the
-    // transition into a user's activity works. This makes the back button work on mobile
-    // where there is no user card as well as desktop where there is.
-    if (this.site.mobileView) {
-      this.router.replaceWith(destination);
+    let destination;
+    if (viewingMe) {
+      destination = "userActivity";
     } else {
-      this.router.transitionTo(destination);
+      destination = this.viewingOtherUserDefaultRoute;
     }
-  },
-});
+
+    this.router.transitionTo(destination);
+  }
+}

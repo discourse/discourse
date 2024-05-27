@@ -8,6 +8,8 @@ RSpec.describe Chat::SearchChatable do
     fab!(:sam) { Fabricate(:user, username: "sam-user") }
     fab!(:charlie) { Fabricate(:user, username: "charlie-user") }
     fab!(:alain) { Fabricate(:user, username: "alain-user") }
+    fab!(:group_1) { Fabricate(:group, name: "awesome-group") }
+    fab!(:group_2) { Fabricate(:group) }
     fab!(:channel_1) { Fabricate(:chat_channel, name: "bob-channel") }
     fab!(:channel_2) { Fabricate(:direct_message_channel, users: [current_user, sam]) }
     fab!(:channel_3) { Fabricate(:direct_message_channel, users: [current_user, sam, charlie]) }
@@ -17,6 +19,7 @@ RSpec.describe Chat::SearchChatable do
     let(:guardian) { Guardian.new(current_user) }
     let(:term) { "" }
     let(:include_users) { false }
+    let(:include_groups) { false }
     let(:include_category_channels) { false }
     let(:include_direct_message_channels) { false }
     let(:excluded_memberships_channel_id) { nil }
@@ -25,6 +28,7 @@ RSpec.describe Chat::SearchChatable do
         guardian: guardian,
         term: term,
         include_users: include_users,
+        include_groups: include_groups,
         include_category_channels: include_category_channels,
         include_direct_message_channels: include_direct_message_channels,
         excluded_memberships_channel_id: excluded_memberships_channel_id,
@@ -78,6 +82,27 @@ RSpec.describe Chat::SearchChatable do
 
           expect(result.users).to_not include(current_user)
         end
+
+        context "when chat_allowed_bot_user_ids modifier exists" do
+          fab!(:bot_1) { Fabricate(:user, id: -500) }
+          fab!(:bot_2) { Fabricate(:user, id: -501) }
+
+          it "alters the users returned" do
+            modifier_block = Proc.new { [bot_2.id] }
+            plugin_instance = Plugin::Instance.new
+            plugin_instance.register_modifier(:chat_allowed_bot_user_ids, &modifier_block)
+
+            expect(result.users).to_not include(bot_1)
+            expect(result.users).to include(bot_2)
+            expect(result.users).to include(current_user, sam, charlie, alain)
+          ensure
+            DiscoursePluginRegistry.unregister_modifier(
+              plugin_instance,
+              :chat_allowed_bot_user_ids,
+              &modifier_block
+            )
+          end
+        end
       end
 
       context "when not including users" do
@@ -85,6 +110,32 @@ RSpec.describe Chat::SearchChatable do
 
         it "doesn’t fetch users" do
           expect(result.users).to be_nil
+        end
+      end
+
+      context "when including groups" do
+        let(:include_groups) { true }
+
+        it "fetches groups" do
+          expect(result.groups).to include(group_1, group_2)
+        end
+
+        it "can filter groups by name" do
+          params[:term] = "awesome-group"
+          expect(result.groups).to contain_exactly(group_1)
+        end
+
+        it "excludes groups not matching the search term" do
+          params[:term] = "nonexistent"
+          expect(result.groups).to be_empty
+        end
+      end
+
+      context "when not including groups" do
+        let(:include_groups) { false }
+
+        it "doesn’t fetch groups" do
+          expect(result.groups).to be_nil
         end
       end
 

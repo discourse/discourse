@@ -17,10 +17,10 @@
     "src"
   ],
   "dependencies": {
-    "@embroider/addon-shim": "^1.0.0"
+    "@embroider/addon-shim": "^1.8.9"
   },
   "engines": {
-    "node": "16.* || >= 18",
+    "node": ">= 18",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   },

@@ -1,5 +1,5 @@
 import { getOwner, setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse-common/utils/decorators";
@@ -20,6 +20,7 @@ export default class ChatablesLoader {
     term,
     options = {
       includeUsers: true,
+      includeGroups: true,
       includeCategoryChannels: true,
       includeDirectMessageChannels: true,
       excludedUserIds: null,
@@ -52,6 +53,7 @@ export default class ChatablesLoader {
 
       return [
         ...results.users,
+        ...results.groups,
         ...results.direct_message_channels,
         ...results.category_channels,
       ]
@@ -84,6 +86,10 @@ export default class ChatablesLoader {
   }
 
   #injectTracking(chatable) {
+    if (!chatable.type === "channel") {
+      return;
+    }
+
     return this.chatChannelsManager.allChannels.find(
       (channel) => channel.id === chatable.model.id
     )?.tracking;

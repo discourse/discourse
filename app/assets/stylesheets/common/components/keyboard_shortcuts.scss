@@ -1,22 +1,29 @@
-.topic-list-item td:first-child,
+.topic-list-item td:first-of-type,
 .topic-post {
   border-left: 1px solid transparent;
 }
 
-.topic-list tr.selected td:first-child,
-.topic-list-item.selected td:first-child,
+.topic-list tr.selected td:first-of-type,
+.topic-list-item.selected td:first-of-type,
 .latest-topic-list-item.selected,
 .search-results .fps-result.selected {
-  box-shadow: inset 3px 0 0 var(--danger); // needs to be inset for Edge
+  box-shadow: inset 3px 0 0 var(--quaternary);
 }
 
 .featured-topic.selected,
 .topic-post.selected {
-  box-shadow: -3px 0 0 var(--danger);
+  box-shadow: -3px 0 0 var(--quaternary);
 }
 
-.tabLoc:focus {
-  outline: none;
+.topic-list tr.selected,
+.topic-list-item.selected,
+.featured-topic.selected,
+.topic-post.selected,
+.latest-topic-list-item.selected,
+.search-results .fps-result.selected {
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .latest .featured-topic {
@@ -27,25 +34,26 @@
   background-color: inherit;
 }
 
-.keyboard-shortcuts-modal {
-  .modal-inner-container {
-    width: 100%;
-    --modal-max-width: 80vw;
+.keyboard-shortcuts-modal.d-modal.-max {
+  .d-modal__container {
+    max-width: 70vw;
   }
 }
 
-.modal-body:has(#keyboard-shortcuts-help) {
-  overflow-y: hidden;
+.shortcut-category {
+  border: 1px solid var(--primary-low);
+
+  h4 {
+    background-color: var(--primary-very-low);
+    padding: 0.5rem 1rem;
+  }
 }
 
 #keyboard-shortcuts-help {
   box-sizing: border-box;
-  overflow-x: hidden;
-  overflow-y: auto;
-  max-height: 80vh !important; // overrides a default modal !important for extra space
 
   .keyboard-shortcuts-help__container {
-    columns: auto 20em;
+    columns: 2 20em; // Set maximum of 2 columns
     section {
       display: inline-block;
       margin-bottom: 1.5em;
@@ -74,8 +82,11 @@
     li {
       align-items: center;
       display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 6px;
+      flex-wrap: nowrap;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--primary-low);
+      padding: 0.25rem 1rem;
     }
 
     span {
@@ -86,7 +97,11 @@
     }
 
     span:first-child {
-      margin-left: 0;
+      margin-right: 0;
+    }
+
+    span:last-child {
+      margin-left: auto;
     }
 
     kbd {

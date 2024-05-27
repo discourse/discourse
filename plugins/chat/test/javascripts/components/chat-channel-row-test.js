@@ -1,15 +1,19 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
+import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.categoryChatChannel = fabricators.channel();
-    this.directMessageChannel = fabricators.directMessageChannel();
+    this.categoryChatChannel = new ChatFabricators(getOwner(this)).channel();
+    this.directMessageChannel = new ChatFabricators(
+      getOwner(this)
+    ).directMessageChannel();
   });
 
   test("links to correct channel", async function (assert) {
@@ -43,17 +47,21 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   test("renders correct channel title", async function (assert) {
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
-    assert.dom(".chat-channel-title").hasText(this.categoryChatChannel.title);
+    assert
+      .dom(".chat-channel-name__label")
+      .hasText(this.categoryChatChannel.title);
   });
 
   test("renders correct channel metadata", async function (assert) {
-    this.categoryChatChannel.lastMessage = fabricators.message({
+    this.categoryChatChannel.lastMessage = new ChatFabricators(
+      getOwner(this)
+    ).message({
       created_at: moment().toISOString(),
     });
     await render(hbs`<ChatChannelRow @channel={{this.categoryChatChannel}} />`);
 
     assert
-      .dom(".chat-channel-metadata")
+      .dom(".chat-channel__metadata-date")
       .hasText(
         moment(this.categoryChatChannel.lastMessage.createdAt).format("h:mm A")
       );
@@ -150,8 +158,10 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("user status with direct message channel", async function (assert) {
-    this.directMessageChannel.chatable = fabricators.directMessage({
-      users: [fabricators.user()],
+    this.directMessageChannel.chatable = new ChatFabricators(
+      getOwner(this)
+    ).directMessage({
+      users: [new CoreFabricators(getOwner(this)).user()],
     });
     const status = { description: "Off to dentist", emoji: "tooth" };
     this.directMessageChannel.chatable.users[0].status = status;

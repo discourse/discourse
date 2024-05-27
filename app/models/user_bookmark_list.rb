@@ -36,4 +36,16 @@ class UserBookmarkList
     @has_more = (@page.to_i + 1) * @per_page < query.count
     @bookmarks
   end
+
+  def categories
+    @categories ||=
+      @bookmarks
+        .map do |bm|
+          category = bm.bookmarkable.try(:category) || bm.bookmarkable.try(:topic)&.category
+          [category&.parent_category, category]
+        end
+        .flatten
+        .compact
+        .uniq
+  end
 end

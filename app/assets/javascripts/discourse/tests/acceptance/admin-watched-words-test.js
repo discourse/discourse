@@ -1,4 +1,4 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
@@ -57,20 +57,34 @@ acceptance("Admin - Watched Words", function (needs) {
 
   test("add words", async function (assert) {
     await visit("/admin/customize/watched_words/action/block");
+    const submitButton = query(".watched-word-form button");
 
     await click(".show-words-checkbox");
-    await fillIn(".watched-word-form input", "poutine");
-    await click(".watched-word-form button");
+    await click(".select-kit-header.multi-select-header");
 
-    let found = [];
-    [...queryAll(".watched-words-list .watched-word")].forEach((elem) => {
-      if (elem.innerText.trim() === "poutine") {
-        found.push(true);
+    await fillIn(".select-kit-filter input", "poutine");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
+
+    await fillIn(".select-kit-filter input", "cheese");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
+
+    assert.equal(
+      query(".select-kit-header-wrapper .formatted-selection").innerText,
+      "poutine, cheese",
+      "has the correct words in the input field"
+    );
+
+    await click(submitButton);
+
+    const words = [...queryAll(".watched-words-list .watched-word")].map(
+      (elem) => {
+        return elem.innerText.trim();
       }
-    });
+    );
 
-    assert.strictEqual(found.length, 1);
-    assert.strictEqual(count(".watched-words-list .case-sensitive"), 0);
+    assert.ok(words.includes("poutine"), "has word 'poutine'");
+    assert.ok(words.includes("cheese"), "has word 'cheese'");
+    assert.equal(count(".watched-words-list .case-sensitive"), 0);
   });
 
   test("add case-sensitive words", async function (assert) {
@@ -82,7 +96,11 @@ acceptance("Admin - Watched Words", function (needs) {
       "Add button is disabled by default"
     );
     await click(".show-words-checkbox");
-    await fillIn(".watched-word-form input", "Discourse");
+
+    await click(".select-kit-header.multi-select-header");
+    await fillIn(".select-kit-filter input", "Discourse");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
+
     await click(".case-sensitivity-checkbox");
     assert.strictEqual(
       submitButton.disabled,
@@ -95,7 +113,9 @@ acceptance("Admin - Watched Words", function (needs) {
       .dom(".watched-words-list .watched-word")
       .hasText(`Discourse ${I18n.t("admin.watched_words.case_sensitive")}`);
 
-    await fillIn(".watched-word-form input", "discourse");
+    await click(".select-kit-header.multi-select-header");
+    await fillIn(".select-kit-filter input", "discourse");
+    await triggerKeyEvent(".select-kit-filter input", "keydown", "Enter");
     await click(".case-sensitivity-checkbox");
     await click(submitButton);
 
@@ -124,17 +144,20 @@ acceptance("Admin - Watched Words", function (needs) {
   test("test modal - replace", async function (assert) {
     await visit("/admin/customize/watched_words/action/replace");
     await click(".watched-word-test");
-    await fillIn(".modal-body textarea", "Hi there!");
-    assert.strictEqual(query(".modal-body li .match").innerText, "Hi");
-    assert.strictEqual(query(".modal-body li .replacement").innerText, "hello");
+    await fillIn(".d-modal__body textarea", "Hi there!");
+    assert.strictEqual(query(".d-modal__body li .match").innerText, "Hi");
+    assert.strictEqual(
+      query(".d-modal__body li .replacement").innerText,
+      "hello"
+    );
   });
 
   test("test modal - tag", async function (assert) {
     await visit("/admin/customize/watched_words/action/tag");
     await click(".watched-word-test");
-    await fillIn(".modal-body textarea", "Hello world!");
-    assert.strictEqual(query(".modal-body li .match").innerText, "Hello");
-    assert.strictEqual(query(".modal-body li .tag").innerText, "greeting");
+    await fillIn(".d-modal__body textarea", "Hello world!");
+    assert.strictEqual(query(".d-modal__body li .match").innerText, "Hello");
+    assert.strictEqual(query(".d-modal__body li .tag").innerText, "greeting");
   });
 });
 

@@ -9,11 +9,11 @@ export default Component.extend({
     this.setProperties({
       _table: this.element.querySelector(".directory-table"),
       _columnCount: this.showTimeRead
-        ? this.attrs.columns.value.length + 1
-        : this.attrs.columns.value.length,
+        ? this.columns.length + 1
+        : this.columns.length,
     });
 
-    this._table.style.gridTemplateColumns = `minmax(13em, 3fr) repeat(${this._columnCount}, minmax(max-content, 1fr))`;
+    this._table.style.gridTemplateColumns = `minmax(15em, 3fr) repeat(${this._columnCount}, minmax(max-content, 1fr))`;
   },
 
   @action

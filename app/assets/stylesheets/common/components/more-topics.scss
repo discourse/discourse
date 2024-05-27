@@ -56,31 +56,17 @@
   }
 
   // Target the .badge-category text, the bullet icon needs to maintain `display: block`
-  .suggested-topics-message .badge-wrapper.bullet span.badge-category,
-  .suggested-topics-message .badge-wrapper.box span,
-  .suggested-topics-message .badge-wrapper.bar span {
+  .suggested-topics-message .badge-category__wrapper .badge-category {
     display: inline;
-  }
-
-  .suggested-topics-message .badge-wrapper.bullet span.badge-category {
-    // Override vertical-align: text-top from `badges.css.scss`
     vertical-align: baseline;
     line-height: var(--line-height-medium);
-  }
-
-  .suggested-topics-message .badge-wrapper.bullet {
     margin-right: 0;
-  }
-
-  .suggested-topics-message .badge-wrapper.bullet,
-  .suggested-topics-message .badge-wrapper.bullet span.badge-category-parent-bg,
-  .suggested-topics-message .badge-wrapper.bullet span.badge-category-bg {
-    // Top of bullet aligns with top of line - adjust line height to vertically align bullet.
     line-height: 0.8;
+    max-width: 150px;
   }
 
-  .suggested-topics-message .badge-wrapper.bullet span.badge-category,
-  .suggested-topics-message .badge-wrapper.bar span.badge-category {
-    max-width: 150px;
+  .more-topics__list-title,
+  .more-topics__browse-more {
+    padding-left: 0.5em;
   }
 }

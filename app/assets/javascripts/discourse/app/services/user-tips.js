@@ -1,7 +1,6 @@
-import Service, { inject as service } from "@ember/service";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
+import Service, { service } from "@ember/service";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import Site from "discourse/models/site";
 import { isTesting } from "discourse-common/config/environment";
 
 @disableImplicitInjections
@@ -11,7 +10,7 @@ export default class UserTips extends Service {
 
   #availableTips = new Set();
   #renderedId;
-  #shouldRenderMap = new TrackedMap();
+  #shouldRenderSet = new TrackedSet();
 
   #updateRenderedId() {
     const tipsArray = [...this.#availableTips];
@@ -29,19 +28,21 @@ export default class UserTips extends Service {
       })?.id;
 
     if (this.#renderedId !== newId) {
-      this.#shouldRenderMap.delete(this.#renderedId);
-      this.#shouldRenderMap.set(newId, true);
+      this.#shouldRenderSet.delete(this.#renderedId);
+      this.#shouldRenderSet.add(newId);
       this.#renderedId = newId;
     }
   }
 
   shouldRender(id) {
-    return this.#shouldRenderMap.get(id);
+    return this.#shouldRenderSet.has(id);
   }
 
   addAvailableTip(tip) {
-    this.#availableTips.add(tip);
-    this.#updateRenderedId();
+    if (this.canSeeUserTip(tip.id) && !this._findAvailableTipById(tip.id)) {
+      this.#availableTips.add(tip);
+      this.#updateRenderedId();
+    }
   }
 
   removeAvailableTip(tip) {
@@ -54,8 +55,7 @@ export default class UserTips extends Service {
       return false;
     }
 
-    const userTips = Site.currentProp("user_tips");
-
+    const userTips = this.site.user_tips;
     if (!userTips || this.currentUser.user_option?.skip_new_user_tips) {
       return false;
     }
@@ -81,12 +81,11 @@ export default class UserTips extends Service {
       return;
     }
 
-    const userTips = Site.currentProp("user_tips");
+    const userTips = this.site.user_tips;
     if (!userTips || this.currentUser.user_option?.skip_new_user_tips) {
       return;
     }
 
-    // Empty tipId means all user tips.
     if (!userTips[tipId]) {
       // eslint-disable-next-line no-console
       console.warn("Cannot hide user tip with id", tipId);
@@ -95,6 +94,23 @@ export default class UserTips extends Service {
 
     const tipObj = [...this.#availableTips].find((t) => t.id === tipId);
     this.removeAvailableTip(tipObj);
+
+    await this.markAsSeen(tipId);
+  }
+
+  async markAsSeen(tipId) {
+    if (!this.currentUser) {
+      return;
+    }
+
+    if (!tipId) {
+      return;
+    }
+
+    const userTips = this.site.user_tips;
+    if (!userTips || this.currentUser.user_option?.skip_new_user_tips) {
+      return;
+    }
 
     // Update list of seen user tips.
     let seenUserTips = this.currentUser.user_option?.seen_popups || [];
@@ -109,5 +125,26 @@ export default class UserTips extends Service {
     }
     this.currentUser.set("user_option.seen_popups", seenUserTips);
     await this.currentUser.save(["seen_popups"]);
+  }
+
+  async skipTips() {
+    if (!this.currentUser) {
+      return;
+    }
+
+    this.#availableTips.clear();
+    this.#shouldRenderSet.clear();
+
+    this.currentUser.set("user_option.skip_new_user_tips", true);
+    await this.currentUser.save(["skip_new_user_tips"]);
+  }
+
+  _findAvailableTipById(id) {
+    for (let item of this.#availableTips) {
+      if (item.id === id) {
+        return item;
+      }
+    }
+    return null;
   }
 }

@@ -13,11 +13,11 @@
           }}</label>
 
         <EmailGroupUserChooser
-          @class="input-xxlarge"
           @id="owner-selector"
           @value={{this.splitOwnerUsernames}}
           @onChange={{action "updateOwnerUsernames"}}
           @options={{hash filterPlaceholder="groups.selector_placeholder"}}
+          class="input-xxlarge"
         />
       </div>
 
@@ -27,11 +27,11 @@
           }}</label>
 
         <EmailGroupUserChooser
-          @class="input-xxlarge"
           @id="member-selector"
           @value={{this.splitUsernames}}
           @onChange={{action "updateUsernames"}}
           @options={{hash filterPlaceholder="groups.selector_placeholder"}}
+          class="input-xxlarge"
         />
       </div>
     </GroupsFormProfileFields>

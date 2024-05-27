@@ -11,9 +11,9 @@ RSpec.describe TopicQuery do
   #   work.
   #
   #   We should use be more explicit in communicating how the clock moves
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
-  fab!(:creator) { Fabricate(:user) }
+  fab!(:creator) { Fabricate(:user, refresh_auto_groups: true) }
   let(:topic_query) { TopicQuery.new(user) }
 
   fab!(:tl4_user) { Fabricate(:trust_level_4) }
@@ -72,6 +72,70 @@ RSpec.describe TopicQuery do
 
       expect(TopicQuery.new(nil).list_topics_by(user).topics.count).to eq(1)
       expect(TopicQuery.new(user).list_topics_by(user).topics.count).to eq(2)
+    end
+  end
+
+  describe "#list_hot" do
+    it "keeps pinned topics on top" do
+      pinned_topic =
+        Fabricate(
+          :topic,
+          created_at: 1.hour.ago,
+          pinned_at: 1.hour.ago,
+          pinned_globally: true,
+          like_count: 1,
+        )
+      _topic = Fabricate(:topic, created_at: 5.minute.ago, like_count: 100)
+      topic = Fabricate(:topic, created_at: 1.minute.ago, like_count: 100)
+
+      # pinned topic is older so generally it would not hit the batch without
+      # extra special logic
+      TopicHotScore.update_scores(2)
+
+      expect(TopicQuery.new(nil).list_hot.topics.map(&:id)).to eq([pinned_topic.id, topic.id])
+
+      SiteSetting.tagging_enabled = true
+      user = Fabricate(:user)
+      tag = Fabricate(:tag)
+
+      TagUser.create!(
+        user_id: user.id,
+        tag_id: tag.id,
+        notification_level: NotificationLevels.all[:muted],
+      )
+
+      topic.update!(tags: [tag])
+
+      # even though it is muted, we should still show it cause we are filtered to it
+      expect(TopicQuery.new(user, { tags: [tag.name] }).list_hot.topics.map(&:id)).to eq([topic.id])
+    end
+
+    it "excludes muted categories and topics" do
+      muted_category = Fabricate(:category)
+      muted_topic = Fabricate(:topic, category: muted_category)
+
+      TopicHotScore.create!(topic_id: muted_topic.id, score: 1.0)
+
+      expect(TopicQuery.new(user).list_hot.topics.map(&:id)).to include(muted_topic.id)
+
+      tu =
+        TopicUser.create!(
+          user_id: user.id,
+          topic_id: muted_topic.id,
+          notification_level: TopicUser.notification_levels[:muted],
+        )
+
+      expect(TopicQuery.new(user).list_hot.topics.map(&:id)).not_to include(muted_topic.id)
+
+      tu.destroy!
+
+      CategoryUser.create!(
+        user_id: user.id,
+        category_id: muted_category.id,
+        notification_level: CategoryUser.notification_levels[:muted],
+      )
+
+      expect(TopicQuery.new(user).list_hot.topics.map(&:id)).not_to include(muted_topic.id)
     end
   end
 
@@ -245,7 +309,7 @@ RSpec.describe TopicQuery do
       group = Fabricate(:group)
       group.add(group_moderator)
       category = Fabricate(:category, reviewable_by_group: group)
-      topic = Fabricate(:topic, category: category, deleted_at: 1.year.ago)
+      _topic = Fabricate(:topic, category: category, deleted_at: 1.year.ago)
 
       expect(TopicQuery.new(admin, status: "deleted").list_latest.topics.size).to eq(1)
       expect(TopicQuery.new(moderator, status: "deleted").list_latest.topics.size).to eq(1)
@@ -265,7 +329,7 @@ RSpec.describe TopicQuery do
     it "includes users own pms in regular topic lists" do
       topic = Fabricate(:topic)
       own_pm = Fabricate(:private_message_topic, user: user)
-      other_pm = Fabricate(:private_message_topic, user: Fabricate(:user))
+      _other_pm = Fabricate(:private_message_topic, user: Fabricate(:user))
 
       expect(TopicQuery.new(user).list_latest.topics).to contain_exactly(topic)
       expect(TopicQuery.new(admin).list_latest.topics).to contain_exactly(topic)
@@ -1466,8 +1530,8 @@ RSpec.describe TopicQuery do
         it "should return random topics excluding topics that are muted by user and not older than `suggested_topics_max_days_old` site setting" do
           topic2 = Fabricate(:topic, user: user)
           topic3 = Fabricate(:topic, user: user)
-          topic4 = Fabricate(:topic, user: user, created_at: 8.days.ago)
-          topic5 = Fabricate(:topic).tap { |t| TopicNotifier.new(t).mute!(user) }
+          _topic4 = Fabricate(:topic, user: user, created_at: 8.days.ago)
+          _topic5 = Fabricate(:topic).tap { |t| TopicNotifier.new(t).mute!(user) }
 
           SiteSetting.suggested_topics_max_days_old = 7
 
@@ -1483,7 +1547,7 @@ RSpec.describe TopicQuery do
 
         fab!(:topic_in_category_that_user_created_and_has_partially_read) do
           Fabricate(:topic, user: user, category:).tap do |t|
-            first_post = Fabricate(:post, topic: t)
+            _first_post = Fabricate(:post, topic: t)
             second_post = Fabricate(:post, topic: t)
 
             TopicUser.change(
@@ -1498,7 +1562,7 @@ RSpec.describe TopicQuery do
 
         fab!(:topic_in_category2_that_user_created_and_has_partially_read) do
           Fabricate(:topic, user: user, category: category2).tap do |t|
-            first_post = Fabricate(:post, topic: t)
+            _first_post = Fabricate(:post, topic: t)
             second_post = Fabricate(:post, topic: t)
 
             TopicUser.change(
@@ -1513,7 +1577,7 @@ RSpec.describe TopicQuery do
 
         fab!(:topic_in_category_that_user_has_partially_read) do
           Fabricate(:topic, category:).tap do |t|
-            first_post = Fabricate(:post, topic: t)
+            _first_post = Fabricate(:post, topic: t)
             second_post = Fabricate(:post, topic: t)
 
             TopicUser.change(
@@ -1528,7 +1592,7 @@ RSpec.describe TopicQuery do
 
         fab!(:topic_in_category2_that_user_has_partially_read) do
           Fabricate(:topic, category: category2).tap do |t|
-            first_post = Fabricate(:post, topic: t)
+            _first_post = Fabricate(:post, topic: t)
             second_post = Fabricate(:post, topic: t)
 
             TopicUser.change(
@@ -1840,7 +1904,6 @@ RSpec.describe TopicQuery do
       SiteSetting.shared_drafts_category = shared_drafts_category.id
       SiteSetting.shared_drafts_allowed_groups =
         Group::AUTO_GROUPS[:trust_level_3].to_s + "|" + Group::AUTO_GROUPS[:staff].to_s
-      Group.refresh_automatic_groups!
     end
 
     context "with destination_category_id" do
@@ -1855,7 +1918,7 @@ RSpec.describe TopicQuery do
       end
 
       it "allow group members with enough trust level to query destination_category_id" do
-        member = Fabricate(:user, trust_level: TrustLevel[3], refresh_auto_groups: true)
+        member = Fabricate(:user, trust_level: TrustLevel[3])
         group.add(member)
 
         list = TopicQuery.new(member, destination_category_id: category.id).list_latest
@@ -1864,7 +1927,7 @@ RSpec.describe TopicQuery do
       end
 
       it "doesn't allow group members without enough trust level to query destination_category_id" do
-        member = Fabricate(:user, trust_level: TrustLevel[2], refresh_auto_groups: true)
+        member = Fabricate(:user, trust_level: TrustLevel[2])
         group.add(member)
 
         list = TopicQuery.new(member, destination_category_id: category.id).list_latest
@@ -2058,6 +2121,40 @@ RSpec.describe TopicQuery do
       expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
         unread_topic.id,
       )
+    end
+  end
+
+  describe "#apply_ordering" do
+    fab!(:topic1) { Fabricate(:topic, spam_count: 3, bumped_at: 3.hours.ago) }
+    fab!(:topic2) { Fabricate(:topic, spam_count: 2, bumped_at: 3.minutes.ago) }
+    fab!(:topic3) { Fabricate(:topic, spam_count: 3, bumped_at: 1.hour.ago) }
+
+    let(:modifier_block) do
+      Proc.new do |result, sort_column, sort_dir, options, topic_query|
+        if sort_column == "spam"
+          sort_column = "spam_count"
+          result.order("topics.#{sort_column} #{sort_dir}, bumped_at DESC")
+        end
+      end
+    end
+
+    it "returns the result of topic_query_apply_ordering_result modifier" do
+      plugin_instance = Plugin::Instance.new
+      plugin_instance.register_modifier(:topic_query_apply_ordering_result, &modifier_block)
+
+      topics = TopicQuery.new(nil, order: "spam", ascending: "false").list_latest.topics
+      expect(topics.map(&:id)).to eq([topic3.id, topic1.id, topic2.id])
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :topic_query_apply_ordering_result,
+        &modifier_block
+      )
+    end
+
+    it "ignores the result of topic_query_apply_ordering_result if modifier not registered" do
+      topics = TopicQuery.new(nil, order: "spam", ascending: "false").list_latest.topics
+      expect(topics.map(&:id)).to eq([topic2.id, topic3.id, topic1.id])
     end
   end
 

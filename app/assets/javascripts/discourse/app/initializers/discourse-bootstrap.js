@@ -1,5 +1,5 @@
 import { DEBUG } from "@glimmer/env";
-import runloop from "@ember/runloop";
+import { _backburner } from "@ember/runloop";
 import RSVP from "rsvp";
 import PreloadStore from "discourse/lib/preload-store";
 import { setURLContainer } from "discourse/lib/url";
@@ -19,7 +19,7 @@ export default {
   // The very first initializer to run
   initialize(app) {
     if (DEBUG) {
-      runloop._backburner.ASYNC_STACKS = true;
+      _backburner.ASYNC_STACKS = true;
     }
 
     setURLContainer(app.__container__);
@@ -67,7 +67,6 @@ export default {
     session.serviceWorkerURL = setupData.serviceWorkerUrl;
     session.assetVersion = setupData.assetVersion;
     session.disableCustomCSS = setupData.disableCustomCss === "true";
-    session.markdownItURL = setupData.markdownItUrl;
 
     if (setupData.mbLastFileChangeId) {
       session.mbLastFileChangeId = parseInt(setupData.mbLastFileChangeId, 10);

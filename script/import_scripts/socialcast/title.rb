@@ -2,7 +2,6 @@
 
 require_relative "./socialcast_message.rb"
 require_relative "./socialcast_user.rb"
-require "set"
 require File.expand_path(File.dirname(__FILE__) + "/../base.rb")
 
 MESSAGES_DIR = "output/messages"

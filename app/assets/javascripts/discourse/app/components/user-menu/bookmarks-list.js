@@ -73,7 +73,11 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     await Bookmark.applyTransformations(bookmarks);
     content.push(
       ...bookmarks.map((bookmark) => {
-        return new UserMenuBookmarkItem({ bookmark });
+        return new UserMenuBookmarkItem({
+          bookmark,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        });
       })
     );
 

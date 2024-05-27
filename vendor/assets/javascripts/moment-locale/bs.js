@@ -1,6 +1,7 @@
 //! moment.js locale configuration
 //! locale : Bosnian [bs]
 //! author : Nedim Cholich : https://github.com/frontyard
+//! author : Rasid Redzic : https://github.com/rasidre
 //! based on (hr) translation by Bojan Marković
 
 ;(function (global, factory) {
@@ -11,6 +12,17 @@
 }(this, (function (moment) { 'use strict';
 
     //! moment.js locale configuration
+
+    function processRelativeTime(number, withoutSuffix, key, isFuture) {
+        switch (key) {
+            case 'm':
+                return withoutSuffix
+                    ? 'jedna minuta'
+                    : isFuture
+                      ? 'jednu minutu'
+                      : 'jedne minute';
+        }
+    }
 
     function translate(number, withoutSuffix, key) {
         var result = number + ' ';
@@ -24,8 +36,6 @@
                     result += 'sekundi';
                 }
                 return result;
-            case 'm':
-                return withoutSuffix ? 'jedna minuta' : 'jedne minute';
             case 'mm':
                 if (number === 1) {
                     result += 'minuta';
@@ -36,7 +46,7 @@
                 }
                 return result;
             case 'h':
-                return withoutSuffix ? 'jedan sat' : 'jednog sata';
+                return withoutSuffix ? 'jedan sat' : 'jedan sat';
             case 'hh':
                 if (number === 1) {
                     result += 'sat';
@@ -137,7 +147,7 @@
             past: 'prije %s',
             s: 'par sekundi',
             ss: translate,
-            m: translate,
+            m: processRelativeTime,
             mm: translate,
             h: translate,
             hh: translate,

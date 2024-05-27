@@ -64,11 +64,6 @@ RSpec.describe Email::Styles do
       expect(frag.at("a")["style"]).to be_present
     end
 
-    it "attaches a style to a tags" do
-      frag = html_fragment("<a href>wat</a>")
-      expect(frag.at("a")["style"]).to be_present
-    end
-
     it "attaches a style to ul and li tags" do
       frag = html_fragment("<ul><li>hello</li></ul>")
       expect(frag.at("ul")["style"]).to be_present

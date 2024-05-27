@@ -49,13 +49,14 @@ RSpec.describe Chat::TrashMessage do
 
         it "destroys notifications for mentions" do
           notification = Fabricate(:notification)
-          mention = Fabricate(:chat_mention, chat_message: message, notification: notification)
+          mention =
+            Fabricate(:user_chat_mention, chat_message: message, notifications: [notification])
 
           result
 
           mention = Chat::Mention.find_by(id: mention.id)
           expect(mention).to be_present
-          expect(mention.notification_id).to be_nil
+          expect(mention.notifications).to be_empty
         end
 
         it "publishes associated Discourse and MessageBus events" do
@@ -105,7 +106,7 @@ RSpec.describe Chat::TrashMessage do
           expect(membership_3.reload.last_read_message_id).to eq(other_message.id)
         end
 
-        it "updates the tracking to nil when there are no other messages left in the channnel" do
+        it "updates the tracking to nil when there are no other messages left in the channel" do
           membership_1 =
             Fabricate(
               :user_chat_channel_membership,

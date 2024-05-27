@@ -24,7 +24,7 @@ export function grantableBadges(allBadges, userBadges) {
 }
 
 export function isBadgeGrantable(badgeId, availableBadges) {
-  return (
+  return !!(
     availableBadges && availableBadges.some((b) => b.get("id") === badgeId)
   );
 }

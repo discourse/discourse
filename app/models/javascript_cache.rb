@@ -22,7 +22,8 @@ class JavascriptCache < ActiveRecord::Base
   end
 
   def update_digest
-    self.digest = Digest::SHA1.hexdigest(content) if content_changed?
+    self.digest =
+      Digest::SHA1.hexdigest("#{content}|#{GlobalSetting.asset_url_salt}") if content_changed?
   end
 
   def content_cannot_be_nil

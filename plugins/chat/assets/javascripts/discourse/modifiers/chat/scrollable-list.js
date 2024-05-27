@@ -3,6 +3,7 @@ import { cancel, throttle } from "@ember/runloop";
 import Modifier from "ember-modifier";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
+import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";
 
 const UP = "up";
 const DOWN = "down";
@@ -26,6 +27,8 @@ export default class ChatScrollableList extends Modifier {
     this.element.addEventListener("wheel", this.handleWheel, {
       passive: true,
     });
+
+    this.throttleComputeScroll();
   }
 
   @bind
@@ -49,7 +52,11 @@ export default class ChatScrollableList extends Modifier {
     cancel(this.scrollTimer);
     this.throttleTimer = throttle(this, this.computeScroll, 50, true);
     this.scrollTimer = discourseLater(() => {
-      this.options.onScrollEnd?.(this.computeState());
+      this.options.onScrollEnd?.(
+        Object.assign(this.computeState(), {
+          firstVisibleId: firstVisibleMessageId(this.element),
+        })
+      );
     }, this.options.delay || 250);
   }
 

@@ -3,6 +3,7 @@
 class CurrentUserSerializer < BasicUserSerializer
   include UserTagNotificationsMixin
   include UserSidebarMixin
+  include UserStatusMixin
 
   attributes :name,
              :unread_notifications,
@@ -19,10 +20,15 @@ class CurrentUserSerializer < BasicUserSerializer
              :trust_level,
              :can_send_private_email_messages,
              :can_send_private_messages,
+             :can_upload_avatar,
              :can_edit,
              :can_invite_to_forum,
              :no_password,
              :can_delete_account,
+             :can_post_anonymously,
+             :can_ignore_users,
+             :can_delete_all_posts_and_topics,
+             :can_summarize,
              :custom_fields,
              :muted_category_ids,
              :indirectly_muted_category_ids,
@@ -60,27 +66,29 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_review,
              :draft_count,
              :pending_posts_count,
-             :status,
              :grouped_unread_notifications,
              :display_sidebar_tags,
              :sidebar_tags,
              :sidebar_category_ids,
              :sidebar_sections,
              :new_new_view_enabled?,
-             :experimental_search_menu_groups_enabled?
+             :use_experimental_topic_bulk_actions?,
+             :use_admin_sidebar,
+             :can_view_raw_email,
+             :use_glimmer_topic_list?
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
 
   has_one :user_option, embed: :object, serializer: CurrentUserOptionSerializer
+  has_many :all_sidebar_sections,
+           embed: :object,
+           key: :sidebar_sections,
+           serializer: SidebarSectionSerializer
 
-  def sidebar_sections
-    SidebarSection
-      .public_sections
-      .or(SidebarSection.where(user_id: object.id))
-      .includes(:sidebar_urls)
-      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
-      .map { |section| SidebarSectionSerializer.new(section, root: false) }
+  def initialize(object, options = {})
+    super
+    options[:include_status] = true
   end
 
   def groups
@@ -118,6 +126,35 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def can_send_private_messages
     scope.can_send_private_messages?
+  end
+
+  def use_admin_sidebar
+    object.staff? && object.in_any_groups?(SiteSetting.admin_sidebar_enabled_groups_map)
+  end
+
+  def include_user_admin_sidebar?
+    object.admin?
+  end
+
+  def can_post_anonymously
+    SiteSetting.allow_anonymous_posting &&
+      (is_anonymous || object.in_any_groups?(SiteSetting.anonymous_posting_allowed_groups_map))
+  end
+
+  def can_ignore_users
+    !is_anonymous && object.in_any_groups?(SiteSetting.ignore_allowed_groups_map)
+  end
+
+  def can_delete_all_posts_and_topics
+    object.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+  end
+
+  def can_summarize
+    object.in_any_groups?(SiteSetting.custom_summarization_allowed_groups_map)
+  end
+
+  def can_upload_avatar
+    !is_anonymous && object.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
   end
 
   def can_edit
@@ -267,15 +304,19 @@ class CurrentUserSerializer < BasicUserSerializer
     Draft.has_topic_draft(object)
   end
 
-  def include_status?
-    SiteSetting.enable_user_status && object.has_status?
-  end
-
-  def status
-    UserStatusSerializer.new(object.user_status, root: false)
-  end
-
   def unseen_reviewable_count
     Reviewable.unseen_reviewable_count(object)
+  end
+
+  def use_experimental_topic_bulk_actions?
+    scope.user.in_any_groups?(SiteSetting.experimental_topic_bulk_actions_enabled_groups_map)
+  end
+
+  def can_view_raw_email
+    scope.user.in_any_groups?(SiteSetting.view_raw_email_allowed_groups_map)
+  end
+
+  def use_glimmer_topic_list?
+    scope.user.in_any_groups?(SiteSetting.experimental_glimmer_topic_list_groups_map)
   end
 end

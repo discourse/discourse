@@ -4,6 +4,7 @@ require "mini_mime"
 
 class UploadsController < ApplicationController
   include ExternalUploadHelpers
+  include SecureUploadEndpointHelpers
 
   requires_login except: %i[show show_short _show_secure_deprecated show_secure]
 
@@ -24,16 +25,23 @@ class UploadsController < ApplicationController
     # capture current user for block later on
     me = current_user
 
+    RateLimiter.new(
+      current_user,
+      "uploads-per-minute",
+      SiteSetting.max_uploads_per_minute,
+      1.minute.to_i,
+    ).performed!
+
     params.permit(:type, :upload_type)
     raise Discourse::InvalidParameters if params[:type].blank? && params[:upload_type].blank?
     # 50 characters ought to be enough for the upload type
     type =
       (params[:upload_type].presence || params[:type].presence).parameterize(separator: "_")[0..50]
 
-    if type == "avatar" && !me.admin? &&
+    if type == "avatar" &&
          (
            SiteSetting.discourse_connect_overrides_avatar ||
-             !TrustLevelAndStaffAndDisabledSetting.matches?(SiteSetting.allow_uploaded_avatars, me)
+             !me.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
          )
       return render json: failed_json, status: 422
     end
@@ -143,12 +151,8 @@ class UploadsController < ApplicationController
     return xhr_not_allowed if request.xhr?
 
     path_with_ext = "#{params[:path]}.#{params[:extension]}"
+    upload = upload_from_path_and_extension(path_with_ext)
 
-    sha1 = File.basename(path_with_ext, File.extname(path_with_ext))
-    # this takes care of optimized image requests
-    sha1 = sha1.partition("_").first if sha1.include?("_")
-
-    upload = Upload.find_by(sha1: sha1)
     return render_404 if upload.blank?
 
     return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
@@ -167,11 +171,7 @@ class UploadsController < ApplicationController
   end
 
   def handle_secure_upload_request(upload, path_with_ext = nil)
-    if upload.access_control_post_id.present?
-      raise Discourse::InvalidAccess if !guardian.can_see?(upload.access_control_post)
-    else
-      return render_404 if current_user.nil?
-    end
+    check_secure_upload_permission(upload)
 
     # defaults to public: false, so only cached by the client browser
     cache_seconds =

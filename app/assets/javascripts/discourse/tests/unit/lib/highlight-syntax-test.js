@@ -4,9 +4,7 @@ import highlightSyntax from "discourse/lib/highlight-syntax";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
 
 let siteSettings = { autohighlight_all_code: true },
-  session = {
-    highlightJsPath: "/assets/highlightjs/highlight-test-bundle.min.js",
-  };
+  session = {};
 
 module("Unit | Utility | highlight-syntax", function (hooks) {
   setupTest(hooks);
@@ -14,7 +12,7 @@ module("Unit | Utility | highlight-syntax", function (hooks) {
   test("highlighting code", async function (assert) {
     fixture().innerHTML = `
       <pre>
-        <code class="language-ruby">
+        <code class="lang-ruby">
           def code
             puts 1 + 2
           end
@@ -26,7 +24,7 @@ module("Unit | Utility | highlight-syntax", function (hooks) {
 
     assert.strictEqual(
       document
-        .querySelector("code.language-ruby.hljs .hljs-keyword")
+        .querySelector("code.lang-ruby.hljs .hljs-keyword")
         .innerText.trim(),
       "def"
     );
@@ -35,7 +33,7 @@ module("Unit | Utility | highlight-syntax", function (hooks) {
   test("highlighting code with HTML intermingled", async function (assert) {
     fixture().innerHTML = `
       <pre>
-        <code class="language-ruby">
+        <code class="lang-ruby">
           <ol>
           <li>def code</li>
           <li>  puts 1 + 2</li>
@@ -49,14 +47,14 @@ module("Unit | Utility | highlight-syntax", function (hooks) {
 
     assert.strictEqual(
       document
-        .querySelector("code.language-ruby.hljs .hljs-keyword")
+        .querySelector("code.lang-ruby.hljs .hljs-keyword")
         .innerText.trim(),
       "def"
     );
 
     // Checks if HTML structure was preserved
     assert.strictEqual(
-      document.querySelectorAll("code.language-ruby.hljs ol li").length,
+      document.querySelectorAll("code.lang-ruby.hljs ol li").length,
       3
     );
   });

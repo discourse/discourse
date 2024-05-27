@@ -1,5 +1,5 @@
 <Discovery::Layout
-  @category={{this.model.category}}
+  @model={{this.model}}
   @createTopicDisabled={{this.createTopicDisabled}}
 >
   <:navigation>
@@ -16,6 +16,11 @@
       @canCreateTopicOnTag={{this.model.canCreateTopicOnTag}}
       @toggleTagInfo={{this.toggleTagInfo}}
       @tagNotification={{this.model.tagNotification}}
+      @model={{this.model.list}}
+      @showDismissRead={{this.showDismissRead}}
+      @showResetNew={{this.showResetNew}}
+      @dismissRead={{this.dismissRead}}
+      @resetNew={{this.resetNew}}
     />
   </:navigation>
 
@@ -26,7 +31,7 @@
         @parentCategory={{this.model.subcategoryList.parentCategory}}
       />
     {{/if}}
-    {{#if this.showTagInfo}}
+    {{#if (and this.showTagInfo this.model.tag)}}
       <TagInfo @tag={{this.model.tag}} @list={{this.model.list}} />
     {{/if}}
   </:header>
@@ -44,6 +49,8 @@
       @tag={{this.model.tag}}
       @changeSort={{this.changeSort}}
       @changeNewListSubset={{this.changeNewListSubset}}
+      @dismissRead={{this.dismissRead}}
+      @resetNew={{this.resetNew}}
     />
   </:list>
 </Discovery::Layout>

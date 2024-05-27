@@ -157,8 +157,8 @@ acceptance("Topic Discovery", function (needs) {
   });
 
   test("refreshing tabs", async function (assert) {
-    const assertShowingLatest = () => {
-      assert.strictEqual(currentURL(), "/latest", "stays on latest");
+    const assertShowingLatest = (url) => {
+      assert.strictEqual(currentURL(), url, "stays on latest");
       const el = query(".topic-list-body .topic-list-item:first-of-type");
       assert.strictEqual(el.closest(".hidden"), null, "topic list is visible");
       assert.strictEqual(
@@ -169,13 +169,13 @@ acceptance("Topic Discovery", function (needs) {
     };
 
     await visit("/latest");
-    assertShowingLatest();
+    assertShowingLatest("/latest");
 
     await click(".navigation-container a[href='/latest']");
-    assertShowingLatest();
+    assertShowingLatest("/latest");
 
     await click("#site-logo");
-    assertShowingLatest();
+    assertShowingLatest("/");
   });
 });
 

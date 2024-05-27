@@ -6,15 +6,15 @@
     <ComboBox
       @content={{this.reasons}}
       @value={{this.selectedReason}}
-      @class="suspend-reason"
       @onChange={{this.setSelectedReason}}
+      class="suspend-reason"
     />
 
     {{#if this.isCustomReason}}
       <TextField
         @value={{this.customReason}}
-        @class="suspend-reason"
         @onChange={{this.setCustomReason}}
+        class="suspend-reason"
       />
     {{/if}}
   {{else if (eq @penaltyType "silence")}}
@@ -24,16 +24,16 @@
     <ComboBox
       @content={{this.reasons}}
       @value={{this.selectedReason}}
-      @class="silence-reason"
       @onChange={{this.setSelectedReason}}
+      class="silence-reason"
     />
 
     {{#if this.isCustomReason}}
       <TextField
         @value={{this.customReason}}
-        @class="silence-reason"
         @onChange={{this.setCustomReason}}
         @placeholderKey="admin.user.silence_reason_placeholder"
+        class="silence-reason"
       />
     {{/if}}
   {{/if}}

@@ -586,6 +586,7 @@ RSpec.describe Notification do
       expect(Notification.prioritized_list(user, count: 1).map(&:id)).to eq(
         [unread_high_priority_2].map(&:id),
       )
+
       expect(Notification.prioritized_list(user, count: 3).map(&:id)).to eq(
         [unread_high_priority_2, unread_high_priority_1, unread_regular_2].map(&:id),
       )
@@ -804,6 +805,36 @@ RSpec.describe Notification do
           notification_type: 1,
         )
       expect(notification.shelved_notification).to be_nil
+    end
+  end
+
+  describe ".populate_acting_user" do
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+    fab!(:user3) { Fabricate(:user) }
+    fab!(:user4) { Fabricate(:user) }
+    fab!(:notification1) do
+      Fabricate(:notification, user: user, data: { username: user1.username }.to_json)
+    end
+    fab!(:notification2) do
+      Fabricate(:notification, user: user, data: { display_username: user2.username }.to_json)
+    end
+    fab!(:notification3) do
+      Fabricate(:notification, user: user, data: { mentioned_by_username: user3.username }.to_json)
+    end
+    fab!(:notification4) do
+      Fabricate(:notification, user: user, data: { invited_by_username: user4.username }.to_json)
+    end
+
+    it "Sets the acting_user correctly for each notification" do
+      Notification.populate_acting_user(
+        [notification1, notification2, notification3, notification4],
+      )
+
+      expect(notification1.acting_user).to eq(user1)
+      expect(notification2.acting_user).to eq(user2)
+      expect(notification3.acting_user).to eq(user3)
+      expect(notification4.acting_user).to eq(user4)
     end
   end
 end

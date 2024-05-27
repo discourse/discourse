@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import I18n from "discourse-i18n";
@@ -139,7 +139,7 @@ export default class extends Controller {
           ? this.model.regularCategories
           : this.model.mutedCategories
       )
-      .filter((t) => t);
+      .filter(Boolean);
   }
 
   @computed("siteSettings.remove_muted_tags_from_latest")
@@ -167,6 +167,7 @@ export default class extends Controller {
       "tracked_category_ids",
       "watched_first_post_category_ids",
       "watched_precedence_over_muted",
+      "topics_unread_when_closed",
     ];
 
     if (this.siteSettings.tagging_enabled) {

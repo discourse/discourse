@@ -10,17 +10,13 @@ export default createWidget("link", {
   tagName: "a",
 
   href(attrs) {
-    const route = attrs.route;
-    if (route) {
-      const router = this.register.lookup("router:main");
-      if (router && router._routerMicrolib) {
-        const params = [route];
-        if (attrs.model) {
-          params.push(attrs.model);
-        }
-        return getURL(
-          router._routerMicrolib.generate.apply(router._routerMicrolib, params)
-        );
+    if (attrs.route) {
+      const router = this.register.lookup("service:router");
+
+      if (attrs.model) {
+        return router.urlFor(attrs.route, attrs.model);
+      } else {
+        return router.urlFor(attrs.route);
       }
     } else {
       return getURL(attrs.href);

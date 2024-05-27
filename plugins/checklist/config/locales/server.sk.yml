@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 sk:
+  site_settings:
+    checklist_enabled: "Povoliť doplnok kontrolného zoznamu?"

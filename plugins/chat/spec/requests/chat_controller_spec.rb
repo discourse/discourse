@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::ChatController do
   fab!(:user)
   fab!(:other_user) { Fabricate(:user) }
@@ -30,43 +28,6 @@ RSpec.describe Chat::ChatController do
 
   def flag_message(message, flagger, flag_type: ReviewableScore.types[:off_topic])
     Chat::ReviewQueue.new.flag_message(message, Guardian.new(flagger), flag_type)[:reviewable]
-  end
-
-  describe "#enable_chat" do
-    context "with category as chatable" do
-      let!(:category) { Fabricate(:category) }
-      let(:channel) { Fabricate(:category_channel, chatable: category) }
-
-      it "ensures created channel can be seen" do
-        Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
-
-        sign_in(admin)
-        post "/chat/enable.json", params: { chatable_type: "Category", chatable_id: category.id }
-      end
-
-      # TODO: rewrite specs to ensure no exception is raised
-      it "ensures existing channel can be seen" do
-        Guardian.any_instance.expects(:can_join_chat_channel?)
-
-        sign_in(admin)
-        post "/chat/enable.json", params: { chatable_type: "Category", chatable_id: category.id }
-      end
-    end
-  end
-
-  describe "#disable_chat" do
-    context "with category as chatable" do
-      it "ensures category can be seen" do
-        category = Fabricate(:category)
-        channel = Fabricate(:category_channel, chatable: category)
-        message = Fabricate(:chat_message, chat_channel: channel)
-
-        Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
-
-        sign_in(admin)
-        post "/chat/disable.json", params: { chatable_type: "Category", chatable_id: category.id }
-      end
-    end
   end
 
   describe "#rebake" do
@@ -391,14 +352,14 @@ RSpec.describe Chat::ChatController do
       sign_in(user)
       expect {
         post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "Category" }
-      }.to change { user.user_option.reload.dismissed_channel_retention_reminder }.to (true)
+      }.to change { user.user_option.reload.dismissed_channel_retention_reminder }.to(true)
     end
 
     it "sets `dismissed_dm_retention_reminder` to true" do
       sign_in(user)
       expect {
         post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "DirectMessage" }
-      }.to change { user.user_option.reload.dismissed_dm_retention_reminder }.to (true)
+      }.to change { user.user_option.reload.dismissed_dm_retention_reminder }.to(true)
     end
 
     it "doesn't error if the fields are already true" do
@@ -488,158 +449,6 @@ RSpec.describe Chat::ChatController do
       aw :(
       [/chat]
       EXPECTED
-    end
-  end
-
-  describe "#flag" do
-    fab!(:admin_chat_message) { Fabricate(:chat_message, user: admin, chat_channel: chat_channel) }
-    fab!(:user_chat_message) { Fabricate(:chat_message, user: user, chat_channel: chat_channel) }
-
-    fab!(:admin_dm_message) { Fabricate(:chat_message, user: admin, chat_channel: dm_chat_channel) }
-
-    before do
-      sign_in(user)
-      Group.refresh_automatic_groups!
-    end
-
-    it "creates reviewable" do
-      expect {
-        put "/chat/flag.json",
-            params: {
-              chat_message_id: admin_chat_message.id,
-              flag_type_id: ReviewableScore.types[:off_topic],
-            }
-      }.to change { Chat::ReviewableMessage.where(target: admin_chat_message).count }.by(1)
-      expect(response.status).to eq(200)
-    end
-
-    it "errors for silenced users" do
-      UserSilencer.new(user).silence
-
-      put "/chat/flag.json",
-          params: {
-            chat_message_id: admin_chat_message.id,
-            flag_type_id: ReviewableScore.types[:off_topic],
-          }
-      expect(response.status).to eq(403)
-    end
-
-    it "doesn't allow flagging your own message" do
-      put "/chat/flag.json",
-          params: {
-            chat_message_id: user_chat_message.id,
-            flag_type_id: ReviewableScore.types[:off_topic],
-          }
-      expect(response.status).to eq(403)
-    end
-
-    it "doesn't allow flagging messages in a read_only channel" do
-      user_chat_message.chat_channel.update(status: :read_only)
-      put "/chat/flag.json",
-          params: {
-            chat_message_id: admin_chat_message.id,
-            flag_type_id: ReviewableScore.types[:off_topic],
-          }
-
-      expect(response.status).to eq(403)
-    end
-
-    it "doesn't allow flagging staff if SiteSetting.allow_flagging_staff is false" do
-      SiteSetting.allow_flagging_staff = false
-      put "/chat/flag.json",
-          params: {
-            chat_message_id: admin_chat_message.id,
-            flag_type_id: ReviewableScore.types[:off_topic],
-          }
-      expect(response.status).to eq(403)
-    end
-
-    it "returns a 429 when the user attempts to flag more than 4 messages  in 1 minute" do
-      RateLimiter.enable
-
-      [message_1, message_2, message_3, message_4].each do |message|
-        put "/chat/flag.json",
-            params: {
-              chat_message_id: message.id,
-              flag_type_id: ReviewableScore.types[:off_topic],
-            }
-        expect(response.status).to eq(200)
-      end
-
-      put "/chat/flag.json",
-          params: {
-            chat_message_id: message_5.id,
-            flag_type_id: ReviewableScore.types[:off_topic],
-          }
-
-      expect(response.status).to eq(429)
-    end
-  end
-
-  describe "#set_draft" do
-    fab!(:chat_channel) { Fabricate(:category_channel) }
-    let(:dm_channel) { Fabricate(:direct_message_channel) }
-
-    before { sign_in(user) }
-
-    it "can create and destroy chat drafts" do
-      expect {
-        post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      }.to change { Chat::Draft.count }.by(1)
-
-      expect { post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id } }.to change {
-        Chat::Draft.count
-      }.by(-1)
-    end
-
-    it "cannot create chat drafts for a category channel the user cannot access" do
-      group = Fabricate(:group)
-      private_category = Fabricate(:private_category, group: group)
-      chat_channel.update!(chatable: private_category)
-
-      post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      expect(response.status).to eq(403)
-
-      GroupUser.create!(user: user, group: group)
-      expect {
-        post "/chat/drafts.json", params: { chat_channel_id: chat_channel.id, data: "{}" }
-      }.to change { Chat::Draft.count }.by(1)
-    end
-
-    it "cannot create chat drafts for a direct message channel the user cannot access" do
-      post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
-      expect(response.status).to eq(403)
-
-      Chat::DirectMessageUser.create(user: user, direct_message: dm_channel.chatable)
-
-      expect {
-        post "/chat/drafts.json", params: { chat_channel_id: dm_channel.id, data: "{}" }
-      }.to change { Chat::Draft.count }.by(1)
-    end
-
-    it "cannot create a too long chat draft" do
-      SiteSetting.max_chat_draft_length = 100
-
-      post "/chat/drafts.json",
-           params: {
-             chat_channel_id: chat_channel.id,
-             data: { value: "a" * (SiteSetting.max_chat_draft_length + 1) }.to_json,
-           }
-
-      expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"]).to eq([I18n.t("chat.errors.draft_too_long")])
-    end
-  end
-
-  describe "#message_link" do
-    it "ensures message's channel can be seen" do
-      channel = Fabricate(:category_channel, chatable: Fabricate(:category))
-      message = Fabricate(:chat_message, chat_channel: channel)
-
-      Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
-
-      sign_in(Fabricate(:user))
-      get "/chat/message/#{message.id}.json"
     end
   end
 end

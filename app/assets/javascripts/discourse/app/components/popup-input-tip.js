@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { not, or, reads } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import discourseComputed from "discourse-common/utils/decorators";
 

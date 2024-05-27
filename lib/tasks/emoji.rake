@@ -475,12 +475,27 @@ def confirm_overwrite(path)
   STDIN.gets.chomp
 end
 
-class TestEmojiUpdate < Minitest::Test
+class TestEmojiUpdate
   def self.run_and_summarize
-    puts "Runnings tests..."
-    reporter = Minitest::SummaryReporter.new
-    TestEmojiUpdate.run(reporter)
-    puts reporter.to_s
+    puts "Running tests..."
+    instance = TestEmojiUpdate.new
+    instance.public_methods.each do |method|
+      next unless method.to_s.start_with? "test_"
+      print "Running #{method}..."
+      instance.public_send(method)
+      puts " ✅"
+    rescue StandardError => e
+      puts " ❌"
+      puts e.message.indent(2)
+    end
+  end
+
+  def assert_equal(a, b)
+    raise "Expected #{a.inspect} to equal #{b.inspect}" if a != b
+  end
+
+  def assert(a)
+    raise "Expected #{a.inspect} to be truthy" if !a
   end
 
   def image_path(style, name)

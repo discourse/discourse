@@ -4,7 +4,7 @@
     <Input
       @value={{this.buffered.host}}
       placeholder="example.com"
-      @enter={{action "save"}}
+      @enter={{this.save}}
       class="host-name"
       autofocus={{true}}
     />
@@ -14,16 +14,35 @@
     <Input
       @value={{this.buffered.allowed_paths}}
       placeholder="/blog/.*"
-      @enter={{action "save"}}
+      @enter={{this.save}}
       class="path-allowlist"
     />
   </td>
   <td class="editing-input">
     <div class="label">{{i18n "admin.embedding.category"}}</div>
     <CategoryChooser
-      @value={{this.categoryId}}
-      @class="small"
-      @onChange={{action (mut this.categoryId)}}
+      @value={{this.category.id}}
+      @onChangeCategory={{fn (mut this.category)}}
+      class="small"
+    />
+  </td>
+  <td class="editing-input">
+    <div class="label">{{i18n "admin.embedding.tags"}}</div>
+    <TagChooser
+      @tags={{this.tags}}
+      @everyTag={{true}}
+      @excludeSynonyms={{true}}
+      @unlimitedTagCount={{true}}
+      @onChange={{fn (mut this.tags)}}
+      @options={{hash filterPlaceholder="category.tags_placeholder"}}
+    />
+  </td>
+  <td class="editing-input">
+    <div class="label">{{i18n "admin.embedding.user"}}</div>
+    <UserChooser
+      @value={{this.user}}
+      @onChange={{action "onUserChange"}}
+      @options={{hash maximum=1 excludeCurrentUser=false}}
     />
   </td>
   <td class="editing-controls">
@@ -53,7 +72,13 @@
   </td>
   <td>
     <div class="label">{{i18n "admin.embedding.category"}}</div>
-    {{category-badge this.host.category allowUncategorized=true}}
+    {{category-badge this.category allowUncategorized=true}}
+  </td>
+  <td>
+    {{this.tags}}
+  </td>
+  <td>
+    {{this.user}}
   </td>
   <td class="controls">
     <DButton @icon="pencil-alt" @action={{this.edit}} />

@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n, propertyEqual } from "discourse/lib/computed";
@@ -10,6 +11,8 @@ import I18n from "discourse-i18n";
 import UserField from "admin/models/user-field";
 
 export default Component.extend(bufferedProperty("userField"), {
+  adminCustomUserFields: service(),
+
   tagName: "",
   isEditing: false,
 
@@ -41,15 +44,12 @@ export default Component.extend(bufferedProperty("userField"), {
   },
 
   @discourseComputed(
-    "userField.{editable,required,show_on_profile,show_on_user_card,searchable}"
+    "userField.{editable,show_on_profile,show_on_user_card,searchable}"
   )
   flags(userField) {
     const ret = [];
     if (userField.editable) {
       ret.push(I18n.t("admin.user_fields.editable.enabled"));
-    }
-    if (userField.required) {
-      ret.push(I18n.t("admin.user_fields.required.enabled"));
     }
     if (userField.show_on_profile) {
       ret.push(I18n.t("admin.user_fields.show_on_profile.enabled"));
@@ -71,11 +71,12 @@ export default Component.extend(bufferedProperty("userField"), {
       "description",
       "field_type",
       "editable",
-      "required",
+      "requirement",
       "show_on_profile",
       "show_on_user_card",
       "searchable",
-      "options"
+      "options",
+      ...this.adminCustomUserFields.additionalProperties
     );
 
     return this.userField

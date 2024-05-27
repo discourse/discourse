@@ -51,10 +51,10 @@ acceptance("Modal service: component-based API", function () {
     await settled();
     assert.dom(".d-modal").exists("modal should appear");
 
-    assert.dom(".d-modal .title h3").hasText("Hello World");
-    assert.dom(".d-modal .modal-body").hasText("Modal content is working");
+    assert.dom(".d-modal__title-text").hasText("Hello World");
+    assert.dom(".d-modal .d-modal__body").hasText("Modal content is working");
 
-    await click(".modal-backdrop");
+    await click(".d-modal__backdrop");
     assert.dom(".d-modal").doesNotExist("disappears on click outside");
     assert.deepEqual(
       await promise,
@@ -105,7 +105,7 @@ acceptance("Modal service: component-based API", function () {
     modalService.show(MyModalClass, { model: { text: "second" } });
     await settled();
     assert
-      .dom(".d-modal .modal-body")
+      .dom(".d-modal .d-modal__body")
       .hasText("Modal content is second", "new modal replaces old");
     assert.deepEqual(
       await promise,

@@ -47,8 +47,7 @@ RSpec.describe Category do
 
     it "should delete associated sidebar_section_links when category is destroyed" do
       category_sidebar_section_link = Fabricate(:category_sidebar_section_link)
-      category_sidebar_section_link_2 =
-        Fabricate(:category_sidebar_section_link, linkable: category_sidebar_section_link.linkable)
+      Fabricate(:category_sidebar_section_link, linkable: category_sidebar_section_link.linkable)
       tag_sidebar_section_link = Fabricate(:tag_sidebar_section_link)
 
       expect { category_sidebar_section_link.linkable.destroy! }.to change {
@@ -88,7 +87,7 @@ RSpec.describe Category do
     fab!(:category) { Fabricate(:category_with_definition, reviewable_by_group: group) }
     fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post) { Fabricate(:post, topic: topic) }
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     it "will add the group to the reviewable" do
       SiteSetting.enable_category_group_moderation = true
@@ -220,6 +219,19 @@ RSpec.describe Category do
 
       # anonymous has permission to create no topics
       expect(Category.scoped_to_permissions(user_guardian, [:readonly]).count).to eq(3)
+    end
+  end
+
+  describe "with_parents" do
+    fab!(:category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+
+    it "returns parent categories and subcategories" do
+      expect(Category.with_parents([category.id])).to contain_exactly(category)
+    end
+
+    it "returns only categories if top-level categories" do
+      expect(Category.with_parents([subcategory.id])).to contain_exactly(category, subcategory)
     end
   end
 
@@ -632,7 +644,10 @@ RSpec.describe Category do
   end
 
   describe "update_stats" do
-    before { @category = Fabricate(:category_with_definition) }
+    before do
+      @category =
+        Fabricate(:category_with_definition, user: Fabricate(:user, refresh_auto_groups: true))
+    end
 
     context "with regular topics" do
       before do
@@ -694,7 +709,7 @@ RSpec.describe Category do
     context "for uncategorized category" do
       before do
         @uncategorized = Category.find(SiteSetting.uncategorized_category_id)
-        create_post(user: Fabricate(:user), category: @uncategorized.id)
+        create_post(user: Fabricate(:user, refresh_auto_groups: true), category: @uncategorized.id)
         Category.update_stats
         @uncategorized.reload
       end
@@ -980,7 +995,7 @@ RSpec.describe Category do
         )
       category.clear_auto_bump_cache!
 
-      post1 = create_post(category: category, created_at: 15.seconds.ago)
+      create_post(category: category, created_at: 15.seconds.ago)
 
       # no limits on post creation or category creation please
       RateLimiter.enable
@@ -1022,7 +1037,7 @@ RSpec.describe Category do
       topic = Topic.find_by_id(post1.topic_id)
 
       TopicTimer.create!(
-        user_id: -1,
+        user_id: Discourse::SYSTEM_USER_ID,
         topic: topic,
         execute_at: 1.hour.from_now,
         status_type: TopicTimer.types[:bump],
@@ -1403,7 +1418,7 @@ RSpec.describe Category do
 
     it 'returns nil when input is ["category:invalid-slug:sub-subcategory"] and maximum category nesting is 3' do
       SiteSetting.max_category_nesting = 3
-      sub_subcategory = Fabricate(:category, parent_category: subcategory, slug: "sub-subcategory")
+      Fabricate(:category, parent_category: subcategory, slug: "sub-subcategory")
 
       expect(Category.ids_from_slugs(%w[category:invalid-slug:sub-subcategory])).to eq([])
     end
@@ -1448,6 +1463,34 @@ RSpec.describe Category do
     end
   end
 
+  describe "#slug_path" do
+    before { SiteSetting.max_category_nesting = 3 }
+
+    fab!(:grandparent) { Fabricate(:category, slug: "foo") }
+    fab!(:parent) { Fabricate(:category, parent_category: grandparent, slug: "bar") }
+    let(:child) { Fabricate(:category, parent_category: parent, slug: "boo") }
+
+    it "returns the slug for categories without parents" do
+      expect(grandparent.slug_path).to eq [grandparent.slug]
+    end
+
+    it "returns the slug for categories with parent" do
+      expect(parent.slug_path).to eq [grandparent.slug, parent.slug]
+    end
+
+    it "returns the slug for categories with grand-parent" do
+      expect(child.slug_path).to eq [grandparent.slug, parent.slug, child.slug]
+    end
+
+    it "avoids infinite loops with circular references" do
+      grandparent.parent_category = parent
+      grandparent.save!(validate: false)
+
+      expect(grandparent.slug_path).to eq [parent.slug, grandparent.slug]
+      expect(parent.slug_path).to eq [grandparent.slug, parent.slug]
+    end
+  end
+
   describe "#slug_ref" do
     fab!(:category) { Fabricate(:category, slug: "foo") }
 
@@ -1478,6 +1521,33 @@ RSpec.describe Category do
       it "allows limiting depth" do
         expect(subcategory_2.slug_ref(depth: 1)).to eq("bar#{Category::SLUG_REF_SEPARATOR}boo")
       end
+    end
+  end
+
+  describe ".ancestors_of" do
+    fab!(:category)
+    fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+
+    fab!(:sub_subcategory) do
+      SiteSetting.max_category_nesting = 3
+      Fabricate(:category, parent_category: subcategory)
+    end
+
+    it "finds the parent" do
+      expect(Category.ancestors_of([subcategory.id]).to_a).to eq([category])
+    end
+
+    it "finds the grandparent" do
+      expect(Category.ancestors_of([sub_subcategory.id]).to_a).to contain_exactly(
+        category,
+        subcategory,
+      )
+    end
+
+    it "respects the relation it's called on" do
+      expect(Category.where.not(id: category.id).ancestors_of([sub_subcategory.id]).to_a).to eq(
+        [subcategory],
+      )
     end
   end
 end

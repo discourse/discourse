@@ -17,7 +17,15 @@ class DraftsController < ApplicationController
         limit: fetch_limit_from_params(default: nil, max: INDEX_LIMIT),
       )
 
-    render json: { drafts: stream ? serialize_data(stream, DraftSerializer) : [] }
+    response = { drafts: serialize_data(stream, DraftSerializer) }
+
+    if guardian.can_lazy_load_categories?
+      category_ids = stream.map { |draft| draft.topic&.category_id }.compact.uniq
+      categories = Category.secured(guardian).with_parents(category_ids)
+      response[:categories] = serialize_data(categories, CategoryBadgeSerializer)
+    end
+
+    render json: response
   end
 
   def show

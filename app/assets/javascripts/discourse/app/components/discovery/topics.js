@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import DismissNew from "discourse/components/modal/dismiss-new";
+import { service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { userPath } from "discourse/lib/url";
-import Topic from "discourse/models/topic";
 import I18n from "discourse-i18n";
 
 export default class DiscoveryTopics extends Component {
@@ -15,6 +15,8 @@ export default class DiscoveryTopics extends Component {
   @service topicTrackingState;
   @service site;
 
+  @tracked loadingNew;
+
   get redirectedReason() {
     return this.currentUser?.user_option.redirected_to_top?.reason;
   }
@@ -24,7 +26,7 @@ export default class DiscoveryTopics extends Component {
   }
 
   get ascending() {
-    return this.args.model.get("params.ascending");
+    return this.args.model.get("params.ascending") === "true";
   }
 
   get hasTopics() {
@@ -43,65 +45,32 @@ export default class DiscoveryTopics extends Component {
     return filterTypeForMode(this.args.model.filter) === "top";
   }
 
+  get hot() {
+    return filterTypeForMode(this.args.model.filter) === "hot";
+  }
+
   get new() {
     return filterTypeForMode(this.args.model.filter) === "new";
   }
 
-  async callResetNew(
-    dismissPosts = false,
-    dismissTopics = false,
-    untrack = false
-  ) {
-    const tracked =
-      (this.router.currentRoute.queryParams["f"] ||
-        this.router.currentRoute.queryParams["filter"]) === "tracked";
-
-    let topicIds = this.args.bulkSelectHelper.selected.map((topic) => topic.id);
-    const result = await Topic.resetNew(
-      this.args.category,
-      !this.args.noSubcategories,
-      {
-        tracked,
-        tag: this.args.tag,
-        topicIds,
-        dismissPosts,
-        dismissTopics,
-        untrack,
-      }
-    );
-
-    if (result.topic_ids) {
-      this.topicTrackingState.removeTopics(result.topic_ids);
-    }
-    this.router.refresh();
-  }
-
-  @action
-  resetNew() {
-    if (!this.currentUser.new_new_view_enabled) {
-      return this.callResetNew();
-    }
-
-    this.modal.show(DismissNew, {
-      model: {
-        selectedTopics: this.args.bulkSelectHelper.selected,
-        subset: this.args.model.listParams?.subset,
-        dismissCallback: ({ dismissPosts, dismissTopics, untrack }) => {
-          this.callResetNew(dismissPosts, dismissTopics, untrack);
-        },
-      },
-    });
-  }
-
   // Show newly inserted topics
   @action
-  showInserted(event) {
+  async showInserted(event) {
     event?.preventDefault();
-    const tracker = this.topicTrackingState;
 
-    // Move inserted into topics
-    this.args.model.loadBefore(tracker.get("newIncoming"), true);
-    tracker.resetTracking();
+    if (this.args.model.loadingBefore) {
+      return; // Already loading
+    }
+
+    const { topicTrackingState } = this;
+
+    try {
+      const topicIds = [...topicTrackingState.newIncoming];
+      await this.args.model.loadBefore(topicIds, true);
+      topicTrackingState.clearIncoming(topicIds);
+    } catch (e) {
+      popupAjaxError(e);
+    }
   }
 
   get showTopicsAndRepliesToggle() {
@@ -209,15 +178,5 @@ export default class DiscoveryTopics extends Component {
 
   get expandAllPinned() {
     return this.args.tag || this.args.category;
-  }
-
-  @action
-  dismissRead(dismissTopics) {
-    const operationType = dismissTopics ? "topics" : "posts";
-    this.args.bulkSelectHelper.dismissRead(operationType, {
-      categoryId: this.args.category?.id,
-      tagName: this.args.tag?.id,
-      includeSubcategories: this.args.noSubcategories,
-    });
   }
 }

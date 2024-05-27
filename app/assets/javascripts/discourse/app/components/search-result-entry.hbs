@@ -10,7 +10,7 @@
       <TrackSelected
         @selectedList={{this.selected}}
         @selectedId={{this.post.topic}}
-        @class="bulk-select"
+        class="bulk-select"
       />
     {{/if}}
 
@@ -83,3 +83,5 @@
     {{/if}}
   {{/if}}
 </div>
+
+<PluginOutlet @name="after-search-result-entry" />

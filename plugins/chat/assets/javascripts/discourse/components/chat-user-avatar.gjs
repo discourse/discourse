@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import { renderAvatar } from "discourse/helpers/user-avatar";
@@ -56,7 +56,9 @@ export default class ChatUserAvatar extends Component {
           {{this.avatar}}
         </a>
       {{else}}
-        {{this.avatar}}
+        <span class="chat-user-avatar__container">
+          {{this.avatar}}
+        </span>
       {{/if}}
     </div>
   </template>

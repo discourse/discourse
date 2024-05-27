@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { getOwner, setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { cloneJSON } from "discourse-common/lib/object";
 import { bind } from "discourse-common/utils/decorators";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
@@ -116,7 +116,9 @@ export default class ChatChannelThreadSubscriptionManager {
     const message = this.messagesManager.findMessage(data.chat_message.id);
     if (message) {
       message.cooked = data.chat_message.cooked;
+      message.uploads = cloneJSON(data.chat_message.uploads || []);
       message.processed = true;
+      message.incrementVersion();
     }
   }
 
@@ -133,6 +135,7 @@ export default class ChatChannelThreadSubscriptionManager {
       message.excerpt = data.chat_message.excerpt;
       message.uploads = cloneJSON(data.chat_message.uploads || []);
       message.edited = data.chat_message.edited;
+      message.streaming = data.chat_message.streaming;
     }
   }
 

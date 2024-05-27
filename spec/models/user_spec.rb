@@ -17,6 +17,29 @@ RSpec.describe User do
     )
   end
 
+  describe ".in_any_groups?" do
+    fab!(:group)
+
+    it "returns true if any of the group IDs are the 'everyone' auto group" do
+      expect(user.in_any_groups?([group.id, Group::AUTO_GROUPS[:everyone]])).to eq(true)
+    end
+
+    it "returns true if the user is in the group" do
+      expect(user.in_any_groups?([group.id])).to eq(false)
+      group.add(user)
+      user.reload
+      expect(user.in_any_groups?([group.id])).to eq(true)
+    end
+
+    it "always returns true for system user for automated groups" do
+      GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
+      Discourse.system_user.reload
+      expect(Discourse.system_user.in_any_groups?([group.id])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:trust_level_4]])).to eq(true)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
+    end
+  end
+
   describe "Associations" do
     it "should delete sidebar_section_links when a user is destroyed" do
       Fabricate(:category_sidebar_section_link, user: user)
@@ -32,7 +55,7 @@ RSpec.describe User do
     describe "default sidebar section links" do
       fab!(:category)
 
-      fab!(:secured_category) do |category|
+      fab!(:secured_category) do
         category = Fabricate(:category)
         category.permissions = { "staff" => :full }
         category.save!
@@ -104,6 +127,27 @@ RSpec.describe User do
             new_name: "Batman",
           },
         ) { user.update(name: "Batman") }
+      end
+    end
+
+    describe "#refresh_user_directory" do
+      context "when bootstrap mode is enabled" do
+        before { SiteSetting.bootstrap_mode_enabled = true }
+
+        it "creates directory items for a new user for all periods" do
+          expect do user = Fabricate(:user) end.to change { DirectoryItem.count }.by(
+            DirectoryItem.period_types.count,
+          )
+          expect(DirectoryItem.where(user_id: user.id)).to exist
+        end
+      end
+
+      context "when bootstrap mode is disabled" do
+        before { SiteSetting.bootstrap_mode_enabled = false }
+
+        it "doesn't create directory items for a new user" do
+          expect do Fabricate(:user) end.not_to change { DirectoryItem.count }
+        end
       end
     end
   end
@@ -260,6 +304,11 @@ RSpec.describe User do
 
             it { is_expected.to be_valid }
           end
+          context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+            before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+            it { is_expected.to be_valid }
+          end
         end
 
         context "when watched words are of type 'Censor'" do
@@ -272,6 +321,15 @@ RSpec.describe User do
             it "censors the words upon saving" do
               user.save!
               expect(user_field_value).to eq "■■■■■■■■ word"
+            end
+
+            context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+              before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+              it "does not censor the words upon saving" do
+                user.save!
+                expect(user_field_value).to eq "censored word"
+              end
             end
           end
 
@@ -300,6 +358,14 @@ RSpec.describe User do
             it "replaces the words upon saving" do
               user.save!
               expect(user_field_value).to eq "word replaced"
+            end
+            context "when SiteSetting.disable_watched_word_checking_in_user_fields is true" do
+              before { SiteSetting.disable_watched_word_checking_in_user_fields = true }
+
+              it "does not replace anything" do
+                user.save!
+                expect(user_field_value).to eq "word to replace"
+              end
             end
           end
 
@@ -397,7 +463,7 @@ RSpec.describe User do
   describe "#count_by_signup_date" do
     before(:each) do
       User.destroy_all
-      freeze_time DateTime.parse("2017-02-01 12:00")
+      freeze_time_safe
       Fabricate(:user)
       Fabricate(:user, created_at: 1.day.ago)
       Fabricate(:user, created_at: 1.day.ago)
@@ -1339,7 +1405,7 @@ RSpec.describe User do
   end
 
   describe "flag_linked_posts_as_spam" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:admin)
     fab!(:post) do
       PostCreator.new(
@@ -1736,8 +1802,20 @@ RSpec.describe User do
     end
   end
 
+  describe "real users" do
+    it "should find system user if you allow it" do
+      ids =
+        User
+          .real(allowed_bot_user_ids: [Discourse.system_user.id])
+          .where(id: Discourse.system_user.id)
+          .pluck(:id)
+      expect(ids).to eq([Discourse.system_user.id])
+    end
+  end
+
   describe "#purge_unactivated" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:admin) { Fabricate(:user) }
     fab!(:unactivated) { Fabricate(:user, active: false) }
     fab!(:unactivated_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
     fab!(:unactivated_old_with_system_pm) do
@@ -1746,11 +1824,17 @@ RSpec.describe User do
     fab!(:unactivated_old_with_human_pm) do
       Fabricate(:user, active: false, created_at: 2.months.ago)
     end
-    fab!(:unactivated_old_with_post) { Fabricate(:user, active: false, created_at: 1.month.ago) }
+    fab!(:unactivated_old_with_post) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
+    fab!(:unactivated_by_admin) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
+    fab!(:unactivated_by_system) do
+      Fabricate(:user, active: false, created_at: 1.month.ago, refresh_auto_groups: true)
+    end
 
     before do
-      Group.refresh_automatic_groups!
-
       PostCreator.new(
         Discourse.system_user,
         title: "Welcome to our Discourse",
@@ -1772,12 +1856,31 @@ RSpec.describe User do
         title: "Test topic from a user",
         raw: "This is a sample message",
       ).create
+
+      UserHistory.create!(
+        action: UserHistory.actions[:deactivate_user],
+        acting_user: admin,
+        target_user: unactivated_by_admin,
+      )
+      UserHistory.create!(
+        action: UserHistory.actions[:deactivate_user],
+        acting_user: Discourse.system_user,
+        target_user: unactivated_by_system,
+      )
     end
 
-    it "should only remove old, unactivated users" do
+    it "should only remove old, unactivated users that haven't been manually deactivated" do
       User.purge_unactivated
       expect(User.real.all).to match_array(
-        [user, unactivated, unactivated_old_with_human_pm, unactivated_old_with_post],
+        [
+          user,
+          unactivated,
+          unactivated_old_with_human_pm,
+          unactivated_old_with_post,
+          unactivated_by_admin,
+          unactivated_by_system,
+          admin,
+        ],
       )
     end
 
@@ -1792,6 +1895,9 @@ RSpec.describe User do
           unactivated_old_with_system_pm,
           unactivated_old_with_human_pm,
           unactivated_old_with_post,
+          unactivated_by_admin,
+          unactivated_by_system,
+          admin,
         ],
       )
     end
@@ -1925,7 +2031,7 @@ RSpec.describe User do
   end
 
   describe "staff info" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:moderator)
 
     describe "#number_of_flags_given" do
@@ -2640,7 +2746,7 @@ RSpec.describe User do
   end
 
   describe "#title=" do
-    fab!(:badge) { Fabricate(:badge, name: "Badge", allow_title: false) }
+    fab!(:badge) { Badge.find_by(name: "Welcome") }
 
     it "sets granted_title_badge_id correctly" do
       BadgeGranter.grant(badge, user)

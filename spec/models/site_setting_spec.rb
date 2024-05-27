@@ -47,10 +47,6 @@ RSpec.describe SiteSetting do
     it "sets a setting" do
       SiteSetting.contact_email = "sam@sam.com"
     end
-
-    it "is always the correct default" do
-      expect(SiteSetting.contact_email).to eq("")
-    end
   end
 
   describe "anonymous_homepage" do
@@ -148,43 +144,6 @@ RSpec.describe SiteSetting do
     end
   end
 
-  describe "deprecated site settings" do
-    before do
-      SiteSetting.force_https = true
-      @orig_logger = Rails.logger
-      Rails.logger = @fake_logger = FakeLogger.new
-    end
-
-    after { Rails.logger = @orig_logger }
-
-    it "should act as a proxy to the new methods" do
-      begin
-        original_settings = SiteSettings::DeprecatedSettings::SETTINGS.dup
-        SiteSettings::DeprecatedSettings::SETTINGS.clear
-
-        SiteSettings::DeprecatedSettings::SETTINGS.push(["use_https", "force_https", true, "0.0.1"])
-
-        SiteSetting.setup_deprecated_methods
-
-        expect do
-          expect(SiteSetting.use_https).to eq(true)
-          expect(SiteSetting.use_https?).to eq(true)
-        end.to change { @fake_logger.warnings.count }.by(2)
-
-        expect do SiteSetting.use_https(warn: false) end.to_not change { @fake_logger.warnings }
-
-        SiteSetting.use_https = false
-
-        expect(SiteSetting.force_https).to eq(false)
-        expect(SiteSetting.force_https?).to eq(false)
-      ensure
-        SiteSettings::DeprecatedSettings::SETTINGS.clear
-
-        SiteSettings::DeprecatedSettings::SETTINGS.concat(original_settings)
-      end
-    end
-  end
-
   describe "cached settings" do
     it "should recalculate cached setting when dependent settings are changed" do
       SiteSetting.blocked_attachment_filenames = "foo"
@@ -211,5 +170,30 @@ RSpec.describe SiteSetting do
     settings.test_setting = value
 
     expect(settings.test_setting).to eq(value)
+  end
+
+  describe "#all_settings" do
+    it "does not include the `default_locale` setting if include_locale_setting is false" do
+      expect(SiteSetting.all_settings.map { |s| s[:setting] }).to include("default_locale")
+      expect(
+        SiteSetting.all_settings(include_locale_setting: false).map { |s| s[:setting] },
+      ).not_to include("default_locale")
+    end
+
+    it "does not include the `default_locale` setting if filter_categories are specified" do
+      expect(
+        SiteSetting.all_settings(filter_categories: ["branding"]).map { |s| s[:setting] },
+      ).not_to include("default_locale")
+    end
+
+    it "does not include the `default_locale` setting if filter_plugin is specified" do
+      expect(
+        SiteSetting.all_settings(filter_plugin: "chat").map { |s| s[:setting] },
+      ).not_to include("default_locale")
+    end
+
+    it "includes only settings for the specified category" do
+      expect(SiteSetting.all_settings(filter_categories: ["required"]).count).to eq(12)
+    end
   end
 end

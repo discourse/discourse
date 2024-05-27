@@ -19,7 +19,6 @@ export default class ApiKey extends RestModel {
     } else {
       this.set("_user", value);
     }
-    return this._user;
   }
 
   @discourseComputed("description")

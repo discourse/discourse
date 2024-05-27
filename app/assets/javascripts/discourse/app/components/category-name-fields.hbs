@@ -1,4 +1,4 @@
-<section class="field">
+<section class="field category-name-fields">
   {{#unless this.category.isUncategorizedCategory}}
     <section class="field-item">
       <label>{{i18n "category.name"}}</label>
@@ -6,7 +6,7 @@
         @value={{this.category.name}}
         @placeholderKey="category.name_placeholder"
         @maxlength="50"
-        @class="category-name"
+        class="category-name"
       />
     </section>
   {{/unless}}

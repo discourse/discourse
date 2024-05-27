@@ -13,6 +13,8 @@ nb_NO:
           never: "Aldri"
     chat:
       deleted_chat_username: slettet
+      dates:
+        yesterday: "I går"
       create: "Opprett"
       cancel: "Avbryt"
       channel_settings:
@@ -48,6 +50,7 @@ nb_NO:
       browse:
         back: "Forrige"
         filter_all: Alle
+        filter_open: Åpne
         filter_closed: Lukket
       chat_message_separator:
         today: I dag
@@ -61,6 +64,8 @@ nb_NO:
         tabs:
           members: Medlemmer
           settings: Instillinger
+      new_message_modal:
+        filter: "Filtrer"
       direct_message_creator:
         title: Ny Melding
         prefix: "Til:"

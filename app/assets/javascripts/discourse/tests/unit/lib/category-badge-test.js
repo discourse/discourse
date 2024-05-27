@@ -26,11 +26,11 @@ module("Unit | Utility | category-badge", function (hooks) {
     assert.strictEqual(tag.tagName, "A", "it creates a `a` wrapper tag");
     assert.strictEqual(
       tag.className.trim(),
-      "badge-wrapper bullet",
+      "badge-category__wrapper",
       "it has the correct class"
     );
 
-    const label = tag.children[1];
+    const label = tag.children[0];
     assert.strictEqual(
       label.title,
       "cool description",
@@ -108,12 +108,13 @@ module("Unit | Utility | category-badge", function (hooks) {
     });
 
     let tag = $.parseHTML(categoryBadgeHTML(rtlCategory))[0];
-    let dirSpan = tag.children[1].children[0];
-    assert.strictEqual(dirSpan.dir, "rtl");
+
+    let dirSpan = tag.children[0].children[0];
+    assert.strictEqual(dirSpan.dir, "auto");
 
     tag = $.parseHTML(categoryBadgeHTML(ltrCategory))[0];
-    dirSpan = tag.children[1].children[0];
-    assert.strictEqual(dirSpan.dir, "ltr");
+    dirSpan = tag.children[0].children[0];
+    assert.strictEqual(dirSpan.dir, "auto");
   });
 
   test("recursive", function (assert) {

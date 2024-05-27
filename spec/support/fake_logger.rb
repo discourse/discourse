@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 class FakeLogger
-  attr_reader :debug, :infos, :warnings, :errors, :fatals
+  attr_reader :debugs, :infos, :warnings, :errors, :fatals
   attr_accessor :level
 
   def initialize
-    @debug = []
+    @debugs = []
     @infos = []
     @warnings = []
     @errors = []
@@ -14,7 +14,7 @@ class FakeLogger
   end
 
   def debug(message)
-    @debug << message
+    @debugs << message
   end
 
   def debug?

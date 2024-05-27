@@ -1,9 +1,11 @@
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { click, render, settled } from "@ember/test-helpers";
+import { click, render, settled, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import noop from "discourse/helpers/noop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | d-modal", function (hooks) {
@@ -17,8 +19,8 @@ module("Integration | Component | d-modal", function (hooks) {
         @subtitle="Modal Subtitle"
       />
     </template>);
-    assert.dom(".d-modal .title h3").hasText("Modal Title");
-    assert.dom(".d-modal .subtitle").hasText("Modal Subtitle");
+    assert.dom(".d-modal .d-modal__title-text").hasText("Modal Title");
+    assert.dom(".d-modal .d-modal__subtitle-text").hasText("Modal Subtitle");
   });
 
   test("named blocks", async function (assert) {
@@ -41,6 +43,43 @@ module("Integration | Component | d-modal", function (hooks) {
     assert.dom(".d-modal").includesText("bodyContent");
     assert.dom(".d-modal").includesText("footerContent");
     assert.dom(".d-modal").includesText("belowFooterContent");
+  });
+
+  test("headerPrimaryAction block", async function (assert) {
+    await render(<template>
+      <DModal @inline={{true}} @title="test">
+        <:headerPrimaryAction>headerPrimaryActionContent</:headerPrimaryAction>
+      </DModal>
+    </template>);
+
+    assert.dom(".d-modal").doesNotIncludeText("headerPrimaryActionContent");
+
+    await render(<template>
+      <DModal @inline={{true}} @title="test" @closeModal={{noop}}>
+        <:headerPrimaryAction>headerPrimaryActionContent</:headerPrimaryAction>
+      </DModal>
+    </template>);
+
+    assert.dom(".d-modal").doesNotIncludeText("headerPrimaryActionContent");
+
+    this.site.mobileView = true;
+
+    await render(<template>
+      <DModal @inline={{true}} @title="test" @closeModal={{noop}}>
+        <:headerPrimaryAction>headerPrimaryActionContent</:headerPrimaryAction>
+      </DModal>
+    </template>);
+
+    assert.dom(".d-modal").includesText("headerPrimaryActionContent");
+    assert.dom(".d-modal__dismiss-action-button").exists();
+
+    await render(<template>
+      <DModal @inline={{true}} @title="test">
+        <:headerPrimaryAction>headerPrimaryActionContent</:headerPrimaryAction>
+      </DModal>
+    </template>);
+
+    assert.dom(".d-modal__dismiss-action-button").doesNotExist();
   });
 
   test("flash", async function (assert) {
@@ -104,8 +143,8 @@ module("Integration | Component | d-modal", function (hooks) {
       />
     </template>);
 
-    assert.dom(".d-modal .modal-header").hasClass("my-header-class");
-    assert.dom(".d-modal .modal-body").hasClass("my-body-class");
+    assert.dom(".d-modal .d-modal__header").hasClass("my-header-class");
+    assert.dom(".d-modal .d-modal__body").hasClass("my-body-class");
   });
 
   test("as a form", async function (assert) {
@@ -129,5 +168,31 @@ module("Integration | Component | d-modal", function (hooks) {
     assert.dom("form.d-modal").exists();
     await click(".d-modal button[type=submit]");
     assert.deepEqual(submittedFormData.get("name"), "John Doe");
+  });
+
+  test("default action on enter", async function (assert) {
+    let actionCalled = false;
+    const someAction = () => {
+      actionCalled = true;
+    };
+
+    await render(<template>
+      <DModal @inline={{true}}>
+        <:body>
+          body content
+        </:body>
+        <:footer>
+          <DButton
+            @action={{someAction}}
+            @translatedLabel="Perform action"
+            class="btn-primary"
+          />
+        </:footer>
+      </DModal>
+    </template>);
+
+    await triggerKeyEvent(".d-modal__body", "keydown", "Enter");
+
+    assert.true(actionCalled, "pressing enter triggers the default button");
   });
 });

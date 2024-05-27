@@ -98,13 +98,14 @@ export function performEmojiUnescape(string, opts) {
       isReplaceableInlineEmoji(string, index, opts.inlineEmoji);
 
     const title = opts.title ?? emojiVal;
+    const alt = opts.alt ?? opts.title ?? emojiVal;
     const tabIndex = opts.tabIndex ? ` tabindex='${opts.tabIndex}'` : "";
     return url && isReplacable
       ? `<img width="20" height="20" src='${url}' ${
           opts.skipTitle ? "" : `title='${title}'`
         } ${
           opts.lazy ? "loading='lazy' " : ""
-        }alt='${title}' class='${classes}'${tabIndex}>`
+        }alt='${alt}' class='${classes}'${tabIndex}>`
       : m;
   };
 
@@ -122,11 +123,11 @@ export function performEmojiEscape(string, opts) {
 
   const replacementFunction = (m, index) => {
     if (isReplaceableInlineEmoji(string, index, opts.inlineEmoji)) {
-      if (!!allTranslations[m]) {
+      if (allTranslations[m]) {
         return opts.emojiShortcuts ? `:${allTranslations[m]}:` : m;
-      } else if (!!replacements[m]) {
+      } else if (replacements[m]) {
         return `:${replacements[m]}:`;
-      } else if (!!replacements[m[0]]) {
+      } else if (replacements[m[0]]) {
         return `:${replacements[m[0]]}:`;
       }
     }

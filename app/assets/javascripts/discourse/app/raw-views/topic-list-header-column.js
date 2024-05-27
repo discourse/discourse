@@ -18,13 +18,23 @@ export default EmberObject.extend({
 
   @discourseComputed
   sortIcon() {
-    const asc = this.parent.ascending ? "up" : "down";
-    return `chevron-${asc}`;
+    const isAscending =
+      (
+        this.parent.ascending ||
+        this.parent.context?.ascending ||
+        ""
+      ).toString() === "true";
+
+    return `chevron-${isAscending ? "up" : "down"}`;
   },
 
   @discourseComputed
   isSorting() {
-    return this.sortable && this.parent.order === this.order;
+    return (
+      this.sortable &&
+      (this.parent.order === this.order ||
+        this.parent.context?.order === this.order)
+    );
   },
 
   @discourseComputed

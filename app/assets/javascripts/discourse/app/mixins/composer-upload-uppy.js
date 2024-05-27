@@ -3,7 +3,7 @@ import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
 import Mixin from "@ember/object/mixin";
 import { run } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
@@ -11,6 +11,7 @@ import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import { updateCsrfToken } from "discourse/lib/ajax";
 import {
   bindFileInputChangeListener,
+  displayErrorForBulkUpload,
   displayErrorForUpload,
   getUploadMarkdown,
   validateUploadedFile,
@@ -99,6 +100,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
   _bindUploadTarget() {
     this.set("inProgressUploads", []);
+    this.set("bufferedUploadErrors", []);
     this.placeholders = {};
     this._preProcessorStatus = {};
     this.editorEl = this.element.querySelector(this.editorClass);
@@ -317,13 +319,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     });
 
     this._uppyInstance.on("upload-success", (file, response) => {
-      run(() => {
+      run(async () => {
         if (!this._uppyInstance) {
           return;
         }
         this._removeInProgressUpload(file.id);
         let upload = response.body;
-        const markdown = this.uploadMarkdownResolvers.reduce(
+        const markdown = await this.uploadMarkdownResolvers.reduce(
           (md, resolver) => resolver(upload) || md,
           getUploadMarkdown(upload)
         );
@@ -352,6 +354,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
               this.appEvents.trigger(
                 `${this.composerEventPrefix}:all-uploads-complete`
               );
+              this._displayBufferedErrors();
               this._reset();
             }
           }
@@ -403,11 +406,11 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     file.meta.error = error;
 
     if (!this.userCancelled) {
-      displayErrorForUpload(response || error, this.siteSettings, file.name);
+      this._bufferUploadError(response || error, file.name);
       this.appEvents.trigger(`${this.composerEventPrefix}:upload-error`, file);
     }
-
     if (this.inProgressUploads.length === 0) {
+      this._displayBufferedErrors();
       this._reset();
     }
   },
@@ -417,6 +420,24 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       "inProgressUploads",
       this.inProgressUploads.filter((upl) => upl.id !== fileId)
     );
+  },
+
+  _displayBufferedErrors() {
+    if (this.bufferedUploadErrors.length === 0) {
+      return;
+    } else if (this.bufferedUploadErrors.length === 1) {
+      displayErrorForUpload(
+        this.bufferedUploadErrors[0].data,
+        this.siteSettings,
+        this.bufferedUploadErrors[0].fileName
+      );
+    } else {
+      displayErrorForBulkUpload(this.bufferedUploadErrors);
+    }
+  },
+
+  _bufferUploadError(data, fileName) {
+    this.bufferedUploadErrors.push({ data, fileName });
   },
 
   _setupPreProcessors() {
@@ -561,6 +582,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       isProcessingUpload: false,
       isCancellable: false,
       inProgressUploads: [],
+      bufferedUploadErrors: [],
     });
     this._resetPreProcessors();
     this.fileInputEl.value = "";

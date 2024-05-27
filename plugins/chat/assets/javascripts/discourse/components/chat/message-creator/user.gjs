@@ -1,8 +1,10 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
+import { gt, not } from "truth-helpers";
+import UserStatusMessage from "discourse/components/user-status-message";
 import userStatus from "discourse/helpers/user-status";
 import I18n from "discourse-i18n";
-import gt from "truth-helpers/helpers/gt";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
 
@@ -11,8 +13,19 @@ export default class ChatableUser extends Component {
 
   disabledUserLabel = I18n.t("chat.new_message_modal.disabled_user");
 
+  trackUserStatus = modifier((element, [user]) => {
+    user.statusManager.trackStatus();
+
+    return () => {
+      user.statusManager.stopTrackingStatus();
+    };
+  });
+
   <template>
-    <div class="chat-message-creator__chatable-user">
+    <div
+      class="chat-message-creator__chatable -user"
+      data-disabled={{not @item.enabled}}
+    >
       <ChatUserAvatar @user={{@item.model}} @interactive={{false}} />
       <ChatUserDisplayName @user={{@item.model}} />
 
@@ -22,8 +35,15 @@ export default class ChatableUser extends Component {
 
       {{userStatus @item.model currentUser=this.currentUser}}
 
+      <div class="user-status" {{this.trackUserStatus @item.model}}>
+        <UserStatusMessage
+          @status={{@item.model.status}}
+          @showDescription={{true}}
+        />
+      </div>
+
       {{#unless @item.enabled}}
-        <span class="disabled-text">
+        <span class="chat-message-creator__disabled-warning">
           {{this.disabledUserLabel}}
         </span>
       {{/unless}}

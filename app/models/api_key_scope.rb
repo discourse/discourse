@@ -34,6 +34,9 @@ class ApiKeyScope < ActiveRecord::Base
           delete: {
             actions: %w[topics#destroy],
           },
+          recover: {
+            actions: %w[topics#recover],
+          },
           read: {
             actions: %w[topics#show topics#feed topics#posts topics#show_by_external_id],
             params: %i[topic_id external_id],
@@ -61,8 +64,25 @@ class ApiKeyScope < ActiveRecord::Base
           delete: {
             actions: %w[posts#destroy],
           },
+          recover: {
+            actions: %w[posts#recover],
+          },
           list: {
             actions: %w[posts#latest],
+          },
+        },
+        revisions: {
+          read: {
+            actions: %w[posts#latest_revision posts#revisions],
+            params: %i[post_id],
+          },
+          modify: {
+            actions: %w[posts#hide_revision posts#show_revision posts#revert],
+            params: %i[post_id],
+          },
+          permanently_delete: {
+            actions: %w[posts#permanently_delete_revisions],
+            params: %i[post_id],
           },
         },
         tags: {
@@ -234,6 +254,11 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[users#create groups#index],
           },
         },
+        logs: {
+          messages: {
+            actions: [Logster::Web],
+          },
+        },
       }
 
       parse_resources!(mappings)
@@ -279,7 +304,7 @@ class ApiKeyScope < ActiveRecord::Base
           engine_mount_path = nil if engine_mount_path == "/"
           set.routes.each do |route|
             defaults = route.defaults
-            action = "#{defaults[:controller].to_s}##{defaults[:action]}"
+            action = "#{defaults[:controller]}##{defaults[:action]}"
             path = route.path.spec.to_s.gsub(/\(\.:format\)/, "")
             api_supported_path =
               (
@@ -290,6 +315,11 @@ class ApiKeyScope < ActiveRecord::Base
 
             if actions.include?(action) && api_supported_path && !excluded_paths.include?(path)
               urls << "#{engine_mount_path}#{path} (#{route.verb})"
+            end
+
+            if actions.include?(Logster::Web)
+              urls << "/logs/messages.json (POST)"
+              urls << "/logs/show/:id.json (GET)"
             end
           end
         end

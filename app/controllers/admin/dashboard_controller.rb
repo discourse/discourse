@@ -7,14 +7,17 @@ class Admin::DashboardController < Admin::StaffController
     if SiteSetting.version_checks?
       data.merge!(version_check: DiscourseUpdates.check_version.as_json)
     end
+    data.merge!(has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id))
 
     render json: data
   end
 
   def moderation
   end
+
   def security
   end
+
   def reports
   end
 
@@ -23,7 +26,9 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def problems
-    render_json_dump(problems: AdminDashboardData.fetch_problems(check_force_https: request.ssl?))
+    ProblemCheck.realtime.run_all
+
+    render json: { problems: serialize_data(AdminNotice.problem.all, AdminNoticeSerializer) }
   end
 
   def new_features
@@ -38,11 +43,15 @@ class Admin::DashboardController < Admin::StaffController
       has_unseen_features: DiscourseUpdates.has_unseen_features?(current_user.id),
       release_notes_link: AdminDashboardGeneralData.fetch_cached_stats["release_notes_link"],
     }
+
+    mark_new_features_as_seen
+
     render json: data
   end
 
+  private
+
   def mark_new_features_as_seen
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)
-    render json: success_json
   end
 end

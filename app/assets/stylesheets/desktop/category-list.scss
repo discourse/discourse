@@ -59,9 +59,6 @@
       align-items: baseline;
       margin-right: 0.3em;
     }
-    .badge-wrapper {
-      margin-right: 0.5em;
-    }
     .badge-notification.unread-posts {
       display: block;
       padding: 0;
@@ -88,11 +85,17 @@
     .title {
       margin-right: 5px;
     }
+
+    &.--glimmer button.-trigger {
+      background: transparent;
+      border: none;
+      padding: 0;
+    }
   }
 
   tbody {
     .category {
-      border-left: 6px solid var(--category-color, var(--primary-low));
+      border-left: 6px solid var(--category-badge-color, var(--primary-low));
       h3,
       h4 {
         line-height: var(--line-height-medium);
@@ -143,10 +146,6 @@
     .discourse-tag {
       font-size: var(--font-down-1);
     }
-  }
-
-  .topic-featured-link {
-    padding-left: 8px;
   }
 
   .subcategories-with-subcategories {

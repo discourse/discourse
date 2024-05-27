@@ -27,7 +27,7 @@ module Stylesheet
         else
           # if plugin doesn’t seem to be in our app, consider it as outside of the app
           # and ignore it
-          warn("[stylesheet watcher] Ignoring outside of rails root plugin: #{plugin.path.to_s}")
+          warn("[stylesheet watcher] Ignoring outside of rails root plugin: #{plugin.path}")
         end
       end
       @default_paths
@@ -109,7 +109,7 @@ module Stylesheet
       targets = []
       if target.present?
         if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, target.to_sym)
-          targets.push("#{plugin_name}_#{target.to_s}")
+          targets.push("#{plugin_name}_#{target}")
         end
       else
         targets.push(plugin_name)

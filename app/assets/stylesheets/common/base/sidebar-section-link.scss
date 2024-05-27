@@ -67,13 +67,14 @@
       .emoji {
         width: 15px;
         height: 15px;
+        vertical-align: baseline;
       }
 
-      .badge-wrapper {
+      .badge-category__wrapper {
         font-size: 100%;
         width: 100%;
 
-        .category-name {
+        .badge-category__name {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -82,24 +83,9 @@
     }
   }
 
-  .sidebar-section-link-button {
-    color: var(--d-sidebar-link-color);
-    background-color: var(--secondary);
-    width: 100%;
-    justify-content: flex-start;
-
-    &:hover {
-      color: var(--d-sidebar-link-color);
-      background-color: var(--primary-low);
-
-      .d-icon {
-        color: var(--d-sidebar-link-icon-color);
-      }
-    }
-
-    .d-icon {
-      color: var(--d-sidebar-link-icon-color);
-    }
+  .--link-button {
+    border: none;
+    background: inherit;
   }
 
   .sidebar-section-link[data-link-name="personal-messages-sent"],

@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import deprecated from "discourse-common/lib/deprecated";
 
 let reopenedClasses = [];
@@ -11,7 +11,7 @@ function ControllerShim(resolverName, deprecationId) {
       deprecated(
         `${resolverName} no longer exists, and this shim will eventually be removed. To fetch information about the current discovery route, use the discovery service instead.`,
         {
-          deprecationId,
+          id: deprecationId,
         }
       );
     }

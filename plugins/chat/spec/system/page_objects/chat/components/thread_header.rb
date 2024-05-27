@@ -6,7 +6,7 @@ module PageObjects
       class ThreadHeader < PageObjects::Components::Base
         attr_reader :context
 
-        SELECTOR = ".chat-thread-header"
+        SELECTOR = ".c-navbar"
 
         def initialize(context)
           @context = context
@@ -21,15 +21,15 @@ module PageObjects
         end
 
         def has_title_content?(content)
-          component.find(SELECTOR + " .chat-thread-header__label").has_content?(content)
+          component.find(SELECTOR + " .c-navbar__title").has_content?(content)
         end
 
         def open_settings
-          component.find(SELECTOR + " .chat-thread-header__settings").click
+          component.find(SELECTOR + " .c-navbar__thread-settings-button").click
         end
 
         def has_no_settings_button?
-          component.has_no_css?(SELECTOR + " .chat-thread-header__settings")
+          component.has_no_css?(SELECTOR + " .c-navbar__thread-settings-button")
         end
       end
     end

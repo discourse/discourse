@@ -54,7 +54,7 @@
 
   <li class="drafts">
     <LinkTo @route="userActivity.drafts" @model={{this.currentUser}}>
-      {{d-icon "pencil-alt"}}
+      {{d-icon "user_menu.drafts"}}
       <span class="item-label">
         {{#if this.currentUser.draft_count}}
           {{i18n "drafts.label_with_count" count=this.currentUser.draft_count}}

@@ -331,7 +331,7 @@ class PostSerializer < BasicPostSerializer
         summary[:count] = summary[:acted] ? 1 : 0
       end
 
-      summary.delete(:count) if summary[:count] == 0
+      summary.delete(:count) if summary[:count].to_i.zero?
 
       # Only include it if the user can do it or it has a count
       result << summary if summary[:can_act] || summary[:count]
@@ -581,12 +581,12 @@ class PostSerializer < BasicPostSerializer
       if @topic_view && (mentioned_users = @topic_view.mentioned_users[object.id])
         mentioned_users
       else
-        query = User
+        query = User.includes(:user_option)
         query = query.includes(:user_status) if SiteSetting.enable_user_status
         query = query.where(username: object.mentions)
       end
 
-    users.map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+    users.map { |user| BasicUserSerializer.new(user, root: false, include_status: true).as_json }
   end
 
   def include_mentioned_users?
@@ -607,7 +607,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def reviewable_scores
-    reviewable&.reviewable_scores&.to_a || []
+    reviewable&.reviewable_scores.to_a
   end
 
   def user_custom_fields_object

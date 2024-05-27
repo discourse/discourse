@@ -282,6 +282,9 @@ table.screened-ip-addresses {
 
 .watched-words-uploader {
   display: inline-block;
+  label {
+    font-weight: normal;
+  }
 }
 
 .watched-words-list {
@@ -344,6 +347,7 @@ table.screened-ip-addresses {
   }
   .select-kit.multi-select.watched-word-input-field {
     width: 300px;
+    margin-bottom: 9px;
   }
 
   + .btn-primary {

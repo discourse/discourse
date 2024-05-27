@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import Evented from "@ember/object/evented";
 import { cancel, later, schedule } from "@ember/runloop";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -74,8 +74,8 @@ export default class LoadingSlider extends Service.extend(Evented) {
 
   timer = new Timer();
 
-  get enabled() {
-    return this.siteSettings.page_loading_indicator === "slider";
+  get mode() {
+    return this.siteSettings.page_loading_indicator;
   }
 
   get averageLoadingDuration() {
@@ -83,6 +83,11 @@ export default class LoadingSlider extends Service.extend(Evented) {
   }
 
   transitionStarted() {
+    if (this.loading) {
+      // Nested transition
+      return;
+    }
+
     this.timer.start();
     this.loading = true;
     this.trigger("stateChanged", true);
@@ -97,6 +102,10 @@ export default class LoadingSlider extends Service.extend(Evented) {
 
   @bind
   transitionEnded() {
+    if (!this.loading) {
+      return;
+    }
+
     let duration = this.timer.stop();
     if (duration < MIN_LOADING_TIME) {
       duration = MIN_LOADING_TIME;

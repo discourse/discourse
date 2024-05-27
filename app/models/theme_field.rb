@@ -3,6 +3,9 @@
 class ThemeField < ActiveRecord::Base
   MIGRATION_NAME_PART_MAX_LENGTH = 150
 
+  # This string is not 'secret'. It's just randomized to avoid accidental clashes with genuine theme field content.
+  CSP_NONCE_PLACEHOLDER = "__CSP__NONCE__PLACEHOLDER__f72bff1b1768168a34ee092ce759f192__"
+
   belongs_to :upload
   has_one :javascript_cache, dependent: :destroy
   has_one :upload_reference, as: :target, dependent: :destroy
@@ -19,7 +22,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   scope :find_by_theme_ids,
-        ->(theme_ids) {
+        ->(theme_ids) do
           return none unless theme_ids.present?
 
           where(theme_id: theme_ids).joins(
@@ -27,10 +30,10 @@ class ThemeField < ActiveRecord::Base
           SELECT #{theme_ids.map.with_index { |id, idx| "#{id.to_i} AS theme_id, #{idx} AS theme_sort_column" }.join(" UNION ALL SELECT ")}
         ) as X ON X.theme_id = theme_fields.theme_id",
           ).order("theme_sort_column")
-        }
+        end
 
   scope :filter_locale_fields,
-        ->(locale_codes) {
+        ->(locale_codes) do
           return none unless locale_codes.present?
 
           where(target_id: Theme.targets[:translations], name: locale_codes).joins(
@@ -41,20 +44,20 @@ class ThemeField < ActiveRecord::Base
               *locale_codes.map.with_index { |code, index| [code, index] },
             ),
           ).order("Y.locale_sort_column")
-        }
+        end
 
   scope :find_first_locale_fields,
-        ->(theme_ids, locale_codes) {
+        ->(theme_ids, locale_codes) do
           find_by_theme_ids(theme_ids)
             .filter_locale_fields(locale_codes)
             .reorder("X.theme_sort_column", "Y.locale_sort_column")
             .select("DISTINCT ON (X.theme_sort_column) *")
-        }
+        end
 
   scope :svg_sprite_fields,
-        -> {
+        -> do
           where(type_id: ThemeField.theme_var_type_ids, name: SvgSprite.theme_sprite_variable_name)
-        }
+        end
 
   def self.types
     @types ||=
@@ -168,12 +171,15 @@ class ThemeField < ActiveRecord::Base
     doc
       .css("script")
       .each_with_index do |node, index|
-        next unless inline_javascript?(node)
-        js_compiler.append_raw_script(
-          "_html/#{Theme.targets[self.target_id]}/#{name}_#{index + 1}.js",
-          node.inner_html,
-        )
-        node.remove
+        if inline_javascript?(node)
+          js_compiler.append_raw_script(
+            "_html/#{Theme.targets[self.target_id]}/#{name}_#{index + 1}.js",
+            node.inner_html,
+          )
+          node.remove
+        else
+          node["nonce"] = CSP_NONCE_PLACEHOLDER
+        end
       end
 
     settings_hash = theme.build_settings_hash
@@ -185,9 +191,8 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.save!
 
     doc.add_child(<<~HTML.html_safe) if javascript_cache.content.present?
-          <link rel="preload" href="#{javascript_cache.url}" as="script">
-          <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>
-        HTML
+      <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}' nonce="#{CSP_NONCE_PLACEHOLDER}"></script>
+    HTML
     [doc.to_s, errors&.join("\n")]
   end
 
@@ -294,8 +299,7 @@ class ThemeField < ActiveRecord::Base
     javascript_cache.save!
     doc = ""
     doc = <<~HTML.html_safe if javascript_cache.content.present?
-          <link rel="preload" href="#{javascript_cache.url}" as="script">
-          <script defer src='#{javascript_cache.url}' data-theme-id='#{theme_id}'></script>
+          <script defer src="#{javascript_cache.url}" data-theme-id="#{theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}"></script>
         HTML
     [doc, errors&.join("\n")]
   end
@@ -304,6 +308,7 @@ class ThemeField < ActiveRecord::Base
     return unless self.name == "yaml"
 
     errors = []
+
     begin
       ThemeSettingsParser
         .new(self)
@@ -319,16 +324,21 @@ class ThemeField < ActiveRecord::Base
             end
           end
 
-          errors << I18n.t("#{translation_key}.default_value_missing", name: name) if default.nil?
-
-          if (min = opts[:min]) && (max = opts[:max])
-            unless ThemeSetting.value_in_range?(default, (min..max), type)
-              errors << I18n.t("#{translation_key}.default_out_range", name: name)
-            end
+          unless ThemeSettingsValidator.is_value_present?(default)
+            errors << I18n.t("#{translation_key}.default_value_missing", name: name)
+            next
           end
 
-          unless ThemeSetting.acceptable_value_for_type?(default, type)
+          unless ThemeSettingsValidator.is_valid_value_type?(default, type)
             errors << I18n.t("#{translation_key}.default_not_match_type", name: name)
+          end
+
+          if (setting_errors = ThemeSettingsValidator.validate_value(default, type, opts)).present?
+            errors << I18n.t(
+              "#{translation_key}.default_value_not_valid",
+              name: name,
+              error_messages: setting_errors.join(" "),
+            )
           end
         end
     rescue ThemeSettingsParser::InvalidYaml => e
@@ -451,7 +461,7 @@ class ThemeField < ActiveRecord::Base
 
     self.theme.with_scss_load_paths do |load_paths|
       Stylesheet::Compiler.compile(
-        "#{prepended_scss} #{self.theme.scss_variables.to_s} #{self.value}",
+        "#{prepended_scss} #{self.theme.scss_variables} #{self.value}",
         "#{Theme.targets[self.target_id]}.scss",
         theme: self.theme,
         load_paths: load_paths,
@@ -664,6 +674,8 @@ class ThemeField < ActiveRecord::Base
           name: ThemeField.scss_fields + ThemeField.html_fields,
         )
       )
+    elsif translation_field? && name == "en" # en is fallback for all other locales
+      return theme.theme_fields.where(target_id: Theme.targets[:translations]).where.not(name: "en")
     end
     ThemeField.none
   end

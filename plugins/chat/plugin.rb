@@ -6,7 +6,6 @@
 # version: 0.4
 # authors: Kane York, Mark VanLandingham, Martin Brennan, Joffrey Jaffeux
 # url: https://github.com/discourse/discourse/tree/main/plugins/chat
-# transpile_js: true
 # meta_topic_id: 230881
 
 enabled_site_setting :chat_enabled
@@ -24,6 +23,7 @@ register_svg_icon "clipboard"
 register_svg_icon "file-audio"
 register_svg_icon "file-video"
 register_svg_icon "file-image"
+register_svg_icon "stop-circle"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat"
@@ -32,10 +32,13 @@ GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 
 module ::Chat
   PLUGIN_NAME = "chat"
+  RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
+    chat_channel_retention_days: :dismissed_channel_retention_reminder,
+    chat_dm_retention_days: :dismissed_dm_retention_reminder,
+  }
 end
 
 require_relative "lib/chat/engine"
-require_relative "lib/chat/types/array"
 
 after_initialize do
   register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))
@@ -44,10 +47,14 @@ after_initialize do
 
   register_category_custom_field_type(Chat::HAS_CHAT_ENABLED, :boolean)
 
+  register_user_custom_field_type(Chat::LAST_CHAT_CHANNEL_ID, :integer)
+  DiscoursePluginRegistry.serialized_current_user_fields << Chat::LAST_CHAT_CHANNEL_ID
+
   UserUpdater::OPTION_ATTR.push(:chat_enabled)
   UserUpdater::OPTION_ATTR.push(:only_chat_push_notifications)
   UserUpdater::OPTION_ATTR.push(:chat_sound)
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
+  UserUpdater::OPTION_ATTR.push(:show_thread_title_prompts)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
   UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
@@ -66,9 +73,10 @@ after_initialize do
     Reviewable.prepend Chat::ReviewableExtension
     Bookmark.prepend Chat::BookmarkExtension
     User.prepend Chat::UserExtension
+    Group.prepend Chat::GroupExtension
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
-    Jobs::ExportCsvFile.class_eval { prepend Chat::MessagesExporter }
+    Jobs::ExportCsvFile.prepend Chat::MessagesExporter
     WebHook.prepend Chat::OutgoingWebHookExtension
   end
 
@@ -126,11 +134,22 @@ after_initialize do
     end
   end
 
+  add_to_serializer(
+    :admin_plugin,
+    :incoming_chat_webhooks,
+    include_condition: -> { self.name == "chat" },
+  ) { Chat::IncomingWebhook.includes(:chat_channel).all }
+
+  add_to_serializer(:admin_plugin, :chat_channels, include_condition: -> { self.name == "chat" }) do
+    Chat::Channel.public_channels
+  end
+
   add_to_serializer(:user_card, :can_chat_user) do
     return false if !SiteSetting.chat_enabled
-    return false if scope.user.blank?
+    return false if scope.user.blank? || scope.user.id == object.id
+    return false if !scope.user.user_option.chat_enabled || !object.user_option.chat_enabled
 
-    scope.user.id != object.id && scope.can_chat? && Guardian.new(object).can_chat?
+    scope.can_direct_message? && Guardian.new(object).can_chat?
   end
 
   add_to_serializer(
@@ -139,6 +158,15 @@ after_initialize do
     include_condition: -> do
       return @can_chat if defined?(@can_chat)
       @can_chat = SiteSetting.chat_enabled && scope.can_chat?
+    end,
+  ) { true }
+
+  add_to_serializer(
+    :current_user,
+    :can_direct_message,
+    include_condition: -> do
+      return @can_direct_message if defined?(@can_direct_message)
+      @can_direct_message = include_has_chat_enabled? && scope.can_direct_message?
     end,
   ) { true }
 
@@ -185,29 +213,6 @@ after_initialize do
     ).exists?
   end
 
-  add_to_serializer(:current_user, :chat_channels) do
-    structured = Chat::ChannelFetcher.structured(self.scope)
-
-    structured[:unread_thread_overview] = ::Chat::TrackingStateReportQuery.call(
-      guardian: self.scope,
-      channel_ids: structured[:public_channels].map(&:id),
-      include_threads: true,
-      include_read: false,
-      include_last_reply_details: true,
-    ).thread_unread_overview_by_channel
-
-    category_ids = structured[:public_channels].map { |c| c.chatable_id }
-    post_allowed_category_ids =
-      Category.post_create_allowed(self.scope).where(id: category_ids).pluck(:id)
-
-    Chat::ChannelIndexSerializer.new(
-      structured,
-      scope: self.scope,
-      root: false,
-      post_allowed_category_ids: post_allowed_category_ids,
-    ).as_json
-  end
-
   add_to_serializer(
     :current_user,
     :chat_drafts,
@@ -217,9 +222,19 @@ after_initialize do
       .where(user_id: object.id)
       .order(updated_at: :desc)
       .limit(20)
-      .pluck(:chat_channel_id, :data)
-      .map { |row| { channel_id: row[0], data: row[1] } }
+      .pluck(:chat_channel_id, :data, :thread_id)
+      .map { |row| { channel_id: row[0], data: row[1], thread_id: row[2] } }
   end
+
+  add_to_serializer(
+    :user_notification_total,
+    :chat_notifications,
+    include_condition: -> do
+      return @has_chat_enabled if defined?(@has_chat_enabled)
+      @has_chat_enabled =
+        SiteSetting.chat_enabled && scope.can_chat? && object.user_option.chat_enabled
+    end,
+  ) { Chat::ChannelFetcher.unreads_total(self.scope) }
 
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
 
@@ -235,6 +250,12 @@ after_initialize do
 
   add_to_serializer(:user_option, :ignore_channel_wide_mention) do
     object.ignore_channel_wide_mention
+  end
+
+  add_to_serializer(:user_option, :show_thread_title_prompts) { object.show_thread_title_prompts }
+
+  add_to_serializer(:current_user_option, :show_thread_title_prompts) do
+    object.show_thread_title_prompts
   end
 
   add_to_serializer(:user_option, :chat_email_frequency) { object.chat_email_frequency }
@@ -253,12 +274,14 @@ after_initialize do
     object.chat_separate_sidebar_mode
   end
 
-  RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
-    chat_channel_retention_days: :dismissed_channel_retention_reminder,
-    chat_dm_retention_days: :dismissed_dm_retention_reminder,
-  }
+  add_to_serializer(
+    :upload,
+    :thumbnail,
+    include_condition: -> { SiteSetting.chat_enabled && SiteSetting.create_thumbnails },
+  ) { object.thumbnail }
+
   on(:site_setting_changed) do |name, old_value, new_value|
-    user_option_field = RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]
+    user_option_field = Chat::RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]
     begin
       if user_option_field && old_value != new_value && !new_value.zero?
         UserOption.where(user_option_field => true).update_all(user_option_field => false)
@@ -325,10 +348,9 @@ after_initialize do
     nil
   end
 
-  CHAT_NOTIFICATION_TYPES = [Notification.types[:chat_mention], Notification.types[:chat_message]]
   register_push_notification_filter do |user, payload|
     if user.user_option.only_chat_push_notifications && user.user_option.chat_enabled
-      CHAT_NOTIFICATION_TYPES.include?(payload[:notification_type])
+      payload[:notification_type].in?(::Notification.types.values_at(:chat_mention, :chat_message))
     else
       true
     end
@@ -483,10 +505,15 @@ after_initialize do
   register_stat("chat_messages", show_in_ui: true, expose_via_api: true) do
     Chat::Statistics.about_messages
   end
-
+  register_stat("chat_users", expose_via_api: true) { Chat::Statistics.about_users }
   register_stat("chat_channels", expose_via_api: true) { Chat::Statistics.about_channels }
 
-  register_stat("chat_users", expose_via_api: true) { Chat::Statistics.about_users }
+  register_stat("chat_channel_messages") { Chat::Statistics.channel_messages }
+  register_stat("chat_direct_messages") { Chat::Statistics.direct_messages }
+  register_stat("chat_open_channels_with_threads_enabled") do
+    Chat::Statistics.open_channels_with_threads_enabled
+  end
+  register_stat("chat_threaded_messages") { Chat::Statistics.threaded_messages }
 
   # Make sure to update spec/system/hashtag_autocomplete_spec.rb when changing this.
   register_hashtag_data_source(Chat::ChannelHashtagDataSource)

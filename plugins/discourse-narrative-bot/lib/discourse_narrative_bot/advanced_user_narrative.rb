@@ -78,7 +78,7 @@ module DiscourseNarrativeBot
         prerequisite:
           Proc.new do
             SiteSetting.poll_enabled &&
-              @user.has_trust_level?(SiteSetting.poll_minimum_trust_level_to_create)
+              @user.in_any_groups?(SiteSetting.poll_create_allowed_groups_map)
           end,
         next_state: :tutorial_details,
         next_instructions: Proc.new { I18n.t("#{I18N_KEY}.details.instructions", i18n_post_args) },
@@ -180,10 +180,6 @@ module DiscourseNarrativeBot
         target_usernames: @user.username,
         archetype: Archetype.private_message,
       }
-
-      if @post && @post.topic.private_message? &&
-           @post.topic.topic_allowed_users.pluck(:user_id).include?(@user.id)
-      end
 
       if @data[:topic_id]
         opts = opts.merge(topic_id: @data[:topic_id]).except(:title, :target_usernames, :archetype)

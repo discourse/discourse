@@ -9,19 +9,19 @@
       <div class="penalty-duration-controls">
         {{#if (eq @model.penaltyType "suspend")}}
           <FutureDateInput
-            @class="suspend-until"
             @label="admin.user.suspend_duration"
             @clearable={{false}}
             @input={{this.penalizeUntil}}
-            @onChangeInput={{action (mut this.penalizeUntil)}}
+            @onChangeInput={{fn (mut this.penalizeUntil)}}
+            class="suspend-until"
           />
         {{else if (eq @model.penaltyType "silence")}}
           <FutureDateInput
-            @class="silence-until"
             @label="admin.user.silence_duration"
             @clearable={{false}}
             @input={{this.penalizeUntil}}
-            @onChangeInput={{action (mut this.penalizeUntil)}}
+            @onChangeInput={{fn (mut this.penalizeUntil)}}
+            class="silence-until"
           />
         {{/if}}
       </div>

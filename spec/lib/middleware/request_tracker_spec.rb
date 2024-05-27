@@ -66,6 +66,7 @@ RSpec.describe Middleware::RequestTracker do
       CachedCounting.flush
 
       expect(ApplicationRequest.page_view_anon.first.count).to eq(2)
+      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(2)
     end
 
     it "can log requests correctly" do
@@ -119,6 +120,23 @@ RSpec.describe Middleware::RequestTracker do
       expect(ApplicationRequest.page_view_anon_mobile.first.count).to eq(1)
 
       expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
+
+      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
+    end
+
+    it "logs deferred pageviews correctly" do
+      data =
+        Middleware::RequestTracker.get_data(
+          env(:path => "/message-bus/abcde/poll", "HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1"),
+          ["200", { "Content-Type" => "text/html" }],
+          0.1,
+        )
+      Middleware::RequestTracker.log_request(data)
+
+      expect(data[:deferred_track]).to eq(true)
+      CachedCounting.flush
+
+      expect(ApplicationRequest.page_view_anon_browser.first.count).to eq(1)
     end
 
     it "logs API requests correctly" do
@@ -260,7 +278,7 @@ RSpec.describe Middleware::RequestTracker do
 
       # rate limiter tests depend on checks for retry-after
       # they can be sensitive to clock skew during test runs
-      freeze_time DateTime.parse("2021-01-01 01:00")
+      freeze_time_safe
     end
 
     use_redis_snapshotting
@@ -307,9 +325,9 @@ RSpec.describe Middleware::RequestTracker do
         status, _ = middleware.call(env1)
         status, _ = middleware.call(env1)
 
-        expect(
-          @fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") },
-        ).to eq(warn_count)
+        expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(
+          warn_count,
+        )
         expect(status).to eq(429)
         warn_count += 1
       end
@@ -329,7 +347,7 @@ RSpec.describe Middleware::RequestTracker do
       stub_const(
         Middleware::RequestTracker,
         "STATIC_IP_SKIPPER",
-        "177.33.14.73 191.209.88.192/30"&.split&.map { |ip| IPAddr.new(ip) },
+        "177.33.14.73 191.209.88.192/30".split.map { |ip| IPAddr.new(ip) },
       ) do
         global_setting :max_reqs_per_ip_per_10_seconds, 1
         global_setting :max_reqs_per_ip_mode, "block"
@@ -398,9 +416,9 @@ RSpec.describe Middleware::RequestTracker do
         status, _ = middleware.call(env1)
         status, _ = middleware.call(env1)
 
-        expect(
-          @fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") },
-        ).to eq(0)
+        expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(
+          0,
+        )
         expect(status).to eq(200)
       end
     end
@@ -412,9 +430,7 @@ RSpec.describe Middleware::RequestTracker do
       status, _ = middleware.call(env)
       status, headers = middleware.call(env)
 
-      expect(@fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") }).to eq(
-        1,
-      )
+      expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
       expect(status).to eq(429)
       expect(headers["Retry-After"]).to eq("10")
     end
@@ -426,9 +442,7 @@ RSpec.describe Middleware::RequestTracker do
       status, _ = middleware.call(env)
       status, _ = middleware.call(env)
 
-      expect(@fake_logger.warnings.count { |w| w.include?("Global IP rate limit exceeded") }).to eq(
-        1,
-      )
+      expect(@fake_logger.warnings.count { |w| w.include?("Global rate limit exceeded") }).to eq(1)
       expect(status).to eq(200)
     end
 
@@ -495,6 +509,7 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(429)
         expect(called).to eq(1)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_10_secs_limit")
+        expect(response.first).to include("too many requests from this IP address")
         expect(response.first).to include("Error code: ip_10_secs_limit.")
       end
 
@@ -518,6 +533,7 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(429)
         expect(called).to eq(1)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+        expect(response.first).to include("too many requests from this IP address")
         expect(response.first).to include("Error code: ip_60_secs_limit.")
       end
 
@@ -542,6 +558,7 @@ RSpec.describe Middleware::RequestTracker do
         expect(status).to eq(429)
         expect(called).to eq(1)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_assets_10_secs_limit")
+        expect(response.first).to include("too many requests from this IP address")
         expect(response.first).to include("Error code: ip_assets_10_secs_limit.")
       end
     end
@@ -582,6 +599,7 @@ RSpec.describe Middleware::RequestTracker do
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("id_60_secs_limit")
+        expect(response.first).to include("too many requests from this user")
         expect(response.first).to include("Error code: id_60_secs_limit.")
       end
       expect(called).to eq(3)
@@ -617,6 +635,7 @@ RSpec.describe Middleware::RequestTracker do
         status, headers, response = middleware.call(env)
         expect(status).to eq(429)
         expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+        expect(response.first).to include("too many requests from this IP address")
         expect(response.first).to include("Error code: ip_60_secs_limit.")
       end
     end
@@ -652,6 +671,7 @@ RSpec.describe Middleware::RequestTracker do
       status, headers, response = middleware.call(env)
       expect(status).to eq(429)
       expect(headers["Discourse-Rate-Limit-Error-Code"]).to eq("ip_60_secs_limit")
+      expect(response.first).to include("too many requests from this IP address")
       expect(response.first).to include("Error code: ip_60_secs_limit.")
     end
   end
@@ -667,10 +687,10 @@ RSpec.describe Middleware::RequestTracker do
     end
 
     let(:logger) do
-      ->(env, data) {
+      ->(env, data) do
         @env = env
         @data = data
-      }
+      end
     end
 
     before { Middleware::RequestTracker.register_detailed_request_logger(logger) }
@@ -794,6 +814,24 @@ RSpec.describe Middleware::RequestTracker do
       tracker.call(env("HTTP_DONT_CHUNK" => "True", :path => "/message-bus/abcde/poll"))
       expect(@data[:is_background]).to eq(true)
       expect(@data[:background_type]).to eq("message-bus-dontchunk")
+    end
+  end
+
+  describe "error handling" do
+    before do
+      @original_logger = Rails.logger
+      Rails.logger = @fake_logger = FakeLogger.new
+    end
+
+    after { Rails.logger = @original_logger }
+
+    it "logs requests even if they cause exceptions" do
+      app = lambda { |env| raise RateLimiter::LimitExceeded, 1 }
+      tracker = Middleware::RequestTracker.new(app)
+      expect { tracker.call(env) }.to raise_error(RateLimiter::LimitExceeded)
+      CachedCounting.flush
+      expect(ApplicationRequest.stats).to include("http_total_total" => 1)
+      expect(@fake_logger.warnings).to be_empty
     end
   end
 end

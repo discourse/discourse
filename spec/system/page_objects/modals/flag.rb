@@ -16,9 +16,17 @@ module PageObjects
 
       def take_action(action)
         select_kit =
-          PageObjects::Components::SelectKit.new(".modal-footer .reviewable-action-dropdown")
+          PageObjects::Components::SelectKit.new(".d-modal__footer .reviewable-action-dropdown")
         select_kit.expand
         select_kit.select_row_by_value(action)
+      end
+
+      def fill_message(message)
+        body.fill_in("message", with: message)
+      end
+
+      def check_confirmation
+        body.check("confirmation")
       end
     end
   end

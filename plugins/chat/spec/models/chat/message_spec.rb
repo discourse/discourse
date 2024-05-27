@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::Message do
   fab!(:message) { Fabricate(:chat_message, message: "hey friend, what's up?!") }
 
@@ -11,6 +9,40 @@ describe Chat::Message do
     subject(:message) { described_class.new(message: "") }
 
     it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
+  end
+
+  describe ".in_thread?" do
+    context "when in a thread enabled channel" do
+      fab!(:message) do
+        Fabricate(
+          :chat_message,
+          thread_id: 1,
+          chat_channel: Fabricate(:chat_channel, threading_enabled: true),
+        )
+      end
+
+      it "returns true for messages in a thread" do
+        expect(message.in_thread?).to eq(true)
+      end
+
+      it "returns false for messages not in a thread" do
+        message.update!(thread_id: nil)
+        expect(message.in_thread?).to eq(false)
+      end
+    end
+
+    context "when the thread is forced" do
+      fab!(:message) { Fabricate(:chat_message, thread: Fabricate(:chat_thread, force: true)) }
+
+      it "returns true for messages in a thread" do
+        expect(message.in_thread?).to eq(true)
+      end
+
+      it "returns false for messages not in a thread" do
+        message.update!(thread_id: nil)
+        expect(message.in_thread?).to eq(false)
+      end
+    end
   end
 
   describe ".cook" do
@@ -68,7 +100,7 @@ describe Chat::Message do
       RAW
 
       expect(cooked).to eq(<<~COOKED.chomp)
-      <pre><code class="lang-ruby">Widget.triangulate(argument: "no u")
+      <pre data-code-wrap="ruby"><code class="lang-ruby">Widget.triangulate(argument: "no u")
       </code></pre>
       COOKED
     end
@@ -279,7 +311,9 @@ describe Chat::Message do
           :chat_message,
           message: "https://twitter.com/EffinBirds/status/1518743508378697729",
         )
-      expect(message.excerpt).to eq("https://twitter.com/EffinBirds/status/1518743508378697729")
+      expect(message.build_excerpt).to eq(
+        "https://twitter.com/EffinBirds/status/1518743508378697729",
+      )
       message =
         Fabricate.build(
           :chat_message,
@@ -288,7 +322,9 @@ describe Chat::Message do
           <aside class=\"onebox twitterstatus\" data-onebox-src=\"https://twitter.com/EffinBirds/status/1518743508378697729\">\n  <header class=\"source\">\n\n      <a href=\"https://twitter.com/EffinBirds/status/1518743508378697729\" target=\"_blank\" rel=\"nofollow ugc noopener\">twitter.com</a>\n  </header>\n\n  <article class=\"onebox-body\">\n    \n<h4><a href=\"https://twitter.com/EffinBirds/status/1518743508378697729\" target=\"_blank\" rel=\"nofollow ugc noopener\">Effin' Birds</a></h4>\n<div class=\"twitter-screen-name\"><a href=\"https://twitter.com/EffinBirds/status/1518743508378697729\" target=\"_blank\" rel=\"nofollow ugc noopener\">@EffinBirds</a></div>\n\n<div class=\"tweet\">\n  <span class=\"tweet-description\">https://t.co/LjlqMm9lck</span>\n</div>\n\n<div class=\"date\">\n  <a href=\"https://twitter.com/EffinBirds/status/1518743508378697729\" class=\"timestamp\" target=\"_blank\" rel=\"nofollow ugc noopener\">5:07 PM - 25 Apr 2022</a>\n\n    <span class=\"like\">\n      <svg viewbox=\"0 0 512 512\" width=\"14px\" height=\"16px\" aria-hidden=\"true\">\n        <path d=\"M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z\"></path>\n      </svg>\n      2.5K\n    </span>\n\n    <span class=\"retweet\">\n      <svg viewbox=\"0 0 640 512\" width=\"14px\" height=\"16px\" aria-hidden=\"true\">\n        <path d=\"M629.657 343.598L528.971 444.284c-9.373 9.372-24.568 9.372-33.941 0L394.343 343.598c-9.373-9.373-9.373-24.569 0-33.941l10.823-10.823c9.562-9.562 25.133-9.34 34.419.492L480 342.118V160H292.451a24.005 24.005 0 0 1-16.971-7.029l-16-16C244.361 121.851 255.069 96 276.451 96H520c13.255 0 24 10.745 24 24v222.118l40.416-42.792c9.285-9.831 24.856-10.054 34.419-.492l10.823 10.823c9.372 9.372 9.372 24.569-.001 33.941zm-265.138 15.431A23.999 23.999 0 0 0 347.548 352H160V169.881l40.416 42.792c9.286 9.831 24.856 10.054 34.419.491l10.822-10.822c9.373-9.373 9.373-24.569 0-33.941L144.971 67.716c-9.373-9.373-24.569-9.373-33.941 0L10.343 168.402c-9.373 9.373-9.373 24.569 0 33.941l10.822 10.822c9.562 9.562 25.133 9.34 34.419-.491L96 169.881V392c0 13.255 10.745 24 24 24h243.549c21.382 0 32.09-25.851 16.971-40.971l-16.001-16z\"></path>\n      </svg>\n      499\n    </span>\n</div>\n\n  </article>\n\n  <div class=\"onebox-metadata\">\n    \n    \n  </div>\n\n  <div style=\"clear: both\"></div>\n</aside>\n
         COOKED
         )
-      expect(message.excerpt).to eq("https://twitter.com/EffinBirds/status/1518743508378697729")
+      expect(message.build_excerpt).to eq(
+        "https://twitter.com/EffinBirds/status/1518743508378697729",
+      )
     end
 
     it "excerpts upload file name if message is empty" do
@@ -296,7 +332,7 @@ describe Chat::Message do
         Fabricate(:upload, original_filename: "cat.gif", width: 400, height: 300, extension: "gif")
       message = Fabricate(:chat_message, message: "", uploads: [gif])
 
-      expect(message.excerpt).to eq "cat.gif"
+      expect(message.build_excerpt).to eq "cat.gif"
     end
 
     it "supports autolink with <>" do
@@ -449,8 +485,9 @@ describe Chat::Message do
 
     it "destroys chat_mention" do
       message_1 = Fabricate(:chat_message)
-      notification = Fabricate(:notification)
-      mention_1 = Fabricate(:chat_mention, chat_message: message_1, notification: notification)
+      notification = Fabricate(:notification, notification_type: Notification.types[:chat_mention])
+      mention_1 =
+        Fabricate(:user_chat_mention, chat_message: message_1, notifications: [notification])
 
       message_1.reload.destroy!
 
@@ -510,6 +547,8 @@ describe Chat::Message do
 
       it "keeps the same hashtags the user has permission to after rebake" do
         group.add(chat_message.user)
+        chat_message.chat_channel.add(chat_message.user)
+
         update_message!(
           chat_message,
           user: chat_message.user,
@@ -527,42 +566,162 @@ describe Chat::Message do
   end
 
   describe "#upsert_mentions" do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
-    fab!(:user4) { Fabricate(:user) }
-    fab!(:message) do
-      Fabricate(:chat_message, message: "Hey @#{user1.username} and @#{user2.username}")
+    context "with direct mentions" do
+      fab!(:user1) { Fabricate(:user) }
+      fab!(:user2) { Fabricate(:user) }
+      fab!(:user3) { Fabricate(:user) }
+      fab!(:user4) { Fabricate(:user) }
+      fab!(:message) do
+        Fabricate(:chat_message, message: "Hey @#{user1.username} and @#{user2.username}")
+      end
+      let(:already_mentioned) { [user1.id, user2.id] }
+
+      it "creates newly added mentions" do
+        existing_mention_ids = message.chat_mentions.pluck(:id)
+        message.message = message.message + " @#{user3.username} @#{user4.username} "
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.user_mentions.pluck(:target_id)).to match_array(
+          [user1.id, user2.id, user3.id, user4.id],
+        )
+        expect(message.user_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
+      end
+
+      it "drops removed mentions" do
+        # user 2 is not mentioned anymore:
+        message.message = "Hey @#{user1.username}"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.user_mentions.pluck(:target_id)).to contain_exactly(user1.id)
+      end
+
+      it "changes nothing if message mentions has not been changed" do
+        existing_mention_ids = message.chat_mentions.pluck(:id)
+
+        message.upsert_mentions
+
+        expect(message.user_mentions.pluck(:target_id)).to match_array(already_mentioned)
+        expect(message.user_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+      end
     end
-    let(:already_mentioned) { [user1.id, user2.id] }
 
-    it "creates newly added mentions" do
-      existing_mention_ids = message.chat_mentions.pluck(:id)
-      update_message!(
-        message,
-        user: message.user,
-        text: message.message + " @#{user3.username} @#{user4.username} ",
-      )
+    context "with group mentions" do
+      fab!(:group1) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:group2) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:group3) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:group4) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
+      fab!(:message) do
+        Fabricate(:chat_message, message: "Hey @#{group1.name} and @#{group2.name}")
+      end
+      let(:already_mentioned) { [group1.id, group2.id] }
 
-      expect(message.chat_mentions.pluck(:user_id)).to match_array(
-        [user1.id, user2.id, user3.id, user4.id],
-      )
-      expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
+      it "creates newly added mentions" do
+        existing_mention_ids = message.chat_mentions.pluck(:id)
+        message.message = message.message + " @#{group3.name} @#{group4.name} "
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.group_mentions.pluck(:target_id)).to match_array(
+          [group1.id, group2.id, group3.id, group4.id],
+        )
+        expect(message.group_mentions.pluck(:id)).to include(*existing_mention_ids) # existing mentions weren't recreated
+      end
+
+      it "drops removed mentions" do
+        # group 2 is not mentioned anymore:
+        message.message = "Hey @#{group1.name}"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.group_mentions.pluck(:target_id)).to contain_exactly(group1.id)
+      end
+
+      it "changes nothing if message mentions has not been changed" do
+        existing_mention_ids = message.chat_mentions.pluck(:id)
+
+        message.upsert_mentions
+
+        expect(message.group_mentions.pluck(:target_id)).to match_array(already_mentioned)
+        expect(message.group_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+      end
     end
 
-    it "drops removed mentions" do
-      # user 2 is not mentioned anymore
-      update_message!(message, user: message.user, text: "Hey @#{user1.username}")
+    context "with @here mentions" do
+      fab!(:message) { Fabricate(:chat_message, message: "There are no mentions yet") }
 
-      expect(message.chat_mentions.pluck(:user_id)).to contain_exactly(user1.id)
+      it "creates @here mention" do
+        message.message = "Mentioning @here"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.here_mention).to be_present
+      end
+
+      it "creates only one mention even if @here present more than once in a message" do
+        message.message = "Mentioning several times: @here @here @here"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.here_mention).to be_present
+        expect(message.chat_mentions.count).to be(1)
+      end
+
+      it "drops @here mention when it's dropped from the message" do
+        message.message = "Mentioning @here"
+        message.cook
+        message.upsert_mentions
+
+        message.message = "No mentions now"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.here_mention).to be_blank
+      end
     end
 
-    it "changes nothing if passed mentions are identical to existing mentions" do
-      existing_mention_ids = message.chat_mentions.pluck(:id)
-      update_message!(message, user: message.user, text: message.message)
+    context "with @all mentions" do
+      fab!(:message) { Fabricate(:chat_message, message: "There are no mentions yet") }
 
-      expect(message.chat_mentions.pluck(:user_id)).to match_array(already_mentioned)
-      expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+      it "creates @all mention" do
+        message.message = "Mentioning @all"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.all_mention).to be_present
+      end
+
+      it "creates only one mention even if @here present more than once in a message" do
+        message.message = "Mentioning several times: @all @all @all"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.all_mention).to be_present
+        expect(message.chat_mentions.count).to be(1)
+      end
+
+      it "drops @here mention when it's dropped from the message" do
+        message.message = "Mentioning @all"
+        message.cook
+        message.upsert_mentions
+
+        message.message = "No mentions now"
+        message.cook
+
+        message.upsert_mentions
+
+        expect(message.all_mention).to be_blank
+      end
     end
   end
 

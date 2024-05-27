@@ -5,11 +5,12 @@ import { h } from "virtual-dom";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+import { recentlyCopied, showAlert } from "discourse/lib/post-action-feedback";
+import { userPath } from "discourse/lib/url";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import { smallUserAtts } from "discourse/widgets/actions-summary";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import discourseLater from "discourse-common/lib/later";
@@ -50,6 +51,16 @@ export function replaceButton(name, replaceWith) {
 
 function registerButton(name, builder) {
   _builders[name] = builder;
+}
+
+function smallUserAtts(user) {
+  return {
+    template: user.avatar_template,
+    username: user.username,
+    post_url: user.post_url,
+    url: userPath(user.username_lower),
+    unknown: user.unknown,
+  };
 }
 
 export function buildButton(name, widget) {
@@ -331,9 +342,18 @@ registerButton("replies", (attrs, state, siteSettings) => {
 registerButton("share", () => {
   return {
     action: "share",
+    icon: "d-post-share",
     className: "share",
     title: "post.controls.share",
+  };
+});
+
+registerButton("copyLink", () => {
+  return {
+    action: "copyLink",
     icon: "d-post-share",
+    className: "post-action-menu__copy-link",
+    title: "post.controls.copy_title",
   };
 });
 
@@ -367,7 +387,7 @@ registerButton(
       return;
     }
 
-    let classNames = ["bookmark", "with-reminder"];
+    let classNames = ["bookmark"];
     let title = "bookmarks.not_bookmarked";
     let titleOptions = { name: "" };
 
@@ -375,6 +395,8 @@ registerButton(
       classNames.push("bookmarked");
 
       if (attrs.bookmarkReminderAt) {
+        classNames.push("with-reminder");
+
         let formattedReminder = formattedReminderTime(
           attrs.bookmarkReminderAt,
           currentUser.user_option.timezone
@@ -601,6 +623,7 @@ export default createWidget("post-menu", {
       visibleButtons = allButtons;
     }
 
+    let hasShowMoreButton = false;
     // Only show ellipsis if there is more than one button hidden
     // if there are no more buttons, we are not collapsed
     if (!state.collapsed || allButtons.length <= visibleButtons.length + 1) {
@@ -616,6 +639,7 @@ export default createWidget("post-menu", {
         icon: "ellipsis-h",
       });
       visibleButtons.splice(visibleButtons.length - 1, 0, showMore);
+      hasShowMoreButton = true;
     }
 
     Object.values(_extraButtons).forEach((builder) => {
@@ -644,8 +668,36 @@ export default createWidget("post-menu", {
         if (buttonAttrs) {
           const { position, beforeButton, afterButton } = buttonAttrs;
           delete buttonAttrs.position;
+          let button;
 
-          let button = this.attach(this.settings.buttonType, buttonAttrs);
+          if (typeof buttonAttrs.action === "function") {
+            const original = buttonAttrs.action;
+            const self = this;
+
+            buttonAttrs.action = async function (post) {
+              let showFeedback = null;
+
+              if (buttonAttrs.className) {
+                showFeedback = (messageKey) => {
+                  showAlert(post.id, buttonAttrs.className, messageKey);
+                };
+              }
+
+              const postAttrs = {
+                post,
+                showFeedback,
+              };
+
+              if (
+                !buttonAttrs.className ||
+                !recentlyCopied(post.id, buttonAttrs.actionClass)
+              ) {
+                self.sendWidgetAction(original, postAttrs);
+              }
+            };
+          }
+
+          button = this.attach(this.settings.buttonType, buttonAttrs);
 
           const content = [];
           if (beforeButton) {
@@ -765,7 +817,9 @@ export default createWidget("post-menu", {
         })
       );
     }
-
+    if (hasShowMoreButton) {
+      contents.push(this.attach("post-user-tip-shim"));
+    }
     return contents;
   },
 
@@ -773,6 +827,8 @@ export default createWidget("post-menu", {
     this.menu.show(event.target, {
       identifier: "admin-post-menu",
       component: AdminPostMenu,
+      modalForMobile: true,
+      autofocus: true,
       data: {
         scheduleRerender: this.scheduleRerender.bind(this),
         transformedPost: this.attrs,

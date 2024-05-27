@@ -1,12 +1,10 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 
-acceptance("Discourse Foonote Plugin", function (needs) {
-  needs.user();
-
+acceptance("Discourse Footnote Plugin", function (needs) {
   needs.settings({
     display_footnotes_inline: true,
   });
@@ -28,30 +26,47 @@ acceptance("Discourse Foonote Plugin", function (needs) {
     });
   });
 
-  test("displays the foonote on click", async function (assert) {
-    await visit("/t/45");
+  test("displays the footnote on click", async function (assert) {
+    await visit("/t/-/45");
 
-    const tooltip = document.getElementById("footnote-tooltip");
-    assert.ok(exists(tooltip));
+    assert.dom("#footnote-tooltip", document.body).exists();
 
+    // open
     await click(".expand-footnote");
-    assert.equal(
-      tooltip.querySelector(".footnote-tooltip-content").textContent.trim(),
-      "consectetur adipiscing elit ↩︎"
-    );
+    assert
+      .dom(".footnote-tooltip-content", document.body)
+      .hasText("consectetur adipiscing elit ↩︎");
+    assert.dom("#footnote-tooltip", document.body).hasAttribute("data-show");
+
+    // close by clicking outside
+    await click(document.body);
+    assert
+      .dom("#footnote-tooltip", document.body)
+      .doesNotHaveAttribute("data-show");
+
+    // open again
+    await click(".expand-footnote");
+    assert
+      .dom(".footnote-tooltip-content", document.body)
+      .hasText("consectetur adipiscing elit ↩︎");
+    assert.dom("#footnote-tooltip", document.body).hasAttribute("data-show");
+
+    // close by clicking the button
+    await click(".expand-footnote");
+    assert
+      .dom("#footnote-tooltip", document.body)
+      .doesNotHaveAttribute("data-show");
   });
 
   test("clicking a second footnote with same name works", async function (assert) {
-    await visit("/t/45");
+    await visit("/t/-/45");
 
-    const tooltip = document.getElementById("footnote-tooltip");
-    assert.ok(exists(tooltip));
+    assert.dom("#footnote-tooltip", document.body).exists();
 
     await click(".second .expand-footnote");
-
-    assert.equal(
-      tooltip.querySelector(".footnote-tooltip-content").textContent.trim(),
-      "consectetur adipiscing elit ↩︎"
-    );
+    assert
+      .dom(".footnote-tooltip-content", document.body)
+      .hasText("consectetur adipiscing elit ↩︎");
+    assert.dom("#footnote-tooltip", document.body).hasAttribute("data-show");
   });
 });

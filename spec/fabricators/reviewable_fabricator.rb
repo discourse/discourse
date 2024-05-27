@@ -12,6 +12,7 @@ Fabricator(:reviewable) do
   category
   score 1.23
   payload { { list: [1, 2, 3], name: "bandersnatch" } }
+  status { :pending }
 end
 
 Fabricator(:reviewable_queued_post_topic, class_name: :reviewable_queued_post) do

@@ -9,6 +9,7 @@ import I18n from "discourse-i18n";
 export default class ChangeOwnerModal extends Component {
   @tracked saving = false;
   @tracked newOwner = null;
+  @tracked flash;
 
   get buttonDisabled() {
     return this.saving || isEmpty(this.newOwner);

@@ -1,4 +1,5 @@
 {{body-class "invite-page"}}
+{{hide-application-sidebar}}
 
 <section>
   <div class="container invites-show clearfix">
@@ -46,11 +47,14 @@
                 {{#unless this.isInviteLink}}
                   <InputTip
                     @validation={{this.emailValidation}}
-                    @id="account-email-validation"
+                    id="account-email-validation"
                   />
                 {{/unless}}
               {{else}}
-                <LoginButtons @externalLogin={{action "externalLogin"}} />
+                <LoginButtons
+                  @externalLogin={{action "externalLogin"}}
+                  @context="invite"
+                />
               {{/if}}
             {{/if}}
 
@@ -82,7 +86,7 @@
                     </label>
                     <InputTip
                       @validation={{this.emailValidation}}
-                      @id="account-email-validation"
+                      id="account-email-validation"
                     />
                     <div class="instructions">{{i18n
                         "user.email.instructions"
@@ -105,7 +109,7 @@
                   </label>
                   <InputTip
                     @validation={{this.usernameValidation}}
-                    @id="username-validation"
+                    id="username-validation"
                   />
                   <div class="instructions">{{i18n
                       "user.username.instructions"
@@ -134,10 +138,11 @@
                   <div class="input password-input input-group">
                     <PasswordField
                       @value={{this.accountPassword}}
-                      @class={{value-entered this.accountPassword}}
-                      @type={{if this.maskPassword "password" "text"}}
-                      @id="new-account-password"
                       @capsLockOn={{this.capsLockOn}}
+                      type={{if this.maskPassword "password" "text"}}
+                      autocomplete="new-password"
+                      id="new-account-password"
+                      class={{value-entered this.accountPassword}}
                     />
                     <label class="alt-placeholder" for="new-account-password">
                       {{i18n "invites.password_label"}}
@@ -147,7 +152,7 @@
                       <div class="create-account__password-tip-validation">
                         <InputTip
                           @validation={{this.passwordValidation}}
-                          @id="password-validation"
+                          id="password-validation"
                         />
                         <span
                           class="more-info"
@@ -176,7 +181,7 @@
                         <UserField
                           @field={{f.field}}
                           @value={{f.value}}
-                          @class={{value-entered f.value}}
+                          class={{value-entered f.value}}
                         />
                       </div>
                     {{/each}}

@@ -35,6 +35,11 @@
       border-bottom: 1px solid var(--primary-low);
       padding: 0.25em 0.25em 0 0.25em;
 
+      .disabled {
+        margin: 0 0.25em 0.25em 0;
+        align-content: center;
+      }
+
       .selected-choice {
         margin: 0 0.25em 0.25em 0;
         font-size: var(--font-down-1);

@@ -86,6 +86,14 @@ class TopicsFilter
     @scope
   end
 
+  def self.add_filter_by_status(status, &blk)
+    custom_status_filters[status] = blk
+  end
+
+  def self.custom_status_filters
+    @custom_status_filters ||= {}
+  end
+
   def filter_status(status:, category_id: nil)
     case status
     when "open"
@@ -106,6 +114,10 @@ class TopicsFilter
       end
     when "public"
       @scope = @scope.joins(:category).where("NOT categories.read_restricted")
+    else
+      if custom_filter = TopicsFilter.custom_status_filters[status]
+        @scope = custom_filter.call(@scope)
+      end
     end
 
     @scope
@@ -258,9 +270,14 @@ class TopicsFilter
       )
     end
 
-    if exclude_category_ids.present?
-      @scope = @scope.where("topics.category_id NOT IN (?)", exclude_category_ids)
-    end
+    # Use `NOT EXISTS` instead of `NOT IN` to avoid performance issues with large arrays.
+    @scope = @scope.where(<<~SQL) if exclude_category_ids.present?
+      NOT EXISTS (
+        SELECT 1
+        FROM unnest(array[#{exclude_category_ids.join(",")}]) AS excluded_categories(category_id)
+        WHERE topics.category_id IS NULL OR excluded_categories.category_id = topics.category_id
+      )
+      SQL
   end
 
   def filter_created_by_user(usernames:)

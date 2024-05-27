@@ -1,5 +1,5 @@
 <div class="topic-footer-main-buttons">
-  <TopicAdminMenuButton
+  <TopicAdminMenu
     @topic={{this.topic}}
     @openUpwards="true"
     @toggleMultiSelect={{this.toggleMultiSelect}}
@@ -27,25 +27,32 @@
 
   {{#each this.inlineActionables as |actionable|}}
     {{#if (eq actionable.type "inline-button")}}
-      <DButton
-        @action={{actionable.action}}
-        @icon={{actionable.icon}}
-        @translatedLabel={{actionable.label}}
-        @translatedTitle={{actionable.title}}
-        @translatedAriaLabel={{actionable.ariaLabel}}
-        @disabled={{actionable.disabled}}
-        id={{concat "topic-footer-button-" actionable.id}}
-        class={{concat-class
-          "btn-default"
-          "topic-footer-button"
-          actionable.classNames
-        }}
-      />
+      {{#if (eq actionable.id "bookmark")}}
+        <BookmarkMenu
+          @showLabel={{this.showBookmarkLabel}}
+          @bookmarkManager={{this.topicBookmarkManager}}
+          @buttonClasses="btn-default"
+        />
+      {{else}}
+        <DButton
+          @action={{actionable.action}}
+          @icon={{actionable.icon}}
+          @translatedLabel={{actionable.label}}
+          @translatedTitle={{actionable.title}}
+          @translatedAriaLabel={{actionable.ariaLabel}}
+          @disabled={{actionable.disabled}}
+          id={{concat "topic-footer-button-" actionable.id}}
+          class={{concat-class
+            "btn-default"
+            "topic-footer-button"
+            actionable.classNames
+          }}
+        />
+      {{/if}}
     {{else}}
       <DropdownSelectBox
         @id={{concat "topic-footer-dropdown-" actionable.id}}
         @value={{actionable.value}}
-        @class={{concat "topic-footer-dropdown " actionable.classNames}}
         @content={{actionable.content}}
         @onChange={{action actionable.action}}
         @options={{hash
@@ -53,6 +60,7 @@
           none=actionable.noneItem
           disabled=actionable.disabled
         }}
+        class={{concat-class "topic-footer-dropdown" actionable.classNames}}
       />
     {{/if}}
   {{/each}}

@@ -1,7 +1,7 @@
 import { alias, match } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
 import { schedule, throttle } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import $ from "jquery";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { headerOffset } from "discourse/lib/offset-calculator";
@@ -45,7 +45,7 @@ export default Mixin.create({
   _show(username, target, event) {
     // No user card for anon
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
-      return false;
+      return true;
     }
 
     username = escapeExpression(username.toString());
@@ -157,9 +157,15 @@ export default Mixin.create({
         return true;
       }
 
-      event.preventDefault();
-      event.stopPropagation();
-      return this._show(transformText(matchingEl), matchingEl, event);
+      const shouldBubble = this._show(
+        transformText(matchingEl),
+        matchingEl,
+        event
+      );
+      if (!shouldBubble) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
     }
 
     return false;

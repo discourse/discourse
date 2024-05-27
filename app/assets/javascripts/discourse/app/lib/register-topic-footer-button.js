@@ -51,6 +51,9 @@ export function registerTopicFooterButton(button) {
 
     // display order, higher comes first
     priority: 0,
+
+    // is this button displayed for anonymous users ?
+    anonymousOnly: false,
   };
 
   const normalizedButton = Object.assign(defaultButton, button);
@@ -125,6 +128,11 @@ export function getTopicFooterButtons() {
           discourseComputedButton.disabled = _compute(button, "disabled");
           discourseComputedButton.dropdown = _compute(button, "dropdown");
           discourseComputedButton.priority = _compute(button, "priority");
+
+          discourseComputedButton.anonymousOnly = _compute(
+            button,
+            "anonymousOnly"
+          );
 
           if (_isFunction(button.action)) {
             discourseComputedButton.action = () => button.action.apply(this);

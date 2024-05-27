@@ -94,10 +94,15 @@ class UserSummarySerializer < ApplicationSerializer
              :time_read,
              :recent_time_read,
              :bookmark_count,
-             :can_see_summary_stats
+             :can_see_summary_stats,
+             :can_see_user_actions
 
   def can_see_summary_stats
     scope.can_see_summary_stats?(object.user)
+  end
+
+  def can_see_user_actions
+    scope.can_see_user_actions?(object.user, [])
   end
 
   def include_badges?

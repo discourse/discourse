@@ -31,10 +31,23 @@ RSpec.describe Chat::CreateMessage do
 
     let(:guardian) { user.guardian }
     let(:content) { "A new message @#{other_user.username_lower}" }
+    let(:context_topic_id) { nil }
+    let(:context_post_ids) { nil }
     let(:params) do
-      { guardian: guardian, chat_channel_id: channel.id, message: content, upload_ids: [upload.id] }
+      {
+        enforce_membership: false,
+        guardian: guardian,
+        chat_channel_id: channel.id,
+        message: content,
+        upload_ids: [upload.id],
+        context_topic_id: context_topic_id,
+        context_post_ids: context_post_ids,
+        force_thread: false,
+      }
     end
     let(:message) { result[:message_instance].reload }
+
+    before { channel.add(guardian.user) }
 
     shared_examples "creating a new message" do
       it "saves the message" do
@@ -43,13 +56,29 @@ RSpec.describe Chat::CreateMessage do
       end
 
       it "cooks the message" do
-        Jobs.run_immediately!
         expect(message).to be_cooked
+      end
+
+      it "creates the excerpt" do
+        expect(message).to have_attributes(excerpt: content)
       end
 
       it "creates mentions" do
         Jobs.run_immediately!
         expect { result }.to change { Chat::Mention.count }.by(1)
+      end
+
+      it "cleans the message" do
+        params[:message] = "aaaaaaa\n"
+        expect(message.message).to eq("aaaaaaa")
+      end
+
+      context "when strip_whitespace is disabled" do
+        it "doesn't strip newlines" do
+          params[:strip_whitespaces] = false
+          params[:message] = "aaaaaaa\n"
+          expect(message.message).to eq("aaaaaaa\n")
+        end
       end
 
       context "when coming from a webhook" do
@@ -92,8 +121,34 @@ RSpec.describe Chat::CreateMessage do
           instance_of(Chat::Message),
           channel,
           user,
+          has_entries(thread: anything, thread_replies_count: anything, context: anything),
         )
+
         result
+      end
+
+      context "when context given" do
+        let(:context_post_ids) { [1, 2] }
+        let(:context_topic_id) { 3 }
+
+        it "triggers a Discourse event with context if given" do
+          DiscourseEvent.expects(:trigger).with(
+            :chat_message_created,
+            instance_of(Chat::Message),
+            channel,
+            user,
+            has_entries(
+              thread: anything,
+              thread_replies_count: anything,
+              context: {
+                post_ids: context_post_ids,
+                topic_id: context_topic_id,
+              },
+            ),
+          )
+
+          result
+        end
       end
 
       it "processes the direct message channel" do
@@ -173,14 +228,25 @@ RSpec.describe Chat::CreateMessage do
         end
 
         context "when channel model is found" do
-          context "when user can't join channel" do
-            let(:guardian) { Guardian.new }
+          context "when user is not part of the channel" do
+            before { channel.membership_for(user).destroy! }
 
-            it { is_expected.to fail_a_policy(:allowed_to_join_channel) }
+            it { is_expected.to fail_to_find_a_model(:membership) }
           end
 
-          context "when user is system" do
+          context "when user is a bot" do
             fab!(:user) { Discourse.system_user }
+
+            it { is_expected.to be_a_success }
+          end
+
+          context "when membership is enforced" do
+            fab!(:user) { Fabricate(:user) }
+
+            before do
+              SiteSetting.chat_allowed_groups = [Group::AUTO_GROUPS[:everyone]]
+              params[:enforce_membership] = true
+            end
 
             it { is_expected.to be_a_success }
           end
@@ -195,17 +261,13 @@ RSpec.describe Chat::CreateMessage do
             end
 
             context "when user can create a message in the channel" do
-              context "when user is not a member of the channel" do
-                it { is_expected.to fail_to_find_a_model(:channel_membership) }
-              end
-
               context "when user is a member of the channel" do
                 fab!(:existing_message) { Fabricate(:chat_message, chat_channel: channel) }
 
-                let(:membership) { Chat::UserChatChannelMembership.last }
+                let(:membership) { channel.membership_for(user) }
 
                 before do
-                  channel.add(user).update!(last_read_message: existing_message)
+                  membership.update!(last_read_message: existing_message)
                   DiscourseEvent.stubs(:trigger)
                 end
 
@@ -276,6 +338,20 @@ RSpec.describe Chat::CreateMessage do
                         it "does not publish the new thread" do
                           Chat::Publisher.expects(:publish_thread_created!).never
                           result
+                        end
+
+                        context "when thread is forced" do
+                          before { params[:force_thread] = true }
+
+                          it "publishes the new thread" do
+                            Chat::Publisher.expects(:publish_thread_created!).with(
+                              channel,
+                              reply_to,
+                              instance_of(Integer),
+                              nil,
+                            )
+                            result
+                          end
                         end
                       end
                     end

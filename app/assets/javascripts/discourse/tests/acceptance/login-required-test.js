@@ -27,7 +27,7 @@ acceptance("Login Required", function (needs) {
     await click("header .login-button");
     assert.ok(exists(".login-modal"), "they can still access the login modal");
 
-    await click(".modal-header .close");
+    await click(".d-modal__header .modal-close");
     assert.ok(invisible(".login-modal"), "it closes the login modal");
   });
 });

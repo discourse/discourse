@@ -3,10 +3,13 @@
 class TopicEmbed < ActiveRecord::Base
   include Trashable
 
+  EMBED_CONTENT_CACHE_MAX_LENGTH = 32_000
+
   belongs_to :topic
   belongs_to :post
   validates_presence_of :embed_url
   validates_uniqueness_of :embed_url
+  validates :embed_content_cache, length: { maximum: EMBED_CONTENT_CACHE_MAX_LENGTH }
 
   before_validation(on: :create) do
     unless (
@@ -43,6 +46,7 @@ class TopicEmbed < ActiveRecord::Base
   def self.import(user, url, title, contents, category_id: nil, cook_method: nil, tags: nil)
     return unless url =~ %r{\Ahttps?\://}
 
+    original_contents = contents.dup.truncate(EMBED_CONTENT_CACHE_MAX_LENGTH)
     contents = first_paragraph_from(contents) if SiteSetting.embed_truncate && cook_method.nil?
     contents ||= ""
     contents = contents.dup << imported_from_html(url)
@@ -56,7 +60,10 @@ class TopicEmbed < ActiveRecord::Base
     # If there is no embed, create a topic, post and the embed.
     if embed.blank?
       Topic.transaction do
-        eh = EmbeddableHost.record_for_url(url)
+        if eh = EmbeddableHost.record_for_url(url)
+          tags = eh.tags.presence || tags
+          user = eh.user.presence || user
+        end
 
         cook_method ||=
           if SiteSetting.embed_support_markdown
@@ -72,23 +79,33 @@ class TopicEmbed < ActiveRecord::Base
           cook_method: cook_method,
           category: category_id || eh.try(:category_id),
           tags: SiteSetting.tagging_enabled ? tags : nil,
+          embed_url: url,
+          embed_content_sha1: content_sha1,
         }
-        create_args[:visible] = false if SiteSetting.embed_unlisted?
+        create_args[:visible] = false if SiteSetting.import_embed_unlisted?
 
-        creator = PostCreator.new(user, create_args)
-        post = creator.create
-        if post.present?
-          TopicEmbed.create!(
-            topic_id: post.topic_id,
-            embed_url: url,
-            content_sha1: content_sha1,
-            post_id: post.id,
-          )
-        end
+        # always return `args` when using this modifier, e.g:
+        #
+        # plugin.register_modifier(:topic_embed_import_create_args) do |args|
+        #   args[:title] = "MODIFIED: #{args[:title]}"
+        #
+        #   args # returning args is important to prevent errors
+        # end
+        create_args =
+          DiscoursePluginRegistry.apply_modifier(:topic_embed_import_create_args, create_args) ||
+            create_args
+
+        post = PostCreator.create(user, create_args)
+        post.topic.topic_embed.update!(embed_content_cache: original_contents)
       end
     else
       absolutize_urls(url, contents)
       post = embed.post
+
+      if eh = EmbeddableHost.record_for_url(url)
+        tags = eh.tags.presence || tags
+        user = eh.user.presence || user
+      end
 
       # Update the topic if it changed
       if post&.topic
@@ -104,12 +121,20 @@ class TopicEmbed < ActiveRecord::Base
           post.reload
         end
 
-        if (content_sha1 != embed.content_sha1) || (title && title != post&.topic&.title)
+        existing_tag_names = post.topic.tags.pluck(:name).sort
+        incoming_tag_names = Array(tags).map(&:name).sort
+
+        tags_changed = existing_tag_names != incoming_tag_names
+
+        if (content_sha1 != embed.content_sha1) || (title && title != post&.topic&.title) ||
+             tags_changed
           changes = { raw: absolutize_urls(url, contents) }
+
+          changes[:tags] = incoming_tag_names if SiteSetting.tagging_enabled && tags_changed
           changes[:title] = title if title.present?
 
           post.revise(user, changes, skip_validations: true, bypass_rate_limiter: true)
-          embed.update!(content_sha1: content_sha1)
+          embed.update!(content_sha1: content_sha1, embed_content_cache: original_contents)
         end
       end
     end
@@ -304,6 +329,11 @@ class TopicEmbed < ActiveRecord::Base
         response = TopicEmbed.find_remote(url)
 
         body = response.body
+        if post&.topic&.topic_embed && body.present?
+          post.topic.topic_embed.update!(
+            embed_content_cache: body.truncate(EMBED_CONTENT_CACHE_MAX_LENGTH),
+          )
+        end
         body << TopicEmbed.imported_from_html(url)
         body
       end
@@ -314,15 +344,16 @@ end
 #
 # Table name: topic_embeds
 #
-#  id            :integer          not null, primary key
-#  topic_id      :integer          not null
-#  post_id       :integer          not null
-#  embed_url     :string(1000)     not null
-#  content_sha1  :string(40)
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  deleted_at    :datetime
-#  deleted_by_id :integer
+#  id                  :integer          not null, primary key
+#  topic_id            :integer          not null
+#  post_id             :integer          not null
+#  embed_url           :string(1000)     not null
+#  content_sha1        :string(40)
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  deleted_at          :datetime
+#  deleted_by_id       :integer
+#  embed_content_cache :text
 #
 # Indexes
 #

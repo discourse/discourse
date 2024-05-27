@@ -15,8 +15,7 @@
     min-height: 65dvh;
   }
 
-  .modal-footer {
-    gap: 0.5em;
+  .d-modal__footer {
     justify-content: space-between;
   }
 
@@ -48,9 +47,6 @@
     flex-wrap: wrap;
     align-items: center;
     gap: 0.5em;
-    .badge-wrapper {
-      margin: 0;
-    }
   }
 
   #display-modes {
@@ -135,7 +131,7 @@
   }
 
   .markdown {
-    font-family: monospace;
+    font-family: var(--d-font-family--monospace);
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
@@ -170,9 +166,6 @@
 
   #revisions {
     word-wrap: break-word;
-    .badge-wrapper {
-      margin: 0;
-    }
     table {
       margin-top: 10px;
       tr {

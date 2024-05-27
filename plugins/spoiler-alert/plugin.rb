@@ -2,10 +2,10 @@
 
 # name: spoiler-alert
 # about: Uses the Spoiler Alert plugin to blur text when spoiling it.
+# meta_topic_id: 12650
 # version: 1.1.0
 # authors: Discourse Team
 # url: https://github.com/discourse/discourse/tree/main/plugins/spoiler-alert
-# transpile_js: true
 
 enabled_site_setting :spoiler_enabled
 

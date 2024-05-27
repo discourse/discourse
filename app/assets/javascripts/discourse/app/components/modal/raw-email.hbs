@@ -43,10 +43,7 @@
         <Textarea @value={{this.textPart}} />
       {{/if}}
       {{#if (eq this.tab "html_part")}}
-        <IframedHtml
-          @html={{this.htmlPart}}
-          @className="incoming-email-html-part"
-        />
+        <IframedHtml @html={{this.htmlPart}} class="incoming-email-html-part" />
       {{/if}}
     </div>
   </:body>

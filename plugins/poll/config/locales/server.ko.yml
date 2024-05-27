@@ -15,7 +15,6 @@ ko:
   poll:
     poll: "투표"
     invalid_argument: "&#39;%{argument}&#39;인수에 대해 &#39;%{value}&#39;값이 잘못되었습니다."
-    multiple_polls_without_name: "이름없는 투표가 여러 개 있습니다. '<code>name</code>' 속성을 사용해서 투표에 특색을 부여해보세요."
     multiple_polls_with_same_name: "같은 이름 <strong>%{name}</strong> 으로 투표가 여러 개 있습니다. '<code>name</code>' 속성을 사용하여 투표를 구분해보세요."
     default_poll_must_have_at_least_1_option: "설문 조사에는 1 개 이상의 옵션이 있어야합니다."
     named_poll_must_have_at_least_1_option: "이름이 <strong>%{name} 인</strong> 설문 조사에는 하나 이상의 옵션이 있어야합니다."

@@ -9,36 +9,19 @@
   ],
   "dependencies": {
     "a11y-dialog": "8.0.4",
-    "ember-auto-import": "^2.6.3",
+    "ember-auto-import": "^2.7.2",
     "ember-cli-babel": "^8.2.0",
-    "ember-cli-htmlbars": "^6.3.0"
+    "ember-cli-htmlbars": "^6.3.0",
+    "ember-template-imports": "^4.1.1"
   },
   "devDependencies": {
-    "@types/ember": "^4.0.9",
-    "@types/ember__application": "^4.0.10",
-    "@types/ember__array": "^4.0.8",
-    "@types/ember__component": "^4.0.20",
-    "@types/ember__controller": "^4.0.10",
-    "@types/ember__debug": "^4.0.7",
-    "@types/ember__destroyable": "^4.0.4",
-    "@types/ember__engine": "^4.0.9",
-    "@types/ember__error": "^4.0.5",
-    "@types/ember__object": "^4.0.10",
-    "@types/ember__polyfills": "^4.0.5",
-    "@types/ember__routing": "^4.0.18",
-    "@types/ember__runloop": "^4.0.8",
-    "@types/ember__service": "^4.0.7",
-    "@types/ember__string": "^3.0.13",
-    "@types/ember__template": "^4.0.5",
-    "@types/ember__test": "^4.0.5",
-    "@types/ember__utils": "^4.0.6",
-    "@types/jquery": "^3.5.27",
-    "@types/qunit": "^2.19.8",
-    "@types/rsvp": "^4.0.7",
-    "webpack": "^5.89.0"
+    "@types/jquery": "^3.5.30",
+    "@types/qunit": "^2.19.10",
+    "@types/rsvp": "^4.0.9",
+    "webpack": "^5.91.0"
   },
   "engines": {
-    "node": "16.* || >= 18",
+    "node": ">= 18",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   }

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe "DiscoursePoll endpoints" do
   describe "fetch voters for a poll" do
     fab!(:user)

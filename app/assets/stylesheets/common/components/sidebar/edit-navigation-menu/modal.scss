@@ -1,25 +1,14 @@
-.modal.sidebar__edit-navigation-menu__modal {
-  @include breakpoint("tablet", min-width) {
-    .modal-inner-container {
-      width: 100%;
-    }
-  }
-  .modal-header {
-    border: none;
-  }
-  .modal-body {
-    border-top: 1px solid var(--primary-low);
-    margin-top: 1em;
-    height: 40dvh;
+.d-modal {
+  &__container {
+    width: 100%;
   }
 }
-
 .sidebar__edit-navigation-menu__filter {
   display: flex;
   gap: 0.5em;
-  padding: 0 0.66em 0;
+  padding: 1rem 0.66em 0;
   @include breakpoint("tablet", min-width) {
-    padding: 0 1em 0;
+    padding: 1rem 1.5rem 0;
   }
 
   .sidebar__edit-navigation-menu__filter-dropdown {

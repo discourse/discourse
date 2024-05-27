@@ -6,34 +6,20 @@ source "https://rubygems.org"
 
 gem "bootsnap", require: false, platform: :mri
 
-def rails_master?
-  ENV["RAILS_MASTER"] == "1"
-end
-
-if rails_master?
-  gem "arel", git: "https://github.com/rails/arel.git"
-  gem "rails", git: "https://github.com/rails/rails.git"
-else
-  # NOTE: Until rubygems gives us optional dependencies we are stuck with this needing to be explicit
-  # this allows us to include the bits of rails we use without pieces we do not.
-  #
-  # To issue a rails update bump the version number here
-  rails_version = "7.0.7"
-  gem "actionmailer", rails_version
-  gem "actionpack", rails_version
-  gem "actionview", rails_version
-  gem "activemodel", rails_version
-  gem "activerecord", rails_version
-  gem "activesupport", rails_version
-  gem "railties", rails_version
-  gem "sprockets-rails"
-end
+gem "actionmailer", "< 7.1"
+gem "actionpack", "< 7.1"
+gem "actionview", "< 7.1"
+gem "activemodel", "< 7.1"
+gem "activerecord", "< 7.1"
+gem "activesupport", "< 7.1"
+gem "railties", "< 7.1"
+gem "sprockets-rails"
 
 gem "json"
 
 # TODO: At the moment Discourse does not work with Sprockets 4, we would need to correct internals
 # We intend to drop sprockets rather than upgrade to 4.x
-gem "sprockets", git: "https://github.com/rails/sprockets", branch: "3.x"
+gem "sprockets", "~> 3.7.3"
 
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the unicorn master
@@ -45,7 +31,9 @@ gem "mail"
 gem "mini_mime"
 gem "mini_suffix"
 
-gem "redis"
+# config/initializers/006-mini_profiler.rb depends upon the RedisClient#call.
+# Rework this when upgrading to redis client 5.0 and above.
+gem "redis", "< 5.0"
 
 # This is explicitly used by Sidekiq and is an optional dependency.
 # We tell Sidekiq to use the namespace "sidekiq" which triggers this
@@ -68,8 +56,6 @@ gem "discourse-fonts", require: "discourse_fonts"
 gem "message_bus"
 
 gem "rails_multisite"
-
-gem "fast_xs", platform: :ruby
 
 gem "fastimage"
 
@@ -139,9 +125,9 @@ group :test do
   gem "capybara", require: false
   gem "webmock", require: false
   gem "fakeweb", require: false
-  gem "minitest", require: false
   gem "simplecov", require: false
   gem "selenium-webdriver", "~> 4.14", require: false
+  gem "selenium-devtools", require: false
   gem "test-prof"
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
@@ -158,8 +144,9 @@ group :test, :development do
 
   gem "rspec-rails"
 
-  gem "shoulda-matchers", require: false, github: "thoughtbot/shoulda-matchers"
+  gem "shoulda-matchers", require: false
   gem "rspec-html-matchers"
+  gem "pry-stack_explorer", require: false
   gem "byebug", require: ENV["RM_INFO"].nil?, platform: :mri
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
@@ -209,8 +196,8 @@ gem "rack-mini-profiler", require: ["enable_rails_patches"]
 
 gem "unicorn", require: false, platform: :ruby
 gem "puma", require: false
+
 gem "rbtrace", require: false, platform: :mri
-gem "gc_tracer", require: false, platform: :mri
 
 # required for feed importing and embedding
 gem "ruby-readability", require: false
@@ -229,7 +216,7 @@ gem "logstash-logger", require: false
 gem "logster"
 
 # A fork of sassc with dart-sass support
-gem "dartsass-ruby"
+gem "sassc-embedded"
 
 gem "rotp", require: false
 
@@ -258,7 +245,7 @@ if ENV["IMPORT"] == "1"
   gem "parallel", require: false
 end
 
-if ENV["GENERIC_IMPORT"] == "1"
+group :generic_import, optional: true do
   gem "sqlite3"
   gem "redcarpet"
 end
@@ -280,3 +267,12 @@ gem "net-http"
 gem "cgi", ">= 0.3.6", require: false
 
 gem "tzinfo-data"
+gem "csv", require: false
+
+# TODO: Can be removed once we upgrade to Rails 7.1
+gem "mutex_m"
+gem "drb"
+
+# dependencies for the automation plugin
+gem "iso8601"
+gem "rrule"

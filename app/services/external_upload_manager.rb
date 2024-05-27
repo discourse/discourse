@@ -9,10 +9,13 @@ class ExternalUploadManager
 
   class ChecksumMismatchError < StandardError
   end
+
   class DownloadFailedError < StandardError
   end
+
   class CannotPromoteError < StandardError
   end
+
   class SizeMismatchError < StandardError
   end
 

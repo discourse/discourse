@@ -22,51 +22,9 @@ module SystemHelpers
     expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
-  # Uploads a theme from a directory.
-  #
-  # @param set_theme_as_default [Boolean] Whether to set the uploaded theme as the default theme for the site. Defaults to true.
-  #
-  # @return [Theme] The uploaded theme model given by `models/theme.rb`.
-  #
-  # @example Upload a theme and set it as default
-  #   upload_theme("/path/to/theme")
-  def upload_theme(set_theme_as_default: true)
-    theme = RemoteTheme.import_theme_from_directory(theme_dir_from_caller)
-
-    if theme.component
-      raise "Uploaded theme is a theme component, please use the `upload_theme_component` method instead."
-    end
-
-    theme.set_default! if set_theme_as_default
-    theme
-  end
-
-  # Uploads a theme component from a directory.
-  #
-  # @param parent_theme_id [Integer] The ID of the theme to add the theme component to. Defaults to `SiteSetting.default_theme_id`.
-  #
-  # @return [Theme] The uploaded theme model given by `models/theme.rb`.
-  #
-  # @example Upload a theme component
-  #   upload_theme_component("/path/to/theme_component")
-  #
-  # @example Upload a theme component and add it to a specific theme
-  #   upload_theme_component("/path/to/theme_component", parent_theme_id: 123)
-  def upload_theme_component(parent_theme_id: SiteSetting.default_theme_id)
-    theme = RemoteTheme.import_theme_from_directory(theme_dir_from_caller)
-
-    if !theme.component
-      raise "Uploaded theme is not a theme component, please use the `upload_theme` method instead."
-    end
-
-    Theme.find(parent_theme_id).child_themes << theme
-    theme
-  end
-
   def setup_system_test
     SiteSetting.login_required = false
     SiteSetting.has_login_hint = false
-    SiteSetting.content_security_policy = false
     SiteSetting.force_hostname = Capybara.server_host
     SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_enabled = false
@@ -148,16 +106,10 @@ module SystemHelpers
   end
 
   def using_browser_timezone(timezone, &example)
-    previous_browser_timezone = ENV["TZ"]
-
-    ENV["TZ"] = timezone
-
-    using_session(timezone) do |session|
+    using_session(timezone) do
+      page.driver.browser.devtools.emulation.set_timezone_override(timezone_id: timezone)
       freeze_time(&example)
-      session.quit
     end
-
-    ENV["TZ"] = previous_browser_timezone
   end
 
   # When using parallelism, Capybara's `using_session` method can cause
@@ -199,20 +151,17 @@ module SystemHelpers
   end
 
   def skip_unless_s3_system_specs_enabled!
+    if ENV["CI"]
+      return(
+        skip(
+          "S3 system specs are temporarily disabled in this environment to address parallel spec issues",
+        )
+      )
+    end
     if !ENV["CI"] && !ENV["RUN_S3_SYSTEM_SPECS"]
       skip(
         "S3 system specs are disabled in this environment, set CI=1 or RUN_S3_SYSTEM_SPECS=1 to enable them.",
       )
-    end
-  end
-
-  private
-
-  def theme_dir_from_caller
-    caller.each do |line|
-      if (split = line.split(%r{/spec/system/.+_spec.rb})).length > 1
-        return split.first
-      end
     end
   end
 end

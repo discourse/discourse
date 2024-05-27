@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   DEFAULT_MESSAGE_PAGE_SIZE,

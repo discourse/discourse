@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class Badge < ActiveRecord::Base
-  # TODO: Drop in July 2021
-  self.ignored_columns = %w[image]
-
   include GlobalPath
   include HasSanitizableFields
 
@@ -296,7 +293,6 @@ class Badge < ActiveRecord::Base
 
   def long_description=(val)
     self[:long_description] = val if val != long_description
-    val
   end
 
   def description
@@ -311,7 +307,6 @@ class Badge < ActiveRecord::Base
 
   def description=(val)
     self[:description] = val if val != description
-    val
   end
 
   def slug

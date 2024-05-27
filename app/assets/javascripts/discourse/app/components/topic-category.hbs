@@ -1,5 +1,9 @@
 {{#unless this.topic.isPrivateMessage}}
-  {{bound-category-link this.topic.category recursive=true hideParent=true}}
+  {{bound-category-link
+    this.topic.category
+    ancestors=this.topic.category.predecessors
+    hideParent=true
+  }}
 {{/unless}}
 <div class="topic-header-extra">
   {{#if this.siteSettings.tagging_enabled}}

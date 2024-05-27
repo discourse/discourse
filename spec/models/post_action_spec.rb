@@ -3,9 +3,9 @@
 RSpec.describe PostAction do
   it { is_expected.to rate_limit }
 
-  fab!(:moderator)
-  fab!(:codinghorror) { Fabricate(:coding_horror) }
-  fab!(:eviltrout) { Fabricate(:evil_trout) }
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
+  fab!(:codinghorror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
+  fab!(:eviltrout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
   fab!(:admin)
   fab!(:post)
   fab!(:second_post) { Fabricate(:post, topic: post.topic) }
@@ -25,7 +25,6 @@ RSpec.describe PostAction do
     it "notifies moderators (integration test)" do
       post = create_post
       mod = moderator
-      Group.refresh_automatic_groups!
 
       result =
         PostActionCreator.notify_moderators(codinghorror, post, "this is my special long message")
@@ -456,6 +455,8 @@ RSpec.describe PostAction do
   end
 
   describe "flagging" do
+    before { SiteSetting.flag_post_allowed_groups = "1|2|11" }
+
     it "does not allow you to flag stuff twice, even if the reason is different" do
       expect(PostActionCreator.spam(eviltrout, post)).to be_success
       expect(PostActionCreator.off_topic(eviltrout, post)).to be_failed
@@ -524,7 +525,7 @@ RSpec.describe PostAction do
 
     it "should follow the rules for automatic hiding workflow" do
       post = create_post
-      walterwhite = Fabricate(:walter_white)
+      walterwhite = Fabricate(:walter_white, refresh_auto_groups: true)
 
       Reviewable.set_priorities(high: 3.0)
       SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:low]
@@ -543,6 +544,9 @@ RSpec.describe PostAction do
       expect(post.hidden_at).to be_present
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached])
       expect(post.topic.visible).to eq(false)
+      expect(post.topic.visibility_reason_id).to eq(
+        Topic.visibility_reasons[:op_flag_threshold_reached],
+      )
 
       post.revise(post.user, raw: post.raw + " ha I edited it ")
 
@@ -552,6 +556,7 @@ RSpec.describe PostAction do
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached]) # keep most recent reason
       expect(post.hidden_at).to be_present # keep the most recent hidden_at time
       expect(post.topic.visible).to eq(true)
+      expect(post.topic.visibility_reason_id).to eq(Topic.visibility_reasons[:op_unhidden])
 
       PostActionCreator.spam(eviltrout, post)
       PostActionCreator.off_topic(walterwhite, post)
@@ -566,6 +571,9 @@ RSpec.describe PostAction do
       expect(post.hidden_at).to be_present
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached_again])
       expect(post.topic.visible).to eq(false)
+      expect(post.topic.visibility_reason_id).to eq(
+        Topic.visibility_reasons[:op_flag_threshold_reached],
+      )
 
       post.revise(post.user, raw: post.raw + " ha I edited it again ")
 
@@ -574,7 +582,10 @@ RSpec.describe PostAction do
       expect(post.hidden).to eq(true)
       expect(post.hidden_at).to be_present
       expect(post.hidden_reason_id).to eq(Post.hidden_reasons[:flag_threshold_reached_again])
-      expect(post.topic.visible).to eq(false)
+      expect(post.topic.reload.visible).to eq(false)
+      expect(post.topic.visibility_reason_id).to eq(
+        Topic.visibility_reasons[:op_flag_threshold_reached],
+      )
     end
 
     it "doesn't fail when post has nil user" do
@@ -586,12 +597,12 @@ RSpec.describe PostAction do
       expect(post.hidden).to eq(true)
     end
     it "hide tl0 posts that are flagged as spam by a tl3 user" do
-      newuser = Fabricate(:newuser)
+      newuser = Fabricate(:newuser, refresh_auto_groups: true)
       post = create_post(user: newuser)
 
       Discourse.stubs(:site_contact_user).returns(admin)
 
-      PostActionCreator.spam(Fabricate(:leader), post)
+      PostActionCreator.spam(Fabricate(:leader, refresh_auto_groups: true), post)
 
       post.reload
 
@@ -605,7 +616,7 @@ RSpec.describe PostAction do
       create_post(topic: post1.topic)
       result =
         PostActionCreator.new(
-          Fabricate(:user),
+          Fabricate(:user, refresh_auto_groups: true),
           post1,
           PostActionType.types[:spam],
           flag_topic: true,
@@ -618,7 +629,7 @@ RSpec.describe PostAction do
       post = create_post
       result =
         PostActionCreator.new(
-          Fabricate(:user),
+          Fabricate(:user, refresh_auto_groups: true),
           post,
           PostActionType.types[:spam],
           flag_topic: true,
@@ -649,8 +660,8 @@ RSpec.describe PostAction do
       let(:post2) { create_post(topic: topic) }
       let(:post3) { create_post(topic: topic) }
 
-      fab!(:flagger1) { Fabricate(:user) }
-      fab!(:flagger2) { Fabricate(:user) }
+      fab!(:flagger1) { Fabricate(:user, refresh_auto_groups: true) }
+      fab!(:flagger2) { Fabricate(:user, refresh_auto_groups: true) }
 
       before do
         SiteSetting.hide_post_sensitivity = Reviewable.sensitivities[:disabled]
@@ -754,12 +765,11 @@ RSpec.describe PostAction do
     end
   end
 
-  it "prevents user to act twice at the same time" do
-    Group.refresh_automatic_groups!
-    # flags are already being tested
-    all_types_except_flags =
-      PostActionType.types.except(*PostActionType.flag_types_without_custom.keys)
-    all_types_except_flags.values.each do |action|
+  # flags are already being tested
+  all_types_except_flags =
+    PostActionType.types.except(*PostActionType.flag_types_without_custom.keys)
+  all_types_except_flags.values.each do |action|
+    it "prevents user to act twice at the same time" do
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_success
       expect(PostActionCreator.new(eviltrout, post, action).perform).to be_failed
     end
@@ -831,7 +841,7 @@ RSpec.describe PostAction do
 
     it "should create a notification in the related topic" do
       Jobs.run_immediately!
-      user = Fabricate(:user)
+      user = Fabricate(:user, refresh_auto_groups: true)
       stub_image_size
       result = PostActionCreator.create(user, post, :spam, message: "WAT")
       topic = result.post_action.related_post.topic

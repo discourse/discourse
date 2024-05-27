@@ -132,7 +132,7 @@ function rewireClassicComponentEvents(app) {
      * @param {string | typeof INTERNAL} name
      * @param {unknown[]} args
      */
-    trigger(name, ...args) {
+    _trigger(name, ...args) {
       if (name === INTERNAL) {
         if (this.element) {
           return this._super.call(this, ...args);

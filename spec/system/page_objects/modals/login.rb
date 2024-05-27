@@ -6,6 +6,65 @@ module PageObjects
       def open?
         super && has_css?(".login-modal")
       end
+
+      def closed?
+        super && has_no_css?(".login-modal")
+      end
+
+      def open
+        visit("/login")
+      end
+
+      def open_from_header
+        find(".login-button").click
+      end
+
+      def click(selector)
+        if page.has_css?("html.mobile-view", wait: 0)
+          expect(page).to have_css(".d-modal:not(.is-animating)")
+        end
+        find(selector).click
+      end
+
+      def open_signup
+        click("#new-account-link")
+      end
+
+      def click_login
+        click("#login-button")
+      end
+
+      def email_login_link
+        click("#email-login-link")
+      end
+
+      def forgot_password
+        click("#forgot-password-link")
+      end
+
+      def fill_input(selector, text)
+        if page.has_css?("html.mobile-view", wait: 0)
+          expect(page).to have_css(".d-modal:not(.is-animating)")
+        end
+        find(selector).fill_in(with: text)
+      end
+
+      def fill_username(username)
+        fill_input("#login-account-name", username)
+      end
+
+      def fill_password(password)
+        fill_input("#login-account-password", password)
+      end
+
+      def fill(username: nil, password: nil)
+        fill_username(username) if username
+        fill_password(password) if password
+      end
+
+      def click_social_button(provider)
+        click(".btn-social.#{provider}")
+      end
     end
   end
 end

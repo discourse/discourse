@@ -6,7 +6,7 @@ RSpec.describe Jobs::AutoQueueHandler do
   describe "old flagged post" do
     fab!(:spam_result) do
       PostActionCreator.new(
-        Fabricate(:user),
+        Fabricate(:user, refresh_auto_groups: true),
         Fabricate(:post),
         PostActionType.types[:spam],
         message: "this is the initial message",

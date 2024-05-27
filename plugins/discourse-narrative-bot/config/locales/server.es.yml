@@ -295,10 +295,6 @@ es:
         not_found: |-
           Oh no, mi publicación desagradable todavía no ha sido denunciada. :worried: ¿Puedes denunciarla como inapropiada usando el botón de **denunciar** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? No olvides que esa opción está oculta, así que primero debes presionar el botón ver más <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> para que se muestren otras opciones para cada mensaje.
       search:
-        instructions: |-
-          _psst_ … He ocultado una sorpresa en este tema. Si estás listo para el desafío, **selecciona el botón para buscar** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> que está arriba a la derecha &#8599; y ahí puedes buscar palabras.
-
-          Trata de buscar el término «capi&#8203;bara» en este tema.
         hidden_message: |-
           ¿Cómo pudiste pasar por alto este capibara? :wink:
 
@@ -375,7 +371,7 @@ es:
         instructions: |-
           ¿Sabías que puedes hacer referencia a categorías y etiquetas en tus publicaciones? Por ejemplo, ¿has visto la categoría %{category}?
 
-          Escribe `#` en cualquier lugar de una frase y selecciona cualquier categoría o etiqueta.
+          Escribe «#» en cualquier lugar de una frase y selecciona cualquier categoría o etiqueta.
         not_found: |-
           Hmm, no veo ninguna categoría por ninguna parte. ¿Puedes copiar esto en tu próxima respuesta?
 

@@ -15,6 +15,10 @@ class Reporter extends TapReporter {
     if (process.env.GITHUB_ACTIONS) {
       colors.enable();
     }
+
+    if (process.env.GITHUB_ACTIONS) {
+      this.out.write("::group:: Verbose QUnit test output\n");
+    }
   }
 
   reportMetadata(tag, metadata) {
@@ -105,6 +109,10 @@ class Reporter extends TapReporter {
   }
 
   finish() {
+    if (process.env.GITHUB_ACTIONS) {
+      this.out.write("::endgroup::");
+    }
+
     super.finish();
 
     this.reportDeprecations();
@@ -127,12 +135,23 @@ class Reporter extends TapReporter {
 module.exports = {
   test_page: "tests/index.html?hidepassed",
   disable_watching: true,
-  launch_in_ci: ["Chrome"],
-  // launch_in_dev: ["Chrome"] // Ember-CLI always launches testem in 'CI' mode
+  launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,
   parallel: -1,
   browser_start_timeout: 120,
   browser_args: {
+    Chromium: [
+      // --no-sandbox is needed when running Chromium inside a container
+      process.env.CI ? "--no-sandbox" : null,
+      "--headless=new",
+      "--disable-dev-shm-usage",
+      "--disable-software-rasterizer",
+      "--mute-audio",
+      "--remote-debugging-port=4201",
+      "--window-size=1440,900",
+      "--enable-precise-memory-info",
+      "--js-flags=--max_old_space_size=4096",
+    ].filter(Boolean),
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container
       process.env.CI ? "--no-sandbox" : null,
@@ -156,17 +175,21 @@ if (process.env.TESTEM_FIREFOX_PATH) {
 }
 
 const target = `http://127.0.0.1:${process.env.UNICORN_PORT || "3000"}`;
+const themeTestPages = process.env.THEME_TEST_PAGES;
 
-if (process.argv.includes("-t")) {
-  // Running testem without ember cli. Probably for theme-qunit
-  const testPage = process.argv[process.argv.indexOf("-t") + 1];
-
+if (themeTestPages) {
+  module.exports.test_page = themeTestPages.split(",");
   module.exports.proxies = {};
+
+  // Prepend a prefix to the path of the route such that the server handling the request can easily identify `/theme-qunit`
+  // requests. This is required because testem prepends a string to the path of the `test_page` option when it makes
+  // the request and there is no easy way for us to strip the string from the path through the proxy. As such, we let the
+  // destination server handle the request base on the prefix instead.
   module.exports.proxies[`/*/theme-qunit`] = {
-    target: `${target}${testPage}`,
-    ignorePath: true,
+    target: `${target}/testem-theme-qunit`,
     xfwd: true,
   };
+
   module.exports.proxies["/*/*"] = { target, xfwd: true };
 
   module.exports.middleware = [

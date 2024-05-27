@@ -526,6 +526,78 @@ RSpec.describe GroupsController do
     end
   end
 
+  describe "#mentions" do
+    it "ensures mentions are enabled" do
+      SiteSetting.enable_mentions = false
+
+      sign_in(user)
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "ensures the group can be seen" do
+      sign_in(user)
+      group.update!(visibility_level: Group.visibility_levels[:owners])
+
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "ensures the group members can be seen" do
+      sign_in(user)
+      group.update!(members_visibility_level: Group.visibility_levels[:owners])
+
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns the right response" do
+      post = Fabricate(:post)
+      GroupMention.create!(post: post, group: group)
+
+      sign_in(user)
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
+    end
+
+    it "supports pagination using before (date)" do
+      post = Fabricate(:post)
+      GroupMention.create!(post: post, group: group)
+
+      sign_in(user)
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
+
+      get "/groups/#{group.name}/mentions.json", params: { before: post.created_at }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"]).to be_empty
+    end
+
+    it "supports pagination using before_post_id" do
+      post = Fabricate(:post)
+      GroupMention.create!(post: post, group: group)
+
+      sign_in(user)
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
+
+      get "/groups/#{group.name}/mentions.json", params: { before_post_id: post.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"]).to be_empty
+    end
+  end
+
   describe "#posts" do
     it "ensures the group can be seen" do
       sign_in(user)
@@ -551,7 +623,7 @@ RSpec.describe GroupsController do
       get "/groups/#{group.name}/posts.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body.first["id"]).to eq(post.id)
+      expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
     end
 
     it "returns moderator actions" do
@@ -560,7 +632,37 @@ RSpec.describe GroupsController do
       get "/groups/#{group.name}/posts.json"
 
       expect(response.status).to eq(200)
-      expect(response.parsed_body.first["id"]).to eq(post.id)
+      expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
+    end
+
+    it "supports pagination using before (date)" do
+      post = Fabricate(:post, user: user)
+
+      sign_in(user)
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
+
+      get "/groups/#{group.name}/posts.json", params: { before: post.created_at }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"]).to be_empty
+    end
+
+    it "supports pagination using before_post_id" do
+      post = Fabricate(:post, user: user)
+
+      sign_in(user)
+      get "/groups/#{group.name}/posts.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].first["id"]).to eq(post.id)
+
+      get "/groups/#{group.name}/posts.json", params: { before_post_id: post.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"]).to be_empty
     end
   end
 
@@ -657,12 +759,48 @@ RSpec.describe GroupsController do
         SiteSetting.public_user_custom_fields = user_field_name
       end
 
-      it "shows custom the fields" do
+      it "shows the custom fields" do
         get "/groups/#{group.name}/members.json", params: { include_custom_fields: true }
 
         expect(response.status).to eq(200)
         response_custom_fields = response.parsed_body["members"].first["custom_fields"]
         expect(response_custom_fields[user_field_name]).to eq("A custom field")
+      end
+
+      it "allows sorting by custom fields" do
+        group.add(user2)
+        UserCustomField.create!(user_id: user2.id, name: user_field_name, value: "C custom field")
+        group.add(other_user)
+        UserCustomField.create!(
+          user_id: other_user.id,
+          name: user_field_name,
+          value: "B custom field",
+        )
+
+        get "/groups/#{group.name}/members.json",
+            params: {
+              include_custom_fields: true,
+              order: "custom_field",
+              order_field: user_field_name,
+              asc: true,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["members"].pluck("id")).to eq(
+          [user.id, other_user.id, user2.id],
+        )
+
+        get "/groups/#{group.name}/members.json",
+            params: {
+              include_custom_fields: true,
+              order: "custom_field",
+              order_field: user_field_name,
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["members"].pluck("id")).to eq(
+          [user2.id, other_user.id, user.id],
+        )
       end
     end
   end
@@ -958,6 +1096,7 @@ RSpec.describe GroupsController do
           mentionable_level: 2,
           messageable_level: 2,
           default_notification_level: 2,
+          members_visibility_level: 2,
         )
 
         put "/groups/#{group.id}.json",
@@ -971,6 +1110,7 @@ RSpec.describe GroupsController do
                 mentionable_level: 1,
                 messageable_level: 1,
                 default_notification_level: 1,
+                members_visibility_level: 1,
                 tracking_category_ids: [category.id],
                 tracking_tags: [tag.name],
               },
@@ -989,6 +1129,7 @@ RSpec.describe GroupsController do
         expect(group.mentionable_level).to eq(1)
         expect(group.messageable_level).to eq(1)
         expect(group.default_notification_level).to eq(1)
+        expect(group.members_visibility_level).to eq(1)
         expect(group.group_category_notification_defaults.first&.category).to eq(category)
         expect(group.group_tag_notification_defaults.first&.tag).to eq(tag)
       end
@@ -1931,7 +2072,7 @@ RSpec.describe GroupsController do
       end
 
       it "returns skipped_usernames response body when removing a valid user but is not a member of that group" do
-        delete "/groups/#{group.id}/members.json", params: { user_id: -1 }
+        delete "/groups/#{group.id}/members.json", params: { user_id: Discourse::SYSTEM_USER_ID }
 
         response_body = response.parsed_body
         expect(response.status).to eq(200)
@@ -2126,21 +2267,83 @@ RSpec.describe GroupsController do
       sign_in(user)
     end
 
-    it "sends a private message when accepted" do
+    it "sends a reply to the request membership topic when accepted" do
       GroupRequest.create!(group: group, user: other_user)
+
+      # send the initial request PM
+      PostCreator.new(
+        other_user,
+        title: I18n.t("groups.request_membership_pm.title", group_name: group.name),
+        raw: "*British accent* Please, sir, may I have some group?",
+        archetype: Archetype.private_message,
+        target_usernames: "#{user.username}",
+        skip_validations: true,
+      ).create!
+
+      topic = Topic.last
+
       expect {
         put "/groups/#{group.id}/handle_membership_request.json",
             params: {
               user_id: other_user.id,
               accept: true,
             }
-      }.to change { Topic.count }.by(1).and change { Post.count }.by(1)
+      }.to_not change { Topic.count }
+
+      expect(topic.archetype).to eq(Archetype.private_message)
+      expect(Topic.first.title).to eq(
+        I18n.t("groups.request_membership_pm.title", group_name: group.name),
+      )
+
+      post = Post.last
+      expect(post.topic_id).to eq(Topic.last.id)
+      expect(topic.posts.count).to eq(2)
+      expect(post.raw).to eq(
+        I18n.t("groups.request_accepted_pm.body", group_name: group.name).strip,
+      )
+    end
+
+    it "sends accepted membership request reply even if request is in another language" do
+      SiteSetting.allow_user_locale = true
+      other_user.update!(locale: "fr")
+
+      GroupRequest.create!(group: group, user: other_user)
+
+      # send the initial request PM
+      PostCreator.new(
+        other_user,
+        title:
+          (
+            I18n.t "groups.request_membership_pm.title",
+                   group_name: group.name,
+                   locale: other_user.locale
+          ),
+        raw: "*French accent* Please let me in!",
+        archetype: Archetype.private_message,
+        target_usernames: "#{user.username}",
+        skip_validations: true,
+      ).create!
 
       topic = Topic.last
+
+      expect {
+        put "/groups/#{group.id}/handle_membership_request.json",
+            params: {
+              user_id: other_user.id,
+              accept: true,
+            }
+      }.to_not change { Topic.count }
+
       expect(topic.archetype).to eq(Archetype.private_message)
-      expect(topic.title).to eq(I18n.t("groups.request_accepted_pm.title", group_name: group.name))
-      expect(topic.first_post.raw).to eq(
-        I18n.t("groups.request_accepted_pm.body", group_name: group.name).strip,
+      expect(Topic.first.title).to eq(
+        I18n.t("groups.request_membership_pm.title", group_name: group.name, locale: "fr"),
+      )
+
+      post = Post.last
+      expect(post.topic_id).to eq(Topic.last.id)
+      expect(topic.posts.count).to eq(2)
+      expect(post.raw).to eq(
+        I18n.t("groups.request_accepted_pm.body", group_name: group.name, locale: "fr").strip,
       )
     end
   end

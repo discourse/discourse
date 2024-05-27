@@ -14,7 +14,7 @@ module("Integration | Helper | category-badge", function (hooks) {
     await render(hbs`{{category-badge this.category}}`);
 
     assert.strictEqual(
-      query(".category-name").innerText.trim(),
+      query(".badge-category__name").innerText.trim(),
       this.category.name
     );
   });
@@ -26,7 +26,7 @@ module("Integration | Helper | category-badge", function (hooks) {
 
     assert.ok(
       exists(
-        `a.badge-wrapper[href="/c/${this.category.slug}/${this.category.id}"]`
+        `a.badge-category__wrapper[href="/c/${this.category.slug}/${this.category.id}"]`
       )
     );
   });

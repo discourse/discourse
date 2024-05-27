@@ -11,6 +11,7 @@ class CategoriesController < ApplicationController
                    redirect
                    find_by_slug
                    visible_groups
+                   find
                    search
                  ]
 
@@ -33,8 +34,12 @@ class CategoriesController < ApplicationController
     @description = SiteSetting.site_description
 
     parent_category =
-      Category.find_by_slug(params[:parent_category_id]) ||
-        Category.find_by(id: params[:parent_category_id].to_i)
+      if params[:parent_category_id].present?
+        Category.find_by_slug(params[:parent_category_id]) ||
+          Category.find_by(id: params[:parent_category_id].to_i)
+      elsif params[:category_slug_path_with_id].present?
+        Category.find_by_slug_path_with_id(params[:category_slug_path_with_id])
+      end
 
     include_subcategories =
       SiteSetting.desktop_category_page_style == "subcategories_with_featured_topics" ||
@@ -42,10 +47,11 @@ class CategoriesController < ApplicationController
 
     category_options = {
       is_homepage: current_homepage == "categories",
-      parent_category_id: params[:parent_category_id],
+      parent_category_id: parent_category&.id,
       include_topics: include_topics(parent_category),
       include_subcategories: include_subcategories,
       tag: params[:tag],
+      page: params[:page],
     }
 
     @category_list = CategoryList.new(guardian, category_options)
@@ -194,8 +200,8 @@ class CategoriesController < ApplicationController
       category_params.delete(:custom_fields)
 
       # properly null the value so the database constraint doesn't catch us
-      category_params[:email_in] = nil if category_params[:email_in]&.blank?
-      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
+      category_params[:email_in] = nil if category_params[:email_in].blank?
+      category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags].blank?
 
       old_permissions = cat.permissions_params
       old_permissions = { "everyone" => 1 } if old_permissions.empty?
@@ -299,6 +305,35 @@ class CategoriesController < ApplicationController
     render json: success_json.merge(groups: groups || [])
   end
 
+  def find
+    categories = []
+    serializer = params[:include_permissions] ? CategorySerializer : SiteCategorySerializer
+
+    if params[:ids].present?
+      categories = Category.secured(guardian).where(id: params[:ids])
+    elsif params[:slug_path].present?
+      category = Category.find_by_slug_path(params[:slug_path].split("/"))
+      raise Discourse::NotFound if category.blank?
+      guardian.ensure_can_see!(category)
+
+      ancestors = Category.secured(guardian).with_ancestors(category.id).where.not(id: category.id)
+      categories = [*ancestors, category]
+    elsif params[:slug_path_with_id].present?
+      category = Category.find_by_slug_path_with_id(params[:slug_path_with_id])
+      raise Discourse::NotFound if category.blank?
+      guardian.ensure_can_see!(category)
+
+      ancestors = Category.secured(guardian).with_ancestors(category.id).where.not(id: category.id)
+      categories = [*ancestors, category]
+    end
+
+    raise Discourse::NotFound if categories.blank?
+
+    Category.preload_user_fields!(guardian, categories)
+
+    render_serialized(categories, serializer, root: :categories, scope: guardian)
+  end
+
   def search
     term = params[:term].to_s.strip
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
@@ -310,33 +345,50 @@ class CategoriesController < ApplicationController
           true
         end
       )
-    select_category_ids = params[:select_category_ids].presence
-    reject_category_ids = params[:reject_category_ids].presence
+    if params[:select_category_ids].is_a?(Array)
+      select_category_ids = params[:select_category_ids].map(&:presence)
+    end
+    if params[:reject_category_ids].is_a?(Array)
+      reject_category_ids = params[:reject_category_ids].map(&:presence)
+    end
     include_subcategories =
       if params[:include_subcategories].present?
         ActiveModel::Type::Boolean.new.cast(params[:include_subcategories])
       else
         true
       end
+    include_ancestors =
+      if params[:include_ancestors].present?
+        ActiveModel::Type::Boolean.new.cast(params[:include_ancestors])
+      else
+        false
+      end
     prioritized_category_id = params[:prioritized_category_id].to_i if params[
       :prioritized_category_id
     ].present?
-    limit = params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT) if params[:limit].present?
+    limit =
+      (
+        if params[:limit].present?
+          params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT)
+        else
+          MAX_CATEGORIES_LIMIT
+        end
+      )
+    page = [1, params[:page].to_i].max
 
     categories = Category.secured(guardian)
 
-    categories =
-      categories
-        .includes(:category_search_data)
-        .references(:category_search_data)
-        .where(
-          "category_search_data.search_data @@ #{Search.ts_query(term: term)}",
-        ) if term.present?
+    if term.present? && words = term.split
+      words.each { |word| categories = categories.where("name ILIKE ?", "%#{word}%") }
+    end
 
     categories =
-      categories.where(
-        "id = :id OR parent_category_id = :id",
-        id: parent_category_id,
+      (
+        if parent_category_id != -1
+          categories.where(parent_category_id: parent_category_id)
+        else
+          categories.where(parent_category_id: nil)
+        end
       ) if parent_category_id.present?
 
     categories =
@@ -348,19 +400,50 @@ class CategoriesController < ApplicationController
 
     categories = categories.where(parent_category_id: nil) if !include_subcategories
 
-    categories = categories.limit(limit || MAX_CATEGORIES_LIMIT)
+    categories_count = categories.count
 
-    categories = categories.order(<<~SQL) if prioritized_category_id.present?
-      CASE
-      WHEN id = #{prioritized_category_id} THEN 1
-      WHEN parent_category_id = #{prioritized_category_id} THEN 2
-      ELSE 3
-      END
-    SQL
+    categories =
+      categories
+        .includes(
+          :uploaded_logo,
+          :uploaded_logo_dark,
+          :uploaded_background,
+          :uploaded_background_dark,
+          :tags,
+          :tag_groups,
+          :form_templates,
+          category_required_tag_groups: :tag_group,
+        )
+        .joins("LEFT JOIN topics t on t.id = categories.topic_id")
+        .select("categories.*, t.slug topic_slug")
+        .order(
+          "starts_with(lower(categories.name), #{ActiveRecord::Base.connection.quote(term)}) DESC",
+          "categories.parent_category_id IS NULL DESC",
+          "categories.id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
+          "categories.parent_category_id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
+          "categories.id ASC",
+        )
+        .limit(limit)
+        .offset((page - 1) * limit)
 
-    categories.order(:id)
+    if Site.preloaded_category_custom_fields.present?
+      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+    end
 
-    render json: categories, each_serializer: SiteCategorySerializer
+    Category.preload_user_fields!(guardian, categories)
+
+    response = {
+      categories_count: categories_count,
+      categories: serialize_data(categories, SiteCategorySerializer, scope: guardian),
+    }
+
+    if include_ancestors
+      ancestors = Category.secured(guardian).ancestors_of(categories.map(&:id))
+      Category.preload_user_fields!(guardian, ancestors)
+      response[:ancestors] = serialize_data(ancestors, SiteCategorySerializer, scope: guardian)
+    end
+
+    render_json_dump(response)
   end
 
   private
@@ -380,6 +463,7 @@ class CategoriesController < ApplicationController
       is_homepage: current_homepage == "categories",
       parent_category_id: params[:parent_category_id],
       include_topics: false,
+      page: params[:page],
     }
 
     topic_options = { per_page: CategoriesController.topics_per_page, no_definitions: true }

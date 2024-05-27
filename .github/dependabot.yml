@@ -40,14 +40,37 @@ updates:
         versions:
           - "> 1.2.0"
           - "< 2"
+    groups:
+      rails:
+        patterns:
+          - "actionmailer"
+          - "actionpack"
+          - "actionview"
+          - "actionmodel"
+          - "activerecord"
+          - "activesupport"
+          - "railties"
+          - "sprockets-rails"
   - package-ecosystem: "npm"
-    directory: "/app/assets/javascripts/"
+    directory: "/"
     schedule:
       interval: daily
       time: "08:00"
       timezone: Australia/Sydney
     open-pull-requests-limit: 20
     versioning-strategy: increase
+    ignore: # These are all vendored so need to be updated manually. See lib/tasks/javascript.rake
+      - dependency-name: "ace-builds"
+      - dependency-name: "@json-editor/json-editor"
+      - dependency-name: "chart.js"
+      - dependency-name: "chartjs-plugin-datalabels"
+      - dependency-name: "diffhtml"
+      - dependency-name: "magnific-popup"
+      - dependency-name: "pikaday"
+      - dependency-name: "moment"
+      - dependency-name: "moment-timezone"
+      - dependency-name: "@discourse/moment-timezon-names-translations"
+      - dependency-name: "squoosh"
     groups:
       babel:
         patterns:
@@ -58,3 +81,11 @@ updates:
       types:
         patterns:
           - "@types/*"
+#  - package-ecosystem: "bundler"
+#    directory: "migrations/config/gemfiles/convert"
+#    schedule:
+#      interval: "weekly"
+#      day: "wednesday"
+#      time: "10:00"
+#      timezone: "Europe/Vienna"
+#    versioning-strategy: "increase"

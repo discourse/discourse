@@ -10,7 +10,7 @@ RSpec.describe Email::Processor do
   context "when reply via email is too short" do
     let(:mail) { file_from_fixtures("chinese_reply.eml", "emails").read }
     fab!(:post)
-    fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+    fab!(:user) { Fabricate(:user, email: "discourse@bar.com", refresh_auto_groups: true) }
 
     fab!(:post_reply_key) do
       Fabricate(

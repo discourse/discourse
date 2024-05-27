@@ -236,6 +236,11 @@ class Search
     @in_title = false
 
     term = process_advanced_search!(term)
+    if !@order &&
+         SiteSetting.search_default_sort_order !=
+           SearchSortOrderSiteSetting.value_from_id(:relevance)
+      @order = SearchSortOrderSiteSetting.id_from_value(SiteSetting.search_default_sort_order)
+    end
 
     if term.present?
       @term = Search.prepare_data(term, Topic === @search_context ? :topic : nil)
@@ -261,6 +266,7 @@ class Search
         search_context: @search_context,
         blurb_length: @blurb_length,
         is_header_search: !use_full_page_limit,
+        can_lazy_load_categories: @guardian.can_lazy_load_categories?,
       )
   end
 
@@ -343,19 +349,19 @@ class Search
   end
 
   def self.advanced_order(trigger, &block)
-    (@advanced_orders ||= {})[trigger] = block
+    advanced_orders[trigger] = block
   end
 
   def self.advanced_orders
-    @advanced_orders
+    @advanced_orders ||= {}
   end
 
   def self.advanced_filter(trigger, &block)
-    (@advanced_filters ||= {})[trigger] = block
+    advanced_filters[trigger] = block
   end
 
   def self.advanced_filters
-    @advanced_filters
+    @advanced_filters ||= {}
   end
 
   def self.custom_topic_eager_load(tables = nil, &block)
@@ -1070,7 +1076,7 @@ class Search
 
   def posts_query(limit, type_filter: nil, aggregate_search: false)
     posts =
-      Post.where(post_type: Topic.visible_post_types(@guardian.user)).joins(
+      Post.where(post_type: Topic.visible_post_types(@guardian.user), hidden: false).joins(
         :post_search_data,
         :topic,
       )
@@ -1328,7 +1334,7 @@ class Search
     tsquery = "TO_TSQUERY(#{ts_config || default_ts_config}, #{escaped_term})"
     # PG 14 and up default to using the followed by operator
     # this restores the old behavior
-    tsquery = "REPLACE(#{tsquery}::text, '<->', '&')::tsquery"
+    tsquery = "REGEXP_REPLACE(#{tsquery}::text, '<->|<\\d+>', '&', 'g')::tsquery"
     tsquery = "REPLACE(#{tsquery}::text, '&', '#{escape_string(joiner)}')::tsquery" if joiner
     tsquery
   end
@@ -1442,7 +1448,7 @@ class Search
 
   def posts_eager_loads(query)
     query = query.includes(:user, :post_search_data)
-    topic_eager_loads = [:category]
+    topic_eager_loads = [{ category: :parent_category }]
 
     topic_eager_loads << :tags if SiteSetting.tagging_enabled
 

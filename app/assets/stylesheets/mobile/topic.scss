@@ -72,17 +72,6 @@
   }
 }
 
-#topic-progress-wrapper {
-  .topic-admin-menu-button .toggle-admin-menu {
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  #topic-progress {
-    border-top-right-radius: var(--d-border-radius);
-    border-top-left-radius: var(--d-border-radius);
-  }
-}
-
 .topic-error {
   padding: 18px;
   width: 90%;
@@ -120,6 +109,10 @@ sub sub {
     width: 100%;
     margin-top: 0;
   }
+
+  .topic-category {
+    margin-top: 0.25em;
+  }
 }
 
 // make mobile timeline top and bottom dates easier to select
@@ -140,39 +133,6 @@ sub sub {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-}
-
-@media screen and (max-height: 600px) {
-  .topic-admin-popup-menu {
-    box-sizing: border-box;
-    padding: 0.25em;
-    width: unset;
-    ul {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-
-      @media screen and (max-width: 550px) {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      ul {
-        display: contents;
-      }
-
-      .d-button-label {
-        @include ellipsis;
-      }
-
-      .popup-menu-btn {
-        @include ellipsis;
-      }
-
-      li {
-        border: 0;
-        min-width: 0;
-      }
-    }
-  }
 }
 
 .container.posts .topic-navigation {

@@ -248,13 +248,7 @@ RSpec.describe HashtagAutocompleteService do
       fab!(:tag3) { Fabricate(:tag, name: "terrible-books") }
       fab!(:tag4) { Fabricate(:tag, name: "book") }
 
-      it "orders them by name within their type order" do
-        expect(service.search("book", %w[category tag], limit: 10).map(&:ref)).to eq(
-          %w[book book::tag book-dome book-zone the-book-club great-books mid-books terrible-books],
-        )
-      end
-
-      it "prioritises exact matches to the top of the list" do
+      it "orders them by name within their type order and prioritizes exact matches to the top of the list" do
         expect(service.search("book", %w[category tag], limit: 10).map(&:ref)).to eq(
           %w[book book::tag book-dome book-zone the-book-club great-books mid-books terrible-books],
         )
@@ -310,6 +304,14 @@ RSpec.describe HashtagAutocompleteService do
           %w[book-dome book-zone media book uncategorized the-book-club],
         )
       end
+    end
+  end
+
+  describe "#find_by_ids" do
+    it "can lookup and return only categories" do
+      results = service.find_by_ids({ "category" => [category1.id] })
+
+      expect(results["category"].map { |r| r[:slug] }).to eq(["the-book-club"])
     end
   end
 

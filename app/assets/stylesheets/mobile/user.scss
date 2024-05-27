@@ -203,7 +203,7 @@
       flex: 1 1 25%;
 
       .btn {
-        margin-bottom: 16px;
+        margin-bottom: 0.5rem;
       }
 
       ul {
@@ -222,6 +222,7 @@
           }
           .select-kit.dropdown-select-box.user-notifications-dropdown {
             width: 100%;
+            align-self: flex-start;
             li {
               flex: 1 1 100%;
               margin-left: 0;
@@ -357,18 +358,6 @@
     flex-wrap: wrap;
     .user-invite-search {
       width: 100%;
-    }
-    .user-invite-buttons {
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      .btn {
-        margin-bottom: 0.5em;
-      }
-      .btn:not(:last-of-type) {
-        margin-right: 0.5em;
-      }
     }
   }
 

@@ -2,9 +2,10 @@ import { computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { h } from "virtual-dom";
 import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import { decorateHashtags } from "discourse/lib/hashtag-autocomplete";
 import { userPath } from "discourse/lib/url";
+import DecoratorHelper from "discourse/widgets/decorator-helper";
 import { avatarFor } from "discourse/widgets/post";
+import PostCooked from "discourse/widgets/post-cooked";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -133,7 +134,6 @@ export default createWidget("post-small-action", {
   html(attrs) {
     const contents = [];
     const buttons = [];
-    const customMessage = [];
 
     contents.push(
       avatarFor.call(this, "small", {
@@ -189,26 +189,20 @@ export default createWidget("post-small-action", {
       );
     }
 
-    if (!attrs.actionDescriptionWidget && attrs.cooked) {
-      const fragment = document.createElement("div");
-      fragment.innerHTML = attrs.cooked;
-      decorateHashtags(fragment, this.site);
-      customMessage.push(
-        new RawHtml({
-          html: `<div class='small-action-custom-message'>${fragment.innerHTML}</div>`,
-        })
-      );
-    }
-
     return [
-      h("span.tabLoc", {
-        attributes: { "aria-hidden": true, tabindex: -1 },
-      }),
       h("div.topic-avatar", iconNode(icons[attrs.actionCode] || "exclamation")),
       h("div.small-action-desc", [
         h("div.small-action-contents", contents),
         h("div.small-action-buttons", buttons),
-        customMessage,
+        !attrs.actionDescriptionWidget && attrs.cooked
+          ? h("div.small-action-custom-message", [
+              new PostCooked(
+                attrs,
+                new DecoratorHelper(this),
+                this.currentUser
+              ),
+            ])
+          : null,
       ]),
     ];
   },

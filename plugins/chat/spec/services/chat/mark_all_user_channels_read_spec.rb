@@ -84,13 +84,13 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
       let(:messages) { MessageBus.track_publish { result } }
 
       before do
-        Chat::Mention.create!(
-          notification: notification_1,
+        Chat::UserMention.create!(
+          notifications: [notification_1],
           user: current_user,
           chat_message: message_1,
         )
-        Chat::Mention.create!(
-          notification: notification_2,
+        Chat::UserMention.create!(
+          notifications: [notification_2],
           user: current_user,
           chat_message: message_3,
         )

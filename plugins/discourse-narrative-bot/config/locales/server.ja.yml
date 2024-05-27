@@ -296,10 +296,6 @@ ja:
         not_found: |-
           おや？私の不愉快な投稿はまだ不適切の通報を受けていないようです。:worried: **通報** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> を使って投稿を不適切だと通報してみてください。投稿の操作をさらに表示するには、もっと表示ボタン <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> を使用してくださいね。
       search:
-        instructions: |-
-          _ちょっと_ … このトピックにサプライズを仕掛けましたよ。受けて立つなら、右上&#8599; にある**検索アイコンを選択** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16">して、サプライズを検索してみましょう。
-
-          このトピックから "カピ&#8203;バラ" という言葉を探してみましょう
         hidden_message: |-
           カピバラを見逃しましたか？:wink:
 
@@ -374,7 +370,7 @@ ja:
           投稿の削除を取り消せるのは %{deletion_after} 時間以内ですので、注意しましょう。
       category_hashtag:
         instructions: |-
-          投稿内でカテゴリとタグを参照できることを知っていますか？たとえば、%{category} カテゴリというのを見たことがありませんか？
+          投稿内でカテゴリとタグを参照できることをご存知ですか？たとえば %{category} カテゴリというのを見たことがありませんか？
 
           文中で `#` を入力すると、カテゴリまたはタグを選択できます。
         not_found: |-

@@ -18,9 +18,6 @@
       "admin/*": [
         "./app/assets/javascripts/admin/addon/*"
       ],
-      "wizard/*": [
-        "./app/assets/javascripts/wizard/addon/*"
-      ],
       "pretty-text/*": [
         "./app/assets/javascripts/pretty-text/addon/*"
       ],
@@ -79,7 +76,6 @@
     "./app/assets/javascripts/discourse/tests",
     "./app/assets/javascripts/discourse-common/addon",
     "./app/assets/javascripts/admin/addon",
-    "./app/assets/javascripts/wizard/addon",
     "./app/assets/javascripts/pretty-text/addon",
     "./app/assets/javascripts/select-kit/addon",
     "./app/assets/javascripts/float-kit/addon",

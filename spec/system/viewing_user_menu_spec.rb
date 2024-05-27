@@ -5,6 +5,25 @@ RSpec.describe "Viewing User Menu", system: true do
 
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
+  describe "with notification limit set via plugin api" do
+    it "only displays as many notifications as the limit" do
+      sign_in(user)
+
+      visit("/latest")
+
+      3.times { Fabricate(:notification, user: user) }
+      page.execute_script <<~JS
+        require("discourse/lib/plugin-api").withPluginApi("1.22.0", (api) => {
+          api.setUserMenuNotificationsLimit(2);
+        })
+      JS
+
+      user_menu.open
+
+      expect(user_menu).to have_notification_count_of(2)
+    end
+  end
+
   describe "when viewing replies notifications tab" do
     fab!(:topic)
 

@@ -53,7 +53,7 @@
             }}</label>
           <Textarea
             @value={{this.pollOptionsText}}
-            {{on "input" (action "onOptionsTextChange")}}
+            {{on "input" this.onOptionsTextChange}}
           />
           {{#if this.showMinNumOfOptionsValidation}}
             {{#unless this.minNumOfOptionsValidation.ok}}
@@ -145,6 +145,15 @@
       {{/unless}}
     {{/unless}}
 
+    <div class="input-group poll-public">
+      <DToggleSwitch
+        @state={{this.publicPoll}}
+        @label="poll.ui_builder.poll_public.label"
+        class="poll-toggle-public"
+        {{on "click" this.togglePublic}}
+      />
+    </div>
+
     {{#if this.showAdvanced}}
       <div class="input-group poll-allowed-groups">
         <label class="input-group-label">{{i18n
@@ -153,7 +162,7 @@
         <GroupChooser
           @content={{this.siteGroups}}
           @value={{this.pollGroups}}
-          @onChange={{action (mut this.pollGroups)}}
+          @onChange={{fn (mut this.pollGroups)}}
           @labelProperty="name"
           @valueProperty="name"
         />
@@ -165,7 +174,7 @@
           }}</label>
         <DateTimeInput
           @date={{this.pollAutoClose}}
-          @onChange={{action (mut this.pollAutoClose)}}
+          @onChange={{fn (mut this.pollAutoClose)}}
           @clearable={{true}}
           @useGlobalPickerContainer={{true}}
         />
@@ -178,9 +187,9 @@
         <ComboBox
           @content={{this.pollResults}}
           @value={{this.pollResult}}
-          @class="poll-result"
           @valueProperty="value"
-          @onChange={{action (mut this.pollResult)}}
+          @onChange={{fn (mut this.pollResult)}}
+          class="poll-result"
         />
       </div>
 
@@ -211,19 +220,6 @@
             <label for="poll-chart-type-pie">{{d-icon "chart-pie"}}
               {{i18n "poll.ui_builder.poll_chart_type.pie"}}</label>
           </div>
-        </div>
-      {{/unless}}
-
-      {{#unless this.isPie}}
-        <div class="input-group poll-checkbox column">
-          <label>
-            <Input
-              @type="checkbox"
-              @checked={{this.publicPoll}}
-              class="poll-toggle-public"
-            />
-            {{i18n "poll.ui_builder.poll_public.label"}}
-          </label>
         </div>
       {{/unless}}
     {{/if}}

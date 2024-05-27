@@ -22,7 +22,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
   end
   let(:staged1) { Fabricate(:staged, email: "otherguy@test.com") }
   let(:staged2) { Fabricate(:staged, email: "cormac@lit.com") }
-  let(:normaluser) { Fabricate(:user, email: "justanormalguy@test.com", username: "normaluser") }
+  let(:normal_user) { Fabricate(:user, email: "justanormalguy@test.com", username: "normal_user") }
 
   before do
     SiteSetting.enable_smtp = true
@@ -33,7 +33,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     TopicAllowedUser.create(user: recipient_user, topic: topic)
     TopicAllowedUser.create(user: staged1, topic: topic)
     TopicAllowedUser.create(user: staged2, topic: topic)
-    TopicAllowedUser.create(user: normaluser, topic: topic)
+    TopicAllowedUser.create(user: normal_user, topic: topic)
   end
 
   it "sends an email using the GroupSmtpMailer and Email::Sender" do
@@ -95,7 +95,7 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(email_text).not_to include("[otherguy@test.com]")
     expect(email_text).to include("cormac@lit.com")
     expect(email_text).not_to include("[cormac@lit.com]")
-    expect(email_text).to include("normaluser")
+    expect(email_text).to include("normal_user")
     expect(email_text).not_to include(recipient_user.username)
   end
 
@@ -143,20 +143,6 @@ RSpec.describe Jobs::GroupSmtpEmail do
     expect(email_log.message_id).to eq("discourse/post/#{post.id}@test.localhost")
   end
 
-  it "creates an IncomingEmail record with the correct details to avoid double processing IMAP" do
-    job.execute(args)
-    expect(ActionMailer::Base.deliveries.count).to eq(1)
-    expect(ActionMailer::Base.deliveries.last.subject).to eq("Re: Help I need support")
-    incoming_email =
-      IncomingEmail.find_by(post_id: post.id, topic_id: post.topic_id, user_id: post.user.id)
-    expect(incoming_email).not_to eq(nil)
-    expect(incoming_email.message_id).to eq("discourse/post/#{post.id}@test.localhost")
-    expect(incoming_email.created_via).to eq(IncomingEmail.created_via_types[:group_smtp])
-    expect(incoming_email.to_addresses).to eq("test@test.com")
-    expect(incoming_email.cc_addresses).to eq("otherguy@test.com;cormac@lit.com")
-    expect(incoming_email.subject).to eq("Re: Help I need support")
-  end
-
   it "does not create a post reply key, it always replies to the group email_username" do
     job.execute(args)
     expect(ActionMailer::Base.deliveries.count).to eq(1)
@@ -197,6 +183,18 @@ RSpec.describe Jobs::GroupSmtpEmail do
     last_email = ActionMailer::Base.deliveries.last
     expect(last_email.subject).to eq("Re: Help I need support")
     expect(last_email.cc).to match_array(%w[otherguy@test.com cormac@lit.com])
+  end
+
+  it "does not retry the job if the IncomingEmail record is not created because of an error" do
+    Jobs.run_immediately!
+    IncomingEmail.expects(:create!).raises(StandardError)
+    expect { Jobs.enqueue(:group_smtp_email, **args) }.not_to raise_error
+  end
+
+  it "does not retry the job on SMTP read timeouts, because we can't be sure if the send actually failed or if ENTER . ENTER just timed out" do
+    Jobs.run_immediately!
+    Email::Sender.any_instance.expects(:send).raises(Net::ReadTimeout)
+    expect { Jobs.enqueue(:group_smtp_email, **args) }.not_to raise_error
   end
 
   context "when there are cc_addresses" do

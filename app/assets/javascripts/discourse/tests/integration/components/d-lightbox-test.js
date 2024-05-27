@@ -56,11 +56,10 @@ module("Integration | Component | d-lightbox", function (hooks) {
     // the content has an aria-labelledby attribute
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).hasAttribute("aria-labelledby");
 
-    assert.strictEqual(
+    assert.true(
       query(SELECTORS.LIGHTBOX_CONTENT)
         .getAttribute("style")
         .match(/--d-lightbox/g).length > 0,
-      true,
       "the content has the correct css variables added"
     );
 

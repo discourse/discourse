@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::ChannelArchiveService do
   class FakeArchiveError < StandardError
   end
 
   fab!(:channel) { Fabricate(:category_channel) }
-  fab!(:user) { Fabricate(:user, admin: true) }
+  fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
   fab!(:category)
 
   let(:topic_params) { { topic_title: "This will be a new topic", category_id: category.id } }
@@ -90,6 +88,14 @@ describe Chat::ChannelArchiveService do
       num.times { Fabricate(:chat_message, chat_channel: channel) }
     end
 
+    def create_threaded_messages(num, title: nil)
+      original_message = Fabricate(:chat_message, chat_channel: channel)
+      thread =
+        Fabricate(:chat_thread, channel: channel, title: title, original_message: original_message)
+      (num - 1).times { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
+      thread.update!(replies_count: num - 1)
+    end
+
     def start_archive
       @channel_archive =
         described_class.create_archive_process(
@@ -109,7 +115,7 @@ describe Chat::ChannelArchiveService do
         reaction_message = Chat::Message.last
         Chat::MessageReaction.create!(
           chat_message: reaction_message,
-          user: Fabricate(:user),
+          user: Fabricate(:user, refresh_auto_groups: true),
           emoji: "+1",
         )
         stub_const(Chat::ChannelArchiveService, "ARCHIVED_MESSAGES_PER_POST", 5) do
@@ -139,6 +145,63 @@ describe Chat::ChannelArchiveService do
         expect(topic.archived).to eq(true)
 
         expect(@channel_archive.archived_messages).to eq(50)
+        expect(@channel_archive.chat_channel.status).to eq("archived")
+        expect(@channel_archive.chat_channel.chat_messages.count).to eq(0)
+      end
+
+      xit "creates the correct posts for a channel with messages and threads" do
+        channel.update!(threading_enabled: true)
+
+        create_messages(2)
+        create_threaded_messages(6, title: "a new thread")
+        create_messages(7)
+        create_threaded_messages(3)
+        create_threaded_messages(27, title: "another long thread")
+        create_messages(10)
+
+        start_archive
+
+        stub_const(Chat::ChannelArchiveService, "ARCHIVED_MESSAGES_PER_POST", 5) do
+          described_class.new(@channel_archive).execute
+        end
+
+        @channel_archive.reload
+        topic = @channel_archive.destination_topic
+        expect(topic.posts.count).to eq(14)
+
+        topic
+          .posts
+          .where.not(post_number: 1)
+          .each do |post|
+            case post.post_number
+            when 2
+              expect(post.raw).to include("a new thread")
+              expect(post.raw).to include(
+                I18n.t("chat.transcript.split_thread_range", start: 1, end: 2, total: 5),
+              )
+            when 3
+              expect(post.raw).to include("a new thread")
+              expect(post.raw).to include(
+                I18n.t("chat.transcript.split_thread_range", start: 3, end: 5, total: 5),
+              )
+            when 5
+              expect(post.raw).to include(
+                "threadTitle=\"#{I18n.t("chat.transcript.default_thread_title")}\"",
+              )
+            when 10
+              expect(post.raw).to include("another long thread")
+              expect(post.raw).to include(
+                I18n.t("chat.transcript.split_thread_range", start: 17, end: 20, total: 26),
+              )
+            end
+
+            expect(post.raw).to include("[chat")
+            expect(post.raw).to include("noLink=\"true\"")
+            expect(post.user).to eq(Discourse.system_user)
+          end
+        expect(topic.archived).to eq(true)
+
+        expect(@channel_archive.archived_messages).to eq(55)
         expect(@channel_archive.chat_channel.status).to eq("archived")
         expect(@channel_archive.chat_channel.chat_messages.count).to eq(0)
       end

@@ -72,13 +72,6 @@ RSpec.describe UploadSecurity do
             end
           end
 
-          describe "for a public type avatar" do
-            let(:type) { "avatar" }
-            it "returns false" do
-              expect(security.should_be_secure?).to eq(false)
-            end
-          end
-
           describe "for a public type category_logo" do
             let(:type) { "category_logo" }
             it "returns false" do

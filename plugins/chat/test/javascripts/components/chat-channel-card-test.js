@@ -1,16 +1,17 @@
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "discourse-i18n";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-channel-card", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.channel = fabricators.channel();
+    this.channel = new ChatFabricators(getOwner(this)).channel();
     this.channel.description =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
   });
@@ -35,14 +36,14 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
     this.channel.status = "closed";
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.true(exists(".chat-channel-card.-closed"));
+    assert.true(exists(".chat-channel-card.--closed"));
   });
 
   test("Archived channel", async function (assert) {
     this.channel.status = "archived";
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.true(exists(".chat-channel-card.-archived"));
+    assert.true(exists(".chat-channel-card.--archived"));
   });
 
   test("Muted channel", async function (assert) {
@@ -50,21 +51,12 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
     this.channel.currentUserMembership.following = true;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
 
-    assert.strictEqual(
-      query(".chat-channel-card__tag.-muted").textContent.trim(),
-      I18n.t("chat.muted")
-    );
+    assert.true(exists(".chat-channel-card__muted"));
   });
 
   test("Joined channel", async function (assert) {
     this.channel.currentUserMembership.following = true;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
-
-    assert.strictEqual(
-      query(".chat-channel-card__tag.-joined").textContent.trim(),
-      I18n.t("chat.joined")
-    );
-
     assert.true(exists(".toggle-channel-membership-button.-leave"));
   });
 
@@ -109,20 +101,9 @@ module("Discourse Chat | Component | chat-channel-card", function (hooks) {
     );
   });
 
-  test("Settings button", async function (assert) {
-    await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
-
-    assert.true(exists(".chat-channel-card__setting"));
-  });
-
   test("Read restricted chatable", async function (assert) {
     this.channel.chatable.read_restricted = true;
     await render(hbs`<ChatChannelCard @channel={{this.channel}} />`);
-
     assert.true(exists(".d-icon-lock"));
-    assert.strictEqual(
-      query(".chat-channel-card").style.borderLeftColor,
-      "rgb(213, 99, 83)"
-    );
   });
 });

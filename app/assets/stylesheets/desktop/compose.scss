@@ -11,6 +11,10 @@
     }
   }
 
+  .autocomplete {
+    max-width: 600px;
+  }
+
   .select-kit.is-expanded {
     z-index: z("composer", "dropdown") + 1;
   }
@@ -18,12 +22,19 @@
   &.private-message {
     .with-tags {
       .title-and-category {
-        flex-wrap: nowrap; // force title and tags on same line for PMs
+        flex-wrap: nowrap;
+        gap: 0.5em;
         .mini-tag-chooser {
+          max-width: 50%;
           margin-bottom: 8px; // match title input margin
-          flex: 0 0 auto;
-          margin-left: 8px; // matches margin between category and tag input
-          width: 39%;
+          flex: 1 1 auto;
+        }
+      }
+      .title-input {
+        max-width: 50%;
+        min-width: 0;
+        input {
+          min-width: 0;
         }
       }
     }
@@ -128,8 +139,8 @@
     flex-direction: row-reverse;
     align-items: center;
     position: absolute;
-    right: 0.67em;
-    top: 0.67em;
+    right: 0;
+    top: 0;
     color: var(--primary-medium);
     font-size: var(--font-0);
     .d-icon {
@@ -180,6 +191,10 @@
 .similar-topics {
   background-color: var(--tertiary-low);
 
+  .similar-topic {
+    margin-bottom: 0.5em;
+  }
+
   a[href] {
     color: var(--primary);
   }
@@ -188,39 +203,39 @@
     background-color: var(--tertiary);
   }
 
-  .search-link {
-    .topic-title {
-      flex: 0 1 auto;
-      margin-right: 0.5em;
-    }
-    span.badge-wrapper {
-      margin-left: 0;
-    }
-    .blurb {
+  .topic-title {
+    flex: 0 1 auto;
+    margin-right: 0.5em;
+  }
+  span.badge-wrapper {
+    margin-left: 0;
+  }
+  .blurb {
+    color: var(--primary-high);
+  }
+  .topic-title,
+  .blurb {
+    margin-bottom: 0.5em;
+    .d-icon {
       color: var(--primary-high);
     }
-    .topic-title,
-    .blurb {
-      .d-icon {
-        color: var(--primary-high);
-      }
+  }
+  span.topic {
+    display: flex;
+    flex-direction: column;
+
+    .first-line {
+      flex: 1;
     }
-    span.topic {
+
+    .second-line {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5em;
 
-      .first-line {
-        flex: 1;
-      }
-
-      .second-line {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-
-        .discourse-tags {
-          font-size: var(--font-down-1);
-        }
+      .discourse-tags {
+        font-size: var(--font-down-1);
       }
     }
   }

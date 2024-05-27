@@ -32,7 +32,7 @@ jobs:
           git config --global user.name "Discourse CI"
 
       - name: Bundler cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
@@ -55,7 +55,7 @@ jobs:
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
@@ -76,10 +76,4 @@ jobs:
         run: |
           yarn global add licensee
           yarn global upgrade licensee
-          licensee --errors-only
-
-      - name: Check Ember CLI Workspace Licenses
-        if: ${{ !cancelled() }}
-        working-directory: ./app/assets/javascripts
-        run: |
           licensee --errors-only

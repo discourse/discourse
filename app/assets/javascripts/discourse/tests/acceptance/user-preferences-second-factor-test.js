@@ -1,4 +1,10 @@
-import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
+import {
+  click,
+  currentRouteName,
+  fillIn,
+  triggerKeyEvent,
+  visit,
+} from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
@@ -50,6 +56,10 @@ acceptance("User Preferences - Second Factor", function (needs) {
       return helper.response({
         backup_codes: ["dsffdsd", "fdfdfdsf", "fddsds"],
       });
+    });
+
+    server.get("/u/trusted-session.json", () => {
+      return helper.response({ success: "OK" });
     });
   });
 
@@ -128,6 +138,25 @@ acceptance("User Preferences - Second Factor", function (needs) {
       query("#dialog-title").innerText.trim(),
       "Are you sure you want to disable two-factor authentication?"
     );
+  });
+
+  test("rename second factor security method", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
+    await visit("/u/eviltrout/preferences/second-factor");
+
+    assert
+      .dom(".security-key .second-factor-item")
+      .exists("User has a physical security key");
+
+    await click(".security-key-dropdown .select-kit-header");
+    await click(".security-key-dropdown li[data-name='Edit']");
+
+    await fillIn("input[name='security-key-name']", "keyname changed");
+    await triggerKeyEvent(".d-modal .btn-primary", "keydown", "Enter");
+
+    assert
+      .dom(".d-modal__container")
+      .doesNotExist("modal is closed when form is submitted via keyboard");
   });
 });
 

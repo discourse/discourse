@@ -91,8 +91,18 @@ class PrivateMessageTopicTrackingState extends Service {
     });
   }
 
-  resetIncomingTracking() {
-    if (this.isTrackingIncoming) {
+  resetIncomingTracking(topicIds) {
+    if (!this.isTrackingIncoming) {
+      return;
+    }
+
+    if (topicIds) {
+      const topicIdSet = new Set(topicIds);
+      this.set(
+        "newIncoming",
+        this.newIncoming.filter((id) => !topicIdSet.has(id))
+      );
+    } else {
       this.set("newIncoming", []);
     }
   }

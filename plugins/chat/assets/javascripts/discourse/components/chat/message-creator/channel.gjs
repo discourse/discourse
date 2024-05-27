@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { gt, not } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
-import gt from "truth-helpers/helpers/gt";
-import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class Channel extends Component {
   @service currentUser;
@@ -16,10 +16,14 @@ export default class Channel extends Component {
   }
 
   <template>
-    <div class="chat-message-creator__chatable-category-channel">
-      <ChatChannelTitle @channel={{@item.model}} />
+    <div
+      class="chat-message-creator__chatable -category-channel"
+      data-disabled={{not @item.enabled}}
+    >
+      <ChannelTitle @channel={{@item.model}} />
 
       {{#if (gt @item.tracking.unreadCount 0)}}
+
         <div
           class={{concatClass "unread-indicator" (if this.isUrgent "-urgent")}}
         ></div>

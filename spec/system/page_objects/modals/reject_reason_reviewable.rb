@@ -18,7 +18,7 @@ module PageObjects
       end
 
       def delete_user
-        modal.find(".modal-footer .btn.btn-danger").click
+        modal.find(".d-modal__footer .btn.btn-danger").click
       end
     end
   end

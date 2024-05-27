@@ -23,6 +23,10 @@ describe "Topic list focus", type: :system do
     )&.to_i
   end
 
+  def focussed_post_id
+    page.evaluate_script("document.activeElement.closest('.onscreen-post')?.dataset.postId")&.to_i
+  end
+
   it "refocusses last clicked topic when going back to topic list" do
     visit("/latest")
     expect(page).to have_css("body.navigation-topics")
@@ -80,5 +84,27 @@ describe "Topic list focus", type: :system do
     page.go_back
     expect(page).to have_css("body.navigation-topics")
     expect(focussed_topic_id).to eq(nil)
+  end
+
+  it "refocusses properly when there are multiple pages of topics" do
+    extra_topics = Fabricate.times(25, :post).map(&:topic)
+    oldest_topic = Fabricate(:post).topic
+    oldest_topic.update(bumped_at: 1.day.ago)
+
+    visit("/latest")
+
+    # Scroll to bottom for infinite load
+    page.execute_script <<~JS
+      document.querySelectorAll('.topic-list-item')[24].scrollIntoView(true);
+    JS
+
+    # Click a topic
+    discovery.topic_list.visit_topic(oldest_topic)
+    expect(topic).to have_topic_title(oldest_topic.title)
+
+    # Going back to the topic-list should re-focus
+    page.go_back
+    expect(page).to have_css("body.navigation-topics")
+    expect(focussed_topic_id).to eq(oldest_topic.id)
   end
 end

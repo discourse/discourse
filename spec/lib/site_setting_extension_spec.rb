@@ -330,6 +330,8 @@ RSpec.describe SiteSettingExtension do
 
   describe "string setting with regex" do
     it "Supports custom validation errors" do
+      I18n.backend.store_translations(:en, { oops: "oops" })
+
       settings.setting(:test_str, "bob", regex: "hi", regex_error: "oops")
       settings.refresh!
 
@@ -390,6 +392,7 @@ RSpec.describe SiteSettingExtension do
       def self.valid_value?(v)
         true
       end
+
       def self.values
         [1, 2, 3]
       end
@@ -409,9 +412,11 @@ RSpec.describe SiteSettingExtension do
       def self.valid_value?(v)
         self.values.include?(v)
       end
+
       def self.values
         ["en"]
       end
+
       def self.translate_names?
         false
       end
@@ -854,6 +859,29 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "mandatory_values for group list settings" do
+    it "adds mandatory values" do
+      expect(SiteSetting.embedded_media_post_allowed_groups).to eq("1|2|10")
+
+      SiteSetting.embedded_media_post_allowed_groups = 14
+      expect(SiteSetting.embedded_media_post_allowed_groups).to eq("1|2|14")
+
+      SiteSetting.embedded_media_post_allowed_groups = ""
+      expect(SiteSetting.embedded_media_post_allowed_groups).to eq("1|2")
+
+      test_provider = SiteSetting.provider
+      SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
+      SiteSetting.embedded_media_post_allowed_groups = "13|14"
+      expect(SiteSetting.embedded_media_post_allowed_groups).to eq("1|2|13|14")
+      expect(SiteSetting.find_by(name: "embedded_media_post_allowed_groups").value).to eq(
+        "1|2|13|14",
+      )
+    ensure
+      SiteSetting.find_by(name: "embedded_media_post_allowed_groups").destroy
+      SiteSetting.provider = test_provider
+    end
+  end
+
   describe "_map extension for list settings" do
     it "handles splitting group_list settings" do
       SiteSetting.personal_message_enabled_groups = "1|2"
@@ -878,6 +906,16 @@ RSpec.describe SiteSettingExtension do
     it "does not handle splitting secret list settings" do
       SiteSetting.discourse_connect_provider_secrets = "test|secret1\ntest2|secret2"
       expect(SiteSetting.respond_to?(:discourse_connect_provider_secrets_map)).to eq(false)
+    end
+
+    it "handles splitting emoji_list settings" do
+      SiteSetting.emoji_deny_list = "smile|frown"
+      expect(SiteSetting.emoji_deny_list_map).to eq(%w[smile frown])
+    end
+
+    it "handles splitting tag_list settings" do
+      SiteSetting.digest_suppress_tags = "blah|blah2"
+      expect(SiteSetting.digest_suppress_tags_map).to eq(%w[blah blah2])
     end
 
     it "handles null values for settings" do

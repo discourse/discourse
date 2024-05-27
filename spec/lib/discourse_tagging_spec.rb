@@ -6,8 +6,8 @@ require "discourse_tagging"
 # More tests are found in the category_tag_spec integration specs
 
 RSpec.describe DiscourseTagging do
-  fab!(:admin)
-  fab!(:user)
+  fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:admin_guardian) { Guardian.new(admin) }
   let(:guardian) { Guardian.new(user) }
 
@@ -17,8 +17,8 @@ RSpec.describe DiscourseTagging do
 
   before do
     SiteSetting.tagging_enabled = true
-    SiteSetting.min_trust_to_create_tag = 0
-    SiteSetting.min_trust_level_to_tag_topics = 0
+    SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+    SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
   end
 
   describe "visible_tags" do
@@ -424,6 +424,24 @@ RSpec.describe DiscourseTagging do
             for_input: true,
           ).map(&:name)
         expect(tags).to contain_exactly(tag1.name, tag3.name)
+      end
+
+      context "with tags with underscores" do
+        fab!(:tag_with_underscore) { Fabricate(:tag, name: "tag_1") }
+        fab!(:another_tag_with_underscore) do
+          Fabricate(:tag, name: "tag_1a", public_topic_count: 10)
+        end
+
+        it "puts the exact match at the start of the results" do
+          tags =
+            DiscourseTagging.filter_allowed_tags(
+              nil,
+              term: "tag_1",
+              order_search_results: true,
+            ).map(&:name)
+
+          expect(tags).to eq(%w[tag_1 tag_1a])
+        end
       end
 
       context "with tag with colon" do
@@ -1478,6 +1496,11 @@ RSpec.describe DiscourseTagging do
 
       it "removes zero-width spaces" do
         expect(DiscourseTagging.clean_tag("hel\ufefflo")).to eq("hello")
+      end
+
+      it "removes multiple consecutive dashes" do
+        expect(DiscourseTagging.clean_tag("hello---world")).to eq("hello-world")
+        expect(DiscourseTagging.clean_tag("Finances & Accounting")).to eq("finances-accounting")
       end
     end
   end

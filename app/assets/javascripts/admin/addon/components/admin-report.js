@@ -220,11 +220,11 @@ export default class AdminReport extends Component {
 
   @action
   refreshReport(options = {}) {
-    if (!this.attrs.onRefresh) {
+    if (!this.onRefresh) {
       return;
     }
 
-    this.attrs.onRefresh({
+    this.onRefresh({
       type: this.get("model.type"),
       mode: this.currentMode,
       chartGrouping: options.chartGrouping,

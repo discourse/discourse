@@ -1,13 +1,27 @@
 # frozen_string_literal: true
 
-require "rails_helper"
 require "ostruct"
 
 RSpec.describe "topics/show.html.erb" do
-  fab!(:topic)
+  fab!(:category)
+  fab!(:topic) { Fabricate(:topic, category: category) }
+
+  it "uses subfolder-safe category url" do
+    set_subfolder "/subpath"
+    topic_view = OpenStruct.new(topic: topic, posts: [], crawler_posts: [])
+    topic_view.stubs(:summary).returns("")
+    view.stubs(:crawler_layout?).returns(false)
+    assign(:topic_view, topic_view)
+    assign(:breadcrumbs, [{ name: category.name, color: category.color }])
+    assign(:tags, [])
+
+    render template: "topics/show", formats: [:html]
+
+    assert_select "a[href='/subpath/c/#{category.slug}/#{category.id}']"
+  end
 
   it "add nofollow to RSS alternate link for topic" do
-    topic_view = OpenStruct.new(topic: topic, posts: [])
+    topic_view = OpenStruct.new(topic: topic, posts: [], crawler_posts: [])
     topic_view.stubs(:summary).returns("")
     view.stubs(:crawler_layout?).returns(false)
     view.stubs(:url_for).returns("https://www.example.com/test.rss")

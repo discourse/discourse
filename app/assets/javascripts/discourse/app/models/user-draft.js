@@ -1,3 +1,4 @@
+import { service } from "@ember/service";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import {
@@ -5,20 +6,21 @@ import {
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
-import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
-export default RestModel.extend({
+export default class UserDraft extends RestModel {
+  @service currentUser;
+
   @discourseComputed("draft_username")
   editableDraft(draftUsername) {
-    return draftUsername === User.currentProp("username");
-  },
+    return draftUsername === this.currentUser?.get("username");
+  }
 
   @discourseComputed("username_lower")
   userUrl(usernameLower) {
     return userPath(usernameLower);
-  },
+  }
 
   @discourseComputed("topic_id")
   postUrl(topicId) {
@@ -27,7 +29,7 @@ export default RestModel.extend({
     }
 
     return postUrl(this.slug, this.topic_id, this.post_number);
-  },
+  }
 
   @discourseComputed("draft_key")
   draftType(draftKey) {
@@ -39,5 +41,5 @@ export default RestModel.extend({
       default:
         return false;
     }
-  },
-});
+  }
+}

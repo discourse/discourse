@@ -1,93 +1,36 @@
-{{#if this.model.length}}
-  <h3>{{i18n "admin.plugins.installed"}}</h3>
+<DBreadcrumbsContainer />
 
-  <table class="admin-plugins grid">
-    <thead>
-      <tr>
-        <th></th>
-        <th>{{i18n "admin.plugins.name"}}</th>
-        <th>{{i18n "admin.plugins.version"}}</th>
-        <th>{{i18n "admin.plugins.enabled"}}</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#each this.model as |plugin|}}
-        <tr data-plugin-name={{plugin.name}}>
-          <td>
-            {{#if plugin.isOfficial}}
-              {{d-icon
-                "check-circle"
-                title="admin.plugins.official"
-                class="admin-plugins-official-badge"
-              }}
-            {{/if}}
-          </td>
+<DBreadcrumbsItem as |linkClass|>
+  <LinkTo @route="admin" class={{linkClass}}>
+    {{i18n "admin_title"}}
+  </LinkTo>
+</DBreadcrumbsItem>
 
-          <td class="plugin-name">
-            <div class="name">
-              {{#if plugin.url}}
-                <a
-                  href={{plugin.url}}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >{{plugin.name}} {{d-icon "external-link-alt"}}</a>
-              {{else}}
-                {{plugin.name}}
-              {{/if}}
-            </div>
-            <div class="about">
-              {{plugin.about}}
-            </div>
-          </td>
-          <td class="version">
-            <div class="label">{{i18n "admin.plugins.version"}}</div>
-            {{plugin.version}}<br />
-            <PluginCommitHash @plugin={{plugin}} />
-          </td>
-          <td class="col-enabled">
-            <div class="label">{{i18n "admin.plugins.enabled"}}</div>
-            {{#if plugin.enabledSetting}}
-              <DToggleSwitch
-                @state={{plugin.enabled}}
-                {{on "click" (fn this.togglePluginEnabled plugin)}}
-              />
-            {{else}}
-              <DToggleSwitch @state={{plugin.enabled}} disabled={{true}} />
-            {{/if}}
-          </td>
-          <td class="settings">
-            {{#if this.currentUser.admin}}
-              {{#if plugin.hasSettings}}
-                <LinkTo
-                  class="btn-default btn btn-icon-text"
-                  @route="adminSiteSettingsCategory"
-                  @model={{plugin.settingCategoryName}}
-                  @query={{hash filter=(concat "plugin:" plugin.name)}}
-                  data-plugin-setting-button={{plugin.name}}
-                >
-                  {{d-icon "cog"}}
-                  {{i18n "admin.plugins.change_settings_short"}}
-                </LinkTo>
-              {{/if}}
-            {{/if}}
-          </td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
-{{else}}
-  <p>{{i18n "admin.plugins.none_installed"}}</p>
-{{/if}}
+<DBreadcrumbsItem as |linkClass|>
+  <LinkTo @route="adminPlugins" class={{linkClass}}>
+    {{i18n "admin.plugins.title"}}
+  </LinkTo>
+</DBreadcrumbsItem>
 
-<p class="admin-plugins-howto"><a
-    href="https://meta.discourse.org/t/install-a-plugin/19157"
-  >{{i18n "admin.plugins.howto"}}</a></p>
+<div class="admin-plugins-list-container">
+  {{#if this.model.length}}
+    <h2>{{i18n "admin.plugins.installed"}}</h2>
+    <AdminPluginsList @plugins={{this.model}} />
+  {{else}}
+    <p>{{i18n "admin.plugins.none_installed"}}</p>
+  {{/if}}
 
-<span>
-  <PluginOutlet
-    @name="admin-below-plugins-index"
-    @connectorTagName="div"
-    @outletArgs={{hash model=this.model}}
-  />
-</span>
+  <p class="admin-plugins-howto">
+    <a href="https://meta.discourse.org/t/install-a-plugin/19157">
+      {{i18n "admin.plugins.howto"}}
+    </a>
+  </p>
+
+  <span>
+    <PluginOutlet
+      @name="admin-below-plugins-index"
+      @connectorTagName="div"
+      @outletArgs={{hash model=this.model}}
+    />
+  </span>
+</div>

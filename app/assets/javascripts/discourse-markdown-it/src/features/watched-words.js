@@ -16,7 +16,7 @@ function isLinkClose(str) {
 function findAllMatches(text, matchers) {
   const matches = [];
 
-  for (const { word, pattern, replacement, link } of matchers) {
+  for (const { word, pattern, replacement, link, html } of matchers) {
     if (matches.length >= MAX_MATCHES) {
       break;
     }
@@ -28,6 +28,7 @@ function findAllMatches(text, matchers) {
           text: match[1],
           replacement,
           link,
+          html,
         });
 
         if (matches.length >= MAX_MATCHES) {
@@ -65,6 +66,7 @@ export function setup(helper) {
             pattern: createWatchedWordRegExp(word),
             replacement: options.replacement,
             link: false,
+            html: options.html,
           });
         }
       );
@@ -239,7 +241,8 @@ export function setup(helper) {
                   nodes.push(token);
                 }
               } else {
-                token = new state.Token("text", "", 0);
+                let tokenType = matches[ln].html ? "html_inline" : "text";
+                token = new state.Token(tokenType, "", 0);
                 token.content = matches[ln].replacement;
                 token.level = level;
                 nodes.push(token);

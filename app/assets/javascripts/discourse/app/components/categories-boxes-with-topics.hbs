@@ -1,10 +1,9 @@
 {{#each this.categories as |c|}}
   <div
     data-notification-level={{c.notificationLevelString}}
-    style={{unless this.noCategoryStyle (category-color-variable c.color)}}
+    style={{category-color-variable c.color}}
     class="category category-box category-box-{{c.slug}}
-      {{if c.isMuted 'muted'}}
-      {{if this.noCategoryStyle 'no-category-boxes-style'}}"
+      {{if c.isMuted 'muted'}}"
   >
     <div class="category-box-inner">
       <div class="category-box-heading">

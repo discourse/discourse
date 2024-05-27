@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Chat | composer | channel", type: :system, js: true do
+RSpec.describe "Chat | composer | channel", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
   fab!(:current_user) { Fabricate(:admin) }
@@ -18,7 +18,12 @@ RSpec.describe "Chat | composer | channel", type: :system, js: true do
   describe "reply to message" do
     context "when raw contains html" do
       fab!(:message_1) do
-        Fabricate(:chat_message, chat_channel: channel_1, message: "<mark>not marked</mark>")
+        Fabricate(
+          :chat_message,
+          use_service: true,
+          chat_channel: channel_1,
+          message: "<mark>not marked</mark>",
+        )
       end
 
       it "renders text in the details" do
@@ -97,6 +102,21 @@ RSpec.describe "Chat | composer | channel", type: :system, js: true do
         expect(channel_page.composer).to be_editing_no_message
         expect(channel_page.composer.value).to eq("")
       end
+    end
+  end
+
+  context "when click on reply indicator" do
+    before do
+      Fabricate(:chat_message, chat_channel: channel_1)
+      Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: message_1)
+    end
+
+    it "highlights the message" do
+      chat_page.visit_channel(channel_1)
+
+      page.find(".chat-reply").click
+
+      expect(channel_page.messages).to have_message(id: message_1.id, highlighted: true)
     end
   end
 end

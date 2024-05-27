@@ -8,8 +8,13 @@
 
 {{#if this.topics}}
   {{#each this.topics as |t|}}
-    <LatestTopicListItem @topic={{t}} />
+    {{#if this.currentUser.use_glimmer_topic_list}}
+      <TopicList::LatestTopicListItem @topic={{t}} />
+    {{else}}
+      <LatestTopicListItem @topic={{t}} />
+    {{/if}}
   {{/each}}
+
   <div class="more-topics">
     {{#if
       (eq

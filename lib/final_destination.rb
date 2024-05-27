@@ -11,6 +11,9 @@ class FinalDestination
   class SSRFError < SocketError
   end
 
+  class UrlEncodingError < ArgumentError
+  end
+
   MAX_REQUEST_TIME_SECONDS = 10
   MAX_REQUEST_SIZE_BYTES = 5_242_880 # 1024 * 1024 * 5
 
@@ -84,6 +87,7 @@ class FinalDestination
         end
       )
     @stop_at_blocked_pages = @opts[:stop_at_blocked_pages]
+    @extra_headers = @opts[:headers]
   end
 
   def self.connection_timeout
@@ -118,6 +122,7 @@ class FinalDestination
       "Host" => @uri.hostname + (@include_port_in_host_header ? ":#{@uri.port}" : ""),
     }
 
+    result.merge!(@extra_headers) if @extra_headers
     result["Cookie"] = @cookie if @cookie
 
     result
@@ -151,7 +156,7 @@ class FinalDestination
 
   # this is a new interface for simply getting
   # N bytes accounting for all internal logic
-  def get(redirects = @limit, extra_headers: {}, &blk)
+  def get(redirects = @limit, extra_headers: {}, except_headers: [], &blk)
     raise "Must specify block" unless block_given?
 
     if @uri && @uri.port == 80 && FinalDestination.is_https_domain?(@uri.hostname)
@@ -162,7 +167,7 @@ class FinalDestination
     return if !validate_uri
     return if @stop_at_blocked_pages && blocked_domain?(@uri)
 
-    result, headers_subset = safe_get(@uri, &blk)
+    result, headers_subset = safe_get(@uri, except_headers:, &blk)
     return if !result
 
     cookie = headers_subset.set_cookie
@@ -193,7 +198,12 @@ class FinalDestination
       extra = nil
       extra = { "Cookie" => cookie } if cookie
 
-      get(redirects - 1, extra_headers: extra, &blk)
+      # Most HTTP Clients strip the Authorization header on redirects as the client could be redirecting to a untrusted
+      # party. Not stripping the Authorization header on redirect can also lead to problems where the
+      # redirected party does not expect a Authorization header and thus rejects the request.
+      except_headers = ["Authorization"]
+
+      get(redirects - 1, extra_headers: extra, except_headers:, &blk)
     elsif result == :ok
       @uri.to_s
     else
@@ -241,10 +251,10 @@ class FinalDestination
       lambda do |chunk, _remaining_bytes, _total_bytes|
         response_body << chunk
         if response_body.bytesize > MAX_REQUEST_SIZE_BYTES
-          raise Excon::Errors::ExpectationFailed.new("response size too big: #{@uri.to_s}")
+          raise Excon::Errors::ExpectationFailed.new("response size too big: #{@uri}")
         end
         if Time.now - request_start_time > MAX_REQUEST_TIME_SECONDS
-          raise Excon::Errors::ExpectationFailed.new("connect timeout reached: #{@uri.to_s}")
+          raise Excon::Errors::ExpectationFailed.new("connect timeout reached: #{@uri}")
         end
       end
 
@@ -423,7 +433,7 @@ class FinalDestination
     return true if @uri.port == 80
 
     allowed_internal_hosts =
-      SiteSetting.allowed_internal_hosts&.split(/[|\n]/).filter_map { |aih| aih.strip.presence }
+      SiteSetting.allowed_internal_hosts&.split(/[|\n]/)&.filter_map { |aih| aih.strip.presence }
     return false if allowed_internal_hosts.empty? || SiteSetting.s3_endpoint.blank?
     return false if allowed_internal_hosts.none? { |aih| hostname_matches_s3_endpoint?(aih) }
 
@@ -457,6 +467,8 @@ class FinalDestination
 
   def normalized_url
     UrlHelper.normalized_encode(@url)
+  rescue ArgumentError => e
+    raise UrlEncodingError, e.message
   end
 
   def log(log_level, message)
@@ -471,7 +483,7 @@ class FinalDestination
 
   protected
 
-  def safe_get(uri)
+  def safe_get(uri, except_headers: [])
     result = nil
     unsafe_close = false
     headers_subset = Struct.new(:location, :set_cookie).new
@@ -481,7 +493,7 @@ class FinalDestination
         request_headers.merge(
           "Accept-Encoding" => "gzip",
           "Host" => uri.hostname + (@include_port_in_host_header ? ":#{uri.port}" : ""),
-        )
+        ).except(*except_headers)
 
       req = FinalDestination::HTTP::Get.new(uri.request_uri, headers)
 

@@ -142,6 +142,17 @@ RSpec.describe Chat::UpdateChannel do
           end
         end
       end
+
+      describe "#update_site_settings" do
+        before do
+          SiteSetting.chat_threads_enabled = false
+          params[:threading_enabled] = true
+        end
+
+        it "sets chat_threads_enabled to true" do
+          expect { result }.to change { SiteSetting.chat_threads_enabled }.from(false).to(true)
+        end
+      end
     end
   end
 end

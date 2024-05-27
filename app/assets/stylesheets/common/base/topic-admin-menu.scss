@@ -1,42 +1,10 @@
 // Styles for the topic admin menu
 
 .topic-admin-popup-menu {
-  @include breakpoint(mobile-extra-large) {
-    width: calc(100% - 20px);
-    margin: 0 10px;
-    padding: 0;
-    padding-bottom: env(safe-area-inset-bottom);
-    z-index: z("modal", "popover");
-
-    @keyframes slideUp {
-      0% {
-        transform: translateY(100%);
-      }
-      100% {
-        transform: translateY(0);
-      }
-    }
-    animation: slideUp 0.3s;
-    @media (prefers-reduced-motion) {
-      animation-duration: 0s;
-    }
-  }
-
-  .mobile-view & {
-    z-index: z("modal", "popover");
-  }
-
-  .btn {
-    padding: 0.5rem;
-
-    .d-icon {
-      font-size: var(--font-down-1);
-      margin-top: 2px; // vertical alignment
-      margin-right: 1rem;
-    }
-  }
-
   ul {
+    margin: 0;
+    list-style: none;
+
     li {
       border: none;
       &:not(:last-of-type) {
@@ -45,83 +13,28 @@
       }
     }
     ul {
-      padding: 0.5rem;
+      padding: 0.5em;
       &:not(:last-of-type) {
         border-bottom: 1px solid var(--primary-low);
       }
     }
-  }
-}
 
-.modal-body.feature-topic {
-  max-height: 70vh !important;
-  padding: 0 1em;
-  input.date-picker {
-    margin: 0;
-  }
-  .feature-section {
-    display: block;
-    padding: 1.25em 0;
-    &:not(:last-of-type) {
-      border-bottom: 1px solid var(--primary-low);
-    }
-    .badge-wrapper {
-      margin-right: 0;
-    }
-    .desc {
-      display: inline-block;
-      vertical-align: middle;
-      p:first-of-type {
-        margin: 0;
-      }
-      p {
-        margin: 10px 0 0;
-        max-width: 31em;
-      }
-    }
-    .with-validation {
-      position: relative;
-
-      > span {
-        display: flex;
-        align-items: flex-start;
-        > .d-icon {
-          padding-top: 0.75em;
-          margin-right: 0.5em;
-        }
-      }
+    .btn {
+      justify-content: left;
+      text-align: left;
+      width: 100%;
+      padding: 0.5em;
     }
   }
 }
 
-.desktop-view .feature-topic-modal {
-  .pin-until {
-    position: relative;
-    display: inline-block;
-  }
-  .modal-inner-container {
-    overflow: visible;
-  }
-  .modal-footer {
-    background: var(--secondary);
+.fk-d-menu {
+  .topic-admin-popup-menu {
+    width: 14em;
   }
 }
 
-.mobile-view .feature-topic .feature-section {
-  .desc {
-    display: block;
-    clear: both;
-    max-width: 90%;
-    margin: 0;
-  }
-  .badge-wrapper {
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: 19em;
-  }
-}
-
-// Select posts
+// Styles for select posts mini menu
 
 .selected-posts {
   border: 1px solid var(--tertiary-medium);

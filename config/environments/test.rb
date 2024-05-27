@@ -9,6 +9,12 @@ Discourse::Application.configure do
   # and recreated between test runs.  Don't rely on the data there!
   config.cache_classes = true
 
+  # Eager loading loads your entire application. When running a single test locally,
+  # this is usually not necessary, and can slow down your test suite. However, it's
+  # recommended that you enable it in continuous integration systems to ensure eager
+  # loading is working properly before deploying your code.
+  config.eager_load = ENV["CI"].present?
+
   # Configure static asset server for tests with Cache-Control for performance
   config.public_file_server.enabled = true
 
@@ -44,7 +50,27 @@ Discourse::Application.configure do
   config.assets.compile = true
   config.assets.digest = false
 
-  config.eager_load = ENV["DISCOURSE_ZEITWERK_EAGER_LOAD"] == "1"
+  config.active_record.verbose_query_logs = true
+  config.active_record.query_log_tags_enabled = true
+
+  config.active_record.query_log_tags = [
+    :application,
+    :controller,
+    :action,
+    {
+      request_path: ->(context) { context[:controller]&.request&.path },
+      thread_id: ->(context) { Thread.current.object_id },
+    },
+  ]
+
+  # Catch missing translations during test runs.
+  config.i18n.raise_on_missing_translations = true
+
+  config.after_initialize do
+    ActiveRecord::LogSubscriber.backtrace_cleaner.add_silencer do |line|
+      line =~ %r{lib/freedom_patches}
+    end
+  end
 
   if ENV["RAILS_ENABLE_TEST_LOG"]
     config.logger = Logger.new(STDOUT)
@@ -72,13 +98,14 @@ Discourse::Application.configure do
       # Most existing tests were written assuming allow_uncategorized_topics
       # was enabled, so we should set it to true.
       s.set_regardless_of_locale(:allow_uncategorized_topics, true)
-
-      # disable plugins
-      if ENV["LOAD_PLUGINS"] == "1"
-        s.set_regardless_of_locale(:discourse_narrative_bot_enabled, false)
-      end
     end
 
     SiteSetting.refresh!
+  end
+
+  if ENV["CI"].present?
+    config.to_prepare do
+      ActiveSupport.on_load(:active_record_postgresqladapter) { self.create_unlogged_tables = true }
+    end
   end
 end

@@ -14,7 +14,7 @@ class SidebarSiteSettingsBackfiller
     @linkable_klass, previous_ids, new_ids =
       case setting_name
       when "default_navigation_menu_categories"
-        [Category, previous_value.split("|"), new_value.split("|")]
+        [Category, previous_value.split("|").map(&:to_i), new_value.split("|").map(&:to_i)]
       when "default_navigation_menu_tags"
         klass = Tag
 
@@ -31,33 +31,37 @@ class SidebarSiteSettingsBackfiller
     @removed_ids = previous_ids - new_ids
   end
 
+  # This should only be called from the `Jobs::BackfillSidebarSiteSettings` job as the job is ran with a cluster
+  # concurrency of 1 to ensure that only one process is running the backfill at any point in time.
   def backfill!
-    DistributedMutex.synchronize("backfill_sidebar_site_settings_#{@setting_name}") do
-      SidebarSectionLink.where(
-        linkable_type: @linkable_klass.to_s,
-        linkable_id: @removed_ids,
-      ).delete_all
+    User
+      .real
+      .where(staged: false)
+      .select(:id)
+      .find_in_batches do |users|
+        rows = []
+        user_ids = users.map(&:id)
 
-      User
-        .real
-        .where(staged: false)
-        .select(:id)
-        .find_in_batches do |users|
-          rows = []
-
-          users.each do |user|
-            @added_ids.each do |linkable_id|
-              rows << {
-                user_id: user[:id],
-                linkable_type: @linkable_klass.to_s,
-                linkable_id: linkable_id,
-              }
-            end
+        user_ids.each do |user_id|
+          @added_ids.each do |linkable_id|
+            rows << {
+              user_id: user_id,
+              linkable_type: @linkable_klass.to_s,
+              linkable_id: linkable_id,
+            }
           end
+        end
+
+        SidebarSectionLink.transaction do
+          SidebarSectionLink.where(
+            user_id: user_ids,
+            linkable_id: @removed_ids,
+            linkable_type: @linkable_klass.to_s,
+          ).delete_all
 
           SidebarSectionLink.insert_all(rows) if rows.present?
         end
-    end
+      end
   end
 
   def number_of_users_to_backfill
@@ -67,7 +71,7 @@ class SidebarSiteSettingsBackfiller
       SELECT
         sidebar_section_links.user_id
       FROM sidebar_section_links
-      WHERE sidebar_section_links.linkable_type = '#{@linkable_klass.to_s}'
+      WHERE sidebar_section_links.linkable_type = '#{@linkable_klass}'
       AND sidebar_section_links.linkable_id IN (#{@removed_ids.join(",")})
       SQL
 
@@ -83,7 +87,7 @@ class SidebarSiteSettingsBackfiller
         SELECT
           DISTINCT(sidebar_section_links.user_id)
         FROM sidebar_section_links
-        WHERE sidebar_section_links.linkable_type = '#{@linkable_klass.to_s}'
+        WHERE sidebar_section_links.linkable_type = '#{@linkable_klass}'
         AND sidebar_section_links.linkable_id IN (#{@added_ids.join(",")})
       ) AND users.id > 0 AND NOT users.staged
       SQL

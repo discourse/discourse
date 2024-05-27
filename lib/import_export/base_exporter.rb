@@ -2,7 +2,7 @@
 
 module ImportExport
   class BaseExporter
-    attr_reader :export_data, :categories
+    attr_reader :export_data
 
     CATEGORY_ATTRS = %i[
       id

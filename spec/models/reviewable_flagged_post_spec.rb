@@ -5,14 +5,14 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     ReviewableFlaggedPost.default_visible.pending.count
   end
 
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post)
-  fab!(:moderator)
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
 
   it "sets `potential_spam` when a spam flag is added" do
     reviewable = PostActionCreator.off_topic(user, post).reviewable
     expect(reviewable.potential_spam?).to eq(false)
-    PostActionCreator.spam(Fabricate(:user), post)
+    PostActionCreator.spam(Fabricate(:user, refresh_auto_groups: true), post)
     expect(reviewable.reload.potential_spam?).to eq(true)
   end
 
@@ -27,6 +27,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         actions = reviewable.actions_for(guardian)
         expect(actions.has?(:agree_and_hide)).to eq(true)
         expect(actions.has?(:agree_and_keep)).to eq(true)
+        expect(actions.has?(:agree_and_edit)).to eq(true)
         expect(actions.has?(:agree_and_keep_hidden)).to eq(false)
         expect(actions.has?(:agree_and_silence)).to eq(true)
         expect(actions.has?(:agree_and_suspend)).to eq(true)
@@ -56,6 +57,7 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         post.hidden = true
         actions = reviewable.actions_for(guardian)
         expect(actions.has?(:agree_and_keep)).to eq(false)
+        expect(actions.has?(:agree_and_edit)).to eq(false)
         expect(actions.has?(:agree_and_keep_hidden)).to eq(true)
       end
 
@@ -99,9 +101,31 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
           expect(reviewable.actions_for(guardian).has?(:delete_user_block)).to be true
         end
       end
+
+      context "for ignore_and_do_nothing" do
+        it "does not return `ignore_and_do_nothing` when post is hidden" do
+          post.update(hidden: true)
+
+          expect(reviewable.actions_for(guardian).has?(:ignore_and_do_nothing)).to eq(false)
+        end
+
+        it "returns `ignore_and_do_nothing` if the acting user is system" do
+          post.update(hidden: true)
+          system_guardian = Guardian.new(Discourse.system_user)
+
+          expect(reviewable.actions_for(system_guardian).has?(:ignore_and_do_nothing)).to eq(true)
+        end
+      end
     end
 
     it "agree_and_keep agrees with the flags and keeps the post" do
+      reviewable.perform(moderator, :agree_and_keep)
+      expect(reviewable).to be_approved
+      expect(score.reload).to be_agreed
+      expect(post).not_to be_hidden
+    end
+
+    it "agree_and_keep agrees with the flags and edits the post" do
       reviewable.perform(moderator, :agree_and_keep)
       expect(reviewable).to be_approved
       expect(score.reload).to be_agreed

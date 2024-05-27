@@ -100,7 +100,7 @@ RSpec.describe ComposerMessagesFinder do
 
   describe ".check_avatar_notification" do
     let(:finder) { ComposerMessagesFinder.new(user, composer_action: "createTopic") }
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     context "with success" do
       let!(:message) { finder.check_avatar_notification }
@@ -143,8 +143,13 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     it "doesn't notify users if 'allow_uploaded_avatars' setting is disabled" do
-      SiteSetting.allow_uploaded_avatars = "disabled"
+      user.change_trust_level!(TrustLevel[3])
+
+      SiteSetting.uploaded_avatars_allowed_groups = ""
       expect(finder.check_avatar_notification).to be_blank
+
+      SiteSetting.uploaded_avatars_allowed_groups = "13"
+      expect(finder.check_avatar_notification).to be_present
     end
   end
 
@@ -355,7 +360,7 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     it "shows a message when the replier has already flagged the post" do
-      Fabricate(:flag, post: self_flagged_post, user: user)
+      Fabricate(:flag_post_action, post: self_flagged_post, user: user)
       finder =
         ComposerMessagesFinder.new(
           user,
@@ -367,13 +372,13 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     it "shows a message when replying to flagged topic (first post)" do
-      Fabricate(:flag, post: original_post, user: user)
+      Fabricate(:flag_post_action, post: original_post, user: user)
       finder = ComposerMessagesFinder.new(user, composer_action: "reply", topic_id: topic.id)
       expect(finder.check_dont_feed_the_trolls).to be_present
     end
 
     it "does not show a message when not enough others have flagged the post" do
-      Fabricate(:flag, post: under_flagged_post, user: other_user)
+      Fabricate(:flag_post_action, post: under_flagged_post, user: other_user)
       finder =
         ComposerMessagesFinder.new(
           user,
@@ -387,7 +392,12 @@ RSpec.describe ComposerMessagesFinder do
     it "does not show a message when the flag has already been resolved" do
       SiteSetting.dont_feed_the_trolls_threshold = 1
 
-      Fabricate(:flag, post: resolved_flag_post, user: other_user, disagreed_at: 1.hour.ago)
+      Fabricate(
+        :flag_post_action,
+        post: resolved_flag_post,
+        user: other_user,
+        disagreed_at: 1.hour.ago,
+      )
       finder =
         ComposerMessagesFinder.new(
           user,
@@ -399,8 +409,8 @@ RSpec.describe ComposerMessagesFinder do
     end
 
     it "shows a message when enough others have already flagged the post" do
-      Fabricate(:flag, post: over_flagged_post, user: other_user)
-      Fabricate(:flag, post: over_flagged_post, user: third_user)
+      Fabricate(:flag_post_action, post: over_flagged_post, user: other_user)
+      Fabricate(:flag_post_action, post: over_flagged_post, user: third_user)
       finder =
         ComposerMessagesFinder.new(
           user,
@@ -436,6 +446,24 @@ RSpec.describe ComposerMessagesFinder do
       SiteSetting.educate_until_posts = 10
       user.stubs(:post_count).returns(11)
       SiteSetting.get_a_room_threshold = 2
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+    end
+
+    context "when user can't send private messages" do
+      fab!(:group)
+
+      before { SiteSetting.personal_message_enabled_groups = group.id }
+
+      it "does not show the message" do
+        expect(
+          ComposerMessagesFinder.new(
+            user,
+            composer_action: "reply",
+            topic_id: topic.id,
+            post_id: op.id,
+          ).check_get_a_room(min_users_posted: 2),
+        ).to be_blank
+      end
     end
 
     it "does not show the message for new topics" do

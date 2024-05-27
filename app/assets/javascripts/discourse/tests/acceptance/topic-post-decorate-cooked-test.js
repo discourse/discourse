@@ -12,7 +12,7 @@ acceptance("Acceptance | decorateCookedElement", function () {
       static eventLog = [];
       constructor() {
         DemoComponent.eventLog.push("created");
-        return super(...arguments);
+        super(...arguments);
       }
       willDestroy() {
         super.willDestroy(...arguments);

@@ -12,7 +12,7 @@ class TopicListSerializer < ApplicationSerializer
   has_many :topics, serializer: TopicListItemSerializer, embed: :objects
   has_many :shared_drafts, serializer: TopicListItemSerializer, embed: :objects
   has_many :tags, serializer: TagSerializer, embed: :objects
-  has_many :categories, serializer: TopicCategorySerializer, embed: :objects
+  has_many :categories, serializer: CategoryBadgeSerializer, embed: :objects
 
   def can_create_topic
     scope.can_create?(Topic)
@@ -39,6 +39,6 @@ class TopicListSerializer < ApplicationSerializer
   end
 
   def include_categories?
-    SiteSetting.lazy_load_categories
+    scope.can_lazy_load_categories?
   end
 end

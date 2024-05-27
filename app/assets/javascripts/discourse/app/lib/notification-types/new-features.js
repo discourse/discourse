@@ -12,7 +12,7 @@ export default class extends NotificationTypeBase {
   }
 
   get linkHref() {
-    return getURL("/admin");
+    return getURL("/admin/dashboard/whats-new");
   }
 
   get icon() {

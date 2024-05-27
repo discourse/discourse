@@ -2,12 +2,11 @@ import { A } from "@ember/array";
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { alias, notEmpty } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import { Promise } from "rsvp";
-import LoginModal from "discourse/components/modal/login";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
@@ -30,9 +29,9 @@ export default class CreateAccount extends Component.extend(
   NameValidation,
   UserFieldsValidation
 ) {
-  @service modal;
   @service site;
   @service siteSettings;
+  @service login;
 
   accountChallenge = 0;
   accountHoneypot = 0;
@@ -67,27 +66,6 @@ export default class CreateAccount extends Component.extend(
       this.performAccountCreation().finally(() =>
         this.set("model.skipConfirmation", false)
       );
-    }
-  }
-
-  // used for animating the label inside of inputs
-  @bind
-  userInputFocus(event) {
-    const userField = event.target.parentElement.parentElement;
-    if (!userField.classList.contains("value-entered")) {
-      userField.classList.toggle("value-entered");
-    }
-  }
-
-  // used for animating the label inside of inputs
-  @bind
-  userInputFocusOut(event) {
-    const userField = event.target.parentElement.parentElement;
-    if (
-      event.target.value.length === 0 &&
-      userField.classList.contains("value-entered")
-    ) {
-      userField.classList.toggle("value-entered");
     }
   }
 
@@ -383,7 +361,6 @@ export default class CreateAccount extends Component.extend(
       accountPasswordConfirm: this.accountHoneypot,
     };
 
-    const userFields = this.userFields;
     const destinationUrl = this.get("model.authOptions.destination_url");
 
     if (!isEmpty(destinationUrl)) {
@@ -391,9 +368,9 @@ export default class CreateAccount extends Component.extend(
     }
 
     // Add the userFields to the data
-    if (!isEmpty(userFields)) {
+    if (!isEmpty(this.userFields)) {
       attrs.userFields = {};
-      userFields.forEach(
+      this.userFields.forEach(
         (f) => (attrs.userFields[f.get("field.id")] = f.get("value"))
       );
     }
@@ -477,13 +454,7 @@ export default class CreateAccount extends Component.extend(
   @action
   externalLogin(provider) {
     // we will automatically redirect to the external auth service
-    this.modal.show(LoginModal, {
-      model: {
-        isExternalLogin: true,
-        externalLoginMethod: provider,
-        signup: true,
-      },
-    });
+    this.login.externalLogin(provider, { signup: true });
   }
 
   @action

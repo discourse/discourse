@@ -1,5 +1,6 @@
 import Controller from "@ember/controller";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import { FOOTER_NAV_ROUTES } from "discourse/plugins/chat/discourse/lib/chat-constants";
 
 export default class ChatController extends Controller {
   @service chat;
@@ -20,6 +21,13 @@ export default class ChatController extends Controller {
 
   get shouldUseCoreSidebar() {
     return this.siteSettings.navigation_menu === "sidebar";
+  }
+
+  get shouldUseChatFooter() {
+    return (
+      this.site.mobileView &&
+      FOOTER_NAV_ROUTES.includes(this.router.currentRouteName)
+    );
   }
 
   get mainOutletModifierClasses() {

@@ -3,7 +3,7 @@ import User from "discourse/models/user";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 
-export function downloadCalendar(title, dates) {
+export function downloadCalendar(title, dates, options = {}) {
   const currentUser = User.current();
 
   const formattedDates = formatDates(dates);
@@ -11,20 +11,20 @@ export function downloadCalendar(title, dates) {
 
   switch (currentUser.user_option.default_calendar) {
     case "none_selected":
-      _displayModal(title, formattedDates);
+      _displayModal(title, formattedDates, options);
       break;
     case "ics":
-      downloadIcs(title, formattedDates);
+      downloadIcs(title, formattedDates, options);
       break;
     case "google":
-      downloadGoogle(title, formattedDates);
+      downloadGoogle(title, formattedDates, options);
       break;
   }
 }
 
-export function downloadIcs(title, dates) {
+export function downloadIcs(title, dates, options = {}) {
   const REMOVE_FILE_AFTER = 20_000;
-  const file = new File([generateIcsData(title, dates)], {
+  const file = new File([generateIcsData(title, dates, options)], {
     type: "text/plain",
   });
 
@@ -37,15 +37,31 @@ export function downloadIcs(title, dates) {
   setTimeout(() => window.URL.revokeObjectURL(file), REMOVE_FILE_AFTER); //remove file to avoid memory leaks
 }
 
-export function downloadGoogle(title, dates) {
+export function downloadGoogle(title, dates, options = {}) {
   dates.forEach((date) => {
-    const encodedTitle = encodeURIComponent(title);
-    const link = getURL(`
-      https://www.google.com/calendar/event?action=TEMPLATE&text=${encodedTitle}&dates=${_formatDateForGoogleApi(
-      date.startsAt
-    )}/${_formatDateForGoogleApi(date.endsAt)}
-    `).trim();
-    window.open(link, "_blank", "noopener", "noreferrer");
+    const link = new URL("https://www.google.com/calendar/event");
+    link.searchParams.append("action", "TEMPLATE");
+    link.searchParams.append("text", title);
+    link.searchParams.append(
+      "dates",
+      `${_formatDateForGoogleApi(date.startsAt)}/${_formatDateForGoogleApi(
+        date.endsAt
+      )}`
+    );
+
+    if (options.recurrenceRule) {
+      link.searchParams.append("recur", `RRULE:${options.recurrenceRule}`);
+    }
+
+    if (options.location) {
+      link.searchParams.append("location", options.location);
+    }
+
+    if (options.details) {
+      link.searchParams.append("details", options.details);
+    }
+
+    window.open(getURL(link.href).trim(), "_blank", "noopener", "noreferrer");
   });
 }
 
@@ -60,7 +76,7 @@ export function formatDates(dates) {
   });
 }
 
-export function generateIcsData(title, dates) {
+export function generateIcsData(title, dates, options = {}) {
   let data = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Discourse//EN\n";
   dates.forEach((date) => {
     const startDate = moment(date.startsAt);
@@ -72,6 +88,9 @@ export function generateIcsData(title, dates) {
         `DTSTAMP:${moment().utc().format("YMMDDTHHmmss")}Z\n` +
         `DTSTART:${startDate.utc().format("YMMDDTHHmmss")}Z\n` +
         `DTEND:${endDate.utc().format("YMMDDTHHmmss")}Z\n` +
+        (options.recurrenceRule ? `RRULE:${options.recurrenceRule}\n` : ``) +
+        (options.location ? `LOCATION:${options.location}\n` : ``) +
+        (options.details ? `DESCRIPTION:${options.details}\n` : ``) +
         `SUMMARY:${title}\n` +
         "END:VEVENT\n"
     );
@@ -80,9 +99,19 @@ export function generateIcsData(title, dates) {
   return data;
 }
 
-function _displayModal(title, dates) {
+function _displayModal(title, dates, options = {}) {
   const modal = getOwnerWithFallback(this).lookup("service:modal");
-  modal.show(downloadCalendarModal, { model: { calendar: { title, dates } } });
+  modal.show(downloadCalendarModal, {
+    model: {
+      calendar: {
+        title,
+        dates,
+        recurrenceRule: options.recurrenceRule,
+        location: options.location,
+        details: options.details,
+      },
+    },
+  });
 }
 
 function _formatDateForGoogleApi(date) {

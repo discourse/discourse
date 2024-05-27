@@ -11,15 +11,15 @@ acceptance("Composer - Hyperlink", function (needs) {
     await fillIn(".d-editor-input", "This is a link to ");
 
     assert
-      .dom(".insert-link.modal-body")
+      .dom(".insert-link.d-modal__body")
       .doesNotExist("no hyperlink modal by default");
 
     await click(".d-editor button.link");
-    assert.dom(".insert-link.modal-body").exists("hyperlink modal visible");
+    assert.dom(".insert-link.d-modal__body").exists("hyperlink modal visible");
 
-    await fillIn(".modal-body .link-url", "google.com");
-    await fillIn(".modal-body .link-text", "Google");
-    await click(".modal-footer button.btn-primary");
+    await fillIn(".d-modal__body .link-url", "google.com");
+    await fillIn(".d-modal__body .link-text", "Google");
+    await click(".d-modal__footer button.btn-primary");
 
     assert
       .dom(".d-editor-input")
@@ -29,15 +29,15 @@ acceptance("Composer - Hyperlink", function (needs) {
       );
 
     assert
-      .dom(".insert-link.modal-body")
+      .dom(".insert-link.d-modal__body")
       .doesNotExist("modal dismissed after submitting link");
 
     await fillIn(".d-editor-input", "Reset textarea contents.");
 
     await click(".d-editor button.link");
-    await fillIn(".modal-body .link-url", "google.com");
-    await fillIn(".modal-body .link-text", "Google");
-    await click(".modal-footer button.btn-danger");
+    await fillIn(".d-modal__body .link-url", "google.com");
+    await fillIn(".d-modal__body .link-text", "Google");
+    await click(".d-modal__footer button.btn-danger");
 
     assert
       .dom(".d-editor-input")
@@ -47,7 +47,7 @@ acceptance("Composer - Hyperlink", function (needs) {
       );
 
     assert
-      .dom(".insert-link.modal-body")
+      .dom(".insert-link.d-modal__body")
       .doesNotExist("modal dismissed after cancelling");
 
     const textarea = query("#reply-control .d-editor-input");
@@ -55,8 +55,8 @@ acceptance("Composer - Hyperlink", function (needs) {
     textarea.selectionEnd = 6;
     await click(".d-editor button.link");
 
-    await fillIn(".modal-body .link-url", "somelink.com");
-    await click(".modal-footer button.btn-primary");
+    await fillIn(".d-modal__body .link-url", "somelink.com");
+    await click(".d-modal__footer button.btn-primary");
 
     assert
       .dom(".d-editor-input")
@@ -68,16 +68,16 @@ acceptance("Composer - Hyperlink", function (needs) {
     await fillIn(".d-editor-input", "");
 
     await click(".d-editor button.link");
-    await fillIn(".modal-body .link-url", "http://google.com");
-    await triggerKeyEvent(".modal-body .link-url", "keyup", "Space");
+    await fillIn(".d-modal__body .link-url", "http://google.com");
+    await triggerKeyEvent(".d-modal__body .link-url", "keyup", "Space");
     assert
       .dom(".internal-link-results")
       .doesNotExist(
         "does not show internal links search dropdown when inputting a url"
       );
 
-    await fillIn(".modal-body .link-url", "local");
-    await triggerKeyEvent(".modal-body .link-url", "keyup", "Space");
+    await fillIn(".d-modal__body .link-url", "local");
+    await triggerKeyEvent(".d-modal__body .link-url", "keyup", "Space");
     assert
       .dom(".internal-link-results")
       .exists("shows internal links search dropdown when entering keywords");

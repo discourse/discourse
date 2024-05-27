@@ -334,6 +334,18 @@ RSpec.describe Admin::UsersController do
         end
       end
 
+      it "fails the request if the reason is too long" do
+        expect(user).not_to be_suspended
+        put "/admin/users/#{user.id}/suspend.json",
+            params: {
+              reason: "x" * 301,
+              suspend_until: 5.hours.from_now,
+            }
+        expect(response.status).to eq(400)
+        user.reload
+        expect(user).not_to be_suspended
+      end
+
       it "requires suspend_until and reason" do
         expect(user).not_to be_suspended
         put "/admin/users/#{user.id}/suspend.json", params: {}
@@ -1181,7 +1193,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#destroy" do
-    fab!(:delete_me) { Fabricate(:user) }
+    fab!(:delete_me) { Fabricate(:user, refresh_auto_groups: true) }
 
     shared_examples "user deletion possible" do
       it "returns a 403 if the user doesn't exist" do
@@ -1321,11 +1333,7 @@ RSpec.describe Admin::UsersController do
         end
 
         it "does not block the urls by default" do
-          delete "/admin/users/#{delete_me.id}.json",
-                 params: {
-                   delete_posts: true,
-                   block_urls: false,
-                 }
+          delete "/admin/users/#{delete_me.id}.json", params: { delete_posts: true }
           expect(response.status).to eq(200)
           expect(ScreenedUrl.exists?(url: @urls)).to eq(false)
         end
@@ -1599,6 +1607,18 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(200)
         expect(reg_user.reload).to be_silenced
         expect(other_user.reload).to be_silenced
+      end
+
+      it "fails the request if the reason is too long" do
+        expect(user).not_to be_silenced
+        put "/admin/users/#{user.id}/silence.json",
+            params: {
+              reason: "x" * 301,
+              silenced_till: 5.hours.from_now,
+            }
+        expect(response.status).to eq(400)
+        user.reload
+        expect(user).not_to be_suspended
       end
     end
 

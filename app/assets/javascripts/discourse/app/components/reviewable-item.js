@@ -1,7 +1,7 @@
 import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import { action, set } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
@@ -10,6 +10,8 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import optionalService from "discourse/lib/optional-service";
 import Category from "discourse/models/category";
+import Composer from "discourse/models/composer";
+import Topic from "discourse/models/topic";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
@@ -45,6 +47,7 @@ export default Component.extend({
   modal: service(),
   siteSettings: service(),
   currentUser: service(),
+  composer: service(),
   tagName: "",
   updating: null,
   editing: false,
@@ -190,8 +193,8 @@ export default Component.extend({
             );
           }
 
-          if (this.attrs.remove) {
-            this.attrs.remove(performResult.remove_reviewable_ids);
+          if (this.remove) {
+            this.remove(performResult.remove_reviewable_ids);
           } else {
             return this.store.find("reviewable", reviewable.id);
           }
@@ -223,6 +226,34 @@ export default Component.extend({
 
   clientSilence(reviewable, performAction) {
     this._penalize("showSilenceModal", reviewable, performAction);
+  },
+
+  async clientEdit(reviewable, performAction) {
+    if (!this.currentUser) {
+      return this.dialog.alert(I18n.t("post.controls.edit_anonymous"));
+    }
+    const post = await this.store.find("post", reviewable.post_id);
+    const topic_json = await Topic.find(post.topic_id, {});
+
+    const topic = Topic.create(topic_json);
+    post.set("topic", topic);
+
+    if (!post.can_edit) {
+      return false;
+    }
+
+    const opts = {
+      post,
+      action: Composer.EDIT,
+      draftKey: post.get("topic.draft_key"),
+      draftSequence: post.get("topic.draft_sequence"),
+      skipDraftCheck: true,
+      skipJumpOnSave: true,
+    };
+
+    this.composer.open(opts);
+
+    return performAction();
   },
 
   _penalize(adminToolMethod, reviewable, performAction) {

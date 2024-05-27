@@ -1,4 +1,7 @@
 .chat-message-thread-indicator {
+  .c-routes-threads & {
+    background: var(--secondary);
+  }
   grid-template-areas:
     "avatar info info participants"
     "excerpt excerpt excerpt replies";

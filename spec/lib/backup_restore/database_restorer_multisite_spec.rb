@@ -5,7 +5,7 @@ require_relative "shared_context_for_backup_restore"
 RSpec.describe BackupRestore::DatabaseRestorer, type: :multisite do
   subject(:restorer) { BackupRestore::DatabaseRestorer.new(logger, current_db) }
 
-  include_context "with shared stuff"
+  include_context "with shared backup restore context"
 
   let(:current_db) { RailsMultisite::ConnectionManagement.current_db }
 

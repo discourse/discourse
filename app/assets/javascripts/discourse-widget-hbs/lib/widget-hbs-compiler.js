@@ -10,13 +10,15 @@ function sexpValue(value) {
     return;
   }
 
-  let pValue = value.original;
-  if (value.type === "StringLiteral") {
-    return JSON.stringify(pValue);
+  if (value.type === "PathExpression") {
+    return resolve(value.original);
+  } else if (value.type === "StringLiteral") {
+    return JSON.stringify(value.value);
   } else if (value.type === "SubExpression") {
     return sexp(value);
+  } else {
+    return resolve(value.value);
   }
-  return resolve(pValue);
 }
 
 function pairsToObj(pairs) {
@@ -98,13 +100,10 @@ function mustacheValue(node, state) {
         opts ? argValue(opts) : opts
       }, ${otherOpts ? argValue(otherOpts) : otherOpts})`;
 
-      break;
     case "yield":
       return `this.attrs.contents()`;
-      break;
     case "i18n":
       return i18n(node);
-      break;
     case "avatar":
       let template = argValue(
         node.hash.pairs.find((p) => p.key === "template")
@@ -117,13 +116,10 @@ function mustacheValue(node, state) {
         state,
         "avatar"
       )}(${size}, { template: ${template}, username: ${username} })`;
-      break;
     case "date":
       return `${useHelper(state, "dateNode")}(${valueOf(node.params[0])})`;
-      break;
     case "d-icon":
       return `${useHelper(state, "iconNode")}(${valueOf(node.params[0])})`;
-      break;
     default:
       // Shortcut: If our mustache has hash arguments, we can assume it's attaching.
       // For example `{{home-logo count=123}}` can become `this.attach('home-logo, { "count": 123 });`
@@ -139,14 +135,13 @@ function mustacheValue(node, state) {
         return `this.attach(${widgetString}, ${pairsToObj(hash.pairs)})`;
       }
 
-      if (node.escaped) {
-        return `${resolve(path)}`;
-      } else {
+      if (node.trusting) {
         return `new ${useHelper(state, "rawHtml")}({ html: '<span>' + ${resolve(
           path
         )} + '</span>'})`;
+      } else {
+        return `${resolve(path)}`;
       }
-      break;
   }
 }
 
@@ -232,6 +227,7 @@ class Compiler {
         switch (node.path.original) {
           case "unless":
             negate = "!";
+          // eslint-disable-next-line no-fallthrough
           case "if":
             instructions.push(
               `if (${negate}${resolve(node.params[0].original)}) {`

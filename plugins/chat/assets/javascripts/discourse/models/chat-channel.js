@@ -70,6 +70,7 @@ export default class ChatChannel {
   @tracked archive;
   @tracked tracking;
   @tracked threadingEnabled = false;
+  @tracked draft;
 
   threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
@@ -107,6 +108,10 @@ export default class ChatChannel {
       (lastReplyCreatedAt) =>
         lastReplyCreatedAt >= this.currentUserMembership.lastViewedAt
     ).length;
+  }
+
+  get unreadThreadsCount() {
+    return Array.from(this.threadsManager.unreadThreadOverview.values()).length;
   }
 
   updateLastViewedAt() {
@@ -202,6 +207,12 @@ export default class ChatChannel {
     }
 
     message.manager = this.messagesManager;
+  }
+
+  resetDraft(user) {
+    this.draft = ChatMessage.createDraftMessage(this, {
+      user,
+    });
   }
 
   canModifyMessages(user) {

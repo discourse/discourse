@@ -8,7 +8,7 @@ module PageObjects
       end
 
       def has_right_title?(title)
-        has_css?(".sidebar__edit-navigation-menu__modal .title", text: title)
+        has_css?(".sidebar__edit-navigation-menu__modal .d-modal__title-text", text: title)
       end
 
       def has_focus_on_filter_input?

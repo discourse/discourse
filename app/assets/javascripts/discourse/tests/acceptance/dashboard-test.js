@@ -11,7 +11,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 acceptance("Dashboard", function (needs) {
   needs.user();
   needs.settings({
-    dashboard_visible_tabs: "moderation|security|reports",
+    dashboard_visible_tabs: "moderation|security|reports|features",
     dashboard_general_tab_activity_metrics: "page_view_total_reqs",
   });
   needs.site({
@@ -93,31 +93,25 @@ acceptance("Dashboard", function (needs) {
     await visit("/admin");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
-    assert.strictEqual(
-      count(".dashboard .reports-index.section .reports-list .report"),
-      1
-    );
+    assert.strictEqual(count(".dashboard .admin-reports-list__report"), 1);
 
-    await fillIn(".dashboard .filter-reports-input", "flags");
+    await fillIn(".dashboard .admin-reports-header__filter", "flags");
 
-    assert.strictEqual(
-      count(".dashboard .reports-index.section .reports-list .report"),
-      0
-    );
+    assert.strictEqual(count(".dashboard .admin-reports-list__report"), 0);
 
     await click(".dashboard .navigation-item.security .navigation-link");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
     assert.strictEqual(
-      count(".dashboard .reports-index.section .reports-list .report"),
+      count(".dashboard .admin-reports-list__report"),
       1,
       "navigating back and forth resets filter"
     );
 
-    await fillIn(".dashboard .filter-reports-input", "activities");
+    await fillIn(".dashboard .admin-reports-header__filter", "activities");
 
     assert.strictEqual(
-      count(".dashboard .reports-index.section .reports-list .report"),
+      count(".dashboard .admin-reports-list__report"),
       1,
       "filter is case insensitive"
     );
@@ -140,8 +134,15 @@ acceptance("Dashboard", function (needs) {
   test("new features", async function (assert) {
     await visit("/admin");
 
+    await click(".dashboard .navigation-item.new-features .navigation-link");
+
+    assert.ok(
+      exists(
+        ".dashboard .navigation-item.new-features .navigation-link .emoji[title='gift']"
+      )
+    );
     assert.ok(exists(".dashboard-new-features"));
-    assert.ok(exists(".dashboard-new-features .new-features-release-notes"));
+    assert.ok(exists("img.admin-new-feature-item__screenshot"));
   });
 });
 

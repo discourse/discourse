@@ -289,6 +289,7 @@ RSpec.describe Jobs::CleanUpUploads do
       payload: {
         raw: "#{upload.short_url}\n#{upload2.short_url}",
       },
+      status: :pending,
     )
 
     Fabricate(
@@ -296,7 +297,7 @@ RSpec.describe Jobs::CleanUpUploads do
       payload: {
         raw: "#{upload3.short_url}",
       },
-      status: Reviewable.statuses[:rejected],
+      status: :rejected,
     )
 
     Jobs::CleanUpUploads.new.execute(nil)

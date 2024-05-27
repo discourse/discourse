@@ -15,7 +15,6 @@ lv:
   poll:
     poll: "aptauja"
     invalid_argument: "Nederīga vērtība “%{value}” argumentam “%{argument}”."
-    multiple_polls_without_name: "Ir vairākas aptaujas bez nosaukuma. Izmantojiet<code>vārds</code>”, lai unikāli identificētu savas aptaujas."
     multiple_polls_with_same_name: "Ir vairākas aptaujas ar tādu pašu nosaukumu: <strong>%{name}</strong>. Izmantojiet<code>nosaukums</code>”, lai unikāli identificētu savas aptaujas."
     default_poll_must_have_at_least_1_option: "Aptaujai ir jābūt vismaz 1 opcijai."
     named_poll_must_have_at_least_1_option: "Aptaujai ar nosaukumu <strong>%{name}</strong> ir jābūt vismaz 1 opcijai."

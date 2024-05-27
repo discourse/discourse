@@ -17,6 +17,11 @@ module PageObjects
         self
       end
 
+      def delete_group
+        page.find("[data-test-selector='delete-group-button']").click
+        page.find(".dialog-footer .btn-danger").click
+      end
+
       def select_user_and_add(user)
         page.find(
           ".modal-container .user-chooser .multi-select-header .select-kit-header-wrapper",

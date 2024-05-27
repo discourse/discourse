@@ -69,7 +69,6 @@ export default class AdminThemeEditor extends Component {
 
   set activeSection(value) {
     this.theme.setField(this.currentTargetName, this.fieldName, value);
-    return value;
   }
 
   @discourseComputed("maximized")

@@ -15,6 +15,7 @@ export function overrideThrowGjsError(value) {
 // This patch is not ideal, but Ember does not allow us to change a component template after initial association
 // https://github.com/glimmerjs/glimmer-vm/blob/03a4b55c03/packages/%40glimmer/manager/lib/public/template.ts#L14-L20
 const originalGetTemplate = GlimmerManager.getComponentTemplate;
+// eslint-disable-next-line no-import-assign
 GlimmerManager.getComponentTemplate = (component) => {
   return (
     COLOCATED_TEMPLATE_OVERRIDES.get(component) ??

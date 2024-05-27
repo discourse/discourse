@@ -4,6 +4,7 @@ import { sanitize as textSanitize } from "pretty-text/sanitizer";
 import deprecated from "discourse-common/lib/deprecated";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { helperContext } from "discourse-common/lib/helpers";
+import I18n from "discourse-i18n";
 
 async function withEngine(name, ...args) {
   const engine = await import("discourse/static/markdown-it");
@@ -135,4 +136,19 @@ export function excerpt(cooked, length) {
   });
 
   return result;
+}
+
+export function humanizeList(listItems) {
+  const items = Array.from(listItems);
+  const last = items.pop();
+
+  if (items.length === 0) {
+    return last;
+  } else {
+    return [
+      items.join(I18n.t("word_connector.comma")),
+      I18n.t("word_connector.last_item"),
+      last,
+    ].join(" ");
+  }
 }

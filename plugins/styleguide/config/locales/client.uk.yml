@@ -10,10 +10,13 @@ uk:
       title: "Styleguide"
       welcome: "Для початку оберіть розділ у меню ліворуч."
       categories:
+        syntax: Синтаксис
         atoms: Атоми
         molecules: Молекули
         organisms: Організми
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "Типографіка"
           example: "Ласкаво просимо в Discourse"

@@ -269,19 +269,19 @@ RSpec.describe Email::AuthenticationResults do
     it "enqueues a fail verdict" do
       results = described_class.new("")
       results.expects(:verdict).returns(:fail)
-      expect(results.action).to eq (:enqueue)
+      expect(results.action).to eq(:enqueue)
     end
 
     it "accepts a pass verdict" do
       results = described_class.new("")
       results.expects(:verdict).returns(:pass)
-      expect(results.action).to eq (:accept)
+      expect(results.action).to eq(:accept)
     end
 
     it "accepts a gray verdict" do
       results = described_class.new("")
       results.expects(:verdict).returns(:gray)
-      expect(results.action).to eq (:accept)
+      expect(results.action).to eq(:accept)
     end
   end
 end

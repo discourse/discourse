@@ -16,46 +16,56 @@
   />
 </div>
 
-<div class="themes-list-container">
-  {{#if this.showFilter}}
-    <div class="themes-list-filter themes-list-item">
-      <Input
-        class="filter-input"
-        placeholder={{i18n "admin.customize.theme.filter_placeholder"}}
-        autocomplete="off"
-        @type="search"
-        @value={{mut this.filterTerm}}
-      />
-      {{d-icon "search"}}
+{{#if this.showSearchAndFilter}}
+  <div class="themes-list-search">
+    <Input
+      class="themes-list-search__input"
+      placeholder={{i18n "admin.customize.theme.search_placeholder"}}
+      autocomplete="off"
+      @type="search"
+      @value={{mut this.searchTerm}}
+    />
+    {{d-icon "search"}}
+  </div>
+  <div class="themes-list-filter">
+    <div class="themes-list-filter__label">
+      {{i18n "admin.customize.theme.filter_by"}}
     </div>
-  {{/if}}
+    <ComboBox
+      @content={{this.selectableFilters}}
+      @value={{this.filter}}
+      class="themes-list-filter__input"
+    />
+  </div>
+{{/if}}
+<div class="themes-list-container">
   {{#if this.hasThemes}}
-    {{#if this.hasActiveThemes}}
+    {{#if (and this.hasActiveThemes (not this.inactiveFilter))}}
       {{#each this.activeThemes as |theme|}}
         <ThemesListItem
           @theme={{theme}}
-          @navigateToTheme={{action "navigateToTheme" theme}}
+          @navigateToTheme={{fn this.navigateToTheme theme}}
         />
       {{/each}}
 
-      {{#if this.hasInactiveThemes}}
-        <div class="themes-list-item inactive-indicator">
+      {{#if (and this.hasInactiveThemes (not this.activeFilter))}}
+        <div class="themes-list-container__item inactive-indicator">
           <span class="empty">
             <div class="info">
               {{#if this.selectInactiveMode}}
                 <Input
                   @type="checkbox"
-                  @checked={{(or
+                  @checked={{or
                     (eq this.allInactiveSelected true)
                     (eq this.someInactiveSelected true)
-                  )}}
+                  }}
                   class="toggle-all-inactive"
                   indeterminate={{this.someInactiveSelected}}
                   {{on "click" this.toggleAllInactive}}
                 />
               {{else}}
                 <DButton
-                  class="btn-flat select-inactive-mode"
+                  class="btn-transparent select-inactive-mode"
                   @action={{this.toggleInactiveMode}}
                 >
                   {{d-icon "list"}}
@@ -89,7 +99,7 @@
                 <DButton
                   class="btn btn-delete"
                   @action={{this.deleteConfirmation}}
-                  @disabled={{(eq this.selectedCount 0)}}
+                  @disabled={{eq this.selectedCount 0}}
                 >
                   {{d-icon "trash-alt"}}
                   Delete
@@ -101,18 +111,18 @@
       {{/if}}
     {{/if}}
 
-    {{#if this.hasInactiveThemes}}
+    {{#if (and this.hasInactiveThemes (not this.activeFilter))}}
       {{#each this.inactiveThemes as |theme|}}
         <ThemesListItem
           @classNames="inactive-theme"
           @theme={{theme}}
-          @navigateToTheme={{action "navigateToTheme" theme}}
+          @navigateToTheme={{fn this.navigateToTheme theme}}
           @selectInactiveMode={{this.selectInactiveMode}}
         />
       {{/each}}
     {{/if}}
   {{else}}
-    <div class="themes-list-item">
+    <div class="themes-list-container__item">
       <span class="empty">{{i18n "admin.customize.theme.empty"}}</span>
     </div>
   {{/if}}

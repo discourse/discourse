@@ -36,6 +36,12 @@ module Chat
     # @param direction [String] (optional) The direction to fetch messages in when not
     #   using the target_message_id param. Must be valid. If not provided, only the
     #   latest messages for the channel are loaded.
+    # @param include_target_message_id [Boolean] (optional) Specifies whether the target message specified by
+    #   target_message_id should be included in the results. This parameter modifies the behavior when querying messages:
+    #   - When true and the direction is set to "past", the query will include messages up to and including the target message.
+    #   - When true and the direction is set to "future", the query will include messages starting from and including the target message.
+    #   - When false, the query will exclude the target message, fetching only those messages strictly before or after it, depending on the direction.
+
     def self.call(
       channel:,
       guardian:,
@@ -44,7 +50,8 @@ module Chat
       include_thread_messages: false,
       page_size: PAST_MESSAGE_LIMIT + FUTURE_MESSAGE_LIMIT,
       direction: nil,
-      target_date: nil
+      target_date: nil,
+      include_target_message_id: false
     )
       messages = base_query(channel: channel)
       messages = messages.with_deleted if guardian.can_moderate_chat?(channel.chatable)
@@ -52,13 +59,23 @@ module Chat
         include_thread_messages = true
         messages = messages.where(thread_id: thread_id)
       end
-      messages = messages.where(<<~SQL, channel_id: channel.id) if !include_thread_messages
-        chat_messages.thread_id IS NULL OR chat_messages.id IN (
-          SELECT original_message_id
-          FROM chat_threads
-          WHERE chat_threads.channel_id = :channel_id
-        )
-      SQL
+
+      if include_thread_messages
+        if !thread_id.present?
+          messages =
+            messages.left_joins(:thread).where(
+              "chat_threads.id IS NULL OR chat_threads.force = false OR chat_messages.id = chat_threads.original_message_id",
+            )
+        end
+      else
+        messages = messages.where(<<~SQL, channel_id: channel.id)
+          chat_messages.thread_id IS NULL OR chat_messages.id IN (
+            SELECT original_message_id
+            FROM chat_threads
+            WHERE chat_threads.channel_id = :channel_id
+          )
+        SQL
+      end
 
       if target_message_id.present? && direction.blank?
         query_around_target(target_message_id, channel, messages)
@@ -66,7 +83,14 @@ module Chat
         if target_date.present?
           query_by_date(target_date, channel, messages)
         else
-          query_paginated_messages(direction, page_size, channel, messages, target_message_id)
+          query_paginated_messages(
+            direction,
+            page_size,
+            channel,
+            messages,
+            target_message_id: target_message_id,
+            include_target_message_id: include_target_message_id,
+          )
         end
       end
     end
@@ -87,9 +111,9 @@ module Chat
 
       if SiteSetting.enable_user_status
         query = query.includes(user: :user_status)
-        query = query.includes(chat_mentions: { user: :user_status })
+        query = query.includes(user_mentions: { user: :user_status })
       else
-        query = query.includes(chat_mentions: :user)
+        query = query.includes(user_mentions: :user)
       end
 
       query
@@ -100,14 +124,14 @@ module Chat
 
       past_messages =
         messages
-          .where("created_at < ?", target_message.created_at)
+          .where("chat_messages.created_at < ?", target_message.created_at)
           .order(created_at: :desc)
           .limit(PAST_MESSAGE_LIMIT)
           .to_a
 
       future_messages =
         messages
-          .where("created_at > ?", target_message.created_at)
+          .where("chat_messages.created_at > ?", target_message.created_at)
           .order(created_at: :asc)
           .limit(FUTURE_MESSAGE_LIMIT)
           .to_a
@@ -129,17 +153,30 @@ module Chat
       page_size,
       channel,
       messages,
-      target_message_id = nil
+      target_message_id: nil,
+      include_target_message_id: false
     )
       page_size = [page_size || MAX_PAGE_SIZE, MAX_PAGE_SIZE].min
 
       if target_message_id.present?
-        condition = direction == PAST ? "<" : ">"
-        messages = messages.where("id #{condition} ?", target_message_id.to_i)
+        condition = nil
+
+        if include_target_message_id
+          condition = direction == PAST ? "<=" : ">="
+        else
+          condition = direction == PAST ? "<" : ">"
+        end
+
+        messages = messages.where("chat_messages.id #{condition} ?", target_message_id.to_i)
       end
 
       order = direction == FUTURE ? "ASC" : "DESC"
-      messages = messages.order("created_at #{order}, id #{order}").limit(page_size).to_a
+
+      messages =
+        messages
+          .order("chat_messages.created_at #{order}, chat_messages.id #{order}")
+          .limit(page_size)
+          .to_a
 
       if direction == FUTURE
         can_load_more_future = messages.size == page_size
@@ -161,14 +198,14 @@ module Chat
     def self.query_by_date(target_date, channel, messages)
       past_messages =
         messages
-          .where("created_at <= ?", target_date)
+          .where("chat_messages.created_at <= ?", target_date.to_time.utc)
           .order(created_at: :desc)
           .limit(PAST_MESSAGE_LIMIT)
           .to_a
 
       future_messages =
         messages
-          .where("created_at > ?", target_date)
+          .where("chat_messages.created_at > ?", target_date.to_time.utc)
           .order(created_at: :asc)
           .limit(FUTURE_MESSAGE_LIMIT)
           .to_a

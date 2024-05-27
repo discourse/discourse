@@ -13,7 +13,7 @@ RSpec.describe PinnedCheck do
     end
 
     it "returns true if the topic is pinned" do
-      expect(PinnedCheck.pinned?(unpinned_topic)).to eq(false)
+      expect(PinnedCheck.pinned?(pinned_topic)).to eq(true)
     end
   end
 

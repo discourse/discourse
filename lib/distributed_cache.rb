@@ -14,6 +14,8 @@ class DistributedCache < MessageBus::DistributedCache
   end
 
   def defer_get_set(k, &block)
+    raise TypeError if !Rails.env.production? && !k.is_a?(String)
+
     return self[k] if hash.key? k
     value = block.call
     self.defer_set(k, value)
@@ -44,5 +46,9 @@ class DistributedCache < MessageBus::DistributedCache
     else
       super()
     end
+  end
+
+  def clear_regex(regex)
+    hash.keys.select { |k| k =~ regex }.each { |k| delete(k) }
   end
 end

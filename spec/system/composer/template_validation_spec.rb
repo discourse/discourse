@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-describe "Composer Form Template Validations", type: :system, js: true do
-  fab!(:user)
+describe "Composer Form Template Validations", type: :system do
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:form_template) do
     Fabricate(
       :form_template,
@@ -72,7 +72,7 @@ describe "Composer Form Template Validations", type: :system, js: true do
     composer.fill_title(topic_title)
     composer.create
     expect(composer).to have_form_template_field_error(
-      I18n.t("js.form_templates.errors.valueMissing.default"),
+      I18n.t("js.form_templates.errors.value_missing.default"),
     )
   end
 
@@ -83,7 +83,7 @@ describe "Composer Form Template Validations", type: :system, js: true do
     composer.create
     composer.fill_form_template_field("input", "Bruce Wayne")
     expect(composer).to have_form_template_field_error(
-      I18n.t("js.form_templates.errors.typeMismatch.email"),
+      I18n.t("js.form_templates.errors.type_mismatch.email"),
     )
   end
 
@@ -94,7 +94,7 @@ describe "Composer Form Template Validations", type: :system, js: true do
     composer.create
     composer.fill_form_template_field("input", "b@b.com")
     expect(composer).to have_form_template_field_error(
-      I18n.t("js.form_templates.errors.tooShort", count: 10),
+      I18n.t("js.form_templates.errors.too_short", count: 10),
     )
   end
 
@@ -105,7 +105,7 @@ describe "Composer Form Template Validations", type: :system, js: true do
     composer.fill_form_template_field("input", "www.example.com")
     composer.create
     expect(composer).to have_form_template_field_error(
-      I18n.t("js.form_templates.errors.patternMismatch"),
+      I18n.t("js.form_templates.errors.pattern_mismatch"),
     )
   end
 end

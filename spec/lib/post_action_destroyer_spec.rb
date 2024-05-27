@@ -2,7 +2,7 @@
 
 RSpec.describe PostActionDestroyer do
   fab!(:admin)
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post)
 
   describe "#perform" do

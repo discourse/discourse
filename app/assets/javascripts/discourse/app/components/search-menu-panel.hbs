@@ -1,6 +1,9 @@
-<MenuPanel @animationClass={{this.animationClass}}>
+<MenuPanel
+  @animationClass={{this.animationClass}}
+  @panelClass="search-menu-panel"
+>
   <SearchMenu
-    @closeSearchMenu={{@closeSearchMenu}}
+    @onClose={{@closeSearchMenu}}
     @inlineResults={{true}}
     @autofocusInput={{true}}
   />

@@ -2,7 +2,7 @@
 
 class TopicUser < ActiveRecord::Base
   self.ignored_columns = [
-    :highest_seen_post_number, # Remove after 01 Jan 2022
+    :highest_seen_post_number, # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   belongs_to :user
@@ -308,7 +308,14 @@ class TopicUser < ActiveRecord::Base
     UPDATE_TOPIC_USER_SQL = <<~SQL
       UPDATE topic_users
       SET
-        last_read_post_number = GREATEST(:post_number, tu.last_read_post_number),
+        last_read_post_number =
+          LEAST(
+            CASE WHEN :whisperer
+              THEN highest_staff_post_number
+              ELSE highest_post_number END
+            ,
+            GREATEST(:post_number, tu.last_read_post_number)
+          ),
         total_msecs_viewed = LEAST(tu.total_msecs_viewed + :msecs,86400000),
         notification_level =
            case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
@@ -357,6 +364,7 @@ class TopicUser < ActiveRecord::Base
         msecs: msecs,
         tracking: notification_levels[:tracking],
         threshold: SiteSetting.default_other_auto_track_topics_after_msecs,
+        whisperer: user.whisperer?,
       }
 
       rows = DB.query(UPDATE_TOPIC_USER_SQL, args)

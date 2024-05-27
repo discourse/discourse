@@ -110,4 +110,12 @@ describe FinalDestination::HTTP do
       FinalDestination::HTTP.start("example.com", 80, open_timeout: 5) {}
     end.to raise_error(Net::OpenTimeout)
   end
+
+  it "validates address argument against nil value" do
+    expect do FinalDestination::HTTP.start(nil) {} end.to raise_error(ArgumentError)
+  end
+
+  it "validates address argument against empty value" do
+    expect do FinalDestination::HTTP.start("") {} end.to raise_error(ArgumentError)
+  end
 end

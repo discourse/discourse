@@ -3,9 +3,11 @@
 require "rotp"
 
 RSpec.describe UsersController do
-  fab!(:user)
-  fab!(:user1) { Fabricate(:user, username: "someusername") }
-  fab!(:another_user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user1) do
+    Fabricate(:user, username: "someusername", refresh_auto_groups: true, created_at: 6.minutes.ago)
+  end
+  fab!(:another_user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
 
@@ -13,11 +15,9 @@ RSpec.describe UsersController do
   fab!(:moderator)
   fab!(:inactive_user)
 
-  before { Group.refresh_automatic_groups! }
-
   # Unfortunately, there are tests that depend on the user being created too
   # late for fab! to work.
-  let(:user_deferred) { Fabricate(:user) }
+  let(:user_deferred) { Fabricate(:user, refresh_auto_groups: true) }
 
   describe "#full account registration flow" do
     it "will correctly handle honeypot and challenge" do
@@ -312,7 +312,7 @@ RSpec.describe UsersController do
               params: {
                 password: "hg9ow8yhg98oadminlonger",
               }
-        end.to change { UserHistory.count }.by (1)
+        end.to change { UserHistory.count }.by(1)
 
         user_history = UserHistory.last
         expect(user_history.target_user_id).to eq(user1.id)
@@ -440,6 +440,7 @@ RSpec.describe UsersController do
 
         before do
           simulate_localhost_webauthn_challenge
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
 
           # store challenge in secure session by visiting the email login page
           get "/u/password-reset/#{email_token.token}"
@@ -604,10 +605,7 @@ RSpec.describe UsersController do
     it "allows you to toggle anon if enabled" do
       SiteSetting.allow_anonymous_posting = true
 
-      user = sign_in(Fabricate(:user))
-      user.trust_level = 1
-      user.save!
-      Group.refresh_automatic_groups!
+      user = sign_in(Fabricate(:user, trust_level: TrustLevel[1]))
 
       post "/u/toggle-anon.json"
       expect(response.status).to eq(200)
@@ -836,15 +834,9 @@ RSpec.describe UsersController do
       end
 
       context "when normalize_emails is enabled" do
-        let (:email) {
-          "jane+100@gmail.com"
-        }
-        let (:dupe_email) {
-          "jane+191@gmail.com"
-        }
-        let! (:user) {
-          Fabricate(:user, email: email, password: "strongpassword")
-        }
+        let(:email) { "jane+100@gmail.com" }
+        let(:dupe_email) { "jane+191@gmail.com" }
+        let!(:user) { Fabricate(:user, email: email, password: "strongpassword") }
 
         before do
           SiteSetting.hide_email_address_taken = true
@@ -1440,7 +1432,7 @@ RSpec.describe UsersController do
     context "with custom fields" do
       fab!(:user_field)
       fab!(:another_field) { Fabricate(:user_field) }
-      fab!(:optional_field) { Fabricate(:user_field, required: false) }
+      fab!(:optional_field) { Fabricate(:user_field, requirement: "optional") }
 
       context "without a value for the fields" do
         let(:create_params) do
@@ -1500,7 +1492,7 @@ RSpec.describe UsersController do
           it "value can't be nil or empty if the field is required" do
             put update_user_url, params: { user_fields: { field_id => valid_options } }
 
-            user_field.update!(required: true)
+            user_field.for_all_users!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1514,7 +1506,7 @@ RSpec.describe UsersController do
           it "value can nil or empty if the field is not required" do
             put update_user_url, params: { user_fields: { field_id => valid_options } }
 
-            user_field.update!(required: false)
+            user_field.optional!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1555,7 +1547,7 @@ RSpec.describe UsersController do
           it "value can't be nil if the field is required" do
             put update_user_url, params: { user_fields: { field_id => valid_options.first } }
 
-            user_field.update!(required: true)
+            user_field.for_all_users!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1565,7 +1557,7 @@ RSpec.describe UsersController do
           it "value can be set to nil if the field is not required" do
             put update_user_url, params: { user_fields: { field_id => valid_options.last } }
 
-            user_field.update!(required: false)
+            user_field.optional!
 
             expect do
               put update_user_url, params: { user_fields: { field_id => nil } }
@@ -1622,7 +1614,7 @@ RSpec.describe UsersController do
     end
 
     context "with only optional custom fields" do
-      fab!(:user_field) { Fabricate(:user_field, required: false) }
+      fab!(:user_field) { Fabricate(:user_field, requirement: "optional") }
 
       context "without values for the fields" do
         let(:create_params) do
@@ -1717,7 +1709,7 @@ RSpec.describe UsersController do
     context "while logged in" do
       let(:old_username) { "OrigUsername" }
       let(:new_username) { "#{old_username}1234" }
-      fab!(:user) { Fabricate(:user, username: "OrigUsername") }
+      fab!(:user) { Fabricate(:user, username: "OrigUsername", refresh_auto_groups: true) }
 
       before do
         user.username = old_username
@@ -1747,7 +1739,7 @@ RSpec.describe UsersController do
         body = response.parsed_body
 
         expect(body["errors"].first).to include(
-          I18n.t("user.username.short", min: User.username_length.begin),
+          I18n.t("user.username.short", count: User.username_length.begin),
         )
 
         expect(user.reload.username).to eq(old_username)
@@ -1901,7 +1893,7 @@ RSpec.describe UsersController do
       it 'should return the "too long" message' do
         expect(response.status).to eq(200)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t(:"user.username.long", max: SiteSetting.max_username_length),
+          I18n.t(:"user.username.long", count: SiteSetting.max_username_length),
         )
       end
     end
@@ -1985,7 +1977,7 @@ RSpec.describe UsersController do
     end
 
     it "returns success" do
-      user = Fabricate(:user, trust_level: 2)
+      user = Fabricate(:user, trust_level: TrustLevel[2])
       Fabricate(:invite, invited_by: user)
 
       sign_in(user)
@@ -1997,7 +1989,7 @@ RSpec.describe UsersController do
     end
 
     it "filters by all if viewing self" do
-      inviter = Fabricate(:user, trust_level: 2)
+      inviter = Fabricate(:user, trust_level: TrustLevel[2])
       sign_in(inviter)
 
       Fabricate(:invite, email: "billybob@example.com", invited_by: inviter)
@@ -2024,8 +2016,8 @@ RSpec.describe UsersController do
     end
 
     it "doesn't filter by email if another regular user" do
-      inviter = Fabricate(:user, trust_level: 2)
-      sign_in(Fabricate(:user, trust_level: 2))
+      inviter = Fabricate(:user, trust_level: TrustLevel[2])
+      sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
 
       Fabricate(:invite, email: "billybob@example.com", invited_by: inviter)
       redeemed_invite = Fabricate(:invite, email: "jimtom@example.com", invited_by: inviter)
@@ -2080,7 +2072,7 @@ RSpec.describe UsersController do
 
       context "with redeemed invites" do
         it "returns invited_users" do
-          inviter = Fabricate(:user, trust_level: 2)
+          inviter = Fabricate(:user, trust_level: TrustLevel[2])
           sign_in(inviter)
           invite = Fabricate(:invite, invited_by: inviter)
           _invited_user = Fabricate(:invited_user, invite: invite, user: invitee)
@@ -2099,7 +2091,7 @@ RSpec.describe UsersController do
       context "with pending invites" do
         context "with permission to see pending invites" do
           it "returns invites" do
-            inviter = Fabricate(:user, trust_level: 2)
+            inviter = Fabricate(:user, trust_level: TrustLevel[2])
             invite = Fabricate(:invite, invited_by: inviter)
             sign_in(inviter)
 
@@ -2128,7 +2120,7 @@ RSpec.describe UsersController do
 
         context "with permission to see invite links" do
           it "returns own invites" do
-            inviter = sign_in(Fabricate(:user, trust_level: 2))
+            inviter = sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
             invite =
               Fabricate(
                 :invite,
@@ -2267,9 +2259,14 @@ RSpec.describe UsersController do
     context "with authenticated user" do
       context "with permission to update" do
         fab!(:upload)
-        fab!(:user)
+        fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
-        before { sign_in(user) }
+        before do
+          User.set_callback(:create, :after, :ensure_in_trust_level_group)
+          sign_in(user)
+        end
+
+        after { User.skip_callback(:create, :after, :ensure_in_trust_level_group) }
 
         it "allows the update" do
           SiteSetting.tagging_enabled = true
@@ -2381,8 +2378,8 @@ RSpec.describe UsersController do
 
         context "with user fields" do
           context "with an editable field" do
-            fab!(:user_field)
-            fab!(:optional_field) { Fabricate(:user_field, required: false) }
+            fab!(:user_field) { Fabricate(:user_field, requirement: "for_all_users") }
+            fab!(:optional_field) { Fabricate(:user_field, requirement: "optional") }
 
             it "should update the user field" do
               put "/u/#{user.username}.json",
@@ -3175,7 +3172,10 @@ RSpec.describe UsersController do
       fab!(:badge) { Fabricate(:badge, name: "Demogorgon", allow_title: true) }
       let(:user_badge) { BadgeGranter.grant(badge, user1) }
 
-      before { TranslationOverride.upsert!("en", "badges.demogorgon.name", "Boss") }
+      before do
+        I18n.backend.store_translations(:en, { badges: { demogorgon: { name: "D'Artagnan" } } })
+        TranslationOverride.upsert!("en", "badges.demogorgon.name", "Boss")
+      end
 
       after { TranslationOverride.revert!("en", ["badges.demogorgon.name"]) }
 
@@ -3348,8 +3348,8 @@ RSpec.describe UsersController do
         expect(response.status).to eq(422)
       end
 
-      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is disabled" do
-        SiteSetting.allow_uploaded_avatars = "disabled"
+      it "raises an error when selecting the custom/uploaded avatar and uploaded_avatars_allowed_groups is disabled" do
+        SiteSetting.uploaded_avatars_allowed_groups = ""
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3359,8 +3359,8 @@ RSpec.describe UsersController do
         expect(response.status).to eq(422)
       end
 
-      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is admin" do
-        SiteSetting.allow_uploaded_avatars = "admin"
+      it "raises an error when selecting the custom/uploaded avatar and uploaded_avatars_allowed_groups is admin" do
+        SiteSetting.uploaded_avatars_allowed_groups = "1"
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3369,6 +3369,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(422)
 
         user1.update!(admin: true)
+        Group.refresh_automatic_groups!
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3377,8 +3378,8 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
       end
 
-      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is staff" do
-        SiteSetting.allow_uploaded_avatars = "staff"
+      it "raises an error when selecting the custom/uploaded avatar and uploaded_avatars_allowed_groups is staff" do
+        SiteSetting.uploaded_avatars_allowed_groups = "3"
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3387,6 +3388,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(422)
 
         user1.update!(moderator: true)
+        Group.refresh_automatic_groups!
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3395,8 +3397,8 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
       end
 
-      it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is a trust level" do
-        SiteSetting.allow_uploaded_avatars = "3"
+      it "raises an error when selecting the custom/uploaded avatar and uploaded_avatars_allowed_groups is a trust level" do
+        SiteSetting.uploaded_avatars_allowed_groups = "13"
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3404,7 +3406,8 @@ RSpec.describe UsersController do
             }
         expect(response.status).to eq(422)
 
-        user1.update!(trust_level: 3)
+        user1.change_trust_level!(TrustLevel[3])
+
         put "/u/#{user1.username}/preferences/avatar/pick.json",
             params: {
               upload_id: upload.id,
@@ -3414,7 +3417,7 @@ RSpec.describe UsersController do
       end
 
       it "ignores the upload if picking a system avatar" do
-        SiteSetting.allow_uploaded_avatars = "disabled"
+        SiteSetting.uploaded_avatars_allowed_groups = ""
         another_upload = Fabricate(:upload)
 
         put "/u/#{user1.username}/preferences/avatar/pick.json",
@@ -3428,7 +3431,7 @@ RSpec.describe UsersController do
       end
 
       it "raises an error if the type is invalid" do
-        SiteSetting.allow_uploaded_avatars = "disabled"
+        SiteSetting.uploaded_avatars_allowed_groups = ""
         another_upload = Fabricate(:upload)
 
         put "/u/#{user1.username}/preferences/avatar/pick.json",
@@ -4208,7 +4211,7 @@ RSpec.describe UsersController do
             flair_color: "#999999",
             flair_icon: "icon",
           )
-        liker = Fabricate(:user, flair_group: group)
+        liker = Fabricate(:user, flair_group: group, refresh_auto_groups: true)
         create_and_like_post(user_deferred, liker)
 
         get "/u/#{user_deferred.username_lower}/summary.json"
@@ -4542,12 +4545,19 @@ RSpec.describe UsersController do
         expect(parsed["trust_level"]).to be_blank
       end
 
-      it "should redirect to login page for anonymous user when profiles are hidden" do
+      it "should 403 for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}.json"
         expect(response).to have_http_status(:forbidden)
         get "/u/#{user.username}/messages.json"
         expect(response).to have_http_status(:forbidden)
+      end
+
+      it "should 403 correctly for crawlers when profiles are hidden" do
+        SiteSetting.hide_user_profiles_from_public = true
+        get "/u/#{user.username}", headers: { "User-Agent" => "Googlebot" }
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to have_tag("body.crawler")
       end
 
       describe "user profile views" do
@@ -4903,7 +4913,7 @@ RSpec.describe UsersController do
   end
 
   describe "#search_users" do
-    fab!(:topic) { Fabricate :topic }
+    fab!(:topic)
     let(:user) { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
     let(:post1) { Fabricate(:post, user: user, topic: topic) }
     let(:staged_user) { Fabricate(:user, staged: true) }
@@ -5447,7 +5457,7 @@ RSpec.describe UsersController do
           ApplicationController
             .any_instance
             .expects(:secure_session)
-            .returns("confirmed-password-#{user1.id}" => "false")
+            .returns("confirmed-session-#{user1.id}" => "false")
           post "/users/create_second_factor_totp.json"
 
           expect(response.status).to eq(403)
@@ -5478,7 +5488,7 @@ RSpec.describe UsersController do
           ApplicationController
             .any_instance
             .stubs(:secure_session)
-            .returns("confirmed-password-#{user1.id}" => "true")
+            .returns("confirmed-session-#{user1.id}" => "true")
           post "/users/create_second_factor_totp.json"
 
           expect(response.status).to eq(200)
@@ -5487,6 +5497,19 @@ RSpec.describe UsersController do
 
           expect(response_body["key"]).to be_present
           expect(response_body["qr"]).to be_present
+        end
+
+        it "raises an error for a user created > 5 mins ago without a confirmed session" do
+          post "/users/create_second_factor_totp.json"
+
+          expect(response.status).to eq(403)
+        end
+
+        it "does not require confirming session for a user created < 5 mins ago" do
+          user1.update(created_at: Time.now.utc - 4.minutes)
+          post "/users/create_second_factor_totp.json"
+
+          expect(response.status).to eq(200)
         end
       end
     end
@@ -5704,7 +5727,7 @@ RSpec.describe UsersController do
             ApplicationController
               .any_instance
               .stubs(:secure_session)
-              .returns("confirmed-password-#{user1.id}" => "true")
+              .returns("confirmed-session-#{user1.id}" => "true")
           end
           it "should allow second factor backup for the user to be disabled" do
             put "/users/second_factor.json",
@@ -5744,7 +5767,7 @@ RSpec.describe UsersController do
           ApplicationController
             .any_instance
             .expects(:secure_session)
-            .returns("confirmed-password-#{user1.id}" => "false")
+            .returns("confirmed-session-#{user1.id}" => "false")
           put "/users/second_factors_backup.json"
 
           expect(response.status).to eq(403)
@@ -5775,7 +5798,7 @@ RSpec.describe UsersController do
           ApplicationController
             .any_instance
             .expects(:secure_session)
-            .returns("confirmed-password-#{user1.id}" => "true")
+            .returns("confirmed-session-#{user1.id}" => "true")
 
           put "/users/second_factors_backup.json"
 
@@ -5827,9 +5850,13 @@ RSpec.describe UsersController do
   end
 
   describe "#register_second_factor_security_key" do
+    before do
+      simulate_localhost_webauthn_challenge
+      DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+    end
+
     context "when creation parameters are valid" do
       it "creates a security key for the user" do
-        simulate_localhost_webauthn_challenge
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 
@@ -5844,7 +5871,6 @@ RSpec.describe UsersController do
       end
 
       it "doesn't allow creating too many security keys" do
-        simulate_localhost_webauthn_challenge
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 
@@ -5862,7 +5888,6 @@ RSpec.describe UsersController do
       end
 
       it "doesn't allow the security key name to exceed the limit" do
-        simulate_localhost_webauthn_challenge
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 
@@ -5950,7 +5975,7 @@ RSpec.describe UsersController do
 
   describe "#create_passkey" do
     before do
-      SiteSetting.experimental_passkeys = true
+      SiteSetting.enable_passkeys = true
       stub_secure_session_confirmed
     end
 
@@ -5991,7 +6016,7 @@ RSpec.describe UsersController do
   end
 
   describe "#rename_passkey" do
-    before { SiteSetting.experimental_passkeys = true }
+    before { SiteSetting.enable_passkeys = true }
 
     it "fails if no user is logged in" do
       put "/u/rename_passkey/NONE.json"
@@ -6044,7 +6069,7 @@ RSpec.describe UsersController do
   end
 
   describe "#delete_passkey" do
-    before { SiteSetting.experimental_passkeys = true }
+    before { SiteSetting.enable_passkeys = true }
     fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
 
     it "fails if user does not have a confirmed session" do
@@ -6079,7 +6104,10 @@ RSpec.describe UsersController do
   end
 
   describe "#register_passkey" do
-    before { SiteSetting.experimental_passkeys = true }
+    before do
+      SiteSetting.enable_passkeys = true
+      DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+    end
 
     it "fails if user is not logged in" do
       stub_secure_session_confirmed
@@ -6388,18 +6416,25 @@ RSpec.describe UsersController do
       end
     end
 
-    context "when the site settings allow second factors" do
+    context "when the site settings allow local logins" do
       before do
         SiteSetting.enable_local_logins = true
         SiteSetting.enable_discourse_connect = false
       end
 
-      context "when the password is wrong" do
-        it "returns incorrect password response" do
+      context "when params are incorrect" do
+        it "returns 400 response if no password or passkey is supplied" do
+          post "/u/confirm-session.json"
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"][0]).to include("Missing password or passkey")
+        end
+
+        it "returns incorrect response on a wrong password" do
           post "/u/confirm-session.json", params: { password: password }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body["error"]).to eq("Incorrect password")
+          expect(response.parsed_body["error"]).to eq("Incorrect password or passkey")
         end
       end
 
@@ -6413,6 +6448,72 @@ RSpec.describe UsersController do
           expect(response.parsed_body["error"]).to eq(nil)
         end
       end
+
+      context "with an invalid passkey" do
+        it "returns invalid response" do
+          post "/u/confirm-session.json", params: { publicKeyCredential: "someboringstring" }
+
+          expect(response.status).to eq(401)
+
+          json = response.parsed_body
+          expect(json["errors"][0]).to eq(
+            I18n.t("webauthn.validation.malformed_public_key_credential_error"),
+          )
+        end
+      end
+
+      context "with a valid passkey" do
+        fab!(:user2) { Fabricate(:user) }
+        let!(:passkey) do
+          Fabricate(
+            :user_security_key,
+            credential_id: valid_passkey_data[:credential_id],
+            public_key: valid_passkey_data[:public_key],
+            user: user1,
+            factor_type: UserSecurityKey.factor_types[:first_factor],
+            last_used: nil,
+            name: "passkey",
+          )
+        end
+
+        before do
+          DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
+          simulate_localhost_passkey_challenge
+        end
+
+        it "returns a successful response for the correct user" do
+          user1.create_or_fetch_secure_identifier
+
+          post "/u/confirm-session.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user1.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(nil)
+        end
+
+        it "returns invalid response when key belongs to a different user" do
+          sign_in(user2)
+          user2.create_or_fetch_secure_identifier
+
+          post "/u/confirm-session.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user2.secure_identifier) },
+                   ),
+               }
+
+          expect(response.status).to eq(401)
+
+          json = response.parsed_body
+          expect(json["errors"][0]).to eq(I18n.t("webauthn.validation.ownership_error"))
+        end
+      end
     end
   end
 
@@ -6422,12 +6523,21 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
-    it "resopnds with a 'failed' result by default" do
+    it "responds with a 'failed' result by default" do
       sign_in(user1)
 
       get "/u/trusted-session.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["failed"]).to eq("FAILED")
+    end
+
+    it "responds with a 'success' result if user was recently created" do
+      sign_in(user1)
+      user1.update(created_at: Time.now.utc - 4.minutes)
+
+      get "/u/trusted-session.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["success"]).to eq("OK")
     end
 
     it "response with 'success' on a confirmed session" do
@@ -6524,7 +6634,7 @@ RSpec.describe UsersController do
       expect(response.status).to eq(403)
     end
 
-    it "returns an error if the the current user does not have access" do
+    it "returns an error if the current user does not have access" do
       sign_in(user1)
       topic.update(user_id: another_user.id)
       put "/u/#{another_user.username}/clear-featured-topic.json"
@@ -6719,10 +6829,9 @@ RSpec.describe UsersController do
   end
 
   describe "#private_message_topic_tracking_state" do
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
 
     fab!(:private_message) do
-      Group.refresh_automatic_groups!
       create_post(
         user: user1,
         target_usernames: [user_2.username],
@@ -6986,6 +7095,49 @@ RSpec.describe UsersController do
         notifications = response.parsed_body["notifications"]
         expect(notifications.size).to eq(1)
         expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
+      end
+
+      it "shows unread notifications even if the bookmark has been deleted if they have bookmarkable data" do
+        bookmark_with_reminder.destroy!
+
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+        expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
+      end
+
+      it "does not show unread notifications if the bookmark has been deleted if they only have the bookmark_id data" do
+        notif =
+          Notification.find_by(
+            topic: bookmark_with_reminder.bookmarkable.topic,
+            post_number: bookmark_with_reminder.bookmarkable.post_number,
+          )
+        new_data = notif.data_hash
+        new_data.delete(:bookmarkable_type)
+        new_data.delete(:bookmarkable_id)
+        notif.update!(data: JSON.dump(new_data))
+
+        bookmark_with_reminder.destroy!
+
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(0)
+      end
+
+      context "with `show_user_menu_avatars` setting enabled" do
+        before { SiteSetting.show_user_menu_avatars = true }
+
+        it "serializes acting_user_avatar into notifications" do
+          get "/u/#{user.username}/user-menu-bookmarks"
+          expect(response.status).to eq(200)
+
+          first_notification = response.parsed_body["notifications"].first
+          expect(first_notification["acting_user_avatar_template"]).to be_present
+        end
       end
     end
   end

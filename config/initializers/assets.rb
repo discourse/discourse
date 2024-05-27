@@ -6,7 +6,7 @@
 Rails.application.config.assets.enabled = true
 
 # Version of your assets, change this if you want to expire all your assets.
-Rails.application.config.assets.version = "2"
+Rails.application.config.assets.version = "2-#{GlobalSetting.asset_url_salt}"
 
 # Add additional assets to the asset load path.
 Rails.application.config.assets.paths << "#{Rails.root}/config/locales"
@@ -27,9 +27,6 @@ Rails.application.config.assets.precompile += %w[
   break_string.js
   service-worker.js
   locales/i18n.js
-  discourse/app/lib/webauthn.js
-  confirm-new-email/confirm-new-email.js
-  confirm-new-email/bootstrap.js
   scripts/discourse-test-listen-boot
 ]
 

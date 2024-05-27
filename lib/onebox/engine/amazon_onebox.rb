@@ -82,7 +82,7 @@ module Onebox
       private
 
       def has_cached_body
-        body_cacher&.respond_to?("cache_response_body?") &&
+        body_cacher.respond_to?("cache_response_body?") &&
           body_cacher.cache_response_body?(uri.to_s) &&
           body_cacher.cached_response_body_exists?(uri.to_s)
       end

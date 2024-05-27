@@ -9,7 +9,8 @@ export default class UploadedImageList extends Component {
     : [];
 
   @action
-  remove(url) {
+  remove(url, event) {
+    event.preventDefault();
     this.images.removeObject(url);
   }
 

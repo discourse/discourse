@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 he:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: צ׳אט
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "תמיד"
           fullscreen: "כאשר הצ׳אט במסך מלא"
@@ -39,8 +42,10 @@ he:
     chat:
       text_copied: טקסט הועתק ללוח הגזירים
       link_copied: קישור הועתק ללוח הגזירים
+      back_to_forum: "פורום"
       deleted_chat_username: נמחק
       dates:
+        yesterday: "אתמול"
         time_tiny: "h:mm"
       all_loaded: "כל ההודעות מוצגות"
       already_enabled: "כבר מופעל צ׳אט בנושא הזה. נא לרענן."
@@ -51,6 +56,7 @@ he:
       cancel_reply: "ביטול תגובה"
       chat_channels: "ערוצים"
       browse_all_channels: "עיון בכל הערוצים"
+      see_in: "לראות ב־"
       move_to_channel:
         title: "העברת הודעות לערוץ"
         instructions:
@@ -69,7 +75,8 @@ he:
         delete_channel: "מחיקת ערוץ"
         join_channel: "הצטרפות לערוץ"
         leave_channel: "יציאה מהערוץ"
-        join: "הצטרף"
+        leave_groupchat_info: "יציאה מהצ׳אט הקבוצתי הזה תשלול את הגישה שלך אליו ולא תאפשר לך לקבל התראות שקשורות אליו. כדי להצטרף מחדש צריכה להישלח אליך הזמנה מאחד מהחברים בצ׳אט הקבוצתי הזה."
+        join: "הצטרפות"
         leave: "עזוב"
         save_label:
           mute_channel: "העדפת השתקת ערוץ נשמרה"
@@ -109,12 +116,13 @@ he:
       hidden: "הודעה הוסתרה. [צפייה]"
       delete: "מחיקה"
       edited: "נערך"
-      muted: "בהשתקה"
+      muted: "מושתק"
       joined: "הצטרפו"
       empty_state:
         direct_message_cta: "התחלת צ׳אט אישי"
         direct_message: "אפשר לפתוח בצ׳אט אישי עם משתמש אחד או יותר."
         title: "לא נמצאו ערוצים"
+        my_threads: "עוד אין לך שרשורים. שרשורים בהם השתתפת יופיעו כאן."
       email_frequency:
         description: "נשלח לך דוא״ל אם לא ראינו אותך ב־15 הדקות האחרונות."
         never: "לעולם לא"
@@ -129,14 +137,14 @@ he:
       separate_sidebar_mode:
         title: "הצגת מצבי סרגל צד נפרדים עבור פורום וצ׳אט"
       enable: "הפעלת צ׳אט"
-      flag: "דיגול"
+      flag: "סימון"
       emoji: "הוספת אמוג׳י"
       flagged: "הודעה זו סומנה לסקירה"
       invalid_access: "אין לך גישה לצפות בערוץ הצ׳אט הזה"
       invitation_notification: "<span>הוזמנת להצטרף לערוץ צ׳אט על ידי</span> <span>%{username}</span>"
       in_reply_to: "בתגובה אל"
       heading: "צ׳אט"
-      join: "הצטרף"
+      join: "הצטרפות"
       last_visit: "ביקור אחרון"
       summarization:
         title: "סיכום הודעות"
@@ -234,6 +242,7 @@ he:
         header: "כותרת צ׳אט"
         composer: "כותב צ׳אט"
         channels_list: "רשימת ערוצי צ׳אט"
+      no_direct_message_channels: "לא הצטרפת לאף ערוץ הודעות ישירות."
       no_public_channels: "לא הצטרפת לאף ערוץ."
       kicked_from_channel: "אין לך יותר גישה לערוץ הזה."
       only_chat_push_notifications:
@@ -272,6 +281,8 @@ he:
       save: "שמירה"
       select: "בחירה"
       return_to_list: "חזרה לרשימת הערוצים"
+      return_to_channel: "חזרה לערוץ"
+      return_to_threads_list: "חזרה לרשימת השרשורים"
       unread_threads_count:
         one: "יש דיון שטרם קראת"
         two: "יש %{count} דיונים שטרם קראת"
@@ -306,15 +317,15 @@ he:
         archive_failed_no_topic: "העברת הערוץ לארכיון נכשלה. %{completed}/%{total} הודעות הועברו לארכיון, נושא היעד לא נוצר. יש ללחוץ על לנסות שוב כדי לנסות להעביר שוב לארכיון."
         archive_completed: "אפשר לעיין ב<a target=\"_blank\" href=\"%{topic_url}\">ארכיון הנושא</a>"
         closed_header: "הערוץ סגור"
-        closed: "סגורה"
+        closed: "סגור"
         open_header: "הערוץ פתוח"
-        open: "פתיחה"
+        open: "פתוח"
       browse:
         back: "חזרה"
         title: ערוצים
         filter_all: הכול
-        filter_open: נפתחו
-        filter_closed: סגורה
+        filter_open: פתוח
+        filter_closed: סגור
         filter_archived: בארכיון
         filter_input_placeholder: חיפוש ערוץ לפי שם
       chat_message_separator:
@@ -322,6 +333,8 @@ he:
         yesterday: אתמול
       members_view:
         filter_placeholder: איתור חברים
+        add_member: הוספת חברים
+        back_to_settings: "חזרה להגדרות"
       about_view:
         associated_topic: נושא מקושר
         associated_category: קטגוריה מקושרת
@@ -342,9 +355,16 @@ he:
         default_search_placeholder: "#ערוץ, @מישהם או כל דבר אחר"
         default_channel_search_placeholder: "#ערוץ"
         default_user_search_placeholder: "@מישהם"
-        user_search_placeholder: "…הוספת משתמשים נוספים"
+        user_search_placeholder: "…הוספת חברים נוספים"
         disabled_user: "השבית את הצ׳אט"
         no_items: "אין פריטים"
+        create_group_placeholder: "שם בצ׳אט הקבוצתי (רשות)"
+        participants_counter: "%{selection_count}/%{max} משתתפים"
+        new_group_chat: "צ׳אט קבוצתי חדש"
+        filter: "סינון"
+        cant_add_more_members: "הגעת למספר החברים המרבי"
+        create_new_group_chat: "יצירת צ׳אט קבוצתי"
+        group_with_too_many_members: "יותר מדי חברים (%{membersCount})"
       channel_edit_name_slug_modal:
         title: עריכת ערוץ
         input_placeholder: הוספת שם
@@ -356,10 +376,17 @@ he:
         input_placeholder: הוספת תיאור
         description: כדי לספר לאנשים על מה הערוץ הזה
       direct_message_creator:
+        add_to_channel: "הוספה לערוץ"
         title: הודעה חדשה
         prefix: "אל:"
         no_results: אין תוצאות
         selected_user_title: "ביטול בחירת %{username}"
+        group_name: "שם צ׳אט קבוצתי (רשות)"
+        members_counter:
+          one: "%{count}/חבר"
+          two: "%{count}/%{max} חברים"
+          many: "%{count}/%{max} חברים"
+          other: "%{count}/%{max} חברים"
       channel:
         no_memberships: אין חברים בערוץ הזה
         no_memberships_found: לא נמצאו חברים
@@ -421,21 +448,21 @@ he:
       reviewable:
         type: "הודעת צ׳אט"
       reactions:
-        only_you: "הגבת עם :%{emoji}:"
-        you_and_single_user: "הגבת יחד עם %{username} את האמוג׳י :%{emoji}:"
-        you_and_multiple_users: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{username} את האמוג׳י :%{emoji}:"
+        only_you: "<span>הגבת עם </span>:%{emoji}:"
+        you_and_single_user: "<span>הגבת יחד עם %{username} את האמוג׳י </span>:%{emoji}:"
+        you_and_multiple_users: "<span>הגבת יחד עם %{commaSeparatedUsernames} ועם %{username} את האמוג׳י </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י :%{emoji}:"
-          two: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{count} נוספים את האמוג׳י :%{emoji}:"
-          many: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{count} נוספים את האמוג׳י :%{emoji}:"
-          other: "הגבת יחד עם %{commaSeparatedUsernames} ו־%{count} נוספים את האמוג׳י :%{emoji}:"
-        single_user: "האמוג׳י שנוסף ע״י %{username} הוא :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} ו־%{username} הגיבו את האמוג׳י :%{emoji}:"
+          one: "<span>הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י </span>:%{emoji}:"
+          two: "<span>הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י </span>:%{emoji}:"
+          many: "<span>הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י </span>:%{emoji}:"
+          other: "<span>הגבת יחד עם %{commaSeparatedUsernames} ועוד %{count} את האמוג׳י </span>:%{emoji}:"
+        single_user: "<span>התגובה של %{username} היא </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} וגם %{username} הגיבו עם </span>:%{emoji}:"
         multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י :%{emoji}:"
-          two: "%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י :%{emoji}:"
-          many: "%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י :%{emoji}:"
-          other: "%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י :%{emoji}:"
+          one: "<span>%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י </span>:%{emoji}:"
+          two: "<span>%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י </span>:%{emoji}:"
+          many: "<span>%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} ועוד %{count} הגיבו את האמוג׳י </span>:%{emoji}:"
       composer:
         toggle_toolbar: "החלפת מצב סרגל כלים"
         italic_text: "טקסט נטוי"
@@ -445,6 +472,7 @@ he:
       quote:
         original_channel: 'נשלח במקור ב־<a href="%{channelLink}">%{channel}</a>'
         copy_success: "ציטוט מהצ׳אט הועתק ללוח הגזירים"
+        default_thread_title: "שרשור"
       notification_levels:
         never: "לעולם לא"
         mention: "רק אזכורים"
@@ -459,7 +487,7 @@ he:
         auto_join_users_info_no_category: "לבדוק כל שעה אילו משתמשים היו פעילים ב־3 החודשים האחרונים. להוסיף אותם לערוץ אם יש להם גישה לקטגוריה הנבחרת."
         auto_join_users_warning: "כל משתמש שאינו חבר בערוץ הזה ויש לו גישה לקטגוריה %{category} יצטרף. זה בסדר?"
         desktop_notification_level: "התראות שולחן עבודה"
-        follow: "הצטרף"
+        follow: "הצטרפות"
         followed: "הצטרפו"
         mobile_notification_level: "התראות בדחיפה לנייד"
         mute: "השתקת ערוץ"
@@ -471,7 +499,7 @@ he:
         preview: "תצוגה מקדימה"
         save: "שמירה"
         saved: "נשמר"
-        unfollow: "עזוב"
+        unfollow: "לעזוב"
         admin_title: "הנהלה"
         settings_title: "הגדרות"
         info_title: "פרטי ערוץ"
@@ -485,12 +513,20 @@ he:
           description: "פעולה זו תייצא את כל ההודעות מכל הערוצים."
           create_export: "יצירת ייצוא"
           export_has_started: "הייצוא החל. תישלח אליך הודעה פרטית כשהוא מוכן."
+      my_threads:
+        title: השרשורים שלי
+        aria_label: "מעבר לרשימת השרשורים שלי"
       direct_messages:
-        title: "צ׳אט אישי"
+        title: "הודעות ישירות"
+        aria_label: "מעבר להודעות ישירות"
         new: "יצירת צ׳אט אישי"
         create: "קדימה"
         leave: "יציאה מהצ׳אט האישי הזה"
+        close: "סגירת הצ׳אט האישי הזה"
         cannot_create: "מחילה, אין לך אפשרות לשלוח הודעות ישירות."
+      channel_list:
+        title: "ערוצים"
+        aria_label: "מעבר לרשימת ערוצים"
       incoming_webhooks:
         back: "חזרה"
         channel_placeholder: "בחירת ערוץ"
@@ -525,7 +561,7 @@ he:
         error: "אירעה שגיאה בהעברת הודעות הצ׳אט"
         title: "העברת צ׳אט לנושא"
         new_topic:
-          title: "העבר לנושא חדש"
+          title: "העברה לנושא חדש"
           instructions:
             one: "פעולה זו תיצור נושא חדש ותמלא בו את הודעת הצ׳אט שבחרת."
             two: "פעולה זו תיצור נושא חדש ותמלא בו את <b>%{count}</b> הודעות הצ׳אט שבחרת."
@@ -533,7 +569,7 @@ he:
             other: "פעולה זו תיצור נושא חדש ותמלא בו את <b>%{count}</b> הודעות הצ׳אט שבחרת."
           instructions_channel_archive: "פעולה זו תיצור נושא חדש ותעביר אליו את הודעות הערוץ כארכיון."
         existing_topic:
-          title: "העבר לנושא קיים"
+          title: "העברה לנושא קיים"
           instructions:
             one: "נא לבחור את הנושא אליו ברצונך להעביר את הודעת הצ׳אט הזו."
             two: "נא לבחור את הנושא אליו ברצונך להעביר את <b>%{count}</b> הודעות הצ׳אט האלו."
@@ -541,7 +577,7 @@ he:
             other: "נא לבחור את הנושא אליו ברצונך להעביר את <b>%{count}</b> הודעות הצ׳אט האלו."
           instructions_channel_archive: "נא לבחור את הנושא אליו ברצונך להעביר את הודעות הערוץ כארכיון."
         new_message:
-          title: "העבר להודעה חדשה"
+          title: "העברה להודעה חדשה"
           instructions:
             one: "פעולה זו תיצור הודעה חדשה ותמלא בה את הודעת הצ׳אט שבחרת."
             two: "פעולה זו תיצור הודעה חדשה ותמלא בה את <b>%{count}</b> הודעות הצ׳אט שבחרת."
@@ -571,6 +607,7 @@ he:
       flags:
         off_topic: "הודעה זו לא תואמת לדיון הנוכחי כפי שהוגדר בכותרת הערוץ וכנראה שצריך להעביר אותה."
         inappropriate: "הודעה זו מכילה תוכן שאדם מן השורה עשוי להחשיב כפוגעני, נצלני או מפר את <a href=\"%{basePath}/guidelines\">הכללים המנחים את הקהילה שלנו</a>."
+        illegal: "הפוסט הזה דורש את תשומת לב הסגל כיוון שלהבנתי הוא מכיל תוכן לא חוקי."
         spam: "הודעה זו היא פרסומת או השחתה. היא אינה שימושית או רלוונטית לערוץ הנוכחי."
         notify_user: "אשמח לדבר עם אותו גורם ישירות ובאופן אישי על ההודעה שנשלחה על ידי הגורם."
         notify_moderators: "הודעה זו דורשת את התערבות הסגל מסיבות אחרות שאינן מופיעות לעיל."
@@ -615,8 +652,19 @@ he:
           two: "+%{count}"
           many: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "הגדרת כותרת שרשור"
+        message: "סיוע לאחרים להכיר את הדיון."
+        dismiss_action: "לא להציג שוב"
+        primary_action: "הגדרת כותרת"
+      thread_title_modal:
+        title: "הגדרת כותרת שרשור"
+        input_placeholder: "לספר לאחרים על מה הדיון הזה…"
+        discourse_ai:
+          title: "יצירת כותרות שרשורים אוטומטית"
       threads:
         open: "פתיחת שרשור"
+        list: "שרשורים"
         none: "אין לך חלק באף אחד מהשרשורים בערוץ הזה."
       draft_channel_screen:
         header: "הודעה חדשה"

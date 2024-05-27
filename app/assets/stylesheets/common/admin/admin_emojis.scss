@@ -7,7 +7,6 @@
     text-align: right;
   }
   #emoji-uploader {
-    padding: 10px;
     transition: box-shadow ease-in-out 0.25s;
   }
   .uppy-is-drag-over {
@@ -18,5 +17,14 @@
     @media (prefers-reduced-motion: no-preference) {
       animation: background-fade-highlight 2.5s ease-out;
     }
+  }
+}
+.admin-emojis__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  a {
+    font-size: var(--font-up-1);
+    margin-bottom: 10px;
   }
 }

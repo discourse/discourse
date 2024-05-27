@@ -6,11 +6,12 @@ require "csv"
 class S3Inventory
   attr_reader :type, :model, :inventory_date
 
-  CSV_KEY_INDEX ||= 1
-  CSV_ETAG_INDEX ||= 2
-  INVENTORY_PREFIX ||= "inventory"
-  INVENTORY_VERSION ||= "1"
-  INVENTORY_LAG ||= 2.days
+  CSV_KEY_INDEX = 1
+  CSV_ETAG_INDEX = 2
+  INVENTORY_PREFIX = "inventory"
+  INVENTORY_VERSION = "1"
+  INVENTORY_LAG = 2.days
+  WAIT_AFTER_RESTORE_DAYS = 2
 
   def initialize(s3_helper, type, preloaded_inventory_file: nil, preloaded_inventory_date: nil)
     @s3_helper = s3_helper
@@ -41,11 +42,13 @@ class S3Inventory
         download_and_decompress_files if !@preloaded_inventory_file
 
         multisite_prefix = Discourse.store.upload_path
+
         ActiveRecord::Base.transaction do
           begin
             connection.exec(
               "CREATE TEMP TABLE #{table_name}(url text UNIQUE, etag text, PRIMARY KEY(etag, url))",
             )
+
             connection.copy_data("COPY #{table_name} FROM STDIN CSV") do
               for_each_inventory_row do |row|
                 key = row[CSV_KEY_INDEX]
@@ -258,10 +261,18 @@ class S3Inventory
 
   def files
     return if @preloaded_inventory_file
+
     @files ||=
       begin
         symlink_file = unsorted_files.sort_by { |file| -file.last_modified.to_i }.first
+
         return [] if symlink_file.blank?
+
+        if BackupMetadata.last_restore_date.present? &&
+             (symlink_file.last_modified - WAIT_AFTER_RESTORE_DAYS.days) <
+               BackupMetadata.last_restore_date
+          return []
+        end
 
         @inventory_date = symlink_file.last_modified - INVENTORY_LAG
         log "Downloading symlink file to tmp directory..."
@@ -269,6 +280,9 @@ class S3Inventory
         filename = File.join(tmp_directory, File.basename(symlink_file.key))
 
         @s3_helper.download_file(symlink_file.key, filename, failure_message)
+
+        return [] if !File.exist?(filename)
+
         File
           .readlines(filename)
           .map do |key|

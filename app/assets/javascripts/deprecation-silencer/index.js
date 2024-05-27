@@ -1,6 +1,6 @@
 const SILENCED_WARN_PREFIXES = [
   "Setting the `jquery-integration` optional feature flag",
-  "DEPRECATION: Invoking the `<LinkTo>` component with positional arguments is deprecated",
+  'unexpectedly found "!', // https://github.com/emberjs/ember.js/issues/19392
 ];
 
 class DeprecationSilencer {

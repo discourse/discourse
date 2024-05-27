@@ -1,10 +1,10 @@
-import { schedule } from "@ember/runloop";
-import Service, { inject as service } from "@ember/service";
+import { next, schedule } from "@ember/runloop";
+import Service, { service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
 
-const MAX_SCROLL_LOCATIONS = 100;
+const STORE_KEY = Symbol("scroll-location");
 
 /**
  * This service is responsible for managing scroll position when transitioning.
@@ -18,9 +18,7 @@ const MAX_SCROLL_LOCATIONS = 100;
 @disableImplicitInjections
 export default class RouteScrollManager extends Service {
   @service router;
-
-  scrollLocationHistory = new Map();
-  uuid;
+  @service historyStore;
 
   scrollElement = isTesting()
     ? document.getElementById("ember-testing-container")
@@ -28,14 +26,10 @@ export default class RouteScrollManager extends Service {
 
   @bind
   routeWillChange() {
-    if (!this.uuid) {
-      return;
-    }
-    this.scrollLocationHistory.set(this.uuid, [
+    this.historyStore.set(STORE_KEY, [
       this.scrollElement.scrollLeft,
       this.scrollElement.scrollTop,
     ]);
-    this.#pruneOldScrollLocations();
   }
 
   @bind
@@ -44,32 +38,17 @@ export default class RouteScrollManager extends Service {
       return;
     }
 
-    const newUuid = this.router.location.getState?.().uuid;
-
-    if (newUuid === this.uuid) {
-      // routeDidChange fired without the history state actually changing. Most likely a refresh.
-      // Forget the previously-stored scroll location so that we scroll to the top
-      this.scrollLocationHistory.delete(this.uuid);
-    }
-
-    this.uuid = newUuid;
-
     if (!this.#shouldScroll(transition.to)) {
       return;
     }
 
-    const scrollLocation = this.scrollLocationHistory.get(this.uuid) || [0, 0];
-    schedule("afterRender", () => {
-      this.scrollElement.scrollTo(...scrollLocation);
-    });
-  }
+    const scrollLocation = this.historyStore.get(STORE_KEY) || [0, 0];
 
-  #pruneOldScrollLocations() {
-    while (this.scrollLocationHistory.size > MAX_SCROLL_LOCATIONS) {
-      // JS Map guarantees keys will be returned in insertion order
-      const oldestUUID = this.scrollLocationHistory.keys().next().value;
-      this.scrollLocationHistory.delete(oldestUUID);
-    }
+    next(() =>
+      schedule("afterRender", () =>
+        this.scrollElement.scrollTo(...scrollLocation)
+      )
+    );
   }
 
   #shouldScroll(routeInfo) {

@@ -6,10 +6,9 @@
 
 zh_CN:
   site_settings:
-    chat_separate_sidebar_mode: "为论坛和聊天显示单独边栏模式。"
-    chat_enabled: "启用聊天."
+    chat_separate_sidebar_mode: "为论坛和聊天显示单独的边栏模式。"
+    chat_enabled: "启用聊天。"
     enable_public_channels: "基于类别启用公开频道。"
-    chat_allowed_groups: "这些群组中的用户可以聊天。请注意，管理人员始终可以访问聊天。"
     chat_channel_retention_days: "常规频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_auto_silence_duration: "用户超过聊天消息创建速率限制时将被禁言的分钟数。设置为 0 将禁用自动禁言。"
@@ -24,15 +23,19 @@ zh_CN:
     chat_archive_destination_topic_status: "频道归档完成后目标话题应处于的状态。这仅适用于目标话题是新话题而不是现有话题的情况。"
     default_emoji_reactions: "聊天消息的默认表情符号回应。最多可添加 5 个表情符号进行快速回应。"
     direct_message_enabled_groups: "允许这些群组中的用户创建用户间的个人聊天。请注意：管理人员始终可以创建个人聊天，用户将能够回复有权创建个人聊天的用户发起的个人聊天。"
-    chat_message_flag_allowed_groups: "这些群组中的用户可以举报聊天消息。"
     max_mentions_per_chat_message: "用户可以在聊天消息中使用的 @name 通知的最大数量。"
     chat_max_direct_message_users: "在创建新的直接消息时，用户无法添加超过此数量的其他用户。设置为 0 只允许给自己发送消息。管理人员不受此设置的影响。"
     chat_allow_archiving_channels: "允许管理人员在关闭频道时将消息归档到某个话题。"
+    chat_editing_grace_period: "在发送聊天后 (n) 秒内进行编辑时，不会在聊天消息旁边显示（已编辑）标签。"
+    chat_editing_grace_period_max_diff_low_trust: "聊天编辑宽限期内允许的最大字符更改数，超过此值将在聊天消息旁边显示（已编辑）标签（信任级别 0 和 1）。"
+    chat_editing_grace_period_max_diff_high_trust: "聊天编辑宽限期内允许的最大字符更改数，超过此值将在聊天消息旁边显示（已编辑）标签（信任级别 2 及以上）。"
+    chat_preferred_mobile_index: "在移动设备上加载 /chat 时的首选标签页。"
     errors:
       chat_default_channel: "默认聊天频道必须是公共频道。"
       direct_message_enabled_groups_invalid: "您必须为此设置至少指定一个群组。如果您不希望管理人员以外的任何人发送直接消息，请选择管理人员群组。"
       chat_upload_not_allowed_secure_uploads: "当启用安全上传站点设置时，不允许在聊天中上传文件。"
   system_messages:
+    private_channel_title: "频道 %{id}"
     chat_channel_archive_complete:
       title: "聊天频道归档完成"
       subject_template: "聊天频道归档成功完成"
@@ -55,6 +58,7 @@ zh_CN:
   chat:
     deleted_chat_username: 已删除
     errors:
+      users_cant_be_added_to_channel: "无法将用户添加到此频道。"
       channel_exists_for_category: "此类别和名称的频道已经存在"
       channel_new_message_disallowed:
         archived: "该频道已被归档，无法发送新消息"
@@ -91,6 +95,7 @@ zh_CN:
       original_message_not_found: "找不到您要回复信息的上级内容，或相关内容已被删除。"
       thread_invalid_for_channel: "该对话不是所提供频道的一部分。"
       thread_does_not_match_parent: "对话与父消息不匹配。"
+      invalid_direct_message: "你不能创建此私信。"
     reviewables:
       message_already_handled: "谢谢，但我们已经审核此消息，并确定它不需要被再次举报。"
       actions:
@@ -116,7 +121,7 @@ zh_CN:
           description: "删除消息，使用户看不到。"
         delete_and_agree:
           title: "忽略举报并删除消息"
-          description: "将它从队列中移除并删除消息以忽略这个举报。"
+          description: "将举报从队列中移除并删除消息以忽略该举报。"
         disagree_and_restore:
           title: "不同意并恢复消息"
           description: "恢复消息，以便所有用户都可以看到。"
@@ -124,11 +129,13 @@ zh_CN:
           title: "不同意"
         ignore:
           title: "不进行操作"
-          description: "不采取任何措施，将其从队列中移除，忽略该举报。"
+          description: "不采取任何措施，将举报从队列中移除以忽略该举报。"
       direct_messages:
         transcript_title: "%{channel_name}中以前消息的副本"
         transcript_body: "为了向您提供更多背景，我们在此对话中包含了以前消息的副本（最多十条）：\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        other: "%{inviting_user} 已邀请 %{invited_users}。"
       archive:
         first_post_raw: "此话题是[%{channel_name}](%{channel_url})聊天频道的归档。"
       messages_moved:
@@ -152,7 +159,7 @@ zh_CN:
       group_mentions_disabled: "%{first_identifier} 不允许提及。"
       group_mentions_disabled_multiple:
         other: "%{first_identifier} 和其他 %{count} 个群组不允许提及。"
-      global_mentions_disallowed: "在本频道中禁用 @here 和 @all 这2种提及方式。"
+      global_mentions_disallowed: "@here 和 @all 提及在此频道中被禁用。"
       too_many_members: "%{first_identifier} 的成员过多。任何人都没有收到通知。"
       too_many_members_multiple:
         other: "%{first_identifier} 和其他 %{count} 个群组的成员过多。任何人都没有收到通知。"
@@ -167,13 +174,16 @@ zh_CN:
       inline_to_message: "消息 #%{message_id}，来自%{username} – #%{chat_channel}"
       inline_to_channel: "聊天 #%{chat_channel}"
       inline_to_topic_channel: "话题%{topic_title}的聊天"
-      thread_title_connector: "位置"
+      thread_title_connector: "位置："
       x_members:
         other: "%{count} 个成员"
       and_x_others:
         other: "和其他 %{count} 人"
     summaries:
       no_targets: "在所选时间段内没有消息。"
+    transcript:
+      default_thread_title: "对话"
+      split_thread_range: "%{start} 到 %{end} 的消息（共 %{total} 条）"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -207,6 +217,7 @@ zh_CN:
         other: "您有新的聊天消息"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] 新消息"
         direct_message_from_1: "[%{email_prefix}] 来自 %{username} 的新消息"
         direct_message_from_2: "[%{email_prefix}] 来自 %{username1} 和 %{username2} 的新消息"
         direct_message_from_more:

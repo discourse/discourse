@@ -6,10 +6,8 @@ describe "Thread indicator for chat messages", type: :system do
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
-  let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
   let(:open_thread) { PageObjects::Pages::ChatThread.new }
-  let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
     chat_system_bootstrap(current_user, [channel])
@@ -135,6 +133,15 @@ describe "Thread indicator for chat messages", type: :system do
       expect(
         channel_page.message_thread_indicator(thread_1.original_message.reload).excerpt,
       ).to have_content(thread_excerpt(thread_1.last_message.reload))
+    end
+
+    it "builds an excerpt for the last reply if it doesn’t have one" do
+      thread_1.last_message.update!(excerpt: nil)
+      chat_page.visit_channel(channel)
+
+      expect(
+        channel_page.message_thread_indicator(thread_1.original_message).excerpt,
+      ).to have_content(thread_1.last_message.build_excerpt)
     end
 
     it "updates the last reply excerpt and participants when a new message is added to the thread" do

@@ -41,6 +41,10 @@ module PageObjects
         horizontal_secondary_link_visible?(ACCOUNT_LINK_CSS_SELECTOR, visible: false)
       end
 
+      def has_primary_email?(email)
+        has_css?(".email-first", text: email)
+      end
+
       private
 
       def horizontal_secondary_link_visible?(selector, visible: true)

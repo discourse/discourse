@@ -78,7 +78,7 @@ class UserAvatar < ActiveRecord::Base
           end
         end
       rescue OpenURI::HTTPError => e
-        raise e if e.io&.status[0].to_i != 404
+        raise e if e.io&.status&.[](0).to_i != 404
       ensure
         tempfile&.close!
       end
@@ -178,10 +178,14 @@ class UserAvatar < ActiveRecord::Base
 
     ids =
       DB.query_single(<<~SQL, sizes: Discourse.avatar_sizes, limit: max_optimized_avatars_to_remove)
-      SELECT oi.id FROM user_avatars a
+      SELECT oi.id FROM (
+        SELECT custom_upload_id FROM user_avatars
+        EXCEPT
+        SELECT upload_id FROM  upload_references WHERE target_type <> 'UserAvatar'
+        AND upload_id IS NOT NULL
+      ) AS a
       JOIN optimized_images oi ON oi.upload_id = a.custom_upload_id
-      LEFT JOIN upload_references ur ON ur.upload_id = a.custom_upload_id and ur.target_type <> 'UserAvatar'
-      WHERE oi.width not in (:sizes) AND oi.height not in (:sizes) AND ur.upload_id IS NULL
+      WHERE oi.width not in (:sizes) AND oi.height not in (:sizes)
       LIMIT :limit
     SQL
 

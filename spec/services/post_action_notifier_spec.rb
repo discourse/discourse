@@ -6,7 +6,7 @@ RSpec.describe PostActionNotifier do
     Jobs.run_immediately!
   end
 
-  fab!(:evil_trout)
+  fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
   fab!(:post)
 
   context "when editing a post" do

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "User preferences for Security", type: :system do
+describe "User preferences | Security", type: :system do
   fab!(:password) { "kungfukenny" }
   fab!(:email) { "email@user.com" }
   fab!(:user) { Fabricate(:user, email: email, password: password) }
@@ -9,6 +9,9 @@ describe "User preferences for Security", type: :system do
 
   before do
     user.activate
+    # testing the enforced 2FA flow requires a user that was created > 5 minutes ago
+    user.created_at = 6.minutes.ago
+    user.save!
     sign_in(user)
 
     # system specs run on their own host + port
@@ -26,7 +29,7 @@ describe "User preferences for Security", type: :system do
       find(".security-key .new-security-key").click
       expect(user_preferences_security_page).to have_css("input#security-key-name")
 
-      find(".modal-body input#security-key-name").fill_in(with: "First Key")
+      find(".d-modal__body input#security-key-name").fill_in(with: "First Key")
       find(".add-security-key").click
 
       expect(user_preferences_security_page).to have_css(".security-key .second-factor-item")
@@ -38,7 +41,7 @@ describe "User preferences for Security", type: :system do
       find("input#login-account-name").fill_in(with: user.username)
       find("input#login-account-password").fill_in(with: password)
 
-      find(".modal-footer .btn-primary").click
+      find(".d-modal__footer .btn-primary").click
       find("#security-key .btn-primary").click
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
@@ -49,7 +52,7 @@ describe "User preferences for Security", type: :system do
   end
 
   shared_examples "passkeys" do
-    before { SiteSetting.experimental_passkeys = true }
+    before { SiteSetting.enable_passkeys = true }
 
     it "adds a passkey and logs in with it" do
       options =
@@ -109,13 +112,38 @@ describe "User preferences for Security", type: :system do
     end
   end
 
+  shared_examples "enforced second factor" do
+    it "allows user to add 2FA" do
+      SiteSetting.enforce_second_factor = "all"
+
+      visit("/")
+
+      expect(page).to have_selector(
+        ".alert-error",
+        text: "You are required to enable two-factor authentication before accessing this site.",
+      )
+
+      expect(page).to have_css(".user-preferences .totp")
+      expect(page).to have_css(".user-preferences .security-key")
+
+      find(".user-preferences .totp .btn.new-totp").click
+
+      find(".dialog-body input#password").fill_in(with: password)
+      find(".confirm-session .btn-primary").click
+
+      expect(page).to have_css(".qr-code")
+    end
+  end
+
   context "when desktop" do
     include_examples "security keys"
     include_examples "passkeys"
+    include_examples "enforced second factor"
   end
 
   context "when mobile", mobile: true do
     include_examples "security keys"
     include_examples "passkeys"
+    include_examples "enforced second factor"
   end
 end

@@ -54,13 +54,19 @@ RSpec.describe StaticController do
         expect(response.media_type).to eq("image/png")
         expect(response.body.bytesize).to eq(upload.filesize)
       end
+
+      context "when favicon fails to load" do
+        before { FileHelper.stubs(:download).raises(SocketError) }
+
+        it "creates an admin notice" do
+          expect { get "/favicon/proxied" }.to change { AdminNotice.problem.count }.by(1)
+        end
+      end
     end
   end
 
   describe "#cdn_asset" do
-    let (:site) {
-      RailsMultisite::ConnectionManagement.current_db
-    }
+    let(:site) { RailsMultisite::ConnectionManagement.current_db }
 
     it "can serve assets" do
       begin
@@ -166,11 +172,6 @@ RSpec.describe StaticController do
       before { SiteSetting.login_required = true }
 
       %w[faq guidelines rules conduct].each do |page_name|
-        it "#{page_name} page redirects to login page for anon" do
-          get "/#{page_name}"
-          expect(response).to redirect_to "/login"
-        end
-
         it "#{page_name} page redirects to login page for anon" do
           get "/#{page_name}"
           expect(response).to redirect_to "/login"
@@ -326,7 +327,7 @@ RSpec.describe StaticController do
       get "/service-worker.js"
       expect(response.status).to eq(200)
       expect(response.content_type).to start_with("application/javascript")
-      expect(response.body).to include("workbox")
+      expect(response.body).to include("addEventListener")
     end
 
     it "replaces sourcemap URL" do

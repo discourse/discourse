@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe PostActionUsersController do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:post) { Fabricate(:post, user: sign_in(user)) }
 
   describe "index" do
@@ -137,5 +137,42 @@ RSpec.describe PostActionUsersController do
 
     expect(users.length).to eq(0)
     expect(total).to be_nil
+  end
+
+  describe "when a plugin registers the :post_action_users_list modifier" do
+    before do
+      @post_action_1 = PostActionCreator.like(Fabricate(:user), post).post_action
+      @post_action_2 = PostActionCreator.like(Fabricate(:user), post).post_action
+    end
+
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "allows the plugin to modify the post action query" do
+      excluded_post_action_ids = [@post_action_1.id]
+      Plugin::Instance
+        .new
+        .register_modifier(:post_action_users_list) do |query, modifier_post|
+          expect(modifier_post.id).to eq(post.id)
+          query.where("post_actions.id NOT IN (?)", excluded_post_action_ids)
+        end
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: PostActionType.types[:like],
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post_action_users"].count).to eq(1)
+
+      DiscoursePluginRegistry.clear_modifiers!
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: PostActionType.types[:like],
+          }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["post_action_users"].count).to eq(2)
+    end
   end
 end

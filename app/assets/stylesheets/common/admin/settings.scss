@@ -123,7 +123,7 @@
         width: 0.5rem;
         height: 0.5rem;
         border-radius: 100%;
-        background-color: var(--quaternary-low);
+        background-color: var(--highlight-high);
       }
     }
   }
@@ -136,5 +136,12 @@
   }
   .warning {
     color: var(--danger);
+  }
+  .file-types-list__button {
+    margin-top: 0.5em;
+    margin-bottom: 0.2em;
+    background: var(--primary-medium);
+    color: var(--secondary);
+    font-size: var(--font-down-2);
   }
 }

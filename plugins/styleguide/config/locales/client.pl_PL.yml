@@ -10,16 +10,23 @@ pl_PL:
       title: "Przewodnik po stylach"
       welcome: "Aby rozpocząć, wybierz sekcję z menu po lewej stronie."
       categories:
+        syntax: Składnia
         atoms: Atomy
         molecules: Cząsteczki
         organisms: Organizmy
       sections:
+        bem:
+          title: "BEM"
         typography:
           title: "Typografia"
           example: "Witaj w Discourse"
           paragraph: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercise ullamco labouris nisi ut aliquip ex ea commodo consat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         date_time_inputs:
           title: "Data/czas"
+        menus:
+          title: "Menu"
+        toasts:
+          title: "Komunikaty podpowiedzi"
         font_scale:
           title: "System czcionek"
         colors:
@@ -88,6 +95,7 @@ pl_PL:
         empty_state:
           title: "Pusty stan"
         tooltips:
+          title: "Podpowiedzi"
           description: "Opis"
           header: "Nagłówek"
           hover_to_see: "Najedź kursorem, aby zobaczyć podpowiedź"

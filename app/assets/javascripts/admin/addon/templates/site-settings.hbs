@@ -1,38 +1,19 @@
-<div class="admin-controls">
-  <div class="controls">
-    <div class="inline-form">
-      <DButton @action={{this.toggleMenu}} @icon="bars" class="menu-toggle" />
-      <TextField
-        @id="setting-filter"
-        @value={{this.filter}}
-        @placeholderKey="type_to_filter"
-        @class="no-blur"
-      />
-      <DButton
-        @action={{this.clearFilter}}
-        @label="admin.site_settings.clear_filter"
-        id="clear-filter"
-        class="btn-default"
-      />
-    </div>
-  </div>
+<AdminSiteSettingsFilterControls
+  @initialFilter={{this.filter}}
+  @onChangeFilter={{this.filterChanged}}
+  @showMenu={{true}}
+  @onToggleMenu={{this.toggleMenu}}
+/>
 
-  <div class="search controls">
-    <label>
-      <Input
-        @type="checkbox"
-        @checked={{this.onlyOverridden}}
-        class="toggle-overridden"
-      />
-      {{i18n "admin.settings.show_overriden"}}
-    </label>
-  </div>
-</div>
-
-<div class="admin-nav pull-left">
+<div class="admin-nav admin-site-settings-category-nav pull-left">
   <ul class="nav nav-stacked">
     {{#each this.visibleSiteSettings as |category|}}
-      <li class={{category.nameKey}}>
+      <li
+        class={{concat-class
+          "admin-site-settings-category-nav__item"
+          category.nameKey
+        }}
+      >
         <LinkTo
           @route="adminSiteSettingsCategory"
           @model={{category.nameKey}}

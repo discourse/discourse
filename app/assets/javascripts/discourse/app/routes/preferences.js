@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 import I18n from "discourse-i18n";
 

@@ -40,7 +40,6 @@ class TopicList
     :filter,
     :for_period,
     :per_page,
-    :top_tags,
     :current_user,
     :tags,
     :shared_drafts,
@@ -56,7 +55,7 @@ class TopicList
 
     @category = Category.find_by(id: @opts[:category_id]) if @opts[:category]
 
-    @tags = Tag.where(id: @opts[:tags]).all if @opts[:tags]
+    @tags = Tag.where(id: @opts[:tag_ids]).all if @opts[:tag_ids].present?
 
     @publish_read_state = !!@opts[:publish_read_state]
   end
@@ -78,7 +77,7 @@ class TopicList
 
   def categories
     @categories ||=
-      topics.map { |t| [t.category, t.category&.parent_category] }.uniq.flatten.compact
+      topics.map { |t| [t.category&.parent_category, t.category] }.flatten.uniq.compact
   end
 
   def load_topics

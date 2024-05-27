@@ -2,6 +2,14 @@
   background: var(--primary-medium) center;
   background-size: cover;
   position: relative;
+  max-width: 400px;
+  width: 100%;
+  height: 150px;
+  margin-bottom: 0.5em;
+
+  .meta {
+    display: none;
+  }
 
   .placeholder-overlay {
     background-size: contain;
@@ -19,28 +27,10 @@
     position: relative;
     display: flex;
     padding: 10px;
-
-    .btn {
-      margin-right: 5px;
-      padding: 7px 10px;
-    }
+    gap: 0.5em;
 
     .image-uploader-lightbox-btn {
-      background: none;
-      margin-right: 0;
       margin-left: auto;
-
-      .d-icon {
-        color: var(--primary-low);
-      }
-
-      &:hover {
-        background: none;
-
-        .d-icon {
-          color: var(--primary);
-        }
-      }
     }
   }
 }

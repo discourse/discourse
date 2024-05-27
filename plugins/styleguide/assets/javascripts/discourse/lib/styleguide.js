@@ -36,13 +36,15 @@ import navigation from "../components/sections/organisms/navigation";
 import siteHeader from "../components/sections/organisms/site-header";
 import suggestedTopics from "../components/sections/organisms/suggested-topics";
 import userAbout from "../components/sections/organisms/user-about";
+import bem from "../components/sections/syntax/00-bem";
 
 let _allCategories = null;
 let _sectionsById = {};
 
-export const CATEGORIES = ["atoms", "molecules", "organisms"];
+export const CATEGORIES = ["syntax", "atoms", "molecules", "organisms"];
 
 const SECTIONS = [
+  { component: bem, category: "syntax", id: "bem", priority: 0 },
   { component: typography, category: "atoms", id: "typography", priority: 0 },
   { component: fontScale, category: "atoms", id: "font-scale", priority: 1 },
   { component: buttons, category: "atoms", id: "buttons", priority: 2 },

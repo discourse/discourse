@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import AdminDashboard from "admin/models/admin-dashboard";
@@ -50,6 +50,11 @@ export default class AdminDashboardController extends Controller {
     return this.visibleTabs.includes("reports");
   }
 
+  @computed("visibleTabs")
+  get isNewFeaturesTabVisible() {
+    return this.visibleTabs.includes("features");
+  }
+
   fetchProblems() {
     if (this.isLoadingProblems) {
       return;
@@ -86,6 +91,7 @@ export default class AdminDashboardController extends Controller {
           if (versionChecks) {
             properties.versionCheck = VersionCheck.create(model.version_check);
           }
+          properties.hasUnseenFeatures = model.hasUnseenFeatures;
 
           this.setProperties(properties);
         })

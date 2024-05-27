@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
@@ -36,8 +36,6 @@ export default class SearchMenu extends Component {
   @service appEvents;
 
   @tracked loading = false;
-  @tracked results = {};
-  @tracked noResults = false;
   @tracked
   inPMInboxContext = this.search.searchContext?.type === "private_messages";
   @tracked typeFilter = DEFAULT_TYPE_FILTER;
@@ -51,24 +49,30 @@ export default class SearchMenu extends Component {
 
   @bind
   setupEventListeners() {
-    document.addEventListener("mousedown", this.onDocumentPress, true);
-    document.addEventListener("touchend", this.onDocumentPress, {
-      capture: true,
-      passive: true,
-    });
+    // We only need to register click events when the search menu is rendered outside of the header.
+    // The header handles clicking outside.
+    if (!this.args.inlineResults) {
+      document.addEventListener("mousedown", this.onDocumentPress);
+      document.addEventListener("touchend", this.onDocumentPress);
+    }
   }
 
   willDestroy() {
-    document.removeEventListener("mousedown", this.onDocumentPress);
-    document.removeEventListener("touchend", this.onDocumentPress);
-
+    if (!this.args.inlineResults) {
+      document.removeEventListener("mousedown", this.onDocumentPress);
+      document.removeEventListener("touchend", this.onDocumentPress);
+    }
     super.willDestroy(...arguments);
   }
 
   @bind
   onDocumentPress(event) {
+    if (!this.menuPanelOpen) {
+      return;
+    }
+
     if (!event.target.closest(".search-menu-container.menu-panel-results")) {
-      this.menuPanelOpen = false;
+      this.close();
     }
   }
 
@@ -79,11 +83,18 @@ export default class SearchMenu extends Component {
       classes.push("menu-panel-results");
     }
 
+    if (this.loading) {
+      classes.push("loading");
+    }
+
     return classes.join(" ");
   }
 
   get includesTopics() {
-    return this.typeFilter !== DEFAULT_TYPE_FILTER;
+    return (
+      !!this.search.results?.topics?.length ||
+      this.typeFilter !== DEFAULT_TYPE_FILTER
+    );
   }
 
   get searchContext() {
@@ -96,13 +107,13 @@ export default class SearchMenu extends Component {
 
   @action
   close() {
-    if (this.args?.closeSearchMenu) {
-      return this.args.closeSearchMenu();
+    if (this.args?.onClose) {
+      return this.args.onClose();
     }
 
-    // We want to blur the active element (search input) when in stand-alone mode
+    // We want to blur the search input when in stand-alone mode
     // so that when we focus on the search input again, the menu panel pops up
-    document.activeElement.blur();
+    document.getElementById(SEARCH_INPUT_ID)?.blur();
     this.menuPanelOpen = false;
   }
 
@@ -135,8 +146,10 @@ export default class SearchMenu extends Component {
     return getURL(url);
   }
 
-  get advancedSearchButtonHref() {
-    return this.fullSearchUrl({ expanded: true });
+  @action
+  openAdvancedSearch() {
+    this.fullSearch();
+    this.close();
   }
 
   get displayMenuPanelResults() {
@@ -203,8 +216,8 @@ export default class SearchMenu extends Component {
 
     const matchSuggestions = this.matchesSuggestions();
     if (matchSuggestions) {
-      this.noResults = true;
-      this.results = {};
+      this.search.noResults = true;
+      this.search.results = {};
       this.loading = false;
       this.suggestionResults = [];
 
@@ -241,7 +254,7 @@ export default class SearchMenu extends Component {
             this.suggestionResults = result.users;
             this.suggestionKeyword = "@";
           } else {
-            this.noResults = true;
+            this.search.noResults = true;
             this.suggestionKeyword = false;
           }
         });
@@ -254,18 +267,19 @@ export default class SearchMenu extends Component {
     this.suggestionKeyword = false;
 
     if (!this.search.activeGlobalSearchTerm) {
-      this.noResults = false;
-      this.results = {};
+      this.search.noResults = false;
+      this.search.results = {};
       this.loading = false;
       this.invalidTerm = false;
     } else if (
       !isValidSearchTerm(this.search.activeGlobalSearchTerm, this.siteSettings)
     ) {
-      this.noResults = true;
-      this.results = {};
+      this.search.noResults = true;
+      this.search.results = {};
       this.loading = false;
       this.invalidTerm = true;
     } else {
+      this.loading = true;
       this.invalidTerm = false;
 
       this._activeSearch = searchForTerm(this.search.activeGlobalSearchTerm, {
@@ -285,8 +299,8 @@ export default class SearchMenu extends Component {
               });
             }
 
-            this.noResults = results.resultTypes.length === 0;
-            this.results = results;
+            this.search.noResults = results.resultTypes.length === 0;
+            this.search.results = results;
           }
         })
         .catch(popupAjaxError)
@@ -326,7 +340,7 @@ export default class SearchMenu extends Component {
 
   @action
   triggerSearch() {
-    this.noResults = false;
+    this.search.noResults = false;
 
     if (this.includesTopics) {
       if (this.search.contextType === "topic") {

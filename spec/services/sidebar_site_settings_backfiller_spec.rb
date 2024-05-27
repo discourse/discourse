@@ -73,7 +73,7 @@ RSpec.describe SidebarSiteSettingsBackfiller do
         expect(SidebarSectionLink.exists?(id: category_sidebar_section_link_ids)).to eq(false)
       end
 
-      it "creates the right sidebar section link records when categories are added" do
+      it "updates the right sidebar section link records when categories are added" do
         backfiller =
           described_class.new(
             "default_navigation_menu_categories",

@@ -1,3 +1,19 @@
+.d-modal {
+  --modal-max-width: 600px;
+  --modal-width: 30em; // set in ems to scale with user font-size
+  --modal-min-width: 400px;
+  &__container {
+    max-width: var(--modal-max-width);
+    min-width: var(--modal-min-width);
+    .d-modal.-large & {
+      max-width: 800px;
+    }
+    .d-modal.-max & {
+      max-width: 90vw;
+    }
+  }
+}
+//legacy
 // Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
 .bootbox.modal {
   top: 50%;
@@ -13,16 +29,6 @@
   animation: fade 0.25s;
   @media (prefers-reduced-motion) {
     animation-duration: 0s;
-  }
-}
-
-.modal-footer .btn.right {
-  float: right;
-}
-
-.modal-header {
-  h3 {
-    font-size: var(--font-up-3);
   }
 }
 

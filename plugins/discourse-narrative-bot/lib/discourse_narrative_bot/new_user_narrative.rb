@@ -80,7 +80,7 @@ module DiscourseNarrativeBot
       #       The prerequisites should ensure only one of them is called.
       tutorial_images: {
         prerequisite:
-          Proc.new { @user.has_trust_level?(SiteSetting.min_trust_to_post_embedded_media) },
+          Proc.new { @user.in_any_groups?(SiteSetting.embedded_media_post_allowed_groups_map) },
         next_state: :tutorial_likes,
         next_instructions:
           Proc.new { I18n.t("#{I18N_KEY}.likes.instructions", base_uri: Discourse.base_path) },
@@ -93,7 +93,7 @@ module DiscourseNarrativeBot
       },
       tutorial_likes: {
         prerequisite:
-          Proc.new { !@user.has_trust_level?(SiteSetting.min_trust_to_post_embedded_media) },
+          Proc.new { !@user.in_any_groups?(SiteSetting.embedded_media_post_allowed_groups_map) },
         next_state: :tutorial_flag,
         next_instructions:
           Proc.new do
@@ -172,12 +172,6 @@ module DiscourseNarrativeBot
     def init_tutorial_search
       topic = @post.topic
       post = topic.first_post
-
-      MessageBus.publish(
-        "/new_user_narrative/tutorial_search/#{@user.id}",
-        {},
-        user_ids: [@user.id],
-      )
 
       raw = <<~MD
       #{post.raw}

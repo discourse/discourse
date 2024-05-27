@@ -21,6 +21,10 @@ acceptance("User Preferences - Security", function (needs) {
     server.get("/u/trusted-session.json", () => {
       return helper.response({ failed: "FAILED" });
     });
+
+    server.post("/session/forgot_password.json", () => {
+      return helper.response({ success: "Ok" });
+    });
   });
 
   test("recently connected devices", async function (assert) {
@@ -99,7 +103,7 @@ acceptance("User Preferences - Security", function (needs) {
   });
 
   test("Viewing Passkeys - user has a key", async function (assert) {
-    this.siteSettings.experimental_passkeys = true;
+    this.siteSettings.enable_passkeys = true;
 
     updateCurrentUser({
       user_passkeys: [
@@ -136,6 +140,24 @@ acceptance("User Preferences - Security", function (needs) {
         "displays a dialog to confirm the user's identity before adding a passkey"
       );
 
+    assert
+      .dom(".dialog-body #password")
+      .exists("dialog includes a password field");
+
+    assert
+      .dom(".dialog-body .confirm-session__passkey")
+      .exists("dialog includes a passkey button");
+
+    assert
+      .dom(".dialog-body .confirm-session__reset")
+      .exists("dialog includes a link to reset the password");
+
+    await click(".dialog-body .confirm-session__reset-btn");
+
+    assert
+      .dom(".confirm-session__reset-email-sent")
+      .exists("shows reset email confirmation message");
+
     await click(".dialog-close");
 
     const dropdown = selectKit(".passkey-options-dropdown");
@@ -161,7 +183,7 @@ acceptance("User Preferences - Security", function (needs) {
   });
 
   test("Viewing Passkeys - empty state", async function (assert) {
-    this.siteSettings.experimental_passkeys = true;
+    this.siteSettings.enable_passkeys = true;
 
     await visit("/u/eviltrout/preferences/security");
 
@@ -176,10 +198,16 @@ acceptance("User Preferences - Security", function (needs) {
       .exists(
         "displays a dialog to confirm the user's identity before adding a passkey"
       );
+
+    assert.dom(".dialog-body #password").exists("includes a password field");
+
+    assert
+      .dom(".dialog-body .confirm-session__passkey")
+      .doesNotExist("does not include a passkey button");
   });
 
   test("Viewing Passkeys - another user has a key", async function (assert) {
-    this.siteSettings.experimental_passkeys = true;
+    this.siteSettings.enable_passkeys = true;
 
     // user charlie has passkeys in fixtures
     await visit("/u/charlie/preferences/security");

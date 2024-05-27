@@ -3,8 +3,10 @@
 class MockedImapProvider < Imap::Providers::Gmail
   def connect!
   end
+
   def disconnect!
   end
+
   def open_mailbox(mailbox_name, write: false)
   end
 

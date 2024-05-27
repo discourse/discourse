@@ -158,7 +158,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     username.gsub!(/[._]+/, "_") # can't have 2 special in a row
     username.gsub!(/_+/, "_") # could result in dupes, but wtf?
     username.gsub!(/_$/, "") # could result in dupes, but wtf?
-    print_warning ("#{olduser} --> #{username}") if olduser != username
+    print_warning("#{olduser} --> #{username}") if olduser != username
     username
   end
 

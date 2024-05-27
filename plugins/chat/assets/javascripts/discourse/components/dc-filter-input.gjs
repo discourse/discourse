@@ -30,9 +30,9 @@ export default class DcFilterInput extends Component {
   <template>
     <div
       class={{concatClass
-        @class
+        @containerClass
         "dc-filter-input-container"
-        (if this.isFocused " is-focused")
+        (if this.isFocused "is-focused")
       }}
     >
       {{#if @icons.left}}
@@ -40,10 +40,10 @@ export default class DcFilterInput extends Component {
       {{/if}}
 
       <Input
-        class="dc-filter-input"
-        @value={{@value}}
-        {{on "input" (if @filterAction @filterAction (noop))}}
         {{this.focusState}}
+        {{on "input" (if @filterAction @filterAction (noop))}}
+        @value={{@value}}
+        class="dc-filter-input"
         ...attributes
       />
 

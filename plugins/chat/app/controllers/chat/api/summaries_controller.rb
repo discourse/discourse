@@ -31,7 +31,7 @@ class Chat::Api::SummariesController < Chat::ApiController
         if content[:contents].empty?
           I18n.t("chat.summaries.no_targets")
         else
-          strategy.summarize(content).dig(:summary)
+          strategy.summarize(content, current_user).dig(:summary)
         end
 
       render json: { summary: summarized_text }

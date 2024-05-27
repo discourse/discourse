@@ -10,10 +10,12 @@ const discourseScss = require("./lib/discourse-scss");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
 const DeprecationSilencer = require("deprecation-silencer");
-const generateWorkboxTree = require("./lib/workbox-tree-builder");
 const { compatBuild } = require("@embroider/compat");
 const { Webpack } = require("@embroider/webpack");
 const { StatsWriterPlugin } = require("webpack-stats-plugin");
+const withSideWatch = require("./lib/with-side-watch");
+const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
+const crypto = require("crypto");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -70,12 +72,15 @@ module.exports = function (defaults) {
       backburner:
         "node_modules/@discourse/backburner.js/dist/named-amd/backburner.js",
     },
-  });
 
-  // TODO: remove me
-  // Ember 3.28 still has some internal dependency on jQuery being a global,
-  // for the time being we will bring it in vendor.js
-  app.import("node_modules/jquery/dist/jquery.js", { prepend: true });
+    trees: {
+      app: RawHandlebarsCompiler(
+        withSideWatch("app", {
+          watching: ["../discourse-markdown-it", "../truth-helpers"],
+        })
+      ),
+    },
+  });
 
   // WARNING: We should only import scripts here if they are not in NPM.
   app.import(vendorJs + "bootbox.js");
@@ -91,8 +96,6 @@ module.exports = function (defaults) {
     .generatePluginsTree(app.tests);
 
   const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
-
-  const wizardTree = app.project.findAddonByName("wizard").treeForAddonBundle();
 
   const testStylesheetTree = mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
@@ -110,32 +113,48 @@ module.exports = function (defaults) {
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
-    funnel(`${vendorJs}/highlightjs`, {
-      files: ["highlight-test-bundle.min.js"],
-      destDir: "assets/highlightjs",
-    }),
-    generateWorkboxTree(),
-    concat(adminTree, {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/admin.js`,
-    }),
-    concat(wizardTree, {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/wizard.js`,
-    }),
-    generateScriptsTree(app),
-    discoursePluginsTree,
+    applyTerser(
+      concat(adminTree, {
+        inputFiles: ["**/*.js"],
+        outputFile: `assets/admin.js`,
+      })
+    ),
+    applyTerser(generateScriptsTree(app)),
+    applyTerser(discoursePluginsTree),
     testStylesheetTree,
   ];
 
+  const assetCachebuster = process.env["DISCOURSE_ASSET_URL_SALT"] || "";
+  const cachebusterHash = crypto
+    .createHash("md5")
+    .update(assetCachebuster)
+    .digest("hex")
+    .slice(0, 8);
+
   const appTree = compatBuild(app, Webpack, {
+    splitAtRoutes: ["wizard"],
     staticAppPaths: ["static"],
     packagerOptions: {
       webpackConfig: {
-        devtool: "source-map",
+        devtool:
+          process.env.CHEAP_SOURCE_MAPS === "1"
+            ? "cheap-source-map"
+            : "source-map",
         output: {
           publicPath: "auto",
+          filename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
+          chunkFilename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
         },
+        optimization: {
+          // Disable webpack minimization. Embroider automatically applies terser after webpack.
+          minimize: false,
+        },
+        cache: isProduction
+          ? false
+          : {
+              type: "memory",
+              maxGenerations: 1,
+            },
         entry: {
           "assets/discourse.js/features/markdown-it.js": {
             import: "./static/markdown-it",
@@ -148,9 +167,7 @@ module.exports = function (defaults) {
             if (
               !request.includes("-embroider-implicit") &&
               // TODO: delete special case for jquery when removing app.import() above
-              (request === "jquery" ||
-                request.startsWith("admin/") ||
-                request.startsWith("wizard/") ||
+              (request.startsWith("admin/") ||
                 request.startsWith("discourse/plugins/") ||
                 request.startsWith("discourse/theme-"))
             ) {
@@ -218,7 +235,15 @@ module.exports = function (defaults) {
         ],
       },
     },
+    skipBabel: [
+      {
+        package: "qunit",
+      },
+      {
+        package: "sinon",
+      },
+    ],
   });
 
-  return mergeTrees([appTree, applyTerser(mergeTrees(extraPublicTrees))]);
+  return mergeTrees([appTree, mergeTrees(extraPublicTrees)]);
 };

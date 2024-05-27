@@ -120,11 +120,6 @@
 
   &__unread-indicator {
     flex: 0 0 auto;
-
-    .chat-thread-list-item-unread-indicator__number {
-      color: var(--primary);
-      font-size: var(--font-up-1);
-    }
   }
 
   &__open-button {

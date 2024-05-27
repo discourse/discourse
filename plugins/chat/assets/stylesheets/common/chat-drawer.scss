@@ -7,6 +7,7 @@ body.composer-open .chat-drawer-outlet-container {
   top: -5px;
   width: 15px;
   height: 15px;
+  z-index: z("composer", "content");
 }
 
 html:not(.rtl) {
@@ -30,39 +31,25 @@ html.rtl {
   right: var(--composer-right, 20px);
   left: 0;
   max-height: calc(100% - var(--header-offset) - 15px);
-
-  .rtl & {
-    left: var(--composer-right, 20px);
-    right: 0;
-  }
-
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
   pointer-events: none !important;
   bottom: 0;
-
-  > * {
-    pointer-events: auto;
-  }
-
-  .no-channel-title {
-    font-weight: bold;
-    margin-left: 0.5rem;
-  }
-
-  &.composer-draft-collapsed {
-    bottom: 40px;
-  }
-
   box-sizing: border-box;
   padding-bottom: var(--composer-height, 0);
   transition: all 100ms ease-in;
   transition-property: bottom, padding-bottom;
+
+  .rtl & {
+    left: var(--composer-right, 20px);
+    right: 0;
+  }
 }
 
 .chat-drawer {
+  pointer-events: auto;
   align-self: flex-end;
   width: 400px;
   min-width: 250px !important; // important to override inline styles
@@ -101,171 +88,12 @@ html.rtl {
   }
 }
 
-.chat-drawer-header__left-actions {
-  display: flex;
-  height: 2rem;
-}
-
-.chat-drawer-header__right-actions {
-  display: flex;
-  height: 2rem;
-  margin-left: auto;
-}
-
-.chat-drawer-header__top-line {
-  display: flex;
-  align-items: center;
-}
-
-.chat-drawer-header__bottom-line {
-  height: 1.5rem;
-  display: flex;
-  align-items: start;
-}
-
-.chat-drawer-header__title {
-  @include ellipsis;
-  display: flex;
-  width: auto;
-  font-weight: 700;
-  padding: 0 0.5rem 0 0;
-  cursor: pointer;
-  height: 2rem;
-  align-items: center;
-
-  .chat-drawer-header__top-line {
-    padding: 0.25rem;
-    width: 100%;
-  }
-}
-
-a.chat-drawer-header__title {
-  &:hover {
-    .chat-drawer-header__top-line {
-      background: var(--primary-low);
-      border-radius: var(--d-border-radius);
-    }
-  }
-}
-
-.chat-drawer-header__icon {
-  margin-right: 0.25rem;
-}
-
-.chat-drawer-header__divider {
-  margin: 0 0.25rem;
-}
-
-.chat-drawer-header {
-  box-sizing: border-box;
-  border-bottom: solid 1px var(--primary-low);
-  border-radius: var(--d-border-radius-large) var(--d-border-radius-large) 0 0;
-  background: var(--primary-very-low);
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  cursor: pointer;
-  padding: 0.25rem;
-
-  .btn {
-    height: 100%;
-  }
-
-  .chat-channel-title {
-    font-weight: 700;
-    width: 100%;
-
-    &__user-info {
-      overflow: hidden;
-    }
-
-    .chat-name,
-    .chat-drawer-name,
-    .category-chat-name,
-    .dm-usernames {
-      color: var(--primary);
-    }
-    .category-chat-badge,
-    .chat-drawer-badge {
-      display: flex;
-      justify-content: center;
-      align-content: center;
-      .d-icon:not(.d-icon-lock) {
-        width: 1.25em;
-        height: 1.25em;
-      }
-    }
-
-    .badge-wrapper.bullet {
-      margin-right: 0px;
-    }
-    .dm-usernames {
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .d-icon:not(.d-icon-d-chat) {
-      color: var(--primary-high);
-    }
-    .category-hashtag {
-      padding: 2px 4px;
-    }
-  }
-
-  &__close-btn,
-  &__back-btn,
-  &__full-screen-btn,
-  &__thread-list-btn,
-  &__expand-btn {
-    height: 30px;
-    width: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 100%;
-
-    &:hover:active {
-      background: var(--primary-low);
-    }
-
-    .d-icon {
-      color: var(--primary-low-mid);
-      margin-right: 0;
-    }
-
-    &:visited {
-      .d-icon {
-        color: var(--primary-low-mid);
-      }
-    }
-
-    &:focus {
-      outline: none;
-      background: none;
-
-      .d-icon {
-        background: none;
-        color: var(--primary);
-      }
-    }
-
-    &:hover {
-      .d-icon {
-        color: var(--primary);
-      }
-    }
-  }
-
-  &__thread-list-btn.has-unreads {
-    margin-right: 0.5rem;
-  }
-}
-
 .chat-drawer-content {
+  @include chat-scrollbar();
   box-sizing: border-box;
   height: 100%;
   min-height: 1px;
-  padding-bottom: 0.25em;
   position: relative;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }

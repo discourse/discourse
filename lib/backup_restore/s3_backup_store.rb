@@ -131,9 +131,13 @@ module BackupRestore
     def unsorted_files
       objects = []
 
-      s3_helper.list.each do |obj|
-        objects << create_file_from_object(obj) if obj.key.match?(file_regex)
-      end
+      begin
+        s3_helper.list.each do |obj|
+          objects << create_file_from_object(obj) if obj.key.match?(file_regex)
+        end
+      rescue StandardError
+        NoMethodError
+      end #fired when s3_helper.list is nil - wont respond to .nil?
 
       objects
     rescue Aws::Errors::ServiceError => e

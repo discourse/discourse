@@ -1,6 +1,7 @@
 import { get } from "@ember/object";
 import { and, equal, not, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
@@ -10,7 +11,6 @@ import DiscourseURL from "discourse/lib/url";
 import { highlightPost } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import { loadTopicView } from "discourse/models/topic";
-import User from "discourse/models/user";
 import deprecated from "discourse-common/lib/deprecated";
 import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -33,23 +33,36 @@ export function resetLastEditNotificationClick() {
   _lastEditNotificationClick = null;
 }
 
-export default RestModel.extend({
-  _identityMap: null,
-  posts: null,
-  stream: null,
-  userFilters: null,
-  loaded: null,
-  loadingAbove: null,
-  loadingBelow: null,
-  loadingFilter: null,
-  loadingNearPost: null,
-  stagingPost: null,
-  postsWithPlaceholders: null,
-  timelineLookup: null,
-  filterRepliesToPostNumber: null,
-  filterUpwardsPostID: null,
-  filter: null,
-  topicSummary: null,
+export default class PostStream extends RestModel {
+  @service currentUser;
+  @service store;
+
+  posts = null;
+  stream = null;
+  userFilters = null;
+  loaded = null;
+  loadingAbove = null;
+  loadingBelow = null;
+  loadingFilter = null;
+  loadingNearPost = null;
+  stagingPost = null;
+  postsWithPlaceholders = null;
+  timelineLookup = null;
+  filterRepliesToPostNumber = null;
+  filterUpwardsPostID = null;
+  filter = null;
+  topicSummary = null;
+  lastId = null;
+
+  @or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost") loading;
+  @not("loading") notLoading;
+  @equal("filter", "summary") summary;
+  @and("notLoading", "hasPosts", "lastPostNotLoaded") canAppendMore;
+  @and("notLoading", "hasPosts", "firstPostNotLoaded") canPrependMore;
+  @not("firstPostPresent") firstPostNotLoaded;
+  @not("loadedAllPosts") lastPostNotLoaded;
+
+  _identityMap = null;
 
   init() {
     this._identityMap = {};
@@ -75,12 +88,7 @@ export default RestModel.extend({
       timelineLookup: [],
       topicSummary: new TopicSummary(),
     });
-  },
-
-  loading: or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost"),
-  notLoading: not("loading"),
-
-  summary: equal("filter", "summary"),
+  }
 
   @discourseComputed(
     "isMegaTopic",
@@ -89,20 +97,17 @@ export default RestModel.extend({
   )
   filteredPostsCount(isMegaTopic, streamLength, topicHighestPostNumber) {
     return isMegaTopic ? topicHighestPostNumber : streamLength;
-  },
+  }
 
   @discourseComputed("posts.[]")
   hasPosts() {
     return this.get("posts.length") > 0;
-  },
+  }
 
   @discourseComputed("hasPosts", "filteredPostsCount")
   hasLoadedData(hasPosts, filteredPostsCount) {
     return hasPosts && filteredPostsCount > 0;
-  },
-
-  canAppendMore: and("notLoading", "hasPosts", "lastPostNotLoaded"),
-  canPrependMore: and("notLoading", "hasPosts", "firstPostNotLoaded"),
+  }
 
   @discourseComputed("hasLoadedData", "posts.[]")
   firstPostPresent(hasLoadedData) {
@@ -111,16 +116,12 @@ export default RestModel.extend({
     }
 
     return !!this.posts.findBy("post_number", 1);
-  },
-
-  firstPostNotLoaded: not("firstPostPresent"),
-
-  lastId: null,
+  }
 
   @discourseComputed("isMegaTopic", "stream.lastObject", "lastId")
   lastPostId(isMegaTopic, streamLastId, lastId) {
     return isMegaTopic ? lastId : streamLastId;
-  },
+  }
 
   @discourseComputed("hasLoadedData", "lastPostId", "posts.@each.id")
   loadedAllPosts(hasLoadedData, lastPostId) {
@@ -132,9 +133,7 @@ export default RestModel.extend({
     }
 
     return !!this.posts.findBy("id", lastPostId);
-  },
-
-  lastPostNotLoaded: not("loadedAllPosts"),
+  }
 
   /**
     Returns a JS Object of current stream filter options. It should match the query
@@ -167,7 +166,7 @@ export default RestModel.extend({
     }
 
     return result;
-  },
+  }
 
   @discourseComputed("streamFilters.[]", "topic.posts_count", "posts.length")
   hasNoFilters() {
@@ -176,7 +175,7 @@ export default RestModel.extend({
       streamFilters &&
       (streamFilters.filter === "summary" || streamFilters.username_filters)
     );
-  },
+  }
 
   /**
     Returns the window of posts above the current set in the stream, bound to the top of the stream.
@@ -206,7 +205,7 @@ export default RestModel.extend({
       startIndex = 0;
     }
     return stream.slice(startIndex, firstIndex);
-  },
+  }
 
   /**
     Returns the window of posts below the current set in the stream, bound by the bottom of the
@@ -234,7 +233,7 @@ export default RestModel.extend({
       lastIndex + 1,
       lastIndex + this.get("topic.chunk_size") + 1
     );
-  },
+  }
 
   cancelFilter() {
     this.setProperties({
@@ -244,7 +243,7 @@ export default RestModel.extend({
       mixedHiddenPosts: false,
       filter: null,
     });
-  },
+  }
 
   refreshAndJumpToSecondVisible() {
     return this.refresh({}).then(() => {
@@ -252,20 +251,20 @@ export default RestModel.extend({
         DiscourseURL.jumpToPost(this.posts[1].get("post_number"));
       }
     });
-  },
+  }
 
   showTopReplies() {
     this.cancelFilter();
     this.set("filter", "summary");
     return this.refreshAndJumpToSecondVisible();
-  },
+  }
 
   // Filter the stream to a particular user.
   filterParticipant(username) {
     this.cancelFilter();
     this.userFilters.addObject(username);
     return this.refreshAndJumpToSecondVisible();
-  },
+  }
 
   filterReplies(postNumber, postId) {
     this.cancelFilter();
@@ -295,7 +294,7 @@ export default RestModel.extend({
         highlightPost(postNumber);
       });
     });
-  },
+  }
 
   filterUpwards(postID) {
     this.cancelFilter();
@@ -316,7 +315,7 @@ export default RestModel.extend({
         });
       }
     });
-  },
+  }
 
   /**
     Loads a new set of posts into the stream. If you provide a `nearPost` option and the post
@@ -378,7 +377,7 @@ export default RestModel.extend({
       .finally(() => {
         this.set("loadingNearPost", null);
       });
-  },
+  }
 
   // Fill in a gap of posts before a particular post
   fillGapBefore(post, gap) {
@@ -391,7 +390,6 @@ export default RestModel.extend({
       // Insert the gap at the appropriate place
 
       let postIdx = currentPosts.indexOf(post);
-      const origIdx = postIdx;
 
       let headGap = gap.slice(0, this.topic.chunk_size);
       let tailGap = gap.slice(this.topic.chunk_size);
@@ -402,7 +400,10 @@ export default RestModel.extend({
             this._initUserModels(p);
             const stored = this.storePost(p);
             if (!currentPosts.includes(stored)) {
-              currentPosts.insertAt(postIdx++, stored);
+              const insertAtIndex = postIdx++;
+              this.postsWithPlaceholders.insertPost(insertAtIndex, () => {
+                currentPosts.insertAt(insertAtIndex, stored);
+              });
             }
           });
 
@@ -411,18 +412,14 @@ export default RestModel.extend({
           } else {
             delete this.get("gaps.before")[postId];
           }
-          this.postsWithPlaceholders.arrayContentDidChange(
-            origIdx,
-            0,
-            posts.length
-          );
+
           post.set("hasGap", false);
           this.gapExpanded();
         });
       }
     }
     return Promise.resolve();
-  },
+  }
 
   // Fill in a gap of posts after a particular post
   fillGapAfter(post, gap) {
@@ -438,7 +435,7 @@ export default RestModel.extend({
       });
     }
     return Promise.resolve();
-  },
+  }
 
   gapExpanded() {
     this.appEvents.trigger("post-stream:refresh");
@@ -448,7 +445,7 @@ export default RestModel.extend({
     if (this.streamFilters && this.streamFilters.replies_to_post_number) {
       this.set("streamFilters.mixedHiddenPosts", true);
     }
-  },
+  }
 
   // Appends the next window of posts to the stream. Call it when scrolling downwards.
   appendMore() {
@@ -495,7 +492,7 @@ export default RestModel.extend({
           this.set("loadingBelow", false);
         });
     }
-  },
+  }
 
   // Prepend the previous window of posts to the stream. Call it when scrolling upwards.
   prependMore() {
@@ -537,7 +534,7 @@ export default RestModel.extend({
           this.set("loadingAbove", false);
         });
     }
-  },
+  }
 
   /**
     Stage a post for insertion in the stream. It should be rendered right away under the
@@ -575,7 +572,7 @@ export default RestModel.extend({
     }
 
     return "offScreen";
-  },
+  }
 
   // Commit the post we staged. Call this after a save succeeds.
   commitPost(post) {
@@ -589,7 +586,7 @@ export default RestModel.extend({
     this.stream.removeObject(-1);
     this._identityMap[-1] = null;
     this.set("stagingPost", false);
-  },
+  }
 
   /**
     Undo a post we've staged in the stream. Remove it from being rendered and revert the
@@ -609,7 +606,7 @@ export default RestModel.extend({
     });
 
     // TODO unfudge reply count on parent post
-  },
+  }
 
   prependPost(post) {
     this._initUserModels(post);
@@ -620,7 +617,7 @@ export default RestModel.extend({
     }
 
     return post;
-  },
+  }
 
   appendPost(post) {
     this._initUserModels(post);
@@ -641,7 +638,7 @@ export default RestModel.extend({
       }
     }
     return post;
-  },
+  }
 
   removePosts(posts) {
     if (isEmpty(posts)) {
@@ -657,12 +654,12 @@ export default RestModel.extend({
       allPosts.removeObjects(posts);
       postIds.forEach((id) => delete identityMap[id]);
     });
-  },
+  }
 
   // Returns a post from the identity map if it's been inserted.
   findLoadedPost(id) {
     return this._identityMap[id];
-  },
+  }
 
   loadPostByPostNumber(postNumber) {
     const url = `/posts/by_number/${this.get("topic.id")}/${postNumber}`;
@@ -671,7 +668,7 @@ export default RestModel.extend({
     return ajax(url).then((post) => {
       return this.storePost(store.createRecord("post", post));
     });
-  },
+  }
 
   loadNearestPostToDate(date) {
     const url = `/posts/by-date/${this.get("topic.id")}/${date}`;
@@ -680,7 +677,7 @@ export default RestModel.extend({
     return ajax(url).then((post) => {
       return this.storePost(store.createRecord("post", post));
     });
-  },
+  }
 
   loadPost(postId) {
     const url = "/posts/" + postId;
@@ -694,7 +691,7 @@ export default RestModel.extend({
 
       return this.storePost(store.createRecord("post", p));
     });
-  },
+  }
 
   /* mainly for backwards compatibility with plugins, used in quick messages plugin
    * TODO: remove July 2022
@@ -707,7 +704,7 @@ export default RestModel.extend({
       }
     );
     return this.triggerNewPostsInStream([postId], opts);
-  },
+  }
 
   /**
     Finds and adds posts to the stream by id. Typically this would happen if we receive a message
@@ -751,10 +748,9 @@ export default RestModel.extend({
       return this.findPostsByIds(this._loadingPostIds, opts)
         .then((posts) => {
           this._loadingPostIds = null;
-          const ignoredUsers =
-            User.current() && User.current().get("ignored_users");
+          const ignoredUsers = this.currentUser?.ignored_users;
           posts.forEach((p) => {
-            if (ignoredUsers && ignoredUsers.includes(p.username)) {
+            if (ignoredUsers?.includes(p.username)) {
               this.stream.removeObject(p.id);
               return;
             }
@@ -770,7 +766,7 @@ export default RestModel.extend({
     }
 
     return resolved;
-  },
+  }
 
   triggerRecoveredPost(postId) {
     const existing = this._identityMap[postId];
@@ -816,7 +812,7 @@ export default RestModel.extend({
         }
       });
     }
-  },
+  }
 
   triggerDeletedPost(postId) {
     const existing = this._identityMap[postId];
@@ -834,13 +830,13 @@ export default RestModel.extend({
         });
     }
     return Promise.resolve();
-  },
+  }
 
   triggerDestroyedPost(postId) {
     const existing = this._identityMap[postId];
     this.removePosts([existing]);
     return Promise.resolve();
-  },
+  }
 
   triggerChangedPost(postId, updatedAt, opts) {
     opts = opts || {};
@@ -863,7 +859,7 @@ export default RestModel.extend({
       });
     }
     return resolved;
-  },
+  }
 
   triggerLikedPost(postId, likesCount, userID, eventType) {
     const resolved = Promise.resolve();
@@ -875,7 +871,7 @@ export default RestModel.extend({
     }
 
     return resolved;
-  },
+  }
 
   triggerReadPost(postId, readersCount) {
     const resolved = Promise.resolve();
@@ -888,7 +884,7 @@ export default RestModel.extend({
     });
 
     return resolved;
-  },
+  }
 
   triggerChangedTopicStats() {
     if (this.firstPostNotLoaded) {
@@ -899,7 +895,7 @@ export default RestModel.extend({
       const firstPost = this.posts.findBy("post_number", 1);
       return firstPost.id;
     });
-  },
+  }
 
   postForPostNumber(postNumber) {
     if (!this.hasPosts) {
@@ -909,7 +905,7 @@ export default RestModel.extend({
     return this.posts.find((p) => {
       return p.get("post_number") === postNumber;
     });
-  },
+  }
 
   /**
     Returns the closest post given a postNumber that may not exist in the stream.
@@ -937,12 +933,12 @@ export default RestModel.extend({
     });
 
     return closest;
-  },
+  }
 
   // Get the index of a post in the stream. (Use this for the topic progress bar.)
   progressIndexOfPost(post) {
     return this.progressIndexOfPostId(post);
-  },
+  }
 
   // Get the index in the stream of a post id. (Use this for the topic progress bar.)
   progressIndexOfPostId(post) {
@@ -954,7 +950,7 @@ export default RestModel.extend({
       const index = this.stream.indexOf(postId);
       return index + 1;
     }
-  },
+  }
 
   /**
     Returns the closest post number given a postNumber that may not exist in the stream.
@@ -984,7 +980,7 @@ export default RestModel.extend({
     });
 
     return closest;
-  },
+  }
 
   closestDaysAgoFor(postNumber) {
     const timelineLookup = this.timelineLookup || [];
@@ -1009,7 +1005,7 @@ export default RestModel.extend({
     if (val) {
       return val[1];
     }
-  },
+  }
 
   // Find a postId for a postNumber, respecting gaps
   findPostIdForPostNumber(postNumber) {
@@ -1039,7 +1035,7 @@ export default RestModel.extend({
       }
       sum++;
     }
-  },
+  }
 
   updateFromJson(postStreamData) {
     const posts = this.posts;
@@ -1059,7 +1055,7 @@ export default RestModel.extend({
       // Update our attributes
       this.setProperties(postStreamData);
     }
-  },
+  }
 
   /**
     Stores a post in our identity map, and sets up the references it needs to
@@ -1096,7 +1092,7 @@ export default RestModel.extend({
       this._identityMap[post.get("id")] = post;
     }
     return post;
-  },
+  }
 
   fetchNextWindow(postNumber, asc, callback) {
     let includeSuggested = !this.get("topic.suggested_topics");
@@ -1126,7 +1122,7 @@ export default RestModel.extend({
         });
       }
     });
-  },
+  }
 
   findPostsByIds(postIds, opts) {
     const identityMap = this._identityMap;
@@ -1136,7 +1132,7 @@ export default RestModel.extend({
     return this.loadIntoIdentityMap(unloaded, opts).then(() => {
       return postIds.map((p) => identityMap[p]).compact();
     });
-  },
+  }
 
   loadIntoIdentityMap(postIds, opts) {
     if (isEmpty(postIds)) {
@@ -1166,7 +1162,7 @@ export default RestModel.extend({
         posts.forEach((p) => this.storePost(store.createRecord("post", p)));
       }
     });
-  },
+  }
 
   backfillExcerpts(streamPosition) {
     this._excerpts = this._excerpts || [];
@@ -1213,7 +1209,7 @@ export default RestModel.extend({
       });
 
     return this._excerpts.loading;
-  },
+  }
 
   excerpt(streamPosition) {
     if (this.isMegaTopic) {
@@ -1236,11 +1232,11 @@ export default RestModel.extend({
         })
         .catch((e) => reject(e));
     });
-  },
+  }
 
   indexOf(post) {
     return this.stream.indexOf(post.get("id"));
-  },
+  }
 
   // Handles an error loading a topic based on a HTTP status code. Updates
   // the text to the correct values.
@@ -1261,22 +1257,22 @@ export default RestModel.extend({
       topic.set("errorMessage", I18n.t("topic.server_error.description"));
       topic.set("noRetry", error.jqXHR.status === 403);
     }
-  },
+  }
 
   collapseSummary() {
     this.topicSummary.collapse();
-  },
+  }
 
   showSummary(currentUser) {
     this.topicSummary.generateSummary(currentUser, this.get("topic.id"));
-  },
+  }
 
   processSummaryUpdate(update) {
     this.topicSummary.processUpdate(update);
-  },
+  }
 
   _initUserModels(post) {
-    post.user = User.create({
+    post.user = this.store.createRecord("user", {
       id: post.user_id,
       username: post.username,
     });
@@ -1286,9 +1282,11 @@ export default RestModel.extend({
     }
 
     if (post.mentioned_users) {
-      post.mentioned_users = post.mentioned_users.map((u) => User.create(u));
+      post.mentioned_users = post.mentioned_users.map((u) =>
+        this.store.createRecord("user", u)
+      );
     }
-  },
+  }
 
   _checkIfShouldShowRevisions() {
     if (_lastEditNotificationClick) {
@@ -1308,7 +1306,7 @@ export default RestModel.extend({
         });
       }
     }
-  },
+  }
 
   _setSuggestedTopics(result) {
     if (!result.suggested_topics) {
@@ -1323,5 +1321,5 @@ export default RestModel.extend({
     if (this.topic.isPrivateMessage) {
       this.pmTopicTrackingState.startTracking();
     }
-  },
-});
+  }
+}

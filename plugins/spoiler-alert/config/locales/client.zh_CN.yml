@@ -7,8 +7,8 @@
 zh_CN:
   js:
     spoiler:
-      title: 剧透打码
+      title: 模糊剧透
       label:
         show: "显示隐藏内容"
     composer:
-      spoiler_text: "此文本将被打码"
+      spoiler_text: "此文本将被模糊处理"

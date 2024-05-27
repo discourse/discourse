@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module TopicTagsMixin
+  DESCRIPTION_LIMIT = 80
+
   def self.included(klass)
     klass.attributes :tags
     klass.attributes :tags_descriptions
@@ -15,7 +17,10 @@ module TopicTagsMixin
   end
 
   def tags_descriptions
-    all_tags.each.with_object({}) { |tag, acc| acc[tag.name] = tag.description }.compact
+    all_tags
+      .each
+      .with_object({}) { |tag, acc| acc[tag.name] = tag.description&.truncate(DESCRIPTION_LIMIT) }
+      .compact
   end
 
   def topic

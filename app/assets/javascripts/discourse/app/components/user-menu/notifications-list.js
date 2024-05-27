@@ -1,8 +1,9 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 import UserMenuItemsList from "discourse/components/user-menu/items-list";
 import { ajax } from "discourse/lib/ajax";
+import { MAX_NOTIFICATIONS_LIMIT_PARAMS } from "discourse/lib/constants";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import {
@@ -12,6 +13,22 @@ import {
 import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import I18n from "discourse-i18n";
+
+const MAX_LIMIT = MAX_NOTIFICATIONS_LIMIT_PARAMS;
+const DEFAULT_LIMIT = 30;
+let limit = DEFAULT_LIMIT;
+
+export function setNotificationsLimit(newLimit) {
+  if (newLimit <= 0 || newLimit > MAX_LIMIT) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `Error: Invalid limit of ${newLimit} passed to setNotificationsLimit. Must be greater than 0 and less than ${MAX_LIMIT}`
+    );
+    return;
+  }
+
+  limit = newLimit;
+}
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service appEvents;
@@ -82,7 +99,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
 
   async fetchItems() {
     const params = {
-      limit: 30,
+      limit,
       recent: true,
       bump_last_seen_reviewable: true,
     };

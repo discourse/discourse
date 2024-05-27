@@ -38,7 +38,7 @@ module SecondFactorManager
   end
 
   def authenticate_totp(token)
-    totps = self&.user_second_factors.totps
+    totps = self&.user_second_factors&.totps
     authenticated = false
     totps.each do |totp|
       last_used = 0
@@ -64,20 +64,20 @@ module SecondFactorManager
 
   def totp_enabled?
     !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      self&.user_second_factors.totps.exists?
+      self&.user_second_factors&.totps&.exists?
   end
 
   def backup_codes_enabled?
     !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
-      self&.user_second_factors.backup_codes.exists?
+      self&.user_second_factors&.backup_codes&.exists?
   end
 
   def security_keys_enabled?
     !SiteSetting.enable_discourse_connect && SiteSetting.enable_local_logins &&
       self
         &.security_keys
-        .where(factor_type: UserSecurityKey.factor_types[:second_factor], enabled: true)
-        .exists?
+        &.where(factor_type: UserSecurityKey.factor_types[:second_factor], enabled: true)
+        &.exists?
   end
 
   def has_any_second_factor_methods_enabled?

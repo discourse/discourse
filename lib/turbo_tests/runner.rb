@@ -10,6 +10,7 @@ module TurboTests
       verbose = opts.fetch(:verbose, false)
       fail_fast = opts.fetch(:fail_fast, nil)
       use_runtime_info = opts.fetch(:use_runtime_info, false)
+      retry_and_log_flaky_tests = opts.fetch(:retry_and_log_flaky_tests, false)
 
       STDOUT.puts "VERBOSE" if verbose
 
@@ -37,6 +38,7 @@ module TurboTests
         use_runtime_info: use_runtime_info,
         seed: seed,
         profile: opts[:profile],
+        retry_and_log_flaky_tests: retry_and_log_flaky_tests,
       ).run
     end
 
@@ -56,6 +58,7 @@ module TurboTests
       @use_runtime_info = opts[:use_runtime_info]
       @seed = opts[:seed]
       @profile = opts[:profile]
+      @retry_and_log_flaky_tests = opts[:retry_and_log_flaky_tests]
       @failure_count = 0
 
       @messages = Queue.new
@@ -76,6 +79,8 @@ module TurboTests
 
       setup_tmp_dir
 
+      @reporter.add_formatter(Flaky::FailuresLoggerFormatter.new) if @retry_and_log_flaky_tests
+
       subprocess_opts = { record_runtime: @use_runtime_info }
 
       start_multisite_subprocess(@files, **subprocess_opts)
@@ -84,11 +89,25 @@ module TurboTests
         start_regular_subprocess(tests, process_id + 1, **subprocess_opts)
       end
 
+      @reporter.start
+
       handle_messages
 
       @reporter.finish
 
       @threads.each(&:join)
+
+      if @retry_and_log_flaky_tests && @reporter.failed_examples.present?
+        retry_failed_examples_threshold = 10
+
+        if @reporter.failed_examples.length <= retry_failed_examples_threshold
+          STDOUT.puts "Retrying failed examples and logging flaky tests..."
+          return rerun_failed_examples(@reporter.failed_examples)
+        else
+          STDOUT.puts "Retry and log flaky tests was enabled but ignored because there are more than #{retry_failed_examples_threshold} failures."
+          Flaky::Manager.remove_flaky_tests
+        end
+      end
 
       @reporter.failed_examples.empty? && !@error
     end
@@ -124,6 +143,21 @@ module TurboTests
       end
 
       FileUtils.mkdir_p("tmp/test-pipes/")
+    end
+
+    def rerun_failed_examples(failed_examples)
+      command = [
+        "bundle",
+        "exec",
+        "rspec",
+        "--format",
+        "documentation",
+        "--format",
+        "TurboTests::Flaky::FlakyDetectorFormatter",
+        *Flaky::Manager.potential_flaky_tests,
+      ]
+
+      system(*command)
     end
 
     def start_multisite_subprocess(tests, **opts)
@@ -177,11 +211,11 @@ module TurboTests
 
         env["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"] = "1" if @profile
 
-        if @verbose
-          command_str = [env.map { |k, v| "#{k}=#{v}" }.join(" "), command.join(" ")].join(" ")
+        command_string = [env.map { |k, v| "#{k}=#{v}" }.join(" "), command.join(" ")].join(" ")
 
+        if @verbose
           STDOUT.puts "::group::[#{process_id}] Run RSpec" if ENV["GITHUB_ACTIONS"]
-          STDOUT.puts "Process #{process_id}: #{command_str}"
+          STDOUT.puts "Process #{process_id}: #{command_string}"
           STDOUT.puts "::endgroup::" if ENV["GITHUB_ACTIONS"]
         end
 
@@ -194,6 +228,7 @@ module TurboTests
               message = JSON.parse(line)
               message = message.symbolize_keys
               message[:process_id] = process_id
+              message[:command_string] = command_string
               @messages << message
             end
           end
@@ -231,13 +266,31 @@ module TurboTests
           message = @messages.pop
           case message[:type]
           when "example_passed"
-            example = FakeExample.from_obj(message[:example], message[:process_id])
+            example =
+              FakeExample.from_obj(
+                message[:example],
+                process_id: message[:process_id],
+                command_string: message[:command_string],
+              )
+
             @reporter.example_passed(example)
           when "example_pending"
-            example = FakeExample.from_obj(message[:example], message[:process_id])
+            example =
+              FakeExample.from_obj(
+                message[:example],
+                process_id: message[:process_id],
+                command_string: message[:command_string],
+              )
+
             @reporter.example_pending(example)
           when "example_failed"
-            example = FakeExample.from_obj(message[:example], message[:process_id])
+            example =
+              FakeExample.from_obj(
+                message[:example],
+                process_id: message[:process_id],
+                command_string: message[:command_string],
+              )
+
             @reporter.example_failed(example)
             @failure_count += 1
             if fail_fast_met

@@ -3,12 +3,11 @@
 {{/if}}
 
 <section class="user-content">
-
   <div class="group-members-actions">
     <TextField
       @value={{this.filterInput}}
       @placeholderKey={{this.filterPlaceholder}}
-      @class="group-username-filter no-blur"
+      class="group-username-filter no-blur"
     />
   </div>
 
@@ -20,12 +19,12 @@
       <ResponsiveTable @className="group-members group-members__requests">
         <:header>
           <TableHeaderToggle
-            @class="username"
             @order={{this.order}}
             @asc={{this.asc}}
             @field="username_lower"
             @labelKey="username"
             @automatic={{true}}
+            class="username"
           />
           <TableHeaderToggle
             @order={{this.order}}

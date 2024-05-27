@@ -2,295 +2,216 @@
 import I18n from "discourse-i18n";
 
 const DATA_PREFIX = "data-poll-";
-const DEFAULT_POLL_NAME = "poll";
+const DEFAULT_POLL = { name: "poll", status: "open" };
 const ALLOWED_ATTRIBUTES = [
+  "chartType",
   "close",
+  "groups",
   "max",
   "min",
   "name",
   "order",
   "public",
   "results",
-  "chartType",
-  "groups",
   "status",
   "step",
   "type",
 ];
 
-function replaceToken(tokens, target, list) {
-  let pos = tokens.indexOf(target);
-  let level = tokens[pos].level;
+function addNumberListItems(state, pollTokens, min, max, step) {
+  pollTokens.push(new state.Token("bullet_list_open", "ul", 1));
 
-  tokens.splice(pos, 1, ...list);
-  list[0].map = target.map;
+  for (let i = min; i <= max; i += step) {
+    pollTokens.push(new state.Token("list_item_open", "li", 1));
 
-  // resequence levels
-  for (; pos < tokens.length; pos++) {
-    let nesting = tokens[pos].nesting;
-    if (nesting < 0) {
-      level--;
-    }
-    tokens[pos].level = level;
-    if (nesting > 0) {
-      level++;
-    }
+    let token = new state.Token("text", "", 0);
+    token.content = String(i);
+    pollTokens.push(token);
+
+    pollTokens.push(new state.Token("list_item_close", "li", -1));
   }
+
+  pollTokens.push(new state.Token("bullet_list_close", "ul", -1));
 }
 
-// analyzes the block to that we have poll options
-function getListItems(tokens, startToken) {
-  let i = tokens.length - 1;
-  let listItems = [];
-  let buffer = [];
+function addPollContainer(state, titleTokens, pollTokens) {
+  let token = state.push("poll_container_open", "div", 1);
+  token.attrs = [["class", "poll-container"]];
 
-  for (; tokens[i] !== startToken; i--) {
-    if (i === 0) {
-      return;
-    }
+  if (titleTokens.length > 0) {
+    token = state.push("poll_title_open", "div", 1);
+    token.attrs = [["class", "poll-title"]];
+    state.tokens.push(...titleTokens);
+    state.push("poll_title_close", "div", -1);
+  }
 
-    let token = tokens[i];
-    if (token.level === 0) {
-      if (token.tag !== "ol" && token.tag !== "ul") {
-        return;
+  for (let i = 0; i < pollTokens.length; i++) {
+    if (pollTokens[i].type === "list_item_open") {
+      let listItemCloseIndex = pollTokens.findIndex(
+        (t, j) => j > i && t.type === "list_item_close"
+      );
+
+      if (listItemCloseIndex === -1) {
+        continue;
       }
-    }
 
-    if (token.level === 1 && token.nesting === 1) {
-      if (token.tag === "li") {
-        listItems.push([token, buffer.reverse().join(" ")]);
-      } else {
-        return;
-      }
-    }
+      let text = pollTokens
+        .slice(i, listItemCloseIndex + 1)
+        .filter((c) => c.type === "text" || c.type === "inline")
+        .map((c) => c.content)
+        .join(" ");
 
-    if (token.level === 1 && token.nesting === 1 && token.tag === "li") {
-      buffer = [];
-    } else {
-      if (token.type === "text" || token.type === "inline") {
-        buffer.push(token.content);
-      }
+      let hash = md5(JSON.stringify([text]));
+
+      pollTokens[i].attrs ||= [];
+      pollTokens[i].attrs.push([DATA_PREFIX + "option-id", hash]);
     }
   }
 
-  return listItems.reverse();
+  state.tokens.push(...pollTokens);
+
+  state.push("poll_container_close", "div", -1);
 }
 
-function invalidPoll(state, tag) {
-  let token = state.push("text", "", 0);
-  token.content = "[/" + tag + "]";
-}
+function addPollInfo(state) {
+  let token = state.push("poll_info_open", "div", 1);
+  token.attrs = [["class", "poll-info"]];
 
-function getTitle(tokens, startToken) {
-  const startIndex = tokens.indexOf(startToken);
+  token = state.push("poll_info_counts_open", "div", 1);
+  token.attrs = [["class", "poll-info_counts"]];
 
-  if (startIndex === -1) {
-    return;
-  }
+  token = state.push("poll_info_counts_count_open", "div", 1);
+  token.attrs = [["class", "poll-info_counts-count"]];
 
-  const pollTokens = tokens.slice(startIndex);
-  const open = pollTokens.findIndex((token) => token.type === "heading_open");
-  const close = pollTokens.findIndex((token) => token.type === "heading_close");
+  token = state.push("poll_info_number_open", "span", 1);
+  token.attrs = [["class", "info-number"]];
+  token.block = false;
 
-  if (open === -1 || close === -1) {
-    return;
-  }
+  token = state.push("text", "", 0);
+  token.content = "0";
 
-  const titleTokens = pollTokens.slice(open + 1, close);
+  state.push("poll_info_number_close", "span", -1);
 
-  // Remove the heading element
-  tokens.splice(startIndex + open, close - open + 1);
+  token = state.push("poll_info_label_open", "span", 1);
+  token.attrs = [["class", "info-label"]];
+  token.block = false;
 
-  return titleTokens;
+  token = state.push("text", "", 0);
+  token.content = I18n.t("poll.voters", { count: 0 });
+
+  state.push("poll_info_label_close", "span", -1);
+  state.push("poll_info_counts_count_close", "div", -1);
+  state.push("poll_info_counts_close", "div", -1);
+  state.push("poll_info_close", "div", -1);
 }
 
 const rule = {
   tag: "poll",
 
-  before(state, tagInfo, raw) {
-    let token = state.push("text", "", 0);
-    token.content = raw;
-    token.bbcode_attrs = tagInfo.attrs;
-    token.bbcode_type = "poll_open";
+  before(state, { attrs }) {
+    let open = state.tokens.filter((t) => t.type === "poll_open").length;
+    let closed = state.tokens.filter((t) => t.type === "poll_close").length;
+
+    if (open > closed) {
+      return; // poll-ception is now allowed
+    }
+
+    let token = state.push("poll_open", "div", 1);
+    token.poll_attrs = { ...DEFAULT_POLL, ...attrs };
   },
 
-  after(state, openToken, raw) {
-    const titleTokens = getTitle(state.tokens, openToken);
-    let items = getListItems(state.tokens, openToken);
-
-    if (!items) {
-      return invalidPoll(state, raw);
+  after(state, openToken) {
+    if (openToken.type !== "poll_open") {
+      return;
     }
 
-    const attrs = openToken.bbcode_attrs;
+    let attrs = openToken.poll_attrs;
+    let openTokenIndex = state.tokens.indexOf(openToken);
+    let pollTokens = state.tokens.slice(openTokenIndex + 1);
+    let titleTokens = [];
 
-    // default poll attributes
-    const attributes = [["class", "poll"]];
+    if (pollTokens.length > 0 && pollTokens[0].type === "heading_open") {
+      let idx = pollTokens.findIndex((t) => t.type === "heading_close");
 
-    if (!attrs["status"]) {
-      attributes.push([DATA_PREFIX + "status", "open"]);
-    }
-
-    ALLOWED_ATTRIBUTES.forEach((name) => {
-      if (attrs[name]) {
-        attributes.push([DATA_PREFIX + name, attrs[name]]);
+      if (idx !== -1) {
+        titleTokens = pollTokens.splice(0, idx + 1).slice(1, -1);
+        state.tokens.splice(openTokenIndex + 1, idx + 1);
       }
-    });
-
-    if (!attrs.name) {
-      attributes.push([DATA_PREFIX + "name", DEFAULT_POLL_NAME]);
     }
 
-    // we might need these values later...
-    let min = parseInt(attrs["min"], 10);
-    let max = parseInt(attrs["max"], 10);
-    let step = parseInt(attrs["step"], 10);
+    if (attrs.type === "number") {
+      let min = parseInt(attrs.min, 10);
+      let max = parseInt(attrs.max, 10);
+      let step = parseInt(attrs.step, 10);
 
-    // infinite loop if step < 1
-    if (step < 1) {
-      step = 1;
-    }
-
-    let header = [];
-
-    let token = new state.Token("poll_open", "div", 1);
-    token.block = true;
-    token.attrs = attributes;
-    header.push(token);
-
-    token = new state.Token("poll_open", "div", 1);
-    token.attrs = [["class", "poll-container"]];
-    header.push(token);
-
-    if (titleTokens) {
-      token = new state.Token("title_open", "div", 1);
-      token.attrs = [["class", "poll-title"]];
-      header.push(token);
-
-      header.push(...titleTokens);
-
-      token = new state.Token("title_close", "div", -1);
-      header.push(token);
-    }
-
-    // generate the options when the type is "number"
-    if (attrs["type"] === "number") {
-      // default values
       if (isNaN(min)) {
         min = 1;
       }
+
       if (isNaN(max)) {
         max = state.md.options.discourse.pollMaximumOptions;
       }
-      if (isNaN(step)) {
+
+      if (isNaN(step) || step < 1) {
         step = 1;
       }
 
-      if (items.length > 0) {
-        return invalidPoll(state, raw);
+      if (pollTokens.length > 0) {
+        state.tokens.splice(openTokenIndex, 1);
+        return;
+      } else if (min <= max) {
+        addNumberListItems(state, pollTokens, min, max, step);
       }
-
-      // dynamically generate options
-      token = new state.Token("bullet_list_open", "ul", 1);
-      header.push(token);
-
-      for (let o = min; o <= max; o += step) {
-        token = new state.Token("list_item_open", "li", 1);
-        items.push([token, String(o)]);
-        header.push(token);
-
-        token = new state.Token("text", "", 0);
-        token.content = String(o);
-        header.push(token);
-
-        token = new state.Token("list_item_close", "li", -1);
-        header.push(token);
-      }
-
-      token = new state.Token("bullet_item_close", "", -1);
-      header.push(token);
     }
 
-    // flag items so we add hashes
-    for (let o = 0; o < items.length; o++) {
-      token = items[o][0];
-      let text = items[o][1];
+    state.tokens.splice(openTokenIndex + 1);
 
-      token.attrs = token.attrs || [];
-      let md5Hash = md5(JSON.stringify([text]));
-      token.attrs.push([DATA_PREFIX + "option-id", md5Hash]);
+    openToken.attrs ||= [];
+    openToken.attrs.push(["class", "poll"]);
+
+    for (let n of ALLOWED_ATTRIBUTES) {
+      if (attrs[n]) {
+        openToken.attrs.push([DATA_PREFIX + n, attrs[n]]);
+      }
     }
 
-    replaceToken(state.tokens, openToken, header);
+    if (pollTokens.length > 0) {
+      if (!pollTokens[0].type.endsWith("_list_open")) {
+        return;
+      }
+    }
 
-    // we got to correct the level on the state
-    // we just resequenced
-    state.level = state.tokens[state.tokens.length - 1].level;
+    addPollContainer(state, titleTokens, pollTokens);
+    addPollInfo(state);
 
-    state.push("poll_close", "div", -1);
-
-    token = state.push("poll_open", "div", 1);
-    token.attrs = [["class", "poll-info"]];
-
-    token = state.push("poll_open", "div", 1);
-    token.attrs = [["class", "poll-info_counts"]];
-
-    token = state.push("poll_open", "div", 1);
-    token.attrs = [["class", "poll-info_counts-count"]];
-
-    token = state.push("span_open", "span", 1);
-    token.block = false;
-    token.attrs = [["class", "info-number"]];
-    token = state.push("text", "", 0);
-    token.content = "0";
-    state.push("span_close", "span", -1);
-
-    token = state.push("span_open", "span", 1);
-    token.block = false;
-    token.attrs = [["class", "info-label"]];
-    token = state.push("text", "", 0);
-    token.content = I18n.t("poll.voters", { count: 0 });
-    state.push("span_close", "span", -1);
-
-    state.push("poll_close", "div", -1);
-    state.push("poll_close", "div", -1);
-    state.push("poll_close", "div", -1);
     state.push("poll_close", "div", -1);
   },
 };
 
-function newApiInit(helper) {
+export function setup(helper) {
+  helper.allowList([
+    "a.button.cast-votes",
+    "a.button.toggle-results",
+    "div.poll-buttons",
+    "div.poll-container",
+    "div.poll-info_counts-count",
+    "div.poll-info_counts",
+    "div.poll-info",
+    "div.poll-title",
+    "div.poll",
+    "div[data-*]",
+    "li[data-*]",
+    "span.info-label",
+    "span.info-number",
+    "span.info-text",
+  ]);
+
   helper.registerOptions((opts, siteSettings) => {
-    if (!siteSettings.poll_enabled) {
-      opts.features.poll = false;
-    }
+    opts.features.poll = siteSettings.poll_enabled;
     opts.pollMaximumOptions = siteSettings.poll_maximum_options;
   });
 
-  helper.registerPlugin((md) => {
-    md.block.bbcode.ruler.push("poll", rule);
-  });
-}
-
-export function setup(helper) {
-  helper.allowList([
-    "div.poll",
-    "div.poll-info",
-    "div.poll-info_counts",
-    "div.poll-info_counts-count",
-    "div.poll-container",
-    "div.poll-title",
-    "div.poll-buttons",
-    "div[data-*]",
-    "span.info-number",
-    "span.info-text",
-    "span.info-label",
-    "a.button.cast-votes",
-    "a.button.toggle-results",
-    "li[data-*]",
-  ]);
-
-  newApiInit(helper);
+  helper.registerPlugin((md) => md.block.bbcode.ruler.push("poll", rule));
 }
 
 /*!

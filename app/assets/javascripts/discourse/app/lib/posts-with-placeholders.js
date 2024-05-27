@@ -1,3 +1,7 @@
+import {
+  arrayContentDidChange,
+  arrayContentWillChange,
+} from "@ember/-internals/metal";
 import EmberArray from "@ember/array";
 import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -26,9 +30,9 @@ export default EmberObject.extend(EmberArray, {
   },
 
   _changeArray(cb, offset, removed, inserted) {
-    this.arrayContentWillChange(offset, removed, inserted);
+    arrayContentWillChange(this, offset, removed, inserted);
     cb();
-    this.arrayContentDidChange(offset, removed, inserted);
+    arrayContentDidChange(this, offset, removed, inserted);
     this.notifyPropertyChange("length");
   },
 
@@ -42,6 +46,10 @@ export default EmberObject.extend(EmberArray, {
 
   removePost(cb) {
     this._changeArray(cb, this.get("posts.length") - 1, 1, 0);
+  },
+
+  insertPost(insertAtIndex, cb) {
+    this._changeArray(cb, insertAtIndex, 0, 1);
   },
 
   refreshAll(cb) {

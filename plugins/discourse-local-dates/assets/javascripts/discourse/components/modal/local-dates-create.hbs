@@ -1,7 +1,7 @@
 <DModal
   @title={{i18n "discourse_local_dates.title"}}
   @closeModal={{@closeModal}}
-  class="discourse-local-dates-create-modal"
+  class="discourse-local-dates-create-modal -large"
 >
   <:body>
     <div class="form">
@@ -57,13 +57,13 @@
             {{/if}}
           </div>
 
-          {{#unless this.site.mobileView}}
+          {{#if this.site.desktopView}}
             <TimezoneInput
               @options={{hash icon="globe"}}
               @value={{this.timezone}}
-              @onChange={{action (mut this.timezone)}}
+              @onChange={{fn (mut this.timezone)}}
             />
-          {{/unless}}
+          {{/if}}
         </div>
 
         <div class="picker-panel">
@@ -74,8 +74,8 @@
             @minDate={{this.minDate}}
             @timeFormat={{this.timeFormat}}
             @dateFormat={{this.dateFormat}}
-            @onChangeDate={{action this.changeSelectedDate}}
-            @onChangeTime={{action this.changeSelectedTime}}
+            @onChangeDate={{this.changeSelectedDate}}
+            @onChangeTime={{this.changeSelectedTime}}
           />
         </div>
 
@@ -83,7 +83,7 @@
           <TimezoneInput
             @value={{this.timezone}}
             @options={{hash icon="globe"}}
-            @onChange={{action (mut this.timezone)}}
+            @onChange={{fn (mut this.timezone)}}
           />
         {{/if}}
       </div>
@@ -103,12 +103,12 @@
               <div class="controls">
                 <ComboBox
                   @content={{this.recurringOptions}}
-                  @class="recurrence-input"
                   @value={{this.recurring}}
-                  @onChange={{action (mut this.recurring)}}
+                  @onChange={{fn (mut this.recurring)}}
                   @options={{hash
                     none="discourse_local_dates.create.form.recurring_none"
                   }}
+                  class="recurrence-input"
                 />
               </div>
             </div>
@@ -125,10 +125,10 @@
               <MultiSelect
                 @valueProperty={{null}}
                 @nameProperty={{null}}
-                @class="timezones-input"
                 @content={{this.allTimezones}}
                 @value={{this.timezones}}
                 @options={{hash allowAny=false maximum=5}}
+                class="timezones-input"
               />
             </div>
           </div>
@@ -148,7 +148,7 @@
               </a>
             </p>
             <div class="controls">
-              <TextField @value={{this.format}} @class="format-input" />
+              <TextField @value={{this.format}} class="format-input" />
             </div>
           </div>
           <div class="control-group">

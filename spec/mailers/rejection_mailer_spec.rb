@@ -3,15 +3,13 @@
 RSpec.describe RejectionMailer do
   describe "send_rejection" do
     context "when sending rejection email" do
-      fab! (:user) {
-        Fabricate(:user)
-      }
-      let (:template_args) {
+      fab!(:user)
+      let(:template_args) do
         { former_title: "Mail Subject", destination: user.email, site_name: SiteSetting.title }
-      }
-      let (:reject_mail) {
+      end
+      let(:reject_mail) do
         RejectionMailer.send_rejection("email_reject_topic_not_found", user.email, template_args)
-      }
+      end
 
       it "renders the senders email" do
         expect(reject_mail.to).to eql([user.email])

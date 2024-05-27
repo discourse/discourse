@@ -7,7 +7,7 @@ RSpec.describe FinishInstallationController do
 
       it "doesn't allow access" do
         get "/finish-installation"
-        expect(response).to be_forbidden
+        expect(response.status).to eq(403)
       end
     end
 
@@ -27,7 +27,7 @@ RSpec.describe FinishInstallationController do
 
       it "doesn't allow access" do
         get "/finish-installation/register"
-        expect(response).to be_forbidden
+        expect(response.status).to eq(403)
       end
     end
 

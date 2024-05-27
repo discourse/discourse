@@ -21,7 +21,7 @@ acceptance(
 
     test("sections are collapsable", async function (assert) {
       await visit("/");
-      await click(".hamburger-dropdown");
+      await click("#toggle-hamburger-menu");
 
       assert.ok(
         exists(".sidebar-section-header.sidebar-section-header-collapsable"),
@@ -42,14 +42,14 @@ acceptance(
 
     test("showing and hiding sidebar", async function (assert) {
       await visit("/");
-      await click(".hamburger-dropdown");
+      await click("#toggle-hamburger-menu");
 
       assert.ok(
         exists(".sidebar-hamburger-dropdown"),
         "displays the sidebar dropdown"
       );
 
-      await click(".hamburger-dropdown");
+      await click("#toggle-hamburger-menu");
 
       assert.notOk(
         exists(".sidebar-hamburger-dropdown"),
@@ -59,7 +59,7 @@ acceptance(
 
     test("sections are not collapsable", async function (assert) {
       await visit("/");
-      await click(".hamburger-dropdown");
+      await click("#toggle-hamburger-menu");
 
       assert.notOk(
         exists(".sidebar-section-header.sidebar-section-header-collapsable"),
@@ -69,7 +69,7 @@ acceptance(
 
     test("'more' dropdown should display as regular list items in header dropdown mode", async function (assert) {
       await visit("/");
-      await click(".hamburger-dropdown");
+      await click("#toggle-hamburger-menu");
 
       assert.ok(
         exists("[data-link-name='admin']"),
@@ -218,7 +218,7 @@ acceptance(
 
       assert.strictEqual(
         query(".btn-sidebar-toggle").title,
-        I18n.t("sidebar.hide_sidebar"),
+        I18n.t("sidebar.title"),
         "has the right title attribute when sidebar is expanded"
       );
 
@@ -233,7 +233,7 @@ acceptance(
 
       assert.strictEqual(
         query(".btn-sidebar-toggle").title,
-        I18n.t("sidebar.show_sidebar"),
+        I18n.t("sidebar.title"),
         "has the right title attribute when sidebar is collapsed"
       );
     });

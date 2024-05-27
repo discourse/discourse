@@ -44,8 +44,12 @@ module TurboTests
             Kernel.const_get(name)
           end
 
-        @formatters << formatter_class.new(output)
+        add_formatter(formatter_class.new(output))
       end
+    end
+
+    def start
+      delegate_to_formatters(:start, RSpec::Core::Notifications::StartNotification.new)
     end
 
     def example_passed(example)
@@ -83,6 +87,8 @@ module TurboTests
     def finish
       end_time = Time.now
 
+      delegate_to_formatters(:stop, RSpec::Core::Notifications::ExamplesNotification.new(self))
+
       delegate_to_formatters(:start_dump, RSpec::Core::Notifications::NullNotification)
 
       delegate_to_formatters(
@@ -109,6 +115,10 @@ module TurboTests
       )
 
       delegate_to_formatters(:close, RSpec::Core::Notifications::NullNotification)
+    end
+
+    def add_formatter(formatter)
+      @formatters << formatter
     end
 
     protected

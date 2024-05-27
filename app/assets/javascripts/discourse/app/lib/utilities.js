@@ -1,5 +1,6 @@
 import Handlebars from "handlebars";
 import $ from "jquery";
+import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
 import { capabilities } from "discourse/services/capabilities";
 import * as AvatarUtils from "discourse-common/lib/avatar-utils";
@@ -78,17 +79,21 @@ export function highlightPost(postNumber) {
     return;
   }
 
-  container.querySelector(".tabLoc")?.focus();
-
-  const element = container.querySelector(".topic-body");
+  const element = container.querySelector(".topic-body, .small-action-desc");
   if (!element || element.classList.contains("highlighted")) {
     return;
   }
 
   element.classList.add("highlighted");
 
+  if (postNumber > 1) {
+    element.setAttribute("tabindex", "0");
+    element.focus();
+  }
+
   const removeHighlighted = function () {
     element.classList.remove("highlighted");
+    element.removeAttribute("tabindex");
     element.removeEventListener("animationend", removeHighlighted);
   };
   element.addEventListener("animationend", removeHighlighted);
@@ -417,34 +422,45 @@ export function postRNWebviewMessage(prop, value) {
   }
 }
 
-const CODE_BLOCKS_REGEX =
-  /^(  |\t).*|`[^`]+`|^```[^]*?^```|\[code\][^]*?\[\/code\]/gm;
-//|    ^     |   ^   |      ^      |           ^           |
-//     |         |          |                  |
-//     |         |          |       code blocks between [code]
-//     |         |          |
-//     |         |          +--- code blocks between three backticks
-//     |         |
-//     |         +----- inline code between backticks
-//     |
-//     +------- paragraphs starting with 2 spaces or tab
-
-const OPEN_CODE_BLOCKS_REGEX = /^(  |\t).*|`[^`]+|^```[^]*?|\[code\][^]*?/gm;
-
-export function inCodeBlock(text, pos) {
-  let end = 0;
-  for (const match of text.matchAll(CODE_BLOCKS_REGEX)) {
-    end = match.index + match[0].length;
-    if (match.index <= pos && pos <= end) {
-      return true;
+function pickMarker(text) {
+  // Uses the private use area (U+E000 to U+F8FF) to find a character that
+  // is not present in the text. This character will be used as a marker in
+  // place of the caret.
+  for (let code = 0xe000; code <= 0xf8ff; ++code) {
+    const char = String.fromCharCode(code);
+    if (!text.includes(char)) {
+      return char;
     }
   }
+  return null;
+}
 
-  // Character at position `pos` can be in a code block that is unfinished.
-  // To check this case, we look for any open code blocks after the last closed
-  // code block.
-  const lastOpenBlock = text.slice(end).search(OPEN_CODE_BLOCKS_REGEX);
-  return lastOpenBlock !== -1 && pos >= end + lastOpenBlock;
+function findToken(tokens, marker, level = 0) {
+  if (level > 50) {
+    return null;
+  }
+  const token = tokens.find((t) => (t.content ?? "").includes(marker));
+  return token?.children ? findToken(token.children, marker, level + 1) : token;
+}
+
+const CODE_MARKERS_REGEX = /    |```|~~~|[^`]`[^`]|\[code\]/;
+const CODE_TOKEN_TYPES = ["code_inline", "code_block", "fence"];
+
+export async function inCodeBlock(text, pos) {
+  if (!CODE_MARKERS_REGEX.test(text)) {
+    return false;
+  }
+
+  const marker = pickMarker(text);
+  if (!marker) {
+    return false;
+  }
+
+  const markedText = text.slice(0, pos) + marker + text.slice(pos);
+  const tokens = await parseAsync(markedText);
+  const type = findToken(tokens, marker)?.type;
+
+  return CODE_TOKEN_TYPES.includes(type);
 }
 
 // Return an array of modifier keys that are pressed during a given `MouseEvent`
@@ -490,7 +506,11 @@ export function clipboardCopy(text) {
   }
 
   // ...Otherwise, use document.execCommand() fallback
-  return clipboardCopyFallback(text);
+  if (clipboardCopyFallback(text)) {
+    return Promise.resolve();
+  } else {
+    return Promise.reject();
+  }
 }
 
 // Use this version of clipboardCopy if you must use an AJAX call
@@ -612,4 +632,124 @@ export function getCaretPosition(element, options) {
   };
 
   return adjustedPosition;
+}
+
+/**
+ * Generate markdown table from an array of objects
+ * Inspired by https://github.com/Ygilany/array-to-table
+ *
+ * @param  {Array} array       Array of objects
+ * @param  {Array} columns     Column headings
+ * @param  {String} colPrefix  Table column prefix
+ *
+ * @return {String} Markdown table
+ */
+export function arrayToTable(array, cols, colPrefix = "col") {
+  let table = "";
+
+  // Generate table headers
+  table += "|";
+  table += cols.join(" | ");
+  table += "|\r\n|";
+
+  // Generate table header separator
+  table += cols
+    .map(function () {
+      return "---";
+    })
+    .join(" | ");
+  table += "|\r\n";
+
+  // Generate table body
+  array.forEach(function (item) {
+    table += "|";
+
+    table +=
+      cols
+        .map(function (_key, index) {
+          return String(item[`${colPrefix}${index}`] || "").replace(
+            /\r?\n|\r/g,
+            " "
+          );
+        })
+        .join(" | ") + "|\r\n";
+  });
+
+  return table;
+}
+
+/**
+ *
+ * @returns a regular expression finding all markdown tables
+ */
+export function findTableRegex() {
+  return /((\r?){2}|^)(^\|[^\r\n]*(\r?\n)?)+(?=(\r?\n){2}|$)/gm;
+}
+
+export function tokenRange(tokens, start, end) {
+  const contents = [];
+  let startPushing = false;
+  let items = [];
+
+  tokens.forEach((token) => {
+    if (token.type === start) {
+      startPushing = true;
+    }
+
+    if (token.type === end) {
+      contents.push(items);
+      items = [];
+      startPushing = false;
+    }
+
+    if (startPushing) {
+      items.push(token);
+    }
+  });
+
+  return contents;
+}
+
+export function allowOnlyNumericInput(event, allowNegative = false) {
+  const ALLOWED_KEYS = [
+    "Enter",
+    "Backspace",
+    "Tab",
+    "Delete",
+    "ArrowLeft",
+    "ArrowUp",
+    "ArrowRight",
+    "ArrowDown",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+  ];
+
+  if (!ALLOWED_KEYS.includes(event.key)) {
+    if (allowNegative && event.key === "-") {
+      return;
+    } else {
+      event.preventDefault();
+    }
+  }
+}
+
+export function cleanNullQueryParams(params) {
+  for (const [key, val] of Object.entries(params)) {
+    if (val === "undefined" || val === "null") {
+      params[key] = null;
+    }
+  }
+  return params;
+}
+
+export function getElement(node) {
+  return node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
 }

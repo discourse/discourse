@@ -3,10 +3,10 @@
 RSpec.describe "Editing sidebar categories navigation", type: :system do
   fab!(:user)
 
-  fab!(:category2) { Fabricate(:category, name: "category2") }
+  fab!(:category2) { Fabricate(:category, name: "category 2") }
 
   fab!(:category2_subcategory) do
-    Fabricate(:category, parent_category_id: category2.id, name: "category2 subcategory")
+    Fabricate(:category, parent_category_id: category2.id, name: "category 2 subcategory")
   end
 
   fab!(:category) { Fabricate(:category, name: "category") }
@@ -21,10 +21,23 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
+  before_all do
+    Jobs.with_immediate_jobs do
+      SearchIndexer.with_indexing do
+        category2.index_search
+        category2_subcategory.index_search
+
+        category.index_search
+        category_subcategory2.index_search
+        category_subcategory.index_search
+      end
+    end
+  end
+
   before { sign_in(user) }
 
   shared_examples "a user can edit the sidebar categories navigation" do |mobile|
-    xit "allows a user to edit the sidebar categories navigation", mobile: mobile do
+    it "allows a user to edit the sidebar categories navigation", mobile: mobile do
       visit "/latest"
 
       sidebar.open_on_mobile if mobile
@@ -42,7 +55,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       expect(modal).to have_no_reset_to_defaults_button
 
       expect(modal).to have_categories(
-        [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
+        [category2, category2_subcategory, category, category_subcategory2, category_subcategory],
       )
 
       modal
@@ -149,14 +162,16 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
 
     modal = sidebar.click_edit_categories_button
 
-    modal.filter("category subcategory 2")
+    modal.filter("subcategory")
 
-    expect(modal).to have_categories([category, category_subcategory2])
+    expect(modal).to have_categories(
+      [category2, category2_subcategory, category, category_subcategory2, category_subcategory],
+    )
 
     modal.filter("2")
 
     expect(modal).to have_categories(
-      [category, category_subcategory2, category2, category2_subcategory],
+      [category2, category2_subcategory, category, category_subcategory2],
     )
 
     modal.filter("someinvalidterm")
@@ -175,7 +190,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     modal = sidebar.click_edit_categories_button
     modal.filter_by_selected
 
-    expect(modal).to have_categories([category, category_subcategory, category2])
+    expect(modal).to have_categories([category2, category, category_subcategory])
     expect(modal).to have_checkbox(category, disabled: true)
     expect(modal).to have_checkbox(category_subcategory)
     expect(modal).to have_checkbox(category2)
@@ -200,7 +215,7 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     modal.filter_by_all
 
     expect(modal).to have_categories(
-      [category, category_subcategory, category_subcategory2, category2, category2_subcategory],
+      [category, category_subcategory2, category_subcategory, category2, category2_subcategory],
     )
 
     expect(modal).to have_checkbox(category)
@@ -208,6 +223,43 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     expect(modal).to have_checkbox(category_subcategory2)
     expect(modal).to have_checkbox(category2)
     expect(modal).to have_checkbox(category2_subcategory)
+  end
+
+  context "when there are more categories than the page limit" do
+    around(:each) do |example|
+      search_calls = 0
+
+      spy =
+        CategoriesController.clone.prepend(
+          Module.new do
+            define_method :search do
+              search_calls += 1
+              super()
+            end
+          end,
+        )
+
+      @get_search_calls = lambda { search_calls }
+
+      stub_const(Object, :CategoriesController, spy) do
+        stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 1) { example.run }
+      end
+    end
+
+    xit "loads all the categories eventually" do
+      visit "/latest"
+
+      expect(sidebar).to have_categories_section
+
+      modal = sidebar.click_edit_categories_button
+      modal.filter("category")
+
+      expect(modal).to have_categories(
+        [category2, category2_subcategory, category, category_subcategory2, category_subcategory],
+      )
+
+      expect(@get_search_calls.call).to eq(6)
+    end
   end
 
   describe "when max_category_nesting has been set to 3" do
@@ -233,8 +285,18 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       Fabricate(
         :category,
         parent_category_id: category2_subcategory.id,
-        name: "category2 subcategory subcategory",
+        name: "category 2 subcategory subcategory",
       )
+    end
+
+    before_all do
+      Jobs.with_immediate_jobs do
+        SearchIndexer.with_indexing do
+          category_subcategory_subcategory.index_search
+          category_subcategory_subcategory2.index_search
+          category2_subcategory_subcategory.index_search
+        end
+      end
     end
 
     it "allows a user to edit sub-subcategories to be included in the sidebar categories section" do
@@ -265,10 +327,18 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       expect(sidebar).to have_categories_section
 
       modal = sidebar.click_edit_categories_button
-      modal.filter("category2 subcategory subcategory")
+      modal.filter("category 2 subcategory subcategory")
 
       expect(modal).to have_categories(
-        [category2, category2_subcategory, category2_subcategory_subcategory],
+        [
+          category2,
+          category2_subcategory,
+          category2_subcategory_subcategory,
+          category,
+          category_subcategory2,
+          category_subcategory,
+          category_subcategory_subcategory2,
+        ],
       )
     end
   end

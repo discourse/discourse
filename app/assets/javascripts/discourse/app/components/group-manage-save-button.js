@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
 import { popupAjaxError } from "discourse/lib/ajax-error";

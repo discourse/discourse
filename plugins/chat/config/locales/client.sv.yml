@@ -5,13 +5,17 @@
 # https://translate.discourse.org/
 
 sv:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Chatt
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Alltid"
+          fullscreen: "När chatten är i helskärm"
           never: "Aldrig"
       logs:
         staff_actions:
@@ -24,9 +28,24 @@ sv:
           descriptions:
             chat:
               create_message: "Skapa ett chattmeddelande i en angiven kanal."
+      web_hooks:
+        chat_event:
+          group_name: "Chatthändelser"
+          chat_message_created: "Meddelandet skapas"
+          chat_message_edited: "Meddelandet redigeras"
+          chat_message_trashed: "Meddelandet kastas"
+          chat_message_restored: "Meddelandet återställs"
+    about:
+      chat_messages_count: "Chattmeddelanden"
+      chat_channels_count: "Chattkanaler"
+      chat_users_count: "Chattanvändare"
     chat:
+      text_copied: Texten har kopierats till urklipp
+      link_copied: Länken har kopierats till urklipp
+      back_to_forum: "Forum"
       deleted_chat_username: raderat
       dates:
+        yesterday: "Igår"
         time_tiny: "h:mm"
       all_loaded: "Visar alla meddelanden"
       already_enabled: "Chatt är redan aktiverat för detta ämne. Vänligen uppdatera."
@@ -37,6 +56,7 @@ sv:
       cancel_reply: "Avbryt svar"
       chat_channels: "Kanaler"
       browse_all_channels: "Bläddra bland alla kanaler"
+      see_in: "Se i"
       move_to_channel:
         title: "Flytta meddelanden till kanal"
         instructions:
@@ -53,6 +73,7 @@ sv:
         delete_channel: "Radera kanal"
         join_channel: "Gå med i kanal"
         leave_channel: "Lämna kanal"
+        leave_groupchat_info: "Genom att lämna den här gruppchatten har du inte längre tillgång till den och kommer inte att få aviseringar relaterade till den. För att gå med igen måste du bjudas in igen av en medlem av gruppchatten."
         join: "Gå med"
         leave: "Lämna"
         save_label:
@@ -97,6 +118,7 @@ sv:
         direct_message_cta: "Starta en personlig chatt"
         direct_message: "Du kan också starta en personlig chatt med en eller flera användare."
         title: "Inga kanaler hittades"
+        my_threads: "Du har inga trådar än. Trådar du deltar i kommer att visas här."
       email_frequency:
         description: "Vi skickar bara e-post till dig om vi inte har sett dig under de senaste 15 minuterna."
         never: "Aldrig"
@@ -106,7 +128,10 @@ sv:
         title: "Visa aktivitetsindikator i sidhuvudet"
         all_new: "Alla nya meddelanden"
         dm_and_mentions: "Direktmeddelanden och omnämnanden"
+        only_mentions: "Bara omnämnanden"
         never: "Aldrig"
+      separate_sidebar_mode:
+        title: "Visa separata sidofältslägen för forum och chatt"
       enable: "Aktivera chatt"
       flag: "Flagga"
       emoji: "Infoga emoji"
@@ -129,6 +154,7 @@ sv:
           one: "Inbjudan skickad"
           other: "Inbjudningar skickade"
         invite: "Bjud in till kanal"
+        channel_wide_mentions_disallowed: "@här och @alla omnämnanden har inaktiverats i den här kanalen."
         groups:
           header:
             some: "Vissa användare kommer inte att aviseras"
@@ -202,6 +228,7 @@ sv:
         header: "Chatthuvud"
         composer: "Chattkompositör"
         channels_list: "Lista över chattkanaler"
+      no_direct_message_channels: "Du har inte gått med i några direktmeddelandekanaler."
       no_public_channels: "Du har inte gått med i några kanaler."
       kicked_from_channel: "Du har inte längre tillgång till den här kanalen."
       only_chat_push_notifications:
@@ -228,6 +255,7 @@ sv:
       reply: "Svara"
       edit: "Redigera"
       copy_link: "Kopiera länk"
+      copy_text: "Kopiera text"
       rebake_message: "Generera HTML"
       retry_staged_message:
         title: "Nätverksfel"
@@ -239,6 +267,8 @@ sv:
       save: "Spara"
       select: "Välj"
       return_to_list: "Återgå till listan över kanaler"
+      return_to_channel: "Återgå till kanal"
+      return_to_threads_list: "Återgå till trådlistan"
       unread_threads_count:
         one: "Du har %{count} oläst diskussion"
         other: "Du har %{count} olästa diskussioner"
@@ -276,7 +306,7 @@ sv:
         back: "Tillbaka"
         title: Kanaler
         filter_all: Alla
-        filter_open: Öppnad
+        filter_open: Öppen
         filter_closed: Stängd
         filter_archived: Arkiverad
         filter_input_placeholder: Sök kanal efter namn
@@ -285,6 +315,8 @@ sv:
         yesterday: Igår
       members_view:
         filter_placeholder: Hitta medlemmar
+        add_member: Lägg till medlem
+        back_to_settings: "Tillbaka till inställningarna"
       about_view:
         associated_topic: Länkat ämne
         associated_category: Länkad kategori
@@ -305,9 +337,16 @@ sv:
         default_search_placeholder: "#a-kanal, @någon eller något"
         default_channel_search_placeholder: "#en-kanal"
         default_user_search_placeholder: "@någon"
-        user_search_placeholder: "...lägg till fler användare"
+        user_search_placeholder: "...lägg till fler medlemmar"
         disabled_user: "har inaktiverat chatten"
         no_items: "Inga objekt"
+        create_group_placeholder: "Gruppchattnamn (valfritt)"
+        participants_counter: "%{selection_count}/%{max} deltagare"
+        new_group_chat: "Ny gruppchatt"
+        filter: "Filter"
+        cant_add_more_members: "Maximalt antal medlemmar nått"
+        create_new_group_chat: "Skapa gruppchatt"
+        group_with_too_many_members: "har för många medlemmar (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Redigera kanal
         input_placeholder: Lägg till ett namn
@@ -319,10 +358,15 @@ sv:
         input_placeholder: Lägg till en beskrivning
         description: Berätta för folk vad den här kanalen handlar om
       direct_message_creator:
+        add_to_channel: "Lägg till i kanal"
         title: Nytt meddelande
         prefix: "Till:"
         no_results: Inga resultat
         selected_user_title: "Avmarkera %{username}"
+        group_name: "Gruppchattnamn (valfritt)"
+        members_counter:
+          one: "%{count}/%{max} medlem"
+          other: "%{count}/%{max} medlemmar"
       channel:
         no_memberships: Denna kanal har inga medlemmar
         no_memberships_found: Inga medlemmar hittades
@@ -376,17 +420,17 @@ sv:
       reviewable:
         type: "Chatt meddelande"
       reactions:
-        only_you: "Du reagerade med :%{emoji}:"
-        you_and_single_user: "Du och %{username} reagerade med :%{emoji}:"
-        you_and_multiple_users: "Du, %{commaSeparatedUsernames} och %{username} reagerade med :%{emoji}:"
+        only_you: "<span>Du reagerade med </span>:%{emoji}:"
+        you_and_single_user: "<span>Du och %{username} reagerade med </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Du, %{commaSeparatedUsernames} och %{username} reagerade med </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "Du, %{commaSeparatedUsernames} och %{count} till reagerade med :%{emoji}:"
-          other: "Du, %{commaSeparatedUsernames} och %{count} till reagerade med :%{emoji}:"
-        single_user: "%{username} reagerade med :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} och %{username} reagerade med :%{emoji}:"
+          one: "<span>Du, %{commaSeparatedUsernames} och %{count} annan reagerade med </span>:%{emoji}:"
+          other: "<span>Du, %{commaSeparatedUsernames} och %{count} andra reagerade med </span>:%{emoji}:"
+        single_user: "<span>%{username} reagerade med </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} och %{username} reagerade med </span>:%{emoji}:"
         multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} och ytterligare %{count} reagerade med :%{emoji}:"
-          other: "%{commaSeparatedUsernames} och ytterligare %{count} reagerade med :%{emoji}:"
+          one: "<span>%{commaSeparatedUsernames} och %{count} annan reagerade med </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} och %{count} andra reagerade med </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Växla verktygsfält"
         italic_text: "kursiv text"
@@ -396,6 +440,7 @@ sv:
       quote:
         original_channel: 'Ursprungligen skickad i <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chattcitat kopierat till urklipp"
+        default_thread_title: "Tråd"
       notification_levels:
         never: "Aldrig"
         mention: "Endast för omnämnanden"
@@ -425,6 +470,7 @@ sv:
         unfollow: "Lämna"
         admin_title: "Admin"
         settings_title: "Inställningar"
+        info_title: "Kanalinfo"
         category_label: "Kategori"
         history_label: "Historik"
         members_label: "Medlemmar"
@@ -432,14 +478,23 @@ sv:
         title: "Chatt"
         export_messages:
           title: "Exportera chattmeddelanden"
+          description: "Detta exporterar alla meddelanden från alla kanaler."
           create_export: "Skapa export"
           export_has_started: "Exporten har börjat. Du får ett PM när det är klart."
+      my_threads:
+        title: Mina trådar
+        aria_label: "Byt till min trådlista"
       direct_messages:
-        title: "Personlig chatt"
+        title: "DM"
+        aria_label: "Byt till direktmeddelanden"
         new: "Skapa en personlig chatt"
         create: "Kör"
         leave: "Lämna den här personliga chatten"
+        close: "Stäng den här personliga chatten"
         cannot_create: "Tyvärr kan du inte skicka direktmeddelanden."
+      channel_list:
+        title: "Kanaler"
+        aria_label: "Växla till kanallistan"
       incoming_webhooks:
         back: "Tillbaka"
         channel_placeholder: "Välj en kanal"
@@ -497,12 +552,18 @@ sv:
           one: "%{commaSeparatedUsernames} och %{count} skriver"
           other: "%{commaSeparatedUsernames} och %{count} andra skriver"
       retention_reminders:
+        indefinitely_short: "på obestämd tid"
+        indefinitely_long: "Chattinställningarna har ställts in för att behålla kanalmeddelanden på obestämd tid."
         short:
           one: "%{count} dag"
           other: "%{count} dagar"
+        long:
+          one: "Chattinställningarna har ställts in för att behålla kanalmeddelanden i %{count} dag."
+          other: "Chattinställningarna har ställts in för att behålla kanalmeddelanden i %{count} dagar."
       flags:
         off_topic: "Det här meddelandet är inte relevant för den aktuella diskussionen enligt kanaltiteln och bör förmodligen flyttas någon annanstans."
         inappropriate: "Detta meddelande innehåller saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href=\"%{basePath}/guidelines\">vårt forums riktlinjer</a>."
+        illegal: "Det här inlägget kräver personalens uppmärksamhet eftersom jag tror att det innehåller innehåll som är olagligt."
         spam: "Det här meddelandet är en annons eller vandalism. Det är inte lämpligt eller relevant med avseende på den aktuella kanalen."
         notify_user: "Jag vill prata med den här personen direkt och privat om meddelandet."
         notify_moderators: "Detta meddelande kräver personalens uppmärksamhet av en annan anledning som inte anges ovan."
@@ -545,6 +606,7 @@ sv:
           other: "+%{count}"
       threads:
         open: "Öppna tråd"
+        list: "Trådar"
         none: "Du deltar inte i några trådar i den här kanalen."
       draft_channel_screen:
         header: "Nytt meddelande"
@@ -594,6 +656,7 @@ sv:
           title: "Flaggat chattmeddelande"
         reviewable_chat_message:
           title: "Flaggat chattmeddelande"
+          noun: "chattmeddelande"
     keyboard_shortcuts_help:
       chat:
         title: "Chatt"

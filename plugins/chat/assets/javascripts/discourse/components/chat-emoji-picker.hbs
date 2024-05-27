@@ -6,7 +6,6 @@
   <div
     class={{concat-class
       "chat-emoji-picker"
-      @class
       (if this.chatEmojiPickerManager.closing "closing")
     }}
     {{did-insert this.addClickOutsideEventListener}}
@@ -19,18 +18,18 @@
   >
     <div class="chat-emoji-picker__filter-container">
       <DcFilterInput
-        @class="chat-emoji-picker__filter"
-        @value={{this.chatEmojiPickerManager.picker.initialFilter}}
-        @filterAction={{action this.didInputFilter value="target.value"}}
-        @icons={{hash left="search"}}
-        placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
-        autofocus={{true}}
         {{did-insert (if this.site.desktopView this.focusFilter (noop))}}
         {{did-insert
           (fn
             this.didInputFilter this.chatEmojiPickerManager.picker.initialFilter
           )
         }}
+        @value={{this.chatEmojiPickerManager.picker.initialFilter}}
+        @filterAction={{with-event-value this.didInputFilter}}
+        @icons={{hash left="search"}}
+        @containerClass="chat-emoji-picker__filter"
+        autofocus={{true}}
+        placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
       >
         <div
           class="chat-emoji-picker__fitzpatrick-scale"

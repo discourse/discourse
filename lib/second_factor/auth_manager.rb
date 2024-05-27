@@ -120,7 +120,7 @@ class SecondFactor::AuthManager
 
   attr_reader :allowed_methods
 
-  def self.find_second_factor_challenge(nonce, secure_session)
+  def self.find_second_factor_challenge(nonce:, secure_session:, target_user:)
     challenge_json = secure_session["current_second_factor_auth_challenge"]
     if challenge_json.blank?
       raise SecondFactor::BadChallenge.new(
@@ -137,16 +137,25 @@ class SecondFactor::AuthManager
             )
     end
 
+    if target_user && (challenge[:target_user_id] != target_user.id)
+      raise SecondFactor::BadChallenge.new(
+              "second_factor_auth.challenge_not_found",
+              status_code: 404,
+            )
+    end
+
     generated_at = challenge[:generated_at]
     if generated_at < MAX_CHALLENGE_AGE.ago.to_i
       raise SecondFactor::BadChallenge.new("second_factor_auth.challenge_expired", status_code: 401)
     end
+
     challenge
   end
 
-  def initialize(guardian, action)
+  def initialize(guardian, action, target_user:)
     @guardian = guardian
     @current_user = guardian.user
+    @target_user = target_user
     @action = action
     @allowed_methods =
       Set.new([UserSecondFactor.methods[:totp], UserSecondFactor.methods[:security_key]]).freeze
@@ -163,7 +172,7 @@ class SecondFactor::AuthManager
     elsif @action.skip_second_factor_auth?(params)
       data = @action.second_factor_auth_skipped!(params)
       create_result(:second_factor_auth_skipped, data)
-    elsif !allowed_methods.any? { |m| @current_user.valid_second_factor_method_for_user?(m) }
+    elsif !allowed_methods.any? { |m| @target_user.valid_second_factor_method_for_user?(m) }
       data = @action.no_second_factors_enabled!(params)
       create_result(:no_second_factor, data)
     else
@@ -185,6 +194,7 @@ class SecondFactor::AuthManager
       callback_params: callback_params,
       allowed_methods: allowed_methods.to_a,
       generated_at: Time.zone.now.to_i,
+      target_user_id: @target_user.id,
     }
     challenge[:description] = config[:description] if config[:description]
     challenge[:redirect_url] = config[:redirect_url] if config[:redirect_url].present?
@@ -193,7 +203,12 @@ class SecondFactor::AuthManager
   end
 
   def verify_second_factor_auth_completed(nonce, secure_session)
-    challenge = self.class.find_second_factor_challenge(nonce, secure_session)
+    challenge =
+      self.class.find_second_factor_challenge(
+        nonce: nonce,
+        secure_session: secure_session,
+        target_user: @target_user,
+      )
     if !challenge[:successful]
       raise SecondFactor::BadChallenge.new(
               "second_factor_auth.challenge_not_completed",

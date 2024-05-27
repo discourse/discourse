@@ -112,7 +112,7 @@ export default class DismissNew extends Component {
               @labelKey={{this.dismissNewTopicsLabel}}
               @labelCount={{this.countNewTopics}}
               @checked={{this.dismissTopics}}
-              @class="dismiss-topics"
+              class="dismiss-topics"
             />
           {{/if}}
           {{#if this.showDismissNewReplies}}
@@ -120,13 +120,13 @@ export default class DismissNew extends Component {
               @labelKey={{this.dismissNewRepliesLabel}}
               @labelCount={{this.countNewReplies}}
               @checked={{this.dismissPosts}}
-              @class="dismiss-posts"
+              class="dismiss-posts"
             />
           {{/if}}
           <PreferenceCheckbox
             @labelKey="topics.bulk.dismiss_new_modal.untrack"
             @checked={{this.untrack}}
-            @class="untrack"
+            class="untrack"
           />
         </p>
       </:body>

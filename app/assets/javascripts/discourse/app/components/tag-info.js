@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { and, reads } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
@@ -80,6 +80,10 @@ export default Component.extend({
   @action
   edit(event) {
     event?.preventDefault();
+    this.tagInfo.set(
+      "descriptionWithNewLines",
+      this.tagInfo.description?.replaceAll("<br>", "\n")
+    );
     this.setProperties({
       editing: true,
       newTagName: this.tag.id,
@@ -127,6 +131,7 @@ export default Component.extend({
   @action
   finishedEditing() {
     const oldTagName = this.tag.id;
+    this.newTagDescription = this.newTagDescription?.replaceAll("\n", "<br>");
     this.tag
       .update({ id: this.newTagName, description: this.newTagDescription })
       .then((result) => {

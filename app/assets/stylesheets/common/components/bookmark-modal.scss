@@ -1,44 +1,23 @@
-.bookmark-with-reminder.modal {
-  .modal-inner-container {
-    box-sizing: border-box;
-    min-width: 310px;
-  }
+.bookmark-reminder-modal {
+  .d-modal {
+    &__body {
+      box-sizing: border-box;
 
-  .modal-footer {
-    margin: 0;
+      .control-label {
+        font-weight: 700;
+      }
 
-    .delete-bookmark {
-      margin-left: auto;
-      margin-right: 0;
+      .ember-text-field.bookmark-name {
+        width: 100%;
+        margin-bottom: 0.5em;
+      }
     }
-  }
-
-  .modal-inner-container {
-    max-width: 375px;
-  }
-
-  .modal-body {
-    width: 375px;
-    box-sizing: border-box;
-    max-height: 70dvh;
-
-    @media (max-width: 600px) {
-      width: 100%;
+    &__footer {
+      .delete-bookmark {
+        margin-left: auto;
+        margin-right: 0;
+      }
     }
-
-    .control-label {
-      font-weight: 700;
-    }
-
-    .ember-text-field.bookmark-name {
-      min-width: 220px;
-      width: 100%;
-      margin-bottom: 0.5em;
-    }
-  }
-
-  .title {
-    max-width: 300px;
   }
 
   .existing-reminder-at-alert {

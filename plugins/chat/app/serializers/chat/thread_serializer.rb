@@ -8,18 +8,28 @@ module Chat
                :title,
                :status,
                :channel_id,
+               :channel,
                :meta,
                :reply_count,
                :current_user_membership,
-               :preview
+               :preview,
+               :last_message_id,
+               :force
 
     def initialize(object, opts)
       super(object, opts)
       @opts = opts
-
       # Avoids an N1 to re-load the thread in the serializer for original_message.
-      object.original_message&.thread = object
+      object&.original_message&.thread = object
       @current_user_membership = opts[:membership]
+    end
+
+    def include_channel?
+      @options[:include_channel].presence || false
+    end
+
+    def channel
+      ::Chat::ChannelSerializer.new(object.channel, scope: scope, root: false)
     end
 
     def include_original_message?

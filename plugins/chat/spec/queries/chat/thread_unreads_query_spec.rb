@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::ThreadUnreadsQuery do
   subject(:query) do
     described_class.call(
@@ -59,6 +57,14 @@ describe Chat::ThreadUnreadsQuery do
 
       it "does not count deleted messages" do
         message_1.trash!
+        expect(query.map(&:to_h).find { |tracking| tracking[:thread_id] == thread_1.id }).to eq(
+          { channel_id: channel_1.id, mention_count: 0, thread_id: thread_1.id, unread_count: 0 },
+        )
+      end
+
+      it "does not count messages in muted channels" do
+        channel_1.membership_for(current_user).update!(muted: true)
+
         expect(query.map(&:to_h).find { |tracking| tracking[:thread_id] == thread_1.id }).to eq(
           { channel_id: channel_1.id, mention_count: 0, thread_id: thread_1.id, unread_count: 0 },
         )

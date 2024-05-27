@@ -52,6 +52,10 @@ module PageObjects
         self
       end
 
+      def click_primary_navigation_item(name)
+        page.find(primary_navigation_selector(name)).click
+      end
+
       private
 
       def primary_navigation_selector(name)

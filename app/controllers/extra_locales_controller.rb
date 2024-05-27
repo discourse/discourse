@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ExtraLocalesController < ApplicationController
-  layout :false
+  layout false
 
   skip_before_action :check_xhr,
                      :preload_json,

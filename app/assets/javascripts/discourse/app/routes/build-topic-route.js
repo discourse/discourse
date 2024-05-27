@@ -1,5 +1,5 @@
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -29,7 +29,7 @@ export async function findTopicList(
   store,
   tracking,
   filter,
-  filterParams,
+  filterParams = {},
   extras = {}
 ) {
   let list;
@@ -57,20 +57,10 @@ export async function findTopicList(
     session.setProperties({ topicList: null });
   }
 
-  if (!list) {
-    // Clean up any string parameters that might slip through
-    filterParams ||= {};
-    for (const [key, val] of Object.entries(filterParams)) {
-      if (val === "undefined" || val === "null") {
-        filterParams[key] = null;
-      }
-    }
-
-    list = await store.findFiltered("topicList", {
-      filter,
-      params: filterParams,
-    });
-  }
+  list ||= await store.findFiltered("topicList", {
+    filter,
+    params: filterParams,
+  });
 
   list.set("listParams", filterParams);
 
@@ -98,17 +88,18 @@ class AbstractTopicRoute extends DiscourseRoute {
   @service store;
   @service topicTrackingState;
   @service currentUser;
+  @service historyStore;
 
   queryParams = queryParams;
   templateName = "discovery/list";
   controllerName = "discovery/list";
 
-  async model(data, transition) {
+  async model(data) {
     // attempt to stop early cause we need this to be called before .sync
     this.screenTrack.stop();
 
     const findOpts = filterQueryParams(data),
-      findExtras = { cached: this.isPoppedState(transition) };
+      findExtras = { cached: this.historyStore.isPoppedState };
 
     const topicListPromise = findTopicList(
       this.store,

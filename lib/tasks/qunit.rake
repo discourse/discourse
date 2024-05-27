@@ -17,7 +17,7 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
 
   report_requests = ENV["REPORT_REQUESTS"] == "1"
 
-  system("yarn install")
+  system("yarn install", exception: true)
 
   # ensure we have this port available
   def port_available?(port)
@@ -100,24 +100,43 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
     end
     puts "Rails server is warmed up"
 
-    cmd = ["env", "UNICORN_PORT=#{unicorn_port}"]
+    env = { "UNICORN_PORT" => unicorn_port.to_s }
+    cmd = []
+
+    parallel = ENV["QUNIT_PARALLEL"]
 
     if qunit_path
       # Bypass `ember test` - it only works properly for the `/tests` path.
       # We have to trigger a `build` manually so that JS is available for rails to serve.
-      system("yarn", "ember", "build", chdir: "#{Rails.root}/app/assets/javascripts/discourse")
-      test_page = "#{qunit_path}?#{query}&testem=1"
-      cmd += ["yarn", "testem", "ci", "-f", "testem.js", "-t", test_page]
+      system(
+        "yarn",
+        "ember",
+        "build",
+        chdir: "#{Rails.root}/app/assets/javascripts/discourse",
+        exception: true,
+      )
+
+      env["THEME_TEST_PAGES"] = if ENV["THEME_IDS"]
+        ENV["THEME_IDS"]
+          .split("|")
+          .map { |theme_id| "#{qunit_path}?#{query}&testem=1&id=#{theme_id}" }
+          .join(",")
+      else
+        "#{qunit_path}?#{query}&testem=1"
+      end
+
+      cmd += %w[yarn testem ci -f testem.js]
+      cmd += ["--parallel", parallel] if parallel
     else
       cmd += ["yarn", "ember", "exam", "--query", query]
-      if parallel = ENV["QUNIT_PARALLEL"]
-        cmd += ["--load-balance", "--parallel", parallel]
-      end
+      cmd += ["--load-balance", "--parallel", parallel] if parallel
       cmd += ["--filter", filter] if filter
       cmd << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
 
-    system(*cmd, chdir: "#{Rails.root}/app/assets/javascripts/discourse")
+    # Print out all env for debugging purposes
+    p env
+    system(env, *cmd, chdir: "#{Rails.root}/app/assets/javascripts/discourse")
 
     success &&= $?.success?
   ensure

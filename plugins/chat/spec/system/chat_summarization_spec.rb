@@ -1,16 +1,12 @@
 # frozen_string_literal: true
 
-RSpec.describe "Summarize a channel since your last visit", type: :system, js: true do
+RSpec.describe "Summarize a channel since your last visit", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:group)
-  let(:plugin) { Plugin::Instance.new }
-
   fab!(:channel) { Fabricate(:chat_channel) }
-
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
-
   let(:chat) { PageObjects::Pages::Chat.new }
-
+  let(:plugin) { Plugin::Instance.new }
   let(:summarization_result) { { summary: "This is a summary", chunks: [] } }
 
   before do

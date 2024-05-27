@@ -62,24 +62,28 @@ def update_themes
     .includes(:remote_theme)
     .where(enabled: true, auto_update: true)
     .find_each do |theme|
-      theme.transaction do
-        remote_theme = theme.remote_theme
-        next if remote_theme.blank? || remote_theme.remote_url.blank?
+      begin
+        theme.transaction do
+          remote_theme = theme.remote_theme
+          next if remote_theme.blank? || remote_theme.remote_url.blank?
 
-        print "Checking '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'... "
-        remote_theme.update_remote_version
-        if remote_theme.out_of_date?
-          puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
-          remote_theme.update_from_remote(already_in_transaction: true)
-        else
-          puts "up to date"
-        end
+          print "Checking '#{theme.name}' for '#{RailsMultisite::ConnectionManagement.current_db}'... "
 
-        if remote_theme.last_error_text.present?
-          raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
+          remote_theme.update_remote_version
+
+          if remote_theme.out_of_date?
+            puts "updating from #{remote_theme.local_version[0..7]} to #{remote_theme.remote_version[0..7]}"
+            remote_theme.update_from_remote(already_in_transaction: true)
+          else
+            puts "up to date"
+          end
+
+          if remote_theme.last_error_text.present?
+            raise RemoteTheme::ImportError.new(remote_theme.last_error_text)
+          end
         end
       rescue => e
-        STDERR.puts "Failed to update '#{theme.name}': #{e}"
+        $stderr.puts "[#{RailsMultisite::ConnectionManagement.current_db}] Failed to update '#{theme.name}' (#{theme.id}): #{e}"
         raise if ENV["RAISE_THEME_ERRORS"] == "1"
       end
     end
@@ -124,7 +128,7 @@ desc "Run QUnit tests of a theme/component"
 task "themes:qunit", :type, :value do |t, args|
   type = args[:type]
   value = args[:value]
-  raise <<~TEXT if !%w[name url id].include?(type) || value.blank?
+  raise <<~TEXT if !%w[name url id ids].include?(type) || value.blank?
       Wrong arguments type:#{type.inspect}, value:#{value.inspect}"
       Usage:
         `bundle exec rake "themes:qunit[url,<theme_url>]"`
@@ -132,7 +136,10 @@ task "themes:qunit", :type, :value do |t, args|
         `bundle exec rake "themes:qunit[name,<theme_name>]"`
         OR
         `bundle exec rake "themes:qunit[id,<theme_id>]"`
+        OR
+        `bundle exec rake "themes:qunit[ids,<theme_id|theme_id|theme_id>]
     TEXT
+
   ENV["THEME_#{type.upcase}"] = value.to_s
   ENV["QUNIT_RAILS_ENV"] ||= "development" # qunit:test will switch to `test` by default
   Rake::Task["qunit:test"].reenable
@@ -193,4 +200,75 @@ ensure
   db&.stop
   db&.remove
   redis&.remove
+end
+
+desc "Clones all official themes"
+task "themes:clone_all_official" do |task, args|
+  require "theme_metadata"
+  FileUtils.rm_rf("tmp/themes")
+
+  official_themes =
+    ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
+      repo = "https://github.com/discourse/#{theme_name}"
+      path = File.join(Rails.root, "tmp/themes/#{theme_name}")
+
+      attempts = 0
+
+      begin
+        attempts += 1
+        system("git clone #{repo} #{path}", exception: true)
+      rescue StandardError
+        abort("Failed to clone #{repo}") if attempts >= 3
+        STDERR.puts "Failed to clone #{repo}... trying again..."
+        retry
+      end
+    end
+end
+
+desc "pull compatible theme versions for all themes"
+task "themes:pull_compatible_all" do |t|
+  Dir
+    .glob(File.expand_path("#{Rails.root}/tmp/themes/*"))
+    .select { |f| File.directory? f }
+    .each do |theme_path|
+      next unless File.directory?(theme_path + "/.git")
+
+      theme_name = File.basename(theme_path)
+      checkout_version = Discourse.find_compatible_git_resource(theme_path)
+
+      # Checkout value of the version compat
+      if checkout_version
+        puts "checking out compatible #{theme_name} version: #{checkout_version}"
+
+        update_status =
+          system(
+            "git -C '#{theme_path}' cat-file -e #{checkout_version} || git -C '#{theme_path}' fetch --depth 1 $(git -C '#{theme_path}' rev-parse --symbolic-full-name @{upstream} | awk -F '/' '{print $3}') #{checkout_version}; git -C '#{theme_path}' reset --hard #{checkout_version}",
+          )
+
+        abort("Unable to checkout a compatible theme version") unless update_status
+      else
+        puts "#{theme_name} is already at latest compatible version"
+      end
+    end
+end
+
+# Note that this should only be used in CI where it is safe to mutate the database without rolling back since running
+# the themes QUnit tests requires the themes to be installed in the database.
+desc "Runs qunit tests for all official themes"
+task "themes:qunit_all_official" => ["themes:clone_all_official", :environment] do |task, args|
+  theme_ids_with_qunit_tests = []
+
+  ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
+    path = File.join(Rails.root, "tmp/themes/#{theme_name}")
+
+    if Dir.glob("#{File.join(path, "test")}/**/*.{js,es6}").any?
+      theme = RemoteTheme.import_theme_from_directory(path)
+      theme_ids_with_qunit_tests << theme.id
+    else
+      puts "Skipping #{theme_name} as no QUnit tests have been detected"
+    end
+  end
+
+  Rake::Task["themes:qunit"].reenable
+  Rake::Task["themes:qunit"].invoke("ids", theme_ids_with_qunit_tests.join("|"))
 end

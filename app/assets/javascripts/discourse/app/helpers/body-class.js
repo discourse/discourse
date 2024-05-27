@@ -1,12 +1,13 @@
 import Helper from "@ember/component/helper";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 
 export default class BodyClass extends Helper {
-  @service bodyClasses;
+  @service elementClasses;
 
   compute([...classes]) {
-    this.bodyClasses.registerClasses(
+    this.elementClasses.registerClasses(
       this,
+      document.body,
       classes.flatMap((c) => c?.split(" ")).filter(Boolean)
     );
   }

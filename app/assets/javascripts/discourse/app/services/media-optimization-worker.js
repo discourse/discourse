@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { fileToImageData } from "discourse/lib/media-optimization-utils";
@@ -37,7 +37,7 @@ export default class MediaOptimizationWorkerService extends Service {
       : true;
 
     let file = data;
-    if (!/(\.|\/)(jpe?g|png|webp)$/i.test(file.type)) {
+    if (!/(\.|\/)(jpe?g|png)$/i.test(file.type)) {
       return Promise.resolve();
     }
     if (
@@ -53,6 +53,7 @@ export default class MediaOptimizationWorkerService extends Service {
     }
     await this.ensureAvailableWorker();
 
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
       this.logIfDebug(`Transforming ${file.name}`);
 

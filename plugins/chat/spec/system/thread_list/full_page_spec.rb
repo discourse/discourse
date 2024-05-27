@@ -30,19 +30,19 @@ describe "Thread list in side panel | full page", type: :system do
 
     before { chat_system_user_bootstrap(user: other_user, channel: channel) }
 
-    it "does not show existing threads in the channel if the user is not tracking them" do
-      Fabricate(:chat_thread, original_message: thread_om, channel: channel, use_service: true)
+    it "it shows threads in the channel even if the user is not tracking them" do
+      thread_1 =
+        Fabricate(
+          :chat_thread,
+          original_message: thread_om,
+          channel: channel,
+          with_replies: 1,
+          use_service: true,
+        )
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
-      expect(page).to have_content(I18n.t("js.chat.threads.none"))
-    end
 
-    it "does not show new threads in the channel in the thread list if the user is not tracking them" do
-      chat_page.visit_channel(channel)
-      Fabricate(:chat_message, chat_channel: channel, in_reply_to: thread_om, use_service: true)
-      channel_page.open_thread_list
-
-      expect(page).to have_content(I18n.t("js.chat.threads.none"))
+      expect(thread_list_page).to have_thread(thread_1)
     end
 
     describe "when the user creates a new thread" do
@@ -59,6 +59,15 @@ describe "Thread list in side panel | full page", type: :system do
         )
       end
     end
+  end
+
+  it "doesn’t list threads with no replies" do
+    thread = Fabricate(:chat_thread, channel: channel, use_service: true)
+
+    chat_page.visit_channel(channel)
+    channel_page.open_thread_list
+
+    expect(thread_list_page).to have_no_thread(thread)
   end
 
   context "when there are threads that the user is participating in" do
@@ -99,6 +108,15 @@ describe "Thread list in side panel | full page", type: :system do
 
       expect(thread_list_page.item_by_id(thread_1.id)).to have_content(
         "This is a long message for the excerpt",
+      )
+    end
+
+    it "builds an excerpt for the original message if it doesn’t have one" do
+      thread_1.original_message.update!(excerpt: nil)
+      chat_page.visit_threads_list(channel)
+
+      expect(thread_list_page.item_by_id(thread_1.id)).to have_content(
+        thread_1.original_message.build_excerpt,
       )
     end
 
@@ -172,7 +190,7 @@ describe "Thread list in side panel | full page", type: :system do
 
         expect(thread_list_page).to have_no_thread(thread_1)
 
-        using_session(:tab_2) do |session|
+        using_session(:tab_2) do
           sign_in(other_user)
           chat_page.visit_channel(channel)
           expect(channel_page).to have_no_loading_skeleton
@@ -180,7 +198,6 @@ describe "Thread list in side panel | full page", type: :system do
           channel_page.message_thread_indicator(thread_1.original_message).click
           expect(side_panel_page).to have_open_thread(thread_1)
           thread_page.messages.restore(thread_1.original_message)
-          session.quit
         end
 
         expect(thread_list_page).to have_thread(thread_1)
@@ -196,7 +213,7 @@ describe "Thread list in side panel | full page", type: :system do
         thread_list_page.item_by_id(thread_1.id).click
         thread_page.header.open_settings
         find(".chat-modal-thread-settings__title-input").fill_in(with: new_title)
-        find(".modal-footer .btn-primary").click
+        find(".d-modal__footer .btn-primary").click
 
         expect(thread_page.header).to have_title_content(new_title)
       end
@@ -208,7 +225,7 @@ describe "Thread list in side panel | full page", type: :system do
         thread_list_page.item_by_id(thread_1.id).click
         thread_page.header.open_settings
         find(".chat-modal-thread-settings__title-input").fill_in(with: new_title)
-        find(".modal-footer .btn-primary").click
+        find(".d-modal__footer .btn-primary").click
 
         expect(thread_page.header).to have_title_content(new_title)
       end

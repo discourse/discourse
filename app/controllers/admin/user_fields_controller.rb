@@ -2,24 +2,24 @@
 
 class Admin::UserFieldsController < Admin::AdminController
   def self.columns
-    %i[
+    columns = %i[
       name
       field_type
       editable
       description
-      required
+      requirement
       show_on_profile
       show_on_user_card
       position
       searchable
     ]
+    DiscoursePluginRegistry.apply_modifier(:admin_user_fields_columns, columns)
   end
 
   def create
     field = UserField.new(params.require(:user_field).permit(*Admin::UserFieldsController.columns))
 
     field.position = (UserField.maximum(:position) || 0) + 1
-    field.required = params[:user_field][:required] == "true"
     update_options(field)
 
     json_result(field, serializer: UserFieldSerializer) { field.save }

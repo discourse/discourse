@@ -1,3 +1,6 @@
+/* global PublicKeyCredential */
+
+import { ajax } from "discourse/lib/ajax";
 import I18n from "discourse-i18n";
 
 export function stringToBuffer(str) {
@@ -36,7 +39,7 @@ class WebauthnAbortService {
 
 // Need to use a singleton here to reset the active webauthn ceremony
 // Inspired by the BaseWebAuthnAbortService in https://github.com/MasterKale/SimpleWebAuthn
-const WebauthnAbortHandler = new WebauthnAbortService();
+export const WebauthnAbortHandler = new WebauthnAbortService();
 
 export function getWebauthnCredential(
   challenge,
@@ -117,18 +120,32 @@ export function getWebauthnCredential(
 }
 
 export async function getPasskeyCredential(
-  challenge,
   errorCallback,
-  mediation = "optional"
+  mediation = "optional",
+  isFirefox = false
 ) {
   if (!isWebauthnSupported()) {
     return errorCallback(I18n.t("login.security_key_support_missing_error"));
   }
 
+  // we need to check isConditionalMediationAvailable for Firefox
+  // without it, Firefox will throw console errors
+  // We cannot do a general check because iOS Safari and Chrome in Selenium quietly support the feature
+  // but they do not support the PublicKeyCredential.isConditionalMediationAvailable() method
+  if (mediation === "conditional" && isFirefox) {
+    const isCMA =
+      (await PublicKeyCredential.isConditionalMediationAvailable?.()) ?? false;
+    if (!isCMA) {
+      return;
+    }
+  }
+
   try {
+    const resp = await ajax("/session/passkey/challenge.json");
+
     const credential = await navigator.credentials.get({
       publicKey: {
-        challenge: stringToBuffer(challenge),
+        challenge: stringToBuffer(resp.challenge),
         // https://www.w3.org/TR/webauthn-2/#user-verification
         // for passkeys (first factor), user verification should be marked as required
         // it ensures browser requests PIN or biometrics before authenticating

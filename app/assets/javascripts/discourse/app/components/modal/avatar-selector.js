@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { allowsImages } from "discourse/lib/uploads";
@@ -41,7 +41,7 @@ export default class AvatarSelectorModal extends Component {
     return this.siteSettings.selectable_avatars_mode !== "disabled";
   }
 
-  get showAvatarUploader() {
+  get showCustomAvatarSelector() {
     const mode = this.siteSettings.selectable_avatars_mode;
     switch (mode) {
       case "no_one":
@@ -92,26 +92,9 @@ export default class AvatarSelectorModal extends Component {
 
   get allowAvatarUpload() {
     return (
-      this.siteSettingMatches &&
+      this.currentUser.can_upload_avatar &&
       allowsImages(this.currentUser.staff, this.siteSettings)
     );
-  }
-
-  get siteSettingMatches() {
-    const allowUploadedAvatars = this.siteSettings.allow_uploaded_avatars;
-    switch (allowUploadedAvatars) {
-      case "disabled":
-        return false;
-      case "staff":
-        return this.currentUser.staff;
-      case "admin":
-        return this.currentUser.admin;
-      default:
-        return (
-          this.currentUser.trust_level >= parseInt(allowUploadedAvatars, 10) ||
-          this.currentUser.staff
-        );
-    }
   }
 
   @action

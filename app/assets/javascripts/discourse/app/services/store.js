@@ -4,6 +4,7 @@ import Service from "@ember/service";
 import { underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { cleanNullQueryParams } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
 import { getRegister } from "discourse-common/lib/get-owner";
@@ -74,7 +75,7 @@ export default class StoreService extends Service {
     const adapter = this.adapterFor(type);
 
     let store = this;
-    return adapter.findAll(this, type, findArgs).then((result) => {
+    return adapter.findAll(this, type, findArgs).then(async (result) => {
       let results = this._resultSet(type, result);
       if (adapter.afterFindAll) {
         results = adapter.afterFindAll(results, {
@@ -83,15 +84,22 @@ export default class StoreService extends Service {
           },
         });
       }
+      await adapter.applyTransformations?.([result]);
       return results;
     });
   }
 
   // Mostly for legacy, things like TopicList without ResultSets
   findFiltered(type, findArgs) {
-    return this.adapterFor(type)
+    const adapter = this.adapterFor(type);
+    findArgs = cleanNullQueryParams(findArgs);
+    return adapter
       .find(this, type, findArgs)
-      .then((result) => this._build(type, result));
+      .then((result) => this._build(type, result))
+      .then(async (result) => {
+        await adapter.applyTransformations?.([result]);
+        return result;
+      });
   }
 
   _hydrateFindResults(result, type, findArgs) {
@@ -120,7 +128,14 @@ export default class StoreService extends Service {
       let hydrated = this._hydrateFindResults(result, type, findArgs, opts);
 
       if (result.extras) {
-        hydrated.set("extras", result.extras);
+        let extras = result.extras;
+
+        const extrasClass = this._extrasClass(type);
+        if (extrasClass) {
+          extras = new extrasClass(extras);
+        }
+
+        hydrated.set("extras", extras);
       }
 
       if (adapter.cache) {
@@ -206,7 +221,7 @@ export default class StoreService extends Service {
   createRecord(type, attrs) {
     attrs = attrs || {};
     const adapter = this.adapterFor(type);
-    return !!attrs[adapter.primaryKey]
+    return attrs[adapter.primaryKey]
       ? this._hydrate(type, attrs)
       : this._build(type, attrs);
   }
@@ -254,10 +269,26 @@ export default class StoreService extends Service {
     };
 
     if (result.extras) {
-      createArgs.extras = result.extras;
+      let extras = result.extras;
+
+      const extrasClass = this._extrasClass(type);
+      if (extrasClass) {
+        extras = new extrasClass(extras);
+      }
+
+      createArgs.extras = extras;
+
+      for (const obj of content) {
+        obj.extras = extras;
+      }
     }
 
     return ResultSet.create(createArgs);
+  }
+
+  _extrasClass(type) {
+    const klass = this.register.lookupFactory("model:" + type) || RestModel;
+    return klass.class?.ExtrasClass;
   }
 
   _build(type, obj) {
@@ -265,12 +296,6 @@ export default class StoreService extends Service {
     obj.store = this;
     obj.__type = type;
     obj.__state = obj[adapter.primaryKey] ? "created" : "new";
-
-    // TODO: Have injections be automatic
-    obj.topicTrackingState = this.register.lookup(
-      "service:topic-tracking-state"
-    );
-    obj.keyValueStore = this.register.lookup("service:key-value-store");
 
     const klass = this.register.lookupFactory("model:" + type) || RestModel;
     const model = klass.create(obj);

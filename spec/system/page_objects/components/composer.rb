@@ -34,6 +34,11 @@ module PageObjects
         self
       end
 
+      def minimize
+        find("#{COMPOSER_ID} .toggle-minimize").click
+        self
+      end
+
       def append_content(content)
         current_content = composer_input.value
         composer_input.set(current_content + content)
@@ -181,7 +186,7 @@ module PageObjects
       end
 
       def has_form_template_field_error?(error)
-        page.has_css?(".form-template-field__error", text: error)
+        page.has_css?(".form-template-field__error", text: error, visible: :all)
       end
 
       def has_form_template_field_label?(label)
@@ -219,6 +224,7 @@ module PageObjects
           const index = composer.value.indexOf(text);
           const position = index + text.length;
 
+          composer.focus();
           composer.setSelectionRange(position, position);
         JS
       end
@@ -226,6 +232,7 @@ module PageObjects
       def select_all
         execute_script(<<~JS, text)
           const composer = document.querySelector("#{COMPOSER_ID} .d-editor-input");
+          composer.focus();
           composer.setSelectionRange(0, composer.value.length);
         JS
       end

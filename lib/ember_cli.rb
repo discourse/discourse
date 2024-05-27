@@ -9,7 +9,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.assets
-    cache[:assets] ||= Dir.glob("**/*.{js,map,txt}", base: "#{dist_dir}/assets")
+    cache[:assets] ||= Dir.glob("**/*.{js,map,txt,css}", base: "#{dist_dir}/assets")
   end
 
   def self.script_chunks
@@ -41,18 +41,8 @@ class EmberCli < ActiveSupport::CurrentAttributes
   def self.ember_version
     @version ||=
       begin
-        ember_source_package_raw =
-          File.read("#{Rails.root}/app/assets/javascripts/node_modules/ember-source/package.json")
+        ember_source_package_raw = File.read("#{Rails.root}/node_modules/ember-source/package.json")
         JSON.parse(ember_source_package_raw)["version"]
-      end
-  end
-
-  def self.workbox_dir_name
-    return @workbox_base_dir if defined?(@workbox_base_dir)
-
-    @workbox_base_dir =
-      if (full_path = Dir.glob("app/assets/javascripts/discourse/dist/assets/workbox-*")[0])
-        File.basename(full_path)
       end
   end
 
@@ -69,7 +59,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.clear_cache!
-    self.request.cache = nil
+    self.request_cache = nil
     @production_cache = nil
   end
 end

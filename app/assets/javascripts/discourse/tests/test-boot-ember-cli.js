@@ -6,7 +6,7 @@ import { setup } from "qunit-dom";
 import setupTests from "discourse/tests/setup-tests";
 import config from "../config/environment";
 
-document.addEventListener("discourse-booted", () => {
+document.addEventListener("discourse-init", () => {
   // eslint-disable-next-line no-undef
   if (!EmberENV.TESTS_FILE_LOADED) {
     throw new Error(

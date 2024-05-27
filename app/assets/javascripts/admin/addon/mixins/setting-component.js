@@ -2,13 +2,14 @@ import { warn } from "@ember/debug";
 import { action } from "@ember/object";
 import { alias, oneWay } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isNone } from "@ember/utils";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
+import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
 import { splitString } from "discourse/lib/utilities";
+import { deepEqual } from "discourse-common/lib/object";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
@@ -34,6 +35,8 @@ const CUSTOM_TYPES = [
   "simple_list",
   "emoji_list",
   "named_list",
+  "file_size_restriction",
+  "file_types_list",
 ];
 
 const AUTO_REFRESH_ON_SAVE = ["logo", "logo_small", "large_icon"];
@@ -77,6 +80,7 @@ const DEFAULT_USER_PREFERENCES = [
 
 export default Mixin.create({
   modal: service(),
+  router: service(),
   site: service(),
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
@@ -108,19 +112,11 @@ export default Mixin.create({
       settingVal = "";
     }
 
-    return bufferVal.toString() !== settingVal.toString();
+    return !deepEqual(bufferVal, settingVal);
   },
 
   @discourseComputed("setting", "buffered.value")
   preview(setting, value) {
-    // A bit hacky, but allows us to use helpers
-    if (setting.setting === "category_style") {
-      const category = this.site.get("categories.firstObject");
-      if (category) {
-        return categoryLinkHTML(category, { categoryStyle: value });
-      }
-    }
-
     const preview = setting.preview;
     if (preview) {
       const escapedValue = preview.replace(/\{\{value\}\}/g, value);
@@ -173,6 +169,39 @@ export default Mixin.create({
       defaultValues.length > 0 &&
       !defaultValues.every((value) => bufferedValues.includes(value))
     );
+  },
+
+  @discourseComputed("setting")
+  settingEditButton(setting) {
+    if (setting.json_schema) {
+      return {
+        action: () => {
+          this.modal.show(JsonSchemaEditorModal, {
+            model: {
+              updateValue: (value) => {
+                this.buffered.set("value", value);
+              },
+              value: this.buffered.get("value"),
+              settingName: setting.setting,
+              jsonSchema: setting.json_schema,
+            },
+          });
+        },
+        label: "admin.site_settings.json_schema.edit",
+        icon: "pencil-alt",
+      };
+    } else if (setting.objects_schema) {
+      return {
+        action: () => {
+          this.router.transitionTo(
+            "adminCustomizeThemes.show.schema",
+            setting.setting
+          );
+        },
+        label: "admin.customize.theme.edit_objects_theme_setting",
+        icon: "pencil-alt",
+      };
+    }
   },
 
   @action
@@ -239,13 +268,18 @@ export default Mixin.create({
   },
 
   @action
+  changeValueCallback(value) {
+    this.set("buffered.value", value);
+  },
+
+  @action
   cancel() {
     this.rollbackBuffer();
   },
 
   @action
   resetDefault() {
-    this.set("buffered.value", this.get("setting.default"));
+    this.set("buffered.value", this.setting.default);
   },
 
   @action

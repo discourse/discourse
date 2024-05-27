@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";

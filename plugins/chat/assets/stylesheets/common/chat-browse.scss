@@ -7,10 +7,6 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-
-    .new-channel-btn {
-      margin-left: auto;
-    }
   }
 
   &__title {
@@ -26,11 +22,11 @@
   &__cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 2rem;
+    grid-gap: 1.25rem;
 
     @include breakpoint(tablet) {
       grid-template-columns: repeat(1, 1fr);
-      grid-gap: 1.5rem;
+      grid-gap: 1rem;
     }
   }
 
@@ -60,10 +56,6 @@
     &:before {
       content: none; //there is a strange thing applied on nav-pills and this resets it
     }
-
-    @include breakpoint(mobile-large) {
-      justify-content: space-between;
-    }
   }
 
   &__filter {
@@ -87,20 +79,6 @@
 
     @include breakpoint(tablet) {
       font-size: var(--font-up-1);
-    }
-  }
-
-  .chat-channel-card {
-    .chat-channel-card__leave-btn {
-      padding: 0;
-      &:hover,
-      &:focus {
-        background: none;
-      }
-
-      &:focus {
-        @include default-focus;
-      }
     }
   }
 }

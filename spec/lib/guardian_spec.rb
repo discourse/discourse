@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Guardian do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:another_user) { Fabricate(:user) }
   fab!(:member) { Fabricate(:user) }
   fab!(:owner) { Fabricate(:user) }
-  fab!(:moderator)
+  fab!(:moderator) { Fabricate(:moderator, refresh_auto_groups: true) }
   fab!(:admin)
   fab!(:anonymous_user) { Fabricate(:anonymous) }
   fab!(:staff_post) { Fabricate(:post, user: moderator) }
@@ -14,21 +14,18 @@ RSpec.describe Guardian do
   fab!(:automatic_group) { Fabricate(:group, automatic: true) }
   fab!(:plain_category) { Fabricate(:category) }
 
-  fab!(:trust_level_0) { Fabricate(:user, trust_level: 0) }
-  fab!(:trust_level_1) { Fabricate(:user, trust_level: 1) }
-  fab!(:trust_level_2) { Fabricate(:user, trust_level: 2) }
-  fab!(:trust_level_3) { Fabricate(:user, trust_level: 3) }
-  fab!(:trust_level_4) { Fabricate(:user, trust_level: 4) }
+  fab!(:trust_level_0)
+  fab!(:trust_level_1)
+  fab!(:trust_level_2)
+  fab!(:trust_level_3)
+  fab!(:trust_level_4) { Fabricate(:trust_level_4, refresh_auto_groups: true) }
   fab!(:another_admin) { Fabricate(:admin) }
-  fab!(:coding_horror)
+  fab!(:coding_horror) { Fabricate(:coding_horror, refresh_auto_groups: true) }
 
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: topic.user) }
 
-  before do
-    Group.refresh_automatic_groups!
-    Guardian.enable_topic_can_see_consistency_check
-  end
+  before { Guardian.enable_topic_can_see_consistency_check }
 
   after { Guardian.disable_topic_can_see_consistency_check }
 
@@ -49,16 +46,23 @@ RSpec.describe Guardian do
       expect(Guardian.new(user).link_posting_access).to eq("full")
     end
 
+    it "is full for staff users regardless of TL" do
+      SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+      admin_user = Fabricate(:admin)
+      admin_user.change_trust_level!(TrustLevel[1])
+      expect(Guardian.new(admin_user).link_posting_access).to eq("full")
+    end
+
     it "is none for a user of a low trust level" do
-      user.trust_level = 0
-      SiteSetting.min_trust_to_post_links = 1
+      user.change_trust_level!(TrustLevel[0])
+      SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       expect(Guardian.new(user).link_posting_access).to eq("none")
     end
 
     it "is limited for a user of a low trust level with a allowlist" do
       SiteSetting.allowed_link_domains = "example.com"
-      user.trust_level = 0
-      SiteSetting.min_trust_to_post_links = 1
+      user.change_trust_level!(TrustLevel[0])
+      SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       expect(Guardian.new(user).link_posting_access).to eq("limited")
     end
   end
@@ -75,10 +79,10 @@ RSpec.describe Guardian do
     end
 
     it "supports customization by site setting" do
-      user.trust_level = 0
-      SiteSetting.min_trust_to_post_links = 0
+      user.change_trust_level!(TrustLevel[0])
+      SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
-      SiteSetting.min_trust_to_post_links = 1
+      SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       expect(Guardian.new(user).can_post_link?(host: host)).to eq(false)
     end
 
@@ -86,8 +90,8 @@ RSpec.describe Guardian do
       before { SiteSetting.allowed_link_domains = host }
 
       it "allows a new user to post the link to the host" do
-        user.trust_level = 0
-        SiteSetting.min_trust_to_post_links = 1
+        user.change_trust_level!(TrustLevel[0])
+        SiteSetting.post_links_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
         expect(Guardian.new(user).can_post_link?(host: host)).to eq(true)
         expect(Guardian.new(user).can_post_link?(host: "another-host.com")).to eq(false)
       end
@@ -95,10 +99,10 @@ RSpec.describe Guardian do
   end
 
   describe "#post_can_act?" do
-    fab!(:user)
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:post)
 
-    describe "an anonymous user" do
+    describe "an authenticated user posting anonymously" do
       before { SiteSetting.allow_anonymous_posting = true }
 
       context "when allow_anonymous_likes is enabled" do
@@ -233,19 +237,18 @@ RSpec.describe Guardian do
     end
 
     describe "trust levels" do
+      before { user.change_trust_level!(TrustLevel[0]) }
+
       it "returns true for a new user liking something" do
-        user.trust_level = TrustLevel[0]
         expect(Guardian.new(user).post_can_act?(post, :like)).to be_truthy
       end
 
       it "returns false for a new user flagging as spam" do
-        user.trust_level = TrustLevel[0]
         expect(Guardian.new(user).post_can_act?(post, :spam)).to be_falsey
       end
 
       it "returns true for a new user flagging as spam if enabled" do
-        SiteSetting.min_trust_to_flag_posts = 0
-        user.trust_level = TrustLevel[0]
+        SiteSetting.flag_post_allowed_groups = 0
         expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
       end
 
@@ -608,13 +611,13 @@ RSpec.describe Guardian do
     fab!(:moderator)
 
     it "returns true if user has sufficient trust level" do
-      SiteSetting.min_trust_level_to_allow_invite = 2
+      SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       expect(Guardian.new(trust_level_2).can_invite_to_forum?).to be_truthy
       expect(Guardian.new(moderator).can_invite_to_forum?).to be_truthy
     end
 
     it "returns false if user trust level does not have sufficient trust level" do
-      SiteSetting.min_trust_level_to_allow_invite = 2
+      SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       expect(Guardian.new(trust_level_1).can_invite_to_forum?).to be_falsey
     end
 
@@ -640,7 +643,7 @@ RSpec.describe Guardian do
       let(:groups) { [group, another_group] }
 
       before do
-        user.update!(trust_level: TrustLevel[2])
+        user.change_trust_level!(TrustLevel[2])
         group.add_owner(user)
       end
 
@@ -661,8 +664,8 @@ RSpec.describe Guardian do
   describe "can_invite_to?" do
     describe "regular topics" do
       before do
-        SiteSetting.min_trust_level_to_allow_invite = 2
-        user.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
+        SiteSetting.invite_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+        user.update!(trust_level: 2)
       end
       fab!(:category) { Fabricate(:category, read_restricted: true) }
       fab!(:topic)
@@ -694,7 +697,7 @@ RSpec.describe Guardian do
       end
 
       it "returns true for a group owner" do
-        group_owner.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
+        group_owner.update!(trust_level: 2)
         expect(Guardian.new(group_owner).can_invite_to?(group_private_topic)).to be_truthy
       end
 
@@ -719,7 +722,7 @@ RSpec.describe Guardian do
         end
 
         it "should return true for a group owner" do
-          group_owner.update!(trust_level: SiteSetting.min_trust_level_to_allow_invite)
+          group_owner.update!(trust_level: 2)
           expect(Guardian.new(group_owner).can_invite_to?(topic)).to eq(true)
         end
 
@@ -749,8 +752,8 @@ RSpec.describe Guardian do
       fab!(:pm) { Fabricate(:private_message_topic, user: user) }
 
       before do
-        user.change_trust_level!(SiteSetting.min_trust_level_to_allow_invite)
-        moderator.change_trust_level!(SiteSetting.min_trust_level_to_allow_invite)
+        user.change_trust_level!(TrustLevel[2])
+        moderator.change_trust_level!(TrustLevel[2])
       end
 
       context "when private messages are disabled" do
@@ -871,7 +874,7 @@ RSpec.describe Guardian do
       expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
     end
 
-    it "diallows secure categories with no access" do
+    it "disallows secure categories with no access" do
       secure_category = Fabricate(:category, read_restricted: true)
       post.topic.update!(category_id: secure_category.id)
 
@@ -1227,24 +1230,37 @@ RSpec.describe Guardian do
 
       it "is false if user has not met minimum trust level" do
         SiteSetting.min_trust_to_create_topic = 1
+        SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
         expect(
           Guardian.new(Fabricate(:user, trust_level: 0)).can_create?(Topic, plain_category),
         ).to be_falsey
       end
 
       it "is true if user has met or exceeded the minimum trust level" do
-        SiteSetting.min_trust_to_create_topic = 1
+        SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
         expect(
-          Guardian.new(Fabricate(:user, trust_level: 1)).can_create?(Topic, plain_category),
+          Guardian.new(Fabricate(:user, trust_level: TrustLevel[1])).can_create?(
+            Topic,
+            plain_category,
+          ),
         ).to be_truthy
         expect(
-          Guardian.new(Fabricate(:user, trust_level: 2)).can_create?(Topic, plain_category),
+          Guardian.new(Fabricate(:user, trust_level: TrustLevel[2])).can_create?(
+            Topic,
+            plain_category,
+          ),
         ).to be_truthy
         expect(
-          Guardian.new(Fabricate(:admin, trust_level: 0)).can_create?(Topic, plain_category),
+          Guardian.new(Fabricate(:admin, trust_level: TrustLevel[0])).can_create?(
+            Topic,
+            plain_category,
+          ),
         ).to be_truthy
         expect(
-          Guardian.new(Fabricate(:moderator, trust_level: 0)).can_create?(Topic, plain_category),
+          Guardian.new(Fabricate(:moderator, trust_level: TrustLevel[0])).can_create?(
+            Topic,
+            plain_category,
+          ),
         ).to be_truthy
       end
     end
@@ -1389,9 +1405,7 @@ RSpec.describe Guardian do
     end
 
     describe "a Post" do
-      let (:guardian) do
-        Guardian.new(user)
-      end
+      let(:guardian) { Guardian.new(user) }
 
       it "isn't allowed when not logged in" do
         expect(Guardian.new(nil).post_can_act?(post, :vote)).to be_falsey
@@ -1427,7 +1441,7 @@ RSpec.describe Guardian do
     it "returns true when tl4 can delete posts and topics" do
       PostDestroyer.new(moderator, topic.first_post).destroy
       expect(Guardian.new(trust_level_4).can_recover_topic?(topic)).to be_falsey
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(trust_level_4).can_recover_topic?(topic.reload)).to be_truthy
     end
 
@@ -1663,47 +1677,55 @@ RSpec.describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
-      it "returns false when trying to edit a topic with no trust" do
-        SiteSetting.min_trust_to_edit_post = 2
-        post.user.trust_level = 1
+      it "returns false when trying to edit a topic when the user is not in the allowed groups" do
+        SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+        post.user.change_trust_level!(TrustLevel[1])
 
         expect(Guardian.new(topic.user).can_edit?(topic)).to be_falsey
       end
 
-      it "returns false when trying to edit a post with no trust" do
-        SiteSetting.min_trust_to_edit_post = 2
-        post.user.trust_level = 1
+      it "returns false when trying to edit a post when the user is not in the allowed groups" do
+        SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+        post.user.change_trust_level!(TrustLevel[1])
 
         expect(Guardian.new(post.user).can_edit?(post)).to be_falsey
       end
 
-      it "returns true when trying to edit a post with trust" do
-        SiteSetting.min_trust_to_edit_post = 1
-        post.user.trust_level = 1
+      it "returns true when editing a post when the user is in the allowed groups" do
+        SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+        post.user.change_trust_level!(TrustLevel[1])
 
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
       end
 
-      it "returns false when another user has too low trust level to edit wiki post" do
-        SiteSetting.min_trust_to_edit_wiki_post = 2
+      it "returns true when editing a post when the user is admin regardless of groups" do
+        SiteSetting.edit_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+        post.user.update!(admin: true)
+        post.user.change_trust_level!(TrustLevel[1])
+
+        expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
+      end
+
+      it "returns false when another user is not member of edit wiki post group" do
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
         post.wiki = true
-        coding_horror.trust_level = 1
+        Group.user_trust_level_change!(coding_horror.id, 1)
 
         expect(Guardian.new(coding_horror).can_edit?(post)).to be_falsey
       end
 
-      it "returns true when another user has adequate trust level to edit wiki post" do
-        SiteSetting.min_trust_to_edit_wiki_post = 2
+      it "returns true when another user is member of edit wiki post group" do
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
         post.wiki = true
-        coding_horror.trust_level = 2
+        Group.user_trust_level_change!(coding_horror.id, 2)
 
         expect(Guardian.new(coding_horror).can_edit?(post)).to be_truthy
       end
 
-      it "returns true for post author even when he has too low trust level to edit wiki post" do
-        SiteSetting.min_trust_to_edit_wiki_post = 2
+      it "returns true for post author even when author is not member of edit wiki post group" do
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
         post.wiki = true
-        post.user.trust_level = 1
+        Group.user_trust_level_change!(post.user, 1)
 
         expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
       end
@@ -1718,7 +1740,6 @@ RSpec.describe Guardian do
           SiteSetting.shared_drafts_category = category.id
           SiteSetting.shared_drafts_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
           Fabricate(:shared_draft, topic: topic)
-          Group.refresh_automatic_groups!
         end
 
         it "returns true if a shared draft exists" do
@@ -1756,7 +1777,8 @@ RSpec.describe Guardian do
 
       describe "post edit time limits" do
         context "when post is older than post_edit_time_limit" do
-          let(:topic) { Fabricate(:topic) }
+          let(:user) { Fabricate(:user, refresh_auto_groups: true) }
+          let(:topic) { Fabricate(:topic, user: user) }
           let(:old_post) do
             Fabricate(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago)
           end
@@ -2190,11 +2212,12 @@ RSpec.describe Guardian do
 
     it "returns false for user with insufficient trust level" do
       SiteSetting.min_trust_to_create_topic = 3
+      SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_3]
       expect(Guardian.new(user).can_create_topic?(topic)).to eq(false)
     end
 
     it "returns true for user with sufficient trust level" do
-      SiteSetting.min_trust_to_create_topic = 3
+      SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_3]
       expect(Guardian.new(trust_level_4).can_create_topic?(topic)).to eq(true)
     end
 
@@ -2282,7 +2305,7 @@ RSpec.describe Guardian do
 
       it "returns true when tl4 can delete posts and topics" do
         expect(Guardian.new(trust_level_4).can_delete?(topic)).to be_falsey
-        SiteSetting.tl4_delete_posts_and_topics = true
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
         expect(Guardian.new(trust_level_4).can_delete?(topic)).to be_truthy
       end
 
@@ -2334,7 +2357,7 @@ RSpec.describe Guardian do
 
       it "returns true when tl4 can delete posts and topics" do
         expect(Guardian.new(trust_level_4).can_delete?(post)).to be_falsey
-        SiteSetting.tl4_delete_posts_and_topics = true
+        SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
         expect(Guardian.new(trust_level_4).can_delete?(post)).to be_truthy
       end
 
@@ -2481,15 +2504,13 @@ RSpec.describe Guardian do
     end
   end
 
-  describe "#can_delete_post_action" do
-    before do
-      SiteSetting.allow_anonymous_posting = true
-      Guardian.any_instance.stubs(:anonymous?).returns(true)
-    end
+  describe "#can_delete_post_action?" do
+    before { SiteSetting.allow_anonymous_posting = true }
 
     context "with allow_anonymous_likes enabled" do
       before { SiteSetting.allow_anonymous_likes = true }
-      describe "an anonymous user" do
+
+      describe "an authenticated anonymous user" do
         let(:post_action) do
           user.id = anonymous_user.id
           post.id = 1
@@ -2519,7 +2540,6 @@ RSpec.describe Guardian do
         end
 
         let(:other_users_post_action) do
-          user.id = user.id
           post.id = 1
 
           a =
@@ -2530,6 +2550,10 @@ RSpec.describe Guardian do
 
         it "returns true if the post belongs to the anonymous user" do
           expect(Guardian.new(anonymous_user).can_delete_post_action?(post_action)).to be_truthy
+        end
+
+        it "returns false if the user is an unauthenticated anonymous user" do
+          expect(Guardian.new.can_delete_post_action?(post_action)).to be_falsey
         end
 
         it "return false if the post belongs to another user" do
@@ -2608,7 +2632,7 @@ RSpec.describe Guardian do
 
     it "returns true when tl4 can delete posts and topics" do
       expect(Guardian.new(trust_level_4).can_see_deleted_posts?(post)).to be_falsey
-      SiteSetting.tl4_delete_posts_and_topics = true
+      SiteSetting.delete_all_posts_and_topics_allowed_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(trust_level_4).can_see_deleted_posts?(post)).to be_truthy
     end
   end
@@ -3453,7 +3477,7 @@ RSpec.describe Guardian do
   end
 
   describe "#can_ignore_user?" do
-    before { SiteSetting.min_trust_level_to_allow_ignore = 1 }
+    before { SiteSetting.ignore_allowed_groups = Group::AUTO_GROUPS[:trust_level_1] }
 
     let(:guardian) { Guardian.new(trust_level_2) }
 
@@ -3484,21 +3508,21 @@ RSpec.describe Guardian do
       end
     end
 
-    context "when ignorer's trust level is below min_trust_level_to_allow_ignore" do
+    context "when ignorer is not in requred trust level group" do
       let(:guardian) { Guardian.new(trust_level_0) }
       it "does not allow ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(false)
       end
     end
 
-    context "when ignorer's trust level is equal to min_trust_level_to_allow_ignore site setting" do
+    context "when ignorer is in the required trust level group" do
       let(:guardian) { Guardian.new(trust_level_1) }
       it "allows ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(true)
       end
     end
 
-    context "when ignorer's trust level is above min_trust_level_to_allow_ignore site setting" do
+    context "when ignorer is in a higher than required trust level group" do
       let(:guardian) { Guardian.new(trust_level_3) }
       it "allows ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(true)
@@ -3531,7 +3555,7 @@ RSpec.describe Guardian do
 
     context "when muter's trust level is below tl1" do
       let(:guardian) { Guardian.new(trust_level_0) }
-      let!(:trust_level_0) { Fabricate(:user, trust_level: 0) }
+      fab!(:trust_level_0)
 
       it "does not allow muting user" do
         expect(guardian.can_mute_user?(another_user)).to eq(false)
@@ -3635,12 +3659,12 @@ RSpec.describe Guardian do
     end
 
     it "returns false when user satisfies trust level but tries to wiki someone else's post" do
-      SiteSetting.min_trust_to_allow_self_wiki = 2
+      SiteSetting.self_wiki_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       expect(Guardian.new(trust_level_2).can_wiki?(post)).to be_falsey
     end
 
     it "returns true when user satisfies trust level and owns the post" do
-      SiteSetting.min_trust_to_allow_self_wiki = 2
+      SiteSetting.self_wiki_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       own_post = Fabricate(:post, user: trust_level_2)
       expect(Guardian.new(trust_level_2).can_wiki?(own_post)).to be_truthy
     end
@@ -3694,11 +3718,13 @@ RSpec.describe Guardian do
     context "when tagging is enabled" do
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.min_trust_level_to_tag_topics = 1
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       end
 
-      context "when min_trust_to_create_tag is 3" do
-        before { SiteSetting.min_trust_to_create_tag = 3 }
+      context "when minimum trust level to create tags is 3" do
+        before do
+          SiteSetting.create_tag_allowed_groups = "1|3|#{Group::AUTO_GROUPS[:trust_level_3]}"
+        end
 
         describe "#can_see_tag?" do
           it "is always true" do
@@ -3723,11 +3749,19 @@ RSpec.describe Guardian do
 
         describe "can_tag_topics" do
           it "returns false if trust level is too low" do
-            expect(Guardian.new(Fabricate(:user, trust_level: 0)).can_tag_topics?).to be_falsey
+            expect(
+              Guardian.new(
+                Fabricate(:user, trust_level: 0, refresh_auto_groups: true),
+              ).can_tag_topics?,
+            ).to be_falsey
           end
 
           it "returns true if trust level is high enough" do
-            expect(Guardian.new(Fabricate(:user, trust_level: 1)).can_tag_topics?).to be_truthy
+            expect(
+              Guardian.new(
+                Fabricate(:user, trust_level: 1, refresh_auto_groups: true),
+              ).can_tag_topics?,
+            ).to be_truthy
           end
 
           it "returns true for staff" do
@@ -3737,8 +3771,12 @@ RSpec.describe Guardian do
         end
       end
 
-      context 'when min_trust_to_create_tag is "staff"' do
-        before { SiteSetting.min_trust_to_create_tag = "staff" }
+      context "when staff and admin groups are allowed to create tags" do
+        before do
+          SiteSetting.min_trust_to_create_tag = "staff"
+          SiteSetting.create_tag_allowed_groups =
+            "#{Group::AUTO_GROUPS[:staff]}|#{Group::AUTO_GROUPS[:admins]}"
+        end
 
         it "returns false if not staff" do
           expect(Guardian.new(trust_level_4).can_create_tag?).to eq(false)
@@ -3750,16 +3788,15 @@ RSpec.describe Guardian do
         end
       end
 
-      context 'when min_trust_to_create_tag is "admin"' do
-        before { SiteSetting.min_trust_to_create_tag = "admin" }
-
-        it "returns false if not admin" do
-          expect(Guardian.new(trust_level_4).can_create_tag?).to eq(false)
-          expect(Guardian.new(moderator).can_create_tag?).to eq(false)
+      context "when only admin group is allowed to create tags" do
+        before do
+          SiteSetting.min_trust_to_create_tag = "admin"
+          SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:admins]
         end
 
-        it "returns true if admin" do
+        it "returns true if admin or moderator" do
           expect(Guardian.new(admin).can_create_tag?).to be_truthy
+          expect(Guardian.new(moderator).can_create_tag?).to be_truthy
         end
       end
     end
@@ -4289,8 +4326,6 @@ RSpec.describe Guardian do
   end
 
   describe "#can_mention_here?" do
-    before { Group.refresh_automatic_groups! }
-
     it "returns false if disabled" do
       SiteSetting.max_here_mentioned = 0
       expect(admin.guardian.can_mention_here?).to eq(false)
@@ -4323,12 +4358,12 @@ RSpec.describe Guardian do
       expect(admin.guardian.can_mention_here?).to eq(true)
     end
 
-    it "works with admin" do
+    it "works with admin or moderator" do
       SiteSetting.min_trust_level_for_here_mention = "admin"
       SiteSetting.here_mention_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(trust_level_4.guardian.can_mention_here?).to eq(false)
-      expect(moderator.guardian.can_mention_here?).to eq(false)
+      expect(moderator.guardian.can_mention_here?).to eq(true)
       expect(admin.guardian.can_mention_here?).to eq(true)
     end
   end

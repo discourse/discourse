@@ -211,11 +211,11 @@ RSpec.describe UserUpdater do
       expect(user.date_of_birth).to eq(date_of_birth.to_date)
     end
 
-    it "allows user to update profile header when the user has required trust level" do
-      user = Fabricate(:user, trust_level: 2)
+    it "allows user to update profile header when the user has required group" do
+      user = Fabricate(:user, trust_level: TrustLevel[2])
       updater = UserUpdater.new(user, user)
       upload = Fabricate(:upload)
-      SiteSetting.min_trust_level_to_allow_profile_background = 2
+      SiteSetting.profile_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       val = updater.update(profile_background_upload_url: upload.url)
       expect(val).to be_truthy
       user.reload
@@ -226,11 +226,11 @@ RSpec.describe UserUpdater do
       expect(user.profile_background_upload).to eq(nil)
     end
 
-    it "allows user to update user card background when the user has required trust level" do
-      user = Fabricate(:user, trust_level: 2)
+    it "allows user to update user card background when the user has required group" do
+      user = Fabricate(:user, trust_level: TrustLevel[2])
       updater = UserUpdater.new(user, user)
       upload = Fabricate(:upload)
-      SiteSetting.min_trust_level_to_allow_user_card_background = 2
+      SiteSetting.user_card_background_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       val = updater.update(card_background_upload_url: upload.url)
       expect(val).to be_truthy
       user.reload
@@ -586,14 +586,10 @@ RSpec.describe UserUpdater do
 
     context "when skip_new_user_tips is edited" do
       it "updates seen_popups too" do
-        messages =
-          MessageBus.track_publish("/user-tips/#{user.id}") do
-            UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: true)
-          end
+        UserUpdater.new(Discourse.system_user, user).update(skip_new_user_tips: true)
 
         expect(user.user_option.skip_new_user_tips).to eq(true)
         expect(user.user_option.seen_popups).to eq([-1])
-        expect(messages.map(&:data)).to contain_exactly([-1])
       end
 
       it "does not reset seen_popups" do
@@ -603,18 +599,6 @@ RSpec.describe UserUpdater do
 
         expect(user.user_option.skip_new_user_tips).to eq(false)
         expect(user.user_option.seen_popups).to eq([1, 2, 3])
-      end
-    end
-
-    context "when seen_popups is edited" do
-      it "publishes a message" do
-        messages =
-          MessageBus.track_publish("/user-tips/#{user.id}") do
-            UserUpdater.new(Discourse.system_user, user).update(seen_popups: [1])
-          end
-
-        expect(user.user_option.seen_popups).to eq([1])
-        expect(messages.map(&:data)).to contain_exactly([1])
       end
     end
 
@@ -652,6 +636,11 @@ RSpec.describe UserUpdater do
       )
 
       expect(UserHistory.last.action).to eq(UserHistory.actions[:change_name])
+    end
+
+    it "clears the homepage_id when the special 'custom' id is chosen" do
+      UserUpdater.new(user, user).update(homepage_id: "-1")
+      expect(user.user_option.homepage_id).to eq(nil)
     end
   end
 end

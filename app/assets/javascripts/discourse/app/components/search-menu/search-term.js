@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import {
   DEFAULT_TYPE_FILTER,
   SEARCH_INPUT_ID,
@@ -9,6 +9,15 @@ import {
 import { isiPad } from "discourse/lib/utilities";
 
 const SECOND_ENTER_MAX_DELAY = 15000;
+
+const onKeyUpCallbacks = [];
+
+export function addOnKeyUpCallback(fn) {
+  onKeyUpCallbacks.push(fn);
+}
+export function resetOnKeyUpCallbacks() {
+  onKeyUpCallbacks.clear();
+}
 
 export default class SearchTerm extends Component {
   @service search;
@@ -41,11 +50,22 @@ export default class SearchTerm extends Component {
   }
 
   @action
-  onKeyup(e) {
+  onKeydown(e) {
     if (e.key === "Escape") {
       this.args.closeSearchMenu();
       e.preventDefault();
-      return false;
+      e.stopPropagation();
+    }
+  }
+
+  @action
+  onKeyup(e) {
+    if (
+      onKeyUpCallbacks.length &&
+      !onKeyUpCallbacks.some((fn) => fn(this, e))
+    ) {
+      // Return early if any callbacks return false
+      return;
     }
 
     this.args.openSearchMenu();
@@ -57,7 +77,6 @@ export default class SearchTerm extends Component {
         this.lastEnterTimestamp &&
         Date.now() - this.lastEnterTimestamp < SECOND_ENTER_MAX_DELAY;
 
-      // same combination as key-enter-escape mixin
       if (
         e.ctrlKey ||
         e.metaKey ||

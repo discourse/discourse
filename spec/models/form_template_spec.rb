@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe FormTemplate, type: :model do
   it "can't have duplicate names" do
     Fabricate(:form_template, name: "Bug Report", template: "- type: input\n  id: name")

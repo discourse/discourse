@@ -808,25 +808,25 @@ eviltrout</p>
 
     assert.cooked(
       "```json\n{hello: 'world'}\n```\ntrailing",
-      "<pre><code class=\"lang-json\">{hello: 'world'}\n</code></pre>\n<p>trailing</p>",
+      '<pre data-code-wrap="json"><code class="lang-json">{hello: \'world\'}\n</code></pre>\n<p>trailing</p>',
       "It does not truncate text after a code block."
     );
 
     assert.cooked(
       "```json\nline 1\n\nline 2\n\n\nline3\n```",
-      '<pre><code class="lang-json">line 1\n\nline 2\n\n\nline3\n</code></pre>',
+      '<pre data-code-wrap="json"><code class="lang-json">line 1\n\nline 2\n\n\nline3\n</code></pre>',
       "it maintains new lines inside a code block."
     );
 
     assert.cooked(
       "hello\nworld\n```json\nline 1\n\nline 2\n\n\nline3\n```",
-      '<p>hello<br>\nworld</p>\n<pre><code class="lang-json">line 1\n\nline 2\n\n\nline3\n</code></pre>',
+      '<p>hello<br>\nworld</p>\n<pre data-code-wrap="json"><code class="lang-json">line 1\n\nline 2\n\n\nline3\n</code></pre>',
       "it maintains new lines inside a code block with leading content."
     );
 
     assert.cooked(
       "```ruby\n<header>hello</header>\n```",
-      '<pre><code class="lang-ruby">&lt;header&gt;hello&lt;/header&gt;\n</code></pre>',
+      '<pre data-code-wrap="ruby"><code class="lang-ruby">&lt;header&gt;hello&lt;/header&gt;\n</code></pre>',
       "it escapes code in the code block"
     );
 
@@ -838,7 +838,7 @@ eviltrout</p>
 
     assert.cooked(
       "```ruby\n# cool\n```",
-      '<pre><code class="lang-ruby"># cool\n</code></pre>',
+      '<pre data-code-wrap="ruby"><code class="lang-ruby"># cool\n</code></pre>',
       "it supports changing the language"
     );
 
@@ -850,19 +850,19 @@ eviltrout</p>
 
     assert.cooked(
       "```ruby\ndef self.parse(text)\n\n  text\nend\n```",
-      '<pre><code class="lang-ruby">def self.parse(text)\n\n  text\nend\n</code></pre>',
+      '<pre data-code-wrap="ruby"><code class="lang-ruby">def self.parse(text)\n\n  text\nend\n</code></pre>',
       "it allows leading spaces on lines in a code block."
     );
 
     assert.cooked(
       "```ruby\nhello `eviltrout`\n```",
-      '<pre><code class="lang-ruby">hello `eviltrout`\n</code></pre>',
+      '<pre data-code-wrap="ruby"><code class="lang-ruby">hello `eviltrout`\n</code></pre>',
       "it allows code with backticks in it"
     );
 
     assert.cooked(
       "```eviltrout\nhello\n```",
-      '<pre data-code-wrap="eviltrout"><code class="lang-plaintext">hello\n</code></pre>',
+      '<pre data-code-wrap="eviltrout"><code class="lang-eviltrout">hello\n</code></pre>',
       "it converts to custom block unknown code names"
     );
 
@@ -1212,6 +1212,11 @@ eviltrout</p>
       '<pre><code class="lang-auto">   s</code></pre>',
       "it doesn't trim leading whitespace"
     );
+    assert.cooked(
+      "> [code]\n> line 1\n> line 2\n> line 3\n> [/code]",
+      '<blockquote>\n<pre><code class="lang-auto">line 1\nline 2\nline 3</code></pre>\n</blockquote>',
+      "supports quoting a whole [code] block"
+    );
   });
 
   test("tags with arguments", function (assert) {
@@ -1315,7 +1320,7 @@ eviltrout</p>
 <div class=\"quote-controls\"></div>
  Alice:</div>
 <blockquote>
-<pre><code class=\"lang-javascript\">var foo ='foo';
+<pre data-code-wrap=\"javascript\"><code class=\"lang-javascript\">var foo ='foo';
 var bar = 'bar';
 </code></pre>
 </blockquote>
@@ -1330,7 +1335,7 @@ var bar = 'bar';
 <div class=\"quote-controls\"></div>
  Alice:</div>
 <blockquote>
-<pre><code class=\"lang-javascript\">var foo ='foo';
+<pre data-code-wrap=\"javascript\"><code class=\"lang-javascript\">var foo ='foo';
 var bar = 'bar';
 </code></pre>
 </blockquote>
@@ -1498,8 +1503,8 @@ var bar = 'bar';
     assert.cookedOptions(
       `![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)`,
       { previewing: true },
-      `<p><div class=\"onebox-placeholder-container\">
-        <span class=\"placeholder-icon video\"></span>
+      `<p><div class="onebox-placeholder-container" data-orig-src-id="eyPnj7UzkU0AkGkx2dx8G4YM1Jx">
+        <span class="placeholder-icon video"></span>
       </div></p>`
     );
   });
@@ -1666,7 +1671,7 @@ var bar = 'bar';
     // "js" is an alias of "javascript"
     assert.cooked(
       "```js\nvar foo ='foo';\nvar bar = 'bar';\n```",
-      `<pre><code class=\"lang-js\">var foo ='foo';
+      `<pre data-code-wrap="js"><code class=\"lang-js\">var foo ='foo';
 var bar = 'bar';
 </code></pre>`,
       "code block with js alias works"
@@ -1675,7 +1680,7 @@ var bar = 'bar';
     // "html" is an alias of "xml"
     assert.cooked(
       "```html\n<strong>fun</strong> times\n```",
-      `<pre><code class=\"lang-html\">&lt;strong&gt;fun&lt;/strong&gt; times
+      `<pre data-code-wrap="html"><code class=\"lang-html\">&lt;strong&gt;fun&lt;/strong&gt; times
 </code></pre>`,
       "code block with html alias work"
     );

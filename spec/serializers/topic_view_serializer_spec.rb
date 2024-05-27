@@ -12,7 +12,7 @@ RSpec.describe TopicViewSerializer do
   use_redis_snapshotting
 
   fab!(:topic)
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user_2) { Fabricate(:user) }
   fab!(:admin)
 
@@ -95,8 +95,6 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe "#suggested_topics" do
-    before { Group.refresh_automatic_groups! }
-
     fab!(:topic2) { Fabricate(:topic) }
 
     before { TopicUser.update_last_read(user, topic2.id, 0, 0, 0) }
@@ -125,8 +123,6 @@ RSpec.describe TopicViewSerializer do
     end
 
     describe "with private messages" do
-      before { Group.refresh_automatic_groups! }
-
       fab!(:topic) do
         Fabricate(
           :private_message_topic,
@@ -166,8 +162,6 @@ RSpec.describe TopicViewSerializer do
   describe "#suggested_group_name" do
     fab!(:pm) { Fabricate(:private_message_post).topic }
     fab!(:group)
-
-    before { Group.refresh_automatic_groups! }
 
     it "is nil for a regular topic" do
       json = serialize_topic(topic, user)
@@ -329,11 +323,13 @@ RSpec.describe TopicViewSerializer do
   context "with flags" do
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:other_post) { Fabricate(:post, topic: topic) }
+    fab!(:flagger_1) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:flagger_2) { Fabricate(:user, refresh_auto_groups: true) }
 
     it "will return reviewable counts on posts" do
-      r = PostActionCreator.inappropriate(Fabricate(:user), post).reviewable
+      r = PostActionCreator.inappropriate(flagger_1, post).reviewable
       r.perform(admin, :agree_and_keep)
-      PostActionCreator.spam(Fabricate(:user), post)
+      PostActionCreator.spam(flagger_2, post)
 
       json = serialize_topic(topic, admin)
       p0 = json[:post_stream][:posts][0]
@@ -445,7 +441,7 @@ RSpec.describe TopicViewSerializer do
     context "with can_edit_tags" do
       before do
         SiteSetting.tagging_enabled = true
-        SiteSetting.min_trust_to_edit_wiki_post = 2
+        SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       end
 
       it "returns true when user can edit a wiki topic" do
@@ -455,9 +451,9 @@ RSpec.describe TopicViewSerializer do
         json = serialize_topic(topic, user)
         expect(json[:details][:can_edit_tags]).to be_nil
 
-        user.update!(trust_level: 2)
+        user.change_trust_level!(TrustLevel[2])
 
-        json = serialize_topic(topic, user)
+        json = serialize_topic(topic, user.reload)
         expect(json[:details][:can_edit_tags]).to eq(true)
       end
     end

@@ -6,6 +6,7 @@ class AddCustomEmailInToCategories < ActiveRecord::Migration[4.2]
     add_column :categories, :email_in_allow_strangers, :boolean, default: false
     add_index :categories, :email_in, unique: true
   end
+
   def down
     remove_column :categories, :email_in
     remove_column :categories, :email_in_allow_strangers

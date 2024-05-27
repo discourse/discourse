@@ -80,7 +80,13 @@
         },
         "has_children": {
           "type": [
-            "string",
+            "boolean",
+            "null"
+          ]
+        },
+        "subcategory_count": {
+          "type": [
+            "integer",
             "null"
           ]
         },
@@ -287,6 +293,7 @@
         "can_edit",
         "topic_template",
         "has_children",
+        "subcategory_count",
         "sort_order",
         "sort_ascending",
         "show_subcategory_list",

@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import I18n from "discourse-i18n";
 

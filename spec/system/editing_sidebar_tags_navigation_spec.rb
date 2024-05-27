@@ -181,7 +181,7 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
     Tag.delete_all
 
     tags =
-      (TagsController::LIST_LIMIT + 1).times.map.with_index do |index|
+      (TagsController::LIST_LIMIT + 1).times.map do |index|
         Fabricate(:tag, name: "Tag #{sprintf("%03d", index)}")
       end
 

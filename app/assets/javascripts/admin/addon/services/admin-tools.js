@@ -1,6 +1,5 @@
-import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
@@ -14,13 +13,11 @@ import AdminUser from "admin/models/admin-user";
 export default class AdminToolsService extends Service {
   @service dialog;
   @service modal;
+  @service router;
 
   showActionLogs(target, filters) {
-    const controller = getOwner(target).lookup(
-      "controller:adminLogs.staffActionLogs"
-    );
-    target.transitionToRoute("adminLogs.staffActionLogs").then(() => {
-      controller.changeFilters(filters);
+    this.router.transitionTo("adminLogs.staffActionLogs", {
+      queryParams: { filters },
     });
   }
 

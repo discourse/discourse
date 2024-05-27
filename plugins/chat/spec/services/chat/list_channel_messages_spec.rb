@@ -109,7 +109,9 @@ RSpec.describe Chat::ListChannelMessages do
       before { target_message.trash! }
 
       context "when user is regular" do
-        it { is_expected.to fail_a_policy(:target_message_exists) }
+        it "nullifies target_message_id" do
+          expect(result.target_message_id).to be_blank
+        end
       end
 
       context "when user is the message creator" do
@@ -157,10 +159,29 @@ RSpec.describe Chat::ListChannelMessages do
     context "when threads are disabled" do
       fab!(:thread_1) { Fabricate(:chat_thread, channel: channel) }
 
-      before { channel.update!(threading_enabled: false) }
+      before do
+        channel.update!(threading_enabled: false)
+        thread_1.add(user)
+      end
 
-      it "returns empty tracking" do
-        expect(result.tracking).to eq({})
+      it "returns tracking" do
+        Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
+
+        expect(result.tracking.thread_tracking).to eq(
+          { thread_1.id => { channel_id: channel.id, mention_count: 0, unread_count: 0 } },
+        )
+      end
+
+      context "when thread is forced" do
+        before { thread_1.update!(force: true) }
+
+        it "returns tracking" do
+          Fabricate(:chat_message, chat_channel: channel, thread: thread_1)
+
+          expect(result.tracking.thread_tracking).to eq(
+            { thread_1.id => { channel_id: channel.id, mention_count: 0, unread_count: 1 } },
+          )
+        end
       end
     end
 
@@ -188,6 +209,21 @@ RSpec.describe Chat::ListChannelMessages do
       expect { result }.to change { channel.membership_for(user).last_viewed_at }.to be_within(
         1.second,
       ).of(Time.zone.now)
+    end
+  end
+
+  context "when update_user_last_channel" do
+    it "updates the custom field" do
+      expect { result }.to change { user.custom_fields[Chat::LAST_CHAT_CHANNEL_ID] }.from(nil).to(
+        channel.id,
+      )
+    end
+
+    it "doesn’t update the custom field when it was already set to this value" do
+      user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel.id)
+      field = UserCustomField.find_by(name: Chat::LAST_CHAT_CHANNEL_ID, user_id: user.id)
+
+      expect { result }.to_not change { field.reload.updated_at }
     end
   end
 end

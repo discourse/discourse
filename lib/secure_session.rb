@@ -34,7 +34,6 @@ class SecureSession
     else
       Discourse.redis.setex(prefixed_key(key), SecureSession.expiry.to_i, val.to_s)
     end
-    val
   end
 
   private

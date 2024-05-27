@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/application";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import UserTipContainer from "discourse/components/user-tip-container";
 import escape from "discourse-common/lib/escape";
@@ -41,7 +41,7 @@ export default class UserTip extends Component {
         buttonText = `${iconHTML(this.args.buttonIcon)} ${buttonText}`;
       }
 
-      instance = new DTooltipInstance(getOwner(this), trigger || element, {
+      instance = new DTooltipInstance(getOwner(this), {
         identifier: "user-tip",
         interactive: true,
         closeOnScroll: false,
@@ -55,14 +55,21 @@ export default class UserTip extends Component {
           contentText: this.args.contentText
             ? escape(this.args.contentText)
             : null,
-          onDismiss: () => {
-            this.userTips.hideUserTipForever(this.args.id);
-          },
           buttonText,
+          buttonSkipText: I18n.t("user_tips.skip"),
+          showSkipButton: this.args.showSkipButton,
         },
       });
+      instance.trigger = trigger || element;
+      instance.detachedTrigger = true;
 
       this.tooltip.show(instance);
+
+      if (this.shouldRenderTip) {
+        // mark tooltip directly as seen so that
+        // refreshing, clicking outside, etc. won't show it again
+        this.userTips.markAsSeen(this.args.id);
+      }
     });
 
     return () => {

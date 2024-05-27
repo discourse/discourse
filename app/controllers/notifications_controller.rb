@@ -5,7 +5,7 @@ class NotificationsController < ApplicationController
   before_action :ensure_admin, only: %i[create update destroy]
   before_action :set_notification, only: %i[update destroy]
 
-  INDEX_LIMIT = 50
+  INDEX_LIMIT = 60
 
   def index
     user =
@@ -57,6 +57,8 @@ class NotificationsController < ApplicationController
 
       notifications =
         Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
+      notifications =
+        Notification.populate_acting_user(notifications) if SiteSetting.show_user_menu_avatars
 
       json = {
         notifications: serialize_data(notifications, NotificationSerializer),
@@ -72,6 +74,7 @@ class NotificationsController < ApplicationController
 
       render_json_dump(json)
     else
+      limit = fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT)
       offset = params[:offset].to_i
 
       notifications =
@@ -82,15 +85,22 @@ class NotificationsController < ApplicationController
       notifications = notifications.where(read: false) if params[:filter] == "unread"
 
       total_rows = notifications.dup.count
-      notifications = notifications.offset(offset).limit(60)
+      notifications = notifications.offset(offset).limit(limit)
       notifications =
         Notification.filter_inaccessible_topic_notifications(current_user.guardian, notifications)
+      notifications =
+        Notification.populate_acting_user(notifications) if SiteSetting.show_user_menu_avatars
       render_json_dump(
         notifications: serialize_data(notifications, NotificationSerializer),
         total_rows_notifications: total_rows,
         seen_notification_id: user.seen_notification_id,
         load_more_notifications:
-          notifications_path(username: user.username, offset: offset + 60, filter: params[:filter]),
+          notifications_path(
+            username: user.username,
+            offset: offset + limit,
+            limit: limit,
+            filter: params[:filter],
+          ),
       )
     end
   end
@@ -134,6 +144,10 @@ class NotificationsController < ApplicationController
   def destroy
     @notification.destroy!
     render json: success_json
+  end
+
+  def totals
+    render_serialized(current_user, UserNotificationTotalSerializer, root: false)
   end
 
   private

@@ -1,11 +1,55 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { equal, gt, gte } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import DeleteThemesConfirm from "discourse/components/modal/delete-themes-confirm";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import { COMPONENTS, THEMES } from "admin/models/theme";
+
+const ALL_FILTER = "all";
+const ACTIVE_FILTER = "active";
+const INACTIVE_FILTER = "inactive";
+const ENABLED_FILTER = "enabled";
+const DISABLED_FILTER = "disabled";
+const UPDATES_AVAILABLE_FILTER = "updates_available";
+
+const THEMES_FILTERS = [
+  { name: I18n.t("admin.customize.theme.all_filter"), id: ALL_FILTER },
+  { name: I18n.t("admin.customize.theme.active_filter"), id: ACTIVE_FILTER },
+  {
+    name: I18n.t("admin.customize.theme.inactive_filter"),
+    id: INACTIVE_FILTER,
+  },
+  {
+    name: I18n.t("admin.customize.theme.updates_available_filter"),
+    id: UPDATES_AVAILABLE_FILTER,
+  },
+];
+const COMPONENTS_FILTERS = [
+  { name: I18n.t("admin.customize.component.all_filter"), id: ALL_FILTER },
+  {
+    name: I18n.t("admin.customize.component.used_filter"),
+    id: ACTIVE_FILTER,
+  },
+  {
+    name: I18n.t("admin.customize.component.unused_filter"),
+    id: INACTIVE_FILTER,
+  },
+  {
+    name: I18n.t("admin.customize.component.enabled_filter"),
+    id: ENABLED_FILTER,
+  },
+  {
+    name: I18n.t("admin.customize.component.disabled_filter"),
+    id: DISABLED_FILTER,
+  },
+  {
+    name: I18n.t("admin.customize.component.updates_available_filter"),
+    id: UPDATES_AVAILABLE_FILTER,
+  },
+];
 
 @classNames("themes-list")
 export default class ThemesList extends Component {
@@ -14,7 +58,8 @@ export default class ThemesList extends Component {
 
   THEMES = THEMES;
   COMPONENTS = COMPONENTS;
-  filterTerm = null;
+  searchTerm = null;
+  filter = ALL_FILTER;
   selectInactiveMode = false;
 
   @gt("themesList.length", 0) hasThemes;
@@ -23,11 +68,21 @@ export default class ThemesList extends Component {
 
   @gt("inactiveThemes.length", 0) hasInactiveThemes;
 
-  @gte("themesList.length", 10) showFilter;
+  @gte("themesList.length", 10) showSearchAndFilter;
 
   @equal("currentTab", THEMES) themesTabActive;
 
   @equal("currentTab", COMPONENTS) componentsTabActive;
+
+  @equal("filter", ACTIVE_FILTER) activeFilter;
+  @equal("filter", INACTIVE_FILTER) inactiveFilter;
+
+  willRender() {
+    super.willRender(...arguments);
+    if (!this.showSearchAndFilter) {
+      this.set("searchTerm", null);
+    }
+  }
 
   @discourseComputed("themes", "components", "currentTab")
   themesList(themes, components) {
@@ -38,13 +93,23 @@ export default class ThemesList extends Component {
     }
   }
 
+  @discourseComputed("currentTab")
+  selectableFilters() {
+    if (this.themesTabActive) {
+      return THEMES_FILTERS;
+    } else {
+      return COMPONENTS_FILTERS;
+    }
+  }
+
   @discourseComputed(
     "themesList",
     "currentTab",
     "themesList.@each.user_selectable",
     "themesList.@each.default",
     "themesList.@each.markedToDelete",
-    "filterTerm"
+    "searchTerm",
+    "filter"
   )
   inactiveThemes(themes) {
     let results;
@@ -57,7 +122,8 @@ export default class ThemesList extends Component {
         (theme) => !theme.get("user_selectable") && !theme.get("default")
       );
     }
-    return this._filterThemes(results, this.filterTerm);
+    results = this._applyFilter(results);
+    return this._searchThemes(results, this.searchTerm);
   }
 
   @discourseComputed("themesList.@each.markedToDelete")
@@ -75,7 +141,8 @@ export default class ThemesList extends Component {
     "currentTab",
     "themesList.@each.user_selectable",
     "themesList.@each.default",
-    "filterTerm"
+    "searchTerm",
+    "filter"
   )
   activeThemes(themes) {
     let results;
@@ -96,7 +163,8 @@ export default class ThemesList extends Component {
             .localeCompare(b.get("name").toLowerCase());
         });
     }
-    return this._filterThemes(results, this.filterTerm);
+    results = this._applyFilter(results);
+    return this._searchThemes(results, this.searchTerm);
   }
   @discourseComputed("themesList.@each.markedToDelete")
   someInactiveSelected() {
@@ -111,12 +179,29 @@ export default class ThemesList extends Component {
     return this.selectedCount === this.inactiveThemes.length;
   }
 
-  _filterThemes(themes, term) {
+  _searchThemes(themes, term) {
     term = term?.trim()?.toLowerCase();
     if (!term) {
       return themes;
     }
     return themes.filter(({ name }) => name.toLowerCase().includes(term));
+  }
+
+  _applyFilter(results) {
+    switch (this.filter) {
+      case UPDATES_AVAILABLE_FILTER: {
+        return results.filterBy("isPendingUpdates");
+      }
+      case ENABLED_FILTER: {
+        return results.filterBy("enabled");
+      }
+      case DISABLED_FILTER: {
+        return results.filterBy("enabled", false);
+      }
+      default: {
+        return results;
+      }
+    }
   }
 
   @bind
@@ -130,10 +215,8 @@ export default class ThemesList extends Component {
   changeView(newTab) {
     if (newTab !== this.currentTab) {
       this.set("selectInactiveMode", false);
-      this.set("currentTab", newTab);
-      if (!this.showFilter) {
-        this.set("filterTerm", null);
-      }
+      this.set("filter", ALL_FILTER);
+      this.router.transitionTo("adminCustomizeThemes", newTab);
     }
   }
 

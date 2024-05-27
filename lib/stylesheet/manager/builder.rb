@@ -122,7 +122,7 @@ class Stylesheet::Manager::Builder
     if is_theme?
       "#{@target}_#{theme&.id}"
     elsif @color_scheme
-      "#{@target}_#{scheme_slug}_#{@color_scheme&.id.to_s}_#{@theme&.id}"
+      "#{@target}_#{scheme_slug}_#{@color_scheme&.id}_#{@theme&.id}"
     else
       scheme_string = theme&.color_scheme ? "_#{theme.color_scheme.id}" : ""
       "#{@target}#{scheme_string}"
@@ -240,20 +240,13 @@ class Stylesheet::Manager::Builder
   def color_scheme_digest
     cs = @color_scheme || theme&.color_scheme
 
-    categories_updated =
-      Stylesheet::Manager
-        .cache
-        .defer_get_set("categories_updated") do
-          Category.where("uploaded_background_id IS NOT NULL").pluck(:updated_at).map(&:to_i).sum
-        end
-
     fonts = "#{SiteSetting.base_font}-#{SiteSetting.heading_font}"
 
     digest_string = "#{current_hostname}-"
-    if cs || categories_updated > 0
+    if cs
       theme_color_defs = resolve_baked_field(:common, :color_definitions)
       digest_string +=
-        "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.fs_asset_cachebuster}-#{categories_updated}-#{fonts}"
+        "#{RailsMultisite::ConnectionManagement.current_db}-#{cs&.id}-#{cs&.version}-#{theme_color_defs}-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts}"
     else
       digest_string += "defaults-#{Stylesheet::Manager.fs_asset_cachebuster}-#{fonts}"
 

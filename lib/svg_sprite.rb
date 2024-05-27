@@ -19,6 +19,7 @@ module SvgSprite
         archive
         arrow-down
         arrow-left
+        arrow-right
         arrow-up
         arrows-alt-h
         arrows-alt-v
@@ -70,11 +71,15 @@ module SvgSprite
         discourse-bell-slash
         discourse-bookmark-clock
         discourse-compress
+        discourse-dnd
         discourse-emojis
         discourse-expand
         discourse-other-tab
         discourse-sparkles
         discourse-threads
+        discourse-sidebar
+        discourse-chevron-collapse
+        discourse-chevron-expand
         download
         ellipsis-h
         ellipsis-v
@@ -94,7 +99,10 @@ module SvgSprite
         fab-facebook
         fab-github
         fab-instagram
+        fab-linkedin-in
         fab-linux
+        fab-threads
+        fab-threads-square
         fab-twitter
         fab-twitter-square
         fab-wikipedia-w
@@ -157,6 +165,7 @@ module SvgSprite
         italic
         key
         keyboard
+        language
         layer-group
         link
         list
@@ -171,6 +180,7 @@ module SvgSprite
         mobile-alt
         moon
         paint-brush
+        palette
         paper-plane
         pause
         pencil-alt
@@ -180,6 +190,7 @@ module SvgSprite
         plus-circle
         plus-square
         power-off
+        project-diagram
         puzzle-piece
         question
         question-circle
@@ -188,6 +199,7 @@ module SvgSprite
         random
         redo
         reply
+        robot
         rocket
         search
         search-plus

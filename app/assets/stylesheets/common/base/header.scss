@@ -2,13 +2,17 @@
   @include sticky;
   top: 0;
   z-index: z("header");
+
+  .footer-nav-ipad & {
+    top: var(--footer-nav-height, 0px);
+  }
 }
 
 .d-header {
   display: flex;
   align-items: center;
+  flex-direction: column;
   width: 100%;
-  z-index: z("header");
   background-color: var(--header_background);
   box-shadow: var(--shadow-header);
   backface-visibility: hidden; /** do magic for scrolling performance **/
@@ -57,6 +61,7 @@
     min-width: var(--d-logo-height);
     a,
     a:visited {
+      min-width: 0;
       color: var(--header_primary);
     }
 
@@ -72,6 +77,10 @@
     width: auto;
     max-width: 100%;
     object-fit: contain;
+  }
+
+  .home-logo-wrapper-outlet {
+    overflow: hidden;
   }
 
   #site-text-logo {
@@ -101,6 +110,11 @@
     display: flex;
     align-items: center;
     margin-top: 0.2em;
+    white-space: nowrap;
+
+    .auth-buttons {
+      display: flex;
+    }
   }
 
   .login-button,
@@ -290,6 +304,7 @@
       "categories extra";
     grid-template-columns: auto minmax(2em, 1fr); // min must be as wide as ellipsis
     align-items: baseline;
+    gap: 0 0.5em;
     .header-title {
       grid-area: title;
     }
@@ -322,28 +337,21 @@
   .categories-wrapper {
     display: inline-flex;
     flex: 0 1 auto;
+    gap: 0 0.5em;
     @include ellipsis;
-    .badge-wrapper {
-      @include ellipsis;
-    }
   }
-  .badge-wrapper {
-    margin-right: 0.7em;
+  .badge-category__wrapper {
     min-width: 2.75em; // min needed for ellipsis
-  }
-  .badge-wrapper {
-    &.bullet,
-    &.bar,
-    &.none {
-      span.badge-category {
-        color: var(--header_primary-high);
-      }
+    @include ellipsis;
+    .badge-category {
+      color: var(--header_primary-high);
     }
   }
   .topic-header-extra {
     display: inline-flex;
     align-items: center;
     max-width: 100%;
+    gap: 0.5em;
     .discourse-tags {
       display: inline;
       color: var(--header_primary-high);
@@ -422,14 +430,31 @@ $mobile-avatar-height: 1.532em;
   }
 }
 
-.d-header-mode .bootstrap-mode {
-  color: var(--primary-medium);
-  font-size: var(--font-down-1);
-  margin-left: 1em;
-  padding: 0.15em 0.5em;
+.d-header-mode {
+  .bootstrap-mode {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin-left: 1em;
+    padding: 0.15em 0.5em;
 
-  &:focus {
-    background-color: var(--primary-medium);
-    color: var(--secondary);
+    &:focus {
+      background-color: var(--primary-medium);
+      color: var(--secondary);
+    }
   }
+
+  .fk-d-button-tooltip .fk-d-tooltip__trigger {
+    color: var(--header_primary-high);
+    background: transparent;
+  }
+}
+
+#additional-panel-wrapper {
+  position: absolute;
+  // positions are relative to the .d-header .panel div
+  top: 100%; // directly underneath .panel
+  right: -10px; // 10px to the right of .panel - adjust as needed
+  max-height: 80vh;
+  border-radius: var(--d-border-radius-large);
+  overflow: auto;
 }

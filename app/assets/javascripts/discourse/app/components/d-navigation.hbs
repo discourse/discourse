@@ -21,11 +21,35 @@
     <BulkSelectToggle @bulkSelectHelper={{@bulkSelectHelper}} />
   {{/if}}
 
+  <TopicDismissButtons
+    @position="top"
+    @selectedTopics={{@bulkSelectHelper.selected}}
+    @model={{@model}}
+    @showResetNew={{@showResetNew}}
+    @showDismissRead={{@showDismissRead}}
+    @resetNew={{@resetNew}}
+    @dismissRead={{@dismissRead}}
+  />
+
   {{#if this.showCategoryAdmin}}
-    <CategoriesAdminDropdown
-      @onChange={{action "selectCategoryAdminDropdownAction"}}
-      @options={{hash triggerOnChangeOnTab=false}}
-    />
+    {{#if this.fixedCategoryPositions}}
+      <CategoriesAdminDropdown
+        @onChange={{action "selectCategoryAdminDropdownAction"}}
+        @options={{hash triggerOnChangeOnTab=false}}
+      />
+    {{else}}
+      <DButton
+        @action={{this.createCategory}}
+        @icon="plus"
+        @label={{if
+          this.site.mobileView
+          "categories.category"
+          "category.create"
+        }}
+        class="btn-default"
+        id="create-category"
+      />
+    {{/if}}
   {{/if}}
 
   {{#if (and this.category this.showCategoryEdit)}}
@@ -77,6 +101,7 @@
       createTopicDisabled=this.createTopicDisabled
       createTopicLabel=this.createTopicLabel
       category=this.category
+      tag=this.tag
     }}
   />
 

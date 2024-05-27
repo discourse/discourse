@@ -1,5 +1,5 @@
 import { setOwner } from "@ember/application";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { until } from "discourse/lib/formatter";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -16,11 +16,16 @@ export class UserStatusMessage {
     this.html = this.#statusHtml(status, opts);
     this.content = this.#tooltipHtml(status);
     this.tooltipInstance = this.tooltip.register(this.html, {
+      identifier: "user-status-message-tooltip",
       content: this.content,
     });
   }
 
   destroy() {
+    if (this.tooltip.isDestroyed) {
+      return;
+    }
+
     this.tooltipInstance.destroy();
   }
 

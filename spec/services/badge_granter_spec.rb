@@ -330,6 +330,10 @@ RSpec.describe BadgeGranter do
       let(:customized_badge_name) { "Merit Badge" }
 
       before do
+        I18n.backend.store_translations(
+          :en,
+          { badges: { Badge.i18n_name(badge.name) => { name: "Badge 0" } } },
+        )
         TranslationOverride.upsert!(I18n.locale, Badge.i18n_key(badge.name), customized_badge_name)
       end
 
@@ -381,6 +385,10 @@ RSpec.describe BadgeGranter do
 
     it "removes custom badge titles" do
       custom_badge_title = "this is a badge title"
+      I18n.backend.store_translations(
+        :en,
+        { badges: { Badge.i18n_name(badge.name) => { name: "Badge 0" } } },
+      )
       TranslationOverride.create!(
         translation_key: badge.translation_key,
         value: custom_badge_title,
@@ -396,8 +404,8 @@ RSpec.describe BadgeGranter do
   end
 
   describe "update_badges" do
-    fab!(:user)
-    fab!(:liker) { Fabricate(:user) }
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:liker) { Fabricate(:user, refresh_auto_groups: true) }
 
     it "grants autobiographer" do
       user.user_profile.bio_raw = "THIS IS MY bio it a long bio I like my bio"

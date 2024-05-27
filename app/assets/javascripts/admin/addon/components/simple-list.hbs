@@ -12,7 +12,7 @@
           title={{value}}
           @value={{value}}
           class="value-input"
-          {{on "focusout" (fn (action "changeValue") index)}}
+          {{on "focusout" (fn this.changeValue index)}}
         />
 
         {{#if this.showUpDownButtons}}
@@ -38,7 +38,7 @@
       <ComboBox
         @content={{this.validValues}}
         @value={{this.newValue}}
-        @onChange={{action this.addValue}}
+        @onChange={{this.addValue}}
         @valueProperty={{this.setting.computedValueProperty}}
         @nameProperty={{this.setting.computedNameProperty}}
         @options={{hash castInteger=true allowAny=false}}

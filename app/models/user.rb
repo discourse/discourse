@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
 
   has_many :badges, through: :user_badges
   has_many :default_featured_user_badges,
-           -> {
+           -> do
              max_featured_rank =
                (
                  if SiteSetting.max_favorite_badges > 0
@@ -113,7 +113,7 @@ class User < ActiveRecord::Base
                  end
                )
              for_enabled_badges.grouped_with_count.where("featured_rank <= ?", max_featured_rank)
-           },
+           end,
            class_name: "UserBadge"
 
   has_many :topics_allowed, through: :topic_allowed_users, source: :topic
@@ -141,6 +141,7 @@ class User < ActiveRecord::Base
   belongs_to :uploaded_avatar, class_name: "Upload"
 
   has_many :sidebar_section_links, dependent: :delete_all
+  has_many :embeddable_hosts
 
   delegate :last_sent_email_address, to: :email_logs
 
@@ -151,9 +152,12 @@ class User < ActiveRecord::Base
   validates :name, user_full_name: true, if: :will_save_change_to_name?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: { on: :create }
   validates :primary_email, presence: true, unless: :skip_email_validation
-  validates :validatable_user_fields_values, watched_words: true, unless: :custom_fields_clean?
+  validates :validatable_user_fields_values,
+            watched_words: true,
+            unless: :should_skip_user_fields_validation?
+
   validates_associated :primary_email,
-                       message: ->(_, user_email) { user_email[:value]&.errors[:email]&.first }
+                       message: ->(_, user_email) { user_email[:value]&.errors&.[](:email)&.first }
 
   after_initialize :add_trust_level
 
@@ -168,6 +172,7 @@ class User < ActiveRecord::Base
   after_create :set_default_categories_preferences
   after_create :set_default_tags_preferences
   after_create :set_default_sidebar_section_links
+  after_create :refresh_user_directory, if: Proc.new { SiteSetting.bootstrap_mode_enabled }
   after_update :set_default_sidebar_section_links, if: Proc.new { self.saved_change_to_staged? }
 
   after_update :trigger_user_updated_event,
@@ -180,7 +185,7 @@ class User < ActiveRecord::Base
   before_save :ensure_password_is_hashed
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
-  before_save :apply_watched_words, unless: :custom_fields_clean?
+  before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
 
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
@@ -249,26 +254,33 @@ class User < ActiveRecord::Base
         ->(email) { joins(:user_emails).where("lower(user_emails.email) IN (?)", email) }
 
   scope :with_primary_email,
-        ->(email) {
+        ->(email) do
           joins(:user_emails).where(
             "lower(user_emails.email) IN (?) AND user_emails.primary",
             email,
           )
-        }
+        end
 
-  scope :human_users, -> { where("users.id > 0") }
+  scope :human_users,
+        ->(allowed_bot_user_ids: nil) do
+          if allowed_bot_user_ids.present?
+            where("users.id > 0 OR users.id IN (?)", allowed_bot_user_ids)
+          else
+            where("users.id > 0")
+          end
+        end
 
   # excluding fake users like the system user or anonymous users
   scope :real,
-        -> {
-          human_users.where(
+        ->(allowed_bot_user_ids: nil) do
+          human_users(allowed_bot_user_ids: allowed_bot_user_ids).where(
             "NOT EXISTS(
                      SELECT 1
                      FROM anonymous_users a
                      WHERE a.user_id = users.id
                   )",
           )
-        }
+        end
 
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
@@ -281,16 +293,16 @@ class User < ActiveRecord::Base
   scope :not_staged, -> { where(staged: false) }
 
   scope :filter_by_username,
-        ->(filter) {
+        ->(filter) do
           if filter.is_a?(Array)
             where("username_lower ~* ?", "(#{filter.join("|")})")
           else
             where("username_lower ILIKE ?", "%#{filter}%")
           end
-        }
+        end
 
   scope :filter_by_username_or_email,
-        ->(filter) {
+        ->(filter) do
           if filter.is_a?(String) && filter =~ /.+@.+/
             # probably an email so try the bypass
             if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pick(:user_id)
@@ -311,10 +323,10 @@ class User < ActiveRecord::Base
               filter: "%#{filter}%",
             )
           end
-        }
+        end
 
   scope :watching_topic,
-        ->(topic) {
+        ->(topic) do
           joins(
             DB.sql_fragment(
               "LEFT JOIN category_users ON category_users.user_id = users.id AND category_users.category_id = :category_id",
@@ -333,7 +345,7 @@ class User < ActiveRecord::Base
             .where(
               "category_users.notification_level > 0 OR topic_users.notification_level > 0 OR tag_users.notification_level > 0",
             )
-        }
+        end
 
   module NewTopicDuration
     ALWAYS = -1
@@ -350,8 +362,18 @@ class User < ActiveRecord::Base
         post_menu: 3,
         topic_notification_levels: 4,
         suggested_topics: 5,
-        admin_guide: 6,
       )
+  end
+
+  def should_skip_user_fields_validation?
+    custom_fields_clean? || SiteSetting.disable_watched_word_checking_in_user_fields
+  end
+
+  def all_sidebar_sections
+    sidebar_sections
+      .or(SidebarSection.public_sections)
+      .includes(:sidebar_urls)
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
   end
 
   def secured_sidebar_category_ids(user_guardian = nil)
@@ -516,7 +538,9 @@ class User < ActiveRecord::Base
   end
 
   def in_any_groups?(group_ids)
-    group_ids.include?(Group::AUTO_GROUPS[:everyone]) || (group_ids & belonging_to_group_ids).any?
+    group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||
+      (is_system_user? && (Group.auto_groups_between(:admins, :trust_level_4) & group_ids).any?) ||
+      (group_ids & belonging_to_group_ids).any?
   end
 
   def belonging_to_group_ids
@@ -548,7 +572,7 @@ class User < ActiveRecord::Base
 
   def enqueue_staff_welcome_message(role)
     return unless staff?
-    return if role == :admin && User.real.where(admin: true).count == 1
+    return if is_singular_admin?
 
     Jobs.enqueue(
       :send_system_message,
@@ -1619,8 +1643,6 @@ class User < ActiveRecord::Base
       secondary_match.mark_for_destruction
       primary_email.skip_validate_unique_email = true
     end
-
-    new_email
   end
 
   def emails
@@ -1807,10 +1829,6 @@ class User < ActiveRecord::Base
 
   def new_new_view_enabled?
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
-  end
-
-  def experimental_search_menu_groups_enabled?
-    in_any_groups?(SiteSetting.experimental_search_menu_groups_map)
   end
 
   def watched_precedence_over_muted
@@ -2009,8 +2027,11 @@ class User < ActiveRecord::Base
     destroyer = UserDestroyer.new(Discourse.system_user)
 
     User
+      .joins(
+        "LEFT JOIN user_histories ON user_histories.target_user_id = users.id AND action = #{UserHistory.actions[:deactivate_user]} AND acting_user_id IS NOT NULL",
+      )
       .where(active: false)
-      .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
+      .where("users.created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
       .where("NOT admin AND NOT moderator")
       .where(
         "NOT EXISTS
@@ -2022,6 +2043,7 @@ class User < ActiveRecord::Base
               (SELECT 1 FROM posts p WHERE p.user_id = users.id LIMIT 1)
             ",
       )
+      .where("user_histories.id IS NULL")
       .limit(200)
       .find_each do |user|
         begin
@@ -2148,6 +2170,10 @@ class User < ActiveRecord::Base
 
   def validate_status!(status)
     UserStatus.new(status).validate!
+  end
+
+  def refresh_user_directory
+    DirectoryItem.refresh!
   end
 end
 

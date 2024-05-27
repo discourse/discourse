@@ -24,6 +24,7 @@ module Summarization
 
       def can_see_summary?(target, user)
         return false if SiteSetting.summarization_strategy.blank?
+        return false if target.class == Topic && target.private_message?
 
         has_cached_summary = SummarySection.exists?(target: target, meta_section_id: nil)
         return has_cached_summary if user.nil?
@@ -75,6 +76,8 @@ module Summarization
     # @param &on_partial_blk { Block - Optional } - If the strategy supports it, the passed block
     # will get called with partial summarized text as its generated.
     #
+    # @param current_user { User } - User requesting the summary.
+    #
     # @returns { Hash } - The summarized content, plus chunks if the content couldn't be summarized in one pass. Example:
     #   {
     #     summary: "This is the final summary",
@@ -83,7 +86,7 @@ module Summarization
     #       { ids: [post_1.post_number, post_2.post_number], summary: "this is the second chunk" },
     #     ],
     #   }
-    def summarize(content)
+    def summarize(content, current_user)
       raise NotImplemented
     end
 

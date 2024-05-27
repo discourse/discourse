@@ -26,7 +26,7 @@ RSpec.describe ReviewableUser, type: :model do
       expect(actions.has?(:delete_user_block)).to eq(false)
     end
 
-    it "can delete a user without a giving a rejection reason if the user was a spammer" do
+    it "doesn't ask for a rejection reason when deleting a user who was flagged as a possible spammer" do
       reviewable.reviewable_scores.build(user: admin, reason: "suspect_user")
 
       assert_require_reject_reason(:delete_user, false)
@@ -36,10 +36,10 @@ RSpec.describe ReviewableUser, type: :model do
       assert_require_reject_reason(:delete_user, true)
     end
 
-    it "can delete and block a user without giving a rejection reason if the user was a spammer" do
+    it "doesn't ask for a rejection reason when blocking a user who was flagged as a possible spammer" do
       reviewable.reviewable_scores.build(user: admin, reason: "suspect_user")
 
-      assert_require_reject_reason(:delete_user, false)
+      assert_require_reject_reason(:delete_user_block, false)
     end
 
     it "requires a rejection reason to delete and block a user" do
@@ -230,17 +230,6 @@ RSpec.describe ReviewableUser, type: :model do
           },
         ) { @reviewable.perform(admin, :approve_user) }
       end
-    end
-
-    it "triggers a extensibility event" do
-      user && admin # bypass the user_created event
-      event =
-        DiscourseEvent
-          .track_events { ReviewableUser.find_by(target: user).perform(admin, :approve_user) }
-          .first
-
-      expect(event[:event_name]).to eq(:user_approved)
-      expect(event[:params].first).to eq(user)
     end
 
     it "triggers a extensibility event" do

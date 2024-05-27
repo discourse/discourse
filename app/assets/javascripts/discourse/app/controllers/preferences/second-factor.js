@@ -1,7 +1,8 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
+import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
 import SecondFactorAddSecurityKey from "discourse/components/modal/second-factor-add-security-key";
 import SecondFactorAddTotp from "discourse/components/modal/second-factor-add-totp";
@@ -25,11 +26,11 @@ export default Controller.extend(CanCheckEmails, {
   newUsername: null,
   backupEnabled: alias("model.second_factor_backup_enabled"),
   secondFactorMethod: SECOND_FACTOR_METHODS.TOTP,
-  totps: null,
+  totps: [],
+  security_keys: [],
 
   init() {
     this._super(...arguments);
-    this.set("totps", []);
   },
 
   @discourseComputed
@@ -45,6 +46,38 @@ export default Controller.extend(CanCheckEmails, {
   @discourseComputed("totps", "security_keys")
   hasSecondFactors(totps, security_keys) {
     return totps.length > 0 || security_keys.length > 0;
+  },
+
+  async createToTpModal() {
+    try {
+      await this.modal.show(SecondFactorAddTotp, {
+        model: {
+          secondFactor: this.model,
+          enforcedSecondFactor: this.currentUser.enforcedSecondFactor,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+        },
+      });
+      this.loadSecondFactors();
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  },
+
+  async createSecurityKeyModal() {
+    try {
+      await this.modal.show(SecondFactorAddSecurityKey, {
+        model: {
+          secondFactor: this.model,
+          enforcedSecondFactor: this.currentUser.enforcedSecondFactor,
+          markDirty: this.markDirty,
+          onError: this.handleError,
+        },
+      });
+      this.loadSecondFactors();
+    } catch (error) {
+      popupAjaxError(error);
+    }
   },
 
   @action
@@ -102,6 +135,46 @@ export default Controller.extend(CanCheckEmails, {
   @action
   markDirty() {
     this.set("dirty", true);
+  },
+
+  @action
+  async createTotp() {
+    try {
+      const trustedSession = await this.model.trustedSession();
+
+      if (!trustedSession.success) {
+        this.dialog.dialog({
+          title: I18n.t("user.confirm_access.title"),
+          type: "notice",
+          bodyComponent: ConfirmSession,
+          didConfirm: () => this.createToTpModal(),
+        });
+      } else {
+        await this.createToTpModal();
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    }
+  },
+
+  @action
+  async createSecurityKey() {
+    try {
+      const trustedSession = await this.model.trustedSession();
+
+      if (!trustedSession.success) {
+        this.dialog.dialog({
+          title: I18n.t("user.confirm_access.title"),
+          type: "notice",
+          bodyComponent: ConfirmSession,
+          didConfirm: () => this.createSecurityKeyModal(),
+        });
+      } else {
+        await this.createSecurityKeyModal();
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    }
   },
 
   actions: {
@@ -235,28 +308,6 @@ export default Controller.extend(CanCheckEmails, {
             .finally(() => this.set("loading", false));
         },
       });
-    },
-
-    async createTotp() {
-      await this.modal.show(SecondFactorAddTotp, {
-        model: {
-          secondFactor: this.model,
-          markDirty: () => this.markDirty(),
-          onError: (e) => this.handleError(e),
-        },
-      });
-      this.loadSecondFactors();
-    },
-
-    async createSecurityKey() {
-      await this.modal.show(SecondFactorAddSecurityKey, {
-        model: {
-          secondFactor: this.model,
-          markDirty: this.markDirty,
-          onError: this.handleError,
-        },
-      });
-      this.loadSecondFactors();
     },
 
     async editSecurityKey(security_key) {

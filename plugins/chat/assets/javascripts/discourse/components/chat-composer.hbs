@@ -4,12 +4,8 @@
 <div class="chat-composer__wrapper">
   {{#if this.shouldRenderMessageDetails}}
     <ChatComposerMessageDetails
-      @message={{if
-        this.currentMessage.editing
-        this.currentMessage
-        this.currentMessage.inReplyTo
-      }}
-      @cancelAction={{this.composer.cancel}}
+      @message={{if this.draft.editing this.draft this.draft.inReplyTo}}
+      @cancelAction={{this.resetDraft}}
     />
   {{/if}}
 
@@ -22,20 +18,29 @@
       (if this.pane.sending "is-sending")
       (if this.sendEnabled "is-send-enabled" "is-send-disabled")
       (if this.disabled "is-disabled" "is-enabled")
-      (if this.currentMessage.draftSaved "is-draft-saved" "is-draft-unsaved")
+      (if this.draft.draftSaved "is-draft-saved" "is-draft-unsaved")
     }}
-    {{did-update this.didUpdateMessage this.currentMessage}}
-    {{did-update this.didUpdateInReplyTo this.currentMessage.inReplyTo}}
+    {{did-update this.didUpdateMessage this.draft}}
+    {{did-update this.didUpdateInReplyTo this.draft.inReplyTo}}
     {{did-insert this.setup}}
     {{will-destroy this.teardown}}
     {{will-destroy this.cancelPersistDraft}}
   >
     <div class="chat-composer__outer-container">
-      <div class="chat-composer__inner-container">
+      {{#if this.site.mobileView}}
         <ChatComposerDropdown
           @buttons={{this.dropdownButtons}}
           @isDisabled={{this.disabled}}
         />
+      {{/if}}
+
+      <div class="chat-composer__inner-container">
+        {{#if this.site.desktopView}}
+          <ChatComposerDropdown
+            @buttons={{this.dropdownButtons}}
+            @isDisabled={{this.disabled}}
+          />
+        {{/if}}
 
         <div
           class="chat-composer__input-container"
@@ -43,7 +48,7 @@
         >
           <DTextarea
             id={{this.composerId}}
-            value={{readonly this.currentMessage.message}}
+            value={{readonly this.draft.message}}
             type="text"
             class="chat-composer__input"
             disabled={{this.disabled}}
@@ -55,8 +60,7 @@
             {{on "input" this.onInput}}
             {{on "keydown" this.onKeyDown}}
             {{on "focusin" this.onTextareaFocusIn}}
-            {{on "focusin" (fn this.computeIsFocused true)}}
-            {{on "focusout" (fn this.computeIsFocused false)}}
+            {{on "focusout" this.onTextareaFocusOut}}
             {{did-insert this.setupAutocomplete}}
             data-chat-composer-context={{this.context}}
           />
@@ -71,7 +75,7 @@
               tabindex={{if button.disabled -1 0}}
               {{on
                 "click"
-                (fn this.handleInlineButonAction button.action)
+                (fn this.handleInlineButtonAction button.action)
                 bubbles=false
               }}
               {{on "focus" (fn this.computeIsFocused true)}}
@@ -82,6 +86,21 @@
           <Chat::Composer::Separator />
         {{/if}}
 
+        {{#if this.site.desktopView}}
+          <Chat::Composer::Button
+            @icon="paper-plane"
+            class="-send"
+            title={{i18n "chat.composer.send"}}
+            disabled={{or this.disabled (not this.sendEnabled)}}
+            tabindex={{if this.sendEnabled 0 -1}}
+            {{on "click" this.onSend}}
+            {{on "mousedown" this.trapMouseDown}}
+            {{on "focus" (fn this.computeIsFocused true)}}
+            {{on "blur" (fn this.computeIsFocused false)}}
+          />
+        {{/if}}
+      </div>
+      {{#if this.site.mobileView}}
         <Chat::Composer::Button
           @icon="paper-plane"
           class="-send"
@@ -93,7 +112,7 @@
           {{on "focus" (fn this.computeIsFocused true)}}
           {{on "blur" (fn this.computeIsFocused false)}}
         />
-      </div>
+      {{/if}}
     </div>
   </div>
 
@@ -101,19 +120,15 @@
     <ChatComposerUploads
       @fileUploadElementId={{this.fileUploadElementId}}
       @onUploadChanged={{this.onUploadChanged}}
-      @existingUploads={{this.currentMessage.uploads}}
+      @existingUploads={{this.draft.uploads}}
       @uploadDropZone={{@uploadDropZone}}
       @composerInputEl={{this.composer.textarea.element}}
     />
   {{/if}}
 
-  {{#if this.shouldRenderReplyingIndicator}}
-    <div class="chat-replying-indicator-container">
-      <ChatReplyingIndicator
-        @presenceChannelName={{this.presenceChannelName}}
-      />
-    </div>
-  {{/if}}
+  <div class="chat-replying-indicator-container">
+    <ChatReplyingIndicator @presenceChannelName={{this.presenceChannelName}} />
+  </div>
 
   <ChatEmojiPicker
     @context={{this.context}}

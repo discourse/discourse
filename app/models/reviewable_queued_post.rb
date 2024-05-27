@@ -7,7 +7,7 @@ class ReviewableQueuedPost < Reviewable
   end
 
   after_save do
-    if saved_change_to_payload? && self.status == Reviewable.statuses[:pending] &&
+    if saved_change_to_payload? && self.status.to_sym == :pending &&
          self.payload&.[]("raw").present?
       upload_ids = Upload.extract_upload_ids(self.payload["raw"])
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)

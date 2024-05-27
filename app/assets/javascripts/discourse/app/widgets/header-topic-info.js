@@ -117,7 +117,7 @@ export default createWidget("header-topic-info", {
       heading.push(
         new RenderGlimmer(
           this,
-          "div",
+          "span.header-topic-title-suffix",
           hbs`<PluginOutlet @name="header-topic-title-suffix" @outletArgs={{@data.outletArgs}}/>`,
           {
             outletArgs: {
@@ -142,7 +142,7 @@ export default createWidget("header-topic-info", {
         if (parentCategory) {
           if (
             this.siteSettings.max_category_nesting > 2 &&
-            !this.site.mobileView
+            this.site.desktopView
           ) {
             const grandParentCategory = parentCategory.get("parentCategory");
             if (grandParentCategory) {
@@ -156,7 +156,9 @@ export default createWidget("header-topic-info", {
             this.attach("category-link", { category: parentCategory })
           );
         }
-        categories.push(this.attach("category-link", { category }));
+        categories.push(
+          this.attach("category-link", { category, hideParent: true })
+        );
 
         this.headerElements.push(h("div.categories-wrapper", categories));
       }

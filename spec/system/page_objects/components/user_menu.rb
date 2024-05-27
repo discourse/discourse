@@ -43,6 +43,10 @@ module PageObjects
       def has_right_replies_button_count?(count)
         expect(find("#user-menu-button-replies").text).to eq(count.to_s)
       end
+
+      def has_notification_count_of?(count)
+        page.has_css?(".user-menu li.notification", count: count)
+      end
     end
   end
 end

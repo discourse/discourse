@@ -54,8 +54,7 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
       /topics/timings
       /uploads/
       /user_avatar/
-      /theme-qunit
-    ].map { |path| "#{Discourse.base_path}#{path}" }
+    ].map { |path| "#{Discourse.base_path}#{path}" }.concat([/.*theme-qunit/])
 
   # we DO NOT WANT mini-profiler loading on anything but real desktops and laptops
   # so let's rule out all handheld, tablet, and mobile devices
@@ -88,6 +87,13 @@ if defined?(Rack::MiniProfiler) && defined?(Rack::MiniProfiler::Config)
   Rack::MiniProfiler.config.backtrace_includes = [%r{^/?(app|config|lib|test|plugins)}]
 
   Rack::MiniProfiler.config.max_traces_to_show = 100 if Rails.env.development?
+
+  Rack::MiniProfiler.config.content_security_policy_nonce =
+    Proc.new do |env, headers|
+      if csp = headers["Content-Security-Policy"]
+        csp[/script-src[^;]+'nonce-([^']+)'/, 1]
+      end
+    end
 
   Rack::MiniProfiler.counter_method(Redis::Client, :call) { "redis" }
   # Rack::MiniProfiler.counter_method(ActiveRecord::QueryMethods, 'build_arel')

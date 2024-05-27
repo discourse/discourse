@@ -1,5 +1,3 @@
-$topic-progress-height: 42px;
-
 @keyframes button-jump-up {
   0% {
     margin-bottom: -60px;
@@ -18,7 +16,7 @@ $topic-progress-height: 42px;
   }
 }
 
-[class*="archetype-"] {
+#main-outlet {
   --below-topic-margin: 0.75em;
 }
 
@@ -76,8 +74,8 @@ $topic-progress-height: 42px;
         display: flex;
         align-items: center;
         position: absolute;
-        right: 10px;
-        top: 10px;
+        right: 0px;
+        top: 8px;
         color: var(--primary);
         opacity: 0.5;
         font-size: var(--font-up-1);
@@ -99,6 +97,23 @@ $topic-progress-height: 42px;
     }
     .timeline-container .timeline-scroller-content {
       position: relative;
+    }
+  }
+  #topic-progress-wrapper {
+    .topic-admin-menu-button .toggle-admin-menu {
+      border-top-right-radius: 0;
+      border-bottom-left-radius: var(--d-border-radius);
+      border-bottom-right-radius: 0;
+    }
+    #topic-progress {
+      border-radius: var(--d-border-radius);
+      overflow: hidden;
+    }
+    .topic-admin-menu-button-container + #topic-progress {
+      border-top-left-radius: 0;
+      border-top-right-radius: var(--d-border-radius);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: var(--d-border-radius);
     }
   }
 }
@@ -133,26 +148,12 @@ $topic-progress-height: 42px;
       display: flex;
     }
   }
-  .topic-admin-popup-menu.right-side {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: auto;
-    transition: bottom 0.5s;
-    transform: translateZ(
-      0
-    ); // iOS11 Rendering bug https://meta.discourse.org/t/wrench-menu-not-disappearing-on-ios/94297
-  }
 
   &.docked {
     position: initial;
-    .topic-admin-popup-menu.right-side {
-      bottom: unset;
-      right: 10px;
-    }
   }
 
-  body:not(.footer-nav-visible) & {
+  html:not(.footer-nav-visible) & {
     bottom: env(safe-area-inset-bottom);
   }
 
@@ -174,12 +175,13 @@ $topic-progress-height: 42px;
 }
 
 #topic-progress {
+  --topic-progress-height: 42px;
   position: relative;
   background-color: var(--secondary);
   color: var(--tertiary);
   border: 1px solid var(--tertiary-low);
   width: 145px;
-  height: $topic-progress-height;
+  height: var(--topic-progress-height);
 
   /* as a big ol' click target, don't let text inside be selected */
   @include unselectable;
@@ -250,9 +252,6 @@ $topic-progress-height: 42px;
   button {
     margin: 0 0.5em 0 0;
   }
-  a.topic-featured-link {
-    display: inline-block;
-  }
   .topic-statuses {
     line-height: 1.2;
     .d-icon {
@@ -265,26 +264,17 @@ $topic-progress-height: 42px;
   }
 }
 
-a.badge-category {
-  margin-top: 5px;
-}
-
 #topic-title {
   .title-wrapper {
     display: flex;
     flex-wrap: wrap;
     width: 90%;
-    a.topic-featured-link {
-      display: inline-block;
-    }
   }
   h1 {
     margin-bottom: 0;
     width: 100%;
   }
-  a.badge-category {
-    margin-top: 5px;
-  }
+
   a.edit-topic .d-icon {
     font-size: 0.8em;
   }
@@ -424,12 +414,14 @@ a.badge-category {
 }
 
 a.topic-featured-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   text-transform: lowercase;
   color: var(--primary-med-or-secondary-med);
   font-size: 0.875rem;
   .d-icon {
-    margin-right: 3px;
+    font-size: var(--font-down-1);
+    margin-right: 0.25em;
   }
 }
 

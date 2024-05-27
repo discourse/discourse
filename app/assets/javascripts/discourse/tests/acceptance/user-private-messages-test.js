@@ -44,27 +44,6 @@ acceptance(
       );
     });
 
-    test("viewing group messages on subfolder setup", async function (assert) {
-      const router = this.container.lookup("router:main");
-      const originalRootURL = router.rootURL;
-
-      try {
-        router.set("rootURL", "/forum/");
-
-        await visit("/forum/u/eviltrout/messages");
-
-        const messagesDropdown = selectKit(".user-nav-messages-dropdown");
-
-        assert.strictEqual(
-          messagesDropdown.header().name(),
-          I18n.t("user.messages.inbox"),
-          "User personal inbox is selected in dropdown"
-        );
-      } finally {
-        router.set("rootURL", originalRootURL);
-      }
-    });
-
     test("viewing messages of another user", async function (assert) {
       updateCurrentUser({ id: 5, username: "charlie" });
 
@@ -318,6 +297,20 @@ const publishGroupNewToMessageBus = function (opts) {
     }
   );
 };
+
+acceptance("User Private Messages - sorting", function (needs) {
+  withGroupMessagesSetup(needs);
+
+  test("order by posts_count", async function (assert) {
+    await visit("/u/eviltrout/messages");
+
+    assert.ok(exists(".topic-list-header th.posts.sortable"), "is sortable");
+
+    await click(".topic-list-header th.posts.sortable");
+
+    assert.ok(exists(".topic-list-header th.posts.sortable.sorting"), "sorted");
+  });
+});
 
 acceptance(
   "User Private Messages - user with group messages",

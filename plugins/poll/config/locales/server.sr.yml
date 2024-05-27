@@ -8,7 +8,6 @@ sr:
   site_settings:
     poll_maximum_options: "Najveći broj opcija dostupan u anketi."
   poll:
-    multiple_polls_without_name: "Postoji više anketa bez imena. Koristite '<code>name</code>' pridev kako bi jedinstveno identifikovali vašu anketu."
     multiple_polls_with_same_name: "Postoji više anketa sa istim imenom: <strong>%{name}</strong>. Koristite '<code>name</code>' pridev kako bi jedinstveno identifikovali vašu anketu."
     default_poll_must_have_less_options:
       one: "Anketa mora imati manje od %{count} opcije."

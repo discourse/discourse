@@ -11,6 +11,7 @@ module Chat
           scope: scope,
           membership: object.memberships.find { |m| m.thread_id == thread.id },
           include_thread_preview: true,
+          include_channel: true,
           include_thread_original_message: true,
           participants: object.threads_participants[thread.id],
           root: nil,
@@ -23,7 +24,9 @@ module Chat
     end
 
     def meta
-      { channel_id: object.channel.id, load_more_url: object.load_more_url }
+      meta = { load_more_url: object.load_more_url }
+      meta[:channel_id] = object.channel.id if object.channel
+      meta
     end
   end
 end

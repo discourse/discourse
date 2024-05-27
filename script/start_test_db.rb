@@ -29,6 +29,7 @@ if should_setup
   run "#{BIN}/initdb -D #{DATA}"
 
   run "echo fsync = off >> #{DATA}/postgresql.conf"
+  run "echo synchronous_commit = off >> #{DATA}/postgresql.conf"
   run "echo full_page_writes = off >> #{DATA}/postgresql.conf"
   run "echo shared_buffers = 500MB >> #{DATA}/postgresql.conf"
 end

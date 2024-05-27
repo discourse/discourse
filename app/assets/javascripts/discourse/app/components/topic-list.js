@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias } from "@ember/object/computed";
 import { on } from "@ember/object/evented";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import LoadMore from "discourse/mixins/load-more";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import TopicBulkActions from "./modal/topic-bulk-actions";
@@ -10,12 +10,14 @@ import TopicBulkActions from "./modal/topic-bulk-actions";
 export default Component.extend(LoadMore, {
   modal: service(),
   router: service(),
+  siteSettings: service(),
 
   tagName: "table",
   classNames: ["topic-list"],
   classNameBindings: ["bulkSelectEnabled:sticky-header"],
   showTopicPostBadges: true,
   listTitle: "topic.title",
+  lastCheckedElementId: null,
 
   get canDoBulkActions() {
     return (
@@ -43,7 +45,14 @@ export default Component.extend(LoadMore, {
   },
 
   get toggleInTitle() {
-    return !this.bulkSelectHelper?.bulkSelectEnabled && this.canBulkSelect;
+    return (
+      !this.bulkSelectHelper?.bulkSelectEnabled && this.get("canBulkSelect")
+    );
+  },
+
+  @discourseComputed
+  experimentalTopicBulkActionsEnabled() {
+    return this.currentUser?.use_experimental_topic_bulk_actions;
   },
 
   @discourseComputed
@@ -69,7 +78,7 @@ export default Component.extend(LoadMore, {
     }
   },
 
-  @observes("topics", "order", "ascending", "category", "top")
+  @observes("topics", "order", "ascending", "category", "top", "hot")
   lastVisitedTopicChanged() {
     this.refreshLastVisited();
   },
@@ -84,7 +93,7 @@ export default Component.extend(LoadMore, {
     onScroll.call(this);
   },
 
-  _updateLastVisitedTopic(topics, order, ascending, top) {
+  _updateLastVisitedTopic(topics, order, ascending, top, hot) {
     this.set("lastVisitedTopic", null);
 
     if (!this.highlightLastVisited) {
@@ -95,7 +104,7 @@ export default Component.extend(LoadMore, {
       return;
     }
 
-    if (top) {
+    if (top || hot) {
       return;
     }
 
@@ -149,7 +158,8 @@ export default Component.extend(LoadMore, {
       this.topics,
       this.order,
       this.ascending,
-      this.top
+      this.top,
+      this.hot
     );
   },
 

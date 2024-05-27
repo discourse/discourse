@@ -9,7 +9,6 @@ pl_PL:
     chat_separate_sidebar_mode: "Pokaż oddzielne tryby paska bocznego dla forum i czatu."
     chat_enabled: "Włącz czat."
     enable_public_channels: "Włącz kanały publiczne na podstawie kategorii."
-    chat_allowed_groups: "Użytkownicy w tych grupach mogą rozmawiać. Pamiętaj, że personel zawsze ma dostęp do czatu."
     chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_dm_retention_days: "Wiadomości czatu w osobistych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_auto_silence_duration: "Liczba minut, przez które użytkownicy zostaną wyciszeni, gdy przekroczą limit szybkości tworzenia wiadomości na czacie. Ustaw na '0', aby wyłączyć automatyczne wyciszanie."
@@ -24,15 +23,19 @@ pl_PL:
     chat_archive_destination_topic_status: "Status, jaki powinien mieć temat docelowy po zakończeniu archiwizacji kanału. Dotyczy to tylko sytuacji, gdy temat docelowy jest nowym tematem, a nie istniejącym."
     default_emoji_reactions: "Domyślne reakcje emoji dla wiadomości czatu. Dodaj do 5 emotikonów, aby szybko reagować."
     direct_message_enabled_groups: "Zezwól użytkownikom w tych grupach na tworzenie czatów osobistych między użytkownikami. Uwaga: personel zawsze może tworzyć czaty osobiste, a użytkownicy będą mogli odpowiadać na czaty osobiste inicjowane przez użytkowników, którzy mają uprawnienia do ich tworzenia."
-    chat_message_flag_allowed_groups: "Użytkownicy w tych grupach mogą oflagować wiadomości na czacie."
     max_mentions_per_chat_message: "Maksymalna liczba powiadomień @name, których użytkownik może użyć w wiadomości na czacie."
     chat_max_direct_message_users: "Użytkownicy nie mogą dodać więcej niż ta liczba innych użytkowników podczas tworzenia nowej wiadomości bezpośredniej. Ustaw na 0, aby zezwolić na wysyłanie wiadomości tylko do siebie. Personel jest zwolniony z tego ustawienia."
     chat_allow_archiving_channels: "Zezwól personelowi na archiwizowanie wiadomości w temacie podczas zamykania kanału."
+    chat_editing_grace_period: "Przez (n) sekund po wysłaniu wiadomości jej edycja nie będzie pokazywać znacznika „edytowana”."
+    chat_editing_grace_period_max_diff_low_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 0 i 1)."
+    chat_editing_grace_period_max_diff_high_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 2 i wyższy)."
+    chat_preferred_mobile_index: "Preferowana karta podczas ładowania /chat na urządzeniach mobilnych."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
       direct_message_enabled_groups_invalid: "Musisz określić co najmniej jedną grupę dla tego ustawienia. Jeśli nie chcesz, aby ktokolwiek poza personelem wysyłał bezpośrednie wiadomości, wybierz grupę pracowników."
       chat_upload_not_allowed_secure_uploads: "Przesyłanie plików na czacie nie jest dozwolone, gdy włączone jest ustawienie bezpiecznego przesyłania."
   system_messages:
+    private_channel_title: "Kanał %{id}"
     chat_channel_archive_complete:
       title: "Archiwizacja kanału czatu ukończona"
       subject_template: "Pomyślnie ukończono archiwizację kanału czatu"
@@ -55,6 +58,7 @@ pl_PL:
   chat:
     deleted_chat_username: usunięte
     errors:
+      users_cant_be_added_to_channel: "Użytkownicy nie mogą być dodawani do tego kanału."
       channel_exists_for_category: "Istnieje już kanał dla tej kategorii i nazwy"
       channel_new_message_disallowed:
         archived: "Kanał jest zarchiwizowany, nie można wysyłać nowych wiadomości"
@@ -100,6 +104,7 @@ pl_PL:
       original_message_not_found: "Nie można znaleźć przodka wiadomości, na którą odpowiadasz, lub został on usunięty."
       thread_invalid_for_channel: "Wątek nie jest częścią udostępnionego kanału."
       thread_does_not_match_parent: "Wątek nie pasuje do wiadomości nadrzędnej."
+      invalid_direct_message: "Nie możesz utworzyć tej wiadomości bezpośredniej."
     reviewables:
       message_already_handled: "Dziękujemy, ale sprawdziliśmy już tę wiadomość i ustaliliśmy, że nie trzeba jej ponownie oznaczać."
       actions:
@@ -123,6 +128,9 @@ pl_PL:
         agree_and_delete:
           title: "Usuń wiadomość"
           description: "Usuń wiadomość, aby użytkownicy nie mogli jej zobaczyć."
+        delete_and_agree:
+          title: "Zignoruj flagę i usuń wiadomość"
+          description: "Zignoruj flagę usuwając ją z kolejki i usuń wiadomość."
         disagree_and_restore:
           title: "Nie zgadzam się i przywracam wiadomość"
           description: "Przywróć wiadomość, aby wszyscy użytkownicy mogli ją zobaczyć."
@@ -130,10 +138,16 @@ pl_PL:
           title: "Wycofaj"
         ignore:
           title: "Nic nie rób"
+          description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
       direct_messages:
         transcript_title: "Transkrypcja poprzednich wiadomości w %{channel_name}"
         transcript_body: "Aby dać Ci więcej kontekstu, zamieściliśmy transkrypcję poprzednich wiadomości w tej rozmowie (do dziesięciu):\n\n%{transcript}"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} został zaproszony przez %{inviting_user}."
+        few: "%{invited_users} zostali zaproszeni przez %{inviting_user}."
+        many: "%{invited_users} zostali zaproszeni przez %{inviting_user}."
+        other: "%{invited_users} zostali zaproszeni przez %{inviting_user}."
       archive:
         first_post_raw: "Ten temat jest archiwum kanału czatu [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -157,6 +171,11 @@ pl_PL:
         few: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
         many: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
         other: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
+      invitations_sent:
+        one: "Zaproszenie wysłane"
+        few: "Zaproszenia wysłane"
+        many: "Zaproszenia wysłane"
+        other: "Zaproszenia wysłane"
       invite: "Zaproś do kanału"
       without_membership: "%{first_identifier} nie dołączył(a) do tego kanału."
       without_membership_multiple:
@@ -201,6 +220,9 @@ pl_PL:
         other: "i %{count} innych"
     summaries:
       no_targets: "W wybranym okresie nie było żadnych wiadomości."
+    transcript:
+      default_thread_title: "Wątek"
+      split_thread_range: "wiadomości od %{start} do %{end} z %{total}"
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -237,6 +259,7 @@ pl_PL:
         other: "Masz nowe wiadomości na czacie"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] Nowa wiadomość"
         direct_message_from_1: "[%{email_prefix}] Nowa wiadomość od %{username}"
         direct_message_from_2: "[%{email_prefix}] Nowa wiadomość od %{username1} i %{username2}"
         direct_message_from_more:

@@ -85,6 +85,7 @@ module Middleware
           CrawlerDetection.is_blocked_crawler?(@env[USER_AGENT])
       end
 
+      # rubocop:disable Lint/BooleanSymbol
       def is_mobile=(val)
         @is_mobile = val ? :true : :false
       end
@@ -111,6 +112,7 @@ module Middleware
           end
         @has_brotli == :true
       end
+      # rubocop:enable Lint/BooleanSymbol
 
       def key_locale
         if locale = Discourse.anonymous_locale(@request)
@@ -120,6 +122,7 @@ module Middleware
         end
       end
 
+      # rubocop:disable Lint/BooleanSymbol
       def is_crawler?
         @is_crawler ||=
           begin
@@ -140,6 +143,7 @@ module Middleware
         @is_crawler == :true
       end
       alias_method :key_is_crawler?, :is_crawler?
+      # rubocop:enable Lint/BooleanSymbol
 
       def key_is_modern_mobile_device?
         MobileDetection.modern_mobile_device?(@env[USER_AGENT]) if @env[USER_AGENT]

@@ -259,7 +259,7 @@ RSpec.describe Admin::SiteSettingsController do
 
         expect(response.status).to eq(422)
         expect(SiteSetting.personal_message_enabled_groups).to eq(
-          Group::AUTO_GROUPS[:trust_level_4],
+          "1|2|#{Group::AUTO_GROUPS[:trust_level_4]}",
         )
       end
 
@@ -269,11 +269,25 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.title).to eq("")
       end
 
+      it "allows value to be a blank string for selectable_avatars" do
+        SiteSetting.selectable_avatars = [Fabricate(:image_upload)]
+        put "/admin/site_settings/selectable_avatars.json", params: { selectable_avatars: "" }
+        expect(response.status).to eq(200)
+        expect(SiteSetting.selectable_avatars).to eq([])
+      end
+
       it "sanitizes integer values" do
         put "/admin/site_settings/suggested_topics.json", params: { suggested_topics: "1,000" }
 
         expect(response.status).to eq(200)
         expect(SiteSetting.suggested_topics).to eq(1000)
+      end
+
+      it "sanitizes file_size_restriction values" do
+        put "/admin/site_settings/max_image_size_kb.json", params: { max_image_size_kb: "4096" }
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.max_image_size_kb).to eq(4096)
       end
 
       it "sanitizes negative integer values correctly" do

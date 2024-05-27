@@ -15,7 +15,7 @@ import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
 acceptance("User Preferences - Account", function (needs) {
-  needs.user();
+  needs.user({ can_upload_avatar: true });
 
   let customUserProps = {};
   let pickAvatarRequestData = null;
@@ -295,7 +295,7 @@ acceptance("User Preferences - Account", function (needs) {
     );
 
     await click("#gravatar");
-    await click(".modal-footer .btn");
+    await click(".d-modal__footer .btn");
 
     assert.deepEqual(
       pickAvatarRequestData,

@@ -1,52 +1,107 @@
-import { setOwner } from "@ember/application";
+import { tracked } from "@glimmer/tracking";
+import { getOwner, setOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { MENU } from "float-kit/lib/constants";
 import FloatKitInstance from "float-kit/lib/float-kit-instance";
 
 export default class DMenuInstance extends FloatKitInstance {
   @service menu;
+  @service site;
+  @service modal;
 
-  constructor(owner, trigger, options = {}) {
+  /**
+   * Indicates whether the menu is expanded or not.
+   * @property {boolean} expanded - Tracks the state of menu expansion, initially set to false.
+   */
+  @tracked expanded = false;
+
+  /**
+   * Specifies whether the trigger for opening/closing the menu is detached from the menu itself.
+   * This is the case when a menu is trigger programmaticaly instead of through the <DMenu /> component.
+   * @property {boolean} detachedTrigger - Tracks whether the trigger is detached, initially set to false.
+   */
+  @tracked detachedTrigger = false;
+
+  /**
+   * Configuration options for the DMenuInstance.
+   * @property {Object} options - Options object that configures the menu behavior and display.
+   */
+  @tracked options;
+
+  @tracked _trigger;
+
+  constructor(owner, options = {}) {
     super(...arguments);
 
     setOwner(this, owner);
     this.options = { ...MENU.options, ...options };
-    this.id = trigger.id || guidFor(trigger);
-    this.trigger = trigger;
+  }
+
+  get portalOutletElement() {
+    return document.getElementById("d-menu-portals");
+  }
+
+  get trigger() {
+    return this._trigger;
+  }
+
+  set trigger(element) {
+    this._trigger = element;
+    this.id = element.id || guidFor(element);
     this.setupListeners();
   }
 
   @action
-  onMouseMove(event) {
-    if (this.trigger.contains(event.target) && this.expanded) {
+  async close() {
+    if (getOwner(this).isDestroying) {
       return;
     }
 
-    this.onTrigger(event);
+    await super.close(...arguments);
+
+    if (this.site.mobileView && this.options.modalForMobile) {
+      await this.modal.close();
+    }
+
+    await this.menu.close(this);
   }
 
   @action
-  onClick(event) {
+  async show() {
+    await super.show(...arguments);
+    await this.menu.show(this);
+  }
+
+  @action
+  async onMouseMove(event) {
+    if (this.expanded && this.trigger.contains(event.target)) {
+      return;
+    }
+
+    await this.onTrigger(event);
+  }
+
+  @action
+  async onClick(event) {
     if (this.expanded && this.untriggers.includes("click")) {
-      this.onUntrigger(event);
-      return;
+      return await this.onUntrigger(event);
     }
 
-    this.onTrigger(event);
+    await this.onTrigger(event);
   }
 
   @action
-  onMouseLeave(event) {
+  async onMouseLeave(event) {
     if (this.untriggers.includes("hover")) {
-      this.onUntrigger(event);
+      await this.onUntrigger(event);
     }
   }
 
   @action
   async onTrigger() {
-    this.options.beforeTrigger?.(this);
+    await this.options.beforeTrigger?.(this);
     await this.show();
   }
 
@@ -56,8 +111,7 @@ export default class DMenuInstance extends FloatKitInstance {
   }
 
   @action
-  async destroy() {
-    await this.close();
+  destroy() {
     this.tearDownListeners();
   }
 }

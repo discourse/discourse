@@ -196,7 +196,7 @@ zh_CN:
         reply: |-
           漂亮的图片 - 我按下了赞 :heart: 按钮，让你知道我有多欣赏它 :heart_eyes:
         like_not_found: |-
-          你忘记赞 :heart: 我的[帖子](%{url})了吗？:crying_cat_face:
+          你是不是忘记赞 :heart: 我的[帖子](%{url})了？:crying_cat_face:
         not_found: |-
           你好像没有上传图片，所以我选择了一张我_确定_你会喜欢的图片。
 
@@ -213,7 +213,7 @@ zh_CN:
         reply: |-
           感谢你赞我的帖子！
         not_found: |-
-          你忘记赞 :heart: 我的[帖子](%{url})了吗？:crying_cat_face:
+          你是不是忘记赞 :heart: 我的[帖子](%{url})了？:crying_cat_face:
       formatting:
         instructions: |-
           你可以在回复中使用**粗体** 或_斜体_吗？
@@ -296,9 +296,9 @@ zh_CN:
           哦不，我讨厌的帖子还没有被举报为不当言论。:worried: 你可以使用**举报** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16"> 将其举报为不当言论吗？不要忘记使用“显示更多”按钮 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> 来显示每个帖子的更多操作。
       search:
         instructions: |-
-          呼…我已经在这个话题中隐藏了一个惊喜。如果你想挑战的话，点击右上角 &#8599; 的**搜索图标** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> 来找到它。
+          _psst_ … 我在这个话题中藏了一个惊喜。如果你愿意接受挑战，**选择右上方的搜索图标**<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> &#8599;，选择 "在此主题中"，然后搜索它。
 
-          试试在这个话题中搜索关键字“capy&#8203;bara”
+          请尝试在此主题中搜索 "caly&#8203;bara"。
         hidden_message: |-
           你怎么错过了这只水豚？:wink:
 
@@ -375,7 +375,7 @@ zh_CN:
         instructions: |-
           您知道您可以在帖子中引用类别和标签吗？例如，您有没有看到%{category}类别？
 
-          在句子中的任何地方输入`#`，然后选择任何类别或标签。
+          在句子中的任何地方输入 `#`，然后选择任何类别或标签。
         not_found: |-
           嗯，我在那里没有看到类别。你能在下一条回复中复制吗？
 
@@ -399,7 +399,7 @@ zh_CN:
           请注意，当你回复话题或阅读话题超过几分钟时，它会被自动设置为“跟踪”通知级别。你可以在[你的用户偏好设置](%{base_uri}/my/preferences)中更改此设置。
       poll:
         instructions: |-
-          你知道你可以在任何帖子中添加投票吗？尝试使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标来**构建投票**。
+          你知道你可以在任何帖子中添加投票吗？尝试使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标来**插入投票**。
         not_found: |-
           哎呀！你的回复中还没有任何投票。
 

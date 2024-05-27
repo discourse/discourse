@@ -1,6 +1,6 @@
 import Route from "@ember/routing/route";
 import { once } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { seenUser } from "discourse/lib/user-presence";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
@@ -64,13 +64,6 @@ const DiscourseRoute = Route.extend({
     }
 
     return user.id === this.currentUser.id;
-  },
-
-  isPoppedState(transition) {
-    return (
-      !transition._discourse_intercepted &&
-      (!!transition.intent.url || !!transition.queryParamsOnly)
-    );
   },
 });
 

@@ -15,6 +15,13 @@ module Onebox
 
       include Onebox::Mixins::GitBlobOnebox
 
+      def i18n
+        {
+          truncated_file: I18n.t("onebox.gitlab.truncated_file"),
+          show_original: I18n.t("onebox.gitlab.show_original"),
+        }
+      end
+
       def raw_regexp
         %r{gitlab\.com/(?<user>[^/]+)/(?<repo>[^/]+)/blob/(?<sha1>[^/]+)/(?<file>[^#]+)(#(L(?<from>[^-]*)(-L(?<to>.*))?))?}mi
       end

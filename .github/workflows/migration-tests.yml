@@ -3,12 +3,14 @@ name: Migration Tests
 on:
   pull_request:
     paths:
+      - ".github/workflows/migration-tests.yml"
       - "migrations/**"
   push:
     branches:
       - main
       - stable
     paths:
+      - ".github/workflows/migration-tests.yml"
       - "migrations/**"
 
 concurrency:
@@ -20,7 +22,8 @@ permissions:
 
 jobs:
   tests:
-    name: Ruby ${{ matrix.ruby }}
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    name: Tests with Ruby ${{ matrix.ruby }}
     runs-on: 'ubuntu-latest'
     container: discourse/discourse_test:slim
     timeout-minutes: 20
@@ -59,12 +62,23 @@ jobs:
           sudo -E -u postgres script/start_test_db.rb
           sudo -u postgres psql -c "CREATE ROLE $PGUSER LOGIN SUPERUSER PASSWORD '$PGPASSWORD';"
 
+      - name: Container envs
+        id: container-envs
+        run: |
+          echo "ruby_version=$RUBY_VERSION" >> $GITHUB_OUTPUT
+          echo "debian_release=$DEBIAN_RELEASE" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Bundler cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor/bundle
-          key: ${{ runner.os }}-${{ matrix.ruby }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: ${{ runner.os }}-${{ matrix.ruby }}-gem-
+          key: >-
+            ${{ runner.os }}-
+            ${{ steps.container-envs.outputs.ruby_version }}-
+            ${{ steps.container-envs.outputs.debian_release }}-
+            ${{ hashFiles('**/Gemfile.lock') }}-
+            ${{ hashFiles('migrations/config/gemfiles/**/Gemfile') }}
 
       - name: Setup gems
         run: |
@@ -72,26 +86,25 @@ jobs:
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
-          bundle install --jobs 4
-          bundle clean
+          bundle install --jobs $(($(nproc) - 1))
+          # don't call `bundle clean` clean, we need the gems for the migrations
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
       - name: Yarn cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: ${{ runner.os }}-yarn-
 
       - name: Yarn install
         run: yarn install --frozen-lockfile
 
       - name: Fetch app state cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: app-cache
         with:
           path: tmp/app-cache
@@ -99,10 +112,11 @@ jobs:
             ${{ runner.os }}-
             ${{ hashFiles('.github/workflows/tests.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
+            ${{ hashFiles('config/environments/test.rb') }}
 
       - name: Restore database from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
-        run: psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
+        run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
 
       - name: Restore uploads from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
@@ -112,7 +126,7 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: |
           bin/rake db:create
-          bin/rake db:migrate
+          script/silence_successful_output bin/rake db:migrate
 
       - name: Dump database for cache
         if: steps.app-cache.outputs.cache-hit != 'true'
@@ -122,5 +136,40 @@ jobs:
         if: steps.app-cache.outputs.cache-hit != 'true'
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
+#      - name: Check core database drift
+#        run: |
+#          mkdir /tmp/intermediate_db
+#          ./migrations/scripts/schema_generator /tmp/intermediate_db/base_migration.sql
+#          diff -u migrations/common/intermediate_db_schema/000_base_schema.sql /tmp/intermediate_db/base_migration.sql
+
       - name: RSpec
-        run: bin/rspec migrations/spec/
+        run: bin/rspec --default-path migrations/spec
+
+  runtime:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    name: Runs on ${{ matrix.os }}, Ruby ${{ matrix.ruby }}
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        os: ["ubuntu-latest", "macos-latest"]
+        ruby: ["3.2", "3.3"]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Run converter
+        working-directory: migrations
+        run: bin/convert version

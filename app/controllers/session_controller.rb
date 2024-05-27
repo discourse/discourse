@@ -11,8 +11,6 @@ class SessionController < ApplicationController
 
   skip_before_action :check_xhr, only: %i[second_factor_auth_show]
 
-  requires_login only: %i[second_factor_auth_show second_factor_auth_perform]
-
   allow_in_staff_writes_only_mode :create
   allow_in_staff_writes_only_mode :email_login
 
@@ -47,8 +45,10 @@ class SessionController < ApplicationController
     result =
       run_second_factor!(
         SecondFactor::Actions::DiscourseConnectProvider,
-        payload: payload,
-        confirmed_2fa_during_login: confirmed_2fa_during_login,
+        action_data: {
+          payload: payload,
+          confirmed_2fa_during_login: confirmed_2fa_during_login,
+        },
       )
 
     if result.second_factor_auth_skipped?
@@ -132,6 +132,33 @@ class SessionController < ApplicationController
     end
   end
 
+  if Rails.env.test?
+    skip_before_action :check_xhr, only: :test_second_factor_restricted_route
+
+    def test_second_factor_restricted_route
+      target_user = User.find_by_username(params[:username]) || current_user
+      raise "user required" if !target_user
+      result =
+        run_second_factor!(TestSecondFactorAction, target_user: target_user) do |manager|
+          manager.allow_backup_codes! if params[:allow_backup_codes]
+        end
+      if result.no_second_factors_enabled?
+        render json: { result: "no_second_factors_enabled" }
+      else
+        render json: { result: "second_factor_auth_completed" }
+      end
+    rescue StandardError => e
+      # Normally this would be checked by the consumer before calling `run_second_factor!`
+      # but since this is a test route, we allow passing a bad value into the API, catch the error
+      # and return a JSON response to assert against.
+      if e.message == "running 2fa against another user is not allowed"
+        render json: { result: "wrong user" }, status: 400
+      else
+        raise e
+      end
+    end
+  end
+
   def sso_login
     raise Discourse::NotFound unless SiteSetting.enable_discourse_connect
     raise Discourse::ReadOnly if @readonly_mode && !staff_writes_only_mode?
@@ -141,13 +168,19 @@ class SessionController < ApplicationController
 
     begin
       sso = DiscourseConnect.parse(request.query_string, secure_session: secure_session)
-    rescue DiscourseConnect::ParseError => e
+    rescue DiscourseConnect::PayloadParseError => e
       connect_verbose_warn do
-        "Verbose SSO log: Signature parse error\n\n#{e.message}\n\n#{sso&.diagnostics}"
+        "Verbose SSO log: Payload is not base64\n\n#{e.message}\n\n#{sso&.diagnostics}"
+      end
+
+      return render_sso_error(text: I18n.t("discourse_connect.payload_parse_error"), status: 422)
+    rescue DiscourseConnect::SignatureError => e
+      connect_verbose_warn do
+        "Verbose SSO log: Signature verification failed\n\n#{e.message}\n\n#{sso&.diagnostics}"
       end
 
       # Do NOT pass the error text to the client, it would give them the correct signature
-      return render_sso_error(text: I18n.t("discourse_connect.login_error"), status: 422)
+      return render_sso_error(text: I18n.t("discourse_connect.signature_error"), status: 422)
     end
 
     if !sso.nonce_valid?
@@ -338,7 +371,7 @@ class SessionController < ApplicationController
   end
 
   def passkey_login
-    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+    raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
     params.require(:publicKeyCredential)
 
@@ -448,14 +481,18 @@ class SessionController < ApplicationController
   end
 
   def second_factor_auth_show
-    user = current_user
-
     nonce = params.require(:nonce)
     challenge = nil
     error_key = nil
+    user = nil
     status_code = 200
     begin
-      challenge = SecondFactor::AuthManager.find_second_factor_challenge(nonce, secure_session)
+      challenge =
+        SecondFactor::AuthManager.find_second_factor_challenge(
+          nonce: nonce,
+          secure_session: secure_session,
+          target_user: current_user,
+        )
     rescue SecondFactor::BadChallenge => exception
       error_key = exception.error_translation_key
       status_code = exception.status_code
@@ -463,6 +500,7 @@ class SessionController < ApplicationController
 
     json = {}
     if challenge
+      user = User.find(challenge[:target_user_id])
       json.merge!(
         totp_enabled: user.totp_enabled?,
         backup_enabled: user.backup_codes_enabled?,
@@ -494,9 +532,16 @@ class SessionController < ApplicationController
     nonce = params.require(:nonce)
     challenge = nil
     error_key = nil
+    user = nil
     status_code = 200
     begin
-      challenge = SecondFactor::AuthManager.find_second_factor_challenge(nonce, secure_session)
+      challenge =
+        SecondFactor::AuthManager.find_second_factor_challenge(
+          nonce: nonce,
+          secure_session: secure_session,
+          target_user: current_user,
+        )
+      user = User.find(challenge[:target_user_id])
     rescue SecondFactor::BadChallenge => exception
       error_key = exception.error_translation_key
       status_code = exception.status_code
@@ -519,7 +564,7 @@ class SessionController < ApplicationController
     # they're redirected to the 2fa page and then uses the same method they've
     # disabled.
     second_factor_method = params[:second_factor_method].to_i
-    if !current_user.valid_second_factor_method_for_user?(second_factor_method)
+    if !user.valid_second_factor_method_for_user?(second_factor_method)
       raise Discourse::InvalidAccess.new
     end
     # and this happens if someone tries to use a 2FA method that's not accepted
@@ -530,8 +575,8 @@ class SessionController < ApplicationController
     end
 
     if !challenge[:successful]
-      rate_limit_second_factor!(current_user)
-      second_factor_auth_result = current_user.authenticate_second_factor(params, secure_session)
+      rate_limit_second_factor!(user)
+      second_factor_auth_result = user.authenticate_second_factor(params, secure_session)
       if second_factor_auth_result.ok
         challenge[:successful] = true
         challenge[:generated_at] += 1.minute.to_i

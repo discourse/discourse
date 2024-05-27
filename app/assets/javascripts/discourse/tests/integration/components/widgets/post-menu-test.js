@@ -1,4 +1,4 @@
-import { render } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { h } from "virtual-dom";
@@ -30,6 +30,48 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     });
 
     await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
+
+    assert.strictEqual(
+      count(".actions .extra-buttons .hot-coffee"),
+      1,
+      "It renders extra button"
+    );
+  });
+
+  test("add extra button with feedback", async function (assert) {
+    this.set("args", {});
+
+    let testPost = null;
+
+    withPluginApi("0.14.0", (api) => {
+      api.addPostMenuButton("coffee", () => {
+        return {
+          action: ({ post, showFeedback }) => {
+            testPost = post;
+            showFeedback("coffee.drink");
+          },
+          icon: "coffee",
+          className: "hot-coffee",
+          title: "coffee.title",
+          position: "first",
+          actionParam: { id: 123 }, // hack for testing
+        };
+      });
+    });
+
+    await render(hbs`
+       <article data-post-id="123">
+          <MountWidget @widget="post-menu" @args={{this.args}} />
+       </article>`);
+
+    await click(".hot-coffee");
+
+    assert.strictEqual(testPost.id, 123, "callback was called with post");
+    assert.strictEqual(
+      count(".post-action-feedback-button"),
+      1,
+      "It renders feedback"
+    );
 
     assert.strictEqual(
       count(".actions .extra-buttons .hot-coffee"),

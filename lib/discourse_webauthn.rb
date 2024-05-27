@@ -14,32 +14,46 @@ module DiscourseWebauthn
 
   class InvalidOriginError < SecurityKeyError
   end
+
   class InvalidRelyingPartyIdError < SecurityKeyError
   end
+
   class UserVerificationError < SecurityKeyError
   end
+
   class UserPresenceError < SecurityKeyError
   end
+
   class ChallengeMismatchError < SecurityKeyError
   end
+
   class InvalidTypeError < SecurityKeyError
   end
+
   class UnsupportedPublicKeyAlgorithmError < SecurityKeyError
   end
+
   class UnsupportedAttestationFormatError < SecurityKeyError
   end
+
   class CredentialIdInUseError < SecurityKeyError
   end
+
   class MalformedAttestationError < SecurityKeyError
   end
+
   class KeyNotFoundError < SecurityKeyError
   end
+
   class MalformedPublicKeyCredentialError < SecurityKeyError
   end
+
   class OwnershipError < SecurityKeyError
   end
+
   class PublicKeyError < SecurityKeyError
   end
+
   class UnknownCOSEAlgorithmError < SecurityKeyError
   end
 
@@ -78,10 +92,8 @@ module DiscourseWebauthn
       # you might need to change this and the rp_id above
       # if you are using a non-default port/hostname locally
       "http://localhost:4200"
-    when "test"
-      "http://localhost:3000"
     else
-      Discourse.base_url
+      Discourse.base_url_no_prefix
     end
   end
 

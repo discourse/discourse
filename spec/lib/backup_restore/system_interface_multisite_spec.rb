@@ -5,7 +5,7 @@ require_relative "shared_context_for_backup_restore"
 RSpec.describe BackupRestore::SystemInterface, type: :multisite do
   subject(:system_interface) { BackupRestore::SystemInterface.new(logger) }
 
-  include_context "with shared stuff"
+  include_context "with shared backup restore context"
 
   describe "#flush_redis" do
     it "removes only keys from the current site in a multisite" do

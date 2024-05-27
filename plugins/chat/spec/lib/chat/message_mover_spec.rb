@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe Chat::MessageMover do
   fab!(:acting_user) { Fabricate(:admin, username: "testmovechat") }
   fab!(:source_channel) { Fabricate(:category_channel) }
@@ -116,7 +114,7 @@ describe Chat::MessageMover do
     it "updates references for reactions, uploads, revisions, mentions, etc." do
       reaction = Fabricate(:chat_message_reaction, chat_message: message1)
       upload = Fabricate(:upload_reference, target: message1)
-      mention = Fabricate(:chat_mention, chat_message: message2, user: acting_user)
+      mention = Fabricate(:user_chat_mention, chat_message: message2, user: acting_user)
       revision = Fabricate(:chat_message_revision, chat_message: message3)
       webhook_event = Fabricate(:chat_webhook_event, chat_message: message3)
       move!
@@ -162,28 +160,23 @@ describe Chat::MessageMover do
         message3.update!(thread: thread)
       end
 
-      it "does not preserve thread_ids" do
+      it "creates a new thread_id for the moved messages" do
         move!
         moved_messages =
           Chat::Message
             .where(chat_channel: destination_channel)
             .order("created_at ASC, id ASC")
             .last(3)
+        moved_thread_ids = moved_messages.pluck(:thread_id).uniq
 
-        expect(moved_messages.pluck(:thread_id).uniq).to eq([nil])
+        expect(moved_thread_ids.size).to eq(1)
+        expect(moved_thread_ids.first).not_to be_nil
+        expect(moved_thread_ids.first).not_to eq(thread.id)
       end
 
       it "deletes the empty thread" do
         move!
         expect(Chat::Thread.exists?(id: thread.id)).to eq(false)
-      end
-
-      it "clears in_reply_to_id for remaining messages when the messages they were replying to are moved but leaves the thread_id" do
-        message3.update!(in_reply_to: message2)
-        message2.update!(in_reply_to: message1)
-        move!([message2.id])
-        expect(message3.reload.in_reply_to_id).to eq(nil)
-        expect(message3.reload.thread).to eq(thread)
       end
 
       it "updates the tracking to the last non-deleted channel message for users whose last_read_message_id was the moved message" do
@@ -212,7 +205,7 @@ describe Chat::MessageMover do
       end
 
       context "when a thread original message is moved" do
-        it "creates a new thread for the messages left behind in the old channel" do
+        it "moves the entire thread to the new channel" do
           message4 =
             Fabricate(
               :chat_message,
@@ -228,39 +221,53 @@ describe Chat::MessageMover do
               message: "the fifth message",
               thread: thread,
             )
-          expect { move! }.to change { Chat::Thread.count }.by(1)
-          new_thread = Chat::Thread.last
-          expect(message4.reload.thread_id).to eq(new_thread.id)
-          expect(message5.reload.thread_id).to eq(new_thread.id)
-          expect(new_thread.channel).to eq(source_channel)
-          expect(new_thread.original_message).to eq(message4)
+
+          expect { move! }.to change {
+            Chat::Message.where(chat_channel: destination_channel).count
+          }.by(5)
+
+          moved_messages =
+            Chat::Message
+              .where(chat_channel: destination_channel)
+              .order("created_at ASC, id ASC")
+              .last(5)
+
+          expect(moved_messages.map(&:thread_id).uniq.size).to eq(1)
+          expect(moved_messages.map(&:chat_channel_id).uniq).to eq([destination_channel.id])
         end
       end
 
       context "when multiple thread original messages are moved" do
-        it "works the same as when one is" do
+        it "moves the entire threads to the new channel" do
           message4 =
             Fabricate(:chat_message, chat_channel: source_channel, message: "the fourth message")
           message5 =
             Fabricate(
               :chat_message,
               chat_channel: source_channel,
-              in_reply_to: message5,
+              in_reply_to: message4,
               message: "the fifth message",
             )
           other_thread =
             Fabricate(:chat_thread, channel: source_channel, original_message: message4)
           message4.update!(thread: other_thread)
           message5.update!(thread: other_thread)
-          expect { move!([message1.id, message4.id]) }.to change { Chat::Thread.count }.by(2)
 
-          new_threads = Chat::Thread.order(:created_at).last(2)
-          expect(message3.reload.thread_id).to eq(new_threads.first.id)
-          expect(message5.reload.thread_id).to eq(new_threads.second.id)
-          expect(new_threads.first.channel).to eq(source_channel)
-          expect(new_threads.second.channel).to eq(source_channel)
-          expect(new_threads.first.original_message).to eq(message2)
-          expect(new_threads.second.original_message).to eq(message5)
+          expect { move!([message1.id, message4.id]) }.to change {
+            Chat::Message.where(chat_channel: destination_channel).count
+          }.by(5)
+
+          moved_messages =
+            Chat::Message
+              .where(chat_channel: destination_channel)
+              .order("created_at ASC, id ASC")
+              .last(5)
+
+          moved_thread_ids = moved_messages.map(&:thread_id).uniq
+          expect(moved_thread_ids.size).to eq(2)
+          moved_thread_ids.each do |thread_id|
+            expect(Chat::Thread.find(thread_id).channel_id).to eq(destination_channel.id)
+          end
         end
       end
     end

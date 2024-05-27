@@ -3,11 +3,7 @@
 // --------------------------------------------------
 
 .d-header {
-  left: 0;
   height: 4em;
-  #site-logo {
-    height: 2.667em; // 40px with default 15px font size
-  }
   #site-text-logo {
     font-size: var(--font-up-3);
   }
@@ -20,7 +16,7 @@
   }
 }
 
-@media all and (max-width: 570px) {
+@include breakpoint(mobile-extra-large) {
   .extra-info-wrapper {
     display: none;
   }

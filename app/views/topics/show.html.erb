@@ -8,7 +8,7 @@
       <div class="topic-category" itemscope itemtype="http://schema.org/BreadcrumbList">
         <% @breadcrumbs.each_with_index do |c, i| %>
           <span itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
-            <a href="<%= Discourse.base_url %><%= c[:url] %>" class="badge-wrapper bullet" itemprop="item">
+            <a href="<%= @topic_view.topic.category.url %>" class="badge-wrapper bullet" itemprop="item">
               <span class='badge-category-bg' style='background-color: #<%= c[:color] %>'></span>
               <span class='badge-category clear-badge'>
                 <span class='category-name' itemprop='name'><%= c[:name] %></span>
@@ -36,6 +36,8 @@
   <%- if include_crawler_content? %>
     <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
       <meta itemprop='headline' content='<%= @topic_view.title %>'>
+      <link itemprop='url' href='<%= @topic_view.absolute_url %>'>
+      <meta itemprop='datePublished' content='<%= @topic_view.topic.created_at.to_formatted_s(:iso8601) %>'>
       <% if @topic_view.topic.category.present? %>
         <meta itemprop='articleSection' content='<%= @topic_view.topic.category.name %>'>
       <% end %>
@@ -49,8 +51,16 @@
         <% end %>
       </div>
 
-      <% @topic_view.posts.each do |post| %>
-        <% if (u = post.user) %>
+      <% if @topic_view.crawler_posts&.first && !@topic_view.crawler_posts.first.is_first_post? %>
+        <span itemprop='author' itemscope itemtype="http://schema.org/Person">
+          <meta itemprop='name' content='<%= @topic_view.topic.user.username %>'>
+          <link itemprop='url' href='<%= Discourse.base_url %>/u/<%= @topic_view.topic.user.username %>'>
+        </span>
+        <meta itemprop='text' content='<%= @topic_view.topic.excerpt %>'>
+      <% end %>
+
+      <% @topic_view.crawler_posts.each do |post| %>
+        <% if (u = post.user) && !post.hidden && post.cooked && !post.cooked.strip.empty? %>
           <div id='post_<%= post.post_number %>' <%= post.is_first_post? ? "" : "itemprop='comment' itemscope itemtype='http://schema.org/Comment'".html_safe %> class='topic-body crawler-post'>
             <div class='crawler-post-meta'>
               <span class="creator" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -66,14 +76,16 @@
                 <% end %>
               </span>
 
-              <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
+              <% if post.is_first_post? %>
+                <link itemprop="mainEntityOfPage" href="<%= post.topic.url %>">
+              <% end %>
 
               <% if post.image_url %>
                 <link itemprop="image" href="<%= post.image_url %>">
               <% end %>
 
               <span class="crawler-post-infos">
-                  <time itemprop='datePublished' datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' class='post-time'>
+                  <time <%= post.is_first_post? ? "" : "itemprop='datePublished'".html_safe %> datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' class='post-time'>
                     <%= l post.created_at, format: :long %>
                   </time>
                 <% if post.version > 1 %>
@@ -84,7 +96,7 @@
               <span itemprop='position'><%= post.post_number %></span>
               </span>
             </div>
-            <div class='post' itemprop='<%= post.is_first_post? ? 'articleBody' : 'text'  %>'>
+            <div class='post' itemprop='text'>
               <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
             </div>
 
@@ -116,24 +128,33 @@
       <% end %>
     </div>
 
-  <% if @topic_view.prev_page || @topic_view.next_page %>
-    <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement' class="topic-body crawler-post">
-      <% if @topic_view.prev_page %>
-        <span itemprop='name'><%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev', itemprop: 'url' %></span>
-      <% end %>
-      <% if @topic_view.next_page %>
-        <span itemprop='name'><b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next', itemprop: 'url' %></b></span>
-      <% end %>
-    </div>
-  <% end %>
+    <% if @topic_view.single_post_request? || @topic_view.prev_page || @topic_view.next_page %>
+      <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement' class="topic-body crawler-post">
+        <% if @topic_view.single_post_request? %>
+          <span itemprop='name'>
+            <%= link_to t(:show_post_in_topic), "#{@topic_view.current_page_path}#post_#{@topic_view.crawler_posts.first&.post_number}", itemprop: 'url' %>
+          </span>
+        <% else %>
+          <% if @topic_view.prev_page %>
+            <span itemprop='name'><%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev', itemprop: 'url' %></span>
+          <% end %>
+          <% if @topic_view.next_page %>
+            <span itemprop='name'><b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next', itemprop: 'url' %></b></span>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
 
+    <%= build_plugin_html 'server:topic-show-after-posts-crawler' %>
+  <% else %>
+    <%= t(:crawler_content_hidden) %>
   <% end %>
 
   <% content_for :head do %>
     <%= auto_discovery_link_tag(@topic_view, {action: :feed, slug: @topic_view.topic.slug, topic_id: @topic_view.topic.id}, rel: 'alternate nofollow', title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>
     <%= raw crawlable_meta_data(title: @topic_view.title, description: @topic_view.summary(strip_images: true), image: @topic_view.image_url, read_time: @topic_view.read_time, like_count: @topic_view.like_count, ignore_canonical: true, published_time: @topic_view.published_time, breadcrumbs: @breadcrumbs, tags: @tags.map(&:name)) %>
 
-    <% if @topic_view.prev_page || @topic_view.next_page %>
+    <% if !@topic_view.single_post_request? && (@topic_view.prev_page || @topic_view.next_page)  %>
       <% if @topic_view.prev_page %>
         <link rel="prev" href="<%= @topic_view.prev_page_path -%>">
       <% end %>

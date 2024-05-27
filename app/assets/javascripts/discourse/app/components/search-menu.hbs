@@ -18,6 +18,11 @@
       />
     {{/if}}
 
+    <PluginOutlet
+      @name="search-menu-before-term-input"
+      @outletArgs={{hash openSearchMenu=this.open}}
+    />
+
     <SearchMenu::SearchTerm
       @searchTermChanged={{this.searchTermChanged}}
       @typeFilter={{this.typeFilter}}
@@ -37,10 +42,13 @@
       </div>
     {{else}}
       <div class="searching">
+        <PluginOutlet @name="search-menu-before-advanced-search" />
         {{#if this.search.activeGlobalSearchTerm}}
           <SearchMenu::ClearButton @clearSearch={{this.clearSearch}} />
         {{/if}}
-        <SearchMenu::AdvancedButton @href={{this.advancedSearchButtonHref}} />
+        <SearchMenu::AdvancedButton
+          @openAdvancedSearch={{this.openAdvancedSearch}}
+        />
       </div>
     {{/if}}
   </div>
@@ -48,8 +56,6 @@
   {{#if @inlineResults}}
     <SearchMenu::Results
       @loading={{this.loading}}
-      @noResults={{this.noResults}}
-      @results={{this.results}}
       @invalidTerm={{this.invalidTerm}}
       @suggestionKeyword={{this.suggestionKeyword}}
       @suggestionResults={{this.suggestionResults}}
@@ -62,11 +68,9 @@
       @clearSearch={{this.clearSearch}}
     />
   {{else if this.displayMenuPanelResults}}
-    <MenuPanel>
+    <MenuPanel @panelClass="search-menu-panel">
       <SearchMenu::Results
         @loading={{this.loading}}
-        @noResults={{this.noResults}}
-        @results={{this.results}}
         @invalidTerm={{this.invalidTerm}}
         @suggestionKeyword={{this.suggestionKeyword}}
         @suggestionResults={{this.suggestionResults}}

@@ -15,7 +15,6 @@ pt:
   poll:
     poll: "enquete"
     invalid_argument: "Valor inválido '%{value}' para o argumento '%{argument}'."
-    multiple_polls_without_name: "Existem várias sondagens sem nome. Utilize o atributo '<code>nome</code>' para identificar as suas sondagens de maneira única."
     multiple_polls_with_same_name: "Existem várias sondagens com o mesmo nome: <strong>%{name}</strong>. Utilize o atributo '<code>nome</code>' para identificar as suas sondagens de maneira única."
     default_poll_must_have_at_least_1_option: "A sondagem deve ter pelo menos 1 opção."
     named_poll_must_have_at_least_1_option: "A sondagem com o nome <strong>%{name}</strong> deve ter pelo menos 1 opção."

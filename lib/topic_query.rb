@@ -338,6 +338,17 @@ class TopicQuery
     create_list(:bookmarks) { |l| l.where("tu.bookmarked") }
   end
 
+  def list_hot
+    create_list(:hot, unordered: true, prioritize_pinned: true) do |topics|
+      topics = remove_muted_topics(topics, user)
+      topics = remove_muted_categories(topics, user, exclude: options[:category])
+      TopicQuery.remove_muted_tags(topics, user, options)
+      topics.joins("JOIN topic_hot_scores on topics.id = topic_hot_scores.topic_id").order(
+        "topic_hot_scores.score DESC",
+      )
+    end
+  end
+
   def list_top_for(period)
     score_column = TopTopic.score_column_for_period(period)
     create_list(:top, unordered: true) do |topics|
@@ -495,10 +506,12 @@ class TopicQuery
       DiscoursePluginRegistry.apply_modifier(:topic_query_create_list_topics, topics, options, self)
 
     options = options.merge(@options)
-    if %w[activity default].include?(options[:order] || "activity") && !options[:unordered] &&
-         filter != :private_messages
-      topics = prioritize_pinned_topics(topics, options)
-    end
+
+    apply_pinning = filter != :private_messages
+    apply_pinning &&= %w[activity default].include?(options[:order] || "activity")
+    apply_pinning &&= !options[:unordered] || options[:prioritize_pinned]
+
+    topics = prioritize_pinned_topics(topics, options) if apply_pinning
 
     topics = topics.to_a
 
@@ -653,8 +666,20 @@ class TopicQuery
   end
 
   def apply_ordering(result, options = {})
-    sort_column = SORTABLE_MAPPING[options[:order]] || "default"
+    order_option = options[:order]
     sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
+
+    new_result =
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_query_apply_ordering_result,
+        result,
+        order_option,
+        sort_dir,
+        options,
+        self,
+      )
+    return new_result if !new_result.nil? && new_result != result
+    sort_column = SORTABLE_MAPPING[order_option] || "default"
 
     # If we are sorting in the default order desc, we should consider including pinned
     # topics. Otherwise, just use bumped_at.
@@ -1260,9 +1285,7 @@ class TopicQuery
         result = result.joins(:tags).where("tags.id in (?)", tags)
       end
 
-      # TODO: this is very side-effecty and should be changed
-      # It is done cause further up we expect normalized tags
-      @options[:tags] = tags
+      @options[:tag_ids] = tags
     elsif @options[:no_tags]
       # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
       result = result.where.not(id: TopicTag.distinct.select(:topic_id))

@@ -7,5 +7,12 @@ RSpec.describe ApiKeyScope do
         "/posts (POST)",
       )
     end
+
+    it "should return logster urls" do
+      expect(ApiKeyScope.find_urls(actions: [Logster::Web], methods: [])).to contain_exactly(
+        "/logs/messages.json (POST)",
+        "/logs/show/:id.json (GET)",
+      )
+    end
   end
 end

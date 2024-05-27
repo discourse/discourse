@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { empty, or } from "@ember/object/computed";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { setting } from "discourse/lib/computed";

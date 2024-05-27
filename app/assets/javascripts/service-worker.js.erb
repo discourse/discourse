@@ -1,150 +1,7 @@
 'use strict';
 
-<%
-  base = if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
-    GlobalSetting.s3_asset_cdn_url.presence || GlobalSetting.s3_cdn_url
-  elsif GlobalSetting.cdn_url
-    GlobalSetting.cdn_url + Discourse.base_path
-  else
-    Discourse.base_path
-  end
-
-  workbox_base = "#{base}/assets/#{EmberCli.workbox_dir_name}"
-%>
-
-importScripts("<%= "#{workbox_base}/workbox-sw.js" %>");
-
-workbox.setConfig({
-  modulePathPrefix: "<%= workbox_base %>",
-  debug: false
-});
-
-var authUrls = ["auth", "session/sso_login", "session/sso", "srv/status"].map(path => `<%= Discourse.base_path %>/${path}`);
 var chatRegex = /\/chat\/channel\/(\d+)\//;
 var inlineReplyIcon = "<%= UrlHelper.absolute("/images/push-notifications/inline_reply.png") %>";
-
-const oldCacheNames = [
-  "discourse-1", "external-1"
-]
-
-oldCacheNames.forEach(cacheName => caches.delete(cacheName))
-
-var cacheVersion = "2";
-var discourseCacheName = "discourse-" + cacheVersion;
-var externalCacheName = "external-" + cacheVersion;
-
-const expirationOptions = {
-  maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
-  maxEntries: 250,
-  purgeOnQuotaError: true, // safe to automatically delete if exceeding the available storage
-  matchOptions: {
-    ignoreVary: true // Many discourse responses include `Vary` header. This option is required to ensure they are cleaned up correctly.
-  }
-}
-
-// Chrome 97 shipped with broken samesite cookie handling when proxying requests through service workers
-// https://bugs.chromium.org/p/chromium/issues/detail?id=1286367
-var chromeVersionMatch = navigator.userAgent.match(/Chrome\/97.0.(\d+)/);
-var isBrokenChrome97 = chromeVersionMatch && parseInt(chromeVersionMatch[1]) <= 4692;
-var isApple = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-// Cache all GET requests, so Discourse can be used while offline
-workbox.routing.registerRoute(
-  function(args) {
-    return args.url.origin === location.origin && !authUrls.some(u => args.url.pathname.startsWith(u)) && !isBrokenChrome97 && !isApple;
-  }, // Match all except auth routes
-  new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
-    cacheName: discourseCacheName,
-    plugins: [
-      new workbox.cacheableResponse.CacheableResponsePlugin({
-        statuses: [200] // opaque responses will return status code '0'
-      }), // for s3 secure uploads signed urls
-      new workbox.expiration.ExpirationPlugin(expirationOptions),
-    ],
-  })
-);
-
-var cdnUrls = [];
-
-<% if GlobalSetting.try(:cdn_cors_enabled) %>
-cdnUrls = ["<%= "#{GlobalSetting.s3_cdn_url}" %>", "<%= "#{GlobalSetting.cdn_url}" %>"].filter(Boolean);
-
-if (cdnUrls.length > 0) {
-  var cdnCacheName = "cdn-" + cacheVersion;
-  var cdnUrl = "<%= "#{GlobalSetting.cdn_url}" %>";
-
-  var appendQueryStringPlugin = {
-    requestWillFetch: function (args) {
-      var request = args.request;
-
-      if (request.url.startsWith(cdnUrl)) {
-        var url = new URL(request.url);
-        // Using this temporary query param to force browsers to redownload images from server.
-        url.searchParams.append('refresh', 'true');
-        return new Request(url.href, request);
-      }
-
-      return request;
-    }
-  };
-
-  workbox.routing.registerRoute(
-    function(args) {
-      var matching = cdnUrls.filter(
-        function(url) {
-          return args.url.href.startsWith(url);
-        }
-      );
-      return matching.length > 0;
-    }, // Match all cdn resources
-    new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
-      cacheName: cdnCacheName,
-      fetchOptions: {
-        mode: 'cors',
-        credentials: 'omit'
-      },
-      plugins: [
-        new workbox.cacheableResponse.CacheableResponsePlugin({
-          statuses: [200] // opaque responses will return status code '0'
-        }),
-        new workbox.expiration.ExpirationPlugin(expirationOptions),
-        appendQueryStringPlugin
-      ],
-    })
-  );
-}
-<% end %>
-
-workbox.routing.registerRoute(
-  function(args) {
-    if (args.url.origin === location.origin) {
-      return false;
-    }
-
-    var matching = cdnUrls.filter(
-      function(url) {
-        return args.url.href.startsWith(url);
-      }
-    );
-    return matching.length === 0;
-  }, // Match all other external resources
-  new workbox.strategies.NetworkFirst({ // This will only use the cache when a network request fails
-    cacheName: externalCacheName,
-    plugins: [
-      new workbox.cacheableResponse.CacheableResponsePlugin({
-        statuses: [200] // opaque responses will return status code '0'
-      }),
-      new workbox.expiration.ExpirationPlugin(expirationOptions),
-    ],
-  })
-);
-
-var idleThresholdTime = 1000 * 10; // 10 seconds
-var lastAction = -1;
-
-function isIdle() {
-  return lastAction + idleThresholdTime < Date.now();
-}
 
 function showNotification(title, body, icon, badge, tag, baseUrl, url) {
   var notificationOptions = {
@@ -170,20 +27,9 @@ function showNotification(title, body, icon, badge, tag, baseUrl, url) {
 
 self.addEventListener('push', function(event) {
   var payload = event.data.json();
-  if(!isIdle() && payload.hide_when_active) {
-    return false;
-  }
 
   event.waitUntil(
-    self.registration.getNotifications({ tag: payload.tag }).then(function(notifications) {
-      if (notifications && notifications.length > 0) {
-        notifications.forEach(function(notification) {
-          notification.close();
-        });
-      }
-
-      return showNotification(payload.title, payload.body, payload.icon, payload.badge, payload.tag, payload.base_url, payload.url);
-    })
+    showNotification(payload.title, payload.body, payload.icon, payload.badge, payload.tag, payload.base_url, payload.url)
   );
 });
 
@@ -253,11 +99,6 @@ self.addEventListener('notificationclick', function(event) {
   }
 });
 
-self.addEventListener('message', function(event) {
-  if('lastAction' in event.data){
-    lastAction = event.data.lastAction;
-  }
-});
 
 self.addEventListener('pushsubscriptionchange', function(event) {
   event.waitUntil(

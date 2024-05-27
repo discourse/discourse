@@ -3,7 +3,7 @@
 require "topic_view"
 
 RSpec.describe TopicView do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:moderator)
   fab!(:admin)
   fab!(:topic)
@@ -72,6 +72,8 @@ RSpec.describe TopicView do
     fab!(:p0) { Fabricate(:post, topic: topic) }
     fab!(:p1) { Fabricate(:post, topic: topic, wiki: true) }
 
+    after { TopicView.custom_filters.clear }
+
     it "allows to register custom filters" do
       tv = TopicView.new(topic.id, evil_trout, { filter: "wiki" })
       expect(tv.filter_posts({ filter: "wiki" })).to eq([p0, p1])
@@ -83,8 +85,6 @@ RSpec.describe TopicView do
 
       tv = TopicView.new(topic.id, evil_trout, { filter: "whatever" })
       expect(tv.filter_posts).to eq([p0, p1])
-    ensure
-      TopicView.instance_variable_set(:@custom_filters, {})
     end
   end
 
@@ -285,7 +285,7 @@ RSpec.describe TopicView do
           1,
         )
 
-        freeze_time (2.hours.from_now)
+        freeze_time(2.hours.from_now)
 
         TopicView.new(private_message.id, evil_trout)
         expect(UserHistory.where(action: UserHistory.actions[:check_personal_message]).count).to eq(
@@ -794,6 +794,18 @@ RSpec.describe TopicView do
           title = TopicView.new(topic.id, evil_trout, post_number: 4).page_title
           expect(title).to eq("#{topic.title} - #4 by #{post2.user.username}")
         end
+      end
+    end
+
+    context "when a page number is specified" do
+      it "does not include the page number for first page" do
+        title = TopicView.new(topic.id, admin, page: 1).page_title
+        expect(title).to eq("#{topic.title}")
+      end
+
+      it "includes page number for subsequent pages" do
+        title = TopicView.new(topic.id, admin, page: 2).page_title
+        expect(title).to eq("#{topic.title} - #{I18n.t("page_num", num: 2)}")
       end
     end
 

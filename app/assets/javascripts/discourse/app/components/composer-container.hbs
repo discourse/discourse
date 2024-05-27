@@ -22,8 +22,8 @@
 
     {{#if this.composer.model.viewOpenOrFullscreen}}
       <div
-        role="form"
-        aria-label={{I18n this.composer.saveLabel}}
+        role="dialog"
+        aria-label={{this.composer.ariaLabel}}
         class="reply-area
           {{if this.composer.canEditTags 'with-tags' 'without-tags'}}
           {{if
@@ -58,7 +58,7 @@
                 @outletArgs={{hash model=this.composer.model}}
               />
 
-              {{#unless this.composer.site.mobileView}}
+              {{#if this.site.desktopView}}
                 {{#if this.composer.model.unlistTopic}}
                   <span class="unlist">({{i18n "composer.unlist"}})</span>
                 {{/if}}
@@ -67,14 +67,14 @@
                     <span class="no-bump">{{d-icon "anchor"}}</span>
                   {{/if}}
                 {{/if}}
-              {{/unless}}
+              {{/if}}
 
               {{#if this.composer.canEdit}}
                 <LinkToInput
                   @onClick={{this.composer.displayEditReason}}
                   @showInput={{this.composer.showEditReason}}
                   @icon="info-circle"
-                  @class="display-edit-reason"
+                  class="display-edit-reason"
                 >
                   <TextField
                     @value={{this.composer.editReason}}
@@ -146,7 +146,7 @@
                       @recipients={{this.composer.model.targetRecipients}}
                       @hasGroups={{this.composer.model.hasTargetGroups}}
                       @focusTarget={{this.composer.focusTarget}}
-                      @class={{concat-class
+                      class={{concat-class
                         "users-input"
                         (if this.composer.showWarning "can-warn")
                       }}
@@ -197,7 +197,7 @@
                   {{#if this.composer.canEditTags}}
                     <MiniTagChooser
                       @value={{this.composer.model.tags}}
-                      @onChange={{action (mut this.composer.model.tags)}}
+                      @onChange={{fn (mut this.composer.model.tags)}}
                       @options={{hash
                         disabled=this.composer.disableTagsChooser
                         categoryId=this.composer.model.categoryId
@@ -264,7 +264,7 @@
               @disableSubmit={{this.composer.disableSubmit}}
             />
 
-            {{#if this.composer.site.mobileView}}
+            {{#if this.site.mobileView}}
               <a
                 href
                 {{on "click" this.composer.cancel}}
@@ -278,12 +278,15 @@
                 {{/if}}
               </a>
             {{else}}
-              <a href {{on "click" this.composer.cancel}} class="cancel">{{i18n
-                  "close"
-                }}</a>
+              <a
+                href
+                {{on "click" this.composer.cancel}}
+                class="cancel"
+                role="button"
+              >{{i18n "close"}}</a>
             {{/if}}
 
-            {{#if this.composer.site.mobileView}}
+            {{#if this.site.mobileView}}
               {{#if this.composer.whisperOrUnlistTopic}}
                 <span class="whisper">
                   {{d-icon "far-eye-slash"}}
@@ -303,7 +306,7 @@
             </span>
           </div>
 
-          {{#if this.composer.site.mobileView}}
+          {{#if this.site.mobileView}}
             <span>
               <PluginOutlet
                 @name="composer-mobile-buttons-bottom"
@@ -385,24 +388,24 @@
                 {{else}}
                   {{d-icon "exclamation-triangle"}}
                 {{/if}}
-                {{#unless this.composer.site.mobileView}}
+                {{#if this.site.desktopView}}
                   {{this.composer.model.draftStatus}}
-                {{/unless}}
+                {{/if}}
               </span>
             {{/if}}
           </div>
 
-          {{#unless this.site.mobileView}}
+          {{#if this.site.desktopView}}
             <DButton
               @action={{this.composer.togglePreview}}
               @translatedTitle={{this.composer.toggleText}}
               @icon="angle-double-left"
-              @class={{concat-class
-                "btn-flat btn-mini-toggle toggle-preview"
+              class={{concat-class
+                "btn-transparent btn-mini-toggle toggle-preview"
                 (unless this.composer.showPreview "active")
               }}
             />
-          {{/unless}}
+          {{/if}}
         </div>
       </div>
     {{else}}

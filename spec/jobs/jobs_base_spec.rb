@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ::Jobs::Base do
+  use_redis_snapshotting
+
   class GoodJob < ::Jobs::Base
     attr_accessor :count
     def execute(args)
@@ -62,12 +64,11 @@ RSpec.describe ::Jobs::Base do
     wait_for { ConcurrentJob.running? }
 
     ConcurrentJob.new.perform({ "test" => 100 })
+
     expect(Sidekiq::Queues["default"].size).to eq(1)
-
     expect(Sidekiq::Queues["default"][0]["args"][0]).to eq("test" => 100)
-
+  ensure
     ConcurrentJob.stop!
-
     thread.join
   end
 

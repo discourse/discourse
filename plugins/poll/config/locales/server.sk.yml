@@ -10,12 +10,16 @@ sk:
     poll_maximum_options: "Maximálny počet povolených možností v hlasovaní."
     poll_edit_window_mins: "Počet minút po vytvorení hlasovania počas ktorých môže byť hlasovanie upravené."
     poll_minimum_trust_level_to_create: "Definuj minimálny stupeň dôvery na vytvorenie hlasonia."
+    poll_create_allowed_groups: "Skupiny, ktoré majú povolené vytvárať ankety."
     poll_groupable_user_fields: "Súbor názvov užívateľských polí, ktoré možno použiť na zoskupovanie a filtrovanie výsledkov prieskumu."
     poll_export_data_explorer_query_id: "ID dotazu Prieskumníka údajov, ktorý sa má použiť na export výsledkov prieskumu (0 pre vypnutie)."
+    poll_default_public: "Pri vytváraní novej ankety predvolene povoľte možnosť „Zobraziť, kto hlasoval“."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
     poll: "anketa"
     invalid_argument: "Neplatná hodnota '%{value}' pre argument '%{argument}'."
-    multiple_polls_without_name: "Existujú viaceré hlasovania bez mena. Použite atribút '<code>meno</code>', aby ste hlasovanie jednoznačne rozlíšili."
+    multiple_polls_without_name: "Pri vytváraní viacerých ankiet zahrňte jedinečné názvy pridaním <code>name=príklad</code> k vašim <code>[anketám]</code> tagom."
     multiple_polls_with_same_name: "Existujú viaceré hlasovania s rovnakým menom: <strong>%{name}</strong>. Použite atribút '<code>meno</code>', aby ste hlasovanie jednoznačne rozlíšili."
     default_poll_must_have_at_least_1_option: "Anketa musí obsahovať aspoň 1 možnosť."
     named_poll_must_have_at_least_1_option: "Anketa <strong>%{name}</strong> musí mať aspoň 1 možnosť."
@@ -45,6 +49,16 @@ sk:
     topic_must_be_open_to_vote: "Na odovzdanie hlasu téma otvorená."
     poll_must_be_open_to_vote: "Na odovzdanie hlasu musí byť hlasovanie otvorené."
     one_vote_per_user: "Pre túto anketu je povolený iba 1 hlas."
+    max_vote_per_user:
+      one: Pre túto anketu je povolený iba %{count} hlas.
+      few: V tomto prieskume sú povolené iba %{count} hlasy.
+      many: Pre túto anketu je povolený iba %{count} hlasov.
+      other: Pre túto anketu je povolených maximálne %{count} hlasov.
+    min_vote_per_user:
+      one: Pre túto anketu je potrebný minimálne %{count} hlas.
+      few: Pre túto anketu je potrebné minimálne %{count} hlasy.
+      many: Pre túto anketu je potrebné minimálne %{count} hlasov.
+      other: Pre túto anketu je potrebné minimálne %{count} hlasov.
     topic_must_be_open_to_toggle_status: "Na zmenu stavu musí byť téma otvorená."
     only_staff_or_op_can_toggle_status: "Zmeniť stav hlasovania môže iba zamestnanec alebo pôvodný prispievateľ."
     insufficient_rights_to_create: "Nemáš povolenie na vytvorenie hlasovania."

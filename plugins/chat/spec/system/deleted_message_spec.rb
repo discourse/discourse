@@ -59,11 +59,11 @@ RSpec.describe "Deleted message", type: :system do
 
         other_user = Fabricate(:admin)
         chat_system_user_bootstrap(user: other_user, channel: channel_1)
-        using_session(:tab_2) do |session|
+
+        using_session(:tab_2) do
           sign_in(other_user)
           chat_page.visit_channel(channel_1)
           channel_page.messages.delete(message)
-          session.quit
         end
 
         sidebar_component.click_link(channel_1.name)
@@ -79,6 +79,18 @@ RSpec.describe "Deleted message", type: :system do
     fab!(:message_4) { Fabricate(:chat_message, chat_channel: channel_1) }
     fab!(:message_5) { Fabricate(:chat_message, chat_channel: channel_1) }
     fab!(:message_6) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+    it "allows user to bulk delete" do
+      chat_page.visit_channel(channel_1)
+
+      channel_page.messages.select(message_2)
+      channel_page.messages.select(message_4)
+      channel_page.messages.select(message_6)
+      channel_page.selection_management.delete
+      click_button(I18n.t("js.delete"))
+
+      expect(channel_page.messages).to have_deleted_messages(message_2, message_4, message_6)
+    end
 
     it "groups them" do
       chat_page.visit_channel(channel_1)

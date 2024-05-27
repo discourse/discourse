@@ -9,6 +9,7 @@ import userSearch from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
+import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
@@ -59,6 +60,10 @@ export function translateResults(results, opts) {
       return Category.list().findBy("id", category.id || category.model.id);
     })
     .compact();
+
+  results.grouped_search_result?.extra?.categories?.forEach((category) =>
+    Site.current().updateCategory(category)
+  );
 
   results.groups = results.groups
     .map((group) => {
@@ -237,6 +242,10 @@ export function applySearchAutocomplete($input, siteSettings) {
 }
 
 export function updateRecentSearches(currentUser, term) {
+  if (!term) {
+    return;
+  }
+
   let recentSearches = Object.assign(currentUser.recent_searches || []);
 
   if (recentSearches.includes(term)) {
@@ -258,4 +267,74 @@ export function logSearchLinkClick(params) {
       search_result_type: params.searchResultType,
     },
   });
+}
+
+/**
+ * reciprocallyRankedList() makes use of the Reciprocal Ranking Fusion Algorithm (RRF)
+ *
+ * A method used to combine rankings from multiple sources
+ * to aggregate them to provide a single improved ranking
+ *
+ * RRF = 1 / k + r(d)
+ *
+ * k = a constant, small positive value to avoid division by zero
+ * r(d) = the reciprocal rank of the item in the ranking list
+ *
+ *
+ * @param {Array} lists - an array of arrays containing the results from each source
+ * The passed-in list must include the properties specified in the `identifiers` array
+ * @param {Array} identifiers - an array of property names used to identify items in the ranking lists
+ *
+ * Example Usage: reciprocallyRankedList([list1, list2, list3], ["id", "topic_id", "uuid"])
+ *
+ **/
+export function reciprocallyRankedList(lists, identifiers) {
+  const k = 5;
+
+  if (lists.length === 1) {
+    return lists;
+  }
+
+  if (lists.length !== identifiers.length) {
+    throw new Error("The number of lists must match the number of identifiers");
+  }
+
+  if (lists.length === 0) {
+    throw new Error("Lists must not be an empty array");
+  }
+
+  // Assign a reciprocal rank to each result
+  lists.forEach((list) => {
+    list.forEach((listItem, index) => {
+      const identifierValues = identifiers.map((id) => listItem[id]);
+      const itemKey = identifierValues.join("_");
+      listItem.reciprocalRank = 1 / (index + k);
+      listItem.itemKey = itemKey;
+    });
+  });
+
+  // Combine lists into a single list
+  const combinedList = [].concat(...lists);
+
+  // Remove duplicates and sum reciprocal ranks based on identifiers
+  const resultMap = new Map();
+  combinedList.forEach((result) => {
+    const existingResult = resultMap.get(result.itemKey);
+    if (!existingResult) {
+      resultMap.set(result.itemKey, result);
+    } else {
+      // Sum reciprocal ranks for duplicates
+      existingResult.reciprocalRank += result.reciprocalRank;
+    }
+  });
+
+  // Convert the map values back to an array
+  const uniqueResults = Array.from(resultMap.values());
+
+  // Sort the results by reciprocal ranking
+  const sortedResults = uniqueResults.sort(
+    (a, b) => b.reciprocalRank - a.reciprocalRank
+  );
+
+  return sortedResults;
 }

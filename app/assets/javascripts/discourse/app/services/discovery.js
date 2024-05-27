@@ -1,4 +1,4 @@
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 /**
@@ -21,19 +21,19 @@ export default class DiscoveryService extends Service {
 
   get category() {
     if (this.onDiscoveryRoute) {
-      return this.#routeAttrs.category;
+      return this.#routeAttrs?.category;
     }
   }
 
   get tag() {
     if (this.onDiscoveryRoute) {
-      return this.#routeAttrs.tag;
+      return this.#routeAttrs?.tag;
     }
   }
 
   get currentTopicList() {
     if (this.onDiscoveryRoute) {
-      return this.#routeAttrs.list;
+      return this.#routeAttrs?.list;
     }
   }
 

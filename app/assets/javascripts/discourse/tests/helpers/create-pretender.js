@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import Pretender from "pretender";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
@@ -288,6 +289,7 @@ export function applyDefaultHandlers(pretender) {
           updated_at: "2023-06-01T04:47:13.195Z",
           expires_at: "2023-08-30T04:47:00.000Z",
           expired: false,
+          max_redemptions_allowed: 10,
           topics: [],
           groups: [],
         },
@@ -306,6 +308,54 @@ export function applyDefaultHandlers(pretender) {
           expired: false,
           topics: [],
           groups: [],
+        },
+        {
+          id: 10,
+          invite_key: "hMFT8G1oKP",
+          link: "http://localhost:3000/invites/hMFT8G1oKP",
+          email: null,
+          domain: "cat.com",
+          redemption_count: 0,
+          emailed: false,
+          can_delete_invite: true,
+          custom_message: null,
+          created_at: "2023-06-01T04:47:13.195Z",
+          updated_at: "2023-06-01T04:47:13.195Z",
+          expires_at: "2023-08-30T04:47:00.000Z",
+          expired: false,
+          max_redemptions_allowed: 10,
+          topics: [
+            {
+              id: 5,
+              title: "Welcome to Discourse! :wave:",
+              fancy_title: "Welcome to Discourse! :wave:",
+              slug: "welcome-to-discourse",
+              posts_count: 1,
+            },
+          ],
+          groups: [
+            {
+              id: 41,
+              automatic: false,
+              name: "discourse",
+              user_count: 0,
+              alias_level: 0,
+              visible: true,
+              automatic_membership_email_domains: "",
+              primary_group: false,
+              title: null,
+              grant_trust_level: null,
+              has_messages: false,
+              flair_url: null,
+              flair_bg_color: null,
+              flair_color: null,
+              bio_raw: "",
+              bio_cooked: null,
+              public_admission: true,
+              allow_membership_requests: false,
+              full_name: "Awesome Team",
+            },
+          ],
         },
       ],
       can_see_invite_details: true,
@@ -358,7 +408,11 @@ export function applyDefaultHandlers(pretender) {
   pretender.post("/clicks/track", success);
 
   pretender.get("/search", (request) => {
-    if (request.queryParams.q === "discourse") {
+    if (
+      request.queryParams.q === "discourse" ||
+      request.queryParams.q === "discourse order:latest" ||
+      request.queryParams.q === "discourse order:likes"
+    ) {
       return response(fixturesByUrl["/search.json"]);
     } else if (request.queryParams.q === "discourse visited") {
       const obj = JSON.parse(JSON.stringify(fixturesByUrl["/search.json"]));
@@ -438,9 +492,43 @@ export function applyDefaultHandlers(pretender) {
     return response([{ id: 1234, cooked: "wat" }]);
   });
 
-  pretender.get("/categories_and_latest", () =>
-    response(fixturesByUrl["/categories_and_latest.json"])
-  );
+  pretender.get("/categories.json", (request) => {
+    const data = cloneJSON(fixturesByUrl["/categories.json"]);
+
+    // replace categories list if parent_category_id filter is present
+    if (request.queryParams.parent_category_id) {
+      const parentCategoryId = parseInt(
+        request.queryParams.parent_category_id,
+        10
+      );
+      data.category_list.categories = fixturesByUrl[
+        "site.json"
+      ].site.categories.filter(
+        (c) => c.parent_category_id === parentCategoryId
+      );
+    }
+
+    return response(data);
+  });
+
+  pretender.get("/categories_and_latest", (request) => {
+    const data = cloneJSON(fixturesByUrl["/categories_and_latest.json"]);
+
+    // replace categories list if parent_category_id filter is present
+    if (request.queryParams.parent_category_id) {
+      const parentCategoryId = parseInt(
+        request.queryParams.parent_category_id,
+        10
+      );
+      data.category_list.categories = fixturesByUrl[
+        "site.json"
+      ].site.categories.filter(
+        (c) => c.parent_category_id === parentCategoryId
+      );
+    }
+
+    return response(data);
+  });
 
   pretender.get("/c/bug/find_by_slug.json", () =>
     response(fixturesByUrl["/c/1/show.json"])
@@ -462,12 +550,38 @@ export function applyDefaultHandlers(pretender) {
       return response(422, { errors: ["duplicate email"] });
     }
 
+    if (category.parent_category_id === 1002) {
+      return response(422, {
+        errors: ["subcategory nested under another subcategory"],
+      });
+    }
+
     return response({ category });
   });
 
   pretender.post("/categories", () =>
     response(fixturesByUrl["/c/11/show.json"])
   );
+
+  pretender.get("/categories/find", () => {
+    return response({
+      categories: fixturesByUrl["site.json"].site.categories,
+    });
+  });
+
+  pretender.post("/categories/search", (request) => {
+    const data = parsePostData(request.requestBody);
+    if (data.include_ancestors) {
+      return response({
+        categories: fixturesByUrl["site.json"].site.categories,
+        ancestors: fixturesByUrl["site.json"].site.categories,
+      });
+    } else {
+      return response({
+        categories: fixturesByUrl["site.json"].site.categories,
+      });
+    }
+  });
 
   pretender.get("/c/testing/find_by_slug.json", () =>
     response(fixturesByUrl["/c/11/show.json"])
@@ -913,9 +1027,24 @@ export function applyDefaultHandlers(pretender) {
   pretender.delete("/admin/customize/watched_words/:id.json", success);
 
   pretender.post("/admin/customize/watched_words.json", (request) => {
-    const result = parsePostData(request.requestBody);
-    result.id = new Date().getTime();
-    result.case_sensitive = result.case_sensitive === "true";
+    const requestData = parsePostData(request.requestBody);
+
+    const result = cloneJSON(
+      fixturesByUrl["/admin/customize/watched_words.json"]
+    );
+    result.words = [];
+
+    const words = requestData.words || requestData["words[]"];
+    words.forEach((word, index) => {
+      result.words[index] = EmberObject.create({
+        id: new Date().getTime(),
+        word,
+        action: requestData.action_key,
+        replacement: requestData.replacement,
+        case_sensitive: requestData.case_sensitive === "true",
+      });
+    });
+
     return response(200, result);
   });
 
@@ -1239,6 +1368,10 @@ export function applyDefaultHandlers(pretender) {
   );
 
   pretender.get("/c/:id/visible_groups.json", () => response({ groups: [] }));
+
+  pretender.get("/session/passkey/challenge.json", () =>
+    response({ challenge: "123" })
+  );
 }
 
 export function resetPretender() {

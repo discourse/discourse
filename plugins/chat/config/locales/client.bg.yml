@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 bg:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Чат
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Винаги"
           never: "Никога"
@@ -27,6 +30,7 @@ bg:
     chat:
       deleted_chat_username: изтрит
       dates:
+        yesterday: "Вчера"
         time_tiny: "ч:мм"
       all_loaded: "Показани са всички съобщения"
       already_enabled: "Чатът вече е активиран по тази тема. Моля опреснете страницата."
@@ -67,6 +71,7 @@ bg:
         dm_and_mentions: "Директни съобщения и споменавания"
         never: "Никога"
       flag: "Сигнализиране"
+      heading: "Чат"
       join: "Влизане"
       last_visit: "последно посещение"
       summarization:
@@ -79,13 +84,17 @@ bg:
       save: "Запази "
       sounds:
         none: "Без"
+      title: "чат"
+      title_capitalized: "Чат"
       exit: "назад"
       channel_status:
         closed: "Затворена"
         open: "Отвори"
       browse:
         back: "Назад"
+        title: Канали
         filter_all: Всички
+        filter_open: Отвори
         filter_closed: Затворена
       chat_message_separator:
         today: Днес
@@ -99,6 +108,8 @@ bg:
         tabs:
           members: Членове
           settings: Настройки
+      new_message_modal:
+        filter: "Филтър"
       direct_message_creator:
         title: Ново Съобщение
         prefix: "До:"
@@ -118,6 +129,7 @@ bg:
         threading_enabled: "Да е включен"
         threading_disabled: "Деактивирани"
         notifications: "Известия"
+        preview: "Преглед"
         save: "Запази "
         saved: "Запазено"
         unfollow: "Напусни"
@@ -126,6 +138,10 @@ bg:
         category_label: "Категория"
         history_label: "История"
         members_label: "Членове"
+      admin:
+        title: "Чат"
+      channel_list:
+        title: "Канали"
       incoming_webhooks:
         back: "Назад"
         description: "Описание"
@@ -171,12 +187,21 @@ bg:
       draft_channel_screen:
         header: "Ново Съобщение"
         cancel: "Прекрати"
+    notifications:
+      chat_quoted: "<span>%{username}</span> %{description}"
     discourse_automation:
       scriptables:
         send_chat_message:
           fields:
             message:
               label: Съобщение
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Съобщение в чата с флаг"
+    keyboard_shortcuts_help:
+      chat:
+        title: "Чат"
     styleguide:
       sections:
         chat:

@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe NewPostManager do
-  let(:user) { Fabricate(:newuser) }
-  let(:admin) { Fabricate(:admin) }
+  let(:user) { Fabricate(:newuser, refresh_auto_groups: true) }
+  let(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
   describe "when new post containing a poll is queued for approval" do
-    before { SiteSetting.poll_minimum_trust_level_to_create = 0 }
+    before { SiteSetting.poll_create_allowed_groups = Group::AUTO_GROUPS[:trust_level_0] }
 
     let(:params) do
       {

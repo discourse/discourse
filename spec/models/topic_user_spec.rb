@@ -75,7 +75,7 @@ RSpec.describe TopicUser do
   fab!(:user)
 
   let(:topic) do
-    u = Fabricate(:user)
+    u = Fabricate(:user, refresh_auto_groups: true)
     guardian = Guardian.new(u)
     TopicCreator.create(u, guardian, title: "this is my topic title")
   end
@@ -228,6 +228,12 @@ RSpec.describe TopicUser do
         today = Time.zone.now
         freeze_time Time.zone.now
 
+        # ensure data model is correct for the test
+        # logging an update to a row that does not exist
+        # is not supported
+        _post1 = Fabricate(:post, topic: topic)
+        _post2 = Fabricate(:post, topic: topic)
+
         TopicUser.update_last_read(user, topic.id, 1, 1, 0)
 
         tomorrow = 1.day.from_now
@@ -250,7 +256,7 @@ RSpec.describe TopicUser do
     end
 
     context "with private messages" do
-      fab!(:target_user) { Fabricate(:user) }
+      fab!(:target_user) { Fabricate(:user, refresh_auto_groups: true) }
 
       let(:post) do
         create_post(archetype: Archetype.private_message, target_usernames: target_user.username)
@@ -304,7 +310,7 @@ RSpec.describe TopicUser do
         end
 
         it "should use group's default notification level" do
-          another_user = Fabricate(:user)
+          another_user = Fabricate(:user, refresh_auto_groups: true)
           group.add(another_user)
 
           Jobs.run_immediately!
@@ -467,8 +473,7 @@ RSpec.describe TopicUser do
       it "should not automatically track PMs" do
         new_user.user_option.update!(auto_track_topics_after_msecs: 0)
 
-        another_user = Fabricate(:user)
-        Group.refresh_automatic_groups!
+        another_user = Fabricate(:user, refresh_auto_groups: true)
         pm = Fabricate(:private_message_topic, user: another_user)
         pm.invite(another_user, new_user.username)
 
@@ -590,10 +595,10 @@ RSpec.describe TopicUser do
 
       called = 0
       visits = []
-      user_first_visit = ->(topic_id, user_id) {
+      user_first_visit = ->(topic_id, user_id) do
         visits << "#{topic_id}-#{user_id}"
         called += 1
-      }
+      end
 
       DiscourseEvent.on(:topic_first_visited_by_user, &user_first_visit)
 

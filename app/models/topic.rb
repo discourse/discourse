@@ -3,6 +3,7 @@
 class Topic < ActiveRecord::Base
   class UserExists < StandardError
   end
+
   class NotAllowed < StandardError
   end
   include RateLimiter::OnCreateRecord
@@ -15,8 +16,8 @@ class Topic < ActiveRecord::Base
   EXTERNAL_ID_MAX_LENGTH = 50
 
   self.ignored_columns = [
-    "avg_time", # TODO(2021-01-04): remove
-    "image_url", # TODO(2021-06-01): remove
+    "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
+    "image_url", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
   ]
 
   def_delegator :featured_users, :user_ids, :featured_user_ids
@@ -42,6 +43,19 @@ class Topic < ActiveRecord::Base
     [self.share_thumbnail_size] + DiscoursePluginRegistry.topic_thumbnail_sizes
   end
 
+  def self.visibility_reasons
+    @visible_reasons ||=
+      Enum.new(
+        op_flag_threshold_reached: 0,
+        op_unhidden: 1,
+        embedded_topic: 2,
+        manually_unlisted: 3,
+        manually_relisted: 4,
+        bulk_action: 5,
+        unknown: 99,
+      )
+  end
+
   def thumbnail_job_redis_key(sizes)
     "generate_topic_thumbnail_enqueue_#{id}_#{sizes.inspect}"
   end
@@ -58,7 +72,7 @@ class Topic < ActiveRecord::Base
 
   def thumbnail_info(enqueue_if_missing: false, extra_sizes: [])
     return nil unless original = image_upload
-    return nil if original.filesize >= SiteSetting.max_image_size_kb.kilobytes
+    return nil if original.filesize >= SiteSetting.max_image_size_kb.to_i.kilobytes
     return nil unless original.read_attribute(:width) && original.read_attribute(:height)
 
     infos = []
@@ -171,7 +185,7 @@ class Topic < ActiveRecord::Base
   rate_limit :limit_private_messages_per_day
 
   validates :title,
-            if: Proc.new { |t| t.new_record? || t.title_changed? },
+            if: Proc.new { |t| t.new_record? || t.title_changed? || t.category_id_changed? },
             presence: true,
             topic_title_length: true,
             censored_words: true,
@@ -317,13 +331,13 @@ class Topic < ActiveRecord::Base
   SQL
 
   scope :private_messages_for_user,
-        ->(user) {
+        ->(user) do
           private_messages.where(
             "topics.id IN (#{PRIVATE_MESSAGES_SQL_USER})
       OR topics.id IN (#{PRIVATE_MESSAGES_SQL_GROUP})",
             user_id: user.id,
           )
-        }
+        end
 
   scope :listable_topics, -> { where("topics.archetype <> ?", Archetype.private_message) }
 
@@ -841,14 +855,22 @@ class Topic < ActiveRecord::Base
         FROM posts
         WHERE deleted_at IS NULL AND post_type <> 4
         GROUP BY topic_id
-      )
+      ),
+      Z as (
+        SELECT topic_id,
+               SUM(COALESCE(posts.word_count, 0)) word_count
+        FROM posts
+        WHERE deleted_at IS NULL AND post_type <> 4
+        GROUP BY topic_id
+      )       
       UPDATE topics
       SET
         highest_staff_post_number = X.highest_post_number,
         highest_post_number = Y.highest_post_number,
         last_posted_at = Y.last_posted_at,
-        posts_count = Y.posts_count
-      FROM X, Y
+        posts_count = Y.posts_count,
+        word_count = Z.word_count
+      FROM X, Y, Z
       WHERE
         topics.archetype <> 'private_message' AND
         X.topic_id = topics.id AND
@@ -856,7 +878,8 @@ class Topic < ActiveRecord::Base
           topics.highest_staff_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
-          topics.posts_count <> Y.posts_count
+          topics.posts_count <> Y.posts_count OR
+          topics.word_count <> Z.word_count
         )
     SQL
 
@@ -877,14 +900,22 @@ class Topic < ActiveRecord::Base
         FROM posts
         WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
         GROUP BY topic_id
+      ),
+      Z as (
+        SELECT topic_id,
+                SUM(COALESCE(posts.word_count, 0)) word_count
+        FROM posts
+        WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
+        GROUP BY topic_id
       )
       UPDATE topics
       SET
         highest_staff_post_number = X.highest_post_number,
         highest_post_number = Y.highest_post_number,
         last_posted_at = Y.last_posted_at,
-        posts_count = Y.posts_count
-      FROM X, Y
+        posts_count = Y.posts_count,
+        word_count = Z.word_count
+      FROM X, Y, Z
       WHERE
         topics.archetype = 'private_message' AND
         X.topic_id = topics.id AND
@@ -892,7 +923,8 @@ class Topic < ActiveRecord::Base
           topics.highest_staff_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
-          topics.posts_count <> Y.posts_count
+          topics.posts_count <> Y.posts_count OR
+          topics.word_count <> Z.word_count
         )
     SQL
   end
@@ -924,6 +956,13 @@ class Topic < ActiveRecord::Base
           SELECT count(*) FROM posts
           WHERE deleted_at IS NULL AND
                 topic_id = :topic_id AND
+                post_type <> 4
+                #{post_type}
+        ),
+        word_count = (
+          SELECT SUM(COALESCE(posts.word_count, 0)) FROM posts
+          WHERE topic_id = :topic_id AND
+                deleted_at IS NULL AND
                 post_type <> 4
                 #{post_type}
         ),
@@ -1803,18 +1842,11 @@ class Topic < ActiveRecord::Base
   end
 
   def convert_to_public_topic(user, category_id: nil)
-    public_topic = TopicConverter.new(self, user).convert_to_public_topic(category_id)
-    Tag.update_counters(public_topic.tags, { public_topic_count: 1 }) if !category.read_restricted
-    add_small_action(user, "public_topic") if public_topic
-    public_topic
+    TopicConverter.new(self, user).convert_to_public_topic(category_id)
   end
 
   def convert_to_private_message(user)
-    read_restricted = category.read_restricted
-    private_topic = TopicConverter.new(self, user).convert_to_private_message
-    Tag.update_counters(private_topic.tags, { public_topic_count: -1 }) if !read_restricted
-    add_small_action(user, "private_topic") if private_topic
-    private_topic
+    TopicConverter.new(self, user).convert_to_private_message
   end
 
   def update_excerpt(excerpt)
@@ -1857,13 +1889,21 @@ class Topic < ActiveRecord::Base
     @is_category_topic ||= Category.exists?(topic_id: self.id.to_i)
   end
 
-  def reset_bumped_at
+  def reset_bumped_at(post_id = nil)
     post =
-      ordered_posts.where(
-        user_deleted: false,
-        hidden: false,
-        post_type: Post.types[:regular],
-      ).last || first_post
+      (
+        if post_id
+          Post.find_by(id: post_id)
+        else
+          ordered_posts.where(
+            user_deleted: false,
+            hidden: false,
+            post_type: Post.types[:regular],
+          ).last || first_post
+        end
+      )
+
+    return if !post
 
     self.bumped_at = post.created_at
     self.save(validate: false)
@@ -2169,6 +2209,7 @@ end
 #  slow_mode_seconds         :integer          default(0), not null
 #  bannered_until            :datetime
 #  external_id               :string
+#  visibility_reason_id      :integer
 #
 # Indexes
 #

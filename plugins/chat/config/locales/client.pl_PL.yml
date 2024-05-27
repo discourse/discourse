@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 pl_PL:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: Czat
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Zawsze"
           fullscreen: "Gdy czat jest w trybie pełnoekranowym"
@@ -25,11 +28,24 @@ pl_PL:
           descriptions:
             chat:
               create_message: "Utwórz wiadomość na czacie w określonym kanale."
+      web_hooks:
+        chat_event:
+          group_name: "Zdarzenia czatu"
+          chat_message_created: "Wiadomość została utworzona"
+          chat_message_edited: "Wiadomość została edytowana"
+          chat_message_trashed: "Wiadomość została umieszczona w koszu"
+          chat_message_restored: "Wiadomość została przywrócona"
+    about:
+      chat_messages_count: "Wiadomości czatu"
+      chat_channels_count: "Kanały czatu"
+      chat_users_count: "Użytkownicy czatu"
     chat:
       text_copied: Tekst skopiowany do schowka
       link_copied: Link skopiowany do schowka
+      back_to_forum: "Forum"
       deleted_chat_username: usunięte
       dates:
+        yesterday: "Wczoraj"
         time_tiny: "h:mm"
       all_loaded: "Pokazuje wszystkie wiadomości"
       already_enabled: "Czat jest już włączony w tym temacie. Spróbuj odświeżyć strone."
@@ -40,6 +56,7 @@ pl_PL:
       cancel_reply: "Anuluj odpowiedź"
       chat_channels: "Kanały"
       browse_all_channels: "Przeglądaj wszystkie kanały"
+      see_in: "Zobacz w"
       move_to_channel:
         title: "Przenieś wiadomości na kanał"
         instructions:
@@ -58,6 +75,7 @@ pl_PL:
         delete_channel: "Usuń kanał"
         join_channel: "Dołącz do kanału"
         leave_channel: "Opuść kanał"
+        leave_groupchat_info: "Opuszczając ten czat grupowy, nie będziesz już mieć do niego dostępu i nie będziesz otrzymywać związanych z nim powiadomień. Aby ponownie dołączyć, musisz otrzymać ponowne zaproszenie od członka czatu grupowego."
         join: "Dołącz"
         leave: "Opuść"
         save_label:
@@ -104,6 +122,7 @@ pl_PL:
         direct_message_cta: "Rozpocznij czat osobisty"
         direct_message: "Możesz także rozpocząć osobisty czat z jednym lub kilkoma użytkownikami."
         title: "Nie znaleziono żadnych kanałów"
+        my_threads: "Nie masz jeszcze żadnych wątków. Wątki, w których bierzesz udział, będą wyświetlane tutaj."
       email_frequency:
         description: "Wyślemy Ci wiadomość e-mail tylko wtedy, gdy nie widzieliśmy Cię w ciągu ostatnich 15 minut."
         never: "Nigdy"
@@ -113,6 +132,7 @@ pl_PL:
         title: "Pokaż wskaźnik aktywności w nagłówku"
         all_new: "Wszystkie nowe wiadomości"
         dm_and_mentions: "Bezpośrednie wiadomości i wzmianki"
+        only_mentions: "Tylko wzmianki"
         never: "Nigdy"
       separate_sidebar_mode:
         title: "Pokaż oddzielne tryby paska bocznego dla forum i czatu"
@@ -222,6 +242,7 @@ pl_PL:
         header: "Nagłówek czatu"
         composer: "Edytor czatu"
         channels_list: "Lista kanałów czatu"
+      no_direct_message_channels: "Nie dołączyłeś do żadnego kanału wiadomości bezpośrednich."
       no_public_channels: "Nie dołączyłeś do żadnego kanału."
       kicked_from_channel: "Nie masz już dostępu do tego kanału."
       only_chat_push_notifications:
@@ -260,6 +281,8 @@ pl_PL:
       save: "Zapisz"
       select: "Wybierz"
       return_to_list: "Powrót do listy kanałów"
+      return_to_channel: "Powrót do kanału"
+      return_to_threads_list: "Powrót do listy wątków"
       unread_threads_count:
         one: "Masz %{count} nieprzeczytaną dyskusje"
         few: "Masz %{count} nieprzeczytane dyskusje"
@@ -301,7 +324,7 @@ pl_PL:
         back: "Poprzednia"
         title: Kanały
         filter_all: Wszystkie
-        filter_open: Otwarty
+        filter_open: Otwórz
         filter_closed: Zamknięte
         filter_archived: Zarchiwizowany
         filter_input_placeholder: Szukaj kanału według nazwy
@@ -310,6 +333,8 @@ pl_PL:
         yesterday: Wczoraj
       members_view:
         filter_placeholder: Znajdź członków
+        add_member: Dodaj członka
+        back_to_settings: "Powrót do ustawień"
       about_view:
         associated_topic: Powiązany temat
         associated_category: Połączona kategoria
@@ -330,9 +355,16 @@ pl_PL:
         default_search_placeholder: "#kanał, @ktoś lub cokolwiek"
         default_channel_search_placeholder: "#kanał"
         default_user_search_placeholder: "@ktoś"
-        user_search_placeholder: "...dodaj więcej użytkowników"
+        user_search_placeholder: "...dodaj więcej członków"
         disabled_user: "wyłączył czat"
         no_items: "Brak elementu"
+        create_group_placeholder: "Nazwa czatu grupowego (opcjonalnie)"
+        participants_counter: "%{selection_count}/%{max} uczestników"
+        new_group_chat: "Nowy czat grupowy"
+        filter: "Filtr"
+        cant_add_more_members: "Osiągnięto maksymalną liczbę członków"
+        create_new_group_chat: "Utwórz czat grupowy"
+        group_with_too_many_members: "ma zbyt wielu członków (%{membersCount})"
       channel_edit_name_slug_modal:
         title: Edytuj kanał
         input_placeholder: Dodaj nazwę
@@ -344,10 +376,17 @@ pl_PL:
         input_placeholder: Dodaj opis
         description: Powiedz innym, o czym jest ten kanał
       direct_message_creator:
+        add_to_channel: "Dodaj do kanału"
         title: Nowa wiadomość
         prefix: "Do:"
         no_results: Brak wyników
         selected_user_title: "Odznacz %{username}"
+        group_name: "Nazwa czatu grupowego (opcjonalnie)"
+        members_counter:
+          one: "%{count}/%{max} członek"
+          few: "%{count}/%{max} członków"
+          many: "%{count}/%{max} członków"
+          other: "%{count}/%{max} członków"
       channel:
         no_memberships: Ten kanał nie ma członków
         no_memberships_found: Nie znaleziono członków
@@ -413,21 +452,21 @@ pl_PL:
       reviewable:
         type: "Wiadomość na czacie"
       reactions:
-        only_you: "Zareagowałeś z :%{emoji}:"
-        you_and_single_user: "Ty i %{username} zareagowaliście za pomocą :%{emoji}:"
-        you_and_multiple_users: "Ty, %{commaSeparatedUsernames} i %{username} zareagowaliście za pomocą :%{emoji}:"
+        only_you: "<span>Zareagowałeś za pomocą </span>:%{emoji}:"
+        you_and_single_user: "<span>Ty i %{username} zareagowaliście za pomocą </span>:%{emoji}:"
+        you_and_multiple_users: "<span>Ty, %{commaSeparatedUsernames} i %{username} zareagowaliście za pomocą </span>:%{emoji}:"
         you_multiple_users_and_more:
-          one: "Ty, %{commaSeparatedUsernames} i %{count} inny zareagowaliście za pomocą :%{emoji}:"
-          few: "Ty, %{commaSeparatedUsernames} i %{count} inni zareagowaliście za pomocą :%{emoji}:"
-          many: "Ty, %{commaSeparatedUsernames} i %{count} inni zareagowaliście za pomocą :%{emoji}:"
-          other: "Ty, %{commaSeparatedUsernames} i %{count} inni zareagowaliście za pomocą :%{emoji}:"
-        single_user: "%{username} zareagował za pomocą :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} i %{username} zareagowali za pomocą :%{emoji}:"
+          one: "<span>Ty, %{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
+          few: "<span>Ty, %{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
+          many: "<span>Ty, %{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
+          other: "<span>Ty, %{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
+        single_user: "<span>%{username} zareagował za pomocą </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} i %{username} zareagowali za pomocą </span>:%{emoji}:"
         multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą :%{emoji}:"
-          few: "%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą :%{emoji}:"
-          many: "%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą :%{emoji}:"
-          other: "%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą :%{emoji}:"
+          one: "<span>%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
+          few: "<span>%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
+          many: "<span>%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
       composer:
         toggle_toolbar: "Przełącz pasek narzędzi"
         italic_text: "wyróżniony tekst"
@@ -437,6 +476,7 @@ pl_PL:
       quote:
         original_channel: 'Oryginalnie wysłane w <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Cytat z czatu skopiowany do schowka"
+        default_thread_title: "Wątek"
       notification_levels:
         never: "Nigdy"
         mention: "Tylko dla wzmianek"
@@ -466,6 +506,7 @@ pl_PL:
         unfollow: "Opuść"
         admin_title: "Administratorzy"
         settings_title: "Ustawienia"
+        info_title: "Informacje o kanale"
         category_label: "Kategoria"
         history_label: "Historia"
         members_label: "Członkowie"
@@ -476,12 +517,20 @@ pl_PL:
           description: "Spowoduje to wyeksportowanie wszystkich wiadomości ze wszystkich kanałów."
           create_export: "Utwórz eksport"
           export_has_started: "Eksport rozpoczął się. Otrzymasz wiadomość prywatną, gdy będzie gotowy."
+      my_threads:
+        title: Moje wątki
+        aria_label: "Przejdź do mojej listy wątków"
       direct_messages:
-        title: "Czat osobisty"
+        title: "PW"
+        aria_label: "Przełącz na wiadomości bezpośrednie"
         new: "Utwórz osobisty czat"
         create: "Utwórz"
         leave: "Opuść ten osobisty czat"
+        close: "Zamknij ten osobisty czat"
         cannot_create: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
+      channel_list:
+        title: "Kanały"
+        aria_label: "Przełącz na listę kanałów"
       incoming_webhooks:
         back: "Poprzednia"
         channel_placeholder: "Wybierz kanał"
@@ -547,14 +596,22 @@ pl_PL:
           many: "%{commaSeparatedUsernames} i %{count} inni piszą"
           other: "%{commaSeparatedUsernames} i %{count} innych piszą"
       retention_reminders:
+        indefinitely_short: "nieokreślony"
+        indefinitely_long: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez czas nieokreślony."
         short:
           one: "%{count} dzień"
           few: "%{count} dni"
           many: "%{count} dni"
           other: "%{count} dni"
+        long:
+          one: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez %{count} dzień."
+          few: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez %{count} dni."
+          many: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez %{count} dni."
+          other: "Ustawienia czatu zostały skonfigurowane tak, aby wiadomości z kanału były przechowywane przez %{count} dni."
       flags:
         off_topic: "Ta wiadomość nie jest związana z bieżącą dyskusją określoną w tytule kanału i prawdopodobnie powinna zostać przeniesiona w inne miejsce."
         inappropriate: "Ta wiadomość zawiera treści, które rozsądna osoba mogłaby uznać za obraźliwe, krzywdzące lub stanowiące naruszenie <a href=\"%{basePath}/guidelines\">naszych wytycznych dotyczących społeczności</a>."
+        illegal: "Ten post wymaga uwagi personelu, ponieważ uważam, że zawiera treści niezgodne z prawem."
         spam: "Ta wiadomość to reklama lub akt wandalizmu. Nie jest przydatna ani istotna dla bieżącego kanału."
         notify_user: "Chcę porozmawiać z tą osobą bezpośrednio i osobiście o jej przesłaniu."
         notify_moderators: "Ta wiadomość wymaga uwagi personelu z innego powodu niewymienionego powyżej."
@@ -599,8 +656,15 @@ pl_PL:
           few: "+%{count}"
           many: "+%{count}"
           other: "+%{count}"
+      thread_title_toast:
+        title: "Ustaw tytuł wątku"
+        dismiss_action: "Nie pokazuj ponownie"
+        primary_action: "Ustaw tytuł"
+      thread_title_modal:
+        title: "Ustaw tytuł wątku"
       threads:
         open: "Otwórz wątek"
+        list: "Wątki"
         none: "Nie uczestniczysz w żadnych wątkach na tym kanale."
       draft_channel_screen:
         header: "Nowa wiadomość"

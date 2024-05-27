@@ -191,7 +191,7 @@ acceptance("Group - Authenticated", function (needs) {
     await click(".group-index-request");
 
     assert.strictEqual(
-      query(".modal-header .title").innerText.trim(),
+      query(".d-modal__header .d-modal__title-text").innerText.trim(),
       I18n.t("groups.membership_request.title", { group_name: "Macdonald" })
     );
 
@@ -200,7 +200,7 @@ acceptance("Group - Authenticated", function (needs) {
       "Please add me"
     );
 
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
 
     assert.strictEqual(
       query(".fancy-title").innerText.trim(),

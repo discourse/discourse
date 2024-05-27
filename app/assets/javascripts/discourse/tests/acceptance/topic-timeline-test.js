@@ -243,7 +243,6 @@ acceptance("Glimmer Topic Timeline", function (needs) {
         current_post_number: 1,
         highest_post_number: 2,
         last_read_post_number: 0,
-        bookmarks: [],
         last_read_post_id: null,
         deleted_by: {
           id: 7,

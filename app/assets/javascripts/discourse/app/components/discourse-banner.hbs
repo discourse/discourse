@@ -3,11 +3,11 @@
     <div id="banner" class={{this.overlay}}>
       <div class="floated-buttons">
         {{#if this.currentUser.staff}}
-          <a href={{this.banner.url}} class="btn btn-flat edit-banner">
+          <a href={{this.banner.url}} class="btn btn-transparent edit-banner">
             {{d-icon "pencil-alt"}}
-            {{#unless this.site.mobileView}}
+            {{#if this.site.desktopView}}
               {{html-safe (i18n "banner.edit")}}
-            {{/unless}}
+            {{/if}}
           </a>
         {{/if}}
 
@@ -15,7 +15,7 @@
           @icon="times"
           @action={{this.dismiss}}
           @title="banner.close"
-          class="btn-flat close"
+          class="btn-transparent close"
         />
       </div>
       <div id="banner-content">

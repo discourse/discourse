@@ -41,22 +41,27 @@ acceptance("Admin - Plugins", function (needs) {
     await visit("/admin/plugins");
 
     assert
-      .dom("table.admin-plugins tr .plugin-name .name")
-      .hasText("some-test-plugin", "displays the plugin in the table");
+      .dom(
+        "table.admin-plugins-list .admin-plugins-list__row .admin-plugins-list__name-details .admin-plugins-list__name-with-badges .admin-plugins-list__name"
+      )
+      .hasText("Some Test Plugin", "displays the plugin in the table");
 
     assert
       .dom(".admin-plugins .admin-container .alert-error")
       .exists("shows an error for unknown routes");
 
     assert
-      .dom("table.admin-plugins tr .version a.commit-hash")
+      .dom(
+        "table.admin-plugins-list tr .admin-plugins-list__version a.commit-hash"
+      )
       .hasAttribute(
         "href",
         "https://github.com/username/some-test-plugin/commit/1234567890abcdef",
         "displays a commit hash with a link to commit url"
       );
 
-    const toggleSelector = "table.admin-plugins tr .col-enabled button";
+    const toggleSelector =
+      "table.admin-plugins-list tr .admin-plugins-list__enabled button";
     assert
       .dom(toggleSelector)
       .hasAttribute("aria-checked", "true", "displays the plugin as enabled");

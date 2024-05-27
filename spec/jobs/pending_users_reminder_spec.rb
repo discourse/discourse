@@ -13,10 +13,7 @@ RSpec.describe Jobs::PendingUsersReminder do
     end
 
     context "when there are pending users" do
-      before do
-        Fabricate(:moderator, approved: true, approved_by_id: -1, approved_at: 1.week.ago)
-        Group.refresh_automatic_group!(:moderators)
-      end
+      before { Fabricate(:moderator, approved: true, approved_by_id: -1, approved_at: 1.week.ago) }
 
       it "sends a message if user was created more than pending_users_reminder_delay minutes ago" do
         SiteSetting.pending_users_reminder_delay_minutes = 8

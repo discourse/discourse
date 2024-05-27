@@ -1,5 +1,5 @@
 import Component from "@ember/component";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import $ from "jquery";
 import LoadMore from "discourse/mixins/load-more";
 import { observes, on } from "discourse-common/utils/decorators";

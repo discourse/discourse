@@ -96,6 +96,8 @@ hu:
       and_x_others:
         one: "és még %{count} fő"
         other: "és még %{count} fő"
+    transcript:
+      default_thread_title: "Szál"
   discourse_push_notifications:
     popup:
       chat_mention:

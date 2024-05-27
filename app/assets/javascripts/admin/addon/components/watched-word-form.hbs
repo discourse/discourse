@@ -1,14 +1,13 @@
 <div class="watched-word-input">
   <label for="watched-word">{{i18n "admin.watched_words.form.label"}}</label>
-  <TextField
-    @id="watched-word"
-    @value={{this.word}}
-    @disabled={{this.formSubmitted}}
-    @class="watched-word-input-field"
-    @autocorrect="off"
-    @autocapitalize="off"
-    @placeholderKey={{this.placeholderKey}}
-    @title={{i18n this.placeholderKey}}
+  <WatchedWords
+    @id="watched-words"
+    @value={{this.words}}
+    @onChange={{fn (mut this.words)}}
+    @options={{hash
+      filterPlaceholder=this.placeholderKey
+      disabled=this.formSubmitted
+    }}
   />
 </div>
 
@@ -21,10 +20,10 @@
       @id="watched-replacement"
       @value={{this.replacement}}
       @disabled={{this.formSubmitted}}
-      @class="watched-word-input-field"
       @autocorrect="off"
       @autocapitalize="off"
       @placeholderKey="admin.watched_words.form.replace_placeholder"
+      class="watched-word-input-field"
     />
   </div>
 {{/if}}
@@ -36,11 +35,11 @@
       }}</label>
     <TagChooser
       @id="watched-tag"
-      @class="watched-word-input-field"
       @tags={{this.selectedTags}}
       @onChange={{this.changeSelectedTags}}
       @everyTag={{true}}
       @options={{hash allowAny=true disabled=this.formSubmitted}}
+      class="watched-word-input-field"
     />
   </div>
 {{/if}}
@@ -54,10 +53,10 @@
       @id="watched-link"
       @value={{this.replacement}}
       @disabled={{this.formSubmitted}}
-      @class="watched-word-input-field"
       @autocorrect="off"
       @autocapitalize="off"
       @placeholderKey="admin.watched_words.form.link_placeholder"
+      class="watched-word-input-field"
     />
   </div>
 {{/if}}
@@ -66,13 +65,27 @@
   <label for="watched-case-sensitivity">{{i18n
       "admin.watched_words.form.case_sensitivity_label"
     }}</label>
-  <label class="case-sensitivity-checkbox">
+  <label class="case-sensitivity-checkbox checkbox-label">
     <Input
       @type="checkbox"
       @checked={{this.isCaseSensitive}}
       disabled={{this.formSubmitted}}
     />
     {{i18n "admin.watched_words.form.case_sensitivity_description"}}
+  </label>
+</div>
+
+<div class="watched-word-input">
+  <label for="watched-html">{{i18n
+      "admin.watched_words.form.html_label"
+    }}</label>
+  <label class="html-checkbox checkbox-label">
+    <Input
+      @type="checkbox"
+      @checked={{this.isHtml}}
+      disabled={{this.formSubmitted}}
+    />
+    {{i18n "admin.watched_words.form.html_description"}}
   </label>
 </div>
 

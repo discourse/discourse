@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Chat::Api::ChannelsArchivesController do
   fab!(:user)
   fab!(:admin)
@@ -153,7 +151,7 @@ RSpec.describe Chat::Api::ChannelsArchivesController do
         expect { post "/chat/api/channels/#{channel.id}/archives" }.to change(
           Jobs::Chat::ChannelArchive.jobs,
           :size,
-        ).by (1)
+        ).by(1)
         expect(response.status).to eq(200)
       end
     end

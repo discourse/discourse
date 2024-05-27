@@ -3,7 +3,7 @@ en:
     chat_separate_sidebar_mode: "Show separate sidebar modes for forum and chat."
     chat_enabled: "Enable chat."
     enable_public_channels: "Enable public channels based on categories."
-    chat_allowed_groups: "Users in these groups can chat. Note that staff can always access chat."
+    chat_allowed_groups: "Users in these groups can chat. Note that admins and moderators can always access chat."
     chat_channel_retention_days: "Chat messages in regular channels will be retained for this many days. Set to '0' to retain messages forever."
     chat_dm_retention_days: "Chat messages in personal chat channels will be retained for this many days. Set to '0' to retain messages forever."
     chat_auto_silence_duration: "Number of minutes that users will be silenced for when they exceed the chat message creation rate limit. Set to '0' to disable auto-silencing."
@@ -18,18 +18,20 @@ en:
     chat_archive_destination_topic_status: "The status that the destination topic should be once a channel archive is completed. This only applies when the destination topic is a new topic, not an existing one."
     default_emoji_reactions: "Default emoji reactions for chat messages. Add up to 5 emojis for quick reaction."
     direct_message_enabled_groups: "Allow users within these groups to create user-to-user Personal Chats. Note: staff can always create Personal Chats, and users will be able to reply to Personal Chats initiated by users who have permission to create them."
-    chat_message_flag_allowed_groups: "Users in these groups are allowed to flag chat messages."
+    chat_message_flag_allowed_groups: "Users in these groups are allowed to flag chat messages. Note that admins and moderators can always flag chat messages."
     max_mentions_per_chat_message: "Maximum number of @name notifications a user can use in a chat message."
     chat_max_direct_message_users: "Users cannot add more than this number of other users when creating a new direct message. Set to 0 to only allow messages to oneself. Staff are exempt from this setting."
     chat_allow_archiving_channels: "Allow staff to archive messages to a topic when closing a channel."
     chat_editing_grace_period: "For (n) seconds after sending a chat, editing will not display the (edited) tag by the chat message."
     chat_editing_grace_period_max_diff_low_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 0 and 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 2 and up)."
+    chat_preferred_mobile_index: "Preferred tab when loading /chat on mobile."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."
       chat_upload_not_allowed_secure_uploads: "Chat uploads are not allowed when secure uploads site setting is enabled."
   system_messages:
+    private_channel_title: "Channel %{id}"
     chat_channel_archive_complete:
       title: "Chat Channel Archive Complete"
       subject_template: "Chat channel archive completed successfully"
@@ -93,6 +95,7 @@ en:
       original_message_not_found: "The ancestor of the message you are replying to cannot be found or has been deleted."
       thread_invalid_for_channel: "Thread is not part of the provided channel."
       thread_does_not_match_parent: "Thread does not match parent message."
+      invalid_direct_message: "You are not allowed to create this direct message."
     reviewables:
       message_already_handled: "Thanks, but we've already reviewed this message and determined it does not need to be flagged again."
       actions:
@@ -196,6 +199,10 @@ en:
     summaries:
       no_targets: "There were no messages during the selected period."
 
+    transcript:
+      default_thread_title: "Thread"
+      split_thread_range: "messages %{start} to %{end} of %{total}"
+
   discourse_push_notifications:
     popup:
       chat_mention:
@@ -233,6 +240,7 @@ en:
         other: "You have new chat messages"
       from: "%{site_name}"
       subject:
+        private_message: "[%{email_prefix}] New message"
         direct_message_from_1: "[%{email_prefix}] New message from %{username}"
         direct_message_from_2: "[%{email_prefix}] New message from %{username1} and %{username2}"
         direct_message_from_more:

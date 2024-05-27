@@ -13,6 +13,8 @@ hy:
           never: "Երբեք"
     chat:
       deleted_chat_username: ջնջված
+      dates:
+        yesterday: "Երեկվա"
       create: "Ստեղծել"
       cancel: "Չեղարկել"
       channel_settings:
@@ -47,6 +49,7 @@ hy:
       browse:
         back: "Ետ"
         filter_all: Բոլորը
+        filter_open: Բացել
         filter_closed: Փակված
       chat_message_separator:
         today: Այսօրվա
@@ -62,6 +65,7 @@ hy:
           settings: Կարգավորումներ
       new_message_modal:
         no_items: "Տարրեր չկան"
+        filter: "Ֆիլտր"
       direct_message_creator:
         title: Նոր Հաղորդագրություն
         prefix: "Ում:"

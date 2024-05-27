@@ -56,6 +56,7 @@ class Migration::SafeMigrate
         def e.cause
           nil
         end
+
         def e.backtrace
           super.reject do |frame|
             frame =~ /safe_migrate\.rb/ || frame =~ /schema_migration_details\.rb/
@@ -140,7 +141,7 @@ class Migration::SafeMigrate
         or rename columns.
 
         Note, to minimize disruption use self.ignored_columns = ["column name"] on your
-        ActiveRecord model, this can be removed 6 months or so later.
+        ActiveRecord model, this can be removed after the post deployment migration has been promoted to a regular migration.
 
         This protection is in place to protect us against dropping columns that are currently
         in use by live applications.

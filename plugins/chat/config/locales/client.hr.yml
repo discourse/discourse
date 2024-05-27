@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 hr:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
-          chat: Čet
+          chat: Čavrljanje
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
           always: "Uvijek"
           never: "Nikad"
@@ -27,6 +30,7 @@ hr:
     chat:
       deleted_chat_username: izbrisao
       dates:
+        yesterday: "Jučer"
         time_tiny: "h:mm"
       all_loaded: "Prikaz svih poruka"
       already_enabled: "Chat je već omogućen na ovu temu. Molimo osvježite."
@@ -166,6 +170,7 @@ hr:
         back: "Natrag"
         title: Kanali
         filter_all: Sve
+        filter_open: Otvori
         filter_closed: Zatvoreno
       chat_message_separator:
         today: Danas
@@ -181,6 +186,7 @@ hr:
           settings: Postavke
       new_message_modal:
         no_items: "Nema stvari"
+        filter: "Filter"
       channel_edit_name_slug_modal:
         title: Uredi kanal
         input_placeholder: Dodajte ime
@@ -205,27 +211,17 @@ hr:
             one: 'Korisnici u %{group} i %{count} drugoj grupi će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
             few: 'Korisnici u %{group} i %{count} druge grupe će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
             other: 'Korisnici u %{group} i %{count} drugih grupa će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
+        name: "Naziv kanala"
         type: "Tip"
         types:
           category: "Kategorija"
           topic: "Tema"
-      reactions:
-        you_and_single_user: "Vi i %{username} ste reagirali s :%{emoji}:"
-        you_and_multiple_users: "Vi, %{commaSeparatedUsernames} i %{username} ste reagirali s :%{emoji}:"
-        you_multiple_users_and_more:
-          one: "Vi, %{commaSeparatedUsernames} i još %{count} ste reagirali s :%{emoji}:"
-          few: "Vi, %{commaSeparatedUsernames} i još njih %{count} ste reagirali s :%{emoji}:"
-          other: "Vi, %{commaSeparatedUsernames} i još njih %{count} ste reagirali s :%{emoji}:"
-        single_user: "%{username} je reagirao s :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} i %{username} reagirali su s :%{emoji}:"
-        multiple_users_and_more:
-          one: "%{commaSeparatedUsernames} i još %{count} reagirali su s :%{emoji}:"
-          few: "%{commaSeparatedUsernames} i još %{count} reagirali su s :%{emoji}:"
-          other: "%{commaSeparatedUsernames} i još %{count} reagirali su s :%{emoji}:"
       composer:
         italic_text: "naglašen tekst"
         bold_text: "jaki text"
         send: "Pošalji"
+      quote:
+        default_thread_title: "Nit"
       notification_levels:
         never: "Nikad"
       settings:

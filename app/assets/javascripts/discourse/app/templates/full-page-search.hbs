@@ -8,7 +8,7 @@
   <ScrollTracker
     @name="full-page-search"
     @tag={{this.searchTerm}}
-    @class="hidden"
+    class="hidden"
   />
 
   <div class="search-header" role="search">
@@ -24,17 +24,17 @@
     <div class="search-bar">
       <SearchTextField
         @value={{this.searchTerm}}
-        @class="full-page-search search no-blur search-query"
         @aria-label={{i18n "search.search_term_label"}}
         @enter={{action "search" (hash collapseFilters=true)}}
         @hasAutofocus={{this.hasAutofocus}}
         @aria-controls="search-result-count"
+        class="full-page-search search no-blur search-query"
       />
       <ComboBox
         @id="search-type"
         @value={{this.search_type}}
         @content={{this.searchTypes}}
-        @onChange={{action (mut this.search_type)}}
+        @onChange={{fn (mut this.search_type)}}
         @options={{hash castInteger=true}}
       />
       <DButton
@@ -64,7 +64,7 @@
       <div class="search-filters">
         <SearchAdvancedOptions
           @searchTerm={{readonly this.searchTerm}}
-          @onChangeSearchTerm={{action (mut this.searchTerm)}}
+          @onChangeSearchTerm={{fn (mut this.searchTerm)}}
           @search={{action "search" (hash collapseFilters=true)}}
           @searchButtonDisabled={{this.searchButtonDisabled}}
           @expandFilters={{this.expandFilters}}
@@ -86,7 +86,12 @@
     <PluginOutlet
       @name="full-page-search-below-search-header"
       @connectorTagName="div"
-      @outletArgs={{hash search=this.searchTerm type=this.search_type}}
+      @outletArgs={{hash
+        search=this.searchTerm
+        type=this.search_type
+        model=this.model
+        addSearchResults=this.addSearchResults
+      }}
     />
 
     {{#if this.hasResults}}
@@ -140,7 +145,7 @@
             <ComboBox
               @value={{this.sortOrder}}
               @content={{this.sortOrders}}
-              @onChange={{action (mut this.sortOrder)}}
+              @onChange={{this.setSortOrder}}
               @id="search-sort-by"
               @options={{hash castInteger=true}}
             />
@@ -164,7 +169,7 @@
         <LoadMore @selector=".fps-result" @action={{action "loadMore"}}>
           {{#if (or this.usingDefaultSearchType this.customSearchType)}}
             <SearchResultEntries
-              @posts={{this.model.posts}}
+              @posts={{this.searchResultPosts}}
               @bulkSelectEnabled={{this.bulkSelectEnabled}}
               @selected={{this.selected}}
               @highlightQuery={{this.highlightQuery}}
@@ -253,7 +258,7 @@
                 {{#if this.model.users}}
                   <div class="user-items">
                     {{#each this.model.users as |user|}}
-                      <UserLink @user={{user}} @class="fps-user-item">
+                      <UserLink @user={{user}} class="fps-user-item">
                         {{avatar user imageSize="large"}}
 
                         <div class="user-titles">

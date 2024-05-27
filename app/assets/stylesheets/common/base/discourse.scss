@@ -3,22 +3,17 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
-// Animation Keyframes
-@keyframes ping {
-  0% {
-    transform: scale(0.6);
-    box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0.7);
-  }
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(var(--success-rgb), 0);
-  }
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(var(--success-rgb), 0);
-  }
+:root {
+  --d-input-bg-color: var(--secondary);
+  --d-input-text-color: var(--primary);
+  --d-input-border: 1px solid var(--primary-400);
+  --d-input-bg-color--disabled: var(--primary-low);
+  --d-input-text-color--disabled: var(--primary);
+  --d-input-border--disabled: 1px solid var(--primary-low);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom);
 }
 
+// Animation Keyframes
 @keyframes rotate-forever {
   0% {
     transform: rotate(0deg);
@@ -131,6 +126,11 @@ span.relative-date {
   white-space: nowrap;
 }
 
+legend {
+  color: var(--primary-high);
+  font-weight: bold;
+}
+
 label {
   display: flex;
   margin-bottom: 5px;
@@ -180,35 +180,6 @@ input {
   }
 }
 
-input,
-select,
-textarea {
-  color: var(--primary);
-  caret-color: currentColor;
-
-  &[class*="span"] {
-    float: none;
-    margin-left: 0;
-  }
-
-  &[disabled],
-  &[readonly] {
-    cursor: not-allowed;
-    background-color: var(--primary-low);
-    border-color: var(--primary-low);
-  }
-
-  &:focus:required:invalid {
-    color: var(--danger);
-    border-color: var(--danger);
-  }
-
-  &:focus:required:invalid:focus {
-    border-color: var(--danger);
-    box-shadow: var(--shadow-focus-danger);
-  }
-}
-
 input {
   &[type="text"],
   &[type="password"],
@@ -228,9 +199,9 @@ input {
     @include form-item-sizing;
     display: inline-block;
     margin-bottom: 9px;
-    color: var(--primary);
-    background-color: var(--secondary);
-    border: 1px solid var(--primary-400);
+    color: var(--d-input-text-color);
+    background-color: var(--d-input-bg-color);
+    border: var(--d-input-border);
     border-radius: var(--d-input-border-radius);
     &:focus {
       @include default-focus;
@@ -295,6 +266,27 @@ table {
   }
 }
 
+input,
+select,
+textarea {
+  color: var(--d-input-text-color);
+  caret-color: currentColor;
+
+  &[disabled],
+  &[readonly] {
+    cursor: not-allowed;
+    color: var(--d-input-text-color--disabled);
+    background-color: var(--d-input-bg-color--disabled);
+    border: var(--d-input-border--disabled);
+  }
+
+  &:focus:required:invalid {
+    color: var(--danger);
+    border-color: var(--danger);
+    outline: 1px solid var(--danger);
+  }
+}
+
 // Common Classes
 
 .sortable {
@@ -331,7 +323,7 @@ table {
 
 .radio.inline .radio.inline,
 .checkbox.inline .checkbox.inline {
-  margin-left: 10px;
+  margin-left: 0.67em;
 }
 
 .container {
@@ -339,10 +331,11 @@ table {
 }
 
 .wrap {
+  --d-wrap-padding-h: 0.67em;
   max-width: var(--d-max-width);
   margin-right: auto;
   margin-left: auto;
-  padding: 0 10px;
+  padding: 0 var(--d-wrap-padding-h);
   .contents {
     position: relative;
   }
@@ -391,7 +384,6 @@ table {
   position: absolute;
   left: 0;
   bottom: -1px;
-  z-index: 1002;
 }
 
 .do-not-disturb-background {
@@ -399,16 +391,15 @@ table {
   align-items: center;
   justify-content: center;
   width: 1.25em;
-  background-color: var(--tertiary-med-or-tertiary);
+  background-color: var(--secondary);
   border-radius: 50%;
   height: 1.25em;
 
-  .d-icon.d-icon-moon {
-    display: block;
-    color: var(--tertiary-or-white) !important;
-    line-height: unset;
-    font-size: 0.875em;
-    margin: 0 !important;
+  .d-icon.d-icon-discourse-dnd {
+    color: var(--header_primary-medium) !important;
+    font-size: 1em;
+    height: 1em;
+    width: 1em;
   }
 }
 
@@ -587,8 +578,12 @@ table {
     line-height: var(--line-height-large);
   }
 
+  .control-group,
   .controls {
     margin-left: 0;
+    label {
+      font-weight: normal;
+    }
   }
 }
 
@@ -598,7 +593,10 @@ table {
   box-sizing: border-box;
   width: 100%;
   display: grid;
-  grid-template-areas: "sidebar content";
+  grid-template-areas:
+    "sidebar content"
+    "sidebar below-content";
+  grid-template-rows: 1fr auto;
   grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
   gap: 0;
 
@@ -667,26 +665,64 @@ table {
 }
 
 .pref-email {
-  .row {
-    border-bottom: 1px solid #ddd;
-    margin: 5px 0px;
-    padding-bottom: 5px;
+  display: grid;
+  grid-template-areas:
+    "title title"
+    "email email"
+    "instructions controls";
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0 0.5em;
 
-    &:last-child {
-      border-bottom: 0;
-    }
+  .control-label {
+    grid-area: title;
+  }
+
+  .emails {
+    grid-area: email;
+  }
+
+  .instructions {
+    grid-area: instructions;
+  }
+
+  .controls {
+    margin-top: 0.5em;
+    grid-area: controls;
+  }
+
+  .resend-email-confirmation {
+    background: transparent;
+    border: none;
+    color: var(--tertiary);
+    padding: 0;
+    text-align: left;
+  }
+
+  .row {
+    border-bottom: 1px solid var(--primary-low);
+    padding: 0.25em 0;
+    display: grid;
+    grid-template-areas:
+      "email dropdown"
+      "meta dropdown";
+    grid-template-columns: 1fr auto;
+    grid-template-rows: 1fr auto;
   }
 
   .email-first {
-    font-size: 1.1em;
+    grid-area: email;
+    align-self: center;
+    overflow-wrap: break-word;
+    min-width: 0;
   }
 
   .email-second {
+    grid-area: meta;
     color: var(--primary-medium);
 
     .primary {
       color: var(--success);
-      font-weight: bold;
     }
 
     .unconfirmed {
@@ -695,12 +731,11 @@ table {
   }
 
   .email-dropdown {
-    float: right;
-
-    .btn,
-    .btn:hover {
+    grid-area: dropdown;
+    align-self: center;
+    justify-self: end;
+    summary {
       background: transparent;
-
       .d-icon {
         color: var(--primary-high);
       }
@@ -709,10 +744,6 @@ table {
 
   .dropdown-menu {
     width: 120px;
-
-    & .icon {
-      margin-top: auto;
-    }
   }
 }
 
@@ -775,6 +806,7 @@ table {
   }
 }
 
+a#user-nav-skip-link,
 a#skip-link {
   padding: 0.25em 0.5em;
   position: fixed;

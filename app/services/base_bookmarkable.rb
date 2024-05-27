@@ -57,7 +57,7 @@ class BaseBookmarkable
   #
   # @param [User] user The user to perform the query for, this scopes the bookmarks returned.
   # @param [Guardian] guardian An instance of Guardian for the user to be used for security filters.
-  # @return [Bookmark::ActiveRecord_AssociationRelation] Should be an approprialely scoped list of bookmarks for the user.
+  # @return [Bookmark::ActiveRecord_AssociationRelation] Should be an appropriately scoped list of bookmarks for the user.
   def self.list_query(user, guardian)
     raise NotImplementedError
   end
@@ -130,6 +130,8 @@ class BaseBookmarkable
       display_username: bookmark.user.username,
       bookmark_name: bookmark.name,
       bookmark_id: bookmark.id,
+      bookmarkable_type: bookmark.bookmarkable_type,
+      bookmarkable_id: bookmark.bookmarkable_id,
     ).to_json
     notification_data[:notification_type] = Notification.types[:bookmark_reminder]
     bookmark.user.notifications.create!(notification_data)
@@ -144,6 +146,18 @@ class BaseBookmarkable
   # @param [Bookmark] bookmark The bookmark which we are checking access for using the bookmarkable association.
   # @return [Boolean]
   def self.can_see?(guardian, bookmark)
+    raise NotImplementedError
+  end
+
+  ##
+  # The can_see? method calls this one directly. can_see_bookmarkable? can be used
+  # in cases where you know the bookmarkable based on type but don't have a bookmark
+  # record to check against.
+  #
+  # @param [Guardian] guardian The guardian class for the user that we are performing the access check for.
+  # @param [Bookmark] bookmarkable The bookmarkable which we are checking access for (e.g. Post, Topic) which is an ActiveModel instance.
+  # @return [Boolean]
+  def self.can_see_bookmarkable?(guardian, bookmarkable)
     raise NotImplementedError
   end
 
@@ -200,7 +214,7 @@ class BaseBookmarkable
   # may be deleted 3 days after the post or topic is deleted.
   #
   # In the case of bookmarkable records that are not trashable, and where
-  # dependent_destroy is not used, this shouldjust delete the bookmarks pointing
+  # dependent_destroy is not used, this should just delete the bookmarks pointing
   # to the record which no longer exists in the database.
   def self.cleanup_deleted
     # noop

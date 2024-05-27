@@ -8,14 +8,18 @@ task "plugin:install_all_official" do
 
   STDERR.puts "Allowing write to all repos!" if ENV["GIT_WRITE"]
 
+  promises = []
+  failures = []
+
   Plugin::Metadata::OFFICIAL_PLUGINS.each do |name|
     next if skip.include? name
+
     repo = "https://github.com/discourse/#{name}"
     dir = repo.split("/").last
     path = File.expand_path("plugins/" + dir)
 
     if Dir.exist? path
-      STDERR.puts "Skipping #{dir} cause it already exists!"
+      STDOUT.puts "Skipping #{dir} cause it already exists!"
       next
     end
 
@@ -24,16 +28,24 @@ task "plugin:install_all_official" do
       repo += ".git"
     end
 
-    attempts = 0
-    begin
-      attempts += 1
-      system("git clone #{repo} #{path}", exception: true)
+    promises << Concurrent::Promise.execute do
+      attempts ||= 1
+      STDOUT.puts("Cloning '#{repo}' to '#{path}'...")
+      system("git clone --quiet #{repo} #{path}", exception: true)
     rescue StandardError
-      abort("Failed to clone #{repo}") if attempts >= 3
-      STDERR.puts "Failed to clone #{repo}... trying again..."
+      if attempts == 3
+        failures << repo
+        abort
+      end
+
+      STDOUT.puts "Failed to clone #{repo}... trying again..."
+      attempts += 1
       retry
     end
   end
+
+  Concurrent::Promise.zip(*promises).value!
+  failures.each { |repo| STDOUT.puts "Failed to clone #{repo}" } if failures.present?
 end
 
 desc "install plugin"
@@ -53,22 +65,8 @@ task "plugin:install", :repo do |t, args|
   end
 end
 
-desc "update all plugins"
-task "plugin:update_all" do |t|
-  # Loop through each directory
-  plugins = Dir.glob(File.expand_path("plugins/*")).select { |f| File.directory? f }
-  # run plugin:update
-  plugins.each do |plugin|
-    next unless File.directory?(plugin + "/.git")
-    Rake::Task["plugin:update"].invoke(plugin)
-    Rake::Task["plugin:update"].reenable
-  end
-  Rake::Task["plugin:versions"].invoke
-end
-
-desc "update a plugin"
-task "plugin:update", :plugin do |t, args|
-  plugin = ENV["PLUGIN"] || ENV["plugin"] || args[:plugin]
+def update_plugin(plugin)
+  plugin = ENV["PLUGIN"] || ENV["plugin"] || plugin
   plugin_path = plugin
   plugin = File.basename(plugin)
 
@@ -100,8 +98,28 @@ task "plugin:update", :plugin do |t, args|
     `git -C '#{plugin_path}' branch -u origin/main main`
   end
 
-  update_status = system("git -C '#{plugin_path}' pull --no-rebase")
+  update_status = system("git -C '#{plugin_path}' pull --quiet --no-rebase")
   abort("Unable to pull latest version of plugin #{plugin_path}") unless update_status
+end
+
+desc "update all plugins"
+task "plugin:update_all" do |t|
+  # Loop through each directory
+  plugins =
+    Dir
+      .glob(File.expand_path("plugins/*"))
+      .select { |f| File.directory?(f) && File.directory?("#{f}/.git") }
+
+  # run plugin:update
+  promises = plugins.map { |plugin| Concurrent::Promise.execute { update_plugin(plugin) } }
+  Concurrent::Promise.zip(*promises).value!
+
+  Rake::Task["plugin:versions"].invoke
+end
+
+desc "update a plugin"
+task "plugin:update", :plugin do |t, args|
+  update_plugin(args[:plugin])
 end
 
 desc "pull compatible plugin versions for all plugins"
@@ -181,7 +199,9 @@ def spec(plugin, parallel: false, argv: nil)
     cmd = parallel ? "bin/turbo_rspec" : "bin/rspec"
 
     Rake::FileUtilsExt.verbose(!parallel) do
-      sh("LOAD_PLUGINS=1 #{cmd} #{files.join(" ")} #{params.join(" ")}")
+      sh("LOAD_PLUGINS=1 #{cmd} #{files.join(" ")} #{params.join(" ")}") do |ok, status|
+        fail "Spec command failed with status (#{status.exitstatus})" if !ok
+      end
     end
   else
     abort "No specs found."

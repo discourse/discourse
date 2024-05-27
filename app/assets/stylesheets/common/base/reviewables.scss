@@ -550,6 +550,13 @@
       font-size: var(--font-up-2);
       margin-right: 0.75em;
     }
+    .badge-category__wrapper {
+      margin-left: 0.25em;
+    }
+    .discourse-tag {
+      vertical-align: bottom;
+      padding-left: 0.1em;
+    }
   }
 
   &__context-question {

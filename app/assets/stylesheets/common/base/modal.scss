@@ -1,5 +1,112 @@
 // Modal wrappers
 
+.d-modal {
+  pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
+
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  z-index: z("modal", "content");
+  overflow: auto;
+
+  &.-inline {
+    position: relative;
+  }
+
+  html.keyboard-visible body.ios-safari-composer-hacks & {
+    height: calc(var(--composer-vh, 1vh) * 100);
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    pointer-events: auto;
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-height: 80vh;
+    background-color: var(--secondary);
+    box-shadow: var(--shadow-modal);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.5rem 0.5rem 1.5rem; //offset for close button padding
+    border-bottom: 1px solid var(--primary-low);
+
+    .modal-close {
+      margin-left: auto;
+      .d-icon {
+        font-size: var(--font-up-2);
+        color: var(--primary-high);
+      }
+    }
+  }
+
+  .d-modal__primary-action,
+  .d-modal__dismiss-action {
+    .btn {
+      text-transform: capitalize;
+    }
+  }
+
+  &__title-text,
+  &__subtitle-text {
+    margin: 0;
+  }
+
+  &__body {
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+    box-sizing: border-box;
+
+    input {
+      width: auto;
+
+      &[type="text"] {
+        width: 100%;
+      }
+    }
+    textarea {
+      width: 100%;
+      height: 80px;
+    }
+    pre code {
+      white-space: pre-wrap;
+      max-width: 100%;
+    }
+  }
+  &__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--primary-low);
+    gap: 0.5rem;
+  }
+  &__backdrop {
+    user-select: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: z("modal", "overlay");
+    background-color: #000;
+    animation: fade 0.3s forwards;
+
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
+  }
+}
+
+//legacy
+
 .fixed-modal:not(#discourse-modal) {
   // new <DModal /> only, not <DModalLegacy />
   pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
@@ -59,36 +166,6 @@
   color: var(--secondary-high);
 }
 
-.modal-header {
-  display: flex;
-  padding: 10px 15px;
-  border-bottom: 1px solid var(--primary-low);
-  align-items: center;
-
-  .title {
-    margin-right: 1em;
-
-    h3 {
-      margin-bottom: 0;
-    }
-
-    p {
-      margin: 0;
-    }
-  }
-
-  .modal-close {
-    order: 2;
-    margin-left: auto;
-    align-self: start;
-    padding: 0.15em 0;
-
-    .close {
-      color: var(--primary-high);
-    }
-  }
-}
-
 .modal-backdrop {
   user-select: none;
   position: fixed;
@@ -119,7 +196,7 @@
     opacity: 0;
   }
   to {
-    opacity: 0.9;
+    opacity: 0.6;
   }
 }
 
@@ -145,9 +222,7 @@
     }
   }
 
-  &:not(.bookmark-reminder-modal):not(.history-modal):not(
-      .sidebar__edit-navigation-menu__modal
-    ) {
+  &:not(.bookmark-reminder-modal):not(.history-modal) {
     .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(
         .poll-breakdown
       ) {
@@ -161,21 +236,6 @@
 
 .modal-form {
   margin-bottom: 0;
-}
-
-.modal-footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  padding: 14px 15px 10px;
-  border-top: 1px solid var(--primary-low);
-  gap: 0.3em 0;
-  .btn {
-    margin: 0 0.75em 0 0;
-    &[href] {
-      min-height: unset;
-    }
-  }
 }
 
 .modal {
@@ -362,21 +422,14 @@
       margin-top: 0.15em;
       display: flex;
       align-items: baseline;
+      gap: 0.5em;
       .discourse-tags {
         font-size: var(--font-down-1);
       }
-      .category-name,
+      .badge-category__name,
       .discourse-tag {
         color: var(--text-color);
       }
-    }
-  }
-}
-
-.delete-user-modal {
-  .modal-footer {
-    .btn {
-      line-height: var(--line-height-medium);
     }
   }
 }
@@ -434,7 +487,7 @@
       width: 100%;
     }
     textarea {
-      font-family: monospace;
+      font-family: var(--d-font-family--monospace);
       resize: none;
       border-radius: 0;
       box-shadow: none;
@@ -515,11 +568,20 @@
 }
 
 .flag-modal-body {
-  max-height: 450px;
+  form {
+    margin: 0;
+  }
+  .flag-action-type .controls .checkbox-label {
+    margin-bottom: 0.25em;
+  }
   .flag-action-type-details {
     width: 100%;
-    max-width: 500px;
+    // max-width: 500px;
     line-height: var(--line-height-large);
+  }
+  .flag-confirmation {
+    margin-top: 0.5em;
+    padding-left: 1.125em;
   }
 }
 
@@ -530,140 +592,6 @@
 .custom-message-length {
   color: var(--primary-medium);
   font-size: var(--font-down-1);
-}
-
-.jump-to-post-modal {
-  .modal-inner-container {
-    max-width: 350px;
-  }
-  .modal-body {
-    overflow-y: visible;
-    #post-jump {
-      margin: 0;
-      width: 100px;
-    }
-
-    .date-picker {
-      margin: 0;
-      width: 180px;
-    }
-
-    .input-hint-text {
-      color: var(--primary);
-    }
-
-    .jump-to-post-control .index {
-      color: var(--primary-medium);
-    }
-
-    .jump-to-date-control {
-      display: flex;
-      align-items: center;
-      .input-hint-text {
-        margin-left: 0;
-        margin-right: 0.5em;
-      }
-    }
-
-    .separator {
-      display: flex;
-      align-items: center;
-      margin: 0.5em auto;
-
-      hr {
-        flex: 1 0 0px;
-      }
-
-      .text {
-        margin: 0 0.5em 0 0;
-        color: var(--primary-medium);
-      }
-    }
-  }
-}
-
-// move-to topic modal
-.choose-topic-modal {
-  #split-topic-name,
-  #choose-topic-title,
-  #choose-message-title {
-    width: 100%;
-  }
-
-  .category-chooser {
-    margin-bottom: 9px;
-    width: 100% !important;
-    .category-row {
-      max-width: 485px;
-    }
-  }
-
-  .controls.existing-topic {
-    margin-bottom: 0.75em;
-  }
-
-  // move to existing topic
-  .existing-topic {
-    .radio {
-      flex-wrap: wrap;
-    }
-    .topic-title {
-      max-width: 90%;
-    }
-    .topic-categories {
-      width: 100%;
-    }
-  }
-
-  #choosing-topic {
-    form {
-      hr {
-        margin-bottom: 0.5em;
-      }
-    }
-  }
-}
-
-.publish-page-modal {
-  .modal-body {
-    p.publish-description {
-      margin-top: 0;
-    }
-    input.publish-slug {
-      width: 100%;
-    }
-
-    .publish-url {
-      margin-bottom: 1em;
-      .example-url,
-      .invalid-slug {
-        font-weight: bold;
-      }
-    }
-
-    .publish-slug:disabled {
-      cursor: not-allowed;
-    }
-
-    .controls {
-      margin-bottom: 1em;
-
-      .description {
-        margin: 0;
-        display: flex;
-        align-items: center;
-      }
-    }
-  }
-
-  .modal-footer {
-    display: flex;
-
-    .close-publish-page {
-      margin-left: auto;
-      margin-right: 0;
-    }
-  }
 }
 
 .ignore-duration-with-username-modal {
@@ -710,26 +638,6 @@
   }
 }
 
-.topic-bulk-actions-modal {
-  .modal-inner-container {
-    min-width: 0;
-    width: 100%;
-  }
-  p {
-    margin-top: 0;
-  }
-  .bulk-buttons {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(12em, 1fr));
-    gap: 0.5em;
-    max-width: 100%;
-    min-width: 0;
-    .d-button-label {
-      @include ellipsis;
-    }
-  }
-}
-
 .bulk-notification-list {
   margin-bottom: 1.5em;
 }
@@ -741,34 +649,6 @@
   .description {
     width: 100%;
     margin-top: 0.25em;
-  }
-}
-
-.modal.edit-slow-mode-modal {
-  .slow-mode-label {
-    display: inline-flex;
-  }
-
-  .alert.alert-info {
-    margin-bottom: 0;
-  }
-
-  .input-small {
-    width: 10%;
-  }
-}
-
-.group-add-members-modal {
-  .input-group {
-    margin-bottom: 0.5em;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  .user-chooser {
-    width: calc(100%);
   }
 }
 
@@ -793,17 +673,26 @@
 
 .confirm-session {
   &__instructions {
-    margin-bottom: 1.5em;
+    margin-bottom: 0.5em;
   }
 
   form {
     margin: 1.5em 0;
   }
 
+  &__passkey {
+    margin-top: 1em;
+  }
+
   &__fine-print {
     font-size: var(--font-down-1);
     color: var(--primary-medium);
-    max-width: 500px;
+    max-width: 600px;
+  }
+
+  &__reset {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
   }
 }
 

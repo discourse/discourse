@@ -5,5 +5,5 @@ Fabricator(:user_field) do
   description "user field description"
   field_type "text"
   editable true
-  required true
+  requirement "on_signup"
 end

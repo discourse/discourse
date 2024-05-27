@@ -61,7 +61,7 @@
         },
         "permission": {
           "type": [
-            "string",
+            "integer",
             "null"
           ]
         },
@@ -83,7 +83,13 @@
         },
         "has_children": {
           "type": [
-            "string",
+            "boolean",
+            "null"
+          ]
+        },
+        "subcategory_count": {
+          "type": [
+            "integer",
             "null"
           ]
         },
@@ -291,6 +297,7 @@
         "topic_template",
         "form_template_ids",
         "has_children",
+        "subcategory_count",
         "sort_order",
         "sort_ascending",
         "show_subcategory_list",

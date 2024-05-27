@@ -21,6 +21,7 @@ class TopicUploadSecurityManager
   end
 
   def run
+    rebaked_posts = []
     Rails.logger.debug("Updating upload security in topic #{@topic.id}")
     posts_owning_uploads.each do |post|
       Post.transaction do
@@ -35,14 +36,18 @@ class TopicUploadSecurityManager
             upload.access_control_post = post
             upload.update_secure_status(source: "topic upload security")
           end
-        post.rebake! if secure_status_did_change
+
+        if secure_status_did_change
+          post.rebake!
+          rebaked_posts << post
+        end
         Rails.logger.debug(
           "Security updated & rebake complete in topic #{@topic.id} - post #{post.id}",
         )
       end
     end
 
-    return if !SiteSetting.secure_uploads
+    return rebaked_posts if !SiteSetting.secure_uploads
 
     # We only want to do this if secure uploads is enabled. If
     # the setting is turned on after a site has been running
@@ -76,7 +81,10 @@ class TopicUploadSecurityManager
             end
           end
 
-        post.rebake! if secure_status_did_change
+        if secure_status_did_change
+          post.rebake!
+          rebaked_posts << post
+        end
         Rails.logger.debug(
           "Completed changing access control posts #{secure_status_did_change ? "and rebaking" : ""} in topic #{@topic.id} - post #{post.id}",
         )
@@ -84,22 +92,23 @@ class TopicUploadSecurityManager
     end
 
     Rails.logger.debug("Completed updating upload security in topic #{@topic.id}!")
+    rebaked_posts
   end
 
   private
 
   def posts_owning_uploads
-    Post.where(topic_id: @topic.id).joins("INNER JOIN uploads ON access_control_post_id = posts.id")
+    Post.where(topic_id: @topic.id, id: Upload.select(:access_control_post_id))
   end
 
   def posts_with_unowned_uploads
-    Post
-      .where(topic_id: @topic.id)
-      .joins(
-        "INNER JOIN upload_references ON upload_references.target_type = 'Post' AND upload_references.target_id = posts.id",
-      )
-      .joins("INNER JOIN uploads ON upload_references.upload_id = uploads.id")
-      .where("uploads.access_control_post_id IS NULL")
-      .includes(:uploads)
+    Post.where(
+      topic_id: @topic.id,
+      id:
+        UploadReference.where(
+          target_type: "Post",
+          upload: Upload.where(access_control_post_id: nil),
+        ).select(:target_id),
+    ).includes(:uploads)
   end
 end

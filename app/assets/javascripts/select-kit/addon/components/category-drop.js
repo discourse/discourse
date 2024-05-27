@@ -2,28 +2,33 @@ import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { setting } from "discourse/lib/computed";
 import DiscourseURL, {
   getCategoryAndTagUrl,
   getEditCategoryUrl,
 } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import I18n from "discourse-i18n";
+import CategoryDropMoreCollection from "select-kit/components/category-drop-more-collection";
+import CategoryRow from "select-kit/components/category-row";
 import ComboBoxComponent from "select-kit/components/combo-box";
+import { MAIN_COLLECTION } from "select-kit/components/select-kit";
 
 export const NO_CATEGORIES_ID = "no-categories";
 export const ALL_CATEGORIES_ID = "all-categories";
 
+const MORE_COLLECTION = "MORE_COLLECTION";
+
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-drop"],
-  classNameBindings: ["categoryStyle"],
   classNames: ["category-drop"],
   value: readOnly("category.id"),
   content: readOnly("categoriesWithShortcuts.[]"),
-  categoryStyle: readOnly("siteSettings.category_style"),
-  noCategoriesLabel: I18n.t("categories.no_subcategory"),
+  noCategoriesLabel: I18n.t("categories.no_subcategories"),
   navigateToEdit: false,
   editingCategory: false,
   editingCategoryTab: null,
+  allowUncategorized: setting("allow_uncategorized_topics"),
 
   selectKitOptions: {
     filterable: true,
@@ -40,10 +45,23 @@ export default ComboBoxComponent.extend({
     displayCategoryDescription: "displayCategoryDescription",
     headerComponent: "category-drop/category-drop-header",
     parentCategory: false,
+    allowUncategorized: "allowUncategorized",
+  },
+
+  init() {
+    this._super(...arguments);
+
+    this.insertAfterCollection(MAIN_COLLECTION, MORE_COLLECTION);
+  },
+
+  modifyComponentForCollection(collection) {
+    if (collection === MORE_COLLECTION) {
+      return CategoryDropMoreCollection;
+    }
   },
 
   modifyComponentForRow() {
-    return "category-row";
+    return CategoryRow;
   },
 
   displayCategoryDescription: computed(function () {
@@ -56,8 +74,7 @@ export default ComboBoxComponent.extend({
     return this.options.subCategory || false;
   }),
 
-  categoriesWithShortcuts: computed(
-    "categories.[]",
+  shortcuts: computed(
     "value",
     "selectKit.options.{subCategory,noSubcategories}",
     function () {
@@ -84,16 +101,34 @@ export default ComboBoxComponent.extend({
         });
       }
 
-      const results = this._filterUncategorized(this.categories || []);
-      return shortcuts.concat(results);
+      // If there is a single shortcut, we can have a single "remove filter"
+      // option
+      if (shortcuts.length === 1 && shortcuts[0].id === ALL_CATEGORIES_ID) {
+        shortcuts[0].name = I18n.t("categories.remove_filter");
+      }
+
+      return shortcuts;
     }
   ),
 
+  categoriesWithShortcuts: computed("categories.[]", "shortcuts", function () {
+    const results = this._filterUncategorized(this.categories || []);
+    return this.shortcuts.concat(results);
+  }),
+
   modifyNoSelection() {
     if (this.selectKit.options.noSubcategories) {
-      return this.defaultItem(NO_CATEGORIES_ID, this.noCategoriesLabel);
+      return this.defaultItem(
+        NO_CATEGORIES_ID,
+        I18n.t("categories.no_subcategories")
+      );
     } else {
-      return this.defaultItem(ALL_CATEGORIES_ID, this.allCategoriesLabel);
+      return this.defaultItem(
+        ALL_CATEGORIES_ID,
+        this.selectKit.options.subCategory
+          ? I18n.t("categories.subcategories_label")
+          : I18n.t("categories.categories_label")
+      );
     }
   },
 
@@ -122,6 +157,7 @@ export default ComboBoxComponent.extend({
       if (this.editingCategory) {
         return this.noCategoriesLabel;
       }
+
       if (this.selectKit.options.subCategory) {
         return I18n.t("categories.all_subcategories", {
           categoryName: this.parentCategoryName,
@@ -133,23 +169,39 @@ export default ComboBoxComponent.extend({
   ),
 
   async search(filter) {
+    if (this.site.lazy_load_categories) {
+      let parentCategoryId;
+      if (this.options.parentCategory?.id) {
+        parentCategoryId = this.options.parentCategory.id;
+      } else if (!filter) {
+        // Only top-level categories should be displayed by default.
+        // If there is a search term, the term can match any category,
+        // including subcategories.
+        parentCategoryId = -1;
+      }
+
+      const result = await Category.asyncSearch(filter, {
+        parentCategoryId,
+        includeUncategorized: this.siteSettings.allow_uncategorized_topics,
+        includeAncestors: true,
+        // Show all categories if possible (up to 18), otherwise show just
+        // first 15 and let CategoryDropMoreCollection show the "show more" link
+        limit: 18,
+      });
+
+      const categories =
+        result.categoriesCount > 18
+          ? result.categories.slice(0, 15)
+          : result.categories;
+
+      this.selectKit.totalCount = result.categoriesCount;
+
+      return this.shortcuts.concat(categories);
+    }
+
     const opts = {
       parentCategoryId: this.options.parentCategory?.id,
-      includeUncategorized: this.siteSettings.allow_uncategorized_topics,
     };
-
-    if (this.siteSettings.lazy_load_categories) {
-      const results = await Category.asyncSearch(filter, { ...opts, limit: 5 });
-      return results.sort((a, b) => {
-        if (a.parent_category_id && !b.parent_category_id) {
-          return 1;
-        } else if (!a.parent_category_id && b.parent_category_id) {
-          return -1;
-        } else {
-          return 0;
-        }
-      });
-    }
 
     if (filter) {
       let results = Category.search(filter, opts);
@@ -174,17 +226,21 @@ export default ComboBoxComponent.extend({
           ? this.selectKit.options.parentCategory
           : Category.findById(parseInt(categoryId, 10));
 
-      const route = this.editingCategory
-        ? getEditCategoryUrl(
-            category,
-            categoryId !== NO_CATEGORIES_ID,
-            this.editingCategoryTab
-          )
-        : getCategoryAndTagUrl(
-            category,
-            categoryId !== NO_CATEGORIES_ID,
-            this.tagId
-          );
+      let route;
+      if (this.editingCategoryTab) {
+        // rendered on category page
+        route = getEditCategoryUrl(
+          category,
+          categoryId !== NO_CATEGORIES_ID,
+          this.editingCategoryTab
+        );
+      } else {
+        route = getCategoryAndTagUrl(
+          category,
+          categoryId !== NO_CATEGORIES_ID,
+          this.tagId
+        );
+      }
 
       DiscourseURL.routeToUrl(route);
     },

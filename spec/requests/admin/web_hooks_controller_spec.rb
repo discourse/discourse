@@ -290,19 +290,36 @@ RSpec.describe Admin::WebHooksController do
       expect(parsed_event["response_body"]).to eq(nil)
     end
 
-    it "doesn't emit the web hook if the payload URL resolves to a blocked IP" do
-      FinalDestination::TestHelper.stub_to_fail do
-        post "/admin/api/web_hooks/#{web_hook.id}/events/#{web_hook_event.id}/redeliver.json"
+    context "with web_hook_event_headers_for_redelivery modifier registered" do
+      let(:modifier_block) do
+        Proc.new do |headers, _, _|
+          headers["bb"] = "22"
+          headers
+        end
       end
-      expect(response.status).to eq(200)
+      it "modifies the headers & saves the updated headers to the webhook event" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:web_hook_event_headers, &modifier_block)
 
-      parsed_event = response.parsed_body["web_hook_event"]
-      expect(parsed_event["id"]).to eq(web_hook_event.id)
-      expect(parsed_event["response_headers"]).to eq(
-        { error: I18n.t("webhooks.payload_url.blocked_or_internal") }.to_json,
-      )
-      expect(parsed_event["status"]).to eq(-1)
-      expect(parsed_event["response_body"]).to eq(nil)
+        stub_request(:post, web_hook.payload_url).to_return(
+          status: 402,
+          body: "efg",
+          headers: {
+            "Content-Type" => "application/json",
+            "yoo" => "man",
+          },
+        )
+        post "/admin/api/web_hooks/#{web_hook.id}/events/#{web_hook_event.id}/redeliver.json"
+        expect(response.status).to eq(200)
+
+        expect(JSON.parse(web_hook_event.reload.headers)).to eq({ "aa" => "1", "bb" => "22" })
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :web_hook_event_headers,
+          &modifier_block
+        )
+      end
     end
   end
 end

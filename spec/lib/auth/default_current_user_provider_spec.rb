@@ -8,9 +8,6 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
 
   class TestProvider < Auth::DefaultCurrentUserProvider
     attr_reader :env
-    def initialize(env)
-      super(env)
-    end
 
     def cookie_jar
       @cookie_jar ||= ActionDispatch::Request.new(env).cookie_jar
@@ -604,11 +601,9 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
   end
 
   describe "user api" do
-    fab! :user do
-      Fabricate(:user)
-    end
+    fab!(:user)
 
-    let :api_key do
+    let(:api_key) do
       UserApiKey.create!(
         application_name: "my app",
         client_id: "1234",

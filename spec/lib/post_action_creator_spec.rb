@@ -2,11 +2,9 @@
 
 RSpec.describe PostActionCreator do
   fab!(:admin)
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:post)
   let(:like_type_id) { PostActionType.types[:like] }
-
-  before { Group.refresh_automatic_groups! }
 
   describe "rate limits" do
     before { RateLimiter.enable }
@@ -202,7 +200,11 @@ RSpec.describe PostActionCreator do
 
     context "with existing reviewable" do
       let!(:reviewable) do
-        PostActionCreator.create(Fabricate(:user), post, :inappropriate).reviewable
+        PostActionCreator.create(
+          Fabricate(:user, refresh_auto_groups: true),
+          post,
+          :inappropriate,
+        ).reviewable
       end
 
       it "appends to an existing reviewable if exists" do
@@ -273,19 +275,31 @@ RSpec.describe PostActionCreator do
   describe "take_action" do
     it "will hide the post" do
       PostActionCreator
-        .new(Fabricate(:moderator), post, PostActionType.types[:spam], take_action: true)
+        .new(
+          Fabricate(:moderator, refresh_auto_groups: true),
+          post,
+          PostActionType.types[:spam],
+          take_action: true,
+        )
         .perform
         .reviewable
       expect(post.reload).to be_hidden
     end
 
     context "when there is another reviewable on the post" do
-      before { PostActionCreator.create(Fabricate(:user), post, :inappropriate) }
+      before do
+        PostActionCreator.create(Fabricate(:user, refresh_auto_groups: true), post, :inappropriate)
+      end
 
       it "will agree with the old reviewable" do
         reviewable =
           PostActionCreator
-            .new(Fabricate(:moderator), post, PostActionType.types[:spam], take_action: true)
+            .new(
+              Fabricate(:moderator, refresh_auto_groups: true),
+              post,
+              PostActionType.types[:spam],
+              take_action: true,
+            )
             .perform
             .reviewable
         expect(reviewable.reload).to be_approved
@@ -298,7 +312,12 @@ RSpec.describe PostActionCreator do
 
       it "still hides the post without considering the score" do
         PostActionCreator
-          .new(Fabricate(:moderator), post, PostActionType.types[:spam], take_action: true)
+          .new(
+            Fabricate(:moderator, refresh_auto_groups: true),
+            post,
+            PostActionType.types[:spam],
+            take_action: true,
+          )
           .perform
           .reviewable
         expect(post.reload).to be_hidden

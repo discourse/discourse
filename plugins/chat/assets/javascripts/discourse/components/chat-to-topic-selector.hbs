@@ -52,8 +52,8 @@
       <CategoryChooser
         @id="new-topic-category-selector"
         @value={{this.categoryId}}
-        @class="small"
-        @onChange={{action (mut this.categoryId)}}
+        @onChange={{fn (mut this.categoryId)}}
+        class="small"
       />
 
       {{#if this.canAddTags}}

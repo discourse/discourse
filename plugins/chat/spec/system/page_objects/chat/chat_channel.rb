@@ -86,6 +86,7 @@ module PageObjects
       def bookmark_message(message)
         if page.has_css?("html.mobile-view", wait: 0)
           click_message_action_mobile(message, "bookmark")
+          expect(page).to have_css(".d-modal:not(.is-animating)")
         else
           hover_message(message)
           find(".bookmark-btn").click
@@ -187,7 +188,7 @@ module PageObjects
       end
 
       def thread_list_button_selector
-        ".chat-threads-list-button"
+        ".c-navbar__threads-list-button"
       end
 
       private

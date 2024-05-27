@@ -93,11 +93,8 @@ body.wizard {
     }
 
     &.styling {
-      max-width: 85%;
-
-      @include breakpoint("mobile-extra-large") {
-        max-width: 100%;
-      }
+      max-width: 100%;
+      width: auto;
     }
   }
 
@@ -161,16 +158,9 @@ body.wizard {
     display: block;
   }
 
-  &__field.component-styling-preview {
-    display: inline;
-    @media only screen and (max-device-width: 568px) {
-      display: none;
-    }
-  }
-
   &__field.text-governing-law,
   &__field.text-city-for-disputes {
-    @media only screen and (max-device-width: 568px) {
+    @media only screen and (max-width: 568px) {
       display: none;
     }
   }
@@ -184,7 +174,7 @@ body.wizard {
     box-sizing: border-box;
     margin-right: 1em;
 
-    @media only screen and (max-device-width: 568px) {
+    @media only screen and (max-width: 925px) {
       width: 80%;
       margin-left: auto;
       margin-right: auto;
@@ -193,11 +183,11 @@ body.wizard {
     + .wizard-container__fields {
       padding: 1em;
       background: var(--primary-very-low);
-      width: calc(100% - 170px);
+      width: auto;
       border-radius: 0.5em;
       margin-top: -1em;
 
-      @media only screen and (max-device-width: 568px) {
+      @media only screen and (max-width: 925px) {
         display: none;
       }
     }
@@ -229,7 +219,7 @@ body.wizard {
   .previews {
     position: relative;
     height: 320px;
-    width: 100%;
+    width: 628px;
     overflow: hidden;
     background: var(--secondary);
     border-radius: 10px;
@@ -285,14 +275,8 @@ body.wizard {
 
   &__step-form {
     flex: 1 0 50%;
-    @media only screen and (max-device-width: 568px) {
+    @media only screen and (max-width: 568px) {
       width: 100%;
-    }
-  }
-
-  &__step.ready {
-    .wizard-container__buttons {
-      flex-direction: row-reverse;
     }
   }
 
@@ -300,7 +284,17 @@ body.wizard {
     font-size: var(--font-0);
   }
 
-  &__step-progress {
+  &__buttons-left {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    align-items: center;
+    @include breakpoint("mobile-extra-large") {
+      order: 2;
+    }
+  }
+
+  &__buttons-right {
     display: flex;
     align-items: center;
     font-weight: bold;
@@ -309,21 +303,12 @@ body.wizard {
       margin-right: 0;
       flex-direction: column;
     }
-    .wizard-container__link {
-      color: var(--primary-400);
-      margin: 0 1em;
-      &.inactive {
-        // disabling instead of removing, to hold space
-        pointer-events: none;
-        opacity: 0;
-      }
-    }
   }
 
   &__step-text {
     display: inline;
     margin-right: 0.25em;
-    @media only screen and (max-device-width: 568px) {
+    @media only screen and (max-width: 568px) {
       display: none;
     }
   }
@@ -383,6 +368,10 @@ body.wizard {
   &__button.primary {
     background-color: var(--tertiary);
     color: var(--secondary);
+    @include breakpoint("mobile-extra-large") {
+      order: 1;
+      margin-left: 0;
+    }
   }
   &__button.primary:hover,
   &__button.primary:focus {
@@ -398,7 +387,7 @@ body.wizard {
   }
 
   &__button.configure-more {
-    //background-color: var(--primary-200);
+    margin-right: 1em;
     background-color: transparent;
     color: var(--tertiary);
     @include breakpoint("mobile-extra-large") {
@@ -412,13 +401,6 @@ body.wizard {
   }
 
   &__button.jump-in {
-    background-color: var(--tertiary);
-    color: var(--secondary);
-    margin-left: 1em;
-    @include breakpoint("mobile-extra-large") {
-      order: 1;
-      margin-left: 0;
-    }
     &:hover {
       background-color: var(--primary-300);
     }
@@ -506,16 +488,6 @@ body.wizard {
     }
   }
 
-  &__buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1em;
-    align-items: center;
-    @include breakpoint("mobile-extra-large") {
-      order: 2;
-    }
-  }
-
   &__label {
     font-weight: bold;
     font-size: var(--font-up-1);
@@ -539,7 +511,7 @@ body.wizard {
       margin: 0;
     }
 
-    @media only screen and (max-device-width: 568px) {
+    @media only screen and (max-width: 568px) {
       font-size: var(--font-0);
     }
   }
@@ -548,7 +520,7 @@ body.wizard {
     color: var(--primary-high);
     font-size: var(--font-up-1);
     margin: 0.25em 0 0.5em 3.5em;
-    @media only screen and (max-device-width: 568px) {
+    @media only screen and (max-width: 568px) {
       margin-left: 2em;
     }
   }
@@ -596,7 +568,7 @@ body.wizard {
     position: relative;
     vertical-align: middle;
     transition: background 0.25s;
-    @media only screen and (max-device-width: 568px) {
+    @media only screen and (max-width: 568px) {
       height: 20px;
       width: 35px;
     }
@@ -613,7 +585,7 @@ body.wizard {
     color: var(--secondary);
     top: 4px;
     left: 9px;
-    @media only screen and (max-device-width: 568px) {
+    @media only screen and (max-width: 568px) {
       top: 3px;
       left: 5px;
       font-size: var(--font-down-3);
@@ -628,7 +600,7 @@ body.wizard {
     top: 4px;
     left: 4px;
     transition: left 0.25s;
-    @media only screen and (max-device-width: 568px) {
+    @media only screen and (max-width: 568px) {
       height: 12px;
       width: 12px;
     }
@@ -644,7 +616,7 @@ body.wizard {
   }
   &__checkbox:checked + .wizard-container__checkbox-slider:before {
     left: 26px;
-    @media only screen and (max-device-width: 568px) {
+    @media only screen and (max-width: 568px) {
       left: 20px;
     }
   }

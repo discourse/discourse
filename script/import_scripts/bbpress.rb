@@ -139,7 +139,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
     # make sure every user name has a unique email address
     anon_names.each do |k, name|
       if not emails.include? name["email"]
-        emails.push (name["email"])
+        emails.push(name["email"])
       else
         name["email"] = "anonymous_#{SecureRandom.hex}@no-email.invalid"
       end

@@ -16,11 +16,13 @@ async function openFlagModal() {
 }
 
 async function pressEnter(element, modifier) {
-  const event = document.createEvent("Event");
-  event.initEvent("keydown", true, true);
-  event.key = "Enter";
-  event.keyCode = 13;
-  event[modifier] = true;
+  const event = new KeyboardEvent("keydown", {
+    bubbles: true,
+    cancelable: true,
+    key: "Enter",
+    keyCode: 13,
+    [modifier]: true,
+  });
   element.dispatchEvent(event);
   await settled();
 }
@@ -126,15 +128,34 @@ acceptance("flagging", function (needs) {
     await selectKit(".reviewable-action-dropdown").expand();
     await click("[data-value='agree_and_silence']");
     assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
-
+    assert.equal(
+      query(".suspend-message").value,
+      "",
+      "penalty message is empty"
+    );
     const silenceUntilCombobox = selectKit(".silence-until .combobox");
     await silenceUntilCombobox.expand();
     await silenceUntilCombobox.selectRowByValue("tomorrow");
-    assert.ok(exists(".modal-body"));
+    assert.ok(exists(".d-modal__body"));
     await fillIn("input.silence-reason", "for breaking the rules");
 
     await click(".perform-penalize");
-    assert.ok(!exists(".modal-body"));
+    assert.ok(!exists(".d-modal__body"));
+  });
+
+  test("Message appears in penalty modal", async function (assert) {
+    this.siteSettings.penalty_include_post_message = true;
+    await visit("/t/internationalization-localization/280");
+    await openFlagModal();
+    await click("#radio_inappropriate");
+    await selectKit(".reviewable-action-dropdown").expand();
+    await click("[data-value='agree_and_silence']");
+    assert.ok(exists(".silence-user-modal"), "it shows the silence modal");
+    assert.equal(
+      query(".suspend-message").value,
+      "-------------------\n<p>Any plans to support localization of UI elements, so that I (for example) could set up a completely German speaking forum?</p>\n-------------------",
+      "penalty message is prefilled with post text"
+    );
   });
 
   test("Can delete spammer from spam", async function (assert) {

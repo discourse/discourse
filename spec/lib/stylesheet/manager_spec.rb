@@ -483,29 +483,6 @@ RSpec.describe Stylesheet::Manager do
   describe "color_scheme_digest" do
     fab!(:theme)
 
-    it "changes with category background image" do
-      category1 = Fabricate(:category, uploaded_background_id: 123, updated_at: 1.week.ago)
-      category2 = Fabricate(:category, uploaded_background_id: 456, updated_at: 2.days.ago)
-
-      manager = manager(theme.id)
-
-      builder =
-        Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
-
-      digest1 = builder.color_scheme_digest
-
-      category2.update!(uploaded_background_id: 789, updated_at: 1.day.ago)
-
-      digest2 = builder.color_scheme_digest
-      expect(digest2).to_not eq(digest1)
-
-      category1.update!(uploaded_background_id: nil, updated_at: 5.minutes.ago)
-
-      digest3 = builder.color_scheme_digest
-      expect(digest3).to_not eq(digest2)
-      expect(digest3).to_not eq(digest1)
-    end
-
     it "updates digest when updating a color scheme" do
       scheme = ColorScheme.create_from_base(name: "Neutral", base_scheme_id: "Neutral")
       manager = manager(theme.id)
@@ -886,7 +863,7 @@ RSpec.describe Stylesheet::Manager do
 
     after do
       STDERR.unstub(:write)
-      FileUtils.rm_rf("tmp/stylesheet-cache")
+      Stylesheet::Manager.rm_cache_folder
     end
 
     it "correctly generates precompiled CSS" do

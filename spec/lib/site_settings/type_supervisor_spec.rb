@@ -96,6 +96,9 @@ RSpec.describe SiteSettings::TypeSupervisor do
       it "'tag_group_list' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:tag_group_list]).to eq(26)
       end
+      it "'file_size_restriction' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:file_size_restriction]).to eq(27)
+      end
     end
   end
 
@@ -136,9 +139,11 @@ RSpec.describe SiteSettings::TypeSupervisor do
       def self.valid_value?(v)
         self.values.include?(v)
       end
+
       def self.values
         ["en"]
       end
+
       def self.translate_names?
         false
       end
@@ -147,9 +152,11 @@ RSpec.describe SiteSettings::TypeSupervisor do
     class TestSmallThanTenValidator
       def initialize(opts)
       end
+
       def valid_value?(v)
         v < 10
       end
+
       def error_message
         ""
       end
@@ -329,6 +336,16 @@ RSpec.describe SiteSettings::TypeSupervisor do
         ).to eq(1)
       end
 
+      it "returns an integer for file_size_restriction type" do
+        expect(
+          settings.type_supervisor.to_rb_value(
+            :type_file_size_restriction,
+            "1024",
+            SiteSetting.types[:file_size_restriction],
+          ),
+        ).to eq 1024
+      end
+
       it "returns nil value" do
         expect(settings.type_supervisor.to_rb_value(:type_null, "1")).to eq nil
         expect(settings.type_supervisor.to_rb_value(:type_null, 1)).to eq nil
@@ -408,9 +425,11 @@ RSpec.describe SiteSettings::TypeSupervisor do
       def self.valid_value?(v)
         self.values.include?(v)
       end
+
       def self.values
         %w[a b]
       end
+
       def self.translate_names?
         false
       end
@@ -418,7 +437,7 @@ RSpec.describe SiteSettings::TypeSupervisor do
 
     before do
       settings.setting(:type_null, nil)
-      settings.setting(:type_int, 1)
+      settings.setting(:type_int, 1, min: -10, max: 10)
       settings.setting(:type_true, true)
       settings.setting(:type_float, 2.3232)
       settings.setting(:type_string, "string")
@@ -433,24 +452,31 @@ RSpec.describe SiteSettings::TypeSupervisor do
     it "returns null type" do
       expect(settings.type_supervisor.type_hash(:type_null)[:type]).to eq "null"
     end
+
     it "returns int type" do
       expect(settings.type_supervisor.type_hash(:type_int)[:type]).to eq "integer"
     end
+
     it "returns bool type" do
       expect(settings.type_supervisor.type_hash(:type_true)[:type]).to eq "bool"
     end
+
     it "returns float type" do
       expect(settings.type_supervisor.type_hash(:type_float)[:type]).to eq "float"
     end
+
     it "returns string type" do
       expect(settings.type_supervisor.type_hash(:type_string)[:type]).to eq "string"
     end
+
     it "returns url_list type" do
       expect(settings.type_supervisor.type_hash(:type_url_list)[:type]).to eq "url_list"
     end
+
     it "returns textarea type" do
       expect(settings.type_supervisor.type_hash(:type_textarea)[:textarea]).to eq true
     end
+
     it "returns enum type" do
       expect(settings.type_supervisor.type_hash(:type_enum_choices)[:type]).to eq "enum"
     end
@@ -473,6 +499,11 @@ RSpec.describe SiteSettings::TypeSupervisor do
       hash = settings.type_supervisor.type_hash(:type_enum_class)
       expect(hash[:valid_values]).to eq %w[a b]
       expect(hash[:translate_names]).to eq false
+    end
+
+    it "returns int min/max values" do
+      expect(settings.type_supervisor.type_hash(:type_int)[:min]).to eq(-10)
+      expect(settings.type_supervisor.type_hash(:type_int)[:max]).to eq(10)
     end
   end
 end

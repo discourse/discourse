@@ -80,7 +80,6 @@ module Chat
         .where(chatable_type: Chat::Channel.public_channel_chatable_types)
         .where("chat_channels.id IN (#{allowed_channel_ids})")
         .where("chat_channels.slug IN (:slugs)", slugs: slugs)
-        .limit(1)
     end
 
     def self.secured_public_channel_search(guardian, options = {})
@@ -171,12 +170,11 @@ module Chat
     end
 
     def self.preload_custom_fields_for(channels)
-      preload_fields = Category.instance_variable_get(:@custom_field_types).keys
       Category.preload_custom_fields(
         channels
           .select { |c| c.chatable_type == "Category" || c.chatable_type == "category" }
           .map(&:chatable),
-        preload_fields,
+        Site.preloaded_category_custom_fields,
       )
     end
 
@@ -201,7 +199,7 @@ module Chat
           .where(id: scoped_channels)
           .includes(
             last_message: [:uploads],
-            chatable: [{ direct_message_users: [user: :user_option] }, :users],
+            chatable: [{ direct_message_users: [user: %i[user_option group_users]] }, :users],
           )
           .joins(
             "LEFT JOIN chat_messages last_message ON last_message.id = chat_channels.last_message_id",
@@ -253,6 +251,20 @@ module Chat
         include_missing_memberships: true,
         include_threads: include_threads,
       ).report
+    end
+
+    def self.unreads_total(guardian)
+      result = 0
+
+      public_channels = secured_public_channels(guardian, status: :open, following: true)
+      publics = tracking_state(public_channels.map(&:id), guardian, include_threads: true)
+      publics.channel_tracking.each_value { |channel_info| result += channel_info[:mention_count] }
+
+      direct_message_channels = secured_direct_message_channels(guardian.user.id, guardian)
+      directs = tracking_state(direct_message_channels.map(&:id), guardian)
+      directs.channel_tracking.each_value { |channel_info| result += channel_info[:unread_count] }
+
+      result
     end
 
     def self.find_with_access_check(channel_id_or_slug, guardian)

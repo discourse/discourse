@@ -37,7 +37,7 @@ export default {
   after: "inject-objects",
 
   initialize(owner) {
-    const router = owner.lookup("router:main");
+    const router = owner.lookup("service:router");
 
     router.on("routeDidChange", (transition) => {
       if (transition.isAborted) {

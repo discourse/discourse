@@ -2,7 +2,7 @@
 
 RSpec.describe PostMover do
   fab!(:admin)
-  fab!(:evil_trout)
+  fab!(:evil_trout) { Fabricate(:evil_trout, refresh_auto_groups: true) }
 
   describe "#move_types" do
     context "when verifying enum sequence" do
@@ -22,7 +22,7 @@ RSpec.describe PostMover do
     context "with topics" do
       before { freeze_time }
 
-      fab!(:user) { Fabricate(:user, admin: true) }
+      fab!(:user) { Fabricate(:admin) }
       fab!(:another_user) { evil_trout }
       fab!(:category) { Fabricate(:category, user: user) }
       fab!(:topic) { Fabricate(:topic, user: user, created_at: 4.hours.ago) }
@@ -532,8 +532,8 @@ RSpec.describe PostMover do
             end
 
             fab!(:user1) { Fabricate(:user) }
-            fab!(:user2) { Fabricate(:user) }
-            fab!(:user3) { Fabricate(:user) }
+            fab!(:user2) { Fabricate(:user, refresh_auto_groups: true) }
+            fab!(:user3) { Fabricate(:user, refresh_auto_groups: true) }
             fab!(:admin1) { Fabricate(:admin) }
             fab!(:admin2) { Fabricate(:admin) }
 
@@ -885,6 +885,27 @@ RSpec.describe PostMover do
             expect(new_post.version).to eq(2)
             expect(new_post.public_version).to eq(2)
             expect(new_post.post_revisions.size).to eq(1)
+          end
+
+          context "with subfolder installs" do
+            before { set_subfolder "/forum" }
+
+            it "creates a small action with correct post url" do
+              moved_to = topic.move_posts(user, [p2.id], destination_topic_id: destination_topic.id)
+              small_action = topic.posts.last
+
+              expect(small_action.post_type).to eq(Post.types[:small_action])
+
+              expected_text =
+                I18n.t(
+                  "move_posts.existing_topic_moderator_post",
+                  count: 1,
+                  topic_link: "[#{moved_to.title}](#{p2.reload.relative_url})",
+                  locale: :en,
+                )
+
+              expect(small_action.raw).to eq(expected_text)
+            end
           end
 
           context "with read state and other stats per user" do
@@ -2204,6 +2225,7 @@ RSpec.describe PostMover do
 
         it "can add tags to new message when staff group is included in pm_tags_allowed_for_groups" do
           SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
+          SiteSetting.tag_topic_allowed_groups = "1|2|3"
           personal_message.move_posts(
             admin,
             [p2.id, p5.id],

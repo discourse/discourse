@@ -53,6 +53,15 @@
     .select-kit-filter.is-expanded {
       padding: 0.25em 0.5em;
     }
+
+    .filter-for-more {
+      display: flex;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0.5em 1em;
+      font-size: var(--font-down-1);
+      color: var(--primary-low-mid);
+    }
   }
 
   &.is-loading {
@@ -69,10 +78,10 @@
     @include form-item-sizing;
     font-weight: 500;
     overflow: hidden;
-    transition: all 0.25s;
     cursor: pointer;
     display: flex;
     align-items: stretch;
+    height: 100%;
     &:not(.btn) {
       border-radius: var(--d-input-border-radius);
       padding-left: 0.5em;
@@ -113,7 +122,8 @@
       }
 
       .name {
-        display: inline-block;
+        display: inline-flex;
+        gap: 0.5em;
         > .d-icon {
           margin-left: 0.5em;
           margin-right: 0;
@@ -128,15 +138,11 @@
         border-bottom-width: 5px;
         border-bottom-style: solid;
       }
-
-      .badge-wrapper {
-        font-size: inherit;
-      }
     }
 
     .btn-clear {
       margin-left: 0.25em;
-      padding: 0.25em;
+      padding: 0 0.2em;
       border: 0;
       background: none;
       min-height: auto;

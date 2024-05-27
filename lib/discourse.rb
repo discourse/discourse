@@ -313,11 +313,11 @@ module Discourse
   end
 
   def self.filters
-    @filters ||= %i[latest unread new unseen top read posted bookmarks]
+    @filters ||= %i[latest unread new unseen top read posted bookmarks hot]
   end
 
   def self.anonymous_filters
-    @anonymous_filters ||= %i[latest top categories]
+    @anonymous_filters ||= %i[latest top categories hot]
   end
 
   def self.top_menu_items
@@ -375,6 +375,13 @@ module Discourse
 
   def self.visible_plugins
     plugins.filter(&:visible?)
+  end
+
+  def self.plugins_sorted_by_name(enabled_only: true)
+    if enabled_only
+      return visible_plugins.filter(&:enabled?).sort_by { |plugin| plugin.humanized_name.downcase }
+    end
+    visible_plugins.sort_by { |plugin| plugin.humanized_name.downcase }
   end
 
   def self.plugin_themes
@@ -484,6 +491,10 @@ module Discourse
     Auth::AuthProvider.new(authenticator: Auth::GithubAuthenticator.new, icon: "fab-github"),
     Auth::AuthProvider.new(authenticator: Auth::TwitterAuthenticator.new, icon: "fab-twitter"),
     Auth::AuthProvider.new(authenticator: Auth::DiscordAuthenticator.new, icon: "fab-discord"),
+    Auth::AuthProvider.new(
+      authenticator: Auth::LinkedInOidcAuthenticator.new,
+      icon: "fab-linkedin-in",
+    ),
   ]
 
   def self.auth_providers

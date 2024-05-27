@@ -13,6 +13,8 @@ vi:
           never: "Không bao giờ"
     chat:
       deleted_chat_username: đã bị xóa
+      dates:
+        yesterday: "Hôm qua"
       create: "Tạo"
       cancel: "Huỷ"
       channel_settings:
@@ -46,6 +48,7 @@ vi:
       bookmark_message: "Đánh dấu chỉ mục"
       bookmark_message_edit: "Chỉnh sửa Dấu trang"
       save: "Lưu lại"
+      select: "Chọn"
       sounds:
         none: "Không có gì"
       exit: "quay lại"
@@ -55,6 +58,7 @@ vi:
       browse:
         back: "Quay lại"
         filter_all: All
+        filter_open: Mở
         filter_closed: Đã
       chat_message_separator:
         today: Hôm nay
@@ -70,6 +74,7 @@ vi:
           settings: Cài đặt
       new_message_modal:
         no_items: "Không có mẫu nào"
+        filter: "Lọc"
       direct_message_creator:
         title: Tin nhắn mới
         prefix: "Tới:"

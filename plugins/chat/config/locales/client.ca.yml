@@ -13,6 +13,8 @@ ca:
           never: "Mai"
     chat:
       deleted_chat_username: suprimit
+      dates:
+        yesterday: "Ahir"
       create: "Crea"
       cancel: "Cancel·la"
       channel_settings:
@@ -48,6 +50,7 @@ ca:
       browse:
         back: "Enrere"
         filter_all: Tot
+        filter_open: Obre
         filter_closed: Tancat
       chat_message_separator:
         today: Avui
@@ -63,6 +66,7 @@ ca:
           settings: Configuració
       new_message_modal:
         no_items: "Sense elements"
+        filter: "Filtre"
       direct_message_creator:
         title: Missatge nou
         prefix: "A:"

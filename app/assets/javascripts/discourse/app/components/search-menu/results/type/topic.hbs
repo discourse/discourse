@@ -8,9 +8,13 @@
           @result.topic_title_headline
         )
       }}
-        <span>{{replace-emoji @result.topic_title_headline}}</span>
+        <a href={{if @withTopicUrl @result.url}}>
+          {{replace-emoji (html-safe @result.topic_title_headline)}}
+        </a>
       {{else}}
-        <SearchMenu::HighlightedSearch @string={{@result.topic.fancyTitle}} />
+        <a href={{if @withTopicUrl @result.url}}>
+          <SearchMenu::HighlightedSearch @string={{@result.topic.fancyTitle}} />
+        </a>
       {{/if}}
       <PluginOutlet
         @name="search-menu-results-topic-title-suffix"
@@ -19,7 +23,7 @@
     </span>
   </span>
   <span class="second-line">
-    {{category-link @result.topic.category link=false}}
+    {{category-link @result.topic.category link=(if @withTopicUrl true false)}}
     {{#if this.siteSettings.tagging_enabled}}
       {{discourse-tags @result.topic tagName="span"}}
     {{/if}}

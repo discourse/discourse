@@ -30,7 +30,7 @@ export default Component.extend({
   // text customizations to use those.
   @discourseComputed("options", "action", "model.tags", "model.category")
   actionTitle(opts, action) {
-    let result = this.model.customizationFor("actionTitle");
+    const result = this.model.customizationFor("actionTitle");
     if (result) {
       return result;
     }
@@ -39,22 +39,23 @@ export default Component.extend({
       return I18n.t(TITLES[action]);
     }
 
-    switch (action) {
-      case REPLY:
-        if (opts.userAvatar && opts.userLink) {
-          return this._formatReplyToUserPost(opts.userAvatar, opts.userLink);
-        } else if (opts.topicLink) {
-          return this._formatReplyToTopic(opts.topicLink);
-        }
-      case EDIT:
-        if (opts.userAvatar && opts.userLink && opts.postLink) {
-          return this._formatEditUserPost(
-            opts.userAvatar,
-            opts.userLink,
-            opts.postLink,
-            opts.originalUser
-          );
-        }
+    if (action === REPLY) {
+      if (opts.userAvatar && opts.userLink) {
+        return this._formatReplyToUserPost(opts.userAvatar, opts.userLink);
+      } else if (opts.topicLink) {
+        return this._formatReplyToTopic(opts.topicLink);
+      }
+    }
+
+    if (action === EDIT) {
+      if (opts.userAvatar && opts.userLink && opts.postLink) {
+        return this._formatEditUserPost(
+          opts.userAvatar,
+          opts.userLink,
+          opts.postLink,
+          opts.originalUser
+        );
+      }
     }
   },
 

@@ -103,13 +103,25 @@ end
 def make_pr(base:, branch:, title:)
   params = { expand: 1, title: title, body: <<~MD }
       > :warning: This PR should not be merged via the GitHub web interface
-      > 
+      >
       > It should only be merged (via fast-forward) using the associated `bin/rake version_bump:*` task.
     MD
 
   if !test_mode?
+    open_command =
+      case RbConfig::CONFIG["host_os"]
+      when /darwin|mac os/
+        "open"
+      when /linux|solaris|bsd/
+        "xdg-open"
+      when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+        "start"
+      else
+        raise "Unsupported OS"
+      end
+
     system(
-      "open",
+      open_command,
       "https://github.com/discourse/discourse/compare/#{base}...#{branch}?#{params.to_query}",
       exception: true,
     )
@@ -340,7 +352,8 @@ task "version_bump:major_stable_merge", [:version_bump_ref] do |t, args|
 
     git "merge", "--no-commit", merge_ref, allow_failure: true
 
-    out, status = Open3.capture2e "git diff --binary #{merge_ref} | patch -p1 -R"
+    out, status =
+      Open3.capture2e "git diff --binary #{merge_ref} | patch -p1 -R --no-backup-if-mismatch"
     raise "Error applying diff\n#{out}}" unless status.success?
 
     git "add", "."
@@ -384,7 +397,7 @@ task "version_bump:stage_security_fixes", [:base] do |t, args|
   base = args[:base]
   raise "Unknown base: #{base.inspect}" unless %w[stable main].include?(base)
 
-  fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",").map(&:strip)
+  fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
   raise "No branches specified in SECURITY_FIX_REFS env" if fix_refs.nil? || fix_refs.empty?
 
   fix_refs.each do |ref|

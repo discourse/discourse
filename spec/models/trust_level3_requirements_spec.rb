@@ -3,7 +3,7 @@
 RSpec.describe TrustLevel3Requirements do
   subject(:tl3_requirements) { described_class.new(user) }
 
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:moderator)
   fab!(:topic1) { Fabricate(:topic) }
   fab!(:topic2) { Fabricate(:topic) }
@@ -359,7 +359,7 @@ RSpec.describe TrustLevel3Requirements do
       flags =
         %i[off_topic inappropriate notify_user notify_moderators spam].map do |t|
           Fabricate(
-            :flag,
+            :flag_post_action,
             post: Fabricate(:post, user: user),
             post_action_type_id: PostActionType.types[t],
             agreed_at: 1.minute.ago,
@@ -369,7 +369,7 @@ RSpec.describe TrustLevel3Requirements do
       _deferred_flags =
         %i[off_topic inappropriate notify_user notify_moderators spam].map do |t|
           Fabricate(
-            :flag,
+            :flag_post_action,
             post: Fabricate(:post, user: user),
             post_action_type_id: PostActionType.types[t],
             deferred_at: 1.minute.ago,
@@ -379,7 +379,7 @@ RSpec.describe TrustLevel3Requirements do
       _deleted_flags =
         %i[off_topic inappropriate notify_user notify_moderators spam].map do |t|
           Fabricate(
-            :flag,
+            :flag_post_action,
             post: Fabricate(:post, user: user),
             post_action_type_id: PostActionType.types[t],
             deleted_at: 1.minute.ago,
@@ -388,7 +388,7 @@ RSpec.describe TrustLevel3Requirements do
 
       # Same post, different user:
       Fabricate(
-        :flag,
+        :flag_post_action,
         post: flags[1].post,
         post_action_type_id: PostActionType.types[:spam],
         agreed_at: 1.minute.ago,
@@ -396,7 +396,7 @@ RSpec.describe TrustLevel3Requirements do
 
       # Flagged their own post:
       Fabricate(
-        :flag,
+        :flag_post_action,
         user: user,
         post: Fabricate(:post, user: user),
         post_action_type_id: PostActionType.types[:spam],
@@ -405,7 +405,7 @@ RSpec.describe TrustLevel3Requirements do
 
       # More than 100 days ago:
       Fabricate(
-        :flag,
+        :flag_post_action,
         post: Fabricate(:post, user: user, created_at: 101.days.ago),
         post_action_type_id: PostActionType.types[:spam],
         created_at: 101.days.ago,
@@ -460,7 +460,6 @@ RSpec.describe TrustLevel3Requirements do
     let(:recent_post1) { create_post(topic: topic, user: user, created_at: 1.hour.ago) }
     let(:recent_post2) { create_post(topic: topic, user: user, created_at: 10.days.ago) }
     let(:private_post) do
-      Group.refresh_automatic_groups!
       create_post(
         user: user,
         archetype: Archetype.private_message,

@@ -2,7 +2,7 @@
 
 RSpec.describe PostGuardian do
   fab!(:groupless_user) { Fabricate(:user) }
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:anon) { Fabricate(:anonymous) }
   fab!(:admin)
   fab!(:moderator)
@@ -11,6 +11,7 @@ RSpec.describe PostGuardian do
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:hidden_post) { Fabricate(:post, topic: topic, hidden: true) }
+  fab!(:post) { Fabricate(:post, topic: topic) }
 
   describe "#can_see_hidden_post?" do
     context "when the hidden_post_visible_groups contains everyone" do
@@ -74,6 +75,27 @@ RSpec.describe PostGuardian do
       SiteSetting.edit_all_post_groups = nil
 
       expect(Guardian.new(user).is_in_edit_post_groups?).to eq(false)
+    end
+  end
+
+  describe "#can_edit_post?" do
+    it "returns true for the author" do
+      post.update!(user: user)
+      expect(Guardian.new(user).can_edit_post?(post)).to eq(true)
+    end
+
+    it "returns false for users who are not the author" do
+      expect(Guardian.new(user).can_edit_post?(post)).to eq(false)
+    end
+
+    it "returns true for admins who are not the author" do
+      expect(Guardian.new(admin).can_edit_post?(post)).to eq(true)
+    end
+
+    it "returns true for the author if they are anonymous" do
+      SiteSetting.allow_anonymous_posting = true
+      post.update!(user: anon)
+      expect(Guardian.new(anon).can_edit_post?(post)).to eq(true)
     end
   end
 end

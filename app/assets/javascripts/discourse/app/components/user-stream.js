@@ -1,7 +1,8 @@
+import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import { on } from "@ember/object/evented";
 import { later } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import $ from "jquery";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
@@ -39,7 +40,7 @@ export default Component.extend(LoadMore, {
       () => false
     );
     $(this.element).on("click.discourse-redirect", ".excerpt a", (e) => {
-      return ClickTrack.trackClick(e, this.siteSettings);
+      return ClickTrack.trackClick(e, getOwner(this));
     });
     this._updateLastDecoratedElement();
     this.appEvents.trigger("decorate-non-stream-cooked-element", this.element);

@@ -29,7 +29,7 @@ acceptance("Create Account", function () {
     assert
       .dom("#username-validation.bad")
       .exists("the username validation is bad");
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
 
     await fillIn("#new-account-username", "good-tuna");
     assert
@@ -46,9 +46,9 @@ acceptance("Create Account", function () {
       return response({ success: true });
     });
 
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
     assert
-      .dom(".modal-footer .btn-primary:disabled")
+      .dom(".d-modal__footer .btn-primary:disabled")
       .exists("create account is disabled");
 
     assert.verifySteps(["request"]);
@@ -59,7 +59,7 @@ acceptance("Create Account", function () {
     await click("header .sign-up-button");
 
     await fillIn("#new-account-email", "z@z.co");
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
 
     assert
       .dom("#username-validation")
@@ -78,6 +78,17 @@ acceptance("Create Account", function () {
 
     assert.verifySteps(["buildPostForm"]);
   });
+
+  test("does not show passkeys button", async function (assert) {
+    await visit("/");
+    await click("header .sign-up-button");
+
+    assert
+      .dom(".d-modal.create-account .btn-primary")
+      .exists("create account button exists");
+
+    assert.dom(".passkey-login-button").doesNotExist();
+  });
 });
 
 acceptance("Create Account - full_name_required", function (needs) {
@@ -91,7 +102,7 @@ acceptance("Create Account - full_name_required", function (needs) {
     await fillIn("#new-account-username", "good-tuna");
     await fillIn("#new-account-password", "cool password bro");
 
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
     assert.dom("#fullname-validation").hasText(I18n.t("user.name.required"));
 
     await fillIn("#new-account-name", "Full Name");
@@ -106,9 +117,9 @@ acceptance("Create Account - full_name_required", function (needs) {
       return response({ success: true });
     });
 
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
     assert
-      .dom(".modal-footer .btn-primary:disabled")
+      .dom(".d-modal__footer .btn-primary:disabled")
       .exists("create account is disabled");
 
     assert.verifySteps(["request"]);

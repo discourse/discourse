@@ -5,13 +5,16 @@
 # https://translate.discourse.org/
 
 zh_CN:
-  js:
+  admin_js:
     admin:
       site_settings:
         categories:
           chat: 聊天
+  js:
+    admin:
+      site_settings:
         chat_separate_sidebar_mode:
-          always: "总是"
+          always: "始终"
           fullscreen: "当全屏聊天时"
           never: "永不"
       logs:
@@ -39,8 +42,10 @@ zh_CN:
     chat:
       text_copied: 文本已复制到剪贴板
       link_copied: 链接已复制到剪贴板
+      back_to_forum: "论坛"
       deleted_chat_username: 已删除
       dates:
+        yesterday: "昨天"
         time_tiny: "h:mm"
       all_loaded: "显示所有消息"
       already_enabled: "此话题已启用聊天。请刷新。"
@@ -51,6 +56,7 @@ zh_CN:
       cancel_reply: "取消回复"
       chat_channels: "频道"
       browse_all_channels: "浏览所有频道"
+      see_in: "参见"
       move_to_channel:
         title: "将消息移至频道"
         instructions:
@@ -66,6 +72,7 @@ zh_CN:
         delete_channel: "删除频道"
         join_channel: "加入频道"
         leave_channel: "离开频道"
+        leave_groupchat_info: "离开此群组聊天后，您将无法再访问它，也不会收到与之相关的通知。要重新加入，需要群组聊天成员再次向您发送邀请。"
         join: "加入"
         leave: "离开"
         save_label:
@@ -109,6 +116,7 @@ zh_CN:
         direct_message_cta: "开始个人聊天"
         direct_message: "您还可以与一位或多位用户开始个人聊天。"
         title: "找不到频道"
+        my_threads: "你还没有任何对话。你参与的主题将在此处显示。"
       email_frequency:
         description: "只有在过去 15 分钟内没有见到您，我们才会给您发送电子邮件。"
         never: "永不"
@@ -118,9 +126,10 @@ zh_CN:
         title: "在标题中显示活动指示器"
         all_new: "所有新消息"
         dm_and_mentions: "直接消息和提及"
+        only_mentions: "仅限提及"
         never: "永不"
       separate_sidebar_mode:
-        title: "为论坛和聊天显示单独边栏模式"
+        title: "为论坛和聊天显示单独的边栏模式"
       enable: "启用聊天"
       flag: "举报"
       emoji: "插入表情符号"
@@ -141,7 +150,7 @@ zh_CN:
         invitations_sent:
           other: "已发送邀请"
         invite: "邀请加入频道"
-        channel_wide_mentions_disallowed: "在本频道中禁用 @here 和 @all 这2种提及方式。"
+        channel_wide_mentions_disallowed: "@here 和 @all 提及在此频道中被禁用。"
         groups:
           header:
             some: "某些用户不会收到通知"
@@ -212,6 +221,7 @@ zh_CN:
         header: "聊天标题"
         composer: "聊天输入框"
         channels_list: "聊天频道列表"
+      no_direct_message_channels: "你还没有加入任何私信渠道。"
       no_public_channels: "您还没有加入任何频道。"
       kicked_from_channel: "您无法再访问此频道。"
       only_chat_push_notifications:
@@ -220,6 +230,9 @@ zh_CN:
       ignore_channel_wide_mention:
         title: "忽略频道范围内的提及"
         description: "不发送频道范围内提及（@here 和 @all）的通知"
+      show_thread_title_prompts:
+        title: "显示对话标题提示"
+        description: "显示为新对话设置标题的提示"
       open: "打开聊天"
       open_full_page: "打开全屏聊天"
       close_full_page: "关闭全屏聊天"
@@ -250,6 +263,8 @@ zh_CN:
       save: "保存"
       select: "选择"
       return_to_list: "返回频道列表"
+      return_to_channel: "返回频道"
+      return_to_threads_list: "返回对话列表"
       unread_threads_count:
         other: "您有 %{count} 条未读讨论"
       scroll_to_bottom: "滚动到底部"
@@ -285,7 +300,7 @@ zh_CN:
         back: "返回"
         title: 频道
         filter_all: 所有
-        filter_open: 已打开
+        filter_open: 开放
         filter_closed: 已关闭
         filter_archived: 已归档
         filter_input_placeholder: 按名称搜索频道
@@ -294,6 +309,8 @@ zh_CN:
         yesterday: 昨天
       members_view:
         filter_placeholder: 查找成员
+        add_member: 添加成员
+        back_to_settings: "返回设置"
       about_view:
         associated_topic: 链接的话题
         associated_category: 链接的类别
@@ -314,9 +331,16 @@ zh_CN:
         default_search_placeholder: "#一个频道、@ 某人或任何内容"
         default_channel_search_placeholder: "#一个频道"
         default_user_search_placeholder: "@ 某人"
-        user_search_placeholder: "…添加更多用户"
+        user_search_placeholder: "…添加更多成员"
         disabled_user: "已禁用聊天"
         no_items: "无条目"
+        create_group_placeholder: "群组聊天名称（可选）"
+        participants_counter: "%{selection_count}/%{max} 参与者"
+        new_group_chat: "新建群组聊天"
+        filter: "筛选"
+        cant_add_more_members: "已达到最大成员数"
+        create_new_group_chat: "创建群组聊天"
+        group_with_too_many_members: "成员过多 (%{membersCount})"
       channel_edit_name_slug_modal:
         title: 编辑频道
         input_placeholder: 添加名称
@@ -328,10 +352,14 @@ zh_CN:
         input_placeholder: 添加描述
         description: 告诉人们这个频道的主题
       direct_message_creator:
+        add_to_channel: "添加到频道"
         title: 新消息
         prefix: "至："
         no_results: 没有结果
         selected_user_title: "取消选择 %{username}"
+        group_name: "群组聊天名称（可选）"
+        members_counter:
+          other: "%{count}/%{max} 成员"
       channel:
         no_memberships: 此频道没有成员
         no_memberships_found: 找不到成员
@@ -374,15 +402,15 @@ zh_CN:
       reviewable:
         type: "聊天消息"
       reactions:
-        only_you: "您回应了 :%{emoji}:"
-        you_and_single_user: "您和 %{username} 回应了 :%{emoji}:"
-        you_and_multiple_users: "您、%{commaSeparatedUsernames} 和 %{username} 回应了 :%{emoji}:"
+        only_you: "<span>您回应了 </span>:%{emoji}:"
+        you_and_single_user: "<span>您和 %{username} 回应了 </span>:%{emoji}:"
+        you_and_multiple_users: "<span>您、%{commaSeparatedUsernames} 和 %{username} 回应了 </span>:%{emoji}:"
         you_multiple_users_and_more:
-          other: "您、%{commaSeparatedUsernames} 和其他 %{count} 人回应了 :%{emoji}:"
-        single_user: "%{username} 回应了 :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} 和 %{username} 回应了 :%{emoji}:"
+          other: "<span>您、%{commaSeparatedUsernames} 和其他 %{count} 人回应了 </span>:%{emoji}:"
+        single_user: "<span>%{username} 回应了 </span>:%{emoji}:"
+        multiple_users: "<span>%{commaSeparatedUsernames} 和 %{username} 回应了 </span>:%{emoji}:"
         multiple_users_and_more:
-          other: "%{commaSeparatedUsernames} 和其他 %{count} 人回应了 :%{emoji}:"
+          other: "<span>%{commaSeparatedUsernames} 和其他 %{count} 人回应了 </span>:%{emoji}:"
       composer:
         toggle_toolbar: "切换工具栏"
         italic_text: "斜体"
@@ -392,6 +420,7 @@ zh_CN:
       quote:
         original_channel: '最初在<a href="%{channelLink}">%{channel}</a>中发送。'
         copy_success: "聊天引用已复制到剪贴板"
+        default_thread_title: "对话"
       notification_levels:
         never: "永不"
         mention: "仅限提及"
@@ -429,15 +458,23 @@ zh_CN:
         title: "聊天"
         export_messages:
           title: "导出聊天消息"
-          description: "这将导出所有频道的所有信息。"
+          description: "这将导出所有频道的所有消息。"
           create_export: "创建导出"
           export_has_started: "导出已开始。导出完成后，您将收到一条私信。"
+      my_threads:
+        title: 我的对话
+        aria_label: "切换到我的对话列表"
       direct_messages:
-        title: "个人聊天"
+        title: "私信"
+        aria_label: "切换到私信"
         new: "创建个人聊天"
         create: "开始"
         leave: "离开此个人聊天"
+        close: "关闭此个人聊天"
         cannot_create: "抱歉，您无法发送直接消息。"
+      channel_list:
+        title: "频道"
+        aria_label: "切换到频道列表"
       incoming_webhooks:
         back: "返回"
         channel_placeholder: "选择一个频道"
@@ -491,15 +528,16 @@ zh_CN:
         many_users:
           other: "%{commaSeparatedUsernames} 和其他 %{count} 人正在输入"
       retention_reminders:
-        indefinitely_short: "无限期地"
-        indefinitely_long: "聊天设置已设置为无限期保留频道信息。"
+        indefinitely_short: "无限期"
+        indefinitely_long: "聊天设置已被设置为无限期保留频道消息。"
         short:
           other: "%{count} 天"
         long:
-          other: "聊天设置已设置为将频道消息保留 %{count} 天。"
+          other: "聊天设置已被设置为将频道消息保留 %{count} 天。"
       flags:
         off_topic: "此消息与频道标题定义的当前讨论无关，可能应当移至其他地方。"
         inappropriate: "此消息包含理性的人会认为具有攻击性、辱骂性或违反<a href=\"%{basePath}/guidelines\">我们的社区准则</a>的内容。"
+        illegal: "本帖需要工作人员注意，因为我认为其中包含非法内容。"
         spam: "此消息是广告或破坏行为。它对当前频道没有用，也不相关。"
         notify_user: "我想亲自直接与此人谈谈他们的消息。"
         notify_moderators: "由于上面未列出的另一个原因，此消息需要管理人员加以注意。"
@@ -538,8 +576,20 @@ zh_CN:
             description: "此对话将在对话列表和频道中显示的新回复数。如果其他人在此对话中提及 (@) 您的名字，您将收到通知。"
         participants_other_count:
           other: "+%{count}"
+      thread_title_toast:
+        title: "设置一个对话标题"
+        message: "帮助他人发现此对话。"
+        dismiss_action: "不再显示"
+        primary_action: "设置标题"
+      thread_title_modal:
+        title: "设置对话标题"
+        input_placeholder: "告诉其他人这次对话的内容..."
+        discourse_ai:
+          title: "自动生成对话标题"
+          description: "查看 %{url} 来了解有关此功能以及 Discourse 体验的其他增强功能的更多信息。"
       threads:
         open: "打开对话"
+        list: "对话"
         none: "您没有参与此频道中的任何对话。"
       draft_channel_screen:
         header: "新消息"

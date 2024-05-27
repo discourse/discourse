@@ -87,6 +87,10 @@ module SiteSettingExtension
     @categories ||= {}
   end
 
+  def mandatory_values
+    @mandatory_values ||= {}
+  end
+
   def shadowed_settings
     @shadowed_settings ||= []
   end
@@ -176,7 +180,13 @@ module SiteSettingExtension
   end
 
   # Retrieve all settings
-  def all_settings(include_hidden: false)
+  def all_settings(
+    include_hidden: false,
+    include_locale_setting: true,
+    only_overridden: false,
+    filter_categories: nil,
+    filter_plugin: nil
+  )
     locale_setting_hash = {
       setting: "default_locale",
       default: SiteSettings::DefaultsProvider::DEFAULT_LOCALE,
@@ -189,12 +199,28 @@ module SiteSettingExtension
       translate_names: LocaleSiteSetting.translate_names?,
     }
 
+    include_locale_setting = false if filter_categories.present? || filter_plugin.present?
+
     defaults
       .all(default_locale)
       .reject do |setting_name, _|
         plugins[name] && !Discourse.plugins_by_name[plugins[name]].configurable?
       end
       .reject { |setting_name, _| !include_hidden && hidden_settings.include?(setting_name) }
+      .select do |setting_name, _|
+        if filter_categories && filter_categories.any?
+          filter_categories.include?(categories[setting_name])
+        else
+          true
+        end
+      end
+      .select do |setting_name, _|
+        if filter_plugin
+          plugins[setting_name] == filter_plugin
+        else
+          true
+        end
+      end
       .map do |s, v|
         type_hash = type_supervisor.type_hash(s)
         default = defaults.get(s, default_locale).to_s
@@ -216,13 +242,22 @@ module SiteSettingExtension
           preview: previews[s],
           secret: secret_settings.include?(s),
           placeholder: placeholder(s),
+          mandatory_values: mandatory_values[s],
         }.merge!(type_hash)
 
         opts[:plugin] = plugins[s] if plugins[s]
 
         opts
       end
-      .unshift(locale_setting_hash)
+      .select do |setting|
+        if only_overridden
+          setting[:value] != setting[:default]
+        else
+          true
+        end
+      end
+      .unshift(include_locale_setting && !only_overridden ? locale_setting_hash : nil)
+      .compact
   end
 
   def description(setting)
@@ -230,7 +265,7 @@ module SiteSettingExtension
   end
 
   def keywords(setting)
-    I18n.t("site_settings.keywords.#{setting}", default: "")
+    Array.wrap(I18n.t("site_settings.keywords.#{setting}", default: ""))
   end
 
   def placeholder(setting)
@@ -335,6 +370,12 @@ module SiteSettingExtension
     sanitize_override = val.is_a?(String) && client_settings.include?(name)
 
     sanitized_val = sanitize_override ? sanitize_field(val) : val
+
+    if mandatory_values[name.to_sym]
+      sanitized_val =
+        (mandatory_values[name.to_sym].split("|") | sanitized_val.to_s.split("|")).join("|")
+    end
+
     provider.save(name, sanitized_val, type)
     current[name] = type_supervisor.to_rb_value(name, sanitized_val)
 
@@ -524,12 +565,13 @@ module SiteSettingExtension
           return false if !plugin.configurable? && plugin.enabled_site_setting == name
         end
 
-        if (c = current[name]).nil?
-          refresh!
-          current[name]
-        else
-          c
+        refresh! if current[name].nil?
+        value = current[name]
+
+        if mandatory_values[name]
+          return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")
         end
+        value
       end
     end
 
@@ -542,9 +584,9 @@ module SiteSettingExtension
       end
     end
 
-    # Same logic as above for group_list settings, with the caveat that normal
+    # Same logic as above for other list type settings, with the caveat that normal
     # list settings are not necessarily integers, so we just want to handle the splitting.
-    if type_supervisor.get_type(name) == :list
+    if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))
       list_type = type_supervisor.get_list_type(name)
 
       if %w[simple compact].include?(list_type) || list_type.nil?
@@ -596,6 +638,8 @@ module SiteSettingExtension
 
     mutex.synchronize do
       defaults.load_setting(name, default, opts.delete(:locale_default))
+
+      mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
 
       categories[name] = opts[:category] || :uncategorized
 

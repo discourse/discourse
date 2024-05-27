@@ -44,6 +44,8 @@ zh_TW:
       thread_title_connector: "在"
       x_members:
         other: "%{count} 位成員"
+    transcript:
+      default_thread_title: "討論串"
   discourse_push_notifications:
     popup:
       chat_mention:

@@ -169,7 +169,7 @@ class Demon::EmailSync < ::Demon::Base
     begin
       data[:syncer]&.disconnect!
     rescue Net::IMAP::ResponseError => err
-      puts "[EmailSync] Encountered a response error when disconnecting: #{err.to_s}"
+      puts "[EmailSync] Encountered a response error when disconnecting: #{err}"
     end
   end
 end

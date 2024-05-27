@@ -6,14 +6,17 @@ function insertSpoiler(_, spoiler) {
 }
 
 function replaceSpoilers(text) {
-  text = text || "";
-  while (
-    text !==
-    (text = text.replace(
+  text ||= "";
+  let previousText;
+
+  do {
+    previousText = text;
+    text = text.replace(
       /\[spoiler\]((?:(?!\[spoiler\]|\[\/spoiler\])[\S\s])*)\[\/spoiler\]/gi,
       insertSpoiler
-    ))
-  ) {}
+    );
+  } while (text !== previousText);
+
   return text;
 }
 

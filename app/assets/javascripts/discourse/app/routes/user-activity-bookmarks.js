@@ -1,11 +1,15 @@
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import $ from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import Bookmark from "discourse/models/bookmark";
+import Site from "discourse/models/site";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
+  historyStore: service(),
   templateName: "user/bookmarks",
 
   queryParams: {
@@ -13,11 +17,11 @@ export default DiscourseRoute.extend({
     q: { refreshModel: true },
   },
 
-  model(params, transition) {
+  model(params) {
     const controller = this.controllerFor("user-activity-bookmarks");
 
     if (
-      this.isPoppedState(transition) &&
+      this.historyStore.isPoppedState &&
       this.session.bookmarksModel &&
       this.session.bookmarksModel.searchTerm === params.q
     ) {
@@ -31,14 +35,19 @@ export default DiscourseRoute.extend({
     controller.set("loading", true);
 
     return this._loadBookmarks(params)
-      .then((response) => {
+      .then(async (response) => {
         if (!response.user_bookmark_list) {
           return { bookmarks: [] };
         }
 
+        response.user_bookmark_list.categories?.forEach((category) =>
+          Site.current().updateCategory(category)
+        );
+
         const bookmarks = response.user_bookmark_list.bookmarks.map(
           controller.transform
         );
+        await Bookmark.applyTransformations(bookmarks);
         const loadMoreUrl = response.user_bookmark_list.more_bookmarks_url;
 
         const model = { bookmarks, loadMoreUrl };

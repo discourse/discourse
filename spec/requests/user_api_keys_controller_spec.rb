@@ -64,10 +64,10 @@ RSpec.describe UserApiKeysController do
     end
 
     it "will allow tokens for staff without TL" do
-      SiteSetting.min_trust_level_for_user_api_key = 2
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
 
-      user = Fabricate(:user, trust_level: 1, moderator: true)
+      user = Fabricate(:user, trust_level: TrustLevel[1], moderator: true)
 
       sign_in(user)
 
@@ -76,10 +76,10 @@ RSpec.describe UserApiKeysController do
     end
 
     it "will not create token unless TL is met" do
-      SiteSetting.min_trust_level_for_user_api_key = 2
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
 
-      user = Fabricate(:user, trust_level: 1)
+      user = Fabricate(:user, trust_level: TrustLevel[1])
       sign_in(user)
 
       post "/user-api-key.json", params: args
@@ -87,11 +87,11 @@ RSpec.describe UserApiKeysController do
     end
 
     it "will deny access if requesting more rights than allowed" do
-      SiteSetting.min_trust_level_for_user_api_key = 0
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
       SiteSetting.allow_user_api_key_scopes = "write"
 
-      user = Fabricate(:user, trust_level: 0)
+      user = Fabricate(:user, trust_level: TrustLevel[0])
       sign_in(user)
 
       post "/user-api-key.json", params: args
@@ -150,13 +150,13 @@ RSpec.describe UserApiKeysController do
     end
 
     it "will not return p access if not yet configured" do
-      SiteSetting.min_trust_level_for_user_api_key = 0
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
 
       args[:scopes] = "push,read"
       args[:push_url] = "https://push.it/here"
 
-      user = Fabricate(:user, trust_level: 0)
+      user = Fabricate(:user, trust_level: TrustLevel[0])
       sign_in(user)
 
       post "/user-api-key.json", params: args
@@ -182,14 +182,14 @@ RSpec.describe UserApiKeysController do
     end
 
     it "will redirect correctly with valid token" do
-      SiteSetting.min_trust_level_for_user_api_key = 0
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
       SiteSetting.allowed_user_api_push_urls = "https://push.it/here"
 
       args[:scopes] = "push,notifications,message_bus,session_info,one_time_password"
       args[:push_url] = "https://push.it/here"
 
-      user = Fabricate(:user, trust_level: 0)
+      user = Fabricate(:user, trust_level: TrustLevel[0])
       sign_in(user)
 
       post "/user-api-key.json", params: args
@@ -235,12 +235,12 @@ RSpec.describe UserApiKeysController do
     end
 
     it "will just show the payload if no redirect" do
-      user = Fabricate(:user, trust_level: 0)
+      user = Fabricate(:user, trust_level: TrustLevel[0])
       sign_in(user)
 
       args.delete(:auth_redirect)
 
-      SiteSetting.min_trust_level_for_user_api_key = 0
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       post "/user-api-key", params: args
       expect(response.status).not_to eq(302)
       payload = Nokogiri.HTML5(response.body).at("code").content
@@ -252,12 +252,12 @@ RSpec.describe UserApiKeysController do
     end
 
     it "will just show the JSON payload if no redirect" do
-      user = Fabricate(:user, trust_level: 0)
+      user = Fabricate(:user, trust_level: TrustLevel[0])
       sign_in(user)
 
       args.delete(:auth_redirect)
 
-      SiteSetting.min_trust_level_for_user_api_key = 0
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       post "/user-api-key.json", params: args
       expect(response.status).not_to eq(302)
       payload = response.parsed_body["payload"]
@@ -272,17 +272,17 @@ RSpec.describe UserApiKeysController do
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
       args[:auth_redirect] = args[:auth_redirect] + "/bluebirds/fly"
 
-      sign_in(Fabricate(:user))
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
 
       post "/user-api-key.json", params: args
       expect(response.status).to eq(302)
     end
 
     it "will keep query_params added in auth_redirect" do
-      SiteSetting.min_trust_level_for_user_api_key = 0
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect] + "/*"
 
-      user = Fabricate(:user, trust_level: 0)
+      user = Fabricate(:user, trust_level: TrustLevel[0])
       sign_in(user)
 
       query_str = "/?param1=val1"
@@ -317,10 +317,10 @@ RSpec.describe UserApiKeysController do
     end
 
     it "will allow one-time-password for staff without TL" do
-      SiteSetting.min_trust_level_for_user_api_key = 2
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
 
-      user = Fabricate(:user, trust_level: 1, moderator: true)
+      user = Fabricate(:user, trust_level: TrustLevel[1], moderator: true)
 
       sign_in(user)
 
@@ -329,10 +329,10 @@ RSpec.describe UserApiKeysController do
     end
 
     it "will not allow one-time-password unless TL is met" do
-      SiteSetting.min_trust_level_for_user_api_key = 2
+      SiteSetting.user_api_key_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
 
-      user = Fabricate(:user, trust_level: 1)
+      user = Fabricate(:user, trust_level: TrustLevel[1])
       sign_in(user)
 
       post "/user-api-key/otp", params: otp_args
@@ -351,7 +351,7 @@ RSpec.describe UserApiKeysController do
 
     it "will return one-time-password when args are valid" do
       SiteSetting.allowed_user_api_auth_redirects = otp_args[:auth_redirect]
-      user = Fabricate(:user)
+      user = Fabricate(:user, refresh_auto_groups: true)
       sign_in(user)
 
       post "/user-api-key/otp", params: otp_args

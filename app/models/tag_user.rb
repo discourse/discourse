@@ -5,7 +5,7 @@ class TagUser < ActiveRecord::Base
   belongs_to :user
 
   scope :notification_level_visible,
-        ->(notification_levels = TagUser.notification_levels.values) {
+        ->(notification_levels = TagUser.notification_levels.values) do
           select("tag_users.*")
             .distinct
             .joins(
@@ -24,7 +24,7 @@ class TagUser < ActiveRecord::Base
               everyone_group_id: Group::AUTO_GROUPS[:everyone],
               notification_levels: notification_levels,
             )
-        }
+        end
 
   def self.notification_levels
     NotificationLevels.all
@@ -44,7 +44,7 @@ class TagUser < ActiveRecord::Base
     tag_ids =
       if tags.empty?
         []
-      elsif tags.first&.is_a?(String)
+      elsif tags.first.is_a?(String)
         Tag.where_name(tags).pluck(:id)
       else
         tags

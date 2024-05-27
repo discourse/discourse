@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DiscourseURL from "discourse/lib/url";
 import { mergeTopic, movePosts } from "discourse/models/topic";
@@ -161,5 +161,20 @@ export default class MoveToTopic extends Component {
     } finally {
       this.saving = false;
     }
+  }
+
+  @action
+  updateTopicName(newName) {
+    this.topicName = newName;
+  }
+
+  @action
+  updateCategoryId(newId) {
+    this.categoryId = newId;
+  }
+
+  @action
+  updateTags(newTags) {
+    this.tags = newTags;
   }
 }

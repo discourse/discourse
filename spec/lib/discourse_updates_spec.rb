@@ -67,7 +67,7 @@ RSpec.describe DiscourseUpdates do
       end
 
       it "queues a version check" do
-        expect_enqueued_with(job: :version_check) { version }
+        expect_enqueued_with(job: :call_discourse_hub) { version }
       end
     end
 
@@ -76,7 +76,7 @@ RSpec.describe DiscourseUpdates do
     context "with old version check data" do
       shared_examples "queue version check and report that version is ok" do
         it "queues a version check" do
-          expect_enqueued_with(job: :version_check) { version }
+          expect_enqueued_with(job: :call_discourse_hub) { version }
         end
 
         it "reports 0 missing versions" do
@@ -105,7 +105,7 @@ RSpec.describe DiscourseUpdates do
 
     shared_examples "when last_installed_version is old" do
       it "queues a version check" do
-        expect_enqueued_with(job: :version_check) { version }
+        expect_enqueued_with(job: :call_discourse_hub) { version }
       end
 
       it "reports 0 missing versions" do
@@ -191,9 +191,9 @@ RSpec.describe DiscourseUpdates do
     it "correctly sees newly added features as unseen" do
       DiscourseUpdates.mark_new_features_as_seen(admin.id)
       expect(DiscourseUpdates.has_unseen_features?(admin.id)).to eq(false)
-      expect(DiscourseUpdates.new_features_last_seen(admin.id)).to be_within(1.second).of (
-             last_item_date
-           )
+      expect(DiscourseUpdates.new_features_last_seen(admin.id)).to be_within(1.second).of(
+        last_item_date,
+      )
 
       updated_features = [
         { "emoji" => "🤾", "title" => "Brand New Item", "created_at" => 2.minutes.ago },

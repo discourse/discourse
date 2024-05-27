@@ -36,7 +36,7 @@ export default Controller.extend({
   init(...args) {
     this._super(...args);
     this.set("priority", this.siteSettings.reviewable_default_visibility);
-    this.set("filtersExpanded", !this.site.mobileView);
+    this.set("filtersExpanded", this.site.desktopView);
   },
 
   @discourseComputed("reviewableTypes")

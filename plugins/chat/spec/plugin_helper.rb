@@ -42,7 +42,7 @@ module ChatSystemHelpers
           in_reply_to_id: in_reply_to,
           thread_id: thread_id,
           guardian: last_user.guardian,
-          message: Faker::Lorem.words(number: 5).join(" "),
+          message: Faker::Alphanumeric.alpha(number: SiteSetting.chat_minimum_message_length),
         )
 
       raise "#{creator.inspect_steps.inspect}\n\n#{creator.inspect_steps.error}" if creator.failure?
@@ -55,9 +55,7 @@ module ChatSystemHelpers
   end
 
   def thread_excerpt(message)
-    CGI.escapeHTML(
-      message.censored_excerpt(max_length: ::Chat::Thread::EXCERPT_LENGTH).gsub("&hellip;", "…"),
-    )
+    message.excerpt
   end
 end
 
@@ -113,13 +111,23 @@ module ChatSpecHelpers
     service_failed!(result) if result.failure?
     result
   end
+
+  def create_draft(channel, thread: nil, user: Discourse.system_user, data: { message: "draft" })
+    result =
+      ::Chat::UpsertDraft.call(
+        guardian: user.guardian,
+        channel_id: channel.id,
+        thread_id: thread&.id,
+        data: data.to_json,
+      )
+    service_failed!(result) if result.failure?
+    result
+  end
 end
 
 RSpec.configure do |config|
   config.include ChatSystemHelpers, type: :system
   config.include ChatSpecHelpers
-  config.include Chat::WithServiceHelper
-  config.include Chat::ServiceMatchers
 
   config.expect_with :rspec do |c|
     # Or a very large value, if you do want to truncate at some point

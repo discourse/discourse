@@ -56,6 +56,8 @@ ko:
     onebox:
       x_members:
         other: "회원 %{count}명"
+    transcript:
+      default_thread_title: "스레드"
   discourse_automation:
     scriptables:
       send_chat_message:

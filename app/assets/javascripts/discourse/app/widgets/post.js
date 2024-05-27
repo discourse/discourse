@@ -1,10 +1,12 @@
 import { getOwner } from "@ember/application";
+import { hbs } from "ember-cli-htmlbars";
 import { Promise } from "rsvp";
 import { h } from "virtual-dom";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import { dateNode } from "discourse/helpers/node";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
+import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import {
   prioritizeNameFallback,
@@ -12,15 +14,20 @@ import {
 } from "discourse/lib/settings";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
-import { formatUsername } from "discourse/lib/utilities";
+import { clipboardCopy, formatUsername } from "discourse/lib/utilities";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
-import hbs from "discourse/widgets/hbs-compiler";
+import widgetHbs from "discourse/widgets/hbs-compiler";
 import PostCooked from "discourse/widgets/post-cooked";
 import { postTransformCallbacks } from "discourse/widgets/post-stream";
 import RawHtml from "discourse/widgets/raw-html";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
+import { isTesting } from "discourse-common/config/environment";
 import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
-import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import getURL, {
+  getAbsoluteURL,
+  getURLWithCDN,
+} from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 
@@ -156,6 +163,7 @@ createWidget("reply-to-tab", {
     };
 
     if (!this.attrs.mobileView) {
+      result["role"] = "button";
       result["aria-controls"] = `embedded-posts__top--${attrs.post_number}`;
       result["aria-expanded"] = this.attrs.repliesAbove.length
         ? "true"
@@ -258,7 +266,7 @@ createWidget("post-avatar", {
 
 createWidget("post-locked-indicator", {
   tagName: "div.post-info.post-locked",
-  template: hbs`{{d-icon "lock"}}`,
+  template: widgetHbs`{{d-icon "lock"}}`,
   title: () => I18n.t("post.locked"),
 });
 
@@ -642,6 +650,31 @@ createWidget("post-contents", {
     });
   },
 
+  copyLink() {
+    // Copying the link to clipboard on mobile doesn't make sense.
+    if (this.site.mobileView) {
+      return this.share();
+    }
+
+    const post = this.findAncestorModel();
+    const postId = post.id;
+
+    let actionCallback = () => clipboardCopy(getAbsoluteURL(post.shareUrl));
+
+    // Can't use clipboard in JS tests.
+    if (isTesting()) {
+      actionCallback = () => {};
+    }
+
+    postActionFeedback({
+      postId,
+      actionClass: "post-action-menu__copy-link",
+      messageKey: "post.controls.link_copied",
+      actionCallback,
+      errorCallback: () => this.share(),
+    });
+  },
+
   init() {
     this.postContentsDestroyCallbacks = [];
   },
@@ -711,10 +744,45 @@ createWidget("post-body", {
     result.push(this.attach("actions-summary", attrs));
     result.push(this.attach("post-links", attrs));
     if (attrs.showTopicMap) {
-      result.push(this.attach("topic-map", attrs));
+      result.push(this.buildTopicMap(attrs));
     }
 
     return result;
+  },
+
+  buildTopicMap(attrs) {
+    return new RenderGlimmer(
+      this,
+      "div.topic-map",
+      hbs`<TopicMap
+        @model={{@data.model}}
+        @topicDetails={{@data.topicDetails}}
+        @postStream={{@data.postStream}}
+        @showPMMap={{@data.showPMMap}}
+        @cancelFilter={{@data.cancelFilter}}
+        @showTopReplies={{@data.showTopReplies}}
+        @collapseSummary={{@data.collapseSummary}}
+        @showSummary={{@data.showSummary}}
+        @showInvite={{@data.showInvite}}
+        @removeAllowedGroup={{@data.removeAllowedGroup}}
+        @removeAllowedUser={{@data.removeAllowedUser}}
+      />`,
+      {
+        model: attrs.topic,
+        topicDetails: attrs.topic.get("details"),
+        postStream: attrs.topic.postStream,
+        showPMMap: attrs.showPMMap,
+        cancelFilter: () => this.sendWidgetAction("cancelFilter"),
+        showTopReplies: () => this.sendWidgetAction("showTopReplies"),
+        collapseSummary: () => this.sendWidgetAction("collapseSummary"),
+        showSummary: () => this.sendWidgetAction("showSummary"),
+        showInvite: () => this.sendWidgetAction("showInvite"),
+        removeAllowedGroup: (group) =>
+          this.sendWidgetAction("removeAllowedGroup", group),
+        removeAllowedUser: (user) =>
+          this.sendWidgetAction("removeAllowedUser", user),
+      }
+    );
   },
 });
 
@@ -758,11 +826,7 @@ createWidget("post-article", {
   },
 
   html(attrs, state) {
-    const rows = [
-      h("span.tabLoc", {
-        attributes: { "aria-hidden": true, tabindex: -1 },
-      }),
-    ];
+    const rows = [];
     if (state.repliesAbove.length) {
       const replies = state.repliesAbove.map((p) => {
         return this.attach("embedded-post", p, {
@@ -859,6 +923,7 @@ createWidget("post-article", {
             delete result.shareUrl;
             delete result.firstPost;
             delete result.usernameUrl;
+            delete result.topicNotificationLevel;
 
             result.customShare = `${topicUrl}/${p.post_number}`;
             result.asPost = this.store.createRecord("post", result);
@@ -950,10 +1015,7 @@ export default createWidget("post", {
       return "";
     }
 
-    return [
-      this.attach("post-user-tip-shim"),
-      this.attach("post-article", attrs),
-    ];
+    return [this.attach("post-article", attrs)];
   },
 
   toggleLike() {

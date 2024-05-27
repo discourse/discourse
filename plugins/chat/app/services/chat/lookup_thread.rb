@@ -33,7 +33,7 @@ module Chat
 
     private
 
-    def fetch_thread(contract:, **)
+    def fetch_thread(contract:)
       Chat::Thread.includes(
         :channel,
         original_message_user: :user_status,
@@ -41,19 +41,19 @@ module Chat
       ).find_by(id: contract.thread_id, channel_id: contract.channel_id)
     end
 
-    def invalid_access(guardian:, thread:, **)
+    def invalid_access(guardian:, thread:)
       guardian.can_preview_chat_channel?(thread.channel)
     end
 
-    def threading_enabled_for_channel(thread:, **)
-      thread.channel.threading_enabled
+    def threading_enabled_for_channel(thread:)
+      thread.channel.threading_enabled || thread.force
     end
 
-    def fetch_membership(thread:, guardian:, **)
+    def fetch_membership(thread:, guardian:)
       context.membership = thread.membership_for(guardian.user)
     end
 
-    def fetch_participants(thread:, **)
+    def fetch_participants(thread:)
       context.participants = ::Chat::ThreadParticipantQuery.call(thread_ids: [thread.id])[thread.id]
     end
   end

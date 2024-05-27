@@ -3,6 +3,7 @@
 class DiscourseConnect < DiscourseConnectBase
   class BlankExternalId < StandardError
   end
+
   class BannedExternalId < StandardError
   end
 
@@ -255,6 +256,7 @@ class DiscourseConnect < DiscourseConnectBase
           name: resolve_name,
           username: resolve_username,
           ip_address: ip_address,
+          registration_ip_address: ip_address,
         }
 
         if SiteSetting.allow_user_locale && locale && LocaleSiteSetting.valid_value?(locale)

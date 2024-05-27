@@ -39,12 +39,6 @@ module PageObjects
         expect(categories.map(&:text)).to eq(category_names)
       end
 
-      def has_checkbox?(category, disabled: false)
-        has_selector?(
-          ".sidebar-categories-form .sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__input#{disabled ? "[disabled]" : ""}",
-        )
-      end
-
       def toggle_category_checkbox(category)
         find(
           ".sidebar-categories-form .sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__input",

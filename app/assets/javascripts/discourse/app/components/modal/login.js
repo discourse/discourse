@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -16,6 +16,7 @@ import {
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import escape from "discourse-common/lib/escape";
+import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
 export default class Login extends Component {
@@ -23,6 +24,7 @@ export default class Login extends Component {
   @service dialog;
   @service siteSettings;
   @service site;
+  @service login;
 
   @tracked loggingIn = false;
   @tracked loggedIn = false;
@@ -45,16 +47,6 @@ export default class Login extends Component {
   @tracked securityKeyChallenge;
   @tracked securityKeyAllowedCredentialIds;
   @tracked secondFactorToken;
-
-  constructor() {
-    super(...arguments);
-
-    if (this.args.model.isExternalLogin) {
-      this.externalLogin(this.args.model.externalLoginMethod, {
-        signup: this.args.model.signup,
-      });
-    }
-  }
 
   get awaitingApproval() {
     return (
@@ -96,13 +88,17 @@ export default class Login extends Component {
   get canUsePasskeys() {
     return (
       this.siteSettings.enable_local_logins &&
-      this.siteSettings.experimental_passkeys &&
+      this.siteSettings.enable_passkeys &&
       isWebauthnSupported()
     );
   }
 
   get hasAtLeastOneLoginButton() {
     return findAll().length > 0 || this.canUsePasskeys;
+  }
+
+  get hasNoLoginOptions() {
+    return !this.hasAtLeastOneLoginButton && !this.canLoginLocal;
   }
 
   get loginButtonLabel() {
@@ -115,31 +111,17 @@ export default class Login extends Component {
     );
   }
 
+  get adminLoginPath() {
+    return getURL("/u/admin-login");
+  }
+
   @action
   async passkeyLogin(mediation = "optional") {
     try {
-      // we need to check isConditionalMediationAvailable for Firefox
-      // without it, Firefox will throw console errors
-      // We cannot do a general check because iOS Safari and Chrome in Selenium quietly support the feature
-      // but they do not support the PublicKeyCredential.isConditionalMediationAvailable() method
-      if (
-        mediation === "conditional" &&
-        this.capabilities.isFirefox &&
-        window.PublicKeyCredential
-      ) {
-        const isCMA =
-          // eslint-disable-next-line no-undef
-          await PublicKeyCredential.isConditionalMediationAvailable();
-        if (!isCMA) {
-          return;
-        }
-      }
-      const response = await ajax("/session/passkey/challenge.json");
-
       const publicKeyCredential = await getPasskeyCredential(
-        response.challenge,
-        (errorMessage) => this.dialog.alert(errorMessage),
-        mediation
+        (e) => this.dialog.alert(e),
+        mediation,
+        this.capabilities.isFirefox
       );
 
       if (publicKeyCredential) {
@@ -201,7 +183,7 @@ export default class Login extends Component {
   }
 
   @action
-  async login() {
+  async triggerLogin() {
     if (this.loginDisabled) {
       return;
     }
@@ -339,23 +321,15 @@ export default class Login extends Component {
     }
   }
 
-  async externalLogin(loginMethod, { signup }) {
-    try {
-      this.loggingIn = true;
-      await loginMethod.doLogin({ signup });
-      this.args.closeModal();
-    } catch {
-      this.loggingIn = false;
-    }
-  }
-
   @action
   async externalLoginAction(loginMethod) {
     if (this.loginDisabled) {
       return;
     }
-
-    await this.externalLogin(loginMethod, { signup: false });
+    this.login.externalLogin(loginMethod, {
+      signup: false,
+      setLoggingIn: (value) => (this.loggingIn = value),
+    });
   }
 
   @action

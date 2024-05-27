@@ -108,3 +108,27 @@ acceptance("Category New", function (needs) {
     );
   });
 });
+
+acceptance("New category preview", function (needs) {
+  needs.user({ admin: true });
+
+  test("Category badge color appears and updates", async function (assert) {
+    await visit("/new-category");
+
+    let previewBadgeColor = document
+      .querySelector(".category-color-editor .badge-category")
+      .style.getPropertyValue("--category-badge-color")
+      .trim();
+
+    assert.equal(previewBadgeColor, "#0088CC");
+
+    await fillIn(".hex-input", "FF00FF");
+
+    previewBadgeColor = document
+      .querySelector(".category-color-editor .badge-category")
+      .style.getPropertyValue("--category-badge-color")
+      .trim();
+
+    assert.equal(previewBadgeColor, "#FF00FF");
+  });
+});

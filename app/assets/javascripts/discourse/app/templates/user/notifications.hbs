@@ -53,6 +53,15 @@
       <span>{{i18n "user_action_groups.11"}}</span>
     </DNavigationItem>
 
+    <DNavigationItem
+      @route="userNotifications.links"
+      @ariaCurrentContext="subNav"
+      class="user-nav__notifications-links"
+    >
+      {{d-icon "link"}}
+      <span>{{i18n "user_action_groups.17"}}</span>
+    </DNavigationItem>
+
     <PluginOutlet
       @name="user-notifications-bottom"
       @connectorTagName="li"
@@ -77,9 +86,9 @@
 
 <section class="user-content" id="user-content">
   <LoadMore
-    @class="notification-history user-stream"
     @selector=".user-stream .notification"
     @action={{action "loadMore"}}
+    class="notification-history user-stream"
   >
     {{outlet}}
     <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />

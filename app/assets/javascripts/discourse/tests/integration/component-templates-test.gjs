@@ -9,9 +9,11 @@ import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
+// eslint-disable-next-line ember/no-empty-glimmer-component-classes
 class MockColocatedComponent extends Component {}
 setComponentTemplate(hbs`Colocated Original`, MockColocatedComponent);
 
+// eslint-disable-next-line ember/no-empty-glimmer-component-classes
 class MockResolvedComponent extends Component {}
 const MockResolvedComponentTemplate = hbs`Resolved Original`;
 

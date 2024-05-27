@@ -5,6 +5,7 @@ class Permalink < ActiveRecord::Base
   belongs_to :post
   belongs_to :category
   belongs_to :tag
+  belongs_to :user
 
   before_validation :normalize_url
 
@@ -75,12 +76,13 @@ class Permalink < ActiveRecord::Base
     return topic.relative_url if topic
     return category.url if category
     return tag.full_url if tag
+    return user.full_url if user
     nil
   end
 
   def self.filter_by(url = nil)
     permalinks =
-      Permalink.includes(:topic, :post, :category, :tag).order("permalinks.created_at desc")
+      Permalink.includes(:topic, :post, :category, :tag, :user).order("permalinks.created_at desc")
 
     permalinks.where!("url ILIKE :url OR external_url ILIKE :url", url: "%#{url}%") if url.present?
     permalinks.limit!(100)
@@ -101,6 +103,7 @@ end
 #  updated_at   :datetime         not null
 #  external_url :string(1000)
 #  tag_id       :integer
+#  user_id      :integer
 #
 # Indexes
 #

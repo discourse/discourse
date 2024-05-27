@@ -18,10 +18,10 @@
     "src"
   ],
   "dependencies": {
-    "@embroider/addon-shim": "^1.0.0",
+    "@embroider/addon-shim": "^1.8.9",
     "discourse-common": "1.0.0",
-    "ember-auto-import": "^2.6.3",
-    "markdown-it": "^13.0.2"
+    "ember-auto-import": "^2.7.2",
+    "markdown-it": "^14.0.0"
   },
   "peerDependencies": {
     "discourse-i18n": "1.0.0",
@@ -29,7 +29,7 @@
     "xss": "*"
   },
   "engines": {
-    "node": "16.* || >= 18",
+    "node": ">= 18",
     "npm": "please-use-yarn",
     "yarn": ">= 1.21.1"
   },

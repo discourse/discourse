@@ -1,16 +1,3 @@
-#main-outlet-wrapper:has(.invites-show) {
-  display: block;
-  height: 100vh;
-
-  .sidebar-wrapper {
-    display: none;
-  }
-
-  #main-outlet {
-    padding: 0;
-    height: 100%;
-  }
-}
 .invites-show {
   padding: 2rem 3rem;
   background: var(--secondary);
