@@ -109,7 +109,7 @@ RSpec.describe "DiscoursePoll endpoints" do
 
       expect(
         JSON.parse(response.body)["voters"][irv_poll_options[1]["digest"]].first["rank"],
-      ).to eq(2)
+      ).to eq("2")
     end
 
     describe "when post_id is blank" do
