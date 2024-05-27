@@ -249,7 +249,7 @@ RSpec.describe SeedData::Topics do
       expect(seeder.reseed_options).to eq(expected_options)
     end
 
-    it "updates 'Welcome Topic' even when `general_category_id` doesn't exist" do
+    it "returns 'Welcome Topic' even when `general_category_id` doesn't exist" do
       create_topic("welcome_topic_id")
       SiteSetting.general_category_id = nil
 
