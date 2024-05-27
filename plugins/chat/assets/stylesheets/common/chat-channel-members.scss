@@ -12,7 +12,6 @@
     flex-direction: column;
 
     &-item {
-      @include ellipsis;
       display: flex;
       list-style: none;
       border-bottom: 1px solid var(--primary-low);
@@ -34,11 +33,14 @@
           margin-right: 0.5rem;
         }
 
-        .chat-user-display-name span:not(.-first) {
-          color: var(--primary-high);
-          font-size: var(--font-down-1);
-          margin-left: 0.5rem;
-          overflow-wrap: anywhere;
+        .chat-user-display-name {
+          @include ellipsis;
+
+          span:not(.-first) {
+            color: var(--primary-high);
+            font-size: var(--font-down-1);
+            margin-left: 0.5rem;
+          }
         }
 
         .user-status-message {
