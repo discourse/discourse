@@ -5,6 +5,7 @@ import { action, get } from "@ember/object";
 import Label from "form-kit/components/label";
 import concatClass from "discourse/helpers/concat-class";
 import uniqueId from "discourse/helpers/unique-id";
+import FormErrors from "./errors";
 import FormInput from "./input";
 
 export default class FormField extends Component {
@@ -29,9 +30,19 @@ export default class FormField extends Component {
   }
 
   get value() {
-    // when @mutableData is set, data is something we don't control, i.e. might require old-school get() to be on the safe side
-    // we do not want to support nested property paths for now though, see the constructor assertion!
     return get(this.args.data, this.args.name);
+  }
+
+  get errors() {
+    return this.args.errors?.[this.args.name];
+  }
+
+  get hasErrors() {
+    return this.errors !== undefined;
+  }
+
+  get showMeta() {
+    return this.args.description || this.hasErrors;
   }
 
   @action
@@ -68,13 +79,18 @@ export default class FormField extends Component {
               triggerValidation=triggerValidation
             )
           }}
+
+          {{#if this.showMeta}}
+            <div class="d-form-field__meta">
+              {{#if this.hasErrors}}
+                <FormErrors @id={{errorId}} @errors={{this.errors}} />
+              {{else if @description}}
+                <p class="d-form-field__meta-text">{{@description}}</p>
+              {{/if}}
+            </div>
+          {{/if}}
         {{/let}}
 
-        {{#if @description}}
-          <div class="d-form-field__meta">
-            <p class="d-form-field__meta-text">{{@description}}</p>
-          </div>
-        {{/if}}
       </div>
     </div>
   </template>

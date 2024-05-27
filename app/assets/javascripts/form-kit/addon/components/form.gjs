@@ -138,6 +138,7 @@ export default class Form extends Component {
             set=this.set
             triggerValidationFor=this.handleFieldValidation
             registerField=this.registerField
+            errors=this.validationState
           )
         )
       }}
