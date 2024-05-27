@@ -13,13 +13,39 @@ RSpec.describe Permalink do
 
   describe "new record" do
     it "strips blanks" do
-      permalink = described_class.create(url: " my/old/url  ")
+      permalink = described_class.create!(url: " my/old/url  ")
       expect(permalink.url).to eq("my/old/url")
     end
 
     it "removes leading slash" do
-      permalink = described_class.create(url: "/my/old/url")
+      permalink = described_class.create!(url: "/my/old/url")
       expect(permalink.url).to eq("my/old/url")
+    end
+
+    it "checks for unique URL" do
+      permalink = described_class.create(url: "/my/old/url")
+      expect(permalink.errors[:url]).to be_empty
+
+      permalink = described_class.create(url: "/my/old/url")
+      expect(permalink.errors[:url]).to be_present
+
+      permalink = described_class.create(url: "my/old/url")
+      expect(permalink.errors[:url]).to be_present
+    end
+
+    context "with special characters in URL" do
+      it "percent encodes any special character" do
+        permalink = described_class.create!(url: "/2022/10/03/привет-sam")
+        expect(permalink.url).to eq("2022/10/03/%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82-sam")
+      end
+
+      it "checks for unique URL" do
+        permalink = described_class.create(url: "/2022/10/03/привет-sam")
+        expect(permalink.errors[:url]).to be_empty
+
+        permalink = described_class.create(url: "/2022/10/03/привет-sam")
+        expect(permalink.errors[:url]).to be_present
+      end
     end
   end
 
