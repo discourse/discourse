@@ -34,57 +34,6 @@ div.poll-outer {
       }
     }
 
-    .irv-poll-options {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5em;
-      padding: 0.5em;
-
-      .irv-poll-option {
-        display: inline-flex;
-        details {
-          padding: 0;
-        }
-        summary {
-          min-width: 100px;
-        }
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.5em;
-        padding: 0.5em;
-      }
-    }
-
-    .tabs {
-      display: none;
-    }
-
-    .discourse-poll-irv-results {
-      .tabs {
-        &.nav-items {
-          display: flex;
-          gap: 0.5em;
-          button {
-            background-color: var(--secondary);
-            border: none;
-            color: var(--primary-medium);
-          }
-          .active {
-            button {
-              color: var(--primary);
-            }
-          }
-        }
-      }
-      span.rank {
-        display: inline-block;
-        min-width: 20px;
-      }
-      .poll-results-irv-subtitle-rounds {
-        margin: 0.25em 0 0.67rem;
-      }
-    }
-
     img {
       // Hacky way to stop images without width/height
       // from causing abrupt unintended scrolling

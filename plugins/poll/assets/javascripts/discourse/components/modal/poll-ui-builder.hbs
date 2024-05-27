@@ -34,16 +34,6 @@
           {{i18n "poll.ui_builder.poll_type.number"}}
         </button>
       {{/if}}
-
-      {{#if this.showIrv}}
-        <button
-          href
-          {{on "click" (fn this.updatePollType "irv")}}
-          class="poll-type-value poll-type-value-irv {{if this.isIrv 'active'}}"
-        >
-          {{i18n "poll.ui_builder.poll_type.irv"}}
-        </button>
-      {{/if}}
     </div>
 
     {{#if this.showAdvanced}}
@@ -109,7 +99,7 @@
       </div>
     {{/unless}}
 
-    {{#unless this.dontShowForIrvOrRegular}}
+    {{#unless this.isRegular}}
       <div class="options">
         <div class="input-group poll-number">
           <label class="input-group-label">{{i18n
@@ -203,7 +193,7 @@
         />
       </div>
 
-      {{#unless this.dontShowForIrvOrNumber}}
+      {{#unless this.isNumber}}
         <div class="input-group poll-select column">
           <label class="input-group-label">{{i18n
               "poll.ui_builder.poll_chart_type.label"

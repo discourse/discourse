@@ -57,28 +57,23 @@ export default class PollResultsStandardComponent extends Component {
         <li class={{if option.chosen "chosen" ""}}>
           <div class="option">
             <p>
-              {{#unless @isIrv}}
-                <span class="percentage">{{i18n
-                    "number.percent"
-                    count=option.percentage
-                  }}</span>
-              {{/unless}}
+              <span class="percentage">{{i18n
+                  "number.percent"
+                  count=option.percentage
+                }}</span>
               <span class="option-text">{{option.html}}</span>
             </p>
-            {{#unless @isIrv}}
-              <div class="bar-back">
-                <div
-                  class="bar"
-                  style={{htmlSafe (concat "width:" option.percentage "%")}}
-                />
-              </div>
-            {{/unless}}
+            <div class="bar-back">
+              <div
+                class="bar"
+                style={{htmlSafe (concat "width:" option.percentage "%")}}
+              />
+            </div>
             <PollVoters
               @postId={{@postId}}
               @pollType={{@pollType}}
               @optionId={{option.id}}
               @pollName={{@pollName}}
-              @isIrv={{@isIrv}}
               @totalVotes={{option.votes}}
               @voters={{option.voters}}
               @fetchVoters={{@fetchVoters}}

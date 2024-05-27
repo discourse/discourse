@@ -5,7 +5,6 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse-common/helpers/d-icon";
-import PollVotersIrv from "./poll-voters-irv";
 
 export default class PollVotersComponent extends Component {
   get showMore() {
@@ -15,15 +14,11 @@ export default class PollVotersComponent extends Component {
   <template>
     <div class="poll-voters">
       <ul class="poll-voters-list">
-        {{#if @isIrv}}
-          <PollVotersIrv @voters={{@voters}} />
-        {{else}}
-          {{#each @voters as |user|}}
-            <li>
-              {{avatar user.avatar_template "tiny"}}
-            </li>
-          {{/each}}
-        {{/if}}
+        {{#each @voters as |user|}}
+          <li>
+            {{avatar user.avatar_template "tiny"}}
+          </li>
+        {{/each}}
       </ul>
       {{#if this.showMore}}
         <ConditionalLoadingSpinner @condition={{@loading}}>

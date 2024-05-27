@@ -17,9 +17,15 @@ import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 import PollInfo from "../components/poll-info";
 import PollOptions from "../components/poll-options";
 import PollResultsPie from "../components/poll-results-pie";
-import PollResultsTabs from "../components/poll-results-tabs";
+import PollResultsStandard from "../components/poll-results-standard";
 
 const FETCH_VOTERS_COUNT = 25;
+const STAFF_ONLY = "staff_only";
+const MULTIPLE = "multiple";
+const NUMBER = "number";
+const REGULAR = "regular";
+const ON_VOTE = "on_vote";
+const ON_CLOSE = "on_close";
 
 const buttonOptionsMap = {
   exportResults: {
@@ -66,12 +72,9 @@ export default class PollComponent extends Component {
   @tracked poll = this.args.attrs.poll;
   @tracked voters = this.poll.voters || 0;
   @tracked preloadedVoters = this.args.preloadedVoters || [];
-  @tracked staffOnly = this.poll.results === "staff_only";
-  @tracked isIrv = this.poll.type === "irv";
-  @tracked irvOutcome = this.poll.irv_outcome || [];
-  @tracked isMultiple = this.poll.type === "multiple";
-  @tracked isNumber = this.poll.type === "number";
-  @tracked isMultiVoteType = this.isIrv || this.isMultiple;
+  @tracked staffOnly = this.poll.results === STAFF_ONLY;
+  @tracked isMultiple = this.poll.type === MULTIPLE;
+  @tracked isNumber = this.poll.type === NUMBER;
   @tracked showingResults = false;
   @tracked hasSavedVote = this.args.attrs.hasSavedVote;
   @tracked status = this.poll.status;
@@ -125,7 +128,6 @@ export default class PollComponent extends Component {
       .then(({ poll }) => {
         this.options = [...poll.options];
         this.hasSavedVote = true;
-        this.irvOutcome = poll.irv_outcome || [];
         this.poll.setProperties(poll);
         this.appEvents.trigger(
           "poll:voted",
@@ -150,7 +152,7 @@ export default class PollComponent extends Component {
       })
       .catch((error) => {
         if (error) {
-          if (!this.isMultiple && !this.isIrv) {
+          if (!this.isMultiple) {
             this._toggleOption(option);
           }
           popupAjaxError(error);
@@ -159,25 +161,7 @@ export default class PollComponent extends Component {
         }
       });
   };
-  areRanksValid = (arr) => {
-    let ranks = new Set(); // Using a Set to keep track of unique ranks
-    let hasNonZeroDuplicate = false;
-
-    arr.forEach((obj) => {
-      const rank = obj.rank;
-
-      if (rank !== 0) {
-        if (ranks.has(rank)) {
-          hasNonZeroDuplicate = true;
-          return; // Exit forEach loop if a non-zero duplicate is found
-        }
-        ranks.add(rank);
-      }
-    });
-
-    return !hasNonZeroDuplicate;
-  };
-  _toggleOption = (option, rank = 0) => {
+  _toggleOption = (option) => {
     let options = this.options;
     let vote = this.vote;
 
@@ -189,24 +173,6 @@ export default class PollComponent extends Component {
       } else {
         vote.push(option.id);
       }
-    } else if (this.isIrv) {
-      options.forEach((candidate, i) => {
-        const chosenIdx = vote.findIndex((object) => {
-          return object.digest === candidate.id;
-        });
-
-        if (chosenIdx === -1) {
-          vote.push({
-            digest: candidate.id,
-            rank: candidate.id === option ? rank : 0,
-          });
-        } else {
-          if (candidate.id === option) {
-            vote[chosenIdx].rank = rank;
-            options[i].rank = rank;
-          }
-        }
-      });
     } else {
       vote = [option.id];
     }
@@ -220,26 +186,6 @@ export default class PollComponent extends Component {
     this.post = this.args.attrs.post;
     this.options = this.poll.options;
     this.getDropdownButtonState = false;
-    this.irvDropdownContent = [];
-
-    if (this.isIrv) {
-      this.irvDropdownContent.push({
-        id: 0,
-        name: I18n.t("poll.options.irv.abstain"),
-      });
-    }
-
-    this.options.forEach((option, i) => {
-      option.rank = 0;
-      if (this.isIrv) {
-        this.irvDropdownContent.push({ id: i + 1, name: (i + 1).toString() });
-        this.args.attrs.vote.forEach((vote) => {
-          if (vote.digest === option.id) {
-            option.rank = vote.rank;
-          }
-        });
-      }
-    });
   }
 
   get min() {
@@ -273,7 +219,7 @@ export default class PollComponent extends Component {
   }
 
   @action
-  toggleOption(option, rank = 0) {
+  toggleOption(option) {
     if (this.closed) {
       return;
     }
@@ -287,20 +233,19 @@ export default class PollComponent extends Component {
 
     if (
       !this.isMultiple &&
-      !this.isIrv &&
       this.vote.length === 1 &&
       this.vote[0] === option.id
     ) {
       return this.removeVote();
     }
 
-    if (!this.isMultiple && !this.isIrv) {
+    if (!this.isMultiple) {
       this.vote.length = 0;
     }
 
-    this._toggleOption(option, rank);
+    this._toggleOption(option);
 
-    if (!this.isMultiple && !this.isIrv) {
+    if (!this.isMultiple) {
       this.castVotes(option);
     }
   }
@@ -322,13 +267,6 @@ export default class PollComponent extends Component {
       return selectedOptionCount >= this.min && selectedOptionCount <= this.max;
     }
 
-    if (this.isIrv) {
-      return (
-        this.options.length === this.vote.length &&
-        this.areRanksValid(this.vote)
-      );
-    }
-
     return selectedOptionCount > 0;
   }
 
@@ -341,7 +279,7 @@ export default class PollComponent extends Component {
   }
 
   get showCastVotesButton() {
-    return (this.isMultiple || this.isIrv) && !this.showResults;
+    return this.isMultiple && !this.showResults;
   }
 
   get castVotesButtonClass() {
@@ -366,9 +304,9 @@ export default class PollComponent extends Component {
     return (
       !this.showResults &&
       !this.hideResultsDisabled &&
-      !(this.poll.results === "on_vote" && !this.hasSavedVote && !this.isMe) &&
-      !(this.poll.results === "on_close" && !this.closed) &&
-      !(this.poll.results === "staff_only" && !this.isStaff) &&
+      !(this.poll.results === ON_VOTE && !this.hasSavedVote && !this.isMe) &&
+      !(this.poll.results === ON_CLOSE && !this.closed) &&
+      !(this.poll.results === STAFF_ONLY && !this.isStaff) &&
       this.voters > 0
     );
   }
@@ -415,15 +353,6 @@ export default class PollComponent extends Component {
   updatedVoters() {
     this.preloadedVoters = this.args.preloadedVoters;
     this.options = [...this.args.options];
-    if (this.isIrv) {
-      this.options.forEach((candidate) => {
-        let specificVote = this.vote.find(
-          (vote) => vote.digest === candidate.id
-        );
-        let rank = specificVote ? specificVote.rank : 0;
-        candidate.rank = rank;
-      });
-    }
   }
 
   @action
@@ -450,26 +379,22 @@ export default class PollComponent extends Component {
           ? this.preloadedVoters[optionId]
           : this.preloadedVoters;
         const newVoters = optionId ? result.voters[optionId] : result.voters;
-        if (this.isIrv) {
-          this.preloadedVoters[optionId] = [...new Set([...newVoters])];
-        } else {
-          const votersSet = new Set(voters.map((voter) => voter.username));
-          newVoters.forEach((voter) => {
-            if (!votersSet.has(voter.username)) {
-              votersSet.add(voter.username);
-              voters.push(voter);
+        const votersSet = new Set(voters.map((voter) => voter.username));
+        newVoters.forEach((voter) => {
+          if (!votersSet.has(voter.username)) {
+            votersSet.add(voter.username);
+            voters.push(voter);
+          }
+        });
+        // remove users who changed their vote
+        if (this.poll.type === REGULAR) {
+          Object.keys(this.preloadedVoters).forEach((otherOptionId) => {
+            if (optionId !== otherOptionId) {
+              this.preloadedVoters[otherOptionId] = this.preloadedVoters[
+                otherOptionId
+              ].filter((voter) => !votersSet.has(voter.username));
             }
           });
-          // remove users who changed their vote
-          if (this.poll.type === "regular") {
-            Object.keys(this.preloadedVoters).forEach((otherOptionId) => {
-              if (optionId !== otherOptionId) {
-                this.preloadedVoters[otherOptionId] = this.preloadedVoters[
-                  otherOptionId
-                ].filter((voter) => !votersSet.has(voter.username));
-              }
-            });
-          }
         }
         this.preloadedVoters[optionId] = [
           ...new Set([...this.preloadedVoters[optionId], ...newVoters]),
@@ -563,14 +488,8 @@ export default class PollComponent extends Component {
       },
     })
       .then(({ poll }) => {
-        if (this.poll.type === "irv") {
-          poll.options.forEach((option) => {
-            option.rank = 0;
-          });
-        }
         this.options = [...poll.options];
         this.poll.setProperties(poll);
-        this.irvOutcome = poll.irv_outcome || [];
         this.vote = [];
         this.voters = poll.voters;
         this.hasSavedVote = false;
@@ -627,10 +546,7 @@ export default class PollComponent extends Component {
 
   @action
   exportResults() {
-    const queryID =
-      this.poll.type === "irv"
-        ? this.siteSettings.poll_export_data_explorer_query_id_irv
-        : this.siteSettings.poll_export_data_explorer_query_id;
+    const queryID = this.siteSettings.poll_export_data_explorer_query_id;
 
     // This uses the Data Explorer plugin export as CSV route
     // There is detection to check if the plugin is enabled before showing the button
@@ -685,18 +601,16 @@ export default class PollComponent extends Component {
             {{#if this.resultsPie}}
               <PollResultsPie @id={{this.id}} @options={{this.options}} />
             {{else}}
-              <PollResultsTabs
+              <PollResultsStandard
                 @options={{this.options}}
                 @pollName={{this.poll.name}}
                 @pollType={{this.poll.type}}
-                @isIrv={{this.isIrv}}
                 @isPublic={{this.poll.public}}
                 @postId={{this.post.id}}
                 @vote={{this.vote}}
                 @voters={{this.preloadedVoters}}
                 @votersCount={{this.poll.voters}}
                 @fetchVoters={{this.fetchVoters}}
-                @irvOutcome={{this.irvOutcome}}
               />
             {{/if}}
           {{/if}}
@@ -704,8 +618,6 @@ export default class PollComponent extends Component {
       {{else}}
         <PollOptions
           @isCheckbox={{this.isCheckbox}}
-          @isIrv={{this.isIrv}}
-          @irvDropdownContent={{this.irvDropdownContent}}
           @options={{this.options}}
           @votes={{this.vote}}
           @sendOptionSelect={{this.toggleOption}}

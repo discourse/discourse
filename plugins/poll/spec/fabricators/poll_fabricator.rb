@@ -9,8 +9,6 @@ Fabricator(:poll_regular, from: :poll) { type "regular" }
 
 Fabricator(:poll_multiple, from: :poll) { type "multiple" }
 
-Fabricator(:poll_irv, from: :poll) { type "irv" }
-
 Fabricator(:poll_option) do
   poll
   html { sequence(:html) { |i| "Poll Option #{i}" } }

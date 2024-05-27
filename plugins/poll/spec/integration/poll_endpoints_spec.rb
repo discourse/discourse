@@ -13,20 +13,8 @@ RSpec.describe "DiscoursePoll endpoints" do
       [/poll]
       SQL
 
-    fab!(:post_with_irv_poll) { Fabricate(:post, raw: <<~SQL) }
-      [poll type=irv public=true]
-      - Red
-      - Blue
-      - Yellow
-      [/poll]
-      SQL
-
     let(:option_a) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:option_b) { "e89dec30bbd9bf50fabf6a05b4324edf" }
-
-    let(:irv_option_a) { { id: "5c24fc1df56d764b550ceae1b9319125", rank: 2 } }
-    let(:irv_option_b) { { id: "e89dec30bbd9bf50fabf6a05b4324edf", rank: 1 } }
-    let(:irv_option_c) { { id: "a1a6e2779b52caadb93579c0c3db7c0c", rank: 0 } }
 
     it "should return the right response" do
       DiscoursePoll::Poll.vote(user, post.id, DiscoursePoll::DEFAULT_POLL_NAME, [option_a])
@@ -73,43 +61,6 @@ RSpec.describe "DiscoursePoll endpoints" do
       expect(option.length).to eq(1)
       expect(option.first["id"]).to eq(user.id)
       expect(option.first["username"]).to eq(user.username)
-    end
-
-    it "should return valid response for a IRV option" do
-      irv_poll = post_with_irv_poll.polls.first
-      irv_poll_options = irv_poll.poll_options
-      irv_votes = {
-        "0": {
-          digest: irv_poll_options.first.digest,
-          rank: "0",
-        },
-        "1": {
-          digest: irv_poll_options.second.digest,
-          rank: "2",
-        },
-        "2": {
-          digest: irv_poll_options.third.digest,
-          rank: "1",
-        },
-      }
-
-      DiscoursePoll::Poll.vote(
-        user,
-        post_with_irv_poll.id,
-        DiscoursePoll::DEFAULT_POLL_NAME,
-        irv_votes,
-      )
-
-      get "/polls/voters.json",
-          params: {
-            post_id: post_with_irv_poll.id,
-            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
-            option_id: irv_poll_options[1]["digest"],
-          }
-
-      expect(
-        JSON.parse(response.body)["voters"][irv_poll_options[1]["digest"]].first["rank"],
-      ).to eq("2")
     end
 
     describe "when post_id is blank" do
@@ -190,71 +141,12 @@ RSpec.describe "DiscoursePoll endpoints" do
       [/poll]
       SQL
 
-    fab!(:post_with_irv_poll) { Fabricate(:post, raw: <<~SQL) }
-      [poll type=irv public=true]
-      - Red
-      - Blue
-      - Yellow
-      [/poll]
-      SQL
-
     let(:option_a) { "5c24fc1df56d764b550ceae1b9319125" }
     let(:option_b) { "e89dec30bbd9bf50fabf6a05b4324edf" }
-
-    let(:irv_vote_a) { { digest: "5c24fc1df56d764b550ceae1b9319125", rank: 2 } }
-    let(:irv_vote_b) { { digest: "e89dec30bbd9bf50fabf6a05b4324edf", rank: 1 } }
-    let(:irv_vote_c) { { digest: "a1a6e2779b52caadb93579c0c3db7c0c", rank: 0 } }
 
     before do
       sign_in(user1)
       user_votes = { user_0: option_a, user_1: option_a, user_2: option_b }
-      irv_poll = post_with_irv_poll.polls.first
-      irv_poll_options = irv_poll.poll_options
-
-      user_irv_votes = [
-        {
-          "0": {
-            digest: irv_poll_options.first.digest,
-            rank: "0",
-          },
-          "1": {
-            digest: irv_poll_options.second.digest,
-            rank: "2",
-          },
-          "2": {
-            digest: irv_poll_options.third.digest,
-            rank: "1",
-          },
-        },
-        {
-          "0": {
-            digest: irv_poll_options.first.digest,
-            rank: "0",
-          },
-          "1": {
-            digest: irv_poll_options.second.digest,
-            rank: "2",
-          },
-          "2": {
-            digest: irv_poll_options.third.digest,
-            rank: "1",
-          },
-        },
-        {
-          "0": {
-            digest: irv_poll_options.first.digest,
-            rank: "0",
-          },
-          "1": {
-            digest: irv_poll_options.second.digest,
-            rank: "2",
-          },
-          "2": {
-            digest: irv_poll_options.third.digest,
-            rank: "1",
-          },
-        },
-      ]
 
       [user1, user2, user3].each_with_index do |user, index|
         DiscoursePoll::Poll.vote(
@@ -262,12 +154,6 @@ RSpec.describe "DiscoursePoll endpoints" do
           post.id,
           DiscoursePoll::DEFAULT_POLL_NAME,
           [user_votes["user_#{index}".to_sym]],
-        )
-        DiscoursePoll::Poll.vote(
-          user,
-          post_with_irv_poll.id,
-          DiscoursePoll::DEFAULT_POLL_NAME,
-          user_irv_votes[index],
         )
         UserCustomField.create(user_id: user.id, name: "something", value: "value#{index}")
       end
@@ -318,19 +204,6 @@ RSpec.describe "DiscoursePoll endpoints" do
           },
         ],
       )
-    end
-
-    it "returns an error when attempting to return group results for IRV type poll" do
-      SiteSetting.poll_groupable_user_fields = "something"
-      get "/polls/grouped_poll_results.json",
-          params: {
-            post_id: post_with_irv_poll.id,
-            poll_name: DiscoursePoll::DEFAULT_POLL_NAME,
-            user_field_name: "something",
-          }
-
-      expect(response.status).to eq(422)
-      expect(response.body).to include("IRV")
     end
 
     it "returns an error when poll_groupable_user_fields is empty" do

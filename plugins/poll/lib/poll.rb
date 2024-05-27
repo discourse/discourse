@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class DiscoursePoll::Poll
-  IRV = "irv"
   MULTIPLE = "multiple"
   REGULAR = "regular"
 
@@ -14,12 +13,7 @@ class DiscoursePoll::Poll
         # remove options that aren't available in the poll
         available_options = poll.poll_options.map { |o| o.digest }.to_set
 
-        if poll.irv?
-          options = options.values.map { |hash| hash }
-          options.select! { |o| available_options.include?(o[:digest]) }
-        else
-          options.select! { |o| available_options.include?(o) }
-        end
+        options.select! { |o| available_options.include?(o) }
 
         if options.empty?
           raise DiscoursePoll::Error.new I18n.t("poll.requires_at_least_1_valid_option")
@@ -29,11 +23,7 @@ class DiscoursePoll::Poll
           poll
             .poll_options
             .each_with_object([]) do |option, obj|
-              if poll.irv?
-                obj << option.id if options.any? { |o| o[:digest] == option.digest }
-              else
-                obj << option.id if options.include?(option.digest)
-              end
+              obj << option.id if options.include?(option.digest)
             end
 
         self.validate_votes!(poll, new_option_ids)
@@ -45,76 +35,42 @@ class DiscoursePoll::Poll
               obj << option.id if option.poll_votes.where(user_id: user.id).exists?
             end
 
-        if poll.irv?
-          # for IRV, we need to remove all votes and re-create them as there is no way to update them due to lack of primary key.
-          PollVote.where(poll: poll, user: user).delete_all
-          creation_set = new_option_ids
-        else
-          # remove non-selected votes
-          PollVote
-            .where(poll: poll, user: user)
-            .where.not(poll_option_id: new_option_ids)
-            .delete_all
-          creation_set = new_option_ids - old_option_ids
-        end
+        # remove non-selected votes
+        PollVote.where(poll: poll, user: user).where.not(poll_option_id: new_option_ids).delete_all
 
         # create missing votes
-        creation_set.each do |option_id|
-          if poll.irv?
-            option_digest = poll.poll_options.find(option_id).digest
+        creation_set = new_option_ids - old_option_ids
 
-            PollVote.create!(
-              poll: poll,
-              user: user,
-              poll_option_id: option_id,
-              rank: options.find { |o| o[:digest] == option_digest }[:rank],
-            )
-          else
-            PollVote.create!(poll: poll, user: user, poll_option_id: option_id)
-          end
+        creation_set.each do |option_id|
+          PollVote.create!(poll: poll, user: user, poll_option_id: option_id)
         end
       end
 
-    unless serialized_poll[:type] == IRV
-      # Ensure consistency here as we do not have a unique index to limit the
-      # number of votes per the poll's configuration.
-      is_multiple = serialized_poll[:type] == MULTIPLE
-      offset = is_multiple ? (serialized_poll[:max] || serialized_poll[:options].length) : 1
+    # Ensure consistency here as we do not have a unique index to limit the
+    # number of votes per the poll's configuration.
+    is_multiple = serialized_poll[:type] == MULTIPLE
+    offset = is_multiple ? (serialized_poll[:max] || serialized_poll[:options].length) : 1
 
-      params = { poll_id: poll_id, offset: offset, user_id: user.id }
+    params = { poll_id: poll_id, offset: offset, user_id: user.id }
 
-      DB.query(<<~SQL, params)
-      DELETE FROM poll_votes
-      USING (
-        SELECT
-          poll_id,
-          user_id
-        FROM poll_votes
-        WHERE poll_id = :poll_id
-        AND user_id = :user_id
-        ORDER BY created_at DESC
-        OFFSET :offset
-      ) to_delete_poll_votes
-      WHERE poll_votes.poll_id = to_delete_poll_votes.poll_id
-      AND poll_votes.user_id = to_delete_poll_votes.user_id
-      SQL
-    end
+    DB.query(<<~SQL, params)
+    DELETE FROM poll_votes
+    USING (
+      SELECT
+        poll_id,
+        user_id
+      FROM poll_votes
+      WHERE poll_id = :poll_id
+      AND user_id = :user_id
+      ORDER BY created_at DESC
+      OFFSET :offset
+    ) to_delete_poll_votes
+    WHERE poll_votes.poll_id = to_delete_poll_votes.poll_id
+    AND poll_votes.user_id = to_delete_poll_votes.user_id
+    SQL
 
-    if serialized_poll[:type] == IRV
-      serialized_poll[:irv_outcome] = DiscoursePoll::Irv.irv_outcome(poll_id)
-    end
-
-    serialized_poll[:options].each do |option|
-      if serialized_poll[:type] == IRV
-        option.merge!(
-          rank:
-            PollVote
-              .joins(:poll_option)
-              .where(poll_options: { digest: option[:id] }, user_id: user.id, poll_id: poll_id)
-              .limit(1)
-              .pluck(:rank),
-        )
-      elsif serialized_poll[:type] == MULTIPLE
+    if serialized_poll[:type] == MULTIPLE
+      serialized_poll[:options].each do |option|
         option.merge!(
           chosen:
             PollVote
@@ -129,19 +85,9 @@ class DiscoursePoll::Poll
   end
 
   def self.remove_vote(user, post_id, poll_name)
-    poll_id = nil
-
-    serialized_poll =
-      DiscoursePoll::Poll.change_vote(user, post_id, poll_name) do |poll|
-        poll_id = poll.id
-        PollVote.where(poll: poll, user: user).delete_all
-      end
-
-    if serialized_poll[:type] == IRV
-      serialized_poll[:irv_outcome] = DiscoursePoll::Irv.irv_outcome(poll_id)
+    DiscoursePoll::Poll.change_vote(user, post_id, poll_name) do |poll|
+      PollVote.where(poll: poll, user: user).delete_all
     end
-
-    serialized_poll
   end
 
   def self.toggle_status(user, post_id, poll_name, status, raise_errors = true)
@@ -220,96 +166,34 @@ class DiscoursePoll::Poll
 
       raise Discourse::InvalidParameters.new(:option_id) unless poll_option
 
-      if poll.irv?
-        params = {
-          poll_id: poll.id,
-          option_digest: option_digest,
-          offset: offset,
-          offset_plus_limit: offset + limit,
-        }
+      user_ids =
+        PollVote
+          .where(poll: poll, poll_option: poll_option)
+          .group(:user_id)
+          .order("MIN(created_at)")
+          .offset(offset)
+          .limit(limit)
+          .pluck(:user_id)
 
-        votes = DB.query(<<~SQL, params)
-        SELECT digest, rank, user_id
-          FROM (
-            SELECT digest
-                  , CASE rank WHEN 0 THEN 'Abstain' ELSE CAST(rank AS text) END AS rank
-                  , user_id
-                  , username
-                  , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
-              FROM poll_votes pv
-              JOIN poll_options po ON pv.poll_option_id = po.id
-              JOIN users u ON pv.user_id = u.id
-              WHERE pv.poll_id = :poll_id
-                AND po.poll_id = :poll_id
-                AND po.digest = :option_digest
-          ) v
-          WHERE row BETWEEN :offset AND :offset_plus_limit
-          ORDER BY digest, CASE WHEN rank = 'Abstain' THEN 1 ELSE CAST(rank AS integer) END, username
-        SQL
+      user_hashes = User.where(id: user_ids).map { |u| UserNameSerializer.new(u).serializable_hash }
 
-        user_ids = votes.map(&:user_id).uniq
-
-        user_hashes =
-          User
-            .where(id: user_ids)
-            .map { |u| [u.id, UserNameSerializer.new(u).serializable_hash] }
-            .to_h
-
-        irv_users = []
-        votes.each do |v|
-          irv_users ||= []
-          irv_users << { rank: v.rank, user: user_hashes[v.user_id] }
-        end
-        user_hashes = irv_users
-      else
-        user_ids =
-          PollVote
-            .where(poll: poll, poll_option: poll_option)
-            .group(:user_id)
-            .order("MIN(created_at)")
-            .offset(offset)
-            .limit(limit)
-            .pluck(:user_id)
-
-        user_hashes =
-          User.where(id: user_ids).map { |u| UserNameSerializer.new(u).serializable_hash }
-      end
       result = { option_digest => user_hashes }
     else
       params = { poll_id: poll.id, offset: offset, offset_plus_limit: offset + limit }
-      if poll.irv?
-        votes = DB.query(<<~SQL, params)
-        SELECT digest, rank, user_id
+
+      votes = DB.query(<<~SQL, params)
+        SELECT digest, user_id
           FROM (
             SELECT digest
-                  , CASE rank WHEN 0 THEN 'Abstain' ELSE CAST(rank AS text) END AS rank
                   , user_id
-                  , username
                   , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
               FROM poll_votes pv
               JOIN poll_options po ON pv.poll_option_id = po.id
-              JOIN users u ON pv.user_id = u.id
               WHERE pv.poll_id = :poll_id
                 AND po.poll_id = :poll_id
           ) v
           WHERE row BETWEEN :offset AND :offset_plus_limit
-          ORDER BY digest, CASE WHEN rank = 'Abstain' THEN 1 ELSE CAST(rank AS integer) END, username
-        SQL
-      else
-        votes = DB.query(<<~SQL, params)
-          SELECT digest, user_id
-            FROM (
-              SELECT digest
-                    , user_id
-                    , ROW_NUMBER() OVER (PARTITION BY poll_option_id ORDER BY pv.created_at) AS row
-                FROM poll_votes pv
-                JOIN poll_options po ON pv.poll_option_id = po.id
-                WHERE pv.poll_id = :poll_id
-                  AND po.poll_id = :poll_id
-            ) v
-            WHERE row BETWEEN :offset AND :offset_plus_limit
-        SQL
-      end
+      SQL
 
       user_ids = votes.map(&:user_id).uniq
 
@@ -321,13 +205,8 @@ class DiscoursePoll::Poll
 
       result = {}
       votes.each do |v|
-        if poll.irv?
-          result[v.digest] ||= []
-          result[v.digest] << { rank: v.rank, user: user_hashes[v.user_id] }
-        else
-          result[v.digest] ||= []
-          result[v.digest] << user_hashes[v.user_id]
-        end
+        result[v.digest] ||= []
+        result[v.digest] << user_hashes[v.user_id]
       end
     end
 
@@ -508,16 +387,6 @@ class DiscoursePoll::Poll
         raise DiscoursePoll::Error.new(I18n.t("poll.min_vote_per_user", count: poll.min))
       elsif poll.max && (num_of_options > poll.max)
         raise DiscoursePoll::Error.new(I18n.t("poll.max_vote_per_user", count: poll.max))
-      end
-    elsif poll.irv?
-      if poll.poll_options.length != num_of_options
-        raise DiscoursePoll::Error.new(
-                I18n.t(
-                  "poll.irv_vote_options_mismatch",
-                  count: poll.options.length,
-                  provided: num_of_options,
-                ),
-              )
       end
     elsif num_of_options > 1
       raise DiscoursePoll::Error.new(I18n.t("poll.one_vote_per_user"))

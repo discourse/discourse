@@ -82,27 +82,9 @@ en:
         breakdown: "Breakdown"
         percentage: "Percentage"
         count: "Count"
-      
-      irv:
-        title:
-          rounds: "Rounds"
-          outcome: "Result"
-        none: "None"
-        majority: "Majority"
-        eliminated: "Elminated"
-        round: "Round"
-        winner:
-          one: "Winner was %{winner} after one round."
-          other: "Winner was %{winner} after %{count} rounds."
-        tied:
-          one: "Tied after one round between the following candidates:"
-          other: "Tied after %{count} rounds between the following candidates:"
 
       options:
         label: "Options"
-        irv:
-          abstain: "Abstain"
-          login: "Login to vote!"
 
       error_while_toggling_status: "Sorry, there was an error toggling the status of this poll."
       error_while_casting_votes: "Sorry, there was an error casting your votes."
@@ -123,7 +105,6 @@ en:
           label: Type
           regular: Single Choice
           multiple: Multiple Choice
-          irv: Instant Runoff Voting
           number: Number Rating
         poll_result:
           label: Show Results...

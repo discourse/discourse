@@ -61,25 +61,18 @@ class DiscoursePoll::PollsController < ::ApplicationController
     poll_name = params.require(:poll_name)
     user_field_name = params.require(:user_field_name)
 
-    if Poll.find_by(post_id: post_id, name: poll_name).type == "irv"
+    begin
       render json: {
-               error: "Invalid poll type, IRV does not support grouped results.",
-             },
-             status: :unprocessable_entity
-    else
-      begin
-        render json: {
-                 grouped_results:
-                   DiscoursePoll::Poll.grouped_poll_results(
-                     current_user,
-                     post_id,
-                     poll_name,
-                     user_field_name,
-                   ),
-               }
-      rescue DiscoursePoll::Error => e
-        render_json_error e.message
-      end
+               grouped_results:
+                 DiscoursePoll::Poll.grouped_poll_results(
+                   current_user,
+                   post_id,
+                   poll_name,
+                   user_field_name,
+                 ),
+             }
+    rescue DiscoursePoll::Error => e
+      render_json_error e.message
     end
   end
 end
