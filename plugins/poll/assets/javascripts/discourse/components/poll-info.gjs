@@ -132,18 +132,16 @@ export default class PollInfoComponent extends Component {
     return htmlSafe(I18n.t("poll.public.title"));
   }
 
-  get showInstructionsSection() {
-    if (
-      this.showMultipleHelpText ||
-      this.args.close ||
-      this.resultsOnVote ||
-      this.resultsOnClose ||
-      this.resultsStaffOnly ||
-      this.publicTitle
-    ) {
-      return true;
-    }
-  }
+get showInstructionsSection() {
+  return (
+    this.showMultipleHelpText ||
+    this.args.close ||
+    this.resultsOnVote ||
+    this.resultsOnClose ||
+    this.resultsStaffOnly ||
+    this.publicTitle
+  );
+}
   <template>
     <div class="poll-info">
       <div class="poll-info_counts">
