@@ -12,6 +12,7 @@
     flex-direction: column;
 
     &-item {
+      @include ellipsis;
       display: flex;
       list-style: none;
       border-bottom: 1px solid var(--primary-low);
@@ -37,6 +38,7 @@
           color: var(--primary-high);
           font-size: var(--font-down-1);
           margin-left: 0.5rem;
+          overflow-wrap: anywhere;
         }
 
         .user-status-message {
