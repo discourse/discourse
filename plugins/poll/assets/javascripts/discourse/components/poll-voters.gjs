@@ -18,7 +18,7 @@ export default class PollVotersComponent extends Component {
       return groups;
     }, {});
   };
-get showMore() {
+  get showMore() {
     return this.args.voters.length < this.args.totalVotes;
   }
 
@@ -36,8 +36,6 @@ get showMore() {
 
     return groupedVoters;
   }
-
-
 
   <template>
     <div class="poll-voters">

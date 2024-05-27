@@ -9,35 +9,35 @@ export default class PollInfoComponent extends Component {
   @service currentUser;
 
   get multipleHelpText() {
-  const { min, max, options } = this.args;
-  const optionsCount = options.length;
+    const { min, max, options } = this.args;
+    const optionsCount = options.length;
 
     if (max > 0) {
-if (max > 0) {
-    if (min === max && min > 1) {
-      return htmlSafe(
-        I18n.t("poll.multiple.help.x_options", { count: min })
-      );
-    }
+      if (min === max && min > 1) {
+        return htmlSafe(I18n.t("poll.multiple.help.x_options", { count: min }));
+      }
 
-    if (min > 1) {
-      if (max < optionsCount) {
+      if (min > 1) {
+        if (max < optionsCount) {
+          return htmlSafe(
+            I18n.t("poll.multiple.help.between_min_and_max_options", {
+              min,
+              max,
+            })
+          );
+        }
+
         return htmlSafe(
-          I18n.t("poll.multiple.help.between_min_and_max_options", { min, max })
+          I18n.t("poll.multiple.help.at_least_min_options", { count: min })
         );
-      } 
-      
-      return htmlSafe(
-        I18n.t("poll.multiple.help.at_least_min_options", { count: min })
-      );
-    }
+      }
 
-    if (max <= optionsCount) {
-      return htmlSafe(
-        I18n.t("poll.multiple.help.up_to_max_options", { count: max })
-      );
+      if (max <= optionsCount) {
+        return htmlSafe(
+          I18n.t("poll.multiple.help.up_to_max_options", { count: max })
+        );
+      }
     }
-  }
   }
 
   get votersLabel() {
@@ -129,16 +129,16 @@ if (max > 0) {
     return htmlSafe(I18n.t("poll.public.title"));
   }
 
-get showInstructionsSection() {
-  return (
-    this.showMultipleHelpText ||
-    this.args.close ||
-    this.resultsOnVote ||
-    this.resultsOnClose ||
-    this.resultsStaffOnly ||
-    this.publicTitle
-  );
-}
+  get showInstructionsSection() {
+    return (
+      this.showMultipleHelpText ||
+      this.args.close ||
+      this.resultsOnVote ||
+      this.resultsOnClose ||
+      this.resultsStaffOnly ||
+      this.publicTitle
+    );
+  }
   <template>
     <div class="poll-info">
       <div class="poll-info_counts">
