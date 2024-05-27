@@ -1,6 +1,5 @@
 import Component from "@ember/component";
-import { cancel } from "@ember/runloop";
-import { next } from "@ember/runloop";
+import { cancel, next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
 import Category from "discourse/models/category";
