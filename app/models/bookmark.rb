@@ -120,7 +120,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   def clear_reminder!
-    update!(reminder_last_sent_at: Time.zone.now, reminder_set_at: nil)
+    update!(reminder_last_sent_at: Time.zone.now, reminder_set_at: nil, reminder_at: nil)
   end
 
   def reminder_at_in_zone(timezone)
