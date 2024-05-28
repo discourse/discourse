@@ -71,29 +71,13 @@ module Email
       def find_post_from_message_ids(message_ids)
         message_ids = message_ids.map { |message_id| message_id_clean(message_id) }
 
-        # TODO (martin) 2023-04-01 We should remove these backwards-compatible
-        # formats for the Message-ID and solely use the discourse/post/999@host
-        # format.
-        topic_ids =
-          message_ids
-            .map { |message_id| message_id[message_id_topic_id_regexp, 1] }
-            .compact
-            .map(&:to_i)
         post_ids =
           message_ids
-            .map { |message_id| message_id[message_id_post_id_regexp, 1] }
+            .map { |message_id| message_id[message_id_discourse_regexp, 1] }
             .compact
             .map(&:to_i)
 
-        post_ids << message_ids
-          .map { |message_id| message_id[message_id_discourse_regexp, 1] }
-          .compact
-          .map(&:to_i)
-
-        post_ids << Post
-          .where(outbound_message_id: message_ids)
-          .or(Post.where(topic_id: topic_ids, post_number: 1))
-          .pluck(:id)
+        post_ids << Post.where(outbound_message_id: message_ids).pluck(:id)
         post_ids << EmailLog.where(message_id: message_ids).pluck(:post_id)
         post_ids << IncomingEmail.where(message_id: message_ids).pluck(:post_id)
 
@@ -106,24 +90,8 @@ module Email
         Post.where(id: post_ids).order(:created_at).last
       end
 
-      # TODO (martin) 2023-04-01 We should remove these backwards-compatible
-      # formats for the Message-ID and solely use the discourse/post/999@host
-      # format.
       def discourse_generated_message_id?(message_id)
-        !!(message_id =~ message_id_post_id_regexp) ||
-          !!(message_id =~ message_id_topic_id_regexp) ||
-          !!(message_id =~ message_id_discourse_regexp)
-      end
-
-      # TODO (martin) 2023-04-01 We should remove these backwards-compatible
-      # formats for the Message-ID and solely use the discourse/post/999@host
-      # format.
-      def message_id_post_id_regexp
-        Regexp.new "topic/\\d+/(\\d+|\\d+\.\\w+)@#{Regexp.escape(host)}"
-      end
-
-      def message_id_topic_id_regexp
-        Regexp.new "topic/(\\d+|\\d+\.\\w+)@#{Regexp.escape(host)}"
+        message_id_discourse_regexp.match?(message_id)
       end
 
       def message_id_discourse_regexp
