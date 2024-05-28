@@ -5,6 +5,7 @@ require "rotp"
 
 RSpec.describe Admin::UsersController do
   fab!(:admin)
+  fab!(:another_admin) { Fabricate(:admin) }
   fab!(:moderator)
   fab!(:user)
   fab!(:coding_horror)
@@ -108,8 +109,10 @@ RSpec.describe Admin::UsersController do
         expect(response.parsed_body["id"]).to eq(user.id)
       end
 
-      it "returns similar users" do
+      it "includes similar users who aren't admin or mods" do
         Fabricate(:user, ip_address: "88.88.88.88")
+        Fabricate(:admin, ip_address: user.ip_address)
+        Fabricate(:moderator, ip_address: user.ip_address)
         similar_user = Fabricate(:user, ip_address: user.ip_address)
 
         get "/admin/users/#{user.id}.json"
@@ -278,10 +281,37 @@ RSpec.describe Admin::UsersController do
       end
     end
 
+    shared_examples "suspension of staff users" do
+      it "doesn't allow suspending a staff user" do
+        put "/admin/users/#{another_admin.id}/suspend.json",
+            params: {
+              suspend_until: 5.hours.from_now,
+              reason: "naughty boy",
+            }
+
+        expect(response.status).to eq(403)
+        expect(another_admin.reload).not_to be_suspended
+      end
+
+      it "doesn't allow suspending a staff user via other_user_ids" do
+        put "/admin/users/#{user.id}/suspend.json",
+            params: {
+              suspend_until: 5.hours.from_now,
+              reason: "naughty boy",
+              other_user_ids: [another_admin.id],
+            }
+
+        expect(response.status).to eq(403)
+        expect(user.reload).not_to be_suspended
+        expect(another_admin.reload).not_to be_suspended
+      end
+    end
+
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
       include_examples "suspension of active user possible"
+      include_examples "suspension of staff users"
 
       it "checks if user is suspended" do
         put "/admin/users/#{user.id}/suspend.json",
@@ -505,6 +535,7 @@ RSpec.describe Admin::UsersController do
       before { sign_in(moderator) }
 
       include_examples "suspension of active user possible"
+      include_examples "suspension of staff users"
     end
 
     context "when logged in as a non-staff user" do
@@ -1517,6 +1548,22 @@ RSpec.describe Admin::UsersController do
         expect(response.status).to eq(404)
       end
 
+      it "doesn't allow silencing another admin" do
+        put "/admin/users/#{another_admin.id}/silence.json"
+        expect(response.status).to eq(403)
+        expect(another_admin.reload).to_not be_silenced
+      end
+
+      it "doesn't allow silencing another admin via other_user_ids" do
+        put "/admin/users/#{reg_user.id}/silence.json",
+            params: {
+              other_user_ids: [another_admin.id],
+            }
+        expect(response.status).to eq(403)
+        expect(another_admin.reload).to_not be_silenced
+        expect(reg_user.reload).to_not be_silenced
+      end
+
       it "punishes the user for spamming" do
         put "/admin/users/#{reg_user.id}/silence.json"
         expect(response.status).to eq(200)
@@ -1632,6 +1679,22 @@ RSpec.describe Admin::UsersController do
         reg_user.reload
         expect(reg_user).to be_silenced
         expect(reg_user.silenced_record).to be_present
+      end
+
+      it "doesn't allow silencing another admin" do
+        put "/admin/users/#{another_admin.id}/silence.json"
+        expect(response.status).to eq(403)
+        expect(another_admin.reload).to_not be_silenced
+      end
+
+      it "doesn't allow silencing another admin via other_user_ids" do
+        put "/admin/users/#{reg_user.id}/silence.json",
+            params: {
+              other_user_ids: [another_admin.id],
+            }
+        expect(response.status).to eq(403)
+        expect(another_admin.reload).to_not be_silenced
+        expect(reg_user.reload).to_not be_silenced
       end
     end
 
