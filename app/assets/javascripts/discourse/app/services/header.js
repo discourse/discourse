@@ -7,6 +7,7 @@ export default class Header extends Service {
   @service siteSettings;
 
   @tracked topic = null;
+  @tracked inTopic = false;
   @tracked hamburgerVisible = false;
   @tracked userVisible = false;
   @tracked anyWidgetHeaderOverrides = false;
