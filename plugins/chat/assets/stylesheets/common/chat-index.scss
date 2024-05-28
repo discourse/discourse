@@ -26,10 +26,12 @@
   }
 }
 
-.channels-list {
+.channels-list,
+.channels-list-container {
   padding-bottom: env(safe-area-inset-bottom);
   position: relative;
   @include chat-scrollbar();
+  height: 100%;
 
   @include breakpoint(mobile-large) {
     @include chat-scrollbar();
@@ -63,26 +65,30 @@
   }
 
   .channel-list-empty-message {
-    margin: 1em 0.5em 0.5em 0.5em;
-    padding: 0 1em;
-  }
-
-  .chat-channel-divider {
-    padding: 2.5rem 1.5rem 0.5rem 1.5rem;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
-    font-weight: bold;
-    font-family: var(--heading-font-family);
-    font-size: var(--font-down-1);
-    color: var(--quaternary);
+    gap: 1rem;
+    height: 100%;
 
     .channel-title {
-      line-height: var(--line-height-medium);
+      margin-bottom: 1rem;
     }
+  }
+}
 
-    &:first-of-type {
-      padding-top: 1rem;
-    }
+.chat-channel-divider {
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: bold;
+  font-family: var(--heading-font-family);
+  font-size: var(--font-down-1);
+  color: var(--quaternary);
+
+  .channel-title {
+    line-height: var(--line-height-medium);
   }
 }

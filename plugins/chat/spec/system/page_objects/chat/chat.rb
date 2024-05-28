@@ -60,8 +60,7 @@ module PageObjects
 
       def visit_user_threads
         visit("/chat/threads")
-        has_css?(".spinner")
-        has_no_css?(".spinner")
+        has_finished_loading?
       end
 
       def visit_thread(thread)

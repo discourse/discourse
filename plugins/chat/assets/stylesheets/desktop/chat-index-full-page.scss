@@ -4,6 +4,17 @@
       height: calc(100vh - var(--header-offset));
       border-right: 1px solid var(--primary-low);
       background: var(--primary-very-low);
+      overflow-y: auto;
+
+      .channel-list-empty-message {
+        padding: 1rem;
+        text-align: center;
+
+        svg,
+        .channel-title {
+          display: none;
+        }
+      }
 
       .chat-channel-divider {
         padding: 2rem 1rem 0.5rem 1rem;
@@ -39,6 +50,9 @@
           }
         }
       }
+    }
+    .channels-list-container {
+      height: auto;
     }
   }
 }
