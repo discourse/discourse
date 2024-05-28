@@ -15,13 +15,13 @@ class MetadataController < ApplicationController
   end
 
   def app_association_android
-    raise Discourse::NotFound unless SiteSetting.app_association_android.present?
+    raise Discourse::NotFound if SiteSetting.app_association_android.blank?
     expires_in 1.minutes
     render plain: SiteSetting.app_association_android, content_type: "application/json"
   end
 
   def app_association_ios
-    raise Discourse::NotFound unless SiteSetting.app_association_ios.present?
+    raise Discourse::NotFound if SiteSetting.app_association_ios.blank?
     expires_in 1.minutes
     render plain: SiteSetting.app_association_ios, content_type: "application/json"
   end

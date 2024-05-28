@@ -640,9 +640,9 @@ class BulkImport::VBulletin < BulkImport::Base
         next if item == (".") || item == ("..") || item == (".DS_Store")
         next unless item =~ /avatar(\d+)_(\d).gif/
         scan = item.scan(/avatar(\d+)_(\d).gif/)
-        next unless scan[0][0].present?
+        next if scan[0][0].blank?
         u = UserCustomField.find_by(name: "import_id", value: scan[0][0]).try(:user)
-        next unless u.present?
+        next if u.blank?
         # raise "User not found for id #{user_id}" if user.blank?
 
         photo_real_filename = File.join(AVATAR_DIR, item)
@@ -686,10 +686,10 @@ class BulkImport::VBulletin < BulkImport::Base
       print_status current_count, total_count
       user_id = sig[0]
       user_sig = sig[1]
-      next unless user_id.present? && user_sig.present?
+      next if user_id.blank? || user_sig.blank?
 
       u = UserCustomField.find_by(name: "import_id", value: user_id).try(:user)
-      next unless u.present?
+      next if u.blank?
 
       # can not hold dupes
       UserCustomField.where(

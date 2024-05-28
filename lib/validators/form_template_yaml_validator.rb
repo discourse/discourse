@@ -69,6 +69,6 @@ class FormTemplateYamlValidator < ActiveModel::Validator
       record.errors.add(:template, I18n.t("form_templates.errors.duplicate_ids"))
     end
 
-    existing_ids << field["id"] unless field["id"].blank?
+    existing_ids << field["id"] if field["id"].present?
   end
 end

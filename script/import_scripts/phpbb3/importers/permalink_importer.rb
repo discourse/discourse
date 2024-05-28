@@ -56,7 +56,7 @@ module ImportScripts::PhpBB3
         normalization = "/#{prefix.gsub("/", '\/')}\\#{normalization}"
       end
 
-      normalizations << normalization unless normalizations.include?(normalization)
+      normalizations << normalization if normalizations.exclude?(normalization)
     end
 
     def permalink_exists(url)

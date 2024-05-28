@@ -837,7 +837,7 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_logged_in
-    raise Discourse::NotLoggedIn.new unless current_user.present?
+    raise Discourse::NotLoggedIn.new if current_user.blank?
   end
 
   def ensure_staff

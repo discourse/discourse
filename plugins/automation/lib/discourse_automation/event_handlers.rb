@@ -25,7 +25,7 @@ module DiscourseAutomation
 
           valid_trust_levels = automation.trigger_field("valid_trust_levels")
           if valid_trust_levels["value"]
-            next unless valid_trust_levels["value"].include?(post.user.trust_level)
+            next if valid_trust_levels["value"].exclude?(post.user.trust_level)
           end
 
           restricted_category = automation.trigger_field("restricted_category")
@@ -205,7 +205,7 @@ module DiscourseAutomation
         .find_each do |automation|
           valid_trust_levels = automation.trigger_field("valid_trust_levels")
           if valid_trust_levels["value"]
-            next unless valid_trust_levels["value"].include?(post.user.trust_level)
+            next if valid_trust_levels["value"].exclude?(post.user.trust_level)
           end
 
           restricted_category = automation.trigger_field("restricted_category")

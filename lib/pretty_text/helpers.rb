@@ -18,7 +18,7 @@ module PrettyText
     def avatar_template(username)
       return "" unless username
       user = User.find_by(username_lower: username.downcase)
-      return "" unless user.present?
+      return "" if user.blank?
 
       # TODO: Add support for ES6 and call `avatar-template` directly
       UrlHelper.schemaless(UrlHelper.absolute(user.avatar_template))
@@ -27,7 +27,7 @@ module PrettyText
     def lookup_primary_user_group(username)
       return "" unless username
       user = User.find_by(username_lower: username.downcase)
-      return "" unless user.present?
+      return "" if user.blank?
 
       user.primary_group.try(:name) || ""
     end

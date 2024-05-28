@@ -39,7 +39,7 @@ class Discourse::Cors
     elsif cors_origins
       origin = nil
       if origin = env["HTTP_ORIGIN"]
-        origin = nil unless cors_origins.include?(origin)
+        origin = nil if cors_origins.exclude?(origin)
       end
 
       headers["Access-Control-Allow-Origin"] = origin || cors_origins[0]

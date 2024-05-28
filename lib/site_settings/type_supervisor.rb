@@ -259,7 +259,7 @@ class SiteSettings::TypeSupervisor
           raise Discourse::InvalidParameters.new(name)
         end
 
-        raise Discourse::InvalidParameters.new(:value) unless choice.include?(val)
+        raise Discourse::InvalidParameters.new(:value) if choice.exclude?(val)
       end
     end
 

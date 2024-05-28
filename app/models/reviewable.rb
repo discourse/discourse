@@ -62,7 +62,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.valid_type?(type)
-    return false unless Reviewable.types.include?(type)
+    return false if Reviewable.types.exclude?(type)
     type.constantize <= Reviewable
   rescue NameError
     false
@@ -383,7 +383,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.viewable_by(user, order: nil, preload: true)
-    return none unless user.present?
+    return none if user.blank?
 
     result = self.order(order || "reviewables.score desc, reviewables.created_at desc")
 
@@ -732,7 +732,7 @@ class Reviewable < ActiveRecord::Base
   private
 
   def update_flag_stats(status:, user_ids:)
-    return unless %i[agreed disagreed ignored].include?(status)
+    return if %i[agreed disagreed ignored].exclude?(status)
 
     # Don't count self-flags
     user_ids -= [post&.user_id]

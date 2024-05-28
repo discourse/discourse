@@ -182,7 +182,7 @@ module Onebox
             )
 
           response = http.head(uri.path)
-          unless %w[200 301 302].include?(response.code)
+          if %w[200 301 302].exclude?(response.code)
             raise "unexpected response code #{response.code}"
           end
 

@@ -203,7 +203,7 @@ class UserProfile < ActiveRecord::Base
         URI.parse(self.website).host
       rescue URI::Error
       end
-    unless allowed_domains.split("|").include?(domain)
+    if allowed_domains.split("|").exclude?(domain)
       self.errors.add :base,
                       (
                         I18n.t(

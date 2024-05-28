@@ -898,7 +898,7 @@ class User < ActiveRecord::Base
 
   def password=(password)
     # special case for passwordless accounts
-    @raw_password = password unless password.blank?
+    @raw_password = password if password.present?
   end
 
   def password
