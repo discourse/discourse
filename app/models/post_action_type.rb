@@ -68,7 +68,12 @@ class PostActionType < ActiveRecord::Base
 
     def flag_types
       return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
-      flag_enum(all_flags)
+      flag_enum(all_flags.reject { |flag| flag.respond_to?(:score_type) && flag.score_type })
+    end
+
+    def score_types
+      return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
+      flag_enum(all_flags.filter { |flag| flag.respond_to?(:score_type) && flag.score_type })
     end
 
     # flags resulting in mod notifications
