@@ -3,11 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default class AdminFlag extends Component {
+export default class AdminFlagItem extends Component {
   @tracked enabled = this.args.flag.enabled;
 
   @action
@@ -16,7 +17,6 @@ export default class AdminFlag extends Component {
 
     return ajax(`/admin/flags/${flag.id}/toggle`, {
       type: "PUT",
-      contentType: "application/json",
     }).catch((error) => {
       this.enabled = !this.enabled;
       return popupAjaxError(error);
@@ -24,15 +24,17 @@ export default class AdminFlag extends Component {
   }
 
   <template>
-    <tr class="flag">
+    <tr class="admin-flag-item">
       <td>
-        <p class="flag__name">{{@flag.name}}</p>
-        <p class="flag__description">{{@flag.description}}</p>
+        <p class="admin-flag-item__name">{{@flag.name}}</p>
+        <p class="admin-flag-item__description">{{htmlSafe
+            @flag.description
+          }}</p>
       </td>
       <td>
         <DToggleSwitch
           @state={{this.enabled}}
-          class="flag__toggle {{@flag.name_key}}"
+          class="admin-flag-item__toggle {{@flag.name_key}}"
           {{on "click" (fn this.toggleFlagEnabled @flag)}}
         />
       </td>
