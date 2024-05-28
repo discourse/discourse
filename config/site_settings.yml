@@ -1930,6 +1930,7 @@ security:
     default: false
   same_site_cookies:
     default: Lax
+    hidden: true
     type: enum
     choices:
       - Lax
