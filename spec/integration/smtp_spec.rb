@@ -13,16 +13,14 @@ RSpec.describe "SMTP Settings Integration" do
   end
 
   it "should send out the email successfully using the SMTP settings" do
-    global_setting :smtp_address, "some.host"
+    global_setting :smtp_address, "172.131.255.255"
     global_setting :smtp_port, 12_345
+    global_setting :smtp_open_timeout, 0.001
 
     ActionMailer::Base.smtp_settings = GlobalSetting.smtp_settings
 
     message = TestMailer.send_test("some_email")
 
-    expect do Email::Sender.new(message, :test_message).send end.to raise_error(
-      StandardError,
-      /some.host/,
-    )
+    expect do Email::Sender.new(message, :test_message).send end.to raise_error(Net::OpenTimeout)
   end
 end
