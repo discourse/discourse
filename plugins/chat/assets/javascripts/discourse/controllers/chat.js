@@ -25,14 +25,7 @@ export default class ChatController extends Controller {
   }
 
   get activeTab() {
-    switch (this.router.currentRouteName) {
-      case "chat.threads":
-        return "threads";
-      case "chat.direct-messages":
-        return "direct-messages";
-      case "chat.channels":
-        return "channels";
-    }
+    return this.router.currentRouteName.replace(/^chat\./, "");
   }
 
   get shouldUseChatFooter() {
@@ -61,13 +54,6 @@ export default class ChatController extends Controller {
 
   @action
   onClickTab(tab) {
-    switch (tab) {
-      case "threads":
-        return this.router.transitionTo("chat.threads");
-      case "direct-messages":
-        return this.router.transitionTo("chat.direct-messages");
-      case "channels":
-        return this.router.transitionTo("chat.channels");
-    }
+    return this.router.transitionTo(`chat.${tab}`);
   }
 }
