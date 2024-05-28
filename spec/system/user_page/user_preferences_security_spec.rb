@@ -8,9 +8,6 @@ describe "User preferences | Security", type: :system do
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
   before do
-    @original_host = Capybara.server_host
-    SiteSetting.force_hostname = Capybara.server_host = "localhost"
-
     user.activate
     # testing the enforced 2FA flow requires a user that was created > 5 minutes ago
     user.created_at = 6.minutes.ago
@@ -20,8 +17,6 @@ describe "User preferences | Security", type: :system do
     # system specs run on their own host + port
     DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
   end
-
-  after { SiteSetting.force_hostname = Capybara.server_host = @original_host }
 
   shared_examples "security keys" do
     it "adds a 2FA security key and logs in with it" do
