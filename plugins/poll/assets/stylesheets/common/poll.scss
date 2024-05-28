@@ -330,6 +330,7 @@ div.poll-outer {
             .widget-dropdown-item {
               padding: 0;
               margin: 0;
+              float: left;
               &:hover {
                 color: var(--primary-low);
                 background-color: var(--primary-low);
