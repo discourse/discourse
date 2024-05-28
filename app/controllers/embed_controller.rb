@@ -85,13 +85,13 @@ class EmbedController < ApplicationController
       raise Discourse::InvalidAccess.new("invalid embed host")
     end
 
-    topic_id = nil
     if embed_url.present?
       topic_id = TopicEmbed.topic_id_for_embed(embed_url)
     else
       topic_id = params[:topic_id].to_i
     end
 
+    response.headers["X-Robots-Tag"] = "noindex, indexifembedded"
     if topic_id
       @topic_view =
         TopicView.new(
