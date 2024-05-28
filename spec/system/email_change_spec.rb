@@ -67,6 +67,9 @@ describe "Changing email", type: :system do
   end
 
   it "works when user has webauthn 2fa" do
+    @original_host = Capybara.server_host
+    SiteSetting.force_hostname = Capybara.server_host = "localhost"
+
     # enforced 2FA flow needs a user created > 5 minutes ago
     user.created_at = 6.minutes.ago
     user.save!
@@ -74,6 +77,7 @@ describe "Changing email", type: :system do
     sign_in user
 
     DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
+
     options =
       ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
         user_verification: true,
@@ -103,6 +107,7 @@ describe "Changing email", type: :system do
     expect(user_preferences_page).to have_primary_email(new_email)
   ensure
     authenticator.remove!
+    SiteSetting.force_hostname = Capybara.server_host = @original_host
   end
 
   it "does not require login to verify" do
