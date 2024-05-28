@@ -6,18 +6,23 @@ class DiscoursePoll::Irv
     options = PollOption.where(poll_id: poll_id).map { |hash| { id: hash.digest, html: hash.html } }
 
     ballot = []
-    PollVote
-      .where(poll_id: poll_id)
-      .pluck(:user_id)
-      .uniq
-      .each do |user_id|
-        ballot_paper = []
-        PollVote
-          .where(poll_id: poll_id, user_id: user_id)
-          .order(rank: :asc)
-          .each { |vote| ballot_paper << vote.poll_option.digest if vote.rank > 0 }
-        ballot << ballot_paper
-      end
+
+    #Fetch all votes for the poll in a single query
+    votes =
+      PollVote
+        .where(poll_id: poll_id)
+        .select(:user_id, :poll_option_id, :rank)
+        .order(:user_id, :rank)
+        .includes(:poll_option) # Eager load poll options
+    # Group votes by user_id
+    votes_by_user = votes.group_by(&:user_id)
+    # Build the ballot
+    votes_by_user.each do |user_id, user_votes|
+      ballot_paper =
+        user_votes.select { |vote| vote.rank > 0 }.map { |vote| vote.poll_option.digest }
+      ballot << ballot_paper
+    end
+
     DiscoursePoll::Irv.run_irv(ballot, options) if ballot.length > 0
   end
 
