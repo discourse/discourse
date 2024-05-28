@@ -315,7 +315,7 @@ RSpec.configure do |config|
     Capybara.w3c_click_offset = false
 
     Capybara.configure do |capybara_config|
-      capybara_config.server_host = ENV["CAPYBARA_SERVER_HOST"].presence || "localhost"
+      capybara_config.server_host = ENV["CAPYBARA_SERVER_HOST"].presence || "127.0.0.1"
 
       capybara_config.server_port =
         (ENV["CAPYBARA_SERVER_PORT"].presence || "31_337").to_i + ENV["TEST_ENV_NUMBER"].to_i
