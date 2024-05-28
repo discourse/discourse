@@ -6,6 +6,9 @@ import { or } from "truth-helpers";
 import ApiPanels from "./api-panels";
 import Footer from "./footer";
 import Sections from "./sections";
+import { tracked } from "@glimmer/tracking";
+import runAfterFramePaint from "discourse/lib/after-frame-paint";
+import loadingSpinner from "discourse/helpers/loading-spinner";
 
 export default class SidebarHamburgerDropdown extends Component {
   @service appEvents;
@@ -13,10 +16,18 @@ export default class SidebarHamburgerDropdown extends Component {
   @service site;
   @service siteSettings;
   @service sidebarState;
+  @tracked initialLoad = true;
 
   @action
   triggerRenderedAppEvent() {
     this.appEvents.trigger("sidebar-hamburger-dropdown:rendered");
+  }
+
+  @action
+  triggerLoadSections() {
+    runAfterFramePaint(() => {
+      this.initialLoad = false;
+    });
   }
 
   get collapsableSections() {
@@ -39,23 +50,26 @@ export default class SidebarHamburgerDropdown extends Component {
       >
         <div class="panel-body">
           <div class="panel-body-contents">
-            <div class="sidebar-hamburger-dropdown">
-              {{#if
-                (or this.sidebarState.showMainPanel @forceMainSidebarPanel)
-              }}
-                <Sections
-                  @currentUser={{this.currentUser}}
-                  @collapsableSections={{this.collapsableSections}}
-                  @panel={{this.sidebarState.currentPanel}}
-                  @hideApiSections={{@forceMainSidebarPanel}}
-                />
+            <div class="sidebar-hamburger-dropdown" {{didInsert this.triggerLoadSections}}>
+              {{#if this.initialLoad}}
+                {{loadingSpinner size="small"}}
               {{else}}
-                <ApiPanels
-                  @currentUser={{this.currentUser}}
-                  @collapsableSections={{this.collapsableSections}}
-                />
+                {{#if
+                  (or this.sidebarState.showMainPanel @forceMainSidebarPanel)
+                }}
+                  <Sections
+                    @currentUser={{this.currentUser}}
+                    @collapsableSections={{this.collapsableSections}}
+                    @panel={{this.sidebarState.currentPanel}}
+                    @hideApiSections={{@forceMainSidebarPanel}}
+                  />
+                {{else}}
+                  <ApiPanels
+                    @currentUser={{this.currentUser}}
+                    @collapsableSections={{this.collapsableSections}}
+                  />
+                {{/if}}
               {{/if}}
-
               <Footer />
             </div>
           </div>
