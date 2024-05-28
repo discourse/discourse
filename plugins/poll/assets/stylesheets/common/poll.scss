@@ -328,14 +328,16 @@ div.poll-outer {
             overflow-y: visible;
             transform: translate(-44px, 38px);
             .widget-dropdown-item {
+              width: 100%;
               padding: 0;
               margin: 0;
               float: left;
               &:hover {
-                color: var(--primary-low);
+                color: var(--tertiary);
                 background-color: var(--primary-low);
               }
               button {
+                width: 100%;
                 padding: 0.5em;
                 display: flex;
                 flex-direction: row;
