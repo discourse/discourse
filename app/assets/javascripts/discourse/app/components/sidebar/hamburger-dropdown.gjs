@@ -7,8 +7,7 @@ import ApiPanels from "./api-panels";
 import Footer from "./footer";
 import Sections from "./sections";
 import { tracked } from "@glimmer/tracking";
-import runAfterFramePaint from "discourse/lib/after-frame-paint";
-import loadingSpinner from "discourse/helpers/loading-spinner";
+import DeferredRender from "discourse/components/deferred-render";
 
 export default class SidebarHamburgerDropdown extends Component {
   @service appEvents;
@@ -21,13 +20,6 @@ export default class SidebarHamburgerDropdown extends Component {
   @action
   triggerRenderedAppEvent() {
     this.appEvents.trigger("sidebar-hamburger-dropdown:rendered");
-  }
-
-  @action
-  triggerLoadSections() {
-    runAfterFramePaint(() => {
-      this.initialLoad = false;
-    });
   }
 
   get collapsableSections() {
@@ -50,10 +42,8 @@ export default class SidebarHamburgerDropdown extends Component {
       >
         <div class="panel-body">
           <div class="panel-body-contents">
-            <div class="sidebar-hamburger-dropdown" {{didInsert this.triggerLoadSections}}>
-              {{#if this.initialLoad}}
-                {{loadingSpinner size="small"}}
-              {{else}}
+            <DeferredRender>
+              <div class="sidebar-hamburger-dropdown">
                 {{#if
                   (or this.sidebarState.showMainPanel @forceMainSidebarPanel)
                 }}
@@ -69,9 +59,9 @@ export default class SidebarHamburgerDropdown extends Component {
                     @collapsableSections={{this.collapsableSections}}
                   />
                 {{/if}}
-              {{/if}}
-              <Footer />
-            </div>
+                <Footer />
+              </div>
+            </DeferredRender>
           </div>
         </div>
       </div>
