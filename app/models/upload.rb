@@ -57,8 +57,28 @@ class Upload < ActiveRecord::Base
 
   scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
 
+  scope :without_s3_file_missing_confirmed_verification_status,
+        -> do
+          where.not(verification_status: Upload.verification_statuses[:s3_file_missing_confirmed])
+        end
+
+  scope :with_invalid_etag_verification_status,
+        -> { where(verification_status: Upload.verification_statuses[:invalid_etag]) }
+
   def self.verification_statuses
-    @verification_statuses ||= Enum.new(unchecked: 1, verified: 2, invalid_etag: 3)
+    @verification_statuses ||=
+      Enum.new(
+        unchecked: 1,
+        verified: 2,
+        invalid_etag: 3, # Used by S3Inventory to mark S3 Upload records that have an invalid ETag value compared to the ETag value of the inventory file
+        s3_file_missing_confirmed: 4, # Used by S3Inventory to skip S3 Upload records that are confirmed to not be backed by a file in the S3 file store
+      )
+  end
+
+  def self.mark_invalid_s3_uploads_as_missing
+    Upload.with_invalid_etag_verification_status.update_all(
+      verification_status: Upload.verification_statuses[:s3_file_missing_confirmed],
+    )
   end
 
   def self.add_unused_callback(&block)
