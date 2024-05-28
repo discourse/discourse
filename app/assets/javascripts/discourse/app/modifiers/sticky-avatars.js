@@ -122,14 +122,7 @@ export default class StickyAvatars extends Modifier {
               return;
             }
 
-            const postContentHeight =
-              entry.target.querySelector(".contents")?.clientHeight;
-            if (
-              this.direction === "⬆️" ||
-              postContentHeight > window.innerHeight - offset
-            ) {
-              entry.target.classList.add(STICKY_CLASS);
-            }
+            entry.target.classList.add(STICKY_CLASS);
           });
         },
         {
