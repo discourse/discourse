@@ -749,3 +749,7 @@ export function cleanNullQueryParams(params) {
   }
   return params;
 }
+
+export function getElement(node) {
+  return node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+}

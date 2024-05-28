@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  site_settings:
+    styleguide_enabled: 'Discourse نىڭ ئۇسلۇبىنى تەڭشەشكە ياردەملىشىش ئۈچۈن «/styleguide» يولى قوزغىتىلىدۇ'
+    styleguide_admin_only: "ئۇسلۇب يېتەكچىسىنىڭ كۆرۈنۈشچانلىقىنى باشقۇرغۇچىلار دائىرىسىدە چەكلەيدۇ"
+    styleguide_allowed_groups: "تەمىنلەنگەن گۇرۇپپىنىڭ ئەزالىرىغا ئۇسلۇب يېتەكچىسىنىڭ كۆرۈنۈشچانلىقىنى چەكلەيدۇ"

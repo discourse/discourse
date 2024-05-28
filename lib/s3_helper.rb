@@ -27,6 +27,7 @@ class S3Helper
 
   def initialize(s3_bucket_name, tombstone_prefix = "", options = {})
     @s3_client = options.delete(:client)
+    @s3_bucket = options.delete(:bucket)
     @s3_options = default_s3_options.merge(options)
 
     @s3_bucket_name, @s3_bucket_folder_path =

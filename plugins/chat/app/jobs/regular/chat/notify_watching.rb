@@ -47,19 +47,23 @@ module Jobs
         user = membership.user
         return unless user.guardian.can_join_chat_channel?(@chat_channel)
         return if ::Chat::Notifier.user_has_seen_message?(membership, @chat_message.id)
-        return if online_user_ids.include?(user.id)
 
         translation_key =
           (
             if @is_direct_message_channel
-              "discourse_push_notifications.popup.new_direct_chat_message"
+              if @chat_channel.chatable.group
+                "discourse_push_notifications.popup.new_chat_message"
+              else
+                "discourse_push_notifications.popup.new_direct_chat_message"
+              end
             else
               "discourse_push_notifications.popup.new_chat_message"
             end
           )
 
         translation_args = { username: @creator.username }
-        translation_args[:channel] = @chat_channel.title(user) unless @is_direct_message_channel
+        translation_args[:channel] = @chat_channel.title(user) unless @is_direct_message_channel &&
+          !@chat_channel.chatable.group
         translation_args =
           DiscoursePluginRegistry.apply_modifier(
             :chat_notification_translation_args,
@@ -76,6 +80,7 @@ module Jobs
           translated_title: translated_title,
           tag: ::Chat::Notifier.push_notification_tag(:message, @chat_channel.id),
           excerpt: @chat_message.push_notification_excerpt,
+          channel_id: @chat_channel.id,
         }
 
         if membership.desktop_notifications_always? && !membership.muted?
@@ -95,10 +100,6 @@ module Jobs
         if membership.mobile_notifications_always? && !membership.muted?
           ::PostAlerter.push_notification(user, payload)
         end
-      end
-
-      def online_user_ids
-        @online_user_ids ||= ::PresenceChannel.new("/chat/online").user_ids
       end
     end
   end

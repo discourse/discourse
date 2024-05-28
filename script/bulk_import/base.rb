@@ -589,6 +589,8 @@ class BulkImport::Base
     visible
     closed
     pinned_at
+    pinned_until
+    pinned_globally
     views
     subtype
     created_at

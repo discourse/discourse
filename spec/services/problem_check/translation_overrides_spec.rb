@@ -3,6 +3,8 @@
 RSpec.describe ProblemCheck::TranslationOverrides do
   subject(:check) { described_class.new }
 
+  around { |example| allow_missing_translations(&example) }
+
   describe ".call" do
     before { Fabricate(:translation_override, status: status) }
 
