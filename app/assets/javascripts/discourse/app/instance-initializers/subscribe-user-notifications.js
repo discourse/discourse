@@ -68,7 +68,7 @@ export default {
     if (!isTesting()) {
       this.messageBus.subscribe(alertChannel(this.currentUser), this.onAlert);
 
-      initDesktopNotifications(this.messageBus, this.appEvents);
+      initDesktopNotifications(this.messageBus);
 
       if (isPushNotificationsEnabled(this.currentUser)) {
         disableDesktopNotifications();

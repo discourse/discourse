@@ -1,0 +1,394 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  js:
+    discourse_automation:
+      title: ئاپتوماتلاشتۇرۇش
+      create: قۇر
+      update: يېڭىلا
+      select_script: قوليازما تاللاڭ
+      select_trigger: قوزغاتقۇچ تاللاڭ
+      confirm_automation_reset: بۇ مەشغۇلات قوليازما ۋە قوزغاتقۇچ تاللانمىسىنى ئەسلىگە قايتۇرىدۇ، يېڭى ھالەت ساقلىنىدۇ، داۋاملاشتۇرامسىز؟
+      confirm_automation_trigger: بۇ مەشغۇلات ئاپتوماتلاشتۇرۇشنى قوزغىتىدۇ، داۋاملاشتۇرامسىز؟
+      no_automation_yet: تېخى ھېچقانداق ئاپتوماتلاشتۇرۇشنى قۇرمىدىڭىز.
+      edit_automation:
+        trigger_section:
+          forced: بۇ قوزغاتقۇچنى قوليازما مەجبۇرىي ئىجرا قىلىدۇ.
+          next_pending_automation: "كېيىنكى ئاپتوماتلاشتۇرۇش قوزغىلىدىغان ۋاقىت: %{date}"
+          trigger_now: "ھازىر قوزغات"
+          title: قاچان/نېمە…
+        fields_section:
+          title: قوليازما تاللانما
+      destroy_automation:
+        confirm: "«%{name}» نى راستتىنلا ئۆچۈرەمسىز؟"
+      fields:
+        key_value:
+          label_without_count: "سەپلە"
+          label_with_count:
+            one: "سەپلىمە تەھرىر (%{count})"
+            other: "سەپلىمە تەھرىر (%{count})"
+        user:
+          label: ئىشلەتكۈچى
+        pm:
+          title:
+            label: ئاتاق
+          raw:
+            label: مەزمۇن
+        pms:
+          confirm_remove_pm: "بۇ شەخسىي ئۇچۇرنى راستتىنلا چىقىرىۋېتەمسىز؟"
+          placeholder_title: شەخسىي ئۇچۇر ماۋزۇسى
+          add_pm: شەخسىي ئۇچۇر قوش
+          no_pm_created: تېخى ھېچقانداق شەخسىي ئۇچۇر قۇرمىدىڭىز. ئاپتوماتلاشتۇرۇشىڭىز قوزغىتىلسا شەخسىي ئۇچۇر يوللىنىدۇ.
+          title:
+            label: ئاتاق
+          raw:
+            label: مەزمۇن
+          delay:
+            label: كېچىكىش (مىنۇت)
+          prefers_encrypt:
+            label: ئەگەر ئىشلەتكىلى بولسا شەخسىي ئۇچۇرنى شىفىرلايدۇ
+        group:
+          label: گۇرۇپپا
+        text:
+          label: تېكىست
+      triggerables:
+        not_found: ئاپتوماتلاشتۇرۇشقا ئىشلىتىدىغان «%{automation}» نىڭ قوزغاتقۇچ «%{trigger}» نى تاپالمىدى، مۇناسىۋەتلىك قىستۇرمىنىڭ ئورنىتىلغانلىقىنى جەزملەڭ.
+        user_badge_granted:
+          fields:
+            badge:
+              label: تارتۇق
+            only_first_grant:
+              label: پەقەت تۇنجى قېتىم بېرىلگەندىلا
+        stalled_topic:
+          durations:
+            PT1H: "بىر سائەت"
+            P1D: "بىر كۈن"
+            P1W: "بىر ھەپتە"
+            P2W: "ئىككى ھەپتە"
+            P1M: "بىر ئاي"
+            P3M: "ئۈچ ئاي"
+            P6M: "ئالتە ئاي"
+            P1Y: "بىر يىل"
+          fields:
+            categories:
+              label: سەھىپە بىلەنلا چەكلىنىدۇ
+            tags:
+              label: بەلگە بىلەنلا چەكلىنىدۇ
+            stalled_after:
+              label: مۇشۇ ۋاقىتتىن كېيىن توختايدۇ
+        recurring:
+          every: ھەر
+          frequencies:
+            minute: مىنۇت
+            hour: سائەت
+            day: كۈن
+            weekday: مىنەپتە
+            week: ھەپتە
+            month: ئاي
+            year: يىل
+          fields:
+            recurrence:
+              label: تەكرار
+            start_date:
+              label: باشلىنىش ۋاقتى
+        stalled_wiki:
+          durations:
+            PT1H: "بىر سائەت"
+            P1D: "بىر كۈن"
+            P1W: "بىر ھەپتە"
+            P2W: "ئىككى ھەپتە"
+            P1M: "بىر ئاي"
+            P3M: "ئۈچ ئاي"
+            P6M: "ئالتە ئاي"
+            P1Y: "بىر يىل"
+          fields:
+            restricted_category:
+              label: سەھىپىگە چەكلەنگەن
+            stalled_after:
+              label: قوزغاتقۇچ كېچىكىشى
+              description: ئالدىنقى قېتىم ۋىكى تەھرىرلەش بىلەن ئاپتوماتلاشتۇرۇلغان قوزغاتقۇچ ئارىسىدىكى كېچىكىشنى بەلگىلەيدۇ
+            retriggered_after:
+              label: قايتا قوزغاتقۇچ كېچىكىشى
+              description: ئەگەر تۇنجى قوزغاتقۇچتىن كېيىن ۋىكى تەھرىرلەنمىگەن بولسا، تۇنجى قوزغاتقۇچ بىلەن كېيىنكى قوزغاتقۇچ ئارىسىدىكى كېچىكىشنى بەلگىلەيدۇ
+        user_added_to_group:
+          fields:
+            joined_group:
+              label: ئىزلايدىغان گۇرۇپپا
+        user_removed_from_group:
+          fields:
+            left_group:
+              label: ئىزلايدىغان گۇرۇپپا
+        user_promoted:
+          fields:
+            restricted_group:
+              label: گۇرۇپپا بىلەنلا چەكلىنىدۇ
+            trust_level_transition:
+              label: ئىشەنچ دەرىجىسىنىڭ ئايلاندۇرۇلۇشى
+          trust_levels:
+            ALL: "بارلىق ئىشەنچ دەرىجىسى"
+            TL01: "ئىشەن دەرىجىسى 0 دىن ئىشەنچ دەرىجىسى 1 گە"
+            TL12: "ئىشەن دەرىجىسى 1 دىن ئىشەنچ دەرىجىسى 2 گە"
+            TL23: "ئىشەن دەرىجىسى 2 دىن ئىشەنچ دەرىجىسى 3 كە"
+            TL34: "ئىشەن دەرىجىسى 3 تىن ئىشەنچ دەرىجىسى 4 كە"
+        point_in_time:
+          fields:
+            execute_at:
+              label: ئىجرا قىلىش ۋاقتى
+        topic:
+          fields:
+            restricted_topic:
+              label: تېما كىملىكى
+        post_created_edited:
+          fields:
+            action_type:
+              label: مەشغۇلات تىپى
+              description: "تاللاشچان، پەقەت پائالىيەت قوزغاتقۇچ قۇرۇش بىلەنلا چەكلىنىدۇ"
+            valid_trust_levels:
+              label: ئىناۋەتلىك ئىشەنچ دەرىجىسى
+              description: يازمىنى بۇ ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچى قۇرغاندىلا ئاندىن قوزغىتىلىدۇ، كۆڭۈلدىكى ئەھۋالدا خالىغان ئىشەنچ دەرىجىسى
+            restricted_category:
+              label: سەھىپە
+              description: تاللاشچان، يازما تېمىسى بۇ سەھىپىدە بولغاندىلا ئاندىن قوزغىلىدۇ
+            restricted_group:
+              label: گۇرۇپپا
+              description: تاللاشچان، يازما تېمىسى بۇ گۇرۇپپىنىڭ شەخسىي ئۇچۇرىغا تەۋە بولغاندىلا ئاندىن قوزغىلىدۇ
+            ignore_group_members:
+              label: گۇرۇپپا ئەزاسىغا پەرۋا قىلما
+              description: ئەگەر يوللىغۇچى يۇقىرىدا كۆرسىتىلگەن گۇرۇپپىنىڭ ئەزاسى بولسا قوزغاتقۇچتىن ئاتلايدۇ
+            ignore_automated:
+              label: ئاپتوماتلاشتۇرۇشقا پەرۋا قىلما
+              description: ئەگەر يوللىغۇچى ئېلخەتكە جاۋاب قايتۇرمىسا ياكى ئاپتوماتلاشتۇرۇلغان مەنبەدىن بولسا قوزغاتقۇچتىن ئاتلايدۇ. پەقەت ئېلخەت ئارقىلىق قۇرۇلغان يازمىغىلا قوللىنىلىدۇ
+            first_post_only:
+              label: تۇنجى يازمىغىلا
+              description: ئەگەر يازما ئىشلەتكۈچى قۇرغان تۇنجى يازما بولغاندىلا قوزغىتىلىدۇ
+            first_topic_only:
+              label: تۇنجى تېمىغىلا
+              description: ئەگەر تېما ئىشلەتكۈچى قۇرغان تۇنجى تېما بولغاندىلا قوزغىتىلىدۇ
+          created: قۇرغان ۋاقتى
+          edited: تەھرىرلەندى
+        user_updated:
+          fields:
+            user_profile:
+              label: ئىشلەتكۈچى تەرجىمىھال بۆلىكى
+              description: ئىشلەتكۈچى بۇ بۆلەكلەرنىڭ ھەممىسىنى تولدۇرغاندىلا ئاندىن قوزغىلىدۇ
+            custom_fields:
+              label: ئىشلەتكۈچى ئىختىيارى بۆلەكلىرى
+              description: ئىشلەتكۈچى بۇ بۆلەكلەرنىڭ ھەممىسىنى تولدۇرغاندىلا ئاندىن قوزغىلىدۇ
+            once_per_user:
+              label: ھەر بىر ئىشلەتكۈچىگە بىر قېتىم
+              description: ھەر بىر ئىشلەتكۈچىگە پەقەت بىرلا قېتىم قوزغىلىدۇ
+            new_users_only:
+              label: يېڭى ئىشلەتكۈچىلا
+              description: بۇ ئاپتوماتلاشتۇرۇش قوزغىتىلغاندىن كېيىن قوشۇلغان يېڭى ئىشلەتكۈچىگىلا قوزغىلىدۇ
+        category_created_edited:
+          fields:
+            restricted_category:
+              label: ئانا سەھىپە
+              description: تاللاشچان، بۇ سەھىپىدە چەكلىك قوزغاتقۇچقىلا يول قويۇلىدۇ
+        pm_created:
+          fields:
+            restricted_user:
+              label: ئىشلەتكۈچى
+              description: شەخسىي ئۇچۇر بۇ ئىشلەتكۈچىگە ئەۋەتىلگەندىلا ئاندىن قوزغىلىدۇ
+            restricted_group:
+              label: گۇرۇپپا
+              description: شەخسىي ئۇچۇر بۇ گۇرۇپپىغا ئەۋەتىلگەندىلا ئاندىن قوزغىلىدۇ
+            ignore_staff:
+              label: باشقۇرغۇچى خادىملارغا پەرۋا قىلما
+              description: ئەگەر يوللىغۇچى باشقۇرغۇچى خادىملار بولسا قوزغاتقۇچتىن ئاتلايدۇ
+            ignore_group_members:
+              label: گۇرۇپپا ئەزاسىغا پەرۋا قىلما
+              description: ئەگەر يوللىغۇچى يۇقىرىدا كۆرسىتىلگەن گۇرۇپپىنىڭ ئەزاسى بولسا قوزغاتقۇچتىن ئاتلايدۇ
+            ignore_automated:
+              label: ئاپتوماتلاشتۇرۇشقا پەرۋا قىلما
+              description: ئەگەر يوللىغۇچى ئېلخەتكە جاۋاب قايتۇرمىسا ياكى ئاپتوماتلاشتۇرۇلغان مەنبەدىن بولسا قوزغاتقۇچتىن ئاتلايدۇ. پەقەت ئېلخەت ئارقىلىق قۇرۇلغان شەخسىي ئۇچۇرغىلا قوللىنىلىدۇ
+            valid_trust_levels:
+              label: ئىناۋەتلىك ئىشەنچ دەرىجىسى
+              description: يازمىنى بۇ ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچى قۇرغاندىلا ئاندىن قوزغىتىلىدۇ، كۆڭۈلدىكى ئەھۋالدا خالىغان ئىشەنچ دەرىجىسى
+        after_post_cook:
+          fields:
+            valid_trust_levels:
+              label: ئىناۋەتلىك ئىشەنچ دەرىجىسى
+              description: يازمىنى بۇ ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچى قۇرغاندىلا ئاندىن قوزغىتىلىدۇ، كۆڭۈلدىكى ئەھۋالدا خالىغان ئىشەنچ دەرىجىسى
+            restricted_category:
+              label: سەھىپە
+              description: تاللاشچان، يازما تېمىسى بۇ سەھىپىدە بولغاندىلا ئاندىن قوزغىلىدۇ
+            restricted_tags:
+              label: بەلگە
+              description: تاللاشچان، يازمىدا بۇ خەتكۈچلەر بولغاندىلا ئاندىن قوزغىلىدۇ
+      scriptables:
+        not_found: ئاپتوماتلاشتۇرۇشقا ئىشلىتىدىغان «%{automation}» نىڭ قوليازمىسى «%{script}» نى تاپالمىدى، مۇناسىۋەتلىك قىستۇرمىنىڭ ئورنىتىلغانلىقىنى جەزملەڭ.
+        zapier_webhook:
+          fields:
+            webhook_url:
+              label: تور ئىلمىكى تور ئادرېسى
+              description: "ئىناۋەتلىك Zapier تور ئىلمەكنىڭ تور ئادرېسى كېرەك، مەسىلەن: https://hooks.zapier.com/hooks/catch/xxx/yyy/"
+        auto_responder:
+          fields:
+            once:
+              label: بىر قېتىم
+              description: پەقەت تېما بويىچە بىر قېتىملا جاۋاب بېرىدۇ
+            word_answer_list:
+              label: سۆز/جاۋاب جۈپلىرىنىڭ تىزىمى
+            answering_user:
+              label: ئىشلەتكۈچىگە جاۋاب
+              description: كۆڭۈلدىكىسى سىستېما ئىشلەتكۈچى
+        auto_tag_topic:
+          fields:
+            tags:
+              label: بەلگە
+              description: تېمىغا قوشىدىغان بەلگە تىزىمى.
+        post:
+          fields:
+            creator:
+              label: قۇرغۇچى
+              post_creator_context: يازمىنى قۇرغۇچى
+              updated_user_context: يېڭىلىغان ئىشلەتكۈچى
+            topic:
+              label: تېما كىملىكى
+            post:
+              label: يازما مەزمۇنى
+        topic:
+          fields:
+            creator:
+              label: قۇرغۇچى
+              updated_user_context: يېڭىلىغان ئىشلەتكۈچى
+            body:
+              label: تېما مەزمۇنى
+            title:
+              label: تېما ماۋزۇسى
+            category:
+              label: تېما سەھىپىسى
+            tags:
+              label: تېما بەلگىسى
+        group_category_notification_default:
+          fields:
+            group:
+              label: گۇرۇپپا
+            notification_level:
+              label: ئۇقتۇرۇش دەرىجىسى
+            update_existing_members:
+              label: مەۋجۇت ئىشلەتكۈچىنى يېڭىلا
+              description: مەۋجۇت گۇرۇپپا ئەزالىرىنىڭ ئۇقتۇرۇش دەرىجىسىنى يېڭىلايدۇ
+        user_global_notice:
+          fields:
+            level:
+              label: دەرىجە
+            notice:
+              label: ئۇقتۇرۇش
+              description: HTML نى قوللايدۇ، بۇنىڭغا ئىشەنچسىز كودنى كىرگۈزمەڭ!
+          levels:
+            warning: ئاگاھلاندۇرۇش
+            info: ئۇچۇر
+            success: مۇۋەپپەقىيەتلىك
+            error: خاتالىق
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: تارتۇق ئىسمى
+            group:
+              label: گۇرۇپپا
+              description: نىشان گۇرۇپپا. تارتۇق بەلگىلەنگەن ئىشلەتكۈچى مەزكۇر گۇرۇپپىغا قوشۇلىدۇ
+            update_user_title_and_flair:
+              label: ئىشلەتكۈچى ئاتىقى ۋە سالاھىيىتىنى يېڭىلايدۇ
+              description: تاللاشچان، ئىشلەتكۈچى ئاتىقى ۋە سالاھىيىتىنى يېڭىلايدۇ
+            remove_members_without_badge:
+              label: مەۋجۇت ئەزالاردىكى تارتۇقسىزلارنى چىقىرىۋېتىدۇ
+              description: تاللاشچان، مەۋجۇت گۇرۇپپىدىكى تارتۇق بەلگىلەنمىگەن ئەزالارنى چىقىرىۋېتىدۇ
+            badge:
+              label: تارتۇق
+              description: تارتۇق تاللا
+        suspend_user_by_email:
+          fields:
+            suspend_until:
+              label: ۋاقىتلىق توختىتىدىغان ۋاقىت (كۆڭۈلدىكى)
+            reason:
+              label: سەۋەبى (كۆڭۈلدىكى)
+            actor:
+              label: ئىشلەتكۈچى
+              description: "توختىتىشقا مەسئۇل ئىشلەتكۈچى (كۆڭۈلدىكى: سىستېما)"
+        pin_topic:
+          fields:
+            pinnable_topic:
+              label: تېما كىملىكى
+            pinned_globally:
+              label: ئومۇميۈزلۈك چوققىلىنىدۇ
+            pinned_until:
+              label: چوققىلىنىدىغان ۋاقىت
+        banner_topic:
+          fields:
+            topic_id:
+              label: تېما كىملىكى
+            banner_until:
+              label: لوزۇنكا تېما دەپ تەڭشەيدىغان ۋاقىت
+            user:
+              label: ئىشلەتكۈچى
+              description: "لوزۇنكا قۇرغان ئىشلەتكۈچى (كۆڭۈلدىكى: سىستېما)"
+        flag_post_on_words:
+          fields:
+            words:
+              label: تەكشۈرۈلىدىغان سۆز
+        topic_required_words:
+          fields:
+            words:
+              label: زۆرۈر سۆز تىزىمى
+        gift_exchange:
+          fields:
+            gift_exchangers_group:
+              label: قاتناشقۇچىلارنىڭ گۇرۇپپا ئىسمى
+            giftee_assignment_messages:
+              label: سوۋغات ئەۋەتكۈچىگە يوللىنىدىغان ئۇچۇر
+        send_pms:
+          add_a_pm_btn:
+            label: شەخسىي ئۇچۇر قوش
+          fields:
+            receiver:
+              label: شەخسىي ئۇچۇر تاپشۇرۇۋالغۇچى
+            sendable_pms:
+              label: شەخسىي ئۇچۇر
+            sender:
+              label: شەخسىي ئۇچۇر يوللىغۇچى
+        close_topic:
+          fields:
+            topic:
+              label: تېما كىملىكى
+            message:
+              label: تاقىلىش ئۇچۇرى
+              description: "تېما تاقالدى خاتىرىسىدە كۆرۈنىدىغان تاللاشچان ئۇچۇر"
+            user:
+              label: ئىشلەتكۈچى
+              description: "تېمىنى تاقىغان ئىشلەتكۈچى (كۆڭۈلدىكى سىستېما)"
+        add_user_to_group_through_custom_field:
+          fields:
+            custom_field_name:
+              label: "ئىشلەتكۈچى ئىختىيارى بۆلەك ئىسمى"
+      models:
+        script:
+          name:
+            label: قوليازما
+        trigger:
+          name:
+            label: قوزغاتقۇچ
+        automation:
+          name:
+            label: ئىسمى
+          trigger:
+            label: قوزغاتقۇچ
+          script:
+            label: قوليازما
+          version:
+            label: نەشرى
+          enabled:
+            label: قوزغىتىلدى
+          disabled:
+            label: چەكلەندى
+          placeholders:
+            label: ئورۇن بەلگىسى
+          last_updated_at:
+            label: ئاخىرقى يېڭىلاش
+          last_updated_by:
+            label: يېڭىلىغۇچى

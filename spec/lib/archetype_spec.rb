@@ -25,12 +25,13 @@ RSpec.describe Archetype do
     end
   end
 
-  describe "register an archetype" do
+  describe "register an archetype" do
     it "has one more element" do
       @list = Archetype.list.dup
       Archetype.register("glados")
       expect(Archetype.list.size).to eq(@list.size + 1)
       expect(Archetype.list.find { |a| a.id == "glados" }).to be_present
+      Archetype.deregister("glados")
     end
   end
 end

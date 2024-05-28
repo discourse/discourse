@@ -289,5 +289,37 @@ RSpec.describe Admin::WebHooksController do
       expect(parsed_event["status"]).to eq(-1)
       expect(parsed_event["response_body"]).to eq(nil)
     end
+
+    context "with web_hook_event_headers_for_redelivery modifier registered" do
+      let(:modifier_block) do
+        Proc.new do |headers, _, _|
+          headers["bb"] = "22"
+          headers
+        end
+      end
+      it "modifies the headers & saves the updated headers to the webhook event" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:web_hook_event_headers, &modifier_block)
+
+        stub_request(:post, web_hook.payload_url).to_return(
+          status: 402,
+          body: "efg",
+          headers: {
+            "Content-Type" => "application/json",
+            "yoo" => "man",
+          },
+        )
+        post "/admin/api/web_hooks/#{web_hook.id}/events/#{web_hook_event.id}/redeliver.json"
+        expect(response.status).to eq(200)
+
+        expect(JSON.parse(web_hook_event.reload.headers)).to eq({ "aa" => "1", "bb" => "22" })
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :web_hook_event_headers,
+          &modifier_block
+        )
+      end
+    end
   end
 end

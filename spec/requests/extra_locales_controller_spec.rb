@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ExtraLocalesController do
+  around { |example| allow_missing_translations(&example) }
+
   describe "#show" do
     it "won't work with a weird parameter" do
       get "/extra-locales/-invalid..character!!"

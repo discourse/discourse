@@ -8,7 +8,6 @@ import { cancel, next } from "@ember/runloop";
 import { service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { resetIdle } from "discourse/lib/desktop-notifications";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
@@ -60,11 +59,6 @@ export default class ChatThread extends Component {
   @tracked uploadDropZone;
 
   scroller = null;
-
-  @action
-  resetIdle() {
-    resetIdle();
-  }
 
   @cached
   get messagesLoader() {
@@ -146,7 +140,6 @@ export default class ChatThread extends Component {
         this.messagesLoader.canLoadMoreFuture) ||
       (state.distanceToBottom.pixels > 250 && !state.atBottom);
     this.isScrolling = false;
-    this.resetIdle();
     this.atBottom = state.atBottom;
     this.args.setFullTitle?.(state.atTop);
 
@@ -366,8 +359,6 @@ export default class ChatThread extends Component {
 
   @action
   async onSendMessage(message) {
-    resetIdle();
-
     await message.cook();
     if (message.editing) {
       await this.#sendEditMessage(message);

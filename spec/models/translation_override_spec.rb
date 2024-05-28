@@ -6,7 +6,7 @@ RSpec.describe TranslationOverride do
       before do
         I18n.backend.store_translations(
           I18n.locale,
-          "user_notifications.user_did_something" => "%{first} %{second}",
+          { user_notifications: { user_did_something: "%{first} %{second}" } },
         )
 
         I18n.backend.store_translations(
@@ -21,7 +21,11 @@ RSpec.describe TranslationOverride do
       describe "when interpolation keys are missing" do
         it "should not be valid" do
           translation_override =
-            TranslationOverride.upsert!(I18n.locale, "some_key", "%{key} %{omg}")
+            TranslationOverride.upsert!(
+              I18n.locale,
+              "user_notifications.user_did_something",
+              "%{key} %{omg}",
+            )
 
           expect(translation_override.errors.full_messages).to include(
             I18n.t(
@@ -129,15 +133,17 @@ RSpec.describe TranslationOverride do
 
         describe "invalid keys" do
           it "does not transform 'tonz'" do
-            translation_override =
-              TranslationOverride.upsert!(I18n.locale, "something.tonz", "%{key3} %{key4} hello")
-            expect(translation_override.errors.full_messages).to include(
-              I18n.t(
-                "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
-                keys: "key3, key4",
-                count: 2,
-              ),
-            )
+            allow_missing_translations do
+              translation_override =
+                TranslationOverride.upsert!(I18n.locale, "something.tonz", "%{key3} %{key4} hello")
+              expect(translation_override.errors.full_messages).to include(
+                I18n.t(
+                  "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+                  keys: "key3, key4",
+                  count: 2,
+                ),
+              )
+            end
           end
         end
       end
@@ -145,6 +151,7 @@ RSpec.describe TranslationOverride do
   end
 
   it "upserts values" do
+    I18n.backend.store_translations(:en, { some: { key: "initial value" } })
     TranslationOverride.upsert!("en", "some.key", "some value")
 
     ovr = TranslationOverride.where(locale: "en", translation_key: "some.key").first
@@ -164,6 +171,7 @@ RSpec.describe TranslationOverride do
   end
 
   it "stores js for a message format key" do
+    I18n.backend.store_translations(:en, { some: { key_MF: "initial value" } })
     TranslationOverride.upsert!(
       "ru",
       "some.key_MF",
@@ -300,7 +308,9 @@ RSpec.describe TranslationOverride do
     end
 
     context "when the original translation no longer exists" do
-      fab!(:translation) { Fabricate(:translation_override, translation_key: "foo.bar") }
+      fab!(:translation) do
+        allow_missing_translations { Fabricate(:translation_override, translation_key: "foo.bar") }
+      end
 
       it { expect(translation.original_translation_deleted?).to eq(true) }
     end
