@@ -66,3 +66,15 @@
     }
   }
 }
+
+.topic-admin-menu-content {
+  .btn.btn-ghost {
+    &:hover,
+    &:focus {
+      background: var(--d-hover);
+    }
+    &:active {
+      background: var(--d-selected);
+    }
+  }
+}
