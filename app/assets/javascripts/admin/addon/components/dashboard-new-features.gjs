@@ -3,8 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
-import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import { i18n } from "discourse-i18n";
 import DashboardNewFeatureItem from "admin/components/dashboard-new-feature-item";
 
 export default class DashboardNewFeatures extends Component {

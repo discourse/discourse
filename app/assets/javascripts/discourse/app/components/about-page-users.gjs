@@ -4,7 +4,7 @@ import { htmlSafe } from "@ember/template";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AboutPageUsers extends Component {
   @service siteSettings;

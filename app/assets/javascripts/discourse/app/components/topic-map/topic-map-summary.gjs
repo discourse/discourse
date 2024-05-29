@@ -6,8 +6,8 @@ import RelativeDate from "discourse/components/relative-date";
 import TopicParticipants from "discourse/components/topic-map/topic-participants";
 import number from "discourse/helpers/number";
 import slice from "discourse/helpers/slice";
-import i18n from "discourse-common/helpers/i18n";
 import { avatarImg } from "discourse-common/lib/avatar-utils";
+import { i18n } from "discourse-i18n";
 
 export default class TopicMapSummary extends Component {
   get linksCount() {

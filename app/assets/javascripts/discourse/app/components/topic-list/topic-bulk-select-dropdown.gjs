@@ -1,5 +1,5 @@
 import BulkSelectTopicsDropdown from "discourse/components/bulk-select-topics-dropdown";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 const TopicBulkSelectDropdown = <template>
   <div class="bulk-select-topics-dropdown">

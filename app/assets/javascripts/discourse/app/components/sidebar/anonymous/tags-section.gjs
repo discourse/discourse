@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import TagSectionLink from "discourse/lib/sidebar/user/tags-section/tag-section-link";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import AllTagsSectionLink from "../common/all-tags-section-link";
 import Section from "../section";
 import SectionLink from "../section-link";

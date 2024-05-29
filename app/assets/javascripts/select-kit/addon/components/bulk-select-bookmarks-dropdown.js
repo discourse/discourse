@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Bookmark from "discourse/models/bookmark";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
 const _customButtons = [];

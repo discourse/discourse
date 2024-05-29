@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import NavItem from "discourse/components/nav-item";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class AdminPluginConfigTopNav extends Component {
   @service adminPluginNavManager;

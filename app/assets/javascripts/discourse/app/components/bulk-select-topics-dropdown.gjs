@@ -9,7 +9,7 @@ import BulkTopicActions, {
 } from "discourse/components/modal/bulk-topic-actions";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse-common/helpers/d-icon";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 const _customButtons = [];

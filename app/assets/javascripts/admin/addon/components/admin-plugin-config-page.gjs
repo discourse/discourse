@@ -3,7 +3,7 @@ import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
 import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import AdminPluginConfigArea from "./admin-plugin-config-area";
 import AdminPluginConfigMetadata from "./admin-plugin-config-metadata";
 import AdminPluginConfigTopNav from "./admin-plugin-config-top-nav";
