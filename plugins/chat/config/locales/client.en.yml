@@ -101,7 +101,6 @@ en:
         browse: "Browse channels"
         create: "New channel"
 
-      click_to_join: "Click here to view available channels."
       close: "Close"
       remove: "Remove"
       collapse: "Collapse Chat Drawer"
@@ -233,8 +232,10 @@ en:
         composer: "Chat composer"
         channels_list: "Chat channels list"
 
-      no_direct_message_channels: "You have not joined any direct message channels."
-      no_public_channels: "You have not joined any channels."
+      no_direct_message_channels: "You have not joined any direct messages, yet!"
+      no_direct_message_channels_cta: "Start a conversation"
+      no_public_channels: "You have not joined any channels, yet!"
+      no_public_channels_cta: "Browse channels"
       kicked_from_channel: "You can no longer access this channel."
       only_chat_push_notifications:
         title: "Only send chat push notifications"

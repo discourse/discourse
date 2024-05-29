@@ -48,11 +48,11 @@ module PageObjects
       end
 
       def has_user_threads_section?
-        has_css?(".chat-channel-row.--threads[href='/chat/threads']")
+        has_css?("#c-footer-threads")
       end
 
       def has_no_user_threads_section?
-        has_no_css?(".chat-channel-row.--threads[href='/chat/threads']")
+        has_no_css?("#c-footer-threads")
       end
 
       def has_unread_user_threads?
@@ -63,8 +63,12 @@ module PageObjects
         has_no_css?(".chat-channel-row.--threads .c-unread-indicator")
       end
 
+      def click_direct_messages
+        find("#c-footer-direct-messages").click
+      end
+
       def click_user_threads
-        find(".chat-channel-row.--threads").click
+        find("#c-footer-threads").click
       end
 
       def maximize

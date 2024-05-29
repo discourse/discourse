@@ -21,7 +21,10 @@
     >
       {{outlet}}
       {{#if this.shouldUseChatFooter}}
-        <ChatFooter />
+        <ChatFooter
+          @activeTab={{this.activeTab}}
+          @onClickTab={{this.onClickTab}}
+        />
       {{/if}}
     </div>
   </div>

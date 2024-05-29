@@ -7,13 +7,15 @@
   class="edit-topic-timer-modal"
 >
   <:body>
-    <EditTopicTimerForm
-      @topic={{@model.topic}}
-      @topicTimer={{this.topicTimer}}
-      @timerTypes={{this.publicTimerTypes}}
-      @onChangeStatusType={{this.onChangeStatusType}}
-      @onChangeInput={{this.onChangeInput}}
-    />
+    {{#if this.topicTimer}}
+      <EditTopicTimerForm
+        @topic={{@model.topic}}
+        @topicTimer={{this.topicTimer}}
+        @timerTypes={{this.publicTimerTypes}}
+        @onChangeStatusType={{this.onChangeStatusType}}
+        @onChangeInput={{this.onChangeInput}}
+      />
+    {{/if}}
   </:body>
   <:footer>
     <DButton

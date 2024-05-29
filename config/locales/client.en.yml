@@ -5023,6 +5023,10 @@ en:
               label: Category
             include_subcategories:
               label: "Include Subcategories"
+      flags:
+        title: "Moderation Flags"
+        description: "Description"
+        enabled: "Enabled?"
 
       groups:
         new:
@@ -5362,6 +5366,8 @@ en:
           user_fields: "User Fields"
           watched_words: "Watched Words"
           legal: "Legal"
+          moderation_flags: "Moderation Flags"
+
 
       appearance:
         title: "Appearance"
@@ -6080,6 +6086,7 @@ en:
             create_watched_word_group: "create watched word group"
             update_watched_word_group: "update watched word group"
             delete_watched_word_group: "delete watched word group"
+            toggle_flag: "toggle flag"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

@@ -1,4 +1,6 @@
+import DEBUG from "@glimmer/env";
 import { registerWaiter } from "@ember/test";
+import { isTesting } from "discourse-common/config/environment";
 
 /**
  * Runs `callback` shortly after the next browser Frame is produced.
@@ -6,7 +8,10 @@ import { registerWaiter } from "@ember/test";
  */
 export default function runAfterFramePaint(callback) {
   let done = false;
-  registerWaiter(() => done);
+
+  if (DEBUG && isTesting()) {
+    registerWaiter(() => done);
+  }
 
   // Queue a "before Render Steps" callback via requestAnimationFrame.
   requestAnimationFrame(() => {
