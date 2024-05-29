@@ -17,7 +17,7 @@ describe "Admin Flags Page", type: :system do
       ["Something Else", "It's Inappropriate", "It's Spam", "It's Illegal"],
     )
 
-    visit "/admin/flags"
+    visit "/admin/config/flags"
     admin_flags_page.toggle("spam")
 
     topic_page.visit_topic(post.topic)
