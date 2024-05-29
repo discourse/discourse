@@ -26,10 +26,6 @@ export default class AdminPluginConfigPage extends Component {
 
   <template>
     <div class="admin-plugin-config-page">
-      {{#if this.adminPluginNavManager.isTopMode}}
-        <AdminPluginConfigTopNav />
-      {{/if}}
-
       <DBreadcrumbsContainer />
 
       <DBreadcrumbsItem as |linkClass|>
@@ -55,6 +51,10 @@ export default class AdminPluginConfigPage extends Component {
       </DBreadcrumbsItem>
 
       <AdminPluginConfigMetadata @plugin={{@plugin}} />
+
+      {{#if this.adminPluginNavManager.isTopMode}}
+        <AdminPluginConfigTopNav />
+      {{/if}}
 
       <div class="admin-plugin-config-page__content">
         <div class={{this.mainAreaClasses}}>

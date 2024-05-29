@@ -13,27 +13,33 @@
         grid-template-columns: 0.25fr repeat(4, 1fr);
       }
     }
+
     @include breakpoint(mobile-extra-large) {
       .admin-plugins-list__row {
         grid-template-columns: 0.25fr repeat(3, 1fr);
       }
+
       .admin-plugins-list {
         &__name-details {
           grid-column-start: 2;
           grid-column-end: -1;
         }
+
         &__settings {
           grid-row: 2;
           grid-column-start: 4;
           text-align: right;
+
           button {
             display: flex;
           }
         }
+
         &__version {
           grid-row: 2;
           grid-column-start: 3;
         }
+
         &__enabled {
           grid-row: 2;
           grid-column-start: 2;
@@ -94,6 +100,64 @@
         border-left: 0;
         padding-left: 0;
         width: 100%;
+      }
+    }
+  }
+
+  &__metadata {
+    margin-bottom: var(--space-6);
+  }
+
+  .admin-nav-submenu {
+    background: transparent;
+    border-bottom: 1px solid var(--primary-low);
+
+    .horizontal-overflow-nav {
+      background: transparent;
+
+      &:before {
+        display: none;
+      }
+
+      &:after {
+        display: none;
+      }
+    }
+
+    .admin-plugin-config-page__top-nav {
+      --active-border-width: var(--space-1);
+
+      width: auto !important;
+      margin: 0;
+
+      a {
+        font-size: var(--font-down-0);
+        padding: var(--space-2) var(--space-3)
+          calc(0.5rem + var(--active-border-width));
+
+        &:hover {
+          color: var(--quaternary);
+          background-color: transparent;
+          border-color: transparent;
+        }
+
+        &.active {
+          color: var(--quaternary);
+          background-color: transparent;
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+          border-width: 0;
+          border-bottom: var(--active-border-width) solid var(--quaternary);
+          padding-bottom: var(--space-2);
+        }
+      }
+
+      .has-sidebar-page & {
+        @include breakpoint(large) {
+          span {
+            display: none;
+          }
+        }
       }
     }
   }
