@@ -158,6 +158,33 @@ function _loadCachedShortUrls(uploadElements, siteSettings, opts) {
         });
 
         break;
+      case "DIV":
+        if (siteSettings.enable_diffhtml_preview === true) {
+          retrieveCachedUrl(upload, siteSettings, "orig-src", opts, (url) => {
+            const videoHTML = `
+              <video width="100%" height="100%" preload="metadata" controls style="">
+                <source src="${url}">
+              </video>`;
+            upload.insertAdjacentHTML("beforeend", videoHTML);
+            upload.classList.add("video-container");
+          });
+        } else {
+          retrieveCachedUrl(
+            upload,
+            siteSettings,
+            "orig-src-id",
+            opts,
+            (url) => {
+              upload.style.backgroundImage = `url('${url}')`;
+
+              const placeholderIcon = upload.querySelector(
+                ".placeholder-icon.video"
+              );
+              placeholderIcon.style.backgroundColor = "rgba(0, 0, 0, 0.3)";
+            }
+          );
+        }
+        break;
     }
   });
 }
@@ -175,7 +202,9 @@ function _loadShortUrls(uploads, ajax, siteSettings, opts) {
   let urls = [...uploads].map((upload) => {
     return (
       upload.getAttribute("data-orig-src") ||
-      upload.getAttribute("data-orig-href")
+      upload.getAttribute("data-orig-href") ||
+      upload.getAttribute("data-orig-src-id") ||
+      upload.getAttribute("data-orig-src")
     );
   });
 
@@ -196,7 +225,7 @@ function _loadShortUrls(uploads, ajax, siteSettings, opts) {
 }
 
 const SHORT_URL_ATTRIBUTES =
-  "img[data-orig-src], a[data-orig-href], source[data-orig-src]";
+  "img[data-orig-src], a[data-orig-href], source[data-orig-src], div[data-orig-src-id], div[data-orig-src]";
 
 export function resolveCachedShortUrls(siteSettings, scope, opts) {
   const shortUploadElements = scope.querySelectorAll(SHORT_URL_ATTRIBUTES);
