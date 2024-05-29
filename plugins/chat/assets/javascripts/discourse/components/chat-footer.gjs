@@ -47,7 +47,7 @@ export default class ChatFooter extends Component {
           aria-label={{i18n "chat.channel_list.aria_label"}}
           id="c-footer-channels"
           class={{concatClass
-            "btn-flat"
+            "btn-transparent"
             "c-footer__item"
             (if (eq @activeTab "channels") "--active")
           }}
