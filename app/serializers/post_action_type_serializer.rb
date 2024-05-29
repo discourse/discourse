@@ -39,7 +39,7 @@ class PostActionTypeSerializer < ApplicationSerializer
   end
 
   def enabled
-    !PostActionType.disabled_flag_types[object.id]
+    PostActionType.enabled_flag_types[object.id]
   end
 
   protected

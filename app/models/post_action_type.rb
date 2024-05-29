@@ -70,6 +70,7 @@ class PostActionType < ActiveRecord::Base
       return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
 
       # Once replace_flag API is fully deprecated, then we can drop respond_to. It is needed right now for migration to be evaluated.
+      # TODO (krisk)
       flag_enum(all_flags.reject { |flag| flag.respond_to?(:score_type) && flag.score_type })
     end
 
@@ -77,6 +78,7 @@ class PostActionType < ActiveRecord::Base
       return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
 
       # Once replace_flag API is fully deprecated, then we can drop respond_to. It is needed right now for migration to be evaluated.
+      # TODO (krisk)
       flag_enum(all_flags.filter { |flag| flag.respond_to?(:score_type) && flag.score_type })
     end
 
@@ -100,6 +102,10 @@ class PostActionType < ActiveRecord::Base
 
     def disabled_flag_types
       flag_enum(all_flags.reject(&:enabled))
+    end
+
+    def enabled_flag_types
+      flag_enum(all_flags.filter(&:enabled))
     end
 
     def custom_types

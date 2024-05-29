@@ -210,8 +210,8 @@ export default function () {
     );
 
     this.route(
-      "adminFlags",
-      { path: "/flags", resetNamespace: true },
+      "adminConfigFlags",
+      { path: "/config/flags", resetNamespace: true },
       function () {
         this.route("index", { path: "/" });
       }

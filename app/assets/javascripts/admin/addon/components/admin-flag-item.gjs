@@ -15,7 +15,7 @@ export default class AdminFlagItem extends Component {
   toggleFlagEnabled(flag) {
     this.enabled = !this.enabled;
 
-    return ajax(`/admin/flags/${flag.id}/toggle`, {
+    return ajax(`/admin/config/flags/${flag.id}/toggle`, {
       type: "PUT",
     }).catch((error) => {
       this.enabled = !this.enabled;

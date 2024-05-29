@@ -14,6 +14,7 @@ class ToggleFlag
 
   class Contract
     attribute :flag_id, :integer
+    validates :flag_id, presence: true
   end
 
   private

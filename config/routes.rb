@@ -393,8 +393,10 @@ Discourse::Application.routes.draw do
           post "preview" => "badges#preview"
         end
       end
-      resources :flags, only: %i[index] do
-        put "toggle"
+      namespace :config, constraints: StaffConstraint.new do
+        resources :flags, only: %i[index] do
+          put "toggle"
+        end
       end
     end # admin namespace
 

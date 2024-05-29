@@ -1,12 +1,11 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import i18n from "discourse-common/helpers/i18n";
 import AdminFlagItem from "admin/components/admin-flag-item";
 
 export default class AdminFlags extends Component {
   @service site;
-  @tracked flags = this.site.flagTypes;
+  flags = this.site.flagTypes;
 
   <template>
     <div class="container admin-flags">

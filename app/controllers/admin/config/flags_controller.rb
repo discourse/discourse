@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Admin::FlagsController < Admin::AdminController
+class Admin::Config::FlagsController < Admin::AdminController
   def toggle
     with_service(ToggleFlag) do
       on_success do

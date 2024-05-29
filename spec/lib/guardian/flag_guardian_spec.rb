@@ -3,13 +3,15 @@
 RSpec.describe FlagGuardian do
   fab!(:user)
   fab!(:admin)
+  fab!(:moderator)
 
   after(:each) { Flag.reset_flag_settings! }
 
   describe "#can_edit_flag?" do
-    it "returns true for admin and false for regular user" do
+    it "returns true for admin and false for moderator and regular user" do
       flag = Fabricate(:flag)
       expect(Guardian.new(admin).can_edit_flag?(flag)).to eq(true)
+      expect(Guardian.new(moderator).can_edit_flag?(flag)).to eq(false)
       expect(Guardian.new(user).can_edit_flag?(flag)).to eq(false)
       flag.destroy!
     end
