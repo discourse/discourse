@@ -7,6 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 class Entry {
   @tracked position;
+
   constructor({ position, depth, category, descendantCount }) {
     this.position = position;
     this.depth = depth;
