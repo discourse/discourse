@@ -9,15 +9,26 @@ export default class FieldData {
   @tracked validationEnabled = false;
 
   constructor(fieldRegistration) {
-    this.validation = fieldRegistration.validation
+    this.fieldRegistration = fieldRegistration;
+
+    this.rules = this.fieldRegistration.validation
       ? ValidationParser.parse(fieldRegistration.validation)
       : null;
   }
+
+  get required() {
+    return this.rules?.required ?? false;
+  }
+
   /**
    * The *field* level validation callback passed to the field as in `<form.field @name="foo" @validate={{this.validateCallback}}>`
    */
 
-  async validate(value, name, data) {
-    return Validator.validate(value, this.validation ?? {});
+  async validate(value) {
+    return Validator.validate(
+      value,
+      this.fieldRegistration.type,
+      this.rules ?? {}
+    );
   }
 }

@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
 import { assert } from "@ember/debug";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import concatClass from "discourse/helpers/concat-class";
 
 const VALID_INPUT_TYPES = [
   // 'button' - not useful as a control component
@@ -28,7 +31,7 @@ const VALID_INPUT_TYPES = [
   "week",
 ];
 
-export default class FormInput extends Component {
+export default class FormControlInput extends Component {
   constructor(owner, args) {
     super(...arguments);
 
@@ -49,6 +52,15 @@ export default class FormInput extends Component {
     return this.args.type ?? "text";
   }
 
+  get primitiveType() {
+    switch (this.type) {
+      case "number":
+        return "number";
+      default:
+        return "string";
+    }
+  }
+
   @action
   handleInput(event) {
     this.args.setValue(
@@ -59,15 +71,28 @@ export default class FormInput extends Component {
   }
 
   <template>
-    <input
-      name={{@name}}
-      type={{this.type}}
-      value={{@value}}
-      id={{@fieldId}}
-      aria-invalid={{if @invalid "true"}}
-      aria-describedby={{if @invalid @errorId}}
-      ...attributes
-      {{on "input" this.handleInput}}
-    />
+    <div
+      class={{concatClass
+        "d-form-field__input-group"
+        (if @before "--prefilled")
+      }}
+    >
+      {{#if @before}}
+        <div class="d-form-field__prefilled-text">{{@before}}</div>
+      {{/if}}
+
+      <input
+        name={{@name}}
+        type={{this.type}}
+        value={{@value}}
+        id={{@fieldId}}
+        aria-invalid={{if @invalid "true"}}
+        aria-describedby={{if @invalid @errorId}}
+        class="d-form-field__input"
+        ...attributes
+        {{on "input" this.handleInput}}
+        {{didInsert (fn @registerFieldWithType this.primitiveType)}}
+      />
+    </div>
   </template>
 }

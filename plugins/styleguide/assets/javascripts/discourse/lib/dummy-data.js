@@ -228,6 +228,8 @@ export function createData(store) {
     formData: {
       name: "joffrey",
       age: 37,
+      legal: false,
+      enabled: true,
     },
 
     onSubmit: (data) => {

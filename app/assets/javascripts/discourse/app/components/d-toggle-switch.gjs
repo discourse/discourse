@@ -23,9 +23,11 @@ export default class DToggleSwitch extends Component {
         </span>
       </label>
 
-      <span class="d-toggle-switch__checkbox-label">
-        {{this.computedLabel}}
-      </span>
+      {{#if @label}}
+        <span class="d-toggle-switch__checkbox-label">
+          {{this.computedLabel}}
+        </span>
+      {{/if}}
     </div>
   </template>
 

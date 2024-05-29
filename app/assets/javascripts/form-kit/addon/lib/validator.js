@@ -1,18 +1,20 @@
+import { assert } from "@ember/debug";
 import { z } from "zod";
 
+const SUPPORTED_PRIMITIVES = ["string", "number", "boolean"];
+
 export default class Validator {
-  static async validate(value, rules = {}) {
-    return await new Validator().validate(value, rules);
+  static async validate(value, type, rules = {}) {
+    return await new Validator().validate(value, type, rules);
   }
 
-  async validate(value, rules = {}) {
-    console.log("value", value, rules);
-    let schema;
-    if (rules.between) {
-      schema = z.coerce.number();
-    } else {
-      schema = z.string();
-    }
+  async validate(value, type, rules = {}) {
+    assert(
+      `Type must be one of ${SUPPORTED_PRIMITIVES.join(", ")}`,
+      SUPPORTED_PRIMITIVES.includes(type)
+    );
+
+    let schema = z[type]();
 
     Object.keys(rules).forEach((rule) => {
       if (this[rule + "Validator"]) {
