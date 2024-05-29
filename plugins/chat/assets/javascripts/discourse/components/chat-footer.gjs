@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -40,7 +41,7 @@ export default class ChatFooter extends Component {
     {{#if this.shouldRenderFooter}}
       <nav class="c-footer">
         <DButton
-          @route="chat.channels"
+          @action={{fn @onClickTab "channels"}}
           @icon="comments"
           @translatedLabel={{i18n "chat.channel_list.title"}}
           aria-label={{i18n "chat.channel_list.aria_label"}}
@@ -48,7 +49,7 @@ export default class ChatFooter extends Component {
           class={{concatClass
             "btn-flat"
             "c-footer__item"
-            (if (eq this.router.currentRouteName "chat.channels") "--active")
+            (if (eq @activeTab "channels") "--active")
           }}
         >
           <UnreadChannelsIndicator />
@@ -56,7 +57,7 @@ export default class ChatFooter extends Component {
 
         {{#if this.directMessagesEnabled}}
           <DButton
-            @route="chat.direct-messages"
+            @action={{fn @onClickTab "direct-messages"}}
             @icon="users"
             @translatedLabel={{i18n "chat.direct_messages.title"}}
             aria-label={{i18n "chat.direct_messages.aria_label"}}
@@ -64,10 +65,7 @@ export default class ChatFooter extends Component {
             class={{concatClass
               "btn-flat"
               "c-footer__item"
-              (if
-                (eq this.router.currentRouteName "chat.direct-messages")
-                "--active"
-              )
+              (if (eq @activeTab "direct-messages") "--active")
             }}
           >
             <UnreadDirectMessagesIndicator />
@@ -76,7 +74,7 @@ export default class ChatFooter extends Component {
 
         {{#if this.includeThreads}}
           <DButton
-            @route="chat.threads"
+            @action={{fn @onClickTab "threads"}}
             @icon="discourse-threads"
             @translatedLabel={{i18n "chat.my_threads.title"}}
             aria-label={{i18n "chat.my_threads.aria_label"}}
@@ -84,7 +82,7 @@ export default class ChatFooter extends Component {
             class={{concatClass
               "btn-flat"
               "c-footer__item"
-              (if (eq this.router.currentRouteName "chat.threads") "--active")
+              (if (eq @activeTab "threads") "--active")
             }}
           >
             <UnreadThreadsIndicator />

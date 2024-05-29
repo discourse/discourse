@@ -300,7 +300,7 @@ module Email
 
     def reply_by_email_address
       return @reply_by_email_address if @reply_by_email_address
-      return nil unless SiteSetting.reply_by_email_address.present?
+      return nil if SiteSetting.reply_by_email_address.blank?
 
       @reply_by_email_address = SiteSetting.reply_by_email_address.dup
 

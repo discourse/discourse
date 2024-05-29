@@ -8,7 +8,7 @@ module Jobs
       DistributedMutex.synchronize("process_post_#{args[:post_id]}", validity: 10.minutes) do
         post = Post.find_by(id: args[:post_id])
         # two levels of deletion
-        return unless post.present? && post.topic.present?
+        return if post.blank? || post.topic.blank?
 
         orig_cooked = post.cooked
         recooked = nil

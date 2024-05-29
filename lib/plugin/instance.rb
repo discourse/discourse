@@ -718,7 +718,7 @@ class Plugin::Instance
   end
 
   def register_emoji(name, url, group = Emoji::DEFAULT_GROUP)
-    name = name.gsub(/[^a-z0-9]+/i, "_").gsub(/_{2,}/, "_").downcase
+    name = Emoji.sanitize_emoji_name(name)
     Plugin::CustomEmoji.register(name, url, group)
     Emoji.clear_cache
   end
@@ -753,7 +753,7 @@ class Plugin::Instance
       assets.concat(auto_assets)
     end
 
-    register_assets! unless assets.blank?
+    register_assets! if assets.present?
     register_locales!
     register_service_workers!
 

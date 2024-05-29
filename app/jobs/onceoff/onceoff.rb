@@ -36,7 +36,7 @@ class Jobs::Onceoff < ::Jobs::Base
       .select { |klass| klass < self }
       .each do |klass|
         job_name = name_for(klass)
-        Jobs.enqueue(job_name.underscore.to_sym) unless previously_ran.include?(job_name)
+        Jobs.enqueue(job_name.underscore.to_sym) if previously_ran.exclude?(job_name)
       end
   end
 end

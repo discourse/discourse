@@ -1326,14 +1326,14 @@ class Post < ActiveRecord::Base
   private
 
   def parse_quote_into_arguments(quote)
-    return {} unless quote.present?
+    return {} if quote.blank?
     args = HashWithIndifferentAccess.new
     quote.first.scan(/([a-z]+)\:(\d+)/).each { |arg| args[arg[0]] = arg[1].to_i }
     args
   end
 
   def add_to_quoted_post_numbers(num)
-    return unless num.present?
+    return if num.blank?
     self.quoted_post_numbers ||= []
     self.quoted_post_numbers << num
   end

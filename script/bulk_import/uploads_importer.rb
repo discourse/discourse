@@ -114,7 +114,7 @@ module BulkImport
       producer_thread =
         Thread.new do
           query("SELECT * FROM uploads ORDER BY id", @source_db).tap do |result_set|
-            result_set.each { |row| queue << row unless output_existing_ids.include?(row["id"]) }
+            result_set.each { |row| queue << row if output_existing_ids.exclude?(row["id"]) }
             result_set.close
           end
         end
@@ -612,7 +612,7 @@ module BulkImport
               begin
                 if optimized_images.present?
                   optimized_images.map! do |optimized_image|
-                    next unless optimized_image.present?
+                    next if optimized_image.blank?
                     optimized_image_path =
                       add_multisite_prefix(store.get_path_for_optimized_image(optimized_image))
 

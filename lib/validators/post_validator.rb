@@ -39,7 +39,7 @@ class PostValidator < ActiveModel::Validator
       if private_message?(post)
         SiteSetting.private_message_post_length
       elsif post.is_first_post? || (post.topic.present? && post.topic.posts_count == 0)
-        if post.topic&.featured_link&.present?
+        if post.topic&.featured_link.present?
           (0..SiteSetting.max_post_length)
         else
           SiteSetting.first_post_length

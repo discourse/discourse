@@ -244,7 +244,7 @@ class BadgeGranter
       post_ids = list.flat_map { |i| i["post_ids"] }.compact.uniq
       user_ids = list.flat_map { |i| i["user_ids"] }.compact.uniq
 
-      next unless post_ids.present? || user_ids.present?
+      next if post_ids.blank? && user_ids.blank?
 
       find_by_type(type).each { |badge| backfill(badge, post_ids: post_ids, user_ids: user_ids) }
     end
@@ -368,7 +368,7 @@ class BadgeGranter
       end
       if opts[:target_posts]
         raise "Query did not return a post ID" unless result.post_id
-        unless Post.exists?(result.post_id).present?
+        if Post.exists?(result.post_id).blank?
           raise "Query returned a non-existent post ID:\n#{result.post_id}"
         end
       end
@@ -383,7 +383,7 @@ class BadgeGranter
   def self.backfill(badge, opts = nil)
     return unless SiteSetting.enable_badges
     return unless badge.enabled
-    return unless badge.query.present?
+    return if badge.query.blank?
 
     post_ids = user_ids = nil
     post_ids = opts[:post_ids] if opts

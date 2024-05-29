@@ -919,7 +919,7 @@ class Search
 
   def find_grouped_results
     if @results.type_filter.present?
-      unless Search.facets.include?(@results.type_filter)
+      if Search.facets.exclude?(@results.type_filter)
         raise Discourse::InvalidAccess.new("invalid type filter")
       end
       # calling protected methods

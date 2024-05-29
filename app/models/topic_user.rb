@@ -531,8 +531,11 @@ SQL
   end
 
   def self.ensure_consistency!(topic_id = nil)
-    update_post_action_cache(topic_id: topic_id)
+    update_post_action_cache(topic_id:)
+    update_last_read_post_number(topic_id:)
+  end
 
+  def self.update_last_read_post_number(topic_id: nil)
     # TODO this needs some reworking, when we mark stuff skipped
     # we up these numbers so they are not in-sync
     # the simple fix is to add a column here, but table is already quite big

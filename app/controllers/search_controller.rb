@@ -220,7 +220,7 @@ class SearchController < ApplicationController
     end
 
     if search_context.present?
-      unless SearchController.valid_context_types.include?(search_context[:type])
+      if SearchController.valid_context_types.exclude?(search_context[:type])
         raise Discourse::InvalidParameters.new(:search_context)
       end
       raise Discourse::InvalidParameters.new(:search_context) if search_context[:id].blank?

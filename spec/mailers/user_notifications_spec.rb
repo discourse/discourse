@@ -450,6 +450,29 @@ RSpec.describe UserNotifications do
         expect(html).to match(' lang="pl-PL"')
         expect(html).to match(' xml:lang="pl-PL"')
       end
+
+      it "uses digest_attempted_at when user hasn't been seen in a while" do
+        user.update!(last_seen_at: 7.days.ago)
+        user.user_stat.update!(digest_attempted_at: 30.minutes.ago)
+        expect(email.to).to be_nil
+      end
+
+      it "uses last_seen_at when user has been sent a digest in a while" do
+        user.update!(last_seen_at: 30.minutes.ago)
+        user.user_stat.update!(digest_attempted_at: 7.days.ago)
+        expect(email.to).to be_nil
+      end
+
+      it "caps at 1 month when user has never been seen or sent a digest" do
+        old_topic = Fabricate(:topic, created_at: 2.months.ago)
+
+        user.update!(last_seen_at: nil)
+        user.user_stat.update!(digest_attempted_at: nil)
+        expect(email.to).to contain_exactly(user.email)
+
+        html = email.html_part.body.to_s
+        expect(html).not_to include(old_topic.title)
+      end
     end
   end
 

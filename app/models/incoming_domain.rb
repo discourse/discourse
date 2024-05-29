@@ -3,7 +3,7 @@
 class IncomingDomain < ActiveRecord::Base
   def self.add!(uri)
     name = uri.host
-    return unless name.present?
+    return if name.blank?
 
     https = uri.scheme == "https"
     port = uri.port
