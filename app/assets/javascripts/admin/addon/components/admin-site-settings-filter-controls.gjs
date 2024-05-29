@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
 import i18n from "discourse-common/helpers/i18n";
 
 export default class AdminSiteSettingsFilterControls extends Component {
@@ -26,6 +25,12 @@ export default class AdminSiteSettingsFilterControls extends Component {
       filter: this.filter,
       onlyOverridden: this.onlyOverridden,
     });
+  }
+
+  @action
+  onChangeFilterInput(event) {
+    this.filter = event.target.value;
+    this.onChangeFilter();
   }
 
   @action
@@ -57,14 +62,14 @@ export default class AdminSiteSettingsFilterControls extends Component {
               class="menu-toggle"
             />
           {{/if}}
-          <TextField
-            @type="text"
-            @value={{this.filter}}
-            placeholder={{i18n "type_to_filter"}}
-            @onChange={{this.onChangeFilter}}
-            class="no-blur"
+          <input
+            {{on "input" this.onChangeFilterInput}}
             id="setting-filter"
+            class="no-blur admin-site-settings-filter-controls__input"
+            placeholder={{i18n "type_to_filter"}}
             autocomplete="off"
+            type="text"
+            value={{this.filter}}
           />
           <DButton
             @action={{this.clearFilter}}
