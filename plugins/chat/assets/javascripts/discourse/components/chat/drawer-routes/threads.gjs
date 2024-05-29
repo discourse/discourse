@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { i18n } from "discourse-i18n";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import UserThreads from "discourse/plugins/chat/discourse/components/user-threads";
 

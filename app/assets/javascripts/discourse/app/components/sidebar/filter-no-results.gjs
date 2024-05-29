@@ -2,8 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
-import { i18n } from "discourse-i18n";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 export default class FilterNoResults extends Component {
   @service sidebarState;

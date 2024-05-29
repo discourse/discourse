@@ -16,8 +16,7 @@ import {
   findTableRegex,
   tokenRange,
 } from "discourse/lib/utilities";
-import { i18n } from "discourse-i18n";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
 
 export default class SpreadsheetEditor extends Component {

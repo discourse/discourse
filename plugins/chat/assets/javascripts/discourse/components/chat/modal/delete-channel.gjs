@@ -9,8 +9,7 @@ import DModal from "discourse/components/d-modal";
 import TextField from "discourse/components/text-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseLater from "discourse-common/lib/later";
-import { i18n } from "discourse-i18n";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 
 export default class ChatModalDeleteChannel extends Component {
   @service chatApi;

@@ -5,8 +5,7 @@ import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { i18n } from "discourse-i18n";
-import I18n from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ChatModalToggleChannelStatus extends Component {
