@@ -453,6 +453,36 @@
   }
 }
 
+.btn-ghost {
+  justify-content: flex-start;
+  background: transparent !important;
+  border: 0;
+  padding: 0;
+  color: var(--primary);
+  border-radius: 0;
+  text-align: left;
+  &:focus,
+  &:focus-visible {
+    color: var(--primary);
+    .d-icon {
+      color: var(--primary-high);
+    }
+  }
+  .discourse-no-touch & {
+    &:hover {
+      color: var(--primary);
+      .d-icon {
+        color: var(--primary-high);
+      }
+    }
+    &:active:not(:hover):not(:focus) {
+      color: var(--primary);
+      .d-icon {
+        color: var(--primary-high);
+      }
+    }
+  }
+}
 .btn-mini-toggle {
   border-radius: var(--d-border-radius);
   padding: 0.4em 0.467em;
