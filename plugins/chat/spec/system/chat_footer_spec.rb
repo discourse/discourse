@@ -116,10 +116,7 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
           user: user_2,
         )
 
-        expect(page).to have_css(
-          "#c-footer-channels .c-unread-indicator.-urgent",
-          text: "1",
-        )
+        expect(page).to have_css("#c-footer-channels .c-unread-indicator.-urgent", text: "1")
       end
     end
 
