@@ -36,6 +36,39 @@ class Demon::Base
     @demons.values.each { |demon| demon.kill(signal) }
   end
 
+  def self.logger
+    @@logger ||= Logger.new(STDERR)
+  end
+
+  def self.logger=(new_logger)
+    @@logger = new_logger
+  end
+
+  def self.log(message, level: info)
+    logger.public_send(level, message)
+  end
+
+  def self.log_in_trap(message, level: :info)
+    # We use an IO pipe and log messages using the logger in a seperate thread to avoid the `log writing failed. can't be called from trap context`
+    # error message that is raised when trying to log from within a `Signal.trap` block.
+    if !defined?(@logger_read_pipe)
+      @@logger_read_pipe, @@logger_write_pipe = IO.pipe
+
+      @@logger_thread =
+        Thread.new do
+          begin
+            while readable_io = IO.select([@@logger_read_pipe])
+              logger.public_send(level, readable_io.first[0].gets.strip)
+            end
+          rescue => e
+            logger.error("Error in demon logger thread: #{e.message}\n#{e.backtrace.join("\n")}")
+          end
+        end
+    end
+
+    @@logger_write_pipe.puts(message)
+  end
+
   attr_reader :pid, :parent_pid, :started, :index
   attr_accessor :stop_timeout
 
@@ -47,6 +80,14 @@ class Demon::Base
     @stop_timeout = 10
     @rails_root = rails_root || Rails.root
     @verbose = verbose
+  end
+
+  def log(message, level: :info)
+    self.class.log(message, level:)
+  end
+
+  def log_in_trap(message, level: :info)
+    self.class.log_in_trap(message, level:)
   end
 
   def pid_file
@@ -72,6 +113,7 @@ class Demon::Base
 
   def stop
     @started = false
+
     if @pid
       Process.kill(stop_signal, @pid)
 
@@ -99,7 +141,7 @@ class Demon::Base
       wait_for_stop.call
 
       if alive?
-        STDERR.puts "Process would not terminate cleanly, force quitting. pid: #{@pid} #{self.class}"
+        log("Process would not terminate cleanly, force quitting. pid: #{@pid} #{self.class}")
         Process.kill("KILL", @pid)
       end
 
@@ -125,8 +167,9 @@ class Demon::Base
       rescue StandardError
         -1
       end
+
     if dead
-      STDERR.puts "Detected dead worker #{@pid}, restarting..."
+      log("Detected dead worker #{@pid}, restarting...")
       @pid = nil
       @started = false
       start
@@ -138,7 +181,7 @@ class Demon::Base
 
     if existing = already_running?
       # should not happen ... so kill violently
-      STDERR.puts "Attempting to kill pid #{existing}"
+      log("Attempting to kill pid #{existing}")
       Process.kill("TERM", existing)
     end
 
@@ -199,7 +242,7 @@ class Demon::Base
             Process.kill "KILL", Process.pid
           end
         rescue => e
-          STDERR.puts "URGENT monitoring thread had an exception #{e}"
+          log("URGENT monitoring thread had an exception #{e}")
         end
         sleep 1
       end

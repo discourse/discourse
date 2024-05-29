@@ -79,17 +79,18 @@ before_fork do |server, worker|
       end
     end
 
+    Demon::Base.logger = server.logger
+
     sidekiqs = ENV["UNICORN_SIDEKIQS"].to_i
     if sidekiqs > 0
       server.logger.info "starting #{sidekiqs} supervised sidekiqs"
 
       require "demon/sidekiq"
-      Demon::Sidekiq.logger = server.logger
       Demon::Sidekiq.after_fork { DiscourseEvent.trigger(:sidekiq_fork_started) }
       Demon::Sidekiq.start(sidekiqs)
 
       Signal.trap("SIGTSTP") do
-        Demon::Sidekiq.log("Issuing stop to Sidekiq")
+        Demon::Sidekiq.log_in_trap("Issuing stop to Sidekiq")
         Demon::Sidekiq.stop
       end
 
