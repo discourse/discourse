@@ -46,6 +46,9 @@ export default class BulkSelectTopicsDropdown extends Component {
         id: "update-category",
         icon: "pencil-alt",
         name: i18n("topic_bulk_actions.update_category.name"),
+        visible: ({ topics }) => {
+          return !topics.some((t) => t.isPrivateMessage);
+        },
       },
       {
         id: "update-notifications",

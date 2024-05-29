@@ -3078,15 +3078,15 @@ en:
 
     topic_bulk_actions:
       close_topics:
-        name: "Close Topics"
+        name: "Close"
         note: "Note"
         optional: (optional)
       archive_topics:
-        name: "Archive Topics"
+        name: "Archive"
       unlist_topics:
-        name: "Unlist Topics"
+        name: "Unlist"
       relist_topics:
-        name: "Relist Topics"
+        name: "Relist"
       remove_tags:
         name: "Remove Tags"
       append_tags:
@@ -3094,7 +3094,7 @@ en:
       replace_tags:
         name: "Replace Tags"
       delete_topics:
-        name: "Delete Topics"
+        name: "Delete"
       update_category:
         name: "Update Category"
         description: "Choose the new category for the selected topics"
