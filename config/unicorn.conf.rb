@@ -268,4 +268,9 @@ end
 after_fork do |server, worker|
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.after_fork
+
+  Signal.trap("USR2") { puts <<~MSG }
+      [#{Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S.%6N")} ##{Process.pid}] Received USR2 signal, dumping backtrace for all threads
+      #{Thread.list.map { |t| "#{t.backtrace&.join("\n")}" }.join("\n\n")}
+    MSG
 end

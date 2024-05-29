@@ -35,6 +35,33 @@
         <div class="emails">
           {{#each this.emails as |email|}}
             <div class="row email">
+              <div class="email-first">{{email.email}}</div>
+              <div class="email-second">
+                {{#if email.primary}}
+                  <span class="primary">
+                    {{i18n "user.email.primary_label"}}
+                  </span>
+                {{/if}}
+                {{#unless email.confirmed}}
+                  <span class="unconfirmed">
+                    {{i18n "user.email.unconfirmed_label"}}
+                  </span>
+                  &bull;
+                  {{#if email.resending}}
+                    <span>{{i18n "user.email.resending_label"}}</span>
+                  {{else if email.resent}}
+                    <span>{{i18n "user.email.resent_label"}}</span>
+                  {{else}}
+                    <button
+                      type="button"
+                      class="resend-email-confirmation"
+                      {{on "click" (fn this.resendConfirmationEmail email)}}
+                    >
+                      {{i18n "user.email.resend_label"}}
+                    </button>
+                  {{/if}}
+                {{/unless}}
+              </div>
               {{#if this.model.can_edit_email}}
                 <EmailDropdown
                   @email={{email}}
@@ -42,46 +69,17 @@
                   @destroyEmail={{action "destroyEmail"}}
                 />
               {{/if}}
-
-              <div class="email-first">{{email.email}}</div>
-
-              <div class="email-second">
-                {{#if email.primary}}
-                  <span class="primary">{{i18n
-                      "user.email.primary_label"
-                    }}</span>
-                {{/if}}
-
-                {{#unless email.confirmed}}
-                  <span class="unconfirmed">{{i18n
-                      "user.email.unconfirmed_label"
-                    }}</span>
-                  &bull;
-                  {{#if email.resending}}
-                    <span>{{i18n "user.email.resending_label"}}</span>
-                  {{else if email.resent}}
-                    <span>{{i18n "user.email.resent_label"}}</span>
-                  {{else}}
-                    <a
-                      {{on "click" (fn this.resendConfirmationEmail email)}}
-                      href
-                    >{{i18n "user.email.resend_label"}}</a>
-                  {{/if}}
-                {{/unless}}
-              </div>
             </div>
           {{/each}}
         </div>
 
         {{#if this.canAddEmail}}
-          <LinkTo
-            @route="preferences.email"
-            @query={{hash new=1}}
-            class="pull-right"
-          >
-            {{d-icon "plus"}}
-            {{i18n "user.email.add_email"}}
-          </LinkTo>
+          <div class="controls">
+            <LinkTo @route="preferences.email" @query={{hash new=1}}>
+              {{d-icon "plus"}}
+              {{i18n "user.email.add_email"}}
+            </LinkTo>
+          </div>
         {{/if}}
       {{else}}
         <div class="controls">
@@ -90,7 +88,9 @@
             <LinkTo
               @route="preferences.email"
               class="btn btn-default btn-small btn-icon pad-left no-text"
-            >{{d-icon "pencil-alt"}}</LinkTo>
+            >
+              {{d-icon "pencil-alt"}}
+            </LinkTo>
           {{/if}}
         </div>
       {{/if}}

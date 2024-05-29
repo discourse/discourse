@@ -18,6 +18,7 @@ module("Integration | Component | admin-plugins-list-item", function (hooks) {
         full_location: "admin",
       },
       has_settings: true,
+      has_only_enabled_setting: false,
     };
   }
 
@@ -55,5 +56,19 @@ module("Integration | Component | admin-plugins-list-item", function (hooks) {
     this.plugin.hasSettings = false;
     await render(hbs`<AdminPluginsListItem @plugin={{this.plugin}} />`);
     assert.dom(".admin-plugins-list__settings a").doesNotExist();
+  });
+
+  test("settings link disabled if only the enabled setting exists", async function (assert) {
+    this.currentUser.admin = true;
+    const store = getOwner(this).lookup("service:store");
+    this.plugin = store.createRecord("admin-plugin", pluginAttrs());
+
+    await render(hbs`<AdminPluginsListItem @plugin={{this.plugin}} />`);
+
+    assert.dom(".admin-plugins-list__settings a.disabled").doesNotExist();
+
+    this.plugin.hasOnlyEnabledSetting = true;
+    await render(hbs`<AdminPluginsListItem @plugin={{this.plugin}} />`);
+    assert.dom(".admin-plugins-list__settings a.disabled").exists();
   });
 });

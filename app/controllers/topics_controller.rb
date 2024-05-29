@@ -1394,7 +1394,7 @@ class TopicsController < ApplicationController
   end
 
   def check_for_status_presence(key, attr)
-    invalid_param(key) unless %w[pinned pinned_globally visible closed archived].include?(attr)
+    invalid_param(key) if %w[pinned pinned_globally visible closed archived].exclude?(attr)
   end
 
   def invalid_param(key)

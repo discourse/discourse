@@ -1101,6 +1101,8 @@ Discourse::Application.routes.draw do
     delete "admin/groups/:id/members" => "groups#remove_member", :constraints => AdminConstraint.new
     put "admin/groups/:id/members" => "groups#add_members", :constraints => AdminConstraint.new
 
+    put "bookmarks/bulk"
+
     resources :posts, only: %i[show update create destroy] do
       delete "bookmark", to: "posts#destroy_bookmark"
       put "wiki"
@@ -1581,6 +1583,9 @@ Discourse::Application.routes.draw do
            constraints: HomePageConstraint.new("#{filter}"),
            as: "list_#{filter}"
     end
+
+    get "/t/:topic_id/view-stats.json" => "topic_view_stats#index"
+
     # special case for categories
     root to: "categories#index",
          constraints: HomePageConstraint.new("categories"),

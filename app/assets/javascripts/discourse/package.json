@@ -32,8 +32,8 @@
     "decorator-transforms": "^2.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.5",
-    "@babel/standalone": "^7.24.5",
+    "@babel/core": "^7.24.6",
+    "@babel/standalone": "^7.24.6",
     "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
@@ -76,7 +76,7 @@
     "discourse-i18n": "1.0.0",
     "discourse-markdown-it": "1.0.0",
     "discourse-plugins": "1.0.0",
-    "ember-auto-import": "^2.7.2",
+    "ember-auto-import": "^2.7.3",
     "ember-buffered-proxy": "^2.1.1",
     "ember-cached-decorator-polyfill": "^1.0.2",
     "ember-cli": "~5.8.1",

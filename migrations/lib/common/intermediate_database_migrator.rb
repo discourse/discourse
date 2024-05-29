@@ -41,7 +41,7 @@ module Migrations
         Dir[file_pattern].sort.each do |path|
           relative_path = Pathname(path).relative_path_from(Migrations.root_path).to_s
 
-          unless performed_migrations.include?(relative_path)
+          if performed_migrations.exclude?(relative_path)
             sql = File.read(path)
             sql_hash = Digest::SHA1.hexdigest(sql)
             connection.execute(sql)

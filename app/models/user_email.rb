@@ -69,7 +69,7 @@ class UserEmail < ActiveRecord::Base
       self.errors.add(
         :user_id,
         I18n.t(
-          "active_record.errors.model.user_email.attributes.user_id.reassigning_primary_email",
+          "activerecord.errors.models.user_email.attributes.user_id.reassigning_primary_email",
         ),
       )
     end

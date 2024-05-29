@@ -197,6 +197,9 @@ class Plugin::Instance
 
   # Applies to all sites in a multisite environment. Ignores plugin.enabled?
   def replace_flags(settings: ::FlagSettings.new, score_type_names: [])
+    Discourse.deprecate(
+      "replace flags should not be used as flags were moved to the database. Instead, a flag record should be added to the database. Alternatively, soon, the admin will be able to do this in the admin panel.",
+    )
     next_flag_id = ReviewableScore.types.values.max + 1
 
     yield(settings, next_flag_id) if block_given?
@@ -715,7 +718,7 @@ class Plugin::Instance
   end
 
   def register_emoji(name, url, group = Emoji::DEFAULT_GROUP)
-    name = name.gsub(/[^a-z0-9]+/i, "_").gsub(/_{2,}/, "_").downcase
+    name = Emoji.sanitize_emoji_name(name)
     Plugin::CustomEmoji.register(name, url, group)
     Emoji.clear_cache
   end
@@ -750,7 +753,7 @@ class Plugin::Instance
       assets.concat(auto_assets)
     end
 
-    register_assets! unless assets.blank?
+    register_assets! if assets.present?
     register_locales!
     register_service_workers!
 

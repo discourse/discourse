@@ -129,7 +129,7 @@ class InviteRedeemer
         field_val = field_params[f.id.to_s]
         fields["#{User::USER_FIELD_PREFIX}#{f.id}"] = field_val[
           0...UserField.max_length
-        ] unless field_val.blank?
+        ] if field_val.present?
       end
       user.custom_fields = fields
     end

@@ -15,7 +15,7 @@ class FinishInstallationController < ApplicationController
     @user = User.new
     if request.post?
       email = params[:email].strip
-      raise Discourse::InvalidParameters.new unless @allowed_emails.include?(email)
+      raise Discourse::InvalidParameters.new if @allowed_emails.exclude?(email)
 
       if existing_user = User.find_by_email(email)
         @user = existing_user

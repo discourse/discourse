@@ -589,6 +589,8 @@ class BulkImport::Base
     visible
     closed
     pinned_at
+    pinned_until
+    pinned_globally
     views
     subtype
     created_at
@@ -1851,7 +1853,7 @@ class BulkImport::Base
   end
 
   def normalize_text(text)
-    return nil unless text.present?
+    return nil if text.blank?
     @html_entities.decode(normalize_charset(text.presence || "").scrub)
   end
 

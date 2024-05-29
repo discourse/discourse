@@ -6,24 +6,6 @@ RSpec.describe AdminDashboardData do
     Discourse.redis.flushdb
   end
 
-  describe "#fetch_problems" do
-    describe "adding problem messages" do
-      it "adds the message and returns it when the problems are fetched" do
-        AdminDashboardData.add_problem_message("dashboard.bad_favicon_url")
-        problems = AdminDashboardData.fetch_problems.map(&:to_s)
-        expect(problems).to include(
-          I18n.t("dashboard.bad_favicon_url", { base_path: Discourse.base_path }),
-        )
-      end
-
-      it "does not allow adding of arbitrary problem messages, they must exist in AdminDashboardData.problem_messages" do
-        AdminDashboardData.add_problem_message("errors.messages.invalid")
-        problems = AdminDashboardData.fetch_problems.map(&:to_s)
-        expect(problems).not_to include(I18n.t("errors.messages.invalid"))
-      end
-    end
-  end
-
   describe "adding scheduled checks" do
     it "does not add duplicate problems with the same identifier" do
       prob1 = ProblemCheck::Problem.new("test problem", identifier: "test")

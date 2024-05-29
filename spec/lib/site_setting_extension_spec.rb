@@ -330,6 +330,8 @@ RSpec.describe SiteSettingExtension do
 
   describe "string setting with regex" do
     it "Supports custom validation errors" do
+      I18n.backend.store_translations(:en, { oops: "oops" })
+
       settings.setting(:test_str, "bob", regex: "hi", regex_error: "oops")
       settings.refresh!
 

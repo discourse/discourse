@@ -7,7 +7,55 @@
       <thead class="topic-list-header">
         {{#if this.site.desktopView}}
           <PluginOutlet @name="bookmark-list-table-header">
-            <th class="topic-list-data">{{i18n "topic.title"}}</th>
+            {{#if this.bulkSelectEnabled}}
+              <th class="bulk-select topic-list-data">
+                <FlatButton
+                  @action={{this.toggleBulkSelect}}
+                  @class="bulk-select"
+                  @icon="tasks"
+                  @title="bookmarks.bulk.toggle"
+                />
+              </th>
+            {{/if}}
+            <th class="topic-list-data">
+
+              {{#if this.bulkSelectEnabled}}
+                <span class="bulk-select-topics">
+                  {{~#if this.canDoBulkActions}}
+                    <div class="bulk-select-bookmarks-dropdown">
+                      <span class="bulk-select-bookmark-dropdown__count">
+                        {{i18n
+                          "bookmarks.bulk.selected_count"
+                          count=this.selectedCount
+                        }}
+                      </span>
+                      <BulkSelectBookmarksDropdown
+                        @bulkSelectHelper={{this.bulkSelectHelper}}
+                      />
+                    </div>
+
+                  {{/if~}}
+                  <DButton
+                    @action={{this.selectAll}}
+                    class="btn btn-default bulk-select-all"
+                    @label="bookmarks.bulk.select_all"
+                  />
+                  <DButton
+                    @action={{this.clearAll}}
+                    class="btn btn-default bulk-clear-all"
+                    @label="bookmarks.bulk.clear_all"
+                  />
+                </span>
+              {{else}}
+                <FlatButton
+                  @action={{this.toggleBulkSelect}}
+                  @class="bulk-select"
+                  @icon="tasks"
+                  @title="bookmarks.bulk.toggle"
+                />
+                {{i18n "topic.title"}}
+              {{/if~}}
+            </th>
             <th class="topic-list-data">&nbsp;</th>
             <th class="post-metadata topic-list-data">{{i18n
                 "post.bookmarks.updated"
@@ -20,6 +68,18 @@
       <tbody class="topic-list-body">
         {{#each this.content as |bookmark|}}
           <tr class="topic-list-item bookmark-list-item">
+            {{#if this.bulkSelectEnabled}}
+              <td class="bulk-select bookmark-list-data">
+                <label for="bulk-select-{{bookmark.id}}">
+                  <input
+                    type="checkbox"
+                    class="bulk-select"
+                    id="bulk-select-{{bookmark.id}}"
+                    data-id={{bookmark.id}}
+                  />
+                </label>
+              </td>
+            {{/if}}
             <th scope="row" class="main-link topic-list-data">
               <span class="link-top-line">
                 <div class="bookmark-metadata">

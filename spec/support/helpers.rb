@@ -206,7 +206,7 @@ module Helpers
   def track_sql_queries
     queries = []
     callback = ->(*, payload) do
-      queries << payload.fetch(:sql) unless %w[CACHE SCHEMA].include?(payload.fetch(:name))
+      queries << payload.fetch(:sql) if %w[CACHE SCHEMA].exclude?(payload.fetch(:name))
     end
 
     ActiveSupport::Notifications.subscribed(callback, "sql.active_record") { yield }

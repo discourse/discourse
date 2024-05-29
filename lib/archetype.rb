@@ -27,13 +27,18 @@ class Archetype
   end
 
   def self.list
-    return [] unless @archetypes.present?
+    return [] if @archetypes.blank?
     @archetypes.values
   end
 
   def self.register(name, options = {})
     @archetypes ||= {}
     @archetypes[name] = Archetype.new(name, options)
+  end
+
+  def self.deregister(name)
+    @archetypes ||= {}
+    @archetypes.delete(name)
   end
 
   # default archetypes

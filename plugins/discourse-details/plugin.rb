@@ -37,7 +37,7 @@ after_initialize do
       .each do |el|
         text = el.css("summary").text
         link = fragment.document.create_element("a")
-        link["href"] = post.url if post
+        link["href"] = post&.url.presence || Discourse.base_url
         link.content = I18n.t("details.excerpt_details")
         el.replace CGI.escapeHTML(text) + " " + link.to_html
       end

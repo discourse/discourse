@@ -216,6 +216,18 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Trashes (soft deletes) multiple chat messages.
+   * @param {number} channelId - ID of the channel.
+   * @param {Array.<number>} messageIds - IDs of the messages to delete.
+   * @returns {Promise}
+   */
+  trashMessages(channelId, messageIds) {
+    return this.#deleteRequest(`/channels/${channelId}/messages`, {
+      message_ids: messageIds,
+    });
+  }
+
+  /**
    * Creates a channel archive.
    * @param {number} channelId - The ID of the channel.
    * @param {object} data - Params of the archive.

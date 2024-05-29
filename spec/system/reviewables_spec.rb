@@ -5,6 +5,8 @@ describe "Reviewables", type: :system do
   fab!(:admin)
   fab!(:theme)
   fab!(:long_post) { Fabricate(:post_with_very_long_raw_content) }
+  fab!(:post)
+  let(:composer) { PageObjects::Components::Composer.new }
 
   before { sign_in(admin) }
 
@@ -23,12 +25,35 @@ describe "Reviewables", type: :system do
   end
 
   describe "when there is a flagged post reviewable with a short post" do
-    fab!(:short_reviewable) { Fabricate(:reviewable_flagged_post) }
+    fab!(:short_reviewable) { Fabricate(:reviewable_flagged_post, target: post) }
 
     it "should not show a button to expand/collapse the post content" do
       visit("/review")
       expect(review_page).to have_no_post_body_collapsed
       expect(review_page).to have_no_post_body_toggle
+    end
+
+    describe "reviewable actions" do
+      it "should have agree_and_edit action" do
+        visit("/review")
+        select_kit =
+          PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide")
+        select_kit.expand
+
+        expect(select_kit).to have_option_value("post-agree_and_edit")
+      end
+
+      it "agree_and_edit should open the composer" do
+        visit("/review")
+        select_kit =
+          PageObjects::Components::SelectKit.new(".dropdown-select-box.post-agree-and-hide")
+        select_kit.expand
+
+        find("[data-value='post-agree_and_edit']").click
+
+        expect(composer).to be_opened
+        expect(composer.composer_input.value).to eq(post.raw)
+      end
     end
   end
 

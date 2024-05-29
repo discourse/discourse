@@ -6,6 +6,33 @@ RSpec.describe TopicViewItem do
     TopicViewItem.add(topic_id, ip, user_id, nil, skip_redis)
   end
 
+  it "correctly increase topic view stats" do
+    topic = Fabricate(:topic)
+
+    freeze_time "2021-01-01 12:00"
+
+    add(topic.id, "1.1.1.1", nil)
+    add(topic.id, "1.1.1.1", nil)
+
+    stat = TopicViewStat.find_by(topic_id: topic.id, viewed_at: Date.today)
+    expect(stat.anonymous_views).to eq(2)
+    expect(stat.logged_in_views).to eq(0)
+
+    add(topic.id, "1.1.1.1", topic.user.id)
+    stat.reload
+
+    expect(stat.anonymous_views).to eq(2)
+    expect(stat.logged_in_views).to eq(1)
+
+    freeze_time(1.day.from_now)
+
+    add(topic.id, "1.1.1.1", nil)
+    stat = TopicViewStat.find_by(topic_id: topic.id, viewed_at: Date.today)
+
+    expect(stat.anonymous_views).to eq(1)
+    expect(stat.logged_in_views).to eq(0)
+  end
+
   it "raises nothing for dupes" do
     add(2, "1.1.1.1")
     add(2, "1.1.1.1", 1)

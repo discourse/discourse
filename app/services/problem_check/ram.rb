@@ -11,10 +11,4 @@ class ProblemCheck::Ram < ProblemCheck
 
     problem
   end
-
-  private
-
-  def translation_key
-    "dashboard.memory_warning"
-  end
 end

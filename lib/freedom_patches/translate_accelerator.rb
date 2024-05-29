@@ -73,7 +73,7 @@ module I18n
       execute_reload if @requires_reload
 
       locale = (opts[:locale] || config.locale).to_sym
-      load_locale(locale) unless @loaded_locales.include?(locale)
+      load_locale(locale) if @loaded_locales.exclude?(locale)
 
       results = {}
       regexp = I18n::Backend::DiscourseI18n.create_search_regexp(query)
@@ -99,7 +99,7 @@ module I18n
     def ensure_loaded!(locale)
       locale = locale.to_sym
       @loaded_locales ||= []
-      load_locale(locale) unless @loaded_locales.include?(locale)
+      load_locale(locale) if @loaded_locales.exclude?(locale)
     end
 
     # In some environments such as migrations we don't want to use overrides.
@@ -122,7 +122,8 @@ module I18n
       dup_options = nil
       if options
         dup_options = options.dup
-        should_raise = dup_options.delete(:raise)
+        should_raise =
+          dup_options.delete(:raise) || Rails.application.config.i18n.raise_on_missing_translations
         locale = dup_options.delete(:locale)
       end
 
@@ -197,7 +198,7 @@ module I18n
       key = args.shift
       locale = (options[:locale] || config.locale).to_sym
 
-      load_locale(locale) unless @loaded_locales.include?(locale)
+      load_locale(locale) if @loaded_locales.exclude?(locale)
 
       if @overrides_enabled
         overrides = {}
@@ -233,7 +234,7 @@ module I18n
 
       locale ||= config.locale
       locale = locale.to_sym
-      load_locale(locale) unless @loaded_locales.include?(locale)
+      load_locale(locale) if @loaded_locales.exclude?(locale)
       exists_no_cache?(key, locale)
     end
 

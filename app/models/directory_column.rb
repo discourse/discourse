@@ -49,7 +49,7 @@ class DirectoryColumn < ActiveRecord::Base
         column.enabled = false
       end
 
-    unless @@plugin_directory_columns.include?(directory_column.name)
+    if @@plugin_directory_columns.exclude?(directory_column.name)
       @@plugin_directory_columns << directory_column.name
       DirectoryItem.add_plugin_query(attrs[:query])
     end

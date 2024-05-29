@@ -16,7 +16,7 @@ class ProblemCheck::UnreachableThemes < ProblemCheck
   end
 
   def message
-    "#{I18n.t("dashboard.unreachable_themes")}<ul>#{themes_list}</ul>"
+    "#{I18n.t("dashboard.problem.unreachable_themes")}<ul>#{themes_list}</ul>"
   end
 
   def themes_list

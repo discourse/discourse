@@ -269,7 +269,7 @@ class CategoriesController < ApplicationController
     @category =
       Category.includes(:category_setting).find_by_slug_path(params[:category_slug].split("/"))
 
-    raise Discourse::NotFound unless @category.present?
+    raise Discourse::NotFound if @category.blank?
 
     if !guardian.can_see?(@category)
       if SiteSetting.detailed_404 && group = @category.access_category_via_group

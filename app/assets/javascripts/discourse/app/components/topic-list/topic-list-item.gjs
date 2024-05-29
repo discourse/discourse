@@ -300,14 +300,13 @@ export default class TopicListItem extends Component {
         <td class="main-link clearfix topic-list-data" colspan="1">
           <PluginOutlet @name="topic-list-before-link" />
 
-          <span class="link-top-line">{{! no whitespace
-          }}<PluginOutlet
-              @name="topic-list-before-status"
-            />{{! no whitespace
-          }}<TopicStatus
-              @topic={{@topic}}
-            />{{! no whitespace
-          }}<TopicLink
+          <span class="link-top-line">
+            {{~! no whitespace ~}}
+            <PluginOutlet @name="topic-list-before-status" />
+            {{~! no whitespace ~}}
+            <TopicStatus @topic={{@topic}} />
+            {{~! no whitespace ~}}
+            <TopicLink
               {{on "focus" this.onTitleFocus}}
               {{on "blur" this.onTitleBlur}}
               @topic={{@topic}}
@@ -317,10 +316,8 @@ export default class TopicListItem extends Component {
               &nbsp;
               {{~topicFeaturedLink @topic}}
             {{~/if~}}
-            <PluginOutlet
-              @name="topic-list-after-title"
-            />{{! no whitespace
-          }}
+            <PluginOutlet @name="topic-list-after-title" />
+            {{~! no whitespace ~}}
             <UnreadIndicator
               @includeUnreadIndicator={{this.includeUnreadIndicator}}
               @topicId={{@topic.id}}
@@ -428,23 +425,17 @@ export default class TopicListItem extends Component {
             {{/if}}
           </div>
 
-          <div
-            class="topic-item-metadata right"
-          >{{! no whitespace
-            }}<PluginOutlet
-              @name="topic-list-before-link"
-            />
+          <div class="topic-item-metadata right">
+            {{~! no whitespace ~}}
+            <PluginOutlet @name="topic-list-before-link" />
 
-            <div
-              class="main-link"
-            >{{! no whitespace
-              }}<PluginOutlet
-                @name="topic-list-before-status"
-              />{{! no whitespace
-              }}<TopicStatus
-                @topic={{@topic}}
-              />{{! no whitespace
-              }}<TopicLink
+            <div class="main-link">
+              {{~! no whitespace ~}}
+              <PluginOutlet @name="topic-list-before-status" />
+              {{~! no whitespace ~}}
+              <TopicStatus @topic={{@topic}} />
+              {{~! no whitespace ~}}
+              <TopicLink
                 {{on "focus" this.onTitleFocus}}
                 {{on "blur" this.onTitleBlur}}
                 @topic={{@topic}}
@@ -463,10 +454,9 @@ export default class TopicListItem extends Component {
                 <TopicExcerpt @topic={{@topic}} />
               {{~/if~}}
               <PluginOutlet @name="topic-list-main-link-bottom" />
-            </div>{{! no whitespace
-            }}<PluginOutlet
-              @name="topic-list-after-main-link"
-            />
+            </div>
+            {{~! no whitespace ~}}
+            <PluginOutlet @name="topic-list-after-main-link" />
 
             <div class="pull-right">
               <PostCountOrBadges

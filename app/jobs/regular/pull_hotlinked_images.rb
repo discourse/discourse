@@ -152,7 +152,7 @@ module Jobs
 
     def should_download_image?(src, post = nil)
       # make sure we actually have a url
-      return false unless src.present?
+      return false if src.blank?
 
       local_bases =
         [Discourse.base_url, Discourse.asset_host, SiteSetting.external_emoji_url.presence].compact
