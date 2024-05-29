@@ -84,12 +84,12 @@ before_fork do |server, worker|
       server.logger.info "starting #{sidekiqs} supervised sidekiqs"
 
       require "demon/sidekiq"
+      Demon::Sidekiq.logger = server.logger
       Demon::Sidekiq.after_fork { DiscourseEvent.trigger(:sidekiq_fork_started) }
-
       Demon::Sidekiq.start(sidekiqs)
 
       Signal.trap("SIGTSTP") do
-        STDERR.puts "#{Time.now}: Issuing stop to sidekiq"
+        Demon::Sidekiq.log("Issuing stop to Sidekiq")
         Demon::Sidekiq.stop
       end
 
