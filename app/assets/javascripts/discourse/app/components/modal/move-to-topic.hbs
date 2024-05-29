@@ -141,8 +141,8 @@
         </p>
         <form>
           <ChooseTopic
+            @topicChangedCallback={{this.newTopicSelected}}
             @currentTopicId={{@model.topic.id}}
-            @selectedTopicId={{this.selectedTopicId}}
           />
 
           {{#if this.selectedTopicId}}
