@@ -23,7 +23,7 @@
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
     "ember-route-template": "^1.0.3",
-    "ember-source": "~5.5.0",
+    "ember-source": "~5.8.0",
     "handlebars": "^4.7.8",
     "highlight.js": "^11.9.0",
     "jspreadsheet-ce": "^4.13.4",
