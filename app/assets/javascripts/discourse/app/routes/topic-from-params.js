@@ -10,7 +10,6 @@ import { isTesting } from "discourse-common/config/environment";
 // This route is used for retrieving a topic based on params
 export default DiscourseRoute.extend({
   composer: service(),
-  header: service(),
 
   // Avoid default model hook
   model(params) {
@@ -45,8 +44,6 @@ export default DiscourseRoute.extend({
     if (topic.isPrivateMessage && topic.suggested_topics) {
       this.pmTopicTrackingState.startTracking();
     }
-
-    this.header.topic = topic;
   },
 
   deactivate() {

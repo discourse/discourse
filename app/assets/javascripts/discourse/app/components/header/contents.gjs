@@ -16,7 +16,7 @@ export default class Contents extends Component {
   @service sidebarState;
 
   get topicPresent() {
-    return this.header.inTopic;
+    return !!this.header.topic;
   }
 
   get sidebarIcon() {
@@ -45,7 +45,7 @@ export default class Contents extends Component {
         </PluginOutlet>
       </div>
 
-      {{#if this.header.inTopic}}
+      {{#if this.header.topic}}
         <TopicInfo @topic={{this.header.topic}} />
       {{else if
         (and

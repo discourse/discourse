@@ -8,7 +8,7 @@ export default class AuthButtons extends Component {
 
   <template>
     <span class="auth-buttons">
-      {{#if (and @canSignUp (not this.header.inTopic))}}
+      {{#if (and @canSignUp (not this.header.topic))}}
         <DButton
           class="btn-primary btn-small sign-up-button"
           @action={{@showCreateAccount}}
