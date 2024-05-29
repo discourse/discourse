@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { isEmpty, isPresent } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { searchForTerm } from "discourse/lib/search";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { debounce } from "discourse-common/utils/decorators";
@@ -37,6 +38,8 @@ export default class ChooseTopic extends Component {
       this.topics = results.posts
         .mapBy("topic")
         .filter((t) => t.id !== this.args.currentTopicId);
+    } catch (e) {
+      popupAjaxError(e);
     } finally {
       this.loading = false;
     }
@@ -88,6 +91,8 @@ export default class ChooseTopic extends Component {
       if (this.topics.length === 1) {
         this.chooseTopic(this.topics[0]);
       }
+    } catch (e) {
+      popupAjaxError(e);
     } finally {
       this.loading = false;
     }
