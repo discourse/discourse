@@ -11,6 +11,15 @@
   }
 }
 
+.c-footer {
+  &__item {
+    .c-unread-indicator,
+    .c-unread-indicator.-urgent {
+      margin-left: 1rem;
+    }
+  }
+}
+
 .has-full-page-chat div#reply-control {
   display: none;
 }
