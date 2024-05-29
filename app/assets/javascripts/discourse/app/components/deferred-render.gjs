@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import runAfterFramePaint from "discourse/lib/after-frame-paint";
 
 export default class DeferredRender extends Component {
@@ -14,8 +13,6 @@ export default class DeferredRender extends Component {
   <template>
     {{#if this.shouldRender}}
       {{yield}}
-    {{else}}
-      {{loadingSpinner}}
     {{/if}}
   </template>
 }
