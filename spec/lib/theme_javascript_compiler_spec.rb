@@ -251,9 +251,23 @@ RSpec.describe ThemeJavascriptCompiler do
       expect(compiler.raw_content).to include(
         "define(\"discourse/theme-1/discourse/components/my-component\", [\"exports\",",
       )
-      expect(compiler.raw_content).to include("_defineProperty(this, \"value\", \"foo\");")
+      expect(compiler.raw_content).to include('value = "foo";')
       expect(compiler.raw_content).to include("setComponentTemplate")
       expect(compiler.raw_content).to include("createTemplateFactory")
+    end
+  end
+
+  describe "safari <16 class field bugfix" do
+    it "is applied" do
+      compiler.append_tree({ "discourse/components/my-component.js" => <<~JS })
+        export default class MyComponent extends Component {
+          value = "foo";
+          complexValue = this.value + "bar";
+        }
+      JS
+
+      expect(compiler.raw_content).to include('value = "foo";')
+      expect(compiler.raw_content).to include('complexValue = (() => this.value + "bar")();')
     end
   end
 end
