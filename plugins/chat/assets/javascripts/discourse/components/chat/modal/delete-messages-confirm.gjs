@@ -5,7 +5,7 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import DModalCancel from "discourse/components/d-modal-cancel";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 
 export default class DeleteMessagesConfirm extends Component {
   @service chatApi;

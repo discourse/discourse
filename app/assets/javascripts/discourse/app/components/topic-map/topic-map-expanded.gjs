@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import TopicParticipants from "discourse/components/topic-map/topic-participants";
 import replaceEmoji from "discourse/helpers/replace-emoji";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import and from "truth-helpers/helpers/and";
 import lt from "truth-helpers/helpers/lt";
 import not from "truth-helpers/helpers/not";

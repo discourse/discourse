@@ -15,7 +15,7 @@ import {
   stringToBuffer,
   WebauthnAbortHandler,
 } from "discourse/lib/webauthn";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import I18n from "discourse-i18n";
 
 export default class UserPasskeys extends Component {

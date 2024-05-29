@@ -6,7 +6,7 @@ import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import i18n from "discourse-common/helpers/i18n";
+import { i18n } from "discourse-i18n";
 import closeOnClickOutside from "../../modifiers/close-on-click-outside";
 
 export default class Dropdown extends Component {
