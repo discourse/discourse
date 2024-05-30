@@ -84,6 +84,11 @@ describe "Uploading files in the composer", type: :system do
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".onebox-placeholder-container")
 
+      expect(page).to have_css(
+        '.onebox-placeholder-container[style*="background-image"]',
+        wait: Capybara.default_max_wait_time,
+      )
+
       composer.submit
 
       expect(find("#topic-title")).to have_content("Video upload test")
@@ -94,6 +99,27 @@ describe "Uploading files in the composer", type: :system do
       within(selector) do
         expect(page).to have_css(".video-placeholder-container[data-thumbnail-src]")
       end
+    end
+
+    it "shows video player in composer" do
+      sign_in(current_user)
+      SiteSetting.enable_diffhtml_preview = true
+
+      visit "/new-topic"
+      expect(composer).to be_opened
+      topic.fill_in_composer_title("Video upload test")
+
+      file_path_1 = file_from_fixtures("small.mp4", "media").path
+      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+
+      expect(composer).to have_no_in_progress_uploads
+      expect(composer.preview).to have_css(".video-container video")
+
+      expect(page).to have_css(
+        ".video-container video source[src]",
+        visible: false,
+        wait: Capybara.default_max_wait_time,
+      )
     end
   end
 end

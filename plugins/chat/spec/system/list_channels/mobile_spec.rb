@@ -155,10 +155,10 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
   end
 
   context "when no category channels" do
-    it "hides the section" do
+    it "shows the empty channel list" do
       visit("/chat/channels")
 
-      expect(page).to have_no_css(".channels-list-container")
+      expect(page).to have_selector(".channel-list-empty-message")
     end
 
     context "when user can create channels" do

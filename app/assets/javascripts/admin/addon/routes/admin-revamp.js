@@ -4,6 +4,7 @@ import DiscourseURL from "discourse/lib/url";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
+// DEPRECATED: (martin) This route is deprecated and will be removed in the near future.
 export default class AdminRoute extends DiscourseRoute {
   @service siteSettings;
   @service currentUser;

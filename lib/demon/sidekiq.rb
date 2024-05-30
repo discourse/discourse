@@ -3,12 +3,45 @@
 require "demon/base"
 
 class Demon::Sidekiq < ::Demon::Base
+  cattr_accessor :logger
+
   def self.prefix
     "sidekiq"
   end
 
   def self.after_fork(&blk)
     blk ? (@blk = blk) : @blk
+  end
+
+  def self.format(message)
+    "[#{Time.now.utc.strftime("%Y-%m-%dT%H:%M:%S.%6N")} ##{Process.pid}] #{message}"
+  end
+
+  def self.log(message, level: :info)
+    # We use an IO pipe and log messages using the logger in a seperate thread to avoid the `log writing failed. can't be called from trap context`
+    # error message that is raised when trying to log from within a `Signal.trap` block.
+    if logger
+      if !defined?(@logger_read_pipe)
+        @logger_read_pipe, @logger_write_pipe = IO.pipe
+
+        @logger_thread =
+          Thread.new do
+            begin
+              while readable_io = IO.select([@logger_read_pipe])
+                logger.public_send(level, readable_io.first[0].gets.strip)
+              end
+            rescue => e
+              STDOUT.puts self.format(
+                            "Error in Sidekiq demon logger thread: #{e.message}\n#{e.backtrace.join("\n")}",
+                          )
+            end
+          end
+      end
+
+      @logger_write_pipe.puts(message)
+    else
+      STDOUT.puts self.format(message)
+    end
   end
 
   private
@@ -21,18 +54,22 @@ class Demon::Sidekiq < ::Demon::Base
     false
   end
 
+  def log(message, level: :info)
+    self.class.log(message, level:)
+  end
+
   def after_fork
     Demon::Sidekiq.after_fork&.call
 
-    puts "Loading Sidekiq in process id #{Process.pid}"
+    log("Loading Sidekiq in process id #{Process.pid}")
     require "sidekiq/cli"
     cli = Sidekiq::CLI.instance
 
     # Unicorn uses USR1 to indicate that log files have been rotated
     Signal.trap("USR1") do
-      puts "Sidekiq PID #{Process.pid} reopening logs..."
+      log("Sidekiq reopening logs...")
       Unicorn::Util.reopen_logs
-      puts "Sidekiq PID #{Process.pid} done reopening logs..."
+      log("Sidekiq done reopening logs...")
     end
 
     options = ["-c", GlobalSetting.sidekiq_workers.to_s]

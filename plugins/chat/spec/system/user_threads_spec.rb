@@ -133,13 +133,14 @@ RSpec.describe "User threads", type: :system do
   end
 
   context "when in drawer" do
+    before { SiteSetting.chat_threads_enabled = true }
+
     context "when user is a member of at least one channel with threads" do
       before { channel_1.add(current_user) }
 
-      it "shows a link to user threads" do
+      it "shows the user threads tab" do
         visit("/")
         chat_page.open_from_header
-
         expect(drawer_page).to have_user_threads_section
       end
     end
@@ -245,6 +246,8 @@ RSpec.describe "User threads", type: :system do
 
   context "when in mobile", mobile: true do
     before do
+      SiteSetting.chat_threads_enabled = true
+
       last_message =
         chat_thread_chain_bootstrap(
           channel: channel_1,

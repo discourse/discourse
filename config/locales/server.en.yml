@@ -1759,7 +1759,6 @@ en:
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
     enforce_second_factor: "Require users to enable two-factor authentication before they can access the Discourse UI. Select 'all' to enforce it to all users. Select 'staff' to enforce it to staff users only. This setting does not affect API or 'DiscourseConnect provider' authentication."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
-    same_site_cookies: "Use same site cookies, they eliminate all Cross Site Request Forgery vectors on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use an external auth method."
 
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled. Changes to this setting will be applied retroactively within a week."
@@ -2654,7 +2653,7 @@ en:
     glimmer_header_mode: "Control whether the new 'glimmer' header implementation is used. Defaults to 'auto', which will enable automatically once all your themes and plugins are ready. https://meta.discourse.org/t/296544"
     experimental_glimmer_topic_list_groups: "EXPERIMENTAL: Enable the new 'glimmer' topic list implementation. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
-    admin_sidebar_enabled_groups: "EXPERIMENTAL: Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
+    admin_sidebar_enabled_groups: "Enable sidebar navigation for the admin UI for the specified groups, which replaces the top-level admin navigation buttons."
     lazy_load_categories_groups: "EXPERIMENTAL: Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTAL: Enable the new bulk actions dropdown."
 

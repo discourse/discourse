@@ -8,11 +8,19 @@
     <table>
       <thead>
         <th>{{i18n "categories.category"}}</th>
-        <th>{{i18n "categories.reorder.position"}}</th>
+        <th class="reorder-categories__header-position">
+          {{i18n "categories.reorder.position"}}
+        </th>
       </thead>
       <tbody>
         {{#each this.sortedEntries as |entry|}}
-          <tr data-category-id={{entry.category.id}}>
+          <tr
+            data-category-id={{entry.category.id}}
+            class={{if
+              (eq this.highlightedCategoryId entry.category.id)
+              "highlighted"
+            }}
+          >
             <td>
               <div class={{concat "reorder-categories-depth-" entry.depth}}>
                 {{category-badge entry.category allowUncategorized="true"}}

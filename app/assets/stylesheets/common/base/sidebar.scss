@@ -323,12 +323,29 @@
 
   &:focus-within {
     border-color: var(--tertiary);
-    outline: 2px solid var(--tertiary);
-    outline-offset: -2px;
+    outline: 1px solid var(--tertiary);
+    outline-offset: -1px;
+  }
+
+  &__input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--secondary);
+    border-radius: var(--d-input-border-radius);
+  }
+
+  &__shortcut-hint {
+    background-color: rgba(var(--tertiary-rgb), 0.1);
+    padding: 0.25em 0.5em;
+    margin-right: 0.5em;
+    font-size: var(--font-down-3);
+    color: var(--primary-medium);
   }
 
   &__input[type="text"] {
     border: 0;
+    background: none;
     margin-bottom: 0;
     width: 50px;
     height: 2em;
