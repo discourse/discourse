@@ -4788,7 +4788,7 @@ en:
       panels:
         forum:
           label: Forum
-      filter: "Filter"
+      filter: "Filter..."
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
