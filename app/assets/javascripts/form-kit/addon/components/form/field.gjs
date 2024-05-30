@@ -6,6 +6,7 @@ import { action, get } from "@ember/object";
 import Label from "form-kit/components/label";
 import concatClass from "discourse/helpers/concat-class";
 import uniqueId from "discourse/helpers/unique-id";
+import FormControlInput from "./control/input";
 import FormControlToggle from "./control/toggle";
 import FormErrors from "./errors";
 import FormFieldsCheckbox from "./fields/checkbox";
@@ -50,6 +51,14 @@ export default class FormField extends Component {
     return this.args.description || this.hasErrors;
   }
 
+  get componentForField() {
+    if (this.args.type === "checkbox") {
+      return FormFieldsCheckbox;
+    }
+
+    return FormFieldsInput;
+  }
+
   @action
   setValue(value) {
     console.log("setting value", this.args.name, value);
@@ -57,18 +66,17 @@ export default class FormField extends Component {
   }
 
   <template>
-    <div class="d-form-row">
+    {{#let
+      (uniqueId) (uniqueId) (fn @set @name) (fn @triggerValidationFor @name)
+      as |fieldId errorId setValue triggerValidation|
+    }}
 
-      {{#let
-        (uniqueId) (uniqueId) (fn @set @name) (fn @triggerValidationFor @name)
-        as |fieldId errorId setValue triggerValidation|
-      }}
+      {{#if (has-block)}}
         {{yield
           (hash
             Input=(component
-              FormFieldsInput
+              FormControlInput
               name=@name
-              label=@label
               fieldId=fieldId
               errorId=errorId
               value=this.value
@@ -103,8 +111,23 @@ export default class FormField extends Component {
             errorId=errorId
           )
         }}
+      {{else}}
+        <this.componentForField
+          @name={{@name}}
+          @label={{@label}}
+          @help={{@help}}
+          @description={{@description}}
+          @fieldId={{fieldId}}
+          @errorId={{errorId}}
+          @value={{this.value}}
+          @setValue={{this.setValue}}
+          @invalid={{this.hasErrors}}
+          @registerFieldWithType={{this.registerFieldWithType "boolean"}}
+          ...attributes
+        />
+      {{/if}}
 
-        {{!--
+      {{!--
         {{#if @help}}
           <p class="d-form-field__info">{{@help}}</p>
         {{/if}}
@@ -119,7 +142,6 @@ export default class FormField extends Component {
           </div>
         {{/if}} --}}
 
-      {{/let}}
-    </div>
+    {{/let}}
   </template>
 }

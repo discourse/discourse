@@ -227,9 +227,12 @@ export function createData(store) {
 
     formData: {
       name: "joffrey",
+      lastname: "jaffeux",
       age: 37,
       legal: false,
-      enabled: true,
+      check_1: true,
+      check_2: false,
+      check_3: true,
     },
 
     onSubmit: (data) => {

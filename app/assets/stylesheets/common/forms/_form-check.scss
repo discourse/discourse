@@ -2,9 +2,11 @@
 // Check/radio
 //
 
-$form-check-input-width: 1em !default;
-$form-check-padding-start: $form-check-input-width + 0.5em !default;
-$form-check-margin-bottom: 0.125rem !default;
+.d-form {
+  input[type] {
+    margin-bottom: 0;
+  }
+}
 
 .d-form-checkbox {
   display: flex;
@@ -16,9 +18,13 @@ $form-check-margin-bottom: 0.125rem !default;
 }
 
 .d-form-checkbox-label {
-  margin-bottom: 0 !important;
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  margin: 0;
+  font-size: var(--font-down-1-rem);
+  color: var(--primary-high);
   font-weight: normal !important;
-  color: var(--primary);
 }
 
 .d-form-text {
@@ -31,4 +37,13 @@ $form-check-margin-bottom: 0.125rem !default;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+
+.d-form-input-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  margin: 0;
+  font-size: var(--font-down-1-rem);
+  color: var(--primary-high);
 }

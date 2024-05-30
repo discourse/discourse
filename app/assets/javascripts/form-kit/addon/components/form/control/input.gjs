@@ -81,7 +81,7 @@ export default class FormControlInput extends Component {
       class="d-form-control-input"
       ...attributes
       {{on "input" this.handleInput}}
-      {{didInsert (fn @registerFieldWithType this.primitiveType)}}
+      {{!-- {{didInsert (fn @registerFieldWithType this.primitiveType)}} --}}
     />
   </template>
 }

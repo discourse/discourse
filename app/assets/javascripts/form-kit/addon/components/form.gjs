@@ -11,8 +11,10 @@ import FieldData from "form-kit/lib/field-data";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import FormField from "./form/field";
+import FormFieldgroup from "./form/fieldgroup";
 import FormFieldsCheckbox from "./form/fields/checkbox";
 import FormFieldset from "./form/fieldset";
+import FormInlineRow from "./form/inline-row";
 import FormText from "./form/text";
 
 export default class Form extends Component {
@@ -229,6 +231,16 @@ export default class Form extends Component {
 
       {{yield
         (hash
+          InlineRow=(component
+            FormInlineRow
+            data=this.effectiveData
+            set=this.set
+            triggerValidationFor=this.handleFieldValidation
+            registerField=this.registerField
+            unregisterField=this.unregisterField
+            errors=this.validationState
+            fields=this.fields
+          )
           Text=(component FormText)
           Field=(component
             FormField
@@ -241,6 +253,7 @@ export default class Form extends Component {
             fields=this.fields
           )
           Fieldset=(component FormFieldset)
+          Fieldgroup=(component FormFieldgroup)
         )
       }}
 

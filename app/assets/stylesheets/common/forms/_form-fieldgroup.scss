@@ -1,0 +1,31 @@
+.d-form-fieldgroup {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+
+  .d-form-text {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    white-space: nowrap;
+    padding-inline: 0.5em;
+    line-height: 2em;
+    background-color: var(--primary-low);
+    color: var(--primary-high);
+    border: 1px solid var(--primary-low-mid);
+    border-radius: var(--d-input-border-radius);
+  }
+
+  > :not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  > :not(:first-child) {
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}

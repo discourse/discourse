@@ -89,9 +89,15 @@ export default {
         }
       );
     }
-    api.decorateChatMessage((element) => decorateHashtags(element, site), {
-      id: "hashtagIcons",
-    });
+    api.decorateChatMessage(
+      (element) => {
+        console.log("decorateChatMessage", element);
+        decorateHashtags(element, site);
+      },
+      {
+        id: "hashtagIcons",
+      }
+    );
   },
 
   _getScrollParent(node, maxParentSelector) {

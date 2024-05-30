@@ -2,37 +2,57 @@
 
 <h2>HORIZONTAL</h2>
 
+<span>check_1: {{@dummy.formData.check_1}}</span>
+<span>check_2: {{@dummy.formData.check_2}}</span>
+<span>check_3: {{@dummy.formData.check_3}}</span>
+<span>name: {{@dummy.formData.name}}</span>
+<span>lastname: {{@dummy.formData.lastname}}</span>
+
 <Form
   @data={{@dummy.formData}}
   @onSubmit={{@dummy.onSubmit}}
   @validateOn="input"
   as |form|
 >
-  <form.Fieldset @legend="yo">
-    <form.Text>Some random explanation about this setting.</form.Text>
+  <form.InlineRow as |inlineRow|>
+    <inlineRow.Field
+      @name="name"
+      @type="text"
+      @validation="required|length:5,16"
+      placeholder="Enter email"
+    />
+  </form.InlineRow>
 
-    <form.Field @name="enabled" @label="test" as |field|>
-      <field.Checkbox />
-    </form.Field>
+  {{! <form.Fieldset @legend="yo">
+    <form.Field
+      @name="check_1"
+      @label="test"
+      @type="checkbox"
+      @help="Do you agree to our terms of service?"
+    />
 
-    <form.Field @name="enabled" @label="test" as |field|>
-      <field.Checkbox />
-    </form.Field>
-
-    <form.Field @name="enabled" @label="test" as |field|>
-      <field.Checkbox />
-    </form.Field>
+    <form.Field @type="checkbox" @name="check_2" @label="test" />
   </form.Fieldset>
+
+  <form.Field @type="checkbox" @name="check_3" @label="test" />
+
+  <form.Fieldgroup>
+    <form.Text>http://</form.Text>
+    <form.Field @name="lastname" @type="text" placeholder="Enter email" />
+    <form.Text>.com</form.Text>
+    <form.Field @name="lastname" @type="text" placeholder="Enter email" />
+  </form.Fieldgroup>
 
   <form.Field
     @name="name"
+    @type="text"
     @validation="required|length:5,16"
     @label="What is your name?"
-    as |field|
-  >
-    <field.Input @before="mailto:" placeholder="Enter email" />
-  </form.Field>
+    @help="age will help us to know you better"
+    placeholder="Enter email"
+  /> }}
 
+  {{!--
   {{#if @dummy.formData.enabled}}
     <form.Field
       @name="age"
@@ -52,7 +72,7 @@
     <form.Field @name="whatever" @label="test" as |field|>
       <field.Checkbox />
     </form.Field>
-  </form.Fieldset>
+  </form.Fieldset> --}}
 
   {{! <form.Field @name="enabled" @label="test" as |field|>
     <field.Toggle />
@@ -80,7 +100,7 @@
 <form class="d-form">
   <h2> Stacked form</h2>
   <div class="d-form__section">
-    {{!-- <div class="d-form__row">
+    <div class="d-form__row">
       <label class="d-form-field__label" for="normal-input-stacked">Standard
         stacked input
         <span class="d-form-field__optional">(Optional)</span>
@@ -284,7 +304,7 @@
           </div>
         </div>
       </div>
-    </div> --}}
+    </div>
 
     <fieldset class="d-form-field --checkbox">
       <legend class="d-form-field__label">Set as default
