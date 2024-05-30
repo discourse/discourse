@@ -5027,6 +5027,10 @@ en:
         title: "Moderation Flags"
         description: "Description"
         enabled: "Enabled?"
+        more_options:
+          title: "More options"
+          move_up: "Move up"
+          move_down: "Move down"
 
       groups:
         new:

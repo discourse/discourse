@@ -1249,6 +1249,7 @@ en:
   flags:
     errors:
       already_handled: "Flag was already handled"
+      wrong_move: "Flag cannot be moved"
   reports:
     default:
       labels:
