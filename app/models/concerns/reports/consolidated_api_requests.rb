@@ -11,7 +11,7 @@ module Reports::ConsolidatedApiRequests
 
       requests =
         filters.map do |filter|
-          color = filter == "api" ? report.colors[0] : report.colors[1]
+          color = filter == "api" ? report.colors[:turquoise] : report.colors[:lime]
 
           {
             req: filter,

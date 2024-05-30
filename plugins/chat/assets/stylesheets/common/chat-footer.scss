@@ -38,7 +38,6 @@
     &:focus {
       .discourse-no-touch &,
       .discourse-touch & {
-        background-color: var(--primary-low);
         .d-icon,
         .d-button-label {
           color: var(--quaternary);
@@ -61,17 +60,22 @@
       color: var(--primary-medium);
     }
 
-    .chat-channel-unread-indicator,
-    .chat-channel-unread-indicator.-urgent {
-      top: 0.25rem;
+    .c-unread-indicator {
+      position: absolute;
+      top: 0.35rem;
       right: unset;
       left: 50%;
       margin-left: 0.75rem;
-    }
-
-    .chat-channel-unread-indicator:not(.-urgent) {
-      width: 11px;
-      height: 11px;
+      &.-urgent {
+        height: 1em;
+        width: min-content;
+        min-width: 0.6em;
+        padding: 0.21em 0.42em;
+      }
+      &:not(.-urgent) {
+        width: 11px;
+        height: 11px;
+      }
     }
   }
 }

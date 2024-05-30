@@ -11,6 +11,7 @@
   }
 
   table {
+    width: 100%;
     padding-bottom: 150px;
     margin: 0 0.667em;
     td {
@@ -28,10 +29,15 @@
       max-width: 30vw;
     }
   }
+
+  &__header-position {
+    text-align: right;
+  }
 }
 
 .reorder-categories-actions {
   display: flex;
+  justify-content: end;
   gap: 0.5rem;
 }
 
