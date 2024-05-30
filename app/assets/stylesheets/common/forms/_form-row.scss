@@ -1,0 +1,25 @@
+.d-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--d-form-gutter-y));
+  margin-right: calc(-0.5 * var(--d-form-gutter-x));
+  margin-left: calc(-0.5 * var(--d-form-gutter-x));
+
+  > * {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--d-form-gutter-x) * 0.5);
+    padding-left: calc(var(--d-form-gutter-x) * 0.5);
+    margin-top: var(--d-form-gutter-y);
+  }
+
+  &.inline-row {
+    align-items: center;
+
+    > .d-form-col {
+      flex: 0 0 auto;
+      width: auto;
+    }
+  }
+}

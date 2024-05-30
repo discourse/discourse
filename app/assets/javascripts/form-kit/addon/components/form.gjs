@@ -14,7 +14,7 @@ import FormField from "./form/field";
 import FormFieldgroup from "./form/fieldgroup";
 import FormFieldsCheckbox from "./form/fields/checkbox";
 import FormFieldset from "./form/fieldset";
-import FormInlineRow from "./form/inline-row";
+import Row from "./form/inline-row";
 import FormText from "./form/text";
 
 export default class Form extends Component {
@@ -109,9 +109,7 @@ export default class Form extends Component {
 
   @action
   set(key, value) {
-    console.log("set", key, value);
     set(this.effectiveData, key, value);
-    console.log(this.effectiveData);
   }
 
   @action
@@ -213,6 +211,7 @@ export default class Form extends Component {
   }
 
   <template>
+    {{log this.fieldValidationEvent}}
     <form
       class="d-form"
       {{on "submit" this.onSubmit}}
@@ -231,8 +230,8 @@ export default class Form extends Component {
 
       {{yield
         (hash
-          InlineRow=(component
-            FormInlineRow
+          Row=(component
+            Row
             data=this.effectiveData
             set=this.set
             triggerValidationFor=this.handleFieldValidation
@@ -253,7 +252,16 @@ export default class Form extends Component {
             fields=this.fields
           )
           Fieldset=(component FormFieldset)
-          Fieldgroup=(component FormFieldgroup)
+          Fieldgroup=(component
+            FormFieldgroup
+            data=this.effectiveData
+            set=this.set
+            triggerValidationFor=this.handleFieldValidation
+            registerField=this.registerField
+            unregisterField=this.unregisterField
+            errors=this.validationState
+            fields=this.fields
+          )
         )
       }}
 

@@ -52,15 +52,6 @@ export default class FormControlInput extends Component {
     return this.args.type ?? "text";
   }
 
-  get primitiveType() {
-    switch (this.type) {
-      case "number":
-        return "number";
-      default:
-        return "string";
-    }
-  }
-
   @action
   handleInput(event) {
     this.args.setValue(
@@ -81,7 +72,6 @@ export default class FormControlInput extends Component {
       class="d-form-control-input"
       ...attributes
       {{on "input" this.handleInput}}
-      {{!-- {{didInsert (fn @registerFieldWithType this.primitiveType)}} --}}
     />
   </template>
 }

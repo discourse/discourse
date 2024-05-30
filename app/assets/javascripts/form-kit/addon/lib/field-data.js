@@ -17,6 +17,7 @@ export default class FieldData {
   }
 
   get required() {
+    console.log("requiredrules", this.rules);
     return this.rules?.required ?? false;
   }
 
@@ -25,10 +26,22 @@ export default class FieldData {
    */
 
   async validate(value) {
-    return Validator.validate(
-      value,
-      this.fieldRegistration.type,
-      this.rules ?? {}
-    );
+    if (this.fieldRegistration.disabled) {
+      return;
+    }
+
+    let primitiveType;
+    switch (this.fieldRegistration.type) {
+      case "number":
+        primitiveType = "number";
+        return;
+      case "checkbox":
+        primitiveType = "boolean";
+        return;
+      default:
+        primitiveType = "string";
+    }
+
+    return Validator.validate(value, primitiveType, this.rules ?? {});
   }
 }

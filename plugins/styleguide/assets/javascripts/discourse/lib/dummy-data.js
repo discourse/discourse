@@ -228,6 +228,9 @@ export function createData(store) {
     formData: {
       name: "joffrey",
       lastname: "jaffeux",
+      foo: "jaffeux",
+      bar: "jaffeux",
+      baz: "jaffeux",
       age: 37,
       legal: false,
       check_1: true,

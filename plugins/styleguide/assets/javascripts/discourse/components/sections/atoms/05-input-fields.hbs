@@ -2,11 +2,14 @@
 
 <h2>HORIZONTAL</h2>
 
-<span>check_1: {{@dummy.formData.check_1}}</span>
-<span>check_2: {{@dummy.formData.check_2}}</span>
-<span>check_3: {{@dummy.formData.check_3}}</span>
-<span>name: {{@dummy.formData.name}}</span>
-<span>lastname: {{@dummy.formData.lastname}}</span>
+<p>check_1: {{@dummy.formData.check_1}}</p>
+<p>check_2: {{@dummy.formData.check_2}}</p>
+<p>check_3: {{@dummy.formData.check_3}}</p>
+<p>name: {{@dummy.formData.name}}</p>
+<p>lastname: {{@dummy.formData.lastname}}</p>
+<p>foo: {{@dummy.formData.foo}}</p>
+<p>bar: {{@dummy.formData.bar}}</p>
+<p>baz: {{@dummy.formData.baz}}</p>
 
 <Form
   @data={{@dummy.formData}}
@@ -14,16 +17,24 @@
   @validateOn="input"
   as |form|
 >
-  <form.InlineRow as |inlineRow|>
-    <inlineRow.Field
+  <form.Row @inline={{true}} as |row|>
+    <row.Field
       @name="name"
       @type="text"
       @validation="required|length:5,16"
       placeholder="Enter email"
     />
-  </form.InlineRow>
 
-  {{! <form.Fieldset @legend="yo">
+    <row.Field
+      @name="lastname"
+      @type="text"
+      @validation="required|length:2,3"
+      @disabled={{true}}
+      placeholder="Enter email"
+    />
+  </form.Row>
+
+  <form.Fieldset @legend="yo">
     <form.Field
       @name="check_1"
       @label="test"
@@ -36,21 +47,30 @@
 
   <form.Field @type="checkbox" @name="check_3" @label="test" />
 
-  <form.Fieldgroup>
-    <form.Text>http://</form.Text>
-    <form.Field @name="lastname" @type="text" placeholder="Enter email" />
-    <form.Text>.com</form.Text>
-    <form.Field @name="lastname" @type="text" placeholder="Enter email" />
+  <form.Fieldgroup as |fieldGroup|>
+    <fieldGroup.Text>http://</fieldGroup.Text>
+    <fieldGroup.Field @name="bar" @type="text" placeholder="Enter email" />
+    <fieldGroup.Text>.com</fieldGroup.Text>
+    <fieldGroup.Field @name="baz" @type="text" placeholder="Enter email" />
   </form.Fieldgroup>
 
-  <form.Field
-    @name="name"
-    @type="text"
-    @validation="required|length:5,16"
-    @label="What is your name?"
-    @help="age will help us to know you better"
-    placeholder="Enter email"
-  /> }}
+  <PluginOutlet
+    @name="my-form"
+    @connectorTagName="span"
+    @outletArgs={{hash form=form}}
+  />
+
+  {{!-- <form.Row as |row|>
+    <row.Field
+      @name="foo"
+      @type="text"
+      @validation="length:5,16"
+      @label="What is your name?"
+      @help="age will help us to know you better"
+      @size={{4}}
+      placeholder="Enter email"
+    />
+  </form.Row> --}}
 
   {{!--
   {{#if @dummy.formData.enabled}}
