@@ -7,7 +7,6 @@
   <:body>
     <div class="input-group poll-type">
       <button
-        href
         {{on "click" (fn this.updatePollType "regular")}}
         class="poll-type-value poll-type-value-regular
           {{if this.isRegular 'active'}}"
@@ -16,7 +15,6 @@
       </button>
 
       <button
-        href
         {{on "click" (fn this.updatePollType "multiple")}}
         class="poll-type-value poll-type-value-multiple
           {{if this.isMultiple 'active'}}"
@@ -26,7 +24,6 @@
 
       {{#if this.showNumber}}
         <button
-          href
           {{on "click" (fn this.updatePollType "number")}}
           class="poll-type-value poll-type-value-number
             {{if this.isNumber 'active'}}"
@@ -37,7 +34,6 @@
 
       {{#if this.showIrv}}
         <button
-          href
           {{on "click" (fn this.updatePollType "irv")}}
           class="poll-type-value poll-type-value-irv {{if this.isIrv 'active'}}"
         >
