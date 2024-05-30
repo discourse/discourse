@@ -172,7 +172,7 @@ after_initialize do
     if self.user.enqueue_narrative_bot_job?
       if self.bookmarkable_type == "Post" || self.bookmarkable_type == "Topic"
         is_topic = self.bookmarkable_type == "Topic"
-        first_post_id = Post.where(topic_id: self.bookmarkable_id).first&.id if is_topic
+        first_post_id = Post.where(topic_id: self.bookmarkable_id, post_number: 1).pick(:id) if is_topic
 
         Jobs.enqueue(
           :bot_input,
