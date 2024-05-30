@@ -112,4 +112,22 @@ RSpec.describe About do
       results.each { |res| expect(res.moderators.size).to eq(2) }
     end
   end
+
+  describe "#admins" do
+    fab!(:admin_mark) { Fabricate(:admin, name: "mark") }
+    fab!(:admin_matt) { Fabricate(:admin, name: "matt") }
+    fab!(:admin_kate) { Fabricate(:admin, name: "kate") }
+
+    context "with about_admins plugin modifier registered" do
+      let(:modifier_block) { Proc.new { |admins| admins.select { |admin| admin.name != "mark" } } }
+
+      it "Applies registered modifiers (filtering out admins in this case)" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:about_admins, &modifier_block)
+        expect(About.new(Fabricate(:user)).admins).to match_array([admin_matt, admin_kate])
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(plugin_instance, :about_admins, &modifier_block)
+      end
+    end
+  end
 end
