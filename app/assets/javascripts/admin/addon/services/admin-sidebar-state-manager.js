@@ -8,6 +8,7 @@ export default class AdminSidebarStateManager extends Service {
   @service currentUser;
   @alias("sidebarState.currentUserUsingAdminSidebar")
   currentUserUsingAdminSidebar;
+  @alias("sidebarState.isForcingAdminSidebar") isForcingAdminSidebar;
 
   keywords = {};
 
@@ -47,7 +48,7 @@ export default class AdminSidebarStateManager extends Service {
       this.sidebarState.currentPanel?.key === ADMIN_PANEL;
 
     if (!this.currentUserUsingAdminSidebar) {
-      this.sidebarState.isForcingAdminSidebar = false;
+      this.isForcingAdminSidebar = false;
       return false;
     }
 
@@ -58,21 +59,21 @@ export default class AdminSidebarStateManager extends Service {
     if (isAdminSidebarActive) {
       return this.#forceAdminSidebar();
     } else {
-      this.sidebarState.isForcingAdminSidebar = false;
+      this.isForcingAdminSidebar = false;
       return false;
     }
   }
 
   stopForcingAdminSidebar() {
     this.sidebarState.setPanel(MAIN_PANEL);
-    this.sidebarState.isForcingAdminSidebar = false;
+    this.isForcingAdminSidebar = false;
   }
 
   #forceAdminSidebar() {
     this.sidebarState.setPanel(ADMIN_PANEL);
     this.sidebarState.setSeparatedMode();
     this.sidebarState.hideSwitchPanelButtons();
-    this.sidebarState.isForcingAdminSidebar = true;
+    this.isForcingAdminSidebar = true;
     return true;
   }
 }
