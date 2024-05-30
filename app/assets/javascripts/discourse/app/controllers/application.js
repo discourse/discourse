@@ -17,7 +17,6 @@ export default Controller.extend({
   footer: service(),
   header: service(),
   sidebarState: service(),
-  adminSidebarStateManager: service(),
   showSidebar: false,
   sidebarDisabledRouteOverride: false,
   navigationMenuQueryParamOverride: null,
@@ -100,8 +99,8 @@ export default Controller.extend({
 
     // Always show sidebar for admin if user can see the admin sidbar
     if (
-      this.adminSidebarStateManager.isForcingAdminSidebar &&
-      this.adminSidebarStateManager.currentUserUsingAdminSidebar
+      this.sidebarState.isForcingAdminSidebar &&
+      this.sidebarState.currentUserUsingAdminSidebar
     ) {
       return true;
     }
