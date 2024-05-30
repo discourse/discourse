@@ -71,28 +71,17 @@ export default class FormControlInput extends Component {
   }
 
   <template>
-    <div
-      class={{concatClass
-        "d-form-field__input-group"
-        (if @before "--prefilled")
-      }}
-    >
-      {{#if @before}}
-        <div class="d-form-field__prefilled-text">{{@before}}</div>
-      {{/if}}
-
-      <input
-        name={{@name}}
-        type={{this.type}}
-        value={{@value}}
-        id={{@fieldId}}
-        aria-invalid={{if @invalid "true"}}
-        aria-describedby={{if @invalid @errorId}}
-        class="d-form-field__input"
-        ...attributes
-        {{on "input" this.handleInput}}
-        {{didInsert (fn @registerFieldWithType this.primitiveType)}}
-      />
-    </div>
+    <input
+      name={{@name}}
+      type={{this.type}}
+      value={{@value}}
+      id={{@fieldId}}
+      aria-invalid={{if @invalid "true"}}
+      aria-describedby={{if @invalid @errorId}}
+      class="d-form-control-input"
+      ...attributes
+      {{on "input" this.handleInput}}
+      {{didInsert (fn @registerFieldWithType this.primitiveType)}}
+    />
   </template>
 }

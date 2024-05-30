@@ -4,7 +4,6 @@ import { assert, debug, warn } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
 import { VALIDATION_TYPES } from "form-kit/lib/constants";
@@ -12,6 +11,9 @@ import FieldData from "form-kit/lib/field-data";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import FormField from "./form/field";
+import FormFieldsCheckbox from "./form/fields/checkbox";
+import FormFieldset from "./form/fieldset";
+import FormText from "./form/text";
 
 export default class Form extends Component {
   @tracked validationState = {};
@@ -227,6 +229,7 @@ export default class Form extends Component {
 
       {{yield
         (hash
+          Text=(component FormText)
           Field=(component
             FormField
             data=this.effectiveData
@@ -237,6 +240,7 @@ export default class Form extends Component {
             errors=this.validationState
             fields=this.fields
           )
+          Fieldset=(component FormFieldset)
         )
       }}
 

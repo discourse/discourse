@@ -8,12 +8,22 @@
   @validateOn="input"
   as |form|
 >
-  ---
-  {{@dummy.formData.name}}
-  {{@dummy.formData.age}}
-  {{@dummy.formData.legal}}
-  {{@dummy.formData.enabled}}
-  ---
+  <form.Fieldset @legend="yo">
+    <form.Text>Some random explanation about this setting.</form.Text>
+
+    <form.Field @name="enabled" @label="test" as |field|>
+      <field.Checkbox />
+    </form.Field>
+
+    <form.Field @name="enabled" @label="test" as |field|>
+      <field.Checkbox />
+    </form.Field>
+
+    <form.Field @name="enabled" @label="test" as |field|>
+      <field.Checkbox />
+    </form.Field>
+  </form.Fieldset>
+
   <form.Field
     @name="name"
     @validation="required|length:5,16"
@@ -35,28 +45,18 @@
     </form.Field>
   {{/if}}
 
-  <form.Field
-    @name="legal"
-    @label="test"
-    @help="help"
-    @description="description"
-    as |field|
-  >
-    <field.Checkbox />
-  </form.Field>
-  <form.Field
-    @name="legal"
-    @label="test"
-    @help="help"
-    @description="description"
-    as |field|
-  >
-    <field.Checkbox />
-  </form.Field>
+  <form.Fieldset @legend="Multi checkbox options">
+    <form.Field @name="legal" @label="test" as |field|>
+      <field.Checkbox />
+    </form.Field>
+    <form.Field @name="whatever" @label="test" as |field|>
+      <field.Checkbox />
+    </form.Field>
+  </form.Fieldset>
 
-  <form.Field @name="enabled" @label="test" as |field|>
+  {{! <form.Field @name="enabled" @label="test" as |field|>
     <field.Toggle />
-  </form.Field>
+  </form.Field> }}
 
   {{!-- <fk.Text
     @name="foo"
@@ -77,126 +77,10 @@
 
 <hr />
 
-<h2>STACKED</h2>
-
 <form class="d-form">
-  <h2>Horizontal form (classic)</h2>
-
-  <div class="d-form__section --landscape">
-    <div class="d-form__row">
-      <div class="d-form__col --col-4">
-        <label class="d-form-field__label" for="normal-input">Standard input
-          <span class="d-form-field__optional">(Optional)</span>
-        </label>
-      </div>
-
-      <div class="d-form__col --col-8">
-        <p class="d-form-field__info">An explanation about the usecase of this
-          form. In landscape forms, the explanation needs to be inside the first
-          `col` element.</p>
-        <div class="d-form-field__value">
-          <input type="text" class="d-form-field__input" id="normal-input" />
-          <div class="d-form-field__meta">
-            <p class="d-form-field__meta-text">Format: XYZ-123</p>
-            <span class="d-form-field__character-count has-error">0/25</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="d-form__row">
-      <label
-        class="d-form__col --col-4 d-form-field__label"
-        for="reminders"
-      >After reminding you, we should…
-      </label>
-
-      <div class="d-form__col --col-8">
-        <div class="d-form-field__value">
-          <div class="d-form-field__input-group">
-            <label for="ltr-radio-1" class="checkbox-label">
-              <input
-                type="radio"
-                id="ltr-radio-1"
-                name="ltr-radio"
-                class="d-form-field__input"
-              />Keep bookmark and delete reminder</label>
-
-            <label for="ltr-radio-2" class="checkbox-label">
-              <input
-                type="radio"
-                id="ltr-radio-2"
-                name="ltr-radio"
-                class="d-form-field__input"
-              />Keep bookmark</label>
-
-            <label for="ltr-radio-3" class="checkbox-label">
-              <input
-                type="radio"
-                id="ltr-radio-3"
-                name="ltr-radio"
-                class="d-form-field__input"
-              />Delete bookmark
-            </label>
-
-            <label for="ltr-radio-4" class="checkbox-label">
-              <input
-                type="radio"
-                id="ltr-radio-4"
-                name="ltr-radio"
-                class="d-form-field__input"
-              />Delete bookmark once I reply
-            </label>
-          </div>
-          <div class="d-form-field__meta --warning">
-            <p class="d-form-field__meta-text">
-              {{d-icon "exclamation-triangle"}}<span>Error: explanation of error</span></p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="d-form__row">
-      <label
-        class="d-form__col --col-4 d-form-field__label"
-        for="short-input-1"
-      >A grouped input field (will stack on mobile)
-      </label>
-      <div class="d-form__col">
-        <div class="d-form-field__value has-error">
-          <input type="text" class="d-form-field__input" id="short-input-1" />
-          <div class="d-form-field__meta --warning">
-            <p class="d-form-field__meta-text">
-              {{d-icon "exclamation-triangle"}}<span>Error: explanation of error</span></p>
-          </div>
-        </div>
-      </div>
-      <div class="d-form__col">
-        <div class="d-form-field__value">
-          <input
-            type="text"
-            class="d-form-field__input --small"
-            id="short-input-2"
-          />
-        </div>
-      </div>
-    </div>
-
-    <div class="d-form__row --toggle">
-      <label class="d-form__col --col-4 d-form-field__label" for="toggle-1">Turn
-        on/off
-      </label>
-      <div class="d-form__col">
-        <DToggleSwitch @state={{@enabled}} {{on "click" @action}} />
-      </div>
-    </div>
-  </div>
-
   <h2> Stacked form</h2>
   <div class="d-form__section">
-    <div class="d-form__row">
+    {{!-- <div class="d-form__row">
       <label class="d-form-field__label" for="normal-input-stacked">Standard
         stacked input
         <span class="d-form-field__optional">(Optional)</span>
@@ -400,7 +284,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> --}}
 
     <fieldset class="d-form-field --checkbox">
       <legend class="d-form-field__label">Set as default
@@ -774,112 +658,3 @@
     </div>
   </div>
 </form>
-
-<StyleguideExample @title="text-field">
-  <TextField @placeholder="Placeholder" />
-</StyleguideExample>
-
-<StyleguideExample @title="password">
-  <PasswordField type="password" placeholder="Placeholder" />
-</StyleguideExample>
-
-<StyleguideExample @title="textarea">
-  <Textarea placeholder="Placeholder" />
-</StyleguideExample>
-
-<StyleguideExample @title="inline-form">
-  <div class="inline-form">
-    <TextField @placeholder="Placeholder" />
-    <DButton
-      @icon="search"
-      @translatedLabel="Submit"
-      type="submit"
-      class="btn-primary"
-    />
-  </div>
-</StyleguideExample>
-
-<StyleguideExample @title="inline-form with icon button">
-  <div class="inline-form">
-    <TextField @placeholder="Placeholder" />
-    <DButton @icon="search" type="submit" class="btn-primary" />
-  </div>
-</StyleguideExample>
-
-<StyleguideExample @title="full-width inline-form with single input">
-  <div class="inline-form full-width">
-    <TextField @placeholder="Placeholder" />
-  </div>
-</StyleguideExample>
-
-<StyleguideExample @title="full-width inline-form with input and icon button">
-  <div class="inline-form full-width">
-    <TextField @placeholder="Placeholder" />
-    <DButton @icon="search" type="submit" class="btn-primary" />
-  </div>
-</StyleguideExample>
-
-<StyleguideExample
-  @title="inline-form with <ComboBox>"
-  @initialValue={{get @dummy "options.0.name"}}
-  as |value|
->
-  <div class="inline-form">
-    <TextField @placeholder="Placeholder" />
-    <ComboBox
-      @content={{@dummy.options}}
-      @value={{value}}
-      @onChange={{fn (mut value)}}
-    />
-    <DButton
-      @icon="search"
-      @translatedLabel="Submit"
-      type="submit"
-      class="btn-primary"
-    />
-  </div>
-</StyleguideExample>
-
-<StyleguideExample @title="inline-form with <MultiSelect>">
-  <div class="inline-form">
-    <TextField />
-    <MultiSelect @content={{@dummy.options}} @onChange={{@dummyAction}} />
-    <DButton
-      @icon="search"
-      @translatedLabel="Submit"
-      type="submit"
-      class="btn-primary"
-    />
-  </div>
-</StyleguideExample>
-
-<StyleguideExample @title="inline-form with <MultiSelect> and label">
-  <div class="inline-form">
-    <label>Text:</label>
-    <TextField />
-    <MultiSelect @content={{@dummy.options}} @onChange={{@dummyAction}} />
-    <DButton
-      @icon="search"
-      @translatedLabel="Submit"
-      type="submit"
-      class="btn-primary"
-    />
-  </div>
-</StyleguideExample>
-
-<StyleguideExample @title="full-width inline-form with search type input">
-  <div class="inline-form full-width">
-    <Input placeholder="Search type input" @type="search" />
-  </div>
-</StyleguideExample>
-
-<StyleguideExample @title="<CategoryNotificationsButton> and regular button">
-  <div class="inline-form">
-    <CategoryNotificationsButton
-      @category={{get @dummy.categories 0}}
-      @value={{1}}
-      @onChange={{@dummyAction}}
-    />
-    <DButton @icon="reply" @type="submit" @translatedLabel="Button" />
-  </div>
-</StyleguideExample>

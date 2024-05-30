@@ -6,10 +6,10 @@ import { action, get } from "@ember/object";
 import Label from "form-kit/components/label";
 import concatClass from "discourse/helpers/concat-class";
 import uniqueId from "discourse/helpers/unique-id";
-import FormControlCheckbox from "./control/checkbox";
-import FormControlInput from "./control/input";
 import FormControlToggle from "./control/toggle";
 import FormErrors from "./errors";
+import FormFieldsCheckbox from "./fields/checkbox";
+import FormFieldsInput from "./fields/input";
 
 export default class FormField extends Component {
   @tracked field;
@@ -57,74 +57,69 @@ export default class FormField extends Component {
   }
 
   <template>
-    -----------------
+    <div class="d-form-row">
 
-    {{log this.field}}
-    -------------------
-    <div class="form-field">
-      {{#if @label}}
-        <Label @label={{@label}} @for={{@name}} />
-      {{/if}}
-
-      {{#if @help}}
-        <p class="d-form-field__info">{{@help}}</p>
-      {{/if}}
-
-      <div class="d-form-field__value">
-        {{#let
-          (uniqueId) (uniqueId) (fn @set @name) (fn @triggerValidationFor @name)
-          as |fieldId errorId setValue triggerValidation|
-        }}
-          {{yield
-            (hash
-              Input=(component
-                FormControlInput
-                name=@name
-                fieldId=fieldId
-                errorId=errorId
-                value=this.value
-                setValue=this.setValue
-                invalid=this.hasErrors
-                registerFieldWithType=this.registerFieldWithType
-              )
-              Checkbox=(component
-                FormControlCheckbox
-                name=@name
-                fieldId=fieldId
-                errorId=errorId
-                value=this.value
-                setValue=this.setValue
-                invalid=this.hasErrors
-                registerFieldWithType=(this.registerFieldWithType "boolean")
-              )
-              Toggle=(component
-                FormControlToggle
-                name=@name
-                fieldId=fieldId
-                errorId=errorId
-                value=this.value
-                setValue=this.setValue
-                invalid=this.hasErrors
-                registerFieldWithType=(this.registerFieldWithType "boolean")
-              )
-              triggerValidation=triggerValidation
-              setValue=setValue
-              id=fieldId
+      {{#let
+        (uniqueId) (uniqueId) (fn @set @name) (fn @triggerValidationFor @name)
+        as |fieldId errorId setValue triggerValidation|
+      }}
+        {{yield
+          (hash
+            Input=(component
+              FormFieldsInput
+              name=@name
+              label=@label
+              fieldId=fieldId
               errorId=errorId
+              value=this.value
+              setValue=this.setValue
+              invalid=this.hasErrors
+              registerFieldWithType=this.registerFieldWithType
             )
-          }}
+            Checkbox=(component
+              FormFieldsCheckbox
+              name=@name
+              label=@label
+              fieldId=fieldId
+              errorId=errorId
+              value=this.value
+              setValue=this.setValue
+              invalid=this.hasErrors
+              registerFieldWithType=(this.registerFieldWithType "boolean")
+            )
+            Toggle=(component
+              FormControlToggle
+              name=@name
+              fieldId=fieldId
+              errorId=errorId
+              value=this.value
+              setValue=this.setValue
+              invalid=this.hasErrors
+              registerFieldWithType=(this.registerFieldWithType "boolean")
+            )
+            triggerValidation=triggerValidation
+            setValue=setValue
+            id=fieldId
+            errorId=errorId
+          )
+        }}
 
-          {{#if this.showMeta}}
-            <div class="d-form-field__meta">
-              {{#if this.hasErrors}}
-                <FormErrors @id={{errorId}} @errors={{this.errors}} />
-              {{else if @description}}
-                <p class="d-form-field__meta-text">{{@description}}</p>
-              {{/if}}
-            </div>
-          {{/if}}
-        {{/let}}
-      </div>
+        {{!--
+        {{#if @help}}
+          <p class="d-form-field__info">{{@help}}</p>
+        {{/if}}
+
+        {{#if this.showMeta}}
+          <div class="d-form-field__meta">
+            {{#if this.hasErrors}}
+              <FormErrors @id={{errorId}} @errors={{this.errors}} />
+            {{else if @description}}
+              <p class="d-form-field__meta-text">{{@description}}</p>
+            {{/if}}
+          </div>
+        {{/if}} --}}
+
+      {{/let}}
     </div>
   </template>
 }
