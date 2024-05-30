@@ -256,6 +256,9 @@ $search-pad-horizontal: 0.5em;
     }
 
     .search-item-slug {
+      overflow-wrap: anywhere;
+      white-space: wrap;
+      min-width: 0;
       .keyword {
         margin-right: 0.33em;
       }
@@ -322,6 +325,9 @@ $search-pad-horizontal: 0.5em;
   .search-menu-recent {
     @include separator;
 
+    .search-menu-assistant-item .search-link {
+      flex-wrap: nowrap;
+    }
     .heading {
       display: flex;
       justify-content: space-between;
