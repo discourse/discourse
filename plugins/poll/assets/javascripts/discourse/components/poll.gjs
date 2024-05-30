@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -14,42 +13,13 @@ import i18n from "discourse-common/helpers/i18n";
 import I18n from "discourse-i18n";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
+import PollButtonsDropdown from "../components/poll-buttons-dropdown";
 import PollInfo from "../components/poll-info";
 import PollOptions from "../components/poll-options";
 import PollResultsPie from "../components/poll-results-pie";
 import PollResultsTabs from "../components/poll-results-tabs";
 
 const FETCH_VOTERS_COUNT = 25;
-
-const buttonOptionsMap = {
-  exportResults: {
-    className: "btn-default export-results",
-    label: "poll.export-results.label",
-    title: "poll.export-results.title",
-    icon: "download",
-    action: "exportResults",
-  },
-  showBreakdown: {
-    className: "btn-default show-breakdown",
-    label: "poll.breakdown.breakdown",
-    icon: "chart-pie",
-    action: "showBreakdown",
-  },
-  openPoll: {
-    className: "btn-default toggle-status",
-    label: "poll.open.label",
-    title: "poll.open.title",
-    icon: "unlock-alt",
-    action: "toggleStatus",
-  },
-  closePoll: {
-    className: "btn-default toggle-status",
-    label: "poll.close.label",
-    title: "poll.close.title",
-    icon: "lock",
-    action: "toggleStatus",
-  },
-};
 
 export default class PollComponent extends Component {
   @service currentUser;
@@ -79,19 +49,11 @@ export default class PollComponent extends Component {
   showResults =
     this.hasSavedVote ||
     this.showingResults ||
-    (this.args.attrs.post.get("topic.archived") && !this.staffOnly) ||
+    (this.topicArchived && !this.staffOnly) ||
     (this.closed && !this.staffOnly);
-  @tracked getDropdownButtonState;
   post = this.args.attrs.post;
   isMe =
     this.currentUser && this.args.attrs.post.user_id === this.currentUser.id;
-
-  isAutomaticallyClosed = () => {
-    const poll = this.poll;
-    return (
-      poll.close && moment.utc(poll.close, "YYYY-MM-DD HH:mm:ss Z") <= moment()
-    );
-  };
 
   checkUserGroups = (user, poll) => {
     const pollGroups =
@@ -219,7 +181,6 @@ export default class PollComponent extends Component {
     this.id = this.args.attrs.id;
     this.post = this.args.attrs.post;
     this.options = this.poll.options;
-    this.getDropdownButtonState = false;
     this.irvDropdownContent = [];
 
     if (this.isIrv) {
@@ -261,7 +222,14 @@ export default class PollComponent extends Component {
   }
 
   get closed() {
-    return this.status === "closed" || this.isAutomaticallyClosed();
+    return this.status === "closed" || this.isAutomaticallyClosed;
+  }
+
+  get isAutomaticallyClosed() {
+    const poll = this.poll;
+    return (
+      poll.close && moment.utc(poll.close, "YYYY-MM-DD HH:mm:ss Z") <= moment()
+    );
   }
 
   get hasVoted() {
@@ -489,68 +457,8 @@ export default class PollComponent extends Component {
   }
 
   @action
-  toggleDropdownButtonState() {
-    this.getDropdownButtonState = !this.getDropdownButtonState;
-  }
-
-  get dropDownButtonState() {
-    return this.getDropdownButtonState ? "opened" : "closed";
-  }
-
-  get showDropdown() {
-    return this.getDropdownContent.length > 1;
-  }
-
-  get showDropdownAsButton() {
-    return this.getDropdownContent.length === 1;
-  }
-
-  @action
   dropDownClick(dropDownAction) {
-    this.toggleDropdownButtonState();
     this[dropDownAction]();
-  }
-
-  get getDropdownContent() {
-    const contents = [];
-    const isAdmin = this.currentUser && this.currentUser.admin;
-    const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
-    const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
-    const { poll, post } = this.args.attrs;
-
-    const topicArchived = post.get("topic.archived");
-
-    if (this.args.attrs.groupableUserFields.length && poll.voters > 0) {
-      const option = { ...buttonOptionsMap.showBreakdown };
-      option.id = option.action;
-      contents.push(option);
-    }
-
-    if (isAdmin && dataExplorerEnabled && poll.voters > 0 && exportQueryID) {
-      const option = { ...buttonOptionsMap.exportResults };
-      option.id = option.action;
-      contents.push(option);
-    }
-
-    if (
-      this.currentUser &&
-      (this.currentUser.id === post.user_id || this.isStaff) &&
-      !topicArchived
-    ) {
-      if (this.closed) {
-        if (!this.args.attrs.isAutomaticallyClosed) {
-          const option = { ...buttonOptionsMap.openPoll };
-          option.id = option.action;
-          contents.push(option);
-        }
-      } else {
-        const option = { ...buttonOptionsMap.closePoll };
-        option.id = option.action;
-        contents.push(option);
-      }
-    }
-
-    return contents;
   }
 
   @action
@@ -581,7 +489,7 @@ export default class PollComponent extends Component {
 
   @action
   toggleStatus() {
-    if (this.isAutomaticallyClosed()) {
+    if (this.isAutomaticallyClosed) {
       return;
     }
 
@@ -772,33 +680,16 @@ export default class PollComponent extends Component {
         </button>
       {{/if}}
 
-      <div class="poll-buttons-dropdown">
-        <div class="widget-dropdown {{this.dropDownButtonState}}">
-          {{#if this.showDropdown}}
-            <button
-              class="widget-dropdown-header btn btn-default"
-              title="poll.dropdown.title"
-              {{on "click" this.toggleDropdownButtonState}}
-            >
-              {{icon "cog"}}
-            </button>
-          {{/if}}
-          <div class="widget-dropdown-body">
-            {{#each this.getDropdownContent as |content|}}
-              <div class="widget-dropdown-item">
-                <button
-                  class="widget-button {{content.className}}"
-                  title={{content.title}}
-                  {{on "click" (fn this.dropDownClick content.action)}}
-                >
-                  {{icon content.icon}}
-                  <span>{{i18n content.label}}</span>
-                </button>
-              </div>
-            {{/each}}
-          </div>
-        </div>
-      </div>
+      <PollButtonsDropdown
+        @closed={{this.closed}}
+        @voters={{this.voters}}
+        @isStaff={{this.isStaff}}
+        @isMe={{this.isMe}}
+        @topicArchived={{this.topicArchived}}
+        @groupableUserFields={{this.args.attrs.groupableUserFields}}
+        @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
+        @dropDownClick={{this.dropDownClick}}
+      />
     </div>
   </template>
 }
