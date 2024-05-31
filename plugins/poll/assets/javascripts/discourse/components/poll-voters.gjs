@@ -25,9 +25,7 @@ export default class PollVotersComponent extends Component {
       {{#if this.showMore}}
         <ConditionalLoadingSpinner @condition={{@loading}}>
           <DButton
-            @action="(fn"
-            @fetchVoters
-            @optionId)
+            @action={{fn @fetchVoters @optionId}}
             @icon="chevron-down"
             class="poll-voters-toggle-expand"
           />
