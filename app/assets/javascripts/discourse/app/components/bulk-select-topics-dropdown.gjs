@@ -75,6 +75,19 @@ export default class BulkSelectTopicsDropdown extends Component {
         id: "archive-topics",
         icon: "folder",
         name: i18n("topic_bulk_actions.archive_topics.name"),
+        visible: ({ topics }) => !topics.some((t) => t.isPrivateMessage),
+      },
+      {
+        id: "archive-messages",
+        icon: "archive",
+        name: i18n("topic_bulk_actions.archive_messages.name"),
+        visible: ({ topics }) => topics.every((t) => t.isPrivateMessage),
+      },
+      {
+        id: "move-messages-to-inbox",
+        icon: "envelope",
+        name: i18n("topic_bulk_actions.move_messages_to_inbox.name"),
+        visible: ({ topics }) => topics.every((t) => t.isPrivateMessage),
       },
       {
         id: "unlist-topics",
@@ -170,15 +183,15 @@ export default class BulkSelectTopicsDropdown extends Component {
   }
 
   @action
-  onSelect(id) {
-    switch (id) {
+  onSelect(actionId) {
+    switch (actionId) {
       case "update-category":
-        this.showBulkTopicActionsModal(id, "change_category", {
+        this.showBulkTopicActionsModal(actionId, "change_category", {
           description: i18n(`topic_bulk_actions.update_category.description`),
         });
         break;
       case "update-notifications":
-        this.showBulkTopicActionsModal(id, "notification_level", {
+        this.showBulkTopicActionsModal(actionId, "notification_level", {
           description: i18n(
             `topic_bulk_actions.update_notifications.description`
           ),
@@ -192,6 +205,15 @@ export default class BulkSelectTopicsDropdown extends Component {
       case "archive-topics":
         this.showBulkTopicActionsModal("archive", "archive_topics");
         break;
+      case "archive-messages":
+        this.showBulkTopicActionsModal("archive_messages", "archive_messages");
+        break;
+      case "move-messages-to-inbox":
+        this.showBulkTopicActionsModal(
+          "move_messages_to_inbox",
+          "move_messages_to_inbox"
+        );
+        break;
       case "unlist-topics":
         this.showBulkTopicActionsModal("unlist", "unlist_topics");
         break;
@@ -199,33 +221,37 @@ export default class BulkSelectTopicsDropdown extends Component {
         this.showBulkTopicActionsModal("relist", "relist_topics");
         break;
       case "append-tags":
-        this.showBulkTopicActionsModal(id, "choose_append_tags");
+        this.showBulkTopicActionsModal(actionId, "choose_append_tags");
         break;
       case "replace-tags":
-        this.showBulkTopicActionsModal(id, "change_tags");
+        this.showBulkTopicActionsModal(actionId, "change_tags");
         break;
       case "remove-tags":
-        this.showBulkTopicActionsModal(id, "remove_tags");
+        this.showBulkTopicActionsModal(actionId, "remove_tags");
         break;
       case "delete-topics":
         this.showBulkTopicActionsModal("delete", "delete");
         break;
       case "reset-bump-dates":
-        this.showBulkTopicActionsModal(id, "reset_bump_dates", {
+        this.showBulkTopicActionsModal(actionId, "reset_bump_dates", {
           description: i18n(`topic_bulk_actions.reset_bump_dates.description`),
         });
         break;
       case "defer":
-        this.showBulkTopicActionsModal(id, "defer", {
+        this.showBulkTopicActionsModal(actionId, "defer", {
           description: i18n(`topic_bulk_actions.defer.description`),
         });
         break;
       default:
-        if (_customOnSelection[id]) {
-          this.showBulkTopicActionsModal(id, _customOnSelection[id].label, {
-            custom: true,
-            setComponent: _customOnSelection[id].setComponent,
-          });
+        if (_customOnSelection[actionId]) {
+          this.showBulkTopicActionsModal(
+            actionId,
+            _customOnSelection[actionId].label,
+            {
+              custom: true,
+              setComponent: _customOnSelection[actionId].setComponent,
+            }
+          );
         }
     }
 

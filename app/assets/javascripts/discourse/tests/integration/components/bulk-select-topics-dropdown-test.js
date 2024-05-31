@@ -26,9 +26,13 @@ function createBulkSelectHelper(testThis, opts = {}) {
     visibility_reason_id: TOPIC_VISIBILITY_REASONS.manually_unlisted,
     visible: false,
   });
-  const topics = [regularTopic, pmTopic, unlistedTopic].filter((t) =>
-    (opts.topicIds || []).includes(t.id)
-  );
+  const topics = [regularTopic, pmTopic, unlistedTopic].filter((t) => {
+    if (opts.topicIds) {
+      return opts.topicIds.includes(t.id);
+    } else {
+      return true;
+    }
+  });
 
   const bulkSelectHelper = new BulkSelectHelper(testThis);
   bulkSelectHelper.addTopics(topics);
@@ -49,14 +53,12 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
     await click(".bulk-select-topics-dropdown-trigger");
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item")
-      .exists({ count: 9 });
+      .exists({ count: 7 });
 
     [
-      "update-category",
       "update-notifications",
       "reset-bump-dates",
       "close-topics",
-      "archive-topics",
       "append-tags",
       "replace-tags",
       "remove-tags",
@@ -80,7 +82,7 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
-      .dom(`.fk-d-menu__inner-content .dropdown-menu__item .unlist-topics`)
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .unlist-topics")
       .doesNotExist();
   });
 
@@ -96,7 +98,7 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
-      .dom(`.fk-d-menu__inner-content .dropdown-menu__item .relist-topics`)
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .relist-topics")
       .doesNotExist();
   });
 
@@ -111,7 +113,7 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
-      .dom(`.fk-d-menu__inner-content .dropdown-menu__item .defer`)
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .defer")
       .exists();
   });
 
@@ -156,7 +158,7 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
-      .dom(`.fk-d-menu__inner-content .dropdown-menu__item .delete-topics`)
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .delete-topics")
       .doesNotExist();
   });
 
@@ -172,10 +174,10 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
-      .dom(`.fk-d-menu__inner-content .dropdown-menu__item .relist-topics`)
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .relist-topics")
       .doesNotExist();
     assert
-      .dom(`.fk-d-menu__inner-content .dropdown-menu__item .unlist-topics`)
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .unlist-topics")
       .doesNotExist();
   });
 
@@ -191,7 +193,7 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
-      .dom(`.fk-d-menu__inner-content .dropdown-menu__item .update-category`)
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .update-category")
       .doesNotExist();
   });
 
@@ -207,10 +209,13 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
-      .dom(`.fk-d-menu__inner-content .dropdown-menu__item .move-to-archive`)
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .move-to-archive")
       .exists();
     assert
-      .dom(`.fk-d-menu__inner-content .dropdown-menu__item .move-to-inbox`)
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .move-to-inbox")
       .exists();
+    assert
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .archive-topics")
+      .doesNotExist();
   });
 });

@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/application";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -144,6 +145,20 @@ export default class BulkTopicActions extends Component {
         this.forEachPerformed({ type: "archive" }, (t) =>
           t.set("archived", true)
         );
+        break;
+      case "archive_messages":
+      case "move_messages_to_inbox":
+        let userPrivateMessages = getOwner(this).lookup(
+          "controller:user-private-messages"
+        );
+
+        let params = { type: this.model.action };
+
+        if (userPrivateMessages.isGroup) {
+          params.group = userPrivateMessages.groupFilter;
+        }
+
+        this.performAndRefresh(params);
         break;
       case "unlist":
         this.forEachPerformed({ type: "unlist" }, (t) =>

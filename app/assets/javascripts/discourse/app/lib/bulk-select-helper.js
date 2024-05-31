@@ -23,11 +23,11 @@ export default class BulkSelectHelper {
   }
 
   clear() {
-    this.selected = new TrackedArray();
+    this.selected.length = 0;
   }
 
   addTopics(topics) {
-    this.selected = new TrackedArray([...this.selected, ...topics]);
+    this.selected.concat(topics);
   }
 
   get selectedCategoryIds() {
