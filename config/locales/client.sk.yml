@@ -418,11 +418,37 @@ sk:
       search_placeholder: "Vyhľadávajte záložky podľa názvu, názvu témy alebo obsahu príspevku"
       search: "Hľadať"
       bookmark: "Záložka"
+      bulk:
+        delete_completed: "Záložky boli úspešne odstránené."
+        reminders_cleared: "Pripomenutia záložiek boli úspešne vymazané."
+        toggle: "prepínanie hromadného výberu záložiek"
+        select_all: "Vyber všetko"
+        clear_all: "Zruš všetko"
+        selected_count:
+          one: "%{count} vybrané"
+          few: "%{count} vybrané"
+          many: "%{count} vybrané"
+          other: "%{count} vybrané"
       reminders:
         today_with_time: "dnes o %{time}"
         tomorrow_with_time: "zajtra o %{time}"
         at_time: "na %{date_time}"
         existing_reminder: "Pre túto záložku máte nastavenú pripomienku, ktorá bude odoslaná %{at_date_time}"
+    bookmark_bulk_actions:
+      clear_reminders:
+        name: "Vymazať pripomenutia"
+        description:
+          one: "Naozaj chcete vymazať pripomenutie pre túto záložku?"
+          few: "Naozaj chcete vymazať pripomenutie pre tieto <b>%{count}</b> záložky?"
+          many: "Naozaj chcete vymazať pripomenutie pre tieto <b>%{count}</b> záložky?"
+          other: "Naozaj chcete vymazať pripomenutie pre tieto <b>%{count}</b> záložky?"
+      delete_bookmarks:
+        name: "Odstrániť záložku"
+        description:
+          one: "Naozaj chcete odstrániť túto záložku?"
+          few: "Naozaj chcete odstrániť tieto <b>%{count}</b> záložky."
+          many: "Naozaj chcete odstrániť tieto <b>%{count}</b> záložky."
+          other: "Naozaj chcete odstrániť tieto <b>%{count}</b> záložky."
     copy_codeblock:
       copied: "skopírované!"
       copy: "skopírujte kód do schránky"
@@ -2410,6 +2436,8 @@ sk:
           title: "Správa kategórií"
         bulk_select_topics_dropdown:
           title: "Hromadné akcie"
+        bulk_select_bookmarks_dropdown:
+          title: "Hromadné akcie"
     date_time_picker:
       from: Od
       to: Komu
@@ -2583,6 +2611,7 @@ sk:
       modal_ok: "OK"
       modal_cancel: "Zrušiť"
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
+      create_message_error: "Ľutujeme, pri vytváraní tejto správy sa vyskytla chyba. Prosím skúste znova."
       yourself_confirm:
         title: "Zabudli ste pridať príjemcov?"
         body: "Práve teraz sa táto správa posiela len vám!"
@@ -3825,6 +3854,7 @@ sk:
           illegal: "Označili ste to ako nezákonné"
           notify_moderators: "Označíli ste to pre moderátora"
           notify_user: "Poslali ste správu používateľovi "
+          custom: "Túto tému ste označili ako %{custom}"
       delete:
         confirm:
           one: "Ste si istý, že chcete tento príspevok vymazať?"
@@ -4869,7 +4899,6 @@ sk:
       panels:
         forum:
           label: fórum
-      filter: "Filter"
       clear_filter: "Vymazať filter"
       no_results:
         title: "Žiadne výsledky"
@@ -5101,6 +5130,9 @@ sk:
               label: Kategória
             include_subcategories:
               label: "Zahrnúť podkategórie"
+      flags:
+        description: "Popis"
+        enabled: "Povolené?"
       groups:
         new:
           title: "Nová skupina"
@@ -5493,6 +5525,7 @@ sk:
         is_enabled: "A"
         not_enabled: "N"
         change_settings_short: "Nastavenia"
+        settings_disabled: "Tento doplnok je možné iba povoliť alebo zakázať, nemá žiadne ďalšie nastavenia."
         howto: "Ako nainštalujem pluginy?"
         official: "Oficiálny plugin Discourse"
         broken_route: "Nie je možné nakonfigurovať prepojenie na adresu '%{name}'. Uistite sa, že sú vypnuté blokovače reklám a skúste stránku načítať znova."
@@ -6649,6 +6682,7 @@ sk:
         name: "Názov poľa"
         type: "Typ poľa"
         description: "Popis poľa"
+        preferences: "Nastavenia"
         save: "Uložiť"
         edit: "Upraviť"
         delete: "Odstrániť"
@@ -6659,6 +6693,13 @@ sk:
           title: "Požadované pri registrácii"
           enabled: "povinné"
           disabled: "nepovinné"
+        requirement:
+          title: "Požiadavka na pole"
+          optional:
+            title: "Nepovinné"
+          on_signup:
+            title: "Pri registrácii"
+            description: "Pri registrácii nových používateľov je potrebné vyplniť toto pole. Existujúcich používateľov sa to netýka."
         editable:
           title: "Upravovateľné po registrácii"
           enabled: "upravovateľné "

@@ -381,11 +381,21 @@ hr:
       search_placeholder: "Pretraživanje oznaka po nazivu, naslovu teme ili sadržaju posta"
       search: "Pretraži"
       bookmark: "Zabilješka"
+      bulk:
+        select_all: "Odaberi sve"
+        clear_all: "Obriši sve"
+        selected_count:
+          one: "%{count} odabrano"
+          few: "%{count} odabrano"
+          other: "%{count} odabrano"
       reminders:
         today_with_time: "danas u %{time}"
         tomorrow_with_time: "sutra u %{time}"
         at_time: "na %{date_time}"
         existing_reminder: "Imate podsjetnik postavljen za ovu oznaku (bookmark) koji će biti poslan %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Izbriši oznaku"
     copy_codeblock:
       copied: "kopirano!"
       copy: "kopirati kod u međuspremnik"
@@ -2238,6 +2248,8 @@ hr:
         categories_admin_dropdown:
           title: "Upravljanje kategorijama"
         bulk_select_topics_dropdown:
+          title: "Grupne aktivnosti"
+        bulk_select_bookmarks_dropdown:
           title: "Grupne aktivnosti"
     date_time_picker:
       from: Od
@@ -4382,7 +4394,6 @@ hr:
                 one: "%{count} na čekanju"
                 few: "%{count} na čekanju"
                 other: "%{count} na čekanju"
-      filter: "Filter"
     welcome_topic_banner:
       title: "Kreirajte svoju temu dobrodošlice"
       description: "Vaša tema dobrodošlice prva je stvar koju će novi članovi pročitati. Zamislite to kao svoj \"elevator pitch\" ili \"izjavu o misiji\". Recite svima za koga je ova zajednica, što mogu očekivati da će ovdje pronaći i što biste željeli da prvo učine."
@@ -4539,6 +4550,9 @@ hr:
               label: Kategorija
             include_subcategories:
               label: "Uključi podkategorije"
+      flags:
+        description: "Opis"
+        enabled: "Omogućeno?"
       groups:
         new:
           title: "Nova grupa"
@@ -5809,6 +5823,7 @@ hr:
         name: "Ime polja"
         type: "Tip polja"
         description: "Opis polja"
+        preferences: "Postavke"
         save: "Spremi"
         edit: "Izmijeni"
         delete: "Obriši"
@@ -5819,6 +5834,9 @@ hr:
           title: "Potrebno pri registraciji"
           enabled: "potrebno"
           disabled: "nije potrebno"
+        requirement:
+          optional:
+            title: "Neobvezno"
         editable:
           title: "Izmijenjivo nakon registracije"
           enabled: "izmijenjivo"

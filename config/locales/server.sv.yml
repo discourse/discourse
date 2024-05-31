@@ -495,7 +495,6 @@ sv:
     request_membership_pm:
       title: "Begäran om medlemskap i @%{group_name}"
     request_accepted_pm:
-      title: "Du har blivit antagen i @%{group_name}"
       body: |
         Din begäran om tillträde i @%{group_name} har godkänts och du är nu medlem.
   education:
@@ -1396,35 +1395,16 @@ sv:
         qtt_like: Mottagna gillningar
       description: "Topp 10-användare som har fått gillningar från ett brett spektrum av personer."
   dashboard:
-    group_email_credentials_warning: 'Det uppstod ett problem med e-postautentiseringsuppgifterna för gruppen <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Inga e-postmeddelanden skickas från gruppinkorgen förrän problemet är åtgärdat. %{error}'
-    rails_env_warning: "Din server kör i %{env}-läge."
-    host_names_warning: "Din config/database.yml-fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
-    sidekiq_warning: 'Sidekiq körs inte. Många uppgifter, som att skicka e-post, utförs asynkront av sidekiq. Se till att minst en sidekiq-process körs. <a href="https://github.com/mperham/sidekiq">Läs mer om Sidekiq här</a>.'
-    queue_size_warning: "Antal köade jobb är %{queue_size}, vilket är ganska högt. Det kan indikera ett problem med Sidekiq-processen/-processerna, eller så kanske du behöver lägga till fler Sidekiq-arbetare."
-    memory_warning: "Din server körs med mindre än 1 GB minne. Det rekommenderas minst 1 GB minne."
-    google_oauth2_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Google OAuth2 (enable_google_oauth2_logins), men klient-id och klienthemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    facebook_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Facebook (enable_facebook_logins), men app-id och appens hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    twitter_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Twitter (enable_twitter_logins), men nyckel och hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    github_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med GitHub (enable_github_logins), men klient-id och hemlighetsvärden har inte ställts in. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    s3_config_warning: 'Servern är konfigurerad till att ladda upp filer till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_upload_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
-    s3_backup_config_warning: 'Servern är konfigurerad till att ladda upp reservfiler till S3, men minst en av följande inställningar har inte ställts in: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, eller s3_backup_bucket. Gå till <a href="%{base_path}/admin/site_settings">webbplatsinställningarna</a> och uppdatera dem. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
-    s3_cdn_warning: 'Servern är konfigurerad att ladda upp filer till S3, men det finns ingen konfigurerad S3 CDN. Detta kan leda till dyra S3-kostnader och långsammare prestanda. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Läs mer i "Använda objektlagring för uppladdningar"</a>.'
-    image_magick_warning: 'Servern är konfigurerad att skapa ikoner av stora bilder, men ImageMagick är inte installerad. Installera ImageMagick med din föredragna pakethanterare eller <a href="https://www.imagemagick.org/script/download.php" target="_blank">hämta den senaste utgåvan</a>.'
-    failing_emails_warning: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml för att säkerställa att serverinställningarna för e-post är korrekta. <a href="%{base_path}/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
-    subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
-    outdated_translations_warning: "Vissa av dina översättningsåsidosättningar är inaktuella. Kontrollera dina <a href='%{base_path}/admin/customize/site_texts?outdated=true'>textanpassningar</a>."
-    email_polling_errored_recently:
-      one: "E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
-      other: "E-postpolling har genererat %{count} fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
-    missing_mailgun_api_key: "Servern är konfigurerad att skicka e-post via Mailgun, men du har inte tillhandahållit en API-nyckel som ska användas för att verifiera webhook-meddelandena."
-    bad_favicon_url: "Favoritikonen kan inte laddas. Kontrollera dina inställningar för favoritikonen i <a href='%{base_path}/admin/site_settings'>webbplatsinställningarna</a>."
-    poll_pop3_timeout: "Anslutningen till POP3-servern har nått tidsgränsen. Inkommande e-postmeddelanden kunde inte mottas. Kontrollera dina <a href='%{base_path}/admin/site_settings/category/email'>POP3-inställningar</a> och tjänsteleverantör."
-    poll_pop3_auth_error: "Anslutning till POP3-servern misslyckas med ett autentiseringsfel. Kontrollera dina <a href='%{base_path}/admin/site_settings/category/email'>POP3-inställningar</a>."
-    force_https_warning: "Din webbplats använder SSL, men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` har inte aktiverats i inställningarna för din webbplats."
-    out_of_date_themes: "Uppdateringar finns tillgängliga för följande teman:"
-    unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
-    v3_analytics_deprecated: "Din Discourse använder för närvarande Google Analytics 3, som inte längre kommer att stödjas efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Uppgradera till Google Analytics 4</a> nu för att fortsätta att få värdefulla insikter i, och analyser av, din webbplats prestanda."
-    category_style_deprecated: "Din Discourse använder för närvarande en utfasad kategoristil som tas bort innan den sista betaversionen av Discourse 3.2 kommer ut. Se <a href='https://meta.discourse.org/t/282441'>Flytta till en enskild webbplatsinställning för kategoristil</a> för instruktioner om hur du behåller din valda kategoristil."
+    problem:
+      rails_env: "Din server kör i %{env}-läge."
+      host_names: "Din config/database.yml-fil använder lokalvärdens standard-värdnamn. Uppdatera den till att använda din webbplats värdnamn."
+      queue_size: "Antal köade jobb är %{queue_size}, vilket är ganska högt. Det kan indikera ett problem med Sidekiq-processen/-processerna, eller så kanske du behöver lägga till fler Sidekiq-arbetare."
+      ram: "Din server körs med mindre än 1 GB minne. Det rekommenderas minst 1 GB minne."
+      subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
+      missing_mailgun_api_key: "Servern är konfigurerad att skicka e-post via Mailgun, men du har inte tillhandahållit en API-nyckel som ska användas för att verifiera webhook-meddelandena."
+      out_of_date_themes: "Uppdateringar finns tillgängliga för följande teman:"
+      unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
+      google_analytics_version: "Din Discourse använder för närvarande Google Analytics 3, som inte längre kommer att stödjas efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Uppgradera till Google Analytics 4</a> nu för att fortsätta att få värdefulla insikter i, och analyser av, din webbplats prestanda."
     back_from_logster_text: "Tillbaka till webbplatsen"
   site_settings:
     allow_bulk_invite: "Tillåt massinbjudningar genom att ladda upp en CSV-fil"
@@ -1522,7 +1502,6 @@ sv:
     detailed_404: "Ger mer information till användarna om varför de inte kan komma åt ett visst ämne. Notera: Det här är mindre säkert eftersom användare vet om att en URL länkar till ett giltigt ämne."
     enforce_second_factor: "Kräv att användare aktiverar tvåfaktorsautentisering innan de kan komma åt Discourse UI. Välj \"alla\" för att tillämpa det för alla användare. Välj \"personal\" för att tillämpa det endast för personalanvändare. Den här inställningen påverkar inte autentiseringen av API eller 'DiscourseConnect provider'."
     force_https: "Tvinga din webbplats att endast använda HTTPS. VARNING: bocka INTE i det här innan du kan verifiera att HTTPS verkligen fungerar överallt! Har du kontrollerat din CDN, alla sociala inloggningar och alla externa logotyper/beroenden för att säkerställa att de alla också är HTTPS-kompatibla?"
-    same_site_cookies: "Använd samma webbplatskakor, detta eliminerar alla vektorer för Cross Site Request Forgery på webbläsare som stöds (Löst eller Strikt). Varning: Strikt fungerar bara på webbplatser som tvingar inloggning och använder en extern autentiseringsmetod."
     summary_score_threshold: "Minsta poäng för att ett inlägg ska inkluderas i 'Sammanfatta det här ämnet'"
     summary_posts_required: "Minsta antal inlägg i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs. Ändringar i denna inställning kommer att genomföras retroaktivt inom en vecka."
     summary_likes_required: "Minsta antal gillningar i ett ämne innan 'Sammanfatta det här ämnet' möjliggörs. Ändringar i denna inställning kommer att genomföras retroaktivt inom en vecka."
@@ -2165,7 +2144,6 @@ sv:
     experimental_topics_filter: "EXPERIMENTELLT: Aktiverar den experimentella ämnesfiltervägen vid /filter"
     enable_experimental_lightbox: "EXPERIMENTELLT: Byt ut standardbild-lightboxen mot den nya designen."
     experimental_form_templates: "EXPERIMENTELLT: Aktivera funktionen för formulärmallar. <b>Efter att den har aktiverats</b> hanterar du mallarna på <a href='%{base_path}/admin/customize/form-templates'>Anpassa / Mallar</a>."
-    admin_sidebar_enabled_groups: "EXPERIMENTELLT: Aktivera sidofältsnavigering för administratörsgränssnittet för de angivna grupperna, som ersätter administratörsnavigeringsknapparna på översta nivån."
     lazy_load_categories_groups: "EXPERIMENTELLT: Information om kategorier av uppskjuten inläsning endast för användare av dessa grupper. Detta förbättrar prestandan på webbplatser med många kategorier."
     page_loading_indicator: "Konfigurera laddningsindikatorn som visas under sidnavigeringar i Discourse. 'Spinnare' är en indikator som tar upp hela sidan. 'Skjutreglage' visar ett smalt fält högst upp på skärmen."
     show_user_menu_avatars: "Visa användaravatarer i användarmenyn"
@@ -3423,7 +3401,6 @@ sv:
       subject_template: "[%{email_prefix}] Tvåfaktorsautentisering inaktiverad"
       text_body_template: "Tvåfaktorsautentisering har stängts av för ditt konto hos %{site_name}. Du kan nu enbart logga in genom ditt lösenord; en ytterligare autentiseringskod behövs inte längre.\n\nOm du inte valde att stänga av tvåfaktorsautentisering kan någon ha äventyrat ditt konto. \n\nOm du har några frågor, [kontakta din trevliga personal](%{base_url}/about).\n"
     digest:
-      why: "En kortfattad sammanfattning av %{site_link} sedan ditt senaste besök den %{last_seen_at}"
       since_last_visit: "Sedan ditt senaste besök"
       new_topics: "Nya ämnen"
       unread_notifications: "Olästa aviseringar"
@@ -3439,7 +3416,6 @@ sv:
       your_email_settings: "dina e-postinställningar"
       click_here: "klicka här"
       from: "%{site_name}"
-      preheader: "En kort sammanfattning sedan ditt senaste besök %{last_seen_at}"
     forgot_password:
       title: "Glömt lösenord"
       subject_template: "[%{email_prefix}] Återställning av lösenord"

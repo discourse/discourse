@@ -351,7 +351,6 @@ lt:
     request_membership_pm:
       title: "Narystės prašymas @%{group_name}"
     request_accepted_pm:
-      title: "Jūs buvote priimtas į @%{group_name}"
       body: |
         Jūsų prašymas įstoti į @%{group_name} buvo priimtas ir dabar esate narys.
   education:
@@ -1191,8 +1190,9 @@ lt:
         user: Narys
         qtt_like: Gauta patikimų
   dashboard:
-    rails_env_warning: "Jūsų serveris veikia %{env} režimu."
-    out_of_date_themes: "Galimi naujiniai šioms temoms:"
+    problem:
+      rails_env: "Jūsų serveris veikia %{env} režimu."
+      out_of_date_themes: "Galimi naujiniai šioms temoms:"
   site_settings:
     disabled: "uždrausta"
     display_local_time_in_user_card: "Rodyti vietinį laiką pagal vartotojo laiko juostą, kai atidaroma vartotojo kortelė."
@@ -2048,7 +2048,6 @@ lt:
       title: "Dviejų veiksnių autentifikavimas išjungtas"
       subject_template: "[%{email_prefix}] Dviejų veiksnių autentifikavimas išjungtas"
     digest:
-      why: "Trumpa %{site_link} santrauka nuo paskutinio apsilankymo %{last_seen_at}"
       since_last_visit: "Nuo paskutinio jūsų apsilankymo"
       new_topics: "Naujos temos"
       unread_notifications: "Neskaityti pranešimai"
@@ -2062,7 +2061,6 @@ lt:
       your_email_settings: "Jūsų el. pašto nustatymai"
       click_here: "spustelti čia"
       from: "%{site_name}"
-      preheader: "Trumpa santrauka nuo paskutinio jūsų apsilankymo %{last_seen_at}"
     forgot_password:
       title: "Pamiršote slaptažodį"
       subject_template: "[%{email_prefix}]Atkurti slaptažodį"

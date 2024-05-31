@@ -342,11 +342,20 @@ nl:
       search_placeholder: "Zoek bladwijzers op naam, topictitel of berichtinhoud"
       search: "Zoeken"
       bookmark: "Bladwijzer"
+      bulk:
+        select_all: "Alles selecteren"
+        clear_all: "Alles wissen"
+        selected_count:
+          one: "%{count} geselecteerd"
+          other: "%{count} geselecteerd"
       reminders:
         today_with_time: "vandaag om %{time}"
         tomorrow_with_time: "morgen om %{time}"
         at_time: "om %{date_time}"
         existing_reminder: "Je hebt een herinnering voor deze bladwijzer ingesteld die %{at_date_time} wordt verzonden"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Bladwijzer verwijderen"
     copy_codeblock:
       copied: "gekopieerd!"
       copy: "code kopiëren naar klembord"
@@ -2155,6 +2164,8 @@ nl:
         categories_admin_dropdown:
           title: "Categorieën beheren"
         bulk_select_topics_dropdown:
+          title: "Bulkacties"
+        bulk_select_bookmarks_dropdown:
           title: "Bulkacties"
     date_time_picker:
       from: Van
@@ -4303,7 +4314,7 @@ nl:
       panels:
         forum:
           label: Forum
-      filter: "Filter"
+      filter: "Filter..."
       no_results:
         title: "Geen resultaten"
     welcome_topic_banner:
@@ -4518,6 +4529,9 @@ nl:
               label: Categorie
             include_subcategories:
               label: "Subcategorieën bijvoegen"
+      flags:
+        description: "Beschrijving"
+        enabled: "Ingeschakeld?"
       groups:
         new:
           title: "Nieuwe groep"
@@ -5966,6 +5980,7 @@ nl:
         name: "Veldnaam"
         type: "Veldtype"
         description: "Veldbeschrijving"
+        preferences: "Voorkeuren"
         save: "Opslaan"
         edit: "Bewerken"
         delete: "Verwijderen"
@@ -5976,6 +5991,9 @@ nl:
           title: "Vereist bij registratie"
           enabled: "vereist"
           disabled: "niet vereist"
+        requirement:
+          optional:
+            title: "Optioneel"
         editable:
           title: "Bewerkbaar na registratie"
           enabled: "bewerkbaar"

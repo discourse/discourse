@@ -464,7 +464,6 @@ ja:
     request_membership_pm:
       title: "@%{group_name} のメンバーシップリクエスト"
     request_accepted_pm:
-      title: "@%{group_name} に承諾されました"
       body: |
         @%{group_name} に参加するリクエストが承諾されたため、メンバーになりました。
   education:
@@ -1333,34 +1332,16 @@ ja:
         qtt_like: '「いいね！」された数'
       description: "広範な人から「いいね！」を受け取った上位 10 人のユーザーです。"
   dashboard:
-    group_email_credentials_warning: 'グループ <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> のメールの資格情報に問題がありました。この問題が解決されるまで、このグループの受信トレイからメールを送信できません。%{error}'
-    rails_env_warning: "サーバーは %{env} モードで実行中です。"
-    host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
-    sidekiq_warning: 'Sidekiq が実行していません。メール送信などの多くのタスクは sidekiq により非同期に実行されます。少なくとも 1 つの sidekiq プロセスが実行していることを確認してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらをご覧ください</a>。'
-    queue_size_warning: "キューに入れられたジョブの数は %{queue_size} で、これは高い数字です。Sidekiq プロセスに問題があるか、Sidekiq ワーカーを増やす必要があります。"
-    memory_warning: "現在サーバーは 1 GB 未満の総メモリで実行しています。推奨メモリサイズは 1 GB 以上です。"
-    google_oauth2_config_warning: 'サーバーは Google OAuth2 を使った登録とログインを許可 (enable_google_oauth2_logins) するように構成されていますが、クライアント ID とクライアントシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
-    facebook_config_warning: 'サーバーは Facebook を使った登録とログインを許可 (enable_facebook_logins) するように構成されていますが、アプリ ID とアプリシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
-    twitter_config_warning: 'サーバーは Twitter を使った登録とログインを許可 (enable_twitter_logins) するように構成されていますが、キーとシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
-    github_config_warning: 'サーバーは GitHub を使った登録とログインを許可 (enable_github_logins) するように構成されていますが、クライアント ID とシークレットの値が設定されていません。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して、設定を更新してください。<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">詳しくは、こちらのガイドをご覧ください</a>。'
-    s3_config_warning: 'サーバーはファイルを S3 にアップロードするように構成されていますが、少なくとも次の設定の 1 つが設定されていません: s3_access_key_id、s3_secret_access_key、s3_use_iam_profile、または s3_upload_bucket。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して設定を更新してください。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは、「S3 への画像アップロードを設定する方法」をご覧ください</a>。'
-    s3_backup_config_warning: 'サーバーはバックアップを S3 にアップロードするように構成されていますが、少なくとも次の設定の 1 つが設定されていません: s3_access_key_id、s3_secret_access_key、s3_use_iam_profile、または s3_backup_bucket。<a href="%{base_path}/admin/site_settings">サイト設定</a>に移動して設定を更新してください。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは、「S3 への画像アップロードを設定する方法」をご覧ください</a>。'
-    s3_cdn_warning: 'サーバーはファイルを S3 にアップロードするように構成されていますが、S3 CDN が構成されていません。これにより、S3 のコストが高くなり、サイトパフォーマンスが低下する可能性があります。<a href="https://meta.discourse.org/t/-/148916" target="_blank">詳しくは、「アップロードにオブジェクトストレージを使用する」をご覧ください</a>。'
-    image_magick_warning: 'サーバーは大きな画像のサムネイルを作成するように構成されていますが、ImageMagick がインストールされていません。パッケージマネージャーを使用して ImageMagick をインストールするか、<a href="https://www.imagemagick.org/script/download.php" target="_blank">最新リリースをダウンロード</a>してください。'
-    failing_emails_warning: '失敗したメールジョブが %{num_failed_jobs} 件あります。app.yml を確認し、メールサーバーの設定が正しいことを確認してください。<a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq で失敗したジョブを参照</a>してください。'
-    subfolder_ends_in_slash: "サブフォルダのセットアップが誤っています。DISCOURSE_RELATIVE_URL_ROOT はスラッシュで終了します。"
-    outdated_translations_warning: "翻訳の上書きの一部が古くなっています。<a href='%{base_path}/admin/customize/site_texts?outdated=true'>テキストのカスタマイズ</a>を確認してください。"
-    email_polling_errored_recently:
-      other: "メールのポーリングにおいて過去 24 時間で %{count} 件のエラーが発生しています。詳細については、<a href='%{base_path}/logs' target='_blank'>ログ</a>をご覧ください。"
-    missing_mailgun_api_key: "サーバーは Mailgun 経由でメールを送信するように構成されていますが、Webhook メッセージを確認するために使用される API キーが指定されていません。"
-    bad_favicon_url: "ファビコンの読み込みに失敗しています。<a href='%{base_path}/admin/site_settings'>サイト設定</a>でファビコンの設定を確認してください。"
-    poll_pop3_timeout: "POP3 サーバーへの接続がタイムアウトしています。受信メールを取得できませんでした。<a href='%{base_path}/admin/site_settings/category/email'>POP3 の設定</a>とサービスプロバイダーを確認してください。"
-    poll_pop3_auth_error: "POP3 サーバーへの接続が認証エラーで失敗しています。<a href='%{base_path}/admin/site_settings/category/email'>POP3 の設定</a>を確認してください。"
-    force_https_warning: "ウェブサイトは SSL を使用していますが、サイト設定では '<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>' が有効になっていません。"
-    out_of_date_themes: "次のテーマの更新があります:"
-    unreachable_themes: "次のテーマの更新を確認できませんでした:"
-    v3_analytics_deprecated: "あなたの Discourse は現在 Google Analytics 3 を使用していますが、2023 年 7 月以降はサポートされなくなります。今すぐ <a href='https://meta.discourse.org/t/260498'>Google Analytics 4 にアップグレード</a>して、ウェブサイトのパフォーマンスに関する貴重なインサイトと分析を引き続き受け取りましょう。"
-    category_style_deprecated: "あなたの Discourse は現在、Discourse 3.2 の最終ベータリリース前に削除が予定されている非推奨のカテゴリスタイルを使用しています。選択したカテゴリスタイルを維持する方法については、<a href='https://meta.discourse.org/t/282441'>単一カテゴリスタイルのサイト設定</a>をご覧ください。"
+    problem:
+      rails_env: "サーバーは %{env} モードで実行中です。"
+      host_names: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
+      queue_size: "キューに入れられたジョブの数は %{queue_size} で、これは高い数字です。Sidekiq プロセスに問題があるか、Sidekiq ワーカーを増やす必要があります。"
+      ram: "現在サーバーは 1 GB 未満の総メモリで実行しています。推奨メモリサイズは 1 GB 以上です。"
+      subfolder_ends_in_slash: "サブフォルダのセットアップが誤っています。DISCOURSE_RELATIVE_URL_ROOT はスラッシュで終了します。"
+      missing_mailgun_api_key: "サーバーは Mailgun 経由でメールを送信するように構成されていますが、Webhook メッセージを確認するために使用される API キーが指定されていません。"
+      out_of_date_themes: "次のテーマの更新があります:"
+      unreachable_themes: "次のテーマの更新を確認できませんでした:"
+      google_analytics_version: "あなたの Discourse は現在 Google Analytics 3 を使用していますが、2023 年 7 月以降はサポートされなくなります。今すぐ <a href='https://meta.discourse.org/t/260498'>Google Analytics 4 にアップグレード</a>して、ウェブサイトのパフォーマンスに関する貴重なインサイトと分析を引き続き受け取りましょう。"
   site_settings:
     allow_bulk_invite: "CSV ファイルのアップロードによる一括招待を許可する"
     disabled: "無効"
@@ -1457,7 +1438,6 @@ ja:
     detailed_404: "特定のトピックにアクセスできない詳細な理由をユーザーに提供します。注意: URL が有効なトピックにリンクしているかどうかがユーザーにわかるため、安全性が低くなります。"
     enforce_second_factor: "ユーザーが Discourse UI にアクセスする前に二要素認証を有効にするように要求します。'すべて' を選択するとすべてのユーザーに適用されます。'スタッフ' を選択するとスタッフユーザーのみに適用されます。この設定は API または 'DiscourseConnect プロバイダー' の認証には影響しません。"
     force_https: "サイトが HTTPS のみを使用するように強制する。警告: HTTPS が完全にセットアップ済みであり、すべての場所で機能していることを確認するまで、これを有効にしないでください！CDN、すべてのソーシャルログイン、および外部ロゴ/依存関係がすべて HTTPS 対応であることを確認しましたか？"
-    same_site_cookies: "同じサイト Cookie を使用する。サポートされているブラウザですべてのクロスサイトリクエストフォージェリ攻撃を排除します (Lax または Strict)。Strict は、ログインと外部認証方式の使用を強制するサイトでのみ動作します。"
     summary_score_threshold: "「このトピックを要約」に含まれるために必要な投稿の最低スコア"
     summary_posts_required: "'このトピックを要約' を有効にするために最低限必要なトピック内の投稿数。この設定を変更すると、1 週間以内で遡って適用されます。"
     summary_likes_required: "'このトピックを要約' を有効にするために最低限必要なトピック内の「いいね！」数。この設定を変更すると、1 週間以内で遡って適用されます。"
@@ -2093,7 +2073,6 @@ ja:
     experimental_topics_filter: "実験的: /filter で実験的なトピックフィルターのルートを有効にします"
     enable_experimental_lightbox: "実験的: デフォルトの画像ライトボックスを改良されたデザインに置き換えます。"
     experimental_form_templates: "実験的: フォームのテンプレート機能を有効にします。<b>有効にした後</b>は、<a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> でテンプレートを管理します。"
-    admin_sidebar_enabled_groups: "実験的: 指定したグループの管理者 UI のサイドバーナビゲーションを有効にします。これは、トップレベル管理者ナビゲーションボタンを置き換えます。"
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
     show_user_menu_avatars: "ユーザーメニューにユーザーアバターを表示する"
     errors:
@@ -3455,7 +3434,6 @@ ja:
 
         不明な点がございましたら、[スタッフにお問い合わせください](%{base_url}/about)。
     digest:
-      why: "最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめ"
       since_last_visit: "最終アクセス以降"
       new_topics: "新規トピック"
       unread_notifications: "未読の通知"
@@ -3471,7 +3449,6 @@ ja:
       your_email_settings: "メール設定"
       click_here: "こちらをクリック"
       from: "%{site_name}"
-      preheader: "%{last_seen_at} の最終アクセス以降の要約"
     forgot_password:
       title: "パスワードを忘れました"
       subject_template: "[%{email_prefix}] パスワードのリセット"

@@ -65,6 +65,12 @@ sk:
           many: "Presúvate <strong>%{count}</strong> správ. Vyberte cieľový kanál. V kanáli <strong>%{channelTitle}</strong> sa vytvorí zástupná správa, ktorá označuje, že táto správa bola presunutá. Upozorňujeme, že reťazce odpovedí sa v novom kanáli nezachovajú a správy v starom kanáli sa už nebudú zobrazovať ako odpovede na žiadne presunuté správy."
           other: "Presúvate <strong>%{count}</strong> správ. Vyberte cieľový kanál. V kanáli <strong>%{channelTitle}</strong> sa vytvorí zástupná správa, ktorá označuje, že táto správa bola presunutá. Upozorňujeme, že reťazce odpovedí sa v novom kanáli nezachovajú a správy v starom kanáli sa už nebudú zobrazovať ako odpovede na žiadne presunuté správy."
         confirm_move: "Presunúť správy"
+      delete_messages:
+        confirm:
+          one: "Naozaj chcete odstrániť túto správu?"
+          few: "Naozaj chcete odstrániť týchto %{count} správ?"
+          many: "Naozaj chcete odstrániť týchto %{count} správ?"
+          other: "Naozaj chcete odstrániť tieto %{count} správy?"
       channel_settings:
         title: "Nastavenia kanála"
         edit: "Upraviť"
@@ -102,7 +108,6 @@ sk:
       channels_list_popup:
         browse: "Prehľadávanie kanálov"
         create: "Nový kanál"
-      click_to_join: "Kliknutím sem zobrazíte dostupné kanály."
       close: "Zavrieť"
       remove: "Odstrániť"
       collapse: "Zatvoriť zásuvku chatu"
@@ -242,8 +247,7 @@ sk:
         header: "Hlavička chatu"
         composer: "Skladateľ chatu"
         channels_list: "Zoznam chatovacích kanálov"
-      no_direct_message_channels: "Nepripojili ste sa k žiadnym kanálom priamych správ."
-      no_public_channels: "Nepripojili ste sa k žiadnym kanálom."
+      no_public_channels_cta: "Prehľadávanie kanálov"
       kicked_from_channel: "K tomuto kanálu už nemáte prístup."
       only_chat_push_notifications:
         title: "Odosielajte iba upozornenia na chat"
@@ -580,6 +584,7 @@ sk:
         cancel: "Zrušiť"
         quote_selection: "Citácia v téme"
         copy: "Kopírovať"
+        delete: "Odstrániť (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "Presun do kanála"
         error: "Došlo k chybe pri presúvaní správ chatu"
         title: "Presunúť chat na tému"

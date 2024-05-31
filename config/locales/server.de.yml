@@ -508,6 +508,7 @@ de:
   read_full_topic: "Vollständiges Thema lesen"
   private_message_abbrev: "Nachricht"
   rss_description:
+    hot: "Heiße Themen"
     latest: "Aktuelle Themen"
     top: "Angesagte Themen"
     top_all: "Angesagte Themen (gesamt)"
@@ -585,7 +586,6 @@ de:
     request_membership_pm:
       title: "Mitgliedschaftsanfrage für @%{group_name}"
     request_accepted_pm:
-      title: "Du wurdest in @%{group_name} aufgenommen"
       body: |
         Deine Anfrage, @%{group_name} beizutreten, wurde angenommen und du bist nun Mitglied.
   education:
@@ -763,6 +763,8 @@ de:
 
       > Wenn du Hilfe brauchst oder einen Vorschlag hast, kannst du unter %{feedback_category} fragen oder [die Administratoren kontaktieren](%{base_path}/about).
   admin_quick_start_title: "Administratorhandbuch: Erste Schritte"
+  topic_view_stats:
+    invalid_date: "Das Datum hat ein ungültiges Format, verwende JJJJ-MM-TT"
   category:
     topic_prefix: "Über die Kategorie %{category}"
     replace_paragraph: "(Ersetze diesen ersten Absatz mit einer kurzen Beschreibung deiner neuen Kategorie. Diese Orientierung wird in der Kategorienauswahl angezeigt, versuche also, weniger als 200 Zeichen zu benutzen.)"
@@ -1519,38 +1521,39 @@ de:
         qtt_like: Erhaltene „Gefällt mir“
       description: "Top-10-Benutzer, die von einer Vielzahl von Personen „Gefällt mir“ erhalten haben."
   dashboard:
-    twitter_login_warning: 'Der Twitter-Login scheint im Moment nicht zu funktionieren. Überprüfe die Anmeldedaten in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">den Website-Einstellungen</a>.'
-    group_email_credentials_warning: 'Es gab ein Problem mit den E-Mail-Anmeldedaten für die Gruppe <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Bis dieses Problem behoben ist, werden keine E-Mails aus dem Posteingang der Gruppe versendet. %{error}'
-    rails_env_warning: "Dein Server läuft im %{env}-Modus."
-    host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostnamen. Trage hier den Hostnamen deiner Website ein."
-    sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben – wie zum Beispiel das Versenden von E-Mails – werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq" target="_blank">Mehr über Sidekiq erfährst du hier</a>.'
-    queue_size_warning: "Eine hohe Anzahl an Aufgaben (%{queue_size}) befindet sich in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder du musst zusätzliche Sidekiq Worker starten."
-    memory_warning: "Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen."
-    maxmind_db_configuration_warning: 'Der Server wurde so konfiguriert, dass er MaxMind-Datenbanken für Reverse-IP-Lookups verwendet, aber es wurde keine gültige MaxMind-Konto-ID konfiguriert, was dazu führen kann, dass MaxMind-Datenbanken in Zukunft nicht mehr heruntergeladen werden können. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">In diesem Leitfaden erfährst du mehr</a>.'
-    google_oauth2_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Google OAuth2 erlaubt (enable_google_oauth2_logins), aber die Client-ID und die Client-Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
-    facebook_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Facebook erlaubt (enable_facebook_logins), aber die App-ID und die Geheimnis-Werte der App sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
-    twitter_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Twitter erlaubt (enable_twitter_logins), aber der Schlüssel und die Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
-    github_config_warning: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit GitHub erlaubt (enable_github_logins), aber die Client-ID und die Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
-    s3_config_warning: 'Der Server ist so konfiguriert, dass Dateien auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht festgelegt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile oder s3_upload_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Unter „Wie richte ich Bilder-Uploads zu S3 ein?“ erfährst du mehr</a>.'
-    s3_backup_config_warning: 'Der Server ist so konfiguriert, dass Backups auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht festgelegt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile oder s3_backup_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Unter „Wie richte ich Bilder-Uploads zu S3 ein?“ erfährst du mehr</a>.'
-    s3_cdn_warning: 'Der Server ist so konfiguriert, dass Dateien auf S3 hochgeladen werden, aber es ist kein S3-CDN konfiguriert. Dies kann zu teuren S3-Kosten und einer langsameren Performance der Website führen. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Unter „Objektspeicher für Uploads verwenden“ erfährst du mehr</a>.'
-    image_magick_warning: 'Der Server ist so konfiguriert, dass er Vorschaubilder von großen Bildern erstellt, aber ImageMagick ist nicht installiert. Installiere ImageMagick mit deinem bevorzugten Paketmanager oder <a href="https://www.imagemagick.org/script/download.php" target="_blank">lade die aktuelle Version herunter</a>.'
-    failing_emails_warning: '%{num_failed_jobs} E-Mail-Jobs sind fehlgeschlagen. Überprüfe deine app.yml und stelle sicher, dass die Mailservereinstellungen korrekt sind. <a href="%{base_path}/sidekiq/retries" target="_blank">Fehlgeschlagene Jobs in Sidekiq anzeigen</a>.'
-    subfolder_ends_in_slash: "Deine Unterordner-Konfiguration ist fehlerhaft; DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
-    outdated_translations_warning: "Einige deiner Übersetzungsüberschreibungen sind nicht mehr aktuell. Bitte überprüfe deine <a href='%{base_path}/admin/customize/site_texts?outdated=true'>Textanpassungen</a>."
-    email_polling_errored_recently:
-      one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Protokollen</a>."
-      other: "Beim Abrufen von E-Mails sind in den letzten 24 Stunden %{count} Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Protokollen</a>."
-    missing_mailgun_api_key: "Der Server ist so konfiguriert, dass E-Mails über Mailgun versendet werden, aber du hast keinen API-Schlüssel angegeben, mit dem die Webhook-Nachrichten verifiziert werden können."
-    bad_favicon_url: "Das Favicon lässt sich nicht laden. Prüfe die Favicon-Einstellung in den <a href='%{base_path}/admin/site_settings'>Einstellungen</a>."
-    poll_pop3_timeout: "Die Verbindung zum POP3-Server schlägt mit einer Zeitüberschreitung fehl. Eingehende E-Mails konnten nicht abgerufen werden. Überprüfe deine <a href='%{base_path}/admin/site_settings/category/email'>POP3-Einstellungen</a>."
-    poll_pop3_auth_error: "Die Verbindung zum POP3-Server schlägt mit einem Authentifizierungsfehler fehl. Überprüfe deine <a href='%{base_path}/admin/site_settings/category/email'>POP3-Einstellungen</a>."
-    force_https_warning: "Deine Website verwendet SSL, aber `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ist in deinen Website-Einstellungen noch nicht aktiviert."
-    out_of_date_themes: "Updates sind für die folgenden Themes verfügbar:"
-    unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
-    watched_word_regexp_error: "Der reguläre Ausdruck für %{action} überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
-    v3_analytics_deprecated: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a>, um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
-    category_style_deprecated: "Dein Discourse verwendet zurzeit einen veralteten Kategoriestil, der vor der endgültigen Beta-Version von Discourse 3.2 entfernt wird. Wie du deinen gewählten Kategoriestil beibehalten kannst, erfährst du unter <a href='https://meta.discourse.org/t/282441'>Umstellung auf einen einzigen Kategoriestil (Website-Einstellung)</a> ."
+    problem:
+      twitter_login: 'Der Twitter-Login scheint im Moment nicht zu funktionieren. Überprüfe die Anmeldedaten in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">den Website-Einstellungen</a>.'
+      group_email_credentials: 'Es gab ein Problem mit den E-Mail-Anmeldedaten für die Gruppe <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Bis dieses Problem behoben ist, werden keine E-Mails aus dem Posteingang der Gruppe versendet. %{error}'
+      rails_env: "Dein Server läuft im %{env}-Modus."
+      host_names: "Deine config/database.yml-Datei verwendet localhost als Hostnamen. Trage hier den Hostnamen deiner Website ein."
+      sidekiq: 'Sidekiq läuft nicht. Viele Aufgaben – wie zum Beispiel das Versenden von E-Mails – werden asynchron durch Sidekiq ausgeführt. Bitte stell sicher, dass mindestens ein Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq" target="_blank">Mehr über Sidekiq erfährst du hier</a>.'
+      queue_size: "Eine hohe Anzahl an Aufgaben (%{queue_size}) befindet sich in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder du musst zusätzliche Sidekiq Worker starten."
+      ram: "Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen."
+      google_oauth2_config: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Google OAuth2 erlaubt (enable_google_oauth2_logins), aber die Client-ID und die Client-Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
+      facebook_config: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Facebook erlaubt (enable_facebook_logins), aber die App-ID und die Geheimnis-Werte der App sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
+      twitter_config: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit Twitter erlaubt (enable_twitter_logins), aber der Schlüssel und die Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
+      github_config: 'Der Server ist so konfiguriert, dass er die Registrierung und die Anmeldung mit GitHub erlaubt (enable_github_logins), aber die Client-ID und die Geheimnis-Werte sind nicht festgelegt. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere sie. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Erfahre in dieser Anleitung mehr dazu</a>.'
+      s3_upload_config: 'Der Server ist so konfiguriert, dass Dateien auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht festgelegt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile oder s3_upload_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Unter „Wie richte ich Bilder-Uploads zu S3 ein?“ erfährst du mehr</a>.'
+      s3_backup_config: 'Der Server ist so konfiguriert, dass Backups auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht festgelegt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile oder s3_backup_bucket. Gehe zu <a href="%{base_path}/admin/site_settings">den Website-Einstellungen</a> und aktualisiere die Einstellungen. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Unter „Wie richte ich Bilder-Uploads zu S3 ein?“ erfährst du mehr</a>.'
+      s3_cdn: 'Der Server ist so konfiguriert, dass Dateien auf S3 hochgeladen werden, aber es ist kein S3-CDN konfiguriert. Dies kann zu teuren S3-Kosten und einer langsameren Performance der Website führen. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Unter „Objektspeicher für Uploads verwenden“ erfährst du mehr</a>.'
+      image_magick: 'Der Server ist so konfiguriert, dass er Vorschaubilder von großen Bildern erstellt, aber ImageMagick ist nicht installiert. Installiere ImageMagick mit deinem bevorzugten Paketmanager oder <a href="https://www.imagemagick.org/script/download.php" target="_blank">lade die aktuelle Version herunter</a>.'
+      failing_emails: '%{num_failed_jobs} E-Mail-Jobs sind fehlgeschlagen. Überprüfe deine app.yml und stelle sicher, dass die Mailservereinstellungen korrekt sind. <a href="%{base_path}/sidekiq/retries" target="_blank">Fehlgeschlagene Jobs in Sidekiq anzeigen</a>.'
+      subfolder_ends_in_slash: "Deine Unterordner-Konfiguration ist fehlerhaft; DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
+      translation_overrides: "Einige deiner Übersetzungsüberschreibungen sind nicht mehr aktuell. Bitte überprüfe deine <a href='%{base_path}/admin/customize/site_texts?outdated=true'>Textanpassungen</a>."
+      email_polling_errored_recently:
+        one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Fehlerprotokollen</a>."
+        other: "Beim Abrufen von E-Mails sind in den letzten 24 Stunden %{count} Fehler aufgetreten. Weitere Informationen findest du <a href='%{base_path}/logs' target='_blank'>in den Fehlerprotokollen</a>."
+      missing_mailgun_api_key: "Der Server ist so konfiguriert, dass E-Mails über Mailgun versendet werden, aber du hast keinen API-Schlüssel angegeben, mit dem die Webhook-Nachrichten verifiziert werden können."
+      bad_favicon_url: "Das Favicon lässt sich nicht laden. Prüfe die Favicon-Einstellung in den <a href='%{base_path}/admin/site_settings'>Einstellungen</a>."
+      poll_pop3_timeout: "Die Verbindung zum POP3-Server schlägt mit einer Zeitüberschreitung fehl. Eingehende E-Mails konnten nicht abgerufen werden. Überprüfe deine <a href='%{base_path}/admin/site_settings/category/email'>POP3-Einstellungen</a>."
+      poll_pop3_auth_error: "Die Verbindung zum POP3-Server schlägt mit einem Authentifizierungsfehler fehl. Überprüfe deine <a href='%{base_path}/admin/site_settings/category/email'>POP3-Einstellungen</a>."
+      force_https: "Deine Website verwendet SSL. Aber <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>`force_https`</a> ist in den Einstellungen deiner Website noch nicht aktiviert."
+      out_of_date_themes: "Updates sind für die folgenden Themes verfügbar:"
+      unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
+      watched_words: "Der reguläre Ausdruck für %{action} überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
+      google_analytics_version: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a>, um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
+      category_style_deprecated: "Dein Discourse verwendet zurzeit einen veralteten Kategoriestil, der vor der endgültigen Beta-Version von Discourse 3.2 entfernt wird. Wie du deinen gewählten Kategoriestil beibehalten kannst, erfährst du unter <a href='https://meta.discourse.org/t/282441'>Umstellung auf einen einzigen Kategoriestil (Website-Einstellung)</a> ."
+      maxmind_db_configuration: 'Der Server wurde so konfiguriert, dass er MaxMind-Datenbanken für Reverse-IP-Lookups verwendet, aber es wurde keine gültige MaxMind-Konto-ID konfiguriert, was dazu führen kann, dass MaxMind-Datenbanken in Zukunft nicht mehr heruntergeladen werden können. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">In diesem Leitfaden erfährst du mehr</a>.'
     back_from_logster_text: "Zurück zur Seite"
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
@@ -1653,7 +1656,6 @@ de:
     detailed_404: "Liefert mehr Details für Benutzer darüber, warum sie keinen Zugriff auf ein spezielles Thema haben. Hinweis: Dies ist weniger sicher, weil Benutzer so herausfinden, ob eine URL zu einem existierenden Thema führt."
     enforce_second_factor: "Verlangt von den Benutzern, dass sie die Zwei-Faktor-Authentifizierung aktivieren, bevor sie auf die Discourse-Benutzeroberfläche zugreifen können. Wähle „alle“, um dies für alle Benutzer zu erzwingen. Wähle „Team“, um dies nur für Team-Mitglieder zu erzwingen. Diese Einstellung wirkt sich nicht auf die API- oder DiscourseConnect-Anbieter-Authentifizierung aus."
     force_https: "Erzwinge HTTPS für deine Website. ACHTUNG: Aktiviere dies NICHT, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du dein CDN, alle Anmeldungen über soziale Netzwerke, alle externe Logos/Abhängigkeiten geprüft, um sicherzustellen, dass sie auch HTTPS-kompatibel sind?"
-    same_site_cookies: "Same-Site-Cookies verwenden, die alle Angriffsszenarien für Cross-Site-Request-Forgery in unterstützten Browsern verhindern („Lax“ oder „Strict“). Warnung: „Strict“ wird nur auf Websites funktionieren, die eine Anmeldung erzwingen und eine externe Authentifizierungsmethode verwenden."
     summary_score_threshold: "Mindestscore, den ein Beitrag benötigt, um in der „Dieses Thema zusammenfassen“-Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor „Dieses Thema zusammenfassen“ aktiviert wird. Änderungen dieser Einstellung werden rückwirkend innerhalb einer Woche angewendet."
     summary_likes_required: "Mindestanzahl an „Gefällt mir“ in einem Thema, bevor „Dieses Thema zusammenfassen“ aktiviert wird. Änderungen dieser Einstellung werden rückwirkend innerhalb einer Woche angewendet."
@@ -1767,7 +1769,7 @@ de:
     log_out_strict: "Beim Abmelden ALLE Sitzungen des Benutzers auf allen Geräten beenden"
     version_checks: "Kontaktiere den Discourse Hub zur Überprüfung auf neue Versionen und zeige Benachrichtigungen über neue Versionen im <a href='%{base_path}/admin' target='_blank'>/admin</a>-Dashboard an."
     new_version_emails: "Sende eine E-Mail an die contact_email-Adresse, wenn eine neue Version von Discourse verfügbar ist."
-    include_in_discourse_discover: "Lasse CDCK, Inc. („Discourse“) diese Community auf der <a href='https://www.discourse.org/discover'>Discover-Seite</a> und in den Marketingmaterialien von Discourse vorstellen. Dann übermittelst du Daten, die zur Aufnahme deiner Seite in diesen Dienst erforderlich sind. Bitte beachte, dass die Förderung von Communities im Ermessen von Discourse liegt."
+    include_in_discourse_discover: "Erlaube CDCK, Inc. („Discourse“) diese Community auf der <a href='https://discover.discourse.org' target='_blank'>Discover-Seite</a> und in Discourse-Marketingmaterialien zu präsentieren. Indem du dies tust, teilst du die erforderlichen Daten, damit deine Website in den Service aufgenommen werden kann. Bitte beachte, dass die Promotion von Communities im Ermessen von Discourse liegt."
     invite_expiry_days: "Gültigkeitsdauer von Benutzereinladungsschlüsseln in Tagen"
     invite_only: "Alle neuen Benutzer müssen explizit von vertrauenswürdigen Benutzern oder dem Team eingeladen werden. Die öffentliche Registrierung ist deaktiviert."
     login_required: "Nur angemeldete Benutzer dürfen Inhalte der Website lesen, anonyme Zugriffe sind verboten."
@@ -2376,8 +2378,8 @@ de:
     enable_experimental_lightbox: "EXPERIMENTELL: Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
     enable_experimental_bookmark_redesign_groups: "EXPERIMENTELL: Zeige ein Schnellzugriffsmenü für Lesezeichen in Beiträgen und ein neu gestaltetes Modal"
     glimmer_header_mode: "Legt fest, ob die neue \"Glimmer\"-Header-Implementierung verwendet wird. Der Standardwert ist \"auto\", sodass automatisch aktiviert wird, sobald alle deine Themes und Plugins bereit sind. https://meta.discourse.org/t/296544"
+    experimental_glimmer_topic_list_groups: "EXPERIMENTELL: Aktiviert die neue Implementierung der 'Glimmer'-Themenliste. Diese Implementierung befindet sich in der aktiven Entwicklung und ist nicht für den Einsatz in der Produktion vorgesehen. Entwickle keine Themes/Plugins dagegen, bis die Implementierung abgeschlossen und angekündigt ist."
     experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
-    admin_sidebar_enabled_groups: "EXPERIMENTELL: Aktiviere die Seitenleistennavigation für die Administrator-Benutzeroberfläche für die angegebenen Gruppen, wodurch die Administrator-Navigationsschaltflächen der obersten Ebene ersetzt werden."
     lazy_load_categories_groups: "EXPERIMENTELL: Lazy-Load-Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTELL: Aktiviere das neue Drop-down für Massenoperationen."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
@@ -3850,7 +3852,7 @@ de:
 
         Wenn du Fragen hast, [wende dich an unser freundliches Team](%{base_url}/about).
     digest:
-      why: "Eine kurze Zusammenfassung von %{site_link} seit deinem letzten Besuch am %{last_seen_at}"
+      why: "Eine kurze Zusammenfassung von %{site_link} seit %{since}"
       since_last_visit: "Seit deinem letzten Besuch"
       new_topics: "Neue Themen"
       unread_notifications: "Ungelesene Benachrichtigungen"
@@ -3866,7 +3868,7 @@ de:
       your_email_settings: "deine E-Mail-Einstellungen"
       click_here: "klicke hier"
       from: "%{site_name}"
-      preheader: "Eine kurze Zusammenfassung seit deinem letzten Besuch am %{last_seen_at}"
+      preheader: "Eine kurze Zusammenfassung seit %{since}"
     forgot_password:
       title: "Passwort vergessen"
       subject_template: "[%{email_prefix}] Passwort zurücksetzen"
@@ -5040,6 +5042,9 @@ de:
       agree_and_hide:
         title: "Beitrag ausblenden"
         description: "Der Meldung zustimmen, diesen Beitrag ausblenden und dem Benutzer automatisch eine Nachricht mit der Bitte schicken, ihn zu bearbeiten."
+      agree_and_edit:
+        title: "Zustimmen und Beitrag bearbeiten"
+        description: "Stimme der Meldung zu und öffne ein Editorfenster, um den Beitrag zu bearbeiten."
       delete_single:
         title: "Löschen"
       delete:

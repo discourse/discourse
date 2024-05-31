@@ -327,11 +327,17 @@ pt:
       search_placeholder: "Pesquise favoritos por nome, título do tópico ou conteúdo do post"
       search: "Pesquisar"
       bookmark: "Adicionar Marcador"
+      bulk:
+        select_all: "Selecionar Tudo"
+        clear_all: "Limpar Tudo"
       reminders:
         today_with_time: "hoje às %{time}"
         tomorrow_with_time: "amanhã às %{time}"
         at_time: "às %{date_time}"
         existing_reminder: "Você tem um lembrete definido para este favorito que será enviado %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Remover Marcador"
     copy_codeblock:
       copied: "copiado!"
     drafts:
@@ -1875,6 +1881,8 @@ pt:
         categories_admin_dropdown:
           title: "Gerir categorias"
         bulk_select_topics_dropdown:
+          title: "Ações em Massa"
+        bulk_select_bookmarks_dropdown:
           title: "Ações em Massa"
     date_time_picker:
       from: De
@@ -3527,7 +3535,6 @@ pt:
               content: "As Minhas publicações"
             review:
               content: "Revisão"
-      filter: "Filtrar"
     until: "Até:"
     form_templates:
       upload_field:
@@ -3650,6 +3657,9 @@ pt:
               label: Categoria
             include_subcategories:
               label: "Incluir Subcategorias"
+      flags:
+        description: "Descrição"
+        enabled: "Ativado?"
       groups:
         new:
           title: "Novo Grupo"
@@ -4604,6 +4614,7 @@ pt:
         name: "Nome do Campo"
         type: "Tipo do Campo"
         description: "Descrição do Campo"
+        preferences: "Preferências"
         save: "Guardar"
         edit: "Editar"
         delete: "Eliminar"
@@ -4614,6 +4625,9 @@ pt:
           title: "Obrigatório na inscrição"
           enabled: "obrigatório"
           disabled: "não obrigatório"
+        requirement:
+          optional:
+            title: "Opcional"
         editable:
           title: "Editável depois da inscrição"
           enabled: "editável"

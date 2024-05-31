@@ -75,8 +75,8 @@ ko:
       not_allowed_theme: "`%{repo}` 가 허용 테마의 목록에 없습니다(`allowed_theme_repos` 글로벌 설정을 확인하세요)."
     errors:
       component_no_user_selectable: "테마 구성 요소는 사용자가 선택할 수 없습니다"
-      component_no_default: "테마 구성 요소는 디폴트 테마가 될 수 없습니다"
-      component_no_color_scheme: "테마 구성 요소는 색상 팔레트를 가질 수 없습니다"
+      component_no_default: "테마 구성 요소는 기본 테마가 될 수 없습니다."
+      component_no_color_scheme: "테마 구성 요소에는 색상 팔레트를 포함할 수 없습니다."
       no_multilevels_components: "자식 테마가 있는 테마는 자식 테마 자체가 될 수 없습니다"
       optimized_link: 최적화된 이미지 링크는 일시적이므로 테마 소스 코드에 포함하지 않아야 합니다.
     settings_errors:
@@ -399,7 +399,6 @@ ko:
     request_membership_pm:
       title: "@%{group_name}에 멤버십 요청"
     request_accepted_pm:
-      title: "@%{group_name}의 가입이 수락되었습니다"
       body: |
         @%{group_name} 가입 요청이 수락되었으며 이제 회원이 되었습니다.
   education:
@@ -1230,30 +1229,15 @@ ko:
         user: 사용자
         qtt_like: 받은 좋아요 수
   dashboard:
-    rails_env_warning: "서버가 %{env} 모드에서 실행 중입니다."
-    host_names_warning: "config/database.yml 파일은 디폴트 로컬호스트 호스트 이름을 사용하고 있습니다. 내 사이트의 호스트 이름으로 업데이트하세요."
-    sidekiq_warning: 'Sidekiq이 현재 실행되고 있지 않습니다. Sidekiq은 이메일 전송 같은 많은 작업을 비동기식으로 처리합니다. 최소 하나의 sidekiq 프로세서를 실행하세요. <a href="https://github.com/mperham/sidekiq">여기에서 Sidekiq을 자세히 알아보세요</a>.'
-    queue_size_warning: "대기열 작업이 %{queue_size}개 있습니다. 작업 수가 너무 많아 Sidekiq 프로세스에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가해야 할 수 있습니다."
-    memory_warning: "서버가 총 1GB 미만 메모리로 실행되고 있습니다. 최소 1GB 이상의 메모리를 사용하세요."
-    google_oauth2_config_warning: '서버가 Google OAuth2(enable_google_oauth2_logins)로 가입 및 로그인을 허용하도록 환경설정되었지만, 클라이언트 ID 및 클라이언트 암호 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하세요. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세한 내용은 이 가이드를 참조하세요</a>.'
-    facebook_config_warning: '서버가 Facebook(enable_facebook_logins)으로 가입 및 로그인을 허용하도록 환경설정되었지만, 앱 ID 및 앱 암호 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하세요. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">자세한 내용은 이 가이드를 참조하세요</a>.'
-    twitter_config_warning: '서버가 Twitter(enable_twitter_logins)로 가입 및 로그인을 허용하도록 환경설정되었지만, 키 및 암호 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하세요. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">자세한 내용은 이 가이드를 참조하세요</a>.'
-    github_config_warning: '서버가 GitHub(enable_github_logins)로 가입 및 로그인을 허용하도록 환경설정되었지만, 클라이언트 ID 및 암호 값이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>으로 이동하여 설정을 업데이트하세요. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">자세한 내용은 이 가이드를 참조하세요</a>.'
-    s3_config_warning: '서버가 S3에 파일을 업로드하도록 환경설정되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_upload_bucket 설정 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>에서 설정을 업데이트하세요. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">자세한 내용은 ''S3에 이미지 업로드 구성 방법''을 참조하세요</a>.'
-    s3_backup_config_warning: '서버가 S3에 백업을 업로드하도록 환경설정되었지만 s3_access_key_id, s3_secret_access_key, s3_use_iam_profile 또는 s3_backup_bucket 설정 중 하나 이상이 설정되지 않았습니다. <a href="%{base_path}/admin/site_settings">사이트 설정</a>에서 설정을 업데이트하세요. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">자세한 내용은 ''S3에 이미지 업로드 구성 방법''을 참조하세요</a>.'
-    s3_cdn_warning: '서버가 S3에 파일을 업로드하도록 환경설정되었지만 S3 CDN이 환경설정되어 있지 않습니다. 이로 인해 S3 비용이 많이 들고 사이트 퍼포먼스가 저하될 수 있습니다. <a href="https://meta.discourse.org/t/-/148916" target="_blank">자세한 내용은 ''업로드용 오브젝트 스토리지 사용''을 참조하세요</a>.'
-    image_magick_warning: '서버가 큰 이미지의 섬네일을 만들도록 환경설정되었지만 ImageMagick이 설치되지 않았습니다. 즐겨 찾는 패키지 관리자를 사용하여 ImageMagick을 설치하거나 <a href="https://www.imagemagick.org/script/download.php" target="_blank">최신 출시 버전을 다운로드하세요</a>.'
-    failing_emails_warning: '실패한 %{num_failed_jobs} 이메일 작업이 있습니다. app.yml을 확인하고 메일 서버 설정이 올바른지 확인하세요. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq의 실패한 작업을 참조하세요</a>.'
-    subfolder_ends_in_slash: "서브폴더 설정이 올바르지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
-    email_polling_errored_recently:
-      other: "이메일 폴링에서 지난 24시간 %{count}개의 오류가 발생했습니다. 자세한 내용은 <a href='%{base_path}/logs' target='_blank'>로그</a>를 확인하세요."
-    missing_mailgun_api_key: "서버가 Mailgun을 통해 이메일을 전송하도록 환경설정되었지만 Webhook 메시지 검증에 사용되는 API 키를 제공하지 않았습니다."
-    bad_favicon_url: "즐겨찾기 아이콘을 로드하지 못했습니다. <a href='%{base_path}/admin/site_settings'>사이트 설정</a>에서 즐겨찾기 아이콘 설정을 확인하세요."
-    poll_pop3_timeout: "POP3 서버 연결이 시간 초과되었습니다. 수신 이메일을 가져올 수 없습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a>과 서비스 제공자를 확인하세요."
-    poll_pop3_auth_error: "인증 오류로 POP3 서버에 연결하지 못했습니다. <a href='%{base_path}/admin/site_settings/category/email'>POP3 설정</a>을 확인하세요."
-    force_https_warning: "웹사이트에서 SSL을 사용하고 있지만, 사이트 설정에서 `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` 가 아직 활성화되어 있지 않습니다."
-    out_of_date_themes: "다음 테마에 대한 업데이트가 있습니다."
-    unreachable_themes: "다음 테마에 대한 업데이트를 확인할 수 없습니다."
+    problem:
+      rails_env: "당신의 서버는 %{env} 모드에서 실행되고 있습니다."
+      host_names: "당신의 config/database.yml 파일은 기본 호스트네임을 사용하고 있습니다. 사이트의 호스트네임으로 업데이트 하세요."
+      queue_size: "큐 작업의 수가 %{queue_size} 개 입니다. 작업의 수가 너무 많습니다. Sidekiq에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가하세요."
+      ram: "당신의 서버는 1GB 이하 메모리로 실행되고 있습니다. 적어도 1GB 이상의 메모리를 사용하세요."
+      subfolder_ends_in_slash: "서브폴더 설정이 정확하지 않습니다. DISCOURSE_RELATIVE_URL_ROOT 다음에 슬래시가 있습니다."
+      missing_mailgun_api_key: "서버가 Mailgun을 통해 이메일을 보내도록 구성되었지만 웹 후크 메시지를 확인하는 데 사용되는 API 키를 제공하지 않았습니다."
+      out_of_date_themes: "다음 테마에 대한 업데이트가 제공됩니다."
+      unreachable_themes: "다음 테마에 대한 업데이트를 확인할 수 없습니다."
   site_settings:
     allow_bulk_invite: "CSV 파일 업로드를 통한 일괄 초대 허용"
     disabled: "비활성화됨"
@@ -3041,7 +3025,6 @@ ko:
 
         궁금한 점이 있으면 [운영진에게 문의하세요](%{base_url}/about).
     digest:
-      why: "%{last_seen_at}부터 지금까지 %{site_link}의 간략한 요약"
       since_last_visit: "마지막 방문 이후"
       new_topics: "새 주제"
       unread_notifications: "읽지 않은 알림"
@@ -3057,7 +3040,6 @@ ko:
       your_email_settings: "이메일 설정"
       click_here: "여기를 클릭"
       from: "%{site_name}"
-      preheader: "%{last_seen_at}부터 지금까지 간략한 요약"
     forgot_password:
       title: "비밀번호가 기억나지 않나요?"
       subject_template: "[%{email_prefix}] 비밀번호 리셋"

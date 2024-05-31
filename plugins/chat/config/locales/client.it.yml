@@ -99,7 +99,6 @@ it:
       channels_list_popup:
         browse: "Sfoglia i canali"
         create: "Nuovo canale"
-      click_to_join: "Fai clic qui per visualizzare i canali disponibili."
       close: "Chiudi"
       remove: "Rimuovi"
       collapse: "Comprimi il cassetto della chat"
@@ -226,7 +225,7 @@ it:
         header: "Intestazione della chat"
         composer: "Compositore di chat"
         channels_list: "Elenco dei canali di chat"
-      no_public_channels: "Non hai partecipato a nessun canale."
+      no_public_channels_cta: "Sfoglia i canali"
       kicked_from_channel: "Non puoi più accedere a questo canale."
       only_chat_push_notifications:
         title: "Invia solo le notifiche push della chat"

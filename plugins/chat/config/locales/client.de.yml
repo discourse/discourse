@@ -63,6 +63,10 @@ de:
           one: "Du verschiebst <strong>%{count}</strong> Nachricht. Wähle einen Zielkanal aus. Im Kanal <strong>%{channelTitle}</strong> wird eine Platzhalter-Nachricht erstellt, um anzuzeigen, dass diese Nachricht verschoben wurde. Beachte, dass Antwortketten im neuen Kanal nicht erhalten bleiben und dass Nachrichten im alten Kanal nicht mehr als Antwort auf verschobene Nachrichten angezeigt werden."
           other: "Du verschiebst <strong>%{count}</strong> Nachrichten. Wähle einen Zielkanal aus. Im Kanal <strong>%{channelTitle}</strong> wird eine Platzhalter-Nachricht erstellt, um anzuzeigen, dass diese Nachrichten verschoben wurden. Beachte, dass die Antwortketten im neuen Kanal nicht erhalten bleiben und dass die Nachrichten im alten Kanal nicht mehr als Antwort auf die verschobenen Nachrichten angezeigt werden."
         confirm_move: "Nachrichten verschieben"
+      delete_messages:
+        confirm:
+          one: "Bist du sicher, dass du diese Nachricht löschen willst?"
+          other: "Bist du sicher, dass du diese %{count} Nachrichten löschen willst?"
       channel_settings:
         title: "Kanaleinstellungen"
         edit: "Bearbeiten"
@@ -100,7 +104,6 @@ de:
       channels_list_popup:
         browse: "Kanäle durchsuchen"
         create: "Neuer Kanal"
-      click_to_join: "Klicke hier, um die verfügbaren Kanäle zu sehen."
       close: "Schließen"
       remove: "Entfernen"
       collapse: "Chat-Bereich ausblenden"
@@ -228,8 +231,7 @@ de:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"
         channels_list: "Liste der Chat-Kanäle"
-      no_direct_message_channels: "Du bist keinem Direktnachrichtenkanal beigetreten."
-      no_public_channels: "Du bist keinem Kanal beigetreten."
+      no_public_channels_cta: "Kanäle durchsuchen"
       kicked_from_channel: "Du kannst nicht mehr auf diesen Kanal zugreifen."
       only_chat_push_notifications:
         title: "Nur Chat-Push-Benachrichtigungen senden"
@@ -528,6 +530,7 @@ de:
         cancel: "Abbrechen"
         quote_selection: "In Thema zitieren"
         copy: "Kopieren"
+        delete: "Lösche (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "In Kanal verschieben"
         error: "Beim Verschieben der Chat-Nachrichten ist ein Fehler aufgetreten"
         title: "Chat in Thema verschieben"

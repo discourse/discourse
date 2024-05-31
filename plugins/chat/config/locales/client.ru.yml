@@ -101,7 +101,6 @@ ru:
       channels_list_popup:
         browse: "Просмотр каналов"
         create: "Новый канал"
-      click_to_join: "Нажмите здесь для просмотра доступных каналов."
       close: "Закрыть"
       remove: "Удалить"
       collapse: "Свернуть чат"
@@ -252,7 +251,7 @@ ru:
         header: "Заголовок чата"
         composer: "Редактор чата"
         channels_list: "Список каналов чата"
-      no_public_channels: "Вы не присоединились ни к одному каналу."
+      no_public_channels_cta: "Просмотр каналов"
       kicked_from_channel: "У вас больше нет доступа к этому каналу."
       only_chat_push_notifications:
         title: "Отправлять только push-уведомления в чате"
