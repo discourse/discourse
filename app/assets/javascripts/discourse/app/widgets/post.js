@@ -741,7 +741,7 @@ createWidget("post-body", {
         this,
         "span",
         hbs`<PluginOutlet
-            @name="above-post-description"
+            @name="post-after-meta-data"
             @connectorTagName="span"
             @outletArgs={{hash postId=@data.postId}}
           />`,
