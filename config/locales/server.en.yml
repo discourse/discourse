@@ -2761,7 +2761,7 @@ en:
         - "unactivated"
       navigation_menu: 
         - "sidebar" 
-        - "header pulldown"
+        - "header dropdown"
         
     placeholder:
       discourse_connect_provider_secrets:
