@@ -2,7 +2,6 @@
 
 class DiscoursePoll::Irv
   def self.irv_outcome(poll_id)
-    poll = Poll.find(poll_id)
     options = PollOption.where(poll_id: poll_id).map { |hash| { id: hash.digest, html: hash.html } }
 
     ballot = []
