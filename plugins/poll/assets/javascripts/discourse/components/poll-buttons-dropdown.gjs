@@ -127,7 +127,7 @@ export default class PollButtonsDropdownComponent extends Component {
             {{/each}}
           </DropdownMenu>
         </:content>
-    </DMenu>
+      </DMenu>
     </div>
   </template>
 }
