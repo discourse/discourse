@@ -22,11 +22,9 @@ const DiscourseRoute = Route.extend({
     // If there's a title token method, call it and get the token
     if (this.titleToken) {
       const t = this.titleToken();
-      if (t && t.length) {
+      if (t?.length) {
         if (t instanceof Array) {
-          t.forEach(function (ti) {
-            tokens.push(ti);
-          });
+          t.forEach((ti) => tokens.push(ti));
         } else {
           tokens.push(t);
         }
