@@ -16,6 +16,7 @@ export default class TopicPostBadges extends Component {
   }
 
   <template>
+    {{~! no whitespace ~}}
     <span class="topic-post-badges">
       {{~#if this.displayUnreadPosts~}}
         &nbsp;<a
@@ -23,7 +24,7 @@ export default class TopicPostBadges extends Component {
           title={{i18n "topic.unread_posts" count=this.displayUnreadPosts}}
           class="badge badge-notification unread-posts"
         >{{this.displayUnreadPosts}}</a>
-      {{/if~}}
+      {{~/if~}}
 
       {{~#if @unseen~}}
         &nbsp;<a
@@ -31,7 +32,8 @@ export default class TopicPostBadges extends Component {
           title={{i18n "topic.new"}}
           class="badge badge-notification new-topic"
         >{{this.newDotText}}</a>
-      {{/if~}}
+      {{~/if~}}
     </span>
+    {{~! no whitespace ~}}
   </template>
 }

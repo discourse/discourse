@@ -8,6 +8,7 @@ import PostTextSelectionToolbar from "discourse/components/post-text-selection-t
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import toMarkdown from "discourse/lib/to-markdown";
 import {
+  getElement,
   selectedNode,
   selectedRange,
   selectedText,
@@ -31,6 +32,13 @@ function getQuoteTitle(element) {
 
   return titleEl.textContent.trim().replace(/:$/, "");
 }
+
+const CSS_TO_DISABLE_FAST_EDIT = [
+  "aside.quote",
+  "aside.onebox",
+  ".cooked-date",
+  "body.encrypted-topic-page",
+].join(",");
 
 export default class PostTextSelection extends Component {
   @service appEvents;
@@ -122,14 +130,8 @@ export default class PostTextSelection extends Component {
     let postId;
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
-      const selectionStart =
-        range.startContainer.nodeType === Node.ELEMENT_NODE
-          ? range.startContainer
-          : range.startContainer.parentElement;
-      const ancestor =
-        range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
-          ? range.commonAncestorContainer
-          : range.commonAncestorContainer.parentElement;
+      const selectionStart = getElement(range.startContainer);
+      const ancestor = getElement(range.commonAncestorContainer);
 
       if (!selectionStart.closest(".cooked")) {
         return await this.hideToolbar();
@@ -142,10 +144,7 @@ export default class PostTextSelection extends Component {
       }
     }
 
-    const _selectedElement =
-      selectedNode().nodeType === Node.ELEMENT_NODE
-        ? selectedNode()
-        : selectedNode().parentElement;
+    const _selectedElement = getElement(selectedNode());
     const cooked =
       _selectedElement.querySelector(".cooked") ||
       _selectedElement.closest(".cooked");
@@ -176,7 +175,14 @@ export default class PostTextSelection extends Component {
     quoteState.selected(postId, _selectedText, opts);
 
     let supportsFastEdit = this.canEditPost;
-    if (this.canEditPost) {
+
+    const start = getElement(selection.getRangeAt(0).startContainer);
+
+    if (!start || start.closest(CSS_TO_DISABLE_FAST_EDIT)) {
+      supportsFastEdit = false;
+    }
+
+    if (supportsFastEdit) {
       const regexp = new RegExp(escapeRegExp(quoteState.buffer), "gi");
       const matches = cooked.innerHTML.match(regexp);
 
@@ -184,11 +190,9 @@ export default class PostTextSelection extends Component {
         quoteState.buffer.length === 0 ||
         quoteState.buffer.includes("|") || // tables are too complex
         quoteState.buffer.match(/\n/g) || // linebreaks are too complex
-        matches?.length > 1 // duplicates are too complex
+        matches?.length !== 1 // duplicates are too complex
       ) {
         supportsFastEdit = false;
-      } else if (matches?.length === 1) {
-        supportsFastEdit = true;
       }
     }
 

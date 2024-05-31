@@ -735,6 +735,7 @@ RSpec.describe PostCreator do
         highest_staff_post_number: 0,
         highest_post_number: 0,
         posts_count: 0,
+        word_count: 0,
         last_posted_at: 1.year.ago,
       )
 
@@ -743,6 +744,7 @@ RSpec.describe PostCreator do
       topic.reload
       expect(topic.highest_post_number).to eq(1)
       expect(topic.posts_count).to eq(1)
+      expect(topic.word_count).to eq(5)
       expect(topic.last_posted_at).to eq_time(first.created_at)
       expect(topic.highest_staff_post_number).to eq(3)
     end
@@ -1187,10 +1189,10 @@ RSpec.describe PostCreator do
       )
     end
 
-    it "does not increase posts count for small actions" do
+    it "does not increase posts/words count for small actions" do
       topic = Fabricate(:private_message_topic, user: Fabricate(:user, refresh_auto_groups: true))
 
-      Fabricate(:post, topic: topic)
+      p1 = Fabricate(:post, topic: topic)
 
       1.upto(3) do |i|
         user = Fabricate(:user)
@@ -1200,13 +1202,19 @@ RSpec.describe PostCreator do
         expect(topic.posts.where(post_type: Post.types[:small_action]).count).to eq(i)
       end
 
-      Fabricate(:post, topic: topic)
-      Topic.reset_highest(topic.id)
-      expect(topic.reload.posts_count).to eq(2)
+      expect(topic.word_count).to eq(0)
 
-      Fabricate(:post, topic: topic)
+      p2 = Fabricate(:post, topic: topic)
+      Topic.reset_highest(topic.id)
+      topic.reload
+      expect(topic.posts_count).to eq(2)
+      expect(topic.word_count).to eq([p1, p2].sum(&:word_count))
+
+      p3 = Fabricate(:post, topic: topic)
       Topic.reset_all_highest!
-      expect(topic.reload.posts_count).to eq(3)
+      topic.reload
+      expect(topic.posts_count).to eq(3)
+      expect(topic.word_count).to eq([p1, p2, p3].sum(&:word_count))
     end
   end
 

@@ -11,9 +11,9 @@ module Reports::ConsolidatedPageViews
 
       requests =
         filters.map do |filter|
-          color = report.colors[0]
-          color = report.colors[1] if filter == "page_view_anon"
-          color = report.colors[2] if filter == "page_view_crawler"
+          color = report.colors[:turquoise]
+          color = report.colors[:lime] if filter == "page_view_anon"
+          color = report.colors[:purple] if filter == "page_view_crawler"
 
           {
             req: filter,

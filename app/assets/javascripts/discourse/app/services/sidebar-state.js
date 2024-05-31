@@ -23,6 +23,7 @@ export default class SidebarState extends Service {
   @tracked mode = COMBINED_MODE;
   @tracked displaySwitchPanelButtons = false;
   @tracked filter = "";
+  @tracked isForcingAdminSidebar = false;
 
   panels = panels;
   collapsedSections = new TrackedSet();
@@ -122,9 +123,13 @@ export default class SidebarState extends Service {
     return this.currentPanelKey === MAIN_PANEL;
   }
 
+  get currentUserUsingAdminSidebar() {
+    return this.currentUser?.use_admin_sidebar;
+  }
+
   get adminSidebarAllowedWithLegacyNavigationMenu() {
     return (
-      this.currentUser?.use_admin_sidebar &&
+      this.currentUserUsingAdminSidebar &&
       this.siteSettings.navigation_menu === "header dropdown"
     );
   }

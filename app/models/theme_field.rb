@@ -23,7 +23,7 @@ class ThemeField < ActiveRecord::Base
 
   scope :find_by_theme_ids,
         ->(theme_ids) do
-          return none unless theme_ids.present?
+          return none if theme_ids.blank?
 
           where(theme_id: theme_ids).joins(
             "JOIN (
@@ -34,7 +34,7 @@ class ThemeField < ActiveRecord::Base
 
   scope :filter_locale_fields,
         ->(locale_codes) do
-          return none unless locale_codes.present?
+          return none if locale_codes.blank?
 
           where(target_id: Theme.targets[:translations], name: locale_codes).joins(
             DB.sql_fragment(
@@ -420,7 +420,7 @@ class ThemeField < ActiveRecord::Base
     if basic_html_field? || translation_field?
       self.value_baked, self.error =
         translation_field? ? process_translation : process_html(self.value)
-      self.error = nil unless self.error.present?
+      self.error = nil if self.error.blank?
       self.compiler_version = Theme.compiler_version
       CSP::Extension.clear_theme_extensions_cache!
     elsif extra_js_field? || js_tests_field?

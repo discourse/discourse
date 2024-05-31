@@ -155,7 +155,7 @@ class ImportScripts::MyAskBot < ImportScripts::Base
         cat = nil
         if tags
           CATEGORIES.each do |cname|
-            next unless tags.include?(cname.downcase)
+            next if tags.exclude?(cname.downcase)
             cat = cname
             break
           end

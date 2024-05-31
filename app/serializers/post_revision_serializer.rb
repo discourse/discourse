@@ -25,10 +25,8 @@ class PostRevisionSerializer < ApplicationSerializer
              :title_changes,
              :user_changes,
              :tags_changes,
-             :wiki,
+             :category_id_changes,
              :can_edit
-
-  has_many :categories, serializer: CategoryBadgeSerializer, embed: :objects
 
   # Creates a field called field_name_changes with previous and
   # current members if a field has changed in this revision
@@ -42,6 +40,7 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   add_compared_field :wiki
+  add_compared_field :post_type
 
   def previous_hidden
     previous["hidden"]
@@ -101,19 +100,16 @@ class PostRevisionSerializer < ApplicationSerializer
     user.avatar_template
   end
 
-  def wiki
-    object.post.wiki
-  end
-
   def can_edit
     scope.can_edit?(object.post)
   end
 
   def edit_reason
-    # only show 'edit_reason' when revisions are consecutive
-    if scope.can_view_hidden_post_revisions? || current["revision"] == previous["revision"] + 1
-      current["edit_reason"]
-    end
+    current["edit_reason"]
+  end
+
+  def include_edit_reason?
+    scope.can_view_hidden_post_revisions? || current["revision"] == previous["revision"] + 1
   end
 
   def body_changes
@@ -139,10 +135,13 @@ class PostRevisionSerializer < ApplicationSerializer
     { inline: diff.inline_html, side_by_side: diff.side_by_side_html }
   end
 
+  def include_title_changes?
+    object.post.post_number == 1
+  end
+
   def user_changes
     prev = previous["user_id"]
     cur = current["user_id"]
-    return if prev == cur
 
     # if stuff is messed up, default to system
     previous = User.find_by(id: prev) || Discourse.system_user
@@ -162,16 +161,30 @@ class PostRevisionSerializer < ApplicationSerializer
     }
   end
 
+  def include_user_changes?
+    previous["user_id"] != current["user_id"]
+  end
+
   def tags_changes
-    changes = {
-      previous: filter_visible_tags(previous["tags"]),
-      current: filter_visible_tags(current["tags"]),
-    }
-    changes[:previous] == changes[:current] ? nil : changes
+    pre = filter_tags previous["tags"]
+    cur = filter_tags current["tags"]
+
+    pre == cur ? nil : { previous: pre, current: cur }
   end
 
   def include_tags_changes?
-    scope.can_see_tags?(topic) && previous["tags"] != current["tags"]
+    previous["tags"] != current["tags"] && scope.can_see_tags?(topic)
+  end
+
+  def category_id_changes
+    pre = filter_category_id previous["category_id"]
+    cur = filter_category_id current["category_id"]
+
+    pre == cur ? nil : { previous: pre, current: cur }
+  end
+
+  def include_category_id_changes?
+    previous["category_id"] != current["category_id"]
   end
 
   protected
@@ -206,14 +219,15 @@ class PostRevisionSerializer < ApplicationSerializer
 
     # Retrieve any `tracked_topic_fields`
     PostRevisor.tracked_topic_fields.each_key do |field|
-      next if field == :tags # Special handling below
+      next if field == :tags
       latest_modifications[field.to_s] = [topic.public_send(field)] if topic.respond_to?(field)
     end
 
     latest_modifications["featured_link"] = [
-      post.topic.featured_link,
+      topic.featured_link,
     ] if SiteSetting.topic_featured_link_enabled
-    latest_modifications["tags"] = [topic.tags.pluck(:name)] if scope.can_see_tags?(topic)
+
+    latest_modifications["tags"] = [topic.tags.map(&:name).sort]
 
     post_revisions << PostRevision.new(
       number: post_revisions.last.number + 1,
@@ -229,7 +243,7 @@ class PostRevisionSerializer < ApplicationSerializer
       revision[:revision] = pr.number
       revision[:hidden] = pr.hidden
 
-      pr.modifications.each_key { |field| revision[field] = pr.modifications[field][0] }
+      pr.modifications.each { |field, (value, _)| revision[field] = value }
 
       @all_revisions << revision
     end
@@ -260,12 +274,16 @@ class PostRevisionSerializer < ApplicationSerializer
     object.user || Discourse.system_user
   end
 
-  def filter_visible_tags(tags)
-    if tags.is_a?(Array) && tags.size > 0
-      @hidden_tag_names ||= DiscourseTagging.hidden_tag_names(scope)
-      tags - @hidden_tag_names
-    else
-      tags
-    end
+  def hidden_tags
+    @hidden_tags ||= DiscourseTagging.hidden_tag_names(scope)
+  end
+
+  def filter_tags(tags)
+    tags - hidden_tags
+  end
+
+  def filter_category_id(category_id)
+    return if category_id.blank?
+    Category.secured(scope).find_by(id: category_id)&.id
   end
 end

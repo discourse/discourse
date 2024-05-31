@@ -4,7 +4,7 @@ module Jobs
   class CreateLinkedTopic < ::Jobs::Base
     def execute(args)
       reference_post = Post.find_by(id: args[:post_id])
-      return unless reference_post.present?
+      return if reference_post.blank?
       parent_topic = reference_post.topic
       return unless parent_topic.present? && parent_topic.regular?
       parent_topic_id = parent_topic.id

@@ -1,0 +1,44 @@
+# encoding: utf-8
+#
+# This file contains transliteration rules for Uyghur based on
+# https://en.wikipedia.org/wiki/Uyghur_Latin_alphabet
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+ug:
+  i18n:
+    transliterate:
+      rule:
+        ئا: "a"
+        ئە: "e"
+        ب: "b"
+        پ: "p"
+        ت: "t"
+        ج: "j"
+        چ: "ch"
+        خ: "x"
+        د: "d"
+        ر: "r"
+        ز: "z"
+        ژ: "zh"
+        س: "s"
+        ش: "sh"
+        غ: "gh"
+        ف: "f"
+        ق: "q"
+        ك: "k"
+        گ: "g"
+        ڭ: "ng"
+        ل: "l"
+        م: "m"
+        ن: "n"
+        ھ: "h"
+        ئو: "o"
+        ئۇ: "u"
+        ئۆ: "ö"
+        ئۈ: "ü"
+        ۋ: "w"
+        ئې: "ë"
+        ئى: "i"
+        ي: "y"

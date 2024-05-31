@@ -185,7 +185,7 @@ class Topic < ActiveRecord::Base
   rate_limit :limit_private_messages_per_day
 
   validates :title,
-            if: Proc.new { |t| t.new_record? || t.title_changed? },
+            if: Proc.new { |t| t.new_record? || t.title_changed? || t.category_id_changed? },
             presence: true,
             topic_title_length: true,
             censored_words: true,
@@ -262,6 +262,7 @@ class Topic < ActiveRecord::Base
 
   has_many :group_archived_messages, dependent: :destroy
   has_many :user_archived_messages, dependent: :destroy
+  has_many :topic_view_stats, dependent: :destroy
 
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_group_users, through: :allowed_groups, source: :users
@@ -855,14 +856,22 @@ class Topic < ActiveRecord::Base
         FROM posts
         WHERE deleted_at IS NULL AND post_type <> 4
         GROUP BY topic_id
+      ),
+      Z as (
+        SELECT topic_id,
+               SUM(COALESCE(posts.word_count, 0)) word_count
+        FROM posts
+        WHERE deleted_at IS NULL AND post_type <> 4
+        GROUP BY topic_id
       )
       UPDATE topics
       SET
         highest_staff_post_number = X.highest_post_number,
         highest_post_number = Y.highest_post_number,
         last_posted_at = Y.last_posted_at,
-        posts_count = Y.posts_count
-      FROM X, Y
+        posts_count = Y.posts_count,
+        word_count = Z.word_count
+      FROM X, Y, Z
       WHERE
         topics.archetype <> 'private_message' AND
         X.topic_id = topics.id AND
@@ -870,7 +879,8 @@ class Topic < ActiveRecord::Base
           topics.highest_staff_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
-          topics.posts_count <> Y.posts_count
+          topics.posts_count <> Y.posts_count OR
+          topics.word_count <> Z.word_count
         )
     SQL
 
@@ -891,14 +901,22 @@ class Topic < ActiveRecord::Base
         FROM posts
         WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
         GROUP BY topic_id
+      ),
+      Z as (
+        SELECT topic_id,
+                SUM(COALESCE(posts.word_count, 0)) word_count
+        FROM posts
+        WHERE deleted_at IS NULL AND post_type <> 3 AND post_type <> 4
+        GROUP BY topic_id
       )
       UPDATE topics
       SET
         highest_staff_post_number = X.highest_post_number,
         highest_post_number = Y.highest_post_number,
         last_posted_at = Y.last_posted_at,
-        posts_count = Y.posts_count
-      FROM X, Y
+        posts_count = Y.posts_count,
+        word_count = Z.word_count
+      FROM X, Y, Z
       WHERE
         topics.archetype = 'private_message' AND
         X.topic_id = topics.id AND
@@ -906,7 +924,8 @@ class Topic < ActiveRecord::Base
           topics.highest_staff_post_number <> X.highest_post_number OR
           topics.highest_post_number <> Y.highest_post_number OR
           topics.last_posted_at <> Y.last_posted_at OR
-          topics.posts_count <> Y.posts_count
+          topics.posts_count <> Y.posts_count OR
+          topics.word_count <> Z.word_count
         )
     SQL
   end
@@ -938,6 +957,13 @@ class Topic < ActiveRecord::Base
           SELECT count(*) FROM posts
           WHERE deleted_at IS NULL AND
                 topic_id = :topic_id AND
+                post_type <> 4
+                #{post_type}
+        ),
+        word_count = (
+          SELECT SUM(COALESCE(posts.word_count, 0)) FROM posts
+          WHERE topic_id = :topic_id AND
+                deleted_at IS NULL AND
                 post_type <> 4
                 #{post_type}
         ),
@@ -1346,7 +1372,7 @@ class Topic < ActiveRecord::Base
   self.slug_computed_callbacks = []
 
   def slug_for_topic(title)
-    return "" unless title.present?
+    return "" if title.blank?
     slug = Slug.for(title)
 
     # this is a hook for plugins that need to modify the generated slug
@@ -1358,7 +1384,7 @@ class Topic < ActiveRecord::Base
   # Even if the slug column in the database is null, topic.slug will return something:
   def slug
     unless slug = read_attribute(:slug)
-      return "" unless title.present?
+      return "" if title.blank?
       slug = slug_for_topic(title)
       if new_record?
         write_attribute(:slug, slug)
@@ -1419,12 +1445,12 @@ class Topic < ActiveRecord::Base
   end
 
   def clear_pin_for(user)
-    return unless user.present?
+    return if user.blank?
     TopicUser.change(user.id, id, cleared_pinned_at: Time.now)
   end
 
   def re_pin_for(user)
-    return unless user.present?
+    return if user.blank?
     TopicUser.change(user.id, id, cleared_pinned_at: nil)
   end
 
@@ -1817,18 +1843,11 @@ class Topic < ActiveRecord::Base
   end
 
   def convert_to_public_topic(user, category_id: nil)
-    public_topic = TopicConverter.new(self, user).convert_to_public_topic(category_id)
-    Tag.update_counters(public_topic.tags, { public_topic_count: 1 }) if !category.read_restricted
-    add_small_action(user, "public_topic") if public_topic
-    public_topic
+    TopicConverter.new(self, user).convert_to_public_topic(category_id)
   end
 
   def convert_to_private_message(user)
-    read_restricted = category.read_restricted
-    private_topic = TopicConverter.new(self, user).convert_to_private_message
-    Tag.update_counters(private_topic.tags, { public_topic_count: -1 }) if !read_restricted
-    add_small_action(user, "private_topic") if private_topic
-    private_topic
+    TopicConverter.new(self, user).convert_to_private_message
   end
 
   def update_excerpt(excerpt)
@@ -2043,7 +2062,7 @@ class Topic < ActiveRecord::Base
 
   def self.publish_stats_to_clients!(topic_id, type, opts = {})
     topic = Topic.find_by(id: topic_id)
-    return unless topic.present?
+    return if topic.blank?
 
     case type
     when :liked, :unliked

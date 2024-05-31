@@ -10,7 +10,6 @@ import { service } from "@ember/service";
 import { and, not } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { resetIdle } from "discourse/lib/desktop-notifications";
 import DiscourseURL from "discourse/lib/url";
 import {
   onPresenceChange,
@@ -477,7 +476,6 @@ export default class ChatChannel extends Component {
 
   @action
   onScrollEnd(state) {
-    resetIdle();
     this.needsArrow =
       (this.messagesLoader.fetchedOnce &&
         this.messagesLoader.canLoadMoreFuture) ||
@@ -535,8 +533,6 @@ export default class ChatChannel extends Component {
 
   async #sendNewMessage(message) {
     this.pane.sending = true;
-
-    resetIdle();
 
     stackingContextFix(this.scroller, async () => {
       await this.args.channel.stageMessage(message);
@@ -738,6 +734,7 @@ export default class ChatChannel extends Component {
             @channel.canModerate
           }}
           @pane={{this.pane}}
+          @messagesManager={{this.messagesManager}}
         />
       {{else}}
         {{#if (and (not @channel.isFollowing) @channel.isCategoryChannel)}}

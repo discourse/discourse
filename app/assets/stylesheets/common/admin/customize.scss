@@ -878,6 +878,10 @@ table.permalinks {
   margin-bottom: 2em;
   table.grid {
     margin-bottom: 1em;
+    .tag-chooser,
+    .user-chooser {
+      width: 100%;
+    }
     tr td {
       word-wrap: break-word;
       max-width: 25vw;
@@ -989,6 +993,22 @@ table.permalinks {
           .select-kit {
             width: 100%;
           }
+        }
+        label {
+          font-weight: normal;
+          padding: 0.5em 0;
+        }
+
+        .label-text {
+          display: inline-flex;
+          flex-direction: column;
+        }
+
+        .description {
+          margin-top: 0.25em;
+          color: var(--primary-medium);
+          font-size: var(--font-down-1);
+          line-height: var(--line-height-large);
         }
       }
       &.label-area {

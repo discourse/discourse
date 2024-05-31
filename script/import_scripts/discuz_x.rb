@@ -994,7 +994,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
           next
         end
         html = html_for_upload(upload, filename)
-        unless new_raw.include? html
+        if new_raw.exclude? html
           new_raw << "\n"
           new_raw << html
         end

@@ -287,6 +287,22 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
         )
       end
 
+      it "triggers the response when bookmarking the topic" do
+        Jobs.run_later!
+        topic = Fabricate(:topic)
+        post = Fabricate(:post, topic: topic)
+        bookmark = Fabricate(:bookmark, bookmarkable: topic)
+
+        expect_job_enqueued(
+          job: :bot_input,
+          args: {
+            user_id: bookmark.user_id,
+            post_id: post.id,
+            input: "bookmark",
+          },
+        )
+      end
+
       context "when the bookmark is created" do
         let(:profile_page_url) { "#{Discourse.base_url_no_prefix}/prefix/u/#{user.username}" }
         let(:new_post) { Post.last }
@@ -1032,7 +1048,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       let(:another_post) { Fabricate(:post, user: discobot_user, topic: topic) }
       let(:flag) do
         Fabricate(
-          :flag,
+          :flag_post_action,
           post: post,
           user: user,
           post_action_type_id: PostActionType.types[:inappropriate],
@@ -1040,7 +1056,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
       end
       let(:other_flag) do
         Fabricate(
-          :flag,
+          :flag_post_action,
           post: another_post,
           user: user,
           post_action_type_id: PostActionType.types[:spam],
@@ -1166,7 +1182,7 @@ RSpec.describe DiscourseNarrativeBot::NewUserNarrative do
 
       describe "when post contain the right answer" do
         let(:post) { Fabricate(:post, user: discobot_user, topic: topic) }
-        let(:flag) { Fabricate(:flag, post: post, user: user) }
+        let(:flag) { Fabricate(:flag_post_action, post: post, user: user) }
 
         before do
           narrative.set_data(user, state: :tutorial_flag, topic_id: topic.id)

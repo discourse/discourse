@@ -1143,7 +1143,7 @@ class UsersController < ApplicationController
         1.hour,
       ).performed!
       @user = User.find_by_username_or_email(params[:username])
-      raise Discourse::InvalidAccess.new unless @user.present?
+      raise Discourse::InvalidAccess.new if @user.blank?
       raise Discourse::InvalidAccess.new unless @user.confirm_password?(params[:password])
     elsif user_key = session[SessionController::ACTIVATE_USER_KEY]
       RateLimiter.new(nil, "activate-edit-email-hr-user-key-#{user_key}", 5, 1.hour).performed!
@@ -1342,9 +1342,7 @@ class UsersController < ApplicationController
       return render json: failed_json, status: 422
     end
 
-    unless SiteSetting.selectable_avatars.include?(upload)
-      return render json: failed_json, status: 422
-    end
+    return render json: failed_json, status: 422 if SiteSetting.selectable_avatars.exclude?(upload)
 
     user.uploaded_avatar_id = upload.id
 
@@ -2096,7 +2094,7 @@ class UsersController < ApplicationController
     ]
 
     editable_custom_fields = User.editable_user_custom_fields(by_staff: current_user.try(:staff?))
-    permitted << { custom_fields: editable_custom_fields } unless editable_custom_fields.blank?
+    permitted << { custom_fields: editable_custom_fields } if editable_custom_fields.present?
     permitted.concat UserUpdater::OPTION_ATTR
     permitted.concat UserUpdater::CATEGORY_IDS.keys.map { |k| { k => [] } }
     permitted.concat UserUpdater::TAG_NAMES.keys
@@ -2132,31 +2130,12 @@ class UsersController < ApplicationController
       result.merge!(params.permit(:active, :staged, :approved))
     end
 
-    deprecate_modify_user_params_method
-    result = modify_user_params(result)
     DiscoursePluginRegistry.apply_modifier(
       :users_controller_update_user_params,
       result,
       current_user,
       params,
     )
-  end
-
-  # Plugins can use this to modify user parameters
-  def modify_user_params(attrs)
-    attrs
-  end
-
-  def deprecate_modify_user_params_method
-    # only issue a deprecation warning if the method is overridden somewhere
-    if method(:modify_user_params).source_location[0] !=
-         "#{Rails.root}/app/controllers/users_controller.rb"
-      Discourse.deprecate(
-        "`UsersController#modify_user_params` method is deprecated. Please use the `users_controller_update_user_params` modifier instead.",
-        since: "3.1.0.beta4",
-        drop_from: "3.2.0",
-      )
-    end
   end
 
   def fail_with(key)

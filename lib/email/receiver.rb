@@ -445,7 +445,7 @@ module Email
         text_content_type = @mail.content_type
       end
 
-      return unless text.present? || html.present?
+      return if text.blank? && html.blank?
 
       if text.present?
         text = trim_discourse_markers(text)

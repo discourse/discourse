@@ -17,7 +17,7 @@ module Jobs
         moved_by = User.find_by(id: args[:moved_by_id])
 
         posts.each do |p|
-          unless users_notified.include?(p.user_id)
+          if users_notified.exclude?(p.user_id)
             p.user.notifications.create(
               notification_type: Notification.types[:moved_post],
               topic_id: p.topic_id,

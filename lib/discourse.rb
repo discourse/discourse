@@ -943,7 +943,7 @@ module Discourse
       # Skip warmup in development mode - it makes boot take ~2s longer
       PrettyText.cook("warm up **pretty text**") if !Rails.env.development?
     rescue => e
-      Rails.logger.error("Failed to warm up pretty text: #{e}")
+      Rails.logger.error("Failed to warm up pretty text: #{e}\n#{e.backtrace.join("\n")}")
     end
 
     nil
@@ -1182,7 +1182,7 @@ module Discourse
   CDN_REQUEST_METHODS ||= %w[GET HEAD OPTIONS]
 
   def self.is_cdn_request?(env, request_method)
-    return unless CDN_REQUEST_METHODS.include?(request_method)
+    return if CDN_REQUEST_METHODS.exclude?(request_method)
 
     cdn_hostnames = GlobalSetting.cdn_hostnames
     return if cdn_hostnames.blank?

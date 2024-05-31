@@ -74,4 +74,24 @@ class BookmarksController < ApplicationController
 
     render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: 400
   end
+
+  def bulk
+    if params[:bookmark_ids].present?
+      unless Array === params[:bookmark_ids]
+        raise Discourse::InvalidParameters.new(
+                "Expecting bookmark_ids to contain a list of bookmark ids",
+              )
+      end
+      bookmark_ids = params[:bookmark_ids].map { |t| t.to_i }
+    else
+      raise ActionController::ParameterMissing.new(:bookmark_ids)
+    end
+
+    operation = params.require(:operation).permit(:type).to_h.symbolize_keys
+
+    raise ActionController::ParameterMissing.new(:operation_type) if operation[:type].blank?
+    operator = BookmarksBulkAction.new(current_user, bookmark_ids, operation)
+    changed_bookmark_ids = operator.perform!
+    render_json_dump bookmark_ids: changed_bookmark_ids
+  end
 end

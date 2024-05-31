@@ -419,7 +419,13 @@ class Report
   end
 
   def colors
-    %w[#1EB8D1 #9BC53D #721D8D #E84A5F #8A6916]
+    {
+      turquoise: "#1EB8D1",
+      lime: "#9BC53D",
+      purple: "#721D8D",
+      magenta: "#E84A5F",
+      brown: "#8A6916",
+    }
   end
 
   private

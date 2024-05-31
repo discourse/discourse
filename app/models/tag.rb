@@ -57,6 +57,9 @@ class Tag < ActiveRecord::Base
   has_many :synonyms, class_name: "Tag", foreign_key: "target_tag_id", dependent: :destroy
   has_many :sidebar_section_links, as: :linkable, dependent: :delete_all
 
+  has_many :embeddable_host_tags
+  has_many :embeddable_hosts, through: :embeddable_host_tags
+
   before_save :sanitize_description
 
   after_save :index_search
@@ -230,10 +233,10 @@ class Tag < ActiveRecord::Base
   def update_synonym_associations
     if target_tag_id && saved_change_to_target_tag_id?
       target_tag.tag_groups.each do |tag_group|
-        tag_group.tags << self unless tag_group.tags.include?(self)
+        tag_group.tags << self if tag_group.tags.exclude?(self)
       end
       target_tag.categories.each do |category|
-        category.tags << self unless category.tags.include?(self)
+        category.tags << self if category.tags.exclude?(self)
       end
     end
   end

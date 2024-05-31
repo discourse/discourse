@@ -17,6 +17,8 @@ RSpec.describe Plugin::Instance do
 some_ruby
 TEXT
 
+  around { |example| allow_missing_translations(&example) }
+
   after { DiscoursePluginRegistry.reset! }
 
   # NOTE: sample_plugin_site_settings.yml is always loaded in tests in site_setting.rb
@@ -322,49 +324,6 @@ TEXT
 
       expect(Report.respond_to?(:report_readers)).to eq(true)
     end
-  end
-
-  it "patches the enabled? function for auth_providers if not defined" do
-    SimpleAuthenticator =
-      Class.new(Auth::Authenticator) do
-        def name
-          "my_authenticator"
-        end
-      end
-
-    plugin = Plugin::Instance.new
-
-    # lets piggy back on another boolean setting, so we don't dirty our SiteSetting object
-    SiteSetting.enable_badges = false
-
-    # No enabled_site_setting
-    authenticator = SimpleAuthenticator.new
-    plugin.auth_provider(authenticator: authenticator)
-    plugin.notify_after_initialize
-    expect(authenticator.enabled?).to eq(true)
-
-    # With enabled site setting
-    plugin = Plugin::Instance.new
-    authenticator = SimpleAuthenticator.new
-    plugin.auth_provider(enabled_setting: "enable_badges", authenticator: authenticator)
-    plugin.notify_after_initialize
-    expect(authenticator.enabled?).to eq(false)
-
-    # Defines own method
-    plugin = Plugin::Instance.new
-
-    SiteSetting.enable_badges = true
-    authenticator =
-      Class
-        .new(SimpleAuthenticator) do
-          def enabled?
-            false
-          end
-        end
-        .new
-    plugin.auth_provider(enabled_setting: "enable_badges", authenticator: authenticator)
-    plugin.notify_after_initialize
-    expect(authenticator.enabled?).to eq(false)
   end
 
   describe "#activate!" do
@@ -718,7 +677,7 @@ TEXT
   describe "#replace_flags" do
     after do
       PostActionType.replace_flag_settings(nil)
-      ReviewableScore.reload_types
+      Flag.reset_flag_settings!
     end
 
     let(:original_flags) { PostActionType.flag_settings }

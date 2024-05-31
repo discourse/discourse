@@ -89,7 +89,7 @@
 .cooked,
 .d-editor-preview {
   word-wrap: break-word;
-  line-height: var(--line-height-large);
+  line-height: 1.5;
 
   > *:first-child {
     margin-top: 0;
@@ -101,7 +101,7 @@
   h4,
   h5,
   h6 {
-    margin: 30px 0 10px;
+    margin: 2rem 0 0.67rem;
     line-height: var(--line-height-medium);
     a.anchor {
       opacity: 0;
@@ -316,7 +316,7 @@ nav.post-controls {
       .d-icon {
         opacity: 1;
       }
-      display: inline-block;
+      display: inline-flex;
     }
 
     button {
@@ -475,13 +475,13 @@ aside.quote {
     @include post-aside;
 
     color: var(--primary-high-or-secondary-low);
-    padding: 12px 12px 0px 12px;
+    padding: 0.8em 0.8em 0 0.8em;
     // blockquote is underneath this and has top margin
     .avatar {
-      margin-right: 7px;
+      margin-right: 0.5em;
     }
     img {
-      margin-top: -4px;
+      margin-top: -0.26em;
     }
     @include unselectable;
   }
@@ -518,8 +518,8 @@ aside.quote {
 
 .cooked .highlight {
   background-color: var(--tertiary-low);
-  padding: 2px;
-  margin: -2px;
+  padding: 0.15em;
+  margin: -0.15em;
 }
 
 .post-ignored {
@@ -813,6 +813,7 @@ aside.quote {
     }
 
     .user {
+      @include ellipsis;
       border: 1px solid var(--primary-low);
       border-radius: 0.25em;
       padding: 0;
@@ -823,6 +824,7 @@ aside.quote {
 
       .user-link,
       .group-link {
+        @include ellipsis;
         color: var(--primary-high);
 
         &:hover {
@@ -1178,7 +1180,10 @@ blockquote > *:last-child {
   }
 
   &.deleted {
-    background-color: var(--danger-low-mid);
+    .topic-avatar,
+    .small-action-desc {
+      background-color: var(--danger-low-mid);
+    }
   }
 
   .topic-avatar,
@@ -1194,6 +1199,7 @@ blockquote > *:last-child {
     padding-top: 1em;
     width: var(--topic-avatar-width);
     justify-content: center;
+    height: auto;
     .d-icon {
       font-size: var(--font-up-3);
       width: var(--topic-avatar-width);

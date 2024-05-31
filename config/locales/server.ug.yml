@@ -1,0 +1,2498 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  dates:
+    short_date_no_year: "D-MMMM"
+    short_date: "YYYY-يىلى D-MMMM"
+    long_date: "YYYY-يىلى M-ئاينىڭ D-كۈنى HH:mm"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%-d-%B"
+      date_only: "%Y-يىلى %-d-%B"
+      long: "%Y-يىلى %-d-%B، %H:%M"
+      no_day: "-يىلى %Y-%B"
+      calendar_ics: "%Y%m%dT%H%M%SZ"
+  date:
+    month_names:
+    -
+    - يانۋار
+    - فېۋرال
+    - مارت
+    - ئاپرېل
+    - ماي
+    - ئىيۇن
+    - ئىيۇل
+    - ئاۋغۇست
+    - سېنتەبىر
+    - ئۆكتەبىر
+    - نويابىر
+    - دېكابىر
+    <<: *datetime_formats
+  time:
+    am: "چ ب"
+    pm: "چ ك"
+    <<: *datetime_formats
+  title: "Discourse"
+  topics: "تېما"
+  posts: "يازما"
+  views: "كۆرۈلۈشى"
+  loading: "يۈكلەۋاتىدۇ"
+  powered_by_html: '<a href="https://www.discourse.org">Discourse</a> قوللايدۇ، JavaScript قوزغىتىلسا كۆرۈنۈشى تېخىمۇ ياخشى.'
+  sign_up: "تىزىملىتىڭ"
+  log_in: "تىزىمغا كىرىش"
+  submit: "تاپشۇر"
+  purge_reason: "تاشلىۋېتىلگەن، ئاكتىپسىزلانغان ھېساباتنى ئۆزلۈكىدىن ئۆچۈرىدۇ"
+  disable_remote_images_download_reason: "يېتەلىك دىسكا بوشلۇقى بولمىغانلىقتىن يىراقتىكى سۈرەتنى چۈشۈرۈش چەكلەنگەن."
+  anonymous: "نامسىز"
+  remove_posts_deleted_by_author: "يازغۇچى ئۆچۈردى"
+  redirect_warning: "سىز تاللىغان ئۇلانمىنىڭ مۇنبەرگە يوللانغانلىقىنى دەلىللىيەلمىگەن ئىدۇق. ئەگەر داۋاملاشتۇرۇۋېرىمەن دېسىڭىز، تۆۋەندىكى ئۇلانمىنى تاللاڭ."
+  on_another_topic: "باشقا بىر تېمىدا"
+  topic_category_changed: "%{from} دىن %{to} غا"
+  topic_tag_changed:
+    added_and_removed: "%{added} قوشۇلدى ۋە %{removed} چىقىرىۋېتىلدى"
+    added: "%{added} قوشۇلدى"
+    removed: "%{removed} چىقىرىۋېتىلدى"
+  inline_oneboxer:
+    topic_page_title_post_number: "#%{post_number}"
+    topic_page_title_post_number_by_user: "#%{post_number} / %{username}"
+  components:
+    enabled_filter: "قوزغىتىلدى"
+    disabled_filter: "چەكلەندى"
+    updates_available_filter: "يېڭىلانما بار"
+  theme_settings:
+    errors:
+      json_value:
+        too_large: "%{max_size} بايت يۇقىرى چېكىدىن ئېشىپ كەتتى."
+  themes:
+    bad_color_scheme: "ئۆرنەكنى يېڭىلىيالمايدۇ، رەڭ تاختىسى ئىناۋەتسىز"
+    other_error: "ئۆرنەكنى يېڭىلاۋاتقاندا خاتالىق كۆرۈلدى"
+    ember_selector_error: "كەچۈرۈڭ - #ember ياكى .ember-view CSS تاللىغۇچ ئىشلىتىشكە ئىجازەت بېرىلمىگەن، چۈنكى بۇ ئىسىملار ئىجرا قىلىنىۋاتقاندا ھەرىكەتچان ھالدا ھاسىللانغان ھەمدە ۋاقىتنىڭ ئۆزگىرىشىگە ئەگىشىپ ئۆزگىرىپ، ئاخىرىدا CSS نىڭ بۇزۇلۇشىنى كەلتۈرۈپ چىقىرىدۇ. باشقا تاللىغۇچنى سىناڭ."
+    import_error:
+      generic: ئۆرنەكنى ئەكىرىۋاتقاندا خاتالىق كۆرۈلدى
+      upload: "يۈكلەش مەنبەسى قۇرۇۋاتقاندا خاتالىق كۆرۈلدى: %{name} - %{errors}"
+      about_json: "ئەكىرىش خاتالىقى: about.json مەۋجۇت ئەمەس ياكى ئىناۋەتسىز. بۇنىڭ Discourse ئۆرنىكى ئىكەنلىكىنى جەزملەمسىز؟"
+      about_json_too_big: "ئەكىرىش خاتالىقى: about.json يۇقىرى چەك %{limit} تىن ئېشىپ كەتتى."
+      about_json_values: "about.json دا ئىناۋەتسىز قىممەت بار: %{errors}"
+      modifier_values: "about.json ئۆزگەرتكۈچتەا ئىناۋەتسىز قىممەت بار: %{errors}"
+      asset_too_big: "بايلىق %{filename} يۇقىرى چەك %{limit} تىن چوڭ"
+      theme_too_big: "ئۆرنەك يۇقىرى چەك %{limit} تىن چوڭ"
+      git: "git خەزىنىسىنى كىلونلاشتا خاتالىق كۆرۈلدى، زىيارەت رەت قىلىندى ياكى خەزىنە تېپىلمىدى"
+      git_ref_not_found: "git پايدىلانمىسىنى تەكشۈرەلمىدى: %{ref}"
+      git_unsupported_scheme: "Git خەزىنىسىنى كلونلىيالمىدى: لايىھەنى قوللىمىدى"
+      unpack_failed: "ھۆججەتنى يېشەلمىدى"
+      file_too_big: "پىرىسلانمىغان ھۆججەت بەك چوڭ."
+      unknown_file_type: "سىز يۈكلىگەن ھۆججەت Discourse نىڭ ئىناۋەتلىك ئۆرنىكى ئەمەستەك قىلىدۇ."
+      not_allowed_theme: "«%{repo}» يول قويىدىغان ئۆرنەك تىزىمىدا ئەمەس («allowed_theme_repos» ئومۇمىيەت تەڭشىكىنى تەكشۈرۈڭ)."
+      ssh_key_gone: "ئۆرنەك ئورنىتىشقا بەك ئۇزۇن كۈتتىڭىز، SSH ئاچقۇچىنىڭ ۋاقتى ئۆتتى. قايتا سىناڭ."
+      too_many_files: "ئۆرنەكتىكى ھۆججەت سانى (%{count}) يول قويىدىغان ئەڭ كۆپ ھۆججەت سانى (%{limit}) دىن ئېشىپ كەتتى."
+      migrations:
+        invalid_filename: "يۆتكەيدىغان ھۆججەتنىڭ ھۆججەت ئىسمى ئىناۋەتسىز: %{filename}. ھۆججەت ئىسمى چوقۇم 4 خانىلىق ساندىن باشلىنىپ سىزىق ئەگىشىدۇ، ئاندىن ھەرپ سان ۋە سىزىق بار ئىسىم بولۇشى كېرەك."
+        name_too_long:
+          one: "يۆتكەيدىغان ئىسىم بەك ئۇزۇن. ئۇ %{count} ھەرپتىن ئاشماسلىقى كېرەك."
+          other: "يۆتكەيدىغان ئىسىم بەك ئۇزۇن. ئۇ %{count} ھەرپتىن ئاشماسلىقى كېرەك."
+        too_many_pending_migrations: "بۇ ئۆرنەكتە يۆتكىلىشنى ساقلاۋاتقانلار بەك كۆپ. ئۆرنەكنى يېڭىلىغاندا بىر قېتىمدا يۆتكەيدىغانلار 100 ئېشىپ كېتىشكە يول قويۇلمايدۇ"
+        out_of_sequence: "«%{name}» نىڭ يۆتكەش تەرتىپسىز. مەزكۇر ئۆرنەكنىڭ ئاخىرقى يۆتكەلگەن نەشر نومۇرى %{current}، يېڭى يۆتكىگەن نەشرىدىن يۇقىرى."
+        syntax_error: "«%{name}» يۆتكەشنى ئىجرا قىلالمىدى چۈنكى ئۇنىڭدا گىرامماتىكىلىق خاتالىق بار: %{error}"
+        exceeded_memory_limit: "«%{name}» يۆتكىيەلمىدى چۈنكى ئەسلەك چەكلىمىسىدىن ھالقىپ كەتتى"
+        timed_out: "«%{name}» يۆتكەش ۋاقىت ھالقىدى"
+        no_exported_function: "«%{name}» يۆتكەش يۆتكەشنى ئىجرا قىلىدىغان فونكسىيەنى چىقارمىدى"
+        default_export_not_a_function: "«%{name}» يۆتكەش كۆڭۈلدىكى ئەھۋالدا فونكسىيە ئەمەس. كۆڭۈلدىكى چىقىرىش چوقۇم يۆتكەشنى ئىجرا قىلىدىغان فونكسىيە بولۇشى كېرەك."
+        no_returned_value: "«%{name}» يۆتكەش ھېچقانداق قىممەت قايتۇرمىدى (ياكى null يەنى بوش ياكى بەلگىلەنمىگەن دەپ قايتۇردى). ئۇ چوقۇم Map ئوبيېكتى قايتۇرۇشى كېرەك."
+        wrong_return_type: "«%{name}» نامەلۇم سانلىق مەلۇمات تىپىنى قايتۇردى. ئۇ چوقۇم Map ئوبيېكتى قايتۇرۇشى كېرەك."
+        runtime_error: "«%{name}» يۆتكەش تۆۋەندىكى ئىجرا قىلىش ۋاقىت خاتالىقىغا يولۇقتى: %{error}"
+        unknown_setting_returned_by_migration: "«%{name}» يۆتكەش قايتۇرغان تەڭشەككە «%{setting_name}» ئۆرنەكنىڭ settings.yml ھۆججىتىدە ئېنىقلىما بېرىلمىگەن"
+    errors:
+      component_no_user_selectable: "ئۆرنەك پارچىسىنى ئىشلەتكۈچى تاللىيالمايدۇ"
+      component_no_default: "ئۆرنەك پارچىسى كۆڭۈلدىكى ئۆرنەك بولمايدۇ"
+      component_no_color_scheme: "ئۆرنەك پارچىسىدا رەڭ تاختىسى بولمايدۇ"
+      no_multilevels_components: "تارماق ئۆرنىكى بار ئۆرنەك ئۆزىنىڭ تارماق ئۆرنىكى بولالمايدۇ"
+      optimized_link: ئەلالاشتۇرۇلغان سۈرەت ئۇلانمىسى ۋاقىتلىق، ئۆرنەك ئەسلى كودىدا بولماسلىقى كېرەك.
+    settings_errors:
+      invalid_yaml: "تەمىنلەنگەن YAML ئىناۋەتسىز."
+      data_type_inclusion: "تەڭشەك «%{name}» نىڭ تىپىنى قوللىمايدۇ. قوللايدىغان تىپ «integer»، «bool»، «list»، «enum» ۋە «upload»"
+      name_too_long: "بىر تەڭشەكنىڭ ئىسمى بەك ئۇزۇن. ئەڭ ئۇزۇن چېكى 255"
+      default_value_missing: "تەڭشەك «%{name}» نىڭ كۆڭۈلدىكى قىممىتى يوق."
+      default_not_match_type: "تەڭشەك «%{name}» نىڭ كۆڭۈلدىكى قىممىتىنىڭ تىپى تەڭشەك تىپى بىلەن ماسلاشمىدى."
+      default_value_not_valid: "تەڭشەك «%{name}» نىڭ كۆڭۈلدىكى قىممىتى ئىناۋەتسىز. %{error_messages}"
+      enum_value_not_valid: "تاللانغان قىممەت ساناش ئۆزگەرگۈچى قىممەتنىڭ تاللىشىنىڭ بىرى ئەمەس."
+      number_value_not_valid_min_max: "قىممىتى چوقۇم %{min} بىلەن %{max} ئارىسىدا بولۇشى كېرەك."
+      number_value_not_valid_min: "قىممىتى چوقۇم %{min} دىن چوڭ ياكى تەڭ بولۇشى كېرەك."
+      number_value_not_valid_max: "قىممىتى چوقۇم %{max} دىن كىچىك ياكى تەڭ بولۇشى كېرەك."
+      string_value_not_valid_min_max: "قىممىتى چوقۇم %{min} بىلەن %{max} ھەرپ ئارىسىدا بولۇشى كېرەك."
+      string_value_not_valid_min:
+        one: "قىممىتى كەم دېگەندە %{count} ھەرپ بولۇشى كېرەك."
+        other: "قىممىتى كەم دېگەندە %{count} ھەرپ بولۇشى كېرەك."
+      string_value_not_valid_max:
+        one: "قىممىتى كۆپ دېگەندە %{count} ھەرپ بولۇشى كېرەك."
+        other: "قىممىتى كۆپ دېگەندە %{count} ھەرپ بولۇشى كېرەك."
+      objects:
+        humanize_required: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم مەۋجۇت بولۇشى كېرەك."
+        required: "مەۋجۇت بولۇشى كېرەك"
+        humanize_invalid_type: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم %{type} بولۇشى كېرەك."
+        invalid_type: "%{type} ئىناۋەتلىك تىپ ئەمەس"
+        humanize_not_valid_string_value: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم ھەرپ تىزىقى بولۇشى كېرەك."
+        not_valid_string_value: "چوقۇم ھەرپ تىزىقى بولۇشى كېرەك"
+        humanize_not_valid_integer_value: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم پۈتۈن سان بولۇشى كېرەك."
+        not_valid_integer_value: "چوقۇم پۈتۈن سان بولۇشى كېرەك"
+        humanize_not_valid_float_value: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم لەيلىمە چېكىتلىك سان بولۇشى كېرەك."
+        not_valid_float_value: "چوقۇم لەيلىمە چېكىتلىك سان بولۇشى كېرەك"
+        humanize_not_valid_boolean_value: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم بۇلىن قىممىتى بولۇشى كېرەك."
+        not_valid_boolean_value: "چوقۇم بۇلىن قىممىتى بولۇشى كېرەك"
+        humanize_not_valid_enum_value: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم %{choices} نىڭ ئارىسىدىكى بىرى بولۇشى كېرەك."
+        not_valid_enum_value: "چوقۇم تۆۋەندىكىلەردىن بىرى بولۇشى كېرەك: %{choices}"
+        humanize_not_valid_categories_value: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم ئىناۋەتلىك تۈر كىملىكتىكى سانلار قاتارى بولۇشى كېرەك."
+        not_valid_categories_value: "چوقۇم ئۈنۈملۈك تۈر كىملىكىنىڭ سانلار قاتارى بولۇشى كېرەك"
+        humanize_categories_value_not_valid_min:
+          one: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كەم دېگەندە %{count} تۈر كىملىكى بولۇشى كېرەك."
+          other: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كەم دېگەندە %{count} تۈر كىملىكى بولۇشى كېرەك."
+        categories_value_not_valid_min:
+          one: "چوقۇم كەم دېگەندە %{count} تۈر كىملىكى بولۇشى كېرەك"
+          other: "چوقۇم كەم دېگەندە %{count} تۈر كىملىكى بولۇشى كېرەك"
+        humanize_categories_value_not_valid_max:
+          one: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كۆپ دېگەندە %{count} تۈر كىملىكى بولۇشى كېرەك."
+          other: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كۆپ دېگەندە %{count} تۈر كىملىكى بولۇشى كېرەك."
+        categories_value_not_valid_max:
+          one: "چوقۇم كۆپ دېگەندە %{count} تۈر كىملىكى بولۇشى كېرەك"
+          other: "چوقۇم كۆپ دېگەندە %{count} تۈر كىملىكى بولۇشى كېرەك"
+        humanize_not_valid_topic_value: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم ئىناۋەتلىك تېما كىملىكى بولۇشى كېرەك."
+        not_valid_topic_value: "چوقۇم ئىناۋەتلىك تېما كىملىكى بولۇشى كېرەك"
+        humanize_not_valid_post_value: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم ئىناۋەتلىك يازما كىملىكى بولۇشى كېرەك."
+        not_valid_post_value: "چوقۇم ئىناۋەتلىك يازما كىملىكى بولۇشى كېرەك"
+        humanize_not_valid_groups_value: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم ئىناۋەتلىك گۇرۇپپا كىملىكىنىڭ سانلار قاتارى بولۇشى كېرەك."
+        not_valid_groups_value: "چوقۇم ئۈنۈملۈك گۇرۇپپا كىملىكىنىڭ سانلار قاتارى بولۇشى كېرەك"
+        humanize_groups_value_not_valid_min:
+          one: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كەم دېگەندە %{count} گۇرۇپپا كىملىكى بولۇشى كېرەك."
+          other: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كەم دېگەندە %{count} گۇرۇپپا كىملىكى بولۇشى كېرەك."
+        groups_value_not_valid_min:
+          one: "چوقۇم كەم دېگەندە %{count} گۇرۇپپا كىملىكى بولۇشى كېرەك"
+          other: "چوقۇم كەم دېگەندە %{count} گۇرۇپپا كىملىكى بولۇشى كېرەك"
+        humanize_groups_value_not_valid_max:
+          one: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كۆپ دېگەندە %{count} گۇرۇپپا كىملىكى بولۇشى كېرەك."
+          other: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كۆپ دېگەندە %{count} گۇرۇپپا كىملىكى بولۇشى كېرەك."
+        groups_value_not_valid_max:
+          one: "چوقۇم كۆپ دېگەندە %{count} گۇرۇپپا كىملىكى بولۇشى كېرەك"
+          other: "چوقۇم كۆپ دېگەندە %{count} گۇرۇپپا كىملىكى بولۇشى كېرەك"
+        humanize_not_valid_tags_value: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم ئىناۋەتلىك بەلگە ئىسمىنىڭ سانلار قاتارى بولۇشى كېرەك."
+        not_valid_tags_value: "چوقۇم ئىناۋەتلىك بەلگە ئىسمىنىڭ سانلار قاتارى بولۇشى كېرەك"
+        humanize_tags_value_not_valid_min:
+          one: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كەم دېگەندە %{count} بەلگە ئىسمى بولۇشى كېرەك."
+          other: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كەم دېگەندە %{count} بەلگە ئىسمى بولۇشى كېرەك."
+        tags_value_not_valid_min:
+          one: "ئەڭ كەم بولغاندا %{count} بەلگە ئىسمى بولۇشى كېرەك"
+          other: "ئەڭ كەم بولغاندا %{count} بەلگە ئىسمى بولۇشى كېرەك"
+        humanize_tags_value_not_valid_max:
+          one: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كۆپ دېگەندە %{count} بەلگە ئىسمى بولۇشى كېرەك."
+          other: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كۆپ دېگەندە %{count} بەلگە ئىسمى بولۇشى كېرەك."
+        tags_value_not_valid_max:
+          one: "ئەڭ كۆپ بولغاندا %{count} بەلگە ئىسمى بولۇشى كېرەك"
+          other: "ئەڭ كۆپ بولغاندا %{count} بەلگە ئىسمى بولۇشى كېرەك"
+        humanize_not_valid_upload_value: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم ئىناۋەتلىك يۈكلەش كىملىكى بولۇشى كېرەك."
+        not_valid_upload_value: "چوقۇم ئىناۋەتلىك يۈكلەش كىملىكى بولۇشى كېرەك"
+        humanize_string_value_not_valid_min:
+          one: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كەم دېگەندە %{count} ھەرپ بولۇشى كېرەك."
+          other: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كەم دېگەندە %{count} ھەرپ بولۇشى كېرەك."
+        string_value_not_valid_min:
+          one: "كەم دېگەندە %{count} ھەرپ بولۇشى كېرەك"
+          other: "كەم دېگەندە %{count} ھەرپ بولۇشى كېرەك"
+        humanize_string_value_not_valid_max:
+          one: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كۆپ دېگەندە %{count} ھەرپ بولۇشى كېرەك."
+          other: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم كۆپ دېگەندە %{count} ھەرپ بولۇشى كېرەك."
+        string_value_not_valid_max:
+          one: "كۆپ دېگەندە %{count} ھەرپ بولۇشى كېرەك"
+          other: "كۆپ دېگەندە %{count} ھەرپ بولۇشى كېرەك"
+        humanize_number_value_not_valid_min: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم %{min} دىن چوڭ ياكى تەڭ بولۇشى كېرەك."
+        number_value_not_valid_min: "چوقۇم %{min} دىن چوڭ ياكى تەڭ بولۇشى كېرەك"
+        humanize_number_value_not_valid_max: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم %{max} دىن كىچىك ياكى تەڭ بولۇشى كېرەك."
+        number_value_not_valid_max: "چوقۇم %{max} دىن كىچىك ياكى تەڭ بولۇشى كېرەك"
+        humanize_string_value_not_valid_url: "JSON نىشانلىغۇچ «%{property_json_pointer}» نىڭ خاسلىقى چوقۇم ئىناۋەتلىك تور ئادرېسى بولۇشى كېرەك."
+        string_value_not_valid_url: "چوقۇم ئۈنۈملۈك تور ئادرېسى بولۇشى كېرەك"
+    locale_errors:
+      top_level_locale: "يەرلىك ھۆججەتتىكى يۇقىرى دەرىجىلىك ئاچقۇچ چوقۇم يەرلىك ئىسىم بىلەن ماس كېلىشى كېرەك"
+      invalid_yaml: "تەرجىمە YAML ئىناۋەتسىز"
+  emails:
+    incoming:
+      default_subject: "بۇ تېمىنىڭ ماۋزۇسى بولۇشى كېرەك"
+      show_trimmed_content: "قىرقىلغان مەزمۇننى كۆرسەت"
+      maximum_staged_user_per_email_reached: "ھەر بىر ئېلخەت قۇرالايدىغان ۋاقىتلىق ساقلانغان ئىشلەتكۈچىنىڭ يۇقىرى چېكىگە يەتتى."
+      no_subject: "(تېما يوق)"
+      no_body: "(مەزمۇن يوق)"
+      missing_attachment: "(يۈكلەنمە %{filename} يوقالغان)"
+      continuing_old_discussion:
+        one: "سۆھبەتنى [%{title}](%{url}) دىن باشلاپ داۋاملاشتۇرىدۇ، چۈنكى ئۇ %{count} كۈن ئىلگىرى قۇرۇلغان."
+        other: "سۆھبەتنى [%{title}](%{url}) دىن باشلاپ داۋاملاشتۇرىدۇ، چۈنكى ئۇ %{count} كۈن ئىلگىرى قۇرۇلغان."
+      errors:
+        empty_email_error: "بىز تاپشۇرۇۋالغان ئەسلى خەت بوش بولغاندا يۈز بېرىدۇ."
+        no_message_id_error: "خەتنىڭ «Message-Id'» ماۋزۇسى بولمىغاندا يۈز بېرىدۇ."
+        auto_generated_email_error: "«precedence'» ماۋزۇسى list، junk، bulk ياكى auto_reply غا تەڭشەلسە ۋە ياكى باشقا ھەر قانداق ماۋزۇدا auto-submitted، auto-replied ياكى auto-generated بولسا مۇشۇ خىل ئەھۋال يۈز بېرىدۇ."
+        no_body_detected_error: "مەزمۇننى ئاجرىتالمىغان ۋە يۈكلەنمە يوق ئەھۋالدا يۈز بېرىدۇ."
+        no_sender_detected_error: "ماۋزۇدىن ئىناۋەتلىك ئېلخەت ئادرېسىنى تاپالمىغاندا يۈز بېرىدۇ."
+        from_reply_by_address_error: "يوللىغۇچى ماۋزۇسىدىكى ئېلخەت بىلەن جاۋاب ئېلخەت ئادرېسى ماس كەلگەندە يۈز بېرىدۇ."
+        inactive_user_error: "ئەۋەتكۈچى ئاكتىپ بولمىغاندا يۈز بېرىدۇ."
+        silenced_user_error: "ئەۋەتكۈچى ئۈنسىزلەنگەن بولسا يۈز بېرىدۇ."
+        bad_destination_address: "يوللىغۇچى/كۆچۈرۈپ يوللىغۇچى بۆلىكىدىكى ئېلخەت ئادرېسى سەپلەنگەن كەلگەن ئېلخەت ئادرېسىنىڭ ھېچقايسىسى بىلەن ماس كەلمىگەندە يۈز بېرىدۇ."
+        strangers_not_allowed_error: "ئىشلەتكۈچى ئەزاسى بولمىغان سەھىپىگە يېڭى يازما قۇرماقچى بولغاندا يۈز بېرىدۇ."
+        insufficient_trust_level_error: "ئىشلەتكۈچى تەلەپتىكى ئىشەنچ دەرىجىسىگە يەتمەي تۇرۇپ سەھىپىگە يېڭى يازما قۇرماقچى بولغاندا يۈز بېرىدۇ."
+        reply_user_not_matching_error: "جاۋاب ئېلخەت ئادرېسى بىلەن ئۇقتۇرۇش يوللانغان ئېلخەت ئادرېس پەرقلىق بولغاندا يۈز بېرىدۇ."
+        topic_not_found_error: "جاۋاب تاپشۇرۇۋالغان ئەمما مۇناسىۋەتلىك تېما ئۆچۈرۈلگەندە بۇ خىل ئەھۋال يۈز بېرىدۇ."
+        topic_closed_error: "جاۋاب تاپشۇرۇۋالغان ئەمما مۇناسىۋەتلىك تېما تاقالغاندا بۇ خىل ئەھۋال يۈز بېرىدۇ."
+        bounced_email_error: "ئېلخەت يەتكۈزۈلمىگەن ئېلخەت دوكلاتى."
+        screened_email_error: "يوللىغۇچىنىڭ ئېلخەت ئادرېسى توسۇش تىزىمىدا بولسا يۈز بېرىدۇ."
+        unsubscribe_not_allowed: "بۇ ئىشلەتكۈچى ئېلخەت ئارقىلىق مۇشتەرىلىكنى قالدۇرۇشقا يول قويۇلمىغان بولسا يۈز بېرىدۇ."
+        email_not_allowed: "ئېلخەت ئادرېسى يول قويۇش تىزىمىدا بولمىغاندا ياكى توسۇش تىزىمىدا بولغاندا يۈز بېرىدۇ."
+      unrecognized_error: "تونۇيالمىغان خاتالىق"
+    secure_uploads_placeholder: "تەھرىرلەندى: بۇ تور بېكەت بىخەتەر يۈكلەشنى قوزغاتقان، تېمىنى زىيارەت قىڭ ياكى ۋاسىتە كۆرسەتنى چېكىپ يۈكلىگەن يۈكلىمىنى كۆرۈڭ."
+    view_redacted_media: "ۋاسىتە كۆرسەت"
+  errors: &errors
+    format: ! "%{attribute} %{message}"
+    format_with_full_message: "<b>%{attribute}</b>: %{message}"
+    messages:
+      too_long_validation:
+        one: "%{count} ھەرپتە چەكلىنىدۇ؛ %{length} نى كىرگۈزدىڭىز."
+        other: "%{count} ھەرپتە چەكلىنىدۇ؛ %{length} نى كىرگۈزدىڭىز."
+      invalid_boolean: "بۇلىن قىممىتى ئىناۋەتسىز."
+      taken: "ئاللىقاچان قوللىنىلغان"
+      accepted: چوقۇم قوبۇل قىلىنىشى كېرەك
+      blank: بوش قالمايدۇ
+      present: بوش بولۇشى كېرەك
+      confirmation: ! "%{attribute} غا ماس كەلمىدى"
+      empty: قۇرۇق قالمايدۇ
+      equal_to: چوقۇم %{count} غا تەڭ بولۇشى كېرەك
+      even: جۈپ سان بولۇشى كېرەك
+      exclusion: قالدۇرۇلغان
+      greater_than: چوقۇم %{count} دىن چوڭ بولۇشى كېرەك
+      greater_than_or_equal_to: چوقۇم %{count} دىن چوڭ ياكى تەڭ بولۇشى كېرەك
+      has_already_been_used: "ئاللىقاچان ئىشلىتىلگەن"
+      inclusion: تىزىمدا ئەمەس
+      invalid: ئىناۋەتسىز
+      is_invalid: "ئېنىق ئەمەستەك قىلىدۇ، ئۇ تولۇق بىر جۈملىمۇ؟"
+      is_invalid_meaningful: "ئېنىق ئەمەستەك قىلىدۇ، زور كۆپچىلىك سۆزدە ئوخشاش ھەرپلەر تەكرارلىنىپتۇ؟"
+      is_invalid_unpretentious: "ئېنىق ئەمەستەك قىلىدۇ، بىر ياكى بىر قانچە سۆز بەك ئۇزۇنمۇ؟"
+      is_invalid_quiet: "ئېنىق ئەمەستەك قىلىدۇ، ھەممىسىنى چوڭ ھەرپ بىلەن كىرگۈزمەكچىمۇ سىز؟"
+      invalid_timezone: "«%{tz}» ئىناۋەتلىك ۋاقىت رايونى ئەمەس"
+      contains_censored_words: "تۆۋەندىكى سۈزۈلىدىغان سۆز بار: %{censored_words}"
+      less_than: چوقۇم %{count} دىن ئاز بولۇشى كېرەك
+      less_than_or_equal_to: چوقۇم %{count} دىن ئاز ياكى تەڭ بولۇشى كېرەك
+      not_a_number: سان ئەمەس
+      not_an_integer: چوقۇم پۈتۈن سان بولۇشى كېرەك
+      odd: چوقۇم تاق سان بولۇشى كېرەك
+      record_invalid: ! "دەلىللىيەلمىدى: %{errors}"
+      max_emojis: "چىراي ئىپادە %{max_emojis_count} دىن ئاشسا بولمايدۇ"
+      emojis_disabled: "چىراي ئىپادە بولسا بولمايدۇ"
+      ip_address_already_screened: "مەۋجۇت قائىدىدە بار"
+      restrict_dependent_destroy:
+        one: "خاتىرىنى ئۆچۈرەلمەيدۇ چۈنكى ئۇنىڭغا مۇناسىۋەتلىك %{record} خاتىرە مەۋجۇت"
+        other: "خاتىرىنى ئۆچۈرەلمەيدۇ چۈنكى ئۇنىڭغا مۇناسىۋەتلىك %{record} خاتىرە مەۋجۇت"
+      too_long:
+        one: بەك ئۇزۇن (ئەڭ كۆپ بولغاندا %{count} ھەرپ)
+        other: بەك ئۇزۇن (ئەڭ كۆپ بولغاندا %{count} ھەرپ)
+      too_short:
+        one: بەك قىسقا (ئەڭ ئاز بولغاندا %{count} ھەرپ)
+        other: بەك قىسقا (ئەڭ ئاز بولغاندا %{count} ھەرپ)
+      wrong_length:
+        one: ئۇزۇنلۇق خاتالىقى (%{count} ھەرپ بولۇشى كېرەك)
+        other: ئۇزۇنلۇق خاتالىقى (%{count} ھەرپ بولۇشى كېرەك)
+      other_than: "%{count} بولماسلىقى كېرەك"
+      auth_overrides_username: "«auth_overrides_username» تەڭشىكى قوزغىتىلغانلىقتىن، ئىشلەتكۈچى ئىسمىنى كىملىك دەلىللەش مۇلازىمىتى تەمىنلىگۈچى تەرەپتىن يېڭىلاش كېرەك."
+    template:
+      body: ! "تۆۋەندىكى بۆلەكتە مەسىلە كۆرۈلگەن:"
+      header:
+        one: "%{count} خاتالىق سەۋەبىدىن بۇ %{model} نى ساقلىيالمايدۇ"
+        other: ! "%{count} خاتالىق سەۋەبىدىن بۇ %{model} نى ساقلىيالمايدۇ"
+    embed:
+      load_from_remote: "ئۇ يازمىنى يۈكلەۋاتقاندا خاتالىق كۆرۈلگەن."
+    site_settings:
+      invalid_site_setting: "«%{name}» ئاتلىق تەڭشەك مەۋجۇت ئەمەس"
+      invalid_category_id: "مەۋجۇت بولمىغان سەھىپىنى بەلگىلىدىڭىز"
+      invalid_choice:
+        one: "«%{name}» ئىناۋەتسىز تاللاش."
+        other: "«%{name}» ئىناۋەتسىز تاللاش."
+      default_categories_already_selected: "باشقا تىزىمدا ئىشلىتىلگەن سەھىپىنى تاللىيالمايسىز."
+      default_tags_already_selected: "باشقا تىزىمدا ئىشلىتىلگەن بەلگىنى تاللىيالمايسىز."
+      s3_upload_bucket_is_required: "«s3_upload_bucket» نى تەمىنلىمىگۈچە، S3 كە يۈكلەشنى قوزغىتالمايسىز."
+      enable_s3_uploads_is_required: "S3 يۈكلەش قوزغىتىلمىغۇچە S3 ئىشلىتىش ئەھۋالىنى قوزغىتالمايسىز."
+      page_publishing_requirements: "ئەگەر بىخەتەر يۈكلەش قوزغىتىلغان بولسا بەت ئېلان قىلىشنى قوزغاتقىلى بولمايدۇ."
+      s3_backup_requires_s3_settings: "«%{setting_name}» نى تەمىنلىمىگۈچە S3 نى زاپاسلاش ئورنى سۈپىتىدە ئىشلىتەلمەيسىز."
+      s3_bucket_reused: "ئوخشاش بىر ساقلاش چىلىكىنى «s3_upload_bucket» ۋە «3_backup_bucket'» غا ئىشلىتەلمەيسىز. پەرقلىق چىلەك تاللاڭ ياكى ھەر بىر چىلەككە پەرقلىق يول ئىشلىتىڭ."
+      secure_uploads_requirements: "بىخەتەر يۈكلەشنى قوزغىتىشتىن ئىلگىرى S3 يۈكلەش ۋە S3 ACL نى قوزغىتىش كېرەك."
+      s3_use_acls_requirements: "بىخەتەر يۈكلەش قوزغىتىلغاندا چوقۇم S3 ACL نى قوزغاتقان بولۇشىڭىز كېرەك."
+      share_quote_facebook_requirements: "سىز Facebook ئەپ كىملىكىنى تەڭشىسىڭىز ئاندىن Facebook قا نەقىل ئېلىپ ھەمبەھىرلىيەلەيسىز."
+      second_factor_cannot_enforce_with_socials: "ئىجتىمائىي تاراتقۇدا تىزىمغا كىرىشنى قوزغاتقان ئەھۋالدا ئىككى ئىسپاتلىق دەلىللەشنى مەجبۇرىي ئىجرا قىلالمايسىز. سىز چوقۇم تۆۋەندىكى ئۇسۇلدا تىزىمغا كىرىشنى چەكلەيسىز: %{auth_provider_names}"
+      second_factor_cannot_be_enforced_with_disabled_local_login: "ئەگەر يەرلىك تىزىمغا كىرىش چەكلەنگەن بولسا ئىككى ئىسپاتلىق دەلىللەشنى مەجبۇرىي ئىجرا قىلالمايسىز."
+      second_factor_cannot_be_enforced_with_discourse_connect_enabled: "ئەگەر DiscourseConnect قوزغىتىلغان بولسا ئىككى ئىسپاتلىق دەلىللەشنى مەجبۇرىي ئىجرا قىلالمايسىز."
+      local_login_cannot_be_disabled_if_second_factor_enforced: "ئەگەر ئىككى ئىسپاتلىق دەلىللەش قوزغىتىلغان بولسا يەرلىك تىزىمغا كىرىشنى چەكلىيەلمەيسىز. يەرلىك تىزىمغا كىرىشنى چەكلەشتىن ئىلگىرى ئىككى ئىسپاتلىق دەلىللەشنى چەكلەش كېرەك."
+      cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 يۈكلەشنى قوزغىتالمايسىز، چۈنكى S3 يۈكلەش ئاللىقاچان پۈتكۈل بېكەت دائىرىسىدە قوزغىتىلغان ، بۇ توربېكەت دائىرىسىدە قوزغىتىلسا يۈكلەشتە ھالقىلىق مەسىلىلەرنى كەلتۈرۈپ چىقىرىشى مۇمكىن."
+      cors_origins_should_not_have_trailing_slash: "سىز CORS مەنبەسىگە ئوڭ يانتۇ سىزىق (/) نى قوشماسلىقىڭىز كېرەك."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "تاسادىپىي قانۇنلۇق ئىشلەتكۈچىنى سۈرئىتىنى چەكلەشنىڭ ئالدىنى ئېلىش ئۈچۈن ئىشلەتكۈچى ۋاكالەتچىنىڭ ئۇزۇنلۇقى كەم دېگەندە 3 ھەرپ بولۇشى كېرەك."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "تۆۋەندىكى ھەر قانداق قىممەتنى تەڭشەككە قوشالمايسىز: %{values}."
+      strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "ئەگەر «كومپوزىتور ۋاسىتە ئەلالاشتۇرۇش سۈرىتى قوزغىتىلغان» نى قوزغاتقان بولسا، بەلگە سۈرەت مېتا سانلىق مەلۇماتىنى چەكلىيەلمەيسىز. بەلگە سۈرەت مېتا سانلىق مەلۇماتىنى چەكلەشتىن بۇرۇن «كومپوزىتور ۋاسىتە ئەلالاشتۇرۇش سۈرىتى قوزغىتىلغان» نى چەكلەڭ."
+      twitter_summary_large_image_no_svg: "twitter:image مېتا سانلىق مەلۇماتىغا ئىشلىتىلىدىغان Twitter خۇلاسە سۈرەت .sage سۈرەت بولسا بولمايدۇ."
+    conflicting_google_user_id: 'بۇ ھېساباتنىڭ Google ھېسابات كىملىكى ئۆزگەردى؛ بىخەتەرلىك سەۋەبىدىن باشقۇرغۇچى خادىملار مۇداخىلە قىلىشى كېرەك. باشقۇرغۇچى خادىملار بىلەن ئالاقىلىشىپ، ئۇلارنى <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a> نىشانلاڭ.'
+    onebox:
+      invalid_address: "كەچۈرۈڭ، بىز بۇ تور بەتكە ئالدىن كۆزىتىش ھاسىللىيالمايمىز، چۈنكى «%{hostname}» مۇلازىمېتىرنى تاپالمىدى. يازمىڭىزدا ئالدىن كۆزىتىشنىڭ ئورنىغا ئۇلانمىلا كۆرۈنىدۇ. :cry:"
+      error_response: "كەچۈرۈڭ، بىز بۇ تور بەتكە ئالدىن كۆزىتىش ھاسىللىيالمايمىز، چۈنكى مۇلازىمېتىر %{status_code} خاتالىق كودىنى قايتۇردى. يازمىڭىزدا ئالدىن كۆزىتىشنىڭ ئورنىغا ئۇلانمىلا كۆرۈنىدۇ. :cry:"
+      missing_data:
+        one: "كەچۈرۈڭ، بۇ بەتكە ئالدىن كۆزىتىش ھاسىللىيالمايسىز، چۈنكى oEmbed / OpenGraph بەلگىسىنى تاپالمىدى: %{missing_attributes}"
+        other: "كەچۈرۈڭ، بۇ بەتكە ئالدىن كۆزىتىش ھاسىللىيالمايسىز، چۈنكى oEmbed / OpenGraph بەلگىسىنى تاپالمىدى: %{missing_attributes}"
+  word_connector:
+    comma: "، "
+  custom_fields:
+    validations:
+      max_items: "بۇ ئەمەلىي گەۋدىنىڭ ئىختىيارى بۆلىكى ئەڭ يۇقىرى چېكىگە يەتتى (%{max_items_number})"
+      max_value_length: "ئىختىيارى بۆلەكنىڭ قىممىتى ئەڭ يۇقىرى ئۇزۇنلۇق چېكىگە يەتتى (%{max_value_length})"
+  invite:
+    expired: "تەكلىپ پەرمان تاختىڭىزنىڭ ۋاقتى ئۆتتى. <a href='%{base_url}/about'>باشقۇرغۇچى خادىم بىلەن ئالاقىلىشىڭ</a>."
+    not_found: "تەكلىپ پەرمان تاختىڭىز ئىناۋەتسىز. <a href='%{base_url}/about'>باشقۇرغۇچى بىلەن ئالاقىلىشىڭ</a>."
+    not_found_json: "تەكلىپ پەرمان تاختىڭىز ئىناۋەتسىز. باشقۇرغۇچى بىلەن ئالاقىلىشىڭ."
+    not_matching_email: "ئېلخەت ئادرېسىڭىز بىلەن تەكلىپنامە پەرمان تاختىسىغا باغلانغان ئېلخەت ماس كەلمىدى. باشقۇرغۇچى خادىم بىلەن ئالاقىلىشىڭ."
+    not_found_template: |
+      <p>سىزنىڭ <a href="%{base_url}">%{site_name}</a> غا كىرىش تەكلىپىڭىز جەزملەندى.</p>
+
+      <p>ئەگەر ئىم يادىڭىزدا بولسا <a href="%{base_url}/login">تىزىمغا كىر</a>سىڭىز بولىدۇ.</p>
+
+      <p>ئۇنداق بولمىسا <a href="%{base_url}/password-reset">ئىم ئەسلىگە قايتۇر</a>ۇڭ.</p>
+    not_found_template_link: |
+      <p>بۇ <a href="%{base_url}">%{site_name}</a>غا كىرىش تەكلىپىنى ئىشلەتكىلى بولمايدۇ. تەكلىپ قىلغۇچىدىن يېڭى تەكلىپنامە ئەۋەتىشنى سوراڭ.</p>
+    existing_user_cannot_redeem: "بۇ تەكلىپىنامەنى ئىشلەتكىلى بولمايدۇ. سىزنى تەكلىپ قىلغۇچىدىن يېڭى تەكلىپنامە ئەۋەتىشنى سوراڭ."
+    existing_user_already_redemeed: "سىز بۇ تەكلىپ ئۇلانمىسىنى ئىشلىتىپ بولدىڭىز."
+    user_exists: "تەكلىپ <b>%{email}</b> ھاجەتسىز، ئۇلارنىڭ ھېساباتى بار!"
+    invite_exists: "سىز <b>%{email}</b> نى تەكلىپ قىلغان."
+    invalid_email: "%{email} ئىناۋەتلىك ئېلخەت ئادرېسى ئەمەس."
+    generic_error_response: "ئىلتىماسىڭىزدا مەسىلە كۆرۈلگەن."
+    rate_limit:
+      one: "ئۆتكەن 24 سائەتتە %{count} تەكلىپ يوللىدىڭىز، %{time_left} كۈتۈپ ئاندىن قايتا سىناڭ."
+      other: "ئۆتكەن 24 سائەتتە %{count} تەكلىپ يوللىدىڭىز، %{time_left} كۈتۈپ ئاندىن قايتا سىناڭ."
+    confirm_email: "<p>ئاساسەن تاماملىدىڭىز! ئېلخەت ئادرېسىڭىزغا ئاكتىپلاش خېتى ئەۋەتىمىز. خەتتىكى كۆرسەتمىگە ئەگىشىپ ھېساباتىڭىزنى ئاكتىپلاڭ.</p><p>ئەگەر خەت كەلمىگەن بولسا، ئەخلەت خەت قىسقۇچنى تەكشۈرۈڭ.</p>"
+    disabled_errors:
+      discourse_connect_enabled: "DiscourseConnect قوزغىتىلغانلىقتىن تەكلىپ چەكلەنگەن."
+      invalid_access: "ئىلتىماس قىلغان مەنبەنى كۆرۈش ئىجازىتىڭىز يوق."
+    requires_groups: "تەكلىپ ساقلانمىدى چۈنكى بەلگىلەنگەن تېمىنى زىيارەت قىلغىلى بولمايدۇ. تۆۋەندىكى گۇرۇپپىدىن بىرنى قوشۇش كېرەك: %{groups}."
+    max_invite_emails_limit_exceeded: "ئىلتىماس قىلالمىدى چۈنكى ئېلخەت سانى ئەڭ چوڭ قىممەت (%{max}) تىن ئېشىپ كەتتى."
+    domain_not_allowed: "ئېلخېتىڭىز بۇ تەكلىپنى ئىشلىتەلمەيدۇ."
+    domain_not_allowed_admin: "بۇ دائىرە نامى تەكلىپنى ئىشلىتەلمەيدۇ."
+    max_redemptions_allowed_one: "ئېلخەت ئىلتىماس ئۈچۈن 1 بولۇشى كېرەك."
+    redemption_count_less_than_max: "%{max_redemptions_allowed} دىن ئاز بولۇشى كېرەك."
+    email_xor_domain: "ئېلخەت ۋە دائىرە نامى بۆلىكى بىرلا ۋاقىتتا كۆرۈلۈشكە يول قويۇلمايدۇ"
+    existing_user_success: "تەكلىپ مۇۋەپپەقىيەتلىك قوللىنىلدى"
+  bulk_invite:
+    file_should_be_csv: "يۈكلەنگەن ھۆججەت csv پىچىمىدا بولۇشى كېرەك."
+    max_rows: "ئالدىنقى %{max_bulk_invites} تەكلىپ يوللاندى. ھۆججەتنى كىچىكرەك بۆلەككە بۆلۇشنى سىنايدۇ."
+    error: "ھۆججەتنى يۈكلەۋاتقاندا خاتالىق كۆرۈلدى. سەل تۇرۇپ قايتا سىناڭ."
+  invite_link:
+    email_taken: "بۇ ئېلخەت ئىشلىتىلىۋاتىدۇ. ئەگەر ھېساباتىڭىز بولسا تىزىمغا كىرىڭ ياكى ئىم ئەسلىگە قايتۇرۇڭ."
+    max_redemptions_limit: "2 بىلەن %{max_limit} ئارىسىدا بولۇشى كېرەك."
+  topic_invite:
+    failed_to_invite: "ئەگەر ئىشلەتكۈچى تۆۋەندىكى خالىغان بىر گۇرۇپپىنىڭ ئەزاسى بولمىسا ئۇنداقتا بۇ سۆھبەتكە تەكلىپ قىلغىلى بولمايدۇ: %{group_names}."
+    not_pm: "پەقەت شەخسىي ئۇچۇرغا تەكلىپ قىلالايسىز."
+    user_exists: "كەچۈرۈڭ، ئۇ ئىشلەتكۈچى تەكلىپ قىلىنغان. بىر تېمىغا بىر ئىشلەتكۈچىنى پەقەت بىرلا قېتىم تەكلىپ قىلالايسىز."
+    muted_topic: "كەچۈرۈڭ، ئىشلەتكۈچى بۇ تېمىنى ئۈنسىزلىدى."
+    receiver_does_not_allow_pm: "كەچۈرۈڭ، ئۇ ئىشلەتكۈچى سىزنىڭ شەخسىي ئۇچۇر يوللىشىڭىزغا يول قويمايدۇ."
+    sender_does_not_allow_pm: "كەچۈرۈڭ، ئۇ ئىشلەتكۈچىنىڭ سىزگە شەخسىي ئۇچۇر يوللىشىغا يول قويمىغان."
+    user_cannot_see_topic: "%{username} تېمىنى كۆرەلمەيدۇ."
+  backup:
+    operation_already_running: "ھازىر بىر مەشغۇلات ئېلىپ بېرىلىۋاتىدۇ. يېڭى ئىش باشلىغىلى بولمايدۇ."
+    backup_file_should_be_tar_gz: "زاپاس ھۆججەت .tar.gz ئارخىپى بولۇشى كېرەك."
+    not_enough_space_on_disk: "بۇ زاپاسنى يۈكلىگۈدەك يېتەرلىك دىسكا بوشلۇقى يوق."
+    invalid_filename: "زاپاس ھۆججەت نامىدا ئىناۋەتسىز ھەرپ بار. ئىناۋەتلىك ھەرپلەر az 0-9. - _."
+    file_exists: "سىز يۈكلىمەكچى بولغان ھۆججەت مەۋجۇت."
+  invalid_params: "ئىلتىماسقا ئىناۋەتسىز پارامېتىر تەمىنلىدىڭىز: %{message}"
+  not_logged_in: "بۇنى قىلىش ئۈچۈن تىزىمغا كىرىشىڭىز كېرەك."
+  not_found: "ئىلتىماس قىلىنغان تور ئادرېسى ياكى مەنبە تېپىلمىدى."
+  invalid_access: "ئىلتىماس قىلغان مەنبەنى كۆرۈش ئىجازىتىڭىز يوق."
+  authenticator_not_found: "دەلىللەش ئۇسۇلى مەۋجۇت ئەمەس ياكى چەكلەنگەن."
+  authenticator_no_connect: "بۇ دەلىللەشنى تەمىنلىگۈچى مەۋجۇت مۇنبەر ھېساباتىغا ئۇلىنىشقا يول قويمايدۇ."
+  invalid_api_credentials: "ئىلتىماس قىلغان مەنبەنى كۆرۈش ئىجازىتىڭىز يوق. بۇ API ئىشلەتكۈچى ئاتى ياكى ئاچقۇچى ئىناۋەتسىز."
+  provider_not_enabled: "ئىلتىماس قىلغان مەنبەنى كۆرۈش ئىجازىتىڭىز يوق. دەلىللەشنى تەمىنلىگۈچى ئىناۋەتسىز."
+  provider_not_found: "ئىلتىماس قىلغان مەنبەنى كۆرۈش ئىجازىتىڭىز يوق. دەلىللەشنى تەمىنلىگۈچى مەۋجۇت ئەمەس."
+  read_only_mode_enabled: "بۇ تور بېكەت ئوقۇشقىلا بولىدىغان ھالەتتە. ئۆز-ئارا تەسىرلىشىش چەكلەنگەن."
+  invalid_grant_badge_reason_link: "تارتۇق سەۋەبىدە سىرتقى ياكى ئىناۋەتسىز discourse ئۇلانمىسىغا يول قويۇلمايدۇ"
+  email_template_cant_be_modified: "بۇ ئېلخەت قېلىپىنى ئۆزگەرتىشكە بولمايدۇ"
+  invalid_whisper_access: "پىچىرلاش قوزغىتىلمىغان ياكى پىچىر يازما قۇرۇش ئىجازىتىڭىز يوق."
+  not_in_group:
+    title_topic: "بۇ تېمىنى كۆرۈش ئۈچۈن «%{group}» گۇرۇپپىغا ئەزالىق ئىلتىماسى يوللاڭ"
+    title_category: "بۇ سەھىپىنى كۆرۈش ئۈچۈن «%{group}» گۇرۇپپىغا ئەزالىق ئىلتىماسى يوللاڭ"
+    request_membership: "ئەزالىق ئىلتىماسى"
+    join_group: "گۇرۇپپىغا قوشۇل"
+  deleted_topic: "ئاپلا! بۇ تېما ئۆچۈرۈلگەن ھەمدە ئەمدى ئىشلەتكىلى بولمايدۇ."
+  delete_topic_failed: "ئۇ تېمىنى ئۆچۈرۈۋاتقاندا خاتالىق كۆرۈلدى. تور بېكەتنىڭ باشقۇرغۇچىسى بىلەن ئالاقىلىشىڭ."
+  reading_time: "ئوقۇش ۋاقتى"
+  likes: "ياقتۇرۇش"
+  action_already_performed: "ئاپلا! سىز بۇ مەشغۇلاتنى ئىجرا قىلغان. بەتنى يېڭىلاپ سىناپ باقامسىز؟"
+  too_many_replies:
+    one: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى ئوخشاش تېمىغا %{count} قېتىم ئىنكاس يوللىيالايدىغان قىلىپ ۋاقىتلىق چەكلەندى."
+    other: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى ئوخشاش تېمىغا %{count} قېتىم ئىنكاس يوللىيالايدىغان قىلىپ ۋاقىتلىق چەكلەندى."
+  max_consecutive_replies:
+    one: "ئۇدا جاۋاب بېرىشكە بولمايدۇ. ئالدىنقى جاۋابىڭىزنى تەھرىرلەڭ ياكى باشقىلارنىڭ سىزگە قايتۇرغان جاۋابىنى كۈتۈڭ."
+    other: "ئۇدا %{count} قېتىم جاۋاب بېرىشكە بولمايدۇ. ئالدىنقى جاۋابىڭىزنى تەھرىرلەڭ ياكى باشقىلارنىڭ سىزگە قايتۇرغان جاۋابىنى كۈتۈڭ."
+  embed:
+    start_discussion: "سۆھبەت باشلا"
+    continue: "سۆھبەتنى داۋاملاشتۇر"
+    error: "سىڭدۈرۈۋاتقاندىكى خاتالىق"
+    referer: "پايدىلانما تور ئادرېسى:"
+    error_topics: "«سىڭدۈرمە تېما تىزىمى» بېكەت تەڭشىكى قوزغىتىلمىغان"
+    mismatch: "پايدىلانما تور ئادرېسى يوللانمىغان ياكى تۆۋەندىكى ھېچقايسى مۇلازىمېتىر بىلەن ماس كەلمىگەن:"
+    no_hosts: "سىڭدۈرمىگە ھېچقانداق مۇلازىمېتىر تەڭشەلمىگەن."
+    configure: "سىڭدۈرمە سەپلىمە"
+    more_replies:
+      one: "باشقا %{count} جاۋاب"
+      other: "باشقا %{count} جاۋاب"
+    loading: "سۆھبەتنى يۈكلەۋاتىدۇ…"
+    permalink: "ئۆزگەرمەس ئۇلانما"
+    imported_from: "بۇ %{link} نىڭدىكى ئەسلى سۆھبەتتىن ئايرىلىپ چىققان سۆھبەت تېمىسى"
+    in_reply_to: "◀ %{username}"
+    replies:
+      one: "%{count} جاۋاب"
+      other: "%{count} جاۋاب"
+    likes:
+      one: "%{count} ياقتۇرۇش"
+      other: "%{count} ياقتۇرۇش"
+    last_reply: "ئاخىرقى جاۋاب"
+    created: "قۇرغان ۋاقتى"
+    new_topic: "يېڭى تېما قۇر"
+  no_mentions_allowed: "كەچۈرۈڭ، باشقا ئىشلەتكۈچىنى ئاتىيالمايسىز."
+  too_many_mentions:
+    one: "كەچۈرۈڭ، سىز بىر يازمىدا پەقەت %{count} ئىشلەتكۈچىنى ئاتىيالايسىز."
+    other: "كەچۈرۈڭ، سىز بىر يازمىدا پەقەت %{count} ئىشلەتكۈچىنى ئاتىيالايسىز."
+  no_mentions_allowed_newuser: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى باشقا ئىشلەتكۈچىنى ئاتىيالمايدۇ."
+  too_many_mentions_newuser:
+    one: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى بىر يازمىدا پەقەت %{count} ئىشلەتكۈچىنى ئاتىيالايدۇ."
+    other: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى بىر يازمىدا پەقەت %{count} ئىشلەتكۈچىنى ئاتىيالايدۇ."
+  no_embedded_media_allowed_group: "كەچۈرۈڭ، سىز يازمىدا ۋاسىتە تۈرىنى سىڭدۈرەلمەيسىز."
+  no_embedded_media_allowed: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى يازمىدا ۋاسىتە تۈرىنى سىڭدۈرەلمەيدۇ."
+  too_many_embedded_media:
+    one: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى يازمىغا پەقەت بىر سىڭدۈرمە ۋاسىتە تۈرىنى قوشالايدۇ."
+    other: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى يازمىغا پەقەت %{count} سىڭدۈرمە ۋاسىتە تۈرىنى قوشالايدۇ."
+  no_attachments_allowed: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى يازمىغا يۈكلەنمە قوشالمايدۇ."
+  too_many_attachments:
+    one: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى يازمىغا پەقەت بىر يۈكلەنمە قوشالايدۇ."
+    other: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى يازمىغا پەقەت %{count} يۈكلەنمە قوشالايدۇ."
+  no_links_allowed: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى يازمىغا ئۇلانما قوشالمايدۇ."
+  links_require_trust: "كەچۈرۈڭ، يازمىڭىزغا ئۇلانما قوشالمايسىز."
+  too_many_links:
+    one: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى يازمىغا پەقەت بىر ئۇلانما قوشالايدۇ."
+    other: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى يازمىغا پەقەت %{count} ئۇلانما قوشالايدۇ."
+  contains_blocked_word: "كەچۈرۈڭ، يازمىدا «%{word}» سۆزنى ئىشلىتەلمەيسىز؛ بۇنىڭغا يول قويۇلمىغان."
+  contains_blocked_words: "كەچۈرۈڭ، ئۇنى يوللىيالمايسىز. يول قويۇلمىغان: %{words}."
+  spamming_host: "كەچۈرۈڭ ئۇ مۇلازىمېتىرغا ئۇلانما يوللىيالمايسىز."
+  user_is_suspended: "توختىتىلغان ئىشلەتكۈچىنىڭ يازما يوللىشىغا يول قويۇلمايدۇ."
+  topic_not_found: "چاتاق چىقتى. بەلكىم سىز كۆرۈۋاتقاندا بۇ تېما تاقالغان ياكى ئۆچۈرۈلگەن بولۇشى مۇمكىن؟"
+  not_accepting_pms: "كەچۈرۈڭ، %{username} نۆۋەتتە ئۇچۇر قوبۇل قىلمايدۇ."
+  max_pm_recipients: "كەچۈرۈڭ، سىز ئەڭ كۆپ بولغاندا %{recipients_limit} تاپشۇرۇۋالغۇچىغا ئۇچۇر يوللىيالايسىز."
+  pm_reached_recipients_limit: "كەچۈرۈڭ، ئۇچۇرىڭىزدىكى تاپشۇرۇۋالغۇچىنىڭ سانى %{recipients_limit} دىن ئاشسا بولمايدۇ."
+  removed_direct_reply_full_quotes: "ئىلگىرىكى بارلىق يازمىنىڭ نەقىللىرىنى ئۆزلۈكىدىن چىقىرىۋەتتى."
+  watched_words_auto_tag: "ئۆزلۈكىدىن بەلگە سېلىنغان تېما"
+  create_pm_on_existing_topic: "كەچۈرۈڭ، مەۋجۇت تېمىدا شەخسىي ئۇچۇر قۇرالمايسىز."
+  slow_mode_enabled: "بۇ تېما ئاستا ھالەتتە."
+  just_posted_that: "يېقىندا يوللىغان يازمىڭىزغا بەكلا ئوخشايدۇ"
+  invalid_characters: "ئىناۋەتسىز ھەرپ بار"
+  is_invalid: "ئېنىق ئەمەستەك قىلىدۇ، ئۇ تولۇق بىر جۈملىمۇ؟"
+  next_page: "كېيىنكى بەت ←"
+  prev_page: "→ ئالدىنقى بەت"
+  show_post_in_topic: "تېمىدىكى يازمىنى كۆرسەت"
+  page_num: "%{num}-بەت"
+  crawler_content_hidden: "HTML مەزمۇنى قىسقارتىلدى چۈنكى سىز تىزىمغا كىرگەن ياكى كۆچمە ئۈسكۈنە ئىشلىتىۋاتىسىز."
+  home_title: "باش بەت"
+  topics_in_category: "«%{category}» سەھىپىدىكى تېما"
+  rss_posts_in_topic: "«%{topic}» نىڭ RSS مەنبەسى"
+  rss_topics_in_category: "«%{category}» سەھىپىدىكى تېمىنىڭ RSS مەنبەسى"
+  rss_num_posts:
+    one: "%{count} يازما"
+    other: "%{count} يازما"
+  rss_num_participants:
+    one: "%{count} قاتناشقۇچى"
+    other: "%{count} قاتناشقۇچى"
+  read_full_topic: "تولۇق تېمىنى ئوقۇڭ"
+  private_message_abbrev: "ئۇچۇر"
+  rss_description:
+    hot: "قىزغىن تېما"
+    latest: "ئاخىرقى تېما"
+    top: "قىزغىن تېما"
+    top_all: "ئەڭ قىزغىن تېما"
+    top_yearly: "يىللىق قىزغىن تېما"
+    top_quarterly: "پەسىللىك قىزغىن تېما"
+    top_monthly: "ئايلىق قىزغىن تېما"
+    top_weekly: "ھەپتىلىك قىزغىن تېما"
+    top_daily: "كۈندىلىك قىزغىن تېما"
+    posts: "ئاخىرقى يازما"
+    private_posts: "ئاخىرقى شەخسىي ئۇچۇر"
+    group_posts: "%{group_name} نىڭ ئاخىرقى يازمىسى"
+    group_mentions: "%{group_name} نىڭ ئاخىرقى ئاتىشى"
+    user_posts: "@%{username} نىڭ ئاخىرقى يازمىسى"
+    user_topics: "@%{username} نىڭ ئاخىرقى تېمىسى"
+    tag: "بەلگە سېلىنغان تېما"
+    badge: "%{site_title} دىكى %{display_name} تارتۇق"
+  too_late_to_edit: "ئۇ يازما ناھايىتى بۇرۇن قۇرۇلغان. ئۇنى ئەمدى تەھرىرلىگىلى ياكى ئۆچۈرگىلى بولمايدۇ."
+  edit_conflict: "بۇ يازمىنى باشقا ئىشلەتكۈچى تەھرىرلىگەن، ئۆزگەرتىشىڭىزنى ئەمدى ساقلىغىلى بولمايدۇ."
+  revert_version_same: "نۆۋەتتىكى نەشرى سىز قايتماقچى بولغان نەشرى بىلەن ئوخشاش."
+  reverted_to_version: "#%{version} نەشرىگە قايتۇرۇلدى"
+  cannot_edit_on_slow_mode: "بۇ تېما ئاستا ھالەتتە. چوڭقۇر مۇلاھىزىلەرنى رىغبەتلەندۈرۈش ئۈچۈن، نۆۋەتتە بۇ تېمىدىكى كونا يازمىلارنى تەھرىرلەشكە يول قويۇلمايدۇ."
+  excerpt_image: "سۈرەت"
+  bookmarks:
+    errors:
+      already_bookmarked_post: "ئوخشاش يازمىنى خەتكۈچكە ئىككى قېتىم قوشالمايسىز."
+      already_bookmarked: "ئوخشاش %{type} نى خەتكۈچكە ئىككى قېتىم قوشالمايسىز."
+      too_many: "كەچۈرۈڭ، %{limit} دىن كۆپ خەتكۈچ قوشالمايسىز، <a href='%{user_bookmarks_url}'>%{user_bookmarks_url}</a> نى زىيارەت قىلىپ بەزىلىرىنى چىقىرىۋېتىڭ."
+      cannot_set_past_reminder: "ئۆتمۈشتىكى خەتكۈچ ئەسكەرتىشىنى تەڭشىيەلمەيسىز."
+      cannot_set_reminder_in_distant_future: "سىز كەلگۈسى خەتكۈچ ئەسكەرتىشىنى 10 يىلدىن ئارتۇق قىلىپ تەڭشىيەلمەيسىز."
+      time_must_be_provided: "بارلىق ئەسكەرتىشلەرگە ۋاقىت تەمىنلىنىشى كېرەك"
+      for_topic_must_use_first_post: "سىز پەقەت تېمىدىكى تۇنجى يازمىنى خەتكۈچكە قوشالايسىز."
+      bookmarkable_id_type_required: "خەتكۈچ خاتىرىسىنىڭ ئىسمى ۋە تىپى تەلەپ قىلىنىدۇ."
+      invalid_bookmarkable: "%{type} نى خەتكۈچكە قوشالمايدۇ."
+    reminders:
+      at_desktop: "كېلەر قېتىم ئۈستەل كومپيۇتېرىمنى ئىشلەتكەندە"
+      later_today: "بۈگۈن كېيىنرەك"
+      next_business_day: "كېيىنكى خىزمەت كۈنى"
+      tomorrow: "ئەتە"
+      next_week: "كېلەر ھەپتە"
+      next_month: "كېلەر ئاي"
+      custom: "ئىختىيارى چېسلا ۋە ۋاقىت"
+  groups:
+    success:
+      bulk_add:
+        one: "گۇرۇپپىغا %{count} ئىشلەتكۈچى قوشۇلغان"
+        other: "گۇرۇپپىغا %{count} ئىشلەتكۈچى قوشۇلغان"
+    errors:
+      grant_trust_level_not_valid: "«%{trust_level}» ئىناۋەتلىك ئىشەنچ دەرىجىسى ئەمەس."
+      can_not_modify_automatic: "ئاپتوماتىك گۇرۇپپىنى ئۆزگەرتەلمەيسىز"
+      member_already_exist:
+        one: "تۆۋەندىكى ئىشلەتكۈچى بۇ گۇرۇپپىنىڭ ئەزاسى «%{username}»."
+        other: "تۆۋەندىكى ئىشلەتكۈچى بۇ گۇرۇپپىنىڭ ئەزاسى: «%{username}»"
+      invalid_domain: "«%{domain}» ئىناۋەتلىك دائىرە ئەمەس"
+      invalid_incoming_email: "«%{email}» ئىناۋەتلىك ئېلخەت ئادرېسى ئەمەس."
+      email_already_used_in_group: "«%{email}» ئاللىبۇرۇن «%{group_name}» گۇرۇپپىدا ئىشلىتىلگەن."
+      email_already_used_in_category: "«%{email}» ئاللىبۇرۇن «%{category_name}» سەھىپىدە ئىشلىتىلگەن."
+      cant_allow_membership_requests: "ھېچقانداق ئىگىسى يوق گۇرۇپپىغا ئەزالىق ئىلتىماسى يوللىيالمايسىز."
+      already_requested_membership: "بۇ گۇرۇپپىغا ئەزا بولۇشنى ئىلتىماس قىلدىڭىز."
+      adding_too_many_users:
+        one: "بىر قېتىمدا ئەڭ كۆپ بولغاندا %{count} ئىشلەتكۈچى قوشقىلى بولىدۇ"
+        other: "بىر قېتىمدا ئەڭ كۆپ بولغاندا %{count} ئىشلەتكۈچى قوشقىلى بولىدۇ"
+      usernames_or_emails_required: "ئىشلەتكۈچى ئاتى ۋە ئېلخەت بولۇشى كېرەك"
+      no_invites_with_discourse_connect: "DiscourseConnect قوزغىتىلغاندا پەقەت تىزىملاتقان ئىشلەتكۈچىنىلا تەكلىپ قىلالايسىز"
+      no_invites_without_local_logins: "يەرلىك تىزىمغا كىرىش چەكلەنگەندە پەقەت تىزىملاتقان ئىشلەتكۈچىنىلا تەكلىپ قىلالايسىز"
+    default_names:
+      everyone: "ھەممەيلەن"
+      admins: "باشقۇرغۇچى"
+      moderators: "رىياسەتچى"
+      staff: "خىزمەتچىلەر"
+      trust_level_0: "ئىشەنچ_دەرىجە_0"
+      trust_level_1: "ئىشەنچ_دەرىجە_1"
+      trust_level_2: "ئىشەنچ_دەرىجە_2"
+      trust_level_3: "ئىشەنچ_دەرىجە_3"
+      trust_level_4: "ئىشەنچ_دەرىجە_4"
+    request_membership_pm:
+      title: "@%{group_name} نىڭ ئەزالىق ئىلتىماسى"
+    request_accepted_pm:
+      body: |
+        سىزنىڭ @%{group_name} غا كىرىش ئىلتىماسىڭىز قوبۇل قىلىندى ھەمدە ھازىر ئەزاسى بولدىڭىز.
+  education:
+    until_posts:
+      one: "%{count} يازما"
+      other: "%{count} يازما"
+    "new-topic": |
+      %{site_name} غا خۇش كەلدىڭىز &mdash; **يېڭى سۆھبەت باشلىغانلىقىڭىزغا رەھمەت**!
+
+      - ئەگەر ماۋزۇنى ئۈنلۈك ئوقۇسىڭىز، قىزىقارلىق ئاڭلىنامدۇ؟ مەزمۇنىنى قىسقىچە قىلىپ ياخشى ئىپادىلىيەلەمدۇ؟
+
+      - بۇنىڭغا كىم قىزىقىدۇ؟ نېمە ئۈچۈن قىزىقىدۇ؟ سىز قانداق ئىنكاسقا ئېرىشمەكچى؟
+
+      - باشقىلارنىڭ ئىزدەپ تېپىشىغا قۇلاي بولۇشى ئۈچۈن سۆھبىتىڭىزدە تىلغا ئېلىنغان ئاتالغۇ. ئەگەر سۆھبىتىڭىز بىلەن مۇناسىۋەتلىك تېما بىر گۇرۇپپا قىلىنىدىغان بولسا، سەھىپە (ياكى بەلگە) تاللاڭ.
+
+      مۇناسىۋەتلىك تەپسىلاتىنى [جامائەت تۈزۈمىمىزدىن كۆرۈڭ] (%{base_path}/guidelines). بۇ تاختا پەقەت تۇنجى %{education_posts_text} كۆرۈنىدۇ.
+    "new-reply": |
+      %{site_name} &mdash; غا خۇش كەلدىڭىز **تۆھپىڭىزگە رەھمەت**!
+
+      - باشقا جامائەت ئەزالىرى بىلەن دوستانىلىقنى ساقلاڭ.
+
+      - ئىنكاسىڭىز پىكىرلىشىشكە پايدىلىقمۇ؟
+
+      - ئىجابىي تەنقىت قارشى ئېلىنىدۇ ئەمما ئادەمگە ئەمەس بەلكى ئىشقا.
+
+      - مۇناسىۋەتلىك تەپسىلاتنى [جامائەت يېتەكچىمىزدىن كۆرۈڭ] (%{base_path}/guidelines) بۇ تاختا پەقەت سىزنىڭ ئالدىنقى %{education_posts_text} دا كۆرۈنىدۇ
+    avatar: |
+      ###ھېساباتىڭىزغا رەسىم قوشسىڭىز قانداق؟
+
+      سىز بىر قانچە تېما ۋە ئىنكاس يوللاپسىز، ئەمما تەرجىمىھالىڭىزدىكى رەسىمىڭىز ئۆزىڭىزگە خاس بىردىنبىر ئەمەس ئىكەن - پەقەتلا بىر ھەرپ ئىكەن.
+
+      **[ئىشلەتكۈچى تەرجىمىھالىڭىزنى زىيارەت قىلىپ](%{profile_path})** ئۆزىڭىزگە ۋەكىللىك قىلىدىغان رەسىمدىن بىرنى يۈكلەمسىز؟
+
+      ھەر بىرەيلەننىڭ ئۆزىگە خاس بىردىنبىر تەرجىمىھال رەسىمى بولسا كىشىلەرنىڭ سۆھبەتكە قاتنىشىشى ۋە جەلپكار كىشىلەرنى تېپىشى قۇلايلىشىدۇ!
+    dominating_topic: سىز بۇ تېمىغا بەك كۆپ مەزمۇن يوللىدىڭىز! باشقىلارغىمۇ ئىنكاس قايتۇرۇش ۋە ئۆز ئارا پىكىر ئالماشتۇرۇش پۇرسىتى يارىتىپ بېرىشنىمۇ ئويلىشىڭ.
+    get_a_room:
+      one: سىز @%{reply_username} قېتىم ئىنكاس قايتۇردىڭىز، سىز ئۇلارغا بىۋاسىتە ئۇچۇر يوللىيالايدىغانلىقىڭىزنى بىلەمسىز؟
+      other: سىز @%{reply_username} كە %{count} قېتىم ئىنكاس قايتۇردىڭىز، سىز ئۇلارغا بىۋاسىتە ئۇچۇر يوللىيالايدىغانلىقىڭىزنى بىلەمسىز؟
+    dont_feed_the_trolls: بۇ يازمىغا رىياسەتچى دىققەت قىلىشى زۆرۈر دەپ پاش قىلىنغان. راستىنلا ئۇنىڭغا جاۋاب قايتۇرۇشنى خالامسىز؟ پاسسىپ مەزمۇنغا قايتۇرۇلغان جاۋاب كۆپىنچە ھاللاردا تېخىمۇ پاسسىپ قىلمىشنى كەلتۈرۈپ چىقىرىدۇ.
+    too_many_replies: |
+      ### سىز بۇ تېمىغا ئىنكاس قايتۇرۇش چېكىگە يەتتىڭىز
+
+      كەچۈرۈڭ، ئەمما يېڭى ئىشلەتكۈچى ئوخشاش تېمىدا %{newuser_max_replies_per_topic} قېتىم ئىنكاس قايتۇرالايدىغان قىلىپ ۋاقىتلىق چەكلىمە قويۇلغان.
+
+      ئۇنىڭغا يەنە بىر ئىنكاس يوللاشنىڭ ئورنىغا، ئالدىنقى ئىنكاسىڭىزنى تەھرىرلەڭ ياكى باشقا تېمىنى زىيارەت قىلىڭ.
+    reviving_old_topic: |
+      ### بۇ تېما قايتا جانلاندۇرۇلسۇنمۇ؟
+
+      بۇ تېمىدىكى ئاخىرقى ئىنكاس **%{time_ago}**. ئىنكاسىڭىز تېمىنى ئۇنىڭ چوققىسىغا قاڭقىتىدۇ ھەمدە ئىلگىرى ئىنكاس قايتۇرغانلارغا ئۇقتۇرىدۇ.
+
+      راستتىنلا بۇ كونا سۆھبەتنى داۋاملاشتۇرامسىز؟
+  activerecord:
+    attributes:
+      category:
+        name: "سەھىپە ئىسمى"
+      topic:
+        title: "ماۋزۇ"
+        featured_link: "جەۋھەر ئۇلانما"
+        category_id: "سەھىپە"
+      post:
+        raw: "مەزمۇن"
+      user_profile:
+        bio_raw: "ھەققىمدە"
+    errors:
+      models:
+        topic:
+          attributes:
+            base:
+              warning_requires_pm: "پەقەت شەخسىي ئۇچۇرغا ئاگاھلاندۇرۇش قوشالايسىز."
+              too_many_users: "بىر قېتىمدا بىرلا ئىشلەتكۈچىگە ئاگاھلاندۇرۇش ئەۋەتەلەيسىز."
+              cant_send_pm: "كەچۈرۈڭ، سىز ئۇ ئىشلەتكۈچىگە شەخسىي ئۇچۇر ئەۋەتەلمەيسىز."
+              no_user_selected: "ئىناۋەتلىك ئىشلەتكۈچىدىن بىرنى تاللىشىڭىز كېرەك."
+              reply_by_email_disabled: "ئېلخەتتە جاۋاب قايتۇرۇش چەكلەنگەن."
+              send_to_email_disabled: "كەچۈرۈڭ، سىز ئېلخەتكە شەخسىي ئۇچۇر ئەۋەتەلمەيسىز."
+              target_user_not_found: "ئەۋەتىۋاتقان بۇ ئۇچۇرىڭىزنى تاپشۇرۇۋالىدىغان ئىشلەتكۈچىدىن بىرىنى تاپالمىدى."
+              unable_to_update: "ئۇ تېمىنى يېڭىلاۋاتقاندا خاتالىق كۆرۈلگەن."
+              unable_to_tag: "تېمغا بەلگە سېلىۋاتقاندا خاتالىق كۆرۈلگەن."
+              unable_to_unlist: "كەچۈرۈڭ، تىزىمدىن چۈشۈرۈلگەن تېمىنى قۇرالمايسىز."
+            featured_link:
+              invalid: "ئىناۋەتسىز. تور ئادرېسى http:// ياكى https:// نى ئۆز ئىچىگە ئالىدۇ."
+        user:
+          attributes:
+            password:
+              common: "ئەڭ كۆپ ئىشلىتىلىدىغان 10000 ئىم ئىچىدىكى بىرى. تېخىمۇ بىخەتەر ئىم ئىشلىتىڭ."
+              same_as_username: "ئىشلەتكۈچى ئاتىڭىز بىلەن ئوخشاش. تېخىمۇ بىخەتەر ئىم ئىشلىتىڭ."
+              same_as_email: "ئېلخىتىڭىز بىلەن ئوخشاش. تېخىمۇ بىخەتەر ئىم ئىشلىتىڭ."
+              same_as_current: "سىز ھازىر ئىشلىتىۋاتقان ئىم بىلەن ئوخشاش."
+              same_as_name: "ئىسمىڭىز بىلەن ئوخشاش."
+              unique_characters: "ھەرپ بەك كۆپ تەكرارلانغان. تېخىمۇ بىخەتەر ئىم ئىشلىتىڭ."
+            username:
+              same_as_password: "سىز ئىشلىتىۋاتقان ئىم بىلەن ئوخشاش."
+            name:
+              same_as_password: "سىز ئىشلىتىۋاتقان ئىم بىلەن ئوخشاش."
+            ip_address:
+              blocked: "IP ئادرېسىڭىزدىن يېڭىدىن تىزىملىتىشقا يول قويۇلمايدۇ."
+              max_new_accounts_per_registration_ip: "IP ئادرېسىڭىزدىن يېڭىدىن تىزىملىتىشقا بولمايدۇ (ئەڭ يۇقىرى چەككە يەتتى). باشقۇرغۇچى ئەزا بىلەن ئالاقىلىشىڭ."
+        user_profile:
+          attributes:
+            featured_topic_id:
+              invalid: "بۇ تېما تەرجىمىھالىڭىزدا كۆرۈنسە بولمايدۇ."
+        user_email:
+          attributes:
+            user_id:
+              reassigning_primary_email: "ئاساسىي ئېلخەتنى باشقا بىر ئىشلەتكۈچىگە تەقسىملەشكە يول قويۇلمايدۇ."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "ئىناۋەتلىك رەڭ ئەمەس"
+        post_reply:
+          base:
+            different_topic: "يازما ۋە ئىنكاس چوقۇم ئوخشاش تېمىغا تەۋە بولۇشى كېرەك."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "تور ئادرېسى ئىناۋەتسىز. تور ئادرېسىدا http:// ياكى https:// بولۇشى ھەمدە بوش قالدۇرۇشقا يول قويۇلمايدۇ."
+        custom_emoji:
+          attributes:
+            name:
+              taken: باشقا بىر چىراي ئىپادە ئىشلىتىۋاتىدۇ
+        topic_timer:
+          attributes:
+            execute_at:
+              in_the_past: "چوقۇم كەلگۈسىدىكى ۋاقىت بولۇشى كېرەك."
+            duration_minutes:
+              cannot_be_zero: "چوقۇم 0 دىن چوڭ بولۇشى كېرەك."
+              exceeds_maximum: "20 يىلدىن ئېشىپ كەتسە بولمايدۇ."
+        translation_overrides:
+          attributes:
+            value:
+              invalid_interpolation_keys:
+                one: "interpolation ئاچقۇچى ئىناۋەتسىز: %{keys}"
+                other: "interpolation ئاچقۇچى ئىناۋەتسىز: %{keys}"
+        watched_word:
+          attributes:
+            word:
+              too_many: "بۇ مەشغۇلاتقا بەك كۆپ سۆز بار"
+            base:
+              invalid_url: "ئالماشتۇرۇش تور ئادرېسى ئىناۋەتسىز"
+              invalid_tag_list: "ئالماشتۇرۇش بەلگە تىزىمى ئىناۋەتسىز"
+              invalid_html: "HTML نى پەقەت ئالماشتۇرۇشقىلا ئىشلىتىشكە بولىدۇ"
+        sidebar_section_link:
+          attributes:
+            linkable_type:
+              invalid: "ئىناۋەتلىك ئەمەس"
+      <<: *errors
+  uncategorized_category_name: "تۈرگە ئايرىلمىغان"
+  general_category_name: "ئادەتتىكى"
+  general_category_description: "بۇ جايدا مەۋجۇت باشقا ھېچقانداق سەھىپىگە تەۋە بولمىغان تېما قۇرۇلىدۇ"
+  meta_category_name: "بېكەت قايتۇرما ئىنكاسى"
+  meta_category_description: "مەزكۇر تور بېكەت ھەققىدە، ئۇنىڭ تەشكىلى، قانداق ئىشلەيدىغانلىقى ۋە ئۇنى ياخشىلاش ھەققىدىكى سۆھبەتلەر."
+  staff_category_name: "باشقۇرغۇچى خادىم"
+  staff_category_description: "باشقۇرغۇچى خادىملار سۆھبەتلىشىدىغان ئاشكارىلانمايدىغان سۆھبەت سەھىپىسى. سەھىپە باشقۇرغۇچى ۋە رىياسەتچىلەرگىلا كۆرۈنىدۇ."
+  discourse_welcome_topic:
+    title: "%{site_title} غا خۇش كەلدىڭىز! :wave:"
+  admin_quick_start_title: "باشقۇرغۇچى يېتەكچىسى: باشلاش"
+  category:
+    topic_prefix: "%{category} سەھىپە ھەققىدە"
+    errors:
+      not_found: "سەھىپە تېپىلمىدى!"
+      uncategorized_parent: "تۈرگە ئايرىلمىغانلارنىڭ ئانا سەھىپىسى بولمايدۇ"
+      self_parent: "تارماق تۈرنىڭ ئاتىسى ئۆزى بولالمايدۇ"
+      depth: "بىر تارماق تۈرنى يەنە بىرسىنىڭ ئاستىغا سىڭدۈرەلمەيسىز"
+      invalid_email_in: "«%{email}» ئىناۋەتلىك ئېلخەت ئادرېسى ئەمەس."
+      email_already_used_in_group: "«%{email}» ئاللىبۇرۇن «%{group_name}» گۇرۇپپىدا ئىشلىتىلگەن."
+      email_already_used_in_category: "«%{email}» ئاللىبۇرۇن «%{category_name}» سەھىپىدە ئىشلىتىلگەن."
+      description_incomplete: "سەھىپە چۈشەندۈرۈش يازمىسى كەم دېگەندە بىر ئابزاس بولۇشى كېرەك."
+      permission_conflict: "تارماق سەھىپىنى زىيارەت قىلىشقا يول قويۇلغان گۇرۇپپىنىڭ ئاتا سەھىپىنى زىيارەت قىلىشىغا يول قويۇلىدۇ. تۆۋەندىكى گۇرۇپپا تارماق سەھىپىدىن بىرىنى زىيارەت قىلالايدۇ، ئەمما ئاتا سەھىپىنى زىيارەت قىلالمايدۇ: %{group_names}."
+      disallowed_topic_tags: "بۇ تېمىدا مەزكۇر سەھىپە يول قويمايدىغان بەلگە بار: «%{tags}»"
+      disallowed_tags_generic: "بۇ تېمىدا يول قويۇلمايدىغان بەلگە بار."
+      slug_contains_non_ascii_chars: "ascii بولمىغان ھەرپلەر بار"
+      is_already_in_use: "ئىشلىتىلىۋاتىدۇ"
+      move_topic_to_category_disallowed: "يېڭى تېما قۇرۇش ئىجازىتىڭىز يوق تېمىنى بۇ سەھىپىگە يۆتكىيەلمەيسىز."
+    cannot_delete:
+      uncategorized: "بۇ سەھىپە ئالاھىدە. ئۇ سەھىپىگە تەۋە بولمىغان تېمىلار ساقلىنىدىغان جاي، ئۇنى ئۆچۈرگىلى بولمايدۇ."
+      has_subcategories: "بۇ سەھىپىنى ئۆچۈرگىلى بولمايدۇ، چۈنكى ئۇنىڭ تارماق سەھىپىسى بار."
+      topic_exists:
+        one: "بۇ سەھىپىنى ئۆچۈرگىلى بولمايدۇ چۈنكى ئۇنىڭدا %{count} تېما بار. ئەڭ كونا تېما %{topic_link}."
+        other: "بۇ سەھىپىنى ئۆچۈرگىلى بولمايدۇ چۈنكى ئۇنىڭدا %{count} تېما بار. ئەڭ كونا تېما %{topic_link}."
+      topic_exists_no_oldest: "بۇ سەھىپىنى ئۆچۈرگىلى بولمايدۇ چۈنكى تېما سانى %{count}."
+    uncategorized_description: "سەھىپە لازىم بولمايدىغان ياكى مەۋجۇت ھېچقانداق سەھىپىگە ماس كەلمەيدىغان تېما."
+  trust_levels:
+    admin: "باشقۇرغۇچى"
+    staff: "باشقۇرغۇچى خادىم"
+    change_failed_explanation: "سىز %{user_name} نى «%{new_trust_level}» غا تۆۋەنلەتمەكچى. ئەمما ئۇنىڭ ئىشەنچ دەرىجىسى «%{current_trust_level}». %{user_name} نىڭ ئىشەنچ دەرىجىسى «%{current_trust_level}» دا تۇرۇۋېرىدۇ - ئەگەر ئىشلەتكۈچىنىڭ ئىشەنچ دەرىجىسىنى تۆۋەنلەتمەكچى بولسىڭىز ئالدى بىلەن ئىشەنچ دەرىجىسىنى قۇلۇپلاڭ"
+  post:
+    image_placeholder:
+      broken: "بۇ سۈرەت بۇزۇلغان"
+      blocked_hotlinked_title: "سۈرەت باشقا تور بېكەتتىكى مۇلازىمېتىردا ساقلانغان. چېكىلسە يېڭى بەتكۈچتە ئاچىدۇ."
+      blocked_hotlinked: "سىرتقى سۈرەت"
+    media_placeholder:
+      blocked_hotlinked_title: "ۋاسىتە باشقا تور بېكەتتىكى مۇلازىمېتىردا ساقلانغان. چېكىلسە يېڭى بەتكۈچتە ئاچىدۇ."
+      blocked_hotlinked: "سىرتقى ۋاسىتە"
+    hidden_bidi_character: "قوش يۆنىلىشلىك كونترول ھەرپلىرى تېكىستنىڭ يۆنىلىشىنى ئۆزگەرتەلەيدۇ. بۇ يامان غەرەزلىك كودنى يوشۇرۇشقا ئىشلىتىلىشى مۇمكىن."
+    has_likes:
+      one: "%{count} ياقتۇرۇش"
+      other: "%{count} ياقتۇرۇش"
+    cannot_permanently_delete:
+      many_posts: "بۇ تېمىدا ئۆچۈرۈلمىگەن يازمىلار بار. تېمىنى مەڭگۈلۈك ئۆچۈرۈشتىن بۇرۇن ئۇلارنى مەڭگۈلۈك ئۆچۈرۈڭ."
+      wait_or_different_admin: "بۇ يازمىنى مەڭگۈلۈك ئۆچۈرۈشتىن ئىلگىرى %{time_left} كۈتۈشىڭىز كېرەك ياكى باشقا باشقۇرغۇچى بۇ مەشغۇلاتنى ئىجرا قىلىشى كېرەك."
+  rate_limiter:
+    slow_down: "بۇ مەشغۇلاتنى بەك كۆپ قىلدىڭىز. سەل تۇرۇپ قايتا سىناڭ."
+    too_many_requests: "بۇ مەشغۇلاتنى بەك كۆپ قىلدىڭىز. %{time_left} كۈتۈپ ئاندىن قايتا سىناڭ."
+    by_type:
+      first_day_replies_per_day: "قىزغىنلىقىڭىزغا تەشەككۈر، ئۇنى داۋاملاشتۇرۇڭ! جامائىتىمىزنىڭ بىخەتەرلىكى ئۈچۈن يېڭى ئىشلەتكۈچى تۇنجى كۈنى قايتۇرالايدىغان ئىنكاسنىڭ يۇقىرى چېكىگە يەتتىڭىز. %{time_left} كۈتۈڭ ئاندىن تېخىمۇ كۆپ يېڭى ئىنكاس قايتۇرالايسىز."
+      first_day_topics_per_day: "قىزغىنلىقىڭىزغا تەشەككۈر! جامائىتىمىزنىڭ بىخەتەرلىكى ئۈچۈن يېڭى ئىشلەتكۈچى تۇنجى كۈنى قۇرالايدىغان تېمىنىڭ يۇقىرى چېكىگە يەتتىڭىز. %{time_left} كۈتۈڭ ئاندىن تېخىمۇ كۆپ يېڭى تېما قۇرالايسىز."
+      create_topic: "تېمىنى بەك تېز قۇرۇۋەتتىڭىز. %{time_left} كۈتۈپ ئاندىن قايتا سىناڭ."
+      create_post: "ئىنكاسنى بەك تېز قايتۇردىڭىز. %{time_left} كۈتۈپ ئاندىن قايتا سىناڭ."
+      delete_post: "يازمىنى بەك تېز ئۆچۈرۈۋەتتىڭىز. %{time_left} كۈتۈپ ئاندىن قايتا سىناڭ."
+      public_group_membership: "گۇرۇپپىغا كىرىش/ئايرىلىشىڭىز بەك تېز. %{time_left} كۈتۈپ ئاندىن قايتا سىناڭ."
+      topics_per_day: "سىز كۈندە قۇرىدىغان ئەڭ كۆپ يېڭى تېما چېكىگە يەتتىڭىز. سىز %{time_left} تىن كېيىن ئاندىن يېڭى تېما قۇرالايسىز."
+      pms_per_day: "سىز كۈندىلىك ئەڭ كۆپ ئۇچۇر چېكىگە يەتتىڭىز. سىز %{time_left} تىن كېيىن ئاندىن يېڭى ئۇچۇر قۇرالايسىز."
+      create_like: "پاھ! نۇرغۇن مۇھەببەتنى ھەمبەھىرلەۋاتىسىز! 24 سائەتتىكى ياقتۇرۇشنىڭ يۇقىرى چېكىگە يەتتىڭىز، ئەمما ئىشەنچ دەرىجىڭىزنىڭ يۈكسىلىشىگە ئەگىشىپ، كۈندىلىك تېخىمۇ كۆپ ياقتۇرۇش چېكىگە ئېرىشەلەيسىز. سىز %{time_left} دىن كېيىن يازمىنى ياقتۇرالايسىز."
+      create_bookmark: "سىز خەتكۈچكە قوشۇشنىڭ كۈندىلىك ئەڭ يۇقىرى چېكىگە يەتتىڭىز. سىز %{time_left} تىن كېيىن تېخىمۇ كۆپ خەتكۈچ قۇرالايسىز."
+      edit_post: "سىز تەھرىرلەشنىڭ كۈندىلىك ئەڭ يۇقىرى چېكىگە يەتتىڭىز. سىز %{time_left} تىن كېيىن تېخىمۇ كۆپ تەھرىرلەشنى يوللىيالايسىز."
+      live_post_counts: "سىز شۇئان يازمىنى بەك تېز ئىلتىماس قىلدىڭىز. %{time_left} كۈتۈپ ئاندىن قايتا سىناڭ."
+      unsubscribe_via_email: "سىز ئېلخەت ئارقىلىق مۇشتەرىلىكنى قالدۇرۇۋېتىشنىڭ يۇقىرى چېكىگە يەتتىڭىز. %{time_left} كۈتۈپ ئاندىن قايتا سىناڭ."
+      topic_invitations_per_day: "سىز تېمىغا تەكلىپ قىلىشنىڭ ئەڭ يۇقىرى چېكىگە يەتتىڭىز. سىز %{time_left} تىن كېيىن تېخىمۇ كۆپ تەكلىپ يوللىيالايسىز."
+    hours:
+      one: "%{count} سائەت"
+      other: "%{count} سائەت"
+    minutes:
+      one: "%{count} مىنۇت"
+      other: "%{count} مىنۇت"
+    seconds:
+      one: "%{count} سېكۇنت"
+      other: "%{count} سېكۇنت"
+    short_time: "بىر قانچە سېكۇنت"
+  datetime:
+    distance_in_words:
+      half_a_minute: "< 1m"
+      less_than_x_seconds:
+        one: "< %{count} سېكۇنت"
+        other: "< %{count} سېكۇنت"
+      x_seconds:
+        one: "%{count} سېكۇنت"
+        other: "%{count} سېكۇنت"
+      less_than_x_minutes:
+        one: "< %{count} مىنۇت"
+        other: "< %{count} مىنۇت"
+      x_minutes:
+        one: "%{count} مىنۇت"
+        other: "%{count} مىنۇت"
+      about_x_hours:
+        one: "%{count} سائەت"
+        other: "%{count} سائەت"
+      x_days:
+        one: "%{count} كۈن"
+        other: "%{count} كۈن"
+      about_x_months:
+        one: "%{count} ئاي"
+        other: "%{count} ئاي"
+      x_months:
+        one: "%{count} ئاي"
+        other: "%{count} ئاي"
+      about_x_years:
+        one: "%{count} يىل"
+        other: "%{count} يىل"
+      over_x_years:
+        one: "> %{count} يىل"
+        other: "> %{count} يىل"
+      almost_x_years:
+        one: "%{count} يىل"
+        other: "%{count} يىل"
+    distance_in_words_verbose:
+      half_a_minute: "ھازىر"
+      less_than_x_seconds: "ھازىر"
+      x_seconds:
+        one: "%{count} سېكۇنت ئىلگىرى"
+        other: "%{count} سېكۇنت ئىلگىرى"
+      less_than_x_minutes:
+        one: "كەم دېگەندە %{count} مىنۇت ئىلگىرى"
+        other: "كەم دېگەندە %{count} مىنۇت ئىلگىرى"
+      x_minutes:
+        one: "%{count} مىنۇت ئىلگىرى"
+        other: "%{count} مىنۇت ئىلگىرى"
+      about_x_hours:
+        one: "%{count} سائەت ئىلگىرى"
+        other: "%{count} سائەت ئىلگىرى"
+      x_days:
+        one: "%{count} كۈن ئىلگىرى"
+        other: "%{count} كۈن ئىلگىرى"
+      about_x_months:
+        one: "تەخمىنەن %{count} ئاي ئىلگىرى"
+        other: "تەخمىنەن %{count} ئاي ئىلگىرى"
+      x_months:
+        one: "%{count} ئاي ئىلگىرى"
+        other: "%{count} ئاي ئىلگىرى"
+      about_x_years:
+        one: "تەخمىنەن %{count} يىل ئىلگىرى"
+        other: "تەخمىنەن %{count} يىل ئىلگىرى"
+      over_x_years:
+        one: "%{count} يىلدىن ئىلگىرى"
+        other: "%{count} يىلدىن ئىلگىرى"
+      almost_x_years:
+        one: "%{count} يىلدەك ئىلگىرى"
+        other: "%{count} يىلدەك ئىلگىرى"
+  password_reset:
+    no_token: 'ئاپلا! سىز ئىشلەتكەن ئۇلانما ئەمدى ئىشلىمەيدۇ. سىز ھازىر <a href="%{base_url}/login">تىزىمغا كىر</a>ىڭ. ئەگەر ئىم ئۇنۇتقان بولسىڭىز، <a href="%{base_url}/password-reset">ئۇلانما ئىلتىماس</a> قىلىپ ئىم ئەسلىگە قايتۇرۇڭ.'
+    title: "ئىم ئەسلىگە قايتۇر"
+    success: "ئىمنى مۇۋەپپەقىيەتلىك ئۆزگەرتتىڭىز، ھازىر تىزىمغا كىردىڭىز."
+    success_unapproved: "ئىمنى مۇۋەپپەقىيەتلىك ئۆزگەرتتىڭىز."
+  email_login:
+    invalid_token: 'ئاپلا! سىز ئىشلەتكەن ئۇلانما ئەمدى ئىشلىمەيدۇ. سىز ھازىر <a href="%{base_url}/login">تىزىمغا كىر</a>ىڭ. ئەگەر ئىم ئۇنۇتقان بولسىڭىز، <a href="%{base_url}/password-reset">ئۇلانما ئىلتىماس</a> قىلىپ ئىم ئەسلىگە قايتۇرۇڭ.'
+    title: "ئېلخەتتە تىزىمغا كىرىش"
+  user_auth_tokens:
+    browser:
+      chrome: "Google Chrome"
+      discoursehub: "DiscourseHub ئەپى"
+      edge: "Microsoft Edge"
+      firefox: "Firefox"
+      ie: "Internet Explorer"
+      opera: "Opera"
+      safari: "Safari"
+      unknown: "نامەلۇم توركۆرگۈ"
+    device:
+      android: "Android ئۈسكۈنىسى"
+      chromebook: "Chrome OS"
+      ipad: "iPad"
+      iphone: "iPhone"
+      ipod: "iPod"
+      linux: "GNU/Linux كومپيۇتېر"
+      mac: "Mac"
+      mobile: "كۆچمە ئۈسكۈنە"
+      windows: "Windows كومپيۇتېر"
+      unknown: "نامەلۇم ئۈسكۈنە"
+    os:
+      android: "Android"
+      chromeos: "Chrome OS"
+      ios: "iOS"
+      linux: "Linux"
+      macos: "macOS"
+      windows: "Microsoft Windows"
+      unknown: "نامەلۇم مەشغۇلات سىستېمىسى"
+  change_email:
+    error: "ئېلخەت ئادرېسىڭىزنى ئۆزگەرتىۋاتقاندا خاتالىق كۆرۈلگەن. بەلكىم ئۇ ئادرېس ئاللىبۇرۇن ئىشلىتىلگەن بولۇشى مۇمكىن؟"
+    doesnt_exist: "ئۇ ئېلخەت ئادرېسى ھېساباتىڭىز بىلەن باغلانمىغان."
+    error_staged: "ئېلخەت ئادرېسىڭىزنى ئۆزگەرتىۋاتقاندا خاتالىق كۆرۈلگەن. بەلكىم ئۇ ئادرېسنى توختىتىلغان ئىشلەتكۈچى ئىشلەتكەن بولۇشى مۇمكىن."
+    already_done: "كەچۈرۈڭ، بۇ جەزملەش ئادرېسى ئەمدى ئىناۋەتلىك ئەمەس. بەلكىم ئېلخەت ئادرېسىڭىز ئۆزگەرگەن بولۇشى مۇمكىن؟"
+    confirm: "جەزملە"
+    max_secondary_emails_error: "سىز يول قويىدىغان ئىككىلەمچى ئېلخەت چېكىگە يەتتىڭىز."
+  associated_accounts:
+    revoke_failed: "%{provider_name} ئارقىلىق ھېساباتىڭىزنى بىكار قىلالمىدى."
+    connected: "(باغلاندى)"
+  activation:
+    action: "ھېساباتىڭىزنى ئاكتىپلاش ئۈچۈن بۇ جاينى چېكىڭ"
+    already_done: "كەچۈرۈڭ، بۇ ئاكتىپلاش ئۇلانمىسى ئەمدى ئىناۋەتلىك ئەمەس. بەلكىم ھېساباتىڭىز ئاللىبۇرۇن ئاكتىپلانغان بولۇشى مۇمكىن؟"
+    please_continue: "يېڭى ھېساباتىڭىز جەزملەندى؛ سىز باش بەتكە قايتا نىشانلىنىسىز."
+    continue_button: "%{site_name} زىيارىتىنى داۋاملاشتۇرىدۇ"
+    welcome_to: "%{site_name} غا خۇش كەلدىڭىز!"
+    approval_required: "رىياسەتچى يېڭى ھېساباتىڭىزنى قولدا تەستىقلىغاندىن كېيىن ئاندىن بۇمۇنبەرنى زىيارەت قىلالايسىز. ھېساباتىڭىز تەستىقلانغاندا ئېلخەت تاپشۇرۇۋالىسىز!"
+    missing_session: "ھېساباتىڭىز قۇرۇلغانلىقىنى بايقىيالمىدۇق، ساقلانما قوزغىتىلغانلىقىنى جەزملەڭ."
+    activated: "كەچۈرۈڭ، بۇ ھېسابات ئاكتىپلانغان."
+    admin_confirm:
+      title: "باشقۇرغۇچى ھېساباتىنى جەزملە"
+      description: "راستتىنلا <b>%{target_username} (%{target_email})</b> نى باشقۇرغۇچى قىلىپ تەڭشەمسىز؟"
+      grant: "باشقۇرغۇچى ئىجازىتى بېرىش"
+      complete: "<b>%{target_username}</b> ھازىر باشقۇرغۇچى."
+      back_to: "%{title} غا قايت"
+  reviewable_score_types:
+    needs_approval:
+      title: "تەستىقلاشقا موھتاج"
+  post_action_types:
+    off_topic:
+      title: "تېما سىرتىدا"
+      description: "بۇ يازما ماۋزۇ ۋە تۇنجى يازمىدا بەلگىلەنگەن نۆۋەتتىكى سۆھبەت بىلەن مۇناسىۋەتسىز، باشقا جايغا يۆتكەش لازىم بولۇشى مۇمكىن."
+      short_description: "سۆھبەت بىلەن مۇناسىۋەتسىز"
+    spam:
+      title: "ئەخلەت خەت"
+      description: "بۇ يازما ئېلان ياكى بۇزغۇنچىلىق. ئۇ نۆۋەتتىكى قانالغا پايدىسىز ياكى مۇناسىۋەتسىز."
+      short_description: "بۇ بىر ئېلان ياكى بۇزغۇنچىلىق"
+      email_title: '«%{title}» ئەخلەت خەت سۈپىتىدە پاش قىلىنغان'
+      email_body: "%{link}\n\n%{message}"
+    inappropriate:
+      title: "نامۇۋاپىق"
+      description: 'ئەقىللىق بىر ئادەم بۇ يازمىدا ھۇجۇم، ھاقارەت ياكى <a href="%{base_path}/guidelines">جامائەت كۆرسەتمىمىز</a>گە خىلاپ مەزمۇن بار دەپ قارايدۇ.'
+      short_description: '<a href="%{base_path}/guidelines">جامائەت يېتەكچىمىز</a>گە خىلاپ'
+    illegal:
+      title: "قانۇنسىز"
+      description: "بۇ يازمىغا باشقۇرغۇچى دىققەت قىلىشى زۆرۈر چۈنكى ئۇنىڭدا قانۇنسىز مەزمۇن بارلىقىغا ئىشىنىمەن."
+      short_description: "بۇ قانۇنسىز"
+      email_title: '«%{title}» دىكى بىر يازمىغا باشقۇرغۇچى خادىم دىققەت قىلىشى كېرەك'
+      email_body: "%{link}\n\n%{message}"
+    notify_user:
+      title: "@%{username} غا ئۇچۇر يوللايدۇ"
+      description: "مەن ئۇلارنىڭ يازمىسى ھەققىدە بۇ كىشى بىلەن بىۋاسىتە ۋە ئۆزۈم سۆزلەشمەكچى."
+      short_description: "مەن ئۇلارنىڭ يازمىسى ھەققىدە بۇ كىشى بىلەن بىۋاسىتە ۋە ئۆزۈم سۆزلەشمەكچى."
+      email_title: '«%{title}» دىكى يازمىڭىز'
+      email_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      title: "باشقا مەزمۇن"
+      description: "ئۈستىدە تىزىلمىغان باشقا بىر سەۋەب تۈپەيلىدىن، بۇ يازمىغا باشقۇرغۇچىلار دىققەت قىلىشى كېرەك."
+      short_description: "باشقا سەۋەب تۈپەيلىدىن باشقۇرغۇچى خىزمەتچىلەرنىڭ دىققەت قىلىشىنى تەلەپ قىلىدۇ."
+      email_title: '«%{title}» دىكى بىر يازما ئۇچۇرىغا باشقۇرغۇچى خىزمەتچىلەر دىققەت قىلىشى كېرەك'
+      email_body: "%{link}\n\n%{message}"
+    bookmark:
+      title: "خەتكۈچ"
+      description: "بۇ يازمىنى خەتكۈچكە قوش"
+      short_description: "بۇ يازمىنى خەتكۈچكە قوش"
+    like:
+      title: "ياقتۇرۇش"
+      description: "بۇ يازمىنى ياقتۇر"
+      short_description: "بۇ يازمىنى ياقتۇر"
+  draft:
+    sequence_conflict_error:
+      title: "دەسلەپكى نۇسخا خاتالىقى"
+      description: "دەسلەپكى نۇسخا باشقا كۆزنەكتە تەھرىرلىنىۋاتىدۇ. بۇ بەتنى قايتا يۈكلەڭ."
+    too_many_drafts:
+      title: "دەسلەپكى لايىھە بەك كۆپ"
+      description: "سىز دەسلەپكى نۇسخىنىڭ ئەڭ يۇقىرى چېكىگە يەتتىڭىز. بەزى [دەسلەپكى نۇسخىڭىز] (%{base_url}/my/activity/drafts) نى ئۆچۈرۈپ ئاندىن قايتا سىناڭ."
+  draft_backup:
+    pm_title: "داۋاملىشىۋاتقان تېمىدىن دەسلەپكى نۇسخا زاپاسلايدۇ"
+    pm_body: "تېمىدا زاپاس دەسلەپكى نۇسخا بار"
+  user_activity:
+    no_log_search_queries: "نۆۋەتتە ئىزدەش سۈرۈشتۈرۈش خاتىرىسى چەكلەنگەن (ئۇنى باشقۇرغۇچى بېكەت تەڭشىكىدىن قوزغىتالايدۇ)"
+  email_settings:
+    pop3_authentication_error: "تەمىنلىگەن POP3 سالاھىيىتىدە مەسىلە بار، ئىشلەتكۈچى ئاتى ۋە ئىمنى تەكشۈرۈپ ئاندىن قايتا سىناڭ."
+    imap_authentication_error: "تەمىنلىگەن IMAP سالاھىيىتىدە مەسىلە بار، ئىشلەتكۈچى ئاتى ۋە ئىمنى تەكشۈرۈپ ئاندىن قايتا سىناڭ."
+    imap_no_response_error: "IMAP مۇلازىمېتىر بىلەن ئالاقە قىلغاندا خاتالىق كۆرۈلدى. %{message}"
+    smtp_authentication_error: "تەمىنلىگەن SMTP سالاھىيىتىدە مەسىلە بار، ئىشلەتكۈچى ئاتى ۋە ئىمنى تەكشۈرۈپ ئاندىن قايتا سىناڭ."
+    authentication_error_gmail_app_password: 'پىروگرامما بەلگىلىگەن ئىمنى تەلەپ قىلىدۇ. تەپسىلاتىنى <a target="_blank" href="https://support.google.com/accounts/answer/185833">بۇ Google ياردەم ماقالىسى</a>دىن كۆرۈڭ.'
+    smtp_server_busy_error: "SMTP مۇلازىمېتىرى ھازىر ئالدىراش، سەل تۇرۇپ قايتا سىناڭ."
+    smtp_unhandled_error: "SMTP مۇلازىمېتىر بىلەن ئالاقە قىلىۋاتقاندا بىر تەرەپ قىلىنمىغان خاتالىق كۆرۈلدى. %{message}"
+    imap_unhandled_error: "IMAP مۇلازىمېتىر بىلەن ئالاقە قىلىۋاتقاندا بىر تەرەپ قىلىنمىغان خاتالىق كۆرۈلدى. %{message}"
+    connection_error: "مۇلازىمېتىرغا باغلىنىۋاتقاندا مەسىلە كۆرۈلدى، مۇلازىمېتىر ئىسمى ۋە ئېغىزىنى تەكشۈرۈپ ئاندىن قايتا سىناڭ."
+    timeout_error: "مۇلازىمېتىرغا باغلىنىش ۋاقتى ئۆتۈپ كەتتى، مۇلازىمېتىرنىڭ ئىسمى ۋە ئېغىزىنى تەكشۈرۈپ ئاندىن قايتا سىناڭ."
+    unhandled_error: "ئېلخەت تەڭشىكىنى سىناۋاتقاندا بىر تەرەپ قىلىنمىغان خاتالىق كۆرۈلدى. %{message}"
+  webauthn:
+    validation:
+      invalid_type_error: "تەمىنلەنگەن تور دەلىللەش يەنى webauthn تىپى ئىناۋەتسىز. ئىناۋەتلىك تىپلىرى webauthn.get ۋە webauthn.create."
+      challenge_mismatch_error: "تەمىنلەنگەن سوراق دەلىللەش مۇلازىمىتىرى ھاسىللىغان سوراققا ماس كەلمىدى."
+      invalid_origin_error: "سالاھىيەت دەلىللەش ئىلتىماسىنىڭ مەنبەسى بىلەن مۇلازىمېتىرنىڭ مەنبەسى ماس كەلمىدى."
+      malformed_attestation_error: "ئىسپات سانلىق مەلۇماتىنى يېشىشتە خاتالىق كۆرۈلدى."
+      invalid_relying_party_id_error: "سالاھىيەت دەلىللەش ئىلتىماسىنىڭ ئىشىنىدىغان تەرەپ كىملىكى بىلەن مۇلازىمېتىرنىڭ ئىشىنىدىغان تەرەپ كىملىكى ماس كەلمىدى."
+      user_presence_error: "ئىشلەتكۈچى مەۋجۇت بولۇشى زۆرۈر."
+      user_verification_error: "ئىشلەتكۈچىنى دەلىللەش زۆرۈر."
+      unsupported_public_key_algorithm_error: "تەمىنلەنگەن ئاممىۋى شىفىرلىق ئاچقۇچ ھېسابلاش ئۇسۇلىنى مۇلازىمېتىر قوللىمايدۇ."
+      unsupported_attestation_format_error: "گۇۋاھنامە پىچىمىنى مۇلازىمېتىر قوللىمايدۇ."
+      credential_id_in_use_error: "تەمىنلەنگەن سالاھىيەت كىملىكى ئىشلىتىلىۋاتىدۇ."
+      public_key_error: "ئاممىۋى شىفىرلىق ئاچقۇچنى دەلىللەشتە ئەجەللىك خاتالىك كۆرۈلدى."
+      ownership_error: "بىخەتەرلىك ئاچقۇچى ئىشلەتكۈچىگە تەۋە ئەمەس."
+      not_found_error: "تەمىنلەنگەن سالاھىيەت كىملىكى بار بىخەتەرلىك ئاچقۇچىنى تاپالمىدى."
+      unknown_cose_algorithm_error: "شىفىرلىق ئاچقۇچقا ئىشلىتىلگەن ھېسابلاش ئۇسۇلىنى تونۇيالمىدى."
+      malformed_public_key_credential_error: "تەمىنلەنگەن ئاممىۋى ئاچقۇچ ئىناۋەتسىز."
+  topic_flag_types:
+    spam:
+      title: "ئەخلەت خەت"
+      description: "بۇ تېما بىر ئېلان. ئۇ بۇ تور بېكەتكە پايدىسىز ياكى مۇناسىۋەتسىز، بەلكى تەشۋىقات خاراكتېرىدە."
+      long_form: "بۇ ئەخلەت خەت دەپ پاش قىلىنغان"
+      short_description: "بۇ بىر ئېلان"
+    inappropriate:
+      title: "نامۇۋاپىق"
+      description: 'ئەقىللىق بىر ئادەم بۇ تېمىدا ھۇجۇم، ھاقارەت ياكى <a href="%{base_path}/guidelines">جامائەت كۆرسەتمىمىز</a>گە خىلاپ مەزمۇن بار دەپ قارايدۇ.'
+      long_form: "بۇ نامۇۋاپىق دەپ پاش قىلىنغان"
+      short_description: '<a href="%{base_path}/guidelines">جامائەت يېتەكچىمىز</a>گە خىلاپ'
+    notify_moderators:
+      title: "باشقا مەزمۇن"
+      description: '<a href="%{base_path}/guidelines">يېتەكچى</a>گە ئاساسلانغاندا، <a href="%{tos_url}">مۇلازىمەت بەلگىلىمىسى</a> ۋە ياكى يۇقىرىدا تىلغا ئېلىنمىغان باشقا سەۋەب تۈپەيلىدىن بۇ تىمىغا باشقۇرغۇچى خادىم دىققەت قىلىشى زۆرۈر.'
+      long_form: "رىياسەتچىنىڭ دىققىتىنى تارتىش ئۈچۈن پاش قىلىندى"
+      short_description: "باشقا سەۋەب تۈپەيلىدىن باشقۇرغۇچى خادىمنىڭ دىققەت قىلىشىنى تەلەپ قىلىدۇ."
+      email_title: 'بۇ «%{title}» تېمىغا رىياسەتچى دىققەت قىلىش زۆرۈر'
+      email_body: "%{link}\n\n%{message}"
+    illegal:
+      title: "قانۇنسىز"
+      description: "بۇ تېمىغا باشقۇرغۇچى دىققەت قىلىشى زۆرۈر چۈنكى ئۇنىڭدا قانۇنسىز مەزمۇن بارلىقىغا ئىشىنىمەن."
+      short_description: "بۇ قانۇنسىز"
+      email_title: '«%{title}» دىكى بىر يازمىغا باشقۇرغۇچى خادىم دىققەت قىلىشى كېرەك'
+      email_body: "%{link}\n\n%{message}"
+  flagging:
+    you_must_edit: '<p>يازمىڭىزنى جامائەت پاش قىلغان. <a href="%{path}">ئۇچۇرىڭىزنى كۆرۈڭ</a>.</p>'
+    user_must_edit: "<p>بۇ يازمىنى جامائەت پاش قىلغان ھەمدە ۋاقىتلىق يوشۇرۇلغان.</p>"
+  ignored:
+    hidden_content: "<p>پەرۋا قىلمايدىغان مەزمۇن</p>"
+  archetypes:
+    regular:
+      title: "ئادەتتىكى تېما"
+    banner:
+      title: "لوزۇنكا تېما"
+      message:
+        make: "بۇ تېما لوزۇنكىغا تەڭشەلگەن. ئىشلەتكۈچى پەرۋا قىلماسلىقنى تاللىمىغۇچە ئۇ ھەممە بەتنىڭ چوققىسىدا كۆرۈنىدۇ."
+        remove: "بۇ تېما ئەمدى لوزۇنكىغا تەڭشەلمىگەن. ئۇ ئەمدى ھەممە بەتنىڭ چوققىسىدا كۆرۈنمەيدۇ."
+  unsubscribed:
+    title: "ئېلخەت مايىللىقى يېڭىلاندى!"
+    description: "<b>%{email}</b> نىڭ ئېلخەت مايىللىقى يېڭىلانغان. ئېلخەت تەڭشىكىڭىزنى ئۆزگەرتىش ئۈچۈن <a href='%{url}'>ئىشلەتكۈچى مايىللىقىڭىز</a>نى زىيارەت قىلىڭ."
+    topic_description: "%{link} غا قايتا مۇشتەرى بولۇشتا، تېما ئاستى ياكى ئوڭ تەرەپتىكى ئۇقتۇرۇش كونترولىنى ئىشلىتىڭ."
+    private_topic_description: "قايتا مۇشتەرى بولۇشتا، تېما ئاستى ياكى ئوڭ تەرەپتىكى ئۇقتۇرۇش كونترولىنى ئىشلىتىڭ."
+  uploads:
+    marked_insecure_from_theme_component_reason: "تېما پارچىسىدىكى يۈكلەش ئىشلىتىلگەن"
+  unsubscribe:
+    title: "مۇشتەرىلىكنى قالدۇر"
+    stop_watching_topic: "بۇ تېمىنى كۆزىتىشنى توختات، %{link}"
+    mute_topic: "بۇ تېمىنىڭ بارلىق ئۇقتۇرۇشلىرىنى ئۈنسىزلە، %{link}"
+    unwatch_category: "%{category} سەھىپىدىكى بارلىق تېمىنى كۆزىتىشنى توختات"
+    mailing_list_mode: "ئېلخەت تىزىمى ھالىتىنى تاقا"
+    all: "%{sitename} دىن ماڭا ھېچقانداق ئېلخەت ئەۋەتمە"
+    different_user_description: "سىز ھازىر بىز ئېلخەت ئەۋەتكەنگە ئوخشىمايدىغان ئىشلەتكۈچى سۈپىتىدە تىزىمغا كىردىڭىز. تىزىمدىن چىقىڭ ياكى نامسىز ھالەتكە كىرىپ قايتا سىناڭ."
+    not_found_description: "كەچۈرۈڭ، بىز ئۇ مۇشتەرىلىكنى تاپالمىدۇق. ئېلخەتتىكى ئۇلانما بەك كونىراپ، ۋاقتى ئۆتۈپ كەتكەن بولۇشى مۇمكىن؟"
+    user_not_found_description: "كەچۈرۈڭ ، بىز بۇ مۇشتەرىلىكنىڭ ئىشلەتكۈچىسىنى تاپالمىدۇق. سىز ھازىر مەۋجۇت بولمىغان ھېساباتنىڭ مۇشتەرىلىكىنى بىكار قىلماقچى بولۇۋاتقان بولۇشىڭىز مۇمكىن."
+    log_out: "تىزىمدىن چىق"
+    submit: "مايىللىقنى ساقلا"
+    digest_frequency:
+      title: "سىز %{frequency} خۇلاسە ئېلخەت تاپشۇرۇۋېلىۋاتىسىز"
+      never_title: "خۇلاسە ئېلخەت تاپشۇرۇۋالمايسىز"
+      select_title: "خۇلاسە ئېلخەت چاستوتا تەڭشىكى:"
+      never: "ھەرگىز"
+      every_30_minutes: "ھەر 30 مىنۇتتا"
+      every_hour: "سائەتلىك"
+      daily: "كۈندىلىك"
+      weekly: "ھەپتىلىك"
+      every_month: "ھەر ئاي"
+      every_six_months: "ھەر ئالتە ئاي"
+  user_api_key:
+    title: "دەلىللەنگەن پىروگرامما زىيارىتى"
+    authorize: "دەلىللە"
+    read: "ئوقۇ"
+    read_write: "ئوقۇ/ياز"
+    description: '«%{application_name}» ھېساباتىڭىزغا تۆۋەندىكىدەك زىيارەتنى ئىلتىماس قىلدى:'
+    instructions: 'بىز «%{application_name}» بىلەن ماسلاشتۇرۇپ ئىشلىتىش ئۈچۈن سىزگە يېڭى ئىشلەتكۈچى API شىفىرلىق ئاچقۇچى ھاسىللىدۇق، تۆۋەندىكى شىفىرلىق ئاچقۇچنى پىروگراممىڭىزغا كۆچۈرۈڭ:'
+    otp_description: '«%{application_name}» نىڭ بۇ تور بېكەتنى زىيارەت قىلىشىغا يول قويامسىز؟'
+    otp_confirmation:
+      confirm_title: '%{site_name} زىيارىتىنى داۋاملاشتۇرىدۇ'
+      logging_in_as: '%{username} تىزىمغا كىرىدۇ'
+      confirm_button: تىزىمغا كىرىش تامام
+    no_trust_level: "كەچۈرۈڭ، ئىشلەتكۈچى API نى زىيارەت قىلىشقا يېتەرلىك تەلەپتىكى ئىشەنچ دەرىجىڭىز يوق"
+    generic_error: "كەچۈرۈڭ، ئىشلەتكۈچى API شىفىرلىق ئاچقۇچنى تارقىتالمايمىز، بۇ ئىقتىدارنى تور بېكەت باشقۇرغۇچى چەكلىگەن بولۇشى مۇمكىن."
+    scopes:
+      message_bus: "شۇئان يېڭىلاش"
+      notifications: "ئۇقتۇرۇشنى ئوقۇپ تازىلا"
+      push: "سىرتقا مۇلازىمەتكە ئۇقتۇرۇش يوللايدۇ"
+      session_info: "ئىشلەتكۈچى سۆزلەشكۈ ئۇچۇرىنى ئوقۇيدۇ"
+      read: "ھەممىنى ئوقۇ"
+      write: "ھەممىنى ياز"
+      one_time_password: "بىر قېتىم تىزىمغا كىرىش پەرمان تاختىسى قۇرىدۇ"
+      bookmarks_calendar: "خەتكۈچ ئەسكەرتكۈچنى ئوقۇيدۇ"
+      user_status: "ئىشلەتكۈچى ھالىتىنى ئوقۇپ ۋە يېڭىلايدۇ"
+    invalid_public_key: "كەچۈرۈڭ، ئاممىۋى شىفىرلىق ئاچقۇچ ئىناۋەتسىز."
+    invalid_auth_redirect: "كەچۈرۈڭ، بۇ auth_redirect مۇلازىمېتىرىغا يول قويۇلمايدۇ."
+    invalid_token: "پەرمان تاختىسى يوقالغان، ئىناۋەتسىز ياكى ۋاقتى ئۆتكەن."
+  flags:
+    errors:
+      already_handled: "پاش قىلىش بىر تەرەپ قىلىنغان"
+  reports:
+    default:
+      labels:
+        count: ساناق
+        percent: پىرسەنت
+        day: كۈن
+    post_edits:
+      title: "يازما تەھرىر"
+      labels:
+        edited_at: چېسلا
+        post: يازما
+        editor: تەھرىر
+        author: يازغۇچى
+        edit_reason: سەۋەبى
+      description: "يېڭى يازما تەھرىرلەش سانى."
+    user_flagging_ratio:
+      title: "ئىشلەتكۈچى پاش قىلىش نىسبىتى"
+      labels:
+        user: ئىشلەتكۈچى
+        agreed_flags: قوشۇلغان پاش قىلىش
+        disagreed_flags: قوشۇلمىغان پاش قىلىش
+        ignored_flags: پەرۋا قىلمىغان پاش قىلىش
+        score: نومۇر
+      description: "باشقۇرغۇچى خادىملار پاش قىلىشقا ئىنكاس قايتۇرۇش نىسبىتى بويىچە تەرتىپلىگەن ئىشلەتكۈچى تىزىمى (قوشۇلمىغاندىن قوشۇلغانغا)."
+    moderators_activity:
+      title: "رىياسەتچى پائالىيەت خاتىرىسى"
+      labels:
+        moderator: رىياسەتچى
+        flag_count: پاش قىلىش تەكشۈرۈلدى
+        time_read: ئوقۇش ۋاقتى
+        topic_count: قۇرۇلغان تېما
+        post_count: قۇرغان يازما
+        pm_count: قۇرغان بىۋاسىتە ئۇچۇر
+        revision_count: تۈزىتىش
+      description: تەكشۈرۈلگەن پاش قىلىش، ئوقۇش ۋاقتى، قۇرغان تېما، قۇرغان يازما، قۇرغان شەخسىي ئۇچۇر ۋە تۈزىتىشنى ئۆز ئىچىگە ئالغان رىياسەتچىلىك پائالىيەت خاتىرىسىنىڭ تىزىمى.
+    flags_status:
+      title: "پاش قىلىش ھالىتى"
+      values:
+        agreed: قوشۇلغان
+        disagreed: قوشۇلمىغان
+        deferred: كېچىكتۈرۈلگەن
+        no_action: تەدبىر قوللانمىغان
+      labels:
+        flag: تىپى
+        assigned: تەقسىملەنگەن
+        poster: يوللىغۇچى
+        flagger: پاش قىلغۇچى
+        time_to_resolution: ھەل قىلىش ۋاقتى
+      description: "پاش قىلىشنىڭ تىپى، يوللىغۇچى، پاش قىلغۇچى ۋە ھەل قىلىش ۋاقتىنى ئۆز ئىچىگە ئالغان پاش قىلىش ھالىتى تىزىمى."
+    visits:
+      title: "ئىشلەتكۈچى زىيارەت"
+      xaxis: "كۈن"
+      yaxis: "زىيارەت قېتىم سانى"
+      description: "تىزىمغا كىرگەن ئىشلەتكۈچىنىڭ زىيارەت سانى."
+    signups:
+      title: "تىزىملىتىش"
+      xaxis: "كۈن"
+      yaxis: "تىزىملىتىش سانى"
+      description: "بۇ مەزگىلدىكى يېڭى تىزىملاتقان ھېسابات."
+    new_contributors:
+      title: "يېڭى تۆھپىكارلار"
+      xaxis: "كۈن"
+      yaxis: "يېڭى تۆھپىكارنىڭ سانى"
+      description: "بۇ مەزگىلدە تۇنجى يازمىسىنى ئېلان قىلغان ئىشلەتكۈچى سانى."
+    trust_level_growth:
+      title: "ئىشەنچ دەرىجىسىنىڭ ئۆسۈشى"
+      xaxis:
+        tl1_reached: "ئىشەنچ دەرىجىسى 1 گە يەتتى"
+        tl2_reached: "ئىشەنچ دەرىجىسى 2 گە يەتتى"
+        tl3_reached: "ئىشەنچ دەرىجىسى 3 كە يەتتى"
+        tl4_reached: "ئىشەنچ دەرىجىسى 4 كە يەتتى"
+      yaxis: "كۈن"
+      description: "بۇ مەزگىلدە ئىشەنچ دەرىجىسى ئۆستۈرۈلگەن ئىشلەتكۈچى سانى."
+    consolidated_page_views:
+      title: "بىرلەشتۈرۈلگەن بەت كۆرۈلۈشى"
+      xaxis:
+        page_view_crawler: "ئۆمىلىگۈچ"
+        page_view_anon: "نامسىز ئىشلەتكۈچى"
+        page_view_logged_in: "تىزىمغا كىرگەن ئىشلەتكۈچى"
+      yaxis: "كۈن"
+      description: "تىزىمغا كىرگەن ئىشلەتكۈچى، نامسىز ئىشلەتكۈچى ۋە ئۆمىلىگۈچنىڭ بەت كۆرۈلۈشى."
+      labels:
+        post: يازما
+        editor: تەھرىر
+        author: يازغۇچى
+        edit_reason: سەۋەبى
+    consolidated_api_requests:
+      title: "بىرلەشتۈرۈلگەن API ئىلتىماسى"
+      xaxis:
+        api: "API"
+        user_api: "ئىشلەتكۈچى API"
+      yaxis: "كۈن"
+      description: "ئادەتتىكى API شىفىرلىق ئاچقۇچى ۋە ئىشلەتكۈچى API شىفىرلىق ئاچقۇچىنىڭ API ئىلتىماسى."
+    consolidated_page_views_browser_detection:
+      title: "توركۆرگۈدە بايقالغان بىرلەشتۈرۈلگەن بەت كۆرۈلۈشى (تەجرىبە)"
+      xaxis:
+        page_view_anon_browser: "نامسىز توركۆرگۈ"
+        page_view_logged_in_browser: "تىزىمغا كىرگەن توركۆرگۈ"
+        page_view_crawler: "تونۇش ئۆمىلىگۈچ"
+        page_view_other: "باشقا بەت كۆرۈلۈشى"
+      yaxis: "كۈن"
+      description: "تىزىمغا كىرگەن ئىشلەتكۈچى، نامسىز ئىشلەتكۈچى، تونۇش ئۆمىلىگۈچ ۋە باشقا ئىشلەتكۈچىنىڭ بەت كۆرۈلۈشى. بۇ تەجرىبە خاراكتېرلىك دوكلات كومپيۇتېر تىزىمغا كىرىش/نامسىز ئىلتىماس يوللاشتىن ئىلگىرى، بۇ ئىلتىماسلارنىڭ ھەقىقىي توركۆرگۈدىن كەلگەنلىكىگە كاپالەتلىك قىلىدۇ."
+    dau_by_mau:
+      title: "كۈندىلىك ئاكتىپ ئىشلەتكۈچى/ئايلىق ئاكتىپ ئىشلەتكۈچى"
+      xaxis: "كۈن"
+      yaxis: "كۈندىلىك ئاكتىپ ئىشلەتكۈچى/ئايلىق ئاكتىپ ئىشلەتكۈچى"
+      description: "ئۆتكەن بىر كۈندە تىزىمغا كىرگەن ئەزا سانىنى ئۆتكەن بىر ئايدا تىزىمغا كىرگەن ئىشلەتكۈچىگە بۆلگەندىكى سان - قايتۇرغان قىممىتى جامائەتنىڭ يېپىشقاقلىقىنى ئەكس ئەتتۈرىدۇ، نىشان >%20"
+    daily_engaged_users:
+      title: "كۈندىلىك قاتناشقۇچىلار"
+      xaxis: "كۈن"
+      yaxis: "قاتناشقۇچىلار"
+      description: "ئالدىنقى كۈنى ياقتۇرغان ياكى يازما يوللىغان ئىشلەتكۈچى سانى."
+    profile_views:
+      title: "ئىشلەتكۈچى تەرجىمىھالىنىڭ كۆرۈلۈشى"
+      xaxis: "كۈن"
+      yaxis: "ئىشلەتكۈچى تەرجىمىھالىنىڭ كۆرۈلۈش سانى"
+      description: "ئىشلەتكۈچى تەرجىمىھالىنىڭ جەمئىي يېڭى كۆرۈلۈش سانى"
+    topics:
+      title: "تېما"
+      xaxis: "كۈن"
+      yaxis: "يېڭى تېما سانى"
+      description: "بۇ مەزگىلدە قۇرۇلغان يېڭى تېما."
+    posts:
+      title: "يازما"
+      xaxis: "كۈن"
+      yaxis: "يېڭى يازما سانى"
+      description: "بۇ مەزگىلدە قۇرۇلغان يېڭى يازما"
+    likes:
+      title: "ياقتۇرۇش"
+      xaxis: "كۈن"
+      yaxis: "يېڭى ياقتۇرۇش سانى"
+      description: "يېڭى ياقتۇرۇش سانى."
+    flags:
+      title: "پاش قىلىش"
+      xaxis: "كۈن"
+      yaxis: "پاش قىلىش سانى"
+      description: "يېڭى پاش قىلىش سانى."
+    bookmarks:
+      title: "خەتكۈچ"
+      xaxis: "كۈن"
+      yaxis: "يېڭى خەتكۈچ سانى"
+      description: "خەتكۈچكە قوشۇلغان يېڭى تېما ۋە يازما سانى."
+    users_by_trust_level:
+      title: "ھەر بىر ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچى"
+      xaxis: "ئىشەنچ دەرىجىسى"
+      yaxis: "ئىشلەتكۈچى سانى"
+      labels:
+        level: دەرىجە
+      description: "ئىشەنچ دەرىجىسى بويىچە گۇرۇپپىلانغان ئىشلەتكۈچى سانى."
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+    users_by_type:
+      title: "ھەر بىرتىپتىكى ئىشلەتكۈچى"
+      xaxis: "تىپى"
+      yaxis: "ئىشلەتكۈچى سانى"
+      labels:
+        type: تىپى
+      xaxis_labels:
+        admin: باشقۇرغۇچى
+        moderator: رىياسەتچى
+        suspended: توختىتىلغان
+        silenced: ئۈنسىزلەندى
+      description: "باشقۇرغۇچى، رىياسەتچى توختاتقان ۋە ئۈنسىزلەپ گۇرۇپپىغا ئايرىغان ئىشلەتكۈچى سانى."
+    trending_search:
+      title: يۈزلىنىش ئىزدەش ئاتالغۇسى
+      labels:
+        term: ئاتالغۇ
+        searches: ئىزدەش نەتىجىسى
+        click_through: CTR
+      description: "ئالقىشلىق ئىزدەش ئاتالغۇسى ۋە ئۇنىڭ چېكىلىش نىسبىتى."
+    emails:
+      title: "يوللانغان ئېلخەت"
+      xaxis: "كۈن"
+      yaxis: "ئېلخەت سانى"
+      description: "يوللىغان يېڭى ئېلخەتنىڭ سانى."
+    user_to_user_private_messages:
+      title: "ئىشلەتكۈچىدىن ئىشلەتكۈچىگە (جاۋابنى ئۆز ئىچىگە ئالمايدۇ)"
+      xaxis: "كۈن"
+      yaxis: "ئۇچۇر سانى"
+      description: "يېڭىدىن قوزغىتىلغان شەخسىي ئۇچۇر سانى."
+    user_to_user_private_messages_with_replies:
+      title: "ئىشلەتكۈچىدىن ئىشلەتكۈچىگە (جاۋابنى ئۆز ئىچىگە ئالىدۇ)"
+      xaxis: "كۈن"
+      yaxis: "ئۇچۇر سانى"
+      description: "بارلىق يېڭى شەخسىي ئۇچۇر ۋە جاۋابنىڭ سانى."
+    system_private_messages:
+      title: "سىستېما"
+      xaxis: "كۈن"
+      yaxis: "ئۇچۇر سانى"
+      description: "سىستېما ئاپتوماتىك ئەۋەتكەن شەخسىي ئۇچۇرنىڭ سانى."
+    moderator_warning_private_messages:
+      title: "رىياسەتچى ئاگاھلاندۇرۇشى"
+      xaxis: "كۈن"
+      yaxis: "ئۇچۇر سانى"
+      description: "رىياسەتچى شەخسىي ئۇچۇردا ئەۋەتكەن ئاگاھلاندۇرۇش سانى."
+    notify_moderators_private_messages:
+      title: "رىياسەتچىگە ئەسكەرت"
+      xaxis: "كۈن"
+      yaxis: "ئۇچۇر سانى"
+      description: "رىياسەتچى پاش قىلىش ئارقىلىق خۇسۇسىي ئۇقتۇرۇش قىلغان قېتىم سانى"
+    notify_user_private_messages:
+      title: "ئىشلەتكۈچىگە ئەسكەرت"
+      xaxis: "كۈن"
+      yaxis: "ئۇچۇر سانى"
+      description: "ئىشلەتكۈچى پاش قىلىش ئارقىلىق خۇسۇسىي ئۇقتۇرۇش قىلغان قېتىم سانى."
+    top_referrers:
+      title: "قىزغىن تەۋسىيەچى"
+      xaxis: "ئىشلەتكۈچى"
+      num_clicks: "چېكىلىش"
+      num_topics: "تېما"
+      labels:
+        user: "ئىشلەتكۈچى"
+        num_clicks: "چېكىلىش"
+        num_topics: "تېما"
+      description: "ئىشلەتكۈچى ھەمبەھىرلەنگەن ئۇلانمىنىڭ چېكىلىش قېتىم سانى بويىچە تىزىلىدۇ."
+    top_traffic_sources:
+      title: "قىزغىن ئېقىم مەنبەسى"
+      xaxis: "تور دائىرە"
+      num_clicks: "چېكىلىش"
+      num_topics: "تېما"
+      num_users: "ئىشلەتكۈچى"
+      labels:
+        domain: تور دائىرە
+        num_clicks: چېكىلىش
+        num_topics: تېما
+      description: "مەزكۇر تور بېكەتكە ئەڭ كۆپ ئۇلانغان سىرتقى مەنبە."
+    top_referred_topics:
+      title: "قىزغىن تەۋسىيە تېمىسى"
+      labels:
+        num_clicks: "چېكىلىش"
+        topic: "تېما"
+      description: "سىرتقى مەنبەدىن ئەڭ كۆپ چېكىلگەن تېما."
+    page_view_anon_reqs:
+      title: "نامسىز"
+      xaxis: "كۈن"
+      yaxis: "نامسىز بەت كۆرۈلۈشى"
+      description: "ھېساباتقا كىرمىگەن زىيارەتچىلەرنىڭ يېڭى بەت كۆرۈلۈش سانى."
+    page_view_logged_in_reqs:
+      title: "تىزىمغا كىردى"
+      xaxis: "كۈن"
+      yaxis: "تىزىمغا كىرگەنلەرنىڭ بەت كۆرۈلۈشى"
+      description: "تىزىمغا كىرگەن ئىشلەتكۈچىنىڭ يېڭى بەت كۆرۈلۈش سانى."
+    page_view_crawler_reqs:
+      title: "تور ئۆمىلىگۈچ بەت كۆرۈلۈشى"
+      xaxis: "كۈن"
+      yaxis: "تور ئۆمىلىگۈچ بەت كۆرۈلۈشى"
+      description: "مەلۇم مەزگىلدىكى تور ئۆمىلىگۈچنىڭ ئومۇمىي بەت كۆرۈلۈشى."
+    page_view_total_reqs:
+      title: "بەت كۆرۈلۈشى"
+      xaxis: "كۈن"
+      yaxis: "ئومۇمىي بەت كۆرۈلۈشى"
+      description: "بارلىق زىيارەتچىلەرنىڭ يېڭى بەت كۆرۈلۈش سانى."
+    page_view_logged_in_mobile_reqs:
+      title: "تىزىمغا كىرگەنلەرنىڭ بەت كۆرۈلۈشى"
+      xaxis: "كۈن"
+      yaxis: "كۆچمە ئۈسكۈنىدە تىزىمغا كىرگەنلەرنىڭ بەت كۆرۈلۈشى"
+      description: "كۆچمە ئۈسكۈنىدىن تىزىمغا كىرگەن ئىشلەتكۈچىنىڭ يېڭى بەت كۆرۈلۈش سانى."
+    page_view_anon_mobile_reqs:
+      title: "نامسىز بەت كۆرۈلۈشى"
+      xaxis: "كۈن"
+      yaxis: "كۆچمە نامسىز بەت كۆرۈلۈشى"
+      description: "كۆچمە ئۈسكۈنىدىن تىزىمغا كىرمىگەن زىيارەتچىنىڭ يېڭى بەت كۆرۈلۈش سانى."
+    page_view_anon_browser_reqs:
+      title: "نامسىز توركۆرگۈ بەت كۆرۈلۈشى"
+      xaxis: "كۈن"
+      yaxis: "نامسىز توركۆرگۈ بەت كۆرۈلۈشى"
+      description: "ھەقىقىي توركۆرگۈ ئىشلەتكەن نامسىز زىيارەتچىلەرنىڭ بەت كۆرۈلۈش سانى."
+    page_view_logged_in_browser_reqs:
+      title: "توركۆرگۈدە تىزىمغا كىرگەنلەرنىڭ بەت كۆرۈلۈشى"
+      xaxis: "كۈن"
+      yaxis: "توركۆرگۈدە تىزىمغا كىرگەنلەرنىڭ بەت كۆرۈلۈشى"
+      description: "ھەقىقىي توركۆرگۈ ئىشلەتكەن تىزىمغا كىرگەن زىيارەتچىلەرنىڭ بەت كۆرۈلۈش سانى."
+    http_background_reqs:
+      title: "ئارقا سۇپا"
+      xaxis: "كۈن"
+      yaxis: "شۇئان يېڭىلاش ۋە ئىزلاشقا ئىشلىتىدىغان ئىلتىماس"
+    http_2xx_reqs:
+      title: "ھالەت 2xx (ئادەتتىكى)"
+      xaxis: "كۈن"
+      yaxis: "مۇۋەپپەقىيەتلىك ئىلتىماس (ھالەت 2xx)"
+    http_3xx_reqs:
+      title: "HTTP 3xx (قايتا نىشانلاش)"
+      xaxis: "كۈن"
+      yaxis: "قايتا نىشانلانغان ئىلتىماس (ھالەت 3xx)"
+    http_4xx_reqs:
+      title: "HTTP 4xx (خېرىدار خاتالىقى)"
+      xaxis: "كۈن"
+      yaxis: "خېرىدار خاتالىقى (ھالەت 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (مۇلازىمېتىر خاتالىقى)"
+      xaxis: "كۈن"
+      yaxis: "مۇلازىمېتىر خاتالىقى (ھالەت 5xx)"
+    http_total_reqs:
+      title: "جەمئىي"
+      xaxis: "كۈن"
+      yaxis: "جەمئىي ئىلتىماس"
+    time_to_first_response:
+      title: "بىرىنچى جاۋاب ۋاقتى"
+      xaxis: "كۈن"
+      yaxis: "ئوتتۇرىچە ۋاقىت (سائەت)"
+      description: "يېڭى تېمىغا بېرىلگەن تۇنجى جاۋابنىڭ ئوتتۇرىچە ۋاقتى (سائەت)"
+    topics_with_no_response:
+      title: "ھېچقانداق جاۋاب يوق تېما"
+      xaxis: "كۈن"
+      yaxis: "جەمئىي"
+      description: "ئىنكاسقا ئېرىشەلمىگەن يېڭى تېمىلارنىڭ سانى."
+    mobile_visits:
+      title: "ئىشلەتكۈچى زىيارىتى (كۆچمە)"
+      xaxis: "كۈن"
+      yaxis: "زىيارەت قېتىم سانى"
+      description: "كۆچمە ئۈسكۈنىدە تىزىمغا كىرىپ زىيارەت قىلغان بىردىنبىر ئىشلەتكۈچىنىڭ سانى."
+    web_crawlers:
+      title: "تور بەت ئۆمىلىگۈچ ئىشلەتكۈچى ۋاكالەتچى"
+      labels:
+        user_agent: "ئىشلەتكۈچى ۋاكالەتچىسى"
+        page_views: "بەت كۆرۈلۈشى"
+      description: "بەت كۆرۈلۈشى بويىچە تىزىلغان تور بەت ئۆمىلىگۈچ ئىشلەتكۈچى ۋاكالەتچىسىنىڭ تىزىمى"
+    suspicious_logins:
+      title: "گۇمانلىق تىزىمغا كىرىش"
+      labels:
+        user: ئىشلەتكۈچى
+        client_ip: خېرىدار IP
+        location: ئورنى
+        browser: توركۆرگۈ
+        device: ئۈسكۈنە
+        os: مەشغۇلات سىستېمىسى
+        login_time: تىزىمغا كىرگەن ۋاقتى
+      description: "ئالدىنقى تىزىمغا كىرىشكە نىسبەتەن گۇمانلىق بولغان يېڭى تىزىمغا كىرىشنىڭ تەپسىلىي ئۇچۇرى."
+    staff_logins:
+      title: "باشقۇرغۇچى تىزىمغا كىرىش"
+      labels:
+        user: ئىشلەتكۈچى
+        location: ئورنى
+        login_at: تىزىمغا كىرگەن ۋاقتى
+      description: "باشقۇرغۇچى تىزىمغا كىرگەن ۋاقىت ۋە ئورۇننىڭ تىزىمى."
+    top_uploads:
+      title: "قىزغىن يېڭىلاش"
+      labels:
+        filename: ھۆججەت ئىسمى
+        extension: كېڭەيتىلمە
+        author: يازغۇچى
+        filesize: ھۆججەت چوڭلۇقى
+      description: "بارلىق يۈكلىمىنى كېڭەيتىلمە، ھۆججەت چوڭلۇقى ۋە يازغۇچى بويىچە تىزىدۇ."
+    top_ignored_users:
+      title: "ئاسانلا سەل قارالغان/ئۈنسىزلەنگەن ئىشلەتكۈچى"
+      labels:
+        ignored_user: سەل قارالغان ئىشلەتكۈچى
+        ignores_count: سەل قارالغان ساناق
+        mutes_count: ئۈنسىز سانى
+      description: "باشقا نۇرغۇن ئىشلەتكۈچى پەرۋا قىلمىغان ۋە ياكى ئۈنسىزلىگەن ئىشلەتكۈچى"
+    top_users_by_likes_received:
+      title: "ياقتۇرغانلار كۆپ ئالقىشلىق ئىشلەتكۈچى"
+      labels:
+        user: ئىشلەتكۈچى
+        qtt_like: تاپشۇرۇۋالغان ياقتۇرۇش
+      description: "ياقتۇرۇلىدىغان ئالقىشلىق 10 ئىشلەتكۈچى."
+    top_users_by_likes_received_from_inferior_trust_level:
+      title: "تۆۋەن ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچىلەرنىڭ ياقتۇرۇشىنى ئەڭ كۆپ تاپشۇرۇۋالغان ئىشلەتكۈچى"
+      labels:
+        user: ئىشلەتكۈچى
+        trust_level: ئىشەنچ دەرىجىسى
+        qtt_like: تاپشۇرۇۋالغان ياقتۇرۇش
+      description: "تۆۋەن ئىشەنچ دەرىجىسىدىكى ئىشلەتكۈچىلەر ياقتۇرغان تېخىمۇ يۇقىرى ئىشەنچ دەرىجىسىدىكى ئالدىنقى 10 ئىشلەتكۈچى"
+    top_users_by_likes_received_from_a_variety_of_people:
+      title: "ھەر خىل كىشىلەرنىڭ ئەڭ كۆپ ياقتۇرۇشىنى تاپشۇرۇۋالغان ئىشلەتكۈچى"
+      labels:
+        user: ئىشلەتكۈچى
+        qtt_like: تاپشۇرۇۋالغان ياقتۇرۇش
+      description: "كەڭ دائىرىدىكى كىشىلەرنىڭ ياقتۇرۇشىغا ئېرىشكەن ئالدىنقى 10 ئىشلەتكۈچى."
+  dashboard:
+    problem:
+      twitter_login: 'Twitter ئارقىلىق تىزىمغا كىرىش ھازىر ئىشلىمەيدىغاندەك قىلىدۇ. <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">بېكەت تەڭشىكى</a> دىن سالاھىيەت كىملىكىنى تەكشۈرۈڭ.'
+      rails_env: "مۇلازىمېتىرىڭىز %{env} ھالىتىدە ئىشلەۋاتىدۇ"
+      host_names: "سىزنىڭ config/database.yml ھۆججىتىڭىز كۆڭۈلدىكى localhost مۇلازىمېتىر ئىسمىنى ئىشلىتىۋاتىدۇ. ئۇنى تور بېكىتىڭىزنىڭ مۇلازىمېتىر ئىسمىغا يېڭىلاڭ."
+      queue_size: "ئۆچرەتتە %{queue_size} ۋەزىپە بار، ۋەزىپە ئېغىر. بۇ بەلكىم Sidekiq جەريانىدا مەسىلە بارلىقى سەۋەبىدىن بولۇشى ياكى تېخىمۇ كۆپ Sidekiq جەريانى قوشۇش كېرەكلىكىنى بىلدۈرۈشى مۇمكىن."
+      ram: "مۇلازىمېتىرىڭىزدىكى جەمئىي ئەسلەك 1GB دىن ئاز ھالەتتە ئىجرا قىلىنىۋاتىدۇ. كەم دېگەندە 1GB ئەسلەك تەۋسىيە قىلىنىدۇ."
+      google_oauth2_config: 'مۇلازىمېتىر Google OAuth2 ئارقىلىق تىزىملاش ۋە تىزىمغا كىرىش (enable_google_oauth2_logins) كە يول قويۇلىدىغان قىلىپ سەپلەنگەن، ئەمما خېرىدار كىملىكى ۋە خېرىدار شىفىرلىق ئاچقۇچ قىممىتى تەڭشەلمىگەن. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ، تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">تېخىمۇ كۆپ تەپسىلاتى ئۈچۈن بۇ يېتەكچىنى كۆرۈڭ</a>.'
+      facebook_config: 'مۇلازىمېتىر Facebook ئارقىلىق تىزىملاش ۋە تىزىمغا كىرىش (enable_facebook_logins) كە يول قويۇلىدىغان قىلىپ سەپلەنگەن، ئەمما ئەپ كىملىكى ۋە ئەپ شىفىرلىق ئاچقۇچ قىممىتى تەڭشەلمىگەن. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ، تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">تېخىمۇ كۆپ تەپسىلاتى ئۈچۈن بۇ يېتەكچىنى كۆرۈڭ</a>.'
+      twitter_config: 'مۇلازىمېتىر Twitter ئارقىلىق تىزىملاش ۋە تىزىمغا كىرىش (enable_twitter_logins) كە يول قويۇلىدىغان قىلىپ سەپلەنگەن، ئەمما ئەپ كىملىكى ۋە ئەپ شىفىرلىق ئاچقۇچ قىممىتى تەڭشەلمىگەن. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ، تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">تېخىمۇ كۆپ تەپسىلاتى ئۈچۈن بۇ يېتەكچىنى كۆرۈڭ</a>.'
+      github_config: 'مۇلازىمېتىر GitHub ئارقىلىق تىزىملاش ۋە تىزىمغا كىرىش (enable_google_oauth2_logins) كە يول قويۇلىدىغان قىلىپ سەپلەنگەن، ئەمما خېرىدار كىملىكى ۋە شىفىرلىق ئاچقۇچ قىممىتى تەڭشەلمىگەن. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ، تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">تېخىمۇ كۆپ تەپسىلاتى ئۈچۈن بۇ يېتەكچىنى كۆرۈڭ</a>.'
+      s3_upload_config: 'مۇلازىمېتىر ھۆججەتنى S3 كە يۈكلەشكە سەپلەندى، ئەمما كەم دېگەندە تۆۋەندىكى تەڭشەكتىن بىرى تەڭشەلمىگەن: s3_access_key_id، s3_secret_access_key، s3_use_iam_profile ياكى s3_upload_bucket. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">تەپسىلاتىنى «سۈرەتنى S3 كە يۈكلەشنى قانداق سەپلەيدۇ؟» دىن كۆرۈڭ</a>.'
+      s3_backup_config: 'مۇلازىمېتىر زاپاسنى S3 كە يۈكلەشكە سەپلەندى، ئەمما كەم دېگەندە تۆۋەندىكى تەڭشەكتىن بىرى تەڭشەلمىگەن: s3_access_key_id، s3_secret_access_key، s3_use_iam_profile ياكى s3_backup_bucket. <a href="%{base_path}/admin/site_settings">بېكەت تەڭشىكى</a>گە يۆتكىلىپ تەڭشەكنى يېڭىلاڭ. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">تەپسىلاتىنى «سۈرەتنى S3 كە يۈكلەشنى قانداق سەپلەيدۇ؟» دىن كۆرۈڭ</a>.'
+      s3_cdn: 'مۇلازىمېتىر ھۆججەتنى S3 كە يۈكلەيدىغان قىلىپ سەپلەنگەن. بۇ قىممەت S3 چىقىمى ۋە تور بېكەتنىڭ ئاستىلىشىنى كەلتۈرۈپ چىقىرىشى مۇمكىن. <a href="https://meta.discourse.org/t/-/148916" target="_blank">تەپسىلاتىنى «يۈكلەشكە ئوبيېكت ساقلىغۇچىسىنى ئىشلىتىش» تىن كۆرۈڭ</a>.'
+      image_magick: 'مۇلازىمېتىر چوڭ سۈرەتنىڭ كىچىك سۈرىتىنى قۇرۇشقا سەپلەنگەن ئەمما ImageMagick ئورنىتىلمىغان. سىز ياقتۇرىدىغان بوغچا باشقۇرغۇچنى ئىشلىتىپ ImageMagick نى ئورنىتىڭ ياكى <a href="https://www.imagemagick.org/script/download.php" target="_blank">ئەڭ يېڭى نەشرىنى چۈشۈرۈڭ</a>.'
+      failing_emails: '%{num_failed_jobs} ئېلخەت خىزمىتى مەغلۇپ بولدى. app.yml ۋە ئېلخەت مۇلازىمېتىر تەڭشىكىنىڭ توغرىلىقىنى تەكشۈرۈڭ. <a href="%{base_path}/sidekiq/retries" target="_blank">مەغلۇپ بولغان خىزمەتنى Sidekiq دىن كۆرۈڭ</a>.'
+      subfolder_ends_in_slash: "تارماق قىسقۇچ تەڭشىكى توغرا ئەمەس؛ DISCOURSE_RELATIVE_URL_ROOT ئوڭغا يانتۇ سىزىق بىلەن ئاخىرلىشىدۇ."
+      translation_overrides: "بەزى ئالماشتۇرىدىغان تەرجىمىڭىزنىڭ ۋاقتى ئۆتتى. <a href='%{base_path}/admin/customize/site_texts?outdated=true'>تېكىست خاسلاشتۇرۇش</a>نى تەكشۈرۈڭ."
+      out_of_date_themes: "تۆۋەندىكى ئۆرنەكنىڭ يېڭىلانمىسى بار:"
+      unreachable_themes: "تۆۋەندىكى ئۆرنەكنىڭ يېڭىلانمىلىرىنى تەكشۈرەلمىدۇق:"
+      watched_words: "%{action} كۆزەتتىكى سۆزنىڭ مۇنتىزىم ئىپادىسى ئىناۋەتسىز. سىز <a href='%{base_path}/admin/customize/watched_words'>كۆزەتتىكى سۆز تەڭشىكى</a>نى تەكشۈرۈڭ ياكى «كۆزەتتىكى سۆزنىڭ مۇنتىزىم ئىپادىسى» تور بېكەت تەڭشىكىنى چەكلەڭ."
+      google_analytics_version: "ھازىر Discourse تا Google Analytics 3 نى ئىشلىتىۋاتىسىز، 2023-يىلى 7-ئاينىڭ 1-كۈنىدىن كېيىن ئەمدى ئۇنى قوللىمايدۇ.<a href='https://meta.discourse.org/t/260498'>Google Analytics 4 كە يۈكسەلتىڭ</a>تور بېكىتىڭىزنىڭ ئۈنۈمى ھەققىدىكى قىممىتى بار تەكلىپ ۋە تەھلىلگە ئېرىشىڭ."
+      category_style_deprecated: "ھازىر Discourse تا ئىشلىتىش توختىغان سەھىپە ئۇسلۇبىنى ئىشلىتىۋاتىسىز، مەزكۇر ئۇسلۇب Discourse 3.2 نىڭ ئاخىرقى سىناق نەشرى ئېلان قىلىنىشتىن ئىلگىرى چىقىرىۋېتىلىدۇ. <a href='https://meta.discourse.org/t/282441'>يەككە سەھىپە ئۇسلۇبىدىكى تور بېكەت تەڭشىكىگە كۆچۈش</a>تىن پايدىلىنىپ، تاللىغان سەھىپە ئۇسلۇبىنى قانداق ساقلاپ قېلىش كۆرسەتمىسىنى چۈشىنىڭ."
+    back_from_logster_text: "بېكەتكە قايت"
+  site_settings:
+    allow_bulk_invite: "بىر CSV ھۆججەتنى يۈكلەش ئارقىلىق توپ تەكلىپكە يول قويىدۇ"
+    disabled: "چەكلەندى"
+    display_local_time_in_user_card: "ئىشلەتكۈچى كارتىسى ئېچىلغاندا، ئىشلەتكۈچىنىڭ ۋاقىت رايونىغا ئاساسەن شۇ جاينىڭ يەرلىك ۋاقتىنى كۆرسىتىدۇ."
+    censored_words: "ئۆزلۈكىدىن &#9632;&#9632;&#9632;&#9632; سۆزگە ئالماشتۇرۇلىدۇ"
+    delete_old_hidden_posts: "30 كۈندىن ئارتۇق يوشۇرۇن تۇرغان يازمىنى ئاپتوماتىك ئۆچۈرىدۇ."
+    default_locale: "بۇ Discourse مىسالىنىڭ كۆڭۈلدىكى تىلى. سىز <a href='%{base_path}/admin/customize/site_texts' target='_blank'>ئىختىيارى/تېكىست</a>تىكى سىستېما ھاسىللىغان سەھىپە ۋە تېمىنىڭ تېكىستىگە ئالماشتۇرالايسىز."
+    allow_user_locale: "ئىشلەتكۈچىلەرنىڭ ئۆز تىلىدىكى ئارايۈز مايىللىقىنى تاللىشىغا يول قويىدۇ"
+    set_locale_from_accept_language_header: "نامسىز ئىشلەتكۈچىلەرنىڭ ئارايۈز تىلىنى ئۇلارنىڭ توركۆرگۈسىنىڭ تىل تەڭشىكىگە ئاساسەن تەڭشەيدۇ"
+    support_mixed_text_direction: "سولدىن ئوڭغا ۋە ئوڭدىن سولدا ئارىلاش تېكىست يۆنىلىشىنى قوللايدۇ."
+    min_post_length: "بىرلىكى ھەرپ بىلەن ئۆلچىنىدىغان ئەڭ قىسقا يازمىنىڭ ئۇزۇنلۇقى (شەخسى ئۇچۇر بۇنىڭ سىرتىدا)"
+    min_first_post_length: "تۇنجى يازما (تېما مەزمۇنى) نىڭ يول قويۇلىدىغان ئەڭ قىسقا ئۇزۇنلۇقى (شەخسىي ئۇچۇر بۇنىڭ سىرتىدا)"
+    min_personal_message_post_length: "بىرلىكى ھەرپ بولغان ئۇچۇرنىڭ يول قويۇلىدىغان ئەڭ قىسقا ئۇزۇنلۇقى (تۇنجى يازما ۋە جاۋابنى ئۆز ئىچىگە ئالىدۇ)"
+    max_post_length: "بىرلىكى ھەرپ بولغان يازمىنىڭ يول قويۇلىدىغان ئەڭ ئۇزۇن ئۇزۇنلۇقى"
+    show_topic_featured_link_in_digest: "ئۈزۈندە ئېلخەتتە تېمىنىڭ جەۋھەر ئۇلانمىسىنى كۆرسىتىدۇ."
+    min_topic_title_length: "بىرلىكى ھەرپ بولغان يازما ماۋزۇسىنىڭ يول قويۇلىدىغان ئەڭ قىسقا ئۇزۇنلۇقى"
+    max_topic_title_length: "بىرلىكى ھەرپ بولغان يازما ماۋزۇسىنىڭ يول قويۇلىدىغان ئەڭ ئۇزۇن ئۇزۇنلۇقى"
+    min_personal_message_title_length: "بىرلىكى ھەرپ بولغان ئۇچۇرنىڭ يول قويۇلىدىغان ئەڭ قىسقا ئۇزۇنلۇقى"
+    min_search_term_length: "بىرلىكى ھەرپ بولغان ئىزدەيدىغان ئىناۋەتلىك ئاتالغۇنىڭ ئەڭ قىسقا ئۇزۇنلۇقى"
+    search_tokenize_chinese: "خەنچە ئەمەس تور بېكەتلەردە مەجبۇرىي خەنچە ئىزدەشكە مەجبۇرلايدۇ"
+    search_tokenize_japanese: "ياپونچە ئەمەس تور بېكەتلەردە مەجبۇرىي ياپونچە ئىزدەشكە مەجبۇرلايدۇ"
+    search_prefer_recent_posts: "ئەگەر چوڭ تىپتىكى مۇنبەرنى ئىزدەش ئاستا بولسا، بۇ تاللانما ئالدى بىلەن يېقىنقى يازمىلارنى ئىدېكىسلاشنى سىنايدۇ"
+    search_recent_posts_size: "ئىندېكىستا يېقىنقى يازمىدىن قانچىنى ساقلاپ قالىدۇ"
+    log_search_queries: "ئىشلەتكۈچى ئىجرا قىلغان ئىزدەش سۈرۈشتۈرۈشىنى خاتىرىلەيدۇ"
+    search_query_log_max_size: "ساقلاپ قالىدىغان ئەڭ كۆپ ئىزدەش سۈرۈشتۈرۈش مىقدارى"
+    search_query_log_max_retention_days: "ئىزدەش سۈرۈشتۈرۈشىنى ساقلاپ قالىدىغان ئەڭ ئۇزۇن ۋاقتى، بىرلىكى كۈن."
+    search_ignore_accents: "ئەگەر بۇ تەڭشەك قوزغىتىلسا، ئىزدەش سۈرۈشتۈرۈشىدىكى ئۇرغۇ بەلگىسى نەزەردىن ساقىت قىلىنغان بولۇپ، ئىشلەتكۈچى ئۇرغۇ بەلگىسىنى توغرا كىرگۈزمىگەن تەقدىردىمۇ، ئىزدەش نەتىجىسىنى تاپالايدۇ."
+    search_default_sort_order: "پۈتكۈل بەتتىن ئىزدەشتە كۆڭۈلدىكى تەرتىپلەش تەرتىپى"
+    category_search_priority_low_weight: "تۆۋەن ئىزدەش ئالدىنلىقنىڭ دەرىجىگە تىزىشقا ئىشلىتىلىدىغان سالمىقى."
+    category_search_priority_high_weight: "يۇقىرى ئىزدەش ئالدىنلىقنىڭ دەرىجىگە تىزىشقا ئىشلىتىلىدىغان سالمىقى."
+    allow_duplicate_topic_titles: "ئوخشاش، تەكرارلانغان ماۋزۇغا يول قويىدۇ."
+    allow_duplicate_topic_titles_category: "ئەگەر سەھىپە ئوخشاش بولمىسا، ئوخشاش ياكى تەكرارلانغان ماۋزۇلۇق تېمىغا يول قويىدۇ. allow_duplicate_topic_titles چوقۇم چەكلىنىشى كېرەك."
+    unique_posts_mins: "ئىشلەتكۈچى ئوخشاش مەزمۇندىكى يازمىنى قايتا يوللاشتىن ئىلگىرى نەچچە مىنۇت كۈتىدۇ"
+    educate_until_posts: "ئىشلەتكۈچى تۇنجى (n) يېڭى يازمىسىنى يېزىشقا باشلىغاندا، تەھرىرلىگۈچتە يېڭى ئىشلەتكۈچى تەربىيەلەش تاختىسىنى قاڭقىتىپ كۆرسىتىدۇ."
+    title: "بۇ تور بېكەتنىڭ ئىسمى. نامسىز ئىشلەتكۈچىلەرنى ئۆز ئىچىگە ئالغان بارلىق زىيارەتچىلەر كۆرەلەيدۇ."
+    site_description: "بۇ تور بېكەتنىڭ بىر جۈملىلىك تونۇشتۇرۇلۇشى. نامسىز ئىشلەتكۈچىلەرنى ئۆز ئىچىگە ئالغان بارلىق زىيارەتچىلەر كۆرەلەيدۇ."
+    short_site_description: "بىر قانچە سۆزلۈك قىسقا تونۇشتۇرۇلۇشى. نامسىز ئىشلەتكۈچىلەرنى ئۆز ئىچىگە ئالغان بارلىق زىيارەتچىلەر كۆرەلەيدۇ."
+    contact_email: "بۇ تور بېكەتنىڭ ئاساسلىق مەسئۇلىنىڭ ئېلخەت ئادرېسى. مۇھىم ئۇقتۇرۇشقا ئىشلىتىلىدۇ، شۇنداقلا <a href='%{base_path}/about' target='_blank'>/about</a> دا كۆرۈنىدۇ. ئاممىۋى تور بېكەتتە نامسىز ئىشلەتكۈچىلەرگە كۆرۈنىدۇ."
+    contact_url: "بۇ تور بېكەتنىڭ ئالاقە تور ئادرېسى. ئەگەر مەۋجۇت بولسا، <a href='%{base_path}/about' target='_blank'>/about</a> دىكى ئېلخەت ئادرېسنى ئالماشتۇرىدۇ ھەمدە ئاممىۋى تور بېكەتتە ئاممىۋى تور بېكەتتە نامسىز ئىشلەتكۈچىلەرگە كۆرۈنىدۇ."
+    crawl_images: "توغرا بولغان كەڭلىك ۋە ئېگىزلىكىنى قىستۇرۇش ئۈچۈن يىراقتىكى تور ئادرېسىدىن سۈرەتنى ئاجرىتىدۇ."
+    post_edit_time_limit: "ئىشەنچ دەرىجىسى 2 ۋەئىشەنچ دەرىجىسى 1 بولغان يازغۇچى يازما يوللىغاندىن كېيىنكى (n) مىنۇت ئىچىدە يازمىسىنى تەھرىرلىيەلەيدۇ. 0 گە تەڭشەلسە مەڭگۈ تەھرىرلىيەلەيدۇ."
+    tl2_post_edit_time_limit: "ئىشەنچ دەرىجىسى 2 ۋە ئۇنىڭدىن يۇقىرى يازغۇچى يازما يوللىغاندىن كېيىنكى (n) مىنۇت ئىچىدە يازمىسىنى تەھرىرلىيەلەيدۇ. 0 گە تەڭشەلسە مەڭگۈ تەھرىرلىيەلەيدۇ."
+    edit_history_visible_to_public: "ھەممەيلەننىڭ تەھرىرلەنگەن يازمىنىڭ ئىلگىرىكى نەشرىنى كۆرۈشىگە يول قويىدۇ. چەكلەنگەندە پەقەت باشقۇرغۇچى خادىملارلا كۆرەلەيدۇ."
+    delete_removed_posts_after: "يازغۇچى ئۆچۈرگەن يازما (n) سائەتتىن كېيىن ئۆزلۈكىدىن ئۆچۈرۈلىدۇ. ئەگەر 0 گە تەڭشەلسە، يازما دەرھال ئۆچۈرۈلىدۇ."
+    notify_users_after_responses_deleted_on_flagged_post: "يازما پاش قىلىنىپ ئۆچۈرۈلسە، يازمىغا ئىنكاس قايتۇرغان ۋە ئىنكاسى ئۆچۈرۈلگەن بارلىق ئىشلەتكۈچىلەرگە ئۇقتۇرۇلىدۇ."
+    max_image_width: "يازمىدىكى سۈرەتنىڭ كىچىك سۈرىتىنىڭ ئەڭ چوڭ كەڭلىكى. كەڭرەك چوڭلۇقتىكى سۈرەتلەرنىڭ چوڭ كىچىكلىكى ۋە نۇر ئۈنۈمىنى تەڭشەيدۇ."
+    max_image_height: "يازمىدىكى سۈرەتنىڭ كىچىك سۈرىتىنىڭ ئەڭ يۇقىرى ئېگىزلىكى. ئېگىزرەك چوڭلۇقتىكى سۈرەتلەرنىڭ چوڭ كىچىكلىكى ۋە نۇر ئۈنۈمىنى تەڭشەيدۇ."
+    max_form_template_title_length: "كۆزنەك قېلىپى ماۋزۇسىنىڭ ئەڭ ئۇزۇن ئۇزۇنلۇقى."
+    max_form_template_content_length: "كۆزنەك قېلىپى مەزمۇنىنىڭ ئەڭ ئۇزۇن ئۇزۇنلۇقى."
+    post_excerpt_maxlength: "يازمىنىڭ قىسقىچە مەزمۇنى/خۇلاسە مەزمۇنىنىڭ ئەڭ ئۇزۇن ئۇزۇنلۇقى."
+    topic_excerpt_maxlength: "بىر تېمىنىڭ تۇنجى يازمىسىدىن ھاسىللىغان تېمىنىڭ قىسقىچە/خۇلاسە مەزمۇنىنىڭ ئەڭ ئۇزۇن ئۇزۇنلۇقى."
+    default_subcategory_on_read_only_category: "ئىشلەتكۈچى يېڭى تېما قۇرۇشقا يول قويۇلمايدىغان سەھىپىدە، «يېڭى تېما» توپچىنى قوزغىتىپ ئاندىن كۆڭۈلدىكى تارماق سەھىپىدىن بىرنى تاللاپ ئېلان قىلىنىدۇ."
+    show_pinned_excerpt_mobile: "كۆچمە كۆرۈنۈشتە چوققىلانغان تېمىنىڭ قىسقىچە مەزمۇنىنى كۆرسىتىدۇ."
+    show_pinned_excerpt_desktop: "ئۈستەل يۈزى كۆرۈنۈشتە چوققىلانغان تېمىنىڭ قىسقىچە مەزمۇنىنى كۆرسىتىدۇ."
+    post_onebox_maxlength: "oneboxed Discourse يازمىنىڭ ھەرپ بىلەن ئىپادىلەنگەن ئەڭ ئۇزۇن ئۇزۇنلۇقى."
+    force_custom_user_agent_hosts: "بارلىق ئىلتىماسقا ئىختىيارى onebox ئىشلەتكۈچى ۋاكالەتچى مۇلازىمېتىرى ئىشلىتىلىدۇ. (بولۇپمۇ ئىشلەتكۈچى ۋاكالەتچىسى ئارقىلىق مۇلازىمېتىرنى زىيارەت قىلغۇچىلارغا تېخىمۇ كېرەكلىك)"
+    max_oneboxes_per_post: "يەككە يازما ئۆز ئىچىگە ئالالايدىغان oneboxes نىڭ ئەڭ كۆپ سانىنىڭ تەڭشىكى. oneboxes يازمىدىكى ئۇلانمىنىڭ مەزمۇنىنى ئالدىن كۆزىتىش ئىقتىدارى بىلەن تەمىنلەيدۇ."
+    facebook_app_access_token: "بۇ پەرمان تاختىسىنى Facebook ئەپ ۋە شىفىرلىق ئاچقۇچى ھاسىللىغان. Instagram oneboxes ھاسىللاشقا ئىشلىتىلىدۇ."
+    logo_dark: "«تۇغ» تور بېكەت تەڭشىكىنىڭ قاراڭغۇ رەڭ لايىھەسىنىڭ ئورنىغا ئالماشتۇرىدىغان تاللىنىشى."
+    logo_small_dark: "«كىچىك تۇغ» تور بېكەت تەڭشىكىنىڭ قاراڭغۇ رەڭ لايىھەسىنىڭ ئورنىغا ئالماشتۇرىدىغان تاللىنىشى."
+    mobile_logo_dark: "«كۆچمە تۇغ» تور بېكەت تەڭشىكىنىڭ قاراڭغۇ رەڭ لايىھەسىنىڭ ئورنىغا ئالماشتۇرىدىغان تاللىنىشى."
+    large_icon: "باشقا مېتا سانلىق مەلۇمات سىنبەلگىسىنىڭ ئاساسى سۈپىتىدە ئىشلىتىلگەن سۈرەت. ئەڭ ياخشىسى 512x512 دىن چوڭ بولۇشى كېرەك. ئەگەر بوش قالسا، logo_small ئىشلىتىلىدۇ."
+    force_https: "تور بېكىتىڭىزنى پەقەت HTTPS ئىشلىتىشكە مەجبۇرلايدۇ. ئاگاھلاندۇرۇش: HTTPS تولۇق تەڭشەلگەن ھەمدە ھەممە جايدا تولۇق ئىشلەيدىغانلىقىنى جەزملىمىگۈچە بۇنى قوزغاتماڭ! مەزمۇن چۈشەندۈرۈش تورى CDN نى تەكشۈردىڭىزمۇ، بارلىق ئىجتىمائىي تاراتقۇدىن تىزىمغا كىرىش ۋە خالىغان سىرتقى تۇغ/تايىنىشچانلىق قاتارلىقلارنىڭ ھەممىسى HTTPS بىلەن ماسلىشامدۇ؟"
+    same_site_cookies: "ئوخشاش تور بېكەت ساقلانمىسىنى ئىشلىتىدۇ، ئۇلار قوللايدىغان توركۆرگۈدە بارلىق بېكەت ھالقىغان ئىلتىماسلاردىكى سىياقسىمان ئۆزگەرگۈچى (بوش ياكى قاتتىق) لەرنى يوقىتىدۇ. ئاگاھلاندۇرۇش: «قاتتىق» پەقەت مەجبۇرىي تىزىمغا كىرىشكە ئىشلىتىشكە ماس كېلىدۇ ھەمدە سىرتقى كىملىك دەلىللەش ئۇسۇلىنى ئىشلىتىدىغان بېكەتلەرگە ئىشلىتىلىدۇ."
+    summary_max_results: "«بۇ تېمىنى خۇلاسىلە» قايتۇرغان ئەڭ كۆپ يازما سانى"
+    summary_timeline_button: "ۋاقىت ئوقىدا «خۇلاسە» توپچەنى كۆرسىتىدۇ"
+    silence_new_user_sensitivity: "ئەخلەت خەتكە ئاساسەن يېڭى ئىشلەتكۈچىنى پاش قىلىپ ئۈنسىزلەشتۈرۈشنىڭ ئېھتىماللىقى"
+    auto_close_topic_sensitivity: "پاش قىلىنغان تېمىنىڭ ئۆزلۈكىدىن تاقىلىشىنىڭ ئېھتىماللىقى"
+    tl2_additional_likes_per_day_multiplier: "بۇ سانغا كۆپەيتىش ئارقىلىق tl2 (ئەزا) نىڭ كۈندىلىك ياقتۇرۇش چېكىنى ئاشۇرىدۇ"
+    tl3_additional_likes_per_day_multiplier: "بۇ سانغا كۆپەيتىش ئارقىلىق tl3 (ئادەتتىكى) نىڭ كۈندىلىك ياقتۇرۇش چېكىنى ئاشۇرىدۇ"
+    tl4_additional_likes_per_day_multiplier: "بۇ سانغا كۆپەيتىش ئارقىلىق tl4 (باشلىق) نىڭ كۈندىلىك ياقتۇرۇش چېكىنى ئاشۇرىدۇ"
+    tl2_additional_edits_per_day_multiplier: "بۇ سانغا كۆپەيتىش ئارقىلىق tl2 (ئەزا) نىڭ كۈندىلىك تەھرىرلەش چېكىنى ئاشۇرىدۇ"
+    tl3_additional_edits_per_day_multiplier: "بۇ سانغا كۆپەيتىش ئارقىلىق tl3 (ئادەتتىكى) نىڭ كۈندىلىك تەھرىرلەش چېكىنى ئاشۇرىدۇ"
+    tl4_additional_edits_per_day_multiplier: "بۇ سانغا كۆپەيتىش ئارقىلىق tl4 (باشلىق) نىڭ كۈندىلىك تەھرىرلەش چېكىنى ئاشۇرىدۇ"
+    tl2_additional_flags_per_day_multiplier: "بۇ سانغا كۆپەيتىش ئارقىلىق tl2 (ئەزا) نىڭ كۈندىلىك پاش قىلىش چېكىنى ئاشۇرىدۇ"
+    tl3_additional_flags_per_day_multiplier: "بۇ سانغا كۆپەيتىش ئارقىلىق tl3 (ئادەتتىكى) نىڭ كۈندىلىك پاش قىلىش چېكىنى ئاشۇرىدۇ"
+    tl4_additional_flags_per_day_multiplier: "بۇ سانغا كۆپەيتىش ئارقىلىق tl4 (باشلىق) نىڭ كۈندىلىك پاش قىلىش چېكىنى ئاشۇرىدۇ"
+    markdown_typographer_quotation_marks: "قوش ۋە يالاڭ تىرناق ئالماشتۇرۇش جۈپتىنىڭ تىزىمى"
+    persistent_sessions: "تو كۆرگۈ تاقالغاندىن كېيىن، ئىشلەتكۈچى تىزىمغا كىرگەن ھالەتنى ساقلاپ قالىدۇ"
+    maximum_session_age: "ئالدىنقى قېتىم زىيارەت قىلغاندىن باشلاپ ئىشلەتكۈچىنىڭ تىزىمغا كىرگەن ھالىتىنى n سائەتكىچە ساقلاپ قالىدۇ"
+    ga_version: "ئىشلەتكەن Google ئۇنىۋېرسال تەھلىلنىڭ نەشرى: v3 (analytics.js), v4 (gtag)"
+    ga_universal_tracking_code: "Google ئۇنىۋېرسال تەھلىل ئىزلاش كودىنىڭ كىملىكى، مەسىلەن: UA-12345678-9؛ <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a> نى كۆرۈڭ"
+    ga_universal_domain_name: "Google ئۇنىۋېرسال تەھلىل دائىرە ئىسمى، مەسىلەن: mysite.com؛ <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a> نى كۆرۈڭ"
+    ga_universal_auto_link_domains: "Google ئۇنىۋېرسال تەھلىلنىڭ تور دائىرىسى ھالقىغان ئىزلاشنى قوزغىتىدۇ. بۇ تور دائىرىسىگە نىشانلانغان چىققان ئۇلانمىغا خېرىدار كىملىكى قوشۇلىدۇ. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google تور دائىرىسى ھالقىغان ئىزلاش يېتەكچىسى</a>نى كۆرۈڭ."
+    gtm_container_id: "Google بەلگە باشقۇرغۇچ قاچىسى كىملىكى. مەسىلەن: GTM-ABCD12E. <br/>دىققەت: مەزمۇن بىخەتەرلىك تۈزۈمى يەنى (CSP)نى قوزغاتقاندا Google بەلگە باشقۇرغۇچ يەنى GTM ئىشلىتىدۇ، Meta دىكى قوللانمىنى كۆرۈڭ: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Google بەلگە باشقۇرغۇچ قوليازمىسىدا تاسادىپىي سان ئىشلىتىلىدۇ</a>."
+    enable_escaped_fragments: "ئەگەر ھېچقانداق تور ئۆمىلىگۈچى بايقالمىسا Google نىڭ Ajax-Crawling API غا قايتىدۇ. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a> نى كۆرۈڭ"
+    moderators_manage_categories_and_groups: "رىياسەتچىنىڭ سەھىپە ۋە گۇرۇپپا قۇرۇپ ۋە باشقۇرۇشىغا يول قويىدۇ"
+    moderators_change_post_ownership: "رىياسەتچىنىڭ يازما ئىگىدارلىقىنى ئۆزگەرتىشىگە يول قويىدۇ"
+    cors_origins: "مەنبە ھالقىغان ئىلتىماس (CORS) نىڭ مەنبەسىگە يول قويىدۇ. ھەر بىر مەنبە چوقۇم http:// ياكى https:// نى ئۆز ئىچىگە ئېلىشى كېرەك. CORS نى قوزغىتىش ئۈچۈن DISCOURSE_ENABLE_CORS env ئۆزگەرگۈچى مىقدار چوقۇم true راست بولۇشى كېرەك."
+    use_admin_ip_allowlist: "پەقەت چەكلەنگەن IP ئادرېس تىزىمى(باشقۇرغۇچى › خاتىرە › چەكلەنگەن IP) دىكى IP ئادرېسنى ئىشلەتكەندىلا ئاندىن باشقۇرغۇچى تىزىمغا كىرەلەيدۇ."
+    blocked_ip_blocks: "Discourse ئۇچۇرىنى توپلىمىسىمۇ بولىدىغان شەخسىي IP بۆلەكلىرىنىڭ تىزىمى"
+    allowed_internal_hosts: "onebox ۋە باشقا مەقسەتلەر ئۈچۈن discourse بىخەتەر ھالدا تارىيالايدىغان ئىچكى مۇلازىمېتىرلار تىزىمى"
+    allowed_onebox_iframes: "Onebox ئارقىلىق سىڭدۈرۈش ئارقىلىق يول قويۇلغان iframe src تور دائىرە نامى تىزىمى. «*» ئىشلىتىلسە بارلىق كۆڭۈلدىكى Onebox موتورى ئىشلىتىشكە يول قويىدۇ."
+    allowed_iframes: "discourse بىخەتەر ھالدا يازمىدا ئىشلىتىشكە يول قويىدىغان iframe src تور دائىرە ئىسمى ئالدى قوشۇلغۇچىسىنىڭ تىزىمى"
+    allowed_crawler_user_agents: "تور ئۆمىلىگۈچنىڭ ئىشلەتكۈچى ۋاكالەتچىسىنىڭ تور بېكەتنى زىيارەت قىلىشىغا يول قويۇلۇشى كېرەك. ئاگاھلاندۇرۇش! بۇ تەڭشەلسە مەزكۇر جايدا تىزىلمىغان بارلىق تور ئۆمىلىگۈچلىرى چەكلىنىدۇ."
+    content_security_policy_report_only: "مەزمۇن بىخەتەرلىك تۈزۈمى (CSP) دوكلاتىنىلا قوزغات"
+    content_security_policy_collect_reports: "/ Csp_reports دىكى CSP بەلگىلىمىگە خىلاپلىق قىلىش دوكلاتى توپلاشنى قوزغىتىدۇ"
+    content_security_policy_frame_ancestors: "كىمنىڭ بۇ تور بېكەتنى CSP ئارقىلىق iframe گە سىڭدۈرەلەيدىغانلىقىنى چەكلەيدۇ. <a href='%{base_path}/admin/customize/embedding'>سىڭدۈرۈش</a>تە يول قويۇلىدىغان مۇلازىمېتىرنى تېزگىنلەيدۇ."
+    content_security_policy_script_src: "يول قويۇش تىزىمىغا قوشۇلغان باشقا قوليازما مەنبەسى. كۆڭۈلدىكى ئەھۋالدا نۆۋەتتىكى مۇلازىمېتىر ۋە CDN نى ئۆز ئىچىگە ئالىدۇ. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>مەزمۇن بىخەتەرلىك تۈزۈمىنى ئىشلىتىش ئارقىلىق XSS ھۇجۇمىنى ئاستىلىتىدۇ.</a> (CSP). content_security_policy_strict_dynamic قوزغىتىلغاندا، مۇلازىمېتىر مەنبەسىگە پەرۋا قىلمايدۇ."
+    content_security_policy_strict_dynamic: "قاتتىق ئۆزگىرىشچان مەزمۇن بىخەتەرلىك تۈزۈمىنى ئىشلىتىپ قولدا سەپلەش ئېھتىياجىنى ئازايتىدۇ. تەپسىلاتىنى <a href='https://meta.discourse.org/t/298172' target='_blank'>ئۇقتۇرۇش</a>تىن كۆرۈڭ. بۇ تەڭشەكنى چەكلەيدىغان ئىقتىدار تېزلا چىقىرىۋېتىلىدۇ."
+    invalidate_inactive_admin_email_after_days: "مۇشۇ كۈن ئىچىدە تور بېكەتنى زىيارەت قىلمىغان باشقۇرغۇچى ھېساباتى تىزىمغا كىرىشتىن ئىلگىرى ئېلخەت ئادرېسىنى قايتا دەلىللىشى كېرەك. 0 گە تەڭشەلسە چەكلىنىدۇ."
+    include_secure_categories_in_tag_counts: "قوزغىتىلغاندا، بەلگىنىڭ تېما سانى بارلىق ئىشلەتكۈچىلەر ئۈچۈن چەكلەنگەن سەھىپىدىكى مەزمۇنلارنى ئۆز ئىچىگە ئالىدۇ. چەكلەنگەندە، ئادەتتىكى ئىشلەتكۈچىگە پەقەت بارلىق تېما ئاممىۋى سەھىپىلەردە بولغان بەلگىسى بار بىر قانچە تېما كۆرسىتىلىدۇ."
+    display_personal_messages_tag_counts: "قوزغىتىلغاندا، بېرىلگەن بەلگە بىلەن بەلگە قويۇلغان شەخسىي ئۇچۇرنىڭ سانى كۆرسىتىلىدۇ."
+    top_menu: "باش بەت يولباشچىدا قايسى تۈرلەرنىڭ كۆرۈنۈدىغانلىقى ۋە تەرتىپىنى جەزملەيدۇ."
+    post_menu: "باش بەت يازما تىزىملىكىدە قايسى تۈرلەرنىڭ كۆرۈنۈدىغانلىقى ۋە تەرتىپىنى جەزملەيدۇ."
+    post_menu_hidden_items: "كۆپ چېكىتنى چەكمىگۈچە، كۆڭۈلدىكى ئەھۋالدا يازما تىزىملىكىدىكى تىزىملىك تۈرلىرى يوشۇرۇن تۇرىدۇ."
+    share_links: "باش بەت ھەمبەھىر سۆزلەشكۈدە قايسى تۈرلەرنىڭ كۆرۈنۈدىغانلىقى ۋە تەرتىپىنى جەزملەيدۇ."
+    allow_username_in_share_links: "ھەمبەھىر ئۇلانمىسىدا ئىشلەتكۈچى ئاتىنىڭ بولۇشىغا يول قويىدۇ. بۇ بىردىنبىر زىيارەتچىگە ئاساسەن تارتۇق بېرىشتە كېرەكلىك."
+    send_tl1_welcome_message: "ئىشەنچ دەرىجىسى 1 بولغان يېڭى ئىشلەتكۈچىگە قارشى ئېلىش ئۇچۇرى يوللايدۇ."
+    send_tl2_promotion_message: "ئىشەنچ دەرىجىسى 2 بولغان يېڭى ئىشلەتكۈچىگە ئۆستۈرۈش ئۇچۇرى ئەۋەتىدۇ."
+    moderators_view_emails: "رىياسەتچىنىڭ ئىشلەتكۈچىنىڭ ئېلخەت ئادرېسىنى كۆرۈشىگە يول قويىدۇ."
+    prioritize_username_in_ux: "ئىشلەتكۈچى بېتى، ئىشلەتكۈچى كارتىسى ۋە يازمىسىدا ئالدى بىلەن ئىشلەتكۈچى ئاتىنى كۆرسىتىدۇ (چەكلەنگەندە ئالدى بىلەن ئىسىمنى كۆرسىتىدۇ)"
+    enable_rich_text_paste: "تېكىستنى تەھرىرلىگۈچكە چاپلىغاندا HTML نى Markdown غا ئۆزلۈكىدىن ئالماشتۇرۇشنى قوزغىتىدۇ. (تەجرىبە)"
+    send_old_credential_reminder_days: "كونا ئىسپاتلارنى قانچە كۈندىن كېيىن ئەسكەرتىدۇ"
+    email_token_valid_hours: "ئىم ئۇنتۇش/ھېسابات ئاكتىپلاش پەرمان تاختىسىنىڭ ئىناۋەتلىك ۋاقتى (n) سائەت."
+    enable_badges: "تارتۇق سىستېمىسىنى قوزغىتىدۇ، بۇ بىر خىل ئويۇنسىمان شەكىل بولۇپ، ئىشلەتكۈچىلەرنىڭ ئاكتىپلىقىنى كۈچەيتىشنى مەقسەت قىلىدۇ. تەپسىلاتىنى Discourse Meta دىكى <a href='https://meta.discourse.org/t/what-are-badges/32540' _target='blank'>تارتۇق دېگەن نېمە؟</a> دىن كۆرۈڭ."
+    max_favorite_badges: "ئىشلەتكۈچى تاللىيالايدىغان تارتۇقنىڭ ئەڭ كۆپ سانى"
+    whispers_allowed_groups: "بەلگىلەنگەن گۇرۇپپا ئەزالىرى تېمىدا ئايرىم پىكىر ئالماشتۇرالايدۇ."
+    hidden_post_visible_groups: "بۇ گۇرۇپپىدىكى ئەزالارنىڭ يوشۇرۇن يازمىلارنى كۆرۈشىگە يول قويىدۇ. باشقۇرغۇچى خادىملار يوشۇرۇن يازمىلارنى ھەمىشە كۆرەلەيدۇ."
+    allow_index_in_robots_txt: "robots.txt دا ئىزدەش موتورىنىڭ مەزكۇر بېكەتتىكى ئىندېكسلاشقا يول قويۇدىغان جايلار بەلگىلىنىدۇ. ئالاھىدە ئەھۋالدا، سىز <a href='%{base_path}/admin/customize/robots'>robots.txt</a> نى مەڭگۈلۈك قاپلىۋېتەلەيسىز."
+    blocked_email_domains: "تىك سىزىق بىلەن ئايرىلغان ئىشلەتكۈچىنىڭ تىزىملىتىشىغا يول قويۇلمايدىغان ئېلخەت تور دائىرە نامىنىڭ تىزىمى. سىستېما بەلگىلەنگەن تور دائىرە ئىسمىنىڭ تارماقلىرىنى ئۆزلۈكىدىن بىر تەرەپ قىلىدۇ. ئورتاق بەلگە * ۋە ? نى قوللىمايدۇ. مەسىلەن: mailinator.com|trashmail.net"
+    allowed_email_domains: "تىك سىزىق بىلەن ئايرىلغان ئىشلەتكۈچى چوقۇم تىزىملىتىشى كېرەك بولغان ئېلخەت تور دائىرە نامىنىڭ تىزىمى. سىستېما بەلگىلەنگەن تور دائىرە ئىسمىنىڭ تارماقلىرىنى ئۆزلۈكىدىن بىر تەرەپ قىلىدۇ. ئورتاق بەلگە * ۋە ? نى قوللىمايدۇ. ئاگاھلاندۇرۇش: تىزىمنىڭ سىرتىدىكى ئىشلەتكۈچىلەرنىڭ ئېلخەت تور دائىرە ئىسمىغا يول قويۇلمايدۇ."
+    normalize_emails: "ئۆلچەملەشكەن ئېلخەتنىڭ بىردىنبىر ياكى ئەمەسلىكىنى تەكشۈرىدۇ. ئۆلچەملەشكەن ئېلخەتتىن ئىشلەتكۈچى ئاتىدىكى بارلىق چېكىت + ۋە @ ئارىسىدىكى بەلگىلەرنى چىقىرىۋېتىدۇ."
+    auto_approve_email_domains: "بۇ تور دائىرە نامى تىزىمىدىكى ئېلخەت ئادرېسى بار ئىشلەتكۈچى ئۆزلۈكىدىن تەستىقلىنىدۇ. سىستېما بەلگىلەنگەن تور دائىرە ئىسمىنىڭ تارماقلىرىنى ئۆزلۈكىدىن بىر تەرەپ قىلىدۇ. ئورتاق بەلگە * ۋە ? نى قوللىمايدۇ."
+    hide_email_address_taken: "تىزىملاتقاندا ياكى ئىم ئۇنتۇپ قالغاندا ئىشلەتكۈچىگە بېرىلگەن ئېلخەت ئادرېسىدىكى ھېساباتنىڭ بارلىقىنى ئۇقتۇرمايدۇ. «ئۇنتۇلغان ئىم» ئىلتىماسىدا تولۇق ئېلخەتنى تەلەپ قىلىدۇ."
+    log_out_strict: "تىزىمدىن چىققاندا، ئىشلەتكۈچىنىڭ بارلىق ئۈسكۈنىلىرىدىكى سۆزلەشكۈدىن تىزىمدىن چىقىدۇ"
+    version_checks: "Discourse غا Ping بۇيرۇقى يوللاپ يېڭى نەشر ئۇچۇرىغا ئېرىشكىلى بولىدۇ ھەمدە <a href='%{base_path}/admin' target='_blank'>/admin</a> باشقۇرۇش تاختىسىدا يېڭى نەشر ئۇچۇرىنى كۆرسىتىدۇ"
+    new_version_emails: "يېڭى نەشرىدىكى Discourse ئېلان قىلىنسا contact_email غا بىر ئېلخەت يوللايدۇ."
+    include_in_discourse_discover: "CDCK شىركىتى («Discourse») <a href='https://discover.discourse.org' target='_blank'>بايقاش بېتى</a> ۋە Discourse بازارچىلىق ماتېرىيالىدا مەزكۇر جامائەتنى تونۇشتۇرىدۇ. بۇنداق بولغاندا، سىز Discourse بىلەن تور بېكىتىڭىزنىڭ مۇلازىمىتىدىكى سانلىق مەلۇماتنى ھەمبەھىرلىنىسىز. دىققەت، جامائەتنىڭ تەۋسىيە قىلىنىشىنى Discourse قارار قىلىدۇ."
+    invite_expiry_days: "ئىشلەتكۈچى تەكلىپ قىلىش شىفىرلىق ئاچقۇچى قانچىلىك ۋاقىت كۈچكە ئىگە بولىدۇ، بىرلىكى كۈن"
+    invite_only: "بارلىق يېڭى ئىشلەتكۈچى چوقۇم ئىشەنچلىك ئىشلەتكۈچى ياكى باشقۇرغۇچى خادىم تەكلىپ قىلىشى كېرەك. ئاشكارا تىزىملاش چەكلەنگەن."
+    login_required: "بۇ تور بېكەتتىكى مەزمۇنلارنى ئوقۇش ئۈچۈن دەلىللەش زۆرۈر، نامسىز زىيارەتكە يول قويۇلمايدۇ."
+    min_username_length: "بىرلىكى ھەرپ بولغان ئەڭ قىسقا ئىشلەتكۈچى ئاتى. ئاگاھلاندۇرۇش: ئەگەر مەۋجۇت ئىشلەتكۈچى ياكى گۇرۇپپىنىڭ ئاتى بۇنىڭدىن قىسقا بولۇپ قالسا تور بېكىتىڭىز يىمىرىلىدۇ!"
+    max_username_length: "بىرلىكى ھەرپ بولغان ئەڭ ئۇزۇن ئىشلەتكۈچى ئاتى. ئاگاھلاندۇرۇش: ئەگەر مەۋجۇت ئىشلەتكۈچى ياكى گۇرۇپپىنىڭ ئاتى بۇنىڭدىن ئۇزۇن بولۇپ قالسا تور بېكىتىڭىز يىمىرىلىدۇ!"
+    unicode_usernames: "ئىشلەتكۈچى ئاتى ۋە گۇرۇپپا ئىسمىدا يۇنىكود ھەرپ ۋە سان بولۇشىغا يول قويىدۇ."
+    allowed_unicode_username_characters: "پەقەت ئىشلەتكۈچى ئاتىدا بەزى يۇنىكود ھەرپلىك مۇنتىزىم ئىپادە بولۇشىغا يول قويۇلىدۇ. ASCII ھەرپ ۋە سانلارغا ھەمىشە يول قويۇلىدۇ ھەمدە يول قويۇش تىزىمىدا بولۇشى ھاجەتسىز."
+    reserved_usernames: "تىزىملىتىشقا يول قويۇلمايدىغان ئىشلەتكۈچى ئاتى. ئورتاق بەلگە * خالىغان يەنى نۆل ياكى تېخىمۇ كۆپ ھەرپنى ئىپادىلەيدۇ."
+    min_password_length: "تور بېكەتتىكى ئىشلەتكۈچى ئىم ئۈچۈن كېرەكلىك ھەرپ سانىنى بەلگىلەيدۇ. قىممىتى بەك تۆۋەن بولسا رۇخسەتسىز تەرەپلەرنىڭ ئىمنى پەرەز قىلىشىغا قولايلىق يارىتىپ بىخەتەرلىككە زىيان يەتكۈزۈشى مۇمكىن ئەمما قىممىتى بەك يۇقىرى بولۇپ كەتسە، ئىشلەتكۈچىنىڭ ئىم ئەستە ساقلىشى تېخىمۇ قىيىنلىشىشى مۇمكىن."
+    min_admin_password_length: "باشقۇرغۇچى ئىشلەتكۈچىنىڭ ئەڭ قىسقا ئىم ئۇزۇنلۇقىنى بەلگىلەيدۇ. ئۇ بارلىق باشقۇرغۇچى ئىشلەتكۈچىلەرنىڭ ئىم ئۇزۇنلۇقىنىڭ مۇئەييەن بىخەتەرلىك تەلىپىگە ئۇيغۇن بولۇشىغا كاپالەتلىك قىلىدۇ. بۇ تەڭشەك باشقۇرغۇچى ھېساباتىنىڭ يوشۇرۇن ئىجازەتسىز زىيارەت قىلىنىشتىن قوغداشتا ئىنتايىن مۇھىم."
+    password_unique_characters: "ئىم ئۆز ئىچىگە ئېلىشقا تېگىشلىك ئەڭ ئاز بىردىنبىر ھەرپ سانى."
+    block_common_passwords: "ئەڭ كۆپ ئۇچرايدىغان 10000 ئىم ئىچىدىكى ئىم بولسا يول قويۇلمايدۇ."
+    auth_skip_create_confirm: سىرتقى سالاھىيەت دەلىللەش ئۇسۇلى ئارقىلىق تىزىملاتقاندا، ھېسابات تىزىملىتىشنىڭ قاڭقىش كۆزنىكىدىن ئاتلاپ كېتىدۇ. ئەڭ ياخشىسى auth_overrides_email، auth_overrides_username ۋە auth_overrides_name بىلەن بىللە ئىشلىتىلسە بولىدۇ.
+    auth_immediately: "ئىشلەتكۈچى بىلەن تەسىرلەشمەيلا سىرتقى سالاھىيەت دەلىللەش تىزىمغا كىرىش سىستېمىسىغا قايتا نىشانلايدۇ. پەقەت login_required قوزغىتىلغان ھەمدە پەقەت بىرلا سىرتقى سالاھىيەت دەلىللەش ئۇسۇلى بولغاندىلا كۈچكە ئىگە بولىدۇ."
+    google_oauth2_client_secret: "Google قوللىنىشچان پروگراممىڭىزنىڭ خېرىدار مەخپىيىتى."
+    google_oauth2_prompt: "تاللاشچان بوشلۇق بىلەن ئايرىلغان ھەرپ تىزىقى قىممىتى تىزىمى، سالاھىيەت دەلىللەش مۇلازىمېتىرى ئىشلەتكۈچىنى قايتا سالاھىيەت دەلىللەشنى ئەسكەرتىش ياكى قوشۇلۇشنى بەلگىلەيدۇ. مۇمكىن بولغان قىممىتىنى <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> دىن كۆرۈڭ."
+    google_oauth2_hd: "تىزىمغا كىرىش چەكلىمىگە ئۇچرايدىغان تاللاشچان Google ئەپ مۇلازىمىتى تەمىنلەيدىغان دائىرە نامى. تەپسىلاتىنى <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> دىن كۆرۈڭ."
+    max_likes_per_day: "ھەر بىر ئىشلەتكۈچىنىڭ كۈندىلىك ئەڭ كۆپ ياقتۇرۇش سانى."
+    max_flags_per_day: "ھەر بىر ئىشلەتكۈچىنىڭ كۈندىلىك ئەڭ كۆپ پاش قىلىش سانى."
+    max_bookmarks_per_day: "ھەر بىر ئىشلەتكۈچىنىڭ كۈندىلىك ئەڭ كۆپ خەتكۈچكە قوشۇش سانى."
+    max_edits_per_day: "ھەر بىر ئىشلەتكۈچىنىڭ كۈندىلىك ئەڭ كۆپ تەھرىرلەش قېتىم سانى."
+    max_topics_per_day: "ھەر بىر ئىشلەتكۈچىنىڭ كۈندە قۇرالايدىغان ئەڭ كۆپ تېما سانى."
+    max_personal_messages_per_day: "ھەر بىر ئىشلەتكۈچىنىڭ كۈندە قۇرالايدىغان ئەڭ كۆپ يېڭى شەخسىي ئۇچۇر تېما سانى."
+    max_invites_per_day: "ھەر بىر ئىشلەتكۈچىنىڭ كۈندە يوللىيالايدىغان ئەڭ كۆپ تەكلىپ سانى."
+    max_topic_invitations_per_day: "ھەر بىر ئىشلەتكۈچىنىڭ كۈندە يوللىيالايدىغان ئەڭ كۆپ تېما تەكلىپ سانى."
+    max_topic_invitations_per_minute: "ھەر بىر ئىشلەتكۈچىنىڭ ھەر مىنۇتتا يوللىيالايدىغان ئەڭ كۆپ تېما تەكلىپ سانى."
+    max_logins_per_ip_per_hour: "بىر سائەتتە بىر IP ئادرېستىن تىزىمغا كىرىشكە يول قويىدىغان ئەڭ كۆپ قېتىم سانى"
+    max_logins_per_ip_per_minute: "بىر مىنۇتتا بىر IP ئادرېستىن تىزىمغا كىرىشكە يول قويىدىغان ئەڭ كۆپ قېتىم سانى"
+    max_post_deletions_per_minute: "ئىشلەتكۈچى بىر مىنۇتتا ئۆچۈرەلەيدىغان ئەڭ كۆپ يازما سانى. 0 گە تەڭشەلسە يازما ئۆچۈرۈش چەكلىنىدۇ."
+    max_post_deletions_per_day: "ئىشلەتكۈچى بىر كۈندە ئۆچۈرەلەيدىغان ئەڭ كۆپ يازما سانى. 0 گە تەڭشەلسە يازما ئۆچۈرۈش چەكلىنىدۇ."
+    invite_link_max_redemptions_limit: "تەكلىپ ئۇلانمىسى يول قويىدىغان ئەڭ كۆپ جەزملىنىدىغان سانى بۇ قىممەتتىن ئېشىپ كەتسە بولمايدۇ."
+    tl1_requires_topics_entered: "ئىشەنچ دەرىجىسى 1 گە ئۆرلەشتىن ئىلگىرى يېڭى ئىشلەتكۈچى قانچە تېمىغا كىرىشى كېرەك."
+    tl1_requires_read_posts: "ئىشەنچ دەرىجىسى 1 گە ئۆرلەشتىن ئىلگىرى يېڭى ئىشلەتكۈچى قانچە يازما ئوقۇشى كېرەك."
+    tl1_requires_time_spent_mins: "ئىشەنچ دەرىجىسى 1 گە ئۆرلەشتىن ئىلگىرى يېڭى ئىشلەتكۈچى قانچە مىنۇت يازما ئوقۇشى كېرەك."
+    tl2_requires_topics_entered: "ئىشەنچ دەرىجىسى 2 گە ئۆرلەشتىن ئىلگىرى ئىشلەتكۈچى قانچە تېمىغا كىرىشى كېرەك."
+    tl2_requires_read_posts: "ئىشەنچ دەرىجىسى 2 گە ئۆرلەشتىن ئىلگىرى ئىشلەتكۈچى قانچە يازما ئوقۇشى كېرەك."
+    tl2_requires_time_spent_mins: "ئىشەنچ دەرىجىسى 2 گە ئۆرلەشتىن ئىلگىرى ئىشلەتكۈچى قانچە مىنۇت يازما ئوقۇشى كېرەك."
+    tl2_requires_days_visited: "ئىشەنچ دەرىجىسى 2 گە ئۆرلەشتىن ئىلگىرى ئىشلەتكۈچى تور بېكەتنى قانچە كۈن زىيارەت قىلىشى كېرەك."
+    tl2_requires_likes_received: "ئىشەنچ دەرىجىسى 2 گە ئۆرلەشتىن ئىلگىرى ئىشلەتكۈچى قانچە ياقتۇرۇش تاپشۇرۇۋېلىشى كېرەك."
+    tl2_requires_likes_given: "ئىشەنچ دەرىجىسى 2 گە ئۆرلەشتىن ئىلگىرى ئىشلەتكۈچى قانچە ياقتۇرۇش بېرىشى كېرەك."
+    tl2_requires_topic_reply_count: "ئىشەنچ دەرىجىسى 2 گە ئۆرلەشتىن ئىلگىرى ئىشلەتكۈچى قانچە يازمىغا ئىنكاس قايتۇرۇشى كېرەك."
+    edit_all_post_groups: "بۇ گۇرۇپپىدىكى ئىشلەتكۈچىلەرنىڭ باشقا ئىشلەتكۈچىلەرنىڭ يازمىسىنى تەھرىرلىشىگە يول قويىدۇ"
+    min_trust_to_create_topic: "يېڭى تېما قۇرۇشقا كېرەكلىك ئەڭ تۆۋەن ئىشەنچ دەرىجىسى."
+    dark_mode_none: "يوق"
+    default_categories_watching: "كۆڭۈلدىكى ئەھۋالدا كۆزىتىدىغان سەھىپە تىزىمى."
+    default_categories_tracking: "كۆڭۈلدىكى ئەھۋالدا ئىزلايدىغان سەھىپە تىزىمى."
+    default_categories_muted: "كۆڭۈلدىكى ئەھۋالدا ئۈنسىزلەيدىغان سەھىپە تىزىمى."
+    default_tags_watching: "كۆڭۈلدىكى ئەھۋالدا كۆزىتىدىغان بەلگە تىزىمى."
+    default_tags_tracking: "كۆڭۈلدىكى ئەھۋالدا ئىزلايدىغان بەلگە تىزىمى."
+    default_tags_muted: "كۆڭۈلدىكى ئەھۋالدا ئۈنسىزلەيدىغان بەلگە تىزىمى."
+    show_user_menu_avatars: "ئىشلەتكۈچى تىزىملىكىدە ئىشلەتكۈچى سىماسىنى كۆرسىتىدۇ"
+    errors:
+      invalid_css_color: "ئىناۋەتسىز رەڭ. رەڭ ئىسمى ياكى ئون ئالتىلىك قىممىتى كىرگۈزۈلىدۇ."
+      invalid_email: "ئىناۋەتسىز ئېلخەت ئادرېسى."
+      invalid_username: "بۇ ئىسىمدىكى ئىشلەتكۈچى يوق."
+      valid_username: "بۇ ئىسىمدىكى بىر ئىشلەتكۈچى بار."
+      invalid_group: "بۇ ئىسىمدىكى گۇرۇپپا يوق."
+      invalid_integer_min_max: "قىممىتى چوقۇم %{min} بىلەن %{max} ئارىسىدا بولۇشى كېرەك."
+      invalid_integer_min: "قىممىتى چوقۇم %{min} ياكى چوڭراق بولۇشى كېرەك."
+      invalid_integer_max: "قىممىتى %{max} دىن ئاشماسلىقى كېرەك."
+      invalid_string: "ئىناۋەتسىز قىممەت."
+      invalid_json: "ئىناۋەتسىز JSON."
+      invalid_alternative_reply_by_email_addresses: "بارلىق قىممەت چوقۇم «%{reply_key}» ئۆز ئىچىگە ئېلىشى ھەمدە ئۇقتۇرۇش ئېلخىتى بىلەن پەرقلىق بولۇشى كېرەك."
+      invalid_domain_hostname: "* ياكى ? ھەرپنى ئۆز ئىچىگە ئالماسلىقى كدرەك."
+      at_least_one_group_required: "بۇ تەڭشەككە ئاز دېگەندە بىر گۇرۇپپا بەلگىلەش كېرەك."
+      invalid_regex: "مۇنتىزىم ئىپادە ئىناۋەتسىز ياكى يول قويۇلمايدۇ."
+      invalid_regex_with_message: "مۇنتىزىم ئىپادە «%{regex}» دا بىر خاتالىق بار: %{message}"
+      email_editable_enabled: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى «ئېلخەت تەھرىرلەشچان» نى چەكلىشىڭىز كېرەك."
+      staged_users_disabled: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى ئالدى بىلەن «توختىتىلغان ئىشلەتكۈچى» نى قوزغىتىشىڭىز كېرەك."
+      reply_by_email_disabled: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى ئالدى بىلەن «ئېلخەتتە جاۋاب قايتۇر» نى قوزغىتىشىڭىز كېرەك."
+      discourse_connect_url_is_empty: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى «discourse ئۇلىنىش تور ئادرېسى» نى تەڭشىشىڭىز كېرەك."
+      enable_local_logins_disabled: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى ئالدى بىلەن «يەرلىكتە تىزىمغا كىرىشنى قوزغات» نى قوزغىتىشىڭىز كېرەك."
+      min_username_length_exists: "ئەڭ قىسقا ئىشلەتكۈچى ئاتى ئۇزۇنلۇقىنى قىسقا ئىشلەتكۈچى ئاتى (%{username}) دىنمۇ قىسقا قىلىپ تەڭشىيەلمەيسىز."
+      min_username_length_range: "ئەڭ كىچىك قىممەتنى ئەڭ چوڭ قىممەتتىن چوڭ قىلىپ تەڭشىيەلمەيسىز."
+      max_username_length_exists: "ئەڭ ئۇزۇن ئىشلەتكۈچى ئاتى ئۇزۇنلۇقىنى ئەڭ ئۇزۇن ئىشلەتكۈچى ئاتى (%{username}) دىن قىسقا قىلىپ تەڭشىيەلمەيسىز."
+      max_username_length_range: "ئەڭ چوڭ قىممەتنى ئەڭ كىچىك قىممەتتىن كىچىك قىلىپ تەڭشىيەلمەيسىز."
+      invalid_hex_value: "رەڭ قىممىتى ئون ئالتىلىك سىستېمىدىكى 6 خانىلىق كود بولۇشى كېرەك."
+      empty_selectable_avatars: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى ئالدى بىلەن كەم دېگەندە تاللاشچان سىمادىن ئىككىنى يۈكلىشىڭىز كېرەك."
+      category_search_priority:
+        low_weight_invalid: "سالمىقىنى 1 گە تەڭ ياكى چوڭ قىلىپ تەڭشىيەلمەيسىز."
+        high_weight_invalid: "سالمىقىنى 1 گە تەڭ ياكى كىچىك قىلىپ تەڭشىيەلمەيسىز."
+      allowed_unicode_usernames:
+        regex_invalid: "بۇ مۇنتىزىم ئىپادە ئىناۋەتسىز: %{error}"
+        leading_trailing_slash: "مۇنتىزىم ئىپادە ئوڭ يانتۇ سىزىق بىلەن باشلانماسلىقى ۋە ئاخىرلاشماسلىقى كېرەك."
+      unicode_usernames_avatars: "ئىچكى سىستېما سىماسى يۇنىكودلۇق ئىشلەتكۈچى ئاتىنى قوللىمايدۇ."
+      list_value_count:
+        one: "تىزىم چوقۇم ئېنىق %{count} قىممەتنى ئۆز ئىچىگە ئېلىشى كېرەك."
+        other: "تىزىم چوقۇم ئېنىق %{count} قىممەتنى ئۆز ئىچىگە ئېلىشى كېرەك."
+      markdown_linkify_tlds: "سىز «*» قىممەتنى ئۆز ئىچىگە ئالسىڭىز بولمايدۇ."
+      google_oauth2_hd_groups: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى چوقۇم بارلىق «google oauth2 hd» تەڭشىكىنى سەپلىشىڭىز كېرەك."
+      linkedin_oidc_credentials: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى چوقۇم LinkedIn OIDC سالاھىيەت كىملىكى (linkedin_oidc_client_id' ۋە 'linkedin_oidc_client_secret) نى سەپلىشىڭىز كېرەك."
+      search_tokenize_chinese_enabled: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى چوقۇم «search_tokenize_chinese» نى چەكلىشىڭىز كېرەك."
+      search_tokenize_japanese_enabled: "بۇ تەڭشەكنى قوزغىتىشتىن ئىلگىرى چوقۇم «search_tokenize_japanese» نى چەكلىشىڭىز كېرەك."
+      discourse_connect_cannot_be_enabled_if_second_factor_enforced: "ئەگەر ئىككى ئىسپاتلىق دەلىللەش 2FA مەجبۇرىي ئىجرا قىلىنغان بولسا DiscourseConnect نى قوزغىتالمايسىز."
+      delete_rejected_email_after_days: "بۇ تەڭشەكنى delete_email_logs_after_days دىن تۆۋەن ياكى %{max} دىن چوڭ قىلىپ تەڭشىگىلى بولمايدۇ"
+      invalid_uncategorized_category_setting: 'ئەگەر «تۈرگە ئايرىلمىغان تېمىغا يول قوي» قوزغىتىلمىغان بولسا «تۈرگە ئايرىلمىغان» سەھىپەنى تاللىغىلى بولمايدۇ.'
+      invalid_search_ranking_weights: "قىممەت search_ranking_weights site setting غا نىسبەتەن ئىناۋەتسىز. مەسىلەن: {0.1,0.2,0.3,1.0}. دىققەت ھەر بىر سالماقنىڭ ئەڭ چوڭ قىممىتى 1.0."
+    keywords:
+      anonymous_posting_allowed_groups: "anonymous_posting_min_trust_level"
+      here_mention_allowed_groups: "min_trust_level_for_here_mention"
+      shared_drafts_allowed_groups: "shared_drafts_min_trust_level"
+      approve_unless_allowed_groups: "approve_unless_trust_level"
+      approve_new_topics_unless_allowed_groups: "approve_new_topics_unless_trust_level"
+      email_in_allowed_groups: "email_in_min_trust"
+      edit_wiki_post_allowed_groups: "min_trust_to_edit_wiki_post"
+      uploaded_avatars_allowed_groups: "allow_uploaded_avatars"
+      create_topic_allowed_groups: "min_trust_to_create_topic"
+      edit_post_allowed_groups: "min_trust_to_edit_post"
+      flag_post_allowed_groups: "min_trust_to_flag_posts"
+      delete_all_posts_and_topics_allowed_groups: "tl4_delete_posts_and_topics"
+      user_card_background_allowed_groups: "min_trust_level_to_allow_user_card_background"
+      invite_allowed_groups: "min_trust_level_to_allow_invite"
+      ignore_allowed_groups: "min_trust_level_to_allow_ignore"
+      self_wiki_allowed_groups: "min_trust_to_allow_self_wiki"
+      create_tag_allowed_groups: "min_trust_to_create_tag"
+      send_email_messages_allowed_groups: "min_trust_to_send_email_messages"
+      skip_review_media_groups: "review_media_unless_trust_level"
+      embedded_media_allowed_groups: "min_trust_to_post_embedded_media"
+      post_links_allowed_groups: "min_trust_to_post_links"
+      user_api_key_allowed_groups: "min_trust_level_for_user_api_key"
+      tag_topic_allowed_groups: "min_trust_level_to_tag_topics"
+      profile_background_allowed_groups: "min_trust_level_to_allow_profile_background"
+      clean_up_inactive_users_after_days:
+      - "توختىتىلدى"
+      - "ئاكتىپ ئەمەس"
+      - "ئاكتىپلانمىغان"
+      purge_unactivated_users_grace_period_days:
+      - "توختىتىلدى"
+      - "ئاكتىپ ئەمەس"
+      - "ئاكتىپلانمىغان"
+    placeholder:
+      discourse_connect_provider_secrets:
+        key: "www.example.com"
+        value: "DiscourseConnect شىفىرلىق ئاچقۇچ"
+  search:
+    extreme_load_error: "بېكەتنىڭ يۈكى ھەددىدىن زىيادە ئېشىپ كەتتى، ئىزدەش چەكلەندى، سەل تۇرۇپ قايتا سىناڭ"
+    within_post: "#%{post_number} / %{username}"
+    types:
+      category: "سەھىپە"
+      topic: "نەتىجە"
+      user: "ئىشلەتكۈچى"
+    results_page: "«%{term}» نىڭ ئىزدەش نەتىجىسى"
+    audio: "[ئۈن]"
+    video: "[سىن]"
+  discourse_connect:
+    login_error: "تىزىمغا كىرىش خاتالىقى"
+    not_found: "ھېساباتىڭىزنى تاپالمىدى. تور بېكەتنىڭ باشقۇرغۇچىسى بىلەن ئالاقىلىشىڭ."
+    account_not_approved: "ھېساباتىڭىز تەستىقلىنىۋاتىدۇ. تەستىقتىن ئۆتكەندە ئېلخەت ئۇقتۇرۇشىنى تاپشۇرۇۋالىسىز."
+    unknown_error: "ھېساباتىڭىزدا مەسىلە بار. تور بېكەتنىڭ باشقۇرغۇچىسى بىلەن ئالاقىلىشىڭ."
+    timeout_expired: "ھېسابات تىزىمغا كىرىش ۋاقىت ھالقىدى، قايتا تىزىمغا كىرىشنى سىناڭ."
+    invalid_parameter_value: "«%{param}» نىڭ پارامېتىر قىممىتى ئىناۋەتسىز بولغانلىقتىن، دەلىللىيەلمىدى. تور بېكەت باشقۇرغۇچى بىلەن ئالاقىلىشىپ مەسىلىنى ھەل قىلىڭ."
+  frequent_poster: "كۆپ يازما يوللىغۇچى"
+  poster_description_joiner: "، "
+  publish_page:
+    slug_errors:
+      blank: "بوش قالمايدۇ"
+      unavailable: "ئىشلەتكىلى بولمايدۇ"
+  topic_statuses:
+    auto_deleted_by_timer: "ۋاقىت خاتىرىلىگۈچ ئۆزلۈكىدىن ئۆچۈرگەن."
+  login:
+    security_key_alternative: "باشقا ئۇسۇلنى سىناي"
+    security_key_authenticate: "بىخەتەرلىك ئاچقۇچى بىلەن دەلىللەيدۇ"
+    security_key_invalid: "بىخەتەرلىك ئاچقۇچىنى دەلىللەشتە خاتالىق كۆرۈلدى."
+    not_approved: "ھېساباتىڭىز تېخى تەستىقلانمىدى. تەستىقلانسا تىزىمغا كىرىش ئېلخەت ئارقىلىق ئۇقتۇرۇش قىلىنىدۇ."
+    incorrect_username_email_or_password: "ئىشلەتكۈچى ئاتى، ئېلخەت ياكى ئىم خاتا"
+    incorrect_password: "ئىم خاتا"
+    incorrect_password_or_passkey: "ئىم ياكى شىفىرلىق ئاچقۇچ خاتا"
+    wait_approval: "تىزىملاتقانلىقىڭىزغا رەھمەت. ھېساباتىڭىز تەستىقلانغاندىن كېيىن سىزگە خەۋەر قىلىمىز."
+    active: "ھېساباتىڭىز ئاكتىپلىنىپ ئىشلىتىشكە تەييار."
+    activate_email: "<p>ئاساسەن تاماملىدىڭىز! <b>%{email}</b> غا ئاكتىپلاش خېتى ئەۋەتىمىز. خەتتىكى كۆرسەتمىگە ئەگىشىپ ھېساباتىڭىزنى ئاكتىپلاڭ.</p><p>ئەگەر خەت كەلمىگەن بولسا، ئەخلەت خەت قىسقۇچنى تەكشۈرۈڭ.</p>"
+    not_activated: "تېخى تىزىمغا كىرەلمەيسىز. بىز سىزگە ئاكتىپلاش ئېلخېتى ئەۋەتتۇق. ھېساباتىڭىزنى ئاكتىپلاش ئۈچۈن ئېخەتتىكى كۆرسەتمگە ئەگىشىڭ."
+    not_allowed_from_ip_address: "بۇ IP ئادرېستىن %{username} سۈپىتىدە تىزىمغا كىرەلمەيسىز."
+    admin_not_allowed_from_ip_address: "بۇ IP ئادرېستىن باشقۇرغۇچى سۈپىتىدە تىزىمغا كىرەلمەيسىز."
+    reset_not_allowed_from_ip_address: "سىز بۇ IP ئادرېستىن ئىم ئەسلىگە قايتۇرۇشنى ئىلتىماس قىلالمايسىز."
+    suspended: "سىز %{date} غىچە تىزىمغا كىرەلمەيسىز."
+    suspended_with_reason: "ھېسابات %{date} غىچە توڭلىتىلدى: %{reason}"
+    suspended_with_reason_forever: "ھېسابات توڭلىتىلدى: %{reason}"
+    errors: "%{errors}"
+    not_available: "ئىشلەتكىلى بولمايدۇ. %{suggestion} نى سىنامسىز؟"
+    omniauth_confirm_button: "داۋاملاشتۇر"
+    click_to_continue: "بۇ جاي چېكىلسە داۋاملىشىدۇ."
+    too_many_authenticators: "كەچۈرۈڭ، دەلىللىگۈچ 50 دىن ئارتۇق بولمايدۇ. مەۋجۇتتىن بىرىنى چىقىرىۋېتىپ قايتا سىناڭ."
+    too_many_security_keys: "كەچۈرۈڭ، بىخەتەرلىك ئاچقۇچى 50 دىن ئارتۇق بولمايدۇ. مەۋجۇتتىن بىرىنى چىقىرىۋېتىپ قايتا سىناڭ."
+  admin:
+    email:
+      sent_test: "يوللاندى!"
+    user:
+      merge_user:
+        updating_username: "ئىشلەتكۈچى ئاتىنى يېڭىلاۋاتىدۇ…"
+        changing_post_ownership: "يازما ئىگىدارلىقىنى ئۆزگەرتىۋاتىدۇ…"
+        merging_given_daily_likes: "بېرىلگەن كۈندىلىك ياقتۇرۇشنى بىرلەشتۈرۈۋاتىدۇ…"
+        merging_post_timings: "يازما ۋاقىت ئۇچۇرىنى بىرلەشتۈرۈۋاتىدۇ…"
+        merging_user_visits: "ئىشلەتكۈچى زىيارەتلىرىنى بىرلەشتۈرۈۋاتىدۇ…"
+        updating_site_settings: "بېكەت تەڭشىكىنى يېڭىلاۋاتىدۇ…"
+        updating_user_stats: "ئىشلەتكۈچى ھالىتىنى يېڭىلاۋاتىدۇ…"
+        merging_user_attributes: "ئىشلەتكۈچى خاسلىقىنى بىرلەشتۈرۈۋاتىدۇ…"
+        updating_user_ids: "ئىشلەتكۈچى كىملىكىنى يېڭىلاۋاتىدۇ…"
+        deleting_source_user: "مەنبە ئىشلەتكۈچىنى ئۆچۈرۈۋاتىدۇ…"
+  user:
+    username:
+      too_long: "بەك ئۇزۇن"
+      unique: "بىردىنبىر بولۇشى كېرەك"
+      blank: "مەۋجۇت بولۇشى كېرەك"
+    destroy_reasons:
+      inactive_user: "ئىشلەتكۈچىنى ئاكتىپسىزلا"
+  system_messages:
+    post_hidden:
+      title: "يازما يوشۇرۇن"
+    reviewable_queued_post_revise_and_reject:
+      title: "يازمىڭىزدىكى قايتۇرما ئىنكاس"
+      subject_template: "%{topic_title} دىكى يازمىڭىزدىكى قايتۇرما ئىنكاس"
+      text_body_template: |
+        سالام %{username}،
+
+        بىز[%{topic_title}](%{topic_url}) دىكى يازمىڭىزنى تەكشۈردۇق ھەمدە سىزگە ئازراق ئىنكاسىمىز بار.
+
+        سەۋەب: %{reason}
+
+        قايتۇرما ئىنكاس: %{feedback}
+
+        سىز تۆۋەندە ئەسلى يازمىنى تەھرىرلەپ، تەۋسىيە ئۆزگەرتىشلەرنى ئېلىپ بېرىپ، ئاندىن ئۇنى قايتا يوللىيالايسىز، ياكى ئەگەر قانداق مەسىلە بولسا مەزكۇر ئۇچۇرغا ئىنكاس يازسىڭىز بولىدۇ.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        كۆپ رەھمەت،
+        %{site_name} رىياسەتچىسى
+    reviewable_queued_post_revise_and_reject_new_topic:
+      title: "تېمىڭىزدىكى قايتۇرما ئىنكاس"
+      subject_template: '«%{topic_title}» ماۋزۇلۇق يېڭى تېمىدىكى قايتۇرما ئىنكاس'
+      text_body_template: |
+        سالام %{username}،
+
+        بىز«%{topic_title}» دىكى يازمىڭىزنى تەكشۈردۇق ھەمدە سىزگە ئازراق ئىنكاسىمىز بار.
+
+        سەۋەب: %{reason}
+
+        قايتۇرما ئىنكاس: %{feedback}
+
+        سىز تۆۋەندە تېمىڭىزنىڭ ئەسلى يازمىسىنى تەھرىرلەپ، تەۋسىيە ئۆزگەرتىشلەرنى ئېلىپ بېرىپ، ئاندىن ئۇنى قايتا يوللىيالايسىز، ياكى ئەگەر قانداق سوئالىڭىز بولسا مەزكۇر ئۇچۇرغا ئىنكاس يازسىڭىز بولىدۇ.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        كۆپ رەھمەت،
+        %{site_name} رىياسەتچىسى
+    backup_succeeded:
+      title: "زاپاسلاش مۇۋەپپەقىيەتلىك بولدى"
+  user_notifications:
+    user_replied:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_replied_pm:
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
+    user_quoted:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_linked:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_mentioned:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_mentioned_pm:
+      subject_template: "[%{email_prefix}] [شەخسىي ئۇچۇر] %{topic_title}"
+    user_group_mentioned:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_group_mentioned_pm:
+      subject_template: "[%{email_prefix}] [شەخسىي ئۇچۇر] %{topic_title}"
+    user_group_mentioned_pm_group:
+      subject_template: "[%{email_prefix}] [شەخسىي ئۇچۇر] %{topic_title}"
+    user_posted:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_watching_category_or_tag:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_watching_first_post:
+      subject_template: "[%{email_prefix}] %{topic_title}"
+    user_posted_pm:
+      subject_template: "[%{email_prefix}] [شەخسىي ئۇچۇر] %{topic_title}"
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+    digest:
+      since_last_visit: "ئالدىنقى قېتىملىق زىيارىتىڭىزدىن بۇيان"
+      new_topics: "يېڭى تېما"
+      unread_notifications: "ئوقۇمىغان ئۇقتۇرۇش"
+      unread_high_priority: "ئوقۇلمىغان يۇقىرى ئالدىنلىقتىكى ئۇقتۇرۇش"
+      liked_received: "تاپشۇرۇۋالغان ياقتۇرۇش"
+      new_users: "يېڭى ئىشلەتكۈچى"
+      popular_topics: "ئالقىشلىق تېما"
+      popular_posts: "ئالقىشلىق يازما"
+    account_created:
+      title: "ھېسابات قۇرۇلدى"
+      subject_template: "[%{email_prefix}] يېڭى ھېساباتىڭىز"
+      text_body_template: |
+        %{site_name} دا سىزگە يېڭى ھېسابات قۇرۇلدى
+
+        تۆۋەندىكى ئۇلانمىنى چېكىپ يېڭى ھېساباتىڭىزغا ئىم تاللاڭ:
+        %{base_url}/u/password-reset/%{email_token}
+    confirm_new_email:
+      title: "يېڭى ئېلخەت جەزملەش"
+      subject_template: "%{email_prefix} يېڭى ئېلخەت ئادرېسىڭىزنى جەزملەڭ"
+  page_not_found:
+    popular_topics: "ئالقىشلىق"
+    recent_topics: "يېقىنقى"
+  skipped_email_log:
+    sender_post_deleted: "يازما ئۆچۈرۈلگەن"
+    sender_message_to_invalid: "تاپشۇرۇۋالغۇچىنىڭ ئېلخەت ئادرېسى ئىناۋەتسىز"
+    sender_topic_deleted: "تېما ئۆچۈرۈلگەن"
+    group_smtp_post_deleted: "يازما ئۆچۈرۈلگەن"
+    group_smtp_topic_deleted: "تېما ئۆچۈرۈلگەن"
+    group_smtp_disabled_for_group: "smtp گۇرۇپپىغا چەكلەنگەن"
+  color_schemes:
+    base_theme_name: "ئاساس"
+    light: "يورۇق"
+    dark: "قاراڭغۇ"
+    neutral: "بىتەرەپ"
+    grey_amber: "ساغۇچ كۈلرەڭ"
+    shades_of_blue: "قېنىق كۆك"
+    latte: "سۇس قوڭۇر"
+    summer: "ياز"
+    dark_rose: "توق قىزىل"
+    wcag: "ئوچۇق WCAG"
+    wcag_theme_name: "ئوچۇق WCAG"
+    default_theme_name: "كۆڭۈلدىكى"
+    light_theme_name: "يورۇق"
+    dark_theme_name: "قاراڭغۇ"
+    neutral_theme_name: "بىتەرەپ"
+    grey_amber_theme_name: "ساغۇچ كۈلرەڭ"
+    shades_of_blue_theme_name: "قېنىق كۆك"
+    latte_theme_name: "سۇس قوڭۇر"
+    summer_theme_name: "ياز"
+    dark_rose_theme_name: "توق قىزىل"
+  edit_this_page: "بۇ بەتنى تەھرىرلە"
+  csv_export:
+    boolean_yes: "ھەئە"
+    boolean_no: "ياق"
+  guidelines_topic:
+    title: "كۆپ سورالغان سوئال/كۆرسەتمە"
+  tos_topic:
+    title: "مۇلازىمەت شەرتلىرى"
+  privacy_topic:
+    title: "شەخسىيەت تۈزۈمى"
+  badges:
+    editor:
+      name: تەھرىر
+      description: تۇنجى يازما تەھرىرلەش
+    wiki_editor:
+      name: ۋىكى تەھرىر
+      description: تۇنجى ۋىكى تەھرىر
+    basic_user:
+      name: ئاساسىي
+    member:
+      name: ئەزا
+    regular:
+      name: ئادەتتىكى
+    leader:
+      name: باشلىق
+    welcome:
+      name: خۇش كەپسىز
+      description: ياقتۇرۇش قوبۇل قىلدى
+    autobiographer:
+      name: ئۆزلۈكىدىن تەرجىمىھال يازغۇچى
+      description: <a href="%{base_uri}/my/preferences/profile">تەرجىمىھال</a> ئۇچۇرىنى تولدۇرىدۇ
+    anniversary:
+      name: يىل خاتىرىسى
+      description: بىر يىللىق ئاكتىپ ئەزا، كەم دېگەندە بىر يازما يوللىغان
+    nice_post:
+      name: بەلەن جاۋاب
+      description: جاۋاب 10 قېتىم ياقتۇرۇلدى
+    good_post:
+      name: ياخشى جاۋاب
+      description: جاۋاب 25 قېتىم ياقتۇرۇلدى
+    great_post:
+      name: قالتىس جاۋاب
+      description: جاۋاب 50 قېتىم ياقتۇرۇلدى
+    nice_topic:
+      name: بەلەن تېما
+      description: تېما 10 قېتىم ياقتۇرۇلدى
+    good_topic:
+      name: ياخشى تېما
+      description: تېما 25 قېتىم ياقتۇرۇلدى
+    great_topic:
+      name: قالتىس تېما
+      description: تېما 50 قېتىم ياقتۇرۇلدى
+    nice_share:
+      name: بەلەن ھەمبەھىر
+      description: 25 بىردىنبىر زىيارەتچىسى بار يازمىنى ھەمبەھىرلىدى
+    good_share:
+      name: ياخشى ھەمبەھىر
+      description: 300 بىردىنبىر زىيارەتچىسى بار يازمىنى ھەمبەھىرلىدى
+    great_share:
+      name: قالتىس ھەمبەھىر
+      description: 1000 بىردىنبىر زىيارەتچىسى بار يازمىنى ئورتاقلاشتى
+    first_like:
+      name: تۇنجى ياقتۇرۇش
+      description: يازمىنى ياقتۇردى
+    first_flag:
+      name: تۇنجى پاش قىلىش
+      description: بىر يازما پاش قىلدى
+    promoter:
+      name: تەشۋىقاتچى
+      description: ئىشلەتكۈچىنى تەكلىپ قىلدى
+    campaigner:
+      name: پائالىيەتچى
+      description: 3 ئاساسىي ئىشلەتكۈچىنى تەكلىپ قىلدى
+    champion:
+      name: چېمپىيون
+      description: 5 ئەزا تەكلىپ قىلدى
+    first_share:
+      name: تۇنجى ھەمبەھىر
+      description: بىر يازمىنى ھەمبەھىرلىدى
+    first_link:
+      name: تۇنجى ئۇلانما
+      description: باشقا بىر تېمىغا ئۇلانما قوشۇلدى
+    first_quote:
+      name: تۇنجى نەقىل
+      description: بىر يازمىنى نەقىل ئالدى
+    read_guidelines:
+      name: كۆرسەتمە ئوقۇش
+      description: <a href="%{base_uri}/guidelines">جامائەت كۆرسەتمىسى</a>نى ئوقۇش
+    reader:
+      name: ئوقۇرمەن
+      description: ئىنكاس سانى 100 دىن ئاشقان تېمىدىكى ھەر بىر ئىنكاسنى ئوقۇغان
+    popular_link:
+      name: ئالقىشلىق ئۇلانما
+      description: ھەمبەھىرلەنگەن ئۇلانما 50 قېتىم چېكىلدى
+    hot_link:
+      name: قىزىق ئۇلانما
+      description: ھەمبەھىرلەنگەن ئۇلانما 300 قېتىم چېكىلدى
+    famous_link:
+      name: داڭلىق ئۇلانما
+      description: ھەمبەھىرلەنگەن ئۇلانما 1000 قېتىم چېكىلدى
+    appreciated:
+      name: تەشەككۈر
+      description: 20 يازما 1 قېتىمدىن ياقتۇرۇلدى
+    respected:
+      name: ھۆرمەت
+      description: 100 يازما 2 قېتىمدىن ياقتۇرۇلدى
+    admired:
+      name: مەدھىيەلەندى
+      description: 300 يازما 5 قېتىمدىن ياقتۇرۇلدى
+    out_of_love:
+      name: مۇھەببەتتىن
+      description: بىر كۈندە %{max_likes_per_day} ياقتۇرۇش ئىشلەتتى
+    crazy_in_love:
+      description: بىر كۈندە %{max_likes_per_day} ياقتۇرۇش ئىشلىتىپ 20 قېتىمغا يەتتى
+      long_description: |
+        بۇ تارتۇق بىر كۈندە %{max_likes_per_day} ياقتۇرۇش ئىشلىتىپ 20 كۈنگە يەتكەندە بېرىلىدۇ، قالتىس! سىز جامائەت ئەزالىرىنى رىغبەتلەندۈرۈشنىڭ ئۈلگىسى ئىكەنسىز!
+    thank_you:
+      name: رەھمەت سىزگە
+      description: يازمىدىن 20 نى ياقتۇرغان ۋە 10 ياقتۇرۇش بەرگەن
+    gives_back:
+      name: ئىنكاس قايتۇر
+      description: يازمىدىن 100 نى ياقتۇرغان ۋە 100 ياقتۇرۇش بەرگەن
+    empathetic:
+      name: ھېسداشلىق
+      description: يازمىدىن 500 نى ياقتۇرغان ۋە 1000 ياقتۇرۇش بەرگەن
+    first_emoji:
+      name: تۇنجى چىراي ئىپادە
+      description: يازمىدا چىراي ئىپادە ئىشلىتىلگەن
+    first_mention:
+      name: تۇنجى ئاتاش
+      description: يازمىدا ئىشلەتكۈچى ئاتالدى
+    first_onebox:
+      name: تۇنجى Onebox
+      description: onebox ئۇلانمىسى يوللاندى
+    first_reply_by_email:
+      name: ئېلخەتتە قايتۇرغان تۇنجى جاۋاب
+      description: يازمىغا ئېلخەتتە جاۋاب قايتۇرۇلغان
+      long_description: |
+        تۇنجى قېتىم ئېلخەت :e-mail: ئارقىلىق يازمىغا جاۋاب قايتۇرغاندا بۇ تارتۇق بېرىلدى.
+    new_user_of_the_month:
+      name: "ئاينىڭ يېڭى ئىشلەتكۈچىسى"
+      description: تۇنجى ئايدىكى كۆرۈنەرلىك تۆھپىسى
+    enthusiast:
+      name: ھەۋەسكار
+      description: ئۇدا 10 كۈن زىيارەت قىلدى
+      long_description: |
+        بۇ تارتۇق ئۇدا 10 كۈن زىيارەت قىلغانلارغا بېرىلىدۇ. بىر ھەپتىدىن كۆپرەك ۋاقىت بىز بىلەن بىللە تۇرغانلىقىڭىزغا رەھمەت!
+    aficionado:
+      name: مەستانە
+      description: ئۇدا 100 كۈن زىيارەت قىلدى
+      long_description: |
+        بۇ تارتۇق ئۇدا 100 كۈن زىيارەت قىلغانلارغا بېرىلىدۇ. بۇ ئۈچ ئايدىن كۆپرەك ۋاقىت!
+    devotee:
+      name: ئىخلاسمەن
+      description: ئۇدا 365 كۈن زىيارەت قىلدى
+      long_description: |
+        بۇ تارتۇق ئۇدا 365 كۈن زىيارەت قىلغانلارغا بېرىلىدۇ. ۋاھ، پۈتكۈل بىر يىل!
+    badge_title_metadata: "%{site_title} دىكى %{display_name} تارتۇق"
+  admin_login:
+    success: "ئېلخەت يوللاندى"
+    errors:
+      unknown_email_address: "نامەلۇم ئېلخەت ئادرېسى."
+      invalid_token: "ئىناۋەتسىز پەرمان تاختىسى."
+    email_input: "باشقۇرغۇچى ئېلخىتى"
+    submit_button: "ئېلخەت يوللا"
+    safe_mode: "بىخەتەر ھالەت: تىزىمغا كىرگەندە بارلىق ئۆرنەك/ قىستۇرما چەكلىنىدۇ"
+  performance_report:
+    initial_post_raw: بۇ تېمىدا تور بېكىتىڭىزنىڭ كۈندىلىك ئۈنۈم دوكلاتى بار.
+    initial_topic_title: تور بېكەت ئۈنۈم دوكلاتى
+  tags:
+    title: "بەلگە"
+    restricted_tag_disallowed: '«%{tag}» بەلگىنى قوللىنالمايسىز.'
+    restricted_tag_remove_disallowed: '«%{tag}» بەلگىنى چىقىرىۋېتەلمەيسىز.'
+    minimum_required_tags:
+      one: "كەم دېگەندە %{count} بەلگە تاللىشىڭىز كېرەك."
+      other: "كەم دېگەندە %{count} بەلگە تاللىشىڭىز كېرەك."
+    upload_row_too_long: "CSV ھۆججىتىدە ھەر بىر قۇردا بىر بەلگە بولۇشى كېرەك. ئىختىيارىي بەلگىدە پەش، ئاندىن بەلگە گۇرۇپپىسىنىڭ ئىسمى بولىدۇ."
+    forbidden:
+      invalid:
+        one: "سىز تاللىغان بەلگىنى ئىشلەتكىلى بولمايدۇ"
+        other: "سىز تاللىغان بەلگىنى ئىشلەتكىلى بولمايدۇ"
+      in_this_category: 'بۇ سەھىپىدە «%{tag_name}» نى ئىشلەتكىلى بولمايدۇ'
+      restricted_to:
+        one: '«%{tag_name}» تۆۋەندىكى سەھىپىدىلا ئىشلتىلىدۇ: %{category_names}'
+        other: '«%{tag_name}» تۆۋەندىكى سەھىپىدىلا ئىشلتىلىدۇ: %{category_names}'
+      synonym: 'مەنىداش سۆز ئىشلىتىشكە يول قويۇلمايدۇ. ئورنىغا «%{tag_name}» ئىشلىتىلىدۇ.'
+      has_synonyms: '«%{tag_name}» ئىشلەتكىلى بولمايدۇ چۈنكى ئۇنىڭ مەنىداش سۆزى بار.'
+    limited_to_one_tag_from_group: "بۇ %{tags} بەلگىنى بىرلا ۋاقىتتا ئىشلەتكىلى بولمايدۇ. ئىچىدىن بىرنىلا ئىشلىتىڭ."
+    invalid_target_tag: "مەنىداش سۆزنىڭ مەنىداش سۆزى بولمايدۇ"
+    synonyms_exist: "مەنىداش سۆزى مەۋجۇت بولسا يول قويۇلمايدۇ"
+    user_not_permitted: "تېمىغا بەلگە سېلىش ئىجازىتىڭىز يوق"
+  rss_by_tag: "%{tag} بەلگە سېلىنغان تېما"
+  finish_installation:
+    congratulations: "مۇبارەك بولسۇن، Discourse نى ئورناتتىڭىز!"
+    register:
+      button: "خەتلەت"
+      title: "باشقۇرغۇچى ھېساباتى خەتلەت"
+      help: "باشلاش ئۈچۈن يېڭى ھېسابات تىزىملىتىلىدۇ."
+    confirm_email:
+      title: "ئېلخېتىڭىزنى جەزملەڭ"
+      message: "<p>ئاكتىپلاش خېتىنى <b>%{email}</b> غا يوللىدۇق. ئېلخەتتىكى كۆرسەتمىگە ئەگىشىپ ھېساباتىڭىزنى ئاكتىپلاڭ.</p><p>ئەگەر خەت يېتىپ كەلمىگەن بولسا، ئەخلەت خەت قىسقۇچنى تەكشۈرۈڭ، <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>ئېلخەتنى توغرا تەڭشىگەنلىكىڭىزنى جەزملەڭ</a>.</p>"
+    resend_email:
+      title: "ئاكتىپلاش ئېلخېتىنى قايتا يوللا"
+      message: "<p>ئاكتىپلاش ئېلخېتىنى <b>%{email}</b> غا قايتا يوللىدۇق"
+  safe_mode:
+    title: "بىخەتەر ھالەتكە كىرىدۇ"
+    description: "بىخەتەر ھالەتتە ئۆرنەك ياكى خېرىدار قىستۇرمىسىنى خاسلاشتۇرمىغان ئەھۋالدا يۈكلەپ تور بېكىتىڭىزنى سىنايدۇ. مۇلازىمېتىر تەرەپتە قىستۇرما خاسلاشتۇرۇش قوزغىتىلغان ھالەتتە بولىدۇ."
+    no_themes: "ئۆرنەك ۋە ئۆرنەك پارچىسىنى چەكلەيدۇ"
+    no_unofficial_plugins: "غەيرى رەسمىي خېرىدار قىستۇرمىسى خاسلاشتۇرۇشنى چەكلەيدۇ"
+    no_plugins: "بارلىق غەيرى رەسمىي خېرىدار قىستۇرمىسى خاسلاشتۇرۇشنى چەكلەيدۇ"
+    deprecation_error_description: "تارقىتىلىدىغان Discourse يېڭىلىنىشىنىڭ ماسلىشىشچانلىقىنى تەكشۈرۈشتە، Javascript نى ئىشلەتمىگەندە بىر خاتالىق كەلتۈرۈپ چىقىرالايسىز:"
+    deprecation_error_label: Javascript ئىشلەتمەسلىك خاتالىقى كەلتۈرۈپ چىقىرىدۇ
+    enter: "بىخەتەر ھالەتكە كىرىدۇ"
+    must_select: "بىخەتەر ھالەتكە كىرىشتە كەم دېگەندە تاللاشتىن بىرى تاللىنىدۇ."
+  wizard:
+    title: "Discourse تەڭشەك"
+    step:
+      introduction:
+        title: "تور بېكىتىڭىز ھەققىدە"
+        description: "بۇ مەزمۇن تىزىمغا كىرىش بېتى ۋە بارلىق ئاممىۋى بەتلەردە كۆرسىتىلىدۇ. ئۇنى كېيىن خالىغان ۋاقىتتا ئۆزگەرتەلەيسىز."
+        fields:
+          title:
+            label: "جامائەت ئىسمى"
+            placeholder: "تارىمنىڭ سۆھبەتلىرى"
+          site_description:
+            label: "جامائىتىڭىزنى بىر جۈملە بىلەن تەسۋىرلەڭ"
+            placeholder: "تارىم بىلەن ئۇنىڭ دوستلىرى يېڭىلىقلارنى سۆھبەتلىشىدىغان جاي"
+          default_locale:
+            label: "تىل"
+      privacy:
+        title: "ئەزا تەجرىبىسى"
+        fields:
+          login_required:
+            placeholder: "شەخسىي"
+            extra_description: "پەقەت تىزىمغا كىرگەن ئىشلەتكۈچىلەرلا بۇ جامائەتنى زىيارەت قىلالايدۇ"
+          invite_only:
+            placeholder: "تەكلىپلا"
+            extra_description: "ئىشلەتكۈچىنى چوقۇم ئىشەنچلىك ئىشلەتكۈچى ياكى باشقۇرغۇچى تەكلىپ قىلىشى كېرەك، بولمىسا ئىشلەتكۈچى ئۆزى تىزىملاتسا بولىدۇ"
+          must_approve_users:
+            placeholder: "تەستىقلاش كېرەك"
+            extra_description: "ئىشلەتكۈچىنى چوقۇم باشقۇرغۇچى تەستىقلىشى كېرەك"
+          chat_enabled:
+            placeholder: "سۆھبەتنى قوزغات"
+            extra_description: "ئەزالار بىلەن شۇئان ئالاقە قىلالايسىز"
+      ready:
+        title: "تور بېتىڭىز تەييار!"
+        description: "مۇشۇنچىلىك! جامائىتىڭىزنىڭ ئاساسىي تەڭشىكىنى تاماملىدىڭىز. ھازىر كىرىپ كۆرۈپ بېقىپ، قارشى ئېلىش تېمىسىدىن بىرنى يېزىپ، ئاندىن تەكلىپ يوللاڭ!<br><br>خۇشاللىق يار بولغاي!"
+      styling:
+        title: "كۆرۈنۈش ۋە تۇيغۇ"
+        fields:
+          color_scheme:
+            label: "رەڭ لايىھەسى"
+          body_font:
+            label: "مەزمۇن خەت نۇسخىسى"
+          heading_font:
+            label: "ماۋزۇ خەت نۇسخىسى"
+          styling_preview:
+            label: "ئالدىن كۆزەت"
+          homepage_style:
+            label: "باش بەت ئۇسلۇبى"
+            choices:
+              latest:
+                label: "ئاخىرقى تېما"
+              categories_only:
+                label: "سەھىپىلا"
+              categories_with_featured_topics:
+                label: "جەۋھەر تېمىلىق سەھىپە"
+              categories_and_latest_topics:
+                label: "سەھىپە ۋە ئاخىرقى تېما"
+              categories_and_latest_topics_created_date:
+                label: "سەھىپە ۋە ئاخىرقى تېما (قۇرۇلغان چېسلا بويىچە تەرتىپلەيدۇ)"
+              categories_and_top_topics:
+                label: "سەھىپە ۋە قىزغىن تېما"
+              categories_boxes:
+                label: "سەھىپە قۇتىسى"
+              categories_boxes_with_topics:
+                label: "تېما بار سەھىپە قۇتىسى"
+              subcategories_with_featured_topics:
+                label: "جەۋھەر تېمىلىق تارماق سەھىپە"
+      branding:
+        title: "بېكەت تۇغى"
+        fields:
+          logo:
+            label: "ئاساسىي تۇغ"
+            description: "تەۋسىيە چوڭلۇقى: 600x200"
+          logo_small:
+            label: "چاسا تۇغ"
+            description: "تەۋسىيە چوڭلۇقى: 512x512. تور بېكەت تۇغى ۋە كۆچمە باش ئېكران ئەپ سىنبەلگىسى سۈپىتىدە ئىشلىتىلىدۇ."
+      corporate:
+        title: "تەشكىلاتىڭىز"
+        description: "تۆۋەندىكى ئۇچۇرلار «مۇلازىمەت كېلىشىمى» ۋە ھەققىدە بەتكە ئىشلىتىلىدۇ. ئەگەر شىركەت بولمىسا، ئاتلاپ كېتىڭ."
+        fields:
+          company_name:
+            label: "شىركەت ئىسمى"
+            placeholder: "Acme تەشكىلاتى"
+          governing_law:
+            label: "باشقۇرۇش قانۇنى"
+            placeholder: "كالىفورنىيە قانۇنى"
+          contact_url:
+            label: "تور بەت"
+            placeholder: "https://www.example.com/contact-us"
+          city_for_disputes:
+            label: "تالاش-تارتىشتىكى شەھەر"
+            placeholder: "سان فىرانسىسكو، كالىفورنىيە"
+          site_contact:
+            label: "ئاپتوماتىك ئۇچۇر"
+            description: "بارلىق ئاپتوماتىك Discourse شەخسىي ئۇچۇرلىرى يەنى پاش قىلىش ئاگاھلاندۇرۇشى ۋە زاپاسلاش تاماملاش ئۇقتۇرۇشى ئوخشاش ئۇچۇرلار بۇ ئىشلەتكۈچىدىن يوللىنىدۇ."
+          contact_email:
+            label: "ئالاقىداش"
+            placeholder: "example@user.com"
+            description: "بۇ تور بېكەتكە مەسئۇل ئاساسلىق كىشىنىڭ ئېلخەت ئادرېسى، مۇھىم ئۇقتۇرۇش ئۈچۈن ئىشلىتىلىدۇ، <a href='%{base_path}/about' target='_blank'>ھەققىدە بېتىڭىز</a>دە كۆرسىتىلىپ جىددىي ئالاقە ئۈچۈن ئىشلىتىلىدۇ."
+      invites:
+        title: "باشقۇرغۇچى تەكلىپى"
+        description: "تاماملاي دېدىڭىز! بەزى كىشىلەرنى تەكلىپ قىلىپ <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>سۆھبىتىڭىزنى موللاشتۇرۇش</a>قا ياردەملەشتۈرۈپ، جامائىتىڭىز ئارىسىدا قىزىقارلىق تېما ۋە ئىنكاسلارنى باشلاڭ."
+        disabled: "يەرلىك ئورۇندا تىزىمغا كىرىش چەكلەنگەن، شۇڭلاشقا ھەر قانداق كىشىگە تەكلىپ يوللىغىلى بولمايدۇ. كېيىنكى قەدەمنى داۋاملاشتۇرۇڭ."
+      finished:
+        title: "Discourse ڭىز تەييار بولدى!"
+  search_logs:
+    graph_title: "ئىزدەش سانى"
+  onebox:
+    discourse:
+      user_joined_community: "%{date} قوشۇلغان"
+    gitlab:
+      truncated_file: "بۇ ھۆججەت قىسقارتىلدى."
+      show_original: "ئەسلىنى كۆرسەت"
+    github:
+      binary_file: "بۇ ئىككىلىك ھۆججەت."
+      truncated_file: "بۇ ھۆججەت قىسقارتىلدى."
+      show_original: "ئەسلىنى كۆرسەت"
+      requires_iframe: "كۆرگۈچ iframe نى تەلەپ قىلىدۇ."
+      committed: "تاپشۇرۇلدى"
+      more_than_three_files: "ئۈچتىن ئارتۇق ھۆججەت بار."
+      opened: "ئېچىلدى"
+      closed: "تاقالدى"
+      commit_by: "تاپشۇرغۇچى"
+      comment_by: "ئىنكاس يوللىغۇچى"
+      review_by: "تەكشۈرگۈچى"
+      pr_summary: "%{commits} تاپشۇرۇش ئۆزگەرتىلگەندىن كېيىنكى %{changed_files} ھۆججەتنى يوللىدى، ئۇنىڭدا %{additions} يېڭىدىن قوشۇلغان ھۆججەت، %{deletions} ئۆچۈرۈلگەن ھۆججەت"
+  discourse_push_notifications:
+    popup:
+      mentioned: '%{username} سىزنى «%{topic}» - %{site_title} دا ئاتىدى'
+      group_mentioned: '%{username} سىزنى «%{topic}» - %{site_title} دا ئاتىدى'
+      quoted: '%{username} سىزنى «%{topic}» - %{site_title} دا نەقىل ئالدى'
+      replied: '%{username} سىزگە «%{topic}» - %{site_title} دا جاۋاب قايتۇردى'
+      posted: '%{username} «%{topic}» - %{site_title} غا يوللىدى'
+      private_message: '%{username} سىزگە «%{topic}» - %{site_title} دا شەخسىي ئۇچۇر يوللىدى'
+      linked: '%{username} سىزنىڭ «%{topic}» - %{site_title} يازمىڭىزنى ياقتۇردى'
+      watching_first_post: '%{username} «%{topic}» - %{site_title} دا يېڭى تېما قۇردى'
+      confirm_title: "ئوقتۇرۇش قوزغىتىلدى - %{site_title}"
+      confirm_body: "مۇۋەپپەقىيەتلىك! ئۇقتۇرۇش قوزغىتىلغان."
+      custom: "%{site_title} دىكى %{username} نىڭ ئۇقتۇرۇشى"
+  staff_action_logs:
+    json_too_long: "رەتنىڭ ئۇزۇنلۇق چېكىدىن ئېشىپ كەتكەچكە قىممىتى خاتىرىلەنمىدى."
+    not_found: "تېپىلمىدى"
+    unknown: "يوچۇن"
+    user_merged: "%{username} بۇ ھېساباتقا بىرلەشتۈرۈلگەن"
+    user_delete_self: "ئۆزى %{url} دىن ئۆچۈردى"
+    webhook_deactivation_reason: "تور ئىلمىكىڭىز ئۆزلۈكىدىن ئاكتىپسىزلاندى. بىز كۆپ «%{status}» نىڭ HTTP ھالىتىنىڭ مەغلۇب بولغانلىق ئىنكاسىنى تاپشۇرۇۋالدۇق."
+    api_key:
+      automatic_revoked:
+        one: "ئۆزلۈكىدىن بىكار قىلىندى، ئاخىرقى پائالىيەتكە %{count} كۈندىن ئاشتى."
+        other: "ئۆزلۈكىدىن بىكار قىلىندى، ئاخىرقى پائالىيەتكە %{count} كۈندىن ئاشتى."
+      automatic_revoked_max_life:
+        one: "ئۆزلۈكىدىن بىكار قىلىندى، قۇرۇلغىلى %{count} كۈندىن ئاشتى."
+        other: "ئۆزلۈكىدىن بىكار قىلىندى، قۇرۇلغىلى %{count} كۈندىن ئاشتى."
+      revoked: بىكار قىلىندى
+      restored: ئەسلىگە كەلتۈرۈلدى
+  reviewables:
+    priorities:
+      low: "تۆۋەن"
+      medium: "ئوتتۇرا"
+      high: "يۇقىرى"
+    sensitivity:
+      disabled: "چەكلەندى"
+      low: "تۆۋەن"
+      medium: "ئوتتۇرا"
+      high: "يۇقىرى"
+    must_claim: "تۈرگە مەشغۇلات ئېلىپ بېرىشتىن ئىلگىرى ئىلتىماس قىلىسىز."
+    user_claimed: "بۇ تۈرنى باشقا بىر ئىشلەتكۈچى تەلەپ قىلغان."
+    missing_version: "سىز چوقۇم نەشر پارامېتىرىنى تەمىنلىشىڭىز كېرەك"
+    conflict: "يېڭىلاش توقۇنۇشى مەشغۇلاتىڭىزنى توستى."
+    reasons:
+      links:
+        watched_word: كۆزەتتىكى سۆز تىزىمى
+        category: سەھىپە تەڭشىكى
+    actions:
+      agree:
+        title: "ھەئە"
+      agree_and_keep:
+        title: "يازمىنى ساقلاپ قالىدۇ"
+        description: "پاش قىلىشقا قوشۇلىدۇ ئەمما بۇ يازمىنى ئۆزگەرتمەي ساقلاپ قالىدۇ."
+      agree_and_keep_hidden:
+        title: "يازمىنى يوشۇرۇن تۇتىدۇ"
+        description: "پاش قىلىشقا قوشۇلىدۇ ۋە بۇ يازمىنى يوشۇرۇن تۇتىدۇ."
+      agree_and_suspend:
+        title: "ئىشلەتكۈچىنى توختات"
+        description: "پاش قىلىشقا قوشۇلىدۇ ۋە ئىشلەتكۈچىنى توختىتىدۇ."
+      agree_and_silence:
+        title: "ئىشلەتكۈچىنى ئۈنسىزلە"
+        description: "پاش قىلىشقا قوشۇلىدۇ ۋە ئىشلەتكۈچىنى ئۈنسىزلەيدۇ."
+      agree_and_restore:
+        title: "يازمىنى ئەسلىگە كەلتۈرىدۇ"
+        description: "يازمىنى ھەممە ئىشلەتكۈچى كۆرەلەيدىغان ھالەتتە ئەسلىگە كەلتۈرىدۇ."
+      agree_and_hide:
+        title: "يازمىنى يوشۇر"
+        description: "پاش قىلىشقا قوشۇلۇپ بۇ يازمىنى يوشۇرىدۇ + ئىشلەتكۈچىگە ئۆزلۈكىدىن ئۇچۇر يوللاپ ئۇلارنى تەھرىرلەشكە سۈيلەيدۇ."
+      delete_single:
+        title: "ئۆچۈر"
+      delete:
+        title: "ئۆچۈر…"
+      delete_and_ignore:
+        title: "پاش قىلىشقا پەرۋا قىلماي يازمىنى ئۆچۈر"
+        description: "پاش قىلىشقا پەرۋا قىلماي، پاش قىلىشنى ئۆچرەتتىن چىقىرىۋېتىدۇ ھەمدە يازمىنى ئۆچۈرىدۇ؛ ئەگەر تۇنجى يازما بولسا، تېمىنىمۇ ئۆچۈرۈۋېتىدۇ. "
+      delete_and_ignore_replies:
+        title: "پاش قىلىشقا پەر قىلماي، يازما ۋە جاۋابنى ئۆچۈر"
+        description: "پاش قىلىشقا پەرۋا قىلماي، ئۇنى ئۆچرەتتىن چىقىرىۋېتىدۇ ھەمدە يازما ۋە ئىنكاسلىرىنى ئۆچۈرىدۇ؛ ئەگەر تۇنجى يازما بولسا، تېمىنىمۇ ئۆچۈرۈۋېتىدۇ"
+        confirm: "راستتىنلا يازمىنىڭ ئىنكاسلىرىنىمۇ قوشۇپ ئۆچۈرەمسىز؟"
+      delete_and_agree:
+        title: "يازما ئۆچۈر"
+        description: "پاش قىلىشقا قوشۇلۇپ بۇ يازمىنى ئۆچۈرىدۇ؛ ئەگەر تۇنجى يازما بولسا تېمىنىمۇ ئۆچۈرىدۇ."
+      delete_and_agree_replies:
+        title: "يازما ۋە جاۋابنى ئۆچۈر"
+        description: "پاش قىلىشقا قوشۇلۇپ بۇ يازما ۋە ئۇنىڭ جاۋابلىرىنى ئۆچۈرىدۇ؛ ئەگەر تۇنجى يازما بولسا تېمىنىمۇ ئۆچۈرىدۇ."
+        confirm: "راستتىنلا يازمىنىڭ ئىنكاسلىرىنىمۇ قوشۇپ ئۆچۈرەمسىز؟"
+      disagree_and_restore:
+        title: "ياق، يازمىنى ئەسلىگە كەلتۈر"
+        description: "يازمىنى ھەممە ئىشلەتكۈچى كۆرەلەيدىغان ھالەتتە ئەسلىگە كەلتۈرىدۇ."
+      disagree:
+        title: "ياق"
+      discard_post:
+        title: "يازمىنى تاشلىۋەت"
+      revise_and_reject_post:
+        title: "يازمىنى تۈزەت…"
+      ignore:
+        title: "پەرۋا قىلما"
+      ignore_and_do_nothing:
+        title: "ھېچ ئىش قىلما"
+        description: "ھېچقانداق مەشغۇلات ئېلىپ بارمايلا پاش قىلىشقا پەرۋا قىلماي ئۇنى ئۆچرەتتىن چىقىرىۋېتىدۇ. يازمىنى يوشۇرۇن پېتى ساقلايدۇ ھەمدە ئاپتوماتىك قورال بىلەن بىر تەرەپ قىلىدۇ."
+      approve:
+        title: "تەستىقلا"
+      approve_post:
+        title: "يازمىنى تەستىقلا"
+        confirm_closed: "بۇ تېما تاقالدى. تېمىنى قۇرۇۋېرەمسىز؟"
+      reject_post:
+        title: "يازمىنى رەت قىل"
+      approve_user:
+        title: "ئىلەتكۈچىنى تەستىقلا"
+      reject_user:
+        title: "ئىشلەتكۈچى ئۆچۈر…"
+        delete:
+          title: "ئىشلەتكۈچى ئۆچۈر"
+          description: "ئىشلەتكۈچى مۇنبەردىن ئۆچۈرۈلىدۇ."
+        block:
+          title: "ئىشلەتكۈچىنى ئۆچۈرۈپ توس"
+          description: "ئىشلەتكۈچى ئۆچۈرۈلىدۇ، ئۇلارنىڭ IP ۋە ئېلخەت ئادرېسىنى توسىمىز."
+      reject:
+        title: "رەت قىل"
+        bundle_title: "رەت قىل…"
+      reject_and_suspend:
+        title: "ئىشلەتكۈچىنى رەت قىلىپ توختات"
+      reject_and_silence:
+        title: "ئىشلەتكۈچىنى رەت قىلىپ ئۈنسىزلە"
+      reject_and_delete:
+        title: "يازمىنى رەت قىلىپ ۋە ئۆچۈر"
+      reject_and_keep_deleted:
+        title: "يازما ئۆچۈرۈشنى ساقلاپ قال"
+      approve_and_restore:
+        title: "يازمىنى تەستىقلاپ ئەسلىگە كەلتۈر"
+      delete_user:
+        reason: "تەستىقلاش ئۆچرىتى ئارقىلىق ئۆچۈرۈلدى"
+  email_style:
+    html_missing_placeholder: "HTML قېلىپىدا %{placeholder} بولۇشى كېرەك"
+  notification_level:
+    ignore_error: "كەچۈرۈڭ، ئۇ ئىشلەتكۈچىنى نەزەردىن ساقىت قىلالمايسىز."
+    mute_error: "كەچۈرۈڭ، ئۇ ئىشلەتكۈچىنى ئۈنسىز قىلالمايسىز."
+    error: "كەچۈرۈڭ، ئۇ ئىشلەتكۈچىنىڭ ئۇقتۇرۇش دەرىجىسىنى ئۆزگەرتەلمەيسىز."
+    invalid_value: '«%{value}» ئىناۋەتلىك ئۇقتۇرۇش دەرىجىسى ئەمەس.'
+  discord:
+    not_in_allowed_guild: "دەلىللىيەلمىدى. سىز ئىجازەتلىك Discord ئۇيۇشمىسىنىڭ ئەزاسى ئەمەس."
+  old_keys_reminder:
+    title: "كونا ئىسپات ھەققىدە ئەسكەرتىش"
+    body: |
+      سالام! بۇ Discourse مىسالىدىكى يىللىق بىخەتەرلىك ئەسكەرتىشى.
+
+      قۇلاي بولۇشى ئۈچۈن، سىزنىڭ Discourse مىسالىدا ئىشلىتىۋاتقان ئاچقۇچ يېڭىلانمىغىلى 2 يىلدىن ئاشتى:
+
+      %{keys}
+
+      ھازىر ھەر قانداق مەشغۇلات قىلىشىڭىز ھاجەتسىز، ئەمما بىر قانچە يىلدا مۇھىم ئاچقۇچلارنى ئالماشتۇرۇپ تۇرۇش ياخشى بىخەتەرلىك ئادىتى.
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (%{count} پارچە)"
+      other: "%{topic_title} (%{count} پارچە)"
+    post_raw: "%{parent_url} دىن سۆھبەتنى داۋاملاشتۇرىدۇ.\n\nئالدىنقى سۆھبەت:\n\n%{previous_topics}"
+    small_action_post_raw: "%{new_title} دا سۆھبەتنى داۋاملاشتۇرىدۇ."
+  fallback_username: "ئىشلەتكۈچى"
+  user_status:
+    errors:
+      ends_at_should_be_greater_than_set_at: "ends_at قىممىتى set_at دىن چوڭ بولۇشى كېرەك"
+  webhooks:
+    payload_url:
+      blocked_or_internal: "ئۈنۈملۈك يۈك تور ئادرېسىنى ئىشلىتەلمەيدۇ چۈنكى ئۇنى توسۇلغان ياكى ئىچكى IP ئادرېس دەپ يەشتى"
+      unsafe: "ئۈنۈملۈك يۈك تور ئادرېسىنى ئىشلىتەلمەيدۇ چۈنكى ئۇ بىخەتەر ئەمەس."
+  form_templates:
+    errors:
+      invalid_yaml: "ئىناۋەتلىك YAML ھەرپ تىزىقى ئەمەس"
+      invalid_type: "ئىناۋەتسىز قېلىپ تىپى بار: %{type} (ئىناۋەتلىك تىپى: %{valid_types})"
+      missing_type: "بۆلەك تىپى كەم"
+      missing_id: "بۆلەك كىملىكى كەم"
+      duplicate_ids: "تەكرار كىملىك بار"
+      reserved_id: "ساقلاپ قالغان ئاچقۇچلۇق سۆز كىملىكى بار: %{id}"
+      unsafe_description: "خەتەرلىك HTML چۈشەندۈرۈشى بار"
+  activemodel:
+    errors:
+      <<: *errors

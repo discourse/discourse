@@ -18,7 +18,6 @@ module Chat
     contract
 
     model :thread
-    policy :ensure_thread_enabled
     policy :can_view_thread
     step :fetch_optional_membership
     step :determine_target_message_id
@@ -60,10 +59,6 @@ module Chat
 
     def fetch_thread(contract:)
       ::Chat::Thread.strict_loading.includes(channel: :chatable).find_by(id: contract.thread_id)
-    end
-
-    def ensure_thread_enabled(thread:)
-      thread.channel.threading_enabled || thread.force
     end
 
     def can_view_thread(guardian:, thread:)

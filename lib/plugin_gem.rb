@@ -10,7 +10,7 @@ module PluginGem
 
     spec_file = spec_path + "/#{name}-#{version}"
 
-    unless platform_variants(spec_file).find(&File.method(:exist?)).present?
+    if platform_variants(spec_file).find(&File.method(:exist?)).blank?
       command =
         "gem install #{name} -v #{version} -i #{gems_path} --no-document --ignore-dependencies --no-user-install"
       command += " --source #{opts[:source]}" if opts[:source]

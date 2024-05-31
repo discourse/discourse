@@ -299,6 +299,83 @@ RSpec.describe TopicEmbed do
       end
     end
 
+    context "with specified user and tags" do
+      fab!(:tag1) { Fabricate(:tag, name: "interesting") }
+      fab!(:tag2) { Fabricate(:tag, name: "article") }
+
+      let!(:new_user) { Fabricate(:user) }
+      let(:tags) { [tag1.name, tag2.name] }
+      let(:imported_post) { TopicEmbed.import(new_user, url, title, contents, tags: tags) }
+
+      it "assigns the specified user as the author" do
+        expect(imported_post.user).to eq(new_user)
+      end
+
+      it "associates the specified tags with the topic" do
+        expect(imported_post.topic.tags).to contain_exactly(tag1, tag2)
+      end
+    end
+
+    context "when the embeddable host specifies the user and tags" do
+      fab!(:tag1) { Fabricate(:tag, name: "interesting") }
+      fab!(:tag2) { Fabricate(:tag, name: "article") }
+      fab!(:embeddable_host) { Fabricate(:embeddable_host, host: "tag-eviltrout.com") }
+
+      let!(:new_user) { Fabricate(:user) }
+      let(:tags) { [tag1.name, tag2.name] }
+      let(:embed_url_with_tags) { "http://tag-eviltrout.com/abcd" }
+
+      let(:imported_post) do
+        # passing user = system and tags = nil to ensure we're getting the user and tags from the embeddable host
+        # and not from the TopicEmbed.import method in the tests
+        TopicEmbed.import(Discourse.system_user, embed_url_with_tags, title, contents, tags: nil)
+      end
+
+      before do
+        embeddable_host.user = new_user
+        embeddable_host.tags = [tag1, tag2]
+        embeddable_host.save!
+      end
+
+      it "assigns the specified user as the author" do
+        expect(imported_post.user).to eq(new_user)
+      end
+
+      it "associates the specified tags with the topic" do
+        expect(imported_post.topic.tags).to contain_exactly(tag1, tag2)
+      end
+    end
+
+    context "when updating an existing post with new tags and a different user" do
+      fab!(:tag1) { Fabricate(:tag, name: "interesting") }
+      fab!(:tag2) { Fabricate(:tag, name: "article") }
+
+      let!(:admin) { Fabricate(:admin) }
+      let!(:new_admin) { Fabricate(:admin) }
+      let(:tags) { [tag1.name, tag2.name] }
+
+      before { SiteSetting.tagging_enabled = true }
+
+      it "updates the user and adds new tags" do
+        original_post = TopicEmbed.import(admin, url, title, contents)
+
+        expect(original_post.user).to eq(admin)
+        expect(original_post.topic.tags).to be_empty
+
+        embeddable_host.update!(
+          tags: [tag1, tag2],
+          user: new_admin,
+          category: category,
+          host: "eviltrout.com",
+        )
+
+        edited_post = TopicEmbed.import(admin, url, title, contents)
+
+        expect(edited_post.user).to eq(new_admin)
+        expect(edited_post.topic.tags).to match_array([tag1, tag2])
+      end
+    end
+
     describe "embedded content truncation" do
       MAX_LENGTH_BEFORE_TRUNCATION = 100
 

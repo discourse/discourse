@@ -80,7 +80,7 @@ module Chat
       message.chat_channel.update_last_message_id!
     end
 
-    def publish_events(guardian:, message:)
+    def publish_events(contract:, guardian:, message:)
       DiscourseEvent.trigger(:chat_message_trashed, message, message.chat_channel, guardian.user)
       Chat::Publisher.publish_delete!(message.chat_channel, message)
 

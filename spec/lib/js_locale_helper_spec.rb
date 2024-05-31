@@ -236,31 +236,32 @@ RSpec.describe JsLocaleHelper do
   end
 
   it "correctly evaluates message formats in en fallback" do
-    JsLocaleHelper.set_translations("en", "en" => { "js" => { "something_MF" => "en mf" } })
+    allow_missing_translations do
+      JsLocaleHelper.set_translations("en", "en" => { "js" => { "something_MF" => "en mf" } })
+      JsLocaleHelper.set_translations("de", "de" => { "js" => { "something_MF" => "de mf" } })
 
-    JsLocaleHelper.set_translations("de", "de" => { "js" => { "something_MF" => "de mf" } })
+      TranslationOverride.upsert!("en", "js.something_MF", <<~MF.strip)
+        There {
+          UNREAD, plural,
+          =0 {are no}
+          one {is one unread}
+          other {are # unread}
+        }
+      MF
 
-    TranslationOverride.upsert!("en", "js.something_MF", <<~MF.strip)
-      There {
-        UNREAD, plural,
-        =0 {are no}
-        one {is one unread}
-        other {are # unread}
-      }
-    MF
+      v8_ctx.eval(JsLocaleHelper.output_locale("de"))
+      v8_ctx.eval(JsLocaleHelper.output_client_overrides("de"))
+      v8_ctx.eval(<<~JS)
+        for (let [key, value] of Object.entries(I18n._mfOverrides || {})) {
+          key = key.replace(/^[a-z_]*js\./, "");
+          I18n._compiledMFs[key] = value;
+        }
+      JS
 
-    v8_ctx.eval(JsLocaleHelper.output_locale("de"))
-    v8_ctx.eval(JsLocaleHelper.output_client_overrides("de"))
-    v8_ctx.eval(<<~JS)
-      for (let [key, value] of Object.entries(I18n._mfOverrides || {})) {
-        key = key.replace(/^[a-z_]*js\./, "");
-        I18n._compiledMFs[key] = value;
-      }
-    JS
-
-    expect(v8_ctx.eval("I18n.messageFormat('something_MF', { UNREAD: 1 })")).to eq(
-      "There is one unread",
-    )
+      expect(v8_ctx.eval("I18n.messageFormat('something_MF', { UNREAD: 1 })")).to eq(
+        "There is one unread",
+      )
+    end
   end
 
   LocaleSiteSetting.values.each do |locale|

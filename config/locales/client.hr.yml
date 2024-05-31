@@ -743,6 +743,7 @@ hr:
       topic_count_long: "Napravljene teme"
       post_count: "Odgovori"
       post_count_long: "Poslan odgovor"
+      no_results_with_search: "Nema pronađenih rezultata"
       days_visited: "Posjete"
       days_visited_long: "Dana posjećeno"
       posts_read: "Pročitano"

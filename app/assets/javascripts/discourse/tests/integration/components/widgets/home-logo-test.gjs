@@ -2,9 +2,12 @@
 import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { clearHomeLogoHrefCallback as clearComponentHomeLogoHrefCallback } from "discourse/components/header/home-logo";
 import MountWidget from "discourse/components/mount-widget";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { clearHomeLogoHrefCallback as clearWidgetHomeLogoHrefCallback } from "discourse/widgets/home-logo";
 
 const bigLogo = "/images/d-logo-sketch.png?test";
 const smallLogo = "/images/d-logo-sketch-small.png?test";
@@ -20,6 +23,8 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.session = getOwner(this).lookup("service:session");
     this.session.set("darkModeAvailable", null);
     this.session.set("defaultColorSchemeIsDark", null);
+    clearWidgetHomeLogoHrefCallback();
+    clearComponentHomeLogoHrefCallback();
   });
 
   test("basics", async function (assert) {
@@ -199,6 +204,32 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
       query("#site-logo").getAttribute("src"),
       bigLogo,
       "uses regular logo on dark scheme if no dark logo"
+    );
+  });
+
+  test("the home logo href url defaults to /", async function (assert) {
+    await render(<template><MountWidget @widget="home-logo" /></template>);
+
+    const anchorElement = query("#site-logo").closest("a");
+    assert.strictEqual(
+      anchorElement.getAttribute("href"),
+      "/",
+      "home logo href equals /"
+    );
+  });
+
+  test("api.registerHomeLogoHrefCallback can be used to change the logo href url", async function (assert) {
+    withPluginApi("1.32.0", (api) => {
+      api.registerHomeLogoHrefCallback(() => "https://example.com");
+    });
+
+    await render(<template><MountWidget @widget="home-logo" /></template>);
+
+    const anchorElement = query("#site-logo").closest("a");
+    assert.strictEqual(
+      anchorElement.getAttribute("href"),
+      "https://example.com",
+      "home logo href equals the one set by the callback"
     );
   });
 });

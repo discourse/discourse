@@ -2,7 +2,9 @@
 
 RSpec.describe Jobs::CheckTranslationOverrides do
   fab!(:up_to_date_translation) { Fabricate(:translation_override, translation_key: "title") }
-  fab!(:deprecated_translation) { Fabricate(:translation_override, translation_key: "foo.bar") }
+  fab!(:deprecated_translation) do
+    allow_missing_translations { Fabricate(:translation_override, translation_key: "foo.bar") }
+  end
   fab!(:outdated_translation) do
     Fabricate(:translation_override, translation_key: "posts", original_translation: "outdated")
   end

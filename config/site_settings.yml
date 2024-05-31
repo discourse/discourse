@@ -1930,6 +1930,7 @@ security:
     default: false
   same_site_cookies:
     default: Lax
+    hidden: true
     type: enum
     choices:
       - Lax
@@ -2346,6 +2347,13 @@ developer:
     client: true
     default: false
   experimental_new_new_view_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+  experimental_glimmer_topic_list_groups:
     client: true
     type: group_list
     list_type: compact

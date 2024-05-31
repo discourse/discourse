@@ -107,7 +107,7 @@ class ImportScripts::Yammer < ImportScripts::Base
     csv_parse("Messages") do |row|
       next unless row[:thread_id] == row[:id]
       next if row[:in_private_conversation] == "true"
-      next unless row[:deleted_at].blank?
+      next if row[:deleted_at].present?
       # next if row[:message_type] == 'system'
       title = ""
       url = ""
@@ -119,7 +119,7 @@ class ImportScripts::Yammer < ImportScripts::Base
           url = Regexp.last_match(2)
           title = Regexp.last_match(3) if Regexp.last_match(3)
           description = Regexp.last_match(4)
-          raw += "\n***\n#{description}\n#{url}\n" unless raw.include?(url)
+          raw += "\n***\n#{description}\n#{url}\n" if raw.exclude?(url)
         end
         row[:attachments].match(/uploadedfile:(\d*)$/) do
           file_id = Regexp.last_match(1).to_i
@@ -148,7 +148,7 @@ class ImportScripts::Yammer < ImportScripts::Base
     csv_parse("Messages") do |row|
       next unless row[:thread_id] == row[:id]
       next unless row[:in_private_conversation] == "true"
-      next unless row[:deleted_at].blank?
+      next if row[:deleted_at].present?
       # next if row[:message_type] == 'system'
       title = ""
       url = ""
@@ -160,7 +160,7 @@ class ImportScripts::Yammer < ImportScripts::Base
           url = Regexp.last_match(2)
           title = Regexp.last_match(3) if Regexp.last_match(3)
           description = Regexp.last_match(4)
-          raw += "\n***\n#{description}\n#{url}\n" unless raw.include?(url)
+          raw += "\n***\n#{description}\n#{url}\n" if raw.exclude?(url)
         end
         row[:attachments].match(/uploadedfile:(\d*)$/) do
           file_id = Regexp.last_match(1).to_i
@@ -189,7 +189,7 @@ class ImportScripts::Yammer < ImportScripts::Base
     # get posts from messages
     csv_parse("Messages") do |row|
       next if row[:thread_id] == row[:id]
-      next unless row[:deleted_at].blank?
+      next if row[:deleted_at].present?
       next if row[:in_private_conversation] == "true"
       @db.insert_post(
         id: row[:id],
@@ -204,7 +204,7 @@ class ImportScripts::Yammer < ImportScripts::Base
     # get pm posts from messages
     csv_parse("Messages") do |row|
       next if row[:thread_id] == row[:id]
-      next unless row[:deleted_at].blank?
+      next if row[:deleted_at].present?
       next unless row[:in_private_conversation] == "false"
       @db.insert_pm_post(
         id: row[:id],

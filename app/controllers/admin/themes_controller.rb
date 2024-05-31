@@ -279,7 +279,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def bulk_destroy
     themes = Theme.where(id: params[:theme_ids])
-    raise Discourse::InvalidParameters.new(:id) unless themes.present?
+    raise Discourse::InvalidParameters.new(:id) if themes.blank?
 
     ActiveRecord::Base.transaction do
       themes.each { |theme| StaffActionLogger.new(current_user).log_theme_destroy(theme) }
@@ -313,7 +313,7 @@ class Admin::ThemesController < Admin::AdminController
 
   def get_translations
     params.require(:locale)
-    unless I18n.available_locales.include?(params[:locale].to_sym)
+    if I18n.available_locales.exclude?(params[:locale].to_sym)
       raise Discourse::InvalidParameters.new(:locale)
     end
 
@@ -445,7 +445,7 @@ class Admin::ThemesController < Admin::AdminController
 
     locale = theme_params[:locale].presence
     if locale
-      unless I18n.available_locales.include?(locale.to_sym)
+      if I18n.available_locales.exclude?(locale.to_sym)
         raise Discourse::InvalidParameters.new(:locale)
       end
       I18n.locale = locale

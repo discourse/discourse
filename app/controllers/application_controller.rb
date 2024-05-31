@@ -29,7 +29,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  before_action :rate_limit_crawlers
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
@@ -838,7 +837,7 @@ class ApplicationController < ActionController::Base
   end
 
   def ensure_logged_in
-    raise Discourse::NotLoggedIn.new unless current_user.present?
+    raise Discourse::NotLoggedIn.new if current_user.blank?
   end
 
   def ensure_staff
@@ -1051,28 +1050,6 @@ class ApplicationController < ActionController::Base
     return "{}" if id.blank?
     ids = Theme.transform_ids(id)
     Theme.where(id: ids).pluck(:id, :name).to_h.to_json
-  end
-
-  def rate_limit_crawlers
-    return if current_user.present?
-    return if SiteSetting.slow_down_crawler_user_agents.blank?
-
-    user_agent = request.user_agent&.downcase
-    return if user_agent.blank?
-
-    SiteSetting
-      .slow_down_crawler_user_agents
-      .downcase
-      .split("|")
-      .each do |crawler|
-        if user_agent.include?(crawler)
-          key = "#{crawler}_crawler_rate_limit"
-          limiter =
-            RateLimiter.new(nil, key, 1, SiteSetting.slow_down_crawler_rate, error_code: key)
-          limiter.performed!
-          break
-        end
-      end
   end
 
   def run_second_factor!(action_class, action_data: nil, target_user: current_user)

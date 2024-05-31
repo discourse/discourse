@@ -62,8 +62,6 @@ after_initialize do
   register_reviewable_type Chat::ReviewableMessage
 
   reloadable_patch do |plugin|
-    ReviewableScore.add_new_types([:needs_review])
-
     Site.preloaded_category_custom_fields << Chat::HAS_CHAT_ENABLED
 
     Guardian.prepend Chat::GuardianExtensions

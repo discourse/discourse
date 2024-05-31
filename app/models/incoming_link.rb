@@ -60,7 +60,7 @@ class IncomingLink < ActiveRecord::Base
     self.incoming_referer_id = nil
 
     # will set incoming_referer_id
-    return unless referer.present?
+    return if referer.blank?
 
     parsed = URI.parse(referer)
 

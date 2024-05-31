@@ -61,7 +61,7 @@ class PostRevisor
     tracked_topic_fields[field] = block
 
     # Define it in the serializer unless it already has been defined
-    unless PostRevisionSerializer.instance_methods(false).include?("#{field}_changes".to_sym)
+    if PostRevisionSerializer.instance_methods(false).exclude?("#{field}_changes".to_sym)
       PostRevisionSerializer.add_compared_field(field)
     end
   end
@@ -287,6 +287,9 @@ class PostRevisor
       advance_draft_sequence if !opts[:keep_existing_draft]
     end
 
+    # bail out if the post or topic failed to save
+    return false if !successfully_saved_post_and_topic
+
     # Lock the post by default if the appropriate setting is true
     if (
          SiteSetting.staff_edit_locks_post? && !@post.wiki? && @fields.has_key?("raw") &&
@@ -312,15 +315,14 @@ class PostRevisor
     # it can fire events in sidekiq before the post is done saving
     # leading to corrupt state
     QuotedPost.extract_from(@post)
+    TopicLink.extract_from(@post)
+
+    Topic.reset_highest(@topic.id)
 
     post_process_post
-
-    update_topic_word_counts
     alert_users
     publish_changes
     grant_badge
-
-    TopicLink.extract_from(@post)
 
     ReviewablePost.queue_for_review_if_possible(@post, @editor) if should_create_new_version?
 
@@ -712,19 +714,6 @@ class PostRevisor
     @post.invalidate_oneboxes = true
     @post.trigger_post_process
     DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?, self)
-  end
-
-  def update_topic_word_counts
-    DB.exec(
-      "UPDATE topics
-                    SET word_count = (
-                      SELECT SUM(COALESCE(posts.word_count, 0))
-                      FROM posts
-                      WHERE posts.topic_id = :topic_id
-                    )
-                    WHERE topics.id = :topic_id",
-      topic_id: @topic.id,
-    )
   end
 
   def alert_users

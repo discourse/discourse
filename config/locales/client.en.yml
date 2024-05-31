@@ -387,11 +387,32 @@ en:
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
       bookmark: "Bookmark"
+      bulk:
+        delete_completed: "Bookmarks successfully deleted."
+        reminders_cleared: "Bookmark reminders successfully cleared."
+        toggle: "toggle bulk selection of bookmarks"
+        select_all: "Select All"
+        clear_all: "Clear All"
+        selected_count:
+          one: "%{count} selected"
+          other: "%{count} selected"
       reminders:
         today_with_time: "today at %{time}"
         tomorrow_with_time: "tomorrow at %{time}"
         at_time: "at %{date_time}"
         existing_reminder: "You have a reminder set for this bookmark which will be sent %{at_date_time}"
+
+    bookmark_bulk_actions:
+      clear_reminders:
+        name: "Clear Reminders"
+        description:
+          one: "Are you sure you want to clear the reminder for this bookmark?"
+          other: "Are you sure you want to clear the reminder for these <b>%{count}</b> bookmarks."
+      delete_bookmarks:
+        name: "Delete Bookmark"
+        description:
+          one: "Are you sure you want to delete this bookmark?"
+          other: "Are you sure you want to delete these <b>%{count}</b> bookmarks."
 
     copy_codeblock:
       copied: "copied!"
@@ -2407,6 +2428,8 @@ en:
           title: "Manage categories"
         bulk_select_topics_dropdown:
           title: "Bulk Actions"
+        bulk_select_bookmarks_dropdown:
+          title: "Bulk Actions"
 
     date_time_picker:
       from: From
@@ -2573,6 +2596,7 @@ en:
       modal_ok: "OK"
       modal_cancel: "Cancel"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
+      create_message_error: "Sorry, there was an error creating that message. Please try again."
       yourself_confirm:
         title: "Did you forget to add recipients?"
         body: "Right now this message is only being sent to yourself!"
@@ -3748,6 +3772,7 @@ en:
           illegal: "You flagged this as illegal"
           notify_moderators: "You flagged this for moderation"
           notify_user: "You sent a message to this user"
+          custom: "You flagged this topic as %{custom}"
 
       delete:
         confirm:
@@ -4763,7 +4788,7 @@ en:
       panels:
         forum:
           label: Forum
-      filter: "Filter"
+      filter: "Filter..."
       clear_filter: "Clear filter"
       no_results:
         title: "No results"
@@ -4998,6 +5023,10 @@ en:
               label: Category
             include_subcategories:
               label: "Include Subcategories"
+      flags:
+        title: "Moderation Flags"
+        description: "Description"
+        enabled: "Enabled?"
 
       groups:
         new:
@@ -5337,6 +5366,8 @@ en:
           user_fields: "User Fields"
           watched_words: "Watched Words"
           legal: "Legal"
+          moderation_flags: "Moderation Flags"
+
 
       appearance:
         title: "Appearance"
@@ -5390,6 +5421,7 @@ en:
         is_enabled: "Y"
         not_enabled: "N"
         change_settings_short: "Settings"
+        settings_disabled: "This plugin can only be enabled or disabled, it has no additional settings."
         howto: "How do I install plugins?"
         official: "Official Discourse Plugin"
         broken_route: "Unable to configure link to '%{name}'. Ensure ad-blockers are disabled and try reloading the page."
@@ -6054,6 +6086,7 @@ en:
             create_watched_word_group: "create watched word group"
             update_watched_word_group: "update watched word group"
             delete_watched_word_group: "delete watched word group"
+            toggle_flag: "toggle flag"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -6561,6 +6594,7 @@ en:
         name: "Field Name"
         type: "Field Type"
         description: "Field Description"
+        preferences: "Preferences"
         save: "Save"
         edit: "Edit"
         delete: "Delete"
@@ -6571,6 +6605,13 @@ en:
           title: "Required at signup"
           enabled: "required"
           disabled: "not required"
+        requirement:
+          title: "Field Requirement"
+          optional:
+            title: "Optional"
+          on_signup:
+            title: "On signup"
+            description: "When new users sign up, they must fill out this field. Existing users are unaffected."
         editable:
           title: "Editable after signup"
           enabled: "editable"
@@ -6816,6 +6857,8 @@ en:
         allowed_paths: "Path Allowlist"
         edit: "edit"
         category: "Post to Category"
+        tags: "Topic Tags"
+        post_author: "Post Author - Defaults to %{author}"
         add_host: "Add Host"
         settings: "Embedding Settings"
         crawling_settings: "Crawler Settings"

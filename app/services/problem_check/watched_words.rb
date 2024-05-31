@@ -11,10 +11,6 @@ class ProblemCheck::WatchedWords < ProblemCheck
 
   private
 
-  def translation_key
-    "dashboard.watched_word_regexp_error"
-  end
-
   def translation_data
     { action: invalid_regexp_actions.map { |w| "'#{w}'" }.join(", ") }
   end

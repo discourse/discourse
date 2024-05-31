@@ -8,7 +8,7 @@ module Discourse
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
       # Use the `version_bump:*` rake tasks to update this value
-      STRING = "3.3.0.beta2-dev"
+      STRING = "3.3.0.beta3-dev"
 
       PARTS = STRING.split(".")
       private_constant :PARTS
@@ -37,7 +37,7 @@ module Discourse
   #  2.4.4.beta6: some-other-branch-ref
   #  2.4.2.beta1: v1-tag
   def self.find_compatible_resource(version_list, target_version = ::Discourse::VERSION::STRING)
-    return unless version_list.present?
+    return if version_list.blank?
 
     begin
       version_list = YAML.safe_load(version_list)

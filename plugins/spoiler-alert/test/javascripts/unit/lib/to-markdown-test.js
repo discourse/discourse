@@ -10,8 +10,8 @@ discourseModule("Spoiler Alert | Unit | to-markdown", function (hooks) {
   });
 
   test("handles spoiler tags", function (assert) {
-    let html = `<div>Text with a</div><div class="spoiled">spoiled</div><div>word.</div>`;
-    let markdown = `Text with a\n\n[spoiler]spoiled[/spoiler]\n\nword.`;
+    let html = `<div>Text with a</div><div class="spoiled spoiler-blurred">spoiled</div><div>word.</div>`;
+    let markdown = `Text with a\n\n[spoiler]\nspoiled\n[/spoiler]\n\nword.`;
 
     assert.strictEqual(
       toMarkdown(html),

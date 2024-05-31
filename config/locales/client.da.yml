@@ -629,6 +629,7 @@ da:
       topic_count_long: "Emner oprettet"
       post_count: "Svar"
       post_count_long: "Svar sendt"
+      no_results_with_search: "Ingen resultater fundet."
       days_visited: "Besøg"
       days_visited_long: "Besøgsdage"
       posts_read: "Læste"

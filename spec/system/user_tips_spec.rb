@@ -40,9 +40,9 @@ describe "Homepage", type: :system do
         text: "Your first notification!",
       )
 
-      find(".d-header").click
+      # Find an element with no action to simulate clicking outside the user tip
+      find("th.topic-list-data span", text: "Topic").click
 
-      # Clicking outside element dismisses the tip
       expect(page).to have_no_css(
         ".fk-d-tooltip__content .user-tip__title",
         text: "Your first notification!",

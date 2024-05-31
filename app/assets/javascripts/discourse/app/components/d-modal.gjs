@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import ClassicComponent from "@ember/component";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -12,6 +11,7 @@ import { and, not, or } from "truth-helpers";
 import ConditionalInElement from "discourse/components/conditional-in-element";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import element from "discourse/helpers/element";
 import {
   disableBodyScroll,
   enableBodyScroll,
@@ -29,7 +29,7 @@ export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 
 const FLASH_TYPES = ["success", "error", "warning", "info"];
 
-const SWIPE_VELOCITY_THRESHOLD = 0.7;
+const SWIPE_VELOCITY_THRESHOLD = 0.4;
 
 export default class DModal extends Component {
   @service modal;
@@ -39,20 +39,24 @@ export default class DModal extends Component {
   @tracked wrapperElement;
   @tracked animating = false;
 
-  setupModalBody = modifierFn((element) => {
-    if (this.site.mobileView) {
-      disableBodyScroll(element);
+  registerModalContainer = modifierFn((el) => {
+    this.modalContainer = el;
+  });
+
+  setupModalBody = modifierFn((el) => {
+    if (!this.site.mobileView) {
+      return;
     }
 
+    disableBodyScroll(el);
+
     return () => {
-      if (this.site.mobileView) {
-        enableBodyScroll(element);
-      }
+      enableBodyScroll(el);
     };
   });
 
   @action
-  async setupModal(element) {
+  async setupModal(el) {
     document.documentElement.addEventListener(
       "keydown",
       this.handleDocumentKeydown
@@ -66,7 +70,7 @@ export default class DModal extends Component {
     if (this.site.mobileView) {
       this.animating = true;
 
-      await element.animate(
+      await el.animate(
         [{ transform: "translateY(100%)" }, { transform: "translateY(0)" }],
         {
           duration: getMaxAnimationTimeMs(),
@@ -78,7 +82,7 @@ export default class DModal extends Component {
       this.animating = false;
     }
 
-    this.wrapperElement = element;
+    this.wrapperElement = el;
   }
 
   @action
@@ -139,19 +143,15 @@ export default class DModal extends Component {
       return;
     }
 
-    if (swipeEvent.goingUp()) {
+    if (
+      swipeEvent.goingUp() ||
+      swipeEvent.velocityY < SWIPE_VELOCITY_THRESHOLD
+    ) {
       return await this.#animateWrapperPosition(0);
     }
 
-    if (swipeEvent.velocityY >= SWIPE_VELOCITY_THRESHOLD) {
-      this.wrapperElement.querySelector(
-        ".d-modal__container"
-      ).style.transform = `translateY(${swipeEvent.deltaY}px)`;
-
-      this.closeModal(CLOSE_INITIATED_BY_SWIPE_DOWN);
-    } else {
-      return await this.#animateWrapperPosition(0);
-    }
+    this.modalContainer.style.transform = `translateY(${swipeEvent.deltaY}px)`;
+    this.closeModal(CLOSE_INITIATED_BY_SWIPE_DOWN);
   }
 
   @action
@@ -178,15 +178,8 @@ export default class DModal extends Component {
 
       this.#animateBackdropOpacity(window.innerHeight);
 
-      await this.wrapperElement.animate(
-        [
-          // hidding first ms to avoid flicker
-          { visibility: "hidden", offset: 0 },
-          { visibility: "visible", offset: 0.01 },
-          { transform: "translateY(100%)", offset: 1 },
-        ],
-        { duration: getMaxAnimationTimeMs(), fill: "forwards" }
-      ).finished;
+      await this.#animateWrapperPosition(this.modalContainer.clientHeight);
+
       this.animating = false;
     }
 
@@ -233,9 +226,7 @@ export default class DModal extends Component {
       throw `@tagName must be form or div`;
     }
 
-    return class WrapperComponent extends ClassicComponent {
-      tagName = tagName;
-    };
+    return element(tagName);
   }
 
   @bind
@@ -252,21 +243,16 @@ export default class DModal extends Component {
       return;
     }
 
-    // 85vh is the max height of the modal
-    const opacity = 1 - position / (window.innerHeight * 0.85);
-    requestAnimationFrame(() => {
-      backdrop.style.setProperty(
-        "opacity",
-        Math.max(0, Math.min(opacity, 0.6)),
-        "important"
-      );
+    const opacity = 1 - position / this.modalContainer.clientHeight;
+    backdrop.animate([{ opacity: Math.max(0, Math.min(opacity, 0.6)) }], {
+      fill: "forwards",
     });
   }
 
   async #animateWrapperPosition(position) {
     this.#animateBackdropOpacity(position);
 
-    await this.wrapperElement.animate(
+    await this.modalContainer.animate(
       [{ transform: `translateY(${position}px)` }],
       {
         fill: "forwards",
@@ -276,7 +262,6 @@ export default class DModal extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-pointer-down-event-binding }}
     {{! template-lint-disable no-invalid-interactive }}
 
     <ConditionalInElement
@@ -300,7 +285,7 @@ export default class DModal extends Component {
         {{willDestroy this.cleanupModal}}
         {{trapTab preventScroll=false}}
       >
-        <div class="d-modal__container">
+        <div class="d-modal__container" {{this.registerModalContainer}}>
           {{yield to="aboveHeader"}}
 
           {{#if

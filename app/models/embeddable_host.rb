@@ -3,6 +3,9 @@
 class EmbeddableHost < ActiveRecord::Base
   validate :host_must_be_valid
   belongs_to :category
+  belongs_to :user, optional: true
+  has_many :embeddable_host_tags
+  has_many :tags, through: :embeddable_host_tags
   after_destroy :reset_embedding_settings
 
   before_validation do
@@ -21,10 +24,10 @@ class EmbeddableHost < ActiveRecord::Base
         end
     end
 
-    return false unless uri.present?
+    return false if uri.blank?
 
     host = uri.host
-    return false unless host.present?
+    return false if host.blank?
 
     host << ":#{uri.port}" if uri.port.present? && uri.port != 80 && uri.port != 443
 
@@ -81,4 +84,5 @@ end
 #  updated_at    :datetime         not null
 #  class_name    :string
 #  allowed_paths :string
+#  user_id       :integer
 #

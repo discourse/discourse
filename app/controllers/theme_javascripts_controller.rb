@@ -15,7 +15,7 @@ class ThemeJavascriptsController < ApplicationController
   before_action :is_asset_path, :no_cookies, :apply_cdn_headers, only: %i[show show_map show_tests]
 
   def show
-    raise Discourse::NotFound unless last_modified.present?
+    raise Discourse::NotFound if last_modified.blank?
     return render body: nil, status: 304 if not_modified?
 
     # Security: safe due to route constraint
@@ -34,7 +34,7 @@ class ThemeJavascriptsController < ApplicationController
   end
 
   def show_map
-    raise Discourse::NotFound unless last_modified.present?
+    raise Discourse::NotFound if last_modified.blank?
     return render body: nil, status: 304 if not_modified?
 
     # Security: safe due to route constraint
