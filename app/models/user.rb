@@ -1850,6 +1850,14 @@ class User < ActiveRecord::Base
       .all? { |field_id| custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"].present? }
   end
 
+  def needs_required_fields_check?
+    (required_fields_version || 0) < UserRequiredFieldsVersion.current
+  end
+
+  def bump_required_fields_version
+    update(required_fields_version: UserRequiredFieldsVersion.current)
+  end
+
   protected
 
   def badge_grant
