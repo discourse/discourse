@@ -147,6 +147,7 @@ export default class PollComponent extends Component {
     this.id = this.args.attrs.id;
     this.post = this.args.attrs.post;
     this.options = this.poll.options;
+    this.groupableUserFields = this.args.attrs.groupableUserFields;
   }
 
   get min() {
@@ -598,7 +599,7 @@ export default class PollComponent extends Component {
         @isStaff={{this.isStaff}}
         @isMe={{this.isMe}}
         @topicArchived={{this.topicArchived}}
-        @groupableUserFields={{this.args.attrs.groupableUserFields}}
+        @groupableUserFields={{this.groupableUserFields}}
         @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
         @dropDownClick={{this.dropDownClick}}
       />
