@@ -2759,7 +2759,10 @@ en:
         - "deactivated"
         - "inactive"
         - "unactivated"
-
+      navigation_menu: 
+        - "sidebar" 
+        - "header pulldown"
+        
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
