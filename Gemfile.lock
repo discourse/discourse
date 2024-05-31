@@ -178,8 +178,7 @@ GEM
     json (2.7.2)
     json-schema (4.3.0)
       addressable (>= 2.8)
-    json_schemer (2.2.1)
-      base64
+    json_schemer (2.3.0)
       bigdecimal
       hana (~> 1.3)
       regexp_parser (~> 2.0)
