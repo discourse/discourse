@@ -3,10 +3,10 @@ import { extractError } from "discourse/lib/ajax-error";
 import PreloadStore from "discourse/lib/preload-store";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend({
-  queryParams: {
+export default class SecondFactorAuth extends DiscourseRoute {
+  queryParams = {
     nonce: { refreshModel: true },
-  },
+  };
 
   model(params) {
     if (PreloadStore.data.has("2fa_challenge_data")) {
@@ -24,15 +24,15 @@ export default DiscourseRoute.extend({
         }
       });
     }
-  },
+  }
 
   setupController(controller, model) {
-    this._super(...arguments);
+    super.setupController(...arguments);
     controller.resetState();
 
     if (model.error) {
       controller.displayError(model.error);
       controller.set("loadError", true);
     }
-  },
-});
+  }
+}

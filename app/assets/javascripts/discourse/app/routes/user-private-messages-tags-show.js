@@ -1,14 +1,14 @@
 import createPMRoute from "discourse/routes/build-private-messages-route";
 import I18n from "discourse-i18n";
 
-export default createPMRoute("tags", "private-messages-tags").extend({
+export default class extends createPMRoute("tags", "private-messages-tags") {
   titleToken() {
     return [
       this.get("tagId"),
       I18n.t("tagging.tags"),
       I18n.t("user.private_messages"),
     ];
-  },
+  }
 
   model(params) {
     this.controllerFor("user-private-messages").set("tagId", params.id);
@@ -20,5 +20,5 @@ export default createPMRoute("tags", "private-messages-tags").extend({
     return this.store.findFiltered("topicList", {
       filter: `topics/private-messages-tags/${username}/${params.id}`,
     });
-  },
-});
+  }
+}

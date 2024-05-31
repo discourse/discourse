@@ -4,8 +4,8 @@ import Tag from "discourse/models/tag";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend({
-  router: service(),
+export default class TagsIndex extends DiscourseRoute {
+  @service router;
 
   model() {
     return this.store.findAll("tag").then((result) => {
@@ -23,11 +23,11 @@ export default DiscourseRoute.extend({
       }
       return result;
     });
-  },
+  }
 
   titleToken() {
     return I18n.t("tagging.tags");
-  },
+  }
 
   setupController(controller, model) {
     this.controllerFor("tags.index").setProperties({
@@ -36,16 +36,16 @@ export default DiscourseRoute.extend({
         ? ["id"]
         : ["totalCount:desc", "id"],
     });
-  },
+  }
 
   @action
   showTagGroups() {
     this.router.transitionTo("tagGroups");
     return true;
-  },
+  }
 
   @action
   triggerRefresh() {
     this.refresh();
-  },
-});
+  }
+}
