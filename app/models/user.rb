@@ -1843,6 +1843,13 @@ class User < ActiveRecord::Base
     end
   end
 
+  def populated_required_custom_fields?
+    UserField
+      .required
+      .pluck(:id)
+      .all? { |field_id| custom_fields["#{User::USER_FIELD_PREFIX}#{field_id}"].present? }
+  end
+
   protected
 
   def badge_grant

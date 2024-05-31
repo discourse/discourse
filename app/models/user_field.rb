@@ -18,6 +18,7 @@ class UserField < ActiveRecord::Base
   after_save :queue_index_search
 
   scope :public_fields, -> { where(show_on_profile: true).or(where(show_on_user_card: true)) }
+  scope :required, -> { where.not(requirement: 0) }
 
   enum :requirement, { optional: 0, for_all_users: 1, on_signup: 2 }.freeze
   enum :field_type_enum, { text: 0, confirm: 1, dropdown: 2, multiselect: 3 }.freeze
