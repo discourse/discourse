@@ -35,7 +35,9 @@ function createBulkSelectHelper(testThis, opts = {}) {
   });
 
   const bulkSelectHelper = new BulkSelectHelper(testThis);
-  bulkSelectHelper.addTopics(topics);
+  topics.forEach((t) => {
+    bulkSelectHelper.selected.addObject(t);
+  });
   return bulkSelectHelper;
 }
 
@@ -209,10 +211,12 @@ module("Integration | Component | BulkSelectTopicsDropdown", function (hooks) {
 
     await click(".bulk-select-topics-dropdown-trigger");
     assert
-      .dom(".fk-d-menu__inner-content .dropdown-menu__item .move-to-archive")
+      .dom(".fk-d-menu__inner-content .dropdown-menu__item .archive-messages")
       .exists();
     assert
-      .dom(".fk-d-menu__inner-content .dropdown-menu__item .move-to-inbox")
+      .dom(
+        ".fk-d-menu__inner-content .dropdown-menu__item .move-messages-to-inbox"
+      )
       .exists();
     assert
       .dom(".fk-d-menu__inner-content .dropdown-menu__item .archive-topics")
