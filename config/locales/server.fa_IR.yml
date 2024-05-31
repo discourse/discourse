@@ -883,17 +883,12 @@ fa_IR:
         user: کاربر
         qtt_like: پسند‌های دریافتی
   dashboard:
-    rails_env_warning: "سرور شما در حالت %{env} در حال اجراست"
-    host_names_warning: "config/database.yml فایل شما از اسم هاست پیش فرض localhost استفاده کرده. برای استفاده از نام سایتتان این قسمت را به‌روز کنید."
-    sidekiq_warning: 'Sidekiq کار نمی کند. کار‌های زیادی مثل ارسال ایمیل ها، برای اجرا نیازمند sidekiq هستند. لطفا مطمئن شوید که حداقل یک پروسه sidekiq کار می‌کند. <a href="https://github.com/mperham/sidekiq" target="_blank"> درباره Sidekiq بیشتر بدانید.</a>'
-    queue_size_warning: "تعداد کار های زمانبندی شده %{queue_size}، که مقدار بالاییست. این مسئله می‌تواند باعث بروز مشکل در پردازش(های) Sidekiq شود، یا می‌توانید عامل‌های Sidekiq بیشتری اضافه کنید."
-    memory_warning: "سرور شما با کمتر از 1 گیگ رم راه اندازی شده است، برای دیسکورس حداقل 1 گیگ رم لازم است تا به درستی کار کند."
-    subfolder_ends_in_slash: "تنظیمات زیرپوشه نادرست است، مقدار DISCOURSE_RELATIVE_URL_ROOT با نویسه‌ی slash تمام می‌شود."
-    email_polling_errored_recently:
-      one: "رای‌گیری ایمیلی %{count} خطا در 24 ساعت گذشته ایجاد کرده. <a href='%{base_path}/logs' target='_blank'>گزارشات</a> را ببینید."
-      other: "رای‌گیری ایمیلی %{count} خطا در 24 ساعت گذشته ایجاد کرده. <a href='%{base_path}/logs' target='_blank'>گزارشات</a> را ببینید."
-    poll_pop3_timeout: "اتصال به سرور POP3 انجام نشد. ایمیل‌های ورودی ممکن است دریافت نشوند. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3 </a>و فراهم کننده خدمات را بررسی کنید."
-    poll_pop3_auth_error: "اتصال به سرور POP3 ناموفق بود، خطای اعتبار سنجی. لطفا <a href='%{base_path}/admin/site_settings/category/email'>تنظیمات POP3</a> را بررسی کنید."
+    problem:
+      rails_env: "سرور شما در حالت %{env} در حال اجراست"
+      host_names: "config/database.yml فایل شما از اسم هاست پیش فرض localhost استفاده کرده. برای استفاده از نام سایتتان این قسمت را به‌روز کنید."
+      queue_size: "تعداد کار های زمانبندی شده %{queue_size}، که مقدار بالاییست. این مسئله می‌تواند باعث بروز مشکل در پردازش(های) Sidekiq شود، یا می‌توانید عامل‌های Sidekiq بیشتری اضافه کنید."
+      ram: "سرور شما با کمتر از 1 گیگ رم راه اندازی شده است، برای دیسکورس حداقل 1 گیگ رم لازم است تا به درستی کار کند."
+      subfolder_ends_in_slash: "تنظیمات زیرپوشه نادرست است، مقدار DISCOURSE_RELATIVE_URL_ROOT با نویسه‌ی slash تمام می‌شود."
   site_settings:
     disabled: "غیرفعال شده"
     censored_words: "کلماتی که به صورت خودکار جایگزین می شوند با &#9632;&#9632;&#9632;&#9632;"
@@ -1853,7 +1848,6 @@ fa_IR:
       title: "حساب کاربری وحود دارد"
       subject_template: "[%{email_prefix}] حساب کاربری وحود دارد"
     digest:
-      why: "یک گزارش کوتاه از %{site_link} از آخرین باری که بازدید کردید در %{last_seen_at}"
       since_last_visit: "از آخرین بازدید شما"
       new_topics: "موضوع جدید"
       unread_notifications: "اطلاعیه‌های خوانده نشده"
@@ -1866,7 +1860,6 @@ fa_IR:
       subject_template: "«%{email_prefix}» خلاصه"
       click_here: "اینجا کلیک کنید"
       from: "%{site_name}"
-      preheader: "یک خلاصه مختصر به دلیل اینکه آخرین بازدیدتان در %{last_seen_at} بوده."
     forgot_password:
       title: "فراموشی رمز عبور"
       subject_template: "[%{email_prefix}] بازنشانی رمز عبور"

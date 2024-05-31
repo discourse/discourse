@@ -343,11 +343,17 @@ sl:
       search_placeholder: "Iščite zaznamke po imenu, naslovu teme ali vsebini objave"
       search: "Išči"
       bookmark: "Zaznamek"
+      bulk:
+        select_all: "Izberi vse"
+        clear_all: "Počisti vse"
       reminders:
         today_with_time: "danes ob %{time}"
         tomorrow_with_time: "jutri ob %{time}"
         at_time: "ob %{date_time}"
         existing_reminder: "Za ta zaznamek imate nastavljen opomnik, ki bo poslan %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Odstrani zaznamek"
     copy_codeblock:
       copied: "kopirano!"
       copy: "kopiraj kodo v odložišče"
@@ -1894,6 +1900,8 @@ sl:
         other: "Izberite vsaj %{count} stvari."
       components:
         bulk_select_topics_dropdown:
+          title: "Množična dejanja"
+        bulk_select_bookmarks_dropdown:
           title: "Množična dejanja"
     date_time_picker:
       from: Od
@@ -3595,7 +3603,7 @@ sl:
               content: "Moji prispevki"
             review:
               content: "Pregled"
-      filter: "Filter"
+      filter: "Filter..."
     until: "Do:"
     form_templates:
       upload_field:
@@ -3751,6 +3759,9 @@ sl:
               label: Skupina
             category:
               label: Kategorija
+      flags:
+        description: "Opis"
+        enabled: "Vključeno?"
       groups:
         new:
           title: "Nova skupina"
@@ -4466,6 +4477,7 @@ sl:
         name: "Ime polja"
         type: "Vrsta polja"
         description: "Opis polja"
+        preferences: "Nastavitve"
         save: "Shrani"
         edit: "Uredi"
         delete: "Izbriši"
@@ -4476,6 +4488,9 @@ sl:
           title: "Zahtevano ob prijavi"
           enabled: "zahtevano"
           disabled: "ni zahtevano"
+        requirement:
+          optional:
+            title: "Neobvezno"
         editable:
           title: "Uredljivo po prijavi"
           enabled: "uredljivo"

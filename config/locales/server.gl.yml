@@ -401,7 +401,6 @@ gl:
     request_membership_pm:
       title: "Solicitude de ser membro para @%{group_name}"
     request_accepted_pm:
-      title: "Aceptouse a súa solicitude para @%{group_name}"
       body: |
         A súa solicitude para entrar no grupo @%{group_name} foi aceptada, así que agora xa é membro.
   education:
@@ -1215,31 +1214,15 @@ gl:
         user: Usuario
         qtt_like: Gústames recibidos
   dashboard:
-    rails_env_warning: "O seu servidor está a executarse en modo %{env}."
-    host_names_warning: "O ficheiro config/database.yml está a usar o nome do servidor predeterminado. Actualíceo para utilizar o nome do servidor do seu sitio."
-    sidekiq_warning: 'Sidekiq non está a funcionar. Moitas tarefas, como o envío de correos electrónicos, sidekiq está a realizaas de forma asíncrona. Asegúrese de que, polo menos un proceso de sidekiq está en execución. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda máis sobre Sidekiq aquí</a>.'
-    queue_size_warning: "O número de tarefas na cola é de %{queue_size}, que é unha cifra alta. Isto pode indicar un problema co(s) proceso(s) de Sidekiq ou ten que engadir máis traballadores de Sidekiq."
-    memory_warning: "O seu servidor está a funcionar con menos de 1 GB de memoria total. Recoméndase polo menos unha memoria de 1 GB."
-    google_oauth2_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Google OAuth2 (enable_google_oauth2_logins) pero o id do cliente e os valores secretos de cliente non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Consulte esta guía para saber máis</a>.'
-    facebook_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Facebook (enable_facebook_logins) pero o id da aplicación e os valores secretos da aplicación non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Consulte esta guía para saber máis</a>.'
-    twitter_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con Twitter (enable_twitter_logins), pero a clave e os valores secretos non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Consulte esta guía para saber máis</a>.'
-    github_config_warning: 'O servidor está configurado para permitir o rexistro e o inicio de sesión con GitHub (enable_github_logins), pero o id do cliente e os valores secretos non están definidos. Vaia a <a href="%{base_path}/admin/site_settings">Configuración do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Consulte esta guía para saber máis</a>.'
-    s3_config_warning: 'O servidor está configurado para subir ficheiros a S3, pero polo menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vaia a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revise esta guía para saber máis</a>.'
-    s3_backup_config_warning: 'O servidor está configurado para subir copias de seguranza a S3, pero polo menos un dos seguintes axustes non esta definido: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Vaia a <a href="%{base_path}/admin/site_settings">Axustes do sitio</a> e actualice a configuración. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revise esta guía para saber máis</a>.'
-    s3_cdn_warning: 'O servidor está configurado para cargar ficheiros en S3, pero non hai ningún CDN S3 configurado. Isto pode supoñer elevados custos de S3 e un rendemento do sitio máis lento. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Vexa «Usar o almacenamento de obxectos para cargas» para saber máis</a>.'
-    image_magick_warning: 'O servidor está configurado para crear miniaturas de imaxes grandes, pero ImageMagick non está instalado. Instáleo utilizando o administrador de paquetes que lle guste ou <a href="https://www.imagemagick.org/script/download.php" target="_blank"> descargue a última versión</a>.'
-    failing_emails_warning: 'Hai %{num_failed_jobs} procesos de correo electrónico que fallaron. Comprobe o seu app.yml e asegúrese de que a configuración do servidor de correo é correcta. <a href="%{base_path}/sidekiq/retries" target="_blank">Revise os procesos que fallaron en Sidekiq</a>.'
-    subfolder_ends_in_slash: "A configuración do subcartafol non é correcta; o campo DISCOURSE_RELATIVE_URL_ROOT remata cunha barra."
-    email_polling_errored_recently:
-      one: "A recollida de correo electrónico xerou un erro nas últimas 24 horas. Revise <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
-      other: "A recollida de correo electrónico xerou %{count} erros nas últimas 24 horas. Revise <a href='%{base_path}/logs' target='_blank'>os rexistros</a> para máis detalles."
-    missing_mailgun_api_key: "O servidor está configurado para enviar correos electrónicos a través de Mailgun, pero non proporcionou unha chave API que se utiliza para verificar as mensaxes de webhook."
-    bad_favicon_url: "Erro ao cargar a favicona. Comprobe a configuración de icona de páxina en <a href='%{base_path}/admin/site_settings'>Configuración do sitio</a>."
-    poll_pop3_timeout: "A conexión ao servidor POP3 está a superar o tempo de espera. Non se puido recuperar o correo electrónico entrante. Comprobe os seus <a href='%{base_path}/admin/site_settings/category/email'>axustes POP3</a> e o provedor do servizo."
-    poll_pop3_auth_error: "A conexión ao servidor POP3 está a fallar por un erro na autenticación. Comprobe os seus <a href='%{base_path}/admin/site_settings/category/email'>axustes POP3</a>."
-    force_https_warning: "O seu sitio web está a utilizar SSL, pero `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` non está aínda activado nos seus axustes de sitio."
-    out_of_date_themes: "Hai actualizacións dispoñibles para os seguintes temas:"
-    unreachable_themes: "Non puidemos comprobar se hai actualizacións para os seguintes temas:"
+    problem:
+      rails_env: "O seu servidor está a executarse en modo %{env}."
+      host_names: "O ficheiro config/database.yml está a usar o nome do servidor predeterminado. Actualíceo para utilizar o nome do servidor do seu sitio."
+      queue_size: "O número de tarefas na cola é de %{queue_size}, que é unha cifra alta. Isto pode indicar un problema co(s) proceso(s) de Sidekiq ou ten que engadir máis traballadores de Sidekiq."
+      ram: "O seu servidor está a funcionar con menos de 1 GB de memoria total. Recoméndase polo menos unha memoria de 1 GB."
+      subfolder_ends_in_slash: "A configuración do subcartafol non é correcta; o campo DISCOURSE_RELATIVE_URL_ROOT remata cunha barra."
+      missing_mailgun_api_key: "O servidor está configurado para enviar correos electrónicos a través de Mailgun, pero non proporcionou unha chave API que se utiliza para verificar as mensaxes de webhook."
+      out_of_date_themes: "Hai actualizacións dispoñibles para os seguintes temas:"
+      unreachable_themes: "Non puidemos comprobar se hai actualizacións para os seguintes temas:"
   site_settings:
     disabled: "desactivado"
     display_local_time_in_user_card: "Amosar a hora local con base no fuso horario do usuario cando se abre a súa tarxeta."
@@ -2954,7 +2937,6 @@ gl:
 
         Se ten calquera pregunta, [contacte co noso equipo](%{base_url}/about).
     digest:
-      why: "Un breve resumo de %{site_link} desde a súa última visita o %{last_seen_at}"
       since_last_visit: "Desde a súa última visita"
       new_topics: "Novos temas"
       unread_notifications: "Notificacións sen ler"
@@ -2970,7 +2952,6 @@ gl:
       your_email_settings: "a configuración do seu correo electrónico"
       click_here: "prema aquí"
       from: "%{site_name}"
-      preheader: "Un breve resumo desde a súa última visita o %{last_seen_at}"
     forgot_password:
       title: "Esquecín o contrasinal"
       subject_template: "[%{email_prefix}] Restabelecemento do contrasinal"

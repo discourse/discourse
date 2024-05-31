@@ -354,11 +354,20 @@ hu:
       search_placeholder: "Könyvjelzők keresése név, téma címe vagy tartalom alapján"
       search: "Keresés"
       bookmark: "Könyvjelző"
+      bulk:
+        select_all: "Összes kiválasztása"
+        clear_all: "Összes törlése"
+        selected_count:
+          one: "%{count} kiválasztva"
+          other: "%{count} kiválasztva"
       reminders:
         today_with_time: "ma %{time}-kor"
         tomorrow_with_time: "holnap %{time}-kor"
         at_time: "%{date_time}-kor"
         existing_reminder: "Beállított egy emlékeztetőt erre a könyvjelzőre, amely %{at_date_time}-kor lesz kiküldve."
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Könyvjelző törlése"
     copy_codeblock:
       copied: "másolva!"
       copy: "kód másolása a vágólapra"
@@ -2180,6 +2189,8 @@ hu:
         categories_admin_dropdown:
           title: "Kategóriák kezelése"
         bulk_select_topics_dropdown:
+          title: "Csoportos műveletek"
+        bulk_select_bookmarks_dropdown:
           title: "Csoportos műveletek"
     date_time_picker:
       from: Feladó
@@ -4367,7 +4378,7 @@ hu:
       panels:
         forum:
           label: Fórum
-      filter: "Szűrő"
+      filter: "Szűrő..."
       clear_filter: "Szűrő kiürítése"
       no_results:
         title: "Nincs eredmény"
@@ -4588,6 +4599,9 @@ hu:
               label: Kategória
             include_subcategories:
               label: "Alkategóriák belefoglalása"
+      flags:
+        description: "Leírás"
+        enabled: "Engedélyezed?"
       groups:
         new:
           title: "Új csoport"
@@ -6085,6 +6099,7 @@ hu:
         name: "Mező neve"
         type: "Mező típusa"
         description: "Mező leírása"
+        preferences: "Beállítások"
         save: "Mentés"
         edit: "Szerkesztés"
         delete: "Törlés"
@@ -6095,6 +6110,9 @@ hu:
           title: "Bejelentkezéskor kötelező"
           enabled: "kötelező"
           disabled: "nem kötelező"
+        requirement:
+          optional:
+            title: "Nem kötelező"
         editable:
           title: "Bejelentkezés után szerkeszthető"
           enabled: "szerkeszthető"

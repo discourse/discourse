@@ -44,7 +44,7 @@ he:
       cannot_edit_default_poll_with_votes: "אין לך אפשרות לשנות סקר לאחר %{minutes} הדקות הראשונות."
       cannot_edit_named_poll_with_votes: "לא ניתן לשנות את שם הסקר <strong>${name}</strong> לאחר %{minutes} הדקות הראשונות."
     no_poll_with_this_name: "אין סקר בשם <strong>%{name}</strong> שמקושר לפוסט הזה."
-    post_is_deleted: "לא ניתן לפעול על פוסט שנמחק."
+    post_is_deleted: "לא ניתן לפעול על הודעה שנמחקה."
     user_cant_post_in_topic: "אין לך אפשרות להצביע כיוון שאין לך אפשרות לפרסם בנושא זה."
     topic_must_be_open_to_vote: "הנושא חייב להיות פתוח להצבעות."
     poll_must_be_open_to_vote: "הסקר חייב להיות פתוח להצבעות."

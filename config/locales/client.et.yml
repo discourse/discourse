@@ -280,10 +280,16 @@ et:
       search_placeholder: "Otsi järjehoidjaid nime, pealkirja või postituse sisu järgi"
       search: "Otsi"
       bookmark: "Järjehoidja"
+      bulk:
+        select_all: "Vali kõik"
+        clear_all: "Puhasta kõik"
       reminders:
         today_with_time: "täna kell %{time}"
         tomorrow_with_time: "homme kell %{time}"
         at_time: "kell %{date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Kustuta järjehoidja"
     copy_codeblock:
       copied: "kopeeritud!"
       view_code: "Vaata koodi"
@@ -1351,6 +1357,8 @@ et:
       filter_placeholder_with_any: Otsi või loo...
       components:
         bulk_select_topics_dropdown:
+          title: "Masstoimingud"
+        bulk_select_bookmarks_dropdown:
           title: "Masstoimingud"
     date_time_picker:
       from: Kellelt
@@ -2599,7 +2607,7 @@ et:
       panels:
         forum:
           label: Foorum
-      filter: "Filter"
+      filter: "Filter..."
     form_templates:
       upload_field:
         upload: "Laadi üles"
@@ -2687,6 +2695,9 @@ et:
               label: Grupp
             category:
               label: Foorum
+      flags:
+        description: "Kirjeldus"
+        enabled: "Sisse lülitatud?"
       groups:
         new:
           title: "Uus grupp"
@@ -3479,6 +3490,7 @@ et:
         name: "Välja nimi"
         type: "Välja tüüp"
         description: "Välja kirjeldus"
+        preferences: "Eelistused"
         save: "Salvesta"
         edit: "Muuda"
         delete: "Kustuta"
@@ -3489,6 +3501,9 @@ et:
           title: "Nõutud registreerumisel"
           enabled: "nõutud"
           disabled: "ei ole nõutud"
+        requirement:
+          optional:
+            title: "Valikuline"
         editable:
           title: "Muudetav pärast registreerumist"
           enabled: "muudetav"

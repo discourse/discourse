@@ -62,7 +62,6 @@ pt:
       channels_list_popup:
         browse: "Navegar canais"
         create: "Novo canal"
-      click_to_join: "Clique aqui para ver canais disponíveis."
       close: "Fechar"
       remove: "Remover"
       collapse: "Colapsar gaveta de Chat"
@@ -84,6 +83,7 @@ pt:
       last_visit: "última visita"
       summarization:
         summarize: "Resumir"
+      no_public_channels_cta: "Navegar canais"
       only_chat_push_notifications:
         title: "Enviar notificações push apenas para chat"
       reply: "Responder"

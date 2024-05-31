@@ -99,7 +99,6 @@ nl:
       channels_list_popup:
         browse: "Kanalen bekijken"
         create: "Nieuw kanaal"
-      click_to_join: "Klik hier om de beschikbare kanalen te bekijken."
       close: "Sluiten"
       remove: "Verwijderen"
       collapse: "Chatlade samenvouwen"
@@ -227,8 +226,7 @@ nl:
         header: "Chatkop"
         composer: "Chateditor"
         channels_list: "Chatkanalenlijst"
-      no_direct_message_channels: "Je bent geen lid geworden van directe berichtkanalen."
-      no_public_channels: "Je bent geen lid geworden van kanalen."
+      no_public_channels_cta: "Kanalen bekijken"
       kicked_from_channel: "Je hebt geen toegang meer tot dit kanaal."
       only_chat_push_notifications:
         title: "Alleen chatpushmeldingen sturen"

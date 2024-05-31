@@ -170,6 +170,8 @@ be:
       no_user_bookmarks: "У вас няма закладак паведамлення; закладкі дазваляюць хутка спасылацца на канкрэтныя пасады."
       search: "Пошук"
       bookmark: "закладка"
+      bulk:
+        select_all: "выбраць усе"
     drafts:
       label: "Чарнавікі"
       remove: "выдаліць"
@@ -819,6 +821,8 @@ be:
       components:
         bulk_select_topics_dropdown:
           title: "масавыя дзеянні"
+        bulk_select_bookmarks_dropdown:
+          title: "масавыя дзеянні"
     date_time_picker:
       from: ад
       to: да
@@ -1434,7 +1438,7 @@ be:
               content_drafts: "Мае чарнавікі"
             review:
               content: "Патрабуе перагляду"
-      filter: "Filter"
+      filter: "Filter..."
     form_templates:
       upload_field:
         upload: "Запампаваць"
@@ -1514,6 +1518,8 @@ be:
               label: Група
             category:
               label: катэгорыя
+      flags:
+        description: "Апісанне"
       groups:
         new:
           title: "Новая група"
@@ -2055,6 +2061,7 @@ be:
         untitled: "без загалоўка"
         type: "тып поля"
         description: "поле апісання"
+        preferences: "Налады"
         save: "захаваць"
         edit: "рэдагаваць"
         delete: "выдаліць"

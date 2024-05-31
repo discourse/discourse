@@ -732,7 +732,8 @@ et:
         user: Kasutaja
         qtt_like: Meeldimisi saadud
   dashboard:
-    host_names_warning: "Sinu config/database.yml fail kasutab vaikimisi hostinime localhost. Kirjuta sinna oma saidi hostinimi."
+    problem:
+      host_names: "Sinu config/database.yml fail kasutab vaikimisi hostinime localhost. Kirjuta sinna oma saidi hostinimi."
   site_settings:
     disabled: "välja lülitatud"
     max_post_length: "Maksimaalne lubatud postituse pikkus tähemärkides"
