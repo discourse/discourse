@@ -177,4 +177,9 @@ export default class MoveToTopic extends Component {
   updateTags(newTags) {
     this.tags = newTags;
   }
+
+  @action
+  newTopicSelected(topic) {
+    this.selectedTopicId = topic.id;
+  }
 }

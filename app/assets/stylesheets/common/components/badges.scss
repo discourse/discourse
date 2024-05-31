@@ -35,8 +35,8 @@
       content: "";
       background: var(--category-badge-color);
       flex: 0 0 auto;
-      width: 0.67rem; // fixed dimensions because otherwise they may not be square
-      height: 0.67rem;
+      width: 0.625rem; // fixed dimensions (10px square)
+      height: 0.625rem;
     }
 
     &__name {

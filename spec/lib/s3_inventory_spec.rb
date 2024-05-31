@@ -38,9 +38,17 @@ RSpec.describe S3Inventory do
         )
       end
 
-      @upload1 = Fabricate(:upload, etag: "ETag", updated_at: 1.days.ago)
-      @upload2 = Fabricate(:upload, etag: "ETag2", updated_at: Time.now)
+      @upload_1 = Fabricate(:upload, etag: "ETag", updated_at: 1.days.ago)
+      @upload_2 = Fabricate(:upload, etag: "ETag2", updated_at: Time.now)
       @no_etag = Fabricate(:upload, updated_at: 2.days.ago)
+
+      @upload_3 =
+        Fabricate(
+          :upload,
+          etag: "ETag3",
+          updated_at: 2.days.ago,
+          verification_status: Upload.verification_statuses[:s3_file_missing_confirmed],
+        )
 
       inventory.expects(:files).returns([{ key: "Key", filename: "#{csv_filename}.gz" }]).times(3)
       inventory.expects(:inventory_date).times(2).returns(Time.now)
@@ -49,7 +57,7 @@ RSpec.describe S3Inventory do
     it "should display missing uploads correctly" do
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
-      expect(output).to eq("#{@upload1.url}\n#{@no_etag.url}\n2 of 5 uploads are missing\n")
+      expect(output).to eq("#{@upload_1.url}\n#{@no_etag.url}\n2 of 5 uploads are missing\n")
       expect(Discourse.stats.get("missing_s3_uploads")).to eq(2)
     end
 
@@ -61,7 +69,7 @@ RSpec.describe S3Inventory do
 
       expect(output).to eq(<<~TEXT)
         #{differing_etag.url} has different etag
-        #{@upload1.url}
+        #{@upload_1.url}
         #{@no_etag.url}
         3 of 5 uploads are missing
         1 of these are caused by differing etags
@@ -80,23 +88,23 @@ RSpec.describe S3Inventory do
       expect(
         Upload.where(verification_status: Upload.verification_statuses[:verified]).count,
       ).to eq(3)
-      expect(
-        Upload.where(verification_status: Upload.verification_statuses[:invalid_etag]).count,
-      ).to eq(2)
+
+      expect(Upload.with_invalid_etag_verification_status.count).to eq(2)
+
       expect(
         Upload.where(verification_status: Upload.verification_statuses[:unchecked]).count,
       ).to eq(7)
     end
 
     it "does not affect the updated_at date of uploads" do
-      upload_1_updated = @upload1.updated_at
-      upload_2_updated = @upload2.updated_at
+      upload_1_updated = @upload_1.updated_at
+      upload_2_updated = @upload_2.updated_at
       no_etag_updated = @no_etag.updated_at
 
       output = capture_stdout { inventory.backfill_etags_and_list_missing }
 
-      expect(@upload1.reload.updated_at).to eq_time(upload_1_updated)
-      expect(@upload2.reload.updated_at).to eq_time(upload_2_updated)
+      expect(@upload_1.reload.updated_at).to eq_time(upload_1_updated)
+      expect(@upload_2.reload.updated_at).to eq_time(upload_2_updated)
       expect(@no_etag.reload.updated_at).to eq_time(no_etag_updated)
     end
   end

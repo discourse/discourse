@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -19,12 +20,22 @@ export const DELETE_REPLIES_TYPE = "delete_replies";
 export default class EditTopicTimer extends Component {
   @service currentUser;
 
-  @tracked
-  topicTimer = new TrackedObject(
-    this.args.model.topic?.topic_timer || this.createDefaultTimer()
-  );
+  @tracked topicTimer;
   @tracked loading = false;
   @tracked flash;
+
+  constructor() {
+    super(...arguments);
+
+    if (this.args.model.topic?.topic_timer) {
+      this.topicTimer = new TrackedObject(this.args.model.topic?.topic_timer);
+    } else {
+      // TODO: next() is a hack, to-be-removed
+      next(() => {
+        this.topicTimer = new TrackedObject(this.createDefaultTimer());
+      });
+    }
+  }
 
   get defaultStatusType() {
     return this.publicTimerTypes[0].id;

@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { or } from "truth-helpers";
+import DeferredRender from "discourse/components/deferred-render";
 import ApiPanels from "./api-panels";
 import Footer from "./footer";
 import Sections from "./sections";
@@ -39,25 +40,26 @@ export default class SidebarHamburgerDropdown extends Component {
       >
         <div class="panel-body">
           <div class="panel-body-contents">
-            <div class="sidebar-hamburger-dropdown">
-              {{#if
-                (or this.sidebarState.showMainPanel @forceMainSidebarPanel)
-              }}
-                <Sections
-                  @currentUser={{this.currentUser}}
-                  @collapsableSections={{this.collapsableSections}}
-                  @panel={{this.sidebarState.currentPanel}}
-                  @hideApiSections={{@forceMainSidebarPanel}}
-                />
-              {{else}}
-                <ApiPanels
-                  @currentUser={{this.currentUser}}
-                  @collapsableSections={{this.collapsableSections}}
-                />
-              {{/if}}
-
-              <Footer />
-            </div>
+            <DeferredRender>
+              <div class="sidebar-hamburger-dropdown">
+                {{#if
+                  (or this.sidebarState.showMainPanel @forceMainSidebarPanel)
+                }}
+                  <Sections
+                    @currentUser={{this.currentUser}}
+                    @collapsableSections={{this.collapsableSections}}
+                    @panel={{this.sidebarState.currentPanel}}
+                    @hideApiSections={{@forceMainSidebarPanel}}
+                  />
+                {{else}}
+                  <ApiPanels
+                    @currentUser={{this.currentUser}}
+                    @collapsableSections={{this.collapsableSections}}
+                  />
+                {{/if}}
+                <Footer />
+              </div>
+            </DeferredRender>
           </div>
         </div>
       </div>
