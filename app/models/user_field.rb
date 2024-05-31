@@ -15,6 +15,8 @@ class UserField < ActiveRecord::Base
   accepts_nested_attributes_for :user_field_options
 
   before_save :sanitize_description
+  after_create :update_required_fields_version
+  after_update :update_required_fields_version, if: -> { saved_change_to_requirement? }
   after_save :queue_index_search
 
   scope :public_fields, -> { where(show_on_profile: true).or(where(show_on_user_card: true)) }
@@ -37,6 +39,12 @@ class UserField < ActiveRecord::Base
   end
 
   private
+
+  def update_required_fields_version
+    return if !for_all_users?
+
+    UserRequiredFieldsVersion.create
+  end
 
   def sanitize_description
     if description_changed?
