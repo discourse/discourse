@@ -75,8 +75,8 @@ ko:
       not_allowed_theme: "`%{repo}` 가 허용 테마의 목록에 없습니다(`allowed_theme_repos` 글로벌 설정을 확인하세요)."
     errors:
       component_no_user_selectable: "테마 구성 요소는 사용자가 선택할 수 없습니다"
-      component_no_default: "테마 구성 요소는 디폴트 테마가 될 수 없습니다"
-      component_no_color_scheme: "테마 구성 요소는 색상 팔레트를 가질 수 없습니다"
+      component_no_default: "테마 구성 요소는 기본 테마가 될 수 없습니다."
+      component_no_color_scheme: "테마 구성 요소에는 색상 팔레트를 포함할 수 없습니다."
       no_multilevels_components: "자식 테마가 있는 테마는 자식 테마 자체가 될 수 없습니다"
       optimized_link: 최적화된 이미지 링크는 일시적이므로 테마 소스 코드에 포함하지 않아야 합니다.
     settings_errors:
