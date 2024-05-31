@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class FakeLogger
-  attr_reader :debugs, :infos, :warnings, :errors, :fatals
+  attr_reader :debugs, :infos, :warnings, :errors, :fatals, :severities
   attr_accessor :level
 
   def initialize
@@ -11,6 +11,7 @@ class FakeLogger
     @errors = []
     @fatals = []
     @level = Logger::DEBUG
+    @severities = { 0 => :debugs, 1 => :infos, 2 => :warnings, 3 => :errors, 4 => :fatals }
   end
 
   def debug(message)
@@ -54,5 +55,9 @@ class FakeLogger
   end
 
   def formatter
+  end
+
+  def add(severity, message = nil, progname = nil)
+    public_send(severities[severity]) << message
   end
 end
