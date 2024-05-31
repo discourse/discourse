@@ -317,6 +317,7 @@ ko:
       other: "%{count}개의 새 주제 보기"
     preview: "미리보기"
     cancel: "취소"
+    deleting: "삭제 중…"
     save: "변경사항 저장"
     saved: "저장되었습니다!"
     upload: "업로드"

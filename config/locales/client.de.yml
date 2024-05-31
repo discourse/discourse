@@ -2372,7 +2372,7 @@ de:
       post_approved: "Dein Beitrag wurde genehmigt."
       reviewable_items: "Elemente, die eine Überprüfung benötigen"
       watching_first_post_label: "Neues Thema"
-      user_moved_post: "%{username} verschoben"
+      user_moved_post: "%{username} verschob"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
