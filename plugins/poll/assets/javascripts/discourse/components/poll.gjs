@@ -175,7 +175,8 @@ export default class PollComponent extends Component {
   get isAutomaticallyClosed() {
     const poll = this.poll;
     return (
-      poll.close && moment.utc(poll.close, "YYYY-MM-DD HH:mm:ss Z") <= moment()
+      (poll.close ?? false) &&
+      moment.utc(poll.close, "YYYY-MM-DD HH:mm:ss Z") <= moment()
     );
   }
 
