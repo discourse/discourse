@@ -735,12 +735,23 @@ createWidget("post-body", {
   tagName: "div.topic-body.clearfix",
 
   html(attrs, state) {
-    const postContents = this.attach("post-contents", attrs);
-    let result = [this.attach("post-meta-data", attrs)];
+    let result = [
+      this.attach("post-meta-data", attrs),
+      new RenderGlimmer(
+        this,
+        "span",
+        hbs`<PluginOutlet
+            @name="above-post-description"
+            @connectorTagName="span"
+            @outletArgs={{hash postId=@data.postId}}
+          />`,
+        { postId: attrs.id }
+      ),
+    ];
     result = result.concat(
       applyDecorators(this, "after-meta-data", attrs, state)
     );
-    result.push(postContents);
+    result.push(this.attach("post-contents", attrs));
     result.push(this.attach("actions-summary", attrs));
     result.push(this.attach("post-links", attrs));
     if (attrs.showTopicMap) {
