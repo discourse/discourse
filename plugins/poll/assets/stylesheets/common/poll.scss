@@ -1,9 +1,3 @@
-.topic-body {
-  .cooked {
-    overflow: visible;
-  }
-}
-
 div.poll-outer {
   div.poll {
     margin: 1em 0;
@@ -353,63 +347,63 @@ div.poll-outer {
       }
     }
 
-    .poll-buttons-dropdown {
-      align-self: stretch;
-      position: relative;
+    // .poll-buttons-dropdown {
+    //   align-self: stretch;
+    //   position: relative;
 
-      .label {
-        display: none;
-      }
-      .widget-dropdown {
-        &.closed {
-          :not(:first-child) {
-            display: none;
-          }
-        }
-        &.opened {
-          display: flex;
-          flex-direction: column;
-          position: relative;
+    //   .label {
+    //     display: none;
+    //   }
+    //   .widget-dropdown {
+    //     &.closed {
+    //       :not(:first-child) {
+    //         display: none;
+    //       }
+    //     }
+    //     &.opened {
+    //       display: flex;
+    //       flex-direction: column;
+    //       position: relative;
 
-          overflow-y: visible;
-          .widget-dropdown-body {
-            display: block;
-            position: absolute;
-            z-index: 300;
-            overflow-y: visible;
-            transform: translate(-44px, 38px);
-            .widget-dropdown-item {
-              width: 100%;
-              padding: 0;
-              margin: 0;
-              float: left;
-              &:hover {
-                color: var(--tertiary);
-                background-color: var(--primary-low);
-              }
-              button {
-                width: 100%;
-                padding: 0.5em;
-                display: flex;
-                flex-direction: row;
-                background-color: var(--secondary);
-                &:hover {
-                  background-color: var(--primary-low);
-                }
-                border: none;
-              }
-            }
-          }
-        }
+    //       overflow-y: visible;
+    //       .widget-dropdown-body {
+    //         display: block;
+    //         position: absolute;
+    //         z-index: 300;
+    //         overflow-y: visible;
+    //         transform: translate(-44px, 38px);
+    //         .widget-dropdown-item {
+    //           width: 100%;
+    //           padding: 0;
+    //           margin: 0;
+    //           float: left;
+    //           &:hover {
+    //             color: var(--tertiary);
+    //             background-color: var(--primary-low);
+    //           }
+    //           button {
+    //             width: 100%;
+    //             padding: 0.5em;
+    //             display: flex;
+    //             flex-direction: row;
+    //             background-color: var(--secondary);
+    //             &:hover {
+    //               background-color: var(--primary-low);
+    //             }
+    //             border: none;
+    //           }
+    //         }
+    //       }
+    //     }
 
-        &-header {
-          height: 100%;
-          .d-icon {
-            margin: 0;
-          }
-        }
-      }
-    }
+    //     &-header {
+    //       height: 100%;
+    //       .d-icon {
+    //         margin: 0;
+    //       }
+    //     }
+    //   }
+    // }
 
     .poll-buttons-dropdown,
     .export-results,
