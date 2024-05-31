@@ -22,6 +22,7 @@ shared_examples "login scenarios" do
       login_modal.open
       login_modal.fill(username: "john", password: "supersecurepassword")
       login_modal.click_login
+      expect(page).to have_css(".not-activated-modal")
       login_modal.click(".activation-controls button.resend")
 
       wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
