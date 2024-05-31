@@ -89,4 +89,19 @@ module("Integration | Helper | raw", function (hooks) {
 
     assert.true(willDestroyCalled, "component was cleaned up correctly");
   });
+
+  test("does not add extra whitespace", async function (assert) {
+    const SimpleTemplate = <template>baz</template>;
+
+    addRawTemplate("raw-test", () =>
+      rawRenderGlimmer(this, "span.bar", SimpleTemplate)
+    );
+
+    await render(<template>
+      <RenderGlimmerContainer />
+      {{raw "raw-test"}}
+    </template>);
+
+    assert.dom("span.bar").hasText(/^baz$/);
+  });
 });
