@@ -48,5 +48,29 @@ export default class FormFieldgroup extends Component {
         )
       }}
     </div>
+
+    {{#let (uniqueId) as |labelId|}}
+      <div
+        role="radiogroup"
+        aria-labelledby={{labelId}}
+        aria-invalid={{if @invalid "true"}}
+        aria-describedby={{if @invalid @errorId}}
+        ...attributes
+      >
+        {{yield
+          (hash
+            Radio=(component
+              HeadlessFormControlRadioComponent
+              name=@name
+              selected=@selected
+              setValue=@setValue
+            )
+            Label=(component
+              HeadlessFormControlRadioGroupLabelComponent id=labelId
+            )
+          )
+        }}
+      </div>
+    {{/let}}
   </template>
 }

@@ -18,6 +18,10 @@
     border-radius: var(--d-input-border-radius);
   }
 
+  .d-form-control-input {
+    z-index: 1;
+  }
+
   > :not(:last-child) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;

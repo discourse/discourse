@@ -6,7 +6,7 @@ import concatClass from "discourse/helpers/concat-class";
 
 class FormFieldInlineRowWrapper extends Component {
   get size() {
-    return this.args.inline ? 12 : this.args.size ?? 12;
+    return this.args.size ?? 4;
   }
 
   <template>
@@ -15,6 +15,7 @@ class FormFieldInlineRowWrapper extends Component {
         @label={{@label}}
         @disabled={{@disabled}}
         @help={{@help}}
+        @description={{@description}}
         @name={{@name}}
         @type={{@type}}
         @validation={{@validation}}

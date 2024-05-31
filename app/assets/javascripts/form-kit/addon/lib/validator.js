@@ -54,7 +54,28 @@ export default class Validator {
   }
 
   requiredValidator(schema, rule) {
-    // return schema.required();
+    if (schema instanceof z.ZodString) {
+      if (rule.trim) {
+        schema = schema.trim();
+      }
+
+      schema = schema.min(1, "Required");
+    }
+
+    return schema;
+  }
+
+  requiredPreprocessor(schema, rule) {
+    schema = z.preprocess((val) => {
+      if (rule.trim) {
+        val = val.trim();
+      }
+
+      console.log("trimmed", val === "" ? null : val);
+
+      return val === "" ? null : val;
+    }, schema);
+
     return schema;
   }
 }

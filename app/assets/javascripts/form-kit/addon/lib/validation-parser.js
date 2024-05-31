@@ -16,8 +16,11 @@ export default class ValidationParser {
     return rules;
   }
 
-  requiredRule() {
-    return true;
+  requiredRule(args = "") {
+    const [trim] = args.split(",");
+    return {
+      trim: trim === "trim",
+    };
   }
 
   betweenRule(args) {

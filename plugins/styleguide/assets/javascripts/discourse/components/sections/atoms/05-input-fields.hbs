@@ -17,6 +17,17 @@
   @validateOn="input"
   as |form|
 >
+  <form.Row as |row|>
+    <row.Field
+      @name="standard_stacked_input"
+      @type="text"
+      @validation="required:trim|length:0,25"
+      @label="Standard stacked input"
+      @help="An explanation about the usecase of this form."
+      @description="Format: XYZ-123"
+    />
+  </form.Row>
+
   <form.Row @inline={{true}} as |row|>
     <row.Field
       @name="name"
@@ -30,6 +41,7 @@
       @type="text"
       @validation="required|length:2,3"
       @disabled={{true}}
+      @size={{6}}
       placeholder="Enter email"
     />
   </form.Row>
@@ -45,13 +57,29 @@
     <form.Field @type="checkbox" @name="check_2" @label="test" />
   </form.Fieldset>
 
+  <form.Fieldset @legend="yo">
+    <form.Field @type="radio" @name="check_2" @label="test" />
+  </form.Fieldset>
+
   <form.Field @type="checkbox" @name="check_3" @label="test" />
 
   <form.Fieldgroup as |fieldGroup|>
     <fieldGroup.Text>http://</fieldGroup.Text>
-    <fieldGroup.Field @name="bar" @type="text" placeholder="Enter email" />
+    <fieldGroup.Field
+      @size={{4}}
+      @name="bar"
+      @type="text"
+      placeholder="Enter email"
+      class="--medium"
+    />
     <fieldGroup.Text>.com</fieldGroup.Text>
-    <fieldGroup.Field @name="baz" @type="text" placeholder="Enter email" />
+    <fieldGroup.Field
+      @size={{4}}
+      @name="baz"
+      @type="text"
+      placeholder="Enter email"
+      class="--small"
+    />
   </form.Fieldgroup>
 
   <PluginOutlet

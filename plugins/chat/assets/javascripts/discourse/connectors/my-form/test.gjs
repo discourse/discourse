@@ -12,6 +12,7 @@ export default class Test extends Component {
         @validation="length:5,16"
         @label="What is your name?"
         @help="age will help us to know you better"
+        @description="Format: XYZ-123"
         placeholder="Enter email"
       />
     </@outletArgs.form.Row>

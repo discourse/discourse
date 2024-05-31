@@ -17,8 +17,11 @@ export default class FieldData {
   }
 
   get required() {
-    console.log("requiredrules", this.rules);
     return this.rules?.required ?? false;
+  }
+
+  get maxLength() {
+    return this.rules?.length?.max ?? null;
   }
 
   /**

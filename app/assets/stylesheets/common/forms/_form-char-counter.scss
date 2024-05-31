@@ -1,0 +1,5 @@
+.d-form-char-counter {
+  &.--exceeded {
+    color: var(--danger);
+  }
+}

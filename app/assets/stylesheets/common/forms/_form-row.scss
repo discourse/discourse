@@ -15,11 +15,10 @@
   }
 
   &.inline-row {
-    align-items: center;
+    align-items: flex-start;
 
     > .d-form-col {
       flex: 0 0 auto;
-      width: auto;
     }
   }
 }

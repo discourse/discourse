@@ -8,6 +8,7 @@ import concatClass from "discourse/helpers/concat-class";
 import uniqueId from "discourse/helpers/unique-id";
 import FormFieldsCheckbox from "./fields/checkbox";
 import FormFieldsInput from "./fields/input";
+import FormFieldsRadioGroup from "./fields/radiogroup";
 
 export default class FormField extends Component {
   @tracked field;
@@ -57,6 +58,10 @@ export default class FormField extends Component {
       return FormFieldsCheckbox;
     }
 
+    if (this.args.type === "radiogroup") {
+      return FormFieldsRadioGroup;
+    }
+
     return FormFieldsInput;
   }
 
@@ -66,23 +71,25 @@ export default class FormField extends Component {
   }
 
   <template>
-    {{log "required" this.field.required}}
     {{#let (uniqueId) (uniqueId) as |fieldId errorId|}}
-      <this.componentForField
-        @name={{@name}}
-        @label={{@label}}
-        @disabled={{@disabled}}
-        @help={{@help}}
-        @description={{@description}}
-        @fieldId={{fieldId}}
-        @errorId={{errorId}}
-        @value={{this.value}}
-        @setValue={{this.setValue}}
-        @invalid={{this.hasErrors}}
-        @errors={{this.errors}}
-        @required={{this.field.required}}
-        ...attributes
-      />
+      <div class={{concatClass "d-form-field" (if this.hasErrors "has-error")}}>
+        <this.componentForField
+          @name={{@name}}
+          @label={{@label}}
+          @disabled={{@disabled}}
+          @maxLength={{this.field.maxLength}}
+          @help={{@help}}
+          @description={{@description}}
+          @fieldId={{fieldId}}
+          @errorId={{errorId}}
+          @value={{this.value}}
+          @setValue={{this.setValue}}
+          @invalid={{this.hasErrors}}
+          @errors={{this.errors}}
+          @required={{this.field.required}}
+          ...attributes
+        />
+      </div>
     {{/let}}
   </template>
 }
