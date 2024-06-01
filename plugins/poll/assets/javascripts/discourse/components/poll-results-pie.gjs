@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
+import { modifier } from "ember-modifier";
 import loadScript from "discourse/lib/load-script";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
@@ -93,13 +94,23 @@ export default class PollResultsPieComponent extends Component {
     };
   };
 
-  get canvasId() {
+  registerLegendElement = modifier((element) => {
+    this.legendElement = element;
+  });
+registerCanvasElement = modifier((element) => {
+    this.canvasElement = element;
+  });
+get canvasId() {
     return htmlSafe(`poll-results-chart-${this.args.id}`);
   }
 
   get legendId() {
     return htmlSafe(`poll-results-legend-${this.args.id}`);
   }
+
+
+
+
 
   @action
   async drawPie() {
@@ -108,10 +119,9 @@ export default class PollResultsPieComponent extends Component {
     const data = this.args.options.mapBy("votes");
     const labels = this.args.options.mapBy("html");
     const config = this.pieChartConfig(data, labels, {
-      legendContainerId: `poll-results-legend-${this.args.id}`,
+      legendContainerId: this.legendElement.id,
     });
-
-    const el = document.getElementById(`poll-results-chart-${this.args.id}`);
+    const el = this.canvasElement;
     // eslint-disable-next-line no-undef
     this._chart = new Chart(el.getContext("2d"), config);
   }
@@ -119,10 +129,15 @@ export default class PollResultsPieComponent extends Component {
     <div class="poll-results-chart">
       <canvas
         {{didInsert this.drawPie}}
+        {{didInsert this.registerCanvasElement}}
         id={{this.canvasId}}
         class="poll-results-canvas"
       ></canvas>
-      <ul id={{this.legendId}} class="pie-chart-legends">
+      <ul
+        {{didInsert this.registerLegendElement}}
+        id={{this.legendId}}
+        class="pie-chart-legends"
+      >
       </ul>
     </div>
   </template>
