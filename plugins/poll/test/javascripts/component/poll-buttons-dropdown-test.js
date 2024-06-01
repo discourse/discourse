@@ -31,12 +31,12 @@ module("Poll | Component | poll-buttons-dropdown", function (hooks) {
       @dropDownClick={{this.dropDownClick}}
     />`);
 
-    await click(".widget-dropdown");
+    await click(".widget-dropdown-header");
 
-    assert.strictEqual(count("div.widget-dropdown-item"), 1);
+    assert.strictEqual(count("li.dropdown-menu__item"), 1);
 
     assert.strictEqual(
-      query("div.widget-dropdown-item span").textContent.trim(),
+      query("li.dropdown-menu__item span").textContent.trim(),
       I18n.t("poll.close.label"),
       "displays the poll Close action"
     );
