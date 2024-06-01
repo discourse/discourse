@@ -61,7 +61,11 @@ class DiscoursePoll::PollsController < ::ApplicationController
     poll_name = params.require(:poll_name)
     user_field_name = params.require(:user_field_name)
 
-    if Poll.find_by(post_id: post_id, name: poll_name).type == "irv"
+    poll = Poll.find_by(post_id: post_id, name: poll_name)
+
+    if poll.nil?
+      render json: { error: I18n.t("poll.errors.poll_not_found") }, status: :not_found
+    elsif poll.irv?
       render json: {
                error: I18n.t("poll.irv.no_group_results_support"),
              },
