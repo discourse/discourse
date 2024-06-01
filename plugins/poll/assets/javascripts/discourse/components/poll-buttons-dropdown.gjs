@@ -58,13 +58,15 @@ export default class PollButtonsDropdownComponent extends Component {
     const dataExplorerEnabled = this.siteSettings.data_explorer_enabled;
     const exportQueryID = this.siteSettings.poll_export_data_explorer_query_id;
 
-    const closed = this.args.closed;
-    const voters = this.args.voters;
-    const isStaff = this.args.isStaff;
-    const isMe = this.args.isMe;
-    const topicArchived = this.args.topicArchived;
-    const groupableUserFields = this.args.groupableUserFields;
-    const isAutomaticallyClosed = this.args.isAutomaticallyClosed;
+    const {
+      closed,
+      voters,
+      isStaff,
+      isMe,
+      topicArchived,
+      groupableUserFields,
+      isAutomaticallyClosed,
+    } = this.args;
 
     if (groupableUserFields.length && voters > 0) {
       const option = { ...buttonOptionsMap.showBreakdown };
