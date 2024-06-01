@@ -97,20 +97,16 @@ export default class PollResultsPieComponent extends Component {
   registerLegendElement = modifier((element) => {
     this.legendElement = element;
   });
-registerCanvasElement = modifier((element) => {
+  registerCanvasElement = modifier((element) => {
     this.canvasElement = element;
   });
-get canvasId() {
+  get canvasId() {
     return htmlSafe(`poll-results-chart-${this.args.id}`);
   }
 
   get legendId() {
     return htmlSafe(`poll-results-legend-${this.args.id}`);
   }
-
-
-
-
 
   @action
   async drawPie() {
