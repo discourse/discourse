@@ -63,7 +63,7 @@ class DiscoursePoll::PollsController < ::ApplicationController
 
     if Poll.find_by(post_id: post_id, name: poll_name).type == "irv"
       render json: {
-               error: "Invalid poll type, IRV does not support grouped results.",
+               error: I18n.t("poll.irv.no_group_results_support"),
              },
              status: :unprocessable_entity
     else

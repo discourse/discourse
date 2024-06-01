@@ -511,7 +511,7 @@ class DiscoursePoll::Poll
       if poll.poll_options.length != num_of_options
         raise DiscoursePoll::Error.new(
                 I18n.t(
-                  "poll.irv_vote_options_mismatch",
+                  "poll.irv.vote_options_mismatch",
                   count: poll.options.length,
                   provided: num_of_options,
                 ),
