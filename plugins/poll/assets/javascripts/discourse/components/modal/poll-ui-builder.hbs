@@ -105,7 +105,7 @@
       </div>
     {{/unless}}
 
-    {{#unless this.dontShowForIrvOrRegular}}
+    {{#unless this.irvOrRegular}}
       <div class="options">
         <div class="input-group poll-number">
           <label class="input-group-label">{{i18n
@@ -199,7 +199,7 @@
         />
       </div>
 
-      {{#unless this.dontShowForIrvOrNumber}}
+      {{#unless this.irvOrNumber}}
         <div class="input-group poll-select column">
           <label class="input-group-label">{{i18n
               "poll.ui_builder.poll_chart_type.label"

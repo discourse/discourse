@@ -39,8 +39,8 @@ export default class PollUiBuilderModal extends Component {
   @or("showAdvanced", "isNumber") showNumber;
   @or("showAdvanced", "isIrv") showIrv;
   @gt("pollOptions.length", 1) canRemoveOption;
-  @or("isIrv", "isRegular") dontShowForIrvOrRegular;
-  @or("isIrv", "isNumber") dontShowForIrvOrNumber;
+  @or("isIrv", "isRegular") irvOrRegular;
+  @or("isIrv", "isNumber") irvOrNumber;
 
   @discourseComputed("currentUser.staff")
   pollResults(staff) {
