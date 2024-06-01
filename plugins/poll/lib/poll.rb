@@ -75,7 +75,9 @@ class DiscoursePoll::Poll
         end
       end
 
-    unless serialized_poll[:type] == IRV
+    if serialized_poll[:type] == IRV
+      serialized_poll[:irv_outcome] = DiscoursePoll::Irv.irv_outcome(poll_id)
+    else
       # Ensure consistency here as we do not have a unique index to limit the
       # number of votes per the poll's configuration.
       is_multiple = serialized_poll[:type] == MULTIPLE
@@ -98,10 +100,6 @@ class DiscoursePoll::Poll
       WHERE poll_votes.poll_id = to_delete_poll_votes.poll_id
       AND poll_votes.user_id = to_delete_poll_votes.user_id
       SQL
-    end
-
-    if serialized_poll[:type] == IRV
-      serialized_poll[:irv_outcome] = DiscoursePoll::Irv.irv_outcome(poll_id)
     end
 
     serialized_poll[:options].each do |option|
