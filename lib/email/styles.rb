@@ -374,12 +374,27 @@ module Email
       end
     end
 
+    def dedup_style(style)
+      style_instructions =
+        style.split(";").map(&:strip).select(&:present?).map { |s| s.split(":", 2).map(&:strip) }
+      styles = {}
+      style_instructions.each { |key, value| styles[key] = value }
+      styles.map { |k, v| "#{k}:#{v}" }.join(";")
+    rescue StandardError
+      style
+    end
+
+    def dedup_styles
+      @fragment.css("[style]").each { |element| element["style"] = dedup_style element["style"] }
+    end
+
     def to_html
       # needs to be before class + id strip because we need to style redacted
       # media and also not double-redact already redacted from lower levels
       replace_secure_uploads_urls if SiteSetting.secure_uploads?
       strip_classes_and_ids
       replace_relative_urls
+      dedup_styles
 
       @fragment.to_html
     end
