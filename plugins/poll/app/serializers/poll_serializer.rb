@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class PollSerializer < ApplicationSerializer
-  attributes :id,
-             :name,
+  attributes :name,
              :type,
              :status,
              :public,
