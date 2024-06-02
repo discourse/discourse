@@ -52,11 +52,9 @@ export default class PollResultsStandardComponent extends Component {
   }
 
   get orderedOptions() {
-    const votersCount = this.votersCount;
+    const ordered = this.orderOptions([...this.args.options]);
 
-    let ordered = this.orderOptions([...this.args.options]);
-
-    const percentages = this.getPercentages(ordered, votersCount);
+    const percentages = this.getPercentages(ordered, this.votersCount);
 
     const roundedPercentages = this.roundPercentages(percentages);
 
