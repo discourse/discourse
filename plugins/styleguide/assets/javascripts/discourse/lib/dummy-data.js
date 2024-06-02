@@ -225,17 +225,22 @@ export function createData(store) {
 
     toggleSwitchState: true,
 
-    formData: {
-      name: "joffrey",
-      lastname: "jaffeux",
-      foo: "jaffeux",
-      bar: "jaffeux",
-      baz: "jaffeux",
-      age: 37,
-      legal: false,
-      check_1: true,
-      check_2: false,
-      check_3: true,
+    formData: {},
+
+    validate: (name, value, data, addError) => {
+      console.log("custom validate", data["what_is_love"] === "check_2");
+      if (
+        name === "foo" &&
+        value === "bar" &&
+        data["what_is_love"] === "check_2"
+      ) {
+        console.log("ADD ERROR", addError);
+        addError({
+          type: "something",
+          value,
+          message: "NOT GOOD!",
+        });
+      }
     },
 
     onSubmit: (data) => {

@@ -9,18 +9,15 @@ import { modifier as modifierFn } from "ember-modifier";
 import { VALIDATION_TYPES } from "form-kit/lib/constants";
 import FieldData from "form-kit/lib/field-data";
 import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
+import FormErrors from "./form/errors";
 import FormField from "./form/field";
-import FormFieldgroup from "./form/fieldgroup";
-import FormFieldsCheckbox from "./form/fields/checkbox";
-import FormFieldset from "./form/fieldset";
-import Row from "./form/inline-row";
-import FormText from "./form/text";
+import Row from "./row";
 
 export default class Form extends Component {
   @tracked validationState = {};
   @tracked showAllValidations = false;
-  @tracked fields = new TrackedMap();
+
+  fields = new Map();
 
   onValidation = modifierFn((element, [eventName, handler]) => {
     if (eventName) {
@@ -45,8 +42,6 @@ export default class Form extends Component {
 
   get fieldValidationEvent() {
     const { validateOn } = this;
-
-    console.log({ validateOn });
 
     if (validateOn === VALIDATION_TYPES.submit) {
       return undefined;
@@ -85,7 +80,7 @@ export default class Form extends Component {
   }
 
   get visibleErrors() {
-    if (!this.validationState?.isResolved) {
+    if (!this.validationState) {
       return;
     }
 
@@ -110,10 +105,15 @@ export default class Form extends Component {
   @action
   set(key, value) {
     set(this.effectiveData, key, value);
+
+    console.log("SET", this.fieldValidationEvent, VALIDATION_TYPES.change);
+    if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
+      this.handleFieldValidation(key);
+    }
   }
 
   @action
-  registerField(name, field, validation) {
+  registerField(name, field) {
     assert(
       `You didn't pass a name to the form field.`,
       typeof name !== "undefined"
@@ -124,9 +124,11 @@ export default class Form extends Component {
       !this.fields.has(name)
     );
 
-    const f = new FieldData(field, validation);
-    this.fields.set(name, f);
-    return f;
+    // const f = new FieldData(field, validation);
+    // this.fields.set(name, f);
+    // return f;
+
+    this.fields.set(name, new FieldData(field));
   }
 
   @action
@@ -158,7 +160,6 @@ export default class Form extends Component {
 
   @action
   async handleFieldValidation(event) {
-    console.log("handleFieldValidation", event);
     let name;
 
     if (typeof event === "string") {
@@ -169,19 +170,14 @@ export default class Form extends Component {
     }
 
     if (name) {
-      console.log(name);
       const field = this.fields.get(name);
 
       if (field) {
-        console.log(field);
         await this._validate();
         field.validationEnabled = true;
       }
     } else if (event instanceof Event) {
-      warn(
-        `An event of type "${event.type}" was received by headless-form, which is supposed to trigger validations for a certain field. But the name of that field could not be determined. Make sure that your control element has a \`name\` attribute matching the field, or use the yielded \`{{field.captureEvents}}\` to capture the events.`,
-        { id: "headless-form.validation-event-for-unknown-field" }
-      );
+      alert("???");
     }
   }
 
@@ -190,30 +186,28 @@ export default class Form extends Component {
   }
 
   async validate() {
-    debug("Validating form");
-
-    const customFieldValidations = [];
+    console.log("---- validate ----");
+    let errors = {};
     for (const [name, field] of this.fields) {
-      const fieldValidationResult = await field.validate?.(
-        this.effectiveData[name],
-        name,
-        this.effectiveData
+      console.log("VALIDATE NAME", name, this.effectiveData);
+      Object.assign(
+        errors,
+        await field.validate?.(
+          name,
+          this.effectiveData[name],
+          this.effectiveData
+        )
       );
-
-      if (fieldValidationResult) {
-        customFieldValidations.push({
-          [name]: fieldValidationResult,
-        });
-      }
     }
 
-    return customFieldValidations[0];
+    return errors;
   }
 
   <template>
-    {{log this.fieldValidationEvent}}
     <form
+      novalidate
       class="d-form"
+      ...attributes
       {{on "submit" this.onSubmit}}
       {{on "reset" this.onReset}}
       {{this.onValidation this.fieldValidationEvent this.handleFieldValidation}}
@@ -221,46 +215,20 @@ export default class Form extends Component {
         this.fieldRevalidationEvent
         this.handleFieldRevalidation
       }}
-      novalidate
     >
-      {{#if this.hasValidationErrors}}
-        {{log this.validationState}}
-        ERROR
-      {{/if}}
-
       {{yield
         (hash
-          Row=(component
-            Row
-            data=this.effectiveData
-            set=this.set
-            triggerValidationFor=this.handleFieldValidation
-            registerField=this.registerField
-            unregisterField=this.unregisterField
-            errors=this.validationState
-            fields=this.fields
+          Row=(component Row)
+          Errors=(component
+            FormErrors errors=this.visibleErrors withPrefix=true
           )
-          Text=(component FormText)
           Field=(component
             FormField
             data=this.effectiveData
             set=this.set
-            triggerValidationFor=this.handleFieldValidation
             registerField=this.registerField
             unregisterField=this.unregisterField
             errors=this.validationState
-            fields=this.fields
-          )
-          Fieldset=(component FormFieldset)
-          Fieldgroup=(component
-            FormFieldgroup
-            data=this.effectiveData
-            set=this.set
-            triggerValidationFor=this.handleFieldValidation
-            registerField=this.registerField
-            unregisterField=this.unregisterField
-            errors=this.validationState
-            fields=this.fields
           )
         )
       }}

@@ -4,15 +4,12 @@ import { assert } from "@ember/debug";
 import { fn, hash } from "@ember/helper";
 import { action, get } from "@ember/object";
 import { next } from "@ember/runloop";
+import FkControlInput from "form-kit/components/control/input";
+import FkControlRadioGroup from "form-kit/components/control/radio-group";
 import concatClass from "discourse/helpers/concat-class";
 import uniqueId from "discourse/helpers/unique-id";
-import FormFieldsCheckbox from "./fields/checkbox";
-import FormFieldsInput from "./fields/input";
-import FormFieldsRadioGroup from "./fields/radiogroup";
 
 export default class FormField extends Component {
-  @tracked field;
-
   constructor() {
     super(...arguments);
 
@@ -21,13 +18,10 @@ export default class FormField extends Component {
       typeof this.args.name !== "string" || !this.args.name.includes(".")
     );
 
-    next(() => {
-      this.field = this.args.registerField(this.args.name, {
-        validate: this.args.validate,
-        validation: this.args.validation,
-        type: this.args.type,
-        disabled: this.args.disabled,
-      });
+    this.args.registerField(this.args.name, {
+      validate: this.args.validate,
+      disabled: this.args.disabled,
+      validation: this.args.validation,
     });
   }
 
@@ -42,27 +36,11 @@ export default class FormField extends Component {
   }
 
   get errors() {
-    return this.args.errors?.[this.args.name];
+    return { [this.args.name]: this.args.errors?.[this.args.name] };
   }
 
   get hasErrors() {
     return this.errors !== undefined;
-  }
-
-  get showMeta() {
-    return this.args.description || this.hasErrors;
-  }
-
-  get componentForField() {
-    if (this.args.type === "checkbox") {
-      return FormFieldsCheckbox;
-    }
-
-    if (this.args.type === "radiogroup") {
-      return FormFieldsRadioGroup;
-    }
-
-    return FormFieldsInput;
   }
 
   @action
@@ -72,24 +50,32 @@ export default class FormField extends Component {
 
   <template>
     {{#let (uniqueId) (uniqueId) as |fieldId errorId|}}
-      <div class={{concatClass "d-form-field" (if this.hasErrors "has-error")}}>
-        <this.componentForField
-          @name={{@name}}
-          @label={{@label}}
-          @disabled={{@disabled}}
-          @maxLength={{this.field.maxLength}}
-          @help={{@help}}
-          @description={{@description}}
-          @fieldId={{fieldId}}
-          @errorId={{errorId}}
-          @value={{this.value}}
-          @setValue={{this.setValue}}
-          @invalid={{this.hasErrors}}
-          @errors={{this.errors}}
-          @required={{this.field.required}}
-          ...attributes
-        />
-      </div>
+      {{yield
+        (hash
+          Input=(component
+            FkControlInput
+            name=@name
+            fieldId=fieldId
+            errorId=errorId
+            setValue=this.setValue
+            value=this.value
+            errors=this.errors
+            triggerValidationFor=@triggerValidationFor
+          )
+          RadioGroup=(component
+            FkControlRadioGroup
+            name=@name
+            fieldId=fieldId
+            errorId=errorId
+            setValue=this.setValue
+            value=this.value
+            errors=this.errors
+            triggerValidationFor=@triggerValidationFor
+          )
+          id=fieldId
+          setValue=this.setValue
+        )
+      }}
     {{/let}}
   </template>
 }

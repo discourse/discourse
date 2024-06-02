@@ -1,10 +1,9 @@
 import Component from "@glimmer/component";
 import { assert } from "@ember/debug";
-import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import concatClass from "discourse/helpers/concat-class";
+import FormMeta from "form-kit/components/form/meta";
+import FormText from "form-kit/components/form/text";
 
 const VALID_INPUT_TYPES = [
   // 'button' - not useful as a control component
@@ -31,7 +30,7 @@ const VALID_INPUT_TYPES = [
   "week",
 ];
 
-export default class FormControlInput extends Component {
+export default class FkControlInput extends Component {
   constructor(owner, args) {
     super(...arguments);
 
@@ -62,6 +61,20 @@ export default class FormControlInput extends Component {
   }
 
   <template>
+    {{#if @label}}
+      <label class="d-form-input-label" for={{@name}}>
+        {{@label}}
+
+        {{#unless @required}}
+          <span class="d-form-field__optional">(Optional)</span>
+        {{/unless}}
+      </label>
+    {{/if}}
+
+    {{#if @help}}
+      <FormText>{{@help}}</FormText>
+    {{/if}}
+
     <input
       name={{@name}}
       type={{this.type}}
@@ -72,6 +85,15 @@ export default class FormControlInput extends Component {
       class="d-form-control-input"
       ...attributes
       {{on "input" this.handleInput}}
+    />
+
+    <FormMeta
+      @description={{@description}}
+      @disabled={{@disabled}}
+      @value={{@value}}
+      @maxLength={{@maxLength}}
+      @errorId={{@errorId}}
+      @errors={{@errors}}
     />
   </template>
 }

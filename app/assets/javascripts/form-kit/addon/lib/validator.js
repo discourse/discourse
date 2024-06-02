@@ -1,81 +1,112 @@
 import { assert } from "@ember/debug";
-import { z } from "zod";
+import { bind } from "discourse-common/utils/decorators";
 
 const SUPPORTED_PRIMITIVES = ["string", "number", "boolean"];
 
 export default class Validator {
   static async validate(value, type, rules = {}) {
-    return await new Validator().validate(value, type, rules);
+    return await new Validator(value, type, rules).validate();
   }
 
-  async validate(value, type, rules = {}) {
+  constructor(value, type, rules = {}) {
+    this.value = value;
+    this.type = this.#computePrimitiveType(type);
+    this.rules = rules;
+    this.errors = [];
+  }
+
+  @bind
+  addError(error) {
+    console.log("addError", error);
+    this.errors.push(error);
+  }
+
+  async validate() {
     assert(
       `Type must be one of ${SUPPORTED_PRIMITIVES.join(", ")}`,
-      SUPPORTED_PRIMITIVES.includes(type)
+      SUPPORTED_PRIMITIVES.includes(this.type)
     );
 
-    let schema = z[type]();
-
-    Object.keys(rules).forEach((rule) => {
+    for (const rule in this.rules) {
       if (this[rule + "Validator"]) {
-        schema = this[rule + "Validator"](schema, rules[rule]);
+        await this[rule + "Validator"](this.value, this.rules[rule]);
       } else {
         console.warn(`Unknown validator: ${rule}`);
       }
-    });
-
-    const parse = schema.safeParse(value);
-
-    if (!parse.success) {
-      return parse.error?.formErrors?.formErrors ?? [];
     }
+
+    return this.errors;
   }
 
-  lengthValidator(schema, rule) {
+  lengthValidator(value, rule) {
     if (rule.max) {
-      schema = schema.max(rule.max);
-    }
-    if (rule.min) {
-      schema = schema.min(rule.min);
+      if (value?.length > rule.max) {
+        this.errors.push({
+          type: "too_long",
+          value,
+          message: `Must be at most ${rule.max} characters`,
+        });
+      }
     }
 
-    return schema;
+    if (rule.min) {
+      if (value?.length < rule.min) {
+        this.errors.push({
+          type: "too_short",
+          value,
+          message: `Must be at least ${rule.min} characters`,
+        });
+      }
+    }
   }
 
-  betweenValidator(schema, rule) {
+  betweenValidator(value, rule) {
     if (rule.max) {
-      schema = schema.lte(rule.max);
-    }
-    if (rule.min) {
-      schema = schema.gte(rule.min);
+      if (value > rule.max) {
+        this.errors.push({
+          type: "too_high",
+          value,
+          message: `Must be at most ${rule.max}`,
+        });
+      }
     }
 
-    return schema;
+    if (rule.min) {
+      if (value < rule.min) {
+        this.errors.push({
+          type: "too_low",
+          value,
+          message: `Must be at least ${rule.min}`,
+        });
+      }
+    }
   }
 
-  requiredValidator(schema, rule) {
-    if (schema instanceof z.ZodString) {
+  requiredValidator(value, rule) {
+    if (this.type === "string") {
       if (rule.trim) {
-        schema = schema.trim();
+        value = value?.trim();
       }
 
-      schema = schema.min(1, "Required");
+      if (!value || value === "") {
+        this.errors.push({
+          type: "required",
+          value,
+          message: "Required",
+        });
+      }
     }
-
-    return schema;
   }
 
-  requiredPreprocessor(schema, rule) {
-    schema = z.preprocess((val) => {
-      if (rule.trim) {
-        val = val.trim();
-      }
+  #computePrimitiveType(type) {
+    switch (type) {
+      case "number":
+        return "number";
+      case "checkbox":
+        return "boolean";
 
-      console.log("trimmed", val === "" ? null : val);
-
-      return val === "" ? null : val;
-    }, schema);
-
-    return schema;
+      default:
+        return "string";
+    }
   }
 }

@@ -5,7 +5,8 @@ import FormText from "form-kit/components/form/text";
 
 export default class FormMeta extends Component {
   get shouldRenderErrors() {
-    return this.args.errors?.length && (this.args.showErrors ?? true);
+    console.log(this.args.errors);
+    return this.args.errors && (this.args.showErrors ?? true);
   }
 
   get shouldRenderCharCounter() {

@@ -28,23 +28,29 @@ export default class FieldData {
    * The *field* level validation callback passed to the field as in `<form.field @name="foo" @validate={{this.validateCallback}}>`
    */
 
-  async validate(value) {
+  async validate(name, value, data) {
     if (this.fieldRegistration.disabled) {
       return;
     }
 
-    let primitiveType;
-    switch (this.fieldRegistration.type) {
-      case "number":
-        primitiveType = "number";
-        return;
-      case "checkbox":
-        primitiveType = "boolean";
-        return;
-      default:
-        primitiveType = "string";
-    }
+    const validator = new Validator(
+      value,
+      this.fieldRegistration.type,
+      this.rules
+    );
 
-    return Validator.validate(value, primitiveType, this.rules ?? {});
+    console.log("validator", validator.addError);
+
+    await this.fieldRegistration.validate?.(
+      name,
+      value,
+      data,
+      validator.addError
+    );
+    await validator.validate();
+
+    return {
+      [name]: validator.errors,
+    };
   }
 }

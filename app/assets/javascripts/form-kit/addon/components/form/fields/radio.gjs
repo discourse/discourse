@@ -16,12 +16,12 @@ export default class FormFieldsCheckbox extends Component {
         name={{@name}}
         aria-invalid={{if @invalid "true"}}
         type="radio"
-        class="d-form-radio-input"
+        class="d-form-radio__input"
         {{on "click" this.handleInput}}
         ...attributes
       />
 
-      <label class="d-form-radio-label" for={{@name}}>
+      <label class="d-form-radio__label" for={{@name}}>
         {{@label}}
       </label>
     </div>
