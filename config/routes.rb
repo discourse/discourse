@@ -98,14 +98,6 @@ Discourse::Application.routes.draw do
     get "wizard/steps/:id" => "wizard#index"
     put "wizard/steps/:id" => "steps#update"
 
-    namespace :admin_revamp,
-              path: "admin-revamp",
-              module: "admin",
-              constraints: StaffConstraint.new do
-      get "" => "admin#index"
-      get "config/:area" => "admin#index"
-    end
-
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
 
@@ -396,6 +388,10 @@ Discourse::Application.routes.draw do
       namespace :config, constraints: StaffConstraint.new do
         resources :flags, only: %i[index] do
           put "toggle"
+        end
+
+        resources :about, constraints: AdminConstraint.new, only: %i[index] do
+          collection { put "/" => "about#update" }
         end
       end
     end # admin namespace

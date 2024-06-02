@@ -40,9 +40,9 @@ export const ADMIN_NAV_MAP = [
     links: [
       {
         name: "admin_about_your_site",
-        route: "adminSiteSettingsCategory",
-        routeModels: ["required"],
-        query: { filter: "" },
+        route: "adminConfig.about",
+        // routeModels: ["required"],
+        // query: { filter: "" },
         label: "admin.community.sidebar_link.about_your_site",
         icon: "cog",
       },
@@ -112,7 +112,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_moderation_flags",
-        route: "adminConfigFlags",
+        route: "adminConfig.flags",
         label: "admin.community.sidebar_link.moderation_flags",
         icon: "flag",
       },
