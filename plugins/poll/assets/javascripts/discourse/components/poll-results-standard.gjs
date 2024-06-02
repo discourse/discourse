@@ -60,9 +60,7 @@ export default class PollResultsStandardComponent extends Component {
 
     const roundedPercentages = this.roundPercentages(percentages);
 
-    const enrichedOptions = this.enrichOptions(ordered, roundedPercentages);
-
-    return enrichedOptions;
+    return this.enrichOptions(ordered, roundedPercentages);
   }
 
   get isMultiple() {
