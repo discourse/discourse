@@ -6,14 +6,8 @@ import evenRound from "discourse/plugins/poll/lib/even-round";
 import PollVoters from "./poll-voters";
 
 export default class PollResultsStandardComponent extends Component {
-  get votersCount() {
-    return this.args.votersCount || 0;
-  }
-
-  get orderedOptions() {
-    const votersCount = this.votersCount;
-
-    let ordered = [...this.args.options].sort((a, b) => {
+  orderOptions = (options) => {
+    return options.sort((a, b) => {
       if (a.votes < b.votes) {
         return 1;
       } else if (a.votes === b.votes) {
@@ -26,16 +20,21 @@ export default class PollResultsStandardComponent extends Component {
         return -1;
       }
     });
+  };
 
-    const percentages =
-      votersCount === 0
-        ? Array(ordered.length).fill(0)
-        : ordered.map((o) => (100 * o.votes) / votersCount);
+  getPercentages = (ordered, votersCount) => {
+    return votersCount === 0
+      ? Array(ordered.length).fill(0)
+      : ordered.map((o) => (100 * o.votes) / votersCount);
+  };
 
-    const rounded = this.isMultiple
+  roundPercentages = (percentages) => {
+    return this.isMultiple
       ? percentages.map(Math.floor)
       : evenRound(percentages);
+  };
 
+  enrichOptions = (ordered, rounded) => {
     ordered.forEach((option, idx) => {
       const per = rounded[idx].toString();
       const chosen = (this.args.vote || []).includes(option.id);
@@ -46,6 +45,24 @@ export default class PollResultsStandardComponent extends Component {
     });
 
     return ordered;
+  };
+
+  get votersCount() {
+    return this.args.votersCount || 0;
+  }
+
+  get orderedOptions() {
+    const votersCount = this.votersCount;
+
+    let ordered = this.orderOptions([...this.args.options]);
+
+    const percentages = this.getPercentages(ordered, votersCount);
+
+    const roundedPercentages = this.roundPercentages(percentages);
+
+    const enrichedOptions = this.enrichOptions(ordered, roundedPercentages);
+
+    return enrichedOptions;
   }
 
   get isMultiple() {
