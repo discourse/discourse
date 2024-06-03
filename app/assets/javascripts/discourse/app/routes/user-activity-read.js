@@ -6,8 +6,8 @@ import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "discourse-i18n";
 
-export default UserTopicListRoute.extend({
-  userActionType: UserAction.TYPES.topics,
+export default class UserActivityRead extends UserTopicListRoute {
+  userActionType = UserAction.TYPES.topics;
 
   model(params = {}) {
     return this.store
@@ -23,7 +23,7 @@ export default UserTopicListRoute.extend({
         model.set("emptyState", this.emptyState());
         return model;
       });
-  },
+  }
 
   emptyState() {
     const title = I18n.t("user_activity.no_read_topics_title");
@@ -35,14 +35,14 @@ export default UserTopicListRoute.extend({
       })
     );
     return { title, body };
-  },
+  }
 
   titleToken() {
     return `${I18n.t("user.read")}`;
-  },
+  }
 
   @action
   triggerRefresh() {
     this.refresh();
-  },
-});
+  }
+}

@@ -2,14 +2,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 
-export default RestrictedUserRoute.extend({
-  currentUser: service(),
-  siteSettings: service(),
-  router: service(),
+export default class PreferencesSecondFactor extends RestrictedUserRoute {
+  @service currentUser;
+  @service siteSettings;
+  @service router;
 
   model() {
     return this.modelFor("user");
-  },
+  }
 
   setupController(controller, model) {
     controller.setProperties({ model, newUsername: model.username });
@@ -32,11 +32,11 @@ export default RestrictedUserRoute.extend({
       })
       .catch(controller.popupAjaxError)
       .finally(() => controller.set("loading", false));
-  },
+  }
 
   @action
   willTransition(transition) {
-    this._super(...arguments);
+    super.willTransition(...arguments);
 
     if (
       transition.targetName === "preferences.second-factor" ||
@@ -52,5 +52,5 @@ export default RestrictedUserRoute.extend({
 
     transition.abort();
     return false;
-  },
-});
+  }
+}
