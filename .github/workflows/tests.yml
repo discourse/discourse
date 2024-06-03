@@ -154,6 +154,9 @@ jobs:
         if: matrix.target == 'themes'
         run: bin/rake themes:pull_compatible_all
 
+      - name: print /etc/hosts
+        run: cat /etc/hosts
+
       - name: Add hosts to /etc/hosts, otherwise Chromium cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
         run: |
