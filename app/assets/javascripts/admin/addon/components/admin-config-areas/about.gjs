@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
-import AdminConfigAreasBase from "./base";
 
-export default class AdminConfigAreasAbout extends AdminConfigAreasBase {
-  primaryContentComponent = class extends Component {
-    <template>
-      Primary Content
-    </template>
-  };
-  helpInsetComponent = class extends Component {
-    <template>
-      Help Inset
-    </template>
-  };
+export default class AdminConfigAreasAbout extends Component {
+  cards = [1, 2, 3];
+
+  <template>
+    <div class="admin-config-area">
+      <div class="admin-config-area__primary-content">
+        {{#each this.cards as |card|}}
+          <div>{{card}}</div>
+        {{/each}}
+      </div>
+    </div>
+  </template>
 }
