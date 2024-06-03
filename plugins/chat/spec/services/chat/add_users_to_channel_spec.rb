@@ -26,10 +26,7 @@ RSpec.describe Chat::AddUsersToChannel do
     end
 
     context "when all steps pass" do
-      before do
-        SiteSetting.chat_max_direct_message_users = 10
-        channel.add(current_user)
-      end
+      before { channel.add(current_user) }
 
       it "fetches users to add" do
         expect(result.target_users.map(&:username)).to contain_exactly(*users.map(&:username))
