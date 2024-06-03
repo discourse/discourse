@@ -4,6 +4,7 @@ class Flag < ActiveRecord::Base
   MAX_SYSTEM_FLAG_ID = 1000
   scope :enabled, -> { where(enabled: true) }
   scope :system, -> { where("id < 1000") }
+  default_scope { where(score_type: false) }
 
   before_save :set_position
   before_save :set_name_key

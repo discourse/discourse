@@ -38,7 +38,7 @@ export default class AdminFlags extends Component {
 
     this.flags = flags;
 
-    return ajax(`/admin/config/flags/${flag.id}/move/${direction}`, {
+    return ajax(`/admin/config/flags/${flag.id}/reorder/${direction}`, {
       type: "PUT",
     }).catch((error) => {
       this.flags = fallbackFlags;

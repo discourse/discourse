@@ -80,3 +80,13 @@ export const TOPIC_VISIBILITY_REASONS = {
   bulk_action: 5,
   unknown: 99,
 };
+
+export const SYSTEM_FLAG_IDS = {
+  like: 2,
+  notify_user: 6,
+  notify_moderators: 7,
+  off_topic: 3,
+  inappropriate: 4,
+  spam: 8,
+  illegal: 10,
+};

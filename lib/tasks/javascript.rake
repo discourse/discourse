@@ -164,6 +164,8 @@ task "javascript:update_constants" => :environment do
     export const MAX_NOTIFICATIONS_LIMIT_PARAMS = #{NotificationsController::INDEX_LIMIT};
 
     export const TOPIC_VISIBILITY_REASONS = #{Topic.visibility_reasons.to_json};
+
+    export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json}
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")

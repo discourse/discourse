@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class MoveFlag
+VALID_DIRECTIONS = %w[up down]
+
+class ReorderFlag
   include Service::Base
 
   contract
@@ -17,7 +19,7 @@ class MoveFlag
     attribute :flag_id, :integer
     attribute :direction, :string
     validates :flag_id, presence: true
-    validates :direction, presence: true
+    validates :direction, inclusion: { in: VALID_DIRECTIONS }
   end
 
   private
@@ -27,11 +29,11 @@ class MoveFlag
   end
 
   def invalid_access(guardian:, flag:)
-    guardian.can_move_flag?(flag)
+    guardian.can_reorder_flag?(flag)
   end
 
   def all_flags
-    @all_flags ||= Flag.where(score_type: false).where.not(name_key: "notify_user").order(:position)
+    @all_flags ||= Flag.where.not(name_key: "notify_user").order(:position)
   end
 
   def invalid_move(flag:, direction:)

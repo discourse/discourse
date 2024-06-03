@@ -9,7 +9,7 @@ module FlagGuardian
     @user.admin?
   end
 
-  def can_move_flag?(flag)
+  def can_reorder_flag?(flag)
     @user.admin? && flag.name_key != "notify_user"
   end
 end

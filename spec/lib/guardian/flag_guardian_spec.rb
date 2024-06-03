@@ -42,13 +42,13 @@ RSpec.describe FlagGuardian do
     end
   end
 
-  describe "#can_move_flag?" do
+  describe "#can_reorder_flag?" do
     it "returns true for admin and false for regular user and notify_user" do
-      expect(Guardian.new(admin).can_move_flag?(Flag.system.last)).to eq(true)
+      expect(Guardian.new(admin).can_reorder_flag?(Flag.system.last)).to eq(true)
       expect(
-        Guardian.new(admin).can_move_flag?(Flag.system.find_by(name_key: "notify_user")),
+        Guardian.new(admin).can_reorder_flag?(Flag.system.find_by(name_key: "notify_user")),
       ).to eq(false)
-      expect(Guardian.new(user).can_move_flag?(Flag.system.last)).to eq(false)
+      expect(Guardian.new(user).can_reorder_flag?(Flag.system.last)).to eq(false)
     end
   end
 end

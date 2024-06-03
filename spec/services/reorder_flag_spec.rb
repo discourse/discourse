@@ -1,17 +1,24 @@
 # frozen_string_literal: true
 
-RSpec.describe(MoveFlag) do
+RSpec.describe(ReorderFlag) do
   subject(:result) do
     described_class.call(flag_id: flag.id, guardian: current_user.guardian, direction: direction)
   end
 
-  let(:flag) { Flag.where(score_type: false).order(:position).last }
+  let(:flag) { Flag.order(:position).last }
   let(:direction) { "up" }
 
   context "when user is not allowed to perform the action" do
     fab!(:current_user) { Fabricate(:user) }
 
     it { is_expected.to fail_a_policy(:invalid_access) }
+  end
+
+  context "when direction is invalid" do
+    fab!(:current_user) { Fabricate(:admin) }
+    let(:direction) { "side" }
+
+    it { is_expected.to fail_a_contract }
   end
 
   context "when move is invalid" do
@@ -29,11 +36,11 @@ RSpec.describe(MoveFlag) do
     end
 
     it "moves the flag" do
-      expect(Flag.where(score_type: false).order(:position).map(&:name)).to eq(
+      expect(Flag.order(:position).map(&:name)).to eq(
         %w[notify_user notify_moderators off_topic inappropriate spam illegal],
       )
       result
-      expect(Flag.where(score_type: false).order(:position).map(&:name)).to eq(
+      expect(Flag.order(:position).map(&:name)).to eq(
         %w[notify_user notify_moderators off_topic inappropriate illegal spam],
       )
     end

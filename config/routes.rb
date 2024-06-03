@@ -396,7 +396,7 @@ Discourse::Application.routes.draw do
       namespace :config, constraints: StaffConstraint.new do
         resources :flags, only: %i[index] do
           put "toggle"
-          put "move/:direction" => "flags#move"
+          put "reorder/:direction" => "flags#reorder"
         end
       end
     end # admin namespace

@@ -9,15 +9,15 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { SYSTEM_FLAG_IDS } from "discourse/lib/constants";
 import i18n from "discourse-common/helpers/i18n";
 import DMenu from "float-kit/components/d-menu";
-const NOTIFY_USER_ID = 6;
 
 export default class AdminFlagItem extends Component {
   @tracked enabled = this.args.flag.enabled;
 
   get canMove() {
-    return this.args.flag.id !== NOTIFY_USER_ID;
+    return this.args.flag.id !== SYSTEM_FLAG_IDS.notify_user;
   }
 
   @action

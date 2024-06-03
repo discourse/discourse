@@ -19,8 +19,8 @@ class Admin::Config::FlagsController < Admin::AdminController
   def index
   end
 
-  def move
-    with_service(MoveFlag) do
+  def reorder
+    with_service(ReorderFlag) do
       on_success do
         Discourse.request_refresh!
         render(json: success_json)
