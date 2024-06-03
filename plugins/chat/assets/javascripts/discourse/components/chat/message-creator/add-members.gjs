@@ -28,7 +28,7 @@ export default class AddMembers extends Component {
   }
 
   get maxMembers() {
-    return this.siteSettings.chat_max_direct_message_users + 1;
+    return this.siteSettings.chat_max_direct_message_users;
   }
 
   @action
