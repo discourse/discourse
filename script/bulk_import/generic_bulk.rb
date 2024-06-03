@@ -415,17 +415,11 @@ class BulkImport::Generic < BulkImport::Base
       end
 
       if row["anonymized"] == 1
-        while true
-          anon_suffix = (SecureRandom.random_number * 100_000_000).to_i
-          break if !@anonymized_user_suffixes.include?(anon_suffix)
-        end
-
-        row["username"] = "anon_#{anon_suffix}"
+        row["username"] = "anon_#{anon_username_suffix}"
         row["email"] = "#{row["username"]}#{UserAnonymizer::EMAIL_SUFFIX}"
         row["name"] = nil
         row["registration_ip_address"] = nil
-
-        @anonymized_user_suffixes << anon_suffix
+        row["date_of_birth"] = nil
       end
 
       {
@@ -455,7 +449,7 @@ class BulkImport::Generic < BulkImport::Base
     existing_user_ids = UserEmail.pluck(:user_id).to_set
 
     users = query(<<~SQL)
-      SELECT id, email, created_at
+      SELECT id, email, created_at, anonymized
       FROM users
       ORDER BY id
     SQL
@@ -463,6 +457,13 @@ class BulkImport::Generic < BulkImport::Base
     create_user_emails(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
       next if user_id && existing_user_ids.include?(user_id)
+
+      if row["anonymized"] == 1
+        username = username_from_id(user_id)
+        email_prefix = /\Aanon_?\d+\Z/.match?(username) ? username : "anon_#{anon_username_suffix}"
+
+        row["email"] = "#{email_prefix}#{UserAnonymizer::EMAIL_SUFFIX}"
+      end
 
       { user_id: user_id, email: row["email"], created_at: to_datetime(row["created_at"]) }
     end
@@ -474,7 +475,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing user profiles..."
 
     users = query(<<~SQL)
-      SELECT id, bio, location
+      SELECT id, bio, location, website, anonymized
       FROM users
       ORDER BY id
     SQL
@@ -485,7 +486,13 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["id"])
       next if user_id && existing_user_ids.include?(user_id)
 
-      { user_id: user_id, bio_raw: row["bio"], location: row["location"] }
+      if row["anonymized"] == 1
+        row["bio"] = nil
+        row["location"] = nil
+        row["website"] = nil
+      end
+
+      { user_id: user_id, bio_raw: row["bio"], location: row["location"], website: row["website"] }
     end
 
     users.close
@@ -2407,6 +2414,16 @@ class BulkImport::Generic < BulkImport::Base
 
   def to_boolean(value)
     value == 1
+  end
+
+  def anon_username_suffix
+    while true
+      suffix = (SecureRandom.random_number * 100_000_000).to_i
+      break if @anonymized_user_suffixes.exclude?(suffix)
+    end
+
+    @anonymized_user_suffixes << suffix
+    suffix
   end
 end
 
