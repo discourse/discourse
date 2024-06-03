@@ -3018,6 +3018,7 @@ en:
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
         move_messages_to_inbox: "Move to Inbox"
+        archive_messages: "Move to Archive"
         notification_level: "Notifications…"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
@@ -3078,15 +3079,19 @@ en:
 
     topic_bulk_actions:
       close_topics:
-        name: "Close Topics"
+        name: "Close"
         note: "Note"
         optional: (optional)
       archive_topics:
-        name: "Archive Topics"
+        name: "Archive"
+      archive_messages:
+        name: "Move to Archive"
+      move_messages_to_inbox:
+        name: "Move to Inbox"
       unlist_topics:
-        name: "Unlist Topics"
+        name: "Unlist"
       relist_topics:
-        name: "Relist Topics"
+        name: "Relist"
       remove_tags:
         name: "Remove Tags"
       append_tags:
@@ -3094,7 +3099,7 @@ en:
       replace_tags:
         name: "Replace Tags"
       delete_topics:
-        name: "Delete Topics"
+        name: "Delete"
       update_category:
         name: "Update Category"
         description: "Choose the new category for the selected topics"
