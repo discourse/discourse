@@ -315,5 +315,15 @@ describe "Topic bulk select", type: :system do
       visit("/u/#{admin.username}/messages/group/#{group.name}")
       expect(page).to have_content(group_private_message.title)
     end
+
+    context "when in mobile" do
+      it "is working", mobile: true do
+        # behavior is already tested on desktop, we simply ensure
+        # the general workflow is working on mobile
+        sign_in(admin)
+        visit("/u/#{admin.username}/messages")
+        open_bulk_actions_modal([private_message_1], "archive-messages")
+      end
+    end
   end
 end
