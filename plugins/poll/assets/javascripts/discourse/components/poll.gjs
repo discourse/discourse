@@ -539,7 +539,7 @@ export default class PollComponent extends Component {
   exportResults() {
     const queryID =
       this.poll.type === "irv"
-        ? this.siteSettings.poll_export_data_explorer_query_id_irv
+        ? this.siteSettings.poll_export_irv_data_explorer_query_id
         : this.siteSettings.poll_export_data_explorer_query_id;
 
     // This uses the Data Explorer plugin export as CSV route
@@ -687,6 +687,7 @@ export default class PollComponent extends Component {
         @voters={{this.voters}}
         @isStaff={{this.isStaff}}
         @isMe={{this.isMe}}
+        @isIrv={{this.isIrv}}
         @topicArchived={{this.topicArchived}}
         @groupableUserFields={{this.groupableUserFields}}
         @isAutomaticallyClosed={{this.isAutomaticallyClosed}}
