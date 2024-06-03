@@ -11,11 +11,11 @@ module PageObjects
       end
 
       def has_bulk_select_button?
-        page.has_css?("#{TOPIC_LIST_HEADER_SELECTOR} button.bulk-select")
+        page.has_css?(".bulk-select")
       end
 
       def click_bulk_select_button
-        find("#{TOPIC_LIST_HEADER_SELECTOR} button.bulk-select").click
+        find(".bulk-select").click
       end
 
       def has_bulk_select_topics_dropdown?
