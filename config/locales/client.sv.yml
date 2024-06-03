@@ -346,11 +346,20 @@ sv:
       search_placeholder: "Sök i bokmärken efter namn, ämnestitel eller postinnehåll"
       search: "Sök"
       bookmark: "Bokmärk"
+      bulk:
+        select_all: "Välj alla"
+        clear_all: "Rensa alla"
+        selected_count:
+          one: "%{count} har valts"
+          other: "%{count} har valts"
       reminders:
         today_with_time: "idag kl. %{time}"
         tomorrow_with_time: "imorgon kl. %{time}"
         at_time: "den %{date_time}"
         existing_reminder: "Du har en påminnelse inställd för detta bokmärke som kommer att skickas %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Radera bokmärke"
     copy_codeblock:
       copied: "kopierad!"
       copy: "kopiera kod till urklipp"
@@ -2162,6 +2171,8 @@ sv:
         categories_admin_dropdown:
           title: "Hantera kategorier"
         bulk_select_topics_dropdown:
+          title: "Massändringar"
+        bulk_select_bookmarks_dropdown:
           title: "Massändringar"
     date_time_picker:
       from: Från
@@ -4313,7 +4324,7 @@ sv:
       panels:
         forum:
           label: Forum
-      filter: "Filter"
+      filter: "Filter..."
     welcome_topic_banner:
       title: "Skapa ditt välkomstämne"
       description: "Ditt välkomstämne är det första som nya medlemmar kommer att läsa. Tänk på det som din \"snabbpresentation\" eller \"målbeskrivning\". Låt alla veta vem den här gruppen är till för, vad de kan förvänta sig att hitta här och vad du vill att de ska göra först."
@@ -4526,6 +4537,9 @@ sv:
               label: Kategori
             include_subcategories:
               label: "Inkludera underkategorier"
+      flags:
+        description: "Beskrivning"
+        enabled: "Aktiverad?"
       groups:
         new:
           title: "Ny grupp"
@@ -5981,6 +5995,7 @@ sv:
         name: "Fältnamn"
         type: "Fälttyp"
         description: "Fältbeskrivning"
+        preferences: "Inställningar"
         save: "Spara"
         edit: "Redigera"
         delete: "Ta bort"
@@ -5991,6 +6006,9 @@ sv:
           title: "Krävs vid registrering"
           enabled: "krävs"
           disabled: "krävs ej"
+        requirement:
+          optional:
+            title: "Valfritt"
         editable:
           title: "Redigerbar efter registrering"
           enabled: "redigerbar"

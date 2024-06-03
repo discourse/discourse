@@ -528,7 +528,6 @@ tr_TR:
     request_membership_pm:
       title: "@%{group_name} için Üyelik Talebi"
     request_accepted_pm:
-      title: "%{group_name} adlı gruba kabul edildiniz"
       body: |
         %{group_name} adlı gruba katılma talebiniz kabul edildi ve artık üyesiniz.
   education:
@@ -1422,37 +1421,18 @@ tr_TR:
         qtt_like: Alınan Beğeniler
       description: "Çok çeşitli kişilerden beğeni alan En Popüler 10 kullanıcı."
   dashboard:
-    twitter_login_warning: 'Twitter girişi şu anda çalışmıyor gibi görünüyor. <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">Site Ayarları</a>içindeki kimlik bilgilerini kontrol edin.'
-    group_email_credentials_warning: '<a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>grubu için e-posta giriş bilgileriyle ilgili bir sorun vardı. Bu sorun giderilene kadar grup gelen kutusundan hiçbir e-posta gönderilmeyecek. %{error}'
-    rails_env_warning: "Sunucunuz %{env} modunda çalışıyor."
-    host_names_warning: "config/database.yml dosyanız varsayılan localhost sunucu adını kullanıyor. Sitenizin sunucu adını kullanmak için bunu güncelleyin."
-    sidekiq_warning: 'Sidekiq çalışmıyor. E-posta göndermek gibi birçok görev Sidekiq tarafından eşzamansız olarak yürütülür. Lütfen en az bir Sidekiq işleminin çalıştığından emin olun. <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq hakkında buradan bilgi edinin</a>.'
-    queue_size_warning: "Kuyruğa alınan işlerin sayısı %{queue_size} ve bu yüksek bir değer. Bu, Sidekiq işlem(ler)inde bir sorun olduğunu gösterebilir veya daha fazla Sidekiq çalışanı eklemeniz gerekebilir."
-    memory_warning: "Sunucunuz 1 GB'den az toplam bellekle çalışıyor. En az 1 GB bellek önerilir."
-    google_oauth2_config_warning: 'Sunucu, Google OAuth2 (enable_google_oauth2_logins) ile kaydolmaya ve oturum açmaya izin verecek şekilde yapılandırılmış, ancak istemci kimliği ve istemci gizli değerleri ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarları</a> adresine gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
-    facebook_config_warning: 'Sunucu, Facebook ile kaydolmaya ve giriş yapmaya izin verecek şekilde yapılandırılmış (enable_facebook_logins), ancak uygulama kimliği ve uygulama gizli değerleri ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarları''na</a> gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
-    twitter_config_warning: 'Sunucu, Twitter ile kaydolmaya ve giriş yapmaya izin verecek şekilde yapılandırılmış (enable_twitter_logins), ancak anahtar ve gizli değerler ayarlanmamış. <a href="%{base_path}/admin/site_settings">Site Ayarları''na</a> gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
-    github_config_warning: 'Sunucu, GitHub ile kaydolmaya ve oturum açmaya izin verecek şekilde yapılandırılmış (enable_github_logins), ancak istemci kimliği ve gizli değerler ayarlanmamıştır. <a href="%{base_path}/admin/site_settings">Site Ayarları''na</a> gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Daha fazla bilgi edinmek için bu kılavuza bakın</a>.'
-    s3_config_warning: 'Sunucu S3''e dosya yüklemek üzere yapılandırılmış ancak aşağıdaki ayarlardan en az biri yapılmamış: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile veya s3_upload_bucket. <a href="%{base_path}/admin/site_settings">Site Ayarları''na</a> gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi edinmek için "S3''e görüntü yüklemeleri nasıl ayarlanır?" bölümüne bakın</a>.'
-    s3_backup_config_warning: 'Sunucu, yedekleri S3''e yüklemek üzere yapılandırılmış ancak aşağıdaki ayarlardan en az biri yapılmamış: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile veya s3_backup_bucket. <a href="%{base_path}/admin/site_settings">Site Ayarları''na</a> gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi edinmek için "S3''e görüntü yüklemeleri nasıl ayarlanır?" bölümüne bakın</a>.'
-    s3_cdn_warning: 'Sunucu, dosyaları S3''e yükleyecek şekilde yapılandırılmış ancak yapılandırılmış bir S3 CDN''si yok. Bu, pahalı S3 maliyetlerine ve daha yavaş site performansına yol açabilir. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Daha fazla bilgi edinmek için "Yüklemeler için Nesne Depolamayı Kullanma" bölümüne bakın</a>.'
-    image_magick_warning: 'Sunucu büyük resimlerin küçük resimlerini oluşturacak şekilde yapılandırılmış, ancak ImageMagick yüklü değil. ImageMagick''i favori paket yöneticinizi kullanarak yükleyin veya <a href="https://www.imagemagick.org/script/download.php" target="_blank">en son sürümü indirin</a>.'
-    failing_emails_warning: 'Başarısız olan %{num_failed_jobs} e-posta işi var. App.yml dosyanızı kontrol edin ve posta sunucusu ayarlarının doğru olduğundan emin olun. <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq''teki</a> başarısız işlere bakın.'
-    subfolder_ends_in_slash: "Alt klasör kurulumunuz yanlış; DISCOURSE_RELATIVE_URL_ROOT bir eğik çizgi ile bitiyor."
-    outdated_translations_warning: "Bazı çeviri geçersiz kılmalarınız güncel değil. Lütfen <a href='%{base_path}/admin/customize/site_texts?outdated=true'>metin özelleştirmelerinizi</a> kontrol edin."
-    email_polling_errored_recently:
-      one: "E-posta yoklaması son 24 saat içinde bir hata oluşturdu. Daha fazla ayrıntı için <a href='%{base_path}/logs' target='_blank'>günlüklere</a> bakın."
-      other: "E-posta yoklaması son 24 saat içinde %{count} hata oluşturdu. Daha fazla ayrıntı için <a href='%{base_path}/logs' target='_blank'>günlüklere</a> bakın."
-    missing_mailgun_api_key: "Sunucu Mailgun aracılığıyla e-posta gönderecek şekilde yapılandırılmış ancak web kancası mesajlarını doğrulamak için kullanılan bir API anahtarı sağlamadınız."
-    bad_favicon_url: "Favicon yüklenemiyor. <a href='%{base_path}/admin/site_settings'>Site Ayarları'ndan</a> favicon ayarınızı kontrol edin."
-    poll_pop3_timeout: "POP3 sunucusuna bağlantı zaman aşımına uğruyor. Gelen e-posta alınamadı. Lütfen <a href='%{base_path}/admin/site_settings/category/email'>POP3 ayarlarınızı</a> ve servis sağlayıcınızı kontrol edin."
-    poll_pop3_auth_error: "POP3 sunucusuna bağlantı bir kimlik doğrulama hatasıyla başarısız oluyor. Lütfen <a href='%{base_path}/admin/site_settings/category/email'>POP3 ayarlarınızı</a> kontrol edin."
-    force_https_warning: "Web siteniz SSL kullanıyor. Ancak \"<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>\" site ayarlarınızda henüz etkinleştirilmemiş."
-    out_of_date_themes: "Aşağıdaki temalar için güncellemeler mevcut:"
-    unreachable_themes: "Aşağıdaki temalarda güncelleme olup olmadığını kontrol edemedik:"
-    watched_word_regexp_error: "%{action} izlenen sözcükler için normal ifade geçersiz. Lütfen <a href='%{base_path}/admin/customize/watched_words'>İzlenen Kelime ayarlarınızı</a>kontrol edin veya \"izlenen kelimeler sıradan ifadeler\" site ayarını devre dışı bırakın."
-    v3_analytics_deprecated: "Discourse'unuz şu anda Temmuz 2023'ten sonra artık desteklenmeyecek olan Google Analytics 3'ü kullanıyor. Web sitenizin performansı hakkında değerli bilgiler ve analizler almaya devam etmek için hemen <a href='https://meta.discourse.org/t/260498'>Google Analytics 4'e yükseltin</a>."
-    category_style_deprecated: "Discourse'unuz şu anda Discourse 3.2'nin son beta sürümünden önce kaldırılacak olan kullanımdan kaldırılmış bir kategori stili kullanıyor. Seçtiğiniz kategori stilini nasıl koruyacağınıza ilişkin talimatlar için lütfen <a href='https://meta.discourse.org/t/282441'>Tek Kategori Stili Site Ayarına Geçme</a> bölümüne bakın."
+    problem:
+      twitter_login: 'Twitter girişi şu anda çalışmıyor gibi görünüyor. <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">Site Ayarları</a>içindeki kimlik bilgilerini kontrol edin.'
+      rails_env: "Sunucunuz %{env} modunda çalışıyor."
+      host_names: "config/database.yml dosyanız varsayılan localhost sunucu adını kullanıyor. Sitenizin sunucu adını kullanmak için bunu güncelleyin."
+      queue_size: "Kuyruğa alınan işlerin sayısı %{queue_size} ve bu yüksek bir değer. Bu, Sidekiq işlem(ler)inde bir sorun olduğunu gösterebilir veya daha fazla Sidekiq çalışanı eklemeniz gerekebilir."
+      ram: "Sunucunuz 1 GB'den az toplam bellekle çalışıyor. En az 1 GB bellek önerilir."
+      subfolder_ends_in_slash: "Alt klasör kurulumunuz yanlış; DISCOURSE_RELATIVE_URL_ROOT bir eğik çizgi ile bitiyor."
+      missing_mailgun_api_key: "Sunucu Mailgun aracılığıyla e-posta gönderecek şekilde yapılandırılmış ancak web kancası mesajlarını doğrulamak için kullanılan bir API anahtarı sağlamadınız."
+      out_of_date_themes: "Aşağıdaki temalar için güncellemeler mevcut:"
+      unreachable_themes: "Aşağıdaki temalarda güncelleme olup olmadığını kontrol edemedik:"
+      watched_words: "%{action} izlenen sözcükler için normal ifade geçersiz. Lütfen <a href='%{base_path}/admin/customize/watched_words'>İzlenen Kelime ayarlarınızı</a>kontrol edin veya \"izlenen kelimeler sıradan ifadeler\" site ayarını devre dışı bırakın."
+      google_analytics_version: "Discourse'unuz şu anda Temmuz 2023'ten sonra artık desteklenmeyecek olan Google Analytics 3'ü kullanıyor. Web sitenizin performansı hakkında değerli bilgiler ve analizler almaya devam etmek için hemen <a href='https://meta.discourse.org/t/260498'>Google Analytics 4'e yükseltin</a>."
     back_from_logster_text: "Siteye geri dön"
   site_settings:
     allow_bulk_invite: "Bir CSV dosyası yükleyerek toplu davetlere izin verin"
@@ -1555,7 +1535,6 @@ tr_TR:
     detailed_404: "Kullanıcılara belirli bir konuya neden erişemedikleri hakkında daha fazla ayrıntı sağlar. Not: Bu daha az güvenlidir çünkü kullanıcılar bir URL'nin geçerli bir konuya bağlanıp bağlanmadığını bilir."
     enforce_second_factor: "Kullanıcılardan Discourse kullanıcı arayüzüne erişmeden önce iki faktörlü kimlik doğrulamayı etkinleştirmelerini isteyin. Tüm kullanıcılara uygulamak için \"tümü\" seçeneğini belirleyin. Yalnızca personel kullanıcılarına uygulamak için \"personel\" seçeneğini belirleyin. Bu ayar API veya \"DiscourseConnect sağlayıcısı\" kimlik doğrulamasını etkilemez."
     force_https: "Sitenizi yalnızca HTTPS kullanmaya zorlayın. UYARI: HTTPS'nin tamamen kurulduğunu ve kesinlikle her yerde çalıştığını doğrulayana kadar bunu etkinleştirmeyin! CDN'nizi, tüm sosyal girişlerinizi ve tüm harici logoları / bağımlılıkları da HTTPS uyumlu olduklarından emin olmak için kontrol ettiniz mi?"
-    same_site_cookies: "Aynı site çerezlerini kullanın, desteklenen tarayıcılarda (Lax veya Strict) tüm Site İçi Talep Sahteciliği vektörlerini ortadan kaldırır. Uyarı: Strict yalnızca oturum açmaya zorlayan ve harici bir auth yöntemi kullanan sitelerde çalışır."
     summary_score_threshold: "Bir gönderinin \"Bu Konuyu Özetleyin\" bölümüne dahil edilmesi için gereken minimum puan"
     summary_posts_required: "\"Bu Konuyu Özetle\" etkinleştirilmeden önce bir konudaki minimum gönderi sayısı. Bu ayarda yapılan değişiklikler bir hafta içinde geriye dönük olarak uygulanır."
     summary_likes_required: "\"Bu Konuyu Özetleyin\" etkinleştirilmeden önce bir konudaki minimum beğeni sayısı. Bu ayarda yapılan değişiklikler bir hafta içinde geriye dönük olarak uygulanır."
@@ -1668,7 +1647,7 @@ tr_TR:
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM oturumlarını kapatın"
     version_checks: "Sürüm güncellemeleri için Discourse Hub'ına ping atın ve yeni sürüm mesajlarını <a href='%{base_path}/admin' target='_blank'>/admin</a> panosunda gösterin"
     new_version_emails: "Discourse'un yeni bir sürümü kullanıma sunulduğunda contact_email adresine bir e-posta gönderin."
-    include_in_discourse_discover: "CDCK, Inc. (\"Discourse\") bu topluluğu <a href='https://www.discourse.org/discover'>Discover sayfasında</a> ve Discourse pazarlama materyallerinde öne çıkarmasına izin verin. Bunu yaparak sitenizin hizmete dahil olması için gerekli verileri paylaşmış olursunuz. Toplulukların tanıtımının Discourse'un takdirinde olduğunu lütfen unutmayın."
+    include_in_discourse_discover: "CDCK, Inc. (\"Discourse\") bu topluluğu <a href='https://discover.discourse.org' target='_blank'>Discover sayfasında</a> ve Discourse pazarlama materyallerinde öne çıkarmasına izin verin. Bunu yaparak sitenizin hizmete dahil olması için gerekli verileri paylaşmış olursunuz. Toplulukların tanıtımının Discourse'un takdirinde olduğunu lütfen unutmayın."
     invite_expiry_days: "Kullanıcı davet anahtarlarının gün cinsinden ne kadar süreyle geçerli olduğu"
     invite_only: "Tüm yeni kullanıcılar güvenilir kullanıcılar veya personel tarafından açıkça davet edilmelidir. Herkese açık kayıt devre dışıdır."
     login_required: "Bu sitedeki içeriği okumak için kimlik doğrulama gerektirin, anonim erişime izin vermeyin."
@@ -2247,7 +2226,6 @@ tr_TR:
     experimental_topics_filter: "DENEYSEL: /filter konumunda deneysel konu filtrelemeyi etkinleştiririn"
     enable_experimental_lightbox: "DENEYSEL: Varsayılan görüntü lightbox'ını yenilenen tasarımla değiştirin."
     experimental_form_templates: "DENEYSEL: Form şablonları özelliğini etkinleştirin. <b>Etkinleştirildikten sonra,</b> bu şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> altında yönetin."
-    admin_sidebar_enabled_groups: "DENEYSEL: Belirtilen gruplar için yönetici kullanıcı arayüzünde üst düzey yönetici gezinme düğmelerinin yerini alan kenar çubuğu gezinmesini etkinleştirin."
     lazy_load_categories_groups: "DENEYSEL: Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
     show_user_menu_avatars: "Kullanıcı menüsünde kullanıcı avatarlarını göster"
@@ -3628,7 +3606,6 @@ tr_TR:
 
         Herhangi bir sorunuz varsa [güler yüzlü personelimizle iletişime geçin](%{base_url}/about).
     digest:
-      why: "Son ziyaretinizden (%{last_seen_at}) bu yana %{site_link} adresinin kısa bir özeti"
       since_last_visit: "Son ziyaretinizden bu yana"
       new_topics: "Yeni Konular"
       unread_notifications: "Okunmamış Bildirimler"
@@ -3644,7 +3621,6 @@ tr_TR:
       your_email_settings: "e-posta ayarlarınız"
       click_here: "buraya tıklayın"
       from: "%{site_name}"
-      preheader: "%{last_seen_at} tarihindeki son ziyaretinizden bu yana kısa bir özet"
     forgot_password:
       title: "Şifremi Unuttum"
       subject_template: "[%{email_prefix}] Şifre sıfırlama"

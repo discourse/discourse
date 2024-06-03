@@ -303,11 +303,18 @@ id:
       search_placeholder: "Cari penanda berdasarkan nama, judul topik, atau isi kiriman"
       search: "Cari"
       bookmark: "Penandaan"
+      bulk:
+        select_all: "Pilih Semua"
+        selected_count:
+          other: "%{count} dipilih"
       reminders:
         today_with_time: "hari ini pada %{time}"
         tomorrow_with_time: "besok pada %{time}"
         at_time: "pada %{date_time}"
         existing_reminder: "Anda memiliki pengingat yang disetel untuk penanda ini yang akan dikirim pada %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Hapus Bookmark"
     copy_codeblock:
       copied: "disalin!"
       copy: "salin kode ke papan klip"
@@ -1597,6 +1604,7 @@ id:
       modal_ok: "OK"
       modal_cancel: "Batal"
       cant_send_pm: "Maaf, anda tidak dapat mengirim pesan kepada %{username}"
+      create_message_error: "Maaf, ada kesalahan dalam membuat pesan tersebut. Silakan coba lagi."
       yourself_confirm:
         title: "Apakah anda lupa menambahkan penerima?"
       composer_actions:
@@ -2135,7 +2143,7 @@ id:
             review:
               content: "Ulasan"
         global_section: "Bagian global, dapat dilihat oleh semua orang"
-      filter: "Filter"
+      filter: "Filter..."
     until: "Sampai:"
     form_template_chooser:
       select_template: "Pilih templat formulir"
@@ -2221,6 +2229,9 @@ id:
           filters:
             category:
               label: Kategori
+      flags:
+        description: "Deskripsi"
+        enabled: "Diaktifkan?"
       groups:
         new:
           create: "Buat"
@@ -2460,8 +2471,11 @@ id:
       watched_words:
         search: "cari"
         clear_filter: "Bersihkan"
+        html: "(html)"
         form:
           add: "Menambahkan"
+          html_label: "HTML"
+          html_description: "Menghasilkan HTML sebagai penggantinya"
         test:
           no_matches: "Tidak ditemukan yang cocok"
       form_templates:
@@ -2564,11 +2578,15 @@ id:
           external_name: "Nama"
           external_email: "Email"
       user_fields:
+        preferences: "Preferensi"
         save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
         cancel: "Batal"
         options: "Pilihan"
+        requirement:
+          optional:
+            title: "Opsional"
       site_text:
         edit: "ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"

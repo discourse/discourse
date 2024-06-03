@@ -298,6 +298,10 @@ sk:
         not_found: |-
           Ach nie, môj nepríjemný príspevok ešte nebol označený ako nevhodný. :worried: Môžete ho označiť ako nevhodné pomocou znaku**vlajky** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-flag.png" width="16" height="16">? Nezabudnite použiť tlačidlo Zobraziť viac <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-ellipsis.png" width="16" height="16"> na zobrazenie ďalších akcií pre každý príspevok.
       search:
+        instructions: |-
+          _psst_ … Skryl som v tejto téme prekvapenie. Ak si pripravený na výzvu, **vyber ikonu vyhľadávania** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> v pravom hornom rohu &#8599;, zvoľ "v tejto téme" a potom ho vyhľadaj.
+
+          Skús vyhľadať termín "capy&#8203;bara" v tejto téme.
         hidden_message: |-
           Ako vám táto kapybara chýbala? :wink:
 

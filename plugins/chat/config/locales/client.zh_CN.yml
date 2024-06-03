@@ -99,7 +99,6 @@ zh_CN:
       channels_list_popup:
         browse: "浏览频道"
         create: "新建频道"
-      click_to_join: "点击此处查看可用频道。"
       close: "关闭"
       remove: "移除"
       collapse: "收起聊天抽屉"
@@ -221,8 +220,7 @@ zh_CN:
         header: "聊天标题"
         composer: "聊天输入框"
         channels_list: "聊天频道列表"
-      no_direct_message_channels: "你还没有加入任何私信渠道。"
-      no_public_channels: "您还没有加入任何频道。"
+      no_public_channels_cta: "浏览频道"
       kicked_from_channel: "您无法再访问此频道。"
       only_chat_push_notifications:
         title: "只发送聊天推送通知"

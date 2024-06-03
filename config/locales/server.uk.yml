@@ -126,6 +126,16 @@ uk:
       number_value_not_valid_min: "Значення має бути більше або дорівнювати %{min}."
       number_value_not_valid_max: "Значення має бути менше або дорівнювати %{max}."
       string_value_not_valid_min_max: "Довжина значення має бути від %{min} до %{max} символів."
+      string_value_not_valid_min:
+        one: "Значення повинно мати принаймні %{count} символ."
+        few: "Значення повинно мати не менше %{count} символи."
+        many: "Значення має містити принаймні %{count} символів."
+        other: "Значення має містити принаймні %{count} символів."
+      string_value_not_valid_max:
+        one: "Значення має бути не більше ніж %{count} символ ."
+        few: "Значення має містити щонайбільше %{count} символів."
+        many: "Значення має містити щонайбільше %{count} символів."
+        other: "Значення має містити щонайбільше %{count} символів."
       objects:
         humanize_required: "Має бути присутня властивість JSON Pointer '%{property_json_pointer}'."
         required: "має бути присутнім"
@@ -143,16 +153,96 @@ uk:
         not_valid_enum_value: "має бути одним із таких: %{choices}"
         humanize_not_valid_categories_value: "Властивість у вказівнику JSON '%{property_json_pointer}' має бути масивом дійсних ідентифікаторів категорії."
         not_valid_categories_value: "має бути масивом дійсних ідентифікаторів категорії"
+        humanize_categories_value_not_valid_min:
+          one: "Властивість JSON Pointer '%{property_json_pointer}' повинна мати принаймні %{count} ідентифікатор категорії."
+          few: "Властивість у JSON Pointer '%{property_json_pointer}' повинна мати принаймні %{count} ідентифікатори категорій."
+          many: "Властивість у JSON Pointer '%{property_json_pointer}' повинна мати принаймні %{count} ідентифікаторів категорій."
+          other: "Властивість у JSON Pointer '%{property_json_pointer}' повинна мати принаймні %{count} ідентифікаторів категорій."
+        categories_value_not_valid_min:
+          one: "повинен мати принаймні %{count} ідентифікатор категорії"
+          few: "повинні мати принаймні %{count} ідентифікатори категорії"
+          many: "повинні мати принаймні %{count} ідентифікатори категорії"
+          other: "повинні мати принаймні %{count} ідентифікатори категорії"
+        humanize_categories_value_not_valid_max:
+          one: "Властивість JSON Pointer '%{property_json_pointer}' має містити не більше %{count} ідентифікатор категорії."
+          few: "Властивість у JSON-покажчику '%{property_json_pointer}' повинна мати не більше %{count} ідентифікаторів категорій."
+          many: "Властивість у JSON-покажчику '%{property_json_pointer}' повинна мати не більше %{count} ідентифікаторів категорій."
+          other: "Властивість у JSON-покажчику '%{property_json_pointer}' повинна мати не більше %{count} ідентифікаторів категорій."
+        categories_value_not_valid_max:
+          one: "повинен мати не більше %{count} ідентифікатора категорії"
+          few: "має мати не більше %{count} ідентифікаторів категорії"
+          many: "має мати не більше %{count} ідентифікаторів категорії"
+          other: "має мати не більше %{count} ідентифікаторів категорії"
         humanize_not_valid_topic_value: "Властивість JSON Pointer '%{property_json_pointer}' має бути дійсним ідентифікатором теми."
         not_valid_topic_value: "має бути дійсним ідентифікатором теми"
         humanize_not_valid_post_value: "Властивість JSON Pointer '%{property_json_pointer}' має бути дійсним ідентифікатором публікації."
         not_valid_post_value: "має бути дійсний ідентифікатор публікації"
         humanize_not_valid_groups_value: "Властивість у форматі JSON Pointer '%{property_json_pointer}' повинна бути масивом дійсних ідентифікаторів груп."
         not_valid_groups_value: "має бути масивом дійсних ідентифікаторів груп"
+        humanize_groups_value_not_valid_min:
+          one: "Властивість JSON Pointer '%{property_json_pointer}' повинна мати принаймні %{count} ідентифікатор групи."
+          few: "Властивість JSON Pointer '%{property_json_pointer}' повинна мати принаймні %{count} ідентифікатори груп."
+          many: "Властивість JSON Pointer '%{property_json_pointer}' повинна мати принаймні %{count} ідентифікатори груп."
+          other: "Властивість JSON Pointer '%{property_json_pointer}' повинна мати принаймні %{count} ідентифікатори груп."
+        groups_value_not_valid_min:
+          one: "повинен мати принаймні %{count} ідентифікатор групи"
+          few: "повинні мати принаймні %{count} ідентифікатори груп"
+          many: "повинні мати принаймні %{count} ідентифікатори груп"
+          other: "повинні мати принаймні %{count} ідентифікатори груп"
+        humanize_groups_value_not_valid_max:
+          one: "Властивість в JSON Pointer '%{property_json_pointer}повинна мати максимум %{count} ідентифікатор групи."
+          few: "Властивість JSON Pointer '%{property_json_pointer}' має мати щонайбільше %{count} ідентифікаторів груп."
+          many: "Властивість JSON Pointer '%{property_json_pointer}' має мати щонайбільше %{count} ідентифікаторів груп."
+          other: "Властивість JSON Pointer '%{property_json_pointer}' має мати щонайбільше %{count} ідентифікаторів груп."
+        groups_value_not_valid_max:
+          one: "повинен мати не більше %{count} ідентифікатора групи"
+          few: "повинні мати не більше %{count} ідентифікаторів груп"
+          many: "повинні мати не більше %{count} ідентифікаторів груп"
+          other: "повинні мати не більше %{count} ідентифікаторів груп"
         humanize_not_valid_tags_value: "Властивість у вказівнику JSON '%{property_json_pointer}' має бути масивом дійсних імен тегів."
         not_valid_tags_value: "має бути масив дійсних імен тегів"
+        humanize_tags_value_not_valid_min:
+          one: "Властивість у JSON Pointer '%{property_json_pointer}' повинен мати принаймні %{count} ім'я тега."
+          few: "Властивість у JSON-покажчику '%{property_json_pointer}' повинна мати принаймні %{count} імен тегів."
+          many: "Властивість у JSON-покажчику '%{property_json_pointer}' повинна мати принаймні %{count} імен тегів."
+          other: "Властивість у JSON-покажчику '%{property_json_pointer}' повинна мати принаймні %{count} імен тегів."
+        tags_value_not_valid_min:
+          one: "повинен мати принаймні %{count} ім'я тегу"
+          few: "повинен мати принаймні %{count} імен тегів"
+          many: "має мати принаймні %{count} імен тегів"
+          other: "має мати принаймні %{count} імен тегів"
+        humanize_tags_value_not_valid_max:
+          one: "Властивість у JSON Pointer '%{property_json_pointer}' повинна мати не більше ніж %{count} ім'я тегу."
+          few: "Властивість у JSON Pointer '%{property_json_pointer}' повинна мати не більше %{count} імен тегів."
+          many: "Властивість у JSON-покажчику '%{property_json_pointer}' повинна мати не більше %{count} імен тегів."
+          other: "Властивість у JSON-покажчику '%{property_json_pointer}' повинна мати не більше %{count} імен тегів."
+        tags_value_not_valid_max:
+          one: "повинен мати не більше %{count} назви тегу"
+          few: "повинні мати не більше %{count} імен тегів"
+          many: "повинні мати не більше %{count} імен тегів"
+          other: "повинні мати не більше %{count} імен тегів"
         humanize_not_valid_upload_value: "Властивість JSON Pointer '%{property_json_pointer}' має бути дійсним ідентифікатором завантаження."
         not_valid_upload_value: "має бути дійсним ідентифікатором завантаження"
+        humanize_string_value_not_valid_min:
+          one: "Властивість JSON Pointer '%{property_json_pointer}' має містити щонайменше %{count} символ."
+          few: "Властивість JSON Pointer '%{property_json_pointer}' має містити принаймні %{count} символів."
+          many: "Властивість JSON Pointer '%{property_json_pointer}' має містити принаймні %{count} символів."
+          other: "Властивість JSON Pointer '%{property_json_pointer}' має містити принаймні %{count} символів."
+        string_value_not_valid_min:
+          one: "має бути не менше ніж %{count} символ"
+          few: "має містити принаймні %{count} символів"
+          many: "має містити принаймні %{count} символів"
+          other: "має містити принаймні %{count} символів"
+        humanize_string_value_not_valid_max:
+          one: "Довжина властивості JSON Pointer '%{property_json_pointer}' має бути не більше ніж %{count} символ."
+          few: "Властивість JSON Pointer '%{property_json_pointer}' має містити щонайбільше %{count} символів."
+          many: "Властивість JSON Pointer '%{property_json_pointer}' має містити щонайбільше %{count} символів."
+          other: "Властивість JSON Pointer '%{property_json_pointer}' має містити щонайбільше %{count} символів."
+        string_value_not_valid_max:
+          one: "повинен мати довжину не більше ніж %{count} символ"
+          few: "має містити щонайбільше %{count} символів"
+          many: "має містити щонайбільше %{count} символів"
+          other: "має містити щонайбільше %{count} символів"
         humanize_number_value_not_valid_min: "Властивість у JSON вказівника '%{property_json_pointer}' має бути більшою або рівною %{min}."
         number_value_not_valid_min: "має бути більше або дорівнювати %{min}"
         humanize_number_value_not_valid_max: "Властивість у JSON вказівника '%{property_json_pointer}' має бути меншою або рівною %{max}."
@@ -201,6 +291,11 @@ uk:
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
     messages:
+      too_long_validation:
+        one: "обмежено %{count} символ; ви ввели %{length}."
+        few: "обмежено %{count} символами; ви ввели %{length}."
+        many: "обмежено %{count} символами; ви ввели %{length}."
+        other: "обмежено %{count} символами; ви ввели %{length}."
       invalid_boolean: "Неправильне логічне значення."
       taken: "вже прийнято"
       accepted: має бути прийнятий
@@ -495,6 +590,7 @@ uk:
   read_full_topic: "Читати тему повністю"
   private_message_abbrev: "Пов."
   rss_description:
+    hot: "Гарячі теми"
     latest: "Останні теми"
     top: "Кращі теми"
     top_all: "Кращі теми за весь час"
@@ -578,7 +674,6 @@ uk:
     request_membership_pm:
       title: "Запит на членство в групі @%{group_name}"
     request_accepted_pm:
-      title: "Вас прийняли в @%{group_name}"
       body: |
         Ваш запит на вступ до @%{group_name} прийнято, і тепер ви є членом групи.
   education:
@@ -624,6 +719,11 @@ uk:
 
       Усім легше читати теми, у яких є детальні докладні відповіді, ніж багато маленьких окремих відповідей.
     dominating_topic: Ви багато писали в цій темі! Подумайте про те, щоб дати іншим можливість відповідати тут і обговорювати речі один з одним.
+    get_a_room:
+      one: Ви відповіли @%{reply_username} один раз, чи знаєте ви, що замість цього можете надіслати особисте повідомлення?
+      few: Ви відповіли @%{reply_username} %{count} разів, чи знаєте ви, що замість цього можете надіслати особисте повідомлення?
+      many: Ви відповіли @%{reply_username} %{count} разів, чи знаєте ви, що замість цього можете надіслати особисте повідомлення?
+      other: Ви відповіли @%{reply_username} %{count} разів, чи знаєте ви, що замість цього можете надіслати особисте повідомлення?
     dont_feed_the_trolls: Це повідомлення вже було позначено як таке, що потребує уваги модератора. Ви впевнені, що хочете відповісти на нього? Відповіді на негативний контент, як правило, заохочують до ще більш негативної поведінки.
     too_many_replies: |
       ### Ви досягли ліміту відповідей для цієї теми
@@ -742,7 +842,23 @@ uk:
   staff_category_description: "Приватний розділ для спілкування команди обслуговування. Теми доступні тільки адміністраторам та модераторам."
   discourse_welcome_topic:
     title: "Ласкаво просимо на сайт %{site_title}! :wave:"
+    body: |
+      Ми дуже раді, що ви приєдналися до нас.
+
+      %{site_info_quote}
+
+      Ось кілька речей, які ви можете зробити, щоб почати:
+
+      :speaking_head: **Представтеся**, додавши своє зображення та інформацію про себе і ваші інтереси до [ваш профіль](%{base_path}/my/preferences/account). Про що б ви хотіли, щоб вас запитали?
+
+      :open_book: **Познайомтеся зі спільнотою**, [переглядаючи обговорення](%{base_path}/найновіші), які вже відбуваються тут. Якщо ви вважаєте публікацію цікавою, інформативною чи розважальною, використовуйте :heart: , щоб висловити свою вдячність або підтримку!
+
+      :handshake: **Зробіть свій внесок**, коментуючи, ділячись власною точкою зору, ставлячи запитання або пропонуючи відгук під час обговорення. Перш ніж відповідати або відкривати нові теми, ознайомтеся з [Правилами спільноти](%{base_path}/faq).
+
+      > Якщо вам потрібна допомога чи є пропозиція, не соромтеся запитати в %{feedback_category} або [зв’язатися з адміністраторами](%{base_path}/about).
   admin_quick_start_title: "Посібник адміністратораю. Початок роботи"
+  topic_view_stats:
+    invalid_date: "Дата у неправильному форматі, використовуйте YYYY-MM-DD"
   category:
     topic_prefix: "Про розділ %{category}"
     replace_paragraph: "(Замініть цей перший абзац коротким описом вашого нового розділу. Даний опис буде показано в області вибору розділів, тому намагайтеся, щоб він не перевищував 200 символів.)"
@@ -1551,40 +1667,41 @@ uk:
         qtt_like: Отримані вподобання
       description: "Топ-10 користувачів за кількістю вподобань, отриманих від широкого кола людей."
   dashboard:
-    twitter_login_warning: 'Схоже, наразі вхід у Twitter не працює. Перевірте облікові дані в <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">налаштуваннях сайту</a>.'
-    group_email_credentials_warning: 'Виникла проблема з обліковими даними електронної пошти для групи <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Жодні електронні листи не надсилатимуться з папки "Вхідні" групи, доки цю проблему не буде вирішено. %{error}'
-    rails_env_warning: "Ваш сервер працює в режимі %{env}."
-    host_names_warning: "Ваш файл config/database.yml використовує localhost. Поміняйте його на хост вашого вебсайт."
-    sidekiq_warning: 'Sidekiq не працює. Багато завдань, наприклад надсилання електронних листів, Sidekiq виконує асинхронно. Переконайтеся, що принаймні один процес Sidekiq запущено. <a href="https://github.com/mperham/sidekiq" target="_blank">Дізнайтеся про Sidekiq тут</a>.'
-    queue_size_warning: "Кількість завдань у черзі становить %{queue_size}, що є високим показником. Це може свідчити про проблему з процесом(ами) Sidekiq або вам може знадобитися додати більше обробників Sidekiq."
-    memory_warning: "Ваш сервер працює з менш ніж 1 Гб загальної пам’яті. Рекомендується принаймні 1 Гб пам’яті."
-    maxmind_db_configuration_warning: 'Сервер налаштований на використання баз даних MaxMind для зворотного пошуку IP-адрес, але дійсний ідентифікатор облікового запису MaxMind не налаштований, що може призвести до того, що бази даних MaxMind не завантажуватимуться в майбутньому. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Перегляньте цей посібник, щоб дізнатися більше</a>.'
-    google_oauth2_config_warning: 'Сервер налаштований так, щоб дозволити реєстрацію та вхід у систему за допомогою Google OAuth2 (enable_google_oauth2_logins), але значення ідентифікатора клієнта та секретні значення клієнта не встановлені. Перейдіть до <a href="%{base_path}/admin/site_settings">Налаштувань сайту</a> та оновіть їх. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Дивіться цей посібник, щоб дізнатися більше</a>.'
-    facebook_config_warning: 'Сервер налаштований на дозвіл реєстрації та входу в систему за допомогою Facebook (enable_facebook_logins), але ідентифікатор додатка та секретні значення додатка не встановлено. Зайдіть в <a href="%{base_path}/admin/site_settings">Налаштування сайту</a> та змініть їх. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Дивіться цей посібник, щоб дізнатися більше</a>.'
-    twitter_config_warning: 'Сервер налаштований на дозвіл реєстрації та входу в систему за допомогою Twitter (enable_twitter_logins), але ідентифікатор додатка та секретні значення додатка не встановлено. Зайдіть в <a href="%{base_path}/admin/site_settings">Налаштування сайту</a> та змініть їх. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Дивіться цей посібник, щоб дізнатися більше</a>.'
-    github_config_warning: 'Сервер налаштований так, щоб дозволити реєстрацію та вхід у систему за допомогою GitHub (enable_github_logins), але значення ідентифікатора клієнта та секретні значення клієнта не встановлені. Перейдіть до <a href="%{base_path}/admin/site_settings">Налаштувань сайту</a> та оновіть їх. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Дивіться цей посібник, щоб дізнатися більше</a>.'
-    s3_config_warning: 'Сервер налаштований для завантаження файлів у S3, але принаймні одне з наступних налаштувань не встановлено: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile або s3_upload_bucket. Перейдіть до <a href="%{base_path}/admin/site_settings">Налаштування сайту</a> та змініть їх. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Див. "Як налаштувати завантаження зображень на S3?" щоб дізнатися більше</a>.'
-    s3_backup_config_warning: 'Сервер налаштований на завантаження резервних копій на S3, але хоча б один параметр не встановлено: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, або s3_backup_bucket. Перейдіть в <a href="%{base_path}/admin/site_settings">Налаштування сайту</a> та оновіть їх. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Дивіться "Як налаштувати завантаження зображень на S3?", щоб дізнатися більше</a>.'
-    s3_cdn_warning: 'Сервер налаштований на завантаження файлів на S3, але S3 CDN не налаштовано. Це може призвести до значних витрат на S3 та зниження продуктивності сайту. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Див. «Using Object Storage for Uploads», щоб дізнатися більше</a>.'
-    image_magick_warning: 'Сервер налаштований на створення мініатюр великих зображень, але ImageMagick не встановлено. Встановіть ImageMagick за допомогою вашого улюбленого менеджера пакунків або <a href="https://www.imagemagick.org/script/download.php" target="_blank">завантажте останній випуск</a>.'
-    failing_emails_warning: 'Є %{num_failed_jobs} невдалих завдань електронної пошти. Перевірте файл app.yml і переконайтеся, що налаштування поштового сервера правильні. <a href="%{base_path}/sidekiq/retries" target="_blank">Перегляньте невдалі завдання в Sidekiq</a>.'
-    subfolder_ends_in_slash: "Ваша вкладена тека налаштована неправильно; DISCOURSE_RELATIVE_URL_ROOT закінчується косою рискою."
-    outdated_translations_warning: "Деякі перевизначення перекладу застаріли. Будь ласка, перевірте свої <a href='%{base_path}/admin/customize/site_texts?outdated=true'>налаштувань тексту</a>."
-    email_polling_errored_recently:
-      one: "Голосування електронною поштою спричинило помилку за останні 24 години. Подивіться <a href='%{base_path}/logs' target='_blank'>журнали</a> для більш детальної інформації."
-      few: "Голосування електронною поштою спричинило %{count} помилки за останні 24 години. Подивіться <a href='%{base_path}/logs' target='_blank'>журнали</a> для більш детальної інформації."
-      many: "Голосування електронною поштою спричинило %{count} помилок за останні 24 години. Подивіться <a href='%{base_path}/logs' target='_blank'>журнали</a> для більш детальної інформації."
-      other: "Голосування електронною поштою спричинило %{count} помилок за останні 24 години. Подивіться <a href='%{base_path}/logs' target='_blank'>журнали</a> для більш детальної інформації."
-    missing_mailgun_api_key: "Сервер налаштований для надсилання електронної пошти через Mailgun, але ви не надали ключ API, який використовується для перевірки повідомлень webhook."
-    bad_favicon_url: "Значок сайту не завантажується. Перевірте його в <a href='%{base_path}/admin/site_settings'>Налаштуваннях сайту</a>."
-    poll_pop3_timeout: "Час зʼєднання з сервером POP3 вичерпано. Не вдалося отримати електронну пошту. Перевірте свої <a href='%{base_path}/admin/site_settings/category/email'>налаштування POP3</a> та постачальника послуг."
-    poll_pop3_auth_error: "Зʼєднання з сервером POP3 не вдається через помилку автентифікації. Перевірте свої <a href='%{base_path}/admin/site_settings/category/email'>налаштування POP3</a>."
-    force_https_warning: "Ваш вебсайт використовує SSL. Але параметр `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ще не увімкнено в налаштуваннях вашого сайту."
-    out_of_date_themes: "Оновлення доступні для наступних тем:"
-    unreachable_themes: "Ми не змогли перевірити наявність оновлень для наступних тем:"
-    watched_word_regexp_error: "Неприпустимий регулярний вираз для '%{action}' контрольованих слів. Будь ласка, перевірте ваші <a href='%{base_path}/admin/customize/watched_words'>Налаштування контрольованих слів</a>, або вимкніть параметр 'контрольовані слова представлені регулярними виразами'."
-    v3_analytics_deprecated: "Ваш Discourse наразі використовує Google Analytics 3, яка більше не підтримуватиметься після липня 2023 року. <a href='https://meta.discourse.org/t/260498'>Оновіть Google Analytics 4</a> зараз, щоб і надалі отримувати цінну статистику та аналітику щодо ефективності вашого веб-сайту."
-    category_style_deprecated: "Наразі ваш Дискурс використовує застарілий стиль категорій, який буде вилучено перед фінальним бета-випуском Дискурсу 3.2. Будь ласка, зверніться до статті <a href='https://meta.discourse.org/t/282441'>Перехід до єдиного стилю категорій</a> для отримання інструкцій про те, як зберегти обраний вами стиль категорій."
+    problem:
+      twitter_login: 'Схоже, наразі вхід у Twitter не працює. Перевірте облікові дані в <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">налаштуваннях сайту</a>.'
+      group_email_credentials: 'Виникла проблема з обліковими даними електронної пошти для групи <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Поки цю проблему не буде вирішено, жодні листи не надсилатимуться зі скриньки "Вхідні" групи. %{error}'
+      rails_env: "Ваш сервер працює в режимі %{env}."
+      host_names: "Ваш файл config/database.yml використовує localhost. Поміняйте його на хост вашого вебсайт."
+      sidekiq: 'Sidekiq не працює. Багато завдань, як-от надсилання електронних листів, виконуються асинхронно Sidekiq. Будь ласка, переконайтеся, що працює принаймні один процес Sidekiq. <a href="https://github.com/mperham/sidekiq" target="_blank">Дізнайтеся про Sidekiq тут</a>.'
+      queue_size: "Кількість завдань у черзі становить %{queue_size}, що є високим показником. Це може свідчити про проблему з процесом(ами) Sidekiq або вам може знадобитися додати більше обробників Sidekiq."
+      ram: "Ваш сервер працює з менш ніж 1 Гб загальної пам’яті. Рекомендується принаймні 1 Гб пам’яті."
+      google_oauth2_config: 'Сервер налаштовано так, щоб дозволити реєстрацію та вхід за допомогою Google OAuth2 (enable_google_oauth2_logins), але ідентифікатор клієнта та значення секретного ключа клієнта не встановлені. Перейдіть до Налаштувань <a href="%{base_path}/admin/site_settings">сайту</a> та оновіть налаштування. Перегляньте <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">цей посібник, щоб дізнатися більше</a>.'
+      facebook_config: 'Сервер налаштований так, щоб дозволити реєстрацію та вхід за допомогою Facebook (enable_facebook_logins), але ідентифікатор програми та секретні значення програми не встановлені. Перейдіть до <a href="%{base_path}/admin/site_settings">Налаштування сайту</a> і оновіть налаштування. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Перегляньте цей посібник, щоб дізнатися більше</a>.'
+      twitter_config: 'Сервер налаштовано так, щоб дозволити реєстрацію та вхід за допомогою Twitter (enable_twitter_logins), але значення ключа та секрету не встановлені. Перейдіть до <a href="%{base_path}/admin/site_settings">Налаштувань сайту</a> та оновіть налаштування. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Дивіться цей посібник, щоб дізнатися більше</a>.'
+      github_config: 'Сервер налаштовано так, щоб дозволити реєстрацію та вхід за допомогою GitHub (enable_github_logins), але ідентифікатор клієнта та секретні значення не встановлені. Перейдіть до налаштувань <a href="%{base_path}/admin/site_settings">сайту</a> та оновіть їх. Перегляньте <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">цей посібник, щоб дізнатися більше</a>.'
+      s3_upload_config: 'Сервер налаштовано для завантаження файлів на S3, але не встановлено принаймні один такий параметр: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile або s3_upload_bucket. Перейдіть до <a href="%{base_path}/admin/site_settings">налаштувань сайту</a> та оновіть налаштування. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Див. «Як налаштувати завантаження зображень на S3?» щоб дізнатися більше</a>.'
+      s3_backup_config: 'Сервер налаштований на завантаження резервних копій на S3, але принаймні один з таких параметрів не встановлено: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile або s3_backup_bucket. Перейдіть до <a href="%{base_path}/admin/site_settings">Налаштування сайту</a> і оновіть налаштування. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Див. «Як налаштувати завантаження зображень на S3?» щоб дізнатися більше</a>.'
+      s3_cdn: 'Сервер налаштовано для завантаження файлів на S3, але CDN S3 не налаштовано. Це може призвести до великих витрат на S3 і зниження продуктивності сайту. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Дивіться «Використання сховища об’єктів для завантажень», щоб дізнатися більше</a>.'
+      image_magick: 'Сервер налаштований на створення мініатюр великих зображень, але ImageMagick не встановлено. Встановіть ImageMagick за допомогою вашого улюбленого менеджера пакунків або <a href="https://www.imagemagick.org/script/download.php" target="_blank">завантажте останній випуск</a>.'
+      failing_emails: 'Існують завдання електронної пошти %{num_failed_jobs} , які не вдалося виконати. Перевірте ваш app.yml і переконайтеся, що налаштування поштового сервера правильні. Перегляньте невдалі <a href="%{base_path}/sidekiq/retries" target="_blank">завдання в Sidekiq</a>.'
+      subfolder_ends_in_slash: "Ваша вкладена тека налаштована неправильно; DISCOURSE_RELATIVE_URL_ROOT закінчується косою рискою."
+      translation_overrides: "Деякі з ваших змін перекладу застаріли. Будь ласка, перевірте свої <a href='%{base_path}/admin/customize/site_texts?outdated=true'>налаштування тексту</a>."
+      email_polling_errored_recently:
+        one: "Опитування електронною поштою спричинило помилку за останні 24 години. Перегляньте <a href='%{base_path}/logs' target='_blank'>журнали</a> для отримання більш детальної інформації."
+        few: "Опитування електронної пошти спричинило %{count} помилки за останні 24 години. Подивіться на <a href='%{base_path}/logs' target='_blank'>журнали</a> для більш детальної інформації."
+        many: "Опитування електронної пошти спричинило %{count} помилок за останні 24 години. Подивіться на <a href='%{base_path}/logs' target='_blank'>журнали</a> для більш детальної інформації."
+        other: "Опитування електронної пошти спричинило %{count} помилок за останні 24 години. Подивіться на <a href='%{base_path}/logs' target='_blank'>журнали</a> для більш детальної інформації."
+      missing_mailgun_api_key: "Сервер налаштований для надсилання електронної пошти через Mailgun, але ви не надали ключ API, який використовується для перевірки повідомлень webhook."
+      bad_favicon_url: "Значок сайту не завантажується. Перевірте його в <a href='%{base_path}/admin/site_settings'>Налаштуваннях сайту</a>."
+      poll_pop3_timeout: "Час зʼєднання з сервером POP3 вичерпано. Не вдалося отримати електронну пошту. Перевірте свої <a href='%{base_path}/admin/site_settings/category/email'>налаштування POP3</a> та постачальника послуг."
+      poll_pop3_auth_error: "Підключення до сервера POP3 не вдається з помилкою аутентифікації. Перевірте свої <a href='%{base_path}/admin/site_settings/category/email'>налаштування POP3</a> ."
+      force_https: "Ваш веб-сайт використовує SSL. Але `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ще не ввімкнено в налаштуваннях вашого сайту."
+      out_of_date_themes: "Оновлення доступні для наступних тем:"
+      unreachable_themes: "Ми не змогли перевірити наявність оновлень для наступних тем:"
+      watched_words: "Неприпустимий регулярний вираз для '%{action}' контрольованих слів. Будь ласка, перевірте ваші <a href='%{base_path}/admin/customize/watched_words'>Налаштування контрольованих слів</a>, або вимкніть параметр 'контрольовані слова представлені регулярними виразами'."
+      google_analytics_version: "Ваш Discourse наразі використовує Google Analytics 3, яка більше не підтримуватиметься після липня 2023 року. <a href='https://meta.discourse.org/t/260498'>Оновіть Google Analytics 4</a> зараз, щоб і надалі отримувати цінну статистику та аналітику щодо ефективності вашого веб-сайту."
+      category_style_deprecated: "Наразі ваш Дискурс використовує застарілий стиль категорій, який буде вилучено перед фінальним бета-випуском Дискурсу 3.2. Будь ласка, зверніться до статті <a href='https://meta.discourse.org/t/282441'>Перехід до єдиного стилю категорій</a> для отримання інструкцій про те, як зберегти обраний вами стиль категорій."
+      maxmind_db_configuration: 'Сервер налаштований на використання баз даних MaxMind для зворотного пошуку IP-адрес, але дійсний ідентифікатор облікового запису MaxMind не налаштований, що може призвести до того, що бази даних MaxMind не завантажуватимуться в майбутньому. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Перегляньте цей посібник, щоб дізнатися більше</a>.'
     back_from_logster_text: "Повернутися на сайт"
   site_settings:
     allow_bulk_invite: "Дозволити масові запрошення, шляхом завантаження файлу CSV"
@@ -1687,7 +1804,6 @@ uk:
     detailed_404: "Надає користувачам більше інформації про те, чому вони не можуть отримати доступ до певної теми. Примітка: Це не дуже безпечно, оскільки користувачі дізнаються, чи URL-адреса посилається на дійсну тему."
     enforce_second_factor: "Вимагати від користувачів увімкнути двофакторну автентифікацію, перш ніж вони зможуть отримати доступ до інтерфейсу Discourse. Виберіть «всі», щоб примусити його всім користувачам. Виберіть «персонал», щоб застосувати його увімкнути лише для користувачів персоналу. Цей параметр не впливає на автентифікацію API або постачальника DiscourseConnect."
     force_https: "Змусьте свій сайт використовувати лише HTTPS. ПОПЕРЕДЖЕННЯ: НЕ вмикайте це, доки не переконаєтеся, що HTTPS повністю налаштовано та працює абсолютно всюди! Чи перевірили ви свій CDN, усі дані для входу в соціальні мережі та будь-які зовнішні логотипи/залежності, щоб переконатися, що всі вони також сумісні з HTTPS?"
-    same_site_cookies: "Використовуйте ті самі файли cookie сайту, вони усувають усі вектори міжсайтової підробки запитів у підтримуваних оглядачах (Lax або Strict). Попередження: Strict працюватиме лише на сайтах, які примусово входять у систему та використовують зовнішній метод авторизації."
     summary_score_threshold: "Мінімальний бал, необхідний для того, щоб допис було додано в «Підсумок теми»"
     summary_posts_required: "Мінімальна кількість дописів у темі перед увімкненням \"Підсумка теми\". Зміни цього налаштування застосовуватимуться до тем минулого тижня."
     summary_likes_required: "Мінімальна кількість вподобань у темі перед увімкненням \"Підсумка теми\". Зміни цього налаштування застосовуватимуться до тем минулого тижня."
@@ -1801,7 +1917,7 @@ uk:
     log_out_strict: "Коли користувач виходить з системи, закривати всі сесії на всіх пристроях користувача."
     version_checks: "Перевірити оновлення на Discourse Hub для отримання повідомлень про нові версії та показувати їх в <a href='%{base_path}/admin' target='_blank'>/admin</a> панелі"
     new_version_emails: "Надсилати повідомлення на адресу contact_email коли будуть доступні нові версії."
-    include_in_discourse_discover: "Нехай CDCK, Inc. («Discourse») розмістить цю спільноту на <a href='https://www.discourse.org/discover'>сторінці Discover</a> та в маркетингових матеріалах Discourse. Роблячи це, ви надаєте доступ до даних, необхідних для включення вашого сайту в службу. Зверніть увагу, що просування спільнот залежить від Discourse."
+    include_in_discourse_discover: "Нехай CDCK, Inc. («Discourse») розмістить цю спільноту на <a href='https://discover.discourse.org' target='_blank'>сторінці Discover</a> та в маркетингових матеріалах Discourse. Роблячи це, ви надаєте доступ до даних, необхідних для включення вашого сайту в службу. Зверніть увагу, що просування спільнот залежить від Discourse."
     invite_expiry_days: "Тривалість дії ключів запрошення користувача, у днях"
     invite_only: "Усі нові користувачі мають бути запрошені довіреними користувачами або членами команди обслуговування. Публічна реєстрація вимкнена."
     login_required: "Вимагати автентифікації для читання вмісту на цьому сайті, заборонити анонімний доступ."
@@ -2410,8 +2526,8 @@ uk:
     enable_experimental_lightbox: "ЕКСПЕРИМЕНТАЛЬНЕ: оновлений дизайн стандартного лайтбоксу зображень."
     enable_experimental_bookmark_redesign_groups: "ЕКСПЕРИМЕНТАЛЬНО: Показати меню швидкого доступу для закладок у дописах та новий перероблений модальний інтерфейс"
     glimmer_header_mode: "Контролюйте, чи використовується нова реалізація заголовка «glimmer». За замовчуванням значення «auto», яке автоматично ввімкнеться, коли всі ваші теми та плагіни будуть готові. https://meta.discourse.org/t/296544"
+    experimental_glimmer_topic_list_groups: "ЕКСПЕРИМЕНТАЛЬНА ЧАСТИНА: увімкніть нову реалізацію списку тем «блимання». Ця реалізація знаходиться в стадії активної розробки і не призначена для використання у виробництві. Не розробляйте теми/плагіни для нього, доки реалізація не буде завершена та оголошена."
     experimental_form_templates: "ЕКСПЕРИМЕНТАЛЬНО: Увімкніть функцію шаблонів форм. <b>Після увімкнення</b> керуйте шаблонами за адресою <a href='%{base_path}/admin/customize/form-templates'>Налаштування/Шаблони</a>."
-    admin_sidebar_enabled_groups: "ЕКСПЕРИМЕНТАЛЬНО: Увімкніть бічну панель навігації в інтерфейсі адміністратора для вказаних груп, яка замінить кнопки навігації адміністратора верхнього рівня."
     lazy_load_categories_groups: "ЕКСПЕРИМЕНТАЛЬНО: Ліниве завантаження інформації про категорії лише для користувачів цих груп. Це покращує продуктивність на сайтах з великою кількістю категорій."
     experimental_topic_bulk_actions_enabled_groups: "ЕКСПЕРИМЕНТАЛЬНО: Увімкніть новий випадаючий список масових дій."
     page_loading_indicator: "Вибір індикатора завантаження, який з’являється під час навігації сторінкою в Discourse. «Спіннер» – це індикатор на всю сторінку. «Слайдер» — вузька смужка у верхній частині екрана."
@@ -2473,6 +2589,11 @@ uk:
         regex_invalid: "Регулярний вираз недійсний: %{error}"
         leading_trailing_slash: "Регулярний вираз не повинен починатися і закінчуватися косою рискою."
       unicode_usernames_avatars: "Внутрішні аватари системи не підтримують імен користувачів Unicode."
+      list_value_count:
+        one: "Список має містити рівно %{count} значення."
+        few: "Список має містити рівно %{count} значень."
+        many: "Список має містити рівно %{count} значень."
+        other: "Список має містити рівно %{count} значень."
       markdown_linkify_tlds: "Не можна включати значення \"*\"."
       google_oauth2_hd_groups: "Ви повинні налаштувати всі параметри «google oauth2 hd», перш ніж увімкнути цей параметр."
       linkedin_oidc_credentials: "Ви повинні налаштувати облікові дані LinkedIn OIDC ('linkedin_oidc_client_id' та 'linkedin_oidc_client_sec') перед включенням цього параметра."
@@ -2757,6 +2878,16 @@ uk:
     new_user_typed_too_fast: "Новий користувач набирає текст занадто швидко"
     content_matches_auto_silence_regex: "Вміст відповідає автоматичному блокуванню за regex (регулярним виразом)"
     username:
+      short:
+        one: "має бути не менше ніж %{count} символ"
+        few: "має бути найменше %{count} символів"
+        many: "має бути найменше %{count} символів"
+        other: "має бути найменше %{count} символів"
+      long:
+        one: "має містити не більше ніж %{count} символ"
+        few: "має містити не більше %{count} символів"
+        many: "має містити не більше %{count} символів"
+        other: "має містити не більше %{count} символів"
       too_long: "занадто довге"
       characters: "має містити лише цифри, літери, тире, крапки та підкреслення"
       unique: "має бути унікальним"
@@ -3187,9 +3318,41 @@ uk:
     bulk_invite_succeeded:
       title: "Успішне масове розсилання запрошень"
       subject_template: "Масове запрошення користувачів пройшло успішно"
+      text_body_template: |
+        Ваш файл масового запрошення користувача оброблено, запрошення %{sent} надіслано поштою, %{skipped} пропущено та %{warnings} попереджень.
+
+        Пропущені запрошення:
+
+        ```text
+        %{skipped_emails}
+        ```
+
+        ```text
+        %{logs}
+        ```
     bulk_invite_failed:
       title: "Помилка масового запрошення"
       subject_template: "Масове запрошення користувачів оброблено з помилками"
+      text_body_template: |
+        Ваш файл масових запрошень для користувачів було оброблено, %{sent} надіслано, %{skipped} пропущено, %{warnings}попередження та %{failed} помилок.
+
+        Пропущені запрошення:
+
+        ``` text
+        %{skipped_emails}
+        ```
+
+        Не вдалося надіслати запрошення:
+
+        ``` text
+        %{failed_emails}
+        ```
+
+        Ось лог:
+
+        ``` text
+        %{logs}
+        ```
     user_added_to_group_as_owner:
       title: "Додано в групу як власника"
       subject_template: "Вас додано як власника групи %{group_name}"
@@ -3848,7 +4011,7 @@ uk:
 
         Якщо у вас виникли запитання, [зверніться до команди обслуговування](%{base_url}/about).
     digest:
-      why: "Короткий підсумок %{site_link} з часу вашого останнього відвідування %{last_seen_at}"
+      why: "Короткий огляд %{site_link} за період з %{since}"
       since_last_visit: "З вашого останнього відвідування"
       new_topics: "Нові теми"
       unread_notifications: "Непрочитані сповіщення"
@@ -3864,7 +4027,7 @@ uk:
       your_email_settings: "налаштування електронної пошти"
       click_here: "натисніть тут"
       from: "%{site_name}"
-      preheader: "Короткий підсумок після вашого останнього відвідування %{last_seen_at}"
+      preheader: "Короткий підсумок з %{since}"
     forgot_password:
       title: "Забув(ла) пароль"
       subject_template: "[%{email_prefix}] Зміна пароля"
@@ -4519,6 +4682,11 @@ uk:
     mass_award:
       errors:
         invalid_csv: У нас виникла помилка в рядку %{line_number}. Будь ласка, підтвердить що CSV має кожен рядок містить один email.
+        too_many_csv_entries:
+          one: Занадто багато записів у CSV-файлі. Будь ласка, надайте CSV-файл, що містить не більше ніж %{count} запис.
+          few: Забагато записів у файлі CSV. Будь ласка, надайте файл CSV з не більше ніж %{count} записами.
+          many: Забагато записів у файлі CSV. Будь ласка, надайте файл CSV з не більше ніж %{count} записами.
+          other: Забагато записів у файлі CSV. Будь ласка, надайте файл CSV з не більше ніж %{count} записами.
         badge_disabled: Будь ласка, спочатку увімкніть нагороду %{badge_name}.
         cant_grant_multiple_times: Неможливо надати нагороду %{badge_name} кілька разів одному користувачеві.
     editor:
@@ -5058,6 +5226,9 @@ uk:
       agree_and_hide:
         title: "Сховати допис"
         description: "Погодитися з прапором і приховати цей допис + автоматично надіслати користувачеві повідомлення із закликом відредагувати його."
+      agree_and_edit:
+        title: "Погодитися і редагувати допис"
+        description: "Погодьтеся з прапором і відкрийте вікно редактора, щоб відредагувати допис."
       delete_single:
         title: "Видалити"
       delete:

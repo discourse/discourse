@@ -40,7 +40,7 @@ export default class extends Controller {
   @readOnly("site.can_tag_pms") pmTaggingEnabled;
 
   get bulkSelectHelper() {
-    this.userTopicsList.bulkSelectHelper;
+    return this.userTopicsList.bulkSelectHelper;
   }
 
   get messagesDropdownValue() {

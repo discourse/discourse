@@ -971,22 +971,14 @@ vi:
         user: Người dùng
         qtt_like: Likes Đã Nhận
   dashboard:
-    rails_env_warning: "Máy chủ của bạn đang chạy trong chế độ %{env}."
-    host_names_warning: "Cài đặt của bạn config/database.yml đang sử dụng hostname mặc định. Cập nhật lại để sử dụng hostname của bạn"
-    sidekiq_warning: ' Sidekiq đang không hoạt động. Rất nhiều tác vụ, như gửi email, là được thực thi không đồng bộ bởi sidekiq. Hãy chắc chắn rằng ít nhất một tiến trình sidekiq phải đang hoạt động. <a href="https://github.com/mperham/sidekiq" target="_blank">Đọc thêm về Sidekiq tại đây</a>.'
-    queue_size_warning: "Có %{queue_size} công việc đang chờ xử lý trong hàng đợi. Điều này chứng tỏ có vấn đề đã xảy ra với tiến trình Sidekiq, hoặc bạn cần tăng số lượng Sidekiq workers ()."
-    memory_warning: "Máy chủ của bạn có bộ nhớ ít hơn 1 GB. Khuyến cáo sử dụng bộ nhớ tối thiểu 1 GB ."
-    google_oauth2_config_warning: 'Máy chủ được định cấu hình để cho phép đăng ký và đăng nhập bằng Google OAuth2 (enable_google_oauth2_logins), nhưng id máy khách và giá trị bí mật của máy khách không được đặt. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Xem hướng dẫn này để tìm hiểu thêm</a>.'
-    facebook_config_warning: 'Máy chủ được định cấu hình để cho phép đăng ký và đăng nhập bằng Facebook (enable_facebook_logins), nhưng giá trị id ứng dụng và bí mật ứng dụng không được đặt. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang web</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Xem hướng dẫn này để tìm hiểu thêm</a>.'
-    s3_backup_config_warning: 'Máy chủ được định cấu hình để tải các bản sao lưu lên S3, nhưng ít nhất một cài đặt sau chưa được đặt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile hoặc s3_backup_bucket. Chuyển đến <a href="%{base_path}/admin/site_settings">Cài đặt trang</a> và cập nhật cài đặt. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Xem "Cách thiết lập tải hình ảnh lên S3?" để tìm hiểu thêm</a>.'
-    s3_cdn_warning: 'Máy chủ được cấu hình để tải lên các tập tin lên S3, nhưng không có S3 CDN cấu hình. Điều này có thể dẫn đến chi phí S3 đắt tiền và hiệu suất trang web chậm hơn. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Xem “Sử dụng lưu trữ đối tượng để tải lên” để tìm hiểu thêm</a>.'
-    subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
-    email_polling_errored_recently:
-      other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='%{base_path}/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."
-    poll_pop3_timeout: "Không thể kết nối với POP3 server, sẽ không nhận được email gửi đến. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a> và nhà cung cấp dịch vụ."
-    poll_pop3_auth_error: "Không thể kết nối với POP3 server do lỗi chứng thực. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a>."
-    out_of_date_themes: "Các bản cập nhật có sẵn cho các chủ đề sau:"
-    unreachable_themes: "Chúng tôi không thể kiểm tra cập nhật về các chủ đề sau:"
+    problem:
+      rails_env: "Máy chủ của bạn đang chạy trong chế độ %{env}."
+      host_names: "Cài đặt của bạn config/database.yml đang sử dụng hostname mặc định. Cập nhật lại để sử dụng hostname của bạn"
+      queue_size: "Có %{queue_size} công việc đang chờ xử lý trong hàng đợi. Điều này chứng tỏ có vấn đề đã xảy ra với tiến trình Sidekiq, hoặc bạn cần tăng số lượng Sidekiq workers ()."
+      ram: "Máy chủ của bạn có bộ nhớ ít hơn 1 GB. Khuyến cáo sử dụng bộ nhớ tối thiểu 1 GB ."
+      subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
+      out_of_date_themes: "Các bản cập nhật có sẵn cho các chủ đề sau:"
+      unreachable_themes: "Chúng tôi không thể kiểm tra cập nhật về các chủ đề sau:"
   site_settings:
     disabled: "khóa"
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
@@ -1842,7 +1834,6 @@ vi:
 
         Nếu bạn có bất kỳ câu hỏi nào, [liên hệ với nhân viên thân thiện của chúng tôi](%{base_url}/about).
     digest:
-      why: "Tóm tắt %{site_link} từ lần cuối truy cập %{last_seen_at}"
       since_last_visit: "Kể từ lần thăm cuối cùng của bạn"
       new_topics: "Chủ đề mới"
       liked_received: "Likes Đã Nhận"
@@ -1852,7 +1843,6 @@ vi:
       more_new: "Mới cho bạn"
       unsubscribe: "Tóm tắt này được gửi từ %{site_link} khi chúng tôi không gặp bạn trong một thời gian. Thay đổi %{email_preferences_link}hoặc %{unsubscribe_link} để hủy đăng ký."
       click_here: "bấm vào đây"
-      preheader: "Bản tóm tắt ngắn gọn kể từ lần cuối bạn ghé thăm vào %{last_seen_at}"
     forgot_password:
       title: "Quên mật khẩu"
     set_password:

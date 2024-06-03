@@ -73,7 +73,6 @@ hr:
         process_started: "Započeo je proces brisanja kanala. Ovaj modal će se uskoro zatvoriti, više nigdje nećete vidjeti izbrisani kanal."
       channels_list_popup:
         browse: "Pretražujte kanale"
-      click_to_join: "Kliknite ovdje da biste vidjeli dostupne kanale."
       close: "Zatvori"
       remove: "Ukloni"
       collapse: "Sažmi ladicu za chat"

@@ -66,7 +66,6 @@ fa_IR:
       channels_list_popup:
         browse: "مرور کانال‌ها"
         create: "کانال جدید"
-      click_to_join: "برای مشاهده کانال‌های موجود، اینجا را کلیک کنید."
       close: "بستن"
       remove: "پاک کردن"
       confirm_flag: "آیا برای پرچم گذاری پیام %{username} مطمئن هستید؟"
@@ -101,7 +100,6 @@ fa_IR:
         invite: "دعوت به کانال"
       aria_roles:
         channels_list: "فهرست کانال‌های گفتگو"
-      no_public_channels: "شما هنوز عضو هیچ کانالی نشده‌اید."
       open: "باز کردن گفتگو..."
       close_full_page: "بستن گفتگو تمام صفحه"
       open_message: "پیام را در گفتگو باز کن"

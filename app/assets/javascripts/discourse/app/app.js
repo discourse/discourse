@@ -15,16 +15,15 @@ import { VERSION } from "@ember/version";
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
-const Discourse = Application.extend({
-  modulePrefix: "discourse",
+class Discourse extends Application {
+  modulePrefix = "discourse";
+  rootElement = "#main";
 
-  rootElement: "#main",
-
-  customEvents: {
+  customEvents = {
     paste: "paste",
-  },
+  };
 
-  Resolver: buildResolver("discourse"),
+  Resolver = buildResolver("discourse");
 
   // Start up the Discourse application by running all the initializers we've defined.
   start() {
@@ -49,18 +48,18 @@ const Discourse = Application.extend({
     window.history.scrollRestoration = "manual";
 
     loadInitializers(this);
-  },
+  }
 
   _registerPluginCode(version, code) {
     _pluginCallbacks.push({ version, code });
-  },
+  }
 
   ready() {
     performance.mark("discourse-ready");
     const event = new CustomEvent("discourse-ready");
     document.dispatchEvent(event);
-  },
-});
+  }
+}
 
 function moduleThemeId(moduleName) {
   const match = moduleName.match(/^discourse\/theme\-(\d+)\//);

@@ -467,6 +467,7 @@ zh_CN:
   read_full_topic: "阅读完整话题"
   private_message_abbrev: "消息"
   rss_description:
+    hot: "热议话题"
     latest: "最新话题"
     top: "热门话题"
     top_all: "所有时间热门话题"
@@ -541,7 +542,6 @@ zh_CN:
     request_membership_pm:
       title: "%{group_name} 的成员资格请求"
     request_accepted_pm:
-      title: "您已被接受加入@%{group_name}"
       body: |
         您加入 @%{group_name} 的请求已被接受，现在您是其中一员了。
   education:
@@ -716,6 +716,8 @@ zh_CN:
 
       > 如果您需要帮助或有建议，请随时在 %{feedback_category} 中提问或[联系管理员](%{base_path}/about)。
   admin_quick_start_title: "管理员指南：使用入门"
+  topic_view_stats:
+    invalid_date: "日期格式无效，请使用 YYYY-MM-DD"
   category:
     topic_prefix: "关于“%{category}”类别"
     replace_paragraph: "（将第一段替换为新类别的简要说明。此指导将显示在类别选择区域中，因此请尽量将其保持在 200 个字符以内。）"
@@ -1446,36 +1448,38 @@ zh_CN:
         qtt_like: 获赞
       description: "从各种用户收到赞最多的前 10 名用户。"
   dashboard:
-    twitter_login_warning: 'Twitter 登录目前似乎无法使用。请在 <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">网站设置</a>中检查凭据。'
-    group_email_credentials_warning: '群组 <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> 的电子邮件凭据有问题。在此问题解决之前，不会从群组收件箱发送电子邮件。%{error}'
-    rails_env_warning: "您的服务器正在以%{env}模式运行。"
-    host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"
-    sidekiq_warning: 'Sidekiq 未运行。许多任务，例如发送电子邮件，是通过 Sidekiq 异步执行的。请确保至少运行一个 Sidekiq进程。<a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
-    queue_size_warning: "队列中有 %{queue_size} 个作业，比较多。这可能表明 Sidekiq 进程存在问题，或者需要添加更多 Sidekiq 工作进程。"
-    memory_warning: "您的服务器运行的总内存不足 1 GB。建议使用至少 1 GB 的内存。"
-    google_oauth2_config_warning: '服务器被配置为允许通过 Google OAuth2 注册和登录 (enable_google_oauth2_logins)，但是没有设置客户端 ID 和客户端密钥值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">请参阅此指南以了解详情</a>。'
-    facebook_config_warning: '服务器被配置为允许通过 Facebook 注册和登录 (enable_facebook_logins)，但是没有设置应用 ID 和应用密钥值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">请参阅此指南以了解详情</a>。'
-    twitter_config_warning: '服务器被配置为允许通过 Twitter 注册和登录 (enable_twitter_logins)，但是没有设置密钥和密钥代码。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">请参阅此指南以了解详情</a>。'
-    github_config_warning: '服务器被配置为允许通过 GitHub 注册和登录 (enable_github_logins)，但是没有设置客户端 ID 和密钥值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">请参阅此指南以了解详情</a>。'
-    s3_config_warning: '服务器被配置为将文件上传到 S3，但未设置以下设置中的至少一个：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_upload_bucket。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">请参阅“如何设置将图片上传到 S3？”以了解详情</a>。'
-    s3_backup_config_warning: '服务器被配置为将备份上传到 S3，但未设置以下设置中的至少一个：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_backup_bucket。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">请参阅“如何设置将图片上传到 S3？”以了解详情</a>。'
-    s3_cdn_warning: '服务器被配置为将文件上传到 S3，但未配置 S3 CDN。这可能会导致昂贵的 S3 成本和站点性能降低。<a href="https://meta.discourse.org/t/-/148916" target="_blank">请参阅“使用对象存储进行上传”以了解详情</a>。'
-    image_magick_warning: '服务器被配置为创建大图片缩略图，但是未安装 ImageMagick。使用您喜爱的软件包管理器安装 ImageMagick 或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下载最新版</a>。'
-    failing_emails_warning: '%{num_failed_jobs} 个电子邮件作业失败。请检查您的 app.yml 并确保邮件服务器设置正确。<a href="%{base_path}/sidekiq/retries" target="_blank">在 Sidekiq 中查看失败的作业</a>。'
-    subfolder_ends_in_slash: "您的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT 以斜杠结尾。"
-    outdated_translations_warning: "您的某些翻译替换已过时。请检查您的<a href='%{base_path}/admin/customize/site_texts?outdated=true'>文本自定义</a>。"
-    email_polling_errored_recently:
-      other: "电子邮件轮询在过去的 24 小时内产生了 %{count} 个错误。查看<a href='%{base_path}/logs' target='_blank'>日志</a>，了解更多详细信息。"
-    missing_mailgun_api_key: "服务器被配置为通过 Mailgun 发送电子邮件，但是您尚未提供用于验证网络钩子消息的 API 密钥。"
-    bad_favicon_url: "网站图标无法加载。检查<a href='%{base_path}/admin/site_settings'>站点设置</a>中的网站图标设置。"
-    poll_pop3_timeout: "连接到 POP3 服务器超时。无法检索收到的电子邮件。请检查您的 <a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a> 和服务提供商。"
-    poll_pop3_auth_error: "连接到 POP3 服务器因身份验证错误而失败。请检查您的 <a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>。"
-    force_https_warning: "您的网站正在使用 SSL。但是，您的站点设置中尚未启用 `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>`。"
-    out_of_date_themes: "以下主题有更新："
-    unreachable_themes: "我们无法检查以下主题的更新："
-    watched_word_regexp_error: "'%{action}' 关注词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>关注词设置</a>，或禁用“关注词正则表达式”站点设置。"
-    v3_analytics_deprecated: "您的 Discourse 目前使用的是 Google Analytics（分析）3，2023 年 7 月后该版本将不受支持。立即<a href='https://meta.discourse.org/t/260498'>升级到Google Analytics（分析）4</a> ，以继续接收有价值的见解和分析，了解您的网站性能。"
-    category_style_deprecated: "您的 Discourse 目前正在使用已弃用的类别样式，该样式将在 Discourse 3.2 最终测试版发布前移除。请参阅<a href='https://meta.discourse.org/t/282441'>移至单一类别样式站点设置</a>，了解如何保留所选类别样式。"
+    problem:
+      twitter_login: 'Twitter 登录目前似乎无法使用。请在 <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">网站设置</a>中检查凭据。'
+      group_email_credentials: '群组 <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>的电子邮件凭证存在问题。在解决此问题之前，不会从群组收件箱发送任何电子邮件。 %{error}'
+      rails_env: "您的服务器正在以%{env}模式运行。"
+      host_names: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"
+      sidekiq: 'Sidekiq 未运行。许多任务（例如发送电子邮件）都是由 Sidekiq 异步执行的。请确保至少一个 Sidekiq 进程正在运行。 <a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
+      queue_size: "队列中有 %{queue_size} 个作业，比较多。这可能表明 Sidekiq 进程存在问题，或者需要添加更多 Sidekiq 工作进程。"
+      ram: "您的服务器运行的总内存不足 1 GB。建议使用至少 1 GB 的内存。"
+      google_oauth2_config: '服务器被配置为允许通过 Google OAuth2 注册和登录 (enable_google_oauth2_logins)，但是没有设置客户端 ID 和客户端密钥值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">请参阅此指南以了解详情</a>。'
+      facebook_config: '服务器被配置为允许通过 Facebook 注册和登录 (enable_facebook_logins)，但是没有设置应用 ID 和应用密钥值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">请参阅此指南以了解详情</a>。'
+      twitter_config: '服务器被配置为允许通过 Twitter 注册和登录 (enable_twitter_logins)，但是没有设置密钥和密钥代码。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">请参阅此指南以了解详情</a>。'
+      github_config: '服务器被配置为允许通过 GitHub 注册和登录 (enable_github_logins)，但是没有设置客户端 ID 和密钥值。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">请参阅此指南以了解详情</a>。'
+      s3_upload_config: '服务器被配置为将文件上传到 S3，但未设置以下设置中的至少一个：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_upload_bucket。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">请参阅“如何设置将图片上传到 S3？”以了解详情</a>。'
+      s3_backup_config: '服务器被配置为将备份上传到 S3，但未设置以下设置中的至少一个：s3_access_key_id、s3_secret_access_key、s3_use_iam_profile 或 s3_backup_bucket。前往<a href="%{base_path}/admin/site_settings">站点设置</a>并更新设置。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">请参阅“如何设置将图片上传到 S3？”以了解详情</a>。'
+      s3_cdn: '服务器被配置为将文件上传到 S3，但未配置 S3 CDN。这可能会导致昂贵的 S3 成本和站点性能降低。<a href="https://meta.discourse.org/t/-/148916" target="_blank">请参阅“使用对象存储进行上传”以了解详情</a>。'
+      image_magick: '服务器被配置为创建大图片缩略图，但是未安装 ImageMagick。使用你喜爱的软件包管理器安装 ImageMagick 或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下载最新版</a>。'
+      failing_emails: '%{num_failed_jobs} 个电子邮件作业失败。请检查您的 app.yml 并确保邮件服务器设置正确。<a href="%{base_path}/sidekiq/retries" target="_blank">在 Sidekiq 中查看失败的作业</a>。'
+      subfolder_ends_in_slash: "您的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT 以斜杠结尾。"
+      translation_overrides: "你的某些翻译替换已过时。请检查你的<a href='%{base_path}/admin/customize/site_texts?outdated=true'>文本自定义</a>。"
+      email_polling_errored_recently:
+        other: "电子邮件轮询在过去的 24 小时内产生了 %{count} 个错误。查看<a href='%{base_path}/logs' target='_blank'>日志</a>，了解更多详细信息。"
+      missing_mailgun_api_key: "服务器被配置为通过 Mailgun 发送电子邮件，但是您尚未提供用于验证网络钩子消息的 API 密钥。"
+      bad_favicon_url: "网站图标无法加载。检查<a href='%{base_path}/admin/site_settings'>站点设置</a>中的网站图标设置。"
+      poll_pop3_timeout: "连接到 POP3 服务器超时。无法检索收到的电子邮件。请检查您的 <a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a> 和服务提供商。"
+      poll_pop3_auth_error: "连接 POP3 服务器失败，出现身份验证错误。请检查你的<a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>。"
+      force_https: "你的网站正在使用 SSL。但在网站设置中，强制 https `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>`尚未启用。"
+      out_of_date_themes: "以下主题有更新："
+      unreachable_themes: "我们无法检查以下主题的更新："
+      watched_words: "'%{action}' 关注词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>关注词设置</a>，或禁用“关注词正则表达式”站点设置。"
+      google_analytics_version: "您的 Discourse 目前使用的是 Google Analytics（分析）3，2023 年 7 月后该版本将不受支持。立即<a href='https://meta.discourse.org/t/260498'>升级到Google Analytics（分析）4</a> ，以继续接收有价值的见解和分析，了解您的网站性能。"
+      category_style_deprecated: "你的 Discourse 目前使用的是过时的分类样式，该样式将在 Discourse 3.2 最终测试版发布前移除。请参阅 \"<a href='https://meta.discourse.org/t/282441'>转至单一类别风格网站设置</a>\"，了解如何保留所选类别风格。"
+      maxmind_db_configuration: '服务器已配置为使用 MaxMind 数据库进行反向 IP 查找，但尚未配置有效的 MaxMind 帐户 ID，这可能导致 MaxMind 数据库将来无法下载。<a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">请参阅本指南了解更多</a>信息。'
     back_from_logster_text: "返回站点"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
@@ -1578,7 +1582,6 @@ zh_CN:
     detailed_404: "向用户提供有关他们无法访问特定话题的更多详细信息。注意：这不太安全，因为用户会知道 URL 是否链接到有效话题。"
     enforce_second_factor: "要求用户在访问 Discourse UI 前启用双重身份验证。选择“所有”，对所有用户强制执行。选择“管理人员”，仅对管理人员用户强制执行。此设置不影响 API 或“DiscourseConnect 提供商”身份验证。"
     force_https: "强制您的站点仅使用 HTTPS。警告：在您验证 HTTPS 已完全设置并在任何地方都可以正常工作之前，请勿启用此功能！您是否检查过您的 CDN、所有社交登录以及任何外部徽标/依赖项，以确保它们都与 HTTPS 兼容？"
-    same_site_cookies: "使用相同的站点 Cookie，它们在支持的浏览器上消除了所有跨站点请求伪造向量（宽松或严格）。警告：“严格”仅适用于强制登录并使用外部身份验证方法的站点。"
     summary_score_threshold: "将帖子包含在“总结此话题”中所需的最低分数"
     summary_posts_required: "启用“总结此话题”之前话题中的最少帖子数。对此设置的更改将在一周内追溯应用。"
     summary_likes_required: "启用“总结此话题”之前话题中的最少赞数。对此设置的更改将在一周内追溯应用。"
@@ -1692,7 +1695,7 @@ zh_CN:
     log_out_strict: "退出时，退出用户在所有设备上的会话"
     version_checks: "Ping Discourse Hub 以获取版本更新并在 <a href='%{base_path}/admin' target='_blank'>/admin</a> 信息中心上显示新版本消息"
     new_version_emails: "当有新版本的 Discourse 时，向 contact_email 地址发送一封电子邮件。"
-    include_in_discourse_discover: "让 CDCK, Inc. (\"Discourse\") 在 <a href='https://www.discourse.org/discover'>发现页面</a> 和 Discourse 营销材料中介绍本社区。这样，你将与 Discourse 共享社区元数据和匿名使用统计数据。请注意，社区的推广将由 Discourse 决定。"
+    include_in_discourse_discover: "让 CDCK, Inc. (\"Discourse\") 在 <a href='https://discover.discourse.org' target='_blank'>发现页面</a> 和 Discourse 营销材料中介绍本社区。这样，你将与 Discourse 共享社区元数据和匿名使用统计数据。请注意，社区的推广将由 Discourse 决定。"
     invite_expiry_days: "用户邀请密钥的有效期，以天为单位"
     invite_only: "所有新用户必须由受信任的用户或管理人员明确邀请。公共注册被禁用。"
     login_required: "需要进行身份验证才能阅读此站点上的内容，禁止匿名访问。"
@@ -2019,13 +2022,17 @@ zh_CN:
     pop3_polling_ssl: "连接到 POP3 服务器时使用 SSL。（推荐）"
     pop3_polling_openssl_verify: "验证 TLS 服务器证书（默认：启用）"
     pop3_polling_period_mins: "检查 POP3 帐户中电子邮件的时间间隔（分钟）。注意：需要重新启动。"
+    pop3_polling_port: "POP3 服务器轮询电子邮件的端口。"
+    pop3_polling_host: "用于轮询电子邮件的 POP3 服务器主机。"
     pop3_polling_username: "用于轮询电子邮件的 POP3 帐户的用户名。"
     pop3_polling_password: "用于轮询电子邮件的 POP3 帐户的密码。"
     pop3_polling_delete_from_server: "从服务器删除电子邮件。注意：如果您禁用此功能，您应该手动清理您的邮件收件箱"
     log_mail_processing_failures: "将所有电子邮件处理失败记录到 <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "允许用户通过电子邮件发布新话题。启用此设置后，您将能够为群组和类别配置传入电子邮件地址。"
     email_in_min_trust: "用户要被允许通过电子邮件发布新话题所需的最低信任级别。"
+    email_in_allowed_groups: "允许通过电子邮件发布新主题的组。管理员和版主可以随时通过电子邮件发布新主题。"
     email_in_authserv_id: "对传入电子邮件进行身份验证检查的服务的标识符。请参阅 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> 了解配置说明"
+    email_in_spam_header: "选择用于识别垃圾邮件的特定邮件头。该选项可以是 X-Spam-Flag、X-Spam-Status 或 X-SES-Spam-Verdict，电子邮件会根据标头值被标记为垃圾邮件。例如，如果选择的设置是 X-Spam-Flag，则该标头值设置为 \"YES\" 的电子邮件将被归类为垃圾邮件。"
     enable_imap: "启用 IMAP 以同步群组消息。"
     enable_imap_write: "启用双向 IMAP 同步。如果禁用，IMAP 帐户上的所有写入操作都将被禁用。"
     enable_imap_idle: "使用 IMAP IDLE 机制等待新电子邮件。"
@@ -2056,6 +2063,7 @@ zh_CN:
     suppress_digest_email_after_days: "禁止向超过 (n) 天未在站点上看到的用户发送总结电子邮件。"
     digest_suppress_categories: "从总结电子邮件中禁止这些类别。"
     digest_suppress_tags: "从摘要电子邮件中禁止这些标签。"
+    disable_digest_emails: "关闭网站上每个用户的摘要电子邮件。所有用户都将停止接收来自网站的热门话题和其他内容摘要的电子邮件。"
     apply_custom_styles_to_digest: "自定义电子邮件模板和 CSS 应用于总结电子邮件。"
     email_accent_bg_color: "用作 HTML 电子邮件中某些元素背景的强调色。输入颜色名称 ('red') 或十六进制值 ('#FF0000')。"
     email_accent_fg_color: "HTML 电子邮件中电子邮件背景颜色上呈现的文本颜色。输入颜色名称 ('white') 或十六进制值 ('#FFFFFF')。"
@@ -2068,6 +2076,8 @@ zh_CN:
     enable_group_directory: "提供群组目录以供浏览"
     enable_category_group_moderation: "允许群组审核特定类别的内容"
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
+    allow_anonymous_posting: "启用用户切换到匿名模式发帖的选项。激活后，用户在网站上创建帖子或主题时可选择隐藏身份。另请参阅 \"allow_anonymous_likes\"。"
+    allow_anonymous_likes: "启用此设置可让匿名浏览网站的用户喜欢帖子。激活后，用户在整个网站上点赞帖子或主题时，可以选择隐藏自己的身份。另请参阅 \"allow_anonymous_posting\"。"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
     anonymous_posting_allowed_groups: "能够启用匿名发帖的群组"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
@@ -2102,6 +2112,7 @@ zh_CN:
     disable_tags_edit_notifications: "禁用话题标签编辑的通知。包括“已发布”的话题（例如，共享草稿）。"
     notification_consolidation_threshold: "合并通知前，收到的赞或成员资格请求通知的数量。设置为 0 将禁用。"
     likes_notification_consolidation_window_mins: "以分钟计的持续时间，被赞的通知在达到此阈值后会被合并到单个通知中。可以通过 `SiteSetting.notification_consolidation_threshold` 配置阈值。"
+    linked_notification_consolidation_window_mins: "一旦达到阈值，链接通知将合并为单个通知的持续时间（以分钟为单位）。可以通过“SiteSetting.notification_consolidation_threshold”配置阈值。"
     automatically_unpin_topics: "当用户到达底部时自动取消置顶话题。"
     read_time_word_count: "每分钟可阅读的字数，用于估算阅读时间。"
     topic_page_title_includes_category: "话题页面<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>标题标签</a>包含类别名称。"
@@ -2109,9 +2120,11 @@ zh_CN:
     native_app_install_banner_android: "在 Android 设备上向基本用户（信任级别 1）及以上的用户显示 DiscourseHub 应用横幅。"
     app_association_android: "端点 <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a> 的内容，用于 Google 的 Digital Asset Links API。"
     app_association_ios: "端点 <a href='%{base_path}/apple-app-site-association'>apple-app-site-association </a> 的内容，用于在创建此站点与 iOS 应用之间通用链接。"
+    share_anonymized_statistics: "启用与 CDCK 公司 (\"Discourse\")共享匿名使用统计数据。启用此设置后，有关网站使用情况的数据将以匿名形式收集和共享，确保不会泄露个人信息。"
     enable_powered_by_discourse: "在大多数页面底部显示 \"Powered by Discourse\" 并链接至 discourse.org。"
     auto_handle_queued_age: "在此设定天数后自动处理待审核的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
     penalty_step_hours: "以小时为单位对用户进行禁言或封禁的默认处罚。第一次违反默认为第一个值，第二次违反默认为第二个值，依此类推。"
+    penalty_include_post_message: "禁止或暂停用户权限时，自动将违规帖子信息包含在电子邮件消息模板中"
     svg_icon_subset: "添加您希望包含在资源中的其他 FontAwesome 5 图标。使用前缀 'fa-' 表示实心图标，使用 far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
     max_prints_per_hour_per_user: "/print 页面的最大展示次数（设置为 0 将禁用打印）"
     full_name_required: "全名是用户个人资料的必填字段。"
@@ -2261,7 +2274,6 @@ zh_CN:
     enable_experimental_bookmark_redesign_groups: "实验：显示帖子书签的快速访问菜单和重新设计的新模式"
     glimmer_header_mode: "控制是否使用新的 \"glimmer \"标头实现。默认为 \"auto\"，一旦所有主题和插件都准备就绪，就会自动启用。https://meta.discourse.org/t/296544"
     experimental_form_templates: "实验性：启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
-    admin_sidebar_enabled_groups: "实验：为指定组的管理员界面启用侧边栏导航，取代顶层管理员导航按钮。"
     lazy_load_categories_groups: "实验：只为这些组的用户懒加载类别信息。这可以提高有许多类别的网站的性能。"
     experimental_topic_bulk_actions_enabled_groups: "实验：启用新的批量操作下拉菜单。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
@@ -3663,7 +3675,7 @@ zh_CN:
 
         如果您有任何问题，请[联系我们友好的管理人员](%{base_url}/about)。
     digest:
-      why: "自 %{last_seen_at} 您上次访问后 %{site_link} 的简短总结"
+      why: "自 %{since} 以来 %{site_link} 的简要摘要"
       since_last_visit: "自从您上次访问以来"
       new_topics: "新话题"
       unread_notifications: "未读通知"
@@ -3679,7 +3691,7 @@ zh_CN:
       your_email_settings: "您的电子邮件设置"
       click_here: "点击此处"
       from: "%{site_name}"
-      preheader: "自 %{last_seen_at} 您上次访问后的简短总结"
+      preheader: "自 %{since} 以来的简要摘要"
     forgot_password:
       title: "忘记密码"
       subject_template: "[%{email_prefix}] 密码重置"

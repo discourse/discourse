@@ -375,11 +375,17 @@ ro:
       search_placeholder: "Caută semne de carte după nume, titlul subiect sau conținut articol"
       search: "Caută"
       bookmark: "Semn de carte"
+      bulk:
+        select_all: "Selectează tot"
+        clear_all: "Deselectează tot"
       reminders:
         today_with_time: "astăzi la %{time}"
         tomorrow_with_time: "mâine la %{time}"
         at_time: "la %{date_time}"
         existing_reminder: "Ai un memento setat pentru acest semn de carte care va fi trimis %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Șterge semn de carte"
     copy_codeblock:
       copied: "copiat!"
       copy: "copiază cod în memoria temporară"
@@ -1786,6 +1792,8 @@ ro:
       components:
         bulk_select_topics_dropdown:
           title: "Acțiuni multiple"
+        bulk_select_bookmarks_dropdown:
+          title: "Acțiuni multiple"
     date_time_picker:
       from: De la
       to: Către
@@ -1877,6 +1885,7 @@ ro:
       modal_ok: "Ok"
       modal_cancel: "Anulare"
       cant_send_pm: "Nu poți trimite mesaje către %{username}"
+      create_message_error: "Ne pare rău, s-a produs o eroare la crearea acestui mesaj. Te rugăm să încerci din nou."
       yourself_confirm:
         title: "Ai uitat să adaugi destinatari?"
         body: "În acest moment mesajul acesta nu este trimis decât către tine însuți!"
@@ -2565,6 +2574,7 @@ ro:
           inappropriate: "Ai semnalat aceasta ca fiind inadecvată"
           notify_moderators: "Ai semnalat aceasta pentru moderare"
           notify_user: "Ai trimis un mesaj către acest utilizator"
+          custom: "Ai marcat acest subiect ca %{custom}"
       delete:
         confirm:
           one: "Ești sigur că vrei să ștergi aca postare?"
@@ -3186,7 +3196,7 @@ ro:
       panels:
         forum:
           label: Forum
-      filter: "Filtru"
+      filter: "Filtru..."
       clear_filter: "Elimină filtrul"
       no_results:
         title: "Fără rezultate"
@@ -3330,6 +3340,9 @@ ro:
               label: Grup
             category:
               label: Categorie
+      flags:
+        description: "Descriere"
+        enabled: "Activat?"
       groups:
         new:
           title: "Grup nou"
@@ -4201,6 +4214,7 @@ ro:
         name: "Nume câmp"
         type: "Tip câmp"
         description: "Descriere câmp"
+        preferences: "Preferințe"
         save: "Salvează"
         edit: "Editează"
         delete: "Șterge"
@@ -4211,6 +4225,9 @@ ro:
           title: "Necesar la înscriere"
           enabled: "necesar"
           disabled: "opţional"
+        requirement:
+          optional:
+            title: "Opțional"
         editable:
           title: "Editabil după înregistrare"
           enabled: "editabil"

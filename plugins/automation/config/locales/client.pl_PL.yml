@@ -134,6 +134,8 @@ pl_PL:
           fields:
             user_profile:
               label: Pola profilu użytkownika
+            custom_fields:
+              label: Pola niestandardowe użytkownika
             once_per_user:
               label: Raz na użytkownika
             new_users_only:
@@ -211,6 +213,7 @@ pl_PL:
               label: Poziom powiadomienia
             update_existing_members:
               label: Zaktualizuj istniejących członków
+              description: Aktualizuje poziom powiadomień dla istniejących członków grupy
         user_global_notice:
           fields:
             level:
@@ -224,6 +227,9 @@ pl_PL:
           fields:
             group:
               label: Grupa
+            update_user_title_and_flair:
+              label: Zaktualizuj tytuł i znacznik użytkownika
+              description: Opcjonalnie, zaktualizuj tytuł i znacznik użytkownika
             badge:
               label: Odznaka
               description: Wybierz odznakę

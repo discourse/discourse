@@ -387,11 +387,22 @@ cs:
       search_placeholder: "Hledat záložky podle názvu, názvu tématu nebo obsahu příspěvku"
       search: "Vyhledat"
       bookmark: "Založit"
+      bulk:
+        select_all: "Vybrat vše"
+        clear_all: "Zrušit vše"
+        selected_count:
+          one: "%{count} vybráno"
+          few: "%{count} vybráno"
+          many: "%{count} vybráno"
+          other: "%{count} vybráno"
       reminders:
         today_with_time: "dnes v %{time}"
         tomorrow_with_time: "zítra v %{time}"
         at_time: "v %{date_time}"
         existing_reminder: "Máte nastavenou připomínku pro tuto záložku, která bude odeslána %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Smazat záložku"
     copy_codeblock:
       copied: "zkopírováno!"
       copy: "zkopírovat kód do schránky"
@@ -2303,6 +2314,8 @@ cs:
         categories_admin_dropdown:
           title: "Správa kategorií"
         bulk_select_topics_dropdown:
+          title: "Hromadné akce"
+        bulk_select_bookmarks_dropdown:
           title: "Hromadné akce"
     date_time_picker:
       from: Od koho
@@ -4638,7 +4651,7 @@ cs:
       panels:
         forum:
           label: Fórum
-      filter: "Filtr"
+      filter: "Filtr..."
       clear_filter: "Vymazat filtr"
       no_results:
         title: "Žádné výsledky"
@@ -4865,6 +4878,9 @@ cs:
               label: Kategorie
             include_subcategories:
               label: "Zahrnout podkategorie"
+      flags:
+        description: "Popis"
+        enabled: "Zapnuto?"
       groups:
         new:
           title: "Nová skupina"
@@ -6018,6 +6034,7 @@ cs:
         name: "Field Name"
         type: "Field Type"
         description: "Field Description"
+        preferences: "Nastavení"
         save: "Uložit"
         edit: "Upravit"
         delete: "Smazat"
@@ -6028,6 +6045,9 @@ cs:
           title: "Povinné pro registraci"
           enabled: "povinné"
           disabled: "není povinné"
+        requirement:
+          optional:
+            title: "Volitelné"
         editable:
           title: "Editovatelné po registraci"
           enabled: "editovatelné"

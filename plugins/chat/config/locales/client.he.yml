@@ -65,6 +65,12 @@ he:
           many: "בחרת להעביר <strong>%{count}</strong> הודעות. נא לבחור את ערוץ היעד. הודעה ממלאת מקום תיווצר בערוץ <strong>%{channelTitle}</strong> כדי לציין שההודעות האלו הועברו. נא לשים לב ששרשורי תגובה לא יישמרו בערוץ החדש והודעות בערוץ הישן לא תופענה עוד כתגובה להודעות כלשהן שהועברו."
           other: "בחרת להעביר <strong>%{count}</strong> הודעות. נא לבחור את ערוץ היעד. הודעה ממלאת מקום תיווצר בערוץ <strong>%{channelTitle}</strong> כדי לציין שההודעות האלו הועברו. נא לשים לב ששרשורי תגובה לא יישמרו בערוץ החדש והודעות בערוץ הישן לא תופענה עוד כתגובה להודעות כלשהן שהועברו."
         confirm_move: "העברת הודעות"
+      delete_messages:
+        confirm:
+          one: "למחוק את ההודעה הזאת?"
+          two: "למחוק את שתי ההודעות האלה?"
+          many: "למחוק את %{count} ההודעות האלה?"
+          other: "למחוק את %{count} ההודעות האלה?"
       channel_settings:
         title: "הגדרות ערוץ"
         edit: "עריכה"
@@ -102,7 +108,6 @@ he:
       channels_list_popup:
         browse: "עיון בערוצים"
         create: "ערוץ חדש"
-      click_to_join: "לחיצה כאן תציג את הערוצים הזמינים."
       close: "סגירה"
       remove: "הסרה"
       collapse: "צמצום מגירת צ׳אט"
@@ -242,8 +247,6 @@ he:
         header: "כותרת צ׳אט"
         composer: "כותב צ׳אט"
         channels_list: "רשימת ערוצי צ׳אט"
-      no_direct_message_channels: "לא הצטרפת לאף ערוץ הודעות ישירות."
-      no_public_channels: "לא הצטרפת לאף ערוץ."
       kicked_from_channel: "אין לך יותר גישה לערוץ הזה."
       only_chat_push_notifications:
         title: "לשלוח התראות בדחיפה על הצ׳אט בלבד"
@@ -557,6 +560,7 @@ he:
         cancel: "ביטול"
         quote_selection: "ציטוט בנושא"
         copy: "העתקה"
+        delete: "מחיקה (%{selectionCount}/%{totalCount})"
         move_selection_to_channel: "העברה לערוץ"
         error: "אירעה שגיאה בהעברת הודעות הצ׳אט"
         title: "העברת צ׳אט לנושא"

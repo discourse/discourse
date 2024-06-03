@@ -295,11 +295,17 @@ ur:
       search_placeholder: "نام ، عنوان عنوان ، یا پوسٹ پوسٹ کے ذریعہ بُک مارکس تلاش کریں"
       search: "تلاش کریں"
       bookmark: "بُک مارک"
+      bulk:
+        select_all: "تمام منتخب کریں"
+        clear_all: "تمام کو صاف کریں"
       reminders:
         today_with_time: "آج کا %{time}"
         tomorrow_with_time: "کل کا %{time}"
         at_time: "پر %{date_time}"
         existing_reminder: "آپ نے اس بُک مارک کے لئے ایک یاد دہانی ترتیب ہے جو %{at_date_time} بھیجی جائے گی ـ"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "بک مارک مٹائیں"
     copy_codeblock:
       copied: "کاپی کر لیا!"
       copy: "کوڈ کو کلپ بورڈ میں کاپی کریں"
@@ -1805,6 +1811,8 @@ ur:
         categories_admin_dropdown:
           title: "زمرے کا انتظام کریں"
         bulk_select_topics_dropdown:
+          title: "بَلک عمل"
+        bulk_select_bookmarks_dropdown:
           title: "بَلک عمل"
     date_time_picker:
       from: سے
@@ -3593,7 +3601,7 @@ ur:
               content: "میری پوسٹ"
             review:
               content: "جائزہ لیں"
-      filter: "فِلٹر"
+      filter: "فِلٹر..."
     until: "جب تک:"
     form_templates:
       upload_field:
@@ -3720,6 +3728,9 @@ ur:
               label: زمرہ
             include_subcategories:
               label: "ذیلی زمرہ جات شامل کریں۔"
+      flags:
+        description: "تفصیل"
+        enabled: "فعال؟"
       groups:
         new:
           title: "نیا گروپ"
@@ -4920,6 +4931,7 @@ ur:
         name: "فیلڈ کا نام"
         type: "فیلڈ کی قسم"
         description: "فیلڈ کی وضاحت"
+        preferences: "ترجیحات"
         save: "محفوظ کریں"
         edit: "ترمیم کریں"
         delete: "حذف کریں"
@@ -4929,6 +4941,9 @@ ur:
         required:
           enabled: "درکار ہے"
           disabled: "درکار نہیں ہے"
+        requirement:
+          optional:
+            title: "اختیاری"
         editable:
           enabled: "قابلِ ترمیم"
           disabled: "ناقابلِ ترمیم"

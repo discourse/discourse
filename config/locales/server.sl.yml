@@ -698,8 +698,8 @@ sl:
         user: Uporabnik
         qtt_like: Všečkov prejetih
   dashboard:
-    s3_cdn_warning: 'Strežnik je konfiguriran za nalaganje datotek v S3, vendar hkrati ni konfiguriran tudi S3 CDN. To lahko privede do visokih stroškov uporabe S3 in počasnejšega delovanja strani. Če želite izvedeti več, glejte <a href="https://meta.discourse.org/t/-/148916" target="_blank">"Using Object Storage for Uploads"</a>.'
-    out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"
+    problem:
+      out_of_date_themes: "Posodobitve so na voljo za naslednje prilagoditve:"
   site_settings:
     disabled: "onemogočeno"
     allow_uncategorized_topics: "Dovoli ustvarjanje tem brez kategorije. OPOZORILO: Če obstajajo nerazvrščene teme, jih morate ponovno razvrstiti, preden izklopite to nastavitev."
@@ -1532,7 +1532,6 @@ sl:
 
         Če imate kakršnakoli vprašanja [kontaktirajte naše prijazno osebje](%{base_url}/about).
     digest:
-      why: "Kratek povzetek %{site_link} od vašega zadnjega obiska %{last_seen_at}"
       since_last_visit: "Od vašega zadnjega obiska"
       new_topics: "Nove teme"
       unread_notifications: "Neprebrana obvestila"
@@ -1546,7 +1545,6 @@ sl:
       unsubscribe: "Ta povzetek je poslan s strani %{site_link}, ker vas nekaj časa ni bilo na strani. Spremenite %{email_preferences_link} ali %{unsubscribe_link} za odjavo."
       your_email_settings: "vaše nastavitve e-pošte"
       click_here: "kliknite tukaj"
-      preheader: "Strnjen povzetek od vašega zadnjega obiska %{last_seen_at}"
     forgot_password:
       title: "Pozabljeno geslo"
       subject_template: "[%{email_prefix}] Ponastavi geslo"

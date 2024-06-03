@@ -518,6 +518,21 @@ RSpec.configure do |config|
         sleep 0.01 while !mutex.synchronize { is_waiting }
       end
     end
+
+    config.around do |example|
+      example.run
+
+      if example.exception.is_a?(Socket::ResolutionError)
+        info = Socket.getaddrinfo("localhost", nil)
+        etc_hosts = `cat /etc/hosts`
+        puts <<~MSG
+          Failed to resolve localhost, available addresses: #{info}
+
+          /etc/hosts:
+          #{etc_hosts}
+          MSG
+      end
+    end
   end
 
   if ENV["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"]

@@ -102,7 +102,6 @@ pl_PL:
       channels_list_popup:
         browse: "Przeglądaj kanały"
         create: "Nowy kanał"
-      click_to_join: "Kliknij tutaj, aby wyświetlić dostępne kanały."
       close: "Zamknij"
       remove: "Usuń"
       collapse: "Zwiń szufladę czatu"
@@ -242,8 +241,6 @@ pl_PL:
         header: "Nagłówek czatu"
         composer: "Edytor czatu"
         channels_list: "Lista kanałów czatu"
-      no_direct_message_channels: "Nie dołączyłeś do żadnego kanału wiadomości bezpośrednich."
-      no_public_channels: "Nie dołączyłeś do żadnego kanału."
       kicked_from_channel: "Nie masz już dostępu do tego kanału."
       only_chat_push_notifications:
         title: "Wysyłaj tylko powiadomienia push czatu"

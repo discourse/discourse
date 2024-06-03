@@ -876,17 +876,12 @@ el:
         user: Χρήστης
         qtt_like: Μου αρέσει που λήφθησαν
   dashboard:
-    rails_env_warning: "Ο διακομιστής σας τρέχει στη %{env} λειτουργία."
-    host_names_warning: "Το αρχείο config/database.yml χρησιμοποιεί ως hostname το localhost . Ενημερώστε το, ώστε να χρησιμοποεί το όνομα του site σας."
-    sidekiq_warning: 'Το Sidekiq σταμάτησε. Κάποιες λειτουργίες, όπως η αποστολή email εκτελούνται ασύγχρονα από το sidekiq. Παρακαλούμε βεβαιωθείτε ότι τουλάχτιστον μία sidekiq λειτουργία εκτελείται. <a href="https://github.com/mperham/sidekiq" target="_blank">Περισσότερα για το Sidekiq εδώ</a>.'
-    queue_size_warning: "Ο αριθμός των εργασιών που βρίσκονται σε λίστα αναμονής είναι %{queue_size}, το οποίο είναι υψηλό. Αυτό θα μπορούσε να ενδείξει πρόβλημα με τις λειτουργία(ες) του Sidekiq ή θα πρέπει να προσθέσετε κι άλλους Sidekiq εργάτες. "
-    memory_warning: "Ο server σας έχει λιγότερο από 1 GB διαθέσιμης μνήμης. Προτείνεται η χρήση τουλάχιστον 1 GB μνήμης."
-    subfolder_ends_in_slash: "Οι ρυθμίσεις του υποφακέλου σας δεν είναι σωστές. Το DISCOURSE_RELATIVE_URL_ROOT τελειώνει με κάθετη. "
-    email_polling_errored_recently:
-      one: "To Email polling έχει παράγει ένα σφάλμα τις τελευταίες 24 ώρες . Δείτε <a href='%{base_path}/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες. "
-      other: "To Email polling έχει παράγει %{count} σφάλματα τις τελευταίες 24 ώρες . Δείτε <a href='%{base_path}/logs' target='_blank'>τα αρχεία καταγραφής</a> για περισσότερες λεπτομέρειες. "
-    poll_pop3_timeout: "Το χρονικό όριο σύνδεσης με τον διακομιστή POP3 έληξε. Τα εισερχόμενα email δεν μπορούν να ανακτηθούν. Παρακαλώ ελέγξτε τις <a href='%{base_path}/admin/site_settings/category/email'>POP3 ρυθμίσεις σας</a> και τον πάροχο υπηρεσιών."
-    poll_pop3_auth_error: "Υπήρξε σφάλμα ελεχγου ταυτότητας κατά την σύνδεση με τον διακομιστή POP3. Παρακαλώ όπως ελέξετε τις <a href='%{base_path}/admin/site_settings/category/email'> POP3 ρυθμίσεις σας.</a> "
+    problem:
+      rails_env: "Ο διακομιστής σας τρέχει στη %{env} λειτουργία."
+      host_names: "Το αρχείο config/database.yml χρησιμοποιεί ως hostname το localhost . Ενημερώστε το, ώστε να χρησιμοποεί το όνομα του site σας."
+      queue_size: "Ο αριθμός των εργασιών που βρίσκονται σε λίστα αναμονής είναι %{queue_size}, το οποίο είναι υψηλό. Αυτό θα μπορούσε να ενδείξει πρόβλημα με τις λειτουργία(ες) του Sidekiq ή θα πρέπει να προσθέσετε κι άλλους Sidekiq εργάτες. "
+      ram: "Ο server σας έχει λιγότερο από 1 GB διαθέσιμης μνήμης. Προτείνεται η χρήση τουλάχιστον 1 GB μνήμης."
+      subfolder_ends_in_slash: "Οι ρυθμίσεις του υποφακέλου σας δεν είναι σωστές. Το DISCOURSE_RELATIVE_URL_ROOT τελειώνει με κάθετη. "
   site_settings:
     disabled: "απενεργοποιημένα"
     censored_words: "Αυτόματη αντικατάσταση λέξεων θα γίνεται με &#9632;&#9632;&#9632;&#9632;"
@@ -1981,7 +1976,6 @@ el:
 
         Αν έχετε απορίες, [επικοινωνήστε με τους συνεργάτες μας](%{base_url}/about).
     digest:
-      why: "Μια σύντομη σύνοψη του %{site_link} από την τελευταία σου επίσκεψη στις %{last_seen_at}"
       since_last_visit: "Από την τελευταία σου επίσκεψη"
       new_topics: "Νέα θέματα"
       unread_notifications: "Αδιάβαστες Ειδοποιήσεις"
@@ -1995,7 +1989,6 @@ el:
       unsubscribe: "Λάβατε αυτή την σύνοψη από την %{site_link} επειδή δεν σας είδαμε εδώ και μερικές μέρες. Αν δεν θέλετε να λαμβάνετε αυτή την σύνοψη, αλλάξτε τις %{email_preferences_link} ή %{unsubscribe_link} για διαγραφή από την λίστα."
       your_email_settings: "ρυθμίσεις email"
       click_here: "κάνε κλικ εδώ"
-      preheader: "Μία σύντομη σύνοψη από την τελευταία σου επίσκεψη στις %{last_seen_at}"
     forgot_password:
       title: "Ξέχασα τον κωδικό πρόσβασης"
       subject_template: "[%{email_prefix}] Επαναφορά κωδικού"
