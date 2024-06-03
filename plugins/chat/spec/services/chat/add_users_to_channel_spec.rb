@@ -29,12 +29,12 @@ RSpec.describe Chat::AddUsersToChannel do
       before { channel.add(current_user) }
 
       it "fetches users to add" do
-        expect(result.users.map(&:username)).to contain_exactly(*users.map(&:username))
+        expect(result.target_users.map(&:username)).to contain_exactly(*users.map(&:username))
       end
 
       it "includes users from groups" do
         params.merge!(groups: [group.name])
-        expect(result.users.map(&:username)).to include(
+        expect(result.target_users.map(&:username)).to include(
           group_user_1.username,
           group_user_2.username,
         )
@@ -59,7 +59,9 @@ RSpec.describe Chat::AddUsersToChannel do
       it "doesn't include existing direct message users" do
         Chat::DirectMessageUser.create!(user: users.first, direct_message: direct_message)
 
-        expect(result.users.map(&:username)).to contain_exactly(*users[1..-1].map(&:username))
+        expect(result.target_users.map(&:username)).to contain_exactly(
+          *users[1..-1].map(&:username),
+        )
       end
 
       it "creates memberships" do
@@ -77,7 +79,7 @@ RSpec.describe Chat::AddUsersToChannel do
       end
 
       it "creates a chat message to show added users" do
-        added_users = result.users
+        added_users = result.target_users
 
         channel.chat_messages.last.tap do |message|
           expect(message.message).to eq(
@@ -93,10 +95,10 @@ RSpec.describe Chat::AddUsersToChannel do
       end
     end
 
-    context "when usernames exceeds chat_max_direct_message_users" do
+    context "when users exceed max direct message user limit" do
       before { SiteSetting.chat_max_direct_message_users = 4 }
 
-      it { is_expected.to fail_a_step(:validate_user_count) }
+      it { is_expected.to fail_a_policy(:satisfies_dms_max_users_limit) }
     end
 
     context "when channel is not found" do
