@@ -112,7 +112,7 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_moderation_flags",
-        route: "adminConfigFlags",
+        route: "adminConfig.flags",
         label: "admin.community.sidebar_link.moderation_flags",
         icon: "flag",
       },
