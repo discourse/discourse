@@ -77,14 +77,14 @@ class Demon::EmailSync < ::Demon::Base
   end
 
   def after_fork
-    puts "[EmailSync] Loading EmailSync in process id #{Process.pid}"
+    log("[EmailSync] Loading EmailSync in process id #{Process.pid}")
 
     loop do
       break if Discourse.redis.set(HEARTBEAT_KEY, Time.now.to_i, ex: HEARTBEAT_INTERVAL, nx: true)
       sleep HEARTBEAT_INTERVAL
     end
 
-    puts "[EmailSync] Starting EmailSync main thread"
+    log("[EmailSync] Starting EmailSync main thread")
 
     @running = true
     @sync_data = {}
@@ -158,18 +158,20 @@ class Demon::EmailSync < ::Demon::Base
     Discourse.redis.del(HEARTBEAT_KEY)
     exit 0
   rescue => e
-    STDERR.puts e.message
-    STDERR.puts e.backtrace.join("\n")
+    log("#{e.message}: #{e.backtrace.join("\n")}")
     exit 1
   end
 
   def kill_and_disconnect!(data)
     data[:thread].kill
     data[:thread].join
+
     begin
       data[:syncer]&.disconnect!
     rescue Net::IMAP::ResponseError => err
-      puts "[EmailSync] Encountered a response error when disconnecting: #{err}"
+      log(
+        "[EmailSync] Encountered a response error when disconnecting: #{err}\n#{err.backtrace.join("\n")}",
+      )
     end
   end
 end
