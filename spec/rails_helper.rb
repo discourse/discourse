@@ -523,13 +523,22 @@ RSpec.configure do |config|
       example.run
 
       if example.exception.is_a?(Socket::ResolutionError)
-        info = Socket.getaddrinfo("localhost", nil)
+        info = Socket.getaddrinfo("localhost", 80, Socket::AF_INET, Socket::SOCK_STREAM)
         etc_hosts = `cat /etc/hosts`
+        resolve_conf = `cat /etc/resolv.conf`
+        nsswitch = `cat /etc/nsswitch.conf`
+
         puts <<~MSG
           Failed to resolve localhost, available addresses: #{info}
 
           /etc/hosts:
           #{etc_hosts}
+
+          /etc/resolv.conf:
+          #{resolve_conf}
+
+          /etc/nsswitch.conf:
+          #{nsswitch}
           MSG
       end
     end
