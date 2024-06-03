@@ -12,6 +12,27 @@
 >
   <form.Errors @names="foo,what_is_love" />
 
+  <form.InputGroup as |inputGroup|>
+    <inputGroup.Field @name="aaa" @validation="required" as |field|>
+      <field.Input @type="text" />
+    </inputGroup.Field>
+    <inputGroup.Field @name="bbb" @validation="required" as |field|>
+      <field.Input @type="text" />
+    </inputGroup.Field>
+  </form.InputGroup>
+
+  <form.Row as |row|>
+    <row.Col @size={{2}}>
+      <form.Field @name="something" @validation="required" as |field|>
+        <field.Select as |select|>
+          <select.Option @value="1">Test 1</select.Option>
+          <select.Option @value="2">Test 2</select.Option>
+          <select.Option @value="3">Test 3</select.Option>
+        </field.Select>
+      </form.Field>
+    </row.Col>
+  </form.Row>
+
   <form.Row as |row|>
     <row.Col @size={{4}}>
       <form.Field @name="coolos" @validation="required" as |field|>

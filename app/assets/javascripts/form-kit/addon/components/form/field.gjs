@@ -6,6 +6,7 @@ import { action, get } from "@ember/object";
 import { next } from "@ember/runloop";
 import FkControlInput from "form-kit/components/control/input";
 import FkControlRadioGroup from "form-kit/components/control/radio-group";
+import FkControlSelect from "form-kit/components/control/select";
 import concatClass from "discourse/helpers/concat-class";
 import uniqueId from "discourse/helpers/unique-id";
 
@@ -31,6 +32,10 @@ export default class FormField extends Component {
     super.willDestroy();
   }
 
+  get inputGroup() {
+    return this.args.inputGroup ?? false;
+  }
+
   get value() {
     return get(this.args.data, this.args.name);
   }
@@ -52,6 +57,16 @@ export default class FormField extends Component {
     {{#let (uniqueId) (uniqueId) as |fieldId errorId|}}
       {{yield
         (hash
+          Select=(component
+            FkControlSelect
+            name=@name
+            fieldId=fieldId
+            errorId=errorId
+            setValue=this.setValue
+            value=this.value
+            errors=this.errors
+            triggerValidationFor=@triggerValidationFor
+          )
           Input=(component
             FkControlInput
             name=@name

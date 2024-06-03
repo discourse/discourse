@@ -1,0 +1,26 @@
+.d-form-select-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  margin: 0;
+  font-size: var(--font-down-1-rem);
+  color: var(--primary-high);
+}
+
+.d-form-select {
+  width: 100% !important;
+
+  .d-form-field.has-error & {
+    border-color: var(--danger);
+  }
+
+  &.--small {
+    width: 100px !important;
+  }
+  &.--medium {
+    width: 200px !important;
+  }
+  &.--large {
+    width: 400px !important;
+  }
+}

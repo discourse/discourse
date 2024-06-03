@@ -6,6 +6,7 @@ import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
+import FkControlInputGroup from "form-kit/components/control/input-group";
 import { VALIDATION_TYPES } from "form-kit/lib/constants";
 import FieldData from "form-kit/lib/field-data";
 import DButton from "discourse/components/d-button";
@@ -224,6 +225,14 @@ export default class Form extends Component {
           )
           Field=(component
             FormField
+            data=this.effectiveData
+            set=this.set
+            registerField=this.registerField
+            unregisterField=this.unregisterField
+            errors=this.validationState
+          )
+          InputGroup=(component
+            FkControlInputGroup
             data=this.effectiveData
             set=this.set
             registerField=this.registerField
