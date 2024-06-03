@@ -471,6 +471,7 @@ pl_PL:
   is_invalid: "wygląda niejasno, czy to cała wypowiedź?"
   next_page: "następna strona →"
   prev_page: "← poprzednia strona"
+  show_post_in_topic: "pokaż post w temacie"
   page_num: "Strona %{num}"
   crawler_content_hidden: "Treść HTML została pominięta, ponieważ jesteś zalogowany lub korzystasz z nowoczesnego urządzenia mobilnego."
   home_title: "Strona główna"
@@ -490,6 +491,7 @@ pl_PL:
   read_full_topic: "Przeczytaj cały temat"
   private_message_abbrev: "Wiad."
   rss_description:
+    hot: "Gorące tematy"
     latest: "Ostatnie tematy"
     top: "Najlepsze tematy"
     top_all: "Popularne tematy ogółem"
@@ -573,7 +575,6 @@ pl_PL:
     request_membership_pm:
       title: "Prośba o członkostwo w grupie @%{group_name}"
     request_accepted_pm:
-      title: "Przyjęto Cię do @%{group_name}"
       body: |
         Twoja prośba o dołączenie do @%{group_name} została zaakceptowana i jesteś teraz jej członkiem.
   education:
@@ -1272,6 +1273,7 @@ pl_PL:
     consolidated_page_views_browser_detection:
       xaxis:
         page_view_anon_browser: "Anonimowa przeglądarka"
+        page_view_other: "Inne wyświetlenia strony"
       yaxis: "Dzień"
     dau_by_mau:
       title: "DAU / MAU"
@@ -1435,7 +1437,9 @@ pl_PL:
     page_view_anon_browser_reqs:
       xaxis: "Dzień"
     page_view_logged_in_browser_reqs:
+      title: "Odsłony zalogowanej przeglądarki"
       xaxis: "Dzień"
+      yaxis: "Odsłony zalogowanej przeglądarki"
     http_background_reqs:
       title: "Tło"
       xaxis: "Dzień"
@@ -1533,39 +1537,18 @@ pl_PL:
         qtt_like: Polubienia otrzymane
       description: "Top 10 użytkowników, którzy otrzymali polubienia od szerokiego grona osób."
   dashboard:
-    twitter_login_warning: 'Wygląda na to, że logowanie przez Twittera obecnie nie działa. Sprawdź dane uwierzytelniające w <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">ustawieniach witryny</a>.'
-    group_email_credentials_warning: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Wiadomości e-mail nie będą wysyłane z grupowej skrzynki odbiorczej do czasu rozwiązania tego problemu. %{error}'
-    rails_env_warning: "Twój serwer działa w trybie %{env}"
-    host_names_warning: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
-    sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
-    queue_size_warning: "Liczba oczekujących zadań wynosi %{queue_size}, to dużo. Może to wskazywać na problem z procesem (procesami) Sidekiq, lub możesz potrzebować więcej pracowników Sidekiq."
-    memory_warning: "Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany."
-    google_oauth2_config_warning: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie przy użyciu Google OAuth2 (enable_google_oauth2_logins), ale identyfikator klienta i jego sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
-    facebook_config_warning: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą Facebooka (enable_facebook_logins), ale identyfikator aplikacji i jej sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
-    twitter_config_warning: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą Twittera (enable_twitter_logins), ale wartości dla klucza i sekretu nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
-    github_config_warning: 'Serwer jest skonfigurowany tak, aby zezwalać na rejestrację i logowanie za pomocą GitHub (enable_github_logins), ale identyfikator klienta oraz jego sekret nie są ustawione. Przejdź do <a href="%{base_path}/admin/site_settings">ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Zobacz ten przewodnik, aby dowiedzieć się więcej</a>.'
-    s3_config_warning: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie ustawiono co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_upload_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a>.'
-    s3_backup_config_warning: 'Serwer jest skonfigurowany do przesyłania kopii zapasowych do S3, ale nie skonfigurowano co najmniej jednego z następujących ustawień: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile lub s3_backup_bucket. Przejdź do <a href="%{base_path}/admin/site_settings">Ustawień witryny</a> i zaktualizuj ustawienia. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz „Jak skonfigurować przesyłanie zdjęć do S3?” aby dowiedzieć się więcej</a>.'
-    s3_cdn_warning: 'Serwer jest skonfigurowany do przesyłania plików do S3, ale nie skonfigurowano S3 CDN. Może to prowadzić do wysokich kosztów S3 i spowolnienia działania witryny. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Zobacz "Używanie Object Storage do wysyłania", aby dowiedzieć się więcej</a>.'
-    image_magick_warning: 'Serwer jest skonfigurowany do tworzenia miniatur dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą swojego ulubionego menedżera pakietów lub <a href="https://www.imagemagick.org/script/download.php" target="_blank">pobierz najnowszą wersję</a> .'
-    failing_emails_warning: 'Istnieją zadania e-mail %{num_failed_jobs}, które się nie powiodły. Sprawdź plik app.yml i upewnij się, że ustawienia serwera poczty są prawidłowe. <a href="%{base_path}/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiq</a> .'
-    subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
-    outdated_translations_warning: "Niektóre z Twoich nadpisanych tłumaczeń są nieaktualne. Sprawdź swoje <a href='%{base_path}/admin/customize/site_texts?outdated=true'>dostosowania tekstu</a>."
-    email_polling_errored_recently:
-      one: "Email polling wygenerował błąd w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
-      few: "Email polling wygenerował %{count} błędy w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
-      many: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
-      other: "Email polling wygenerował %{count} błędów w przeciągu ostatniej doby. Więcej szczegółów w <a href='%{base_path}/logs' target='_blank'>logach</a>."
-    missing_mailgun_api_key: "Serwer jest skonfigurowany do wysyłania wiadomości e-mail za pośrednictwem Mailgun, ale nie podałeś/łaś klucza API używanego do weryfikacji wiadomości z webhooka."
-    bad_favicon_url: "Favicon nie ładuje się. Sprawdź ustawienia favicon w <a href='%{base_path}/admin/site_settings'>Ustawieniach witryny</a>."
-    poll_pop3_timeout: "Połączenie z serwerem POP3 zostało zerwane. Przychodząca wiadomość mogła nie zostać odebrany. Proszę sprawdź swoje <a href='%{base_path}/admin/site_settings/category/email'>ustawienia POP3</a> i dostawcę usług."
-    poll_pop3_auth_error: "Połączenie z serwerem POP3 nie powiodło się przez błąd uwierzytelnienia. Proszę sprawdź swoje <a href='%{base_path}/admin/site_settings/category/email'>ustawienia POP3</a>."
-    force_https_warning: "Twoja strona korzysta z SSL. Ale `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` nie jest jeszcze włączone w ustawieniach strony."
-    out_of_date_themes: "Aktualizacje są dostępne dla następujących motywów:"
-    unreachable_themes: "Nie byliśmy w stanie sprawdzić aktualizacji następujących tematów:"
-    watched_word_regexp_error: "Wyrażenie regularne dla %{action} obserwowanych słów jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a>lub wyłącz ustawienie witryny 'watched words regular expressions'."
-    v3_analytics_deprecated: "Twój Discourse używa obecnie Google Analytics 3, które nie będzie już wspierane po lipcu 2023 roku. <a href='https://meta.discourse.org/t/260498'>Uaktualnij do Google Analytics 4</a> teraz, aby nadal otrzymywać cenne informacje i analizy dotyczące wydajności twojej strony."
-    category_style_deprecated: "Twój Discourse używa obecnie przestarzałego stylu kategorii, który zostanie usunięty przed ostateczną wersją beta Discourse 3.2. Zapoznaj się z instrukcjami dotyczącymi zachowania wybranego stylu kategorii na stronie <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a>."
+    problem:
+      twitter_login: 'Wygląda na to, że logowanie przez Twittera obecnie nie działa. Sprawdź dane uwierzytelniające w <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">ustawieniach witryny</a>.'
+      rails_env: "Twój serwer działa w trybie %{env}"
+      host_names: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
+      queue_size: "Liczba oczekujących zadań wynosi %{queue_size}, to dużo. Może to wskazywać na problem z procesem (procesami) Sidekiq, lub możesz potrzebować więcej pracowników Sidekiq."
+      ram: "Twój serwer działa z mniej niż 1 GB pamięci całkowitej. Przynajmniej 1 GB pamięci jest zalecany."
+      subfolder_ends_in_slash: "Twoje ustawienie podfolderu jest niepoprawne; DISCOURSE_RELATIVE_URL_ROOT kończy się slashem."
+      missing_mailgun_api_key: "Serwer jest skonfigurowany do wysyłania wiadomości e-mail za pośrednictwem Mailgun, ale nie podałeś/łaś klucza API używanego do weryfikacji wiadomości z webhooka."
+      out_of_date_themes: "Aktualizacje są dostępne dla następujących motywów:"
+      unreachable_themes: "Nie byliśmy w stanie sprawdzić aktualizacji następujących tematów:"
+      watched_words: "Wyrażenie regularne dla %{action} obserwowanych słów jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a>lub wyłącz ustawienie witryny 'watched words regular expressions'."
+      google_analytics_version: "Twój Discourse używa obecnie Google Analytics 3, które nie będzie już wspierane po lipcu 2023 roku. <a href='https://meta.discourse.org/t/260498'>Uaktualnij do Google Analytics 4</a> teraz, aby nadal otrzymywać cenne informacje i analizy dotyczące wydajności twojej strony."
     back_from_logster_text: "Powrót do strony"
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
@@ -1668,7 +1651,6 @@ pl_PL:
     detailed_404: "Dostarcza użytkownikom więcej informacji o tym, dlaczego nie mogą uzyskać dostępu do określonego tematu. Uwaga: jest to mniej bezpieczne, ponieważ użytkownicy będą wiedzieć, czy adres URL prowadzi do prawidłowego tematu."
     enforce_second_factor: "Wymagaj od użytkowników włączenia uwierzytelniania dwuskładnikowego przed uzyskaniem dostępu do interfejsu Discourse. Wybierz 'all', aby wymusić to na wszystkich użytkownikach. Wybierz 'staff', aby wymusić to tylko na użytkownikach personelu. To ustawienie nie ma wpływu na uwierzytelnianie API lub \"dostawcy DiscourseConnect\"."
     force_https: "Wymuś używanie wyłącznie HTTPS na stronie. UWAGA: NIE włączaj tego dopóki nie zweryfikujesz, że HTTPS jest w pełni skonfigurowany i działa absolutnie wszędzie! Czy sprawdziłeś/łaś swoje CDN, loginy z portali społecznościowych i wszystkie zewnętrzne loga / zależności żeby być pewnym, że są kompatybilne z HTTPS?"
-    same_site_cookies: "Używaj plików cookie tej samej witryny, eliminują wszystkie wektory Cross Site Request Forgery w obsługiwanych przeglądarkach (Lax lub Strict). Ostrzeżenie: Strict będzie działać tylko w witrynach, które wymuszają logowanie i używają zewnętrznej metody uwierzytelniania."
     summary_score_threshold: "Minimalny wynik wpisu wymagany do umieszczenia go w 'Podsumowaniu tematu'"
     summary_posts_required: "Minimalna liczba wpisów w temacie przed „Podsumowaniem tego tematu” jest włączona. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."
     summary_likes_required: "Minimalna liczba polubień w temacie przed włączeniem „Podsumuj ten temat”. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."
@@ -1781,7 +1763,7 @@ pl_PL:
     log_out_strict: "Po wylogowaniu wyloguj WSZYSTKIE sesje użytkownika na wszystkich urządzeniach."
     version_checks: "Wyślij ping do Discourse Hub w celu uzyskania aktualizacji wersji i pokaż komunikaty o nowej wersji w panelu <a href='%{base_path}/admin' target='_blank'>admina</a>"
     new_version_emails: "Wyślij email na adres contact_email, kiedy nowa wersja Discourse będzie dostępna."
-    include_in_discourse_discover: "Pozwól CDCK, Inc. (\"Discourse\") wyróżnić tę społeczność na stronie <a href='https://www.discourse.org/discover'>odkryj</a> i w materiałach marketingowych Discourse. W ten sposób udostępnisz dane wymagane do włączenia Twojej witryny do usługi. Pamiętaj, że promocja społeczności zależy od uznania Discourse."
+    include_in_discourse_discover: "Pozwól CDCK, Inc. (\"Discourse\") wyróżnić tę społeczność na stronie <a href='https://discover.discourse.org' target='_blank'>odkryj</a> i w materiałach marketingowych Discourse. W ten sposób udostępnisz dane wymagane do włączenia Twojej witryny do usługi. Pamiętaj, że promocja społeczności zależy od uznania Discourse."
     invite_expiry_days: "Jak długo klucz zaproszenie użytkownika jest ważny, w dniach."
     invite_only: "Wszyscy nowi użytkownicy muszą być wyraźnie zaproszeni przez zaufanych użytkowników lub personel. Rejestracja publiczna jest wyłączona."
     login_required: "Wymagaj autoryzacji do wyświetlenia zawartości strony, zablokuj możliwość anonimowego dostępu."
@@ -1966,6 +1948,7 @@ pl_PL:
     min_trust_level_to_allow_profile_background: "Minimalny poziom zaufania wymagany do przesłania tła profilu"
     min_trust_level_to_allow_user_card_background: "Minimalny poziom zaufania wymagany do przesłania tła karty użytkownika"
     min_trust_level_to_allow_invite: "Minimalny poziom zaufania wymagany do zapraszania użytkowników"
+    invite_allowed_groups: "Grupy, które mogą zapraszać użytkowników. Administratorzy i moderatorzy zawsze mogą zapraszać użytkowników."
     min_trust_level_to_allow_ignore: "Minimalny poziom zaufania wymagany do ignorowania użytkowników"
     allowed_link_domains: "Domeny, do których użytkownicy mogą tworzyć linki, nawet jeśli nie mają odpowiedniego poziomu zaufania do publikowania linków"
     newuser_max_links: "Ile linków może dodać nowy użytkownik do wpisu."
@@ -2359,7 +2342,6 @@ pl_PL:
     experimental_topics_filter: "EKSPERYMENTALNE: Włącza eksperymentalną ścieżkę filtrowania tematów w /filter"
     enable_experimental_lightbox: "EKSPERYMENTALNIE: Zastąp domyślny lightbox obrazu odświeżonym projektem."
     experimental_form_templates: "EKSPERYMENTALNIE: Włącz funkcję szablonów formularzy. <b>Po włączeniu</b> zarządzaj szablonami w <a href='%{base_path}/admin/customize/form-templates'>Dostosuj / Szablony</a>."
-    admin_sidebar_enabled_groups: "EKSPERYMENTALNE: Włącz nawigację na pasku bocznym interfejsu administratora dla określonych grup, co zastępuje przyciski nawigacyjne administratora najwyższego poziomu."
     lazy_load_categories_groups: "EKSPERYMENTALNE: Ładuj leniwie informacje o kategorii tylko dla użytkowników tych grup. Poprawia to wydajność w witrynach z wieloma kategoriami."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
     show_user_menu_avatars: "Pokaż awatary użytkowników w menu użytkownika"
@@ -2853,9 +2835,34 @@ pl_PL:
   new_version_mailer:
     title: "Nowa wersja powiadomień"
     subject_template: "[%{email_prefix}] Nowa wersja Discourse jest dostępna"
+    text_body_template: |
+      Hurra, dostępna jest nowa wersja [Discourse](https://www.discourse.org)!
+
+      Twoja wersja: %{installed_version}
+      Nowa wersja: **%{new_version}**
+
+      * Aktualizacja za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
+
+      * Dowiedz się, co nowego w [informacjach o wydaniu](https://meta.discourse.org/tag/release-notes) lub przejrzyj [nieprzetworzony dziennik zmian GitHub](https://github.com/discourse/discourse/commits/main)
+
+      * Odwiedź stronę [meta.discourse.org](https://meta.discourse.org), aby uzyskać informacje, omówienia i wsparcie dla Discourse
   new_version_mailer_with_notes:
     title: "Nowa wersja powiadomień z uwagami"
     subject_template: "[%{email_prefix}] dostępna aktualizacja"
+    text_body_template: |
+      Hurra, dostępna jest nowa wersja [Discourse](https://www.discourse.org)!
+
+      Twoja wersja: %{installed_version}
+      Nowa wersja: **%{new_version}**
+
+      * Aktualizacja za pomocą naszego **[aktualizatora w przeglądarce](%{base_url}/admin/update)**
+
+      * Dowiedz się, co nowego w [informacjach o wydaniu](https://meta.discourse.org/tag/release-notes) lub przejrzyj [nieprzetworzony dziennik zmian GitHub](https://github.com/discourse/discourse/commits/main)
+
+      * Odwiedź stronę [meta.discourse.org](https://meta.discourse.org), aby uzyskać informacje, omówienia i wsparcie dla Discourse
+
+      ### Dziennik zmian
+      %{notes}
   flag_reasons:
     off_topic: "Twój wpis został oznaczony jako **nie na temat**: społeczność uważa, że nie pasuje do tematu, w którym został dodany, biorąc pod uwagę jego tytuł i treść pierwszego wpisu."
     inappropriate: "Twój post został oznaczony jako **nieodpowiedni**: społeczność uważa, że jest on obraźliwy, stanowi przejaw nienawiści lub narusza [nasze wytyczne dla społeczności](%{base_path}/guidelines)."
@@ -3804,7 +3811,6 @@ pl_PL:
 
         Jeśli masz jakieś pytania, [skontaktuj się z naszym przyjaznym personelem](%{base_url}/about).
     digest:
-      why: "Krótkie podsumowanie aktywności na %{site_link} od twojej ostatniej wizyty w dniu %{last_seen_at}."
       since_last_visit: "Od twojej ostatniej wizyty"
       new_topics: "Nowe tematy"
       unread_notifications: "Nieprzeczytane Powiadomienia"
@@ -3820,7 +3826,6 @@ pl_PL:
       your_email_settings: "twoje ustawienia e‐mail"
       click_here: "kliknij tutaj"
       from: "%{site_name}"
-      preheader: "Podsumowanie aktywności od Twojej ostatniej wizyty w dniu %{last_seen_at}"
     forgot_password:
       title: "Zapomniane hasło"
       subject_template: "[%{email_prefix}] Reset hasła"

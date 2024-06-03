@@ -1017,26 +1017,15 @@ hy:
         user: Օգտատեր
         qtt_like: Ստացած Հավանումները
   dashboard:
-    rails_env_warning: "Ձեր սերվերը աշխատում է %{env} ռեժիմով:"
-    host_names_warning: "Ձեր config/database.yml ֆայլը օգտագործում է լռելյայն localhost հոսթի անուն: Թարմացրեք այն Ձեր կայքի հոսթի անունով:"
-    sidekiq_warning: 'Sidekiq -ը չի աշխատում: Շատ առաջադրանքներ, օրինակ՝ էլ. նամակների ուղարկումը, անհամաժամորեն(asynchronously) իրականացվում են sidekiq -ի կողմից: Խնդրում ենք համոզվել, որ առնվազն մեկ sidekiq գործընթաց աշխատում է: <a href="https://github.com/mperham/sidekiq" target="_blank">Իմացեք Sidekiq -ի մասին այստեղ</a>:'
-    queue_size_warning: "Սպասող job-երի քանակը %{queue_size} է, ինչը բարձր է: Սա կարող է խնդիր առաջացնել Sidekiq գործընթաց(ներ)ի հետ, կամ հնարավոր է՝ կարիք լինի ավելացնելու ավելի շատ Sidekiq աշխատողների:"
-    memory_warning: "Ձեր սերվերն աշխատում է 1 ԳԲ-ից քիչ ընդհանուր հիշողությամբ: Խորհուրդ է տրվում առնվազն 1 ԳԲ հիշողություն:"
-    s3_config_warning: 'Սերվերը կարգավորված է վերբեռնել ֆայլեր S3-ում, բայց հետևյալ կարգավորումներից առնվազն մեկը սահմանված չէ. s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, կամ s3_upload_bucket: Այցելեք <a href="%{base_path}/admin/site_settings">Կայքի Կարգավորումներ</a> և թարմացրեք կարգավորումները: <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Դիտեք "Ինչպես կարգավորել նկարի վերբեռնումը S3-ում" ՝ ավելին իամնալու համար</a>:'
-    s3_backup_config_warning: 'Սերվերը կարգավորված է վերբեռնել պահուստներ S3-ում, բայց հետևյալ կարգավորումներից առնվազն մեկը սահմանված չէ. s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, կամ s3_upload_bucket: Այցելեք <a href="%{base_path}/admin/site_settings">Կայքի Կարգավորումներ</a> և թարմացրեք կարգավորումները: <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Դիտեք "Ինչպես կարգավորել նկարի վերբեռնումը S3-ում" ՝ ավելին իամնալու համար</a>:'
-    image_magick_warning: 'Սերվերը կարգավորված է ստեղծելու մեծ նկարների փոքրապատկերներ, սակայն ImageMagick -ը տեղադրված չէ: Տեղադրեք ImageMagick՝ օգտագործելով Ձեր նախընտրելի package manager-ը կամ <a href="https://www.imagemagick.org/script/download.php" target="_blank">ներբեռնեք վերջին թողարկումը</a>:'
-    failing_emails_warning: 'Կան %{num_failed_jobs}էլ. հասցեի ձախողված job-եր: Ստուգեք Ձեր app.yml -ը և համոզվեք, որ փոստի սերվերի կարգավորումները ճիշտ են: <a href="%{base_path}/sidekiq/retries" target="_blank">Դիտեք ձախողված job-երը Sidekiq-ում</a>:'
-    subfolder_ends_in_slash: "Ձեր ենթաթղթապանակի տեղակայումը սխալ է; DISCOURSE_RELATIVE_URL_ROOT -ը վերջանում է թեք գծով (slash):"
-    email_polling_errored_recently:
-      one: "Email polling -ը գեներացրել է սխալ վերջին 24 ժամվա ընթացքում: Դիտեք <a href='%{base_path}/logs' target='_blank'>գրառումները</a> մանրամասն տեղեկությունների համար:"
-      other: "Email polling -ը գեներացրել է %{count} սխալ վերջին 24 ժամվա ընթացքում: Դիտեք <a href='%{base_path}/logs' target='_blank'>գրառումները</a> մանրամասն տեղեկությունների համար:"
-    missing_mailgun_api_key: "Սերվերը կարգավորված է ուղարկելու էլ. նամակներ Mailgun -ի միջոցով, բաց Դուք չեք տրամադրել webhook հաղորդագրությունների հաստատման համար օգտագործվող API Key:"
-    bad_favicon_url: "Ընտրապատկեր բեռնելը ձախողվեց: Ստուգեք ընտրապատկերի կարգավորումը <a href='%{base_path}/admin/site_settings'>Կայքի Կարգավորումներում</a>:"
-    poll_pop3_timeout: "POP3 սերվերի միացման ժամկետն անցնում է: Մուտքային էլ. նամակը չի կարող ստացվել: Խնդրում ենք ստուգել Ձեր <a href='%{base_path}/admin/site_settings/category/email'>POP3 կարգավորումները</a> և ծառայությունների մատակարարին:"
-    poll_pop3_auth_error: "POP3 սերվերի միացումը ձախողվում է նույնականացման սխալի պատճառով: Խնդրում ենք ստուգել Ձեր <a href='%{base_path}/admin/site_settings/category/email'>POP3 կարգավորումները</a>:"
-    force_https_warning: "Ձեր կայքը օգտագործում է SSL: Բայց `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` -ը դեռևս միացված չէ Ձեր կայքի կարգավորումներում:"
-    out_of_date_themes: "Թարմացումները հասանելի են հետևյալ թեմաների համար՝"
-    unreachable_themes: "Մենք չկարողացանք ստուգել թարմացումների առկայությունը հետևյալ թեմաների համար՝"
+    problem:
+      rails_env: "Ձեր սերվերը աշխատում է %{env} ռեժիմով:"
+      host_names: "Ձեր config/database.yml ֆայլը օգտագործում է լռելյայն localhost հոսթի անուն: Թարմացրեք այն Ձեր կայքի հոսթի անունով:"
+      queue_size: "Սպասող job-երի քանակը %{queue_size} է, ինչը բարձր է: Սա կարող է խնդիր առաջացնել Sidekiq գործընթաց(ներ)ի հետ, կամ հնարավոր է՝ կարիք լինի ավելացնելու ավելի շատ Sidekiq աշխատողների:"
+      ram: "Ձեր սերվերն աշխատում է 1 ԳԲ-ից քիչ ընդհանուր հիշողությամբ: Խորհուրդ է տրվում առնվազն 1 ԳԲ հիշողություն:"
+      subfolder_ends_in_slash: "Ձեր ենթաթղթապանակի տեղակայումը սխալ է; DISCOURSE_RELATIVE_URL_ROOT -ը վերջանում է թեք գծով (slash):"
+      missing_mailgun_api_key: "Սերվերը կարգավորված է ուղարկելու էլ. նամակներ Mailgun -ի միջոցով, բաց Դուք չեք տրամադրել webhook հաղորդագրությունների հաստատման համար օգտագործվող API Key:"
+      out_of_date_themes: "Թարմացումները հասանելի են հետևյալ թեմաների համար՝"
+      unreachable_themes: "Մենք չկարողացանք ստուգել թարմացումների առկայությունը հետևյալ թեմաների համար՝"
   site_settings:
     disabled: "անջատված"
     censored_words: "Բառերը, որոնք ավտոմատ կերպով կփոխարինվեն &#9632;&#9632;&#9632;&#9632; -ով"
@@ -2308,7 +2297,6 @@ hy:
       subject_template: "[%{email_prefix}] Հաշիվը արդեն գոյություն ունի"
       text_body_template: "Դուք հենց նոր փորձել եք ստեղծել հաշիվ %{site_name} -ում կամ փոփոխել հաշվի էլ. հասցեն %{email} -ի: Համենայն դեպս, հաշիվն արդեն գոյություն ունի %{email}-ով:\n\nԵթե մոռացել եք Ձեր գաղտնաբառը, [վերահաստատեք այն հիմա](%{base_url}/գաղտնաբառի-վերահաստատում):\n\nԵթե Դուք չեք փորձել ստեղծել հաշիվ %{email} -ով կամ փոփոխել Ձեր էլ. հասցեն, մի անհանգստացեք - Դուք հանգիստ կարող եք անտեսել այս հաղորդագրությունը: \n\nԵթե ունեք հարցեր, [կապվեք մեր բարեհամբույր անձնակազմի հետ](%{base_url}/մեր մասին):\n"
     digest:
-      why: " %{site_link}-ի համառոտ ամփոփում՝ Ձեր %{last_seen_at}վերջին այցելությունից հետո"
       since_last_visit: "Ձեր վերջին այցելությունից հետո"
       new_topics: "Նոր Թեմաներ"
       unread_notifications: "Չկարդացած Ծանուցումներ"
@@ -2322,7 +2310,6 @@ hy:
       unsubscribe: "Այս ամփոփումը ուղարկվում է %{site_link} -ից, երբ մենք չենք տեսնում Ձեզ մի որոշ ժամանակ: Փոփոխեք %{email_preferences_link} -ը կամ դուրս եկեք բաժանորդագրումից՝ %{unsubscribe_link} :"
       your_email_settings: "Ձեր էլ. հասցեի կարգավորումները"
       click_here: "սեղմեք այստեղ"
-      preheader: "Համառոտ ամփոփում՝ Ձեր վերջին՝ %{last_seen_at} այցելությունից հետո"
     forgot_password:
       title: "Մոռացել եմ Գաղտնաբառը"
       subject_template: "[%{email_prefix}] Գաղտնաբառի վերահաստատում"

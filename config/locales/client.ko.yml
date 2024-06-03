@@ -284,11 +284,17 @@ ko:
       search_placeholder: "이름, 주제 또는 게시물 콘텐츠로 북마크 검색"
       search: "검색"
       bookmark: "북마크"
+      bulk:
+        select_all: "모두 선택"
+        clear_all: "모두 지우기"
       reminders:
         today_with_time: "오늘 %{time}"
         tomorrow_with_time: "내일 %{time}"
         at_time: "%{date_time}"
         existing_reminder: "이 북마크는 %{at_date_time}에 미리 알림이 설정되어 있습니다"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "북마크 삭제"
     copy_codeblock:
       copied: "복사되었습니다!"
       copy: "클립보드에 코드 복사"
@@ -318,6 +324,7 @@ ko:
       other: "%{count}개의 새 주제 보기"
     preview: "미리보기"
     cancel: "취소"
+    deleting: "삭제 중…"
     save: "변경사항 저장"
     saved: "저장되었습니다!"
     upload: "업로드"
@@ -1799,6 +1806,8 @@ ko:
         categories_admin_dropdown:
           title: "카테고리 관리"
         bulk_select_topics_dropdown:
+          title: "일괄 적용"
+        bulk_select_bookmarks_dropdown:
           title: "일괄 적용"
     date_time_picker:
       from: 시작
@@ -3536,7 +3545,7 @@ ko:
                 other: "초안 %{count}"
             review:
               content: "검토"
-      filter: "필터"
+      filter: "필터..."
       no_results:
         title: "결과 없음"
     welcome_topic_banner:
@@ -3666,6 +3675,9 @@ ko:
               label: 카테고리
             include_subcategories:
               label: "서브카테고리 포함"
+      flags:
+        description: "내용"
+        enabled: "활성화?"
       groups:
         new:
           title: "새 그룹"
@@ -4871,6 +4883,7 @@ ko:
         name: "필드 이름"
         type: "필드 유형"
         description: "필드 설명"
+        preferences: "환경 설정"
         save: "저장"
         edit: "편집"
         delete: "삭제"
@@ -4881,6 +4894,9 @@ ko:
           title: "회원가입시 필수항목"
           enabled: "필수"
           disabled: "필수 아님"
+        requirement:
+          optional:
+            title: "선택 사항"
         editable:
           title: "가입 후 편집 가능"
           enabled: "편집 가능"

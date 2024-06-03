@@ -224,6 +224,9 @@ sw:
       save: "hifadhi"
       search: "Tafuta"
       bookmark: "Alamisha"
+      bulk:
+        select_all: "Chagua Zote"
+        clear_all: "Futa Zote"
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
@@ -1158,6 +1161,8 @@ sw:
         other: " Chagua japo vitu %{count}."
       components:
         bulk_select_topics_dropdown:
+          title: "Vitendo za Jumla"
+        bulk_select_bookmarks_dropdown:
           title: "Vitendo za Jumla"
     date_time_picker:
       from: Kutoka
@@ -2282,7 +2287,7 @@ sw:
               content: "Watumiaji"
             my_posts:
               content: "Machapisho Yangu"
-      filter: "Chuja"
+      filter: "Chuja..."
     form_templates:
       upload_field:
         upload: "Ongeza"
@@ -2372,6 +2377,9 @@ sw:
               label: Kikundi
             category:
               label: Kategoria
+      flags:
+        description: "Elezo"
+        enabled: "Imeruhusiwa?"
       groups:
         new:
           title: "Kikundi Kipya"
@@ -3173,6 +3181,7 @@ sw:
         name: "Jina la Sehemu ya Taarifa"
         type: "Aina ya Taarifa"
         description: "Sehemu ya Maelezo"
+        preferences: "Mapendekezo"
         save: "Hifadhi"
         edit: "Hariri"
         delete: "Futa"
@@ -3183,6 +3192,9 @@ sw:
           title: "Inahitajika wakati wa kujiunga"
           enabled: "muhimu"
           disabled: "sio muhimu"
+        requirement:
+          optional:
+            title: "Sio muhimu"
         editable:
           title: "Inaweza kufanyiwa uhariri baada ya kujiunga"
           enabled: "inaweza kufanyiwa uhariri"

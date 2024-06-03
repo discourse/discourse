@@ -103,7 +103,6 @@ ar:
       channels_list_popup:
         browse: "استعراض القنوات"
         create: "قناة جديدة"
-      click_to_join: "انقر هنا لعرض القنوات المتاحة"
       close: "إغلاق"
       remove: "إزالة"
       collapse: "طي ساحب الدردشة"
@@ -255,8 +254,6 @@ ar:
         header: "رأس الدردشة"
         composer: "أداة إنشاء الدردشة"
         channels_list: "قائمة قنوات الدردشة"
-      no_direct_message_channels: "لم تنضم إلى أي قنوات الرسائل المباشرة."
-      no_public_channels: "لم تنضم إلى أي قنوات."
       kicked_from_channel: "لم يعُد بإمكانك الوصول إلى هذه القناة."
       only_chat_push_notifications:
         title: "إرسال الإشعارات الفورية للدردشة فقط"

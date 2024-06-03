@@ -700,13 +700,12 @@ bg:
         user: Потребител
         qtt_like: Получени харесвания
   dashboard:
-    rails_env_warning: "Вашият сървър е в % {env} режим."
-    host_names_warning: "Вашият config/database.yml файл използва по подразбиране localhost за hostname. Обновете, за да използва името на вашия сайт за hostname. "
-    sidekiq_warning: 'Sidekiq не работи. Много задачи, като изпращане на имейли, се изпълняват несинхронизирано от sidekiq. Моля убедете се, че поне един процес sidekiq работи. <a href="https://github.com/mperham/sidekiq" target="_blank">Научете повече за Sidekiq тук</a>.'
-    queue_size_warning: "Броят на чакащите задачи е %{queue_size}, и е голям. Това може да означава проблем с процеса(сите) Sidekiq, или може да се наложи да добавите още Sidekiq работници."
-    memory_warning: "Вашият сървър използва по-малко от 1 ГБ от общата памет. Препоръчва се най-малко 1 ГБ."
-    subfolder_ends_in_slash: "Вашата настройка за подпапка е неправилна; DISCOURSE_RELATIVE_URL_ROOT завършва с наклонена черта."
-    v3_analytics_deprecated: "Вашият Discourse в момента използва Google Analytics 3, който няма да се поддържа след юли 2023 г. <a href='https://meta.discourse.org/t/260498'>Актуализирайте до Google Analytics 4</a> сега, за да продължите да получавате ценни сведения и анализи за работата на уебсайта си."
+    problem:
+      host_names: "Вашият config/database.yml файл използва по подразбиране localhost за hostname. Обновете, за да използва името на вашия сайт за hostname. "
+      queue_size: "Броят на чакащите задачи е %{queue_size}, и е голям. Това може да означава проблем с процеса(сите) Sidekiq, или може да се наложи да добавите още Sidekiq работници."
+      ram: "Вашият сървър използва по-малко от 1 ГБ от общата памет. Препоръчва се най-малко 1 ГБ."
+      subfolder_ends_in_slash: "Вашата настройка за подпапка е неправилна; DISCOURSE_RELATIVE_URL_ROOT завършва с наклонена черта."
+      google_analytics_version: "Вашият Discourse в момента използва Google Analytics 3, който няма да се поддържа след юли 2023 г. <a href='https://meta.discourse.org/t/260498'>Актуализирайте до Google Analytics 4</a> сега, за да продължите да получавате ценни сведения и анализи за работата на уебсайта си."
   site_settings:
     disabled: "деактивирани"
     censored_words: "Думите които ще бъдат автоматично заменени с &#9632;&#9632;&#9632;&#9632;"
@@ -1144,7 +1143,6 @@ bg:
     user_replied:
       title: "Потребителят е отговорил"
     digest:
-      why: "Кратко резюме на %{site_link} след последното Ви посещение на %{last_seen_at}"
       liked_received: "Получени харесвания"
       new_users: "Нови потребители"
       join_the_discussion: "Прочетете повече"

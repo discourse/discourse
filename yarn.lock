@@ -8818,59 +8818,59 @@ lcid@^3.0.0:
   dependencies:
     invert-kv "^3.0.0"
 
-lefthook-darwin-arm64@1.6.13:
-  version "1.6.13"
-  resolved "https://registry.yarnpkg.com/lefthook-darwin-arm64/-/lefthook-darwin-arm64-1.6.13.tgz#c7543b057bdceb02a3463b2bb7b279e79c3812b9"
-  integrity sha512-cRmqST0zZQNHl0VwBrlHLDaU1qsiTBLMiDp6bttZzUkfqwH9Pqhj2muxnoAnNXxzhlQsriCIuc44BxtbzL+GTw==
+lefthook-darwin-arm64@1.6.14:
+  version "1.6.14"
+  resolved "https://registry.yarnpkg.com/lefthook-darwin-arm64/-/lefthook-darwin-arm64-1.6.14.tgz#70c22be110365e873487b5d23971290c44e227d7"
+  integrity sha512-CpeLfErvVo7zv4cFMNFjB36OHXytj9H+DyOG1g62LbApMWIC7HOPMQZ0x0QzNIqeRuvpiMst4XOkspQTJ8QYiw==
 
-lefthook-darwin-x64@1.6.13:
-  version "1.6.13"
-  resolved "https://registry.yarnpkg.com/lefthook-darwin-x64/-/lefthook-darwin-x64-1.6.13.tgz#7d38dbacffdc4c17ca6c161372bf9d5c012b1c27"
-  integrity sha512-GYGG71zeUSUua71Idq5/poW8BcR8kNUMzfyZ6ZGSvGxzdnmJRvSHk/bxrvcvfScfqCXKASUM0yRcLgQjJRs5Dg==
+lefthook-darwin-x64@1.6.14:
+  version "1.6.14"
+  resolved "https://registry.yarnpkg.com/lefthook-darwin-x64/-/lefthook-darwin-x64-1.6.14.tgz#33a2850b747fc637d59552570e7725990cf8a2bd"
+  integrity sha512-IUjs7IYuNuKw2pbZP9dLYk9T19qnYKCIBLN58hXkWWFbViiJa+n4vUG4fgw6oBceK6enkvJpa/ma02yqg5Pxsw==
 
-lefthook-freebsd-arm64@1.6.13:
-  version "1.6.13"
-  resolved "https://registry.yarnpkg.com/lefthook-freebsd-arm64/-/lefthook-freebsd-arm64-1.6.13.tgz#2b58526457cac4d34d6017a7ed95de02afe6727d"
-  integrity sha512-VjK6rizPmb79IuyCMZtUKIXRZejs51ItuVSdNGkJg3YFIYzhpINTrQ/9d5/hTJ/QaOtPk72WZsayh5nQYCwJRw==
+lefthook-freebsd-arm64@1.6.14:
+  version "1.6.14"
+  resolved "https://registry.yarnpkg.com/lefthook-freebsd-arm64/-/lefthook-freebsd-arm64-1.6.14.tgz#6a9bf92ca6815653e9f038974a0ddf163bea2790"
+  integrity sha512-FWg2HR0X9NQ0vVTU2iO36llKqyFyB60CFm/4GIUVkAWs7rhmOS/FG7C9pcl2jTDrLyMYMQpEvwwMQBWe6qCfcw==
 
-lefthook-freebsd-x64@1.6.13:
-  version "1.6.13"
-  resolved "https://registry.yarnpkg.com/lefthook-freebsd-x64/-/lefthook-freebsd-x64-1.6.13.tgz#9c5554015e5ff8ba1aeb181ca70b32c6dee6635c"
-  integrity sha512-pz3MxCNIDB1i4LDxK+z4AnRS4ZH9YU6ryDm5RbHQ24sDLPqVdDWs90IAtexp9xvevZwPEtU5e/qCHNuqoYALmQ==
+lefthook-freebsd-x64@1.6.14:
+  version "1.6.14"
+  resolved "https://registry.yarnpkg.com/lefthook-freebsd-x64/-/lefthook-freebsd-x64-1.6.14.tgz#58cd28bbc047feae3fc8b4528b5d954548cce123"
+  integrity sha512-qe/cgGUxMld1XcPhOBtthL/yVfP9KglBqFLXLkkpsg78wVo6nKCADEKWW+3+ofUZSnfpPVbx1435kWtp3NmfdA==
 
-lefthook-linux-arm64@1.6.13:
-  version "1.6.13"
-  resolved "https://registry.yarnpkg.com/lefthook-linux-arm64/-/lefthook-linux-arm64-1.6.13.tgz#3659c18615f830a3bf359ed888bd263a61449ab0"
-  integrity sha512-IvsXpPb1U2nWVByQczyK48pnUAeqlt8Tx73YM8dUU8YBVSN1zVt8xqMSNqnk46zhggCPHEfc3aqL5UInnveJMA==
+lefthook-linux-arm64@1.6.14:
+  version "1.6.14"
+  resolved "https://registry.yarnpkg.com/lefthook-linux-arm64/-/lefthook-linux-arm64-1.6.14.tgz#298caca8a9f6055be00e27e892eb5b898378e80f"
+  integrity sha512-Iw1Av89sxkvxmi5WrHZkNB1lppzFlsRT7CdQ14ckN9xM6kTLnJLKoxKO/ez3WooSp9Yv3NROGAfUzMLCgok3cQ==
 
-lefthook-linux-x64@1.6.13:
-  version "1.6.13"
-  resolved "https://registry.yarnpkg.com/lefthook-linux-x64/-/lefthook-linux-x64-1.6.13.tgz#24b1e83cddb376ba5596e8a570448d2fbae6b354"
-  integrity sha512-Ia8Rr1P7rA+E70ABD80Hm0z1kQK7F+qgoVIpeg+MLwqMHNMWLR0lG+v7iF6W+CeTqgz+80r6E1OjT3rh4O7Feg==
+lefthook-linux-x64@1.6.14:
+  version "1.6.14"
+  resolved "https://registry.yarnpkg.com/lefthook-linux-x64/-/lefthook-linux-x64-1.6.14.tgz#3cc12b6f22cf388d9ff172c3314896752fca4e71"
+  integrity sha512-3taGa/Ge7SZMuG82Abu7YuYSWlbJBIT2ZIVA+YVA1lwI7kZsg9WQPAMvdob125EsS20Z6o0EfYAJPuALxD5Yww==
 
-lefthook-windows-arm64@1.6.13:
-  version "1.6.13"
-  resolved "https://registry.yarnpkg.com/lefthook-windows-arm64/-/lefthook-windows-arm64-1.6.13.tgz#ec6f0e87f3c066b2f88fedc4f5c2b889be6f0cb2"
-  integrity sha512-z1dcEsm7r8OIec2f8tBL02aLZHNWaxI4j+OIPiWKN7AIk4or0uSZTxPCNFnVprfc4tOuDUZlJJJovjrQdRsvNQ==
+lefthook-windows-arm64@1.6.14:
+  version "1.6.14"
+  resolved "https://registry.yarnpkg.com/lefthook-windows-arm64/-/lefthook-windows-arm64-1.6.14.tgz#ce5635fe9fe9fc01db82eabac893c08fc8565786"
+  integrity sha512-XRwJ9wLcMZiXucsQhbuj0yzvX34fVQrYg4gGOVWeb+quO8yYURRInzoYiXGH0iAdQJOUs0WSR5gdZ6lImFgkHg==
 
-lefthook-windows-x64@1.6.13:
-  version "1.6.13"
-  resolved "https://registry.yarnpkg.com/lefthook-windows-x64/-/lefthook-windows-x64-1.6.13.tgz#7f06e2abe4af1a42135eccd19e3f14cc042f963e"
-  integrity sha512-DRgAWkNVyu/JgjXD5Hp8dy/iEep4K9YNUgUSvBlV17DfujUVyrfn2L6RccIdVI8VgIEPCvT+oevmG0ViyfPy3Q==
+lefthook-windows-x64@1.6.14:
+  version "1.6.14"
+  resolved "https://registry.yarnpkg.com/lefthook-windows-x64/-/lefthook-windows-x64-1.6.14.tgz#bd040526dd4eecf06a25c05d36a1ec6377871c17"
+  integrity sha512-qhRBdgk6GgvwGKKojSUieeGgnOTbFyLwj6RyMa5vTYoO10h0e8CE8LWpnM2niyKmB1jTL8Nu128IH50Vp1UT9w==
 
-lefthook@^1.6.13:
-  version "1.6.13"
-  resolved "https://registry.yarnpkg.com/lefthook/-/lefthook-1.6.13.tgz#d74aab4ce23cda121149d94cdea62d873c095544"
-  integrity sha512-2yaLmiEyQUPpSmNwj6Ak1nYjaprHI+a8gYRu2QH+kRkaig+gdpayzIOtL+28phzxsw0aJNTeIeDMnVautKx5eQ==
+lefthook@^1.6.14:
+  version "1.6.14"
+  resolved "https://registry.yarnpkg.com/lefthook/-/lefthook-1.6.14.tgz#981d9e4ba287e93926dba30c1b72beb7c310b376"
+  integrity sha512-IfnzdoZLRnQPm6OgwgH0JlwRK3Ojyn0dXL+JHqewbhDuGGIXqLrHAFK/29KvQK2knsGF4dzlajBvwjwPVY1aVA==
   optionalDependencies:
-    lefthook-darwin-arm64 "1.6.13"
-    lefthook-darwin-x64 "1.6.13"
-    lefthook-freebsd-arm64 "1.6.13"
-    lefthook-freebsd-x64 "1.6.13"
-    lefthook-linux-arm64 "1.6.13"
-    lefthook-linux-x64 "1.6.13"
-    lefthook-windows-arm64 "1.6.13"
-    lefthook-windows-x64 "1.6.13"
+    lefthook-darwin-arm64 "1.6.14"
+    lefthook-darwin-x64 "1.6.14"
+    lefthook-freebsd-arm64 "1.6.14"
+    lefthook-freebsd-x64 "1.6.14"
+    lefthook-linux-arm64 "1.6.14"
+    lefthook-linux-x64 "1.6.14"
+    lefthook-windows-arm64 "1.6.14"
+    lefthook-windows-x64 "1.6.14"
 
 levn@^0.4.1:
   version "0.4.1"
@@ -11160,10 +11160,10 @@ sane@^5.0.1:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sass@^1.77.3:
-  version "1.77.3"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.77.3.tgz#4e93f6197786c05cab2c795c3f0f243470d94836"
-  integrity sha512-WJHo+jmFp0dwRuymPmIovuxHaBntcCyja5hCB0yYY9wWrViEp4kF5Cdai98P72v6FzroPuABqu+ddLMbQWmwzA==
+sass@^1.77.4:
+  version "1.77.4"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.77.4.tgz#92059c7bfc56b827c56eb116778d157ec017a5cd"
+  integrity sha512-vcF3Ckow6g939GMA4PeU7b2K/9FALXk2KF9J87txdHzXbUF9XRQRwSxcAs/fGaTnJeBFd7UoV22j3lzMLdM0Pw==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"

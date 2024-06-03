@@ -368,6 +368,7 @@ id:
   read_full_topic: "Baca topik sepenuhnya"
   private_message_abbrev: "Psn"
   rss_description:
+    hot: "Topik hangat"
     latest: "Topik Terbaru"
     top: "Topik unggulan"
     top_all: "Topik teratas sepanjang masa"
@@ -442,7 +443,6 @@ id:
     request_membership_pm:
       title: "Permintaan Keanggotaan untuk @%{group_name}"
     request_accepted_pm:
-      title: "Anda telah diterima di @%{group_name}"
       body: |
         Permintaan Anda untuk memasukkan @%{group_name} telah diterima dan Anda sekarang menjadi anggota.
   education:
@@ -559,6 +559,7 @@ id:
             base:
               invalid_url: "URL pengganti tidak valid"
               invalid_tag_list: "Daftar tag pengganti tidak valid"
+              invalid_html: "HTML hanya dapat digunakan sebagai pengganti"
         sidebar_section_link:
           attributes:
             linkable_type:
@@ -574,6 +575,8 @@ id:
   discourse_welcome_topic:
     title: "Selamat datang di %{site_title}! :wave:"
   admin_quick_start_title: "Panduan Admin: Memulai"
+  topic_view_stats:
+    invalid_date: "Format tanggal tidak valid, gunakan YYYY-MM-DD"
   category:
     topic_prefix: "Tentang kategori %{category}"
     replace_paragraph: "(Ganti paragraf pertama ini dengan deskripsi singkat tentang kategori baru Anda. Panduan ini akan muncul di area pemilihan kategori, jadi cobalah membuatnya di bawah 200 karakter.)"
@@ -1173,18 +1176,13 @@ id:
         qtt_like: Likes Diterima
       description: "10 pengguna teratas yang memiliki suka dari banyak orang."
   dashboard:
-    group_email_credentials_warning: 'Ada masalah dengan kredensial email untuk grup <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Tidak ada email yang akan dikirim dari kotak masuk grup hingga masalah ini diatasi. %{error}'
-    rails_env_warning: "Server Anda berjalan dalam modus %{env}."
-    host_names_warning: "Berkas config/database.yml Anda menggunakan nama host default localhost. Ubahlah untuk menggunakan nama host dari situs Anda."
-    sidekiq_warning: 'Sidekiq tidak berjalan. Banyak tugas, seperti mengirim email, dijalankan secara asinkron oleh Sidekiq. Harap pastikan setidaknya satu proses Sidekiq sedang berjalan. <a href="https://github.com/mperham/sidekiq" target="_blank">Pelajari tentang Sidekiq di sini</a>.'
-    queue_size_warning: "Jumlah pekerjaan yang antri adalah %{queue_size}, yang mana nilai ini tinggi. Ini bisa menunjukkan masalah dengan proses(-proses) Sidekiq, atau Anda mungkin perlu menambahkan lebih banyak pekerja Sidekiq."
-    memory_warning: "Server Anda berjalan dengan total memori kurang dari 1 GB. Total memori minimum yang direkomendasikan adalah 1 GB."
-    outdated_translations_warning: "Beberapa penggantian terjemahan Anda sudah usang. Silakan periksa <a href='%{base_path}/admin/customize/site_texts?outdated=true'>penyesuaian teks</a> Anda."
-    email_polling_errored_recently:
-      other: "Email polling telah menghasilkan %{count} kesalahan dalam 24 jam terakhir. Lihatlah <a href='%{base_path}/logs' target='_blank'>log</a> untuk lebih jelasnya."
-    missing_mailgun_api_key: "Server dikonfigurasi untuk mengirim email melalui Mailgun tetapi Anda belum memberikan kunci API yang digunakan untuk memverifikasi pesan webhook."
-    v3_analytics_deprecated: "Wacana Anda saat ini menggunakan Google Analytics 3, yang tidak akan didukung lagi setelah Juli 2023.0 <a href='https://meta.discourse.org/t/260498'>ke Google Analytics 4</a> sekarang untuk terus menerima wawasan dan analitik berharga untuk kinerja situs web Anda."
-    category_style_deprecated: "Discourse Anda saat ini menggunakan gaya kategori yang sudah tidak digunakan lagi dan akan dihapus sebelum rilis beta terakhir dari Discourse 3.2. Silakan merujuk ke <a href='https://meta.discourse.org/t/282441'>Pindah ke Pengaturan Situs Gaya Kategori Tunggal</a> untuk petunjuk tentang cara mempertahankan gaya kategori yang Anda pilih."
+    problem:
+      rails_env: "Server Anda berjalan dalam modus %{env}."
+      host_names: "Berkas config/database.yml Anda menggunakan nama host default localhost. Ubahlah untuk menggunakan nama host dari situs Anda."
+      queue_size: "Jumlah pekerjaan yang antri adalah %{queue_size}, yang mana nilai ini tinggi. Ini bisa menunjukkan masalah dengan proses(-proses) Sidekiq, atau Anda mungkin perlu menambahkan lebih banyak pekerja Sidekiq."
+      ram: "Server Anda berjalan dengan total memori kurang dari 1 GB. Total memori minimum yang direkomendasikan adalah 1 GB."
+      missing_mailgun_api_key: "Server dikonfigurasi untuk mengirim email melalui Mailgun tetapi Anda belum memberikan kunci API yang digunakan untuk memverifikasi pesan webhook."
+      google_analytics_version: "Wacana Anda saat ini menggunakan Google Analytics 3, yang tidak akan didukung lagi setelah Juli 2023.0 <a href='https://meta.discourse.org/t/260498'>ke Google Analytics 4</a> sekarang untuk terus menerima wawasan dan analitik berharga untuk kinerja situs web Anda."
   site_settings:
     disabled: "dinonaktifkan"
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
@@ -1252,6 +1250,7 @@ id:
     enable_custom_sidebar_sections: "EKSPERIMENTAL: Mengaktifkan bagian bilah sisi custom"
     experimental_topics_filter: "EKSPERIMENTAL: Mengaktifkan rute filter topik eksperimental di /filter"
     enable_experimental_lightbox: "EKSPERIMENTAL: Ganti lightbox gambar bawaan dengan desain yang diubah."
+    experimental_glimmer_topic_list_groups: "EKSPERIMENTAL: Mengaktifkan implementasi daftar topik 'glimmer' yang baru. Implementasi ini sedang dalam pengembangan aktif, dan tidak dimaksudkan untuk penggunaan produksi. Jangan mengembangkan tema/plugin yang bertentangan dengan ini sampai implementasi selesai dan diumumkan."
     page_loading_indicator: "Konfigurasikan indikator pemuatan yang muncul selama navigasi halaman dalam Discourse. 'Spinner' adalah indikator halaman penuh. 'Slider' menampilkan bilah sempit di bagian atas layar."
     errors:
       invalid_email: "Alamat email tidak valid."

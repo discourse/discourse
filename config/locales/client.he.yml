@@ -194,7 +194,7 @@ he:
       to_placeholder: "עד תאריך"
     share:
       topic_html: 'נושא: <span class="topic-title">%{topicTitle}</span>'
-      post: "פוסט מס׳ %{postNumber} מאת ‎@%{username}"
+      post: "הודעה מס׳ %{postNumber} מאת ‎@%{username}"
       close: "סגירה"
       twitter: "שיתוף בטוויטר"
       facebook: "שיתוף בפייסבוק"
@@ -253,7 +253,7 @@ he:
       broken_theme_alert: "יתכן שהאתר שלך לא יתפקד כיוון שבערכת העיצוב / הרכיב יש שגיאות."
       error_caused_by: "נגרם על ידי ‚%{name}’. <a target='blank' href='%{path}'>יש ללחוץ כאן</a> כדי לעדכן, להגדיר מחדש או להשבית."
       only_admins: "(הודעה זו מופיע רק למנהלי האתר)"
-    broken_decorator_alert: "פוסטים עלולים שלא להופיע כראוי כיוון שאחד ממעצבי התוכן באתר שלך העלה שגיאה."
+    broken_decorator_alert: "פרסומים עלולים שלא להופיע כראוי כיוון שאחד ממעצבי התוכן באתר שלך העלה שגיאה."
     broken_page_change_alert: "מטפל ב־onPageChange הרים שגיאה. כלי המפתחים יציגו לך פרטים נוספים על כך."
     broken_plugin_alert: "קרה בגלל התוסף ‚%{name}’"
     critical_deprecation:
@@ -371,7 +371,7 @@ he:
         last_30_days: "30 ימים"
       like_count: "לייקים"
       topic_count: "נושאים"
-      post_count: "פוסטים"
+      post_count: "פרסומים"
       user_count: "הרשמות"
       active_user_count: "משתמשים פעילים"
       contact: "יצירת קשר אתנו"
@@ -382,7 +382,7 @@ he:
       clear_bookmarks: "מחיקת סימניות"
       help:
         bookmark: "יש ללחוץ כדי להוסיף סימנייה לנושא הזה"
-        edit_bookmark: "יש ללחוץ כדי לערוך את הסימנייה לפוסט בנושא זה"
+        edit_bookmark: "יש ללחוץ כדי לערוך את הסימנייה לפרסום בנושא זה"
         edit_bookmark_for_topic: "יש ללחוץ כדי לערוך את הסימניה לנושא זה"
         unbookmark: "יש ללחוץ כדי להסיר את כל הסימניות בנושא זה"
         unbookmark_with_reminder: "יש ללחוץ כדי להסיר את כל הסימניות והתזכורות בנושא זה"
@@ -391,13 +391,13 @@ he:
       bookmarked_success: "מסומן!"
       deleted_bookmark_success: "הסימנייה נמחקה!"
       reminder_set_success: "תזכורת הוגדרה!"
-      created: "הוספת את הפוסט הזה לסימניות. %{name}"
+      created: "הוספת את ההודעה הזו לסימניות. %{name}"
       created_generic: "הוספת את זה לסימניות. %{name}"
       create: "יצירת סימנייה"
       edit: "עריכת סימנייה"
-      not_bookmarked: "סימון פוסט זה בסימנייה"
+      not_bookmarked: "סימון הודעה זו בסימנייה"
       remove_reminder_keep_bookmark: "הסרת תזכורת ושמירת הסימנייה"
-      created_with_reminder: "סימנת את הפוסט הזה עם תזכורת %{date}. %{name}"
+      created_with_reminder: "סימנת את ההודעה הזו עם תזכורת %{date}. %{name}"
       created_with_reminder_generic: "סימנת את זה עם תזכורת %{date}. %{name}"
       delete: "מחיקת סימנייה"
       confirm_delete: "למחוק את הסימנייה הזאת? גם התזכורת תימחק."
@@ -406,7 +406,7 @@ he:
       no_timezone: 'עדיין לא הגדרת אזור זמן. לא תהיה לך אפשרות להגדיר תזכורות. ניתן להגדיר אותו <a href="%{basePath}/my/preferences/profile">בפרופיל שלך</a>.'
       invalid_custom_datetime: "התאריך והשעה שסיפקת שגויים, נא לנסות שוב."
       list_permission_denied: "אין לך הרשאה לצפות בסימניות של המשתמש הזה."
-      no_user_bookmarks: "לא הוספת פוסטים לסימניות, סימניות מאפשרות לך לפנות במהירות לפוסטים מסוימים."
+      no_user_bookmarks: "לא הוספת הודעות לסימניות, סימניות מאפשרות לך לפנות במהירות להודעות מסוימות."
       auto_delete_preference:
         label: "לאחר שקיבלת התראה"
         never: "לשמור על הסימנייה"
@@ -415,14 +415,35 @@ he:
         clear_reminder: "לשמור על הסימנייה ולפנות את התזכורת"
         after_reminder_label: "לאחר שהזכרנו לך עלינו…"
         after_reminder_checkbox: "להגדיר את זה כברירת מחדל לכל תזכורות הסימניות העתידיות"
-      search_placeholder: "חיפוש סימניות לפי שם, כותרת הנושא או תוכן הפוסט"
+      search_placeholder: "חיפוש סימניות לפי שם, כותרת הנושא או תוכן ההודעה"
       search: "חיפוש"
       bookmark: "סימנייה"
+      bulk:
+        delete_completed: "הסימניות נמחקו בהצלחה."
+        reminders_cleared: "תזכורות הסימניות הוסרו בהצלחה."
+        toggle: "שינוי מצב בחירה מרוכזת של סימניות"
+        select_all: "בחירה בהכול"
+        clear_all: "לפנות הכול"
+        selected_count:
+          one: "%{count} נבחרו"
+          two: "%{count} נבחרו"
+          many: "%{count} נבחרו"
+          other: "%{count} נבחרו"
       reminders:
         today_with_time: "היום ב־%{time}"
         tomorrow_with_time: "מחר ב־%{time}"
         at_time: "ב־%{date_time}"
         existing_reminder: "הגדרת תזכורת עבור הסימנייה הזאת שתישלח ב־%{at_date_time}"
+    bookmark_bulk_actions:
+      clear_reminders:
+        name: "הסרת תזכורות"
+      delete_bookmarks:
+        name: "מחיקת סימנייה"
+        description:
+          one: "למחוק את הסימנייה הזאת?"
+          two: "למחוק את <b>שתי</b> הסימניות האלו?"
+          many: "למחוק את <b>%{count}</b> הסימניות האלו?"
+          other: "למחוק את <b>%{count}</b> הסימניות האלו?"
     copy_codeblock:
       copied: "הועתק!"
       copy: "העתקת קוד ללוח הגזירים"
@@ -517,7 +538,7 @@ he:
         subtotal: "סכום ביניים"
         total: "סה״כ"
         min_score_visibility: "ניקוד מזערי כדי שיופיע"
-        score_to_hide: "ניקוד להסתרת הפוסט"
+        score_to_hide: "ניקוד להסתרת הפרסום"
         take_action_bonus:
           name: "ננקטה פעולה"
           title: "כאשר חבר סגל בוחר לנקוט בפעולה הדגל מקבל בונוס."
@@ -562,17 +583,17 @@ he:
       none: "אין פריטים לסקירה."
       view_pending: "הצגת ממתינים"
       topic_has_pending:
-        one: "לנושא זה יש פוסט <b>אחד</b> שממתין לאישור"
-        two: "לנושא זה יש <b>%{count}</b> פוסטים שממתינים לאישור"
-        many: "לנושא זה יש <b>%{count}</b> פוסטים שממתינים לאישור"
-        other: "לנושא זה יש <b>%{count}</b> פוסטים שממתינים לאישור"
+        one: "לנושא זה יש תגובה <b>אחת</b> שממתינה לאישור"
+        two: "לנושא זה יש <b>תגובותיים</b> שממתינות לאישור"
+        many: "לנושא זה יש <b>%{count}</b> תגובות שממתינות לאישור"
+        other: "לנושא זה יש <b>%{count}</b> תגובות שממתינות לאישור"
       title: "סקירה"
       topic: "נושא:"
       filtered_topic: "סיננת לתוכן שממתין לסקירה בנושא מסוים."
       filtered_user: "משתמש"
       filtered_reviewed_by: "נסקר על ידי"
       show_all_topics: "להציג את כל הנושאים"
-      deleted_post: "(פוסט נמחק)"
+      deleted_post: "(פרסום נמחק)"
       deleted_user: "(משתמש נמחק)"
       user:
         bio: "קורות חיים"
@@ -665,7 +686,7 @@ he:
         approved_user:
           title: "המשתמש אישר"
         approved_post:
-          title: "הפוסט אושר"
+          title: "הפרסום אושר"
         rejected:
           title: "נדחה"
         rejected_flag:
@@ -673,11 +694,11 @@ he:
         rejected_user:
           title: "המשתמש דחה"
         rejected_post:
-          title: "הפוסט נדחה"
+          title: "הפרסום נדחה"
         ignored:
           title: "הסימון זכה להתעלמות"
         deleted:
-          title: "הנושא או הפוסט נמחקו"
+          title: "הנושא או התגובה נמחקו"
         reviewed:
           title: "כל אלו שנסקרו"
         all:
@@ -688,29 +709,29 @@ he:
         something_else_wrong: "משהו לא תקין ב%{reviewable_type} הזאת?"
       types:
         reviewable_flagged_post:
-          title: "פוסט שדוגל"
+          title: "פרסום שדוגל"
           flagged_by: "דוגל על ידי"
-          noun: "פוסט"
+          noun: "פרסום"
         reviewable_queued_topic:
           title: "נושא בתור"
           noun: "נושא"
         reviewable_queued_post:
-          title: "הוספת פוסט לתור"
-          noun: "פוסט"
+          title: "פרסום ממתין בתור"
+          noun: "פרסום"
         reviewable_user:
           title: "משתמש"
           noun: "משתמש"
         reviewable_post:
-          title: "פוסט"
-          noun: "פוסט"
+          title: "פרסום"
+          noun: "פרסום"
       approval:
-        title: "הפוסט זקוק לאישור"
-        description: "הפוסט התקבל אך הוא נתון לאישור מפקח בטרם הצגתו. נא להתאזר בסבלנות."
+        title: "הפרסום זקוק לאישור"
+        description: "הפרסום התקבל אך הוא נתון לאישור מפקח בטרם הצגתו. נא להתאזר בסבלנות."
         pending_posts:
-          one: "יש לך פוסט <strong>אחד</strong> ממתין."
-          two: "יש לך <strong>%{count}</strong> פוסטים ממתינים."
-          many: "יש לך <strong>%{count}</strong> פוסטים ממתינים."
-          other: "יש לך <strong>%{count}</strong> פוסטים ממתינים."
+          one: "יש לך פרסום <strong>אחד</strong> ממתין."
+          two: "יש לך <strong>פרסומיים</strong> ממתינים."
+          many: "יש לך <strong>%{count}</strong> פרסומים ממתינים."
+          other: "יש לך <strong>%{count}</strong> פרסומים ממתינים."
         ok: "אישור"
       example_username: "שם משתמש"
       reject_reason:
@@ -2166,10 +2187,10 @@ he:
       short_label: "תגובות מובילות"
       short_title: "להציג את התגובות המובילות של הנושא הזה: הפוסטים המעניינים ביותר בהתאם להחלטות הקהילה"
     deleted_filter:
-      enabled_description: "נושא זה מכיל פוסטים שנמחקו ולכן אינם מוצגים."
-      disabled_description: "פוסטים שנמחקו בנושא זה מוצגים כעת."
-      enable: "הסתרת פוסטים שנמחקו"
-      disable: "הצגת פוסטים שנמחקו"
+      enabled_description: "נושא זה מכיל תגובות שנמחקו ולכן אינן מוצגות."
+      disabled_description: "תגובות שנמחקו בנושא זה מוצגות כעת."
+      enable: "הסתרת הודעות שנמחקו"
+      disable: "הסתרת הודעות שנמחקו"
     private_message_info:
       title: "הודעה"
       invite: "להזמין אחרים…"
@@ -2393,6 +2414,8 @@ he:
           title: "ניהול קטגוריות"
         bulk_select_topics_dropdown:
           title: "מקבץ פעולות"
+        bulk_select_bookmarks_dropdown:
+          title: "מקבץ פעולות"
     date_time_picker:
       from: מאת
       to: אל
@@ -2486,10 +2509,10 @@ he:
           two: "על הכותרת להיות עד %{count} תווים."
           many: "על הכותרת להיות עד %{count} תווים."
           other: "על הכותרת להיות עד %{count} תווים."
-        post_missing: "הפוסט לא יכול להיות ריק"
+        post_missing: "הפרסום לא יכול להיות ריק"
         post_length:
-          one: "על הפוסט להיות באורך תו %{count} לפחות"
-          two: "על הפוסט להיות באורך %{count} תווים לפחות"
+          one: "על ההודעה להיות באורך תו אחד לפחות"
+          two: "על הפוסט להיות באורך שני תווים לפחות"
           many: "על הפוסט להיות באורך %{count} תווים לפחות"
           other: "על הפוסט להיות באורך %{count} תווים לפחות"
         try_like: "האם ניסית את כפתור ה-%{heart}?"
@@ -2561,6 +2584,7 @@ he:
       modal_ok: "אישור"
       modal_cancel: "ביטול"
       cant_send_pm: "אין לך אפשרות לשלוח הודעה אל %{username}, עמך הסליחה."
+      create_message_error: "אירעה שגיאה ביצירת ההודעה הזאת, נא לנסות שוב, עמך הסליחה."
       yourself_confirm:
         title: "שחכתם להוסיף נמענים?"
         body: "כרגע ההודעה הזו נשלחת רק אליכם!"
@@ -2737,7 +2761,7 @@ he:
         invited_to_private_message: "הוזמנת להודעה פרטית"
         invitee_accepted: "ההזמנה התקבלה"
         posted: "פוסט חדש"
-        watching_category_or_tag: "פוסט חדש"
+        watching_category_or_tag: "פרסום חדש"
         moved_post: "פוסט הועבר"
         linked: "מקושר"
         bookmark_reminder: "תזכורת סימון"
@@ -2971,6 +2995,7 @@ he:
         unlist_topics: "הסרת נושאים"
         relist_topics: "רשימה מחדש של נושאים"
         reset_bump_dates: "איפוס תאריכי ההקפצות"
+        defer: "סימון כלא נקרא"
         delete: "מחיקת נושאים"
         dismiss: "ביטול"
         dismiss_read: "התעלמות מאלו שלא נקראו"
@@ -3107,6 +3132,7 @@ he:
         name: "איפוס תאריכי הקפצה"
         description: "איפוס תאריכי הקפצת הנושאים לתאריך של הפוסט האחרון שנוצר, מה שמשפיע על הסדר ברשימת הנושאים"
       defer:
+        name: "סימון כלא נקרא"
         description: "סימון נושאים כנקראו"
       update_notifications:
         name: "עדכון התראות"
@@ -3127,6 +3153,8 @@ he:
       move_to_inbox:
         title: "העברה לדואר נכנס"
         help: "החזרת הודעה לדואר נכנס"
+      defer:
+        help: "סימון הנושא כלא נקרא"
       list: "נושאים"
       new: "נושא חדש"
       unread: "לא נקראו"
@@ -3626,7 +3654,7 @@ he:
       expand_collapse: "הרחב/צמצם"
       sr_below_embedded_posts_description: "תגובות לפוסט מס׳ %{post_number}"
       sr_embedded_reply_description: "תגובה מאת ‎@%{username} לפוסט %{post_number}"
-      locked: "חבר סגל נעל את האפשרות לערוך את הפוסט הזה"
+      locked: "חבר סגל נעל את האפשרות לערוך את ההודעה הזו"
       gap:
         one: "הצג תגובה אחת שהוסתרה"
         two: "הצגת %{count} תגובות שהוסתרו"
@@ -3750,9 +3778,9 @@ he:
         change_owner: "החלפת בעלות…"
         grant_badge: "הענקת עיטור…"
         lock_post: "נעילת פוסט"
-        lock_post_description: "למנוע מהמפרסם לערוך את הפוסט הזה"
+        lock_post_description: "למנוע מהמפרסם לערוך את ההודעה הזו"
         unlock_post: "שחרור פוסט"
-        unlock_post_description: "לאפשר למפרסם לערוך את הפוסט הזה"
+        unlock_post_description: "לאפשר למפרסם לערוך את ההודעה הזו"
         delete_topic_disallowed_modal: "אין לך הרשאות למחוק את הנושא הזה. כדי למחוק אותו לצמיתות, יש לסמן אותו בדגל כדי שיקבל את תשומת לב הפיקוח לרבות סיבת הסימון."
         delete_topic_disallowed: "אין לך הרשאה למחוק את הנושא הזה"
         delete_topic_confirm_modal:
@@ -3800,6 +3828,7 @@ he:
           illegal: "סימנת את זה כבלתי חוקי"
           notify_moderators: "סימנת זאת בדגל לפיקוח"
           notify_user: "שלחתם הודעה למשתמש זה"
+          custom: "סימנת את הנושא הזה בתור %{custom}"
       delete:
         confirm:
           one: "למחוק את הפוסט הזה?"
@@ -4802,7 +4831,7 @@ he:
       panels:
         forum:
           label: פורום
-      filter: "סינון"
+      filter: "סינון..."
       clear_filter: "פינוי המסנן"
       no_results:
         title: "אין תוצאות"
@@ -5034,6 +5063,9 @@ he:
               label: קטגוריה
             include_subcategories:
               label: "לכלול תת־קטגוריות"
+      flags:
+        description: "תיאור"
+        enabled: "מאופשר?"
       groups:
         new:
           title: "קבוצה חדשה"
@@ -6332,7 +6364,7 @@ he:
         cant_suspend: "אי אפשר להשעות את המשתמש הזה."
         cant_silence: "אי אפשר להשתיק את המשתמש הזה."
         delete_posts_failed: "אירעה תקלה בעת מחיקת הפוסטים."
-        post_edits: "עריכות של פוסטים"
+        post_edits: "עריכות של פרסומים"
         view_edits: "הצגת עריכות"
         penalty_post_actions: "מה לעשות עם הפוסט המשויך?"
         penalty_post_delete: "למחוק את הפוסט"
@@ -6393,7 +6425,7 @@ he:
         approve_success: "משתמש אושר ונשלחה לו הודעות דואר אלקטרוני עם הוראות הפעלה"
         approve_bulk_success: "הידד! כל המשתמשים שנבחרו אושרו ויודעו על כך."
         time_read: "זמן קריאה"
-        post_edits_count: "עריכות של פוסטים"
+        post_edits_count: "עריכות של פרסומים"
         anonymize: "הפיכת משתמשים לאלמוניים"
         anonymize_confirm: "<b>באמת<\\b> להפוך חשבון זה לאלמוני? פעולה זו תשנה את שם המשתמש ואת כתובת הדוא״ל ותאפס את כל נתוני הפרופיל."
         anonymize_yes: "כן, נא להפוך חשבון זה לאלמוני"
@@ -6561,6 +6593,7 @@ he:
         name: "שם שדה"
         type: "סוג השדה"
         description: "תיאור השדה"
+        preferences: "העדפות"
         save: "שמירה"
         edit: "עריכה"
         delete: "מחיקה"
@@ -6571,6 +6604,13 @@ he:
           title: "נדרש בעת הרשמה"
           enabled: "נדרש"
           disabled: "לא נדרש"
+        requirement:
+          title: "דרישת שדה"
+          optional:
+            title: "רשות"
+          on_signup:
+            title: "בהרשמה"
+            description: "כשמשתמשים חדשים נרשמים, הם חייבים למלא את השדה הזה. משתמשים קיימים לא יושפעו."
         editable:
           title: "ניתן לערוך לאחר הרשמה"
           enabled: "ניתן לערוך"

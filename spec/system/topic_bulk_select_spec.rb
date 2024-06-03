@@ -39,6 +39,14 @@ describe "Topic bulk select", type: :system do
       open_bulk_actions_modal(topics_to_select, "append-tags")
     end
 
+    context "when in mobile", mobile: true do
+      it "is working" do
+        # behavior is already tested on desktop, we simply ensure
+        # the general workflow is working on mobile
+        open_append_modal
+      end
+    end
+
     it "appends tags to selected topics" do
       open_append_modal
 

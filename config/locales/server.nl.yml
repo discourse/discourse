@@ -486,7 +486,6 @@ nl:
     request_membership_pm:
       title: "Lidmaatschapsverzoek voor @%{group_name}"
     request_accepted_pm:
-      title: "Je bent geaccepteerd in @%{group_name}"
       body: |
         Je lidmaatschapsverzoek voor @%{group_name} is geaccepteerd, je bent nu lid.
   education:
@@ -1381,35 +1380,16 @@ nl:
         qtt_like: Ontvangen likes
       description: "Top 10 gebruikers die likes hebben ontvangen van een breed scala aan mensen."
   dashboard:
-    group_email_credentials_warning: 'Er was een probleem met de e-mailaanmeldgegevens voor de groep <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Er worden geen e-mails gestuurd vanuit de groepsinbox totdat dit probleem is verholpen. %{error}'
-    rails_env_warning: "Je server werkt in de modus voor %{env}."
-    host_names_warning: "Je bestand config/database.yml gebruikt de standaardhostnaam localhost. Werk deze bij naar de hostnaam van je website."
-    sidekiq_warning: 'Sidekiq is niet actief. Veel taken, zoals het verzenden van e-mail, worden door Sidekiq asynchroon uitgevoerd. Zorg dat er minstens één Sidekiq-proces actief is. <a href="https://github.com/mperham/sidekiq" target="_blank">Lees hier meer over Sidekiq</a>.'
-    queue_size_warning: "Het aantal taken in de wachtrij is %{queue_size}, wat hoog is. Dit kan op een probleem met de Sidekiq-processen duiden, of mogelijk moet je meer Sidekiq-werkers toevoegen."
-    memory_warning: "Je server werkt met minder dan 1 GB aan totaal geheugen. Minstens 1 GB geheugen wordt aanbevolen."
-    google_oauth2_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Google OAuth2 toe te staan (enable_google_oauth2_logins), maar de waarden voor client-ID en clientgeheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-    facebook_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Facebook toe te staan (enable_facebook_logins), maar de waarden voor app-ID en app-geheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-    twitter_config_warning: 'De server is geconfigureerd om registratie en aanmelding via Twitter toe te staan (enable_twitter_logins), maar de waarden voor sleutel en geheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-    github_config_warning: 'De server is geconfigureerd om registratie en aanmelding via GitHub toe te staan (enable_github_logins), maar de waarden voor client-ID en -geheim zijn niet ingesteld. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Bekijk deze handleiding voor meer info</a>.'
-    s3_config_warning: 'De server is geconfigureerd om bestanden naar S3 te uploaden, maar minstens één van de volgende waarden is niet ingesteld: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, of s3_upload_bucket. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Bekijk ''How to set up image uploads to S3?'' voor meer info</a>.'
-    s3_backup_config_warning: 'De server is geconfigureerd om back-ups naar S3 te uploaden, maar minstens één van de volgende waarden is niet ingesteld: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, of s3_backup_bucket. Ga naar <a href="%{base_path}/admin/site_settings">de Website-instellingen</a> en werk de instellingen bij. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Bekijk ''How to set up image uploads to S3?'' voor meer info</a>.'
-    s3_cdn_warning: 'De server is geconfigureerd om bestanden te uploaden naar S3, maar er is geen S3-CDN geconfigureerd. Dit kan leiden tot hoge S3-kosten en tragere websiteprestaties. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Zie "Objectenopslag gebruiken voor uploads" voor meer informatie</a>.'
-    image_magick_warning: 'De server is geconfigureerd om miniaturen van grote afbeeldingen te maken, maar ImageMagick is niet geïnstalleerd. Installeer ImageMagick met je favoriete pakketbeheerder, of <a href="https://www.imagemagick.org/script/download.php" target="_blank">download de nieuwste versie</a>.'
-    failing_emails_warning: 'Er zijn %{num_failed_jobs} mislukte e-mailtaken. Controleer je bestand app.yml en zorg dat de mailserverinstellingen juist zijn. <a href="%{base_path}/sidekiq/retries" target="_blank">Bekijk de mislukte taken in Sidekiq</a>.'
-    subfolder_ends_in_slash: "Je submapconfiguratie is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt met een schuine streep."
-    outdated_translations_warning: "Sommige van je óverschreven vertalingen zijn verouderd. Controleer je <a href='%{base_path}/admin/customize/site_texts?outdated=true'>tekstaanpassingen</a>."
-    email_polling_errored_recently:
-      one: "E-mailpolling heeft de afgelopen 24 uur een fout gegenereerd. Zie <a href='%{base_path}/logs' target='_blank'>de logs</a> voor meer informatie."
-      other: "E-mailpolling heeft de afgelopen 24 uur %{count} fouten gegenereerd. Zie <a href='%{base_path}/logs' target='_blank'>de logs</a> voor meer informatie."
-    missing_mailgun_api_key: "De server is geconfigureerd om e-mails via Mailgun te verzenden, maar je hebt geen API-sleutel opgegeven voor verificatie van de webhookberichten."
-    bad_favicon_url: "De favicon wordt niet geladen. Controleer je favicon-instelling in de <a href='%{base_path}/admin/site_settings'>Website-instellingen</a>."
-    poll_pop3_timeout: "Time-out voor verbinding met de POP3-server. Inkomende e-mail kon niet worden opgehaald. Controleer je <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a> en serviceprovider."
-    poll_pop3_auth_error: "Verbinding met de POP3-server is mislukt met een verificatiefout. Controleer je <a href='%{base_path}/admin/site_settings/category/email'>POP3-instellingen</a>."
-    force_https_warning: "Je website gebruikt SSL, maar '<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>' is nog niet ingeschakeld in je website-instellingen."
-    out_of_date_themes: "Er zijn updates voor de volgende thema's beschikbaar:"
-    unreachable_themes: "We konden niet op updates controleren voor de volgende thema's:"
-    v3_analytics_deprecated: "Je Discourse gebruikt momenteel Google Analytics 3, dat na juli 2023 niet meer wordt ondersteund. <a href='https://meta.discourse.org/t/260498'>Upgrade nu naar Google Analytics 4</a> om waardevolle inzichten en analyses te blijven ontvangen voor de prestaties van je website."
-    category_style_deprecated: "Je Discourse gebruikt op dit moment een verouderde categoriestijl die wordt verwijderd voorafgaand aan de definitieve bètaversie van Discourse 3.2. Zie <a href='https://meta.discourse.org/t/282441'>Overstappen op een website-instelling met één categoriestijl</a> voor instructies over hoe je de geselecteerde categoriestijl kunt behouden."
+    problem:
+      rails_env: "Je server werkt in de modus voor %{env}."
+      host_names: "Je bestand config/database.yml gebruikt de standaardhostnaam localhost. Werk deze bij naar de hostnaam van je website."
+      queue_size: "Het aantal taken in de wachtrij is %{queue_size}, wat hoog is. Dit kan op een probleem met de Sidekiq-processen duiden, of mogelijk moet je meer Sidekiq-werkers toevoegen."
+      ram: "Je server werkt met minder dan 1 GB aan totaal geheugen. Minstens 1 GB geheugen wordt aanbevolen."
+      subfolder_ends_in_slash: "Je submapconfiguratie is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt met een schuine streep."
+      missing_mailgun_api_key: "De server is geconfigureerd om e-mails via Mailgun te verzenden, maar je hebt geen API-sleutel opgegeven voor verificatie van de webhookberichten."
+      out_of_date_themes: "Er zijn updates voor de volgende thema's beschikbaar:"
+      unreachable_themes: "We konden niet op updates controleren voor de volgende thema's:"
+      google_analytics_version: "Je Discourse gebruikt momenteel Google Analytics 3, dat na juli 2023 niet meer wordt ondersteund. <a href='https://meta.discourse.org/t/260498'>Upgrade nu naar Google Analytics 4</a> om waardevolle inzichten en analyses te blijven ontvangen voor de prestaties van je website."
   site_settings:
     allow_bulk_invite: "Bulkuitnodigingen toestaan door een CSV-bestand te uploaden"
     disabled: "uitgeschakeld"
@@ -1506,7 +1486,6 @@ nl:
     detailed_404: "Biedt gebruikers meer informatie over waarom ze geen toegang hebben tot een bepaald topic. Opmerking: dit is minder veilig, omdat gebruikers dan weten of een URL naar een geldig topic verwijst."
     enforce_second_factor: "Verplicht gebruikers om tweeledige verificatie in te schakelen voordat ze toegang krijgen tot de Discourse-UI. Selecteer 'allen' om dit op te leggen aan alle gebruikers. Selecteer 'staf' om het alleen op te leggen aan stafleden. Deze instelling heeft geen invloed op verificatie via de API of de 'DiscourseConnect-provider'."
     force_https: "Dwing gebruik van alleen HTTPS af voor je website. WAARSCHUWING: schakel dit NIET in voordat je hebt geverifieerd dat HTTPS volledig is geconfigureerd en echt overal werkt! Heb je ook je CDN, alle sociale aanmeldingen en eventuele externe logo's / afhankelijkheden gecontroleerd om zeker te weten dat ze allemaal compatibel met HTTPS zijn?"
-    same_site_cookies: "Gebruik cookies van dezelfde website, ze elimineren alle Cross Site Request Forgery-vectoren op ondersteunde browsers (Laks of Strikt). Waarschuwing: strikt werkt alleen op websites die aanmelden afdwingen en een externe verificatiemethode gebruiken."
     summary_score_threshold: "De minimaal vereiste score voor een bericht om in 'Dit topic samenvatten' te worden opgenomen"
     summary_posts_required: "Het minimale aantal berichten in een topic voordat 'Dit topic samenvatten' wordt ingeschakeld. Wijzigingen in deze instelling worden binnen een week met terugwerkende kracht toegepast."
     summary_likes_required: "Het minimale aantal likes in een topic voordat 'Dit topic samenvatten' wordt ingeschakeld. Wijzigingen in deze instelling worden binnen een week met terugwerkende kracht toegepast."
@@ -2144,7 +2123,6 @@ nl:
     experimental_topics_filter: "EXPERIMENTEEL: schakelt de filterroute voor experimentele topics in op /filter"
     enable_experimental_lightbox: "EXPERIMENTEEL: vervangt de standaard afbeeldingslightbox door het vernieuwde ontwerp."
     experimental_form_templates: "EXPERIMENTEEL: schakel de functie Formuliersjablonen in. <b>Nadat je deze functie hebt ingeschakeld,</b> kun je de sjablonen beheren via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
-    admin_sidebar_enabled_groups: "EXPERIMENTEEL: schakel zijbalknavigatie in voor de beheerinterface voor de opgegeven groepen, die de beheernavigatieknoppen op het hoogste niveau vervangt."
     page_loading_indicator: "Configureer de laadindicator die wordt weergegeven tijdens paginanavigatie binnen Discourse. 'Spinner' is een indicator voor een volledige pagina. 'Slider' geeft een smalle balk weer bovenaan het scherm."
     show_user_menu_avatars: "Gebruikersavatars weergeven in het gebruikersmenu"
     errors:
@@ -3532,7 +3510,6 @@ nl:
 
         Als je vragen hebt, [neem dan contact op met onze vriendelijke medewerkers](%{base_url}/about).
     digest:
-      why: "Een korte samenvatting van %{site_link} sinds je laatste bezoek op %{last_seen_at}."
       since_last_visit: "Sinds je laatste bezoek"
       new_topics: "Nieuwe topics"
       unread_notifications: "Ongelezen meldingen"
@@ -3548,7 +3525,6 @@ nl:
       your_email_settings: "uw e-mailinstellingen"
       click_here: "klik hier"
       from: "%{site_name}"
-      preheader: "Een korte samenvatting sinds je laatste bezoek op %{last_seen_at}"
     forgot_password:
       title: "Wachtwoord vergeten"
       subject_template: "[%{email_prefix}] Wachtwoord opnieuw instellen"

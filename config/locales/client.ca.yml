@@ -291,11 +291,17 @@ ca:
       search_placeholder: "Cerqueu preferits per nom, títol del tema o contingut de la publicació"
       search: "Cerca"
       bookmark: "Preferit"
+      bulk:
+        select_all: "Selecciona-ho tot"
+        clear_all: "Neteja-ho tot"
       reminders:
         today_with_time: "avui a les %{time}"
         tomorrow_with_time: "demà a les %{time}"
         at_time: "%{date_time}"
         existing_reminder: "Teniu un recordatori definit per a aquest preferit que se us enviarà: %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Suprimeix el marcador"
     copy_codeblock:
       copied: "copiat!"
     drafts:
@@ -1533,6 +1539,8 @@ ca:
         other: "Seleccioneu almenys %{count}elements."
       components:
         bulk_select_topics_dropdown:
+          title: "Accions massives"
+        bulk_select_bookmarks_dropdown:
           title: "Accions massives"
     date_time_picker:
       from: De
@@ -2906,7 +2914,7 @@ ca:
               content: "Les meves publicacions"
             review:
               content: "Revisa"
-      filter: "Filtre"
+      filter: "Filtre..."
     until: "Fins a:"
     form_templates:
       upload_field:
@@ -3028,6 +3036,9 @@ ca:
               label: Grup
             category:
               label: Categoria
+      flags:
+        description: "Descripció"
+        enabled: "Activat?"
       groups:
         new:
           title: "Grup nou"
@@ -4032,6 +4043,7 @@ ca:
         name: "Nom del camp"
         type: "Tipus de camp"
         description: "Descripció del camp"
+        preferences: "Preferències"
         save: "Desa"
         edit: "Edita"
         delete: "Suprimeix"
@@ -4042,6 +4054,9 @@ ca:
           title: "Necessari en identificar-se"
           enabled: "necessari"
           disabled: "no necessari"
+        requirement:
+          optional:
+            title: "Opcional"
         editable:
           enabled: "editable"
           disabled: "no editable"

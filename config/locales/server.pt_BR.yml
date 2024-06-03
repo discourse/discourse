@@ -487,7 +487,6 @@ pt_BR:
     request_membership_pm:
       title: "Pedido de associação para @%{group_name}"
     request_accepted_pm:
-      title: "Você foi aceito em @%{group_name}"
       body: |
         Seu pedido para entrar no @%{group_name} foi aceito e agora você é um membro.
   education:
@@ -1382,35 +1381,16 @@ pt_BR:
         qtt_like: Curtidas recebidas
       description: "Melhores dez usuários(as) que receberam curtidas de uma ampla variedade de pessoas."
   dashboard:
-    group_email_credentials_warning: 'Houve um problema nas credenciais do e-mail do grupo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Nenhum e-mail será enviado a partir da caixa de entrada do grupo até este problema ser resolvido. %{error}'
-    rails_env_warning: "Seu servidor está rodando no modo %{env}."
-    host_names_warning: "O arquivo config/database.yml está usando hostname do localhost padrão. Modifique para usar o hostname do seu site."
-    sidekiq_warning: 'O Sidekiq não está em execução. Muitas tarefas, como envio de e-mails, são executadas de forma assíncrona pelo Sidekiq. Verifique-se que pelo menos um processo sidekiq esteja em execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
-    queue_size_warning: "A quantidade de processos na fila é de %{queue_size}, o que é um número alto. Isso pode indicar um problema com os processos do Sidekiq, ou pode ser necessário adicionar mais trabalhadores do Sidekiq."
-    memory_warning: "Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada."
-    google_oauth2_config_warning: 'O servidor está configurado para permitir o cadastro e entrada com conta do Google OAuth2 GitHub (enable_google_oauth2_logins), mas a ID do cliente e os valores de segredo de cliente não estão definidos. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Consulte este guia para saber mais</a>.'
-    facebook_config_warning: 'O servidor está configurado para permitir o cadastro e entrada com a conta do Facebook (enable_facebook_logins), mas os valores de id do aplicativo e os valores de segredo do app não foram definidos. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia para saber mais</a>.'
-    twitter_config_warning: 'O servidor está configurado para permitir o cadastro e entrada com a conta do Twitter (enable_twitter_logins), mas a chave e os valores de segredo não foram definidos. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia para saber mais</a>.'
-    github_config_warning: 'O servidor está configurado para permitir o cadastro e entrada com conta do GitHub (enable_github_logins), mas a ID do cliente e os valores de segredo de cliente não estão definidos. Vá para <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Consulte este guia para saber mais</a>.'
-    s3_config_warning: 'O servidor está configurado para enviar arquivos para o S3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_upload_bucket. Acesse <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulte "Como configurar envio de imagens para o S3?" para saber mais</a>.'
-    s3_backup_config_warning: 'O servidor está configurado para enviar de backup para o S3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile ou s3_backup_bucket. Acesse <a href="%{base_path}/admin/site_settings">as configurações do site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consulte "Como configurar envio de imagens para o S3?" para saber mais</a>.'
-    s3_cdn_warning: 'O servidor está configurado para enviar arquivos para S3, mas não há nenhum S3 CDN configurado. Isso pode ocasionar custos S3 elevados e queda de desempenho no site. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Veja "Usando armazenamento de objeto para envios" para saber mais</a>.'
-    image_magick_warning: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando seu gerenciador de pacotes favorito ou <a href="https://www.imagemagick.org/script/download.php" target="_blank">baixe a versão mais recente</a>.'
-    failing_emails_warning: 'Existem tarefas de e-mail %{num_failed_jobs} que falharam. Verifique seu app.yml e se as configurações do servidor de e-mail estão corretas. <a href="%{base_path}/sidekiq/retries" target="_blank">Veja os trabalhos com falha no Sidekiq</a>.'
-    subfolder_ends_in_slash: "Sua configuração de subdiretórios está incorreta. DISCOURSE_RELATIVE_URL_ROOT termina com uma barra."
-    outdated_translations_warning: "Algumas das suas substituições de tradução estão desatualizadas. Consulte suas <a href='%{base_path}/admin/customize/site_texts?outdated=true'>personalizações de texto</a>."
-    email_polling_errored_recently:
-      one: "A sondagem do e-mail gerou um erro nas últimas 24 horas. Consulte <a href='%{base_path}/logs' target='_blank'>os registros</a> para obter mais detalhes."
-      other: "A sondagem do e-mail gerou %{count} erros nas últimas 24 horas. Consulte <a href='%{base_path}/logs' target='_blank'>os registros</a> para obter mais detalhes."
-    missing_mailgun_api_key: "O servidor está configurado para enviar e-mails pelo Mailgun, mas você não informou a chave de API usada para verificar as mensagens do webhook."
-    bad_favicon_url: "O favicon está falhando ao carregar. Verifique sua configuração de favicon nas <a href='%{base_path}/admin/site_settings'>configurações do site</a> ."
-    poll_pop3_timeout: "A conexão com o servidor POP3 está atingindo o tempo limite. Verifique suas <a href='%{base_path}/admin/site_settings/category/email'>configurações de POP3</a> e selecione um provedor de serviço."
-    poll_pop3_auth_error: "A conexão com o servidor POP3 está falhando com um erro de autenticação. Verifique suas <a href='%{base_path}/admin/site_settings/category/email'>configurações de POP3</a>."
-    force_https_warning: "Seu site está usando SSL. Mas \"<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>\" ainda não está ativado nas configurações do seu site."
-    out_of_date_themes: "Atualizações estão disponíveis para os seguintes temas:"
-    unreachable_themes: "Não foi possível verificar se há atualizações para os seguintes temas:"
-    v3_analytics_deprecated: "Atualmente, seu Discourse está usando o Google Analytics 3, que não será mais compatível depois de julho de 2023. <a href='https://meta.discourse.org/t/260498'>Atualize para o Google Analytics 4</a> agora para continuar recebendo informações e análises valiosas para o desempenho do seu site."
-    category_style_deprecated: "Atualmente seu Discourse está usando um estilo de categoria obsoleto que será removido antes da versão beta final do Discourse 3.2. Consulte <a href='https://meta.discourse.org/t/282441'>Movendo para uma configuraçao de site de estilo de categoria único</a> para obter instruções de como manter o estilo de categoria selecionado."
+    problem:
+      rails_env: "Seu servidor está rodando no modo %{env}."
+      host_names: "O arquivo config/database.yml está usando hostname do localhost padrão. Modifique para usar o hostname do seu site."
+      queue_size: "A quantidade de processos na fila é de %{queue_size}, o que é um número alto. Isso pode indicar um problema com os processos do Sidekiq, ou pode ser necessário adicionar mais trabalhadores do Sidekiq."
+      ram: "Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada."
+      subfolder_ends_in_slash: "Sua configuração de subdiretórios está incorreta. DISCOURSE_RELATIVE_URL_ROOT termina com uma barra."
+      missing_mailgun_api_key: "O servidor está configurado para enviar e-mails pelo Mailgun, mas você não informou a chave de API usada para verificar as mensagens do webhook."
+      out_of_date_themes: "Atualizações estão disponíveis para os seguintes temas:"
+      unreachable_themes: "Não foi possível verificar se há atualizações para os seguintes temas:"
+      google_analytics_version: "Atualmente, seu Discourse está usando o Google Analytics 3, que não será mais compatível depois de julho de 2023. <a href='https://meta.discourse.org/t/260498'>Atualize para o Google Analytics 4</a> agora para continuar recebendo informações e análises valiosas para o desempenho do seu site."
   site_settings:
     allow_bulk_invite: "Permitir convites em massa com o uso de um arquivo CSV"
     disabled: "desativado(a)"
@@ -1507,7 +1487,6 @@ pt_BR:
     detailed_404: "Fornece mais detalhes aos(às) usuários(as) sobre o motivo de não poderem acessar um tópico específico. Observação: isso não é tão seguro porque os(as) usuários(as) saberão se uma URL estiver vinculada a um tópico válido."
     enforce_second_factor: "Requer que os(as) usuários(as) ativem a autenticação de dois fatores antes que possam acessar a IU do Discourse. Selecione \"tudo\" para impor a todos(as) usuários(as). Selecione \"equipe\" para impor apenas aos(às) usuários(as) da equipe. Essa configuração não afeta a autenticação por \"DiscourseConnect provider\" ou API."
     force_https: "Obrigue seu site a usar apenas HTTPS. AVISO: NÃO ative até ter verificado se o HTTPS está totalmente configurado e funcionando em todos os lugares! Você verificou se seu CDN, todas as entradas com conta de rede social e logotipos e dependências externas também são compatíveis com HTTPS?"
-    same_site_cookies: "Use os mesmos cookies do site, eles eliminam todos vetores de solicitação intersite forjada nos navegadores compatíveis (Lax ou Strict). Aviso: o Strict funcionará somente em sites que obrigam entrada com conta e usam um método de autenticação externo."
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída em \"Resumir este tópico\" "
     summary_posts_required: "Quantidade mínima de postagens em um tópico antes de ativar \"Resumir este tópico\". As alterações desta configuração serão aplicadas de forma retroativa dentro de uma semana."
     summary_likes_required: "Quantidade mínima de curtidas em um tópico antes de ativar \"Resumir este tópico\". As alterações desta configuração serão aplicadas de forma retroativa dentro de uma semana."
@@ -2143,7 +2122,6 @@ pt_BR:
     experimental_topics_filter: "EXPERIMENTAL: ative a rota do filtro de tópicos experimentais em /filter"
     enable_experimental_lightbox: "EXPERIMENTAL: substitua a lightbox da imagem padrão pelo design renovado."
     experimental_form_templates: "EXPERIMENTAL: ative o recurso de modelo de formulário. <b>Quando ativado,</b> gerencie os modelos em <a href='%{base_path}/admin/customize/form-templates'>Personalizar/Modelos</a>."
-    admin_sidebar_enabled_groups: "EXPERIMENTAL: ative a navegação da barra lateral da IU da administração para grupos específicos, que substitui os botões de navegação da administração superiores."
     page_loading_indicator: "Configure o indicador de carregamento mostrado durante as navegações da página no Discourse. O \"Controle giratório\" é um indicador de página completo. O \"Controle deslizante\" mostra uma barra estreita no topo da tela."
     show_user_menu_avatars: "Mostrar avatadores de usuário(a) no menu do(a) usuário(a)"
     errors:
@@ -3523,7 +3501,6 @@ pt_BR:
 
         Se você tiver alguma dúvida, [entre em contato com nossa equipe prestativa](%{base_url}/sobre).
     digest:
-      why: "Um breve resumo de %{site_link} desde a sua última visita em %{last_seen_at}."
       since_last_visit: "Desde a sua última visita"
       new_topics: "Novos tópicos"
       unread_notifications: "Notificações não lidas"
@@ -3539,7 +3516,6 @@ pt_BR:
       your_email_settings: "suas configurações de e-mail"
       click_here: "clique aqui"
       from: "%{site_name}"
-      preheader: "Um breve resumo do que aconteceu no fórum desde a sua última visita em %{last_seen_at}"
     forgot_password:
       title: "Esqueci a senha"
       subject_template: "[%{email_prefix}] Redefinição de senha"

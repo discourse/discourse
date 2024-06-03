@@ -417,8 +417,6 @@ hr:
       trust_level_2: "razina_povjerenja_2"
       trust_level_3: "razina_povjerenja_3"
       trust_level_4: "razina_povjerenja_4"
-    request_accepted_pm:
-      title: "Primljeni ste u @%{group_name}"
   education:
     until_posts:
       one: "%{count} objava"
@@ -1098,11 +1096,11 @@ hr:
         user: Korisnik
         qtt_like: Like-ova primljeno
   dashboard:
-    rails_env_warning: "Server vam radi na %{env} način."
-    host_names_warning: "Vaša config/database.yml datoteka koristi standardno ime lokalnog domaćina (localhost hostname). Ažurirajte je da koristi ime vaše stranice."
-    sidekiq_warning: 'Sidekiq ne radi. Mnogi zadatci, kao slanje emailova, obavljaju se asinhrono putem sidekiqa. Molimo osigurajte da barem jedan sidekiq provess radi. <a href="https://github.com/mperham/sidekiq" target="_blank">Ovdje naučite o sidekiqu</a>.'
-    queue_size_warning: "Broj predbilježenih zadataka je %{queue_size}, što je velik broj. Ovo može biti pokazatelj problema za Sidekiq procesom(ima), ili trebate dodati još Sidekiq \"radnika\"."
-    memory_warning: "Server vam radi s manje od 1 GB ukupne memorije. Barem 1 GB se preporuča."
+    problem:
+      rails_env: "Server vam radi na %{env} način."
+      host_names: "Vaša config/database.yml datoteka koristi standardno ime lokalnog domaćina (localhost hostname). Ažurirajte je da koristi ime vaše stranice."
+      queue_size: "Broj predbilježenih zadataka je %{queue_size}, što je velik broj. Ovo može biti pokazatelj problema za Sidekiq procesom(ima), ili trebate dodati još Sidekiq \"radnika\"."
+      ram: "Server vam radi s manje od 1 GB ukupne memorije. Barem 1 GB se preporuča."
   site_settings:
     disabled: "onemogućen"
     allow_user_locale: "Dopustite korisnicima da odaberu vlastite postavke jezika sučelja"
@@ -2050,7 +2048,6 @@ hr:
 
         Ako imate pitanja, [kontaktirajte naše ljubazno osoblje](%{base_url}/o).
     digest:
-      why: "Kratak sažetak %{site_link} od vašeg posljednjeg posjeta %{last_seen_at}"
       since_last_visit: "Od vašeg posljednjeg posjeta"
       new_topics: "Nove teme"
       unread_notifications: "Nepročitane obavijesti"
@@ -2066,7 +2063,6 @@ hr:
       your_email_settings: "vaše e-mail postavke"
       click_here: "kliknite ovdje"
       from: "%{site_name}"
-      preheader: "Kratak sažetak od vašeg posljednjeg posjeta %{last_seen_at}"
     forgot_password:
       title: "Zaboravljena zaporka"
       subject_template: "[%{email_prefix}] Ponovno postavljanje zaporke"

@@ -183,7 +183,9 @@ export default class BulkSelectTopicsDropdown extends Component {
   }
 
   @action
-  onSelect(actionId) {
+  async onSelect(actionId) {
+    await this.dMenu.close();
+
     switch (actionId) {
       case "update-category":
         this.showBulkTopicActionsModal(actionId, "change_category", {
@@ -254,8 +256,6 @@ export default class BulkSelectTopicsDropdown extends Component {
           );
         }
     }
-
-    this.dMenu.close();
   }
 
   @action

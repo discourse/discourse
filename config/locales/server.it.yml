@@ -487,7 +487,6 @@ it:
     request_membership_pm:
       title: "Richesta di Adesione per @%{group_name}"
     request_accepted_pm:
-      title: "Sei stato accettato in @%{group_name}"
       body: |
         La tua richiesta di far parte di @%{group_name} è stata accettata e ora sei un membro.
   education:
@@ -1382,35 +1381,16 @@ it:
         qtt_like: Mi piace ricevuti
       description: "I migliori 10 utenti che hanno ricevuto Mi piace da una vasta gamma di persone."
   dashboard:
-    group_email_credentials_warning: 'Si è verificato un problema con le credenziali e-mail per il gruppo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Nessuna e-mail verrà inviata dalla casella di posta del gruppo fino a quando il problema non sarà risolto. %{error}'
-    rails_env_warning: "Il tuo server è in modalità %{env}."
-    host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
-    sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq" target="_blank">Leggi altro su Sidekiq</a>.'
-    queue_size_warning: "Il numero di job in coda è %{queue_size}, molto elevato. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq."
-    memory_warning: "Il tuo server sta funzionando con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria."
-    google_oauth2_config_warning: 'Il server è configurato per permettere la registrazione e l''accesso con Google Oauth2 (enable_google_oauth2_logins), ma l''id e il segreto del client non sono impostati. Vai nelle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiornale. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Per ulteriori informazioni segui questa guida</a>.'
-    facebook_config_warning: 'Il server è configurato per consentire la registrazione e l''accesso con Facebook (enable_facebook_logins), ma l''id e il segreto dell''app non sono impostati. Vai nelle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiornale. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Vedi questa guida per saperne di più</a> .'
-    twitter_config_warning: 'Il server è configurato per consentire la registrazione e l''accesso con Twitter (enable_twitter_logins), ma la chiave e il valore segreto non sono impostati. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Vedi questa guida per saperne di più</a>.'
-    github_config_warning: 'Il server è configurato per consentire la registrazione e l''accesso con GitHub (enable_github_logins), ma l''id e il segreto del client non sono impostati. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Vedi questa guida per saperne di più</a>.'
-    s3_config_warning: 'Il server è configurato per caricare file su S3, ma almeno una delle seguenti impostazioni non è definita: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_upload_bucket. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiornale. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consultare "Come configurare caricamenti di immagini su S3?" per saperne di più</a>'
-    s3_backup_config_warning: 'Il server è configurato per caricare i backup su S3, ma almeno una delle seguenti impostazioni non è definita: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile o s3_backup_bucket. Vai alle <a href="%{base_path}/admin/site_settings">Impostazioni del sito</a> e aggiornale. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Consultare "Come configurare caricamenti di immagini su S3?" per saperne di più</a>'
-    s3_cdn_warning: 'Il server è configurato per caricare file su S3, ma non è configurato nessun CDN S3. Questo può portare a costi S3 onerosi e a prestazioni più lente del sito. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Consultare la sezione "Uso di un archivio oggetti per i caricamenti" per saperne di più</a>.'
-    image_magick_warning: 'Il server è configurato per creare miniature di immagini di grandi dimensioni, ma ImageMagick non è installato. Installa ImageMagick usando il tuo gestore di pacchetti preferito o <a href="https://www.imagemagick.org/script/download.php" target="_blank">scarica l''ultima versione</a> .'
-    failing_emails_warning: 'Ci sono %{num_failed_jobs} processi di posta elettronica non andati a buon fine. Controlla il tuo file app.yml e assicurati che le impostazioni del server di posta siano corrette. <a href="%{base_path}/sidekiq/retries" target="_blank">Vedi i processi non riusciti in Sidekiq</a> .'
-    subfolder_ends_in_slash: "L'impostazione della sottocartella è errata; DISCOURSE_RELATIVE_URL_ROOT finisce con uno slash."
-    outdated_translations_warning: "Alcune delle tue modifiche alla traduzione non sono aggiornate. Controlla le personalizzazioni del testo di <a href='%{base_path}/admin/customize/site_texts?outdated=true'></a>."
-    email_polling_errored_recently:
-      one: "Il polling delle email ha generato un errore nelle ultime 24 ore. Controlla <a href='%{base_path}/logs' target='_blank'>i log</a> per maggiori dettagli."
-      other: "Il polling delle email ha generato %{count} errori nelle ultime 24 ore. Controlla <a href='%{base_path}/logs' target='_blank'>i log</a> per maggiori dettagli."
-    missing_mailgun_api_key: "Il server è configurato per inviare email via Mailgun ma non hai fornito la chiave API necessaria a verificare i messaggi webhook."
-    bad_favicon_url: "Impossibile caricare la favicon. Controlla le impostazioni favicon nelle <a href='%{base_path}/admin/site_settings'>Impostazioni del sito</a> ."
-    poll_pop3_timeout: "La connessione al server POP3 sta scadendo. Le email in entrata non sono state scaricate. Per favore verifica la tua <a href='%{base_path}/admin/site_settings/category/email'>configurazione POP3</a> e il fornitore del servizio."
-    poll_pop3_auth_error: "La connessione al server POP3 è fallita per un errore di autenticazione. Per favore verifica la tua <a href='%{base_path}/admin/site_settings/category/email'>configurazione POP3</a>."
-    force_https_warning: "Il tuo sito web utilizza SSL. Ma ` <a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https`</a> non è ancora abilitato nelle impostazioni del tuo sito."
-    out_of_date_themes: "Sono disponibili aggiornamenti per i seguenti temi:"
-    unreachable_themes: "Non è stato possibile verificare la presenza di aggiornamenti per i seguenti temi:"
-    v3_analytics_deprecated: "Il tuo Discourse utilizza attualmente Google Analytics 3, che non sarà più supportato dopo luglio 2023. <a href='https://meta.discourse.org/t/260498'>Passa a Google Analytics 4</a> ora per continuare a ricevere preziose informazioni e analisi per le prestazioni del tuo sito web."
-    category_style_deprecated: "La tua istanza di Discourse utilizza attualmente uno stile di categoria deprecato che verrà rimosso prima della versione beta finale di Discourse 3.2. Fai riferimento a <a href='https://meta.discourse.org/t/282441'>Passaggio a un'impostazione del sito con stile di categoria singola</a> per istruzioni su come mantenere lo stile di categoria selezionato."
+    problem:
+      rails_env: "Il tuo server è in modalità %{env}."
+      host_names: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
+      queue_size: "Il numero di job in coda è %{queue_size}, molto elevato. Ciò potrebbe indicare un problema con i processi Sidekiq, oppure devi aggiungere altri worker Sidekiq."
+      ram: "Il tuo server sta funzionando con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria."
+      subfolder_ends_in_slash: "L'impostazione della sottocartella è errata; DISCOURSE_RELATIVE_URL_ROOT finisce con uno slash."
+      missing_mailgun_api_key: "Il server è configurato per inviare email via Mailgun ma non hai fornito la chiave API necessaria a verificare i messaggi webhook."
+      out_of_date_themes: "Sono disponibili aggiornamenti per i seguenti temi:"
+      unreachable_themes: "Non è stato possibile verificare la presenza di aggiornamenti per i seguenti temi:"
+      google_analytics_version: "Il tuo Discourse utilizza attualmente Google Analytics 3, che non sarà più supportato dopo luglio 2023. <a href='https://meta.discourse.org/t/260498'>Passa a Google Analytics 4</a> ora per continuare a ricevere preziose informazioni e analisi per le prestazioni del tuo sito web."
   site_settings:
     allow_bulk_invite: "Consenti inviti di massa caricando un file CSV"
     disabled: "disabilitato"
@@ -1507,7 +1487,6 @@ it:
     detailed_404: "Fornisce maggiori dettagli agli utenti sul perché non possono accedere a un argomento specifico. Nota: questo metodo è meno sicuro perché gli utenti sapranno se un URL si collega a un argomento valido."
     enforce_second_factor: "Richiedi agli utenti di abilitare l'autenticazione a due fattori prima di poter accedere all'interfaccia utente di Discourse. Seleziona \"tutti\" per applicarlo a tutti gli utenti. Seleziona \"staff\" per applicarlo solo agli utenti dello staff. Questa impostazione non influisce sull'autenticazione API o \"DiscourseConnect provider\"."
     force_https: "Forza il tuo sito ad usare solo HTTPS. ATTENZIONE: NON abilitare questa opzione finché non hai verificato che HTTPS è pienamente configurato e sta funzionando ovunque! Hai verificato il tuo CDN, tutti gli accessi ai social ed ogni logo esterno / dipendenze per essere sicuro che sono anch'essi tutti compatibili con HTTPS?"
-    same_site_cookies: "Utilizza gli stessi cookie del sito. In tal modo si eliminano tutti i vettori Cross Site Request Forgery nei browser supportati (Lax o Strict). Avviso: Strict funzionerà solo su siti che richiedono l'accesso e utilizzano un metodo di autenticazione esterno."
     summary_score_threshold: "Il punteggio minimo richiesto affinché un messaggio sia incluso in 'Riassumi Questo Argomento'"
     summary_posts_required: "Numero minimo di messaggi in un argomento prima che l'opzione 'Riassumi questo argomento' sia abilitata. Le modifiche a questa impostazione verranno applicate retroattivamente entro una settimana."
     summary_likes_required: "Minimo numero di \"Mi piace\" in un argomento prima che l'opzione 'Riassumi questo argomento' sia abilitata. Le modifiche a questa impostazione verranno applicate retroattivamente entro una settimana."
@@ -3415,7 +3394,6 @@ it:
       subject_template: "[%{email_prefix}] Autenticazione a due fattori disabilitata"
       text_body_template: "L'autenticazione a due fattori è stata disabilitata per il tuo account su %{site_name}. Ora puoi accedere con la tua sola password; non è più richiesto un codice di autenticazione aggiuntivo. \n\nSe non hai disabilitato tu l'autenticazione a due fattori, qualcuno potrebbe aver violato il tuo account. \n\nSe hai domande, [contatta il nostro staff](%{base_url}/about).\n"
     digest:
-      why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
       since_last_visit: "Dalla tua ultima visita"
       new_topics: "Nuovi Argomenti"
       unread_notifications: "Notifiche Non Lette"
@@ -3431,7 +3409,6 @@ it:
       your_email_settings: "le tue impostazioni email"
       click_here: "clicca qui"
       from: "%{site_name}"
-      preheader: "Un breve riepilogo dalla tua ultima visita il %{last_seen_at}"
     forgot_password:
       title: "Password Dimenticata"
       subject_template: "[%{email_prefix}] Reimposta password"
