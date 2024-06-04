@@ -514,7 +514,7 @@ sk:
           title: "Hodnotiteľné položky vytvorené používateľmi s vyššou úrovňou dôvery majú vyššie skóre."
         type_bonus:
           name: "typ bonusu"
-          title: "Určitým kontrolovateľným typom môžu zamestnanci prideliť bonus, aby mali vyššiu prioritu."
+          title: "Určitým kontrolovateľným typom môže personál prideliť bonus, aby mali vyššiu prioritu."
       revise_and_reject_post:
         title: "Revízia"
         reason: "Dôvod"
@@ -6061,7 +6061,7 @@ sk:
         nav:
           new: "Nový"
           active: "Aktívny"
-          staff: "Zamestnanci"
+          staff: "Personál"
           suspended: "Odobrate práva"
           silenced: "Umlčané"
           staged: "Dočasný"
@@ -6075,7 +6075,7 @@ sk:
           member: "Používatelia na stupni dôvery 2 (Člen)"
           regular: "Používatelia na stupni dôvery 3 (Stály člen)"
           leader: "Používatelia na stupni dôvery 4 (Vodca)"
-          staff: "Zamestnanci"
+          staff: "Personál"
           admins: "Admin používatelia"
           moderators: "Moderátori"
           silenced: "Umlčaní používatelia"
