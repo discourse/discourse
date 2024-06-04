@@ -2899,7 +2899,6 @@ en:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
     incorrect_password: "Incorrect password"
-    password_expired: "Password expired. Reset instructions sent to your email."
     incorrect_password_or_passkey: "Incorrect password or passkey"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is activated and ready to use."

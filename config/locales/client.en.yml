@@ -2291,6 +2291,7 @@ en:
       error: "Unknown error"
       cookies_error: "Your browser seems to have cookies disabled. You might not be able to log in without enabling them first."
       rate_limit: "Please wait before trying to log in again."
+      password_expired: "Password expired. Please <a href='%{reset_url}'>reset your password</a>."
       blank_username: "Please enter your email or username."
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: "Reset Password"
