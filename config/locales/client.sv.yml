@@ -2774,14 +2774,12 @@ sv:
         filter: "Det finns inga fler ämnen."
     topic_bulk_actions:
       close_topics:
-        name: "Stäng ämnen"
+        name: "Stäng"
         optional: (valfri)
       archive_topics:
-        name: "Arkivera ämnen"
-      unlist_topics:
-        name: "Avlista ämnen"
-      relist_topics:
-        name: "Lista om ämnen"
+        name: "Arkiv"
+      move_messages_to_inbox:
+        name: "Flytta till inkorgen"
       remove_tags:
         name: "Ta bort taggar"
       append_tags:
@@ -2789,7 +2787,7 @@ sv:
       replace_tags:
         name: "Ersätt taggar"
       delete_topics:
-        name: "Ta bort ämnen"
+        name: "Radera"
       update_category:
         name: "Uppdatera kategori"
         description: "Välj den nya kategorin för de valda ämnena"

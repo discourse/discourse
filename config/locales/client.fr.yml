@@ -2792,15 +2792,13 @@ fr:
         filter: "Il n'y a plus de sujets."
     topic_bulk_actions:
       close_topics:
-        name: "Fermer les sujets"
+        name: "Fermer"
         note: "Note"
         optional: (facultatif)
       archive_topics:
-        name: "Archiver les sujets"
-      unlist_topics:
-        name: "Rendre les sujets invisibles"
-      relist_topics:
-        name: "Lister les sujets"
+        name: "Archivés"
+      move_messages_to_inbox:
+        name: "Déplacer dans la boîte de réception"
       remove_tags:
         name: "Supprimer des étiquettes"
       append_tags:
@@ -2808,7 +2806,7 @@ fr:
       replace_tags:
         name: "Remplacer des étiquettes"
       delete_topics:
-        name: "Supprimer les sujets"
+        name: "Supprimer"
       update_category:
         name: "Mettre à jour la catégorie"
         description: "Choisir la nouvelle catégorie pour les sujets sélectionnés"

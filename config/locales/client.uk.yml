@@ -3056,6 +3056,7 @@ uk:
         close_topics: "Закрити теми"
         archive_topics: "Архівувати теми"
         move_messages_to_inbox: "Перемістити у Вхідні"
+        archive_messages: "Перемістити до архіву"
         notification_level: "Сповіщення…"
         change_notification_level: "Змінити рівень сповіщень"
         choose_new_category: "Виберіть новий розділ для цих тем:"
@@ -3124,15 +3125,19 @@ uk:
         filter: "Більше немає тем."
     topic_bulk_actions:
       close_topics:
-        name: "Закрити теми"
+        name: "Закрити"
         note: "Примітка"
         optional: (опціонально)
       archive_topics:
-        name: "Архівувати теми"
+        name: "Архів"
+      archive_messages:
+        name: "Перемістити до архіву"
+      move_messages_to_inbox:
+        name: "Перемістити у Вхідні"
       unlist_topics:
-        name: "Виключити з усіх списків тем"
+        name: "Вилучити зі списку"
       relist_topics:
-        name: "Повторний Список тем"
+        name: "Вставити повторно"
       remove_tags:
         name: "Видалити теги"
       append_tags:
@@ -3140,7 +3145,7 @@ uk:
       replace_tags:
         name: "Замінити теґи"
       delete_topics:
-        name: "Видалити теми"
+        name: "Видалити"
       update_category:
         name: "Оновити категорію"
         description: "Виберіть нову категорію для обраних тем"
@@ -5114,6 +5119,7 @@ uk:
             include_subcategories:
               label: "Включаючи підрозділи"
       flags:
+        title: "Прапори модерації"
         description: "Опис"
         enabled: "Включено?"
       groups:
@@ -5460,6 +5466,7 @@ uk:
           user_fields: "Поля користувача"
           watched_words: "Відслідковувані слова"
           legal: "Legal"
+          moderation_flags: "Прапори модерації"
       appearance:
         title: "Зовнішній вигляд"
         sidebar_link:
@@ -6172,6 +6179,7 @@ uk:
             create_watched_word_group: "створити контрольовану групу слів"
             update_watched_word_group: "оновити контрольовану групу слів"
             delete_watched_word_group: "видалити контрольовану групу слів"
+            toggle_flag: "перемикати прапор"
         screened_emails:
           title: "Screened Emails"
           description: "Коли хтось намагатиметься створити новий обліковий запис, наступні електронні скриньки буде перевірено, і реєстрацію заблоковано, або вжито якихось інших дій."

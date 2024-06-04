@@ -2205,6 +2205,9 @@ fi:
       - ""
       - "ei aktiivinen"
       - ""
+      navigation_menu:
+      - "sivupalkki"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

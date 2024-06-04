@@ -2366,20 +2366,18 @@ da:
         filter: "Der er ikke flere emner."
     topic_bulk_actions:
       close_topics:
-        name: "Luk indlæg"
+        name: "Luk"
         optional: (valgfri)
       archive_topics:
-        name: "Arkiver Emner"
-      unlist_topics:
-        name: "Fjern emner fra liste"
-      relist_topics:
-        name: "Genindlæs emner"
+        name: "Arkiv"
+      move_messages_to_inbox:
+        name: "Flyt til indbakke"
       append_tags:
         name: "Tilføj Mærker"
       replace_tags:
         name: "Erstat Mærker"
       delete_topics:
-        name: "Slet emner"
+        name: "Slet"
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"

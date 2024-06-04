@@ -2202,6 +2202,9 @@ it:
       - ""
       - "non attivi"
       - ""
+      navigation_menu:
+      - "barra laterale"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

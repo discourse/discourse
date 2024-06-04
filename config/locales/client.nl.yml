@@ -2767,14 +2767,12 @@ nl:
         filter: "Er zijn geen verdere topics."
     topic_bulk_actions:
       close_topics:
-        name: "Topics sluiten"
+        name: "Sluiten"
         optional: (optioneel)
       archive_topics:
-        name: "Topics archiveren"
-      unlist_topics:
-        name: "Topics onzichtbaar maken"
-      relist_topics:
-        name: "Topics opnieuw weergeven"
+        name: "Archief"
+      move_messages_to_inbox:
+        name: "Verplaatsen naar inbox"
       remove_tags:
         name: "Tags verwijderen"
       append_tags:
@@ -2782,7 +2780,7 @@ nl:
       replace_tags:
         name: "Tags vervangen"
       delete_topics:
-        name: "Topics verwijderen"
+        name: "Verwijderen"
       update_category:
         name: "Categorie bijwerken"
         description: "Kies de nieuwe categorie voor de geselecteerde onderwerpen"

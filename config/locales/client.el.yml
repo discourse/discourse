@@ -2127,20 +2127,18 @@ el:
         bookmarks: "Δεν υπάρχουν άλλα νήματα με σελιδοδείκτη."
     topic_bulk_actions:
       close_topics:
-        name: "Κλείσιμο Νημάτων"
+        name: "Κλείσιμο"
         optional: (προεραιτικό)
       archive_topics:
-        name: "Αρχειοθέτηση Νημάτων"
-      unlist_topics:
-        name: "Απόκρυψη Νημάτων"
-      relist_topics:
-        name: "Εμφάνιση Νημάτων"
+        name: "Αρχείο"
+      move_messages_to_inbox:
+        name: "Μετακίνηση στα Εισερχόμενα"
       append_tags:
         name: "Προσάρτηση Ετικετών "
       replace_tags:
         name: "Αντικατάσταση Ετικετών "
       delete_topics:
-        name: "Διαγραφή Νημάτων"
+        name: "Σβήσιμο"
     topic:
       filter_to:
         one: "%{count} δημοσίευση σε νήματα"

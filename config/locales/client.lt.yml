@@ -2307,18 +2307,18 @@ lt:
         bookmarks: "Daugiau pažymėtų temų nėra"
     topic_bulk_actions:
       close_topics:
-        name: "Uždaryti temas"
+        name: "Uždaryti"
         optional: (pasoronktinai)
       archive_topics:
-        name: "Archyvuoti temas"
-      unlist_topics:
-        name: "Atžymėti temas"
+        name: "Archyvuoti"
+      move_messages_to_inbox:
+        name: "Perkelti į Pranešimų dėžutę"
       append_tags:
         name: "Pridėti žymas"
       replace_tags:
         name: "Pakeisti žymas"
       delete_topics:
-        name: "Ištrinti temas"
+        name: "Pašalinti"
     topic:
       filter_to:
         one: "temoje %{count} įrašas"

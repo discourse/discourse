@@ -2798,15 +2798,13 @@ hu:
         filter: "Nincs több téma."
     topic_bulk_actions:
       close_topics:
-        name: "Témák lezárása"
+        name: "Lezárás"
         note: "Megjegyzés"
         optional: (nem kötelező)
       archive_topics:
-        name: "Témák archiválása"
-      unlist_topics:
-        name: "Témák listázásnak megszüntetése"
-      relist_topics:
-        name: "Újralistázott témák"
+        name: "Archiválás"
+      move_messages_to_inbox:
+        name: "Áthelyezés a bejövő üzenetek közé"
       remove_tags:
         name: "Címkék eltávolítása"
       append_tags:
@@ -2814,7 +2812,7 @@ hu:
       replace_tags:
         name: "Címkék cseréje"
       delete_topics:
-        name: "Témák törlése"
+        name: "Törlés"
       update_category:
         name: "Kategória frissítése"
         description: "Válaszd ki az új kategóriát a kiválasztott témákhoz"

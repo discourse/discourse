@@ -2777,14 +2777,12 @@ fi:
         filter: "Ketjuja ei ole enempää."
     topic_bulk_actions:
       close_topics:
-        name: "Sulje ketjut"
+        name: "Sulje"
         optional: (valinnainen)
       archive_topics:
-        name: "Arkistoi ketjut"
-      unlist_topics:
-        name: "Poista ketjuja listauksista"
-      relist_topics:
-        name: "Palauta ketjuja listauksiin"
+        name: "Arkistoi"
+      move_messages_to_inbox:
+        name: "Siirrä saapuneisiin"
       remove_tags:
         name: "Poista tunnisteita"
       append_tags:
@@ -2792,7 +2790,7 @@ fi:
       replace_tags:
         name: "Korvaa tunnisteet"
       delete_topics:
-        name: "Poista ketjut"
+        name: "Poista"
     topic:
       filter_to:
         one: "%{count} viesti ketjussa"

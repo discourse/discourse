@@ -2163,6 +2163,9 @@ ja:
       - ""
       - "非アクティブ"
       - ""
+      navigation_menu:
+      - "サイドバー"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

@@ -73,8 +73,8 @@ de:
         title: Thema erstellen
         description: Ein Thema als ein bestimmter Benutzer erstellen
       flag_post_on_words:
-        title: Beitrag wegen Wörtern markieren
-        description: Markiert einen Beitrag, falls er bestimmte Wörter enthält
+        title: Beitrag wegen Wörtern melden
+        description: Meldet einen Beitrag, falls er bestimmte Wörter enthält
         flag_message: "Beitrag enthält unzulässige Wörter: %{words}"
         doc: Ein Beitrag, der alle angegebenen Wörter auf einmal enthält, wird markiert und ausgeblendet. Beachte, dass die Angabe mehrerer Wörter, die durch ein Komma getrennt sind, als Verbindung behandelt wird (jedes Wort muss vorhanden sein).
       zapier_webhook:

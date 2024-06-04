@@ -1272,6 +1272,9 @@ pt:
       - ""
       - "inativo"
       - ""
+      navigation_menu:
+      - "barra Lateral"
+      - ""
   search:
     within_post: "#%{post_number} por %{username}"
     types:

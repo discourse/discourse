@@ -1649,18 +1649,18 @@ et:
         bookmarks: "Rohkem järjehoidjaga teemasid pole."
     topic_bulk_actions:
       close_topics:
-        name: "Sulge Teemad"
+        name: "Sulge"
         optional: (valikuline)
       archive_topics:
-        name: "Arhiveeri Teemad"
-      unlist_topics:
-        name: "Eemalda teemad loetelust"
+        name: "Arhiiv"
+      move_messages_to_inbox:
+        name: "Liiguta Postkasti"
       append_tags:
         name: "Lisa sildid"
       replace_tags:
         name: "Asenda sildid"
       delete_topics:
-        name: "Kustuta teemad"
+        name: "Kustuta"
     topic:
       filter_to:
         one: "%{count} postitus teemas"

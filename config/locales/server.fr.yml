@@ -2205,6 +2205,9 @@ fr:
       - ""
       - "inactif"
       - ""
+      navigation_menu:
+      - "barre latérale"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

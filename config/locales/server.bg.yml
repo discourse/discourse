@@ -927,6 +927,10 @@ bg:
       invalid_reply_by_email_address: "Стойността трябва да съдържа '%{reply_key}' и да бъде различна от известяващия имейл."
       invalid_uncategorized_category_setting: 'Категорията „Некатегоризирани“ не може да бъде избрана, ако „разрешаване на некатегоризирани теми“ не е активирано.'
       invalid_search_ranking_weights: "Стойността е невалидна за настройката на сайта „search_ranking_weights\". Пример: „{0.1,0.2,0.3,1.0}“. Имайте предвид, че максималната стойност за всяко тегло е 1.0."
+    keywords:
+      navigation_menu:
+      - "странична лента"
+      - ""
   search:
     within_post: "#%{post_number} от %{username}"
     types:

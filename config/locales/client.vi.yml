@@ -2319,14 +2319,12 @@ vi:
         bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
     topic_bulk_actions:
       close_topics:
-        name: "Đóng các chủ đề"
+        name: "Đóng"
         optional: (tùy chọn)
       archive_topics:
-        name: "Chủ đề Lưu trữ"
-      unlist_topics:
-        name: "Chủ đề không công khai"
-      relist_topics:
-        name: "Chủ đề liên quan"
+        name: "Lưu Trữ"
+      move_messages_to_inbox:
+        name: "Chuyển sang hộp thư"
       remove_tags:
         name: "Xóa thẻ"
       append_tags:
@@ -2334,7 +2332,7 @@ vi:
       replace_tags:
         name: "Thay thế thẻ"
       delete_topics:
-        name: "Xóa chủ đề"
+        name: "Xóa"
     topic:
       filter_to:
         other: "%{count} bài viết trong chủ đề"

@@ -2891,14 +2891,12 @@ hr:
         filter: "Nema više tema."
     topic_bulk_actions:
       close_topics:
-        name: "Zatvori teme"
+        name: "Zatvori"
         optional: (opcionalno)
       archive_topics:
-        name: "Arhiviraj teme"
-      unlist_topics:
-        name: "Poništite popis tema"
-      relist_topics:
-        name: "Poništite popis tema"
+        name: "Arhiva"
+      move_messages_to_inbox:
+        name: "Premjesti u Inbox"
       remove_tags:
         name: "Ukloni oznake"
       append_tags:
@@ -2906,7 +2904,7 @@ hr:
       replace_tags:
         name: "Zamijeni oznake"
       delete_topics:
-        name: "Obriši teme"
+        name: "Pobriši"
       update_category:
         name: "Ažuriraj kategoriju"
         description: "Odaberi novu kategoriju za odabrane teme"

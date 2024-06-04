@@ -2290,20 +2290,18 @@ ur:
         bookmarks: "مزید کوئی بک مارک کیے ہوئے ٹاپک موجود نہیں۔"
     topic_bulk_actions:
       close_topics:
-        name: "ٹاپکس بند کریں"
+        name: "بند کریں"
         optional: (اختیاری)
       archive_topics:
-        name: "ٹاپکس آر کائیو کریں"
-      unlist_topics:
-        name: "ٹاپکس کو فہرست سے ہٹائیں"
-      relist_topics:
-        name: "ٹاپک دوبارہ فہرست کریں"
+        name: "آرکائیو"
+      move_messages_to_inbox:
+        name: "اِنباکس میں منتقل کریں"
       append_tags:
         name: "ٹیگز میں اضافہ کریں"
       replace_tags:
         name: "ٹیگز بدلیں"
       delete_topics:
-        name: "ٹاپکس مٹائیں"
+        name: "مٹائیں"
     topic:
       filter_to:
         one: "ٹاپک میں %{count} پوسٹ"

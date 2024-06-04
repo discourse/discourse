@@ -1525,6 +1525,9 @@ zh_TW:
       - ""
       - "不活躍"
       - ""
+      navigation_menu:
+      - "側選單"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.範例.com"

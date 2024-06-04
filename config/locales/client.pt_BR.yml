@@ -2767,20 +2767,18 @@ pt_BR:
         filter: "Não existem mais tópicos."
     topic_bulk_actions:
       close_topics:
-        name: "Fechar tópicos"
+        name: "Fechar"
         optional: (opcional)
       archive_topics:
-        name: "Arquivar tópicos"
-      unlist_topics:
-        name: "Remover tópicos da lista"
-      relist_topics:
-        name: "Reinserir tópicos na lista"
+        name: "Arquivo"
+      move_messages_to_inbox:
+        name: "Mover para caixa de entrada"
       append_tags:
         name: "Adicionar etiquetas"
       replace_tags:
         name: "Substituir etiquetas"
       delete_topics:
-        name: "Excluir tópicos"
+        name: "Excluir"
       update_category:
         name: "Atualizar Categoria"
         description: "Escolha a nova categoria para os tópicos selecionados"

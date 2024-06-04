@@ -2448,18 +2448,18 @@ bg:
         filter: "Няма повече теми."
     topic_bulk_actions:
       close_topics:
-        name: "Затвори темите"
+        name: "Затвори"
         optional: (по избор)
       archive_topics:
-        name: "Архивирай темите"
-      unlist_topics:
-        name: "Непоказани теми"
+        name: "Архив"
+      move_messages_to_inbox:
+        name: "Премести във входящи"
       append_tags:
         name: "Добави етикетите"
       replace_tags:
         name: "Замени етикетите"
       delete_topics:
-        name: "Изтрий темите"
+        name: "Изтрий"
     topic:
       create: "Нова тема"
       create_disabled_category: "Нямате право да създавате теми в тази категория"

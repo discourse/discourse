@@ -2762,14 +2762,12 @@ es:
         filter: "No hay más temas."
     topic_bulk_actions:
       close_topics:
-        name: "Cerrar temas"
+        name: "Cerrar"
         optional: (opcional)
       archive_topics:
-        name: "Archivar temas"
-      unlist_topics:
-        name: "Hacer invisibles"
-      relist_topics:
-        name: "Hacer visibles de nuevo"
+        name: "Archivo"
+      move_messages_to_inbox:
+        name: "Mover a la bandeja de entrada"
       remove_tags:
         name: "Quitar etiquetas"
       append_tags:
@@ -2777,7 +2775,7 @@ es:
       replace_tags:
         name: "Remplazar etiquetas"
       delete_topics:
-        name: "Eliminar temas"
+        name: "Eliminar"
       update_category:
         name: "Actualizar Categoría"
     topic:

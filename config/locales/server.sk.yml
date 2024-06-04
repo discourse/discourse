@@ -2518,7 +2518,7 @@ sk:
     use_name_for_username_suggestions: "Pri navrhovaní používateľských mien používajte celé meno používateľa."
     suggest_weekends_in_date_pickers: "Zahrnúť víkendy (sobotu a nedeľu) do návrhov na výber dátumu (ak Discourse používate len počas pracovných dní, od pondelka do piatku, vypnite túto funkciu)."
     splash_screen: "Zobrazí dočasnú obrazovku načítania, kým sa načítajú aktíva webu"
-    navigation_menu: "Určite, ktoré navigačné menu sa má použiť."
+    navigation_menu: "Ako hlavnú navigačnú ponuku na stránke môžete určiť bočný panel alebo rozbaľovaciu ponuku v záhlaví. Odporúča sa bočný panel."
     default_navigation_menu_categories: "Vybrané kategórie sa predvolene zobrazia v časti Kategórie navigačného menu."
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
     experimental_new_new_view_groups: 'EXPERIMENTÁLNE: Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte odkaz „Všetko“ na bočnom paneli.'
@@ -2529,6 +2529,7 @@ sk:
     glimmer_header_mode: "Kontrola, či sa použije nová implementácia hlavičky \"glimmer\". Predvolené nastavenie je 'auto', ktoré sa zapne automaticky, keď budú všetky vaše témy a doplnky pripravené. https://meta.discourse.org/t/296544"
     experimental_glimmer_topic_list_groups: "EXPERIMENTÁLNE: Povoľte novú implementáciu zoznamu tém \"glimmer\". Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
     experimental_form_templates: "EXPERIMENTÁLNE: Povoľte funkciu šablón formulárov. <b>Po povolení</b> spravujte šablóny na <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
+    admin_sidebar_enabled_groups: "Povolenie navigácie v bočnom paneli pre používateľské rozhranie správcu pre zadané skupiny, ktorá nahradí navigačné tlačidlá správcu na najvyššej úrovni."
     lazy_load_categories_groups: "EXPERIMENTÁLNE: Informácie o kategórii pomalého načítania len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
     experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTÁLNE: Povoľte nové rozbaľovacie okno hromadných akcií."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
@@ -2637,6 +2638,9 @@ sk:
       - "deaktivované"
       - "neaktívne"
       - "neaktivované"
+      navigation_menu:
+      - "bočný panel"
+      - "rozbaľovacia ponuka hlavičky"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

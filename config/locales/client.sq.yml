@@ -1187,13 +1187,13 @@ sq:
         bookmarks: "Nuk ka më tema të preferuara."
     topic_bulk_actions:
       close_topics:
-        name: "Mbyll temat"
+        name: "Mbyll"
       archive_topics:
-        name: "Arkivo temat"
-      unlist_topics:
-        name: "Hiq temat nga lista"
+        name: "Arkivoni"
+      move_messages_to_inbox:
+        name: "Lëviz në Inbox"
       delete_topics:
-        name: "Fshi temat"
+        name: "Fshij"
     topic:
       filter_to:
         one: "%{count} postim në temë"

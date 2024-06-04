@@ -2212,6 +2212,9 @@ es:
       - ""
       - "inactivo"
       - ""
+      navigation_menu:
+      - "barra lateral"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.ejemplo.com"
