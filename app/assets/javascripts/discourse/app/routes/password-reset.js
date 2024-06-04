@@ -5,10 +5,10 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { deepMerge } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend({
+export default class PasswordReset extends DiscourseRoute {
   titleToken() {
     return I18n.t("login.reset_password");
-  },
+  }
 
   model(params) {
     if (PreloadStore.get("password_reset")) {
@@ -16,7 +16,7 @@ export default DiscourseRoute.extend({
         deepMerge(params, json)
       );
     }
-  },
+  }
 
   afterModel(model) {
     // confirm token here so email clients who crawl URLs don't invalidate the link
@@ -26,5 +26,5 @@ export default DiscourseRoute.extend({
         dataType: "json",
       });
     }
-  },
-});
+  }
+}

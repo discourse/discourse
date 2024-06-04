@@ -586,7 +586,6 @@ ar:
     request_membership_pm:
       title: "طلب عضوية في @%{group_name}"
     request_accepted_pm:
-      title: "لقد تم قبولك في @%{group_name}"
       body: |
         تم قبول طلبك لدخول ⁨@%{group_name}⁩ وأصبحت الآن عضوًا.
   education:
@@ -1593,39 +1592,16 @@ ar:
         qtt_like: تسجيلات الإعجاب المتلقاة
       description: "أبرز 10 مستخدمين حصلوا على إعجابات من مجموعة واسعة من الأشخاص."
   dashboard:
-    group_email_credentials_warning: 'حدثت مشكلة في بيانات اعتماد البريد الإلكتروني للمجموعة <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. لن يتم إرسال أي رسائل بريد إلكتروني من صندوق الوارد الخاص بالمجموعة حتى تتم معالجة هذه المشكلة. %{error}'
-    rails_env_warning: "الخادم يعمل في وضع %{env}."
-    host_names_warning: "يستخدم ملف config/database.yml اسم المضيف الافتراضي localhost. حدِّثه لاستخدام اسم مضيف موقعك."
-    sidekiq_warning: 'Sidekiq ليس قيد التشغيل! يتم تنفيذ العديد من المهام، مثل إرسال الرسائل الإلكترونية، بشكلٍ غير متزامن من خلال sidekiq. يُرجى التأكد من وجود عملية sidekiq واحدة على الأقل قيد التشغيل. <a href="https://github.com/mperham/sidekiq" target="_blank">معرفة المزيد عن Sidekiq من هنا</a>.'
-    queue_size_warning: "عدد المهام في قائمة الانتظار هو %{queue_size}، وهذا رقم كبير. قد يكون ذلك مؤشرًا على وجود مشكلة في عمليات Sidekiq، أو قد تحتاج إضافة المزيد من عمال Sidekiq."
-    memory_warning: "يعمل الخادم بإجمالي ذاكرة أقل من 1 غ.ب. يوصى بتوفُّر 1 غ.ب من الذاكرة على الأقل."
-    google_oauth2_config_warning: 'تم إعداد الخادم للسماح بالاشتراك وتسجيل الدخول باستخدام Google OAuth2 (enable_google_oauth2_logins)، ولكن لم يتم تعيين معرِّف العميل والقيم السرية للعميل. انتقل إلى <a href="%{base_path}/admin/site_settings">إعدادات الموقع</a> وحدِّث الإعدادات. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">راجع هذا الدليل لمعرفة المزيد</a>.'
-    facebook_config_warning: 'تم إعداد الخادم للسماح بالاشتراك وتسجيل الدخول باستخدام Facebook (enable_facebook_logins)، ولكن لم يتم تعيين معرِّف العميل والقيم السرية للعميل. انتقل إلى <a href="%{base_path}/admin/site_settings">the إعدادات الموقع</a> وحدِّث الإعدادات. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">راجع هذا الدليل لمعرفة المزيد</a>.'
-    twitter_config_warning: 'تم إعداد الخادم للسماح بالاشتراك وتسجيل الدخول باستخدام Twitter (enable_twitter_logins)، ولكن لم يتم تعيين معرِّف العميل والقيم السرية للعميل. انتقل إلى <a href="%{base_path}/admin/site_settings">the إعدادات الموقع</a> وحدِّث الإعدادات. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">راجع هذا الدليل لمعرفة المزيد</a>.'
-    github_config_warning: 'تم إعداد الخادم للسماح بالاشتراك وتسجيل الدخول باستخدام GitHub (enable_github_logins)، ولكن لم يتم تعيين معرِّف العميل والقيم السرية للعميل. انتقل إلى <a href="%{base_path}/admin/site_settings">إعدادات الموقع</a> وحدِّث الإعدادات. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">راجع هذا الدليل لمعرفة المزيد</a>.'
-    s3_config_warning: 'تم إعداد الخادم لتحميل الملفات إلى S3، ولكن لم يتم تعيين أحد الإعدادات التالية على الأقل: s3_access_key_id أو s3_secret_access_key أو s3_use_iam_profile أو s3_upload_bucket. انتقل إلى <a href="%{base_path}/admin/site_settings">إعدادات الموقع</a> وحدِّث الإعدادات. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">راجع "طريقة إعداد تحميلات الصور إلى S3" لمعرفة المزيد</a>.'
-    s3_backup_config_warning: 'تم إعداد الخادم لتحميل النسخ الاحتياطية إلى S3، ولكن لم يتم تعيين أحد الإعدادات التالية على الأقل: s3_access_key_id أو s3_secret_access_key أو s3_use_iam_profile أو s3_backup_bucket. انتقل إلى <a href="%{base_path}/admin/site_settings">إعدادات الموقع</a> وحدِّث الإعدادات. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">راجع "طريقة إعداد تحميلات الصور إلى S3" لمعرفة المزيد</a>.'
-    s3_cdn_warning: 'تم إعداد الخادم لتحميل الملفات إلى S3، ولكن لم يتم إعداد شبكة توصيل المحتوى على S3. يمكن أن يؤدي ذلك إلى تكاليف باهظة لخدمة S3 وأداء أبطأ للموقع. <a href="https://meta.discourse.org/t/-/148916" target="_blank">راجع "استخدام مساحة تخزين الكائنات للتحميلات" لمعرفة المزيد</a>.'
-    image_magick_warning: 'تم إعداد الخادم لإنشاء صور مصغَّرة للصور الكبيرة، ولكن لم يتم تثبيت ImageMagick. ثبِّت ImageMagick باستخدام مدير الحزم المفضَّل لديك أو <a href="https://www.imagemagick.org/script/download.php" target="_blank">نزِّل أحدث إصدار</a>.'
-    failing_emails_warning: 'هناك %{num_failed_jobs} مهمة بريد إلكتروني فشلت. تحقَّق من app.yml وتأكَّد من صحة إعدادات خادم البريد. <a href="%{base_path}/sidekiq/retries" target="_blank">راجع المهام التي فشلت في Sidekiq</a>.'
-    subfolder_ends_in_slash: "إعداد المجلد الفرعي غير صحيح، تنتهي قيمة DISCOURSE_RELATIVE_URL_ROOT بشرطة مائلة."
-    outdated_translations_warning: "بعض عمليات استبدال الترجمة لديك قديمة. يُرجى التحقق من <a href='%{base_path}/admin/customize/site_texts?outdated=true'>تخصيصاتك النصية</a>."
-    email_polling_errored_recently:
-      zero: "نتج عن استقصاء تلقي الرسائل الإلكترونية %{count} خطأ في آخر 24 ساعة. راجع <a href='%{base_path}/logs' target='_blank'>السجلات</a> لمزيد من التفاصيل."
-      one: "نتج عن استقصاء تلقي الرسائل الإلكترونية خطأ واحد (%{count}) في آخر 24 ساعة. راجع <a href='%{base_path}/logs' target='_blank'>السجلات</a> لمزيد من التفاصيل."
-      two: "نتج عن استقصاء تلقي الرسائل الإلكترونية خطآن (%{count}) في آخر 24 ساعة. راجع <a href='%{base_path}/logs' target='_blank'>السجلات</a> لمزيد من التفاصيل."
-      few: "نتج عن استقصاء تلقي الرسائل الإلكترونية %{count} أخطاء في آخر 24 ساعة. راجع <a href='%{base_path}/logs' target='_blank'>السجلات</a> لمزيد من التفاصيل."
-      many: "نتج عن استقصاء تلقي الرسائل الإلكترونية %{count} خطأ في آخر 24 ساعة. راجع <a href='%{base_path}/logs' target='_blank'>السجلات</a> لمزيد من التفاصيل."
-      other: "نتج عن استقصاء تلقي الرسائل الإلكترونية %{count} خطأ في آخر 24 ساعة. راجع <a href='%{base_path}/logs' target='_blank'>السجلات</a> لمزيد من التفاصيل."
-    missing_mailgun_api_key: "تم إعداد الخادم لإرسال الرسائل الإلكترونية عبر Mailgun، لكنك لم تقدِّم مفتاح API المُستخدَم للتحقُّق من رسائل خطاف الويب."
-    bad_favicon_url: "فشل تحميل الرمز المفضَّل. تحقَّق من إعداد الرمز المفضَّل لديك في <a href='%{base_path}/admin/site_settings'>إعدادات الموقع</a>."
-    poll_pop3_timeout: "تنتهي مهلة الاتصال بخادم POP3. لا يمكن استرداد الرسائل الإلكترونية الواردة. يُرجى التحقُّق من <a href='%{base_path}/admin/site_settings/category/email'>إعدادات POP3</a> وموفِّر الخدمة."
-    poll_pop3_auth_error: "يفشل الاتصال بخادم POP3 بسبب خطأ في المصادقة. تحقَّق من <a href='%{base_path}/admin/site_settings/category/email'>إعدادات POP3</a> لديك."
-    force_https_warning: "يستخدم موقعك الإلكتروني SSL. ولكن لم يتم تفعيل `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` من إعدادات موقعك."
-    out_of_date_themes: "تتوفَّر تحديثات للسمات التالية:"
-    unreachable_themes: "لم نتمكن من التحقُّق من وجود تحديثات للسمات التالية:"
-    v3_analytics_deprecated: "يستخدم Discourse لديك حاليًا Google Analytics 3، والذي سيتوقف دعمه بعد يوليو 2023. <a href='https://meta.discourse.org/t/260498'>قم بالترقية إلى Google Analytics 4</a> الآن للاستمرار في تلقي رؤى وتحليلات قيمة لأداء موقعك الإلكتروني."
-    category_style_deprecated: "يستخدم Discourse الخاص بك حاليًا نمط فئة مهملًا، والذي ستتم إزالته قبل الإصدار التجريبي النهائي من Discourse 3.2. يُرجى الرجوع إلى <a href='https://meta.discourse.org/t/282441'>إعداد الموقع 'الانتقال إلى نمط فئة واحدة'</a> للحصول على تعليمات بشأن كيفية الحفاظ على نمط الفئة المحدَّد."
+    problem:
+      rails_env: "الخادم يعمل في وضع %{env}."
+      host_names: "يستخدم ملف config/database.yml اسم المضيف الافتراضي localhost. حدِّثه لاستخدام اسم مضيف موقعك."
+      queue_size: "عدد المهام في قائمة الانتظار هو %{queue_size}، وهذا رقم كبير. قد يكون ذلك مؤشرًا على وجود مشكلة في عمليات Sidekiq، أو قد تحتاج إضافة المزيد من عمال Sidekiq."
+      ram: "يعمل الخادم بإجمالي ذاكرة أقل من 1 غ.ب. يوصى بتوفُّر 1 غ.ب من الذاكرة على الأقل."
+      subfolder_ends_in_slash: "إعداد المجلد الفرعي غير صحيح، تنتهي قيمة DISCOURSE_RELATIVE_URL_ROOT بشرطة مائلة."
+      missing_mailgun_api_key: "تم إعداد الخادم لإرسال الرسائل الإلكترونية عبر Mailgun، لكنك لم تقدِّم مفتاح API المُستخدَم للتحقُّق من رسائل خطاف الويب."
+      out_of_date_themes: "تتوفَّر تحديثات للسمات التالية:"
+      unreachable_themes: "لم نتمكن من التحقُّق من وجود تحديثات للسمات التالية:"
+      google_analytics_version: "يستخدم Discourse لديك حاليًا Google Analytics 3، والذي سيتوقف دعمه بعد يوليو 2023. <a href='https://meta.discourse.org/t/260498'>قم بالترقية إلى Google Analytics 4</a> الآن للاستمرار في تلقي رؤى وتحليلات قيمة لأداء موقعك الإلكتروني."
   site_settings:
     allow_bulk_invite: "السماح بالدعوات الجماعية عن طريق تحميل ملف CSV"
     disabled: "متوقف"
@@ -1722,7 +1698,6 @@ ar:
     detailed_404: "يوفِّر مزيدًا من التفاصيل للمستخدمين بشأن سبب عدم تمكُّنهم من الوصول إلى موضوع معيَّن. ملاحظة: هذا الإعداد أقل أمانًا لأن المستخدمين سيعرفون إذا كان عنوان URL مرتبطًا بموضوع صالح."
     enforce_second_factor: "مطالبة المستخدمين بتفعيل المصادقة الثنائية قبل أن يتمكنوا من الوصول إلى واجهة مستخدم Discourse. حدِّد \"الكل\" لفرضها على جميع المستخدمين. حدِّد 'staff' لفرضها على المستخدمين من فريق العمل فقط. لا يؤثر هذا الإعداد على مصادقة API أو \"موفِّر DiscourseConnect\"."
     force_https: "فرض استخدام HTTPS فقط على الموقع. تحذير: لا تقم بتفعيل هذا الإعداد إلا بعد التأكد من أن HTTPS مُعد بالكامل ويعمل فى جميع أنحاء الموقع! هل تحقَّقت من شبكة توصيل المحتوى (CDN)، وعمليات تسجيل الدخول على جميع شبكات التواصل الاجتماعى، وأي شعارات أو تبعيات خارجية للتأكد من أنها جميعًا متوافقه مع HTTPS؟"
-    same_site_cookies: "استخدام ملفات تعريف ارتباط الموقع نفسه، فهي تقضي على جميع مؤشرات CSRF على المتصفحات المدعومة (Lax أو Strict). تحذير: سيعمل Strict فقط على المواقع التي تفرض تسجيل الدخول وتستخدم طريقة مصادقة خارجية."
     summary_score_threshold: "الحد الأدنى من النقاط المطلوبة لتضمين منشور في \"تلخيص هذا الموضوع\""
     summary_posts_required: "الحد الأدنى من عدد المنشورات في الموضوع قبل تفعيل \"تلخيص هذا الموضوع\". سيتم تطبيق التغييرات على هذا الإعداد بأثر رجعي في غضون أسبوع."
     summary_likes_required: "الحد الأدنى من عدد تسجيلات الإعجاب في الموضوع قبل تفعيل \"تلخيص هذا الموضوع\". سيتم تطبيق التغييرات على هذا الإعداد بأثر رجعي في غضون أسبوع."
@@ -3828,7 +3803,6 @@ ar:
 
         إذا كانت لديك أيي أسئلة، [فتواصل مع فريق العمل](%{base_url}/about).
     digest:
-      why: "ملخص موجز لرابط الموقع %{site_link} منذ زيارتك الأخيرة في %{last_seen_at}"
       since_last_visit: "منذ زيارتك الأخيرة"
       new_topics: "الموضوعات الجديدة"
       unread_notifications: "الإشعارات غير المقروءة"
@@ -3844,7 +3818,6 @@ ar:
       your_email_settings: "إعدادات بريدك الإلكتروني"
       click_here: "انقر هنا"
       from: "%{site_name}"
-      preheader: "ملخص موجز لزيارتك الأخيرة في %{last_seen_at}"
     forgot_password:
       title: "نسيت كلمة المرور"
       subject_template: "[%{email_prefix}] إعادة تعيين كلمة المرور"

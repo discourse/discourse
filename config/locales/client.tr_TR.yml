@@ -354,11 +354,20 @@ tr_TR:
       search_placeholder: "Yer imlerini ada, konu başlığına veya gönderi içeriğine göre arayın"
       search: "Ara"
       bookmark: "Yer İmi Ekle"
+      bulk:
+        select_all: "Tümünü Seç"
+        clear_all: "Tümünü Temizle"
+        selected_count:
+          one: "%{count} adet seçildi"
+          other: "%{count} adet seçildi"
       reminders:
         today_with_time: "bugün %{time}"
         tomorrow_with_time: "yarın %{time}"
         at_time: "%{date_time}"
         existing_reminder: "Bu yer imi için %{at_date_time} tarihine ayarlanmış bir anımsatıcınız var"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Yer İmini Sil"
     copy_codeblock:
       copied: "kopyalandı!"
       copy: "kodu panoya kopyala"
@@ -2179,6 +2188,8 @@ tr_TR:
         categories_admin_dropdown:
           title: "Kategorileri yönetin"
         bulk_select_topics_dropdown:
+          title: "Toplu Eylemler"
+        bulk_select_bookmarks_dropdown:
           title: "Toplu Eylemler"
     date_time_picker:
       from: Kimden
@@ -4356,7 +4367,7 @@ tr_TR:
       panels:
         forum:
           label: Forum
-      filter: "Filtrele"
+      filter: "Filtrele..."
       clear_filter: "Filtreyi temizle"
       no_results:
         title: "Sonuç yok"
@@ -4577,6 +4588,9 @@ tr_TR:
               label: Kategori
             include_subcategories:
               label: "Alt Kategorileri Dahil Et"
+      flags:
+        description: "Açıklama"
+        enabled: "Etkin mi?"
       groups:
         new:
           title: "Yeni Grup"
@@ -6060,6 +6074,7 @@ tr_TR:
         name: "Alan Adı"
         type: "Alan Türü"
         description: "Alan Açıklaması"
+        preferences: "Tercihler"
         save: "Kaydet"
         edit: "Düzenle"
         delete: "Sil"
@@ -6070,6 +6085,9 @@ tr_TR:
           title: "Kayıt sırasında gerekli"
           enabled: "gerekli"
           disabled: "gerekli değil"
+        requirement:
+          optional:
+            title: "İsteğe bağlı"
         editable:
           title: "Kayıttan sonra düzenlenebilir"
           enabled: "düzenlenebilir"

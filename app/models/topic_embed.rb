@@ -61,7 +61,7 @@ class TopicEmbed < ActiveRecord::Base
     if embed.blank?
       Topic.transaction do
         if eh = EmbeddableHost.record_for_url(url)
-          tags = eh.tags.presence || tags
+          tags = eh.tags.presence&.map(&:name) || tags
           user = eh.user.presence || user
         end
 

@@ -119,6 +119,8 @@ en_GB:
     admin:
       dashboard:
         exception_error: Sorry, an error occurred whilst executing the query
+      flags:
+        description: "Description"
       api:
         description: Description
         scopes:

@@ -354,11 +354,31 @@ de:
       search_placeholder: "Lesezeichen nach Namen, Thementitel oder Beitragsinhalt durchsuchen"
       search: "Suche"
       bookmark: "Lesezeichen"
+      bulk:
+        delete_completed: "Lesezeichen erfolgreich gelöscht."
+        reminders_cleared: "Lesezeichenerinnerungen erfolgreich gelöscht."
+        toggle: "Massenauswahl von Lesezeichen umschalten"
+        select_all: "Alle auswählen"
+        clear_all: "Alle löschen"
+        selected_count:
+          one: "%{count} ausgewählt"
+          other: "%{count} ausgewählt"
       reminders:
         today_with_time: "heute um %{time}"
         tomorrow_with_time: "morgen um %{time}"
         at_time: "am %{date_time}"
         existing_reminder: "Du wirst %{at_date_time} an dieses Lesezeichen erinnert."
+    bookmark_bulk_actions:
+      clear_reminders:
+        name: "Erinnerungen löschen"
+        description:
+          one: "Möchtest du die Erinnerung für dieses Lesezeichen wirklich löschen?"
+          other: "Möchtest du die Erinnerungen für diese <b>%{count}</b> Lesezeichen wirklich löschen?"
+      delete_bookmarks:
+        name: "Lesezeichen löschen"
+        description:
+          one: "Möchtest du dieses Lesezeichen wirklich löschen?"
+          other: "Möchtest du diese <b>%{count}</b> Lesezeichen wirklich löschen?"
     copy_codeblock:
       copied: "Kopiert!"
       copy: "Code in die Zwischenablage kopieren"
@@ -2196,6 +2216,8 @@ de:
           title: "Kategorien verwalten"
         bulk_select_topics_dropdown:
           title: "Massenoperationen"
+        bulk_select_bookmarks_dropdown:
+          title: "Massenoperationen"
     date_time_picker:
       from: Von
       to: An
@@ -2351,6 +2373,7 @@ de:
       modal_ok: "OK"
       modal_cancel: "Abbrechen"
       cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
+      create_message_error: "Entschuldige, es gab einen Fehler beim Erstellen der Nachricht. Bitte versuche es noch einmal."
       yourself_confirm:
         title: "Hast du vergessen, Empfänger hinzuzufügen?"
         body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
@@ -2420,7 +2443,7 @@ de:
       post_approved: "Dein Beitrag wurde genehmigt."
       reviewable_items: "Elemente, die eine Überprüfung benötigen"
       watching_first_post_label: "Neues Thema"
-      user_moved_post: "%{username} verschoben"
+      user_moved_post: "%{username} verschob"
       mentioned: "<span>%{username}</span> %{description}"
       group_mentioned: "<span>%{username}</span> %{description}"
       quoted: "<span>%{username}</span> %{description}"
@@ -3453,6 +3476,7 @@ de:
           illegal: "Du hast dies als illegal gemeldet"
           notify_moderators: "Du hast dies den Moderatoren gemeldet"
           notify_user: "Du hast diesem Benutzer eine Nachricht gesendet"
+          custom: "Du hast dieses Thema als %{custom} gemeldet."
       delete:
         confirm:
           one: "Möchtest du wirklich diesen Beitrag löschen?"
@@ -4409,7 +4433,7 @@ de:
       panels:
         forum:
           label: Forum
-      filter: "Filter"
+      filter: "Filter..."
       clear_filter: "Filter löschen"
       no_results:
         title: "Keine Ergebnisse"
@@ -4631,6 +4655,9 @@ de:
               label: Kategorie
             include_subcategories:
               label: "Unterkategorien einschließen"
+      flags:
+        description: "Beschreibung"
+        enabled: "Aktiviert?"
       groups:
         new:
           title: "Neue Gruppe"
@@ -5013,6 +5040,7 @@ de:
         is_enabled: "J"
         not_enabled: "N"
         change_settings_short: "Einstellungen"
+        settings_disabled: "Dieses Plugin kann nur aktiviert oder deaktiviert werden, es hat keine zusätzlichen Einstellungen."
         howto: "Wie installiere ich Plug-ins?"
         official: "Offizielles Discourse-Plug-in"
         broken_route: "Link zu „%{name}“ kann nicht konfiguriert werden. Vergewissere dich, dass Werbeblocker deaktiviert sind, und versuche, die Seite neu zu laden."
@@ -6137,6 +6165,7 @@ de:
         name: "Feldname"
         type: "Feldtyp"
         description: "Feldbeschreibung"
+        preferences: "Einstellungen"
         save: "Speichern"
         edit: "Bearbeiten"
         delete: "Löschen"
@@ -6147,6 +6176,13 @@ de:
           title: "Bei Registrierung erforderlich"
           enabled: "erforderlich"
           disabled: "nicht erforderlich"
+        requirement:
+          title: "Felderfordernis"
+          optional:
+            title: "Optional"
+          on_signup:
+            title: "Bei der Anmeldung"
+            description: "Wenn sich neue Benutzer anmelden, müssen sie dieses Feld ausfüllen. Bestehende Benutzer sind nicht betroffen."
         editable:
           title: "Nach der Registrierung editierbar"
           enabled: "editierbar"

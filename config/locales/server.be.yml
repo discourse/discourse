@@ -880,7 +880,8 @@ be:
         user: Карыстальнік
         qtt_like: атрыманыя перавагі
   dashboard:
-    rails_env_warning: "Сервер працуе ў рэжыме %{env}."
+    problem:
+      rails_env: "Сервер працуе ў рэжыме %{env}."
   site_settings:
     disabled: "адключана"
     search_recent_posts_size: "Колькі апошніх паведамленняў захваных у індэксе"
@@ -1830,7 +1831,6 @@ be:
       text_body_template: |
         Вы проста спрабавалі стварыць уліковы запіс на% {SITE_NAME}, або спрабавалі змяніць адрас электроннай пошты ўліковага запісу на% {адрас электроннай пошты}. Аднак уліковы запіс ўжо існуе для% {} электроннай пошты.Калі вы забылі свой пароль, [скіньце яго] (% {base_url}
     digest:
-      why: "Кароткі выклад %{site_link}з моманту вашага апошняга наведвання%{last_seen_at} "
       since_last_visit: "З моманту Вашага апошняга візіту"
       new_topics: "новыя тэмы"
       unread_notifications: "непрачытаныя Апавяшчэнні"
@@ -1844,7 +1844,6 @@ be:
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. Change %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       your_email_settings: "your email settings"
       click_here: "click here"
-      preheader: "A brief summary since your last visit on %{last_seen_at}"
     forgot_password:
       title: "Забыліся на пароль"
       subject_template: "[%{email_prefix}] Скінуць пароль"

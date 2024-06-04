@@ -8,14 +8,15 @@ import Site from "discourse/models/site";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend({
-  historyStore: service(),
-  templateName: "user/bookmarks",
+export default class UserActivityBookmarks extends DiscourseRoute {
+  @service historyStore;
 
-  queryParams: {
+  templateName = "user/bookmarks";
+
+  queryParams = {
     acting_username: { refreshModel: true },
     q: { refreshModel: true },
-  },
+  };
 
   model(params) {
     const controller = this.controllerFor("user-activity-bookmarks");
@@ -56,16 +57,16 @@ export default DiscourseRoute.extend({
       })
       .catch(() => controller.set("permissionDenied", true))
       .finally(() => controller.set("loading", false));
-  },
+  }
 
   titleToken() {
     return I18n.t("user_action_groups.3");
-  },
+  }
 
   @action
   triggerRefresh() {
     this.refresh();
-  },
+  }
 
   _loadBookmarks(params) {
     let url = `/u/${this.modelFor("user").username}/bookmarks.json`;
@@ -75,5 +76,5 @@ export default DiscourseRoute.extend({
     }
 
     return ajax(url);
-  },
-});
+  }
+}

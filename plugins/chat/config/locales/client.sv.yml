@@ -100,7 +100,6 @@ sv:
       channels_list_popup:
         browse: "Bläddra bland kanaler"
         create: "Ny kanal"
-      click_to_join: "Klicka här för att se tillgängliga kanaler."
       close: "Stäng"
       remove: "Ta bort"
       collapse: "Komprimera chattruta"
@@ -228,8 +227,6 @@ sv:
         header: "Chatthuvud"
         composer: "Chattkompositör"
         channels_list: "Lista över chattkanaler"
-      no_direct_message_channels: "Du har inte gått med i några direktmeddelandekanaler."
-      no_public_channels: "Du har inte gått med i några kanaler."
       kicked_from_channel: "Du har inte längre tillgång till den här kanalen."
       only_chat_push_notifications:
         title: "Skicka bara push-meddelanden för chatt"

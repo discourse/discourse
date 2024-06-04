@@ -99,8 +99,8 @@ export default Controller.extend({
 
     // Always show sidebar for admin if user can see the admin sidbar
     if (
-      this.router.currentRouteName.startsWith("admin") &&
-      this.currentUser?.use_admin_sidebar
+      this.sidebarState.isForcingAdminSidebar &&
+      this.sidebarState.currentUserUsingAdminSidebar
     ) {
       return true;
     }

@@ -1,79 +1,85 @@
+@mixin bordered-horizontal-nav($border-width) {
+  li {
+    flex: 1 1 auto;
+    margin: 0;
+    display: flex;
+
+    a {
+      box-sizing: border-box;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      border-bottom: var(--user-navigation__border-width) solid transparent;
+      padding: calc(0.75em + var(--user-navigation__border-width)) 0.5em 0.75em;
+      transition: color 0.25s;
+
+      @include breakpoint(extra-large) {
+        font-size: var(--font-0);
+      }
+
+      span {
+        line-height: normal;
+        @include ellipsis;
+      }
+
+      &:hover,
+      &:focus {
+        background: transparent;
+        color: var(--quaternary);
+        border-bottom: var(--user-navigation__border-width) solid
+          var(--quaternary-low);
+      }
+
+      &.active {
+        color: var(--quaternary);
+        background: transparent;
+        border-bottom: var(--user-navigation__border-width) solid
+          var(--quaternary);
+      }
+    }
+  }
+}
+
+@mixin bordered-nav-pills {
+  width: 100%;
+  margin: 0;
+  .d-icon {
+    font-size: var(--font-down-1);
+  }
+
+  &.main-nav {
+    @include breakpoint(medium) {
+      li {
+        .d-icon {
+          font-size: var(--font-up-1);
+          margin: 0;
+        }
+        span {
+          display: none;
+        }
+      }
+    }
+
+    .has-sidebar-page & {
+      @include breakpoint(large) {
+        span {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
 .new-user-wrapper {
   .user-navigation {
     --user-navigation__border-width: 4px;
     border-bottom: 1px solid var(--primary-low);
 
     .nav-pills {
-      width: 100%;
-      margin: 0;
-      .d-icon {
-        font-size: var(--font-down-1);
-      }
-
-      &.main-nav {
-        @include breakpoint(medium) {
-          li {
-            .d-icon {
-              font-size: var(--font-up-1);
-              margin: 0;
-            }
-            span {
-              display: none;
-            }
-          }
-        }
-
-        .has-sidebar-page & {
-          @include breakpoint(large) {
-            span {
-              display: none;
-            }
-          }
-        }
-      }
-
-      li {
-        flex: 1 1 auto;
-        margin: 0;
-        display: flex;
-
-        a {
-          box-sizing: border-box;
-          width: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: relative;
-          border-bottom: var(--user-navigation__border-width) solid transparent;
-          padding: calc(0.75em + var(--user-navigation__border-width)) 0.5em
-            0.75em;
-          transition: color 0.25s;
-
-          @include breakpoint(extra-large) {
-            font-size: var(--font-0);
-          }
-
-          span {
-            line-height: normal;
-            @include ellipsis;
-          }
-
-          &:hover,
-          &:focus {
-            background: transparent;
-            color: var(--quaternary);
-            border-bottom: var(--user-navigation__border-width) solid
-              var(--quaternary-low);
-          }
-
-          &.active {
-            color: var(--quaternary);
-            background: transparent;
-            border-bottom: var(--user-navigation__border-width) solid
-              var(--quaternary);
-          }
-        }
-      }
+      @include bordered-nav-pills;
+      @include bordered-horizontal-nav(var(--user-navigation__border-width));
     }
   }
 

@@ -299,11 +299,17 @@ da:
       search_placeholder: "Søg i bogmærker efter navn, emnetitel eller indlægs indhold"
       search: "Søg"
       bookmark: "Bogmærk"
+      bulk:
+        select_all: "Vælg Alle"
+        clear_all: "Ryd Alle"
       reminders:
         today_with_time: "i dag kl. %{time}"
         tomorrow_with_time: "i morgen kl. %{time}"
         at_time: "kl. %{date_time}"
         existing_reminder: "Du har en påmindelse sat for dette bogmærke, som vil blive sendt %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Slet Bogmærke"
     copy_codeblock:
       copied: "kopieret!"
       copy: "kopier kode til udklipsholder"
@@ -1889,6 +1895,8 @@ da:
         categories_admin_dropdown:
           title: "Administrer kategorier"
         bulk_select_topics_dropdown:
+          title: "Handlinger på flere indlæg"
+        bulk_select_bookmarks_dropdown:
           title: "Handlinger på flere indlæg"
     date_time_picker:
       from: Fra
@@ -3696,7 +3704,7 @@ da:
       panels:
         forum:
           label: Forum
-      filter: "Filter"
+      filter: "Filter..."
     until: "Indtil:"
     form_templates:
       upload_field:
@@ -3823,6 +3831,9 @@ da:
               label: Kategori
             include_subcategories:
               label: "Inkludér Underkategorier"
+      flags:
+        description: "Beskrivelse"
+        enabled: "Aktiveret?"
       groups:
         new:
           title: "Ny Gruppe"
@@ -5058,6 +5069,7 @@ da:
         name: "Feltnavn"
         type: "Felttype"
         description: "Feltbeskrivelse"
+        preferences: "Indstillinger"
         save: "Gem"
         edit: "Ret"
         delete: "Slet"
@@ -5068,6 +5080,9 @@ da:
           title: "Krævet ved registrering"
           enabled: "krævet"
           disabled: "ikke krævet"
+        requirement:
+          optional:
+            title: "Valgfri"
         editable:
           title: "Kan rettes efter registrering"
           enabled: "redigerbar"

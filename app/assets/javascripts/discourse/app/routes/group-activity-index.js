@@ -1,8 +1,8 @@
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
 
-export default Route.extend({
-  router: service(),
+export default class GroupActivityIndex extends Route {
+  @service router;
 
   beforeModel() {
     const group = this.modelFor("group");
@@ -11,5 +11,5 @@ export default Route.extend({
     } else {
       this.router.transitionTo("group.activity.mentions");
     }
-  },
-});
+  }
+}

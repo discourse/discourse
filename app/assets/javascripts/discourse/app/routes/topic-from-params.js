@@ -8,8 +8,8 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { isTesting } from "discourse-common/config/environment";
 
 // This route is used for retrieving a topic based on params
-export default DiscourseRoute.extend({
-  composer: service(),
+export default class TopicFromParams extends DiscourseRoute {
+  @service composer;
 
   // Avoid default model hook
   model(params) {
@@ -36,7 +36,7 @@ export default DiscourseRoute.extend({
         params._loading_error = true;
         return params;
       });
-  },
+  }
 
   afterModel() {
     const topic = this.modelFor("topic");
@@ -44,12 +44,12 @@ export default DiscourseRoute.extend({
     if (topic.isPrivateMessage && topic.suggested_topics) {
       this.pmTopicTrackingState.startTracking();
     }
-  },
+  }
 
   deactivate() {
-    this._super(...arguments);
+    super.deactivate(...arguments);
     this.controllerFor("topic").unsubscribe();
-  },
+  }
 
   setupController(controller, params, { _discourse_anchor }) {
     // Don't do anything else if we couldn't load
@@ -115,7 +115,7 @@ export default DiscourseRoute.extend({
         topic,
       });
     }
-  },
+  }
 
   @action
   willTransition() {
@@ -124,5 +124,5 @@ export default DiscourseRoute.extend({
     // NOTE: omitting this return can break the back button when transitioning quickly between
     // topics and the latest page.
     return true;
-  },
-});
+  }
+}

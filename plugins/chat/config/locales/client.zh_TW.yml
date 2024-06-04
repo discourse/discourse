@@ -98,6 +98,7 @@ zh_TW:
         summarize: "總結"
         since:
           other: "前 %{count} 小時"
+      no_public_channels_cta: "瀏覽頻道"
       remove_upload: "移除檔案"
       react: "用表情符號反應"
       reply: "回覆"

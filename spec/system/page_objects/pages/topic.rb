@@ -244,6 +244,10 @@ module PageObjects
         find(".modal.convert-to-public-topic")
       end
 
+      def open_flag_topic_modal
+        find(".flag-topic").click
+      end
+
       private
 
       def within_post(post)

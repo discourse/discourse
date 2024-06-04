@@ -9,9 +9,11 @@ export function setNotificationsLimit(newLimit) {
   limit = newLimit;
 }
 
-export default DiscourseRoute.extend(ViewingActionType, {
-  controllerName: "user-notifications",
-  queryParams: { filter: { refreshModel: true } },
+export default class UserNotifications extends DiscourseRoute.extend(
+  ViewingActionType
+) {
+  controllerName = "user-notifications";
+  queryParams = { filter: { refreshModel: true } };
 
   model(params) {
     const username = this.modelFor("user").get("username");
@@ -26,15 +28,15 @@ export default DiscourseRoute.extend(ViewingActionType, {
         limit,
       });
     }
-  },
+  }
 
   setupController(controller) {
-    this._super(...arguments);
+    super.setupController(...arguments);
     controller.set("user", this.modelFor("user"));
     this.viewingActionType(-1);
-  },
+  }
 
   titleToken() {
     return I18n.t("user.notifications");
-  },
-});
+  }
+}

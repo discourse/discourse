@@ -407,11 +407,22 @@ ru:
       search_placeholder: "Поиск закладок по имени, названию темы или по содержанию сообщения"
       search: "Поиск"
       bookmark: "Закладка"
+      bulk:
+        select_all: "Выбрать всё"
+        clear_all: "Сбросить всё"
+        selected_count:
+          one: "Выбрано %{count}"
+          few: "Выбрано %{count}"
+          many: "Выбрано %{count}"
+          other: "Выбрано %{count}"
       reminders:
         today_with_time: "сегодня в %{time}"
         tomorrow_with_time: "завтра в %{time}"
         at_time: "%{date_time}"
         existing_reminder: "Для этой закладки уже настроено напоминание, которое будет отправлено %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Удалить закладку"
     copy_codeblock:
       copied: "скопировано!"
       copy: "скопировать код в буфер обмена"
@@ -2346,6 +2357,8 @@ ru:
         categories_admin_dropdown:
           title: "Управление категориями"
         bulk_select_topics_dropdown:
+          title: "Массовые действия"
+        bulk_select_bookmarks_dropdown:
           title: "Массовые действия"
     date_time_picker:
       from: От
@@ -4714,7 +4727,7 @@ ru:
       panels:
         forum:
           label: Форум
-      filter: "Фильтр"
+      filter: "Фильтр..."
       no_results:
         title: "Нет результатов"
     welcome_topic_banner:
@@ -4939,6 +4952,9 @@ ru:
               label: Категория
             include_subcategories:
               label: "Включая подкатегории"
+      flags:
+        description: "Описание"
+        enabled: "Включён?"
       groups:
         new:
           title: "Новая группа"
@@ -6424,6 +6440,7 @@ ru:
         name: "Название поля"
         type: "Тип поля"
         description: "Описание поля"
+        preferences: "Настройки"
         save: "Сохранить"
         edit: "Изменить"
         delete: "Удалить"
@@ -6434,6 +6451,9 @@ ru:
           title: "Обязательное при регистрации"
           enabled: "Обязательное"
           disabled: "Необязательное"
+        requirement:
+          optional:
+            title: "Опционально"
         editable:
           title: "Редактируемое после регистрации"
           enabled: "Редактируемое"

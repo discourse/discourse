@@ -350,11 +350,20 @@ fr:
       search_placeholder: "Rechercher des signets par nom, titre de sujet ou contenu de message"
       search: "Recherche"
       bookmark: "Signet"
+      bulk:
+        select_all: "Tout sélectionner"
+        clear_all: "Tout supprimer"
+        selected_count:
+          one: "%{count} sélectionné"
+          other: "%{count} sélectionné"
       reminders:
         today_with_time: "aujourd'hui à %{time}"
         tomorrow_with_time: "demain à %{time}"
         at_time: "le %{date_time}"
         existing_reminder: "Vous avez configuré un rappel pour ce signet qui sera envoyé %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Supprimer le signet"
     copy_codeblock:
       copied: "copié !"
       copy: "copier le code dans le presse-papiers"
@@ -2169,6 +2178,8 @@ fr:
         categories_admin_dropdown:
           title: "Gérer les catégories"
         bulk_select_topics_dropdown:
+          title: "Actions sur la sélection"
+        bulk_select_bookmarks_dropdown:
           title: "Actions sur la sélection"
     date_time_picker:
       from: De
@@ -4331,7 +4342,7 @@ fr:
       panels:
         forum:
           label: Forum
-      filter: "Filtrer"
+      filter: "Filtrer ..."
       no_results:
         title: "Aucun résultat"
     welcome_topic_banner:
@@ -4549,6 +4560,9 @@ fr:
               label: Catégorie
             include_subcategories:
               label: "Inclure les sous-catégories"
+      flags:
+        description: "Description"
+        enabled: "Activée ?"
       groups:
         new:
           title: "Nouveau groupe"
@@ -6001,6 +6015,7 @@ fr:
         name: "Nom du champ"
         type: "Type du champ"
         description: "Description du champ"
+        preferences: "Préférences"
         save: "Enregistrer"
         edit: "Modifier"
         delete: "Supprimer"
@@ -6011,6 +6026,9 @@ fr:
           title: "Obligatoire à l'inscription "
           enabled: "obligatoire"
           disabled: "facultatif"
+        requirement:
+          optional:
+            title: "Facultatif"
         editable:
           title: "Modifiable après l'inscription "
           enabled: "modifiable"

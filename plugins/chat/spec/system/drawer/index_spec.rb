@@ -15,6 +15,7 @@ RSpec.describe "Drawer - index", type: :system do
     row = PageObjects::Components::Chat::ChannelRow.new(channel.id)
 
     drawer_page.visit_index
+    drawer_page.click_direct_messages
 
     expect(row).to exist
 
@@ -33,6 +34,7 @@ RSpec.describe "Drawer - index", type: :system do
     row = PageObjects::Components::Chat::ChannelRow.new(channel.id)
 
     drawer_page.visit_index
+    drawer_page.click_direct_messages
 
     expect(row).to exist
 

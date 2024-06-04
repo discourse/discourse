@@ -414,7 +414,6 @@ da:
     request_membership_pm:
       title: "Anmodning om medlemskab af @%{group_name}"
     request_accepted_pm:
-      title: "Du er blevet accepteret på @%{group_name}"
       body: |
         Din anmodning om at blive en del af @%{group_name} er blevet accepteret, og du er nu medlem.
   education:
@@ -1222,32 +1221,16 @@ da:
         qtt_like: Likes modtaget
       description: "Top 10 over brugere, der har fået 'Synes godt om' fra en lang række personer."
   dashboard:
-    rails_env_warning: "Din server kører i %{env}-tilstand."
-    host_names_warning: "Din config/database.yml fil bruger standardnavnet localhost som værtsnavn. Opdatér den med webstedets værtsnavn."
-    sidekiq_warning: 'Sidekiq kører ikke. Mange opgaver, som f.eks. udsendelse af e-mails, afvikles asynkront af sidekiq. Du skal sikre dig at der kører mindst én sidekiq-proces. <a href="https://github.com/mperham/sidekiq" target="_blank">Læs mere om Sidekiq her</a>.'
-    queue_size_warning: "Antallet af job i kø er %{queue_size}, hvilket er højt. Dette kunne indikere at der er et problem med Sidekiq processerne, eller at du kan være nødt til at tilføre flere Sidekiq arbejder-resurser."
-    memory_warning: "Din server kører med mindre end 1 GB samlet hukommelse. Det anbefales at have mindst 1 GB hukommelse."
-    google_oauth2_config_warning: 'Serveren er konfigureret til at tillade tilmelding og login med Google OAuth2 (enable_google_oauth2_logins), men klient-id''et og klientens hemmelige værdier er ikke indstillet. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Se denne vejledning for at lære mere</a>.'
-    facebook_config_warning: 'Serveren er konfigureret til at tillade tilmelding og login med Google OAuth2 (enable_facebook_logins), men app-id''et og den hemmelige værdi er ikke indstillet. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Se denne vejledning for at lære mere</a>.'
-    twitter_config_warning: 'Serveren er konfigureret til at tillade tilmelding og login med Twitter (enable_twitter_logins), men nøgle- og hemmelige værdier er ikke indstillet. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Se denne vejledning for at lære mere</a>.'
-    github_config_warning: 'Serveren er konfigureret til at tillade tilmelding og login med GitHub (enable_github_logins), men klient-id og hemmelig værdie er ikke indstillet. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Se denne vejledning for at lære mere</a>.'
-    s3_config_warning: 'Serveren er konfigureret til at overføre filer til S3, men mindst en af følgende indstillinger er ikke indstillet: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile eller s3_upload_bucket. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "Sådan konfigureres overførsel af billeder til S3?" for at lære mere</a>.'
-    s3_backup_config_warning: 'Serveren er konfigureret til at overføre sikkerhedskopier til S3, men mindst en af følgende indstillinger er ikke indstillet: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile eller s3_backup_bucket. Gå til <a href="%{base_path}/admin/site_settings">Webstedsindstillinger</a> og opdater indstillingerne. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "Sådan konfigureres overførsel af billeder til S3?" for at lære mere</a>.'
-    s3_cdn_warning: 'Serveren er konfigureret til at overføre filer til S3, men der er ingen S3 CDN konfigureret. Dette kan føre til dyre S3-omkostninger og langsommere webstedsydelse. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Se "Brug af objektlagring til overførsler" for at lære mere</a>.'
-    image_magick_warning: 'Serveren er konfigureret til at oprette miniaturebilleder af store billeder, men ImageMagick er ikke installeret. Installer ImageMagick hjælp af din foretrukne pakkehåndtering eller <a href="https://www.imagemagick.org/script/download.php" target="_blank">hent den nyeste version</a>.'
-    failing_emails_warning: 'Der er %{num_failed_jobs} e-mail-job(s), der mislykkedes. Tjek din app.yml, og sørg for, at mailserverindstillingerne er korrekte. <a href="%{base_path}/sidekiq/retries" target="_blank">Se de mislykkede job i Sidekiq</a>.'
-    subfolder_ends_in_slash: "Din undermappe opsætning er forkert; DISCOURSE_RELATIVE_URL_ROOT ender med en skråstreg."
-    email_polling_errored_recently:
-      one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='%{base_path}/logs' target='_blank'>the logs</a> for detaljer."
-      other: "Email afstemning har afstedkommet %{count} fejl i de seneste 24 timer. Se venligst <a href='%{base_path}/logs' target='_blank'>the logs</a> for detaljer."
-    missing_mailgun_api_key: "Serveren er konfigureret til at sende e-mails via Mailgun, men du har ikke angivet en API-nøgle, der bruges til at bekræfte webhook-meddelelserne."
-    bad_favicon_url: "Favicon ikonet kunne ikke indlæses. Kontroller din favicon-indstilling i <a href='%{base_path}/admin/site_settings'>Webstedsindstillinger</a>."
-    poll_pop3_timeout: "Forbindelsen til POP3-serveren udløber. Indgående e-mail kunne ikke hentes. Kontroller dine <a href='%{base_path}/admin/site_settings/category/email'>POP3-indstillinger</a> og tjenesteudbyder."
-    poll_pop3_auth_error: "Forbindelsen til POP3-serveren mislykkes med en godkendelsesfejl. Kontroller dine <a href='%{base_path}/admin/site_settings/category/email'>POP3-indstillinger</a>."
-    force_https_warning: "Dit websted bruger SSL. Men '<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>' er endnu ikke aktiveret i dine webstedsindstillinger."
-    out_of_date_themes: "Opdateringer er tilgængelige for følgende temaer:"
-    unreachable_themes: "Vi kunne ikke tjekke for opdateringer til følgende temaer:"
-    v3_analytics_deprecated: "Din Discourse bruger i øjeblikket Google Analytics 3, som ikke længere vil blive understøttet efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Opgrader til Google Analytics 4</a> nu for fortsat at modtage værdifulde indsigter og analyser af dit websteds ydeevne."
+    problem:
+      rails_env: "Din server kører i %{env}-tilstand."
+      host_names: "Din config/database.yml fil bruger standardnavnet localhost som værtsnavn. Opdatér den med webstedets værtsnavn."
+      queue_size: "Antallet af job i kø er %{queue_size}, hvilket er højt. Dette kunne indikere at der er et problem med Sidekiq processerne, eller at du kan være nødt til at tilføre flere Sidekiq arbejder-resurser."
+      ram: "Din server kører med mindre end 1 GB samlet hukommelse. Det anbefales at have mindst 1 GB hukommelse."
+      subfolder_ends_in_slash: "Din undermappe opsætning er forkert; DISCOURSE_RELATIVE_URL_ROOT ender med en skråstreg."
+      missing_mailgun_api_key: "Serveren er konfigureret til at sende e-mails via Mailgun, men du har ikke angivet en API-nøgle, der bruges til at bekræfte webhook-meddelelserne."
+      out_of_date_themes: "Opdateringer er tilgængelige for følgende temaer:"
+      unreachable_themes: "Vi kunne ikke tjekke for opdateringer til følgende temaer:"
+      google_analytics_version: "Din Discourse bruger i øjeblikket Google Analytics 3, som ikke længere vil blive understøttet efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Opgrader til Google Analytics 4</a> nu for fortsat at modtage værdifulde indsigter og analyser af dit websteds ydeevne."
   site_settings:
     disabled: "deaktiveret"
     display_local_time_in_user_card: "Vis den lokale tid baseret på en brugers tidszone, når deres brugerkort åbnes."
@@ -2594,7 +2577,6 @@ da:
 
         Hvis du har spørgsmål, [kontakt vores venlige personale](%{base_url}/about).
     digest:
-      why: "Et kort resumé af %{site_link} siden dit sidste besøg %{last_seen_at}"
       since_last_visit: "Siden dit sidste besøg"
       new_topics: "Nye Emner"
       unread_notifications: "Ulæste beskeder"
@@ -2608,7 +2590,6 @@ da:
       your_email_settings: "dine e-mail-indstillinger"
       click_here: "klik her"
       from: "%{site_name}"
-      preheader: "Et kort resume siden de sidste besøg %{last_seen_at}"
     forgot_password:
       title: "Glemt adgangskode"
       subject_template: "[%{email_prefix}] Nulstil adgangskode"

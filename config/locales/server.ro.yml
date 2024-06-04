@@ -867,19 +867,13 @@ ro:
         user: Utilizator
         qtt_like: Aprecieri primite
   dashboard:
-    twitter_login_warning: 'Conectarea la Twitter pare să nu funcționeze în acest moment. Verifică datele de conectare în <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">setările site-ului</a>.'
-    rails_env_warning: "Serverul funcționează în modul %{env}."
-    host_names_warning: "Fișierul config/database.yml folosește numele implicit al localhost. Actualizează pentru a folosi numele de gazdă al site-ului."
-    sidekiq_warning: 'Sidekiq nu este pornit. Multe acțiuni, cum ar fi trimiterea de emailuri, sunt executate asincron de către sidekiq. Asigură-te că măcar un proces din sidekiq este pornit. <a href="https://github.com/mperham/sidekiq" target="_blank"> Citește despre Sidekiq aici</a>.'
-    queue_size_warning: "Numărul de sarcini aflate în lista de așteptare este de %{queue_size}, ceea ce e mult. Asta poate indica o problemă cu procesul(ele) Sidekiq, sau că e necesar să adaugi mai multi Sidekiq workers."
-    memory_warning: "Serverul tău lucrează cu mai puțin de 1 GB memorie. Se recomandă cel puțin 1 GB memorie."
-    subfolder_ends_in_slash: "Setările subfolderului sunt incorecte; DISCOURSE_RELATIVE_URL_ROOT se termină cu slash."
-    email_polling_errored_recently:
-      one: "Email polling a generat o eroare în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
-      few: "Email polling a generat %{count} erori în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
-      other: "Retragerea de emailuri generat %{count} de erori în ultimele 24 de ore. Vizualizează <a href='%{base_path}/logs' target='_blank'>rapoartele</a> pentru mai multe detalii."
-    poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
-    poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a>."
+    problem:
+      twitter_login: 'Conectarea la Twitter pare să nu funcționeze în acest moment. Verifică datele de conectare în <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">setările site-ului</a>.'
+      rails_env: "Serverul funcționează în modul %{env}."
+      host_names: "Fișierul config/database.yml folosește numele implicit al localhost. Actualizează pentru a folosi numele de gazdă al site-ului."
+      queue_size: "Numărul de sarcini aflate în lista de așteptare este de %{queue_size}, ceea ce e mult. Asta poate indica o problemă cu procesul(ele) Sidekiq, sau că e necesar să adaugi mai multi Sidekiq workers."
+      ram: "Serverul tău lucrează cu mai puțin de 1 GB memorie. Se recomandă cel puțin 1 GB memorie."
+      subfolder_ends_in_slash: "Setările subfolderului sunt incorecte; DISCOURSE_RELATIVE_URL_ROOT se termină cu slash."
     back_from_logster_text: "Înapoi la site"
   site_settings:
     disabled: "dezactivat"
@@ -950,7 +944,7 @@ ro:
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
     log_out_strict: "La ieșire, închide TOATE sesiunile pentru utilizator, pe toate dispozitivele."
     new_version_emails: "Trimite un email la adresa contact_email când o nouă versiune de Discourse este disponibilă."
-    include_in_discourse_discover: "Permite CDCK, Inc. („Discourse”) să prezinte această comunitate pe <a href='https://www.discourse.org/discover'>pagina Discover</a> și în materialele de marketing Discourse. Procedând astfel, vei partaja datele necesare pentru ca site-ul tău să fie inclus în serviciu. Te rugăm să reții că promovarea comunităților este la discreția Discourse."
+    include_in_discourse_discover: "Permite CDCK, Inc. („Discourse”) să prezinte această comunitate pe <a href='https://discover.discourse.org' target='_blank'>pagina Discover</a> și în materialele de marketing Discourse. Procedând astfel, vei partaja datele necesare pentru ca site-ul tău să fie inclus în serviciu. Te rugăm să reții că promovarea comunităților este la discreția Discourse."
     invite_expiry_days: "Cât timp sunt valabile cheile de invitație ale utilizatorilor, în zile"
     login_required: "Cere autentificare pentru a citi conținutul acestui site, blochează accesul anonim."
     block_common_passwords: "Nu permite parole ce sunt printre cele 10,000 cele mai cunoscute parole."
@@ -1690,7 +1684,6 @@ ro:
       title: "Autentificarea în doi pași (2FA) este dezactivată"
       subject_template: "[%{email_prefix}] Autentificare în doi pași (2FA) dezactivată"
     digest:
-      why: "Un rezumat scurt al %{site_link} de la ultima ta vizită din %{last_seen_at}."
       since_last_visit: "De la ultima ta vizită"
       new_topics: "Subiecte noi"
       unread_notifications: "Notificări necitite"
@@ -1702,7 +1695,6 @@ ro:
       unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Poți schimba %{email_preferences_link} sau, pentru a te dezabona, %{unsubscribe_link}"
       your_email_settings: "setările de email"
       click_here: "click aici"
-      preheader: "Un scurt rezumat de la ultima ta vizită din %{last_seen_at}"
     forgot_password:
       title: "Parolă uitată"
       subject_template: "[%{email_prefix}] Resetare parolă"

@@ -309,11 +309,17 @@ fa_IR:
       search_placeholder: "جستجو در نشانک‌ها بر اساس نام، عنوان موضوع یا محتوای نوشته"
       search: "جستجو"
       bookmark: "نشانک"
+      bulk:
+        select_all: "انتخاب همه"
+        clear_all: "پاکسازی همه"
       reminders:
         today_with_time: "امروز در %{time}"
         tomorrow_with_time: "فردا در %{time}"
         at_time: "در %{date_time}"
         existing_reminder: "شما یک یادآور برای این نشانک دارید که در %{at_date_time} ارسال خواهد شد"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "حذف نشانک"
     copy_codeblock:
       copied: "کپی شد!"
       copy: "کپی کد در کلیپ‌بورد"
@@ -1861,6 +1867,8 @@ fa_IR:
           title: "مدیریت دسته ها"
         bulk_select_topics_dropdown:
           title: "عملیات گروهی"
+        bulk_select_bookmarks_dropdown:
+          title: "عملیات گروهی"
     date_time_picker:
       from: از طرف
       to: به
@@ -2797,6 +2805,7 @@ fa_IR:
           inappropriate: "شما به این موضوع پرچم نامناسب زدید"
           notify_moderators: "شما به این موضوع پرچم بررسی مدیریت زدید"
           notify_user: "شما یک پیام به این کاربر ارسال کردید"
+          custom: "شما این موضوع را به عنوان %{custom} علامت‌گذاری کردید"
       delete:
         confirm:
           one: "آیا مطمئن هستید که می خواهید آن پست را حذف کنید؟"
@@ -3477,7 +3486,7 @@ fa_IR:
       panels:
         forum:
           label: انجمن
-      filter: "فیلتر"
+      filter: "فیلتر..."
     until: "تا وقتی که:"
     form_templates:
       upload_field:
@@ -3590,6 +3599,9 @@ fa_IR:
               label: گروه
             category:
               label: دسته‌بندی
+      flags:
+        description: "توضیح"
+        enabled: "فعال شده؟"
       groups:
         new:
           title: "گروه جدید"
@@ -4506,6 +4518,7 @@ fa_IR:
         name: "نام زمینه"
         type: "نوع زمینه"
         description: "توضیحات زمینه"
+        preferences: "تنظیمات"
         save: "ذخیره کردن"
         edit: "ویرایش"
         delete: "حذف"
@@ -4515,6 +4528,11 @@ fa_IR:
         required:
           enabled: "مورد نیاز "
           disabled: "مورد نیاز نیست "
+        requirement:
+          optional:
+            title: "اختیاری"
+          on_signup:
+            title: "هنگام ثبت‌نام"
         editable:
           enabled: "قابل ویرایش"
           disabled: "غیر قابل ویرایش"

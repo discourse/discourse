@@ -62,4 +62,5 @@ end
 #  enabled          :boolean          default(TRUE), not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  score_type       :boolean          default(FALSE), not null
 #

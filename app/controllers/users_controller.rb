@@ -893,15 +893,18 @@ class UsersController < ApplicationController
         @user.password = params[:password]
         @user.password_required!
         @user.user_auth_tokens.destroy_all
+
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
           secure_session["password-#{token}"] = nil
           secure_session["second-factor-#{token}"] = nil
+
           UserHistory.create!(
             target_user: @user,
             acting_user: @user,
             action: UserHistory.actions[:change_password],
           )
+
           logon_after_password_reset
         end
       end
@@ -2130,31 +2133,12 @@ class UsersController < ApplicationController
       result.merge!(params.permit(:active, :staged, :approved))
     end
 
-    deprecate_modify_user_params_method
-    result = modify_user_params(result)
     DiscoursePluginRegistry.apply_modifier(
       :users_controller_update_user_params,
       result,
       current_user,
       params,
     )
-  end
-
-  # Plugins can use this to modify user parameters
-  def modify_user_params(attrs)
-    attrs
-  end
-
-  def deprecate_modify_user_params_method
-    # only issue a deprecation warning if the method is overridden somewhere
-    if method(:modify_user_params).source_location[0] !=
-         "#{Rails.root}/app/controllers/users_controller.rb"
-      Discourse.deprecate(
-        "`UsersController#modify_user_params` method is deprecated. Please use the `users_controller_update_user_params` modifier instead.",
-        since: "3.1.0.beta4",
-        drop_from: "3.2.0",
-      )
-    end
   end
 
   def fail_with(key)

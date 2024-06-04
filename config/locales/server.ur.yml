@@ -425,7 +425,6 @@ ur:
     request_membership_pm:
       title: "@%{group_name} کیلئے رکنیت کی درخواست"
     request_accepted_pm:
-      title: "آپ کو @%{group_name}میں قبول کر لیا گیا ہے"
       body: |
         آپ کی @%{group_name} درج کرنے کی درخواست قبول کر لی گئی ہے اور اب آپ ممبر ہیں۔
   education:
@@ -1276,31 +1275,15 @@ ur:
         qtt_like: لائیکس موصول ہوے
       description: "سرفہرست 10 صارفین جنہیں لوگوں کی ایک وسیع رینج سے پسندیدگی ملی ہے۔"
   dashboard:
-    rails_env_warning: "آپ کا سرور %{env} مَوڈ میں چل رہا ہے۔"
-    host_names_warning: "آپ کی config/database.yml فائل ڈیفالٹ localhost نام استعمال کر رہا ہے۔ اِسے اپنے سائیٹ ہوسٹ کے نام پر اپ ڈیٹ کریں۔"
-    sidekiq_warning: 'Sidekiq نہیں چل رہا۔ بہت سے کام، جیسا کہ ای میل بھیجنا، sidekq کی طرف سے اےسِنکرونسلی مکمل کیے جاتے ہیں۔ براہ کرم یقینی بنائیں کہ کم ازکم ایک sidekq پراسیس چل رہا ہے۔ <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq کے بارے میں یہاں سے جانیے</a>۔'
-    queue_size_warning: "قطار میں لگی جوبز کی تعداد %{queue_size}ہے، جو زیادہ ہے۔ یہ Sidekiq کے عمل (وں) کے ساتھ کسی مسئلے کی نشاندہی کر سکتا ہے، یا آپ کو Sidekiq کے مزید کارکنوں کو شامل کرنے کی ضرورت پڑ سکتی ہے۔"
-    memory_warning: "آپ کا سرور مجموعی طور پر 1 GB سے کم میموری کے ساتھ چل رہا ہے۔ کم ازکم 1 GB میموری تجویز کی گئی ہے۔"
-    google_oauth2_config_warning: 'سرور کو گوگل OAuth2 (enable_google_oauth2_logins) کے ساتھ سائن اپ اور لاگ ان کی اجازت دینے کے لیے کنفیگر کیا گیا ہے، لیکن کلائنٹ آئی ڈی اور کلائنٹ کی خفیہ اقدار سیٹ نہیں ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ سیٹنگز</a> پر جائیں اور سیٹنگز کو اپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">مزید جاننے کے لیے یہ گائیڈ دیکھیں</a>۔'
-    facebook_config_warning: 'سرور کو فیس بک کے ساتھ سائن اپ اور لاگ ان (enable_facebook_logins) کی اجازت دینے کے لیے ترتیب دیا گیا ہے، لیکن ایپ آئی ڈی اور ایپ کی خفیہ اقدار سیٹ نہیں ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ سیٹنگز</a> پر جائیں اور سیٹنگز کو اپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">مزید جاننے کے لیے یہ گائیڈ دیکھیں</a>۔'
-    twitter_config_warning: 'سرور کو ٹویٹر کے ساتھ سائن اپ اور لاگ ان کرنے کی اجازت دینے کے لیے ترتیب دیا گیا ہے (enable_twitter_logins)، لیکن چابی اور خفیہ اقدار سیٹ نہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ سیٹنگز</a> پر جائیں اور سیٹنگز کو اپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">مزید جاننے کے لیے یہ ہِدایَات دیکھیں</a>۔'
-    github_config_warning: 'سرور کو گٹ ہب (enable_github_logins) کے ساتھ سائن اپ اور لاگ ان کی اجازت دینے کے لیے ترتیب دیا گیا ہے، لیکن کلائنٹ آئی ڈی اور خفیہ اقدار سیٹ نہیں ہیں۔ <a href="%{base_path}/admin/site_settings">سائٹ سیٹنگز</a> پر جائیں اور سیٹنگز کو اپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">مزید جاننے کے لیے یہ گائیڈ دیکھیں</a>۔'
-    s3_config_warning: 'سرور کو S3 پر فائلوں کو اَپ لوڈ کرنے کیلئے ترتیب دیا گیا ہے، لیکن کم از کم ایک درج ذیل ترتیب سَیٹ نہیں کی گئی ہے: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket۔ <a href="%{base_path}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">مزید جاننے کے لئے "S3 پر تصویر اپ لوڈز کیسے سَیٹ کریں؟" ملاحظہ کریں</a>۔'
-    s3_backup_config_warning: 'سرور کو S3 پر بیک اَپس اَپ لوڈ کرنے کیلئے ترتیب دیا گیا ہے، لیکن کم از کم ایک درج ذیل ترتیب سَیٹ نہیں کی گئی ہے: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket۔ <a href="%{base_path}/admin/site_settings">سائٹ ترتیبات</a> پر جائیں اور ترتیبات کو اَپ ڈیٹ کریں۔ <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">مزید جاننے کے لئے "S3 پر تصویر اپ لوڈز کیسے سَیٹ کریں؟" ملاحظہ کریں</a>۔'
-    s3_cdn_warning: 'سرور کو S3 پر فائلیں اپ لوڈ کرنے کے لیے کنفیگر کیا گیا ہے، لیکن کوئی S3 CDN کنفیگر نہیں ہے۔ یہ مہنگے S3 اخراجات اور سائٹ کی سست کارکردگی کا باعث بن سکتا ہے۔ <a href="https://meta.discourse.org/t/-/148916" target="_blank">مزید جاننے کے لیے "اپ لوڈز کے لیے آبجیکٹ اسٹوریج کا استعمال" دیکھیں</a>۔'
-    image_magick_warning: 'سرور کو بڑی تصاویر کے تھَمب نَیل تخلیق کرنے کیلئے ترتیب دیا گیا ہے، لیکن ImageMagick اِنسٹال نہیں ہے۔ اپنے پسندیدہ پیکیج مینیجر کا استعمال کرکے ImageMagick اِنسٹال کریں یا <a href="https://www.imagemagick.org/script/download.php" target="_blank">تازہ ترین ورژن ڈاؤن لوڈ کریں</a>۔'
-    failing_emails_warning: 'ناکام ہونے والی %{num_failed_jobs} اِی مَیل جابز موجود ہیں۔ اپنا app.yml چیک کریں اور یہ یقینی بنائیں کہ میل سرور کی ترتیبات درست ہیں۔ <a href="%{base_path}/sidekiq/retries" target="_blank">Sidekiq میں ناکام جابز ملاحظہ کریں</a>۔'
-    subfolder_ends_in_slash: "آپ کا سب-فولڈر سیٹ اپ غلط ہے؛ DISCOURSE_RELATIVE_URL_ROOT ایک سلَیش میں ختم ہوتا ہے۔"
-    email_polling_errored_recently:
-      one: "گزشتہ 24 گھنٹوں میں ای میل پولِنگ نے ایک خرابی دکھائی ہے۔ مزید تفصیلات کیلئے <a href='%{base_path}/logs' target='_blank'>لاگز</a> کا ملاحضہ کریں۔"
-      other: "گزشتہ 24 گھنٹوں میں ای میل پولِنگ نے %{count} خرابیاں دکھائی ہیں۔ مزید تفصیلات کیلئے <a href='%{base_path}/logs' target='_blank'>لاگز</a> کا ملاحضہ کریں۔"
-    missing_mailgun_api_key: "سرور کو بذریعہ مَیلگَن ای میل بھیجنے کیلئے ترتیب دیا گیا ہے، لیکن آپ نے وَیب ھُوک٘ پیغامات کی توثیق کرنے کیلئے API کلید فراہم نہیں کی ہے۔"
-    bad_favicon_url: "فَیوِکان لوڈ نہیں ہو رہا ہے۔ <a href='%{base_path}/admin/site_settings'>سائٹ ترتیبات</a> میں اپنی فَیوِکان ترتیبات چیک کریں۔"
-    poll_pop3_timeout: "POP3 سرور کے ساتھ کنِکشن کا وقت ختم ہوا جا رہا ہے۔ آنے والی ای میل حاصل نہیں کی جاسکی۔ براہ مہربانی اپنی <a href='%{base_path}/admin/site_settings/category/email'>POP3 ترتیبات</a> اور سروس فراہم کرنے والے کو چیک کریں۔"
-    poll_pop3_auth_error: "POP3 سرور کے ساتھ کنِکشن ایک اوَتھَینٹیکیشن خرابی سے ناکام ہو رہا ہے۔ آنے والی ای میل حاصل نہیں کی جاسکی۔ براہ مہربانی اپنی <a href='%{base_path}/admin/site_settings/category/email'>POP3 ترتیبات</a> کو چیک کریں۔"
-    force_https_warning: "آپ کی ویب سائٹ SSL استعمال کر رہی ہے۔ لیکن `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` ابھی تک آپ کی سائٹ ترتیبات میں فعال نہیں ہے۔"
-    out_of_date_themes: "مندرجہ ذیل تِھیمز کیلئے اَپ ڈیٹس دستیاب ہیں:"
-    unreachable_themes: "ہم مندرجہ ذیل تِھیمز کیلئے اپ ڈیٹس کو چیک نہ کر سکے:"
+    problem:
+      rails_env: "آپ کا سرور %{env} مَوڈ میں چل رہا ہے۔"
+      host_names: "آپ کی config/database.yml فائل ڈیفالٹ localhost نام استعمال کر رہا ہے۔ اِسے اپنے سائیٹ ہوسٹ کے نام پر اپ ڈیٹ کریں۔"
+      queue_size: "قطار میں لگی جوبز کی تعداد %{queue_size}ہے، جو زیادہ ہے۔ یہ Sidekiq کے عمل (وں) کے ساتھ کسی مسئلے کی نشاندہی کر سکتا ہے، یا آپ کو Sidekiq کے مزید کارکنوں کو شامل کرنے کی ضرورت پڑ سکتی ہے۔"
+      ram: "آپ کا سرور مجموعی طور پر 1 GB سے کم میموری کے ساتھ چل رہا ہے۔ کم ازکم 1 GB میموری تجویز کی گئی ہے۔"
+      subfolder_ends_in_slash: "آپ کا سب-فولڈر سیٹ اپ غلط ہے؛ DISCOURSE_RELATIVE_URL_ROOT ایک سلَیش میں ختم ہوتا ہے۔"
+      missing_mailgun_api_key: "سرور کو بذریعہ مَیلگَن ای میل بھیجنے کیلئے ترتیب دیا گیا ہے، لیکن آپ نے وَیب ھُوک٘ پیغامات کی توثیق کرنے کیلئے API کلید فراہم نہیں کی ہے۔"
+      out_of_date_themes: "مندرجہ ذیل تِھیمز کیلئے اَپ ڈیٹس دستیاب ہیں:"
+      unreachable_themes: "ہم مندرجہ ذیل تِھیمز کیلئے اپ ڈیٹس کو چیک نہ کر سکے:"
   site_settings:
     allow_bulk_invite: "CSV فائل اپ لوڈ کرکے کَثْرَتی دعوتوں کی اجازت دیں"
     disabled: "غیر فعال"
@@ -1375,7 +1358,6 @@ ur:
     email_subject: "سٹینڈرڈ ای میلز کیلئے اپنی مرضی کا موضوع فارمَیٹ۔ دیکھیے <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
     detailed_404: "صارفین کو اس بارے میں مزید تفصیلات فراہم کرتا ہے کہ وہ کسی خاص موضوع تک کیوں رسائی حاصل نہیں کر سکتے۔ نوٹ: یہ کم محفوظ ہے کیونکہ صارفین کو معلوم ہو جائے گا کہ آیاURL کسی درست موضوع سے منسلک ہے۔"
     force_https: "صرف HTTPS استعمال کرنے کیلئے اپنی سائٹ کو مجبورکریں۔ انتباہ: جب تک آپ تصدیق نہ کر لیں کہ HTTPS مکمل طور پر سیٹ ہے اور ہر جگہ کام کر رہا ہے، اِس کو فعال نہ کریں! کیا آپ نے اپنا CDN، تمام سماجی لاگ ان، اور بیرونی لوگو / انحصارات کو چیک کر کے یہ یقینی بنا لیا ہے کہ وہ تمام HTTPS سے مطابقت رکھتے ہیں؟"
-    same_site_cookies: "ایک ہی سائٹ کوکیز کا استعمال کریں، وہ تعاون یافتہ براؤزرز (Lax یا Strict) پر تمام کراس سائٹ ریکوئسٹ فورجی ویکٹر کو ختم کر دیتے ہیں۔ انتباہ: Strict صرف ان سائٹس پر کام کرے گا جو لاگ ان کرنے اور بیرونی تصدیق کا طریقہ استعمال کرنے پر مجبور کرتی ہیں۔"
     summary_score_threshold: "'اِس ٹاپک کا خلاصہ کریں' میں شامل ہونے کیلئے ایک پوسٹ کا کم از کم سکور"
     summary_posts_required: "'اس موضوع کا خلاصہ' فعال ہونے سے پہلے کسی موضوع میں کم از کم پوسٹس۔ اس ترتیب میں تبدیلیاں ایک ہفتے کے اندر اندر سابقہ طور پر لاگو ہو جائیں گی۔"
     summary_likes_required: "'اس موضوع کا خلاصہ' فعال ہونے سے پہلے کسی موضوع میں کم از کم لائکس۔ اس ترتیب میں تبدیلیاں ایک ہفتے کے اندر اندر سابقہ طور پر لاگو ہو جائیں گی۔"
@@ -2787,7 +2769,6 @@ ur:
 
         اگر آپ کے پاس کوئی سوال ہیں، تو [ہمارے دوستانہ سٹاف سے رابطہ کریں](%{base_url}/about)۔
     digest:
-      why: "آپ کے %{last_seen_at} کو آخری وِزِٹ کے بعد سے %{site_link} کا ایک مختصر خلاصہ"
       since_last_visit: "آپ کے کو آخری وِزِٹ کے بعد سے"
       new_topics: "نئے ٹاپک"
       unread_notifications: "غیر پڑھی اطلاعات"
@@ -2801,7 +2782,6 @@ ur:
       unsubscribe: "یہ خلاصہ %{site_link} کی طرف سے بھیجا جاتا ہے جب ہم نے کچھ دیر سے آپ کو نہیں دیکھا ہو۔ %{email_preferences_link} کو تبدیل کریں، یا غیر سَبسکرائب کرنے کیلئے %{unsubscribe_link}۔"
       your_email_settings: "آپ کی ای میل ترتیبات"
       click_here: "یہاں کلِک کریں"
-      preheader: "آپ کے %{last_seen_at} کو آخری وِزِٹ کے بعد سے ایک مختصر خلاصہ"
     forgot_password:
       title: "پاسوَرڈ بھول گیا"
       subject_template: "[%{email_prefix}] پاسوَرڈ ری سَیٹ"

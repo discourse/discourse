@@ -21,6 +21,7 @@ export default class ReorderCategories extends Component {
 
   @tracked changed = false;
   @tracked entries = this.reorder();
+  @tracked highlightedCategoryId = null;
 
   get sortedEntries() {
     return this.entries.sortBy("position");
@@ -135,6 +136,18 @@ export default class ReorderCategories extends Component {
 
     this.entries = this.reorder(this.sortedEntries);
     this.changed = true;
+
+    this.toggleHighlight(entry.category.id);
+  }
+
+  @action
+  toggleHighlight(categoryId) {
+    this.highlightedCategoryId = categoryId;
+    setTimeout(() => {
+      if (this.highlightedCategoryId === categoryId) {
+        this.highlightedCategoryId = null;
+      }
+    }, 3000);
   }
 
   @action

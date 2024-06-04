@@ -9,70 +9,13 @@
     grid-area: list;
     padding-bottom: 0;
   }
+}
 
-  .c-footer {
-    grid-area: footer;
-    background: var(--secondary);
-    border-top: 1px solid var(--primary-low);
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-around;
-    position: sticky;
-    bottom: 0;
-    left: 0;
-    padding-bottom: env(safe-area-inset-bottom);
-
-    html.footer-nav-ipad &,
-    html.footer-nav-visible & {
-      padding-bottom: calc(
-        env(safe-area-inset-bottom) + var(--footer-nav-height, 0px)
-      );
-    }
-
-    &__item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex-basis: 33%;
-      flex-shrink: 0;
-      padding-block: 0.75rem;
-      height: 100%;
-      position: relative;
-
-      &.--active {
-        .d-icon,
-        .d-button-label {
-          color: var(--quaternary);
-        }
-      }
-
-      .d-icon {
-        margin-right: 0;
-        font-size: var(--font-up-4);
-        color: var(--primary-medium);
-
-        &.d-icon-discourse-threads {
-          font-size: var(--font-up-3); //visual correction
-        }
-      }
-
-      .d-button-label {
-        font-size: var(--font-down-1-rem);
-        color: var(--primary-medium);
-      }
-
-      .chat-channel-unread-indicator,
-      .chat-channel-unread-indicator.-urgent {
-        top: 0.25rem;
-        right: unset;
-        left: 50%;
-        margin-left: 0.75rem;
-      }
-
-      .chat-channel-unread-indicator:not(.-urgent) {
-        width: 11px;
-        height: 11px;
-      }
+.c-footer {
+  &__item {
+    .c-unread-indicator,
+    .c-unread-indicator.-urgent {
+      margin-left: 1rem;
     }
   }
 }

@@ -276,11 +276,17 @@ gl:
       search_placeholder: "Buscar marcadores por nome, título do tema ou contido da publicación"
       search: "Buscar"
       bookmark: "Marcador"
+      bulk:
+        select_all: "Seleccionar todo"
+        clear_all: "Borrar todo"
       reminders:
         today_with_time: "hoxe á(s) %{time}"
         tomorrow_with_time: "mañá á(s) %{time}"
         at_time: "á(s) %{date_time}"
         existing_reminder: "Configurou un recordatorio para este marcador que se enviará %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Eliminar marcador"
     copy_codeblock:
       copied: "copiado!"
     drafts:
@@ -1711,6 +1717,8 @@ gl:
         categories_admin_dropdown:
           title: "Xestionar categorías"
         bulk_select_topics_dropdown:
+          title: "Accións en bloque"
+        bulk_select_bookmarks_dropdown:
           title: "Accións en bloque"
     date_time_picker:
       from: De
@@ -3338,7 +3346,7 @@ gl:
               content: "As miñas publicacións"
             review:
               content: "Revisar"
-      filter: "Filtro"
+      filter: "Filtrar..."
     until: "Ata:"
     form_templates:
       upload_field:
@@ -3463,6 +3471,9 @@ gl:
               label: Categoría
             include_subcategories:
               label: "Incluír subcategorías"
+      flags:
+        description: "Descrición"
+        enabled: "Activado?"
       groups:
         new:
           title: "Novo grupo"
@@ -4609,6 +4620,7 @@ gl:
         name: "Nome do campo"
         type: "TIpo de campo"
         description: "Descrición do campo"
+        preferences: "Preferencias"
         save: "Gardar"
         edit: "Editar"
         delete: "Eliminar"
@@ -4619,6 +4631,9 @@ gl:
           title: "Requirido para rexistrarse"
           enabled: "obrigatorio"
           disabled: "non obrigatorio"
+        requirement:
+          optional:
+            title: "Opcional"
         editable:
           title: "Editábel despois do rexistro"
           enabled: "editábel"

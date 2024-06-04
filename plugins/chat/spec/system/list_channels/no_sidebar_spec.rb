@@ -74,25 +74,30 @@ RSpec.describe "List channels | no sidebar", type: :system do
   end
 
   context "when no category channels" do
-    it "doesn’t show the section" do
+    it "shows the empty channel list" do
       visit("/chat")
-      expect(page).to have_no_css(".public-channels-section")
+      expect(page).to have_css(".c-list-empty-state")
+    end
+
+    it "does not show the create channel button" do
+      visit("/chat")
+      expect(page).to have_no_css(".-navbar__new-channel-button")
     end
 
     context "when user can create channels" do
       before { current_user.update!(admin: true) }
 
-      it "shows the section" do
+      it "shows the new channel button" do
         visit("/chat")
-        expect(page).to have_css(".public-channels-section")
+        expect(page).to have_css(".c-navbar__new-channel-button")
       end
     end
   end
 
   context "when no direct message channels" do
-    it "shows the section" do
+    it "shows the empty channel list" do
       visit("/chat")
-      expect(page).to have_css(".direct-message-channels-section")
+      expect(page).to have_css(".c-list-empty-state")
     end
   end
 

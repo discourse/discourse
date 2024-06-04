@@ -943,7 +943,7 @@ module Discourse
       # Skip warmup in development mode - it makes boot take ~2s longer
       PrettyText.cook("warm up **pretty text**") if !Rails.env.development?
     rescue => e
-      Rails.logger.error("Failed to warm up pretty text: #{e}")
+      Rails.logger.error("Failed to warm up pretty text: #{e}\n#{e.backtrace.join("\n")}")
     end
 
     nil

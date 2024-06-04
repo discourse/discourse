@@ -310,11 +310,16 @@ sr:
       search_placeholder: "Pretraži obeleživače po nazivu, naslovu teme ili sadržaju poruka"
       search: "Pretraži"
       bookmark: "Markiraj"
+      bulk:
+        select_all: "Izaberi sve"
       reminders:
         today_with_time: "danas u %{time}"
         tomorrow_with_time: "sutra u %{time}"
         at_time: "u %{date_time}"
         existing_reminder: "Imate podsetnik postavljen za ovaj obeleživač koji će biti poslan %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Ukloni obeleživač"
     copy_codeblock:
       copied: "kopirano!"
     drafts:
@@ -1074,6 +1079,8 @@ sr:
       delete_item: "Obriši %{name}"
       components:
         bulk_select_topics_dropdown:
+          title: "Grupne aktivnosti"
+        bulk_select_bookmarks_dropdown:
           title: "Grupne aktivnosti"
     emoji_picker:
       flags: Zastave
@@ -1844,7 +1851,6 @@ sr:
               content: "Korisnici"
             my_posts:
               content: "Moje poruke"
-      filter: "Filter"
     form_templates:
       upload_field:
         upload: "Upload"
@@ -1914,6 +1920,9 @@ sr:
               label: Grupa
             category:
               label: Kategorija
+      flags:
+        description: "Opis"
+        enabled: "Omgućeno"
       groups:
         manage:
           interaction:
@@ -2452,6 +2461,7 @@ sr:
         name: "Ime Polja"
         type: "Tip Polja"
         description: "Opis Polja"
+        preferences: "Postavke"
         save: "Sačuvaj"
         edit: "Izmeni"
         delete: "Obriši"

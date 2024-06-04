@@ -608,11 +608,11 @@ sq:
         user: User
         qtt_like: Pëlqime të marra
   dashboard:
-    rails_env_warning: "Your server is running in %{env} mode."
-    host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
-    sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    queue_size_warning: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
-    memory_warning: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
+    problem:
+      rails_env: "Your server is running in %{env} mode."
+      host_names: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
+      queue_size: "The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers."
+      ram: "Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended."
   site_settings:
     censored_words: "Fjalët do të zhvendosen automatikisht me &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -1114,14 +1114,12 @@ sq:
 
         %{message}
     digest:
-      why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
       new_topics: "Diskutimet e Reja"
       liked_received: "Pëlqime të marra"
       new_users: "Përdorues të rinj"
       join_the_discussion: "Më shumë"
       subject_template: "[%{email_prefix}] Përmbledhja"
       click_here: "klikoni këtu"
-      preheader: "Një përmbledhe e shkurtër e faqes që nga vizita juaj e fundit më %{last_seen_at}"
     forgot_password:
       title: "Harruat Fjalëkalimin"
     set_password:

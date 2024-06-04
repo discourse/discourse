@@ -294,11 +294,17 @@ el:
       search_placeholder: "Αναζήτηση σελιδοδεικτών με βάση το όνομα, τον τίτλο θέματος ή το περιεχόμενο δημοσίευσης"
       search: "Αναζήτηση"
       bookmark: "Σελιδοδείκτης"
+      bulk:
+        select_all: "Επιλογή Όλων"
+        clear_all: "Καθαρισμός Όλων"
       reminders:
         today_with_time: "σήμερα στις %{time}"
         tomorrow_with_time: "αύριο στις %{time}"
         at_time: "στις %{date_time}"
         existing_reminder: "Έχετε ορίσει μια υπενθύμιση για αυτόν τον σελιδοδείκτη που θα σταλεί στις %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Διαγραφή σελιδοδείκτη"
     copy_codeblock:
       copied: "αντιγράφηκε!"
       copy: "αντιγραφή κώδικα στο πρόχειρο"
@@ -1707,6 +1713,8 @@ el:
         categories_admin_dropdown:
           title: "Διαχείριση κατηγοριών"
         bulk_select_topics_dropdown:
+          title: "Μαζικές Ενέργειες"
+        bulk_select_bookmarks_dropdown:
           title: "Μαζικές Ενέργειες"
     date_time_picker:
       from: Από
@@ -3318,7 +3326,7 @@ el:
               content: "Οι αναρτήσεις μου"
             review:
               content: "Ανασκόπηση"
-      filter: "Φίλτρο"
+      filter: "Φίλτρο..."
     welcome_topic_banner:
       title: "Δημιουργήστε το θέμα καλωσορίσματος"
       button_title: "Έναρξη Επεξεργασίας"
@@ -3446,6 +3454,9 @@ el:
               label: Κατηγορία
             include_subcategories:
               label: "Συμπερίληψη υποκατηγοριών"
+      flags:
+        description: "Περιγραφή"
+        enabled: "Ενεργοποιημένο;"
       groups:
         new:
           title: "Νέα Ομάδα"
@@ -4523,6 +4534,7 @@ el:
         name: "Όνομα πεδίου"
         type: "Τύπος πεδίου"
         description: "Περιγραφή πεδίου"
+        preferences: "Προτιμήσεις"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
         delete: "Διαγραφή"
@@ -4532,6 +4544,9 @@ el:
         required:
           enabled: "απαραίτητο"
           disabled: "δεν είναι απαραίτητο"
+        requirement:
+          optional:
+            title: "Προεραιτικό"
         editable:
           enabled: "επεξεργάσιμο"
           disabled: "μη επεξεργάσιμο"
