@@ -1949,20 +1949,18 @@ bs_BA:
         bookmarks: "U zabilješkama više nema spremljenih tema."
     topic_bulk_actions:
       close_topics:
-        name: "Zatvori teme"
+        name: "Zatvori"
         optional: (opciono)
       archive_topics:
-        name: "Arhiviraj teme"
-      unlist_topics:
-        name: "Skini teme sa liste"
-      relist_topics:
-        name: "Listaj teme"
+        name: "Arhiva"
+      move_messages_to_inbox:
+        name: "Premjesti u Sanduče"
       append_tags:
         name: "Pripoji oznake"
       replace_tags:
         name: "Zamijeni oznake"
       delete_topics:
-        name: "Obriši teme"
+        name: "Delete"
     topic:
       filter_to:
         one: "%{count} objava u temi"

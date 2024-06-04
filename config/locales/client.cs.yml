@@ -2983,15 +2983,13 @@ cs:
         filter: "Nejsou zde žádná další témata."
     topic_bulk_actions:
       close_topics:
-        name: "Zavřít téma"
+        name: "Zavřít"
         note: "Poznámka"
         optional: (volitelné)
       archive_topics:
-        name: "Archivovat témata"
-      unlist_topics:
-        name: "Odebrat témata ze seznamu"
-      relist_topics:
-        name: "Znovunačíst seznam témat"
+        name: "Archív"
+      move_messages_to_inbox:
+        name: "Přesunout do Přijaté"
       remove_tags:
         name: "Odebrat štítky"
       append_tags:
@@ -2999,7 +2997,7 @@ cs:
       replace_tags:
         name: "Zaměnit štítky"
       delete_topics:
-        name: "Smazat témata"
+        name: "Smazat"
       update_category:
         name: "Aktualizovat kategorii"
         description: "Zvolte novou kategorii pro vybraná témata"

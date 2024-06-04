@@ -1460,20 +1460,18 @@ sw:
         bookmarks: "Hakuna mada zingine zilizoalamishwa."
     topic_bulk_actions:
       close_topics:
-        name: "Funga Mada"
+        name: "Funga"
         optional: (sio muhimu)
       archive_topics:
-        name: "Hifadhi Mada kwenye nyaraka"
-      unlist_topics:
-        name: "Ondoa Mada kwenye listi"
-      relist_topics:
-        name: "Orodhesha Upya Mada"
+        name: "Nyaraka"
+      move_messages_to_inbox:
+        name: "Hamisha kwenda Kisanduku pokezi"
       append_tags:
         name: "Jumlisha Lebo"
       replace_tags:
         name: "Badilisha Lebo"
       delete_topics:
-        name: "Futa Mada"
+        name: "Futa"
     topic:
       filter_to:
         one: "%{count} chapisho kwenye mada"

@@ -259,6 +259,9 @@ uk:
         header: "Заголовок чату"
         composer: "Редактор чату"
         channels_list: "Список каналів чату"
+      no_direct_message_channels: "Ви ще не приєдналися до будь-яких особистих повідомлень!"
+      no_direct_message_channels_cta: "Розпочати розмову"
+      no_public_channels: "Ви ще не приєдналися до жодного каналу!"
       no_public_channels_cta: "Перегляд каналів"
       kicked_from_channel: "Ви більше не можете отримати доступ до цього каналу."
       only_chat_push_notifications:

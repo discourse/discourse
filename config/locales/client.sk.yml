@@ -555,7 +555,7 @@ sk:
           title: "Hodnotiteľné položky vytvorené používateľmi s vyššou úrovňou dôvery majú vyššie skóre."
         type_bonus:
           name: "typ bonusu"
-          title: "Určitým kontrolovateľným typom môžu zamestnanci prideliť bonus, aby mali vyššiu prioritu."
+          title: "Určitým kontrolovateľným typom môže personál prideliť bonus, aby mali vyššiu prioritu."
       revise_and_reject_post:
         title: "Revízia"
         reason: "Dôvod"
@@ -3072,6 +3072,7 @@ sk:
         close_topics: "Uzavrieť tému"
         archive_topics: "Archivuj témy"
         move_messages_to_inbox: "Presuň do prijatej pošty"
+        archive_messages: "Presunúť do archívu"
         notification_level: "Upozornenia…"
         change_notification_level: "Zmena úrovne oznámení"
         choose_new_category: "Vyberte pre tému novú kategóriu:"
@@ -3140,15 +3141,19 @@ sk:
         filter: "Nie sú žiadne ďalšie témy."
     topic_bulk_actions:
       close_topics:
-        name: "Uzavrieť tému"
+        name: "Zavrieť"
         note: "Poznámka"
         optional: (nepovinné)
       archive_topics:
-        name: "Archivuj témy"
+        name: "Archivovať"
+      archive_messages:
+        name: "Presunúť do archívu"
+      move_messages_to_inbox:
+        name: "Presunúť do schránky"
       unlist_topics:
-        name: "Dôverné témy"
+        name: "Zrušiť zoznam"
       relist_topics:
-        name: "Obnoviť zoznam tém"
+        name: "Opätovné zaradenie do zoznamu"
       remove_tags:
         name: "Odstrániť značky"
       append_tags:
@@ -3156,7 +3161,7 @@ sk:
       replace_tags:
         name: "Nahradiť značky"
       delete_topics:
-        name: "Zmazať témy"
+        name: "Odstrániť"
       update_category:
         name: "Aktualizovať kategóriu"
         description: "Výber novej kategórie pre vybrané témy"
@@ -4899,6 +4904,7 @@ sk:
       panels:
         forum:
           label: fórum
+      filter: "Filter..."
       clear_filter: "Vymazať filter"
       no_results:
         title: "Žiadne výsledky"
@@ -5131,6 +5137,7 @@ sk:
             include_subcategories:
               label: "Zahrnúť podkategórie"
       flags:
+        title: "Príznaky moderovania"
         description: "Popis"
         enabled: "Povolené?"
       groups:
@@ -5477,6 +5484,7 @@ sk:
           user_fields: "Používateľské polia"
           watched_words: "Sledované slová"
           legal: "Právne záležitosti"
+          moderation_flags: "Príznaky moderovania"
       appearance:
         title: "Vzhľad"
         sidebar_link:
@@ -6189,6 +6197,7 @@ sk:
             create_watched_word_group: "vytvoriť sledovanú skupinu slov"
             update_watched_word_group: "aktualizovať sledovanú skupinu slov"
             delete_watched_word_group: "odstrániť sledovanú skupinu slov"
+            toggle_flag: "prepnúť príznak"
         screened_emails:
           title: "Kontrolované emaily"
           description: "Keď niekto skúsi vytvoriť nový účet, nasledujúce emailove adresy budú preverené a registrácia bude zablokovaná, alebo bude vykonaná nejaka iná akcia. "
@@ -6389,7 +6398,7 @@ sk:
         nav:
           new: "Nový"
           active: "Aktívny"
-          staff: "Zamestnanci"
+          staff: "Personál"
           suspended: "Odobrate práva"
           silenced: "Umlčané"
           staged: "Dočasný"
@@ -6403,7 +6412,7 @@ sk:
           member: "Používatelia na stupni dôvery 2 (Člen)"
           regular: "Používatelia na stupni dôvery 3 (Stály člen)"
           leader: "Používatelia na stupni dôvery 4 (Vodca)"
-          staff: "Zamestnanci"
+          staff: "Personál"
           admins: "Admin používatelia"
           moderators: "Moderátori"
           silenced: "Umlčaní používatelia"

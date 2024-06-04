@@ -2414,6 +2414,9 @@ ar:
       - ""
       - "غير نشطة"
       - ""
+      navigation_menu:
+      - "الشريط الجانبي"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

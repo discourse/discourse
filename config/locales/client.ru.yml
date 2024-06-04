@@ -3035,14 +3035,12 @@ ru:
         filter: "Тем больше нет."
     topic_bulk_actions:
       close_topics:
-        name: "Закрыть темы"
+        name: "Завершить"
         optional: (необязательно)
       archive_topics:
-        name: "Архивировать темы"
-      unlist_topics:
-        name: "Скрыть темы"
-      relist_topics:
-        name: "Показать темы"
+        name: "Архивировать"
+      move_messages_to_inbox:
+        name: "Переместить во входящие"
       remove_tags:
         name: "Удалить теги"
       append_tags:
@@ -3050,7 +3048,7 @@ ru:
       replace_tags:
         name: "Заменить теги"
       delete_topics:
-        name: "Удалить темы"
+        name: "Удалить"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"

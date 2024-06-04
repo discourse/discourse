@@ -2138,8 +2138,11 @@ zh_CN:
     highlighted_languages: "包括语法高亮显示规则。（警告：包含太多语言可能会影响性能）请参阅：<a href='https://highlightjs.org/static/demo/' target='_blank'>https://highlightjs.org/static/demo</a> 查看演示"
     show_copy_button_on_codeblocks: "向代码块添加一个按钮，以将块内容复制到用户的剪贴板。"
     embed_any_origin: "允许嵌入任意来源的内容。这对于带有静态 HTML 的移动应用是必需的。"
+    embed_topics_list: "启用 HTML 格式的主题列表嵌入。通过此设置，你可以将论坛中的主题列表以兼容、易用的方式整合到其他网站中。"
     embed_set_canonical_url: "将嵌入话题的规范 URL 设置为嵌入内容的 URL。"
+    embed_truncate: "缩短从外部资源嵌入的帖子内容。此设置可确保在网站上嵌入来自外部 URL 的帖子时，只显示内容的开头部分。如果你希望显示外部文章的完整内容，可以禁用此设置。"
     embed_unlisted: "在用户回复前，嵌入的话题将不会被取消公开。"
+    import_embed_unlisted: "在用户回复之前，导入的嵌入式主题将不在列表中 (即使未选中 `embed unlisted` 站点设置)。"
     embed_support_markdown: "支持嵌入帖子的 Markdown 格式。"
     allowed_embed_selectors: "嵌入中允许的 CSS 元素的逗号分隔列表。"
     allowed_href_schemes: "除了 http 和 https 之外，链接中允许的协议名称。"
@@ -2264,7 +2267,6 @@ zh_CN:
     use_name_for_username_suggestions: "建议用户名时使用用户的全名。"
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末（周六和周日）（如果您仅在工作日（周一至周五）使用 Discourse，请禁用此选项）。"
     splash_screen: "在加载站点资源时显示临时加载屏幕"
-    navigation_menu: "确定使用哪个导航菜单。"
     default_navigation_menu_categories: "所选类别默认将显示在导航菜单的“类别”版块下。"
     default_navigation_menu_tags: "所选标签默认将显示在导航菜单的“标签”版块下。"
     experimental_new_new_view_groups: '实验性：启用一个新的话题列表，将未读话题和新话题合并，并使边栏中的“一切”链接指向它。'
@@ -2274,6 +2276,7 @@ zh_CN:
     enable_experimental_bookmark_redesign_groups: "实验：显示帖子书签的快速访问菜单和重新设计的新模式"
     glimmer_header_mode: "控制是否使用新的 \"glimmer \"标头实现。默认为 \"auto\"，一旦所有主题和插件都准备就绪，就会自动启用。https://meta.discourse.org/t/296544"
     experimental_form_templates: "实验性：启用表单模板功能。<b>启用后</b>，可以在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
+    admin_sidebar_enabled_groups: "为指定组的管理用户界面启用侧边栏导航，取代顶层管理导航按钮。"
     lazy_load_categories_groups: "实验：只为这些组的用户懒加载类别信息。这可以提高有许多类别的网站的性能。"
     experimental_topic_bulk_actions_enabled_groups: "实验：启用新的批量操作下拉菜单。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
@@ -2371,6 +2374,9 @@ zh_CN:
       - "已停用"
       - "停用"
       - "未激活"
+      navigation_menu:
+      - "边栏"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

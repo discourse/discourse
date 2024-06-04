@@ -2136,7 +2136,6 @@ sv:
     use_name_for_username_suggestions: "Använd en användares fullständiga namn när det föreslås användarnamn."
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
     splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
-    navigation_menu: "Bestäm vilken navigeringsmeny som ska användas."
     default_navigation_menu_categories: "Valda kategorier visas som standard under navigeringsmenyns sektion Kategorier."
     default_navigation_menu_tags: "Valda taggar visas som standard under navigeringsmenyns sektion Taggar."
     experimental_new_new_view_groups: 'EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken "Allt" i sidofältet länkar till den.'
@@ -2233,6 +2232,9 @@ sv:
       purge_unactivated_users_grace_period_days:
       - ""
       - "inaktiv"
+      - ""
+      navigation_menu:
+      - "sidofält"
       - ""
     placeholder:
       discourse_connect_provider_secrets:

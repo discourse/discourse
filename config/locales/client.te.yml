@@ -2808,14 +2808,12 @@ te:
         filter: "ఇక విషయాలు లేవు."
     topic_bulk_actions:
       close_topics:
-        name: "విషయాలు మూయు"
+        name: "మూసివేయండి"
         optional: (ఐచ్ఛికం)
       archive_topics:
-        name: "విషయాలు కట్టకట్టు"
-      unlist_topics:
-        name: "విషయాలను జాబితా నుండి తీసివేయండి"
-      relist_topics:
-        name: "విషయాలను మళ్లీ జాబితా చేయండి"
+        name: "ఆర్కైవ్ చెయ్యండి"
+      move_messages_to_inbox:
+        name: "ఇన్‌బాక్స్‌కి తరలించండి"
       remove_tags:
         name: "ట్యాగ్‌లను తీసివేయండి"
       append_tags:
@@ -2823,7 +2821,7 @@ te:
       replace_tags:
         name: "ట్యాగ్‌లను భర్తీ చేయండి"
       delete_topics:
-        name: "విషయాలను తొలగించండి"
+        name: "తొలగించండి"
       update_category:
         name: "వర్గాన్ని నవీకరించండి"
         description: "ఎంచుకున్న విషయాలకి కొత్త వర్గాన్ని ఎంచుకోండి"

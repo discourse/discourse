@@ -1914,20 +1914,18 @@ zh_TW:
         bookmarks: "書籤裡沒有更多的話題了。"
     topic_bulk_actions:
       close_topics:
-        name: "關閉話題"
+        name: "關閉"
         optional: (選擇性)
       archive_topics:
-        name: "已封存的話題"
-      unlist_topics:
-        name: "未在列表中的話題"
-      relist_topics:
-        name: "討論話題"
+        name: "封存"
+      move_messages_to_inbox:
+        name: "移動到收件匣"
       append_tags:
         name: "向後追加標記"
       replace_tags:
         name: "取代標記"
       delete_topics:
-        name: "刪除話題"
+        name: "刪除"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"

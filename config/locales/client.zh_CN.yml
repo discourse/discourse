@@ -2689,15 +2689,13 @@ zh_CN:
         filter: "没有更多话题了。"
     topic_bulk_actions:
       close_topics:
-        name: "关闭话题"
+        name: "关闭"
         note: "备注"
         optional: '（可选）'
       archive_topics:
-        name: "归档话题"
-      unlist_topics:
-        name: "取消公开话题"
-      relist_topics:
-        name: "重新公开话题"
+        name: "归档"
+      move_messages_to_inbox:
+        name: "移至收件箱"
       remove_tags:
         name: "移除标签"
       append_tags:
@@ -2705,7 +2703,7 @@ zh_CN:
       replace_tags:
         name: "替换标签"
       delete_topics:
-        name: "删除话题"
+        name: "删除"
       update_category:
         name: "更新类别"
         description: "为所选主题选择新类别"
@@ -4206,6 +4204,7 @@ zh_CN:
       panels:
         forum:
           label: 论坛
+      filter: "筛选..."
       clear_filter: "清除过滤器"
       no_results:
         title: "没有结果"
@@ -4423,6 +4422,7 @@ zh_CN:
             include_subcategories:
               label: "包括子类别"
       flags:
+        title: "审核标记"
         description: "描述"
         enabled: "已启用？"
       groups:
@@ -4754,6 +4754,7 @@ zh_CN:
           user_fields: "用户字段"
           watched_words: "关注词"
           legal: "法律信息"
+          moderation_flags: "审核标记"
       appearance:
         title: "外观"
         sidebar_link:
@@ -5445,6 +5446,7 @@ zh_CN:
             create_watched_word_group: "创建关注词组"
             update_watched_word_group: "更新关注词组"
             delete_watched_word_group: "删除关注词组"
+            toggle_flag: "切换标记"
         screened_emails:
           title: "已屏蔽的电子邮件"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"

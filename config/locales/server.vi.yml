@@ -1346,6 +1346,9 @@ vi:
       - ""
       - "không hoạt động"
       - ""
+      navigation_menu:
+      - "thanh bên"
+      - ""
   search:
     within_post: "#%{post_number} bởi %{username}"
     types:

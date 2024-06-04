@@ -2312,6 +2312,9 @@ ru:
       - ""
       - "неактивна"
       - ""
+      navigation_menu:
+      - "боковая панель"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

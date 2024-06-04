@@ -2205,6 +2205,9 @@ pt_BR:
       - ""
       - "inativo(a)"
       - ""
+      navigation_menu:
+      - "barra lateral"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.exemplo.com.br"

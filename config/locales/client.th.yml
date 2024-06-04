@@ -1623,16 +1623,16 @@ th:
         bookmarks: "ไม่มีกระทู้ที่บุ๊กมาร์กอีกแล้ว"
     topic_bulk_actions:
       close_topics:
-        name: "ปิดกระทู้"
+        name: "ปิด"
         optional: (ทางเลือก)
       archive_topics:
-        name: "คลังกระทู้"
-      unlist_topics:
-        name: "กระทู้ที่ไม่ได้แสดง"
+        name: "คลัง"
+      move_messages_to_inbox:
+        name: "ย้ายไปกล่องขาเข้า"
       replace_tags:
         name: "แทนที่แท็ก"
       delete_topics:
-        name: "ลบกระทู้"
+        name: "ลบ"
     topic:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"

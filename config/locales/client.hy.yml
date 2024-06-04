@@ -1807,20 +1807,18 @@ hy:
         bookmarks: "Էջանշված թեմաներ այլևս չկան:"
     topic_bulk_actions:
       close_topics:
-        name: "Փակել Թեմաները"
+        name: "Փակել"
         optional: (ընտրովի)
       archive_topics:
-        name: "Արխիվացնել Թեմաները"
-      unlist_topics:
-        name: "Թեմաները Ցանկից Հանել"
-      relist_topics:
-        name: "Վերացանկավորել Թեմաները"
+        name: "Արխիվ"
+      move_messages_to_inbox:
+        name: "Տեղափոխել Մուտքային արկղ"
       append_tags:
         name: "Ավելացնել Թեգեր"
       replace_tags:
         name: "Փոխարինել Թեգերը"
       delete_topics:
-        name: "Ջնջել Թեմաները"
+        name: "Ջնջել"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"

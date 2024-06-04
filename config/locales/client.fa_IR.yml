@@ -2335,15 +2335,13 @@ fa_IR:
         filter: "هیچ موضوع بیشتری وجود ندارد."
     topic_bulk_actions:
       close_topics:
-        name: "بستن موضوعات"
+        name: "بستن"
         note: "یادداشت"
         optional: (اختیاری)
       archive_topics:
-        name: "بایگانی موضوعات"
-      unlist_topics:
-        name: "از فهرست خارج کردن مباحث"
-      relist_topics:
-        name: "ایجاد فهرست مجدد از موضوعات"
+        name: "بایگانی"
+      move_messages_to_inbox:
+        name: "انتقال به صندوق دریافت"
       remove_tags:
         name: "حذف برچسب‌ها"
       append_tags:
@@ -2351,7 +2349,7 @@ fa_IR:
       replace_tags:
         name: "جایگزینی برچسب‌ها"
       delete_topics:
-        name: "حذف موضوعات"
+        name: "حذف"
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"

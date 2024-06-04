@@ -220,6 +220,7 @@ zh_CN:
         header: "聊天标题"
         composer: "聊天输入框"
         channels_list: "聊天频道列表"
+      no_direct_message_channels: "你还没有加入任何直接消息。"
       no_public_channels_cta: "浏览频道"
       kicked_from_channel: "您无法再访问此频道。"
       only_chat_push_notifications:

@@ -1227,6 +1227,9 @@ fa_IR:
       - ""
       - "غیر‌فعال"
       - ""
+      navigation_menu:
+      - "نوار کناری"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

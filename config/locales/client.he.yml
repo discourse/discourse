@@ -437,6 +437,11 @@ he:
     bookmark_bulk_actions:
       clear_reminders:
         name: "הסרת תזכורות"
+        description:
+          one: "האם להסיר את התזכורת עבור סימניה זו?"
+          two: "האם להסיר את התזכורות עבור שתי סימניות אלו?"
+          many: "האם להסיר את התזכורות עבור <b>%{count}</b> סימניות אלו?"
+          other: "האם להסיר את התזכורות עבור <b>%{count}</b> סימניות אלו?"
       delete_bookmarks:
         name: "מחיקת סימנייה"
         description:
@@ -821,6 +826,9 @@ he:
       topic_count_long: "נושאים שנוצרו"
       post_count: "תגובות"
       post_count_long: "תגובות שפורסמו"
+      no_results:
+        body: "רשימה של חברי קהילה המציגים את פעילותם תוצג כאן. לעת עתה הרשימה ריקה מכיוון שהקהילה שלך עדיין חדשה לגמרי!"
+        extra_body: "מנהלי מערכת ומנחים יכולים לראות ולנהל משתמשים ב<a href='%{basePath}/admin/users/'>ניהול משתמשים</a>."
       no_results_with_search: "לא נמצאו תוצאות"
       days_visited: "ביקורים"
       days_visited_long: "ימים לביקור"
@@ -2692,6 +2700,11 @@ he:
         many: "אהבו %{count} מהפוסטים שלך"
         other: "אהבו %{count} מהפוסטים שלך"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated_description:
+        one: "קישרו הודעה שלך"
+        two: "קישרו שתי הודעות שלך"
+        many: "קישרו %{count} הודעות שלך"
+        other: "קישרו %{count} הודעות שלך"
       linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -3040,6 +3053,7 @@ he:
         close_topics: "סגירת נושאים"
         archive_topics: "ארכוב נושאים"
         move_messages_to_inbox: "העברה לדואר נכנס"
+        archive_messages: "העברה לארכיון"
         notification_level: "התראות…"
         change_notification_level: "שינוי רמת ההתראות"
         choose_new_category: "נא לבחור קטגוריה לנושאים:"
@@ -3108,15 +3122,19 @@ he:
         filter: "אין נושאים נוספים."
     topic_bulk_actions:
       close_topics:
-        name: "סגירת נושאים"
+        name: "סגירה"
         note: "הערה"
         optional: (רשות)
       archive_topics:
-        name: "העברת נושאים לארכיון"
+        name: "ארכב"
+      archive_messages:
+        name: "העברה לארכיון"
+      move_messages_to_inbox:
+        name: "העברה לדואר נכנס"
       unlist_topics:
-        name: "הסרת נושאים מהרשימה"
+        name: "הסרה מהרשימה"
       relist_topics:
-        name: "הצגת נושאים ברשימה מחדש"
+        name: "החזרה לרשימה"
       remove_tags:
         name: "הסרת תגיות"
       append_tags:
@@ -3124,7 +3142,7 @@ he:
       replace_tags:
         name: "החלפת תגיות"
       delete_topics:
-        name: "מחיקת נושאים"
+        name: "מחיקה"
       update_category:
         name: "עדכון קטגוריה"
         description: "נא לבחור קטגוריה חדשה לנושאים הנבחרים"
@@ -3136,6 +3154,7 @@ he:
         description: "סימון נושאים כנקראו"
       update_notifications:
         name: "עדכון התראות"
+        description: "שינוי רמת ההתראה לצפייה, מעקב, רגיל או מושתק"
     topic:
       filter_to:
         one: "פוסט אחד בנושא"
@@ -3155,6 +3174,7 @@ he:
         help: "החזרת הודעה לדואר נכנס"
       defer:
         help: "סימון הנושא כלא נקרא"
+        title: "סימון כלא נקרא"
       list: "נושאים"
       new: "נושא חדש"
       unread: "לא נקראו"
@@ -4159,9 +4179,18 @@ he:
       pinned:
         title: "נעוץ"
         help: "נושא זה ננעץ עבורכם, הוא יופיע בראש הקטגוריה"
+      unlisted:
+        help: "נושא זה מוסתר; הוא לא יוצג ברשימות הנושאים, וזמין רק באמצעות קישור ישיר. %{unlistedReason}"
       personal_message:
         title: "הנושא הזה הוא הודעה אישית"
         help: "הנושא הזה הוא הודעה אישית"
+      visibility_reasons:
+        op_flag_threshold_reached: "נושא זה הוסר באופן אוטומטי מכיוון שהגיע לסף דיגולים (דיווחי תוכן)"
+        op_unhidden: "נושא זה הועלה מחדש על ידי המחבר/ת"
+        embedded_topic: "נושא זה הוחזר מכיוון שהוא נושא מוטבע"
+        manually_unlisted: "נושא זה הוסר באופן ידני על ידי מנהל או מנחה"
+        manually_relisted: "נושא זה פורסם מחדש ידנית על ידי מנהל.ת או מנחה"
+        bulk_action: "החשיפה של נושא זה שונתה בגלל פעולה גורפת שבוצעה על ידי משתמש"
     posts: "פוסטים"
     pending_posts:
       label: "בהמתנה"
@@ -5064,6 +5093,7 @@ he:
             include_subcategories:
               label: "לכלול תת־קטגוריות"
       flags:
+        title: "סימוני פיקוח"
         description: "תיאור"
         enabled: "מאופשר?"
       groups:
@@ -5408,6 +5438,7 @@ he:
           user_fields: "שדות משתמש"
           watched_words: "מילים במעקב"
           legal: "משפטי"
+          moderation_flags: "סימוני פיקוח"
       appearance:
         title: "מראה"
         sidebar_link:
@@ -6106,6 +6137,7 @@ he:
             create_watched_word_group: "יצירת קבוצת מילים במעקב"
             update_watched_word_group: "עדכון קבוצת מילים במעקב"
             delete_watched_word_group: "מחיקת קבוצת מילים במעקב"
+            toggle_flag: "החלפת סימון"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."

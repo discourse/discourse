@@ -2284,14 +2284,12 @@ ko:
         bookmarks: "더 이상 북마크한 주제가 없습니다."
     topic_bulk_actions:
       close_topics:
-        name: "글 닫기"
+        name: "닫기"
         optional: (선택 사항)
       archive_topics:
-        name: "글 보관"
-      unlist_topics:
-        name: "목록에서 글 숨기기"
-      relist_topics:
-        name: "목록에서 글 다시 보이기"
+        name: "보관"
+      move_messages_to_inbox:
+        name: "받은 편지함으로 이동"
       remove_tags:
         name: "태그 제거"
       append_tags:
@@ -2299,7 +2297,7 @@ ko:
       replace_tags:
         name: "태그 바꾸기"
       delete_topics:
-        name: "글 삭제"
+        name: "삭제하기"
     topic:
       filter_to:
         other: "이 주제의 게시물 %{count}개"

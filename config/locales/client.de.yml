@@ -2088,6 +2088,7 @@ de:
       error: "Unbekannter Fehler"
       cookies_error: "Dein Browser scheint Cookies deaktiviert zu haben. Du kannst dich möglicherweise nicht anmelden, ohne diese zuerst zu aktivieren."
       rate_limit: "Warte bitte ein wenig, bevor du erneut versuchst, dich anzumelden."
+      password_expired: "Passwort abgelaufen. Bitte <a href='%{reset_url}'>setze dein Passwort zurück</a>."
       blank_username: "Bitte gib deine E-Mail-Adresse oder deinen Benutzernamen ein."
       blank_username_or_password: "Bitte gib deine E-Mail-Adresse oder deinen Benutzernamen und dein Passwort ein."
       reset_password: "Passwort zurücksetzen"
@@ -2778,6 +2779,7 @@ de:
         close_topics: "Themen schließen"
         archive_topics: "Themen archivieren"
         move_messages_to_inbox: "In Posteingang verschieben"
+        archive_messages: "Ins Archiv verschieben"
         notification_level: "Benachrichtigungen …"
         change_notification_level: "Benachrichtigungsstufe ändern"
         choose_new_category: "Neue Kategorie für die gewählten Themen:"
@@ -2836,15 +2838,19 @@ de:
         filter: "Es gibt keine weiteren Themen."
     topic_bulk_actions:
       close_topics:
-        name: "Themen schließen"
+        name: "Schließen"
         note: "Hinweis"
         optional: (optional)
       archive_topics:
-        name: "Themen archivieren"
+        name: "Archivieren"
+      archive_messages:
+        name: "Ins Archiv verschieben"
+      move_messages_to_inbox:
+        name: "In Posteingang verschieben"
       unlist_topics:
-        name: "Themen unsichtbar machen"
+        name: "Unsichtbar machen"
       relist_topics:
-        name: "Themen neu auflisten"
+        name: "Neu auflisten"
       remove_tags:
         name: "Schlagwörter entfernen"
       append_tags:
@@ -2852,7 +2858,7 @@ de:
       replace_tags:
         name: "Schlagwörter ersetzen"
       delete_topics:
-        name: "Themen löschen"
+        name: "Löschen"
       update_category:
         name: "Kategorie aktualisieren"
         description: "Wähle die neue Kategorie für die ausgewählten Themen"
@@ -4656,6 +4662,7 @@ de:
             include_subcategories:
               label: "Unterkategorien einschließen"
       flags:
+        title: "Moderationsmeldungen"
         description: "Beschreibung"
         enabled: "Aktiviert?"
       groups:
@@ -4992,6 +4999,7 @@ de:
           user_fields: "Benutzerfelder"
           watched_words: "Beobachtete Wörter"
           legal: "Rechtliches"
+          moderation_flags: "Moderationsmeldungen"
       appearance:
         title: "Erscheinungsbild"
         sidebar_link:
@@ -5690,6 +5698,7 @@ de:
             create_watched_word_group: "Beobachtete Wortgruppe erstellen"
             update_watched_word_group: "Beobachtete Wortgruppe aktualisieren"
             delete_watched_word_group: "Beobachtete Wortgruppe löschen"
+            toggle_flag: "Meldung umschalten"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."

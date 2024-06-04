@@ -975,11 +975,13 @@ be:
         bookmarks: "Тэмы ў закладках адсутнічаюць."
     topic_bulk_actions:
       close_topics:
-        name: "Закрыць тэму"
+        name: "зачыніць"
       archive_topics:
-        name: "Заархіваваныя тэмы"
+        name: "архіў"
+      move_messages_to_inbox:
+        name: "Перамясціць у тэчцы Уваходныя"
       delete_topics:
-        name: "Выдаліць тэмы"
+        name: "выдаляць"
     topic:
       create: "пачаць новую тэму"
       create_long: "Стварыць новую тэму"

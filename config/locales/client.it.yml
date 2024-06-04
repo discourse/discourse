@@ -2761,14 +2761,12 @@ it:
         filter: "Non ci sono altri argomenti."
     topic_bulk_actions:
       close_topics:
-        name: "Chiudi argomenti"
+        name: "Chiudi"
         optional: (opzionale)
       archive_topics:
-        name: "Archivia argomenti"
-      unlist_topics:
-        name: "Rendi argomenti invisibili"
-      relist_topics:
-        name: "Ripubblica Argomenti"
+        name: "Archiviati"
+      move_messages_to_inbox:
+        name: "Sposta in posta in arrivo"
       remove_tags:
         name: "Rimuovi etichette"
       append_tags:
@@ -2776,7 +2774,7 @@ it:
       replace_tags:
         name: "Sostituisci Etichette"
       delete_topics:
-        name: "Elimina argomenti"
+        name: "Elimina"
     topic:
       filter_to:
         one: "%{count} messaggio in questo argomento"

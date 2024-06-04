@@ -1903,20 +1903,18 @@ lv:
         bookmarks: "Vairāk grāmatzīmēs ievietoto tēmu nav. "
     topic_bulk_actions:
       close_topics:
-        name: "Slēgt tēmas"
+        name: "Aizvērt"
         optional: (pēc izvēles)
       archive_topics:
-        name: "Arhivēt tēmas"
-      unlist_topics:
-        name: "Izņemt no sarakstiem tēmas"
-      relist_topics:
-        name: "Atkal padarīt tēmas redzamas sarakstiem"
+        name: "Arhīvs"
+      move_messages_to_inbox:
+        name: "Pārvietot uz iesūtni"
       append_tags:
         name: "Pievienot tagus"
       replace_tags:
         name: "Aizvietot tagus"
       delete_topics:
-        name: "Dzēst tēmas"
+        name: "Dzēst"
     topic:
       filter_to:
         zero: "tēmā ziņu nav"

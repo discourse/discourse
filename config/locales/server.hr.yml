@@ -1457,6 +1457,9 @@ hr:
       - ""
       - "neaktivan"
       - ""
+      navigation_menu:
+      - "bočna traka"
+      - ""
   search:
     within_post: "#%{post_number} od %{username}"
     types:
