@@ -4,7 +4,6 @@ import { assert, debug, warn } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
 import FkControlInputGroup from "form-kit/components/control/input-group";
 import { VALIDATION_TYPES } from "form-kit/lib/constants";
@@ -27,6 +26,15 @@ export default class Form extends Component {
       return () => element.removeEventListener(eventName, handler);
     }
   });
+
+  constructor() {
+    super(...arguments);
+
+    this.args.onRegisterApi?.({
+      submit: this.onSubmit,
+      reset: this.onReset,
+    });
+  }
 
   @cached
   get effectiveData() {
@@ -107,7 +115,6 @@ export default class Form extends Component {
   set(key, value) {
     set(this.effectiveData, key, value);
 
-    console.log("SET", this.fieldValidationEvent, VALIDATION_TYPES.change);
     if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
       this.handleFieldValidation(key);
     }
@@ -124,10 +131,6 @@ export default class Form extends Component {
       `You passed @name="${name}" to the form field, but this is already in use. Names of form fields must be unique!`,
       !this.fields.has(name)
     );
-
-    // const f = new FieldData(field, validation);
-    // this.fields.set(name, f);
-    // return f;
 
     this.fields.set(name, new FieldData(field));
   }
@@ -187,10 +190,8 @@ export default class Form extends Component {
   }
 
   async validate() {
-    console.log("---- validate ----");
     let errors = {};
     for (const [name, field] of this.fields) {
-      console.log("VALIDATE NAME", name, this.effectiveData);
       Object.assign(
         errors,
         await field.validate?.(

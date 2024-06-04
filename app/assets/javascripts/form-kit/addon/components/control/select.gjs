@@ -14,9 +14,8 @@ export default class FkControlSelect extends Component {
 
   <template>
     {{#if @label}}
-      <label class="d-form-content-label" for={{@name}}>
+      <label class="d-form-select-label" for={{@name}}>
         {{@label}}
-
         {{#unless @required}}
           <span class="d-form-field__optional">(Optional)</span>
         {{/unless}}

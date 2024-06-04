@@ -48,6 +48,20 @@ export default class FormField extends Component {
     return this.errors !== undefined;
   }
 
+  get showMeta() {
+    return this.args.showMeta ?? true;
+  }
+
+  get wrapper() {
+    if (this.args.inputGroup) {
+      return <template>
+        <div class="d-form-col --col-12">{{yield}}</div>
+      </template>;
+    } else {
+      return <template>{{yield}}</template>;
+    }
+  }
+
   @action
   setValue(value) {
     this.args.set(this.args.name, value);
@@ -55,42 +69,44 @@ export default class FormField extends Component {
 
   <template>
     {{#let (uniqueId) (uniqueId) as |fieldId errorId|}}
-      {{yield
-        (hash
-          Select=(component
-            FkControlSelect
-            name=@name
-            fieldId=fieldId
-            errorId=errorId
+      <this.wrapper>
+        {{yield
+          (hash
+            Select=(component
+              FkControlSelect
+              name=@name
+              fieldId=fieldId
+              errorId=errorId
+              setValue=this.setValue
+              value=this.value
+              errors=this.errors
+              triggerValidationFor=@triggerValidationFor
+            )
+            Input=(component
+              FkControlInput
+              name=@name
+              fieldId=fieldId
+              errorId=errorId
+              setValue=this.setValue
+              value=this.value
+              errors=this.errors
+              triggerValidationFor=@triggerValidationFor
+            )
+            RadioGroup=(component
+              FkControlRadioGroup
+              name=@name
+              fieldId=fieldId
+              errorId=errorId
+              setValue=this.setValue
+              value=this.value
+              errors=this.errors
+              triggerValidationFor=@triggerValidationFor
+            )
+            id=fieldId
             setValue=this.setValue
-            value=this.value
-            errors=this.errors
-            triggerValidationFor=@triggerValidationFor
           )
-          Input=(component
-            FkControlInput
-            name=@name
-            fieldId=fieldId
-            errorId=errorId
-            setValue=this.setValue
-            value=this.value
-            errors=this.errors
-            triggerValidationFor=@triggerValidationFor
-          )
-          RadioGroup=(component
-            FkControlRadioGroup
-            name=@name
-            fieldId=fieldId
-            errorId=errorId
-            setValue=this.setValue
-            value=this.value
-            errors=this.errors
-            triggerValidationFor=@triggerValidationFor
-          )
-          id=fieldId
-          setValue=this.setValue
-        )
-      }}
+        }}
+      </this.wrapper>
     {{/let}}
   </template>
 }

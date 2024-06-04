@@ -8,7 +8,6 @@ export default class FormErrors extends Component {
   }
 
   get visibleErrors() {
-    console.log(this.args.names);
     if (!this.args.names) {
       return this.args.errors;
     }

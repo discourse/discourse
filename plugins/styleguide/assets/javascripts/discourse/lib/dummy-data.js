@@ -227,6 +227,15 @@ export function createData(store) {
 
     formData: {},
 
+    doSomething: () => {
+      _data.formApi.submit();
+    },
+
+    registerFormApi: (formApi) => {
+      console.log("registerFormApi", formApi);
+      _data.formApi = formApi;
+    },
+
     validate: (name, value, data, addError) => {
       console.log("custom validate", data["what_is_love"] === "check_2");
       if (

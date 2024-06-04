@@ -39,8 +39,6 @@ export default class FieldData {
       this.rules
     );
 
-    console.log("validator", validator.addError);
-
     await this.fieldRegistration.validate?.(
       name,
       value,
