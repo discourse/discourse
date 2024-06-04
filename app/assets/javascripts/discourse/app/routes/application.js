@@ -21,12 +21,14 @@ import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 import NotActivatedModal from "../components/modal/not-activated";
 
-function unlessStrictlyReadOnly(cb, message) {
-  if (this.site.isReadOnly && !this.site.isStaffWritesOnly) {
-    this.dialog.alert(message);
-  } else {
-    cb();
-  }
+function unlessStrictlyReadOnly(method, message) {
+  return function () {
+    if (this.site.isReadOnly && !this.site.isStaffWritesOnly) {
+      this.dialog.alert(message);
+    } else {
+      this[method]();
+    }
+  };
 }
 
 const ApplicationRoute = DiscourseRoute.extend({
@@ -72,204 +74,183 @@ const ApplicationRoute = DiscourseRoute.extend({
     return true;
   },
 
-  @action
-  toggleMobileView() {
-    mobile.toggleMobileView();
-  },
+  actions: {
+    toggleMobileView() {
+      mobile.toggleMobileView();
+    },
 
-  @action
-  toggleSidebar() {
-    this.controllerFor("application").send("toggleSidebar");
-  },
+    toggleSidebar() {
+      this.controllerFor("application").send("toggleSidebar");
+    },
 
-  @action
-  logout() {
-    unlessStrictlyReadOnly.apply(this, [
-      () => this._handleLogout(),
-      I18n.t("read_only_mode.logout_disabled"),
-    ]);
-  },
+    logout: unlessStrictlyReadOnly(
+      "_handleLogout",
+      I18n.t("read_only_mode.logout_disabled")
+    ),
 
-  @action
-  _collectTitleTokens(tokens) {
-    tokens.push(this.siteTitle);
-    if (
-      (window.location.pathname === getURL("/") ||
-        window.location.pathname === getURL("/login")) &&
-      this.shortSiteDescription !== ""
-    ) {
-      tokens.push(this.shortSiteDescription);
-    }
-    this.documentTitle.setTitle(tokens.join(" - "));
-  },
-
-  @action
-  composePrivateMessage(user, post) {
-    const recipients = user ? user.get("username") : "";
-    const reply = post
-      ? `${window.location.protocol}//${window.location.host}${post.url}`
-      : null;
-    const title = post
-      ? I18n.t("composer.reference_topic_title", {
-          title: post.topic.title,
-        })
-      : null;
-
-    // used only once, one less dependency
-    return this.composer.open({
-      action: Composer.PRIVATE_MESSAGE,
-      recipients,
-      archetypeId: "private_message",
-      draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
-      draftSequence: 0,
-      reply,
-      title,
-    });
-  },
-
-  @action
-  error(err, transition) {
-    const xhrOrErr = err.jqXHR ? err.jqXHR : err;
-    const exceptionController = this.controllerFor("exception");
-    let shouldBubble = false;
-
-    const themeOrPluginSource = identifySource(err);
-
-    if (!(xhrOrErr instanceof RouteException)) {
-      shouldBubble = true;
-      // eslint-disable-next-line no-console
-      console.error(
-        ...[consolePrefix(err, themeOrPluginSource), xhrOrErr].filter(Boolean)
-      );
-
-      if (xhrOrErr && xhrOrErr.status === 404) {
-        return this.router.transitionTo("exception-unknown");
+    _collectTitleTokens(tokens) {
+      tokens.push(this.siteTitle);
+      if (
+        (window.location.pathname === getURL("/") ||
+          window.location.pathname === getURL("/login")) &&
+        this.shortSiteDescription !== ""
+      ) {
+        tokens.push(this.shortSiteDescription);
       }
+      this.documentTitle.setTitle(tokens.join(" - "));
+    },
 
-      if (themeOrPluginSource) {
-        this.clientErrorHandler.displayErrorNotice(
-          "Error loading route",
-          themeOrPluginSource
+    composePrivateMessage(user, post) {
+      const recipients = user ? user.get("username") : "";
+      const reply = post
+        ? `${window.location.protocol}//${window.location.host}${post.url}`
+        : null;
+      const title = post
+        ? I18n.t("composer.reference_topic_title", {
+            title: post.topic.title,
+          })
+        : null;
+
+      // used only once, one less dependency
+      return this.composer.open({
+        action: Composer.PRIVATE_MESSAGE,
+        recipients,
+        archetypeId: "private_message",
+        draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
+        draftSequence: 0,
+        reply,
+        title,
+      });
+    },
+
+    error(err, transition) {
+      const xhrOrErr = err.jqXHR ? err.jqXHR : err;
+      const exceptionController = this.controllerFor("exception");
+      let shouldBubble = false;
+
+      const themeOrPluginSource = identifySource(err);
+
+      if (!(xhrOrErr instanceof RouteException)) {
+        shouldBubble = true;
+        // eslint-disable-next-line no-console
+        console.error(
+          ...[consolePrefix(err, themeOrPluginSource), xhrOrErr].filter(Boolean)
         );
+
+        if (xhrOrErr && xhrOrErr.status === 404) {
+          return this.router.transitionTo("exception-unknown");
+        }
+
+        if (themeOrPluginSource) {
+          this.clientErrorHandler.displayErrorNotice(
+            "Error loading route",
+            themeOrPluginSource
+          );
+        }
       }
-    }
 
-    exceptionController.setProperties({
-      lastTransition: transition,
-      thrown: xhrOrErr,
-    });
+      exceptionController.setProperties({
+        lastTransition: transition,
+        thrown: xhrOrErr,
+      });
 
-    if (transition.intent.url) {
-      if (transition.method === "replace") {
-        DiscourseURL.replaceState(transition.intent.url);
+      if (transition.intent.url) {
+        if (transition.method === "replace") {
+          DiscourseURL.replaceState(transition.intent.url);
+        } else {
+          DiscourseURL.pushState(transition.intent.url);
+        }
+      }
+
+      this.intermediateTransitionTo("exception");
+      return shouldBubble;
+    },
+
+    showLogin: unlessStrictlyReadOnly(
+      "handleShowLogin",
+      I18n.t("read_only_mode.login_disabled")
+    ),
+
+    showCreateAccount(createAccountProps = {}) {
+      if (this.site.isReadOnly) {
+        this.dialog.alert(I18n.t("read_only_mode.login_disabled"));
       } else {
-        DiscourseURL.pushState(transition.intent.url);
+        this.handleShowCreateAccount(createAccountProps);
       }
-    }
+    },
 
-    this.intermediateTransitionTo("exception");
-    return shouldBubble;
-  },
+    showForgotPassword() {
+      this.modal.show(ForgotPassword);
+    },
 
-  @action
-  showLogin() {
-    unlessStrictlyReadOnly.apply(this, [
-      () => this.handleShowLogin(),
-      I18n.t("read_only_mode.login_disabled"),
-    ]);
-  },
+    showNotActivated(props) {
+      this.modal.show(NotActivatedModal, { model: props });
+    },
 
-  @action
-  showCreateAccount(createAccountProps = {}) {
-    if (this.site.isReadOnly) {
-      this.dialog.alert(I18n.t("read_only_mode.login_disabled"));
-    } else {
-      this.handleShowCreateAccount(createAccountProps);
-    }
-  },
+    showUploadSelector() {
+      document.getElementById("file-uploader").click();
+    },
 
-  @action
-  showForgotPassword() {
-    this.modal.show(ForgotPassword);
-  },
+    showKeyboardShortcutsHelp() {
+      this.modal.show(KeyboardShortcutsHelp);
+    },
 
-  @action
-  showNotActivated(props) {
-    this.modal.show(NotActivatedModal, { model: props });
-  },
+    // Close the current modal, and destroy its state.
+    closeModal(initiatedBy) {
+      return this.modal.close(initiatedBy);
+    },
 
-  @action
-  showUploadSelector() {
-    document.getElementById("file-uploader").click();
-  },
-
-  @action
-  showKeyboardShortcutsHelp() {
-    this.modal.show(KeyboardShortcutsHelp);
-  },
-
-  // Close the current modal, and destroy its state.
-  @action
-  closeModal(initiatedBy) {
-    return this.modal.close(initiatedBy);
-  },
-
-  /**
+    /**
       Hide the modal, but keep it with all its state so that it can be shown again later.
       This is useful if you want to prompt for confirmation. hideModal, ask "Are you sure?",
       user clicks "No", reopenModal. If user clicks "Yes", be sure to call closeModal.
     **/
-  @action
-  hideModal() {
-    return this.modal.hide();
-  },
+    hideModal() {
+      return this.modal.hide();
+    },
 
-  @action
-  reopenModal() {
-    return this.modal.reopen();
-  },
+    reopenModal() {
+      return this.modal.reopen();
+    },
 
-  @action
-  editCategory(category) {
-    DiscourseURL.routeTo(`/c/${Category.slugFor(category)}/edit`);
-  },
+    editCategory(category) {
+      DiscourseURL.routeTo(`/c/${Category.slugFor(category)}/edit`);
+    },
 
-  @action
-  checkEmail(user) {
-    user.checkEmail();
-  },
+    checkEmail(user) {
+      user.checkEmail();
+    },
 
-  @action
-  createNewTopicViaParams(title, body, categoryId, tags) {
-    deprecated(
-      "createNewTopicViaParam on the application route is deprecated. Use the composer service instead",
-      { id: "discourse.createNewTopicViaParams" }
-    );
-    getOwnerWithFallback(this).lookup("service:composer").openNewTopic({
-      title,
-      body,
-      categoryId,
-      tags,
-    });
-  },
+    createNewTopicViaParams(title, body, categoryId, tags) {
+      deprecated(
+        "createNewTopicViaParam on the application route is deprecated. Use the composer service instead",
+        { id: "discourse.createNewTopicViaParams" }
+      );
+      getOwnerWithFallback(this).lookup("service:composer").openNewTopic({
+        title,
+        body,
+        categoryId,
+        tags,
+      });
+    },
 
-  @action
-  createNewMessageViaParams({
-    recipients = "",
-    topicTitle = "",
-    topicBody = "",
-    hasGroups = false,
-  } = {}) {
-    deprecated(
-      "createNewMessageViaParams on the application route is deprecated. Use the composer service instead",
-      { id: "discourse.createNewMessageViaParams" }
-    );
-    getOwnerWithFallback(this).lookup("service:composer").openNewMessage({
-      recipients,
-      title: topicTitle,
-      body: topicBody,
-      hasGroups,
-    });
+    createNewMessageViaParams({
+      recipients = "",
+      topicTitle = "",
+      topicBody = "",
+      hasGroups = false,
+    } = {}) {
+      deprecated(
+        "createNewMessageViaParams on the application route is deprecated. Use the composer service instead",
+        { id: "discourse.createNewMessageViaParams" }
+      );
+      getOwnerWithFallback(this).lookup("service:composer").openNewMessage({
+        recipients,
+        title: topicTitle,
+        body: topicBody,
+        hasGroups,
+      });
+    },
   },
 
   handleShowLogin() {
