@@ -38,6 +38,18 @@ shared_examples "login scenarios" do
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
+    it "displays the right message when user's email has been marked as expired" do
+      password = "myawesomepassword"
+      user.update!(password:)
+      expired_user_password = Fabricate(:expired_user_password, user:, password:)
+
+      login_modal.open
+      login_modal.fill(username: user.username, password:)
+      login_modal.click_login
+
+      expect(login_modal).to have_content(I18n.t("login.password_expired"))
+    end
+
     it "can reset password" do
       login_modal.open
       login_modal.fill_username("john")

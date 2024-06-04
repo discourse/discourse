@@ -748,6 +748,7 @@ en:
               same_as_username: "is the same as your username. Please use a more secure password."
               same_as_email: "is the same as your email. Please use a more secure password."
               same_as_current: "is the same as your current password."
+              same_as_previous: "is the same as your previous password."
               same_as_name: "is the same as your name."
               unique_characters: "has too many repeated characters. Please use a more secure password."
             username:
@@ -2759,10 +2760,10 @@ en:
         - "deactivated"
         - "inactive"
         - "unactivated"
-      navigation_menu: 
-        - "sidebar" 
+      navigation_menu:
+        - "sidebar"
         - "header dropdown"
-        
+
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2898,6 +2899,7 @@ en:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
     incorrect_password: "Incorrect password"
+    password_expired: "Password expired. Reset instructions sent to your email."
     incorrect_password_or_passkey: "Incorrect password or passkey"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is activated and ready to use."

@@ -77,6 +77,7 @@ class User < ActiveRecord::Base
           dependent: :destroy
   has_one :invited_user, dependent: :destroy
   has_one :user_notification_schedule, dependent: :destroy
+  has_many :passwords, class_name: "UserPassword", dependent: :destroy
 
   # delete all is faster but bypasses callbacks
   has_many :bookmarks, dependent: :delete_all
@@ -924,6 +925,15 @@ class User < ActiveRecord::Base
 
   def password_validator
     PasswordValidator.new(attributes: :password).validate_each(self, :password, @raw_password)
+  end
+
+  def password_expired?(password)
+    passwords
+      .where("password_expired_at IS NOT NULL AND password_expired_at < ?", Time.zone.now)
+      .any? do |user_password|
+        user_password.password_hash ==
+          hash_password(password, user_password.password_salt, user_password.password_algorithm)
+      end
   end
 
   def confirm_password?(password)
