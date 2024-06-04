@@ -427,18 +427,20 @@ export default class Category extends RestModel {
 
   init() {
     super.init(...arguments);
+    this.setupGroupsAndPermissions();
+  }
 
+  setupGroupsAndPermissions() {
     if (!this.available_groups) {
       return;
     }
+
     this.set("availableGroups", this.available_groups);
 
-    const groupPermissions = this.group_permissions;
-
-    if (groupPermissions) {
+    if (this.group_permissions) {
       this.set(
         "permissions",
-        groupPermissions.map((elem) => {
+        this.group_permissions.map((elem) => {
           this.available_groups.removeObject(elem.group_name);
           return elem;
         })
