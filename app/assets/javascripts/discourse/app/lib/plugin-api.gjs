@@ -55,6 +55,7 @@ import {
   PLUGIN_NAV_MODE_TOP,
   registerAdminPluginConfigNav,
 } from "discourse/lib/admin-plugin-config-nav";
+import classPrepend from "discourse/lib/class-prepend";
 import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
@@ -174,6 +175,7 @@ const DEPRECATED_HEADER_WIDGETS = [
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
   if (!changes.pluginId) {
+    // TODO: handle pluginId for callback-based syntax. Can we remove the need for it entirely?
     // eslint-disable-next-line no-console
     console.warn(
       consolePrefix(),
@@ -292,7 +294,9 @@ class PluginApi {
     if (canModify(klass, "member", resolverName, changes)) {
       delete changes.pluginId;
 
-      if (klass.class.reopen) {
+      if (typeof changes === "function") {
+        classPrepend(klass.class, changes);
+      } else if (klass.class.reopen) {
         klass.class.reopen(changes);
       } else {
         Object.defineProperties(
