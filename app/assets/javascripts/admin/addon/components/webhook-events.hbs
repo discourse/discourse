@@ -1,8 +1,17 @@
 <div
   class="web-hook-events-listing"
   {{did-insert this.subscribe}}
+  {{did-update this.reloadEvents @status}}
   {{will-destroy this.unsubscribe}}
 >
+  <ComboBox
+    @value={{@status}}
+    @content={{this.statuses}}
+    @onChange={{fn (mut @status)}}
+    @options={{hash clearable=true none="admin.web_hooks.events.filter_by"}}
+    class="delivery-status-filters"
+  />
+
   <DButton
     @icon="paper-plane"
     @label="admin.web_hooks.events.ping"

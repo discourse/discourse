@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 export default class WebhookEvents extends Component {
   @service messageBus;
@@ -14,9 +15,12 @@ export default class WebhookEvents extends Component {
   @tracked pingEnabled = true;
   @tracked events = [];
   @tracked incomingEventIds = [];
+  @tracked status = [];
 
   @readOnly("incomingEventIds.length") incomingCount;
   @gt("incomingCount", 0) hasIncoming;
+
+  queryParams = ["status"];
 
   constructor() {
     super(...arguments);
@@ -24,10 +28,36 @@ export default class WebhookEvents extends Component {
   }
 
   async loadEvents() {
-    this.events = await this.store.findAll(
-      "web-hook-event",
-      this.args.webhookId
-    );
+    this.loading = true;
+    this.events = await this.store.findAll("web-hook-event", {
+      webhookId: this.args.webhookId,
+      status: this.args.status,
+    });
+    this.loading = false;
+  }
+
+  get statuses() {
+    let status = [
+      { id: "all", name: I18n.t("admin.web_hooks.events.filter_status.all") },
+      {
+        id: "successful",
+        name: I18n.t("admin.web_hooks.events.filter_status.successful"),
+      },
+      {
+        id: "failed",
+        name: I18n.t("admin.web_hooks.events.filter_status.failed"),
+      },
+    ];
+    return status;
+  }
+
+  @bind
+  reloadEvents() {
+    if (this.loading) {
+      return;
+    }
+
+    this.loadEvents();
   }
 
   @bind
