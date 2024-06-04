@@ -28,7 +28,9 @@ export default class SidebarApiSection extends Component {
     }
 
     if (
-      this.section.text.toLowerCase().match(this.sidebarState.filter.trim())
+      this.section.text
+        .toLowerCase()
+        .match(this.sidebarState.filter.toLowerCase().trim())
     ) {
       return this.section.links;
     }
@@ -38,7 +40,7 @@ export default class SidebarApiSection extends Component {
         link.text
           .toString()
           .toLowerCase()
-          .match(this.sidebarState.filter.trim()) ||
+          .match(this.sidebarState.filter.toLowerCase().trim()) ||
         link.keywords.navigation.some((keyword) =>
           keyword.match(this.sidebarState.filter)
         )
