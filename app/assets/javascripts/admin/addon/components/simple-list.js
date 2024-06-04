@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { empty } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { classNameBindings } from "@ember-decorators/component";
-import { on } from "@ember-decorators/object";
 import discourseComputed from "discourse-common/utils/decorators";
 
 @classNameBindings(":simple-list", ":value-list")
@@ -18,8 +17,8 @@ export default class SimpleList extends Component {
   choices = null;
   allowAny = false;
 
-  @on("didReceiveAttrs")
-  _setupCollection() {
+  didReceiveAttrs() {
+    super.didReceiveAttrs(...arguments);
     this.set("collection", this._splitValues(this.values, this.inputDelimiter));
     this.set("isPredefinedList", !this.allowAny && !isEmpty(this.choices));
   }

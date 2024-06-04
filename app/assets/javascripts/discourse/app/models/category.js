@@ -1,7 +1,6 @@
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
 import { service } from "@ember/service";
-import { on } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PermissionType from "discourse/models/permission-type";
@@ -426,13 +425,13 @@ export default class Category extends RestModel {
 
   permissions = null;
 
-  @on("init")
-  setupGroupsAndPermissions() {
-    const availableGroups = this.available_groups;
-    if (!availableGroups) {
+  init() {
+    super.init(...arguments);
+
+    if (!this.available_groups) {
       return;
     }
-    this.set("availableGroups", availableGroups);
+    this.set("availableGroups", this.available_groups);
 
     const groupPermissions = this.group_permissions;
 
@@ -440,7 +439,7 @@ export default class Category extends RestModel {
       this.set(
         "permissions",
         groupPermissions.map((elem) => {
-          availableGroups.removeObject(elem.group_name);
+          this.available_groups.removeObject(elem.group_name);
           return elem;
         })
       );
