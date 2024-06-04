@@ -1,14 +1,12 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { on } from "@ember-decorators/object";
 import $ from "jquery";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 import { convertIconClass } from "discourse-common/lib/icon-library";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default Component.extend({

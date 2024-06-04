@@ -1,12 +1,13 @@
 import Component from "@ember/component";
 import { cancel, next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import { on } from "@ember-decorators/object";
 import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
 import Category from "discourse/models/category";
 import { isTesting } from "discourse-common/config/environment";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export default Component.extend({

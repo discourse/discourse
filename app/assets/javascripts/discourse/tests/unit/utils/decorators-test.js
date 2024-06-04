@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { clearRender, render, settled } from "@ember/test-helpers";
-import { observes as nativeClassObserves } from "@ember-decorators/object";
+import { observes as nativeClassObserves, on } from "@ember-decorators/object";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -11,7 +11,6 @@ import discourseComputed, {
   afterRender,
   debounce,
   observes,
-  on,
 } from "discourse-common/utils/decorators";
 
 const fooComponent = Component.extend({

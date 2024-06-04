@@ -2,8 +2,8 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { on } from "@ember-decorators/object";
 import $ from "jquery";
-import { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   @on("init")

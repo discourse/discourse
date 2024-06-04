@@ -4,6 +4,7 @@ import { or } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
+import { on } from "@ember-decorators/object";
 import AwsS3 from "@uppy/aws-s3";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
@@ -20,7 +21,7 @@ import ExtendableUploader from "discourse/mixins/extendable-uploader";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import getUrl from "discourse-common/lib/get-url";
 import { deepMerge } from "discourse-common/lib/object";
-import { bind, on } from "discourse-common/utils/decorators";
+import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 export const HUGE_FILE_THRESHOLD_BYTES = 104_857_600; // 100MB

@@ -1,10 +1,8 @@
 import Component from "@ember/component";
 import { equal, gt, readOnly, union } from "@ember/object/computed";
 import { service } from "@ember/service";
-import discourseComputed, {
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
+import { on } from "@ember-decorators/object";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "",

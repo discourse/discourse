@@ -3,6 +3,7 @@ import Component from "@ember/component";
 import EmberObject, { computed } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { next, schedule, throttle } from "@ember/runloop";
+import { on } from "@ember-decorators/object";
 import { BasePlugin } from "@uppy/core";
 import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
@@ -40,7 +41,6 @@ import discourseComputed, {
   bind,
   debounce,
   observes,
-  on,
 } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 

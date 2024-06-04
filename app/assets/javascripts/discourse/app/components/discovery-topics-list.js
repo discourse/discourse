@@ -1,8 +1,9 @@
 import Component from "@ember/component";
 import { service } from "@ember/service";
+import { on } from "@ember-decorators/object";
 import $ from "jquery";
 import LoadMore from "discourse/mixins/load-more";
-import { observes, on } from "discourse-common/utils/decorators";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend(LoadMore, {
   classNames: ["contents"],

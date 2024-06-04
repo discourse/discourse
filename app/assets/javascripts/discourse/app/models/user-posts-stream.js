@@ -1,9 +1,9 @@
 import EmberObject from "@ember/object";
+import { on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { url } from "discourse/lib/computed";
 import UserAction from "discourse/models/user-action";
-import { on } from "discourse-common/utils/decorators";
 
 export default class UserPostsStream extends EmberObject {
   loaded = false;

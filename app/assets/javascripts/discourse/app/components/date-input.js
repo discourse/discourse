@@ -2,9 +2,10 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
+import { on } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import loadScript from "discourse/lib/load-script";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
 function isInputDateSupported() {

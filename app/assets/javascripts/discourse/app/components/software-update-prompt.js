@@ -1,10 +1,11 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
+import { on } from "@ember-decorators/object";
 import { isTesting } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
 import discourseLater from "discourse-common/lib/later";
-import discourseComputed, { bind, on } from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "",

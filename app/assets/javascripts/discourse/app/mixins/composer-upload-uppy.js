@@ -4,6 +4,7 @@ import EmberObject from "@ember/object";
 import Mixin from "@ember/object/mixin";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
+import { on } from "@ember-decorators/object";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
@@ -23,7 +24,7 @@ import ExtendableUploader from "discourse/mixins/extendable-uploader";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
 import getURL from "discourse-common/lib/get-url";
 import { deepMerge } from "discourse-common/lib/object";
-import { bind, observes, on } from "discourse-common/utils/decorators";
+import { bind, observes } from "discourse-common/utils/decorators";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
 import I18n from "discourse-i18n";
 
