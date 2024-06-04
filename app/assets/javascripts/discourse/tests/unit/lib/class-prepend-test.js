@@ -167,4 +167,88 @@ module("Unit | class-prepend", function () {
       "it works"
     );
   });
+
+  test("can modify same class twice", function (assert) {
+    class Topic {
+      get someGetter() {
+        return "original";
+      }
+    }
+
+    classPrepend(
+      Topic,
+      (Superclass) =>
+        class extends Superclass {
+          get someGetter() {
+            return `${super.someGetter} modified1`;
+          }
+        }
+    );
+
+    classPrepend(
+      Topic,
+      (Superclass) =>
+        class extends Superclass {
+          get someGetter() {
+            return `${super.someGetter} modified2`;
+          }
+        }
+    );
+
+    assert.strictEqual(
+      new Topic().someGetter,
+      "original modified1 modified2",
+      "it works"
+    );
+  });
+
+  test("doesn't affect parent class private fields", function (assert) {
+    class Topic {
+      #somePrivateField = "supersecret";
+
+      get someGetter() {
+        return this.#somePrivateField;
+      }
+    }
+
+    classPrepend(
+      Topic,
+      (Superclass) =>
+        class extends Superclass {
+          get someGetter() {
+            return `${super.someGetter} modified`;
+          }
+        }
+    );
+
+    assert.strictEqual(new Topic().someGetter, "supersecret modified");
+  });
+
+  test("static this is correct in static methods", function (assert) {
+    class Topic {}
+
+    classPrepend(
+      Topic,
+      (Superclass) =>
+        class extends Superclass {
+          static someStaticField = this;
+          static someStaticMethod() {
+            return this;
+          }
+        }
+    );
+
+    assert.strictEqual(
+      Topic.someStaticMethod(),
+      Topic,
+      "`this` referrs to the original class in static methods"
+    );
+
+    // Known limitation - `this` in static field overrides is wrong
+    assert.notStrictEqual(
+      Topic.someStaticField,
+      Topic,
+      "`this` referrs to the temporary superclass in static fields"
+    );
+  });
 });
