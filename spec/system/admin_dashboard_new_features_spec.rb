@@ -6,7 +6,7 @@ describe "Admin Dashboard New Features Page", type: :system do
 
   before { sign_in(admin) }
 
-  it "displays new features with screenshot taking precednce over emoji" do
+  it "displays new features with screenshot taking precedence over emoji" do
     DiscourseUpdates.stubs(:new_features).returns(
       [
         {

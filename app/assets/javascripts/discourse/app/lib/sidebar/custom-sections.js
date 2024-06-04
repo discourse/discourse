@@ -39,7 +39,7 @@ export function addSidebarSection(func, panelKey) {
   if (!panel) {
     // eslint-disable-next-line no-console
     return console.warn(
-      `Error adding section to ${panelKey} because panel doens't exist. Check addSidebarPanel API.`
+      `Error adding section to ${panelKey} because panel doesn't exist. Check addSidebarPanel API.`
     );
   }
   panel.sections.push(
