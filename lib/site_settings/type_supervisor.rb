@@ -20,6 +20,7 @@ class SiteSettings::TypeSupervisor
     list_type
     textarea
     json_schema
+    requires_confirmation
   ].freeze
   VALIDATOR_OPTS = %i[min max regex hidden regex_error json_schema].freeze
 

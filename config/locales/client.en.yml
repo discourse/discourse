@@ -6740,6 +6740,12 @@ en:
           add_types_title: "Allow extensions %{types}"
           add_types_toast: "%{types} file types added"
         mandatory_group: "Group is mandatory"
+        confirmation_messages:
+          default: "Changing this setting may have far-reaching or unintended consequences for your site. Are you sure you want to proceed?"
+          min_password_length: "All non-admin users of your site will be required to change their password to satisfy this requirement if they do not already. Are you sure you want to change this?"
+          min_admin_password_length: "WORSE STUFF HAPPEN"
+          password_unique_charactes: "OK BAD TOO"
+          block_common_passwords: "BAD BAD BAD"
 
       badges:
         title: Badges

@@ -5,6 +5,7 @@ import Mixin from "@ember/object/mixin";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isNone } from "@ember/utils";
+import { Promise } from "rsvp";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
@@ -82,6 +83,7 @@ export default Mixin.create({
   modal: service(),
   router: service(),
   site: service(),
+  dialog: service(),
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   validationMessage: null,
@@ -204,9 +206,38 @@ export default Mixin.create({
     }
   },
 
+  async confirmChanges(settingKey) {
+    return new Promise((resolve) => {
+      this.dialog.yesNoConfirm({
+        // Fallback is needed in case the setting does not have a custom confirmation
+        // message defined.
+        message: I18n.t(
+          `admin.site_settings.confirmation_messages.${settingKey}`,
+          {
+            translatedFallback: I18n.t(
+              "admin.site_settings.confirmation_messages.default"
+            ),
+          }
+        ),
+        didCancel: () => resolve(false),
+        didConfirm: () => resolve(true),
+      });
+    });
+  },
+
   @action
   async update() {
     const key = this.buffered.get("setting");
+
+    let confirm = true;
+    if (this.buffered.get("requires_confirmation")) {
+      confirm = await this.confirmChanges(key);
+    }
+
+    if (!confirm) {
+      this.cancel();
+      return;
+    }
 
     if (!DEFAULT_USER_PREFERENCES.includes(key)) {
       await this.save();

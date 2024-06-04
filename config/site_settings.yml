@@ -630,16 +630,21 @@ users:
     default: 10
     min: 8
     max: 500
+    requires_confirmation: true
   min_admin_password_length:
     client: true
     default: 15
     min: 8
     max: 500
+    requires_confirmation: true
   password_unique_characters:
     default: 6
     min: 1
     max: 10
-  block_common_passwords: true
+    requires_confirmation: true
+  block_common_passwords:
+    default: true
+    requires_confirmation: true
   username_change_period: 3
   email_editable:
     client: true
