@@ -353,13 +353,7 @@ class SessionController < ApplicationController
 
       # User's password has expired so they need to reset it
       if user.password_expired?(password)
-        begin
-          enqueue_password_reset_for_user(user)
-        rescue RateLimiter::LimitExceeded
-          # Just noop here as user would have already been sent the forgot password email more than once
-        end
-
-        render json: { error: I18n.t("login.password_expired") }
+        render json: { error: "expired", reason: "expired" }
         return
       end
     else

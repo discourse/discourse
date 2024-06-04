@@ -2045,52 +2045,13 @@ RSpec.describe SessionController do
 
         use_redis_snapshotting
 
-        it "should return an error response code with the right error message and enqueues the password reset email" do
-          expect_enqueued_with(
-            job: :critical_user_email,
-            args: {
-              type: "forgot_password",
-              user_id: user.id,
-            },
-          ) do
-            post "/session.json", params: { login: user.username, password: "myawesomepassword" }
-          end
+        it "should return an error response code with the right error message" do
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
           expect(response.status).to eq(200)
-          expect(response.parsed_body["error"]).to eq(I18n.t("login.password_expired"))
+          expect(response.parsed_body["error"]).to eq("expired")
+          expect(response.parsed_body["reason"]).to eq("expired")
           expect(session[:current_user_id]).to eq(nil)
-        end
-
-        it "should limit the number of forgot password emails sent a day to the user when logging in with an expired password" do
-          SiteSetting.max_logins_per_ip_per_minute =
-            described_class::FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY + 1
-
-          SiteSetting.max_logins_per_ip_per_hour =
-            described_class::FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY + 1
-
-          described_class::FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY.times do
-            expect_enqueued_with(
-              job: :critical_user_email,
-              args: {
-                type: "forgot_password",
-                user_id: user.id,
-              },
-            ) do
-              post "/session.json", params: { login: user.username, password: "myawesomepassword" }
-              expect(response.status).to eq(200)
-            end
-          end
-
-          expect_not_enqueued_with(
-            job: :critical_user_email,
-            args: {
-              type: "forgot_password",
-              user_id: user.id,
-            },
-          ) do
-            post "/session.json", params: { login: user.username, password: "myawesomepassword" }
-            expect(response.status).to eq(200)
-          end
         end
       end
 
