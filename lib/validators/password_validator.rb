@@ -19,6 +19,8 @@ class PasswordValidator < ActiveModel::EachValidator
       record.errors.add(attribute, :same_as_email)
     elsif record.confirm_password?(value)
       record.errors.add(attribute, :same_as_current)
+    elsif record.password_expired?(value)
+      record.errors.add(attribute, :same_as_previous)
     elsif SiteSetting.block_common_passwords && CommonPasswords.common_password?(value)
       record.errors.add(attribute, :common)
     elsif value.chars.uniq.length < SiteSetting.password_unique_characters

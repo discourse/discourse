@@ -1991,7 +1991,7 @@ RSpec.describe SessionController do
         end
       end
 
-      describe "success by username" do
+      describe "success by username and password" do
         it "logs in correctly" do
           events =
             DiscourseEvent.track_events do
@@ -2026,6 +2026,70 @@ RSpec.describe SessionController do
             expect(response.status).to eq(200)
             expect(response.parsed_body["error"]).not_to be_present
             expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")
+          end
+        end
+      end
+
+      describe "when user's password has been marked as expired" do
+        let!(:expired_user_password) do
+          Fabricate(
+            :expired_user_password,
+            user:,
+            password: "myawesomepassword",
+            password_salt: user.salt,
+            password_algorithm: user.password_algorithm,
+          )
+        end
+
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
+
+        it "should return an error response code with the right error message and enqueues the password reset email" do
+          expect_enqueued_with(
+            job: :critical_user_email,
+            args: {
+              type: "forgot_password",
+              user_id: user.id,
+            },
+          ) do
+            post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+          end
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq(I18n.t("login.password_expired"))
+          expect(session[:current_user_id]).to eq(nil)
+        end
+
+        it "should limit the number of forgot password emails sent a day to the user when logging in with an expired password" do
+          SiteSetting.max_logins_per_ip_per_minute =
+            described_class::FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY + 1
+
+          SiteSetting.max_logins_per_ip_per_hour =
+            described_class::FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY + 1
+
+          described_class::FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY.times do
+            expect_enqueued_with(
+              job: :critical_user_email,
+              args: {
+                type: "forgot_password",
+                user_id: user.id,
+              },
+            ) do
+              post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+              expect(response.status).to eq(200)
+            end
+          end
+
+          expect_not_enqueued_with(
+            job: :critical_user_email,
+            args: {
+              type: "forgot_password",
+              user_id: user.id,
+            },
+          ) do
+            post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+            expect(response.status).to eq(200)
           end
         end
       end
