@@ -174,8 +174,7 @@ const DEPRECATED_HEADER_WIDGETS = [
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
-  if (!changes.pluginId) {
-    // TODO: handle pluginId for callback-based syntax. Can we remove the need for it entirely?
+  if (typeof changes !== "function" && !changes.pluginId) {
     // eslint-disable-next-line no-console
     console.warn(
       consolePrefix(),

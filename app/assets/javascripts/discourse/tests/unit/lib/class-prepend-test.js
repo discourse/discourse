@@ -1,7 +1,9 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { module, test } from "qunit";
-import classPrepend from "discourse/lib/class-prepend";
+import classPrepend, {
+  rollbackAllModifications,
+} from "discourse/lib/class-prepend";
 
 module("Unit | class-prepend", function () {
   test("can override function, with super support", function (assert) {
@@ -250,5 +252,29 @@ module("Unit | class-prepend", function () {
       Topic,
       "`this` referrs to the temporary superclass in static fields"
     );
+  });
+
+  test("changes can be rolled back", function (assert) {
+    class Topic {
+      someFunction() {
+        return 1;
+      }
+    }
+
+    classPrepend(
+      Topic,
+      (Superclass) =>
+        class extends Superclass {
+          someFunction() {
+            return 2;
+          }
+        }
+    );
+
+    assert.strictEqual(new Topic().someFunction(), 2, "change is applied");
+
+    rollbackAllModifications();
+
+    assert.strictEqual(new Topic().someFunction(), 1, "change is rolled back");
   });
 });
