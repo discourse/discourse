@@ -22,6 +22,7 @@ shared_examples "login scenarios" do
       login_modal.open
       login_modal.fill(username: "john", password: "supersecurepassword")
       login_modal.click_login
+      expect(page).to have_css(".not-activated-modal")
       login_modal.click(".activation-controls button.resend")
 
       wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
@@ -35,6 +36,28 @@ shared_examples "login scenarios" do
 
       visit "/"
       expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+
+    it "displays the right message when user's email has been marked as expired" do
+      password = "myawesomepassword"
+      user.update!(password:)
+      Fabricate(:expired_user_password, user:, password:)
+
+      login_modal.open
+      login_modal.fill(username: user.username, password:)
+      login_modal.click_login
+
+      expect(login_modal.find("#modal-alert")).to have_content(
+        I18n.t("js.login.password_expired", reset_url: "/password-reset").gsub(/<.*?>/, ""),
+      )
+      login_modal.find("#modal-alert a").click
+      find("button.forgot-password-reset").click
+
+      wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
+
+      mail = ActionMailer::Base.deliveries.last
+      expect(mail.to).to contain_exactly(user.email)
+      expect(mail.body).to match(%r{/u/password-reset/\S+})
     end
 
     it "can reset password" do

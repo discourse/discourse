@@ -94,7 +94,7 @@ class ImportScripts::Kunena < ImportScripts::Base
         cache_rows: false,
       )
     results.each do |u|
-      next unless u["id"].to_i > (0) && u["username"].present? && u["email"].present?
+      next if u["id"].to_i <= (0) || u["username"].blank? || u["email"].blank?
       username = u["username"].gsub(" ", "_").gsub(/[^A-Za-z0-9_]/, "")[0, User.username_length.end]
       if username.length < User.username_length.first
         username = username * User.username_length.first

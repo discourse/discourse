@@ -13,7 +13,7 @@ class PostAnalyzer
   end
 
   def has_oneboxes?
-    return false unless @raw.present?
+    return false if @raw.blank?
 
     cooked_stripped
     found_oneboxes?
@@ -56,7 +56,7 @@ class PostAnalyzer
 
   # How many images are present in the post
   def embedded_media_count
-    return 0 unless @raw.present?
+    return 0 if @raw.blank?
 
     # TODO - do we need to look for tags other than img, video and audio?
     cooked_stripped
@@ -71,7 +71,7 @@ class PostAnalyzer
 
   # How many attachments are present in the post
   def attachment_count
-    return 0 unless @raw.present?
+    return 0 if @raw.blank?
 
     attachments =
       cooked_stripped.css("a.attachment[href^=\"#{Discourse.store.absolute_base_url}\"]")
@@ -119,7 +119,7 @@ class PostAnalyzer
 
   # Returns an array of all links in a post excluding mentions
   def raw_links
-    return [] unless @raw.present?
+    return [] if @raw.blank?
     return @raw_links if @raw_links.present?
 
     @raw_links = []

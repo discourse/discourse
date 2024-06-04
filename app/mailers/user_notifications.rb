@@ -224,7 +224,8 @@ class UserNotifications < ActionMailer::Base
     build_summary_for(user)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, UnsubscribeKey::DIGEST_TYPE)
 
-    @since = opts[:since] || user.last_seen_at || user.user_stat&.digest_attempted_at || 1.month.ago
+    @since = opts[:since].presence
+    @since ||= [user.last_seen_at, user.user_stat&.digest_attempted_at, 1.month.ago].compact.max
 
     # Fetch some topics and posts to show
     digest_opts = {
@@ -506,7 +507,7 @@ class UserNotifications < ActionMailer::Base
 
     if post && SiteSetting.enable_names && SiteSetting.display_name_on_email_from
       name = User.where(id: notification_data[:original_user_id] || post.user_id).pick(:name)
-      user_name = name unless name.blank?
+      user_name = name if name.present?
     end
 
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?

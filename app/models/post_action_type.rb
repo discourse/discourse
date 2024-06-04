@@ -37,6 +37,7 @@ class PostActionType < ActiveRecord::Base
       @all_flags = nil
       @flag_settings = FlagSettings.new
       ReviewableScore.reload_types
+      PostActionType.new.expire_cache
     end
 
     def overridden_by_plugin_or_skipped_db?
@@ -67,7 +68,18 @@ class PostActionType < ActiveRecord::Base
 
     def flag_types
       return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
-      flag_enum(all_flags)
+
+      # Once replace_flag API is fully deprecated, then we can drop respond_to. It is needed right now for migration to be evaluated.
+      # TODO (krisk)
+      flag_enum(all_flags.reject { |flag| flag.respond_to?(:score_type) && flag.score_type })
+    end
+
+    def score_types
+      return flag_settings.flag_types if overridden_by_plugin_or_skipped_db?
+
+      # Once replace_flag API is fully deprecated, then we can drop respond_to. It is needed right now for migration to be evaluated.
+      # TODO (krisk)
+      flag_enum(all_flags.filter { |flag| flag.respond_to?(:score_type) && flag.score_type })
     end
 
     # flags resulting in mod notifications
@@ -86,6 +98,14 @@ class PostActionType < ActiveRecord::Base
       else
         flag_enum(all_flags.select { |flag| flag.applies_to?("Topic") })
       end
+    end
+
+    def disabled_flag_types
+      flag_enum(all_flags.reject(&:enabled))
+    end
+
+    def enabled_flag_types
+      flag_enum(all_flags.filter(&:enabled))
     end
 
     def custom_types

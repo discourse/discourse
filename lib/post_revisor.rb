@@ -61,7 +61,7 @@ class PostRevisor
     tracked_topic_fields[field] = block
 
     # Define it in the serializer unless it already has been defined
-    unless PostRevisionSerializer.instance_methods(false).include?("#{field}_changes".to_sym)
+    if PostRevisionSerializer.instance_methods(false).exclude?("#{field}_changes".to_sym)
       PostRevisionSerializer.add_compared_field(field)
     end
   end

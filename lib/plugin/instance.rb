@@ -753,7 +753,7 @@ class Plugin::Instance
       assets.concat(auto_assets)
     end
 
-    register_assets! unless assets.blank?
+    register_assets! if assets.present?
     register_locales!
     register_service_workers!
 

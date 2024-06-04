@@ -124,7 +124,7 @@ module Onebox
 
           code = response.code.to_i
           unless code === 200
-            response.error! unless [301, 302, 303, 307, 308].include?(code)
+            response.error! if [301, 302, 303, 307, 308].exclude?(code)
 
             return(
               fetch_response(

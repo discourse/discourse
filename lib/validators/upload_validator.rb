@@ -78,7 +78,7 @@ class UploadValidator < ActiveModel::Validator
       .gsub(/[\s\.]+/, "")
       .downcase
       .split("|")
-      .each { |extension| extensions << extension unless extension.include?("*") }
+      .each { |extension| extensions << extension if extension.exclude?("*") }
 
     extensions
   end

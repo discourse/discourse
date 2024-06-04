@@ -24,10 +24,10 @@ class EmbeddableHost < ActiveRecord::Base
         end
     end
 
-    return false unless uri.present?
+    return false if uri.blank?
 
     host = uri.host
-    return false unless host.present?
+    return false if host.blank?
 
     host << ":#{uri.port}" if uri.port.present? && uri.port != 80 && uri.port != 443
 

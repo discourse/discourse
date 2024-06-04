@@ -220,6 +220,9 @@ sq:
       save: "Ruaj"
       search: "Kërko"
       bookmark: "Shto tek të preferuarat"
+      bulk:
+        select_all: "Zgjidhni Gjithçka"
+        clear_all: "Pastro kriteret"
     drafts:
       remove: "Hiq"
     preview: "shiko"
@@ -1000,6 +1003,8 @@ sq:
       delete_item: "Fshi %{name}"
       components:
         bulk_select_topics_dropdown:
+          title: "Veprime në masë"
+        bulk_select_bookmarks_dropdown:
           title: "Veprime në masë"
     date_time_picker:
       from: Nga
@@ -1958,7 +1963,6 @@ sq:
               content: "Users"
             my_posts:
               content: "Postimet e mia"
-      filter: "Filtro"
     form_templates:
       upload_field:
         upload: "Ngarko"
@@ -2034,6 +2038,9 @@ sq:
               label: Grupi
             category:
               label: Kategori
+      flags:
+        description: "Përshkrimi"
+        enabled: "Aktivizuar?"
       groups:
         new:
           title: "Grup i ri"
@@ -2665,6 +2672,7 @@ sq:
         name: "Fusha e emrit"
         type: "Field Type"
         description: "Field Description"
+        preferences: "Preferencat"
         save: "Ruaj"
         edit: "Redakto"
         delete: "Fshij"

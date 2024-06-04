@@ -210,6 +210,8 @@ class Tag < ActiveRecord::Base
     "#{Discourse.base_path}/tag/#{UrlHelper.encode_component(self.name)}"
   end
 
+  alias_method :relative_url, :url
+
   def full_url
     "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
   end
@@ -233,10 +235,10 @@ class Tag < ActiveRecord::Base
   def update_synonym_associations
     if target_tag_id && saved_change_to_target_tag_id?
       target_tag.tag_groups.each do |tag_group|
-        tag_group.tags << self unless tag_group.tags.include?(self)
+        tag_group.tags << self if tag_group.tags.exclude?(self)
       end
       target_tag.categories.each do |category|
-        category.tags << self unless category.tags.include?(self)
+        category.tags << self if category.tags.exclude?(self)
       end
     end
   end

@@ -1,5 +1,5 @@
 import UnknownRoute from "discourse/routes/unknown";
 
-export default UnknownRoute.extend({
-  templateName: "unknown",
-});
+export default class ExceptionUnknown extends UnknownRoute {
+  templateName = "unknown";
+}

@@ -358,8 +358,6 @@ hu:
       trust_level_2: "bizalmi_szint_2"
       trust_level_3: "bizalmi_szint_3"
       trust_level_4: "bizalmi_szint_4"
-    request_accepted_pm:
-      title: "Felvettek a @%{group_name} csoportba."
   education:
     until_posts:
       one: "%{count} bejegyzés"
@@ -973,10 +971,11 @@ hu:
         user: Felhasználó
         qtt_like: Kapott kedvelések
   dashboard:
-    rails_env_warning: "A kiszolgáló jelenleg %{env} módban fut."
-    host_names_warning: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
-    memory_warning: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
-    v3_analytics_deprecated: "A Discourse jelenleg a Google Analytics 3-at használja, amely 2023 júliusa után már nem kap támogatást. <a href='https://meta.discourse.org/t/260498'>Frissítsen most a Google Analytics 4-re</a> , hogy továbbra is értékes betekintést és elemzést kapjon webhelye teljesítményéről."
+    problem:
+      rails_env: "A kiszolgáló jelenleg %{env} módban fut."
+      host_names: "A config/database.yml fájl az alapértelmezett „localhost” domaint használja. Állítsa be az oldala saját domain nevét."
+      ram: "A kiszolgáló kevesebb mint 1 GB memóriával rendelkezik. Legalább 1 GB memória ajánlott."
+      google_analytics_version: "A Discourse jelenleg a Google Analytics 3-at használja, amely 2023 júliusa után már nem kap támogatást. <a href='https://meta.discourse.org/t/260498'>Frissítsen most a Google Analytics 4-re</a> , hogy továbbra is értékes betekintést és elemzést kapjon webhelye teljesítményéről."
   site_settings:
     disabled: "kikapcsolva"
     default_locale: "A Discourse alapértelmezett nyelve. A rendszer által generált kategóriák és témák szövegét lecserélheted a <a href='%{base_path}/admin/customize/site_texts' target='_blank'>Személyre szabás / Szöveg</a>oldalon."
@@ -1694,7 +1693,6 @@ hu:
 
         Ha kérdésed van, [vedd fel a kapcsolatot barátságos munkatársainkkal] (%{base_url}/about).
     digest:
-      why: "Egy kis összefoglaló a(z) %{site_link} oldalról, hogy mik történtek a legutóbbi látogatása (%{last_seen_at}) óta."
       since_last_visit: "Utolsó látogatása óta"
       new_topics: "Új téma"
       unread_notifications: "Olvasatlan értesítés"
@@ -1708,7 +1706,6 @@ hu:
       unsubscribe: "Ezt az összefoglalót %{site_link} tól küldjük, mert már egy ideje nem látunk. Az %{email_preferences_link} vagy a %{unsubscribe_link} oldalon tudod a beállításokat változtatni vagy leiratkozni."
       your_email_settings: "e-mail beállítások"
       click_here: "kattintson ide"
-      preheader: "Rövid összefoglaló a legutóbbi látogatásod óta, ami ekkor történt: %{last_seen_at}"
     forgot_password:
       title: "Elfelejtett jelszó"
       subject_template: "[%{email_prefix}] Jelszó visszaállítás"

@@ -1045,26 +1045,16 @@ zh_TW:
         user: 使用者
         qtt_like: 收到的讚
   dashboard:
-    rails_env_warning: "伺服器現在運行 %{env} 模式。"
-    host_names_warning: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"
-    sidekiq_warning: 'Sidekiq 未有執行。很多程序, 如發送電子郵件, 需要 sidekiq 非同步 (asynchronous) 執行的。請確保至少運行一個 sidekiq 程序。<a href="https://github.com/mperham/sidekiq">瞭解 Sidekiq</a>。'
-    queue_size_warning: "隊列中有較多任務，為 %{queue_size} 個。這可能是因為 Sidekiq 進程的問題導致，或者需要更多的 Sidekiq 進程。"
-    memory_warning: "伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體"
-    s3_config_warning: '伺服器被設定為上傳文件到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, s3_upload_bucket。到<a href="%{base_path}/admin/site_settings">網站設定</a>更新此設定。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">請查閱「如何設置圖片上傳至 S3」</a>.'
-    s3_backup_config_warning: '伺服器被設置為上傳備份到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="%{base_path}/admin/site_settings">設定</a>更新此設定。<a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
-    image_magick_warning: '伺服器被設置為給尺寸較大的圖片縮圖，但是 ImageMagick 沒有被安裝。使用你喜愛的包裝管理器安裝 ImageMagick 或<a href="https://www.imagemagick.org/script/download.php" target="_blank">下載最新版</a>。'
-    failing_emails_warning: '有 %{num_failed_jobs} 個郵件任務失敗。請檢查 app.yml 檔案是否正確配置了郵件伺服器。<a href="%{base_path}/sidekiq/retries" target="_blank">查看 Sidekiq 中失敗的任務</a>。'
-    subfolder_ends_in_slash: "你的子目錄設置不正確；DISCOURSE_RELATIVE_URL_ROOT以斜杠結尾。"
-    email_polling_errored_recently:
-      other: "郵件輪詢在過去的 24 小時內出現了 %{count} 個錯誤。看一看<a href='%{base_path}/logs' target='_blank'>日誌</a>尋找詳情。"
-    missing_mailgun_api_key: "伺服器設置使用 Mailgun 寄送電子郵件，但你尚未設置用來驗證 webhook 訊息的 API 鑰匙。"
-    bad_favicon_url: "網站 favicon 無法載入。檢查</a>網站設置</a>中的 favicon_url。"
-    poll_pop3_timeout: "至 POP3 伺服器的連接超時。無法獲取進站郵件。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>和服務商。"
-    poll_pop3_auth_error: "至 POP3 伺服器的連接驗證失敗。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>。"
-    force_https_warning: "伺服器設置使用SSL，但<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>並未在伺服器設置中啟用。"
-    out_of_date_themes: "以下主題可更新："
-    unreachable_themes: "我們無法檢查以下主題是否可更新："
-    v3_analytics_deprecated: "您的 Discourse 目前正在使用 Google Analytics 3，將在 2023 年 7 月後失去支援。 <a href='https://meta.discourse.org/t/260498'>立即升級到 Google Analytics 4</a> 以繼續接收有關您網站性能的寶貴見解和分析。"
+    problem:
+      rails_env: "伺服器現在運行 %{env} 模式。"
+      host_names: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"
+      queue_size: "隊列中有較多任務，為 %{queue_size} 個。這可能是因為 Sidekiq 進程的問題導致，或者需要更多的 Sidekiq 進程。"
+      ram: "伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體"
+      subfolder_ends_in_slash: "你的子目錄設置不正確；DISCOURSE_RELATIVE_URL_ROOT以斜杠結尾。"
+      missing_mailgun_api_key: "伺服器設置使用 Mailgun 寄送電子郵件，但你尚未設置用來驗證 webhook 訊息的 API 鑰匙。"
+      out_of_date_themes: "以下主題可更新："
+      unreachable_themes: "我們無法檢查以下主題是否可更新："
+      google_analytics_version: "您的 Discourse 目前正在使用 Google Analytics 3，將在 2023 年 7 月後失去支援。 <a href='https://meta.discourse.org/t/260498'>立即升級到 Google Analytics 4</a> 以繼續接收有關您網站性能的寶貴見解和分析。"
   site_settings:
     disabled: "停用"
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
@@ -2375,7 +2365,6 @@ zh_TW:
 
         如果您有任何疑問，[聯繫論壇管理員](%{base_url}/about)。
     digest:
-      why: "在你上一次於 %{last_seen_at} 訪問後，在 %{site_link} 上的摘要。"
       since_last_visit: "自你上次訪問至今"
       new_topics: "新主題"
       unread_notifications: "未讀通知"
@@ -2390,7 +2379,6 @@ zh_TW:
       your_email_settings: "你的電子郵件設定"
       click_here: "點擊此處"
       from: "%{site_name}"
-      preheader: "在你上次於%{last_seen_at}訪問後的新內容摘要"
     forgot_password:
       title: "忘記密碼"
       subject_template: "[%{email_prefix}] 重設密碼"

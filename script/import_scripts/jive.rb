@@ -188,7 +188,7 @@ class ImportScripts::Jive < ImportScripts::Base
     rows = []
 
     csv_parse("communities") do |row|
-      next unless CATEGORY_IDS.include?(row.communityid.to_i)
+      next if CATEGORY_IDS.exclude?(row.communityid.to_i)
       rows << { id: row.communityid, name: "#{row.name} (#{row.communityid})" }
     end
 
@@ -261,7 +261,7 @@ class ImportScripts::Jive < ImportScripts::Base
     thread_map = {}
 
     csv_parse("messages") do |thread|
-      next unless CATEGORY_IDS.include?(thread.containerid.to_i)
+      next if CATEGORY_IDS.exclude?(thread.containerid.to_i)
 
       if !thread.parentmessageid
         # topic
@@ -329,7 +329,7 @@ class ImportScripts::Jive < ImportScripts::Base
     csv_parse("messages") do |thread|
       # post
 
-      next unless CATEGORY_IDS.include?(thread.containerid.to_i)
+      next if CATEGORY_IDS.exclude?(thread.containerid.to_i)
 
       if thread.parentmessageid
         #IMAGE UPLOADER

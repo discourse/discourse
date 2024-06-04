@@ -28,7 +28,7 @@ class ThemeSettingsParser
     if type == @types[:enum]
       choices = raw_opts[:choices]
       choices = [] unless choices.is_a?(Array)
-      choices << default unless choices.include?(default)
+      choices << default if choices.exclude?(default)
       opts[:choices] = choices
     end
 

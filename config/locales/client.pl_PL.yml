@@ -418,11 +418,24 @@ pl_PL:
       search_placeholder: "Wyszukiwanie zakładek według nazwy, tytułu tematu lub treści postu"
       search: "Wyszukaj"
       bookmark: "Zakładka"
+      bulk:
+        select_all: "Zaznacz wszystkie"
+        clear_all: "Wyczyść wszystko"
+        selected_count:
+          one: "%{count} wybrano"
+          few: "%{count} wybrano"
+          many: "%{count} wybrano"
+          other: "%{count} wybrano"
       reminders:
         today_with_time: "dzisiaj o %{time}"
         tomorrow_with_time: "jutro o %{time}"
         at_time: "o %{date_time}"
         existing_reminder: "Masz ustawione przypomnienie dla tej zakładki, które zostanie wysłane %{at_date_time}"
+    bookmark_bulk_actions:
+      clear_reminders:
+        name: "Wyczyść przypomnienia"
+      delete_bookmarks:
+        name: "Usuń zakładkę"
     copy_codeblock:
       copied: "skopiowane!"
       copy: "skopiuj kod do schowka"
@@ -2379,6 +2392,8 @@ pl_PL:
         categories_admin_dropdown:
           title: "Zarządzaj kategoriami"
         bulk_select_topics_dropdown:
+          title: "Operacje grupowe"
+        bulk_select_bookmarks_dropdown:
           title: "Operacje grupowe"
     date_time_picker:
       from: Od
@@ -4818,7 +4833,7 @@ pl_PL:
       panels:
         forum:
           label: Forum
-      filter: "Filtr"
+      filter: "Filtr..."
       clear_filter: "Wyczyść filtr"
       no_results:
         title: "Brak wyników"
@@ -5049,6 +5064,9 @@ pl_PL:
               label: Kategoria
             include_subcategories:
               label: "Uwzględnij podkategorie"
+      flags:
+        description: "Opis"
+        enabled: "Włączona?"
       groups:
         new:
           title: "Nowa grupa"
@@ -5439,6 +5457,7 @@ pl_PL:
         is_enabled: "T"
         not_enabled: "N"
         change_settings_short: "Ustawienia"
+        settings_disabled: "Ta wtyczka może być tylko włączona lub wyłączona, nie ma żadnych dodatkowych ustawień."
         howto: "Jak zainstalować wtyczkę?"
         official: "Oficjalna wtyczka Discourse"
         broken_route: "Nie można skonfigurować łącza do '%{name}'. Upewnij się, że blokery reklam są wyłączone i spróbuj ponownie załadować stronę."
@@ -6081,6 +6100,9 @@ pl_PL:
             update_public_sidebar_section: "aktualizuj publiczną sekcję paska bocznego"
             destroy_public_sidebar_section: "zniszcz publiczną sekcję paska bocznego"
             reset_bounce_score: "zresetuj licznik odrzuceń"
+            create_watched_word_group: "Utwórz grupę obserwowanych słów"
+            update_watched_word_group: "Zaktualizuj grupę obserwowanych słów"
+            delete_watched_word_group: "Usuń grupę obserwowanych słów"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -6562,6 +6584,7 @@ pl_PL:
         name: "Nazwa pola"
         type: "Typ pola"
         description: "Opis pola"
+        preferences: "Ustawienia"
         save: "Zapisz"
         edit: "Edycja"
         delete: "Usuń"
@@ -6572,6 +6595,10 @@ pl_PL:
           title: "Wymagane przy rejestracji"
           enabled: "wymagane"
           disabled: "niewymagane"
+        requirement:
+          title: "Pole obowiązkowe"
+          optional:
+            title: "Opcjonalnie"
         editable:
           title: "Edytowalne po rejestracji"
           enabled: "edytowalne"

@@ -343,11 +343,20 @@ it:
       search_placeholder: "Cerca nei segnalibri per nome, titolo dell'argomento o contenuto del messaggio"
       search: "Cerca"
       bookmark: "Aggiungi ai segnalibri"
+      bulk:
+        select_all: "Seleziona Tutto"
+        clear_all: "Deseleziona Tutto"
+        selected_count:
+          one: "%{count} selezionati"
+          other: "%{count} selezionati"
       reminders:
         today_with_time: "oggi alle %{time}"
         tomorrow_with_time: "domani alle %{time}"
         at_time: "il %{date_time}"
         existing_reminder: "Hai un promemoria impostato per questo segnalibro, che verrà inviato il %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Cancella Segnalibro"
     copy_codeblock:
       copied: "copiato!"
       copy: "copia il codice negli appunti"
@@ -2152,6 +2161,8 @@ it:
         categories_admin_dropdown:
           title: "Gestisci le categorie"
         bulk_select_topics_dropdown:
+          title: "Azioni Multiple"
+        bulk_select_bookmarks_dropdown:
           title: "Azioni Multiple"
     date_time_picker:
       from: Da
@@ -4288,7 +4299,7 @@ it:
       panels:
         forum:
           label: Forum
-      filter: "Filtro"
+      filter: "Filtro..."
       no_results:
         title: "Nessun risultato"
     welcome_topic_banner:
@@ -4503,6 +4514,9 @@ it:
               label: Categoria
             include_subcategories:
               label: "Includi Sottocategorie"
+      flags:
+        description: "Descrizione"
+        enabled: "Abilitato?"
       groups:
         new:
           title: "Nuovo Gruppo"
@@ -5950,6 +5964,7 @@ it:
         name: "Nome Campo"
         type: "Tipo Campo"
         description: "Descrizione Campo"
+        preferences: "Preferenze"
         save: "Salva"
         edit: "Modifica"
         delete: "Cancella"
@@ -5960,6 +5975,9 @@ it:
           title: "Obbligatorio durante l'iscrizione"
           enabled: "obbligatorio"
           disabled: "non obbligatorio"
+        requirement:
+          optional:
+            title: "Facoltativo"
         editable:
           title: "Modificabile dopo l'iscrizione"
           enabled: "modificabile"

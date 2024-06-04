@@ -322,11 +322,28 @@ zh_CN:
       search_placeholder: "按名称、话题标题或帖子内容搜索书签"
       search: "搜索"
       bookmark: "书签"
+      bulk:
+        delete_completed: "删除书签成功。"
+        reminders_cleared: "已成功清除书签提醒。"
+        toggle: "切换批量选择书签"
+        select_all: "全选"
+        clear_all: "全部清除"
+        selected_count:
+          other: "已选择 %{count} 个"
       reminders:
         today_with_time: "今天 %{time}"
         tomorrow_with_time: "明天 %{time}"
         at_time: "%{date_time}"
         existing_reminder: "您为此书签设置的提醒将在%{at_date_time}发送"
+    bookmark_bulk_actions:
+      clear_reminders:
+        name: "清除提醒"
+        description:
+          other: "你确定要清除 <b>%{count}</b> 个书签的提醒吗？"
+      delete_bookmarks:
+        name: "删除书签"
+        description:
+          other: "你确定要删除 <b>%{count}</b> 个书签吗？"
     copy_codeblock:
       copied: "已复制！"
       copy: "将代码复制到剪贴板"
@@ -2097,6 +2114,8 @@ zh_CN:
           title: "管理类别"
         bulk_select_topics_dropdown:
           title: "批量操作"
+        bulk_select_bookmarks_dropdown:
+          title: "批量操作"
     date_time_picker:
       from: 从
       to: 至
@@ -2243,6 +2262,7 @@ zh_CN:
       modal_ok: "确定"
       modal_cancel: "取消"
       cant_send_pm: "抱歉，您无法向 %{username} 发送消息。"
+      create_message_error: "抱歉，创建该信息时出现错误。请重试。"
       yourself_confirm:
         title: "您是否忘记添加收件人？"
         body: "目前，此消息只发给您自己！"
@@ -3268,6 +3288,7 @@ zh_CN:
           illegal: "你把它标记为非法"
           notify_moderators: "您将此帖子举报为需要由版主审核"
           notify_user: "您向此用户发送了一条消息"
+          custom: "你已将这个话题标记为 %{custom}"
       delete:
         confirm:
           other: "确定要删除这 %{count} 个帖子吗？"
@@ -4185,7 +4206,6 @@ zh_CN:
       panels:
         forum:
           label: 论坛
-      filter: "筛选"
       clear_filter: "清除过滤器"
       no_results:
         title: "没有结果"
@@ -4402,6 +4422,9 @@ zh_CN:
               label: 类别
             include_subcategories:
               label: "包括子类别"
+      flags:
+        description: "描述"
+        enabled: "已启用？"
       groups:
         new:
           title: "新群组"
@@ -4779,6 +4802,7 @@ zh_CN:
         is_enabled: "是"
         not_enabled: "否"
         change_settings_short: "设置"
+        settings_disabled: "该插件只能启用或禁用，没有其他设置。"
         howto: "如何安装插件？"
         official: "官方 Discourse 插件"
         broken_route: "无法配置“%{name}”的链接。确保禁用广告拦截器并尝试重新加载页面。"
@@ -5890,6 +5914,7 @@ zh_CN:
         name: "字段名称"
         type: "字段类型"
         description: "字段描述"
+        preferences: "偏好设置"
         save: "保存"
         edit: "编辑"
         delete: "删除"
@@ -5900,6 +5925,13 @@ zh_CN:
           title: "注册时需要"
           enabled: "必选"
           disabled: "非必选"
+        requirement:
+          title: "字段要求"
+          optional:
+            title: "可选"
+          on_signup:
+            title: "注册时"
+            description: "新用户注册时必须填写此字段。现有用户不受影响。"
         editable:
           title: "注册后可以编辑"
           enabled: "可编辑"

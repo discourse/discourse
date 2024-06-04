@@ -36,7 +36,7 @@ class SearchLog < ActiveRecord::Base
     return [:error] if term.blank?
 
     search_type = search_types[search_type]
-    return [:error] unless search_type.present? && ip_address.present?
+    return [:error] if search_type.blank? || ip_address.blank?
 
     ip_address = nil if user_id
     key = redis_key(user_id: user_id, ip_address: ip_address)

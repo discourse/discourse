@@ -4,7 +4,7 @@ import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 
 const UnreadIndicator = <template>
-  {{#if @includeUnreadIndicator~}}
+  {{~#if @includeUnreadIndicator~}}
     &nbsp;<span
       title={{i18n "topic.unread_indicator"}}
       class={{concatClass
@@ -15,7 +15,7 @@ const UnreadIndicator = <template>
     >
       {{~icon "asterisk"~}}
     </span>
-  {{~/if}}
+  {{~/if~}}
 </template>;
 
 export default UnreadIndicator;

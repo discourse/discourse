@@ -5,6 +5,7 @@
   @flash={{this.flash}}
   @flashType={{this.flashType}}
   {{did-insert this.preloadLogin}}
+  {{on "click" this.interceptResetLink}}
 >
   <:body>
     <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />

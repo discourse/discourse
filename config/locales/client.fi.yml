@@ -344,11 +344,20 @@ fi:
       search_placeholder: "Hae kirjanmerkkejä nimen, ketjun otsikon tai viestin sisällön perusteella"
       search: "Haku"
       bookmark: "Kirjanmerkki"
+      bulk:
+        select_all: "Valitse kaikki"
+        clear_all: "Tyhjennä kaikki"
+        selected_count:
+          one: "%{count} valittu"
+          other: "%{count} valittu"
       reminders:
         today_with_time: "tänään klo %{time}"
         tomorrow_with_time: "huomenna klo %{time}"
         at_time: "%{date_time}"
         existing_reminder: "Olet pyytänyt muistutuksen tästä kirjanmerkistä, joka lähetetään %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Poista kirjanmerkki"
     copy_codeblock:
       copied: "kopioitiin!"
       copy: "kopioi koodi leikepöydälle"
@@ -2165,6 +2174,8 @@ fi:
         categories_admin_dropdown:
           title: "Hallitse alueita"
         bulk_select_topics_dropdown:
+          title: "Joukkotoiminnot"
+        bulk_select_bookmarks_dropdown:
           title: "Joukkotoiminnot"
     date_time_picker:
       from: Alkaen
@@ -4312,7 +4323,7 @@ fi:
       panels:
         forum:
           label: Keskustelualuea
-      filter: "Suodatin"
+      filter: "Suodata..."
       clear_filter: "Tyhjennä suodatin"
       no_results:
         title: "Ei tuloksia"
@@ -4532,6 +4543,9 @@ fi:
               label: Alue
             include_subcategories:
               label: "Sisällytä ala-alueet"
+      flags:
+        description: "Kuvaus"
+        enabled: "Otettu käyttöön?"
       groups:
         new:
           title: "Uusi ryhmä"
@@ -6002,6 +6016,7 @@ fi:
         name: "Kentän nimi"
         type: "Kentän tyyppi"
         description: "Kentän kuvaus"
+        preferences: "Asetukset"
         save: "Tallenna"
         edit: "Muokkaa"
         delete: "Poista"
@@ -6012,6 +6027,9 @@ fi:
           title: "Pakollinen rekisteröidyttäessä"
           enabled: "pakollinen"
           disabled: "ei pakollinen"
+        requirement:
+          optional:
+            title: "Valinnainen"
         editable:
           title: "Muokattavissa rekisteröitymisen jälkeen"
           enabled: "muokattavissa"

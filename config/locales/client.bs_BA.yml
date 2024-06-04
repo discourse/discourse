@@ -295,10 +295,16 @@ bs_BA:
       search_placeholder: "Pretražite zabilješke po imenu, naslovu teme ili sadržaju objave"
       search: "Pretraži"
       bookmark: "Sačuvaj"
+      bulk:
+        select_all: "Označi sve"
+        clear_all: "Očisti sve"
       reminders:
         today_with_time: "danas u %{time}"
         tomorrow_with_time: "sutra u %{time}"
         at_time: "na %{date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Izbriši zabilješku"
     copy_codeblock:
       copied: "kopirano!"
     drafts:
@@ -1585,6 +1591,8 @@ bs_BA:
         other: "Označi bar %{count} predmeta."
       components:
         bulk_select_topics_dropdown:
+          title: "Masovno odrađene akcije"
+        bulk_select_bookmarks_dropdown:
           title: "Masovno odrađene akcije"
     date_time_picker:
       from: Od
@@ -3052,7 +3060,7 @@ bs_BA:
               content: "Moje objave"
             review:
               content: "Pregled"
-      filter: "Filter"
+      filter: "Filter..."
     until: "Sve do:"
     form_templates:
       upload_field:
@@ -3177,6 +3185,9 @@ bs_BA:
               label: Kategorija
             include_subcategories:
               label: "Uključi potkategorije"
+      flags:
+        description: "Opis"
+        enabled: "Omogućen?"
       groups:
         new:
           title: "Nova Grupa"
@@ -4168,6 +4179,7 @@ bs_BA:
         name: "Field Name"
         type: "Field Type"
         description: "Field Description"
+        preferences: "Postavke"
         save: "Save"
         edit: "Edit"
         delete: "Delete"
@@ -4178,6 +4190,9 @@ bs_BA:
           title: "Required at signup"
           enabled: "required"
           disabled: "not required"
+        requirement:
+          optional:
+            title: "Opciono"
         editable:
           title: "Editable after signup"
           enabled: "editable"

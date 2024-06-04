@@ -491,10 +491,9 @@ span.highlighted {
   max-width: var(--d-wrap-padding-h);
   right: calc(var(--d-wrap-padding-h) * -1);
   font-size: var(--font-down-5);
-  margin-top: 0.45em;
 
   svg {
-    right: 0.25em;
+    right: -0.25em;
   }
 }
 

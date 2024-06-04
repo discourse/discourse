@@ -39,7 +39,7 @@ describe "Navigation menu states", type: :system, js: true do
         expect(find(sidebar_navigation.header_toggle_css)).to have_css(".d-icon-discourse-sidebar")
       end
 
-      it "shows the hamburger menu and allows toggling it, which shows the MAIN_PANEL onls" do
+      it "shows the hamburger menu and allows toggling it, which shows the MAIN_PANEL only" do
         visit "/admin"
         expect(header_dropdown).to be_visible
         header_dropdown.open
@@ -48,6 +48,15 @@ describe "Navigation menu states", type: :system, js: true do
         expect(header_dropdown).to have_no_sidebar_panel("admin")
         header_dropdown.close
         expect(header_dropdown).to have_no_dropdown_visible
+      end
+
+      it "shows the sidebar on other admin pages" do
+        visit "/admin"
+        expect(sidebar_navigation).to be_visible
+        visit "/admin/site_settings/category/all_results"
+        expect(sidebar_navigation).to be_visible
+        visit "/admin/reports"
+        expect(sidebar_navigation).to be_visible
       end
 
       context "when the user is not in admin_sidebar_enabled_groups" do

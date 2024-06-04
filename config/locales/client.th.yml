@@ -264,10 +264,16 @@ th:
         when_reminder_sent: "ลบบุ๊กมาร์ก"
       search: "ค้นหา"
       bookmark: "บุ๊คมาร์ค"
+      bulk:
+        select_all: "เลือกทั้งหมด"
+        clear_all: "ล้างทั้งหมด"
       reminders:
         today_with_time: "วันนี้ตอน%{time}"
         tomorrow_with_time: "พรุ่งนี้ตอน%{time}"
         at_time: "เมื่อ%{date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "ลบบุ๊กมาร์ก"
     copy_codeblock:
       copied: "คัดลอกแล้ว!"
     drafts:
@@ -1296,6 +1302,8 @@ th:
         other: "เลือกอย่างน้อย %{count} รายการ"
       components:
         bulk_select_topics_dropdown:
+          title: "การดำเนินการจำนวนมาก"
+        bulk_select_bookmarks_dropdown:
           title: "การดำเนินการจำนวนมาก"
     date_time_picker:
       from: จาก
@@ -2548,6 +2556,9 @@ th:
               label: หมวดหมู่
             include_subcategories:
               label: "รวมหมวดหมู่ย่อย"
+      flags:
+        description: "รายละเอียด"
+        enabled: "เปิดใช้"
       groups:
         new:
           title: "กลุ่มใหม่"
@@ -3093,6 +3104,7 @@ th:
         name: "ชื่อช่อง"
         type: "ประเภทช่อง"
         description: "รายละเอียดช่อง"
+        preferences: "การตั้งค่า"
         save: "บันทึก"
         edit: "แก้ไข"
         delete: "ลบ"
@@ -3103,6 +3115,9 @@ th:
           title: "ต้องการเมื่อลงทะเบียน"
           enabled: "ต้องการ"
           disabled: "ไม่ต้องการ"
+        requirement:
+          optional:
+            title: "ทางเลือก"
         editable:
           enabled: "แก้ไขได้"
           disabled: "แก้ไขไม่ได้"

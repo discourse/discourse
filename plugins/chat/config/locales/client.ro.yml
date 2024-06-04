@@ -27,6 +27,11 @@ ro:
           one: "Mutați <strong>%{count}</strong> mesaj. Selectați un canal de destinație. Un mesaj placeholder va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că acest mesaj a fost mutat. Retineți că lanțurile de răspuns nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca raspunsuri la mesajele mutate."
           few: "Mutați <strong>%{count}</strong> mesaje. Selectați un canal destinație. Un mesaj substitut va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că aceste mesaje au fost mutate. Rețineți că lanțurile de răspunsuri nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca răspunsuri la mesajele mutate."
           other: "Mutați <strong>%{count}</strong> mesaje. Selectați un canal destinație. Un mesaj substitut va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că aceste mesaje au fost mutate. Rețineți că lanțurile de răspunsuri nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca răspunsuri la mesajele mutate."
+      delete_messages:
+        confirm:
+          one: "Sigur vrei să ștergi acest mesaj?"
+          few: "Sigur vrei să ștergi aceste %{count} mesaje?"
+          other: "Sigur vrei să ștergi aceste %{count} de mesaje?"
       channel_settings:
         edit: "Modifică"
         add: "Adaugă"
@@ -171,6 +176,7 @@ ro:
       selection:
         cancel: "Anulare"
         copy: "Copiază"
+        delete: "Șterge (%{selectionCount}/%{totalCount})"
         new_topic:
           title: "Mutare în subiect nou."
         existing_topic:

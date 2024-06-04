@@ -899,20 +899,13 @@ nb_NO:
         user: Bruker
         qtt_like: Likes mottatt
   dashboard:
-    rails_env_warning: "Serveren din kjører i %{env] modus."
-    host_names_warning: "Din config/database.yml-fil bruker forvalgt lokalvert-vertsnavn. Oppdater det til å bruke din sides vertsnavn."
-    sidekiq_warning: 'Sidekiq kjører ikke. Mange oppgaver, som å sende e-post, kjøres i bakgrunnen av sidekiq. Vennligst verifiser at minst én sidekiq-prosess kjører. <a href="https://github.com/mperham/sidekiq" target="_blank">Lær mer om Sidekiq her</a>.'
-    queue_size_warning: "Antallet jobber som står i kø er %{queue_size}, som er høyt. Dette kan være en indikasjon på at Sidekiq-prosessen(e) har et problem, eller det kan tenkes du bare trenger flere samtidige Sidekiq-arbeidere."
-    memory_warning: "Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt."
-    subfolder_ends_in_slash: "Oppsettet av undermappe er feil; variablen DISCOURSE_RELATIVE_URL_ROOT slutter med en skråstrek."
-    email_polling_errored_recently:
-      one: "Henting av e-post har generert en feil de siste 24 timene. Se i <a href='%{base_path}/logs' target='_blank'>loggene</a> for mer detaljer."
-      other: "Henting av e-post har generert %{count} feil de siste 24 timene. Se i <a href='%{base_path}/logs' target='_blank'>loggene</a> for mer detaljer."
-    missing_mailgun_api_key: "Serveren er konfigurert til å sende e-post via Mailgun men du har ikke satt API-nøkkelen som brukes til å verifisere webhook meldinger."
-    poll_pop3_timeout: "Tilkoblingen til POP3 serveren får timeout. Vi får ikke hentet innkommende e-post. Vennligst sjekk <a href='%{base_path}/admin/site_settings/category/email'>instillingene for POP3</a> eller leverandøren av posttjenesten."
-    poll_pop3_auth_error: "Tilkoblingen til POP3 serveren feiler på grunn av problemer med autentisering. Vennligst sjekk <a href='%{base_path}/admin/site_settings/category/email'>POP3 instillingene</a>. "
-    force_https_warning: "Nettstedet ditt bruker SSL. Men `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` er ikke aktivert enda i instillingene."
-    out_of_date_themes: "Oppdateringer er tilgjengelig for følgende drakter:"
+    problem:
+      host_names: "Din config/database.yml-fil bruker forvalgt lokalvert-vertsnavn. Oppdater det til å bruke din sides vertsnavn."
+      queue_size: "Antallet jobber som står i kø er %{queue_size}, som er høyt. Dette kan være en indikasjon på at Sidekiq-prosessen(e) har et problem, eller det kan tenkes du bare trenger flere samtidige Sidekiq-arbeidere."
+      ram: "Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt."
+      subfolder_ends_in_slash: "Oppsettet av undermappe er feil; variablen DISCOURSE_RELATIVE_URL_ROOT slutter med en skråstrek."
+      missing_mailgun_api_key: "Serveren er konfigurert til å sende e-post via Mailgun men du har ikke satt API-nøkkelen som brukes til å verifisere webhook meldinger."
+      out_of_date_themes: "Oppdateringer er tilgjengelig for følgende drakter:"
   site_settings:
     disabled: "deaktivert"
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
@@ -1146,7 +1139,6 @@ nb_NO:
       title: "Konto sperret"
       subject_template: "[%{email_prefix}] Kontoen din er blitt sperret"
     digest:
-      why: "Dette har skjedd på %{site_link} siden ditt forrige besøk %{last_seen_at}"
       since_last_visit: "Siden siste besøk"
       new_topics: "Nye emner"
       unread_notifications: "Uleste varslinger."
@@ -1157,7 +1149,6 @@ nb_NO:
       popular_posts: "Populære innlegg"
       more_new: "Nytt for deg"
       click_here: "trykk her"
-      preheader: "En kort oppsummering siden ditt siste besøk på %{last_seen_at}"
     forgot_password:
       title: "Glemt passord"
     set_password:

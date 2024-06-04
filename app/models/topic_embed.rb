@@ -61,7 +61,7 @@ class TopicEmbed < ActiveRecord::Base
     if embed.blank?
       Topic.transaction do
         if eh = EmbeddableHost.record_for_url(url)
-          tags = eh.tags.presence || tags
+          tags = eh.tags.presence&.map(&:name) || tags
           user = eh.user.presence || user
         end
 
@@ -315,7 +315,7 @@ class TopicEmbed < ActiveRecord::Base
           return result if result.size >= 100
         end
       end
-    return result unless result.blank?
+    return result if result.present?
 
     # If there is no first paragraph, return the first div (onebox)
     doc.css("div").first.to_s

@@ -6,7 +6,7 @@ module Jobs
       def execute(args)
         reason = args[:reason]
         valid_reasons = %w[new edit]
-        return unless valid_reasons.include?(reason)
+        return if valid_reasons.exclude?(reason)
 
         return if (timestamp = args[:timestamp]).blank?
 

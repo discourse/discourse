@@ -343,11 +343,20 @@ es:
       search_placeholder: "Buscar marcadores por nombre, título del tema o contenido de la publicación"
       search: "Buscar"
       bookmark: "Marcador"
+      bulk:
+        select_all: "Seleccionar todo"
+        clear_all: "Limpiar todo"
+        selected_count:
+          one: "%{count} seleccionado"
+          other: "%{count} seleccionado"
       reminders:
         today_with_time: "hoy a las %{time}"
         tomorrow_with_time: "mañana a las %{time}"
         at_time: "a las %{date_time}"
         existing_reminder: "Tienes un recordatorio para este marcador que se enviará %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Eliminar marcador"
     copy_codeblock:
       copied: "¡copiado!"
       copy: "copiar código al portapapeles"
@@ -2153,6 +2162,8 @@ es:
         categories_admin_dropdown:
           title: "Gestionar categorías"
         bulk_select_topics_dropdown:
+          title: "Acciones en bloque"
+        bulk_select_bookmarks_dropdown:
           title: "Acciones en bloque"
     date_time_picker:
       from: Desde
@@ -4296,7 +4307,7 @@ es:
       panels:
         forum:
           label: Foro
-      filter: "Filtro"
+      filter: "Filtrar..."
       no_results:
         title: "No hay resultados"
     welcome_topic_banner:
@@ -4511,6 +4522,9 @@ es:
               label: Categoría
             include_subcategories:
               label: "Incluir subcategoría"
+      flags:
+        description: "Descripción"
+        enabled: "¿Activado?"
       groups:
         new:
           title: "Crear grupo"
@@ -5957,6 +5971,7 @@ es:
         name: "Nombre del campo"
         type: "Tipo de campo"
         description: "Descripción del campo"
+        preferences: "Preferencias"
         save: "Guardar"
         edit: "Editar"
         delete: "Eliminar"
@@ -5967,6 +5982,9 @@ es:
           title: "Obligatorio rellenarlo al registrarse"
           enabled: "obligatorio"
           disabled: "no requerido"
+        requirement:
+          optional:
+            title: "Opcional"
         editable:
           title: "Editable después del registro"
           enabled: "editable"

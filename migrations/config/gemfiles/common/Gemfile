@@ -6,13 +6,17 @@ source "https://rubygems.org"
 ruby ">= 3.2.2"
 
 # `activesupport` gem needs to be in sync with the Rails version of Discourse, see `/Gemfile`
-gem "activesupport", "< 7.1", require: "active_support"
+lock_file = %w[Gemfile.lock ../Gemfile.lock].detect { File.exist?(_1) }
+activesupport_version =
+  Bundler::LockfileParser
+    .new(Bundler.read_file(lock_file))
+    .specs
+    .detect { _1.name == "activesupport" }
+    .version
+gem "activesupport", "= #{activesupport_version}", require: "active_support"
 
 # for SQLite
-gem "extralite-bundle",
-    "~> 2.8",
-    require: "extralite",
-    github: "digital-fabric/extralite"
+gem "extralite-bundle", "~> 2.8", require: "extralite", github: "digital-fabric/extralite"
 gem "lru_redux", "~> 1.1", require: false
 
 # for communication between process forks

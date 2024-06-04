@@ -23,18 +23,6 @@ export default class AdminPluginFilteredSiteSettings extends Component {
     this.filterChanged({ filter: "", onlyOverridden: false });
   }
 
-  filterSettings(filterData) {
-    this.args.onFilterChanged(filterData);
-    this.visibleSettings = this.siteSettingFilter.filterSettings(
-      filterData.filter,
-      {
-        includeAllCategory: false,
-        onlyOverridden: filterData.onlyOverridden,
-      }
-    )[0]?.siteSettings;
-    this.loading = false;
-  }
-
   @action
   filterChanged(filterData) {
     this._debouncedOnChangeFilter(filterData);
@@ -52,6 +40,18 @@ export default class AdminPluginFilteredSiteSettings extends Component {
       filterData,
       100
     );
+  }
+
+  filterSettings(filterData) {
+    this.args.onFilterChanged(filterData);
+    this.visibleSettings = this.siteSettingFilter.filterSettings(
+      filterData.filter,
+      {
+        includeAllCategory: false,
+        onlyOverridden: filterData.onlyOverridden,
+      }
+    )[0]?.siteSettings;
+    this.loading = false;
   }
 
   <template>

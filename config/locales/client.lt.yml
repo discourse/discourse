@@ -355,11 +355,17 @@ lt:
       search_placeholder: "Ieškokite žymių pagal pavadinimą, temos pavadinimą ar įrašo turinį"
       search: "Paieška"
       bookmark: "Žymės"
+      bulk:
+        select_all: "Pasirinkti viską"
+        clear_all: "Ištrinti viską"
       reminders:
         today_with_time: "šiandien %{time}"
         tomorrow_with_time: "rytoj %{time}"
         at_time: "ties %{date_time}"
         existing_reminder: "Turite priminimų rinkinį šiai žymai, kuri bus išsiųsta %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Ištrinti žymę"
     copy_codeblock:
       copied: "nukopijuota!"
       copy: "nukopijuoti kodą į iškarpinę"
@@ -1859,6 +1865,8 @@ lt:
         categories_admin_dropdown:
           title: "Tvarkyti kategorijas"
         bulk_select_topics_dropdown:
+          title: "Veiksmai"
+        bulk_select_bookmarks_dropdown:
           title: "Veiksmai"
     date_time_picker:
       from: Nuo
@@ -3574,7 +3582,7 @@ lt:
               content: "Mano Įrašai"
             review:
               content: "Peržiūra"
-      filter: "Filtruoti"
+      filter: "Filtruoti..."
     until: "Iki:"
     form_templates:
       upload_field:
@@ -3696,6 +3704,9 @@ lt:
               label: Kategorija
             include_subcategories:
               label: "Įtraukti subkategorijas"
+      flags:
+        description: "Aprašymas"
+        enabled: "Galimas?"
       groups:
         new:
           title: "Nauja Grupė"
@@ -4776,6 +4787,7 @@ lt:
         name: "Lauko Pavadinimas"
         type: "Lauko Tema"
         description: "Lauko Tekstas"
+        preferences: "Nustatymai"
         save: "Išsaugoti"
         edit: "Redaguoti"
         delete: "Ištrinti"
@@ -4786,6 +4798,9 @@ lt:
           title: "Privaloma per prisijungimą"
           enabled: "privalomi"
           disabled: "neprivaloma"
+        requirement:
+          optional:
+            title: "Pasirinktinai"
         editable:
           title: "Gali keisti po registracijos"
           enabled: "redaguojama"

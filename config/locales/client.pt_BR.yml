@@ -342,11 +342,20 @@ pt_BR:
       search_placeholder: "Pesquisar os favoritos por nome, título do tópico ou conteúdo da postagem"
       search: "Pesquisar"
       bookmark: "Marcador"
+      bulk:
+        select_all: "Selecionar tudo"
+        clear_all: "Limpar tudo"
+        selected_count:
+          one: "Selecionou %{count}"
+          other: "Selecionou %{count}"
       reminders:
         today_with_time: "hoje à(s) %{time}"
         tomorrow_with_time: "amanhã à(s) %{time}"
         at_time: "em %{date_time}"
         existing_reminder: "Você tem um lembrete definido para este favorito que será enviado em %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Excluir favorito"
     copy_codeblock:
       copied: "copiado!"
       copy: "copiar código para a área de transferência"
@@ -2155,6 +2164,8 @@ pt_BR:
         categories_admin_dropdown:
           title: "Gerenciar categorias"
         bulk_select_topics_dropdown:
+          title: "Ações em massa"
+        bulk_select_bookmarks_dropdown:
           title: "Ações em massa"
     date_time_picker:
       from: De
@@ -4301,7 +4312,7 @@ pt_BR:
       panels:
         forum:
           label: Fórum
-      filter: "Filtro"
+      filter: "Filtro..."
       no_results:
         title: "Nenhum resultado"
     welcome_topic_banner:
@@ -4516,6 +4527,9 @@ pt_BR:
               label: Categoria
             include_subcategories:
               label: "Incluir subcategorias"
+      flags:
+        description: "Descrição"
+        enabled: "Ativado(a)?"
       groups:
         new:
           title: "Novo grupo"
@@ -5963,6 +5977,7 @@ pt_BR:
         name: "Nome do campo"
         type: "Tipo do campo"
         description: "Descrição do campo"
+        preferences: "Preferências"
         save: "Salvar"
         edit: "Editar"
         delete: "Excluir"
@@ -5973,6 +5988,9 @@ pt_BR:
           title: "Necessário para cadastro"
           enabled: "necessário(a)"
           disabled: "não necessário(a)"
+        requirement:
+          optional:
+            title: "Opcional"
         editable:
           title: "Editável após criar conta"
           enabled: "editável"

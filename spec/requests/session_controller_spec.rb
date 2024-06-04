@@ -1991,7 +1991,7 @@ RSpec.describe SessionController do
         end
       end
 
-      describe "success by username" do
+      describe "success by username and password" do
         it "logs in correctly" do
           events =
             DiscourseEvent.track_events do
@@ -2027,6 +2027,31 @@ RSpec.describe SessionController do
             expect(response.parsed_body["error"]).not_to be_present
             expect(user.reload.user_option.timezone).to eq("Australia/Melbourne")
           end
+        end
+      end
+
+      describe "when user's password has been marked as expired" do
+        let!(:expired_user_password) do
+          Fabricate(
+            :expired_user_password,
+            user:,
+            password: "myawesomepassword",
+            password_salt: user.salt,
+            password_algorithm: user.password_algorithm,
+          )
+        end
+
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
+
+        it "should return an error response code with the right error message" do
+          post "/session.json", params: { login: user.username, password: "myawesomepassword" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).to eq("expired")
+          expect(response.parsed_body["reason"]).to eq("expired")
+          expect(session[:current_user_id]).to eq(nil)
         end
       end
 

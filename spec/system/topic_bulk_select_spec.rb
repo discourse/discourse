@@ -11,6 +11,20 @@ describe "Topic bulk select", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:topic_bulk_actions_modal) { PageObjects::Modals::TopicBulkActions.new }
 
+  def open_bulk_actions_modal(topics_to_select = nil, action)
+    topic_list_header.click_bulk_select_button
+
+    if !topics_to_select
+      topic_list.click_topic_checkbox(topics.last)
+    else
+      topics_to_select.each { |topic| topic_list.click_topic_checkbox(topic) }
+    end
+
+    topic_list_header.click_bulk_select_topics_dropdown
+    topic_list_header.click_bulk_button(action)
+    expect(topic_bulk_actions_modal).to be_open
+  end
+
   context "when appending tags" do
     fab!(:tag1) { Fabricate(:tag) }
     fab!(:tag2) { Fabricate(:tag) }
@@ -22,17 +36,15 @@ describe "Topic bulk select", type: :system do
       sign_in(admin)
       visit("/latest")
 
-      topic_list_header.click_bulk_select_button
+      open_bulk_actions_modal(topics_to_select, "append-tags")
+    end
 
-      if !topics_to_select
-        topic_list.click_topic_checkbox(topics.last)
-      else
-        topics_to_select.each { |topic| topic_list.click_topic_checkbox(topic) }
+    context "when in mobile", mobile: true do
+      it "is working" do
+        # behavior is already tested on desktop, we simply ensure
+        # the general workflow is working on mobile
+        open_append_modal
       end
-
-      topic_list_header.click_bulk_select_topics_dropdown
-      topic_list_header.click_bulk_button("append-tags")
-      expect(topic_bulk_actions_modal).to be_open
     end
 
     it "appends tags to selected topics" do
@@ -231,6 +243,87 @@ describe "Topic bulk select", type: :system do
       click_button("dismiss-read-confirm")
 
       expect(topic_list).to have_no_topics
+    end
+  end
+
+  context "when working with private messages" do
+    fab!(:private_message_1) do
+      Fabricate(:private_message_topic, user: admin, recipient: user, participant_count: 2)
+    end
+    fab!(:private_message_post_1) { Fabricate(:post, topic: private_message_1, user: admin) }
+    fab!(:private_message_post_2) { Fabricate(:post, topic: private_message_1, user: user) }
+    fab!(:group)
+    fab!(:group_private_message) do
+      Fabricate(:group_private_message_topic, user: admin, recipient_group: group)
+    end
+
+    before do
+      TopicUser.change(
+        admin.id,
+        private_message_1,
+        notification_level: TopicUser.notification_levels[:tracking],
+      )
+      TopicUser.update_last_read(admin, private_message_1.id, 1, 1, 1)
+      GroupUser.create!(user: admin, group: group)
+    end
+
+    it "allows moving private messages to the Archive" do
+      sign_in(admin)
+      visit("/u/#{admin.username}/messages")
+      expect(page).to have_content(private_message_1.title)
+      open_bulk_actions_modal([private_message_1], "archive-messages")
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
+      visit("/u/#{admin.username}/messages/archive")
+      expect(page).to have_content(private_message_1.title)
+      expect(UserArchivedMessage.exists?(user_id: admin.id, topic_id: private_message_1.id)).to eq(
+        true,
+      )
+    end
+
+    it "allows moving private messages to the Inbox" do
+      UserArchivedMessage.create!(user: admin, topic: private_message_1)
+      sign_in(admin)
+      visit("/u/#{admin.username}/messages/archive")
+      expect(page).to have_content(private_message_1.title)
+      open_bulk_actions_modal([private_message_1], "move-messages-to-inbox")
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
+      visit("/u/#{admin.username}/messages")
+      expect(page).to have_content(private_message_1.title)
+    end
+
+    it "allows moving group private messages to the scoped group Archive" do
+      sign_in(admin)
+      visit("/u/#{admin.username}/messages/group/#{group.name}")
+      expect(page).to have_content(group_private_message.title)
+      open_bulk_actions_modal([group_private_message], "archive-messages")
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
+      visit("/u/#{admin.username}/messages/group/#{group.name}/archive")
+      expect(page).to have_content(group_private_message.title)
+    end
+
+    it "allows moving group private messages to the scoped group Inbox" do
+      GroupArchivedMessage.create!(group: group, topic: group_private_message)
+      sign_in(admin)
+      visit("/u/#{admin.username}/messages/group/#{group.name}/archive")
+      expect(page).to have_content(group_private_message.title)
+      open_bulk_actions_modal([group_private_message], "move-messages-to-inbox")
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+      expect(page).to have_content(I18n.t("js.topics.bulk.completed"))
+      visit("/u/#{admin.username}/messages/group/#{group.name}")
+      expect(page).to have_content(group_private_message.title)
+    end
+
+    context "when in mobile" do
+      it "is working", mobile: true do
+        # behavior is already tested on desktop, we simply ensure
+        # the general workflow is working on mobile
+        sign_in(admin)
+        visit("/u/#{admin.username}/messages")
+        open_bulk_actions_modal([private_message_1], "archive-messages")
+      end
     end
   end
 end

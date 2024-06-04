@@ -29,7 +29,7 @@ class ThemeSettingsValidator
 
       case type
       when types[:enum]
-        unless opts[:choices].include?(value) || opts[:choices].map(&:to_s).include?(value)
+        if opts[:choices].exclude?(value) && opts[:choices].map(&:to_s).exclude?(value)
           errors << I18n.t(
             "themes.settings_errors.enum_value_not_valid",
             choices: opts[:choices].join(", "),

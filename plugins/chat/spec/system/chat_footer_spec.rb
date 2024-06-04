@@ -100,7 +100,7 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
         visit("/")
         chat_page.open_from_header
 
-        expect(page).to have_css("#c-footer-channels .chat-channel-unread-indicator")
+        expect(page).to have_css("#c-footer-channels .c-unread-indicator")
       end
 
       it "is urgent for mentions" do
@@ -116,10 +116,7 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
           user: user_2,
         )
 
-        expect(page).to have_css(
-          "#c-footer-channels .chat-channel-unread-indicator.-urgent",
-          text: "1",
-        )
+        expect(page).to have_css("#c-footer-channels .c-unread-indicator.-urgent", text: "1")
       end
     end
 
@@ -131,7 +128,7 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
         visit("/")
         chat_page.open_from_header
 
-        expect(page).to have_css("#c-footer-direct-messages .chat-channel-unread-indicator.-urgent")
+        expect(page).to have_css("#c-footer-direct-messages .c-unread-indicator.-urgent")
       end
     end
 
@@ -145,7 +142,7 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
         visit("/")
         chat_page.open_from_header
 
-        expect(page).to have_css("#c-footer-threads .chat-channel-unread-indicator")
+        expect(page).to have_css("#c-footer-threads .c-unread-indicator")
       end
     end
   end
