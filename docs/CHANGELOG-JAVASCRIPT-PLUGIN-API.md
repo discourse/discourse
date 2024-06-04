@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.32.0] - 2024-05-16
 
-- Adds `registerHomeLogoHrefCallback` which allows to set a callback to change the home logo URL.
+- Added `registerHomeLogoHrefCallback` which allows to set a callback to change the home logo URL.
 
 ## [1.31.0] - 2024-04-22
 
-- Adds `addTopicAdminMenuButton` which allows to register a new button in the topic admin menu.
+- Added `addTopicAdminMenuButton` which allows to register a new button in the topic admin menu.
 
 ## [1.30.0] - 2024-03-20
 
@@ -21,20 +21,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.29.0] - 2024-03-05
 
-- added `headerButtons` which allows for manipulation of the header butttons. This includes, adding, removing, or modifying the order of buttons. 
+- Added `headerButtons` which allows for manipulation of the header buttons. This includes, adding, removing, or modifying the order of buttons.
 
 ## [1.28.0] - 2024-02-21
 
-- added `headerIcons` which allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons. 
+- Added `headerIcons` which allows for manipulation of the header icons. This includes, adding, removing, or modifying the order of icons.
 
 ## [1.27.0] - 2024-02-21
 
-- deprecated `addToHeaderIcons` in favor of `headerIcons`
+- Deprecated `addToHeaderIcons` in favor of `headerIcons`
 
 ## [1.26.0] - 2024-02-21
 
-- Added `renderBeforeWrapperOutlet` which is used for rendering components before the content of wrapper plugin outlets 
-- Added `renderAfterWrapperOutlet` which is used for rendering components after the content of wrapper plugin outlets 
+- Added `renderBeforeWrapperOutlet` which is used for rendering components before the content of wrapper plugin outlets
+- Added `renderAfterWrapperOutlet` which is used for rendering components after the content of wrapper plugin outlets
 
 ## [1.25.0] - 2024-02-05
 
