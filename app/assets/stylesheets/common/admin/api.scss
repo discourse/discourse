@@ -43,10 +43,6 @@ table.web-hooks.grid {
   }
 }
 
-div.delivery-status-filters {
-  margin-top: 1em;
-}
-
 // Api keys
 
 table.api-keys {
@@ -342,7 +338,10 @@ table.api-keys {
   }
 }
 
-.webhook-events__ping-button {
+.web-hook-events-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   margin-bottom: 1rem;
 }
 

@@ -9,7 +9,7 @@ export default class AdminWebHooksShowController extends Controller {
   @service dialog;
   @service router;
   @controller adminWebHooks;
-  @tracked status = [];
+  @tracked status;
 
   queryParams = ["status"];
 

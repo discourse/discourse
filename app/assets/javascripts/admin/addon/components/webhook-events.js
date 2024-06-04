@@ -15,12 +15,9 @@ export default class WebhookEvents extends Component {
   @tracked pingEnabled = true;
   @tracked events = [];
   @tracked incomingEventIds = [];
-  @tracked status = [];
 
   @readOnly("incomingEventIds.length") incomingCount;
   @gt("incomingCount", 0) hasIncoming;
-
-  queryParams = ["status"];
 
   constructor() {
     super(...arguments);
@@ -38,7 +35,6 @@ export default class WebhookEvents extends Component {
 
   get statuses() {
     let status = [
-      { id: "all", name: I18n.t("admin.web_hooks.events.filter_status.all") },
       {
         id: "successful",
         name: I18n.t("admin.web_hooks.events.filter_status.successful"),

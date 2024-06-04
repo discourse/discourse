@@ -8,12 +8,8 @@ module PageObjects
         self
       end
 
-      def click_filter
-        find(".combo-box-header", text: "Filter by Delivery Status").click
-      end
-
       def click_filter_all
-        find(".select-kit-row", text: "All Events").click
+        find(".select-kit-header", text: "All Events").click
       end
 
       def click_filter_delivered

@@ -15,10 +15,11 @@ export default class WebHookEvent extends RestAdapter {
     }
 
     const queryString = urlSearchParams.toString();
+    let url = `${path}/${findArgs.webhookId}${extension || ""}`;
 
     if (queryString) {
-      return `${path}/${findArgs.webhookId}${extension || ""}?${queryString}`;
+      url = `${url}?${queryString}`;
     }
-    return `${path}/${findArgs.webhookId}${extension || ""}`;
+    return url;
   }
 }

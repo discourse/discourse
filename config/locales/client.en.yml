@@ -5314,7 +5314,6 @@ en:
           timestamp: "Created"
           completion: "Completion Time"
           actions: "Actions"
-          filter_by: "Filter by Delivery Status"
           filter_status:
             all: "All Events"
             successful: "Delivered"
