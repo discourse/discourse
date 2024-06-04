@@ -134,6 +134,10 @@ export default class SidebarState extends Service {
     );
   }
 
+  get sanitizedFilter() {
+    return this.filter.toLowerCase().trim();
+  }
+
   clearFilter() {
     this.filter = "";
   }
