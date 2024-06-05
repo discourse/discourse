@@ -9,10 +9,6 @@ const InputTip = <template>
     {{#if @validation.reason}}
       {{icon (if @validation.failed "times" "check")}}
       {{@validation.reason}}
-    {{else}}
-      {{#if @keepSpace}}
-        &nbsp;
-      {{/if}}
     {{/if}}
   </div>
 </template>;
