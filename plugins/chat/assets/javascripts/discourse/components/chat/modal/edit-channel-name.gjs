@@ -54,7 +54,7 @@ export default class ChatModalEditChannelName extends Component {
       this.channel.title = result.channel.title;
       this.channel.slug = result.channel.slug;
       await this.args.closeModal();
-      await this.router.replaceWith(
+      this.router.replaceWith(
         "chat.channel",
         ...this.channel.routeModels
       );
