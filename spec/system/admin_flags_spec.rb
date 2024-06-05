@@ -25,6 +25,8 @@ describe "Admin Flags Page", type: :system do
     expect(all(".flag-action-type-details strong").map(&:text)).to eq(
       ["Something Else", "It's Inappropriate", "It's Illegal"],
     )
+
+    Flag.system.where(name: "spam").update!(enabled: true)
   end
 
   it "allows admin to change order of flags" do

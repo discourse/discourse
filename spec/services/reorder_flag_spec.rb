@@ -31,6 +31,10 @@ RSpec.describe(ReorderFlag) do
   context "when user is allowed to perform the action" do
     fab!(:current_user) { Fabricate(:admin) }
 
+    after do
+      described_class.call(flag_id: flag.id, guardian: current_user.guardian, direction: "down")
+    end
+
     it "sets the service result as successful" do
       expect(result).to be_a_success
     end
