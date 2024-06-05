@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Flag < ActiveRecord::Base
+  VALID_APPLIES_TO = %w[Post Topic Chat::Message]
   MAX_SYSTEM_FLAG_ID = 1000
   scope :enabled, -> { where(enabled: true) }
   scope :system, -> { where("id < 1000") }
