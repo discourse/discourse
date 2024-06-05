@@ -93,7 +93,10 @@ export default Controller.extend(PasswordValidation, {
               DiscourseURL.redirectTo(result.redirect_to || "/");
             }
           } else {
-            if (result.errors && !result.errors.password) {
+            if (
+              result.errors.security_keys ||
+              result.errors.user_second_factors
+            ) {
               this.setProperties({
                 secondFactorRequired: this.secondFactorRequired,
                 securityKeyRequired: this.securityKeyRequired,

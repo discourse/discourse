@@ -187,6 +187,26 @@ shared_examples "login scenarios" do
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
+    it "shows error correctly when TOTP code is invalid" do
+      login_modal.open
+      login_modal.fill_username("john")
+      login_modal.forgot_password
+      find("button.forgot-password-reset").click
+
+      reset_password_link = wait_for_email_link(user, :reset_password)
+      visit reset_password_link
+
+      find(".second-factor-token-input").fill_in(with: "123456")
+      find(".password-reset .btn-primary").click
+
+      expect(page).to have_css(
+        ".alert-error",
+        text: "Invalid authentication code. Each code can only be used once.",
+      )
+
+      expect(page).to have_css(".second-factor-token-input")
+    end
+
     it "can reset password with a backup code" do
       login_modal.open
       login_modal.fill_username("john")
