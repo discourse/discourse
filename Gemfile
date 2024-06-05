@@ -276,3 +276,19 @@ gem "drb"
 # dependencies for the automation plugin
 gem "iso8601"
 gem "rrule"
+
+group :migrations, optional: true do
+  gem "extralite-bundle", "~> 2.8", require: "extralite"
+
+  # for communication between process forks
+  gem "msgpack", "~> 1.7"
+
+  # auto-loading
+  gem "zeitwerk", "~> 2.6"
+
+  # databases
+  gem "trilogy", "~> 2.8"
+
+  # additional Gemfiles from converters
+  Dir[File.expand_path("migrations/**/Gemfile", __dir__)].each { |path| eval_gemfile(path) }
+end
