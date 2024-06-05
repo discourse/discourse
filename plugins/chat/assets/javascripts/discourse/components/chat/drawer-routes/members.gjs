@@ -1,11 +1,10 @@
 import Component from "@glimmer/component";
-import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
+import I18n from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
-import ChannelInfo from "discourse/plugins/chat/discourse/components/chat/routes/channel-info";
 import ChannelMembers from "discourse/plugins/chat/discourse/components/chat/routes/channel-info-members";
 import ChannelInfoNav from "discourse/plugins/chat/discourse/components/chat/routes/channel-info-nav";
 
