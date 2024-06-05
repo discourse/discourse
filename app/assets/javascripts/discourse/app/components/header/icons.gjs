@@ -60,16 +60,18 @@ export default class Icons extends Component {
     <ul class="icons d-header-icons">
       {{#each (headerIcons.resolve) as |entry|}}
         {{#if (eq entry.key "search")}}
-          <Dropdown
-            @title="search.title"
-            @icon="search"
-            @iconId={{@searchButtonId}}
-            @onClick={{@toggleSearchMenu}}
-            @active={{this.search.visible}}
-            @href={{getURL "/search"}}
-            @className="search-dropdown"
-            @targetSelector=".search-menu-panel"
-          />
+          {{#unless this.header.headerButtonsHidden}}
+            <Dropdown
+              @title="search.title"
+              @icon="search"
+              @iconId={{@searchButtonId}}
+              @onClick={{@toggleSearchMenu}}
+              @active={{this.search.visible}}
+              @href={{getURL "/search"}}
+              @className="search-dropdown"
+              @targetSelector=".search-menu-panel"
+            />
+          {{/unless}}
         {{else if (eq entry.key "hamburger")}}
           {{#if this.showHamburger}}
             <Dropdown

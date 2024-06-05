@@ -232,7 +232,7 @@ createWidget(
 );
 
 createWidget("header-icons", {
-  services: ["search"],
+  services: ["search", "header"],
   tagName: "ul.icons.d-header-icons",
 
   init() {
@@ -250,17 +250,19 @@ createWidget("header-icons", {
 
     resolvedIcons.forEach((icon) => {
       if (icon.key === "search") {
-        icons.push(
-          this.attach("header-dropdown", {
-            title: "search.title",
-            icon: "search",
-            iconId: SEARCH_BUTTON_ID,
-            action: "toggleSearchMenu",
-            active: this.search.visible,
-            href: getURL("/search"),
-            classNames: ["search-dropdown"],
-          })
-        );
+        if (!this.header.headerButtonsHidden) {
+          icons.push(
+            this.attach("header-dropdown", {
+              title: "search.title",
+              icon: "search",
+              iconId: SEARCH_BUTTON_ID,
+              action: "toggleSearchMenu",
+              active: this.search.visible,
+              href: getURL("/search"),
+              classNames: ["search-dropdown"],
+            })
+          );
+        }
       } else if (icon.key === "user-menu" && attrs.user) {
         icons.push(
           this.attach("user-dropdown", {
@@ -294,6 +296,7 @@ createWidget("header-icons", {
 });
 
 createWidget("header-buttons", {
+  services: ["header"],
   tagName: "span.auth-buttons",
 
   html(attrs) {
@@ -303,24 +306,26 @@ createWidget("header-buttons", {
 
     const buttons = [];
 
-    if (attrs.canSignUp && !attrs.topic) {
+    if (!this.header.headerButtonsHidden) {
+      if (attrs.canSignUp && !attrs.topic) {
+        buttons.push(
+          this.attach("button", {
+            label: "sign_up",
+            className: "btn-primary btn-small sign-up-button",
+            action: "showCreateAccount",
+          })
+        );
+      }
+
       buttons.push(
         this.attach("button", {
-          label: "sign_up",
-          className: "btn-primary btn-small sign-up-button",
-          action: "showCreateAccount",
+          label: "log_in",
+          className: "btn-primary btn-small login-button",
+          action: "showLogin",
+          icon: "user",
         })
       );
     }
-
-    buttons.push(
-      this.attach("button", {
-        label: "log_in",
-        className: "btn-primary btn-small login-button",
-        action: "showLogin",
-        icon: "user",
-      })
-    );
     return buttons;
   },
 });
