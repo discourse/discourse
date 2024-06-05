@@ -99,6 +99,7 @@ RSpec.describe SessionController do
           expect(response_body_parsed["can_login"]).to eq(true)
           expect(response_body_parsed["second_factor_required"]).to eq(true)
           expect(response_body_parsed["backup_codes_enabled"]).to eq(true)
+          expect(response_body_parsed["totp_enabled"]).to eq(true)
         end
       end
 

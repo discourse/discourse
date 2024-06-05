@@ -42,10 +42,12 @@ export default Component.extend({
     }
   },
 
-  @discourseComputed("backupEnabled", "secondFactorMethod")
-  showToggleMethodLink(backupEnabled, secondFactorMethod) {
+  @discourseComputed("backupEnabled", "totpEnabled", "secondFactorMethod")
+  showToggleMethodLink(backupEnabled, totpEnabled, secondFactorMethod) {
     return (
-      backupEnabled && secondFactorMethod !== SECOND_FACTOR_METHODS.SECURITY_KEY
+      backupEnabled &&
+      totpEnabled &&
+      secondFactorMethod !== SECOND_FACTOR_METHODS.SECURITY_KEY
     );
   },
 
