@@ -43,7 +43,7 @@ def with_db_path
   yield tempfile.path
 
   db = create_extralite_db(tempfile.path)
-  row_count = db.query_single_value("SELECT COUNT(*) FROM users")
+  row_count = db.query_single_splat("SELECT COUNT(*) FROM users")
   puts "Row count: #{row_count}" if row_count != ROW_COUNT
   db.close
 ensure
