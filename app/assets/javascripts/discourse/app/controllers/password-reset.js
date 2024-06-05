@@ -35,10 +35,10 @@ export default Controller.extend(PasswordValidation, {
   redirected: false,
   maskPassword: true,
 
-  init() {
-    this._super(...arguments);
-    this.set("selectedSecondFactorMethod", this.secondFactorMethod);
-  },
+  // init() {
+  //   this._super(...arguments);
+  //   this.set("selectedSecondFactorMethod", this.secondFactorMethod);
+  // },
 
   @discourseComputed()
   continueButtonText() {
@@ -78,7 +78,7 @@ export default Controller.extend(PasswordValidation, {
           password: this.accountPassword,
           second_factor_token:
             this.securityKeyCredential || this.secondFactorToken,
-          second_factor_method: this.selectedSecondFactorMethod,
+          second_factor_method: this.secondFactorMethod,
           timezone: moment.tz.guess(),
         },
       })
