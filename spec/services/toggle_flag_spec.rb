@@ -14,6 +14,8 @@ RSpec.describe(ToggleFlag) do
   context "when user is allowed to perform the action" do
     fab!(:current_user) { Fabricate(:admin) }
 
+    after { flag.update!(enabled: true) }
+
     it "sets the service result as successful" do
       expect(result).to be_a_success
     end
