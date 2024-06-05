@@ -43,10 +43,12 @@ export default class Header extends Service {
   }
 
   get headerButtonsHidden() {
-    let buttonsToHide = [];
-    this.#hiders.forEach((value) => {
-      buttonsToHide.push(...value);
+    const buttonsToHide = new Set();
+    this.#hiders.forEach((buttons) => {
+      buttons.forEach((button) => {
+        buttonsToHide.add(button);
+      });
     });
-    return Array.from(new Set(buttonsToHide));
+    return Array.from(buttonsToHide);
   }
 }
