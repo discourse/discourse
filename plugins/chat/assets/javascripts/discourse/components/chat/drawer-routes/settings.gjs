@@ -19,7 +19,7 @@ export default class ChatDrawerRoutesSettings extends Component {
       route: "chat.channel",
       models: this.chat.activeChannel?.routeModels,
       title: I18n.t("chat.return_to_channel"),
-    }
+    };
   }
 
   @action
@@ -37,9 +37,9 @@ export default class ChatDrawerRoutesSettings extends Component {
 
   <template>
     <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
-      <navbar.BackButton 
-        @title={{this.backButton.title}} 
-        @route={{this.backButton.route}} 
+      <navbar.BackButton
+        @title={{this.backButton.title}}
+        @route={{this.backButton.route}}
         @routeModels={{this.backButton.models}}
       />
       <navbar.ChannelTitle @channel={{this.chat.activeChannel}} />
@@ -57,7 +57,10 @@ export default class ChatDrawerRoutesSettings extends Component {
         {{didUpdate this.fetchChannel @params.channelId}}
       >
         {{#if this.chat.activeChannel}}
-          <ChannelInfoNav @channel={{this.chat.activeChannel}} @tab="settings" />
+          <ChannelInfoNav
+            @channel={{this.chat.activeChannel}}
+            @tab="settings"
+          />
           <ChannelSettings @channel={{this.chat.activeChannel}} />
         {{/if}}
       </div>

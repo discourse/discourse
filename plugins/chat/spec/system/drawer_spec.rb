@@ -9,6 +9,7 @@ RSpec.describe "Drawer", type: :system do
   before do
     chat_system_bootstrap
     sign_in(current_user)
+    chat_page.prefers_drawer
   end
 
   context "when on channel" do
@@ -18,13 +19,32 @@ RSpec.describe "Drawer", type: :system do
     end
 
     context "when clicking channel title" do
-      it "opens channel settings page" do
+      before do
         visit("/")
         chat_page.open_from_header
         drawer_page.open_channel(channel)
         page.find(".c-navbar__channel-title").click
+      end
 
-        expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}/info/settings")
+      it "opens channel settings page" do
+        expect(drawer_page).to have_channel_settings
+      end
+
+      it "has tabs for settings and members" do
+        expect(drawer_page).to have_css(".c-channel-info__nav li a", text: "Settings")
+        expect(drawer_page).to have_css(".c-channel-info__nav li a", text: "Members")
+      end
+
+      it "opens correct tab when clicked" do
+        page.find(".c-channel-info__nav li a", text: "Members").click
+        expect(drawer_page).to have_channel_members
+
+        page.find(".c-channel-info__nav li a", text: "Settings").click
+        expect(drawer_page).to have_channel_settings
+      end
+
+      it "has a back button" do
+        expect(drawer_page).to have_css(".c-navbar__back-button")
       end
     end
   end
