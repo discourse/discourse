@@ -82,7 +82,7 @@ export default Mixin.create({
       return EmberObject.create(
         Object.assign(failedAttrs, {
           reason: I18n.t("user.password.too_short", {
-            password_min_length: passwordMinLength,
+            count: passwordMinLength,
           }),
         })
       );

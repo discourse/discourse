@@ -81,7 +81,7 @@ module("Unit | Component | create-account", function (hooks) {
     testInvalidPassword(
       "x",
       I18n.t("user.password.too_short", {
-        password_min_length: siteSettings.min_password_length,
+        count: siteSettings.min_password_length,
       })
     );
     testInvalidPassword(

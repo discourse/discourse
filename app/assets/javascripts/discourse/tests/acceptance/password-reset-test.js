@@ -79,7 +79,7 @@ acceptance("Password Reset", function (needs) {
     assert.ok(
       query(".password-reset .tip.bad").innerHTML.includes(
         I18n.t("user.password.too_short", {
-          password_min_length: this.siteSettings.min_password_length,
+          count: this.siteSettings.min_password_length,
         })
       ),
       "password too short"
