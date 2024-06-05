@@ -54,7 +54,7 @@ Flag.seed do |s|
   s.custom_type = true
   s.applies_to = %w[Post Topic Chat::Message]
 end
-Flag.seed do |s|
+Flag.unscoped.seed do |s|
   s.id = 9
   s.name = "needs_approval"
   s.position = 6

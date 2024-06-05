@@ -5033,6 +5033,10 @@ en:
         title: "Moderation Flags"
         description: "Description"
         enabled: "Enabled?"
+        more_options:
+          title: "More options"
+          move_up: "Move up"
+          move_down: "Move down"
 
       groups:
         new:
@@ -6093,6 +6097,7 @@ en:
             update_watched_word_group: "update watched word group"
             delete_watched_word_group: "delete watched word group"
             toggle_flag: "toggle flag"
+            move_flag: "move flag"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
