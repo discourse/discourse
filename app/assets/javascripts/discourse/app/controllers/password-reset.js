@@ -136,6 +136,10 @@ export default Controller.extend(PasswordValidation, {
     },
 
     authenticateSecurityKey() {
+      this.set(
+        "selectedSecondFactorMethod",
+        SECOND_FACTOR_METHODS.SECURITY_KEY
+      );
       getWebauthnCredential(
         this.model.challenge,
         this.model.allowed_credential_ids,
