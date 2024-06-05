@@ -127,7 +127,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("<:trigger>", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}}><:trigger>label</:trigger></DMenu />`
+      hbs`<DMenu @inline={{true}}><:trigger>label</:trigger></DMenu>`
     );
 
     assert.dom(".fk-d-menu__trigger").containsText("label");
@@ -135,7 +135,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
   test("<:content>", async function (assert) {
     await render(
-      hbs`<DMenu @inline={{true}}><:content>content</:content></DMenu />`
+      hbs`<DMenu @inline={{true}}><:content>content</:content></DMenu>`
     );
 
     await open();
