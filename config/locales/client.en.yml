@@ -1936,8 +1936,8 @@ en:
       password:
         title: "Password"
         too_short:
-          one: "Your password is too short (minimum is %{password_min_length} character)."
-          other: "Your password is too short (minimum is %{password_min_length} characters)."
+          one: "Your password is too short (minimum is %{count} character)."
+          other: "Your password is too short (minimum is %{count} characters)."
         common: "That password is too common."
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
