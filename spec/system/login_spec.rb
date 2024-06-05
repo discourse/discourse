@@ -262,7 +262,6 @@ shared_examples "login scenarios" do
       find("#new-account-password").fill_in(with: "newsuperpassword")
       find(".change-password-form .btn-primary").click
       expect(page).to have_css(".header-dropdown-toggle.current-user")
-
     ensure
       # clear authenticator (otherwise it will interfere with other tests)
       authenticator&.remove!
