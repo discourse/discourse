@@ -460,9 +460,7 @@ class BulkImport::Generic < BulkImport::Base
 
       if row["anonymized"] == 1
         username = username_from_id(user_id)
-        email_prefix = /\Aanon_?\d+\Z/.match?(username) ? username : "anon_#{anon_username_suffix}"
-
-        row["email"] = "#{email_prefix}#{UserAnonymizer::EMAIL_SUFFIX}"
+        row["email"] = "#{username}#{UserAnonymizer::EMAIL_SUFFIX}"
       end
 
       { user_id: user_id, email: row["email"], created_at: to_datetime(row["created_at"]) }
