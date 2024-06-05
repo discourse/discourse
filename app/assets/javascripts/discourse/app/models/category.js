@@ -393,6 +393,8 @@ export default class Category extends RestModel {
       term,
       parent_category_id: opts.parentCategoryId,
       limit: opts.limit,
+      only: opts.only,
+      except: opts.except,
       page: opts.page,
     };
 

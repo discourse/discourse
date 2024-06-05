@@ -18,6 +18,46 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 
+class ActionSerializer {
+  constructor(perform) {
+    this.perform = perform;
+    this.processing = false;
+    this.queued = false;
+  }
+
+  async trigger() {
+    this.queued = true;
+
+    if (!this.processing) {
+      this.processing = true;
+
+      while (this.queued) {
+        this.queued = false;
+
+        try {
+          await this.perform();
+        } catch (e) {}
+      }
+
+      this.processing = false;
+    }
+  }
+}
+
+// Given an async method that takes no parameters, produce a method that
+// triggers the original method only if it is not currently executing it,
+// otherwise it will queue up to one execution of the method
+function serialized(target, key, descriptor) {
+  const originalMethod = descriptor.value;
+
+  descriptor.value = function() {
+    this[`_${key}_serializer`] ||= new ActionSerializer(() => originalMethod.apply(this));
+    this[`_${key}_serializer`].trigger();
+  };
+
+  return descriptor;
+}
+
 // Given a list, break into chunks starting a new chunk whenever the predicate
 // is true for an element.
 function splitWhere(elements, f) {
@@ -30,42 +70,26 @@ function splitWhere(elements, f) {
   }, []);
 }
 
-function findAncestors(categories) {
-  let categoriesToCheck = categories;
-  const ancestors = [];
-
-  for (let i = 0; i < 3; i++) {
-    categoriesToCheck = categoriesToCheck
-      .map((c) => Category.findById(c.parent_category_id))
-      .filter(Boolean)
-      .uniqBy((c) => c.id);
-
-    ancestors.push(...categoriesToCheck);
-  }
-
-  return ancestors;
-}
-
 export default class SidebarEditNavigationMenuCategoriesModal extends Component {
   @service currentUser;
   @service site;
   @service siteSettings;
 
   @tracked initialLoad = true;
-  @tracked filteredCategoriesGroupings = [];
-  @tracked filteredCategoryIds = [];
+  @tracked fetchedCategoriesGroupings = [];
+  @tracked fetchedCategoryIds = [];
   @tracked
-  selectedSidebarCategoryIds = new TrackedSet([
+  selectedCategoryIds = new TrackedSet([
     ...this.currentUser.sidebar_category_ids,
   ]);
-  hasMorePages;
+  selectedFilter = '';
+  selectedMode = 'everything';
   loadedFilter;
   loadedMode;
   loadedPage;
-  processing = false;
-  requestedFilter;
-  requestedMode;
   saving = false;
+  loadAnotherPage = false;
+  unseenCategoryIdsChanged = false;
   observer = new IntersectionObserver(
     ([entry]) => {
       if (entry.isIntersecting) {
@@ -80,45 +104,22 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   constructor() {
     super(...arguments);
-    this.setFilterAndMode("", "everything");
+    this.performSearch();
   }
 
-  setFilteredCategories(categories) {
-    this.filteredCategories = categories;
-    const ancestors = findAncestors(categories);
-    const allCategories = categories.concat(ancestors).uniqBy((c) => c.id);
+  setFetchedCategories(categories) {
+    this.fetchedCategories = categories;
 
-    this.filteredCategoriesGroupings = splitWhere(
-      Category.sortCategories(allCategories),
+    this.fetchedCategoriesGroupings = splitWhere(
+      categories,
       (category) => category.parent_category_id === undefined
     );
 
-    this.filteredCategoryIds = categories.map((c) => c.id);
+    this.fetchedCategoryIds = categories.map((c) => c.id);
   }
 
-  concatFilteredCategories(categories) {
-    this.setFilteredCategories(this.filteredCategories.concat(categories));
-  }
-
-  setFetchedCategories(mode, categories) {
-    this.setFilteredCategories(this.applyMode(mode, categories));
-  }
-
-  concatFetchedCategories(mode, categories) {
-    this.concatFilteredCategories(this.applyMode(mode, categories));
-  }
-
-  applyMode(mode, categories) {
-    return categories.filter((c) => {
-      switch (mode) {
-        case "everything":
-          return true;
-        case "only-selected":
-          return this.selectedSidebarCategoryIds.has(c.id);
-        case "only-unselected":
-          return !this.selectedSidebarCategoryIds.has(c.id);
-      }
-    });
+  concatFetchedCategories(categories) {
+    this.setFetchedCategories(this.fetchedCategories.concat(categories));
   }
 
   @action
@@ -127,133 +128,120 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     this.observer.observe(element);
   }
 
-  async searchCategories(filter, mode) {
-    if (filter === "" && mode === "only-selected") {
-      this.setFilteredCategories(
-        await Category.asyncFindByIds([...this.selectedSidebarCategoryIds])
-      );
+  @serialized
+  async performSearch() {
+    const requestedFilter = this.selectedFilter;
+    const requestedMode = this.selectedMode;
+    const requestedCategoryIds = [...this.selectedCategoryIds];
+    const selectedCategoriesNeedsUpdate = this.unseenCategoryIdsChanged && requestedMode !== 'everything';
 
-      this.loadedPage = null;
-      this.hasMorePages = false;
-    } else {
-      const categories = await Category.asyncHierarchicalSearch(filter, {});
+    // Is the current set of displayed categories up-to-date?
+    if (requestedFilter === this.loadedFilter && requestedMode === this.loadedMode && !selectedCategoriesNeedsUpdate) {
+      // The shown categories are up-to-date, so we can do elaboration
+      if (this.loadAnotherPage && !this.lastPage) {
+        const requestedPage = this.loadedPage + 1;
+        const opts = {page: requestedPage};
 
-      this.setFetchedCategories(mode, categories);
-
-      this.loadedPage = 1;
-      this.hasMorePages = true;
-    }
-  }
-
-  async setFilterAndMode(newFilter, newMode) {
-    this.requestedFilter = newFilter;
-    this.requestedMode = newMode;
-
-    if (!this.processing) {
-      this.processing = true;
-
-      try {
-        while (
-          this.loadedFilter !== this.requestedFilter ||
-          this.loadedMode !== this.requestedMode
-        ) {
-          const filter = this.requestedFilter;
-          const mode = this.requestedMode;
-
-          await this.searchCategories(filter, mode);
-
-          this.loadedFilter = filter;
-          this.loadedMode = mode;
-          this.initialLoad = false;
+        if (requestedMode === 'only-selected') {
+          opts.only = requestedCategoryIds;
+        } else if (requestedMode === 'only-unselected') {
+          opts.except = requestedCategoryIds;
         }
-      } finally {
-        this.processing = false;
+
+        const categories = await Category.asyncHierarchicalSearch(requestedFilter, opts);
+
+        if (categories.length === 0) {
+          this.lastPage = true;
+        } else {
+          this.concatFetchedCategories(categories);
+        }
+
+        this.loadAnotherPage = false;
+        this.loadedPage = requestedPage;
       }
+    } else {
+      // The shown categories are stale, refresh everything
+      this.unseenCategoryIdsChanged = false;
+
+      const opts = {};
+
+      if (requestedMode === 'only-selected') {
+        opts.only = requestedCategoryIds;
+      } else if (requestedMode === 'only-unselected') {
+        opts.except = requestedCategoryIds;
+      }
+
+      this.setFetchedCategories(await Category.asyncHierarchicalSearch(requestedFilter, opts));
+
+      this.loadedFilter = requestedFilter;
+      this.loadedMode = requestedMode;
+      this.loadedCategoryIds = requestedCategoryIds;
+      this.loadedPage = 1;
+      this.lastPage = false;
+      this.initialLoad = false;
+      this.loadAnotherPage = false;
     }
   }
 
   async loadMore() {
-    if (!this.processing && this.hasMorePages) {
-      this.processing = true;
-
-      try {
-        const page = this.loadedPage + 1;
-        const { categories } = await Category.asyncSearch(
-          this.requestedFilter,
-          {
-            includeAncestors: true,
-            includeUncategorized: false,
-            page,
-          }
-        );
-        this.loadedPage = page;
-
-        if (categories.length === 0) {
-          this.hasMorePages = false;
-        } else {
-          this.concatFetchedCategories(this.requestedMode, categories);
-        }
-      } finally {
-        this.processing = false;
-      }
-
-      if (
-        this.loadedFilter !== this.requestedFilter ||
-        this.loadedMode !== this.requestedMode
-      ) {
-        await this.setFilterAndMode(this.requestedFilter, this.requestedMode);
-      }
-    }
+    this.loadAnotherPage = true;
+    this.debouncedSendRequest();
   }
 
-  debouncedSetFilterAndMode(filter, mode) {
-    discourseDebounce(this, this.setFilterAndMode, filter, mode, INPUT_DELAY);
+  debouncedSendRequest() {
+    discourseDebounce(this, this.performSearch, INPUT_DELAY);
   }
 
   @action
   resetFilter() {
-    this.debouncedSetFilterAndMode(this.requestedFilter, "everything");
+    this.selectedMode = "everything";
+    this.debouncedSendRequest();
   }
 
   @action
   filterSelected() {
-    this.debouncedSetFilterAndMode(this.requestedFilter, "only-selected");
+    this.selectedMode = "only-selected";
+    this.debouncedSendRequest();
   }
 
   @action
   filterUnselected() {
-    this.debouncedSetFilterAndMode(this.requestedFilter, "only-unselected");
+    this.selectedMode = "only-unselected";
+    this.debouncedSendRequest();
   }
 
   @action
   onFilterInput(filter) {
-    this.debouncedSetFilterAndMode(
-      filter.toLowerCase().trim(),
-      this.requestedMode
-    );
+    this.selectedFilter = filter.toLowerCase().trim();
+    this.debouncedSendRequest();
   }
 
   @action
   deselectAll() {
-    this.selectedSidebarCategoryIds.clear();
+    this.selectedCategoryIds.clear();
+    this.unseenCategoryIdsChanged = true;
+    this.debouncedSendRequest();
   }
 
   @action
   toggleCategory(categoryId) {
-    if (this.selectedSidebarCategoryIds.has(categoryId)) {
-      this.selectedSidebarCategoryIds.delete(categoryId);
+    if (this.selectedCategoryIds.has(categoryId)) {
+      this.selectedCategoryIds.delete(categoryId);
     } else {
-      this.selectedSidebarCategoryIds.add(categoryId);
+      this.selectedCategoryIds.add(categoryId);
     }
   }
 
   @action
   resetToDefaults() {
-    this.selectedSidebarCategoryIds = new TrackedSet(
+    this.selectedCategoryIds = new TrackedSet(
       this.siteSettings.default_navigation_menu_categories
         .split("|")
         .map((id) => parseInt(id, 10))
     );
+
+    this.unseenCategoryIdsChanged = true;
+    this.debouncedSendRequest();
   }
 
   @action
@@ -262,7 +250,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     const initialSidebarCategoryIds = this.currentUser.sidebar_category_ids;
 
     this.currentUser.set("sidebar_category_ids", [
-      ...this.selectedSidebarCategoryIds,
+      ...this.selectedCategoryIds,
     ]);
 
     try {
@@ -304,14 +292,14 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
             {{loadingSpinner size="small"}}
           </div>
         {{else}}
-          {{#each this.filteredCategoriesGroupings as |categories|}}
+          {{#each this.fetchedCategoriesGroupings as |categories|}}
             <div
-              {{didInsert this.didInsert}}
               style={{borderColor (get categories "0.color") "left"}}
               class="sidebar-categories-form__row"
             >
               {{#each categories as |category|}}
                 <div
+                  {{didInsert this.didInsert}}
                   data-category-id={{category.id}}
                   data-category-level={{category.level}}
                   class="sidebar-categories-form__category-row"
@@ -344,11 +332,8 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                       {{on "click" (fn this.toggleCategory category.id)}}
                       type="checkbox"
                       checked={{has
-                        this.selectedSidebarCategoryIds
+                        this.selectedCategoryIds
                         category.id
-                      }}
-                      disabled={{not
-                        (includes this.filteredCategoryIds category.id)
                       }}
                       id={{concat
                         "sidebar-categories-form__input--"
