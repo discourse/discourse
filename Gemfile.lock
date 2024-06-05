@@ -399,6 +399,8 @@ GEM
     rspec-mocks (3.13.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
+    rspec-multi-mock (0.3.1)
+      rspec (>= 3.7.0)
     rspec-rails (6.1.2)
       actionpack (>= 6.1)
       activesupport (>= 6.1)
@@ -672,6 +674,7 @@ DEPENDENCIES
   rrule
   rspec
   rspec-html-matchers
+  rspec-multi-mock
   rspec-rails
   rss
   rswag-specs

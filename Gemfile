@@ -131,6 +131,7 @@ group :test do
   gem "test-prof"
   gem "rails-dom-testing", require: false
   gem "minio_runner", require: false
+  gem "rspec-multi-mock", require: false
 end
 
 group :test, :development do
