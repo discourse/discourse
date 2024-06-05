@@ -3,13 +3,15 @@
 require "extralite"
 require "lru_redux"
 
-module Migrations
-  class IntermediateDatabase
+module Migrations::IntermediateDB
+  class Connection
     DEFAULT_JOURNAL_MODE = "wal"
     TRANSACTION_BATCH_SIZE = 1000
     PREPARED_STATEMENT_CACHE_SIZE = 5
 
-    def self.create_connection(path:, journal_mode: DEFAULT_JOURNAL_MODE)
+    def self.create(path:, journal_mode: DEFAULT_JOURNAL_MODE)
+      FileUtils.mkdir_p(File.dirname(path))
+
       db = ::Extralite::Database.new(path)
       db.pragma(
         busy_timeout: 60_000, # 60 seconds
@@ -29,13 +31,13 @@ module Migrations
       db.close if db
     end
 
-    attr_reader :connection
+    attr_reader :db
     attr_reader :path
 
     def initialize(path:, journal_mode: DEFAULT_JOURNAL_MODE)
       @path = path
       @journal_mode = journal_mode
-      @connection = self.class.create_connection(path: path, journal_mode: journal_mode)
+      @db = self.class.create(path: path, journal_mode: journal_mode)
       @statement_counter = 0
 
       # don't cache too many prepared statements
@@ -43,19 +45,19 @@ module Migrations
     end
 
     def close
-      if @connection
+      if @db
         commit_transaction
         @statement_cache.clear
-        @connection.close
+        @db.close
       end
 
-      @connection = nil
+      @db = nil
       @statement_counter = 0
     end
 
     def reconnect
       close
-      @connection = self.class.create_connection(path: @path, journal_mode: @journal_mode)
+      @db = self.class.create(path: @path, journal_mode: @journal_mode)
     end
 
     def copy_from(source_db_paths)
@@ -66,27 +68,25 @@ module Migrations
       insert_actions = { "config" => "OR REPLACE", "uploads" => "OR IGNORE" }
 
       source_db_paths.each do |source_db_path|
-        @connection.execute("ATTACH DATABASE ? AS source", source_db_path)
+        @db.execute("ATTACH DATABASE ? AS source", source_db_path)
 
         table_names.each do |table_name|
           or_action = insert_actions[table_name] || ""
-          @connection.execute(
-            "INSERT #{or_action} INTO #{table_name} SELECT * FROM source.#{table_name}",
-          )
+          @db.execute("INSERT #{or_action} INTO #{table_name} SELECT * FROM source.#{table_name}")
         end
 
-        @connection.execute("DETACH DATABASE source")
+        @db.execute("DETACH DATABASE source")
       end
     end
 
     def begin_transaction
-      return if @connection.transaction_active?
-      @connection.execute("BEGIN DEFERRED TRANSACTION")
+      return if @db.transaction_active?
+      @db.execute("BEGIN DEFERRED TRANSACTION")
     end
 
     def commit_transaction
-      return unless @connection.transaction_active?
-      @connection.execute("COMMIT")
+      return unless @db.transaction_active?
+      @db.execute("COMMIT")
     end
 
     private
@@ -94,7 +94,7 @@ module Migrations
     def insert(sql, *parameters)
       begin_transaction if @statement_counter == 0
 
-      stmt = @statement_cache.getset(sql) { @connection.prepare(sql) }
+      stmt = @statement_cache.getset(sql) { @db.prepare(sql) }
       stmt.execute(*parameters)
 
       if (@statement_counter += 1) > TRANSACTION_BATCH_SIZE
@@ -109,7 +109,7 @@ module Migrations
     end
 
     def get_table_names
-      @connection.query_splat(<<~SQL)
+      @db.query_splat(<<~SQL)
         SELECT name
           FROM sqlite_schema
          WHERE type = 'table'

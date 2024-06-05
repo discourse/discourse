@@ -137,6 +137,7 @@ GEM
     excon (0.111.0)
     execjs (2.9.1)
     exifr (1.4.0)
+    extralite-bundle (2.8.1)
     fabrication (2.31.0)
     faker (2.23.0)
       i18n (>= 1.8.11, < 2)
@@ -549,6 +550,7 @@ GEM
     test-prof (1.4.1)
     thor (1.3.1)
     timeout (0.4.1)
+    trilogy (2.8.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2024.1)
@@ -627,6 +629,7 @@ DEPENDENCIES
   email_reply_trimmer
   excon
   execjs
+  extralite-bundle (~> 2.8)
   fabrication
   faker (~> 2.16)
   fakeweb
@@ -660,6 +663,7 @@ DEPENDENCIES
   mini_suffix
   minio_runner
   mocha
+  msgpack (~> 1.7)
   multi_json
   mustache
   mutex_m
@@ -726,6 +730,7 @@ DEPENDENCIES
   syntax_tree-disable_ternary
   test-prof
   thor
+  trilogy (~> 2.8)
   tzinfo-data
   uglifier
   unf
@@ -734,6 +739,7 @@ DEPENDENCIES
   webmock
   yaml-lint
   yard
+  zeitwerk (~> 2.6)
 
 BUNDLED WITH
    2.5.9

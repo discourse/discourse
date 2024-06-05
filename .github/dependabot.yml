@@ -78,11 +78,3 @@ updates:
       types:
         patterns:
           - "@types/*"
-#  - package-ecosystem: "bundler"
-#    directory: "migrations/config/gemfiles/convert"
-#    schedule:
-#      interval: "weekly"
-#      day: "wednesday"
-#      time: "10:00"
-#      timezone: "Europe/Vienna"
-#    versioning-strategy: "increase"

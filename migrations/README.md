@@ -1,5 +1,11 @@
 # Migrations Tooling
 
+## Command line interface
+
+```bash
+./bin/cli help
+```
+
 ## Development
 
 ### Running tests
