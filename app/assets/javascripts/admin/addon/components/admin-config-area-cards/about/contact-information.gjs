@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import i18n from "discourse-common/helpers/i18n";
@@ -25,7 +24,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       <p class="admin-config-area-card__additional-help">
         {{i18n "admin.config_areas.about.community_owner_help"}}
       </p>
-      <Input />
+      <input type="text" />
     </div>
     <div class="control-group">
       <label>
@@ -37,7 +36,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       <p class="admin-config-area-card__additional-help">
         {{i18n "admin.config_areas.about.contact_email_help"}}
       </p>
-      <Input />
+      <input type="text" />
     </div>
     <div class="control-group">
       <label>
@@ -49,7 +48,7 @@ export default class AdminConfigAreasAboutContactInformation extends Component {
       <p class="admin-config-area-card__additional-help">
         {{i18n "admin.config_areas.about.contact_url_help"}}
       </p>
-      <Input />
+      <input type="text" />
     </div>
     <div class="control-group">
       <label>

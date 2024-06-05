@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
@@ -17,11 +16,11 @@ export default class AdminConfigAreasAboutGeneralSettings extends Component {
   <template>
     <div class="control-group">
       <label>{{i18n "admin.config_areas.about.community_name"}}</label>
-      <Input />
+      <input type="text" />
     </div>
     <div class="control-group">
       <label>{{i18n "admin.config_areas.about.community_summary"}}</label>
-      <Input />
+      <input type="text" />
     </div>
     <div class="control-group">
       <label>
