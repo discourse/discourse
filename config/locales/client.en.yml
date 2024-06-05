@@ -1497,6 +1497,8 @@ en:
         set_password: "Set Password"
         choose_new: "Choose a new password"
         choose: "Choose a password"
+        verify_identity: "To continue, please verify your identity."
+        title: "Password Reset"
 
       second_factor_backup:
         title: "Two-Factor Backup Codes"
@@ -1933,7 +1935,9 @@ en:
         fine_print: "We are asking you to confirm your identity because this is a potentially sensitive action. Once authenticated, you will only be asked to re-authenticate again after a few hours of inactivity."
       password:
         title: "Password"
-        too_short: "Your password is too short."
+        too_short:
+          one: "Your password is too short (minimum is %{password_min_length} character)."
+          other: "Your password is too short (minimum is %{password_min_length} characters)."
         common: "That password is too common."
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."

@@ -723,6 +723,7 @@ en:
         bio_raw: "About Me"
       user:
         ip_address: ""
+        password: "Password"
     errors:
       <<: *errors
       models:
