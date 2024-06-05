@@ -114,7 +114,7 @@ export default Controller.extend(PasswordValidation, {
               this.rejectedPasswords.pushObject(this.accountPassword);
               this.rejectedPasswordsMessages.set(
                 this.accountPassword,
-                result.friendly_messages.join("\n")
+                (result.friendly_messages || []).join("\n")
               );
             }
 
