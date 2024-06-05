@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import Service, { service } from "@ember/service";
-import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 @disableImplicitInjections
@@ -13,7 +13,7 @@ export default class Header extends Service {
   @tracked userVisible = false;
   @tracked anyWidgetHeaderOverrides = false;
 
-  #hiders = new TrackedSet();
+  #hiders = new TrackedMap();
 
   get useGlimmerHeader() {
     if (this.siteSettings.glimmer_header_mode === "disabled") {
@@ -34,8 +34,8 @@ export default class Header extends Service {
     }
   }
 
-  registerHider(ref) {
-    this.#hiders.add(ref);
+  registerHider(ref, buttons) {
+    this.#hiders.set(ref, buttons);
 
     registerDestructor(ref, () => {
       this.#hiders.delete(ref);
@@ -43,6 +43,10 @@ export default class Header extends Service {
   }
 
   get headerButtonsHidden() {
-    return this.#hiders.size > 0;
+    let buttonsToHide = [];
+    this.#hiders.forEach((value) => {
+      buttonsToHide.push(...value);
+    });
+    return Array.from(new Set(buttonsToHide));
   }
 }

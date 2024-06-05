@@ -250,7 +250,7 @@ createWidget("header-icons", {
 
     resolvedIcons.forEach((icon) => {
       if (icon.key === "search") {
-        if (!this.header.headerButtonsHidden) {
+        if (!this.header.headerButtonsHidden.includes("search")) {
           icons.push(
             this.attach("header-dropdown", {
               title: "search.title",
@@ -306,17 +306,21 @@ createWidget("header-buttons", {
 
     const buttons = [];
 
-    if (!this.header.headerButtonsHidden) {
-      if (attrs.canSignUp && !attrs.topic) {
-        buttons.push(
-          this.attach("button", {
-            label: "sign_up",
-            className: "btn-primary btn-small sign-up-button",
-            action: "showCreateAccount",
-          })
-        );
-      }
+    if (
+      attrs.canSignUp &&
+      !attrs.topic &&
+      !this.header.headerButtonsHidden.includes("signup")
+    ) {
+      buttons.push(
+        this.attach("button", {
+          label: "sign_up",
+          className: "btn-primary btn-small sign-up-button",
+          action: "showCreateAccount",
+        })
+      );
+    }
 
+    if (!this.header.headerButtonsHidden.includes("login")) {
       buttons.push(
         this.attach("button", {
           label: "log_in",
@@ -326,6 +330,7 @@ createWidget("header-buttons", {
         })
       );
     }
+
     return buttons;
   },
 });

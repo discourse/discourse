@@ -47,6 +47,10 @@ export default class Icons extends Component {
     return !this.args.sidebarEnabled || this.site.mobileView;
   }
 
+  get hideSearchButton() {
+    return this.header.headerButtonsHidden.includes("search");
+  }
+
   @action
   toggleHamburger() {
     if (this.sidebarState.adminSidebarAllowedWithLegacyNavigationMenu) {
@@ -60,7 +64,7 @@ export default class Icons extends Component {
     <ul class="icons d-header-icons">
       {{#each (headerIcons.resolve) as |entry|}}
         {{#if (eq entry.key "search")}}
-          {{#unless this.header.headerButtonsHidden}}
+          {{#unless this.hideSearchButton}}
             <Dropdown
               @title="search.title"
               @icon="search"

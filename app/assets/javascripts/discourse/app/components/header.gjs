@@ -195,13 +195,7 @@ export default class GlimmerHeader extends Component {
         >
           <span class="header-buttons">
             {{#each (headerButtons.resolve) as |entry|}}
-              {{#if
-                (and
-                  (eq entry.key "auth")
-                  (not this.currentUser)
-                  (not this.header.headerButtonsHidden)
-                )
-              }}
+              {{#if (and (eq entry.key "auth") (not this.currentUser))}}
                 <AuthButtons
                   @showCreateAccount={{@showCreateAccount}}
                   @showLogin={{@showLogin}}

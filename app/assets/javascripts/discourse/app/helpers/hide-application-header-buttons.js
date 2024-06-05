@@ -5,14 +5,11 @@ import { service } from "@ember/service";
 export default class HideApplicationHeaderButtons extends Helper {
   @service header;
 
-  constructor() {
-    super(...arguments);
-    scheduleOnce("afterRender", this, this.registerHider);
+  registerHider(buttons) {
+    this.header.registerHider(this, buttons);
   }
 
-  registerHider() {
-    this.header.registerHider(this);
+  compute([...buttons]) {
+    scheduleOnce("afterRender", this, this.registerHider, buttons);
   }
-
-  compute() {}
 }
