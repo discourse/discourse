@@ -14,16 +14,23 @@
 
   <DButton @translatedLabel="SUBMIT" @action={{@dummy.doSomething}} />
 
-  <form.InputGroup as |inputGroup|>
-    <inputGroup.Text>http://</inputGroup.Text>
-    <inputGroup.Field @name="aaa" @validation="required" as |field|>
-      <field.Input @type="text" />
-    </inputGroup.Field>
-    <inputGroup.Text>test</inputGroup.Text>
-    <inputGroup.Field @name="bbb" @validation="required" as |field|>
-      <field.Input @type="text" />
-    </inputGroup.Field>
-  </form.InputGroup>
+  <form.Row as |row|>
+    <row.Col @size={{8}}>
+      <form.InputGroup as |inputGroup|>
+        <inputGroup.Text>http://</inputGroup.Text>
+        <inputGroup.Field @name="aaa" @validation="required" as |field|>
+          <field.Input @type="text" />
+        </inputGroup.Field>
+        <inputGroup.Text>test</inputGroup.Text>
+        <inputGroup.Field @name="bbb" @validation="required" as |field|>
+          <field.Input @type="text" />
+        </inputGroup.Field>
+        <inputGroup.Field @name="bcccbb" @validation="required" as |field|>
+          <field.Input @type="text" />
+        </inputGroup.Field>
+      </form.InputGroup>
+    </row.Col>
+  </form.Row>
 
   <form.Row as |row|>
     <row.Col @size={{2}}>
@@ -38,64 +45,38 @@
   </form.Row>
 
   <form.Row as |row|>
-    <row.Col @size={{4}}>
-      <form.Field @name="coolos" @validation="required" as |field|>
-        <CustomInput @id={{field.id}} @onChange={{field.setValue}} />
+    <row.Col @size={{2}}>
+      <form.Field @name="icon" @validation="required" as |field|>
+        <field.IconPicker @label="Icon" />
       </form.Field>
     </row.Col>
   </form.Row>
-
-  <form.Row as |row|>
-    <row.Col @size={{4}}>
-      <form.Field @name="what_is_love" @validation="required" as |field|>
-        <field.RadioGroup
-          @legend="After reminding you, we should…"
-          @help="Some random explanation about this setting."
-          as |group|
-        >
-          <group.Radio @value="check_1" @label="Check 1" />
-          <group.Radio @value="check_2" @label="Check 2" />
-        </field.RadioGroup>
-      </form.Field>
-    </row.Col>
-  </form.Row>
-
-  <form.Row as |row|>
-    <row.Col @size={{4}}>
-      <form.Field
-        @name="foo"
-        @validation="required:trim|length:2,5"
-        @validate={{@dummy.validate}}
-        as |field|
-      >
-        <field.Input
-          @label="Standard stacked input"
-          @help="An explanation about the usecase of this form."
-          @type="text"
-          @placeholder="Enter email"
-          @description="Format: XYZ-123"
-        />
-      </form.Field>
-    </row.Col>
-  </form.Row>
-
-  <form.InputGroup as |inputGroup|>
-    <inputGroup.Field @name="aaa" @validation="required" as |field|>
-      <field.Input @type="text" />
-    </inputGroup.Field>
-    <inputGroup.Field @name="bbb" @validation="required" as |field|>
-      <field.Input @type="text" />
-    </inputGroup.Field>
-  </form.InputGroup>
 
   <form.Row as |row|>
     <row.Col @size={{2}}>
-      <form.Field @name="something" @validation="required" as |field|>
-        <field.Select as |select|>
-          <select.Option @value="1">Test 1</select.Option>
-          <select.Option @value="2">Test 2</select.Option>
-          <select.Option @value="3">Test 3</select.Option>
-        </field.Select>
+      <form.Field @name="image" @validation="required" as |field|>
+        <field.Image @label="Image" />
+      </form.Field>
+    </row.Col>
+  </form.Row>
+
+  <form.Row as |row|>
+    <row.Col @size={{5}}>
+      <form.Field @name="menu-item" @validation="required" as |field|>
+        <field.Menu @label="What is the best fruit" as |menu|>
+          <menu.Item
+            @icon="exclamation-triangle"
+            @value="mango"
+            @label="Mango"
+          />
+          <menu.Item
+            @action={{@dummy.customAction}}
+            @value="pineapple"
+            @label="Pineapple"
+          />
+          <menu.Divider />
+          <menu.Item @value="durian" @label="Durian" />
+        </field.Menu>
       </form.Field>
     </row.Col>
   </form.Row>

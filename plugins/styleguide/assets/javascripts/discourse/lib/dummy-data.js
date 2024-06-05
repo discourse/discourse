@@ -252,6 +252,14 @@ export function createData(store) {
       }
     },
 
+    customAction: (value, { setValue }) => {
+      console.log("customACtion", value);
+
+      alert(1);
+
+      setValue("HELLO");
+    },
+
     onSubmit: (data) => {
       console.log("onSubmit", data);
     },

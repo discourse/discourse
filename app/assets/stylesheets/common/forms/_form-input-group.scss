@@ -1,7 +1,6 @@
 .d-form-input-group {
   position: relative;
   display: flex;
-  flex-wrap: wrap;
   align-items: stretch;
   width: 100%;
 
@@ -24,18 +23,18 @@
 
   .d-form-control-input {
     z-index: 1;
+    width: 100% !important;
+    min-width: auto !important;
   }
 
   > :not(:last-child) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    padding-right: 0;
   }
 
   > :not(:first-child) {
     margin-left: -1px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    padding-left: 0;
   }
 }

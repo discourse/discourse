@@ -173,6 +173,8 @@ export default class Form extends Component {
       name = target.name;
     }
 
+    console.log(event.target, name);
+
     if (name) {
       const field = this.fields.get(name);
 

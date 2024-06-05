@@ -4,7 +4,10 @@ import { assert } from "@ember/debug";
 import { fn, hash } from "@ember/helper";
 import { action, get } from "@ember/object";
 import { next } from "@ember/runloop";
+import FkControlIconPicker from "form-kit/components/control/icon-picker";
+import FkControlImage from "form-kit/components/control/image";
 import FkControlInput from "form-kit/components/control/input";
+import FkControlMenu from "form-kit/components/control/menu";
 import FkControlRadioGroup from "form-kit/components/control/radio-group";
 import FkControlSelect from "form-kit/components/control/select";
 import concatClass from "discourse/helpers/concat-class";
@@ -52,16 +55,6 @@ export default class FormField extends Component {
     return this.args.showMeta ?? true;
   }
 
-  get wrapper() {
-    if (this.args.inputGroup) {
-      return <template>
-        <div class="d-form-col --col-12">{{yield}}</div>
-      </template>;
-    } else {
-      return <template>{{yield}}</template>;
-    }
-  }
-
   @action
   setValue(value) {
     this.args.set(this.args.name, value);
@@ -69,44 +62,72 @@ export default class FormField extends Component {
 
   <template>
     {{#let (uniqueId) (uniqueId) as |fieldId errorId|}}
-      <this.wrapper>
-        {{yield
-          (hash
-            Select=(component
-              FkControlSelect
-              name=@name
-              fieldId=fieldId
-              errorId=errorId
-              setValue=this.setValue
-              value=this.value
-              errors=this.errors
-              triggerValidationFor=@triggerValidationFor
-            )
-            Input=(component
-              FkControlInput
-              name=@name
-              fieldId=fieldId
-              errorId=errorId
-              setValue=this.setValue
-              value=this.value
-              errors=this.errors
-              triggerValidationFor=@triggerValidationFor
-            )
-            RadioGroup=(component
-              FkControlRadioGroup
-              name=@name
-              fieldId=fieldId
-              errorId=errorId
-              setValue=this.setValue
-              value=this.value
-              errors=this.errors
-              triggerValidationFor=@triggerValidationFor
-            )
-            id=fieldId
+      {{yield
+        (hash
+          Image=(component
+            FkControlImage
+            name=@name
+            fieldId=fieldId
+            errorId=errorId
             setValue=this.setValue
+            value=this.value
+            errors=this.errors
+            triggerValidationFor=@triggerValidationFor
           )
-        }}
-      </this.wrapper>
+          IconPicker=(component
+            FkControlIconPicker
+            name=@name
+            fieldId=fieldId
+            errorId=errorId
+            setValue=this.setValue
+            value=this.value
+            errors=this.errors
+            triggerValidationFor=@triggerValidationFor
+          )
+          Menu=(component
+            FkControlMenu
+            name=@name
+            fieldId=fieldId
+            errorId=errorId
+            setValue=this.setValue
+            value=this.value
+            errors=this.errors
+            triggerValidationFor=@triggerValidationFor
+          )
+          Select=(component
+            FkControlSelect
+            name=@name
+            fieldId=fieldId
+            errorId=errorId
+            setValue=this.setValue
+            value=this.value
+            errors=this.errors
+            triggerValidationFor=@triggerValidationFor
+          )
+          Input=(component
+            FkControlInput
+            name=@name
+            fieldId=fieldId
+            errorId=errorId
+            setValue=this.setValue
+            value=this.value
+            errors=this.errors
+            triggerValidationFor=@triggerValidationFor
+          )
+          RadioGroup=(component
+            FkControlRadioGroup
+            name=@name
+            fieldId=fieldId
+            errorId=errorId
+            setValue=this.setValue
+            value=this.value
+            errors=this.errors
+            triggerValidationFor=@triggerValidationFor
+          )
+          id=fieldId
+          setValue=this.setValue
+        )
+      }}
     {{/let}}
   </template>
 }
