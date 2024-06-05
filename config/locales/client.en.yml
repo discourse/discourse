@@ -1497,6 +1497,7 @@ en:
         set_password: "Set Password"
         choose_new: "Choose a new password"
         choose: "Choose a password"
+        verify_identity: "To reset your password, please verify your identity."
 
       second_factor_backup:
         title: "Two-Factor Backup Codes"
@@ -1937,6 +1938,7 @@ en:
         common: "That password is too common."
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
+        server_message: "Your password %{message}"
         ok: "Your password looks good."
         instructions:
           one: "At least %{count} character."

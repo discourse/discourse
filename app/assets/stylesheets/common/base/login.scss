@@ -50,6 +50,23 @@ body.invite-page {
   }
 }
 
+.password-reset-page {
+  .d-header .header-buttons .auth-buttons {
+    display: none;
+  }
+  .d-header-icons .search-dropdown {
+    display: none;
+  }
+  .caps-lock-warning {
+    display: inline;
+  }
+  .change-password-form {
+    .tip {
+      display: block;
+    }
+  }
+}
+
 .toggle-password-mask {
   align-self: start;
   line-height: 1.4; // aligns with input description text
