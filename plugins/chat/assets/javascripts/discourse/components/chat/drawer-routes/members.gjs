@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import I18n from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
@@ -13,8 +12,6 @@ export default class ChatDrawerRoutesMembers extends Component {
   @service chatStateManager;
   @service chatChannelsManager;
 
-  activeChannel = null;
-
   get backButton() {
     return {
       route: "chat.channel",
@@ -24,16 +21,16 @@ export default class ChatDrawerRoutesMembers extends Component {
   }
 
   @action
-  fetchChannel() {
+  async fetchChannel() {
     if (!this.args.params?.channelId) {
       return;
     }
 
-    return this.chatChannelsManager
-      .find(this.args.params.channelId)
-      .then((channel) => {
-        this.chat.activeChannel = channel;
-      });
+    const channel = await this.chatChannelsManager.find(
+      this.args.params.channelId
+    );
+
+    this.chat.activeChannel = channel;
   }
 
   <template>
@@ -52,11 +49,7 @@ export default class ChatDrawerRoutesMembers extends Component {
     </Navbar>
 
     {{#if this.chatStateManager.isDrawerExpanded}}
-      <div
-        class="chat-drawer-content"
-        {{didInsert this.fetchChannel}}
-        {{didUpdate this.fetchChannel @params.channelId}}
-      >
+      <div class="chat-drawer-content" {{didInsert this.fetchChannel}}>
         {{#if this.chat.activeChannel}}
           <ChannelInfoNav @channel={{this.chat.activeChannel}} @tab="members" />
           <ChannelMembers @channel={{this.chat.activeChannel}} />

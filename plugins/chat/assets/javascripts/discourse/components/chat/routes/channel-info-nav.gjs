@@ -2,13 +2,10 @@ import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
-import I18n from "discourse-i18n";
+import i18n from "discourse-common/helpers/i18n";
 
 export default class ChatRoutesChannelInfoNav extends Component {
   @service site;
-
-  membersLabel = I18n.t("chat.channel_info.tabs.members");
-  settingsLabel = I18n.t("chat.channel_info.tabs.settings");
 
   get showTabs() {
     return this.site.desktopView && this.args.channel.isOpen;
@@ -25,7 +22,7 @@ export default class ChatRoutesChannelInfoNav extends Component {
               class={{if (eq @tab "settings") "active"}}
               @replace={{true}}
             >
-              {{this.settingsLabel}}
+              {{i18n "chat.channel_info.tabs.settings"}}
             </LinkTo>
           </li>
           <li>
@@ -35,7 +32,7 @@ export default class ChatRoutesChannelInfoNav extends Component {
               class={{if (eq @tab "members") "active"}}
               @replace={{true}}
             >
-              {{this.membersLabel}}
+              {{i18n "chat.channel_info.tabs.members"}}
               {{#if @channel.isCategoryChannel}}
                 <span
                   class="c-channel-info__member-count"

@@ -72,7 +72,6 @@ const ROUTES = {
     name: ChatDrawerRoutesSettings,
     extractParams: (route) => {
       return {
-        channelTitle: route.parent.params.channelTitle,
         channelId: route.parent.params.channelId,
       };
     },
@@ -81,7 +80,6 @@ const ROUTES = {
     name: ChatDrawerRoutesMembers,
     extractParams: (route) => {
       return {
-        channelTitle: route.parent.params.channelTitle,
         channelId: route.parent.params.channelId,
       };
     },

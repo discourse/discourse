@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import I18n from "discourse-i18n";
+import i18n from "discourse-common/helpers/i18n";
 import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
@@ -12,9 +12,6 @@ export default class ChatRoutesChannelInfo extends Component {
   @service site;
   @service modal;
   @service chatGuardian;
-
-  backToChannelLabel = I18n.t("chat.channel_info.back_to_all_channels");
-  backToAllChannelsLabel = I18n.t("chat.channel_info.back_to_channel");
 
   get canEditChannel() {
     return (
@@ -38,13 +35,13 @@ export default class ChatRoutesChannelInfo extends Component {
         {{#if this.chatChannelInfoRouteOriginManager.isBrowse}}
           <navbar.BackButton
             @route="chat.browse"
-            @title={{this.backToAllChannelsLabel}}
+            @title={{i18n "chat.channel_info.back_to_all_channels"}}
           />
         {{else}}
           <navbar.BackButton
             @route="chat.channel"
             @routeModels={{@channel.routeModels}}
-            @title={{this.backToChannelLabel}}
+            @title={{i18n "chat.channel_info.back_to_channel"}}
           />
         {{/if}}
         <navbar.ChannelTitle @channel={{@channel}} />
