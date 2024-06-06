@@ -5,6 +5,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
+import FkControlConditionalDisplay from "form-kit/components/control/conditional-display";
 import FkControlInputGroup from "form-kit/components/control/input-group";
 import { VALIDATION_TYPES } from "form-kit/lib/constants";
 import FieldData from "form-kit/lib/field-data";
@@ -223,6 +224,7 @@ export default class Form extends Component {
       {{yield
         (hash
           Row=(component Row)
+          ConditionalDisplay=(component FkControlConditionalDisplay)
           Errors=(component
             FormErrors errors=this.visibleErrors withPrefix=true
           )
