@@ -519,28 +519,33 @@ RSpec.configure do |config|
       end
     end
 
-    config.around do |example|
-      example.run
+    # This is a monkey patch for the `Selenium::WebDriver::Platform.localhost` method in `selenium-webdriver`. For some
+    # unknown reasons on Github Actions, we are seeing system tests failing intermittently with the error
+    # `Socket::ResolutionError: getaddrinfo: Temporary failure in name resolution` when `selenium-webdriver` tries to
+    # resolve `localhost` in a `Capybara#using_session` block.
+    #
+    # Too much time has been spent trying to debug this issue and the root cause is still unknown so we are just dropping
+    # this workaround for now.
+    module Selenium
+      module WebDriver
+        module Platform
+          def self.localhost_with_retry
+            attempts = 0
 
-      if example.exception.is_a?(Socket::ResolutionError)
-        info = Socket.getaddrinfo("localhost", 80, Socket::AF_INET, Socket::SOCK_STREAM)
-        etc_hosts = `cat /etc/hosts`
-        resolve_conf = `cat /etc/resolv.conf`
-        nsswitch = `cat /etc/nsswitch.conf`
-
-        puts <<~MSG
-          Failed to resolve localhost, available addresses: #{info}
-
-          /etc/hosts:
-          #{etc_hosts}
-
-          /etc/resolv.conf:
-          #{resolve_conf}
-
-          /etc/nsswitch.conf:
-          #{nsswitch}
-          MSG
+            begin
+              localhost_without_retry
+            rescue Socket::ResolutionError
+              attempts += 1
+              attempts <= 3 ? retry : raise
+            end
+          end
+        end
       end
+    end
+
+    Selenium::WebDriver::Platform.singleton_class.class_eval do
+      alias_method :localhost_without_retry, :localhost
+      alias_method :localhost, :localhost_with_retry
     end
   end
 

@@ -1177,12 +1177,37 @@ id:
       description: "10 pengguna teratas yang memiliki suka dari banyak orang."
   dashboard:
     problem:
-      rails_env: "Server Anda berjalan dalam modus %{env}."
-      host_names: "Berkas config/database.yml Anda menggunakan nama host default localhost. Ubahlah untuk menggunakan nama host dari situs Anda."
+      twitter_login: 'Login Twitter tampaknya tidak berfungsi saat ini. Periksa kredensial di <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">Pengaturan Situs</a>.'
+      group_email_credentials: 'Ada masalah dengan kredensial email untuk grup <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Tidak ada email yang akan dikirim dari kotak masuk grup sampai masalah ini teratasi. %{error}'
+      rails_env: "Server Anda beroperasi dalam mode %{env}."
+      host_names: "Berkas config/database.yml Anda menggunakan nama host localhost default. Perbarui untuk menggunakan nama host situs Anda."
+      sidekiq: 'Sidekiq tidak beroperasi. Banyak tugas, seperti mengirim email, dijalankan secara asinkron oleh Sidekiq. Harap pastikan setidaknya satu proses Sidekiq berjalan. <a href="https://github.com/mperham/sidekiq" target="_blank">Pelajari tentang Sidekiq di sini</a>.'
       queue_size: "Jumlah pekerjaan yang antri adalah %{queue_size}, yang mana nilai ini tinggi. Ini bisa menunjukkan masalah dengan proses(-proses) Sidekiq, atau Anda mungkin perlu menambahkan lebih banyak pekerja Sidekiq."
       ram: "Server Anda berjalan dengan total memori kurang dari 1 GB. Total memori minimum yang direkomendasikan adalah 1 GB."
+      google_oauth2_config: 'Server dikonfigurasi untuk mengizinkan pendaftaran dan masuk dengan Google OAuth2 (enable_google_oauth2_logins), namun id klien dan nilai rahasia klien tidak ditetapkan. Buka <a href="%{base_path}/admin/site_settings">Pengaturan Situs</a> dan perbarui pengaturan. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Lihat panduan ini untuk mempelajari lebih lanjut</a>.'
+      facebook_config: 'Server dikonfigurasi untuk mengizinkan pendaftaran dan masuk dengan Facebook (enable_facebook_logins), tetapi nilai id aplikasi dan rahasia aplikasi tidak ditetapkan. Buka <a href="%{base_path}/admin/site_settings">Pengaturan Situs</a> dan perbarui pengaturan. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Lihat panduan ini untuk mempelajari lebih lanjut</a>.'
+      twitter_config: 'Server dikonfigurasi untuk mengizinkan pendaftaran dan login dengan Twitter (enable_twitter_logins), tetapi nilai kunci dan rahasia tidak disetel. Buka <a href="%{base_path}/admin/site_settings">Pengaturan Situs</a> dan perbarui pengaturan. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Lihat panduan ini untuk mempelajari lebih lanjut</a>.'
+      github_config: 'Server dikonfigurasi untuk mengizinkan pendaftaran dan login dengan GitHub (enable_github_logins), tetapi id klien dan nilai rahasia tidak disetel. Buka <a href="%{base_path}/admin/site_settings">Pengaturan Situs</a> dan perbarui pengaturan. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Lihat panduan ini untuk mempelajari lebih lanjut</a>.'
+      s3_upload_config: 'Server dikonfigurasi untuk mengunggah file ke S3, namun setidaknya satu pengaturan berikut tidak disetel: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, atau s3_upload_bucket. Buka <a href="%{base_path}/admin/site_settings">Pengaturan Situs</a> dan perbarui pengaturan. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Lihat "Bagaimana cara mengatur unggahan gambar ke S3?" untuk mempelajari lebih lanjut</a>.'
+      s3_backup_config: 'Server dikonfigurasi untuk mengunggah cadangan ke S3, namun setidaknya satu pengaturan berikut tidak disetel: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, atau s3_backup_bucket. Buka <a href="%{base_path}/admin/site_settings">Pengaturan Situs</a> dan perbarui pengaturan. <a href="https://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Lihat "Bagaimana cara mengatur unggahan gambar ke S3?" untuk mempelajari lebih lanjut</a>.'
+      s3_cdn: 'Server dikonfigurasi untuk mengunggah file ke S3, tetapi tidak ada CDN S3 yang dikonfigurasi. Hal ini dapat menyebabkan biaya S3 yang mahal dan kinerja situs yang lebih lambat. <a href="https://meta.discourse.org/t/-/148916" target="_blank">Lihat "Menggunakan Penyimpanan Objek untuk Unggahan" untuk mempelajari lebih lanjut</a>.'
+      image_magick: 'Server dikonfigurasi untuk membuat thumbnail gambar besar, tetapi ImageMagick tidak diinstal. Instal ImageMagick menggunakan manajer paket favorit Anda atau <a href="https://www.imagemagick.org/script/download.php" target="_blank">unduh rilis terbaru</a>.'
+      failing_emails: 'Ada %{num_failed_jobs} pekerjaan email yang gagal. Periksa app.yml Anda dan pastikan pengaturan server email sudah benar. <a href="%{base_path}/sidekiq/retries" target="_blank">Lihat pekerjaan yang gagal di Sidekiq</a>.'
+      subfolder_ends_in_slash: "Pengaturan subfolder Anda salah; DISCOURSE_RELATIVE_URL_ROOT diakhiri dengan garis miring."
+      translation_overrides: "Beberapa penggantian terjemahan Anda sudah kedaluwarsa. Silakan periksa <a href='%{base_path}/admin/customize/site_texts?outdated=true'>penyesuaian teks Anda</a>."
+      email_polling_errored_recently:
+        other: "Email polling telah menghasilkan %{count} kesalahan dalam 24 jam terakhir. Lihatlah <a href='%{base_path}/logs' target='_blank'>log</a> untuk lebih jelasnya."
       missing_mailgun_api_key: "Server dikonfigurasi untuk mengirim email melalui Mailgun tetapi Anda belum memberikan kunci API yang digunakan untuk memverifikasi pesan webhook."
+      bad_favicon_url: "Favicon gagal dimuat. Periksa pengaturan favicon Anda di <a href='%{base_path}/admin/site_settings'>Pengaturan Situs</a>."
+      poll_pop3_timeout: "Waktu koneksi ke server POP3 habis. Email masuk tidak dapat diambil. Silakan periksa <a href='%{base_path}/admin/site_settings/category/email'>pengaturan POP3</a> dan penyedia layanan Anda."
+      poll_pop3_auth_error: "Sambungan ke server POP3 gagal karena kesalahan autentikasi. Silakan periksa <a href='%{base_path}/admin/site_settings/category/email'>pengaturan POP3</a>."
+      force_https: "Situs web Anda menggunakan SSL. Namun `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` belum diaktifkan di pengaturan situs Anda."
+      out_of_date_themes: "Pembaruan tersedia untuk tema-tema berikut ini:"
+      unreachable_themes: "Kami tidak dapat memeriksa pembaruan pada tema-tema berikut ini:"
+      watched_words: "Ekspresi reguler untuk %{action} kata-kata yang diawasi tidak valid. Silakan periksa <a href='%{base_path}/admin/customize/watched_words'>pengaturan Word yang Diawasi</a>, atau nonaktifkan pengaturan situs 'ekspresi reguler kata yang diawasi'."
       google_analytics_version: "Wacana Anda saat ini menggunakan Google Analytics 3, yang tidak akan didukung lagi setelah Juli 2023.0 <a href='https://meta.discourse.org/t/260498'>ke Google Analytics 4</a> sekarang untuk terus menerima wawasan dan analitik berharga untuk kinerja situs web Anda."
+      category_style_deprecated: "Discourse Anda saat ini menggunakan gaya kategori yang sudah tidak digunakan lagi yang akan dihapus sebelum rilis beta akhir Discourse 3.2. Silakan lihat <a href='https://meta.discourse.org/t/282441'>Pindah ke Pengaturan Situs Gaya Kategori Tunggal</a> untuk petunjuk tentang cara mempertahankan gaya kategori yang Anda pilih."
+      maxmind_db_configuration: 'Server telah dikonfigurasi untuk menggunakan database MaxMind untuk pencarian IP terbalik tetapi ID akun MaxMind yang valid belum dikonfigurasi yang dapat mengakibatkan database MaxMind gagal diunduh di masa mendatang. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">Lihat panduan ini untuk mempelajari lebih lanjut</a>.'
   site_settings:
     disabled: "dinonaktifkan"
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
@@ -1207,6 +1232,7 @@ id:
     blocked_email_domains: "Daftar domain email yang dipisahkan tanda pipa yang tidak diizinkan untuk didaftarkan akun oleh pengguna. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. Contoh: mailinator.com|trashmail.net"
     allowed_email_domains: "Daftar domain email yang dibatasi pipa yang HARUS digunakan pengguna untuk mendaftarkan akun. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. PERINGATAN: Pengguna dengan domain email selain yang terdaftar tidak akan diizinkan!"
     auto_approve_email_domains: "Pengguna dengan alamat email dari daftar domain ini akan disetujui secara otomatis. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung."
+    include_in_discourse_discover: "Izinkan CDCK, Inc (\"Discourse\") untuk menampilkan komunitas ini di <a href='https://discover.discourse.org' target='_blank'>halaman Discover</a> dan dalam materi pemasaran Discourse. Dengan demikian, Anda akan membagikan data yang diperlukan agar situs Anda dapat disertakan dalam layanan ini. Harap diperhatikan bahwa promosi komunitas merupakan kebijakan Discourse."
     discourse_connect_url: "URL endpoint DiscourseConnect (harus menyertakan http:// atau https://, dan tidak boleh menyertakan garis miring)"
     discourse_connect_allowed_redirect_domains: "Batasi ke domain ini untuk return_paths yang disediakan oleh DiscourseConnect (secara bawaan jalur pengembalian harus ada di situs saat ini). Gunakan * untuk mengizinkan domain apa pun untuk jalur pengembalian. Karakter pengganti subdomain (`*.foobar.com`) tidak diizinkan."
     s3_use_acls: "AWS merekomendasikan untuk tidak menggunakan ACL pada bucket S3; jika Anda mengikuti saran ini, hapus centang opsi ini. Ini harus diaktifkan jika Anda menggunakan unggahan aman."
@@ -1244,6 +1270,7 @@ id:
     automatically_clean_unused_tags: "Secara otomatis menghapus tag yang tidak digunakan pada topik atau pesan pribadi apa pun setiap hari."
     watched_precedence_over_muted: "Beri tahu saya tentang topik dalam kategori atau tag yang saya ikuti yang juga termasuk dalam kategori yang telah saya nonaktifkan"
     enable_user_tips: "Aktifkan kiat pengguna baru yang menjelaskan fitur utama kepada pengguna"
+    navigation_menu: "Tentukan bilah sisi atau menu tarik-turun tajuk sebagai menu navigasi utama untuk situs Anda. Bilah sisi direkomendasikan."
     default_navigation_menu_categories: "Kategori yang dipilih akan ditampilkan di bawah bagian Kategori pada Menu Navigasi secara bawaan."
     default_navigation_menu_tags: "Tag yang dipilih akan ditampilkan di bawah bagian Tag pada Menu Navigasi secara bawaan."
     experimental_new_new_view_groups: 'EKSPERIMENTAL: Aktifkan daftar topik baru yang menggabungkan topik yang belum dibaca dan topik baru dan buat tautan "Everything" di tautan sidebar ke sana.'
@@ -1251,6 +1278,7 @@ id:
     experimental_topics_filter: "EKSPERIMENTAL: Mengaktifkan rute filter topik eksperimental di /filter"
     enable_experimental_lightbox: "EKSPERIMENTAL: Ganti lightbox gambar bawaan dengan desain yang diubah."
     experimental_glimmer_topic_list_groups: "EKSPERIMENTAL: Mengaktifkan implementasi daftar topik 'glimmer' yang baru. Implementasi ini sedang dalam pengembangan aktif, dan tidak dimaksudkan untuk penggunaan produksi. Jangan mengembangkan tema/plugin yang bertentangan dengan ini sampai implementasi selesai dan diumumkan."
+    admin_sidebar_enabled_groups: "Aktifkan navigasi bilah sisi untuk UI admin untuk grup tertentu, yang menggantikan tombol navigasi admin tingkat atas."
     page_loading_indicator: "Konfigurasikan indikator pemuatan yang muncul selama navigasi halaman dalam Discourse. 'Spinner' adalah indikator halaman penuh. 'Slider' menampilkan bilah sempit di bagian atas layar."
     errors:
       invalid_email: "Alamat email tidak valid."
@@ -1270,6 +1298,9 @@ id:
       - "dinonaktifkan"
       - "tidak aktif"
       - "tidak diaktifkan"
+      navigation_menu:
+      - "bilah sisi"
+      - "tarik-turun tajuk"
   search:
     within_post: "#%{post_number} oleh %{username}"
     types:
@@ -1353,9 +1384,11 @@ id:
     more_pm_participants:
       other: "%{participants} dan %{count} lainnya"
     digest:
+      why: "Ringkasan singkat %{site_link} sejak %{since}"
       liked_received: "Likes Diterima"
       new_users: "Pengguna Baru"
       from: "%{site_name}"
+      preheader: "Ringkasan singkat sejak %{since}"
     forgot_password:
       title: "Lupa Password"
     set_password:
@@ -1741,6 +1774,9 @@ id:
       agree_and_hide:
         title: "Sembunyikan pos"
         description: "Setuju dengan penanda dan sembunyikan kiriman ini + secara otomatis mengirimkan pesan kepada pengguna yang mendesak mereka untuk mengeditnya."
+      agree_and_edit:
+        title: "Setuju dan Edit Post"
+        description: "Setuju dengan bendera dan buka jendela komposer untuk mengedit post."
       delete_single:
         title: "Hapus"
       delete_and_ignore:

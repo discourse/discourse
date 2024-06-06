@@ -14,7 +14,7 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.24.6",
+    "@babel/core": "^7.24.7",
     "discourse-common": "1.0.0",
     "ember-auto-import": "^2.7.3",
     "ember-cli-babel": "^8.2.0",

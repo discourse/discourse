@@ -3,19 +3,19 @@ import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
 export function buildGroupPage(type) {
-  return DiscourseRoute.extend({
-    type,
-    templateName: "group-activity-posts",
-    controllerName: "group-activity-posts",
+  return class GroupActivityPosts extends DiscourseRoute {
+    type = type;
+    templateName = "group-activity-posts";
+    controllerName = "group-activity-posts";
 
     titleToken() {
       return I18n.t(`groups.${type}`);
-    },
+    }
 
     model(params, transition) {
       let categoryId = get(transition.to, "queryParams.category_id");
       return this.modelFor("group").findPosts({ type, categoryId });
-    },
+    }
 
     setupController(controller, model) {
       let loadedAll = model.length < 20;
@@ -24,13 +24,13 @@ export function buildGroupPage(type) {
         type,
         canLoadMore: !loadedAll,
       });
-    },
+    }
 
     @action
     didTransition() {
       return true;
-    },
-  });
+    }
+  };
 }
 
 export default buildGroupPage("posts");

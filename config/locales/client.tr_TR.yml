@@ -2797,15 +2797,13 @@ tr_TR:
         filter: "Başka konu kalmadı."
     topic_bulk_actions:
       close_topics:
-        name: "Konuları Kapat"
+        name: "Bitir"
         note: "Not"
         optional: (isteğe bağlı)
       archive_topics:
-        name: "Konuları Arşivle"
-      unlist_topics:
-        name: "Konuları listeden kaldır"
-      relist_topics:
-        name: "Konuları yeniden listele"
+        name: "Arşiv"
+      move_messages_to_inbox:
+        name: "Gelen kutusuna taşı"
       remove_tags:
         name: "Etiketleri Kaldır"
       append_tags:
@@ -2813,7 +2811,7 @@ tr_TR:
       replace_tags:
         name: "Etiketleri Değiştir"
       delete_topics:
-        name: "Konuları sil"
+        name: "Sil"
       update_category:
         name: "Kategoriyi Güncelle"
         description: "Seçilen konular için yeni kategoriyi seçin"

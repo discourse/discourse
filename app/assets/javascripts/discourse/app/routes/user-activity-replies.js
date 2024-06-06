@@ -4,8 +4,8 @@ import UserActivityStreamRoute from "discourse/routes/user-activity-stream";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
-export default UserActivityStreamRoute.extend({
-  userActionType: UserAction.TYPES["posts"],
+export default class UserActivityReplies extends UserActivityStreamRoute {
+  userActionType = UserAction.TYPES["posts"];
 
   emptyState() {
     const user = this.modelFor("user");
@@ -26,9 +26,9 @@ export default UserActivityStreamRoute.extend({
     }
 
     return { title, body };
-  },
+  }
 
   titleToken() {
     return I18n.t("user_action_groups.5");
-  },
-});
+  }
+}

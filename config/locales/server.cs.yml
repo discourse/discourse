@@ -1198,6 +1198,9 @@ cs:
       - ""
       - "neaktivní"
       - ""
+      navigation_menu:
+      - "postranní panel"
+      - ""
   search:
     within_post: "#%{post_number} od %{username}"
     types:

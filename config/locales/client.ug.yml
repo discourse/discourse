@@ -2757,15 +2757,13 @@ ug:
         filter: "تېخىمۇ كۆپ تېما يوق."
     topic_bulk_actions:
       close_topics:
-        name: "تېمىنى تاقا"
+        name: "تاقا"
         note: "ئەسكەرتىش"
         optional: (تاللاشچان)
       archive_topics:
-        name: "تېما ئارخىپلاشتۇر"
-      unlist_topics:
-        name: "تىزىلمىغان تېما"
-      relist_topics:
-        name: "قايتا تىزىلغان تېما"
+        name: "ئارخىپ"
+      move_messages_to_inbox:
+        name: "قوبۇللاش ساندۇقىغا يۆتكە"
       remove_tags:
         name: "بەلگىنى چىقىرىۋەت"
       append_tags:
@@ -2773,7 +2771,7 @@ ug:
       replace_tags:
         name: "بەلگە ئالماشتۇر"
       delete_topics:
-        name: "تېما ئۆچۈر"
+        name: "ئۆچۈر"
       update_category:
         name: "سەھىپىنى يېڭىلا"
         description: "تاللىغان تېمىغا يېڭى سەھىپە تاللايدۇ"

@@ -723,6 +723,7 @@ en:
         bio_raw: "About Me"
       user:
         ip_address: ""
+        password: "Password"
     errors:
       <<: *errors
       models:
@@ -748,6 +749,7 @@ en:
               same_as_username: "is the same as your username. Please use a more secure password."
               same_as_email: "is the same as your email. Please use a more secure password."
               same_as_current: "is the same as your current password."
+              same_as_previous: "is the same as your previous password."
               same_as_name: "is the same as your name."
               unique_characters: "has too many repeated characters. Please use a more secure password."
             username:
@@ -1249,6 +1251,7 @@ en:
   flags:
     errors:
       already_handled: "Flag was already handled"
+      wrong_move: "Flag cannot be moved"
   reports:
     default:
       labels:
@@ -2759,10 +2762,10 @@ en:
         - "deactivated"
         - "inactive"
         - "unactivated"
-      navigation_menu: 
-        - "sidebar" 
+      navigation_menu:
+        - "sidebar"
         - "header dropdown"
-        
+
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

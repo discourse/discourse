@@ -1886,6 +1886,9 @@ ko:
       - ""
       - "비활성화"
       - ""
+      navigation_menu:
+      - "사이드바"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

@@ -2136,15 +2136,13 @@ ro:
         bookmarks: "Nu mai sunt semne de carte."
     topic_bulk_actions:
       close_topics:
-        name: "Închide subiectele"
+        name: "Închide sondajul"
         note: "Notă"
         optional: (opțional)
       archive_topics:
-        name: "Arhivează subiecte"
-      unlist_topics:
-        name: "Elimină subiecte din listă"
-      relist_topics:
-        name: "Relistează subiecte"
+        name: "Arhivă"
+      move_messages_to_inbox:
+        name: "Mută în Primite"
       remove_tags:
         name: "Înlătură etichete"
       append_tags:
@@ -2152,7 +2150,7 @@ ro:
       replace_tags:
         name: "Înlocuiește etichete"
       delete_topics:
-        name: "Șterge subiecte"
+        name: "Șterge"
       defer:
         name: "Marchează ca necitite"
         description: "Marchează subiecte ca necitite"

@@ -2138,20 +2138,18 @@ nb_NO:
         bookmarks: "Det finnes ingen flere bokmerkede emner."
     topic_bulk_actions:
       close_topics:
-        name: "Lukk emner"
+        name: "Lukk"
         optional: (valgfritt)
       archive_topics:
-        name: "Arkiver emner"
-      unlist_topics:
-        name: "Fjern emner fra lister"
-      relist_topics:
-        name: "Før opp igjen emner i lister"
+        name: "Arkiver"
+      move_messages_to_inbox:
+        name: "Flytt til innboks"
       append_tags:
         name: "Legg til stikkord"
       replace_tags:
         name: "Erstatt stikkord"
       delete_topics:
-        name: "Slett emner"
+        name: "Slett"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"

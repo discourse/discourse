@@ -2337,20 +2337,18 @@ pt:
         bookmarks: "Não há mais tópicos marcados."
     topic_bulk_actions:
       close_topics:
-        name: "Fechar Tópicos"
+        name: "Fechar"
         optional: (opcional)
       archive_topics:
-        name: "Arquivar tópicos"
-      unlist_topics:
-        name: "Remover Tópicos da Lista"
-      relist_topics:
-        name: "Voltar a Listar Tópicos"
+        name: "Arquivo"
+      move_messages_to_inbox:
+        name: "Mover para a Caixa de Entrada"
       append_tags:
         name: "Anexar Etiquetas"
       replace_tags:
         name: "Substituir Etiquetas"
       delete_topics:
-        name: "Eliminar Tópicos"
+        name: "Eliminar"
     topic:
       filter_to:
         one: "%{count} publicação no tópico"

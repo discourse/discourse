@@ -5,12 +5,12 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend({
-  router: service(),
-  siteSettings: service(),
-  currentUser: service(),
+export default class Users extends DiscourseRoute {
+  @service router;
+  @service siteSettings;
+  @service currentUser;
 
-  queryParams: {
+  queryParams = {
     period: { refreshModel: true },
     order: { refreshModel: true },
     asc: { refreshModel: true },
@@ -18,11 +18,11 @@ export default DiscourseRoute.extend({
     group: { refreshModel: true },
     exclude_groups: { refreshModel: true },
     exclude_usernames: { refreshModel: true },
-  },
+  };
 
   titleToken() {
     return I18n.t("directory.title");
-  },
+  }
 
   resetController(controller, isExiting) {
     if (isExiting) {
@@ -37,13 +37,13 @@ export default DiscourseRoute.extend({
         lastUpdatedAt: null,
       });
     }
-  },
+  }
 
   beforeModel() {
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
       this.router.replaceWith("discovery");
     }
-  },
+  }
 
   model(params) {
     return ajax("/directory-columns.json")
@@ -55,7 +55,7 @@ export default DiscourseRoute.extend({
         return { params, columns: response.directory_columns };
       })
       .catch(popupAjaxError);
-  },
+  }
 
   setupController(controller, model) {
     controller.set("columns", model.columns);
@@ -63,5 +63,5 @@ export default DiscourseRoute.extend({
       controller.loadGroups(),
       controller.loadUsers(model.params),
     ]);
-  },
-});
+  }
+}

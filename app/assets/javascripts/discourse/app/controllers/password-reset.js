@@ -35,6 +35,11 @@ export default Controller.extend(PasswordValidation, {
   redirected: false,
   maskPassword: true,
 
+  init() {
+    this._super(...arguments);
+    this.set("selectedSecondFactorMethod", this.secondFactorMethod);
+  },
+
   @discourseComputed()
   continueButtonText() {
     return I18n.t("password_reset.continue", {
@@ -73,7 +78,7 @@ export default Controller.extend(PasswordValidation, {
           password: this.accountPassword,
           second_factor_token:
             this.securityKeyCredential || this.secondFactorToken,
-          second_factor_method: this.secondFactorMethod,
+          second_factor_method: this.selectedSecondFactorMethod,
           timezone: moment.tz.guess(),
         },
       })
@@ -88,7 +93,10 @@ export default Controller.extend(PasswordValidation, {
               DiscourseURL.redirectTo(result.redirect_to || "/");
             }
           } else {
-            if (result.errors && !result.errors.password) {
+            if (
+              result.errors.security_keys ||
+              result.errors.user_second_factors
+            ) {
               this.setProperties({
                 secondFactorRequired: this.secondFactorRequired,
                 securityKeyRequired: this.securityKeyRequired,
@@ -109,7 +117,7 @@ export default Controller.extend(PasswordValidation, {
               this.rejectedPasswords.pushObject(this.accountPassword);
               this.rejectedPasswordsMessages.set(
                 this.accountPassword,
-                result.errors.password[0]
+                (result.friendly_messages || []).join("\n")
               );
             }
 
@@ -128,6 +136,10 @@ export default Controller.extend(PasswordValidation, {
     },
 
     authenticateSecurityKey() {
+      this.set(
+        "selectedSecondFactorMethod",
+        SECOND_FACTOR_METHODS.SECURITY_KEY
+      );
       getWebauthnCredential(
         this.model.challenge,
         this.model.allowed_credential_ids,

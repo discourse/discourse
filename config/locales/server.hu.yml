@@ -1065,6 +1065,9 @@ hu:
       - ""
       - "inaktív"
       - ""
+      navigation_menu:
+      - "oldalsáv"
+      - ""
   search:
     within_post: "#%{post_number}, szerző: %{username}"
     types:

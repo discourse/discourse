@@ -1895,20 +1895,18 @@ ca:
         bookmarks: "No hi ha més temes marcats com a preferits."
     topic_bulk_actions:
       close_topics:
-        name: "Tanca temes"
+        name: "Tanca"
         optional: (opcional)
       archive_topics:
-        name: "Arxiva temes"
-      unlist_topics:
-        name: "Fes temes invisibles"
-      relist_topics:
-        name: "Torna a llistar els temes"
+        name: "Arxiva"
+      move_messages_to_inbox:
+        name: "Mou a la safata d'entrada"
       append_tags:
         name: "Annexa etiquetes"
       replace_tags:
         name: "Reemplaça etiquetes"
       delete_topics:
-        name: "Suprimeix temes"
+        name: "Suprimeix"
     topic:
       filter_to:
         one: "%{count} publicació en el tema"

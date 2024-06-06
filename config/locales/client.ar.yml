@@ -3307,14 +3307,12 @@ ar:
         filter: "لا توجد موضوعات أخرى."
     topic_bulk_actions:
       close_topics:
-        name: "إغلاق الموضوعات"
+        name: "إغلاق"
         optional: (اختياري)
       archive_topics:
-        name: "أرشفة الموضوعات"
-      unlist_topics:
-        name: "إلغاء إدراج الموضوعات"
-      relist_topics:
-        name: "إعادة إدراج الموضوعات"
+        name: "الأرشيف"
+      move_messages_to_inbox:
+        name: "النقل إلى صندوق الوارد"
       remove_tags:
         name: "أزِل الوسوم"
       append_tags:
@@ -3322,7 +3320,7 @@ ar:
       replace_tags:
         name: "استبدال الوسوم"
       delete_topics:
-        name: "حذف الموضوعات"
+        name: "حذف"
       update_category:
         name: "تحديث الفئة"
         description: "اختر الفئة الجديدة للموضوعات المحددة"

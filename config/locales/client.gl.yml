@@ -2131,14 +2131,12 @@ gl:
         bookmarks: "Non hai máis temas marcados."
     topic_bulk_actions:
       close_topics:
-        name: "Pechar temas"
+        name: "Pechar"
         optional: (opcional)
       archive_topics:
-        name: "Arquivar temas"
-      unlist_topics:
-        name: "Retirar temas da listaxe"
-      relist_topics:
-        name: "Refacer a listaxe de temas"
+        name: "Arquivo"
+      move_messages_to_inbox:
+        name: "Mover á caixa de entrada"
       remove_tags:
         name: "Retirar etiquetas"
       append_tags:
@@ -2146,7 +2144,7 @@ gl:
       replace_tags:
         name: "Substituír etiquetas"
       delete_topics:
-        name: "Eliminar temas"
+        name: "Eliminar"
     topic:
       filter_to:
         one: "%{count} publicación no tema"

@@ -1226,11 +1226,11 @@ sr:
         bookmarks: "Nema više markiranih tema."
     topic_bulk_actions:
       close_topics:
-        name: "Zatvori Teme"
+        name: "Zatvori"
       archive_topics:
-        name: "Arhiviraj teme"
+        name: "Arhiviraj"
       delete_topics:
-        name: "Obriši Teme"
+        name: "Obriši"
     topic:
       create: "Nova Tema"
       create_long: "Otvori novu Temu"

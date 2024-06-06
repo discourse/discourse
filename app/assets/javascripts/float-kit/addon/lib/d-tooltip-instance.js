@@ -17,7 +17,7 @@ export default class DTooltipInstance extends FloatKitInstance {
 
   /**
    * Specifies whether the trigger for opening/closing the tooltip is detached from the tooltip itself.
-   * This is the case when a tooltip is trigger programmaticaly instead of through the <DTooltip /> component.
+   * This is the case when a tooltip is trigger programmatically instead of through the <DTooltip /> component.
    * @property {boolean} detachedTrigger - Tracks whether the trigger is detached, initially set to false.
    */
   @tracked detachedTrigger = false;

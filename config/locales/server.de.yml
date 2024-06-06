@@ -681,6 +681,7 @@ de:
               same_as_username: "ist mit deinem Benutzernamen identisch. Bitte verwende ein sichereres Passwort."
               same_as_email: "ist mit deiner E-Mail-Adresse identisch. Bitte verwende ein sichereres Passwort."
               same_as_current: "ist mit deinem aktuellen Passwort identisch."
+              same_as_previous: "ist mit deinem vorherigen Passwort identisch."
               same_as_name: "ist mit deinem Namen identisch."
               unique_characters: "hat zu viele sich wiederholende Zeichen. Bitte verwende ein sichereres Passwort."
             username:
@@ -2369,7 +2370,7 @@ de:
     use_name_for_username_suggestions: "Beim Vorschlagen von Benutzernamen den vollen Namen eines Benutzers verwenden."
     suggest_weekends_in_date_pickers: "Wochenenden (Samstag und Sonntag) in die Datumsvorschläge einbeziehen (deaktiviere dies, wenn du Discourse nur an Wochentagen von Montag bis Freitag benutzt)."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
-    navigation_menu: "Bestimme, welches Navigationsmenü du verwenden willst."
+    navigation_menu: "Lege die Seitenleiste oder das Kopfzeilen-Drop-down als Hauptnavigationsmenü für deine Website fest. Die Seitenleiste wird empfohlen."
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
     experimental_new_new_view_groups: 'EXPERIMENTELL: Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
@@ -2380,6 +2381,7 @@ de:
     glimmer_header_mode: "Legt fest, ob die neue \"Glimmer\"-Header-Implementierung verwendet wird. Der Standardwert ist \"auto\", sodass automatisch aktiviert wird, sobald alle deine Themes und Plugins bereit sind. https://meta.discourse.org/t/296544"
     experimental_glimmer_topic_list_groups: "EXPERIMENTELL: Aktiviert die neue Implementierung der 'Glimmer'-Themenliste. Diese Implementierung befindet sich in der aktiven Entwicklung und ist nicht für den Einsatz in der Produktion vorgesehen. Entwickle keine Themes/Plugins dagegen, bis die Implementierung abgeschlossen und angekündigt ist."
     experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion „Formularvorlagen“. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
+    admin_sidebar_enabled_groups: "Aktiviere die Seitenleistennavigation für die Administrator-Benutzeroberfläche für die angegebenen Gruppen, wodurch die Administrator-Navigationsschaltflächen der obersten Ebene ersetzt werden."
     lazy_load_categories_groups: "EXPERIMENTELL: Lazy-Load-Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     experimental_topic_bulk_actions_enabled_groups: "EXPERIMENTELL: Aktiviere das neue Drop-down für Massenoperationen."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
@@ -2482,6 +2484,9 @@ de:
       - "deaktiviert"
       - "inaktiv"
       - "nicht aktiviert"
+      navigation_menu:
+      - "Seitenleiste"
+      - "Kopfzeilen-Drop-down"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

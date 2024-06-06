@@ -2322,14 +2322,12 @@ sl:
         bookmarks: "Ni več tem z zaznamki."
     topic_bulk_actions:
       close_topics:
-        name: "Zapri teme"
+        name: "Zapri"
         optional: (neobvezno)
       archive_topics:
-        name: "Arhiviraj teme"
-      unlist_topics:
-        name: "Izloči temo iz seznamov"
-      relist_topics:
-        name: "Postavi temo nazaj na seznam"
+        name: "Arhiviraj"
+      move_messages_to_inbox:
+        name: "Prestavi v Prejeto"
       remove_tags:
         name: "Odstrani oznake"
       append_tags:
@@ -2337,7 +2335,7 @@ sl:
       replace_tags:
         name: "Zamenjaj oznake"
       delete_topics:
-        name: "Izbriši teme"
+        name: "Izbriši"
     topic:
       filter_to:
         one: "%{count} prispevek v temi"

@@ -1599,6 +1599,9 @@ da:
       - ""
       - "inaktiv"
       - ""
+      navigation_menu:
+      - "sidebjælke"
+      - ""
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.eksempel.dk"

@@ -8,4 +8,14 @@
   &__description {
     margin-top: 0.5em;
   }
+  &__options {
+    display: flex;
+    align-items: center;
+  }
+  .d-toggle-switch--label {
+    margin-bottom: 0;
+  }
+  .flag-menu-trigger {
+    padding: 0.25em 0.325em;
+  }
 }

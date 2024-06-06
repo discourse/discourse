@@ -419,6 +419,9 @@ pl_PL:
       search: "Wyszukaj"
       bookmark: "Zakładka"
       bulk:
+        delete_completed: "Zakładki zostały pomyślnie usunięte."
+        reminders_cleared: "Przypomnienia o zakładkach zostały pomyślnie usunięte."
+        toggle: "przełącz zbiorczy wybór zakładek"
         select_all: "Zaznacz wszystkie"
         clear_all: "Wyczyść wszystko"
         selected_count:
@@ -436,6 +439,11 @@ pl_PL:
         name: "Wyczyść przypomnienia"
       delete_bookmarks:
         name: "Usuń zakładkę"
+        description:
+          one: "Czy na pewno chcesz usunąć tę zakładkę?"
+          few: "Czy na pewno chcesz usunąć te <b>%{count}</b> zakładki?"
+          many: "Czy na pewno chcesz usunąć te <b>%{count}</b> zakładek?"
+          other: "Czy na pewno chcesz usunąć te <b>%{count}</b> zakładek?"
     copy_codeblock:
       copied: "skopiowane!"
       copy: "skopiuj kod do schowka"
@@ -2568,6 +2576,7 @@ pl_PL:
       modal_ok: "OK"
       modal_cancel: "Anuluj"
       cant_send_pm: "Przepraszamy, niestety nie możesz wysłać prywatnej wiadomości do %{username}."
+      create_message_error: "Przepraszamy, wystąpił błąd podczas tworzenia tej wiadomości. Spróbuj ponownie."
       yourself_confirm:
         title: "Nie zapomniałeś/łaś dodać odbiorców?"
         body: "Aktualnie ta wiadomość będzie wysłana tylko do ciebie!"
@@ -3036,6 +3045,11 @@ pl_PL:
           few: "Zaznaczono <b>%{count}</b> tematy."
           many: "Zaznaczono <b>%{count}</b> tematów."
           other: "Zaznaczono <b>%{count}</b> tematów."
+        selected_sole_category:
+          one: "Wybrano <b>%{count}</b> temat z kategorii:"
+          few: "Wybrano <b>%{count}</b> tematy z kategorii:"
+          many: "Wybrano <b>%{count}</b> tematów z kategorii:"
+          other: "Wybrano <b>%{count}</b> tematów z kategorii:"
         selected_count:
           one: "%{count} wybrano"
           few: "%{count} wybrano"
@@ -3091,15 +3105,13 @@ pl_PL:
         filter: "Nie ma więcej tematów."
     topic_bulk_actions:
       close_topics:
-        name: "Zamknij tematy"
+        name: "Zamknij"
         note: "Uwaga"
         optional: (opcjonalne)
       archive_topics:
-        name: "Zarchiwizuj tematy"
-      unlist_topics:
-        name: "Ukryj tematy"
-      relist_topics:
-        name: "Odśwież listę tematów"
+        name: "Archiwum"
+      move_messages_to_inbox:
+        name: "Przenieś do skrzynki odbiorczej"
       remove_tags:
         name: "Usuń tagi"
       append_tags:
@@ -3107,7 +3119,7 @@ pl_PL:
       replace_tags:
         name: "Zmień tagi"
       delete_topics:
-        name: "Usuń tematy"
+        name: "Usuń"
       update_category:
         name: "Aktualizuj kategorię"
         description: "Wybierz nową kategorię dla wybranych tematów"
@@ -3813,6 +3825,7 @@ pl_PL:
           illegal: "Oflagowano jako nielegalne"
           notify_moderators: "Oflagowano do moderacji"
           notify_user: "Wysłano wiadomość do tego użytkownika"
+          custom: "Oznaczyłeś ten temat jako %{custom}"
       delete:
         confirm:
           one: "Czy na pewno chcesz usunąć ten post?"
@@ -5065,6 +5078,7 @@ pl_PL:
             include_subcategories:
               label: "Uwzględnij podkategorie"
       flags:
+        title: "Flagi moderacji"
         description: "Opis"
         enabled: "Włączona?"
       groups:
@@ -5410,6 +5424,7 @@ pl_PL:
           user_fields: "Pola użytkownika"
           watched_words: "Obserwowane słowa"
           legal: "Prawne"
+          moderation_flags: "Flagi moderacji"
       appearance:
         title: "Wygląd"
         sidebar_link:
@@ -6103,6 +6118,7 @@ pl_PL:
             create_watched_word_group: "Utwórz grupę obserwowanych słów"
             update_watched_word_group: "Zaktualizuj grupę obserwowanych słów"
             delete_watched_word_group: "Usuń grupę obserwowanych słów"
+            toggle_flag: "przełącz flagę"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -6177,6 +6193,9 @@ pl_PL:
           silence: "Wycisz nowe konta, jeśli ich pierwszy post zawiera którekolwiek z tych słów. Post zostanie automatycznie ukryty, dopóki personel go nie zatwierdzi."
           link: "Zastąp słowa w postach linkami."
         form:
+          label: "Zawiera słowa lub wyrażenia"
+          placeholder: "słowa lub frazy (* to symbol wieloznaczny)"
+          placeholder_regexp: "wyrażenia regularne"
           replace_label: "Zastąpienie"
           replace_placeholder: "przykład"
           tag_label: "Tag"
@@ -6190,6 +6209,7 @@ pl_PL:
           case_sensitivity_label: "Rozróżniana jest wielkość liter"
           case_sensitivity_description: "Tylko słowa z dopasowaną wielkością liter"
           html_label: "HTML"
+          words_or_phrases: "słowa lub frazy"
         test:
           button_label: "Sprawdź"
           modal_title: "%{action}: Testuj obserwowane słowa"
@@ -6599,6 +6619,8 @@ pl_PL:
           title: "Pole obowiązkowe"
           optional:
             title: "Opcjonalnie"
+          on_signup:
+            title: "Podczas rejestracji"
         editable:
           title: "Edytowalne po rejestracji"
           enabled: "edytowalne"
@@ -6838,6 +6860,8 @@ pl_PL:
         allowed_paths: "Lista dozwolonych ścieżek"
         edit: "edytuj"
         category: "Publikuj w kategorii"
+        tags: "Tagi tematu"
+        post_author: "Autor postu — domyślnie %{author}"
         add_host: "Dodaj host"
         settings: "Ustawienia osadzania"
         crawling_settings: "Ustawienia crawlera"

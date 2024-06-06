@@ -2628,20 +2628,18 @@ ja:
         filter: "トピックは以上です。"
     topic_bulk_actions:
       close_topics:
-        name: "トピックをクローズ"
+        name: "クローズ"
         optional: (オプション)
       archive_topics:
-        name: "トピックをアーカイブ"
-      unlist_topics:
-        name: "トピックを非表示"
-      relist_topics:
-        name: "トピックを表示"
+        name: "アーカイブ"
+      move_messages_to_inbox:
+        name: "受信トレイに移動"
       append_tags:
         name: "タグを追加"
       replace_tags:
         name: "タグを置換"
       delete_topics:
-        name: "トピックを削除"
+        name: "削除"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"

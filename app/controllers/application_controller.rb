@@ -803,9 +803,7 @@ class ApplicationController < ActionController::Base
   def check_xhr
     # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
     return if !request.get? && (is_api? || is_user_api?)
-    unless ((request.format && request.format.json?) || request.xhr?)
-      raise ApplicationController::RenderEmpty.new
-    end
+    raise ApplicationController::RenderEmpty.new if !request.format&.json? && !request.xhr?
   end
 
   def apply_cdn_headers
