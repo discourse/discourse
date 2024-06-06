@@ -72,6 +72,11 @@ export default class TopicListHeaderColumn extends Component {
     }
   }
 
+  @action
+  afterBulkActionComplete() {
+    return this.router.refresh();
+  }
+
   <template>
     <th
       {{(if @sortable (modifier on "click" this.onClick))}}
@@ -108,6 +113,7 @@ export default class TopicListHeaderColumn extends Component {
               {{#if @experimentalTopicBulkActionsEnabled}}
                 <TopicBulkSelectDropdown
                   @bulkSelectHelper={{@bulkSelectHelper}}
+                  @afterBulkActionComplete={{this.afterBulkActionComplete}}
                 />
               {{else}}
                 <button

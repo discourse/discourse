@@ -26,12 +26,13 @@ export default class extends EmberObject {
         </span>
         <BulkSelectTopicsDropdown
           @bulkSelectHelper={{@data.bulkSelectHelper}}
-          @afterBulkActionComplete={{this.afterBulkAction}}
+          @afterBulkActionComplete={{@data.afterBulkAction}}
         />
       </template>,
       {
         bulkSelectHelper: this.bulkSelectHelper,
         selectedCount: this.selectedCount,
+        afterBulkAction: this.afterBulkAction,
       }
     );
   }

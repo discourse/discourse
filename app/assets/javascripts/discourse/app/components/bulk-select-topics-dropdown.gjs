@@ -173,9 +173,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         title,
         description,
         bulkSelectHelper: this.args.bulkSelectHelper,
-        refreshClosure: () => {
-          return this.args.afterBulkActionComplete?.();
-        },
+        refreshClosure: () => this.args.afterBulkActionComplete(),
         allowSilent,
         initialAction,
         initialActionLabel,
