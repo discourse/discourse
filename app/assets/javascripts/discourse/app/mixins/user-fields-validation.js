@@ -4,6 +4,11 @@ import { isEmpty } from "@ember/utils";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 
+const addCustomUserFieldValidationCallbacks = [];
+export function addCustomUserFieldValidationCallback(callback) {
+  addCustomUserFieldValidationCallbacks.push(callback);
+}
+
 export default Mixin.create({
   @on("init")
   _createUserFields() {
@@ -54,6 +59,13 @@ export default Mixin.create({
           element: userField.field.element,
         });
       }
+
+      addCustomUserFieldValidationCallbacks.map((callback) => {
+        const customUserFieldValidationObject = callback(userField);
+        if (customUserFieldValidationObject) {
+          validation = customUserFieldValidationObject;
+        }
+      });
 
       userField.set("validation", validation);
     });

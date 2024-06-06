@@ -96,6 +96,7 @@ import { includeAttributes } from "discourse/lib/transform-post";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
+import { addCustomUserFieldValidationCallback } from "discourse/mixins/user-fields-validation";
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
@@ -152,7 +153,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.32.0";
+export const PLUGIN_API_VERSION = "1.33.0";
 
 const DEPRECATED_HEADER_WIDGETS = [
   "header",
@@ -1286,6 +1287,33 @@ class PluginApi {
    **/
   addTopicParticipantClassesCallback(callback) {
     addTopicParticipantClassesCallback(callback);
+  }
+
+  /**
+   * Adds a callback when validating the value of a custom user field in the signup form.
+   *
+   * If the validation is intended to fail, the callback should return an Ember Object with the
+   * following properties: `failed`, `reason`, and `element`.
+   *
+   * In the case of a failed validation, the `reason` will be displayed to the user
+   * and the form will not be submitted.
+   *
+   *
+   * Example:
+   *
+   * addCustomUserFieldValidationCallback((userField) => {
+   *   if (userField.field.name === "my custom user field" && userField.value === "foo") {
+   *     return EmberObject.create({
+   *       failed: true,
+   *       reason: I18n.t("value_can_not_be_foo"),
+   *       element: userField.field.element,
+   *     });
+   *   }
+   * });
+   **/
+
+  addCustomUserFieldValidationCallback(callback) {
+    addCustomUserFieldValidationCallback(callback);
   }
 
   /**
