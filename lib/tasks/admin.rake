@@ -35,21 +35,6 @@ task "admin:invite", [:email] => [:environment] do |_, args|
   )
 end
 
-desc "Promote a user to adminstrator"
-task "admin:promote", [:username] => [:environment] do |_, args|
-  username = args[:username]
-  user = find_user(username)
-  if !user
-    puts "ERROR: User with username #{username} does not exist"
-    exit 1
-  end
-  puts "Granting admin!"
-  user.grant_admin!
-  user.change_trust_level!(1) if user.trust_level < 1
-  user.email_tokens.update_all confirmed: true
-  say("User #{username} is now an admin")
-end
-
 desc "Creates a forum administrator"
 task "admin:create" => :environment do
   require "highline/import"
