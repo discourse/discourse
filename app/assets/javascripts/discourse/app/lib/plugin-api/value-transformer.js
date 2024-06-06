@@ -1,92 +1,137 @@
-import DAG from "../dag";
+// add core transformer names
+const validCoreTransformerNames = new Set(["header-notifications-avatar-size"]);
+
+// do not add anything directly to this set, use addTransformerName instead
+const validPluginTransformerNames = new Set();
 
 const transformersRegistry = new Map();
-const resolvedTransformers = new Map();
-const transformerLastRegisterPluginId = new Map(); // to enforce the order the transformers are registered
 
-export function registerTransformer(
-  transformerName,
-  pluginId,
-  transformer,
-  position
-) {
-  if (!pluginId) {
-    throw new Error("api registerTransformer requires a pluginId");
+/**
+ * Register a value transformer. To be used by the plugin API.
+ *
+ * @param {string} transformerName the name of the transformer
+ * @param {* | function} valueOrCallback the value or callback to apply. If a callback is provided, it will be called
+ * with the following arguments: { newValue, context }
+ */
+export function registerTransformer(transformerName, valueOrCallback) {
+  if (!transformerNameExists.has(transformerName)) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `api registerTransformer: transformer "${transformerName}" is unknown and will be ignored.`
+    );
   }
-  if (transformer === undefined) {
+
+  if (valueOrCallback === undefined) {
     throw new Error(
       "api registerTransformer requires transformer to be set with a value or a callback"
     );
   }
-  if (position && !position.before && !position.after) {
-    throw new Error(
-      "api registerTransformer requires position if provided, to have a before or after key"
-    );
-  }
 
-  // setting the default position to be after the last registered plugin enforces the DAG to be executed in the order
-  // the plugins/theme components are registered, which provides a predictable order of execution in case a position is
-  // not explicitly set
-  const existingTransformers =
-    transformersRegistry.get(transformerName) || new DAG();
+  const existingTransformers = transformersRegistry.get(transformerName) || [];
 
-  if (existingTransformers.has(pluginId)) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      `Value transformer ${transformerName} already registered previously with pluginId ${pluginId}`
-    );
-    existingTransformers.delete(pluginId);
-  }
-
-  existingTransformers.add(
-    pluginId,
-    transformer,
-    position || {
-      after:
-        transformerLastRegisterPluginId.get(pluginId) || "__discourse:core",
-    }
-  );
+  existingTransformers.push({
+    valueOrCallback,
+    isCallback: typeof valueOrCallback === "function", // to avoid unnecessary checks while applying the transformer
+  });
 
   transformersRegistry.set(transformerName, existingTransformers);
-
-  // just updated the last registered plugin id, if a position is not provided, or else we can bind the next transformer
-  // with the position specified
-  if (!position) {
-    transformerLastRegisterPluginId.set(pluginId);
-  }
-
-  // resolve the transformers DAG to cache the result and avoid resolving it every time the value transformer is used
-  resolveTransformersDag(transformerName);
 }
 
-export function applyTransformer(transformerName, value, context) {
-  const transformers = resolvedTransformers.get(transformerName);
-  if (!transformers) {
-    return value;
+/**
+ * Apply a transformer to a value
+ *
+ * @param {string} transformerName the name of the transformer applied
+ * @param {*} defaultValue the default value
+ * @param {*} [context] the context to pass to the transformer callbacks
+ *
+ * @returns {*} the transformed value
+ */
+
+export function applyTransformer(transformerName, defaultValue, context) {
+  if (!transformerNameExists(transformerName)) {
+    throw new Error(
+      `applyTransformer: transformer id "${transformerName}" does not exist. Did you forget to register it?`
+    );
   }
 
-  let newValue = value;
+  const transformers = transformersRegistry.get(transformerName);
+  if (!transformers) {
+    return defaultValue;
+  }
 
-  for (const entry of transformers) {
-    const { value: transformer } = entry;
+  let newValue = defaultValue;
 
-    if (typeof transformer === "function") {
-      newValue = transformer(newValue, context);
+  const transformerPoolSize = transformers.length;
+  for (let i = 0; i < transformerPoolSize; i++) {
+    const { valueOrCallback, isCallback } = transformers[i];
+
+    if (isCallback) {
+      newValue = valueOrCallback({ value: newValue, context });
     } else {
-      newValue = transformer;
+      newValue = valueOrCallback;
     }
   }
 
   return newValue;
 }
 
-function resolveTransformersDag(transformerName) {
-  const transformersDag = transformersRegistry.get(transformerName);
-
-  if (!transformersDag) {
-    resolvedTransformers.delete(transformerName);
+/**
+ * Register a transformer name.
+ *
+ * To be used only in the plugin API. Do not use this functions to add core transformer names. Instead register them
+ * directly in the validCoreTransformerNames set above.
+ *
+ * @param {string} name the name to register
+ */
+export function addTransformerName(name) {
+  if (validCoreTransformerNames.has(name)) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `api.addTransformerName: transformer "${name}" matches an existing core transformer and shouldn't be re-registered using the the API.`
+    );
     return;
   }
 
-  resolvedTransformers.set(transformerName, transformersDag.resolve());
+  if (validPluginTransformerNames.has(name)) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `api.addTransformerName: transformer "${name}" is already registered.`
+    );
+    return;
+  }
+
+  if (transformersRegistry.size > 0) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `api.addTransformerName was called after transformers were registered.\n` +
+        "This is not recommended as it can lead to unexpected behavior." +
+        `If a plugin or theme component tried to register a transformer for "${name}" previously, the register was ignored.` +
+        "Consider moving the call to addTransformerName to a pre-initializer."
+    );
+    return;
+  }
+
+  validPluginTransformerNames.add(name);
+}
+
+/**
+ * Check if a transformer name exists
+ *
+ * @param {string} name the name to check
+ * @returns {boolean}
+ */
+function transformerNameExists(name) {
+  return (
+    validCoreTransformerNames.has(name) || validPluginTransformerNames.has(name)
+  );
+}
+
+// to be used only for test purposes
+export function clearTransformerNames() {
+  validPluginTransformerNames.clear();
+}
+
+// to be used only for test purposes
+export function clearTransformers() {
+  transformersRegistry.clear();
 }

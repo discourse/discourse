@@ -147,7 +147,10 @@ import {
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
-import { registerTransformer } from "./plugin-api/value-transformer";
+import {
+  addTransformerName,
+  registerTransformer,
+} from "./plugin-api/value-transformer";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -329,8 +332,27 @@ class PluginApi {
     return klass;
   }
 
-  registerTransformer(modifierName, pluginId, modifier, position) {
-    registerValueModifier(modifierName, pluginId, modifier, position);
+  /**
+   * Add a new valid transformer name.
+   *
+   * Use this API to add a new transformer name that can be used in the `registerTransformer` API.
+   *
+   * @param name the name of the new transformer
+   */
+  addTransformerName(name) {
+    addTransformerName(name);
+  }
+
+  /**
+   * Register a transformer to override values defined in Discourse.
+   *
+   * @param {string} transformerName the name of the transformer
+   * @param {*} valueOrCallback new value or callback to be used to transform the value, if a callback is provided it
+   * will be called with ({value, context}), where value is the current value and context is the context in which the
+   * value is being used.
+   */
+  registerTransformer(transformerName, valueOrCallback) {
+    registerTransformer(transformerName, valueOrCallback);
   }
 
   /**
