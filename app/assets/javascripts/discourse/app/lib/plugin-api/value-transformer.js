@@ -1,3 +1,5 @@
+import { isTesting } from "discourse-common/config/environment";
+
 // add core transformer names
 const validCoreTransformerNames = new Set(["header-notifications-avatar-size"]);
 
@@ -7,30 +9,25 @@ const validPluginTransformerNames = new Set();
 const transformersRegistry = new Map();
 
 /**
- * Register a value transformer. To be used by the plugin API.
+ * Indicates if the registry is open for registration.
  *
- * @param {string} transformerName the name of the transformer
- * @param {function({value, context})} valueCallback callback that will transform the value.
+ * When the registry is closed, the system accepts adding new transformer names and throws an error when trying to
+ * register a transformer.
+ *
+ * When the registry is open, the system will throw an error if a transformer name is added and will accept registering
+ * transformers to be applied.
+ *
+ * @type {boolean}
  */
-export function registerTransformer(transformerName, valueCallback) {
-  if (!transformerNameExists.has(transformerName)) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      `api registerTransformer: transformer "${transformerName}" is unknown and will be ignored.`
-    );
-  }
+let registryOpened = false;
 
-  if (valueCallback === undefined) {
-    throw new Error(
-      "api registerTransformer requires transformer to be set with a value or a callback"
-    );
-  }
-
-  const existingTransformers = transformersRegistry.get(transformerName) || [];
-
-  existingTransformers.push(valueCallback);
-
-  transformersRegistry.set(transformerName, existingTransformers);
+/**
+ * Freezes the valid transformers list and open the registry to accept new transform registrations.
+ *
+ * INTERNAL API: to be used only in `initializers/freeze-valid-transformers`
+ */
+export function _freezeValidTransformerNames() {
+  registryOpened = true;
 }
 
 /**
@@ -45,7 +42,7 @@ export function registerTransformer(transformerName, valueCallback) {
 export function applyTransformer(transformerName, defaultValue, context) {
   if (!transformerNameExists(transformerName)) {
     throw new Error(
-      `applyTransformer: transformer name "${transformerName}" does not exist. Perhaps you misspelled it?`
+      `applyTransformer: transformer name "${transformerName}" does not exist. Did you forget to register it?`
     );
   }
 
@@ -66,14 +63,60 @@ export function applyTransformer(transformerName, defaultValue, context) {
 }
 
 /**
- * Register a transformer name.
+ * Register a value transformer.
  *
- * To be used only in the plugin API. Do not use this functions to add core transformer names. Instead register them
- * directly in the validCoreTransformerNames set above.
+ * INTERNAL API: use pluginApi.registerTransformer instead.
+ *
+ * @param {string} transformerName the name of the transformer
+ * @param {function({value, context})} valueCallback callback that will transform the value.
+ */
+export function _registerTransformer(transformerName, valueCallback) {
+  if (!registryOpened) {
+    throw new Error(
+      "api.registerTransformer was called while the system was still accepting new transformer names to be added.\n" +
+        `Move your code to an initializer or a pre-initializer that runs after "freeze-valid-transformers" to avoid this error.`
+    );
+  }
+
+  if (!transformerNameExists.has(transformerName)) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `api.registerTransformer: transformer "${transformerName}" is unknown and will be ignored. ` +
+        "Perhaps you misspelled it?"
+    );
+  }
+
+  if (typeof valueCallback !== "function") {
+    throw new Error(
+      "api.registerTransformer requires the valueCallback argument to be a function"
+    );
+  }
+
+  const existingTransformers = transformersRegistry.get(transformerName) || [];
+
+  existingTransformers.push(valueCallback);
+
+  transformersRegistry.set(transformerName, existingTransformers);
+}
+
+/**
+ * Registers a new transformer name.
+ *
+ * INTERNAL API: use pluginApi.addTransformerName instead.
+ *
+ * DO NOT USE THIS FUNCTION TO ADD CORE TRANSFORMER NAMES. Instead register them directly in the
+ * validCoreTransformerNames set above.
  *
  * @param {string} name the name to register
  */
-export function addTransformerName(name) {
+export function _addTransformerName(name) {
+  if (registryOpened) {
+    throw new Error(
+      "api.registerTransformer was called when the system is no longer accepting new names to be added.\n" +
+        `Move your code to a pre-initializer that runs before "freeze-valid-transformers" to avoid this error.`
+    );
+  }
+
   if (validCoreTransformerNames.has(name)) {
     // eslint-disable-next-line no-console
     console.warn(
@@ -114,12 +157,24 @@ function transformerNameExists(name) {
   );
 }
 
-// to be used only for test purposes
+/**
+ * Resets the transformer names added.
+ *
+ * Use only for testing purposes.
+ */
 export function resetTransformerNames() {
-  validPluginTransformerNames.clear();
+  if (isTesting()) {
+    validPluginTransformerNames.clear();
+  }
 }
 
-// to be used only for test purposes
+/**
+ * Resets the transformer names added.
+ *
+ * Use only for testing purposes.
+ */
 export function resetTransformers() {
-  transformersRegistry.clear();
+  if (isTesting()) {
+    transformersRegistry.clear();
+  }
 }

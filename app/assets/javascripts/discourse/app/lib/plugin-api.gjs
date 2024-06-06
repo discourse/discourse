@@ -148,8 +148,8 @@ import { addImageWrapperButton } from "discourse-markdown-it/features/image-cont
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import {
-  addTransformerName,
-  registerTransformer,
+  _addTransformerName,
+  _registerTransformer,
 } from "./plugin-api/value-transformer";
 
 // If you add any methods to the API ensure you bump up the version number
@@ -340,7 +340,7 @@ class PluginApi {
    * @param name the name of the new transformer
    */
   addTransformerName(name) {
-    addTransformerName(name);
+    _addTransformerName(name);
   }
 
   /**
@@ -354,7 +354,7 @@ class PluginApi {
    * @param {*} [valueCallback.context] the optional context in which the value is being transformed
    */
   registerTransformer(transformerName, valueCallback) {
-    registerTransformer(transformerName, valueCallback);
+    _registerTransformer(transformerName, valueCallback);
   }
 
   /**
