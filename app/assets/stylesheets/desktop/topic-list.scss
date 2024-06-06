@@ -141,12 +141,15 @@
 }
 
 .topic-list-bottom {
-  margin: 20px 0;
-  .footer-message {
-    padding-top: 4px;
-  }
+  margin: 1.25em 0;
   .dismiss-container-bottom {
     float: right;
+  }
+  .--no-topics-education + & {
+    margin: 0;
+    .footer-message {
+      padding-top: 4em;
+    }
   }
 }
 
