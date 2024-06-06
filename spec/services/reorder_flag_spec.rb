@@ -31,17 +31,21 @@ RSpec.describe(ReorderFlag) do
   context "when user is allowed to perform the action" do
     fab!(:current_user) { Fabricate(:admin) }
 
+    after do
+      described_class.call(flag_id: flag.id, guardian: current_user.guardian, direction: "down")
+    end
+
     it "sets the service result as successful" do
       expect(result).to be_a_success
     end
 
     it "moves the flag" do
       expect(Flag.order(:position).map(&:name)).to eq(
-        %w[notify_user notify_moderators off_topic inappropriate spam illegal],
+        %w[notify_user off_topic inappropriate spam illegal notify_moderators],
       )
       result
       expect(Flag.order(:position).map(&:name)).to eq(
-        %w[notify_user notify_moderators off_topic inappropriate illegal spam],
+        %w[notify_user off_topic inappropriate spam notify_moderators illegal],
       )
     end
 

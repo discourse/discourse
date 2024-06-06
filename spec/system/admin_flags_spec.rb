@@ -14,7 +14,7 @@ describe "Admin Flags Page", type: :system do
     topic_page.visit_topic(post.topic)
     topic_page.open_flag_topic_modal
     expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["Something Else", "It's Inappropriate", "It's Spam", "It's Illegal"],
+      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else"],
     )
 
     visit "/admin/config/flags"
@@ -23,15 +23,17 @@ describe "Admin Flags Page", type: :system do
     topic_page.visit_topic(post.topic)
     topic_page.open_flag_topic_modal
     expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["Something Else", "It's Inappropriate", "It's Illegal"],
+      ["It's Inappropriate", "It's Illegal", "Something Else"],
     )
+
+    Flag.system.where(name: "spam").update!(enabled: true)
   end
 
   it "allows admin to change order of flags" do
     topic_page.visit_topic(post.topic)
     topic_page.open_flag_topic_modal
     expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["Something Else", "It's Inappropriate", "It's Spam", "It's Illegal"],
+      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else"],
     )
 
     visit "/admin/config/flags"
@@ -40,7 +42,7 @@ describe "Admin Flags Page", type: :system do
     topic_page.visit_topic(post.topic)
     topic_page.open_flag_topic_modal
     expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["Something Else", "It's Inappropriate", "It's Illegal", "It's Spam"],
+      ["It's Inappropriate", "It's Illegal", "It's Spam", "Something Else"],
     )
 
     visit "/admin/config/flags"
@@ -49,7 +51,7 @@ describe "Admin Flags Page", type: :system do
     topic_page.visit_topic(post.topic)
     topic_page.open_flag_topic_modal
     expect(all(".flag-action-type-details strong").map(&:text)).to eq(
-      ["Something Else", "It's Inappropriate", "It's Spam", "It's Illegal"],
+      ["It's Inappropriate", "It's Spam", "It's Illegal", "Something Else"],
     )
   end
 
@@ -60,13 +62,13 @@ describe "Admin Flags Page", type: :system do
 
   it "does not allow bottom flag to move down" do
     visit "/admin/config/flags"
-    admin_flags_page.open_flag_menu("illegal")
+    admin_flags_page.open_flag_menu("notify_moderators")
     expect(page).not_to have_css(".dropdown-menu__item .move-down")
   end
 
   it "does not allow top flag to move up" do
     visit "/admin/config/flags"
-    admin_flags_page.open_flag_menu("notify_moderators")
+    admin_flags_page.open_flag_menu("off_topic")
     expect(page).not_to have_css(".dropdown-menu__item .move-up")
   end
 end

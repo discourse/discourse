@@ -418,6 +418,7 @@ class SessionController < ApplicationController
         response.merge!(
           second_factor_required: true,
           backup_codes_enabled: matched_user&.backup_codes_enabled?,
+          totp_enabled: matched_user&.totp_enabled?,
         )
       end
 
