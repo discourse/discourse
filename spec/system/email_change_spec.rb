@@ -102,7 +102,7 @@ describe "Changing email", type: :system do
     expect(page).to have_current_path("/u/#{user.username}/preferences/account")
     expect(user_preferences_page).to have_primary_email(new_email)
   ensure
-    authenticator.remove!
+    authenticator&.remove!
   end
 
   it "does not require login to verify" do
