@@ -183,7 +183,7 @@ describe "Search", type: :system do
         tag_selector.search(tag1.name)
         tag_selector.select_row_by_value(tag1.name)
         tag_selector.collapse
-        find(".topc-bulk-actions__append-tags").click
+        find(".topic-bulk-actions__append-tags").click
         expect(
           find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags"),
         ).to have_content(tag1.name)

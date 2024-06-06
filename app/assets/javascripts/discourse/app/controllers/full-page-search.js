@@ -60,6 +60,7 @@ export default Controller.extend({
   appEvents: service(),
   siteSettings: service(),
   searchPreferencesManager: service(),
+  currentUser: service(),
 
   bulkSelectEnabled: null,
   loading: false,
@@ -481,8 +482,7 @@ export default Controller.extend({
 
   @action
   afterBulkActionComplete() {
-    this.reset();
-    this._search();
+    return Promise.resolve(this._search());
   },
 
   @action

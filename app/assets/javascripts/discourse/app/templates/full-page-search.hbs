@@ -113,9 +113,7 @@
               {{#if this.useNewBulkActions}}
                 <TopicList::TopicBulkSelectDropdown
                   @bulkSelectHelper={{this.bulkSelectHelper}}
-                  @afterBulkActionComplete={{action
-                    this.afterBulkActionComplete
-                  }}
+                  @afterBulkActionComplete={{this.afterBulkActionComplete}}
                 />
               {{else}}
                 <DButton
