@@ -290,11 +290,19 @@ vi:
       search_placeholder: "Tìm kiếm dấu trang theo tên, tiêu đề chủ đề hoặc nội dung bài đăng"
       search: "Tìm kiếm"
       bookmark: "Đánh dấu chỉ mục"
+      bulk:
+        select_all: "Chọn hết"
+        clear_all: "Xoá hết"
+        selected_count:
+          other: "%{count} được chọn"
       reminders:
         today_with_time: "hôm nay lúc %{time}"
         tomorrow_with_time: "ngày mai lúc %{time}"
         at_time: "lúc %{date_time}"
         existing_reminder: "Bạn đã đặt lời nhắc cho dấu trang này sẽ được gửi vào lúc %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Xóa chỉ mục"
     copy_codeblock:
       copied: "đã sao chép!"
       copy: "sao chép mã vào khay nhớ tạm"
@@ -1801,6 +1809,8 @@ vi:
           title: "Quản lý Danh mục"
         bulk_select_topics_dropdown:
           title: "Hành động theo lô"
+        bulk_select_bookmarks_dropdown:
+          title: "Hành động theo lô"
     date_time_picker:
       from: Từ
       to: Tới
@@ -2309,14 +2319,12 @@ vi:
         bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
     topic_bulk_actions:
       close_topics:
-        name: "Đóng các chủ đề"
+        name: "Đóng"
         optional: (tùy chọn)
       archive_topics:
-        name: "Chủ đề Lưu trữ"
-      unlist_topics:
-        name: "Chủ đề không công khai"
-      relist_topics:
-        name: "Chủ đề liên quan"
+        name: "Lưu Trữ"
+      move_messages_to_inbox:
+        name: "Chuyển sang hộp thư"
       remove_tags:
         name: "Xóa thẻ"
       append_tags:
@@ -2324,7 +2332,7 @@ vi:
       replace_tags:
         name: "Thay thế thẻ"
       delete_topics:
-        name: "Xóa chủ đề"
+        name: "Xóa"
     topic:
       filter_to:
         other: "%{count} bài viết trong chủ đề"
@@ -3604,7 +3612,7 @@ vi:
                 other: "%{count} bản nháp"
             review:
               content: "Review"
-      filter: "Lọc"
+      filter: "Lọc..."
     until: "Cho đến khi:"
     form_templates:
       upload_field:
@@ -3730,6 +3738,9 @@ vi:
               label: Danh mục
             include_subcategories:
               label: "Bao gồm các danh mục phụ"
+      flags:
+        description: "Mô tả"
+        enabled: "Kích hoạt"
       groups:
         new:
           title: "Nhóm mới"
@@ -4942,6 +4953,7 @@ vi:
         name: "Tên Trường"
         type: "Loại Trường"
         description: "Trường mô tả"
+        preferences: "Tùy chỉnh"
         save: "Lưu"
         edit: "Sửa"
         delete: "Xoá"
@@ -4952,6 +4964,9 @@ vi:
           title: "Bắt buộc lúc đăng ký"
           enabled: "bắt buộc"
           disabled: "không bắt buộc"
+        requirement:
+          optional:
+            title: "Tùy chọn"
         editable:
           title: "Có thể chỉnh sửa sau khi đăng ký"
           enabled: "có thể chỉnh sửa"

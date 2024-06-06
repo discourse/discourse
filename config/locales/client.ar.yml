@@ -471,11 +471,24 @@ ar:
       search_placeholder: "البحث عن الإشارات المرجعية بالاسم أو عنوان الموضوع أو محتوى المنشور"
       search: "البحث"
       bookmark: "وضع إشارة مرجعية"
+      bulk:
+        select_all: "تحديد الكل"
+        clear_all: "مسح الكل"
+        selected_count:
+          zero: "المحدَّدة: %{count}"
+          one: "المحدَّدة: %{count}"
+          two: "المحدَّدة: %{count}"
+          few: "المحدَّدة: %{count}"
+          many: "المحدَّدة: %{count}"
+          other: "المحدَّدة: %{count}"
       reminders:
         today_with_time: "اليوم في الساعة %{time}"
         tomorrow_with_time: "غدًا في الساعة %{time}"
         at_time: "بتاريخ %{date_time}"
         existing_reminder: "لديك تذكير معيَّن لهذه الإشارة المرجعية، وسيتم إرساله إليك في %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "حذف الإشارة المرجعية"
     copy_codeblock:
       copied: "تم النسخ!"
       copy: "نسخ الرمز إلى الحافظة"
@@ -2536,6 +2549,8 @@ ar:
           title: "إدارة الفئات"
         bulk_select_topics_dropdown:
           title: "الإجراءات الجماعية"
+        bulk_select_bookmarks_dropdown:
+          title: "الإجراءات الجماعية"
     date_time_picker:
       from: من
       to: إلى
@@ -3292,14 +3307,12 @@ ar:
         filter: "لا توجد موضوعات أخرى."
     topic_bulk_actions:
       close_topics:
-        name: "إغلاق الموضوعات"
+        name: "إغلاق"
         optional: (اختياري)
       archive_topics:
-        name: "أرشفة الموضوعات"
-      unlist_topics:
-        name: "إلغاء إدراج الموضوعات"
-      relist_topics:
-        name: "إعادة إدراج الموضوعات"
+        name: "الأرشيف"
+      move_messages_to_inbox:
+        name: "النقل إلى صندوق الوارد"
       remove_tags:
         name: "أزِل الوسوم"
       append_tags:
@@ -3307,7 +3320,7 @@ ar:
       replace_tags:
         name: "استبدال الوسوم"
       delete_topics:
-        name: "حذف الموضوعات"
+        name: "حذف"
       update_category:
         name: "تحديث الفئة"
         description: "اختر الفئة الجديدة للموضوعات المحددة"
@@ -5141,7 +5154,7 @@ ar:
       panels:
         forum:
           label: المنتدى
-      filter: "عامل التصفية"
+      filter: "المرشح..."
       no_results:
         title: "لا نتائج"
     welcome_topic_banner:
@@ -5376,6 +5389,9 @@ ar:
               label: الفئة
             include_subcategories:
               label: "تضمين الفئات الفرعية"
+      flags:
+        description: "الوصف"
+        enabled: "مفعَّلة؟"
       groups:
         new:
           title: "مجموعة جديدة"
@@ -6882,6 +6898,7 @@ ar:
         name: "اسم الحقل"
         type: "نوع الحقل"
         description: "وصف الحقل"
+        preferences: "التفضيلات"
         save: "حفظ"
         edit: "تعديل"
         delete: "حذف"
@@ -6892,6 +6909,9 @@ ar:
           title: "مطلوب عند التسجيل"
           enabled: "مطلوب"
           disabled: "غير مطلوب"
+        requirement:
+          optional:
+            title: "اختياري"
         editable:
           title: "يمكن تعديله بعد التسجيل"
           enabled: "يمكن تعديله"

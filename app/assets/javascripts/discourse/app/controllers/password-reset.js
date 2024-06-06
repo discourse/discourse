@@ -22,18 +22,33 @@ export default Controller.extend(PasswordValidation, {
     "model.security_key_required"
   ),
   otherMethodAllowed: readOnly("model.multiple_second_factor_methods"),
-  @discourseComputed("model.security_key_required")
-  secondFactorMethod(security_key_required) {
-    return security_key_required
-      ? SECOND_FACTOR_METHODS.SECURITY_KEY
-      : SECOND_FACTOR_METHODS.TOTP;
-  },
   passwordRequired: true,
   errorMessage: null,
   successMessage: null,
   requiresApproval: false,
   redirected: false,
   maskPassword: true,
+
+  @discourseComputed("securityKeyRequired", "selectedSecondFactorMethod")
+  displaySecurityKeyForm(securityKeyRequired, selectedSecondFactorMethod) {
+    return (
+      securityKeyRequired &&
+      selectedSecondFactorMethod === SECOND_FACTOR_METHODS.SECURITY_KEY
+    );
+  },
+
+  initSelectedSecondFactorMethod() {
+    if (this.model.security_key_required) {
+      this.set(
+        "selectedSecondFactorMethod",
+        SECOND_FACTOR_METHODS.SECURITY_KEY
+      );
+    } else if (this.model.second_factor_required) {
+      this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.TOTP);
+    } else if (this.model.backup_enabled) {
+      this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.BACKUP_CODE);
+    }
+  },
 
   @discourseComputed()
   continueButtonText() {
@@ -73,7 +88,7 @@ export default Controller.extend(PasswordValidation, {
           password: this.accountPassword,
           second_factor_token:
             this.securityKeyCredential || this.secondFactorToken,
-          second_factor_method: this.secondFactorMethod,
+          second_factor_method: this.selectedSecondFactorMethod,
           timezone: moment.tz.guess(),
         },
       })
@@ -88,7 +103,10 @@ export default Controller.extend(PasswordValidation, {
               DiscourseURL.redirectTo(result.redirect_to || "/");
             }
           } else {
-            if (result.errors && !result.errors.password) {
+            if (
+              result.errors.security_keys ||
+              result.errors.user_second_factors
+            ) {
               this.setProperties({
                 secondFactorRequired: this.secondFactorRequired,
                 securityKeyRequired: this.securityKeyRequired,
@@ -109,7 +127,7 @@ export default Controller.extend(PasswordValidation, {
               this.rejectedPasswords.pushObject(this.accountPassword);
               this.rejectedPasswordsMessages.set(
                 this.accountPassword,
-                result.errors.password[0]
+                (result.friendly_messages || []).join("\n")
               );
             }
 
@@ -128,6 +146,11 @@ export default Controller.extend(PasswordValidation, {
     },
 
     authenticateSecurityKey() {
+      this.set(
+        "selectedSecondFactorMethod",
+        SECOND_FACTOR_METHODS.SECURITY_KEY
+      );
+
       getWebauthnCredential(
         this.model.challenge,
         this.model.allowed_credential_ids,

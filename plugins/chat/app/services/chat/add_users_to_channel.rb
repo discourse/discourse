@@ -25,10 +25,11 @@ module Chat
     contract
     model :channel
     policy :can_add_users_to_channel
-    model :users, optional: true
+    model :target_users, optional: true
+    policy :satisfies_dms_max_users_limit,
+           class_name: Chat::DirectMessageChannel::MaxUsersExcessPolicy
 
     transaction do
-      step :validate_user_count
       step :upsert_memberships
       step :recompute_users_count
       step :notice_channel
@@ -56,7 +57,7 @@ module Chat
         channel.direct_message_channel? && channel.chatable.group
     end
 
-    def fetch_users(contract:, channel:)
+    def fetch_target_users(contract:, channel:)
       ::Chat::UsersFromUsernamesAndGroupsQuery.call(
         usernames: contract.usernames,
         groups: contract.groups,
@@ -68,17 +69,11 @@ module Chat
       ::Chat::Channel.includes(:chatable).find_by(id: contract.channel_id)
     end
 
-    def validate_user_count(channel:, users:)
-      if channel.user_count + users.length > SiteSetting.chat_max_direct_message_users
-        fail!("should have less than #{SiteSetting.chat_max_direct_message_users} elements")
-      end
-    end
-
-    def upsert_memberships(channel:, users:)
+    def upsert_memberships(channel:, target_users:)
       always_level = ::Chat::UserChatChannelMembership::NOTIFICATION_LEVELS[:always]
 
       memberships =
-        users.map do |user|
+        target_users.map do |user|
           {
             user_id: user.id,
             chat_channel_id: channel.id,
@@ -128,8 +123,8 @@ module Chat
       )
     end
 
-    def notice_channel(guardian:, channel:, users:)
-      added_users = users.select { |u| context.added_user_ids.include?(u.id) }
+    def notice_channel(guardian:, channel:, target_users:)
+      added_users = target_users.select { |u| context.added_user_ids.include?(u.id) }
 
       return if added_users.blank?
 

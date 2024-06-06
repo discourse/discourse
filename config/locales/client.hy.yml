@@ -265,10 +265,16 @@ hy:
         when_reminder_sent: "Ջնջել էջանշանը"
       search: "Որոնում"
       bookmark: "Էջանշել"
+      bulk:
+        select_all: "Ընտրել Բոլորը"
+        clear_all: "Ջնջել Բոլորը"
       reminders:
         today_with_time: "այսօր %{time}"
         tomorrow_with_time: "Վաղը %{time}"
         at_time: " %{date_time} -ում"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Ջնջել Էջանշանը"
     drafts:
       label: "Սևագրեր"
       resume: "Վերսկսել"
@@ -1441,6 +1447,8 @@ hy:
       components:
         bulk_select_topics_dropdown:
           title: "Զանգվածային Գործողությունները"
+        bulk_select_bookmarks_dropdown:
+          title: "Զանգվածային Գործողությունները"
     date_time_picker:
       from: Ում կողմից
       to: Ում
@@ -1799,20 +1807,18 @@ hy:
         bookmarks: "Էջանշված թեմաներ այլևս չկան:"
     topic_bulk_actions:
       close_topics:
-        name: "Փակել Թեմաները"
+        name: "Փակել"
         optional: (ընտրովի)
       archive_topics:
-        name: "Արխիվացնել Թեմաները"
-      unlist_topics:
-        name: "Թեմաները Ցանկից Հանել"
-      relist_topics:
-        name: "Վերացանկավորել Թեմաները"
+        name: "Արխիվ"
+      move_messages_to_inbox:
+        name: "Տեղափոխել Մուտքային արկղ"
       append_tags:
         name: "Ավելացնել Թեգեր"
       replace_tags:
         name: "Փոխարինել Թեգերը"
       delete_topics:
-        name: "Ջնջել Թեմաները"
+        name: "Ջնջել"
     topic:
       filter_to:
         one: "%{count} հրապարակում թեմայում"
@@ -2869,7 +2875,6 @@ hy:
               content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
-      filter: "Ֆիլտր"
     form_templates:
       upload_field:
         upload: "Վերբեռնել"
@@ -2993,6 +2998,9 @@ hy:
               label: Կատեգորիա
             include_subcategories:
               label: "Ներառել Ենթակատեգորիաներ"
+      flags:
+        description: "Նկարագրությունը"
+        enabled: "Միացվա՞ծ է:"
       groups:
         new:
           title: "Նոր Խումբ"
@@ -4032,6 +4040,7 @@ hy:
         name: "Դաշտի Անվանումը"
         type: "Դաշտի Տիպը"
         description: "Դաշտի Նկարագրությունը"
+        preferences: "Նախընտրություններ"
         save: "Պահպանել"
         edit: "Խմբագրել"
         delete: "Ջնջել"
@@ -4041,6 +4050,9 @@ hy:
         required:
           enabled: "պարտադիր է"
           disabled: "պարտադիր չէ"
+        requirement:
+          optional:
+            title: "Ընտրովի"
         editable:
           enabled: "խմբագրելի է"
           disabled: "խմբագրելի չէ"

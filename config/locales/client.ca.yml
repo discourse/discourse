@@ -291,11 +291,17 @@ ca:
       search_placeholder: "Cerqueu preferits per nom, títol del tema o contingut de la publicació"
       search: "Cerca"
       bookmark: "Preferit"
+      bulk:
+        select_all: "Selecciona-ho tot"
+        clear_all: "Neteja-ho tot"
       reminders:
         today_with_time: "avui a les %{time}"
         tomorrow_with_time: "demà a les %{time}"
         at_time: "%{date_time}"
         existing_reminder: "Teniu un recordatori definit per a aquest preferit que se us enviarà: %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Suprimeix el marcador"
     copy_codeblock:
       copied: "copiat!"
     drafts:
@@ -1534,6 +1540,8 @@ ca:
       components:
         bulk_select_topics_dropdown:
           title: "Accions massives"
+        bulk_select_bookmarks_dropdown:
+          title: "Accions massives"
     date_time_picker:
       from: De
       to: A
@@ -1887,20 +1895,18 @@ ca:
         bookmarks: "No hi ha més temes marcats com a preferits."
     topic_bulk_actions:
       close_topics:
-        name: "Tanca temes"
+        name: "Tanca"
         optional: (opcional)
       archive_topics:
-        name: "Arxiva temes"
-      unlist_topics:
-        name: "Fes temes invisibles"
-      relist_topics:
-        name: "Torna a llistar els temes"
+        name: "Arxiva"
+      move_messages_to_inbox:
+        name: "Mou a la safata d'entrada"
       append_tags:
         name: "Annexa etiquetes"
       replace_tags:
         name: "Reemplaça etiquetes"
       delete_topics:
-        name: "Suprimeix temes"
+        name: "Suprimeix"
     topic:
       filter_to:
         one: "%{count} publicació en el tema"
@@ -2906,7 +2912,7 @@ ca:
               content: "Les meves publicacions"
             review:
               content: "Revisa"
-      filter: "Filtre"
+      filter: "Filtre..."
     until: "Fins a:"
     form_templates:
       upload_field:
@@ -3028,6 +3034,9 @@ ca:
               label: Grup
             category:
               label: Categoria
+      flags:
+        description: "Descripció"
+        enabled: "Activat?"
       groups:
         new:
           title: "Grup nou"
@@ -4032,6 +4041,7 @@ ca:
         name: "Nom del camp"
         type: "Tipus de camp"
         description: "Descripció del camp"
+        preferences: "Preferències"
         save: "Desa"
         edit: "Edita"
         delete: "Suprimeix"
@@ -4042,6 +4052,9 @@ ca:
           title: "Necessari en identificar-se"
           enabled: "necessari"
           disabled: "no necessari"
+        requirement:
+          optional:
+            title: "Opcional"
         editable:
           enabled: "editable"
           disabled: "no editable"

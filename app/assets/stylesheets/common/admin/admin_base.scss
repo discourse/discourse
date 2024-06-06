@@ -1065,6 +1065,7 @@ a.inline-editable-field {
 @import "common/admin/api";
 @import "common/admin/backups";
 @import "common/admin/plugins";
+@import "common/admin/admin_config_area";
 @import "common/admin/admin_reports";
 @import "common/admin/admin_report";
 @import "common/admin/admin_report_counters";
@@ -1078,6 +1079,3 @@ a.inline-editable-field {
 @import "common/admin/mini_profiler";
 @import "common/admin/schema_theme_setting_editor";
 @import "common/admin/customize_themes_show_schema";
-
-// EXPERIMENTAL: Revamped admin styles, probably can be split up later down the line.
-@import "common/admin/admin_revamp";

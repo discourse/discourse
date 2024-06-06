@@ -7,10 +7,10 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie from "discourse/lib/cookie";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend({
-  router: service(),
-  currentUser: service(),
-  modal: service(),
+export default class AssociateAccount extends DiscourseRoute {
+  @service router;
+  @service currentUser;
+  @service modal;
 
   beforeModel(transition) {
     if (!this.currentUser) {
@@ -19,7 +19,7 @@ export default DiscourseRoute.extend({
     }
     const params = this.paramsFor("associate-account");
     this.redirectToAccount(params);
-  },
+  }
 
   @action
   async redirectToAccount(params) {
@@ -27,7 +27,7 @@ export default DiscourseRoute.extend({
       .replaceWith(`preferences.account`, this.currentUser)
       .followRedirects();
     next(() => this.showAssociateAccount(params));
-  },
+  }
 
   @action
   async showAssociateAccount(params) {
@@ -39,5 +39,5 @@ export default DiscourseRoute.extend({
     } catch (e) {
       popupAjaxError(e);
     }
-  },
-});
+  }
+}

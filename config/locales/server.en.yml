@@ -723,6 +723,7 @@ en:
         bio_raw: "About Me"
       user:
         ip_address: ""
+        password: "Password"
     errors:
       <<: *errors
       models:
@@ -748,6 +749,7 @@ en:
               same_as_username: "is the same as your username. Please use a more secure password."
               same_as_email: "is the same as your email. Please use a more secure password."
               same_as_current: "is the same as your current password."
+              same_as_previous: "is the same as your previous password."
               same_as_name: "is the same as your name."
               unique_characters: "has too many repeated characters. Please use a more secure password."
             username:
@@ -1249,6 +1251,7 @@ en:
   flags:
     errors:
       already_handled: "Flag was already handled"
+      wrong_move: "Flag cannot be moved"
   reports:
     default:
       labels:
@@ -2642,7 +2645,7 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
-    navigation_menu: "Determine which navigation menu to use."
+    navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'EXPERIMENTAL: Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
@@ -2759,6 +2762,9 @@ en:
         - "deactivated"
         - "inactive"
         - "unactivated"
+      navigation_menu:
+        - "sidebar"
+        - "header dropdown"
 
     placeholder:
       discourse_connect_provider_secrets:

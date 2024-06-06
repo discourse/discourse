@@ -283,11 +283,17 @@ zh_TW:
       search_placeholder: "依名稱、主題標題或貼文內容搜尋書籤"
       search: "搜尋"
       bookmark: "書籤"
+      bulk:
+        select_all: "選擇全部"
+        clear_all: "清除全部"
       reminders:
         today_with_time: "今天 %{time}"
         tomorrow_with_time: "明天 %{time}"
         at_time: "在 %{date_time}"
         existing_reminder: "您為此書籤設置了一個提醒，該提醒將在 %{at_date_time} 被發送"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "刪除書籤"
     copy_codeblock:
       copied: "已複製!"
       copy: "將程式碼複製到剪貼簿"
@@ -1557,6 +1563,8 @@ zh_TW:
       components:
         bulk_select_topics_dropdown:
           title: "批次操作"
+        bulk_select_bookmarks_dropdown:
+          title: "批次操作"
     date_time_picker:
       from: 自
       to: 至
@@ -1906,20 +1914,18 @@ zh_TW:
         bookmarks: "書籤裡沒有更多的話題了。"
     topic_bulk_actions:
       close_topics:
-        name: "關閉話題"
+        name: "關閉"
         optional: (選擇性)
       archive_topics:
-        name: "已封存的話題"
-      unlist_topics:
-        name: "未在列表中的話題"
-      relist_topics:
-        name: "討論話題"
+        name: "封存"
+      move_messages_to_inbox:
+        name: "移動到收件匣"
       append_tags:
         name: "向後追加標記"
       replace_tags:
         name: "取代標記"
       delete_topics:
-        name: "刪除話題"
+        name: "刪除"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"
@@ -2956,7 +2962,6 @@ zh_TW:
               content: "審核"
               pending_count:
                 other: "剩餘 %{count}"
-      filter: "過濾"
       no_results:
         title: "沒有結果"
     welcome_topic_banner:
@@ -3074,6 +3079,9 @@ zh_TW:
               label: 群組
             category:
               label: 分類
+      flags:
+        description: "簡述"
+        enabled: "啟用?"
       groups:
         new:
           title: "新群組"
@@ -4056,6 +4064,7 @@ zh_TW:
         name: "欄位名稱"
         type: "欄位類別"
         description: "欄位敘述"
+        preferences: "偏好設定"
         save: "儲存"
         edit: "編輯"
         delete: "刪除"
@@ -4066,6 +4075,9 @@ zh_TW:
           title: "在註冊時必填"
           enabled: "必填"
           disabled: "非必填"
+        requirement:
+          optional:
+            title: "選擇性"
         editable:
           title: "註冊後可以修改"
           enabled: "可編輯"

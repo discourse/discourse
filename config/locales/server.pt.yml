@@ -943,17 +943,12 @@ pt:
         user: Utilizador
         qtt_like: Gostos Recebidos
   dashboard:
-    rails_env_warning: "O seu servidor está a executar em modo %{env}."
-    host_names_warning: "O ficheiro config/database.yml está a utilizar o nome do servidor local por defeito. Modifique para usar o nome do servidor do seu sítio."
-    sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que pelo menos um processo sidekiq está em execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
-    queue_size_warning: "O número de trabalhos na fila é %{queue_size}, o que é alto. Isto pode indicar um problema com o(s) processo(s) Sidekiq, ou pode necessitar de adicionar mais trabalhadores Sidekiq."
-    memory_warning: "O seu servidor está a executar com menos de 1 GB de memória total. Pelo menos 1 GB é a quantidade de memória recomendada."
-    subfolder_ends_in_slash: "A configuração da sua sub-página está incorreta; o DISCOURSE_RELATIVE_URL_ROOT termina com um traço."
-    email_polling_errored_recently:
-      one: "A consulta automática de emails gerou um erro nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
-      other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
-    poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
-    poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a>."
+    problem:
+      rails_env: "O seu servidor está a executar em modo %{env}."
+      host_names: "O ficheiro config/database.yml está a utilizar o nome do servidor local por defeito. Modifique para usar o nome do servidor do seu sítio."
+      queue_size: "O número de trabalhos na fila é %{queue_size}, o que é alto. Isto pode indicar um problema com o(s) processo(s) Sidekiq, ou pode necessitar de adicionar mais trabalhadores Sidekiq."
+      ram: "O seu servidor está a executar com menos de 1 GB de memória total. Pelo menos 1 GB é a quantidade de memória recomendada."
+      subfolder_ends_in_slash: "A configuração da sua sub-página está incorreta; o DISCOURSE_RELATIVE_URL_ROOT termina com um traço."
   site_settings:
     disabled: "desativado"
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
@@ -1276,6 +1271,9 @@ pt:
       purge_unactivated_users_grace_period_days:
       - ""
       - "inativo"
+      - ""
+      navigation_menu:
+      - "barra Lateral"
       - ""
   search:
     within_post: "#%{post_number} por %{username}"
@@ -1755,7 +1753,6 @@ pt:
 
         %{message}
     digest:
-      why: "Um breve sumário de %{site_link} desde a sua última visita em %{last_seen_at}"
       since_last_visit: "Desde a sua última visita"
       new_topics: "Novos tópicos"
       unread_notifications: "Notificações Não Lidas"
@@ -1765,7 +1762,6 @@ pt:
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
       click_here: "clique aqui"
-      preheader: "Um breve sumário desde a sua última visita em %{last_seen_at}"
     forgot_password:
       title: "Esqueci a palavra-passe"
     set_password:

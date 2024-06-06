@@ -24,7 +24,7 @@ export default class Filter extends Component {
 
   @action
   setFilter(event) {
-    this.sidebarState.filter = event.target.value.toLowerCase();
+    this.sidebarState.filter = event.target.value;
   }
 
   @action

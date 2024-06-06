@@ -310,11 +310,19 @@ ja:
       search_placeholder: "名前、トピックタイトル、または投稿コンテンツでブックマークを検索する"
       search: "検索"
       bookmark: "ブックマーク"
+      bulk:
+        select_all: "すべて選択"
+        clear_all: "すべてクリア"
+        selected_count:
+          other: "%{count} 個選択済み"
       reminders:
         today_with_time: "今日 %{time}"
         tomorrow_with_time: "明日 %{time}"
         at_time: "%{date_time}"
         existing_reminder: "このブックマークに %{at_date_time} に送信されるリマインダーが設定されています"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "ブックマークを削除"
     copy_codeblock:
       copied: "コピーしました！"
       copy: "コードをクリップボードにコピー"
@@ -2058,6 +2066,8 @@ ja:
           title: "カテゴリの管理"
         bulk_select_topics_dropdown:
           title: "一括操作"
+        bulk_select_bookmarks_dropdown:
+          title: "一括操作"
     date_time_picker:
       from: 開始
       to: 終了
@@ -2618,20 +2628,18 @@ ja:
         filter: "トピックは以上です。"
     topic_bulk_actions:
       close_topics:
-        name: "トピックをクローズ"
+        name: "クローズ"
         optional: (オプション)
       archive_topics:
-        name: "トピックをアーカイブ"
-      unlist_topics:
-        name: "トピックを非表示"
-      relist_topics:
-        name: "トピックを表示"
+        name: "アーカイブ"
+      move_messages_to_inbox:
+        name: "受信トレイに移動"
       append_tags:
         name: "タグを追加"
       replace_tags:
         name: "タグを置換"
       delete_topics:
-        name: "トピックを削除"
+        name: "削除"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -4088,7 +4096,7 @@ ja:
       panels:
         forum:
           label: フォーラム
-      filter: "フィルタ"
+      filter: "フィルタ..."
       no_results:
         title: "結果がありません"
     welcome_topic_banner:
@@ -4298,6 +4306,9 @@ ja:
               label: カテゴリ
             include_subcategories:
               label: "サブカテゴリを含める"
+      flags:
+        description: "説明"
+        enabled: "有効化？"
       groups:
         new:
           title: "新しいグループ"
@@ -5734,6 +5745,7 @@ ja:
         name: "フィールド名"
         type: "フィールドタイプ"
         description: "フィールド説明"
+        preferences: "設定"
         save: "保存"
         edit: "編集"
         delete: "削除"
@@ -5744,6 +5756,9 @@ ja:
           title: "登録時に必須"
           enabled: "必須"
           disabled: "オプション"
+        requirement:
+          optional:
+            title: "オプション"
         editable:
           title: "登録後に編集可能"
           enabled: "編集可能"

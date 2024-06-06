@@ -45,9 +45,9 @@ describe "User preferences | Security", type: :system do
       find("#security-key .btn-primary").click
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
-
+    ensure
       # clear authenticator (otherwise it will interfere with other tests)
-      authenticator.remove!
+      authenticator&.remove!
     end
   end
 
@@ -106,9 +106,9 @@ describe "User preferences | Security", type: :system do
 
       # ensures that we are redirected to the destination_url cookie
       expect(page.driver.current_url).to include("/new")
-
+    ensure
       # clear authenticator (otherwise it will interfere with other tests)
-      authenticator.remove!
+      authenticator&.remove!
     end
   end
 

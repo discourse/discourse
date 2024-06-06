@@ -210,6 +210,8 @@ class Tag < ActiveRecord::Base
     "#{Discourse.base_path}/tag/#{UrlHelper.encode_component(self.name)}"
   end
 
+  alias_method :relative_url, :url
+
   def full_url
     "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
   end

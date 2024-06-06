@@ -348,11 +348,20 @@ te:
       search_placeholder: "పేరు, విషయం శీర్షిక లేదా పోస్ట్ కంటెంట్ ద్వారా బుక్‌మార్క్‌లను శోధించండి"
       search: "శోధించండి"
       bookmark: "బుక్‌మార్క్"
+      bulk:
+        select_all: "అన్ని ఎంచుకోండి"
+        clear_all: "అన్నీ క్లియర్ చేయండి"
+        selected_count:
+          one: "%{count} ఎంచుకోబడింది"
+          other: "%{count} ఎంచుకోబడింది"
       reminders:
         today_with_time: "ఈరోజు %{time} కి"
         tomorrow_with_time: "రేపు %{time} కి"
         at_time: "%{date_time} వద్ద"
         existing_reminder: "మీరు ఈ బుక్‌మార్క్ కోసం రిమైండర్ సెట్ చేసారు, అది %{at_date_time} పంపబడుతుంది"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "బుక్‌మార్క్‌ను తొలగించండి"
     copy_codeblock:
       copied: "కాపీ చేయబడింది!"
       copy: "కోడ్‌ను క్లిప్‌బోర్డ్‌కి కాపీ చేయండి"
@@ -2195,6 +2204,8 @@ te:
           title: "వర్గాలను నిర్వహించండి"
         bulk_select_topics_dropdown:
           title: "బహుళ చర్యలు"
+        bulk_select_bookmarks_dropdown:
+          title: "బహుళ చర్యలు"
     date_time_picker:
       from: నుండి
       to: కు
@@ -2797,14 +2808,12 @@ te:
         filter: "ఇక విషయాలు లేవు."
     topic_bulk_actions:
       close_topics:
-        name: "విషయాలు మూయు"
+        name: "మూసివేయండి"
         optional: (ఐచ్ఛికం)
       archive_topics:
-        name: "విషయాలు కట్టకట్టు"
-      unlist_topics:
-        name: "విషయాలను జాబితా నుండి తీసివేయండి"
-      relist_topics:
-        name: "విషయాలను మళ్లీ జాబితా చేయండి"
+        name: "ఆర్కైవ్ చెయ్యండి"
+      move_messages_to_inbox:
+        name: "ఇన్‌బాక్స్‌కి తరలించండి"
       remove_tags:
         name: "ట్యాగ్‌లను తీసివేయండి"
       append_tags:
@@ -2812,7 +2821,7 @@ te:
       replace_tags:
         name: "ట్యాగ్‌లను భర్తీ చేయండి"
       delete_topics:
-        name: "విషయాలను తొలగించండి"
+        name: "తొలగించండి"
       update_category:
         name: "వర్గాన్ని నవీకరించండి"
         description: "ఎంచుకున్న విషయాలకి కొత్త వర్గాన్ని ఎంచుకోండి"
@@ -4367,7 +4376,6 @@ te:
       panels:
         forum:
           label: ఫోరం
-      filter: "ఫిల్టర్ చేయండి"
       clear_filter: "ఫిల్టర్‌ని క్లియర్ చేయండి"
       no_results:
         title: "ఫలితాలు లేవు"
@@ -4583,6 +4591,9 @@ te:
               label: వర్గం
             include_subcategories:
               label: "ఉపవర్గాలను చేర్చండి"
+      flags:
+        description: "వివరణ"
+        enabled: "ప్రారంభించబడిందా?"
       groups:
         new:
           title: "కొత్త సమూహం"
@@ -6048,6 +6059,7 @@ te:
         name: "క్షేత్రం పేరు"
         type: "క్షేత్రం టైపు"
         description: "క్షేత్రం వివరణ"
+        preferences: "ప్రాధాన్యతలు"
         save: "సేవ్ చేయండి"
         edit: "సవరించండి"
         delete: "తొలగించండి"
@@ -6058,6 +6070,9 @@ te:
           title: "సైన్అప్ వద్ద అవసరం"
           enabled: "అవసరం"
           disabled: "అవసరంలేదు"
+        requirement:
+          optional:
+            title: "ఐచ్ఛికం"
         editable:
           title: "సైన్అప్ తర్వాత సవరించదగినది"
           enabled: "సవరించదగిన"

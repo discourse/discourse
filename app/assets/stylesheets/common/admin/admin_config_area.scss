@@ -1,0 +1,12 @@
+.admin-config-area {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  column-gap: 1em;
+
+  &__primary-content {
+    background: red;
+  }
+  &__help-inset {
+    background: green;
+  }
+}

@@ -343,11 +343,17 @@ sl:
       search_placeholder: "Iščite zaznamke po imenu, naslovu teme ali vsebini objave"
       search: "Išči"
       bookmark: "Zaznamek"
+      bulk:
+        select_all: "Izberi vse"
+        clear_all: "Počisti vse"
       reminders:
         today_with_time: "danes ob %{time}"
         tomorrow_with_time: "jutri ob %{time}"
         at_time: "ob %{date_time}"
         existing_reminder: "Za ta zaznamek imate nastavljen opomnik, ki bo poslan %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Odstrani zaznamek"
     copy_codeblock:
       copied: "kopirano!"
       copy: "kopiraj kodo v odložišče"
@@ -1895,6 +1901,8 @@ sl:
       components:
         bulk_select_topics_dropdown:
           title: "Množična dejanja"
+        bulk_select_bookmarks_dropdown:
+          title: "Množična dejanja"
     date_time_picker:
       from: Od
       to: Do
@@ -2314,14 +2322,12 @@ sl:
         bookmarks: "Ni več tem z zaznamki."
     topic_bulk_actions:
       close_topics:
-        name: "Zapri teme"
+        name: "Zapri"
         optional: (neobvezno)
       archive_topics:
-        name: "Arhiviraj teme"
-      unlist_topics:
-        name: "Izloči temo iz seznamov"
-      relist_topics:
-        name: "Postavi temo nazaj na seznam"
+        name: "Arhiviraj"
+      move_messages_to_inbox:
+        name: "Prestavi v Prejeto"
       remove_tags:
         name: "Odstrani oznake"
       append_tags:
@@ -2329,7 +2335,7 @@ sl:
       replace_tags:
         name: "Zamenjaj oznake"
       delete_topics:
-        name: "Izbriši teme"
+        name: "Izbriši"
     topic:
       filter_to:
         one: "%{count} prispevek v temi"
@@ -3595,7 +3601,7 @@ sl:
               content: "Moji prispevki"
             review:
               content: "Pregled"
-      filter: "Filter"
+      filter: "Filter..."
     until: "Do:"
     form_templates:
       upload_field:
@@ -3751,6 +3757,9 @@ sl:
               label: Skupina
             category:
               label: Kategorija
+      flags:
+        description: "Opis"
+        enabled: "Vključeno?"
       groups:
         new:
           title: "Nova skupina"
@@ -4466,6 +4475,7 @@ sl:
         name: "Ime polja"
         type: "Vrsta polja"
         description: "Opis polja"
+        preferences: "Nastavitve"
         save: "Shrani"
         edit: "Uredi"
         delete: "Izbriši"
@@ -4476,6 +4486,9 @@ sl:
           title: "Zahtevano ob prijavi"
           enabled: "zahtevano"
           disabled: "ni zahtevano"
+        requirement:
+          optional:
+            title: "Neobvezno"
         editable:
           title: "Uredljivo po prijavi"
           enabled: "uredljivo"

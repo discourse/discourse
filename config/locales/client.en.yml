@@ -1497,6 +1497,8 @@ en:
         set_password: "Set Password"
         choose_new: "Choose a new password"
         choose: "Choose a password"
+        verify_identity: "To continue, please verify your identity."
+        title: "Password Reset"
 
       second_factor_backup:
         title: "Two-Factor Backup Codes"
@@ -1933,7 +1935,9 @@ en:
         fine_print: "We are asking you to confirm your identity because this is a potentially sensitive action. Once authenticated, you will only be asked to re-authenticate again after a few hours of inactivity."
       password:
         title: "Password"
-        too_short: "Your password is too short."
+        too_short:
+          one: "Your password is too short (minimum is %{count} character)."
+          other: "Your password is too short (minimum is %{count} characters)."
         common: "That password is too common."
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
@@ -2291,6 +2295,7 @@ en:
       error: "Unknown error"
       cookies_error: "Your browser seems to have cookies disabled. You might not be able to log in without enabling them first."
       rate_limit: "Please wait before trying to log in again."
+      password_expired: "Password expired. Please <a href='%{reset_url}'>reset your password</a>."
       blank_username: "Please enter your email or username."
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: "Reset Password"
@@ -3018,6 +3023,7 @@ en:
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
         move_messages_to_inbox: "Move to Inbox"
+        archive_messages: "Move to Archive"
         notification_level: "Notifications…"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
@@ -3078,15 +3084,19 @@ en:
 
     topic_bulk_actions:
       close_topics:
-        name: "Close Topics"
+        name: "Close"
         note: "Note"
         optional: (optional)
       archive_topics:
-        name: "Archive Topics"
+        name: "Archive"
+      archive_messages:
+        name: "Move to Archive"
+      move_messages_to_inbox:
+        name: "Move to Inbox"
       unlist_topics:
-        name: "Unlist Topics"
+        name: "Unlist"
       relist_topics:
-        name: "Relist Topics"
+        name: "Relist"
       remove_tags:
         name: "Remove Tags"
       append_tags:
@@ -3094,7 +3104,7 @@ en:
       replace_tags:
         name: "Replace Tags"
       delete_topics:
-        name: "Delete Topics"
+        name: "Delete"
       update_category:
         name: "Update Category"
         description: "Choose the new category for the selected topics"
@@ -5027,6 +5037,10 @@ en:
         title: "Moderation Flags"
         description: "Description"
         enabled: "Enabled?"
+        more_options:
+          title: "More options"
+          move_up: "Move up"
+          move_down: "Move down"
 
       groups:
         new:
@@ -6087,6 +6101,7 @@ en:
             update_watched_word_group: "update watched word group"
             delete_watched_word_group: "delete watched word group"
             toggle_flag: "toggle flag"
+            move_flag: "move flag"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

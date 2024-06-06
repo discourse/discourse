@@ -518,6 +518,35 @@ RSpec.configure do |config|
         sleep 0.01 while !mutex.synchronize { is_waiting }
       end
     end
+
+    # This is a monkey patch for the `Selenium::WebDriver::Platform.localhost` method in `selenium-webdriver`. For some
+    # unknown reasons on Github Actions, we are seeing system tests failing intermittently with the error
+    # `Socket::ResolutionError: getaddrinfo: Temporary failure in name resolution` when `selenium-webdriver` tries to
+    # resolve `localhost` in a `Capybara#using_session` block.
+    #
+    # Too much time has been spent trying to debug this issue and the root cause is still unknown so we are just dropping
+    # this workaround for now.
+    module Selenium
+      module WebDriver
+        module Platform
+          def self.localhost_with_retry
+            attempts = 0
+
+            begin
+              localhost_without_retry
+            rescue Socket::ResolutionError
+              attempts += 1
+              attempts <= 3 ? retry : raise
+            end
+          end
+        end
+      end
+    end
+
+    Selenium::WebDriver::Platform.singleton_class.class_eval do
+      alias_method :localhost_without_retry, :localhost
+      alias_method :localhost, :localhost_with_retry
+    end
   end
 
   if ENV["DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE"]

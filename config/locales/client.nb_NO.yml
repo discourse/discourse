@@ -280,11 +280,17 @@ nb_NO:
       search_placeholder: "Søk i bokmerker etter navn, emnetittel eller innleggsinnhold"
       search: "Søk"
       bookmark: "Bokmerke"
+      bulk:
+        select_all: "Velg alle"
+        clear_all: "Fjern alle"
       reminders:
         today_with_time: "I dag klokken %{time}"
         tomorrow_with_time: "i morgen kl. %{time}"
         at_time: "Den %{date_time}"
         existing_reminder: "Du har en påminnelse satt for dette bokmerket som vil bli sendt %{at_date_time}"
+    bookmark_bulk_actions:
+      delete_bookmarks:
+        name: "Slett bokmerke"
     copy_codeblock:
       copied: "kopiert!"
     drafts:
@@ -1733,6 +1739,8 @@ nb_NO:
           title: "Administrere kategorier"
         bulk_select_topics_dropdown:
           title: "Massehandlinger"
+        bulk_select_bookmarks_dropdown:
+          title: "Massehandlinger"
     date_time_picker:
       from: Fra
       to: Til
@@ -2130,20 +2138,18 @@ nb_NO:
         bookmarks: "Det finnes ingen flere bokmerkede emner."
     topic_bulk_actions:
       close_topics:
-        name: "Lukk emner"
+        name: "Lukk"
         optional: (valgfritt)
       archive_topics:
-        name: "Arkiver emner"
-      unlist_topics:
-        name: "Fjern emner fra lister"
-      relist_topics:
-        name: "Før opp igjen emner i lister"
+        name: "Arkiver"
+      move_messages_to_inbox:
+        name: "Flytt til innboks"
       append_tags:
         name: "Legg til stikkord"
       replace_tags:
         name: "Erstatt stikkord"
       delete_topics:
-        name: "Slett emner"
+        name: "Slett"
     topic:
       filter_to:
         one: "%{count} innlegg i emnet"
@@ -3370,7 +3376,7 @@ nb_NO:
               content: "Mine innlegg"
             review:
               content: "Gjennomgang"
-      filter: "Filtrer"
+      filter: "Filtrer..."
     until: "Inntil:"
     form_templates:
       upload_field:
@@ -3497,6 +3503,9 @@ nb_NO:
               label: Kategori
             include_subcategories:
               label: "Inkluder underkategorier"
+      flags:
+        description: "Beskrivelse"
+        enabled: "Aktivert?"
       groups:
         new:
           title: "Ny gruppe"
@@ -4467,6 +4476,7 @@ nb_NO:
         name: "Feltnavn"
         type: "Felttype"
         description: "Beskrivelse av felt"
+        preferences: "Innstillinger"
         save: "Lagre"
         edit: "Endre"
         delete: "Slett"
@@ -4477,6 +4487,9 @@ nb_NO:
           title: "Nødvendig ved registrering"
           enabled: "nødvendig"
           disabled: "ikke obligatorisk"
+        requirement:
+          optional:
+            title: "Valgfritt"
         editable:
           title: "Kan det endres etter registrering"
           enabled: "kan endres"

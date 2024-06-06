@@ -1,14 +1,25 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 
 export default class AuthButtons extends Component {
   @service header;
 
+  get showSignupButton() {
+    return (
+      this.args.canSignUp &&
+      !this.header.headerButtonsHidden.includes("signup") &&
+      !this.header.topic
+    );
+  }
+
+  get showLoginButton() {
+    return !this.header.headerButtonsHidden.includes("login");
+  }
+
   <template>
     <span class="auth-buttons">
-      {{#if (and @canSignUp (not this.header.topic))}}
+      {{#if this.showSignupButton}}
         <DButton
           class="btn-primary btn-small sign-up-button"
           @action={{@showCreateAccount}}
@@ -16,12 +27,14 @@ export default class AuthButtons extends Component {
         />
       {{/if}}
 
-      <DButton
-        class="btn-primary btn-small login-button"
-        @action={{@showLogin}}
-        @label="log_in"
-        @icon="user"
-      />
+      {{#if this.showLoginButton}}
+        <DButton
+          class="btn-primary btn-small login-button"
+          @action={{@showLogin}}
+          @label="log_in"
+          @icon="user"
+        />
+      {{/if}}
     </span>
   </template>
 }

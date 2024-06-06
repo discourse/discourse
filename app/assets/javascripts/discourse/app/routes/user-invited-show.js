@@ -4,13 +4,13 @@ import Invite from "discourse/models/invite";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
-export default DiscourseRoute.extend({
-  router: service(),
+export default class UserInvitedShow extends DiscourseRoute {
+  @service router;
 
   model(params) {
     this.inviteFilter = params.filter;
     return Invite.findInvitedBy(this.modelFor("user"), params.filter);
-  },
+  }
 
   afterModel(model) {
     if (!model.can_see_invite_details) {
@@ -19,7 +19,7 @@ export default DiscourseRoute.extend({
     this.controllerFor("user.invited").setProperties({
       invitesCount: model.counts,
     });
-  },
+  }
 
   setupController(controller, model) {
     controller.setProperties({
@@ -29,14 +29,14 @@ export default DiscourseRoute.extend({
       filter: this.inviteFilter,
       searchTerm: "",
     });
-  },
+  }
 
   titleToken() {
     return I18n.t("user.invited." + this.inviteFilter + "_tab");
-  },
+  }
 
   @action
   triggerRefresh() {
     this.refresh();
-  },
-});
+  }
+}

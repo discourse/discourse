@@ -21,6 +21,8 @@
                 @showSecurityKey={{this.model.security_key_required}}
                 @showSecondFactor={{false}}
                 @secondFactorMethod={{this.secondFactorMethod}}
+                @backupEnabled={{this.model.backup_codes_enabled}}
+                @totpEnabled={{this.model.totp_enabled}}
                 @otherMethodAllowed={{this.secondFactorRequired}}
                 @action={{action "authenticateSecurityKey"}}
               />
@@ -29,6 +31,7 @@
                 @secondFactorMethod={{this.secondFactorMethod}}
                 @secondFactorToken={{this.secondFactorToken}}
                 @backupEnabled={{this.model.backup_codes_enabled}}
+                @totpEnabled={{this.model.totp_enabled}}
                 @isLogin={{true}}
               >
                 <SecondFactorInput

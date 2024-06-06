@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
@@ -75,8 +76,14 @@ module("Unit | Component | create-account", function (hooks) {
       );
     };
 
+    const siteSettings = getOwner(this).lookup("service:site-settings");
     testInvalidPassword("", null);
-    testInvalidPassword("x", I18n.t("user.password.too_short"));
+    testInvalidPassword(
+      "x",
+      I18n.t("user.password.too_short", {
+        count: siteSettings.min_password_length,
+      })
+    );
     testInvalidPassword(
       "porkchops123",
       I18n.t("user.password.same_as_username")
