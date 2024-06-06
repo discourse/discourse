@@ -157,24 +157,64 @@ function transformerNameExists(name) {
   );
 }
 
+///////// Testing helpers
+
 /**
- * Resets the transformer names added.
+ * Stores the initial state of `registryOpened` to allow the correct reset after a test that needs to manually
+ * override the registry opened state finishes running.
  *
- * Use only for testing purposes.
+ * @type {boolean | null}
  */
-export function resetTransformerNames() {
-  if (isTesting()) {
-    validPluginTransformerNames.clear();
+let testRegistryOpenedState = null; // initially set to null bto allow testing if it was initialized
+
+/**
+ * Opens the transformers registry for registration
+ *
+ * USE ONLY FOR TESTING PURPOSES.
+ */
+export function acceptNewTransformerNames() {
+  if (!isTesting()) {
+    throw new Error("Use `acceptNewTransformerNames` only in tests.");
   }
+
+  if (testRegistryOpenedState === null) {
+    testRegistryOpenedState = registryOpened;
+  }
+
+  registryOpened = false;
 }
 
 /**
- * Resets the transformer names added.
+ * Closes the transformers registry for registration
  *
- * Use only for testing purposes.
+ * USE ONLY FOR TESTING PURPOSES.
+ */
+export function acceptTransformerRegistrations() {
+  if (!isTesting()) {
+    throw new Error("Use `acceptTransformerRegistrations` only in tests.");
+  }
+
+  if (testRegistryOpenedState === null) {
+    testRegistryOpenedState = registryOpened;
+  }
+
+  registryOpened = true;
+}
+
+/**
+ * Resets the transformers initial state
+ *
+ * USE ONLY FOR TESTING PURPOSES.
  */
 export function resetTransformers() {
-  if (isTesting()) {
-    transformersRegistry.clear();
+  if (!isTesting()) {
+    throw new Error("Use `resetTransformers` only in tests.");
   }
+
+  if (testRegistryOpenedState !== null) {
+    registryOpened = testRegistryOpenedState;
+  }
+
+  validPluginTransformerNames.clear();
+  transformersRegistry.clear();
 }
