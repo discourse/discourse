@@ -6,9 +6,51 @@ import AdminConfigAreasAboutGeneralSettings from "admin/components/admin-config-
 import AdminConfigAreasAboutYourOrganization from "admin/components/admin-config-area-cards/about/your-organization";
 
 export default class AdminConfigAreasAbout extends Component {
-  saveCallback() {
-    // eslint-disable-next-line no-console
-    console.log("save callback");
+  get generalSettings() {
+    const hash = {};
+
+    hash.title = this.#lookupSettingFromData("title");
+    hash.siteDescription = this.#lookupSettingFromData("site_description");
+    hash.extendedSiteDescription = this.#lookupSettingFromData(
+      "extended_site_description"
+    );
+    hash.aboutBannerImage = this.#lookupSettingFromData("about_banner_image");
+
+    return hash;
+  }
+
+  get contactInformation() {
+    const hash = {};
+
+    hash.communityOwner = this.#lookupSettingFromData("community_owner");
+    hash.contactEmail = this.#lookupSettingFromData("contact_email");
+    hash.contactURL = this.#lookupSettingFromData("contact_url");
+    hash.contactUsername = this.#lookupSettingFromData("site_contact_username");
+    hash.contactGroupName = this.#lookupSettingFromData(
+      "site_contact_group_name"
+    );
+
+    return hash;
+  }
+
+  get yourOrganization() {
+    const hash = {};
+
+    hash.companyName = this.#lookupSettingFromData("company_name");
+    hash.governingLaw = this.#lookupSettingFromData("governing_law");
+    hash.cityForDisputes = this.#lookupSettingFromData("city_for_disputes");
+
+    return hash;
+  }
+
+  saveCallback() {}
+
+  #lookupSettingFromData(name) {
+    for (const setting of this.args.data) {
+      if (setting.setting === name) {
+        return setting;
+      }
+    }
   }
 
   <template>
@@ -18,24 +60,30 @@ export default class AdminConfigAreasAbout extends Component {
         <AdminConfigAreaCard
           @heading="admin.config_areas.about.general_settings"
           @primaryActionLabel="admin.config_areas.about.update"
+          class="general-settings-section"
         >
           <AdminConfigAreasAboutGeneralSettings
+            @generalSettings={{this.generalSettings}}
             @saveCallback={{this.saveCallback}}
           />
         </AdminConfigAreaCard>
         <AdminConfigAreaCard
           @heading="admin.config_areas.about.contact_information"
           @primaryActionLabel="admin.config_areas.about.update"
+          class="contact-information-section"
         >
           <AdminConfigAreasAboutContactInformation
+            @contactInformation={{this.contactInformation}}
             @saveCallback={{this.saveCallback}}
           />
         </AdminConfigAreaCard>
         <AdminConfigAreaCard
           @heading="admin.config_areas.about.your_organization"
           @primaryActionLabel="admin.config_areas.about.update"
+          class="your-organization-section"
         >
           <AdminConfigAreasAboutYourOrganization
+            @yourOrganization={{this.yourOrganization}}
             @saveCallback={{this.saveCallback}}
           />
         </AdminConfigAreaCard>

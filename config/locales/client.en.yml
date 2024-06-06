@@ -5468,6 +5468,7 @@ en:
             Specify the city that will be used as the jurisdiction for resolving any disputes related to the use of this forum. This information is typically included in legal documents such as the forum's Terms of Service.
           optional: "(optional)"
           update: "Update"
+          saved: "saved!"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
