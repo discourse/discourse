@@ -2,13 +2,13 @@
 
 class ReorderFlags < ActiveRecord::Migration[7.0]
   def up
-    default_order = DB.query(<<~SQL)
+    current_order = DB.query(<<~SQL)
       SELECT name FROM flags
       WHERE score_type IS FALSE
       ORDER BY position ASC
     SQL
 
-    if default_order.map(&:name) ==
+    if current_order.map(&:name) ==
          %w[notify_user notify_moderators off_topic inappropriate spam illegal]
       execute "UPDATE flags SET position = 0 WHERE name = 'notify_user'"
       execute "UPDATE flags SET position = 1 WHERE name = 'off_topic'"
