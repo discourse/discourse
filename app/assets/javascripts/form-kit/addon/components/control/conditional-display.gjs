@@ -2,37 +2,50 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { eq } from "truth-helpers";
 import uniqueId from "discourse/helpers/unique-id";
-import FkControlConditionalDisplayOption from "./conditional-display/option";
+import FkControlConditionalDisplayCondition from "./conditional-display/condition";
+import FkControlConditionalDisplayContent from "./conditional-display/content";
+
+const Conditions = <template>
+  {{yield
+    (component
+      FkControlConditionalDisplayCondition
+      id=@id
+      name=@name
+      setCondition=@setCondition
+      active=(eq @activeName @name)
+    )
+  }}
+</template>;
+
+const Contents = <template>
+  {{yield
+    (component FkControlConditionalDisplayContent activeName=@activeName)
+  }}
+</template>;
 
 export default class FkControlConditionalDisplay extends Component {
-  @tracked options = new TrackedArray();
+  @tracked activeName = this.args.activeName;
 
-  name = uniqueId();
+  id = uniqueId();
 
   @action
-  registerOption(id, label) {
-    this.options.pushObject({ id, label });
+  setCondition(name) {
+    this.activeName = name;
   }
 
   <template>
     <div class="d-form-conditional-display">
-      {{#each this.options as |option|}}
-        <div class="d-form-conditional-display__option">
-          <label>{{option.label}}
-            <input type="radio" name={{this.name}} value={{option.id}} />
-          </label>
-        </div>
-      {{/each}}
-
       {{yield
         (hash
-          Option=(component
-            FkControlConditionalDisplayOption
-            id=(uniqueId)
-            registerOption=this.registerOption
+          Conditions=(component
+            Conditions
+            activeName=this.activeName
+            setCondition=this.setCondition
+            id=this.id
           )
+          Contents=(component Contents activeName=this.activeName)
         )
       }}
     </div>

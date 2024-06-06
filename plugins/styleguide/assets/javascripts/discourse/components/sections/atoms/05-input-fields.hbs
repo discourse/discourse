@@ -14,18 +14,23 @@
 
   <DButton @translatedLabel="SUBMIT" @action={{@dummy.doSomething}} />
 
-  <form.ConditionalDisplay as |conditionalDisplay|>
-    <conditionalDisplay.Option @label="Upload image">
-      <form.Field @name="image_1" as |field|>
-        <field.Image />
-      </form.Field>
-    </conditionalDisplay.Option>
-
-    <conditionalDisplay.Option @label="Choose icon">
-      <form.Field @name="icon_1" as |field|>
-        <field.IconPicker />
-      </form.Field>
-    </conditionalDisplay.Option>
+  <form.ConditionalDisplay @activeName="upload-image" as |cd|>
+    <cd.Conditions as |condition|>
+      <condition @name="upload-image">Upload image</condition>
+      <condition @name="choose-icon">Choose icon</condition>
+    </cd.Conditions>
+    <cd.Contents as |content|>
+      <content @name="upload-image">
+        <form.Field @name="image_1" as |field|>
+          <field.Image />
+        </form.Field>
+      </content>
+      <content @name="choose-icon">
+        <form.Field @name="icon_1" as |field|>
+          <field.IconPicker />
+        </form.Field>
+      </content>
+    </cd.Contents>
   </form.ConditionalDisplay>
 
   <form.Row as |row|>

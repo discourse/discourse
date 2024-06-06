@@ -184,7 +184,7 @@ export default class Form extends Component {
         field.validationEnabled = true;
       }
     } else if (event instanceof Event) {
-      alert("???");
+      console.log("???");
     }
   }
 

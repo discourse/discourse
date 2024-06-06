@@ -1,10 +1,7 @@
 import Component from "@glimmer/component";
-import { fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import { hash } from "@ember/helper";
 import FormErrors from "form-kit/components/form/errors";
 import FkText from "form-kit/components/form/text";
-import FkLabel from "form-kit/components/label";
 import uniqueId from "discourse/helpers/unique-id";
 import FkControlRadioGroupRadio from "./radio-group/radio";
 

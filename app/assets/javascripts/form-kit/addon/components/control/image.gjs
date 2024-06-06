@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import FormMeta from "form-kit/components/form/meta";
 import FormText from "form-kit/components/form/text";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
@@ -13,7 +14,12 @@ export default class FkControlImage extends Component {
 
   @action
   removeImage() {
-    this.args.setValue(null);
+    this.args.setValue(undefined);
+  }
+
+  @action
+  handleDestroy() {
+    this.args.setValue(undefined);
   }
 
   <template>
@@ -36,6 +42,7 @@ export default class FkControlImage extends Component {
       @onUploadDone={{this.setImage}}
       @onUploadDeleted={{this.removeImage}}
       class="d-form-image-input no-repeat contain-image"
+      {{willDestroy this.handleDestroy}}
     />
 
     <FormMeta
