@@ -7,10 +7,10 @@ export default class AdminConfigAreaCard extends Component {
 
   <template>
     <section class="admin-config-area-card">
-      <h3>{{i18n @heading}}</h3>
-      <form>
+      <h3 class="admin-config-area-card__title">{{i18n @heading}}</h3>
+      <div class="admin-config-area-card__content">
         {{yield}}
-      </form>
+      </div>
     </section>
   </template>
 }
