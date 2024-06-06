@@ -11,7 +11,12 @@ export default class SecurityKeyForm extends Component {
     event.preventDefault();
     this.args.setShowSecurityKey?.(false);
     this.args.setShowSecondFactor?.(true);
-    this.args.setSecondFactorMethod?.(SECOND_FACTOR_METHODS.TOTP);
+
+    if (this.args.totpEnabled) {
+      this.args.setSecondFactorMethod?.(SECOND_FACTOR_METHODS.TOTP);
+    } else if (this.args.backupEnabled) {
+      this.args.setSecondFactorMethod?.(SECOND_FACTOR_METHODS.BACKUP_CODE);
+    }
   }
 
   <template>

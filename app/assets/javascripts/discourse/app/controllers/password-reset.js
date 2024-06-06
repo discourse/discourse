@@ -22,12 +22,6 @@ export default Controller.extend(PasswordValidation, {
     "model.security_key_required"
   ),
   otherMethodAllowed: readOnly("model.multiple_second_factor_methods"),
-  @discourseComputed("model.security_key_required")
-  secondFactorMethod(security_key_required) {
-    return security_key_required
-      ? SECOND_FACTOR_METHODS.SECURITY_KEY
-      : SECOND_FACTOR_METHODS.TOTP;
-  },
   passwordRequired: true,
   errorMessage: null,
   successMessage: null,
@@ -35,9 +29,25 @@ export default Controller.extend(PasswordValidation, {
   redirected: false,
   maskPassword: true,
 
-  init() {
-    this._super(...arguments);
-    this.set("selectedSecondFactorMethod", this.secondFactorMethod);
+  @discourseComputed("securityKeyRequired", "selectedSecondFactorMethod")
+  displaySecurityKeyForm(securityKeyRequired, selectedSecondFactorMethod) {
+    return (
+      securityKeyRequired &&
+      selectedSecondFactorMethod === SECOND_FACTOR_METHODS.SECURITY_KEY
+    );
+  },
+
+  initSelectedSecondFactorMethod() {
+    if (this.model.security_key_required) {
+      this.set(
+        "selectedSecondFactorMethod",
+        SECOND_FACTOR_METHODS.SECURITY_KEY
+      );
+    } else if (this.model.second_factor_required) {
+      this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.TOTP);
+    } else if (this.model.backup_enabled) {
+      this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.BACKUP_CODE);
+    }
   },
 
   @discourseComputed()
@@ -138,6 +148,7 @@ export default Controller.extend(PasswordValidation, {
   @action
   authenticateSecurityKey() {
     this.set("selectedSecondFactorMethod", SECOND_FACTOR_METHODS.SECURITY_KEY);
+
     getWebauthnCredential(
       this.model.challenge,
       this.model.allowed_credential_ids,

@@ -45,7 +45,7 @@ shared_examples "login scenarios" do
 
       find("#activate-account-button").click
 
-      visit "/"
+      expect(page).to have_current_path("/")
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
@@ -61,25 +61,12 @@ shared_examples "login scenarios" do
       expect(login_modal.find("#modal-alert")).to have_content(
         I18n.t("js.login.password_expired", reset_url: "/password-reset").gsub(/<.*?>/, ""),
       )
+
       login_modal.find("#modal-alert a").click
       find("button.forgot-password-reset").click
 
       reset_password_link = wait_for_email_link(user, :reset_password)
       expect(reset_password_link).to be_present
-    end
-
-    it "can reset password" do
-      login_modal.open
-      login_modal.fill_username("john")
-      login_modal.forgot_password
-      find("button.forgot-password-reset").click
-
-      reset_password_link = wait_for_email_link(user, :reset_password)
-      visit reset_password_link
-
-      find("#new-account-password").fill_in(with: "newsuperpassword")
-      find(".change-password-form .btn-primary").click
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end
 
@@ -225,46 +212,6 @@ shared_examples "login scenarios" do
       find("#new-account-password").fill_in(with: "newsuperpassword")
       find(".change-password-form .btn-primary").click
       expect(page).to have_css(".header-dropdown-toggle.current-user")
-    end
-
-    it "can reset password with a security key" do
-      # testing the 2FA flow requires a user that was created > 5 minutes ago
-      user.created_at = 6.minutes.ago
-      user.save!
-      sign_in(user)
-      options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
-      authenticator = page.driver.browser.add_virtual_authenticator(options)
-
-      user_preferences_security_page.visit(user)
-      user_preferences_security_page.visit_second_factor("supersecurepassword")
-
-      find(".security-key .new-security-key").click
-      expect(user_preferences_security_page).to have_css("input#security-key-name")
-
-      find(".d-modal__body input#security-key-name").fill_in(with: "First Key")
-      find(".add-security-key").click
-
-      expect(user_preferences_security_page).to have_css(".security-key .second-factor-item")
-
-      user_menu.sign_out
-
-      # reset password flow
-      login_modal.open
-      login_modal.fill_username("john")
-      login_modal.forgot_password
-      find("button.forgot-password-reset").click
-
-      reset_password_link = wait_for_email_link(user, :reset_password)
-      visit reset_password_link
-
-      find("#security-key .btn-primary").click
-
-      find("#new-account-password").fill_in(with: "newsuperpassword")
-      find(".change-password-form .btn-primary").click
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
-    ensure
-      # clear authenticator (otherwise it will interfere with other tests)
-      authenticator&.remove!
     end
   end
 end

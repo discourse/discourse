@@ -20,7 +20,9 @@
                   (mut this.model.security_key_required)
                 }}
                 @setSecondFactorMethod={{fn (mut this.secondFactorMethod)}}
-                @otherMethodAllowed={{fn (mut this.secondFactorRequired)}}
+                @backupEnabled={{this.model.backup_codes_enabled}}
+                @totpEnabled={{this.model.totp_enabled}}
+                @otherMethodAllowed={{this.secondFactorRequired}}
                 @action={{this.authenticateSecurityKey}}
               />
             {{else}}
@@ -28,6 +30,7 @@
                 @secondFactorMethod={{this.secondFactorMethod}}
                 @secondFactorToken={{this.secondFactorToken}}
                 @backupEnabled={{this.model.backup_codes_enabled}}
+                @totpEnabled={{this.model.totp_enabled}}
                 @isLogin={{true}}
               >
                 <SecondFactorInput

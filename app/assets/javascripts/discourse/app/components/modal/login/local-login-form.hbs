@@ -72,6 +72,7 @@
     @secondFactorMethod={{@secondFactorMethod}}
     @secondFactorToken={{@secondFactorToken}}
     @backupEnabled={{@backupEnabled}}
+    @totpEnabled={{@totpEnabled}}
     @isLogin={{true}}
     class={{this.secondFactorClass}}
   >
@@ -80,6 +81,8 @@
         @setShowSecurityKey={{fn (mut @showSecurityKey)}}
         @setShowSecondFactor={{fn (mut @showSecondFactor)}}
         @setSecondFactorMethod={{fn (mut @secondFactorMethod)}}
+        @backupEnabled={{@backupEnabled}}
+        @totpEnabled={{@totpEnabled}}
         @otherMethodAllowed={{@otherMethodAllowed}}
         @action={{this.authenticateSecurityKey}}
       />
