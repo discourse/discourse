@@ -1,7 +1,10 @@
 import { isTesting } from "discourse-common/config/environment";
 
 // add core transformer names
-const validCoreTransformerNames = new Set(["header-notifications-avatar-size"]);
+const validCoreTransformerNames = new Set([
+  "header-notifications-avatar-size",
+  "home-logo-href",
+]);
 
 // do not add anything directly to this set, use addTransformerName instead
 const validPluginTransformerNames = new Set();
@@ -78,7 +81,7 @@ export function _registerTransformer(transformerName, valueCallback) {
     );
   }
 
-  if (!transformerNameExists.has(transformerName)) {
+  if (!transformerNameExists(transformerName)) {
     // eslint-disable-next-line no-console
     console.warn(
       `api.registerTransformer: transformer "${transformerName}" is unknown and will be ignored. ` +

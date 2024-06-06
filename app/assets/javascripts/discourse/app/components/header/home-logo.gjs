@@ -10,16 +10,7 @@ import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";
 import Logo from "./logo";
-
-let hrefCallback;
-
-export function registerHomeLogoHrefCallback(callback) {
-  hrefCallback = callback;
-}
-
-export function clearHomeLogoHrefCallback() {
-  hrefCallback = null;
-}
+import { applyTransformer } from "discourse/lib/plugin-api/value-transformer";
 
 export default class HomeLogo extends Component {
   @service session;
@@ -29,11 +20,7 @@ export default class HomeLogo extends Component {
   darkModeAvailable = this.session.darkModeAvailable;
 
   get href() {
-    if (hrefCallback) {
-      return hrefCallback();
-    }
-
-    return getURL("/");
+    return applyTransformer("home-logo-href", getURL("/"));
   }
 
   get showMobileLogo() {

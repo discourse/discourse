@@ -13,7 +13,6 @@ import { addCategorySortCriteria } from "discourse/components/edit-category-sett
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
-import { registerHomeLogoHrefCallback } from "discourse/components/header/home-logo";
 import { headerIconsDAG } from "discourse/components/header/icons";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 import MountWidget, {
@@ -110,7 +109,6 @@ import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { attachAdditionalPanel } from "discourse/widgets/header";
-import { registerHomeLogoHrefCallback as registerHomeLogoHrefCallbackOnWidget } from "discourse/widgets/home-logo";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import { addDecorator } from "discourse/widgets/post-cooked";
 import {
@@ -2044,8 +2042,7 @@ class PluginApi {
    *
    */
   registerHomeLogoHrefCallback(callback) {
-    registerHomeLogoHrefCallback(callback);
-    registerHomeLogoHrefCallbackOnWidget(callback); // for compatibility with the legacy header
+    _registerTransformer("home-logo-href", ({ value }) => callback(value));
   }
 
   /**
