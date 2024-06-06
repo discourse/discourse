@@ -88,6 +88,14 @@ module PageObjects
         has_css?("#{VISIBLE_DRAWER} .chat-channel[data-id='#{channel.id}']")
       end
 
+      def has_channel_settings?
+        has_css?("#{VISIBLE_DRAWER} .c-channel-settings")
+      end
+
+      def has_channel_members?
+        has_css?("#{VISIBLE_DRAWER} .c-channel-members")
+      end
+
       def has_open_thread_list?
         has_css?("#{VISIBLE_DRAWER} .chat-thread-list")
       end
