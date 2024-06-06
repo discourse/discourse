@@ -45,7 +45,7 @@ RSpec.describe(ReorderFlag) do
       )
       result
       expect(Flag.order(:position).map(&:name)).to eq(
-        %w[notify_user off_topic inappropriate illegal spam notify_moderators],
+        %w[notify_user off_topic inappropriate spam notify_moderators illegal],
       )
     end
 
