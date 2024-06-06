@@ -45,7 +45,7 @@ shared_examples "login scenarios" do
 
       find("#activate-account-button").click
 
-      visit "/"
+      expect(page).to have_current_path("/")
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
