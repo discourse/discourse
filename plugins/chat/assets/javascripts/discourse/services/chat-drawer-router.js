@@ -4,6 +4,8 @@ import ChatDrawerRoutesChannel from "discourse/plugins/chat/discourse/components
 import ChatDrawerRoutesChannelThread from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-thread";
 import ChatDrawerRoutesChannelThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-threads";
 import ChatDrawerRoutesChannels from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channels";
+import ChatDrawerRoutesMembers from "discourse/plugins/chat/discourse/components/chat/drawer-routes/members";
+import ChatDrawerRoutesSettings from "discourse/plugins/chat/discourse/components/chat/drawer-routes/settings";
 import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
 
 const ROUTES = {
@@ -63,6 +65,22 @@ const ROUTES = {
       return {
         channelId: route.parent.params.channelId,
         messageId: route.params.messageId,
+      };
+    },
+  },
+  "chat.channel.info.settings": {
+    name: ChatDrawerRoutesSettings,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
+      };
+    },
+  },
+  "chat.channel.info.members": {
+    name: ChatDrawerRoutesMembers,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
       };
     },
   },
