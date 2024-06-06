@@ -17,6 +17,7 @@ import Category from "discourse/models/category";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { eq } from "truth-helpers";
 
 class ActionSerializer {
   constructor(perform) {
@@ -70,6 +71,25 @@ function splitWhere(elements, f) {
   }, []);
 }
 
+function addShowMore(categories) {
+  return categories.reduce((acc, el, i) => {
+    acc.push({type: "category", category: el});
+
+    const elID = categories[i].id;
+    const elParentID = categories[i].parent_category_id;
+    const nextParentID = categories[i + 1]?.parent_category_id;
+
+    const nextIsSibling = nextParentID === elParentID;
+    const nextIsChild = nextParentID === elID;
+
+    if (!nextIsSibling && !nextIsChild) {
+      acc.push({type: "show-more", level: el.level});
+    }
+
+    return acc;
+  }, []);
+}
+
 export default class SidebarEditNavigationMenuCategoriesModal extends Component {
   @service currentUser;
   @service site;
@@ -113,7 +133,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     this.fetchedCategoriesGroupings = splitWhere(
       categories,
       (category) => category.parent_category_id === undefined
-    );
+    ).map(addShowMore);
 
     this.fetchedCategoryIds = categories.map((c) => c.id);
   }
@@ -294,55 +314,77 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
         {{else}}
           {{#each this.fetchedCategoriesGroupings as |categories|}}
             <div
-              style={{borderColor (get categories "0.color") "left"}}
+              style={{borderColor (get categories "0.category.color") "left"}}
               class="sidebar-categories-form__row"
             >
-              {{#each categories as |category|}}
-                <div
-                  {{didInsert this.didInsert}}
-                  data-category-id={{category.id}}
-                  data-category-level={{category.level}}
-                  class="sidebar-categories-form__category-row"
-                >
-                  <label
-                    for={{concat
-                      "sidebar-categories-form__input--"
-                      category.id
-                    }}
-                    class="sidebar-categories-form__category-label"
-                  >
-                    <div class="sidebar-categories-form__category-wrapper">
-                      <div class="sidebar-categories-form__category-badge">
-                        {{categoryBadge category}}
-                      </div>
+              {{#each categories as |c|}}
+                {{#if (eq c.type "category")}}
+                  {{#with c.category as |category|}}
+                    <div
+                      {{didInsert this.didInsert}}
+                      data-category-id={{category.id}}
+                      data-category-level={{category.level}}
+                      class="sidebar-categories-form__category-row"
+                    >
+                      <label
+                        for={{concat
+                          "sidebar-categories-form__input--"
+                          category.id
+                        }}
+                        class="sidebar-categories-form__category-label"
+                      >
+                        <div class="sidebar-categories-form__category-wrapper">
+                          <div class="sidebar-categories-form__category-badge">
+                            {{categoryBadge category}}
+                          </div>
 
-                      {{#unless category.parentCategory}}
-                        <div
-                          class="sidebar-categories-form__category-description"
-                        >
-                          {{dirSpan
-                            category.description_excerpt
-                            htmlSafe="true"
-                          }}
+                          {{#unless category.parentCategory}}
+                            <div
+                              class="sidebar-categories-form__category-description"
+                            >
+                              {{dirSpan
+                                category.description_excerpt
+                                htmlSafe="true"
+                              }}
+                            </div>
+                          {{/unless}}
                         </div>
-                      {{/unless}}
-                    </div>
 
-                    <input
-                      {{on "click" (fn this.toggleCategory category.id)}}
-                      type="checkbox"
-                      checked={{has
-                        this.selectedCategoryIds
-                        category.id
-                      }}
-                      id={{concat
-                        "sidebar-categories-form__input--"
-                        category.id
-                      }}
-                      class="sidebar-categories-form__input"
-                    />
-                  </label>
-                </div>
+                        <input
+                          {{on "click" (fn this.toggleCategory category.id)}}
+                          type="checkbox"
+                          checked={{has
+                            this.selectedCategoryIds
+                            category.id
+                          }}
+                          id={{concat
+                            "sidebar-categories-form__input--"
+                            category.id
+                          }}
+                          class="sidebar-categories-form__input"
+                        />
+                      </label>
+                    </div>
+                  {{/with}}
+                {{else}}
+                  <div
+                    {{didInsert this.didInsert}}
+                    data-category-level={{c.level}}
+                    class="sidebar-categories-form__category-row"
+                  >
+                    <label
+                      class="sidebar-categories-form__category-label"
+                    >
+                      <div class="sidebar-categories-form__category-wrapper">
+                        <div class="sidebar-categories-form__category-badge">
+                          <a>
+                            {{i18n "sidebar.categories_form_modal.show_more"}}
+                          </a>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                {{/if}}
               {{/each}}
             </div>
           {{else}}
