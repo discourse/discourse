@@ -41,11 +41,11 @@ RSpec.describe(ReorderFlag) do
 
     it "moves the flag" do
       expect(Flag.order(:position).map(&:name)).to eq(
-        %w[notify_user notify_moderators off_topic inappropriate spam illegal],
+        %w[notify_user off_topic inappropriate spam illegal notify_moderators],
       )
       result
       expect(Flag.order(:position).map(&:name)).to eq(
-        %w[notify_user notify_moderators off_topic inappropriate illegal spam],
+        %w[notify_user off_topic inappropriate illegal spam notify_moderators],
       )
     end
 
