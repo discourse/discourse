@@ -46,6 +46,10 @@ import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
 import {
+  resetTransformerNames,
+  resetTransformers,
+} from "discourse/lib/plugin-api/value-transformer";
+import {
   clearCache as clearOutletCache,
   resetExtraClasses,
 } from "discourse/lib/plugin-connectors";
@@ -246,6 +250,8 @@ export function testCleanup(container, app) {
   clearPopupMenuOptions();
   clearAdditionalAdminSidebarSectionLinks();
   resetAdminPluginConfigNav();
+  resetTransformerNames();
+  resetTransformers();
 }
 
 function cleanupCssGeneratorTags() {

@@ -347,12 +347,14 @@ class PluginApi {
    * Register a transformer to override values defined in Discourse.
    *
    * @param {string} transformerName the name of the transformer
-   * @param {*} valueOrCallback new value or callback to be used to transform the value, if a callback is provided it
-   * will be called with ({value, context}), where value is the current value and context is the context in which the
-   * value is being used.
+   * @param {function({value, context})} valueCallback callback to be used to transform the value. To avoid potential
+   * errors or unexpected behavior the callback must be a pure function, i.e. return the transform value instead of
+   * mutating the input value, return the same output for the same input and not have any side effects.
+   * @param {*} valueCallback.value the value to be transformed
+   * @param {*} [valueCallback.context] the optional context in which the value is being transformed
    */
-  registerTransformer(transformerName, valueOrCallback) {
-    registerTransformer(transformerName, valueOrCallback);
+  registerTransformer(transformerName, valueCallback) {
+    registerTransformer(transformerName, valueCallback);
   }
 
   /**

@@ -10,10 +10,9 @@ const transformersRegistry = new Map();
  * Register a value transformer. To be used by the plugin API.
  *
  * @param {string} transformerName the name of the transformer
- * @param {* | function} valueOrCallback the value or callback to apply. If a callback is provided, it will be called
- * with the following arguments: { newValue, context }
+ * @param {function({value, context})} valueCallback callback that will transform the value.
  */
-export function registerTransformer(transformerName, valueOrCallback) {
+export function registerTransformer(transformerName, valueCallback) {
   if (!transformerNameExists.has(transformerName)) {
     // eslint-disable-next-line no-console
     console.warn(
@@ -21,7 +20,7 @@ export function registerTransformer(transformerName, valueOrCallback) {
     );
   }
 
-  if (valueOrCallback === undefined) {
+  if (valueCallback === undefined) {
     throw new Error(
       "api registerTransformer requires transformer to be set with a value or a callback"
     );
@@ -29,10 +28,7 @@ export function registerTransformer(transformerName, valueOrCallback) {
 
   const existingTransformers = transformersRegistry.get(transformerName) || [];
 
-  existingTransformers.push({
-    valueOrCallback,
-    isCallback: typeof valueOrCallback === "function", // to avoid unnecessary checks while applying the transformer
-  });
+  existingTransformers.push(valueCallback);
 
   transformersRegistry.set(transformerName, existingTransformers);
 }
@@ -42,15 +38,14 @@ export function registerTransformer(transformerName, valueOrCallback) {
  *
  * @param {string} transformerName the name of the transformer applied
  * @param {*} defaultValue the default value
- * @param {*} [context] the context to pass to the transformer callbacks
+ * @param {*} [context] the optional context to pass to the transformer callbacks.
  *
  * @returns {*} the transformed value
  */
-
 export function applyTransformer(transformerName, defaultValue, context) {
   if (!transformerNameExists(transformerName)) {
     throw new Error(
-      `applyTransformer: transformer id "${transformerName}" does not exist. Did you forget to register it?`
+      `applyTransformer: transformer name "${transformerName}" does not exist. Perhaps you misspelled it?`
     );
   }
 
@@ -63,13 +58,8 @@ export function applyTransformer(transformerName, defaultValue, context) {
 
   const transformerPoolSize = transformers.length;
   for (let i = 0; i < transformerPoolSize; i++) {
-    const { valueOrCallback, isCallback } = transformers[i];
-
-    if (isCallback) {
-      newValue = valueOrCallback({ value: newValue, context });
-    } else {
-      newValue = valueOrCallback;
-    }
+    const valueCallback = transformers[i];
+    newValue = valueCallback({ value: newValue, context });
   }
 
   return newValue;
@@ -101,14 +91,12 @@ export function addTransformerName(name) {
   }
 
   if (transformersRegistry.size > 0) {
-    // eslint-disable-next-line no-console
-    console.warn(
+    throw new Error(
       `api.addTransformerName was called after transformers were registered.\n` +
         "This is not recommended as it can lead to unexpected behavior." +
         `If a plugin or theme component tried to register a transformer for "${name}" previously, the register was ignored.` +
         "Consider moving the call to addTransformerName to a pre-initializer."
     );
-    return;
   }
 
   validPluginTransformerNames.add(name);
@@ -127,11 +115,11 @@ function transformerNameExists(name) {
 }
 
 // to be used only for test purposes
-export function clearTransformerNames() {
+export function resetTransformerNames() {
   validPluginTransformerNames.clear();
 }
 
 // to be used only for test purposes
-export function clearTransformers() {
+export function resetTransformers() {
   transformersRegistry.clear();
 }
