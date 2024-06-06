@@ -3,6 +3,7 @@ import { run } from "@ember/runloop";
 import { settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { dedupeTracked, DeferredTrackedSet } from "discourse/lib/tracked-tools";
+
 module("Unit | tracked-tools", function () {
   test("@dedupeTracked", async function (assert) {
     class Pet {
@@ -113,5 +114,6 @@ module("Unit | tracked-tools", function () {
 
     assert.strictEqual(player.score, 6, "score is correct");
     assert.strictEqual(player.evaluationsCount, 4, "getter evaluated");
+    assert.deepEqual([...player.letters], ["a", "b", "c", "d", "e", "f"]);
   });
 });
