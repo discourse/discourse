@@ -10,9 +10,11 @@ class Chat::Api::SummariesController < Chat::ApiController
     channel = Chat::Channel.find(params[:channel_id])
     guardian.ensure_can_join_chat_channel!(channel)
 
-    strategy = Summarization::Base.selected_strategy
+    strategy = DiscourseAi::Summarization::Models::Base.selected_strategy
     raise Discourse::NotFound.new unless strategy
-    raise Discourse::InvalidAccess unless Summarization::Base.can_request_summary_for?(current_user)
+    unless DiscourseAi::Summarization::Models::Base.can_request_summary_for?(current_user)
+      raise Discourse::InvalidAccess
+    end
 
     RateLimiter.new(current_user, "channel_summary", 6, 5.minutes).performed!
 

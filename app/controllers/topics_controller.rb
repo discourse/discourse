@@ -1189,37 +1189,6 @@ class TopicsController < ApplicationController
     head :ok
   end
 
-  def summary
-    topic = Topic.find(params[:topic_id])
-    guardian.ensure_can_see!(topic)
-    strategy = Summarization::Base.selected_strategy
-
-    if strategy.nil? || !Summarization::Base.can_see_summary?(topic, current_user)
-      raise Discourse::NotFound
-    end
-
-    RateLimiter.new(current_user, "summary", 6, 5.minutes).performed! if current_user
-
-    opts = params.permit(:skip_age_check)
-
-    if params[:stream] && current_user
-      Jobs.enqueue(
-        :stream_topic_summary,
-        topic_id: topic.id,
-        user_id: current_user.id,
-        opts: opts.as_json,
-      )
-
-      render json: success_json
-    else
-      hijack do
-        summary = TopicSummarization.new(strategy).summarize(topic, current_user, opts)
-
-        render_serialized(summary, TopicSummarySerializer)
-      end
-    end
-  end
-
   private
 
   def topic_params

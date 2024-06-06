@@ -10,8 +10,8 @@ RSpec.describe Chat::Api::SummariesController do
 
     strategy = DummyCustomSummarization.new({ summary: "dummy", chunks: [] })
     plugin.register_summarization_strategy(strategy)
-    SiteSetting.summarization_strategy = strategy.model
-    SiteSetting.custom_summarization_allowed_groups = group.id
+    SiteSetting.ai_summarization_strategy = strategy.model
+    SiteSetting.ai_custom_summarization_allowed_groups = group.id
 
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = group.id

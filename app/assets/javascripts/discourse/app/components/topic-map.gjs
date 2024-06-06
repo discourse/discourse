@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import SummaryBox from "discourse/components/summary-box";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import PrivateMessageMap from "discourse/components/topic-map/private-message-map";
 import TopicMapExpanded from "discourse/components/topic-map/topic-map-expanded";
 import TopicMapSummary from "discourse/components/topic-map/topic-map-summary";
 import concatClass from "discourse/helpers/concat-class";
-import or from "truth-helpers/helpers/or";
 
 export default class TopicMap extends Component {
   @tracked collapsed = !this.args.model.has_summary;
@@ -41,18 +41,20 @@ export default class TopicMap extends Component {
         />
       </section>
     {{/unless}}
-    {{#if (or @model.has_summary @model.summarizable)}}
-      <section class="information toggle-summary">
-        <SummaryBox
-          @topic={{@model}}
-          @postStream={{@postStream}}
-          @cancelFilter={{@cancelFilter}}
-          @showTopReplies={{@showTopReplies}}
-          @collapseSummary={{@collapseSummary}}
-          @showSummary={{@showSummary}}
-        />
-      </section>
-    {{/if}}
+
+    <PluginOutlet
+      @name="topic-map-expanded-after"
+      @connectorTagName="span"
+      @outletArgs={{hash
+        topic=@model
+        postStream=@postStream
+        cancelFilter=@cancelFilter
+        showTopReplies=@showTopReplies
+        collapseSummary=@collapseSummary
+        showSummary=@showSummary
+      }}
+    />
+
     {{#if @showPMMap}}
       <section class="information private-message-map">
         <PrivateMessageMap

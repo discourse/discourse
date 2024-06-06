@@ -14,8 +14,8 @@ RSpec.describe "Summarize a channel since your last visit", type: :system do
 
     strategy = DummyCustomSummarization.new(summarization_result)
     plugin.register_summarization_strategy(strategy)
-    SiteSetting.summarization_strategy = strategy.model
-    SiteSetting.custom_summarization_allowed_groups = group.id.to_s
+    SiteSetting.ai_summarization_strategy = strategy.model
+    SiteSetting.ai_custom_summarization_allowed_groups = group.id.to_s
 
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = group.id.to_s

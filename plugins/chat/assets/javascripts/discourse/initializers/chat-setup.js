@@ -98,7 +98,7 @@ export default {
       });
 
       const canSummarize =
-        this.siteSettings.summarization_strategy &&
+        this.siteSettings.ai_summarization_strategy &&
         this.currentUser &&
         this.currentUser.can_summarize;
 

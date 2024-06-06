@@ -17,7 +17,7 @@ export default class TopicSummary {
   @tracked loadingSummary = false;
 
   processUpdate(update) {
-    const topicSummary = update.topic_summary;
+    const topicSummary = update.ai_topic_summary;
 
     return cook(topicSummary.summarized_text)
       .then((cooked) => {
@@ -50,7 +50,7 @@ export default class TopicSummary {
       return;
     }
 
-    let fetchURL = `/t/${topicId}/strategy-summary?`;
+    let fetchURL = `/discourse-ai/summarization/t/${topicId}?`;
 
     if (currentUser) {
       fetchURL += `stream=true`;

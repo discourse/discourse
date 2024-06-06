@@ -149,10 +149,6 @@ class CurrentUserSerializer < BasicUserSerializer
     object.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
   end
 
-  def can_summarize
-    object.in_any_groups?(SiteSetting.custom_summarization_allowed_groups_map)
-  end
-
   def can_upload_avatar
     !is_anonymous && object.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map)
   end
