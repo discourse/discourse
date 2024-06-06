@@ -126,8 +126,8 @@ export function dedupeTracked(target, key, desc) {
 export class DeferredTrackedSet {
   #set;
 
-  constructor() {
-    this.#set = new TrackedSet();
+  constructor(value) {
+    this.#set = new TrackedSet(value);
   }
 
   has(value) {
