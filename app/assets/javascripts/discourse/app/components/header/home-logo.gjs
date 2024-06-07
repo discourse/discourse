@@ -6,11 +6,11 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { applyTransformer } from "discourse/lib/plugin-api/value-transformer";
 import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";
 import Logo from "./logo";
-import { applyTransformer } from "discourse/lib/plugin-api/value-transformer";
 
 export default class HomeLogo extends Component {
   @service session;
