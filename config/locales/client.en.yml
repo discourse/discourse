@@ -5357,6 +5357,10 @@ en:
           timestamp: "Created"
           completion: "Completion Time"
           actions: "Actions"
+          filter_status:
+            all: "All Events"
+            successful: "Delivered"
+            failed: "Failed"
       home:
         title: "Home"
       account:
