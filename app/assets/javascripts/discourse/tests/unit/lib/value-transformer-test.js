@@ -1,3 +1,4 @@
+import EmberObject from "@ember/object";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -176,6 +177,105 @@ module("Unit | Utility | transformers", function (hooks) {
       assert.throws(
         () => applyTransformer("whatever", "foo"),
         /does not exist. Did you forget to register it/
+      );
+    });
+
+    test("accepts only simple objects as context", function (assert) {
+      const notThrows = (testCallback) => {
+        try {
+          testCallback();
+          return true;
+        } catch (error) {
+          return false;
+        }
+      };
+
+      assert.ok(
+        notThrows(() => applyTransformer("test-value1-transformer", "foo")),
+        "it won't throw an error if context is not passed"
+      );
+
+      assert.ok(
+        notThrows(() =>
+          applyTransformer("test-value1-transformer", "foo", undefined)
+        ),
+        "it won't throw an error if context is undefined"
+      );
+
+      assert.ok(
+        notThrows(() =>
+          applyTransformer("test-value1-transformer", "foo", null)
+        ),
+        "it won't throw an error if context is null"
+      );
+
+      assert.ok(
+        notThrows(() =>
+          applyTransformer("test-value1-transformer", "foo", {
+            pojo: true,
+            property: "foo",
+          })
+        ),
+        "it won't throw an error if context is a POJO"
+      );
+
+      assert.throws(
+        () => applyTransformer("test-value1-transformer", "foo", ""),
+        /context must be a simple JS object/,
+        "it will throw an error if context is a string"
+      );
+
+      assert.throws(
+        () => applyTransformer("test-value1-transformer", "foo", 0),
+        /context must be a simple JS object/,
+        "it will throw an error if context is a number"
+      );
+
+      assert.throws(
+        () => applyTransformer("test-value1-transformer", "foo", false),
+        /context must be a simple JS object/,
+        "it will throw an error if context is a boolean value"
+      );
+
+      assert.throws(
+        () =>
+          applyTransformer("test-value1-transformer", "foo", () => "function"),
+        /context must be a simple JS object/,
+        "it will throw an error if context is a function"
+      );
+
+      assert.throws(
+        () =>
+          applyTransformer(
+            "test-value1-transformer",
+            "foo",
+            EmberObject.create({
+              test: true,
+            })
+          ),
+        /context must be a simple JS object/,
+        "it will throw an error if context is an Ember object"
+      );
+
+      assert.throws(
+        () =>
+          applyTransformer(
+            "test-value1-transformer",
+            "foo",
+            EmberObject.create({
+              test: true,
+            })
+          ),
+        /context must be a simple JS object/,
+        "it will throw an error if context is an Ember component"
+      );
+
+      class Testable {}
+      assert.throws(
+        () =>
+          applyTransformer("test-value1-transformer", "foo", new Testable()),
+        /context must be a simple JS object/,
+        "it will throw an error if context is an instance of a class"
       );
     });
 

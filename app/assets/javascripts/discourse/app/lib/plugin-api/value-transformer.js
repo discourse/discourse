@@ -123,6 +123,18 @@ export function applyTransformer(transformerName, defaultValue, context) {
     );
   }
 
+  if (
+    typeof (context ?? undefined) !== "undefined" &&
+    !(typeof context === "object" && context.constructor === Object)
+  ) {
+    throw (
+      `applyTransformer("${transformerName}", ...): context must be a simple JS object or nullish.\n` +
+      "Avoid passing complex objects in the context, like for example, component instances or objects that carry " +
+      "mutable state directly. This can induce users to registry transformers with callbacks causing side effects " +
+      "and mutating the context directly. Inevitably, this leads to fragile integrations."
+    );
+  }
+
   const transformers = transformersRegistry.get(transformerName);
   if (!transformers) {
     return defaultValue;
