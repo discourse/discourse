@@ -65,6 +65,12 @@ export default Component.extend(bufferedProperty("userField"), {
   },
 
   @action
+  changeRequirementType(requirement) {
+    this.buffered.set("requirement", requirement);
+    this.buffered.set("editable", requirement === "for_all_users");
+  },
+
+  @action
   save() {
     const attrs = this.buffered.getProperties(
       "name",

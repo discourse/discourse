@@ -1,5 +1,7 @@
 {{#if this.showEnforcedRequiredFieldsNotice}}
-  <div class="alert alert-error">{{i18n "user.preferences.profile.enforced_required_fields"}}</div>
+  <div class="alert alert-error">{{i18n
+      "user.preferences.profile.enforced_required_fields"
+    }}</div>
 {{/if}}
 
 {{#unless this.showEnforcedRequiredFieldsNotice}}
@@ -90,7 +92,10 @@
       </div>
     {{/if}}
     {{#if this.canUploadUserCardBackground}}
-      <div class="control-group pref-profile-bg" data-setting-name="user-card-bg">
+      <div
+        class="control-group pref-profile-bg"
+        data-setting-name="user-card-bg"
+      >
         <label class="control-label">{{i18n
             "user.change_card_background.title"
           }}</label>

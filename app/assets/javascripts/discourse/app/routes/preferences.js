@@ -16,4 +16,4 @@ export default class Preferences extends RestrictedUserRoute {
       ? `${subpageTitle} - ${I18n.t("user.preferences.title")}`
       : I18n.t("user.preferences.title");
   }
-};
+}

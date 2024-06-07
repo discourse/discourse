@@ -8,7 +8,7 @@ export default class PreferencesProfile extends RestrictedUserRoute {
 
   @action
   willTransition(transition) {
-    this._super(...arguments);
+    super.willTransition(...arguments);
 
     if (
       this.controllerFor("preferences.profile").get(
@@ -21,4 +21,4 @@ export default class PreferencesProfile extends RestrictedUserRoute {
 
     return true;
   }
-};
+}
