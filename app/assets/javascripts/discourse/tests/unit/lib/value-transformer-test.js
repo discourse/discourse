@@ -6,14 +6,14 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   acceptNewTransformerNames,
   acceptTransformerRegistrations,
-  applyTransformer,
+  applyValueTransformer,
   transformerExists,
-} from "discourse/lib/plugin-api/value-transformer";
+} from "discourse/lib/plugin-api/transformer";
 
 module("Unit | Utility | transformers", function (hooks) {
   setupTest(hooks);
 
-  module("pluginApi.addTransformerName", function (innerHooks) {
+  module("pluginApi.addValueTransformerName", function (innerHooks) {
     innerHooks.beforeEach(function () {
       this.consoleWarnStub = sinon.stub(console, "warn");
     });
@@ -29,7 +29,7 @@ module("Unit | Utility | transformers", function (hooks) {
       assert.throws(
         () =>
           withPluginApi("1.34.0", (api) => {
-            api.addTransformerName("whatever");
+            api.addValueTransformerName("whatever");
           }),
         /was called when the system is no longer accepting new names to be added/
       );
@@ -39,7 +39,7 @@ module("Unit | Utility | transformers", function (hooks) {
       acceptNewTransformerNames();
 
       withPluginApi("1.34.0", (api) => {
-        api.addTransformerName("home-logo-href"); // existing core transformer
+        api.addValueTransformerName("home-logo-href"); // existing core transformer
 
         // testing warning about core transformers
         assert.strictEqual(
@@ -53,14 +53,14 @@ module("Unit | Utility | transformers", function (hooks) {
         // testing warning about plugin transformers
         this.consoleWarnStub.reset();
 
-        api.addTransformerName("new-plugin-transformer"); // first time should go through
+        api.addValueTransformerName("new-plugin-transformer"); // first time should go through
         assert.strictEqual(
           this.consoleWarnStub.notCalled,
           true,
           "did not log warning to the console"
         );
 
-        api.addTransformerName("new-plugin-transformer"); // second time log a warning
+        api.addValueTransformerName("new-plugin-transformer"); // second time log a warning
 
         assert.strictEqual(
           this.consoleWarnStub.calledWith(sinon.match(/is already registered/)),
@@ -79,7 +79,7 @@ module("Unit | Utility | transformers", function (hooks) {
           false,
           "initially the transformer does not exists"
         );
-        api.addTransformerName("a-new-plugin-transformer"); // second time log a warning
+        api.addValueTransformerName("a-new-plugin-transformer"); // second time log a warning
         assert.strictEqual(
           transformerExists("a-new-plugin-transformer"),
           true,
@@ -89,7 +89,7 @@ module("Unit | Utility | transformers", function (hooks) {
     });
   });
 
-  module("pluginApi.registerTransformer", function (innerHooks) {
+  module("pluginApi.registerValueTransformer", function (innerHooks) {
     innerHooks.beforeEach(function () {
       this.consoleWarnStub = sinon.stub(console, "warn");
     });
@@ -104,7 +104,7 @@ module("Unit | Utility | transformers", function (hooks) {
       assert.throws(
         () =>
           withPluginApi("1.34.0", (api) => {
-            api.registerTransformer("whatever", () => "foo"); // the name doesn't really matter at this point
+            api.registerValueTransformer("whatever", () => "foo"); // the name doesn't really matter at this point
           }),
         /was called while the system was still accepting new transformer names/
       );
@@ -112,7 +112,7 @@ module("Unit | Utility | transformers", function (hooks) {
 
     test("warns if transformer is unknown", function (assert) {
       withPluginApi("1.34.0", (api) => {
-        api.registerTransformer("whatever", () => "foo");
+        api.registerValueTransformer("whatever", () => "foo");
 
         // testing warning about core transformers
         assert.strictEqual(
@@ -128,7 +128,7 @@ module("Unit | Utility | transformers", function (hooks) {
       assert.throws(
         () =>
           withPluginApi("1.34.0", (api) => {
-            api.registerTransformer("whatever", "foo");
+            api.registerValueTransformer("whatever", "foo");
           }),
         /requires the valueCallback argument to be a function/
       );
@@ -138,11 +138,11 @@ module("Unit | Utility | transformers", function (hooks) {
       acceptNewTransformerNames();
 
       withPluginApi("1.34.0", (api) => {
-        api.addTransformerName("test-transformer");
+        api.addValueTransformerName("test-transformer");
         acceptTransformerRegistrations();
 
         const transformerWasRegistered = (name) =>
-          applyTransformer(name, false);
+          applyValueTransformer(name, false);
 
         assert.strictEqual(
           transformerWasRegistered("test-transformer"),
@@ -150,7 +150,7 @@ module("Unit | Utility | transformers", function (hooks) {
           "value did not change. transformer is not registered yet"
         );
 
-        api.registerTransformer("test-transformer", () => true);
+        api.registerValueTransformer("test-transformer", () => true);
 
         assert.strictEqual(
           transformerWasRegistered("test-transformer"),
@@ -161,13 +161,13 @@ module("Unit | Utility | transformers", function (hooks) {
     });
   });
 
-  module("applyTransformer", function (innerHooks) {
+  module("applyValueTransformer", function (innerHooks) {
     innerHooks.beforeEach(function () {
       acceptNewTransformerNames();
 
       withPluginApi("1.34.0", (api) => {
-        api.addTransformerName("test-value1-transformer");
-        api.addTransformerName("test-value2-transformer");
+        api.addValueTransformerName("test-value1-transformer");
+        api.addValueTransformerName("test-value2-transformer");
       });
 
       acceptTransformerRegistrations();
@@ -175,7 +175,7 @@ module("Unit | Utility | transformers", function (hooks) {
 
     test("raises an exception if the transformer name does not exist", function (assert) {
       assert.throws(
-        () => applyTransformer("whatever", "foo"),
+        () => applyValueTransformer("whatever", "foo"),
         /does not exist. Did you forget to register it/
       );
     });
@@ -191,27 +191,29 @@ module("Unit | Utility | transformers", function (hooks) {
       };
 
       assert.ok(
-        notThrows(() => applyTransformer("test-value1-transformer", "foo")),
+        notThrows(() =>
+          applyValueTransformer("test-value1-transformer", "foo")
+        ),
         "it won't throw an error if context is not passed"
       );
 
       assert.ok(
         notThrows(() =>
-          applyTransformer("test-value1-transformer", "foo", undefined)
+          applyValueTransformer("test-value1-transformer", "foo", undefined)
         ),
         "it won't throw an error if context is undefined"
       );
 
       assert.ok(
         notThrows(() =>
-          applyTransformer("test-value1-transformer", "foo", null)
+          applyValueTransformer("test-value1-transformer", "foo", null)
         ),
         "it won't throw an error if context is null"
       );
 
       assert.ok(
         notThrows(() =>
-          applyTransformer("test-value1-transformer", "foo", {
+          applyValueTransformer("test-value1-transformer", "foo", {
             pojo: true,
             property: "foo",
           })
@@ -220,33 +222,37 @@ module("Unit | Utility | transformers", function (hooks) {
       );
 
       assert.throws(
-        () => applyTransformer("test-value1-transformer", "foo", ""),
+        () => applyValueTransformer("test-value1-transformer", "foo", ""),
         /context must be a simple JS object/,
         "it will throw an error if context is a string"
       );
 
       assert.throws(
-        () => applyTransformer("test-value1-transformer", "foo", 0),
+        () => applyValueTransformer("test-value1-transformer", "foo", 0),
         /context must be a simple JS object/,
         "it will throw an error if context is a number"
       );
 
       assert.throws(
-        () => applyTransformer("test-value1-transformer", "foo", false),
+        () => applyValueTransformer("test-value1-transformer", "foo", false),
         /context must be a simple JS object/,
         "it will throw an error if context is a boolean value"
       );
 
       assert.throws(
         () =>
-          applyTransformer("test-value1-transformer", "foo", () => "function"),
+          applyValueTransformer(
+            "test-value1-transformer",
+            "foo",
+            () => "function"
+          ),
         /context must be a simple JS object/,
         "it will throw an error if context is a function"
       );
 
       assert.throws(
         () =>
-          applyTransformer(
+          applyValueTransformer(
             "test-value1-transformer",
             "foo",
             EmberObject.create({
@@ -259,7 +265,7 @@ module("Unit | Utility | transformers", function (hooks) {
 
       assert.throws(
         () =>
-          applyTransformer(
+          applyValueTransformer(
             "test-value1-transformer",
             "foo",
             EmberObject.create({
@@ -273,7 +279,11 @@ module("Unit | Utility | transformers", function (hooks) {
       class Testable {}
       assert.throws(
         () =>
-          applyTransformer("test-value1-transformer", "foo", new Testable()),
+          applyValueTransformer(
+            "test-value1-transformer",
+            "foo",
+            new Testable()
+          ),
         /context must be a simple JS object/,
         "it will throw an error if context is an instance of a class"
       );
@@ -288,11 +298,11 @@ module("Unit | Utility | transformers", function (hooks) {
         }
 
         get value1() {
-          return applyTransformer("test-value1-transformer", this.#value);
+          return applyValueTransformer("test-value1-transformer", this.#value);
         }
 
         get value2() {
-          return applyTransformer("test-value2-transformer", this.#value);
+          return applyValueTransformer("test-value2-transformer", this.#value);
         }
       }
 
@@ -311,7 +321,7 @@ module("Unit | Utility | transformers", function (hooks) {
       );
 
       withPluginApi("1.34.0", (api) => {
-        api.registerTransformer("test-value1-transformer", ({ value }) => {
+        api.registerValueTransformer("test-value1-transformer", ({ value }) => {
           return value * 10;
         });
       });
@@ -333,7 +343,7 @@ module("Unit | Utility | transformers", function (hooks) {
       let expectedContext = null;
 
       withPluginApi("1.34.0", (api) => {
-        api.registerTransformer(
+        api.registerValueTransformer(
           "test-value1-transformer",
           // eslint-disable-next-line no-unused-vars
           ({ value, context }) => {
@@ -344,7 +354,7 @@ module("Unit | Utility | transformers", function (hooks) {
         );
       });
 
-      const value = applyTransformer("test-value1-transformer", false, {
+      const value = applyValueTransformer("test-value1-transformer", false, {
         prop1: true,
         prop2: false,
       });
@@ -363,7 +373,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("multiple transformers registered for the same name will be applied in sequence", function (assert) {
       class Testable {
         get sequence() {
-          return applyTransformer("test-value1-transformer", ["r"]);
+          return applyValueTransformer("test-value1-transformer", ["r"]);
         }
       }
 
@@ -376,16 +386,16 @@ module("Unit | Utility | transformers", function (hooks) {
       );
 
       withPluginApi("1.34.0", (api) => {
-        api.registerTransformer("test-value1-transformer", ({ value }) => {
+        api.registerValueTransformer("test-value1-transformer", ({ value }) => {
           return ["r", ...value];
         });
-        api.registerTransformer("test-value1-transformer", ({ value }) => {
+        api.registerValueTransformer("test-value1-transformer", ({ value }) => {
           return [...value, "e", "c"];
         });
-        api.registerTransformer("test-value1-transformer", ({ value }) => {
+        api.registerValueTransformer("test-value1-transformer", ({ value }) => {
           return ["o", ...value];
         });
-        api.registerTransformer("test-value1-transformer", ({ value }) => {
+        api.registerValueTransformer("test-value1-transformer", ({ value }) => {
           return ["c", ...value, "t"];
         });
       });

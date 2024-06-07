@@ -148,7 +148,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 import {
   _addTransformerName,
   _registerTransformer,
-} from "./plugin-api/value-transformer";
+} from "./plugin-api/transformer";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -333,7 +333,7 @@ class PluginApi {
   /**
    * Add a new valid transformer name.
    *
-   * Use this API to add a new transformer name that can be used in the `registerTransformer` API.
+   * Use this API to add a new transformer name that can be used in the `registerValueTransformer` API.
    *
    * Notice that this API must be used in a pre-initializer, executed before `freeze-valid-transformers`, otherwise it will throw an error:
    *
@@ -346,7 +346,7 @@ class PluginApi {
    *
    *   initialize() {
    *     withPluginApi("1.33.0", (api) => {
-   *       api.addTransformerName("my-unique-transformer-name");
+   *       api.addValueTransformerName("my-unique-transformer-name");
    *     }),
    *   },
    * };
@@ -354,7 +354,7 @@ class PluginApi {
    * @param name the name of the new transformer
    *
    */
-  addTransformerName(name) {
+  addValueTransformerName(name) {
     _addTransformerName(name);
   }
 
@@ -363,17 +363,17 @@ class PluginApi {
    *
    * Example: return a static value
    * ```
-   * api.registerTransformer("example-transformer", () => "value");
+   * api.registerValueTransformer("example-transformer", () => "value");
    * ```
    *
    * Example: transform the current value
    * ```
-   * api.registerTransformer("example-transformer", ({value}) => value * 10);
+   * api.registerValueTransformer("example-transformer", ({value}) => value * 10);
    * ```
    *
    * Example: transform the current value based on a context property
    * ```
-   * api.registerTransformer("example-transformer", ({value, context}) => {
+   * api.registerValueTransformer("example-transformer", ({value, context}) => {
    *   if (context.property) {
    *     return value * 10;
    *   }
@@ -389,7 +389,7 @@ class PluginApi {
    * @param {*} valueCallback.value the value to be transformed
    * @param {*} [valueCallback.context] the optional context in which the value is being transformed
    */
-  registerTransformer(transformerName, valueCallback) {
+  registerValueTransformer(transformerName, valueCallback) {
     _registerTransformer(transformerName, valueCallback);
   }
 

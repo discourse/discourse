@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.34.0] - 2024-06-06
 
-- Added `registerTransformer` which allows registering a transformer callback to override values defined in Discourse modules
-- Added `addTransformerName` which allows plugins/TCs to register a new transformer to override values defined in their modules
+- Added `registerValueTransformer` which allows registering a transformer callback to override values defined in Discourse modules
+- Added `addValueTransformerName` which allows plugins/TCs to register a new transformer to override values defined in their modules
 
 ## [1.33.0] - 2024-06-06
 

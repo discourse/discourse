@@ -7,7 +7,7 @@ import {
   addExtraUserClasses,
   renderAvatar,
 } from "discourse/helpers/user-avatar";
-import { applyTransformer } from "discourse/lib/plugin-api/value-transformer";
+import { applyValueTransformer } from "discourse/lib/plugin-api/transformer";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import UserTip from "../../user-tip";
@@ -34,7 +34,7 @@ export default class Notifications extends Component {
   }
 
   get avatarSize() {
-    return applyTransformer(
+    return applyValueTransformer(
       "header-notifications-avatar-size",
       DEFAULT_AVATAR_SIZE
     );

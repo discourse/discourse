@@ -45,7 +45,7 @@ import { resetMentions } from "discourse/lib/link-mentions";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
-import { resetTransformers } from "discourse/lib/plugin-api/value-transformer";
+import { resetTransformers } from "discourse/lib/plugin-api/transformer";
 import {
   clearCache as clearOutletCache,
   resetExtraClasses,

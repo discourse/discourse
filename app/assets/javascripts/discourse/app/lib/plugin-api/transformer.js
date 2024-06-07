@@ -6,7 +6,7 @@ const validCoreTransformerNames = new Set([
   "home-logo-href",
 ]);
 
-// do not add anything directly to this set, use addTransformerName instead
+// do not add anything directly to this set, use addValueTransformerName instead
 const validPluginTransformerNames = new Set();
 
 const transformersRegistry = new Map();
@@ -36,7 +36,7 @@ export function _freezeValidTransformerNames() {
 /**
  * Adds a new valid transformer name.
  *
- * INTERNAL API: use pluginApi.addTransformerName instead.
+ * INTERNAL API: use pluginApi.addValueTransformerName instead.
  *
  * DO NOT USE THIS FUNCTION TO ADD CORE TRANSFORMER NAMES. Instead register them directly in the
  * validCoreTransformerNames set above.
@@ -46,7 +46,7 @@ export function _freezeValidTransformerNames() {
 export function _addTransformerName(name) {
   if (registryOpened) {
     throw new Error(
-      "api.registerTransformer was called when the system is no longer accepting new names to be added.\n" +
+      "api.registerValueTransformer was called when the system is no longer accepting new names to be added.\n" +
         `Move your code to a pre-initializer that runs before "freeze-valid-transformers" to avoid this error.`
     );
   }
@@ -54,7 +54,7 @@ export function _addTransformerName(name) {
   if (validCoreTransformerNames.has(name)) {
     // eslint-disable-next-line no-console
     console.warn(
-      `api.addTransformerName: transformer "${name}" matches an existing core transformer and shouldn't be re-registered using the the API.`
+      `api.addValueTransformerName: transformer "${name}" matches an existing core transformer and shouldn't be re-registered using the the API.`
     );
     return;
   }
@@ -62,7 +62,7 @@ export function _addTransformerName(name) {
   if (validPluginTransformerNames.has(name)) {
     // eslint-disable-next-line no-console
     console.warn(
-      `api.addTransformerName: transformer "${name}" is already registered.`
+      `api.addValueTransformerName: transformer "${name}" is already registered.`
     );
     return;
   }
@@ -73,15 +73,15 @@ export function _addTransformerName(name) {
 /**
  * Register a value transformer.
  *
- * INTERNAL API: use pluginApi.registerTransformer instead.
+ * INTERNAL API: use pluginApi.registerValueTransformer instead.
  *
  * @param {string} transformerName the name of the transformer
- * @param {function({value, context})} valueCallback callback that will transform the value.
+ * @param {function({value, context})} callback callback that will transform the value.
  */
-export function _registerTransformer(transformerName, valueCallback) {
+export function _registerTransformer(transformerName, callback) {
   if (!registryOpened) {
     throw new Error(
-      "api.registerTransformer was called while the system was still accepting new transformer names to be added.\n" +
+      "api.registerValueTransformer was called while the system was still accepting new transformer names to be added.\n" +
         `Move your code to an initializer or a pre-initializer that runs after "freeze-valid-transformers" to avoid this error.`
     );
   }
@@ -89,20 +89,20 @@ export function _registerTransformer(transformerName, valueCallback) {
   if (!transformerExists(transformerName)) {
     // eslint-disable-next-line no-console
     console.warn(
-      `api.registerTransformer: transformer "${transformerName}" is unknown and will be ignored. ` +
+      `api.registerValueTransformer: transformer "${transformerName}" is unknown and will be ignored. ` +
         "Perhaps you misspelled it?"
     );
   }
 
-  if (typeof valueCallback !== "function") {
+  if (typeof callback !== "function") {
     throw new Error(
-      "api.registerTransformer requires the valueCallback argument to be a function"
+      "api.registerValueTransformer requires the valueCallback argument to be a function"
     );
   }
 
   const existingTransformers = transformersRegistry.get(transformerName) || [];
 
-  existingTransformers.push(valueCallback);
+  existingTransformers.push(callback);
 
   transformersRegistry.set(transformerName, existingTransformers);
 }
@@ -116,10 +116,10 @@ export function _registerTransformer(transformerName, valueCallback) {
  *
  * @returns {*} the transformed value
  */
-export function applyTransformer(transformerName, defaultValue, context) {
+export function applyValueTransformer(transformerName, defaultValue, context) {
   if (!transformerExists(transformerName)) {
     throw new Error(
-      `applyTransformer: transformer name "${transformerName}" does not exist. Did you forget to register it?`
+      `applyValueTransformer: transformer name "${transformerName}" does not exist. Did you forget to register it?`
     );
   }
 
@@ -128,7 +128,7 @@ export function applyTransformer(transformerName, defaultValue, context) {
     !(typeof context === "object" && context.constructor === Object)
   ) {
     throw (
-      `applyTransformer("${transformerName}", ...): context must be a simple JS object or nullish.\n` +
+      `applyValueTransformer("${transformerName}", ...): context must be a simple JS object or nullish.\n` +
       "Avoid passing complex objects in the context, like for example, component instances or objects that carry " +
       "mutable state directly. This can induce users to registry transformers with callbacks causing side effects " +
       "and mutating the context directly. Inevitably, this leads to fragile integrations."
