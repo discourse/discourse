@@ -5,6 +5,7 @@ class SessionController < ApplicationController
                 only: %i[create forgot_password passkey_challenge passkey_login]
   before_action :rate_limit_login, only: %i[create email_login]
   skip_before_action :redirect_to_login_if_required
+  skip_before_action :redirect_to_profile_if_required
   skip_before_action :preload_json,
                      :check_xhr,
                      only: %i[sso sso_login sso_provider destroy one_time_password]

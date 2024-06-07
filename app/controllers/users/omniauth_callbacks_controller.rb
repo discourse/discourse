@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < ApplicationController
-  skip_before_action :redirect_to_login_if_required
+  skip_before_action :redirect_to_login_if_required, :redirect_to_profile_if_required
 
   layout "no_ember"
 

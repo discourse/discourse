@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PresenceController < ApplicationController
-  skip_before_action :check_xhr
+  skip_before_action :check_xhr, :redirect_to_profile_if_required
   before_action :ensure_logged_in, only: [:update]
   before_action :skip_persist_session
 
