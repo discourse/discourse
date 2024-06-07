@@ -72,8 +72,13 @@ function splitWhere(elements, f) {
 }
 
 function addShowMore(categories) {
+  const categoriesPerParent = new Map();
+
   return categories.reduce((acc, el, i) => {
     acc.push({type: "category", category: el});
+
+    const count = (categoriesPerParent.get(el.parent_category_id) || 0) + 1;
+    categoriesPerParent.set(el.parent_category_id, count)
 
     const elID = categories[i].id;
     const elParentID = categories[i].parent_category_id;
@@ -82,7 +87,7 @@ function addShowMore(categories) {
     const nextIsSibling = nextParentID === elParentID;
     const nextIsChild = nextParentID === elID;
 
-    if (!nextIsSibling && !nextIsChild) {
+    if (!nextIsSibling && !nextIsChild && count == 5) {
       acc.push({type: "show-more", level: el.level});
     }
 
