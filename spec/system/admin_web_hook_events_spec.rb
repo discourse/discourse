@@ -3,8 +3,8 @@
 describe "Admin WebHook Events", type: :system do
   fab!(:web_hook)
   fab!(:admin)
-  fab!(:web_hook_event1) { Fabricate(:web_hook_event, web_hook: web_hook, id: 1, status: 200) }
-  fab!(:web_hook_event2) { Fabricate(:web_hook_event, web_hook: web_hook, id: 2, status: 404) }
+  fab!(:web_hook_event1) { Fabricate(:web_hook_event, web_hook: web_hook, status: 200) }
+  fab!(:web_hook_event2) { Fabricate(:web_hook_event, web_hook: web_hook, status: 404) }
 
   let(:admin_web_hooks_page) { PageObjects::Pages::AdminWebHookEvents.new }
 

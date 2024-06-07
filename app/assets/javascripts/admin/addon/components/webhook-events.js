@@ -26,15 +26,21 @@ export default class WebhookEvents extends Component {
 
   async loadEvents() {
     this.loading = true;
-    this.events = await this.store.findAll("web-hook-event", {
-      webhookId: this.args.webhookId,
-      status: this.args.status,
-    });
-    this.loading = false;
+
+    try {
+      this.events = await this.store.findAll("web-hook-event", {
+        webhookId: this.args.webhookId,
+        status: this.args.status,
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.loading = false;
+    }
   }
 
   get statuses() {
-    let status = [
+    return [
       {
         id: "successful",
         name: I18n.t("admin.web_hooks.events.filter_status.successful"),
@@ -44,7 +50,6 @@ export default class WebhookEvents extends Component {
         name: I18n.t("admin.web_hooks.events.filter_status.failed"),
       },
     ];
-    return status;
   }
 
   @bind
