@@ -34,76 +34,7 @@ export function _freezeValidTransformerNames() {
 }
 
 /**
- * Apply a transformer to a value
- *
- * @param {string} transformerName the name of the transformer applied
- * @param {*} defaultValue the default value
- * @param {*} [context] the optional context to pass to the transformer callbacks.
- *
- * @returns {*} the transformed value
- */
-export function applyTransformer(transformerName, defaultValue, context) {
-  if (!transformerNameExists(transformerName)) {
-    throw new Error(
-      `applyTransformer: transformer name "${transformerName}" does not exist. Did you forget to register it?`
-    );
-  }
-
-  const transformers = transformersRegistry.get(transformerName);
-  if (!transformers) {
-    return defaultValue;
-  }
-
-  let newValue = defaultValue;
-
-  const transformerPoolSize = transformers.length;
-  for (let i = 0; i < transformerPoolSize; i++) {
-    const valueCallback = transformers[i];
-    newValue = valueCallback({ value: newValue, context });
-  }
-
-  return newValue;
-}
-
-/**
- * Register a value transformer.
- *
- * INTERNAL API: use pluginApi.registerTransformer instead.
- *
- * @param {string} transformerName the name of the transformer
- * @param {function({value, context})} valueCallback callback that will transform the value.
- */
-export function _registerTransformer(transformerName, valueCallback) {
-  if (!registryOpened) {
-    throw new Error(
-      "api.registerTransformer was called while the system was still accepting new transformer names to be added.\n" +
-        `Move your code to an initializer or a pre-initializer that runs after "freeze-valid-transformers" to avoid this error.`
-    );
-  }
-
-  if (!transformerNameExists(transformerName)) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      `api.registerTransformer: transformer "${transformerName}" is unknown and will be ignored. ` +
-        "Perhaps you misspelled it?"
-    );
-  }
-
-  if (typeof valueCallback !== "function") {
-    throw new Error(
-      "api.registerTransformer requires the valueCallback argument to be a function"
-    );
-  }
-
-  const existingTransformers = transformersRegistry.get(transformerName) || [];
-
-  existingTransformers.push(valueCallback);
-
-  transformersRegistry.set(transformerName, existingTransformers);
-}
-
-/**
- * Registers a new transformer name.
+ * Adds a new valid transformer name.
  *
  * INTERNAL API: use pluginApi.addTransformerName instead.
  *
@@ -136,16 +67,76 @@ export function _addTransformerName(name) {
     return;
   }
 
-  if (transformersRegistry.size > 0) {
+  validPluginTransformerNames.add(name);
+}
+
+/**
+ * Register a value transformer.
+ *
+ * INTERNAL API: use pluginApi.registerTransformer instead.
+ *
+ * @param {string} transformerName the name of the transformer
+ * @param {function({value, context})} valueCallback callback that will transform the value.
+ */
+export function _registerTransformer(transformerName, valueCallback) {
+  if (!registryOpened) {
     throw new Error(
-      `api.addTransformerName was called after transformers were registered.\n` +
-        "This is not recommended as it can lead to unexpected behavior." +
-        `If a plugin or theme component tried to register a transformer for "${name}" previously, the register was ignored.` +
-        "Consider moving the call to addTransformerName to a pre-initializer."
+      "api.registerTransformer was called while the system was still accepting new transformer names to be added.\n" +
+        `Move your code to an initializer or a pre-initializer that runs after "freeze-valid-transformers" to avoid this error.`
     );
   }
 
-  validPluginTransformerNames.add(name);
+  if (!transformerExists(transformerName)) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `api.registerTransformer: transformer "${transformerName}" is unknown and will be ignored. ` +
+        "Perhaps you misspelled it?"
+    );
+  }
+
+  if (typeof valueCallback !== "function") {
+    throw new Error(
+      "api.registerTransformer requires the valueCallback argument to be a function"
+    );
+  }
+
+  const existingTransformers = transformersRegistry.get(transformerName) || [];
+
+  existingTransformers.push(valueCallback);
+
+  transformersRegistry.set(transformerName, existingTransformers);
+}
+
+/**
+ * Apply a transformer to a value
+ *
+ * @param {string} transformerName the name of the transformer applied
+ * @param {*} defaultValue the default value
+ * @param {*} [context] the optional context to pass to the transformer callbacks.
+ *
+ * @returns {*} the transformed value
+ */
+export function applyTransformer(transformerName, defaultValue, context) {
+  if (!transformerExists(transformerName)) {
+    throw new Error(
+      `applyTransformer: transformer name "${transformerName}" does not exist. Did you forget to register it?`
+    );
+  }
+
+  const transformers = transformersRegistry.get(transformerName);
+  if (!transformers) {
+    return defaultValue;
+  }
+
+  let newValue = defaultValue;
+
+  const transformerPoolSize = transformers.length;
+  for (let i = 0; i < transformerPoolSize; i++) {
+    const valueCallback = transformers[i];
+    newValue = valueCallback({ value: newValue, context });
+  }
+
+  return newValue;
 }
 
 /**
@@ -154,7 +145,7 @@ export function _addTransformerName(name) {
  * @param {string} name the name to check
  * @returns {boolean}
  */
-function transformerNameExists(name) {
+export function transformerExists(name) {
   return (
     validCoreTransformerNames.has(name) || validPluginTransformerNames.has(name)
   );
