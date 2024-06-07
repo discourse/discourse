@@ -9,7 +9,9 @@ import ChatDrawerRoutesSettings from "discourse/plugins/chat/discourse/component
 import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
 
 const ROUTES = {
+  "chat.index": { name: ChatDrawerRoutesChannels },
   "chat.channel": { name: ChatDrawerRoutesChannel },
+  "chat.channel.index": { name: ChatDrawerRoutesChannel },
   "chat.channel.thread": {
     name: ChatDrawerRoutesChannelThread,
     extractParams: (route) => {
@@ -102,6 +104,8 @@ export default class ChatDrawerRouter extends Service {
   @tracked component = null;
   @tracked drawerRoute = null;
   @tracked params = null;
+
+  routeNames = Object.keys(ROUTES);
 
   stateFor(route) {
     this.drawerRoute?.deactivate?.(this.chatHistory.currentRoute);
