@@ -1197,7 +1197,10 @@ en:
       activity_stream: "Activity"
       read: "Read"
       read_help: "Recently read topics"
-      preferences: "Preferences"
+      preferences:
+        title: "Preferences"
+        profile:
+          enforced_required_fields: "You are required to provide additional information before continuing to use this site."
       feature_topic_on_profile:
         open_search: "Select a New Topic"
         title: "Select a Topic"
