@@ -155,7 +155,7 @@ import {
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.33.0";
+export const PLUGIN_API_VERSION = "1.34.0";
 
 const DEPRECATED_HEADER_WIDGETS = [
   "header",
@@ -335,7 +335,24 @@ class PluginApi {
    *
    * Use this API to add a new transformer name that can be used in the `registerTransformer` API.
    *
+   * Notice that this API must be used in a pre-initializer, executed before `freeze-valid-transformers`, otherwise it will throw an error:
+   *
+   * Example:
+   *
+   * // pre-initializers/my-transformers.js
+   *
+   * export default {
+   *   before: "freeze-valid-transformers",
+   *
+   *   initialize() {
+   *     withPluginApi("1.33.0", (api) => {
+   *       api.addTransformerName("my-unique-transformer-name");
+   *     }),
+   *   },
+   * };
+   *
    * @param name the name of the new transformer
+   *
    */
   addTransformerName(name) {
     _addTransformerName(name);
@@ -343,6 +360,27 @@ class PluginApi {
 
   /**
    * Register a transformer to override values defined in Discourse.
+   *
+   * Example: return a static value
+   * ```
+   * api.registerTransformer("example-transformer", () => "value");
+   * ```
+   *
+   * Example: transform the current value
+   * ```
+   * api.registerTransformer("example-transformer", ({value}) => value * 10);
+   * ```
+   *
+   * Example: transform the current value based on a context property
+   * ```
+   * api.registerTransformer("example-transformer", ({value, context}) => {
+   *   if (context.property) {
+   *     return value * 10;
+   *   }
+   *
+   *   return value;
+   * });
+   * ```
    *
    * @param {string} transformerName the name of the transformer
    * @param {function({value, context})} valueCallback callback to be used to transform the value. To avoid potential

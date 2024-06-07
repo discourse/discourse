@@ -27,7 +27,7 @@ module("Unit | Utility | transformers", function (hooks) {
 
       assert.throws(
         () =>
-          withPluginApi("1.33.0", (api) => {
+          withPluginApi("1.34.0", (api) => {
             api.addTransformerName("whatever");
           }),
         /was called when the system is no longer accepting new names to be added/
@@ -37,7 +37,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("warns if name is already registered", function (assert) {
       acceptNewTransformerNames();
 
-      withPluginApi("1.33.0", (api) => {
+      withPluginApi("1.34.0", (api) => {
         api.addTransformerName("home-logo-href"); // existing core transformer
 
         // testing warning about core transformers
@@ -72,7 +72,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("adds a new transformer name", function (assert) {
       acceptNewTransformerNames();
 
-      withPluginApi("1.33.0", (api) => {
+      withPluginApi("1.34.0", (api) => {
         assert.strictEqual(
           transformerExists("a-new-plugin-transformer"),
           false,
@@ -102,7 +102,7 @@ module("Unit | Utility | transformers", function (hooks) {
 
       assert.throws(
         () =>
-          withPluginApi("1.33.0", (api) => {
+          withPluginApi("1.34.0", (api) => {
             api.registerTransformer("whatever", () => "foo"); // the name doesn't really matter at this point
           }),
         /was called while the system was still accepting new transformer names/
@@ -110,7 +110,7 @@ module("Unit | Utility | transformers", function (hooks) {
     });
 
     test("warns if transformer is unknown", function (assert) {
-      withPluginApi("1.33.0", (api) => {
+      withPluginApi("1.34.0", (api) => {
         api.registerTransformer("whatever", () => "foo");
 
         // testing warning about core transformers
@@ -126,7 +126,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("raises an exception if the callback parameter is not a function", function (assert) {
       assert.throws(
         () =>
-          withPluginApi("1.33.0", (api) => {
+          withPluginApi("1.34.0", (api) => {
             api.registerTransformer("whatever", "foo");
           }),
         /requires the valueCallback argument to be a function/
@@ -136,7 +136,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("registering a new transformer works", function (assert) {
       acceptNewTransformerNames();
 
-      withPluginApi("1.33.0", (api) => {
+      withPluginApi("1.34.0", (api) => {
         api.addTransformerName("test-transformer");
         acceptTransformerRegistrations();
 
@@ -164,7 +164,7 @@ module("Unit | Utility | transformers", function (hooks) {
     innerHooks.beforeEach(function () {
       acceptNewTransformerNames();
 
-      withPluginApi("1.33.0", (api) => {
+      withPluginApi("1.34.0", (api) => {
         api.addTransformerName("test-value1-transformer");
         api.addTransformerName("test-value2-transformer");
       });
@@ -210,7 +210,7 @@ module("Unit | Utility | transformers", function (hooks) {
         "it returns the default values when there are no transformers registered"
       );
 
-      withPluginApi("1.33.0", (api) => {
+      withPluginApi("1.34.0", (api) => {
         api.registerTransformer("test-value1-transformer", ({ value }) => {
           return value * 10;
         });
@@ -232,7 +232,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("the transformer callback can receive an optional context object", function (assert) {
       let expectedContext = null;
 
-      withPluginApi("1.33.0", (api) => {
+      withPluginApi("1.34.0", (api) => {
         api.registerTransformer(
           "test-value1-transformer",
           // eslint-disable-next-line no-unused-vars
@@ -275,7 +275,7 @@ module("Unit | Utility | transformers", function (hooks) {
         `initially the sequence contains only the element "r"`
       );
 
-      withPluginApi("1.33.0", (api) => {
+      withPluginApi("1.34.0", (api) => {
         api.registerTransformer("test-value1-transformer", ({ value }) => {
           return ["r", ...value];
         });
