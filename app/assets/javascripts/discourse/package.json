@@ -79,7 +79,7 @@
     "ember-auto-import": "^2.7.3",
     "ember-buffered-proxy": "^2.1.1",
     "ember-cached-decorator-polyfill": "^1.0.2",
-    "ember-cli": "~5.8.1",
+    "ember-cli": "~5.9.0",
     "ember-cli-app-version": "^6.0.1",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-deprecation-workflow": "^2.2.0",
