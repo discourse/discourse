@@ -72,7 +72,6 @@ after_initialize do
     Bookmark.prepend Chat::BookmarkExtension
     User.prepend Chat::UserExtension
     Group.prepend Chat::GroupExtension
-    Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
     Jobs::ExportCsvFile.prepend Chat::MessagesExporter
     WebHook.prepend Chat::OutgoingWebHookExtension
