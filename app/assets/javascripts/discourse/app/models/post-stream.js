@@ -6,7 +6,6 @@ import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
-import TopicSummary from "discourse/lib/topic-summary";
 import DiscourseURL from "discourse/lib/url";
 import { highlightPost } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
@@ -51,7 +50,6 @@ export default class PostStream extends RestModel {
   filterRepliesToPostNumber = null;
   filterUpwardsPostID = null;
   filter = null;
-  topicSummary = null;
   lastId = null;
 
   @or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost") loading;
@@ -86,7 +84,6 @@ export default class PostStream extends RestModel {
       loadingFilter: false,
       stagingPost: false,
       timelineLookup: [],
-      topicSummary: new TopicSummary(),
     });
   }
 
@@ -1257,18 +1254,6 @@ export default class PostStream extends RestModel {
       topic.set("errorMessage", I18n.t("topic.server_error.description"));
       topic.set("noRetry", error.jqXHR.status === 403);
     }
-  }
-
-  collapseSummary() {
-    this.topicSummary.collapse();
-  }
-
-  showSummary(currentUser) {
-    this.topicSummary.generateSummary(currentUser, this.get("topic.id"));
-  }
-
-  processSummaryUpdate(update) {
-    this.topicSummary.processUpdate(update);
   }
 
   _initUserModels(post) {

@@ -50,8 +50,6 @@ export default class TopicMap extends Component {
         postStream=@postStream
         cancelFilter=@cancelFilter
         showTopReplies=@showTopReplies
-        collapseSummary=@collapseSummary
-        showSummary=@showSummary
       }}
     />
 

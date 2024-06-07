@@ -761,8 +761,6 @@ createWidget("post-body", {
         @showPMMap={{@data.showPMMap}}
         @cancelFilter={{@data.cancelFilter}}
         @showTopReplies={{@data.showTopReplies}}
-        @collapseSummary={{@data.collapseSummary}}
-        @showSummary={{@data.showSummary}}
         @showInvite={{@data.showInvite}}
         @removeAllowedGroup={{@data.removeAllowedGroup}}
         @removeAllowedUser={{@data.removeAllowedUser}}
@@ -774,8 +772,6 @@ createWidget("post-body", {
         showPMMap: attrs.showPMMap,
         cancelFilter: () => this.sendWidgetAction("cancelFilter"),
         showTopReplies: () => this.sendWidgetAction("showTopReplies"),
-        collapseSummary: () => this.sendWidgetAction("collapseSummary"),
-        showSummary: () => this.sendWidgetAction("showSummary"),
         showInvite: () => this.sendWidgetAction("showInvite"),
         removeAllowedGroup: (group) =>
           this.sendWidgetAction("removeAllowedGroup", group),
