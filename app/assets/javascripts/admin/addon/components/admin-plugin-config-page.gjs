@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
-import { LinkTo } from "@ember/routing";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import i18n from "discourse-common/helpers/i18n";
@@ -28,27 +27,16 @@ export default class AdminPluginConfigPage extends Component {
     <div class="admin-plugin-config-page">
       <DBreadcrumbsContainer />
 
-      <DBreadcrumbsItem as |linkClass|>
-        <LinkTo @route="admin" class={{linkClass}}>
-          {{i18n "admin_title"}}
-        </LinkTo>
-      </DBreadcrumbsItem>
-
-      <DBreadcrumbsItem as |linkClass|>
-        <LinkTo @route="adminPlugins" class={{linkClass}}>
-          {{i18n "admin.plugins.title"}}
-        </LinkTo>
-      </DBreadcrumbsItem>
-
-      <DBreadcrumbsItem as |linkClass|>
-        <LinkTo
-          @route="adminPlugins.show"
-          @model={{@plugin}}
-          class={{linkClass}}
-        >
-          {{@plugin.nameTitleized}}
-        </LinkTo>
-      </DBreadcrumbsItem>
+      <DBreadcrumbsItem @route="admin" @label={{i18n "admin_title"}} />
+      <DBreadcrumbsItem
+        @route="adminPlugins"
+        @label={{i18n "admin.plugins.title"}}
+      />
+      <DBreadcrumbsItem
+        @route="adminPlugins.show"
+        @model={{@plugin}}
+        @label={{@plugin.nameTitleized}}
+      />
 
       <AdminPluginConfigMetadata @plugin={{@plugin}} />
 
