@@ -9,7 +9,10 @@ const TopicBulkSelectDropdown = <template>
         count=@bulkSelectHelper.selected.length
       }}
     </span>
-    <BulkSelectTopicsDropdown @bulkSelectHelper={{@bulkSelectHelper}} />
+    <BulkSelectTopicsDropdown
+      @bulkSelectHelper={{@bulkSelectHelper}}
+      @afterBulkActionComplete={{@afterBulkActionComplete}}
+    />
   </div>
 </template>;
 
