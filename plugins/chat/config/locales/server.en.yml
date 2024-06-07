@@ -240,18 +240,20 @@ en:
         other: "You have new chat messages"
       from: "%{site_name}"
       subject:
-        private_message: "[%{email_prefix}] New message"
-        direct_message_from_1: "[%{email_prefix}] New message from %{username}"
-        direct_message_from_2: "[%{email_prefix}] New message from %{username1} and %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] New message from %{username} and %{count} other"
-          other: "[%{email_prefix}] New message from %{username} and %{count} others"
-        chat_channel_1: "[%{email_prefix}] New message in %{channel}"
-        chat_channel_2: "[%{email_prefix}] New message in %{channel1} and %{channel2}"
-        chat_channel_more:
-          one: "[%{email_prefix}] New message in %{channel} and %{count} other"
-          other: "[%{email_prefix}] New message in %{channel} and %{count} others"
-        chat_channel_and_direct_message: "[%{email_prefix}] New message in %{channel} and from %{username}"
+        private_email:
+          one: "[%{site_name}] New message"
+          other: "[%{site_name}] New messages"
+        chat_dm_1:
+          one: "[%{site_name}] New message from %{name}"
+          other: "[%{site_name}] New messages from %{name}"
+        chat_dm_2: "[%{site_name}] New messages from %{name_1} and %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] New messages from %{name} and %{count} others"
+        chat_channel_1:
+          one: "[%{site_name}] New message in %{channel}"
+          other: "[%{site_name}] New messages in %{channel}"
+        chat_channel_2: "[%{site_name}] New messages in %{channel_1} and %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] New messages in %{channel} and %{count} others"
+        chat_channel_and_dm: "[%{site_name}] New messages in %{channel} and from %{name}"
       unsubscribe: "This chat summary is sent from %{site_link} when you are away. Change your %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       unsubscribe_no_link: "This chat summary is sent from %{site_link} when you are away. Change your %{email_preferences_link}."
       view_messages:
