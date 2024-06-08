@@ -1,36 +1,18 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "extralite"
 require "thor"
 require_relative "../lib/migrations"
 
 module Migrations
-  load_rails_environment
   configure_zeitwerk
 
   class CommandLineInterface < ::Thor
     extend ::Migrations::CLI::ThorExt
 
-    desc "convert", "Convert a file"
-    def convert
-      puts "Converting..."
-
-      IntermediateDB::Migrator.reset!("/tmp/converter/intermediate.db")
-      IntermediateDB::Migrator.migrate("/tmp/converter/intermediate.db")
-    end
-
-    desc "import", "Import a file"
-    def import
-      puts "Importing into Discourse #{Discourse::VERSION::STRING}"
-      puts "Extralite SQLite version: #{Extralite.sqlite3_version}"
-    end
-
-    desc "upload", "Upload a file"
-    def upload
-      # Your implementation for the 'upload' command
-      puts "Uploading..."
-    end
+    include Migrations::CLI::ConvertCommand
+    include Migrations::CLI::ImportCommand
+    include Migrations::CLI::UploadCommand
   end
 
   CommandLineInterface.start
