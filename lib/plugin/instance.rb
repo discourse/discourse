@@ -1177,17 +1177,6 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_bookmarkable(RegisteredBookmarkable.new(klass), self)
   end
 
-  ## ! TODO: move to discourse-ai
-  # Register an object that inherits from [DiscourseAi::Summarization::Models::Base], which provides a way
-  # to summarize content. Staff can select which strategy to use
-  # through the `summarization_strategy` setting.
-  def register_summarization_strategy(strategy)
-    if !strategy.class.ancestors.include?(DiscourseAi::Summarization::Models::Base)
-      raise ArgumentError.new("Not a valid summarization strategy")
-    end
-    DiscoursePluginRegistry.register_summarization_strategy(strategy, self)
-  end
-
   ##
   # Register a block that will be called when PostActionCreator is going to notify a
   # user of a post action. If any of these handlers returns false the default PostCreator
