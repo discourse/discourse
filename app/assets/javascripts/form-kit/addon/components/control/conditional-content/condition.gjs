@@ -1,8 +1,9 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { eq } from "truth-helpers";
 
-export default class FkControlConditionalDisplayOption extends Component {
+export default class FkControlConditionalContentOption extends Component {
   <template>
     <div class="d-form-conditional-display__condition">
       {{yield}}
@@ -10,7 +11,7 @@ export default class FkControlConditionalDisplayOption extends Component {
         type="radio"
         name={{@id}}
         value={{@name}}
-        checked={{@active}}
+        checked={{eq @name @activeName}}
         {{on "change" (fn @setCondition @name)}}
       />
     </div>

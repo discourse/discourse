@@ -1,0 +1,7 @@
+.d-form__control-input {
+  width: 100% !important;
+
+  .d-form-field.has-error & {
+    border-color: var(--danger);
+  }
+}

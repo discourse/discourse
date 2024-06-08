@@ -1,27 +1,22 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import FkControlSelectOption from "./select/option";
 
-export default class FkControlSelect extends Component {
+export default class FkControlText extends Component {
   @action
   handleInput(event) {
     this.args.setValue(event.target.value);
   }
 
   <template>
-    <select
-      name={{@name}}
-      value={{@value}}
+    <textarea
       id={{@fieldId}}
+      name={{@name}}
       aria-invalid={{if @invalid "true"}}
       aria-describedby={{if @invalid @errorId}}
+      class="d-form-control-text"
       ...attributes
-      class="d-form__control-select"
       {{on "input" this.handleInput}}
-    >
-      {{yield (hash Option=(component FkControlSelectOption selected=@value))}}
-    </select>
+    >{{@value}}</textarea>
   </template>
 }

@@ -1,18 +1,19 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { assert, debug, warn } from "@ember/debug";
+import { assert, debug } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
-import FkControlConditionalDisplay from "form-kit/components/control/conditional-display";
-import FkControlInputGroup from "form-kit/components/control/input-group";
+import FKControlConditionalContent from "form-kit/components/control/conditional-content";
+import FKControlInputGroup from "form-kit/components/control/input-group";
+import FKFormErrors from "form-kit/components/errors";
+import FKFormField from "form-kit/components/field";
+import Row from "form-kit/components/row";
+import FKSection from "form-kit/components/section";
 import { VALIDATION_TYPES } from "form-kit/lib/constants";
 import FieldData from "form-kit/lib/field-data";
 import DButton from "discourse/components/d-button";
-import FormErrors from "./form/errors";
-import FormField from "./form/field";
-import Row from "./row";
 
 export default class Form extends Component {
   @tracked validationState = {};
@@ -133,7 +134,10 @@ export default class Form extends Component {
       !this.fields.has(name)
     );
 
-    this.fields.set(name, new FieldData(field));
+    const fieldModel = new FieldData(field);
+    this.fields.set(name, fieldModel);
+
+    return fieldModel;
   }
 
   @action
@@ -224,12 +228,13 @@ export default class Form extends Component {
       {{yield
         (hash
           Row=(component Row)
-          ConditionalDisplay=(component FkControlConditionalDisplay)
+          Section=(component FKSection)
+          ConditionalConTent=(component FKControlConditionalContent)
           Errors=(component
-            FormErrors errors=this.visibleErrors withPrefix=true
+            FKFormErrors errors=this.visibleErrors withPrefix=true
           )
           Field=(component
-            FormField
+            FKFormField
             data=this.effectiveData
             set=this.set
             registerField=this.registerField
@@ -237,7 +242,7 @@ export default class Form extends Component {
             errors=this.validationState
           )
           InputGroup=(component
-            FkControlInputGroup
+            FKControlInputGroup
             data=this.effectiveData
             set=this.set
             registerField=this.registerField

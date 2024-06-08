@@ -16,6 +16,10 @@ export default class FieldData {
       : null;
   }
 
+  get disabled() {
+    return this.fieldRegistration.disabled;
+  }
+
   get required() {
     return this.rules?.required ?? false;
   }

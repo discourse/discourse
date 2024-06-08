@@ -2,27 +2,18 @@ import Component from "@glimmer/component";
 import { assert } from "@ember/debug";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import FormMeta from "form-kit/components/form/meta";
-import FormText from "form-kit/components/form/text";
 
-const VALID_INPUT_TYPES = [
-  // 'button' - not useful as a control component
-  // 'checkbox' - handled separately, for handling `checked` correctly and operating with true boolean values
+const SUPPORTED_TYPES = [
   "color",
   "date",
   "datetime-local",
   "email",
-  // 'file' - would need special handling
   "hidden",
-  // 'image' - not useful as a control component
   "month",
   "number",
   "password",
-  // 'radio' - handled separately, for handling groups or radio buttons
   "range",
-  // 'reset' - would need special handling
   "search",
-  // 'submit' - not useful as a control component
   "tel",
   "text",
   "time",
@@ -42,8 +33,8 @@ export default class FkControlInput extends Component {
     assert(
       `input component does not support @type="${
         args.type
-      }", must be one of ${VALID_INPUT_TYPES.join(", ")}!`,
-      args.type === undefined || VALID_INPUT_TYPES.includes(args.type)
+      }", must be one of ${SUPPORTED_TYPES.join(", ")}!`,
+      args.type === undefined || SUPPORTED_TYPES.includes(args.type)
     );
   }
 
@@ -53,6 +44,11 @@ export default class FkControlInput extends Component {
 
   @action
   handleInput(event) {
+    if (event.target.value === "") {
+      this.args.setValue(undefined);
+      return;
+    }
+
     this.args.setValue(
       this.type === "number"
         ? parseFloat(event.target.value)
@@ -61,39 +57,13 @@ export default class FkControlInput extends Component {
   }
 
   <template>
-    {{#if @label}}
-      <label class="d-form-input-label" for={{@name}}>
-        {{@label}}
-
-        {{#unless @required}}
-          <span class="d-form-field__optional">(Optional)</span>
-        {{/unless}}
-      </label>
-    {{/if}}
-
-    {{#if @help}}
-      <FormText>{{@help}}</FormText>
-    {{/if}}
-
     <input
-      name={{@name}}
       type={{this.type}}
       value={{@value}}
-      id={{@fieldId}}
-      aria-invalid={{if @invalid "true"}}
-      aria-describedby={{if @invalid @errorId}}
-      class="d-form-control-input"
+      class="d-form__control-input"
+      disabled={{@disabled}}
       ...attributes
       {{on "input" this.handleInput}}
-    />
-
-    <FormMeta
-      @description={{@description}}
-      @disabled={{@disabled}}
-      @value={{@value}}
-      @maxLength={{@maxLength}}
-      @errorId={{@errorId}}
-      @errors={{@errors}}
     />
   </template>
 }

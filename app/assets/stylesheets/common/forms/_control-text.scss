@@ -1,0 +1,11 @@
+.d-form__control-text {
+  // reset textarea styles
+  width: 100% !important;
+  margin: 0 !important;
+
+  display: block; // prevents firefox/chrome to add spacing under textarea
+
+  .d-form-field.has-error & {
+    border-color: var(--danger);
+  }
+}

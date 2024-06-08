@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import icon from "discourse-common/helpers/d-icon";
-import FkFormText from "./text";
 
 export default class FormErrors extends Component {
   get withPrefix() {
@@ -25,12 +24,7 @@ export default class FormErrors extends Component {
   }
 
   <template>
-    <FkFormText
-      class="d-form-errors"
-      id={{@id}}
-      aria-live="assertive"
-      ...attributes
-    >
+    <p class="d-form__errors" id={{@id}} aria-live="assertive" ...attributes>
       {{#each-in this.visibleErrors as |name errors|}}
         {{#each errors as |error|}}
           <span>
@@ -39,6 +33,6 @@ export default class FormErrors extends Component {
           </span>
         {{/each}}
       {{/each-in}}
-    </FkFormText>
+    </p>
   </template>
 }

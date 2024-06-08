@@ -3,9 +3,8 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import FkControlMenuItem from "form-kit/components/control/menu/item";
-import FormMeta from "form-kit/components/form/meta";
-import FormText from "form-kit/components/form/text";
-import FkText from "form-kit/components/text";
+// import FormMeta from "form-kit/components/form/meta";
+import FormText from "form-kit/components/text";
 import DMenu from "discourse/components/d-menu";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse-common/helpers/d-icon";
@@ -39,19 +38,6 @@ export default class FkControlMenu extends Component {
   }
 
   <template>
-    {{#if @label}}
-      <label class="d-form-select-label" for={{@name}}>
-        {{@label}}
-        {{#unless @required}}
-          <span class="d-form-field__optional">(Optional)</span>
-        {{/unless}}
-      </label>
-    {{/if}}
-
-    {{#if @help}}
-      <FormText>{{@help}}</FormText>
-    {{/if}}
-
     <DMenu @onRegisterApi={{this.registerMenuApi}}>
       <:trigger>
         <span class="d-button-label">
@@ -74,14 +60,5 @@ export default class FkControlMenu extends Component {
         </DropdownMenu>
       </:content>
     </DMenu>
-
-    <FormMeta
-      @description={{@description}}
-      @disabled={{@disabled}}
-      @value={{@value}}
-      @maxLength={{@maxLength}}
-      @errorId={{@errorId}}
-      @errors={{@errors}}
-    />
   </template>
 }

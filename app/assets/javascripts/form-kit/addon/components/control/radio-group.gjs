@@ -1,27 +1,27 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import FormErrors from "form-kit/components/form/errors";
-import FkText from "form-kit/components/form/text";
+import FKErrors from "form-kit/components/errors";
+import FKText from "form-kit/components/text";
 import uniqueId from "discourse/helpers/unique-id";
 import FkControlRadioGroupRadio from "./radio-group/radio";
 
-export default class FkControlRadioGroup extends Component {
+export default class FKControlRadioGroup extends Component {
   <template>
     {{#let (uniqueId) as |labelId|}}
       <fieldset
         aria-invalid={{if @invalid "true"}}
         aria-describedby={{if @invalid @errorId}}
-        class="d-form-radio-group"
+        class="d-form__radio-group"
         ...attributes
       >
-        {{#if @legend}}
-          <legend class="d-form-radio-group__legend">{{@legend}}</legend>
+        {{#if @title}}
+          <legend class="d-form__radio-group__legend">{{@title}}</legend>
         {{/if}}
 
-        {{#if @help}}
-          <FkText>
-            {{@help}}
-          </FkText>
+        {{#if @subtitle}}
+          <FKText class="d-form__radio-group__subtitle">
+            {{@subtitle}}
+          </FKText>
         {{/if}}
 
         {{yield
@@ -32,7 +32,7 @@ export default class FkControlRadioGroup extends Component {
           )
         }}
 
-        <FormErrors @errors={{@errors}} />
+        <FKErrors @errors={{@errors}} />
       </fieldset>
     {{/let}}
   </template>

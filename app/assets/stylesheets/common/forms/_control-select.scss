@@ -1,0 +1,21 @@
+.d-form__control-select {
+  background: var(--secondary);
+  border: 1px solid var(--primary-low-mid);
+  border-radius: var(--d-input-border-radius);
+  padding: 0.5em 2.25rem 0.5em 0.65em;
+  box-sizing: border-box;
+  width: 100% !important;
+  margin: 0 !important;
+  appearance: none;
+  background-image: svg-uri(
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$secondary}' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/></svg>"
+  );
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+  max-height: 36px;
+
+  .d-form-field.has-error & {
+    border-color: var(--danger);
+  }
+}

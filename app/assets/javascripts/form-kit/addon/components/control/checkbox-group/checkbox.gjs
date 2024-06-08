@@ -3,22 +3,27 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import FKLabel from "form-kit/components/label";
+import { eq } from "truth-helpers";
 import uniqueId from "discourse/helpers/unique-id";
 
-export default class FkControlRadioGroupRadio extends Component {
+export default class FKControlCheckboxGroupCheckbox extends Component {
+  @action
+  handleInput() {
+    this.args.setValue(!this.args.value);
+  }
+
   <template>
+    --------
+
     {{#let (uniqueId) as |uuid|}}
       <div class="d-form-field d-form-radio">
         <FKLabel @fieldId={{uuid}} class="d-form-radio__label">
           <input
-            name={{@name}}
-            type="radio"
-            value={{@value}}
-            checked={{@checked}}
-            id={{uuid}}
-            class="d-form-radio__input"
+            type="checkbox"
+            checked={{eq @value true}}
+            class="d-form__control-checkbox"
             ...attributes
-            {{on "change" (fn @setValue @value)}}
+            {{on "change" this.handleInput}}
           />
           {{@label}}
         </FKLabel>

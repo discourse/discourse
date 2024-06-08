@@ -1,4 +1,4 @@
-.d-form-input-group {
+.d-form__input-group {
   position: relative;
   display: flex;
   align-items: stretch;
@@ -21,7 +21,7 @@
     width: auto;
   }
 
-  .d-form-control-input {
+  .d-form__control-input {
     z-index: 1;
     width: 100% !important;
     min-width: auto !important;

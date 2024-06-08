@@ -2,30 +2,28 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { eq } from "truth-helpers";
 import uniqueId from "discourse/helpers/unique-id";
-import FkControlConditionalDisplayCondition from "./conditional-display/condition";
-import FkControlConditionalDisplayContent from "./conditional-display/content";
+import FKControlConditionalDisplayCondition from "./conditional-content/condition";
+import FKControlConditionalContentContent from "./conditional-content/content";
 
 const Conditions = <template>
   {{yield
     (component
-      FkControlConditionalDisplayCondition
+      FKControlConditionalDisplayCondition
+      activeName=@activeName
       id=@id
-      name=@name
       setCondition=@setCondition
-      active=(eq @activeName @name)
     )
   }}
 </template>;
 
 const Contents = <template>
   {{yield
-    (component FkControlConditionalDisplayContent activeName=@activeName)
+    (component FKControlConditionalContentContent activeName=@activeName)
   }}
 </template>;
 
-export default class FkControlConditionalDisplay extends Component {
+export default class FkControlConditionalContent extends Component {
   @tracked activeName = this.args.activeName;
 
   id = uniqueId();
@@ -45,7 +43,7 @@ export default class FkControlConditionalDisplay extends Component {
             setCondition=this.setCondition
             id=this.id
           )
-          Contents=(component Contents activeName=this.activeName)
+          Contents=(component Contents activeName=this.activeName id=this.id)
         )
       }}
     </div>

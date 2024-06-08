@@ -1,20 +1,20 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import FormField from "form-kit/components/form/field";
-import FkText from "form-kit/components/text";
+import FKField from "form-kit/components/field";
+import FKText from "form-kit/components/text";
 
-const FkTextWrapper = <template>
-  <FkText ...attributes>{{yield}}</FkText>
+const FKTextWrapper = <template>
+  <FKText ...attributes>{{yield}}</FKText>
 </template>;
 
-export default class FkControlInputGroup extends Component {
+export default class FKControlInputGroup extends Component {
   <template>
-    <div class="d-form-input-group">
+    <div class="d-form__input-group">
       {{yield
         (hash
-          Text=(component FkTextWrapper)
+          Text=(component FKTextWrapper)
           Field=(component
-            FormField
+            FKField
             data=@data
             set=@set
             registerField=@registerField
