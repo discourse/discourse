@@ -17,7 +17,7 @@ module Migrations::IntermediateDB
     end
 
     def migrate
-      @db = Connection.create(path: @db_path)
+      @db = Connection.open_database(path: @db_path)
 
       if new_database?
         create_schema_migrations_table

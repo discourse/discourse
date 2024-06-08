@@ -9,7 +9,9 @@ module Migrations::IntermediateDB
     TRANSACTION_BATCH_SIZE = 1000
     PREPARED_STATEMENT_CACHE_SIZE = 5
 
-    def self.create(path:, journal_mode: DEFAULT_JOURNAL_MODE)
+    DEFAULT_INSERT_ACTIONS = { "config" => "OR REPLACE", "uploads" => "OR IGNORE" }
+
+    def self.open_database(path:, journal_mode: DEFAULT_JOURNAL_MODE)
       FileUtils.mkdir_p(File.dirname(path))
 
       db = ::Extralite::Database.new(path)
@@ -24,20 +26,25 @@ module Migrations::IntermediateDB
       db
     end
 
-    def self.connect
-      db = self.class.new
-      yield(db)
+    def self.connect(path)
+      connection = self.new(path:)
+      yield(connection)
     ensure
-      db.close if db
+      connection.close if connection
     end
 
     attr_reader :db
     attr_reader :path
 
-    def initialize(path:, journal_mode: DEFAULT_JOURNAL_MODE)
+    def initialize(
+      path:,
+      journal_mode: DEFAULT_JOURNAL_MODE,
+      transaction_batch_size: TRANSACTION_BATCH_SIZE
+    )
       @path = path
       @journal_mode = journal_mode
-      @db = self.class.create(path: path, journal_mode: journal_mode)
+      @transaction_batch_size = transaction_batch_size
+      @db = self.class.open_database(path: path, journal_mode: journal_mode)
       @statement_counter = 0
 
       # don't cache too many prepared statements
@@ -57,15 +64,14 @@ module Migrations::IntermediateDB
 
     def reconnect
       close
-      @db = self.class.create(path: @path, journal_mode: @journal_mode)
+      @db = self.class.open_database(path: @path, journal_mode: @journal_mode)
     end
 
-    def copy_from(source_db_paths)
+    def copy_from(source_db_paths, insert_actions: DEFAULT_INSERT_ACTIONS)
       commit_transaction
       @statement_counter = 0
 
-      table_names = get_table_names
-      insert_actions = { "config" => "OR REPLACE", "uploads" => "OR IGNORE" }
+      table_names = @db.tables.excluding("schema_migrations")
 
       source_db_paths.each do |source_db_path|
         @db.execute("ATTACH DATABASE ? AS source", source_db_path)
@@ -79,6 +85,20 @@ module Migrations::IntermediateDB
       end
     end
 
+    def insert(sql, *parameters)
+      begin_transaction if @statement_counter == 0
+
+      stmt = @statement_cache.getset(sql) { @db.prepare(sql) }
+      stmt.execute(*parameters)
+
+      if (@statement_counter += 1) >= @transaction_batch_size
+        commit_transaction
+        @statement_counter = 0
+      end
+    end
+
+    private
+
     def begin_transaction
       return if @db.transaction_active?
       @db.execute("BEGIN DEFERRED TRANSACTION")
@@ -87,35 +107,6 @@ module Migrations::IntermediateDB
     def commit_transaction
       return unless @db.transaction_active?
       @db.execute("COMMIT")
-    end
-
-    private
-
-    def insert(sql, *parameters)
-      begin_transaction if @statement_counter == 0
-
-      stmt = @statement_cache.getset(sql) { @db.prepare(sql) }
-      stmt.execute(*parameters)
-
-      if (@statement_counter += 1) > TRANSACTION_BATCH_SIZE
-        commit_transaction
-        @statement_counter = 0
-      end
-    end
-
-    def iso8601(column_name, alias_name = nil)
-      alias_name ||= column_name.split(".").last
-      "strftime('%Y-%m-%dT%H:%M:%SZ', #{column_name}) AS #{alias_name}"
-    end
-
-    def get_table_names
-      @db.query_splat(<<~SQL)
-        SELECT name
-          FROM sqlite_schema
-         WHERE type = 'table'
-           AND name NOT LIKE 'sqlite_%'
-           AND name NOT IN ('schema_migrations', 'config')
-      SQL
     end
   end
 end
