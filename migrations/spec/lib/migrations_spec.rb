@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "../../lib/migrations"
-
 RSpec.describe Migrations do
   describe ".root_path" do
     it "returns the root path" do

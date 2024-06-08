@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require "active_support"
+require "active_support/core_ext"
+require "zeitwerk"
+
 module Migrations
   def self.root_path
     @root_path ||= File.expand_path("..", __dir__)
@@ -20,8 +24,6 @@ module Migrations
   end
 
   def self.configure_zeitwerk
-    require "zeitwerk"
-
     Zeitwerk::Loader.default_logger = method(:puts) if ENV["DEBUG"]
 
     loader = Zeitwerk::Loader.new
