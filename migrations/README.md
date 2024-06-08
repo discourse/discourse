@@ -6,6 +6,11 @@
 ./bin/cli help
 ```
 
+## Converters
+
+Public converters are stored in `lib/converters/`.
+If you need to run a private converter, put its code into a subdirectory of `private/converters/`
+
 ## Development
 
 ### Running tests
