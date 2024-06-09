@@ -413,6 +413,10 @@ RSpec.describe HtmlToMarkdown do
     expect(html_to_markdown("<u>Underline</u>")).to eq("Underline")
   end
 
+  it "swallows <center>" do
+    expect(html_to_markdown("<center>Centered</center>")).to eq("Centered")
+  end
+
   it "removes <script>" do
     expect(html_to_markdown("<script>var foo = 'bar'</script>")).to eq("")
   end

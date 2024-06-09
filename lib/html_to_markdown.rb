@@ -220,7 +220,7 @@ class HtmlToMarkdown
     "\n\n#{traverse(node)}\n\n"
   end
 
-  TRAVERSABLES ||= %w[aside font span thead tbody tfoot u]
+  TRAVERSABLES ||= %w[aside font span thead tbody tfoot u center]
   TRAVERSABLES.each { |tag| define_method("visit_#{tag}") { |node| traverse(node) } }
 
   def visit_tt(node)
