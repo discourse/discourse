@@ -26,7 +26,7 @@ class HtmlToMarkdown
   end
 
   def remove_not_allowed!(doc)
-    allowed = Set.new
+    allowed = Set.new(@opts[:additional_allowed_tags] || [])
 
     HtmlToMarkdown.private_instance_methods.each do |m|
       if tag = m.to_s[/^visit_(.+)/, 1]

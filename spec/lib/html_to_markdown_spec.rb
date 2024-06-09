@@ -65,6 +65,43 @@ RSpec.describe HtmlToMarkdown do
     expect(html_to_markdown(html)).to eq(markdown.strip)
   end
 
+  it "removes tags that aren't allowed" do
+    html = <<~HTML
+      <custom>Text withing custom <span>tag</span></custom>
+      <div>Text within allowed tag</div>
+    HTML
+
+    expect(html_to_markdown(html)).to eq("Text within allowed tag")
+  end
+
+  it "allows additional tags that can be consumed by subclasses" do
+    class ExtendedHtmlToMarkdown < HtmlToMarkdown
+      def to_markdown
+        yield @doc
+        super
+      end
+    end
+
+    html = <<~HTML
+      <custom-image image-id="42">Image text</custom-image>
+      <div>Text within allowed tag</div>
+    HTML
+
+    md =
+      ExtendedHtmlToMarkdown
+        .new(html)
+        .to_markdown { |doc| expect(doc.css("custom-image")).to be_empty }
+    expect(md).to eq("Text within allowed tag")
+
+    md =
+      ExtendedHtmlToMarkdown
+        .new(html, { additional_allowed_tags: ["custom-image"] })
+        .to_markdown do |doc|
+          doc.css("custom-image").each { |img| img.replace("Image #{img["image-id"]}") }
+        end
+    expect(md).to eq("Image 42\nText within allowed tag")
+  end
+
   it "doesn't error on non-inline elements like (aside, section)" do
     html = <<~HTML
       <aside class="quote no-group">
