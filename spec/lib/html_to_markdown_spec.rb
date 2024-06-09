@@ -527,6 +527,14 @@ RSpec.describe HtmlToMarkdown do
             <td>line</td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td>This</td>
+            <td>is</td>
+            <td>the</td>
+            <td>footer</td>
+          </tr>
+        </tfoot>
       </table>
     HTML
 
@@ -535,6 +543,7 @@ RSpec.describe HtmlToMarkdown do
       | - | - | - | - |
       | I am | the | **first** | row |
       | And this | is the | 2<sup>nd</sup> | line |
+      | This | is | the | footer |
     MD
 
     expect(html_to_markdown(html)).to eq(markdown.strip)
@@ -565,24 +574,24 @@ RSpec.describe HtmlToMarkdown do
       <table>
       <tr>
       <th>
-      
+
       1
-      
+
       </th>
       <th>
-      
+
       2
-      
+
       </th>
       <th>
-      
+
       3
-      
+
       </th>
       <th>
-      
+
       4
-      
+
       </th>
       </tr>
       <tr>
@@ -592,12 +601,12 @@ RSpec.describe HtmlToMarkdown do
 
       </td>
       <td>
-      
+
       **Two**
 
       </td>
       <td>
-      
+
       Three
 
       </td>
@@ -625,14 +634,14 @@ RSpec.describe HtmlToMarkdown do
       <table>
       <tr>
       <th>
-      
+
       1
-      
+
       </th>
       <th>
-      
+
       2
-      
+
       </th>
       </tr>
       <tr>
@@ -671,31 +680,31 @@ RSpec.describe HtmlToMarkdown do
       <th>
 
       1
-      
+
       </th>
       <th>
-      
+
       2
-      
+
       </th>
       </tr>
       <tr>
       <td>
 
       A
-      
+
       </td>
       <td rowspan="2">
-      
+
       B
-      
+
       </td>
       </tr>
       <tr>
       <td>
-      
+
       C
-      
+
       </td>
       </tr>
       </table>
