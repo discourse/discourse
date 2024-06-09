@@ -1,0 +1,17 @@
+CREATE TABLE users
+(
+    id       INTEGER NOT NULL PRIMARY KEY,
+    username TEXT    NOT NULL UNIQUE
+);
+
+CREATE TABLE config
+(
+    name  TEXT NOT NULL PRIMARY KEY,
+    value TEXT NOT NULL
+);
+
+CREATE TABLE uploads
+(
+    id  INTEGER NOT NULL PRIMARY KEY,
+    url TEXT    NOT NULL
+);
