@@ -197,7 +197,9 @@ class HtmlToMarkdown
 
   ALLOWED ||= %w[kbd del ins small big sub sup dl dd dt mark]
   ALLOWED.each do |tag|
-    define_method("visit_#{tag}") { |node| "<#{tag}>#{traverse(node)}</#{tag}>" }
+    define_method("visit_#{tag}") do |node|
+      "<#{tag}>#{traverse(node, within_html_block: true)}</#{tag}>"
+    end
   end
 
   def visit_blockquote(node)
@@ -250,8 +252,8 @@ class HtmlToMarkdown
 
   def visit_abbr(node)
     title = node["title"].presence
-    title_attr = title ? %[ title="#{title}"] : ""
-    "<abbr#{title_attr}>#{traverse(node)}</abbr>"
+    attributes = { title: } if title
+    create_element("abbr", traverse(node, within_html_block: true), attributes).to_html
   end
 
   def visit_acronym(node)
