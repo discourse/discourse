@@ -13,6 +13,13 @@ If you need to run a private converter, put its code into a subdirectory of `pri
 
 ## Development
 
+### Installing Gems
+
+```bash
+bundle config set --local with migrations
+bundle install
+```
+
 ### Running tests
 
 You need to execute `rspec` in the root of the project.
