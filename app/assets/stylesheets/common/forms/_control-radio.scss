@@ -7,3 +7,9 @@
     color: var(--primary);
   }
 }
+
+.d-form__inline-radio {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+}

@@ -10,6 +10,8 @@ export default class FormControlWrapper extends Component {
         return "-input";
       case "FkControlText":
         return "-text";
+      case "FkControlYesNo":
+        return "-yes-no";
       case "FkControlSelect":
         return "-select";
       case "FkControlIconSelector":
@@ -42,13 +44,19 @@ export default class FormControlWrapper extends Component {
       <@component
         @value={{@value}}
         @type={{@type}}
+        @positiveLabel={{@positiveLabel}}
+        @negativeLabel={{@negativeLabel}}
         @setValue={{@setValue}}
         @disabled={{@field.disabled}}
         id={{@fieldId}}
         name={{@name}}
         aria-invalid={{if @invalid "true"}}
         aria-describedby={{if @invalid @errorId}}
-      />
+        ...attributes
+        as |components|
+      >
+        {{yield components}}
+      </@component>
 
       <FKMeta
         @description={{@description}}

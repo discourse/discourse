@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 
-export default class FkControlSelectOption extends Component {
+export default class FKControlSelectOption extends Component {
   get isSelected() {
     return this.args.selected === this.args.value;
   }
@@ -13,13 +13,13 @@ export default class FkControlSelectOption extends Component {
         value={{@value}}
         selected
         ...attributes
-      >{{yield}}</option>
+      >
+        {{yield}}
+      </option>
     {{else}}
-      <option
-        class="d-form-select-option"
-        value={{@value}}
-        ...attributes
-      >{{yield}}</option>
+      <option class="d-form-select-option" value={{@value}} ...attributes>
+        {{yield}}
+      </option>
     {{/if}}
   </template>
 }

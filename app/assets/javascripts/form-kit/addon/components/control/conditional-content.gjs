@@ -2,19 +2,19 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import uniqueId from "discourse/helpers/unique-id";
 import FKControlConditionalDisplayCondition from "./conditional-content/condition";
 import FKControlConditionalContentContent from "./conditional-content/content";
 
 const Conditions = <template>
-  {{yield
-    (component
-      FKControlConditionalDisplayCondition
-      activeName=@activeName
-      id=@id
-      setCondition=@setCondition
-    )
-  }}
+  <div class="d-form__inline-radio">
+    {{yield
+      (component
+        FKControlConditionalDisplayCondition
+        activeName=@activeName
+        setCondition=@setCondition
+      )
+    }}
+  </div>
 </template>;
 
 const Contents = <template>
@@ -26,8 +26,6 @@ const Contents = <template>
 export default class FkControlConditionalContent extends Component {
   @tracked activeName = this.args.activeName;
 
-  id = uniqueId();
-
   @action
   setCondition(name) {
     this.activeName = name;
@@ -38,12 +36,9 @@ export default class FkControlConditionalContent extends Component {
       {{yield
         (hash
           Conditions=(component
-            Conditions
-            activeName=this.activeName
-            setCondition=this.setCondition
-            id=this.id
+            Conditions activeName=this.activeName setCondition=this.setCondition
           )
-          Contents=(component Contents activeName=this.activeName id=this.id)
+          Contents=(component Contents activeName=this.activeName)
         )
       }}
     </div>

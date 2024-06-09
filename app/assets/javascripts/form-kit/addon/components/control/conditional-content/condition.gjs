@@ -1,19 +1,23 @@
-import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import FKLabel from "form-kit/components/label";
 import { eq } from "truth-helpers";
+import uniqueId from "discourse/helpers/unique-id";
 
-export default class FkControlConditionalContentOption extends Component {
-  <template>
-    <div class="d-form-conditional-display__condition">
+const FKControlConditionalContentOption = <template>
+  {{#let (uniqueId) as |uuid|}}
+    <FKLabel @fieldId={{uuid}} class="d-form__control-radio__label">
       {{yield}}
+
       <input
         type="radio"
-        name={{@id}}
+        id={{uuid}}
         value={{@name}}
         checked={{eq @name @activeName}}
         {{on "change" (fn @setCondition @name)}}
       />
-    </div>
-  </template>
-}
+    </FKLabel>
+  {{/let}}
+</template>;
+
+export default FKControlConditionalContentOption;

@@ -3,16 +3,17 @@ import { tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { action, get } from "@ember/object";
-import FkControlCheckbox from "form-kit/components/control/checkbox";
-import FkControlIconPicker from "form-kit/components/control/icon-picker";
-import FkControlImage from "form-kit/components/control/image";
-import FkControlInput from "form-kit/components/control/input";
-import FkControlMenu from "form-kit/components/control/menu";
-import FkControlRadioGroup from "form-kit/components/control/radio-group";
-import FkControlSelect from "form-kit/components/control/select";
-import FkControlText from "form-kit/components/control/text";
-import FkControlWrapper from "form-kit/components/control-wrapper";
-import Row from "form-kit/components/row";
+import FKControlCheckbox from "form-kit/components/control/checkbox";
+import FKControlIconPicker from "form-kit/components/control/icon-picker";
+import FKControlImage from "form-kit/components/control/image";
+import FKControlInput from "form-kit/components/control/input";
+import FKControlMenu from "form-kit/components/control/menu";
+import FKControlQuestion from "form-kit/components/control/question";
+import FKControlRadioGroup from "form-kit/components/control/radio-group";
+import FKControlSelect from "form-kit/components/control/select";
+import FKControlText from "form-kit/components/control/text";
+import FKControlWrapper from "form-kit/components/control-wrapper";
+import FKRow from "form-kit/components/row";
 import uniqueId from "discourse/helpers/unique-id";
 
 export default class FormField extends Component {
@@ -63,11 +64,11 @@ export default class FormField extends Component {
   get wrapper() {
     if (this.args.size) {
       return <template>
-        <Row as |row|>
+        <FKRow as |row|>
           <row.Col @size={{@size}}>
             {{yield}}
           </row.Col>
-        </Row>
+        </FKRow>
       </template>;
     } else {
       return <template>{{yield}}</template>;
@@ -79,9 +80,21 @@ export default class FormField extends Component {
       {{#let (uniqueId) (uniqueId) as |fieldId errorId|}}
         {{yield
           (hash
+            Question=(component
+              FKControlWrapper
+              component=FKControlQuestion
+              name=@name
+              fieldId=fieldId
+              errorId=errorId
+              setValue=this.setValue
+              value=this.value
+              errors=this.errors
+              triggerValidationFor=@triggerValidationFor
+              field=this.field
+            )
             Text=(component
-              FkControlWrapper
-              component=FkControlText
+              FKControlWrapper
+              component=FKControlText
               name=@name
               fieldId=fieldId
               errorId=errorId
@@ -92,7 +105,7 @@ export default class FormField extends Component {
               field=this.field
             )
             Checkbox=(component
-              FkControlCheckbox
+              FKControlCheckbox
               name=@name
               fieldId=fieldId
               errorId=errorId
@@ -103,8 +116,8 @@ export default class FormField extends Component {
               field=this.field
             )
             Image=(component
-              FkControlWrapper
-              component=FkControlImage
+              FKControlWrapper
+              component=FKControlImage
               name=@name
               fieldId=fieldId
               errorId=errorId
@@ -112,10 +125,11 @@ export default class FormField extends Component {
               value=this.value
               errors=this.errors
               triggerValidationFor=@triggerValidationFor
+              field=this.field
             )
             IconPicker=(component
-              FkControlWrapper
-              component=FkControlIconPicker
+              FKControlWrapper
+              component=FKControlIconPicker
               name=@name
               fieldId=fieldId
               errorId=errorId
@@ -126,8 +140,8 @@ export default class FormField extends Component {
               field=this.field
             )
             Menu=(component
-              FkControlWrapper
-              component=FkControlMenu
+              FKControlWrapper
+              component=FKControlMenu
               name=@name
               fieldId=fieldId
               errorId=errorId
@@ -138,8 +152,8 @@ export default class FormField extends Component {
               field=this.field
             )
             Select=(component
-              FkControlWrapper
-              component=FkControlSelect
+              FKControlWrapper
+              component=FKControlSelect
               name=@name
               fieldId=fieldId
               errorId=errorId
@@ -150,8 +164,8 @@ export default class FormField extends Component {
               field=this.field
             )
             Input=(component
-              FkControlWrapper
-              component=FkControlInput
+              FKControlWrapper
+              component=FKControlInput
               name=@name
               fieldId=fieldId
               errorId=errorId
@@ -162,8 +176,8 @@ export default class FormField extends Component {
               field=this.field
             )
             RadioGroup=(component
-              FkControlWrapper
-              component=FkControlRadioGroup
+              FKControlWrapper
+              component=FKControlRadioGroup
               name=@name
               fieldId=fieldId
               errorId=errorId

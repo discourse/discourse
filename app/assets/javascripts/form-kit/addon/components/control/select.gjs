@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import FkControlSelectOption from "./select/option";
+import FKControlSelectOption from "./select/option";
 
 export default class FkControlSelect extends Component {
   @action
@@ -21,7 +21,7 @@ export default class FkControlSelect extends Component {
       class="d-form__control-select"
       {{on "input" this.handleInput}}
     >
-      {{yield (hash Option=(component FkControlSelectOption selected=@value))}}
+      {{yield (hash Option=(component FKControlSelectOption selected=@value))}}
     </select>
   </template>
 }

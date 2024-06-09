@@ -12,8 +12,6 @@ export default class FKControlCheckbox extends Component {
   }
 
   <template>
-    {{log @errors}}
-
     <div class="d-form-field d-form-radio">
       <FKLabel class="d-form__control-radio__label">
         <input

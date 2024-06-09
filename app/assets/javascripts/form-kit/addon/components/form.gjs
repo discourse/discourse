@@ -229,7 +229,7 @@ export default class Form extends Component {
         (hash
           Row=(component Row)
           Section=(component FKSection)
-          ConditionalConTent=(component FKControlConditionalContent)
+          ConditionalContent=(component FKControlConditionalContent)
           Errors=(component
             FKFormErrors errors=this.visibleErrors withPrefix=true
           )

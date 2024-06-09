@@ -25,8 +25,12 @@
     </form.Field>
   </form.Section>
 
-  <form.Field @name="what_is_love2" @size={{12}} as |field|>
+  <form.Field @name="what_is_love2" as |field|>
     <field.Checkbox @label="What is love?" />
+  </form.Field>
+
+  <form.Field @name="yes_no" @size={{12}} as |field|>
+    <field.YesNo @title="Yes no" @subtitle="This is cool" />
   </form.Field>
 
   <form.Field
@@ -43,6 +47,14 @@
       @placeholder="Enter email"
       @description="Format: XYZ-123"
     />
+  </form.Field>
+
+  <form.Field @name="something" @validation="required" as |field|>
+    <field.Select as |select|>
+      <select.Option @value="1">Test 1</select.Option>
+      <select.Option @value="2">Test 2</select.Option>
+      <select.Option @value="3">Test 3</select.Option>
+    </field.Select>
   </form.Field>
 
   {{! <form.ConditionalContent @activeName="upload-image" as |cc|>
@@ -94,17 +106,7 @@
     </row.Col>
   </form.Row>
 
-  <form.Row as |row|>
-    <row.Col @size={{4}}>
-      <form.Field @name="something" @validation="required" as |field|>
-        <field.Select as |select|>
-          <select.Option @value="1">Test 1</select.Option>
-          <select.Option @value="2">Test 2</select.Option>
-          <select.Option @value="3">Test 3</select.Option>
-        </field.Select>
-      </form.Field>
-    </row.Col>
-  </form.Row>
+
 
   <form.Row as |row|>
     <row.Col @size={{2}}>
