@@ -544,7 +544,7 @@ RSpec.describe HtmlToMarkdown do
     )
   end
 
-  it "doesn't swallow badly formatted <table>" do
+  it "keeps HTML for badly formatted <table>" do
     html = <<~HTML
       <table>
         <tr>
@@ -554,13 +554,153 @@ RSpec.describe HtmlToMarkdown do
           <th>4</th>
         </tr>
         <tr>
-          <td>One</td>
-          <td>Two</td>
-          <td>Three</td>
+          <td>&lt;One&gt;</td>
+          <td><strong>Two</strong></td>
+          <td>Three<script>alert("foo")</script></td>
         </tr>
       </table>
     HTML
 
-    expect(html_to_markdown(html)).to eq("1 2 3 4 \nOne Two Three")
+    markdown = <<~MD
+      <table>
+      <tr>
+      <th>
+      
+      1
+      
+      </th>
+      <th>
+      
+      2
+      
+      </th>
+      <th>
+      
+      3
+      
+      </th>
+      <th>
+      
+      4
+      
+      </th>
+      </tr>
+      <tr>
+      <td>
+
+      &lt;One&gt;
+
+      </td>
+      <td>
+      
+      **Two**
+
+      </td>
+      <td>
+      
+      Three
+
+      </td>
+      </tr>
+      </table>
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
+  end
+
+  it "keeps HTML for <table> with colspan" do
+    html = <<~HTML
+      <table>
+        <tr>
+          <th>1</th>
+          <th>2</th>
+        </tr>
+        <tr>
+          <td colspan="2">One / Two</td>
+        </tr>
+      </table>
+    HTML
+
+    markdown = <<~MD
+      <table>
+      <tr>
+      <th>
+      
+      1
+      
+      </th>
+      <th>
+      
+      2
+      
+      </th>
+      </tr>
+      <tr>
+      <td colspan="2">
+
+      One / Two
+
+      </td>
+      </tr>
+      </table>
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
+  end
+
+  it "keeps HTML for <table> with rowspan" do
+    html = <<~HTML
+      <table>
+        <tr>
+          <th>1</th>
+          <th>2</th>
+        </tr>
+        <tr>
+          <td>A</td>
+          <td rowspan="2">B</td>
+        </tr>
+        <tr>
+          <td>C</td>
+        </tr>
+      </table>
+    HTML
+
+    markdown = <<~MD
+      <table>
+      <tr>
+      <th>
+
+      1
+      
+      </th>
+      <th>
+      
+      2
+      
+      </th>
+      </tr>
+      <tr>
+      <td>
+
+      A
+      
+      </td>
+      <td rowspan="2">
+      
+      B
+      
+      </td>
+      </tr>
+      <tr>
+      <td>
+      
+      C
+      
+      </td>
+      </tr>
+      </table>
+    MD
+
+    expect(html_to_markdown(html)).to eq(markdown.strip)
   end
 end
