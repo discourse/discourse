@@ -259,6 +259,35 @@ RSpec.describe HtmlToMarkdown do
     expect(html_to_markdown("<code>Code</code>")).to eq("`Code`")
   end
 
+  describe "when HTML is used within Markdown" do
+    HtmlToMarkdown::ALLOWED.each do |tag|
+      it "keeps mandatory HTML entities in text of <#{tag}>" do
+        expect(html_to_markdown("<#{tag}>Less than: &lt;</#{tag}>")).to eq(
+          "<#{tag}>Less than: &lt;</#{tag}>",
+        )
+        expect(html_to_markdown("<#{tag}>Greater than: &gt;")).to eq(
+          "<#{tag}>Greater than: &gt;</#{tag}>",
+        )
+        expect(html_to_markdown("<#{tag}>Ampersand: &amp;")).to eq(
+          "<#{tag}>Ampersand: &amp;</#{tag}>",
+        )
+
+        expect(html_to_markdown("<#{tag}>Double Quote: &quot;</#{tag}>")).to eq(
+          "<#{tag}>Double Quote: \"</#{tag}>",
+        )
+        expect(html_to_markdown("<#{tag}>Single Quote: &apos;</#{tag}>")).to eq(
+          "<#{tag}>Single Quote: '</#{tag}>",
+        )
+        expect(html_to_markdown("<#{tag}>Copyright Symbol: &copy;</#{tag}>")).to eq(
+          "<#{tag}>Copyright Symbol: ©</#{tag}>",
+        )
+        expect(html_to_markdown("<#{tag}>Euro Symbol: &euro;</#{tag}>")).to eq(
+          "<#{tag}>Euro Symbol: €</#{tag}>",
+        )
+      end
+    end
+  end
+
   it "supports <ins>" do
     expect(html_to_markdown("This is an <ins>insertion</ins>")).to eq(
       "This is an <ins>insertion</ins>",
@@ -285,16 +314,37 @@ RSpec.describe HtmlToMarkdown do
 
   it "supports <small>" do
     expect(html_to_markdown("<small>Small</small>")).to eq("<small>Small</small>")
+    expect(html_to_markdown("<mark><small>Small</small></mark>")).to eq(
+      "<mark><small>Small</small></mark>",
+    )
+    expect(html_to_markdown("<strong><small>Small</small></strong>")).to eq(
+      "**<small>Small</small>**",
+    )
+    expect(html_to_markdown("<small><strong>&lt;small&gt;</strong></small>")).to eq(
+      "<small>**&lt;small&gt;**</small>",
+    )
+  end
+
+  it "supports <big>" do
+    expect(html_to_markdown("<big>Big</big>")).to eq("<big>Big</big>")
+    expect(html_to_markdown("<big>&lt;big&gt;</big>")).to eq("<big>&lt;big&gt;</big>")
   end
 
   it "supports <kbd>" do
     expect(html_to_markdown("<kbd>CTRL</kbd>+<kbd>C</kbd>")).to eq("<kbd>CTRL</kbd>+<kbd>C</kbd>")
+    expect(html_to_markdown("<kbd>&lt;</kbd>")).to eq("<kbd>&lt;</kbd>")
   end
 
   it "supports <abbr>" do
     expect(
       html_to_markdown(%Q{<abbr title="Civilized Discourse Construction Kit, Inc.">CDCK</abbr>}),
     ).to eq(%Q{<abbr title="Civilized Discourse Construction Kit, Inc.">CDCK</abbr>})
+
+    expect(
+      html_to_markdown(
+        %Q{<abbr title="&quot;abbr&quot;: The Abbreviation element">&lt;abbr&gt;</abbr>},
+      ),
+    ).to eq(%Q{<abbr title="&quot;abbr&quot;: The Abbreviation element">&lt;abbr&gt;</abbr>})
   end
 
   it "supports <s>" do
@@ -366,6 +416,18 @@ RSpec.describe HtmlToMarkdown do
         "<pre>    function f() {\n        console.log('Hello world!');\n    }</pre>",
       ),
     ).to eq("```\n    function f() {\n        console.log('Hello world!');\n    }\n```")
+
+    html = <<~HTML
+      <pre data-code-wrap="plaintext"><code class="lang-plaintext">Reported-and-tested-by: A &lt;a@example.com&gt;
+      Reviewed-by: B &lt;b@example.com&gt;</code></pre>
+    HTML
+    md = <<~MD
+      ```plaintext
+      Reported-and-tested-by: A <a@example.com>
+      Reviewed-by: B <b@example.com>
+      ```
+    MD
+    expect(html_to_markdown(html)).to eq(md.strip)
   end
 
   it "supports <pre> inside <blockquote>" do
