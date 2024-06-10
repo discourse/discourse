@@ -132,16 +132,6 @@ after_initialize do
     end
   end
 
-  add_to_serializer(
-    :admin_plugin,
-    :incoming_chat_webhooks,
-    include_condition: -> { self.name == "chat" },
-  ) { Chat::IncomingWebhook.includes(:chat_channel).all }
-
-  add_to_serializer(:admin_plugin, :chat_channels, include_condition: -> { self.name == "chat" }) do
-    Chat::Channel.public_channels
-  end
-
   add_to_serializer(:user_card, :can_chat_user) do
     return false if !SiteSetting.chat_enabled
     return false if scope.user.blank? || scope.user.id == object.id
@@ -436,7 +426,7 @@ after_initialize do
   Discourse::Application.routes.append do
     mount ::Chat::Engine, at: "/chat"
 
-    get "/admin/plugins/chat" => "chat/admin/incoming_webhooks#index",
+    get "/admin/plugins/chat/hooks" => "chat/admin/incoming_webhooks#index",
         :constraints => StaffConstraint.new
     post "/admin/plugins/chat/hooks" => "chat/admin/incoming_webhooks#create",
          :constraints => StaffConstraint.new

@@ -9,7 +9,7 @@ export default class AdminPluginsChatRoute extends DiscourseRoute {
       return { model: null };
     }
 
-    return ajax("/admin/plugins/chat.json").then((model) => {
+    return ajax("/admin/plugins/chat/hooks.json").then((model) => {
       model.incoming_chat_webhooks = model.incoming_chat_webhooks.map(
         (webhook) => EmberObject.create(webhook)
       );
