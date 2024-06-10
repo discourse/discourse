@@ -5,6 +5,7 @@ describe DiscourseAutomation::AdminAutomationsController do
 
   before do
     SiteSetting.discourse_automation_enabled = true
+
     I18n.backend.store_translations(
       :en,
       {
@@ -23,6 +24,8 @@ describe DiscourseAutomation::AdminAutomationsController do
       },
     )
   end
+
+  after { I18n.backend.reload! }
 
   describe "#show" do
     context "when logged in as an admin" do

@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -8,6 +9,9 @@ export default class AdminWebHooksShowController extends Controller {
   @service dialog;
   @service router;
   @controller adminWebHooks;
+  @tracked status;
+
+  queryParams = ["status"];
 
   @action
   edit() {

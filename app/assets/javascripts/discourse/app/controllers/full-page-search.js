@@ -6,6 +6,7 @@ import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
 import { ajax } from "discourse/lib/ajax";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import { setTransient } from "discourse/lib/page-tracker";
 import {
@@ -59,6 +60,7 @@ export default Controller.extend({
   appEvents: service(),
   siteSettings: service(),
   searchPreferencesManager: service(),
+  currentUser: service(),
 
   bulkSelectEnabled: null,
   loading: false,
@@ -82,7 +84,6 @@ export default Controller.extend({
   resultCount: null,
   searchTypes: null,
   additionalSearchResults: [],
-  selected: [],
   error: null,
 
   init() {
@@ -113,6 +114,8 @@ export default Controller.extend({
     });
 
     this.set("searchTypes", searchTypes);
+
+    this.bulkSelectHelper = new BulkSelectHelper(this);
   },
 
   @discourseComputed("resultCount")
@@ -229,6 +232,11 @@ export default Controller.extend({
     }
   },
 
+  @discourseComputed("currentUser.use_experimental_topic_bulk_actions")
+  useNewBulkActions() {
+    return this.currentUser?.use_experimental_topic_bulk_actions;
+  },
+
   @discourseComputed("q")
   showLikeCount(q) {
     return q?.includes("order:likes");
@@ -282,9 +290,12 @@ export default Controller.extend({
     return this.currentUser && this.currentUser.staff && hasResults;
   },
 
-  hasSelection: gt("selected.length", 0),
+  hasSelection: gt("bulkSelectHelper.selected.length", 0),
 
-  @discourseComputed("selected.length", "searchResultPosts.length")
+  @discourseComputed(
+    "bulkSelectHelper.selected.length",
+    "searchResultPosts.length"
+  )
   hasUnselectedResults(selectionCount, postsCount) {
     return selectionCount < postsCount;
   },
@@ -350,7 +361,7 @@ export default Controller.extend({
     if (args.page === 1) {
       this.set("bulkSelectEnabled", false);
 
-      this.selected.clear();
+      this.bulkSelectHelper.selected.clear();
       this.set("searching", true);
       scrollTop();
     } else {
@@ -465,8 +476,13 @@ export default Controller.extend({
       searching: false,
       page: 1,
       resultCount: null,
-      selected: [],
     });
+    this.bulkSelectHelper.clear();
+  },
+
+  @action
+  afterBulkActionComplete() {
+    return Promise.resolve(this._search());
   },
 
   @action
@@ -502,7 +518,9 @@ export default Controller.extend({
 
   actions: {
     selectAll() {
-      this.selected.addObjects(this.get("searchResultPosts").mapBy("topic"));
+      this.bulkSelectHelper.selected.addObjects(
+        this.get("searchResultPosts").mapBy("topic")
+      );
 
       // Doing this the proper way is a HUGE pain,
       // we can hack this to work by observing each on the array
@@ -517,7 +535,7 @@ export default Controller.extend({
     },
 
     clearAll() {
-      this.selected.clear();
+      this.bulkSelectHelper.selected.clear();
 
       document
         .querySelectorAll(".fps-result input[type=checkbox]")
@@ -528,13 +546,13 @@ export default Controller.extend({
 
     toggleBulkSelect() {
       this.toggleProperty("bulkSelectEnabled");
-      this.selected.clear();
+      this.bulkSelectHelper.selected.clear();
     },
 
     showBulkActions() {
       this.modal.show(TopicBulkActions, {
         model: {
-          topics: this.selected,
+          topics: this.bulkSelectHelper.selected,
           refreshClosure: this._search,
         },
       });

@@ -98,7 +98,9 @@ export function autoUpdatingRelativeAge(date, options) {
     append += " with-year";
   }
 
-  if (options.title) {
+  if (options.customTitle) {
+    append += "' title='" + options.customTitle;
+  } else if (options.title) {
     append += "' title='" + longDate(date);
   }
 

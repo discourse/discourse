@@ -1,12 +1,25 @@
-.admin-config-area {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  column-gap: 1em;
+.admin-config-area-card {
+  padding: 20px;
+  border: 1px solid var(--primary-low);
+  border-radius: 2px;
+  background-color: var(--secondary);
+  margin-bottom: 1em;
 
-  &__primary-content {
-    background: red;
+  &__label-optional {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    margin-left: 5px;
   }
-  &__help-inset {
-    background: green;
+
+  &__additional-help {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+  }
+
+  &__warning-banner {
+    color: var(--primary-high);
+    background-color: var(--danger-low);
+    font-size: var(--font-down-1);
+    padding: 10px 10px;
   }
 }
