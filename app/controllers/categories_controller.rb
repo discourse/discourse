@@ -340,7 +340,19 @@ class CategoriesController < ApplicationController
     offset = params[:offset].to_i
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
     only = Category.where(id: params[:only].to_a.map(&:to_i)) if params[:only].present?
-    except = Category.where(id: params[:except].to_a.map(&:to_i)) if params[:except].present?
+    except_ids = params[:except].to_a.map(&:to_i)
+    include_uncategorized =
+      (
+        if params[:include_uncategorized].present?
+          ActiveModel::Type::Boolean.new.cast(params[:include_uncategorized])
+        else
+          true
+        end
+      )
+
+    except_ids << SiteSetting.uncategorized_category_id unless include_uncategorized
+
+    except = Category.where(id: except_ids) if except_ids.present?
 
     limit =
       (

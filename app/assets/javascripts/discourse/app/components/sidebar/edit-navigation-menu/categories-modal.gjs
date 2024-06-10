@@ -34,10 +34,7 @@ class ActionSerializer {
 
       while (this.queued) {
         this.queued = false;
-
-        try {
-          await this.perform();
-        } catch (e) {}
+        await this.perform();
       }
 
       this.processing = false;
@@ -89,6 +86,7 @@ function findPartialCategories(categories) {
 
     const recursiveCount =
       subcategoryCountsRecursive.get(category.parent_category_id) || 0;
+
     subcategoryCountsRecursive.set(
       category.parent_category_id,
       recursiveCount + (subcategoryCountsRecursive.get(category.id) || 0) + 1
@@ -233,6 +231,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       this.partialCategoryInfos.set(id, {
         offset: offset + subcategories.length,
       });
+
       this.recomputeGroupings();
     }
   }
@@ -243,11 +242,24 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     this.observer.observe(element);
   }
 
+  searchOpts() {
+    const requestedMode = this.selectedMode;
+    const requestedCategoryIds = [...this.selectedCategoryIds];
+    const opts = { includeUncategorized: false };
+
+    if (requestedMode === "only-selected") {
+      opts.only = requestedCategoryIds;
+    } else if (requestedMode === "only-unselected") {
+      opts.except = requestedCategoryIds;
+    }
+
+    return opts;
+  }
+
   @serialized
   async performSearch() {
     const requestedFilter = this.selectedFilter;
     const requestedMode = this.selectedMode;
-    const requestedCategoryIds = [...this.selectedCategoryIds];
     const selectedCategoriesNeedsUpdate =
       this.unseenCategoryIdsChanged && requestedMode !== "everything";
 
@@ -260,13 +272,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       // The shown categories are up-to-date, so we can do elaboration
       if (this.loadAnotherPage && !this.lastPage) {
         const requestedPage = this.loadedPage + 1;
-        const opts = { page: requestedPage };
-
-        if (requestedMode === "only-selected") {
-          opts.only = requestedCategoryIds;
-        } else if (requestedMode === "only-unselected") {
-          opts.except = requestedCategoryIds;
-        }
+        const opts = { page: requestedPage, ...this.searchOpts() };
 
         const categories = await Category.asyncHierarchicalSearch(
           requestedFilter,
@@ -283,34 +289,25 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
         this.loadedPage = requestedPage;
       } else if (this.subcategoryLoadList.length !== 0) {
         const { id, offset } = this.subcategoryLoadList.shift();
-        const opts = { parentCategoryId: id, offset };
-
-        if (requestedMode === "only-selected") {
-          opts.only = requestedCategoryIds;
-        } else if (requestedMode === "only-unselected") {
-          opts.except = requestedCategoryIds;
-        }
+        const opts = { parentCategoryId: id, offset, ...this.searchOpts() };
 
         let subcategories = await Category.asyncHierarchicalSearch(
           requestedFilter,
           opts
         );
+
         this.substituteInFetchedCategories(id, subcategories, offset);
       }
     } else {
       // The shown categories are stale, refresh everything
+      const requestedCategoryIds = [...this.selectedCategoryIds];
       this.unseenCategoryIdsChanged = false;
 
-      const opts = {};
-
-      if (requestedMode === "only-selected") {
-        opts.only = requestedCategoryIds;
-      } else if (requestedMode === "only-unselected") {
-        opts.except = requestedCategoryIds;
-      }
-
       this.setFetchedCategories(
-        await Category.asyncHierarchicalSearch(requestedFilter, opts)
+        await Category.asyncHierarchicalSearch(
+          requestedFilter,
+          this.searchOpts()
+        )
       );
 
       this.loadedFilter = requestedFilter;

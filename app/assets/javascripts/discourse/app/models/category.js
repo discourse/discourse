@@ -397,6 +397,7 @@ export default class Category extends RestModel {
       except: opts.except,
       page: opts.page,
       offset: opts.offset,
+      include_uncategorized: opts.includeUncategorized,
     };
 
     const result = (CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE[
