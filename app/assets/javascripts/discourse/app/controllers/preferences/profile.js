@@ -62,7 +62,7 @@ export default Controller.extend({
 
   @discourseComputed("currentUser")
   showEnforcedRequiredFieldsNotice(user) {
-    return !!user;
+    return user.needs_required_fields_check;
   },
 
   @discourseComputed("model.user_option.default_calendar")

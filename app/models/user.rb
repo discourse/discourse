@@ -2240,6 +2240,7 @@ end
 #  flair_group_id            :integer
 #  last_seen_reviewable_id   :integer
 #  password_algorithm        :string(64)
+#  required_fields_version   :integer
 #
 # Indexes
 #

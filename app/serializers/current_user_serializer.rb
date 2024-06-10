@@ -58,6 +58,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :associated_account_ids,
              :top_category_ids,
              :groups,
+             :needs_required_fields_check?,
              :second_factor_enabled,
              :ignored_users,
              :featured_topic,
@@ -286,6 +287,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_associated_account_ids?
     SiteSetting.include_associated_account_ids
+  end
+
+  def needs_required_fields_check?
+    object.needs_required_fields_check?
   end
 
   def second_factor_enabled
