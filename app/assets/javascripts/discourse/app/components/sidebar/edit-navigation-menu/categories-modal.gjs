@@ -184,14 +184,14 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   }
 
   concatFetchedCategories(categories) {
-    this.fetchedCategories.concat(categories);
+    this.fetchedCategories = this.fetchedCategories.concat(categories);
     this.partialCategoryInfos = new Map([
       ...this.partialCategoryInfos,
       ...findPartialCategories(categories),
     ]);
 
     this.fetchedCategoriesGroupings = splitWhere(
-      categories,
+      this.fetchedCategories,
       (category) => category.parent_category_id === undefined
     ).map((categories) => addShowMore(categories, this.partialCategoryInfos));
   }
