@@ -1560,7 +1560,9 @@ RSpec.describe Category do
 
     it "produces results in depth-first pre-order" do
       SiteSetting.max_category_nesting = 3
-      expect(Category.limited_categories_matching(nil, "baz").pluck(:name)).to eq(%w[foo bar baz])
+      expect(Category.limited_categories_matching(nil, nil, nil, "baz").pluck(:name)).to eq(
+        %w[foo bar baz],
+      )
     end
   end
 end
