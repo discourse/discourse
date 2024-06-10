@@ -8,7 +8,7 @@ import {
   acceptTransformerRegistrations,
   applyValueTransformer,
   transformerExists,
-} from "discourse/lib/plugin-api/transformer";
+} from "discourse/lib/transformer";
 
 module("Unit | Utility | transformers", function (hooks) {
   setupTest(hooks);

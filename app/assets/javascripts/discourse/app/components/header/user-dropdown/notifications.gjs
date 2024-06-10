@@ -7,7 +7,7 @@ import {
   addExtraUserClasses,
   renderAvatar,
 } from "discourse/helpers/user-avatar";
-import { applyValueTransformer } from "discourse/lib/plugin-api/transformer";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import icon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import UserTip from "../../user-tip";

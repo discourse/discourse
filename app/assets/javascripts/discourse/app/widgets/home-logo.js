@@ -1,7 +1,7 @@
 // deprecated in favor of components/header/home-logo.gjs
 import { h } from "virtual-dom";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { applyValueTransformer } from "discourse/lib/plugin-api/transformer";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import Session from "discourse/models/session";
 import { createWidget } from "discourse/widgets/widget";

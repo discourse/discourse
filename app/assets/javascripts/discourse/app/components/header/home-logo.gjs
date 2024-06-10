@@ -6,7 +6,7 @@ import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { applyValueTransformer } from "discourse/lib/plugin-api/transformer";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
 import getURL from "discourse-common/lib/get-url";

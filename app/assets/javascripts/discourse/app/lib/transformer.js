@@ -1,10 +1,10 @@
+import { VALUE_TRANSFORMERS } from "discourse/lib/transformer/registry";
 import { isTesting } from "discourse-common/config/environment";
 
 // add core transformer names
-const validCoreTransformerNames = new Set([
-  "header-notifications-avatar-size",
-  "home-logo-href",
-]);
+const validCoreTransformerNames = new Set(
+  VALUE_TRANSFORMERS.map((name) => name.toLowerCase())
+);
 
 // do not add anything directly to this set, use addValueTransformerName instead
 const validPluginTransformerNames = new Set();
@@ -67,7 +67,7 @@ export function _addTransformerName(name) {
     return;
   }
 
-  validPluginTransformerNames.add(name);
+  validPluginTransformerNames.add(name.toLowerCase());
 }
 
 /**

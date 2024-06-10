@@ -92,6 +92,10 @@ import {
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { includeAttributes } from "discourse/lib/transform-post";
+import {
+  _addTransformerName,
+  _registerTransformer,
+} from "discourse/lib/transformer";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
 import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
@@ -145,10 +149,6 @@ import {
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
-import {
-  _addTransformerName,
-  _registerTransformer,
-} from "./plugin-api/transformer";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at

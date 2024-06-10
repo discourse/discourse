@@ -1,4 +1,4 @@
-import { _freezeValidTransformerNames } from "discourse/lib/plugin-api/transformer";
+import { _freezeValidTransformerNames } from "discourse/lib/transformer";
 
 export default {
   before: "inject-discourse-objects",
