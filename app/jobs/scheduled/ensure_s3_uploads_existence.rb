@@ -15,8 +15,8 @@ module Jobs
       end
     end
 
-    def prepare_for_all_sites
-      inventory = S3Inventory.new(s3_helper, :upload)
+    def prepare_for_all_sites(s3_inventory_bucket)
+      inventory = S3Inventory.new(:upload, s3_inventory_bucket:)
       @db_inventories = inventory.prepare_for_all_sites
       @inventory_date = inventory.inventory_date
     end
@@ -25,7 +25,7 @@ module Jobs
       return if (s3_inventory_bucket = SiteSetting.s3_inventory_bucket).blank?
 
       if !@db_inventories && Rails.configuration.multisite && GlobalSetting.use_s3?
-        prepare_for_all_sites
+        prepare_for_all_sites(s3_inventory_bucket)
       end
 
       if @db_inventories &&
