@@ -337,6 +337,7 @@ class CategoriesController < ApplicationController
   def hierarchical_search
     term = params[:term].to_s.strip
     page = [1, params[:page].to_i].max
+    offset = params[:offset].to_i
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
     only = Category.where(id: params[:only].to_a.map(&:to_i)) if params[:only].present?
     except = Category.where(id: params[:except].to_a.map(&:to_i)) if params[:except].present?
@@ -366,7 +367,7 @@ class CategoriesController < ApplicationController
         .joins("LEFT JOIN topics t on t.id = categories.topic_id")
         .select("categories.*, t.slug topic_slug")
         .limit(limit)
-        .offset((page - 1) * limit)
+        .offset((page - 1) * limit + offset)
 
     if Site.preloaded_category_custom_fields.present?
       Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)

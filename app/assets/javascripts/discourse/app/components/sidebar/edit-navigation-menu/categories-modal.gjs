@@ -18,6 +18,7 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { eq } from "truth-helpers";
+import DButton from "discourse/components/d-button";
 
 class ActionSerializer {
   constructor(perform) {
@@ -37,7 +38,7 @@ class ActionSerializer {
 
         try {
           await this.perform();
-        } catch (e) {}
+        } catch (e) { console.error(e); }
       }
 
       this.processing = false;
@@ -71,14 +72,47 @@ function splitWhere(elements, f) {
   }, []);
 }
 
-function addShowMore(categories) {
-  const categoriesPerParent = new Map();
+function findPartialCategories(categories) {
+  const categoriesById = new Map(categories.map((category) => [category.id, category]));
+  const subcategoryCounts = new Map();
+  const subcategoryCountsRecursive = new Map();
+  const partialCategoryInfos = new Map();
 
-  return categories.reduce((acc, el, i) => {
-    acc.push({type: "category", category: el});
+  for (const category of categoriesById.values()) {
+    const count = subcategoryCounts.get(category.parent_category_id) || 0;
+    subcategoryCounts.set(category.parent_category_id, count + 1);
+  }
 
-    const count = (categoriesPerParent.get(el.parent_category_id) || 0) + 1;
-    categoriesPerParent.set(el.parent_category_id, count)
+  for (const category of categoriesById.values()) {
+    let c = category;
+    for (let i = 0; i < 3; i ++) {
+      const count = subcategoryCountsRecursive.get(c.parent_category_id) || 0;
+      subcategoryCountsRecursive.set(c.parent_category_id, count + 1);
+
+      c = categoriesById.get(c.parent_category_id);
+      if (!c) {
+        break;
+      }
+    }
+  }
+
+  for (const [id, count] of subcategoryCounts) {
+    if (count === 5) {
+      partialCategoryInfos.set(id, {
+        level: categoriesById.get(id).level + 1,
+        offset: subcategoryCountsRecursive.get(id),
+      })
+    }
+  }
+
+  return partialCategoryInfos;
+}
+
+function addShowMore(categories, partialCategoryInfos) {
+  return categories.flatMap((el, i) => {
+    const result = [
+      {type: "category", category: el}
+    ];
 
     const elID = categories[i].id;
     const elParentID = categories[i].parent_category_id;
@@ -87,11 +121,18 @@ function addShowMore(categories) {
     const nextIsSibling = nextParentID === elParentID;
     const nextIsChild = nextParentID === elID;
 
-    if (!nextIsSibling && !nextIsChild && count == 5) {
-      acc.push({type: "show-more", level: el.level});
+    if (!nextIsSibling && !nextIsChild && partialCategoryInfos.has(elParentID)) {
+      const {level, offset, page} = partialCategoryInfos.get(elParentID);
+
+      result.push({
+        type: "show-more",
+        id: elParentID,
+        level,
+        offset,
+      });
     }
 
-    return acc;
+    return result;
   }, []);
 }
 
@@ -102,7 +143,6 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   @tracked initialLoad = true;
   @tracked fetchedCategoriesGroupings = [];
-  @tracked fetchedCategoryIds = [];
   @tracked
   selectedCategoryIds = new TrackedSet([
     ...this.currentUser.sidebar_category_ids,
@@ -129,22 +169,55 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   constructor() {
     super(...arguments);
+    this.subcategoryLoadList = [];
     this.performSearch();
   }
 
   setFetchedCategories(categories) {
     this.fetchedCategories = categories;
+    this.partialCategoryInfos = findPartialCategories(categories);
 
     this.fetchedCategoriesGroupings = splitWhere(
       categories,
       (category) => category.parent_category_id === undefined
-    ).map(addShowMore);
-
-    this.fetchedCategoryIds = categories.map((c) => c.id);
+    ).map((categories) => addShowMore(categories, this.partialCategoryInfos));
   }
 
   concatFetchedCategories(categories) {
-    this.setFetchedCategories(this.fetchedCategories.concat(categories));
+    this.fetchedCategories.concat(categories);
+    this.partialCategoryInfos = new Map([
+      ...this.partialCategoryInfos,
+      ...findPartialCategories(categories),
+    ]);
+
+    this.fetchedCategoriesGroupings = splitWhere(
+      categories,
+      (category) => category.parent_category_id === undefined
+    ).map((categories) => addShowMore(categories, this.partialCategoryInfos));
+  }
+
+  substituteInFetchedCategories(id, subcategories, offset) {
+    this.partialCategoryInfos.delete(id);
+    const index = this.fetchedCategories.findLastIndex((c) => c.parent_category_id === id) + 1;
+
+    if (subcategories.length !== 0) {
+      this.partialCategoryInfos.set(id, {offset: offset + subcategories.length});
+
+      this.fetchedCategories = [
+        ...this.fetchedCategories.slice(0, index),
+        ...subcategories,
+        ...this.fetchedCategories.slice(index),
+      ];
+      this.partialCategoryInfos = new Map([
+        ...this.partialCategoryInfos,
+        ...findPartialCategories(subcategories),
+      ]);
+    }
+
+    this.fetchedCategoriesGroupings = splitWhere(
+      this.fetchedCategories,
+      (category) => category.parent_category_id === undefined
+    ).map((categories) => addShowMore(categories, this.partialCategoryInfos));
   }
 
   @action
@@ -183,6 +256,18 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
         this.loadAnotherPage = false;
         this.loadedPage = requestedPage;
+      } else if (this.subcategoryLoadList.length !== 0) {
+        const {id, offset} = this.subcategoryLoadList.shift();
+        const opts = {parentCategoryId: id, offset};
+
+        if (requestedMode === 'only-selected') {
+          opts.only = requestedCategoryIds;
+        } else if (requestedMode === 'only-unselected') {
+          opts.except = requestedCategoryIds;
+        }
+
+        let subcategories = await Category.asyncHierarchicalSearch(requestedFilter, opts)
+        this.substituteInFetchedCategories(id, subcategories, offset);
       }
     } else {
       // The shown categories are stale, refresh everything
@@ -210,6 +295,12 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   async loadMore() {
     this.loadAnotherPage = true;
+    this.debouncedSendRequest();
+  }
+
+  @action
+  async loadSubcategories(id, offset) {
+    this.subcategoryLoadList.push({id, offset});
     this.debouncedSendRequest();
   }
 
@@ -341,6 +432,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                         <div class="sidebar-categories-form__category-wrapper">
                           <div class="sidebar-categories-form__category-badge">
                             {{categoryBadge category}}
+
                           </div>
 
                           {{#unless category.parentCategory}}
@@ -382,9 +474,11 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                     >
                       <div class="sidebar-categories-form__category-wrapper">
                         <div class="sidebar-categories-form__category-badge">
-                          <a>
-                            {{i18n "sidebar.categories_form_modal.show_more"}}
-                          </a>
+                          <DButton
+                            @label="sidebar.categories_form_modal.show_more"
+                            @action={{fn this.loadSubcategories c.id c.offset}}
+                            class="btn-flat"
+                          />
                         </div>
                       </div>
                     </label>
