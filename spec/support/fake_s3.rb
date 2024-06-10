@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "aws-sdk-s3"
+
 class FakeS3
   attr_reader :s3_client
 
