@@ -90,10 +90,25 @@ html.rtl {
 
 .chat-drawer-content {
   @include chat-scrollbar();
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   height: 100%;
   min-height: 1px;
   position: relative;
   overflow-y: auto;
   overscroll-behavior: contain;
+
+  .c-channel-settings {
+    flex-grow: 1;
+
+    .chat-form {
+      height: 100%;
+    }
+
+    .chat-form__section.--leave-channel {
+      margin-top: auto;
+      margin-bottom: 0;
+    }
+  }
 }
