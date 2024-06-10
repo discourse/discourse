@@ -4792,17 +4792,30 @@ RSpec.describe UsersController do
         expect(response.parsed_body["user"]["inactive"]).to eq(true)
       end
 
-      it "returns partial response when hidden users" do
-        user.user_option.update!(hide_profile_and_presence: true)
-        get "/u/#{user.username}/card.json"
-        expect(response).to be_successful
-        expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
-      end
-
       it "raises an error on invalid access" do
         Guardian.any_instance.expects(:can_see?).with(user).returns(false)
         get "/u/#{user.username}/card.json"
         expect(response).to be_forbidden
+      end
+
+      context "when hidden users" do
+        before { user.user_option.update!(hide_profile_and_presence: true) }
+
+        it "returns the correct partial response when the user has messages enabled" do
+          user.user_option.update!(allow_private_messages: true)
+          get "/u/#{user.username}/card.json"
+          expect(response).to be_successful
+          expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
+          expect(response.parsed_body["user"]["can_send_private_message_to_user"]).to eq(true)
+        end
+
+        it "returns the correct partial response when the user has messages disabled" do
+          user.user_option.update!(allow_private_messages: false)
+          get "/u/#{user.username}/card.json"
+          expect(response).to be_successful
+          expect(response.parsed_body["user"]["profile_hidden"]).to eq(true)
+          expect(response.parsed_body["user"]["can_send_private_message_to_user"]).to eq(false)
+        end
       end
     end
   end
