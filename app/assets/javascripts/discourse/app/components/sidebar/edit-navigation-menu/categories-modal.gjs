@@ -6,7 +6,8 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
-import { gt, has, includes, not } from "truth-helpers";
+import { eq, gt, has } from "truth-helpers";
+import DButton from "discourse/components/d-button";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
 import borderColor from "discourse/helpers/border-color";
 import categoryBadge from "discourse/helpers/category-badge";
@@ -17,8 +18,6 @@ import Category from "discourse/models/category";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import i18n from "discourse-common/helpers/i18n";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { eq } from "truth-helpers";
-import DButton from "discourse/components/d-button";
 
 class ActionSerializer {
   constructor(perform) {
@@ -38,7 +37,7 @@ class ActionSerializer {
 
         try {
           await this.perform();
-        } catch (e) { console.error(e); }
+        } catch (e) {}
       }
 
       this.processing = false;
@@ -52,8 +51,10 @@ class ActionSerializer {
 function serialized(target, key, descriptor) {
   const originalMethod = descriptor.value;
 
-  descriptor.value = function() {
-    this[`_${key}_serializer`] ||= new ActionSerializer(() => originalMethod.apply(this));
+  descriptor.value = function () {
+    this[`_${key}_serializer`] ||= new ActionSerializer(() =>
+      originalMethod.apply(this)
+    );
     this[`_${key}_serializer`].trigger();
   };
 
@@ -72,68 +73,38 @@ function splitWhere(elements, f) {
   }, []);
 }
 
+// categories must be topologically sorted so that the parents appear before
+// the children
 function findPartialCategories(categories) {
-  const categoriesById = new Map(categories.map((category) => [category.id, category]));
+  const categoriesById = new Map(
+    categories.map((category) => [category.id, category])
+  );
   const subcategoryCounts = new Map();
   const subcategoryCountsRecursive = new Map();
   const partialCategoryInfos = new Map();
 
-  for (const category of categoriesById.values()) {
+  for (const category of categories.slice().reverse()) {
     const count = subcategoryCounts.get(category.parent_category_id) || 0;
     subcategoryCounts.set(category.parent_category_id, count + 1);
-  }
 
-  for (const category of categoriesById.values()) {
-    let c = category;
-    for (let i = 0; i < 3; i ++) {
-      const count = subcategoryCountsRecursive.get(c.parent_category_id) || 0;
-      subcategoryCountsRecursive.set(c.parent_category_id, count + 1);
-
-      c = categoriesById.get(c.parent_category_id);
-      if (!c) {
-        break;
-      }
-    }
+    const recursiveCount =
+      subcategoryCountsRecursive.get(category.parent_category_id) || 0;
+    subcategoryCountsRecursive.set(
+      category.parent_category_id,
+      recursiveCount + (subcategoryCountsRecursive.get(category.id) || 0) + 1
+    );
   }
 
   for (const [id, count] of subcategoryCounts) {
-    if (count === 5) {
+    if (count === 5 && categoriesById.has(id)) {
       partialCategoryInfos.set(id, {
         level: categoriesById.get(id).level + 1,
         offset: subcategoryCountsRecursive.get(id),
-      })
+      });
     }
   }
 
   return partialCategoryInfos;
-}
-
-function addShowMore(categories, partialCategoryInfos) {
-  return categories.flatMap((el, i) => {
-    const result = [
-      {type: "category", category: el}
-    ];
-
-    const elID = categories[i].id;
-    const elParentID = categories[i].parent_category_id;
-    const nextParentID = categories[i + 1]?.parent_category_id;
-
-    const nextIsSibling = nextParentID === elParentID;
-    const nextIsChild = nextParentID === elID;
-
-    if (!nextIsSibling && !nextIsChild && partialCategoryInfos.has(elParentID)) {
-      const {level, offset, page} = partialCategoryInfos.get(elParentID);
-
-      result.push({
-        type: "show-more",
-        id: elParentID,
-        level,
-        offset,
-      });
-    }
-
-    return result;
-  }, []);
 }
 
 export default class SidebarEditNavigationMenuCategoriesModal extends Component {
@@ -147,8 +118,8 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   selectedCategoryIds = new TrackedSet([
     ...this.currentUser.sidebar_category_ids,
   ]);
-  selectedFilter = '';
-  selectedMode = 'everything';
+  selectedFilter = "";
+  selectedMode = "everything";
   loadedFilter;
   loadedMode;
   loadedPage;
@@ -174,10 +145,39 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   }
 
   recomputeGroupings() {
+    const categoriesWithShowMores = this.fetchedCategories.flatMap((el, i) => {
+      const result = [{ type: "category", category: el }];
+
+      const elID = el.id;
+      const elParentID = el.parent_category_id;
+      const nextParentID = this.fetchedCategories[i + 1]?.parent_category_id;
+
+      const nextIsSibling = nextParentID === elParentID;
+      const nextIsChild = nextParentID === elID;
+
+      if (
+        !nextIsSibling &&
+        !nextIsChild &&
+        this.partialCategoryInfos.has(elParentID)
+      ) {
+        const { level, offset } = this.partialCategoryInfos.get(elParentID);
+
+        result.push({
+          type: "show-more",
+          id: elParentID,
+          level,
+          offset,
+        });
+      }
+
+      return result;
+    }, []);
+
     this.fetchedCategoriesGroupings = splitWhere(
-      this.fetchedCategories,
-      (category) => category.parent_category_id === undefined
-    ).map((categories) => addShowMore(categories, this.partialCategoryInfos));
+      categoriesWithShowMores,
+      (c) =>
+        c.type === "category" && c.category.parent_category_id === undefined
+    );
   }
 
   setFetchedCategories(categories) {
@@ -194,12 +194,11 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     // loaded, because the total number of categories in the response clipped
     // them off.
     if (categories[0].parent_category_id !== undefined) {
-      const index = this.fetchedCategories.findLastIndex(element => element.parent_category_id === undefined);
+      const index = this.fetchedCategories.findLastIndex(
+        (element) => element.parent_category_id === undefined
+      );
 
-      categories = [
-        ...this.fetchedCategories.slice(index),
-        ...categories,
-      ];
+      categories = [...this.fetchedCategories.slice(index), ...categories];
     }
 
     this.partialCategoryInfos = new Map([
@@ -215,8 +214,10 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     this.recomputeGroupings();
 
     if (subcategories.length !== 0) {
-      this.partialCategoryInfos.set(id, {offset: offset + subcategories.length});
-      const index = this.fetchedCategories.findLastIndex((c) => c.parent_category_id === id) + 1;
+      const index =
+        this.fetchedCategories.findLastIndex(
+          (c) => c.parent_category_id === id
+        ) + 1;
 
       this.fetchedCategories = [
         ...this.fetchedCategories.slice(0, index),
@@ -229,6 +230,9 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
         ...findPartialCategories(subcategories),
       ]);
 
+      this.partialCategoryInfos.set(id, {
+        offset: offset + subcategories.length,
+      });
       this.recomputeGroupings();
     }
   }
@@ -244,22 +248,30 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     const requestedFilter = this.selectedFilter;
     const requestedMode = this.selectedMode;
     const requestedCategoryIds = [...this.selectedCategoryIds];
-    const selectedCategoriesNeedsUpdate = this.unseenCategoryIdsChanged && requestedMode !== 'everything';
+    const selectedCategoriesNeedsUpdate =
+      this.unseenCategoryIdsChanged && requestedMode !== "everything";
 
     // Is the current set of displayed categories up-to-date?
-    if (requestedFilter === this.loadedFilter && requestedMode === this.loadedMode && !selectedCategoriesNeedsUpdate) {
+    if (
+      requestedFilter === this.loadedFilter &&
+      requestedMode === this.loadedMode &&
+      !selectedCategoriesNeedsUpdate
+    ) {
       // The shown categories are up-to-date, so we can do elaboration
       if (this.loadAnotherPage && !this.lastPage) {
         const requestedPage = this.loadedPage + 1;
-        const opts = {page: requestedPage};
+        const opts = { page: requestedPage };
 
-        if (requestedMode === 'only-selected') {
+        if (requestedMode === "only-selected") {
           opts.only = requestedCategoryIds;
-        } else if (requestedMode === 'only-unselected') {
+        } else if (requestedMode === "only-unselected") {
           opts.except = requestedCategoryIds;
         }
 
-        const categories = await Category.asyncHierarchicalSearch(requestedFilter, opts);
+        const categories = await Category.asyncHierarchicalSearch(
+          requestedFilter,
+          opts
+        );
 
         if (categories.length === 0) {
           this.lastPage = true;
@@ -270,16 +282,19 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
         this.loadAnotherPage = false;
         this.loadedPage = requestedPage;
       } else if (this.subcategoryLoadList.length !== 0) {
-        const {id, offset} = this.subcategoryLoadList.shift();
-        const opts = {parentCategoryId: id, offset};
+        const { id, offset } = this.subcategoryLoadList.shift();
+        const opts = { parentCategoryId: id, offset };
 
-        if (requestedMode === 'only-selected') {
+        if (requestedMode === "only-selected") {
           opts.only = requestedCategoryIds;
-        } else if (requestedMode === 'only-unselected') {
+        } else if (requestedMode === "only-unselected") {
           opts.except = requestedCategoryIds;
         }
 
-        let subcategories = await Category.asyncHierarchicalSearch(requestedFilter, opts)
+        let subcategories = await Category.asyncHierarchicalSearch(
+          requestedFilter,
+          opts
+        );
         this.substituteInFetchedCategories(id, subcategories, offset);
       }
     } else {
@@ -288,13 +303,15 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
       const opts = {};
 
-      if (requestedMode === 'only-selected') {
+      if (requestedMode === "only-selected") {
         opts.only = requestedCategoryIds;
-      } else if (requestedMode === 'only-unselected') {
+      } else if (requestedMode === "only-unselected") {
         opts.except = requestedCategoryIds;
       }
 
-      this.setFetchedCategories(await Category.asyncHierarchicalSearch(requestedFilter, opts));
+      this.setFetchedCategories(
+        await Category.asyncHierarchicalSearch(requestedFilter, opts)
+      );
 
       this.loadedFilter = requestedFilter;
       this.loadedMode = requestedMode;
@@ -313,7 +330,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   @action
   async loadSubcategories(id, offset) {
-    this.subcategoryLoadList.push({id, offset});
+    this.subcategoryLoadList.push({ id, offset });
     this.debouncedSendRequest();
   }
 
@@ -378,9 +395,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     this.saving = true;
     const initialSidebarCategoryIds = this.currentUser.sidebar_category_ids;
 
-    this.currentUser.set("sidebar_category_ids", [
-      ...this.selectedCategoryIds,
-    ]);
+    this.currentUser.set("sidebar_category_ids", [...this.selectedCategoryIds]);
 
     try {
       await this.currentUser.save(["sidebar_category_ids"]);
@@ -463,10 +478,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                         <input
                           {{on "click" (fn this.toggleCategory category.id)}}
                           type="checkbox"
-                          checked={{has
-                            this.selectedCategoryIds
-                            category.id
-                          }}
+                          checked={{has this.selectedCategoryIds category.id}}
                           id={{concat
                             "sidebar-categories-form__input--"
                             category.id
@@ -482,9 +494,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                     data-category-level={{c.level}}
                     class="sidebar-categories-form__category-row"
                   >
-                    <label
-                      class="sidebar-categories-form__category-label"
-                    >
+                    <label class="sidebar-categories-form__category-label">
                       <div class="sidebar-categories-form__category-wrapper">
                         <div class="sidebar-categories-form__category-badge">
                           <DButton
