@@ -173,51 +173,51 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     this.performSearch();
   }
 
-  setFetchedCategories(categories) {
-    this.fetchedCategories = categories;
-    this.partialCategoryInfos = findPartialCategories(categories);
-
-    this.fetchedCategoriesGroupings = splitWhere(
-      categories,
-      (category) => category.parent_category_id === undefined
-    ).map((categories) => addShowMore(categories, this.partialCategoryInfos));
-  }
-
-  concatFetchedCategories(categories) {
-    this.fetchedCategories = this.fetchedCategories.concat(categories);
-    this.partialCategoryInfos = new Map([
-      ...this.partialCategoryInfos,
-      ...findPartialCategories(categories),
-    ]);
-
+  recomputeGroupings() {
     this.fetchedCategoriesGroupings = splitWhere(
       this.fetchedCategories,
       (category) => category.parent_category_id === undefined
     ).map((categories) => addShowMore(categories, this.partialCategoryInfos));
   }
 
+  setFetchedCategories(categories) {
+    this.fetchedCategories = categories;
+    this.partialCategoryInfos = findPartialCategories(categories);
+    this.recomputeGroupings();
+  }
+
+  concatFetchedCategories(categories) {
+    this.fetchedCategories = this.fetchedCategories.concat(categories);
+
+    this.partialCategoryInfos = new Map([
+      ...this.partialCategoryInfos,
+      ...findPartialCategories(categories),
+    ]);
+
+    this.recomputeGroupings();
+  }
+
   substituteInFetchedCategories(id, subcategories, offset) {
     this.partialCategoryInfos.delete(id);
-    const index = this.fetchedCategories.findLastIndex((c) => c.parent_category_id === id) + 1;
+    this.recomputeGroupings();
 
     if (subcategories.length !== 0) {
       this.partialCategoryInfos.set(id, {offset: offset + subcategories.length});
+      const index = this.fetchedCategories.findLastIndex((c) => c.parent_category_id === id) + 1;
 
       this.fetchedCategories = [
         ...this.fetchedCategories.slice(0, index),
         ...subcategories,
         ...this.fetchedCategories.slice(index),
       ];
+
       this.partialCategoryInfos = new Map([
         ...this.partialCategoryInfos,
         ...findPartialCategories(subcategories),
       ]);
-    }
 
-    this.fetchedCategoriesGroupings = splitWhere(
-      this.fetchedCategories,
-      (category) => category.parent_category_id === undefined
-    ).map((categories) => addShowMore(categories, this.partialCategoryInfos));
+      this.recomputeGroupings();
+    }
   }
 
   @action
