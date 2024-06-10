@@ -12,9 +12,7 @@ export default Controller.extend({
   router: service(),
 
   secondFactorMethod: null,
-
   secondFactorToken: null,
-
   lockImageUrl: getURL("/images/lock.svg"),
 
   @discourseComputed("model")
@@ -23,43 +21,47 @@ export default Controller.extend({
   },
 
   @action
-  finishLogin() {
+  async finishLogin() {
     let data = {
       second_factor_method: this.secondFactorMethod,
       timezone: moment.tz.guess(),
     };
+
     if (this.securityKeyCredential) {
       data.second_factor_token = this.securityKeyCredential;
     } else {
       data.second_factor_token = this.secondFactorToken;
     }
 
-    ajax({
-      url: `/session/email-login/${this.model.token}`,
-      type: "POST",
-      data,
-    })
-      .then((result) => {
-        if (result.success) {
-          let destination = "/";
+    try {
+      const result = await ajax({
+        url: `/session/email-login/${this.model.token}`,
+        type: "POST",
+        data,
+      });
 
-          const safeMode = new URL(
-            this.router.currentURL,
-            window.location.origin
-          ).searchParams.get("safe_mode");
+      if (!result.success) {
+        this.set("model.error", result.error);
+        return;
+      }
 
-          if (safeMode) {
-            const params = new URLSearchParams();
-            params.set("safe_mode", safeMode);
-            destination += `?${params.toString()}`;
-          }
+      let destination = "/";
 
-          DiscourseURL.redirectTo(destination);
-        } else {
-          this.set("model.error", result.error);
-        }
-      })
-      .catch(popupAjaxError);
+      const safeMode = new URL(
+        this.router.currentURL,
+        window.location.origin
+      ).searchParams.get("safe_mode");
+
+      if (safeMode) {
+        const params = new URLSearchParams();
+        params.set("safe_mode", safeMode);
+        destination += `?${params.toString()}`;
+      }
+
+      DiscourseURL.redirectTo(destination);
+    } catch (e) {
+      popupAjaxError(e);
+    }
   },
 
   @action
