@@ -189,6 +189,19 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   concatFetchedCategories(categories) {
     this.fetchedCategories = this.fetchedCategories.concat(categories);
 
+    // In order to find partially loaded categories correctly, we need to
+    // ensure that we account for categories that may have been partially
+    // loaded, because the total number of categories in the response clipped
+    // them off.
+    if (categories[0].parent_category_id !== undefined) {
+      const index = this.fetchedCategories.findLastIndex(element => element.parent_category_id === undefined);
+
+      categories = [
+        ...this.fetchedCategories.slice(index),
+        ...categories,
+      ];
+    }
+
     this.partialCategoryInfos = new Map([
       ...this.partialCategoryInfos,
       ...findPartialCategories(categories),
