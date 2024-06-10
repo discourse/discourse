@@ -51,20 +51,35 @@
   </form.Section>
 
   <form.Section @title="Settings">
+    <form.Field
+      @name="badge_grouping_id"
+      @disabled={{this.readOnly}}
+      as |field|
+    >
+      <field.Menu @title="What is the best fruit" as |menu|>
+        {{log "--" menu}}
+        {{#each this.badgeGroupings as |grouping|}}
+          <menu.Item @value={{grouping.id}} @title={{grouping.name}} />
+        {{/each}}
+        <menu.Divider />
+        <menu.Item @value="durian" @title="Add new group" />
+      </field.Menu>
+    </form.Field>
+
     <form.Field @name="allow_title" @disabled={{this.readOnly}} as |field|>
-      <field.Question @title={{i18n "admin.badges.allow_title"}} />
+      <field.Checkbox @label={{i18n "admin.badges.allow_title"}} />
     </form.Field>
 
     <form.Field @name="multiple_grant" @disabled={{this.readOnly}} as |field|>
-      <field.Question @title={{i18n "admin.badges.multiple_grant"}} />
+      <field.Checkbox @label={{i18n "admin.badges.multiple_grant"}} />
     </form.Field>
 
     <form.Field @name="listable" @disabled={{this.readOnly}} as |field|>
-      <field.Question @title={{i18n "admin.badges.listable"}} />
+      <field.Checkbox @label={{i18n "admin.badges.listable"}} />
     </form.Field>
 
     <form.Field @name="show_posts" @disabled={{this.readOnly}} as |field|>
-      <field.Question @title={{i18n "admin.badges.show_posts"}} />
+      <field.Checkbox @label={{i18n "admin.badges.show_posts"}} />
     </form.Field>
   </form.Section>
 </Form>

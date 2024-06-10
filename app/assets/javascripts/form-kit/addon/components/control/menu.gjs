@@ -2,9 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import FkControlMenuItem from "form-kit/components/control/menu/item";
-// import FormMeta from "form-kit/components/form/meta";
-import FormText from "form-kit/components/text";
+import FKControlMenuItem from "form-kit/components/control/menu/item";
 import DMenu from "discourse/components/d-menu";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse-common/helpers/d-icon";
@@ -26,7 +24,7 @@ export default class FkControlMenu extends Component {
       {{yield
         (hash
           Item=(component
-            FkControlMenuItem
+            FKControlMenuItem
             item=@menu.item
             setValue=@setValue
             menuApi=@menuApi
@@ -41,7 +39,7 @@ export default class FkControlMenu extends Component {
     <DMenu @onRegisterApi={{this.registerMenuApi}}>
       <:trigger>
         <span class="d-button-label">
-          {{yield (hash SelectedItem=this.headerTemplate)}}
+          {{yield (hash SelectedItem=this.headerTemplate) (hash)}}
         </span>
         {{icon "angle-down"}}
       </:trigger>
