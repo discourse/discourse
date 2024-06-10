@@ -438,7 +438,7 @@ GEM
       rubocop-factory_bot (>= 2.0.0)
       rubocop-rails (>= 2.25.0)
       rubocop-rspec (>= 2.25.0)
-    rubocop-factory_bot (2.25.1)
+    rubocop-factory_bot (2.26.0)
       rubocop (~> 1.41)
     rubocop-rails (2.25.0)
       activesupport (>= 4.2.0)
