@@ -1548,6 +1548,8 @@ sk:
         set_password: "Nastaviť heslo"
         choose_new: "Vyberte si nové heslo"
         choose: "Vyberte si heslo"
+        verify_identity: "Ak chcete pokračovať, overte svoju totožnosť."
+        title: "Obnovenie hesla"
       second_factor_backup:
         title: "Dvojfaktorové záložné kódy"
         regenerate: "Znovu vygenerovať"
@@ -1952,7 +1954,11 @@ sk:
         fine_print: "Žiadame vás, aby ste potvrdili svoju identitu, pretože ide o citlivú akciu.O ďalšie opätovné overenie budete požiadaný až po niekoľkých hodinách nečinnosti."
       password:
         title: "Heslo"
-        too_short: "Vaše heslo je príliš krátke."
+        too_short:
+          one: "Vaše heslo je príliš krátke (minimum je %{count} znakov)."
+          few: "Vaše heslo je príliš krátke (minimum je %{count} znakov)."
+          many: "Vaše heslo je príliš krátke (minimum je %{count} znakov)."
+          other: "Vaše heslo je príliš krátke (minimum sú %{count} znaky)."
         common: "Toto heslo je príliš časté."
         same_as_username: "Vaše heslo je rovnaké ako používateľské meno."
         same_as_email: "Vaše heslo je rovnaké ako e-mail."
@@ -2298,6 +2304,7 @@ sk:
       error: "Neznáma chyba"
       cookies_error: "Zdá sa, že váš prehliadač má vypnuté súbory cookie. Je možné, že bez ich povolenia sa nebudete môcť prihlásiť."
       rate_limit: "Pred opätovným prihlásením chvíľku počkajte."
+      password_expired: "Platnosť hesla vypršala. Prosím, <a href='%{reset_url}'>obnovte svoje heslo</a>."
       blank_username: "Prosím vložte Váš email alebo používateľské meno."
       blank_username_or_password: "Zadajte prosím svoj e-mail alebo používateľské meno a heslo."
       reset_password: "Obnoviť heslo"
@@ -3823,8 +3830,8 @@ sk:
         delete_topic_confirm_modal_no: "Nie, ponechať túto tému"
         delete_topic_error: "Pri odstraňovaní tejto témy došlo k chybe"
         delete_topic: "odstrániť tému"
-        add_post_notice: "Pridať oznámenie pre adminov…"
-        change_post_notice: "Zmena oznámenia pre adminov…"
+        add_post_notice: "Pridať oznámenie pre personál…"
+        change_post_notice: "Zmena oznámenia pre personál…"
         delete_post_notice: "Vymazať oznámenie pre personál"
         remove_timer: "odstrániť časovač"
         edit_timer: "upraviť časovač"
@@ -5140,6 +5147,10 @@ sk:
         title: "Príznaky moderovania"
         description: "Popis"
         enabled: "Povolené?"
+        more_options:
+          title: "Ďalšie možnosti"
+          move_up: "Posunúť sa nahor"
+          move_down: "Posunúť sa nadol"
       groups:
         new:
           title: "Nová skupina"
@@ -5462,6 +5473,10 @@ sk:
           timestamp: "Vytvorené"
           completion: "Čas dokončenia"
           actions: "Akcie"
+          filter_status:
+            all: "Všetky udalosti"
+            successful: "Doručené"
+            failed: "Nepodarilo sa"
       home:
         title: "Domov"
       account:
@@ -5523,6 +5538,46 @@ sk:
           security: "Bezpečnosť"
           spam: "Spam"
           staff_action_logs: "Záznamy o akciách personálu"
+      config_areas:
+        about:
+          header: "O vašej stránke"
+          general_settings: "Všeobecné nastavenia"
+          community_name: "Názov komunity"
+          community_summary: "Súhrn komunity"
+          community_description: "Popis komunity"
+          banner_image: "Obrázok bannera"
+          banner_image_help: |
+            Táto informácia sa použije na stránke o vás. Odporúčaná veľkosť: 800x300px. Akceptované typy: JPG, PNG a SVG do veľkosti 10 MB.
+          contact_information: "Kontaktné informácie"
+          community_owner: "Vlastník komunity"
+          community_owner_help: |
+            Meno kľúčového kontaktu zodpovedného za túto stránku. Používa sa pre kritické oznámenia a zobrazuje sa aj v /about. Viditeľné pre anonymných používateľov na verejných stránkach.
+          contact_email: "Kontaktný e-mail"
+          contact_email_help: |
+            E-mailová adresa kľúčového kontaktu zodpovedného za túto stránku. Používa sa na kritické oznámenia a zobrazuje sa aj na /about. Viditeľná pre anonymných používateľov na verejných stránkach.
+          contact_url: "Adresa URL kontaktu"
+          contact_url_help: |
+            Kontaktná adresa URL pre túto stránku. Ak je prítomná, nahrádza kontaktnú e-mailovú adresu na /about a je viditeľná pre anonymných používateľov na verejných stránkach.
+          site_contact_name: "Kontaktné meno stránky"
+          site_contact_name_help: |
+            Platné používateľské meno člena personálu, z ktorého sa budú odosielať všetky automatické správy. Ak zostane prázdne, použije sa predvolené systémové konto.
+          site_contact_group: "Kontaktná skupina stránky"
+          site_contact_group_help: |
+            Platný názov skupiny, ktorá je pozývaná do všetkých automaticky odosielaných súkromných správ.
+          your_organization: "Vaša organizácia"
+          company_name: "Názov spoločnosti"
+          company_name_help: |
+            Názov vašej spoločnosti alebo organizácie.
+          company_name_warning: |
+            Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
+          governing_law: "Platné právo"
+          governing_law_help: |
+            Uveďte jurisdikciu, ktorá upravuje právne aspekty stránky vrátane podmienok používania služby a oznámenia o ochrane osobných údajov. Zvyčajne ide o krajinu alebo štát, v ktorom je spoločnosť prevádzkujúca lokalitu registrovaná alebo v ktorom podniká.
+          city_for_disputes: "Mesto pre spory"
+          city_for_disputes_help: |
+            Uveďte mesto, ktoré sa použije ako súdna právomoc na riešenie akýchkoľvek sporov súvisiacich s používaním tohto fóra. Táto informácia sa zvyčajne uvádza v právnych dokumentoch, ako sú napríklad podmienky používania fóra.
+          optional: "(nepovinné)"
+          update: "Aktualizovať"
       plugins:
         title: "Pluginy"
         installed: "Nainštalované pluginy"
@@ -6198,6 +6253,7 @@ sk:
             update_watched_word_group: "aktualizovať sledovanú skupinu slov"
             delete_watched_word_group: "odstrániť sledovanú skupinu slov"
             toggle_flag: "prepnúť príznak"
+            move_flag: "vlajka presunu"
         screened_emails:
           title: "Kontrolované emaily"
           description: "Keď niekto skúsi vytvoriť nový účet, nasledujúce emailove adresy budú preverené a registrácia bude zablokovaná, alebo bude vykonaná nejaka iná akcia. "

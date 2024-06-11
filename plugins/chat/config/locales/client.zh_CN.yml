@@ -221,6 +221,8 @@ zh_CN:
         composer: "聊天输入框"
         channels_list: "聊天频道列表"
       no_direct_message_channels: "你还没有加入任何直接消息。"
+      no_direct_message_channels_cta: "开始一个对话"
+      no_public_channels: "你还没有加入任何频道。"
       no_public_channels_cta: "浏览频道"
       kicked_from_channel: "您无法再访问此频道。"
       only_chat_push_notifications:

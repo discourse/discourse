@@ -893,7 +893,6 @@ sr:
           hide_advanced: "Сакриј напредне опције"
       password:
         title: "Šifra"
-        too_short: "Vaša šifra je prekratka."
         common: "Ta šifra je pre česta."
         same_as_username: "Tvoja šifra je ista kao i tvoje korisničko ime."
         same_as_email: "Tvoja šifra je ista kao i tvoj email."
@@ -1971,6 +1970,8 @@ sr:
         events:
           timestamp: "Napravljeno"
           actions: "Akcije"
+          filter_status:
+            failed: "Neuspešno"
       home:
         title: "Home"
       account:

@@ -69,15 +69,6 @@ hr:
   user_notifications:
     chat_summary:
       deleted_user: "Izbrisani korisnik"
-      subject:
-        direct_message_from_1: "[%{email_prefix}] Nova poruka od %{username}"
-        direct_message_from_2: "[%{email_prefix}] Nova poruka od %{username1} i %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] Nova poruka od %{username} i %{count} drugoga"
-          few: "[%{email_prefix}] Nova poruka od %{username} i %{count} drugih"
-          other: "[%{email_prefix}] Nova poruka od %{username} i %{count} drugih"
-        chat_channel_1: "[%{email_prefix}] Nova poruka u kanalu %{channel}"
-        chat_channel_2: "[%{email_prefix}] Nova poruka u kanalima %{channel1} i %{channel2}"
   unsubscribe:
     chat_summary:
       never: Nikad

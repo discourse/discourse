@@ -611,6 +611,8 @@ zh_CN:
         raw: "正文"
       user_profile:
         bio_raw: "自我介绍"
+      user:
+        password: "密码"
     errors:
       models:
         topic:
@@ -635,6 +637,7 @@ zh_CN:
               same_as_username: "与您的用户名相同。请使用一个更安全的密码。"
               same_as_email: "与您的电子邮件相同。请使用一个更安全的密码。"
               same_as_current: "与您当前的密码相同"
+              same_as_previous: "与你当前的密码相同"
               same_as_name: "与您的名字相同。"
               unique_characters: "包含太多重复的字符。请使用一个更安全的密码。"
             username:
@@ -1079,6 +1082,7 @@ zh_CN:
   flags:
     errors:
       already_handled: "举报已被处理"
+      wrong_move: "举报无法移动"
   reports:
     default:
       labels:
@@ -1766,7 +1770,6 @@ zh_CN:
     s3_endpoint: "可以修改端点以备份到 S3 兼容服务，如 DigitalOcean Spaces 或 Minio。警告：如果使用 AWS S3，请留空。"
     s3_configure_tombstone_policy: "为逻辑删除上传启用自动删除策略。重要提示：如果禁用，在删除上传后不会回收空间。"
     s3_disable_cleanup: "当备份的数量超出允许的最大值时，不移除 S3 中的旧备份。"
-    enable_s3_inventory: "使用 Amazon S3 清单生成报告并验证上传。重要提示：需要有效的 S3 凭据（访问密钥 ID 和秘密访问密钥）。"
     s3_use_acls: "AWS 建议不要在 S3 存储桶上使用 ACL；如果您遵循此建议，请取消选中此选项。如果您使用安全上传，则必须启用此选项。"
     backup_time_of_day: "备份的 UTC 时间。"
     backup_with_uploads: "在计划备份中包括上传。禁用此项只会备份数据库。"
@@ -2267,6 +2270,7 @@ zh_CN:
     use_name_for_username_suggestions: "建议用户名时使用用户的全名。"
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末（周六和周日）（如果您仅在工作日（周一至周五）使用 Discourse，请禁用此选项）。"
     splash_screen: "在加载站点资源时显示临时加载屏幕"
+    navigation_menu: "指定侧边栏或标题下拉菜单作为网站的主导航菜单。推荐使用侧边栏。"
     default_navigation_menu_categories: "所选类别默认将显示在导航菜单的“类别”版块下。"
     default_navigation_menu_tags: "所选标签默认将显示在导航菜单的“标签”版块下。"
     experimental_new_new_view_groups: '实验性：启用一个新的话题列表，将未读话题和新话题合并，并使边栏中的“一切”链接指向它。'
@@ -2376,7 +2380,7 @@ zh_CN:
       - "未激活"
       navigation_menu:
       - "边栏"
-      - ""
+      - "标题下拉列表"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"

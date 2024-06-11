@@ -1364,6 +1364,7 @@ it:
         set_password: "Imposta Password"
         choose_new: "Scegli una nuova password"
         choose: "Scegli una password"
+        title: "Reimposta Password"
       second_factor_backup:
         title: "Codice di backup per l'autenticazione a due fattori"
         regenerate: "Rigenera"
@@ -1752,7 +1753,6 @@ it:
         fine_print: "Ti chiediamo di confermare la tua identità perché si tratta di un'azione potenzialmente sensibile. Una volta effettuata l'autenticazione, ti verrà chiesto di riautenticarti solo dopo alcune ore di inattività."
       password:
         title: "Password"
-        too_short: "La password è troppo breve."
         common: "Questa password è troppo comune."
         same_as_username: "La tua password è uguale al tuo nome utente."
         same_as_email: "La password coincide con l'email."
@@ -4816,6 +4816,8 @@ it:
           timestamp: "Creazione"
           completion: "Tempo Completamento"
           actions: "Azioni"
+          filter_status:
+            failed: "Non riuscito"
       home:
         title: "Home"
       account:
@@ -4862,6 +4864,16 @@ it:
           search_logs: "Log di ricerca"
           security: "Sicurezza"
           spam: "Spam"
+      config_areas:
+        about:
+          header: "Informazioni sul tuo sito"
+          community_name: "Nome community"
+          your_organization: "La tua organizzazione"
+          company_name: "Nome società"
+          governing_law: "Diritto applicabile"
+          city_for_disputes: "Sede per eventuali controversie"
+          optional: "(opzionale)"
+          update: "Aggiorna"
       plugins:
         title: "Plugin"
         installed: "Plugin Installati"

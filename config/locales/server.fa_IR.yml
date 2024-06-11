@@ -326,6 +326,8 @@ fa_IR:
         raw: "متن"
       user_profile:
         bio_raw: "درباره من"
+      user:
+        password: "رمزعبور"
     errors:
       models:
         topic:

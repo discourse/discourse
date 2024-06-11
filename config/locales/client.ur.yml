@@ -1162,6 +1162,7 @@ ur:
         set_password: "پاس ورڈ رکھیں"
         choose_new: "نیا پاس ورڈ منتخب کریں"
         choose: "پاس ورڈ منتخب کریں"
+        title: "پاسورڈ رِی سَیٹ"
       second_factor_backup:
         title: "دو فیکٹر بیک اپ کوڈز"
         regenerate: "دوبارہ تخلیق کریں"
@@ -1502,7 +1503,6 @@ ur:
           error: "معذرت، فائل CSV فارمیٹ میں ہونا ضروری ہے۔"
       password:
         title: "پاسورڈ"
-        too_short: "آپ کا پاسورڈ بہت چھوٹا ہے"
         common: "وہ پاسورڈ کافی عام ہے"
         same_as_username: "آپ کا پاسورڈ وہی ہے جو آپ کا صارف نام ہے۔"
         same_as_email: "آپ کا پاسورڈ وہی ہے جو آپ کا اِی میل ہے۔"
@@ -3930,6 +3930,8 @@ ur:
           timestamp: "بنایا گیا"
           completion: "مدتِ تکمیل"
           actions: "عوامل"
+          filter_status:
+            failed: "ناکامی"
       home:
         title: "ہَوم"
       account:
@@ -3976,6 +3978,10 @@ ur:
           search_logs: "لاگز سرچ کریں"
           security: "سیکورٹی"
           spam: "سپَیم"
+      config_areas:
+        about:
+          optional: "(اختیاری)"
+          update: "اپ ڈیٹ"
       plugins:
         title: "پلَگ اِنز"
         installed: "انسٹال کیے ہوے پلَگ اِنز"

@@ -1400,6 +1400,8 @@ de:
         set_password: "Passwort ändern"
         choose_new: "Wähle ein neues Passwort"
         choose: "Wähle ein Passwort"
+        verify_identity: "Um fortzufahren, bestätige bitte deine Identität."
+        title: "Passwort zurücksetzen"
       second_factor_backup:
         title: "Wiederherstellungscodes für Zwei-Faktor-Authentifizierung"
         regenerate: "Erneuern"
@@ -1796,7 +1798,9 @@ de:
         fine_print: "Wir bitten dich, deine Identität zu bestätigen, da dies eine potenziell sensible Aktion ist. Wenn du dich einmal authentifiziert hast, wirst du erst nach ein paar Stunden Inaktivität wieder aufgefordert, dich erneut zu authentifizieren."
       password:
         title: "Passwort"
-        too_short: "Dein Passwort ist zu kurz."
+        too_short:
+          one: "Dein Passwort ist zu kurz (Minimum ist %{count} Zeichen)."
+          other: "Dein Passwort ist zu kurz (Minimum sind %{count} Zeichen)."
         common: "Das Passwort wird zu häufig verwendet."
         same_as_username: "Dein Passwort entspricht deinem Benutzernamen."
         same_as_email: "Dein Passwort entspricht deiner E-Mail-Adresse."
@@ -2869,7 +2873,7 @@ de:
         name: "Als ungelesen markieren"
         description: "Themen als ungelesen markieren"
       update_notifications:
-        name: "Update-Benachrichtigungen"
+        name: "Benachrichtigungsstufe aktualisieren"
         description: "Ändere die Benachrichtigungsstufe auf Beobachten, Verfolgen, Normal oder Stumm"
     topic:
       filter_to:
@@ -4665,6 +4669,10 @@ de:
         title: "Moderationsmeldungen"
         description: "Beschreibung"
         enabled: "Aktiviert?"
+        more_options:
+          title: "Mehr Optionen"
+          move_up: "Nach oben"
+          move_down: "Nach unten"
       groups:
         new:
           title: "Neue Gruppe"
@@ -4977,6 +4985,10 @@ de:
           timestamp: "Erstellt"
           completion: "Fertigstellungszeit"
           actions: "Aktionen"
+          filter_status:
+            all: "Alle Ereignisse"
+            successful: "Geliefert"
+            failed: "Fehlgeschlagen"
       home:
         title: "Startseite"
       account:
@@ -5038,6 +5050,46 @@ de:
           security: "Sicherheit"
           spam: "Spam"
           staff_action_logs: "Team-Aktionen-Protokolle"
+      config_areas:
+        about:
+          header: "Über deine Website"
+          general_settings: "Allgemeine Einstellungen"
+          community_name: "Name der Community"
+          community_summary: "Kurzbeschreibung der Gemeinschaft"
+          community_description: "Beschreibung der Gemeinschaft"
+          banner_image: "Bannerbild"
+          banner_image_help: |
+            Dies wird auf deiner "Über uns"-Seite verwendet. Empfohlene Größe: 800x300px. Akzeptierte Typen: JPG, PNG und SVG bis zu 10 MB.
+          contact_information: "Kontaktinformationen"
+          community_owner: "Eigentümer der Gemeinschaft"
+          community_owner_help: |
+            Name einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter /about angezeigt. Sichtbar für anonyme Benutzer auf öffentlichen Websites.
+          contact_email: "Kontakt E-Mail"
+          contact_email_help: |
+            E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter /about angezeigt. Sichtbar für anonyme Benutzer auf öffentlichen Websites.
+          contact_url: "Kontakt-URL"
+          contact_url_help: |
+            Kontakt-URL für diese Website. Wenn vorhanden, ersetzt sie die Kontakt-E-Mail-Adresse unter /about und ist für anonyme Benutzer auf öffentlichen Websites sichtbar.
+          site_contact_name: "Ansprechpartner"
+          site_contact_name_help: |
+            Gültiger Benutzername eines Team-Mitglieds, in dessen Namen alle automatisch erzeugten Nachrichten versendet werden sollen. Falls leer, wird das Standard-System-Konto verwendet.
+          site_contact_group: "Ansprechpartner-Team"
+          site_contact_group_help: |
+            Ein gültiger Name einer Gruppe, die zu allen automatisch versendeten persönlichen Nachrichten eingeladen wird.
+          your_organization: "Deine Organisation"
+          company_name: "Firmenname"
+          company_name_help: |
+            Name deines Unternehmens oder deiner Organisation.
+          company_name_warning: |
+            Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder Datenschutzhinweise bereitgestellt.
+          governing_law: "Anzuwendendes Recht"
+          governing_law_help: |
+            Gib die Gerichtsbarkeit an, die für die rechtlichen Aspekte der Website gilt, einschließlich der Nutzungsbedingungen und der Datenschutzrichtlinie. Dies ist in der Regel das Land oder der Staat, in dem das Unternehmen, das die Seite betreibt, registriert ist oder Geschäfte tätigt.
+          city_for_disputes: "Stadt für Rechtsstreitigkeiten"
+          city_for_disputes_help: |
+            Gib die Stadt an, die für die Beilegung von Streitigkeiten im Zusammenhang mit der Nutzung dieses Forums zuständig sein soll. Diese Information ist normalerweise in rechtlichen Dokumenten wie den Nutzungsbedingungen des Forums enthalten.
+          optional: "(optional)"
+          update: "Aktualisieren"
       plugins:
         title: "Plug-ins"
         installed: "Installierte Plug-ins"
@@ -5699,6 +5751,7 @@ de:
             update_watched_word_group: "Beobachtete Wortgruppe aktualisieren"
             delete_watched_word_group: "Beobachtete Wortgruppe löschen"
             toggle_flag: "Meldung umschalten"
+            move_flag: "Meldung verschieben"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."

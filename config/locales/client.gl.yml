@@ -1087,6 +1087,7 @@ gl:
         set_password: "Estabelecer o contrasinal"
         choose_new: "Elixir un novo contrasinal"
         choose: "Elixir un contrasinal"
+        title: "Contrasinal restabelecido"
       second_factor_backup:
         title: "Códigos de copia de seguranza de dobre paso"
         regenerate: "Rexenerar"
@@ -1412,7 +1413,6 @@ gl:
           error: "O ficheiro ten que ter formato CSV."
       password:
         title: "Contrasinal"
-        too_short: "O seu contrasinal é demasiado curto."
         common: "Ese contrasinal é demasiado habitual."
         same_as_username: "O contrasinal é igual ao nome de usuario."
         same_as_email: "O contrasinal é igual ao correo electrónico."
@@ -3646,6 +3646,8 @@ gl:
           timestamp: "Creado"
           completion: "Tempo para completar"
           actions: "Accións"
+          filter_status:
+            failed: "Fallou"
       home:
         title: "Inicio"
       account:
@@ -3692,6 +3694,10 @@ gl:
           search_logs: "Buscar rexistros"
           security: "Seguranza"
           spam: "Lixo"
+      config_areas:
+        about:
+          optional: "(opcional)"
+          update: "Actualizar"
       plugins:
         title: "Complementos"
         installed: "Complementos instalados"

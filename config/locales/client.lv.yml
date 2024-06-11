@@ -1067,6 +1067,7 @@ lv:
         set_password: "Uzstādīt paroli"
         choose_new: "Izvēlēties jaunu paroli"
         choose: "Izvēlēties paroli"
+        title: "Paroles atjaunošana"
       second_factor_backup:
         title: "Divu faktoru rezerves kodi"
         regenerate: "Atkārtoti radīt"
@@ -1342,7 +1343,6 @@ lv:
           error: "Atvainojiet, failam jābūt CSV formātā."
       password:
         title: "Parole"
-        too_short: "Jūsu parole ir pārāk īsa."
         common: "Šī parole ir pārāk vienkārša."
         same_as_username: "Jūsu parole ir tāda pati, kā jūsu lietotājvārds."
         same_as_email: "Jūsu parole ir tāda pati, kā jūsu e-pasts."
@@ -2968,6 +2968,8 @@ lv:
           timestamp: "Izveidots"
           completion: "Pabeigšanas laiks"
           actions: "Darbības"
+          filter_status:
+            failed: "Neizdevies"
       home:
         title: "Mājas"
       account:
@@ -3006,6 +3008,9 @@ lv:
           screened_urls: "Pārbaudītie URL"
           security: "Drošība"
           spam: "Spams"
+      config_areas:
+        about:
+          optional: "(pēc izvēles)"
       plugins:
         title: "Spraudņi"
         installed: "Uzinstalētie spraudņi"

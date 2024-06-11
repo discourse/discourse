@@ -125,6 +125,8 @@ lv:
         raw: "Saturs"
       user_profile:
         bio_raw: "Par Mani"
+      user:
+        password: "Parole"
     errors:
       <<: *errors
   general_category_name: "Vispārīgi"

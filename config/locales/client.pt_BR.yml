@@ -1364,6 +1364,7 @@ pt_BR:
         set_password: "Definir senha"
         choose_new: "Escolha uma nova senha"
         choose: "Escolha uma senha"
+        title: "Redefinição de senha"
       second_factor_backup:
         title: "Códigos de backup de dois fatores"
         regenerate: "Gerar novamente"
@@ -1755,7 +1756,6 @@ pt_BR:
         fine_print: "Solicitamos que você confirme sua identidade porque provavelmente esta é uma ação confidencial. Após a autenticação, será solicitado que você autentique novamente após algumas horas de inatividade."
       password:
         title: "Senha"
-        too_short: "A sua senha é muito curta."
         common: "A senha é muito comum."
         same_as_username: "A sua senha é igual ao seu nome do(a) usuário(a)."
         same_as_email: "A sua senha é igual ao seu e-mail."
@@ -4413,6 +4413,7 @@ pt_BR:
           copy: "Copiar..."
           paste: "Colar..."
           save: "Salvar como..."
+    powered_by_discourse: "Alimentado pelo Discourse"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:
@@ -4830,6 +4831,8 @@ pt_BR:
           timestamp: "Criado(a)"
           completion: "Tempo de conclusão"
           actions: "Ações"
+          filter_status:
+            failed: "Falha"
       home:
         title: "Início"
       account:
@@ -4876,6 +4879,16 @@ pt_BR:
           search_logs: "Registros de pesquisa"
           security: "Segurança"
           spam: "Spam"
+      config_areas:
+        about:
+          header: "Sobre seu site"
+          community_name: "Nome da comunidade"
+          your_organization: "Sua organização"
+          company_name: "Nome da empresa"
+          governing_law: "Lei aplicável"
+          city_for_disputes: "Cidade para disputas"
+          optional: "(opcional)"
+          update: "Atualizar"
       plugins:
         title: "Plugins"
         installed: "Plugins nstalados"

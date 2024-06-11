@@ -468,6 +468,8 @@ ko:
         raw: "본문"
       user_profile:
         bio_raw: "내 정보"
+      user:
+        password: "비밀번호"
     errors:
       models:
         topic:
@@ -1446,7 +1448,6 @@ ko:
     s3_endpoint: "엔드포인트를 수정하여 DigitalOcean Spaces 또는 Minio와 같은 S3 호환 서비스로 백업할 수 있습니다. 경고: AWS S3를 사용하는 경우 비워두세요."
     s3_configure_tombstone_policy: "삭제 표시 업로드에 대한 자동 삭제 정책을 활성화합니다. 중요: 비활성화하면 업로드가 삭제된 후 공간이 확보되지 않습니다."
     s3_disable_cleanup: "허용되는 최대 개수보다 많은 백업이 있는 경우 S3에서 이전 백업이 제거되지 않도록 합니다."
-    enable_s3_inventory: "Amazon S3 인벤토리를 사용하여 리포트를 생성하고 업로드를 검증합니다. 중요: 유효한 S3 크리덴셜(액세스 키 ID 및 암호 액세스 키 모두)이 필요합니다."
     backup_time_of_day: "백업이 실행되어야 할 시간(UTC)"
     backup_with_uploads: "예약된 백업에 업로드를 포함합니다. 비활성화하면 데이터베이스만 백업합니다."
     backup_location: "백업이 저장된 위치입니다. 중요: S3에는 파일 설정에 입력 한 유효한 S3 크리덴셜이 필요합니다."

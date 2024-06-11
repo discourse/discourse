@@ -433,6 +433,8 @@ hr:
         raw: "Tijelo"
       user_profile:
         bio_raw: "O meni"
+      user:
+        password: "Lozinka"
     errors:
       models:
         topic:

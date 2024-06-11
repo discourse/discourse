@@ -337,6 +337,8 @@ ro:
         raw: "Corp"
       user_profile:
         bio_raw: "Despre mine"
+      user:
+        password: "Parolă"
     errors:
       models:
         topic:

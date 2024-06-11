@@ -126,8 +126,6 @@ hu:
         one: "Új csevegőüzenete érkezett"
         other: "Új csevegőüzenetei érkeztek"
       from: "%{site_name}"
-      subject:
-        direct_message_from_1: "[%{email_prefix}] Új üzenet a következőtől: %{username}"
       view_messages:
         one: "Üzenet megtekintése"
         other: "%{count} üzenet megtekintése"

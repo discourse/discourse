@@ -1197,6 +1197,7 @@ da:
         set_password: "Skriv password"
         choose_new: "Vælg et nyt kodeord"
         choose: "Vælg et kodeord"
+        title: "Nulstil kodeord"
       second_factor_backup:
         title: "To-faktor backup koder"
         regenerate: "Regenerér"
@@ -1537,7 +1538,6 @@ da:
           error: "Desværre, filen skal være CSV format."
       password:
         title: "Adgangskode"
-        too_short: "Din adgangskode er for kort."
         common: "Denne adgangskode er for almindelig."
         same_as_username: "Dit password er det samme som dit brugernavn."
         same_as_email: "Dit password er det samme som din email adresse."
@@ -4024,6 +4024,8 @@ da:
           timestamp: "Oprettet"
           completion: "Tid for fuldførelse"
           actions: "Handlinger"
+          filter_status:
+            failed: "Fejlet"
       home:
         title: "Hjem"
       account:
@@ -4070,6 +4072,10 @@ da:
           search_logs: "Søgnings logs"
           security: "Sikkerhed"
           spam: "Spam"
+      config_areas:
+        about:
+          optional: "(valgfri)"
+          update: "Opdater"
       plugins:
         title: "Udvidelser"
         installed: "Installerede Udvidelser"

@@ -554,6 +554,8 @@ nl:
         raw: "Inhoud"
       user_profile:
         bio_raw: "Over mij"
+      user:
+        password: "Wachtwoord"
     errors:
       models:
         topic:
@@ -1654,7 +1656,6 @@ nl:
     s3_endpoint: "Het eindpunt kan worden gewijzigd voor back-ups van een met S3 compatibele dienst, zoals DigitalOcean Spaces of Minio. WAARSCHUWING: laat dit leeg als je AWS S3 gebruikt."
     s3_configure_tombstone_policy: "Automatisch verwijderingsbeleid voor tombstone-uploads inschakelen. BELANGRIJK: wanneer uitgeschakeld, wordt geen ruimte vrijgemaakt na het verwijderen van uploads."
     s3_disable_cleanup: "Verwijderen van oude back-ups van S3 voorkomen als er meer back-ups zijn dan maximaal toegestaan."
-    enable_s3_inventory: "Rapporten genereren en uploads verifiëren via Amazon S3-inventory. BELANGRIJK: vereist geldige S3-referenties (zowel toegangssleutel-ID als geheime toegangssleutel)."
     s3_use_acls: "AWS raadt aan om geen ACL's te gebruiken op S3-buckets. Als je dit advies opvolgt, schakel deze optie dan uit. Dit moet zijn ingeschakeld als je beveiligde uploads gebruikt."
     backup_time_of_day: "Tijdstip (UTC) waarop de back-up moet plaatsvinden."
     backup_with_uploads: "Uploads opnemen in geplande back-ups. Wanneer uitgeschakeld, wordt alleen een back-up van de database gemaakt."

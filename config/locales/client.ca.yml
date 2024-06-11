@@ -1017,6 +1017,7 @@ ca:
         set_password: "Estableix la contrasenya"
         choose_new: "Trieu una contrasenya nova"
         choose: "Trieu una contrasenya"
+        title: "Restabliment de contrasenya"
       second_factor_backup:
         regenerate: "Regenera"
         disable: "Desactiva"
@@ -1264,7 +1265,6 @@ ca:
           error: "El fitxer hauria de tenir format CSV."
       password:
         title: "Contrasenya"
-        too_short: "La contrasenya és massa curta."
         common: "La contrasenya és massa freqüent."
         same_as_username: "La contrasenya és igual que el nom d'usuari."
         same_as_email: "La contrasenya és igual que el correu electrònic."
@@ -3178,6 +3178,8 @@ ca:
           timestamp: "Creat"
           completion: "Temps de finalització"
           actions: "Accions"
+          filter_status:
+            failed: "Fallits"
       home:
         title: "Pàgina principal"
       account:
@@ -3224,6 +3226,9 @@ ca:
           search_logs: "Cerca els registres (logs)"
           security: "Seguretat"
           spam: "Brossa"
+      config_areas:
+        about:
+          optional: "(opcional)"
       plugins:
         title: "Connectors"
         installed: "Connectors instal·lats"

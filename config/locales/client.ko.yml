@@ -1143,6 +1143,7 @@ ko:
         set_password: "비밀번호 설정"
         choose_new: "새 비밀번호를 입력하세요"
         choose: "비밀번호를 입력하세요"
+        title: "비밀번호 재설정"
       second_factor_backup:
         title: "2단계 백업 코드"
         regenerate: "재생성"
@@ -1484,7 +1485,6 @@ ko:
           error: "파일은 CSV 포맷이어야 합니다."
       password:
         title: "비밀번호"
-        too_short: "비밀번호가 너무 짧습니다."
         common: "비밀번호가 너무 평범합니다."
         same_as_username: "비밀번호가 사용자명과 동일합니다."
         same_as_email: "비밀번호가 이메일과 동일합니다."
@@ -3873,6 +3873,8 @@ ko:
           timestamp: "생성일"
           completion: "완료 시간"
           actions: "작업"
+          filter_status:
+            failed: "실패"
       home:
         title: "홈"
       account:
@@ -3919,6 +3921,13 @@ ko:
           search_logs: "검색 로그"
           security: "보안"
           spam: "스팸"
+      config_areas:
+        about:
+          community_name: "커뮤니티 이름"
+          site_contact_group_help: |
+            모든 자동 메시지에 초대 할 유효한 그룹 이름입니다.
+          optional: "(선택 사항)"
+          update: "업데이트"
       plugins:
         title: "플러그인"
         installed: "설치된 플러그인"

@@ -1177,6 +1177,7 @@ fa_IR:
         set_password: "تغییر رمز‌عبور"
         choose_new: "یک رمز‌عبور جدید وارد کنید"
         choose: "یک رمز‌عبور وارد کنید"
+        title: "باز‌یابی رمز‌عبور"
       second_factor_backup:
         regenerate: "ایجاد مجدد"
         disable: "ازکاراندازی"
@@ -1506,7 +1507,6 @@ fa_IR:
           error: "با عرض پوزش، نوع فایل باید CSV باشد."
       password:
         title: "رمزعبور"
-        too_short: "رمز عبورتان خیلی کوتاه است"
         common: "رمز عبور خیلی ساده است"
         same_as_username: "رمز عبورتان با نام کاربری شما برابر است."
         same_as_email: "رمز عبورتان با ایمیل شما برابر است. "
@@ -3746,6 +3746,8 @@ fa_IR:
           timestamp: "ساخته شد"
           completion: "زمان تکمیل"
           actions: "عملیات"
+          filter_status:
+            failed: "ناموفق"
       home:
         title: "خانه"
       account:
@@ -3802,6 +3804,14 @@ fa_IR:
           search_logs: "جستجوی گزارش‌ها"
           security: "امنیت"
           spam: "هرز‌نامه"
+      config_areas:
+        about:
+          header: "درباره سایت شما"
+          community_name: "نام انجمن"
+          your_organization: "سازمان شما"
+          company_name: "نام شرکت"
+          optional: "(اختیاری)"
+          update: "به روز رسانی"
       plugins:
         title: "افزونه‌ها"
         installed: "افزونه های نصب شده"
