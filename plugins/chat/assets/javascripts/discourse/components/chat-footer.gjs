@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";

@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import i18n from "discourse-common/helpers/i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
-import UserThreads from "discourse/plugins/chat/discourse/components/user-threads";
 import ChatFooter from "discourse/plugins/chat/discourse/components/chat-footer";
+import UserThreads from "discourse/plugins/chat/discourse/components/user-threads";
 
 export default class ChatDrawerRoutesThreads extends Component {
   @service chat;

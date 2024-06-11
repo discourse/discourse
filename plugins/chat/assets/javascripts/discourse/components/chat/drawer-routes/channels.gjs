@@ -1,7 +1,5 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import i18n from "discourse-common/helpers/i18n";
 import ChannelsListPublic from "discourse/plugins/chat/discourse/components/channels-list-public";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
