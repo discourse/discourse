@@ -17,6 +17,7 @@ export default class FkControlSelect extends Component {
       id={{@fieldId}}
       aria-invalid={{if @invalid "true"}}
       aria-describedby={{if @invalid @errorId}}
+      disabled={{@disabled}}
       ...attributes
       class="d-form__control-select"
       {{on "input" this.handleInput}}

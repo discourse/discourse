@@ -4,7 +4,8 @@ import { assert } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { action, get } from "@ember/object";
 import FKControlCheckbox from "form-kit/components/control/checkbox";
-import FKControlIconPicker from "form-kit/components/control/icon-picker";
+import FKControlCode from "form-kit/components/control/code";
+import FKControlIcon from "form-kit/components/control/icon";
 import FKControlImage from "form-kit/components/control/image";
 import FKControlInput from "form-kit/components/control/input";
 import FKControlMenu from "form-kit/components/control/menu";
@@ -80,10 +81,24 @@ export default class FormField extends Component {
       {{#let (uniqueId) (uniqueId) as |fieldId errorId|}}
         {{yield
           (hash
+            Code=(component
+              FKControlWrapper
+              component=FKControlCode
+              name=@name
+              disabled=@disabled
+              fieldId=fieldId
+              errorId=errorId
+              setValue=this.setValue
+              value=this.value
+              errors=this.errors
+              triggerValidationFor=@triggerValidationFor
+              field=this.field
+            )
             Question=(component
               FKControlWrapper
               component=FKControlQuestion
               name=@name
+              disabled=@disabled
               fieldId=fieldId
               errorId=errorId
               setValue=this.setValue
@@ -96,6 +111,7 @@ export default class FormField extends Component {
               FKControlWrapper
               component=FKControlText
               name=@name
+              disabled=@disabled
               fieldId=fieldId
               errorId=errorId
               setValue=this.setValue
@@ -107,6 +123,7 @@ export default class FormField extends Component {
             Checkbox=(component
               FKControlCheckbox
               name=@name
+              disabled=@disabled
               fieldId=fieldId
               errorId=errorId
               setValue=this.setValue
@@ -119,6 +136,7 @@ export default class FormField extends Component {
               FKControlWrapper
               component=FKControlImage
               name=@name
+              disabled=@disabled
               fieldId=fieldId
               errorId=errorId
               setValue=this.setValue
@@ -129,8 +147,9 @@ export default class FormField extends Component {
             )
             IconPicker=(component
               FKControlWrapper
-              component=FKControlIconPicker
+              component=FKControlIcon
               name=@name
+              disabled=@disabled
               fieldId=fieldId
               errorId=errorId
               setValue=this.setValue
@@ -143,6 +162,7 @@ export default class FormField extends Component {
               FKControlWrapper
               component=FKControlMenu
               name=@name
+              disabled=@disabled
               fieldId=fieldId
               errorId=errorId
               setValue=this.setValue
@@ -155,6 +175,7 @@ export default class FormField extends Component {
               FKControlWrapper
               component=FKControlSelect
               name=@name
+              disabled=@disabled
               fieldId=fieldId
               errorId=errorId
               setValue=this.setValue
@@ -167,6 +188,7 @@ export default class FormField extends Component {
               FKControlWrapper
               component=FKControlInput
               name=@name
+              disabled=@disabled
               fieldId=fieldId
               errorId=errorId
               setValue=this.setValue
@@ -179,6 +201,7 @@ export default class FormField extends Component {
               FKControlWrapper
               component=FKControlRadioGroup
               name=@name
+              disabled=@disabled
               fieldId=fieldId
               errorId=errorId
               setValue=this.setValue

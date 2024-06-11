@@ -15,44 +15,29 @@ export default class FkControlMenu extends Component {
     this.menuApi = api;
   }
 
-  get headerTemplate() {
-    return <template>{{yield}}</template>;
-  }
-
-  get contentTemplate() {
-    return <template>
-      {{yield
-        (hash
-          Item=(component
-            FKControlMenuItem
-            item=@menu.item
-            setValue=@setValue
-            menuApi=@menuApi
-          )
-          Divider=@menu.divider
-        )
-      }}
-    </template>;
-  }
-
   <template>
-    <DMenu @onRegisterApi={{this.registerMenuApi}}>
+    <DMenu
+      @onRegisterApi={{this.registerMenuApi}}
+      @triggerClass="d-form__control-menu"
+      @disabled={{@disabled}}
+    >
       <:trigger>
         <span class="d-button-label">
-          {{yield (hash SelectedItem=this.headerTemplate) (hash)}}
+          {{@selection}}
         </span>
         {{icon "angle-down"}}
       </:trigger>
       <:content>
         <DropdownMenu as |menu|>
           {{yield
-            (hash)
-            (component
-              this.contentTemplate
-              menu=menu
-              setValue=@setValue
-              setLabel=this.setLabel
-              menuApi=this.menuApi
+            (hash
+              Item=(component
+                FKControlMenuItem
+                item=menu.item
+                setValue=@setValue
+                menuApi=this.menuApi
+              )
+              Divider=menu.divider
             )
           }}
         </DropdownMenu>

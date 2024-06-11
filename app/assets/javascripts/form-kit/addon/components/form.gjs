@@ -4,6 +4,7 @@ import { assert, debug } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
 import FKControlConditionalContent from "form-kit/components/control/conditional-content";
 import FKControlInputGroup from "form-kit/components/control/input-group";
@@ -29,6 +30,8 @@ export default class Form extends Component {
     }
   });
 
+  transientData = new TrackedObject({});
+
   constructor() {
     super(...arguments);
 
@@ -40,7 +43,47 @@ export default class Form extends Component {
 
   @cached
   get effectiveData() {
-    return this.args.data ?? {};
+    const obj = this.args.data ?? {};
+    const { transientData } = this;
+
+    return new Proxy(obj, {
+      get(target, prop) {
+        return prop in transientData
+          ? transientData[prop]
+          : Reflect.get(target, prop);
+      },
+
+      set(target, property, value) {
+        return Reflect.set(transientData, property, value);
+      },
+
+      has(target, prop) {
+        return prop in transientData ? true : Reflect.has(target, prop);
+      },
+
+      getOwnPropertyDescriptor(target, prop) {
+        return Reflect.getOwnPropertyDescriptor(
+          prop in transientData ? transientData : target,
+          prop
+        );
+      },
+
+      ownKeys(target) {
+        return (
+          [...Reflect.ownKeys(target), ...Reflect.ownKeys(transientData)]
+            // return only unique values
+            .filter((value, index, array) => array.indexOf(value) === index)
+        );
+      },
+
+      deleteProperty(target, prop) {
+        if (prop in transientData) {
+          delete transientData[prop];
+        }
+
+        return true;
+      },
+    });
   }
 
   get validateOn() {
@@ -178,8 +221,6 @@ export default class Form extends Component {
       name = target.name;
     }
 
-    console.log(event.target, name);
-
     if (name) {
       const field = this.fields.get(name);
 
@@ -230,9 +271,7 @@ export default class Form extends Component {
           Row=(component Row)
           Section=(component FKSection)
           ConditionalContent=(component FKControlConditionalContent)
-          Errors=(component
-            FKFormErrors errors=this.visibleErrors withPrefix=true
-          )
+          Errors=(component FKFormErrors errors=this.visibleErrors)
           Field=(component
             FKFormField
             data=this.effectiveData
@@ -250,6 +289,7 @@ export default class Form extends Component {
             errors=this.validationState
           )
         )
+        this.effectiveData
       }}
 
       <DButton

@@ -123,8 +123,12 @@ export default class AceEditor extends Component {
             });
             editor.getSession().setMode("ace/mode/" + this.mode);
             editor.on("change", () => {
-              this._skipContentChangeEvent = true;
-              this.set("content", editor.getSession().getValue());
+              if (this.onChange) {
+                this.onChange(editor.getSession().getValue());
+              } else {
+                this._skipContentChangeEvent = true;
+                this.set("content", editor.getSession().getValue());
+              }
             });
             if (this.save) {
               editor.commands.addCommand({
@@ -143,7 +147,7 @@ export default class AceEditor extends Component {
             editor.$blockScrolling = Infinity;
             editor.renderer.setScrollMargin(10, 10);
 
-            this.element.setAttribute("data-editor", editor);
+            this.element.dataset.editor = editor.id;
             this._editor = editor;
             this.changeDisabledState();
             this.warnSCSSDeprecations();

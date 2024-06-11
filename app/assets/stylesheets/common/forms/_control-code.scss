@@ -1,0 +1,8 @@
+.d-form__control-code {
+  height: 270px;
+  width: 100%;
+
+  &[data-disabled] {
+    opacity: 0.5;
+  }
+}

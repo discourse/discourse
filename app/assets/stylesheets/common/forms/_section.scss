@@ -1,0 +1,9 @@
+.d-form__section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+
+  .d-form__section-title {
+    margin: 0;
+  }
+}

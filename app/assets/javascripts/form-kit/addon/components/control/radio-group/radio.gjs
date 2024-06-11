@@ -17,6 +17,7 @@ export default class FkControlRadioGroupRadio extends Component {
             checked={{@checked}}
             id={{uuid}}
             class="d-form-radio__input"
+            disabled={{@disabled}}
             ...attributes
             {{on "change" (fn @setValue @value)}}
           />

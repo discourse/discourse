@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import FKMeta from "form-kit/components/meta";
 import FormText from "form-kit/components/text";
+import concatClass from "discourse/helpers/concat-class";
 
 export default class FormControlWrapper extends Component {
   get controlType() {
@@ -10,8 +11,10 @@ export default class FormControlWrapper extends Component {
         return "-input";
       case "FkControlText":
         return "-text";
-      case "FkControlYesNo":
-        return "-yes-no";
+      case "FkControlQuestion":
+        return "-question";
+      case "FkControlCode":
+        return "-code";
       case "FkControlSelect":
         return "-select";
       case "FkControlIconSelector":
@@ -26,7 +29,12 @@ export default class FormControlWrapper extends Component {
   }
 
   <template>
-    <div class={{concat "d-form__field" this.controlType}}>
+    <div
+      class={{concatClass
+        (concat "d-form__field" this.controlType)
+        (if @disabled "--disabled")
+      }}
+    >
       {{#if @title}}
         <label class="d-form__field__title" for={{@fieldId}}>
           {{@title}}
@@ -44,8 +52,11 @@ export default class FormControlWrapper extends Component {
       <@component
         @value={{@value}}
         @type={{@type}}
+        @disabled={{@disabled}}
+        @lang={{@lang}}
         @positiveLabel={{@positiveLabel}}
         @negativeLabel={{@negativeLabel}}
+        @selection={{@selection}}
         @setValue={{@setValue}}
         @disabled={{@field.disabled}}
         id={{@fieldId}}

@@ -8,13 +8,11 @@ export default class FkControlMenuItem extends Component {
     this.args.menuApi.close();
 
     if (this.args.action) {
-      this.args.action(this.args.value, this.args.label, {
+      this.args.action(this.args.value, {
         setValue: this.args.setValue,
-        setLabel: this.args.setLabel,
       });
     } else {
       this.args.setValue(this.args.value);
-      this.args.setLabel(this.args.label);
     }
   }
 

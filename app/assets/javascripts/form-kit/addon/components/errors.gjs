@@ -2,10 +2,6 @@ import Component from "@glimmer/component";
 import icon from "discourse-common/helpers/d-icon";
 
 export default class FormErrors extends Component {
-  get withPrefix() {
-    return this.args.withPrefix ?? false;
-  }
-
   get visibleErrors() {
     if (!this.args.names) {
       return this.args.errors;

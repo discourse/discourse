@@ -1,49 +1,17 @@
-//
-// Check/radio
-//
+.d-form__control-checkbox {
+  margin: 0.17em 0 0;
 
-.d-form {
-  input[type] {
-    margin-bottom: 0;
+  &__label {
+    display: flex;
+    gap: 0.5em;
+    font-weight: normal !important;
+    margin: 0;
+    color: var(--primary);
   }
 }
 
-.d-form-checkbox {
-  display: flex;
-  align-items: center;
-}
-
-.d-form-checkbox-input {
-  margin-top: 0 !important;
-}
-
-.d-form-checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.25em;
-  margin: 0;
-  font-size: var(--font-down-1-rem);
-  color: var(--primary-high);
-  font-weight: normal !important;
-}
-
-.d-form-text {
-  margin: 0;
-  color: var(--primary-high);
-  font-size: var(--font-down-1-rem);
-}
-
-.d-form-fieldset {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.d-form-input-label {
-  display: flex;
-  align-items: center;
-  gap: 0.25em;
-  margin: 0;
-  font-size: var(--font-down-1-rem);
-  color: var(--primary-high);
+.d-form__field-checkbox {
+  + .d-form__field-checkbox {
+    margin-top: calc(-1 * var(--d-form-gutter-y));
+  }
 }
