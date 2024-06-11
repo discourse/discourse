@@ -2,6 +2,8 @@
 
 module ThemeResolver
   def self.resolve_theme_id(request, guardian, current_user)
+    return request.env[:resolved_theme_id] if request.env[:resolved_theme_id] != nil
+
     theme_id = nil
 
     if (preview_theme_id = request[:preview_theme_id]&.to_i) &&
@@ -28,7 +30,7 @@ module ThemeResolver
          guardian.allow_themes?([SiteSetting.default_theme_id])
       theme_id = SiteSetting.default_theme_id
     end
-    pp theme_id
+
     request.env[:resolved_theme_id] = theme_id
   end
 end
