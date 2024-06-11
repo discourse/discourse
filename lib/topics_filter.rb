@@ -74,6 +74,8 @@ class TopicsFilter
         filter_by_number_of_posters(max: filter_values)
       when "status"
         filter_values.each { |status| @scope = filter_status(status: status) }
+      when "tag_group"
+        filter_tags(values: tag_groups_to_tags(key_prefixes.zip(filter_values)))
       when "tag"
         filter_tags(values: key_prefixes.zip(filter_values))
       when "views-min"
@@ -366,6 +368,19 @@ class TopicsFilter
     all_tag_ids.compact!
     all_tag_ids.uniq!
     all_tag_ids
+  end
+
+  def tag_groups_to_tags(values)
+    values.map do |key_prefix, value|
+      tag_groups_names =
+        if value.include?(",")
+          value.split(",")
+        else
+          [value]
+        end
+      tags = TagGroup.where(name: tag_groups_names).map(&:tags).flatten.map(&:name).join(",")
+      [key_prefix, tags]
+    end
   end
 
   def filter_tags(values:)
