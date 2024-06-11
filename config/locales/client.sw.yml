@@ -2161,7 +2161,6 @@ sw:
     tagging:
       other_tags: "Lebo Zingine"
       selector_tags: "lebo"
-      selector_all_tags: "lebo zote"
       selector_no_tags: "hakuna lebo"
       selector_remove_filter: "ondoa uchujaji"
       tags: "Lebo"

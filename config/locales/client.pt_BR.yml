@@ -3999,7 +3999,6 @@ pt_BR:
       all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
       selector_tags: "etiquetas"
-      selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
       selector_remove_filter: "remover filtro"
       tags: "Etiquetas"
@@ -4413,7 +4412,7 @@ pt_BR:
           copy: "Copiar..."
           paste: "Colar..."
           save: "Salvar como..."
-    powered_by_discourse: "Alimentado pelo Discourse"
+    powered_by_discourse: "Com tecnologia Discourse"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:

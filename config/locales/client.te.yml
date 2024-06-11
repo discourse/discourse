@@ -4065,7 +4065,6 @@ te:
       all_tags: "అన్ని ట్యాగ్‌లు"
       other_tags: "ఇతర ట్యాగ్‌లు"
       selector_tags: "ట్యాగులు"
-      selector_all_tags: "అన్ని ట్యాగ్‌లు"
       selector_no_tags: "ట్యాగ్‌లు లేవు"
       selector_remove_filter: "ఫిల్టర్‌ని తీసివేయండి"
       tags: "ట్యాగులు"

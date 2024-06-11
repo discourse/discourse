@@ -4388,7 +4388,6 @@ ru:
       all_tags: "Все теги"
       other_tags: "Другие теги"
       selector_tags: "теги"
-      selector_all_tags: "Все теги"
       selector_no_tags: "Без тегов"
       selector_remove_filter: "отменить фильтр"
       tags: "Теги"

@@ -2762,7 +2762,6 @@ ca:
     tagging:
       other_tags: "Altres etiquetes"
       selector_tags: "etiquetes"
-      selector_all_tags: "totes les etiquetes"
       selector_no_tags: "sense etiquetes"
       selector_remove_filter: "elimina filtre"
       tags: "Etiquetes"

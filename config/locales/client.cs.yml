@@ -4338,7 +4338,6 @@ cs:
       all_tags: "Všechny štítky"
       other_tags: "Ostatní štítky "
       selector_tags: "štítky"
-      selector_all_tags: "všechny štítky"
       selector_no_tags: "bez štítků"
       selector_remove_filter: "zrušit filtr"
       tags: "Štítky"

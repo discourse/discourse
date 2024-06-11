@@ -4001,7 +4001,6 @@ nl:
       all_tags: "Alle tags"
       other_tags: "Andere tags"
       selector_tags: "tags"
-      selector_all_tags: "alle tags"
       selector_no_tags: "geen tags"
       selector_remove_filter: "filter verwijderen"
       tags: "Tags"
@@ -4415,6 +4414,7 @@ nl:
           copy: "Kopiëren..."
           paste: "Plakken..."
           save: "Opslaan als..."
+    powered_by_discourse: "Gemaakt met Discourse"
   admin_js:
     type_to_filter: "typ om te filteren…"
     admin:

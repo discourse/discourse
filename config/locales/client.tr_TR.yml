@@ -4054,7 +4054,6 @@ tr_TR:
       all_tags: "Tüm etiketler"
       other_tags: "Diğer Etiketler"
       selector_tags: "etiketler"
-      selector_all_tags: "tüm etiketler"
       selector_no_tags: "etiket yok"
       selector_remove_filter: "filtreyi kaldır"
       tags: "Etiketler"

@@ -4004,7 +4004,6 @@ fi:
       all_tags: "Kaikki tunnisteet"
       other_tags: "Muut tunnisteet"
       selector_tags: "tunnisteet"
-      selector_all_tags: "kaikki tunnisteet"
       selector_no_tags: "ei tunnisteita"
       selector_remove_filter: "poista suodatin"
       tags: "Tunnisteet"

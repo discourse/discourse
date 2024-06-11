@@ -4551,7 +4551,6 @@ sk:
       all_tags: "Všetky značky"
       other_tags: "Iné značky"
       selector_tags: "značky"
-      selector_all_tags: "všetky značky"
       selector_no_tags: "žiadne značky"
       selector_remove_filter: "zruš filter"
       tags: "Značky"

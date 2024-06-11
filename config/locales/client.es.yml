@@ -3994,7 +3994,6 @@ es:
       all_tags: "Todas las etiquetas"
       other_tags: "Otras etiquetas"
       selector_tags: "etiquetas"
-      selector_all_tags: "todas las etiquetas"
       selector_no_tags: "sin etiquetas"
       selector_remove_filter: "quitar filtro"
       tags: "Etiquetas"

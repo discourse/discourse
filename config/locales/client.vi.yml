@@ -3378,7 +3378,6 @@ vi:
       all_tags: "Tất cả các thẻ"
       other_tags: "Các thẻ khác"
       selector_tags: "thẻ"
-      selector_all_tags: "tất cả thẻ"
       selector_no_tags: "không có thẻ"
       selector_remove_filter: "bỏ đièu kiện lọc"
       tags: "Thẻ"

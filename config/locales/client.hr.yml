@@ -4114,7 +4114,6 @@ hr:
       all_tags: "Sve oznake"
       other_tags: "Ostale oznake"
       selector_tags: "oznake"
-      selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
       selector_remove_filter: "uklonite filter"
       tags: "Oznake"

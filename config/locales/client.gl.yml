@@ -3156,7 +3156,6 @@ gl:
     tagging:
       other_tags: "Outras etiquetas"
       selector_tags: "etiquetas"
-      selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sen etiquetas"
       selector_remove_filter: "eliminar filtro"
       tags: "Etiquetas"

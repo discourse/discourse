@@ -3902,7 +3902,6 @@ zh_CN:
       all_tags: "所有标签"
       other_tags: "其他标签"
       selector_tags: "标签"
-      selector_all_tags: "所有标签"
       selector_no_tags: "无标签"
       selector_remove_filter: "移除筛选器"
       tags: "标签"

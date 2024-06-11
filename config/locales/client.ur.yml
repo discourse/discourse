@@ -3375,7 +3375,6 @@ ur:
     tagging:
       other_tags: "دیگر ٹیگز"
       selector_tags: "ٹیگز"
-      selector_all_tags: "تمام ٹیگز"
       selector_no_tags: "کوئی ٹیگ نہیں"
       selector_remove_filter: "فِلٹر ہٹائیں"
       tags: "ٹیگز"

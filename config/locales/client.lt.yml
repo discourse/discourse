@@ -3378,7 +3378,6 @@ lt:
     tagging:
       other_tags: "Kitos žymos"
       selector_tags: "žymos"
-      selector_all_tags: "visos žymos"
       selector_no_tags: "nėra žymų"
       selector_remove_filter: "išjungti filtrus"
       tags: "Žymos"

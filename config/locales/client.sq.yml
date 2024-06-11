@@ -1845,7 +1845,6 @@ sq:
       download: "Shkarko"
     tagging:
       selector_tags: "etiketat"
-      selector_all_tags: "të gjitha etiketat"
       selector_no_tags: "asnjë etiketë"
       selector_remove_filter: "hiq filtrin"
       tags: "Etiketat"

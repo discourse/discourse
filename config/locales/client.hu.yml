@@ -4065,7 +4065,6 @@ hu:
       all_tags: "Minden címke"
       other_tags: "Egyéb címkék"
       selector_tags: "címkék"
-      selector_all_tags: "összes címke"
       selector_no_tags: "címke nélküli"
       selector_remove_filter: "szűrő eltávolítása"
       tags: "Címkék"
