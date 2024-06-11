@@ -112,6 +112,7 @@ export default class DMenuInstance extends FloatKitInstance {
 
   @action
   destroy() {
+    this.close();
     this.tearDownListeners();
   }
 }
