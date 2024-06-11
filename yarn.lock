@@ -5743,14 +5743,15 @@ ember-on-resize-modifier@^2.0.2:
     ember-modifier "^3.2.7 || ^4.0.0"
     ember-resize-observer-service "^1.1.0"
 
-ember-qunit@^8.0.2:
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/ember-qunit/-/ember-qunit-8.0.2.tgz#a6346136cba785853f176dfa6ed25e3f0a11b7a0"
-  integrity sha512-Rf60jeUTWNsF3Imf/FLujW/B/DFmKVXKmXO1lirTXjpertKfwRhp/3MnN8a/U/WyodTIsERkInGT1IqTtphCdQ==
+ember-qunit@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/ember-qunit/-/ember-qunit-8.1.0.tgz#c9dcd5bc97d3b122db7e416e3aef09fba7db39f9"
+  integrity sha512-55/xqvVQwhiNcnh/tCzWyvlYzrYqwDY0/cIPyDQbAxGKtkUt9jCfRUGllfyOofC6LX0fL/0fIi+5e9sg1m6vXw==
   dependencies:
     "@embroider/addon-shim" "^1.8.6"
     "@embroider/macros" "^1.13.1"
     ember-cli-test-loader "^3.1.0"
+    qunit-theme-ember "^1.0.0"
 
 ember-resize-observer-service@^1.1.0:
   version "1.1.0"
@@ -10608,6 +10609,11 @@ qunit-dom@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/qunit-dom/-/qunit-dom-3.1.2.tgz#8adff6d9eb7b0f2ba88d18ba120d2e1b1c4efb5b"
   integrity sha512-urHvzhDxihYrMBpsT/Fk7So79CPfvS0ZwZw2VPA+0JV1Q1XP2IhDg/PLHTt+r2j7787iQAOpILx2GjwAa6CpnA==
+
+qunit-theme-ember@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/qunit-theme-ember/-/qunit-theme-ember-1.0.0.tgz#3b750b9e3ab2837cc3b31cc5b73a0b71b964b0db"
+  integrity sha512-vdMVVo6ecdCkWttMTKeyq1ZTLGHcA6zdze2zhguNuc3ritlJMhOXY5RDseqazOwqZVfCg3rtlmL3fMUyIzUyFQ==
 
 qunit@^2.21.0:
   version "2.21.0"
