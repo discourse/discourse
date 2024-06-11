@@ -64,6 +64,11 @@ export default Component.extend(bufferedProperty("userField"), {
     return ret.join(", ");
   },
 
+  @discourseComputed("buffered.requirement")
+  editableDisabled(requirement) {
+    return requirement === "for_all_users";
+  },
+
   @action
   changeRequirementType(requirement) {
     this.buffered.set("requirement", requirement);

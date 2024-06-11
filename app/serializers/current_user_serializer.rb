@@ -289,10 +289,6 @@ class CurrentUserSerializer < BasicUserSerializer
     SiteSetting.include_associated_account_ids
   end
 
-  def needs_required_fields_check?
-    object.needs_required_fields_check?
-  end
-
   def second_factor_enabled
     object.totp_enabled? || object.security_keys_enabled?
   end

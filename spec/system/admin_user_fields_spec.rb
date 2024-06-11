@@ -25,4 +25,21 @@ describe "Admin User Fields", type: :system, js: true do
 
     expect(user_fields_page).to have_text(/Description can't be blank/)
   end
+
+  it "makes sure new required fields are editable after signup" do
+    user_fields_page.visit
+
+    page.find(".user-fields .btn-primary").click
+
+    form = page.find(".user-field")
+    editable_label = I18n.t("admin_js.admin.user_fields.editable.title")
+
+    user_fields_page.choose_requirement("for_all_users")
+
+    expect(form).to have_field(editable_label, checked: true, disabled: true)
+
+    user_fields_page.choose_requirement("optional")
+
+    expect(form).to have_field(editable_label, checked: false, disabled: false)
+  end
 end
