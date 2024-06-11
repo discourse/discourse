@@ -4029,7 +4029,6 @@ fr:
       all_tags: "Toutes les étiquettes"
       other_tags: "Autres étiquettes"
       selector_tags: "étiquettes"
-      selector_all_tags: "toutes les étiquettes"
       selector_no_tags: "aucune étiquette"
       selector_remove_filter: "supprimer le filtre"
       tags: "Étiquettes"

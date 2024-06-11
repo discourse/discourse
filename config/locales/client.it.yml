@@ -3986,7 +3986,6 @@ it:
       all_tags: "Tutte le etichette"
       other_tags: "Altre Etichette"
       selector_tags: "etichette"
-      selector_all_tags: "tutte le etichette"
       selector_no_tags: "nessuna etichetta"
       selector_remove_filter: "rimuovi filtro"
       tags: "Etichette"

@@ -2714,7 +2714,6 @@ hy:
     tagging:
       other_tags: "Այլ Թեգեր"
       selector_tags: "թեգեր"
-      selector_all_tags: "բոլոր թեգերը"
       selector_no_tags: "առանց թեգերի"
       selector_remove_filter: "հանել ֆիլտրը"
       tags: "Թեգեր"

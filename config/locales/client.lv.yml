@@ -2663,7 +2663,6 @@ lv:
       download: "Lejuplādēt"
     tagging:
       selector_tags: "birkas"
-      selector_all_tags: "visi tagi"
       selector_no_tags: "bez tagiem"
       selector_remove_filter: "noņemt filtru"
       tags: "Tagi"

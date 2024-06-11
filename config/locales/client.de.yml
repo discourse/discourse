@@ -4117,7 +4117,6 @@ de:
       all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"
       selector_tags: "Schlagwörter"
-      selector_all_tags: "alle Schlagwörter"
       selector_no_tags: "keine Schlagwörter"
       selector_remove_filter: "Filter entfernen"
       tags: "Schlagwörter"

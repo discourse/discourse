@@ -2774,7 +2774,6 @@ zh_TW:
       all_tags: "所有標記"
       other_tags: "其他標記"
       selector_tags: "標記"
-      selector_all_tags: "所有標籤"
       selector_no_tags: "無標記"
       selector_remove_filter: "取消過濾"
       tags: "標記"

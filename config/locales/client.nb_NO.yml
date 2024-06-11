@@ -3177,7 +3177,6 @@ nb_NO:
     tagging:
       other_tags: "Andre stikkord"
       selector_tags: "stikkord"
-      selector_all_tags: "alle stikkord"
       selector_no_tags: "ingen stikkord"
       selector_remove_filter: "fjern filter"
       tags: "Stikkord"

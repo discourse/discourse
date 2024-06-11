@@ -4533,7 +4533,6 @@ uk:
       all_tags: "Всі теґи"
       other_tags: "Інші теґи"
       selector_tags: "теґи"
-      selector_all_tags: "усі теґи"
       selector_no_tags: "без теґів"
       selector_remove_filter: "прибрати фільтр"
       tags: "Теґи"

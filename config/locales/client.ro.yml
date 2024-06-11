@@ -3029,7 +3029,6 @@ ro:
     tagging:
       other_tags: "Alte etichete"
       selector_tags: "etichete"
-      selector_all_tags: "toate etichetele"
       selector_no_tags: "fără etichete"
       selector_remove_filter: "șterge filtru"
       tags: "Etichete"

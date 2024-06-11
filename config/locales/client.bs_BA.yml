@@ -2874,7 +2874,6 @@ bs_BA:
     tagging:
       other_tags: "Druge oznake"
       selector_tags: "oznake"
-      selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
       selector_remove_filter: "show all posts in this topic again."
       tags: "Oznake"

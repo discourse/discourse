@@ -3455,7 +3455,6 @@ da:
       all_tags: "Alle mærker"
       other_tags: "Andre Mærker"
       selector_tags: "mærker"
-      selector_all_tags: "alle mærker"
       selector_no_tags: "ingen mærker"
       selector_remove_filter: "fjern filter"
       tags: "Mærker"

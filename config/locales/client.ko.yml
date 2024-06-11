@@ -3321,7 +3321,6 @@ ko:
       all_tags: "모든 태그"
       other_tags: "기타 태그"
       selector_tags: "태그"
-      selector_all_tags: "모든 태그"
       selector_no_tags: "태그 없음"
       selector_remove_filter: "필터 제거"
       tags: "태그"

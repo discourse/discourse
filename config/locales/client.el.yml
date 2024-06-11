@@ -3118,7 +3118,6 @@ el:
       all_tags: "Όλες οι ετικέτες"
       other_tags: "Άλλες ετικέτες"
       selector_tags: "ετικέτες"
-      selector_all_tags: "όλες οι ετικέτες"
       selector_no_tags: "καμία ετικέτα"
       selector_remove_filter: "αφαίρεση φίλτρου"
       tags: "Ετικέτες"

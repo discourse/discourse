@@ -3790,7 +3790,6 @@ ja:
       all_tags: "すべてのタグ"
       other_tags: "他のタグ"
       selector_tags: "タグ"
-      selector_all_tags: "すべてのタグ"
       selector_no_tags: "タグなし"
       selector_remove_filter: "フィルタを削除"
       tags: "タグ"

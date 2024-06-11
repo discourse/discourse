@@ -2473,7 +2473,6 @@ et:
     tagging:
       other_tags: "Muud sildid"
       selector_tags: "sildid"
-      selector_all_tags: "kõik sildid"
       selector_no_tags: "sildid puuduvad"
       selector_remove_filter: "eemalda filter"
       tags: "Sildid"

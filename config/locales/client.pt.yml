@@ -3344,7 +3344,6 @@ pt:
     tagging:
       other_tags: "Outras Tags"
       selector_tags: "etiquetas"
-      selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
       selector_remove_filter: "remover filtro"
       tags: "Etiquetas"

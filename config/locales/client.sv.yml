@@ -4011,7 +4011,6 @@ sv:
       all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
       selector_tags: "taggar"
-      selector_all_tags: "alla taggar"
       selector_no_tags: "inga taggar"
       selector_remove_filter: "ta bort filter"
       tags: "Taggar"

@@ -3392,7 +3392,6 @@ sl:
     tagging:
       other_tags: "Druge oznake"
       selector_tags: "oznake"
-      selector_all_tags: "vse oznake"
       selector_no_tags: "brez oznak"
       selector_remove_filter: "odstrani filter"
       tags: "Oznake"

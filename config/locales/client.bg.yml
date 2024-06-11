@@ -3284,7 +3284,6 @@ bg:
     tagging:
       other_tags: "Други тагове"
       selector_tags: "тагове"
-      selector_all_tags: "всички тагове"
       selector_no_tags: "няма тагове"
       selector_remove_filter: "премахни филтъра"
       tags: "Тагове"

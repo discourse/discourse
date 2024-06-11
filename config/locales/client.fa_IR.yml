@@ -3278,7 +3278,6 @@ fa_IR:
       all_tags: "تمام برچسب‌ها"
       other_tags: "برچسب‌های دیگر"
       selector_tags: "برچسب‌ها"
-      selector_all_tags: "تمام برچسب‌ها"
       selector_no_tags: "بدون برچسب"
       selector_remove_filter: "حذف فیلتر"
       tags: "برچسب‌ها"

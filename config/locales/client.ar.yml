@@ -4791,7 +4791,6 @@ ar:
       all_tags: "كل الوسوم"
       other_tags: "وسوم أخرى"
       selector_tags: "الوسوم"
-      selector_all_tags: "كل الوسوم"
       selector_no_tags: "لا توجد وسوم"
       selector_remove_filter: "إزالة التصفية"
       tags: "الوسوم"
