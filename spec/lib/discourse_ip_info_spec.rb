@@ -2,6 +2,8 @@
 
 RSpec.describe DiscourseIpInfo do
   describe ".mmdb_download" do
+    before { Discourse::Utils.stubs(:execute_command) }
+
     it "should download the MaxMind databases from MaxMind's download permalinks when `maxmind_license_key` and `maxmind_account_id` global setting has been set" do
       global_setting :maxmind_license_key, "license_key"
       global_setting :maxmind_account_id, "account_id"
