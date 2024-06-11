@@ -4454,7 +4454,7 @@ en:
       all_tags: "All tags"
       other_tags: "Other Tags"
       selector_tags: "tags"
-      selector_all_tags: "all tags"
+      selector_all_tags: "remove filter"
       selector_no_tags: "no tags"
       selector_remove_filter: "remove filter"
       tags: "Tags"
@@ -5381,7 +5381,6 @@ en:
           watched_words: "Watched Words"
           legal: "Legal"
           moderation_flags: "Moderation Flags"
-
 
       appearance:
         title: "Appearance"
