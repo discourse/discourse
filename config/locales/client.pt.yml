@@ -2378,6 +2378,7 @@ pt:
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
       created_at: "Criado: %{date}"
       bumped_at: "Mais recente: %{date}"
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Navegue por todas as etiquetas</a> ou <a href='%{basePath}/latest'>visualize os tópicos mais recentes</a>."
       suggest_create_topic: Pronto para <a href>iniciar uma nova conversa?</a>
       deleted: "Este tópico foi eliminado"
       slow_mode_update:
