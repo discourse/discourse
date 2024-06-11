@@ -42,7 +42,7 @@ export default class BadgePreview extends Component {
   }
 
   get queryPlanHtml() {
-    let output = `<pre class="badge-query-plan">`;
+    let output = `<pre>`;
     this.args.model.badge.query_plan.forEach((linehash) => {
       output += escapeExpression(linehash["QUERY PLAN"]);
       output += "<br>";

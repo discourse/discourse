@@ -6,15 +6,15 @@ import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
+import FKContainer from "form-kit/components/container";
 import FKControlConditionalContent from "form-kit/components/control/conditional-content";
 import FKControlInputGroup from "form-kit/components/control/input-group";
 import FKFormErrors from "form-kit/components/errors";
-import FKFormField from "form-kit/components/field";
+import FKField from "form-kit/components/field";
 import Row from "form-kit/components/row";
 import FKSection from "form-kit/components/section";
 import { VALIDATION_TYPES } from "form-kit/lib/constants";
 import FieldData from "form-kit/lib/field-data";
-import DButton from "discourse/components/d-button";
 
 export default class Form extends Component {
   @tracked validationState = {};
@@ -272,8 +272,9 @@ export default class Form extends Component {
           Section=(component FKSection)
           ConditionalContent=(component FKControlConditionalContent)
           Errors=(component FKFormErrors errors=this.visibleErrors)
+          Container=(component FKContainer)
           Field=(component
-            FKFormField
+            FKField
             data=this.effectiveData
             set=this.set
             registerField=this.registerField
@@ -291,12 +292,6 @@ export default class Form extends Component {
         )
         this.effectiveData
       }}
-
-      <DButton
-        class="d-form__submit btn-primary"
-        @label="Submit"
-        @action={{this.onSubmit}}
-      />
     </form>
   </template>
 }

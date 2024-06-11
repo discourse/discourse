@@ -27,14 +27,8 @@ export default class AdminBadgesShowRoute extends Route {
     );
   }
 
-  setupController(controller, model) {
+  setupController(controller) {
     super.setupController(...arguments);
-
-    if (model.image_url) {
-      controller.showImageUploader();
-    } else if (model.icon) {
-      controller.showIconSelector();
-    }
 
     controller.setup();
   }

@@ -31,6 +31,7 @@ export default class FormControlWrapper extends Component {
   <template>
     <div
       class={{concatClass
+        "d-form__field"
         (concat "d-form__field" this.controlType)
         (if @disabled "--disabled")
       }}
@@ -58,7 +59,10 @@ export default class FormControlWrapper extends Component {
         @negativeLabel={{@negativeLabel}}
         @selection={{@selection}}
         @setValue={{@setValue}}
+        @set={{@set}}
         @disabled={{@field.disabled}}
+        @onSet={{@onSet}}
+        @onUnset={{@onUnset}}
         id={{@fieldId}}
         name={{@name}}
         aria-invalid={{if @invalid "true"}}

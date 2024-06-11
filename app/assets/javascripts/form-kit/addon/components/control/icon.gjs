@@ -18,7 +18,7 @@ export default class FkControlIcon extends Component {
   <template>
     <IconPicker
       @value={{@value}}
-      @options={{hash maximum=1}}
+      @options={{hash maximum=1 disabled=@disabled}}
       @onChange={{this.handleInput}}
       class="d-form__control-icon"
       {{willDestroy this.handleDestroy}}

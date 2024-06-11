@@ -14,7 +14,7 @@ export default class FkControlText extends Component {
       name={{@name}}
       aria-invalid={{if @invalid "true"}}
       aria-describedby={{if @invalid @errorId}}
-      class="d-form-control-text"
+      class="d-form__control-text"
       ...attributes
       {{on "input" this.handleInput}}
     >{{@value}}</textarea>

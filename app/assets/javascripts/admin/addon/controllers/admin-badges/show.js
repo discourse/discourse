@@ -9,9 +9,6 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
-const IMAGE = "image";
-const ICON = "icon";
-
 // TODO: Stop using Mixin here
 export default class AdminBadgesShowController extends Controller {
   @service router;
@@ -25,14 +22,6 @@ export default class AdminBadgesShowController extends Controller {
   @tracked model;
   @tracked userBadges;
   @tracked userBadgesAll;
-
-  // get badgeEnabledLabel() {
-  //   if (this.buffered.get("enabled")) {
-  //     return "admin.badges.enabled";
-  //   } else {
-  //     return "admin.badges.disabled";
-  //   }
-  // }
 
   // get selectedBadgeGrouping() {
   //   return this.badgeGroupings.find(
@@ -71,14 +60,6 @@ export default class AdminBadgesShowController extends Controller {
   //   return this.name !== this.displayName;
   // }
 
-  // get iconSelectorSelected() {
-  //   return this.selectedGraphicType === ICON;
-  // }
-
-  // get imageUploaderSelected() {
-  //   return this.selectedGraphicType === IMAGE;
-  // }
-
   setup() {
     // this is needed because the model doesnt have default values
     // and as we are using a bufferedProperty it's not accessible
@@ -110,9 +91,9 @@ export default class AdminBadgesShowController extends Controller {
   //   return modelQuery && modelQuery.trim().length > 0;
   // }
 
-  // get textCustomizationPrefix() {
-  //   return `badges.${this.model.i18n_name}.`;
-  // }
+  get textCustomizationPrefix() {
+    return `badges.${this.model.i18n_name}.`;
+  }
 
   // // FIXME: Remove observer
   // @observes("model.id")
@@ -121,42 +102,28 @@ export default class AdminBadgesShowController extends Controller {
   //   this.savingStatus = "";
   // }
 
-  showIconSelector() {
-    this.selectedGraphicType = ICON;
+  @action
+  onSetImage(upload, { set }) {
+    set("image_upload_id", upload.id);
+    set("image_url", getURL(upload.url));
   }
 
-  // showImageUploader() {
-  //   this.selectedGraphicType = IMAGE;
-  // }
+  @action
+  onUnsetImage({ set }) {
+    set("image_upload_id", undefined);
+    set("image_url", undefined);
+  }
 
-  // @action
-  // changeGraphicType(newType) {
-  //   if (newType === IMAGE) {
-  //     this.showImageUploader();
-  //   } else if (newType === ICON) {
-  //     this.showIconSelector();
-  //   } else {
-  //     throw new Error(`Unknown badge graphic type "${newType}"`);
-  //   }
-  // }
+  @action
+  handleSubmit(data) {
+    console.log("data", data);
+  }
 
-  // @action
-  // setImage(upload) {
-  //   this.buffered.set("image_upload_id", upload.id);
-  //   this.buffered.set("image_url", getURL(upload.url));
-  // }
-
-  // @action
-  // removeImage() {
-  //   this.buffered.set("image_upload_id", null);
-  //   this.buffered.set("image_url", null);
-  // }
-
-  // @action
-  // showPreview(badge, explain, event) {
-  //   event?.preventDefault();
-  //   this.send("preview", badge, explain);
-  // }
+  @action
+  showPreview(badge, explain, event) {
+    event?.preventDefault();
+    this.send("preview", badge, explain);
+  }
 
   // @action
   // save() {

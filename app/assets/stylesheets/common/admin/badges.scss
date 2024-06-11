@@ -188,6 +188,10 @@
 
 // badge preview modal
 .badge-query-preview {
+  .badge-query-plan {
+    overflow-x: auto;
+  }
+
   .badge-errors,
   .badge-query-plan {
     padding: 5px;
