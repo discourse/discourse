@@ -103,9 +103,8 @@ export default Component.extend(CardContentsBase, CleansUp, {
 
   actions: {
     cancelFilter() {
-      const postStream = this.postStream;
-      postStream.cancelFilter();
-      postStream.refresh();
+      this.postStream.cancelFilter();
+      this.postStream.refresh();
       this._close();
     },
 
