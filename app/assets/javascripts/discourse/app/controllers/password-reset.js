@@ -2,8 +2,8 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { alias, or, readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL, { userPath } from "discourse/lib/url";
-import { modKeysPressed } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import PasswordValidation from "discourse/mixins/password-validation";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
@@ -66,10 +66,11 @@ export default Controller.extend(PasswordValidation, {
 
   @action
   done(event) {
-    if (event && modKeysPressed(event).length > 0) {
-      return false;
+    if (wantsNewWindow(event)) {
+      return;
     }
-    event?.preventDefault();
+
+    event.preventDefault();
     this.set("redirected", true);
     DiscourseURL.redirectTo(this.redirectTo || "/");
   },

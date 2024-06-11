@@ -4,10 +4,10 @@ import TopicEntrance from "discourse/components/topic-list/topic-entrance";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
 import formatAge from "discourse/helpers/format-age";
-import { modKeysPressed } from "discourse/lib/utilities";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 const onTimestampClick = function (event) {
-  if (modKeysPressed(event).length) {
+  if (wantsNewWindow(event)) {
     // Allow opening the link in a new tab/window
     event.stopPropagation();
   } else {
