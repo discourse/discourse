@@ -5768,10 +5768,10 @@ ember-resize-observer-service@^1.1.0:
     ember-cli-babel "^7.26.6"
     ember-cli-htmlbars "^5.7.1"
 
-ember-resolver@^12.0.0:
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/ember-resolver/-/ember-resolver-12.0.0.tgz#86e0d48d05418b2d0d4693c569489e900159b906"
-  integrity sha512-JOD8Ja0wU8Q8ZX3NJwprgnbJKO7cbLtoaqHtFdkV4avkLAT8McLWYv82tp4j7EVsZsYhthRJV9jVsX+G/hm0Mg==
+ember-resolver@^12.0.1:
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/ember-resolver/-/ember-resolver-12.0.1.tgz#33563e03d1e6d7aa3ab46aaba16eafd6288631d3"
+  integrity sha512-U+ZBdbEHMhmvcZly1xhZKwqeH5/igjT93p9bbD6x+mQVg7hm4jrsQA4jsxHu3BqgL5MmqOVx0gtAuYEWV1x2MQ==
   dependencies:
     ember-cli-babel "^7.26.11"
 
