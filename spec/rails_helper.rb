@@ -535,6 +535,7 @@ RSpec.configure do |config|
           self._using_session(name, &block)
         rescue Socket::ResolutionError
           puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
+          attempts += 1
           attempts <= 1 ? retry : raise
         end
       end
