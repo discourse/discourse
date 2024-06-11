@@ -5234,10 +5234,10 @@ ember-cached-decorator-polyfill@^1.0.2:
     ember-cli-babel "^7.26.11"
     ember-cli-babel-plugin-helpers "^1.1.1"
 
-ember-cli-app-version@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/ember-cli-app-version/-/ember-cli-app-version-6.0.1.tgz#401cdd440c7fef2059aa54bbadae9ca581d4faa0"
-  integrity sha512-XA1FwkWA5QytmWF0jcJqEr3jcZoiCl9Fb33TZgOVfClL7Voxe+/RwzISEprBRQgbf7j8z1xf8/RJCKfclUy3rQ==
+ember-cli-app-version@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/ember-cli-app-version/-/ember-cli-app-version-7.0.0.tgz#58b758bc16b457ae3e34129fca74aeb5ddda20e2"
+  integrity sha512-zWIkxvlRrW7w1/vp+bGkmS27QsVum7NKp8N9DgAjhFMWuKewVqGyl/jeYaujMS/I4WSKBzSG9WHwBy2rjbUWxA==
   dependencies:
     ember-cli-babel "^7.26.11"
     git-repo-info "^2.1.1"
@@ -5760,10 +5760,10 @@ ember-resize-observer-service@^1.1.0:
     ember-cli-babel "^7.26.6"
     ember-cli-htmlbars "^5.7.1"
 
-ember-resolver@^11.0.1:
-  version "11.0.1"
-  resolved "https://registry.yarnpkg.com/ember-resolver/-/ember-resolver-11.0.1.tgz#5914e67aec7053f7148e4b0ae2d6918e830f7909"
-  integrity sha512-ucBk3oM+PR+AfYoSUXeQh8cDQS1sSiEKp4Pcgbew5cFMSqPxJfqd1zyZsfQKNTuyubeGmWxBOyMVSTvX2LeCyg==
+ember-resolver@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/ember-resolver/-/ember-resolver-12.0.0.tgz#86e0d48d05418b2d0d4693c569489e900159b906"
+  integrity sha512-JOD8Ja0wU8Q8ZX3NJwprgnbJKO7cbLtoaqHtFdkV4avkLAT8McLWYv82tp4j7EVsZsYhthRJV9jVsX+G/hm0Mg==
   dependencies:
     ember-cli-babel "^7.26.11"
 

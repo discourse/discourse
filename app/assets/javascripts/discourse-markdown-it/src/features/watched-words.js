@@ -1,8 +1,3 @@
-import {
-  createWatchedWordRegExp,
-  toWatchedWord,
-} from "discourse-common/utils/watched-words";
-
 const MAX_MATCHES = 100;
 
 function isLinkOpen(str) {
@@ -59,11 +54,12 @@ export function setup(helper) {
     if (md.options.discourse.watchedWordsReplace) {
       Object.entries(md.options.discourse.watchedWordsReplace).forEach(
         ([regexpString, options]) => {
-          const word = toWatchedWord({ [regexpString]: options });
-
           matchers.push({
             word: new RegExp(options.regexp, options.case_sensitive ? "" : "i"),
-            pattern: createWatchedWordRegExp(word),
+            pattern: new RegExp(
+              regexpString,
+              options.case_sensitive ? "gu" : "gui"
+            ),
             replacement: options.replacement,
             link: false,
             html: options.html,
@@ -75,11 +71,12 @@ export function setup(helper) {
     if (md.options.discourse.watchedWordsLink) {
       Object.entries(md.options.discourse.watchedWordsLink).forEach(
         ([regexpString, options]) => {
-          const word = toWatchedWord({ [regexpString]: options });
-
           matchers.push({
             word: new RegExp(options.regexp, options.case_sensitive ? "" : "i"),
-            pattern: createWatchedWordRegExp(word),
+            pattern: new RegExp(
+              regexpString,
+              options.case_sensitive ? "gu" : "gui"
+            ),
             replacement: options.replacement,
             link: true,
           });

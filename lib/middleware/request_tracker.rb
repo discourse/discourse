@@ -2,6 +2,7 @@
 
 require "method_profiler"
 require "middleware/anonymous_cache"
+require "http_user_agent_encoder"
 
 class Middleware::RequestTracker
   @@detailed_request_loggers = nil
@@ -186,10 +187,7 @@ class Middleware::RequestTracker
 
     if h[:is_crawler]
       user_agent = env["HTTP_USER_AGENT"]
-      if user_agent && (user_agent.encoding != Encoding::UTF_8)
-        user_agent = user_agent.encode("utf-8")
-        user_agent.scrub!
-      end
+      user_agent = HttpUserAgentEncoder.ensure_utf8(user_agent) if user_agent
       h[:user_agent] = user_agent
     end
 
@@ -462,7 +460,7 @@ class Middleware::RequestTracker
     slow_down_agents = SiteSetting.slow_down_crawler_user_agents
     return if slow_down_agents.blank?
 
-    user_agent = env["HTTP_USER_AGENT"]&.downcase
+    user_agent = HttpUserAgentEncoder.ensure_utf8(env["HTTP_USER_AGENT"])&.downcase
     return if user_agent.blank?
 
     return if !CrawlerDetection.crawler?(user_agent)

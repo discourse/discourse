@@ -5,9 +5,10 @@ import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import { propertyNotEqual, setting } from "discourse/lib/computed";
 import { durationTiny } from "discourse/lib/formatter";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { prioritizeNameInUx } from "discourse/lib/settings";
 import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
+import { escapeExpression } from "discourse/lib/utilities";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
@@ -233,10 +234,11 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
 
   @action
   handleShowUser(user, event) {
-    if (event && modKeysPressed(event).length > 0) {
-      return false;
+    if (wantsNewWindow(event)) {
+      return;
     }
-    event?.preventDefault();
+
+    event.preventDefault();
     // Invokes `showUser` argument. Convert to `this.args.showUser` when
     // refactoring this to a glimmer component.
     this.showUser(user);

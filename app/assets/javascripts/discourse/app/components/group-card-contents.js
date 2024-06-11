@@ -4,8 +4,8 @@ import { alias, gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { setting } from "discourse/lib/computed";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { groupPath } from "discourse/lib/url";
-import { modKeysPressed } from "discourse/lib/utilities";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -14,6 +14,7 @@ const maxMembersToDisplay = 10;
 
 export default Component.extend(CardContentsBase, CleansUp, {
   composer: service(),
+
   elementId: "group-card",
   mentionSelector: "a.mention-group",
   classNames: ["no-bg", "group-card"],
@@ -88,10 +89,11 @@ export default Component.extend(CardContentsBase, CleansUp, {
 
   @action
   handleShowGroup(group, event) {
-    if (event && modKeysPressed(event).length > 0) {
-      return false;
+    if (wantsNewWindow(event)) {
+      return;
     }
-    event?.preventDefault();
+
+    event.preventDefault();
     // Invokes `showGroup` argument. Convert to `this.args.showGroup` when
     // refactoring this to a glimmer component.
     this.showGroup(group);
