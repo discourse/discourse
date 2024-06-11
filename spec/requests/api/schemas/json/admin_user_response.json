@@ -144,7 +144,7 @@
       ]
     },
     "primary_group_id": {
-      "type": ["string", "null"]
+      "type": ["integer", "null"]
     },
     "badge_count": {
       "type": "integer"
@@ -411,7 +411,7 @@
               "type": ["string", "null"]
             },
             "flair_group_id": {
-              "type": ["string", "null"]
+              "type": ["integer", "null"]
             },
             "bio_raw": {
               "type": ["string", "null"]

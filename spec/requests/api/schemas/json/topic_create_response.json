@@ -105,7 +105,7 @@
     },
     "flair_group_id": {
       "type": [
-        "string",
+        "integer",
         "null"
       ]
     },
@@ -200,7 +200,7 @@
     },
     "reviewable_id": {
       "type": [
-        "string",
+        "integer",
         "null"
       ]
     },

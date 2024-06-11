@@ -178,7 +178,7 @@ RSpec.describe "private messages" do
                                    type: :integer,
                                  },
                                  primary_group_id: {
-                                   type: %i[string null],
+                                   type: %i[integer null],
                                  },
                                },
                              },
@@ -198,7 +198,7 @@ RSpec.describe "private messages" do
                                    type: :integer,
                                  },
                                  primary_group_id: {
-                                   type: %i[string null],
+                                   type: %i[integer null],
                                  },
                                },
                              },
@@ -385,7 +385,7 @@ RSpec.describe "private messages" do
                                    type: :integer,
                                  },
                                  primary_group_id: {
-                                   type: %i[string null],
+                                   type: %i[integer null],
                                  },
                                },
                              },

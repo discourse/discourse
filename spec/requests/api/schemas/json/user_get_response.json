@@ -119,7 +119,7 @@
         },
         "primary_group_id": {
           "type": [
-            "string",
+            "integer",
             "null"
           ]
         },
@@ -131,7 +131,7 @@
         },
         "flair_group_id": {
           "type": [
-            "string",
+            "integer",
             "null"
           ]
         },
@@ -182,7 +182,7 @@
         },
         "uploaded_avatar_id": {
           "type": [
-            "string",
+            "integer",
             "null"
           ]
         },

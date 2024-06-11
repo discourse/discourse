@@ -68,6 +68,18 @@ RSpec.describe "users" do
           let(:expected_request_schema) { expected_request_schema }
         end
       end
+
+      response "200", "user with primary group response" do
+        expected_response_schema = load_spec_schema("user_get_response")
+        schema expected_response_schema
+
+        let(:username) { Fabricate(:user, primary_group_id: Fabricate(:group).id).username }
+
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
+      end
     end
 
     put "Update a user" do

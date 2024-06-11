@@ -103,7 +103,7 @@
       },
       "flair_group_id": {
         "type": [
-          "string",
+          "integer",
           "null"
         ]
       },
@@ -155,7 +155,7 @@
       },
       "actions_summary": {
         "type": "array",
-        "items": 
+        "items":
           {
             "type": "object",
             "additionalProperties": false,
@@ -214,7 +214,7 @@
       },
       "reviewable_id": {
         "type": [
-          "string",
+          "integer",
           "null"
         ]
       },
