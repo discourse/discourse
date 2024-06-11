@@ -201,6 +201,59 @@ export function _registerTransformer(
   transformersRegistry.set(normalizedTransformerName, existingTransformers);
 }
 
+export function applyBehaviorTransformer(
+  transformerName,
+  defaultCallback,
+  context
+) {
+  const normalizedTransformerName = _normalizeTransformerName(
+    transformerName,
+    transformerTypes.BEHAVIOR
+  );
+
+  if (!transformerNameExists(normalizedTransformerName)) {
+    throw new Error(
+      `applyBehaviorTransformer: transformer name "${transformerName}" does not exist.` +
+        "Was the transformer name properly added? Is the transformer name correct? Is the type equals BEHAVIOR?" +
+        "applyBehaviorTransformer can only be used with BEHAVIOR transformers."
+    );
+  }
+
+  if (typeof defaultCallback !== "function") {
+    throw new Error(
+      `applyBehaviorTransformer requires the callback argument to be a function`
+    );
+  }
+
+  if (
+    typeof (context ?? undefined) !== "undefined" &&
+    !(typeof context === "object" && context.constructor === Object)
+  ) {
+    throw `applyBehaviorTransformer("${transformerName}", ...): context must be a simple JS object or nullish.`;
+  }
+
+  const transformers = transformersRegistry.get(normalizedTransformerName);
+  const appliedContext = { ...context, _unstable_self: this };
+
+  if (!transformers) {
+    return defaultCallback({ context: appliedContext });
+  }
+
+  const callbackQueue = [...transformers, defaultCallback];
+
+  function nextCallback() {
+    const currentCallback = callbackQueue.shift();
+
+    if (!currentCallback) {
+      return;
+    }
+
+    return currentCallback({ context: appliedContext, next: nextCallback });
+  }
+
+  return nextCallback();
+}
+
 /**
  * Apply a transformer to a value
  *
