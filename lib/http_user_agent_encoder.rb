@@ -5,8 +5,7 @@ module HttpUserAgentEncoder
     return "" unless user_agent
 
     if user_agent.encoding != Encoding::UTF_8
-      user_agent = user_agent.encode("utf-8", invalid: :replace, undef: :replace)
-      user_agent.scrub!
+      user_agent = user_agent.encode!("utf-8", invalid: :replace, undef: :replace).scrub!
     end
 
     user_agent || ""
