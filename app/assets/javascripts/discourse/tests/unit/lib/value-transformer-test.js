@@ -7,7 +7,8 @@ import {
   acceptNewTransformerNames,
   acceptTransformerRegistrations,
   applyValueTransformer,
-  transformerExists,
+  transformerTypes,
+  transformerWasAdded,
 } from "discourse/lib/transformer";
 
 module("Unit | Utility | transformers", function (hooks) {
@@ -44,7 +45,7 @@ module("Unit | Utility | transformers", function (hooks) {
         // testing warning about core transformers
         assert.strictEqual(
           this.consoleWarnStub.calledWith(
-            sinon.match(/matches an existing core transformer/)
+            sinon.match(/matches existing core transformer/)
           ),
           true,
           "logs warning to the console about existing core transformer with the same name"
@@ -75,13 +76,19 @@ module("Unit | Utility | transformers", function (hooks) {
 
       withPluginApi("1.34.0", (api) => {
         assert.strictEqual(
-          transformerExists("a-new-plugin-transformer"),
+          transformerWasAdded(
+            "a-new-plugin-transformer",
+            transformerTypes.VALUE
+          ),
           false,
           "initially the transformer does not exists"
         );
         api.addValueTransformerName("a-new-plugin-transformer"); // second time log a warning
         assert.strictEqual(
-          transformerExists("a-new-plugin-transformer"),
+          transformerWasAdded(
+            "a-new-plugin-transformer",
+            transformerTypes.VALUE
+          ),
           true,
           "the new transformer was added"
         );
@@ -130,7 +137,7 @@ module("Unit | Utility | transformers", function (hooks) {
           withPluginApi("1.34.0", (api) => {
             api.registerValueTransformer("whatever", "foo");
           }),
-        /requires the valueCallback argument to be a function/
+        /api.registerValueTransformer requires the callback argument to be a function/
       );
     });
 
@@ -176,7 +183,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("raises an exception if the transformer name does not exist", function (assert) {
       assert.throws(
         () => applyValueTransformer("whatever", "foo"),
-        /does not exist. Did you forget to register it/
+        /does not exist./
       );
     });
 
