@@ -23,8 +23,12 @@ export function resetCardClickListenerSelector() {
 }
 
 export default Mixin.create({
-  router: service(),
+  appEvents: service(),
+  currentUser: service(),
   menu: service(),
+  router: service(),
+  site: service(),
+  siteSettings: service(),
 
   elementId: null, //click detection added for data-{elementId}
   triggeringLinkClass: null, //the <a> classname where this card should appear
@@ -299,21 +303,18 @@ export default Mixin.create({
 
   @bind
   _clickOutsideHandler(event) {
-    if (this.visible) {
-      if (
-        event.target
-          .closest(`[data-${this.elementId}]`)
-          ?.getAttribute(`data-${this.elementId}`) ||
-        event.target.closest(`a.${this.triggeringLinkClass}`) ||
-        event.target.closest(`#${this.elementId}`)
-      ) {
-        return;
-      }
-
-      this._close();
+    if (
+      !this.visible ||
+      event.target
+        .closest(`[data-${this.elementId}]`)
+        ?.getAttribute(`data-${this.elementId}`) ||
+      event.target.closest(`a.${this.triggeringLinkClass}`) ||
+      event.target.closest(`#${this.elementId}`)
+    ) {
+      return;
     }
 
-    return true;
+    this._close();
   },
 
   @bind

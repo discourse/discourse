@@ -88,7 +88,7 @@ export default Component.extend(CardContentsBase, CleansUp, {
   },
 
   @action
-  handleShowGroup(group, event) {
+  handleShowGroup(event) {
     if (wantsNewWindow(event)) {
       return;
     }
@@ -96,7 +96,7 @@ export default Component.extend(CardContentsBase, CleansUp, {
     event.preventDefault();
     // Invokes `showGroup` argument. Convert to `this.args.showGroup` when
     // refactoring this to a glimmer component.
-    this.showGroup(group);
+    this.showGroup(this.group);
     this._close();
   },
 
@@ -113,10 +113,6 @@ export default Component.extend(CardContentsBase, CleansUp, {
         recipients: this.get("group.name"),
         hasGroups: true,
       });
-    },
-
-    showGroup(group) {
-      this.handleShowGroup(group);
     },
   },
 });

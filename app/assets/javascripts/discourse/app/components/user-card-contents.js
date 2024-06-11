@@ -170,14 +170,13 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
       return;
     }
 
-    const thisElem = this.element;
-    if (!thisElem) {
+    if (!this.element) {
       return;
     }
 
     const url = this.get("user.card_background_upload_url");
     const bg = isEmpty(url) ? "" : `url(${getURLWithCDN(url)})`;
-    thisElem.style.backgroundImage = bg;
+    this.element.style.backgroundImage = bg;
   },
 
   @discourseComputed("user.primary_group_name")
@@ -190,7 +189,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     return profileHidden || inactive;
   },
 
-  _showCallback(username, $target) {
+  async _showCallback(username, $target) {
     this._positionCard($target);
     this.setProperties({ visible: true, loading: true });
 
@@ -199,26 +198,28 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
       include_post_count_for: this.get("topic.id"),
     };
 
-    return User.findByUsername(username, args)
-      .then((user) => {
-        if (user.topic_post_count) {
-          this.set(
-            "topicPostCount",
-            user.topic_post_count[args.include_post_count_for]
-          );
-        }
-        this.setProperties({ user });
-        this.user.statusManager.trackStatus();
-        return user;
-      })
-      .catch(() => this._close())
-      .finally(() => this.set("loading", null));
+    try {
+      const user = await User.findByUsername(username, args);
+
+      if (user.topic_post_count) {
+        this.set(
+          "topicPostCount",
+          user.topic_post_count[args.include_post_count_for]
+        );
+      }
+      this.setProperties({ user });
+      this.user.statusManager.trackStatus();
+
+      return user;
+    } catch {
+      this._close();
+    } finally {
+      this.set("loading", null);
+    }
   },
 
   _close() {
-    if (this.user) {
-      this.user.statusManager.stopTrackingStatus();
-    }
+    this.user?.statusManager.stopTrackingStatus();
 
     this.setProperties({
       user: null,
@@ -233,7 +234,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   },
 
   @action
-  handleShowUser(user, event) {
+  handleShowUser(event) {
     if (wantsNewWindow(event)) {
       return;
     }
@@ -241,7 +242,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     event.preventDefault();
     // Invokes `showUser` argument. Convert to `this.args.showUser` when
     // refactoring this to a glimmer component.
-    this.showUser(user);
+    this.showUser(this.user);
     this._close();
   },
 
@@ -270,10 +271,6 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     deleteUser() {
       this.user.delete();
       this._close();
-    },
-
-    showUser(user) {
-      this.handleShowUser(user);
     },
 
     checkEmail(user) {
