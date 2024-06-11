@@ -1049,6 +1049,7 @@ zh_TW:
         set_password: "設定密碼"
         choose_new: "選擇一個新密碼"
         choose: "選擇一個密碼"
+        title: "寄出密碼"
       second_factor_backup:
         regenerate: "重新產生"
         disable: "禁用"
@@ -1299,7 +1300,6 @@ zh_TW:
           error: "上傳的檔案必須是 csv 格式。"
       password:
         title: "密碼"
-        too_short: "你的密碼太短。"
         common: "此密碼太簡單。"
         same_as_username: "密碼與使用者名稱相同"
         same_as_email: "你的密碼與電郵相同。"
@@ -3207,6 +3207,8 @@ zh_TW:
           timestamp: "建立時間"
           completion: "完成時間"
           actions: "操作"
+          filter_status:
+            failed: "失敗"
       home:
         title: "主頁"
       account:
@@ -3253,6 +3255,10 @@ zh_TW:
           search_logs: "搜尋紀錄"
           security: "安全性"
           spam: "垃圾內容"
+      config_areas:
+        about:
+          optional: "(選擇性)"
+          update: "更新"
       plugins:
         title: "外掛"
         installed: "已安裝外掛"

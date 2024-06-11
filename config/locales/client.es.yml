@@ -1364,6 +1364,7 @@ es:
         set_password: "Establecer contraseña"
         choose_new: "Escoge una nueva contraseña"
         choose: "Escoge una contraseña"
+        title: "Restablecer contraseña"
       second_factor_backup:
         title: "Códigos de respaldo de la verificación en dos factores"
         regenerate: "Generar nuevos"
@@ -1753,7 +1754,6 @@ es:
         fine_print: "Te pedimos que confirmes tu identidad porque se trata de una acción potencialmente sensible. Una vez autentificado, solo se te pedirá que vuelvas a autentificarte tras unas horas de inactividad."
       password:
         title: "Contraseña"
-        too_short: "Tu contraseña es demasiada corta."
         common: "Esta contraseña es demasiado común."
         same_as_username: "Tu contraseña es la misma que tu nombre de usuario."
         same_as_email: "Tu contraseña es la misma que tu correo electrónico."
@@ -4408,6 +4408,7 @@ es:
           copy: "Copiar..."
           paste: "Pegar..."
           save: "Guardar como..."
+    powered_by_discourse: "Impulsado por Discourse"
   admin_js:
     type_to_filter: "escribe para filtrar…"
     admin:
@@ -4823,6 +4824,8 @@ es:
           timestamp: "Creado"
           completion: "Tiempo de realización"
           actions: "Acciones"
+          filter_status:
+            failed: "Falló"
       home:
         title: "Inicio"
       account:
@@ -4869,6 +4872,16 @@ es:
           search_logs: "Registros de búsqueda"
           security: "Seguridad"
           spam: "Spam"
+      config_areas:
+        about:
+          header: "Acerca de tu sitio"
+          community_name: "Nombre de la comunidad"
+          your_organization: "Tu organización"
+          company_name: "Nombre de la empresa"
+          governing_law: "Ley que rige"
+          city_for_disputes: "Ciudad para disputas"
+          optional: "(opcional)"
+          update: "Actualizar"
       plugins:
         title: "Plugins"
         installed: "Plugins instalados"

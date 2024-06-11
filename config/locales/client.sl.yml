@@ -1215,6 +1215,7 @@ sl:
         set_password: "Nastavi geslo"
         choose_new: "Izberite novo geslo"
         choose: "Izberite geslo"
+        title: "Zamenjava gesla"
       second_factor_backup:
         title: "Rezervne potrditvene kode za preverjanje v dveh korakih"
         regenerate: "Ponovno ustvari"
@@ -1530,7 +1531,6 @@ sl:
         instructions: "Za dokončanje tega dejanja potrdite svojo identiteto."
       password:
         title: "Geslo"
-        too_short: "Vaše geslo je prekratko."
         common: "To geslo je preveč običajno."
         same_as_username: "Vaše geslo je enako kot uporabniško ime."
         same_as_email: "Vaše geslo je enako kot vaš e-naslov."
@@ -3869,6 +3869,8 @@ sl:
           request: "Zahteva"
           timestamp: "Ustvarjeno"
           actions: "Akcije"
+          filter_status:
+            failed: "Spodletelo"
       home:
         title: "Domov"
       account:
@@ -3910,6 +3912,9 @@ sl:
           search_logs: "Dnevnik iskanj"
           security: "Varnost"
           spam: "Neželeno"
+      config_areas:
+        about:
+          optional: "(neobvezno)"
       plugins:
         title: "Vtičniki"
         installed: "Nameščeni vtičniki"

@@ -555,6 +555,8 @@ fi:
         raw: "Leipäteksti"
       user_profile:
         bio_raw: "Tietoa minusta"
+      user:
+        password: "Salasana"
     errors:
       models:
         topic:
@@ -1655,7 +1657,6 @@ fi:
     s3_endpoint: "Päätepisteeksi voidaan vaihtaa muu S3-yhteensopiva palvelu kuten DigitalOcean Spaces tai Minio. VAROITUS: Jätä tyhjäksi, jos käytät AWS S3:a."
     s3_configure_tombstone_policy: "Ota käyttöön tombstone-hakemiston automaattinen tyhjennys. TÄRKEÄÄ: Jos ei käytössä, tilaa ei vapaudu, kun ladattuja tiedostoja poistetaan."
     s3_disable_cleanup: "Estä vanhojen varmuuskopioiden poistaminen S3:sta, kun varmuuskopioita on enemmän kuin suurin sallittu määrä."
-    enable_s3_inventory: "Luo raportit ja vahvista lataukset palvelimeen käyttämällä Amazon S3 -inventaariota. Tärkeää: edellyttää toimivat S3-tunnistetiedot (access key id ja secret access key)."
     s3_use_acls: "AWS suosittelee, ettei ACL-luetteloita käytetä S3-säilöissä; jos noudatat tätä neuvoa, poista tämä valinta. Tämä täytyy olla käytössä, jos käytät suojattuja latauksia."
     backup_time_of_day: "UTC-kellonaika, jolloin varmuuskopio tehdään."
     backup_with_uploads: "Sisällytä lataukset ajastettuihin varmuuskopioihin. Jos tämä ei ole käytössä, vain tietokanta varmuuskopioidaan."

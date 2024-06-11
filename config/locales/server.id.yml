@@ -484,6 +484,8 @@ id:
         raw: "Konten"
       user_profile:
         bio_raw: "Tentang Saya"
+      user:
+        password: "Kata sandi"
     errors:
       models:
         topic:
@@ -508,6 +510,7 @@ id:
               same_as_username: "sama dengan username anda. Mohon gunakan kata sandi yang lebih aman."
               same_as_email: "sama denan surel anda. Mohon gunakan kata sandi yang lebih aman."
               same_as_current: "sama dengan kata sandi saat ini."
+              same_as_previous: "sama dengan kata sandi Anda sebelumnya."
               same_as_name: "sama dengan nama Anda."
               unique_characters: "memiliki terlalu banyak karakter berulang. Harap gunakan kata sandi yang lebih aman."
             username:

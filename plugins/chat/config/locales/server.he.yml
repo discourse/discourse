@@ -259,22 +259,26 @@ he:
         other: "יש לך הודעות חדשות בצ׳אט"
       from: "%{site_name}"
       subject:
-        private_message: "[%{email_prefix}] הודעה חדשה"
-        direct_message_from_1: "[%{email_prefix}] הודעה חדשה מאת %{username}"
-        direct_message_from_2: "[%{email_prefix}] הודעה חדשה שנשלחה מאת %{username1} וגם %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] הודעה חדשה מאת %{username} ועוד %{count}"
-          two: "[%{email_prefix}] הודעה חדשה מאת %{username} ועוד %{count}"
-          many: "[%{email_prefix}] הודעה חדשה מאת %{username} ועוד %{count}"
-          other: "[%{email_prefix}] הודעה חדשה מאת %{username} ועוד %{count}"
-        chat_channel_1: "[%{email_prefix}] הודעה חדשה תחת %{channel}"
-        chat_channel_2: "[%{email_prefix}] הודעה חדשה בערוץ %{channel1} וגם בערוץ %{channel2}"
-        chat_channel_more:
-          one: "[%{email_prefix}] הודעה חדשה בערוץ %{channel} ובעוד %{count}"
-          two: "[%{email_prefix}] הודעה חדשה בערוץ %{channel} ובעוד %{count}"
-          many: "[%{email_prefix}] הודעה חדשה בערוץ %{channel} ובעוד %{count}"
-          other: "[%{email_prefix}] הודעה חדשה בערוץ %{channel} ובעוד %{count}"
-        chat_channel_and_direct_message: "[%{email_prefix}] הודעה חדשה בערוץ %{channel} וגם מאת %{username}"
+        private_email:
+          one: "[%{site_name}] הודעה חדשה"
+          two: "[%{site_name}] הודעות חדשות"
+          many: "[%{site_name}] הודעות חדשות"
+          other: "[%{site_name}] הודעות חדשות"
+        chat_dm_1:
+          one: "[%{site_name}] הודעה חדשה מאת %{name}"
+          two: "[%{site_name}] הודעות חדשות מאת %{name}"
+          many: "[%{site_name}] הודעות חדשות מאת %{name}"
+          other: "[%{site_name}] הודעות חדשות מאת %{name}"
+        chat_dm_2: "[%{site_name}] הודעות חדשות שנשלחות מאת %{name_1} וגם %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] הודעות חדשות מאת %{name} ועוד %{count}"
+        chat_channel_1:
+          one: "[%{site_name}] הודעה חדשה תחת %{channel}"
+          two: "[%{site_name}] הודעות חדשות תחת %{channel}"
+          many: "[%{site_name}] הודעות חדשות תחת %{channel}"
+          other: "[%{site_name}] הודעות חדשות תחת %{channel}"
+        chat_channel_2: "[%{site_name}] הודעה חדשה בערוץ %{channel_1} ובערוץ %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] הודעות חדשות בערוץ %{channel} ובעוד %{count}"
+        chat_channel_and_dm: "[%{site_name}] הודעות חדשות בערוץ %{channel} וגם מאת %{name}"
       unsubscribe: "סיכום צ׳אט זה נשלח מהאתר %{site_link} כשנעדרת ממנו. ניתן לשנות את %{email_preferences_link} שלך או %{unsubscribe_link} כדי להפסיק לקבל הודעות."
       unsubscribe_no_link: "סיכום צ׳אט זה נשלח מהאתר %{site_link} כשנעדרת ממנו. ניתן לשנות את %{email_preferences_link} שלך."
       view_messages:

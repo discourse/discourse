@@ -1052,6 +1052,7 @@ bs_BA:
         set_password: "Namjesti šifru"
         choose_new: "Izaberite novu šifru"
         choose: "Izaberite šifru"
+        title: "Resetovanje lozinke"
       second_factor_backup:
         regenerate: "Regenerate"
         disable: "Onemogući"
@@ -1312,7 +1313,6 @@ bs_BA:
           error: "Oprostite, vaš fajl bi trebao biti u CSV formatu."
       password:
         title: "Lozinka"
-        too_short: "Vaša lozinka je prekratka."
         common: "Vaša lozinka je preobična i česta."
         same_as_username: "Vaš pasword je isti kao vaše korisničko ime."
         same_as_email: "Vaš pasword je isti kao vaš email."
@@ -3329,6 +3329,8 @@ bs_BA:
           timestamp: "Stvoreno"
           completion: "Vrijeme završetka"
           actions: "Akcije"
+          filter_status:
+            failed: "Neuspješno"
       home:
         title: "Naslovnica"
       account:
@@ -3375,6 +3377,9 @@ bs_BA:
           search_logs: "Logovi pretrage"
           security: "Security"
           spam: "Spam"
+      config_areas:
+        about:
+          optional: "(opciono)"
       plugins:
         title: "Pluginovi"
         installed: "Instalirani pluginovi"

@@ -1319,6 +1319,7 @@ zh_CN:
         set_password: "设置密码"
         choose_new: "选择一个新密码"
         choose: "选择一个密码"
+        title: "密码重置"
       second_factor_backup:
         title: "双重备份代码"
         regenerate: "重新生成"
@@ -1711,7 +1712,6 @@ zh_CN:
         fine_print: "我们要求您确认您的身份，因为这是一项潜在的敏感操作。一旦通过身份验证，只有在几个小时不活动后才会要求重新进行身份验证。"
       password:
         title: "密码"
-        too_short: "您的密码过短。"
         common: "该密码过于常见。"
         same_as_username: "您的密码与您的用户名相同。"
         same_as_email: "您的密码与您的电子邮件相同。"
@@ -2636,6 +2636,7 @@ zh_CN:
         close_topics: "关闭话题"
         archive_topics: "归档话题"
         move_messages_to_inbox: "移至收件箱"
+        archive_messages: "移至存档"
         notification_level: "通知…"
         change_notification_level: "更改通知级别"
         choose_new_category: "为话题选择新类别："
@@ -2694,8 +2695,14 @@ zh_CN:
         optional: '（可选）'
       archive_topics:
         name: "归档"
+      archive_messages:
+        name: "移至存档"
       move_messages_to_inbox:
         name: "移至收件箱"
+      unlist_topics:
+        name: "取消列表"
+      relist_topics:
+        name: "重新列表"
       remove_tags:
         name: "移除标签"
       append_tags:
@@ -4425,6 +4432,10 @@ zh_CN:
         title: "审核标记"
         description: "描述"
         enabled: "已启用？"
+        more_options:
+          title: "更多选项"
+          move_up: "上移"
+          move_down: "下移"
       groups:
         new:
           title: "新群组"
@@ -4732,6 +4743,10 @@ zh_CN:
           timestamp: "创建时间"
           completion: "完成时间"
           actions: "操作"
+          filter_status:
+            all: "所有事件"
+            successful: "已送达"
+            failed: "失败"
       home:
         title: "首页"
       account:
@@ -4793,6 +4808,16 @@ zh_CN:
           security: "安全性"
           spam: "垃圾信息"
           staff_action_logs: "管理人员操作日志"
+      config_areas:
+        about:
+          header: "关于您的站点"
+          community_name: "社区名称"
+          your_organization: "您的组织"
+          company_name: "公司名称"
+          governing_law: "适用法律"
+          city_for_disputes: "争议城市"
+          optional: "（可选）"
+          update: "更新"
       plugins:
         title: "插件"
         installed: "安装的插件"
@@ -5447,6 +5472,7 @@ zh_CN:
             update_watched_word_group: "更新关注词组"
             delete_watched_word_group: "删除关注词组"
             toggle_flag: "切换标记"
+            move_flag: "移动举报"
         screened_emails:
           title: "已屏蔽的电子邮件"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"

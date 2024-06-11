@@ -113,6 +113,8 @@ th:
       topic:
         title: "ชื่อเรื่อง"
         category_id: "หมวดหมู่"
+      user:
+        password: "รหัสผ่าน"
     errors:
       <<: *errors
   general_category_name: "ทั่วไป"

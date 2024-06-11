@@ -1225,6 +1225,7 @@ lt:
         set_password: "Nustatyti Slaptažodį"
         choose_new: "Pasirinkite naują slaptažodį"
         choose: "Pasirinkite slaptažodį"
+        title: "Slaptažodžio atkūrimas"
       second_factor_backup:
         title: "Dviejų veiksnių atsarginiai kodai"
         regenerate: "Pergeneruoti"
@@ -1539,7 +1540,6 @@ lt:
           error: "Atsiprašome, failas privalo buti CSV formato."
       password:
         title: "Slaptažodis"
-        too_short: "Jūsų slaptažodis per trumpas."
         common: "Jūsų slaptažodis yra per daug bendrinis."
         same_as_username: "Tavo slaptažodis yra toks pat, kaip ir vartotojo vardas"
         same_as_email: "Tavo slaptažodis yra toks pat, kaip ir el. adresas."
@@ -3873,6 +3873,8 @@ lt:
           timestamp: "Sukurta"
           completion: "Sukurimo laikas"
           actions: "Veiksmai"
+          filter_status:
+            failed: "Nepavyko"
       home:
         title: "Pradinis"
       account:
@@ -3918,6 +3920,12 @@ lt:
           search_logs: "Paieškos žurnalas"
           security: "Apsauga"
           spam: "Šlamštas"
+      config_areas:
+        about:
+          site_contact_group_help: |
+            Galiojantis grupės pavadinimas, kuris yra pakviestas į visas automatiškai siunčiamas privačias žinutes.
+          optional: "(pasoronktinai)"
+          update: "Atnaujinti"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"

@@ -137,6 +137,8 @@ sr:
         category_id: "Kategorija"
       user_profile:
         bio_raw: "O meni"
+      user:
+        password: "Šifra"
     errors:
       models:
         user:
