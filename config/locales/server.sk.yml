@@ -999,7 +999,7 @@ sk:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
-      description: 'Tento príspevok obsahuje obsah, ktorý by rozumná osoba považovala za urážlivý, urážlivý, za nenávistné správanie alebo porušenie <a href="%{base_path}/guidelines">našich pokynov pre komunitu</a>.'
+      description: 'Tento príspevok obsahuje obsah, ktorý by rozumná osoba považovala za urážlivý, hanlivý, za nenávistné správanie alebo porušenie <a href="%{base_path}/guidelines">našich pokynov pre komunitu</a>.'
       short_description: 'Porušenie <a href="%{base_path}/guidelines">našich pokynov pre komunitu</a>'
     notify_user:
       title: "Poslať @%{username} správu"
@@ -4936,7 +4936,7 @@ sk:
             placeholder: "example@user.com"
             description: "E-mailová adresa kľúčového kontaktu zodpovedného za túto stránku. Používa sa na kritické oznámenia a v prípade naliehavých záležitostí sa uvádza na vašej <a href='%{base_path}/about' target='_blank'>stránke o</a> vás."
       invites:
-        title: "Pozvite členov"
+        title: "Pozvať personál"
         description: "Už ste skoro hotoví! Pozvime niekoľko ľudí, aby pomohli <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>rozbehnúť vaše diskusie</a> s zaujímavými témami a odpoveďami, aby sme naštartovali vašu komunitu."
         disabled: "Keďže miestne prihlásenia sú zakázané, nie je možné nikomu posielať pozvánky. Prejdite na ďalší krok."
       finished:
