@@ -333,6 +333,18 @@ class PluginApi {
     return klass;
   }
 
+  addBehaviorTransformerName(name) {
+    _addTransformerName(name, transformerTypes.BEHAVIOR);
+  }
+
+  registerBehaviorTransformer(transformerName, behaviorCallback) {
+    _registerTransformer(
+      transformerName,
+      transformerTypes.BEHAVIOR,
+      behaviorCallback
+    );
+  }
+
   /**
    * Add a new valid transformer name.
    *

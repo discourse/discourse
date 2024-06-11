@@ -103,9 +103,9 @@ function _normalizeTransformerName(name, type) {
  * @param {string} transformerType the type of the transformer being added
  */
 export function _addTransformerName(name, transformerType) {
-  const apiName = `api.register${capitalize(
+  const apiName = `api.add${capitalize(
     transformerType.toLowerCase()
-  )}Transformer`;
+  )}TransformerName`;
 
   if (name !== name.toLowerCase()) {
     throw new Error(
@@ -233,7 +233,10 @@ export function applyBehaviorTransformer(
   }
 
   const transformers = transformersRegistry.get(normalizedTransformerName);
-  const appliedContext = { ...context, _unstable_self: this };
+  const appliedContext = { ...context };
+  if (!appliedContext._unstable_self && this) {
+    appliedContext._unstable_self = this;
+  }
 
   if (!transformers) {
     return defaultCallback({ context: appliedContext });
