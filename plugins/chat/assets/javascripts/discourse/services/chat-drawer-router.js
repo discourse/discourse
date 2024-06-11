@@ -4,12 +4,14 @@ import ChatDrawerRoutesChannel from "discourse/plugins/chat/discourse/components
 import ChatDrawerRoutesChannelThread from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-thread";
 import ChatDrawerRoutesChannelThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-threads";
 import ChatDrawerRoutesChannels from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channels";
+import ChatDrawerRoutesDirectMessages from "discourse/plugins/chat/discourse/components/chat/drawer-routes/direct-messages";
 import ChatDrawerRoutesMembers from "discourse/plugins/chat/discourse/components/chat/drawer-routes/members";
 import ChatDrawerRoutesSettings from "discourse/plugins/chat/discourse/components/chat/drawer-routes/settings";
 import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
 
 const ROUTES = {
   "chat.index": { name: ChatDrawerRoutesChannels },
+  "chat.channels": { name: ChatDrawerRoutesChannels },
   "chat.channel": { name: ChatDrawerRoutesChannel },
   "chat.channel.index": { name: ChatDrawerRoutesChannel },
   "chat.channel.thread": {
@@ -47,6 +49,9 @@ const ROUTES = {
         channelId: route.parent.params.channelId,
       };
     },
+  },
+  "chat.direct-messages": {
+    name: ChatDrawerRoutesDirectMessages,
   },
   "chat.threads": {
     name: ChatDrawerRoutesThreads,

@@ -12,6 +12,14 @@ export default class ChatDrawerRoutesChannel extends Component {
   @service chatStateManager;
   @service chatChannelsManager;
 
+  get backBtnRoute() {
+    if (this.chat.activeChannel?.isDirectMessageChannel) {
+      return "chat.direct-messages";
+    } else {
+      return "chat.channels";
+    }
+  }
+
   @action
   fetchChannel() {
     if (!this.args.params?.channelId) {
@@ -27,7 +35,7 @@ export default class ChatDrawerRoutesChannel extends Component {
 
   <template>
     <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
-      <navbar.BackButton />
+      <navbar.BackButton @route={{this.backBtnRoute}} />
       <navbar.ChannelTitle @channel={{this.chat.activeChannel}} />
       <navbar.Actions as |a|>
         <a.ThreadsListButton @channel={{this.chat.activeChannel}} />

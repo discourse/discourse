@@ -1,31 +1,32 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { eq } from "truth-helpers";
 import i18n from "discourse-common/helpers/i18n";
+import ChannelsListDirect from "discourse/plugins/chat/discourse/components/channels-list-direct";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
-import UserThreads from "discourse/plugins/chat/discourse/components/user-threads";
 import ChatFooter from "discourse/plugins/chat/discourse/components/chat-footer";
 
-export default class ChatDrawerRoutesThreads extends Component {
+export default class ChatDrawerRoutesChannels extends Component {
   @service chat;
   @service chatStateManager;
 
   <template>
     <Navbar @onClick={{this.chat.toggleDrawer}} as |navbar|>
       <navbar.Title @title={{i18n "chat.heading"}} />
-      <navbar.Actions as |action|>
-        <action.ThreadsListButton />
-        <action.ToggleDrawerButton />
-        <action.FullPageButton />
-        <action.CloseDrawerButton />
+      <navbar.Actions as |a|>
+        <a.ToggleDrawerButton />
+        <a.FullPageButton />
+        <a.CloseDrawerButton />
       </navbar.Actions>
     </Navbar>
 
     {{#if this.chatStateManager.isDrawerExpanded}}
       <div class="chat-drawer-content">
-        <UserThreads />
+        <ChannelsListDirect />
       </div>
-    {{/if}}
 
-    <ChatFooter />
+      <ChatFooter />
+    {{/if}}
   </template>
 }
