@@ -13,8 +13,8 @@ module ThemeResolver
 
     user_option = current_user&.user_option
 
-    if theme_id.blank? && request.cookies[:theme_ids].present?
-      ids, seq = request.cookies[:theme_ids]&.split("|")
+    if theme_id.blank? && request.cookie_jar[:theme_ids].present?
+      ids, seq = request.cookie_jar[:theme_ids]&.split("|")
       id = ids&.split(",")&.map(&:to_i)&.first
       if id.present? && seq && seq.to_i == user_option&.theme_key_seq.to_i
         theme_id = id if guardian.allow_themes?([id])
