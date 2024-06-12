@@ -542,20 +542,36 @@ class Search
 
   advanced_filter(/\Awith:images\z/i) { |posts| posts.where("posts.image_upload_id IS NOT NULL") }
 
-  advanced_filter(/\Acategory:(.+)\z/i) do |posts, match|
+  advanced_filter(/\Acategory:(.+)\z/i) do |posts, terms|
     exact = false
 
-    if match[0] == "="
-      exact = true
-      match = match[1..-1]
+    matches = terms.split(",")
+
+    category_ids_found = []
+
+    matches.each do |match|
+      if match[0] == "="
+        exact = true
+        match = match[1..-1]
+      end
+
+      category_ids =
+        Category.where("slug ilike ? OR name ilike ? OR id = ?", match, match, match.to_i).pluck(
+          :id,
+        )
+
+      if category_ids.present?
+        if !exact
+          category_ids += Category.subcategory_ids(category_ids.first)
+          category_ids.uniq!
+        end
+        @category_filter_matched ||= true
+        category_ids_found.concat(category_ids)
+      end
     end
 
-    category_ids =
-      Category.where("slug ilike ? OR name ilike ? OR id = ?", match, match, match.to_i).pluck(:id)
-    if category_ids.present?
-      category_ids += Category.subcategory_ids(category_ids.first) unless exact
-      @category_filter_matched ||= true
-      posts.where("topics.category_id IN (?)", category_ids)
+    if category_ids_found.present?
+      posts.where("topics.category_id IN (?)", category_ids_found)
     else
       posts.where("1 = 0")
     end

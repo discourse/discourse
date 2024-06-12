@@ -1255,6 +1255,22 @@ RSpec.describe Search do
       )
     end
 
+    it "allow searching for multiple categories" do
+      category2 = Fabricate(:category, name: "abc")
+      topic2 = Fabricate(:topic, category: category2)
+      post2 = Fabricate(:post, topic: topic2, raw: "snow monkey")
+
+      category3 = Fabricate(:category, name: "def")
+      topic3 = Fabricate(:topic, category: category3)
+      post3 = Fabricate(:post, topic: topic3, raw: "snow monkey")
+
+      search = Search.execute("monkey category:abc,def")
+      expect(search.posts.map(&:id)).to contain_exactly(post2.id, post3.id)
+
+      search = Search.execute("snow category:abc,#{category.id}")
+      expect(search.posts.map(&:id)).to contain_exactly(post.id, post2.id)
+    end
+
     it "should return the right categories" do
       search = Search.execute("monkey")
 
