@@ -95,6 +95,7 @@ import { includeAttributes } from "discourse/lib/transform-post";
 import {
   _addTransformerName,
   _registerTransformer,
+  transformerTypes,
 } from "discourse/lib/transformer";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
@@ -330,6 +331,18 @@ class PluginApi {
     return klass;
   }
 
+  addBehaviorTransformerName(name) {
+    _addTransformerName(name, transformerTypes.BEHAVIOR);
+  }
+
+  registerBehaviorTransformer(transformerName, behaviorCallback) {
+    _registerTransformer(
+      transformerName,
+      transformerTypes.BEHAVIOR,
+      behaviorCallback
+    );
+  }
+
   /**
    * Add a new valid transformer name.
    *
@@ -355,7 +368,7 @@ class PluginApi {
    *
    */
   addValueTransformerName(name) {
-    _addTransformerName(name);
+    _addTransformerName(name, transformerTypes.VALUE);
   }
 
   /**
@@ -390,7 +403,11 @@ class PluginApi {
    * @param {*} [valueCallback.context] the optional context in which the value is being transformed
    */
   registerValueTransformer(transformerName, valueCallback) {
-    _registerTransformer(transformerName, valueCallback);
+    _registerTransformer(
+      transformerName,
+      transformerTypes.VALUE,
+      valueCallback
+    );
   }
 
   /**
@@ -2080,7 +2097,11 @@ class PluginApi {
    *
    */
   registerHomeLogoHrefCallback(callback) {
-    _registerTransformer("home-logo-href", ({ value }) => callback(value));
+    _registerTransformer(
+      "home-logo-href",
+      transformerTypes.VALUE,
+      ({ value }) => callback(value)
+    );
   }
 
   /**
