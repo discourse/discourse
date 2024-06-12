@@ -919,14 +919,14 @@ class ApplicationController < ActionController::Base
   end
 
   def should_enforce_second_factor?
-    disqualified_from_2fa_enforcement =
+    exempted_from_2fa_enforcement =
       request.format.json? || is_api? || current_user.anonymous? || !current_user.local_login_only?
     enforcing_2fa =
       (
         (SiteSetting.enforce_second_factor == "staff" && current_user.staff?) ||
           SiteSetting.enforce_second_factor == "all"
       )
-    !disqualified_from_2fa_enforcement && enforcing_2fa &&
+    !exempted_from_2fa_enforcement && enforcing_2fa &&
       !current_user.has_any_second_factor_methods_enabled?
   end
 
