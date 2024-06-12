@@ -2455,6 +2455,10 @@ legal:
     default: ""
   log_anonymizer_details:
     default: true
+  rename_faq_to_guidelines:
+    default: false
+    hidden: true
+    client: true
 
 backups:
   enable_backups:

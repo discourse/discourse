@@ -4773,6 +4773,9 @@ en:
             faq:
               content: "FAQ"
               title: "Guidelines for using this site"
+            guidelines:
+              content: "Guidelines"
+              title: "Guidelines for using this site"
             groups:
               content: "Groups"
               title: "List of available user groups"

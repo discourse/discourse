@@ -58,7 +58,7 @@ Now that you have a few collaborators, you can start trying things out together 
 
 ## :wave: Update your welcome topic and guidelines
 
-Update the welcome topic in the [#General](/c/-/4) category and the community guidelines on your [FAQ](/faq) page as you see fit. Go through it yourself with your initial members and see if there's anything you want to add or change.
+Update the welcome topic in the [#General](/c/-/4) category and the community guidelines on your [Guidelines](/guidelines) page as you see fit. Go through it yourself with your initial members and see if there's anything you want to add or change.
 
 To get you started, think about what you want new members to **know about your community** or **do when they first join**. 
 
