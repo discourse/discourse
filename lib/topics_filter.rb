@@ -385,11 +385,6 @@ class TopicsFilter
     end
   end
 
-  def include_topics_with_tags_from_tag_groups
-  end
-
-  def exclude_topics_with_tags_from_tag_groups
-  end
   def filter_tags(values:)
     return if !SiteSetting.tagging_enabled?
 
