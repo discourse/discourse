@@ -373,7 +373,7 @@ class TopicsFilter
   def filter_tag_groups(values:)
     values.each do |key_prefix, tag_groups|
       should_exclude = "NOT" if key_prefix == "-"
-      tag_group_ids = TagGroup.where(name: tag_groups).pluck(:id)
+      tag_group_ids = TagGroup.visible(@guardian).where(name: tag_groups).pluck(:id)
       @scope =
         @scope
           .joins(:tags)
