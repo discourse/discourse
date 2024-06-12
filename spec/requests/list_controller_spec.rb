@@ -1286,24 +1286,13 @@ RSpec.describe ListController do
     it "should filter with tag_group option" do
       topic_with_tag = Fabricate(:topic, tags: [tag])
       topic2_with_tag = Fabricate(:topic, tags: [tag])
-      Fabricate(:tag_group, tags: [tag], name: "tag_group")
+      tag_group = Fabricate(:tag_group, tags: [tag])
 
       sign_in(user)
 
-      get "/filter.json", params: { q: "tags:tag1" }
-
-      expect(response.status).to eq(200)
+      get "/filter.json", params: { q: "tag_group:#{tag_group.name}" }
 
       parsed = response.parsed_body
-
-      expect(parsed["topic_list"]["topics"].length).to eq(2)
-      expect(parsed["topic_list"]["topics"].map { |topic| topic["id"] }).to contain_exactly(
-        topic_with_tag.id,
-        topic2_with_tag.id,
-      )
-
-      get "/filter.json", params: { q: "tag_group:tag_group" }
-
       expect(response.status).to eq(200)
       expect(parsed["topic_list"]["topics"].length).to eq(2)
       expect(parsed["topic_list"]["topics"].map { |topic| topic["id"] }).to contain_exactly(

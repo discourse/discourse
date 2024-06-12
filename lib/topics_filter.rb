@@ -75,7 +75,7 @@ class TopicsFilter
       when "status"
         filter_values.each { |status| @scope = filter_status(status: status) }
       when "tag_group"
-        filter_tags(values: tag_groups_to_tags(key_prefixes.zip(filter_values)))
+        filter_tag_groups(values: key_prefixes.zip(filter_values))
       when "tag"
         filter_tags(values: key_prefixes.zip(filter_values))
       when "views-min"
@@ -370,19 +370,26 @@ class TopicsFilter
     all_tag_ids
   end
 
-  def tag_groups_to_tags(values)
-    values.map do |key_prefix, value|
-      tag_groups_names =
-        if value.include?(",")
-          value.split(",")
-        else
-          [value]
-        end
-      tags = TagGroup.where(name: tag_groups_names).map(&:tags).flatten.map(&:name).join(",")
-      [key_prefix, tags]
+  def filter_tag_groups(values:)
+    values.each do |key_prefix, tag_groups|
+      should_exclude = "NOT" if key_prefix == "-"
+      tag_group_ids = TagGroup.where(name: tag_groups).pluck(:id)
+      @scope =
+        @scope
+          .joins(:tags)
+          .where(
+            "tags.id #{should_exclude} IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))",
+            tag_group_ids,
+          )
+          .distinct(:id)
     end
   end
 
+  def include_topics_with_tags_from_tag_groups
+  end
+
+  def exclude_topics_with_tags_from_tag_groups
+  end
   def filter_tags(values:)
     return if !SiteSetting.tagging_enabled?
 
