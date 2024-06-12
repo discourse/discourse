@@ -442,12 +442,17 @@ module SiteSettingExtension
     end
   end
 
-  def set_and_log(name, value, user = Discourse.system_user)
+  def set_and_log(name, value, user = Discourse.system_user, detailed_message = nil)
     if has_setting?(name)
       prev_value = public_send(name)
       set(name, value)
       value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
-      StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value)
+      StaffActionLogger.new(user).log_site_setting_change(
+        name,
+        prev_value,
+        value,
+        detailed_message.present? ? { details: detailed_message } : {},
+      )
     else
       raise Discourse::InvalidParameters.new(
               I18n.t("errors.site_settings.invalid_site_setting", name: name),
