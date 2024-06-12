@@ -366,7 +366,7 @@ class CategoriesController < ApplicationController
     categories =
       Category
         .limited_categories_matching(only, except, parent_category_id, term)
-        .includes(
+        .preload(
           :uploaded_logo,
           :uploaded_logo_dark,
           :uploaded_background,
@@ -380,6 +380,7 @@ class CategoriesController < ApplicationController
         .select("categories.*, t.slug topic_slug")
         .limit(limit)
         .offset((page - 1) * limit + offset)
+        .to_a
 
     if Site.preloaded_category_custom_fields.present?
       Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
