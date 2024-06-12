@@ -456,7 +456,6 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                       <div class="sidebar-categories-form__category-wrapper">
                         <div class="sidebar-categories-form__category-badge">
                           {{categoryBadge c.category}}
-
                         </div>
 
                         {{#unless c.category.parentCategory}}
