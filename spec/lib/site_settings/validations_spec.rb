@@ -144,7 +144,7 @@ RSpec.describe SiteSettings::Validations do
         before { SiteSetting.enable_local_logins = false }
 
         it "should raise an error" do
-          expect { validations.validate_enforce_second_factor("t") }.to raise_error(
+          expect { validations.validate_enforce_second_factor("all") }.to raise_error(
             Discourse::InvalidParameters,
             error_message,
           )
@@ -155,7 +155,7 @@ RSpec.describe SiteSettings::Validations do
         before { SiteSetting.enable_local_logins = true }
 
         it "should be ok" do
-          expect { validations.validate_enforce_second_factor("t") }.not_to raise_error
+          expect { validations.validate_enforce_second_factor("all") }.not_to raise_error
         end
       end
 
@@ -171,11 +171,8 @@ RSpec.describe SiteSettings::Validations do
           SiteSetting.enable_github_logins = true
         end
 
-        it "raises and error, and specifies the auth providers" do
-          expect { validations.validate_enforce_second_factor("all") }.to raise_error(
-            Discourse::InvalidParameters,
-            error_message,
-          )
+        it "should be ok" do
+          expect { validations.validate_enforce_second_factor("all") }.not_to raise_error
         end
       end
 
@@ -191,7 +188,7 @@ RSpec.describe SiteSettings::Validations do
         end
 
         it "should raise an error" do
-          expect { validations.validate_enforce_second_factor("t") }.to raise_error(
+          expect { validations.validate_enforce_second_factor("all") }.to raise_error(
             Discourse::InvalidParameters,
             error_message,
           )

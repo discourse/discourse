@@ -8,7 +8,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
   end
 
   def description_for_user(user)
-    associated_account = UserAssociatedAccount.find_by(provider_name: name, user_id: user.id)
+    associated_account = user.user_associated_accounts.find { |acc| acc.provider_name == name }
     return "" if associated_account.nil?
     description_for_auth_hash(associated_account) || I18n.t("associated_accounts.connected")
   end

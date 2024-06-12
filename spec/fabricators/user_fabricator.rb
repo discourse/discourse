@@ -152,3 +152,14 @@ Fabricator(:east_coast_user, from: :user) do
     user.save
   end
 end
+
+Fabricator(:social_login_user, from: :user) do
+  transient :provider_name
+  password SecureRandom.hex
+  name "Test Social User"
+  email { sequence(:email) { |i| "testsocial#{i}@test.com" } }
+
+  after_create do |user, transients|
+    Fabricate(:user_associated_account, user: user, provider_name: transients[:provider_name])
+  end
+end

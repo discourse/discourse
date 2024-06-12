@@ -75,7 +75,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :use_experimental_topic_bulk_actions?,
              :use_admin_sidebar,
              :can_view_raw_email,
-             :use_glimmer_topic_list?
+             :use_glimmer_topic_list?,
+             :local_login_only?
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -289,7 +290,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def second_factor_enabled
-    object.totp_enabled? || object.security_keys_enabled?
+    object.has_any_second_factor_methods_enabled?
   end
 
   def featured_topic

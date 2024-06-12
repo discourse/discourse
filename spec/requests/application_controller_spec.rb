@@ -204,6 +204,20 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{user.encoded_username}/preferences/second-factor")
     end
 
+    it "should not enforce second factor for users who are using social logins instead of local logins" do
+      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.enable_facebook_logins = true
+      social_login_user = Fabricate(:social_login_user)
+
+      sign_in(social_login_user)
+
+      get "/"
+      expect(response).not_to redirect_to(
+        "/u/#{social_login_user.username}/preferences/second-factor",
+      )
+      expect(response.status).to eq(200)
+    end
+
     context "when enforcing second factor for staff" do
       before do
         SiteSetting.enforce_second_factor = "staff"

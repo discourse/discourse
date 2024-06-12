@@ -909,7 +909,7 @@ class ApplicationController < ActionController::Base
     end
 
     return if !current_user
-    return if !should_enforce_2fa?
+    return if !should_enforce_second_factor?
 
     redirect_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
     if !request.fullpath.start_with?(redirect_path)
@@ -918,8 +918,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def should_enforce_2fa?
-    disqualified_from_2fa_enforcement = request.format.json? || is_api? || current_user.anonymous?
+  def should_enforce_second_factor?
+    disqualified_from_2fa_enforcement =
+      request.format.json? || is_api? || current_user.anonymous? || !current_user.local_login_only?
     enforcing_2fa =
       (
         (SiteSetting.enforce_second_factor == "staff" && current_user.staff?) ||

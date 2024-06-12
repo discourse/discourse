@@ -1155,11 +1155,12 @@ export default class User extends RestModel.extend(Evented) {
     }
   }
 
-  @discourseComputed("second_factor_enabled", "staff")
-  enforcedSecondFactor(secondFactorEnabled, staff) {
+  @discourseComputed("second_factor_enabled", "staff", "local_login_only")
+  enforcedSecondFactor(secondFactorEnabled, staff, localLoginOnly) {
     const enforce = this.siteSettings.enforce_second_factor;
     return (
       !secondFactorEnabled &&
+      localLoginOnly &&
       (enforce === "all" || (enforce === "staff" && staff))
     );
   }

@@ -17,6 +17,37 @@ RSpec.describe User do
     )
   end
 
+  describe ".local_login_only?" do
+    before { SiteSetting.enable_facebook_logins = true }
+
+    it "returns false if the user has any social logins" do
+      Fabricate(:user_associated_account, user: user, provider_name: "facebook")
+      expect(user.reload.local_login_only?).to eq(false)
+    end
+
+    it "returns true if the user is using a social login but they have turned on 2FA" do
+      Fabricate(:user_associated_account, user: user, provider_name: "facebook")
+      Fabricate(:user_second_factor_totp, user: user)
+      expect(user.reload.local_login_only?).to eq(true)
+    end
+
+    it "returns true if the user is not using social logins or SSO" do
+      expect(user.reload.local_login_only?).to eq(true)
+    end
+
+    context "when DiscourseConnect is enabled" do
+      before do
+        SiteSetting.discourse_connect_url = "https://somewhere.over.com"
+        SiteSetting.enable_discourse_connect = true
+      end
+
+      it "returns false if the user is using SSO via DiscourseConnect" do
+        Fabricate(:single_sign_on_record, user: user)
+        expect(user.reload.local_login_only?).to eq(false)
+      end
+    end
+  end
+
   describe ".in_any_groups?" do
     fab!(:group)
 
@@ -678,7 +709,7 @@ RSpec.describe User do
           quoted_post = create_post(user: user, topic: topic, post_number: 1, raw: "quoted post")
           post = create_post(raw: <<~RAW)
             Lorem ipsum
-  
+
             [quote="#{user.username}, post:1, topic:#{quoted_post.topic.id}"]
             quoted post
             [/quote]

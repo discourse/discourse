@@ -1515,6 +1515,10 @@ class User < ActiveRecord::Base
     result
   end
 
+  def local_login_only?
+    (associated_accounts.empty? && !single_sign_on_record) || has_any_second_factor_methods_enabled?
+  end
+
   USER_FIELD_PREFIX ||= "user_field_"
 
   def user_fields(field_ids = nil)
