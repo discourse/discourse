@@ -31,7 +31,8 @@ export default class ChatFooter extends Component {
   }
 
   get currentRouteName() {
-    return this.chatHistory.currentRoute?.name;
+    const routeName = this.chatHistory.currentRoute?.name;
+    return routeName === "chat" ? "chat.channels" : routeName;
   }
 
   get shouldRenderFooter() {
