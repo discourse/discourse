@@ -1275,6 +1275,16 @@ RSpec.describe Search do
 
       search = Search.execute("snow category:abc,#{category.id}")
       expect(search.posts.map(&:id)).to contain_exactly(post.id, post2.id)
+
+      child_category = Fabricate(:category, parent_category: category2)
+      child_topic = Fabricate(:topic, category: child_category)
+      child_post = Fabricate(:post, topic: child_topic, raw: "snow monkey")
+
+      search = Search.execute("monkey category:zzz,nnn,=abc,mmm")
+      expect(search.posts.map(&:id)).to contain_exactly(post2.id)
+
+      search = Search.execute("monkey category:zzz,nnn,abc,mmm")
+      expect(search.posts.map(&:id)).to contain_exactly(post2.id, child_post.id)
     end
 
     it "should return the right categories" do
