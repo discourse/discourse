@@ -1577,10 +1577,10 @@
     lodash "^4.17.21"
     resolve "^1.20.0"
 
-"@embroider/webpack@^4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@embroider/webpack/-/webpack-4.0.2.tgz#99c3c15e8d72e450982f63fc28830ab269211ba0"
-  integrity sha512-PNCzbrz2+CIIqVql+ByZdNWTbEnrC4edXjyrp1mP5JOfaLSaOAFoe6mluwed4C8qAdKZDa7eoSXI7jsPPdaYKA==
+"@embroider/webpack@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@embroider/webpack/-/webpack-4.0.3.tgz#c6c77d0c6ce4094798fd0a34c5e4ff9762eaac86"
+  integrity sha512-bDjQfyI8O7xADDajfQ6IFHen4XirsNJ2Y3s0LzNw/USWYCD043G+K7wAsZ0HXfhkZKyj+uw60zeOWQuVrepWGQ==
   dependencies:
     "@babel/core" "^7.14.5"
     "@babel/preset-env" "^7.14.5"
