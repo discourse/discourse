@@ -1434,4 +1434,22 @@ RSpec.describe CategoriesController do
       expect(category["subcategory_count"]).to eq(1)
     end
   end
+
+  describe "#hierachical_search" do
+    before { sign_in(user) }
+
+    it "produces categories with an empty term" do
+      get "/categories/hierarchical_search.json", params: { term: "" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["categories"].length).not_to eq(0)
+    end
+
+    it "doesn't produce categories with a very specific term" do
+      get "/categories/hierarchical_search.json", params: { term: "acategorythatdoesnotexist" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["categories"].length).to eq(0)
+    end
+  end
 end
