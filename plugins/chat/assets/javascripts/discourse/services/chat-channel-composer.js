@@ -41,7 +41,7 @@ export default class ChatChannelComposer extends Service {
 
   @action
   blur() {
-    this.textarea.blur();
+    this.textarea?.blur();
   }
 
   @action
