@@ -160,6 +160,10 @@ Fabricator(:social_login_user, from: :user) do
   email { sequence(:email) { |i| "testsocial#{i}@test.com" } }
 
   after_create do |user, transients|
-    Fabricate(:user_associated_account, user: user, provider_name: transients[:provider_name])
+    Fabricate(
+      :user_associated_account,
+      user: user,
+      provider_name: transients[:provider_name] || "facebook",
+    )
   end
 end
