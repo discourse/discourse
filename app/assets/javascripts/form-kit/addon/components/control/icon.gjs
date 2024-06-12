@@ -7,7 +7,12 @@ import IconPicker from "select-kit/components/icon-picker";
 export default class FkControlIcon extends Component {
   @action
   handleInput(value) {
-    this.args.setValue(value);
+    console.log("icon:", value);
+    if (this.args.onSet) {
+      this.args.onSet(value, { set: this.args.set });
+    } else {
+      this.args.setValue(value);
+    }
   }
 
   @action
@@ -18,7 +23,14 @@ export default class FkControlIcon extends Component {
   <template>
     <IconPicker
       @value={{@value}}
-      @options={{hash maximum=1 disabled=@disabled}}
+      @onlyAvailable={{true}}
+      @options={{hash
+        maximum=1
+        disabled=@disabled
+        caretDownIcon="caret-down"
+        caretUpIcon="caret-up"
+        icons=@value
+      }}
       @onChange={{this.handleInput}}
       class="d-form__control-icon"
       {{willDestroy this.handleDestroy}}

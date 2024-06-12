@@ -32,7 +32,7 @@ export default class FkControlConditionalContent extends Component {
   }
 
   <template>
-    <div class="d-form-conditional-display">
+    <div class="d-form__conditional-display">
       {{yield
         (hash
           Conditions=(component

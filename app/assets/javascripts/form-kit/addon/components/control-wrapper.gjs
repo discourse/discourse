@@ -63,8 +63,9 @@ export default class FormControlWrapper extends Component {
         @disabled={{@field.disabled}}
         @onSet={{@onSet}}
         @onUnset={{@onUnset}}
-        id={{@fieldId}}
-        name={{@name}}
+        @height={{@height}}
+        @id={{@fieldId}}
+        @name={{@name}}
         aria-invalid={{if @invalid "true"}}
         aria-describedby={{if @invalid @errorId}}
         ...attributes

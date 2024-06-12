@@ -8,7 +8,20 @@ import uniqueId from "discourse/helpers/unique-id";
 export default class FkControlQuestion extends Component {
   @action
   handleInput(event) {
-    this.args.setValue(event.target.value);
+    if (this.args.onSet) {
+      this.args.onSet(event.target.value, { set: this.args.set });
+    } else {
+      this.args.setValue(event.target.value);
+    }
+  }
+
+  @action
+  handleDestroy() {
+    if (this.args.onUnset) {
+      this.args.onUnset({ set: this.args.set });
+    } else {
+      this.args.setValue(undefined);
+    }
   }
 
   <template>

@@ -2,7 +2,20 @@
   height: 270px;
   width: 100%;
 
-  &[data-disabled] {
+  > .ace_editor {
+    box-sizing: border-box;
+    height: auto;
+    border: 1px solid var(--primary-400);
+    border-radius: var(--d-input-border-radius);
+
+    &.ace_focus {
+      border-color: var(--tertiary);
+      outline: 2px solid var(--tertiary);
+      outline-offset: -1px;
+    }
+  }
+
+  &[data-disabled="true"] {
     opacity: 0.5;
   }
 }

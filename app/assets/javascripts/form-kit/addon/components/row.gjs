@@ -3,7 +3,7 @@ import Col from "form-kit/components/col";
 import concatClass from "discourse/helpers/concat-class";
 
 const Row = <template>
-  <div class={{concatClass "d-form-row"}}>
+  <div class="d-form__row" ...attributes>
     {{yield (hash Col=Col)}}
   </div>
 </template>;

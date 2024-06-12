@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import getURL from "discourse-common/lib/get-url";
 
@@ -24,19 +23,13 @@ export default class FkControlImage extends Component {
     }
   }
 
-  @action
-  handleDestroy() {
-    this.removeImage();
-  }
-
   <template>
     <UppyImageUploader
       @id={{concat @id "-" @name}}
       @imageUrl={{@value}}
       @onUploadDone={{this.setImage}}
       @onUploadDeleted={{this.removeImage}}
-      class="d-form-image-input no-repeat contain-image"
-      {{willDestroy this.handleDestroy}}
+      class="d-form__control-image no-repeat contain-image"
     />
   </template>
 }

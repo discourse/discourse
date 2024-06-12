@@ -10,6 +10,9 @@
       flex: 1 0 100%;
       .create-new-badge {
         margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
       }
     }
     .content-list {
@@ -60,6 +63,28 @@
       background-color: unset;
     }
   }
+
+  .current-badge-header {
+    display: flex;
+    padding-bottom: 2em;
+    gap: 1em;
+    align-items: center;
+
+    img {
+      border-radius: var(--d-border-radius-large);
+      max-width: 36px;
+    }
+
+    .d-icon {
+      font-size: 36px;
+    }
+
+    .badge-display-name {
+      font-size: var(--font-up-1);
+      font-weight: bold;
+    }
+  }
+
   .current-badge {
     margin: 20px;
     p.help {

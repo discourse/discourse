@@ -93,6 +93,9 @@ export default class FormField extends Component {
               errors=this.errors
               triggerValidationFor=@triggerValidationFor
               field=this.field
+              onSet=@onSet
+              onUnset=@onUnset
+              set=@set
             )
             Question=(component
               FKControlWrapper
@@ -108,6 +111,7 @@ export default class FormField extends Component {
               field=this.field
               onSet=@onSet
               onUnset=@onUnset
+              set=@set
             )
             Text=(component
               FKControlWrapper
@@ -123,6 +127,7 @@ export default class FormField extends Component {
               field=this.field
               onSet=@onSet
               onUnset=@onUnset
+              set=@set
             )
             Checkbox=(component
               FKControlCheckbox
@@ -137,6 +142,7 @@ export default class FormField extends Component {
               field=this.field
               onSet=@onSet
               onUnset=@onUnset
+              set=@set
             )
             Image=(component
               FKControlWrapper
@@ -146,13 +152,13 @@ export default class FormField extends Component {
               fieldId=fieldId
               errorId=errorId
               setValue=this.setValue
-              set=@set
               value=this.value
               errors=this.errors
               triggerValidationFor=@triggerValidationFor
               field=this.field
               onSet=@onSet
               onUnset=@onUnset
+              set=@set
             )
             Icon=(component
               FKControlWrapper
@@ -168,6 +174,7 @@ export default class FormField extends Component {
               field=this.field
               onSet=@onSet
               onUnset=@onUnset
+              set=@set
             )
             Menu=(component
               FKControlWrapper
@@ -181,6 +188,9 @@ export default class FormField extends Component {
               errors=this.errors
               triggerValidationFor=@triggerValidationFor
               field=this.field
+              onSet=@onSet
+              onUnset=@onUnset
+              set=@set
             )
             Select=(component
               FKControlWrapper
@@ -196,6 +206,7 @@ export default class FormField extends Component {
               field=this.field
               onSet=@onSet
               onUnset=@onUnset
+              set=@set
             )
             Input=(component
               FKControlWrapper
@@ -211,6 +222,7 @@ export default class FormField extends Component {
               field=this.field
               onSet=@onSet
               onUnset=@onUnset
+              set=@set
             )
             RadioGroup=(component
               FKControlWrapper
@@ -226,6 +238,7 @@ export default class FormField extends Component {
               field=this.field
               onSet=@onSet
               onUnset=@onUnset
+              set=@set
             )
             id=fieldId
             setValue=this.setValue

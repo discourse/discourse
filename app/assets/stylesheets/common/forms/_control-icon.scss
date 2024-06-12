@@ -1,3 +1,7 @@
 .d-form__control-icon {
-  width: 100% !important;
+  width: auto !important;
+
+  .formatted-selection {
+    display: none !important;
+  }
 }

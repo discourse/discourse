@@ -15,6 +15,7 @@ import Row from "form-kit/components/row";
 import FKSection from "form-kit/components/section";
 import { VALIDATION_TYPES } from "form-kit/lib/constants";
 import FieldData from "form-kit/lib/field-data";
+import DButton from "discourse/components/d-button";
 
 export default class Form extends Component {
   @tracked validationState = {};
@@ -111,7 +112,9 @@ export default class Form extends Component {
       return false;
     }
 
-    return Object.keys(validationState).some((name) => this.fields.has(name));
+    return Object.keys(validationState).some(
+      (name) => this.fields.get(name)?.length
+    );
   }
 
   get fieldRevalidationEvent() {
@@ -191,11 +194,14 @@ export default class Form extends Component {
   @action
   async onSubmit(event) {
     debug("OnSubmit form");
+    console.log(event);
 
     event?.preventDefault();
 
     await this._validate();
     this.showAllValidations = true;
+
+    console.log(this.validationState);
 
     if (!this.hasValidationErrors) {
       this.args.onSubmit?.(this.effectiveData);
@@ -273,6 +279,15 @@ export default class Form extends Component {
           ConditionalContent=(component FKControlConditionalContent)
           Errors=(component FKFormErrors errors=this.visibleErrors)
           Container=(component FKContainer)
+          Button=(component DButton)
+          Submit=(component
+            DButton
+            action=this.onSubmit
+            forwardEvent=true
+            class="btn-primary"
+            label="submit"
+            type="submit"
+          )
           Field=(component
             FKField
             data=this.effectiveData

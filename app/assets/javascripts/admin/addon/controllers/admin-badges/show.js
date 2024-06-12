@@ -1,37 +1,26 @@
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { observes } from "@ember-decorators/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
 
-// TODO: Stop using Mixin here
 export default class AdminBadgesShowController extends Controller {
   @service router;
+  @service toasts;
   @service dialog;
 
   @controller adminBadges;
 
-  @tracked saving = false;
-  @tracked savingStatus = "";
-  @tracked selectedGraphicType = null;
   @tracked model;
+  @tracked saving = false;
+  @tracked selectedGraphicType = null;
   @tracked userBadges;
   @tracked userBadgesAll;
 
-  // get selectedBadgeGrouping() {
-  //   return this.badgeGroupings.find(
-  //     (bg) => bg.id === this.model.get("badge_grouping_id")
-  //   );
-  // }
-
   @action
-  something(data) {
-    console.log("data", data.badge_grouping_id);
+  currentBadgeGrouping(data) {
     return this.badgeGroupings.find((bg) => bg.id === data.badge_grouping_id)
       ?.name;
   }
@@ -56,15 +45,10 @@ export default class AdminBadgesShowController extends Controller {
     return this.model.system;
   }
 
-  // get showDisplayName() {
-  //   return this.name !== this.displayName;
-  // }
-
   setup() {
-    // this is needed because the model doesnt have default values
-    // and as we are using a bufferedProperty it's not accessible
-    // in any other way
+    this.saving = false;
 
+    // this is needed because the model doesnt have default values
     // Using `set` here isn't ideal, but we don't know that tracking is set up on the model yet.
     if (this.model) {
       if (!this.model.badge_type_id) {
@@ -81,42 +65,40 @@ export default class AdminBadgesShowController extends Controller {
     }
   }
 
-  // get hasQuery() {
-  //   let modelQuery = this.model.get("query");
-  //   let bufferedQuery = this.buffered.get("query");
-
-  //   if (bufferedQuery) {
-  //     return bufferedQuery.trim().length > 0;
-  //   }
-  //   return modelQuery && modelQuery.trim().length > 0;
-  // }
+  hasQuery(query) {
+    return query?.trim?.()?.length > 0;
+  }
 
   get textCustomizationPrefix() {
     return `badges.${this.model.i18n_name}.`;
   }
 
-  // // FIXME: Remove observer
-  // @observes("model.id")
-  // _resetSaving() {
-  //   this.saving = false;
-  //   this.savingStatus = "";
-  // }
-
   @action
   onSetImage(upload, { set }) {
     set("image_upload_id", upload.id);
     set("image_url", getURL(upload.url));
+    set("icon", "");
+    this.model.image = getURL(upload.url);
+  }
+
+  @action
+  onSetIcon(value, { set }) {
+    this.model.set("icon", value);
+    set("icon", value);
+    set("image_upload_id", "");
+    set("image_url", "");
+  }
+
+  @action
+  onSetName(value, { set }) {
+    this.model.set("name", value);
+    set("name", value);
   }
 
   @action
   onUnsetImage({ set }) {
-    set("image_upload_id", undefined);
-    set("image_url", undefined);
-  }
-
-  @action
-  handleSubmit(data) {
-    console.log("data", data);
+    set("image_upload_id", "");
+    set("image_url", "");
   }
 
   @action
@@ -125,115 +107,93 @@ export default class AdminBadgesShowController extends Controller {
     this.send("preview", badge, explain);
   }
 
-  // @action
-  // save() {
-  //   if (!this.saving) {
-  //     let fields = [
-  //       "allow_title",
-  //       "multiple_grant",
-  //       "listable",
-  //       "auto_revoke",
-  //       "enabled",
-  //       "show_posts",
-  //       "target_posts",
-  //       "name",
-  //       "description",
-  //       "long_description",
-  //       "icon",
-  //       "image_upload_id",
-  //       "query",
-  //       "badge_grouping_id",
-  //       "trigger",
-  //       "badge_type_id",
-  //     ];
+  @action
+  async handleSubmit(formData) {
+    if (this.saving) {
+      return;
+    }
 
-  //     if (this.buffered.get("system")) {
-  //       let protectedFields = this.protectedSystemFields || [];
-  //       fields = fields.filter((f) => !protectedFields.includes(f));
-  //     }
+    let fields = [
+      "allow_title",
+      "multiple_grant",
+      "listable",
+      "auto_revoke",
+      "enabled",
+      "show_posts",
+      "target_posts",
+      "name",
+      "description",
+      "long_description",
+      "icon",
+      "image_upload_id",
+      "query",
+      "badge_grouping_id",
+      "trigger",
+      "badge_type_id",
+    ];
 
-  //     this.saving = true;
-  //     this.savingStatus = I18n.t("saving");
+    if (formData.system) {
+      const protectedFields = this.protectedSystemFields || [];
+      fields = fields.filter((f) => !protectedFields.includes(f));
+    }
 
-  //     const boolFields = [
-  //       "allow_title",
-  //       "multiple_grant",
-  //       "listable",
-  //       "auto_revoke",
-  //       "enabled",
-  //       "show_posts",
-  //       "target_posts",
-  //     ];
+    this.saving = true;
 
-  //     const data = {};
-  //     const buffered = this.buffered;
-  //     fields.forEach(function (field) {
-  //       let d = buffered.get(field);
-  //       if (boolFields.includes(field)) {
-  //         d = !!d;
-  //       }
-  //       data[field] = d;
-  //     });
+    const data = {};
+    fields.forEach(function (field) {
+      data[field] = formData[field];
+    });
 
-  //     const newBadge = !this.id;
-  //     const model = this.model;
-  //     this.model
-  //       .save(data)
-  //       .then(() => {
-  //         if (newBadge) {
-  //           const adminBadges = this.get("adminBadges.model");
-  //           if (!adminBadges.includes(model)) {
-  //             adminBadges.pushObject(model);
-  //           }
-  //           this.router.transitionTo("adminBadges.show", model.get("id"));
-  //         } else {
-  //           this.commitBuffer();
-  //           this.savingStatus = I18n.t("saved");
-  //         }
-  //       })
-  //       .catch(popupAjaxError)
-  //       .finally(() => {
-  //         this.saving = false;
-  //         this.savingStatus = "";
-  //       });
-  //   }
-  // }
+    const newBadge = !this.model.id;
 
-  // @action
-  // destroyBadge() {
-  //   const adminBadges = this.adminBadges.model;
-  //   const model = this.model;
+    try {
+      this.model = await this.model.save(data);
 
-  //   if (!model?.get("id")) {
-  //     this.router.transitionTo("adminBadges.index");
-  //     return;
-  //   }
+      this.toasts.success({ data: { message: I18n.t("saved") } });
 
-  //   return this.dialog.yesNoConfirm({
-  //     message: I18n.t("admin.badges.delete_confirm"),
-  //     didConfirm: () => {
-  //       model
-  //         .destroy()
-  //         .then(() => {
-  //           adminBadges.removeObject(model);
-  //           this.router.transitionTo("adminBadges.index");
-  //         })
-  //         .catch(() => {
-  //           this.dialog.alert(I18n.t("generic_error"));
-  //         });
-  //     },
-  //   });
-  // }
+      if (newBadge) {
+        const adminBadges = this.get("adminBadges.model");
+        if (!adminBadges.includes(this.model)) {
+          adminBadges.pushObject(this.model);
+        }
+        return this.router.transitionTo("adminBadges.show", this.model.id);
+      }
+    } catch (error) {
+      return popupAjaxError(error);
+    } finally {
+      this.saving = false;
+    }
+  }
 
-  // @action
-  // toggleBadge() {
-  //   const originalState = this.buffered.get("enabled");
-  //   const newState = !this.buffered.get("enabled");
+  @action
+  async handleDelete() {
+    if (!this.model?.id) {
+      return this.router.transitionTo("adminBadges.index");
+    }
 
-  //   this.buffered.set("enabled", newState);
-  //   this.model.save({ enabled: newState }).catch((error) => {
-  //     this.buffered.set("enabled", originalState);
-  //     return popupAjaxError(error);
-  //   });
-  // }
+    const adminBadges = this.adminBadges.model;
+    return this.dialog.yesNoConfirm({
+      message: I18n.t("admin.badges.delete_confirm"),
+      didConfirm: async () => {
+        try {
+          await this.model.destroy();
+          adminBadges.removeObject(this.model);
+          this.router.transitionTo("adminBadges.index");
+        } catch {
+          this.dialog.alert(I18n.t("generic_error"));
+        }
+      },
+    });
+  }
+
+  @action
+  async onToggleBadge(enabled, { set }) {
+    try {
+      await this.model.save({ enabled });
+      this.toasts.success({ data: { message: I18n.t("saved") } });
+    } catch (error) {
+      set("enabled", !enabled);
+      return popupAjaxError(error);
+    }
+  }
 }

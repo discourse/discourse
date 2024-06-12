@@ -44,16 +44,18 @@ export default class FkControlInput extends Component {
 
   @action
   handleInput(event) {
-    if (event.target.value === "") {
-      this.args.setValue(undefined);
-      return;
-    }
-
-    this.args.setValue(
-      this.type === "number"
+    const value =
+      event.target.value === ""
+        ? undefined
+        : this.type === "number"
         ? parseFloat(event.target.value)
-        : event.target.value
-    );
+        : event.target.value;
+
+    if (this.args.onSet) {
+      this.args.onSet(value, { set: this.args.set });
+    } else {
+      this.args.setValue(value);
+    }
   }
 
   <template>

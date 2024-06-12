@@ -1,4 +1,9 @@
 .d-form__container {
+  display: flex;
+  gap: 0.25rem;
+  flex-direction: column;
+  align-items: flex-start;
+
   &-title {
     display: flex;
     align-items: center;
@@ -6,8 +11,12 @@
     margin: 0;
     font-size: var(--font-down-1-rem);
     color: var(--primary-high);
+    line-height: var(--line-height-medium);
+    font-weight: bold;
   }
 
-  &-subtitle {
+  &-content {
+    display: flex;
+    gap: var(--d-form-gutter-x);
   }
 }
