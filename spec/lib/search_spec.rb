@@ -1267,6 +1267,9 @@ RSpec.describe Search do
       search = Search.execute("monkey category:abc,def")
       expect(search.posts.map(&:id)).to contain_exactly(post2.id, post3.id)
 
+      search = Search.execute("monkey categories:abc,def")
+      expect(search.posts.map(&:id)).to contain_exactly(post2.id, post3.id)
+
       search = Search.execute("snow category:abc,#{category.id}")
       expect(search.posts.map(&:id)).to contain_exactly(post.id, post2.id)
     end

@@ -542,7 +542,7 @@ class Search
 
   advanced_filter(/\Awith:images\z/i) { |posts| posts.where("posts.image_upload_id IS NOT NULL") }
 
-  advanced_filter(/\Acategory:(.+)\z/i) do |posts, terms|
+  advanced_filter(/\Acategor(?:y|ies):(.+)\z/i) do |posts, terms|
     exact = false
 
     matches = terms.split(",")
