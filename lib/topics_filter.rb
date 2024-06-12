@@ -372,16 +372,22 @@ class TopicsFilter
 
   def filter_tag_groups(values:)
     values.each do |key_prefix, tag_groups|
-      should_exclude = "NOT" if key_prefix == "-"
       tag_group_ids = TagGroup.visible(@guardian).where(name: tag_groups).pluck(:id)
-      @scope =
-        @scope
-          .joins(:tags)
-          .where(
-            "tags.id #{should_exclude} IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))",
-            tag_group_ids,
-          )
-          .distinct(:id)
+      exclude_clause = "NOT" if key_prefix == "-"
+      filter =
+        "tags.id #{exclude_clause} IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))"
+
+      query =
+        if exclude_clause.present?
+          @scope
+            .joins("LEFT JOIN topic_tags ON topic_tags.topic_id = topics.id")
+            .joins("LEFT JOIN tags ON tags.id = topic_tags.tag_id")
+            .where("tags.id IS NULL OR #{filter}", tag_group_ids)
+        else
+          @scope.joins(:tags).where(filter, tag_group_ids)
+        end
+
+      @scope = query.distinct(:id)
     end
   end
 
