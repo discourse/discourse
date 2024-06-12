@@ -566,7 +566,7 @@ class Search
           unnest(ARRAY[:matches]) AS term ON
           c.slug ILIKE term OR
           c.name ILIKE term OR
-          (term ~ '^[0-9]{1,19}$' AND c.id = term::int)
+          (term ~ '^[0-9]{1,10}$' AND c.id = term::int)
       SQL
 
       found = DB.query(sql, matches: matches.keys)
