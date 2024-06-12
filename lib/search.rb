@@ -575,7 +575,7 @@ class Search
         found.each do |row|
           category_ids << row.id
           @category_filter_matched ||= true
-          category_ids += Category.subcategory_ids(category_ids.first) if !matches[row.term]
+          category_ids += Category.subcategory_ids(row.id) if !matches[row.term]
         end
       end
     end
