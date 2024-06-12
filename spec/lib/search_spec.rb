@@ -1283,7 +1283,10 @@ RSpec.describe Search do
       search = Search.execute("monkey category:zzz,nnn,=abc,mmm")
       expect(search.posts.map(&:id)).to contain_exactly(post2.id)
 
-      search = Search.execute("monkey category:zzz,nnn,abc,mmm")
+      search =
+        Search.execute(
+          "monkey category:0007847874874874874748749398384398439843984938439843948394834984934839483984983498394834983498349834983,zzz,nnn,abc,mmm",
+        )
       expect(search.posts.map(&:id)).to contain_exactly(post2.id, child_post.id)
     end
 
