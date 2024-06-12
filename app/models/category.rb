@@ -291,11 +291,10 @@ class Category < ActiveRecord::Base
           word_match = <<~SQL
             COALESCE(
               (
-                SELECT DISTINCT true
+                SELECT BOOL_AND(position(pattern IN LOWER(categories.name)) <> 0)
                 FROM unnest(regexp_split_to_array(#{escaped_term}, '\s+')) AS pattern
-                WHERE position(pattern IN LOWER(categories.name)) <> 0
               ),
-              false
+              true
             )
           SQL
 
