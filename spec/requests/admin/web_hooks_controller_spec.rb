@@ -203,6 +203,13 @@ RSpec.describe Admin::WebHooksController do
 
     before { sign_in(admin) }
 
+    context "when status param is provided" do
+      it "load_more_web_hook_events URL is correct" do
+        get "/admin/api/web_hook_events/#{web_hook.id}.json", params: { status: "successful" }
+        expect(response.parsed_body["load_more_web_hook_events"]).to include("status=successful")
+      end
+    end
+
     context "when status is 'successful'" do
       it "lists the successfully delivered webhook events" do
         get "/admin/api/web_hook_events/#{web_hook.id}.json", params: { status: "successful" }

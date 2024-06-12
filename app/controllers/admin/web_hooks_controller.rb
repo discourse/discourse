@@ -88,9 +88,10 @@ class Admin::WebHooksController < Admin::AdminController
     limit = 50
     offset = params[:offset].to_i
     events = @web_hook.web_hook_events
-    if params[:status] == "successful"
+    status = params[:status]
+    if status == "successful"
       events = events.successful
-    elsif params[:status] == "failed"
+    elsif status == "failed"
       events = events.failed
     end
 
@@ -101,7 +102,12 @@ class Admin::WebHooksController < Admin::AdminController
       web_hook_events: serialize_data(events, AdminWebHookEventSerializer),
       total_rows_web_hook_events: total,
       load_more_web_hook_events:
-        web_hook_events_admin_api_index_path(limit: limit, offset: offset + limit, format: :json),
+        web_hook_events_admin_api_index_path(
+          limit: limit,
+          offset: offset + limit,
+          status: status,
+          format: :json,
+        ),
       extras: {
         web_hook_id: @web_hook.id,
       },
