@@ -151,16 +151,6 @@
   }
 }
 
-.bootbox.modal {
-  position: fixed;
-  z-index: z("modal", "content");
-  overflow: auto;
-  height: auto;
-  background-color: var(--secondary);
-  box-shadow: var(--shadow-card);
-  background-clip: padding-box;
-}
-
 .input-hint-text {
   margin-left: 0.5em;
   color: var(--secondary-high);
