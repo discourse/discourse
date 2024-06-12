@@ -2,6 +2,7 @@
 
 require "sidekiq/pausable"
 require "sidekiq_logster_reporter"
+require "sidekiq_long_running_job_logger"
 
 Sidekiq.configure_client { |config| config.redis = Discourse.sidekiq_redis_config }
 
@@ -9,6 +10,10 @@ Sidekiq.configure_server do |config|
   config.redis = Discourse.sidekiq_redis_config
 
   config.server_middleware { |chain| chain.add Sidekiq::Pausable }
+
+  if stuck_sidekiq_job_minutes = GlobalSetting.sidekiq_report_long_running_jobs_minutes
+    config.on(:startup) { SidekiqLongRunningJobLogger.new(stuck_sidekiq_job_minutes:).start }
+  end
 end
 
 if Sidekiq.server?
