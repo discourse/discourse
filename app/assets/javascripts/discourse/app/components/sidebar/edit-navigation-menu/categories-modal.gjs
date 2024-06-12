@@ -440,51 +440,49 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
             >
               {{#each categories as |c|}}
                 {{#if (eq c.type "category")}}
-                  {{#with c.category as |category|}}
-                    <div
-                      {{didInsert this.didInsert}}
-                      data-category-id={{category.id}}
-                      data-category-level={{category.level}}
-                      class="sidebar-categories-form__category-row"
+                  <div
+                    {{didInsert this.didInsert}}
+                    data-category-id={{c.category.id}}
+                    data-category-level={{c.category.level}}
+                    class="sidebar-categories-form__category-row"
+                  >
+                    <label
+                      for={{concat
+                        "sidebar-categories-form__input--"
+                        c.category.id
+                      }}
+                      class="sidebar-categories-form__category-label"
                     >
-                      <label
-                        for={{concat
-                          "sidebar-categories-form__input--"
-                          category.id
-                        }}
-                        class="sidebar-categories-form__category-label"
-                      >
-                        <div class="sidebar-categories-form__category-wrapper">
-                          <div class="sidebar-categories-form__category-badge">
-                            {{categoryBadge category}}
+                      <div class="sidebar-categories-form__category-wrapper">
+                        <div class="sidebar-categories-form__category-badge">
+                          {{categoryBadge c.category}}
 
-                          </div>
-
-                          {{#unless category.parentCategory}}
-                            <div
-                              class="sidebar-categories-form__category-description"
-                            >
-                              {{dirSpan
-                                category.description_excerpt
-                                htmlSafe="true"
-                              }}
-                            </div>
-                          {{/unless}}
                         </div>
 
-                        <input
-                          {{on "click" (fn this.toggleCategory category.id)}}
-                          type="checkbox"
-                          checked={{has this.selectedCategoryIds category.id}}
-                          id={{concat
-                            "sidebar-categories-form__input--"
-                            category.id
-                          }}
-                          class="sidebar-categories-form__input"
-                        />
-                      </label>
-                    </div>
-                  {{/with}}
+                        {{#unless c.category.parentCategory}}
+                          <div
+                            class="sidebar-categories-form__category-description"
+                          >
+                            {{dirSpan
+                              c.category.description_excerpt
+                              htmlSafe="true"
+                            }}
+                          </div>
+                        {{/unless}}
+                      </div>
+
+                      <input
+                        {{on "click" (fn this.toggleCategory c.category.id)}}
+                        type="checkbox"
+                        checked={{has this.selectedCategoryIds c.category.id}}
+                        id={{concat
+                          "sidebar-categories-form__input--"
+                          c.category.id
+                        }}
+                        class="sidebar-categories-form__input"
+                      />
+                    </label>
+                  </div>
                 {{else}}
                   <div
                     {{didInsert this.didInsert}}
