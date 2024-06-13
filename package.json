@@ -17,7 +17,7 @@
     "ace-builds": "1.4.13",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "2.2.0",
-    "chrome-launcher": "^1.1.1",
+    "chrome-launcher": "^1.1.2",
     "chrome-remote-interface": "^0.33.0",
     "concurrently": "^8.2.2",
     "diffhtml": "1.0.0-beta.30",
