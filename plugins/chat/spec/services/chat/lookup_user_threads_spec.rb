@@ -168,4 +168,13 @@ RSpec.describe ::Chat::LookupUserThreads do
 
     expect(result.threads).to eq([])
   end
+
+  it "returns threads from muted channels" do
+    thread_1 = Fabricate(:chat_thread, channel: channel_1, with_replies: 1)
+    thread_1.add(current_user)
+
+    channel_1.membership_for(current_user).update!(muted: true)
+
+    expect(result.threads).to eq([thread_1])
+  end
 end
