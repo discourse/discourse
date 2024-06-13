@@ -15,6 +15,7 @@ export default class FKControlCheckbox extends Component {
   <template>
     <div
       class={{concatClass
+        "form-kit__field"
         "form-kit__field-checkbox"
         (if @field.disabled "--disabled")
       }}

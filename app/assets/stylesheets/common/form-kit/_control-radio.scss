@@ -5,6 +5,10 @@
     font-weight: normal !important;
     margin: 0;
     color: var(--primary);
+
+    .form-kit__field.--disabled & {
+      cursor: not-allowed;
+    }
   }
 }
 
