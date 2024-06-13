@@ -24,12 +24,12 @@
 
     {{#if this.readOnly}}
       <form.Container @title={{i18n "admin.badges.name"}}>
+        <span>{{this.model.name}}</span>
         <LinkTo
           @route="adminSiteText.edit"
           @models={{array (concat this.textCustomizationPrefix "name")}}
           @query={{hash locale="en"}}
         >
-          {{i18n "admin.badges.read_only_setting_help"}}
           {{d-icon "pencil-alt"}}
         </LinkTo>
       </form.Container>
@@ -89,6 +89,9 @@
 
       {{#if this.readOnly}}
         <form.Container @title={{i18n "admin.badges.description"}}>
+          <span>
+            {{this.model.description}}
+          </span>
           <LinkTo
             @route="adminSiteText.edit"
             @models={{array
@@ -96,7 +99,6 @@
             }}
             @query={{hash locale="en"}}
           >
-            {{i18n "admin.badges.read_only_setting_help"}}
             {{d-icon "pencil-alt"}}
           </LinkTo>
         </form.Container>
@@ -111,6 +113,10 @@
 
       {{#if this.readOnly}}
         <form.Container @title={{i18n "admin.badges.long_description"}}>
+          <span>
+            {{this.model.long_description}}
+          </span>
+
           <LinkTo
             @route="adminSiteText.edit"
             @models={{array
@@ -118,7 +124,6 @@
             }}
             @query={{hash locale="en"}}
           >
-            {{i18n "admin.badges.read_only_setting_help"}}
             {{d-icon "pencil-alt"}}
           </LinkTo>
         </form.Container>
