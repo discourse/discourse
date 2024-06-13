@@ -75,10 +75,16 @@ export default class AdminBadgesShowController extends Controller {
 
   @action
   onSetImage(upload, { set }) {
-    set("image_upload_id", upload.id);
-    set("image_url", getURL(upload.url));
-    set("icon", "");
-    this.model.image = getURL(upload.url);
+    console.log(upload, set);
+    if (upload) {
+      set("image_upload_id", upload.id);
+      set("image_url", getURL(upload.url));
+      set("icon", undefined);
+      this.model.image = getURL(upload.url);
+    } else {
+      set("image_upload_id", "");
+      set("image_url", "");
+    }
   }
 
   @action
@@ -93,12 +99,6 @@ export default class AdminBadgesShowController extends Controller {
   onSetName(value, { set }) {
     this.model.set("name", value);
     set("name", value);
-  }
-
-  @action
-  onUnsetImage({ set }) {
-    set("image_upload_id", "");
-    set("image_url", "");
   }
 
   @action

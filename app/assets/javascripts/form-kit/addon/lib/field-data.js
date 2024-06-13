@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import ValidationParser from "form-kit/lib/validation-parser";
 import Validator from "form-kit/lib/validator";
+import uniqueId from "discourse/helpers/unique-id";
 
 export default class FieldData {
   /**
@@ -8,8 +9,14 @@ export default class FieldData {
    */
   @tracked validationEnabled = false;
 
-  constructor(fieldRegistration) {
+  id = uniqueId();
+
+  errorId = uniqueId;
+
+  constructor(name, fieldRegistration) {
+    this.name = name;
     this.fieldRegistration = fieldRegistration;
+    this.onSet = fieldRegistration.onSet;
 
     this.rules = this.fieldRegistration.validation
       ? ValidationParser.parse(fieldRegistration.validation)

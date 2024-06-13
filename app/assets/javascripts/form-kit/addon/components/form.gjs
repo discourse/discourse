@@ -180,7 +180,7 @@ export default class Form extends Component {
       !this.fields.has(name)
     );
 
-    const fieldModel = new FieldData(field);
+    const fieldModel = new FieldData(name, field);
     this.fields.set(name, fieldModel);
 
     return fieldModel;
@@ -197,8 +197,6 @@ export default class Form extends Component {
 
     await this._validate();
     this.showAllValidations = true;
-
-    console.log(this.hasValidationErrors, this.validationState);
 
     if (!this.hasValidationErrors) {
       this.args.onSubmit?.(this.effectiveData);

@@ -10,7 +10,6 @@ export default class FKControlSelectOption extends Component {
   }
 
   <template>
-    {{log "FKControlSelectOption" @value}}
     {{! https://github.com/emberjs/ember.js/issues/19115 }}
     {{#if (eq @selected @value)}}
       <option

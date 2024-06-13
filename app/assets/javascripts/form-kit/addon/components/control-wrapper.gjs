@@ -3,6 +3,7 @@ import { concat } from "@ember/helper";
 import FKMeta from "form-kit/components/meta";
 import FormText from "form-kit/components/text";
 import concatClass from "discourse/helpers/concat-class";
+import i18n from "discourse-common/helpers/i18n";
 
 export default class FKControlWrapper extends Component {
   get controlType() {
@@ -33,16 +34,18 @@ export default class FKControlWrapper extends Component {
       class={{concatClass
         "form-kit__field"
         (concat "form-kit__field" this.controlType)
-        (if @disabled "--disabled")
+        (if @field.disabled "--disabled")
         (if @hasErrors "has-errors")
       }}
     >
       {{#if @title}}
-        <label class="form-kit__field__title" for={{@fieldId}}>
+        <label class="form-kit__field__title" for={{@field.id}}>
           {{@title}}
 
           {{#unless @field.required}}
-            <span class="form-kit__field__optional">(Optional)</span>
+            <span class="form-kit__field__optional">({{i18n
+                "form_kit.optional"
+              }})</span>
           {{/unless}}
         </label>
       {{/if}}
@@ -53,23 +56,22 @@ export default class FKControlWrapper extends Component {
 
       <div class={{concatClass "form-kit__field__content" @format}}>
         <@component
+          @field={{@field}}
           @value={{@value}}
           @type={{@type}}
-          @disabled={{@disabled}}
           @lang={{@lang}}
           @positiveLabel={{@positiveLabel}}
           @negativeLabel={{@negativeLabel}}
           @selection={{@selection}}
           @setValue={{@setValue}}
           @set={{@set}}
-          @disabled={{@field.disabled}}
           @onSet={{@onSet}}
           @onUnset={{@onUnset}}
           @height={{@height}}
-          @id={{@fieldId}}
-          @name={{@name}}
+          id={{@field.id}}
+          name={{@field.name}}
           aria-invalid={{if @hasErrors "true"}}
-          aria-describedby={{if @hasErrors @errorId}}
+          aria-describedby={{if @hasErrors @field.errorId}}
           ...attributes
           as |components|
         >
@@ -81,7 +83,6 @@ export default class FKControlWrapper extends Component {
           @description={{@description}}
           @value={{@value}}
           @field={{@field}}
-          @errorId={{@errorId}}
           @errors={{@errors}}
         />
       </div>

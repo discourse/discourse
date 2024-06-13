@@ -51,8 +51,8 @@ export default class FKControlInput extends Component {
         ? parseFloat(event.target.value)
         : event.target.value;
 
-    if (this.args.onSet) {
-      this.args.onSet(value, { set: this.args.set });
+    if (this.args.field.onSet) {
+      this.args.field.onSet(value, { set: this.args.set });
     } else {
       this.args.setValue(value);
     }
@@ -63,7 +63,7 @@ export default class FKControlInput extends Component {
       type={{this.type}}
       value={{@value}}
       class="form-kit__control-input"
-      disabled={{@disabled}}
+      disabled={{@field.disabled}}
       ...attributes
       {{on "input" this.handleInput}}
     />

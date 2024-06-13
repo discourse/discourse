@@ -18,8 +18,6 @@ export default class FKControlText extends Component {
 
   <template>
     <textarea
-      id={{@fieldId}}
-      name={{@name}}
       class="form-kit__control-text"
       style={{this.style}}
       ...attributes

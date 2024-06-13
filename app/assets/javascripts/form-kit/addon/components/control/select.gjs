@@ -17,10 +17,8 @@ export default class FKControlSelect extends Component {
 
   <template>
     <select
-      name={{@name}}
       value={{@value}}
-      id={{@fieldId}}
-      disabled={{@disabled}}
+      disabled={{@field.disabled}}
       ...attributes
       class="form-kit__control-select"
       {{on "input" this.handleInput}}

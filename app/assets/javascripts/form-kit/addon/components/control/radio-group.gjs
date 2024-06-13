@@ -17,7 +17,9 @@ const FKControlRadioGroup = <template>
 
     {{yield
       (hash
-        Radio=(component FKControlRadioGroupRadio name=@name setValue=@setValue)
+        Radio=(component
+          FKControlRadioGroupRadio name=@field.name setValue=@setValue
+        )
       )
     }}
 

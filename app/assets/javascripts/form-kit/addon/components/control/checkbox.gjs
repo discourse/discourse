@@ -24,19 +24,14 @@ export default class FKControlCheckbox extends Component {
           type="checkbox"
           checked={{eq @value true}}
           class="form-kit__control-checkbox"
-          disabled={{@disabled}}
+          disabled={{@field.disabled}}
           ...attributes
           {{on "change" this.handleInput}}
         />
         {{@label}}
       </FKLabel>
 
-      <FKMeta
-        @value={{@value}}
-        @field={{@field}}
-        @errorId={{@errorId}}
-        @errors={{@errors}}
-      />
+      <FKMeta @value={{@value}} @field={{@field}} @errors={{@errors}} />
     </div>
   </template>
 }

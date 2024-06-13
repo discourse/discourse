@@ -7,25 +7,21 @@ import getURL from "discourse-common/lib/get-url";
 export default class FKControlImage extends Component {
   @action
   setImage(upload) {
-    if (this.args.onSet) {
-      this.args.onSet(upload, { set: this.args.set });
+    if (this.args.field.onSet) {
+      this.args.field.onSet(upload, { set: this.args.set });
     } else {
-      this.args.setValue(getURL(upload.url));
+      this.args.setValue(upload ? getURL(upload.url) : upload);
     }
   }
 
   @action
   removeImage() {
-    if (this.args.onUnset) {
-      this.args.onUnset({ set: this.args.set });
-    } else {
-      this.args.setValue(undefined);
-    }
+    this.setImage(undefined);
   }
 
   <template>
     <UppyImageUploader
-      @id={{concat @id "-" @name}}
+      @id={{concat @field.id "-" @field.name}}
       @imageUrl={{@value}}
       @onUploadDone={{this.setImage}}
       @onUploadDeleted={{this.removeImage}}

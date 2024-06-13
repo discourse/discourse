@@ -4,23 +4,15 @@ import { action } from "@ember/object";
 import FKLabel from "form-kit/components/label";
 import { eq } from "truth-helpers";
 import uniqueId from "discourse/helpers/unique-id";
+import i18n from "discourse-common/helpers/i18n";
 
 export default class FKControlQuestion extends Component {
   @action
   handleInput(event) {
-    if (this.args.onSet) {
-      this.args.onSet(event.target.value, { set: this.args.set });
+    if (this.args.field.onSet) {
+      this.args.field.onSet(event.target.value, { set: this.args.set });
     } else {
       this.args.setValue(event.target.value);
-    }
-  }
-
-  @action
-  handleDestroy() {
-    if (this.args.onUnset) {
-      this.args.onUnset({ set: this.args.set });
-    } else {
-      this.args.setValue(undefined);
     }
   }
 
@@ -29,12 +21,12 @@ export default class FKControlQuestion extends Component {
       {{#let (uniqueId) as |uuid|}}
         <FKLabel @fieldId={{uuid}} class="form-kit__control-radio__label">
           <input
-            name={{@name}}
+            name={{@field.name}}
             type="radio"
             value={{true}}
             checked={{eq @value true}}
             class="form-kit__control-radio"
-            disabled={{@disabled}}
+            disabled={{@field.disabled}}
             ...attributes
             id={{uuid}}
             {{on "change" this.handleInput}}
@@ -43,7 +35,7 @@ export default class FKControlQuestion extends Component {
           {{#if @positiveLabel}}
             {{@positiveLabel}}
           {{else}}
-            Yes
+            {{i18n "yes_value"}}
           {{/if}}
         </FKLabel>
       {{/let}}
@@ -51,12 +43,12 @@ export default class FKControlQuestion extends Component {
       {{#let (uniqueId) as |uuid|}}
         <FKLabel @fieldId={{uuid}} class="form-kit__control-radio__label">
           <input
-            name={{@name}}
+            name={{@field.name}}
             type="radio"
             value={{false}}
             checked={{eq @value false}}
             class="form-kit__control-radio"
-            disabled={{@disabled}}
+            disabled={{@field.disabled}}
             ...attributes
             id={{uuid}}
             {{on "change" this.handleInput}}
@@ -65,7 +57,7 @@ export default class FKControlQuestion extends Component {
           {{#if @negativeLabel}}
             {{@negativeLabel}}
           {{else}}
-            No
+            {{i18n "no_value"}}
           {{/if}}
         </FKLabel>
       {{/let}}
