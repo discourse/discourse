@@ -9,10 +9,10 @@ export default class FKControlMenuItem extends Component {
 
     if (this.args.action) {
       this.args.action(this.args.value, {
-        setValue: this.args.setValue,
+        set: this.args.set,
       });
     } else {
-      this.args.setValue(this.args.value);
+      this.args.set(this.args.value);
     }
   }
 

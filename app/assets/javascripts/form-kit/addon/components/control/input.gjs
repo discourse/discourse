@@ -51,11 +51,7 @@ export default class FKControlInput extends Component {
         ? parseFloat(event.target.value)
         : event.target.value;
 
-    if (this.args.field.onSet) {
-      this.args.field.onSet(value, { set: this.args.set });
-    } else {
-      this.args.setValue(value);
-    }
+    this.args.set(value);
   }
 
   <template>

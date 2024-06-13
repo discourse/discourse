@@ -7,7 +7,7 @@ export default class FKControlCode extends Component {
 
   @action
   handleInput(content) {
-    this.args.setValue(content);
+    this.args.set(content);
   }
 
   <template>

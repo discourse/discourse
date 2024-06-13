@@ -62,6 +62,15 @@ export default class FormField extends Component {
     this.args.set(this.args.name, value);
   }
 
+  @action
+  set(value) {
+    if (this.field.onSet) {
+      this.field.onSet(value, { set: this.args.set });
+    } else {
+      this.setValue(value);
+    }
+  }
+
   get wrapper() {
     if (this.args.size) {
       return <template>
@@ -89,7 +98,7 @@ export default class FormField extends Component {
             hasErrors=this.hasErrors
             triggerValidationFor=@triggerValidationFor
             field=this.field
-            set=@set
+            set=this.set
           )
           Question=(component
             FKControlWrapper
@@ -100,7 +109,7 @@ export default class FormField extends Component {
             hasErrors=this.hasErrors
             triggerValidationFor=@triggerValidationFor
             field=this.field
-            set=@set
+            set=this.set
           )
           Text=(component
             FKControlWrapper
@@ -111,7 +120,7 @@ export default class FormField extends Component {
             hasErrors=this.hasErrors
             triggerValidationFor=@triggerValidationFor
             field=this.field
-            set=@set
+            set=this.set
           )
           Checkbox=(component
             FKControlCheckbox
@@ -121,7 +130,7 @@ export default class FormField extends Component {
             hasErrors=this.hasErrors
             triggerValidationFor=@triggerValidationFor
             field=this.field
-            set=@set
+            set=this.set
           )
           Image=(component
             FKControlWrapper
@@ -132,7 +141,7 @@ export default class FormField extends Component {
             hasErrors=this.hasErrors
             triggerValidationFor=@triggerValidationFor
             field=this.field
-            set=@set
+            set=this.set
           )
           Icon=(component
             FKControlWrapper
@@ -143,7 +152,7 @@ export default class FormField extends Component {
             hasErrors=this.hasErrors
             triggerValidationFor=@triggerValidationFor
             field=this.field
-            set=@set
+            set=this.set
           )
           Menu=(component
             FKControlWrapper
@@ -154,7 +163,7 @@ export default class FormField extends Component {
             hasErrors=this.hasErrors
             triggerValidationFor=@triggerValidationFor
             field=this.field
-            set=@set
+            set=this.set
           )
           Select=(component
             FKControlWrapper
@@ -165,7 +174,7 @@ export default class FormField extends Component {
             hasErrors=this.hasErrors
             triggerValidationFor=@triggerValidationFor
             field=this.field
-            set=@set
+            set=this.set
           )
           Input=(component
             FKControlWrapper
@@ -176,7 +185,7 @@ export default class FormField extends Component {
             hasErrors=this.hasErrors
             triggerValidationFor=@triggerValidationFor
             field=this.field
-            set=@set
+            set=this.set
           )
           RadioGroup=(component
             FKControlWrapper
@@ -187,7 +196,7 @@ export default class FormField extends Component {
             hasErrors=this.hasErrors
             triggerValidationFor=@triggerValidationFor
             field=this.field
-            set=@set
+            set=this.set
           )
           setValue=this.setValue
         )

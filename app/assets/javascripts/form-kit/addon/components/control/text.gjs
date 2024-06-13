@@ -7,7 +7,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 export default class FKControlText extends Component {
   @action
   handleInput(event) {
-    this.args.setValue(event.target.value);
+    this.args.set(event.target.value);
   }
 
   get style() {

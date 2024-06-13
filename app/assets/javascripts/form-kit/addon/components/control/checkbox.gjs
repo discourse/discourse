@@ -9,7 +9,7 @@ import concatClass from "discourse/helpers/concat-class";
 export default class FKControlCheckbox extends Component {
   @action
   handleInput() {
-    this.args.setValue(!this.args.value);
+    this.args.set(!this.args.value);
   }
 
   <template>

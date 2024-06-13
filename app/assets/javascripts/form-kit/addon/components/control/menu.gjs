@@ -32,10 +32,7 @@ export default class FKControlMenu extends Component {
           {{yield
             (hash
               Item=(component
-                FKControlMenuItem
-                item=menu.item
-                setValue=@setValue
-                menuApi=this.menuApi
+                FKControlMenuItem item=menu.item set=@set menuApi=this.menuApi
               )
               Divider=menu.divider
             )

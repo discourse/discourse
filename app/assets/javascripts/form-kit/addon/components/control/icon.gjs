@@ -6,16 +6,12 @@ import IconPicker from "select-kit/components/icon-picker";
 export default class FKControlIcon extends Component {
   @action
   handleInput(value) {
-    if (this.args.field.onSet) {
-      this.args.field.onSet(value, { set: this.args.set });
-    } else {
-      this.args.setValue(value);
-    }
+    this.args.set(value);
   }
 
   <template>
     <IconPicker
-      @value={{@value}}
+      @value={{readonly @value}}
       @onlyAvailable={{true}}
       @options={{hash
         maximum=1

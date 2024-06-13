@@ -70,12 +70,7 @@
         </cc.Conditions>
         <cc.Contents as |content|>
           <content @name="choose-icon">
-            <form.Field
-              @name="icon"
-              @onSet={{this.onSetIcon}}
-              @validation="required"
-              as |field|
-            >
+            <form.Field @name="icon" @onSet={{this.onSetIcon}} as |field|>
               <field.Icon />
             </form.Field>
           </content>

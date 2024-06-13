@@ -9,11 +9,7 @@ import i18n from "discourse-common/helpers/i18n";
 export default class FKControlQuestion extends Component {
   @action
   handleInput(event) {
-    if (this.args.field.onSet) {
-      this.args.field.onSet(event.target.value, { set: this.args.set });
-    } else {
-      this.args.setValue(event.target.value);
-    }
+    this.args.set(event.target.value);
   }
 
   <template>

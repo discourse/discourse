@@ -10,7 +10,7 @@ export default class FKControlSelect extends Component {
   handleInput(event) {
     // if an option has no value, event.target.value will be the content of the option
     // this is why we use this magic value to represent no value
-    this.args.setValue(
+    this.args.set(
       event.target.value === NO_VALUE_OPTION ? undefined : event.target.value
     );
   }
