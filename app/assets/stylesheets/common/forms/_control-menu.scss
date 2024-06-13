@@ -1,3 +1,9 @@
 .d-form__control-menu {
   width: auto;
+
+  &:focus {
+    border-color: var(--tertiary);
+    outline: 2px solid var(--tertiary) !important;
+    outline-offset: -2px;
+  }
 }

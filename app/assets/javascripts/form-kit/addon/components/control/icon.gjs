@@ -7,7 +7,6 @@ import IconPicker from "select-kit/components/icon-picker";
 export default class FkControlIcon extends Component {
   @action
   handleInput(value) {
-    console.log("icon:", value);
     if (this.args.onSet) {
       this.args.onSet(value, { set: this.args.set });
     } else {
@@ -27,8 +26,8 @@ export default class FkControlIcon extends Component {
       @options={{hash
         maximum=1
         disabled=@disabled
-        caretDownIcon="caret-down"
-        caretUpIcon="caret-up"
+        caretDownIcon="angle-down"
+        caretUpIcon="angle-up"
         icons=@value
       }}
       @onChange={{this.handleInput}}

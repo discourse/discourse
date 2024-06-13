@@ -50,37 +50,39 @@ export default class FormControlWrapper extends Component {
         <FormText class="d-form__field__subtitle">{{@subtitle}}</FormText>
       {{/if}}
 
-      <@component
-        @value={{@value}}
-        @type={{@type}}
-        @disabled={{@disabled}}
-        @lang={{@lang}}
-        @positiveLabel={{@positiveLabel}}
-        @negativeLabel={{@negativeLabel}}
-        @selection={{@selection}}
-        @setValue={{@setValue}}
-        @set={{@set}}
-        @disabled={{@field.disabled}}
-        @onSet={{@onSet}}
-        @onUnset={{@onUnset}}
-        @height={{@height}}
-        @id={{@fieldId}}
-        @name={{@name}}
-        aria-invalid={{if @invalid "true"}}
-        aria-describedby={{if @invalid @errorId}}
-        ...attributes
-        as |components|
-      >
-        {{yield components}}
-      </@component>
+      <div class="d-form__field__content">
+        <@component
+          @value={{@value}}
+          @type={{@type}}
+          @disabled={{@disabled}}
+          @lang={{@lang}}
+          @positiveLabel={{@positiveLabel}}
+          @negativeLabel={{@negativeLabel}}
+          @selection={{@selection}}
+          @setValue={{@setValue}}
+          @set={{@set}}
+          @disabled={{@field.disabled}}
+          @onSet={{@onSet}}
+          @onUnset={{@onUnset}}
+          @height={{@height}}
+          @id={{@fieldId}}
+          @name={{@name}}
+          aria-invalid={{if @invalid "true"}}
+          aria-describedby={{if @invalid @errorId}}
+          ...attributes
+          as |components|
+        >
+          {{yield components}}
+        </@component>
 
-      <FKMeta
-        @description={{@description}}
-        @value={{@value}}
-        @field={{@field}}
-        @errorId={{@errorId}}
-        @errors={{@errors}}
-      />
+        <FKMeta
+          @description={{@description}}
+          @value={{@value}}
+          @field={{@field}}
+          @errorId={{@errorId}}
+          @errors={{@errors}}
+        />
+      </div>
     </div>
   </template>
 }

@@ -2,5 +2,11 @@
   display: flex;
   gap: 0.25rem;
   flex-direction: column;
-  align-items: flex-start;
+
+  &__content {
+    display: flex;
+    gap: 0.25rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
