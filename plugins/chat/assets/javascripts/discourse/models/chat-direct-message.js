@@ -7,8 +7,8 @@ export default class ChatDirectMessage {
     return new ChatDirectMessage(args);
   }
 
-  @tracked users = null;
-  @tracked group = false;
+  @tracked users;
+  @tracked group;
 
   type = CHATABLE_TYPES.directMessageChannel;
 
