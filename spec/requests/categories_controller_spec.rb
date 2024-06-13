@@ -1433,5 +1433,14 @@ RSpec.describe CategoriesController do
       expect(category["has_children"]).to eq(true)
       expect(category["subcategory_count"]).to eq(1)
     end
+
+    it "doesn't expose secret categories" do
+      category.update!(read_restricted: true)
+
+      post "/categories/search.json", params: { term: "" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["categories"].map { |c| c["id"] }).not_to include(category.id)
+    end
   end
 end
