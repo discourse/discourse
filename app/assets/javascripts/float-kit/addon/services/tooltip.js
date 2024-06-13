@@ -95,9 +95,11 @@ export default class Tooltip extends Service {
     tooltip.expanded = false;
 
     await new Promise((resolve) => {
-      this.registeredTooltips = this.registeredTooltips.filter(
-        (registeredTooltips) => tooltip.id !== registeredTooltips.id
-      );
+      if (this.registeredTooltips.includes(tooltip)) {
+        this.registeredTooltips = this.registeredTooltips.filter(
+          (registeredTooltip) => registeredTooltip !== tooltip
+        );
+      }
 
       schedule("afterRender", () => {
         resolve();
