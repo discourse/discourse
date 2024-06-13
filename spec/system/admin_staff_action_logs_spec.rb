@@ -11,45 +11,39 @@ describe "Admin staff action logs", type: :system do
     )
   end
   fab!(:history_2) { Fabricate(:topic_closed_change_history) }
+  let(:staff_action_logs_page) { PageObjects::Pages::AdminStaffActionLogs.new }
 
   before { sign_in(current_user) }
 
   it "shows details for an action" do
     visit "/admin/logs/staff_action_logs"
 
-expect(find(".staff-logs tr[data-user-history-id='#{history_1.id}']"))
-  .to have_content(I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"))
-  .and have_content("enforce_second_factor")
-  .and have_content(I18n.t("admin_js.admin.logs.staff_actions.new_value", "all"))
-  .and have_content(I18n.t("admin_js.admin.logs.staff_actions.previous_value", "no"))
+    expect(staff_action_logs_page.log_row(history_1)).to have_content(
+      I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
+    ).and have_content("enforce_second_factor").and have_content(
+                  I18n.t("admin_js.admin.logs.staff_actions.new_value", "all"),
+                ).and have_content(I18n.t("admin_js.admin.logs.staff_actions.previous_value", "no"))
 
-    expect(find(".staff-logs tr[data-user-history-id='#{history_2.id}']")).to have_content(
+    expect(staff_action_logs_page.log_row(history_2)).to have_content(
       I18n.t("admin_js.admin.logs.staff_actions.actions.topic_closed"),
-    )
-    expect(find(".staff-logs tr[data-user-history-id='#{history_2.id}']")).to have_css(
-      "[data-link-topic-id='#{history_2.topic_id}']",
-    )
+    ).and have_css("[data-link-topic-id='#{history_2.topic_id}']")
   end
 
   it "can filter by type of action" do
     visit "/admin/logs/staff_action_logs"
 
-    expect(page).to have_css(".staff-logs tr[data-user-history-id='#{history_1.id}']")
-    expect(page).to have_css(".staff-logs tr[data-user-history-id='#{history_2.id}']")
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    expect(staff_action_logs_page).to have_log_row(history_2)
 
-    filter = PageObjects::Components::SelectKit.new("#staff-action-logs-action-filter")
-    filter.search(I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"))
-    filter.select_row_by_value(
-      UserHistory.actions.key(UserHistory.actions[:change_site_setting]).to_s,
-    )
+    staff_action_logs_page.filter_by_action(:change_site_setting)
 
     expect(page).to have_css(
       ".staff-action-logs-filters .filter",
       text: I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
     )
 
-    expect(page).to have_css(".staff-logs tr[data-user-history-id='#{history_1.id}']")
-    expect(page).to have_no_css(".staff-logs tr[data-user-history-id='#{history_2.id}']")
+    expect(staff_action_logs_page).to have_log_row(history_1)
+    expect(staff_action_logs_page).to have_no_log_row(history_2)
   end
 
   it "can show details for an action" do
@@ -59,7 +53,7 @@ expect(find(".staff-logs tr[data-user-history-id='#{history_1.id}']"))
     )
     visit "/admin/logs/staff_action_logs"
 
-    find(".staff-logs tr[data-user-history-id='#{history_1.id}'] .col.value.details a").click
+    find("#{staff_action_logs_page.log_row_selector(history_1)} .col.value.details a").click
     expect(PageObjects::Modals::Base.new).to have_content(history_1.details)
   end
 end

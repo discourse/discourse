@@ -570,10 +570,14 @@ RSpec.describe SiteSettingExtension do
       expect(UserHistory.last.new_value).to eq("Discourse v2")
     end
 
-    it "adds a detailed message to the user history record if provided" do
-      message = "We really need to do this, see https://meta.discourse.org/t/123"
-      settings.set_and_log("title", "Discourse v2", Discourse.system_user, message)
-      expect(UserHistory.last.details).to eq(message)
+    context "when a detailed message is provided" do
+      let(:message) { "We really need to do this, see https://meta.discourse.org/t/123" }
+
+      it "adds the detailed message to the user history record" do
+        expect {
+          settings.set_and_log("title", "Discourse v2", Discourse.system_user, message)
+        }.to change { UserHistory.last.try(:details) }.to(message)
+      end
     end
   end
 

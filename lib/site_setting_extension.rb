@@ -451,7 +451,7 @@ module SiteSettingExtension
         name,
         prev_value,
         value,
-        detailed_message.present? ? { details: detailed_message } : {},
+        { details: detailed_message }.compact_blank,
       )
     else
       raise Discourse::InvalidParameters.new(
