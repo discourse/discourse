@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { gt } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class CharCounter extends Component {
@@ -6,15 +7,11 @@ export default class CharCounter extends Component {
     return this.args.value?.length || 0;
   }
 
-  get exceeded() {
-    return this.currentLength > this.args.maxLength;
-  }
-
   <template>
     <span
       class={{concatClass
         "d-form__char-counter"
-        (if this.exceeded "--exceeded")
+        (if (gt this.currentLength @maxLength) "--exceeded")
       }}
       ...attributes
     >

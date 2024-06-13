@@ -1,25 +1,25 @@
-import Component from "@glimmer/component";
+import { eq } from "truth-helpers";
 
-export default class FKControlSelectOption extends Component {
-  get isSelected() {
-    return this.args.selected === this.args.value;
-  }
+const FKControlSelectOption = <template>
+  {{! https://github.com/emberjs/ember.js/issues/19115 }}
+  {{#if (eq @selected @value)}}
+    <option
+      class="d-form__control-select__option"
+      value={{@value}}
+      selected
+      ...attributes
+    >
+      {{yield}}
+    </option>
+  {{else}}
+    <option
+      class="d-form__control-select__option"
+      value={{@value}}
+      ...attributes
+    >
+      {{yield}}
+    </option>
+  {{/if}}
+</template>;
 
-  <template>
-    {{! https://github.com/emberjs/ember.js/issues/19115 }}
-    {{#if this.isSelected}}
-      <option
-        class="d-form-select-option"
-        value={{@value}}
-        selected
-        ...attributes
-      >
-        {{yield}}
-      </option>
-    {{else}}
-      <option class="d-form-select-option" value={{@value}} ...attributes>
-        {{yield}}
-      </option>
-    {{/if}}
-  </template>
-}
+export default FKControlSelectOption;

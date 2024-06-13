@@ -4,7 +4,7 @@ import FKMeta from "form-kit/components/meta";
 import FormText from "form-kit/components/text";
 import concatClass from "discourse/helpers/concat-class";
 
-export default class FormControlWrapper extends Component {
+export default class FKControlWrapper extends Component {
   get controlType() {
     switch (this.args.component.name) {
       case "FKControlInput":
@@ -68,8 +68,8 @@ export default class FormControlWrapper extends Component {
           @height={{@height}}
           @id={{@fieldId}}
           @name={{@name}}
-          aria-invalid={{if @invalid "true"}}
-          aria-describedby={{if @invalid @errorId}}
+          aria-invalid={{if @hasErrors "true"}}
+          aria-describedby={{if @hasErrors @errorId}}
           ...attributes
           as |components|
         >

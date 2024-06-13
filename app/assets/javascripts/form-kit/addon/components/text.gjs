@@ -1,9 +1,7 @@
-import Component from "@glimmer/component";
+const FKText = <template>
+  <p class="d-form-text" ...attributes>
+    {{yield}}
+  </p>
+</template>;
 
-export default class FkFormText extends Component {
-  <template>
-    <p class="d-form-text" ...attributes>
-      {{yield}}
-    </p>
-  </template>
-}
+export default FKText;
