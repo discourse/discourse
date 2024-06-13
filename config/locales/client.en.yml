@@ -6795,6 +6795,7 @@ en:
         mandatory_group: "Group is mandatory"
 
       badges:
+        status: Status
         title: Badges
         new_badge: New Badge
         new: New

@@ -14,9 +14,11 @@
       @onSet={{this.onToggleBadge}}
       @name="enabled"
       @disabled={{this.readOnly}}
+      @validation="required"
       as |field|
     >
       <field.Question
+        @title={{i18n "admin.badges.status"}}
         @positiveLabel={{i18n "admin.badges.enabled"}}
         @negativeLabel={{i18n "admin.badges.disabled"}}
       />
