@@ -365,6 +365,7 @@ class CategoriesController < ApplicationController
 
     categories =
       Category
+        .secured(guardian)
         .limited_categories_matching(only, except, parent_category_id, term)
         .preload(
           :uploaded_logo,

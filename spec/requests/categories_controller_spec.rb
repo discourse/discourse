@@ -1451,5 +1451,14 @@ RSpec.describe CategoriesController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["categories"].length).to eq(0)
     end
+
+    it "doesn't expose secret categories" do
+      category.update!(read_restricted: true)
+
+      get "/categories/hierarchical_search.json", params: { term: "" }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["categories"].map { |c| c["id"] }).not_to include(category.id)
+    end
   end
 end

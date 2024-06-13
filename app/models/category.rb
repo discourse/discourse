@@ -394,7 +394,7 @@ class Category < ActiveRecord::Base
 
   scope :limited_categories_matching,
         ->(only, except, parent_id, term) do
-          Category.joins(<<~SQL).order("c.ancestors || ARRAY[ROW(NOT c.matches, c.name)]")
+          joins(<<~SQL).order("c.ancestors || ARRAY[ROW(NOT c.matches, c.name)]")
             INNER JOIN (
               WITH matches AS (#{Category.tree_search(only, except, term).to_sql})
               #{Category.where(parent_category_id: parent_id).select_descendants(Category.from("matches").select(:matches, :id), 5).to_sql}
