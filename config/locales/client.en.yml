@@ -5347,6 +5347,7 @@ en:
           request: "Request"
           response: "Response"
           redeliver_confirm: "Are you sure you want to redeliver the same payload?"
+          bulk_redeliver_confirm: "Are you sure you want to redeliver %{count} webhook events? (You can redeliver up to 50 failed events at once.)"
           headers: "Headers"
           payload: "Payload"
           body: "Body"
@@ -5356,6 +5357,7 @@ en:
           timestamp: "Created"
           completion: "Completion Time"
           actions: "Actions"
+          redeliver_failed: "Redeliver Failed"
           filter_status:
             all: "All Events"
             successful: "Delivered"
