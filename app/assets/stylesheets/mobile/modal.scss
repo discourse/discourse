@@ -72,12 +72,6 @@ html:not(.keyboard-visible.mobile-view) {
   margin-bottom: 30px; // For iOS Safari issues
 }
 
-// Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
-.bootbox.modal {
-  top: 10%;
-  width: 100%;
-}
-
 .modal {
   &.fade {
     transition: opacity 0.3s linear, top 0.3s ease-out;

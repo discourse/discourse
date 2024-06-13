@@ -659,7 +659,7 @@ RSpec.describe Email::Sender do
 
           message.header["X-Discourse-Post-Id"] = nil
           message.header["X-Discourse-Post-Ids"] = "#{reply.id},#{other_post.id}"
-          Email::Sender.new(message, :digest).send
+          Email::Sender.new(message, "digest").send
           expect(message.attachments.map(&:filename)).to include(
             *[image, @secure_image, @secure_image_2].map(&:original_filename),
           )

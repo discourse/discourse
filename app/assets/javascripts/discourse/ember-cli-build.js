@@ -78,7 +78,6 @@ module.exports = function (defaults) {
   });
 
   // WARNING: We should only import scripts here if they are not in NPM.
-  app.import(vendorJs + "bootbox.js");
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
 
   app.import(
@@ -178,22 +177,6 @@ module.exports = function (defaults) {
               exportsPresence: "error",
             },
           },
-          rules: [
-            {
-              test: require.resolve("bootstrap/js/modal"),
-              use: [
-                {
-                  loader: "imports-loader",
-                  options: {
-                    imports: {
-                      moduleName: "jquery",
-                      name: "jQuery",
-                    },
-                  },
-                },
-              ],
-            },
-          ],
         },
         plugins: [
           // The server use this output to map each asset to its chunks

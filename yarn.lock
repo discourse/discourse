@@ -1577,10 +1577,10 @@
     lodash "^4.17.21"
     resolve "^1.20.0"
 
-"@embroider/webpack@^4.0.2":
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@embroider/webpack/-/webpack-4.0.2.tgz#99c3c15e8d72e450982f63fc28830ab269211ba0"
-  integrity sha512-PNCzbrz2+CIIqVql+ByZdNWTbEnrC4edXjyrp1mP5JOfaLSaOAFoe6mluwed4C8qAdKZDa7eoSXI7jsPPdaYKA==
+"@embroider/webpack@^4.0.3":
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/@embroider/webpack/-/webpack-4.0.3.tgz#c6c77d0c6ce4094798fd0a34c5e4ff9762eaac86"
+  integrity sha512-bDjQfyI8O7xADDajfQ6IFHen4XirsNJ2Y3s0LzNw/USWYCD043G+K7wAsZ0HXfhkZKyj+uw60zeOWQuVrepWGQ==
   dependencies:
     "@babel/core" "^7.14.5"
     "@babel/preset-env" "^7.14.5"
@@ -5072,10 +5072,10 @@ detect-newline@3.1.0:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
 
-devtools-protocol@0.0.1286932:
-  version "0.0.1286932"
-  resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.1286932.tgz#2303707034426fe0b39012713d4b7339f7dbc815"
-  integrity sha512-wu58HMQll9voDjR4NlPyoDEw1syfzaBNHymMMZ/QOXiHRNluOnDgu9hp1yHOKYoMlxCh4lSSiugLITe6Fvu1eA==
+devtools-protocol@0.0.1299070:
+  version "0.0.1299070"
+  resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.1299070.tgz#b3e4cf0b678a46f0f907ae6e07e03ad3a53c00df"
+  integrity sha512-+qtL3eX50qsJ7c+qVyagqi7AWMoQCBGNfoyJZMwm/NSXVqLYbuitrWEEIzxfUmTNy7//Xe8yhMmQ+elj3uAqSg==
 
 diff@^5.1.0, diff@^5.2.0:
   version "5.2.0"
@@ -10558,15 +10558,15 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.0.tgz#f67fa67c94da8f4d0cfff981aee4118064199b8f"
   integrity sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==
 
-puppeteer-core@^22.10.1:
-  version "22.10.1"
-  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-22.10.1.tgz#b2ad26480a7c148f9cacbe10d97b48afc2197358"
-  integrity sha512-t98x55ohn6eioM/e1dmhy6bG9iuQ+mvpNXyr+UppB789uvNKKOvy9YnWpKp4mVyKxi9BGsceHAFuovQGqQKyCQ==
+puppeteer-core@^22.11.0:
+  version "22.11.0"
+  resolved "https://registry.yarnpkg.com/puppeteer-core/-/puppeteer-core-22.11.0.tgz#82b77f306c3665d65a1ad0115402c98ee404baee"
+  integrity sha512-57YUjhRoSpZWg9lCssWsgzM1/X/1jQnkKbbspbeW0bhZTt3TD4WdNXEYI7KrFFnSvx21tyHhfWW0zlxzbwYSAA==
   dependencies:
     "@puppeteer/browsers" "2.2.3"
     chromium-bidi "0.5.23"
     debug "4.3.5"
-    devtools-protocol "0.0.1286932"
+    devtools-protocol "0.0.1299070"
     ws "8.17.0"
 
 qs@6.11.0:
@@ -11113,10 +11113,10 @@ sane@^5.0.1:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sass@^1.77.4:
-  version "1.77.4"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.77.4.tgz#92059c7bfc56b827c56eb116778d157ec017a5cd"
-  integrity sha512-vcF3Ckow6g939GMA4PeU7b2K/9FALXk2KF9J87txdHzXbUF9XRQRwSxcAs/fGaTnJeBFd7UoV22j3lzMLdM0Pw==
+sass@^1.77.5:
+  version "1.77.5"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.77.5.tgz#5f9009820297521356e962c0bed13ee36710edfe"
+  integrity sha512-oDfX1mukIlxacPdQqNb6mV2tVCrnE+P3nVYioy72V5tlk56CPNcO4TCuFcaCRKKfJ1M3lH95CleRS+dVKL2qMg==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
