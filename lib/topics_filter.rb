@@ -74,6 +74,8 @@ class TopicsFilter
         filter_by_number_of_posters(max: filter_values)
       when "status"
         filter_values.each { |status| @scope = filter_status(status: status) }
+      when "tag_group"
+        filter_tag_groups(values: key_prefixes.zip(filter_values))
       when "tag"
         filter_tags(values: key_prefixes.zip(filter_values))
       when "views-min"
@@ -366,6 +368,27 @@ class TopicsFilter
     all_tag_ids.compact!
     all_tag_ids.uniq!
     all_tag_ids
+  end
+
+  def filter_tag_groups(values:)
+    values.each do |key_prefix, tag_groups|
+      tag_group_ids = TagGroup.visible(@guardian).where(name: tag_groups).pluck(:id)
+      exclude_clause = "NOT" if key_prefix == "-"
+      filter =
+        "tags.id #{exclude_clause} IN (SELECT tag_id FROM tag_group_memberships WHERE tag_group_id IN (?))"
+
+      query =
+        if exclude_clause.present?
+          @scope
+            .joins("LEFT JOIN topic_tags ON topic_tags.topic_id = topics.id")
+            .joins("LEFT JOIN tags ON tags.id = topic_tags.tag_id")
+            .where("tags.id IS NULL OR #{filter}", tag_group_ids)
+        else
+          @scope.joins(:tags).where(filter, tag_group_ids)
+        end
+
+      @scope = query.distinct(:id)
+    end
   end
 
   def filter_tags(values:)
