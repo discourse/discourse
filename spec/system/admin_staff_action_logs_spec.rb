@@ -17,18 +17,11 @@ describe "Admin staff action logs", type: :system do
   it "shows details for an action" do
     visit "/admin/logs/staff_action_logs"
 
-    expect(find(".staff-logs tr[data-user-history-id='#{history_1.id}']")).to have_content(
-      I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"),
-    )
-    expect(find(".staff-logs tr[data-user-history-id='#{history_1.id}']")).to have_content(
-      "enforce_second_factor",
-    )
-    expect(find(".staff-logs tr[data-user-history-id='#{history_1.id}']")).to have_content(
-      I18n.t("admin_js.admin.logs.staff_actions.new_value", "all"),
-    )
-    expect(find(".staff-logs tr[data-user-history-id='#{history_1.id}']")).to have_content(
-      I18n.t("admin_js.admin.logs.staff_actions.previous_value", "no"),
-    )
+expect(find(".staff-logs tr[data-user-history-id='#{history_1.id}']"))
+  .to have_content(I18n.t("admin_js.admin.logs.staff_actions.actions.change_site_setting"))
+  .and have_content("enforce_second_factor")
+  .and have_content(I18n.t("admin_js.admin.logs.staff_actions.new_value", "all"))
+  .and have_content(I18n.t("admin_js.admin.logs.staff_actions.previous_value", "no"))
 
     expect(find(".staff-logs tr[data-user-history-id='#{history_2.id}']")).to have_content(
       I18n.t("admin_js.admin.logs.staff_actions.actions.topic_closed"),
