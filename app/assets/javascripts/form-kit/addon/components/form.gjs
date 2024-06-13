@@ -6,6 +6,7 @@ import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
+import FKAlert from "form-kit/components/alert";
 import FKContainer from "form-kit/components/container";
 import FKControlConditionalContent from "form-kit/components/control/conditional-content";
 import FKControlInputGroup from "form-kit/components/control/input-group";
@@ -273,6 +274,7 @@ export default class Form extends Component {
           Errors=(component FKFormErrors errors=this.visibleErrors)
           Container=(component FKContainer)
           Button=(component DButton)
+          Alert=(component FKAlert)
           Submit=(component
             DButton
             action=this.onSubmit

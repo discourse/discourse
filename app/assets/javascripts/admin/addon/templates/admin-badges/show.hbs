@@ -10,19 +10,25 @@
     @validateOn="change"
     as |form data|
   >
-    <form.Field
-      @onSet={{this.onToggleBadge}}
-      @name="enabled"
-      @disabled={{this.readOnly}}
-      @validation="required"
-      as |field|
-    >
-      <field.Question
-        @title={{i18n "admin.badges.status"}}
-        @positiveLabel={{i18n "admin.badges.enabled"}}
-        @negativeLabel={{i18n "admin.badges.disabled"}}
-      />
-    </form.Field>
+    {{#if this.readOnly}}
+      <form.Alert @icon="info-circle">
+        {{i18n "admin.badges.disable_system"}}
+      </form.Alert>
+    {{else}}
+      <form.Field
+        @onSet={{this.onToggleBadge}}
+        @name="enabled"
+        @disabled={{this.readOnly}}
+        @validation="required"
+        as |field|
+      >
+        <field.Question
+          @title={{i18n "admin.badges.status"}}
+          @positiveLabel={{i18n "admin.badges.enabled"}}
+          @negativeLabel={{i18n "admin.badges.disabled"}}
+        />
+      </form.Field>
+    {{/if}}
 
     {{#if this.readOnly}}
       <form.Container @title={{i18n "admin.badges.name"}}>

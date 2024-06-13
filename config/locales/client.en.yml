@@ -6795,6 +6795,7 @@ en:
         mandatory_group: "Group is mandatory"
 
       badges:
+        disable_system: This badge is a system badge and cannot be disabled.
         status: Status
         title: Badges
         new_badge: New Badge

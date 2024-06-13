@@ -1,4 +1,4 @@
-const FkLabel = <template>
+const FKLabel = <template>
   <label for={{@fieldId}} ...attributes>
     {{yield}}
 
@@ -8,4 +8,4 @@ const FkLabel = <template>
   </label>
 </template>;
 
-export default FkLabel;
+export default FKLabel;
