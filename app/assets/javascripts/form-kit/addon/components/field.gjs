@@ -81,7 +81,10 @@ export default class FormField extends Component {
         </FKRow>
       </template>;
     } else {
-      return <template>{{yield}}</template>;
+      return <template>
+        {{! template-lint-disable no-yield-only }}
+        {{yield}}
+      </template>;
     }
   }
 
