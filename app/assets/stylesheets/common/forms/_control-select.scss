@@ -21,7 +21,7 @@
     outline-offset: -2px;
   }
 
-  .form-kit-field.has-error & {
+  .form-kit__field.has-errors & {
     border-color: var(--danger);
   }
 }

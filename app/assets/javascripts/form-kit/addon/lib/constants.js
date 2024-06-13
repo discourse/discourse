@@ -4,3 +4,5 @@ export const VALIDATION_TYPES = {
   focusout: "focusout",
   input: "input",
 };
+
+export const NO_VALUE_OPTION = "__NONE__";

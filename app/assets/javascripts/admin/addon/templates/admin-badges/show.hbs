@@ -46,14 +46,8 @@
     {{/if}}
 
     <form.Section @title="Design">
-      <form.Field
-        @name="badge_type_id"
-        @disabled={{this.readOnly}}
-        @validation="required"
-        as |field|
-      >
+      <form.Field @name="badge_type_id" @disabled={{this.readOnly}} as |field|>
         <field.Select @title={{i18n "admin.badges.badge_type"}} as |select|>
-          <select.Option @value={{undefined}}>-- make a choice--</select.Option>
           {{#each this.badgeTypes as |badgeType|}}
             <select.Option @value={{badgeType.id}}>
               {{badgeType.name}}
@@ -76,7 +70,12 @@
         </cc.Conditions>
         <cc.Contents as |content|>
           <content @name="choose-icon">
-            <form.Field @name="icon" @onSet={{this.onSetIcon}} as |field|>
+            <form.Field
+              @name="icon"
+              @onSet={{this.onSetIcon}}
+              @validation="required"
+              as |field|
+            >
               <field.Icon />
             </form.Field>
           </content>
