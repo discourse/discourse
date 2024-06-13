@@ -20,6 +20,7 @@ export default class FKControlMenu extends Component {
       @onRegisterApi={{this.registerMenuApi}}
       @triggerClass="form-kit__control-menu"
       @disabled={{@disabled}}
+      @placement="bottom-start"
     >
       <:trigger>
         <span class="d-button-label">
