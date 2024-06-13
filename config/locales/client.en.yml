@@ -2087,7 +2087,7 @@ en:
       close: "close"
       dismiss_error: "Dismiss error"
     form_kit:
-      optional: Optional
+      optional: optional
     close: "Close"
     assets_changed_confirm: "This site just received a software update. Get the latest version now?"
     logout: "You were logged out."
