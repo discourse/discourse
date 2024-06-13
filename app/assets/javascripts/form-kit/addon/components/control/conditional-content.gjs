@@ -23,7 +23,7 @@ const Contents = <template>
   }}
 </template>;
 
-export default class FkControlConditionalContent extends Component {
+export default class FKControlConditionalContent extends Component {
   @tracked activeName = this.args.activeName;
 
   @action

@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import FKControlSelectOption from "./select/option";
 
-export default class FkControlSelect extends Component {
+export default class FKControlSelect extends Component {
   @action
   handleInput(event) {
     this.args.setValue(event.target.value);

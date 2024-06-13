@@ -7,23 +7,23 @@ import concatClass from "discourse/helpers/concat-class";
 export default class FormControlWrapper extends Component {
   get controlType() {
     switch (this.args.component.name) {
-      case "FkControlInput":
+      case "FKControlInput":
         return "-input";
-      case "FkControlText":
+      case "FKControlText":
         return "-text";
-      case "FkControlQuestion":
+      case "FKControlQuestion":
         return "-question";
-      case "FkControlCode":
+      case "FKControlCode":
         return "-code";
-      case "FkControlSelect":
+      case "FKControlSelect":
         return "-select";
-      case "FkControlIconSelector":
+      case "FKControlIcon":
         return "-icon";
-      case "FkControlImage":
+      case "FKControlImage":
         return "-image";
-      case "FkControlMenu":
+      case "FKControlMenu":
         return "-menu";
-      case "FkControlRadioGroup":
+      case "FKControlRadioGroup":
         return "-radio-group";
     }
   }
@@ -34,6 +34,7 @@ export default class FormControlWrapper extends Component {
         "d-form__field"
         (concat "d-form__field" this.controlType)
         (if @disabled "--disabled")
+        (if @hasErrors "has-errors")
       }}
     >
       {{#if @title}}
@@ -50,7 +51,7 @@ export default class FormControlWrapper extends Component {
         <FormText class="d-form__field__subtitle">{{@subtitle}}</FormText>
       {{/if}}
 
-      <div class="d-form__field__content">
+      <div class={{concatClass "d-form__field__content" @format}}>
         <@component
           @value={{@value}}
           @type={{@type}}
@@ -76,6 +77,7 @@ export default class FormControlWrapper extends Component {
         </@component>
 
         <FKMeta
+          @hasErrors={{@hasErrors}}
           @description={{@description}}
           @value={{@value}}
           @field={{@field}}

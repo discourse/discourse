@@ -5,7 +5,7 @@ import FKLabel from "form-kit/components/label";
 import { eq } from "truth-helpers";
 import uniqueId from "discourse/helpers/unique-id";
 
-export default class FkControlQuestion extends Component {
+export default class FKControlQuestion extends Component {
   @action
   handleInput(event) {
     if (this.args.onSet) {

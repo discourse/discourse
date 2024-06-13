@@ -3,6 +3,7 @@
   flex-wrap: wrap;
   margin-right: calc(-0.5 * var(--d-form-gutter-x));
   margin-left: calc(-0.5 * var(--d-form-gutter-x));
+  row-gap: var(--d-form-gutter-y);
 
   > * {
     flex-shrink: 0;

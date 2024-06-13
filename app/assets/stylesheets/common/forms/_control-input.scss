@@ -1,8 +1,9 @@
 .d-form__control-input {
   margin: 0 !important;
   width: 100% !important;
+  min-width: auto !important;
 
-  .d-form-field.has-error & {
+  .d-form__field.has-errors & {
     border-color: var(--danger);
   }
 }

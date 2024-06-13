@@ -21,7 +21,7 @@ const SUPPORTED_TYPES = [
   "week",
 ];
 
-export default class FkControlInput extends Component {
+export default class FKControlInput extends Component {
   constructor(owner, args) {
     super(...arguments);
 

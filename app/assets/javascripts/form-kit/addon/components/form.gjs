@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { assert, debug } from "@ember/debug";
+import { assert } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
@@ -113,7 +113,7 @@ export default class Form extends Component {
     }
 
     return Object.keys(validationState).some(
-      (name) => this.fields.get(name)?.length
+      (name) => !validationState[name]?.length
     );
   }
 
@@ -193,15 +193,12 @@ export default class Form extends Component {
 
   @action
   async onSubmit(event) {
-    debug("OnSubmit form");
-    console.log(event);
-
     event?.preventDefault();
 
     await this._validate();
     this.showAllValidations = true;
 
-    console.log(this.validationState);
+    console.log(this.hasValidationErrors, this.validationState);
 
     if (!this.hasValidationErrors) {
       this.args.onSubmit?.(this.effectiveData);
@@ -234,8 +231,6 @@ export default class Form extends Component {
         await this._validate();
         field.validationEnabled = true;
       }
-    } else if (event instanceof Event) {
-      console.log("???");
     }
   }
 

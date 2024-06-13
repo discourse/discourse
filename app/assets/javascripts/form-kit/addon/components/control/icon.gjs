@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import IconPicker from "select-kit/components/icon-picker";
 
-export default class FkControlIcon extends Component {
+export default class FKControlIcon extends Component {
   @action
   handleInput(value) {
     if (this.args.onSet) {

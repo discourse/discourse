@@ -14,7 +14,6 @@
       @onSet={{this.onToggleBadge}}
       @name="enabled"
       @disabled={{this.readOnly}}
-      @validation="required"
       as |field|
     >
       <field.Question
@@ -132,6 +131,7 @@
         <form.Field
           @name="long_description"
           @disabled={{this.readOnly}}
+          @height={{100}}
           as |field|
         >
           <field.Text @title={{i18n "admin.badges.long_description"}} />

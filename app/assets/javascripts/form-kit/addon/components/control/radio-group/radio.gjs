@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import FKLabel from "form-kit/components/label";
 import uniqueId from "discourse/helpers/unique-id";
 
-export default class FkControlRadioGroupRadio extends Component {
+export default class FKControlRadioGroupRadio extends Component {
   <template>
     {{#let (uniqueId) as |uuid|}}
       <div class="d-form-field d-form-radio">

@@ -5,7 +5,7 @@ import FKText from "form-kit/components/text";
 
 export default class FKMeta extends Component {
   get shouldRenderErrors() {
-    return this.args.errors && (this.args.showErrors ?? true);
+    return this.args.hasErrors && (this.args.showErrors ?? true);
   }
 
   get shouldRenderCharCounter() {

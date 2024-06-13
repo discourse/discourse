@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 
-export default class FkControlMenuItem extends Component {
+export default class FKControlMenuItem extends Component {
   @action
   handleInput() {
     this.args.menuApi.close();

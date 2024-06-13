@@ -50,7 +50,7 @@ export default class FormField extends Component {
   }
 
   get hasErrors() {
-    return this.errors !== undefined;
+    return Object.values(this.errors).flat().compact().length;
   }
 
   get showMeta() {
@@ -91,6 +91,7 @@ export default class FormField extends Component {
               setValue=this.setValue
               value=this.value
               errors=this.errors
+              hasErrors=this.hasErrors
               triggerValidationFor=@triggerValidationFor
               field=this.field
               onSet=@onSet
@@ -107,6 +108,7 @@ export default class FormField extends Component {
               setValue=this.setValue
               value=this.value
               errors=this.errors
+              hasErrors=this.hasErrors
               triggerValidationFor=@triggerValidationFor
               field=this.field
               onSet=@onSet
@@ -123,6 +125,7 @@ export default class FormField extends Component {
               setValue=this.setValue
               value=this.value
               errors=this.errors
+              hasErrors=this.hasErrors
               triggerValidationFor=@triggerValidationFor
               field=this.field
               onSet=@onSet
@@ -138,6 +141,7 @@ export default class FormField extends Component {
               setValue=this.setValue
               value=this.value
               errors=this.errors
+              hasErrors=this.hasErrors
               triggerValidationFor=@triggerValidationFor
               field=this.field
               onSet=@onSet
@@ -154,6 +158,7 @@ export default class FormField extends Component {
               setValue=this.setValue
               value=this.value
               errors=this.errors
+              hasErrors=this.hasErrors
               triggerValidationFor=@triggerValidationFor
               field=this.field
               onSet=@onSet
@@ -170,6 +175,7 @@ export default class FormField extends Component {
               setValue=this.setValue
               value=this.value
               errors=this.errors
+              hasErrors=this.hasErrors
               triggerValidationFor=@triggerValidationFor
               field=this.field
               onSet=@onSet
@@ -186,6 +192,7 @@ export default class FormField extends Component {
               setValue=this.setValue
               value=this.value
               errors=this.errors
+              hasErrors=this.hasErrors
               triggerValidationFor=@triggerValidationFor
               field=this.field
               onSet=@onSet
@@ -202,6 +209,7 @@ export default class FormField extends Component {
               setValue=this.setValue
               value=this.value
               errors=this.errors
+              hasErrors=this.hasErrors
               triggerValidationFor=@triggerValidationFor
               field=this.field
               onSet=@onSet
@@ -218,6 +226,7 @@ export default class FormField extends Component {
               setValue=this.setValue
               value=this.value
               errors=this.errors
+              hasErrors=this.hasErrors
               triggerValidationFor=@triggerValidationFor
               field=this.field
               onSet=@onSet
@@ -234,6 +243,7 @@ export default class FormField extends Component {
               setValue=this.setValue
               value=this.value
               errors=this.errors
+              hasErrors=this.hasErrors
               triggerValidationFor=@triggerValidationFor
               field=this.field
               onSet=@onSet

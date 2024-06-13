@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import AceEditor from "discourse/components/ace-editor";
 
-export default class FkControlCode extends Component {
+export default class FKControlCode extends Component {
   initialValue = this.args.value || "";
 
   @action

@@ -2,13 +2,13 @@
   background: var(--secondary);
   border: 1px solid var(--primary-low-mid);
   border-radius: var(--d-input-border-radius);
-  padding: 0.5em 2.25rem 0.5em 0.65em;
+  padding: 0.5em 2.25em 0.5em 0.65em;
   box-sizing: border-box;
   width: auto !important;
   margin: 0 !important;
   appearance: none;
   background-image: svg-uri(
-    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$primary-medium}' stroke-linecap='round' stroke-linejoin='round' stroke-width='4' d='m2 5 6 6 6-6'/></svg>"
+    "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='#{$primary-medium}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m2 5 6 6 6-6'/></svg>"
   );
   background-repeat: no-repeat;
   background-position: right 0.75rem center;

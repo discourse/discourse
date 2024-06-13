@@ -2,11 +2,37 @@
   display: flex;
   gap: 0.25rem;
   flex-direction: column;
+  width: 100%;
 
   &__content {
     display: flex;
     gap: 0.25rem;
     flex-direction: column;
     align-items: flex-start;
+    width: var(--d-form-medium-input) !important;
+    max-width: 100%;
+
+    &.small {
+      width: var(--d-form-small-input) !important;
+    }
+
+    &.medium {
+      width: var(--d-form-medium-input) !important;
+    }
+
+    &.large {
+      width: var(--d-form-large-input) !important;
+    }
+
+    &.full {
+      width: 100% !important;
+    }
+  }
+
+  &-text,
+  &-code {
+    .d-form__field__content {
+      width: var(--d-form-large-input) !important;
+    }
   }
 }

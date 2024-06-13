@@ -7,7 +7,7 @@ import DMenu from "discourse/components/d-menu";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse-common/helpers/d-icon";
 
-export default class FkControlMenu extends Component {
+export default class FKControlMenu extends Component {
   @tracked menuApi;
 
   @action
