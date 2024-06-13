@@ -1,4 +1,4 @@
-.d-form__control-code {
+.form-kit__control-code {
   height: 270px;
   width: 100%;
 
@@ -13,6 +13,10 @@
       outline: 2px solid var(--tertiary);
       outline-offset: -1px;
     }
+  }
+
+  .form-kit__field.has-errors & {
+    border-color: var(--danger);
   }
 
   &[data-disabled="true"] {

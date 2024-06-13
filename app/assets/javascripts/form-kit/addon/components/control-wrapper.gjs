@@ -31,27 +31,27 @@ export default class FKControlWrapper extends Component {
   <template>
     <div
       class={{concatClass
-        "d-form__field"
-        (concat "d-form__field" this.controlType)
+        "form-kit__field"
+        (concat "form-kit__field" this.controlType)
         (if @disabled "--disabled")
         (if @hasErrors "has-errors")
       }}
     >
       {{#if @title}}
-        <label class="d-form__field__title" for={{@fieldId}}>
+        <label class="form-kit__field__title" for={{@fieldId}}>
           {{@title}}
 
           {{#unless @field.required}}
-            <span class="d-form__field__optional">(Optional)</span>
+            <span class="form-kit__field__optional">(Optional)</span>
           {{/unless}}
         </label>
       {{/if}}
 
       {{#if @subtitle}}
-        <FormText class="d-form__field__subtitle">{{@subtitle}}</FormText>
+        <FormText class="form-kit__field__subtitle">{{@subtitle}}</FormText>
       {{/if}}
 
-      <div class={{concatClass "d-form__field__content" @format}}>
+      <div class={{concatClass "form-kit__field__content" @format}}>
         <@component
           @value={{@value}}
           @type={{@type}}

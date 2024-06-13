@@ -1,11 +1,11 @@
-.d-form-fieldgroup {
+.form-kit-fieldgroup {
   position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
   width: 100%;
 
-  .d-form-text {
+  .form-kit-text {
     display: flex;
     align-items: center;
     text-align: center;
@@ -18,7 +18,7 @@
     border-radius: var(--d-input-border-radius);
   }
 
-  .d-form-control-input {
+  .form-kit-control-input {
     z-index: 1;
   }
 

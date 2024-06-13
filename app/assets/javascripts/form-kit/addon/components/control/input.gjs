@@ -62,7 +62,7 @@ export default class FKControlInput extends Component {
     <input
       type={{this.type}}
       value={{@value}}
-      class="d-form__control-input"
+      class="form-kit__control-input"
       disabled={{@disabled}}
       ...attributes
       {{on "input" this.handleInput}}

@@ -29,7 +29,7 @@ export default class FKControlImage extends Component {
       @imageUrl={{@value}}
       @onUploadDone={{this.setImage}}
       @onUploadDeleted={{this.removeImage}}
-      class="d-form__control-image no-repeat contain-image"
+      class="form-kit__control-image no-repeat contain-image"
     />
   </template>
 }

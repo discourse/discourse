@@ -1,4 +1,4 @@
-.d-form {
+.form-kit {
   display: flex;
   flex-direction: column;
   gap: 1.5em;
@@ -9,7 +9,7 @@
   // }
 }
 
-// .d-form-bak {
+// .form-kit-bak {
 //   //core overrules
 //   select,
 //   input[list] {
@@ -37,7 +37,7 @@
 //   }
 // }
 
-// .d-form-field {
+// .form-kit-field {
 //   display: flex;
 //   flex-direction: column;
 //   gap: 0.25em;
@@ -228,7 +228,7 @@
 //     }
 
 //     .--toggle &,
-//     .d-form-field__group & {
+//     .form-kit-field__group & {
 //       flex-basis: 100%;
 //     }
 //   }
@@ -251,13 +251,13 @@
 // }
 
 // //to include
-// .d-form-grid select {
+// .form-kit-grid select {
 //   .has-error & {
 //     border: 1px solid var(--danger);
 //   }
 // }
 
-// .d-form__row {
+// .form-kit__row {
 //   display: flex;
 //   flex-direction: column;
 //   flex-wrap: nowrap;
@@ -289,7 +289,7 @@
 //   }
 // }
 
-// .d-form__col {
+// .form-kit__col {
 //   flex: 0 0 auto;
 //   box-sizing: border-box;
 //   .--fluid & {
@@ -334,7 +334,7 @@
 //   }
 // }
 
-// .d-form-grid {
+// .form-kit-grid {
 //   &:not(.--rows) {
 //     display: grid;
 //     grid-auto-flow: column;
@@ -351,7 +351,7 @@
 //       grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
 //     }
 
-//     .d-form-field__label {
+//     .form-kit-field__label {
 //       align-self: flex-end;
 //     }
 //   }

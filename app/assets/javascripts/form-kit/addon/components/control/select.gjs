@@ -15,11 +15,9 @@ export default class FKControlSelect extends Component {
       name={{@name}}
       value={{@value}}
       id={{@fieldId}}
-      aria-invalid={{if @invalid "true"}}
-      aria-describedby={{if @invalid @errorId}}
       disabled={{@disabled}}
       ...attributes
-      class="d-form__control-select"
+      class="form-kit__control-select"
       {{on "input" this.handleInput}}
     >
       {{yield (hash Option=(component FKControlSelectOption selected=@value))}}

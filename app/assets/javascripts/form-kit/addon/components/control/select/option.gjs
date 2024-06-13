@@ -4,7 +4,7 @@ const FKControlSelectOption = <template>
   {{! https://github.com/emberjs/ember.js/issues/19115 }}
   {{#if (eq @selected @value)}}
     <option
-      class="d-form__control-select__option"
+      class="form-kit__control-select__option"
       value={{@value}}
       selected
       ...attributes
@@ -13,7 +13,7 @@ const FKControlSelectOption = <template>
     </option>
   {{else}}
     <option
-      class="d-form__control-select__option"
+      class="form-kit__control-select__option"
       value={{@value}}
       ...attributes
     >

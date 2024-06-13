@@ -20,7 +20,7 @@ export default class FKErrors extends Component {
   }
 
   <template>
-    <p class="d-form__errors" id={{@id}} aria-live="assertive" ...attributes>
+    <p class="form-kit__errors" id={{@id}} aria-live="assertive" ...attributes>
       {{#each-in this.visibleErrors as |name errors|}}
         {{#each errors as |error|}}
           <span>

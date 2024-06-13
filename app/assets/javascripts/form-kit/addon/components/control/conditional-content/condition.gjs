@@ -6,7 +6,7 @@ import uniqueId from "discourse/helpers/unique-id";
 
 const FKControlConditionalContentOption = <template>
   {{#let (uniqueId) as |uuid|}}
-    <FKLabel @fieldId={{uuid}} class="d-form__control-radio__label">
+    <FKLabel @fieldId={{uuid}} class="form-kit__control-radio__label">
       {{yield}}
 
       <input

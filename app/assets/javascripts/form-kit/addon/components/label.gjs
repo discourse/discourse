@@ -3,7 +3,7 @@ const FkLabel = <template>
     {{yield}}
 
     {{#if @optional}}
-      <span class="d-form-field__optional">(Optional)</span>
+      <span class="form-kit-field__optional">(Optional)</span>
     {{/if}}
   </label>
 </template>;

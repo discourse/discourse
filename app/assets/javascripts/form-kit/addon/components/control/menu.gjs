@@ -18,7 +18,7 @@ export default class FKControlMenu extends Component {
   <template>
     <DMenu
       @onRegisterApi={{this.registerMenuApi}}
-      @triggerClass="d-form__control-menu"
+      @triggerClass="form-kit__control-menu"
       @disabled={{@disabled}}
     >
       <:trigger>

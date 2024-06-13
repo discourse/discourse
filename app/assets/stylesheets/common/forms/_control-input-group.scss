@@ -1,10 +1,10 @@
-.d-form__input-group {
+.form-kit__input-group {
   position: relative;
   display: flex;
   align-items: stretch;
   width: 100%;
 
-  .d-form-text {
+  .form-kit-text {
     display: flex;
     align-items: center;
     text-align: center;
@@ -21,7 +21,7 @@
     width: auto;
   }
 
-  .d-form__control-input {
+  .form-kit__control-input {
     z-index: 1;
     width: 100% !important;
     min-width: auto !important;

@@ -10,7 +10,7 @@ export default class CharCounter extends Component {
   <template>
     <span
       class={{concatClass
-        "d-form__char-counter"
+        "form-kit__char-counter"
         (if (gt this.currentLength @maxLength) "--exceeded")
       }}
       ...attributes

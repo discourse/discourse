@@ -1,4 +1,4 @@
-.d-form__control-checkbox {
+.form-kit__control-checkbox {
   margin: 0.17em 0 0;
 
   &__label {
@@ -10,8 +10,8 @@
   }
 }
 
-.d-form__field-checkbox {
-  + .d-form__field-checkbox {
-    margin-top: calc(-1 * var(--d-form-gutter-y));
+.form-kit__field-checkbox {
+  + .form-kit__field-checkbox {
+    margin-top: calc(-1 * var(--form-kit-gutter-y));
   }
 }

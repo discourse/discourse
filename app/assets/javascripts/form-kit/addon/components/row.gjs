@@ -2,7 +2,7 @@ import { hash } from "@ember/helper";
 import Col from "form-kit/components/col";
 
 const Row = <template>
-  <div class="d-form__row" ...attributes>
+  <div class="form-kit__row" ...attributes>
     {{yield (hash Col=Col)}}
   </div>
 </template>;

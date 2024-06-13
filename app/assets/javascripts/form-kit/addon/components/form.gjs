@@ -113,7 +113,7 @@ export default class Form extends Component {
     }
 
     return Object.keys(validationState).some(
-      (name) => !validationState[name]?.length
+      (name) => validationState[name].length
     );
   }
 
@@ -257,7 +257,7 @@ export default class Form extends Component {
   <template>
     <form
       novalidate
-      class="d-form"
+      class="form-kit"
       ...attributes
       {{on "submit" this.onSubmit}}
       {{on "reset" this.onReset}}

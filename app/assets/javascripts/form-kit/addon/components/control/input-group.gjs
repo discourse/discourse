@@ -4,7 +4,7 @@ import FKText from "form-kit/components/text";
 import DButton from "discourse/components/d-button";
 
 const FKControlInputGroup = <template>
-  <div class="d-form__input-group">
+  <div class="form-kit__input-group">
     {{yield
       (hash
         Text=(component FKText)

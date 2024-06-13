@@ -31,7 +31,7 @@ export default class FKControlIcon extends Component {
         icons=@value
       }}
       @onChange={{this.handleInput}}
-      class="d-form__control-icon"
+      class="form-kit__control-icon"
       {{willDestroy this.handleDestroy}}
     />
   </template>

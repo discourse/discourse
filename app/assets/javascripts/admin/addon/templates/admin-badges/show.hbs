@@ -53,6 +53,7 @@
         as |field|
       >
         <field.Select @title={{i18n "admin.badges.badge_type"}} as |select|>
+          <select.Option @value={{undefined}}>-- make a choice--</select.Option>
           {{#each this.badgeTypes as |badgeType|}}
             <select.Option @value={{badgeType.id}}>
               {{badgeType.name}}

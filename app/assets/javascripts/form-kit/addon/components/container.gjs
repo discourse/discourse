@@ -1,18 +1,18 @@
 import FormText from "form-kit/components/text";
 
 const FKContainer = <template>
-  <div class="d-form__container" ...attributes>
+  <div class="form-kit__container" ...attributes>
     {{#if @title}}
-      <span class="d-form__container-title">
+      <span class="form-kit__container-title">
         {{@title}}
       </span>
     {{/if}}
 
     {{#if @subtitle}}
-      <FormText class="d-form__container-subtitle">{{@subtitle}}</FormText>
+      <FormText class="form-kit__container-subtitle">{{@subtitle}}</FormText>
     {{/if}}
 
-    <div class="d-form__container-content">
+    <div class="form-kit__container-content">
       {{yield}}
     </div>
   </div>

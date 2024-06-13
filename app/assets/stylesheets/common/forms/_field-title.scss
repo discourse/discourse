@@ -1,4 +1,4 @@
-.d-form__field__title {
+.form-kit__field__title {
   display: flex;
   align-items: center;
   gap: 0.25em;
@@ -8,7 +8,7 @@
   font-weight: bold;
 }
 
-.d-form__field__optional {
+.form-kit__field__optional {
   font-size: var(--font-down-2-rem);
   color: var(--primary-medium);
   font-weight: normal;

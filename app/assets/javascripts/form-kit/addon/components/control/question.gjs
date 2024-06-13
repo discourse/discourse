@@ -25,15 +25,15 @@ export default class FKControlQuestion extends Component {
   }
 
   <template>
-    <div class="d-form__inline-radio">
+    <div class="form-kit__inline-radio">
       {{#let (uniqueId) as |uuid|}}
-        <FKLabel @fieldId={{uuid}} class="d-form__control-radio__label">
+        <FKLabel @fieldId={{uuid}} class="form-kit__control-radio__label">
           <input
             name={{@name}}
             type="radio"
             value={{true}}
             checked={{eq @value true}}
-            class="d-form__control-radio"
+            class="form-kit__control-radio"
             disabled={{@disabled}}
             ...attributes
             id={{uuid}}
@@ -49,13 +49,13 @@ export default class FKControlQuestion extends Component {
       {{/let}}
 
       {{#let (uniqueId) as |uuid|}}
-        <FKLabel @fieldId={{uuid}} class="d-form__control-radio__label">
+        <FKLabel @fieldId={{uuid}} class="form-kit__control-radio__label">
           <input
             name={{@name}}
             type="radio"
             value={{false}}
             checked={{eq @value false}}
-            class="d-form__control-radio"
+            class="form-kit__control-radio"
             disabled={{@disabled}}
             ...attributes
             id={{uuid}}

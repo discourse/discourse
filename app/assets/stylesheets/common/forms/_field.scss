@@ -1,4 +1,4 @@
-.d-form__field {
+.form-kit__field {
   display: flex;
   gap: 0.25rem;
   flex-direction: column;
@@ -9,19 +9,19 @@
     gap: 0.25rem;
     flex-direction: column;
     align-items: flex-start;
-    width: var(--d-form-medium-input) !important;
+    width: var(--form-kit-medium-input) !important;
     max-width: 100%;
 
     &.small {
-      width: var(--d-form-small-input) !important;
+      width: var(--form-kit-small-input) !important;
     }
 
     &.medium {
-      width: var(--d-form-medium-input) !important;
+      width: var(--form-kit-medium-input) !important;
     }
 
     &.large {
-      width: var(--d-form-large-input) !important;
+      width: var(--form-kit-large-input) !important;
     }
 
     &.full {
@@ -31,8 +31,8 @@
 
   &-text,
   &-code {
-    .d-form__field__content {
-      width: var(--d-form-large-input) !important;
+    .form-kit__field__content {
+      width: var(--form-kit-large-input) !important;
     }
   }
 }

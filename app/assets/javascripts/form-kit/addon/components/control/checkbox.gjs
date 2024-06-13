@@ -15,15 +15,15 @@ export default class FKControlCheckbox extends Component {
   <template>
     <div
       class={{concatClass
-        "d-form__field-checkbox"
+        "form-kit__field-checkbox"
         (if @field.disabled "--disabled")
       }}
     >
-      <FKLabel class="d-form__control-checkbox__label">
+      <FKLabel class="form-kit__control-checkbox__label">
         <input
           type="checkbox"
           checked={{eq @value true}}
-          class="d-form__control-checkbox"
+          class="form-kit__control-checkbox"
           disabled={{@disabled}}
           ...attributes
           {{on "change" this.handleInput}}

@@ -1,15 +1,15 @@
-.d-form__row {
+.form-kit__row {
   display: flex;
   flex-wrap: wrap;
-  margin-right: calc(-0.5 * var(--d-form-gutter-x));
-  margin-left: calc(-0.5 * var(--d-form-gutter-x));
-  row-gap: var(--d-form-gutter-y);
+  margin-right: calc(-0.5 * var(--form-kit-gutter-x));
+  margin-left: calc(-0.5 * var(--form-kit-gutter-x));
+  row-gap: var(--form-kit-gutter-y);
 
   > * {
     flex-shrink: 0;
     width: 100%;
     max-width: 100%;
-    padding-right: calc(var(--d-form-gutter-x) * 0.5);
-    padding-left: calc(var(--d-form-gutter-x) * 0.5);
+    padding-right: calc(var(--form-kit-gutter-x) * 0.5);
+    padding-left: calc(var(--form-kit-gutter-x) * 0.5);
   }
 }

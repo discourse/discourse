@@ -1,4 +1,4 @@
-.d-form__control-select {
+.form-kit__control-select {
   background: var(--secondary);
   border: 1px solid var(--primary-low-mid);
   border-radius: var(--d-input-border-radius);
@@ -21,7 +21,7 @@
     outline-offset: -2px;
   }
 
-  .d-form-field.has-error & {
+  .form-kit-field.has-error & {
     border-color: var(--danger);
   }
 }

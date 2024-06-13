@@ -20,9 +20,7 @@ export default class FKControlText extends Component {
     <textarea
       id={{@fieldId}}
       name={{@name}}
-      aria-invalid={{if @invalid "true"}}
-      aria-describedby={{if @invalid @errorId}}
-      class="d-form__control-text"
+      class="form-kit__control-text"
       style={{this.style}}
       ...attributes
       {{on "input" this.handleInput}}

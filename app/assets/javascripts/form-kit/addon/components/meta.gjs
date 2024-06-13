@@ -24,7 +24,7 @@ export default class FKMeta extends Component {
 
   <template>
     {{#if this.shouldRenderMeta}}
-      <div class="d-form__meta">
+      <div class="form-kit__meta">
         {{#if this.shouldRenderErrors}}
           <FKErrors @id={{@errorId}} @errors={{@errors}} />
         {{else if @description}}

@@ -1,5 +1,5 @@
 const FKText = <template>
-  <p class="d-form-text" ...attributes>
+  <p class="form-kit-text" ...attributes>
     {{yield}}
   </p>
 </template>;

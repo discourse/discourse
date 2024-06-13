@@ -1,4 +1,4 @@
-.d-form__container {
+.form-kit__container {
   display: flex;
   gap: 0.25rem;
   flex-direction: column;
@@ -17,6 +17,6 @@
 
   &-content {
     display: flex;
-    gap: var(--d-form-gutter-x);
+    gap: var(--form-kit-gutter-x);
   }
 }

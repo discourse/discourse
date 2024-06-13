@@ -6,7 +6,7 @@ import FKControlConditionalDisplayCondition from "./conditional-content/conditio
 import FKControlConditionalContentContent from "./conditional-content/content";
 
 const Conditions = <template>
-  <div class="d-form__inline-radio">
+  <div class="form-kit__inline-radio">
     {{yield
       (component
         FKControlConditionalDisplayCondition
@@ -32,7 +32,7 @@ export default class FKControlConditionalContent extends Component {
   }
 
   <template>
-    <div class="d-form__conditional-display">
+    <div class="form-kit__conditional-display">
       {{yield
         (hash
           Conditions=(component

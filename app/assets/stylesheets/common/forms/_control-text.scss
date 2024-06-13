@@ -1,4 +1,4 @@
-.d-form__control-text {
+.form-kit__control-text {
   // reset textarea styles
   width: 100% !important;
   margin: 0 !important;
@@ -10,7 +10,7 @@
   height: 150px;
   border-radius: var(--d-input-border-radius);
 
-  .d-form-field.has-error & {
+  .form-kit__field.has-errors & {
     border-color: var(--danger);
   }
 }

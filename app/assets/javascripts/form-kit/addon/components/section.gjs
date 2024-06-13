@@ -1,11 +1,11 @@
 const FKSection = <template>
-  <div class="d-form__section">
+  <div class="form-kit__section">
     {{#if @title}}
-      <h2 class="d-form__section-title">{{@title}}</h2>
+      <h2 class="form-kit__section-title">{{@title}}</h2>
     {{/if}}
 
     {{#if @subtitle}}
-      <span class="d-form__section-subtitle">{{@subtitle}}</span>
+      <span class="form-kit__section-subtitle">{{@subtitle}}</span>
     {{/if}}
 
     {{yield}}
