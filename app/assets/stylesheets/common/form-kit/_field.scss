@@ -4,7 +4,7 @@
   flex-direction: column;
   width: 100%;
 
-  &__content {
+  &-content {
     display: flex;
     gap: 0.25rem;
     flex-direction: column;
@@ -32,7 +32,7 @@
   &-text,
   &-code,
   &-image {
-    .form-kit__field__content {
+    .form-kit__field-content {
       width: var(--form-kit-large-input) !important;
     }
   }

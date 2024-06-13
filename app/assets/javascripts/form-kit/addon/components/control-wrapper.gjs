@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
+import FKLabel from "form-kit/components/label";
 import FKMeta from "form-kit/components/meta";
 import FormText from "form-kit/components/text";
 import concatClass from "discourse/helpers/concat-class";
@@ -39,22 +40,22 @@ export default class FKControlWrapper extends Component {
       }}
     >
       {{#if @title}}
-        <label class="form-kit__field__title" for={{@field.id}}>
+        <FKLabel class="form-kit__field-title" @fieldId={{@field.id}}>
           {{@title}}
 
           {{#unless @field.required}}
-            <span class="form-kit__field__optional">({{i18n
+            <span class="form-kit__field-optional">({{i18n
                 "form_kit.optional"
               }})</span>
           {{/unless}}
-        </label>
+        </FKLabel>
       {{/if}}
 
       {{#if @subtitle}}
-        <FormText class="form-kit__field__subtitle">{{@subtitle}}</FormText>
+        <FormText class="form-kit__field-subtitle">{{@subtitle}}</FormText>
       {{/if}}
 
-      <div class={{concatClass "form-kit__field__content" @format}}>
+      <div class={{concatClass "form-kit__field-content" @format}}>
         <@component
           @field={{@field}}
           @value={{@value}}

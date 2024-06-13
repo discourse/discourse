@@ -13,7 +13,7 @@ export default class FKControlSelectOption extends Component {
     {{! https://github.com/emberjs/ember.js/issues/19115 }}
     {{#if (eq @selected @value)}}
       <option
-        class="form-kit__control-select__option"
+        class="form-kit__control-option"
         value={{this.value}}
         selected
         ...attributes
@@ -22,7 +22,7 @@ export default class FKControlSelectOption extends Component {
       </option>
     {{else}}
       <option
-        class="form-kit__control-select__option"
+        class="form-kit__control-option"
         value={{this.value}}
         ...attributes
       >

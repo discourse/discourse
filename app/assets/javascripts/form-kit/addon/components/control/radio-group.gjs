@@ -6,11 +6,11 @@ import FKControlRadioGroupRadio from "./radio-group/radio";
 const FKControlRadioGroup = <template>
   <fieldset class="form-kit__radio-group" ...attributes>
     {{#if @title}}
-      <legend class="form-kit__radio-group__legend">{{@title}}</legend>
+      <legend class="form-kit__radio-group-legend">{{@title}}</legend>
     {{/if}}
 
     {{#if @subtitle}}
-      <FKText class="form-kit__radio-group__subtitle">
+      <FKText class="form-kit__radio-group-subtitle">
         {{@subtitle}}
       </FKText>
     {{/if}}
