@@ -9,6 +9,9 @@
     .form-kit__field.--disabled & {
       cursor: not-allowed;
     }
+    input[type="radio"] {
+      margin-right: 0; //old input overrule
+    }
   }
 }
 
@@ -16,4 +19,8 @@
   display: flex;
   gap: 1em;
   align-items: center;
+
+  input[type="radio"] {
+    margin-right: 0; //old input overrule
+  }
 }
