@@ -62,21 +62,21 @@
         @activeName={{if data.icon "choose-icon" "upload-image"}}
         as |cc|
       >
-        <cc.Conditions as |condition|>
-          <condition @name="choose-icon">
+        <cc.Conditions as |Condition|>
+          <Condition @name="choose-icon">
             {{i18n "admin.badges.select_an_icon"}}
-          </condition>
-          <condition @name="upload-image">
+          </Condition>
+          <Condition @name="upload-image">
             {{i18n "admin.badges.upload_an_image"}}
-          </condition>
+          </Condition>
         </cc.Conditions>
-        <cc.Contents as |content|>
-          <content @name="choose-icon">
+        <cc.Contents as |Content|>
+          <Content @name="choose-icon">
             <form.Field @name="icon" @onSet={{this.onSetIcon}} as |field|>
               <field.Icon />
             </form.Field>
-          </content>
-          <content @name="upload-image">
+          </Content>
+          <Content @name="upload-image">
             <form.Field
               @name="image_url"
               @onSet={{this.onSetImage}}
@@ -85,7 +85,7 @@
             >
               <field.Image />
             </form.Field>
-          </content>
+          </Content>
         </cc.Contents>
       </form.ConditionalContent>
 
@@ -151,13 +151,13 @@
           <form.Container>
             <form.Button
               @isLoading={{this.preview_loading}}
-              @label={{"admin.badges.preview.link_text"}}
+              @label="admin.badges.preview.link_text"
               class="preview-badge"
               @action={{fn this.showPreview data "false"}}
             />
             <form.Button
               @isLoading={{this.preview_loading}}
-              @label={{"admin.badges.preview.plan_text"}}
+              @label="admin.badges.preview.plan_text"
               class="preview-badge-plan"
               @action={{fn this.showPreview data "true"}}
             />
@@ -211,7 +211,7 @@
       >
         <field.Menu
           @title={{i18n "admin.badges.badge_grouping"}}
-          @selection={{(this.currentBadgeGrouping data)}}
+          @selection={{this.currentBadgeGrouping data}}
           as |menu|
         >
           {{#each this.badgeGroupings as |grouping|}}
