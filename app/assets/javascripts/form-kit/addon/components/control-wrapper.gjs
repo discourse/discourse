@@ -65,8 +65,6 @@ export default class FKControlWrapper extends Component {
           @selection={{@selection}}
           @setValue={{@setValue}}
           @set={{@set}}
-          @onSet={{@onSet}}
-          @onUnset={{@onUnset}}
           @height={{@height}}
           id={{@field.id}}
           name={{@field.name}}
