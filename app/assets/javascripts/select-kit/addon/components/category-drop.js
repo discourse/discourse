@@ -22,6 +22,7 @@ const MORE_COLLECTION = "MORE_COLLECTION";
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-drop"],
   classNames: ["category-drop"],
+  classNameBindings: ["noSubcategories:has-selection"],
   value: readOnly("category.id"),
   content: readOnly("categoriesWithShortcuts.[]"),
   noCategoriesLabel: I18n.t("categories.no_subcategories"),
@@ -64,6 +65,10 @@ export default ComboBoxComponent.extend({
     return CategoryRow;
   },
 
+  noSubcategories: computed("selectKit.options.noSubcategories", function () {
+    return this.selectKit.options.noSubcategories;
+  }),
+
   displayCategoryDescription: computed(function () {
     return !(
       this.get("currentUser.staff") || this.get("currentUser.trust_level") > 0
@@ -101,8 +106,7 @@ export default ComboBoxComponent.extend({
         });
       }
 
-      // If there is a single shortcut, we can have a single "remove filter"
-      // option
+      // If there is a single shortcut, we can have a single "remove filter" option
       if (shortcuts.length === 1 && shortcuts[0].id === ALL_CATEGORIES_ID) {
         shortcuts[0].name = I18n.t("categories.remove_filter");
       }
