@@ -159,7 +159,7 @@ export default ComboBoxComponent.extend({
       }
 
       if (this.selectKit.options.subCategory) {
-        return I18n.t("categories.all_subcategories", {
+        return I18n.t("categories.remove_filter", {
           categoryName: this.parentCategoryName,
         });
       }

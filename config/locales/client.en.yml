@@ -1076,7 +1076,6 @@ en:
     categories:
       categories_label: "categories"
       subcategories_label: "subcategories"
-      all_subcategories: "all subcategories"
       no_subcategories: "no subcategories"
       remove_filter: "remove filter"
       plus_more_count:
