@@ -8,7 +8,6 @@ loaderShim("@ember-compat/tracked-built-ins", () =>
   importSync("@ember-compat/tracked-built-ins")
 );
 loaderShim("@popperjs/core", () => importSync("@popperjs/core"));
-loaderShim("zod", () => importSync("zod"));
 loaderShim("@floating-ui/dom", () => importSync("@floating-ui/dom"));
 loaderShim("@uppy/aws-s3", () => importSync("@uppy/aws-s3"));
 loaderShim("@uppy/aws-s3-multipart", () =>

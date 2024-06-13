@@ -29,8 +29,7 @@
     "highlight.js": "^11.9.0",
     "jspreadsheet-ce": "^4.13.4",
     "morphlex": "^0.0.16",
-    "pretty-text": "1.0.0",
-    "zod": "^3.23.8"
+    "pretty-text": "1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
