@@ -59,7 +59,7 @@ acceptance("Discourse Chat - Channel Reactions", function (needs) {
     );
   });
 
-  test("when pasting html in composer", async function (assert) {
+  test("shows the reaction button with the count", async function (assert) {
     await visit("/chat/c/another-category/11");
 
     await Promise.all([
