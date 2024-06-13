@@ -30,7 +30,8 @@
   }
 
   &-text,
-  &-code {
+  &-code,
+  &-image {
     .form-kit__field__content {
       width: var(--form-kit-large-input) !important;
     }
