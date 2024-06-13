@@ -66,9 +66,10 @@
 
   .current-badge-header {
     display: flex;
-    padding-bottom: 2em;
+    padding-bottom: 1rem;
     gap: 1em;
     align-items: center;
+    font-size: var(--font-up-2-rem);
 
     img {
       border-radius: var(--d-border-radius-large);

@@ -1,8 +1,8 @@
 <section class="current-badge content-body">
-  <div class="current-badge-header">
+  <h1 class="current-badge-header">
     {{iconOrImage this.model}}
     <span class="badge-display-name">{{this.model.name}}</span>
-  </div>
+  </h1>
 
   <Form
     @data={{this.model}}
@@ -89,7 +89,7 @@
 
       {{#if this.readOnly}}
         <form.Container @title={{i18n "admin.badges.description"}}>
-          <span>
+          <span class="form-kit__readonly-text">
             {{this.model.description}}
           </span>
           <LinkTo
@@ -113,7 +113,7 @@
 
       {{#if this.readOnly}}
         <form.Container @title={{i18n "admin.badges.long_description"}}>
-          <span>
+          <span class="form-kit__readonly-text">
             {{this.model.long_description}}
           </span>
 
