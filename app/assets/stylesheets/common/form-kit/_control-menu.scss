@@ -1,9 +1,58 @@
 .form-kit__control-menu {
   width: auto;
+  background: var(--secondary);
+  border: 1px solid var(--primary-low-mid);
+  border-radius: var(--d-input-border-radius);
+  padding: 0.5em;
+  box-sizing: border-box;
+  margin: 0 !important;
+  appearance: none;
+  height: 2em;
 
-  &:focus {
+  &:focus,
+  &:focus-visible,
+  &:focus:focus-visible,
+  &:active {
+    //these importants are another great case for having a button element without that pesky default styling
+    background-color: var(--secondary) !important;
+    color: var(--primary) !important;
     border-color: var(--tertiary);
-    outline: 2px solid var(--tertiary) !important;
+    outline: 2px solid var(--tertiary);
     outline-offset: -2px;
+    background-image: none !important;
+
+    .d-icon {
+      color: inherit !important;
+    }
+  }
+
+  &:hover {
+    .discourse-no-touch & {
+      background-color: var(--secondary);
+      color: var(--primary);
+      border-color: var(--tertiary);
+
+      .d-icon {
+        color: inherit;
+      }
+    }
+  }
+
+  .form-kit__field.has-errors & {
+    border-color: var(--danger);
+  }
+}
+
+.fk-d-menu {
+  .dropdown-menu__item {
+    &:hover {
+      background: var(--d-hover);
+    }
+
+    &:last-child {
+      .btn {
+        color: var(--tertiary);
+      }
+    }
   }
 }

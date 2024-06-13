@@ -20,7 +20,7 @@ export default class FKControlMenuItem extends Component {
     <@item>
       <DButton
         @action={{this.handleInput}}
-        class="btn-transparent"
+        class="btn-flat"
         @icon={{@icon}}
         ...attributes
       >
