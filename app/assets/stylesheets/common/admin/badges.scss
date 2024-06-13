@@ -88,64 +88,18 @@
 
   .current-badge {
     margin: 20px;
-    p.help {
-      margin: 0;
-      margin-top: 5px;
-      color: var(--primary-medium);
-      font-size: var(--font-down-1);
-    }
-    .badge-grouping-control {
-      display: flex;
-      align-items: center;
-      .badge-selector {
-        margin-right: 5px;
-      }
-    }
 
-    .icon-picker {
-      width: 350px;
-    }
-  }
-  .current-badge {
-    .ace-wrapper {
-      position: relative;
-      height: 270px;
-      .ace_editor {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-      }
-      &[data-disabled="true"] {
-        cursor: not-allowed;
-        opacity: 0.5;
-        .ace_editor {
-          pointer-events: none;
-          .ace_cursor {
-            visibility: hidden;
-          }
-        }
+    .form-kit__field-question {
+      .form-kit__control-radio__label {
+        text-transform: capitalize;
       }
     }
-    textarea {
-      height: 200px;
-    }
   }
+
   .current-badge-actions {
     margin: 10px;
     padding: 10px;
     border-top: 1px solid var(--primary-low);
-  }
-  .buttons {
-    display: flex;
-    align-items: center;
-    button {
-      margin-right: 0.5em;
-    }
-    .saving {
-      order: 3;
-    }
   }
 }
 
