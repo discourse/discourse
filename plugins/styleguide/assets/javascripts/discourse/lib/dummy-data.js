@@ -225,45 +225,6 @@ export function createData(store) {
 
     toggleSwitchState: true,
 
-    formData: {},
-
-    doSomething: () => {
-      _data.formApi.submit();
-    },
-
-    registerFormApi: (formApi) => {
-      console.log("registerFormApi", formApi);
-      _data.formApi = formApi;
-    },
-
-    validate: (name, value, data, addError) => {
-      console.log("custom validate", data["what_is_love"] === "check_2");
-      if (
-        name === "foo" &&
-        value === "bar" &&
-        data["what_is_love"] === "check_2"
-      ) {
-        console.log("ADD ERROR", addError);
-        addError({
-          type: "something",
-          value,
-          message: "NOT GOOD!",
-        });
-      }
-    },
-
-    customAction: (value, { setValue }) => {
-      console.log("customACtion", value);
-
-      alert(1);
-
-      setValue("HELLO");
-    },
-
-    onSubmit: (data) => {
-      console.log("onSubmit", data);
-    },
-
     navItems: ["latest", "categories", "top"].map((name) => {
       let item = NavItem.fromText(name);
 
