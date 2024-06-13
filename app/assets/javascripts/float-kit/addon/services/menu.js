@@ -117,9 +117,11 @@ export default class Menu extends Service {
     await new Promise((resolve) => {
       menu.expanded = false;
 
-      this.registeredMenus = this.registeredMenus.filter(
-        (registeredMenu) => menu.id !== registeredMenu.id
-      );
+      if (this.registeredMenus.includes(menu)) {
+        this.registeredMenus = this.registeredMenus.filter(
+          (registeredMenu) => registeredMenu !== menu
+        );
+      }
 
       schedule("afterRender", () => {
         resolve();
