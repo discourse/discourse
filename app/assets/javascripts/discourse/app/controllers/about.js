@@ -5,7 +5,9 @@ import I18n from "discourse-i18n";
 
 export default Controller.extend({
   faqOverridden: gt("siteSettings.faq_url.length", 0),
-  renameFaqToGuidelines: alias("siteSettings.rename_faq_to_guidelines"),
+  renameFaqToGuidelines: alias(
+    "siteSettings.experimental_rename_faq_to_guidelines"
+  ),
 
   @discourseComputed("model.contact_url", "model.contact_email")
   contactInfo(url, email) {

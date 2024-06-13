@@ -3,7 +3,9 @@ import I18n from "discourse-i18n";
 
 export default class FAQSectionLink extends BaseSectionLink {
   get renameToGuidelines() {
-    return this.siteSettings.rename_faq_to_guidelines && !this.href;
+    return (
+      this.siteSettings.experimental_rename_faq_to_guidelines && !this.href
+    );
   }
 
   get name() {

@@ -2455,7 +2455,7 @@ legal:
     default: ""
   log_anonymizer_details:
     default: true
-  rename_faq_to_guidelines:
+  experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
     client: true

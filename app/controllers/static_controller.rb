@@ -67,7 +67,7 @@ class StaticController < ApplicationController
       @title = "#{title_prefix} - #{SiteSetting.title}"
       @body = @topic.posts.first.cooked
       @faq_overridden = !SiteSetting.faq_url.blank?
-      @rename_faq_to_guidelines = SiteSetting.rename_faq_to_guidelines
+      @experimental_rename_faq_to_guidelines = SiteSetting.experimental_rename_faq_to_guidelines
 
       render :show, layout: !request.xhr?, formats: [:html]
       return
