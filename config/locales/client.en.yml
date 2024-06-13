@@ -2599,7 +2599,6 @@ en:
       show_toolbar: "show composer toolbar"
       hide_toolbar: "hide composer toolbar"
       modal_ok: "OK"
-      modal_cancel: "Cancel"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
       create_message_error: "Sorry, there was an error creating that message. Please try again."
       yourself_confirm:
