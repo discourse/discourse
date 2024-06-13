@@ -16,7 +16,6 @@
       </form.Alert>
     {{else}}
       <form.Field
-        @onSet={{this.onToggleBadge}}
         @name="enabled"
         @disabled={{this.readOnly}}
         @validation="required"

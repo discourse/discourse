@@ -185,15 +185,4 @@ export default class AdminBadgesShowController extends Controller {
       },
     });
   }
-
-  @action
-  async onToggleBadge(enabled, { set }) {
-    try {
-      await this.model.save({ enabled });
-      this.toasts.success({ data: { message: I18n.t("saved") } });
-    } catch (error) {
-      set("enabled", !enabled);
-      return popupAjaxError(error);
-    }
-  }
 }
