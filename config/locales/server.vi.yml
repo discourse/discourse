@@ -421,6 +421,8 @@ vi:
         raw: "Thân"
       user_profile:
         bio_raw: "GIới thiệu bản thân"
+      user:
+        password: "Mật khẩu"
     errors:
       models:
         topic:

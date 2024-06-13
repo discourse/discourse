@@ -475,6 +475,8 @@ da:
         raw: "Brødtekst"
       user_profile:
         bio_raw: "Om mig"
+      user:
+        password: "Adgangskode"
     errors:
       models:
         topic:

@@ -297,10 +297,12 @@ module FileStore
     end
 
     def list_missing_uploads(skip_optimized: false)
-      if SiteSetting.enable_s3_inventory
-        require "s3_inventory"
-        S3Inventory.new(s3_helper, :upload).backfill_etags_and_list_missing
-        S3Inventory.new(s3_helper, :optimized).backfill_etags_and_list_missing unless skip_optimized
+      if s3_inventory_bucket = SiteSetting.s3_inventory_bucket
+        S3Inventory.new(:upload, s3_inventory_bucket:).backfill_etags_and_list_missing
+
+        unless skip_optimized
+          S3Inventory.new(:optimized, s3_inventory_bucket:).backfill_etags_and_list_missing
+        end
       else
         list_missing(Upload.by_users, "original/")
         list_missing(OptimizedImage, "optimized/") unless skip_optimized

@@ -750,6 +750,8 @@ sk:
         raw: "Telo"
       user_profile:
         bio_raw: "O mne"
+      user:
+        password: "Heslo"
     errors:
       models:
         topic:
@@ -774,6 +776,7 @@ sk:
               same_as_username: "je také isté ako vaše používateľské meno. Prosím použite bezpečnejšie heslo"
               same_as_email: "je také isté ako Váš email. Prosím použite bezpečnejšie heslo"
               same_as_current: "je také isté ako Vaše súčasné heslo"
+              same_as_previous: "je rovnaké ako vaše predchádzajúce heslo."
               same_as_name: "je rovnaké ako vaše meno."
               unique_characters: "má príliš veľa opakujúcich sa znakov. Použite bezpečnejšie heslo."
             username:
@@ -1133,7 +1136,7 @@ sk:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Nevhodné"
-      description: 'Tento príspevok obsahuje obsah, ktorý by rozumná osoba považovala za urážlivý, urážlivý, za nenávistné správanie alebo porušenie <a href="%{base_path}/guidelines">našich pokynov pre komunitu</a>.'
+      description: 'Tento príspevok obsahuje obsah, ktorý by rozumná osoba považovala za urážlivý, hanlivý, za nenávistné správanie alebo porušenie <a href="%{base_path}/guidelines">našich pokynov pre komunitu</a>.'
       short_description: 'Porušenie <a href="%{base_path}/guidelines">našich pokynov pre komunitu</a>'
     illegal:
       title: "Nelegálne"
@@ -1299,6 +1302,7 @@ sk:
   flags:
     errors:
       already_handled: "Označenie už bolo spracované"
+      wrong_move: "Vlajku nie je možné presunúť"
   reports:
     default:
       labels:
@@ -1989,7 +1993,6 @@ sk:
     s3_endpoint: "Koncový bod je možné upraviť tak, aby zálohoval do služby kompatibilnej so službou S3, napríklad DigitalOcean Spaces alebo Minio. VAROVANIE: Ak používate AWS S3, nechajte prázdne."
     s3_configure_tombstone_policy: "Povolenie politiky automatického odstraňovania pre nahrávanie náhrobných kameňov. DÔLEŽITÉ: Ak je táto funkcia vypnutá, po vymazaní nahraných súborov nebude obnovené žiadne miesto."
     s3_disable_cleanup: "Zabrániť odstráneniu starých záloh zo služby S3, ak je ich viac, ako je povolené maximum."
-    enable_s3_inventory: "Vytvárajte správy a overujte nahrávania pomocou inventára Amazon S3. DÔLEŽITÉ: vyžaduje platné poverenia S3 (identifikátor prístupového kľúča aj tajný prístupový kľúč)."
     s3_use_acls: "AWS odporúča nepoužívať ACL na vedrách S3; ak sa riadite touto radou, zrušte začiarknutie tejto možnosti. Táto možnosť musí byť povolená, ak používate zabezpečené nahrávanie."
     backup_time_of_day: "Čas v UTC, kedy sa má spustiť záloha."
     backup_with_uploads: "Do pravidelných záloh ulož i nahrané súbory. Pri vypnutej voľbe sa uloží iba záloha databázy."
@@ -5169,7 +5172,7 @@ sk:
             placeholder: "example@user.com"
             description: "E-mailová adresa kľúčového kontaktu zodpovedného za túto stránku. Používa sa na kritické oznámenia a v prípade naliehavých záležitostí sa uvádza na vašej <a href='%{base_path}/about' target='_blank'>stránke o</a> vás."
       invites:
-        title: "Pozvite členov"
+        title: "Pozvať personál"
         description: "Už ste skoro hotoví! Pozvime niekoľko ľudí, aby pomohli <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>rozbehnúť vaše diskusie</a> s zaujímavými témami a odpoveďami, aby sme naštartovali vašu komunitu."
         disabled: "Keďže miestne prihlásenia sú zakázané, nie je možné nikomu posielať pozvánky. Prejdite na ďalší krok."
       finished:

@@ -1433,6 +1433,7 @@ cs:
         set_password: "Nastavit heslo"
         choose_new: "Zvolte si nové heslo"
         choose: "Vyber si heslo"
+        title: "Obnovení hesla"
       second_factor_backup:
         title: "Dvoufaktorové záložní kódy"
         regenerate: "Vytvořit znovu"
@@ -1826,7 +1827,6 @@ cs:
         fine_print: "Žádáme vás o potvrzení vaší totožnosti, protože se jedná o potenciálně citlivou akci. Po ověření budete požádáni o opětovné ověření až po několika hodinách nečinnosti."
       password:
         title: "Heslo"
-        too_short: "Vaše heslo je příliš krátké."
         common: "Toto heslo je používané moc často."
         same_as_username: "Vaše heslo je stejné jako Vaše uživatelské jméno."
         same_as_email: "Vaše heslo je stejné jako váš e-mail."
@@ -4338,7 +4338,6 @@ cs:
       all_tags: "Všechny štítky"
       other_tags: "Ostatní štítky "
       selector_tags: "štítky"
-      selector_all_tags: "všechny štítky"
       selector_no_tags: "bez štítků"
       selector_remove_filter: "zrušit filtr"
       tags: "Štítky"
@@ -5160,6 +5159,8 @@ cs:
           timestamp: "Vytvořený"
           completion: "čas dokončení"
           actions: "Akce"
+          filter_status:
+            failed: "Neúspěšný"
       home:
         title: "Domů"
       account:
@@ -5210,6 +5211,10 @@ cs:
           security: "Zabezpečení"
           spam: "Spam"
           staff_action_logs: "Protokoly akcí redaktorů"
+      config_areas:
+        about:
+          optional: "(volitelné)"
+          update: "Aktualizovat"
       plugins:
         title: "Pluginy"
         installed: "Nainstalované pluginy"

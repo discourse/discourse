@@ -569,6 +569,16 @@ RSpec.describe SiteSettingExtension do
       expect(UserHistory.last.previous_value).to eq("Discourse v1")
       expect(UserHistory.last.new_value).to eq("Discourse v2")
     end
+
+    context "when a detailed message is provided" do
+      let(:message) { "We really need to do this, see https://meta.discourse.org/t/123" }
+
+      it "adds the detailed message to the user history record" do
+        expect {
+          settings.set_and_log("title", "Discourse v2", Discourse.system_user, message)
+        }.to change { UserHistory.last.try(:details) }.to(message)
+      end
+    end
   end
 
   describe "filter domain name" do

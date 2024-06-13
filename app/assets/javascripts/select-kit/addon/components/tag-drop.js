@@ -106,7 +106,7 @@ export default ComboBoxComponent.extend(TagsMixin, {
     if (this.tagId) {
       shortcuts.push({
         id: ALL_TAGS_ID,
-        name: I18n.t("tagging.selector_all_tags"),
+        name: I18n.t("tagging.selector_remove_filter"),
       });
     }
 

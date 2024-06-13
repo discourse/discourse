@@ -84,7 +84,6 @@ module Chat
             ::Chat::Channel
               .joins(:user_chat_channel_memberships)
               .where(user_chat_channel_memberships: { user_id: guardian.user.id, following: true })
-              .where.not("user_chat_channel_memberships.muted")
               .where(
                 {
                   chatable_type: "Category",

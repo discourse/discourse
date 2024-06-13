@@ -187,6 +187,8 @@ sq:
         raw: "Trupi"
       user_profile:
         bio_raw: "Rreth Meje"
+      user:
+        password: "Fjalëkalimi"
     errors:
       models:
         topic:

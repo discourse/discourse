@@ -177,7 +177,7 @@ module Service
         context[contract_name] = contract
         context[result_key] = Context.build
         if contract.invalid?
-          context[result_key].fail(errors: contract.errors)
+          context[result_key].fail(errors: contract.errors, parameters: contract.raw_attributes)
           context.fail!
         end
       end
@@ -218,6 +218,10 @@ module Service
           include ActiveModel::Attributes
           include ActiveModel::AttributeMethods
           include ActiveModel::Validations::Callbacks
+
+          def raw_attributes
+            @attributes.values_before_type_cast
+          end
         end
     end
 

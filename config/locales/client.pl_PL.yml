@@ -1549,6 +1549,7 @@ pl_PL:
         set_password: "Ustaw hasło"
         choose_new: "Wyberz nowe hasło"
         choose: "Wybierz hasło"
+        title: "Reset hasła"
       second_factor_backup:
         title: "Kody zapasowe weryfikacji dwuskładnikowej"
         regenerate: "Odnów"
@@ -1953,7 +1954,6 @@ pl_PL:
         fine_print: "Prosimy o potwierdzenie Twojej tożsamości, ponieważ jest to potencjalnie wrażliwe działanie. Po uwierzytelnieniu zostaniesz poproszony o ponowne uwierzytelnienie po kilku godzinach bezczynności."
       password:
         title: "Hasło"
-        too_short: "Hasło jest za krótkie."
         common: "To hasło jest zbyt popularne."
         same_as_username: "Twoje hasło jest takie samo jak nazwa użytkownika."
         same_as_email: "Twoje hasło jest takie samo jak twój e-mail."
@@ -4496,7 +4496,6 @@ pl_PL:
       all_tags: "Wszystkie tagi"
       other_tags: "Inne tagi"
       selector_tags: "tagi"
-      selector_all_tags: "wszystkie tagi"
       selector_no_tags: "brak tagów"
       selector_remove_filter: "usuń filtr"
       tags: "Tagi"
@@ -5403,6 +5402,8 @@ pl_PL:
           timestamp: "Utworzono"
           completion: "Czas wykonania"
           actions: "Akcje"
+          filter_status:
+            failed: "Niepowodzenie"
       home:
         title: "Strona główna"
       account:
@@ -5462,6 +5463,18 @@ pl_PL:
           security: "Bezpieczeństwo"
           spam: "Spam"
           staff_action_logs: "Dzienniki działań personelu"
+      config_areas:
+        about:
+          header: "O Twojej witrynie"
+          community_name: "Nazwa społeczności"
+          your_organization: "Twoja organizacja"
+          company_name: "Nazwa firmy"
+          governing_law: "Obowiązujące prawo"
+          city_for_disputes: "Miasto do sporów"
+          city_for_disputes_help: |
+            Określ miasto, które będzie używane jako jurysdykcja do rozstrzygania wszelkich sporów związanych z korzystaniem z tego forum. Informacje te są zazwyczaj zawarte w dokumentach prawnych, takich jak warunki korzystania z forum.
+          optional: "(opcjonalne)"
+          update: "Aktualizuj"
       plugins:
         title: "Wtyczki"
         installed: "Zainstalowane wtyczki"

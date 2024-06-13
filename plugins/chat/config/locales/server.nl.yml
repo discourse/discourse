@@ -229,18 +229,8 @@ nl:
         other: "Je hebt nieuwe chatberichten"
       from: "%{site_name}"
       subject:
-        private_message: "[%{email_prefix}] Nieuw bericht"
-        direct_message_from_1: "[%{email_prefix}] Nieuw bericht van %{username}"
-        direct_message_from_2: "[%{email_prefix}] Nieuw bericht van %{username1} en %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] Nieuw bericht van %{username} en %{count} ander"
-          other: "[%{email_prefix}] Nieuw bericht van %{username} en %{count} anderen"
-        chat_channel_1: "[%{email_prefix}] Nieuw bericht in %{channel}"
-        chat_channel_2: "[%{email_prefix}] Nieuw bericht in %{channel1} en %{channel2}"
-        chat_channel_more:
-          one: "[%{email_prefix}] Nieuw bericht in %{channel} en %{count} andere groep"
-          other: "[%{email_prefix}] Nieuw bericht in %{channel} en %{count} andere groepen"
-        chat_channel_and_direct_message: "[%{email_prefix}] Nieuw bericht in %{channel} en van %{username}"
+        chat_dm_2: "[%{site_name}] Nieuwe berichten van %{name_1} en %{name_2}"
+        chat_channel_2: "[%{site_name}] Nieuwe berichten in %{channel_1} en %{channel_2}"
       unsubscribe: "Deze chatsamenvatting wordt verzonden van %{site_link} wanneer je afwezig bent. Wijzig je %{email_preferences_link}, of %{unsubscribe_link} om je af te melden."
       unsubscribe_no_link: "Deze chatsamenvatting wordt verzonden van %{site_link} wanneer je afwezig bent. Wijzig je %{email_preferences_link}."
       view_messages:

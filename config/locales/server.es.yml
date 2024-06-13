@@ -555,6 +555,8 @@ es:
         raw: "Cuerpo"
       user_profile:
         bio_raw: "Acerca de mí"
+      user:
+        password: "Contraseña"
     errors:
       models:
         topic:
@@ -1662,7 +1664,6 @@ es:
     s3_endpoint: "El terminal se puede modificar para realizar una copia de seguridad en un servicio compatible con S3 como DigitalOcean Spaces o Minio. ADVERTENCIA: dejar en blanco si usas AWS S3."
     s3_configure_tombstone_policy: "Activar la política de eliminación automática para cargas tombstone. IMPORTANTE: si está desactivado, no se reclamará ningún espacio después de eliminar las cargas."
     s3_disable_cleanup: "Evite la eliminación de copias de seguridad antiguas de S3 cuando hay más copias de seguridad que el máximo permitido."
-    enable_s3_inventory: "Generar informes y verificar las cargas utilizando el inventario de Amazon S3. IMPORTANTE: requiere credenciales S3 válidas (tanto la clave de acceso como la clave de acceso secreta)."
     s3_use_acls: "AWS recomienda no utilizar ACL en los buckets S3; si sigues este consejo, desmarca esta opción. Debes activarla si utilizas cargas seguras."
     backup_time_of_day: "Hora UTC del día cuando debería ejecutarse el respaldo."
     backup_with_uploads: "Incluir archivos subidos en las copias de seguridad programadas. Si esta opción está desactivada, tan solo se ejecutará una copia de seguridad de la base de datos."

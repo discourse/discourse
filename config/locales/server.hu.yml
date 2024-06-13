@@ -406,6 +406,8 @@ hu:
         raw: "Törzs"
       user_profile:
         bio_raw: "Bemutatkozás"
+      user:
+        password: "Jelszó"
     errors:
       models:
         topic:

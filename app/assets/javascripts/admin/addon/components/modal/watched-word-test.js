@@ -1,9 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import {
-  createWatchedWordRegExp,
-  toWatchedWord,
-} from "discourse-common/utils/watched-words";
 
 export default class WatchedWordTest extends Component {
   @tracked value;
@@ -31,7 +27,10 @@ export default class WatchedWordTest extends Component {
     if (this.isReplace || this.isLink) {
       const matches = [];
       this.args.model.watchedWord.words.forEach((word) => {
-        const regexp = createWatchedWordRegExp(word);
+        const regexp = new RegExp(
+          word.regexp,
+          word.case_sensitive ? "gu" : "gui"
+        );
         let match;
 
         while ((match = regexp.exec(this.value)) !== null) {
@@ -42,38 +41,44 @@ export default class WatchedWordTest extends Component {
         }
       });
       return matches;
-    } else if (this.isTag) {
-      const matches = {};
+    }
+
+    if (this.isTag) {
+      const matches = new Map();
       this.args.model.watchedWord.words.forEach((word) => {
-        const regexp = createWatchedWordRegExp(word);
+        const regexp = new RegExp(
+          word.regexp,
+          word.case_sensitive ? "gu" : "gui"
+        );
         let match;
 
         while ((match = regexp.exec(this.value)) !== null) {
-          if (!matches[match[1]]) {
-            matches[match[1]] = new Set();
+          if (!matches.has(match[1])) {
+            matches.set(match[1], new Set());
           }
 
-          let tags = matches[match[1]];
-          word.replacement.split(",").forEach((tag) => {
-            tags.add(tag);
-          });
+          const tags = matches.get(match[1]);
+          word.replacement.split(",").forEach((tag) => tags.add(tag));
         }
       });
 
-      return Object.entries(matches).map((entry) => ({
-        match: entry[0],
-        tags: Array.from(entry[1]),
+      return Array.from(matches, ([match, tagsSet]) => ({
+        match,
+        tags: Array.from(tagsSet),
       }));
-    } else {
-      let matches = [];
-      this.args.model.watchedWord.compiledRegularExpression.forEach(
-        (regexp) => {
-          const wordRegexp = createWatchedWordRegExp(toWatchedWord(regexp));
-          matches.push(...(this.value.match(wordRegexp) || []));
-        }
+    }
+
+    let matches = [];
+    this.args.model.watchedWord.compiledRegularExpression.forEach((entry) => {
+      const [regexp, options] = Object.entries(entry)[0];
+      const wordRegexp = new RegExp(
+        regexp,
+        options.case_sensitive ? "gu" : "gui"
       );
 
-      return matches;
-    }
+      matches.push(...(this.value.match(wordRegexp) || []));
+    });
+
+    return matches;
   }
 }

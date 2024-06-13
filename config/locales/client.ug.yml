@@ -1344,6 +1344,7 @@ ug:
         set_password: "ئىم تەڭشەك"
         choose_new: "يېڭى ئىم تاللىنىدۇ"
         choose: "ئىم تاللىنىدۇ"
+        title: "ئىم ئەسلىگە قايتۇر"
       second_factor_backup:
         title: "ئىككى ئامىللىق زاپاسلاش كودى"
         regenerate: "قايتا ھاسىللا"
@@ -1736,7 +1737,6 @@ ug:
         fine_print: "كىملىكىڭىزنى جەزملىشىڭىزنى سورايمىز چۈنكى بۇ يوشۇرۇن سەزگۈر مەشغۇلات. دەلىللەنگەندىن كېيىن، سىز بىر نەچچە سائەت مەشغۇلات قىلمىغاندىن كېيىن ئاندىن قايتا دەلىللەشنى تەلەپ قىلىدۇ."
       password:
         title: "ئىم"
-        too_short: "ئىم بەك قىسقا."
         common: "بۇ ئىم بەك كۆپ ئۇچرايدۇ."
         same_as_username: "ئىم ئىشلەتكۈچى ئاتىڭىز بىلەن ئوخشاش."
         same_as_email: "ئىم ئېلخېتىڭىز بىلەن ئوخشاش."
@@ -3963,7 +3963,6 @@ ug:
       all_tags: "ھەممە بەلگە"
       other_tags: "باشقا بەلگە"
       selector_tags: "بەلگە"
-      selector_all_tags: "ھەممە بەلگە"
       selector_no_tags: "بەلگە يوق"
       selector_remove_filter: "سۈزگۈچنى چىقىرىۋەت"
       tags: "بەلگە"
@@ -4794,6 +4793,8 @@ ug:
           timestamp: "قۇرغان ۋاقتى"
           completion: "تاماملاش ۋاقتى"
           actions: "مەشغۇلات"
+          filter_status:
+            failed: "مەغلۇب بولدى"
       home:
         title: "باش بەت"
       account:
@@ -4854,6 +4855,16 @@ ug:
           security: "بىخەتەرلىك"
           spam: "ئەخلەت خەت"
           staff_action_logs: "باشقۇرغۇچى مەشغۇلات خاتىرىسى"
+      config_areas:
+        about:
+          header: "تور بېكىتىڭىز ھەققىدە"
+          community_name: "جامائەت ئىسمى"
+          your_organization: "تەشكىلاتىڭىز"
+          company_name: "شىركەت ئىسمى"
+          governing_law: "باشقۇرۇش قانۇنى"
+          city_for_disputes: "تالاش-تارتىشتىكى شەھەر"
+          optional: "(تاللاشچان)"
+          update: "يېڭىلا"
       plugins:
         title: "قىستۇرما"
         installed: "ئورنىتىلغان قىستۇرما"

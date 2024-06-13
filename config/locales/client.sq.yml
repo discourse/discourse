@@ -638,6 +638,7 @@ sq:
         set_password: "Vendos fjalëkalim"
         choose_new: "Zgjidhni një fjalëkalim të ri"
         choose: "Zgjidhni një fjalëkalim të ri"
+        title: "Rivendos fjalëkalimin"
       second_factor_backup:
         regenerate: "Rigjenero"
         disable: "Çaktivizo"
@@ -800,7 +801,6 @@ sq:
           error: "Na vjen keq, skedari duhet të jete i formatit CSV."
       password:
         title: "Fjalëkalimi"
-        too_short: "Fjalëkalimi është shumë i shkurër."
         common: "Ky fjalëkalim është shumë i përdorur."
         same_as_username: "Fjalëkalimi është i njëjtë me emrin e përdoruesit."
         same_as_email: "Fjalëkalimi është i njëjtë me adresën email."
@@ -1845,7 +1845,6 @@ sq:
       download: "Shkarko"
     tagging:
       selector_tags: "etiketat"
-      selector_all_tags: "të gjitha etiketat"
       selector_no_tags: "asnjë etiketë"
       selector_remove_filter: "hiq filtrin"
       tags: "Etiketat"
@@ -2100,6 +2099,8 @@ sq:
           body: "Trupi"
           timestamp: "Krijuar"
           actions: "Veprimet"
+          filter_status:
+            failed: "Dështoi"
       home:
         title: "Kryefaqja"
       account:

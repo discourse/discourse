@@ -1426,6 +1426,7 @@ hr:
         set_password: "Postavi zaporku"
         choose_new: "Izaberite novu lozinku"
         choose: "Izaberite lozinku"
+        title: "Poništavanje lozinke"
       second_factor_backup:
         title: "Dva faktorski rezervni kodovi"
         regenerate: "Regeneriraj"
@@ -1826,7 +1827,6 @@ hr:
         fine_print: "Molimo vas da potvrdite svoj identitet jer je ovo potencijalno osjetljiva radnja. Jednom kad ste autenticirani, od vas će se tražiti ponovna autentikacija tek nakon nekoliko sati neaktivnosti."
       password:
         title: "Zaporka"
-        too_short: "Vaša je zaporka prekratka"
         common: "Ta je zaporka pre česta."
         same_as_username: "Vaša lozinka je ista kao korisničko ime."
         same_as_email: "Vaša lozinka jednaka je vašoj e-pošti."
@@ -4114,7 +4114,6 @@ hr:
       all_tags: "Sve oznake"
       other_tags: "Ostale oznake"
       selector_tags: "oznake"
-      selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
       selector_remove_filter: "uklonite filter"
       tags: "Oznake"
@@ -4768,6 +4767,8 @@ hr:
           timestamp: "Stvoreno"
           completion: "Vrijeme završetka"
           actions: "Akcije"
+          filter_status:
+            failed: "Neuspješno"
       home:
         title: "Naslovnica"
       account:
@@ -4816,6 +4817,10 @@ hr:
           search_logs: "Pretraživanje dnevnika"
           security: "Sigurnost"
           spam: "Nepoželjno"
+      config_areas:
+        about:
+          optional: "(opcionalno)"
+          update: "Ažuriraj"
       plugins:
         title: "Dodaci"
         installed: "Instalirani dodaci"

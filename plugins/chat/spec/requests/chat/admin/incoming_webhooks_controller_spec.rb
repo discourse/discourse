@@ -14,13 +14,13 @@ RSpec.describe Chat::Admin::IncomingWebhooksController do
 
     it "blocks non-admin" do
       sign_in(user)
-      get "/admin/plugins/chat.json"
+      get "/admin/plugins/chat/hooks.json"
       expect(response.status).to eq(404)
     end
 
     it "Returns chat_channels and incoming_chat_webhooks for admin" do
       sign_in(admin)
-      get "/admin/plugins/chat.json"
+      get "/admin/plugins/chat/hooks.json"
       expect(response.status).to eq(200)
       expect(
         response.parsed_body["incoming_chat_webhooks"].map { |webhook| webhook["id"] },

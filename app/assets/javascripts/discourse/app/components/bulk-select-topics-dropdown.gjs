@@ -36,7 +36,6 @@ export function addBulkDropdownButton(opts) {
 
 export default class BulkSelectTopicsDropdown extends Component {
   @service modal;
-  @service router;
   @service currentUser;
   @service siteSettings;
 
@@ -174,7 +173,7 @@ export default class BulkSelectTopicsDropdown extends Component {
         title,
         description,
         bulkSelectHelper: this.args.bulkSelectHelper,
-        refreshClosure: () => this.router.refresh(),
+        refreshClosure: () => this.args.afterBulkActionComplete(),
         allowSilent,
         initialAction,
         initialActionLabel,

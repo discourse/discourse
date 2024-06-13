@@ -68,6 +68,7 @@
       @value={{this.filterActionId}}
       @onChange={{action "filterActionIdChanged"}}
       @options={{hash none="admin.logs.staff_actions.all"}}
+      @id="staff-action-logs-action-filter"
     />
   {{/if}}
 
@@ -95,7 +96,7 @@
         </thead>
         <tbody>
           {{#each this.model.content as |item|}}
-            <tr class="admin-list-item">
+            <tr class="admin-list-item" data-user-history-id={{item.id}}>
               <td class="staff-users">
                 <div class="staff-user">
                   {{#if item.acting_user}}

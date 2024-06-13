@@ -1562,6 +1562,8 @@ he:
         set_password: "הזן סיסמה"
         choose_new: "בחירת סיסמה חדשה"
         choose: "בחירת סיסמה"
+        verify_identity: "כדי להמשיך, יש לאמת את זהותך."
+        title: "אתחול סיסמה"
       second_factor_backup:
         title: "קודים כגיבוי לאימות דו־שלבי"
         regenerate: "חדש"
@@ -1968,7 +1970,11 @@ he:
         fine_print: "אנו מבקשים ממך לאשר את הזהות שלך כיוון שזאת פעולה שעלולה להיות רגישה. לאחר האימות, נבקש ממך לעבור אימות שוב רק כעבור כמה שעות של חוסר פעילות."
       password:
         title: "סיסמה"
-        too_short: "הסיסמה שלך קצרה מידי."
+        too_short:
+          one: "סיסמתך קצרה מדי (תו אחד לפחות)."
+          two: "סיסמתך קצרה מדי (שני תווים לפחות)."
+          many: "סיסמתך קצרה מדי (%{count} תווים לפחות)."
+          other: "סיסמתך קצרה מדי (%{count} תווים לפחות)."
         common: "הסיסמה הזו נפוצה מידי."
         same_as_username: "הסיסמה שלך זהה לשם המשתמש/ת שלך."
         same_as_email: "הסיסמה שלך זהה לכתובת הדוא״ל שלך."
@@ -2284,6 +2290,7 @@ he:
       error: "שגיאה לא ידועה"
       cookies_error: "כנראה שהעוגיות בדפדפן שלך מושבתות. אין אפשרות להיכנס מבלי להפעיל אותן."
       rate_limit: "נא להמתין בטרם ביצוע ניסיון כניסה חוזר."
+      password_expired: "פג תוקף הסיסמה. יש <a href='%{reset_url}'>לאפס את הסיסמה שלך</a>."
       blank_username: "נא למלא כתובת דוא״ל או שם משתמש."
       blank_username_or_password: "נא למלא את כתובת הדוא״ל או את שם המשתמש שלך וסיסמה."
       reset_password: "אפס סיסמה"
@@ -4338,6 +4345,8 @@ he:
         this_month: "חודש"
         this_week: "שבוע"
         today: "היום"
+    custom_homepage:
+      admin_message: 'אחת מערכות הנושא שלך הפעילה את אפשרות "דף הבית מותאם אישית" אך הוא אינו מוציא דבר במֵחבַּר [דף הבית המותאם אישית]. (הודעה זו מוצגת רק למנהלי האתר.)'
     browser_update: 'אתרע מזלך וכי <a href="https://www.discourse.org/faq/#browser">דפדפנך אינו נתמך עוד</a>. נא <a href="https://browsehappy.com">לעבור לדפדפן נתמך</a> כדי לצפות בתוכן עשיר, להיכנס ולהגיב.'
     permission_types:
       full: "יצירה / תגובה / צפייה"
@@ -4450,6 +4459,7 @@ he:
         mark_tracking: "%{shortcut} עקבו אחר נושא"
         mark_watching: "%{shortcut} הצגת הנושא"
         print: "%{shortcut} הדפסת נושא"
+        defer: "%{shortcut} סימון הנושא כלא נקרא"
         topic_admin_actions: "%{shortcut} פתיחת פעולות ניהול לנושא"
         archive_private_message: "%{shortcut} מתג העברת הודעות פרטיות לארכיון"
       search_menu:
@@ -4520,7 +4530,6 @@ he:
       all_tags: "כל התגיות"
       other_tags: "תגיות אחרות"
       selector_tags: "תגיות"
-      selector_all_tags: "כל התגיות"
       selector_no_tags: "ללא תגיות"
       selector_remove_filter: "הסרת הסינון"
       tags: "תגיות"
@@ -4973,7 +4982,7 @@ he:
           copy: "העתקה…"
           paste: "הדבקה…"
           save: "שמירה בשם…"
-    powered_by_discourse: "מופעל על גבי Discrouse"
+    powered_by_discourse: "מופעל על גבי Discourse"
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     admin:
@@ -5096,6 +5105,10 @@ he:
         title: "סימוני פיקוח"
         description: "תיאור"
         enabled: "מאופשר?"
+        more_options:
+          title: "אפשרויות נוספות"
+          move_up: "קידום למעלה"
+          move_down: "העברה למטה"
       groups:
         new:
           title: "קבוצה חדשה"
@@ -5241,6 +5254,7 @@ he:
               list: הצגת הפוסטים העדכניים ביותר ופוסטים פרטיים. יש תמיכה גם ב־RSS.
             revisions:
               read: "משיכת הגרסה האחרונה או אחת מסוימת."
+              modify: "הסתרה, הצגה או שחזור גרסא."
               permanently_delete: "מחיקת מהדורה לצמיתות."
             tags:
               list: הצגת תגיות.
@@ -5417,6 +5431,9 @@ he:
           timestamp: "נוצר"
           completion: "זמן השלמה"
           actions: "פעולות"
+          filter_status:
+            all: "כל האירועים"
+            failed: "נכשל"
       home:
         title: "בית"
       account:
@@ -5425,6 +5442,7 @@ he:
           backups: "גיבויים"
           whats_new:
             title: "מה חדש"
+            keywords: "שינוים|תכונה|מהדורה"
       community:
         title: "קהילה"
         sidebar_link:
@@ -5450,6 +5468,7 @@ he:
           themes: "תמות"
           components:
             title: "רכיבים"
+            keywords: "ערכת נושא | הרחבה"
           site_texts: "טקסטים של האתר"
       email_settings:
         title: "הגדרות דוא״ל"
@@ -5476,6 +5495,24 @@ he:
           security: "אבטחה"
           spam: "ספאם"
           staff_action_logs: "יומני פעולות סגל"
+      config_areas:
+        about:
+          header: "על האתר שלך"
+          general_settings: "הגדרות כלליות"
+          community_name: "שם הקהילה"
+          community_summary: "תקציר קהילה"
+          community_description: "תיאור קהילה"
+          banner_image: "תמונת כרזה"
+          contact_information: "פרטי קשר"
+          community_owner: "בעלות על הקהילה"
+          your_organization: "הארגון שלך"
+          company_name: "שם החברה"
+          governing_law: "החוק המחייב"
+          city_for_disputes: "עיר המחלוקת"
+          city_for_disputes_help: |
+            ציון העיר שתשמש כתחום השיפוט ליישוב מחלוקות שקשורות בשימוש בפורום הזה. המידע הזה בדרך כלל מופיע במסמכים הרשמיים כגון תנאי השירות של הפורום.
+          optional: "(רשות)"
+          update: "עדכון"
       plugins:
         title: "הרחבות (Plugins)"
         installed: "הרחבות מותקנות"
@@ -5486,6 +5523,7 @@ he:
         is_enabled: "Y"
         not_enabled: "N"
         change_settings_short: "הגדרות"
+        settings_disabled: "ניתן להפעיל או להשבית תוסף זה בלבד, אין לו הגדרות נוספות."
         howto: "איך אני מתקין/ה הרחבות?"
         official: "תוסף רשמי של Discourse"
         broken_route: "לא ניתן להגדיר את הקישור אל ‚%{name}’. כדאי לוודא שחוסמי פרסומות מושבתים ואז לנסות לטעון את הדף מחדש."
@@ -5833,6 +5871,12 @@ he:
                   two: "צריך לפחות שתי קבוצות"
                   many: "צריך לפחות %{count} קבוצות"
                   other: "צריך לפחות %{count} קבוצות"
+              categories:
+                at_least:
+                  one: "דרוש לפחות תחום אחד"
+                  two: "דרושים לפחות שני תחומים"
+                  many: "דרושים לפחות %{count} תחומים"
+                  other: "דרושים לפחות %{count} תחומים"
               tags:
                 at_least:
                   one: "צריך לפחות תגית אחת"
@@ -6138,6 +6182,7 @@ he:
             update_watched_word_group: "עדכון קבוצת מילים במעקב"
             delete_watched_word_group: "מחיקת קבוצת מילים במעקב"
             toggle_flag: "החלפת סימון"
+            move_flag: "להזיז דגל"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."

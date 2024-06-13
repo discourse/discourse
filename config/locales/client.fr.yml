@@ -1371,6 +1371,7 @@ fr:
         set_password: "Définir le mot de passe"
         choose_new: "Choisissez un nouveau mot de passe"
         choose: "Choisissez un mot de passe"
+        title: "Réinitialisation du mot de passe"
       second_factor_backup:
         title: "Codes de secours de l'authentification à deux facteurs"
         regenerate: "Régénérer"
@@ -1762,7 +1763,6 @@ fr:
         fine_print: "Nous vous demandons de confirmer votre identité, car il s'agit d'une action potentiellement sensible. Une fois que vous serez authentifié(e), il ne vous sera demandé de vous réauthentifier qu'après quelques heures d'inactivité."
       password:
         title: "Mot de passe"
-        too_short: "Votre mot de passe est trop court."
         common: "Ce mot de passe est trop commun."
         same_as_username: "Votre mot de passe est identique à votre nom d'utilisateur."
         same_as_email: "Votre mot de passe est identique à votre adresse e-mail."
@@ -4029,7 +4029,6 @@ fr:
       all_tags: "Toutes les étiquettes"
       other_tags: "Autres étiquettes"
       selector_tags: "étiquettes"
-      selector_all_tags: "toutes les étiquettes"
       selector_no_tags: "aucune étiquette"
       selector_remove_filter: "supprimer le filtre"
       tags: "Étiquettes"
@@ -4443,6 +4442,7 @@ fr:
           copy: "Copier..."
           paste: "Coller..."
           save: "Enregistrer sous..."
+    powered_by_discourse: "Propulsé par Discourse"
   admin_js:
     type_to_filter: "commencez votre saisie pour filtrer…"
     admin:
@@ -4867,6 +4867,8 @@ fr:
           timestamp: "Créé"
           completion: "Temps d'exécution"
           actions: "Actions"
+          filter_status:
+            failed: "Échec"
       home:
         title: "Accueil"
       account:
@@ -4913,6 +4915,16 @@ fr:
           search_logs: "Journaux de recherche"
           security: "Sécurité"
           spam: "Spam"
+      config_areas:
+        about:
+          header: "À propos de votre site"
+          community_name: "Nom de la communauté"
+          your_organization: "Votre organisation"
+          company_name: "Nom de l'entreprise"
+          governing_law: "Droit applicable"
+          city_for_disputes: "Ville pour les litiges"
+          optional: "(facultatif)"
+          update: "Mettre à jour"
       plugins:
         title: "Extensions"
         installed: "Extensions installées"

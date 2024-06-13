@@ -579,6 +579,12 @@ export default class ChatRouteChannelInfoSettings extends Component {
         {{/if}}
 
         <form.section class="--leave-channel" as |section|>
+          {{#if @channel.chatable.group}}
+            <div class="c-channel-settings__leave-info">
+              {{icon "exclamation-triangle"}}
+              {{i18n "chat.channel_settings.leave_groupchat_info"}}
+            </div>
+          {{/if}}
           <section.row>
             <:action>
               <ToggleChannelMembershipButton
@@ -593,12 +599,6 @@ export default class ChatRouteChannelInfoSettings extends Component {
               />
             </:action>
           </section.row>
-          {{#if @channel.chatable.group}}
-            <div class="c-channel-settings__leave-info">
-              {{icon "exclamation-triangle"}}
-              {{i18n "chat.channel_settings.leave_groupchat_info"}}
-            </div>
-          {{/if}}
         </form.section>
       </ChatForm>
     </div>

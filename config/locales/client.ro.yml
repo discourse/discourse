@@ -1255,6 +1255,7 @@ ro:
         set_password: "Introdu parolă"
         choose_new: "Alege o parolă nouă"
         choose: "Alege o parolă"
+        title: "Resetare parolă"
       second_factor_backup:
         regenerate: "Regenerare"
         disable: "Dezactivează"
@@ -1505,7 +1506,6 @@ ro:
         cannot_send_password_reset_email: "Nu am putut trimite emailul de resetare a parolei."
       password:
         title: "Parolă"
-        too_short: "Parola este prea scurtă."
         common: "Această parolă este prea comună."
         same_as_username: "Parolă identică cu numele de utilizator"
         same_as_email: "Parolă identică cu adresa de email"
@@ -3029,7 +3029,6 @@ ro:
     tagging:
       other_tags: "Alte etichete"
       selector_tags: "etichete"
-      selector_all_tags: "toate etichetele"
       selector_no_tags: "fără etichete"
       selector_remove_filter: "șterge filtru"
       tags: "Etichete"
@@ -3464,6 +3463,8 @@ ro:
           timestamp: "Creat"
           completion: "Timp finalizare"
           actions: "Acțiuni"
+          filter_status:
+            failed: "Eșuată"
       home:
         title: "Acasă"
       account:
@@ -3519,6 +3520,9 @@ ro:
           security: "Securitate"
           spam: "Spam"
           staff_action_logs: "Jurnal de acțiuni ale personalului"
+      config_areas:
+        about:
+          optional: "(opțional)"
       plugins:
         title: "Plugin-uri"
         installed: "Plugin-uri instalate"

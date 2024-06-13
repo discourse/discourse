@@ -1110,6 +1110,7 @@ el:
         set_password: "Ορισμός Συνθηματικού"
         choose_new: "Επιλέξτε νέο κωδικό πρόσβασης"
         choose: "Επιλέξτε έναν κωδικό πρόσβασης"
+        title: "Επαναφορά Κωδικού"
       second_factor_backup:
         regenerate: "Αναδημιουγία"
         disable: "Απενεργοποίηση"
@@ -1396,7 +1397,6 @@ el:
           error: "Λυπούμαστε, το αρχείο πρέπει να έχει την μορφή CSV."
       password:
         title: "Κωδικός Πρόσβασης"
-        too_short: "Ο κωδικός πρόσβασης είναι μικρός."
         common: "Ο κωδικός πρόσβασης είναι πολύ κοινός."
         same_as_username: "Ο κωδικός πρόσβασης που έδωσες είναι ο ίδιος με το όνομα χρήστη."
         same_as_email: "Ο κωδικός πρόσβασής σου είναι ίδιος με τη διεύθυνση email σου."
@@ -3118,7 +3118,6 @@ el:
       all_tags: "Όλες οι ετικέτες"
       other_tags: "Άλλες ετικέτες"
       selector_tags: "ετικέτες"
-      selector_all_tags: "όλες οι ετικέτες"
       selector_no_tags: "καμία ετικέτα"
       selector_remove_filter: "αφαίρεση φίλτρου"
       tags: "Ετικέτες"
@@ -3616,6 +3615,8 @@ el:
           timestamp: "Δημιουργήθηκε"
           completion: "Χρόνος Ολοκλήρωσης"
           actions: "Ενέργειες"
+          filter_status:
+            failed: "Απέτυχε"
       home:
         title: "Αρχική Σελίδα"
       account:
@@ -3662,6 +3663,10 @@ el:
           search_logs: "Αναζήτηση καταγραφών"
           security: "Ασφάλεια"
           spam: "Ανεπιθύμητα"
+      config_areas:
+        about:
+          optional: "(προεραιτικό)"
+          update: "Ενημέρωση"
       plugins:
         title: "Plugins"
         installed: "Εγκατεστημένα Plugins"

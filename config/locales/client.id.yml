@@ -1141,6 +1141,7 @@ id:
         set_password: "Atur Kata Sandi"
         choose_new: "Pilih kata sandi baru"
         choose: "Pilih kata sandi"
+        title: "Atur Ulang Kata Sandi"
       second_factor_backup:
         disable: "Nonaktifkan"
         enable: "Buat kode cadangan"
@@ -1338,7 +1339,6 @@ id:
           error: "Maaf, file harus dalam format CSV"
       password:
         title: "Kata sandi"
-        too_short: "Password kamu terlalu pendek."
         common: "Password terlalu umum"
         same_as_username: "Password dan nama pengguna kamu sama"
         same_as_email: "Password dan email kamu sama"
@@ -1498,6 +1498,7 @@ id:
       show_password: "Tunjukkan"
       caps_lock_warning: "Tombol \"Caps Lock\" menyala"
       error: "Galat yang tidak diketahui"
+      password_expired: "Kata sandi kedaluwarsa. Silakan <a href='%{reset_url}'>atur ulang kata sandi Anda</a>."
       blank_username: "Silakan masukkan email atau nama pengguna Anda."
       blank_username_or_password: "Silahkan masukkan email atau nama pengguna dan kata sandi anda"
       reset_password: "Atur Ulang Kata Sandi"
@@ -2315,6 +2316,8 @@ id:
           body: "Konten"
           timestamp: "Dibuat"
           actions: "Aksi"
+          filter_status:
+            failed: "Gagal"
       home:
         title: "Beranda"
       account:
@@ -2335,6 +2338,10 @@ id:
       security:
         sidebar_link:
           spam: "Spam"
+      config_areas:
+        about:
+          community_name: "Nama komunitas"
+          optional: "(opsional)"
       plugins:
         name: "Nama"
         enabled: "Diaktifkan?"

@@ -152,24 +152,6 @@ describe Chat do
     end
   end
 
-  describe "admin plugin serializer extension" do
-    let(:admin) { Fabricate(:admin) }
-    let(:chat_plugin) do
-      Plugin::Instance.parse_from_source(File.join(Rails.root, "plugins", "chat", "plugin.rb"))
-    end
-    let(:serializer) { AdminPluginSerializer.new(chat_plugin, scope: admin.guardian) }
-
-    it "includes all incoming webhooks via :incoming_chat_webhooks" do
-      webhook = Fabricate(:incoming_chat_webhook)
-      expect(serializer.incoming_chat_webhooks).to contain_exactly(webhook)
-    end
-
-    it "includes all chat channels via :chat_channels" do
-      channel = Fabricate(:chat_channel)
-      expect(serializer.chat_channels).to contain_exactly(channel)
-    end
-  end
-
   describe "chat oneboxes" do
     fab!(:chat_channel) { Fabricate(:category_channel) }
     fab!(:user)

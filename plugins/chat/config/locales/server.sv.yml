@@ -228,19 +228,6 @@ sv:
         one: "Du har ett nytt chattmeddelande"
         other: "Du har nya chattmeddelanden"
       from: "%{site_name}"
-      subject:
-        private_message: "[%{email_prefix}] Nytt meddelande"
-        direct_message_from_1: "[%{email_prefix}] Nytt meddelande från %{username}"
-        direct_message_from_2: "[%{email_prefix}] Nytt meddelande från %{username1} och %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] Nytt meddelande från %{username} och ytterligare %{count}"
-          other: "[%{email_prefix}] Nytt meddelande från %{username} och ytterligare %{count}"
-        chat_channel_1: "[%{email_prefix}] Nytt meddelande i %{channel}"
-        chat_channel_2: "[%{email_prefix}] Nytt meddelande i %{channel1} och %{channel2}"
-        chat_channel_more:
-          one: "[%{email_prefix}] Nytt meddelande i %{channel} och ytterligare %{count}"
-          other: "[%{email_prefix}] Nytt meddelande i %{channel} och ytterligare %{count}"
-        chat_channel_and_direct_message: "[%{email_prefix}] Nytt meddelande i %{channel} och från %{username}"
       unsubscribe: "Den här chattsammanfattningen skickas från %{site_link} när du är borta. Ändra din %{email_preferences_link} eller %{unsubscribe_link} för att avsluta prenumerationen."
       unsubscribe_no_link: "Den här chattsammanfattningen skickas från %{site_link} när du är borta. Ändra din %{email_preferences_link}."
       view_messages:

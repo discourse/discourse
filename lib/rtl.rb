@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Rtl
+  LOCALES = %w[ar fa_IR he ug ur]
+
   attr_reader :user
 
   def initialize(user)
@@ -12,15 +14,11 @@ class Rtl
   end
 
   def current_user_rtl?
-    SiteSetting.allow_user_locale && (user&.locale || SiteSetting.default_locale).in?(rtl_locales)
+    SiteSetting.allow_user_locale && (user&.locale || SiteSetting.default_locale).in?(LOCALES)
   end
 
   def site_locale_rtl?
-    !SiteSetting.allow_user_locale && SiteSetting.default_locale.in?(rtl_locales)
-  end
-
-  def rtl_locales
-    %w[he ar ur fa_IR]
+    !SiteSetting.allow_user_locale && SiteSetting.default_locale.in?(LOCALES)
   end
 
   def css_class

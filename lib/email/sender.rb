@@ -253,7 +253,7 @@ module Email
       if post.present?
         @stripped_secure_upload_shas = style.stripped_upload_sha_map.values
         add_attachments(post)
-      elsif @email_type == :digest
+      elsif @email_type.to_s == "digest"
         @stripped_secure_upload_shas = style.stripped_upload_sha_map.values
         digest_posts.each { |p| add_attachments(p) }
       end

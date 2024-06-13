@@ -187,12 +187,6 @@ module SiteSettings::Validations
     end
   end
 
-  def validate_enable_s3_inventory(new_val)
-    if new_val == "t" && !SiteSetting.Upload.enable_s3_uploads
-      validate_error :enable_s3_uploads_is_required
-    end
-  end
-
   def validate_backup_location(new_val)
     return unless new_val == BackupLocationSiteSetting::S3
     if SiteSetting.s3_backup_bucket.blank?

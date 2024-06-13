@@ -257,6 +257,8 @@ bg:
         raw: "Тяло"
       user_profile:
         bio_raw: "За мен"
+      user:
+        password: "Парола"
     errors:
       models:
         topic:

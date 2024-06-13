@@ -365,6 +365,8 @@ zh_TW:
         raw: "內容"
       user_profile:
         bio_raw: "關於我"
+      user:
+        password: "密碼"
     errors:
       models:
         topic:
@@ -1192,7 +1194,6 @@ zh_TW:
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     s3_endpoint: "Discourse 備份空間有支援其他第三方服務，可修改備份空間存向 DigitalOcean Spaces、Minio或是Amazon S3。警告：如果使用Amazon S3，請留白。"
     s3_configure_tombstone_policy: "啟用上傳的自動刪除功能。重要提醒：如果禁用此功能，在檔案刪除後，不會回收空間。"
-    enable_s3_inventory: "使用Amazon S3 清單生成報告並驗證上傳。注意：需要設定Amazon S3 驗證資料（包括Access Key ID、Secret Access Key）。"
     backup_time_of_day: "備份的 UTC 時間"
     backup_with_uploads: "在備份日程中包括上傳。關閉此項僅備份資料庫。"
     backup_location: "讀取備份資料的位置。注意：Amazon S3 需要在“文件”設定中輸入有效的 S3 驗證資料。"

@@ -16,6 +16,7 @@ const { StatsWriterPlugin } = require("webpack-stats-plugin");
 const withSideWatch = require("./lib/with-side-watch");
 const RawHandlebarsCompiler = require("discourse-hbr/raw-handlebars-compiler");
 const crypto = require("crypto");
+const commonBabelConfig = require("./lib/common-babel-config");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -58,13 +59,7 @@ module.exports = function (defaults) {
       exclude: ["**/highlightjs/*", "**/javascripts/*"],
     },
 
-    "ember-cli-babel": {
-      throwUnlessParallelizable: true,
-    },
-
-    babel: {
-      plugins: [require.resolve("deprecation-silencer")],
-    },
+    ...commonBabelConfig(),
 
     vendorFiles: {
       // Freedom patch - includes bug fix and async stack support
@@ -83,7 +78,6 @@ module.exports = function (defaults) {
   });
 
   // WARNING: We should only import scripts here if they are not in NPM.
-  app.import(vendorJs + "bootbox.js");
   app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
 
   app.import(
@@ -183,22 +177,6 @@ module.exports = function (defaults) {
               exportsPresence: "error",
             },
           },
-          rules: [
-            {
-              test: require.resolve("bootstrap/js/modal"),
-              use: [
-                {
-                  loader: "imports-loader",
-                  options: {
-                    imports: {
-                      moduleName: "jquery",
-                      name: "jQuery",
-                    },
-                  },
-                },
-              ],
-            },
-          ],
         },
         plugins: [
           // The server use this output to map each asset to its chunks

@@ -934,6 +934,7 @@ hy:
         set_password: "Առաջադրել Գաղտնաբառ"
         choose_new: "Ընտրել նոր գաղտնաբառ"
         choose: "Ընտրել գաղտնաբառ"
+        title: "Գաղտնաբառի Վերականգնում"
       second_factor_backup:
         regenerate: "Վերագեներացնել"
         disable: "Անջատել"
@@ -1179,7 +1180,6 @@ hy:
           error: "Ներողություն, ֆայլը պետք է լինի CSV ձևաչափով:"
       password:
         title: "Գաղտնաբառ"
-        too_short: "Ձեր գաղտնաբառը շատ կարճ է:"
         common: "Այդ գաղտնաբառը շատ է տարածված:"
         same_as_username: "Ձեր գաղտնաբառը համընկնում է Ձեր օգտանվան հետ:"
         same_as_email: "Ձեր գաղտնաբառը համընկնում է Ձեր էլ. հասցեի հետ:"
@@ -2714,7 +2714,6 @@ hy:
     tagging:
       other_tags: "Այլ Թեգեր"
       selector_tags: "թեգեր"
-      selector_all_tags: "բոլոր թեգերը"
       selector_no_tags: "առանց թեգերի"
       selector_remove_filter: "հանել ֆիլտրը"
       tags: "Թեգեր"
@@ -3144,6 +3143,8 @@ hy:
           timestamp: "Ստեղծված"
           completion: "Ավարտի Ժամանակը"
           actions: "Գործողություններ"
+          filter_status:
+            failed: "Ձախողված"
       home:
         title: "Գլխավոր էջ"
       account:
@@ -3190,6 +3191,9 @@ hy:
           search_logs: "Որոնել Գրառումներ"
           security: "Անվտանգություն"
           spam: "Սպամ"
+      config_areas:
+        about:
+          optional: "(ընտրովի)"
       plugins:
         title: "Հավելումներ"
         installed: "Տեղադրված Հավելումները"

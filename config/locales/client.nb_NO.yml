@@ -1117,6 +1117,7 @@ nb_NO:
         set_password: "Sett passord"
         choose_new: "Velg et nytt passord"
         choose: "Velg et passord"
+        title: "Nullstill Passord"
       second_factor_backup:
         title: "To-faktor backup koder"
         regenerate: "Regenerer"
@@ -1431,7 +1432,6 @@ nb_NO:
           error: "Beklager, fila må være i CSV-format."
       password:
         title: "Passord"
-        too_short: "Passordet ditt er for kort"
         common: "Det passordet er for vanlig."
         same_as_username: "Ditt passord er det samme som ditt brukernavn."
         same_as_email: "Ditt passord er det samme som din e-post."
@@ -3177,7 +3177,6 @@ nb_NO:
     tagging:
       other_tags: "Andre stikkord"
       selector_tags: "stikkord"
-      selector_all_tags: "alle stikkord"
       selector_no_tags: "ingen stikkord"
       selector_remove_filter: "fjern filter"
       tags: "Stikkord"
@@ -3633,6 +3632,8 @@ nb_NO:
           timestamp: "Opprettet"
           completion: "Gjennomføringstid"
           actions: "Handlinger"
+          filter_status:
+            failed: "Feilet"
       home:
         title: "Hjem"
       account:
@@ -3679,6 +3680,10 @@ nb_NO:
           search_logs: "Søkelogger"
           security: "Sikkerhet"
           spam: "Spam"
+      config_areas:
+        about:
+          optional: "(valgfritt)"
+          update: "Oppdater"
       plugins:
         title: "Utvidelser"
         installed: "Installerte utvidelser"

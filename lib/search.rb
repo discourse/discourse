@@ -542,20 +542,46 @@ class Search
 
   advanced_filter(/\Awith:images\z/i) { |posts| posts.where("posts.image_upload_id IS NOT NULL") }
 
-  advanced_filter(/\Acategory:(.+)\z/i) do |posts, match|
-    exact = false
+  advanced_filter(/\Acategor(?:y|ies):(.+)\z/i) do |posts, terms|
+    category_ids = []
 
-    if match[0] == "="
-      exact = true
-      match = match[1..-1]
+    matches =
+      terms
+        .split(",")
+        .map do |term|
+          if term[0] == "="
+            [term[1..-1], true]
+          else
+            [term, false]
+          end
+        end
+        .to_h
+
+    if matches.present?
+      sql = <<~SQL
+      SELECT c.id, term
+      FROM
+          categories c
+      JOIN
+          unnest(ARRAY[:matches]) AS term ON
+          c.slug ILIKE term OR
+          c.name ILIKE term OR
+          (term ~ '^[0-9]{1,10}$' AND c.id = term::int)
+      SQL
+
+      found = DB.query(sql, matches: matches.keys)
+
+      if found.present?
+        found.each do |row|
+          category_ids << row.id
+          @category_filter_matched ||= true
+          category_ids += Category.subcategory_ids(row.id) if !matches[row.term]
+        end
+      end
     end
 
-    category_ids =
-      Category.where("slug ilike ? OR name ilike ? OR id = ?", match, match, match.to_i).pluck(:id)
     if category_ids.present?
-      category_ids += Category.subcategory_ids(category_ids.first) unless exact
-      @category_filter_matched ||= true
-      posts.where("topics.category_id IN (?)", category_ids)
+      posts.where("topics.category_id IN (?)", category_ids.uniq)
     else
       posts.where("1 = 0")
     end
