@@ -2,7 +2,6 @@ import { alias, match } from "@ember/object/computed";
 import Mixin from "@ember/object/mixin";
 import { schedule, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
-import $ from "jquery";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import DiscourseURL from "discourse/lib/url";
@@ -34,10 +33,7 @@ export default Mixin.create({
 
   elementId: null, //click detection added for data-{elementId}
   triggeringLinkClass: null, //the <a> classname where this card should appear
-  _showCallback: null, //username, $target - load up data for when show is called, should call this._positionCard($target) when it's done.
-
-  postStream: alias("topic.postStream"),
-  viewingTopic: match("router.currentRouteName", /^topic\./),
+  _showCallback: null, //username - load up data for when show is called
 
   visible: false,
   username: null,
@@ -45,8 +41,10 @@ export default Mixin.create({
   cardTarget: null,
   post: null,
   isDocked: false,
-
   _menuInstance: null,
+
+  postStream: alias("topic.postStream"),
+  viewingTopic: match("router.currentRouteName", /^topic\./),
 
   _show(username, target, event) {
     // No user card for anon
@@ -65,14 +63,11 @@ export default Mixin.create({
 
     this.appEvents.trigger("card:show", username, target, event);
 
-    const closestArticle = target.closest("article");
-    const postId = closestArticle?.dataset?.postId || null;
-    const wasVisible = this.visible;
-    const previousTarget = this.cardTarget;
+    const postId = target.closest("article")?.dataset?.postId || null;
 
-    if (wasVisible) {
+    if (this.visible) {
       this._close();
-      if (target === previousTarget) {
+      if (target === this.cardTarget) {
         return;
       }
     }
@@ -81,6 +76,7 @@ export default Mixin.create({
       this.viewingTopic && postId
         ? this.postStream.findLoadedPost(postId)
         : null;
+
     this.setProperties({
       username,
       loading: username,
@@ -90,7 +86,8 @@ export default Mixin.create({
 
     document.querySelector(".card-cloak")?.classList.remove("hidden");
     this.appEvents.trigger("user-card:show", { username });
-    this._showCallback(username, $(target)).then((user) => {
+    this._positionCard(target, event);
+    this._showCallback(username).then((user) => {
       this.appEvents.trigger("user-card:after-show", { user });
     });
 
@@ -105,13 +102,8 @@ export default Mixin.create({
   didInsertElement() {
     this._super(...arguments);
 
-    const id = this.elementId;
-    const previewClickEvent = `click.discourse-preview-${id}-${this.triggeringLinkClass}`;
-
-    this.setProperties({
-      boundCardClickHandler: this._cardClickHandler,
-      previewClickEvent,
-    });
+    const previewClickEvent = `click.discourse-preview-${this.elementId}-${this.triggeringLinkClass}`;
+    this.setProperties({ previewClickEvent });
 
     document.addEventListener("mousedown", this._clickOutsideHandler);
     document.addEventListener("keyup", this._escListener);
@@ -119,13 +111,13 @@ export default Mixin.create({
     _cardClickListenerSelectors.forEach((selector) => {
       document
         .querySelector(selector)
-        .addEventListener("click", this.boundCardClickHandler);
+        .addEventListener("click", this._cardClickHandler);
     });
 
     this.appEvents.on(previewClickEvent, this, "_previewClick");
 
     this.appEvents.on(
-      `topic-header:trigger-${id}`,
+      `topic-header:trigger-${this.elementId}`,
       this,
       "_topicHeaderTrigger"
     );
@@ -136,7 +128,7 @@ export default Mixin.create({
   @bind
   _cardClickHandler(event) {
     if (this.avatarSelector) {
-      let matched = this._showCardOnClick(
+      const matched = this._showCardOnClick(
         event,
         this.avatarSelector,
         (el) => el.dataset[this.avatarDataAttrKey]
@@ -154,7 +146,7 @@ export default Mixin.create({
   },
 
   _showCardOnClick(event, selector, transformText) {
-    let matchingEl = event.target.closest(selector);
+    const matchingEl = event.target.closest(selector);
     if (matchingEl) {
       if (wantsNewWindow(event)) {
         return true;
@@ -165,6 +157,7 @@ export default Mixin.create({
         matchingEl,
         event
       );
+
       if (!shouldBubble) {
         event.preventDefault();
         event.stopPropagation();
@@ -179,30 +172,27 @@ export default Mixin.create({
     return this._show(username, target);
   },
 
-  _bindMobileScroll() {
-    const onScroll = () => {
-      throttle(this, this._close, 1000);
-    };
+  @bind
+  _onScroll() {
+    throttle(this, this._close, 1000);
+  },
 
-    $(window).on(MOBILE_SCROLL_EVENT, onScroll);
+  _bindMobileScroll() {
+    window.addEventListener(MOBILE_SCROLL_EVENT, this._onScroll);
   },
 
   _unbindMobileScroll() {
-    $(window).off(MOBILE_SCROLL_EVENT);
+    window.removeEventListener(MOBILE_SCROLL_EVENT, this._onScroll);
   },
 
-  _previewClick($target) {
-    return this._show($target.text().replace(/^@/, ""), $target);
+  _previewClick(target) {
+    return this._show(target.innerText.replace(/^@/, ""), target);
   },
 
-  _positionCard(target) {
+  _positionCard(target, event) {
     schedule("afterRender", async () => {
-      if (!target) {
-        return;
-      }
-
       if (this.site.desktopView) {
-        this._menuInstance = await this.menu.show(target[0], {
+        this._menuInstance = await this.menu.show(target, {
           content: this.element,
           autoUpdate: false,
           identifier: "card",
@@ -214,7 +204,7 @@ export default Mixin.create({
           },
         });
       } else {
-        this._menuInstance = await this.menu.show(target[0], {
+        this._menuInstance = await this.menu.show(target, {
           content: this.element,
           strategy: "fixed",
           identifier: "card",
@@ -243,10 +233,8 @@ export default Mixin.create({
 
   @bind
   _hide() {
-    if (!this.visible) {
-      if (this.site.mobileView) {
-        $(".card-cloak").addClass("hidden");
-      }
+    if (!this.visible && this.site.mobileView) {
+      document.querySelector(".card-cloak")?.classList.add("hidden");
     }
 
     this._menuInstance?.destroy();
@@ -280,11 +268,10 @@ export default Mixin.create({
     _cardClickListenerSelectors.forEach((selector) => {
       document
         .querySelector(selector)
-        .removeEventListener("click", this.boundCardClickHandler);
+        .removeEventListener("click", this._cardClickHandler);
     });
 
-    const previewClickEvent = this.previewClickEvent;
-    this.appEvents.off(previewClickEvent, this, "_previewClick");
+    this.appEvents.off(this.previewClickEvent, this, "_previewClick");
 
     this.appEvents.off(
       `topic-header:trigger-${this.elementId}`,
@@ -317,7 +304,6 @@ export default Mixin.create({
     if (this.visible && event.key === "Escape") {
       this.cardTarget?.focus();
       this._close();
-      return;
     }
   },
 });
