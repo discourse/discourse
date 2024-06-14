@@ -14,6 +14,7 @@
   background-position: right 0.5rem center;
   background-size: 16px 12px;
   height: 2em;
+  cursor: pointer;
 
   &:focus {
     border-color: var(--tertiary);
