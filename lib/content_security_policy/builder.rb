@@ -75,8 +75,7 @@ class ContentSecurityPolicy
 
       sources = Array(sources).map { |s| normalize_source(s) }
 
-      if SiteSetting.content_security_policy_strict_dynamic &&
-           %w[script_src worker_src].include?(directive.to_s)
+      if %w[script_src worker_src].include?(directive.to_s)
         # Strip any sources which are ignored under strict-dynamic
         # If/when we make strict-dynamic the only option, we could print deprecation warnings
         # asking plugin/theme authors to remove the unnecessary config
