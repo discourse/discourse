@@ -7,12 +7,15 @@ class Admin::SiteSettingsController < Admin::AdminController
 
   def index
     params.permit(:categories, :plugin)
+    params.permit(:filter_names, [])
 
     render_json_dump(
       site_settings:
         SiteSetting.all_settings(
           filter_categories: params[:categories],
           filter_plugin: params[:plugin],
+          filter_names: params[:filter_names],
+          include_locale_setting: params[:filter_names].blank?,
         ),
     )
   end
@@ -20,8 +23,8 @@ class Admin::SiteSettingsController < Admin::AdminController
   def update
     params.require(:id)
     id = params[:id]
+    update_existing_users = params[:update_existing_user].present?
     value = params[id]
-    value.strip! if value.is_a?(String)
 
     new_setting_name =
       SiteSettings::DeprecatedSettings::SETTINGS.find do |old_name, new_name, override, _|
@@ -37,127 +40,124 @@ class Admin::SiteSettingsController < Admin::AdminController
 
     id = new_setting_name if new_setting_name
 
-    raise_access_hidden_setting(id)
-
-    case SiteSetting.type_supervisor.get_type(id)
-    when :integer
-      value = value.tr("^-0-9", "")
-    when :file_size_restriction
-      value = value.tr("^0-9", "").to_i
-    when :uploaded_image_list
-      value = value.blank? ? "" : Upload.get_from_urls(value.split("|")).to_a
-    end
-
-    value = Upload.get_from_url(value) || "" if SiteSetting.type_supervisor.get_type(id) == :upload
-
-    update_existing_users = params[:update_existing_user].present?
     previous_value = value_or_default(SiteSetting.get(id)) if update_existing_users
 
-    SiteSetting.set_and_log(id, value, current_user)
+    with_service(UpdateSiteSetting, setting_name: id, new_value: value, current_user:) do
+      on_success do
+        value = result.new_value
+        if update_existing_users
+          new_value = value_or_default(value)
 
-    if update_existing_users
-      new_value = value_or_default(value)
+          if (user_option = user_options[id.to_sym]).present?
+            if user_option == "text_size_key"
+              previous_value = UserOption.text_sizes[previous_value.to_sym]
+              new_value = UserOption.text_sizes[new_value.to_sym]
+            elsif user_option == "title_count_mode_key"
+              previous_value = UserOption.title_count_modes[previous_value.to_sym]
+              new_value = UserOption.title_count_modes[new_value.to_sym]
+            end
 
-      if (user_option = user_options[id.to_sym]).present?
-        if user_option == "text_size_key"
-          previous_value = UserOption.text_sizes[previous_value.to_sym]
-          new_value = UserOption.text_sizes[new_value.to_sym]
-        elsif user_option == "title_count_mode_key"
-          previous_value = UserOption.title_count_modes[previous_value.to_sym]
-          new_value = UserOption.title_count_modes[new_value.to_sym]
-        end
+            attrs = { user_option => new_value }
+            attrs[:email_digests] = (new_value.to_i != 0) if id == "default_email_digest_frequency"
 
-        attrs = { user_option => new_value }
-        attrs[:email_digests] = (new_value.to_i != 0) if id == "default_email_digest_frequency"
+            UserOption.human_users.where(user_option => previous_value).update_all(attrs)
+          elsif id.start_with?("default_categories_")
+            previous_category_ids = previous_value.split("|")
+            new_category_ids = new_value.split("|")
 
-        UserOption.human_users.where(user_option => previous_value).update_all(attrs)
-      elsif id.start_with?("default_categories_")
-        previous_category_ids = previous_value.split("|")
-        new_category_ids = new_value.split("|")
+            notification_level = category_notification_level(id)
 
-        notification_level = category_notification_level(id)
-
-        categories_to_unwatch = previous_category_ids - new_category_ids
-        CategoryUser.where(
-          category_id: categories_to_unwatch,
-          notification_level: notification_level,
-        ).delete_all
-        TopicUser
-          .joins(:topic)
-          .where(
-            notification_level: TopicUser.notification_levels[:watching],
-            notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category],
-            topics: {
+            categories_to_unwatch = previous_category_ids - new_category_ids
+            CategoryUser.where(
               category_id: categories_to_unwatch,
-            },
-          )
-          .update_all(notification_level: TopicUser.notification_levels[:regular])
+              notification_level: notification_level,
+            ).delete_all
+            TopicUser
+              .joins(:topic)
+              .where(
+                notification_level: TopicUser.notification_levels[:watching],
+                notifications_reason_id: TopicUser.notification_reasons[:auto_watch_category],
+                topics: {
+                  category_id: categories_to_unwatch,
+                },
+              )
+              .update_all(notification_level: TopicUser.notification_levels[:regular])
 
-        (new_category_ids - previous_category_ids).each do |category_id|
-          skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
+            (new_category_ids - previous_category_ids).each do |category_id|
+              skip_user_ids = CategoryUser.where(category_id: category_id).pluck(:user_id)
 
-          User
-            .real
-            .where(staged: false)
-            .where.not(id: skip_user_ids)
-            .select(:id)
-            .find_in_batches do |users|
-              category_users = []
-              users.each do |user|
-                category_users << {
-                  category_id: category_id,
-                  user_id: user.id,
-                  notification_level: notification_level,
-                }
-              end
-              CategoryUser.insert_all!(category_users)
+              User
+                .real
+                .where(staged: false)
+                .where.not(id: skip_user_ids)
+                .select(:id)
+                .find_in_batches do |users|
+                  category_users = []
+                  users.each do |user|
+                    category_users << {
+                      category_id: category_id,
+                      user_id: user.id,
+                      notification_level: notification_level,
+                    }
+                  end
+                  CategoryUser.insert_all!(category_users)
+                end
             end
-        end
-      elsif id.start_with?("default_tags_")
-        previous_tag_ids = Tag.where(name: previous_value.split("|")).pluck(:id)
-        new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
-        now = Time.zone.now
+          elsif id.start_with?("default_tags_")
+            previous_tag_ids = Tag.where(name: previous_value.split("|")).pluck(:id)
+            new_tag_ids = Tag.where(name: new_value.split("|")).pluck(:id)
+            now = Time.zone.now
 
-        notification_level = tag_notification_level(id)
+            notification_level = tag_notification_level(id)
 
-        TagUser.where(
-          tag_id: (previous_tag_ids - new_tag_ids),
-          notification_level: notification_level,
-        ).delete_all
+            TagUser.where(
+              tag_id: (previous_tag_ids - new_tag_ids),
+              notification_level: notification_level,
+            ).delete_all
 
-        (new_tag_ids - previous_tag_ids).each do |tag_id|
-          skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
+            (new_tag_ids - previous_tag_ids).each do |tag_id|
+              skip_user_ids = TagUser.where(tag_id: tag_id).pluck(:user_id)
 
-          User
-            .real
-            .where(staged: false)
-            .where.not(id: skip_user_ids)
-            .select(:id)
-            .find_in_batches do |users|
-              tag_users = []
-              users.each do |user|
-                tag_users << {
-                  tag_id: tag_id,
-                  user_id: user.id,
-                  notification_level: notification_level,
-                  created_at: now,
-                  updated_at: now,
-                }
-              end
-              TagUser.insert_all!(tag_users)
+              User
+                .real
+                .where(staged: false)
+                .where.not(id: skip_user_ids)
+                .select(:id)
+                .find_in_batches do |users|
+                  tag_users = []
+                  users.each do |user|
+                    tag_users << {
+                      tag_id: tag_id,
+                      user_id: user.id,
+                      notification_level: notification_level,
+                      created_at: now,
+                      updated_at: now,
+                    }
+                  end
+                  TagUser.insert_all!(tag_users)
+                end
             end
+          elsif is_sidebar_default_setting?(id)
+            Jobs.enqueue(
+              :backfill_sidebar_site_settings,
+              setting_name: id,
+              previous_value: previous_value,
+              new_value: new_value,
+            )
+          end
         end
-      elsif is_sidebar_default_setting?(id)
-        Jobs.enqueue(
-          :backfill_sidebar_site_settings,
-          setting_name: id,
-          previous_value: previous_value,
-          new_value: new_value,
-        )
+
+        render body: nil
+      end
+
+      on_failed_policy(:setting_is_visible) do
+        raise Discourse::InvalidParameters, "You are not allowed to change hidden settings"
+      end
+
+      on_failed_policy(:setting_is_configurable) do
+        raise Discourse::InvalidParameters, "You are not allowed to change unconfigurable settings"
       end
     end
-
-    render body: nil
   end
 
   def user_count

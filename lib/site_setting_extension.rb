@@ -185,7 +185,8 @@ module SiteSettingExtension
     include_locale_setting: true,
     only_overridden: false,
     filter_categories: nil,
-    filter_plugin: nil
+    filter_plugin: nil,
+    filter_names: nil
   )
     locale_setting_hash = {
       setting: "default_locale",
@@ -252,6 +253,13 @@ module SiteSettingExtension
       .select do |setting|
         if only_overridden
           setting[:value] != setting[:default]
+        else
+          true
+        end
+      end
+      .select do |setting|
+        if filter_names
+          filter_names.include?(setting[:setting].to_s)
         else
           true
         end
