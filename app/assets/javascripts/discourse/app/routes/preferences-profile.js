@@ -1,7 +1,10 @@
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
 
 export default class PreferencesProfile extends RestrictedUserRoute {
+  @service currentUser;
+
   setupController(controller, model) {
     controller.set("model", model);
   }
@@ -10,11 +13,7 @@ export default class PreferencesProfile extends RestrictedUserRoute {
   willTransition(transition) {
     super.willTransition(...arguments);
 
-    if (
-      this.controllerFor("preferences.profile").get(
-        "showEnforcedRequiredFieldsNotice"
-      )
-    ) {
+    if (this.currentUser.needs_required_fields_check) {
       transition.abort();
       return false;
     }
