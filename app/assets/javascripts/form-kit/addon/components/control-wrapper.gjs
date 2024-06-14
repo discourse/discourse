@@ -11,6 +11,8 @@ export default class FKControlWrapper extends Component {
     switch (this.args.component.name) {
       case "FKControlInput":
         return "-input";
+      case "FKControlComposer":
+        return "-composer";
       case "FKControlText":
         return "-text";
       case "FKControlQuestion":

@@ -5,6 +5,7 @@ import { hash } from "@ember/helper";
 import { action, get } from "@ember/object";
 import FKControlCheckbox from "form-kit/components/control/checkbox";
 import FKControlCode from "form-kit/components/control/code";
+import FKControlComposer from "form-kit/components/control/composer";
 import FKControlIcon from "form-kit/components/control/icon";
 import FKControlImage from "form-kit/components/control/image";
 import FKControlInput from "form-kit/components/control/input";
@@ -138,6 +139,17 @@ export default class FormField extends Component {
           Image=(component
             FKControlWrapper
             component=FKControlImage
+            setValue=this.setValue
+            value=this.value
+            errors=this.errors
+            hasErrors=this.hasErrors
+            triggerValidationFor=@triggerValidationFor
+            field=this.field
+            set=this.set
+          )
+          Composer=(component
+            FKControlWrapper
+            component=FKControlComposer
             setValue=this.setValue
             value=this.value
             errors=this.errors
