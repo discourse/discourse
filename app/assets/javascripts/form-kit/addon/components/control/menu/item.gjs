@@ -17,7 +17,7 @@ export default class FKControlMenuItem extends Component {
   }
 
   <template>
-    <@item>
+    <@item class="form-kit__control-menu-item">
       <DButton
         @action={{this.handleInput}}
         class="btn-flat"

@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import FKControlMenuContainer from "form-kit/components/control/menu/container";
+import FKControlMenuDivider from "form-kit/components/control/menu/divider";
 import FKControlMenuItem from "form-kit/components/control/menu/item";
 import DMenu from "discourse/components/d-menu";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -35,7 +37,8 @@ export default class FKControlMenu extends Component {
               Item=(component
                 FKControlMenuItem item=menu.item set=@set menuApi=this.menuApi
               )
-              Divider=menu.divider
+              Divider=(component FKControlMenuDivider divider=menu.divider)
+              Container=FKControlMenuContainer
             )
           }}
         </DropdownMenu>
