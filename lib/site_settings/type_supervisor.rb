@@ -27,6 +27,8 @@ class SiteSettings::TypeSupervisor
   # For plugins, so they can tell if a feature is supported
   SUPPORTED_TYPES = %i[email username list enum].freeze
 
+  REQUIRES_CONFIRMATION_TYPES = { simple: "simple", user_option: "user_option" }.freeze
+
   def self.types
     @types ||=
       Enum.new(

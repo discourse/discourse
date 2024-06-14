@@ -9,6 +9,7 @@ import { Promise } from "rsvp";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
+import { SITE_SETTING_REQUIRES_CONFIRMATION_TYPES } from "discourse/lib/constants";
 import { splitString } from "discourse/lib/utilities";
 import { deepEqual } from "discourse-common/lib/object";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
@@ -208,19 +209,36 @@ export default Mixin.create({
 
   async confirmChanges(settingKey) {
     return new Promise((resolve) => {
-      this.dialog.yesNoConfirm({
-        // Fallback is needed in case the setting does not have a custom confirmation
-        // message defined.
+      // Fallback is needed in case the setting does not have a custom confirmation
+      // prompt/confirm defined.
+      this.dialog.alert({
         message: I18n.t(
-          `admin.site_settings.confirmation_messages.${settingKey}`,
+          `admin.site_settings.requires_confirmation_messages.${settingKey}.prompt`,
           {
             translatedFallback: I18n.t(
-              "admin.site_settings.confirmation_messages.default"
+              "admin.site_settings.requires_confirmation_messages.default.prompt"
             ),
           }
         ),
-        didCancel: () => resolve(false),
-        didConfirm: () => resolve(true),
+        buttons: [
+          {
+            label: I18n.t(
+              `admin.site_settings.requires_confirmation_messages.${settingKey}.confirm`,
+              {
+                translatedFallback: I18n.t(
+                  "admin.site_settings.requires_confirmation_messages.default.confirm"
+                ),
+              }
+            ),
+            class: "btn-primary",
+            action: () => resolve(true),
+          },
+          {
+            label: I18n.t("no_value"),
+            class: "btn-default",
+            action: () => resolve(false),
+          },
+        ],
       });
     });
   },
@@ -230,7 +248,10 @@ export default Mixin.create({
     const key = this.buffered.get("setting");
 
     let confirm = true;
-    if (this.buffered.get("requires_confirmation")) {
+    if (
+      this.buffered.get("requires_confirmation") ===
+      SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple
+    ) {
       confirm = await this.confirmChanges(key);
     }
 

@@ -650,7 +650,14 @@ module SiteSettingExtension
       defaults.load_setting(name, default, opts.delete(:locale_default))
 
       mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
-      requires_confirmation_settings[name] = opts[:requires_confirmation] || false
+
+      requires_confirmation_settings[name] = (
+        if SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.values.include?(
+             opts[:requires_confirmation],
+           )
+          opts[:requires_confirmation]
+        end
+      )
 
       categories[name] = opts[:category] || :uncategorized
 

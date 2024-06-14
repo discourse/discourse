@@ -10,7 +10,7 @@ describe "Emoji deny list", type: :system do
 
   describe "when editing admin settings" do
     before { SiteSetting.emoji_deny_list = "" }
-    let(:site_settings_page) { PageObjects::Pages::AdminSettings.new }
+    let(:site_settings_page) { PageObjects::Pages::AdminSiteSettings.new }
 
     skip "should allow admin to update emoji deny list" do
       site_settings_page.visit_category("posting")
