@@ -19,28 +19,28 @@ describe "User preferences | Profile", type: :system do
       )
     end
 
-    it "allows user to fill up required fields" do
-      # Redirects to the profile page to fill up missing fields.
-      #
+    it "redirects to the profile page to fill up required fields" do
       visit("/")
 
       expect(page).to have_current_path("/u/bruce0/preferences/profile")
 
-      # Shows a notice that the user needs to fill up more fields.
-      #
       expect(page).to have_selector(
         ".alert-error",
         text: I18n.t("js.user.preferences.profile.enforced_required_fields"),
       )
+    end
 
-      # Prevents user from navigating to other client-side routes.
-      #
+    it "disables client-side routing while missing required fields" do
+      user_preferences_profile_page.visit(user)
+
       find("#site-logo").click
 
       expect(page).to have_current_path("/u/bruce0/preferences/profile")
+    end
 
-      # No longer redirects after filling up the missing fields.
-      #
+    it "allows user to fill up required fields" do
+      user_preferences_profile_page.visit(user)
+
       find(".user-field-favourite-pokemon input").fill_in(with: "Mudkip")
       find(".save-button .btn-primary").click
 
