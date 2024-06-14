@@ -511,6 +511,10 @@ class FieldHelper {
   get value() {
     return this.element.dataset.value;
   }
+
+  get disabled() {
+    return this.element.dataset.disabled === "";
+  }
 }
 
 class FormHelper {
@@ -532,6 +536,9 @@ QUnit.assert.form = function (selector) {
       const field = form.field(name);
 
       return {
+        isDisabled: (message) => {
+          this.ok(field.disabled, message);
+        },
         hasValue: (value, message) => {
           this.deepEqual(field.value, value, message);
         },

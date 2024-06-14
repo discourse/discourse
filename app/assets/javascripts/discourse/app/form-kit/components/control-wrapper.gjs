@@ -39,9 +39,9 @@ export default class FKControlWrapper extends Component {
       class={{concatClass
         "form-kit__field"
         (concat "form-kit__field" this.controlType)
-        (if @field.disabled "--disabled")
         (if @hasErrors "has-errors")
       }}
+      data-disabled={{@field.disabled}}
       data-name={{@field.name}}
       data-value={{@value}}
     >

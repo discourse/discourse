@@ -4,7 +4,6 @@ import { action } from "@ember/object";
 import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/label";
 import FKMeta from "discourse/form-kit/components/meta";
-import concatClass from "discourse/helpers/concat-class";
 
 export default class FKControlCheckbox extends Component {
   @action
@@ -14,11 +13,8 @@ export default class FKControlCheckbox extends Component {
 
   <template>
     <div
-      class={{concatClass
-        "form-kit__field"
-        "form-kit__field-checkbox"
-        (if @field.disabled "--disabled")
-      }}
+      class="form-kit__field form-kit__field-checkbox"
+      data-disabled={{@field.disabled}}
     >
       <FKLabel class="form-kit__control-checkbox__label">
         <input
