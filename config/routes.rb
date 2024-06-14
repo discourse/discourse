@@ -1174,6 +1174,7 @@ Discourse::Application.routes.draw do
     post "categories/reorder" => "categories#reorder"
     get "categories/find" => "categories#find"
     post "categories/search" => "categories#search"
+    get "categories/hierarchical_search" => "categories#hierarchical_search"
     get "categories/:parent_category_id" => "categories#index"
 
     scope path: "category/:category_id" do

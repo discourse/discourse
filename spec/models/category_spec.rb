@@ -1550,4 +1550,19 @@ RSpec.describe Category do
       )
     end
   end
+
+  describe ".limited_categories_matching" do
+    before_all { SiteSetting.max_category_nesting = 3 }
+
+    fab!(:foo) { Fabricate(:category, name: "foo") }
+    fab!(:bar) { Fabricate(:category, name: "bar", parent_category: foo) }
+    fab!(:baz) { Fabricate(:category, name: "baz", parent_category: bar) }
+
+    it "produces results in depth-first pre-order" do
+      SiteSetting.max_category_nesting = 3
+      expect(Category.limited_categories_matching(nil, nil, nil, "baz").pluck(:name)).to eq(
+        %w[foo bar baz],
+      )
+    end
+  end
 end

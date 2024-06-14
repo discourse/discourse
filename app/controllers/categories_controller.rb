@@ -334,6 +334,66 @@ class CategoriesController < ApplicationController
     render_serialized(categories, serializer, root: :categories, scope: guardian)
   end
 
+  def hierarchical_search
+    term = params[:term].to_s.strip
+    page = [1, params[:page].to_i].max
+    offset = params[:offset].to_i
+    parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
+    only = Category.where(id: params[:only].to_a.map(&:to_i)) if params[:only].present?
+    except_ids = params[:except].to_a.map(&:to_i)
+    include_uncategorized =
+      (
+        if params[:include_uncategorized].present?
+          ActiveModel::Type::Boolean.new.cast(params[:include_uncategorized])
+        else
+          true
+        end
+      )
+
+    except_ids << SiteSetting.uncategorized_category_id unless include_uncategorized
+
+    except = Category.where(id: except_ids) if except_ids.present?
+
+    limit =
+      (
+        if params[:limit].present?
+          params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT)
+        else
+          MAX_CATEGORIES_LIMIT
+        end
+      )
+
+    categories =
+      Category
+        .secured(guardian)
+        .limited_categories_matching(only, except, parent_category_id, term)
+        .preload(
+          :uploaded_logo,
+          :uploaded_logo_dark,
+          :uploaded_background,
+          :uploaded_background_dark,
+          :tags,
+          :tag_groups,
+          :form_templates,
+          category_required_tag_groups: :tag_group,
+        )
+        .joins("LEFT JOIN topics t on t.id = categories.topic_id")
+        .select("categories.*, t.slug topic_slug")
+        .limit(limit)
+        .offset((page - 1) * limit + offset)
+        .to_a
+
+    if Site.preloaded_category_custom_fields.present?
+      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
+    end
+
+    Category.preload_user_fields!(guardian, categories)
+
+    response = { categories: serialize_data(categories, SiteCategorySerializer, scope: guardian) }
+
+    render_json_dump(response)
+  end
+
   def search
     term = params[:term].to_s.strip
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
