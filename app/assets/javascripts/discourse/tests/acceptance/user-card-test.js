@@ -2,11 +2,7 @@ import { getOwner } from "@ember/owner";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import {
-  acceptance,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "discourse-i18n";
 
@@ -21,10 +17,11 @@ acceptance("User Card - Show Local Time", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click('a[data-user-card="charlie"]');
 
-    assert.notOk(
-      exists(".user-card .local-time"),
-      "it does not show the local time if the user card returns a null/undefined timezone for another user"
-    );
+    assert
+      .dom(".user-card .local-time")
+      .doesNotExist(
+        "it does not show the local time if the user card returns a null/undefined timezone for another user"
+      );
   });
 });
 
@@ -42,11 +39,10 @@ acceptance(
       await visit("/t/this-is-a-test-topic/9");
       await click('a[data-user-card="eviltrout"]');
 
-      assert.equal(
-        query(".user-card h1.username .name-username-wrapper").innerText,
-        "eviltrout"
-      );
-      assert.equal(query(".user-card h2.full-name").innerText, "Robin Ward");
+      assert
+        .dom(".user-card h1.username .name-username-wrapper")
+        .hasText("eviltrout");
+      assert.dom(".user-card h2.full-name").hasText("Robin Ward");
     });
   }
 );
@@ -65,11 +61,10 @@ acceptance(
       await visit("/t/this-is-a-test-topic/9");
       await click('a[data-user-card="eviltrout"]');
 
-      assert.equal(
-        query(".user-card h1.full-name .name-username-wrapper").innerText,
-        "Robin Ward"
-      );
-      assert.equal(query(".user-card h2.username").innerText, "eviltrout");
+      assert
+        .dom(".user-card h1.full-name .name-username-wrapper")
+        .hasText("Robin Ward");
+      assert.dom(".user-card h2.username").hasText("eviltrout");
     });
   }
 );
@@ -88,7 +83,7 @@ acceptance("User Card - User Status", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click('a[data-user-card="charlie"]');
 
-    assert.ok(exists(".user-card h3.user-status"));
+    assert.dom(".user-card h3.user-status").exists();
   });
 
   test("doesn't show user status if disabled", async function (assert) {
@@ -97,7 +92,7 @@ acceptance("User Card - User Status", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click('a[data-user-card="charlie"]');
 
-    assert.notOk(exists(".user-card h3.user-status"));
+    assert.dom(".user-card h3.user-status").doesNotExist();
   });
 });
 
@@ -123,14 +118,10 @@ acceptance("User Card - Hidden Profile", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
     await click('a[data-user-card="eviltrout"]');
 
-    assert.equal(
-      query(".user-card .name-username-wrapper").innerText,
-      "eviltrout"
-    );
-    assert.equal(
-      query(".user-card .profile-hidden").innerText,
-      I18n.t("user.profile_hidden")
-    );
+    assert.dom(".user-card .name-username-wrapper").hasText("eviltrout");
+    assert
+      .dom(".user-card .profile-hidden")
+      .hasText(I18n.t("user.profile_hidden"));
   });
 });
 
@@ -154,14 +145,9 @@ acceptance("User Card - Inactive user", function (needs) {
     await visit("/t/this-is-a-test-topic/9");
     await click('a[data-user-card="eviltrout"]');
 
-    assert.equal(
-      query(".user-card .name-username-wrapper").innerText,
-      "eviltrout"
-    );
-
-    assert.equal(
-      query(".user-card .inactive-user").innerText,
-      I18n.t("user.inactive_user")
-    );
+    assert.dom(".user-card .name-username-wrapper").hasText("eviltrout");
+    assert
+      .dom(".user-card .inactive-user")
+      .hasText(I18n.t("user.inactive_user"));
   });
 });

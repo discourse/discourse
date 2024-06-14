@@ -11,6 +11,8 @@ import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 
 const DEFAULT_SELECTOR = "#main-outlet";
+const AVATAR_OVERFLOW_SIZE = 44;
+const MOBILE_SCROLL_EVENT = "scroll.mobile-card-cloak";
 
 let _cardClickListenerSelectors = [DEFAULT_SELECTOR];
 
@@ -23,8 +25,12 @@ export function resetCardClickListenerSelector() {
 }
 
 export default Mixin.create({
-  router: service(),
+  appEvents: service(),
+  currentUser: service(),
   menu: service(),
+  router: service(),
+  site: service(),
+  siteSettings: service(),
 
   elementId: null, //click detection added for data-{elementId}
   triggeringLinkClass: null, //the <a> classname where this card should appear
@@ -100,14 +106,11 @@ export default Mixin.create({
     this._super(...arguments);
 
     const id = this.elementId;
-    const triggeringLinkClass = this.triggeringLinkClass;
-    const previewClickEvent = `click.discourse-preview-${id}-${triggeringLinkClass}`;
-    const mobileScrollEvent = "scroll.mobile-card-cloak";
+    const previewClickEvent = `click.discourse-preview-${id}-${this.triggeringLinkClass}`;
 
     this.setProperties({
       boundCardClickHandler: this._cardClickHandler,
       previewClickEvent,
-      mobileScrollEvent,
     });
 
     document.addEventListener("mousedown", this._clickOutsideHandler);
@@ -177,18 +180,15 @@ export default Mixin.create({
   },
 
   _bindMobileScroll() {
-    const mobileScrollEvent = this.mobileScrollEvent;
     const onScroll = () => {
       throttle(this, this._close, 1000);
     };
 
-    $(window).on(mobileScrollEvent, onScroll);
+    $(window).on(MOBILE_SCROLL_EVENT, onScroll);
   },
 
   _unbindMobileScroll() {
-    const mobileScrollEvent = this.mobileScrollEvent;
-
-    $(window).off(mobileScrollEvent);
+    $(window).off(MOBILE_SCROLL_EVENT);
   },
 
   _previewClick($target) {
@@ -201,14 +201,13 @@ export default Mixin.create({
         return;
       }
 
-      const avatarOverflowSize = 44;
       if (this.site.desktopView) {
         this._menuInstance = await this.menu.show(target[0], {
           content: this.element,
           autoUpdate: false,
           identifier: "card",
           padding: {
-            top: 10 + avatarOverflowSize + headerOffset(),
+            top: 10 + AVATAR_OVERFLOW_SIZE + headerOffset(),
             right: 10,
             bottom: 10,
             left: 10,
@@ -222,7 +221,7 @@ export default Mixin.create({
           computePosition: (content) => {
             content.style.left = "10px";
             content.style.right = "10px";
-            content.style.top = 10 + avatarOverflowSize + "px";
+            content.style.top = 10 + AVATAR_OVERFLOW_SIZE + "px";
           },
         });
       }
@@ -299,21 +298,18 @@ export default Mixin.create({
 
   @bind
   _clickOutsideHandler(event) {
-    if (this.visible) {
-      if (
-        event.target
-          .closest(`[data-${this.elementId}]`)
-          ?.getAttribute(`data-${this.elementId}`) ||
-        event.target.closest(`a.${this.triggeringLinkClass}`) ||
-        event.target.closest(`#${this.elementId}`)
-      ) {
-        return;
-      }
-
-      this._close();
+    if (
+      !this.visible ||
+      event.target
+        .closest(`[data-${this.elementId}]`)
+        ?.getAttribute(`data-${this.elementId}`) ||
+      event.target.closest(`a.${this.triggeringLinkClass}`) ||
+      event.target.closest(`#${this.elementId}`)
+    ) {
+      return;
     }
 
-    return true;
+    this._close();
   },
 
   @bind
