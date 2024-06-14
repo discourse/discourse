@@ -19,8 +19,8 @@ class UpdateSiteSetting
     context.setting_name = setting_name.to_sym
   end
 
-  def current_user_is_admin(current_user:)
-    current_user.admin?
+  def current_user_is_admin(guardian:)
+    guardian.is_admin?
   end
 
   def setting_is_visible(setting_name:)
@@ -49,7 +49,7 @@ class UpdateSiteSetting
     context.new_value = new_value
   end
 
-  def save(setting_name:, new_value:, current_user:)
-    SiteSetting.set_and_log(setting_name, new_value, current_user)
+  def save(setting_name:, new_value:, guardian:)
+    SiteSetting.set_and_log(setting_name, new_value, guardian.user)
   end
 end

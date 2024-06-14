@@ -42,7 +42,7 @@ class Admin::SiteSettingsController < Admin::AdminController
 
     previous_value = value_or_default(SiteSetting.get(id)) if update_existing_users
 
-    with_service(UpdateSiteSetting, setting_name: id, new_value: value, current_user:) do
+    with_service(UpdateSiteSetting, setting_name: id, new_value: value) do
       on_success do
         value = result.new_value
         SiteSettingUpdateExistingUsers.call(id, value, previous_value) if update_existing_users

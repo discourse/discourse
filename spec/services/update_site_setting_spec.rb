@@ -3,20 +3,20 @@
 describe(UpdateSiteSetting) do
   fab!(:admin)
 
-  def call_service(name, value, current_user: admin, allow_changing_hidden: false)
+  def call_service(name, value, user: admin, allow_changing_hidden: false)
     described_class.call(
       setting_name: name,
       new_value: value,
-      current_user:,
+      guardian: user.guardian,
       allow_changing_hidden:,
     )
   end
 
   context "when a non-admin user tries to change a setting" do
     it "fails the current_user_is_admin policy" do
-      expect(
-        call_service(:title, "some new title", current_user: Fabricate(:moderator)),
-      ).to fail_a_policy(:current_user_is_admin)
+      expect(call_service(:title, "some new title", user: Fabricate(:moderator))).to fail_a_policy(
+        :current_user_is_admin,
+      )
       expect(SiteSetting.title).not_to eq("some new title")
     end
   end
