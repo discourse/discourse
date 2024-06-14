@@ -186,10 +186,6 @@
     background: var(--secondary);
     color: var(--primary);
 
-    &[editing] {
-      opacity: 1;
-    }
-
     .scale-btn-container,
     .alt-text-readonly-container,
     .alt-text-edit-container,
