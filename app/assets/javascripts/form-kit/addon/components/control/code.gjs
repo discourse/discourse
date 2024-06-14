@@ -17,6 +17,7 @@ export default class FKControlCode extends Component {
       @disabled={{@field.disabled}}
       @onChange={{this.handleInput}}
       class="form-kit__control-code"
+      ...attributes
     />
   </template>
 }
