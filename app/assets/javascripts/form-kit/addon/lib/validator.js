@@ -1,5 +1,6 @@
-import { assert } from "@ember/debug";
+import { assert, warn } from "@ember/debug";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 
 const SUPPORTED_PRIMITIVES = ["string", "number", "boolean"];
 
@@ -17,7 +18,6 @@ export default class Validator {
 
   @bind
   addError(error) {
-    console.log("addError", error);
     this.errors.push(error);
   }
 
@@ -31,7 +31,7 @@ export default class Validator {
       if (this[rule + "Validator"]) {
         await this[rule + "Validator"](this.value, this.rules[rule]);
       } else {
-        console.warn(`Unknown validator: ${rule}`);
+        warn(`Unknown validator: ${rule}`);
       }
     }
 
@@ -44,7 +44,9 @@ export default class Validator {
         this.errors.push({
           type: "too_long",
           value,
-          message: `Must be at most ${rule.max} characters`,
+          message: I18n.t("form_kit.errors.too_long", {
+            count: rule.max,
+          }),
         });
       }
     }
@@ -54,7 +56,9 @@ export default class Validator {
         this.errors.push({
           type: "too_short",
           value,
-          message: `Must be at least ${rule.min} characters`,
+          message: I18n.t("form_kit.errors.too_short", {
+            count: rule.min,
+          }),
         });
       }
     }
@@ -66,7 +70,9 @@ export default class Validator {
         this.errors.push({
           type: "too_high",
           value,
-          message: `Must be at most ${rule.max}`,
+          message: I18n.t("form_kit.errors.too_high", {
+            count: rule.max,
+          }),
         });
       }
     }
@@ -76,7 +82,9 @@ export default class Validator {
         this.errors.push({
           type: "too_low",
           value,
-          message: `Must be at least ${rule.min}`,
+          message: I18n.t("form_kit.errors.too_low", {
+            count: rule.min,
+          }),
         });
       }
     }
@@ -92,7 +100,7 @@ export default class Validator {
         this.errors.push({
           type: "required",
           value,
-          message: "Required",
+          message: I18n.t("form_kit.errors.required"),
         });
       }
     }

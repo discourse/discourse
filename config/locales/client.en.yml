@@ -2088,6 +2088,17 @@ en:
       dismiss_error: "Dismiss error"
     form_kit:
       optional: optional
+      errors:
+        required: "Required"
+        too_high: "Must be at most %{count}"
+        too_low: "Must be at least %{count}"
+        too_long:
+          one: "Must be at most %{count} character"
+          other: "Must be at most %{count} characters"
+        too_short:
+          one: "Must be at least %{count} character"
+          other: "Must be at least %{count} characters"
+
     close: "Close"
     assets_changed_confirm: "This site just received a software update. Get the latest version now?"
     logout: "You were logged out."
