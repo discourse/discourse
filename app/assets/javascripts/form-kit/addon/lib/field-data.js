@@ -39,7 +39,7 @@ export default class FieldData {
     this.onSet = onSet;
     this.disabled = disabled;
     this.type = type;
-    this.validate = validate;
+    this.customValidate = validate;
     this.validation = validation;
     this.rules = this.validation ? ValidationParser.parse(validation) : null;
     this.validationEnabled = validationEnabled ?? true;
@@ -76,7 +76,7 @@ export default class FieldData {
     }
 
     const validator = new Validator(value, this.type, this.rules);
-    await this.validate?.(name, value, data, validator.addError);
+    await this.customValidate?.(name, value, data, validator.addError);
     await validator.validate();
 
     return {
