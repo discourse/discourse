@@ -50,8 +50,7 @@ export default Component.extend(CardContentsBase, CleansUp, {
     return groupPath(group.name);
   },
 
-  async _showCallback(username, $target) {
-    this._positionCard($target);
+  async _showCallback(username) {
     this.setProperties({ visible: true, loading: true });
 
     try {

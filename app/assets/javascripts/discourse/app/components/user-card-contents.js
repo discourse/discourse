@@ -189,8 +189,7 @@ export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
     return profileHidden || inactive;
   },
 
-  async _showCallback(username, $target) {
-    this._positionCard($target);
+  async _showCallback(username) {
     this.setProperties({ visible: true, loading: true });
 
     const args = {
