@@ -199,11 +199,6 @@
             </field.Select>
           </form.Field>
         {{/if}}
-
-        <PluginOutlet
-          @name="admin-above-badge-buttons"
-          @outletArgs={{hash badge=this.buffered form=form}}
-        />
       </form.Section>
     {{/if}}
 
@@ -246,6 +241,11 @@
         <field.Checkbox @label={{i18n "admin.badges.show_posts"}} />
       </form.Field>
     </form.Section>
+
+    <PluginOutlet
+      @name="admin-above-badge-buttons"
+      @outletArgs={{hash badge=this.buffered form=form}}
+    />
 
     <form.Container>
       <form.Submit @isLoading={{this.saving}} />
