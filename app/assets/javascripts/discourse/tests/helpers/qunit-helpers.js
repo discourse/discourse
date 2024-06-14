@@ -504,8 +504,8 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 };
 
 class FieldHelper {
-  constructor(selector) {
-    this.element = query(selector);
+  constructor(element) {
+    this.element = element;
   }
 
   get value() {
@@ -519,12 +519,16 @@ class FieldHelper {
 
 class FormHelper {
   constructor(selector) {
-    this.selector = selector;
+    if (selector instanceof HTMLElement) {
+      this.element = selector;
+    } else {
+      this.element = query(selector);
+    }
   }
 
   field(name) {
     return new FieldHelper(
-      `${this.selector} .form-kit__field[data-name="${name}"]`
+      query(`.form-kit__field[data-name="${name}"]`, this.element)
     );
   }
 }
