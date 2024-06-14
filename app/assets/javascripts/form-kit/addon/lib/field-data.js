@@ -3,59 +3,80 @@ import ValidationParser from "form-kit/lib/validation-parser";
 import Validator from "form-kit/lib/validator";
 import uniqueId from "discourse/helpers/unique-id";
 
+/**
+ * Represents field data for a form.
+ */
 export default class FieldData {
-  /**
-   * tracked state that enabled a dynamic validation of a field *before* the whole form is submitted, e.g. by `@validateOn="blur" and the blur event being triggered for that particular field.
-   */
-  @tracked validationEnabled = false;
+  @tracked validationEnabled;
 
+  /**
+   * Unique identifier for the field.
+   * @type {string}
+   */
   id = uniqueId();
 
+  /**
+   * Unique identifier for the field error.
+   * @type {Function}
+   */
   errorId = uniqueId;
 
-  constructor(name, fieldRegistration) {
+  /**
+   * Creates an instance of FieldData.
+   * @param {string} name - The name of the field.
+   * @param {Object} options - The options for the field.
+   * @param {Function} options.onSet - The callback function for setting the field value.
+   * @param {string} options.validation - The validation rules for the field.
+   * @param {boolean} options.disabled - Indicates if the field is disabled.
+   * @param {string} options.type - The type of the field.
+   * @param {Function} options.validate - The custom validation function.
+   */
+  constructor(
+    name,
+    { onSet, validation, disabled, type, validate, validationEnabled }
+  ) {
     this.name = name;
-    this.fieldRegistration = fieldRegistration;
-    this.onSet = fieldRegistration.onSet;
-
-    this.rules = this.fieldRegistration.validation
-      ? ValidationParser.parse(fieldRegistration.validation)
-      : null;
+    this.onSet = onSet;
+    this.disabled = disabled;
+    this.type = type;
+    this.validate = validate;
+    this.validation = validation;
+    this.rules = this.validation ? ValidationParser.parse(validation) : null;
+    this.validationEnabled = validationEnabled ?? true;
   }
 
-  get disabled() {
-    return this.fieldRegistration.disabled;
-  }
-
+  /**
+   * Checks if the field is required.
+   * @type {boolean}
+   * @readonly
+   */
   get required() {
     return this.rules?.required ?? false;
   }
 
+  /**
+   * Gets the maximum length of the field value.
+   * @type {number|null}
+   * @readonly
+   */
   get maxLength() {
     return this.rules?.length?.max ?? null;
   }
 
   /**
-   * The *field* level validation callback passed to the field as in `<form.field @name="foo" @validate={{this.validateCallback}}>`
+   * Validates the field value.
+   * @param {string} name - The name of the field.
+   * @param {any} value - The value of the field.
+   * @param {Object} data - Additional data for validation.
+   * @returns {Promise<Object>} The validation errors.
    */
-
   async validate(name, value, data) {
-    if (this.fieldRegistration.disabled) {
-      return;
+    if (this.disabled) {
+      return { [name]: [] };
     }
 
-    const validator = new Validator(
-      value,
-      this.fieldRegistration.type,
-      this.rules
-    );
-
-    await this.fieldRegistration.validate?.(
-      name,
-      value,
-      data,
-      validator.addError
-    );
+    const validator = new Validator(value, this.type, this.rules);
+    await this.validate?.(name, value, data, validator.addError);
     await validator.validate();
 
     return {
