@@ -5,6 +5,8 @@ class UpdateSiteSetting
 
   policy :current_user_is_admin
 
+  contract
+
   step :convert_name_to_sym
 
   policy :setting_is_visible
@@ -12,6 +14,13 @@ class UpdateSiteSetting
 
   step :cleanup_value
   step :save
+
+  class Contract
+    attribute :setting_name
+    attribute :new_value
+
+    validates :setting_name, presence: true
+  end
 
   private
 

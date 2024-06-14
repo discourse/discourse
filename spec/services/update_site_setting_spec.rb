@@ -12,6 +12,14 @@ describe(UpdateSiteSetting) do
     )
   end
 
+  context "when setting_name is blank" do
+    it "fails the service contract" do
+      expect(call_service(nil, "blah whatever")).to fail_a_contract
+
+      expect(call_service(:"", "blah whatever")).to fail_a_contract
+    end
+  end
+
   context "when a non-admin user tries to change a setting" do
     it "fails the current_user_is_admin policy" do
       expect(call_service(:title, "some new title", user: Fabricate(:moderator))).to fail_a_policy(
