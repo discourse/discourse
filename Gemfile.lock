@@ -551,6 +551,7 @@ PLATFORMS
   arm64-darwin-21
   arm64-darwin-22
   arm64-darwin-23
+  arm64-darwin-24
   x86_64-darwin-18
   x86_64-darwin-19
   x86_64-darwin-20
