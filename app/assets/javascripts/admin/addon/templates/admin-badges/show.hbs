@@ -138,10 +138,12 @@
         <form.Field
           @name="long_description"
           @disabled={{this.readOnly}}
-          @height={{100}}
           as |field|
         >
-          <field.Text @title={{i18n "admin.badges.long_description"}} />
+          <field.Text
+            @height={{100}}
+            @title={{i18n "admin.badges.long_description"}}
+          />
         </form.Field>
       {{/if}}
     </form.Section>

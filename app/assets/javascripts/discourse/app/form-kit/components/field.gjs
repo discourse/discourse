@@ -14,6 +14,7 @@ import FKControlQuestion from "discourse/form-kit/components/control/question";
 import FKControlRadioGroup from "discourse/form-kit/components/control/radio-group";
 import FKControlSelect from "discourse/form-kit/components/control/select";
 import FKControlText from "discourse/form-kit/components/control/text";
+import FKControlToggle from "discourse/form-kit/components/control/toggle";
 import FKControlWrapper from "discourse/form-kit/components/control-wrapper";
 import FKRow from "discourse/form-kit/components/row";
 
@@ -161,6 +162,17 @@ export default class FormField extends Component {
           Icon=(component
             FKControlWrapper
             component=FKControlIcon
+            setValue=this.setValue
+            value=this.value
+            errors=this.errors
+            hasErrors=this.hasErrors
+            triggerValidationFor=@triggerValidationFor
+            field=this.field
+            set=this.set
+          )
+          Toggle=(component
+            FKControlWrapper
+            component=FKControlToggle
             setValue=this.setValue
             value=this.value
             errors=this.errors

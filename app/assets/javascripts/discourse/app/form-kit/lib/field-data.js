@@ -37,7 +37,7 @@ export default class FieldData {
   ) {
     this.name = name;
     this.onSet = onSet;
-    this.disabled = disabled;
+    this.disabled = disabled ?? false;
     this.type = type;
     this.customValidate = validate;
     this.validation = validation;

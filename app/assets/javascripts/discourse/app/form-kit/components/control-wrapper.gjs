@@ -9,6 +9,8 @@ import i18n from "discourse-common/helpers/i18n";
 export default class FKControlWrapper extends Component {
   get controlType() {
     switch (this.args.component.name) {
+      case "FKControlToggle":
+        return "-toggle";
       case "FKControlInput":
         return "-input";
       case "FKControlComposer":
