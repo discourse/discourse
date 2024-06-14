@@ -1,7 +1,7 @@
 import { hash } from "@ember/helper";
-import FKField from "form-kit/components/field";
-import FKText from "form-kit/components/text";
 import DButton from "discourse/components/d-button";
+import FKField from "discourse/form-kit/components/field";
+import FKText from "discourse/form-kit/components/text";
 
 const FKControlInputGroup = <template>
   <div class="form-kit__input-group">

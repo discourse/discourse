@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import FKLabel from "form-kit/components/label";
-import FKMeta from "form-kit/components/meta";
 import { eq } from "truth-helpers";
+import FKLabel from "discourse/form-kit/components/label";
+import FKMeta from "discourse/form-kit/components/meta";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class FKControlCheckbox extends Component {

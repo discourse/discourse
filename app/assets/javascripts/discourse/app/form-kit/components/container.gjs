@@ -1,4 +1,4 @@
-import FormText from "form-kit/components/text";
+import FormText from "discourse/form-kit/components/text";
 
 const FKContainer = <template>
   <div class="form-kit__container" ...attributes>

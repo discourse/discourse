@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
-import FKLabel from "form-kit/components/label";
-import FKMeta from "form-kit/components/meta";
-import FormText from "form-kit/components/text";
+import FKLabel from "discourse/form-kit/components/label";
+import FKMeta from "discourse/form-kit/components/meta";
+import FormText from "discourse/form-kit/components/text";
 import concatClass from "discourse/helpers/concat-class";
 import i18n from "discourse-common/helpers/i18n";
 

@@ -1,6 +1,6 @@
 import { hash } from "@ember/helper";
-import FKErrors from "form-kit/components/errors";
-import FKText from "form-kit/components/text";
+import FKErrors from "discourse/form-kit/components/errors";
+import FKText from "discourse/form-kit/components/text";
 import FKControlRadioGroupRadio from "./radio-group/radio";
 
 const FKControlRadioGroup = <template>

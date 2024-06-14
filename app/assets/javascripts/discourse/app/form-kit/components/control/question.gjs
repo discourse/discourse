@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import FKLabel from "form-kit/components/label";
 import { eq } from "truth-helpers";
+import FKLabel from "discourse/form-kit/components/label";
 import uniqueId from "discourse/helpers/unique-id";
 import i18n from "discourse-common/helpers/i18n";
 

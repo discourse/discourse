@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import Col from "form-kit/components/col";
+import Col from "discourse/form-kit/components/col";
 
 const Row = <template>
   <div class="form-kit__row" ...attributes>

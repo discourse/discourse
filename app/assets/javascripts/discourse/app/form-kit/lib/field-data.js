@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import ValidationParser from "form-kit/lib/validation-parser";
-import Validator from "form-kit/lib/validator";
+import ValidationParser from "discourse/form-kit/lib/validation-parser";
+import Validator from "discourse/form-kit/lib/validator";
 import uniqueId from "discourse/helpers/unique-id";
 
 /**

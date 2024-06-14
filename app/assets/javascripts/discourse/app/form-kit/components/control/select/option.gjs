@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { NO_VALUE_OPTION } from "form-kit/lib/constants";
 import { eq } from "truth-helpers";
+import { NO_VALUE_OPTION } from "discourse/form-kit/lib/constants";
 
 export default class FKControlSelectOption extends Component {
   get value() {

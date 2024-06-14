@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import FKLabel from "form-kit/components/label";
 import { eq } from "truth-helpers";
+import FKLabel from "discourse/form-kit/components/label";
 import uniqueId from "discourse/helpers/unique-id";
 
 const FKControlConditionalContentOption = <template>

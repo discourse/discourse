@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { NO_VALUE_OPTION } from "form-kit/lib/constants";
+import { NO_VALUE_OPTION } from "discourse/form-kit/lib/constants";
 import FKControlSelectOption from "./select/option";
 
 export default class FKControlSelect extends Component {

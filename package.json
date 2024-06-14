@@ -72,7 +72,6 @@
     "app/assets/javascripts/ember-cli-progress-ci",
     "app/assets/javascripts/ember-production-deprecations",
     "app/assets/javascripts/float-kit",
-    "app/assets/javascripts/form-kit",
     "app/assets/javascripts/pretty-text",
     "app/assets/javascripts/select-kit",
     "app/assets/javascripts/theme-transpiler",

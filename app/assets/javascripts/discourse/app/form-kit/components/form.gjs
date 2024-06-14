@@ -6,17 +6,17 @@ import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
-import FKAlert from "form-kit/components/alert";
-import FKContainer from "form-kit/components/container";
-import FKControlConditionalContent from "form-kit/components/control/conditional-content";
-import FKControlInputGroup from "form-kit/components/control/input-group";
-import FKFormErrors from "form-kit/components/errors";
-import FKField from "form-kit/components/field";
-import Row from "form-kit/components/row";
-import FKSection from "form-kit/components/section";
-import { VALIDATION_TYPES } from "form-kit/lib/constants";
-import FieldData from "form-kit/lib/field-data";
 import DButton from "discourse/components/d-button";
+import FKAlert from "discourse/form-kit/components/alert";
+import FKContainer from "discourse/form-kit/components/container";
+import FKControlConditionalContent from "discourse/form-kit/components/control/conditional-content";
+import FKControlInputGroup from "discourse/form-kit/components/control/input-group";
+import FKFormErrors from "discourse/form-kit/components/errors";
+import FKField from "discourse/form-kit/components/field";
+import Row from "discourse/form-kit/components/row";
+import FKSection from "discourse/form-kit/components/section";
+import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
+import FieldData from "discourse/form-kit/lib/field-data";
 
 export default class Form extends Component {
   @tracked validationState = {};
