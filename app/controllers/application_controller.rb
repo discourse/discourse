@@ -919,7 +919,7 @@ class ApplicationController < ActionController::Base
     end
 
     redirect_path = path("/u/#{current_user.encoded_username}/preferences/profile")
-    if !request.fullpath.start_with?(redirect_path)
+    if !request.fullpath.start_with?(redirect_path) && !request.fullpath.start_with?("/admin")
       redirect_to path(redirect_path)
       nil
     end
