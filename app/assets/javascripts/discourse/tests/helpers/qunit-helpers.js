@@ -503,6 +503,43 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
   });
 };
 
+class FieldHelper {
+  constructor(selector) {
+    this.element = query(selector);
+  }
+
+  get value() {
+    return this.element.dataset.value;
+  }
+}
+
+class FormHelper {
+  constructor(selector) {
+    this.selector = selector;
+  }
+
+  field(name) {
+    return new FieldHelper(
+      `${this.selector} .form-kit__field[data-name="${name}"]`
+    );
+  }
+}
+
+QUnit.assert.form = function (selector) {
+  const form = new FormHelper(selector);
+  return {
+    field: (name) => {
+      const field = form.field(name);
+
+      return {
+        hasValue: (value, message) => {
+          this.deepEqual(field.value, value, message);
+        },
+      };
+    },
+  };
+};
+
 export async function selectDate(selector, date) {
   const elem = document.querySelector(selector);
   elem.value = date;

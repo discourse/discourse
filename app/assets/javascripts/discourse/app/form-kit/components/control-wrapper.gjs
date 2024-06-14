@@ -42,6 +42,8 @@ export default class FKControlWrapper extends Component {
         (if @field.disabled "--disabled")
         (if @hasErrors "has-errors")
       }}
+      data-name={{@field.name}}
+      data-value={{@value}}
     >
       {{#if @title}}
         <FKLabel class="form-kit__field-title" @fieldId={{@field.id}}>
