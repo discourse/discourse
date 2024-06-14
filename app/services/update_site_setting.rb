@@ -18,6 +18,7 @@ class UpdateSiteSetting
   class Contract
     attribute :setting_name
     attribute :new_value
+    attribute :allow_changing_hidden, :boolean, default: false
 
     validates :setting_name, presence: true
   end
