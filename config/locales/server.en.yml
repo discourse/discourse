@@ -723,6 +723,7 @@ en:
         bio_raw: "About Me"
       user:
         ip_address: ""
+        password: "Password"
     errors:
       <<: *errors
       models:
@@ -748,6 +749,7 @@ en:
               same_as_username: "is the same as your username. Please use a more secure password."
               same_as_email: "is the same as your email. Please use a more secure password."
               same_as_current: "is the same as your current password."
+              same_as_previous: "is the same as your previous password."
               same_as_name: "is the same as your name."
               unique_characters: "has too many repeated characters. Please use a more secure password."
             username:
@@ -1249,6 +1251,7 @@ en:
   flags:
     errors:
       already_handled: "Flag was already handled"
+      wrong_move: "Flag cannot be moved"
   reports:
     default:
       labels:
@@ -1970,7 +1973,6 @@ en:
     s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Leave blank if using AWS S3."
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
     s3_disable_cleanup: "Prevent removal of old backups from S3 when there are more backups than the maximum allowed."
-    enable_s3_inventory: "Generate reports and verify uploads using Amazon S3 inventory. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_use_acls: "AWS recommends not using ACLs on S3 buckets; if you are following this advice, uncheck this option. This must be enabled if you are using secure uploads."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
@@ -2759,10 +2761,10 @@ en:
         - "deactivated"
         - "inactive"
         - "unactivated"
-      navigation_menu: 
-        - "sidebar" 
+      navigation_menu:
+        - "sidebar"
         - "header dropdown"
-        
+
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -4622,6 +4624,7 @@ en:
 
   guidelines_topic:
     title: "FAQ/Guidelines"
+    guidelines_title: "Guidelines"
     body: |
       <a name="civilized"></a>
 

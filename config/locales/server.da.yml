@@ -475,6 +475,8 @@ da:
         raw: "Brødtekst"
       user_profile:
         bio_raw: "Om mig"
+      user:
+        password: "Adgangskode"
     errors:
       models:
         topic:
@@ -1598,6 +1600,9 @@ da:
       purge_unactivated_users_grace_period_days:
       - ""
       - "inaktiv"
+      - ""
+      navigation_menu:
+      - "sidebjælke"
       - ""
     placeholder:
       discourse_connect_provider_secrets:

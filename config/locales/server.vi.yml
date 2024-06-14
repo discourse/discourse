@@ -421,6 +421,8 @@ vi:
         raw: "Thân"
       user_profile:
         bio_raw: "GIới thiệu bản thân"
+      user:
+        password: "Mật khẩu"
     errors:
       models:
         topic:
@@ -1345,6 +1347,9 @@ vi:
       purge_unactivated_users_grace_period_days:
       - ""
       - "không hoạt động"
+      - ""
+      navigation_menu:
+      - "thanh bên"
       - ""
   search:
     within_post: "#%{post_number} bởi %{username}"

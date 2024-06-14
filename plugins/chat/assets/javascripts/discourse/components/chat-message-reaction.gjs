@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -11,15 +11,12 @@ import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
 import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
 
 export default class ChatMessageReaction extends Component {
-  @service capabilities;
   @service currentUser;
-  @service tooltip;
   @service site;
-
-  @tracked isActive = false;
+  @service tooltip;
 
   registerTooltip = modifier((element) => {
-    if (this.disableTooltip || !this.popoverContent?.length) {
+    if (this.args.disableTooltip || !this.popoverContent?.length) {
       return;
     }
 
@@ -33,13 +30,9 @@ export default class ChatMessageReaction extends Component {
     });
 
     return () => {
-      instance?.destroy();
+      instance.destroy();
     };
   });
-
-  get disableTooltip() {
-    return this.args.disableTooltip ?? false;
-  }
 
   get showCount() {
     return this.args.showCount ?? true;
@@ -75,17 +68,16 @@ export default class ChatMessageReaction extends Component {
   <template>
     {{#if (and @reaction this.emojiUrl)}}
       <button
+        {{on "click" this.handleClick passive=true}}
+        {{this.registerTooltip}}
         type="button"
+        title={{this.emojiString}}
+        data-emoji-name={{@reaction.emoji}}
         tabindex="0"
         class={{concatClass
           "chat-message-reaction"
           (if @reaction.reacted "reacted")
-          (if this.isActive "-active")
         }}
-        data-emoji-name={{@reaction.emoji}}
-        title={{this.emojiString}}
-        {{on "click" this.handleClick passive=true}}
-        {{this.registerTooltip}}
       >
         <img
           loading="lazy"

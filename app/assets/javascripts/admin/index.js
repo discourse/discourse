@@ -2,9 +2,14 @@
 
 const calculateCacheKeyForTree = require("calculate-cache-key-for-tree");
 const path = require("path");
+const commonBabelConfig = require("../discourse/lib/common-babel-config");
 
 module.exports = {
   name: require("./package").name,
+
+  options: {
+    ...commonBabelConfig(),
+  },
 
   // return an empty tree here as we do not want the addon modules to be
   // included into vendor.js; instead, we will produce a separate bundle

@@ -21,6 +21,7 @@ import prepareFormTemplateData, {
 } from "discourse/lib/form-template-validation";
 import { shortDate } from "discourse/lib/formatter";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { buildQuote } from "discourse/lib/quote";
 import renderTags from "discourse/lib/render-tags";
 import { emojiUnescape } from "discourse/lib/text";
@@ -29,7 +30,7 @@ import {
   uploadIcon,
 } from "discourse/lib/uploads";
 import DiscourseURL from "discourse/lib/url";
-import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
+import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer, {
   CREATE_TOPIC,
@@ -645,10 +646,11 @@ export default class ComposerService extends Service {
 
   @action
   viewNewReply(event) {
-    if (event && modKeysPressed(event).length > 0) {
-      return false;
+    if (wantsNewWindow(event)) {
+      return;
     }
-    event?.preventDefault();
+
+    event.preventDefault();
     DiscourseURL.routeTo(this.get("model.createdPost.url"));
     this.close();
   }

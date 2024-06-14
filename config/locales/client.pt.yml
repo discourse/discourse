@@ -1218,6 +1218,7 @@ pt:
         set_password: "Definir Palavra-passe"
         choose_new: "Escolha uma nova palavra-passe"
         choose: "Escolha uma palavra-passe"
+        title: "Repor Palavra-Passe"
       second_factor_backup:
         title: "Códigos de Reserva para Autenticação em Dois Passos"
         regenerate: "Regenerar"
@@ -1545,7 +1546,6 @@ pt:
         title: "Confirmar acesso"
       password:
         title: "Palavra-passe"
-        too_short: "A sua palavra-passe é muito curta."
         common: "Essa palavra-passe é muito comum."
         same_as_username: "A sua palavra-passe é a mesma que o seu nome de utilizador."
         same_as_email: "A sua palavra-passe é a mesma que o seu e-mail."
@@ -2337,20 +2337,18 @@ pt:
         bookmarks: "Não há mais tópicos marcados."
     topic_bulk_actions:
       close_topics:
-        name: "Fechar Tópicos"
+        name: "Fechar"
         optional: (opcional)
       archive_topics:
-        name: "Arquivar tópicos"
-      unlist_topics:
-        name: "Remover Tópicos da Lista"
-      relist_topics:
-        name: "Voltar a Listar Tópicos"
+        name: "Arquivo"
+      move_messages_to_inbox:
+        name: "Mover para a Caixa de Entrada"
       append_tags:
         name: "Anexar Etiquetas"
       replace_tags:
         name: "Substituir Etiquetas"
       delete_topics:
-        name: "Eliminar Tópicos"
+        name: "Eliminar"
     topic:
       filter_to:
         one: "%{count} publicação no tópico"
@@ -2399,6 +2397,7 @@ pt:
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
       created_at: "Criado: %{date}"
       bumped_at: "Mais recente: %{date}"
+      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Navegue por todas as etiquetas</a> ou <a href='%{basePath}/latest'>visualize os tópicos mais recentes</a>."
       suggest_create_topic: Pronto para <a href>iniciar uma nova conversa?</a>
       deleted: "Este tópico foi eliminado"
       slow_mode_update:
@@ -3345,7 +3344,6 @@ pt:
     tagging:
       other_tags: "Outras Tags"
       selector_tags: "etiquetas"
-      selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
       selector_remove_filter: "remover filtro"
       tags: "Etiquetas"
@@ -3556,6 +3554,7 @@ pt:
       spreadsheet:
         show: "Mostrar"
         about: "Sobre"
+    powered_by_discourse: "Alimentado pelo Discourse"
   admin_js:
     admin:
       title: "Administração Discourse"
@@ -3827,6 +3826,8 @@ pt:
           timestamp: "Criado"
           completion: "Tempo de Resposta"
           actions: "Ações"
+          filter_status:
+            failed: "Falhado"
       home:
         title: "Início"
       account:
@@ -3873,6 +3874,10 @@ pt:
           search_logs: "Logs de Pesquisa"
           security: "Segurança"
           spam: "Spam"
+      config_areas:
+        about:
+          optional: "(opcional)"
+          update: "Atualização"
       plugins:
         title: "Plugins"
         installed: "Plugins Instalados"

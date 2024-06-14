@@ -519,28 +519,31 @@ RSpec.configure do |config|
       end
     end
 
-    config.around do |example|
-      example.run
-
-      if example.exception.is_a?(Socket::ResolutionError)
-        info = Socket.getaddrinfo("localhost", 80, Socket::AF_INET, Socket::SOCK_STREAM)
-        etc_hosts = `cat /etc/hosts`
-        resolve_conf = `cat /etc/resolv.conf`
-        nsswitch = `cat /etc/nsswitch.conf`
-
-        puts <<~MSG
-          Failed to resolve localhost, available addresses: #{info}
-
-          /etc/hosts:
-          #{etc_hosts}
-
-          /etc/resolv.conf:
-          #{resolve_conf}
-
-          /etc/nsswitch.conf:
-          #{nsswitch}
-          MSG
+    # This is a monkey patch for the `Capybara.using_session` method in `capybara`. For some
+    # unknown reasons on Github Actions, we are seeing system tests failing intermittently with the error
+    # `Socket::ResolutionError: getaddrinfo: Temporary failure in name resolution` when the app tries to resolve
+    # `localhost` from within a `Capybara#using_session` block.
+    #
+    # Too much time has been spent trying to debug this issue and the root cause is still unknown so we are just dropping
+    # this workaround for now where we will retry the block once before raising the error.
+    #
+    # Potentially related: https://bugs.ruby-lang.org/issues/20172
+    module Capybara
+      class << self
+        def using_session_with_localhost_resolution(name, &block)
+          attempts = 0
+          self._using_session(name, &block)
+        rescue Socket::ResolutionError
+          puts "Socket::ResolutionError error encountered... Current thread count: #{Thread.list.size}"
+          attempts += 1
+          attempts <= 1 ? retry : raise
+        end
       end
+    end
+
+    Capybara.singleton_class.class_eval do
+      alias_method :_using_session, :using_session
+      alias_method :using_session, :using_session_with_localhost_resolution
     end
   end
 

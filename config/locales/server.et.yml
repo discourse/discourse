@@ -252,6 +252,8 @@ et:
         raw: "Sisu"
       user_profile:
         bio_raw: "Minust"
+      user:
+        password: "Parool"
     errors:
       models:
         topic:

@@ -853,6 +853,7 @@ th:
         set_password: "ตั้งรหัสผ่าน"
         choose_new: "เลือกรหัสผ่านใหม่"
         choose: "เลือกรหัสผ่าน"
+        title: "รีเซ็ตรหัสผ่าน"
       second_factor_backup:
         disable: "ปิดใช้งาน"
       second_factor:
@@ -1064,7 +1065,6 @@ th:
           error: "มีข้อผิดพลาดในการสร้างลิงก์คำเชิญ"
       password:
         title: "รหัสผ่าน"
-        too_short: "รหัสผ่านสั้นเกินไป"
         common: "รหัสผ่านง่ายเกินไป"
         same_as_username: "รหัสผ่านเหมือนกับชื่อผู้ใช้ของคุณ"
         same_as_email: "รหัสผ่านเหมือนกับอีเมลของคุณ"
@@ -1623,16 +1623,16 @@ th:
         bookmarks: "ไม่มีกระทู้ที่บุ๊กมาร์กอีกแล้ว"
     topic_bulk_actions:
       close_topics:
-        name: "ปิดกระทู้"
+        name: "ปิด"
         optional: (ทางเลือก)
       archive_topics:
-        name: "คลังกระทู้"
-      unlist_topics:
-        name: "กระทู้ที่ไม่ได้แสดง"
+        name: "คลัง"
+      move_messages_to_inbox:
+        name: "ย้ายไปกล่องขาเข้า"
       replace_tags:
         name: "แทนที่แท็ก"
       delete_topics:
-        name: "ลบกระทู้"
+        name: "ลบ"
     topic:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"
@@ -2343,7 +2343,6 @@ th:
     tagging:
       other_tags: "แท็กอื่น"
       selector_tags: "ป้าย"
-      selector_all_tags: "แท็กทั้งหมด"
       selector_no_tags: "ไม่มีแท็ก"
       selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
@@ -2634,6 +2633,8 @@ th:
           request: "ร้องขอ"
           timestamp: "สร้าง"
           actions: "การกระทำ"
+          filter_status:
+            failed: "ล้มเหลว"
       home:
         title: "หน้าแรก"
       account:
@@ -2666,6 +2667,10 @@ th:
         sidebar_link:
           security: "ความปลอดภัย"
           spam: "ขยะ"
+      config_areas:
+        about:
+          optional: "(ทางเลือก)"
+          update: "อัปเดต"
       plugins:
         title: "ปลั้กอิน"
         installed: "ปลั้กอินที่ติดตั้งแล้ว"

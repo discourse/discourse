@@ -53,13 +53,13 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
 
     assert.strictEqual(
       content[0].name,
-      I18n.t("tagging.selector_no_tags"),
-      "it has the translated label for no-tags"
+      I18n.t("tagging.selector_remove_filter"),
+      "it has the correct label for removing the tag filter"
     );
     assert.strictEqual(
       content[1].name,
-      I18n.t("tagging.selector_all_tags"),
-      "it has the correct label for all-tags"
+      I18n.t("tagging.selector_no_tags"),
+      "it has the translated label for no-tags"
     );
 
     await this.subject.fillInFilter("dav");

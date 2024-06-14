@@ -555,6 +555,8 @@ fr:
         raw: "Corps"
       user_profile:
         bio_raw: "À propos de moi"
+      user:
+        password: "Mot de passe"
     errors:
       models:
         topic:
@@ -1655,7 +1657,6 @@ fr:
     s3_endpoint: "La destination peut être modifiée pour envoyer les sauvegardes vers un service compatible avec S3, par exemple DigitalOcean Spaces ou Minio. ATTENTION : laisser vide si vous utilisez AWS S3."
     s3_configure_tombstone_policy: "Activer la suppression automatique des fichiers non utilisés. IMPORTANT : en cas de désactivation, aucun espace disque ne sera récupéré après la suppression des fichiers."
     s3_disable_cleanup: "Empêcher la suppression des anciennes sauvegardes sur S3 lorsqu'il y a plus de sauvegardes que le maximum autorisé."
-    enable_s3_inventory: "Générer des rapports et vérifier les envois avec l'inventaire Amazon S3. IMPORTANT : cela nécessite un accès valide à S3 (l'identifiant et la clé secrète)."
     s3_use_acls: "AWS recommande de ne pas utiliser d'ACL sur les compartiments S3 ; si vous suivez ce conseil, décochez cette option. Cela doit être activé si vous utilisez des téléchargements sécurisés."
     backup_time_of_day: "Heure (UTC) de planification de la sauvegarde."
     backup_with_uploads: "Inclure les fichiers envoyés dans les sauvegardes. Si cette option est désactivée, seule la base de données sera sauvegardée."
@@ -2204,6 +2205,9 @@ fr:
       purge_unactivated_users_grace_period_days:
       - ""
       - "inactif"
+      - ""
+      navigation_menu:
+      - "barre latérale"
       - ""
     placeholder:
       discourse_connect_provider_secrets:

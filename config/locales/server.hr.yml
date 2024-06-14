@@ -433,6 +433,8 @@ hr:
         raw: "Tijelo"
       user_profile:
         bio_raw: "O meni"
+      user:
+        password: "Lozinka"
     errors:
       models:
         topic:
@@ -1456,6 +1458,9 @@ hr:
       purge_unactivated_users_grace_period_days:
       - ""
       - "neaktivan"
+      - ""
+      navigation_menu:
+      - "bočna traka"
       - ""
   search:
     within_post: "#%{post_number} od %{username}"

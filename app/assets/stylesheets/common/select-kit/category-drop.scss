@@ -19,6 +19,13 @@
         }
       }
 
+      &.has-selection {
+        .category-drop-header {
+          color: var(--quaternary);
+          border-color: var(--quaternary);
+        }
+      }
+
       .select-kit-row {
         flex-direction: column;
         align-items: flex-start;

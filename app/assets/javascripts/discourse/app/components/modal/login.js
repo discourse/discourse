@@ -3,10 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { areCookiesEnabled } from "discourse/lib/utilities";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
 import {
@@ -18,6 +20,7 @@ import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import escape from "discourse-common/lib/escape";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "discourse-i18n";
+import ForgotPassword from "./forgot-password";
 
 export default class Login extends Component {
   @service capabilities;
@@ -25,6 +28,7 @@ export default class Login extends Component {
   @service siteSettings;
   @service site;
   @service login;
+  @service modal;
 
   @tracked loggingIn = false;
   @tracked loggedIn = false;
@@ -248,6 +252,13 @@ export default class Login extends Component {
         } else if (result.reason === "suspended") {
           this.args.closeModal();
           this.dialog.alert(result.error);
+        } else if (result.reason === "expired") {
+          this.flash = htmlSafe(
+            I18n.t("login.password_expired", {
+              reset_url: getURL("/password-reset"),
+            })
+          );
+          this.flashType = "error";
         } else {
           this.flash = result.error;
           this.flashType = "error";
@@ -343,5 +354,22 @@ export default class Login extends Component {
       createAccountProps.accountEmail = null;
     }
     this.args.model.showCreateAccount(createAccountProps);
+  }
+
+  @action
+  interceptResetLink(event) {
+    if (
+      !wantsNewWindow(event) &&
+      event.target.href &&
+      new URL(event.target.href).pathname === getURL("/password-reset")
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.modal.show(ForgotPassword, {
+        model: {
+          emailOrUsername: this.loginName,
+        },
+      });
+    }
   }
 }

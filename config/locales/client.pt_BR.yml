@@ -1364,6 +1364,7 @@ pt_BR:
         set_password: "Definir senha"
         choose_new: "Escolha uma nova senha"
         choose: "Escolha uma senha"
+        title: "Redefinição de senha"
       second_factor_backup:
         title: "Códigos de backup de dois fatores"
         regenerate: "Gerar novamente"
@@ -1755,7 +1756,6 @@ pt_BR:
         fine_print: "Solicitamos que você confirme sua identidade porque provavelmente esta é uma ação confidencial. Após a autenticação, será solicitado que você autentique novamente após algumas horas de inatividade."
       password:
         title: "Senha"
-        too_short: "A sua senha é muito curta."
         common: "A senha é muito comum."
         same_as_username: "A sua senha é igual ao seu nome do(a) usuário(a)."
         same_as_email: "A sua senha é igual ao seu e-mail."
@@ -2767,20 +2767,18 @@ pt_BR:
         filter: "Não existem mais tópicos."
     topic_bulk_actions:
       close_topics:
-        name: "Fechar tópicos"
+        name: "Fechar"
         optional: (opcional)
       archive_topics:
-        name: "Arquivar tópicos"
-      unlist_topics:
-        name: "Remover tópicos da lista"
-      relist_topics:
-        name: "Reinserir tópicos na lista"
+        name: "Arquivo"
+      move_messages_to_inbox:
+        name: "Mover para caixa de entrada"
       append_tags:
         name: "Adicionar etiquetas"
       replace_tags:
         name: "Substituir etiquetas"
       delete_topics:
-        name: "Excluir tópicos"
+        name: "Excluir"
       update_category:
         name: "Atualizar Categoria"
         description: "Escolha a nova categoria para os tópicos selecionados"
@@ -4001,7 +3999,6 @@ pt_BR:
       all_tags: "Todas as etiquetas"
       other_tags: "Outras etiquetas"
       selector_tags: "etiquetas"
-      selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
       selector_remove_filter: "remover filtro"
       tags: "Etiquetas"
@@ -4415,6 +4412,7 @@ pt_BR:
           copy: "Copiar..."
           paste: "Colar..."
           save: "Salvar como..."
+    powered_by_discourse: "Com tecnologia Discourse"
   admin_js:
     type_to_filter: "Digite para filtrar..."
     admin:
@@ -4832,6 +4830,8 @@ pt_BR:
           timestamp: "Criado(a)"
           completion: "Tempo de conclusão"
           actions: "Ações"
+          filter_status:
+            failed: "Falha"
       home:
         title: "Início"
       account:
@@ -4878,6 +4878,16 @@ pt_BR:
           search_logs: "Registros de pesquisa"
           security: "Segurança"
           spam: "Spam"
+      config_areas:
+        about:
+          header: "Sobre seu site"
+          community_name: "Nome da comunidade"
+          your_organization: "Sua organização"
+          company_name: "Nome da empresa"
+          governing_law: "Lei aplicável"
+          city_for_disputes: "Cidade para disputas"
+          optional: "(opcional)"
+          update: "Atualizar"
       plugins:
         title: "Plugins"
         installed: "Plugins nstalados"

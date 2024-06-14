@@ -59,17 +59,17 @@ export default class ChatChannel {
   @tracked slug;
   @tracked description;
   @tracked status;
-  @tracked activeThread = null;
+  @tracked activeThread;
   @tracked meta;
   @tracked chatableId;
   @tracked chatableType;
   @tracked chatableUrl;
-  @tracked autoJoinUsers = false;
-  @tracked allowChannelWideMentions = true;
-  @tracked membershipsCount = 0;
+  @tracked autoJoinUsers;
+  @tracked allowChannelWideMentions;
+  @tracked membershipsCount;
   @tracked archive;
   @tracked tracking;
-  @tracked threadingEnabled = false;
+  @tracked threadingEnabled;
   @tracked draft;
 
   threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
@@ -91,16 +91,16 @@ export default class ChatChannel {
     this.threadingEnabled = args.threading_enabled;
     this.autoJoinUsers = args.auto_join_users;
     this.allowChannelWideMentions = args.allow_channel_wide_mentions;
-    this.chatable = this.#initChatable(args.chatable || []);
     this.currentUserMembership = args.current_user_membership;
+    this.lastMessage = args.last_message;
+    this.meta = args.meta;
+
+    this.chatable = this.#initChatable(args.chatable ?? []);
+    this.tracking = new ChatTrackingState(getOwnerWithFallback(this));
 
     if (args.archive_completed || args.archive_failed) {
       this.archive = ChatChannelArchive.create(args);
     }
-
-    this.tracking = new ChatTrackingState(getOwnerWithFallback(this));
-    this.lastMessage = args.last_message;
-    this.meta = args.meta;
   }
 
   get unreadThreadsCountSinceLastViewed() {

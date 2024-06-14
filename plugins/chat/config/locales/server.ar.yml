@@ -284,27 +284,6 @@ ar:
         many: "لديك رسائل دردشة جديدة"
         other: "لديك رسائل دردشة جديدة"
       from: "%{site_name}"
-      subject:
-        private_message: "[%{email_prefix}] رسالة جديدة"
-        direct_message_from_1: "[%{email_prefix}] رسالة جديدة من %{username}"
-        direct_message_from_2: "[%{email_prefix}] رسالة جديدة من %{username1} و%{username2}"
-        direct_message_from_more:
-          zero: "[%{email_prefix}] رسالة جديدة من %{username} و%{count} مستخدم آخر"
-          one: "[%{email_prefix}] رسالة جديدة من %{username} ومستخدم (%{count}) آخر"
-          two: "[%{email_prefix}] رسالة جديدة من %{username} ومستخدمَين (%{count}) آخرين"
-          few: "[%{email_prefix}] رسالة جديدة من %{username} و%{count} مستخدمين آخرين"
-          many: "[%{email_prefix}] رسالة جديدة من %{username} و%{count} مستخدمًا آخر"
-          other: "[%{email_prefix}] رسالة جديدة من %{username} و%{count} مستخدم آخر"
-        chat_channel_1: "[%{email_prefix}] رسالة جديدة في %{channel}"
-        chat_channel_2: "[%{email_prefix}] رسالة جديدة في %{channel1} و%{channel2}"
-        chat_channel_more:
-          zero: "[%{email_prefix}] رسالة جديدة في %{channel} و%{count} قناة أخرى"
-          one: "[%{email_prefix}] رسالة جديدة في %{channel} وقناة (%{count}) أخرى"
-          two: "[%{email_prefix}] رسالة جديدة في %{channel} وقناتين (%{count}) آخرتين"
-          few: "[%{email_prefix}] رسالة جديدة في %{channel} و%{count} قنوات أخرى"
-          many: "[%{email_prefix}] رسالة جديدة في %{channel} و%{count} قناةً أخرى"
-          other: "[%{email_prefix}] رسالة جديدة في %{channel} و%{count} قناة أخرى"
-        chat_channel_and_direct_message: "[%{email_prefix}] رسالة جديدة في %{channel} ومن %{username}"
       unsubscribe: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} أو %{unsubscribe_link} لإلغاء الاشتراك."
       unsubscribe_no_link: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} لديك."
       view_messages:

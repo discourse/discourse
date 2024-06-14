@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
-import { modKeysPressed } from "discourse/lib/utilities";
 
 export default Component.extend({
   tagName: "div",
@@ -13,9 +13,10 @@ export default Component.extend({
   @action
   logClick(topicId, event) {
     // Avoid click logging when any modifier keys are pressed.
-    if (event && modKeysPressed(event).length > 0) {
-      return false;
+    if (wantsNewWindow(event)) {
+      return;
     }
+
     if (this.searchLogId && topicId) {
       logSearchLinkClick({
         searchLogId: this.searchLogId,

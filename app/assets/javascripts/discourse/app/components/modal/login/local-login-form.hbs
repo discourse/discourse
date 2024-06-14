@@ -72,16 +72,17 @@
     @secondFactorMethod={{@secondFactorMethod}}
     @secondFactorToken={{@secondFactorToken}}
     @backupEnabled={{@backupEnabled}}
+    @totpEnabled={{@totpEnabled}}
     @isLogin={{true}}
     class={{this.secondFactorClass}}
   >
     {{#if @showSecurityKey}}
       <SecurityKeyForm
-        @allowedCredentialIds={{@securityKeyAllowedCredentialIds}}
-        @challenge={{@securityKeyChallenge}}
-        @showSecurityKey={{@showSecurityKey}}
-        @showSecondFactor={{@showSecondFactor}}
-        @secondFactorMethod={{@secondFactorMethod}}
+        @setShowSecurityKey={{fn (mut @showSecurityKey)}}
+        @setShowSecondFactor={{fn (mut @showSecondFactor)}}
+        @setSecondFactorMethod={{fn (mut @secondFactorMethod)}}
+        @backupEnabled={{@backupEnabled}}
+        @totpEnabled={{@totpEnabled}}
         @otherMethodAllowed={{@otherMethodAllowed}}
         @action={{this.authenticateSecurityKey}}
       />

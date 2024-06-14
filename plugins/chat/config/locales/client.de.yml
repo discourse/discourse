@@ -231,6 +231,9 @@ de:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"
         channels_list: "Liste der Chat-Kanäle"
+      no_direct_message_channels: "Du bist noch keiner Direktnachricht beigetreten!"
+      no_direct_message_channels_cta: "Eine Unterhaltung starten"
+      no_public_channels: "Du bist noch keinem Kanal beigetreten!"
       no_public_channels_cta: "Kanäle durchsuchen"
       kicked_from_channel: "Du kannst nicht mehr auf diesen Kanal zugreifen."
       only_chat_push_notifications:

@@ -147,12 +147,8 @@ jobs:
           key: ${{ runner.os }}-plugin-gems-${{ steps.container-envs.outputs.ruby_version }}-${{ steps.container-envs.outputs.debian_release }}-${{ hashFiles('plugins/*/plugin.rb') }}
 
       - name: Checkout official themes
-        if: matrix.target == 'themes' && matrix.build_type == 'system'
-        run: bin/rake themes:clone_all_official
-
-      - name: Pull compatible versions of themes
         if: matrix.target == 'themes'
-        run: bin/rake themes:pull_compatible_all
+        run: bin/rake themes:clone_all_official themes:pull_compatible_all
 
       - name: Add hosts to /etc/hosts, otherwise Chromium cannot reach minio
         if: matrix.build_type == 'system' && matrix.target == 'core'
@@ -310,7 +306,7 @@ jobs:
 
       - name: Check for flaky tests report
         id: check-flaky-spec-report
-        if: always()
+        if: always() && github.repository == 'discourse/discourse'
         run: |
           if [ -f tmp/turbo_rspec_flaky_tests.json ]; then
             echo "exists=true" >> $GITHUB_OUTPUT

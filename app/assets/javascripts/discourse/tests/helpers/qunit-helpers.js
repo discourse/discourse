@@ -65,6 +65,7 @@ import {
   resetHighestReadCache,
   setTopicList,
 } from "discourse/lib/topic-list-tracker";
+import { resetTransformers } from "discourse/lib/transformer";
 import { clearRewrites } from "discourse/lib/url";
 import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
 import {
@@ -246,6 +247,7 @@ export function testCleanup(container, app) {
   clearPopupMenuOptions();
   clearAdditionalAdminSidebarSectionLinks();
   resetAdminPluginConfigNav();
+  resetTransformers();
 }
 
 function cleanupCssGeneratorTags() {

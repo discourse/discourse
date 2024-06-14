@@ -112,6 +112,18 @@ RSpec.describe Middleware::AnonymousCache do
       expect(key1).not_to eq(key2)
     end
 
+    it "handles user agents with invalid bytes" do
+      agent = (+"Evil Googlebot String \xc3\x28").force_encoding("ASCII")
+      expect {
+        key1 = new_helper("HTTP_USER_AGENT" => agent).cache_key
+        key2 =
+          new_helper(
+            "HTTP_USER_AGENT" => agent.encode("utf-8", invalid: :replace, undef: :replace),
+          ).cache_key
+        expect(key1).to eq(key2)
+      }.not_to raise_error
+    end
+
     context "when cached" do
       let!(:helper) { new_helper("ANON_CACHE_DURATION" => 10) }
 
@@ -350,6 +362,15 @@ RSpec.describe Middleware::AnonymousCache do
       get "/", headers: { "HTTP_USER_AGENT" => "Googlebot/2.1 (+http://www.google.com/bot.html)" }
 
       expect(@status).to eq(403)
+
+      expect {
+        get "/",
+            headers: {
+              "HTTP_USER_AGENT" => (+"Evil Googlebot String \xc3\x28").force_encoding("ASCII"),
+            }
+
+        expect(@status).to eq(403)
+      }.not_to raise_error
 
       get "/",
           headers: {

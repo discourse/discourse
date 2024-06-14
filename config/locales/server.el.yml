@@ -361,6 +361,8 @@ el:
         raw: "Κύριο μέρος"
       user_profile:
         bio_raw: "Σχετικά με εμένα"
+      user:
+        password: "Κωδικός Πρόσβασης"
     errors:
       models:
         topic:

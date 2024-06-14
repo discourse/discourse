@@ -737,6 +737,7 @@ sw:
         set_password: "Tengeneza Nywila"
         choose_new: "Chagua nywila mpya"
         choose: "Chagua nywila"
+        title: "Weka upa nywila"
       second_factor_backup:
         regenerate: "Tengeneza Upya"
         disable: "Sitisha"
@@ -917,7 +918,6 @@ sw:
           error: "Samahani, faili hili inabidi liwe na umbizo faili la CSV"
       password:
         title: "Nywila"
-        too_short: "Nywila yako ni fupi sana."
         common: "Nywila yako imeshatumika sana."
         same_as_username: "Nywila yako ni sawa na jina lako la utumiaji."
         same_as_email: "Nywila yako ni sawa na jina lako la utumiaji."
@@ -1460,20 +1460,18 @@ sw:
         bookmarks: "Hakuna mada zingine zilizoalamishwa."
     topic_bulk_actions:
       close_topics:
-        name: "Funga Mada"
+        name: "Funga"
         optional: (sio muhimu)
       archive_topics:
-        name: "Hifadhi Mada kwenye nyaraka"
-      unlist_topics:
-        name: "Ondoa Mada kwenye listi"
-      relist_topics:
-        name: "Orodhesha Upya Mada"
+        name: "Nyaraka"
+      move_messages_to_inbox:
+        name: "Hamisha kwenda Kisanduku pokezi"
       append_tags:
         name: "Jumlisha Lebo"
       replace_tags:
         name: "Badilisha Lebo"
       delete_topics:
-        name: "Futa Mada"
+        name: "Futa"
     topic:
       filter_to:
         one: "%{count} chapisho kwenye mada"
@@ -2163,7 +2161,6 @@ sw:
     tagging:
       other_tags: "Lebo Zingine"
       selector_tags: "lebo"
-      selector_all_tags: "lebo zote"
       selector_no_tags: "hakuna lebo"
       selector_remove_filter: "ondoa uchujaji"
       tags: "Lebo"
@@ -2476,6 +2473,8 @@ sw:
           timestamp: "Imetengenezwa"
           completion: "Mda wa Kumaliza"
           actions: "Vitendo"
+          filter_status:
+            failed: "Kushindwa"
       home:
         title: "Nyumbani"
       account:
@@ -2518,6 +2517,9 @@ sw:
           search_logs: "Batli ya Utafiti"
           security: "Ulinzi"
           spam: "Barua Taka"
+      config_areas:
+        about:
+          optional: "(sio muhimu)"
       plugins:
         title: "Programu-jalizi"
         installed: "Progamu-jalizi zilizowekwa"

@@ -1286,6 +1286,7 @@ ja:
         set_password: "パスワードを設定"
         choose_new: "新しいパスワードを選択する"
         choose: "パスワードを選択する"
+        title: "パスワードをリセット"
       second_factor_backup:
         title: "二要素認証のバックアップコード"
         regenerate: "再生成"
@@ -1670,7 +1671,6 @@ ja:
         fine_print: "これは機密性のある操作である可能性があるため、本人確認を求めています。認証が完了すると、数時間操作がなかった場合にのみもう一度認証が求められます。"
       password:
         title: "パスワード"
-        too_short: "パスワードが短すぎます。"
         common: "このパスワードは非常に一般的です。"
         same_as_username: "パスワードとユーザー名が同じです。"
         same_as_email: "パスワードとメールアドレスが同じです。"
@@ -2628,20 +2628,18 @@ ja:
         filter: "トピックは以上です。"
     topic_bulk_actions:
       close_topics:
-        name: "トピックをクローズ"
+        name: "クローズ"
         optional: (オプション)
       archive_topics:
-        name: "トピックをアーカイブ"
-      unlist_topics:
-        name: "トピックを非表示"
-      relist_topics:
-        name: "トピックを表示"
+        name: "アーカイブ"
+      move_messages_to_inbox:
+        name: "受信トレイに移動"
       append_tags:
         name: "タグを追加"
       replace_tags:
         name: "タグを置換"
       delete_topics:
-        name: "トピックを削除"
+        name: "削除"
     topic:
       filter_to:
         other: "トピックの %{count} 件の投稿"
@@ -3792,7 +3790,6 @@ ja:
       all_tags: "すべてのタグ"
       other_tags: "他のタグ"
       selector_tags: "タグ"
-      selector_all_tags: "すべてのタグ"
       selector_no_tags: "タグなし"
       selector_remove_filter: "フィルタを削除"
       tags: "タグ"
@@ -4607,6 +4604,8 @@ ja:
           timestamp: "作成"
           completion: "完了時間"
           actions: "操作"
+          filter_status:
+            failed: "失敗しました"
       home:
         title: "ホーム"
       account:
@@ -4653,6 +4652,16 @@ ja:
           search_logs: "検索ログ"
           security: "セキュリティ"
           spam: "迷惑"
+      config_areas:
+        about:
+          header: "サイトについて"
+          community_name: "コミュニティー名"
+          your_organization: "あなたの組織"
+          company_name: "会社名"
+          governing_law: "準拠法"
+          city_for_disputes: "紛争都市"
+          optional: "(オプション)"
+          update: "更新"
       plugins:
         title: "プラグイン"
         installed: "インストール済みプラグイン"

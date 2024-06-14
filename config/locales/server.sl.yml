@@ -263,6 +263,8 @@ sl:
         title: "Naziv"
         featured_link: "Izpostavljena povezava"
         category_id: "Kategorija"
+      user:
+        password: "Geslo"
     errors:
       models:
         user:

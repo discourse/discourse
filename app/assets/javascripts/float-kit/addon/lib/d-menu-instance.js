@@ -19,7 +19,7 @@ export default class DMenuInstance extends FloatKitInstance {
 
   /**
    * Specifies whether the trigger for opening/closing the menu is detached from the menu itself.
-   * This is the case when a menu is trigger programmaticaly instead of through the <DMenu /> component.
+   * This is the case when a menu is trigger programmatically instead of through the <DMenu /> component.
    * @property {boolean} detachedTrigger - Tracks whether the trigger is detached, initially set to false.
    */
   @tracked detachedTrigger = false;

@@ -17,6 +17,15 @@
     .c-unread-indicator.-urgent {
       margin-left: 1rem;
     }
+
+    &.--active {
+      .full-page-chat & {
+        .d-icon,
+        .d-button-label {
+          color: var(--quaternary);
+        }
+      }
+    }
   }
 }
 

@@ -4,9 +4,24 @@ require "rotp"
 
 shared_examples "login scenarios" do
   let(:login_modal) { PageObjects::Modals::Login.new }
+  let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
   fab!(:user) { Fabricate(:user, username: "john", password: "supersecurepassword") }
+  let(:user_menu) { PageObjects::Components::UserMenu.new }
 
   before { Jobs.run_immediately! }
+
+  def wait_for_email_link(user, type)
+    wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
+    mail = ActionMailer::Base.deliveries.last
+    expect(mail.to).to contain_exactly(user.email)
+    if type == :reset_password
+      mail.body.to_s[%r{/u/password-reset/\S+}]
+    elsif type == :activation
+      mail.body.to_s[%r{/u/activate-account/\S+}]
+    elsif type == :email_login
+      mail.body.to_s[%r{/session/email-login/\S+}]
+    end
+  end
 
   context "with username and password" do
     it "can login" do
@@ -25,35 +40,33 @@ shared_examples "login scenarios" do
       expect(page).to have_css(".not-activated-modal")
       login_modal.click(".activation-controls button.resend")
 
-      wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
-
-      mail = ActionMailer::Base.deliveries.last
-      expect(mail.to).to contain_exactly(user.email)
-      activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
+      activation_link = wait_for_email_link(user, :activation)
       visit activation_link
 
       find("#activate-account-button").click
 
-      visit "/"
+      expect(page).to have_current_path("/")
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
 
-    it "can reset password" do
+    it "displays the right message when user's email has been marked as expired" do
+      password = "myawesomepassword"
+      user.update!(password:)
+      Fabricate(:expired_user_password, user:, password:)
+
       login_modal.open
-      login_modal.fill_username("john")
-      login_modal.forgot_password
+      login_modal.fill(username: user.username, password:)
+      login_modal.click_login
+
+      expect(login_modal.find("#modal-alert")).to have_content(
+        I18n.t("js.login.password_expired", reset_url: "/password-reset").gsub(/<.*?>/, ""),
+      )
+
+      login_modal.find("#modal-alert a").click
       find("button.forgot-password-reset").click
 
-      wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
-
-      mail = ActionMailer::Base.deliveries.last
-      expect(mail.to).to contain_exactly(user.email)
-      reset_password_link = mail.body.to_s[%r{/u/password-reset/\S+}]
-      visit reset_password_link
-
-      find("#new-account-password").fill_in(with: "newsuperpassword")
-      find("form .btn-primary").click
-      expect(page).to have_css(".header-dropdown-toggle.current-user")
+      reset_password_link = wait_for_email_link(user, :reset_password)
+      expect(reset_password_link).to be_present
     end
   end
 
@@ -63,11 +76,7 @@ shared_examples "login scenarios" do
       login_modal.fill_username("john")
       login_modal.email_login_link
 
-      wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
-
-      mail = ActionMailer::Base.deliveries.last
-      expect(mail.to).to contain_exactly(user.email)
-      login_link = mail.body.to_s[%r{/session/email-login/\S+}]
+      login_link = wait_for_email_link(user, :email_login)
       visit login_link
 
       find(".email-login-form .btn-primary").click
@@ -126,11 +135,7 @@ shared_examples "login scenarios" do
       login_modal.fill_username("john")
       login_modal.email_login_link
 
-      wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
-
-      mail = ActionMailer::Base.deliveries.last
-      expect(mail.to).to contain_exactly(user.email)
-      login_link = mail.body.to_s[%r{/session/email-login/\S+}]
+      login_link = wait_for_email_link(user, :email_login)
       visit login_link
 
       totp = ROTP::TOTP.new(user_second_factor.data).now
@@ -144,16 +149,68 @@ shared_examples "login scenarios" do
       login_modal.fill_username("john")
       login_modal.email_login_link
 
-      wait_for(timeout: 5) { ActionMailer::Base.deliveries.count != 0 }
-
-      mail = ActionMailer::Base.deliveries.last
-      expect(mail.to).to contain_exactly(user.email)
-      login_link = mail.body.to_s[%r{/session/email-login/\S+}]
+      login_link = wait_for_email_link(user, :email_login)
       visit login_link
 
       find(".toggle-second-factor-method").click
       find(".second-factor-token-input").fill_in(with: "iAmValidBackupCode")
       find(".email-login-form .btn-primary").click
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+
+    it "can reset password with TOTP" do
+      login_modal.open
+      login_modal.fill_username("john")
+      login_modal.forgot_password
+      find("button.forgot-password-reset").click
+
+      reset_password_link = wait_for_email_link(user, :reset_password)
+      visit reset_password_link
+
+      totp = ROTP::TOTP.new(user_second_factor.data).now
+      find(".second-factor-token-input").fill_in(with: totp)
+      find(".password-reset .btn-primary").click
+
+      find("#new-account-password").fill_in(with: "newsuperpassword")
+      find(".change-password-form .btn-primary").click
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+    end
+
+    it "shows error correctly when TOTP code is invalid" do
+      login_modal.open
+      login_modal.fill_username("john")
+      login_modal.forgot_password
+      find("button.forgot-password-reset").click
+
+      reset_password_link = wait_for_email_link(user, :reset_password)
+      visit reset_password_link
+
+      find(".second-factor-token-input").fill_in(with: "123456")
+      find(".password-reset .btn-primary").click
+
+      expect(page).to have_css(
+        ".alert-error",
+        text: "Invalid authentication code. Each code can only be used once.",
+      )
+
+      expect(page).to have_css(".second-factor-token-input")
+    end
+
+    it "can reset password with a backup code" do
+      login_modal.open
+      login_modal.fill_username("john")
+      login_modal.forgot_password
+      find("button.forgot-password-reset").click
+
+      reset_password_link = wait_for_email_link(user, :reset_password)
+      visit reset_password_link
+
+      find(".toggle-second-factor-method").click
+      find(".second-factor-token-input").fill_in(with: "iAmValidBackupCode")
+      find(".password-reset .btn-primary").click
+
+      find("#new-account-password").fill_in(with: "newsuperpassword")
+      find(".change-password-form .btn-primary").click
       expect(page).to have_css(".header-dropdown-toggle.current-user")
     end
   end

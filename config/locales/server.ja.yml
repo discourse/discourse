@@ -533,6 +533,8 @@ ja:
         raw: "本文"
       user_profile:
         bio_raw: "自己紹介"
+      user:
+        password: "パスワード"
     errors:
       models:
         topic:
@@ -1606,7 +1608,6 @@ ja:
     s3_endpoint: "エンドポイントは DigitalOcean Spaces または Minio などの S3 対応サービスにバックアップするように変更できます。警告: AWS S3 を使用している場合は空のままにしてください。"
     s3_configure_tombstone_policy: "トゥームストーンアップロードの自動削除ポリシーを有効にする。重要: 無効である場合、アップロードが削除された後にスペースを再確保することはありません。"
     s3_disable_cleanup: "最大許容数を超えるバックアップが存在する場合、S3 の古いバックアップの削除を防止する。"
-    enable_s3_inventory: "Amazon S3 インベントリを使ってレポートを生成してアップロードを確認する。重要: 有効な S3 資格情報が必要です (access key id と secret access key)。"
     s3_use_acls: "AWS は S3 バケットでの ACL の使用を推奨していません。このアドバイスに従っている場合は、このオプションをオフにしてください。安全なアップロードを使用している場合は、これを有効にする必要があります。"
     backup_time_of_day: "バックアップが発生する必要のある時刻 (UTC)。"
     backup_with_uploads: "スケジュールされたバックアップにアップロードを含める。これを無効にすると、データベースのみがバックアップされます。"
@@ -2162,6 +2163,9 @@ ja:
       purge_unactivated_users_grace_period_days:
       - ""
       - "非アクティブ"
+      - ""
+      navigation_menu:
+      - "サイドバー"
       - ""
     placeholder:
       discourse_connect_provider_secrets:

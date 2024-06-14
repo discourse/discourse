@@ -88,13 +88,13 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   });
 
   test("trigger role attribute", async function (assert) {
-    await render(hbs`<DTooltip @inline={{true}} @label="label"  />`);
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
 
     assert.dom(".fk-d-tooltip__trigger").hasAttribute("role", "button");
   });
 
   test("trigger id attribute", async function (assert) {
-    await render(hbs`<DTooltip @inline={{true}} @label="label"  />`);
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
 
     assert.dom(".fk-d-tooltip__trigger").hasAttribute("id");
   });
@@ -112,7 +112,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   });
 
   test("aria-expanded attribute", async function (assert) {
-    await render(hbs`<DTooltip @inline={{true}} @label="label"  />`);
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
 
     assert.dom(".fk-d-tooltip__trigger").hasAttribute("aria-expanded", "false");
 
@@ -123,7 +123,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
   test("<:trigger>", async function (assert) {
     await render(
-      hbs`<DTooltip @inline={{true}}><:trigger>label</:trigger></DTooltip />`
+      hbs`<DTooltip @inline={{true}}><:trigger>label</:trigger></DTooltip>`
     );
 
     assert.dom(".fk-d-tooltip__trigger").hasText("label");
@@ -131,7 +131,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
 
   test("<:content>", async function (assert) {
     await render(
-      hbs`<DTooltip @inline={{true}}><:content>content</:content></DTooltip />`
+      hbs`<DTooltip @inline={{true}}><:content>content</:content></DTooltip>`
     );
 
     await hover();
@@ -140,7 +140,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   });
 
   test("content role attribute", async function (assert) {
-    await render(hbs`<DTooltip @inline={{true}} @label="label"  />`);
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
 
     await hover();
 
@@ -164,7 +164,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   });
 
   test("content aria-labelledby attribute", async function (assert) {
-    await render(hbs`<DTooltip @inline={{true}} @label="label"  />`);
+    await render(hbs`<DTooltip @inline={{true}} @label="label" />`);
 
     await hover();
 

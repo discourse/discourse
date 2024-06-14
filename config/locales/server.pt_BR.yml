@@ -555,6 +555,8 @@ pt_BR:
         raw: "Corpo"
       user_profile:
         bio_raw: "Sobre mim"
+      user:
+        password: "Senha"
     errors:
       models:
         topic:
@@ -1655,7 +1657,6 @@ pt_BR:
     s3_endpoint: "O ponto de extremindade pode ser modificado para fazer backup em um serviço compatível com S3, como DigitalOcean Spaces ou Minio. AVISO: deixe em branco se estiver usando o AWS S3."
     s3_configure_tombstone_policy: "Ative a política de exclusão automática para envios de marca de exclusão. IMPORTANTE: Se for desativado, nenhum espaço será recuperado depois que os envios forem excluídos."
     s3_disable_cleanup: "Evite remover backups antigos do S3 quando houver mais backups do que o máximo permitido."
-    enable_s3_inventory: "Gere relatórios e verifique os envios usando o inventário do Amazon S3. IMPORTANTE: requer credenciais S3 válidas (ID da chave de acesso e chave de acesso secreta)."
     s3_use_acls: "O AWS não recomenda utilizar ACLs em buckets S3. Se você estiver seguindo essa recomendação, desmarque esta opção. Isto deve estar ativado se você estiver usando envios seguros."
     backup_time_of_day: "Hora do dia, em UTC, em que o backup deve ocorrer."
     backup_with_uploads: "Inclua envios nos backups programados. Desative para copiar apenas a base de dados."
@@ -2204,6 +2205,9 @@ pt_BR:
       purge_unactivated_users_grace_period_days:
       - ""
       - "inativo(a)"
+      - ""
+      navigation_menu:
+      - "barra lateral"
       - ""
     placeholder:
       discourse_connect_provider_secrets:

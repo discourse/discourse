@@ -1367,6 +1367,7 @@ sv:
         set_password: "Ange lösenord"
         choose_new: "Välj ett nytt lösenord"
         choose: "Välj ett lösenord"
+        title: "Beställ nytt lösenord"
       second_factor_backup:
         title: "Tvåfaktorsreservkoder"
         regenerate: "Generera ny"
@@ -1762,7 +1763,6 @@ sv:
         fine_print: "Vi ber dig bekräfta din identitet eftersom detta är en potentiellt känslig åtgärd. När du har autentiserats kommer du bara att bli ombedd att autentisera igen efter några timmars inaktivitet."
       password:
         title: "Lösenord"
-        too_short: "Ditt lösenord är för kort."
         common: "Det lösenordet är för vanligt."
         same_as_username: "Ditt lösenord är detsamma som ditt användarnamn."
         same_as_email: "Ditt lösenord är detsamma som din e-postadress."
@@ -2774,14 +2774,12 @@ sv:
         filter: "Det finns inga fler ämnen."
     topic_bulk_actions:
       close_topics:
-        name: "Stäng ämnen"
+        name: "Stäng"
         optional: (valfri)
       archive_topics:
-        name: "Arkivera ämnen"
-      unlist_topics:
-        name: "Avlista ämnen"
-      relist_topics:
-        name: "Lista om ämnen"
+        name: "Arkiv"
+      move_messages_to_inbox:
+        name: "Flytta till inkorgen"
       remove_tags:
         name: "Ta bort taggar"
       append_tags:
@@ -2789,7 +2787,7 @@ sv:
       replace_tags:
         name: "Ersätt taggar"
       delete_topics:
-        name: "Ta bort ämnen"
+        name: "Radera"
       update_category:
         name: "Uppdatera kategori"
         description: "Välj den nya kategorin för de valda ämnena"
@@ -4013,7 +4011,6 @@ sv:
       all_tags: "Alla taggar"
       other_tags: "Övriga taggar"
       selector_tags: "taggar"
-      selector_all_tags: "alla taggar"
       selector_no_tags: "inga taggar"
       selector_remove_filter: "ta bort filter"
       tags: "Taggar"
@@ -4846,6 +4843,8 @@ sv:
           timestamp: "Skapad"
           completion: "Sluttid"
           actions: "Åtgärder"
+          filter_status:
+            failed: "Misslyckad"
       home:
         title: "Hem"
       account:
@@ -4893,6 +4892,16 @@ sv:
           search_logs: "Söklogg"
           security: "Säkerhet"
           spam: "Skräppost"
+      config_areas:
+        about:
+          header: "Om din webbplats"
+          community_name: "Forumets namn"
+          your_organization: "Din organisation"
+          company_name: "Företagsnamn"
+          governing_law: "Gällande lag"
+          city_for_disputes: "Domstol vid tvister"
+          optional: "(valfri)"
+          update: "Uppdatera"
       plugins:
         title: "Tillägg"
         installed: "Installerade tillägg"

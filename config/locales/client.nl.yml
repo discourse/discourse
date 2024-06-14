@@ -1364,6 +1364,7 @@ nl:
         set_password: "Wachtwoord instellen"
         choose_new: "Kies een nieuw wachtwoord"
         choose: "Kies een wachtwoord"
+        title: "Wachtwoord herstellen"
       second_factor_backup:
         title: "Back-upcodes voor tweeledige verificatie"
         regenerate: "Opnieuw genereren"
@@ -1755,7 +1756,6 @@ nl:
         fine_print: "We vragen je om je identiteit te bevestigen omdat dit een potentieel gevoelige actie is. Nadat je je hebt geverifieerd, wordt je pas na een paar uur inactiviteit opnieuw gevraagd om je te verifiëren."
       password:
         title: "Wachtwoord"
-        too_short: "Je wachtwoord is te kort."
         common: "Dat wachtwoord wordt te vaak gebruikt."
         same_as_username: "Je wachtwoord is hetzelfde als je gebruikersnaam."
         same_as_email: "Je wachtwoord is hetzelfde als je e-mailadres."
@@ -2767,14 +2767,12 @@ nl:
         filter: "Er zijn geen verdere topics."
     topic_bulk_actions:
       close_topics:
-        name: "Topics sluiten"
+        name: "Sluiten"
         optional: (optioneel)
       archive_topics:
-        name: "Topics archiveren"
-      unlist_topics:
-        name: "Topics onzichtbaar maken"
-      relist_topics:
-        name: "Topics opnieuw weergeven"
+        name: "Archief"
+      move_messages_to_inbox:
+        name: "Verplaatsen naar inbox"
       remove_tags:
         name: "Tags verwijderen"
       append_tags:
@@ -2782,7 +2780,7 @@ nl:
       replace_tags:
         name: "Tags vervangen"
       delete_topics:
-        name: "Topics verwijderen"
+        name: "Verwijderen"
       update_category:
         name: "Categorie bijwerken"
         description: "Kies de nieuwe categorie voor de geselecteerde onderwerpen"
@@ -4003,7 +4001,6 @@ nl:
       all_tags: "Alle tags"
       other_tags: "Andere tags"
       selector_tags: "tags"
-      selector_all_tags: "alle tags"
       selector_no_tags: "geen tags"
       selector_remove_filter: "filter verwijderen"
       tags: "Tags"
@@ -4417,6 +4414,7 @@ nl:
           copy: "Kopiëren..."
           paste: "Plakken..."
           save: "Opslaan als..."
+    powered_by_discourse: "Gemaakt met Discourse"
   admin_js:
     type_to_filter: "typ om te filteren…"
     admin:
@@ -4834,6 +4832,8 @@ nl:
           timestamp: "Gemaakt"
           completion: "Voltooiingstijd"
           actions: "Acties"
+          filter_status:
+            failed: "Mislukt"
       home:
         title: "Start"
       account:
@@ -4880,6 +4880,18 @@ nl:
           search_logs: "Zoeken in logs"
           security: "Beveiliging"
           spam: "Spam"
+      config_areas:
+        about:
+          header: "Over je site"
+          community_name: "Communitynaam"
+          site_contact_group_help: |
+            Een geldige groepsnaam voor uitnodiging in alle automatische berichten.
+          your_organization: "Je organisatie"
+          company_name: "Bedrijfsnaam"
+          governing_law: "Toepasselijk recht"
+          city_for_disputes: "Plaats voor geschillen"
+          optional: "(optioneel)"
+          update: "Bijwerken"
       plugins:
         title: "Plug-ins"
         installed: "Geïnstalleerde plug-ins"

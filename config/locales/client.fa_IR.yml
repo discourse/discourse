@@ -1177,6 +1177,7 @@ fa_IR:
         set_password: "تغییر رمز‌عبور"
         choose_new: "یک رمز‌عبور جدید وارد کنید"
         choose: "یک رمز‌عبور وارد کنید"
+        title: "باز‌یابی رمز‌عبور"
       second_factor_backup:
         regenerate: "ایجاد مجدد"
         disable: "ازکاراندازی"
@@ -1506,7 +1507,6 @@ fa_IR:
           error: "با عرض پوزش، نوع فایل باید CSV باشد."
       password:
         title: "رمزعبور"
-        too_short: "رمز عبورتان خیلی کوتاه است"
         common: "رمز عبور خیلی ساده است"
         same_as_username: "رمز عبورتان با نام کاربری شما برابر است."
         same_as_email: "رمز عبورتان با ایمیل شما برابر است. "
@@ -2335,15 +2335,13 @@ fa_IR:
         filter: "هیچ موضوع بیشتری وجود ندارد."
     topic_bulk_actions:
       close_topics:
-        name: "بستن موضوعات"
+        name: "بستن"
         note: "یادداشت"
         optional: (اختیاری)
       archive_topics:
-        name: "بایگانی موضوعات"
-      unlist_topics:
-        name: "از فهرست خارج کردن مباحث"
-      relist_topics:
-        name: "ایجاد فهرست مجدد از موضوعات"
+        name: "بایگانی"
+      move_messages_to_inbox:
+        name: "انتقال به صندوق دریافت"
       remove_tags:
         name: "حذف برچسب‌ها"
       append_tags:
@@ -2351,7 +2349,7 @@ fa_IR:
       replace_tags:
         name: "جایگزینی برچسب‌ها"
       delete_topics:
-        name: "حذف موضوعات"
+        name: "حذف"
     topic:
       filter_to:
         one: "%{count} نوشته در این موضوع وجود دارد"
@@ -3280,7 +3278,6 @@ fa_IR:
       all_tags: "تمام برچسب‌ها"
       other_tags: "برچسب‌های دیگر"
       selector_tags: "برچسب‌ها"
-      selector_all_tags: "تمام برچسب‌ها"
       selector_no_tags: "بدون برچسب"
       selector_remove_filter: "حذف فیلتر"
       tags: "برچسب‌ها"
@@ -3748,6 +3745,8 @@ fa_IR:
           timestamp: "ساخته شد"
           completion: "زمان تکمیل"
           actions: "عملیات"
+          filter_status:
+            failed: "ناموفق"
       home:
         title: "خانه"
       account:
@@ -3804,6 +3803,14 @@ fa_IR:
           search_logs: "جستجوی گزارش‌ها"
           security: "امنیت"
           spam: "هرز‌نامه"
+      config_areas:
+        about:
+          header: "درباره سایت شما"
+          community_name: "نام انجمن"
+          your_organization: "سازمان شما"
+          company_name: "نام شرکت"
+          optional: "(اختیاری)"
+          update: "به روز رسانی"
       plugins:
         title: "افزونه‌ها"
         installed: "افزونه های نصب شده"

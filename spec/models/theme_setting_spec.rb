@@ -24,7 +24,7 @@ RSpec.describe ThemeSetting do
         expect(theme_setting.errors[:json_value]).to contain_exactly(
           I18n.t(
             "theme_settings.errors.json_value.too_large",
-            max_size_megabytes: (bytesize - 1) / 1024 / 1024,
+            max_size: (bytesize - 1) / 1024 / 1024,
           ),
         )
       end

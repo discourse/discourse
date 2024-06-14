@@ -405,6 +405,8 @@ pt:
         raw: "Corpo"
       user_profile:
         bio_raw: "Sobre Mim"
+      user:
+        password: "Palavra-passe"
     errors:
       models:
         topic:
@@ -1271,6 +1273,9 @@ pt:
       purge_unactivated_users_grace_period_days:
       - ""
       - "inativo"
+      - ""
+      navigation_menu:
+      - "barra Lateral"
       - ""
   search:
     within_post: "#%{post_number} por %{username}"

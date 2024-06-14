@@ -1312,6 +1312,7 @@ bg:
         set_password: "Задайте парола"
         choose_new: "Избери нова парола"
         choose: "Избери парола"
+        title: "Възстановяване на парола"
       second_factor_backup:
         title: "Двуфакторни резервни кодове"
         regenerate: "Регенерирай"
@@ -1664,7 +1665,6 @@ bg:
           error: "За съжаление файлът трябва да е във формат CSV."
       password:
         title: "Парола"
-        too_short: "Вашата парола е твърде кратка."
         common: "Вашата парола е твърде разпространена."
         same_as_username: "Вашата парола е същата като вашето потребителско име."
         same_as_email: "Вашата парола е същата като вашия email."
@@ -2448,18 +2448,18 @@ bg:
         filter: "Няма повече теми."
     topic_bulk_actions:
       close_topics:
-        name: "Затвори темите"
+        name: "Затвори"
         optional: (по избор)
       archive_topics:
-        name: "Архивирай темите"
-      unlist_topics:
-        name: "Непоказани теми"
+        name: "Архив"
+      move_messages_to_inbox:
+        name: "Премести във входящи"
       append_tags:
         name: "Добави етикетите"
       replace_tags:
         name: "Замени етикетите"
       delete_topics:
-        name: "Изтрий темите"
+        name: "Изтрий"
     topic:
       create: "Нова тема"
       create_disabled_category: "Нямате право да създавате теми в тази категория"
@@ -3284,7 +3284,6 @@ bg:
     tagging:
       other_tags: "Други тагове"
       selector_tags: "тагове"
-      selector_all_tags: "всички тагове"
       selector_no_tags: "няма тагове"
       selector_remove_filter: "премахни филтъра"
       tags: "Тагове"
@@ -3568,6 +3567,8 @@ bg:
           body: "Тяло"
           timestamp: "Създадени"
           actions: "Действия"
+          filter_status:
+            failed: "Провалени"
       home:
         title: "Начало"
       account:
@@ -3608,6 +3609,10 @@ bg:
           search_logs: "Търсене в логовете"
           security: "Сигурност"
           spam: "Спам"
+      config_areas:
+        about:
+          optional: "(по избор)"
+          update: "Актуализация"
       plugins:
         title: "Приставки"
         installed: "Инсталирани приставки"

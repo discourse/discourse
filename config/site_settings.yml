@@ -1586,11 +1586,6 @@ files:
     default: true
   s3_use_acls:
     default: true
-  enable_s3_inventory:
-    default: false
-  s3_configure_inventory_policy:
-    default: true
-    hidden: true
   s3_presigned_get_url_expires_after_seconds:
     default: 300
     hidden: true
@@ -2465,6 +2460,10 @@ legal:
     default: ""
   log_anonymizer_details:
     default: true
+  experimental_rename_faq_to_guidelines:
+    default: false
+    hidden: true
+    client: true
 
 backups:
   enable_backups:
@@ -2492,6 +2491,10 @@ backups:
   s3_backup_bucket:
     default: ""
     regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
+  s3_inventory_bucket:
+    hidden: true
+    default: ""
+    regex: '^[a-z0-9\-\/_]+$' # can't use '.' when using HTTPS
   s3_disable_cleanup:
     default: false
   backup_time_of_day:

@@ -1087,6 +1087,7 @@ gl:
         set_password: "Estabelecer o contrasinal"
         choose_new: "Elixir un novo contrasinal"
         choose: "Elixir un contrasinal"
+        title: "Contrasinal restabelecido"
       second_factor_backup:
         title: "Códigos de copia de seguranza de dobre paso"
         regenerate: "Rexenerar"
@@ -1412,7 +1413,6 @@ gl:
           error: "O ficheiro ten que ter formato CSV."
       password:
         title: "Contrasinal"
-        too_short: "O seu contrasinal é demasiado curto."
         common: "Ese contrasinal é demasiado habitual."
         same_as_username: "O contrasinal é igual ao nome de usuario."
         same_as_email: "O contrasinal é igual ao correo electrónico."
@@ -2131,14 +2131,12 @@ gl:
         bookmarks: "Non hai máis temas marcados."
     topic_bulk_actions:
       close_topics:
-        name: "Pechar temas"
+        name: "Pechar"
         optional: (opcional)
       archive_topics:
-        name: "Arquivar temas"
-      unlist_topics:
-        name: "Retirar temas da listaxe"
-      relist_topics:
-        name: "Refacer a listaxe de temas"
+        name: "Arquivo"
+      move_messages_to_inbox:
+        name: "Mover á caixa de entrada"
       remove_tags:
         name: "Retirar etiquetas"
       append_tags:
@@ -2146,7 +2144,7 @@ gl:
       replace_tags:
         name: "Substituír etiquetas"
       delete_topics:
-        name: "Eliminar temas"
+        name: "Eliminar"
     topic:
       filter_to:
         one: "%{count} publicación no tema"
@@ -3158,7 +3156,6 @@ gl:
     tagging:
       other_tags: "Outras etiquetas"
       selector_tags: "etiquetas"
-      selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sen etiquetas"
       selector_remove_filter: "eliminar filtro"
       tags: "Etiquetas"
@@ -3648,6 +3645,8 @@ gl:
           timestamp: "Creado"
           completion: "Tempo para completar"
           actions: "Accións"
+          filter_status:
+            failed: "Fallou"
       home:
         title: "Inicio"
       account:
@@ -3694,6 +3693,10 @@ gl:
           search_logs: "Buscar rexistros"
           security: "Seguranza"
           spam: "Lixo"
+      config_areas:
+        about:
+          optional: "(opcional)"
+          update: "Actualizar"
       plugins:
         title: "Complementos"
         installed: "Complementos instalados"

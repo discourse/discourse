@@ -203,6 +203,8 @@ bs_BA:
         raw: "Tijelo"
       user_profile:
         bio_raw: "O Meni"
+      user:
+        password: "Lozinka"
     errors:
       models:
         topic:

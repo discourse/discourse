@@ -1049,6 +1049,7 @@ zh_TW:
         set_password: "設定密碼"
         choose_new: "選擇一個新密碼"
         choose: "選擇一個密碼"
+        title: "寄出密碼"
       second_factor_backup:
         regenerate: "重新產生"
         disable: "禁用"
@@ -1299,7 +1300,6 @@ zh_TW:
           error: "上傳的檔案必須是 csv 格式。"
       password:
         title: "密碼"
-        too_short: "你的密碼太短。"
         common: "此密碼太簡單。"
         same_as_username: "密碼與使用者名稱相同"
         same_as_email: "你的密碼與電郵相同。"
@@ -1914,20 +1914,18 @@ zh_TW:
         bookmarks: "書籤裡沒有更多的話題了。"
     topic_bulk_actions:
       close_topics:
-        name: "關閉話題"
+        name: "關閉"
         optional: (選擇性)
       archive_topics:
-        name: "已封存的話題"
-      unlist_topics:
-        name: "未在列表中的話題"
-      relist_topics:
-        name: "討論話題"
+        name: "封存"
+      move_messages_to_inbox:
+        name: "移動到收件匣"
       append_tags:
         name: "向後追加標記"
       replace_tags:
         name: "取代標記"
       delete_topics:
-        name: "刪除話題"
+        name: "刪除"
     topic:
       filter_to:
         other: "本話題中的 %{count} 帖"
@@ -2776,7 +2774,6 @@ zh_TW:
       all_tags: "所有標記"
       other_tags: "其他標記"
       selector_tags: "標記"
-      selector_all_tags: "所有標籤"
       selector_no_tags: "無標記"
       selector_remove_filter: "取消過濾"
       tags: "標記"
@@ -3209,6 +3206,8 @@ zh_TW:
           timestamp: "建立時間"
           completion: "完成時間"
           actions: "操作"
+          filter_status:
+            failed: "失敗"
       home:
         title: "主頁"
       account:
@@ -3255,6 +3254,10 @@ zh_TW:
           search_logs: "搜尋紀錄"
           security: "安全性"
           spam: "垃圾內容"
+      config_areas:
+        about:
+          optional: "(選擇性)"
+          update: "更新"
       plugins:
         title: "外掛"
         installed: "已安裝外掛"

@@ -463,12 +463,6 @@ export async function inCodeBlock(text, pos) {
   return CODE_TOKEN_TYPES.includes(type);
 }
 
-// Return an array of modifier keys that are pressed during a given `MouseEvent`
-// or `KeyboardEvent`.
-export function modKeysPressed(event) {
-  return ["alt", "shift", "meta", "ctrl"].filter((key) => event[`${key}Key`]);
-}
-
 export function translateModKey(string) {
   const { isApple } = capabilities;
   // Apple device users are used to glyphs for shortcut keys

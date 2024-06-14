@@ -1144,6 +1144,7 @@ vi:
         set_password: "Nhập Mật khẩu"
         choose_new: "Chọn một mật khẩu mới"
         choose: "Chọn một mật khẩu"
+        title: "Đặt lại mật khẩu"
       second_factor_backup:
         title: "Mã dự phòng đăng nhập hai yếu tố"
         regenerate: "Khởi tạo lại"
@@ -1473,7 +1474,6 @@ vi:
           error: "Xin lỗi, file phải ở định dạng CSV."
       password:
         title: "Mật khẩu"
-        too_short: "Mật khẩu của bạn quá ngắn."
         common: "Mật khẩu quá đơn giản, rất dễ bị đoán ra"
         same_as_username: "Mật khẩu của bạn trùng với tên đăng nhập."
         same_as_email: "Mật khẩu của bạn trùng với email của bạn."
@@ -2319,14 +2319,12 @@ vi:
         bookmarks: "Không còn thêm chủ đề được đánh dấu nào nữa."
     topic_bulk_actions:
       close_topics:
-        name: "Đóng các chủ đề"
+        name: "Đóng"
         optional: (tùy chọn)
       archive_topics:
-        name: "Chủ đề Lưu trữ"
-      unlist_topics:
-        name: "Chủ đề không công khai"
-      relist_topics:
-        name: "Chủ đề liên quan"
+        name: "Lưu Trữ"
+      move_messages_to_inbox:
+        name: "Chuyển sang hộp thư"
       remove_tags:
         name: "Xóa thẻ"
       append_tags:
@@ -2334,7 +2332,7 @@ vi:
       replace_tags:
         name: "Thay thế thẻ"
       delete_topics:
-        name: "Xóa chủ đề"
+        name: "Xóa"
     topic:
       filter_to:
         other: "%{count} bài viết trong chủ đề"
@@ -3380,7 +3378,6 @@ vi:
       all_tags: "Tất cả các thẻ"
       other_tags: "Các thẻ khác"
       selector_tags: "thẻ"
-      selector_all_tags: "tất cả thẻ"
       selector_no_tags: "không có thẻ"
       selector_remove_filter: "bỏ đièu kiện lọc"
       tags: "Thẻ"
@@ -3982,6 +3979,8 @@ vi:
           timestamp: "Tạo bởi"
           completion: "Thời gian hoàn thành"
           actions: "Hành động"
+          filter_status:
+            failed: "Thất bại"
       home:
         title: "Trang chủ"
       account:
@@ -4028,6 +4027,10 @@ vi:
           search_logs: "Nhật ký tìm kiếm"
           security: "Bảo mật"
           spam: "Rác"
+      config_areas:
+        about:
+          optional: "(tùy chọn)"
+          update: "Cập nhật"
       plugins:
         title: "Plugin"
         installed: "Đã cài Plugin"

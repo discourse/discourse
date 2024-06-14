@@ -337,6 +337,8 @@ ro:
         raw: "Corp"
       user_profile:
         bio_raw: "Despre mine"
+      user:
+        password: "Parolă"
     errors:
       models:
         topic:
@@ -1230,6 +1232,9 @@ ro:
       purge_unactivated_users_grace_period_days:
       - "dezactivat"
       - "inactiv"
+      - ""
+      navigation_menu:
+      - "bară laterală"
       - ""
   search:
     within_post: "#%{post_number} de %{username}:"

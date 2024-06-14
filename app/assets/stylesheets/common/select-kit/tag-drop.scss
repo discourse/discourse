@@ -3,6 +3,11 @@
     &.tag-drop {
       min-width: auto;
 
+      .tag-drop-header,
+      .selected-name {
+        color: var(--primary-high);
+      }
+
       .select-kit-row {
         &[data-value="all-tags"],
         &[data-value="no-tags"] {
@@ -11,8 +16,11 @@
         }
       }
 
-      .tag-drop-header {
-        color: var(--primary-high);
+      &.has-selection {
+        .tag-drop-header {
+          color: var(--quaternary);
+          border-color: var(--quaternary);
+        }
       }
     }
   }

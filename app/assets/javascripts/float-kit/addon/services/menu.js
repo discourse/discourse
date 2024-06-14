@@ -1,12 +1,12 @@
-import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import Service from "@ember/service";
+import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 export default class Menu extends Service {
-  @tracked registeredMenus = [];
+  registeredMenus = new TrackedSet();
 
   /**
    * Render a menu
@@ -25,7 +25,7 @@ export default class Menu extends Service {
    * @param {String} [options.groupIdentifier] - Only one menu with the same groupIdentifier can be open at a time
    * @param {Boolean} [options.inline] - Improves positioning for trigger that spans over multiple lines
    *
-   * @returns {Promise<DMenuInstance>}
+   * @returns {Promise<DMenuInstance | undefined>}
    */
   @action
   async show() {
@@ -38,7 +38,7 @@ export default class Menu extends Service {
         return;
       }
     } else {
-      instance = this.registeredMenus.find(
+      instance = [...this.registeredMenus].find(
         (registeredMenu) => registeredMenu.trigger === arguments[0]
       );
 
@@ -66,20 +66,17 @@ export default class Menu extends Service {
     }
 
     if (instance.expanded) {
-      return await this.close(instance);
+      await this.close(instance);
+      return;
     }
 
-    await new Promise((resolve) => {
-      if (!this.registeredMenus.includes(instance)) {
-        this.registeredMenus = this.registeredMenus.concat(instance);
-      }
+    if (!this.registeredMenus.has(instance)) {
+      this.registeredMenus.add(instance);
+    }
 
-      instance.expanded = true;
+    instance.expanded = true;
 
-      schedule("afterRender", () => {
-        resolve();
-      });
-    });
+    await new Promise((resolve) => schedule("afterRender", resolve));
 
     return instance;
   }
@@ -89,10 +86,10 @@ export default class Menu extends Service {
    *
    * @param {String} identifier - the menu identifier to retrieve
    *
-   * @returns {Promise<DMenuInstance>}
+   * @returns {DMenuInstance | undefined}
    */
   getByIdentifier(identifier) {
-    return this.registeredMenus.find(
+    return [...this.registeredMenus].find(
       (registeredMenu) => registeredMenu.options.identifier === identifier
     );
   }
@@ -105,7 +102,7 @@ export default class Menu extends Service {
   @action
   async close(menu) {
     if (typeof menu === "string") {
-      menu = this.registeredMenus.find(
+      menu = [...this.registeredMenus].find(
         (registeredMenu) => registeredMenu.options.identifier === menu
       );
     }
@@ -114,17 +111,13 @@ export default class Menu extends Service {
       return;
     }
 
-    await new Promise((resolve) => {
-      menu.expanded = false;
+    menu.expanded = false;
 
-      this.registeredMenus = this.registeredMenus.filter(
-        (registeredMenu) => menu.id !== registeredMenu.id
-      );
+    if (this.registeredMenus.has(menu)) {
+      this.registeredMenus.delete(menu);
+    }
 
-      schedule("afterRender", () => {
-        resolve();
-      });
-    });
+    await new Promise((resolve) => schedule("afterRender", resolve));
   }
 
   /**

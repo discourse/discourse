@@ -233,18 +233,20 @@ de:
         other: "Du hast neue Chat-Nachrichten"
       from: "%{site_name}"
       subject:
-        private_message: "[%{email_prefix}] Neue Nachricht"
-        direct_message_from_1: "[%{email_prefix}] Neue Nachricht von %{username}"
-        direct_message_from_2: "[%{email_prefix}] Neue Nachricht von %{username1} und %{username2}"
-        direct_message_from_more:
-          one: "[%{email_prefix}] Neue Nachricht von %{username} und %{count} anderem Benutzer"
-          other: "[%{email_prefix}] Neue Nachricht von %{username} und %{count} anderen"
-        chat_channel_1: "[%{email_prefix}] Neue Nachricht in %{channel}"
-        chat_channel_2: "[%{email_prefix}] Neue Nachricht in %{channel1} und %{channel2}"
-        chat_channel_more:
-          one: "[%{email_prefix}] Neue Nachricht in %{channel} und %{count} anderem Kanal"
-          other: "[%{email_prefix}] Neue Nachricht in %{channel} und %{count} anderen"
-        chat_channel_and_direct_message: "[%{email_prefix}] Neue Nachricht in %{channel} und von %{username}"
+        private_email:
+          one: "[%{site_name}] Neue Nachricht"
+          other: "[%{site_name}] Neue Nachrichten"
+        chat_dm_1:
+          one: "[%{site_name}] Neue Nachricht von %{name}"
+          other: "[%{site_name}] Neue Nachrichten von %{name}"
+        chat_dm_2: "[%{site_name}] Neue Nachrichten von %{name_1} und %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Neue Nachrichten von %{name} und %{count} anderen"
+        chat_channel_1:
+          one: "[%{site_name}] Neue Nachricht in %{channel}"
+          other: "[%{site_name}] Neue Nachrichten in %{channel}"
+        chat_channel_2: "[%{site_name}] Neue Nachrichten in %{channel_1} und %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Neue Nachrichten in %{channel} und %{count} anderen"
+        chat_channel_and_dm: "[%{site_name}] Neue Nachrichten in %{channel} und von %{name}"
       unsubscribe: "Diese Chat-Zusammenfassung wird dir von %{site_link} gesendet, wenn du abwesend bist. Ändere deine %{email_preferences_link} oder %{unsubscribe_link}, um dich abzumelden."
       unsubscribe_no_link: "Diese Chat-Zusammenfassung wird dir von %{site_link} gesendet, wenn du abwesend bist. Ändere deine %{email_preferences_link}."
       view_messages:

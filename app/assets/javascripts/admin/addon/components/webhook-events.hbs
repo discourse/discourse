@@ -1,15 +1,26 @@
 <div
   class="web-hook-events-listing"
   {{did-insert this.subscribe}}
+  {{did-update this.reloadEvents @status}}
   {{will-destroy this.unsubscribe}}
 >
-  <DButton
-    @icon="paper-plane"
-    @label="admin.web_hooks.events.ping"
-    @action={{this.ping}}
-    @disabled={{not this.pingEnabled}}
-    class="webhook-events__ping-button"
-  />
+  <div class="web-hook-events-actions">
+    <ComboBox
+      @value={{@status}}
+      @content={{this.statuses}}
+      @onChange={{fn (mut @status)}}
+      @options={{hash none="admin.web_hooks.events.filter_status.all"}}
+      class="delivery-status-filters"
+    />
+
+    <DButton
+      @icon="paper-plane"
+      @label="admin.web_hooks.events.ping"
+      @action={{this.ping}}
+      @disabled={{not this.pingEnabled}}
+      class="webhook-events__ping-button"
+    />
+  </div>
 
   {{#if this.events}}
     <LoadMore @selector=".web-hook-events li" @action={{this.loadMore}}>

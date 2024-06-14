@@ -1520,6 +1520,7 @@ ru:
         set_password: "Установить пароль"
         choose_new: "Введите новый пароль"
         choose: "Введите пароль"
+        title: "Сброс пароля"
       second_factor_backup:
         title: "Резервные коды двухфакторной аутентификации"
         regenerate: "Сгенерировать заново"
@@ -1916,7 +1917,6 @@ ru:
         fine_print: "Мы просим вас подтвердить свою личность, поскольку это потенциально конфиденциальное действие. После аутентификации вам будет предложено пройти повторную аутентификацию только через несколько часов бездействия."
       password:
         title: "Пароль"
-        too_short: "Пароль слишком короткий."
         common: "Пароль слишком простой."
         same_as_username: "Пароль совпадает с именем пользователя."
         same_as_email: "Пароль совпадает с адресом электронной почты."
@@ -3035,14 +3035,12 @@ ru:
         filter: "Тем больше нет."
     topic_bulk_actions:
       close_topics:
-        name: "Закрыть темы"
+        name: "Завершить"
         optional: (необязательно)
       archive_topics:
-        name: "Архивировать темы"
-      unlist_topics:
-        name: "Скрыть темы"
-      relist_topics:
-        name: "Показать темы"
+        name: "Архивировать"
+      move_messages_to_inbox:
+        name: "Переместить во входящие"
       remove_tags:
         name: "Удалить теги"
       append_tags:
@@ -3050,7 +3048,7 @@ ru:
       replace_tags:
         name: "Заменить теги"
       delete_topics:
-        name: "Удалить темы"
+        name: "Удалить"
     topic:
       filter_to:
         one: "%{count} сообщение в теме"
@@ -4390,7 +4388,6 @@ ru:
       all_tags: "Все теги"
       other_tags: "Другие теги"
       selector_tags: "теги"
-      selector_all_tags: "Все теги"
       selector_no_tags: "Без тегов"
       selector_remove_filter: "отменить фильтр"
       tags: "Теги"
@@ -5266,6 +5263,8 @@ ru:
           timestamp: "Создано"
           completion: "Время завершения"
           actions: "Действия"
+          filter_status:
+            failed: "Не удалась"
       home:
         title: "Главная"
       account:
@@ -5312,6 +5311,18 @@ ru:
           search_logs: "Журналы поиска"
           security: "Безопасность"
           spam: "Спам"
+      config_areas:
+        about:
+          header: "О вашем сайте"
+          community_name: "Название сообщества"
+          site_contact_group_help: |
+            Допустимое имя группы для приглашения ко всем автоматическим сообщениям.
+          your_organization: "Ваша организация"
+          company_name: "Название компании"
+          governing_law: "Регулирующее законодательство"
+          city_for_disputes: "Город для разрешения споров"
+          optional: "(необязательно)"
+          update: "Обновить"
       plugins:
         title: "Плагины"
         installed: "Установленные плагины"

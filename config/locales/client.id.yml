@@ -304,7 +304,11 @@ id:
       search: "Cari"
       bookmark: "Penandaan"
       bulk:
+        delete_completed: "Penanda berhasil dihapus."
+        reminders_cleared: "Pengingat penanda berhasil dihapus."
+        toggle: "mengganti pilihan penanda secara massal"
         select_all: "Pilih Semua"
+        clear_all: "Hapus Semua"
         selected_count:
           other: "%{count} dipilih"
       reminders:
@@ -313,8 +317,14 @@ id:
         at_time: "pada %{date_time}"
         existing_reminder: "Anda memiliki pengingat yang disetel untuk penanda ini yang akan dikirim pada %{at_date_time}"
     bookmark_bulk_actions:
+      clear_reminders:
+        name: "Hapus Pengingat"
+        description:
+          other: "Apakah Anda yakin ingin menghapus pengingat untuk <b>%{count}</b> penanda."
       delete_bookmarks:
-        name: "Hapus Bookmark"
+        name: "Hapus Penanda"
+        description:
+          other: "Apakah Anda yakin ingin menghapus <b>%{count}</b> penanda."
     copy_codeblock:
       copied: "disalin!"
       copy: "salin kode ke papan klip"
@@ -1131,6 +1141,7 @@ id:
         set_password: "Atur Kata Sandi"
         choose_new: "Pilih kata sandi baru"
         choose: "Pilih kata sandi"
+        title: "Atur Ulang Kata Sandi"
       second_factor_backup:
         disable: "Nonaktifkan"
         enable: "Buat kode cadangan"
@@ -1328,7 +1339,6 @@ id:
           error: "Maaf, file harus dalam format CSV"
       password:
         title: "Kata sandi"
-        too_short: "Password kamu terlalu pendek."
         common: "Password terlalu umum"
         same_as_username: "Password dan nama pengguna kamu sama"
         same_as_email: "Password dan email kamu sama"
@@ -1488,6 +1498,7 @@ id:
       show_password: "Tunjukkan"
       caps_lock_warning: "Tombol \"Caps Lock\" menyala"
       error: "Galat yang tidak diketahui"
+      password_expired: "Kata sandi kedaluwarsa. Silakan <a href='%{reset_url}'>atur ulang kata sandi Anda</a>."
       blank_username: "Silakan masukkan email atau nama pengguna Anda."
       blank_username_or_password: "Silahkan masukkan email atau nama pengguna dan kata sandi anda"
       reset_password: "Atur Ulang Kata Sandi"
@@ -1545,6 +1556,9 @@ id:
       delete_item: "Hapus %{name}"
       no_content: Tidak ditemukan yang cocok
       create: "Buat: &#39;%{content}&#39;"
+      components:
+        bulk_select_bookmarks_dropdown:
+          title: "Aksi Massal"
     date_time_picker:
       from: Dari
       to: Kepada
@@ -1722,7 +1736,14 @@ id:
         new: "Tidak ada topik baru lagi"
     topic_bulk_actions:
       close_topics:
+        name: "Tutup"
         optional: (opsional)
+      archive_topics:
+        name: "Arsip"
+      move_messages_to_inbox:
+        name: "Pindah ke Kotak Masuk"
+      delete_topics:
+        name: "Hapus"
       defer:
         name: "Tandai Belum Dibaca"
     topic:
@@ -1838,6 +1859,9 @@ id:
         like: "sukai post ini"
         edit_action: "Ubah"
         more: "Selengkapnya"
+      actions:
+        by_you:
+          custom: "Anda menandai topik ini sebagai %{custom}"
       revisions:
         controls:
           first: "Revisi pertama"
@@ -2230,6 +2254,7 @@ id:
             category:
               label: Kategori
       flags:
+        title: "Bendera Moderasi"
         description: "Deskripsi"
         enabled: "Diaktifkan?"
       groups:
@@ -2291,6 +2316,8 @@ id:
           body: "Konten"
           timestamp: "Dibuat"
           actions: "Aksi"
+          filter_status:
+            failed: "Gagal"
       home:
         title: "Beranda"
       account:
@@ -2299,6 +2326,7 @@ id:
         sidebar_link:
           notifications: "Pemberitahuan"
           users: "Pengguna"
+          moderation_flags: "Bendera Moderasi"
       appearance:
         sidebar_link:
           navigation: "Navigasi"
@@ -2310,10 +2338,15 @@ id:
       security:
         sidebar_link:
           spam: "Spam"
+      config_areas:
+        about:
+          community_name: "Nama komunitas"
+          optional: "(opsional)"
       plugins:
         name: "Nama"
         enabled: "Diaktifkan?"
         change_settings_short: "Pengaturan"
+        settings_disabled: "Plugin ini hanya dapat diaktifkan atau dinonaktifkan, tidak memiliki pengaturan tambahan."
       advanced:
         sidebar_link:
           user_api: "API Pengguna"
@@ -2455,6 +2488,7 @@ id:
             update_directory_columns: "perbarui kolom direktori"
             post_approved: "tulisan disetujui"
             post_rejected: "post ditolak"
+            toggle_flag: "bendera sakelar"
         screened_emails:
           email: "Alamat Email"
         screened_urls:
@@ -2585,8 +2619,12 @@ id:
         cancel: "Batal"
         options: "Pilihan"
         requirement:
+          title: "Persyaratan Kolom"
           optional:
             title: "Opsional"
+          on_signup:
+            title: "Saat mendaftar"
+            description: "Saat pengguna baru mendaftar, mereka harus mengisi kolom ini. Pengguna yang sudah ada tidak terpengaruh."
       site_text:
         edit: "ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"

@@ -53,8 +53,6 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
     Scheduler::Defer.later("Null topic slug") { Topic.update_all(slug: nil) }
   end
 
-  Jobs.enqueue(:update_s3_inventory) if %i[enable_s3_inventory s3_upload_bucket].include?(name)
-
   SvgSprite.expire_cache if name.to_s.include?("_icon")
 
   SiteIconManager.ensure_optimized! if SiteIconManager::WATCHED_SETTINGS.include?(name)

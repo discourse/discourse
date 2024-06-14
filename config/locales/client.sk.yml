@@ -555,7 +555,7 @@ sk:
           title: "Hodnotiteľné položky vytvorené používateľmi s vyššou úrovňou dôvery majú vyššie skóre."
         type_bonus:
           name: "typ bonusu"
-          title: "Určitým kontrolovateľným typom môžu zamestnanci prideliť bonus, aby mali vyššiu prioritu."
+          title: "Určitým kontrolovateľným typom môže personál prideliť bonus, aby mali vyššiu prioritu."
       revise_and_reject_post:
         title: "Revízia"
         reason: "Dôvod"
@@ -1548,6 +1548,8 @@ sk:
         set_password: "Nastaviť heslo"
         choose_new: "Vyberte si nové heslo"
         choose: "Vyberte si heslo"
+        verify_identity: "Ak chcete pokračovať, overte svoju totožnosť."
+        title: "Obnovenie hesla"
       second_factor_backup:
         title: "Dvojfaktorové záložné kódy"
         regenerate: "Znovu vygenerovať"
@@ -1952,7 +1954,11 @@ sk:
         fine_print: "Žiadame vás, aby ste potvrdili svoju identitu, pretože ide o citlivú akciu.O ďalšie opätovné overenie budete požiadaný až po niekoľkých hodinách nečinnosti."
       password:
         title: "Heslo"
-        too_short: "Vaše heslo je príliš krátke."
+        too_short:
+          one: "Vaše heslo je príliš krátke (minimum je %{count} znakov)."
+          few: "Vaše heslo je príliš krátke (minimum je %{count} znakov)."
+          many: "Vaše heslo je príliš krátke (minimum je %{count} znakov)."
+          other: "Vaše heslo je príliš krátke (minimum sú %{count} znaky)."
         common: "Toto heslo je príliš časté."
         same_as_username: "Vaše heslo je rovnaké ako používateľské meno."
         same_as_email: "Vaše heslo je rovnaké ako e-mail."
@@ -2298,6 +2304,7 @@ sk:
       error: "Neznáma chyba"
       cookies_error: "Zdá sa, že váš prehliadač má vypnuté súbory cookie. Je možné, že bez ich povolenia sa nebudete môcť prihlásiť."
       rate_limit: "Pred opätovným prihlásením chvíľku počkajte."
+      password_expired: "Platnosť hesla vypršala. Prosím, <a href='%{reset_url}'>obnovte svoje heslo</a>."
       blank_username: "Prosím vložte Váš email alebo používateľské meno."
       blank_username_or_password: "Zadajte prosím svoj e-mail alebo používateľské meno a heslo."
       reset_password: "Obnoviť heslo"
@@ -3072,6 +3079,7 @@ sk:
         close_topics: "Uzavrieť tému"
         archive_topics: "Archivuj témy"
         move_messages_to_inbox: "Presuň do prijatej pošty"
+        archive_messages: "Presunúť do archívu"
         notification_level: "Upozornenia…"
         change_notification_level: "Zmena úrovne oznámení"
         choose_new_category: "Vyberte pre tému novú kategóriu:"
@@ -3140,15 +3148,19 @@ sk:
         filter: "Nie sú žiadne ďalšie témy."
     topic_bulk_actions:
       close_topics:
-        name: "Uzavrieť tému"
+        name: "Zavrieť"
         note: "Poznámka"
         optional: (nepovinné)
       archive_topics:
-        name: "Archivuj témy"
+        name: "Archivovať"
+      archive_messages:
+        name: "Presunúť do archívu"
+      move_messages_to_inbox:
+        name: "Presunúť do schránky"
       unlist_topics:
-        name: "Dôverné témy"
+        name: "Zrušiť zoznam"
       relist_topics:
-        name: "Obnoviť zoznam tém"
+        name: "Opätovné zaradenie do zoznamu"
       remove_tags:
         name: "Odstrániť značky"
       append_tags:
@@ -3156,7 +3168,7 @@ sk:
       replace_tags:
         name: "Nahradiť značky"
       delete_topics:
-        name: "Zmazať témy"
+        name: "Odstrániť"
       update_category:
         name: "Aktualizovať kategóriu"
         description: "Výber novej kategórie pre vybrané témy"
@@ -3818,8 +3830,8 @@ sk:
         delete_topic_confirm_modal_no: "Nie, ponechať túto tému"
         delete_topic_error: "Pri odstraňovaní tejto témy došlo k chybe"
         delete_topic: "odstrániť tému"
-        add_post_notice: "Pridať oznámenie pre adminov…"
-        change_post_notice: "Zmena oznámenia pre adminov…"
+        add_post_notice: "Pridať oznámenie pre personál…"
+        change_post_notice: "Zmena oznámenia pre personál…"
         delete_post_notice: "Vymazať oznámenie pre personál"
         remove_timer: "odstrániť časovač"
         edit_timer: "upraviť časovač"
@@ -4539,7 +4551,6 @@ sk:
       all_tags: "Všetky značky"
       other_tags: "Iné značky"
       selector_tags: "značky"
-      selector_all_tags: "všetky značky"
       selector_no_tags: "žiadne značky"
       selector_remove_filter: "zruš filter"
       tags: "Značky"
@@ -4899,6 +4910,7 @@ sk:
       panels:
         forum:
           label: fórum
+      filter: "Filter..."
       clear_filter: "Vymazať filter"
       no_results:
         title: "Žiadne výsledky"
@@ -5131,8 +5143,13 @@ sk:
             include_subcategories:
               label: "Zahrnúť podkategórie"
       flags:
+        title: "Príznaky moderovania"
         description: "Popis"
         enabled: "Povolené?"
+        more_options:
+          title: "Ďalšie možnosti"
+          move_up: "Posunúť sa nahor"
+          move_down: "Posunúť sa nadol"
       groups:
         new:
           title: "Nová skupina"
@@ -5455,6 +5472,10 @@ sk:
           timestamp: "Vytvorené"
           completion: "Čas dokončenia"
           actions: "Akcie"
+          filter_status:
+            all: "Všetky udalosti"
+            successful: "Doručené"
+            failed: "Nepodarilo sa"
       home:
         title: "Domov"
       account:
@@ -5477,6 +5498,7 @@ sk:
           user_fields: "Používateľské polia"
           watched_words: "Sledované slová"
           legal: "Právne záležitosti"
+          moderation_flags: "Príznaky moderovania"
       appearance:
         title: "Vzhľad"
         sidebar_link:
@@ -5515,6 +5537,46 @@ sk:
           security: "Bezpečnosť"
           spam: "Spam"
           staff_action_logs: "Záznamy o akciách personálu"
+      config_areas:
+        about:
+          header: "O vašej stránke"
+          general_settings: "Všeobecné nastavenia"
+          community_name: "Názov komunity"
+          community_summary: "Súhrn komunity"
+          community_description: "Popis komunity"
+          banner_image: "Obrázok bannera"
+          banner_image_help: |
+            Táto informácia sa použije na stránke o vás. Odporúčaná veľkosť: 800x300px. Akceptované typy: JPG, PNG a SVG do veľkosti 10 MB.
+          contact_information: "Kontaktné informácie"
+          community_owner: "Vlastník komunity"
+          community_owner_help: |
+            Meno kľúčového kontaktu zodpovedného za túto stránku. Používa sa pre kritické oznámenia a zobrazuje sa aj v /about. Viditeľné pre anonymných používateľov na verejných stránkach.
+          contact_email: "Kontaktný e-mail"
+          contact_email_help: |
+            E-mailová adresa kľúčového kontaktu zodpovedného za túto stránku. Používa sa na kritické oznámenia a zobrazuje sa aj na /about. Viditeľná pre anonymných používateľov na verejných stránkach.
+          contact_url: "Adresa URL kontaktu"
+          contact_url_help: |
+            Kontaktná adresa URL pre túto stránku. Ak je prítomná, nahrádza kontaktnú e-mailovú adresu na /about a je viditeľná pre anonymných používateľov na verejných stránkach.
+          site_contact_name: "Kontaktné meno stránky"
+          site_contact_name_help: |
+            Platné používateľské meno člena personálu, z ktorého sa budú odosielať všetky automatické správy. Ak zostane prázdne, použije sa predvolené systémové konto.
+          site_contact_group: "Kontaktná skupina stránky"
+          site_contact_group_help: |
+            Platný názov skupiny, ktorá je pozývaná do všetkých automaticky odosielaných súkromných správ.
+          your_organization: "Vaša organizácia"
+          company_name: "Názov spoločnosti"
+          company_name_help: |
+            Názov vašej spoločnosti alebo organizácie.
+          company_name_warning: |
+            Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
+          governing_law: "Platné právo"
+          governing_law_help: |
+            Uveďte jurisdikciu, ktorá upravuje právne aspekty stránky vrátane podmienok používania služby a oznámenia o ochrane osobných údajov. Zvyčajne ide o krajinu alebo štát, v ktorom je spoločnosť prevádzkujúca lokalitu registrovaná alebo v ktorom podniká.
+          city_for_disputes: "Mesto pre spory"
+          city_for_disputes_help: |
+            Uveďte mesto, ktoré sa použije ako súdna právomoc na riešenie akýchkoľvek sporov súvisiacich s používaním tohto fóra. Táto informácia sa zvyčajne uvádza v právnych dokumentoch, ako sú napríklad podmienky používania fóra.
+          optional: "(nepovinné)"
+          update: "Aktualizovať"
       plugins:
         title: "Pluginy"
         installed: "Nainštalované pluginy"
@@ -6189,6 +6251,8 @@ sk:
             create_watched_word_group: "vytvoriť sledovanú skupinu slov"
             update_watched_word_group: "aktualizovať sledovanú skupinu slov"
             delete_watched_word_group: "odstrániť sledovanú skupinu slov"
+            toggle_flag: "prepnúť príznak"
+            move_flag: "vlajka presunu"
         screened_emails:
           title: "Kontrolované emaily"
           description: "Keď niekto skúsi vytvoriť nový účet, nasledujúce emailove adresy budú preverené a registrácia bude zablokovaná, alebo bude vykonaná nejaka iná akcia. "
@@ -6389,7 +6453,7 @@ sk:
         nav:
           new: "Nový"
           active: "Aktívny"
-          staff: "Zamestnanci"
+          staff: "Personál"
           suspended: "Odobrate práva"
           silenced: "Umlčané"
           staged: "Dočasný"
@@ -6403,7 +6467,7 @@ sk:
           member: "Používatelia na stupni dôvery 2 (Člen)"
           regular: "Používatelia na stupni dôvery 3 (Stály člen)"
           leader: "Používatelia na stupni dôvery 4 (Vodca)"
-          staff: "Zamestnanci"
+          staff: "Personál"
           admins: "Admin používatelia"
           moderators: "Moderátori"
           silenced: "Umlčaní používatelia"

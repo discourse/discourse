@@ -536,6 +536,7 @@ be:
         set_password: "ўсталяваць пароль"
         choose_new: "Абярыце новы пароль"
         choose: "% Менш, чым {лік} хвілін таму........................................................."
+        title: "Скід пароля"
       second_factor_backup:
         regenerate: "Перагенераваць"
         disable: "Адключыць"
@@ -670,7 +671,6 @@ be:
         account_age_days: "Ўзрост акаўнта ў днях"
       password:
         title: "Пароль"
-        too_short: "Пароль занадта кароткі."
         common: "Гэты пароль занадта просты."
         same_as_username: "Гэты пароль занадта просты...."
         same_as_email: "Пароль ідэнтычны Вашаму email"
@@ -975,11 +975,13 @@ be:
         bookmarks: "Тэмы ў закладках адсутнічаюць."
     topic_bulk_actions:
       close_topics:
-        name: "Закрыць тэму"
+        name: "зачыніць"
       archive_topics:
-        name: "Заархіваваныя тэмы"
+        name: "архіў"
+      move_messages_to_inbox:
+        name: "Перамясціць у тэчцы Уваходныя"
       delete_topics:
-        name: "Выдаліць тэмы"
+        name: "выдаляць"
     topic:
       create: "пачаць новую тэму"
       create_long: "Стварыць новую тэму"
@@ -1581,6 +1583,8 @@ be:
           body: "цела"
           timestamp: "Створана"
           actions: "загалоўкі....................."
+          filter_status:
+            failed: "памылка"
       home:
         title: "дома"
       account:

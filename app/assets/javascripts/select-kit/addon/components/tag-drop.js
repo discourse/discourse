@@ -96,17 +96,17 @@ export default ComboBoxComponent.extend(TagsMixin, {
   shortcuts: computed("tagId", function () {
     const shortcuts = [];
 
+    if (this.tagId) {
+      shortcuts.push({
+        id: ALL_TAGS_ID,
+        name: I18n.t("tagging.selector_remove_filter"),
+      });
+    }
+
     if (this.tagId !== NONE_TAG) {
       shortcuts.push({
         id: NO_TAG_ID,
         name: I18n.t("tagging.selector_no_tags"),
-      });
-    }
-
-    if (this.tagId) {
-      shortcuts.push({
-        id: ALL_TAGS_ID,
-        name: I18n.t("tagging.selector_all_tags"),
       });
     }
 

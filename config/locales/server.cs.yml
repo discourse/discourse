@@ -474,6 +474,8 @@ cs:
         raw: "Tělo"
       user_profile:
         bio_raw: "O mně"
+      user:
+        password: "Heslo"
     errors:
       models:
         topic:
@@ -1197,6 +1199,9 @@ cs:
       purge_unactivated_users_grace_period_days:
       - ""
       - "neaktivní"
+      - ""
+      navigation_menu:
+      - "postranní panel"
       - ""
   search:
     within_post: "#%{post_number} od %{username}"

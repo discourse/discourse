@@ -927,6 +927,7 @@ et:
         set_password: "Määra parool"
         choose_new: "Vali uus parool"
         choose: "Vali parool"
+        title: "Parooli uuendamine"
       second_factor_backup:
         title: "Kahefaktorilise autentimise varukoodid"
         regenerate: "Genereeri uus"
@@ -1131,7 +1132,6 @@ et:
           error: "Vabandust, fail peab olema CSV vormingus."
       password:
         title: "Parool"
-        too_short: "Parool on liiga lühike."
         common: "See parool on liiga tavaline."
         same_as_username: "Parool ühtib sinu kasutajanimega."
         same_as_email: "Parool ühtib sinu meiliaadressiga."
@@ -1649,18 +1649,18 @@ et:
         bookmarks: "Rohkem järjehoidjaga teemasid pole."
     topic_bulk_actions:
       close_topics:
-        name: "Sulge Teemad"
+        name: "Sulge"
         optional: (valikuline)
       archive_topics:
-        name: "Arhiveeri Teemad"
-      unlist_topics:
-        name: "Eemalda teemad loetelust"
+        name: "Arhiiv"
+      move_messages_to_inbox:
+        name: "Liiguta Postkasti"
       append_tags:
         name: "Lisa sildid"
       replace_tags:
         name: "Asenda sildid"
       delete_topics:
-        name: "Kustuta teemad"
+        name: "Kustuta"
     topic:
       filter_to:
         one: "%{count} postitus teemas"
@@ -2473,7 +2473,6 @@ et:
     tagging:
       other_tags: "Muud sildid"
       selector_tags: "sildid"
-      selector_all_tags: "kõik sildid"
       selector_no_tags: "sildid puuduvad"
       selector_remove_filter: "eemalda filter"
       tags: "Sildid"
@@ -2815,6 +2814,8 @@ et:
           timestamp: "Loaded"
           completion: "Soorituse aeg"
           actions: "Tegevused"
+          filter_status:
+            failed: "Ebaõnnestunud"
       home:
         title: "Avaleht"
       account:
@@ -2859,6 +2860,9 @@ et:
           search_logs: "Otsingu logid"
           security: "Turve"
           spam: "Spämm"
+      config_areas:
+        about:
+          optional: "(valikuline)"
       plugins:
         title: "Plugin"
         installed: "Paigaldatud pluginad"

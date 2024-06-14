@@ -1380,6 +1380,7 @@ tr_TR:
         set_password: "Şifre Belirle"
         choose_new: "Yeni bir şifre seç"
         choose: "Şifre seç"
+        title: "Şifre Sıfırlama"
       second_factor_backup:
         title: "İki Adımlı Yedek Kodları"
         regenerate: "Yeniden oluştur"
@@ -1776,7 +1777,6 @@ tr_TR:
         fine_print: "Bu potansiyel olarak hassas bir eylem olduğu için sizden kimliğinizi doğrulamanızı istiyoruz. Kimliğiniz doğrulandıktan sonra, yalnızca birkaç saat işlem yapılmaması durumunda yeniden kimlik doğrulamanız istenir."
       password:
         title: "Şifre"
-        too_short: "Şifreniz çok kısa."
         common: "Bu şifre çok yaygın."
         same_as_username: "Şifreniz kullanıcı adınızla aynı."
         same_as_email: "Şifreniz e-posta adresinizle aynı."
@@ -2797,15 +2797,13 @@ tr_TR:
         filter: "Başka konu kalmadı."
     topic_bulk_actions:
       close_topics:
-        name: "Konuları Kapat"
+        name: "Bitir"
         note: "Not"
         optional: (isteğe bağlı)
       archive_topics:
-        name: "Konuları Arşivle"
-      unlist_topics:
-        name: "Konuları listeden kaldır"
-      relist_topics:
-        name: "Konuları yeniden listele"
+        name: "Arşiv"
+      move_messages_to_inbox:
+        name: "Gelen kutusuna taşı"
       remove_tags:
         name: "Etiketleri Kaldır"
       append_tags:
@@ -2813,7 +2811,7 @@ tr_TR:
       replace_tags:
         name: "Etiketleri Değiştir"
       delete_topics:
-        name: "Konuları sil"
+        name: "Sil"
       update_category:
         name: "Kategoriyi Güncelle"
         description: "Seçilen konular için yeni kategoriyi seçin"
@@ -4056,7 +4054,6 @@ tr_TR:
       all_tags: "Tüm etiketler"
       other_tags: "Diğer Etiketler"
       selector_tags: "etiketler"
-      selector_all_tags: "tüm etiketler"
       selector_no_tags: "etiket yok"
       selector_remove_filter: "filtreyi kaldır"
       tags: "Etiketler"
@@ -4903,6 +4900,8 @@ tr_TR:
           timestamp: "Oluşturuldu"
           completion: "Tamamlanma Süresi"
           actions: "Eylemler"
+          filter_status:
+            failed: "Başarısız"
       home:
         title: "Ana Sayfa"
       account:
@@ -4961,6 +4960,20 @@ tr_TR:
           security: "Güvenlik"
           spam: "Spam"
           staff_action_logs: "Personel Eylem Günlükleri"
+      config_areas:
+        about:
+          header: "Siteniz hakkında"
+          community_name: "Topluluk adı"
+          site_contact_group_help: |
+            Otomatik olarak gönderilen tüm özel mesajlara davet edilen bir grubun geçerli adı.
+          your_organization: "Organizasyonunuz"
+          company_name: "Şirket adı"
+          governing_law: "Geçerli kanun"
+          city_for_disputes: "Anlaşmazlıklar için şehir"
+          city_for_disputes_help: |
+            Bu forumun kullanımıyla ilgili herhangi bir anlaşmazlığın çözümünde yargı yetkisi olarak kullanılacak şehri belirtin. Bu bilgi genellikle forumun Hizmet Şartları gibi yasal belgelerde yer alır.
+          optional: "(isteğe bağlı)"
+          update: "Güncelle"
       plugins:
         title: "Eklentiler"
         installed: "Yüklü Eklentiler"

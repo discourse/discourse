@@ -205,16 +205,6 @@ id:
       description:
         other: "Anda memiliki pesan obrolan baru"
       from: "%{site_name}"
-      subject:
-        direct_message_from_1: "[%{email_prefix}] Pesan baru dari %{username}"
-        direct_message_from_2: "[%{email_prefix}] Pesan baru dari %{username1} dan %{username2}"
-        direct_message_from_more:
-          other: "[%{email_prefix}] Pesan baru dari %{username} dan %{count} lainnya"
-        chat_channel_1: "[%{email_prefix}] Pesan baru di %{channel}"
-        chat_channel_2: "[%{email_prefix}] Pesan baru di %{channel1} dan %{channel2}"
-        chat_channel_more:
-          other: "[%{email_prefix}] Pesan baru di %{channel} dan %{count} lainnya"
-        chat_channel_and_direct_message: "[%{email_prefix}] Pesan baru di %{channel} dan dari %{username}"
       unsubscribe: "Ringkasan obrolan ini dikirim dari %{site_link} saat Anda pergi. Ubah %{email_preferences_link}, atau %{unsubscribe_link} Anda untuk berhenti berlangganan."
       unsubscribe_no_link: "Ringkasan obrolan ini dikirim dari %{site_link} saat Anda pergi. Ubah %{email_preferences_link} Anda."
       view_messages:
