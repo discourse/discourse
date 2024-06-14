@@ -51,11 +51,12 @@ class Admin::SiteSettingsController < Admin::AdminController
       end
 
       on_failed_policy(:setting_is_visible) do
-        raise Discourse::InvalidParameters, "You are not allowed to change hidden settings"
+        raise Discourse::InvalidParameters, I18n.t("errors.site_settings.site_setting_is_hidden")
       end
 
       on_failed_policy(:setting_is_configurable) do
-        raise Discourse::InvalidParameters, "You are not allowed to change unconfigurable settings"
+        raise Discourse::InvalidParameters,
+              I18n.t("errors.site_settings.site_setting_is_unconfigurable")
       end
     end
   end
