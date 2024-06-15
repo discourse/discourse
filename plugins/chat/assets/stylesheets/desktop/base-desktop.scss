@@ -1,6 +1,5 @@
-.user-card,
-.group-card {
-  z-index: z("usercard") + 1; // bump up user card
+.fk-d-menu[data-identifier="card"] {
+  z-index: z("usercard");
 }
 
 .full-page-chat {
