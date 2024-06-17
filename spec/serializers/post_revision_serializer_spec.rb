@@ -41,6 +41,16 @@ RSpec.describe PostRevisionSerializer do
     end
   end
 
+  it "handles tags not being an array" do
+    pr = Fabricate(:post_revision, post: post, modifications: { "tags" => ["[]", ""] })
+
+    json =
+      PostRevisionSerializer.new(pr, scope: Guardian.new(Fabricate(:user)), root: false).as_json
+
+    expect(json[:tags_changes][:previous]).to eq("[]")
+    expect(json[:tags_changes][:current]).to eq([])
+  end
+
   context "with hidden tags" do
     fab!(:public_tag) { Fabricate(:tag, name: "public") }
     fab!(:public_tag2) { Fabricate(:tag, name: "visible") }
