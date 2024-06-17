@@ -569,8 +569,8 @@ td .main-link {
     box-shadow: 0 3px 0 var(--primary-low);
 
     &.active {
-      color: var(--quaternary);
-      box-shadow: 0 3px 0 var(--quaternary);
+      color: var(--d-nav-active-color);
+      box-shadow: 0 3px 0 var(--d-nav-active-color);
     }
   }
 }

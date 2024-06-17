@@ -60,7 +60,6 @@
 
   &__filter {
     display: inline;
-    margin-right: 1em;
 
     &:last-of-type {
       margin-right: 0;
@@ -74,7 +73,7 @@
   &__filter-link,
   &__filter-link:visited {
     color: var(--primary);
-    font-size: var(--font-up-2);
+    font-size: var(--font-up-1);
     padding: 0 0.25rem;
 
     @include breakpoint(tablet) {

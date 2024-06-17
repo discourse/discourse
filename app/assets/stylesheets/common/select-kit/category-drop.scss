@@ -21,9 +21,9 @@
 
       &.has-selection {
         .category-drop-header {
-          border-color: var(--quaternary);
+          border-color: var(--d-nav-active-color);
           .caret-icon {
-            color: var(--quaternary);
+            color: var(--d-nav-active-color);
           }
         }
       }

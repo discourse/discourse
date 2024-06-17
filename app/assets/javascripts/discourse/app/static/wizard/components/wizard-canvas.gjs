@@ -9,9 +9,9 @@ const SIZE = 144;
 
 const COLORS = [
   "--tertiary",
-  "--quaternary",
+  "--tertiary-high",
   "--tertiary-medium",
-  "--quaternary-low",
+  "--tertiary-low",
 ];
 
 class Particle {

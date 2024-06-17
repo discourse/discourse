@@ -362,7 +362,7 @@ export default Component.extend({
 
     const activeWidth = categoriesSize * (opts.categories ? 0.8 : 0.55);
     ctx.beginPath();
-    ctx.fillStyle = colors.quaternary;
+    ctx.fillStyle = colors.tertiary;
     ctx.rect(
       headerMargin * 2 + categoriesSize,
       headerHeight + headerMargin,

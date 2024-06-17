@@ -29,18 +29,27 @@
     position: relative;
 
     &.--active {
+      &:after {
+        position: absolute;
+        content: "";
+        height: 0.25em;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--d-nav-active-color);
+      }
       .d-icon,
       .d-button-label {
-        color: var(--quaternary);
+        color: var(--d-nav-active-color);
       }
     }
     &:hover,
     &:focus {
-      .discourse-no-touch &,
-      .discourse-touch & {
+      .discourse-no-touch & {
+        background: var(--d-hover);
         .d-icon,
         .d-button-label {
-          color: var(--quaternary);
+          color: var(--d-nav-active-color);
         }
       }
     }

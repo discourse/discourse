@@ -232,29 +232,53 @@
   .themes-list-header {
     width: 100%;
     display: flex;
-
+    border: 1px solid var(--primary-low);
     .tab {
       border: none;
       padding: 1em;
       width: 50%;
       box-sizing: border-box;
       text-align: center;
+      background: transparent;
       &.themes-tab {
-        border-top-right-radius: 0px;
-        border-bottom-left-radius: 0px;
-        border-bottom-right-radius: 0px;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
       }
       &.components-tab {
-        border-top-left-radius: 0px;
-        border-bottom-left-radius: 0px;
-        border-bottom-right-radius: 0px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .discourse-no-touch & {
+        &:focus,
+        &:hover {
+          color: inherit;
+          background: var(--d-hover);
+          &.active {
+            color: var(--d-nav-active-color);
+          }
+          .d-icon {
+            color: inherit;
+          }
+        }
       }
 
       &.active {
-        background-color: var(--quaternary);
-        color: var(--secondary);
+        color: var(--d-nav-active-color);
+        position: relative;
+        &:after {
+          content: "";
+          position: absolute;
+          height: 0.25em;
+          background: var(--d-nav-active-color);
+          left: 0;
+          right: 0;
+          bottom: 0;
+        }
         .d-icon {
-          color: currentColor;
+          color: inherit;
         }
       }
     }
@@ -556,11 +580,6 @@
       margin: 0;
     }
 
-    .edit-main-nav .nav-pills > li a.active {
-      background-color: var(--quaternary);
-      color: var(--secondary);
-    }
-
     .edit-main-nav ul {
       padding-bottom: 0;
     }
@@ -585,11 +604,6 @@
         label {
           padding: 6px 12px;
           margin-bottom: 0;
-        }
-
-        a.active {
-          background: var(--primary-medium);
-          color: var(--secondary);
         }
 
         a.blank:not(.active) {

@@ -134,22 +134,6 @@
         font-size: var(--font-down-0);
         padding: var(--space-2) var(--space-3)
           calc(0.5rem + var(--active-border-width));
-
-        &:hover {
-          color: var(--quaternary);
-          background-color: transparent;
-          border-color: transparent;
-        }
-
-        &.active {
-          color: var(--quaternary);
-          background-color: transparent;
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
-          border-width: 0;
-          border-bottom: var(--active-border-width) solid var(--quaternary);
-          padding-bottom: var(--space-2);
-        }
       }
 
       .has-sidebar-page & {

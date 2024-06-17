@@ -497,7 +497,6 @@ $mobile-breakpoint: 700px;
 
 .admin-controls {
   display: flex;
-  background-color: var(--primary-low);
   align-items: center;
 
   .admin-actions {
@@ -551,9 +550,9 @@ $mobile-breakpoint: 700px;
   }
 
   .nav-pills {
-    width: calc(100% - 10px);
+    width: 100%;
     display: inline-flex;
-    padding: 10px;
+    padding: 0.5em;
     margin: 0;
     white-space: nowrap;
     overflow-x: auto;
@@ -565,12 +564,6 @@ $mobile-breakpoint: 700px;
 
     &:before {
       display: none;
-    }
-    > li {
-      margin: 0;
-      a.active {
-        background: var(--primary-medium);
-      }
     }
   }
   h1 {
@@ -700,7 +693,7 @@ $mobile-breakpoint: 700px;
       color: var(--primary);
       background-color: initial;
       font-weight: 700;
-      border-right: 4px solid var(--quaternary);
+      border-right: 4px solid var(--d-nav-active-color);
 
       &::after {
         display: none; // Hides the arrow

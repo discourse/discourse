@@ -6,53 +6,17 @@
 }
 
 .dashboard-next {
-  .navigation {
+  .nav {
     display: flex;
-    margin: 0 0 1em 0;
-    border-bottom: 1px solid var(--primary-low-mid);
-
-    .navigation-item {
-      display: inline;
-      &:hover {
-        background: var(--primary-very-low);
-      }
-    }
+    margin: 0 0 2em 0;
+    border-bottom: 1px solid var(--primary-low);
+    font-size: var(--font-up-1);
 
     .navigation-link {
-      display: block;
-      font-weight: bold;
-      padding: 0.6em 1em 0.5em 1em;
-
       .emoji {
         margin-right: 0.5em;
       }
     }
-  }
-
-  @mixin active-navigation-item {
-    .navigation-link {
-      border-bottom: 0.4em solid var(--tertiary);
-    }
-  }
-
-  &.dashboard-moderation .navigation-item.moderation {
-    @include active-navigation-item;
-  }
-
-  &.dashboard-security .navigation-item.security {
-    @include active-navigation-item;
-  }
-
-  &.dashboard-reports .navigation-item.reports {
-    @include active-navigation-item;
-  }
-
-  &.dashboard-new-features .navigation-item.new-features {
-    @include active-navigation-item;
-  }
-
-  &.general .navigation-item.general {
-    @include active-navigation-item;
   }
 
   .sections {
