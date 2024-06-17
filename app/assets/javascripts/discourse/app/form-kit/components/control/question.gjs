@@ -9,7 +9,7 @@ import i18n from "discourse-common/helpers/i18n";
 export default class FKControlQuestion extends Component {
   @action
   handleInput(event) {
-    this.args.field.set(event.target.value);
+    this.args.field.set(event.target.value === "true");
   }
 
   <template>
@@ -19,7 +19,7 @@ export default class FKControlQuestion extends Component {
           <input
             name={{@field.name}}
             type="radio"
-            value={{true}}
+            value="true"
             checked={{eq @value true}}
             class="form-kit__control-radio"
             disabled={{@field.disabled}}
@@ -41,7 +41,7 @@ export default class FKControlQuestion extends Component {
           <input
             name={{@field.name}}
             type="radio"
-            value={{false}}
+            value="false"
             checked={{eq @value false}}
             class="form-kit__control-radio"
             disabled={{@field.disabled}}

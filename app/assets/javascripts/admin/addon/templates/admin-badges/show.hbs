@@ -8,6 +8,7 @@
     @data={{this.model}}
     @onSubmit={{this.handleSubmit}}
     @validateOn="change"
+    class="badge-form"
     as |form data|
   >
     {{#if this.readOnly}}
@@ -248,17 +249,15 @@
       @outletArgs={{hash badge=this.buffered form=form}}
     />
 
-    <form.Container>
+    <form.Actions>
       <form.Submit @isLoading={{this.saving}} />
 
-      <form.Button
-        @action={{this.handleDelete}}
-        @disabled={{this.readOnly}}
-        class="btn-danger"
-      >
-        {{i18n "admin.badges.delete"}}
-      </form.Button>
-    </form.Container>
+      {{#unless this.readOnly}}
+        <form.Button @action={{this.handleDelete}} class="btn-danger">
+          {{i18n "admin.badges.delete"}}
+        </form.Button>
+      {{/unless}}
+    </form.Actions>
   </Form>
 
   {{#if this.grant_count}}

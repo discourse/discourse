@@ -5,13 +5,8 @@ import I18n from "discourse-i18n";
 const SUPPORTED_PRIMITIVES = ["string", "number", "boolean"];
 
 export default class Validator {
-  static async validate(value, type, rules = {}) {
-    return await new Validator(value, type, rules).validate();
-  }
-
-  constructor(value, type, rules = {}) {
+  constructor(value, rules = {}) {
     this.value = value;
-    this.type = this.#computePrimitiveType(type);
     this.rules = rules;
     this.errors = [];
   }
@@ -22,11 +17,6 @@ export default class Validator {
   }
 
   async validate() {
-    assert(
-      `Type must be one of ${SUPPORTED_PRIMITIVES.join(", ")}`,
-      SUPPORTED_PRIMITIVES.includes(this.type)
-    );
-
     for (const rule in this.rules) {
       if (this[rule + "Validator"]) {
         await this[rule + "Validator"](this.value, this.rules[rule]);
@@ -91,30 +81,37 @@ export default class Validator {
   }
 
   requiredValidator(value, rule) {
-    if (this.type === "string") {
-      if (rule.trim) {
-        value = value?.trim();
-      }
+    let error = false;
 
-      if (!value || value === "") {
-        this.errors.push({
-          type: "required",
-          value,
-          message: I18n.t("form_kit.errors.required"),
-        });
-      }
-    }
-  }
-
-  #computePrimitiveType(type) {
-    switch (type) {
+    switch (typeof value) {
+      case "string":
+        if (rule.trim) {
+          value = value?.trim();
+        }
+        if (!value || value === "") {
+          error = true;
+        }
+        break;
       case "number":
-        return "number";
-      case "checkbox":
-        return "boolean";
-
+        if (typeof value === "undefined" || isNaN(Number(value))) {
+          error = true;
+        }
+        break;
+      case "boolean":
+        if (value !== true && value !== false) {
+          error = true;
+        }
+        break;
       default:
-        return "string";
+        throw new Error("Unsupported field type");
+    }
+
+    if (error) {
+      this.errors.push({
+        type: "required",
+        value,
+        message: I18n.t("form_kit.errors.required"),
+      });
     }
   }
 }

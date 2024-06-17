@@ -1,5 +1,4 @@
 import { click, fillIn, triggerEvent } from "@ember/test-helpers";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
@@ -12,10 +11,14 @@ class Field {
     }
   }
 
+  get controlType() {
+    return this.element.dataset.controlType;
+  }
+
   async fillIn(value) {
     let element;
 
-    switch (this.element.dataset.controlType) {
+    switch (this.controlType) {
       case "input":
         element = this.element.querySelector("input");
         break;
@@ -25,6 +28,11 @@ class Field {
       case "text":
         element = this.element.querySelector("textarea");
         break;
+      case "composer":
+        element = this.element.querySelector("textarea");
+        break;
+      default:
+        throw new Error(`Unsupported control type: ${this.controlType}`);
     }
 
     await fillIn(element, value);
