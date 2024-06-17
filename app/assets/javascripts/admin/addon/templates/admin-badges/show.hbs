@@ -250,13 +250,11 @@
     <form.Container>
       <form.Submit @isLoading={{this.saving}} />
 
-      <form.Button
-        @action={{this.handleDelete}}
-        @disabled={{this.readOnly}}
-        class="btn-danger"
-      >
-        {{i18n "admin.badges.delete"}}
-      </form.Button>
+      {{#unless this.readOnly}}
+        <form.Button @action={{this.handleDelete}} class="btn-danger">
+          {{i18n "admin.badges.delete"}}
+        </form.Button>
+      {{/unless}}
     </form.Container>
   </Form>
 
