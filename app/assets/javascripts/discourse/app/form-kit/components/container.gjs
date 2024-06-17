@@ -1,7 +1,8 @@
 import FormText from "discourse/form-kit/components/text";
+import concatClass from "discourse/helpers/concat-class";
 
 const FKContainer = <template>
-  <div class="form-kit__container" ...attributes>
+  <div class={{concatClass "form-kit__container" @class}} ...attributes>
     {{#if @title}}
       <span class="form-kit__container-title">
         {{@title}}

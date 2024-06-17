@@ -273,6 +273,7 @@ export default class Form extends Component {
           ConditionalContent=(component FKControlConditionalContent)
           Errors=(component FKFormErrors errors=this.visibleErrors)
           Container=(component FKContainer)
+          Actions=(component FKContainer class="form-kit__actions")
           Button=(component DButton)
           Alert=(component FKAlert)
           Submit=(component

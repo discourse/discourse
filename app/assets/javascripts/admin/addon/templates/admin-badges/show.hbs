@@ -247,7 +247,7 @@
       @outletArgs={{hash badge=this.buffered form=form}}
     />
 
-    <form.Container>
+    <form.Actions>
       <form.Submit @isLoading={{this.saving}} />
 
       {{#unless this.readOnly}}
@@ -255,7 +255,7 @@
           {{i18n "admin.badges.delete"}}
         </form.Button>
       {{/unless}}
-    </form.Container>
+    </form.Actions>
   </Form>
 
   {{#if this.grant_count}}
