@@ -31,7 +31,9 @@
 
     {{#if this.readOnly}}
       <form.Container @title={{i18n "admin.badges.name"}}>
-        <span>{{this.model.name}}</span>
+        <span class="form-kit__readonly-text">
+          <span>{{this.model.name}}</span>
+        </span>
         <LinkTo
           @route="adminSiteText.edit"
           @models={{array (concat this.textCustomizationPrefix "name")}}
