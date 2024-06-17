@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/discourse/messageformat.git
+  revision: 35662b0474d31480d470597b2479f6cb55cb1f20
+  branch: loic-initial-release
+  specs:
+    messageformat (1.0.0)
+      mini_racer (>= 0.6.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -622,6 +630,7 @@ DEPENDENCIES
   maxminddb
   memory_profiler
   message_bus
+  messageformat!
   mini_mime
   mini_racer
   mini_scheduler

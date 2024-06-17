@@ -3,7 +3,7 @@ const Yaml = require("js-yaml");
 const fs = require("fs");
 const concat = require("broccoli-concat");
 const mergeTrees = require("broccoli-merge-trees");
-const MessageFormat = require("messageformat");
+const MessageFormat = require("@messageformat/core");
 const deepmerge = require("deepmerge");
 const glob = require("glob");
 const { shouldLoadPlugins } = require("discourse-plugins");
@@ -34,7 +34,7 @@ class TranslationPlugin extends Plugin {
       } else if (key.endsWith("_MF")) {
         // omit locale.js
         let mfPath = subpath.slice(2).join(".");
-        formats[mfPath] = this.mf.precompile(this.mf.parse(value));
+        formats[mfPath] = this.mf.compile(value);
       }
     });
   }
@@ -119,7 +119,6 @@ module.exports.createI18nTree = function (discourseRoot, vendorJs) {
         "moment.js",
         "moment-timezone-with-data.js",
         "messageformat-lookup.js",
-        "locale/en.js",
         "client.en.js",
       ],
       headerFiles: [
@@ -128,7 +127,7 @@ module.exports.createI18nTree = function (discourseRoot, vendorJs) {
         "moment-timezone-with-data.js",
         "messageformat-lookup.js",
       ],
-      footerFiles: ["client.en.js", "locale/en.js"],
+      footerFiles: ["client.en.js"],
       outputFile: `assets/test-i18n.js`,
     }
   );

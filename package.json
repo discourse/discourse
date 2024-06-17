@@ -13,6 +13,7 @@
     "@glint/environment-ember-template-imports": "^1.4.0",
     "@glint/template": "^1.4.0",
     "@json-editor/json-editor": "2.10.0",
+    "@messageformat/core": "^3.3.0",
     "@mixer/parallel-prettier": "^2.0.3",
     "ace-builds": "1.4.13",
     "chart.js": "3.5.1",

@@ -20,6 +20,8 @@
     "@faker-js/faker": "^8.4.1",
     "@glimmer/syntax": "^0.92.0",
     "@highlightjs/cdn-assets": "^11.9.0",
+    "@messageformat/runtime": "^3.0.1",
+    "decorator-transforms": "^2.0.0",
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
     "ember-route-template": "^1.0.3",
@@ -28,8 +30,7 @@
     "highlight.js": "^11.9.0",
     "jspreadsheet-ce": "^4.13.4",
     "morphlex": "^0.0.16",
-    "pretty-text": "1.0.0",
-    "decorator-transforms": "^2.0.0"
+    "pretty-text": "1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
@@ -104,7 +105,6 @@
     "js-yaml": "^4.1.0",
     "loader.js": "^4.7.0",
     "message-bus-client": "^4.3.8",
-    "messageformat": "0.1.5",
     "pretender": "^3.4.7",
     "qunit": "^2.21.0",
     "qunit-dom": "^3.2.0",

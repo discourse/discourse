@@ -1,5 +1,10 @@
 //= depend_on 'client.en.yml'
 //= require locales/i18n
 
+import { number, plural } from "@messageformat/runtime";
+import { en } from "@messageformat/runtime/lib/cardinals";
+import { numberPercent } from "@messageformat/runtime/lib/formatters";
+
 <% JsLocaleHelper.reloadable_plugins(:en, self) %>
 <%= JsLocaleHelper.output_locale(:en) %>
+console.log("taiste");

@@ -89,6 +89,10 @@ gem "mini_sql"
 gem "pry-rails", require: false
 gem "pry-byebug", require: false
 gem "rtlcss", require: false
+gem "messageformat",
+    require: false,
+    github: "discourse/messageformat",
+    branch: "loic-initial-release"
 gem "rake"
 
 gem "thor", require: false

@@ -302,6 +302,8 @@ module JsLocaleHelper
   end
 
   def self.generate_message_format(message_formats, locale, filename)
+    require "messageformat"
+
     formats =
       message_formats
         .map { |k, v| k.inspect << " : " << compile_message_format(filename, locale, v) }
@@ -309,7 +311,6 @@ module JsLocaleHelper
 
     result = +"MessageFormat = {locale: {}};\n"
     result << "I18n._compiledMFs = {#{formats}};\n"
-    result << File.read(filename) << "\n"
 
     if locale != "en"
       # Include "en" pluralization rules for use in fallbacks
@@ -326,24 +327,21 @@ module JsLocaleHelper
   end
 
   @mutex = Mutex.new
-  def self.with_context
+  def self.with_context(locale)
     @mutex.synchronize do
       yield(
         @ctx ||=
           begin
-            ctx = MiniRacer::Context.new(timeout: 15_000, ensure_gc_after_idle: 2000)
-            ctx.load("#{Rails.root}/node_modules/messageformat/messageformat.js")
-            ctx
+            MessageFormat::Compiler.new(locale, {}).context
           end
       )
     end
   end
 
   def self.compile_message_format(path, locale, format)
-    with_context do |ctx|
-      ctx.load(path) if File.exist?(path)
+    with_context(locale) do |ctx|
       ctx.eval("mf = new MessageFormat('#{locale}');")
-      ctx.eval("mf.precompile(mf.parse(#{format.inspect}))")
+      ctx.eval("mf.compile(#{format.inspect}).toString();")
     end
   rescue MiniRacer::EvalError => e
     message = +"Invalid Format: " << e.message
