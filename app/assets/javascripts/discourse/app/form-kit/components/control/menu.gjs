@@ -23,6 +23,7 @@ export default class FKControlMenu extends Component {
       @triggerClass="form-kit__control-menu"
       @disabled={{@disabled}}
       @placement="bottom-start"
+      @offset={{5}}
       id={{@field.id}}
     >
       <:trigger>
