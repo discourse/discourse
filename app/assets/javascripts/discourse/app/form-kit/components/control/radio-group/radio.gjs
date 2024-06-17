@@ -1,24 +1,25 @@
-import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/label";
 import uniqueId from "discourse/helpers/unique-id";
+import withEventValue from "discourse/helpers/with-event-value";
 
 const FKControlRadioGroupRadio = <template>
   {{#let (uniqueId) as |uuid|}}
     <div class="form-kit__field form-kit__field-radio">
       <FKLabel @fieldId={{uuid}} class="form-kit__control-radio-label">
         <input
-          name={{@name}}
+          name={{@field.name}}
           type="radio"
           value={{@value}}
-          checked={{@checked}}
+          checked={{eq @groupValue @value}}
           id={{uuid}}
           class="form-kit__control-radio"
-          disabled={{@disabled}}
+          disabled={{@field.disabled}}
           ...attributes
-          {{on "change" (fn @setValue @value)}}
+          {{on "change" (withEventValue @field.set)}}
         />
-        {{@label}}
+        <span>{{yield}}</span>
       </FKLabel>
     </div>
   {{/let}}

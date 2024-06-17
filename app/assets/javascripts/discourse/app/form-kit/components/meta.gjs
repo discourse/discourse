@@ -14,7 +14,10 @@ export default class FKMeta extends Component {
 
   get shouldRenderMeta() {
     return (
-      this.showMeta && (this.shouldRenderCharCounter || this.shouldRenderErrors)
+      this.showMeta &&
+      (this.shouldRenderCharCounter ||
+        this.shouldRenderErrors ||
+        this.args.description?.length)
     );
   }
 
@@ -28,7 +31,7 @@ export default class FKMeta extends Component {
         {{#if this.shouldRenderErrors}}
           <FKErrors @id={{@field.errorId}} @errors={{@errors}} />
         {{else if @description}}
-          <FKText>{{@description}}</FKText>
+          <FKText class="form-kit__meta-description">{{@description}}</FKText>
         {{/if}}
 
         {{#if this.shouldRenderCharCounter}}

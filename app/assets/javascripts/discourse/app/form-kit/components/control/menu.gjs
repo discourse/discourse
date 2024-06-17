@@ -23,6 +23,7 @@ export default class FKControlMenu extends Component {
       @triggerClass="form-kit__control-menu"
       @disabled={{@disabled}}
       @placement="bottom-start"
+      id={{@field.id}}
     >
       <:trigger>
         <span class="d-button-label">
@@ -35,7 +36,10 @@ export default class FKControlMenu extends Component {
           {{yield
             (hash
               Item=(component
-                FKControlMenuItem item=menu.item set=@set menuApi=this.menuApi
+                FKControlMenuItem
+                item=menu.item
+                field=@field
+                menuApi=this.menuApi
               )
               Divider=(component FKControlMenuDivider divider=menu.divider)
               Container=FKControlMenuContainer

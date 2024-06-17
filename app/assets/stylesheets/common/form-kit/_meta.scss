@@ -9,4 +9,8 @@
   width: 100%;
   min-height: 20px;
   line-height: var(--line-height-medium);
+
+  &-description {
+    margin: 0;
+  }
 }

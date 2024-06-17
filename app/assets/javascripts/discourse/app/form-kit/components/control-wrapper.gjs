@@ -9,28 +9,28 @@ import i18n from "discourse-common/helpers/i18n";
 export default class FKControlWrapper extends Component {
   get controlType() {
     switch (this.args.component.name) {
-      case "FKControlToggle":
-        return "-toggle";
-      case "FKControlInput":
-        return "-input";
-      case "FKControlComposer":
-        return "-composer";
-      case "FKControlText":
-        return "-text";
-      case "FKControlQuestion":
-        return "-question";
-      case "FKControlCode":
-        return "-code";
-      case "FKControlSelect":
-        return "-select";
-      case "FKControlIcon":
-        return "-icon";
-      case "FKControlImage":
-        return "-image";
-      case "FKControlMenu":
-        return "-menu";
       case "FKControlRadioGroup":
-        return "-radio-group";
+        return "radio-group";
+      case "FKControlToggle":
+        return "toggle";
+      case "FKControlInput":
+        return "input";
+      case "FKControlComposer":
+        return "composer";
+      case "FKControlText":
+        return "text";
+      case "FKControlQuestion":
+        return "question";
+      case "FKControlCode":
+        return "code";
+      case "FKControlSelect":
+        return "select";
+      case "FKControlIcon":
+        return "icon";
+      case "FKControlImage":
+        return "image";
+      case "FKControlMenu":
+        return "menu";
     }
   }
 
@@ -38,12 +38,13 @@ export default class FKControlWrapper extends Component {
     <div
       class={{concatClass
         "form-kit__field"
-        (concat "form-kit__field" this.controlType)
+        (concat "form-kit__field-" this.controlType)
         (if @hasErrors "has-errors")
       }}
       data-disabled={{@field.disabled}}
       data-name={{@field.name}}
       data-value={{@value}}
+      data-control-type={{this.controlType}}
     >
       {{#if @title}}
         <FKLabel class="form-kit__field-title" @fieldId={{@field.id}}>

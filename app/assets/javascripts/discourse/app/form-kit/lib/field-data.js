@@ -25,7 +25,8 @@ export default class FieldData {
    * Creates an instance of FieldData.
    * @param {string} name - The name of the field.
    * @param {Object} options - The options for the field.
-   * @param {Function} options.onSet - The callback function for setting the field value.
+   * @param {Function} options.set - The callback function for setting the field value.
+   * @param {Function} options.onSet - The callback function for setting the custom field value.
    * @param {string} options.validation - The validation rules for the field.
    * @param {boolean} options.disabled - Indicates if the field is disabled.
    * @param {string} options.type - The type of the field.
@@ -33,16 +34,22 @@ export default class FieldData {
    */
   constructor(
     name,
-    { onSet, validation, disabled, type, validate, validationEnabled }
+    { set, onSet, validation, disabled, type, validate, validationEnabled }
   ) {
     this.name = name;
-    this.onSet = onSet;
     this.disabled = disabled ?? false;
     this.type = type;
     this.customValidate = validate;
     this.validation = validation;
     this.rules = this.validation ? ValidationParser.parse(validation) : null;
     this.validationEnabled = validationEnabled ?? true;
+    this.set = (value) => {
+      if (onSet) {
+        onSet(value, { set });
+      } else {
+        set(this.name, value);
+      }
+    };
   }
 
   /**

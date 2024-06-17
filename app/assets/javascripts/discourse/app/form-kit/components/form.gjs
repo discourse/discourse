@@ -299,6 +299,7 @@ export default class Form extends Component {
             unregisterField=this.unregisterField
             errors=this.validationState
           )
+          set=this.set
         )
         this.effectiveData
       }}

@@ -6,7 +6,7 @@ import DToggleSwitch from "discourse/components/d-toggle-switch";
 export default class FKControlToggle extends Component {
   @action
   handleInput() {
-    this.args.set(!this.args.value);
+    this.args.field.set(!this.args.value);
   }
 
   <template>

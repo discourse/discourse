@@ -9,13 +9,15 @@ export default class FKControlCode extends Component {
 
   @action
   handleInput(content) {
-    this.args.set(content);
+    this.args.field.set(content);
   }
 
   get style() {
-    return `height: ${htmlSafe(
-      escapeExpression(this.args.height ?? 200) + "px"
-    )}`;
+    if (!this.args.height) {
+      return;
+    }
+
+    return `height: ${htmlSafe(escapeExpression(this.args.height) + "px")}`;
   }
 
   <template>

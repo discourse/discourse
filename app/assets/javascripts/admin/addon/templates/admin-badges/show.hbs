@@ -217,13 +217,10 @@
           as |menu|
         >
           {{#each this.badgeGroupings as |grouping|}}
-            <menu.Item @value={{grouping.id}} @label={{grouping.name}} />
+            <menu.Item @value={{grouping.id}}>{{grouping.name}}</menu.Item>
           {{/each}}
           <menu.Divider />
-          <menu.Item
-            @action={{route-action "editGroupings"}}
-            @label="Add new group"
-          />
+          <menu.Item @action={{route-action "editGroupings"}}>Add new group</menu.Item>
         </field.Menu>
       </form.Field>
 

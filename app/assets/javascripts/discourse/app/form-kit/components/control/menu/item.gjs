@@ -12,19 +12,19 @@ export default class FKControlMenuItem extends Component {
         set: this.args.set,
       });
     } else {
-      this.args.set(this.args.value);
+      this.args.field.set(this.args.value);
     }
   }
 
   <template>
-    <@item class="form-kit__control-menu-item">
+    <@item class="form-kit__control-menu-item" data-value={{@value}}>
       <DButton
         @action={{this.handleInput}}
         class="btn-flat"
         @icon={{@icon}}
         ...attributes
       >
-        {{@label}}
+        {{yield}}
       </DButton>
     </@item>
   </template>

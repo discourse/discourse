@@ -7,12 +7,12 @@ import { escapeExpression } from "discourse/lib/utilities";
 export default class FKControlComposer extends Component {
   @action
   handleInput(event) {
-    this.args.set(event.target.value);
+    this.args.field.set(event.target.value);
   }
 
   get style() {
     return `height: ${htmlSafe(
-      escapeExpression(this.args.height ?? 200) + "px"
+      this.args.height ? escapeExpression(this.args.height) + "px" : "auto"
     )}`;
   }
 

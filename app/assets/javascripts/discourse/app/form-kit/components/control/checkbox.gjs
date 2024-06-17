@@ -8,15 +8,18 @@ import FKMeta from "discourse/form-kit/components/meta";
 export default class FKControlCheckbox extends Component {
   @action
   handleInput() {
-    this.args.set(!this.args.value);
+    this.args.field.set(!this.args.value);
   }
 
   <template>
     <div
       class="form-kit__field form-kit__field-checkbox"
       data-disabled={{@field.disabled}}
+      data-name={{@field.name}}
+      data-value={{@value}}
+      data-control-type="checkbox"
     >
-      <FKLabel class="form-kit__control-checkbox__label">
+      <FKLabel class="form-kit__control-checkbox-label">
         <input
           type="checkbox"
           checked={{eq @value true}}
@@ -25,7 +28,7 @@ export default class FKControlCheckbox extends Component {
           ...attributes
           {{on "change" this.handleInput}}
         />
-        {{@label}}
+        <span>{{@label}}</span>
       </FKLabel>
 
       <FKMeta @value={{@value}} @field={{@field}} @errors={{@errors}} />
