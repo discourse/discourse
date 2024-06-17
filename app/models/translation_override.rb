@@ -48,6 +48,14 @@ class TranslationOverride < ActiveRecord::Base
   attribute :status, :integer
   enum status: { up_to_date: 0, outdated: 1, invalid_interpolation_keys: 2, deprecated: 3 }
 
+  scope :mf_locales, ->(locale) { where(locale: locale).where("translation_key LIKE '%_MF'") }
+  scope :client_locales,
+        ->(locale) do
+          where(locale: locale)
+            .where("translation_key LIKE 'js.%' OR translation_key LIKE 'admin_js.%'")
+            .where.not("translation_key LIKE '%_MF'")
+        end
+
   def self.upsert!(locale, key, value)
     params = { locale: locale, translation_key: key }
 
@@ -58,10 +66,6 @@ class TranslationOverride < ActiveRecord::Base
       I18n.overrides_disabled { I18n.t(transform_pluralized_key(key), locale: :en) }
 
     data = { value: sanitized_value, original_translation: original_translation }
-    if key.end_with?("_MF")
-      _, filename = JsLocaleHelper.find_message_format_locale([locale], fallback_to_english: false)
-      data[:compiled_js] = JsLocaleHelper.compile_message_format(filename, locale, sanitized_value)
-    end
 
     params.merge!(data) if translation_override.new_record?
     i18n_changed(locale, [key]) if translation_override.update(data)

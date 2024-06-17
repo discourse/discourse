@@ -11,6 +11,7 @@
       <%= preload_script "discourse" %>
       <%= preload_script "test" %>
       <%= preload_script "locales/#{I18n.locale}" %>
+      <%= preload_script_url ExtraLocalesController.url("mf") %>
       <%= preload_script "admin" %>
       <%- Discourse.find_plugin_js_assets(include_disabled: true).each do |file| %>
         <%= preload_script file %>
@@ -50,7 +51,7 @@
     <% elsif @suggested_themes %>
       <h2>Theme QUnit Test Runner</h2>
 
-      <%- if @suggested_themes.size == 0 %>
+      <%- if @suggested_themes.empty? %>
         <p>Cannot find any theme tests.</p>
       <%- else %>
         <h3>Select a theme/component: </h3>
