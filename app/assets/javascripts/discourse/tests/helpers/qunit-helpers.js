@@ -512,7 +512,7 @@ class FieldHelper {
     return this.element.dataset.value;
   }
 
-  get disabled() {
+  get isDisabled() {
     return this.element.dataset.disabled === "";
   }
 }

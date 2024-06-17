@@ -29,16 +29,14 @@ export default class FieldData {
    * @param {Function} options.onSet - The callback function for setting the custom field value.
    * @param {string} options.validation - The validation rules for the field.
    * @param {boolean} options.disabled - Indicates if the field is disabled.
-   * @param {string} options.type - The type of the field.
    * @param {Function} options.validate - The custom validation function.
    */
   constructor(
     name,
-    { set, onSet, validation, disabled, type, validate, validationEnabled }
+    { set, onSet, validation, disabled, validate, validationEnabled }
   ) {
     this.name = name;
     this.disabled = disabled ?? false;
-    this.type = type;
     this.customValidate = validate;
     this.validation = validation;
     this.rules = this.validation ? ValidationParser.parse(validation) : null;
@@ -82,7 +80,7 @@ export default class FieldData {
       return { [name]: [] };
     }
 
-    const validator = new Validator(value, this.type, this.rules);
+    const validator = new Validator(value, this.rules);
     await this.customValidate?.(name, value, data, validator.addError);
     await validator.validate();
 
