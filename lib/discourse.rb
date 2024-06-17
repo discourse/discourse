@@ -916,7 +916,6 @@ module Discourse
     PrettyText.reset_context
 
     DiscourseJsProcessor::Transpiler.reset_context if defined?(DiscourseJsProcessor::Transpiler)
-    JsLocaleHelper.reset_context if defined?(JsLocaleHelper)
 
     # warm up v8 after fork, that way we do not fork a v8 context
     # it may cause issues if bg threads in a v8 isolate randomly stop
