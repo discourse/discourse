@@ -149,12 +149,12 @@
 }
 
 .d-editor-preview img {
-  padding-bottom: 1.4em;
+  vertical-align: baseline; // consistent with cooked
   &.emoji,
   &.avatar,
   &.onebox-avatar,
   &.site-icon {
-    padding-bottom: 0;
+    vertical-align: text-bottom;
   }
   &.resizable {
     object-fit: cover;
@@ -163,50 +163,33 @@
 }
 
 .d-editor-preview .image-wrapper {
-  --resizer-height: 1.75em;
   position: relative;
   display: inline-block;
-  .discourse-no-touch & {
-    // on hover-capable devices we position the controls within the padding
-    padding-bottom: var(--resizer-height);
-    margin-bottom: calc(var(--resizer-height) * -1);
-  }
-
-  img {
-    padding-bottom: 0;
-  }
-
-  &:hover {
-    .button-wrapper {
-      opacity: 1;
-    }
-  }
 
   .button-wrapper {
-    min-width: 10em;
+    --resizer-height: 2.5em;
+    box-sizing: border-box;
+    padding: 0.25em 0.5em;
+    min-width: 19em; // wide enough to contain all controls
     width: 100%;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     gap: 0 0.5em;
     position: absolute;
-    height: calc(var(--resizer-height) + 0.5em);
-    bottom: 0;
+    height: var(--resizer-height);
+    bottom: 0.4em;
     left: 0;
-    opacity: 0;
+    opacity: 0.9;
     transition: all 0.25s;
     z-index: 1; // needs to be higher than image
-    background: var(--secondary); // for when images are wider than controls
-
-    &[editing] {
-      opacity: 1;
-    }
+    background: var(--secondary);
+    color: var(--primary);
 
     .scale-btn-container,
     .alt-text-readonly-container,
     .alt-text-edit-container,
     .delete-image-button {
-      background: var(--secondary);
       display: flex;
       height: var(--resizer-height);
       align-items: center;
@@ -262,11 +245,11 @@
       gap: 0 0.25em;
       flex: 1;
       max-width: 100%;
-
+      height: 95%; // gives input some padding
       .alt-text-input,
       .alt-text-edit-ok,
       .alt-text-edit-cancel {
-        height: var(--resizer-height);
+        height: 100%;
       }
 
       .alt-text-input {
@@ -308,10 +291,6 @@
       pointer-events: none;
     }
   }
-}
-
-.discourse-touch .d-editor-preview .image-wrapper .button-wrapper {
-  opacity: 1;
 }
 
 // d-editor bar button sizing
