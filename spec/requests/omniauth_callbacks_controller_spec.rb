@@ -631,7 +631,7 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
       end
 
-      context "when user has TOTP enabled but not enforced" do
+      context "when user has TOTP enabled but enforce_second_factor_on_external_auth is false" do
         before { user.create_totp(enabled: true) }
 
         it "should return the right response" do
