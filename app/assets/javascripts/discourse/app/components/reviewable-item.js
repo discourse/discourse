@@ -173,6 +173,7 @@ export default Component.extend({
         `/review/${reviewable.id}/perform/${performableAction.server_action}?version=${version}`,
         {
           type: "PUT",
+          dataType: "json",
           data,
         }
       )
