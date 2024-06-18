@@ -19,7 +19,7 @@ if defined?(RailsFailover::Redis)
     SiteSetting.refresh!
   end
 
-  RailsFailover::Redis.logger = Rails.logger.broadcasts.first
+  RailsFailover::Redis.logger = Rails.logger.chained.first if Rails.logger.respond_to? :chained
 end
 
 if defined?(RailsFailover::ActiveRecord)
