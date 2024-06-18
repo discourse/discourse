@@ -60,4 +60,8 @@ class FakeLogger
   def add(severity, message = nil, progname = nil)
     public_send(severities[severity]) << message
   end
+
+  def broadcasts
+    [self]
+  end
 end

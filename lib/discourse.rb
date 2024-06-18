@@ -954,14 +954,7 @@ module Discourse
   def self.warn(message, env = nil)
     append = env ? (+" ") << env.map { |k, v| "#{k}: #{v}" }.join(" ") : ""
 
-    if !(Logster::Logger === Rails.logger)
-      Rails.logger.warn("#{message}#{append}")
-      return
-    end
-
-    loggers = [Rails.logger]
-    loggers.concat(Rails.logger.chained) if Rails.logger.chained
-
+    loggers = Rails.logger.broadcasts
     logster_env = env
 
     if old_env = Thread.current[Logster::Logger::LOGSTER_ENV]
