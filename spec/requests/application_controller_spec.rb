@@ -547,6 +547,35 @@ RSpec.describe ApplicationController do
         expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("unsafe-none")
       end
     end
+
+    describe "when `cross_origin_unsafe_none_referrers` site setting has been set" do
+      before do
+        SiteSetting.cross_origin_opener_policy_header = "same-origin"
+        SiteSetting.cross_origin_opener_unsafe_none_referrers =
+          "meta.discourse.org|try.discourse.org"
+      end
+
+      it "sets `Cross-Origin-Opener-Policy` to `unsafe-none` for a listed referrer" do
+        get "/latest", headers: { "HTTP_REFERER" => "meta.discourse.org" }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("unsafe-none")
+      end
+
+      it "sets `Cross-Origin-Opener-Policy` to configured value for a non-listed referrer" do
+        get "/latest", headers: { "HTTP_REFERER" => "www.discourse.org" }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")
+      end
+
+      it "sets `Cross-Origin-Opener-Policy` to configured value when referrer is missing" do
+        get "/latest"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")
+      end
+    end
   end
 
   describe "splash_screen" do

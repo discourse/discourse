@@ -2049,6 +2049,10 @@ security:
       - "same-origin"
       - "same-origin-allow-popups"
     hidden: true
+  cross_origin_opener_unsafe_none_referrers:
+    default: ""
+    type: host_list
+    hidden: true
 
 onebox:
   post_onebox_maxlength:
