@@ -27,29 +27,18 @@
     padding-block: 0.75rem;
     height: 100%;
     position: relative;
+    color: var(--primary-medium);
 
     &.--active {
-      &:after {
-        position: absolute;
-        content: "";
-        height: 0.25em;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: var(--d-nav-active-color);
-      }
-      .d-icon,
-      .d-button-label {
-        color: var(--d-nav-active-color);
-      }
+      @include nav-active();
     }
     &:hover,
     &:focus {
       .discourse-no-touch & {
-        background: var(--d-hover);
+        background: var(--d-nav-bg-color--active);
         .d-icon,
         .d-button-label {
-          color: var(--d-nav-active-color);
+          color: var(--d-nav-color--active);
         }
       }
     }
@@ -66,7 +55,6 @@
 
     .d-button-label {
       font-size: var(--font-down-1-rem);
-      color: var(--primary-medium);
     }
 
     .c-unread-indicator {

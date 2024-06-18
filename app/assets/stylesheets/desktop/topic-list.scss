@@ -64,16 +64,7 @@
     padding-right: 0.5em;
     position: relative;
     &.active {
-      color: var(--d-nav-active-color);
-      &:after {
-        content: "";
-        position: absolute;
-        height: 0.125em;
-        background: var(--d-nav-active-color);
-        left: 0;
-        right: 0;
-        bottom: -0.125em;
-      }
+      @include nav-active();
     }
   }
 

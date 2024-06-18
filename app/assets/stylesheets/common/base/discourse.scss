@@ -10,7 +10,11 @@
   --d-input-bg-color--disabled: var(--primary-low);
   --d-input-text-color--disabled: var(--primary);
   --d-input-border--disabled: 1px solid var(--primary-low);
-  --d-nav-active-color: var(--tertiary);
+  --d-nav-color: var(--primary);
+  --d-nav-color--hover: var(--primary);
+  --d-nav-color--active: var(--tertiary);
+  --d-nav-bg-color--hover: var(--d-hover);
+  --d-nav-bg-color--active: transparent;
   --safe-area-inset-bottom: env(safe-area-inset-bottom);
 }
 

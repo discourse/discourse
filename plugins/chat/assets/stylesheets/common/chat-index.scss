@@ -21,8 +21,8 @@
 
   &:focus {
     @include default-focus;
-    border-color: var(--d-nav-active-color);
-    outline-color: var(--d-nav-active-color);
+    border-color: var(--d-nav-color--active);
+    outline-color: var(--d-nav-color--active);
   }
 }
 

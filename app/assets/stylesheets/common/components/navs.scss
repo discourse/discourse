@@ -44,31 +44,21 @@
       .d-icon {
         margin-right: 5px;
         color: var(--primary-high);
-      }
-
-      &:after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 0.125em;
+        transition: color 0.2s;
       }
 
       &:hover {
-        background: var(--d-hover);
+        color: var(--d-nav-color--hover);
+        background: var(--d-nav-bg-color--hover);
+        .d-icon {
+          color: var(--d-nav-color--hover);
+        }
       }
     }
 
     a.active,
     button.active {
-      color: var(--d-nav-active-color);
-      .d-icon {
-        color: var(--d-nav-active-color);
-      }
-      &:after {
-        background-color: var(--d-nav-active-color);
-      }
+      @include nav-active();
     }
   }
 }

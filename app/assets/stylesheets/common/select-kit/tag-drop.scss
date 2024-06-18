@@ -18,8 +18,8 @@
 
       &.has-selection {
         .tag-drop-header {
-          color: var(--d-nav-active-color);
-          border-color: var(--d-nav-active-color);
+          color: var(--d-nav-color--active);
+          border-color: var(--d-nav-color--active);
         }
       }
     }

@@ -254,10 +254,11 @@
       .discourse-no-touch & {
         &:focus,
         &:hover {
-          color: inherit;
-          background: var(--d-hover);
+          color: var(--d-nav-color--hover);
+          background: var(--d-nav-bg-color--hover);
           &.active {
-            color: var(--d-nav-active-color);
+            color: var(--d-nav-color--active);
+            background: var(--d-nav-bg-color--active);
           }
           .d-icon {
             color: inherit;
@@ -266,17 +267,8 @@
       }
 
       &.active {
-        color: var(--d-nav-active-color);
         position: relative;
-        &:after {
-          content: "";
-          position: absolute;
-          height: 0.25em;
-          background: var(--d-nav-active-color);
-          left: 0;
-          right: 0;
-          bottom: 0;
-        }
+        @include nav-active();
         .d-icon {
           color: inherit;
         }

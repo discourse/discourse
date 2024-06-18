@@ -693,7 +693,7 @@ $mobile-breakpoint: 700px;
       color: var(--primary);
       background-color: initial;
       font-weight: 700;
-      border-right: 4px solid var(--d-nav-active-color);
+      border-right: 4px solid var(--d-nav-color--active);
 
       &::after {
         display: none; // Hides the arrow
