@@ -1,5 +1,5 @@
 const FKSection = <template>
-  <div class="form-kit__section">
+  <div class="form-kit__section" ...attributes>
     {{#if @title}}
       <h2 class="form-kit__section-title">{{@title}}</h2>
     {{/if}}
