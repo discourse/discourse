@@ -2,7 +2,7 @@
 
 RSpec.describe Reviewable, type: :model do
   describe "Validations" do
-    it { is_expected.to validate_length_of(:reject_reason).is_at_most(500) }
+    it { is_expected.to validate_length_of(:reject_reason).is_at_most(2000) }
   end
 
   describe ".create" do
