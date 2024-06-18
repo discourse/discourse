@@ -1116,7 +1116,16 @@ module Discourse
       end
     end
 
+    schema_cache = ActiveRecord::Base.connection.schema_cache
+
     RailsMultisite::ConnectionManagement.safe_each_connection do
+      # load up schema cache for all multisite assuming all dbs have
+      # an identical schema
+      dup_cache = schema_cache.dup
+      # this line is not really needed, but just in case the
+      # underlying implementation changes lets give it a shot
+      dup_cache.connection = nil
+      ActiveRecord::Base.connection.schema_cache = dup_cache
       I18n.t(:posts)
 
       # this will force Cppjieba to preload if any site has it
