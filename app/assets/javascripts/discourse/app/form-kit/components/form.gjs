@@ -275,13 +275,13 @@ export default class Form extends Component {
           Errors=(component FKFormErrors errors=this.visibleErrors)
           Container=(component FKContainer)
           Actions=(component FKContainer class="form-kit__actions")
-          Button=(component DButton)
+          Button=(component DButton class="form-kit__button")
           Alert=(component FKAlert)
           Submit=(component
             DButton
             action=this.onSubmit
             forwardEvent=true
-            class="btn-primary"
+            class="btn-primary form-kit__button"
             label="submit"
             type="submit"
           )

@@ -7,7 +7,7 @@ export default class FKAlert extends Component {
   }
 
   <template>
-    <div class="form-kit__alert alert alert-{{this.type}}">
+    <div class="form-kit__alert alert alert-{{this.type}}" ...attributes>
       {{#if @icon}}
         {{icon @icon}}
       {{/if}}
