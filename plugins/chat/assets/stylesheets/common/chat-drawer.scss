@@ -26,7 +26,7 @@ html.rtl {
 
 .chat-drawer-outlet-container {
   // higher than timeline, lower than composer, lower than user card (bump up below)
-  z-index: z("usercard");
+  z-index: z("composer", "content") - 1;
   position: fixed;
   right: var(--composer-right, 20px);
   left: 0;
