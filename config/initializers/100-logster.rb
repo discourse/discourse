@@ -2,7 +2,7 @@
 
 if GlobalSetting.skip_redis?
   Rails.application.reloader.to_prepare do
-    Rails.logger = Rails.logger.chained.first if Rails.logger.respond_to? :chained
+    Rails.logger.stop_broadcasting_to(Logster.logger) if defined?(Logster::Logger) && Logster.logger
   end
   return
 end
@@ -118,10 +118,7 @@ RailsMultisite::ConnectionManagement.each_connection do
 end
 
 if Rails.configuration.multisite
-  if Rails.logger.respond_to? :chained
-    chained = Rails.logger.chained
-    chained && chained.first.formatter = RailsMultisite::Formatter.new
-  end
+  Rails.logger.broadcasts.first.formatter = RailsMultisite::Formatter.new
 end
 
 Logster.config.project_directories = [
