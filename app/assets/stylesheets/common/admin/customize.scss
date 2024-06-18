@@ -239,7 +239,7 @@
       width: 50%;
       box-sizing: border-box;
       text-align: center;
-      background: transparent;
+      background: var(--d-nav-bg-color);
       &.themes-tab {
         border-top-right-radius: 0;
         border-bottom-left-radius: 0;
@@ -269,9 +269,6 @@
       &.active {
         position: relative;
         @include nav-active();
-        .d-icon {
-          color: inherit;
-        }
       }
     }
 
