@@ -11,10 +11,6 @@
 
   height: 150px;
   border-radius: var(--d-input-border-radius);
-
-  .form-kit__field.has-errors & {
-    border-color: var(--danger);
-  }
 }
 
 .form-kit__readonly-text {

@@ -1,9 +1,5 @@
 .form-kit__control-menu {
   @include default-input;
-
-  .form-kit__field.has-errors & {
-    border-color: var(--danger);
-  }
 }
 
 .fk-d-menu {

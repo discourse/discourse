@@ -10,8 +10,4 @@
   background-size: 16px 12px;
   cursor: pointer;
   height: 2em;
-
-  .form-kit__field.has-errors & {
-    border-color: var(--danger);
-  }
 }

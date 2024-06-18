@@ -38,4 +38,8 @@
       }
     }
   }
+
+  .has-errors & {
+    border-color: var(--danger);
+  }
 }
