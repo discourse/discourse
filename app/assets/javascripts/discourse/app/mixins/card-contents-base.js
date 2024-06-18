@@ -32,7 +32,6 @@ export default Mixin.create({
   siteSettings: service(),
 
   elementId: null, //click detection added for data-{elementId}
-  triggeringLinkClass: null, //the <a> classname where this card should appear
   _showCallback: null, //username - load up data for when show is called
 
   visible: false,
@@ -85,6 +84,7 @@ export default Mixin.create({
     });
 
     document.querySelector(".card-cloak")?.classList.remove("hidden");
+
     this.appEvents.trigger("user-card:show", { username });
     this._positionCard(target, event);
     this._showCallback(username).then((user) => {
@@ -102,9 +102,6 @@ export default Mixin.create({
   didInsertElement() {
     this._super(...arguments);
 
-    const previewClickEvent = `click.discourse-preview-${this.elementId}-${this.triggeringLinkClass}`;
-    this.setProperties({ previewClickEvent });
-
     document.addEventListener("mousedown", this._clickOutsideHandler);
     document.addEventListener("keyup", this._escListener);
 
@@ -114,7 +111,11 @@ export default Mixin.create({
         .addEventListener("click", this._cardClickHandler);
     });
 
-    this.appEvents.on(previewClickEvent, this, "_previewClick");
+    this.appEvents.on(
+      `d-editor:preview-click-${this.elementId}`,
+      this,
+      "_previewClick"
+    );
 
     this.appEvents.on(
       `topic-header:trigger-${this.elementId}`,
@@ -167,9 +168,9 @@ export default Mixin.create({
     return false;
   },
 
-  _topicHeaderTrigger(username, target) {
-    this.setProperties({ isDocked: true });
-    return this._show(username, target);
+  _topicHeaderTrigger(username, target, event) {
+    this.set("isDocked", true);
+    return this._show(username, target, event);
   },
 
   @bind
@@ -185,8 +186,8 @@ export default Mixin.create({
     window.removeEventListener(MOBILE_SCROLL_EVENT, this._onScroll);
   },
 
-  _previewClick(target) {
-    return this._show(target.innerText.replace(/^@/, ""), target);
+  _previewClick(target, event) {
+    return this._show(target.innerText.replace(/^@/, ""), target, event);
   },
 
   _positionCard(target, event) {
@@ -271,7 +272,11 @@ export default Mixin.create({
         .removeEventListener("click", this._cardClickHandler);
     });
 
-    this.appEvents.off(this.previewClickEvent, this, "_previewClick");
+    this.appEvents.off(
+      `d-editor:preview-click-${this.elementId}`,
+      this,
+      "_previewClick"
+    );
 
     this.appEvents.off(
       `topic-header:trigger-${this.elementId}`,
