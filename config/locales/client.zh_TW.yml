@@ -1669,7 +1669,6 @@ zh_TW:
       enter_fullscreen: "進入全螢幕編輯"
       exit_fullscreen: "離開全螢幕編輯"
       modal_ok: "確定"
-      modal_cancel: "取消"
       cant_send_pm: "抱歉，你不能發訊息給 %{username} 。"
       yourself_confirm:
         title: "忘記填收信人了嗎？"
@@ -2949,6 +2948,8 @@ zh_TW:
               title: "所有話題"
             faq:
               content: "常見問答"
+            guidelines:
+              content: "守則"
             groups:
               content: "群組"
             users:

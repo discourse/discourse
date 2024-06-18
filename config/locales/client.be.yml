@@ -869,7 +869,6 @@ be:
       list_item: "элемент спісу"
       help: "Markdown Editing Help"
       modal_ok: "Добра"
-      modal_cancel: "Адмяніць"
       admin_options_title: "Неабавязковыя налады персаналу для гэтай тэмы"
       composer_actions:
         reply: Адказаць
@@ -1431,6 +1430,8 @@ be:
               content: "тэмы"
             faq:
               content: "Пытанні і адказы"
+            guidelines:
+              content: "інструкцыі"
             groups:
               content: "Групы"
             users:

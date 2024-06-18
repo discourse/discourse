@@ -3665,6 +3665,7 @@ sv:
     Redigera det första inlägget i det här ämnet för att ändra innehållet på sidan %{page_name}.
   guidelines_topic:
     title: "Vanliga frågor/riktlinjer"
+    guidelines_title: "Riktlinjer"
   tos_topic:
     title: "Villkor"
     body: |

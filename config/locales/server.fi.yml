@@ -3808,6 +3808,7 @@ fi:
     Muokkaa ketjun aloitusviestiä muokataksesi sivun %{page_name} sisältöä.
   guidelines_topic:
     title: "UKK/Ohjeet"
+    guidelines_title: "Ohjeet"
   tos_topic:
     title: "Käyttöehdot"
     body: |

@@ -2323,7 +2323,6 @@ sv:
       show_toolbar: "visa redigerarens verktygsfält"
       hide_toolbar: "dölj redigerarens verktygsfält"
       modal_ok: "OK"
-      modal_cancel: "Avbryt"
       cant_send_pm: "Tyvärr, du kan inte skicka ett meddelande till %{username}."
       yourself_confirm:
         title: "Glömde du lägga till mottagare?"
@@ -4207,6 +4206,7 @@ sv:
           text: "så visar vi automatiskt de mest populära kategorierna på denna webbplats"
         filter_placeholder: "Filterkategorier"
         no_categories: "Det finns inga kategorier som matchar den angivna termen."
+        show_more: "Visa mer"
       tags_form_modal:
         title: "Redigera taggnavigering"
         filter_placeholder: "Filtrera taggar"
@@ -4296,6 +4296,9 @@ sv:
               title: "Alla ämnen"
             faq:
               content: "Vanliga frågor och svar"
+              title: "Riktlinjer för att använda denna webbplats"
+            guidelines:
+              content: "Riktlinjer"
               title: "Riktlinjer för att använda denna webbplats"
             groups:
               content: "Grupper"

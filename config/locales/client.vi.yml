@@ -1935,7 +1935,6 @@ vi:
       show_toolbar: "hiển thị thanh công cụ của trình soạn nội dung"
       hide_toolbar: "ẩn thanh công cụ của trình soạn nội dung"
       modal_ok: "OK"
-      modal_cancel: "Hủy"
       cant_send_pm: "Xin lỗi, bạn không thể gởi tin nhắn đến %{username}."
       yourself_confirm:
         title: "Bạn có quên chưa thêm người nhận?"
@@ -3601,6 +3600,8 @@ vi:
               title: "Tất cả các chủ đề"
             faq:
               content: "Câu hỏi thường gặp"
+            guidelines:
+              content: "Hướng dẫn"
             groups:
               content: "Nhóm"
             users:

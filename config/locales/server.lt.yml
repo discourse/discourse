@@ -2313,6 +2313,7 @@ lt:
     Redaguoti pirmutinį įrašą kad pakeisti turinį %{page_name} puslapio.
   guidelines_topic:
     title: "DUK/Gairės"
+    guidelines_title: "Instrukcijos"
   tos_topic:
     title: "Paslaugų teikimo sąlygos"
   privacy_topic:

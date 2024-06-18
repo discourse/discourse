@@ -989,7 +989,6 @@ ro:
     categories:
       categories_label: "categorii"
       subcategories_label: "subcategorii"
-      all_subcategories: "toate subcategoriile"
       no_subcategories: "nicio subcategorie"
       remove_filter: "șterge filtru"
       plus_more_count:
@@ -1883,7 +1882,6 @@ ro:
       toggle_direction: "Schimbă direcția"
       help: "Ajutor pentru formatarea cu Markdown"
       modal_ok: "Ok"
-      modal_cancel: "Anulare"
       cant_send_pm: "Nu poți trimite mesaje către %{username}"
       create_message_error: "Ne pare rău, s-a produs o eroare la crearea acestui mesaj. Te rugăm să încerci din nou."
       yourself_confirm:
@@ -3134,6 +3132,8 @@ ro:
         other: "%{count} nou"
       more: "Mai multe"
       all_categories: "Toate categoriile"
+      categories_form_modal:
+        show_more: "Arată mai mult"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Toate"
@@ -3181,6 +3181,8 @@ ro:
               content: "Subiecte"
             faq:
               content: "Întrebări frecvente"
+            guidelines:
+              content: "Indicații"
             groups:
               content: "Grupuri"
             users:

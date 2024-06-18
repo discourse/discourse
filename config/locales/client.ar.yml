@@ -2732,7 +2732,6 @@ ar:
       show_toolbar: "عرض شريط أداة الإنشاء"
       hide_toolbar: "إخفاء شريط أداة الإنشاء"
       modal_ok: "حسنًا"
-      modal_cancel: "إلغاء"
       cant_send_pm: "عذرًا، لا يمكنك إرسال رسالة إلى %{username}."
       yourself_confirm:
         title: "هل نسيت إضافة المستلمين؟"
@@ -5031,6 +5030,7 @@ ar:
           text: "وسنعرض تلقائيًا الفئات الأكثر شيوعًا على هذا الموقع"
         filter_placeholder: "تصفية الفئات"
         no_categories: "لا توجد فئات مطابقة للمصطلح المحدَّد."
+        show_more: "عرض المزيد"
       tags_form_modal:
         title: "يمكنك تعديل التنقل بين الوسوم"
         filter_placeholder: "تصفية الوسوم"
@@ -5120,6 +5120,9 @@ ar:
               title: "كل الموضوعات"
             faq:
               content: "الأسئلة الشائعة"
+              title: "إرشادات لاستخدام هذا الموقع"
+            guidelines:
+              content: "الإرشادات"
               title: "إرشادات لاستخدام هذا الموقع"
             groups:
               content: "المجموعات"
@@ -6995,6 +6998,7 @@ ar:
           empty: "لا توجد صور حتى الآن. يُرجى تحميل واحدة."
           upload:
             label: "تحميل"
+            title: "رفع الصور"
         selectable_avatars:
           title: "قائمة الصور الرمزية التي يمكن للمستخدمين الاختيار منها"
         categories:
@@ -7161,6 +7165,8 @@ ar:
         allowed_paths: "قائمة السماح بالمسارات"
         edit: "تعديل"
         category: "النشر في الفئة"
+        tags: "وسوم الموضوع"
+        post_author: "مؤلف المنشور - افتراضي إلى %{author}"
         add_host: "إضافة مضيف"
         settings: "إعدادات التضمين"
         crawling_settings: "إعدادات الزاحف"
@@ -7186,6 +7192,7 @@ ar:
         category_title: "الفئة"
         tag_name: "اسم الوسم"
         external_url: "عنوان URL خارجي أو نسبي"
+        user_id: "معرّف المستخدم"
         username: "اسم المستخدم"
         destination: "الوجهة"
         copy_to_clipboard: "نسخ الرابط الثابت إلى الحافظة"

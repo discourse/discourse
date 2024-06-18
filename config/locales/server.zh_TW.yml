@@ -2566,6 +2566,7 @@ zh_TW:
     編輯本主題的第一帖以改變 %{page_name} 頁面的內容。
   guidelines_topic:
     title: "FAQ / 使用守則"
+    guidelines_title: "守則"
   tos_topic:
     title: "服務條款"
   privacy_topic:

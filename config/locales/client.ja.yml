@@ -2211,7 +2211,6 @@ ja:
       show_toolbar: "コンポーザーツールバーを表示"
       hide_toolbar: "コンポーザーツールバーを非表示"
       modal_ok: "OK"
-      modal_cancel: "キャンセル"
       cant_send_pm: "%{username} にメッセージを送ることはできません。"
       yourself_confirm:
         title: "受信者を追加し忘れましたか？"
@@ -3975,6 +3974,7 @@ ja:
           text: "このサイトで最も人気のあるカテゴリを自動的に表示します"
         filter_placeholder: "カテゴリをフィルタする"
         no_categories: "指定された用語に一致するカテゴリはありません。"
+        show_more: "もっと表示"
       tags_form_modal:
         title: "タグナビゲーションを編集する"
         filter_placeholder: "タグをフィルタする"
@@ -4072,6 +4072,9 @@ ja:
               title: "すべてのトピック"
             faq:
               content: "FAQ"
+              title: "このサイトの利用に関するガイドライン"
+            guidelines:
+              content: "ガイドライン"
               title: "このサイトの利用に関するガイドライン"
             groups:
               content: "グループ"
