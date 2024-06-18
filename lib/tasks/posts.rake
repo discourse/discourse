@@ -208,11 +208,13 @@ def remap_posts(find, type, ignore_case, replace = "")
 end
 
 desc "monitor rebaking progress for the current unbaked post count; Ctrl-C to exit"
-task "posts:monitor_rebaking_progress", [ :csv ] => [ :environment ] do |_, args|
-  puts 'utc_time_now,remaining_to_bake,baked_in_last_period,etc_in_days,sidekiq_enqueued,sidekiq_scheduled' if args[:csv]
+task "posts:monitor_rebaking_progress", [:csv] => [:environment] do |_, args|
+  if args[:csv]
+    puts "utc_time_now,remaining_to_bake,baked_in_last_period,etc_in_days,sidekiq_enqueued,sidekiq_scheduled"
+  end
 
   # remember last ID right now so the goal post isn't constantly moved by new posts being created
-  last_id_as_of_now = Post.where(baked_version: nil).order('id desc').first&.id
+  last_id_as_of_now = Post.where(baked_version: nil).order("id desc").first&.id
   if last_id_as_of_now.nil?
     warn "no posts to bake; all done"
     exit
@@ -225,7 +227,7 @@ task "posts:monitor_rebaking_progress", [ :csv ] => [ :environment ] do |_, args
   last = nil
 
   while true
-    now = Post.where('id <= ? and baked_version is null', last_id_as_of_now).count
+    now = Post.where("id <= ? and baked_version is null", last_id_as_of_now).count
 
     if last
       delta_now = last - now
@@ -233,7 +235,7 @@ task "posts:monitor_rebaking_progress", [ :csv ] => [ :environment ] do |_, args
 
       deltas = deltas.take((window_size_in_hs * 60) / report_time_in_mins)
       average = deltas.reduce(:+).to_f / deltas.length.to_f / report_time_in_mins.to_f
-      etc_days = sprintf('%.2f', (now.to_f / average ) / 60.0 / 24.0)
+      etc_days = sprintf("%.2f", (now.to_f / average) / 60.0 / 24.0)
     else
       last = now
       etc_days = 999 # fake initial value so that the column is 100% valid floats
@@ -242,24 +244,17 @@ task "posts:monitor_rebaking_progress", [ :csv ] => [ :environment ] do |_, args
     s = Sidekiq::Stats.new
 
     if args[:csv]
-      puts [
-        Time.now.utc.iso8601,
-        now,
-        last - now,
-        etc_days,
-        s.enqueued,
-        s.scheduled_size,
-      ].join(',')
+      puts [Time.now.utc.iso8601, now, last - now, etc_days, s.enqueued, s.scheduled_size].join(",")
     else
       puts [
-          Time.now.utc.iso8601,
-          "unbaked old posts remaining: #{now}",
-          "baked in last period: #{last - now}",
-          "ETC based on #{window_size_in_hs}h avg: #{etc_days} days",
-          "SK enqueued: #{s.enqueued}",
-          "SK scheduled: #{s.scheduled_size}",
-          "waiting #{report_time_in_mins}min",
-      ].join(' - ')
+             Time.now.utc.iso8601,
+             "unbaked old posts remaining: #{now}",
+             "baked in last period: #{last - now}",
+             "ETC based on #{window_size_in_hs}h avg: #{etc_days} days",
+             "SK enqueued: #{s.enqueued}",
+             "SK scheduled: #{s.scheduled_size}",
+             "waiting #{report_time_in_mins}min",
+           ].join(" - ")
     end
 
     last = now
