@@ -231,7 +231,7 @@
     }
     &:hover,
     &:focus {
-      color: currentColor;
+      color: inherit;
     }
   }
 
@@ -404,7 +404,7 @@
 @mixin btn-colors($btn-color) {
   color: var(--#{$btn-color});
   .d-icon {
-    color: currentColor;
+    color: inherit;
   }
   &:focus,
   &:focus-visible {
@@ -430,14 +430,14 @@
     &:focus-visible {
       color: var(--tertiary-hover);
       .d-icon {
-        color: currentColor;
+        color: inherit;
       }
     }
     .discourse-no-touch & {
       &:hover {
         color: var(--tertiary-hover);
         .d-icon {
-          color: currentColor;
+          color: inherit;
         }
       }
     }
