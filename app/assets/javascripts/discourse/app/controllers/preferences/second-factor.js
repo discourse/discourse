@@ -20,6 +20,7 @@ import I18n from "discourse-i18n";
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
   modal: service(),
+  siteSettings: service(),
   loading: false,
   dirty: false,
   errorMessage: null,
@@ -34,13 +35,34 @@ export default Controller.extend(CanCheckEmails, {
   },
 
   @discourseComputed
-  displayOAuthWarning() {
+  hasOAuth() {
     return findAll().length > 0;
+  },
+
+  @discourseComputed
+  displayOAuthWarning() {
+    return (
+      this.hasOAuth && this.siteSettings.enforce_second_factor_on_external_auth
+    );
+  },
+
+  @discourseComputed("currentUser")
+  showEnforcedWithOAuthNotice(user) {
+    return (
+      user &&
+      user.enforcedSecondFactor &&
+      this.hasOAuth &&
+      !this.siteSettings.enforce_second_factor_on_external_auth
+    );
   },
 
   @discourseComputed("currentUser")
   showEnforcedNotice(user) {
-    return user && user.enforcedSecondFactor;
+    return (
+      user &&
+      user.enforcedSecondFactor &&
+      this.siteSettings.enforce_second_factor_on_external_auth
+    );
   },
 
   @discourseComputed("totps", "security_keys")

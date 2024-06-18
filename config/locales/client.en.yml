@@ -1539,6 +1539,7 @@ en:
           Two-factor authentication adds extra security to your account by requiring a one-time token in addition to your password. Tokens can be generated on <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> and <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a> devices.
         oauth_enabled_warning: "Please note that social logins will be disabled once two-factor authentication has been enabled on your account."
         use: "Use Authenticator app"
+        enforced_with_oauth_notice: "You are required to enable two-factor authentication. You will only be prompted to use this when logging in with a password, not with external authentication or social login methods."
         enforced_notice: "You are required to enable two-factor authentication before accessing this site."
         disable: "Disable"
         disable_confirm: "Are you sure you want to disable two-factor authentication?"
