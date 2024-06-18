@@ -2017,8 +2017,6 @@ security:
   content_security_policy_script_src:
     type: simple_list
     default: ""
-  content_security_policy_strict_dynamic:
-    default: true
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
