@@ -21,8 +21,10 @@
 
       &.has-selection {
         .category-drop-header {
-          color: var(--quaternary);
           border-color: var(--quaternary);
+          .caret-icon {
+            color: var(--quaternary);
+          }
         }
       }
 

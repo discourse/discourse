@@ -4665,6 +4665,7 @@ en:
           text: "and we'll automatically show this site's most popular categories"
         filter_placeholder: "Filter categories"
         no_categories: "There are no categories matching the given term."
+        show_more: "Show more"
       tags_form_modal:
         title: "Edit tags navigation"
         filter_placeholder: "Filter tags"

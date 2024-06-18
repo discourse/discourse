@@ -124,7 +124,7 @@ GEM
     docile (1.4.0)
     drb (2.2.1)
     email_reply_trimmer (0.1.13)
-    erubi (1.12.0)
+    erubi (1.13.0)
     excon (0.110.0)
     execjs (2.9.1)
     exifr (1.4.0)
@@ -233,7 +233,7 @@ GEM
       ffi (~> 1.9)
     minio_runner (0.1.2)
     minitest (5.23.1)
-    mocha (2.3.0)
+    mocha (2.4.0)
       ruby2_keywords (>= 0.0.5)
     msgpack (1.7.2)
     multi_json (1.15.0)
@@ -243,7 +243,7 @@ GEM
     mutex_m (0.2.0)
     net-http (0.4.1)
       uri
-    net-imap (0.4.12)
+    net-imap (0.4.13)
       date
       net-protocol
     net-pop (0.1.2)
@@ -253,13 +253,13 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.3)
-    nokogiri (1.16.5-aarch64-linux)
+    nokogiri (1.16.6-aarch64-linux)
       racc (~> 1.4)
-    nokogiri (1.16.5-arm64-darwin)
+    nokogiri (1.16.6-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.5-x86_64-darwin)
+    nokogiri (1.16.6-x86_64-darwin)
       racc (~> 1.4)
-    nokogiri (1.16.5-x86_64-linux)
+    nokogiri (1.16.6-x86_64-linux)
       racc (~> 1.4)
     oauth (1.1.0)
       oauth-tty (~> 1.0, >= 1.0.1)
@@ -321,7 +321,7 @@ GEM
     pry-stack_explorer (0.6.1)
       binding_of_caller (~> 1.0)
       pry (~> 0.13)
-    public_suffix (5.0.5)
+    public_suffix (5.1.0)
     puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.8.0)
@@ -376,7 +376,7 @@ GEM
       strscan
     rinku (2.0.6)
     rotp (6.3.0)
-    rouge (4.2.1)
+    rouge (4.3.0)
     rqrcode (2.2.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
@@ -389,7 +389,7 @@ GEM
       rspec-mocks (~> 3.13.0)
     rspec-core (3.13.0)
       rspec-support (~> 3.13.0)
-    rspec-expectations (3.13.0)
+    rspec-expectations (3.13.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-html-matchers (0.10.0)
@@ -458,7 +458,7 @@ GEM
       nokogiri (>= 1.6.0)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    sanitize (6.1.0)
+    sanitize (6.1.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     sass-embedded (1.77.5-aarch64-linux-gnu)
@@ -543,7 +543,7 @@ GEM
       nokogiri (~> 1.8)
     yaml-lint (0.1.2)
     yard (0.9.36)
-    zeitwerk (2.6.15)
+    zeitwerk (2.6.16)
 
 PLATFORMS
   aarch64-linux
@@ -551,6 +551,7 @@ PLATFORMS
   arm64-darwin-21
   arm64-darwin-22
   arm64-darwin-23
+  arm64-darwin-24
   x86_64-darwin-18
   x86_64-darwin-19
   x86_64-darwin-20

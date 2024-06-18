@@ -3,7 +3,17 @@
 class FormTemplateYamlValidator < ActiveModel::Validator
   RESERVED_KEYWORDS = %w[title body category category_id tags]
   ALLOWED_TYPES = %w[checkbox dropdown input multi-select textarea upload]
-  HTML_SANITIZATION_OPTIONS = { elements: ["a"], attributes: { "a" => %w[href target] } }
+  HTML_SANITIZATION_OPTIONS = {
+    elements: ["a"],
+    attributes: {
+      "a" => %w[href target],
+    },
+    protocols: {
+      "a" => {
+        "href" => %w[http https mailto],
+      },
+    },
+  }
 
   def validate(record)
     begin

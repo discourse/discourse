@@ -16,8 +16,8 @@
       <div class="card-row first-row">
         <div class="group-card-avatar">
           <a
+            {{on "click" this.handleShowGroup}}
             href={{this.groupPath}}
-            {{on "click" (fn this.handleShowGroup this.group)}}
             class="card-huge-avatar"
           >
             <AvatarFlair
@@ -32,8 +32,8 @@
           <span>
             <h1 class={{this.group.name}}>
               <a
+                {{on "click" this.handleShowGroup}}
                 href={{this.groupPath}}
-                {{on "click" (fn this.handleShowGroup this.group)}}
                 class="group-page-link"
               >{{this.group.name}}</a>
             </h1>
@@ -84,8 +84,8 @@
             {{/each}}
             {{#if this.showMoreMembers}}
               <a
+                {{on "click" this.handleShowGroup}}
                 href={{this.groupPath}}
-                {{on "click" (fn this.handleShowGroup this.group)}}
                 class="more-members-link"
               >
                 <span class="more-members-count">+{{this.moreMembersCount}}
