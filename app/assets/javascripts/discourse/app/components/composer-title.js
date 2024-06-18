@@ -15,11 +15,20 @@ export default Component.extend({
   classNames: ["title-input"],
   watchForLink: alias("composer.canEditTopicFeaturedLink"),
   disabled: or("composer.loading", "composer.disableTitleInput"),
+  isTitleFocused: false,
 
   didInsertElement() {
     this._super(...arguments);
+    const titleInput = this.element.querySelector("input");
+
+    this._focusHandler = () => this.set("isTitleFocused", true);
+    this._blurHandler = () => this.set("isTitleFocused", false);
+
+    titleInput.addEventListener("focus", this._focusHandler);
+    titleInput.addEventListener("blur", this._blurHandler);
+
     if (this.focusTarget === "title") {
-      putCursorAtEnd(this.element.querySelector("input"));
+      putCursorAtEnd(titleInput);
     }
 
     if (this.get("composer.titleLength") > 0) {
@@ -27,19 +36,34 @@ export default Component.extend({
     }
   },
 
+  willDestroyElement() {
+    this._super(...arguments);
+    const titleInput = this.element.querySelector("input");
+
+    if (titleInput) {
+      titleInput.removeEventListener("focus", this._focusHandler);
+      titleInput.removeEventListener("blur", this._blurHandler);
+    }
+  },
+
   @discourseComputed(
     "composer.titleLength",
     "composer.missingTitleCharacters",
     "composer.minimumTitleLength",
-    "lastValidatedAt"
+    "lastValidatedAt",
+    "isTitleFocused"
   )
   validation(
     titleLength,
     missingTitleChars,
     minimumTitleLength,
-    lastValidatedAt
+    lastValidatedAt,
+    isTitleFocused
   ) {
     let reason;
+    if (isTitleFocused) {
+      return;
+    }
     if (titleLength < 1) {
       reason = I18n.t("composer.error.title_missing");
     } else if (missingTitleChars > 0) {
