@@ -922,6 +922,10 @@ class ApplicationController < ActionController::Base
     second_factor_path = path("/u/#{current_user.encoded_username}/preferences/second-factor")
     allowed_paths = [redirect_path, second_factor_path, "/admin"]
     if allowed_paths.none? { |p| request.fullpath.start_with?(p) }
+      UserHistory.create!(
+        action: UserHistory.actions[:redirected_to_required_fields],
+        acting_user_id: current_user.id,
+      )
       redirect_to path(redirect_path)
       nil
     end

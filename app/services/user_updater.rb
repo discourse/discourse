@@ -266,6 +266,13 @@ class UserUpdater
         end
       end
       DiscourseEvent.trigger(:user_updated, user)
+
+      if attributes[:custom_fields].present? && user.needs_required_fields_check?
+        UserHistory.create!(
+          action: UserHistory.actions[:filled_in_required_fields],
+          acting_user_id: user.id,
+        )
+      end
     end
 
     saved
