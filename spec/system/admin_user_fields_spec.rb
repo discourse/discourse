@@ -42,4 +42,21 @@ describe "Admin User Fields", type: :system, js: true do
 
     expect(form).to have_field(editable_label, checked: false, disabled: false)
   end
+
+  it "requires confirmation when applying required fields retroactively" do
+    user_fields_page.visit
+
+    page.find(".user-fields .btn-primary").click
+
+    form = page.find(".user-field")
+
+    form.find(".user-field-name").fill_in(with: "Favourite Pokémon")
+    form.find(".user-field-desc").fill_in(with: "Hint: It's Mudkip")
+
+    user_fields_page.choose_requirement("for_all_users")
+
+    form.find(".btn-primary").click
+
+    expect(page).to have_text(I18n.t("admin_js.admin.user_fields.requirement.confirmation"))
+  end
 end

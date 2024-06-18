@@ -6678,6 +6678,7 @@ en:
           on_signup:
             title: "On signup"
             description: "When new users sign up, they must fill out this field. Existing users are unaffected."
+          confirmation: "This will prompt existing users to fill in this field and will not allow them to do anything else on your site until the field is filled. Proceed?"
         editable:
           title: "Editable after signup"
           enabled: "editable"
