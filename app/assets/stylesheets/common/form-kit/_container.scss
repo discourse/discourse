@@ -11,12 +11,33 @@
     margin: 0;
     font-size: var(--font-down-1-rem);
     color: var(--primary-high);
-    line-height: var(--line-height-medium);
     font-weight: bold;
+    padding-bottom: 0.25em;
+    width: max-content;
+  }
+
+  &-subtitle {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary-high);
+    padding-bottom: 0.25em;
+    width: max-content;
+  }
+
+  &-optional {
+    font-size: var(--font-down-2-rem);
+    color: var(--primary-medium);
+    font-weight: normal;
   }
 
   &-content {
     display: flex;
-    gap: 0.5em;
+    gap: 0.25em;
+    flex-direction: row;
+    align-items: flex-start;
+    max-width: 100%;
   }
 }

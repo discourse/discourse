@@ -1,68 +1,38 @@
 .form-kit__field {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-
-  &-title {
-    display: flex;
-    align-items: center;
-    gap: 0.25em;
-    margin: 0;
-    font-size: var(--font-down-1-rem);
-    color: var(--primary-high);
-    font-weight: bold;
-    padding-bottom: 0.25em;
-    width: max-content;
-  }
-
-  &-subtitle {
-    display: flex;
-    align-items: center;
-    gap: 0.25em;
-    margin: 0;
-    font-size: var(--font-down-1-rem);
-    color: var(--primary-high);
-    padding-bottom: 0.25em;
-    width: max-content;
-  }
-
-  &-optional {
-    font-size: var(--font-down-2-rem);
-    color: var(--primary-medium);
-    font-weight: normal;
-  }
-
-  &-content {
-    display: flex;
-    gap: 0.25em;
-    flex-direction: column;
-    align-items: flex-start;
+  .form-kit__container-content {
     width: var(--form-kit-medium-input) !important;
-    max-width: 100%;
-
-    &.small {
-      width: var(--form-kit-small-input) !important;
-    }
-
-    &.medium {
-      width: var(--form-kit-medium-input) !important;
-    }
-
-    &.large {
-      width: var(--form-kit-large-input) !important;
-    }
-
-    &.full {
-      width: 100% !important;
-    }
   }
 
   &-text,
   &-composer,
   &-code,
   &-image {
-    .form-kit__field-content {
+    .form-kit__container-content {
       width: var(--form-kit-large-input) !important;
+    }
+  }
+
+  &.small {
+    .form-kit__container-content {
+      width: var(--form-kit-small-input) !important;
+    }
+  }
+
+  &.medium {
+    .form-kit__container-content {
+      width: var(--form-kit-medium-input) !important;
+    }
+  }
+
+  &.large {
+    .form-kit__container-content {
+      width: var(--form-kit-large-input) !important;
+    }
+  }
+
+  &.full {
+    .form-kit__container-content {
+      width: 100% !important;
     }
   }
 }

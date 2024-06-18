@@ -37,6 +37,7 @@ export default class FKControlWrapper extends Component {
   <template>
     <div
       class={{concatClass
+        "form-kit__container"
         "form-kit__field"
         (concat "form-kit__field-" this.controlType)
         (if @hasErrors "has-errors")
@@ -47,11 +48,11 @@ export default class FKControlWrapper extends Component {
       data-control-type={{this.controlType}}
     >
       {{#if @title}}
-        <FKLabel class="form-kit__field-title" @fieldId={{@field.id}}>
+        <FKLabel class="form-kit__container-title" @fieldId={{@field.id}}>
           {{@title}}
 
           {{#unless @field.required}}
-            <span class="form-kit__field-optional">({{i18n
+            <span class="form-kit__container-optional">({{i18n
                 "form_kit.optional"
               }})</span>
           {{/unless}}
@@ -59,10 +60,10 @@ export default class FKControlWrapper extends Component {
       {{/if}}
 
       {{#if @subtitle}}
-        <FormText class="form-kit__field-subtitle">{{@subtitle}}</FormText>
+        <FormText class="form-kit__container-subtitle">{{@subtitle}}</FormText>
       {{/if}}
 
-      <div class={{concatClass "form-kit__field-content" @format}}>
+      <div class={{concatClass "form-kit__container-content" @format}}>
         <@component
           @field={{@field}}
           @value={{@value}}
