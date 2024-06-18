@@ -29,7 +29,7 @@ class SilenceLogger < Rails::Rack::Logger
       super(env)
     end
   ensure
-    Logster.logger.override_level = nil if override
+    Rails.logger.override_level = nil if override
   end
 end
 

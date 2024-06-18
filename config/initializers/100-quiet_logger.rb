@@ -17,7 +17,7 @@ module DiscourseRackQuietAssetsLogger
       end
     end
 
-    super(env).tap { Logster.logger.override_level = nil if override }
+    super(env).tap { Rails.logger.override_level = nil if override }
   end
 end
 
