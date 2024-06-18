@@ -514,7 +514,11 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
     let requestCount = 0;
     pretender.post("/presence/update", () => {
       requestCount++;
-      return response(429, { extras: { wait_seconds: 2 } });
+      if (requestCount === 1) {
+        return response(429, { extras: { wait_seconds: 2 } });
+      } else {
+        return response({});
+      }
     });
 
     const presenceService = getOwner(this).lookup("service:presence");
