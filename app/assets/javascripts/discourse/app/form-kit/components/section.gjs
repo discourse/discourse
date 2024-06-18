@@ -1,5 +1,7 @@
+import concatClass from "discourse/helpers/concat-class";
+
 const FKSection = <template>
-  <div class="form-kit__section" ...attributes>
+  <div class={{concatClass "form-kit__section" @class}} ...attributes>
     {{#if @title}}
       <h2 class="form-kit__section-title">{{@title}}</h2>
     {{/if}}
