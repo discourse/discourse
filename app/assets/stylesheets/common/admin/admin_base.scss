@@ -498,6 +498,7 @@ $mobile-breakpoint: 700px;
 .admin-controls {
   display: flex;
   align-items: center;
+  background: var(--primary-low);
 
   .admin-actions {
     margin-left: auto;
