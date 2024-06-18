@@ -11,8 +11,6 @@ describe "Uploading files in the composer", type: :system do
   before { sign_in(current_user) }
 
   it "uploads multiple files at once" do
-    sign_in(current_user)
-
     visit "/new-topic"
     expect(composer).to be_opened
 
@@ -25,8 +23,6 @@ describe "Uploading files in the composer", type: :system do
   end
 
   it "allows cancelling uploads" do
-    sign_in(current_user)
-
     visit "/new-topic"
     expect(composer).to be_opened
 
@@ -52,8 +48,6 @@ describe "Uploading files in the composer", type: :system do
     #
     # c.f. https://groups.google.com/g/chromedriver-users/c/1SMbByMfO2U
     xit "generates a topic preview thumbnail from the video" do
-      sign_in(current_user)
-
       visit "/new-topic"
       expect(composer).to be_opened
       topic.fill_in_composer_title("Video upload test")
@@ -72,8 +66,6 @@ describe "Uploading files in the composer", type: :system do
     end
 
     it "generates a thumbnail from the video" do
-      sign_in(current_user)
-
       visit "/new-topic"
       expect(composer).to be_opened
       topic.fill_in_composer_title("Video upload test")
@@ -102,7 +94,6 @@ describe "Uploading files in the composer", type: :system do
     end
 
     it "shows video player in composer" do
-      sign_in(current_user)
       SiteSetting.enable_diffhtml_preview = true
 
       visit "/new-topic"
