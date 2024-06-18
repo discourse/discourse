@@ -38,6 +38,7 @@ export default class Form extends Component {
     super(...arguments);
 
     this.args.onRegisterApi?.({
+      set: this.set,
       submit: this.onSubmit,
       reset: this.onReset,
     });

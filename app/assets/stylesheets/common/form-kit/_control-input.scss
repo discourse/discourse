@@ -1,4 +1,6 @@
 .form-kit__control-input {
+  @include default-input;
+
   margin: 0 !important;
   width: 100% !important;
   min-width: auto !important;

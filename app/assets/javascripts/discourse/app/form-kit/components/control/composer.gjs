@@ -11,9 +11,11 @@ export default class FKControlComposer extends Component {
   }
 
   get style() {
-    return `height: ${htmlSafe(
-      this.args.height ? escapeExpression(this.args.height) + "px" : "auto"
-    )}`;
+    if (this.args.height) {
+      return;
+    }
+
+    return `height: ${htmlSafe(escapeExpression(this.args.height) + "px")}`;
   }
 
   <template>
@@ -23,6 +25,7 @@ export default class FKControlComposer extends Component {
       @disabled={{@field.disabled}}
       class="form-kit__control-composer"
       style={{this.style}}
+      @textAreaId={{@field.id}}
     />
   </template>
 }

@@ -1,49 +1,5 @@
-@mixin default-input {
-  width: auto !important;
-  background: var(--secondary);
-  border: 1px solid var(--primary-low-mid);
-  border-radius: var(--d-input-border-radius);
-  padding: 0.5em;
-  box-sizing: border-box;
-  margin: 0 !important;
-  appearance: none;
-  height: 2em;
-
-  &:focus,
-  &:focus-visible,
-  &:focus:focus-visible,
-  &:active {
-    //these importants are another great case for having a button element without that pesky default styling
-    &:not(:disabled) {
-      background-color: var(--secondary) !important;
-      color: var(--primary) !important;
-      border-color: var(--tertiary);
-      outline: 2px solid var(--tertiary);
-      outline-offset: -2px;
-      background-image: none !important;
-
-      .d-icon {
-        color: inherit !important;
-      }
-    }
-  }
-
-  &:hover:not(:disabled) {
-    .discourse-no-touch & {
-      background-color: var(--secondary);
-      color: var(--primary);
-      border-color: var(--tertiary);
-
-      .d-icon {
-        color: inherit;
-      }
-    }
-  }
-}
-
 .form-kit__field {
   display: flex;
-  gap: 0.25rem;
   flex-direction: column;
   width: 100%;
 
@@ -55,6 +11,7 @@
     font-size: var(--font-down-1-rem);
     color: var(--primary-high);
     font-weight: bold;
+    padding-bottom: 0.25em;
   }
 
   &-subtitle {
@@ -64,6 +21,7 @@
     margin: 0;
     font-size: var(--font-down-1-rem);
     color: var(--primary-high);
+    padding-bottom: 0.25em;
   }
 
   &-optional {
@@ -74,7 +32,7 @@
 
   &-content {
     display: flex;
-    gap: 0.25rem;
+    gap: 0.25em;
     flex-direction: column;
     align-items: flex-start;
     width: var(--form-kit-medium-input) !important;

@@ -114,10 +114,7 @@
         </form.Container>
       {{else}}
         <form.Field @name="description" @disabled={{this.readOnly}} as |field|>
-          <field.Text
-            @height={{100}}
-            @title={{i18n "admin.badges.description"}}
-          />
+          <field.Text @title={{i18n "admin.badges.description"}} />
         </form.Field>
       {{/if}}
 
@@ -143,10 +140,7 @@
           @disabled={{this.readOnly}}
           as |field|
         >
-          <field.Text
-            @height={{100}}
-            @title={{i18n "admin.badges.long_description"}}
-          />
+          <field.Text @title={{i18n "admin.badges.long_description"}} />
         </form.Field>
       {{/if}}
     </form.Section>
