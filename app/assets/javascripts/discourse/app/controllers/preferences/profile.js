@@ -60,9 +60,9 @@ export default Controller.extend({
     });
   },
 
-  @discourseComputed("currentUser")
-  showEnforcedRequiredFieldsNotice(user) {
-    return user.needs_required_fields_check;
+  @discourseComputed("currentUser.needs_required_fields_check")
+  showEnforcedRequiredFieldsNotice(needsRequiredFieldsCheck) {
+    return needsRequiredFieldsCheck;
   },
 
   @discourseComputed("model.user_option.default_calendar")
@@ -152,6 +152,7 @@ export default Controller.extend({
             .then(() => {
               model.set("bio_cooked");
               this.set("saved", true);
+              this.currentUser.set("needs_required_fields_check", false);
             })
             .catch(popupAjaxError);
         })
