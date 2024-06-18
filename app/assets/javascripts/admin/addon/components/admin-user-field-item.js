@@ -109,7 +109,6 @@ export default Component.extend(bufferedProperty("userField"), {
     }
 
     if (!confirm) {
-      this.cancel();
       return;
     }
 

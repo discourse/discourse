@@ -96,7 +96,9 @@ export default Controller.extend({
   _missingRequiredFields(siteFields, userFields) {
     return siteFields
       .filter(
-        (siteField) => siteField.required && isEmpty(userFields[siteField.id])
+        (siteField) =>
+          siteField.requirement === "for_all_users" &&
+          isEmpty(userFields[siteField.id])
       )
       .map((field) => EmberObject.create({ field, value: "" }));
   },
