@@ -987,7 +987,6 @@ hu:
     categories:
       categories_label: "kategóriák"
       subcategories_label: "alkategóriák"
-      all_subcategories: "minden alkategória"
       no_subcategories: "nincsenek alkategóriák"
       remove_filter: "szűrő eltávolítása"
       plus_more_count:
@@ -2342,7 +2341,6 @@ hu:
       show_toolbar: "szerkesztő eszköztár megjelenítése"
       hide_toolbar: "szerkesztő eszköztár elrejtése"
       modal_ok: "Rendben"
-      modal_cancel: "Mégse"
       cant_send_pm: "Nem tud üzenetet küldeni %{username} számára"
       yourself_confirm:
         title: "Elfelejtett címzettet hozzáadni?"
@@ -4261,6 +4259,7 @@ hu:
           text: "és automatikusan megmutatjuk az oldal legnépszerűbb kategóriáit."
         filter_placeholder: "Kategóriák szűrése"
         no_categories: "Az adott kifejezésnek nincs megfelelő kategória."
+        show_more: "Mutass többet"
       tags_form_modal:
         title: "Címkék szerkesztése navigáció"
         filter_placeholder: "Címkék szűrése"
@@ -4350,6 +4349,9 @@ hu:
               title: "Minden téma"
             faq:
               content: "GYIK"
+              title: "Útmutató az oldal használatához"
+            guidelines:
+              content: "Irányelvek"
               title: "Útmutató az oldal használatához"
             groups:
               content: "Csoportok"

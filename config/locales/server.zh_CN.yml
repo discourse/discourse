@@ -282,6 +282,8 @@ zh_CN:
     site_settings:
       invalid_site_setting: "不存在名为 '%{name}' 的设置"
       invalid_category_id: "您指定了一个不存在的类别"
+      site_setting_is_hidden: "你无权更改隐藏设置"
+      site_setting_is_unconfigurable: "你无权更改不可配置的设置"
       invalid_choice:
         other: "'%{name}' 是无效的选择。"
       default_categories_already_selected: "您不能选择其他列表中使用的类别。"
@@ -1658,7 +1660,6 @@ zh_CN:
     content_security_policy_collect_reports: "在 /csp_reports 启用 CSP 违规报告收集"
     content_security_policy_frame_ancestors: "限制谁可以通过 CSP 将此站点嵌入 iframe 中。在<a href='%{base_path}/admin/customize/embedding'>嵌入</a>上控制允许的主机。"
     content_security_policy_script_src: "其他列入白名单的脚本源。默认情况下包含当前主机和 CDN。请参阅 <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略缓解 XSS 攻击。</a> (CSP)。启用 content_security_policy_strict_dynamic 时，主机源将被忽略。"
-    content_security_policy_strict_dynamic: "使用严格动态内容安全策略来减少手动配置的需要。查看 <a href='https://meta.discourse.org/t/298172' target='_blank'>公告</a> 了解更多信息。禁用此设置的功能将很快被删除。"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问站点的管理员帐户将需要在登录前重新验证其电子邮件地址。设置为 0 将禁用。"
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
@@ -2152,19 +2153,25 @@ zh_CN:
     embed_post_limit: "要嵌入的最大帖子数。"
     embed_username_required: "创建话题需要用户名。"
     notify_about_reviewable_item_after: "如果经过这么多小时数后仍有未处理的可审核条目，请向版主发送个人信息。设置为 0 将禁用。"
+    delete_drafts_older_than_n_days: "删除超过 (n) 天未更改的草稿。"
     delete_merged_stub_topics_after_days: "在自动删除完全合并的存根话题之前等待的天数。设置为 0 将从不删除存根话题。"
+    bootstrap_mode_min_users: "禁用引导模式并移除“开始”按钮所需的最小用户数（设置为 0 将禁用，最多可能需要 24 小时）"
     prevent_anons_from_downloading_files: "阻止匿名用户下载附件。"
     secure_uploads: '限制对所有上传（图片、视频、音频、文本、pdf、zip 等）的访问。如果启用“需要登录”，则只有登录用户才能访问上传。否则，访问将仅限于私信和不公开类别中的媒体上传。警告：此设置比较复杂，需要深入理解管理操作。请参阅 <a target="_blank" href="https://meta.discourse.org/t/-/140017">Meta 安全上传话题</a>以了解详情。'
     secure_uploads_allow_embed_images_in_emails: "如果小于 'secure uploads max email embed image size kb' 设置，则允许嵌入通常会在电子邮件中编辑的安全图片。"
     secure_uploads_max_email_embed_image_size_kb: "如果启用了 'secure uploads allow embed in emails' 设置，将被嵌入到电子邮件的安全图片的大小限制；如果不启用，则此设置无效。"
     slug_generation_method: "选择一种缩略名生成方法。'encoded' 将生成百分比编码字符串。'none' 将完全禁用缩略名。"
+    enable_emoji: "在 Discourse 实例中启用表情符号的显示和使用。如果禁用，表情符号将不会被渲染，用户将无法在文本中访问或使用它们。"
     enable_emoji_shortcuts: "常见的笑脸文字（如 :) :p :(）将被转换为表情符号"
+    emoji_set: "选择您喜欢的表情符号样式。不同的表情符号集可以为网站上显示的表情符号提供独特的外观。"
     emoji_autocomplete_min_chars: "触发自动填充表情符号弹出窗口所需的最少字符数"
     enable_inline_emoji_translation: "启用内联表情符号的翻译（之前没有任何空格或标点符号）"
     emoji_deny_list: "这些表情符号将无法在菜单或短代码中使用。"
     approve_post_count: "新用户或基本用户必须接受审批的帖子数量"
     approve_unless_trust_level: "低于此信任级别的用户创建的帖子必须获得批准"
+    approve_unless_allowed_groups: "不属于这些群组的用户所发布的帖子必须经过批准。管理员和版主发布的帖子始终会被批准。"
     approve_new_topics_unless_trust_level: "低于此信任级别的用户创建的新主题必须获得批准"
+    approve_new_topics_unless_allowed_groups: "不属于这些群组的用户所发布的话题必须经过批准。管理员和版主发布的话题始终会被批准。"
     approve_unless_staged: "暂存用户创建的新主题和帖子必须获得批准"
     notify_about_queued_posts_after: "如果有帖子等待审核的小时超过此数值，向所有版主发送通知。设置为 0 将禁用这些通知。"
     reviewable_revision_reasons: "拒绝带有修订的可审查队列帖子时，可以选择的原因列表。其他也始终可用，允许输入自定义原因。"
@@ -3024,6 +3031,26 @@ zh_CN:
     bulk_invite_failed:
       title: "批量邀请失败"
       subject_template: "批量用户邀请已被处理，但存在错误"
+      text_body_template: |
+        您的批量用户邀请文件已被处理， %{sent} 份邀请已发送， %{skipped} 份邀请被跳过， %{warnings} 份警告和 %{failed} 份错误。
+
+        跳过的电子邮件邀请：
+
+        ``` text
+        %{skipped_emails}
+        ```
+
+        失败的电子邮件邀请：
+
+        ``` text
+        %{failed_emails}
+        ```
+
+        日志如下：
+
+        ``` text
+        %{logs}
+        ```
     user_added_to_group_as_owner:
       title: "作为所有者被添加到群组"
       subject_template: "您已被添加为 %{group_name} 群组的所有者"
@@ -3989,6 +4016,7 @@ zh_CN:
     编辑此话题中的第一个帖子以更改 %{page_name} 页面的内容。
   guidelines_topic:
     title: "常见问题解答/准则"
+    guidelines_title: "准则"
   tos_topic:
     title: "服务条款"
     body: |
@@ -4773,6 +4801,9 @@ zh_CN:
       agree_and_hide:
         title: "隐藏帖子"
         description: "同意举报并隐藏此帖子 + 自动向用户发送信息，敦促他们进行编辑。"
+      agree_and_edit:
+        title: "同意并编辑帖子"
+        description: "同意举报并打开编辑器窗口以编辑帖子。"
       delete_single:
         title: "删除"
       delete:

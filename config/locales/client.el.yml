@@ -1817,7 +1817,6 @@ el:
       exit_fullscreen: "έξοδος από επεξεργαστή κειμένου πλήρους οθόνης"
       exit_fullscreen_prompt: "Πατήστε <kbd>ESC</kbd> για έξοδο από την πλήρη οθόνη"
       modal_ok: "OK"
-      modal_cancel: "Ακύρωση"
       cant_send_pm: "Λυπούμαστε, δεν μπορείτε να στείλετε μήνυμα στο χρήστη %{username}."
       yourself_confirm:
         title: "Ξεχάσατε να προσθέσετε αποδέκτες;"
@@ -3314,6 +3313,8 @@ el:
               title: "Όλα τα θέματα"
             faq:
               content: "Συχνές ερωτήσεις"
+            guidelines:
+              content: "Οδηγίες"
             groups:
               content: "Ομάδες"
             users:

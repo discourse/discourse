@@ -1843,7 +1843,6 @@ nb_NO:
       show_toolbar: "vis verktøylinje for komponist"
       hide_toolbar: "skjul verktøylinje for komponist"
       modal_ok: "OK"
-      modal_cancel: "Avbryt"
       cant_send_pm: "Beklager, du kan ikke sende privat melding til %{username}."
       yourself_confirm:
         title: "Glemte du å legge til mottagere?"
@@ -3367,6 +3366,8 @@ nb_NO:
               content: "Emner"
             faq:
               content: "O-S-S"
+            guidelines:
+              content: "Retningslinjer"
             groups:
               content: "Grupper"
             users:

@@ -360,6 +360,8 @@ sk:
     site_settings:
       invalid_site_setting: "Neexistuje žiadne nastavenie s názvom '%{name}'"
       invalid_category_id: "Zadali ste kategóriu, ktorá neexistuje"
+      site_setting_is_hidden: "Nie je povolené meniť skryté nastavenia"
+      site_setting_is_unconfigurable: "Nie je povolené meniť nekonfigurovateľné nastavenia"
       invalid_choice:
         one: "'%{name}' je neplatná voľba."
         few: "'%{name}' sú neplatné voľby."
@@ -1881,7 +1883,6 @@ sk:
     content_security_policy_collect_reports: "Povolenie zberu správ o porušeniach CSP na adrese /csp_reports"
     content_security_policy_frame_ancestors: "Obmedziť, kto môže túto stránku vložiť do iframe prostredníctvom CSP. Kontrola povolených hostiteľov pri <a href='%{base_path}/admin/customize/embedding'>vkladaní</a>"
     content_security_policy_script_src: "Ďalšie zdroje skriptov uvedené v zozname povolených zdrojov. Aktuálny hostiteľ a CDN sú predvolene zahrnuté. Pozrite si časť <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmiernenie útokov XSS pomocou zásad zabezpečenia obsahu.</a> (CSP). Zdroje hostiteľa budú ignorované, keď je zapnutá funkcia content_security_policy_strict_dynamic."
-    content_security_policy_strict_dynamic: "Použite striktne dynamickú politiku zabezpečenia obsahu na zníženie potreby manuálnej konfigurácie. Ďalšie informácie nájdete v <a href='https://meta.discourse.org/t/298172' target='_blank'>v oznámení</a> . Možnosť deaktivovať toto nastavenie bude čoskoro odstránená."
     invalidate_inactive_admin_email_after_days: "Účty administrátorov, ktorí nenavštívili stránku počas tohto počtu dní, budú musieť pred prihlásením znovu overiť svoju e-mailovú adresu. Nastavte na 0, aby ste to zakázali."
     include_secure_categories_in_tag_counts: "Ak je táto možnosť povolená, počet tém pre značku bude zahŕňať témy, ktoré sú v kategóriách s obmedzeným čítaním pre všetkých používateľov. Ak je vypnuté, bežným používateľom sa zobrazí len počet tém pre značku, v ktorej sú všetky témy vo verejných kategóriách."
     display_personal_messages_tag_counts: "Ak je táto možnosť povolená, zobrazí sa počet osobných správ označených danou značkou."
@@ -4386,6 +4387,7 @@ sk:
     Upravte prvý príspevok v téme pre zmenu obsahu %{page_name} stránky.
   guidelines_topic:
     title: "FAQ/Pravidlá"
+    guidelines_title: "Pokyny"
     body: |
       <a name="civilized"></a>
 

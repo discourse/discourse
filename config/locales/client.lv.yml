@@ -1699,7 +1699,6 @@ lv:
       list_item: "Saraksta punkts"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
       modal_ok: "Labi"
-      modal_cancel: "Atcelt"
       cant_send_pm: "Atvainojiet, jūs nevarat sūtīt ziņu %{username}."
       yourself_confirm:
         title: "Vai jūs aizmirsāt pievienot saņēmējus?"
@@ -2780,6 +2779,8 @@ lv:
               content: "Tēmas"
             faq:
               content: "BUJ"
+            guidelines:
+              content: "Vadlīnijas"
             groups:
               content: "Grupas"
             users:

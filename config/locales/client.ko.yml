@@ -1925,7 +1925,6 @@ ko:
       show_toolbar: "작성기 툴바 표시"
       hide_toolbar: "작성기 툴바 숨기기"
       modal_ok: "확인"
-      modal_cancel: "취소"
       cant_send_pm: "%{username} 님에게 메시지를 보낼 수 없습니다."
       yourself_confirm:
         title: "받는 사람 추가를 잊으셨나요?"
@@ -3532,6 +3531,8 @@ ko:
               title: "모든 글"
             faq:
               content: "자주하는 질문"
+            guidelines:
+              content: "가이드라인"
             groups:
               content: "그룹"
             users:

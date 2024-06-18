@@ -1004,7 +1004,6 @@ ug:
     categories:
       categories_label: "سەھىپە"
       subcategories_label: "تارماق سەھىپە"
-      all_subcategories: "ھەممە تارماق سەھىپە"
       no_subcategories: "تارماق سەھىپە يوق"
       remove_filter: "سۈزگۈچنى چىقىرىۋەت"
       plus_more_count:
@@ -2300,7 +2299,6 @@ ug:
       show_toolbar: "تەھرىرلىگۈچ قورال بالداقنى كۆرسەت"
       hide_toolbar: "تەھرىرلىگۈچ قورال بالداقنى يوشۇر"
       modal_ok: "جەزملە"
-      modal_cancel: "ۋاز كەچ"
       cant_send_pm: "كەچۈرۈڭ، %{username} غا ئۇچۇر يوللىيالمايسىز."
       yourself_confirm:
         title: "تاپشۇرۇۋالغۇچىنى قوشۇشنى ئۇنۇتتىڭىزمۇ؟"
@@ -4144,6 +4142,7 @@ ug:
         title: "سەھىپە يولباشچى تەھرىر"
         filter_placeholder: "سەھىپە سۈزگۈچ"
         no_categories: "بېرىلگەن ئاتالغۇغا ماس كېلىدىغان سەھىپە يوق."
+        show_more: "تېخىمۇ كۆپ كۆرسەت"
       tags_form_modal:
         title: "بەلگە يولباشچى تەھرىر"
         filter_placeholder: "بەلگە سۈزگۈچ"
@@ -4245,6 +4244,9 @@ ug:
               title: "بارلىق تېما"
             faq:
               content: "كۆپ سورالغان سوئال"
+              title: "بۇ تور بېكەتنى ئىشلىتىش قوللانمىسى"
+            guidelines:
+              content: "كۆرسەتمە"
               title: "بۇ تور بېكەتنى ئىشلىتىش قوللانمىسى"
             groups:
               content: "گۇرۇپپا"

@@ -1616,7 +1616,6 @@ id:
       paste_code_text: "ketik atau tempel kode di sini"
       upload_title: "Unggah"
       modal_ok: "OK"
-      modal_cancel: "Batal"
       cant_send_pm: "Maaf, anda tidak dapat mengirim pesan kepada %{username}"
       create_message_error: "Maaf, ada kesalahan dalam membuat pesan tersebut. Silakan coba lagi."
       yourself_confirm:
@@ -2107,6 +2106,7 @@ id:
           text: "dan kami akan menampilkan kategori paling populer dari situs ini secara otomatis"
         filter_placeholder: "Kategori filter"
         no_categories: "Tidak ada kategori yang cocok dengan istilah yang diberikan."
+        show_more: "Tampilkan lebih banyak"
       tags_form_modal:
         title: "Edit navigasi tag"
         filter_placeholder: "Filter tag"
@@ -2160,6 +2160,8 @@ id:
               title: "Semua topik"
             faq:
               content: "FAQ"
+            guidelines:
+              content: "Petunjuk"
             groups:
               content: "Grup"
             users:

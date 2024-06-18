@@ -2169,7 +2169,6 @@ bg:
       show_toolbar: "показване на лентата с инструменти на композитора"
       hide_toolbar: "скриване на лентата с инструменти на композитора"
       modal_ok: "Ок"
-      modal_cancel: "Отмени"
       cant_send_pm: "Съжеляваме, но неможете да изпращате съобщения до %{username}."
       yourself_confirm:
         title: "Забравихте ли да добавите получатели?"
@@ -3358,6 +3357,8 @@ bg:
         other: "%{count} нови"
       more: "Повече"
       all_categories: "Всички категории"
+      categories_form_modal:
+        show_more: "Покажи повече"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Всички"
@@ -3410,6 +3411,8 @@ bg:
               content: "Теми"
             faq:
               content: "FAQ"
+            guidelines:
+              content: "Насоки"
             groups:
               content: "Групи"
             users:

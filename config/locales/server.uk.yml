@@ -360,6 +360,8 @@ uk:
     site_settings:
       invalid_site_setting: "Не існує параметра з назвою «%{name}»"
       invalid_category_id: "Ви вказали розділ, якого не існує"
+      site_setting_is_hidden: "Ви не можете змінити приховані налаштування"
+      site_setting_is_unconfigurable: "Ви не маєте права змінювати неконфігуровані налаштування"
       invalid_choice:
         one: "'%{name}' є недійсним вибором."
         few: "'%{name}' є недійсним вибором."
@@ -1880,7 +1882,6 @@ uk:
     content_security_policy_collect_reports: "Увімкнути збір звітів про порушення CSP на /csp_reports"
     content_security_policy_frame_ancestors: "Обмежити за допомогою CSP, хто може вбудувати цей сайт в iframes. Керування дозволеними хостами у <a href='%{base_path}/admin/customize/embedding'>Вбудовування</a>"
     content_security_policy_script_src: "Додаткові дозволені джерела скриптів. Поточний хост і CDN включені за замовчуванням. Див. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Пом'якшення атак XSS за допомогою політики безпеки вмісту.</a> (КСП). Джерела хосту ігноруватимуться, коли ввімкнено content_security_policy_strict_dynamic."
-    content_security_policy_strict_dynamic: "Використовуйте сувору політику безпеки динамічного вмісту, щоб зменшити потребу в ручному налаштуванні. Перегляньте <a href='https://meta.discourse.org/t/298172' target='_blank'>оголошення</a> для отримання додаткової інформації. Можливість вимкнути це налаштування незабаром буде видалено."
     invalidate_inactive_admin_email_after_days: "Облікові записи адміністраторів, які не відвідували сайт протягом цієї кількості днів, потрібно буде повторно підтвердити свою електронну адресу пошти перед входом у систему. Встановіть 0, щоб вимкнути."
     include_secure_categories_in_tag_counts: "Якщо увімкнено, підрахунок тем для тегу буде включати теми, які знаходяться в категоріях, обмежених для читання для всіх користувачів. Якщо вимкнено, звичайним користувачам буде показано лише кількість тем за тегом, де всі теми знаходяться у загальнодоступних категоріях."
     display_personal_messages_tag_counts: "Якщо ввімкнено, буде показано кількість особистих повідомлень, позначених певним тегом."
@@ -4330,6 +4331,7 @@ uk:
     Відредагуйте перший допис в цій темі, щоб змінити вміст сторінки %{page_name}.
   guidelines_topic:
     title: "ЧаПи/Настанови"
+    guidelines_title: "Настанови"
     body: |
       <a name="civilized"></a>
 

@@ -4098,6 +4098,7 @@ ar:
     عدِّل أول منشور في هذا الموضوع لتغيير محتويات الصفحة %{page_name}.
   guidelines_topic:
     title: "الأسئلة الشائعة/الإرشادات"
+    guidelines_title: "الإرشادات"
   tos_topic:
     title: "شروط الخدمة"
     body: |

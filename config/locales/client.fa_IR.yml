@@ -1982,7 +1982,6 @@ fa_IR:
       exit_fullscreen: "خارج شدن از حالت نوشتار تمام‌صفحه"
       exit_fullscreen_prompt: "برای خروج از تمام صفحه، دکمه <kbd>ESC</kbd> را فشار دهید"
       modal_ok: "تایید"
-      modal_cancel: "لغو"
       cant_send_pm: "متاسفانه , شما نمیتوانید به %{username} پیام بفرستید."
       yourself_confirm:
         title: "آیا اضافه کردن دریافت‌کنندگان را فراموش کردید؟"
@@ -3401,6 +3400,8 @@ fa_IR:
       more: "بیشتر"
       all_categories: "همه‌ی دسته‌بندی‌ها"
       all_tags: "همه برچسب‌ها"
+      categories_form_modal:
+        show_more: "نمایش بیشتر"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "همه"
@@ -3463,6 +3464,9 @@ fa_IR:
               title: "همه موضوعات"
             faq:
               content: "پرسش‌های متداول"
+              title: "راهنمای استفاده از این سایت"
+            guidelines:
+              content: "راهنماها"
               title: "راهنمای استفاده از این سایت"
             groups:
               content: "گروه‌ها"

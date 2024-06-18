@@ -1437,7 +1437,6 @@ et:
       toggle_direction: "Muuda suunda"
       help: "Markdown-i redaktori spikker"
       modal_ok: "OK"
-      modal_cancel: "Tühista"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
       yourself_confirm:
         title: "Kas unustasid saajad lisada?"
@@ -2595,6 +2594,8 @@ et:
               content: "Teemasid"
             faq:
               content: "KKK"
+            guidelines:
+              content: "Juhised"
             groups:
               content: "Grupid"
             users:

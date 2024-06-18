@@ -1118,7 +1118,6 @@ he:
     categories:
       categories_label: "קטגוריות"
       subcategories_label: "תת־קטגוריות"
-      all_subcategories: "כל תת־הקטגוריות"
       no_subcategories: "אין תת־קטגוריות"
       remove_filter: "הסרת הסינון"
       plus_more_count:
@@ -2597,7 +2596,6 @@ he:
       show_toolbar: "הצגת סרגל כתיבת הודעות"
       hide_toolbar: "הסתרת סרגל כתיבת הודעות"
       modal_ok: "אישור"
-      modal_cancel: "ביטול"
       cant_send_pm: "אין לך אפשרות לשלוח הודעה אל %{username}, עמך הסליחה."
       create_message_error: "אירעה שגיאה ביצירת ההודעה הזאת, נא לנסות שוב, עמך הסליחה."
       yourself_confirm:
@@ -4748,6 +4746,7 @@ he:
           text: "ואנו נציג לך את הקטגוריות הנפוצות ביותר באתר אוטומטית"
         filter_placeholder: "סינון קטגוריות"
         no_categories: "אין קטגוריות שעונות למונח שצוין."
+        show_more: "להציג יותר"
       tags_form_modal:
         title: "עריכת ניווט בתגיות"
         filter_placeholder: "סינון תגיות"
@@ -4840,6 +4839,9 @@ he:
               title: "כל הנושאים"
             faq:
               content: "שאלות נפוצות"
+              title: "הנחיות לשימוש באתר הזה"
+            guidelines:
+              content: "הנחיות"
               title: "הנחיות לשימוש באתר הזה"
             groups:
               content: "קבוצות"
@@ -5433,6 +5435,7 @@ he:
           actions: "פעולות"
           filter_status:
             all: "כל האירועים"
+            successful: "נמסר"
             failed: "נכשל"
       home:
         title: "בית"
@@ -5503,8 +5506,19 @@ he:
           community_summary: "תקציר קהילה"
           community_description: "תיאור קהילה"
           banner_image: "תמונת כרזה"
+          banner_image_help: |
+            זה ישמש בדף המידע שלך. גודל מומלץ: 800x300 פיקסלים. סוגים מקובלים: JPG, PNG ו-SVG עד 10MB.
           contact_information: "פרטי קשר"
           community_owner: "בעלות על הקהילה"
+          community_owner_help: |
+            שם איש הקשר הראשי האחראי לאתר זה. משמש להתראות קריטיות, ומוצג גם ב-/about. גלוי למשתמשים אנונימיים באתרים ציבוריים.
+          contact_email: "דוא\"ל ליצירת קשר"
+          contact_email_help: |
+            כתובת דוא״ל של איש קשר מוביל שאחראי על האתר הזה. משמש להתראות קריטיות, וגם יוצג ב־‎/about. חשוף בפני משתמשים אלמוניים באתרים ציבוריים.
+          contact_url: "יצירת קשר"
+          contact_url_help: |
+            כתובת ליצירת קשר עבור אתר זה. כאשר קיימת, מופיעה במקום כתובת דוא״ל ב־/about וחשופה בפני משתמשים אלמוניים באתרים ציבוריים.
+          site_contact_name: "שם איש הקשר באתר"
           your_organization: "הארגון שלך"
           company_name: "שם החברה"
           governing_law: "החוק המחייב"

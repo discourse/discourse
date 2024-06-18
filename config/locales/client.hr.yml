@@ -1035,7 +1035,6 @@ hr:
     categories:
       categories_label: "kategorije"
       subcategories_label: "podkategorije"
-      all_subcategories: "sve potkategorije"
       no_subcategories: "nema podkategorija"
       remove_filter: "uklonite filter"
       plus_more_count:
@@ -2409,7 +2408,6 @@ hr:
       show_toolbar: "prikaži alatnu traku skladatelja"
       hide_toolbar: "sakrij alatnu traku skladatelja"
       modal_ok: "U redu"
-      modal_cancel: "Odustani"
       cant_send_pm: "Žao nam je, ne možete poslati poruku %{username}."
       yourself_confirm:
         title: "Jeste li zaboravili dodati primatelje?"
@@ -4309,6 +4307,7 @@ hr:
           text: "i automatski ćemo prikazati najpopularnije kategorije ove stranice"
         filter_placeholder: "Filtrirajte kategorije"
         no_categories: "Nema kategorija koje odgovaraju danom pojmu."
+        show_more: "Prikaži više"
       edit_navigation_modal_form:
         deselect_button_text: "Odznači sve"
         reset_to_defaults: "Vrati na zadane postavke"
@@ -4369,6 +4368,9 @@ hr:
               title: "Sve teme"
             faq:
               content: "ČPP"
+              title: "Smjernice za korištenje ove stranice"
+            guidelines:
+              content: "Vodić za uporabu"
               title: "Smjernice za korištenje ove stranice"
             groups:
               content: "Grupe"

@@ -3310,6 +3310,7 @@ ko:
     %{page_name} 페이지의 콘텐츠를 변경하려면 이 주제의 첫 게시물을 편집하세요.
   guidelines_topic:
     title: "FAQ/가이드라인"
+    guidelines_title: "가이드라인"
   tos_topic:
     title: "이용약관"
   privacy_topic:

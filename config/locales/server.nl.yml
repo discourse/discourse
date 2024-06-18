@@ -3821,6 +3821,7 @@ nl:
     Bewerk het eerste bericht in dit topic om de inhoud van de pagina %{page_name} te wijzigen.
   guidelines_topic:
     title: "FAQ/Richtlijnen"
+    guidelines_title: "Richtlijnen"
   tos_topic:
     title: "Gebruiksvoorwaarden"
     body: |

@@ -247,6 +247,16 @@ zh_CN:
               label: 话题 ID
             post:
               label: 帖子内容
+        topic:
+          fields:
+            body:
+              label: 话题正文
+            title:
+              label: 话题标题
+            category:
+              label: 话题类别
+            tags:
+              label: 话题标签
         group_category_notification_default:
           fields:
             group:

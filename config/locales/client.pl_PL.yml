@@ -1108,7 +1108,6 @@ pl_PL:
     categories:
       categories_label: "kategorie"
       subcategories_label: "podkategorie"
-      all_subcategories: "wszystkie podkategorie"
       no_subcategories: "brak podkategorii"
       remove_filter: "usuń filtr"
       plus_more_count:
@@ -2574,7 +2573,6 @@ pl_PL:
       show_toolbar: "pokaż pasek narzędzi kompozytora"
       hide_toolbar: "ukryj pasek narzędzi kompozytora"
       modal_ok: "OK"
-      modal_cancel: "Anuluj"
       cant_send_pm: "Przepraszamy, niestety nie możesz wysłać prywatnej wiadomości do %{username}."
       create_message_error: "Przepraszamy, wystąpił błąd podczas tworzenia tej wiadomości. Spróbuj ponownie."
       yourself_confirm:
@@ -4714,6 +4712,7 @@ pl_PL:
           text: "i automatycznie pokażemy najpopularniejsze kategorie tej witryny"
         filter_placeholder: "Filtruj kategorie"
         no_categories: "Brak kategorii pasujących do podanego terminu."
+        show_more: "Pokaż więcej"
       tags_form_modal:
         title: "Edytuj nawigację tagów"
         filter_placeholder: "Filtruj tagi"
@@ -4816,6 +4815,9 @@ pl_PL:
               title: "Wszystkie tematy"
             faq:
               content: "FAQ"
+              title: "Wskazówki dotyczące korzystania z tej witryny"
+            guidelines:
+              content: "Wytyczne"
               title: "Wskazówki dotyczące korzystania z tej witryny"
             groups:
               content: "Grupy"
