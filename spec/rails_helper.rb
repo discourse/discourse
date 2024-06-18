@@ -245,7 +245,7 @@ RSpec.configure do |config|
     CachedCounting.disable
 
     begin
-      ActiveRecord::Migration.check_all_pending!
+      ActiveRecord::Migration.check_pending!
     rescue ActiveRecord::PendingMigrationError
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
@@ -718,7 +718,7 @@ RSpec.configure do |config|
   end
 
   config.after(:each, type: :multisite) do
-    ActiveRecord::Base.connection_handler.clear_all_connections!
+    ActiveRecord::Base.clear_all_connections!
     Rails.configuration.multisite = false # rubocop:disable Discourse/NoDirectMultisiteManipulation
     RailsMultisite::ConnectionManagement.clear_settings!
     ActiveRecord::Base.establish_connection

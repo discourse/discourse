@@ -183,7 +183,7 @@ RSpec.describe "Visit channel", type: :system do
           context "when visiting a specific channel message ID then navigating to another channel" do
             fab!(:early_message) { Fabricate(:chat_message, chat_channel: category_channel_1) }
             fab!(:other_channel) do
-              Fabricate(:category_channel, chatable: category_channel_1.chatable)
+              Fabricate(:category_channel, category: category_channel_1.chatable)
             end
             fab!(:other_channel_message) { Fabricate(:chat_message, chat_channel: other_channel) }
 

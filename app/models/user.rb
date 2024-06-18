@@ -158,9 +158,7 @@ class User < ActiveRecord::Base
             unless: :should_skip_user_fields_validation?
 
   validates_associated :primary_email,
-                       message: ->(_, user_email) do
-                         user_email[:value]&.errors&.[](:email)&.first.to_s
-                       end
+                       message: ->(_, user_email) { user_email[:value]&.errors&.[](:email)&.first }
 
   after_initialize :add_trust_level
 
