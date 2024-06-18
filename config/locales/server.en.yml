@@ -2561,7 +2561,7 @@ en:
     enable_offline_indicator: "Display a message to users when it is detected that they have no network connection"
     default_sidebar_link_to_filtered_list: "Make navigation menu links link to filtered list by default."
     default_sidebar_show_count_of_new_items: "Make navigation menu links show count of new items instead of badges by default."
-    default_sidebar_switch_panel_position: "Position of sidebar switch panel buttons"
+    default_sidebar_switch_panel_position: "Position of button on sidebar to switch to chat"
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
