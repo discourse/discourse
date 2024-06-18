@@ -14,7 +14,7 @@ class FakeLogger
     @severities = { 0 => :debugs, 1 => :infos, 2 => :warnings, 3 => :errors, 4 => :fatals }
   end
 
-  def debug(message = nil)
+  def debug(message)
     @debugs << message
   end
 
@@ -30,7 +30,7 @@ class FakeLogger
     @level <= Logger::INFO
   end
 
-  def warn(message = nil)
+  def warn(message)
     @warnings << message
   end
 
@@ -38,7 +38,7 @@ class FakeLogger
     @level <= Logger::WARN
   end
 
-  def error(message = nil)
+  def error(message)
     @errors << message
   end
 
@@ -46,7 +46,7 @@ class FakeLogger
     @level <= Logger::ERROR
   end
 
-  def fatal(message = nil)
+  def fatal(message)
     @fatals << message
   end
 
