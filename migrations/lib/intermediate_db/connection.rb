@@ -14,7 +14,7 @@ module Migrations::IntermediateDB
     def self.open_database(path:, journal_mode: DEFAULT_JOURNAL_MODE)
       FileUtils.mkdir_p(File.dirname(path))
 
-      db = ::Extralite::Database.new(path)
+      db = Extralite::Database.new(path)
       db.pragma(
         busy_timeout: 60_000, # 60 seconds
         journal_mode: journal_mode,

@@ -7,8 +7,8 @@ require_relative "../lib/migrations"
 module Migrations
   configure_zeitwerk
 
-  class CommandLineInterface < ::Thor
-    extend ::Migrations::CLI::ThorExt
+  class CommandLineInterface < Thor
+    extend Migrations::CLI::ThorExt
 
     include Migrations::CLI::ConvertCommand
     include Migrations::CLI::ImportCommand
