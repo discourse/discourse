@@ -207,8 +207,8 @@ export default Mixin.create({
     }
   },
 
-  async confirmChanges(settingKey) {
-    return await new Promise((resolve) => {
+  confirmChanges(settingKey) {
+    return new Promise((resolve) => {
       // Fallback is needed in case the setting does not have a custom confirmation
       // prompt/confirm defined.
       this.dialog.alert({
