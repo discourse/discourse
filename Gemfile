@@ -277,3 +277,5 @@ gem "drb"
 # dependencies for the automation plugin
 gem "iso8601"
 gem "rrule"
+
+gem "importmap-rails", "~> 2.0"
