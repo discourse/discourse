@@ -1059,7 +1059,6 @@ sq:
       list_item: "Element liste"
       help: "Ndihmë mbi Markdown"
       modal_ok: "OK"
-      modal_cancel: "Anulo"
       cant_send_pm: "Na vjen keq, nuk mund t'i dërgoni mesazh privat anëtarit %{username}."
       yourself_confirm:
         title: "Mos harruat të shtonit marrësit?"
@@ -1956,6 +1955,8 @@ sq:
               content: "Topics"
             faq:
               content: "Pyetje të shpeshta"
+            guidelines:
+              content: "Udhëzimet"
             groups:
               content: "Grupet"
             users:

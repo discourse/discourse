@@ -3818,6 +3818,7 @@ es:
     Edita la primera publicación de este tema para cambiar el contenido de la página %{page_name}.
   guidelines_topic:
     title: "Preguntas frecuentes/Directrices"
+    guidelines_title: "Directrices"
   tos_topic:
     title: "Términos del servicio"
     body: |

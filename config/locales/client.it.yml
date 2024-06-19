@@ -2313,7 +2313,6 @@ it:
       show_toolbar: "mostra la barra degli strumenti del Composer"
       hide_toolbar: "nascondi la barra degli strumenti del Composer"
       modal_ok: "OK"
-      modal_cancel: "Annulla"
       cant_send_pm: "Spiacenti, non puoi inviare un messaggio a %{username}."
       yourself_confirm:
         title: "Hai dimenticato di aggiungere i destinatari?"
@@ -4182,6 +4181,7 @@ it:
           text: "e mostreremo automaticamente le categorie più popolari di questo sito"
         filter_placeholder: "Filtra le categorie"
         no_categories: "Non ci sono categorie corrispondenti al termine specificato."
+        show_more: "Mostra altro"
       tags_form_modal:
         title: "Modifica la navigazione delle etichette"
         filter_placeholder: "Filtra etichette"
@@ -4271,6 +4271,9 @@ it:
               title: "Tutti gli argomenti"
             faq:
               content: "FAQ"
+              title: "Linee guida per l'utilizzo di questo sito"
+            guidelines:
+              content: "Linee Guida"
               title: "Linee guida per l'utilizzo di questo sito"
             groups:
               content: "Gruppi"

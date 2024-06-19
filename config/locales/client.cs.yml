@@ -1036,7 +1036,6 @@ cs:
     categories:
       categories_label: "kategorie"
       subcategories_label: "podkategorie"
-      all_subcategories: "všechny podkategorie"
       no_subcategories: "žádné podkategorie"
       remove_filter: "zrušit filtr"
       plus_more_count:
@@ -2483,7 +2482,6 @@ cs:
       show_toolbar: "zobrazit panel nástrojů editoru"
       hide_toolbar: "skrýt panel nástrojů editoru"
       modal_ok: "OK"
-      modal_cancel: "Zrušit"
       cant_send_pm: "Bohužel, nemůžete poslat zprávu uživateli %{username}."
       yourself_confirm:
         title: "Zapomněl/a jste přidat přijemce?"
@@ -4527,6 +4525,7 @@ cs:
           text: "a automaticky zobrazíme nejoblíbenější kategorie tohoto webu"
         filter_placeholder: "Filtrovat kategorie"
         no_categories: "Zadanému výrazu neodpovídají žádné kategorie."
+        show_more: "Zobrazit více"
       tags_form_modal:
         title: "Úprava štítků v postranním panelu"
         filter_placeholder: "Filtrovat štítky"
@@ -4619,6 +4618,9 @@ cs:
               title: "Všechna témata"
             faq:
               content: "FAQ"
+              title: "Pokyny pro používání tohoto webu"
+            guidelines:
+              content: "Pokyny"
               title: "Pokyny pro používání tohoto webu"
             groups:
               content: "Skupiny"

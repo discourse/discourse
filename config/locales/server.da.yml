@@ -2836,6 +2836,7 @@ da:
     Rediger det første indlæg i dette emne for at ændre indholdet af siden %{page_name}
   guidelines_topic:
     title: "OSS/Retningslinjer"
+    guidelines_title: "Retningslinier"
   tos_topic:
     title: "Vilkår"
   privacy_topic:

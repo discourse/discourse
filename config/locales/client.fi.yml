@@ -319,6 +319,7 @@ fi:
         unbookmark: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit"
         unbookmark_with_reminder: "Klikkaa poistaaksesi kaikki tämän ketjun kirjanmerkit ja muistutukset"
     bookmarks:
+      deleted_bookmark_success: "Kirjanmerkki poistettu!"
       created: "Olet kirjanmerkinnyt tämän viestin. %{name}"
       created_generic: "Olet kirjanmerkinnyt tämän. %{name}"
       create: "Luo kirjanmerkki"
@@ -2327,7 +2328,6 @@ fi:
       show_toolbar: "näytä kirjoitustilan työkalurivi"
       hide_toolbar: "piilota kirjoitustilan työkalurivi"
       modal_ok: "OK"
-      modal_cancel: "Peruuta"
       cant_send_pm: "Et voi valitettavasti lähettää viestiä käyttäjälle %{username}."
       yourself_confirm:
         title: "Unohditko lisätä vastaanottajia?"
@@ -4200,6 +4200,7 @@ fi:
           text: "ja näytämme automaattisesti tämän sivuston suosituimmat alueet"
         filter_placeholder: "Suodata alueita"
         no_categories: "Annettua termiä vastaavia alueita ei ole."
+        show_more: "Näytä lisää"
       tags_form_modal:
         title: "Muokkaa tunnisteiden navigointia"
         filter_placeholder: "Suodata tunnisteita"
@@ -4295,6 +4296,9 @@ fi:
               title: "Kaikki ketjut"
             faq:
               content: "UKK"
+              title: "Ohjeet tämän sivuston käyttöön"
+            guidelines:
+              content: "Ohjeet"
               title: "Ohjeet tämän sivuston käyttöön"
             groups:
               content: "Ryhmät"

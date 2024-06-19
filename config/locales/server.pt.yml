@@ -1839,6 +1839,7 @@ pt:
     Edite a primeira mensagem neste tópico para alterar os conteúdos da página %{page_name}.
   guidelines_topic:
     title: "FAQ/Orientações"
+    guidelines_title: "Orientações"
   tos_topic:
     title: "Termos de Serviço"
   privacy_topic:

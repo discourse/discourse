@@ -1998,7 +1998,6 @@ pt:
       show_toolbar: "mostrar barra de compositor"
       hide_toolbar: "esconder barra de compositor"
       modal_ok: "CONFIRMAR"
-      modal_cancel: "Cancelar"
       cant_send_pm: "Desculpe, não pode enviar uma mensagem para %{username}."
       yourself_confirm:
         title: "Esqueceu-se de adicionar os destinatários?"
@@ -3482,6 +3481,8 @@ pt:
         other: "%{count} novos"
       more: "Mais"
       all_categories: "Todas as categorias"
+      categories_form_modal:
+        show_more: "Mostrar mais"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Tudo"
@@ -3525,6 +3526,8 @@ pt:
               content: "Tópicos"
             faq:
               content: "FAQ"
+            guidelines:
+              content: "Orientações"
             groups:
               content: "Grupos"
             users:

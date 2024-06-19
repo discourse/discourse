@@ -1608,7 +1608,6 @@ tr_TR:
     content_security_policy_collect_reports: "CSP ihlal raporu toplamayı /csp_reports adresinde etkinleştir"
     content_security_policy_frame_ancestors: "CSP aracılığıyla bu siteyi iframe'lere kimlerin yerleştirebileceğini kısıtlayın. <a href='%{base_path}/admin/customize/embedding'>Gömme</a> bölümünde izin verilen sunucuları kontrol edin"
     content_security_policy_script_src: "İzin verilenler listesine eklenen ek komut dosyası kaynakları. Geçerli ana bilgisayar ve CDN varsayılan olarak dahil edilmiştir. Bkz. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>İçerik Güvenliği Politikasıyla XSS Saldırılarını Azaltın.</a> (CSP). content_security_policy_strict_dynamic etkinleştirildiğinde ana makine kaynakları yok sayılacaktır."
-    content_security_policy_strict_dynamic: "Manuel yapılandırma ihtiyacını azaltmak için sıkı dinamik bir içerik güvenliği politikası kullanın. Daha fazla bilgi için <a href='https://meta.discourse.org/t/298172' target='_blank'>duyuruyu</a> kontrol edin. Bu ayarı devre dışı bırakma özelliği yakında kaldırılacak."
     invalidate_inactive_admin_email_after_days: "Bu kadar gün içinde siteyi ziyaret etmemiş olan yönetici hesaplarının oturum açmadan önce e-posta adreslerini yeniden doğrulamaları gerekir. Devre dışı bırakmak için 0 olarak ayarlayın."
     include_secure_categories_in_tag_counts: "Etkinleştirildiğinde, bir etiket için konu sayısı, tüm kullanıcılar için okuma kısıtlamalı kategorilerdeki konuları içerecektir. Devre dışı bırakıldığında, normal kullanıcılara yalnızca tüm konuların herkese açık kategorilerde olduğu bir etiket için konu sayısı gösterilir."
     display_personal_messages_tag_counts: "Etkinleştirildiğinde, belirli bir etiketle etiketlenmiş kişisel mesajların sayısı görüntülenir."
@@ -3887,6 +3886,7 @@ tr_TR:
     %{page_name} sayfasının içeriğini değiştirmek için bu konudaki ilk gönderiyi düzenleyin.
   guidelines_topic:
     title: "SSS/Kılavuz"
+    guidelines_title: "Kılavuz"
   tos_topic:
     title: "Hizmet Şartları"
     body: |

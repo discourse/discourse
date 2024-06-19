@@ -631,6 +631,21 @@ RSpec.describe Users::OmniauthCallbacksController do
         end
       end
 
+      context "when user has TOTP enabled but enforce_second_factor_on_external_auth is false" do
+        before { user.create_totp(enabled: true) }
+
+        it "should return the right response" do
+          SiteSetting.enforce_second_factor_on_external_auth = false
+          get "/auth/google_oauth2/callback.json"
+
+          expect(response.status).to eq(302)
+
+          data = JSON.parse(cookies[:authentication_data])
+
+          expect(data["authenticated"]).to eq(true)
+        end
+      end
+
       context "when user has security key enabled" do
         before { Fabricate(:user_security_key_with_random_credential, user: user) }
 

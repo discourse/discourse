@@ -3820,6 +3820,7 @@ fr:
     Modifiez le premier message de ce sujet pour changer le contenu de la page %{page_name}.
   guidelines_topic:
     title: "FAQ/Charte"
+    guidelines_title: "Charte"
   tos_topic:
     title: "Conditions générales d'utilisation"
     body: |

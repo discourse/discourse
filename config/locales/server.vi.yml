@@ -1936,6 +1936,7 @@ vi:
     Sửa bài viết đầu tiên trong chủ đề này để thay đổi nội dung của trang %{page_name}.
   guidelines_topic:
     title: "FAQ/Hướng dẫn"
+    guidelines_title: "Hướng dẫn"
   tos_topic:
     title: "Điều khoản Dịch vụ"
   privacy_topic:

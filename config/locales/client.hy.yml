@@ -1546,7 +1546,6 @@ hy:
       enter_fullscreen: "մուտք գործել ամբողջական էկրանով կոմպոզեր"
       exit_fullscreen: "դուրս գալ ամբողջական էկրանով կոմպոզերից"
       modal_ok: "ՕԿ"
-      modal_cancel: "Չեղարկել"
       cant_send_pm: "Ներողություն, Դուք չեք կարող ուղարկել հաղորդագրություն %{username}-ին:"
       yourself_confirm:
         title: "Մոռացե՞լ եք ավելացնել ստացողներին:"
@@ -2866,6 +2865,8 @@ hy:
               content: "Թեմա"
             faq:
               content: "ՀՏՀ"
+            guidelines:
+              content: "Ուղեցույց"
             groups:
               content: "Խմբեր"
             users:

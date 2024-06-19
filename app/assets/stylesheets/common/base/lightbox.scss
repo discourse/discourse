@@ -24,6 +24,7 @@ $meta-element-margin: 6px;
 
 .lightbox-wrapper {
   display: inline-block;
+  vertical-align: middle;
   img {
     object-fit: cover;
     object-position: top;

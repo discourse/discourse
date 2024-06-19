@@ -1690,7 +1690,6 @@ bs_BA:
       enter_fullscreen: "unesite fullscreen composer"
       exit_fullscreen: "izlaz iz fullscreen kompozitora"
       modal_ok: "OK"
-      modal_cancel: "Odustani"
       cant_send_pm: "Neuspješno, ne možete slati poruke ka %{username}."
       yourself_confirm:
         title: "Da li ste zaboravili da dodate primaoca?"
@@ -3049,6 +3048,8 @@ bs_BA:
               content: "Topics"
             faq:
               content: "Česta pitanja"
+            guidelines:
+              content: "Smjernice"
             groups:
               content: "Grupe"
             users:

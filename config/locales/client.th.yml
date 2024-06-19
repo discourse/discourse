@@ -1400,7 +1400,6 @@ th:
       enter_fullscreen: "ขยายหน้าเขียนกระทู้เต็มจอ"
       exit_fullscreen: "ออกจากหน้าเขียนกระทู้เต็มจอ"
       modal_ok: "ตกลง"
-      modal_cancel: "ยกเลิก"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
       yourself_confirm:
         title: "คุณลืมเพิ่มผู้รับหรือไม่"
@@ -2459,6 +2458,8 @@ th:
               content: "หัวข้อ"
             faq:
               content: "คำถามที่พบบ่อย"
+            guidelines:
+              content: "คู่มือ"
             groups:
               content: "กลุ่ม"
             users:
