@@ -95,6 +95,10 @@ module SiteSettingExtension
     @shadowed_settings ||= []
   end
 
+  def requires_confirmation_settings
+    @requires_confirmation_settings ||= {}
+  end
+
   def hidden_settings_provider
     @hidden_settings_provider ||= SiteSettings::HiddenProvider.new
   end
@@ -244,6 +248,7 @@ module SiteSettingExtension
           secret: secret_settings.include?(s),
           placeholder: placeholder(s),
           mandatory_values: mandatory_values[s],
+          requires_confirmation: requires_confirmation_settings[s],
         }.merge!(type_hash)
 
         opts[:plugin] = plugins[s] if plugins[s]
@@ -653,6 +658,14 @@ module SiteSettingExtension
       defaults.load_setting(name, default, opts.delete(:locale_default))
 
       mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
+
+      requires_confirmation_settings[name] = (
+        if SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.values.include?(
+             opts[:requires_confirmation],
+           )
+          opts[:requires_confirmation]
+        end
+      )
 
       categories[name] = opts[:category] || :uncategorized
 
