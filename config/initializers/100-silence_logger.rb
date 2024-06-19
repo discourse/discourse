@@ -26,7 +26,12 @@ class SilenceLogger < Rails::Rack::Logger
       end
       @app.call(env)
     else
-      super(env)
+      # TODO: Just call `super` instead when upgrading to Rails 7.2. With Rails
+      # 7.1 there is a bug in `Rails::Rack::Logger` when there is more than one
+      # `ActiveSupport::TaggedLogging` logger in the broadcast logger. It
+      # results in duplicating the response from Rack as many times as there
+      # are tagged loggers, returning an array of arrays.
+      super.tap { break _1.first if _1.any?(Array) }
     end
   ensure
     Logster.logger.override_level = nil if override
