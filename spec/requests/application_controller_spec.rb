@@ -556,14 +556,19 @@ RSpec.describe ApplicationController do
       end
 
       it "sets `Cross-Origin-Opener-Policy` to `unsafe-none` for a listed referrer" do
-        get "/latest", headers: { "HTTP_REFERER" => "meta.discourse.org" }
+        get "/latest", headers: { "HTTP_REFERER" => "https://meta.discourse.org/" }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("unsafe-none")
+
+        get "/latest", headers: { "HTTP_REFERER" => "https://meta.discourse.org/hot" }
 
         expect(response.status).to eq(200)
         expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("unsafe-none")
       end
 
       it "sets `Cross-Origin-Opener-Policy` to configured value for a non-listed referrer" do
-        get "/latest", headers: { "HTTP_REFERER" => "www.discourse.org" }
+        get "/latest", headers: { "HTTP_REFERER" => "https://www.discourse.org/" }
 
         expect(response.status).to eq(200)
         expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")

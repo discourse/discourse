@@ -1008,10 +1008,13 @@ class ApplicationController < ActionController::Base
   end
 
   def set_cross_origin_opener_policy_header
-    response.headers["Cross-Origin-Opener-Policy"] = if SiteSetting
-         .cross_origin_opener_unsafe_none_referrers
-         .split("|")
-         .include?(request.referrer&.split("://")&.last)
+    response.headers[
+      "Cross-Origin-Opener-Policy"
+    ] = if SiteSetting.cross_origin_opener_unsafe_none_referrers.present? &&
+         SiteSetting
+           .cross_origin_opener_unsafe_none_referrers
+           .split("|")
+           .include?(UrlHelper.relaxed_parse(request.referrer.to_s)&.host)
       "unsafe-none"
     else
       SiteSetting.cross_origin_opener_policy_header
