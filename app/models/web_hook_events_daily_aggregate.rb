@@ -36,10 +36,10 @@ end
 
 # == Schema Information
 #
-# Table name: web_hook_events_daily_aggregate
+# Table name: web_hook_events_daily_aggregates
 #
-#  id                   :integer          not null, primary key
-#  web_hook_id          :integer
+#  id                   :bigint           not null, primary key
+#  web_hook_id          :bigint           not null
 #  date                 :date
 #  successful_events_id :integer          is an Array
 #  failed_events_id     :integer          is an Array
@@ -49,5 +49,5 @@ end
 #
 # Indexes
 #
-#  index_web_hook_events_daily_aggregate_on_web_hook_id  (web_hook_id)
+#  index_web_hook_events_daily_aggregates_on_web_hook_id  (web_hook_id)
 #
