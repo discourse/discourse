@@ -26,13 +26,6 @@ module Migrations::IntermediateDB
       db
     end
 
-    def self.connect(path)
-      connection = self.new(path:)
-      yield(connection)
-    ensure
-      connection.close if connection
-    end
-
     attr_reader :db
     attr_reader :path
 

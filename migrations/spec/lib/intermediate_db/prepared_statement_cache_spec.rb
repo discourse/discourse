@@ -6,7 +6,7 @@ RSpec.describe Migrations::IntermediateDB::PreparedStatementCache do
   let(:cache) { described_class.new(3) }
 
   def create_statement_double
-    instance_double(::Extralite::Query, close: nil)
+    instance_double(Extralite::Query, close: nil)
   end
 
   it "should inherit behavior from LruRedux::Cache" do

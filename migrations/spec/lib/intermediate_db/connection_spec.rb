@@ -28,42 +28,6 @@ RSpec.describe Migrations::IntermediateDB::Connection do
     end
   end
 
-  describe ".connect" do
-    it "yields a new connection and closes it after the block" do
-      Dir.mktmpdir do |storage_path|
-        db_path = File.join(storage_path, "test.db")
-        db = nil
-
-        described_class.connect(db_path) do |connection|
-          expect(connection).to be_a(described_class)
-          expect(connection.path).to eq(db_path)
-
-          db = connection.db
-          expect(db).not_to be_closed
-        end
-
-        expect(db).to be_closed
-      end
-    end
-
-    it "closes the connection even if an exception is raised within block" do
-      Dir.mktmpdir do |storage_path|
-        db_path = File.join(storage_path, "test.db")
-        db = nil
-
-        expect {
-          described_class.connect(db_path) do |connection|
-            db = connection.db
-            expect(db).not_to be_closed
-            raise "boom"
-          end
-        }.to raise_error(StandardError)
-
-        expect(db).to be_closed
-      end
-    end
-  end
-
   def create_connection(**params)
     Dir.mktmpdir do |storage_path|
       db_path = File.join(storage_path, "test.db")
@@ -156,12 +120,12 @@ RSpec.describe Migrations::IntermediateDB::Connection do
 
     def create_db(db_path)
       migrations_path = File.join(Migrations.root_path, "spec", "fixtures", "schema", "copy")
-      Migrations::IntermediateDB::Migrator.migrate(db_path, migrations_path:)
+      Migrations::IntermediateDB.migrate(db_path, migrations_path:)
       described_class.open_database(path: db_path)
     end
 
     it "commits an active transaction" do
-      described_class.connect(@main_db_path) do |main_connection|
+      Migrations::IntermediateDB.connect(@main_db_path) do |main_connection|
         main_connection.insert("INSERT INTO users (id, username) VALUES (?, ?)", [1, "sam"])
 
         expect(@main_db.query_single_splat("SELECT COUNT(*) FROM users")).to eq(0)
@@ -183,7 +147,7 @@ RSpec.describe Migrations::IntermediateDB::Connection do
       @db2.execute("INSERT INTO users (id, username) VALUES (?, ?)", 4, "user4")
       @db2.execute("INSERT INTO uploads (id, url) VALUES (?, ?)", 4, "url4")
 
-      described_class.connect(@main_db_path) do |main_connection|
+      Migrations::IntermediateDB.connect(@main_db_path) do |main_connection|
         main_connection.copy_from([@db1_path, @db2_path, @db3_path])
       end
 
@@ -206,7 +170,7 @@ RSpec.describe Migrations::IntermediateDB::Connection do
         @db1.execute("INSERT INTO users (id, username) VALUES (?, ?)", 1, "user1")
         @db2.execute("INSERT INTO users (id, username) VALUES (?, ?)", 1, "user1")
 
-        described_class.connect(@main_db_path) do |main_connection|
+        Migrations::IntermediateDB.connect(@main_db_path) do |main_connection|
           expect { main_connection.copy_from([@db1_path, @db2_path]) }.to raise_error(
             Extralite::Error,
             "UNIQUE constraint failed: users.id",
@@ -220,7 +184,7 @@ RSpec.describe Migrations::IntermediateDB::Connection do
 
         insert_actions = { "users" => "OR IGNORE" }
 
-        described_class.connect(@main_db_path) do |main_connection|
+        Migrations::IntermediateDB.connect(@main_db_path) do |main_connection|
           main_connection.copy_from([@db1_path, @db2_path], insert_actions:)
         end
 
@@ -234,7 +198,7 @@ RSpec.describe Migrations::IntermediateDB::Connection do
 
         insert_actions = { "config" => "OR REPLACE" }
 
-        described_class.connect(@main_db_path) do |main_connection|
+        Migrations::IntermediateDB.connect(@main_db_path) do |main_connection|
           main_connection.copy_from([@db1_path, @db2_path], insert_actions:)
         end
 
