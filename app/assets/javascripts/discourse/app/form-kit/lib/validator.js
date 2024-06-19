@@ -102,6 +102,9 @@ export default class Validator {
           error = true;
         }
         break;
+      case "undefined":
+        error = true;
+        break;
       default:
         throw new Error("Unsupported field type");
     }

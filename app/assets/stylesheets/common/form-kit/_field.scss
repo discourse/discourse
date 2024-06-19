@@ -1,5 +1,6 @@
 .form-kit__field {
   .form-kit__container-content {
+    flex-direction: column;
     width: var(--form-kit-medium-input) !important;
   }
 
@@ -9,6 +10,12 @@
   &-image {
     .form-kit__container-content {
       width: var(--form-kit-large-input) !important;
+    }
+  }
+
+  &-checkbox {
+    .form-kit__container-content {
+      width: 100% !important;
     }
   }
 

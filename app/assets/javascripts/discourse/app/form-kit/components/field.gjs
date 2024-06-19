@@ -109,7 +109,8 @@ export default class FormField extends Component {
             field=this.field
           )
           Checkbox=(component
-            FKControlCheckbox
+            FKControlWrapper
+            component=FKControlCheckbox
             value=this.value
             errors=this.errors
             hasErrors=this.hasErrors

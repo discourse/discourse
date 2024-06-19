@@ -29,6 +29,8 @@ export default class FKControlWrapper extends Component {
         return "icon";
       case "FKControlImage":
         return "image";
+      case "FKControlCheckbox":
+        return "checkbox";
       case "FKControlMenu":
         return "menu";
     }
