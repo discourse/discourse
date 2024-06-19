@@ -48,7 +48,6 @@ class Plugin::Metadata
         discourse-lti
         discourse-math
         discourse-microsoft-auth
-        discourse-moderator-attention
         discourse-narrative-bot
         discourse-newsletter-integration
         discourse-no-bump
