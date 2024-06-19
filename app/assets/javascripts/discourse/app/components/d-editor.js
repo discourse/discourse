@@ -354,15 +354,17 @@ export default Component.extend(TextareaTextManipulation, {
     if (event.target.tagName === "A") {
       if (event.target.classList.contains("mention")) {
         this.appEvents.trigger(
-          "click.discourse-preview-user-card-mention",
-          $(event.target)
+          "d-editor:preview-click-user-card",
+          event.target,
+          event
         );
       }
 
       if (event.target.classList.contains("mention-group")) {
         this.appEvents.trigger(
-          "click.discourse-preview-group-card-mention-group",
-          $(event.target)
+          "d-editor:preview-click-group-card",
+          event.target,
+          event
         );
       }
 
