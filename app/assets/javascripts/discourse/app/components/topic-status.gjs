@@ -86,7 +86,10 @@ export default class TopicStatus extends Component {
 
       {{~#if @topic.invisible~}}
         <span
-          title={{i18n "topic_statuses.unlisted.help"}}
+          title={{i18n
+            "topic_statuses.unlisted.help"
+            unlistedReason=@topic.visibilityReasonTranslated
+          }}
           class="topic-status"
         >{{icon "far-eye-slash"}}</span>
       {{~/if~}}
