@@ -4,3 +4,4 @@
 tmp/*
 private/
 Gemfile.lock
+/config/upload.yml
