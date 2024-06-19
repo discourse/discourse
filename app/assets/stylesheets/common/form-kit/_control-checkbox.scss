@@ -1,5 +1,9 @@
 .form-kit__control-checkbox {
-  margin: 0.17em 0 0;
+  &[type="checkbox"] {
+    margin: 0.17em;
+    margin-right: 0;
+    margin-left: 0;
+  }
 
   &-label {
     display: flex;
