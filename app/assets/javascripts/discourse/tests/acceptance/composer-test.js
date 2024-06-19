@@ -2,6 +2,7 @@ import {
   click,
   currentURL,
   fillIn,
+  focus,
   settled,
   triggerEvent,
   triggerKeyEvent,
@@ -155,8 +156,9 @@ acceptance("Composer", function (needs) {
 
     await click("#create-topic");
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
+    await focus(".title-input input");
     assert.ok(
-      exists(".title-input .popup-tip.bad.hide"),
+      exists(".title-input .popup-tip.good.hide"),
       "title errors are hidden by default"
     );
     assert.ok(
