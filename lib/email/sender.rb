@@ -255,7 +255,7 @@ module Email
         add_attachments(post)
       elsif @email_type.to_s == "digest"
         @stripped_secure_upload_shas = style.stripped_upload_sha_map.values
-        digest_posts.each { |p| add_attachments(p) }
+        add_attachments(*digest_posts)
       end
 
       # Suppress images from short emails
@@ -354,43 +354,45 @@ module Email
       Post.where(id: header_value("X-Discourse-Post-Ids")&.split(","))
     end
 
-    def add_attachments(post)
+    def add_attachments(*posts)
       max_email_size = SiteSetting.email_total_attachment_size_limit_kb.kilobytes
       return if max_email_size == 0
 
       email_size = 0
-      post.uploads.each do |original_upload|
-        optimized_1X = original_upload.optimized_images.first
+      posts.each do |post|
+        post.uploads.each do |original_upload|
+          optimized_1X = original_upload.optimized_images.first
 
-        if FileHelper.is_supported_image?(original_upload.original_filename) &&
-             !should_attach_image?(original_upload, optimized_1X)
-          next
-        end
+          if FileHelper.is_supported_image?(original_upload.original_filename) &&
+               !should_attach_image?(original_upload, optimized_1X)
+            next
+          end
 
-        attached_upload = optimized_1X || original_upload
-        next if email_size + attached_upload.filesize > max_email_size
+          attached_upload = optimized_1X || original_upload
+          next if email_size + attached_upload.filesize > max_email_size
 
-        begin
-          path =
-            if attached_upload.local?
-              Discourse.store.path_for(attached_upload)
-            else
-              Discourse.store.download!(attached_upload).path
-            end
+          begin
+            path =
+              if attached_upload.local?
+                Discourse.store.path_for(attached_upload)
+              else
+                Discourse.store.download!(attached_upload).path
+              end
 
-          @message_attachments_index[original_upload.sha1] = @message.attachments.size
-          @message.attachments[original_upload.original_filename] = File.read(path)
-          email_size += File.size(path)
-        rescue => e
-          Discourse.warn_exception(
-            e,
-            message: "Failed to attach file to email",
-            env: {
-              post_id: post.id,
-              upload_id: original_upload.id,
-              filename: original_upload.original_filename,
-            },
-          )
+            @message_attachments_index[original_upload.sha1] = @message.attachments.size
+            @message.attachments[original_upload.original_filename] = File.read(path)
+            email_size += File.size(path)
+          rescue => e
+            Discourse.warn_exception(
+              e,
+              message: "Failed to attach file to email",
+              env: {
+                post_id: post.id,
+                upload_id: original_upload.id,
+                filename: original_upload.original_filename,
+              },
+            )
+          end
         end
       end
 
@@ -442,9 +444,11 @@ module Email
 
         html_part = @message.html_part
         @message.html_part = nil
+        @message.parts.reject! { |p| p.content_type.start_with?("text/html") }
 
         text_part = @message.text_part
         @message.text_part = nil
+        @message.parts.reject! { |p| p.content_type.start_with?("text/plain") }
 
         content =
           Mail::Part.new do
