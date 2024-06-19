@@ -5,7 +5,7 @@ module Migrations::CLI::ImportCommand
     thor.class_eval do
       desc "import", "Import a file"
       def import
-        ::Migrations.load_rails_environment
+        Migrations.load_rails_environment
         require "extralite"
 
         puts "Importing into Discourse #{Discourse::VERSION::STRING}"

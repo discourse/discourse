@@ -2,56 +2,98 @@
 
 RSpec.describe Migrations::Converters do
   let(:root_path) { Dir.mktmpdir }
+  let(:core_path) { File.join(root_path, "lib", "converters") }
+  let(:private_path) { File.join(root_path, "private", "converters") }
 
   before { allow(Migrations).to receive(:root_path).and_return(root_path) }
   after { FileUtils.remove_dir(root_path, force: true) }
 
-  describe ".converter_paths" do
-    it "returns the paths of converters and excludes 'base'" do
-      core_path = File.join(root_path, "lib/converters")
-      %w[base foo bar].each { |dir| FileUtils.mkdir_p(File.join(core_path, dir)) }
+  def create_converters(core_names: [], private_names: [])
+    core_names.each { |dir| FileUtils.mkdir_p(File.join(core_path, dir)) }
+    private_names.each { |dir| FileUtils.mkdir_p(File.join(private_path, dir)) }
+  end
 
-      expect(described_class.converter_paths).to contain_exactly(
-        File.join(core_path, "foo"),
-        File.join(core_path, "bar"),
+  describe ".all" do
+    subject(:all) { described_class.all }
+
+    it "returns all the converters except for 'base'" do
+      create_converters(core_names: %w[base foo bar])
+
+      expect(all).to eq(
+        { "foo" => File.join(core_path, "foo"), "bar" => File.join(core_path, "bar") },
       )
     end
 
     it "returns converters from core and private directory" do
-      core_path = File.join(root_path, "lib", "converters")
-      private_path = File.join(root_path, "private", "converters")
+      create_converters(core_names: %w[base foo bar], private_names: %w[baz qux])
 
-      %w[base foo bar].each { |dir| FileUtils.mkdir_p(File.join(core_path, dir)) }
-      %w[baz qux].each { |dir| FileUtils.mkdir_p(File.join(private_path, dir)) }
+      expect(all).to eq(
+        {
+          "foo" => File.join(core_path, "foo"),
+          "bar" => File.join(core_path, "bar"),
+          "baz" => File.join(private_path, "baz"),
+          "qux" => File.join(private_path, "qux"),
+        },
+      )
+    end
 
-      expect(described_class.converter_paths).to contain_exactly(
-        File.join(core_path, "foo"),
-        File.join(core_path, "bar"),
-        File.join(private_path, "baz"),
-        File.join(private_path, "qux"),
+    it "raises an error if there a duplicate names" do
+      create_converters(core_names: %w[base foo bar], private_names: %w[foo baz qux])
+
+      expect { all }.to raise_error(StandardError, /Duplicate converter name found: foo/)
+    end
+  end
+
+  describe ".names" do
+    subject(:names) { described_class.names }
+
+    it "returns a sorted array of converter names" do
+      create_converters(core_names: %w[base foo bar], private_names: %w[baz qux])
+
+      expect(names).to eq(%w[bar baz foo qux])
+    end
+  end
+
+  describe ".path_of" do
+    it "returns the path of a converter" do
+      create_converters(core_names: %w[base foo bar])
+
+      expect(described_class.path_of("foo")).to eq(File.join(core_path, "foo"))
+    end
+
+    it "raises an error if there is no converter" do
+      create_converters(core_names: %w[base foo bar])
+
+      expect { described_class.path_of("baz") }.to raise_error(
+        StandardError,
+        "Could not find a converter named 'baz'",
+      )
+      expect { described_class.path_of("base") }.to raise_error(
+        StandardError,
+        "Could not find a converter named 'base'",
       )
     end
   end
 
-  describe ".converter_names" do
-    it "returns a sorted array of converter names" do
-      core_path = File.join(root_path, "lib", "converters")
-      private_path = File.join(root_path, "private", "converters")
+  describe ".default_settings_path" do
+    it "returns the path of the default settings file" do
+      create_converters(core_names: %w[foo bar])
 
-      %w[base foo bar].each { |dir| FileUtils.mkdir_p(File.join(core_path, dir)) }
-      %w[baz qux].each { |dir| FileUtils.mkdir_p(File.join(private_path, dir)) }
-
-      expect(described_class.converter_names).to eq(%w[bar baz foo qux])
+      expect(described_class.default_settings_path("foo")).to eq(
+        File.join(core_path, "foo", "settings.yml"),
+      )
+      expect(described_class.default_settings_path("bar")).to eq(
+        File.join(core_path, "bar", "settings.yml"),
+      )
     end
 
-    it "raises an error if there a duplicate names" do
-      core_path = File.join(root_path, "lib", "converters")
-      private_path = File.join(root_path, "private", "converters")
+    it "raises an error if there is no converter" do
+      create_converters(core_names: %w[foo bar])
 
-      %w[base foo bar].each { |dir| FileUtils.mkdir_p(File.join(core_path, dir)) }
-      %w[foo baz qux].each { |dir| FileUtils.mkdir_p(File.join(private_path, dir)) }
-
-      expect { described_class.converter_names }.to raise_error(StandardError, /foo/)
+      expect { described_class.default_settings_path("baz") }.to raise_error(
+        StandardError,
+        "Could not find a converter named 'baz'",
+      )
     end
   end
 end
