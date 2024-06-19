@@ -2,14 +2,6 @@
 
 module Migrations::IntermediateDB
   class Migrator
-    def self.migrate(db_path, migrations_path: nil)
-      self.new(db_path, migrations_path).migrate
-    end
-
-    def self.reset!(db_path)
-      self.new(db_path).reset!
-    end
-
     def initialize(db_path, migrations_path = nil)
       @db_path = db_path
       @migrations_path = migrations_path
@@ -26,7 +18,7 @@ module Migrations::IntermediateDB
         performed_migrations = find_performed_migrations
       end
 
-      path = @migrations_path || File.join(::Migrations.root_path, "db", "schema")
+      path = @migrations_path || File.join(Migrations.root_path, "db", "schema")
       migrate_from_path(path, performed_migrations)
 
       @db.close

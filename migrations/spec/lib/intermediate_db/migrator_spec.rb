@@ -13,7 +13,7 @@ RSpec.describe Migrations::IntermediateDB::Migrator do
     db_path = File.join(storage_path, "intermediate.db")
 
     begin
-      described_class.migrate(db_path, migrations_path:)
+      described_class.new(db_path, migrations_path).migrate
     rescue StandardError
       raise unless ignore_errors
     end
@@ -23,7 +23,7 @@ RSpec.describe Migrations::IntermediateDB::Migrator do
     FileUtils.remove_dir(temp_path, force: true) if temp_path
   end
 
-  describe ".migrate" do
+  describe "#migrate" do
     it "works with the default schema" do
       migrate do |db_path, storage_path|
         expect(Dir.children(storage_path)).to contain_exactly("intermediate.db")
@@ -57,7 +57,7 @@ RSpec.describe Migrations::IntermediateDB::Migrator do
     end
   end
 
-  describe ".reset!" do
+  describe "#reset!" do
     it "deletes all DB related files" do
       migrate(migrations_directory: "invalid", ignore_errors: true) do |db_path, storage_path|
         File.write(File.join(storage_path, "hello_world.txt"), "Hello World!")
@@ -69,7 +69,7 @@ RSpec.describe Migrations::IntermediateDB::Migrator do
           "hello_world.txt",
         )
 
-        described_class.reset!(db_path)
+        described_class.new(db_path).reset!
         expect(Dir.children(storage_path)).to contain_exactly("hello_world.txt")
       end
     end
