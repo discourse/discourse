@@ -1314,13 +1314,19 @@ class TopicsController < ApplicationController
       TopicsController.defer_add_incoming_link(hash)
     end
 
-    TopicsController.defer_track_visit(topic_id, ip, user_id, track_visit)
+    TopicsController.defer_track_visit(topic_id, user_id, track_visit)
   end
 
-  def self.defer_track_visit(topic_id, ip, user_id, track_visit)
+  def self.defer_track_visit(topic_id, user_id, track_visit)
     Scheduler::Defer.later "Track Visit" do
-      TopicViewItem.add(topic_id, ip, user_id)
       TopicUser.track_visit!(topic_id, user_id) if track_visit
+    end
+  end
+
+  def self.defer_topic_view(topic_id, ip, user_id)
+    puts "DEFER TOPIC VIEW #{topic_id} #{ip} #{user_id}"
+    Scheduler::Defer.later "Topic View" do
+      TopicViewItem.add(topic_id, ip, user_id)
     end
   end
 

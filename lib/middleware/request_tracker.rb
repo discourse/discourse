@@ -72,21 +72,39 @@ class Middleware::RequestTracker
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
         WebCrawlerRequest.increment!(data[:user_agent])
-      elsif data[:has_auth_cookie]
+      elsif data[:current_user_id].present?
         ApplicationRequest.increment!(:page_view_logged_in)
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
+
         if data[:explicit_track_view]
           # Must be a browser if it had this header from our ajax implementation
           ApplicationRequest.increment!(:page_view_logged_in_browser)
           ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
+
+          if data[:topic_id].present?
+            TopicsController.defer_topic_view(
+              data[:topic_id],
+              data[:request_remote_ip],
+              data[:current_user_id],
+            )
+          end
         end
       elsif !SiteSetting.login_required
         ApplicationRequest.increment!(:page_view_anon)
         ApplicationRequest.increment!(:page_view_anon_mobile) if data[:is_mobile]
+
         if data[:explicit_track_view]
           # Must be a browser if it had this header from our ajax implementation
           ApplicationRequest.increment!(:page_view_anon_browser)
           ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
+
+          if data[:topic_id].present?
+            TopicsController.defer_topic_view(
+              data[:topic_id],
+              data[:request_remote_ip],
+              data[:current_user_id],
+            )
+          end
         end
       end
     end
@@ -94,9 +112,17 @@ class Middleware::RequestTracker
     # Message-bus requests may include this 'deferred track' header which we use to detect
     # 'real browser' views.
     if data[:deferred_track] && !data[:is_crawler]
-      if data[:has_auth_cookie]
+      if data[:current_user_id].present?
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
+
+        if data[:topic_id].present?
+          TopicsController.defer_topic_view(
+            data[:topic_id],
+            data[:request_remote_ip],
+            data[:current_user_id],
+          )
+        end
       elsif !SiteSetting.login_required
         ApplicationRequest.increment!(:page_view_anon_browser)
         ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
@@ -141,10 +167,17 @@ class Middleware::RequestTracker
       status == 200 && !%w[0 false].include?(env_track_view) && request.get? && !request.xhr? &&
         headers["Content-Type"] =~ %r{text/html}
 
+    # Does the same thing as ActionDispatch::Request.remote_ip internally,
+    # the request at this point in time is a Rack::Request so we don't have
+    # access to it
+    #
+    # TODO (martin) Fix this, it's not always right.
+    request_remote_ip = "#{env["action_dispatch.remote_ip"] || request.ip}"
+
     track_view = !!(explicit_track_view || implicit_track_view)
 
-    has_auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request).present?
-    has_auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env).present?
+    auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request)
+    auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env)
 
     is_api ||= !!env[Auth::DefaultCurrentUserProvider::API_KEY_ENV]
     is_user_api ||= !!env[Auth::DefaultCurrentUserProvider::USER_API_KEY_ENV]
@@ -156,10 +189,33 @@ class Middleware::RequestTracker
     # see `scripts/pageview.js` and `instance-initializers/page-tracking.js`
     has_deferred_track_header = %w[1 true].include?(env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"])
 
+    is_topic_view =
+      if has_deferred_track_header
+        request.referrer&.start_with?("#{Discourse.base_url}/t/")
+      else
+        request.path.start_with?("#{Discourse.base_path}/t/")
+      end
+
+    topic_id =
+      if is_topic_view
+        path =
+          (
+            if has_deferred_track_header
+              request.referrer.gsub(Discourse.base_url, "")
+            else
+              request.path
+            end
+          )
+        topic_params = Rails.application.routes.recognize_path(path)
+        topic_params[:topic_id] || topic_params[:id]
+      end
+
     h = {
       status: status,
       is_crawler: helper.is_crawler?,
-      has_auth_cookie: has_auth_cookie,
+      # TODO (martin) Double check this is ok for API calls too
+      current_user_id: auth_cookie&.[](:user_id),
+      topic_id: topic_id,
       is_api: is_api,
       is_user_api: is_user_api,
       is_background: is_message_bus || is_topic_timings,
@@ -169,6 +225,7 @@ class Middleware::RequestTracker
       queue_seconds: env["REQUEST_QUEUE_SECONDS"],
       explicit_track_view: explicit_track_view,
       deferred_track: has_deferred_track_header,
+      request_remote_ip: request_remote_ip,
     }
 
     if h[:is_background]
