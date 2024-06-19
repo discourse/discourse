@@ -25,8 +25,8 @@ export default class FKControlRadioGroup extends Component {
           )
         )
       }}
-
-      <FKErrors @errors={{@errors}} />
     </fieldset>
+
+    <FKErrors @errors={{@errors}} />
   </template>
 }
