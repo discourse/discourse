@@ -2,26 +2,39 @@
 
 module Migrations
   module Converters
-    def self.converter_paths
+    def self.all
       base_path = File.join(Migrations.root_path, "lib", "converters", "base")
       core_paths = Dir[File.join(Migrations.root_path, "lib", "converters", "*")]
       private_paths = Dir[File.join(Migrations.root_path, "private", "converters", "*")]
+      all_paths = core_paths - [base_path] + private_paths
 
-      core_paths - [base_path] + private_paths
+      all_paths.each_with_object({}) do |path, hash|
+        name = File.basename(path).downcase
+        existing_path = hash[name]
+
+        raise <<~MSG if existing_path
+                Duplicate converter name found: #{name}
+                  * #{existing_path}
+                  * #{path}
+              MSG
+
+        hash[name] = path
+      end
     end
 
-    def self.converter_names
-      names = converter_paths.map! { |path| File.basename(path) }
-      names.reject! { |name| name == "base" }
-      names.sort!
+    def self.names
+      self.all.keys.sort
+    end
 
-      duplicates = names.select { |name| names.count(name) > 1 }.uniq
+    def self.path_of(converter_name)
+      converter_name = converter_name.downcase
+      path = self.all[converter_name]
+      raise "Could not find a converter named '#{converter_name}'" unless path
+      path
+    end
 
-      if duplicates.any?
-        raise StandardError.new("Duplicate converter names detected: #{duplicates.join(", ")}")
-      end
-
-      names
+    def self.default_settings_path(converter_name)
+      File.join(path_of(converter_name), "settings.yml")
     end
   end
 end

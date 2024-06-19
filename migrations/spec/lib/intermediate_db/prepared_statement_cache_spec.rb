@@ -10,7 +10,7 @@ RSpec.describe Migrations::IntermediateDB::PreparedStatementCache do
   end
 
   it "should inherit behavior from LruRedux::Cache" do
-    expect(described_class).to be < ::LruRedux::Cache
+    expect(described_class).to be < LruRedux::Cache
   end
 
   it "closes the statement when an old entry is removed" do
