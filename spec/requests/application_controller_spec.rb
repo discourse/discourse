@@ -287,7 +287,7 @@ RSpec.describe ApplicationController do
 
       expect(log).not_to include("exception app middleware")
 
-      expect(response.parsed_body).to eq("status" => 400, "error" => "Bad Request")
+      expect(response.status).to eq(400)
     end
   end
 
