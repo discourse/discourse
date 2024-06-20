@@ -19,26 +19,20 @@
     }
   }
 
-  &.small {
-    .form-kit__container-content {
+  .form-kit__container-content {
+    &.--small {
       width: var(--form-kit-small-input) !important;
     }
-  }
 
-  &.medium {
-    .form-kit__container-content {
+    &.--medium {
       width: var(--form-kit-medium-input) !important;
     }
-  }
 
-  &.large {
-    .form-kit__container-content {
+    &.--large {
       width: var(--form-kit-large-input) !important;
     }
-  }
 
-  &.full {
-    .form-kit__container-content {
+    &.--full {
       width: 100% !important;
     }
   }

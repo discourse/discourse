@@ -13,17 +13,19 @@ export default class FKControlCode extends Component {
   }
 
   get style() {
-    if (!this.args.height) {
+    if (!this.args.props.height) {
       return;
     }
 
-    return `height: ${htmlSafe(escapeExpression(this.args.height) + "px")}`;
+    return `height: ${htmlSafe(
+      escapeExpression(this.args.props.height) + "px"
+    )}`;
   }
 
   <template>
     <AceEditor
       @content={{readonly this.initialValue}}
-      @mode={{@lang}}
+      @mode={{@props.lang}}
       @disabled={{@field.disabled}}
       @onChange={{this.handleInput}}
       class="form-kit__control-code"

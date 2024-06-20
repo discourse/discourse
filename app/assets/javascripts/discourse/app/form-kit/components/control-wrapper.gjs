@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import FKLabel from "discourse/form-kit/components/label";
 import FKMeta from "discourse/form-kit/components/meta";
 import FormText from "discourse/form-kit/components/text";
@@ -43,6 +44,35 @@ export default class FKControlWrapper extends Component {
     this.args.field.type = this.controlType;
   }
 
+  get props() {
+    const props = {};
+
+    switch (this.args.component.name) {
+      case "FKControlInput":
+        props.type = this.args.type;
+        break;
+      case "FKControlQuestion":
+        props.yesLabel = this.args.yesLabel;
+        props.noLabel = this.args.noLabel;
+        break;
+      case "FKControlCode":
+        props.lang = this.args.lang;
+        props.height = this.args.height;
+        break;
+      case "FKControlText":
+        props.height = this.args.height;
+        break;
+      case "FKControlComposer":
+        props.height = this.args.height;
+        break;
+      case "FKControlMenu":
+        props.selection = this.args.selection;
+        break;
+    }
+
+    return new TrackedObject(props);
+  }
+
   <template>
     <div
       class={{concatClass
@@ -53,7 +83,6 @@ export default class FKControlWrapper extends Component {
       }}
       data-disabled={{@field.disabled}}
       data-name={{@field.name}}
-      data-value={{@value}}
       data-control-type={{this.controlType}}
       {{didInsert this.setFieldType}}
     >
@@ -75,19 +104,16 @@ export default class FKControlWrapper extends Component {
         >{{@field.subtitle}}</FormText>
       {{/if}}
 
-      <div class={{concatClass "form-kit__container-content" @format}}>
+      <div
+        class={{concatClass
+          "form-kit__container-content"
+          (if @format (concat "--" @format))
+        }}
+      >
         <@component
           @field={{@field}}
           @value={{@value}}
-          @type={{@type}}
-          @lang={{@lang}}
-          @positiveLabel={{@positiveLabel}}
-          @negativeLabel={{@negativeLabel}}
-          @selection={{@selection}}
-          @setValue={{@setValue}}
-          @set={{@set}}
-          @height={{@height}}
-          @formElement={{@formElement}}
+          @props={{this.props}}
           id={{@field.id}}
           name={{@field.name}}
           aria-invalid={{if @field.hasErrors "true"}}

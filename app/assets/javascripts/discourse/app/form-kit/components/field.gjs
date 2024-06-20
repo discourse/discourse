@@ -73,12 +73,7 @@ export default class FormField extends Component {
   }
 
   <template>
-    <this.wrapper
-      @size={{@size}}
-      @title={{@title}}
-      @subtitle={{@subtitle}}
-      @showTitle={{@showTitle}}
-    >
+    <this.wrapper>
       {{yield
         (hash
           Code=(component
@@ -86,72 +81,84 @@ export default class FormField extends Component {
             component=FKControlCode
             value=this.value
             field=this.field
+            format=@format
           )
           Question=(component
             FKControlWrapper
             component=FKControlQuestion
             value=this.value
             field=this.field
+            format=@format
           )
           Text=(component
             FKControlWrapper
             component=FKControlText
             value=this.value
             field=this.field
+            format=@format
           )
           Checkbox=(component
             FKControlWrapper
             component=FKControlCheckbox
             value=this.value
             field=this.field
+            format=@format
           )
           Image=(component
             FKControlWrapper
             component=FKControlImage
             value=this.value
             field=this.field
+            format=@format
           )
           Composer=(component
             FKControlWrapper
             component=FKControlComposer
             value=this.value
             field=this.field
+            format=@format
           )
           Icon=(component
             FKControlWrapper
             component=FKControlIcon
             value=this.value
             field=this.field
+            format=@format
           )
           Toggle=(component
             FKControlWrapper
             component=FKControlToggle
             value=this.value
             field=this.field
+            format=@format
           )
           Menu=(component
             FKControlWrapper
             component=FKControlMenu
             value=this.value
             field=this.field
+            format=@format
           )
           Select=(component
             FKControlWrapper
             component=FKControlSelect
             value=this.value
             field=this.field
+            format=@format
           )
           Input=(component
             FKControlWrapper
             component=FKControlInput
             value=this.value
             field=this.field
+            format=@format
           )
           RadioGroup=(component
             FKControlWrapper
             component=FKControlRadioGroup
             value=this.value
             field=this.field
+            format=@format
           )
           errorId=this.field.errorId
           id=this.field.id

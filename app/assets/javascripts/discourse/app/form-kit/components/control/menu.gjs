@@ -28,7 +28,7 @@ export default class FKControlMenu extends Component {
     >
       <:trigger>
         <span class="d-button-label">
-          {{@selection}}
+          {{@props.selection}}
         </span>
         {{icon "angle-down"}}
       </:trigger>

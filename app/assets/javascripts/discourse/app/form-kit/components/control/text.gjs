@@ -11,11 +11,13 @@ export default class FKControlText extends Component {
   }
 
   get style() {
-    if (!this.args.height) {
+    if (!this.args.props.height) {
       return;
     }
 
-    return `height: ${htmlSafe(escapeExpression(this.args.height) + "px")}`;
+    return `height: ${htmlSafe(
+      escapeExpression(this.args.props.height) + "px"
+    )}`;
   }
 
   <template>
