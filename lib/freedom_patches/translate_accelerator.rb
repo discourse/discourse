@@ -80,6 +80,16 @@ module I18n
 
       if opts[:only_overridden]
         add_if_matches(overrides_by_locale(locale), results, regexp)
+      elsif opts[:only_untranslated]
+        target = opts[:backend] || backend
+
+        target_strings = target.search(locale, query)
+        override_strings = overrides_by_locale(locale)
+        all_locale_strings = target_strings.merge(override_strings)
+        original_strings = target.search(:en, query)
+        untranslated =
+          original_strings.reject { |key, value| all_locale_strings.key?(key) || !value.present? }
+        add_if_matches(untranslated, results, regexp)
       else
         target = opts[:backend] || backend
 
