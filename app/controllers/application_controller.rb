@@ -919,17 +919,18 @@ class ApplicationController < ActionController::Base
   end
 
   def should_enforce_2fa?
-    disqualified_from_2fa_enforcement = request.format.json? || is_api? || current_user.anonymous?
     enforcing_2fa =
       (
         (SiteSetting.enforce_second_factor == "staff" && current_user.staff?) ||
           SiteSetting.enforce_second_factor == "all"
       )
-    oauth_authenticated_and_not_enforced =
-      !SiteSetting.enforce_second_factor_on_external_auth && secure_session[:oauth]
-
     !disqualified_from_2fa_enforcement && enforcing_2fa &&
-      !current_user.has_any_second_factor_methods_enabled? && !oauth_authenticated_and_not_enforced
+      !current_user.has_any_second_factor_methods_enabled?
+  end
+
+  def disqualified_from_2fa_enforcement
+    request.format.json? || is_api? || current_user.anonymous? ||
+      (!SiteSetting.enforce_second_factor_on_external_auth && secure_session["oauth"])
   end
 
   def build_not_found_page(opts = {})
