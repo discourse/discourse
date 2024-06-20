@@ -10,7 +10,7 @@ module Jobs
       today_web_hooks_events.each do |web_hooks_event|
         WebHookEventsDailyAggregate.create!(
           web_hook_id: web_hooks_event.web_hook_id,
-          date: Time.zone.now.beginning_of_day.to_date,
+          date: Time.zone.now.to_date,
         )
       end
     end
