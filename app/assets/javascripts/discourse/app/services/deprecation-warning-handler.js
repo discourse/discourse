@@ -13,6 +13,8 @@ import I18n from "discourse-i18n";
 export const CRITICAL_DEPRECATIONS = [
   /^discourse.modal-controllers$/,
   /^discourse.bootbox$/,
+  /^discourse.add-header-panel$/,
+  /^discourse.header-widget-overrides$/,
   /^(?!discourse\.)/, // All unsilenced ember deprecations
 ];
 
