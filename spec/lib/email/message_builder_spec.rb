@@ -14,9 +14,9 @@ RSpec.describe Email::MessageBuilder do
 
   let(:body_modifier_block) { Proc.new { |subject, opts| "modified body" } }
   let(:visit_link_to_respond_modifier_block) do
-    Proc.new { |subject, opts| "modified_visit_link_to_respond" }
+    Proc.new { |subject, opts| "modified visit_link_to_respond" }
   end
-  let(:reply_by_email_modifier_block) { Proc.new { |subject, opts| "modified_reply_by_email" } }
+  let(:reply_by_email_modifier_block) { Proc.new { |subject, opts| "modified reply_by_email" } }
 
   it "has the correct to address" do
     expect(build_args[:to]).to eq(to_address)
@@ -69,7 +69,7 @@ RSpec.describe Email::MessageBuilder do
         include_respond_instructions: true,
         url: "http://localhost",
       )
-    expect(builder2.reply_by_email_key).to equal("modified_reply_by_email")
+    expect(builder2.reply_by_email_key).to equal("modified reply_by_email")
   ensure
     DiscoursePluginRegistry.unregister_modifier(
       plugin_instance,
@@ -93,7 +93,7 @@ RSpec.describe Email::MessageBuilder do
         url: "http://localhost",
       )
     expect(builder2.template_args[:respond_instructions]).to include(
-      "modified_visit_link_to_respond",
+      "modified visit_link_to_respond",
     )
   ensure
     DiscoursePluginRegistry.unregister_modifier(

@@ -90,7 +90,7 @@ module Discourse
     # tiny file needed by site settings
     require "highlight_js"
 
-    config.load_defaults 7.0
+    config.load_defaults 6.1
     config.active_record.cache_versioning = false # our custom cache class doesn’t support this
     config.action_controller.forgery_protection_origin_check = false
     config.active_record.belongs_to_required_by_default = false
@@ -100,9 +100,6 @@ module Discourse
       Time,
       Symbol,
     ]
-    config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
-    config.action_dispatch.cookies_serializer = :hybrid
-    config.action_controller.wrap_parameters_by_default = false
 
     # we skip it cause we configure it in the initializer
     # the railtie for message_bus would insert it in the
@@ -115,9 +112,8 @@ module Discourse
       ENV["DISCOURSE_MULTISITE_CONFIG_PATH"] || GlobalSetting.multisite_config_path
     config.multisite_config_path = File.absolute_path(multisite_config_path, Rails.root)
 
-    config.autoload_lib(ignore: %w[common_passwords emoji generators javascripts tasks])
-    Rails.autoloaders.main.do_not_eager_load(config.root.join("lib"))
     # Custom directories with classes and modules you want to be autoloadable.
+    config.autoload_paths << "#{root}/lib"
     config.autoload_paths << "#{root}/lib/guardian"
     config.autoload_paths << "#{root}/lib/i18n"
     config.autoload_paths << "#{root}/lib/validators"
@@ -244,17 +240,6 @@ module Discourse
 
       # we got to clear the pool in case plugins connect
       ActiveRecord::Base.connection_handler.clear_active_connections!
-
-      # Mailers and controllers may have been patched by plugins and when the
-      # application is eager loaded, the list of public methods is cached.
-      # We need to invalidate the existing caches, otherwise the new actions
-      # won’t be seen by Rails.
-      if Rails.configuration.eager_load
-        AbstractController::Base.descendants.each do |controller|
-          controller.clear_action_methods!
-          controller.action_methods
-        end
-      end
     end
 
     require "rbtrace" if ENV["RBTRACE"] == "1"

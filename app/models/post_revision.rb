@@ -4,7 +4,7 @@ class PostRevision < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
 
-  serialize :modifications, type: Hash
+  serialize :modifications, Hash
 
   after_create :create_notification
 
