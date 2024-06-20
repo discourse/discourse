@@ -2,7 +2,7 @@
 
 module Chat
   class CategoryChannel < Channel
-    alias_attribute :category, :chatable
+    alias_method :category, :chatable
 
     delegate :read_restricted?, to: :category
     delegate :url, to: :chatable, prefix: true
