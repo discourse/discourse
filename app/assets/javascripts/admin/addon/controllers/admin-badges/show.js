@@ -108,6 +108,14 @@ export default class AdminBadgesShowController extends Controller {
   }
 
   @action
+  validateForm(data, { addError }) {
+    if (!data.icon && !data.image_url) {
+      addError("icon", I18n.t("admin.badges.icon_or_image"));
+      addError("image_url", I18n.t("admin.badges.icon_or_image"));
+    }
+  }
+
+  @action
   async handleSubmit(formData) {
     if (this.saving) {
       return;

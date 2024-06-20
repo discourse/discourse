@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import FKLabel from "discourse/form-kit/components/label";
 import FKMeta from "discourse/form-kit/components/meta";
 import FormText from "discourse/form-kit/components/text";
@@ -14,7 +16,7 @@ export default class FKControlWrapper extends Component {
       case "FKControlToggle":
         return "toggle";
       case "FKControlInput":
-        return "input";
+        return "input-" + (this.args.type || "text");
       case "FKControlComposer":
         return "composer";
       case "FKControlText":
@@ -36,22 +38,28 @@ export default class FKControlWrapper extends Component {
     }
   }
 
+  @action
+  setFieldType() {
+    this.args.field.type = this.controlType;
+  }
+
   <template>
     <div
       class={{concatClass
         "form-kit__container"
         "form-kit__field"
         (concat "form-kit__field-" this.controlType)
-        (if @hasErrors "has-errors")
+        (if @field.hasErrors "has-errors")
       }}
       data-disabled={{@field.disabled}}
       data-name={{@field.name}}
       data-value={{@value}}
       data-control-type={{this.controlType}}
+      {{didInsert this.setFieldType}}
     >
-      {{#if @title}}
+      {{#if @field.showTitle}}
         <FKLabel class="form-kit__container-title" @fieldId={{@field.id}}>
-          {{@title}}
+          {{@field.title}}
 
           {{#unless @field.required}}
             <span class="form-kit__container-optional">({{i18n
@@ -61,8 +69,10 @@ export default class FKControlWrapper extends Component {
         </FKLabel>
       {{/if}}
 
-      {{#if @subtitle}}
-        <FormText class="form-kit__container-subtitle">{{@subtitle}}</FormText>
+      {{#if @field.subtitle}}
+        <FormText
+          class="form-kit__container-subtitle"
+        >{{@field.subtitle}}</FormText>
       {{/if}}
 
       <div class={{concatClass "form-kit__container-content" @format}}>
@@ -77,10 +87,11 @@ export default class FKControlWrapper extends Component {
           @setValue={{@setValue}}
           @set={{@set}}
           @height={{@height}}
+          @formElement={{@formElement}}
           id={{@field.id}}
           name={{@field.name}}
-          aria-invalid={{if @hasErrors "true"}}
-          aria-describedby={{if @hasErrors @field.errorId}}
+          aria-invalid={{if @field.hasErrors "true"}}
+          aria-describedby={{if @field.hasErrors @field.errorId}}
           ...attributes
           as |components|
         >
@@ -88,11 +99,9 @@ export default class FKControlWrapper extends Component {
         </@component>
 
         <FKMeta
-          @hasErrors={{@hasErrors}}
           @description={{@description}}
           @value={{@value}}
           @field={{@field}}
-          @errors={{@errors}}
         />
       </div>
     </div>

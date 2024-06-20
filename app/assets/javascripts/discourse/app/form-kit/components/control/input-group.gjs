@@ -15,7 +15,6 @@ const FKControlInputGroup = <template>
           set=@set
           registerField=@registerField
           unregisterField=@unregisterField
-          errors=@errors
           showMeta=false
         )
       )

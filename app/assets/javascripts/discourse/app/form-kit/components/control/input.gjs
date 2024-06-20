@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { assert } from "@ember/debug";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 
@@ -25,17 +24,19 @@ export default class FKControlInput extends Component {
   constructor(owner, args) {
     super(...arguments);
 
-    assert(
-      `input component does not support @type="${args.type}" as there is a dedicated component for this. Please use the \`field.${args.type}\` instead!`,
-      args.type === undefined || !["checkbox", "radio"].includes(args.type)
-    );
+    if (["checkbox", "radio"].includes(args.type)) {
+      throw new Error(
+        `input component does not support @type="${args.type}" as there is a dedicated component for this.`
+      );
+    }
 
-    assert(
-      `input component does not support @type="${
-        args.type
-      }", must be one of ${SUPPORTED_TYPES.join(", ")}!`,
-      args.type === undefined || SUPPORTED_TYPES.includes(args.type)
-    );
+    if (args.type && !SUPPORTED_TYPES.includes(args.type)) {
+      throw new Error(
+        `input component does not support @type="${
+          args.type
+        }", must be one of ${SUPPORTED_TYPES.join(", ")}!`
+      );
+    }
   }
 
   get type() {

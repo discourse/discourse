@@ -1,54 +1,46 @@
-import { assert, warn } from "@ember/debug";
-import { bind } from "discourse-common/utils/decorators";
+import { warn } from "@ember/debug";
 import I18n from "discourse-i18n";
-
-const SUPPORTED_PRIMITIVES = ["string", "number", "boolean"];
 
 export default class Validator {
   constructor(value, rules = {}) {
     this.value = value;
     this.rules = rules;
-    this.errors = [];
   }
 
-  @bind
-  addError(error) {
-    this.errors.push(error);
-  }
-
-  async validate() {
+  async validate(type) {
+    const errors = [];
     for (const rule in this.rules) {
       if (this[rule + "Validator"]) {
-        await this[rule + "Validator"](this.value, this.rules[rule]);
+        const error = await this[rule + "Validator"](
+          this.value,
+          this.rules[rule],
+          type
+        );
+
+        if (error) {
+          errors.push(error);
+        }
       } else {
         warn(`Unknown validator: ${rule}`);
       }
     }
 
-    return this.errors;
+    return errors;
   }
 
   lengthValidator(value, rule) {
     if (rule.max) {
       if (value?.length > rule.max) {
-        this.errors.push({
-          type: "too_long",
-          value,
-          message: I18n.t("form_kit.errors.too_long", {
-            count: rule.max,
-          }),
+        return I18n.t("form_kit.errors.too_long", {
+          count: rule.max,
         });
       }
     }
 
     if (rule.min) {
       if (value?.length < rule.min) {
-        this.errors.push({
-          type: "too_short",
-          value,
-          message: I18n.t("form_kit.errors.too_short", {
-            count: rule.min,
-          }),
+        return I18n.t("form_kit.errors.too_short", {
+          count: rule.min,
         });
       }
     }
@@ -57,34 +49,48 @@ export default class Validator {
   betweenValidator(value, rule) {
     if (rule.max) {
       if (value > rule.max) {
-        this.errors.push({
-          type: "too_high",
-          value,
-          message: I18n.t("form_kit.errors.too_high", {
-            count: rule.max,
-          }),
+        return I18n.t("form_kit.errors.too_high", {
+          count: rule.max,
         });
       }
     }
 
     if (rule.min) {
       if (value < rule.min) {
-        this.errors.push({
-          type: "too_low",
-          value,
-          message: I18n.t("form_kit.errors.too_low", {
-            count: rule.min,
-          }),
+        return I18n.t("form_kit.errors.too_low", {
+          count: rule.min,
         });
       }
     }
   }
 
-  requiredValidator(value, rule) {
+  numberValidator(value) {
+    if (isNaN(Number(value))) {
+      return I18n.t("form_kit.errors.not_a_number");
+    }
+  }
+
+  acceptedValidator(value) {
+    const acceptedValues = ["yes", "on", true, 1, "true"];
+    if (!acceptedValues.includes(value)) {
+      return I18n.t("form_kit.errors.not_accepted");
+    }
+  }
+
+  urlValidator(value) {
+    try {
+      // eslint-disable-next-line no-new
+      new URL(value);
+    } catch (e) {
+      return I18n.t("form_kit.errors.invalid_url");
+    }
+  }
+
+  requiredValidator(value, rule, type) {
     let error = false;
 
-    switch (typeof value) {
-      case "string":
+    switch (type) {
+      case "input-text":
         if (rule.trim) {
           value = value?.trim();
         }
@@ -92,29 +98,25 @@ export default class Validator {
           error = true;
         }
         break;
-      case "number":
+      case "input-number":
         if (typeof value === "undefined" || isNaN(Number(value))) {
           error = true;
         }
         break;
-      case "boolean":
-        if (value !== true && value !== false) {
+      case "icon":
+      case "question":
+      case "select":
+      case "menu":
+        if (value !== false && !value) {
           error = true;
         }
         break;
-      case "undefined":
-        error = true;
-        break;
       default:
-        throw new Error("Unsupported field type");
+        return;
     }
 
     if (error) {
-      this.errors.push({
-        type: "required",
-        value,
-        message: I18n.t("form_kit.errors.required"),
-      });
+      return I18n.t("form_kit.errors.required");
     }
   }
 }

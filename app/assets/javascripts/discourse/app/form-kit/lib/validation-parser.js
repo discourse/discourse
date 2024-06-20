@@ -17,10 +17,22 @@ export default class ValidationParser {
   }
 
   requiredRule(args = "") {
-    const [trim] = args.split(",");
+    const [option] = args.split(",");
     return {
-      trim: trim === "trim",
+      trim: option === "trim",
     };
+  }
+
+  urlRule() {
+    return {};
+  }
+
+  acceptedRule() {
+    return {};
+  }
+
+  numberRule() {
+    return {};
   }
 
   betweenRule(args) {

@@ -177,6 +177,7 @@
   .badge-query-plan {
     padding: 5px;
     background-color: var(--primary-low);
+    white-space: pre-wrap;
   }
   .count-warning {
     background-color: var(--danger-low);

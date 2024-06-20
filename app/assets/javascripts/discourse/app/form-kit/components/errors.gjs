@@ -1,34 +1,34 @@
 import Component from "@glimmer/component";
 import icon from "discourse-common/helpers/d-icon";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default class FKErrors extends Component {
-  get visibleErrors() {
-    if (!this.args.names) {
-      return this.args.errors;
-    }
+  get withTitle() {
+    return this.args.withTitle ?? false;
+  }
 
-    const names = this.args.names.split(",");
+  get fields() {
+    return makeArray(this.args.fields);
+  }
 
-    const visibleErrors = {};
-    for (const [field, errors] of Object.entries(this.args.errors)) {
-      if (names.includes(field)) {
-        visibleErrors[field] = errors;
-      }
-    }
-
-    return visibleErrors;
+  concatErrors(errors) {
+    return errors.join(", ");
   }
 
   <template>
     <p class="form-kit__errors" id={{@id}} aria-live="assertive" ...attributes>
-      {{#each-in this.visibleErrors as |name errors|}}
-        {{#each errors as |error|}}
+      {{#each this.fields as |field|}}
+        {{#if field.hasErrors}}
           <span>
             {{icon "exclamation-triangle"}}
-            {{error.message}}
+            {{#if this.withTitle}}
+              [{{field.title}}]
+            {{/if}}
+            {{(this.concatErrors field.visibleErrors)}}
           </span>
-        {{/each}}
-      {{/each-in}}
+          <br />
+        {{/if}}
+      {{/each}}
     </p>
   </template>
 }

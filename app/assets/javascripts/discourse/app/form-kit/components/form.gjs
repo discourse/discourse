@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { assert } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -11,7 +11,8 @@ import FKAlert from "discourse/form-kit/components/alert";
 import FKContainer from "discourse/form-kit/components/container";
 import FKControlConditionalContent from "discourse/form-kit/components/control/conditional-content";
 import FKControlInputGroup from "discourse/form-kit/components/control/input-group";
-import FKFormErrors from "discourse/form-kit/components/errors";
+import FKErrors from "discourse/form-kit/components/errors";
+import FKErrorsSummary from "discourse/form-kit/components/errors-summary";
 import FKField from "discourse/form-kit/components/field";
 import Row from "discourse/form-kit/components/row";
 import FKSection from "discourse/form-kit/components/section";
@@ -19,8 +20,8 @@ import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FieldData from "discourse/form-kit/lib/field-data";
 
 export default class Form extends Component {
-  @tracked validationState = {};
-  @tracked showAllValidations = false;
+  @tracked fieldsWithErrors;
+  @tracked formElement;
 
   fields = new Map();
 
@@ -93,10 +94,6 @@ export default class Form extends Component {
     return this.args.validateOn ?? VALIDATION_TYPES.submit;
   }
 
-  get revalidateOn() {
-    return this.args.revalidateOn ?? VALIDATION_TYPES.change;
-  }
-
   get fieldValidationEvent() {
     const { validateOn } = this;
 
@@ -107,58 +104,22 @@ export default class Form extends Component {
     return validateOn;
   }
 
-  get hasValidationErrors() {
-    const { validationState } = this;
-
-    if (!validationState) {
-      return false;
-    }
-
-    return Object.keys(validationState).some(
-      (name) => validationState[name].length
-    );
+  get hasErrors() {
+    return Array.from(this.fields.values()).some((field) => field.hasErrors);
   }
 
-  get fieldRevalidationEvent() {
-    const { validateOn, revalidateOn } = this;
-
-    if (revalidateOn === VALIDATION_TYPES.submit) {
-      return undefined;
-    }
-
-    if (
-      validateOn === VALIDATION_TYPES.input ||
-      (validateOn === VALIDATION_TYPES.change &&
-        revalidateOn === VALIDATION_TYPES.focusout) ||
-      validateOn === revalidateOn
-    ) {
-      return undefined;
-    }
-
-    return revalidateOn;
-  }
-
-  get visibleErrors() {
-    if (!this.validationState) {
-      return;
-    }
-
+  get errors() {
     const visibleErrors = {};
-
-    for (const [field, errors] of Object.entries(this.validationState)) {
-      if (this.showErrorsFor(field)) {
-        visibleErrors[field] = errors;
-      }
+    for (const [name, field] of this.fields) {
+      visibleErrors[name] = field.visibleErrors;
     }
-
     return visibleErrors;
   }
 
-  showErrorsFor(field) {
-    return (
-      this.showAllValidations ||
-      (this.fields.get(field)?.validationEnabled ?? false)
-    );
+  @action
+  addError(name, message) {
+    const field = this.fields.get(name);
+    field?.addError(message);
   }
 
   @action
@@ -172,15 +133,15 @@ export default class Form extends Component {
 
   @action
   registerField(name, field) {
-    assert(
-      `You didn't pass a name to the form field.`,
-      typeof name !== "undefined"
-    );
+    if (!name) {
+      throw new Error("@name is required on `<form.Field />`.");
+    }
 
-    assert(
-      `You passed @name="${name}" to the form field, but this is already in use. Names of form fields must be unique!`,
-      !this.fields.has(name)
-    );
+    if (this.fields.has(name)) {
+      throw new Error(
+        `@name="${name}", is already in use. Names of \`<form.Field />\` must be unique!`
+      );
+    }
 
     const fieldModel = new FieldData(name, field);
     this.fields.set(name, fieldModel);
@@ -197,10 +158,9 @@ export default class Form extends Component {
   async onSubmit(event) {
     event?.preventDefault();
 
-    await this._validate();
-    this.showAllValidations = true;
+    await this.validate(this.fields);
 
-    if (!this.hasValidationErrors) {
+    if (!this.hasErrors) {
       this.args.onSubmit?.(this.effectiveData);
     }
   }
@@ -209,8 +169,20 @@ export default class Form extends Component {
   async onReset(event) {
     event?.preventDefault();
 
-    this.validationState = undefined;
-    this.submissionState = undefined;
+    this.fields.forEach((field) => {
+      field.reset();
+    });
+  }
+
+  @action
+  async triggerRevalidationFor(name) {
+    const field = this.fields.get(name);
+
+    if (!field) {
+      return;
+    }
+
+    await this.validate(new Map([[name, field]]));
   }
 
   @action
@@ -228,30 +200,25 @@ export default class Form extends Component {
       const field = this.fields.get(name);
 
       if (field) {
-        await this._validate();
-        field.validationEnabled = true;
+        await this.validate(this.fields);
       }
     }
   }
 
-  async _validate() {
-    this.validationState = await this.validate();
-  }
-
-  async validate() {
-    let errors = {};
-    for (const [name, field] of this.fields) {
-      Object.assign(
-        errors,
-        await field.validate?.(
-          name,
-          this.effectiveData[name],
-          this.effectiveData
-        )
+  async validate(fields) {
+    for (const [name, field] of fields) {
+      await field.validate?.(
+        name,
+        this.effectiveData[name],
+        this.effectiveData
       );
     }
 
-    return errors;
+    await this.args.validate?.(this.effectiveData, { addError: this.addError });
+
+    this.fieldsWithErrors = Array.from(this.fields.values()).filter(
+      (field) => field.hasErrors
+    );
   }
 
   <template>
@@ -262,17 +229,15 @@ export default class Form extends Component {
       {{on "submit" this.onSubmit}}
       {{on "reset" this.onReset}}
       {{this.onValidation this.fieldValidationEvent this.handleFieldValidation}}
-      {{this.onValidation
-        this.fieldRevalidationEvent
-        this.handleFieldRevalidation
-      }}
     >
+      <FKErrorsSummary @fields={{this.fieldsWithErrors}} />
+
       {{yield
         (hash
           Row=(component Row)
           Section=(component FKSection)
           ConditionalContent=(component FKControlConditionalContent)
-          Errors=(component FKFormErrors errors=this.visibleErrors)
+          Errors=(component FKErrors errors=this.errors)
           Container=(component FKContainer)
           Actions=(component FKSection class="form-kit__actions")
           Button=(component DButton class="form-kit__button")
@@ -291,7 +256,7 @@ export default class Form extends Component {
             set=this.set
             registerField=this.registerField
             unregisterField=this.unregisterField
-            errors=this.validationState
+            triggerRevalidationFor=this.triggerRevalidationFor
           )
           InputGroup=(component
             FKControlInputGroup
@@ -299,7 +264,6 @@ export default class Form extends Component {
             set=this.set
             registerField=this.registerField
             unregisterField=this.unregisterField
-            errors=this.validationState
           )
           set=this.set
         )

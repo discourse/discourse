@@ -1,13 +1,16 @@
 import { tracked } from "@glimmer/tracking";
+import { next } from "@ember/runloop";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
 import uniqueId from "discourse/helpers/unique-id";
+import { bind } from "discourse-common/utils/decorators";
 
 /**
  * Represents field data for a form.
  */
 export default class FieldData {
-  @tracked validationEnabled;
+  @tracked errors = new TrackedArray();
 
   /**
    * Unique identifier for the field.
@@ -19,7 +22,9 @@ export default class FieldData {
    * Unique identifier for the field error.
    * @type {Function}
    */
-  errorId = uniqueId;
+  errorId = uniqueId();
+
+  type;
 
   /**
    * Creates an instance of FieldData.
@@ -30,22 +35,39 @@ export default class FieldData {
    * @param {string} options.validation - The validation rules for the field.
    * @param {boolean} options.disabled - Indicates if the field is disabled.
    * @param {Function} options.validate - The custom validation function.
+   * @param {Function} options.type - The custom validation function.
+   * @param {Function} options.title - The custom validation function.
+   * @param {Function} options.showTitle - The custom validation function.
    */
   constructor(
     name,
-    { set, onSet, validation, disabled, validate, validationEnabled }
+    {
+      set,
+      onSet,
+      validation,
+      disabled,
+      validate,
+      title,
+      showTitle,
+      triggerRevalidationFor,
+    }
   ) {
     this.name = name;
+    this.title = title;
+    this.showTitle = showTitle ?? true;
     this.disabled = disabled ?? false;
     this.customValidate = validate;
     this.validation = validation;
     this.rules = this.validation ? ValidationParser.parse(validation) : null;
-    this.validationEnabled = validationEnabled ?? true;
     this.set = (value) => {
       if (onSet) {
         onSet(value, { set });
       } else {
         set(this.name, value);
+      }
+
+      if (this.hasErrors) {
+        triggerRevalidationFor(name);
       }
     };
   }
@@ -76,16 +98,39 @@ export default class FieldData {
    * @returns {Promise<Object>} The validation errors.
    */
   async validate(name, value, data) {
+    this.reset();
+
     if (this.disabled) {
-      return { [name]: [] };
+      return;
     }
 
     const validator = new Validator(value, this.rules);
-    await this.customValidate?.(name, value, data, validator.addError);
-    await validator.validate();
+    await this.customValidate?.(name, value, {
+      data,
+      type: this.type,
+      addError: this.addError,
+    });
 
-    return {
-      [name]: validator.errors,
-    };
+    const validationErrors = await validator.validate(this.type);
+    validationErrors.forEach((message) => {
+      this.addError(message);
+    });
+  }
+
+  get visibleErrors() {
+    return this.errors;
+  }
+
+  get hasErrors() {
+    return this.errors.length > 0;
+  }
+
+  reset() {
+    this.errors = new TrackedArray();
+  }
+
+  @bind
+  addError(error) {
+    this.errors.push(error);
   }
 }

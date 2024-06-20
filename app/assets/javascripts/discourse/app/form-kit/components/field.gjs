@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { assert } from "@ember/debug";
 import { hash } from "@ember/helper";
 import { get } from "@ember/object";
 import FKControlCheckbox from "discourse/form-kit/components/control/checkbox";
@@ -24,12 +23,20 @@ export default class FormField extends Component {
   constructor() {
     super(...arguments);
 
-    assert(
-      "Nested property paths in @name are not supported.",
-      typeof this.args.name !== "string" || !this.args.name.includes(".")
-    );
+    if (!this.args.title?.length) {
+      throw new Error("@title is required on `<form.Field />`.");
+    }
+
+    if (typeof this.args.name !== "string" || this.args.name.includes(".")) {
+      throw new Error(
+        "@name is required and must be a string on `<form.Field />`. "
+      );
+    }
 
     this.field = this.args.registerField(this.args.name, {
+      triggerRevalidationFor: this.args.triggerRevalidationFor,
+      title: this.args.title,
+      showTitle: this.args.showTitle,
       set: this.args.set,
       validate: this.args.validate,
       disabled: this.args.disabled,
@@ -46,18 +53,6 @@ export default class FormField extends Component {
 
   get value() {
     return get(this.args.data, this.args.name);
-  }
-
-  get errors() {
-    return { [this.args.name]: this.args.errors?.[this.args.name] };
-  }
-
-  get hasErrors() {
-    return Object.values(this.errors).flat().compact().length;
-  }
-
-  get showMeta() {
-    return this.args.showMeta ?? true;
   }
 
   get wrapper() {
@@ -78,115 +73,84 @@ export default class FormField extends Component {
   }
 
   <template>
-    <this.wrapper @size={{@size}}>
+    <this.wrapper
+      @size={{@size}}
+      @title={{@title}}
+      @subtitle={{@subtitle}}
+      @showTitle={{@showTitle}}
+    >
       {{yield
         (hash
           Code=(component
             FKControlWrapper
             component=FKControlCode
             value=this.value
-            errors=this.errors
-            hasErrors=this.hasErrors
-            triggerValidationFor=@triggerValidationFor
             field=this.field
           )
           Question=(component
             FKControlWrapper
             component=FKControlQuestion
             value=this.value
-            errors=this.errors
-            hasErrors=this.hasErrors
-            triggerValidationFor=@triggerValidationFor
             field=this.field
           )
           Text=(component
             FKControlWrapper
             component=FKControlText
             value=this.value
-            errors=this.errors
-            hasErrors=this.hasErrors
-            triggerValidationFor=@triggerValidationFor
             field=this.field
           )
           Checkbox=(component
             FKControlWrapper
             component=FKControlCheckbox
             value=this.value
-            errors=this.errors
-            hasErrors=this.hasErrors
-            triggerValidationFor=@triggerValidationFor
             field=this.field
           )
           Image=(component
             FKControlWrapper
             component=FKControlImage
             value=this.value
-            errors=this.errors
-            hasErrors=this.hasErrors
-            triggerValidationFor=@triggerValidationFor
             field=this.field
           )
           Composer=(component
             FKControlWrapper
             component=FKControlComposer
             value=this.value
-            errors=this.errors
-            hasErrors=this.hasErrors
-            triggerValidationFor=@triggerValidationFor
             field=this.field
           )
           Icon=(component
             FKControlWrapper
             component=FKControlIcon
             value=this.value
-            errors=this.errors
-            hasErrors=this.hasErrors
-            triggerValidationFor=@triggerValidationFor
             field=this.field
           )
           Toggle=(component
             FKControlWrapper
             component=FKControlToggle
             value=this.value
-            errors=this.errors
-            hasErrors=this.hasErrors
-            triggerValidationFor=@triggerValidationFor
             field=this.field
           )
           Menu=(component
             FKControlWrapper
             component=FKControlMenu
             value=this.value
-            errors=this.errors
-            hasErrors=this.hasErrors
-            triggerValidationFor=@triggerValidationFor
             field=this.field
           )
           Select=(component
             FKControlWrapper
             component=FKControlSelect
             value=this.value
-            errors=this.errors
-            hasErrors=this.hasErrors
-            triggerValidationFor=@triggerValidationFor
             field=this.field
           )
           Input=(component
             FKControlWrapper
             component=FKControlInput
             value=this.value
-            errors=this.errors
-            hasErrors=this.hasErrors
-            triggerValidationFor=@triggerValidationFor
             field=this.field
           )
           RadioGroup=(component
             FKControlWrapper
             component=FKControlRadioGroup
             value=this.value
-            errors=this.errors
-            hasErrors=this.hasErrors
-            triggerValidationFor=@triggerValidationFor
             field=this.field
           )
           errorId=this.field.errorId
