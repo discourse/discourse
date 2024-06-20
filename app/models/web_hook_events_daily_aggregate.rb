@@ -29,8 +29,6 @@ class WebHookEventsDailyAggregate < ActiveRecord::Base
 
     self.successful_event_count = events.where("status >= 200 AND status <= 299").count
     self.failed_event_count = events.where("status < 200 OR status > 299").count
-
-    self.save!
   end
 end
 
