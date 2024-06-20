@@ -4,10 +4,10 @@ class WebHookEventsDailyAggregate < ActiveRecord::Base
   belongs_to :web_hook
 
   default_scope { order("created_at DESC") }
-  after_create :aggregate
+  before_create :aggregate!
 
   def self.purge_old
-    where("created_at < ?", SiteSetting.retain_web_hook_events_period_days.days.ago).delete_all
+    where("created_at < ?", SiteSetting.retain_web_hook_events_aggregate_days.days.ago).delete_all
   end
 
   def self.by_day(start_date, end_date, web_hook_id = nil)
@@ -16,7 +16,7 @@ class WebHookEventsDailyAggregate < ActiveRecord::Base
     result
   end
 
-  def aggregate
+  def aggregate!
     events =
       WebHookEvent.where(
         "created_at >= ? AND created_at < ? AND web_hook_id = ?",
@@ -25,10 +25,10 @@ class WebHookEventsDailyAggregate < ActiveRecord::Base
         self.web_hook_id,
       )
 
-    self.mean_duration = events.sum(:duration) / events.count if events.count > 0
+    self.mean_duration = events.sum(:duration) / events.count
 
-    self.successful_events_id = events.where("status >= 200 AND status <= 299").pluck(:id)
-    self.failed_events_id = events.where("status < 200 OR status > 299").pluck(:id)
+    self.successful_event_count = events.where("status >= 200 AND status <= 299").count
+    self.failed_event_count = events.where("status < 200 OR status > 299").count
 
     self.save!
   end
@@ -38,14 +38,14 @@ end
 #
 # Table name: web_hook_events_daily_aggregates
 #
-#  id                   :bigint           not null, primary key
-#  web_hook_id          :bigint           not null
-#  date                 :date
-#  successful_events_id :integer          is an Array
-#  failed_events_id     :integer          is an Array
-#  mean_duration        :integer          default(0)
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
+#  id                     :bigint           not null, primary key
+#  web_hook_id            :bigint           not null
+#  date                   :date
+#  successful_event_count :integer
+#  failed_event_count     :integer
+#  mean_duration          :integer          default(0)
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
 #
 # Indexes
 #

@@ -3046,6 +3046,9 @@ api:
   retain_web_hook_events_period_days:
     default: 30
     max: 36500
+  retain_web_hook_events_aggregate_days:
+    default: 720
+    max: 36500
   retry_web_hook_events:
     default: false
   api_key_last_used_epoch:
