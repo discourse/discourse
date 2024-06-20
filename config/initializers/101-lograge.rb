@@ -111,8 +111,8 @@ Rails.application.config.to_prepare do
 
         # Remove ActiveSupport::Logger from the chain and replace with Lograge's
         # logger
-        Rails.logger.chained.pop
-        Rails.logger.chain(config.lograge.logger)
+        Rails.logger.stop_broadcasting_to(Rails.logger.broadcasts.last)
+        Rails.logger.broadcast_to(config.lograge.logger)
       end
     end
   end
