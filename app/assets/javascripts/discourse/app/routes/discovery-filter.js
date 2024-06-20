@@ -1,3 +1,4 @@
+import { setTopicList } from "discourse/lib/topic-list-tracker";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "discourse-i18n";
 
@@ -6,11 +7,15 @@ export default class DiscoveryFilterRoute extends DiscourseRoute {
     q: { replace: true, refreshModel: true },
   };
 
-  model(data) {
-    return this.store.findFiltered("topicList", {
+  async model(data) {
+    const list = await this.store.findFiltered("topicList", {
       filter: "filter",
       params: { q: data.q },
     });
+
+    setTopicList(list);
+
+    return list;
   }
 
   titleToken() {
