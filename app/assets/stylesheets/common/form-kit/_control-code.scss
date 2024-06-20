@@ -3,16 +3,20 @@
   width: 100%;
 
   > .ace_editor {
-    @include default-input;
-
     box-sizing: border-box;
     border: 1px solid var(--primary-400);
     border-radius: var(--d-input-border-radius);
+  }
 
-    &.ace_focus {
-      border-color: var(--tertiary);
-      outline: 2px solid var(--tertiary);
-      outline-offset: -1px;
+  &[data-disabled="false"] {
+    > .ace_editor {
+      @include default-input;
+
+      &.ace_focus {
+        border-color: var(--tertiary);
+        outline: 2px solid var(--tertiary);
+        outline-offset: -1px;
+      }
     }
   }
 
@@ -20,7 +24,11 @@
     border-color: var(--danger);
   }
 
-  &[data-disabled="true"] {
+  &[data-disabled]:not([data-disabled="false"]) {
     opacity: 0.5;
+
+    .ace_scroller {
+      cursor: not-allowed !important;
+    }
   }
 }
