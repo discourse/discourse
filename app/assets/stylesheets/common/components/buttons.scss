@@ -31,12 +31,12 @@
     rgba(0, 0, 0, 0)
   );
   border-radius: var(--d-button-border-radius);
-  transition: background 0.25s, color 0.25s;
+  transition: var(--d-button-transition);
   cursor: pointer;
   .d-icon {
     color: $icon-color;
     margin-right: 0.45em;
-    transition: color 0.25s;
+    transition: var(--d-button-transition);
     // For Windows High Contrast (see whcm.scss for more)
     @media (forced-colors: active) {
       color: ButtonText;
@@ -231,7 +231,7 @@
     }
     &:hover,
     &:focus {
-      color: currentColor;
+      color: inherit;
     }
   }
 
@@ -302,10 +302,10 @@
   background: transparent;
   border: 0;
   line-height: var(--line-height-small);
-  transition: background 0.25s, color 0.25s;
+  transition: var(--d-button-transition);
   .d-icon {
     color: var(--primary-low-mid);
-    transition: color 0.25s;
+    transition: var(--d-button-transition);
   }
   .discourse-no-touch & {
     &:hover,
@@ -404,7 +404,7 @@
 @mixin btn-colors($btn-color) {
   color: var(--#{$btn-color});
   .d-icon {
-    color: currentColor;
+    color: inherit;
   }
   &:focus,
   &:focus-visible {
@@ -430,14 +430,14 @@
     &:focus-visible {
       color: var(--tertiary-hover);
       .d-icon {
-        color: currentColor;
+        color: inherit;
       }
     }
     .discourse-no-touch & {
       &:hover {
         color: var(--tertiary-hover);
         .d-icon {
-          color: currentColor;
+          color: inherit;
         }
       }
     }
