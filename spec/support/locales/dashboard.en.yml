@@ -1,0 +1,6 @@
+en:
+  new_key: new_key
+  dashboard:
+    problem:
+      foo: foo
+      bar: bar
