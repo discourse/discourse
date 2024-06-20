@@ -1,20 +1,40 @@
 # frozen_string_literal: true
 
 RSpec.describe WebHookEventsDailyAggregate do
-  let!(:web_hook) { Fabricate(:web_hook) }
-  let!(:event) do
-    WebHookEvent.create!(status: 200, web_hook: web_hook, created_at: 1.days.ago, duration: 280)
+  fab!(:web_hook)
+  fab!(:event) do
+    Fabricate(
+      :web_hook_event,
+      status: 200,
+      web_hook: web_hook,
+      created_at: 1.days.ago,
+      duration: 280,
+    )
   end
-  let!(:event_today) { WebHookEvent.create!(status: 200, web_hook: web_hook, duration: 300) }
+  fab!(:event_today) { Fabricate(:web_hook_event, status: 200, web_hook: web_hook, duration: 300) }
 
-  let!(:failed_event) do
-    WebHookEvent.create!(status: 400, web_hook: web_hook, created_at: 1.days.ago, duration: 180)
+  fab!(:failed_event) do
+    Fabricate(
+      :web_hook_event,
+      status: 400,
+      created_at: 1.days.ago,
+      web_hook: web_hook,
+      duration: 200,
+    )
   end
-  let!(:failed_event2) do
-    WebHookEvent.create!(status: 400, web_hook: web_hook, created_at: 1.days.ago, duration: 200)
-  end
-  let!(:failed_event_today) { WebHookEvent.create!(status: 400, web_hook: web_hook, duration: 200) }
 
+  fab!(:failed_event2) do
+    Fabricate(
+      :web_hook_event,
+      status: 400,
+      web_hook: web_hook,
+      created_at: 1.days.ago,
+      duration: 200,
+    )
+  end
+  fab!(:failed_event_today) do
+    Fabricate(:web_hook_event, status: 400, web_hook: web_hook, duration: 200)
+  end
   describe ".purge_old" do
     before { SiteSetting.retain_web_hook_events_aggregate_days = 1 }
 
