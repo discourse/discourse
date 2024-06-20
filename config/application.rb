@@ -247,5 +247,8 @@ module Discourse
     config.active_record.query_log_tags_enabled = true if ENV["RAILS_QUERY_LOG_TAGS"] == "1"
 
     config.generators { |g| g.test_framework :rspec, fixture: false }
+    config.content_security_policy_nonce_generator = ->(request) do
+      ContentSecurityPolicy.nonce_placeholder(request.headers)
+    end
   end
 end

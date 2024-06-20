@@ -66,7 +66,9 @@ module ApplicationHelper
   end
 
   def csp_nonce_placeholder
-    ContentSecurityPolicy.nonce_placeholder(response.headers)
+    response.headers[
+      ::Middleware::CspScriptNonceInjector::PLACEHOLDER_HEADER
+    ] ||= ContentSecurityPolicy.nonce_placeholder(response.request.headers)
   end
 
   def shared_session_key
