@@ -2563,6 +2563,7 @@ en:
     default_sidebar_switch_panel_position: "Position of button on sidebar to switch to chat"
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
+    retain_web_hook_events_aggregate_days: "Number of days to retain web hook event aggregate records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
     revoke_api_keys_unused_days: "Number of days since an API key was last used before it is automatically revoked (0 for never)"
     revoke_api_keys_maxlife_days: "Number of days before an API key is automatically revoked (0 for never)"
