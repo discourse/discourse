@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   include GlobalPath
   include Hijack
   include ReadOnlyMixin
+  include ThemeResolver
   include VaryHeader
 
   attr_reader :theme_id
@@ -478,34 +479,7 @@ class ApplicationController < ActionController::Base
     resolve_safe_mode
     return if request.env[NO_THEMES]
 
-    theme_id = nil
-
-    if (preview_theme_id = request[:preview_theme_id]&.to_i) &&
-         guardian.allow_themes?([preview_theme_id], include_preview: true)
-      theme_id = preview_theme_id
-    end
-
-    user_option = current_user&.user_option
-
-    if theme_id.blank?
-      ids, seq = cookies[:theme_ids]&.split("|")
-      id = ids&.split(",")&.map(&:to_i)&.first
-      if id.present? && seq && seq.to_i == user_option&.theme_key_seq.to_i
-        theme_id = id if guardian.allow_themes?([id])
-      end
-    end
-
-    if theme_id.blank?
-      ids = user_option&.theme_ids || []
-      theme_id = ids.first if guardian.allow_themes?(ids)
-    end
-
-    if theme_id.blank? && SiteSetting.default_theme_id != -1 &&
-         guardian.allow_themes?([SiteSetting.default_theme_id])
-      theme_id = SiteSetting.default_theme_id
-    end
-
-    @theme_id = request.env[:resolved_theme_id] = theme_id
+    @theme_id ||= ThemeResolver.resolve_theme_id(request, guardian, current_user)
   end
 
   def guardian
@@ -518,7 +492,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_homepage
-    current_user&.user_option&.homepage || HomepageHelper.resolve(request, current_user)
+    current_user&.user_option&.homepage || HomepageHelper.resolve(@theme_id, current_user)
   end
 
   def serialize_data(obj, serializer, opts = nil)
