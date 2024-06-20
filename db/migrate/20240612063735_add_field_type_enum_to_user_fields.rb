@@ -19,5 +19,8 @@ class AddFieldTypeEnumToUserFields < ActiveRecord::Migration[7.0]
       change_column_null :user_fields, :field_type, true
       change_column_null :user_fields, :field_type_enum, false
     end
+
+    rename_column :user_fields, :field_type, :field_type_old
+    rename_column :user_fields, :field_type_enum, :field_type
   end
 end
