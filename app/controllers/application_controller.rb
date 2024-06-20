@@ -925,8 +925,11 @@ class ApplicationController < ActionController::Base
         (SiteSetting.enforce_second_factor == "staff" && current_user.staff?) ||
           SiteSetting.enforce_second_factor == "all"
       )
+    oauth_authenticated_and_not_enforced =
+      !SiteSetting.enforce_second_factor_on_external_auth && secure_session[:oauth]
+
     !disqualified_from_2fa_enforcement && enforcing_2fa &&
-      !current_user.has_any_second_factor_methods_enabled?
+      !current_user.has_any_second_factor_methods_enabled? && !oauth_authenticated_and_not_enforced
   end
 
   def build_not_found_page(opts = {})
