@@ -237,7 +237,6 @@ export default class Form extends Component {
           Row=(component Row)
           Section=(component FKSection)
           ConditionalContent=(component FKControlConditionalContent)
-          Errors=(component FKErrors errors=this.errors)
           Container=(component FKContainer)
           Actions=(component FKSection class="form-kit__actions")
           Button=(component DButton class="form-kit__button")
