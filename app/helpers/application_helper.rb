@@ -560,7 +560,7 @@ module ApplicationHelper
   end
 
   def current_homepage
-    current_user&.user_option&.homepage || HomepageHelper.resolve(theme_id, current_user)
+    current_user&.user_option&.homepage || HomepageHelper.resolve(request, current_user)
   end
 
   def build_plugin_html(name)
