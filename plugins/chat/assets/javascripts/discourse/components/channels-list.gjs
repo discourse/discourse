@@ -6,6 +6,7 @@ import ChannelsListPublic from "discourse/plugins/chat/discourse/components/chan
 
 export default class ChannelsList extends Component {
   @service chat;
+  @service siteSettings;
 
   <template>
     <div
@@ -13,7 +14,9 @@ export default class ChannelsList extends Component {
       aria-label={{i18n "chat.aria_roles.channels_list"}}
       class="channels-list"
     >
-      <ChannelsListPublic />
+      {{#if this.siteSettings.enable_public_channels}}
+        <ChannelsListPublic />
+      {{/if}}
 
       {{#if this.chat.userCanAccessDirectMessages}}
         <ChannelsListDirect />
