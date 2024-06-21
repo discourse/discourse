@@ -15,10 +15,8 @@ module Migrations::CLI::ConvertCommand
 
         Migrations.load_rails_environment
 
-        puts "Converting..."
-
-        Migrations::IntermediateDB::Migrator.reset!("/tmp/converter/intermediate.db")
-        Migrations::IntermediateDB::Migrator.migrate("/tmp/converter/intermediate.db")
+        Migrations::IntermediateDB.reset!("/tmp/converter/intermediate.db")
+        Migrations::IntermediateDB.migrate("/tmp/converter/intermediate.db")
       end
 
       private
@@ -36,24 +34,6 @@ module Migrations::CLI::ConvertCommand
         if !File.exist?(settings_path)
           raise Thor::Error, "Settings file not found: #{settings_path}"
         end
-      end
-
-      def validate_options(options)
-        if File.exist?(OutputDatabase::DEFAULT_PATH)
-          options.compatible = compatible_database?(options.from) if options.compatible.nil?
-          if !options.reset && !options.compatible
-            prompt.error("Incompatible database found")
-            exit(1)
-          end
-        end
-      end
-
-      def compatible_database?(type)
-        Migrations::IntermediateDB::Connection.connect(path) do |db|
-          db.get_config_value(CONFIG_CONVERTING_FROM) == type
-        end
-      rescue Extralite::SQLError
-        false
       end
 
       def calculate_settings_path(converter_type)

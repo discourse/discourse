@@ -78,7 +78,7 @@ jobs:
             ${{ steps.container-envs.outputs.ruby_version }}-
             ${{ steps.container-envs.outputs.debian_release }}-
             ${{ hashFiles('**/Gemfile.lock') }}-
-            ${{ hashFiles('migrations/config/gemfiles/**/Gemfile') }}
+            migrations-tooling
 
       - name: Setup gems
         run: |
@@ -86,8 +86,9 @@ jobs:
           bundle config --local path vendor/bundle
           bundle config --local deployment true
           bundle config --local without development
+          bundle config --local with migrations
           bundle install --jobs $(($(nproc) - 1))
-          # don't call `bundle clean` clean, we need the gems for the migrations
+          bundle clean
 
       - name: Get yarn cache directory
         id: yarn-cache-dir
@@ -144,36 +145,3 @@ jobs:
 
       - name: RSpec
         run: bin/rspec --default-path migrations/spec
-
-  runtime:
-    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: Runs on ${{ matrix.os }}, Ruby ${{ matrix.ruby }}
-    timeout-minutes: 20
-
-    strategy:
-      fail-fast: false
-
-      matrix:
-        os: ["ubuntu-latest", "macos-latest"]
-        ruby: ["3.2", "3.3"]
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Modify path for libpq
-        if: matrix.os == 'macos-latest'
-        run: echo "/opt/homebrew/opt/libpq/bin" >> $GITHUB_PATH
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
-
-      - name: Run converter
-        working-directory: migrations
-        run: bin/convert version

@@ -13,11 +13,17 @@ If you need to run a private converter, put its code into a subdirectory of `pri
 
 ## Development
 
-### Installing Gems
+### Installing gems
 
 ```bash
 bundle config set --local with migrations
 bundle install
+```
+
+### Updating gems
+
+```bash
+bundle update --group migrations
 ```
 
 ### Running tests

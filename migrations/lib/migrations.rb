@@ -18,7 +18,14 @@ module Migrations
 
     rails_root = File.expand_path("../..", __dir__)
     # rubocop:disable Discourse/NoChdir
-    Dir.chdir(rails_root) { require File.join(rails_root, "config/environment") }
+    Dir.chdir(rails_root) do
+      begin
+        require File.join(rails_root, "config/environment")
+      rescue LoadError => e
+        $stderr.puts e.message
+        raise
+      end
+    end
     # rubocop:enable Discourse/NoChdir
 
     print "\r"

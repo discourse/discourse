@@ -10,6 +10,6 @@ RSpec.describe "Migrations::Import" do
   it "works" do
     expect { run_command("import") }.to output(
       include("Importing into Discourse #{Discourse::VERSION::STRING}"),
-    ).to_stdout_from_any_process
+    ).to_stdout_from_any_process.and output(be_empty).to_stderr_from_any_process
   end
 end
