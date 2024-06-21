@@ -9,12 +9,11 @@ RSpec.describe Migration::SafeMigrate do
   end
 
   def migrate_up(path)
-    migrations = ActiveRecord::MigrationContext.new(path).migrations
+    migrations = ActiveRecord::MigrationContext.new(path, ActiveRecord::SchemaMigration).migrations
     ActiveRecord::Migrator.new(
       :up,
       migrations,
-      ActiveRecord::Base.connection.schema_migration,
-      ActiveRecord::Base.connection.internal_metadata,
+      ActiveRecord::SchemaMigration,
       migrations.first.version,
     ).run
   end
@@ -78,7 +77,7 @@ RSpec.describe Migration::SafeMigrate do
 
     output = capture_stdout { migrate_up(path) }
 
-    expect(output).to include("change_column_null(:users, :username, true, nil)")
+    expect(output).to include("change_column_null(:users, :username, true)")
   end
 
   it "supports being disabled" do
