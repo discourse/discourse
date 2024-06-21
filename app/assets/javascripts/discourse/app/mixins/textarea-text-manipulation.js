@@ -5,6 +5,7 @@ import { isEmpty } from "@ember/utils";
 import { generateLinkifyFunction } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
 import {
+  caretPosition,
   clipboardHelpers,
   determinePostReplaceSelection,
 } from "discourse/lib/utilities";
@@ -14,6 +15,9 @@ import I18n from "discourse-i18n";
 
 const INDENT_DIRECTION_LEFT = "left";
 const INDENT_DIRECTION_RIGHT = "right";
+
+// Supports '- ', '* ', '1. ', '- [ ]', '- [x]', `* [ ] `, `* [x] `, '1. [ ] ', '1. [x] '
+const LIST_REGEXP = /^(\s*)([*-]|(\d+)\.)\s(\[[\sx]\]\s)?/;
 
 const OP = {
   NONE: 0,
@@ -492,6 +496,128 @@ export default Mixin.create({
     return str;
   },
 
+  _updateListNumbers(text, currentNumber) {
+    return text
+      .split("\n")
+      .map((line) => {
+        if (line.replace(/^\s+/, "").startsWith(`${currentNumber}.`)) {
+          const result = line.replace(
+            `${currentNumber}`,
+            `${currentNumber + 1}`
+          );
+          currentNumber += 1;
+          return result;
+        }
+        return line;
+      })
+      .join("\n");
+  },
+
+  @bind
+  maybeContinueList() {
+    const offset = caretPosition(this._textarea);
+    const text = this._textarea.value;
+    const lines = text.substring(0, offset).split("\n");
+
+    // Only continue if the previous line was a list item.
+    const previousLine = lines[lines.length - 2];
+    const match = previousLine?.match(LIST_REGEXP);
+    if (!match) {
+      return;
+    }
+
+    const listPrefix = match[0];
+    const indentationLevel = match[1];
+    const bullet = match[2];
+    const hasCheckbox = Boolean(match[4]);
+    const numericBullet = parseInt(match[3], 10);
+    const isNumericBullet = !isNaN(numericBullet);
+    const newBullet = isNumericBullet ? `${numericBullet + 1}.` : bullet;
+    let newPrefix = `${newBullet} ${hasCheckbox ? "[ ] " : ""}`;
+
+    // Do not append list item if there already is one on this line.
+    let currentLineEnd = text.indexOf("\n", offset);
+    if (currentLineEnd < 0) {
+      currentLineEnd = text.length;
+    }
+    const currentLine = text.substring(offset, currentLineEnd);
+    if (currentLine.startsWith(newPrefix)) {
+      newPrefix = "";
+    }
+
+    /*
+      Autocomplete list element on next line if current line has list element containing text.
+      or there's text on the line after the cursor (|):
+
+      - | some text
+
+      Becomes:
+
+      -
+      - | some text
+
+      And
+
+      - some text|
+
+      Becomes:
+
+      - some text
+      - |
+    */
+    const shouldAutocomplete =
+      previousLine.replace(listPrefix, "").trim().length > 0 ||
+      currentLine.trim().length > 0;
+
+    if (shouldAutocomplete) {
+      let autocompletePrefix = `${indentationLevel}${newPrefix}`;
+      let autocompletePostfix = text.substring(offset);
+      const autocompletePrefixLength = autocompletePrefix.length;
+
+      /*
+        For numeric items, we have to also replace the rest of the
+        numbered items in the list with their new values. Cursor is |.
+
+        1. foo|
+        2. bar
+
+        Becomes
+
+        1. foo
+        2.
+        3. bar
+      */
+      if (isNumericBullet && !text.substring(offset).match(/^\s*$/g)) {
+        autocompletePostfix = this._updateListNumbers(
+          text.substring(offset),
+          numericBullet + 1
+        );
+        autocompletePrefix += autocompletePostfix;
+
+        this.replaceText(
+          text.substring(offset, offset + autocompletePrefix.length),
+          autocompletePrefix,
+          {
+            skipNewSelection: true,
+          }
+        );
+      } else {
+        this._insertAt(offset, offset, autocompletePrefix);
+      }
+
+      this.selectText(offset + autocompletePrefixLength, 0);
+    } else {
+      // Clear the new autocompleted list item if there is no other text.
+      const offsetWithoutPrefix = offset - `\n${listPrefix}`.length;
+      this.replaceText(
+        text,
+        text.substring(0, offsetWithoutPrefix) + text.substring(offset),
+        { skipNewSelection: true }
+      );
+      this.selectText(offsetWithoutPrefix, 0);
+    }
+  },
+
   @bind
   indentSelection(direction) {
     if (![INDENT_DIRECTION_LEFT, INDENT_DIRECTION_RIGHT].includes(direction)) {
@@ -502,10 +628,12 @@ export default Mixin.create({
     const { lineVal } = selected;
     let value = selected.value;
 
-    // Perhaps this is a bit simplistic, but it is a fairly reliable
-    // guess to say whether we are indenting with tabs or spaces. for
-    // example some programming languages prefer tabs, others prefer
-    // spaces, and for the cases with no tabs it's safer to use spaces
+    /*
+      Perhaps this is a bit simplistic, but it is a fairly reliable
+      guess to say whether we are indenting with tabs or spaces. for
+      example some programming languages prefer tabs, others prefer
+      spaces, and for the cases with no tabs it's safer to use spaces
+    */
     let indentationSteps, indentationChar;
     let linesStartingWithTabCount = value.match(/^\t/gm)?.length || 0;
     let linesStartingWithSpaceCount = value.match(/^ /gm)?.length || 0;
@@ -517,24 +645,26 @@ export default Mixin.create({
       indentationSteps = 2;
     }
 
-    // We want to include all the spaces on the selected line as
-    // well, no matter where the cursor begins on the first line,
-    // because we want to indent those too. * is the cursor/selection
-    // and . are spaces:
-    //
-    // BEFORE               AFTER
-    //
-    //     *                *
-    // ....text here        ....text here
-    // ....some more text   ....some more text
-    //                  *                    *
-    //
-    // BEFORE               AFTER
-    //
-    //  *                   *
-    // ....text here        ....text here
-    // ....some more text   ....some more text
-    //                  *                    *
+    /*
+      We want to include all the spaces on the selected line as
+      well, no matter where the cursor begins on the first line,
+      because we want to indent those too. * is the cursor/selection
+      and . are spaces:
+
+      BEFORE               AFTER
+
+          *                *
+      ....text here        ....text here
+      ....some more text   ....some more text
+                       *                    *
+
+      BEFORE               AFTER
+
+       *                   *
+      ....text here        ....text here
+      ....some more text   ....some more text
+                       *                    *
+    */
     const indentationRegexp = new RegExp(`^${indentationChar}+`);
     const lineStartsWithIndentationChar = lineVal.match(indentationRegexp);
     const indentationCharsBeforeSelection = value.match(indentationRegexp);
