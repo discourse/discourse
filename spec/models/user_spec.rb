@@ -678,7 +678,7 @@ RSpec.describe User do
           quoted_post = create_post(user: user, topic: topic, post_number: 1, raw: "quoted post")
           post = create_post(raw: <<~RAW)
             Lorem ipsum
-
+  
             [quote="#{user.username}, post:1, topic:#{quoted_post.topic.id}"]
             quoted post
             [/quote]
