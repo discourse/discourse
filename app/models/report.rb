@@ -16,50 +16,51 @@ class Report
     include_subcategories
   ]
 
-  include Reports::PostEdits
-  include Reports::TopTrafficSources
-  include Reports::TopicsWithNoResponse
-  include Reports::DauByMau
-  include Reports::FlagsStatus
-  include Reports::Emails
-  include Reports::Likes
-  include Reports::SystemPrivateMessages
-  include Reports::UsersByType
-  include Reports::StorageStats
-  include Reports::NotifyModeratorsPrivateMessages
-  include Reports::SuspiciousLogins
-  include Reports::TopReferredTopics
-  include Reports::Signups
-  include Reports::NotifyUserPrivateMessages
-  include Reports::NewContributors
-  include Reports::TrendingSearch
-  include Reports::UserToUserPrivateMessages
-  include Reports::Flags
-  include Reports::Topics
-  include Reports::Posts
   include Reports::Bookmarks
-  include Reports::StaffLogins
-  include Reports::DailyEngagedUsers
-  include Reports::UserToUserPrivateMessagesWithReplies
-  include Reports::MobileVisits
-  include Reports::TopReferrers
-  include Reports::WebCrawlers
-  include Reports::ModeratorsActivity
-  include Reports::TopIgnoredUsers
-  include Reports::UserFlaggingRatio
-  include Reports::TrustLevelGrowth
+  include Reports::ConsolidatedApiRequests
   include Reports::ConsolidatedPageViews
   include Reports::ConsolidatedPageViewsBrowserDetection
-  include Reports::ConsolidatedApiRequests
-  include Reports::Visits
-  include Reports::TimeToFirstResponse
-  include Reports::UsersByTrustLevel
+  include Reports::DailyEngagedUsers
+  include Reports::DauByMau
+  include Reports::Emails
+  include Reports::Flags
+  include Reports::FlagsStatus
+  include Reports::Likes
+  include Reports::MobileVisits
   include Reports::ModeratorWarningPrivateMessages
+  include Reports::ModeratorsActivity
+  include Reports::NewContributors
+  include Reports::NotifyModeratorsPrivateMessages
+  include Reports::NotifyUserPrivateMessages
+  include Reports::PostEdits
+  include Reports::Posts
   include Reports::ProfileViews
+  include Reports::Signups
+  include Reports::StaffLogins
+  include Reports::StorageStats
+  include Reports::SuspiciousLogins
+  include Reports::SystemPrivateMessages
+  include Reports::TimeToFirstResponse
+  include Reports::TopIgnoredUsers
+  include Reports::TopReferredTopics
+  include Reports::TopReferrers
+  include Reports::TopTrafficSources
   include Reports::TopUploads
   include Reports::TopUsersByLikesReceived
-  include Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
   include Reports::TopUsersByLikesReceivedFromAVarietyOfPeople
+  include Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
+  include Reports::Topics
+  include Reports::TopicsWithNoResponse
+  include Reports::TrendingSearch
+  include Reports::TrustLevelGrowth
+  include Reports::UserFlaggingRatio
+  include Reports::UserToUserPrivateMessages
+  include Reports::UserToUserPrivateMessagesWithReplies
+  include Reports::UsersByTrustLevel
+  include Reports::UsersByType
+  include Reports::Visits
+  include Reports::WebCrawlers
+  include Reports::WebHookEventsDailyAggregate
 
   attr_accessor :type,
                 :data,

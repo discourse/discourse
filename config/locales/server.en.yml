@@ -1570,6 +1570,11 @@ en:
         user_agent: "User Agent"
         page_views: "Pageviews"
       description: "List of web crawler user agents, sorted by pageviews."
+    web_hook_events_daily_aggregate:
+      title: "Web Hook Events"
+      xaxis: "Day"
+      yaxis: "Number of events"
+      description: "Number of web hook events triggered or their mean duration."
     suspicious_logins:
       title: "Suspicious Logins"
       labels:

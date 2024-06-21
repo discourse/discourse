@@ -5035,6 +5035,8 @@ en:
               label: Category
             include_subcategories:
               label: "Include Subcategories"
+            type_of_web_hook_event:
+              label: "Type of event"
       flags:
         title: "Moderation Flags"
         description: "Description"
