@@ -1,21 +1,19 @@
 # frozen_string_literal: true
 
 class CspScriptSrcValidator
-  def initialize(opts = {})
-    @opts = opts
-  end
-
-  def valid_value?(values)
-    return true if values == ""
-
-    regex =
-      /
+  VALID_SOURCE_REGEX =
+    /
         (?:\A'unsafe-eval'\z)|
         (?:\A'wasm-unsafe-eval'\z)|
         (?:\A'sha(?:256|384|512)-[A-Za-z0-9+\/\-_]+={0,2}'\z)
       /x
 
-    values.split("|").all? { |v| v.match? regex }
+  def initialize(opts = {})
+    @opts = opts
+  end
+
+  def valid_value?(values)
+    values.split("|").all? { _1.match? VALID_SOURCE_REGEX }
   end
 
   def error_message
