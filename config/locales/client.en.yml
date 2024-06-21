@@ -2089,6 +2089,7 @@ en:
     form_kit:
       optional: optional
       errors_summary_title: "This form contains errors:"
+      dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
       errors:
         required: "Required"
         invalid_url: "Must be a valid URL"

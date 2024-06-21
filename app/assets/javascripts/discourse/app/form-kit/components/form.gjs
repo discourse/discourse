@@ -3,6 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
+import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -16,12 +17,17 @@ import Row from "discourse/form-kit/components/row";
 import FKSection from "discourse/form-kit/components/section";
 import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FieldData from "discourse/form-kit/lib/field-data";
+import I18n from "I18n";
 
 export default class Form extends Component {
+  @service dialog;
+  @service router;
+
   @tracked fieldsWithErrors;
   @tracked formElement;
 
   fields = new Map();
+  isDirtyForm = false;
 
   onValidation = modifierFn((element, [eventName, handler]) => {
     if (eventName) {
@@ -41,6 +47,30 @@ export default class Form extends Component {
       submit: this.onSubmit,
       reset: this.onReset,
     });
+
+    this.router.on("routeWillChange", this.checkIsDirty);
+  }
+
+  willDestroy() {
+    super.willDestroy();
+
+    this.router.off("routeWillChange", this.checkIsDirty);
+  }
+
+  @action
+  checkIsDirty(transition) {
+    if (this.isDirtyForm && !transition.isAborted) {
+      transition.abort();
+
+      this.dialog.yesNoConfirm({
+        message: I18n.t("form_kit.dirty_form"),
+        didConfirm: () => {
+          this.isDirtyForm = false;
+          this.onReset();
+          transition.retry();
+        },
+      });
+    }
   }
 
   @cached
@@ -122,6 +152,7 @@ export default class Form extends Component {
 
   @action
   set(key, value) {
+    this.isDirtyForm = true;
     set(this.effectiveData, key, value);
 
     if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
@@ -159,6 +190,7 @@ export default class Form extends Component {
     await this.validate(this.fields);
 
     if (!this.hasErrors) {
+      this.isDirtyForm = false;
       this.args.onSubmit?.(this.effectiveData);
     }
   }
@@ -166,6 +198,10 @@ export default class Form extends Component {
   @action
   async onReset(event) {
     event?.preventDefault();
+
+    for (const key of Object.keys(this.transientData)) {
+      delete this.transientData[key];
+    }
 
     this.fields.forEach((field) => {
       field.reset();
