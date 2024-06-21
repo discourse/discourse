@@ -38,7 +38,11 @@
       <%= preload_script file %>
     <%- end %>
 
-    <%= preload_script "locales/#{I18n.locale}", type: "module" %>
+    <%= preload_script "locales/#{I18n.locale}" %>
+    <%= javascript_tag type: "module", nonce: true do -%>
+      import messages from "message_format/<%= I18n.locale %>"
+      globalThis.I18n._compiledMFs = messages;
+    <% end -%>
     <%- if ExtraLocalesController.client_overrides_exist? %>
       <%= preload_script_url ExtraLocalesController.url('overrides') %>
     <%- end %>

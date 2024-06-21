@@ -134,14 +134,23 @@ module JsLocaleHelper
     Marshal.load(Marshal.dump(translations))
   end
 
-  def self.output_locale(locale)
+  def self.output_MF(locale)
     locale_str = locale.to_s
     fallback_locale_str = LocaleSiteSetting.fallback_locale(locale_str)&.to_s
     translations = translations_for(locale_str)
 
     message_formats = remove_message_formats!(translations, locale)
     mf_locale, mf_filename = find_message_format_locale([locale_str], fallback_to_english: true)
-    result = generate_message_format(message_formats, mf_locale, mf_filename)
+    generate_message_format(message_formats, mf_locale, mf_filename)
+  end
+
+  def self.output_locale(locale)
+    locale_str = locale.to_s
+    fallback_locale_str = LocaleSiteSetting.fallback_locale(locale_str)&.to_s
+    translations = translations_for(locale_str)
+
+    remove_message_formats!(translations, locale)
+    result = +""
 
     translations.keys.each do |l|
       translations[l].keys.each { |k| translations[l].delete(k) unless k == "js" }
@@ -153,9 +162,7 @@ module JsLocaleHelper
     if fallback_locale_str && fallback_locale_str != "en"
       result << "I18n.fallbackLocale = '#{fallback_locale_str}';\n"
     end
-    if mf_locale != "en"
-      result << "I18n.pluralizationRules.#{locale_str} = MessageFormat.locale.#{mf_locale};\n"
-    end
+    result << File.read("#{Rails.root}/lib/javascripts/messageformat-lookup.js") << "\n"
 
     # moment
     result << File.read("#{Rails.root}/vendor/assets/javascripts/moment.js")
@@ -304,21 +311,20 @@ module JsLocaleHelper
   def self.generate_message_format(message_formats, locale, filename)
     require "messageformat"
 
-    formats =
-      message_formats
-        .map { |k, v| k.inspect << " : " << compile_message_format(filename, locale, v) }
-        .join(", ")
+    MessageFormat.compile(locale, message_formats)
+    # formats =
+    #   message_formats
+    #     .map { |k, v| k.inspect << " : " << compile_message_format(filename, locale, v) }
+    #     .join(", ")
 
-    result = +"MessageFormat = {locale: {}};\n"
-    result << "I18n._compiledMFs = {#{formats}};\n"
+    # result = +"const MessageFormat = {locale: {}};\n"
+    # result << "I18n._compiledMFs = {#{formats}};\n"
 
-    if locale != "en"
-      # Include "en" pluralization rules for use in fallbacks
-      _, en_filename = find_message_format_locale(["en"], fallback_to_english: false)
-      result << File.read(en_filename) << "\n"
-    end
-
-    result << File.read("#{Rails.root}/lib/javascripts/messageformat-lookup.js") << "\n"
+    # if locale != "en"
+    #   # Include "en" pluralization rules for use in fallbacks
+    #   _, en_filename = find_message_format_locale(["en"], fallback_to_english: false)
+    #   result << File.read(en_filename) << "\n"
+    # end
   end
 
   def self.reset_context
