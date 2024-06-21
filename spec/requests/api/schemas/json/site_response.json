@@ -839,6 +839,9 @@
     "denied_emojis" : {
       "type": "array"
     },
+    "valid_flag_applies_to_types" : {
+      "type": "array"
+    },
     "navigation_menu_site_top_tags": {
       "type": "array"
     }

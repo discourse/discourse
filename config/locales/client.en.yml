@@ -5486,7 +5486,7 @@ en:
           enabled: "Enabled?"
           add: "Add Flag"
           edit: "Edit"
-          back: "Back"
+          back: "Back to flags"
           delete: "Delete"
           delete_confirm: 'Are you sure you want to delete "%{name}"?'
           form:
@@ -5496,11 +5496,15 @@ en:
             name: "Name"
             description: "Description"
             applies_to: "Display this flag on"
-            topics: "topics"
-            posts: "posts"
-            chat_messages: "chat messages"
+            topic: "topics"
+            post: "posts"
+            chat_message: "chat messages"
             enabled: "Enable this custom flag after saving"
             alert: "Once a custom flag has been used, it can only be disabled but not edited or deleted."
+            edit_flag: "Edit flag"
+            non_editable: "You cannot edit this flag because it is a system flag or has already been used in the review system, however you can still disable it."
+            delete_flag: "Delete flag"
+            non_deletable: "You cannot delete this flag because it is a system flag or has already been used in the review system, however you can still disable it."
           more_options:
             title: "More options"
             move_up: "Move up"

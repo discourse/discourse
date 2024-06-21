@@ -5,6 +5,8 @@ class Flags::UpdateFlag
 
   contract
   model :flag
+  policy :not_system
+  policy :not_used
   policy :invalid_access
 
   transaction do
@@ -17,13 +19,25 @@ class Flags::UpdateFlag
     attribute :description, :string
     attribute :enabled, :boolean
     attribute :applies_to
-    validates :applies_to, inclusion: { in: Flag::VALID_APPLIES_TO }, allow_nil: false
+    validates :name, presence: true
+    validates :description, presence: true
+    validates :name, length: { maximum: Flag::MAX_NAME_LENGTH }
+    validates :description, length: { maximum: Flag::MAX_DESCRIPTION_LENGTH }
+    validates :applies_to, inclusion: { in: Flag.valid_applies_to_types }, allow_nil: false
   end
 
   private
 
   def fetch_flag(id:)
     Flag.find(id)
+  end
+
+  def not_system(flag:)
+    !flag.system?
+  end
+
+  def not_used(flag:)
+    !flag.used?
   end
 
   def invalid_access(guardian:, flag:)

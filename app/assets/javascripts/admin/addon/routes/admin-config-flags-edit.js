@@ -5,8 +5,6 @@ export default class AdminConfigFlagsEditRoute extends Route {
   @service site;
 
   model(params) {
-    return this.site.flagTypes.find(
-      (flag) => flag.id === parseInt(params.flag_id, 10)
-    );
+    return this.site.flagTypes.findBy("id", parseInt(params.flag_id, 10));
   }
 }

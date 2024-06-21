@@ -1,16 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import dIcon from "discourse-common/helpers/d-icon";
 import i18n from "discourse-common/helpers/i18n";
 import { bind } from "discourse-common/utils/decorators";
+import AdminConfigHeader from "admin/components/admin-config-header";
 import AdminFlagItem from "admin/components/admin-flag-item";
 
-export default class AdminFlags extends Component {
+export default class AdminConfigAreasFlags extends Component {
   @service site;
   @tracked flags = this.site.flagTypes;
 
@@ -56,25 +55,20 @@ export default class AdminFlags extends Component {
       .then(() => {
         this.flags.removeObject(flag);
       })
-      .catch((error) => {
-        return popupAjaxError(error);
-      });
+      .catch((error) => popupAjaxError(error));
   }
 
   <template>
     <div class="container admin-flags">
-      <div class="admin-flags__header">
-        <h2>{{i18n "admin.config_areas.flags.header"}}</h2>
-        <LinkTo
-          @route="adminConfig.flags.new"
-          class="btn-primary btn btn-icon-text admin-flags__header-add-flag"
-        >
-          {{dIcon "plus"}}
-          {{i18n "admin.config_areas.flags.add"}}
-        </LinkTo>
-
-        <h3>{{i18n "admin.config_areas.flags.subheader"}}</h3>
-      </div>
+      <AdminConfigHeader
+        @name="flags"
+        @heading="admin.config_areas.flags.header"
+        @subheading="admin.config_areas.flags.subheader"
+        @primaryActionRoute="adminConfig.flags.new"
+        @primaryActionCssClass="admin-flags__header-add-flag"
+        @primaryActionIcon="plus"
+        @primaryActionLabel="admin.config_areas.flags.add"
+      />
       <table class="admin-flags__items grid">
         <thead>
           <th>{{i18n "admin.config_areas.flags.description"}}</th>

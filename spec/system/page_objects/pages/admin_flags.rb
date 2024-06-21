@@ -26,7 +26,7 @@ module PageObjects
       end
 
       def click_edit_flag(key)
-        find(".admin-flag-item__edit").click
+        find(".#{key} .admin-flag-item__edit").click
       end
 
       def click_delete_flag(key)

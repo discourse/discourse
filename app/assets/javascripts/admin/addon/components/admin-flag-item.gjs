@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -17,6 +17,7 @@ import DMenu from "float-kit/components/d-menu";
 
 export default class AdminFlagItem extends Component {
   @service dialog;
+  @service router;
 
   @tracked enabled = this.args.flag.enabled;
 
@@ -29,6 +30,18 @@ export default class AdminFlagItem extends Component {
       !Object.values(SYSTEM_FLAG_IDS).includes(this.args.flag.id) &&
       !this.args.flag.is_used
     );
+  }
+
+  get editTitle() {
+    return this.canEdit
+      ? "admin.config_areas.flags.form.edit_flag"
+      : "admin.config_areas.flags.form.non_editable";
+  }
+
+  get deleteTitle() {
+    return this.canEdit
+      ? "admin.config_areas.flags.form.edit_flag"
+      : "admin.config_areas.flags.form.non_editable";
   }
 
   @action
@@ -63,6 +76,10 @@ export default class AdminFlagItem extends Component {
     this.args.moveFlagCallback(this.args.flag, "down");
     this.dMenu.close();
   }
+  @action
+  edit() {
+    this.router.transitionTo("adminConfig.flags.edit", this.args.flag);
+  }
 
   @action
   delete() {
@@ -93,15 +110,13 @@ export default class AdminFlagItem extends Component {
             {{on "click" (fn this.toggleFlagEnabled @flag)}}
           />
 
-          {{#if this.canEdit}}
-            <LinkTo
-              @route="adminConfig.flags.edit"
-              @model={{@flag}}
-              class="btn btn-secondary admin-flag-item__edit"
-            >
-              {{i18n "admin.config_areas.flags.edit"}}
-            </LinkTo>
-          {{/if}}
+          <DButton
+            class="btn btn-secondary admin-flag-item__edit"
+            @action={{this.edit}}
+            @label="admin.config_areas.flags.edit"
+            @disabled={{not this.canEdit}}
+            @title={{this.editTitle}}
+          />
 
           {{#if this.canMove}}
             <DMenu
@@ -133,16 +148,16 @@ export default class AdminFlagItem extends Component {
                     </dropdown.item>
                   {{/unless}}
 
-                  {{#if this.canEdit}}
-                    <dropdown.item>
-                      <DButton
-                        @label="admin.config_areas.flags.delete"
-                        @icon="trash-alt"
-                        class="btn-transparent admin-flag-item__delete"
-                        @action={{this.delete}}
-                      />
-                    </dropdown.item>
-                  {{/if}}
+                  <dropdown.item>
+                    <DButton
+                      @label="admin.config_areas.flags.delete"
+                      @icon="trash-alt"
+                      class="btn-transparent admin-flag-item__delete"
+                      @action={{this.delete}}
+                      @disabled={{not this.canEdit}}
+                      @title={{this.deleteTitle}}
+                    />
+                  </dropdown.item>
                 </DropdownMenu>
               </:content>
             </DMenu>

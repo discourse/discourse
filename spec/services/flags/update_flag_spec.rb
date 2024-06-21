@@ -34,6 +34,34 @@ RSpec.describe(Flags::UpdateFlag) do
     it { is_expected.to fail_a_contract }
   end
 
+  context "when title is empty" do
+    fab!(:current_user) { Fabricate(:admin) }
+    let(:name) { nil }
+
+    it { is_expected.to fail_a_contract }
+  end
+
+  context "when title is too long" do
+    fab!(:current_user) { Fabricate(:admin) }
+    let(:name) { "a" * 201 }
+
+    it { is_expected.to fail_a_contract }
+  end
+
+  context "when description is empty" do
+    fab!(:current_user) { Fabricate(:admin) }
+    let(:description) { nil }
+
+    it { is_expected.to fail_a_contract }
+  end
+
+  context "when description is too long" do
+    fab!(:current_user) { Fabricate(:admin) }
+    let(:description) { "a" * 1001 }
+
+    it { is_expected.to fail_a_contract }
+  end
+
   context "when user is allowed to perform the action" do
     fab!(:current_user) { Fabricate(:admin) }
 

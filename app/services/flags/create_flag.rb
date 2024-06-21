@@ -5,7 +5,7 @@ class Flags::CreateFlag
 
   contract
   policy :invalid_access
-  model :flag_instance, :instantiate_flag
+  model :flag, :instantiate_flag
 
   transaction do
     step :create
@@ -17,7 +17,11 @@ class Flags::CreateFlag
     attribute :description, :string
     attribute :enabled, :boolean
     attribute :applies_to
-    validates :applies_to, inclusion: { in: Flag::VALID_APPLIES_TO }, allow_nil: false
+    validates :name, presence: true
+    validates :description, presence: true
+    validates :name, length: { maximum: Flag::MAX_NAME_LENGTH }
+    validates :description, length: { maximum: Flag::MAX_DESCRIPTION_LENGTH }
+    validates :applies_to, inclusion: { in: Flag.valid_applies_to_types }, allow_nil: false
   end
 
   private
@@ -36,18 +40,18 @@ class Flags::CreateFlag
     guardian.can_create_flag?
   end
 
-  def create(flag_instance:)
-    flag_instance.save!
+  def create(flag:)
+    flag.save!
   end
 
-  def log(guardian:, flag_instance:)
+  def log(guardian:, flag:)
     StaffActionLogger.new(guardian.user).log_custom(
       "create_flag",
       {
-        name: flag_instance.name,
-        description: flag_instance.description,
-        applies_to: flag_instance.applies_to,
-        enabled: flag_instance.enabled,
+        name: flag.name,
+        description: flag.description,
+        applies_to: flag.applies_to,
+        enabled: flag.enabled,
       },
     )
   end

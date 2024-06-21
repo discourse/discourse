@@ -4,6 +4,8 @@ class Flags::DestroyFlag
   include Service::Base
 
   model :flag
+  policy :not_system
+  policy :not_used
   policy :invalid_access
 
   transaction do
@@ -15,6 +17,14 @@ class Flags::DestroyFlag
 
   def fetch_flag(id:)
     Flag.find(id)
+  end
+
+  def not_system(flag:)
+    !flag.system?
+  end
+
+  def not_used(flag:)
+    !flag.used?
   end
 
   def invalid_access(guardian:, flag:)

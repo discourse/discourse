@@ -118,14 +118,13 @@ describe "Admin Flags Page", type: :system do
 
   it "does not allow to system flag to be edited" do
     visit "/admin/config/flags"
-    admin_flags_page.open_flag_menu("notify_moderators")
-    expect(page).not_to have_css(".admin-flag-item__edit")
+    expect(page).to have_css(".off_topic .admin-flag-item__edit[disabled]")
   end
 
   it "does not allow to system flag to be deleted" do
     visit "/admin/config/flags"
     admin_flags_page.open_flag_menu("notify_moderators")
-    expect(page).not_to have_css(".admin-flag-item__delete")
+    expect(page).to have_css(".admin-flag-item__delete[disabled]")
   end
 
   it "does not allow top flag to move up" do

@@ -56,14 +56,16 @@ export default class AdminFlagsForm extends Component {
   }
 
   get appliesToValues() {
-    return [
-      { name: I18n.t("admin.config_areas.flags.form.posts"), id: "Post" },
-      { name: I18n.t("admin.config_areas.flags.form.topics"), id: "Topic" },
-      {
-        name: I18n.t("admin.config_areas.flags.form.chat_messages"),
-        id: "Chat::Message",
-      },
-    ];
+    return this.site.valid_flag_applies_to_types.map((type) => {
+      return {
+        name: I18n.t(
+          `admin.config_areas.flags.form.${type
+            .toLowerCase()
+            .replace("::", "_")}`
+        ),
+        id: type,
+      };
+    });
   }
 
   @action
@@ -134,6 +136,7 @@ export default class AdminFlagsForm extends Component {
               name="name"
               @type="text"
               @value={{this.name}}
+              maxlength="200"
               class="admin-flag-form__name"
             />
           </div>
@@ -144,6 +147,7 @@ export default class AdminFlagsForm extends Component {
             </label>
             <TextArea
               @value={{this.description}}
+              maxlength="1000"
               class="admin-flag-form__description"
             />
           </div>
