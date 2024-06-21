@@ -4718,7 +4718,7 @@ en:
 
       ## [Powered by You](#power)
 
-      This site is operated by your [friendly local staff](%{base_path}/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in %{feedback_category} and let’s discuss! If there’s a critical or urgent issue that can’t be handled by a meta topic or flag, contact us via the [staff page](%{base_path}/about).
+      This site is operated by your [friendly moderator team](%{base_path}/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in %{feedback_category} and let’s discuss! If there’s a critical or urgent issue that can’t be handled by a meta topic or flag, [contact the moderators](%{base_path}/about).
 
   tos_topic:
     title: "Terms of Service"
