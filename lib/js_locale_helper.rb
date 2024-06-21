@@ -312,46 +312,12 @@ module JsLocaleHelper
     require "messageformat"
 
     MessageFormat.compile(locale, message_formats)
-    # formats =
-    #   message_formats
-    #     .map { |k, v| k.inspect << " : " << compile_message_format(filename, locale, v) }
-    #     .join(", ")
-
-    # result = +"const MessageFormat = {locale: {}};\n"
-    # result << "I18n._compiledMFs = {#{formats}};\n"
 
     # if locale != "en"
     #   # Include "en" pluralization rules for use in fallbacks
     #   _, en_filename = find_message_format_locale(["en"], fallback_to_english: false)
     #   result << File.read(en_filename) << "\n"
     # end
-  end
-
-  def self.reset_context
-    @ctx&.dispose
-    @ctx = nil
-  end
-
-  @mutex = Mutex.new
-  def self.with_context(locale)
-    @mutex.synchronize do
-      yield(
-        @ctx ||=
-          begin
-            MessageFormat::Compiler.new(locale, {}).context
-          end
-      )
-    end
-  end
-
-  def self.compile_message_format(path, locale, format)
-    with_context(locale) do |ctx|
-      ctx.eval("mf = new MessageFormat('#{locale}');")
-      ctx.eval("mf.compile(#{format.inspect}).toString();")
-    end
-  rescue MiniRacer::EvalError => e
-    message = +"Invalid Format: " << e.message
-    "function(){ return #{message.inspect};}"
   end
 
   def self.remove_message_formats!(translations, locale)
