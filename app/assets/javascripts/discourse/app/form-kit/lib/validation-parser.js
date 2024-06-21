@@ -10,6 +10,8 @@ export default class ValidationParser {
 
       if (this[ruleName + "Rule"]) {
         rules[ruleName] = this[ruleName + "Rule"](args);
+      } else {
+        throw new Error(`Unknown rule: ${ruleName}`);
       }
     });
 
@@ -36,6 +38,10 @@ export default class ValidationParser {
   }
 
   betweenRule(args) {
+    if (!args) {
+      throw new Error("`between` rule expects min/max, eg: between:1,10");
+    }
+
     const [min, max] = args.split(",").map(Number);
 
     return {
@@ -45,6 +51,10 @@ export default class ValidationParser {
   }
 
   lengthRule(args) {
+    if (!args) {
+      throw new Error("`length` rule expects min/max, eg: length:1,10");
+    }
+
     const [min, max] = args.split(",").map(Number);
 
     return {

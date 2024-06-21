@@ -1,4 +1,3 @@
-import { warn } from "@ember/debug";
 import I18n from "discourse-i18n";
 
 export default class Validator {
@@ -21,7 +20,7 @@ export default class Validator {
           errors.push(error);
         }
       } else {
-        warn(`Unknown validator: ${rule}`);
+        throw new Error(`Unknown validator: ${rule}`);
       }
     }
 
@@ -103,16 +102,15 @@ export default class Validator {
           error = true;
         }
         break;
-      case "icon":
       case "question":
-      case "select":
-      case "menu":
         if (value !== false && !value) {
           error = true;
         }
         break;
       default:
-        return;
+        if (!value) {
+          error = true;
+        }
     }
 
     if (error) {
