@@ -1835,7 +1835,6 @@ gl:
       show_toolbar: "amosar a barra de ferramentas de composición"
       hide_toolbar: "agochar a barra de ferramentas de composición"
       modal_ok: "De acordo"
-      modal_cancel: "Cancelar"
       cant_send_pm: "Sentímolo pero non pode enviar unha mensaxe a %{username}."
       yourself_confirm:
         title: "Esqueceu engadir os destinatarios?"
@@ -3335,6 +3334,8 @@ gl:
               content: "Temas"
             faq:
               content: "PMF"
+            guidelines:
+              content: "Directrices"
             groups:
               content: "Grupos"
             users:

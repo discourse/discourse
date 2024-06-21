@@ -308,6 +308,8 @@ de:
     site_settings:
       invalid_site_setting: "Es ist keine Einstellung mit dem Namen „%{name}“ vorhanden"
       invalid_category_id: "Du hast eine Kategorie angegeben, die nicht existiert"
+      site_setting_is_hidden: "Du darfst versteckten Einstellungen nicht ändern"
+      site_setting_is_unconfigurable: "Du darfst keine unkonfigurierbaren Einstellungen ändern"
       invalid_choice:
         one: "„%{name}“ ist eine ungültige Option."
         other: "„%{name}“ sind ungültige Optionen."
@@ -1732,7 +1734,6 @@ de:
     content_security_policy_collect_reports: "Aktiviere die Sammlung von Berichten zu CSP-Verstößen unter /csp_reports"
     content_security_policy_frame_ancestors: "Schränke ein, wer diese Website in iframes über CSP einbetten kann. Kontrolliere erlaubte Hosts unter <a href='%{base_path}/admin/customize/embedding'>Einbettung</a>"
     content_security_policy_script_src: "Zusätzliche Skript-Quellen auf der Erlaubnisliste. Der aktuelle Host und das CDN sind standardmäßig enthalten. Siehe <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Minderung von XSS-Angriffen mit Content Security Policy.</a> (CSP). Host-Quellen werden ignoriert, wenn content_security_policy_strict_dynamic aktiviert ist."
-    content_security_policy_strict_dynamic: "Verwende eine strikt-dynamische Inhaltssicherheitsrichtlinie, um die Notwendigkeit einer manuellen Konfiguration zu verringern. Weitere Informationen findest du in <a href='https://meta.discourse.org/t/298172' target='_blank'>der Ankündigung</a> . Die Möglichkeit, diese Einstellung zu deaktivieren, wird bald entfernt."
     invalidate_inactive_admin_email_after_days: "Administrator-Konten, die die Website in dieser Anzahl von Tagen nicht besucht haben, müssen ihre E-Mail-Adresse erneut bestätigen, bevor sie sich anmelden können. 0 zum Deaktivieren."
     include_secure_categories_in_tag_counts: "Wenn diese Option aktiviert ist, werden bei der Zählung der Themen für ein Schlagwort auch die Themen berücksichtigt, die sich in Kategorien mit Lesebeschränkung für alle Benutzer befinden. Wenn diese Option deaktiviert ist, wird normalen Benutzern nur die Anzahl der Themen für ein Schlagwort angezeigt, die sich in öffentlichen Kategorien befinden."
     display_personal_messages_tag_counts: "Wenn diese Option aktiviert ist, wird die Anzahl der persönlichen Nachrichten mit einem bestimmten Schlagwort angezeigt."
@@ -4163,6 +4164,7 @@ de:
     Bearbeite den ersten Beitrag in diesem Thema, um den Inhalt von %{page_name} zu ändern.
   guidelines_topic:
     title: "FAQ/Richtlinien"
+    guidelines_title: "Richtlinien"
     body: |
       <a name="civilized"></a>
 

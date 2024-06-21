@@ -2316,7 +2316,6 @@ pt_BR:
       show_toolbar: "exibir barra de ferramentas do compositor"
       hide_toolbar: "ocultar barra de ferramentas do compositor"
       modal_ok: "Ok"
-      modal_cancel: "Cancelar"
       cant_send_pm: "Desculpe, você não pode enviar uma mensagem para %{username}."
       yourself_confirm:
         title: "Você se esqueceu de adicionar destinatários?"
@@ -4195,6 +4194,7 @@ pt_BR:
           text: "e mostraremos automaticamente as categorias mais populares deste site"
         filter_placeholder: "Filtrar categorias"
         no_categories: "Não há categorias correspondentes ao termo fornecido."
+        show_more: "Exibir mais"
       tags_form_modal:
         title: "Editar navegação por etiquetas"
         filter_placeholder: "Filtrar etiquetas"
@@ -4284,6 +4284,9 @@ pt_BR:
               title: "Todos os tópicos"
             faq:
               content: "FAQ"
+              title: "Diretrizes para usar este site"
+            guidelines:
+              content: "Diretrizes"
               title: "Diretrizes para usar este site"
             groups:
               content: "Grupos"

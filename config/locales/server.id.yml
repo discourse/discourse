@@ -1419,6 +1419,8 @@ id:
   csv_export:
     boolean_yes: "Ya"
     boolean_no: "Tidak"
+  guidelines_topic:
+    guidelines_title: "Petunjuk"
   tos_topic:
     title: "Ketentuan Layanan"
     body: |

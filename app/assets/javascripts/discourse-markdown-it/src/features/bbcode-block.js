@@ -1,4 +1,24 @@
-let isWhiteSpace;
+let isWhiteSpace, escapeHtml;
+
+function camelCaseToDash(str) {
+  return str.replace(/([a-zA-Z])(?=[A-Z])/g, "$1-").toLowerCase();
+}
+
+export function applyDataAttributes(token, attributes, defaultName) {
+  const { _default, ...attrs } = attributes;
+
+  if (_default && defaultName) {
+    attrs[defaultName] = _default;
+  }
+
+  for (let key of Object.keys(attrs).sort()) {
+    const value = escapeHtml(attrs[key]);
+    key = camelCaseToDash(key.replace(/[^a-z0-9-]/gi, ""));
+    if (value && key && key.length > 1) {
+      token.attrSet(`data-${key}`, value);
+    }
+  }
+}
 
 function trailingSpaceOnly(src, start, max) {
   for (let i = start; i < max; i++) {
@@ -14,89 +34,121 @@ function trailingSpaceOnly(src, start, max) {
   return true;
 }
 
-const ATTR_REGEX =
-  /^\s*=(.+)$|((([a-z0-9]*)\s*)=)([“”"][^“”"]*[“”"]|['][^']*[']|[^"'“”]\S*)/gi;
+// Easiest case is the closing tag which never has any attributes
+const BBCODE_CLOSING_TAG_REGEXP = /^\[\/([-\w]+)\]/i;
 
-// parse a tag [test a=1 b=2] to a data structure
-// {tag: "test", attrs={a: "1", b: "2"}
+// Old case where we supported attributes without quotation marks
+const BBCODE_QUOTE_TAG_REGEXP = /^\[quote=([-\w,: ]+)\]/i;
+
+// Most common quotation marks.
+// More can be found at https://en.wikipedia.org/wiki/Quotation_mark
+const QUOTATION_MARKS = [`""`, `''`, `“”`, `‘’`, `„“`, `‚’`, `«»`, `‹›`];
+
+const QUOTATION_MARKS_NO_MATCH = QUOTATION_MARKS.map(
+  ([a, b]) => `${a}[^${b}]+${b}`
+).join("|");
+
+const QUOTATION_MARKS_WITH_MATCH = QUOTATION_MARKS.map(
+  ([a, b]) => `${a}([^${b}]+)${b}`
+).join("|");
+
+// This is used to match a **valid** opening tag
+// NOTE: it does not match the closing bracket "]" because it makes the regexp too slow
+// due to the backtracking. So we check for the "]" manually.
+const BBCODE_TAG_REGEXP = new RegExp(
+  `\\[(?:(?:[-\\w]+(?:=(?:${QUOTATION_MARKS_NO_MATCH}|[^\\s\\]]+))?)+\\s*)+`,
+  "i"
+);
+
+// This is used to parse attributes of the form key=value
+// Where value might have some quotation marks
+const BBCODE_ATTR_REGEXP = new RegExp(
+  `([-\\w]+)(?:=(?:${QUOTATION_MARKS_WITH_MATCH}|([^\\s\\]]+)))?`,
+  "gi"
+);
+
 export function parseBBCodeTag(src, start, max, multiline) {
-  let i;
-  let tag;
-  let attrs = {};
-  let closed = false;
-  let length = 0;
-  let closingTag = false;
+  let m;
+  const text = src.slice(start, max);
 
-  // closing tag
-  if (src.charCodeAt(start + 1) === 47) {
-    closingTag = true;
-    start += 1;
-  }
+  // CASE 1 - closing tag
+  m = BBCODE_CLOSING_TAG_REGEXP.exec(text);
 
-  for (i = start + 1; i < max; i++) {
-    if (!/[a-z]/i.test(src[i])) {
-      break;
+  if (m && m[0] && m[1]) {
+    if (multiline && !trailingSpaceOnly(src, start + m[0].length, max)) {
+      return null;
     }
+
+    return {
+      tag: m[1].toLowerCase(),
+      closing: true,
+      length: m[0].length,
+    };
   }
 
-  tag = src.slice(start + 1, i);
+  // CASE 2 - [quote=...] tag (without quotes)
+  m = BBCODE_QUOTE_TAG_REGEXP.exec(text);
 
-  if (!tag) {
-    return;
-  }
-
-  if (closingTag) {
-    if (src[i] === "]") {
-      if (multiline && !trailingSpaceOnly(src, i + 1, max)) {
-        return;
-      }
-
-      tag = tag.toLowerCase();
-
-      return { tag, length: tag.length + 3, closing: true };
+  if (m && m[0] && m[1]) {
+    if (multiline && !trailingSpaceOnly(src, start + m[0].length, max)) {
+      return null;
     }
-    return;
+
+    return {
+      tag: "quote",
+      length: m[0].length,
+      attrs: { _default: m[1] },
+    };
   }
 
-  for (; i < max; i++) {
-    if (src[i] === "]") {
-      closed = true;
-      break;
+  // CASE 3 - regular opening tag
+  m = BBCODE_TAG_REGEXP.exec(text);
+  const bbcode = m ? m[0] : null;
+
+  if (!bbcode) {
+    return null;
+  }
+
+  if (text.length <= bbcode.length || text[bbcode.length] !== "]") {
+    return null;
+  }
+
+  const r = {};
+
+  while ((m = BBCODE_ATTR_REGEXP.exec(bbcode))) {
+    const [, key, ...v] = m;
+    const value = v.find(Boolean);
+
+    if (!key) {
+      return null;
     }
-  }
 
-  if (closed) {
-    length = i - start + 1;
-
-    let raw = src.slice(start + tag.length + 1, i);
-
-    // trivial parser that is going to have to be rewritten at some point
-    if (raw) {
-      let match, key, val;
-
-      while ((match = ATTR_REGEX.exec(raw))) {
-        if (match[1]) {
-          key = "_default";
-        } else {
-          key = match[4];
+    if (!r.tag) {
+      r.tag = key.toLowerCase();
+      r.length = bbcode.length + 1;
+      if (m.index === 1) {
+        r.attrs = {};
+        if (value) {
+          r.attrs["_default"] = value.trim();
         }
-
-        val = match[1] || match[5];
-
-        if (val) {
-          attrs[key] = val.trim().replace(/^["'“”](.*)["'“”]$/, "$1");
-        }
+      } else {
+        return null;
       }
+    } else if (r.attrs) {
+      r.attrs[key] = value?.trim() || "";
+    } else {
+      return null;
     }
-
-    if (multiline && !trailingSpaceOnly(src, start + length, max)) {
-      return;
-    }
-
-    tag = tag.toLowerCase();
-
-    return { tag, attrs, length };
   }
+
+  if (r.tag) {
+    if (multiline && !trailingSpaceOnly(src, start + bbcode.length + 1, max)) {
+      return null;
+    }
+    return r;
+  }
+
+  return null;
 }
 
 function findBlockCloseTag(state, openTag, startLine, endLine) {
@@ -332,6 +384,7 @@ function applyBBCode(state, startLine, endLine, silent, md) {
 export function setup(helper) {
   helper.registerPlugin((md) => {
     isWhiteSpace = md.utils.isWhiteSpace;
+    escapeHtml = md.utils.escapeHtml;
 
     md.block.bbcode.ruler.push("excerpt", {
       tag: "excerpt",

@@ -36,7 +36,7 @@ class Reviewable < ActiveRecord::Base
   enum :priority, { low: 0, medium: 5, high: 10 }, scopes: false, suffix: true
   enum :sensitivity, { disabled: 0, low: 9, medium: 6, high: 3 }, scopes: false, suffix: true
 
-  validates :reject_reason, length: { maximum: 500 }
+  validates :reject_reason, length: { maximum: 2000 }
 
   after_create { log_history(:created, created_by) }
 

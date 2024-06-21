@@ -2,14 +2,18 @@
 
 module PageObjects
   module Pages
-    class AdminSettings < PageObjects::Pages::Base
+    class AdminSiteSettings < PageObjects::Pages::Base
       def visit_filtered_plugin_setting(filter)
         page.visit("/admin/site_settings/category/plugins?filter=#{filter}")
         self
       end
 
-      def visit
-        page.visit("/admin/site_settings")
+      def visit(filter = nil)
+        if filter.present?
+          page.visit("/admin/site_settings?filter=#{filter}")
+        else
+          page.visit("/admin/site_settings")
+        end
         self
       end
 
@@ -18,17 +22,31 @@ module PageObjects
         self
       end
 
+      def find_setting(setting_name)
+        find(".admin-detail .row.setting[data-setting='#{setting_name}']")
+      end
+
       def toggle_setting(setting_name, text = "")
-        setting = find(".admin-detail .row.setting[data-setting='#{setting_name}']")
+        setting = find_setting(setting_name)
         setting.find(".setting-value span", text: text).click
-        setting.find(".setting-controls button.ok").click
+        save_setting(setting)
+      end
+
+      def change_number_setting(setting_name, value, save_changes = true)
+        setting = find_setting(setting_name)
+        setting.fill_in(with: value)
+        save_setting(setting) if save_changes
       end
 
       def select_from_emoji_list(setting_name, text = "", save_changes = true)
         setting = find(".admin-detail .row.setting[data-setting='#{setting_name}']")
         setting.find(".setting-value .value-list > .value button").click
         setting.find(".setting-value .emoji-picker .emoji[title='#{text}']").click
-        setting.find(".setting-controls button.ok").click if save_changes
+        save_setting(setting) if save_changes
+      end
+
+      def save_setting(setting_element)
+        setting_element.find(".setting-controls button.ok").click
       end
 
       def values_in_list(setting_name)
@@ -66,6 +84,11 @@ module PageObjects
       def has_greater_than_n_results?(count)
         assert_selector(".admin-detail .row.setting", minimum: count)
       end
+    end
+
+    # TODO (martin) Remove this after discourse-topic-voting no longer
+    # relies on this, it was renamed to AdminSiteSettings.
+    class AdminSettings < PageObjects::Pages::AdminSiteSettings
     end
   end
 end

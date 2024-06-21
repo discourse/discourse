@@ -1118,7 +1118,6 @@ uk:
     categories:
       categories_label: "розділи"
       subcategories_label: "підрозділи"
-      all_subcategories: "всі підкатегорії"
       no_subcategories: "немає підрозділів"
       remove_filter: "прибрати фільтр"
       plus_more_count:
@@ -2600,7 +2599,6 @@ uk:
       show_toolbar: "показати панель інструментів редактора"
       hide_toolbar: "приховати панель інструментів редактора"
       modal_ok: "Гаразд"
-      modal_cancel: "Скасувати"
       cant_send_pm: "На жаль, ви не можете надсилати повідомлення користувачу %{username}."
       create_message_error: "На жаль, сталася помилка при створенні цього повідомлення. Будь ласка, спробуйте ще раз."
       yourself_confirm:
@@ -4751,6 +4749,7 @@ uk:
           text: "і ми автоматично покажемо найпопулярніші категорії цього сайту"
         filter_placeholder: "Фільтр категорій"
         no_categories: "Немає категорій, що відповідають даним умовам."
+        show_more: "Показати більше"
       tags_form_modal:
         title: "Редагувати навігацію тегами"
         filter_placeholder: "Теги фільтрів"
@@ -4863,6 +4862,9 @@ uk:
               title: "Всі теми"
             faq:
               content: "Часті запитання"
+              title: "Правила використання цього сайту"
+            guidelines:
+              content: "Настанови"
               title: "Правила використання цього сайту"
             groups:
               content: "Групи"

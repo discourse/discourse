@@ -1813,6 +1813,7 @@ ro:
     Editează prima postare în acest subiect pentru a schimba conținutul paginii %{page_name}.
   guidelines_topic:
     title: "FAQ/Ghid"
+    guidelines_title: "Indicații"
   tos_topic:
     title: "Condiții generale de utilizare"
   privacy_topic:

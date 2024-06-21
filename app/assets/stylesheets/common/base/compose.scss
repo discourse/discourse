@@ -235,14 +235,16 @@ html.composer-open {
     }
 
     .archetype-private_message & {
-      // PMs don's have categories, so we need a wider tag input
+      // PMs don't have categories, so we need a wider tag input
       .mini-tag-chooser {
         width: 100%;
+        max-width: 100%;
       }
     }
   }
 
   .category-input {
+    position: relative;
     display: flex;
     flex: 1 0 40%;
     max-width: 40%;
@@ -324,18 +326,22 @@ html.composer-open {
     }
   }
 
-  .category-input + .mini-tag-chooser {
+  .category-input + .tags-input {
     margin-left: 8px;
     width: auto;
     max-width: calc(50% - 4px);
   }
 
-  .mini-tag-chooser {
-    flex-grow: 1;
+  .tags-input {
+    position: relative;
     margin: 0 0 8px 0px;
-    z-index: z("composer", "dropdown");
-    .select-kit-header {
-      color: var(--primary-high);
+    flex-grow: 1;
+    .mini-tag-chooser {
+      z-index: z("composer", "dropdown");
+      width: 100%;
+      .select-kit-header {
+        color: var(--primary-high);
+      }
     }
   }
 

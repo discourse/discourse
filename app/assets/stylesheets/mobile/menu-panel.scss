@@ -4,6 +4,10 @@
 
   .user-menu.revamped & {
     height: 100%;
+
+    .quick-access-panel li {
+      padding-block: 0.15em;
+    }
   }
 }
 

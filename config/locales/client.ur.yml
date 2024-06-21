@@ -1940,7 +1940,6 @@ ur:
       show_toolbar: "کمپوزر ٹول بار دکھائیں"
       hide_toolbar: "کمپوزر ٹول بار کو چھپائیں"
       modal_ok: "ٹھیک"
-      modal_cancel: "منسوخ"
       cant_send_pm: "معذرت، آپ %{username} کو پیغام نہیں بھیج سکتے۔"
       yourself_confirm:
         title: "کیا آپ وصول کنندگان کو شامل کرنا بھول گئے؟"
@@ -3590,6 +3589,8 @@ ur:
               content: "ٹاپکس"
             faq:
               content: "عمومی سوالات"
+            guidelines:
+              content: "ہدایات"
             groups:
               content: "گروپس"
             users:

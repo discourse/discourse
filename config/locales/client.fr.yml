@@ -35,9 +35,11 @@ fr:
       long_with_year: "DD MMM YYYY HH:mm"
       long_with_year_no_time: "DD MMM YYYY"
       full_with_year_no_time: "D MMMM YYYY"
+      long_date_with_year: "D MMM YYYY, HH:mm"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "DD MMM YYYY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
+      long_date_with_year_with_linebreak: "D MMM YYYY <br/>HH:mm"
       wrap_ago: "il y a %{date}"
       wrap_on: "le %{date}"
       tiny:
@@ -200,6 +202,8 @@ fr:
     broken_plugin_alert: "Causé par l'extension « %{name}»"
     critical_deprecation:
       notice: "<b>[Avis d'administration]</b> L'un de vos thèmes ou extensions doit être mis à jour pour être compatible avec les prochaines modifications principales de Discourse."
+      id: "(id:<em>%{id}</em>)"
+      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
       theme_source: "Thème identifié : <a target='_blank' href='%{path}'>« %{name} »</a>."
       plugin_source: "Extension identifiée : « %{name} »"
     s3:
@@ -351,6 +355,9 @@ fr:
       search: "Recherche"
       bookmark: "Signet"
       bulk:
+        delete_completed: "Les signets ont été supprimés avec succès."
+        reminders_cleared: "Les rappels de signets ont été effacés avec succès."
+        toggle: "activer/désactiver la sélection multiple des signets"
         select_all: "Tout sélectionner"
         clear_all: "Tout supprimer"
         selected_count:
@@ -362,6 +369,8 @@ fr:
         at_time: "le %{date_time}"
         existing_reminder: "Vous avez configuré un rappel pour ce signet qui sera envoyé %{at_date_time}"
     bookmark_bulk_actions:
+      clear_reminders:
+        name: "Effacer les rappels"
       delete_bookmarks:
         name: "Supprimer le signet"
     copy_codeblock:
@@ -2331,7 +2340,6 @@ fr:
       show_toolbar: "afficher la barre d'outils de l'éditeur"
       hide_toolbar: "masquer la barre d'outils de l'éditeur"
       modal_ok: "OK"
-      modal_cancel: "Annuler"
       cant_send_pm: "Nous sommes désolés, vous ne pouvez pas envoyer de message à l'utilisateur %{username}."
       yourself_confirm:
         title: "Avez-vous oublié d'ajouter des destinataires ?"
@@ -4225,6 +4233,7 @@ fr:
           text: "et nous afficherons automatiquement les catégories les plus populaires de ce site"
         filter_placeholder: "Filtrer les catégories"
         no_categories: "Il n'y a aucune catégorie correspondant au terme donné."
+        show_more: "Afficher plus"
       tags_form_modal:
         title: "Modifier la navigation des étiquettes"
         filter_placeholder: "Filtrer les étiquettes"
@@ -4314,6 +4323,9 @@ fr:
               title: "Tous les sujets"
             faq:
               content: "FAQ"
+              title: "Lignes directrices pour l'utilisation de ce site"
+            guidelines:
+              content: "Charte"
               title: "Lignes directrices pour l'utilisation de ce site"
             groups:
               content: "Groupes"

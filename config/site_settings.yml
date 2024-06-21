@@ -630,16 +630,21 @@ users:
     default: 10
     min: 8
     max: 500
+    requires_confirmation: "simple"
   min_admin_password_length:
     client: true
     default: 15
     min: 8
     max: 500
+    requires_confirmation: "simple"
   password_unique_characters:
     default: 6
     min: 1
     max: 10
-  block_common_passwords: true
+    requires_confirmation: "simple"
+  block_common_passwords:
+    default: true
+    requires_confirmation: "simple"
   username_change_period: 3
   email_editable:
     client: true
@@ -1913,6 +1918,9 @@ trust:
 
 security:
   detailed_404: false
+  enforce_second_factor_on_external_auth:
+    client: true
+    default: true
   enforce_second_factor:
     client: true
     type: enum
@@ -1988,7 +1996,7 @@ security:
     allow_any: false
     choices: "['*'] + Onebox::Engine.all_iframe_origins"
   allowed_iframes:
-    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/|https://www.instagram.com"
+    default: "https://www.google.com/maps/embed?|https://www.openstreetmap.org/export/embed.html?|https://calendar.google.com/calendar/embed?|https://codepen.io/|https://www.instagram.com|https://open.spotify.com"
     type: list
     list_type: simple
     client: true
@@ -2017,8 +2025,7 @@ security:
   content_security_policy_script_src:
     type: simple_list
     default: ""
-  content_security_policy_strict_dynamic:
-    default: true
+    validator: "CspScriptSrcValidator"
   invalidate_inactive_admin_email_after_days:
     default: 365
     min: 0
@@ -2050,6 +2057,10 @@ security:
       - "unsafe-none"
       - "same-origin"
       - "same-origin-allow-popups"
+    hidden: true
+  cross_origin_opener_unsafe_none_referrers:
+    default: ""
+    type: host_list
     hidden: true
 
 onebox:

@@ -1968,7 +1968,6 @@ lt:
       toggle_direction: "Perjungti kryptį"
       help: "Markdown redagavimo pagalba"
       modal_ok: "OK"
-      modal_cancel: "Atšaukti"
       cant_send_pm: "Atsiprašome, bet negalite siųsti žinučių %{username}."
       yourself_confirm:
         title: "Ar pamiršote pridėti gavėjų?"
@@ -3527,6 +3526,8 @@ lt:
         other: "%{count} nauja"
       more: "Daugiau"
       all_categories: "Visos kategorijos"
+      categories_form_modal:
+        show_more: "Rodyti daugiau"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Visos"
@@ -3573,6 +3574,8 @@ lt:
               title: "Visos temos"
             faq:
               content: "DUK"
+            guidelines:
+              content: "Instrukcijos"
             groups:
               content: "Grupės"
             users:

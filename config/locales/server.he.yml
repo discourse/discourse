@@ -1810,7 +1810,6 @@ he:
     content_security_policy_collect_reports: "הפעלת איסוף דוחות הפרה של CSP (מדיניות אבטחת תוכן) תחת ‎/csp_reports"
     content_security_policy_frame_ancestors: "להגביל מי יכול להטמיע את האתר הזה עם מסגרות iframes דרך CSP. ניתן לשלוח במארחים המורשים דרך <a href='%{base_path}/admin/customize/embedding'>הטמעה</a>"
     content_security_policy_script_src: "מקורות סקריפט נוספים ברשימת ההיתרים. השרת המקומי וה-CDN כלולים כברירת מחדל. ראה <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>הקטנת התקפות XSS עם מדיניות אבטחת תוכן.</a> (CSP). מקורות שרת מקומי יתעלמו כאשר content_security_policy_strict_dynamic מופעל."
-    content_security_policy_strict_dynamic: "השתמש במדיניות אבטחת תוכן דינמית קפדנית כדי להפחית את הצורך בתצורה ידנית. בדוק <a href='https://meta.discourse.org/t/298172' target='_blank'>את ההכרזה</a> למידע נוסף. היכולת להשבית הגדרה זו תוסר בקרוב."
     invalidate_inactive_admin_email_after_days: "חשבונות מנהלים שלא ביקרו באתר מעל כמות כזו של ימים יאלצו לאמת מחדש את כתובת הדוא״ל שלהם כדי לשוב ולהיכנס. להגדיר כ־0 כדי להשבית."
     include_secure_categories_in_tag_counts: "כאשר האפשרות פעילה, מניין הנושאים לתגית יכלול נושאים בקטגוריות שמוגבלות לקריאה לכל המשתמשים. כשהאפשרות מוגבלת, משתמשים רגילים חשופים רק למניין הנושאים לתגית כאשר כל הנושאים הם בקטגוריות ציבוריות."
     display_personal_messages_tag_counts: "כאשר האפשרות פעילה, מניין ההודעות האישיות שמתויגות בתגית מסוימת יוצגו."
@@ -4203,6 +4202,7 @@ he:
     עריכת הפוסט הראשון בנושא משנה את התכנים של העמוד %{page_name}.
   guidelines_topic:
     title: "שאלות נפוצות / הנחיות"
+    guidelines_title: "הנחיות"
   tos_topic:
     title: "תנאי השימוש"
     body: |

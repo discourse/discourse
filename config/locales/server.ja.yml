@@ -3729,6 +3729,7 @@ ja:
     %{page_name} ページのコンテンツを変更するには、このトピックの最初の投稿を編集してください。
   guidelines_topic:
     title: "FAQ/ガイドライン"
+    guidelines_title: "ガイドライン"
   tos_topic:
     title: "利用規約"
     body: |

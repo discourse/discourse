@@ -166,6 +166,8 @@ task "javascript:update_constants" => :environment do
     export const TOPIC_VISIBILITY_REASONS = #{Topic.visibility_reasons.to_json};
 
     export const SYSTEM_FLAG_IDS = #{PostActionType.types.to_json}
+
+    export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json}
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")

@@ -1126,7 +1126,6 @@ sr:
       list_item: "Predmet popisa"
       help: "Markdown pomoć pri izmenama"
       modal_ok: "U redu"
-      modal_cancel: "Odustani"
       yourself_confirm:
         title: "Da li ste zaboravili da dodate primaoce?"
         body: "Trenutno se ova poruka šalje samo Vama!"
@@ -1844,6 +1843,8 @@ sr:
               content: "Teme"
             faq:
               content: "FAQ (često postavljana pitanja)"
+            guidelines:
+              content: "Smernice"
             groups:
               content: "Grupe"
             users:

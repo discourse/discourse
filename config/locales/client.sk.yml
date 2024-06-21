@@ -1118,7 +1118,6 @@ sk:
     categories:
       categories_label: "kategórie"
       subcategories_label: "podkategórie"
-      all_subcategories: "všetky podkategórie"
       no_subcategories: "žiadne podkategórie"
       remove_filter: "zruš filter"
       plus_more_count:
@@ -2616,7 +2615,6 @@ sk:
       show_toolbar: "zobraziť panel nástrojov kompozície"
       hide_toolbar: "skryť panel s nástrojmi kompozície"
       modal_ok: "OK"
-      modal_cancel: "Zrušiť"
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
       create_message_error: "Ľutujeme, pri vytváraní tejto správy sa vyskytla chyba. Prosím skúste znova."
       yourself_confirm:
@@ -4769,6 +4767,7 @@ sk:
           text: "a automaticky zobrazíme najobľúbenejšie kategórie tejto lokality"
         filter_placeholder: "Filtrovanie kategórií"
         no_categories: "Neexistujú žiadne kategórie, ktoré by zodpovedali danému výrazu."
+        show_more: "Zobraziť viac"
       tags_form_modal:
         title: "Upraviť navigáciu značiek"
         filter_placeholder: "Značky filtra"
@@ -4881,6 +4880,9 @@ sk:
               title: "Všetky témy"
             faq:
               content: "Časté otázky"
+              title: "Pokyny na používanie tejto stránky"
+            guidelines:
+              content: "Pokyny"
               title: "Pokyny na používanie tejto stránky"
             groups:
               content: "Skupiny"

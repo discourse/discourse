@@ -3801,6 +3801,7 @@ pt_BR:
     Altere o primeiro post desse tópico para mudar seu conteúdo na página de %{page_name}
   guidelines_topic:
     title: "Perguntas frequentes/diretrizes"
+    guidelines_title: "Diretrizes"
   tos_topic:
     title: "Termos de Serviço"
     body: |

@@ -109,7 +109,7 @@ a.cancel {
   margin-left: 1.25em;
   line-height: normal;
   color: var(--primary-high);
-  transition: color 250ms;
+  transition: var(--d-button-transition);
   &:hover {
     color: var(--danger);
   }
