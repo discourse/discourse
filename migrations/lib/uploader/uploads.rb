@@ -13,15 +13,14 @@ module Migrations::Uploader
 
       @databases = { uploads_db: @uploads_db, intermediate_db: @intermediate_db }
 
+      # disable logging for EXIFR which is used by ImageOptim
       EXIFR.logger = Logger.new(nil)
       SiteSettings.configure!(settings[:site_settings])
       initialize_uploads_db
     end
 
     def perform!
-      # TODO: if :fix_missing is set, should that be the only task running?
-      return Tasks::Fixer.run!(databases, settings) if settings[:fix_missing]
-
+      Tasks::Fixer.run!(databases, settings) if settings[:fix_missing]
       Tasks::Uploader.run!(databases, settings)
       Tasks::Optimizer.run!(databases, settings) if settings[:create_optimized_images]
     end
