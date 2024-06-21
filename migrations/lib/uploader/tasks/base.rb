@@ -15,6 +15,7 @@ module Migrations::Uploader
       attr_reader :uploads_db,
                   :intermediate_db,
                   :settings,
+                  :root_paths,
                   :work_queue,
                   :status_queue,
                   :discourse_store,
@@ -25,6 +26,7 @@ module Migrations::Uploader
         @intermediate_db = databases[:intermediate_db]
 
         @settings = settings
+        @root_paths = @settings[:root_paths]
 
         @work_queue = SizedQueue.new(QUEUE_SIZE)
         @status_queue = SizedQueue.new(QUEUE_SIZE)
