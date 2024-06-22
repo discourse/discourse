@@ -22,6 +22,10 @@ export default class Info extends Component {
   @service site;
   @service siteSettings;
 
+  get hasTopic() {
+    return this.args.topic && this.args.topic.details.loaded;
+  }
+
   get showPM() {
     return !this.args.topic.is_warning && this.args.topic.isPrivateMessage;
   }
@@ -82,115 +86,117 @@ export default class Info extends Component {
   }
 
   <template>
-    <div
-      class={{concatClass (if this.twoRows "two-rows") "extra-info-wrapper"}}
-    >
-      <PluginOutlet
-        @name="header-topic-info__before"
-        @outletArgs={{hash topic=@topic}}
-      />
-      <div class={{concatClass (if this.twoRows "two-rows") "extra-info"}}>
-        <div class="title-wrapper">
-          <h1 class="header-title">
-            {{#if this.showPM}}
-              <a
-                class="private-message-glyph-wrapper"
-                href={{this.pmHref}}
-                aria-label={{i18n "user.messages.inbox"}}
-              >
-                {{icon "envelope" class="private-message-glyph"}}
-              </a>
-            {{/if}}
+    {{#if this.hasTopic}}
+      <div
+        class={{concatClass (if this.twoRows "two-rows") "extra-info-wrapper"}}
+      >
+        <PluginOutlet
+          @name="header-topic-info__before"
+          @outletArgs={{hash topic=@topic}}
+        />
+        <div class={{concatClass (if this.twoRows "two-rows") "extra-info"}}>
+          <div class="title-wrapper">
+            <h1 class="header-title">
+              {{#if this.showPM}}
+                <a
+                  class="private-message-glyph-wrapper"
+                  href={{this.pmHref}}
+                  aria-label={{i18n "user.messages.inbox"}}
+                >
+                  {{icon "envelope" class="private-message-glyph"}}
+                </a>
+              {{/if}}
 
-            {{#if (and @topic.fancyTitle @topic.url)}}
-              <Status @topic={{@topic}} @disableActions={{@disableActions}} />
+              {{#if (and @topic.fancyTitle @topic.url)}}
+                <Status @topic={{@topic}} @disableActions={{@disableActions}} />
 
-              <a
-                class="topic-link"
-                {{on "click" this.jumpToTopPost}}
-                href={{@topic.url}}
-                data-topic-id={{@topic.id}}
-              >
-                <span>{{htmlSafe @topic.fancyTitle}}</span>
-              </a>
+                <a
+                  class="topic-link"
+                  {{on "click" this.jumpToTopPost}}
+                  href={{@topic.url}}
+                  data-topic-id={{@topic.id}}
+                >
+                  <span>{{htmlSafe @topic.fancyTitle}}</span>
+                </a>
 
-              <span class="header-topic-title-suffix">
-                <PluginOutlet
-                  @name="header-topic-title-suffix"
-                  @outletArgs={{hash topic=@topic}}
-                />
-              </span>
-            {{/if}}
-          </h1>
+                <span class="header-topic-title-suffix">
+                  <PluginOutlet
+                    @name="header-topic-title-suffix"
+                    @outletArgs={{hash topic=@topic}}
+                  />
+                </span>
+              {{/if}}
+            </h1>
 
-          {{#if (or @topic.details.loaded @topic.category)}}
-            {{#if
-              (and
-                @topic.category
-                (or
-                  (not @topic.category.isUncategorizedCategory)
-                  (not this.siteSettings.suppress_uncategorized_badge)
+            {{#if (or @topic.details.loaded @topic.category)}}
+              {{#if
+                (and
+                  @topic.category
+                  (or
+                    (not @topic.category.isUncategorizedCategory)
+                    (not this.siteSettings.suppress_uncategorized_badge)
+                  )
                 )
-              )
-            }}
-              <div class="categories-wrapper">
-                {{#if @topic.category.parentCategory}}
-                  {{#if
-                    (and
-                      @topic.category.parentCategory.parentCategory
-                      this.site.desktopView
-                    )
-                  }}
+              }}
+                <div class="categories-wrapper">
+                  {{#if @topic.category.parentCategory}}
+                    {{#if
+                      (and
+                        @topic.category.parentCategory.parentCategory
+                        this.site.desktopView
+                      )
+                    }}
+                      {{categoryLink
+                        @topic.category.parentCategory.parentCategory
+                      }}
+                    {{/if}}
+
                     {{categoryLink
-                      @topic.category.parentCategory.parentCategory
+                      @topic.category.parentCategory
+                      (hash hideParent="true")
                     }}
                   {{/if}}
+                  {{categoryLink @topic.category}}
+                </div>
+              {{/if}}
 
-                  {{categoryLink
-                    @topic.category.parentCategory
-                    (hash hideParent="true")
-                  }}
+              <div class="topic-header-extra">
+                {{htmlSafe this.tags}}
+                <div class="topic-header-participants">
+                  {{#if this.showPM}}
+                    {{#each this.participants as |participant|}}
+                      <Participant
+                        @user={{participant}}
+                        @type={{if participant.username "user" "group"}}
+                        {{! username for user, name for group }}
+                        @username={{or participant.username participant.name}}
+                      />
+                    {{/each}}
+
+                    {{#if (gt this.totalParticipants this.maxExtraItems)}}
+                      <a
+                        class="more-participants"
+                        {{on "click" this.jumpToTopPost}}
+                        href={{@topic.url}}
+                        data-topic-id={{@topic.id}}
+                      >
+                        +{{this.remainingParticipantCount}}
+                      </a>
+                    {{/if}}
+                  {{/if}}
+                </div>
+                {{#if this.siteSettings.topic_featured_link_enabled}}
+                  <FeaturedLink />
                 {{/if}}
-                {{categoryLink @topic.category}}
               </div>
             {{/if}}
-
-            <div class="topic-header-extra">
-              {{htmlSafe this.tags}}
-              <div class="topic-header-participants">
-                {{#if this.showPM}}
-                  {{#each this.participants as |participant|}}
-                    <Participant
-                      @user={{participant}}
-                      @type={{if participant.username "user" "group"}}
-                      {{! username for user, name for group }}
-                      @username={{or participant.username participant.name}}
-                    />
-                  {{/each}}
-
-                  {{#if (gt this.totalParticipants this.maxExtraItems)}}
-                    <a
-                      class="more-participants"
-                      {{on "click" this.jumpToTopPost}}
-                      href={{@topic.url}}
-                      data-topic-id={{@topic.id}}
-                    >
-                      +{{this.remainingParticipantCount}}
-                    </a>
-                  {{/if}}
-                {{/if}}
-              </div>
-              {{#if this.siteSettings.topic_featured_link_enabled}}
-                <FeaturedLink />
-              {{/if}}
-            </div>
-          {{/if}}
+          </div>
         </div>
+        <PluginOutlet
+          @name="header-topic-info__after"
+          @outletArgs={{hash topic=@topic}}
+        />
       </div>
-      <PluginOutlet
-        @name="header-topic-info__after"
-        @outletArgs={{hash topic=@topic}}
-      />
-    </div>
+    {{/if}}
   </template>
 }

@@ -185,60 +185,74 @@ export default class GlimmerHeader extends Component {
     }
   }
 
+  get canLoadContent() {
+    // we want to determine if we need to show the topic info or not
+    // *before* we load content to prevent content layout shift
+    return (
+      (this.router.currentRouteName.startsWith("topic.") &&
+        this.header.showTopic !== null) ||
+      !this.router.currentRouteName.startsWith("topic.")
+    );
+  }
+
   <template>
     <header class="d-header" {{this.appEventsListeners}}>
       <div class="wrap">
-        <Contents
-          @sidebarEnabled={{@sidebarEnabled}}
-          @toggleNavigationMenu={{this.toggleNavigationMenu}}
-          @showSidebar={{@showSidebar}}
-        >
-          <span class="header-buttons">
-            {{#each (headerButtons.resolve) as |entry|}}
-              {{#if (and (eq entry.key "auth") (not this.currentUser))}}
-                <AuthButtons
-                  @showCreateAccount={{@showCreateAccount}}
-                  @showLogin={{@showLogin}}
-                  @canSignUp={{@canSignUp}}
-                />
-              {{else if entry.value}}
-                <entry.value />
-              {{/if}}
-            {{/each}}
-          </span>
+        {{#if this.canLoadContent}}
+          <Contents
+            @sidebarEnabled={{@sidebarEnabled}}
+            @toggleNavigationMenu={{this.toggleNavigationMenu}}
+            @showSidebar={{@showSidebar}}
+          >
+            <span class="header-buttons">
+              {{#each (headerButtons.resolve) as |entry|}}
+                {{#if (and (eq entry.key "auth") (not this.currentUser))}}
+                  <AuthButtons
+                    @showCreateAccount={{@showCreateAccount}}
+                    @showLogin={{@showLogin}}
+                    @canSignUp={{@canSignUp}}
+                  />
+                {{else if entry.value}}
+                  <entry.value />
+                {{/if}}
+              {{/each}}
+            </span>
 
-          {{#if
-            (not (and this.siteSettings.login_required (not this.currentUser)))
-          }}
-            <Icons
-              @sidebarEnabled={{@sidebarEnabled}}
-              @toggleSearchMenu={{this.toggleSearchMenu}}
-              @toggleNavigationMenu={{this.toggleNavigationMenu}}
-              @toggleUserMenu={{this.toggleUserMenu}}
-              @searchButtonId={{SEARCH_BUTTON_ID}}
-            />
-          {{/if}}
+            {{#if
+              (not
+                (and this.siteSettings.login_required (not this.currentUser))
+              )
+            }}
+              <Icons
+                @sidebarEnabled={{@sidebarEnabled}}
+                @toggleSearchMenu={{this.toggleSearchMenu}}
+                @toggleNavigationMenu={{this.toggleNavigationMenu}}
+                @toggleUserMenu={{this.toggleUserMenu}}
+                @searchButtonId={{SEARCH_BUTTON_ID}}
+              />
+            {{/if}}
 
-          {{#if this.search.visible}}
-            <SearchMenuWrapper @closeSearchMenu={{this.toggleSearchMenu}} />
-          {{else if this.header.hamburgerVisible}}
-            <HamburgerDropdownWrapper
-              @toggleNavigationMenu={{this.toggleNavigationMenu}}
-              @sidebarEnabled={{@sidebarEnabled}}
-            />
-          {{else if this.header.userVisible}}
-            <UserMenuWrapper @toggleUserMenu={{this.toggleUserMenu}} />
-          {{/if}}
+            {{#if this.search.visible}}
+              <SearchMenuWrapper @closeSearchMenu={{this.toggleSearchMenu}} />
+            {{else if this.header.hamburgerVisible}}
+              <HamburgerDropdownWrapper
+                @toggleNavigationMenu={{this.toggleNavigationMenu}}
+                @sidebarEnabled={{@sidebarEnabled}}
+              />
+            {{else if this.header.userVisible}}
+              <UserMenuWrapper @toggleUserMenu={{this.toggleUserMenu}} />
+            {{/if}}
 
-          {{#if
-            (and
-              (or this.site.mobileView this.site.narrowDesktopView)
-              (or this.header.hamburgerVisible this.header.userVisible)
-            )
-          }}
-            <div class="header-cloak"></div>
-          {{/if}}
-        </Contents>
+            {{#if
+              (and
+                (or this.site.mobileView this.site.narrowDesktopView)
+                (or this.header.hamburgerVisible this.header.userVisible)
+              )
+            }}
+              <div class="header-cloak"></div>
+            {{/if}}
+          </Contents>
+        {{/if}}
       </div>
       <PluginOutlet
         @name="after-header"

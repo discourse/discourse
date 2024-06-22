@@ -49,6 +49,11 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
   },
 
   _highlightPost(postNumber, options = {}) {
+    if (postNumber > 1) {
+      this.header.showTopic = true;
+    } else {
+      this.header.showTopic = false;
+    }
     if (isBlank(options.jump) || options.jump !== false) {
       scheduleOnce("afterRender", null, highlightPost, postNumber);
     }
@@ -56,8 +61,8 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
 
   _hideTopicInHeader() {
     this.appEvents.trigger("header:hide-topic");
-    this.header.topic = null;
     this._lastShowTopic = false;
+    this.header.showTopic = false;
   },
 
   _showTopicInHeader(topic) {
@@ -65,8 +70,8 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
       return;
     }
     this.appEvents.trigger("header:show-topic", topic);
-    this.header.topic = topic;
     this._lastShowTopic = true;
+    this.header.showTopic = true;
   },
 
   _updateTopic(topic, debounceDuration) {
@@ -87,12 +92,10 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
     }
 
     const offset = window.pageYOffset || document.documentElement.scrollTop;
-    this._lastShowTopic = this.shouldShowTopicInHeader(topic, offset);
+    this._lastShowTopic = this.shouldShowTopicInHeader(offset);
 
     if (this._lastShowTopic) {
       this._showTopicInHeader(topic);
-    } else {
-      this._hideTopicInHeader();
     }
   },
 
@@ -113,6 +116,7 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
       ".cooked a, a.track-link",
       (e) => ClickTrack.trackClick(e, getOwner(this))
     );
+    this.header.topic = this.topic;
   },
 
   willDestroy() {
@@ -147,7 +151,7 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
     this.set("dockAt", 0);
   },
 
-  shouldShowTopicInHeader(topic, offset) {
+  shouldShowTopicInHeader(offset) {
     // On mobile, we show the header topic if the user has scrolled past the topic
     // title and the current scroll direction is down
     // On desktop the user only needs to scroll past the topic title.
@@ -174,7 +178,7 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
 
     this.set("hasScrolled", offset > 0);
 
-    const showTopic = this.shouldShowTopicInHeader(this.topic, offset);
+    const showTopic = this.shouldShowTopicInHeader(offset);
 
     if (showTopic !== this._lastShowTopic) {
       if (showTopic) {
