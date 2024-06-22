@@ -1,7 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import topicFixtures from "discourse/tests/fixtures/topic";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   fakeTime,
