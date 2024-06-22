@@ -424,12 +424,6 @@ acceptance("Topic - Edit timer", function (needs) {
   });
 
   test("Does not show timer notice unless timer set", async function (assert) {
-    const topicResponse = cloneJSON(topicFixtures["/t/54077.json"]);
-    const lastPostIndex = topicResponse.post_stream.posts.length - 1;
-    topicResponse.post_stream.posts[lastPostIndex].created_at =
-      moment().toISOString();
-    pretender.get("/t/54077.json", () => response(topicResponse));
-
     updateCurrentUser({ moderator: true });
 
     await visit("/t/internationalization-localization");
