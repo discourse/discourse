@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import { next } from "@ember/runloop";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";

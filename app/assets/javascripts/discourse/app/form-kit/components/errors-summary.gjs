@@ -24,7 +24,7 @@ export default class FKErrorsSummary extends Component {
           {{#each this.fields as |field|}}
             <li>
               {{field.title}}:
-              {{(this.concatErrors field.visibleErrors)}}
+              {{this.concatErrors field.visibleErrors}}
             </li>
           {{/each}}
         </ul>

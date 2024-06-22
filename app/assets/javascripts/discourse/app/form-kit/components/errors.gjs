@@ -24,7 +24,7 @@ export default class FKErrors extends Component {
             {{#if this.withTitle}}
               [{{field.title}}]
             {{/if}}
-            {{(this.concatErrors field.visibleErrors)}}
+            {{this.concatErrors field.visibleErrors}}
           </span>
           <br />
         {{/if}}
