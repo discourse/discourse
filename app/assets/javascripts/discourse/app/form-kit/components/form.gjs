@@ -3,6 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { modifier as modifierFn } from "ember-modifier";
@@ -151,13 +152,15 @@ export default class Form extends Component {
   }
 
   @action
-  set(key, value) {
+  async set(key, value) {
     this.isDirtyForm = true;
     set(this.effectiveData, key, value);
 
     if (this.fieldValidationEvent === VALIDATION_TYPES.change) {
-      this.handleFieldValidation(key);
+      await this.handleFieldValidation(key);
     }
+
+    await new Promise((resolve) => next(resolve));
   }
 
   @action
@@ -191,7 +194,7 @@ export default class Form extends Component {
 
     if (!this.hasErrors) {
       this.isDirtyForm = false;
-      this.args.onSubmit?.(this.effectiveData);
+      await this.args.onSubmit?.(this.effectiveData);
     }
   }
 
@@ -206,6 +209,8 @@ export default class Form extends Component {
     this.fields.forEach((field) => {
       field.reset();
     });
+
+    await new Promise((resolve) => next(resolve));
   }
 
   @action

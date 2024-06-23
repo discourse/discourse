@@ -90,6 +90,10 @@ class Form {
     }
   }
 
+  submit() {
+    this.element.dispatchEvent(new Event("submit"));
+  }
+
   field(name) {
     const field = new Field(
       this.element.querySelector(`[data-name="${name}"]`)
@@ -106,6 +110,9 @@ export default function form(selector) {
   const helper = new Form(selector);
 
   return {
+    submit() {
+      return helper.submit();
+    },
     field(name) {
       return helper.field(name);
     },

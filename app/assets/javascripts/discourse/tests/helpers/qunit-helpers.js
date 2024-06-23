@@ -1,4 +1,5 @@
 import { run } from "@ember/runloop";
+import { capitalize } from "@ember/string";
 import {
   getApplication,
   settled,
@@ -509,7 +510,12 @@ class FieldHelper {
   }
 
   get value() {
-    return this.element.dataset.value;
+    console.log(this.element.dataset);
+    switch (this.element.dataset.controlType) {
+      case "input-text": {
+        return this.element.querySelector(".form-kit__control-input").value;
+      }
+    }
   }
 
   get isDisabled() {
@@ -518,12 +524,22 @@ class FieldHelper {
 }
 
 class FormHelper {
-  constructor(selector) {
+  constructor(selector, context) {
+    this.context = context;
     if (selector instanceof HTMLElement) {
       this.element = selector;
     } else {
       this.element = query(selector);
     }
+  }
+
+  hasErrors(fields) {
+    Object.keys(fields).forEach((name) => {
+      const message = fields[name];
+      this.context
+        .dom(this.element.querySelector(".form-kit__errors-summary-list"))
+        .includesText(`${capitalize(name)}: ${message}`);
+    });
   }
 
   field(name) {
@@ -534,8 +550,11 @@ class FormHelper {
 }
 
 QUnit.assert.form = function (selector) {
-  const form = new FormHelper(selector);
+  const form = new FormHelper(selector, this);
   return {
+    hasErrors: (fields) => {
+      form.hasErrors(fields);
+    },
     field: (name) => {
       const field = form.field(name);
 

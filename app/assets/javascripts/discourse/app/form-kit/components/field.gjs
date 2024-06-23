@@ -73,7 +73,7 @@ export default class FormField extends Component {
   }
 
   <template>
-    <this.wrapper>
+    <this.wrapper @size={{@size}}>
       {{yield
         (hash
           Code=(component
