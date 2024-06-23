@@ -62,7 +62,6 @@ export default Controller.extend({
       "allow_private_messages",
       "enable_allowed_pm_users",
       "homepage_id",
-      "hide_profile_and_presence",
       "hide_profile",
       "hide_presence",
       "text_size",

@@ -52,7 +52,6 @@ const DEFAULT_USER_PREFERENCES = [
   "default_email_mailing_list_mode_frequency",
   "default_email_previous_replies",
   "default_email_in_reply_to",
-  "default_hide_profile_and_presence",
   "default_hide_profile",
   "default_hide_presence",
   "default_other_new_topic_duration_minutes",

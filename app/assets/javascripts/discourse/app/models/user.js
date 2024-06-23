@@ -120,7 +120,6 @@ let userOptionFields = [
   "allow_private_messages",
   "enable_allowed_pm_users",
   "homepage_id",
-  "hide_profile_and_presence",
   "hide_profile",
   "hide_presence",
   "text_size",
@@ -187,7 +186,6 @@ export default class User extends RestModel.extend(Evented) {
   @userOption("dynamic_favicon") dynamic_favicon;
   @userOption("automatically_unpin_topics") automatically_unpin_topics;
   @userOption("likes_notifications_disabled") likes_notifications_disabled;
-  @userOption("hide_profile_and_presence") hide_profile_and_presence;
   @userOption("hide_profile") hide_profile;
   @userOption("hide_presence") hide_presence;
   @userOption("title_count_mode") title_count_mode;

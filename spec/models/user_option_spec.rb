@@ -223,4 +223,45 @@ RSpec.describe UserOption do
       end
     end
   end
+
+  # TODO This describe-block can be deleted when UserOption#hide_profile_and_presence is removed from the db
+  # and no longer accessible to plugins. We provide this support so that plugins have time to update themselves
+  # to use UserOption#hide_profile and/or UserOption#hide_presence directly.
+  describe "backwards compat for #hide_profile_and_presence" do
+    fab!(:user)
+
+    context "when hide_profile_and_presence is changed (i.e. called by a plugin)" do
+      it "to true, #hide_profile and #hide_presence have the same value as #hide_profile_and_presence" do
+        user.user_option.update!(hide_profile_and_presence: true)
+
+        expect(user.user_option.hide_profile_and_presence).to eq(true)
+        expect(user.user_option.hide_profile).to eq(true)
+        expect(user.user_option.hide_presence).to eq(true)
+      end
+
+      it "to false, #hide_profile and #hide_presence have the same value as #hide_profile_and_presence" do
+        user.user_option.update!(hide_profile_and_presence: false)
+
+        expect(user.user_option.hide_profile_and_presence).to eq(false)
+        expect(user.user_option.hide_profile).to eq(false)
+        expect(user.user_option.hide_presence).to eq(false)
+      end
+    end
+
+    context "when hide_profile or hide_presence is changed" do
+      it "#hide_profile_and_presence changes if either is true" do
+        user.user_option.update!(hide_profile: true, hide_presence: false)
+
+        expect(user.user_option.hide_profile_and_presence).to eq(true)
+        expect(user.user_option.hide_profile).to eq(true)
+        expect(user.user_option.hide_presence).to eq(false)
+
+        user.user_option.update!(hide_profile: false, hide_presence: true)
+
+        expect(user.user_option.hide_profile_and_presence).to eq(true)
+        expect(user.user_option.hide_profile).to eq(false)
+        expect(user.user_option.hide_presence).to eq(true)
+      end
+    end
+  end
 end
