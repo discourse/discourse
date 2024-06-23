@@ -1,10 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import {
-  acceptance,
-  count,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Rendering polls with pie charts", function (needs) {
   needs.user();
@@ -16,30 +12,18 @@ acceptance("Rendering polls with pie charts", function (needs) {
   test("Displays the pie chart", async function (assert) {
     await visit("/t/-/topic_with_pie_chart_poll");
 
-    const poll = query(".poll");
+    assert
+      .dom(".poll .poll-info_counts-count:first-child .info-number")
+      .hasText("2", "it should display the right number of voters");
 
-    assert.strictEqual(
-      query(".info-number", poll).innerHTML,
-      "2",
-      "it should display the right number of voters"
-    );
+    assert
+      .dom(".poll .poll-info_counts-count:last-child .info-number")
+      .hasText("5", "it should display the right number of votes");
 
-    assert.strictEqual(
-      poll.querySelectorAll(".info-number")[1].innerHTML,
-      "5",
-      "it should display the right number of votes"
-    );
+    assert.dom(".poll").hasClass("pie", "pie class is present on poll div");
 
-    assert.strictEqual(
-      poll.classList.contains("pie"),
-      true,
-      "pie class is present on poll div"
-    );
-
-    assert.strictEqual(
-      count(".poll-results-chart", poll),
-      1,
-      "Renders the chart div instead of bar container"
-    );
+    assert
+      .dom(".poll .poll-results-chart")
+      .exists({ count: 1 }, "Renders the chart div instead of bar container");
   });
 });

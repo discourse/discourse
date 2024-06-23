@@ -1,6 +1,6 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Badges", function (needs) {
@@ -9,23 +9,21 @@ acceptance("Badges", function (needs) {
   test("Visit Badge Pages", async function (assert) {
     await visit("/badges");
 
-    assert.ok(
-      document.body.classList.contains("badges-page"),
-      "has body class"
-    );
-    assert.ok(exists(".badge-groups .badge-card"), "has a list of badges");
+    assert.dom(document.body).hasClass("badges-page", "has body class");
+    assert.dom(".badge-groups .badge-card").exists("has a list of badges");
 
     await visit("/badges/9/autobiographer");
 
-    assert.ok(exists(".badge-card"), "has the badge in the listing");
-    assert.ok(exists(".user-info"), "has the list of users with that badge");
-    assert.ok(!exists(".badge-card:nth-of-type(1) script"));
+    assert.dom(".badge-card").exists("has the badge in the listing");
+    assert.dom(".user-info").exists("has the list of users with that badge");
+    assert.dom(".badge-card:nth-of-type(1) script").doesNotExist();
   });
 
   test("shows correct badge titles to choose from", async function (assert) {
     const availableBadgeTitles = selectKit(".select-kit");
     await visit("/badges/50/custombadge");
     await availableBadgeTitles.expand();
+
     assert.strictEqual(
       availableBadgeTitles.rowByIndex(1).name(),
       "CustomBadge"

@@ -2,8 +2,7 @@ import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import pretender from "discourse/tests/helpers/create-pretender";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 function emojisResponse() {
   return {
@@ -61,9 +60,7 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
   });
 
   hooks.beforeEach(function () {
-    pretender.get("/chat/emojis.json", () => {
-      return [200, {}, emojisResponse()];
-    });
+    pretender.get("/chat/emojis.json", () => response(emojisResponse()));
 
     this.chatEmojiPickerManager = this.container.lookup(
       "service:chat-emoji-picker-manager"
@@ -83,23 +80,18 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
   test("When displaying navigation", async function (assert) {
     await render(hbs`<ChatEmojiPicker />`);
 
-    assert.true(
-      exists(
-        `.chat-emoji-picker__section-btn.active[data-section="favorites"]`
-      ),
-      "it renders first section as active"
-    );
-    assert.true(
-      exists(
-        `.chat-emoji-picker__section-btn[data-section="smileys_&_emotion"]`
-      )
-    );
-    assert.true(
-      exists(`.chat-emoji-picker__section-btn[data-section="people_&_body"]`)
-    );
-    assert.true(
-      exists(`.chat-emoji-picker__section-btn[data-section="objects"]`)
-    );
+    assert
+      .dom(`.chat-emoji-picker__section-btn.active[data-section="favorites"]`)
+      .exists("it renders first section as active");
+    assert
+      .dom(`.chat-emoji-picker__section-btn[data-section="smileys_&_emotion"]`)
+      .exists();
+    assert
+      .dom(`.chat-emoji-picker__section-btn[data-section="people_&_body"]`)
+      .exists();
+    assert
+      .dom(`.chat-emoji-picker__section-btn[data-section="objects"]`)
+      .exists();
   });
 
   test("When changing tone scale", async function (assert) {
@@ -107,14 +99,12 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
     await click(".chat-emoji-picker__fitzpatrick-modifier-btn.current.t1");
     await click(".chat-emoji-picker__fitzpatrick-modifier-btn.t6");
 
-    assert.true(
-      exists(`img[src="/images/emoji/twitter/raised_hands/6.png"]`),
-      "it applies the tone to emojis"
-    );
-    assert.true(
-      exists(".chat-emoji-picker__fitzpatrick-modifier-btn.current.t6"),
-      "it changes the current scale to t6"
-    );
+    assert
+      .dom(`img[src="/images/emoji/twitter/raised_hands/6.png"]`)
+      .exists("it applies the tone to emojis");
+    assert
+      .dom(".chat-emoji-picker__fitzpatrick-modifier-btn.current.t6")
+      .exists("it changes the current scale to t6");
   });
 
   test("When requesting section", async function (assert) {
@@ -138,83 +128,85 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
     await render(hbs`<ChatEmojiPicker />`);
     await fillIn(".dc-filter-input", "grinning");
 
-    assert.strictEqual(
-      queryAll(".chat-emoji-picker__section.filtered > img").length,
-      1,
-      "it filters the emojis list"
-    );
-    assert.true(
-      exists('.chat-emoji-picker__section.filtered > img[alt="grinning"]'),
-      "it filters the correct emoji"
-    );
+    assert
+      .dom(".chat-emoji-picker__section.filtered > img")
+      .exists({ count: 1 }, "it filters the emojis list");
+    assert
+      .dom('.chat-emoji-picker__section.filtered > img[alt="grinning"]')
+      .exists("it filters the correct emoji");
 
     await fillIn(".dc-filter-input", "Grinning");
 
-    assert.true(
-      exists('.chat-emoji-picker__section.filtered > img[alt="grinning"]'),
-      "it is case insensitive"
-    );
+    assert
+      .dom('.chat-emoji-picker__section.filtered > img[alt="grinning"]')
+      .exists("it is case insensitive");
 
     await fillIn(".dc-filter-input", "smiley_cat");
 
-    assert.true(
-      exists('.chat-emoji-picker__section.filtered > img[alt="grinning"]'),
-      "it filters the correct emoji using search alias"
-    );
+    assert
+      .dom('.chat-emoji-picker__section.filtered > img[alt="grinning"]')
+      .exists("it filters the correct emoji using search alias");
   });
 
   test("When selecting an emoji", async function (assert) {
-    let selection;
-    this.didSelectEmoji = (emoji) => {
-      selection = emoji;
-    };
+    this.didSelectEmoji = (emoji) => assert.step(emoji);
 
     await render(
       hbs`<ChatEmojiPicker @didSelectEmoji={{this.didSelectEmoji}} />`
     );
     await click('img.emoji[data-emoji="grinning"]');
 
-    assert.strictEqual(selection, "grinning");
+    assert.verifySteps(["grinning"]);
   });
 
   test("When navigating sections", async function (assert) {
     await render(hbs`<ChatEmojiPicker />`);
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
-    assert.strictEqual(
-      document.activeElement.dataset.emoji,
-      "grinning",
-      "ArrowDown focuses on the first favorite emoji"
-    );
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "data-emoji",
+        "grinning",
+        "ArrowDown focuses on the first favorite emoji"
+      );
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
-    assert.strictEqual(
-      document.activeElement.dataset.emoji,
-      "raised_hands",
-      "ArrowDown focuses on the first emoji form the third section"
-    );
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "data-emoji",
+        "raised_hands",
+        "ArrowDown focuses on the first emoji form the third section"
+      );
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
-    assert.strictEqual(
-      document.activeElement.dataset.emoji,
-      "man_rowing_boat",
-      "ArrowRight focuses on the emoji at the right"
-    );
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "data-emoji",
+        "man_rowing_boat",
+        "ArrowRight focuses on the emoji at the right"
+      );
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowLeft");
-    assert.strictEqual(
-      document.activeElement.dataset.emoji,
-      "raised_hands",
-      "ArrowLeft focuses on the emoji at the left"
-    );
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "data-emoji",
+        "raised_hands",
+        "ArrowLeft focuses on the emoji at the left"
+      );
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowUp");
-    assert.strictEqual(
-      document.activeElement.dataset.emoji,
-      "grinning",
-      "ArrowUp focuses on the first emoji form the second section"
-    );
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "data-emoji",
+        "grinning",
+        "ArrowUp focuses on the first emoji form the second section"
+      );
   });
 
   test("When navigating filtered emojis", async function (assert) {
@@ -222,32 +214,35 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
     await fillIn(".dc-filter-input", "man");
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
-    assert.strictEqual(
-      document.activeElement.dataset.emoji,
-      "man_rowing_boat",
-      "ArrowDown focuses on the first filtered emoji"
-    );
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "data-emoji",
+        "man_rowing_boat",
+        "ArrowDown focuses on the first filtered emoji"
+      );
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowRight");
-    assert.strictEqual(
-      document.activeElement.dataset.emoji,
-      "womans_clothes",
-      "ArrowRight focuses on the emoji at the right"
-    );
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "data-emoji",
+        "womans_clothes",
+        "ArrowRight focuses on the emoji at the right"
+      );
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowLeft");
-    assert.strictEqual(
-      document.activeElement.dataset.emoji,
-      "man_rowing_boat",
-      "ArrowLeft focuses on the emoji at the left"
-    );
+    assert
+      .dom(document.activeElement)
+      .hasAttribute(
+        "data-emoji",
+        "man_rowing_boat",
+        "ArrowLeft focuses on the emoji at the left"
+      );
   });
 
   test("When selecting a toned an emoji", async function (assert) {
-    let selection;
-    this.didSelectEmoji = (emoji) => {
-      selection = emoji;
-    };
+    this.didSelectEmoji = (emoji) => assert.step(emoji);
 
     await render(
       hbs`<ChatEmojiPicker @didSelectEmoji={{this.didSelectEmoji}} />`
@@ -255,62 +250,58 @@ module("Discourse Chat | Component | chat-emoji-picker", function (hooks) {
     this.emojiReactionStore.diversity = 1;
     await click('img.emoji[data-emoji="man_rowing_boat"]');
 
-    assert.strictEqual(selection, "man_rowing_boat");
-
     this.emojiReactionStore.diversity = 2;
     await click('img.emoji[data-emoji="man_rowing_boat"]');
 
-    assert.strictEqual(selection, "man_rowing_boat:t2");
+    assert.verifySteps(["man_rowing_boat", "man_rowing_boat:t2"]);
   });
 
   test("When opening the picker", async function (assert) {
     await render(hbs`<ChatEmojiPicker />`);
 
-    assert.true(document.activeElement.classList.contains("dc-filter-input"));
+    assert.dom(document.activeElement).hasClass("dc-filter-input");
   });
 
   test("When hovering an emoji", async function (assert) {
     await render(hbs`<ChatEmojiPicker />`);
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         '.chat-emoji-picker__section[data-section="people_&_body"] img.emoji:nth-child(1)'
-      ).title,
-      ":raised_hands:",
-      "first emoji has a title"
-    );
+      )
+      .hasAttribute("title", ":raised_hands:", "first emoji has a title");
 
-    assert.strictEqual(
-      query(
+    assert
+      .dom(
         '.chat-emoji-picker__section[data-section="people_&_body"] img.emoji:nth-child(2)'
-      ).title,
-      ":man_rowing_boat:",
-      "second emoji has a title"
-    );
+      )
+      .hasAttribute("title", ":man_rowing_boat:", "second emoji has a title");
 
     await fillIn(".dc-filter-input", "grinning");
-    assert.strictEqual(
-      query('img.emoji[data-emoji="grinning"]').title,
-      ":grinning:",
-      "filtered emoji have a title"
-    );
+    assert
+      .dom('img.emoji[data-emoji="grinning"]')
+      .hasAttribute("title", ":grinning:", "filtered emoji have a title");
 
     this.emojiReactionStore.diversity = 1;
     await render(hbs`<ChatEmojiPicker />`);
 
-    assert.strictEqual(
-      query('img.emoji[data-emoji="man_rowing_boat"]').title,
-      ":man_rowing_boat:",
-      "it has a title without the scale as diversity value is 1"
-    );
+    assert
+      .dom('img.emoji[data-emoji="man_rowing_boat"]')
+      .hasAttribute(
+        "title",
+        ":man_rowing_boat:",
+        "it has a title without the scale as diversity value is 1"
+      );
 
     this.emojiReactionStore.diversity = 2;
     await render(hbs`<ChatEmojiPicker />`);
 
-    assert.strictEqual(
-      query('img.emoji[data-emoji="man_rowing_boat"]').title,
-      ":man_rowing_boat:t2:",
-      "it has a title with the scale"
-    );
+    assert
+      .dom('img.emoji[data-emoji="man_rowing_boat"]')
+      .hasAttribute(
+        "title",
+        ":man_rowing_boat:t2:",
+        "it has a title with the scale"
+      );
   });
 });
