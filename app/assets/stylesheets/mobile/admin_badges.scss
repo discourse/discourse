@@ -24,4 +24,13 @@
       width: 100%;
     }
   }
+
+  .badges-header .create-new-badge .btn-default {
+    .d-button-label {
+      display: none;
+    }
+    .d-icon {
+      margin-right: 0;
+    }
+  }
 }
