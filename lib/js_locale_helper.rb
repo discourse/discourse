@@ -135,13 +135,14 @@ module JsLocaleHelper
   end
 
   def self.output_MF(locale)
+    require "messageformat"
+
     locale_str = locale.to_s
     fallback_locale_str = LocaleSiteSetting.fallback_locale(locale_str)&.to_s
     translations = translations_for(locale_str)
-
     message_formats = remove_message_formats!(translations, locale)
-    mf_locale, mf_filename = find_message_format_locale([locale_str], fallback_to_english: true)
-    generate_message_format(message_formats, mf_locale, mf_filename)
+
+    MessageFormat.compile(locale, message_formats)
   end
 
   def self.output_locale(locale)
@@ -258,11 +259,6 @@ module JsLocaleHelper
     end
   end
 
-  def self.find_message_format_locale(locale_chain, fallback_to_english:)
-    path = "#{Rails.root}/lib/javascripts/locale"
-    find_locale(locale_chain, path, :message_format, fallback_to_english: fallback_to_english)
-  end
-
   def self.find_locale(locale_chain, path, type, fallback_to_english:)
     locale_chain.map!(&:to_s)
 
@@ -306,18 +302,6 @@ module JsLocaleHelper
   def self.moment_locale(locale, timezone_names: false)
     _, filename = find_moment_locale([locale], timezone_names: timezone_names)
     filename && File.exist?(filename) ? File.read(filename) << "\n" : ""
-  end
-
-  def self.generate_message_format(message_formats, locale, filename)
-    require "messageformat"
-
-    MessageFormat.compile(locale, message_formats)
-
-    # if locale != "en"
-    #   # Include "en" pluralization rules for use in fallbacks
-    #   _, en_filename = find_message_format_locale(["en"], fallback_to_english: false)
-    #   result << File.read(en_filename) << "\n"
-    # end
   end
 
   def self.remove_message_formats!(translations, locale)
