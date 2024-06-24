@@ -39,7 +39,28 @@ class Field {
   }
 
   async toggle() {
-    await click(this.element.querySelector("input"));
+    switch (this.controlType) {
+      case "checkbox":
+        await click(this.element.querySelector("input"));
+        break;
+      case "toggle":
+        await click(this.element.querySelector("button"));
+        break;
+      default:
+        throw new Error(`Unsupported control type: ${this.controlType}`);
+    }
+  }
+
+  async accept() {
+    await click(
+      this.element.querySelector(".form-kit__control-radio[value='true']")
+    );
+  }
+
+  async refuse() {
+    await click(
+      this.element.querySelector(".form-kit__control-radio[value='false']")
+    );
   }
 
   async select(value) {
@@ -90,8 +111,8 @@ class Form {
     }
   }
 
-  submit() {
-    this.element.dispatchEvent(new Event("submit"));
+  async submit() {
+    await triggerEvent(this.element, "submit");
   }
 
   field(name) {
@@ -106,12 +127,12 @@ class Form {
     return field;
   }
 }
-export default function form(selector) {
+export default function form(selector = "form") {
   const helper = new Form(selector);
 
   return {
-    submit() {
-      return helper.submit();
+    async submit() {
+      await helper.submit();
     },
     field(name) {
       return helper.field(name);

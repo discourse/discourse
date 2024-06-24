@@ -58,6 +58,10 @@ export default class Form extends Component {
     this.router.off("routeWillChange", this.checkIsDirty);
   }
 
+  get mutable() {
+    return this.args.mutable ?? false;
+  }
+
   @action
   checkIsDirty(transition) {
     if (this.isDirtyForm && !transition.isAborted) {
@@ -77,6 +81,11 @@ export default class Form extends Component {
   @cached
   get effectiveData() {
     const obj = this.args.data ?? {};
+
+    if (this.mutable) {
+      return obj;
+    }
+
     const { transientData } = this;
 
     return new Proxy(obj, {
@@ -148,7 +157,7 @@ export default class Form extends Component {
   @action
   addError(name, message) {
     const field = this.fields.get(name);
-    field?.addError(message);
+    field?.pushError(message);
   }
 
   @action
@@ -290,6 +299,7 @@ export default class Form extends Component {
           )
           Field=(component
             FKField
+            addError=this.addError
             data=this.effectiveData
             set=this.set
             registerField=this.registerField

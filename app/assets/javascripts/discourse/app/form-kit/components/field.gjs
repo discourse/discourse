@@ -38,6 +38,7 @@ export default class FormField extends Component {
       title: this.args.title,
       showTitle: this.args.showTitle,
       set: this.args.set,
+      addError: this.args.addError,
       validate: this.args.validate,
       disabled: this.args.disabled,
       validation: this.args.validation,

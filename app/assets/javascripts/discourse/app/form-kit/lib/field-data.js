@@ -49,10 +49,12 @@ export default class FieldData {
       title,
       showTitle,
       triggerRevalidationFor,
+      addError,
     }
   ) {
     this.name = name;
     this.title = title;
+    this.addError = addError;
     this.showTitle = showTitle ?? true;
     this.disabled = disabled ?? false;
     this.customValidate = validate;
@@ -104,6 +106,7 @@ export default class FieldData {
     }
 
     const validator = new Validator(value, this.rules);
+
     await this.customValidate?.(name, value, {
       data,
       type: this.type,
@@ -112,8 +115,12 @@ export default class FieldData {
 
     const validationErrors = await validator.validate(this.type);
     validationErrors.forEach((message) => {
-      this.addError(message);
+      this.pushError(message);
     });
+  }
+
+  pushError(message) {
+    this.errors.push(message);
   }
 
   get visibleErrors() {
@@ -126,10 +133,5 @@ export default class FieldData {
 
   reset() {
     this.errors = new TrackedArray();
-  }
-
-  @bind
-  addError(error) {
-    this.errors.push(error);
   }
 }

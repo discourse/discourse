@@ -507,21 +507,73 @@ QUnit.assert.containsInstance = function (collection, klass, message) {
 };
 
 class FieldHelper {
-  constructor(element) {
+  constructor(element, context) {
     this.element = element;
+    this.context = context;
   }
 
   get value() {
-    console.log(this.element.dataset);
     switch (this.element.dataset.controlType) {
+      case "image": {
+        return this.element
+          .querySelector(".form-kit__control-image a.lightbox")
+          .getAttribute("href");
+      }
       case "input-text": {
         return this.element.querySelector(".form-kit__control-input").value;
+      }
+      case "icon": {
+        return this.element.querySelector(
+          ".form-kit__control-icon .select-kit-header"
+        )?.dataset?.value;
+      }
+      case "question": {
+        return (
+          this.element.querySelector(`.form-kit__control-radio:checked`)
+            ?.value === "true"
+        );
+      }
+      case "toggle": {
+        return (
+          this.element.querySelector(".form-kit__control-toggle")
+            .ariaChecked === "true"
+        );
+      }
+      case "text": {
+        return this.element.querySelector(".form-kit__control-text").value;
+      }
+      case "code": {
+        return this.element.querySelector(
+          ".form-kit__control-code .ace_text-input"
+        ).value;
+      }
+      case "composer": {
+        return this.element.querySelector(
+          ".form-kit__control-composer .d-editor-input"
+        ).value;
+      }
+      case "select": {
+        return this.element.querySelector(".form-kit__control-select").value;
+      }
+      case "menu": {
+        return this.element.querySelector(".form-kit__control-menu").dataset
+          .value;
+      }
+      case "checkbox": {
+        return this.element.querySelector(".form-kit__control-checkbox")
+          .checked;
       }
     }
   }
 
   get isDisabled() {
     return this.element.dataset.disabled === "";
+  }
+
+  hasError(error, message) {
+    this.context
+      .dom(this.element.querySelector(".form-kit__errors"))
+      .includesText(error, message);
   }
 }
 
@@ -546,12 +598,13 @@ class FormHelper {
 
   field(name) {
     return new FieldHelper(
-      query(`.form-kit__field[data-name="${name}"]`, this.element)
+      query(`.form-kit__field[data-name="${name}"]`, this.element),
+      this.context
     );
   }
 }
 
-QUnit.assert.form = function (selector) {
+QUnit.assert.form = function (selector = "form") {
   const form = new FormHelper(selector, this);
   return {
     hasErrors: (fields) => {
@@ -563,6 +616,9 @@ QUnit.assert.form = function (selector) {
       return {
         isDisabled: (message) => {
           this.ok(field.disabled, message);
+        },
+        hasError: (message) => {
+          field.hasError(message);
         },
         hasValue: (value, message) => {
           this.deepEqual(field.value, value, message);
