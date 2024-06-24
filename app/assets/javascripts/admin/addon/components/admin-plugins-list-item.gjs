@@ -67,15 +67,7 @@ export default class AdminPluginsListItem extends Component {
       <td class="admin-plugins-list__name-details">
         <div class="admin-plugins-list__name-with-badges">
           <div class="admin-plugins-list__name">
-            {{#if @plugin.linkUrl}}
-              <a
-                href={{@plugin.linkUrl}}
-                rel="noopener noreferrer"
-                target="_blank"
-              >{{@plugin.nameTitleized}}</a>
-            {{else}}
-              {{@plugin.nameTitleized}}
-            {{/if}}
+            {{@plugin.nameTitleized}}
           </div>
 
           <div class="badges">
@@ -98,6 +90,7 @@ export default class AdminPluginsListItem extends Component {
               target="_blank"
             >
               {{i18n "admin.plugins.learn_more"}}
+              {{icon "external-link-alt"}}
             </a>
           {{/if}}
         </div>
@@ -122,19 +115,18 @@ export default class AdminPluginsListItem extends Component {
         {{#if this.showPluginSettingsButton}}
           {{#if @plugin.useNewShowRoute}}
             <LinkTo
-              class="btn-default btn btn-icon-text"
+              class="btn btn-text btn-small"
               @route="adminPlugins.show"
               @model={{@plugin}}
               @disabled={{this.disablePluginSettingsButton}}
               title={{this.settingsButtonTitle}}
               data-plugin-setting-button={{@plugin.name}}
             >
-              {{icon "cog"}}
               {{i18n "admin.plugins.change_settings_short"}}
             </LinkTo>
           {{else}}
             <LinkTo
-              class="btn-default btn btn-icon-text"
+              class="btn btn-text btn-small"
               @route="adminSiteSettingsCategory"
               @model={{@plugin.settingCategoryName}}
               @query={{hash filter=(concat "plugin:" @plugin.name)}}
@@ -142,7 +134,6 @@ export default class AdminPluginsListItem extends Component {
               title={{this.settingsButtonTitle}}
               data-plugin-setting-button={{@plugin.name}}
             >
-              {{icon "cog"}}
               {{i18n "admin.plugins.change_settings_short"}}
             </LinkTo>
           {{/if}}

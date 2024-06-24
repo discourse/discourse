@@ -29,9 +29,6 @@ describe "Admin Plugins List", type: :system, js: true do
       text: I18n.t("admin_js.admin.plugins.author", { author: "Discourse" }),
     )
     expect(plugin_row).to have_css(
-      ".admin-plugins-list__name-with-badges .admin-plugins-list__name a[href=\"https://meta.discourse.org/t/12650\"]",
-    )
-    expect(plugin_row).to have_css(
       ".admin-plugins-list__about",
       text: spoiler_alert_plugin.metadata.about,
     )
