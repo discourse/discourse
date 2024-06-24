@@ -138,12 +138,10 @@ module JsLocaleHelper
     require "messageformat"
 
     message_formats =
-      I18n.fallbacks[locale]
-        .map do |l|
-          translations = translations_for(l, no_fallback: true)
-          [l.to_s.dasherize, remove_message_formats!(translations, l)]
-        end
-        .to_h
+      I18n.fallbacks[locale].each_with_object({}) do |l, hash|
+        translations = translations_for(l, no_fallback: true)
+        hash[l.to_s.dasherize] = remove_message_formats!(translations, l)
+      end
 
     MessageFormat.compile(I18n.fallbacks[locale].map(&:to_s).map(&:dasherize), message_formats)
   end
