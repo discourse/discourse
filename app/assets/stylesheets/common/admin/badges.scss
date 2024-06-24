@@ -1,6 +1,7 @@
 // Styles for admin/badges
 .admin-badges {
   // flex page layout
+
   .badges {
     display: flex;
     flex-wrap: wrap;
@@ -66,7 +67,6 @@
 
   .current-badge-header {
     display: flex;
-    padding-bottom: 1rem;
     gap: 1em;
     align-items: center;
     font-size: var(--font-up-2-rem);
