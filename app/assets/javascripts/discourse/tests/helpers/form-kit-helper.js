@@ -24,7 +24,7 @@ class Field {
         element = this.element.querySelector("input");
         break;
       case "code":
-      case "text":
+      case "textarea":
       case "composer":
         element = this.element.querySelector("textarea");
         break;

@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 
-export default class FKControlText extends Component {
+export default class FKControlTextarea extends Component {
   @action
   handleInput(event) {
     this.args.field.set(event.target.value);
@@ -22,7 +22,7 @@ export default class FKControlText extends Component {
 
   <template>
     <textarea
-      class="form-kit__control-text"
+      class="form-kit__control-textarea"
       style={{this.style}}
       ...attributes
       {{on "input" this.handleInput}}

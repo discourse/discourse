@@ -544,7 +544,7 @@ class FieldHelper {
         );
       }
       case "text": {
-        return this.element.querySelector(".form-kit__control-text").value;
+        return this.element.querySelector(".form-kit__control-textarea").value;
       }
       case "code": {
         return this.element.querySelector(

@@ -33,7 +33,7 @@ module PageObjects
         case control_type
         when "input"
           component.find("input").fill_in(with: value)
-        when "code", "text", "composer"
+        when "code", "textarea", "composer"
           component.find("textarea").fill_in(with: value)
         else
           raise "Unsupported control type: #{control_type}"
