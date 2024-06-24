@@ -1879,55 +1879,40 @@ class UsersController < ApplicationController
   end
 
   USER_MENU_LIST_LIMIT = 20
+
   def user_menu_bookmarks
     if !current_user.username_equals_to?(params[:username])
       raise Discourse::InvalidAccess.new("username doesn't match current_user's username")
     end
 
-    reminder_notifications =
-      BookmarkQuery.new(user: current_user).unread_notifications(limit: USER_MENU_LIST_LIMIT)
-    if reminder_notifications.size < USER_MENU_LIST_LIMIT
-      exclude_bookmark_ids =
-        reminder_notifications.filter_map { |notification| notification.data_hash[:bookmark_id] }
+    reminders =
+      current_user
+        .notifications
+        .for_user_menu(USER_MENU_LIST_LIMIT)
+        .unread
+        .where(notification_type: Notification.types[:bookmark_reminder])
 
-      bookmark_list =
-        UserBookmarkList.new(
-          user: current_user,
-          guardian: guardian,
-          per_page: USER_MENU_LIST_LIMIT - reminder_notifications.size,
-        )
+    reminders =
+      Notification.filter_inaccessible_topic_notifications(current_user.guardian, reminders)
 
-      bookmark_list.load do |query|
-        if exclude_bookmark_ids.present?
-          query.where("bookmarks.id NOT IN (?)", exclude_bookmark_ids)
-        end
-      end
-    end
+    reminders = Notification.populate_acting_user(reminders) if SiteSetting.show_user_menu_avatars
 
-    if reminder_notifications.present?
-      if SiteSetting.show_user_menu_avatars
-        Notification.populate_acting_user(reminder_notifications)
-      end
-      serialized_notifications =
-        ActiveModel::ArraySerializer.new(
-          reminder_notifications,
-          each_serializer: NotificationSerializer,
-          scope: guardian,
-        )
-    end
+    bookmark_list = []
 
-    if bookmark_list
+    if reminders.count < USER_MENU_LIST_LIMIT
+      reminded_bookmark_ids = reminders.filter_map { _1.data_hash[:bookmark_id] }
+      per_page = USER_MENU_LIST_LIMIT - reminders.count
+      bookmark_list = UserBookmarkList.new(user: current_user, guardian:, per_page:)
       bookmark_list.bookmark_serializer_opts = { link_to_first_unread_post: true }
-      serialized_bookmarks =
-        serialize_data(bookmark_list, UserBookmarkListSerializer, scope: guardian, root: false)[
-          :bookmarks
-        ]
+      bookmark_list.load do |query|
+        query.where.not(id: reminded_bookmark_ids) if reminded_bookmark_ids.present?
+      end
     end
 
-    render json: {
-             notifications: serialized_notifications || [],
-             bookmarks: serialized_bookmarks || [],
-           }
+    notifications = serialize_data(reminders, NotificationSerializer)
+    bookmarks = serialize_data(bookmark_list, UserBookmarkListSerializer, root: false)[:bookmarks]
+
+    render json: { notifications:, bookmarks: }
   end
 
   def user_menu_messages
@@ -1941,8 +1926,9 @@ class UsersController < ApplicationController
     end
 
     unread_notifications =
-      Notification
-        .for_user_menu(current_user.id, limit: USER_MENU_LIST_LIMIT)
+      current_user
+        .notifications
+        .for_user_menu(USER_MENU_LIST_LIMIT)
         .unread
         .where(
           notification_type: [
@@ -1962,18 +1948,14 @@ class UsersController < ApplicationController
           .list_private_messages_direct_and_groups(
             current_user,
             groups_messages_notification_level: :watching,
-          ) do |query|
-            if exclude_topic_ids.present?
-              query.where("topics.id NOT IN (?)", exclude_topic_ids)
-            else
-              query
-            end
-          end
+          ) { |query| query.where.not(id: exclude_topic_ids) if exclude_topic_ids.present? }
 
       read_notifications =
-        Notification
-          .for_user_menu(current_user.id, limit: limit)
-          .where(read: true, notification_type: Notification.types[:group_message_summary])
+        current_user
+          .notifications
+          .for_user_menu(limit)
+          .read
+          .where(notification_type: Notification.types[:group_message_summary])
           .to_a
     end
 

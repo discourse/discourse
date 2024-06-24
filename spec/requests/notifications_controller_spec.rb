@@ -461,15 +461,17 @@ RSpec.describe NotificationsController do
       end
 
       it "updates the `read` status" do
-        expect(user.reload.unread_notifications).to eq(1)
-        expect(user.reload.total_unread_notifications).to eq(1)
+        user.reload
+        expect(user.unread_notifications).to eq(1)
+        expect(user.total_unread_notifications).to eq(1)
 
         put "/notifications/mark-read.json"
 
         expect(response.status).to eq(200)
+
         user.reload
-        expect(user.reload.unread_notifications).to eq(0)
-        expect(user.reload.total_unread_notifications).to eq(0)
+        expect(user.unread_notifications).to eq(0)
+        expect(user.total_unread_notifications).to eq(0)
       end
 
       describe "#create" do

@@ -185,22 +185,23 @@ class PostTiming < ActiveRecord::Base
 
     if join_table.length > 0
       sql = <<~SQL
-      UPDATE post_timings t
-      SET msecs = LEAST(t.msecs::bigint + x.msecs, 2^31 - 1)
-      FROM (#{join_table.join(" UNION ALL ")}) x
-      WHERE x.topic_id = t.topic_id AND
-            x.post_number = t.post_number AND
-            x.user_id = t.user_id
-      RETURNING x.idx
-SQL
+        UPDATE post_timings t
+        SET msecs = LEAST(t.msecs::bigint + x.msecs, 2^31 - 1)
+        FROM (#{join_table.join(" UNION ALL ")}) x
+        WHERE x.topic_id = t.topic_id AND
+              x.post_number = t.post_number AND
+              x.user_id = t.user_id
+        RETURNING x.idx
+      SQL
 
       existing = Set.new(DB.query_single(sql))
 
       sql = <<~SQL
-      SELECT 1 FROM topics
-      WHERE deleted_at IS NULL AND
-        archetype = 'regular' AND
-        id = :topic_id
+        SELECT 1 
+        FROM topics
+        WHERE deleted_at IS NULL 
+        AND archetype = 'regular'
+        AND id = :topic_id
       SQL
 
       is_regular = DB.exec(sql, topic_id: topic_id) == 1
@@ -220,7 +221,8 @@ SQL
 
     total_changed = 0
     if timings.length > 0
-      total_changed = Notification.mark_posts_read(current_user, topic_id, timings.map { |t| t[0] })
+      post_numbers = timings.map(&:first)
+      total_changed = Notification.read!(current_user, topic_id:, post_numbers:)
     end
 
     topic_time = max_time_per_post if topic_time > max_time_per_post

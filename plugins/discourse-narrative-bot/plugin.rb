@@ -112,8 +112,9 @@ after_initialize do
     first_post = topic.ordered_posts.first
 
     notification = Notification.where(topic_id: topic.id, post_number: first_post.post_number).first
+
     if notification.present?
-      Notification.read(self, notification.id)
+      Notification.read!(self, id: notification.id)
       self.reload
       self.publish_notifications_state
     end
