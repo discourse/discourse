@@ -72,7 +72,7 @@ class Middleware::RequestTracker
       if data[:is_crawler]
         ApplicationRequest.increment!(:page_view_crawler)
         WebCrawlerRequest.increment!(data[:user_agent])
-      elsif data[:current_user_id].present?
+      elsif data[:has_auth_cookie].present?
         ApplicationRequest.increment!(:page_view_logged_in)
         ApplicationRequest.increment!(:page_view_logged_in_mobile) if data[:is_mobile]
 
@@ -98,7 +98,7 @@ class Middleware::RequestTracker
           ApplicationRequest.increment!(:page_view_anon_browser)
           ApplicationRequest.increment!(:page_view_anon_browser_mobile) if data[:is_mobile]
 
-          if data[:topic_id].present?
+          if data[:topic_id].present? && data[:current_user_id].present?
             TopicsController.defer_topic_view(
               data[:topic_id],
               data[:request_remote_ip],
@@ -112,11 +112,11 @@ class Middleware::RequestTracker
     # Message-bus requests may include this 'deferred track' header which we use to detect
     # 'real browser' views.
     if data[:deferred_track] && !data[:is_crawler]
-      if data[:current_user_id].present?
+      if data[:has_auth_cookie].present?
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
 
-        if data[:topic_id].present?
+        if data[:topic_id].present? && data[:current_user_id].present?
           TopicsController.defer_topic_view(
             data[:topic_id],
             data[:request_remote_ip],
@@ -179,6 +179,7 @@ class Middleware::RequestTracker
 
     auth_cookie = Auth::DefaultCurrentUserProvider.find_v0_auth_cookie(request)
     auth_cookie ||= Auth::DefaultCurrentUserProvider.find_v1_auth_cookie(env)
+    has_auth_cookie = auth_cookie.present?
 
     is_api ||= !!env[Auth::DefaultCurrentUserProvider::API_KEY_ENV]
     is_user_api ||= !!env[Auth::DefaultCurrentUserProvider::USER_API_KEY_ENV]
@@ -211,11 +212,20 @@ class Middleware::RequestTracker
         topic_params[:topic_id] || topic_params[:id]
       end
 
+    # Auth cookie can be used to find the ID for logged in users, but API calls must look up the
+    # current user based on env variables.
+    #
+    # We only care about this for topic views, other pageviews it's enough to know if the user is
+    # logged in or not, and we have separate pageview tracking for API views.
+    if is_topic_view
+      current_user_id = (auth_cookie&.[](:user_id) || CurrentUser.lookup_from_env(env)&.id)
+    end
+
     h = {
       status: status,
       is_crawler: helper.is_crawler?,
-      # TODO (martin) Double check this is ok for API calls too
-      current_user_id: auth_cookie&.[](:user_id),
+      has_auth_cookie: has_auth_cookie,
+      current_user_id: current_user_id,
       topic_id: topic_id,
       is_api: is_api,
       is_user_api: is_user_api,
