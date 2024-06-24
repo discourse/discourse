@@ -68,7 +68,7 @@ export default class ChatFooter extends Component {
             aria-label={{i18n "chat.direct_messages.aria_label"}}
             id="c-footer-direct-messages"
             class={{concatClass
-              "btn-flat"
+              "btn-transparent"
               "c-footer__item"
               (if (eq this.currentRouteName "chat.direct-messages") "--active")
             }}
@@ -85,7 +85,7 @@ export default class ChatFooter extends Component {
             aria-label={{i18n "chat.my_threads.aria_label"}}
             id="c-footer-threads"
             class={{concatClass
-              "btn-flat"
+              "btn-transparent"
               "c-footer__item"
               (if (eq this.currentRouteName "chat.threads") "--active")
             }}
