@@ -138,11 +138,11 @@ module JsLocaleHelper
     require "messageformat"
 
     locale_str = locale.to_s
-    fallback_locale_str = LocaleSiteSetting.fallback_locale(locale_str)&.to_s
+    # fallback_locale_str = LocaleSiteSetting.fallback_locale(locale_str)&.to_s
     translations = translations_for(locale_str)
     message_formats = remove_message_formats!(translations, locale)
 
-    MessageFormat.compile(locale, message_formats)
+    MessageFormat.compile(locale_str.tr("_", "-"), message_formats)
   end
 
   def self.output_locale(locale)
