@@ -175,6 +175,6 @@ export default class EditTopicTimerForm extends Component {
 
   @action
   changeDuration(newDurationMins) {
-    this.args.topicTimer.set("duration_minutes", newDurationMins);
+    this.args.topicTimer.duration_minutes = newDurationMins;
   }
 }

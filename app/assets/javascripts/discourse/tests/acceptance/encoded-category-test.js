@@ -1,7 +1,7 @@
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Encoded Sub Category Discovery", function (needs) {
   needs.settings({
@@ -47,19 +47,13 @@ acceptance("Encoded Sub Category Discovery", function (needs) {
       "category-%E6%BC%A2%E5%AD%97-parent-%E6%BC%A2%E5%AD%97-subcategory";
 
     await visit("/c/%E6%BC%A2%E5%AD%97-parent/%E6%BC%A2%E5%AD%97-subcategory");
-    assert.ok(
-      document.body.classList.contains(bodyClass),
-      "has the default navigation"
-    );
-    assert.ok(exists(".topic-list"), "The list of topics was rendered");
-    assert.ok(exists(".topic-list .topic-list-item"), "has topics");
+    assert.dom(document.body).hasClass(bodyClass, "has the default navigation");
+    assert.dom(".topic-list").exists("The list of topics was rendered");
+    assert.dom(".topic-list .topic-list-item").exists("has topics");
 
     await visit("/c/漢字-parent/漢字-subcategory");
-    assert.ok(
-      document.body.classList.contains(bodyClass),
-      "has the default navigation"
-    );
-    assert.ok(exists(".topic-list"), "The list of topics was rendered");
-    assert.ok(exists(".topic-list .topic-list-item"), "has topics");
+    assert.dom(document.body).hasClass(bodyClass, "has the default navigation");
+    assert.dom(".topic-list").exists("The list of topics was rendered");
+    assert.dom(".topic-list .topic-list-item").exists("has topics");
   });
 });

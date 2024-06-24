@@ -39,16 +39,16 @@ RSpec.describe CategoriesController do
 
     it "redirects /category paths to /c paths" do
       get "/category/uncategorized"
-      expect(response.status).to eq(302)
-      expect(response.body).to include("c/uncategorized")
+      expect(response).to have_http_status(:found)
+      expect(response).to redirect_to("/c/uncategorized")
     end
 
     it "respects permalinks before redirecting /category paths to /c paths" do
       _perm = Permalink.create!(url: "category/something", category_id: category.id)
 
       get "/category/something"
-      expect(response.status).to eq(301)
-      expect(response.body).to include(category.slug)
+      expect(response).to have_http_status(:moved_permanently)
+      expect(response).to redirect_to(%r{/c/#{category.slug}})
     end
 
     it "returns the right response for a normal user" do

@@ -11,13 +11,13 @@ module DiscourseRackQuietAssetsLogger
          (env["PATH_INFO"].index("/service-worker") == 0) ||
          (env["PATH_INFO"].index("mini-profiler-resources") == 0) ||
          (env["PATH_INFO"].index("/srv/status") == 0)
-      if ::Logster::Logger === Rails.logger
+      if defined?(::Logster::Logger) && Logster.logger
         override = true
-        Rails.logger.override_level = Logger::ERROR
+        Logster.logger.override_level = Logger::ERROR
       end
     end
 
-    super(env).tap { Rails.logger.override_level = nil if override }
+    super(env).tap { Logster.logger.override_level = nil if override }
   end
 end
 

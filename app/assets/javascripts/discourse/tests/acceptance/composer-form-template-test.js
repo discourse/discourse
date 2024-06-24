@@ -22,7 +22,7 @@ const FORM_TEMPLATES = [
           label: "Description"
       - type: input
         id: disabled-input
-        attributes: 
+        attributes:
           label: "Disabled input"
           disabled: true
     `,
@@ -96,6 +96,7 @@ acceptance("Composer Form Template", function (needs) {
     server.get("/posts/419", () => {
       return helper.response({ id: 419 });
     });
+
     server.get("/composer/mentions", () => {
       return helper.response({
         users: [],
@@ -105,6 +106,7 @@ acceptance("Composer Form Template", function (needs) {
         max_users_notified_per_group_mention: 100,
       });
     });
+
     server.get("/t/960.json", () => {
       const topicList = cloneJSON(TopicFixtures["/t/9/1.json"]);
       topicList.post_stream.posts[2].post_type = 4;
@@ -124,17 +126,11 @@ acceptance("Composer Form Template", function (needs) {
     );
     assert.strictEqual(selectKit(".category-chooser").header().value(), "1");
 
-    assert.ok(
-      document.querySelector("#reply-control").classList.contains("open"),
-      "reply control is open"
-    );
+    assert.dom("#reply-control").hasClass("open", "reply control is open");
 
-    assert.ok(
-      document.querySelector(
-        ".form-template-field__input[name='disabled-input']"
-      ).disabled,
-      "disabled-input is disabled"
-    );
+    assert
+      .dom(".form-template-field__input[name='disabled-input']")
+      .isDisabled();
 
     await fillIn(".form-template-field__input[name='full-name']", "John Smith");
 
@@ -145,32 +141,29 @@ acceptance("Composer Form Template", function (needs) {
 
     await click(".toggle-minimize");
 
-    assert.ok(
-      document.querySelector("#reply-control").classList.contains("draft"),
-      "reply control is minimized into draft mode"
-    );
+    assert
+      .dom("#reply-control")
+      .hasClass("draft", "reply control is minimized into draft mode");
 
     await click(".toggle-fullscreen");
 
-    assert.ok(
-      document.querySelector("#reply-control").classList.contains("open"),
-      "reply control is opened from draft mode"
-    );
+    assert
+      .dom("#reply-control")
+      .hasClass("open", "reply control is opened from draft mode");
 
-    assert.strictEqual(
-      document.querySelector(".form-template-field__input[name='full-name']")
-        .value,
-      "John Smith",
-      "keeps the value of the input field when composer is re-opened from draft mode"
-    );
+    assert
+      .dom(".form-template-field__input[name='full-name']")
+      .hasValue(
+        "John Smith",
+        "keeps the value of the input field when composer is re-opened from draft mode"
+      );
 
-    assert.strictEqual(
-      document.querySelector(
-        ".form-template-field__textarea[name='description']"
-      ).value,
-      "Community manager",
-      "keeps the value of the textarea field when composer is re-opened from draft mode"
-    );
+    assert
+      .dom(".form-template-field__textarea[name='description']")
+      .hasValue(
+        "Community manager",
+        "keeps the value of the textarea field when composer is re-opened from draft mode"
+      );
   });
 
   test("Composer opens with the specified form template selected", async function (assert) {

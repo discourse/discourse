@@ -250,9 +250,15 @@ task "javascript:update" => "clean_up" do
 
           ace_root = "#{library_src}/ace-builds/src-min-noconflict/"
 
-          addtl_files = %w[ext-searchbox mode-html mode-scss mode-sql mode-yaml worker-html].concat(
-            themes,
-          )
+          addtl_files = %w[
+            ext-searchbox
+            mode-html
+            mode-javascript
+            mode-scss
+            mode-sql
+            mode-yaml
+            worker-html
+          ].concat(themes)
 
           dest_path = dest.split("/")[0..-2].join("/")
           addtl_files.each { |file| FileUtils.cp_r("#{ace_root}#{file}.js", dest_path) }

@@ -904,7 +904,7 @@ class ApplicationController < ActionController::Base
 
   def disqualified_from_2fa_enforcement
     request.format.json? || is_api? || current_user.anonymous? ||
-      (!SiteSetting.enforce_second_factor_on_external_auth && secure_session["oauth"])
+      (!SiteSetting.enforce_second_factor_on_external_auth && secure_session["oauth"] == "true")
   end
 
   def build_not_found_page(opts = {})
