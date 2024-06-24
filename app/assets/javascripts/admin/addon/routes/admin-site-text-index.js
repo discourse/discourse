@@ -11,6 +11,7 @@ export default class AdminSiteTextIndexRoute extends Route {
     q: { replace: true },
     overridden: { replace: true },
     outdated: { replace: true },
+    untranslated: { replace: true },
     locale: { replace: true },
   };
 
@@ -19,6 +20,7 @@ export default class AdminSiteTextIndexRoute extends Route {
       q: params.q,
       overridden: params.overridden ?? false,
       outdated: params.outdated ?? false,
+      untranslated: params.untranslated ?? false,
       locale: params.locale ?? this.siteSettings.default_locale,
     });
   }

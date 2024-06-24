@@ -6706,6 +6706,7 @@ en:
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: "Only show overridden"
         show_outdated: "Only show outdated/invalid"
+        show_untranslated: "Only show untranslated"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
         no_results: "No matching site texts found"
