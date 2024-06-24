@@ -80,7 +80,7 @@ export default class ChatMessageActionsMobile extends Component {
       <DModal
         @closeModal={{@closeModal}}
         @headerClass="hidden"
-        class="chat-message-actions"
+        class="fk-d-menu-modal chat-message-actions"
         {{didInsert this.vibrate}}
       >
         <:body>
