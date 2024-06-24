@@ -24,8 +24,6 @@ module Reports::WebHookEventsDailyAggregate
           end,
       )
 
-      Rails.logger.warn("type: #{type}")
-
       report.average = true
       report.percent = true
 
