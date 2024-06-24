@@ -947,7 +947,6 @@ zh_CN:
     categories:
       categories_label: "类别"
       subcategories_label: "子类别"
-      all_subcategories: "所有子类别"
       no_subcategories: "无子类别"
       remove_filter: "移除筛选器"
       plus_more_count:
@@ -1319,6 +1318,7 @@ zh_CN:
         set_password: "设置密码"
         choose_new: "选择一个新密码"
         choose: "选择一个密码"
+        verify_identity: "为了继续，请验证您的身份。"
         title: "密码重置"
       second_factor_backup:
         title: "双重备份代码"
@@ -1712,6 +1712,8 @@ zh_CN:
         fine_print: "我们要求您确认您的身份，因为这是一项潜在的敏感操作。一旦通过身份验证，只有在几个小时不活动后才会要求重新进行身份验证。"
       password:
         title: "密码"
+        too_short:
+          other: "您的密码太短了(最少需要 %{count} 个字符)"
         common: "该密码过于常见。"
         same_as_username: "您的密码与您的用户名相同。"
         same_as_email: "您的密码与您的电子邮件相同。"
@@ -1991,6 +1993,7 @@ zh_CN:
       error: "未知错误"
       cookies_error: "您的浏览器似乎禁用了 Cookie。如果不先启用它们，您可能无法登录。"
       rate_limit: "请稍后再尝试登录。"
+      password_expired: "密码已过期。请<a href='%{reset_url}'>重置您的密码</a>。"
       blank_username: "请输入您的电子邮件或用户名。"
       blank_username_or_password: "请输入您的电子邮件或用户名和密码。"
       reset_password: "重置密码"
@@ -2260,7 +2263,6 @@ zh_CN:
       show_toolbar: "显示编辑器工具栏"
       hide_toolbar: "隐藏编辑器工具栏"
       modal_ok: "确定"
-      modal_cancel: "取消"
       cant_send_pm: "抱歉，您无法向 %{username} 发送消息。"
       create_message_error: "抱歉，创建该信息时出现错误。请重试。"
       yourself_confirm:
@@ -2346,6 +2348,8 @@ zh_CN:
       liked_consolidated_description:
         other: "点赞了您的 %{count} 个帖子"
       liked_consolidated: "<span>%{username}</span> %{description}"
+      linked_consolidated_description:
+        other: "点赞了您的 %{count} 个帖子"
       linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2412,6 +2416,7 @@ zh_CN:
         watching_first_post: "新话题"
         topic_reminder: "话题提醒"
         liked_consolidated: "新赞"
+        linked_consolidated: "新点赞"
         post_approved: "已批准帖子"
         membership_request_consolidated: "新成员资格请求"
         reaction: "新回应"
@@ -4087,6 +4092,7 @@ zh_CN:
           text: "我们将自动显示此站点最受欢迎的类别"
         filter_placeholder: "筛选类别"
         no_categories: "没有与给定术语匹配的类别。"
+        show_more: "展开"
       tags_form_modal:
         title: "编辑标签导航"
         filter_placeholder: "筛选标签"
@@ -4187,6 +4193,9 @@ zh_CN:
               title: "所有话题"
             faq:
               content: "常见问题解答"
+              title: "使用此站点的准则"
+            guidelines:
+              content: "准则"
               title: "使用此站点的准则"
             groups:
               content: "群组"
@@ -4810,9 +4819,33 @@ zh_CN:
       config_areas:
         about:
           header: "关于您的站点"
+          general_settings: "常规设置"
           community_name: "社区名称"
+          community_summary: "社区摘要"
+          community_description: "社区概述"
+          banner_image: "横幅图片"
+          banner_image_help: |
+            这将用于您的 关于页面。推荐尺寸：800x300像素。接受的图片类型：JPG、PNG和SVG，最大大小为10MB。
+          contact_information: "联系信息"
+          community_owner: "社区名称"
+          community_owner_help: |
+            负责此站点的主要联系人的电子邮件地址，用于重要通知，也会显示在 /about 上。对公共站点上的匿名用户可见。
+          contact_email: "联系邮箱"
+          contact_email_help: |
+            负责此站点的主要联系人的电子邮件地址，用于重要通知，也会显示在 /about 上。对公共站点上的匿名用户可见。
+          contact_url: "联系我们"
+          contact_url_help: |
+            本网站的联系 URL。如果存在，则取代 /about 上的联系电子邮件地址，在公共网站上对匿名用户可见。
+          site_contact_name: "站点联系人名称"
+          site_contact_name_help: |
+            用于发送所有自动信息的有效管理人员用户名。如果留空，将使用默认的系统账户。
+          site_contact_group: "站点联系群组"
           your_organization: "您的组织"
           company_name: "公司名称"
+          company_name_help: |
+            你的公司或组织的名称。
+          company_name_warning: |
+            如果留空，则不会提供模板式服务条款或隐私声明。
           governing_law: "适用法律"
           city_for_disputes: "争议城市"
           optional: "（可选）"

@@ -279,6 +279,130 @@ class Category < ActiveRecord::Base
     where(id: ancestor_ids)
   end
 
+  # Perform a search. If a category exists in the result, its ancestors do too.
+  # Also check for prefix matches. If a category has a prefix match, its
+  # ancestors report a match too.
+  scope :tree_search,
+        ->(only, except, term) do
+          term = term.strip
+          escaped_term = ActiveRecord::Base.connection.quote(term.downcase)
+          prefix_match = "starts_with(LOWER(categories.name), #{escaped_term})"
+
+          word_match = <<~SQL
+            COALESCE(
+              (
+                SELECT BOOL_AND(position(pattern IN LOWER(categories.name)) <> 0)
+                FROM unnest(regexp_split_to_array(#{escaped_term}, '\s+')) AS pattern
+              ),
+              true
+            )
+          SQL
+
+          if except
+            prefix_match =
+              "NOT categories.id IN (#{except.reselect(:id).to_sql}) AND #{prefix_match}"
+            word_match = "NOT categories.id IN (#{except.reselect(:id).to_sql}) AND #{word_match}"
+          end
+
+          if only
+            prefix_match = "categories.id IN (#{only.reselect(:id).to_sql}) AND #{prefix_match}"
+            word_match = "categories.id IN (#{only.reselect(:id).to_sql}) AND #{word_match}"
+          end
+
+          categories =
+            Category.select(
+              "categories.*",
+              "#{prefix_match} AS has_prefix_match",
+              "#{word_match} AS has_word_match",
+            )
+
+          (1...SiteSetting.max_category_nesting).each do
+            categories = Category.from("(#{categories.to_sql}) AS categories")
+
+            subcategory_matches =
+              categories
+                .where.not(parent_category_id: nil)
+                .group("categories.parent_category_id")
+                .select(
+                  "categories.parent_category_id AS id",
+                  "BOOL_OR(categories.has_prefix_match) AS has_prefix_match",
+                  "BOOL_OR(categories.has_word_match) AS has_word_match",
+                )
+
+            categories =
+              Category.joins(
+                "LEFT JOIN (#{subcategory_matches.to_sql}) AS subcategory_matches ON categories.id = subcategory_matches.id",
+              ).select(
+                "categories.*",
+                "#{prefix_match} OR COALESCE(subcategory_matches.has_prefix_match, false) AS has_prefix_match",
+                "#{word_match} OR COALESCE(subcategory_matches.has_word_match, false) AS has_word_match",
+              )
+          end
+
+          categories =
+            Category.from("(#{categories.to_sql}) AS categories").where(has_word_match: true)
+
+          categories.select("has_prefix_match AS matches", :id)
+        end
+
+  # Given a relation, 'matches', which contains category ids and a 'matches'
+  # boolean, and a limit (the maximum number of subcategories per category),
+  # produce a subset of the matches categories annotated with information about
+  # their ancestors.
+  scope :select_descendants,
+        ->(matches, limit) do
+          max_nesting = SiteSetting.max_category_nesting
+
+          categories =
+            joins("INNER JOIN (#{matches.to_sql}) AS matches ON matches.id = categories.id").select(
+              "categories.id",
+              "categories.name",
+              "ARRAY[]::record[] AS ancestors",
+              "0 AS depth",
+              "matches.matches",
+            )
+
+          categories = Category.from("(#{categories.to_sql}) AS c1")
+
+          (1...max_nesting).each { |i| categories = categories.joins(<<~SQL) }
+            INNER JOIN LATERAL (
+              (SELECT c#{i}.id, c#{i}.name, c#{i}.ancestors, c#{i}.depth, c#{i}.matches)
+              UNION ALL
+              (SELECT
+                categories.id,
+                categories.name,
+                c#{i}.ancestors || ARRAY[ROW(NOT c#{i}.matches, c#{i}.name)] AS ancestors,
+                c#{i}.depth + 1 as depth,
+                matches.matches
+              FROM categories
+              INNER JOIN matches
+              ON matches.id = categories.id
+              WHERE categories.parent_category_id = c#{i}.id
+              AND c#{i}.depth = #{i - 1}
+              ORDER BY (NOT matches.matches, categories.name)
+              LIMIT #{limit})
+            ) c#{i + 1} ON true
+          SQL
+
+          categories.select(
+            "c#{max_nesting}.id",
+            "c#{max_nesting}.ancestors",
+            "c#{max_nesting}.name",
+            "c#{max_nesting}.matches",
+          )
+        end
+
+  scope :limited_categories_matching,
+        ->(only, except, parent_id, term) do
+          joins(<<~SQL).order("c.ancestors || ARRAY[ROW(NOT c.matches, c.name)]")
+            INNER JOIN (
+              WITH matches AS (#{Category.tree_search(only, except, term).to_sql})
+              #{Category.where(parent_category_id: parent_id).select_descendants(Category.from("matches").select(:matches, :id), 5).to_sql}
+            ) AS c
+            ON categories.id = c.id
+          SQL
+        end
+
   def self.topic_id_cache
     @topic_id_cache ||= DistributedCache.new("category_topic_ids")
   end

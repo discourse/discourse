@@ -979,7 +979,6 @@ te:
     categories:
       categories_label: "వర్గాలు"
       subcategories_label: "ఉప వర్గాలు"
-      all_subcategories: "అన్ని ఉపవర్గాలు"
       no_subcategories: "ఉపవర్గాలు లేవు"
       remove_filter: "ఫిల్టర్‌ని తీసివేయండి"
       plus_more_count:
@@ -2355,7 +2354,6 @@ te:
       show_toolbar: "కంపోజర్ టూల్బార్ చూపించండి"
       hide_toolbar: "కంపోజర్ టూల్‌బార్‌ను దాచండి"
       modal_ok: "సరే"
-      modal_cancel: "రద్దు చేయండి"
       cant_send_pm: "క్షమించండి, మీరు %{username}కి సందేశం పంపలేరు."
       yourself_confirm:
         title: "మీరు స్వీకర్తలను జోడించడం మర్చిపోయారా?"
@@ -4261,6 +4259,7 @@ te:
           text: "మరియు మేము ఈ సైట్ యొక్క అత్యంత జనాదరణ పొందిన వర్గాలను స్వయంచాలకంగా చూపుతాము"
         filter_placeholder: "వర్గాలను ఫిల్టర్ చేయండి"
         no_categories: "ఇచ్చిన పదానికి సరిపోలే వర్గాలు ఏవీ లేవు."
+        show_more: "మరిన్ని చూపించండి"
       tags_form_modal:
         title: "ట్యాగ్‌ల నావిగేషన్‌ను సవరించండి"
         filter_placeholder: "ఫిల్టర్ ట్యాగ్‌లు"
@@ -4350,6 +4349,9 @@ te:
               title: "అన్ని విషయాలు"
             faq:
               content: "ఎఫ్ ఎ క్యూ"
+              title: "ఈ సైట్‌ని ఉపయోగించడం కోసం మార్గదర్శకాలు"
+            guidelines:
+              content: "మార్గదర్శకాలు"
               title: "ఈ సైట్‌ని ఉపయోగించడం కోసం మార్గదర్శకాలు"
             groups:
               content: "సమూహాలు"

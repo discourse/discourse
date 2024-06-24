@@ -2316,7 +2316,6 @@ nl:
       show_toolbar: "editorwerkbalk weergeven"
       hide_toolbar: "editorwerkbalk verbergen"
       modal_ok: "OK"
-      modal_cancel: "Annuleren"
       cant_send_pm: "Sorry, je kunt geen bericht naar %{username} sturen."
       yourself_confirm:
         title: "Ben je vergeten ontvangers toe te voegen?"
@@ -4197,6 +4196,7 @@ nl:
           text: "en we geven automatisch de populairste categorieën van deze site weer"
         filter_placeholder: "Filter categorieën"
         no_categories: "Er zijn geen categorieën die overeenkomen met de opgegeven term."
+        show_more: "Meer weergeven"
       tags_form_modal:
         title: "Tagsnavigatie bewerken"
         filter_placeholder: "Filter tags"
@@ -4286,6 +4286,9 @@ nl:
               title: "Alle topics"
             faq:
               content: "FAQ"
+              title: "Richtlijnen voor het gebruik van deze site"
+            guidelines:
+              content: "Richtlijnen"
               title: "Richtlijnen voor het gebruik van deze site"
             groups:
               content: "Groepen"

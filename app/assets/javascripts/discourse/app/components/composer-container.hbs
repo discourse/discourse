@@ -195,22 +195,24 @@
                   {{/if}}
 
                   {{#if this.composer.canEditTags}}
-                    <MiniTagChooser
-                      @value={{this.composer.model.tags}}
-                      @onChange={{fn (mut this.composer.model.tags)}}
-                      @options={{hash
-                        disabled=this.composer.disableTagsChooser
-                        categoryId=this.composer.model.categoryId
-                        minimum=this.composer.model.minimumRequiredTags
-                      }}
-                    />
-                    <PluginOutlet
-                      @name="after-composer-tag-input"
-                      @outletArgs={{hash composer=this.composer.model}}
-                    />
-                    <PopupInputTip
-                      @validation={{this.composer.tagValidation}}
-                    />
+                    <div class="tags-input">
+                      <MiniTagChooser
+                        @value={{this.composer.model.tags}}
+                        @onChange={{fn (mut this.composer.model.tags)}}
+                        @options={{hash
+                          disabled=this.composer.disableTagsChooser
+                          categoryId=this.composer.model.categoryId
+                          minimum=this.composer.model.minimumRequiredTags
+                        }}
+                      />
+                      <PluginOutlet
+                        @name="after-composer-tag-input"
+                        @outletArgs={{hash composer=this.composer.model}}
+                      />
+                      <PopupInputTip
+                        @validation={{this.composer.tagValidation}}
+                      />
+                    </div>
                   {{/if}}
 
                   <PluginOutlet

@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
@@ -6,6 +7,8 @@ import I18n from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 
 export default class RelativeTimePicker extends Component {
+  @tracked _selectedInterval;
+
   _roundedDuration(duration) {
     const rounded = parseFloat(duration.toFixed(2));
 
@@ -22,7 +25,9 @@ export default class RelativeTimePicker extends Component {
   }
 
   get selectedInterval() {
-    if (this.args.durationMinutes !== undefined) {
+    if (this._selectedInterval) {
+      return this._selectedInterval;
+    } else if (this.args.durationMinutes !== undefined) {
       return this._intervalFromMinutes;
     } else {
       return this._intervalFromHours;
@@ -148,6 +153,7 @@ export default class RelativeTimePicker extends Component {
 
   @action
   onChangeInterval(interval) {
+    this._selectedInterval = interval;
     const minutes = this.calculateMinutes(this.duration, interval);
     this.args.onChange?.(minutes);
   }

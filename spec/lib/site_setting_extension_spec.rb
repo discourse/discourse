@@ -892,6 +892,24 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "requires_confirmation settings" do
+    it "returns 'simple' for settings that require confirmation with 'simple' type" do
+      expect(
+        SiteSetting.all_settings.find { |s| s[:setting] == :min_password_length }[
+          :requires_confirmation
+        ],
+      ).to eq("simple")
+    end
+
+    it "returns nil for settings that do not require confirmation" do
+      expect(
+        SiteSetting.all_settings.find { |s| s[:setting] == :display_local_time_in_user_card }[
+          :requires_confirmation
+        ],
+      ).to eq(nil)
+    end
+  end
+
   describe "_map extension for list settings" do
     it "handles splitting group_list settings" do
       SiteSetting.personal_message_enabled_groups = "1|2"

@@ -150,6 +150,25 @@ RSpec.describe ApplicationController do
       expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
     end
 
+    it "should redirect users when enforce_second_factor is 'all' and authenticated via oauth" do
+      SiteSetting.enforce_second_factor = "all"
+      write_secure_session("oauth", true)
+      sign_in(user)
+
+      get "/"
+      expect(response).to redirect_to("/u/#{user.username}/preferences/second-factor")
+    end
+
+    it "should not redirect users when enforce_second_factor is 'all', authenticated via oauth but enforce_second_factor_on_external_auth is false" do
+      SiteSetting.enforce_second_factor = "all"
+      SiteSetting.enforce_second_factor_on_external_auth = false
+      write_secure_session("oauth", true)
+      sign_in(user)
+
+      get "/"
+      expect(response.status).to eq(200)
+    end
+
     it "should not redirect anonymous users when enforce_second_factor is 'all'" do
       SiteSetting.enforce_second_factor = "all"
       SiteSetting.allow_anonymous_posting = true
@@ -545,6 +564,40 @@ RSpec.describe ApplicationController do
 
         expect(response.status).to eq(200)
         expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("unsafe-none")
+      end
+    end
+
+    describe "when `cross_origin_unsafe_none_referrers` site setting has been set" do
+      before do
+        SiteSetting.cross_origin_opener_policy_header = "same-origin"
+        SiteSetting.cross_origin_opener_unsafe_none_referrers =
+          "meta.discourse.org|try.discourse.org"
+      end
+
+      it "sets `Cross-Origin-Opener-Policy` to `unsafe-none` for a listed referrer" do
+        get "/latest", headers: { "HTTP_REFERER" => "https://meta.discourse.org/" }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("unsafe-none")
+
+        get "/latest", headers: { "HTTP_REFERER" => "https://meta.discourse.org/hot" }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("unsafe-none")
+      end
+
+      it "sets `Cross-Origin-Opener-Policy` to configured value for a non-listed referrer" do
+        get "/latest", headers: { "HTTP_REFERER" => "https://www.discourse.org/" }
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")
+      end
+
+      it "sets `Cross-Origin-Opener-Policy` to configured value when referrer is missing" do
+        get "/latest"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")
       end
     end
   end

@@ -37,7 +37,6 @@
     margin-right: -1px;
     padding: 0.5em 0;
     width: 2.5em;
-    transition: background 0.2s, border-color 0.2s;
 
     > * {
       pointer-events: none;
@@ -78,7 +77,7 @@
       border-left-color: transparent;
       padding: 0.5em 0;
       width: 2.5em;
-      transition: background 0.2s, border-color 0.2s;
+      transition: var(--d-button-transition);
       border-radius: var(--d-border-radius);
       border-top-left-radius: 0px;
       border-bottom-left-radius: 0px;

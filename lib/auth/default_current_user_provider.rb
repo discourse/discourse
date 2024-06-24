@@ -165,7 +165,15 @@ class Auth::DefaultCurrentUserProvider
               )
       end
       raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
-      admin_api_key_limiter.performed! if !Rails.env.profile?
+
+      if !Rails.env.profile?
+        admin_api_key_limiter.performed!
+
+        # Don't enforce the default per ip limits for authenticated admin api
+        # requests
+        (@env["DISCOURSE_RATE_LIMITERS"] || []).each(&:rollback!)
+      end
+
       @env[API_KEY_ENV] = true
     end
 

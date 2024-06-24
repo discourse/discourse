@@ -1639,7 +1639,6 @@ ca:
       enter_fullscreen: "entra en la redacció a pantalla completa"
       exit_fullscreen: "surt de la redacció a pantalla completa"
       modal_ok: "D'acord"
-      modal_cancel: "Cancel·la"
       cant_send_pm: "No podeu enviar cap missatge a %{username}."
       yourself_confirm:
         title: "Heu oblidat afegir destinataris?"
@@ -2903,6 +2902,8 @@ ca:
               content: "Temes"
             faq:
               content: "PMF"
+            guidelines:
+              content: "Directrius"
             groups:
               content: "Grups"
             users:

@@ -1174,6 +1174,7 @@ Discourse::Application.routes.draw do
     post "categories/reorder" => "categories#reorder"
     get "categories/find" => "categories#find"
     post "categories/search" => "categories#search"
+    get "categories/hierarchical_search" => "categories#hierarchical_search"
     get "categories/:parent_category_id" => "categories#index"
 
     scope path: "category/:category_id" do
@@ -1597,7 +1598,9 @@ Discourse::Application.routes.draw do
          constraints: HomePageConstraint.new("finish_installation"),
          as: "installation_redirect"
 
-    root to: "custom#index", constraints: HomePageConstraint.new("custom"), as: "custom_index"
+    root to: "custom_homepage#index",
+         constraints: HomePageConstraint.new("custom"),
+         as: "custom_index"
 
     get "/user-api-key/new" => "user_api_keys#new"
     post "/user-api-key" => "user_api_keys#create"

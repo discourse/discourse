@@ -95,6 +95,10 @@ module SiteSettingExtension
     @shadowed_settings ||= []
   end
 
+  def requires_confirmation_settings
+    @requires_confirmation_settings ||= {}
+  end
+
   def hidden_settings_provider
     @hidden_settings_provider ||= SiteSettings::HiddenProvider.new
   end
@@ -185,7 +189,8 @@ module SiteSettingExtension
     include_locale_setting: true,
     only_overridden: false,
     filter_categories: nil,
-    filter_plugin: nil
+    filter_plugin: nil,
+    filter_names: nil
   )
     locale_setting_hash = {
       setting: "default_locale",
@@ -243,6 +248,7 @@ module SiteSettingExtension
           secret: secret_settings.include?(s),
           placeholder: placeholder(s),
           mandatory_values: mandatory_values[s],
+          requires_confirmation: requires_confirmation_settings[s],
         }.merge!(type_hash)
 
         opts[:plugin] = plugins[s] if plugins[s]
@@ -252,6 +258,13 @@ module SiteSettingExtension
       .select do |setting|
         if only_overridden
           setting[:value] != setting[:default]
+        else
+          true
+        end
+      end
+      .select do |setting|
+        if filter_names
+          filter_names.include?(setting[:setting].to_s)
         else
           true
         end
@@ -645,6 +658,14 @@ module SiteSettingExtension
       defaults.load_setting(name, default, opts.delete(:locale_default))
 
       mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
+
+      requires_confirmation_settings[name] = (
+        if SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.values.include?(
+             opts[:requires_confirmation],
+           )
+          opts[:requires_confirmation]
+        end
+      )
 
       categories[name] = opts[:category] || :uncategorized
 

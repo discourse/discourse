@@ -1004,7 +1004,6 @@ de:
     categories:
       categories_label: "Kategorien"
       subcategories_label: "Unterkategorien"
-      all_subcategories: "alle Unterkategorien"
       no_subcategories: "keine Unterkategorien"
       remove_filter: "Filter entfernen"
       plus_more_count:
@@ -2376,7 +2375,6 @@ de:
       show_toolbar: "Editor-Werkzeugleiste anzeigen"
       hide_toolbar: "Editor-Werkzeugleiste ausblenden"
       modal_ok: "OK"
-      modal_cancel: "Abbrechen"
       cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
       create_message_error: "Entschuldige, es gab einen Fehler beim Erstellen der Nachricht. Bitte versuche es noch einmal."
       yourself_confirm:
@@ -4313,6 +4311,7 @@ de:
           text: "und wir zeigen automatisch die beliebtesten Kategorien dieser Website an"
         filter_placeholder: "Kategorien filtern"
         no_categories: "Es gibt keine Kategorien, die dem angegebenen Begriff entsprechen."
+        show_more: "Mehr anzeigen"
       tags_form_modal:
         title: "Schlagwörter-Navigation bearbeiten"
         filter_placeholder: "Schlagwörter filtern"
@@ -4417,6 +4416,9 @@ de:
               title: "Alle Themen"
             faq:
               content: "FAQ"
+              title: "Richtlinien für die Nutzung dieser Website"
+            guidelines:
+              content: "Richtlinien"
               title: "Richtlinien für die Nutzung dieser Website"
             groups:
               content: "Gruppen"

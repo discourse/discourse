@@ -2010,6 +2010,7 @@ fa_IR:
     نوشته اول این موضوع را برای عوض کردن محتویات صفحه %{page_name} ویرایش کن.
   guidelines_topic:
     title: "پرسش و پاسخ / دستورالعمل"
+    guidelines_title: "راهنماها"
   tos_topic:
     title: "شرایط استفاده از خدمات"
   privacy_topic:

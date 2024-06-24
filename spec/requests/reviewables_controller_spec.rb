@@ -187,6 +187,28 @@ RSpec.describe ReviewablesController do
         expect(json["errors"][0]).to eq(I18n.t("reviewables.already_handled_and_user_not_exist"))
       end
 
+      it "returns a readable error message if reject_reason is too long, does not send email, and does not delete the user" do
+        sign_in(admin)
+        Jobs.run_immediately!
+        SiteSetting.must_approve_users = true
+        user = Fabricate(:user)
+        user.activate
+        reviewable = ReviewableUser.find_by(target: user)
+
+        expect {
+          put "/review/#{reviewable.id}/perform/delete_user.json?version=0",
+              params: {
+                send_email: true,
+                reject_reason: "a" * 3000,
+              }
+        }.to not_change { ActionMailer::Base.deliveries.size }.and not_change { User.count }
+
+        expect(response.code).to eq("422")
+        expect(response.parsed_body["errors"]).to eq(
+          ["Reject reason " + I18n.t("errors.messages.too_long", count: 2000)],
+        )
+      end
+
       context "when filtering by range" do
         let(:from) { 3.days.ago.strftime("%F") }
         let(:to) { 1.day.ago.strftime("%F") }

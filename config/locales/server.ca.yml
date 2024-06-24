@@ -2512,6 +2512,7 @@ ca:
     Edita la primera publicació en aquest tema per a canviar els continguts de la pàgina %{page_name}.
   guidelines_topic:
     title: "Guies/PMF"
+    guidelines_title: "Directrius"
   tos_topic:
     title: "Condicions del servei"
   privacy_topic:

@@ -929,6 +929,72 @@ RSpec.describe TopicsFilter do
       end
     end
 
+    describe "when filtering by tag_groups" do
+      fab!(:tag) { Fabricate(:tag, name: "tag1") }
+      fab!(:tag2) { Fabricate(:tag, name: "tag2") }
+      fab!(:tag3) { Fabricate(:tag, name: "tag3") }
+
+      fab!(:topic_without_tag) { Fabricate(:topic) }
+      fab!(:topic_with_tag) { Fabricate(:topic, tags: [tag]) }
+      fab!(:topic_with_tag_and_tag2) { Fabricate(:topic, tags: [tag, tag2]) }
+      fab!(:topic_with_tag2) { Fabricate(:topic, tags: [tag2]) }
+
+      fab!(:tag_group) { Fabricate(:tag_group, tag_names: [tag.name, tag2.name]) }
+      fab!(:topic_with_tag3) { Fabricate(:topic, tags: [tag3]) }
+
+      fab!(:staff_only_tag) { Fabricate(:tag, name: "group-only-tag") }
+      fab!(:group)
+      let!(:staff_tag_group) do
+        Fabricate(
+          :tag_group,
+          permissions: {
+            group.name => TagGroupPermission.permission_types[:full],
+          },
+          name: "staff-only-tag-group",
+          tag_names: [staff_only_tag.name],
+        )
+      end
+
+      fab!(:topic_with_staff_only_tag) { Fabricate(:topic, tags: [staff_only_tag]) }
+
+      it "should only return topics that are tagged with any of the specified tag_group when query string is tag_group:tag_group_name" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tag_group:#{tag_group.name}")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
+      end
+
+      it "should only return topics that are not excluded by the specified tag_group when query string is -tag_group:tag_group_name" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-tag_group:#{tag_group.name}")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag3.id, topic_without_tag.id, topic_with_staff_only_tag.id)
+      end
+
+      it "should return the right topics when query string is `tag_group:staff_tag_group` and user has access to specified tag" do
+        group.add(admin)
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new(admin))
+            .filter_from_query_string("tag_group:#{staff_tag_group.name}")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_staff_only_tag.id)
+      end
+
+      it "should not return any topics when query string is `tag_group:staff_tag_group` because specified tag is hidden to user" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tag_group:#{staff_tag_group.name}")
+            .pluck(:id),
+        ).to eq([])
+      end
+    end
     describe "when filtering by topic author" do
       fab!(:user2) { Fabricate(:user, username: "username2") }
       fab!(:topic_by_user) { Fabricate(:topic, user: user) }

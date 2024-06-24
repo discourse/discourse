@@ -2314,7 +2314,6 @@ es:
       show_toolbar: "mostrar la barra de herramientas del editor"
       hide_toolbar: "ocultar la barra de herramientas del editor"
       modal_ok: "Aceptar"
-      modal_cancel: "Cancelar"
       cant_send_pm: "Lo sentimos, no puedes enviar un mensaje a %{username}."
       yourself_confirm:
         title: "¿Olvidaste añadir destinatarios?"
@@ -4190,6 +4189,7 @@ es:
           text: "y mostraremos automáticamente las categorías más populares de este sitio"
         filter_placeholder: "Filtrar categorías"
         no_categories: "No hay categorías que coincidan con el término proporcionado."
+        show_more: "Mostrar más"
       tags_form_modal:
         title: "Editar etiquetas navegación"
         filter_placeholder: "Filtrar etiquetas"
@@ -4279,6 +4279,9 @@ es:
               title: "Todos los temas"
             faq:
               content: "Preguntas frecuentes"
+              title: "Normas de uso de este sitio"
+            guidelines:
+              content: "Directrices"
               title: "Normas de uso de este sitio"
             groups:
               content: "Grupos"

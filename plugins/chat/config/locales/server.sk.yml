@@ -260,6 +260,27 @@ sk:
         many: "Máte nové správy v chate"
         other: "Máte nové správy v chate"
       from: "%{site_name}"
+      subject:
+        private_email:
+          one: "[%{site_name}] Nová správa"
+          few: "[%{site_name}] Nových správ"
+          many: "[%{site_name}] Nových správ"
+          other: "[%{site_name}] Nové správy"
+        chat_dm_1:
+          one: "[%{site_name}] Nová správa od %{name}"
+          few: "[%{site_name}] Nových správ od %{name}"
+          many: "[%{site_name}] Nových správ od %{name}"
+          other: "[%{site_name}] Nové správy od %{name}"
+        chat_dm_2: "[%{site_name}] Nové správy od %{name_1} a %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Nové správy od %{name} a %{count} ďalších"
+        chat_channel_1:
+          one: "[%{site_name}] Nová správa v %{channel}"
+          few: "[%{site_name}] Nových správ v %{channel}"
+          many: "[%{site_name}] Nových správ v %{channel}"
+          other: "[%{site_name}] Nové správy v %{channel}"
+        chat_channel_2: "[%{site_name}] Nové správy v %{channel_1} a %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Nové správy v %{channel} a %{count} ďalšie"
+        chat_channel_and_dm: "[%{site_name}] Nové správy v %{channel} a od %{name}"
       unsubscribe: "Tento súhrn chatu sa odosiela zo stránky %{site_link} , keď ste preč. Zmeňte adresu %{email_preferences_link}, alebo %{unsubscribe_link} a odhláste sa z odberu."
       unsubscribe_no_link: "Tento súhrn chatu sa odosiela zo stránky %{site_link} , keď ste preč. Zmeňte si stránku %{email_preferences_link}."
       view_messages:

@@ -987,7 +987,6 @@ tr_TR:
     categories:
       categories_label: "kategoriler"
       subcategories_label: "alt kategoriler"
-      all_subcategories: "tüm alt kategoriler"
       no_subcategories: "alt kategori yok"
       remove_filter: "filtreyi kaldır"
       plus_more_count:
@@ -2341,7 +2340,6 @@ tr_TR:
       show_toolbar: "besteci araç çubuğunu göster"
       hide_toolbar: "besteci araç çubuğunu gizle"
       modal_ok: "Tamam"
-      modal_cancel: "İptal et"
       cant_send_pm: "Üzgünüz, %{username} adlı kullanıcıya mesaj gönderemezsiniz."
       yourself_confirm:
         title: "Alıcıları eklemeyi unuttunuz mu?"
@@ -4250,6 +4248,7 @@ tr_TR:
           text: "ve bu sitenin en popüler kategorilerini otomatik olarak gösteririz"
         filter_placeholder: "Kategorileri filtrele"
         no_categories: "Bu terimle eşleşen kategori yok."
+        show_more: "Daha fazla göster"
       tags_form_modal:
         title: "Etiketlerde gezinmeyi düzenle"
         filter_placeholder: "Etiketleri filtrele"
@@ -4339,6 +4338,9 @@ tr_TR:
               title: "Tüm konular"
             faq:
               content: "SSS"
+              title: "Bu siteyi kullanmak için kılavuz"
+            guidelines:
+              content: "Kılavuz"
               title: "Bu siteyi kullanmak için kılavuz"
             groups:
               content: "Gruplar"

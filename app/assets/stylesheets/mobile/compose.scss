@@ -205,9 +205,10 @@
       z-index: z("base");
     }
 
-    .mini-tag-chooser {
+    .tags-input {
       margin: 0 0 6px 6px;
       max-width: calc(50% - 3px);
+      width: 100%;
     }
   }
 

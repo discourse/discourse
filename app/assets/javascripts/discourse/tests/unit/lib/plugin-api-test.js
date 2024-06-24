@@ -118,4 +118,50 @@ module("Unit | Utility | plugin-api", function (hooks) {
 
     assert.strictEqual(obj.foo, "modified getter", "returns correct result");
   });
+
+  test("modifyClass works with modern callback syntax", function (assert) {
+    class TestThingy {
+      static someStaticMethod() {
+        return "original static method";
+      }
+      someFunction() {
+        return "original function";
+      }
+      get someGetter() {
+        return "original getter";
+      }
+    }
+
+    getOwner(this).register("test-thingy:main", TestThingy);
+
+    withPluginApi("1.1.0", (api) => {
+      api.modifyClass(
+        "test-thingy:main",
+        (Superclass) =>
+          class extends Superclass {
+            static someStaticMethod() {
+              return `${super.someStaticMethod()} modified`;
+            }
+
+            someFunction() {
+              return `${super.someFunction()} modified`;
+            }
+
+            get someGetter() {
+              return `${super.someGetter} modified`;
+            }
+          }
+      );
+
+      const thingyKlass =
+        getOwner(this).resolveRegistration("test-thingy:main");
+      const thingy = new thingyKlass();
+      assert.strictEqual(thingy.someFunction(), "original function modified");
+      assert.strictEqual(thingy.someGetter, "original getter modified");
+      assert.strictEqual(
+        TestThingy.someStaticMethod(),
+        "original static method modified"
+      );
+    });
+  });
 });

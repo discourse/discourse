@@ -14,6 +14,8 @@ zh_CN:
         invalid_field: 字段的组件 `%{component}` 在 `%{target}:%{target_name}` 上不可用。
         invalid_metadata: '`%{field}` 的数据无效或组件 `%{component}` 未知。'
     triggerables:
+      errors:
+        custom_fields_or_user_profile_required: "必须提供至少一个 'custom_fields' 或 'user_profile'。"
       user_badge_granted:
         title: 授予用户徽章
         doc: 当用户被授予徽章时触发自动化。
@@ -60,12 +62,16 @@ zh_CN:
       after_post_cook:
         title: 处理帖子后
         description: 当帖子内容被处理时，触发自动化
+      user_updated:
+        title: 用户更新后
+        description: 当用户更新任何信息时，将触发自动操作
     scriptables:
       post:
         title: 创建帖子
         description: 在指定话题上创建帖子
       topic:
         title: 创建话题
+        description: 以特定用户身份创建话题
       flag_post_on_words:
         title: 基于字词举报帖子
         description: 如果帖子包含指定字词，则举报它

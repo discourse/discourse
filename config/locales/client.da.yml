@@ -2023,7 +2023,6 @@ da:
       exit_fullscreen: "gå ud af 'fullscreen composer'"
       exit_fullscreen_prompt: "Tryk på <kbd>ESC</kbd> for at afslutte fuld skærm"
       modal_ok: "OK"
-      modal_cancel: "Annuller"
       cant_send_pm: "Beklager, du kan ikke sende en besked til %{username}."
       yourself_confirm:
         title: "Glemte du at tilføje modtagere?"
@@ -3631,6 +3630,8 @@ da:
       more: "Flere"
       all_categories: "Alle kategorier"
       all_tags: "Alle mærker"
+      categories_form_modal:
+        show_more: "Vis mere"
       edit_navigation_modal_form:
         filter_dropdown:
           all: "Alle"
@@ -3688,6 +3689,8 @@ da:
               title: "Alle emner"
             faq:
               content: "OSS"
+            guidelines:
+              content: "Retningslinier"
             groups:
               content: "Grupper"
             users:
