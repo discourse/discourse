@@ -27,6 +27,7 @@
     padding-block: 0.75rem;
     height: 100%;
     position: relative;
+    color: var(--primary-medium);
 
     &.--active {
       .d-icon,
@@ -48,7 +49,7 @@
     .d-icon {
       margin-right: 0;
       font-size: var(--font-up-2);
-      color: var(--primary-medium);
+      color: inherit;
 
       &.d-icon-discourse-threads {
         font-size: var(--font-up-1); //visual correction
