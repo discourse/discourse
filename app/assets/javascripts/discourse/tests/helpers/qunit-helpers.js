@@ -519,9 +519,13 @@ class FieldHelper {
           .querySelector(".form-kit__control-image a.lightbox")
           .getAttribute("href");
       }
-      case "input-text": {
-        return this.element.querySelector(".form-kit__control-input").value;
+      case "radio-group": {
+        return this.element.querySelector(".form-kit__control-radio:checked")
+          ?.value;
       }
+      case "input-number":
+      case "input-text":
+        return this.element.querySelector(".form-kit__control-input").value;
       case "icon": {
         return this.element.querySelector(
           ".form-kit__control-icon .select-kit-header"
@@ -529,7 +533,7 @@ class FieldHelper {
       }
       case "question": {
         return (
-          this.element.querySelector(`.form-kit__control-radio:checked`)
+          this.element.querySelector(".form-kit__control-radio:checked")
             ?.value === "true"
         );
       }

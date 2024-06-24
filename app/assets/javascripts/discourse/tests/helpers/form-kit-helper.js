@@ -19,15 +19,12 @@ class Field {
     let element;
 
     switch (this.controlType) {
-      case "input":
+      case "input-text":
+      case "input-number":
         element = this.element.querySelector("input");
         break;
       case "code":
-        element = this.element.querySelector("textarea");
-        break;
       case "text":
-        element = this.element.querySelector("textarea");
-        break;
       case "composer":
         element = this.element.querySelector("textarea");
         break;

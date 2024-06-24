@@ -34,7 +34,7 @@ module(
       let data = { image_url: "/images/discourse-logo-sketch-small.png" };
 
       await render(<template>
-        <Form @mutable={{true}} @data={{data}} as |form d|>
+        <Form @mutable={{true}} @data={{data}} as |form|>
           <form.Field @name="image_url" @title="Foo" as |field|>
             <field.Image />
           </form.Field>
