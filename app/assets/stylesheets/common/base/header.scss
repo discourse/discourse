@@ -312,6 +312,9 @@
     }
     .topic-header-extra {
       grid-area: extra;
+      .archetype-private_message & {
+        grid-area: categories;
+      }
     }
   }
   .topic-link {
