@@ -6840,8 +6840,8 @@ en:
         badge: Badge
         display_name: Display Name
         description: Description
-        long_description: Long Description
-        badge_type: Badge Type
+        long_description: Long description
+        badge_type: Badge type
         badge_grouping: Group
         badge_groupings:
           modal_title: Badge Groupings
