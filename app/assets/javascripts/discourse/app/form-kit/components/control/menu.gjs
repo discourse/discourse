@@ -26,6 +26,7 @@ export default class FKControlMenu extends Component {
       @offset={{5}}
       id={{@field.id}}
       data-value={{@value}}
+      @modalForMobile={{true}}
     >
       <:trigger>
         <span class="d-button-label">

@@ -28,8 +28,8 @@ export default class FKControlQuestion extends Component {
             {{on "change" this.handleInput}}
           />
 
-          {{#if @yesLabel}}
-            {{@yesLabel}}
+          {{#if @props.yesLabel}}
+            {{@props.yesLabel}}
           {{else}}
             {{i18n "yes_value"}}
           {{/if}}
@@ -50,8 +50,8 @@ export default class FKControlQuestion extends Component {
             {{on "change" this.handleInput}}
           />
 
-          {{#if @noLabel}}
-            {{@noLabel}}
+          {{#if @props.noLabel}}
+            {{@props.noLabel}}
           {{else}}
             {{i18n "no_value"}}
           {{/if}}
