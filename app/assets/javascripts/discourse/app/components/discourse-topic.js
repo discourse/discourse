@@ -69,6 +69,10 @@ export default Component.extend(Scrolling, MobileScrollDirection, {
     if (this.pauseHeaderTopicUpdate) {
       return;
     }
+    if (topic.errorLoading) {
+      this._hideTopicInHeader();
+      return;
+    }
     this.appEvents.trigger("header:show-topic", topic);
     this._lastShowTopic = true;
     this.header.showTopic = true;

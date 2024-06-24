@@ -188,7 +188,9 @@ export default class GlimmerHeader extends Component {
   get canLoadContent() {
     // we want to determine if we need to show the topic info or not
     // *before* we load content to prevent content layout shift
+    // on mobile
     return (
+      this.site.desktopView ||
       (this.router.currentRouteName.startsWith("topic.") &&
         this.header.showTopic !== null) ||
       !this.router.currentRouteName.startsWith("topic.")
