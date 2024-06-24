@@ -117,14 +117,14 @@ module JsLocaleHelper
     @loaded_merges = nil
   end
 
-  def self.translations_for(locale_str)
+  def self.translations_for(locale_str, no_fallback: false)
     clear_cache! if Rails.env.development?
 
     locale_sym = locale_str.to_sym
 
     translations =
       I18n.with_locale(locale_sym) do
-        if locale_sym == :en
+        if locale_sym == :en || no_fallback
           load_translations(locale_sym)
         else
           load_translations_merged(*I18n.fallbacks[locale_sym])
@@ -137,12 +137,15 @@ module JsLocaleHelper
   def self.output_MF(locale)
     require "messageformat"
 
-    locale_str = locale.to_s
-    # fallback_locale_str = LocaleSiteSetting.fallback_locale(locale_str)&.to_s
-    translations = translations_for(locale_str)
-    message_formats = remove_message_formats!(translations, locale)
+    message_formats =
+      I18n.fallbacks[locale]
+        .map do |l|
+          translations = translations_for(l, no_fallback: true)
+          [l.to_s.dasherize, remove_message_formats!(translations, l)]
+        end
+        .to_h
 
-    MessageFormat.compile(locale_str.tr("_", "-"), message_formats)
+    MessageFormat.compile(I18n.fallbacks[locale].map(&:to_s).map(&:dasherize), message_formats)
   end
 
   def self.output_locale(locale)

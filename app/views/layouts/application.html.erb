@@ -40,8 +40,13 @@
 
     <%= preload_script "locales/#{I18n.locale}" %>
     <%= javascript_tag type: "module", nonce: true do -%>
-      import messages from "message_format/<%= I18n.locale %>"
-      globalThis.I18n._compiledMFs = messages;
+      import Messages from '@messageformat/runtime/messages';
+      import msgData from "message_format/<%= I18n.locale %>";
+
+      const messages = new Messages(msgData, "<%= I18n.locale.to_s.dasherize %>");
+      messages.defaultLocale = "en";
+
+      globalThis.I18n.mf_messages = messages;
     <% end -%>
     <%- if ExtraLocalesController.client_overrides_exist? %>
       <%= preload_script_url ExtraLocalesController.url('overrides') %>
