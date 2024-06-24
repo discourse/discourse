@@ -90,6 +90,40 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     assert.dom(".foo").hasText("1");
   });
 
+  test("@mutable", async function (assert) {
+    const data = { foo: 1 };
+
+    await render(<template>
+      <Form @mutable={{true}} @data={{data}} as |form|>
+        <form.Field @name="foo" @title="Foo" as |field|>
+          <field.Input />
+        </form.Field>
+        <form.Button class="set-foo" @action={{fn form.set "foo" 2}} />
+      </Form>
+    </template>);
+
+    await click(".set-foo");
+
+    assert.deepEqual(data.foo, 2);
+  });
+
+  test("immutable by default", async function (assert) {
+    const data = { foo: 1 };
+
+    await render(<template>
+      <Form @data={{data}} as |form|>
+        <form.Field @name="foo" @title="Foo" as |field|>
+          <field.Input />
+        </form.Field>
+        <form.Button class="set-foo" @action={{fn form.set "foo" 2}} />
+      </Form>
+    </template>);
+
+    await click(".set-foo");
+
+    assert.deepEqual(data.foo, 1);
+  });
+
   test("yielded set", async function (assert) {
     await render(<template>
       <Form @data={{hash foo=1}} as |form data|>
